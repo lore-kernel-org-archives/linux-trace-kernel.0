@@ -1,445 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDCB1A3164;
-	Thu, 12 Mar 2026 05:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773293693; cv=none; b=ZI402CpYCBBG62J9u//8wKUcJiak90j5U2rzQDXGQh0UMq7CU8FJN2lnFwffgbiVyzIKR8mmwefxMLkTTJCQNUYpU8brvud4ZX44zYqUcDrBbofSmpBapVPuYMxlqTmIOjfBg65KQgevvbHpov5jFhvzXXVeo0mdMHZM7PQLXe4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773293693; c=relaxed/simple;
-	bh=duV5HZVBXZd7cFYI2jy65CNYjG6xngqIysIAm7baeno=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HeNpCY1uQmBu0uRzRysz2oPdNX/+jgzFofToxzIn5zCyZbQqmjYwqzQZiiE7eEOd/h8dqBXAYbxcqFtHjkkmB71fMbWW7/f6RBZy66G6XE4Pk2DFUE226kLGVXIzMnDdiJWBnTzGxgJHS5HMTJYfQuX/VYTrzkV92BDz+q/7Y0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFfIEocg; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F6431D381
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 05:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773294303; cv=pass; b=tOL/x9dHz1NVNEsCYW9+ajNPvoWRfeiQCaq6rf8pJEuymgxtS6fPX8kmuP6ZUQfduN7PeK2/e6j6YIIl3Yy891J3JG35CC8lE5EI+LSb/mIDQ5tcJaLApOQjWM5qk2NTCiJmmawll/yddAsJd4C1wvEl4jH/rqt7oZ+Q4RugP3U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773294303; c=relaxed/simple;
+	bh=GmJK/N0KBkRxDo+pqiY/6G+ZRXyparhw1yW+Cxl6e28=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FeLngpHAsuVBC+qHGFdNuFFo3GRvwIpQG9YIWHN/nVw1QU6UI6sH2P39Y1LrwSyE2tlauKDLXCDMbVjmFSDNdWLBz2ELflSfcHAFw7YeZOxU2T5erGDiWuTCkr9MdexLlQl61MZjec6o/XS7MgjkxG3Yh/uoHJJx1W7gXTqWYYs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VdZJT0Tx; arc=pass smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFfIEocg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F1ABC4CEF7;
-	Thu, 12 Mar 2026 05:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773293693;
-	bh=duV5HZVBXZd7cFYI2jy65CNYjG6xngqIysIAm7baeno=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bFfIEocgUYiZbNfXJmxW9LUA83i2/Q970QekVaqvHnST3gu2KMMMSgY51c82z0vOW
-	 Unt5hXM2p6AtX3qfoWTcdZrEYar9LU6+U8I4U/GP1yvHg4EmV6J4PItArZ2G53feLq
-	 3M0pDP6yEKTX5SXolB/sgJTBLuZ0bZzobGKDG6CJRwPJeyedNmTC/N8YD+PvC0LjkV
-	 gKfis9/51VR8aUCtdO7ZsxQHLExaN77TuiXsCFEJVNjAcjFlxVU/DXTd6ivnPEuM1z
-	 32Z5W3h+J/y2Mp6D4wrptGG9QmFgjwcL8M16zeDbVaAwJv9by+NBiDwmF50yEZGH3F
-	 rMj1fbenPLDqQ==
-Date: Thu, 12 Mar 2026 14:34:49 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Peter
- Zijlstra <peterz@infradead.org>, Brian Geffon <bgeffon@google.com>, John
- Stultz <jstultz@google.com>, Ian Rogers <irogers@google.com>, Suleiman
- Souhlal <suleiman@google.com>
-Subject: Re: [PATCH v2 2/3] tracing: Update futex syscall trace event to
- show more commands
-Message-Id: <20260312143449.9abd724174c1238cd0debaee@kernel.org>
-In-Reply-To: <20260310201036.713629966@kernel.org>
-References: <20260310200954.285663884@kernel.org>
-	<20260310201036.713629966@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VdZJT0Tx"
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-5ffe68892efso442191137.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 22:45:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773294301; cv=none;
+        d=google.com; s=arc-20240605;
+        b=HeMzTujAbh+Vbtwt4pyk5IcCl6Whkg+ISXVWwRsvsPBB0p85w8KedeipLJwkdxam2q
+         wyh81Voq+dYmjrGZJXSrn00ckAXEdwhRJG7AVuifTGWB5KlH7R0odzM0gQfGpdu+0dGy
+         6zSKH5EMZIaDKvmmx3T/Zcpd7g36QInTRJ//9VsTrZ+oQxZC8l/RXdvzVeRKmiIq5tV5
+         rtLAxQ+1Ci7/l6z2YI3+oA6+f7WsDGZjpcYgWWUswKEQ7sazzrx4U/9OP+GIdRI0OduM
+         30lvbYNnUEyYPQ9l5BhM9H8H/0T1TyWM4dVXv1XojnLY1Xfzivw1wJjXvdn+FiksVDFt
+         +azg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=WHL+cdGBVdeYzUrRkXUnxuFTgvkDYPGLTyvabwlDW1U=;
+        fh=3l5awn8D8oIspswSR1fLrTOwhAg/T3fgMCPTNLwfFJs=;
+        b=XT+vFISmhnlNf/2COGkbS6khXwvcDVpjR7Dk73kFXY+q+svAZ9P5krK9/hcSlRQU68
+         pyCgPAE0lDhehlrU3X/ATuGj3xOmqT/Hn/XWgv5aUlqFcHLhX+iMF+W2V+e+v9WnDdO8
+         zfjmBBLuV7IuJkIzPpYmBUHBGtFUywHzlmUGhZ4shQVU+WGFyWUtrckdwgRzR9I2Pnai
+         eVtoOCtI0NLCGEzSbUQMDdxb0Dl0wRlCiru9zPl6V0/ywfyGFMWLphBRhCIGUkElBeBw
+         PRrAOeCAUDhLpmUBSh2YOtu+wLA5EDmKQkoYOpv1V1oeYZ6GkCxm2d7uYnUYPQqW+Ygt
+         aElA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773294301; x=1773899101; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WHL+cdGBVdeYzUrRkXUnxuFTgvkDYPGLTyvabwlDW1U=;
+        b=VdZJT0TxrE2a9giQrcsUQtWWCibe1Z2In7NV0CRlZMWbacWoFRZzPJiR7FY93c03j9
+         2yAo6IHTgN6vy8NV77CVpW+HhOc8Y55Q1whsRU7GuexdhiOif0pMktOgLab0yQH24Xmb
+         eY626NrC06XAbL+FuZen1nZxylloOh0Xe89KQ40vjxWjixm6s10qgZ4tccTY1C/SL9YU
+         idN+6ZtprApYPnh/eGiR+dkQwu97WSop2d6awTVostO+SsiP5p9csP3pOO148vafEevW
+         oby0MD9CpiBWwPQcNfulnvgZ3CI41epjzwTw2bXTqHx8ZBGK0yocieKobEXt292GR1Sr
+         CfPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773294301; x=1773899101;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WHL+cdGBVdeYzUrRkXUnxuFTgvkDYPGLTyvabwlDW1U=;
+        b=ADfu9N/Y6wnbEjBnzvds3EJnTEHQD3ZmvtBhODIJ6+RFXY6LoDfwTmZpB9QssHcu+e
+         MIxPZZ7MVQRa48PioG5wjbFLTkv/V/ImQTdtNI0VbfQrZulRblCq9l6eirLOBig4RT9G
+         v4Hk6Htyv1782rjNHVHdEKkn3R6Uo/Kpz8T7myrSj0QuDZLtF9773vjUCkm9ibmSLqC1
+         UJnQtefVy/q3UkmCBsYXnc7J2vg24Ptq0vDQ5nek/pxCuU6Yjti8PevmRzLB1wA8cdQW
+         4yNvxhFb1Wo9sTEf68058KyOCcF6cXXMN/LUS891Xb69GfVMlYULSAzWZZUcohlNm14m
+         1E5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWWs+4d6MQ/1hSzYIo9nwcSghA6ZvTwAm0AZk6Aw1hoCpwoD43QaexRSzvC9nBDdR3TlKUiPIcRbKJteGNvc05CaaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYNga8EYkTUKJoaV+MYyPEehndKNND2pkSmGTcugLNePT80Idx
+	PcwZwMcgeFiPxvadH1tdLPrnpct20YesgpKvgHiuutluMz7XiUkEYO8xGypfE7wYhQsUkw2v4Dm
+	ar7MnKpcSwhWYbHpWFN8Gpj0fPPK7lngfReHmIDahx4trGiI47kgAuOIcYTI=
+X-Gm-Gg: ATEYQzxEJTafMIYgZsDVo367DXaytpplskDYctdHtc+q9V5SeimAc9whv/1uUuxipYN
+	nm81+ECRmI4AMNMP1HAwCixY3ATI9hLxRc7ox5YiiGCtAXGetDKs1zj5rUcPx0bwbRtyRPti12E
+	Tjwb2D/Sss8+HI7XYRk54AiZFW+DZWfHANOgmvSvT2ZGbChGsFMoao+fIahiizPtFcEdDBF023/
+	pxOEHfH79hXWj4pCNlQln4qIcSW6eoTNJnaQgYCKgrYyTo9aKHd/pRNaqcnyyqxLPGIfcIyk9Y5
+	HEEq6Tx/yn17p2jqOMrVHVLyydGiuFKyp+cE9w==
+X-Received: by 2002:a05:6102:418e:b0:5ff:ba2d:17c1 with SMTP id
+ ada2fe7eead31-601deb8f595mr2321310137.9.1773294300559; Wed, 11 Mar 2026
+ 22:45:00 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 11 Mar 2026 22:44:59 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 11 Mar 2026 22:44:59 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
+References: <cover.1770071243.git.ackerleytng@google.com> <86ad28b767524e1e654b9c960e39ca8bfb24c114.1770071243.git.ackerleytng@google.com>
+ <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Date: Wed, 11 Mar 2026 22:44:59 -0700
+X-Gm-Features: AaiRm50qY80lG_kPAevYiMiI4iaIYG-rOHvoXqEdwljZn3zJnS7kUqoIvI7enLE
+Message-ID: <CAEvNRgG-L+GBcm+u_thGvXAxV-Nqzu5VtgXy0PfND6SG0FiyVg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 09/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
+To: kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org
+Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
+	bp@alien8.de, brauner@kernel.org, chao.p.peng@intel.com, 
+	chao.p.peng@linux.intel.com, chenhuacai@kernel.org, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, david@kernel.org, hpa@zytor.com, 
+	ira.weiny@intel.com, jgg@nvidia.com, jmattson@google.com, jroedel@suse.de, 
+	jthoughton@google.com, maobibo@loongson.cn, mathieu.desnoyers@efficios.com, 
+	maz@kernel.org, mhiramat@kernel.org, michael.roth@amd.com, mingo@redhat.com, 
+	mlevitsk@redhat.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	pbonzini@redhat.com, prsampat@amd.com, qperret@google.com, 
+	ricarkol@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, seanjc@google.com, shivankg@amd.com, shuah@kernel.org, 
+	steven.price@arm.com, tabba@google.com, tglx@linutronix.de, 
+	vannapurve@google.com, vbabka@suse.cz, willy@infradead.org, wyihan@google.com, 
+	yan.y.zhao@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 10 Mar 2026 16:09:56 -0400
-Steven Rostedt <rostedt@kernel.org> wrote:
+Ackerley Tng <ackerleytng@google.com> writes:
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Make the futex syscall trace event a little more smart. Have it read the
-> futex_op instruction to determine what else it can save and print. For the
-> appropriate options, it will read the utime (timespec) parameter and show
-> its output as well as the uaddr2.
-> 
->  futex_requeue_p-1154    [004] .....   144.568339: sys_futex(uaddr: 0x5652b178d834 (0x482), FUTEX_UNLOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
->  futex_requeue_p-1162    [002] .....   144.568696: sys_futex(uaddr: 0x7f763b7fece0 (2), FUTEX_WAIT|FUTEX_PRIVATE_FLAG, val: 2)
->  futex_requeue_p-1151    [000] .....   144.568700: sys_futex(uaddr: 0x7f763b7fece0 (0), FUTEX_WAKE|FUTEX_PRIVATE_FLAG, val: 1)
->  futex_requeue_p-1162    [002] .....   144.568705: sys_futex(uaddr: 0x7f763b7fece0 (0), FUTEX_WAKE|FUTEX_PRIVATE_FLAG, val: 1)
->  futex_requeue_p-1151    [000] .....   144.568715: sys_futex(uaddr: 0x7f764369e990 (0x483), FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, val: 1155)
->  futex_requeue_p-1155    [005] .....   144.569420: sys_futex(uaddr: 0x5652b178d838 (0), FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7ffdacfba500 (143.890024054), uaddr2: 0x5652b178d834 (0), val3: 0)
->  futex_requeue_p-1155    [005] .....   144.569454: sys_futex(uaddr: 0x5652b178d834 (0), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Here's iteration 2 of the attributes, after getting a much clearer idea
+of the use cases across platforms at the last guest_memfd biweekly.
 
-This looks good to me.
+Please comment in this context! I'm planning for this text to make it to
+Documentation/virt/kvm/api.rst.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Ackerley Tng <ackerleytng@google.com> writes:
+>
+>>
+>> [...snip...]
+>>
+>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>> index 23ec0b0c3e22..26e80745c8b4 100644
+>> --- a/Documentation/virt/kvm/api.rst
+>> +++ b/Documentation/virt/kvm/api.rst
+>> @@ -117,7 +117,7 @@ description:
+>>        x86 includes both i386 and x86_64.
+>>
+>>    Type:
+>> -      system, vm, or vcpu.
+>> +      system, vm, vcpu or guest_memfd.
+>>
+>>    Parameters:
+>>        what parameters are accepted by the ioctl.
+>> @@ -6523,11 +6523,22 @@ the capability to be present.
+>>  ---------------------------------
+>>
+>>  :Capability: KVM_CAP_MEMORY_ATTRIBUTES2
+>> -:Architectures: x86
+>> -:Type: vm ioctl
+>> +:Architectures: all
+>> +:Type: vm, guest_memfd ioctl
+>>  :Parameters: struct kvm_memory_attributes2 (in/out)
+>>  :Returns: 0 on success, <0 on error
+>>
+>> +Errors:
+>> +
+>> +  ========== ===============================================================
+>> +  EINVAL     The specified `offset` or `size` were invalid (e.g. not
+>> +             page aligned, causes an overflow, or size is zero).
+>> +  EFAULT     The parameter address was invalid.
+>> +  EAGAIN     Some page within requested range had unexpected refcounts. The
+>> +             offset of the page will be returned in `error_offset`.
+>> +  ENOMEM     Ran out of memory trying to track private/shared state
+      EOPNOTSUPP The specified content policy is not supported while
+                 setting the requested attribute
+>> +  ========== ===============================================================
+>> +
+>>  KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
+>>  KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
+>>  userspace.  The original (pre-extension) fields are shared with
+>> @@ -6538,15 +6549,42 @@ Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
+>>  ::
+>>
+>>    struct kvm_memory_attributes2 {
+>> -	__u64 address;
+>> +	/* in */
+>> +	union {
+>> +		__u64 address;
+>> +		__u64 offset;
+>> +	};
+>>  	__u64 size;
+>>  	__u64 attributes;
+>>  	__u64 flags;
+>> -	__u64 reserved[12];
+>> +	/* out */
+>> +	__u64 error_offset;
+>> +	__u64 reserved[11];
+>>    };
+>>
+>>    #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
+>>
+>> +Set attributes for a range of offsets within a guest_memfd to
+>> +KVM_MEMORY_ATTRIBUTE_PRIVATE to limit the specified guest_memfd backed
+>> +memory range for guest_use. Even if KVM_CAP_GUEST_MEMFD_MMAP is
+>> +supported, after a successful call to set
+>> +KVM_MEMORY_ATTRIBUTE_PRIVATE, the requested range will not be mappable
+>> +into host userspace and will only be mappable by the guest.
+>> +
+>> +To allow the range to be mappable into host userspace again, call
+>> +KVM_SET_MEMORY_ATTRIBUTES2 on the guest_memfd again with
+>> +KVM_MEMORY_ATTRIBUTE_PRIVATE unset.
+>> +
+>> +If this ioctl returns -EAGAIN, the offset of the page with unexpected
+>> +refcounts will be returned in `error_offset`. This can occur if there
+>> +are transient refcounts on the pages, taken by other parts of the
+>> +kernel.
+>> +
+>> +Userspace is expected to figure out how to remove all known refcounts
+>> +on the shared pages, such as refcounts taken by get_user_pages(), and
+>> +try the ioctl again. A possible source of these long term refcounts is
+>> +if the guest_memfd memory was pinned in IOMMU page tables.
+>> +
 
-Thanks,
+Memory *content* policies can be requested while setting memory
+attributes. This defines:
 
-> ---
-> Changes since v1: https://lore.kernel.org/all/20260303214942.587739736@kernel.org/
-> 
-> - Updated to have the print processing in kernel/futex/syscall.c
-> 
->  include/linux/futex.h         |  35 ++++++++-
->  kernel/futex/syscalls.c       |  48 ++++++-------
->  kernel/trace/trace_syscalls.c | 129 +++++++++++++++++++++++++++++-----
->  3 files changed, 164 insertions(+), 48 deletions(-)
-> 
-> diff --git a/include/linux/futex.h b/include/linux/futex.h
-> index 9fc47aa01a8b..976fa257ab5c 100644
-> --- a/include/linux/futex.h
-> +++ b/include/linux/futex.h
-> @@ -82,8 +82,35 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
->  	      u32 __user *uaddr2, u32 val2, u32 val3);
->  int futex_hash_prctl(unsigned long arg2, unsigned long arg3, unsigned long arg4);
->  
-> +static __always_inline bool futex_cmd_has_timeout(u32 cmd)
-> +{
-> +	switch (cmd) {
-> +	case FUTEX_WAIT:
-> +	case FUTEX_LOCK_PI:
-> +	case FUTEX_LOCK_PI2:
-> +	case FUTEX_WAIT_BITSET:
-> +	case FUTEX_WAIT_REQUEUE_PI:
-> +		return true;
-> +	}
-> +	return false;
-> +}
-> +
-> +static __always_inline bool futex_cmd_has_addr2(u32 cmd)
-> +{
-> +	switch (cmd) {
-> +	case FUTEX_REQUEUE:
-> +	case FUTEX_CMP_REQUEUE:
-> +	case FUTEX_WAKE_OP:
-> +	case FUTEX_WAIT_REQUEUE_PI:
-> +		return true;
-> +	}
-> +	return false;
-> +}
-> +
->  #ifdef CONFIG_FTRACE_SYSCALLS
-> -void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u32 *ptr);
-> +void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
-> +			 u32 *ptr1, u32 *ptr2, unsigned long *ts1,
-> +			 unsigned long *ts2);
->  #endif
->  
->  #ifdef CONFIG_FUTEX_PRIVATE_HASH
-> @@ -119,7 +146,11 @@ static inline int futex_hash_allocate_default(void)
->  static inline int futex_hash_free(struct mm_struct *mm) { return 0; }
->  static inline int futex_mm_init(struct mm_struct *mm) { return 0; }
->  static inline void futex_print_syscall(struct seq_buf *s, int nr_args,
-> -				       unsigned long *args, u32 *ptr) { }
-> +				       unsigned long *args, u32 *ptr1,
-> +				       u32 *ptr2, unsigned long *ts1,
-> +				       unsigned long *ts2) { }
-> +static __always_inline bool futex_cmd_has_timeout(u32 cmd) { return false; }
-> +static __always_inline bool futex_cmd_has_addr2(u32 cmd) { return false; }
->  #endif
->  
->  #endif
-> diff --git a/kernel/futex/syscalls.c b/kernel/futex/syscalls.c
-> index a1cd512aa502..a46706d6bc6c 100644
-> --- a/kernel/futex/syscalls.c
-> +++ b/kernel/futex/syscalls.c
-> @@ -158,31 +158,6 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
->  	return -ENOSYS;
->  }
->  
-> -static __always_inline bool futex_cmd_has_timeout(u32 cmd)
-> -{
-> -	switch (cmd) {
-> -	case FUTEX_WAIT:
-> -	case FUTEX_LOCK_PI:
-> -	case FUTEX_LOCK_PI2:
-> -	case FUTEX_WAIT_BITSET:
-> -	case FUTEX_WAIT_REQUEUE_PI:
-> -		return true;
-> -	}
-> -	return false;
-> -}
-> -
-> -static __always_inline bool futex_cmd_has_addr2(u32 cmd)
-> -{
-> -	switch (cmd) {
-> -	case FUTEX_REQUEUE:
-> -	case FUTEX_CMP_REQUEUE:
-> -	case FUTEX_WAKE_OP:
-> -	case FUTEX_WAIT_REQUEUE_PI:
-> -		return true;
-> -	}
-> -	return false;
-> -}
-> -
->  static __always_inline int
->  futex_init_timeout(u32 cmd, u32 op, struct timespec64 *ts, ktime_t *t)
->  {
-> @@ -229,7 +204,9 @@ static const char * __futex_cmds[] =
->  	"FUTEX_LOCK_PI2",
->  };
->  
-> -void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u32 *ptr)
-> +void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
-> +			 u32 *ptr1, u32 *ptr2, unsigned long *ts1,
-> +			 unsigned long *ts2)
->  {
->  	unsigned int op, cmd;
->  	bool done = false;
-> @@ -242,8 +219,8 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u3
->  		switch (i) {
->  		case 0:
->  			seq_buf_printf(s, "uaddr: 0x%lx", args[i]);
-> -			if (ptr) {
-> -				u32 val = *ptr;
-> +			if (ptr1) {
-> +				u32 val = *ptr1;
->  				if (val < 10)
->  					seq_buf_printf(s, " (%u)", val);
->  				else
-> @@ -279,6 +256,15 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u3
->  				continue;
->  
->  			seq_buf_printf(s, ", timespec: 0x%lx", args[i]);
-> +
-> +			if (!ts1 || !ts2)
-> +				continue;
-> +
-> +			if (!*ts1 && !*ts2) {
-> +				seq_buf_puts(s, " (0)");
-> +				continue;
-> +			}
-> +			seq_buf_printf(s, " (%lu.%09lu)", *ts1, *ts2);
->  			continue;
->  		case 4:
->  			if (!futex_cmd_has_addr2(cmd)) {
-> @@ -286,6 +272,12 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u3
->  				continue;
->  			}
->  			seq_buf_printf(s, ", uaddr2: 0x%lx", args[i]);
-> +
-> +			if (!ptr2)
-> +				continue;
-> +
-> +			seq_buf_printf(s, " (%x)", *ptr2);
-> +
->  			continue;
->  		case 5:
->  			seq_buf_printf(s, ", val3: %lu", args[i]);
-> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-> index 8cb3af569157..de1fa97547a3 100644
-> --- a/kernel/trace/trace_syscalls.c
-> +++ b/kernel/trace/trace_syscalls.c
-> @@ -239,21 +239,35 @@ sys_enter_openat_print(struct syscall_trace_enter *trace, struct syscall_metadat
->  	return trace_handle_return(s);
->  }
->  
-> +struct futex_data {
-> +	u32		val1;
-> +	u32		val2;
-> +	unsigned long	ts1;
-> +	unsigned long	ts2;
-> +};
-> +
->  static enum print_line_t
->  sys_enter_futex_print(struct syscall_trace_enter *trace, struct syscall_metadata *entry,
->  		      struct trace_seq *s, struct trace_event *event, int ent_size)
->  {
-> +	struct futex_data *data;
->  	void *end = (void *)trace + ent_size;
-> -	void *ptr;
-> +	unsigned long *ts1 = NULL, *ts2 = NULL;
-> +	u32 *ptr1 = NULL, *ptr2 = NULL;
->  
->  	/* Set ptr to the user space copied area */
-> -	ptr = (void *)trace->args + sizeof(unsigned long) * entry->nb_args;
-> -	if (ptr + 4 > end)
-> -		ptr = NULL;
-> +	data = (void *)trace->args + sizeof(unsigned long) * entry->nb_args;
-> +	if ((void *)data + sizeof(*data) <= end) {
-> +		ptr1 = &data->val1;
-> +		ptr2 = &data->val2;
-> +		ts1 = &data->ts1;
-> +		ts2 = &data->ts2;
-> +	}
->  
->  	trace_seq_printf(s, "%s(", entry->name);
->  
-> -	futex_print_syscall(&s->seq, entry->nb_args, trace->args, ptr);
-> +	futex_print_syscall(&s->seq, entry->nb_args, trace->args, ptr1, ptr2,
-> +			    ts1, ts2);
->  
->  	trace_seq_puts(s, ")\n");
->  
-> @@ -472,9 +486,9 @@ sys_enter_futex_print_fmt(struct syscall_metadata *entry, char *buf, int len)
->  	pos += snprintf(buf + pos, LEN_OR_ZERO,
->  			"\"uaddr: 0x%%lx (0x%%lx) cmd=%%s%%s%%s");
->  	pos += snprintf(buf + pos, LEN_OR_ZERO,
-> -			"  val: 0x%%x timeout/val2: 0x%%llx");
-> +			"  val: 0x%%x timeout/val2: 0x%%llx (%%lu.%%lu)");
->  	pos += snprintf(buf + pos, LEN_OR_ZERO,
-> -			" uaddr2: 0x%%lx val3: 0x%%x\", ");
-> +			" uaddr2: 0x%%lx (0x%%lx) val3: 0x%%x\", ");
->  
->  	pos += snprintf(buf + pos, LEN_OR_ZERO,
->  			" REC->uaddr,");
-> @@ -520,10 +534,12 @@ sys_enter_futex_print_fmt(struct syscall_metadata *entry, char *buf, int len)
->  			FUTEX_CLOCK_REALTIME);
->  
->  	pos += snprintf(buf + pos, LEN_OR_ZERO,
-> -			" REC->val, REC->utime,");
-> +			" REC->val, REC->utime, REC->__ts1, REC->__ts2,");
->  
->  	pos += snprintf(buf + pos, LEN_OR_ZERO,
-> -			" REC->uaddr, REC->val3");
-> +			" REC->uaddr,");
-> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
-> +			" REC->__value2, REC->val3");
->  	return pos;
->  }
->  
-> @@ -626,7 +642,39 @@ static int __init futex_fields(struct trace_event_call *call, int offset)
->  	ret = trace_define_field(call, "u32", arg, offset, sizeof(int), 0,
->  				 FILTER_OTHER);
->  	if (ret)
-> -		kfree(arg);
-> +		goto free;
-> +	offset += sizeof(int);
-> +
-> +	arg = kstrdup("__value2", GFP_KERNEL);
-> +	if (WARN_ON_ONCE(!arg))
-> +		return -ENOMEM;
-> +	ret = trace_define_field(call, "u32", arg, offset, sizeof(int), 0,
-> +				 FILTER_OTHER);
-> +	if (ret)
-> +		goto free;
-> +	offset += sizeof(int);
-> +
-> +	arg = kstrdup("__ts1", GFP_KERNEL);
-> +	if (WARN_ON_ONCE(!arg))
-> +		return -ENOMEM;
-> +	ret = trace_define_field(call, "unsigned long", arg, offset,
-> +				 sizeof(unsigned long), 0, FILTER_OTHER);
-> +	if (ret)
-> +		goto free;
-> +	offset += sizeof(long);
-> +
-> +	arg = kstrdup("__ts2", GFP_KERNEL);
-> +	if (WARN_ON_ONCE(!arg))
-> +		return -ENOMEM;
-> +	ret = trace_define_field(call, "unsigned long", arg, offset,
-> +				 sizeof(unsigned long), 0, FILTER_OTHER);
-> +	if (ret)
-> +		goto free;
-> +
-> +	return 0;
-> +
-> +free:
-> +	kfree(arg);
->  	return ret;
->  }
->  
-> @@ -799,11 +847,51 @@ static int syscall_copy_user_array(char *buf, const char __user *ptr,
->  	return 0;
->  }
->  
-> +struct tp_futex_data {
-> +	u32			cmd;
-> +	const u32		__user *val1;
-> +	const u32 		__user *val2;
-> +	void			__user *timeout;
-> +};
-> +
-> +static int syscall_copy_futex(char *buf, const char __user *ptr,
-> +			      size_t size, void *data)
-> +{
-> +	struct tp_futex_data *tp_data = data;
-> +	struct futex_data *fdata = (void *)buf;
-> +	int cmd = tp_data->cmd & FUTEX_CMD_MASK;
-> +	int ret;
-> +
-> +	memset(fdata, 0, sizeof(*fdata));
-> +
-> +	if (tp_data->val1) {
-> +		ret = __copy_from_user(&fdata->val1, tp_data->val1, 4);
-> +		if (ret)
-> +			return -1;
-> +	}
-> +
-> +	if (tp_data->val2 && futex_cmd_has_addr2(cmd)) {
-> +		ret = __copy_from_user(&fdata->val2, tp_data->val2, 4);
-> +		if (ret)
-> +			return -1;
-> +	}
-> +
-> +	if (tp_data->timeout && futex_cmd_has_timeout(cmd)) {
-> +		/* Copies both ts1 and ts2 */
-> +		ret = __copy_from_user(&fdata->ts1, tp_data->timeout,
-> +				       sizeof(long) * 2);
-> +		if (ret)
-> +			return -1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int
->  syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
->  {
->  	struct syscall_user_buffer *sbuf;
-> -	const char __user *ptr;
-> +	struct tp_futex_data tp_data;
->  	char *buf;
->  
->  	/* buf_size of zero means user doesn't want user space read */
-> @@ -815,14 +903,18 @@ syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
->  	if (!sbuf)
->  		return -1;
->  
-> -	ptr = (char __user *)args[0];
-> +	tp_data.cmd = args[1];
-> +	tp_data.val1 = (u32 __user *)args[0];
-> +	tp_data.val2 = (u32 __user *)args[4];
-> +	tp_data.timeout = (u64 __user *)args[3];
->  
-> -	*buffer = trace_user_fault_read(&sbuf->buf, ptr, 4, NULL, NULL);
-> +	*buffer = trace_user_fault_read(&sbuf->buf, NULL, 0,
-> +					syscall_copy_futex, &tp_data);
->  	if (!*buffer)
->  		return -1;
->  
-> -	/* Add room for the value */
-> -	*size += 4;
-> +	/* Add room for values */
-> +	*size += sizeof(struct futex_data);
->  
->  	buf = *buffer;
->  
-> @@ -833,12 +925,13 @@ static void syscall_put_futex(struct syscall_metadata *sys_data,
->  			      struct syscall_trace_enter *entry,
->  			      char *buffer)
->  {
-> -	u32 *ptr;
-> +	struct futex_data *fdata = (void *)buffer;
-> +	struct futex_data *data;
->  
->  	/* Place the futex key into the storage */
-> -	ptr = (void *)entry->args + sizeof(unsigned long) * sys_data->nb_args;
-> +	data = (void *)entry->args + sizeof(unsigned long) * sys_data->nb_args;
->  
-> -	*ptr = *(u32 *)buffer;
-> +	*data = *fdata;
->  }
->  
->  static char *sys_fault_user(unsigned int buf_size,
-> -- 
-> 2.51.0
-> 
-> 
+  - What the host reads after a private to shared conversion
+  - What the guest reads after a shared to private conversion (if
+    applicable)
 
+The policy definitions below provide more details:
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+``KVM_SET_MEMORY_ATTRIBUTES2_CONTENT_POLICY_ZERO`` (default)
+
+  On a private to shared conversion, the host will read zeros from the
+  converted memory on the next fault after successful return of the
+  KVM_SET_MEMORY_ATTRIBUTES2 ioctl.
+
+  This is not supported (-EOPNOTSUPP) for a shared to private
+  conversion. While some CoCo implementations do zero memory contents
+  such that the guest reads zeros after conversion, the guest is not
+  expected to trust host-provided zeroing, hence as a UAPI policy, KVM
+  does not make any such guarantees.
+
+  For testing purposes, the KVM_X86_SW_PROTECTED_VM testing vehicle
+  will support this policy and ensure zeroing for conversions in both
+  directions.
+
+``KVM_SET_MEMORY_ATTRIBUTES2_CONTENT_POLICY_PRESERVE``
+
+  On private/shared conversions in both directions, memory contents
+  will be preserved and readable. As a concrete example, if the host
+  writes ``0xbeef`` to memory and converts the memory to shared, the
+  guest will also read ``0xbeef``, after any necessary hardware or
+  software provided decryption. After a reverse shared to private
+  conversion, the host will also read ``0xbeef``.
+
+  pKVM (ARM) is the first user of this policy. Since pKVM does not
+  protect memory with encryption, a content policy to preserve memory
+  will not will not involve any decryption. The guest will be able to
+  read what the host wrote with full content preservation.
+
+  For testing purposes, the KVM_X86_SW_PROTECTED_VM testing vehicle
+  will support this policy and the contents of converted memory will
+  be preserved.
+
+``KVM_SET_MEMORY_ATTRIBUTES2_CONTENT_POLICY_NONE``
+
+  This is an explicit request that KVM provide no guarantees on memory
+  contents after conversion. Neither host nor guest should expect any
+  guarantees about the memory contents after conversion.
+
+  For testing purposes, the KVM_X86_SW_PROTECTED_VM testing vehicle will
+  support this policy and every byte of converted memory will read
+  ``0xab``.
+
+>>  See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
+>>
+>
+> [...snip...]
+>
