@@ -1,252 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8413D9DAF;
-	Thu, 12 Mar 2026 23:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC272BEFFD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 23:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773359518; cv=none; b=fNk1DU3h9ZSUpFEgu4EgQaXIwht5hupHpqskzyjeN00MnCbgYHsjTqseHBsQMwpLLym2HEEo/zIhFORLD9MnNMwQftc3ZubXKXwlNZ4eUwTGAfotsRJW1gBZHISW22T+D8ZLrEnx0btLMLYVtC09QK15TzQns3CpAAwrzxxG6B0=
+	t=1773359677; cv=none; b=JXBSL3hZPqJeHVBNFmi5TzeuKvkpEQ2rBWjjlUaUgU0DlF9O0PVOV+IwVnG59m/FmQL8IKhOIQZZ5/OOzmUd0LBhsZ6xb8HwuC++RZdVy7D7U5yc3upcT7uBh5W3cghy4U3/aPfSA+uCPw7fap2P5AQFcIJi/bc8epAg281xdGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773359518; c=relaxed/simple;
-	bh=qD/7CdUR0FWQsy1MPlTTxVBHiQ9FN1ndBxO1HK0Fr3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hfcfSCj1UhOujdFWMiz4WxlK8uTa/cFmu39kBKV16EhdrhfTyM5b6v6hufoLxaPG5Z4+ZcJ+iPNaINn8CnGan9MPaXXV60zPPyZ/mxwPrefK6/gwpfkz5XvA0aAhhK76UsZgQByZN0tfztX+MZopv0FffVratixXAm7cVDm6DQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZNspkYo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773359677; c=relaxed/simple;
+	bh=wOUC16WI4/reo5GvoZO5ESmt8rfD7PE3++Xf9novjKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DH3q/FgspwQ2W/fOr+/mKHx/31FIRIHN473pHewOzDYMWQloM7V1gT341iXLkRYSKAidPt7qOpPUSvj0/DnehPckt/ojxXnJnoa2l5Q5pApB6YEeWDOoeHXbU2syqqm68ZVKH8U4x2Mx+OpDuEFfsIJW3Ap2R6+jTPLFvwyWifg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FS1W6xRy; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZNspkYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C61CC4CEF7;
-	Thu, 12 Mar 2026 23:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773359517;
-	bh=qD/7CdUR0FWQsy1MPlTTxVBHiQ9FN1ndBxO1HK0Fr3c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UZNspkYoKLw42etkuga7S8rATF+lLguXC6ojsSBBDb7AiOYPywY2WrZZELLNLK3cR
-	 /h4I4hFjhAb/UxzqOG7/2xC7OQM6O59c3PyIEWUU2qvYpc5L8xWeTj/hiywgG9xISD
-	 /nqtFoA0no+2aN12rv+vIj3SneQQ7F159NWyl1dtdj1M/FdxUwQJOFFVJp22NV2Lxd
-	 r5BDMhsilc/woqZa02OEzGTEiuiGBfJFo9g1ha945FZwNKa1wWt2oTvYMefHI/kXNW
-	 8bQHdHrVdmEq2VzG2XpoMX2t8pEjzpx2Pt0geuU2ygArByrT1NSBlGWLk90diJCo5M
-	 mJqL7A9jzz3hw==
-Date: Thu, 12 Mar 2026 16:51:53 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: maz@kernel.org, rostedt@goodmis.org, arnd@arndb.de,
-	linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	kernel-team@android.com
-Subject: Re: [PATCH] tracing: Generate undef symbols allowlist for
- simple_ring_buffer
-Message-ID: <20260312235153.GA1147071@ax162>
-References: <20260312182010.111013-1-vdonnefort@google.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FS1W6xRy"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b976e181895so2865666b.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 16:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1773359674; x=1773964474; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pkgvHL0resGmXTqRBi16uC1NxLEncxIx9i+VLjGIXAo=;
+        b=FS1W6xRyPzTb+AekkNw1gVm9VnIa3TB4UJb9VxJNQJZfj/AWAA4CzIpAWVJFxL+5EV
+         waFzjSeSv26gcfAk8NexfeYn3bYuMGjTUhDYuCMD+iUyEckh7Dj7vM/Eyuu9wBnCXXMh
+         xZpH91Y0or7Z1WrzzcykCs2amIBAR1kALjGXs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773359674; x=1773964474;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pkgvHL0resGmXTqRBi16uC1NxLEncxIx9i+VLjGIXAo=;
+        b=VdcCTqQ8R9LMpnFTGm8LKaXldRwUmzuRFxiLh+kdHFR7bITEOaKGhqvkO4qELHrVuG
+         oUVrdpUzIE5l2Ecc5Eweq9Wl2tVkRKd0ITzTTusqLb6zlP/jiVpU6V5rnD+NV+GFIEkk
+         6dWOX7DOrMOuZF2qgfc6hGF6pf6llpB37v0/N1ER6dmn+Wf57JfcyZdXiQWwxwqiKr3m
+         ceERS+b07iLXdT9rN0DcnbiLbwEjIfxIbMvXQ+64wgFwS/Wh+2eDL8pTKS9Z9B6Sfmbq
+         AidldrH9fZWPKAuayopC2yweI8memMeAgRO1wUHY5fludKYDaS8790/WeHobxLXRtE2K
+         fsXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTqr62RgblL3q+LE72g1dq+bE03hTzKWb/PB9LvcVJlWP7GkCyy2ZAivbsg0Cz6RBxmHxVBFawDqjsoF92q4vjUvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMriF/x4erClN+lASHLHu2fGXObzgzQ/VgywRJg55M5rL8xFT8
+	GlXqacOOu8micWQ0JDNyUpk9msZzIDgpm0gutKsdD1MOuIGYSIuhCmohcXErOuu8AmBovyJgphz
+	CoC8azF4=
+X-Gm-Gg: ATEYQzwoLGCiePFHgtLdleHAVzDepqfRqgCURZyQE3ODMABr0qGYukb6wBztNWgek9q
+	pOm92grT95u0D+09vsrIBLizKIXvuAbpC9AjssIzp1HiD8+fAueQnirZiq4jf62G7+l4mIkLOOm
+	BcxqSomXBtxW0BJ++9h8Ekue6Me7fidwDMMode0+4ukoBR/jyby5FzwqWMpwLVGlM580E6auKyz
+	LCfsTdke4vmwO9VrcQf43rJr4Wm+3SNWtM4sRVKFNbIUEgm6y89oTwRMEPOGfwtQPuqeBWo6Z/s
+	47vwXl95trR1lzEg+t46XewtX/4QMPRuyrkVqxU6we03sUZ9PATw1yymC0yHKxTLfzBcemWwjTL
+	oXsd7DIAjjntZwJ8gS2zWwbO0TrcZzIeLmuN4xPjzhKQnVogaRYPlmlUoxPFY9ek8ehDu0iqEyG
+	hS3MiIKrbc08cpzus7cBxMRaHd/9mopZFFPlRzO/DmKIdpm92nWyOIAbdXd5DU8bNO2a7dFUpO
+X-Received: by 2002:a17:907:a42:b0:b97:17b7:d8eb with SMTP id a640c23a62f3a-b9765392026mr68146166b.38.1773359674355;
+        Thu, 12 Mar 2026 16:54:34 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b976d0b5886sm2994166b.65.2026.03.12.16.54.34
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2026 16:54:34 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b96f02b4329so272658566b.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 16:54:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXSI57+F0LwlnHrDK8Nx+Pw5TdDqxpx+pdtOj2BRIJh+01MYj8rQzVb4JEz4er4ZuKZ4rFo3U15uVBoS/7ZyxLL10M=@vger.kernel.org
+X-Received: by 2002:a17:907:c5c9:b0:b96:d802:8b41 with SMTP id
+ a640c23a62f3a-b9764fd8722mr66207066b.15.1773359215961; Thu, 12 Mar 2026
+ 16:46:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260312182010.111013-1-vdonnefort@google.com>
+References: <20260312214330.3885211-1-neilb@ownmail.net>
+In-Reply-To: <20260312214330.3885211-1-neilb@ownmail.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 12 Mar 2026 16:46:39 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh92deXvH5iXCo9mThXCBYt-jRcVu=z4kiH-f3+wZQOHA@mail.gmail.com>
+X-Gm-Features: AaiRm503fTaccEgKNbxF9h_dDHM9fUsSr52XJuxzTwCI0G9L03uDq8g5di1zchk
+Message-ID: <CAHk-=wh92deXvH5iXCo9mThXCBYt-jRcVu=z4kiH-f3+wZQOHA@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/53] lift lookup out of exclive lock for dir ops
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Carlos Maiolino <cem@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>, 
+	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+	Steve French <sfrench@samba.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Breno Leitao <leitao@debian.org>, "Theodore Ts'o" <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, 
+	Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, Tyler Hicks <code@tyhicks.com>, 
+	Andreas Gruenbacher <agruenba@redhat.com>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel <ardb@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, coda@cs.cmu.edu, linux-mm@kvack.org, 
+	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, ceph-devel@vger.kernel.org, 
+	ecryptfs@vger.kernel.org, gfs2@lists.linux.dev, linux-um@lists.infradead.org, 
+	linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Vincent,
+On Thu, 12 Mar 2026 at 14:44, NeilBrown <neilb@ownmail.net> wrote:
+>
+> This patch set progresses my effort to improve concurrency of
+> directory operations and specifically to allow concurrent updates
+> in a given directory.
 
-On Thu, Mar 12, 2026 at 06:20:10PM +0000, Vincent Donnefort wrote:
-> Compiler and tooling-generated symbols are difficult to maintain
-> across all supported architectures. Make the allowlist more robust by
-> replacing the harcoded list with a mechanism that automatically detects
-> these symbols.
-> 
-> This mechanism generates a C function designed to trigger common
-> compiler-inserted symbols.
+I only got about half the patches, but the ones I did get didn't raise
+my hackles.
 
-This certainly seems more robust.
+HOWEVER.
 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index beb15936829d..3b427b76434a 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -136,17 +136,37 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
->  # simple_ring_buffer is used by the pKVM hypervisor which does not have access
->  # to all kernel symbols. Fail the build if forbidden symbols are found.
->  #
-> -UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
-> -UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer llvm_gcda llvm_gcov
-> -UNDEFINED_ALLOWLIST += .TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
-> -UNDEFINED_ALLOWLIST += ftrace_likely_update __hwasan_load __hwasan_store __hwasan_tag_memory
-> -UNDEFINED_ALLOWLIST += warn_bogus_irq_restore __stack_chk_guard
-> -UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
-> +# undefsyms_base generates a set of compiler and tooling-generated symbols that can
-> +# safely be ignored for simple_ring_buffer.
-> +#
-> +$(obj)/undefsyms_base.c: FORCE
-> +	$(Q)echo '#include <asm/page.h>' > $@
-> +	$(Q)echo '#include <asm/local.h>' >> $@
-> +	$(Q)echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);' >> $@
-> +	$(Q)echo 'void undefsyms_base(int n);' >> $@
-> +	$(Q)echo 'void undefsyms_base(int n) {' >> $@
-> +	$(Q)echo '	char buffer[256] = { 0 };' >> $@
-> +	$(Q)echo '	u32 u = 0;' >> $@
-> +	$(Q)echo '	memset((char * volatile)page, 8, PAGE_SIZE);' >> $@
-> +	$(Q)echo '	memset((char * volatile)buffer, 8, sizeof(buffer));' >> $@
-> +	$(Q)echo '	cmpxchg((u32 * volatile)&u, 0, 8);' >> $@
-> +	$(Q)echo '	WARN_ON(n == 0xdeadbeef);' >> $@
-> +	$(Q)echo '}' >> $@
+This is very much a "absolutely requires ACKs from Al" series. Al?
 
-This should use filechk, otherwise undefsyms_base.c will be regenerated
-every build, resulting in undefsyms_base.o being rebuilt every time.
+Also, because I only got about half the patches, and there's 53 of
+them total, I'd really like to see a git branch for something like
+this. It makes it easier to review for me, and I suspect it makes it
+easier for some of the test robots too.
 
-  $ make -skj"$(nproc)" ARCH=x86_64 mrproper allmodconfig kernel/trace/
+But again - this needs Al to look at it. Iirc he had some fundamental
+concern with the last version - hopefully now fixed, but ...
 
-  $ make -skj"$(nproc)" ARCH=x86_64 V=2 kernel/trace/
-  ...
-    CC      kernel/trace/undefsyms_base.o - due to: kernel/trace/undefsyms_base.c
-    NM      kernel/trace/simple_ring_buffer.o - due to target missing
-
-filechk_undefsyms_base = {                                              \
-	echo '$(pound)include <asm/page.h>';                            \
-	echo '$(pound)include <asm/local.h>';                           \
-	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);';       \
-	echo 'void undefsyms_base(int n);';                             \
-	echo 'void undefsyms_base(int n) {';                            \
-	echo '	char buffer[256] = { 0 };';                             \
-	echo '	u32 u = 0;';                                            \
-	echo '	memset((char * volatile)page, 8, PAGE_SIZE);';          \
-	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));';   \
-	echo '	cmpxchg((u32 * volatile)&u, 0, 8);';                    \
-	echo '	WARN_ON(n == 0xdeadbeef);';                             \
-	echo '}';                                                       \
-	}
-
-$(obj)/undefsyms_base.c: FORCE
-	$(call filechk,undefsyms_base)
-
-  $ make -skj"$(nproc)" ARCH=x86_64 mrproper allmodconfig kernel/trace/
-
-  $ make -skj"$(nproc)" ARCH=x86_64 V=2 kernel/trace/
-    GEN     Makefile - due to target is PHONY
-    DESCEND objtool
-    CALL    scripts/checksyscalls.sh - due to target is PHONY
-    INSTALL libsubcmd_headers
-    NM      kernel/trace/simple_ring_buffer.o - due to target missing
-
-> +clean-files += undefsyms_base.c
-> +targets += undefsyms_base.c
-
-I don't think this targets addition is necessary.
-
-> +$(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
-> +
-> +extra-y += undefsyms_base.o
-
-I think this should be
-
-  targets += undefsyms_base.o
-
-as extra-y is deprecated per Documentation/kbuild/makefiles.rst.
-
-> +UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sanitizer __tsan __ubsan __x86_indirect_thunk \
-> +		       $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
-
-With an allmodconfig + ThinLTO build, I still see:
-
-  $ cat allmod.config
-  CONFIG_GCOV_KERNEL=n
-  CONFIG_KASAN=n
-  CONFIG_LTO_CLANG_THIN=y
-
-  $ make -skj"$(nproc)" ARCH=x86_64 KCONFIG_ALLCONFIG=1 LLVM=1 mrproper allmodconfig kernel/trace/
-  Unexpected symbols in kernel/trace/simple_ring_buffer.o:
-                   U __fortify_panic
-                   U __write_overflow_field
-                   U simple_ring_buffer_commit
-                   U simple_ring_buffer_enable_tracing
-                   U simple_ring_buffer_init
-                   U simple_ring_buffer_reserve
-                   U simple_ring_buffer_reset
-                   U simple_ring_buffer_swap_reader_page
-                   U simple_ring_buffer_unload
-
-Something like:
-
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 48c415a0c7e4..0f9a6ce9abd9 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -142,13 +142,15 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
- filechk_undefsyms_base = {                                              \
- 	echo '$(pound)include <asm/page.h>';                            \
- 	echo '$(pound)include <asm/local.h>';                           \
-+	echo '$(pound)include <linux/string.h>';                        \
- 	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);';       \
--	echo 'void undefsyms_base(int n);';                             \
--	echo 'void undefsyms_base(int n) {';                            \
-+	echo 'void undefsyms_base(int n, void *ptr);';                  \
-+	echo 'void undefsyms_base(int n, void *ptr) {';                 \
- 	echo '	char buffer[256] = { 0 };';                             \
- 	echo '	u32 u = 0;';                                            \
- 	echo '	memset((char * volatile)page, 8, PAGE_SIZE);';          \
- 	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));';   \
-+	echo '	memcpy((void* volatile)ptr, buffer, sizeof(buffer));';  \
- 	echo '	cmpxchg((u32 * volatile)&u, 0, 8);';                    \
- 	echo '	WARN_ON(n == 0xdeadbeef);';                             \
- 	echo '}';                                                       \
---
-
-cures the first two. The simple_ring_buffer symbols are very odd...
-
-  $ llvm-nm kernel/trace/simple_ring_buffer.o | grep simple_ring_buffer
-  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_commit_845
-  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_enable_tracing_849
-  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_init_847
-  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_reserve_841
-  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_reset_846
-  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_swap_reader_page_837
-  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_unload_848
-  ---------------- t __export_symbol_simple_ring_buffer_commit
-  ---------------- t __export_symbol_simple_ring_buffer_enable_tracing
-  ---------------- t __export_symbol_simple_ring_buffer_init
-  ---------------- t __export_symbol_simple_ring_buffer_reserve
-  ---------------- t __export_symbol_simple_ring_buffer_reset
-  ---------------- t __export_symbol_simple_ring_buffer_swap_reader_page
-  ---------------- t __export_symbol_simple_ring_buffer_unload
-  ---------------- T simple_ring_buffer_commit
-                   U simple_ring_buffer_commit
-  ---------------- T simple_ring_buffer_enable_tracing
-                   U simple_ring_buffer_enable_tracing
-                   U simple_ring_buffer_init
-  ---------------- T simple_ring_buffer_init
-  ---------------- T simple_ring_buffer_init_mm
-  ---------------- T simple_ring_buffer_reserve
-                   U simple_ring_buffer_reserve
-  ---------------- T simple_ring_buffer_reset
-                   U simple_ring_buffer_reset
-                   U simple_ring_buffer_swap_reader_page
-  ---------------- T simple_ring_buffer_swap_reader_page
-                   U simple_ring_buffer_unload
-  ---------------- T simple_ring_buffer_unload
-  ---------------- T simple_ring_buffer_unload_mm
-
-This is LLVM IR bitcode at this stage, which could be messing things up.
-
-  $ file kernel/trace/simple_ring_buffer.o
-  kernel/trace/simple_ring_buffer.o: LLVM IR bitcode
-
-Maybe not worth thinking about too much and just adding it to the
-allowlist manually?
-
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 0f9a6ce9abd9..cb1ec50a8386 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -166,6 +166,7 @@ $(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
- targets += undefsyms_base.o
- 
- UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sanitizer __tsan __ubsan __x86_indirect_thunk \
-+		       simple_ring_buffer \
- 		       $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
- 
- quiet_cmd_check_undefined = NM      $<
---
-
-Cheers,
-Nathan
+                 Linus
