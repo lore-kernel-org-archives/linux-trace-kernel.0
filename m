@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC3926C3BD;
-	Thu, 12 Mar 2026 20:00:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701CE2C17A0;
+	Thu, 12 Mar 2026 20:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773345636; cv=none; b=jZOCpZfTrK7VmJHu/6V+4AmarL3ieA08yv9evZf4lcq7vjQ+gkupn+fvgITawH+kRvSzQUCaB9Q0QP6ZUFTEriTviTMQ0ucPpdnaphJ5zAxyR3aZka+79wsGoHHn7GyD/mp7mjPwe970XbGMhp+IYeXR+WvuGoKBwYztS8r20Vg=
+	t=1773345926; cv=none; b=alkyXav75r9eMd2gQ5hkU6QnYj8xV7T2vnZuPCovy8AUe97oJMHZqTPoEJL68JSbsFezSw+kCq5XBEQ/Lh06KnKlgEuolO3Sy+K0IBRT+vA0+yHBpKl1FLjZwO/40Bx6YrhJ2k5egxvAd299fUghQ8gDtSplf9MSgVRL4CtdMrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773345636; c=relaxed/simple;
-	bh=X2l3L12LE/Ap7HQkaYJkOvMdZnPgyASN/c+AER2mf9E=;
+	s=arc-20240116; t=1773345926; c=relaxed/simple;
+	bh=TKrYFGOjRsvMAxAukqQ/oXF7qrP1ca6vGO7fAHdp7ZI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QM4gU5KhnEkcTcnp+VS3+D8tIVYeDCu5UKPEtagVfkHET75kqk1VmBY+Jfp4WmE1vTkMYEEbLWYgkj9ipn5VTs9UZ49qtt6Okbl+KEuwzXJqm3S09SEEEpgLnG/lvfDoMHpn8cwsibQFJT15SkLzzLKZZ6spXuV1ePvLOmnOieo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/jQTOKg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NYfGca8cvlY4U9pvQPqfzybaHdE5IEkmxoNLW6U/BXYjkmctgfuK/1CRWLeveUWdmxcToFWP3TloEII1vipdoFchVwB7DPl4r0wkqgvtHUnkSvbfxOrha1CTHsN3bTxnZlfHgaMX+3p9SihZcjzB9fiLTWGActRPEDcwkHLGjeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nE67XPBA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/jQTOKg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97DC5C4CEF7;
-	Thu, 12 Mar 2026 20:00:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nE67XPBA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C30CC4CEF7;
+	Thu, 12 Mar 2026 20:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773345636;
-	bh=X2l3L12LE/Ap7HQkaYJkOvMdZnPgyASN/c+AER2mf9E=;
+	s=k20201202; t=1773345926;
+	bh=TKrYFGOjRsvMAxAukqQ/oXF7qrP1ca6vGO7fAHdp7ZI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A/jQTOKgGFuThlP6+bZiGnH9sHDS1JnpOiQ6X0m7ngr4C2WF4YRSdRx/V86yEsVZq
-	 wxqr/bWVL8FMrj7J/DK3x9QSz7wR7kMbql9f1kBSCiKQPSqzkeVafoJ+up3YN92hra
-	 lzImPhac4DRueo6ihfiJ8oCxajHO2joXO/HpbLCHWlYQdmQrtdoMJOOJQnRPvdpd+X
-	 UmI3LAkJR+tyNRtUy8YnnSeE0PSdHA+GiRjimIkRk4l89zXQynD8PbNWRalVQN8Cs6
-	 5BJOtk/DnPWCVSKPUMWkVuNJIiIFnajvIrmEOFi9fx4LyE9d6wIrXoWcJOgCBjKV9h
-	 veyJx/83NIIsw==
-Message-ID: <8487a99b-efc7-4e7a-9e24-1cfa705a586d@kernel.org>
-Date: Thu, 12 Mar 2026 21:00:20 +0100
+	b=nE67XPBA7vjZW0whcqJr6w1GSmX9V6Ku9FUqgFH00BwXvNGmdQMnHvvoKpEh4r5r/
+	 X9hObAopEkZBinjHsbBEq0jcDIEpkQMRSapqZlUrgtrjBz0s8mqbqQSFdzlI91qp4/
+	 W7yxa2aQWPeUacEmmTgqKlUrnvK8mD7CkZoURXMymRGo90IKwD88CbbuzqFB2LYquY
+	 0a8c56YQKwT0iPEGFIqOEq/f0GwpzCNpIcIAEMHDjKzCgtMO3OliI56LI6o1Ynnqop
+	 8yjiBbnHCAEZ8VbWToSgcLqQ6KDvW0l0vQXWLSP3jDx9NH14XzHlBD91PobwzILqTi
+	 0v84HgsT52z0Q==
+Message-ID: <e4378d7d-2425-4cb9-b863-5a4cd1b85d83@kernel.org>
+Date: Thu, 12 Mar 2026 21:05:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v15 01/13] mm/khugepaged: generalize
- hugepage_vma_revalidate for mTHP support
+Subject: Re: [PATCH mm-unstable v15 02/13] mm/khugepaged: generalize
+ alloc_charge_folio()
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -59,7 +59,7 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
 References: <20260226031741.230674-1-npache@redhat.com>
- <20260226032217.232353-1-npache@redhat.com>
+ <20260226032326.232770-1-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -106,26 +106,24 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260226032217.232353-1-npache@redhat.com>
+In-Reply-To: <20260226032326.232770-1-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/26/26 04:22, Nico Pache wrote:
-> For khugepaged to support different mTHP orders, we must generalize this
-> to check if the PMD is not shared by another VMA and that the order is
-> enabled.
+On 2/26/26 04:23, Nico Pache wrote:
+> From: Dev Jain <dev.jain@arm.com>
 > 
-> No functional change in this patch. Also correct a comment about the
-> functionality of the revalidation.
+> Pass order to alloc_charge_folio() and update mTHP statistics.
 > 
 > Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
 > Reviewed-by: Lance Yang <lance.yang@linux.dev>
 > Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 > Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> Co-developed-by: Nico Pache <npache@redhat.com>
 > Signed-off-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
