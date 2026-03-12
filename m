@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830E840DFAB;
-	Thu, 12 Mar 2026 21:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCAD3C3450;
+	Thu, 12 Mar 2026 21:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773350386; cv=none; b=RiHUUubsXVzt8Kr10y0lLoT0p8bT/1zJJix8A4vR6IXIt+A+i4FqRrclcvEpUWx+Ul1eLFr0+6b0MHcY2UdSTGICdRmTy6f9Ls7N3voeuoaeUrk4n6hSt5p7YLo1RQPyCY3BMtuQkHbt8UVpUoJfjxEfYfnGqcnBe1e9+bIB+uI=
+	t=1773350556; cv=none; b=twTqtA9bliE1lVYynRK9cVlMH2crURnvdxs/1nUZMVTx85JSNJgNiH5XPBjAiT8AJMbEhTWWQ6kJkvBGl2IXCaxz/5JXy+ZcH6FplY6udlGuYSzLGGb96BYhJVGwV/+RajbMxmNm1NttpMOO0gOUSuHoBHEi/cToT+HXshcNZC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773350386; c=relaxed/simple;
-	bh=b/n1AB5/3Poo0rQsSnXTnJrEIrDJtXE5V+mRQh+spI4=;
+	s=arc-20240116; t=1773350556; c=relaxed/simple;
+	bh=vXrfk40UtZbX0SqCHHqsOdP16LoMR78nLHdRm76+ZlE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UPbuqD9xKFxdvtv0zizcJT5fWfhmcXjMzJ1KWxMVp6+A3JQB+FvMq9zDGQiZa+BywPlYrR2YVMgP6HCsD6/9AQ/cvA0He1CQ+3lZsM7kb9sApLK9j9+Tl2Yt9rMn4Cvm9CerC6u417P4MoKdOagxAZvsvvlrtiJS6WgNm7a0IEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAmgV2ar; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cXlooCKOdjYzuuLD30L7vKsH11UT7D29NZGLqZS47nyHgyt4OFf56EzXP/GXJePVOCMVze7Durk0z3Ht2/LLMpsmqGBzOnEjG5an0fqmI6bwxrBBa59/Bak4k4Sjx8e+zTqmkiiKbnsVivufOlGJK7IYIO1uwBUpqWqn6pMwl34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mro02dO+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAmgV2ar"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CE64C4CEF7;
-	Thu, 12 Mar 2026 21:19:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mro02dO+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0807C4CEF7;
+	Thu, 12 Mar 2026 21:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773350386;
-	bh=b/n1AB5/3Poo0rQsSnXTnJrEIrDJtXE5V+mRQh+spI4=;
+	s=k20201202; t=1773350555;
+	bh=vXrfk40UtZbX0SqCHHqsOdP16LoMR78nLHdRm76+ZlE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oAmgV2arw8JwtUgPzmUkQXEI7qwOzfCbG1n6XzBr808nXkT+OTjcRoZGUbQVs225r
-	 9oL/+sG4BcrmV3hycYoRG47G00JbqB8hTMHM0ptNJU7mjsuefL4tvMRzuId6W14LfC
-	 IhC3XdsJFW4ICAXdSYDHW57MGspUq0ZIKv9UDCO2lWLUNOBuhtz5raqUE/EXj07yKw
-	 lSTutMzLLYbUh0c0Tgi5w3ADbIccOK0ATm2IM7ZQRhFJKmmxtB8JJh2aueu/1QEbET
-	 doHY7gQJmOOlG2DNwXemCr96moZ7CqMMX0kfhuAXOVJR/pnLfkaz6t22RHEZ5xmisP
-	 wmCkSME14rwIQ==
-Message-ID: <ef97dc96-2525-4694-aaea-34ef67a05caa@kernel.org>
-Date: Thu, 12 Mar 2026 22:19:27 +0100
+	b=Mro02dO+YyFgDnaGXuPbgLN5GgvpSjomBgjxPOEDX8QhxT0RJ7M5QeY7EQTFblHwn
+	 +jQLoHj3heOq50guPlmWTSueQqnadlOF0cjmjDAJAeoZ0IwvheYmgnDA9AfZMPvK8A
+	 kLLNXq/lTRvjded7buEA4WfHzkiiksMRkdp37DEyve9lxrJtWc3YQ4GBaczagMg79u
+	 UJI21S55B02VO2qlDVdoypuBc7vsHK4YIZjDjvtmovRH2N1Ex3nEjvR7ZlKeEUXoiG
+	 OWeMTrLJKxZIWdaij9GFkwu0sovQMmaDh8ICqasn3ISfKMJqzY2KHFpZiUgxabqhXI
+	 vwvPREQtBRXOQ==
+Message-ID: <b001eb8e-3e12-4713-aff5-8cfcfea792e6@kernel.org>
+Date: Thu, 12 Mar 2026 22:22:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v15 11/13] mm/khugepaged: avoid unnecessary
- mTHP collapse attempts
+Subject: Re: [PATCH mm-unstable v15 12/13] mm/khugepaged: run khugepaged for
+ all orders
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -59,7 +59,7 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
 References: <20260226031741.230674-1-npache@redhat.com>
- <20260226032631.234234-1-npache@redhat.com>
+ <20260226032650.234386-1-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -106,76 +106,33 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260226032631.234234-1-npache@redhat.com>
+In-Reply-To: <20260226032650.234386-1-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/26/26 04:26, Nico Pache wrote:
-> There are cases where, if an attempted collapse fails, all subsequent
-> orders are guaranteed to also fail. Avoid these collapse attempts by
-> bailing out early.
+> From: Baolin Wang <baolin.wang@linux.alibaba.com>
 > 
+> If any order (m)THP is enabled we should allow running khugepaged to
+> attempt scanning and collapsing mTHPs. In order for khugepaged to operate
+> when only mTHP sizes are specified in sysfs, we must modify the predicate
+> function that determines whether it ought to run to do so.
+> 
+> This function is currently called hugepage_pmd_enabled(), this patch
+> renames it to hugepage_enabled() and updates the logic to check to
+> determine whether any valid orders may exist which would justify
+> khugepaged running.
+> 
+> We must also update collapse_allowable_orders() to check all orders if
+> the vma is anonymous and the collapse is khugepaged.
+> 
+> After this patch khugepaged mTHP collapse is fully enabled.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 > Signed-off-by: Nico Pache <npache@redhat.com>
 > ---
->  mm/khugepaged.c | 35 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 1c3711ed4513..388d3f2537e2 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1492,9 +1492,42 @@ static int mthp_collapse(struct mm_struct *mm, unsigned long address,
->  			ret = collapse_huge_page(mm, collapse_address, referenced,
->  						 unmapped, cc, mmap_locked,
->  						 order);
-> -			if (ret == SCAN_SUCCEED) {
-> +
-> +			switch (ret) {
-> +			/* Cases were we continue to next collapse candidate */
-> +			case SCAN_SUCCEED:
->  				collapsed += nr_pte_entries;
-> +				fallthrough;
-> +			case SCAN_PTE_MAPPED_HUGEPAGE:
->  				continue;
-> +			/* Cases were lower orders might still succeed */
-> +			case SCAN_LACK_REFERENCED_PAGE:
-> +			case SCAN_EXCEED_NONE_PTE:
-> +			case SCAN_EXCEED_SWAP_PTE:
-> +			case SCAN_EXCEED_SHARED_PTE:
-> +			case SCAN_PAGE_LOCK:
-> +			case SCAN_PAGE_COUNT:
-> +			case SCAN_PAGE_LRU:
-> +			case SCAN_PAGE_NULL:
-> +			case SCAN_DEL_PAGE_LRU:
-> +			case SCAN_PTE_NON_PRESENT:
-> +			case SCAN_PTE_UFFD_WP:
-> +			case SCAN_ALLOC_HUGE_PAGE_FAIL:
-> +				goto next_order;
-> +			/* Cases were no further collapse is possible */
-> +			case SCAN_CGROUP_CHARGE_FAIL:
-> +			case SCAN_COPY_MC:
-> +			case SCAN_ADDRESS_RANGE:
-> +			case SCAN_NO_PTE_TABLE:
-> +			case SCAN_ANY_PROCESS:
-> +			case SCAN_VMA_NULL:
-> +			case SCAN_VMA_CHECK:
-> +			case SCAN_SCAN_ABORT:
-> +			case SCAN_PAGE_ANON:
-> +			case SCAN_PMD_MAPPED:
-> +			case SCAN_FAIL:
-> +			default:
-> +				return collapsed;
->  			}
->  		}
->  
 
-LGTM, but I do wonder, given that you have the "default" case, why spell
-out the ones that fall into the "default" category? I'd strip those
-
-/* For all other cases no futher collapse is possible */
-default:
-	return collapsed;
-
+Nothing jumped at me
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
