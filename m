@@ -1,79 +1,79 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D2236C0DC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 08:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA8A384242
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 08:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773390733; cv=pass; b=lAxaNxSGpH+JMMlMY6MG6unC+rTboq568EJWajbCabzAHxHhU+w97OU6vWUBzWmD8kNIJ00OELQGTaKAl5adZqlPDbs6WuHHt93m0EmVKw5S+xHhYKbS6Ywe5gptku/5hcdB+Hk+p0sFqiXGBNvnCGMpaEOAMrq7/mJd3wLs5fg=
+	t=1773390806; cv=pass; b=ZPUsJBHSWNzlcQ3nfdlEtHFi7oRiWIkAD56PWv6kptR65vhJ1nwR7AjBUVHOoHlTK1VN5iPtblcrJsaRL0HTM2g6O4LeayLdIyqmi2Yzm33i+LCWEIpTHt6aDIpd7MooJeSb4dJ0AREEDKb/7USfNJ1Qq1d8LmsQteixVP8+TlY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773390733; c=relaxed/simple;
-	bh=73CFgCEKHFJELY9UP5/RhebVFajDLrcQrE0lsXPbdIc=;
+	s=arc-20240116; t=1773390806; c=relaxed/simple;
+	bh=Nhlp+IHXNVySMgNUt1ii8X1l7FQ+Mw0ootJ8uYr949w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p2YbTeYjV9XBo3Nh81hhasHFf3BdU2Om53Phg1Dh6w/pXZ2Eq/XhRBFldkoYClgvIgbyzyKe50DI6prhbNSzYggQGYL4HSgT/Q0WaBtsgM7yzLwA4NrsnxcZ9as05YOAX9xsPaw9x8vZTufoeC8a44YTu5c0ltASeK45V1oqcMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nQJMmXtD; arc=pass smtp.client-ip=209.85.160.174
+	 To:Cc:Content-Type; b=b09S/aCG0KftYkPX2XGOQy9o+x7u+J186uiWN5ibJy/ANO1pMP8HDEUVM1dp7PglEs+ix+3eGwSrM13LuqRnWagIBPUEtD004MjupHbf2cT4qOENjCkyjE44bumRjcy0BbPkSGMWGxCx3QVCXnWrrLj5fH4R9beGbRqci8GBbKU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c9D/VzDW; arc=pass smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nQJMmXtD"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-509069a7a7fso391391cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 01:32:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773390731; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c9D/VzDW"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-5091ed02c54so295471cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 01:33:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773390804; cv=none;
         d=google.com; s=arc-20240605;
-        b=EatYob4Y/imSYDahfAoHmQ5IATQf215rlCBswjlEEO0e6VJjNwr6iLZsoYWP+vc7Eh
-         OTDJxZcAf1GlkHr5Snvj+OxsR7A/zdeYf8iFh1NHswgIBRo2BgUcHLgiLjDJbu7OYXcl
-         jWZYm5QlM5Q9lbMbEqgEjmJV3/jnpjL94+aw55JY96+U8ZcnpqMfLtK0YOYM8K+4IRhI
-         OGCJWRg4EDGhI33gA/CHxsmEkr4aWfCtnAsAovdGugkR0Few6Ln+VFjjIfPsFmlTBOuX
-         WNQL7pmCMAdiHyydLnu9oYyTnGU3xBnonbzYY8AiF0aeHUErrqABgCu5Skcwyw4Xi/bg
-         GIfw==
+        b=d5U9OilzSfu1LEX2TRE7C8M70B8F58132XvVh/ITf0Cf8QbzcASBNYf3obH/7nGwaV
+         N9HwUq2n8nWyeNBJQJHG4iQicQ5YUgULQFJ9ruu4JA7fgQ7yS+6CIK7LbGOQGbVhCJcY
+         B5qmP/uvXtgbzAiC2aoi7P5fi0/XWqpFY4mgPZ2UpqQiawYlOV3VNclitqXn8dILPW9s
+         4xHTwmfZy56OpQIIFIxk5TQTofk3PymSp6yeImpJvHe7c2gQhR9xdjZsmtS4LbMYOusW
+         Ajjz6anA0f3Muq5YbQE3EtmRk5+LUCFvURBQCpBNXzaMXhAFAlQMfeHgPywfZI+qe2KS
+         x6YA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=+ZginHenLFfV4BXN5/Mah3uAKtVZ/csIYirzOzG2w24=;
-        fh=5kM3C1tlatpRkNTgKyqbrL5z9js1kzJ2urB0JZSiMho=;
-        b=kTe+te8OdTYBI28tc6b5/pVeM2oSh266aTQup2AZl27+j+T80u5ZtaBazYs+7mGQn6
-         oyePFu2Y13Eiz7ukC9Ny7sZcCfBMvwHoj5pMp5QSpGQUuoXgxY3e5zCUrXgMqBayrlxf
-         gf8EjgiO9m5nW7USnNlkOC7H9Jbf93y7tMAt1d8gphHjCg9iMCDlTNqIvA4BqWC4jruS
-         u1PyW1nQNKIudjoFO0hESTLwn/bBJ7ambkoFFCrNZIp1IWJiGpk4X9eqZJOcCIcF+6y3
-         /ZqEkvxigT5vJXaZxnWfLwVP+5AAZEPzKkhfYRr038nzex3YhBeCkStSPRwNLv0vdQk3
-         Gq7w==;
+        bh=cD8HoG2tID/gH/E5EhaBddCA2irOciAAr3AbkzzwhPM=;
+        fh=OYNKFrC7TYZGK1kta5QB1u6WdXPzWzRBPs47nmZz600=;
+        b=jBYTxk6mFkAMJn7nMLAZdV6JsRecZpKTZ6pQFe2DvKkv1Mz58h6fmREa1HSfN9cKH/
+         7DpsKMdcEGUxgCjoXMfzIlEQ6Pnc6AJGnZQIJR2UKC+XD6kcilhcaRqyLYMWAooCa8Ig
+         RI8QJkbzp0R+9piTZ4K0OpOA8UDNmfbjwjGiVHW+5m2rl0KalPI+OlHxBobH9mfWYj1I
+         3HvQ10f9fh3fMkQZZR8vu3xK8V/HOtBJk9sg3EGq8SeNKZRvONheIyNd00UdAzlEQYJx
+         ARtM84cVh/WvjMb//pmEE0BWTefCTJk6SEfw8Phffl5Mw61ggyoCHReysZF2Cb1RPt8k
+         dzeA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773390731; x=1773995531; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773390804; x=1773995604; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+ZginHenLFfV4BXN5/Mah3uAKtVZ/csIYirzOzG2w24=;
-        b=nQJMmXtDeSbfqyR+LkB3F6MP0abezHJlWnsMbWoEcXY08iHzHCjQhwLMn8VR4iT2Be
-         G1UgMm5hGMR3gYMYgmgkeR25dFtszddTUZNA8KbWejU6Qg0bU6y5QU4ORGPkXuJSWgdL
-         qF0bNUYpsGBcQsDCD9VCFAx8lIRtDxgdSh9W9HQrqGJFElIOD/TzbthIFloS0wM57u0Z
-         quzVdUomwO1CWThAvGKXHVUhtRBgezKzUsbQRN2pRl9u8QU58pk9XVuVvuJUsevLO37B
-         /2oUkr+FqlOR2zNGSgeYYq3id7E/zCJFtLM+z9d6ojL5T/PvKBMvtY9I0pHKEDDVyg/a
-         +l9w==
+        bh=cD8HoG2tID/gH/E5EhaBddCA2irOciAAr3AbkzzwhPM=;
+        b=c9D/VzDWddEYOEl/qqVUn0JX68GdlzwfOfZhNhJj99a6H7e91FWh9KS7WWMiSTOJ8b
+         nJNLbmAgCGVi6yqHknAiKqS7tHdzpPuoU4hqpT7ICSwkITBVRVH47aE6wjtn9/wS4qz7
+         +G3QmyEuKp+YhXBCo1tYeoJ1gdVhtWIKiOTFE6vChvFB2yUbDIovAVDjsGf7JvFECERS
+         IjecdMlRYCnMceeO+uLt05Qzya7mh9ro7MyUGbvcVrLbIKtXDRwYNr8P5nR4+aLV+sGp
+         X0odav7G38PrPtzmMrlCejq1v+Yv/OYGDSG8WQ33bfLlwXhzLBzeUOZ01Fb20jQBEKnE
+         WIQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773390731; x=1773995531;
+        d=1e100.net; s=20251104; t=1773390804; x=1773995604;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+ZginHenLFfV4BXN5/Mah3uAKtVZ/csIYirzOzG2w24=;
-        b=Ui99C6ErpGaVy1uXghs21hMzns/gb2zj4RF3Qo7kZ0x1x1h0+5xG7YUS/MZ8T2PN3U
-         tZlu9gdQDbeOx6FlqjtPgnpMiO1FotXm9g0nk55xxwAga6g6Dun86FMc7TpZQsuVIKzS
-         p4GwmOlYbLiBf1UfwDUL3pkEHB6Z40d6qVygRY15R/Xfv+9LBT+aorj4G421JGCR7oUG
-         mm+1lIk7QgRlmGZVlsCLAaJhytEv32wU7RNnPiKPHHqjuXzOKLjKpNULRrHGEvrHL/F+
-         bMmRLtDYddsA7Xs85fVpXri8lTnKaU+2F0ZtTW/lZUszkfEANhKB6Dj0odOvJ/MrmrxB
-         Ozsg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4HYc9C9pewHOlEqy/jlDRfIeWM0D549FxNl2WGonfpHuPDAZSMaajqEZPUL/ICqvE57iQPbAV6jLwau4ziqkovSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywgy26zvmKVe6/Q7PcthKAsbA6wvj4jlIbbsnSG73LEk8eAnmQX
-	QYTBUD+jhwVYn0EO3hHSmIb79Jny2VzqXcccYCNqlkKO+iHSx/RZrRJe/W4LiHtPHoWsgdcSJpq
-	qRAH4JYWwfmpKdeCQGfnvSm8UNFwghGOY5IU2YCTu
-X-Gm-Gg: ATEYQzwx3k51ZFANZEs2LxQoGBubGhHEM7W/yWRvfpcdFFZpqt4f06sivBc69eWpuw2
-	e6D+YQt42ip9yTIWSLjiJDJduVyiZinBX9rqnMwR661H/+o9NebePw4glSt4ueZ4c90cvr8lHTx
-	fAbXHKV0L3LjVQyrIUrCfGV7RwUGO4NHylW6Oq+Tb1YdUwhzXWu5/hyhavfQ9XLv73+hMkIydov
-	B9dt65+mBFSYw9BGwo+mfQPh3Uq1WhRRsEmmy1sn5zkw4o4EkGMJvQ7BlQHSmO7NIFe3Swbdg2F
-	1qn08pjC
-X-Received: by 2002:a05:622a:58c:b0:506:9852:75ec with SMTP id
- d75a77b69052e-50959e1d20cmr8206111cf.9.1773390730313; Fri, 13 Mar 2026
- 01:32:10 -0700 (PDT)
+        bh=cD8HoG2tID/gH/E5EhaBddCA2irOciAAr3AbkzzwhPM=;
+        b=aCMnGwub2Pke7dnktqlG/TAFwqMVG/nU+wXb3LCdkdE+YiETDGM6pSx4Yf6QhaQa8H
+         9EY8Nl9FeXoG8Qeumy8N6hxrjlqlfMstA0gosSXGLOEXoPYau/bVUOZuwlPPug3TPeZM
+         1kplhSXWlDqfdm/H6RFgJx5Aul6TCKhPD7yC0rmWYNNfLgb5fWgvGfRXCNa0tOhRI2LO
+         9qQUj2mNRWLikUgxaSyJXf/4FeL3mc/y+mIgsZy6cYyJwkOj+YFdadIFxhclFVlUgfXZ
+         XhoXYjC9BHd8COgfdgXYSAtQapyrQ8W/sak1H7bgTTnxBnxqhBbXYH5rLfDhPlFFjgzZ
+         FD4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXOWh3QfXdKnHBLIXRBJj19l2EFj0OCum/d+le3uMP+aSPWnfFBWylm2q/shi9LQNsE+jl5oADKG/qJdjTnHElveoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE/BM8YoX+4CSkqR8nQnrbSowB4DhamA7x1d/Iua+NxEf72RRG
+	3vLF3kd9sTFiSZIP2CK2qPiugY4iZ6atYlQOXcf3lEIBKzmQQlvp8xVt/inLOzGnh8ZyUiwx1lF
+	WT3z/TpqhE5nNsXGxDNH1RHQOzZ/Xnc627x+8TQJc
+X-Gm-Gg: ATEYQzx0Ld6AQxLP/XYJks2yzSTUG228KMfYdBDjBdX3q5jFog20QgWAU68QHugB61s
+	kcWmKXYXaMlj9w7SmWPGBKwjGfHYdWgrlxWgGlIQCMgYXW6TY2IlUQy7GMtfocyxBFFnmWkXEN+
+	O6MRHss6jbVswb3RNjwxCbEJx+2FjLaZcjOx+HhrnneRaXZ13+SKE4LDDj3Zz3eE/D9m7lmz4EG
+	KQhvKgQDimPAUXmJ/MzDfFOze+CA/TK2Of19iyWhBh3Pq9sBC+OUcqpkNb0YUzeedV/MZgZJUIJ
+	cuXUyRet
+X-Received: by 2002:a05:622a:1a89:b0:509:45f:fdd2 with SMTP id
+ d75a77b69052e-50959e8684bmr8455681cf.15.1773390803655; Fri, 13 Mar 2026
+ 01:33:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -85,14 +85,15 @@ References: <cover.1770071243.git.ackerleytng@google.com> <86ad28b767524e1e654b9
  <CAEvNRgG-L+GBcm+u_thGvXAxV-Nqzu5VtgXy0PfND6SG0FiyVg@mail.gmail.com>
  <CA+EHjTy2urW2Tj5czQDKUHdri7FCLfw2mafTgmmtFs+-7ueoiw@mail.gmail.com>
  <abLfWHf89TxWqeGZ@google.com> <CAEvNRgFUc+9xCoN9Yo5NThHrvbccWAhPwp9nNM2fvx7QqrcJsg@mail.gmail.com>
-In-Reply-To: <CAEvNRgFUc+9xCoN9Yo5NThHrvbccWAhPwp9nNM2fvx7QqrcJsg@mail.gmail.com>
+ <abNcEkNseDEBIhop@google.com>
+In-Reply-To: <abNcEkNseDEBIhop@google.com>
 From: Fuad Tabba <tabba@google.com>
-Date: Fri, 13 Mar 2026 08:31:33 +0000
-X-Gm-Features: AaiRm52mXTtSsie7DL9lVs7x2V-5c-a3ZmVbxJyJb1VBocy3h5inh1iSGtq73Is
-Message-ID: <CA+EHjTzJmJZF=XE2NWsTZ9yCVix8oLp6M_Jb5m2EuC-W5p+U4A@mail.gmail.com>
+Date: Fri, 13 Mar 2026 08:32:46 +0000
+X-Gm-Features: AaiRm51ywXpTuOot2q1XwdhhIuZ40FH3GjYl4tPqPPT-m9I6kc4EDU_1p4w_okM
+Message-ID: <CA+EHjTyjjTf26-ob4kPfQDrHN+7z_YGcvtO989SnEUfR+4fcBA@mail.gmail.com>
 Subject: Re: [RFC PATCH v2 09/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+To: Sean Christopherson <seanjc@google.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, x86@kernel.org, aik@amd.com, 
 	andrew.jones@linux.dev, binbin.wu@linux.intel.com, bp@alien8.de, 
@@ -110,59 +111,67 @@ Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-doc@vger
 	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Ackerley,
+Hi,
 
-<snip>
-
-> > By default, KVM makes no guarantees about the in-memory values after memory is
-> > convert to/from shared/private.  Optionally, userspace may instruct KVM to
-> > ensure the contents of memory are zeroed or preserved, e.g. to enable in-place
-> > sharing of data, or as an optimization to avoid having to re-zero memory when
-> > the trusted entity guarantees the memory will be zeroed after conversion.
+On Fri, 13 Mar 2026 at 00:36, Sean Christopherson <seanjc@google.com> wrote:
+>
+> On Thu, Mar 12, 2026, Ackerley Tng wrote:
+> > Sean Christopherson <seanjc@google.com> writes:
 > >
+> > > On Thu, Mar 12, 2026, Fuad Tabba wrote:
+> > >> Hi Ackerley,
+> > >>
+> > >> Before getting into the UAPI semantics, thank you for all the heavy
+> > >> lifting you've done here. Figuring out how to make it all work across
+> > >> the different platforms is not easy :)
+> > >>
+> > >> <snip>
+> > >>
+> > >> > The policy definitions below provide more details:
+> > >
+> > > Please drop "CONTENT_POLICY" from the KVM documentation.  From KVM's perspective,
+> > > these are not "policy", they are purely properties of the underlying memory.
+> > > Userspace will likely use the attributes to implement policy of some kind, but
+> > > KVM straight up doesn't care.
+> >
+> > Policy might have been the wrong word. I think this is a property of the
+> > conversion process/request, not a property of the memory like how
+> > shared/private is a property of the memory?
+> >
+> > I'll have to find another word to describe this enum of
 >
-> How about:
->
-> or as an optimization to avoid having to re-zero memory when userspace
-> could have relied on the trusted entity to guarantee the memory will be
-> zeroed as part of the entire conversion process.
->
-> > The behaviors supported by a given KVM instance can be queried via <cap>.  If
->
-> I started with some implementation and was questioning the value of a
-> CAP. It seems like there won't be anything dynamic about this?
+> Or just don't?  I'm 100% serious, because unless we carve out a field _just_ for
+> these two flags, they're eventually going to get mixed with other stuff.  At that
+> point, having a precisely named enum container just gets in the way.
 
-We can drop the CAP for now. Probing via the ioctl and handling
--EOPNOTSUPP is entirely sufficient for the VMM to discover whether
-ZERO or PRESERVE are supported for a given architecture and conversion
-direction.
+I agree. It makes sense to drop the enum wrapper and the "policy"
+terminology entirely. Let's go with direct flags passed to the ioctl
+representing the requested memory properties upon conversion.
 
-> The userspace code can check what platform it is running on, and then
-> decide ZERO or PRESERVE based on the platform:
+> > I see you dropped any documentation to do with testing.
 >
-> If the VM is running on TDX, it would want to specify ZERO all the
-> time. If the VM were running on pKVM it would want to specify PRESERVE
-> if it wants to enable in-place sharing, and ZERO if it wants to zero the
-> memory.
+> Yes.
 >
-> If someday TDX supports PRESERVE, then there's room for discovery of
-> which algorithm to choose when running the guest. Perhaps that's when
-> the CAP should be introduced?
+> > I meant to document it (at least something about the unspecified case) so it
+> > can be relied on in selftests, with the understanding (already specified
+> > elsewhere in Documentation/virt/kvm/api.rst) that nothing about
+> > KVM_X86_SW_PROTECTED_VM is to be relied on in production, and can be changed
+> > anytime. What do you think?
 >
-> > the requested behavior is an unsupported, KVM will return -EOPNOTSUPP and
-> > reject the conversion request.  Note!  The "ZERO" request is only support for
-> > private to shared conversion!
+> KVM_X86_SW_PROTECTED_VM should self-report like all other VM types, and shouldn't
+> support anything that isn't documented as possible.  I.e. we shouldn't allow
+> ZERO on shared=>private "for testing".
+>
+> What I do think we should do is scribble memory on conversions without ZERO or
+> PRIVATE, probably guarded by a Kconfig or maybe a module param, to do a best
+> effort enforcement of the ABI, i.e. to try and prevent userspace from depending
+> on uarch/vendor specific behavior.
 
-I think that this makes sensefor the UAPI. Returning -EOPNOTSUPP for
-shared-to-private ZERO conversions.
-
-For pKVM's specific use cases where the VMM requires a zeroed page to
-be injected into the guest's private space via attribute conversion,
-the VMM can simply `memset()` the shared memory to zero in userspace,
-and then invoke the ioctl with the
-`KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE` flag. This completely offloads
-the UAPI from making guarantees on behalf of the trusted entity, while
-still satisfying pKVM's functional requirements.
+I strongly agree with scribbling/poisoning the memory on default
+conversions. If userspace specifies neither flag, actively destroying
+the data in software is the only way to strictly enforce that the ABI
+makes no guarantees, preventing the VMM from implicitly relying on
+underlying hardware behavior (like TDX automatically zeroing).
 
 Cheers,
 /fuad
