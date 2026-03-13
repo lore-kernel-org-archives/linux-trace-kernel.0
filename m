@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582C537E2FC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 06:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B8C364035
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 06:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773382416; cv=none; b=NVj7phTtm8x26fx349IYLQ0us0um9cdQtiwjN8woz/N7HRiSM0H3WwKPsS6mEOebT6wl13idEkOQj1h3NfW0RzQ8SgNeI63Rlskox38M0xYc8xc4sEHib4+jKONW/1kR/n8EYQ3AH6lFJQdwyM2hVxhYZOJpZ5v6gmK5ivxfS8s=
+	t=1773382419; cv=none; b=YfOhcHaRw7YXB2TFPxZ34C1z+3WuinqwL5nyxrIOJms8wpVuSwaRZ0T97DsV7VxfZSNrCvK9+Uvy+b+ujjW5FQYc6izuI+NQ+8iM8j4TMyAxb1doQQCBEOaBcyrG+8X/saYFsIXR9KGLnH8JZCc0TW50/42FviVcodEoeK9omck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773382416; c=relaxed/simple;
-	bh=56/zjr6xU9a2m6PNWz2cIUvRanV0VxsnnbXP2H5M1fU=;
+	s=arc-20240116; t=1773382419; c=relaxed/simple;
+	bh=AsQimpP6VPCpX/GeA3PXLmrBwdE8bqvci7sU/Y3ufXs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pMZTOCbH+9pVwMVcqwvacLvl+pfmJEJ5Eqeut1tczyUpisEyq4+oRD0bLe8ApC5u52aMGvIs9odnnHKtcj3P7VyFoVZXj95kh4Fg/Yu7gakT+tu9HwCZCJfAPXl++pRU4lmVJBv7UTx3PmFqGYCPIg9SmbMTlxJ1IQvr2KzzxqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UNRuDLcw; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=oMbkvG87/XyEtyqKcgP6ENQWDTihxsp/D0vPsM8FbwUbSGF/INQjLA/xVXGqNVzfxN7m6Vm7NZj+0J36hyj/o8Hw2C8z6ssZBPO7XXy0bz3JgWxg3pqEys/6kD70j0o2WrfEHixzL3dTwzYtrEtf9N/1Rrz5VMbE0yaG1si/yTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XRiWkCSV; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UNRuDLcw"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35a0998a441so11197260a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 23:13:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XRiWkCSV"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35a1a764225so1322891a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 23:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773382412; x=1773987212; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773382413; x=1773987213; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sSBIDB/ezQI0Wvtx4iOhvmaJE6wuN3Y0svhFaOA6jy4=;
-        b=UNRuDLcwnKqG6BZ8TeS/u5mkDvOkKXUuLKgv6PJzlZSAAhK73EnVP6tBhR53saeqXu
-         SFL5fw0fFS2MQ42XVTqlaUThjVMAWZgIF7jZQ480YN+Tqu00kztDBaFrmw11pnT5ayle
-         lq6wPMMrrUX5EY8XpWYqMU8/bVVvnO23MKaiSO2U7j96hLT6MxTBc4qDHpx1H+Sk6zrQ
-         6hYOCQ717YR60vtgEaR9yUa8Ph5xGbs8p8rT3xVChupqDO9hYN++yFSipQb5TpqkMuI2
-         5yTcQefm6tNPUcZTIRSYxzo73HLLFM9M8cKs0+xMg/YaNiz7+4Do/z1uX62Ss7WBw8bh
-         j2Nw==
+        bh=CYNGOoNNh7RW693z87teeFuj/YH+4YrK5JAx0qc/QTU=;
+        b=XRiWkCSVLhdFTGBcZYNn1hBrtn1DzZoJTtIiFrcoI634tKr2aV3v8A4OVoQDD3emxa
+         DVO6tQAcQLKCFK+utKfawyvYsc6tN4LeritZAudo5dkjmj9EmPQakvpOQPpYdKyMY0as
+         WafnpAarM72O03lRdBRLkT1XlbQkqZUnb4nAsuYfc9PtmCXhAjpTHgj0b5omOtwPWCyq
+         +osjql4VBcXQZQ0s1d+x/6hcGXqwubE1ZJAGSJXTSV34OFY0btK5gZmWs7aZzI87/WOQ
+         RMMLkHkcbISiqxBPeeGDz1AhSfjD18+VOHKHLZJiUHC7n+dl7+9g8m4I+MhpZeMVbGMZ
+         p1lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773382412; x=1773987212;
+        d=1e100.net; s=20251104; t=1773382413; x=1773987213;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sSBIDB/ezQI0Wvtx4iOhvmaJE6wuN3Y0svhFaOA6jy4=;
-        b=H8zyS3JM8LPI1iI/5Fg/+dQwuHnHy3EGErVZcuivlq/U/OR+hJaJO1YqAoT4Xk7hrT
-         OIp9Eoq3pBb+mWJ6Rn9SCghMJ7VyVJstoPsvzzShCkfTQ1nbw07sGwraAt9VVUNWXKJJ
-         h3NXIMhwUuvMyzqatd0U8cVrDDYMDDoTiQ8dR2L6bIM88ZXT3B0CJszWgRC16lAIGFVp
-         23gnaSNdpiuOEMlQK+0G7w51bQhqB0P0wkZLagwV/GbA17WrXYQ+jEW6SnxTC3dWH5+K
-         6joP+ZENwtvTghJebUwvl4dRaspr/YnQCS0/TbnCa9Vmdapm6P3w0mQBW8pfgO0KfKej
-         LmTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQCLire6ylSpMDoWy+1q6aIgtcLBPdrE+8P5+q+LZmpYnF6Z2oNIlxPbHA9Bq0SwizdkwDwEEx35T0UVsfKrv6PP0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7uBqSiYpEqZA6yhI8ZayyfKl89PJsaxoM16AIVaCA3UaAjm87
-	CT1GFEIevkCNVJ7oxw90unMSSMSLazlQXdOWtoz0SX6TGB5CPaRW0x80YXQNCvieiCxTZUF2FA6
-	Wf46FxS8TcJnfJ+QzibmINNkWUQ==
-X-Received: from pjbli13.prod.google.com ([2002:a17:90b:48cd:b0:356:20f7:5344])
+        bh=CYNGOoNNh7RW693z87teeFuj/YH+4YrK5JAx0qc/QTU=;
+        b=AF9WmQFqkDWWfQWZ/VhaJQ+9vIKtaWPcwumrbQIOaGFd+5k7WFOsqUsTOkCvqqSAfD
+         6ipal9TpjuO9Gay7caag3xG2/QplwghhiEKmCC8oN6fecITFCGdL2jfBpxqr0qsrnDZI
+         Q9mQMkqCiJDa4R9EDQZrAIhxYtBLyqu20y5nXyPSkXfj0WQfA7ie8vRXzrKKognmdEq+
+         v/MbjRjAbg1Pbnqn9OeTIWgDzJkx8ve5nxCiXquapc3qmeL5q/F26Lwp79O3OtFNQd5l
+         lZqF5+l7fYdprLg5Iqfcg9F0vd4tpRsoRNy/SiblSOeVoKCfeeTE0gP2lQb4t1cL2Pz9
+         I4vw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbgbURMyDxL/I33NqGE0d4lgFrIxiycx0LW+rhmsH2D7ubJH+8jxh1uCrOC008LLUPse5RdRKFGvN62MZese9tN5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoNqCEIqTl1yOKbCqLfk3xMahF0m/SKxtHpN8vaaxU4EEL37+7
+	mbEBTIEpa+aZCCt2bbYC9oEx79pXtAMe17o3utL951V33dz0GLAUzge7UatBmWBi8l9Wja6Yn1H
+	6S04djDNz1WxhL/9fFkejzJ2UDQ==
+X-Received: from pjvf3.prod.google.com ([2002:a17:90a:da83:b0:359:86b9:176d])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4c8f:b0:353:e91:9b38 with SMTP id 98e67ed59e1d1-35a220b9fdcmr1978831a91.34.1773382411375;
- Thu, 12 Mar 2026 23:13:31 -0700 (PDT)
-Date: Fri, 13 Mar 2026 06:13:05 +0000
+ 2002:a17:90b:1fcc:b0:359:8dfc:d39a with SMTP id 98e67ed59e1d1-35a11940b38mr5012681a91.4.1773382412954;
+ Thu, 12 Mar 2026 23:13:32 -0700 (PDT)
+Date: Fri, 13 Mar 2026 06:13:06 +0000
 In-Reply-To: <20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,14 +58,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773382364; l=1962;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773382364; l=3457;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=56/zjr6xU9a2m6PNWz2cIUvRanV0VxsnnbXP2H5M1fU=; b=h9jqU7xHor+02bUk347m4gpVjd5rVb7Yxm/mn+WFbkm85uDs4u9mnaWihlocy3zeYfVDrJkFW
- tW/T0KZJLkBD/zA4yrx71TTuDTl1JU5erPasZYBKgBt5Ic8lMs7D8GP
+ bh=VmcKXTBk9OIQ151891CwT/J/1loQnzBkF6yygKgeTPk=; b=z3KgLYQjwUaYikW8XAOodIwQ93xrZsUpHVKoezptz6hG2AKa7cWLyyzelsKs++CcZexA/5KQ8
+ RM4G7PiCRZXBpyLNHyr7/eGs7fAM0F2Z7u3swsCGBSOSQZvOCOykYJ5
 X-Mailer: b4 0.14.3
-Message-ID: <20260313-gmem-inplace-conversion-v3-26-5fc12a70ec89@google.com>
-Subject: [PATCH RFC v3 26/43] KVM: selftests: Test that truncation does not
- change shared/private status
+Message-ID: <20260313-gmem-inplace-conversion-v3-27-5fc12a70ec89@google.com>
+Subject: [PATCH RFC v3 27/43] KVM: selftests: Test that shared/private status
+ is consistent across processes
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -88,49 +88,106 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org, Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Add a test to verify that deallocating a page in a guest memfd region via
-fallocate() with FALLOC_FL_PUNCH_HOLE does not alter the shared or private
-status of the corresponding memory range.
+From: Sean Christopherson <seanjc@google.com>
 
-When a page backing a guest memfd mapping is deallocated, e.g., by punching
-a hole or truncating the file, and then subsequently faulted back in, the
-new page must inherit the correct shared/private status tracked by
-guest_memfd.
+Add a test to verify that a guest_memfd's shared/private status is
+consistent across processes, and that any shared pages previously mapped in
+any process are unmapped from all processes.
 
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Co-developed-by: Sean Christopherson <seanjc@google.com>
+The test forks a child process after creating the shared guest_memfd
+region so that the second process exists alongside the main process for the
+entire test.
+
+The processes then take turns to access memory to check that the
+shared/private status is consistent across processes.
+
 Signed-off-by: Sean Christopherson <seanjc@google.com>
+Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- tools/testing/selftests/kvm/guest_memfd_conversions_test.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../selftests/kvm/guest_memfd_conversions_test.c   | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
 diff --git a/tools/testing/selftests/kvm/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
-index b109f078bc6bd..89881a71902e6 100644
+index 89881a71902e6..c1a9cc7c9fae6 100644
 --- a/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
 +++ b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
-@@ -10,6 +10,7 @@
- #include <linux/sizes.h>
- 
- #include "kvm_util.h"
-+#include "kvm_syscalls.h"
- #include "kselftest_harness.h"
- #include "test_util.h"
- #include "ucall_common.h"
-@@ -308,6 +309,19 @@ GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(unallocated_folios, 8)
- 		test_convert_to_shared(t, i, 'B', 'C', 'D');
+@@ -322,6 +322,80 @@ GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
+ 	test_private(t, 0, 0, 'A');
  }
  
-+/* Truncation should not affect shared/private status. */
-+GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
++/* Test that shared/private memory protections work and are seen from any process. */
++GMEM_CONVERSION_TEST_INIT_SHARED(forked_accesses)
 +{
-+	host_do_rmw(t->mem, 0, 0, 'A');
-+	kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	host_do_rmw(t->mem, 0, 0, 'A');
++	/*
++	 * No races are intended in this test, shared memory is only used to
++	 * coordinate between processes.
++	 */
++	static enum {
++		STATE_INIT,
++		STATE_CHECK_SHARED,
++		STATE_DONE_CHECKING_SHARED,
++		STATE_CHECK_PRIVATE,
++		STATE_DONE_CHECKING_PRIVATE,
++	} *test_state;
++	pid_t child_pid;
 +
-+	test_convert_to_private(t, 0, 'A', 'B');
++	test_state = kvm_mmap(sizeof(*test_state), PROT_READ | PROT_WRITE,
++			      MAP_SHARED | MAP_ANONYMOUS, -1);
 +
-+	kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	test_private(t, 0, 0, 'A');
++#define TEST_STATE_AWAIT(__state)						\
++	while (READ_ONCE(*test_state) != __state) {				\
++		if (child_pid != 0) {						\
++			int status;						\
++			pid_t pid;						\
++			do {							\
++				pid = waitpid(child_pid, &status, WNOHANG);	\
++			} while (pid == -1 && errno == EINTR);			\
++			if (pid == -1)						\
++				TEST_FAIL("Couldn't check child status.");	\
++			else if (pid != 0)					\
++				TEST_FAIL("Child exited prematurely.");		\
++		}								\
++	}
++
++#define TEST_STATE_SET(__state) WRITE_ONCE(*test_state, __state)
++
++	child_pid = fork();
++	TEST_ASSERT(child_pid != -1, "fork failed");
++
++	if (child_pid == 0) {
++		const char inconsequential = 0xdd;
++
++		TEST_STATE_AWAIT(STATE_CHECK_SHARED);
++
++		/*
++		 * This maps the pages into the child process as well, and tests
++		 * that the conversion process will unmap the guest_memfd memory
++		 * from all processes.
++		 */
++		host_do_rmw(t->mem, 0, 0xB, 0xC);
++
++		TEST_STATE_SET(STATE_DONE_CHECKING_SHARED);
++		TEST_STATE_AWAIT(STATE_CHECK_PRIVATE);
++
++		TEST_EXPECT_SIGBUS(READ_ONCE(t->mem[0]));
++		TEST_EXPECT_SIGBUS(WRITE_ONCE(t->mem[0], inconsequential));
++
++		TEST_STATE_SET(STATE_DONE_CHECKING_PRIVATE);
++		exit(0);
++	}
++
++	test_shared(t, 0, 0, 0xA, 0xB);
++
++	TEST_STATE_SET(STATE_CHECK_SHARED);
++	TEST_STATE_AWAIT(STATE_DONE_CHECKING_SHARED);
++
++	test_convert_to_private(t, 0, 0xC, 0xD);
++
++	TEST_STATE_SET(STATE_CHECK_PRIVATE);
++	TEST_STATE_AWAIT(STATE_DONE_CHECKING_PRIVATE);
++
++	kvm_munmap(test_state, sizeof(*test_state));
 +}
 +
  int main(int argc, char *argv[])
