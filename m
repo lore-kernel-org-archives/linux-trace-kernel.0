@@ -1,54 +1,54 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5CD37F755
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 06:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3F437F8DB
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 06:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773382424; cv=none; b=uSZgjNh0cX0lCgpCE4f/7tHBxTqKcQlHaTNDTK9IN44NA0e3VG6FVbOgHcXgFsD9SrUn6RnVris6wQQZkUT9Cv3HeGP8o84OeCvpV6Mxkm+wYrKW5juYOGAw+k+meC74Vkn0gsIxmTbggRT24DF0QbTemvbYvIY7sbcVYxEydaI=
+	t=1773382426; cv=none; b=mDRJEUEEHFVMJglBkSAEbinyA3Y1QPS3P3T5PdqVC2uf/4rOujYh69j5xwkNlhPgJXuln2FAXG2yOWmgZ9bYQ4wD/fjyEpfFziPEGI5srGPXym+wwd+KGHxTIbhI19xSSX2ASU/wwizAkPpYbb2A1GUlBsj/b5GTLHxANzJWjWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773382424; c=relaxed/simple;
-	bh=0AvRrh6vEolvov+ilblsavP802x/MyKKPaG/juCrxSw=;
+	s=arc-20240116; t=1773382426; c=relaxed/simple;
+	bh=aSgpCJ/+CEz5WLnq+ZIsNaLgtlURyDcAX64hYkmBOv0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AQTe1z03PSxtbg1HJYGMM6vDJ2OdPwAskik3yKsqIJvRW4N9qrJVM7gOAoa1CZS1yBiO3PRA4vcYIpWUibCTwpAtJAPAihvHsPVlFFKQsCTm36rz8bI2H/s4ghcj7Z7d4meMyGUaMDF+JsEjX1KJ145XtNtSGR8GRzU42hN2IjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DNPFQBSU; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=ta1Y2x7+R09fNf8vZIu5uNZFIMvfs3eugs18VmPzNAIz3bOtu+N7eRovkikFrk5F/+uXzOzH57p2SWXmrOmaGnKyvtmsJVGLy6vh6mcASvpr125y3xIb5Je8XcPLghfwVCtvPQIsrodKdL80fxnOHjtwy7yIO1Hs80b+SP0qqI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kqRUu7Fx; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DNPFQBSU"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35983ee9f3bso1714331a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 23:13:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kqRUu7Fx"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2aecd4f7c37so4373645ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 23:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773382418; x=1773987218; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1773382420; x=1773987220; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u0n8Uv+LnWZDbbOj01OuzxvOS5iNrHuDnl1B5SLsuNA=;
-        b=DNPFQBSUKua+clQmEpJTxqiinIRejFGXtl6V5yAp8IMzdWz2YlvQ6p5m702EMvJVrS
-         wtDu6pSBuh/S1o5kReYX/zunY2KCr0jZ9u0HiyO27ICt3zBsCpT+73c92Euk45thmbp0
-         1EAjmpURY9SZubN/Z1LoBBFep3NJUqIqdTWbGZnCLw+zE/y3oU6yv1LaE1eOZXNz1i82
-         1rT6KFZSTP4uFV3NStr4f6PvqTHLYonoIy0SQymlDGt/VOHY2G/t26HQtthrOXfDhGj5
-         IeyK9u6ASGapABH0xNr4Buts11wfh4d50i0UIX11htfjegnqP7kJX1OPIZuKFxYdWidq
-         R59g==
+        bh=9BzVYsA3kNACHoMy8wwuYISEzNkcuCvKxQpW69pzKj8=;
+        b=kqRUu7FxhBohrsFdkDVnlyyGqYOg926If7Tl6G0csOaNToi6R+5xs1g+vdjBQJTnQR
+         g3VSFLuBHI2n3BYOcAZuyZDHdcVWRnMYvN+cUUcWengTb0xQNMB7RPikJxWsfmlaLxNc
+         7ybBa7F2dL+bNKI/X7JpgPCYg/+4f0Cdx61PolpJQozOgjuE4auBasSKApx6oXpiPP3I
+         n9PiblrQEI4L96kfPJU1xUtF8x2htBdB1WreVDz6iqZAqN20bnHIzAZMncH0Dc+8QI+6
+         FrDnd6PR/xQq2d6FBr88aEOHKmeVCSyQ8xbgystmf4kY3Wu0GiZOsSTuJjmN1coiti1S
+         LF/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773382418; x=1773987218;
+        d=1e100.net; s=20251104; t=1773382420; x=1773987220;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u0n8Uv+LnWZDbbOj01OuzxvOS5iNrHuDnl1B5SLsuNA=;
-        b=gdi9Rl09sA31kbaEWRDY65t0P52v06oHfXBrH08CCWcnCZGJo41NXHY6iOheRfsbkW
-         XKK7v9qWaVZsLHz4nNhL5S+D1N/eRG/ON218Y+EyxH5Vr5zcbUSJV79yxQwRy2MStAXa
-         PVkRHB+M3INXw2Fi+phDrw3V9QFxWMOVJG0pXct9GE6fP7xV1oHnRSUO37ME4XrACUQC
-         EdjRJFlkRFda3FSNfTJKw7jjLp52AY4iO30p7CvYRJo2NE+MWclV3qnUMfejdo1PH5uN
-         eYAUzqnh3juZWldXDyMqPF1O4qZkZQ3KS+04WmY9joafNPY+iHCkwKdtYVOxfVK48kAG
-         uoLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcPVlqgkKDWv4yEmSptzixMXkDnpL79kAVhZH11C8bpVjhWAKaUf1do2zb4b77+syrolRgVfGpuxwXrM2tr18f5xo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqLzlC/gDmXvBgy/YDByQy1/gFdVnSFMY+960b80arZ1FYno5g
-	ivTcN3IzHVmfcq+8abSUu86ad+BYsAmyztREVXDPnmu2Gh75ef/anpJNAqMU5ebFyk+7CDYeYj0
-	8Oux69bhMNi/0p2xvHWTxCeIbkw==
-X-Received: from pjbie24.prod.google.com ([2002:a17:90b:4018:b0:359:8bb2:c98d])
+        bh=9BzVYsA3kNACHoMy8wwuYISEzNkcuCvKxQpW69pzKj8=;
+        b=mMoBSMMdB7pft9O3NXnK4oVbmwd8vx0ue5GJb/XTZ/VUfEPTc+k+EX374qtq3Th1Dp
+         N2hKvOwJJe4O78ddHkzBt76b1UIqWvECc+B8dF00X/R5o7wjUoYJnaeYiUrvazm6Y/hV
+         8X51CiDOsADJPR50gf9geFbquCYjHkKYLmYLoolqtonTxVtHBGR8x8/i6Q0FFjnPsxFz
+         LK9jMZqWsc9/kd03mB8i90L63uxjN0QVgkgz3gN2kFKlnyAekgyBipnWpDbCXih79E+C
+         Jo7ev9NPVmSKL10JShvEdmT+r9gh6/Jr5PujwS4E62ZDnS4w+oW8L+9IKRbfdODjKAMt
+         ZGBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwzTT/cO9Mz6oplbv72Df5dxSMPoJxk56+lIdgmMiNMpFJ8E8qLUTfXXLkJ28GIsEyznlklsX+p/87IoHN+Ps+QKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2lG3G0ipqR/Tj6RzJ+v1LDQ4bpzlDJxBjzgmmarGhcx8JMUU/
+	LXxEZ1CjBBAYRwLh+6+NJr6wtkz/n5AXXwreWKouJllgp5HvdZp2+wu9Vqf/6nYwmlqlkfaa6vg
+	RqEwl9aJzhRxKfek81F0fLmpf3A==
+X-Received: from plbmm6.prod.google.com ([2002:a17:903:a06:b0:2ae:bcf8:c324])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3c11:b0:359:f7d2:a1fe with SMTP id 98e67ed59e1d1-35a21f5decemr1878689a91.9.1773382417898;
- Thu, 12 Mar 2026 23:13:37 -0700 (PDT)
-Date: Fri, 13 Mar 2026 06:13:09 +0000
+ 2002:a17:903:234e:b0:2ae:56bd:5318 with SMTP id d9443c01a7336-2aecaa40072mr17899725ad.22.1773382419519;
+ Thu, 12 Mar 2026 23:13:39 -0700 (PDT)
+Date: Fri, 13 Mar 2026 06:13:10 +0000
 In-Reply-To: <20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,14 +58,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773382364; l=3935;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773382364; l=2718;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=0AvRrh6vEolvov+ilblsavP802x/MyKKPaG/juCrxSw=; b=Oqn+kMoXiALCHT/I5zr1jx+6Bu2QtC9I0x7Z++M22HSCzj46+HAGaUfwfPI/FhcRcgAfSNWe7
- 2uRQSqdZQ+CD23+sfbfxrWQjqpgESh1jN4DKp9Zljz94lOs6+wmOSf6
+ bh=v6F0/65iA3JRUfC1QmgBIJnF3zWWs+e6BseTT95B4p4=; b=nDXRIWwyxZomGeHvQUbNSLIecKS8Wq8s9llOyXJlEhoEZMP6VGk4bIHOCwNtANyHljL1bm+gl
+ fTm6mXcMhorCTRUTgCnXGkDb7ONsIJel+g5ciJ2+ew9GVxZir+k0FG5
 X-Mailer: b4 0.14.3
-Message-ID: <20260313-gmem-inplace-conversion-v3-30-5fc12a70ec89@google.com>
-Subject: [PATCH RFC v3 30/43] KVM: selftests: Provide function to look up
- guest_memfd details from gpa
+Message-ID: <20260313-gmem-inplace-conversion-v3-31-5fc12a70ec89@google.com>
+Subject: [PATCH RFC v3 31/43] KVM: selftests: Provide common function to set
+ memory attributes
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -88,99 +88,85 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org, Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Introduce a new helper, kvm_gpa_to_guest_memfd(), to find the
-guest_memfd-related details of a memory region that contains a given guest
-physical address (GPA).
+From: Sean Christopherson <seanjc@google.com>
 
-The function returns the file descriptor for the memfd, the offset into
-the file that corresponds to the GPA, and the number of bytes remaining
-in the region from that GPA.
+Introduce vm_mem_set_memory_attributes(), which handles setting of memory
+attributes for a range of guest physical addresses, regardless of whether
+the attributes should be set via guest_memfd or via the memory attributes
+at the VM level.
 
-kvm_gpa_to_guest_memfd() was factored out from vm_guest_mem_fallocate();
-refactor vm_guest_mem_fallocate() to use the new helper.
+Refactor existing vm_mem_set_{shared,private} functions to use the new
+function.
 
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Co-developed-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
+Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- tools/testing/selftests/kvm/include/kvm_util.h |  3 +++
- tools/testing/selftests/kvm/lib/kvm_util.c     | 34 ++++++++++++++++----------
- 2 files changed, 24 insertions(+), 13 deletions(-)
+ tools/testing/selftests/kvm/include/kvm_util.h | 44 +++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 1c0f41bf847d0..f05f5ebf0c569 100644
+index f05f5ebf0c569..e4de0050d1ab3 100644
 --- a/tools/testing/selftests/kvm/include/kvm_util.h
 +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -427,6 +427,9 @@ static inline void vm_enable_cap(struct kvm_vm *vm, uint32_t cap, uint64_t arg0)
- 	vm_ioctl(vm, KVM_ENABLE_CAP, &enable_cap);
+@@ -456,18 +456,6 @@ static inline void vm_set_memory_attributes(struct kvm_vm *vm, uint64_t gpa,
+ 	vm_ioctl(vm, KVM_SET_MEMORY_ATTRIBUTES2, &attr);
  }
  
-+int kvm_gpa_to_guest_memfd(struct kvm_vm *vm, vm_paddr_t gpa, off_t *fd_offset,
-+			   uint64_t *nr_bytes);
-+
- /*
-  * KVM_SET_MEMORY_ATTRIBUTES overwrites _all_ attributes.  These flows need
-  * significant enhancements to support multiple attributes.
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 404efb5318f09..6deb6b333a066 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -1291,27 +1291,19 @@ void vm_guest_mem_fallocate(struct kvm_vm *vm, uint64_t base, uint64_t size,
- 			    bool punch_hole)
- {
- 	const int mode = FALLOC_FL_KEEP_SIZE | (punch_hole ? FALLOC_FL_PUNCH_HOLE : 0);
--	struct userspace_mem_region *region;
- 	uint64_t end = base + size;
- 	uint64_t gpa, len;
- 	off_t fd_offset;
--	int ret;
-+	int fd, ret;
- 
- 	for (gpa = base; gpa < end; gpa += len) {
--		uint64_t offset;
-+		fd = kvm_gpa_to_guest_memfd(vm, gpa, &fd_offset, &len);
-+		len = min(end - gpa, len);
- 
--		region = userspace_mem_region_find(vm, gpa, gpa);
--		TEST_ASSERT(region && region->region.flags & KVM_MEM_GUEST_MEMFD,
--			    "Private memory region not found for GPA 0x%lx", gpa);
+-static inline void vm_mem_set_private(struct kvm_vm *vm, uint64_t gpa,
+-				      uint64_t size)
+-{
+-	vm_set_memory_attributes(vm, gpa, size, KVM_MEMORY_ATTRIBUTE_PRIVATE);
+-}
 -
--		offset = gpa - region->region.guest_phys_addr;
--		fd_offset = region->region.guest_memfd_offset + offset;
--		len = min_t(uint64_t, end - gpa, region->region.memory_size - offset);
+-static inline void vm_mem_set_shared(struct kvm_vm *vm, uint64_t gpa,
+-				     uint64_t size)
+-{
+-	vm_set_memory_attributes(vm, gpa, size, 0);
+-}
 -
--		ret = fallocate(region->region.guest_memfd, mode, fd_offset, len);
-+		ret = fallocate(fd, mode, fd_offset, len);
- 		TEST_ASSERT(!ret, "fallocate() failed to %s at %lx (len = %lu), fd = %d, mode = %x, offset = %lx",
- 			    punch_hole ? "punch hole" : "allocate", gpa, len,
--			    region->region.guest_memfd, mode, fd_offset);
-+			    fd, mode, fd_offset);
- 	}
+ static inline int __gmem_set_memory_attributes(int fd, loff_t offset,
+ 					       uint64_t size,
+ 					       uint64_t attributes,
+@@ -531,6 +519,38 @@ static inline void gmem_set_shared(int fd, loff_t offset, uint64_t size)
+ 	gmem_set_memory_attributes(fd, offset, size, 0);
  }
  
-@@ -1717,6 +1709,22 @@ void *addr_gpa2alias(struct kvm_vm *vm, vm_paddr_t gpa)
- 	return (void *) ((uintptr_t) region->host_alias + offset);
- }
- 
-+int kvm_gpa_to_guest_memfd(struct kvm_vm *vm, vm_paddr_t gpa, off_t *fd_offset,
-+			   uint64_t *nr_bytes)
++static inline void vm_mem_set_memory_attributes(struct kvm_vm *vm, uint64_t gpa,
++						uint64_t size, uint64_t attrs)
 +{
-+	struct userspace_mem_region *region;
-+	vm_paddr_t gpa_offset;
++	if (kvm_has_gmem_attributes) {
++		uint64_t end = gpa + size;
++		uint64_t addr, len;
++		off_t fd_offset;
++		int fd;
 +
-+	region = userspace_mem_region_find(vm, gpa, gpa);
-+	TEST_ASSERT(region && region->region.flags & KVM_MEM_GUEST_MEMFD,
-+		    "guest_memfd memory region not found for GPA 0x%lx", gpa);
++		for (addr = gpa; addr < end; addr += len) {
++			fd = kvm_gpa_to_guest_memfd(vm, addr, &fd_offset, &len);
++			len = min(end - addr, len);
 +
-+	gpa_offset = gpa - region->region.guest_phys_addr;
-+	*fd_offset = region->region.guest_memfd_offset + gpa_offset;
-+	*nr_bytes = region->region.memory_size - gpa_offset;
-+	return region->region.guest_memfd;
++			gmem_set_memory_attributes(fd, fd_offset, len, attrs);
++		}
++	} else {
++		vm_set_memory_attributes(vm, gpa, size, attrs);
++	}
 +}
 +
- /* Create an interrupt controller chip for the specified VM. */
- void vm_create_irqchip(struct kvm_vm *vm)
- {
++static inline void vm_mem_set_private(struct kvm_vm *vm, uint64_t gpa,
++				      uint64_t size)
++{
++	vm_mem_set_memory_attributes(vm, gpa, size, KVM_MEMORY_ATTRIBUTE_PRIVATE);
++}
++
++static inline void vm_mem_set_shared(struct kvm_vm *vm, uint64_t gpa,
++				     uint64_t size)
++{
++	vm_mem_set_memory_attributes(vm, gpa, size, 0);
++}
++
+ void vm_guest_mem_fallocate(struct kvm_vm *vm, uint64_t gpa, uint64_t size,
+ 			    bool punch_hole);
+ 
 
 -- 
 2.53.0.851.ga537e3e6e9-goog
