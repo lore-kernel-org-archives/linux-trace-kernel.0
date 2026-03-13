@@ -1,185 +1,176 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99BB3BA22E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 15:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E90738CFFF;
+	Fri, 13 Mar 2026 16:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773416731; cv=none; b=M0aDi20J9I1eMfwTbRe0d59T83j+JwYDeh5pr0XkSeHBQJap7bJlf2TAbkMHzDUGhhII7A1NdXtsrmZDpFck0nyyslo/HxprtUh2/dfNriCYUxnVAhQHdjjJ5LdyCHe4mG1QRrFofR19kqEV+dLGbHI6TPIFOHGXFJHlQGYtSFE=
+	t=1773419849; cv=none; b=R1Pk1S0yk0/BxIWGY3S9g5mn8mOomHLwqbP+1DxFcmkwS6L3G7kA3Q/bL3y9Xw32L/W3vTGn/vOb/65P4LUn1s8pg0XJhWXAVhQJOw46pGFZfg3jE1hfWPB3q8D2ZWUDhD3MiPDXMdkOuBplUo8CDhf7xdcu0Lwb+veSe8xcINI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773416731; c=relaxed/simple;
-	bh=ih3Rem8ez1m/UeZdhhbrirn/qXqZUnYA/rNla9ScMnk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ItU/gBI/g9TM9DCQze+iPMWawl1knflUdMtkDP8jhsSjdyjkciiO5Kp1EtwjcWm40fbj8rtBh3H1wPpupftHH9niHx4jtr6nI60kF2Z8gsL7fh4XQsQuh453KeqyIL0pRF/nHIz/8kOrpaWiOMAa1LM77oN48dSky9wo968ZQx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J+MyWJKm; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1773419849; c=relaxed/simple;
+	bh=+p7K7t+lqKRI/HEx+sFaMdgIdBTU2hDoEqIoEciXQqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V5wgHop5guyT4lmzvFKkn2eYsmBfPkX009kPyDx0vbyIHxJySTrmvHP2+N49B6sHfzny1aSRymx+npOhFUuIf0Wbwyaajlae5Z30Tu8AV+encmZESoIK44tNikgHb7HSra8ZB1vwZXnzYZvuLKDSjGozuxccfZknDEIlACLGbw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9t7jYSX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J+MyWJKm"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35a032cdd78so9793205a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 08:45:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773416729; x=1774021529; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qe2Sep21p9IzCULSaXAl1wdem+djxjYgrVntlTLH2o8=;
-        b=J+MyWJKmq3TeYCE8dGWnkFvkTtg21IoJtTEY/WGCvGWRJfdlvFX4a+UVvq1xSOaXIR
-         Ogl13w+WD9fZJ4kJoSstt6y1dFwu74p7Hq1IlSMGFJBWPtVT0FoJWRBSeuuAWNYVgexN
-         Tk3BFyKK+c/N/I/cqyB9KFHLXiJzOfHXSEfaRe2q8BhDiUrBQNPUm6iHT5D60DTkl4ol
-         CtsfWmQkT+L3WoENEiGNUENT7dZmgiUls7HJXks2NILq/DMuhrydOLzZ0M/3ks8UuSgD
-         EBK99HKoFfFRTnXg0TtH8BBcuBNg757hPC6JqBrGBihIvRtybg68xRtfO+LNv7D9d81A
-         wtAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773416729; x=1774021529;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qe2Sep21p9IzCULSaXAl1wdem+djxjYgrVntlTLH2o8=;
-        b=eQJafOR2iwfxma4wndJNXKYWVv7D3h1bTEVPosjmeyJIH4mrOIiJuGnotxp347gTgK
-         woyODKnp0nyrqQYJRRKHVKoooeXhQ6uQt/pyrPfN0/DntgD88Zx+FEBNnZlhgOt815wb
-         3NGs6cNbR5EEvJU3+374qc2T5ntlHutsXkg82Dz2K+497yOD8eAXv+nXHKgeT1QnP0yg
-         7LzrT8JCjr/90bKT8O+deHNMaV9OVU3Hrnu6SBDuYNlc3XF0ZvrNz52yivHUmSTjq0Sg
-         sk6RIziUs2hPyp0Bk1+WKa9ucj61EgZs8wFT0qnrWzKHmUpsMqxumKQoI0zS+zUfbXwp
-         HcWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbuuRc+21ZSjMkWzgeWSArQTjq4gfAPz5vEMV/sgjtue/Tz0LwWPZ7MEADMb2P8d5l4ew3qbOiILhLos9z+PcSrn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgrcCREaW481TNmLh5r/AfVT1yevB8gtVAc8FxivQW/jLbIbeO
-	TgQOkwwHS5U+K9DtH8eerk57ZARiWaD6lgbSng1WbAiD/POgx3vHgWj5MZ2DVmysoEbV0WoKAso
-	B9Y2EAw==
-X-Received: from pgmr19.prod.google.com ([2002:a63:2053:0:b0:c73:cc95:c0e4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d8a:b0:359:1821:b4e3
- with SMTP id 98e67ed59e1d1-35a21ec0e6amr3676826a91.15.1773416728908; Fri, 13
- Mar 2026 08:45:28 -0700 (PDT)
-Date: Fri, 13 Mar 2026 08:45:27 -0700
-In-Reply-To: <20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9t7jYSX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5375C19421;
+	Fri, 13 Mar 2026 16:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773419849;
+	bh=+p7K7t+lqKRI/HEx+sFaMdgIdBTU2hDoEqIoEciXQqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y9t7jYSXb3E2gURWOtsG8nDT4lxlXyOjNSD1SWiKmKUE8R+65TgwKKdSRTak/gNVB
+	 Eccrvvbc3joPxt9wA+0/V6OcyATwvkjQzX3jCJNct+8PmFHyxnJOmpZHfW4uu5WqNw
+	 koqnkajz1sXX3qtkOPzbQI4n3MYq2h/rap2rTAUT2ymqZU858vLwfpK9JfvIgMY+XQ
+	 VMbDp14B1HQIWwQi8Q+r2+t8HMjvuZEpzaT7IG4STs7S/2rgnYNTPlTGmeRm/Tigz0
+	 6z7v8PkdG9tdVjyGg5qzuWjz/pu9+qFsBSOpLHaNr5v2/udpq6EpTwgCArM2daTowT
+	 IRqQOLhAwO29Q==
+Date: Fri, 13 Mar 2026 09:37:24 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: maz@kernel.org, rostedt@goodmis.org, arnd@arndb.de,
+	linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	kernel-team@android.com
+Subject: Re: [PATCH v2] tracing: Generate undef symbols allowlist for
+ simple_ring_buffer
+Message-ID: <20260313163724.GA2573924@ax162>
+References: <20260313105829.1214123-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com>
-Message-ID: <abQxF2Gbd7sSsCcq@google.com>
-Subject: Re: [PATCH RFC v3 00/43] guest_memfd: In-place conversion support
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jroedel@suse.de, 
-	jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org, 
-	pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com, 
-	rientjes@google.com, shivankg@amd.com, steven.price@arm.com, tabba@google.com, 
-	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com, 
-	forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com, 
-	aneesh.kumar@kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260313105829.1214123-1-vdonnefort@google.com>
 
-On Fri, Mar 13, 2026, Ackerley Tng wrote:
-> Hi,
+On Fri, Mar 13, 2026 at 10:58:29AM +0000, Vincent Donnefort wrote:
+> Compiler and tooling-generated symbols are difficult to maintain
+> across all supported architectures. Make the allowlist more robust by
+> replacing the harcoded list with a mechanism that automatically detects
+> these symbols.
 > 
-> (Here's the motivation for this series, which I realized was missing from
-> the earlier revisions of this series)
-
-...
-
-> I'm intending RFC (v3) as a basis for discussion of flags/content
-> modes (name TBD) to allow userspace to request guarantees on how the memory
-> contents will look like after setting memory attributes. The last 6 patches
-> implement content mode support. These patches will be reordered, and some
-> of them could be absorbed into earlier patches, in later revisions.
+> This mechanism generates a C function designed to trigger common
+> compiler-inserted symbols.
 > 
-> Here are the discussion points I can think of (please add on):
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 > 
-> 1. (Might hopefully resolve soon?) Should ZERO be supported on shared to
->    private conversions? Discussion is at [6].
-
-No.  There is no use case.  The entire point of CoCo is that the VMM is untrusted.
-Having the guest rely on the VMM to zero memory makes no sense whatsoever.  There
-may be a contract between the trusted whatever and the guest, but that's between
-those two entities, the VMM is not involved, period.
-
-PRESERVE is different because the intent is to allow the guest to operate on
-*untrusted* data.  Operating on untrusted zeros is nonsensical.
-
-ZERO for private=>shared is different between the VMM trusts the host kernel.
-
-> 2. Do we need a CAP for userspace to query the flags/modes supported?
-
-Yes.
-
->    It seems like there won't be anything dynamic about the flags/modes
->    supported.
+> ---
 > 
->    The userspace code can check what platform it is running on, and then
->    decide ZERO or PRESERVE based on the platform:
+> Changes in v2:
 > 
->    If the VM is running on TDX,
-
-No.  No, no, no, no.  I have said this over, and over, and over.  The contract
-is between userspace and KVM, not between userspace and the underlying CoCo
-implementation.  Anything that requires making assumptions based on the VM type
-is a non-starter for me.
-
->    it would want to specify ZERO all the
->    time. If the VM were running on pKVM it would want to specify PRESERVE
->    if it wants to enable in-place sharing, and ZERO if it wants to zero the
->    memory.
+>   - Use filechk (Nathan)
+>   - Removed deprecated extra-y (Nathan)
+>   - Added simple_ring_buffer in allowlist (Nathan)
+>   - Added memcpy() to generate more symbols (Nathan)
+>   - Added __sancov 
 > 
->    If someday TDX supports PRESERVE, then there's room for discovery of
->    which algorithm to choose when running the guest. Perhaps that's when
->    the CAP should be introduced?
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index beb15936829d..96627a909ecc 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -136,17 +136,42 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+>  # simple_ring_buffer is used by the pKVM hypervisor which does not have access
+>  # to all kernel symbols. Fail the build if forbidden symbols are found.
+>  #
+> -UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+> -UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer llvm_gcda llvm_gcov
+> -UNDEFINED_ALLOWLIST += .TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
+> -UNDEFINED_ALLOWLIST += ftrace_likely_update __hwasan_load __hwasan_store __hwasan_tag_memory
+> -UNDEFINED_ALLOWLIST += warn_bogus_irq_restore __stack_chk_guard
+> -UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> +# undefsyms_base generates a set of compiler and tooling-generated symbols that can
+> +# safely be ignored for simple_ring_buffer.
+> +#
+> +filechk_undefsyms_base = \
+> +	echo '$(pound)include <linux/atomic.h>'; \
+> +	echo '$(pound)include <linux/string.h>'; \
+> +	echo '$(pound)include <asm/page.h>'; \
+> +	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);'; \
+> +	echo 'void undefsyms_base(void *p, int n);'; \
+> +	echo 'void undefsyms_base(void *p, int n) {'; \
+> +	echo '	char buffer[256] = { 0 };'; \
+> +	echo '	u32 u = 0;'; \
+> +	echo '	memset((char * volatile)page, 8, PAGE_SIZE);'; \
+> +	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));'; \
+> +	echo '	memcpy((void * volatile)p, buffer, sizeof(buffer));'; \
+> +	echo '	cmpxchg((u32 * volatile)&u, 0, 8);'; \
+> +	echo '	WARN_ON(n == 0xdeadbeef);'; \
+> +	echo '}'
+> +
+> +$(obj)/undefsyms_base.c: FORCE
+> +	$(call filechk,undefsyms_base)
+> +
+> +clean-files += undefsyms_base.c
+> +
+> +$(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
+> +
+> +targets += undefsyms_base.o
+> +
+> +UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
+> +		      simple_ring_buffer \
+> +		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+>  
+>  quiet_cmd_check_undefined = NM      $<
+> -      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
+> +      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST))`"
+>  
+> -$(obj)/%.o.checked: $(obj)/%.o FORCE
+> +$(obj)/%.o.checked: $(obj)/%.o $(obj)/undefsyms_base.o FORCE
+>  	$(call if_changed,check_undefined)
+>  
+>  always-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o.checked
 > 
-> 3. What do people think of the structure of how various content modes are
->    checked for support or applied? I used overridable weak functions for
->    architectures that haven't defined support, and defined overrides for
->    x86 to show how I think it would work. For CoCo platforms, I only
->    implemented TDX for illustration purposes and might need help with the
->    other platforms. Should I have used kvm_x86_ops? I tried and found
->    myself defining lots of boilerplate.
+> base-commit: 33f2e266515717c4b2df585dadefa0525557726c
+> -- 
+> 2.53.0.851.ga537e3e6e9-goog
 > 
-> 4. enum for ZERO and PRESERVE?
-> 
->    Pros:
-> 
->    * No way to define both ZERO and PRESERVE (make impossible states
->      unrepresentable)
->        * e.g. enum kvm_device_type in __u32 type in struct
->          kvm_create_device
->        * But maybe someday some modes can be used together?
 
-Huh?  Oh, you don't mean "enum", you mean "values vs. flags".  Because in C you
-can obviously have an enum of flags.
+Thanks! This is almost perfect for my tests, one final thing that I
+noticed as a result of my full overnight builds. For ARCH=riscv (and
+some other architectures from a quick grep), there is some logic in
+their include/asm/string.h files to avoid FORTIFY_SOURCE when KASAN is
+enabled for the entire build but not enabled for the particular file. As
+undefsyms_base.o is not linked into vmlinux or modules, it does not
+automatically have KASAN enabled.
 
-I don't have a strong preference, though I think I'd vote for flags.
+  $ cat allmod.config
+  CONFIG_GCOV_KERNEL=n
+  CONFIG_LTO_CLANG_THIN=y
+  CONFIG_WERROR=n
 
-Practically speaking, I doubt we'll ever have more than DEFAULT, ZERO, and PRESERVE,
-i.e. more than '0', '1, and '2'.  Perhaps I lack imagination, but I can't think
-of any operation that we would want to become ABI.  ZERO is special purely because
-various CoCo implementations already zero memory on conversion.  Everything else
-fits into PRESERVE, because if the kernel perform the operation, then userspace
-can do the same, and likely more performantly and obviously without needing a
-contract with KVM.
+  $ make -skj"$(nproc)" ARCH=riscv KCONFIG_ALLCONFIG=1 LLVM=1 mrproper allmodconfig kernel/trace/
+  Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+                   U __fortify_panic
+                   U __write_overflow_field
+  ...
 
-The only other option I can think of is if a CoCo implementation wanted to use an
-specific value other than '0' to fill a page on conversion.  Given that starting
-from '0' is by far the most common state in computing, I just don't see that
-happening.  E.g. that's be like adding k1salloc() in addition to kmalloc() and
-kzalloc().
+This cures that for me.
 
-So, we're likely only going to have DEFAULT, ZERO, and PRESERVE, at which point
-whether we use flags or values is a wash in terms of how many bits we need: 2.
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 260382f62dbf..55af887a90e2 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -164,6 +164,11 @@ $(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
+ 
+ targets += undefsyms_base.o
+ 
++# ensure KASAN is enabled to avoid logic that may disable FORTIFY_SOURCE when
++# KASAN is not enabled. undefsyms_base.o does not automatically get KASAN flags
++# because it is not linked into vmlinux.
++KASAN_SANITIZE_undefsyms_base.o := y
++
+ UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
+ 		      simple_ring_buffer \
+ 		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+--
 
-If we use flags, then we can have a single CAP to enumerate all FLAGS that are
-supported KVM_SET_MEMORY_ATTRIBUTES2.  If we use values, we'd need a separate CAP
-for flags and a separate cap for conversion operations.
+With that addressed:
 
-Using values would allow providing a dedicated field in kvm_memory_attributes2,
-which _might_ make some code more readable.  But for me, that doesn't outweigh the
-disadvantage of needing another CAP.
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+Cheers,
+Nathan
