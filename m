@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E5A2F5485;
-	Fri, 13 Mar 2026 02:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44531A267;
+	Fri, 13 Mar 2026 02:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773367806; cv=none; b=QVZZYeakRWCpfdQgG6S5HdEZqoPahmUxXPKGUy9fLRLFlXGR8PsC0XtSXWmpY5UDCeXgfBtsokNBuMP1r01THbjV94Xca70VJs+re2uOf5fsliD6YQkqq2/Zdkcvq568jvcfS1lUDa1mD5m1e2fh2vYQlBRFDbtQ9g0uFKd7568=
+	t=1773368816; cv=none; b=DgSrYBkm1TjjBpp5IYictTJLY9dTa1GJHDscWenN/thR3JMHFn6XcmSXtmRK4Vh/w8AcAvaQWYPjhqts24KAwuQYFMBYwUnPvZIslAt+2vDUAQaODQY4KP74xaUfDcjPDQtJiJynSNBNNmuKu2y6C9kPRSMHTcUkbU8b9Bd59jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773367806; c=relaxed/simple;
-	bh=3LFFiQmcDjHIlO+Jbk/cyVGUOfdnYrv+zjDgtwVLJjE=;
+	s=arc-20240116; t=1773368816; c=relaxed/simple;
+	bh=LFyclqZwemoID6W7OZ9uCtPIBTrteWpAtRT9b9viEmA=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=I/sG5t2EQH4LUgCg9O1tNxxXQerM4Pw9FaepVyHMmvJIbmys3M11S2uHgsJMzxFcSU2J0lBHaKt15qnn/5sLef+qhw9xmBKIrNJuaIB696KsoJEoNwA5SslGhW/Kj7zc5Qhr3IZoYdR9B+dX1uDqsUmyYxFAvsEvu/Hg1CRJV8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pErochix; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=S1AJZtEAtmainxq1HsVyqsgwewB/I6+Yq9bgjz0jk7+teolYUu8PTAuPK46C8SUmwJm8fFjESXVe3/OVfTkAHT+HvlI0DUt/dPvJmS3nBTcaGaI82T+Fi73hiE3Wv3cH22oz/b0BcT8J79OZZ6sVogUb1GDboRzuQUGb629DlOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6owGfe/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pErochix"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37ACC4CEF7;
-	Fri, 13 Mar 2026 02:10:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6owGfe/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D74B2C4CEF7;
+	Fri, 13 Mar 2026 02:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773367806;
-	bh=3LFFiQmcDjHIlO+Jbk/cyVGUOfdnYrv+zjDgtwVLJjE=;
+	s=k20201202; t=1773368816;
+	bh=LFyclqZwemoID6W7OZ9uCtPIBTrteWpAtRT9b9viEmA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pErochix+B7ZrpESOagQfa1KjizyPxaNsbL9GuLjxU9w7gj6M41O/Hr7THGO/eAtY
-	 agNhjvTq14AtO0Seh/Z53yEsFoXigJKFsoFEB9TqmihhbMKbOt9XpXdQjrv5yXv7vU
-	 6nfCK8YG1iU19vf+gBzG8g9pIz7dPGCSA6K5LuIGpgyH9ZSrkFWrLeh4lnZb48Mf8P
-	 MYOJn6vzLizO/KQNoyk+3ouzlSoP4WghGtR0Qwg7AEYDHOPCblaEx8t7Yj66jt0yFt
-	 oW1qdHCNa54PZ2lP9x/KG8aaBZp7KudWL9NtbEeYUtKFcBAzT7zYbDaLv+qIniNbno
-	 84ixOaA6E7kRQ==
-Date: Fri, 13 Mar 2026 11:10:02 +0900
+	b=r6owGfe/Wjn3X55WYKlxwA489oQA2v3hQr/GORH8CxSKWzw2/onjmMNr0XWWfDWO8
+	 +g1064PkCK/QDTKjRTQb9ELEZ3VrMfSNdCIKUb6+opvmos+Y7EhRcKq1SuNYwQgCko
+	 G3cyBUERzQ9IHe3U/Gp8jCID/TZV5F2XlfRY9mlpku6i1H9yQ58xWpDGc16i5Mb/dy
+	 pj+cSO0fe5ymQJhuLHjYv/f3tAnYgvIsTdGeTbUwHL5lW6s0xb/FLvGkfPWpIZqvTc
+	 37s3VMvLLq9QKutZIqddmcq5HZvcbRjqsoXjP6z/BSyNwEDVT4czq2CnS6tXu6tgj/
+	 wyllHOIlK6LuA==
+Date: Fri, 13 Mar 2026 11:26:52 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Josh Law <hlcj1234567@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Josh Law
  <objecting@objecting.org>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] lib/bootconfig: check bounds before writing in
- __xbc_open_brace()
-Message-Id: <20260313111002.ff8f22fc02da8b6bedcf5218@kernel.org>
-In-Reply-To: <20260312191143.28719-3-objecting@objecting.org>
+Subject: Re: [PATCH v2 3/3] lib/bootconfig: fix snprintf truncation check in
+ xbc_node_compose_key_after()
+Message-Id: <20260313112652.098e6cb456091d0936032663@kernel.org>
+In-Reply-To: <20260312191143.28719-4-objecting@objecting.org>
 References: <20260312191143.28719-1-objecting@objecting.org>
-	<20260312191143.28719-3-objecting@objecting.org>
+	<20260312191143.28719-4-objecting@objecting.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,48 +48,39 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 12 Mar 2026 19:11:42 +0000
+On Thu, 12 Mar 2026 19:11:43 +0000
 Josh Law <hlcj1234567@gmail.com> wrote:
 
 > From: Josh Law <objecting@objecting.org>
 > 
-> The bounds check for brace_index happens after the array write.
-> While the current call pattern prevents an actual out-of-bounds
-> access (the previous call would have returned an error), the
-> write-before-check pattern is fragile and would become a real
-> out-of-bounds write if the error return were ever not propagated.
+> snprintf() returns the number of characters that would have been
+> written excluding the NUL terminator.  Output is truncated when the
+> return value is >= the buffer size, not just > the buffer size.
 > 
-> Move the bounds check before the array write so the function is
-> self-contained and safe regardless of caller behavior.
+> When ret == size, the current code takes the non-truncated path,
+> advancing buf by ret and reducing size to 0.  This is wrong because
+> the output was actually truncated (the last character was replaced by
+> NUL).  Fix by using >= so the truncation path is taken correctly.
 > 
 
-Hmm good catch. This is a kind of specification mistake.
-If we pass below to the bootconfig tool, currently it fails.
-----
-key1 {
-key2 {
-key3 {
-key4 {
-key5 {
-key6 {
-key7 {
-key8 {
-key9 {
-key10 {
-key11 {
-key12 {
-key13 {
-key14 {
-key15 {
-key16 {
-}}}}}}}}}}}}}}}}
-----
-But since "open_brace[]" array has 16 entries, it should
-accept the 16th brace.
+OK, but this one is a minor issue, because either way, remaining
+size becomes 0.
 
-Let me add a good and a bad example for this case too.
+		ret = snprintf(buf, size, "%s%s", xbc_node_get_data(node),
+			       depth ? "." : "");
+		if (ret < 0)
+			return ret;
+		if (ret > size) {
+			size = 0;
+		} else {
+			size -= ret; // if ret == size, the size becomes 0
+			buf += ret;
+		}
 
-Thanks,
+Anyway, to be clear the correct error case handling, this
+should be applied.
+
+Thank you!
 
 > Signed-off-by: Josh Law <objecting@objecting.org>
 > ---
@@ -97,20 +88,18 @@ Thanks,
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> index a1e6a2e14b01..62b4ed7a0ba6 100644
+> index 62b4ed7a0ba6..b0ef1e74e98a 100644
 > --- a/lib/bootconfig.c
 > +++ b/lib/bootconfig.c
-> @@ -532,9 +532,9 @@ static char *skip_spaces_until_newline(char *p)
->  static int __init __xbc_open_brace(char *p)
->  {
->  	/* Push the last key as open brace */
-> -	open_brace[brace_index++] = xbc_node_index(last_parent);
->  	if (brace_index >= XBC_DEPTH_MAX)
->  		return xbc_parse_error("Exceed max depth of braces", p);
-> +	open_brace[brace_index++] = xbc_node_index(last_parent);
->  
->  	return 0;
->  }
+> @@ -316,7 +316,7 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
+>  			       depth ? "." : "");
+>  		if (ret < 0)
+>  			return ret;
+> -		if (ret > size) {
+> +		if (ret >= size) {
+>  			size = 0;
+>  		} else {
+>  			size -= ret;
 > -- 
 > 2.34.1
 > 
