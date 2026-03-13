@@ -1,135 +1,124 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59B938CFE8
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 11:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB84D30E82D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 13:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773403037; cv=none; b=nxF67dJ8b12wrvwkeaSmcMlMI9ZsxaAsXMahYKqeGobZvdmAmopx1y8HxJafEJFIubdGpAmJFoBE7fIZjwFg086odxPIfpSOPkmOdkolyhOtFDD6Prlk6q0i3cOs3ZhyoeqM6wc9V3Ga1oXkV7l0fxqGfKFdRmZ8+waUBfdnQ+A=
+	t=1773407118; cv=none; b=ei3lbI5SSbOjMSFOgtnEUs16BdulxizDqhT6lGVkc0CPkvV78tiX++fOyTnENj2fsmZChCMvA09jSrCRGr3nvHM5TKHr+WKdXEdNy8iNh09G3b4AxWwXCYE0pktidVicbzgH6rYbTwuoIKPTEnTr/nxAZLSOLZj2GPLjJp2pdDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773403037; c=relaxed/simple;
-	bh=lH1uhOdjYFmC3JrvjmKwXDjfQwtszuioLTDCY7UeKts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GxJ6L6pvDIPeUQ/97fpbZ3sTbxJEEyM8CJrh4Hn0V8KEC51ICTnHSNIRSATICYkibrKyxVhdUUI3mlhz27Ew0gW9C0Iip6VD4ThDLrYYfv9sGy5Hn7VFNciwGPwALzGu1KVipAgA4YHTC99dmgK9tMSThQhSGbjmSWuQXSsDXrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eoJiSPEk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NTw0Td9b; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eoJiSPEk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NTw0Td9b; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1773407118; c=relaxed/simple;
+	bh=QlDMUd7f1JdkVm7v5UibiBKuEOhJyK5M/xPgVuOcFWw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hGx3NFZO6w5eO3AEkqn2hFfOqQyjNkn9oJ5UWK3ihQ+Gd/Z+IZfe83q1DD2zD9a6Yc2A27VZjzDEj/ELIJrXde4HEirgQKJLZQgXdHlDHpg5Az0hDd2VHSVPxouLopiIIs5BFyS/5xH4nCG1uHmvyVAI77jr0H9NFJFxX11AoHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BUCCOfhh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eoJiSPEk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NTw0Td9b";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eoJiSPEk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NTw0Td9b"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 259835BD5B;
-	Fri, 13 Mar 2026 11:57:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773403034;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BUCCOfhh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773407116;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dFd6Wl1Szr2Hs94RLnDBxd3xZiFagKqf54VnDXVEQ24=;
-	b=eoJiSPEkMKBrHBRhU8JtCrk5gSGYIYO/G1OD/4t84umSXM4H8nx/7hgLIjRnPSXvNnGwf0
-	uJumiXxFKj0ZbdYTiZpfVcE3ZT3t7HJ5liEI28PSSmLaDmsuJSv44b7In12maTKAnH/ycZ
-	/wo3RxCyRI1q9jjSsDOldulzet+XyRw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773403034;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dFd6Wl1Szr2Hs94RLnDBxd3xZiFagKqf54VnDXVEQ24=;
-	b=NTw0Td9bHq3QnNwMHKIkCR1vqGZCNuPXXbaFev/5q6vEp+KHnDrOVTEYqK8sJEYkZInqjx
-	LyhvpVY7hnpr71Dg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773403034;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dFd6Wl1Szr2Hs94RLnDBxd3xZiFagKqf54VnDXVEQ24=;
-	b=eoJiSPEkMKBrHBRhU8JtCrk5gSGYIYO/G1OD/4t84umSXM4H8nx/7hgLIjRnPSXvNnGwf0
-	uJumiXxFKj0ZbdYTiZpfVcE3ZT3t7HJ5liEI28PSSmLaDmsuJSv44b7In12maTKAnH/ycZ
-	/wo3RxCyRI1q9jjSsDOldulzet+XyRw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773403034;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dFd6Wl1Szr2Hs94RLnDBxd3xZiFagKqf54VnDXVEQ24=;
-	b=NTw0Td9bHq3QnNwMHKIkCR1vqGZCNuPXXbaFev/5q6vEp+KHnDrOVTEYqK8sJEYkZInqjx
-	LyhvpVY7hnpr71Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 08F32404EF;
-	Fri, 13 Mar 2026 11:57:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MAcEApr7s2meIgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 13 Mar 2026 11:57:14 +0000
-Date: Fri, 13 Mar 2026 12:57:12 +0100
-From: David Sterba <dsterba@suse.cz>
-To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/15] btrfs: Use trace_invoke_##name() at guarded
- tracepoint call sites
-Message-ID: <20260313115712.GG5735@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
- <20260312150523.2054552-16-vineeth@bitbyteword.org>
+	bh=QlDMUd7f1JdkVm7v5UibiBKuEOhJyK5M/xPgVuOcFWw=;
+	b=BUCCOfhhX3iAk8jyQhLLWcdqDtr6HTTaEM0x5jn96BMvedCKIffqlWhK4mkDIfKE/KugmH
+	TCa3P76WbFeLsGUv5OE9yK3jBAMJCQWk17XPcpITidMDe97OE3oMZdJk7oGbLObEMFIfKo
+	AuPFBt4IQI0q08KIBSsp5VOMYQ01RG8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-642-jsZ-3HcfM-G8ofCy8PHcvQ-1; Fri, 13 Mar 2026 09:05:14 -0400
+X-MC-Unique: jsZ-3HcfM-G8ofCy8PHcvQ-1
+X-Mimecast-MFC-AGG-ID: jsZ-3HcfM-G8ofCy8PHcvQ_1773407113
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-439bcec86dfso1971717f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 06:05:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773407113; x=1774011913;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QlDMUd7f1JdkVm7v5UibiBKuEOhJyK5M/xPgVuOcFWw=;
+        b=L4j3Mfh1EwT4wROgTR2WHATO+rcuo9quRE0DfzBaZxeHujs1kl1D9vlFl9FaIx1b7h
+         rCto+2bT8n5/dJmYlsDviFs7Ji8rouSvF9jN9qFJi3D+816jdrXmSnlWBW3vx5aUWnBw
+         so68irmoamjBSoAqwXvHvSnRDgZRduVg7Zwh2WV/1B8iiPw1jmBKSNs9THw/cRpPSheI
+         EYcNBeUCIkKUzrXc7hDSpie8mGvbEauxdYaNOKDy77NGciQsumIsSQld0bJCWwUBhMIe
+         LkVZDtvjAmTZQueOK2tf6iTqztkpVpVR9aVvRs61losHUfAIfySnKSdOJwt6XQFa1vMJ
+         tO5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUz+P25z/6zjq6DavQK/0e3BN7qPpLplv+9PU3x+LBJdoGuZRslX+cU6R2i1z1qT5FzHkAEQgLYkyJ0TzjnluuSz70=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNfU7xXNjyJK67JutSkBDvuaJ8laxHmx8GU9AGqxkfCbyAi8R8
+	iorGYd3tRisK3XoL46PChQbnwRa1jKVm4rqRFoZM+suHmYL1cDCnM0+WZEOHyJDSz6roZVFiMTy
+	EA2HAwnj07ryRXsaOD1ZvPeTXSgJL2hCUHU1IsqMBUEBX/Y7O1Ovjr435JAzaeDxoNLNLm72TyA
+	==
+X-Gm-Gg: ATEYQzwkF3czEPYpTvHSnWW2aoIu21AponUwj+Rrxp7gITkrqYMVkdsDD4Taw95tTkp
+	AneRk5o4BOJFGKadrr/H8ub2ZiqA7JhKzOfLtBunIwDrvPBkS365TnwMtFrpnIQaAhRMciyQERh
+	6+1ZXyFdgw+/ee38jd73PsWfOqKIckyplvt3s1pCGtVMohW5XPUnmF9PyIfeQedLHqXlXUJllTD
+	0b9PdeQIfi1WXaAitmKsAYv8aDvjgrsw8t4+rfFiR9fhnCtUr8i39bcvIEsX5WsDtMbz08ujFtH
+	EACpClnqtc+MvQS1a59SB7aeNqRXPk7dYENw9M6YfraHLCKR59EKmjNTv3mJnwy8niV/L1p38yf
+	crzJCKM0gIRN8Yas2ysy2LIIadg==
+X-Received: by 2002:a05:6000:288c:b0:439:c9dd:cd5f with SMTP id ffacd0b85a97d-43a04d863bfmr6367994f8f.19.1773407110687;
+        Fri, 13 Mar 2026 06:05:10 -0700 (PDT)
+X-Received: by 2002:a05:6000:288c:b0:439:c9dd:cd5f with SMTP id ffacd0b85a97d-43a04d863bfmr6367443f8f.19.1773407106833;
+        Fri, 13 Mar 2026 06:05:06 -0700 (PDT)
+Received: from [192.168.1.166] ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe21b631sm20184469f8f.27.2026.03.13.06.05.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2026 06:05:06 -0700 (PDT)
+Message-ID: <4620e92b1c7f4d87f192a017f3026dfc17bcaef6.camel@redhat.com>
+Subject: Re: [PATCH v7 05/15] Documentation/rv: Add documentation about
+ hybrid automata
+From: gmonaco@redhat.com
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Nam
+ Cao	 <namcao@linutronix.de>, Juri Lelli <jlelli@redhat.com>, Jonathan
+ Corbet	 <corbet@lwn.net>, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org,  Tomas Glozar <tglozar@redhat.com>, Clark
+ Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
+Date: Fri, 13 Mar 2026 14:05:05 +0100
+In-Reply-To: <abKX1XO4vqY74uA7@jlelli-thinkpadt14gen4.remote.csb>
+References: <20260310105627.332044-1-gmonaco@redhat.com>
+	 <20260310105627.332044-6-gmonaco@redhat.com>
+	 <abKX1XO4vqY74uA7@jlelli-thinkpadt14gen4.remote.csb>
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260312150523.2054552-16-vineeth@bitbyteword.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: zoZXwDmWIQJgmY7QPam96pCA0qQZ_bTxz1A-gOTfoJE_1773407113
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 12, 2026 at 11:05:10AM -0400, Vineeth Pillai (Google) wrote:
-> Replace trace_foo() with the new trace_invoke_foo() at sites already
-> guarded by trace_foo_enabled(), avoiding a redundant
-> static_branch_unlikely() re-evaluation inside the tracepoint.
-> trace_invoke_foo() calls the tracepoint callbacks directly without
-> utilizing the static branch again.
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-> Assisted-by: Claude:claude-sonnet-4-6
+Hello,
 
-Acked-by: David Sterba <dsterba@suse.com>
+On Thu, 2026-03-12 at 11:39 +0100, Juri Lelli wrote:
+> Very minor nit, feel free to ignore, but ...
+>=20
+> The formal 7-tuple definition includes 'i' (invariant function), but
+> unlike other elements, 'i' isn't stored in the automaton struct -
+> it's implemented as generated code in ha_verify_constraint(), IIUC.
+> Worth a brief note clarifying this design choice so readers don't
+> expect to find an invariants[] member in the struct? Here or below in
+> the example C code section.
+
+Thanks for the review! I haven't really thought of that.
+At this stage we are not mentioning any struct element (it's purely
+theoretical), so there shouldn't be any expectation from the reader.
+
+Later I mention "The function verify_constraint checks guards,
+performs resets and starts timers to validate invariants according to
+specification".
+In fact, also guards are not represented as part of 'function', I may
+mention after that sentence something like: "those cannot easily be
+represented in the automaton struct".
+
+Not sure if saying more wouldn't make it even more confusing than it
+already is.
+
+Thanks,
+Gabriele
+
