@@ -1,187 +1,132 @@
-Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93875191;
-	Fri, 13 Mar 2026 00:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F621C8634
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 00:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773361147; cv=none; b=AzsiR7Wkyaex8qDknmU3dNmJejChFfrbPhR6bCWiBjY15UsdYm+59Z7MjRQnPo3Gmr6QJ9taLhsy6EMxgFyjiPLTbV6P3hXHiI1Mcjkn+n0bteYwhp88GwYcTrqX/gekV18KdkkSdgt4V7Ajte0qo9TDRjYWHq6AXRIvkhbDySQ=
+	t=1773362197; cv=none; b=dscmxLGmKKw9wFL1pVrpdUeLNoox41tDEYdzaVECpe/Kaagt8XJXHmekmsxGB59wqYKPy/MMimm7POrcjV2EcDUVQTDmVMkzCKUJARYac4AbcH1lvDfncK5Rs2BfI7rDiqwpapLPTN/va5q+uPNGG8dJNCXcpxTAjw3Mjc7NBZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773361147; c=relaxed/simple;
-	bh=KDownSrJa5S3EqGFi/GZy1HPESB/36MNwmQwJTfITNs=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=LXOJLgK2hIr46xWJEMJLAapItWGFd9kRKjO7S676rr7rLFynCxJ/vH0dpCvvesB225rs0KpTLnpk9mYOF9W6VOpKm55aMhHnntub3ECUO5VI7LJgZa2DnrbbxU8QCoorKuq7bKGidQWKeKlvwXz26Eyfb+Sp0Ou48pfmce6YWQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=gHD+X8LZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cCdkekOP; arc=none smtp.client-ip=202.12.124.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+	s=arc-20240116; t=1773362197; c=relaxed/simple;
+	bh=9oIvEgCdqEl+AGZYDSEAFBDA6RTB3elZif62x1BQroI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Noit4/C6EKC+RVoAqWrttf5mkOi1AMezLgHow6gNFpaXb1r5QmdR94WYKC0SjWmcj5El2iBkFgRJdM8kk/wC1QDkSA9TWVZq0usfJ/8i8n7HLYFD1tYsCIp6B9OTAFEQva7LqbwLhya0WS1jPBP4eoLefAwIMyy3Iyz1xlb41ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tbr6d3rA; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="gHD+X8LZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cCdkekOP"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.stl.internal (Postfix) with ESMTP id 8CEA61301B20;
-	Thu, 12 Mar 2026 20:19:04 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Thu, 12 Mar 2026 20:19:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1773361144; x=1773368344; bh=mVG8eebTQIYrNSCfz5AoYNPWvAP9zOmA/oS
-	XBEUNMDg=; b=gHD+X8LZJV5BmcTxyVzSi4eOH+f9NWdLk6voSZ3Dk2TmtFtrTPT
-	n0z2oXB44COIaMxym9EotuPwl3zhBchA17LQD1aiXLP0HZVx+1sB2rDvs+59CClN
-	HQKjtkq+MLlefiP50e3G0ZUzDRVImhJt8LXC5Gk+3LL4kz0dWCTiZEgkORI83H3g
-	IYzMIhIFS+pW8u+iq3O1fDK+eB6xv0w3oEKr75CQKG3ENMDVGe/ATK98/l7Dvx/P
-	8BZhP/BMTsa8A8nINOCn4yT0evPyJ+NeT9UVxbDjMi1RnmCTf2Vmbpsgbeb+2prd
-	AnO6/VSTlvk8uuzd90K874TkKVJWxfC+iOg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773361144; x=
-	1773368344; bh=mVG8eebTQIYrNSCfz5AoYNPWvAP9zOmA/oSXBEUNMDg=; b=c
-	CdkekOPdZGeTHq9Q9fn6kwRHxICBqhAbEe7Mbn8RL0/ghUTZud8i2luiteEmp2Ir
-	nIdMJTy2arC7PIdd3QUxuvFoTPxCOMLV9z6Gm7Dry2+55WAsz8/lpUpp6KLCvOb5
-	vppTuCMIOaaruvILxo7wGqRgbVRfmvszAtPJWbhzUWIoBUdJz8+7BU3zgxJSlbc3
-	fpGHsm7gMQ5BqZ2Qbs1zxa7FgNneoKrfT70cZbcDqlzmSr5Rt1Zdfq8ZqH/0hCpG
-	u4ztiIjqn7BZ94m/pkzsJPqZlNum+Fn4NWKv3hqcNWG2BtBRflNBWi/TcF8QJ+Eo
-	3H4DqYmdO0Ph/KIpM2FGA==
-X-ME-Sender: <xms:9lezaf2biEH_YUoVtaJ788TBctRMYMGJjfZ2DGR5uanh1iY0Bnn1tg>
-    <xme:9lezaRxzKm32RjDuV_b2LpuNVPPb6Y2SpMCDjskankSuVyTtPWjSsFcMWwjNHIFU7
-    GLRMDp98i1zC2yMmBsdKulbM_AH2YMuIt5X8wc4fPQA-OpC2Q>
-X-ME-Received: <xmr:9lezaa84oPqo9JeTHF-KiyHUZaJt4h0JSykKqUiirLVobFQ0qtPIFeYYpGFOGnN83U9sO87B36Hyg9vaeC9k5oIsMjNlS0OCsh5IMJauHcVf>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeekvddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epffevjeeljeehueejgeehleelueevudehjeekgeevueffteevhfefvedtueeugfejnecu
-    ffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsgesohifnhhm
-    rghilhdrnhgvthdpnhgspghrtghpthhtohephedupdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthht
-    oheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:9lezaSQ88me8CYxNCjygrSQBmtG4cdv1lL3aUTLRRuM52pJKUU1ccw>
-    <xmx:9lezaXkQlDHP4UxMpnGEVP1brRONq1oRM3xyFBblzX9245pjYr4Vpw>
-    <xmx:9lezaSZBls0VHhctSLEpvUTcq6jJd_Fbrs8I5U1SyxvxEE-JGS1Fuw>
-    <xmx:9lezaak5kvHNn-TYlzGIxM5qxPwoE_QzIk7oFu49dZPa1Fp3mUUnVA>
-    <xmx:-FezaRCDWnLXkmnc85hbOjTGKD_omhp2YPsIbC_7rVSfPvFCo06RTGxC>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Mar 2026 20:18:49 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tbr6d3rA"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35a0b51eb23so1053464a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 17:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773362195; x=1773966995; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=msDdWC7KsVzGR7+a7KYP2KJHZfc1KrX2g6o6c66TQ0I=;
+        b=Tbr6d3rA2menzviTRGUxxZ/si/4YqVxHLGAIIYU6rftjAVvS4DqBQFBP+SNle6fuGw
+         BH61TbGgpLa0hrFoPxm7W2WyN0FxrzKw5wj6dfMQ6molTQcALy10kT/SA2kdGdB487OM
+         8m7OKaFZjLA3qfFIr9iGtEhB1zTiFJOGY7lM8+lbg31xmTBOytAlDlV1uiFKnIz70yoO
+         ymOdFRtG1OnQYqpdEXjqrUdzwgSeY4IuS9YuG4qXBbv6KclUNvdx6yBQ3N65rfDmFUBL
+         xSd4h7fnjC7mYOcv61a9sHykaFyLshubWOaXp6RJ/WzVOFLy2EBwWmrMUFPW/ye2Groq
+         wY4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773362195; x=1773966995;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=msDdWC7KsVzGR7+a7KYP2KJHZfc1KrX2g6o6c66TQ0I=;
+        b=p/o/85WcdBYlU0mC+TedUbf2Nh466fMfdtQ8aFki0SlaT4XHWshDOtC5SUBjr8JJHm
+         hwQHk5/ANBUsbZYmC7m2l2rftISBa5BLRjuq7xYvatvnHtxDjcDheIqwgMOE6H35z+UL
+         4YNbm8DxQQEAHep0+aP2rg3YpRP0Yts1Mrji059f5sPQVDPwid6vbx2Xmcf+Wjr1OlNi
+         MhWYlED00zd3y8hBiEjs0xvCoyR+DQpjOdYzw4kxU6b//EbF1/TL1/dZTNWIRkacAXHl
+         NP+0D5hcwAxxUz1II1Z4YPK3a8KkdQxFg6+2xRrZMr046ulRt0IOt2bjTKWbmmTWs3UV
+         aFPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVGeIwIUTAR9Zp/GmYz9vKR/3z/tMebZ2ENlYDSsZ++s//gIE9NvsA69wQSWXhx+qmN55U8aBBKxdVEJGMSfJYqsk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZbN3FF244noWDvBGSWpo2nXKbVA172usTTkRPLiJUR+0mFgDg
+	v+YUl+gv3gFnmYvY6qSK5BE/7HCRr1fllakBb7XGuYW24mP/eXuMMXaFFnZvH2HXu74FY8UClgC
+	t4jWIAA==
+X-Received: from pjdd8.prod.google.com ([2002:a17:90a:2c8:b0:359:8f01:6c5a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:28c4:b0:359:fcba:6517
+ with SMTP id 98e67ed59e1d1-35a21fd7ab5mr1194105a91.19.1773362195351; Thu, 12
+ Mar 2026 17:36:35 -0700 (PDT)
+Date: Thu, 12 Mar 2026 17:36:34 -0700
+In-Reply-To: <CAEvNRgFUc+9xCoN9Yo5NThHrvbccWAhPwp9nNM2fvx7QqrcJsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Jeff Layton" <jlayton@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Carlos Maiolino" <cem@kernel.org>,
- "Miklos Szeredi" <miklos@szeredi.hu>,
- "Amir Goldstein" <amir73il@gmail.com>,
- "Jan Harkes" <jaharkes@cs.cmu.edu>, "Hugh Dickins" <hughd@google.com>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "David Howells" <dhowells@redhat.com>,
- "Marc Dionne" <marc.dionne@auristor.com>,
- "Steve French" <sfrench@samba.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Sungjong Seo" <sj1557.seo@samsung.com>,
- "Yuezhang Mo" <yuezhang.mo@sony.com>,
- "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Breno Leitao" <leitao@debian.org>, "Theodore Ts'o" <tytso@mit.edu>,
- "Andreas Dilger" <adilger.kernel@dilger.ca>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Ilya Dryomov" <idryomov@gmail.com>,
- "Alex Markuze" <amarkuze@redhat.com>,
- "Viacheslav Dubeyko" <slava@dubeyko.com>,
- "Tyler Hicks" <code@tyhicks.com>,
- "Andreas Gruenbacher" <agruenba@redhat.com>,
- "Richard Weinberger" <richard@nod.at>,
- "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Jeremy Kerr" <jk@ozlabs.org>, "Ard Biesheuvel" <ardb@kernel.org>,
- linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
- coda@cs.cmu.edu, linux-mm@kvack.org, linux-afs@lists.infradead.org,
- linux-cifs@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org,
- gfs2@lists.linux.dev, linux-um@lists.infradead.org,
- linux-efi@vger.kernel.org
-Subject: Re: [PATCH RFC 00/53] lift lookup out of exclive lock for dir ops
-In-reply-to: <20260312193847.28c32a2c@gandalf.local.home>
-References: <20260312214330.3885211-1-neilb@ownmail.net>,
- <20260312193847.28c32a2c@gandalf.local.home>
-Date: Fri, 13 Mar 2026 11:18:47 +1100
-Message-id: <177336112755.5556.2850267364383380917@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Mime-Version: 1.0
+References: <cover.1770071243.git.ackerleytng@google.com> <86ad28b767524e1e654b9c960e39ca8bfb24c114.1770071243.git.ackerleytng@google.com>
+ <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
+ <CAEvNRgG-L+GBcm+u_thGvXAxV-Nqzu5VtgXy0PfND6SG0FiyVg@mail.gmail.com>
+ <CA+EHjTy2urW2Tj5czQDKUHdri7FCLfw2mafTgmmtFs+-7ueoiw@mail.gmail.com>
+ <abLfWHf89TxWqeGZ@google.com> <CAEvNRgFUc+9xCoN9Yo5NThHrvbccWAhPwp9nNM2fvx7QqrcJsg@mail.gmail.com>
+Message-ID: <abNcEkNseDEBIhop@google.com>
+Subject: Re: [RFC PATCH v2 09/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
+From: Sean Christopherson <seanjc@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Fuad Tabba <tabba@google.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, aik@amd.com, 
+	andrew.jones@linux.dev, binbin.wu@linux.intel.com, bp@alien8.de, 
+	brauner@kernel.org, chao.p.peng@intel.com, chao.p.peng@linux.intel.com, 
+	chenhuacai@kernel.org, corbet@lwn.net, dave.hansen@linux.intel.com, 
+	david@kernel.org, hpa@zytor.com, ira.weiny@intel.com, jgg@nvidia.com, 
+	jmattson@google.com, jroedel@suse.de, jthoughton@google.com, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, michael.roth@amd.com, mingo@redhat.com, 
+	mlevitsk@redhat.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	pbonzini@redhat.com, prsampat@amd.com, qperret@google.com, 
+	ricarkol@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, shivankg@amd.com, shuah@kernel.org, steven.price@arm.com, 
+	tglx@linutronix.de, vannapurve@google.com, vbabka@suse.cz, 
+	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 13 Mar 2026, Steven Rostedt wrote:
-> On Fri, 13 Mar 2026 08:11:47 +1100
-> NeilBrown <neilb@ownmail.net> wrote:
->=20
-> > *[PATCH 26/53] smb/client: don't unhashed and rehash to prevent new
-> > *[PATCH 27/53] smb/client: use d_splice_alias() in atomic_open
-> >  [PATCH 28/53] smb/client: Use d_alloc_noblock() in
-> > *[PATCH 29/53] exfat: simplify exfat_lookup()
-> > *[PATCH 30/53] configfs: remove d_add() calls before
-> >  [PATCH 31/53] configfs: stop using d_add().
-> > *[PATCH 32/53] ext4: move dcache modifying code out of __ext4_link()
-> > *[PATCH 33/53] ext4: use on-stack dentries in
->=20
-> >  [PATCH 34/53] tracefs: stop using d_add().
->=20
-> Hmm, another reason I hate being Cc'd on every patch of a patch bomb where
-> I only need to look at one (and maybe the first) patch.
+On Thu, Mar 12, 2026, Ackerley Tng wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+> > On Thu, Mar 12, 2026, Fuad Tabba wrote:
+> >> Hi Ackerley,
+> >>
+> >> Before getting into the UAPI semantics, thank you for all the heavy
+> >> lifting you've done here. Figuring out how to make it all work across
+> >> the different platforms is not easy :)
+> >>
+> >> <snip>
+> >>
+> >> > The policy definitions below provide more details:
+> >
+> > Please drop "CONTENT_POLICY" from the KVM documentation.  From KVM's perspective,
+> > these are not "policy", they are purely properties of the underlying memory.
+> > Userspace will likely use the attributes to implement policy of some kind, but
+> > KVM straight up doesn't care.
+> 
+> Policy might have been the wrong word. I think this is a property of the
+> conversion process/request, not a property of the memory like how
+> shared/private is a property of the memory?
+> 
+> I'll have to find another word to describe this enum of
 
-I could try to refine my tooling, but you can't please all the people
-all the time...  I wonder how many people would be bothered if only the
-cover-letter was sent to everyone, and the patches only went to lkml -
-to be fetched from lore if not subscribed.
+Or just don't?  I'm 100% serious, because unless we carve out a field _just_ for
+these two flags, they're eventually going to get mixed with other stuff.  At that
+point, having a precisely named enum container just gets in the way.
 
-You would probably need to look at 02/53
+> I see you dropped any documentation to do with testing.
 
-https://github.com/neilbrown/linux/commit/aebdc6545eb18e5b6a7d41320f30d752996=
-b3c6c
+Yes.
 
-to have the context to understand 34/53
+> I meant to document it (at least something about the unspecified case) so it
+> can be relied on in selftests, with the understanding (already specified
+> elsewhere in Documentation/virt/kvm/api.rst) that nothing about
+> KVM_X86_SW_PROTECTED_VM is to be relied on in production, and can be changed
+> anytime. What do you think?
 
->=20
-> For some reason, I'm missing several patches, and this is one of them :-p
+KVM_X86_SW_PROTECTED_VM should self-report like all other VM types, and shouldn't
+support anything that isn't documented as possible.  I.e. we shouldn't allow
+ZERO on shared=>private "for testing".
 
-They don't seem to have made it to lore.kernel.org either.  Maybe I'm
-being rate-limited somewhere.
-
-https://github.com/neilbrown/linux/commit/77074c04a94176d6b2b2caf44dd84f0788a=
-420c4
-
-Thanks,
-NeilBrown
-
->=20
-> -- Steve
->=20
->=20
-> >  [PATCH 35/53] cephfs: stop using d_add().
-> > *[PATCH 36/53] cephfs: remove d_alloc from CEPH_MDS_OP_LOOKUPNAME
-> >  [PATCH 37/53] cephfs: Use d_alloc_noblock() in
-> >  [PATCH 38/53] cephfs: Don't d_drop() before d_splice_alias()
-> >  [PATCH 39/53] ecryptfs: stop using d_add().
-> >  [PATCH 40/53] gfs2: stop using d_add().
->=20
-
+What I do think we should do is scribble memory on conversions without ZERO or
+PRIVATE, probably guarded by a Kconfig or maybe a module param, to do a best
+effort enforcement of the ABI, i.e. to try and prevent userspace from depending
+on uarch/vendor specific behavior.
