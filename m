@@ -1,49 +1,49 @@
 Received: from sender-of-o57.zoho.eu (sender-of-o57.zoho.eu [136.143.169.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3316E391501
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7B03914EE
 	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 23:32:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773531136; cv=pass; b=uw5NWRQG/l+0AgZK+eqBQ+etKKOjq8/x+Iw0NUKHyX5hiUC3zC9SstyBACpH+U7mVDq1L8N0e1qvR/mrYblEclA9IFR8NHPgveZ5sN/bcOSCULUfvYMfkHWp+LzV1ACmPepiJv8cNaLl+Y9Vj5gpV2YYaxr5m3J/X+effR8+pQw=
+	t=1773531136; cv=pass; b=e5U7M51T+HtxeTpUHNXsMpNt1+g7FK8MqwY81N67jMtHLWCbStdB/9Oh39nxh2gzUlhjmFYxz2ZaQJMKUTQ2UomyROGsTnH8HRClEg6dekbon2ONEdcqvAl9mD1PjPKZ1roNkDo1/mDKRmszabKiX9zVN+rCiwY1yKrEH9GME8w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773531136; c=relaxed/simple;
-	bh=V7ReOpjvgKpqLyMe87lV2El6zoCxd9xHdzcToswP9A4=;
+	bh=DRP0bkR7bPm24iP6Lzhg3tEJBN+s2+Bet778OjDqUXs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tlNDbT9O/jkgHnSPtK4LFoOIHCV5oo1N0J2RitNuHJMlhSiKWMisOT1q38CH4V8oI0abbC+iE0wEZy44Z1d0oNdVPOpJCnoEhX+WLs2MPHx8Db4LxDU0HGOBgOemnyVA6uaNY988H3m0AHqhfvGjO3sRAQILhM4IdE3z6d3K/NM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=huSbb3xC; arc=pass smtp.client-ip=136.143.169.57
+	 MIME-Version; b=KPEcj/bBGgzx3yzcI6gZ0Tot+tl3tRmq7uclhRYl36ikFMLS27I1qjJNeqJlL9iPvTa8NghK5DSIRmGvKxkQigwmw2/h4r9pnaKCY4owY92FPEUy3ZFQoAxfc4VU/IW0rycfUWhf1Z2XGRzVtPx5O7OIMkeVHUdXL3efCOGO6ws=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=YWHtNSm+; arc=pass smtp.client-ip=136.143.169.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="huSbb3xC"
-ARC-Seal: i=1; a=rsa-sha256; t=1773531116; cv=none; 
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="YWHtNSm+"
+ARC-Seal: i=1; a=rsa-sha256; t=1773531110; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=DQlJIBi8i6vj92RLNeegKLZnI3cEMEoZNPxR5GugGM0zEiiotKA/l3Uo9lnYlb+v71/Yq1bhCFV5wpiQol7QreFfj8spD75EQPAOxQF4ihsySE6TsipVK0LtGtTBhDE5QkuzI4Uq5dqFjxQDElmMn3k1K0yNQ6GFMbhDP81LpUg=
+	b=WcKQFweUWijBt2SvRxM8QRXyWrikxHh4ZMSGo/dhMW1TP56KZKklnBwK2GlwgDz066zwby6vmwIkeTWxGSify5cdGN/bexzEzZyZqElpWaNxIEKWFqf0hyWDdI6Gmv3S3CDE942H60HLoL/fTXo3M615Ta7jBNedEKbgdEC28OE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773531116; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=AWTtpdsy4qWl6puGZW7KMyBkMjPa87avwV40la3Leew=; 
-	b=cd6qaPoymqJ87g62wiQFAdXAu88g1/3ESsWDVzgyEduCMw4c6Nx8UoY724B7LKOIS6nGMbILKG7pIVIRjLPy95S2do+0Jcfo9ymDgxeaOYuS3MP/22jvYGS5rurzs8Fsz1EOT3zcM6HONZmiP8XclKLKj6XntmI7MUGw6szeoFc=
+	t=1773531110; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Xeupn9cKPxiPKbISrjkPHMR3deW24vI0PqVo9Jq/DYc=; 
+	b=hyEldJbxHhQj5WNDqTZSHgiQYBVclqURR5ykH3ohP0T/4GyHUJwCE9Q8WljR972bosnaz/H6BxLR2RsdOVjZu2ReAMyH3Ox3j5GtwSkRB0nKcwzbB1J3Ooy+Xmh/5ut1L4SWCvE6/ZBYVlS6S8p+/BGvFKK0fXeJy15KL0YA0Rc=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773531116;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773531110;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=AWTtpdsy4qWl6puGZW7KMyBkMjPa87avwV40la3Leew=;
-	b=huSbb3xCkXqGOojf01LrSJJ2XgRzxLEYQ08F9zyOqhsIlqfCJmML6xb9K2s6C+Nf
-	ei6J74X5UMnjaFqwLY3edLlrLkHyjbjl4QFlC23/wxCBgp06GkkMf75MKTH3nHThpYJ
-	QKwhKhk6OHWV9NLdeY/zc6OpSb1mL7b2Hlonw8mY=
-Received: by mx.zoho.eu with SMTPS id 1773531113731902.1726274425757;
-	Sun, 15 Mar 2026 00:31:53 +0100 (CET)
+	bh=Xeupn9cKPxiPKbISrjkPHMR3deW24vI0PqVo9Jq/DYc=;
+	b=YWHtNSm+vJ7glu7RIRgIS6SCSRj1mTkgCAiFT1Wgtg+9pqKBLOAnRVbyzo4DTQjO
+	yfnwZz3b41fplv/xzgDPlwD75WsFJUDseYhquxdcKRstbGwzzVpDZQ7Xld+prbUN8eL
+	Ivd4ah2CrjwQ+XY9Q+INGGSDfBzRooRyhP0h3RqI=
+Received: by mx.zoho.eu with SMTPS id 1773531108799283.4619488222643;
+	Sun, 15 Mar 2026 00:31:48 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5 16/23] lib/bootconfig: check xbc_init_node() return in override path
-Date: Sat, 14 Mar 2026 23:31:37 +0000
-Message-Id: <20260314233144.187273-17-objecting@objecting.org>
+Subject: [PATCH v5 06/23] lib/bootconfig: narrow flag parameter type from uint32_t to uint16_t
+Date: Sat, 14 Mar 2026 23:31:27 +0000
+Message-Id: <20260314233144.187273-7-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260314233144.187273-1-objecting@objecting.org>
 References: <20260314233144.187273-1-objecting@objecting.org>
@@ -56,38 +56,68 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-The ':=' override path in xbc_parse_kv() calls xbc_init_node() to
-re-initialize an existing value node but does not check the return
-value.  If xbc_init_node() fails (data offset out of range), parsing
-silently continues with stale node data.
-
-Add the missing error check to match the xbc_add_node() call path
-which already checks for failure.
-
-In practice, a bootconfig using ':=' to override a value near the
-32KB data limit could silently retain the old value, meaning a
-security-relevant boot parameter override (e.g., a trace filter or
-debug setting) would not take effect as intended.
+The flag parameter in the node creation helpers only ever carries
+XBC_KEY (0) or XBC_VALUE (0x8000), both of which fit in uint16_t.
+Using uint16_t matches the width of xbc_node.data where the flag is
+ultimately stored.
 
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
- lib/bootconfig.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/bootconfig.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 038f56689a48..182d9d9bc5a6 100644
+index 45db51bc9cc7..34bdc2d13881 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -728,7 +728,8 @@ static int __init xbc_parse_kv(char **k, char *v, int op)
- 		if (op == ':') {
- 			unsigned short nidx = child->next;
+@@ -408,7 +408,7 @@ const char * __init xbc_node_find_next_key_value(struct xbc_node *root,
  
--			xbc_init_node(child, v, XBC_VALUE);
-+			if (xbc_init_node(child, v, XBC_VALUE) < 0)
-+				return xbc_parse_error("Failed to override value", v);
- 			child->next = nidx;	/* keep subkeys */
- 			goto array;
- 		}
+ /* XBC parse and tree build */
+ 
+-static int __init xbc_init_node(struct xbc_node *node, char *data, uint32_t flag)
++static int __init xbc_init_node(struct xbc_node *node, char *data, uint16_t flag)
+ {
+ 	unsigned long offset = data - xbc_data;
+ 
+@@ -422,7 +422,7 @@ static int __init xbc_init_node(struct xbc_node *node, char *data, uint32_t flag
+ 	return 0;
+ }
+ 
+-static struct xbc_node * __init xbc_add_node(char *data, uint32_t flag)
++static struct xbc_node * __init xbc_add_node(char *data, uint16_t flag)
+ {
+ 	struct xbc_node *node;
+ 
+@@ -452,7 +452,7 @@ static inline __init struct xbc_node *xbc_last_child(struct xbc_node *node)
+ 	return node;
+ }
+ 
+-static struct xbc_node * __init __xbc_add_sibling(char *data, uint32_t flag, bool head)
++static struct xbc_node * __init __xbc_add_sibling(char *data, uint16_t flag, bool head)
+ {
+ 	struct xbc_node *sib, *node = xbc_add_node(data, flag);
+ 
+@@ -480,17 +480,17 @@ static struct xbc_node * __init __xbc_add_sibling(char *data, uint32_t flag, boo
+ 	return node;
+ }
+ 
+-static inline struct xbc_node * __init xbc_add_sibling(char *data, uint32_t flag)
++static inline struct xbc_node * __init xbc_add_sibling(char *data, uint16_t flag)
+ {
+ 	return __xbc_add_sibling(data, flag, false);
+ }
+ 
+-static inline struct xbc_node * __init xbc_add_head_sibling(char *data, uint32_t flag)
++static inline struct xbc_node * __init xbc_add_head_sibling(char *data, uint16_t flag)
+ {
+ 	return __xbc_add_sibling(data, flag, true);
+ }
+ 
+-static inline __init struct xbc_node *xbc_add_child(char *data, uint32_t flag)
++static inline __init struct xbc_node *xbc_add_child(char *data, uint16_t flag)
+ {
+ 	struct xbc_node *node = xbc_add_sibling(data, flag);
+ 
 -- 
 2.34.1
 
