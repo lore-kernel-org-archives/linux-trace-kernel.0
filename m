@@ -1,50 +1,50 @@
 Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD53638A73B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143EA38AC7D;
 	Sat, 14 Mar 2026 23:02:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773529334; cv=pass; b=a0N9cT1s15tZmRNZAreEoYtvuEVRXo3XmHp/dwIlyGawqgnH+c1KDl7fMzAlYhyPTQ2PcCub9wjbfe7pBIULDLnkFE35NbP78lv9AfpS5smDtXFaOLhI3bt9j6L+T/v/ext6Ou5IYHwc/Px9BqVJdMgeUdCrLtl12dmqaMoUhbw=
+	t=1773529334; cv=pass; b=mUcmzbdUXgjdW4uRneQoW+jM5bA10bad/QyIqp5Xot5keZdxGeuDe0kXRhYS8gJsiXitIBzpZLesNOCmrzocf+ZgSXND1NqJtbB0Y/MDsLk3D9gbTxobMUMOZ7ZUxajRAcN2uHL3JlS80coboCLLS+Y7koot/MUbEUm5PUpJvwQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773529334; c=relaxed/simple;
-	bh=g0gLOzGvGgBaDelQ1nQAH+bFpUg7Z1FFbkCEaYNyQHI=;
+	bh=5jHlNQbA4ax5oxWy6TmNNrMnctsyCd5kWbRwYKqDhJE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J/RD9OWqBh+gYQBAZaIQYtEIm9oBLV+SepcwfiS4mT5vc/DHUV3vLb9UStg3i4TG6gYIy5dAleZJ73gFoM+hVgMbGX2omQj9VkoOGu5e/3D0QGC0rI6hMm54ZeJJJ48Pa5hhpllCr6pkWPk6HlXlw0NrVJbQWraQetv5uREr+kk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=TgtnwPSE; arc=pass smtp.client-ip=136.143.169.55
+	 MIME-Version; b=sWNtt1aABgxhiNSHDfEn3smpyJtjZoShic9rV/uAVTnlQHf5aHZDsoN8D2XwjU2sTdGCexOXjvUEmLE8q89FBRVjtr0ekXV+Z7FB65try7DmaWkaf7ujIv5+H9314j73fOs5fc7mTBXpUI9aMK30H2yCVgOsMVwJ8OV+Y1kgXU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=HsM4+0kD; arc=pass smtp.client-ip=136.143.169.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="TgtnwPSE"
-ARC-Seal: i=1; a=rsa-sha256; t=1773529326; cv=none; 
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="HsM4+0kD"
+ARC-Seal: i=1; a=rsa-sha256; t=1773529327; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=LVmd4T9/wEhNcmbXNcwu2t0jjcRn6Yn+p20zhYNeDQujIgOolwtzoSIENhjvh1qYisYrN8eCq8Pq+B1jvU4b3AeeF8v+a5QXDYo7mRxRhm8pCZXs4HvhZqwaQBdkd847aoX2Q2yCA0f8pCKijkiUoSTCV1y3QBT2tPU0hZSirIk=
+	b=DN5HsVZLsnF/bKV5TVQMYcNivt9cgVQ6eKoFNSokYwbH8oUvk1CXTn0XbxUyDVjS1gVg6PDf2AHN0DcYlLhfWOImHj6olXtwtpQjApA7NO064/1ccu2WGzKuuLLQuMxy/+kB/cnAd+HJ1SaIjg2ZdQC1jIXtNe37tKwTbNUCmlY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773529326; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=/qCjNtdUtGuqj2pRl8MUrYP2ntfBCQat1rATubD3gRk=; 
-	b=B9PCn8odiAWviXZfkwc7S88OzxemVlSLtuJ/MRpNJqOvYGvxhF0BgLduiKrXzfOrpfolmOsoIaSlKKIRq27mzs7a1AG1Hfj6IvgyV4YmalNpxVjse8xHqg3hxnB9Hu5GPusB1qhfySMQHPsWHI7mBnEORjuAA+GUzz12fhk+y1Q=
+	t=1773529327; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=RAInAapaPEVVIMyMy0xQq48ym4WbDouBno9PBv2kGos=; 
+	b=IOGTMqynrzy/kGDeBu+6LosBFFAmHPKgV6fSUyVvjg0RDNREoeIbkdFBVj3PlUOtJKcx0Kae3oB+F0rhGxnYrjlhsYcIUetQY+RjGAOEE1fCqAe9ajU9VI/oB60ZOVLhVsOG3AOwxh5ED0MBIby5Qgj+hMi8PSbktuENoMP4rQI=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773529326;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773529327;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=/qCjNtdUtGuqj2pRl8MUrYP2ntfBCQat1rATubD3gRk=;
-	b=TgtnwPSEZqM5UtJcSt+VfvbT7MMpcCr+J8FZwMK/HLhWxeXM2qO82vPS8CFvh8QN
-	0RZbbM7CbwZBOxxyx0i3eB4vVl4h3SsQcYTfvZwzqtCr3Tpm3xfGzyY3YUcb7AYRbYH
-	T8gQmVkFfTZDuVhHjung4K7HvysDoWFlaM/sax8M=
-Received: by mx.zoho.eu with SMTPS id 1773529323996483.49049098865214;
-	Sun, 15 Mar 2026 00:02:03 +0100 (CET)
+	bh=RAInAapaPEVVIMyMy0xQq48ym4WbDouBno9PBv2kGos=;
+	b=HsM4+0kDH5gbW7wnW/SDO92uksAzEH/ir2Ynbv7Qymd6/bojSyMw8jyvHGPmHBiN
+	TBmit3jbQVXuM5H+Ys1M2yawL6lQLml0XZ0Po6B+6PcrU2TYNdw72vxuVIgTdqeCRsx
+	bd/X1eeEymSK7XTapa62KGJF1+1aXu159jEwLpHA=
+Received: by mx.zoho.eu with SMTPS id 1773529324550686.8899954035314;
+	Sun, 15 Mar 2026 00:02:04 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Josh Law <objecting@objecting.org>
-Subject: [PATCH v4 12/17] bootconfig: constify xbc_calc_checksum() data parameter
-Date: Sat, 14 Mar 2026 23:01:50 +0000
-Message-Id: <20260314230155.155777-13-objecting@objecting.org>
+Subject: [PATCH v4 13/17] lib/bootconfig: replace linux/kernel.h with specific includes
+Date: Sat, 14 Mar 2026 23:01:51 +0000
+Message-Id: <20260314230155.155777-14-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260314230155.155777-1-objecting@objecting.org>
 References: <20260314230155.155777-1-objecting@objecting.org>
@@ -57,30 +57,30 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-xbc_calc_checksum() only reads the data buffer, so mark the parameter
-as const void * and the internal pointer as const unsigned char *.
+linux/kernel.h is a legacy catch-all header. Replace it with the
+specific headers actually needed: linux/cache.h for SMP_CACHE_BYTES,
+linux/compiler.h for unlikely(), and linux/sprintf.h for snprintf().
 
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
- include/linux/bootconfig.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bootconfig.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-index c37e0096c4f1..d78c2b62debf 100644
---- a/include/linux/bootconfig.h
-+++ b/include/linux/bootconfig.h
-@@ -36,9 +36,9 @@ bool __init cmdline_has_extra_options(void);
-  * The checksum will be used with the BOOTCONFIG_MAGIC and the size for
-  * embedding the bootconfig in the initrd image.
-  */
--static inline __init uint32_t xbc_calc_checksum(void *data, uint32_t size)
-+static inline __init uint32_t xbc_calc_checksum(const void *data, uint32_t size)
- {
--	unsigned char *p = data;
-+	const unsigned char *p = data;
- 	uint32_t ret = 0;
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index fe1053043752..0823491221f4 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -17,7 +17,9 @@
+ #include <linux/bug.h>
+ #include <linux/ctype.h>
+ #include <linux/errno.h>
+-#include <linux/kernel.h>
++#include <linux/cache.h>
++#include <linux/compiler.h>
++#include <linux/sprintf.h>
+ #include <linux/memblock.h>
+ #include <linux/string.h>
  
- 	while (size--)
 -- 
 2.34.1
 
