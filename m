@@ -1,62 +1,64 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7858C383C96
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 20:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F36384242
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 20:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773519283; cv=none; b=gLR1QcvgIIgDptIanZ4NjbT3kLfKm6czogwAcZpsrVxHFQaPVOmQhKLcgGeC4abrlSMx0jzzP8vl02LfYQdltjrdpoetze6UFBk9/6U7qYdNyigqW9Vyo2QeUH/nU9ri1ely38IahYPBasKGTWCaffP2UIoDBSp3rPyHjol1R9U=
+	t=1773519284; cv=none; b=T6XtDyLa/Qej4ER1Ezx7W3VfPigwBVkX34NsBraHkhdMMEd2HDBm+gLEo8vo7lSsHns20Bn66I7Pd/q+DnzzaYooDfOoNAfM652K2efGxMpavo0dMKxZhTwOLaur83fWWL9GvOtJbRZqhYn+5G3d+4xg/Usx5eAMZrEEOUBAcUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773519283; c=relaxed/simple;
-	bh=BynOgwAYPtb/KpshiEi9Ah5xEZa4UMFbs/5oRQMyRbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MbfXFsw/f0Q1q6PbehDWDn/jNIcADhK4UDXDYSCP0ux/h9BjwwGxc9kZsDlOZTP8OK9YhMsIqer4REQnBcDTah2YqOR+Ge/s9alFc2Ya8grAuqU0CcBkcD6glOSXpGcH7SyxgK+FtOetNXOKX8hWEBzofNQYqTRha6WGl5vA58U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hro6Tiyy; arc=none smtp.client-ip=209.85.160.52
+	s=arc-20240116; t=1773519284; c=relaxed/simple;
+	bh=x7JZBaiPMjila4i+dsi/muzHxZeS9PJ/SGrV4i00JNc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Dgz9f7e0OrKN1quxH8YPjwLf2/mW6d54b4sQWNd5+WSqD4N1xkn2yPUbWo5aMX6tCS9Mf0l9/lPNbop7FCpGmcMCvRHE+rq/lVTlm7qd2ujHRaRdGF8uYbaSw7A0j7+3ao6T41NPmhgp+eev3Igt0QPWJvb4YEZGZeWSnDAm5B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AhUkIN79; arc=none smtp.client-ip=209.85.160.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hro6Tiyy"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-40946982a78so1278331fac.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 13:14:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhUkIN79"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-40ea611d1a4so1313961fac.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 13:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773519280; x=1774124080; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ZQP7SyWGDwwAMOAnxSbi4O+tM8xtS6WH81TGDPwQ5w=;
-        b=Hro6TiyyKbllqTwuYBm8ZLytugkPa7QgbTUsOycf61G5oWgwGxQ8mFa88taodDMlLV
-         e2e5r6pIvC+SyxZ/w2RzZZnPfrjMOcdUGdFbAdMoHEULawFq5m8QanTVSw+6Oawc8M5B
-         bJ9ZYk41i9HkS6xB0RIfyZDG55Z1Olr8qBjbxGVoO6vpHG/oA8zz1kZHopN/YrDuaQsd
-         pNx8erJaKVb0RK+jca5AxZ1JFMntIX/bZDOA84Lofxk8/EGhD86e/X+JJ40XCq3wyQsG
-         wS/XjtW4vvUbXL7IcaXpfeGh0KefJ4KtRApp/c/TFEEPmwyrHmf5UtgCB06ZSp6OZsGj
-         3mEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773519280; x=1774124080;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773519282; x=1774124082; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2ZQP7SyWGDwwAMOAnxSbi4O+tM8xtS6WH81TGDPwQ5w=;
-        b=HOQjuCj6obUlEspzdaL8ONSix7qH1zYtsf5iv5oRXG/GZUKvEQtNYoBWpH3dyctEFp
-         B+J3edj8Mi8o3Tpcby0GLLTvGGqM0csbXNdnyFy14MTsfpvXgVwHTnozQHiH/s4TatDH
-         ZWm9fM88vyC5ttQrkQFccKreBMBmtbU2ebPos9j5mE0H1UgMaRfdCfO1xUwHv0VF445s
-         LuEpf/UsovEaSLagvfL1nb8iemlAIO7a2EclYa9cOWZSEenhxalhcYe7du4K2INGafFH
-         dndizCgEB2MF2HUEK9+9kpbUnXwqAouY0Ariz0SGGqwFXRDyA+JH0XosSt1mkOCAAuKw
-         x8GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzt9QfNqUh5me48V7jvxqN2x5MqD1bSCaZBSGAa8tmrLbgaxBtvkX3dQfqKzLt0TRfdBP8KlrRGFlz5DUDNsE4Umc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtIj3a1T8GUoSB4koNzfVOjNtGax3BRDeWZNlY0/OkjTkGVCI9
-	fBBm+WdZ0Tlr+xmhAzmDs4VCav/xy95F9IvV9rBX3nk4S3Fxq1R/itE6
-X-Gm-Gg: ATEYQzx9mQ3oW0p8s1azODklsC+3nrdB1s/oHOSqppzEKcNYrebyc5dkWULfy8X5hWM
-	4AujmHy396YeRG84nX/7uj7lvoCxQDz1OgZxtA9wL94FZubQE/pnrs6YeFpEuhDKXqwnhGBOPd4
-	GQ0c/5KIL/AeWZHfkiTWn7nRwUapMk2LunVCHiUtl7dkEcJCdb4mJcpwukxJSPja3I/DbVmVwqH
-	Ztf18r9UOTpTK+KYmEGwB06eTzqjz6tSXO032RvMPsxj4FFXMXXH5bygQoLLo0hbDS3UghRuCA7
-	1lrGLj5kl9/ciJsjk35oH1kuagt3DHDdzW9AaRe3fOriauRAf0a2Wahzj3HQBWIv1TEb8LBmlU7
-	DBQdPhuFjliQpH3omLQshceDEAgG2XfIQJxhDsRu1aQvSq3fYCMUxmd3MIxIPI4qqfESc9nArB1
-	08daDoJ6528da38YjBzwFtRCZ5jv9k8Rs5DXWnOf65Z0NFSxTEIILY+dFC6UWYXcpGjqB+nSDqm
-	sHdohnE1hN87u/HwSS96DkPmEMpnXZH85ocfiiq
-X-Received: by 2002:a05:6871:ca:b0:417:6237:cf82 with SMTP id 586e51a60fabf-417b923e031mr4502917fac.23.1773519280265;
-        Sat, 14 Mar 2026 13:14:40 -0700 (PDT)
+        bh=iO8Gig+uUsNsJX3c3oLWHfAhxFR79WVWca0SWR3nLZY=;
+        b=AhUkIN79mN8ojz/fybmKvpF0JjleCLGY4QbBKJgI6OUDuBXH4XR3lV3+WckMvA4KCc
+         0OjOLBcBwM71dp/Mk32iasY+Z2jObUC4pSQP4hQqWgy0rpHeliVj8qTuEtNgwgrUcnoJ
+         seV+FVl7Z93NKeu9ucjyvGwlbAFnJbY3D28Gs5S1QmeSbxksLmAUGkHjrA/P1xTN4edZ
+         EOb+QWuFCp8WX0ZIJtxHpe70w9ne1eN+Xii8M33lXisL1CNd8vydDrg1MsnigRVFcecW
+         bjcQFJWcU58wxnXkq+57nzQ57x/HlYiTb2HC26qEevaQptff6NMfXwj31ErwfQ8+QhUm
+         kElQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773519282; x=1774124082;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=iO8Gig+uUsNsJX3c3oLWHfAhxFR79WVWca0SWR3nLZY=;
+        b=iFm+ynu8D3CNMTv/lLuF3vcGI/LRXH2Uj8h/VFaQIETn0ZLp8Oarv1XkaX3yHtUAZa
+         KRSsIqdKjOuCbkTfFo8eNBJwvPq4cuIc9BxxVcrt1gZLdNbrrT8hb5qiQCw8i264viUe
+         JWzL4jNdITrGxUON3LxxHHmoozCqsCIJ//4+fTBeO7fCPxX9ClIIaSsrMNGUAyMg4smF
+         vLYpXzqDK/jDAgPlkJbzVJv9DbeB1j5vGC48rB5rfyXNgN8D15cOYzTSjDDtWKDkUye6
+         kRxmlxVWFrZKXe33WyZuPnEXWsA3fq7s6MxLRQFaJNiTwn7wyZd+glDTvbIEklZZ+O1I
+         knTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPGR4JBBGpxn2oXKJo01jCOOLo2oVtMfIJCMEg6lKbJAhJRG16DySolkqzXrIQfm5fF8N4mEBIsXuzCRsg4McHfOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweqQ+Ggzc2U5MNLbthlXu87eb2UGzZwkI93VNxQK0pgUeBNRbV
+	MyDy8s8hPA6i3qDcmpvMGi6xEJEXuXfRydPJEz3XQeflAKQ8EeKRdd5X
+X-Gm-Gg: ATEYQzwrrfv+0P2RRaW8D871zDe36ykqqfUQF6VxP0ygSQgn+mTZ7TDbmNzY6Z3j5D5
+	t8JwDyOHuECWQpj/LyTvhPi19FJpfI//wo5NVNBXbLqt8ZIxYelyixzP8+Sz6RP94GCyjPkRkDn
+	pQDKieNik6mbgpRaP3tMmO8vYgpIUja1OH7UsWJ/OyQca8TF6LPPxmEz07s/u+HTBvyeFNJD9F7
+	EWpj8uIxMXdgsiP9SAtkYMoo4qagscxGB/0FbVF860rJjgYSbxUj0K9jTLiRZKPejAa8S+JHvd3
+	PhpIqZzxzxbK6OFMpZTR9tCjbJ99w2Jvg7AUzoeHSJKI2Jpt8WUj6tomWLKQEQFyPceK4jbcnAY
+	defN7r78+a2wvZUy7KZl8BaE5F8klibrb/FKdClS6znVOajOSfiyUV8WHBNl2COhB/8BzMyobdo
+	dm3ecpGmOWWYiZU0dVpOtnHIDGkHXyToRymy7PzGxySowNzxJivOCDD1T/v/OV44qTwcEOKBh78
+	PbkrM83RIj4MqDe/yb3Y4UlW7aouLznrTuRoW7b
+X-Received: by 2002:a05:6870:d8c:b0:404:33e1:3cc2 with SMTP id 586e51a60fabf-417b91b2c8fmr4474193fac.13.1773519282232;
+        Sat, 14 Mar 2026 13:14:42 -0700 (PDT)
 Received: from Atwell-Laptop.. (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.14.38
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.14.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2026 13:14:39 -0700 (PDT)
+        Sat, 14 Mar 2026 13:14:41 -0700 (PDT)
 From: atwellwea@gmail.com
 To: netdev@vger.kernel.org,
 	davem@davemloft.net,
@@ -85,10 +87,12 @@ Cc: linux-kernel@vger.kernel.org,
 	mhiramat@kernel.org,
 	mathieu.desnoyers@efficios.com,
 	0x7f454c46@gmail.com
-Subject: [PATCH net-next v2 00/14] tcp: preserve receive-window accounting across ratio drift
-Date: Sat, 14 Mar 2026 14:13:34 -0600
-Message-ID: <20260314201348.1786972-1-atwellwea@gmail.com>
+Subject: [PATCH net-next v2 01/14] tcp: factor receive-memory accounting helpers
+Date: Sat, 14 Mar 2026 14:13:35 -0600
+Message-ID: <20260314201348.1786972-2-atwellwea@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260314201348.1786972-1-atwellwea@gmail.com>
+References: <20260314201348.1786972-1-atwellwea@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -99,104 +103,92 @@ Content-Transfer-Encoding: 8bit
 
 From: Wesley Atwell <atwellwea@gmail.com>
 
-This series keeps sender-visible TCP receive-window accounting tied to the
-scaling basis that was in force when the window was advertised, even if
-later receive-side truesize inflation lowers scaling_ratio or the live
-receive window retracts below the largest right edge already exposed to the
-sender.
+Factor the core receive-memory byte accounting into small helpers so
+window selection, pressure checks, and prune decisions all start from
+one set of quantities.
 
-After the receive-window retraction changes, the receive path needs to keep
-track of two related pieces of sender-visible state:
+This is preparatory only. Later patches will use the same helpers when
+tying sender-visible receive-window state back to hard memory admission.
 
-  1. the live advertised receive window
-  2. the maximum advertised right edge and the basis it was exposed with
+Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
+---
+ include/net/tcp.h    | 32 +++++++++++++++++++++++++++-----
+ net/ipv4/tcp_input.c |  2 +-
+ 2 files changed, 28 insertions(+), 6 deletions(-)
 
-This repost snapshots both, uses them to repair receive-buffer backing when
-ratio drift would otherwise strand sender-visible space, extends
-TCP_REPAIR_WINDOW so repair/restore can round-trip the new state, and adds
-truesize-drift coverage through TUN packetdrill tests and netdevsim-based
-selftests.
-
-v2:
-- repost to net-next and use the [PATCH net-next v2] prefix
-- rebase the receive-window accounting changes on top of the retraction
-  model
-- split the series more finely
-- snapshot both the live rwnd basis and the max advertised-window basis
-- extend TCP_REPAIR_WINDOW to preserve legacy, v1, and current layouts
-- add TUN RX truesize injection and packetdrill coverage for ratio drift
-- split the generic netdevsim PSP extension cleanup into its own final
-  patch after the peer RX truesize support
-- add the requested ABI/runtime comments at the non-obvious review points
-
-Testing:
-
-- full runtime selftest coverage for netdevsim, tcp_ao, mptcp, and
-  packetdrill; all runtime suites completed successfully
-- tcp_ao completed 24/24 top-level tests, covering 803 passing checks,
-  6 expected failures, 36 skips, and 0 unexpected failures
-- mptcp completed 588 passing checks in aggregate, with 28 skips and
-  0 unexpected failures
-- packetdrill completed 219/219 runtime cases with 0 failures,
-  including the new tests
-- netdevsim completed 18/18 top-level runtime tests with 0 failures,
-  including the peer RX truesize and related netdevsim coverage used by
-  this series
-
-Wesley Atwell (14):
-  tcp: factor receive-memory accounting helpers
-  tcp: snapshot advertise-time scaling for rcv_wnd
-  tcp: refresh rcv_wnd snapshots at TCP write sites
-  tcp: snapshot the maximum advertised receive window
-  tcp: grow rcvbuf to back scaled-window quantization slack
-  tcp: regrow rcvbuf when scaling_ratio drops after advertisement
-  tcp: honor the maximum advertised window after live retraction
-  tcp: extend TCP_REPAIR_WINDOW for live and max-window snapshots
-  mptcp: refresh TCP receive-window snapshots on subflows
-  tcp: expose rmem and backlog in tcp and mptcp rcvbuf_grow tracepoints
-  selftests: tcp_ao: cover legacy, v1, and retracted repair windows
-  tun/selftests: add RX truesize injection for TCP window tests
-  netdevsim: add peer RX truesize support for selftests
-  netdevsim: release pinned PSP ext on drop paths
-
- .../networking/net_cachelines/tcp_sock.rst    |   2 +
- drivers/net/netdevsim/netdev.c                | 156 ++++++-
- drivers/net/netdevsim/netdevsim.h             |   4 +
- drivers/net/tun.c                             |  65 +++
- include/linux/tcp.h                           |   2 +
- include/net/tcp.h                             | 118 ++++-
- include/trace/events/mptcp.h                  |  11 +-
- include/trace/events/tcp.h                    |  12 +-
- include/uapi/linux/if_tun.h                   |   4 +
- include/uapi/linux/tcp.h                      |   8 +
- net/ipv4/tcp.c                                |  75 ++-
- net/ipv4/tcp_fastopen.c                       |   2 +-
- net/ipv4/tcp_input.c                          | 160 ++++++-
- net/ipv4/tcp_minisocks.c                      |   4 +-
- net/ipv4/tcp_output.c                         |  25 +-
- net/mptcp/options.c                           |  14 +-
- net/mptcp/protocol.h                          |  14 +-
- .../selftests/drivers/net/netdevsim/Makefile  |   1 +
- .../drivers/net/netdevsim/peer-rx-truesize.sh | 426 ++++++++++++++++++
- .../tcp_rcv_neg_window_truesize.pkt           | 143 ++++++
- .../net/packetdrill/tcp_rcv_toobig.pkt        |  35 ++
- .../packetdrill/tcp_rcv_toobig_default.pkt    |  97 ++++
- .../tcp_rcv_toobig_default_truesize.pkt       | 118 +++++
- .../tcp_rcv_wnd_shrink_allowed_truesize.pkt   |  49 ++
- .../testing/selftests/net/tcp_ao/lib/aolib.h  |  83 +++-
- .../testing/selftests/net/tcp_ao/lib/repair.c |  18 +-
- .../selftests/net/tcp_ao/self-connect.c       | 201 ++++++++-
- tools/testing/selftests/net/tun.c             | 140 +++++-
- 28 files changed, 1911 insertions(+), 76 deletions(-)
- create mode 100755 tools/testing/selftests/drivers/net/netdevsim/peer-rx-truesize.sh
- create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window_truesize.pkt
- create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_toobig.pkt
- create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_toobig_default.pkt
- create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_toobig_default_truesize.pkt
- create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_wnd_shrink_allowed_truesize.pkt
-
-
-base-commit: f807b5b9b89eb9220d034115c272c312251cbcac
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index f87bdacb5a69..3a0060599afe 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1751,12 +1751,34 @@ static inline void tcp_scaling_ratio_init(struct sock *sk)
+ 	tcp_sk(sk)->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+ }
+ 
++/* TCP receive-side accounting reuses sk_rcvbuf as both a hard memory limit
++ * and as the source material for the advertised receive window after
++ * scaling_ratio conversion. Keep the byte accounting explicit so admission,
++ * pruning, and rwnd selection all start from the same quantities.
++ */
++static inline int tcp_rmem_used(const struct sock *sk)
++{
++	return atomic_read(&sk->sk_rmem_alloc);
++}
++
++static inline int tcp_rmem_avail(const struct sock *sk)
++{
++	return READ_ONCE(sk->sk_rcvbuf) - tcp_rmem_used(sk);
++}
++
++/* Sender-visible rwnd headroom also reserves bytes already queued on backlog.
++ * Those bytes are not free to advertise again until __release_sock() drains
++ * backlog and clears sk_backlog.len.
++ */
++static inline int tcp_rwnd_avail(const struct sock *sk)
++{
++	return tcp_rmem_avail(sk) - READ_ONCE(sk->sk_backlog.len);
++}
++
+ /* Note: caller must be prepared to deal with negative returns */
+ static inline int tcp_space(const struct sock *sk)
+ {
+-	return tcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) -
+-				  READ_ONCE(sk->sk_backlog.len) -
+-				  atomic_read(&sk->sk_rmem_alloc));
++	return tcp_win_from_space(sk, tcp_rwnd_avail(sk));
+ }
+ 
+ static inline int tcp_full_space(const struct sock *sk)
+@@ -1799,7 +1821,7 @@ static inline bool tcp_rmem_pressure(const struct sock *sk)
+ 	rcvbuf = READ_ONCE(sk->sk_rcvbuf);
+ 	threshold = rcvbuf - (rcvbuf >> 3);
+ 
+-	return atomic_read(&sk->sk_rmem_alloc) > threshold;
++	return tcp_rmem_used(sk) > threshold;
+ }
+ 
+ static inline bool tcp_epollin_ready(const struct sock *sk, int target)
+@@ -1949,7 +1971,7 @@ static inline void tcp_fast_path_check(struct sock *sk)
+ 
+ 	if (RB_EMPTY_ROOT(&tp->out_of_order_queue) &&
+ 	    tp->rcv_wnd &&
+-	    atomic_read(&sk->sk_rmem_alloc) < sk->sk_rcvbuf &&
++	    tcp_rmem_avail(sk) > 0 &&
+ 	    !tp->urg_data)
+ 		tcp_fast_path_on(tp);
+ }
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index e6b2f4be7723..b8e65e31255e 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -5959,7 +5959,7 @@ static int tcp_prune_queue(struct sock *sk, const struct sk_buff *in_skb)
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 
+ 	/* Do nothing if our queues are empty. */
+-	if (!atomic_read(&sk->sk_rmem_alloc))
++	if (!tcp_rmem_used(sk))
+ 		return -1;
+ 
+ 	NET_INC_STATS(sock_net(sk), LINUX_MIB_PRUNECALLED);
 -- 
 2.43.0
 
