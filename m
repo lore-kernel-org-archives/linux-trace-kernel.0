@@ -1,64 +1,64 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48513876D6
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 20:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A63B388E71
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 20:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773519296; cv=none; b=bB2sQQ2KGEdXNx/I4BSe0FLuOH3TWg7sDrqzfLagc/RgqeWKSwFtO+VVLN6myKpFRwhTjtwgAWSI7Pu32Vjm0lU2HYeq/g0Jozw++pybIxOnDuKyil13uEroHr3aQa/jDDulYtA+a4k7T2YrJbzFOE+ok6a4Itv8c01+W2mLs0w=
+	t=1773519298; cv=none; b=Q1VIrV18nH434WMiXuig1SXc4fcHI5zCTGZ/BtNzNfguB8sP3wCII9i236DXMMWpKAC93GwNxOVnCw3iVw4xl5jcXT+PlGZxysZjacyaQoTsN1p3QZ/7+IM9Ls99SexYfLsDWSCzE1+TfAv7fVdC3qW46TYC+LjnrGMGbDe9uqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773519296; c=relaxed/simple;
-	bh=UwI3YBDLFZSN0Qol0fxNTwazKut7aA5SPPECRbpGROI=;
+	s=arc-20240116; t=1773519298; c=relaxed/simple;
+	bh=dcj1s6Dgcrw3Y7tNOEUlJFcSNNEIPs4iabts40+JwIM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rIVSZKDYxrPLCd8tcYQfb5fkBjwciDw0RSLps9co+oQ4tsf8MIIPXLD0asdoMcKEiUALyVDuYOqgWEsRnQnfozkSS96WOmh2qpH4+V02NKfnVpQF0HGYNCMoqypMIOXe9fJVlMN+3SzESu7gbEBQPfATGKayI+gFI7ZJgXszBvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j49SHDWy; arc=none smtp.client-ip=209.85.160.43
+	 MIME-Version; b=htLw03m2OIKjPDTYlAqflLb3lsBdZbKzUr+eCk2cdQxBz80x70d9E1kPlRo0FvkSsoajJS6Qi/Ez5oNpEEMxDUoKQ/v7XlLJpz13WzMaQnMiWersJrypRA7lFDeKWT8UtH5wtYS+Inr54LaIYcHyIKoK73Zf1Kt7ThtlWhZmJi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mFW7KEXb; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j49SHDWy"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-4138136f02eso2337964fac.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 13:14:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFW7KEXb"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7d556c1a79eso3744107a34.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Mar 2026 13:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773519294; x=1774124094; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773519295; x=1774124095; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W8jG5HL0B71BMqNMR6IMNfhIt0KSqCtw04UXTW9LEYQ=;
-        b=j49SHDWyhL6wVPV5IL2n94528OcExoRQnxUY1jTYXuP9K5S7QNJhuDq8bK7PGpVdf2
-         IqZrZw86ALzFrFB7Dm1rYuRSKE51wU3EBTogSlIzUc8xR7rhpUWSEgMkUE3jmocumDW3
-         ZXRd33PWAzTNzUQIcWtqxbrFNOrq00xB6l/Afjl+nBygCSzgG3J8KYC1MXTabkdXlG5Z
-         ho5UwDBIsi6JuMoafh9D1E73l18caLotal1OPM62yTIie9pZ+IcMRXu/muCXIk7W6eAv
-         Q221WX4LU4hrfBVNoXINbhrBMEwgtWdBRAO25EnJl/8EHyc6i8KbPBQrnVbLQN0uz7L4
-         4BoA==
+        bh=xpvhfo9p2XSrc/tbQHeJ0/cabcWcjahm5y6siccjbzs=;
+        b=mFW7KEXbx2xHzOcHzEC4+WerjZYDr6T5uY/8RXTxpLRLV9ogJJQlGWMN7baacQtjD8
+         0w6nsnlYIhN/otPV6vVvu3g8yy/JiJI5mnP77ZdS4pQ8DJymo/PXbkmVocG9uNYovlLz
+         4/5Ocjf42HImX3dEKcpcff1fprnlrROEXn3BA8jyNwI6LVH6z61MUT2DXpwnDo+NBHsn
+         nfF8O5euOI/3LCSqq7X6hHeSQb2r1QurUdXyaxbvzNuljzDXVgWg9qd3mAn9NdJQGQsA
+         VlLzjLF2EcJ5MOmMhrQ38lHjicLFQO9IiTLg2g4acWNXyaaQvZoGTL8TdOdq/eArIkf8
+         QIAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773519294; x=1774124094;
+        d=1e100.net; s=20251104; t=1773519295; x=1774124095;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=W8jG5HL0B71BMqNMR6IMNfhIt0KSqCtw04UXTW9LEYQ=;
-        b=W2dmCjeDB5U6sU2aav4YzPVT7q3zQzAPWVEMmH0LwxJ3E6kcb4sri+LVnNSpem4gso
-         kw+jmYGR1duSU4jb63TTqsx9L+Bh8WS4cuWMZm7aJn8ZiMYBfYZWqlcF3ArKSeG3bU3u
-         XME1aMr+qdW205GfMbrP6/wA2Fahmb2SqWyPcNc4bJx93sB4Gyp5bbjIR+l83e68Waza
-         W8D/gmhHIORHuOtZrAcQieIV0y+j7wpcBIQVXIpgXXSEPiI+NCsJ18SLNUDVzzGsMUjQ
-         h4zuKhS/OslpEj3fo+VZ3ZUOYT+D/Uc/qLzDmDpA/a37K7j7aOiNjM2ReArCAawxoIcW
-         sR7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW8B1xoX77AltFIAt7Sqzz4DvoirMGKFB7FEoKrsaI0WZFliqxKJbKVPQ9HmEmpTViDEjojnAbe7v7Xsnc/ZH/cCW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWjfs8hEEs2yHCCIK6u6HiWDJ3Xv3nLouBvz87ZTctdTeOT5Y3
-	OqvrBNMvWt5GZq8z27qNog3OisYxahMPJwwrFgGMmInC7V6bYNiSPQsE
-X-Gm-Gg: ATEYQzyNiLl03E547aNN7JLsjPJShfM7HA+SpQxSMujQ1bbvE7XuczvrjgQVn/M/qoi
-	zLh1UK1rraTlkLSn/0RyaHDAjYgiZuB5HLjMNkKPTyk2dL9MBXFD6OAuBeOjNamAk4AJhIkpdtR
-	+2jozk1umoh/L3XFYZqGKvwS2ZB4RDTweG8b5C95IZFSV/XA57X3GUioI5QTOm1+JnJaeOn6d+9
-	+QQmAKsib+OpnVvPzkT8XfyO/if7NAiCXBVJpxD0toN7PU8MQ5h65yUb+YkPbAom91d5ql+5Cxl
-	IOYKPwSZvtquoEybkX8vAyrv+nEm/Dd0RLVXJSJahcX7ni3XJPa7meE4jsOQAhxsHUTdFZE/O3+
-	Rcg8m8PvSyXRx4yHQKq8ET1CQDth8qycgZ7NvK/wIW+bU0Tmnlvz0WYjGVfaCoKd24EH2bU6zVI
-	F7f1Lps9q8mAl6D6sgaDwG1af+BKEdgb6Jm2AdFmrrkDJxEjgHht+4WJbFfSnRlCs7/v0DCC3Ff
-	gsYBbWyUBGHneygatlyWX5ht9wlBfnOMjHu+MhS
-X-Received: by 2002:a05:6870:a70b:b0:409:5241:8abc with SMTP id 586e51a60fabf-417b91902e7mr4222211fac.20.1773519293652;
-        Sat, 14 Mar 2026 13:14:53 -0700 (PDT)
+        bh=xpvhfo9p2XSrc/tbQHeJ0/cabcWcjahm5y6siccjbzs=;
+        b=gQlqalm88nfMuxa3VJYY4emrp6P2YcF8ZwGXP3ynkmieh5GdR2wcljgkuSxY+DiigS
+         sATRdZciUUidn4Fuqk8Vjm6qGgq4cbS7wzmxEK7X1Ei2zxrNJg9f+cVfQda4D+D72Nnv
+         9JHneNoedTazpSkNwjpk1tTLyMSiL+NOBCbjZAxKMejJtZvuDGKV16K+ZTBbVcDFWG+n
+         p+Y8rVbnw6u8SHOfMBO52Bk6YcKa4nbpnnwesEYIVu5CHr5xN1gr5xnttRlXN/eVFLrk
+         uK+LRL1UQke9aVGbNFxb4JZo36eAH1+cC5faaby6Ch2u534a2RuXzgnhElIuxaiZYr3L
+         kaVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXh07diSK3Z89KUKNY/qeB+Ja7vwkbn9d6lXaec3pt4EAefTkMajDUBJPWj2ja3aq9AtbzD49nuM75chETGjYoDXCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaLpLkzQXksqG6wbSP5Z3k3ZOhR4c5U0wsRT41fAE6zWpNUTRA
+	LVsVbLMMwJVQaMXUP5ZYnA/WuDGu0hMs5Ndpqiv2J4N55b+a4lPFR8ZF
+X-Gm-Gg: ATEYQzx5r0XjWJ+I3I/Juq8/bHw1q0DszUQVRF33ypbhP46I4PFSZ5E1Po+QvArJnPV
+	KBto0r4dAWW2AtU49yyhf0phN8kOfnk2SHv9p62nrJ+Scvf5Zkn5V5VxVP+hfXDhXm52qa1KfeO
+	6mP4QccfarSPDO8gTwKa8YG4w0ilkVP82P0ZjhK5GY3am54DBq0JL7+Bv5F3DWrbY1aUCkAiFD0
+	wdezkXdi0b0FRA0IEyJy7RPmzUINKOeLWMeiyW5eWKXtPqF3yU3zxRD4aqQvesxwb4VTbme493Y
+	dTE69YPTRE+pUoTRO823k2ptZ0M2cGLolPc2qYrRqUKYceWiBlsuhtrwPhF7yzEGPigZH17NDfm
+	4CH9ElEi4YzE0M1RlcmuK7UgyA6Z+iDeE+mqkmSsSBWmdZ9RjNxeafJmE9iAsH6V/CG/wEi+jz9
+	KsD6DQdQR4KCdA1n6z4dZEHNhbUy2MYxyOIqODuPSQnNHG069Xpuk9rGeMj85kk594T5gDe5yQW
+	QPFW0Qg9ypWnNexTzQpImIZODrsokJdr97EAXES
+X-Received: by 2002:a05:6870:a796:b0:3e8:8b6f:9d85 with SMTP id 586e51a60fabf-417b937d46cmr4417226fac.29.1773519295129;
+        Sat, 14 Mar 2026 13:14:55 -0700 (PDT)
 Received: from Atwell-Laptop.. (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.14.52
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.14.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2026 13:14:53 -0700 (PDT)
+        Sat, 14 Mar 2026 13:14:54 -0700 (PDT)
 From: atwellwea@gmail.com
 To: netdev@vger.kernel.org,
 	davem@davemloft.net,
@@ -87,9 +87,9 @@ Cc: linux-kernel@vger.kernel.org,
 	mhiramat@kernel.org,
 	mathieu.desnoyers@efficios.com,
 	0x7f454c46@gmail.com
-Subject: [PATCH net-next v2 08/14] tcp: extend TCP_REPAIR_WINDOW for live and max-window snapshots
-Date: Sat, 14 Mar 2026 14:13:42 -0600
-Message-ID: <20260314201348.1786972-9-atwellwea@gmail.com>
+Subject: [PATCH net-next v2 09/14] mptcp: refresh TCP receive-window snapshots on subflows
+Date: Sat, 14 Mar 2026 14:13:43 -0600
+Message-ID: <20260314201348.1786972-10-atwellwea@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260314201348.1786972-1-atwellwea@gmail.com>
 References: <20260314201348.1786972-1-atwellwea@gmail.com>
@@ -103,199 +103,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Wesley Atwell <atwellwea@gmail.com>
 
-Extend TCP_REPAIR_WINDOW so repair and restore can round-trip both the
-live rwnd snapshot and the remembered maximum sender-visible window.
+When MPTCP resynchronizes the per-subflow TCP shadow window from the
+mptcp-level receive state, refresh the live rwnd snapshot and the
+remembered maximum-window snapshot along with it.
 
-Keep the ABI append-only by accepting the legacy and v1 prefix lengths on
-both get and set, rebuilding any missing max-window state from the live
-window when older userspace restores a socket.
+That keeps subflow TCP bookkeeping aligned with the sender-visible
+window state tracked in the core TCP patches.
 
 Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
 ---
- include/net/tcp.h        | 13 +++----
- include/uapi/linux/tcp.h |  8 +++++
- net/ipv4/tcp.c           | 73 ++++++++++++++++++++++++++++++++++++----
- 3 files changed, 81 insertions(+), 13 deletions(-)
+ net/mptcp/options.c  | 14 +++++++++-----
+ net/mptcp/protocol.h | 14 +++++++++++---
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 5b479ad44f89..12e62fea2aaf 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1766,13 +1766,14 @@ static inline bool tcp_space_from_wnd_snapshot(u8 scaling_ratio, int win,
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 8a1c5698983c..64cd637484a4 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1073,9 +1073,12 @@ static void rwin_update(struct mptcp_sock *msk, struct sock *ssk,
+ 		return;
+ 
+ 	/* Some other subflow grew the mptcp-level rwin since rcv_wup,
+-	 * resync.
++	 * resync. Keep the TCP shadow window in its advertised u32 domain
++	 * and refresh the advertise-time scaling snapshot while doing so.
+ 	 */
+-	tp->rcv_wnd += mptcp_rcv_wnd - subflow->rcv_wnd_sent;
++	tcp_set_rcv_wnd(tp, min_t(u64, (u64)tp->rcv_wnd +
++				  (mptcp_rcv_wnd - subflow->rcv_wnd_sent),
++				  U32_MAX));
+ 	tcp_update_max_rcv_wnd_seq(tp);
+ 	subflow->rcv_wnd_sent = mptcp_rcv_wnd;
+ }
+@@ -1335,12 +1338,13 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
+ 	if (rcv_wnd_new != rcv_wnd_old) {
+ raise_win:
+ 		/* The msk-level rcv wnd is after the tcp level one,
+-		 * sync the latter.
++		 * sync the latter and refresh its advertise-time scaling
++		 * snapshot.
+ 		 */
+ 		rcv_wnd_new = rcv_wnd_old;
+ 		win = rcv_wnd_old - ack_seq;
+-		new_win = min_t(u64, win, U32_MAX);
+-		tp->rcv_wnd = new_win;
++		tcp_set_rcv_wnd(tp, min_t(u64, win, U32_MAX));
++		new_win = tp->rcv_wnd;
+ 		tcp_update_max_rcv_wnd_seq(tp);
+ 
+ 		/* Make sure we do not exceed the maximum possible
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0bd1ee860316..4ea95c9c0c7a 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -408,11 +408,19 @@ static inline int mptcp_space_from_win(const struct sock *sk, int win)
+ 	return __tcp_space_from_win(mptcp_sk(sk)->scaling_ratio, win);
  }
  
- /* Rebuild hard receive-memory units for data already covered by tp->rcv_wnd if
-- * the advertise-time basis is known.
-+ * the advertise-time basis is known. Legacy TCP_REPAIR restores can only
-+ * recover tp->rcv_wnd itself; callers must fall back when the snapshot is
-+ * unknown.
-  */
- static inline bool tcp_space_from_rcv_wnd(const struct tcp_sock *tp, int win,
- 					  int *space)
- {
--	return tcp_space_from_wnd_snapshot(tp->rcv_wnd_scaling_ratio, win,
--					   space);
-+	return tcp_space_from_wnd_snapshot(tp->rcv_wnd_scaling_ratio, win, space);
- }
- 
- /* Same as tcp_space_from_rcv_wnd(), but for the remembered maximum
-@@ -1800,9 +1801,9 @@ static inline void tcp_scaling_ratio_init(struct sock *sk)
- }
- 
- /* tp->rcv_wnd is paired with the scaling_ratio that was in force when that
-- * window was last advertised. Callers can leave a zero snapshot when the
-- * advertise-time basis is unknown and refresh the pair on the next local
-- * window update.
-+ * window was last advertised. Legacy TCP_REPAIR restores can only recover the
-+ * window value itself and use a zero snapshot until a fresh local window
-+ * advertisement refreshes the pair.
-  */
- static inline void tcp_set_rcv_wnd_snapshot(struct tcp_sock *tp, u32 win,
- 					    u8 scaling_ratio)
-diff --git a/include/uapi/linux/tcp.h b/include/uapi/linux/tcp.h
-index 03772dd4d399..564a77f69130 100644
---- a/include/uapi/linux/tcp.h
-+++ b/include/uapi/linux/tcp.h
-@@ -152,6 +152,11 @@ struct tcp_repair_opt {
- 	__u32	opt_val;
- };
- 
-+/* Append-only repair ABI.
-+ * Older userspace may stop at rcv_wup or rcv_wnd_scaling_ratio.
-+ * The kernel accepts those prefix lengths and rebuilds any missing
-+ * receive-window snapshot state on restore.
++/* MPTCP exposes window space from the mptcp-level receive queue, so it tracks
++ * a separate backlog counter from the subflow backlog embedded in struct sock.
 + */
- struct tcp_repair_window {
- 	__u32	snd_wl1;
- 	__u32	snd_wnd;
-@@ -159,6 +164,9 @@ struct tcp_repair_window {
- 
- 	__u32	rcv_wnd;
- 	__u32	rcv_wup;
-+	__u32	rcv_wnd_scaling_ratio;  /* 0 means live-window basis unknown */
-+	__u32	rcv_mwnd_seq;
-+	__u32	rcv_mwnd_scaling_ratio; /* 0 means max-window basis unknown */
- };
- 
- enum {
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 66706dbb90f5..39a1265876ea 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3533,17 +3533,31 @@ static inline bool tcp_can_repair_sock(const struct sock *sk)
- 		(sk->sk_state != TCP_LISTEN);
- }
- 
-+/* Keep accepting the pre-extension TCP_REPAIR_WINDOW layout so legacy
-+ * userspace can restore sockets without fabricating a snapshot basis.
-+ */
-+static inline int tcp_repair_window_legacy_size(void)
++static inline int mptcp_rwnd_avail(const struct sock *sk)
 +{
-+	return offsetof(struct tcp_repair_window, rcv_wnd_scaling_ratio);
++	return READ_ONCE(sk->sk_rcvbuf) -
++	       READ_ONCE(mptcp_sk(sk)->backlog_len) -
++	       tcp_rmem_used(sk);
 +}
 +
-+static inline int tcp_repair_window_v1_size(void)
-+{
-+	return offsetof(struct tcp_repair_window, rcv_mwnd_seq);
-+}
-+
- static int tcp_repair_set_window(struct tcp_sock *tp, sockptr_t optbuf, int len)
+ static inline int __mptcp_space(const struct sock *sk)
  {
--	struct tcp_repair_window opt;
-+	struct tcp_repair_window opt = {};
- 
- 	if (!tp->repair)
- 		return -EPERM;
- 
--	if (len != sizeof(opt))
-+	if (len != tcp_repair_window_legacy_size() &&
-+	    len != tcp_repair_window_v1_size() && len != sizeof(opt))
- 		return -EINVAL;
- 
--	if (copy_from_sockptr(&opt, optbuf, sizeof(opt)))
-+	if (copy_from_sockptr(&opt, optbuf, len))
- 		return -EFAULT;
- 
- 	if (opt.max_window < opt.snd_wnd)
-@@ -3559,9 +3573,47 @@ static int tcp_repair_set_window(struct tcp_sock *tp, sockptr_t optbuf, int len)
- 	tp->snd_wnd	= opt.snd_wnd;
- 	tp->max_window	= opt.max_window;
- 
--	tp->rcv_wnd	= opt.rcv_wnd;
-+	if (len == tcp_repair_window_legacy_size()) {
-+		/* Legacy repair UAPI has no advertise-time basis for tp->rcv_wnd.
-+		 * Mark the snapshot unknown until a fresh local advertisement
-+		 * re-establishes the pair.
-+		 */
-+		tcp_set_rcv_wnd_unknown(tp, opt.rcv_wnd);
-+		tp->rcv_wup	= opt.rcv_wup;
-+		tcp_init_max_rcv_wnd_seq(tp);
-+		return 0;
-+	}
-+
-+	if (opt.rcv_wnd_scaling_ratio > U8_MAX)
-+		return -EINVAL;
-+
-+	tcp_set_rcv_wnd_snapshot(tp, opt.rcv_wnd, opt.rcv_wnd_scaling_ratio);
- 	tp->rcv_wup	= opt.rcv_wup;
--	tp->rcv_mwnd_seq = opt.rcv_wup + opt.rcv_wnd;
-+
-+	if (len == tcp_repair_window_v1_size()) {
-+		/* v1 repair can restore the live-window snapshot, but not a
-+		 * retracted max-window snapshot. Rebuild it from the live pair
-+		 * until a fresh local advertisement updates it again.
-+		 */
-+		tcp_init_max_rcv_wnd_seq(tp);
-+		return 0;
-+	}
-+
-+	if (opt.rcv_mwnd_scaling_ratio > U8_MAX)
-+		return -EINVAL;
-+
-+	/* Userspace may repair sequence-space values after checkpoint without
-+	 * also rebasing the remembered max advertised right edge. If the exact
-+	 * snapshot no longer covers the restored live window, treat it like
-+	 * v1 and rebuild the max-window side from the live pair.
-+	 */
-+	if (after(opt.rcv_wup + opt.rcv_wnd, opt.rcv_mwnd_seq)) {
-+		tcp_init_max_rcv_wnd_seq(tp);
-+		return 0;
-+	}
-+
-+	tp->rcv_mwnd_seq = opt.rcv_mwnd_seq;
-+	tp->rcv_mwnd_scaling_ratio = opt.rcv_mwnd_scaling_ratio;
- 
- 	return 0;
+-	return mptcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) -
+-				    READ_ONCE(mptcp_sk(sk)->backlog_len) -
+-				    sk_rmem_alloc_get(sk));
++	return mptcp_win_from_space(sk, mptcp_rwnd_avail(sk));
  }
-@@ -4650,12 +4702,16 @@ int do_tcp_getsockopt(struct sock *sk, int level,
- 		break;
  
- 	case TCP_REPAIR_WINDOW: {
--		struct tcp_repair_window opt;
-+		struct tcp_repair_window opt = {};
- 
- 		if (copy_from_sockptr(&len, optlen, sizeof(int)))
- 			return -EFAULT;
- 
--		if (len != sizeof(opt))
-+		/* Mirror the accepted set-side prefix lengths so checkpoint
-+		 * tools can round-trip exactly the layout version they know.
-+		 */
-+		if (len != tcp_repair_window_legacy_size() &&
-+		    len != tcp_repair_window_v1_size() && len != sizeof(opt))
- 			return -EINVAL;
- 
- 		if (!tp->repair)
-@@ -4666,6 +4722,9 @@ int do_tcp_getsockopt(struct sock *sk, int level,
- 		opt.max_window	= tp->max_window;
- 		opt.rcv_wnd	= tp->rcv_wnd;
- 		opt.rcv_wup	= tp->rcv_wup;
-+		opt.rcv_wnd_scaling_ratio = tp->rcv_wnd_scaling_ratio;
-+		opt.rcv_mwnd_seq = tp->rcv_mwnd_seq;
-+		opt.rcv_mwnd_scaling_ratio = tp->rcv_mwnd_scaling_ratio;
- 
- 		if (copy_to_sockptr(optval, &opt, len))
- 			return -EFAULT;
+ static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *sk)
 -- 
 2.43.0
 
