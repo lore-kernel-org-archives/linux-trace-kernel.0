@@ -1,35 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D124315F;
-	Sat, 14 Mar 2026 20:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773519632; cv=none; b=B3/Kc40OtElfqzwRQhV3Wi4Osjbu0VkPHiYldxVOltkBKBUAzRarQSnI/hi4iCRCMqy0vPp7qzHSrrUQVe41LB+Qo2qlK23a4cK/6YD7I9EvVUmluicswocrNXbEgl/bXyeElbbMr2DaE4GR1C0OAqR44Xi5/oOU1ALSanVIkCE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773519632; c=relaxed/simple;
-	bh=dZ7TUltrsGQnkjHyx6uPFJSysa3z0NsdMkhYSIVZlgU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=cp1xTW1bp0KgkNAIV9ioOaWTybJYj4o9MQNgunThb6ZqKgWdgd116UNpc6eoy4NFD9Zkt0DV3PhJWvkjvngYAM0DSCqHCENCDisC+zORa4PKMy0E6UtNT+5SwTVXWV7w/EcJJ3nGMSYXjb5xc+oq91CXbbu3gIeMKejC6qXnGcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HdJqR8X2; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1893246F0;
+	Sat, 14 Mar 2026 21:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773524773; cv=pass; b=IWo7vAhBjnk4OUyavVFBh4w5mbDlz98/mEkM+pQOR8FMWO3fkCGFvq5Fg0ZnNrG17s3/mdXz2ubsb4cBdlBs+xriQp/wihnfdCRn0iRBkuTvPX6rSS8ZgA7oLHTdE8x+x/gdCzlSE/jUMRpPbyMEkB7lUHRWSX8g/a1cCZhvf7c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773524773; c=relaxed/simple;
+	bh=mOcA5NumuG5htRvRiYXxJV6Vjf0pzLdSrtjWwr+L0hk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AlWrg7tFb9DHwVPM+LYGf9LWaEyYUhwdcKN1SKYhoSxX9R6aNJnhtHNIvWxq4nMkPAAyrKPnz3m4sWes1CrVMZieyhFYrpBa5orPysxX0zA1AbBsFUAAAvOvWT3IHuYZYxjEhlbvn+SKWnGwF+ROsoM+PeRBfRrrT7vr/ieV5Jc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=F0d2qFzW; arc=pass smtp.client-ip=136.143.169.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HdJqR8X2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31DFAC116C6;
-	Sat, 14 Mar 2026 20:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773519632;
-	bh=dZ7TUltrsGQnkjHyx6uPFJSysa3z0NsdMkhYSIVZlgU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HdJqR8X2SLbtNr28I19jzsOqhPhUyN9DvIpBPNgNE3OBDtV4RhJcouPowb6Uqxnez
-	 Ve4ks8+dMYm9BIMr0WnHTltEHBmV4oRclBNoHf0b6l9V2JLFKs83Lawdb4W52210al
-	 v+THkPxay8iLVet0kxhUlyQUfrgMSFZv1dpi2WhMSR3mZgMta2ctlQKUdLPVGWZrAt
-	 lq9boFOdArGdKw9As8kO+ae8Zzxe5Vsan6Zohzz+FflwaCu7HB4K1UCwwHti0dW0EH
-	 pFKVUP7gqsoCKvG4nz8GPd5QnZU4TMew7otPt7usiqrVN4H1FWZeIHsoyMTS6ELHDx
-	 dsxBvK47zealw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7CF643808200;
-	Sat, 14 Mar 2026 20:20:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="F0d2qFzW"
+ARC-Seal: i=1; a=rsa-sha256; t=1773524759; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=L0JdAFptlufiKnS5g5xhAg0zszJqP6jVtOX/46L4GeCPH1nXQuJxRq5LN+V2YRhfubGOd1gVt8F/HnIrgy1ZoMiZYah+Cp50um3E5O2wkcc1UIYoz/WAB8EmQjY/AGWXIRb7ILG1lrQABKZSjH7DrnQG8keQfiYioZrcOR4rOGM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1773524759; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=RNVEZU5OMpS4t6chZVfYPFtX6E6ANKPvlBhC6PXo744=; 
+	b=QN+RTiTTJqhfVV4CLreAmcIUpe6U1kj0UwINxOHzy5Cyi+WJwXEJiDhtQU0oDsOUSvLD3mcq7vId785IoULP51mj7mxj59FtHseqx3h/lAun4L/+r3EWhPqdpLSgmMlO0t+91TRbdp7JpL+jtEcM2sfoF2XphhiDSInqUcGzWF0=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=objecting.org;
+	spf=pass  smtp.mailfrom=objecting@objecting.org;
+	dmarc=pass header.from=<objecting@objecting.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773524759;
+	s=zmail; d=objecting.org; i=objecting@objecting.org;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=RNVEZU5OMpS4t6chZVfYPFtX6E6ANKPvlBhC6PXo744=;
+	b=F0d2qFzWdBeyM2LKZSaeptKUW2/UMDHWa0qO98VqlxZgBrizXoTUqi001VrkJUoj
+	Ge5pQ5NFq8y4vb6oXuQXhuJgqBOcn21w0e+Q0+zPN3Rr5CwJ7iO+k0qFUWpJJ09QQcn
+	XXByHt/82D6fsIcrYmnwrKb31cs/xLWKpOQ5ifFY=
+Received: by mx.zoho.eu with SMTPS id 1773524758686449.92300632525917;
+	Sat, 14 Mar 2026 22:45:58 +0100 (CET)
+From: Josh Law <objecting@objecting.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Josh Law <objecting@objecting.org>
+Subject: [PATCH 02/15] lib/bootconfig: fix typo "initiized" in xbc_root_node() kerneldoc
+Date: Sat, 14 Mar 2026 21:45:42 +0000
+Message-Id: <20260314214555.96217-3-objecting@objecting.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260314214555.96217-1-objecting@objecting.org>
+References: <20260314214555.96217-1-objecting@objecting.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,76 +55,26 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v4 00/13] devlink: introduce shared devlink
- instance
- for PFs on same chip
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177351962627.1773477.8399936488095147761.git-patchwork-notify@kernel.org>
-Date: Sat, 14 Mar 2026 20:20:26 +0000
-References: <20260312100407.551173-1-jiri@resnulli.us>
-In-Reply-To: <20260312100407.551173-1-jiri@resnulli.us>
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- donald.hunter@gmail.com, corbet@lwn.net, skhan@linuxfoundation.org,
- saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, mbloch@nvidia.com,
- przemyslaw.kitszel@intel.com, mschmidt@redhat.com, andrew+netdev@lunn.ch,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- chuck.lever@oracle.com, matttbe@kernel.org, cjubran@nvidia.com,
- daniel.zahka@gmail.com, linux-doc@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-ZohoMailClient: External
 
-Hello:
+Signed-off-by: Josh Law <objecting@objecting.org>
+---
+ lib/bootconfig.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 12 Mar 2026 11:03:54 +0100 you wrote:
-> From: Jiri Pirko <jiri@nvidia.com>
-> 
-> Multiple PFs on a network adapter often reside on the same physical
-> chip, running a single firmware. Some resources and configurations
-> are inherently shared among these PFs - PTP clocks, VF group rates,
-> firmware parameters, and others. Today there is no good object in
-> the devlink model to attach these chip-wide configuration knobs to.
-> Drivers resort to workarounds like pinning shared state to PF0 or
-> maintaining ad-hoc internal structures (e.g., ice_adapter) that are
-> invisible to userspace.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v4,01/13] devlink: expose devlink instance index over netlink
-    https://git.kernel.org/netdev/net-next/c/68deca0f0f4b
-  - [net-next,v4,02/13] devlink: add helpers to get bus_name/dev_name
-    https://git.kernel.org/netdev/net-next/c/0f5531879afb
-  - [net-next,v4,03/13] devlink: avoid extra iterations when found devlink is not registered
-    https://git.kernel.org/netdev/net-next/c/e2e3666fd360
-  - [net-next,v4,04/13] devlink: allow to use devlink index as a command handle
-    https://git.kernel.org/netdev/net-next/c/d85a8af57da8
-  - [net-next,v4,05/13] devlink: support index-based lookup via bus_name/dev_name handle
-    https://git.kernel.org/netdev/net-next/c/725d5fdb7b9c
-  - [net-next,v4,06/13] devlink: support index-based notification filtering
-    https://git.kernel.org/netdev/net-next/c/089aeb4f2218
-  - [net-next,v4,07/13] devlink: introduce __devlink_alloc() with dev driver pointer
-    https://git.kernel.org/netdev/net-next/c/eb32a6310a7b
-  - [net-next,v4,08/13] devlink: add devlink_dev_driver_name() helper and use it in trace events
-    https://git.kernel.org/netdev/net-next/c/20b0f383aae7
-  - [net-next,v4,09/13] devlink: add devl_warn() helper and use it in port warnings
-    https://git.kernel.org/netdev/net-next/c/104733e1303e
-  - [net-next,v4,10/13] devlink: allow devlink instance allocation without a backing device
-    https://git.kernel.org/netdev/net-next/c/a4c6d53e5fd6
-  - [net-next,v4,11/13] devlink: introduce shared devlink instance for PFs on same chip
-    https://git.kernel.org/netdev/net-next/c/1850e76b3804
-  - [net-next,v4,12/13] documentation: networking: add shared devlink documentation
-    https://git.kernel.org/netdev/net-next/c/63fff8c0f702
-  - [net-next,v4,13/13] net/mlx5: Add a shared devlink instance for PFs on same chip
-    https://git.kernel.org/netdev/net-next/c/2a8c8a03f306
-
-You are awesome, thank you!
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 51fd2299ec0f..53aedc042f6e 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -112,7 +112,7 @@ static int __init xbc_parse_error(const char *msg, const char *p)
+  * xbc_root_node() - Get the root node of extended boot config
+  *
+  * Return the address of root node of extended boot config. If the
+- * extended boot config is not initiized, return NULL.
++ * extended boot config is not initialized, return NULL.
+  */
+ struct xbc_node * __init xbc_root_node(void)
+ {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
