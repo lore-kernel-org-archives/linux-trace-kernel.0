@@ -1,28 +1,28 @@
-Received: from sender-of-o59.zoho.eu (sender-of-o59.zoho.eu [136.143.169.59])
+Received: from sender-of-o58.zoho.eu (sender-of-o58.zoho.eu [136.143.169.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6043859C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0C138F641;
 	Sat, 14 Mar 2026 22:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.59
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773527684; cv=pass; b=fomLFL2EWOhTSSXbu7Z7+3g0RHVS3hKTiJn6CKmXqAZrPYUVtS44/TdcGfYArlxbk2LVGB6o0uv7YOxrjkKFrPEH4zGyiqoW9yr0JhX+dFFzHomwPoh8VeHSoUDWs8XxtPM5ov2QaNAcVNxBxKfHq0bC4hcJUvMnMxwcyDuxfFs=
+	t=1773527685; cv=pass; b=qZTqatSKWjbWcQ8+5sGhSPjGKy/zdDikpytjbyt/omi/Msocn1HqMLHstekHiofoZBDoR4Y9CP5bhLrejVII4tTiRajF37HGsLfyJdjn+mO3/nXo6zA4cz4VxjiEkB6S45rvS81OVTo4Vsbr+OCYDou96XkjE/T0F+BA1xyvDUE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773527684; c=relaxed/simple;
-	bh=EyQa2yiCR3sisK7A/Krl1IC09X8Q7RdNked45ipt3G0=;
+	s=arc-20240116; t=1773527685; c=relaxed/simple;
+	bh=6I0hpTbxvzM0MrqqhLwejv2QuzQNDU3b1q7ISIjV9Vw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=teDDiV2dtSL0TMTpHNdCwLfQ2I/JAsP3WTsKtPjrO9BlJTqie4du+9bW4/kKZNLQ9BxxPzwXc9R2+U/7VELHVwlTp5Q928mlqXfmS7DCimdKP1SZqL0dd0ujAyVrEEbrIU4B4a3rFlyp+2Y5qgLqfbSIy06XP/YwE+svrXxYDaE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=nhwuJKvi; arc=pass smtp.client-ip=136.143.169.59
+	 MIME-Version; b=aLkPmON/Voo4P+lJo2jC+qgN9tHOskicfYXv7tWUOWZ9A/XKv5EefrUyMKS6FY458ZgGuBib15GWAitUrApz5iXB+6P5Wmdngf9a+mgmTyo81QsgoymgTmOLmx2SlHz16S3saKVIlzyWcyWwoKTao0w+EZRtHZXmhnTPnbQRaio=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=S+6Xx2gg; arc=pass smtp.client-ip=136.143.169.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="nhwuJKvi"
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="S+6Xx2gg"
 ARC-Seal: i=1; a=rsa-sha256; t=1773527676; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=bydEujns4hDvrdxEs7PzqaGuhQVpqTmbfqVOdog8puCogiKGZ31j6y4Fw0EN97HkAocpBH6RBMSyxPABL6lDu6Wyj2o9exHrcLnR3jHklM8XqgfOSvYsZ5LOdmmka88GyZ7n08bCSSkq8d9uWRLH9FlKcZ8OaMGmUwt91f2lRRk=
+	b=Q9cxx5Z1q1JrI8Lne992emwju4tuyoACr8J+vaVkn2pquowaong6NfwDMMu07vfq1v0KbjUNqBBKoZObXMIG2q8bqxJGSscQcL2MSG5CP8BK3WMFMhAI3/JVrMu8WKHph2/eHEMfLfxIrMzWU33JTLkW5OfY+8Jv4xpaqjGF+aY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
 	t=1773527676; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Q+C7ggGoU4QHs0Fn4FuoB2kR86tEhBwFbzmCOlWlA0A=; 
-	b=M8A7OjmSgsE9EIbuzdj/AAFM5WYbT9gFfNF2pQhls2DQ7ETTWOzL55gNvwZgt0ufiU/auRlDheSKgmOhO7OYvFPym33xgEWsn9f7WDnkHE+bSG1RgMmkzT//f/9CKh3xH3c5EvxNc6NbGd2hMKRAItOSZTLlIUXReBTxsJraKGQ=
+	bh=1AD6D9MidV6Fkfxyg/iT9A9sDWNhqE7cnbV+HIFl0WI=; 
+	b=kbAbIe8q+oL5vQnIyc8BCaJGtVKgOTG8UmFAkStl+iBE7dMerHWE5VIsKgbqQJqsiOw6tKPNUwvbh2eV+BoMNbcVVRwaq5SNU5egJWlMbZilI4vFA4Uut5bbNBS5UHnPX+WVs0kdteOA8fFKhkDDCvWM2m5wIP9izs9nYTqDLWs=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
@@ -30,21 +30,21 @@ ARC-Authentication-Results: i=1; mx.zohomail.eu;
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773527676;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=Q+C7ggGoU4QHs0Fn4FuoB2kR86tEhBwFbzmCOlWlA0A=;
-	b=nhwuJKviRtwMwkAqm782ObXqT3ITKEZzyDw5oWr07EApv/lwtCQeLPDhh4YaEToK
-	bsUVIdJz36W7lmTrD7t2vWEzgv2edHLGeXuQhNF95jmO1+l8Gmkj/VqyBHKz+k70CuP
-	Al7UTUJAsWNLlexZGiK9ZNcv/rO5iGQNf1MSxgno=
-Received: by mx.zoho.eu with SMTPS id 1773527674466602.1923633326625;
-	Sat, 14 Mar 2026 23:34:34 +0100 (CET)
+	bh=1AD6D9MidV6Fkfxyg/iT9A9sDWNhqE7cnbV+HIFl0WI=;
+	b=S+6Xx2ggomHXMMHgZcGBGddkod8q4kv6RYLBB5+DJTLn8zPLjW0TxGmqFNTtzoBv
+	0Knn99PJRzXTS4jpX9uuylO8NNQlMdXt7TBMu7gLdTTxyFgrPOWuJ1snvE1OJMpqtdJ
+	MAoDGxJGNLoYE8torqfnFzA80wkp/ioJVetJZdBA=
+Received: by mx.zoho.eu with SMTPS id 1773527673949838.9845325686828;
+	Sat, 14 Mar 2026 23:34:33 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Josh Law <objecting@objecting.org>
-Subject: [PATCH v3 15/17] lib/bootconfig: validate child node index in xbc_verify_tree()
-Date: Sat, 14 Mar 2026 22:34:23 +0000
-Message-Id: <20260314223425.142966-16-objecting@objecting.org>
+Subject: [PATCH v3 14/17] bootconfig: add __packed definition to tools/bootconfig shim header
+Date: Sat, 14 Mar 2026 22:34:22 +0000
+Message-Id: <20260314223425.142966-15-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260314223425.142966-1-objecting@objecting.org>
 References: <20260314223425.142966-1-objecting@objecting.org>
@@ -57,32 +57,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-xbc_verify_tree() validates that each node's next index is within
-bounds, but does not check the child index.  If a parser bug ever
-sets an out-of-bounds child value, xbc_node_get_child() would return
-a pointer outside the xbc_nodes array.  Add the same bounds check
-for the child field.
+The tools/bootconfig userspace build includes the main bootconfig.h
+via a shim header that defines kernel macros for userspace. Add the
+__packed macro so the struct xbc_node declaration works after the
+conversion from open-coded __attribute__((__packed__)).
 
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
- lib/bootconfig.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/bootconfig/include/linux/bootconfig.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 0823491221f4..038f56689a48 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -823,6 +823,10 @@ static int __init xbc_verify_tree(void)
- 			return xbc_parse_error("No closing brace",
- 				xbc_node_get_data(xbc_nodes + i));
- 		}
-+		if (xbc_nodes[i].child >= xbc_node_num) {
-+			return xbc_parse_error("Broken child node",
-+				xbc_node_get_data(xbc_nodes + i));
-+		}
- 	}
+diff --git a/tools/bootconfig/include/linux/bootconfig.h b/tools/bootconfig/include/linux/bootconfig.h
+index 6784296a0692..41c50ab95ba5 100644
+--- a/tools/bootconfig/include/linux/bootconfig.h
++++ b/tools/bootconfig/include/linux/bootconfig.h
+@@ -48,6 +48,7 @@ static inline char *strim(char *s)
  
- 	/* Key tree limitation check */
+ #define __init
+ #define __initdata
++#define __packed	__attribute__((__packed__))
+ 
+ #include "../../../../include/linux/bootconfig.h"
+ 
 -- 
 2.34.1
 
