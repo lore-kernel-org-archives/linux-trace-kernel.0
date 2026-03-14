@@ -1,50 +1,50 @@
 Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AF138836A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE8238839C;
 	Sat, 14 Mar 2026 23:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773529333; cv=pass; b=LKky6ooUyGX03c9gkGXfuuWBjiE/wwsyS3rkKC/dRTPO+3QVnoi1NgqAWyzdV8OjCK0goQQMH8yRZ5TsrACHwlgujaiEFlgpXPc65ussUMy5d9daeoZd5YsDHlhp7JRQiglNXI3u9nhegD/iWrUeb3MgaE4SiP0KxE30aY+bCdI=
+	t=1773529333; cv=pass; b=F0QOg77r5t+2SEHqFu+ApIrmWCGVmpOkVdtqcGOccXjdCuZQolBZGXppkzZz9LoSMqtZiCM7EItQA0WytDYalugFvaw6JIBvAFJdNxiAvZiEZn32vKYi6UEJD+wyESduIQyK7q0R3BBtZCViWBfmGGF27Y/YVQT3F9tY0xBZycc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773529333; c=relaxed/simple;
-	bh=2jZFhcm65pVh1my7aFVnxTPWIZ+otcDP9/Gf4KWRft0=;
+	bh=EWCRpZBNHCZU8iztguL/vt47WImiwDpV31hec4mL7Lw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gKE9gcu8v5+t2PqMbcnzZpe7UClyV3+89cn1QoOtddOQqO0XQjWnn53DC4OuZutrolQ2LoRlOpzhI6XrWgTfapUu8jgvptqNhwbF8dbZobDu1W6Nh3brmCyN62Pza5ohPCRxKpInSYXR6oU8UP9+s/mYpGnHfyKACM92LacpKKY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=T0R7oGpg; arc=pass smtp.client-ip=136.143.169.55
+	 MIME-Version; b=tjMFgSmBgZlmQaGvbQuVSpKH/IkZGkr88I4YekECnWJ1t6YskvLcfKY2K4/ySdD18FhpoFApk34s3wUbfcDAkiV/429hbHJl+HqiklFkSY7P6wJxTaB6PgcSwQqqgn0nBEipo/9KPURDV3okk2RaqjCZbklMVATHVFChVLQxDuE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=JDwhqRb4; arc=pass smtp.client-ip=136.143.169.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="T0R7oGpg"
-ARC-Seal: i=1; a=rsa-sha256; t=1773529322; cv=none; 
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="JDwhqRb4"
+ARC-Seal: i=1; a=rsa-sha256; t=1773529324; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=XrG81q+g0QZvOOqpitVL7TQopFW/ZzxxzfxXCpWDUTKWmMRlDkeRV0g2W1pKJFb5GLWOVgBamJR3K5VQF7kXsB7e09xnIkbOVPxUzPpIGlMEDcuqIUDiVKYV1Qwr7SliddmcVAHMy2P6uU7zIw5wdowI3OWudDVQiDoqYK1F5nA=
+	b=UpnmB//8o+mcEhztJrECb/qi6PThQPaErgzH1PQUiogj0G61J5UcN+Wn38+XSpX37mX0VhzWISrLBeFUiegTwxiTFIr44MO6Fh1lWCVZon2R/0izrylGn8hH55N7l7409ASgsNIk40J8Dm1Fz3jKFiwhxhRtEGQykPUM7EnzjgM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773529322; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=2lprVVDRD4lH3M3PsJ+R627NsZ/o1XOLdXFW/LZVSKM=; 
-	b=hmS8LtrjGtjvjNkKCIkJfsqlAXDAqhRMR6Uv7/N3o0YemfWP9jND5m63QMqjsIix8apc6iUTFVXloCFEqhmaDnnt38UuWodXu1EJkwlof6L9QUoksQ38eUjWfKAqfzuzBVBei3b3N1yQVxEnGy/H9p0kY3GEX4LKeYjQoYDvZvc=
+	t=1773529324; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Y3g/gWcuZygcqvX4QpGo9gnBChjnwRu7NCitJ/yvsXM=; 
+	b=kbhPU7PGq1tsFrYovpVKD3mNRUjSzBLwbsZX+7/rtvo7CY/e86qc5qy6Gm+FSN5pYewj9Vyp8LdJ9dkwMDc9I77Wvm+1myNXSdObPNQMNLATMwB1JSaydo8FMSywJWwBfr1ltEDAg251JGrriCk/JOpIN8UM0NkojqEHR7RWSmc=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773529322;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773529324;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=2lprVVDRD4lH3M3PsJ+R627NsZ/o1XOLdXFW/LZVSKM=;
-	b=T0R7oGpgM3E1avt0Dl8eKkZ/mohgnlJZB+55Q308bP1E70LFQ5Pmwffai7sF+ynD
-	0AGFGob/X+miQj+KUBq60dKp3y3xl3tNvLQ7n70WGWCHYna12iPz++NIIgc5z7kRumO
-	vrHCbQd2R0W2bOV6HGc6dd9AV/g6qTurgvk9hwJM=
-Received: by mx.zoho.eu with SMTPS id 1773529319712962.2648996757065;
-	Sun, 15 Mar 2026 00:01:59 +0100 (CET)
+	bh=Y3g/gWcuZygcqvX4QpGo9gnBChjnwRu7NCitJ/yvsXM=;
+	b=JDwhqRb4C4KYKlR6hvqOvrDeNHKtN3CdDM3JO5AzwVvbI/0bKer60QWNeR3VT+/4
+	YIz7YMxFgUDPrwV3K3LXPeevma4kbQAk/0amY44KBlx4KoDF7yv+eno5Mcn6E+gej/v
+	Jf+XNJNVPRtaUUH08Stqsfu0iOb/kjmbkqjvW3Rs=
+Received: by mx.zoho.eu with SMTPS id 1773529322882862.0718540279187;
+	Sun, 15 Mar 2026 00:02:02 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Josh Law <objecting@objecting.org>
-Subject: [PATCH v4 04/17] lib/bootconfig: add blank line before xbc_get_info() kerneldoc
-Date: Sat, 14 Mar 2026 23:01:42 +0000
-Message-Id: <20260314230155.155777-5-objecting@objecting.org>
+Subject: [PATCH v4 10/17] lib/bootconfig: drop redundant memset of xbc_nodes
+Date: Sat, 14 Mar 2026 23:01:48 +0000
+Message-Id: <20260314230155.155777-11-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260314230155.155777-1-objecting@objecting.org>
 References: <20260314230155.155777-1-objecting@objecting.org>
@@ -57,27 +57,37 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Add the missing blank line between xbc_free_mem() and the
-xbc_get_info() kerneldoc block so that documentation parsers do not
-associate the comment with the wrong function.
+memblock_alloc() already returns zeroed memory, so the explicit memset
+in xbc_init() is redundant. Switch the userspace xbc_alloc_mem() from
+malloc() to calloc() so both paths return zeroed memory, and remove
+the separate memset call.
 
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
- lib/bootconfig.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bootconfig.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 35091617bca5..e955d2f7e7ca 100644
+index 06e8a79ab472..fe1053043752 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -79,6 +79,7 @@ static inline void xbc_free_mem(void *addr, size_t size, bool early)
- 	free(addr);
+@@ -71,7 +71,7 @@ static inline void __init xbc_free_mem(void *addr, size_t size, bool early)
+ 
+ static inline void *xbc_alloc_mem(size_t size)
+ {
+-	return malloc(size);
++	return calloc(1, size);
  }
- #endif
-+
- /**
-  * xbc_get_info() - Get the information of loaded boot config
-  * @node_size: A pointer to store the number of nodes.
+ 
+ static inline void xbc_free_mem(void *addr, size_t size, bool early)
+@@ -982,7 +982,6 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
+ 		_xbc_exit(true);
+ 		return -ENOMEM;
+ 	}
+-	memset(xbc_nodes, 0, sizeof(struct xbc_node) * XBC_NODE_MAX);
+ 
+ 	ret = xbc_parse_tree();
+ 	if (!ret)
 -- 
 2.34.1
 
