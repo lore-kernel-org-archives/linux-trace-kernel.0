@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0D31EBA14;
-	Sun, 15 Mar 2026 08:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E779A39FD9;
+	Sun, 15 Mar 2026 08:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773562608; cv=none; b=q5A0mZPa3wk+E5sQKiSDqybQ6DVekpMRVGnvUC/2BHtWnQqoeYg1w6msslLF7y7JDDGPkun19i3vh2UicnwizqICWpumsluvPww0p9/xs7HU6a5JmHalsJjUO8BqoUPmIBT5Z3M4aTqd1oPju+rJYAOuX1PcpXJ1qdFnMVIKadI=
+	t=1773562663; cv=none; b=n4QPBW4mVbK39g110gKIMfdtdjzBHerg64MSxgjMm/utf2EjOWjUk99BBYanobNL3CmEhAfQaEddbpxpDLbKB0P8nM1v3qcNNICie+0TOOZqcPG6bPfkMQuKzvQJEOMmGYSmTztIo1zMEDRIYRgP4ofW9wqRzLfxWIQ+zAPI0T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773562608; c=relaxed/simple;
-	bh=asEirovM0yxrksDqtmQwMqJlnlnKxib8/01w3vglH3A=;
+	s=arc-20240116; t=1773562663; c=relaxed/simple;
+	bh=i2ojNwsLwSPeDEf6e7BNmTghLUkLbKMacxA8Nk1T2hA=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oauiKqEgd67J5/se4r4j9oNgzS6MUCBepn+J4ZhAYZigqtEJL1k3ct8fkQuhyMOfpzoQ5Wxg1yVDRwoM68p7g5pp0vq/oqwnjMj1/W0BaSNJXlQiCEka8pvi4mj2bBoc8kt4Vh0N7FYRAtBiGbSYBFnIv5O+XhlbpEpV7wEMtZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHTT+uhs; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=QwYp3Guj9FKDWj8W4OLgDlx+HuuGkrKakXdDeISXf7phEbIkcSRlgP5Rbpx2yi9Hq37SMpYcZsZ29zEFBp8kCJcTlvxWMW4VInkfV/lhtYIsAzXfwwONHDIw9zXBcaW36wOKwPE7XOtbqv8X/QXxuJs6Z6Ug7jMW74qWG824Y0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCfhnkHQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHTT+uhs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 212E1C4CEF7;
-	Sun, 15 Mar 2026 08:16:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCfhnkHQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53727C4CEF7;
+	Sun, 15 Mar 2026 08:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773562608;
-	bh=asEirovM0yxrksDqtmQwMqJlnlnKxib8/01w3vglH3A=;
+	s=k20201202; t=1773562662;
+	bh=i2ojNwsLwSPeDEf6e7BNmTghLUkLbKMacxA8Nk1T2hA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uHTT+uhsQe6HDfofHtYCbLuyFfvsyH4+XjTTpTkHgWXjqyVzETiAFy0GqyIfa8r/j
-	 8jnrQd9cktayZfrkA0rdVL1u2cuqp/mh3D1Qlj4r+wfHr4U6WwQChxeAyolA1/nJ9+
-	 qMki4WtUgp2IwF2GQxi4bW3i7Cg06lDYR0QEDbbYwGkxP58i6otYrzLd8u6gc9HCGq
-	 Vo2gSkN05pB4/CYGCEImxN8LFsEpqBWno8i4dpb3J2Qq8XDgyX0+JjgcoIZJiPs50v
-	 mDZiU7Fr+xm6ghTkU7/VTC4C3fK3Kj+k019FGUbEy2fvQ49Aa209QkjF4/w47doxPc
-	 Kfak5rZfGyJQg==
-Date: Sun, 15 Mar 2026 17:16:45 +0900
+	b=PCfhnkHQ97KD7xd3bl8aG5kkc7LQLzHU4r6zROR+p2sejFl/H4ObFluCfXAp56vqA
+	 sqex2kMTV1bxQvydEH7JxdrKzLcysKoFIAZKQx2PX/2DiM16vtwpoI6RqcyJds1sGR
+	 Y61P8it7/ptVS+uKA+0tgOGJyymT5AExSgJ/Xc9S5OcEbsicFBo9ZTUJjnbKtBkx9u
+	 6vKU3EgThTPbzhTrvrxhUlvPwHOc0oA4VFvhtfBqT6fDo8LPyvzqmA8ELZEbPwhHx4
+	 XjW6hBDoyo3QcbeQrH3tHfJMAn93Gs/PC3lV+qvgrhQepXncPQnkeIp/lRFCMEnrTf
+	 s1L5VeQpZMpjg==
+Date: Sun, 15 Mar 2026 17:17:39 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Josh Law <objecting@objecting.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 17/17] tools/bootconfig: fix fd leak in
- load_xbc_file() on fstat failure
-Message-Id: <20260315171645.f5bf64edf6aa68550096a231@kernel.org>
-In-Reply-To: <20260314230155.155777-18-objecting@objecting.org>
+Subject: Re: [PATCH v4 02/17] lib/bootconfig: fix typo "initiized" in
+ xbc_root_node() kerneldoc
+Message-Id: <20260315171739.5a4edade057a2677cd43941b@kernel.org>
+In-Reply-To: <20260314230155.155777-3-objecting@objecting.org>
 References: <20260314230155.155777-1-objecting@objecting.org>
-	<20260314230155.155777-18-objecting@objecting.org>
+	<20260314230155.155777-3-objecting@objecting.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,40 +47,37 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 14 Mar 2026 23:01:55 +0000
+Hi,
+
+Thanks for cleaning ups. Can you fold [2/17][3/17][4/17] into 1 patch?
+Those are just typo fixes and index/space fix, IOW, cosmetic change.
+
+Thanks,
+
+On Sat, 14 Mar 2026 23:01:40 +0000
 Josh Law <objecting@objecting.org> wrote:
 
-> If fstat() fails after open() succeeds, load_xbc_file() returns
-> -errno without closing the file descriptor.  Add the missing close()
-> call on the error path.
+> Fix "initiized" to "initialized" in the xbc_root_node() kerneldoc
+> comment.
 > 
-
-OK, but anyway this exits soon after failure. So it does not
-cause actual problem.
-
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-
 > Signed-off-by: Josh Law <objecting@objecting.org>
 > ---
->  tools/bootconfig/main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  lib/bootconfig.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> index 55d59ed507d5..8078fee0b75b 100644
-> --- a/tools/bootconfig/main.c
-> +++ b/tools/bootconfig/main.c
-> @@ -162,8 +162,10 @@ static int load_xbc_file(const char *path, char **buf)
->  	if (fd < 0)
->  		return -errno;
->  	ret = fstat(fd, &stat);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		close(fd);
->  		return -errno;
-> +	}
->  
->  	ret = load_xbc_fd(fd, buf, stat.st_size);
->  
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index 51fd2299ec0f..53aedc042f6e 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+> @@ -112,7 +112,7 @@ static int __init xbc_parse_error(const char *msg, const char *p)
+>   * xbc_root_node() - Get the root node of extended boot config
+>   *
+>   * Return the address of root node of extended boot config. If the
+> - * extended boot config is not initiized, return NULL.
+> + * extended boot config is not initialized, return NULL.
+>   */
+>  struct xbc_node * __init xbc_root_node(void)
+>  {
 > -- 
 > 2.34.1
 > 
