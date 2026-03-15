@@ -1,28 +1,28 @@
 Received: from sender-of-o57.zoho.eu (sender-of-o57.zoho.eu [136.143.169.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB22E34D90C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075F634DB77;
 	Sun, 15 Mar 2026 12:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773577233; cv=pass; b=rYP1raDyN+pSBabWq8AlFTIYW9wl4ZwBBmimykHY11pkoNKBJS6dma2DNtAzWTPENoUDj9LRHlrH2i2kURplhJIQD1rZ8Qx0xy5yMghj3M+9PyP/sb3Ypj3RRqtFAoK+4YpmlqLWx6MbUAg8d1ny9gYTRhmw9RIL9xIyo7KBscM=
+	t=1773577234; cv=pass; b=dymugRBkJVp8rlhFPSb3jOa6kjpN3VKtKbyTFZ/a4WM2Ebr6z4mfud3v6hk5qL0ytw/Nk+zeJ3OsndtEHM7ta3O8G1w8ZskuDPq+fw2OAIzzheerfGnyW5y5Aq6UbE8RPesM/I9fnapomv+fmpriDnmVuKOT4mSjD1WfawQOUQ8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773577233; c=relaxed/simple;
-	bh=vcSmVPwd5atv4aQqUiSSsIWmabtFEECei8nDhBxO4fo=;
+	s=arc-20240116; t=1773577234; c=relaxed/simple;
+	bh=5jHlNQbA4ax5oxWy6TmNNrMnctsyCd5kWbRwYKqDhJE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FWFnaTvQOqTrG6fYDiX2K634IxKzza1ACX0sRcJWudjh+fxxFLDpqn3xYplm5TyujRi7V+tubdBpq8t8KvkYZd3brsfjZmcWMerHvhwtDPKNntoxplBCgHyaFFvhLBvrpUR7iLXEeILicl7Q6ETIzMocTXV90Mg/v0QvGCnn47Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=Rq8zi744; arc=pass smtp.client-ip=136.143.169.57
+	 MIME-Version; b=mOZjtH4pX7rNzZPnetKbphlFWuv+GA7dl8PTuiLd+oX/LQgHsw/zwRa0gcGWYLqDd21nazpNA+61l7kVONkPbHr3MSoWn707BevUoeloCdW/FgP/KqJs4QHkhExSDhJj1oMGalclQMDu4rvkCWDdzj71Ss8TKj4Fn9g2vOPITsE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=KeIlqgeK; arc=pass smtp.client-ip=136.143.169.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="Rq8zi744"
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="KeIlqgeK"
 ARC-Seal: i=1; a=rsa-sha256; t=1773577224; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=OQtTEOPxK2C9+XWZfDsll7t13itgHEnWOG/1CBUZWBaXGiTBZJ851ZEjd6lQYwKvPb1aJN671dis+d41xbXlCON+HcsWB+2HEv5LhNfP7axAg1ZyNxT5tEbi9xiGZYDnUEbNXyg//s0ex2nt5jx5THmvmEAUJeBhkpYp5U9budQ=
+	b=fzJop3IvxFk1OHMw1VZZurYKhK5fo2L2XO1dOYAp7YHxvIeWG78jbcJFG9j1Z4XxXw69idatmOQPw/3WrkePbxQjdZ56unjMvtyWFwsG2HuTl76sT6//1mOo54muvMRFpS0L2lQ0KQg2eYK9DQS4XsWaueRgj+hC5A5eRDQs5Ts=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
 	t=1773577224; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=YdQAiEyDpvbZ5I8fQtAjbQ+JeayCjZ3yazt4egZHOB4=; 
-	b=Gefjvlf/Kwbwl2fCdaGBDuI018PZfePNyXfLIHO0ya41PVMsYuIQVuO/kDnOp5S4O/meadCf3T9bnKW248P9frFYh8roA4NPwrXQsFWrRS6u6g1Z+ScEBJof6D79/YsQyFU1Rm6Y6j7tA6lLyjL4wVBbkFRXFHgbSmDXYQcDVMY=
+	bh=RAInAapaPEVVIMyMy0xQq48ym4WbDouBno9PBv2kGos=; 
+	b=MdqFV7ImHGL1pnYA+cQKayZBKHot66lxsBr8YN6RrRK5JcAZVEfPmQoSHvxrYHWOVI9OWmabe5gXYj1AW4KhwFJNfP+yetZ05v6C5H0917qzmt0AWXcyvpIbLibjqItuOrDfc5FBD/5rc0+0BJIMKiyAfD273LEu0suWfQEBuAE=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
@@ -30,12 +30,12 @@ ARC-Authentication-Results: i=1; mx.zohomail.eu;
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773577224;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=YdQAiEyDpvbZ5I8fQtAjbQ+JeayCjZ3yazt4egZHOB4=;
-	b=Rq8zi744kkDoSfapYn1Hdz6PjIvuGoP2HjAsJln/DryltKl/yVBh2qeG9mqZpxQG
-	/WPOdlcFWCg+HbAkqJTR0jAzoiQXKR7OQBbTzPirNx0evoPQyrqMDKQ9AEKUvtnZfwX
-	8KccAhfoSIzNFTcKEjsXEtsTabXiYoLsm9/FPXP4=
-Received: by mx.zoho.eu with SMTPS id 177357722367761.91944581690507;
-	Sun, 15 Mar 2026 13:20:23 +0100 (CET)
+	bh=RAInAapaPEVVIMyMy0xQq48ym4WbDouBno9PBv2kGos=;
+	b=KeIlqgeKkJXZbsFJeKYsJFiXMe782hjM0bv+rznNId4PLlfxctfdv94eQ3BHCoG7
+	y5toZjv9lR9vvLcWpWHtyafVBlRRqrwFGNaHv7QpUv6MCX2ts0nAouRwQWK9AqRQIQA
+	rpamLmoUESFwUxoJBKCTftceSuW2BVr8aMYyK0g8=
+Received: by mx.zoho.eu with SMTPS id 1773577221934891.1839683517646;
+	Sun, 15 Mar 2026 13:20:21 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
@@ -43,9 +43,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Josh Law <objecting@objecting.org>
-Subject: [PATCH v6 11/17] tools/bootconfig: fix fd leak in load_xbc_file() on fstat failure
-Date: Sun, 15 Mar 2026 12:20:09 +0000
-Message-Id: <20260315122015.55965-12-objecting@objecting.org>
+Subject: [PATCH v6 08/17] lib/bootconfig: replace linux/kernel.h with specific includes
+Date: Sun, 15 Mar 2026 12:20:06 +0000
+Message-Id: <20260315122015.55965-9-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260315122015.55965-1-objecting@objecting.org>
 References: <20260315122015.55965-1-objecting@objecting.org>
@@ -58,31 +58,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-If fstat() fails after open() succeeds, load_xbc_file() returns
--errno without closing the file descriptor.  Add the missing close()
-call on the error path.
+linux/kernel.h is a legacy catch-all header. Replace it with the
+specific headers actually needed: linux/cache.h for SMP_CACHE_BYTES,
+linux/compiler.h for unlikely(), and linux/sprintf.h for snprintf().
 
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
- tools/bootconfig/main.c | 4 +++-
+ lib/bootconfig.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 55d59ed507d5..8078fee0b75b 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -162,8 +162,10 @@ static int load_xbc_file(const char *path, char **buf)
- 	if (fd < 0)
- 		return -errno;
- 	ret = fstat(fd, &stat);
--	if (ret < 0)
-+	if (ret < 0) {
-+		close(fd);
- 		return -errno;
-+	}
- 
- 	ret = load_xbc_fd(fd, buf, stat.st_size);
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index fe1053043752..0823491221f4 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -17,7 +17,9 @@
+ #include <linux/bug.h>
+ #include <linux/ctype.h>
+ #include <linux/errno.h>
+-#include <linux/kernel.h>
++#include <linux/cache.h>
++#include <linux/compiler.h>
++#include <linux/sprintf.h>
+ #include <linux/memblock.h>
+ #include <linux/string.h>
  
 -- 
 2.34.1
