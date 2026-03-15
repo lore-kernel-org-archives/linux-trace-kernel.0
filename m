@@ -1,93 +1,75 @@
-Received: from sender-of-o57.zoho.eu (sender-of-o57.zoho.eu [136.143.169.57])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6405E38AC7A;
-	Sat, 14 Mar 2026 23:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773531237; cv=pass; b=tgjTXp+j4lYA/pqeiaPQVYaovOtv3+PJS53HEGD2esTDNfhEA2SM6zTyKe32Wen1E69z2klzGjve6WhsWD6gE0WCFwmOJnhc4BjaUI7osuSWWhIcx10YcyWZTdjwxB61SifweNmujXZDfuSRJZ447qUtH3Ra+xq3atb5lQ10Zh0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773531237; c=relaxed/simple;
-	bh=Y9mfWQWziz20z1wZlyGCqiydfBbJQNFNO/oywEYrkow=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f/7BipYhWphSJY0ocG9UQ0VcMnwwSBs1H/BtFtEuDvQDiC95ICsUAYMrPMhxRf3SJ6i249vWrYOxgXX+NPELIsEFI4IqhGgXAAiMbhXVIMVoc8hZWgfnRhXy5ZKjjry9huXLXVUN5jECLQZVgCm1ZmtXFaS0JXUtAQwda6Grf9Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=HU1fmhDi; arc=pass smtp.client-ip=136.143.169.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AEF40DFA7;
+	Sun, 15 Mar 2026 01:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773537487; cv=none; b=CrjeVg3fc2iJLYx9f4gU8pCsvz+zoH7mdZgtlhJAjQsSg9nJgIfRb+gUA5s0JpDrQzmfn3sNUPRB+hq7KL1oi3yLfZFoSDn5oGMAu2lb8AFJsHMYxCfVN/IdCTyAyulsTK5MTAXCHFN3lina+mb8guaHfNkxsS5dMPxSPIVzIiQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773537487; c=relaxed/simple;
+	bh=YNQnPMfrXLEjO1gWNZbgBw3RHFV96tMCV2Aa+tznba0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mKxmCgw2853uaUYP3shs5oQ+oAgbHVf1Fv5M/rDzew9hK9Qq4m4MveFtYLUt1z/s4vUC16vCmpXb0VPTX4nUYaJ/U4k0K4Tm3DwIUtmn/0g5OCiv+uMDD726AaxqrTFvlUJwztJWpu/L/8wrAePai4VOdYoBQ6HY3nGqqAd3ghg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuKl9SZ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="HU1fmhDi"
-ARC-Seal: i=1; a=rsa-sha256; t=1773531107; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=W1Qgo+4Lp74LECw8K1Apcvhqkr6wxf7KU/ZkPJ0QjSvsbMq/TyIIuwW8x9j6ZWo4oSyl683boUXhA4nT13QqGnDKJ6nboX5UKMgDPjtibM4R4SkGjGxMSEWsQowyqkCUip/WCFRZb+fj3BSIaQdY1c7bZRcDOkt21oakwbeRBOU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773531107; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=hXgtMivk2FUkBDZ0ELim05yAd6enb/8iaNS3/idzO40=; 
-	b=HeSt+EE2W1y2waarZiw9TWssCv5UNHc4XLYfo/t4qZmMEeUx6MLwgV5RFQGI8yjWGji07xFbSQL4SxsWbkUJtC92aMcjB7me9WZnszC7HcULozTIjeqcV4I57dcWP60KpW/CDsl3n4r5wAXppxzrbICFwtRyCXhm4Fjts/xem/M=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=objecting.org;
-	spf=pass  smtp.mailfrom=objecting@objecting.org;
-	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773531107;
-	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=hXgtMivk2FUkBDZ0ELim05yAd6enb/8iaNS3/idzO40=;
-	b=HU1fmhDic8v0jfKGC6SSF9n0NWODSHI1no51QxFS3TUM+rU5OvhMJnX7Eh4AFTBZ
-	kUkg92BnKRTxdBsNnrub1T3dKXSMvc7yIvn2DJiRFw0Wy2a2oAueuWLtIJjgaUmBlo7
-	YV0fWMZ8ColmZerQJz8VgeOdPAWtrf+iw6hXFoa4=
-Received: by mx.zoho.eu with SMTPS id 1773531106259112.30339605381914;
-	Sun, 15 Mar 2026 00:31:46 +0100 (CET)
-From: Josh Law <objecting@objecting.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5 01/23] lib/bootconfig: add missing __init annotations to static helpers
-Date: Sat, 14 Mar 2026 23:31:22 +0000
-Message-Id: <20260314233144.187273-2-objecting@objecting.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260314233144.187273-1-objecting@objecting.org>
-References: <20260314233144.187273-1-objecting@objecting.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuKl9SZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0AA4C116C6;
+	Sun, 15 Mar 2026 01:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773537487;
+	bh=YNQnPMfrXLEjO1gWNZbgBw3RHFV96tMCV2Aa+tznba0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fuKl9SZ+Ulc7B/DFdGYYyeLo5paKdwGEpW+ed9iWNLFm2nbdGOSlQdpsqfGG3Nduh
+	 yRfWtKdWaP6RfMb8K86w26xHj/6HqxOlbg9YqiCw1BgIu5W1fgdb6hr/4mYJsQ7kMn
+	 BJqz1cKYH0Zq74hmOjF+wxQxLPdkBwYzDgakdkg5Ob3IhmuB6P1GrjAAdHG78ZD+kc
+	 tQSjbRQiOkIBsqnhJNJbhuytGzffjfged/REw/iD1qPCRvmHN0U6IIBbGUwbLdJt39
+	 QpeKGaxgIq6LEawDh3n+C0jRzLBiDfrxJOpBfzLkh5q9VxQ/5ED05BCCSTR4shRRg4
+	 ib8fKxP4GLnzw==
+Date: Sat, 14 Mar 2026 18:18:04 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: atwellwea@gmail.com
+Cc: netdev@vger.kernel.org, davem@davemloft.net, pabeni@redhat.com,
+ edumazet@google.com, ncardwell@google.com, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mptcp@lists.linux.dev, dsahern@kernel.org, horms@kernel.org,
+ kuniyu@google.com, andrew+netdev@lunn.ch, willemdebruijn.kernel@gmail.com,
+ jasowang@redhat.com, skhan@linuxfoundation.org, corbet@lwn.net,
+ matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ 0x7f454c46@gmail.com
+Subject: Re: [PATCH net-next v2 13/14] netdevsim: add peer RX truesize
+ support for selftests
+Message-ID: <20260314181804.6f62712c@kernel.org>
+In-Reply-To: <20260314201348.1786972-14-atwellwea@gmail.com>
+References: <20260314201348.1786972-1-atwellwea@gmail.com>
+	<20260314201348.1786972-14-atwellwea@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-skip_comment() and skip_spaces_until_newline() are static functions
-called exclusively from __init code paths but lack the __init
-annotation themselves. Add it so their memory can be reclaimed after
-init.
+On Sat, 14 Mar 2026 14:13:47 -0600 atwellwea@gmail.com wrote:
+> diff --git a/tools/testing/selftests/drivers/net/netdevsim/Makefile b/tools/testing/selftests/drivers/net/netdevsim/Makefile
+> index 1a228c5430f5..9e9e48d5913b 100644
+> --- a/tools/testing/selftests/drivers/net/netdevsim/Makefile
+> +++ b/tools/testing/selftests/drivers/net/netdevsim/Makefile
+> @@ -14,6 +14,7 @@ TEST_PROGS := \
+>  	macsec-offload.sh \
+>  	nexthop.sh \
+>  	peer.sh \
+> +	peer-rx-truesize.sh \
+>  	psample.sh \
+>  	tc-mq-visibility.sh \
+>  	udp_tunnel_nic.sh \
 
-Signed-off-by: Josh Law <objecting@objecting.org>
----
- lib/bootconfig.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I think our order checker thinks that is not alphabetical.
+You can find the scripts here:
+https://github.com/linux-netdev/nipa/tree/main/tests/patch/check_selftest
 
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index b0ef1e74e98a..51fd2299ec0f 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -509,7 +509,7 @@ static inline __init bool xbc_valid_keyword(char *key)
- 	return *key == '\0';
- }
- 
--static char *skip_comment(char *p)
-+static char __init *skip_comment(char *p)
- {
- 	char *ret;
- 
-@@ -522,7 +522,7 @@ static char *skip_comment(char *p)
- 	return ret;
- }
- 
--static char *skip_spaces_until_newline(char *p)
-+static char __init *skip_spaces_until_newline(char *p)
- {
- 	while (isspace(*p) && *p != '\n')
- 		p++;
--- 
-2.34.1
-
+It'd be good if you can try the "running locally" section from README
