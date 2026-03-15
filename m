@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CFB288AD;
-	Sun, 15 Mar 2026 08:19:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB15D245031;
+	Sun, 15 Mar 2026 08:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773562789; cv=none; b=sD54rgHInQfrRImR7iQ8IgLwTWAvtro4tIYXtEQmOOx3Yjp1AEFuIaAKwEoHldFl+pmjdKV8RIvJfox4ezXz4Ybfj0vjAFTdkkSdX0Q9KQalDHjTkKMEavtyAgAfBc4fvmQF0Gf3ADL4KotP9zR2d1zoO2fFhh12ninyWS4U3e8=
+	t=1773562845; cv=none; b=KxcXi2ITh3+pEs8d6hvvtbdViQs8q1msk1ClS86oJkUKACpwwFaHLdeYy7dMptaCmj8sVd7JyEIVn3Ps7fWqy4Ab7koVdJGYGCEaivRhM4G/apxUH4BX4CwlDIAQyiwTQgcdcraMYsOQxUcsm4yYhG0aWxmTnvKEvgE/Wicphxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773562789; c=relaxed/simple;
-	bh=WER+MjFeBfiJ5tkt/IYGfCQrPBNKHuOxQFOyLNXlsEc=;
+	s=arc-20240116; t=1773562845; c=relaxed/simple;
+	bh=YL7EhrSbRmaDEi8N+bhNGFZdS1Nlw7zIHlA3//YUGoU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=W3f+jY6m+lDr87cjV06rAAiPsBqVTFr6nLLXULti4Y3eWt21P+6Av/wqOJEkGIh4NUJ7iQlwlmeAOB33jGPThqt7ZGb1/WY8QCWNxruA9CIQesZquE+/Z+noSFrErlldSuCtyvg48xNpsdNcvVEyNerN1YXe1y/0HD8nXTFhwFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTQz5BCN; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=MYPPMB4NhWuNmiZ3lYCoHS1gw+bUyeFOWh5gv5gWK4rVdJH7OLN6logdypdVqUce09rY1HvwoqAuENNIat3ggmBcXuUmtOZGcTk7roXYVaZHv/floUWJvRuW6PrJiEIWR49+IxpojjS9qs9mjmiT/Ygmstl/vtpiyE2K3oLTI0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbhEyWNu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTQz5BCN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E16FC4CEF7;
-	Sun, 15 Mar 2026 08:19:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbhEyWNu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AD2C4CEF7;
+	Sun, 15 Mar 2026 08:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773562789;
-	bh=WER+MjFeBfiJ5tkt/IYGfCQrPBNKHuOxQFOyLNXlsEc=;
+	s=k20201202; t=1773562845;
+	bh=YL7EhrSbRmaDEi8N+bhNGFZdS1Nlw7zIHlA3//YUGoU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZTQz5BCNh1r4u4t+onbaIwKD9Y5YlxaBOiCR0Ixuvx7BkolTKP0oojXV+u9gnJGd5
-	 p8lfuOFot3ukPTEDsfUPuOB/q0w5aUcW3sw3svK5T/QsJ0RTGzVbl9nhWr86l9027y
-	 1oL64ocfRlgCJVk0Uu3L+wp7aubgGDhURXntMxbOviYrv6sitXqbaP5chgGFKfwbNU
-	 /oDS+OhZ0On2202o5UKSOGtyH/01NActf1c7t3Uo0YX2PNzB864CNgykDgzg7ag+6G
-	 nw4oouvPa42GDK3aO5CA9Q+HKD17dl1dRt4w7LOzeh9gpX8HJLEKIOxTMsNGtBD/Q8
-	 /M5c6EmPSPvog==
-Date: Sun, 15 Mar 2026 17:19:46 +0900
+	b=KbhEyWNujzX2AYlrefaIOftaKuYuEctsLC+aTAokGa/obLF4aoGNa5UZuca098DJu
+	 96YRLrXAPxAZti6avlo36RD+dr2egkX0vVaP7enhF9fV3Fj0Mmsz7+1VM7MOheHRrg
+	 8k/RsZae18idqNSq4yaJGio1dy6++2b86zwsPwpKWfUf929x1SFYJozBdOZ1sLx9x4
+	 RgfVx8iDMy6COBaWbvPJ7CfnLkDPKm85QE6sMVWNXOo/5I6VD4dlLRpWi5MAES1FOS
+	 EKAciXwDOOgniJHufUIUcSCMGKfkV4Q6tuQAhgmJtdh9ViDQZBfh7E8nsM/4Rt2GG4
+	 6cHbvlUi7p5vA==
+Date: Sun, 15 Mar 2026 17:20:42 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Josh Law <objecting@objecting.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 08/17] lib/bootconfig: fix off-by-one in
- xbc_verify_tree() next node check
-Message-Id: <20260315171946.2287bbb22689a52e7d996ca0@kernel.org>
-In-Reply-To: <20260314230155.155777-9-objecting@objecting.org>
+Subject: Re: [PATCH v4 07/17] lib/bootconfig: fix inconsistent if/else
+ bracing in __xbc_add_key()
+Message-Id: <20260315172042.8bcd8c5859e1dc70ae297fc1@kernel.org>
+In-Reply-To: <20260314230155.155777-8-objecting@objecting.org>
 References: <20260314230155.155777-1-objecting@objecting.org>
-	<20260314230155.155777-9-objecting@objecting.org>
+	<20260314230155.155777-8-objecting@objecting.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,41 +47,52 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 14 Mar 2026 23:01:46 +0000
+On Sat, 14 Mar 2026 23:01:45 +0000
 Josh Law <objecting@objecting.org> wrote:
 
-> Valid node indices are 0 to xbc_node_num-1, so a next value equal to
-> xbc_node_num is out of bounds.  Use >= instead of > to catch this.
+> When one branch of a conditional uses braces, both branches should
+> use them per coding-style section 3.1.  Add the missing braces to
+> the if/else blocks in __xbc_add_key().
+
+It is just a cosmetic cleanup.
+Can you fold this with other typo fixes?
+
+THank you,
+
 > 
-> A malformed or corrupt bootconfig could pass tree verification with
-> an out-of-bounds next index.  On subsequent tree traversal at boot
-> time, xbc_node_get_next() would return a pointer past the allocated
-> xbc_nodes array, causing an out-of-bounds read of kernel memory.
-> 
-
-Thanks, but How? Do you have any actual config example?
-Unless that, I would like to treat this as a minor fix.
-
-Thanks,
-
 > Signed-off-by: Josh Law <objecting@objecting.org>
 > ---
->  lib/bootconfig.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  lib/bootconfig.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
 > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> index 58d6ae297280..56fbedc9e725 100644
+> index 34bdc2d13881..58d6ae297280 100644
 > --- a/lib/bootconfig.c
 > +++ b/lib/bootconfig.c
-> @@ -816,7 +816,7 @@ static int __init xbc_verify_tree(void)
+> @@ -657,9 +657,9 @@ static int __init __xbc_add_key(char *k)
+>  	if (unlikely(xbc_node_num == 0))
+>  		goto add_node;
+>  
+> -	if (!last_parent)	/* the first level */
+> +	if (!last_parent) {	/* the first level */
+>  		node = find_match_node(xbc_nodes, k);
+> -	else {
+> +	} else {
+>  		child = xbc_node_get_child(last_parent);
+>  		/* Since the value node is the first child, skip it. */
+>  		if (child && xbc_node_is_value(child))
+> @@ -667,9 +667,9 @@ static int __init __xbc_add_key(char *k)
+>  		node = find_match_node(child, k);
 >  	}
 >  
->  	for (i = 0; i < xbc_node_num; i++) {
-> -		if (xbc_nodes[i].next > xbc_node_num) {
-> +		if (xbc_nodes[i].next >= xbc_node_num) {
->  			return xbc_parse_error("No closing brace",
->  				xbc_node_get_data(xbc_nodes + i));
->  		}
+> -	if (node)
+> +	if (node) {
+>  		last_parent = node;
+> -	else {
+> +	} else {
+>  add_node:
+>  		node = xbc_add_child(k, XBC_KEY);
+>  		if (!node)
 > -- 
 > 2.34.1
 > 
