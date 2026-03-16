@@ -1,180 +1,182 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CDF2E7165
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Mar 2026 02:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773626428; cv=pass; b=F9T5ASpk1vO4DbQ8kLF7NMUx4z4QR7+WusHw/0y7d0+Fo92pzlds70q0kxUD57gkZreEHp43XgZSp3bJ4xi5eBHrOnNwpASQHWzXai+vlsFfj7jxBkQNfFu/19AyTkqL/qHXkleCCx8hFgWT+04/3/SXknkmA/j6O1SBbqYWnE8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773626428; c=relaxed/simple;
-	bh=pNpF/NWhnamL4nSDmUYfNu3BmUMCj47CvcpclhRylTM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s3tkQsEvVr/3Yn4m3J/iEm8fWeplQMX5rF812u6BjC+8CaBjFWx2hGZBHzvOM725oOzqqJscIDotZOtKoxTXSmLuEGl1REwULitQOYUoHmXhf01BJpuVEZBg+YrgqSbUJRDv9sOY3LgKYSLF0tUCl7dCho3hbRc+0jtvZVj+3hM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gt1trbfZ; arc=pass smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235FF320A0E;
+	Mon, 16 Mar 2026 07:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773647512; cv=none; b=uLz4xgQ9n0ks2xP6XbFVDaBCY+k9qu0VVptYDHqu8R+5C7JOrdxBDQ6umn9xU9Wm4Yd0DT7fSFhuUjdklI1CI8vREXHytmuwDeGJsQnf0c5uSQBSEJjHmGC3HarxQgyEHtkQqdxHP1JdJrQJmq+Gg9a79verc5MJn/lKr7ri2YM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773647512; c=relaxed/simple;
+	bh=S0ccrYX+hnq8mcsxGneT9qk0yDFopasoWDV3kXaRa8c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NtVG19Js9lKJHg7ZNeg/S8p/N0DdGyiQMr7jvLHwJetok0GAbwm/w3Chq1eWcqdZz+aHp4i0wpUskaJV6JRkHwIu8cMpMZxCXIUvN8Rw2juVZY7cOuhO2Q+L8NeF3MBsSLhOgckmhA5tJhT0KcPzC7d8X0/0t5cARZTsbVhonto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWzZWn3q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gt1trbfZ"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-50915e14cf6so32280431cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Mar 2026 19:00:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773626426; cv=none;
-        d=google.com; s=arc-20240605;
-        b=BkvcJbEgni0d0jwj8dWzoBcZmMJRLqc/PZrlo0zrPS6uH+789waivfcBMSp7zPXyUj
-         +plVv86Un2M6Ypk+9gRfMsaeWp/iH3TscRNlxZhRWQQUWYrHceBV5ouPgadx9Qm2OuTS
-         LyaLPHqxxgvKrrEJk0zUL2T5Ya+NvG1JlKzWYquEMoM5f2bEuMqQJS77ahyF6QBQnDDc
-         fv3pxLwvCSrxwCkvjCZH1Je4uqHD5KpyWEp8pqD9KO3Xj0tiI8/awYFN0xh9IqGRoubh
-         mKuiBsnt9KcCQ/F6jPpMN2aDhToiyBjjKq1cRfOQmLTINuoEctrlk5kXYs78KwGt0V/t
-         hYIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=6nROnbva2mIoIjRpoWyeMLuW48XcoRdlHO+Qz8e1hbc=;
-        fh=IscZ+RmAdkICNBorjdA1eNfc7nUTK9WLi+0PVFnkV9E=;
-        b=QrCn9V10qXf5M/FEh3bvIHTEKUkRYPJwHMcbWYaVxpfbHBftNvFdyog6qi0vWEMFky
-         xyrvCidsTlkl9MqUHDepOXfDsfWVfDoQ6RkWg0frVal9W6rqbQ6jx4yLEWMN3jgz5C8B
-         BR2e6/4RhNP3PV1WvfxdBWhf2PnHpI0OBSPRSUqE+aHMZJhGW/mIce8ufcbL1X9fxcRh
-         BrOTa1qMRxHcNekTsEZ4HlS7T7v59wNRDs4mVBG8ggHTf+jqc6LXChjZbdDeJkfFXN9u
-         5Z1FGo6Aw4pApISR4BGCyn0GPhz2kMrSPhI1ZK0AwXocYsuNxuOPfE25wcYdsC501/0U
-         HAWg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773626426; x=1774231226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6nROnbva2mIoIjRpoWyeMLuW48XcoRdlHO+Qz8e1hbc=;
-        b=gt1trbfZi9WFdGInFXIp41jUgiPwR7M4yplhHu4ZBsslXEelGYWcLD9KNCShyjvB1h
-         lK57/tFS9NsTlwdGLz9krtuHhMBYVxg3BAbVLFkAs6IJkZReyLxH/XA+qMudPa/AG08J
-         fY5Htw/xhOyjE/56ww+l7Lq+9Wp8N3Qwzh46dmvUJ/Eysb76fFTxePGf/Jtjff1a+IiV
-         5AnDHecDafujHxuQjcc7WadEkrWmrMZmevApbvoq0r3Lr9TgZPW15p+8J3hP2l4lRQFg
-         4ii08D2/nf56gfQ2vd3KDI4LkKi+grtDkFL9LxqhzWTyl9qi4/E9HEz5+C31mvjYKqSl
-         VZ7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773626426; x=1774231226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6nROnbva2mIoIjRpoWyeMLuW48XcoRdlHO+Qz8e1hbc=;
-        b=EjTbeqaVn30GC4Kbro+pqa6sV5t1q9X0GgrQM4Zk+RWKDPIxt0a+m49JNaNGa4q5FQ
-         dVe0mVS5SKMQJaRp7FbyRtAj+GL6DHvvte3fAAQt9JjKP80D1iyK31HTeB0AQjEbtI5n
-         Cwfw0RyvhXo7RG6EZULsJOgRqAEpBZzxomeEaRoVd4AbG8EoI7agwa4JXqmuBtfd/pfB
-         N/HqUoPnCYyOqp2SrLv9gJuNzSAu2oUPslkyWHXuOBjIQ6ym3sZl8Ydr1An963DxZTcw
-         6/GzYl9maNO9iTj6zIF6Uv3rhit8tVK+zI7k7RKbJD9n42Nz2LchxN5Vm06UUeBvEKXa
-         lV+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUR0XVlQkjtHgH6/sonbRWJus+l//g9PiDzmX7FZqnAGTrbKgjAw8YxDNFaHR8NsSlP9j35CPR3fQKzGhJwJMR/MAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkT/HZxHuHhy8VJaGynu8287b7KxrdLGHyUclY7ockYIo3101e
-	wzSrMF9No92L+ZNl18Qwj4RascZn4FB+eYm6hOTmZiKhjwZNLsN249WBvocBgA5HiRRmFZbftvO
-	zcnarrJw9qEcrvkz+eEzP00/NIKjletY=
-X-Gm-Gg: ATEYQzzVm38gAQ+ppclXp85SLnZNOgotgt6ox6Nddvyk6mzlnSS4vKQZuFvnxsEdeIq
-	XwpIPD0zgZFmfuEisiNwNaQJW7XViW2NVEjMBQETY+UJtiCbMXhGWT65NnmxQ2HomsBMtLAlX7f
-	AIl5cBJBRJeRhNWdAkvUZVwumC2SM7LKiUlTBxhkriFKSMmKC2GBeNCagy5QWUGAwsLSMPIA/wn
-	Uww/O/r3zJpFXklaCW5PaYpnwfDXoJTZBZs/pj6vuj7JXfcnWEHXjz0nvi+lE0KHK/BfeUoxrj/
-	fmV4gX6S
-X-Received: by 2002:a05:622a:510:b0:509:3c33:9d0d with SMTP id
- d75a77b69052e-50957b90582mr154459681cf.9.1773626425642; Sun, 15 Mar 2026
- 19:00:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWzZWn3q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A65F9C19421;
+	Mon, 16 Mar 2026 07:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773647511;
+	bh=S0ccrYX+hnq8mcsxGneT9qk0yDFopasoWDV3kXaRa8c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QWzZWn3qoEiWpnmGLbtzi9W9o5JSRnscahCAhfGy2oJ7q8PQuDax8eUKktFpR1owj
+	 REd99OH/YydCJDwuHfO0S+mFWUQq0qRw2XTOW2D1piaWa7JIBsGa8GWwphLCdOxhvi
+	 1h/el5gWjYzOMUO3ZzFGgfAjg/fMEFpC8X9IzHIDVc7qmSk3s5RYiMFZHarxtt8e4h
+	 eZENcaOchVNW+wRJO+HRlB7Li662PSPKWbr1frlQkjMN+G75M1zi7PBFJ1++RzT06C
+	 Ip8cMbHw/eOFCmjwcidciepEoMsQRkaH1eeGl5XBS+MZrWtFRL4xWBvo66o9DjVaOS
+	 H5MZG1DnP6WzA==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Steven Rostedt <rostedt@kernel.org>
+Subject: [PATCHv3 bpf-next 00/24] bpf: tracing_multi link
+Date: Mon, 16 Mar 2026 08:51:14 +0100
+Message-ID: <20260316075138.465430-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260306075954.4533-1-xuewen.yan@unisoc.com> <20260306100625.2211675a@gandalf.local.home>
-In-Reply-To: <20260306100625.2211675a@gandalf.local.home>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Mon, 16 Mar 2026 10:00:13 +0800
-X-Gm-Features: AaiRm51Yqp0v6RvqoIPE_D-FJqiix84GzkJh1OdatJh6dS3PC2XrNo0iITZueIo
-Message-ID: <CAB8ipk8M=Uij65LZCbSAjJPPPsXWYY4kGBQwMm1WqJHHEb33eQ@mail.gmail.com>
-Subject: Re: [PATCH V2] tracing: Revert "tracing: Remove pid in task_rename
- tracing output"
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, elver@google.com, kees@kernel.org, 
-	lorenzo.stoakes@oracle.com, brauner@kernel.org, 
-	schuster.simon@siemens-energy.com, david@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	guohua.yan@unisoc.com, ke.wang@unisoc.com, jing.xia@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Steven,
+hi,
+adding tracing_multi link support that allows fast attachment
+of tracing program to many functions.
 
-Unless there are any further comments, could you please help to take
-this through the tracing tree?
+RFC: https://lore.kernel.org/bpf/20260203093819.2105105-1-jolsa@kernel.org/
+v1: https://lore.kernel.org/bpf/20260220100649.628307-1-jolsa@kernel.org/
+v2: https://lore.kernel.org/bpf/20260304222141.497203-1-jolsa@kernel.org/
 
-Thanks!
+v3 changes:
+- fix module parsing [Leon Hwang]
+- use function traceable check from libbpf [Leon Hwang]
+- use ptr_to_u64 and fix/updated few comments [ci]
+- display cookies as decimal numbers [ci]
+- added link_create.flags check [ci]
+- fix error path in bpf_trampoline_multi_detach [ci]
+- make fentry/fexit.multi not extendable [ci]
+- add missing OPTS_VALID to bpf_program__attach_tracing_multi [ci]
 
-On Fri, Mar 6, 2026 at 11:06=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Fri, 6 Mar 2026 15:59:54 +0800
-> Xuewen Yan <xuewen.yan@unisoc.com> wrote:
->
-> > This reverts commit e3f6a42272e028c46695acc83fc7d7c42f2750ad.
-> >
-> > The commit says that the tracepoint only deals with the current task,
-> > however the following case is not current task:
-> >
-> > comm_write() {
-> >     p =3D get_proc_task(inode);
-> >     if (!p)
-> >         return -ESRCH;
-> >
-> >     if (same_thread_group(current, p))
-> >         set_task_comm(p, buffer);
-> > }
-> > where set_task_comm() calls __set_task_comm() which records
-> > the update of p and not current.
-> >
-> > So revert the patch to show pid.
-> >
-> > Fixes: e3f6a42272e0 ("tracing: Remove pid in task_rename tracing output=
-")
-> > Reported-by: Guohua Yan <guohua.yan@unisoc.com>
-> > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
->
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->
-> -- Steve
->
-> > ---
-> > v2:
-> > - update commit message (Steven)
-> > ---
-> >  include/trace/events/task.h | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/trace/events/task.h b/include/trace/events/task.h
-> > index 4f0759634306..b9a129eb54d9 100644
-> > --- a/include/trace/events/task.h
-> > +++ b/include/trace/events/task.h
-> > @@ -38,19 +38,22 @@ TRACE_EVENT(task_rename,
-> >       TP_ARGS(task, comm),
-> >
-> >       TP_STRUCT__entry(
-> > +             __field(        pid_t,  pid)
-> >               __array(        char, oldcomm,  TASK_COMM_LEN)
-> >               __array(        char, newcomm,  TASK_COMM_LEN)
-> >               __field(        short,  oom_score_adj)
-> >       ),
-> >
-> >       TP_fast_assign(
-> > +             __entry->pid =3D task->pid;
-> >               memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
-> >               strscpy(entry->newcomm, comm, TASK_COMM_LEN);
-> >               __entry->oom_score_adj =3D task->signal->oom_score_adj;
-> >       ),
-> >
-> > -     TP_printk("oldcomm=3D%s newcomm=3D%s oom_score_adj=3D%hd",
-> > -               __entry->oldcomm, __entry->newcomm, __entry->oom_score_=
-adj)
-> > +     TP_printk("pid=3D%d oldcomm=3D%s newcomm=3D%s oom_score_adj=3D%hd=
-",
-> > +             __entry->pid, __entry->oldcomm,
-> > +             __entry->newcomm, __entry->oom_score_adj)
-> >  );
-> >
-> >  /**
->
+v2 changes:
+- allocate data.unreg in bpf_trampoline_multi_attach for rollback path [ci]
+  and fixed link count setup in rollback path [ci]
+- several small assorted fixes [ci]
+- added loongarch and powerpc changes for struct bpf_tramp_node change
+- added support to attach functions from modules
+- added tests for sleepable programs
+- added rollback tests
+
+v1 changes:
+- added ftrace_hash_count as wrapper for hash_count [Steven]
+- added trampoline mutex pool [Andrii]
+- reworked 'struct bpf_tramp_node' separatoin [Andrii]
+  - the 'struct bpf_tramp_node' now holds pointer to bpf_link,
+    which is similar to what we do for uprobe_multi;
+    I understand it's not a fundamental change compared to previous
+    version which used bpf_prog pointer instead, but I don't see better
+    way of doing this.. I'm happy to discuss this further if there's
+    better idea
+- reworked 'struct bpf_fsession_link' based on bpf_tramp_node
+- made btf__find_by_glob_kind function internal helper [Andrii]
+- many small assorted fixes [Andrii,CI]
+- added session support [Leon Hwang]
+- added cookies support
+- added more tests
+
+
+Note I plan to send linkinfo support separately, the patchset is big enough.
+
+thanks,
+jirka
+
+
+Cc: Hengqi Chen <hengqi.chen@gmail.com>
+---
+Jiri Olsa (24):
+      ftrace: Add ftrace_hash_count function
+      bpf: Use mutex lock pool for bpf trampolines
+      bpf: Add struct bpf_trampoline_ops object
+      bpf: Add struct bpf_tramp_node object
+      bpf: Factor fsession link to use struct bpf_tramp_node
+      bpf: Add multi tracing attach types
+      bpf: Move sleepable verification code to btf_id_allow_sleepable
+      bpf: Add bpf_trampoline_multi_attach/detach functions
+      bpf: Add support for tracing multi link
+      bpf: Add support for tracing_multi link cookies
+      bpf: Add support for tracing_multi link session
+      bpf: Add support for tracing_multi link fdinfo
+      libbpf: Add bpf_object_cleanup_btf function
+      libbpf: Add bpf_link_create support for tracing_multi link
+      libbpf: Add btf_type_is_traceable_func function
+      libbpf: Add support to create tracing multi link
+      selftests/bpf: Add tracing multi skel/pattern/ids attach tests
+      selftests/bpf: Add tracing multi skel/pattern/ids module attach tests
+      selftests/bpf: Add tracing multi intersect tests
+      selftests/bpf: Add tracing multi cookies test
+      selftests/bpf: Add tracing multi session test
+      selftests/bpf: Add tracing multi attach fails test
+      selftests/bpf: Add tracing multi attach benchmark test
+      selftests/bpf: Add tracing multi attach rollback tests
+
+ arch/arm64/net/bpf_jit_comp.c                                      |  58 +++---
+ arch/loongarch/net/bpf_jit.c                                       |  44 ++---
+ arch/powerpc/net/bpf_jit_comp.c                                    |  46 ++---
+ arch/riscv/net/bpf_jit_comp64.c                                    |  52 +++---
+ arch/s390/net/bpf_jit_comp.c                                       |  44 ++---
+ arch/x86/net/bpf_jit_comp.c                                        |  54 +++---
+ include/linux/bpf.h                                                |  91 ++++++---
+ include/linux/bpf_types.h                                          |   1 +
+ include/linux/bpf_verifier.h                                       |   3 +
+ include/linux/btf_ids.h                                            |   1 +
+ include/linux/ftrace.h                                             |   1 +
+ include/linux/trace_events.h                                       |   6 +
+ include/uapi/linux/bpf.h                                           |   9 +
+ kernel/bpf/bpf_struct_ops.c                                        |  27 +--
+ kernel/bpf/btf.c                                                   |   4 +
+ kernel/bpf/syscall.c                                               |  88 +++++----
+ kernel/bpf/trampoline.c                                            | 512 ++++++++++++++++++++++++++++++++++++++++----------
+ kernel/bpf/verifier.c                                              | 124 +++++++++---
+ kernel/trace/bpf_trace.c                                           | 149 ++++++++++++++-
+ kernel/trace/ftrace.c                                              |   7 +-
+ net/bpf/bpf_dummy_struct_ops.c                                     |  14 +-
+ net/bpf/test_run.c                                                 |   3 +
+ tools/include/uapi/linux/bpf.h                                     |  10 +
+ tools/lib/bpf/bpf.c                                                |   9 +
+ tools/lib/bpf/bpf.h                                                |   5 +
+ tools/lib/bpf/libbpf.c                                             | 337 ++++++++++++++++++++++++++++++++-
+ tools/lib/bpf/libbpf.h                                             |  15 ++
+ tools/lib/bpf/libbpf.map                                           |   1 +
+ tools/lib/bpf/libbpf_internal.h                                    |   1 +
+ tools/testing/selftests/bpf/Makefile                               |   9 +-
+ tools/testing/selftests/bpf/prog_tests/tracing_multi.c             | 860 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/tracing_multi_attach.c           |  40 ++++
+ tools/testing/selftests/bpf/progs/tracing_multi_attach_module.c    |  26 +++
+ tools/testing/selftests/bpf/progs/tracing_multi_bench.c            |  13 ++
+ tools/testing/selftests/bpf/progs/tracing_multi_check.c            | 213 +++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/tracing_multi_fail.c             |  19 ++
+ tools/testing/selftests/bpf/progs/tracing_multi_intersect_attach.c |  42 +++++
+ tools/testing/selftests/bpf/progs/tracing_multi_rollback.c         |  38 ++++
+ tools/testing/selftests/bpf/progs/tracing_multi_session_attach.c   |  43 +++++
+ tools/testing/selftests/bpf/trace_helpers.c                        |   6 +-
+ tools/testing/selftests/bpf/trace_helpers.h                        |   1 +
+ 41 files changed, 2661 insertions(+), 365 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_attach.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_attach_module.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_bench.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_check.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_fail.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_intersect_attach.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_rollback.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_session_attach.c
