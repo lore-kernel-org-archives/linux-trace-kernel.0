@@ -1,160 +1,118 @@
-Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B41364E85;
-	Mon, 16 Mar 2026 22:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AB1359A76;
+	Mon, 16 Mar 2026 23:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773699061; cv=none; b=X2HD+TcaXbBKqJwG3FOGvtGJ46b+9I3gceqYyzbiFh6CNe9xr5K5tYkgxy7/FPoH9bW5ibjyU1GRsjl45lwRwaFkYUlkIK460MM/W7tnIzi7BdP62SHY3AFNuzkzLwFRLz8crKfu/KWSHUHvsA941n8ETVzAIJYgBbCgkdzV/Y8=
+	t=1773703311; cv=none; b=t5VhOTDK7IHM7kQUXlRrvK+kCOB37EsayNAjD66GpqcRw9FPon/FVIVRtEf0o1N0intqbhal8j/ZtrSgvFtt66+2wbin32Ie77ii2i7oI9OMZk2rKE4NYZk2eEMvXcOTqYfxFRk1Ay9g38tBlt4riv0KCRSECdGE3rzVvVcI3Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773699061; c=relaxed/simple;
-	bh=bR3l1XBxxG0Br6WPViaTYx4jBj801ByLeboUNggNeu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A38yHLwEglJnAk0B2QCy7stC9vMmro0enVPstLHcOoOWf+ISPC3fMoHAiOFXJpgQ+JEGYQrlTu0OIZqL9gIfg9EuELK7OlOHQThyqCuvdDItVMWZTKlH5lCT2EoHtG4zqNZ3haS7IZ2EcyWbx12HIJK/xKpWlKg0tgYFk4eMcz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=eyO5nsRG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=guCypQjf; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	s=arc-20240116; t=1773703311; c=relaxed/simple;
+	bh=AxYtMQ2Nom5pkj1pM4xTyRNeKqbtPrG6JSLZZ8+oCg8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=dyvdpFtHvro9xlrgQe1k/L66yTHxZld0mH/WfsZg5g9HBQHEdbO68CXg+jXVqQlFtj+wy6XcHcxl+Rq0vRP/5U0e+vbeCkglOaADFsTv2/TNJTL7NCBhrsrDQyIj0znlY/NtGXlI3pBnQrG9HGZUhIr3EfTo6fhMxayUVSIdG7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLdJEooH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="eyO5nsRG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="guCypQjf"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailflow.phl.internal (Postfix) with ESMTP id 96E81138028E;
-	Mon, 16 Mar 2026 18:10:56 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 16 Mar 2026 18:10:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1773699056;
-	 x=1773706256; bh=pZj8f0JboyjKt94J8KB7OLIiCOoml43GOZ4w8rDpLPA=; b=
-	eyO5nsRGgscBaSPTlSrjx8D8qsmxFZTD+YBT90C8JLtkSU+JG9otBsGP68/aDjfq
-	Ip8/CY7pDqj8uLfl6tk9PaoCLmHFx9BmC+OLDsgQIKz5wruWwvglBIFTzX8Bgo1G
-	D7tyDhfcq/yYvbxAZYbPlVlov+W1BUQwVVZx34myYfSzzczy+o0TvO2AJR+dEy1d
-	h9Fy4zA0IHy3AyAu2lJw7cTPeRVsoH7Q9DZJUhPGVmEq8IZ5byXvr46eUf3RwYLV
-	Pd21rN+O2sxo21UD0KoApMpHYwnhY5vI1CKlHqs6nb1Q0ON5mjBcz18/WvPyI4M2
-	g7ed/wORmv3aHNEvlM9NEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773699056; x=
-	1773706256; bh=pZj8f0JboyjKt94J8KB7OLIiCOoml43GOZ4w8rDpLPA=; b=g
-	uCypQjfxr+Zi7JxdTC/p3wGQ4VV0q/Wv3rf4QuOSSvRwPZ4hwWoKXSQwRlJppx/A
-	eTD/kX8ytMBkqeeAHXi8QojGoDJPwhemKEl1A5BQyy+VTfQ0kjCklEhRU0D9TNU6
-	QzoouUhJdY7Fi24kVLMS4vkfF5Xif+sxcGuZ+ZH9bmNOAZhg/6jHFnuxjrIUYo4Y
-	sJAjmQ/c58h+MsTVokuL8c2t4xBbVGwnTgXIvKplEwnaY81NNzKXbPGa+zPU58N/
-	vwQ/zZfUYT5zYdyXfBWrfC5sZSkqzhpuD1WACxXIM/TD7Jh2N1ZXy8qS+O1DtSBY
-	h24uS6YuZ9c79L+rKNYRA==
-X-ME-Sender: <xms:73-4aYdtUUIQC679P0YPl8k6UZ10Tz8-qTD319yDZEtXusdBhZuXRA>
-    <xme:73-4aTUav9FvduIIOmc0jldmINr5W_MhUsWQFGzP1fBm1dpf8ggOxSMvCMHniLmCu
-    LbRPk360ujIo39hLA6fsP95YlnCLki5WcrUsiuRyEwh6NcxWlxF>
-X-ME-Received: <xmr:73-4aSY56rJyFtQwMFw-H9dfM29zbbMWxWkWrpi3kYaZ1kbqDyXdf5bHU5U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvleelheegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfgjfhfogggtgfesthejre
-    dtredtvdenucfhrhhomheptehlvgigucghihhllhhirghmshhonhcuoegrlhgvgiesshhh
-    rgiisghothdrohhrgheqnecuggftrfgrthhtvghrnhepvdekfeejkedvudfhudfhteekud
-    fgudeiteetvdeukedvheetvdekgfdugeevueeunecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdhorhhgpdhnsg
-    gprhgtphhtthhopeehhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphhhrghh
-    nhdqohhsshesrghvmhdruggvpdhrtghpthhtoheprghmugdqghhfgieslhhishhtshdrfh
-    hrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegrphhprghrmhhorheslhhishht
-    shdruhgsuhhnthhurdgtohhmpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlh
-    drohhrghdprhgtphhtthhopegtvghphhdquggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopegtohgttghisehinhhrihgrrdhfrhdprhgtphhtthhopegumh
-    dquggvvhgvlheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegurhhiqdgu
-    vghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepgh
-    hfshdvsehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:73-4aQltNdDVIdEqvCmz7Mlt0qW50NA4CHgJQUMNlacMN4MGiVKHfA>
-    <xmx:73-4acHdFw15OLpR73_B1AdIXJMG-pYssiD_C0T2dj2N-8ux7fVHFg>
-    <xmx:73-4aU6P6J2BtdvPwSPzfrUNjz9-qYacHOOWBucSAMlha23fXDTcIg>
-    <xmx:73-4aaO5YEqAXlnOLRO88GZx1RbxPW8QtXAeqZQNaqmxlgOL7PgFkQ>
-    <xmx:8H-4abIvs_QYur641c9BpnDuFQ6ssCC-7-o-rPLEHWyRxStBDxJEr6SL>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 16 Mar 2026 18:10:52 -0400 (EDT)
-Date: Mon, 16 Mar 2026 16:10:50 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
- bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
- dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
- gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
- intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
- kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
- sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
- alex@shazbot.org
-Subject: Re: [PATCH 46/61] vfio: Prefer IS_ERR_OR_NULL over manual NULL
- check
-Message-ID: <20260316161050.01c82973@shazbot.org>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-46-bd63b656022d@avm.de>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-	<20260310-b4-is_err_or_null-v1-46-bd63b656022d@avm.de>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLdJEooH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB15CC19421;
+	Mon, 16 Mar 2026 23:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773703310;
+	bh=AxYtMQ2Nom5pkj1pM4xTyRNeKqbtPrG6JSLZZ8+oCg8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LLdJEooHT6pb3Z9svL8tq2pq5ODZ502u4EXJAqClwYkhkAYkw+k+G6vuWHk9PDhEK
+	 bhsATkoSgRfy9LJoo4H1ApGlTXnz/qSGxTFQ9nh0MJ3ugAjq2rkWg7IJ+m266/nMqb
+	 nv0z7nIRQRdwxCrZ+Ma35VdW2f9lCx2+QaIrINr5hghEeXunwapqmj0oc7LzvUQGf9
+	 C33W6TaHs/1VQtc+HFskZyJq8o/KhCIF/ynxuFuihavCks8x4FyjCDCQfl73+nXw0i
+	 O8r3SIZ8FRVegg4RkcfJXAJA5xld69UCSGJseX72yUBejIMqB4XajiCznznOdpGGzr
+	 SLyH1eu80gq5A==
+Date: Tue, 17 Mar 2026 08:21:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v9 0/4] ring-buffer: Making persistent ring buffers
+ robust
+Message-Id: <20260317082148.a54ae29a7c991cea149d8f1b@kernel.org>
+In-Reply-To: <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
+References: <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Mar 2026 12:49:12 +0100
-Philipp Hahn <phahn-oss@avm.de> wrote:
+On Wed, 11 Mar 2026 10:32:11 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
+> Hi,
 > 
-> Change generated with coccinelle.
+> Here is the 9th version of improvement patches for making persistent
+> ring buffers robust to failures.
+> The previous version is here:
 > 
-> To: Alex Williamson <alex@shazbot.org>
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+> https://lore.kernel.org/all/177303264034.767813.5345788067082238396.stgit@mhiramat.tok.corp.google.com/
+> 
+> In this version, I fixed bugs/typos in [2/4][3/4] and add a bugfix patch
+> [1/4] and a test[4/4]. Also, add a meta->subbuf_size validation[3/4].
+
+Hmm, the test case fails if rewinding happens, because the 
+data_page validation failed in rewinding and stop rewinding.
+The test may need to be designed more carefully.
+Others looks good to me.
+
+Thanks,
+
+> 
+> Thank you,
+> 
 > ---
->  drivers/vfio/vfio_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-> index 742477546b15d4dbaf9ebcfb2e67627db71521e0..d71922dfde5885967398deddec3e9e04b05adfec 100644
-> --- a/drivers/vfio/vfio_main.c
-> +++ b/drivers/vfio/vfio_main.c
-> @@ -923,7 +923,7 @@ vfio_ioctl_device_feature_mig_device_state(struct vfio_device *device,
->  
->  	/* Handle the VFIO_DEVICE_FEATURE_SET */
->  	filp = device->mig_ops->migration_set_state(device, mig.device_state);
-> -	if (IS_ERR(filp) || !filp)
-> +	if (IS_ERR_OR_NULL(filp))
->  		goto out_copy;
->  
->  	return vfio_ioct_mig_return_fd(filp, arg, &mig);
+> Masami Hiramatsu (Google) (4):
+>       ring-buffer: Fix to update per-subbuf entries of persistent ring buffer
+>       ring-buffer: Flush and stop persistent ring buffer on panic
+>       ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
+>       ring-buffer: Add persistent ring buffer selftest
 > 
+> 
+>  arch/alpha/include/asm/Kbuild        |    1 
+>  arch/arc/include/asm/Kbuild          |    1 
+>  arch/arm/include/asm/Kbuild          |    1 
+>  arch/arm64/include/asm/ring_buffer.h |   10 ++
+>  arch/csky/include/asm/Kbuild         |    1 
+>  arch/hexagon/include/asm/Kbuild      |    1 
+>  arch/loongarch/include/asm/Kbuild    |    1 
+>  arch/m68k/include/asm/Kbuild         |    1 
+>  arch/microblaze/include/asm/Kbuild   |    1 
+>  arch/mips/include/asm/Kbuild         |    1 
+>  arch/nios2/include/asm/Kbuild        |    1 
+>  arch/openrisc/include/asm/Kbuild     |    1 
+>  arch/parisc/include/asm/Kbuild       |    1 
+>  arch/powerpc/include/asm/Kbuild      |    1 
+>  arch/riscv/include/asm/Kbuild        |    1 
+>  arch/s390/include/asm/Kbuild         |    1 
+>  arch/sh/include/asm/Kbuild           |    1 
+>  arch/sparc/include/asm/Kbuild        |    1 
+>  arch/um/include/asm/Kbuild           |    1 
+>  arch/x86/include/asm/Kbuild          |    1 
+>  arch/xtensa/include/asm/Kbuild       |    1 
+>  include/asm-generic/ring_buffer.h    |   13 +++
+>  include/linux/ring_buffer.h          |    1 
+>  kernel/trace/Kconfig                 |   15 +++
+>  kernel/trace/ring_buffer.c           |  169 ++++++++++++++++++++++++++--------
+>  kernel/trace/trace.c                 |    4 +
+>  26 files changed, 192 insertions(+), 40 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/ring_buffer.h
+>  create mode 100644 include/asm-generic/ring_buffer.h
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-As others have expressed in general, this doesn't seem to be cleaner
-and tends to mask that we consider IS_ERR() and NULL as separate cases
-in the goto.  This code looks like it could use some refactoring, and
-likely that refactoring should handle the IS_ERR() and NULL cases
-separately, but conflating them here is not an improvement.  Thanks,
 
-Alex
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
