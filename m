@@ -1,95 +1,136 @@
-Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5452238D00A;
-	Mon, 16 Mar 2026 15:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773674102; cv=pass; b=G2VLP97dSrsxBH0/iN6aeAdBbOD22PW4GBJt99oL/0w7VrI3jZPLhGpA+Et5tryIRDZr8ZvMcOp/qgIRDg9yo+5XJn18ujTFutifRT0uERIgg+N1B/xtFr2Jvlqc/KNuW+bNZz0NQRv/W/rHSUeZXxUYRwLyqUmu9TmdGQyWlaI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773674102; c=relaxed/simple;
-	bh=1PE7TuS6a3EBeU+KPtkURt1NYuG9WQSofSwD9tG4L3s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Ywn5riQxunoRj1d1CR8KJunDgiRU9nGPTln1zdtKIq8ESYPnhiftbq4CCuLQubRflCGlibFsG5iiXDIouO1dWu7Q/HuuS1VgL6/RPP+4LBZ894YF9Aokp2IJhsUgtVulRUrKxoXfU3j5XnF8M9At+0dxH22yyNiJ0JjHr6ca/q0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=GdfBad2O; arc=pass smtp.client-ip=136.143.169.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F1939EF38;
+	Mon, 16 Mar 2026 15:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773675139; cv=none; b=B5Gfof0xXWQoU+fd38JgbEqrKZPqDeh+0Sv4JTNyxVcaPFp+B0ioyn0wEWVyXLLYeutKUljpQtDsimx67h20H/8ui9ClQggbgezarcDT5gi+6JVAYEy3lEtkkAYUZNLzrZsfF4DdXGIW9Ex/J9jayc8eI1UTbkBlUDsiASsPqYc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773675139; c=relaxed/simple;
+	bh=bpK8XFgs6ySeQ78nY04cVX/1aacuG1mCw2HDIMSBLhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MGtqDE7n5AzWBG57J78uzxStryBpSqSaeRATkvio+CJqj6+sk+T9HY8HxSpf0+JmVMPgQQ9/MvMdYw+q1Opxp9aJrFOQF6s2TDl0ez2+0giuRyu4BpCT5hu8KjmPPs/b4mflt03ESAQMFBOVqGo1LuBCr0+iA5020wNqHaU0LIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=EDifI+bq; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="GdfBad2O"
-ARC-Seal: i=1; a=rsa-sha256; t=1773674092; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=J4eQ/cWQrmHkEPV9BD0Itu+NXMkvb70DaOLXVl1Wv9utGeOBPkN5VaXtpYCHVhZaoeDLx90CppaXGt6zIpapzDbiJnbSjhiifUPm5MkCn/dG0+54zJMreu2DVh8oSM1lMgVQLCsHlREz5nrvPmjZw/Q4VIy0G8zwp0EfD18pU8A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773674092; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3X4vo4X445RrifJ2ssVD/zI5YLyKtVANoDTewF/v3iE=; 
-	b=IQdh/PnwTkaj5X0PF0P8bQPScPLjeu3ojRpx7lDvV6qsV8izc+gDUCpOkJhFV1oqdYtya3+XsNIC4pitlIy2JQJpZYl2Wwxn+qmBglRJSkd+I5uChHe71bPl+nZ0q+/wfRR8dWVouOnMx42P7oX901cHKgxg0608FJfChgt1cfo=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=objecting.org;
-	spf=pass  smtp.mailfrom=objecting@objecting.org;
-	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773674092;
-	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=3X4vo4X445RrifJ2ssVD/zI5YLyKtVANoDTewF/v3iE=;
-	b=GdfBad2OZvO2mkeIX0t11K0yM1OKZzSSe5Y6d/F60rrvmbjZudoqrMM+X5qBjgL9
-	ria/TPbgX27GhLaO2L84zGCyCQMXEjpoJZ4L2tUOQXkc/EV7uMtzL9Oug3YYVyAwHDn
-	EE6XSzo74HLnGxqEs3GY9QYdYlN0KNHrweIaUP+Q=
-Received: by mx.zoho.eu with SMTPS id 1773674090171538.6075392177464;
-	Mon, 16 Mar 2026 16:14:50 +0100 (CET)
-Date: Mon, 16 Mar 2026 15:14:48 +0000
-From: Josh Law <objecting@objecting.org>
-To: Markus Elfring <Markus.Elfring@web.de>, linux-trace-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-CC: LKML <linux-kernel@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_17/17=5D_tools/bootconfig=3A_fix_?=
- =?US-ASCII?Q?fd_leak_in_load=5Fxbc=5Ffile=28=29_on_fstat_failure?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <ecb34439-8695-4562-a9e7-9fac74323adb@web.de>
-References: <20260314223425.142966-18-objecting@objecting.org> <ecb34439-8695-4562-a9e7-9fac74323adb@web.de>
-Message-ID: <02815935-BE45-4A0E-94EE-435C81681A9D@objecting.org>
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="EDifI+bq"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 96513B3C3A;
+	Mon, 16 Mar 2026 15:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1773675130;
+	bh=Z7lLkAHeLGSHr1ZiNnNC5vKEy7HRABxlzZYRGN1R9Ko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=EDifI+bqJWjIpRUPhvq5Kq4913/23Qez627nTi2AuX1yqmD1y0HHxvbDQ5k+/Qloj
+	 DgZlV+vg+osCbj4k/Qg+UMc9RNVHWi4408Qw0NIafP7VLI9p4xK7i7j/QN7dX/V6On
+	 sS1ijjJGrNsqj8L1QiY4a3OWhsKxqzLeRcX96Ea8=
+Date: Mon, 16 Mar 2026 15:32:07 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Usama Arif <usama.arif@linux.dev>
+Cc: Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v2 2/2] locking: Add contended_release tracepoint
+Message-ID: <abgid9TwAaPJVw1b@shell.ilvokhin.com>
+References: <cb89caf58885858433711f0ed6238484f5f1a67f.1773164180.git.d@ilvokhin.com>
+ <20260312113815.2107882-1-usama.arif@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260312113815.2107882-1-usama.arif@linux.dev>
 
+On Thu, Mar 12, 2026 at 04:38:14AM -0700, Usama Arif wrote:
+> On Tue, 10 Mar 2026 17:49:39 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+> 
+> > Add the contended_release trace event. This tracepoint fires on the
+> > holder side when a contended lock is released, complementing the
+> > existing contention_begin/contention_end tracepoints which fire on the
+> > waiter side.
+> > 
+> > This enables correlating lock hold time under contention with waiter
+> > events by lock address.
+> > 
+> > Add trace_contended_release() calls to the slowpath unlock paths of
+> > sleepable locks: mutex, rtmutex, semaphore, rwsem, percpu-rwsem, and
+> > RT-specific rwbase locks. Each call site fires only when there are
+> > blocked waiters being woken, except percpu_up_write() which always wakes
+> > via __wake_up().
+> > 
+> > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> > ---
+> >  include/trace/events/lock.h   | 17 +++++++++++++++++
+> >  kernel/locking/mutex.c        |  1 +
+> >  kernel/locking/percpu-rwsem.c |  3 +++
+> >  kernel/locking/rtmutex.c      |  1 +
+> >  kernel/locking/rwbase_rt.c    |  8 +++++++-
+> >  kernel/locking/rwsem.c        |  9 +++++++--
+> >  kernel/locking/semaphore.c    |  4 +++-
+> >  7 files changed, 39 insertions(+), 4 deletions(-)
+> > 
 
+[...]
 
-On 16 March 2026 12:15:08 GMT, Markus Elfring <Markus=2EElfring@web=2Ede> =
-wrote:
->> If fstat() fails after open() succeeds, load_xbc_file() returns
->> -errno without closing the file descriptor=2E  Add the missing close()
->> call on the error path=2E
->
->https://elixir=2Ebootlin=2Ecom/linux/v7=2E0-rc3/source/tools/bootconfig/m=
-ain=2Ec#L139-L153
->
->How do you think about to use a corresponding goto chain?
->
->
->Would you like to  add any tags (like =E2=80=9CFixes=E2=80=9D and =E2=80=
-=9CCc=E2=80=9D) accordingly?
->https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Egit/=
-tree/Documentation/process/submitting-patches=2Erst?h=3Dv7=2E0-rc4#n145
->
->Regards,
->Markus
+> > diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+> > index f3ee7a0d6047..1eee51766aaf 100644
+> > --- a/kernel/locking/percpu-rwsem.c
+> > +++ b/kernel/locking/percpu-rwsem.c
+> > @@ -263,6 +263,8 @@ void percpu_up_write(struct percpu_rw_semaphore *sem)
+> >  {
+> >  	rwsem_release(&sem->dep_map, _RET_IP_);
+> >  
+> > +	trace_contended_release(sem);
+> > +
+> 
+> Hello!
+> 
+> I saw that you mentioned in the commmit message that you do this for only
+> blocked waiters except for percpu_up_write(). We can use
+> waitqueue_active(&sem->waiters) to check for this over here so that
+> its consistent with every other call?
 
+Thanks for the feedback, Usama.
 
-Hello markus, i submitted a V6 (yes a v6) that responds to all that, and i=
-ncludes extra patches to fix some warnings under W123 (maximum GCC warning =
-level)
+I thought about it and even mentioned in the comment, but I forgot what
+was the reason. Now, I think you are correct. I added wq_has_sleeper()
+locally instead of waitqueue_active() locally, since we are not holding
+the lock here and waitqueue_active() requires a barrier based on the
+comment. It might be not very important here, but I'd rather make it
+correct even for tracepoint.
 
-Thanks=2E
+Note that __percpu_up_read() doesn't need this guard. Maybe I was
+thinking at __percpu_up_read() part before and just made it symmetric.
 
+Anyway, thanks for suggestion.
 
-V/R
+> 
+> 
+> >  	/*
+> >  	 * Signal the writer is done, no fast path yet.
+> >  	 *
+> > @@ -297,6 +299,7 @@ void __percpu_up_read(struct percpu_rw_semaphore *sem)
+> >  	 * writer.
+> >  	 */
+> >  	smp_mb(); /* B matches C */
+> > +	trace_contended_release(sem);
+> 
+> Should we do this after this_cpu_dec(*sem->read_count)?
 
-
-Josh Law
+Good point. I moved it after this_cpu_dec() so the tracepoint fires
+after the lock is released but before rcuwait_wake_up(). I also went
+through all other call sites and made the placement consistent where
+possible: after release, before wake. It should be fixed in v3.
