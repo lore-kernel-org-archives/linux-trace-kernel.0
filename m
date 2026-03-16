@@ -1,144 +1,101 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3EE3CF04A;
-	Mon, 16 Mar 2026 17:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2355D328B58;
+	Mon, 16 Mar 2026 17:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773680836; cv=none; b=SWl/8UlkwLId1JGar9JK/xzAGCc/PBOIhQgEigMP4HggLunIH0RON10/NFTzhMqhnMc/Bqtie8AahYesCoT2j6vO+k0cjVUvcRCVa0SQJQbdTiOcMqP1JZL9uEkHSES0nbmvcRi5LeKklctootNsAuQrCWmx9LG99PqgVYlAzg8=
+	t=1773682853; cv=none; b=h8ZEA0pi+YeyJK98cjwZkJp/tJ1yv7M9vGppwzaxtdE1niETT8NmVoL13JVYV/E+MvA95t/IjHk1eiyHs/Q5lPkaw1cWUi586g7jMWi0C84qDvH80fQ4ZFVlWubCzMYLitMMMgMb+A100AXD4EC6eahN9LZqq5Q24z8lxBOFvAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773680836; c=relaxed/simple;
-	bh=PRjom+pNrClZS2LbHVl0d3bGE2Rn8HAoHks5xNJDAZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=T/c7Rp63g/kHsoCL6k7UnvcR6ij6+5Pj7LdaahJ2eVR8Rs6OlMEOzrqMjqzy54SyAMPZwZ+eAFkPD5abiQ/KpOM7spFgV2ESSl8ZHU2SX2HUWxR/uMSgWILojbiV9sYHmdiwMbDxXd75BrNdYo7jvgPy4KVWxOwk1LUxhNIoRtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id EBD12160368;
-	Mon, 16 Mar 2026 17:07:12 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 5DDD01A;
-	Mon, 16 Mar 2026 17:07:11 +0000 (UTC)
-Date: Mon, 16 Mar 2026 13:07:34 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing: Fix failure to read user space from system call
- trace events
-Message-ID: <20260316130734.1858a998@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1773682853; c=relaxed/simple;
+	bh=i5PwwlE0Erxpfq9BYUPkFLkHrCDQPEvfsDQxy0XNePg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WheapCLHABJhGxuSC+n1Up6o9PNYNlyKi54a7rsoa3wv9LJdf3Tyn+Otc5mW6xJckTFgmkkswaK7eJr72mSn54TlhQwpgrh9kaGVVAoNCB2H0GNpULZO0+OIKcVVIDzZuRx/bKQOuSG/4JnrS6Ua0erzw7ZpinHGi08jBVRy+Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=dTS6csCv; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="dTS6csCv"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id CE69CB3C52;
+	Mon, 16 Mar 2026 17:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1773682850;
+	bh=PYKf7aY84Fm2Usf9vwKrE8cpw7bghTbRx6rsJcLbz+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dTS6csCvLTM1SQTIz3SKBrpcK4/YVI8zJ4qyJCVZoEHV1Vxlqnqgvu9skkc2esslD
+	 kPcBYa04hvvJJkdQNZF8Ul3irDYeARFq9+DGb6fdeupxhpdV46YjtsdJjsbnUv6nf2
+	 VFicRtsQGemIELk2SvKmdV2I0TqcYlkkroeR9yuQ=
+Date: Mon, 16 Mar 2026 17:40:48 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] mm: zone lock tracepoint instrumentation
+Message-ID: <abhAoF5EpiPigsx7@shell.ilvokhin.com>
+References: <cover.1772206930.git.d@ilvokhin.com>
+ <aa7G1nD7Rd9F4eBH@casper.infradead.org>
+ <aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
+ <aa7dgQDMEz34eadj@casper.infradead.org>
+ <20260309151317.7bba06dd@gandalf.local.home>
+ <aa8xawMxLeUjkyHx@casper.infradead.org>
+ <20260309171700.063318b5@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 5DDD01A
-X-Stat-Signature: 7b5pioggbphnhg886h6uk66m855ywnfb
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+vFFZxYw3KMvJqe6bOH7CexgCq7Wc+Ddo=
-X-HE-Tag: 1773680831-561193
-X-HE-Meta: U2FsdGVkX1/ivveTbMJce5suHTDebzPIW5BRa8ITriPUoE0Js1HOQGz50zT67G5Qw01XpolA1Z3jMfTqAKjF9YIKMSjxlPSjOzQchhBRh2CGSN3llBiMzWVuTZ/YF2hlIa4hZk1GycLGMmb2NJWiijTjTL/IL7HyxpveX16IlDyLNB4ssQwxfWbnzI8SPEkSkY5Vcfb+CURFL7hjZY0rrEciWOx2xg3U9Othp09rI9TsxYXAoDOP1P6m/wh3yVTCfSDd9cwbJizvP4dzmrJSGRhJNrS2Q+u98xuDkM3rwW3f77j10Rs66MFHdGjOMueYZGB3fO8iT7B6qSGm3sC8P2lW2sbiFEvMrItu2fqLVwFdbkaNJeoIdAlor1WVRrxRU0LPkx9B74Ik1NR6oCBbwO9VZr8ECXf/qleeKOF+oQBzinx2vVahqGFOmO7w+kUAC4phkgQz79119cfhkRyaLbKBuXdNda+VVXXmYgyhFHE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260309171700.063318b5@gandalf.local.home>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Thanks for the discussion and for the feedback on generic lock
+instrumentation.
 
-The system call trace events call trace_user_fault_read() to read the user
-space part of some system calls. This is done by grabbing a per-cpu
-buffer, disabling migration, enabling preemption, calling
-copy_from_user(), disabling preemption, enabling migration and checking if
-the task was preempted while preemption was enabled. If it was, the buffer
-is considered corrupted and it tries again.
+Following up on the earlier points about lightweight LOCK_STAT and
+tracepoints.
 
-There's a safety mechanism that will fail out of this loop if it fails 100
-times (with a warning). That warning message was triggered in some
-pi_futex stress tests. Enabling the sched_switch trace event and
-traceoff_on_warning, showed the problem:
+While the thread has focused on spin_lock() calls, the real gap is on
+the unlock path: there is currently no release-side tracepoint to
+correlate holders and waiters or measure contended hold times.
 
- pi_mutex_hammer-1375    [006] d..21   138.981648: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981651: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981656: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981659: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981664: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981667: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981671: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981675: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981679: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981682: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981687: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981690: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981695: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981698: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981703: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981706: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981711: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981714: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981719: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981722: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981727: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981730: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
- pi_mutex_hammer-1375    [006] d..21   138.981735: sched_switch: prev_comm=pi_mutex_hammer prev_pid=1375 prev_prio=95 prev_state=R+ ==> next_comm=migration/6 next_pid=47 next_prio=0
-     migration/6-47      [006] d..2.   138.981738: sched_switch: prev_comm=migration/6 prev_pid=47 prev_prio=0 prev_state=S ==> next_comm=pi_mutex_hammer next_pid=1375 next_prio=95
+A possible generic solution is a trace_contended_release() for spin
+locks, for example:
 
-What happened was the task 1375 was flagged to be migrated. When
-preemption was enabled, the migration thread woke up to migrate that task,
-but failed because migration for that task was disabled. This caused the
-loop to fail to exit because the task scheduled out while trying to read
-user space.
+    if (trace_contended_release_enabled() &&
+        atomic_read(&lock->val) & ~_Q_LOCKED_MASK)
+        trace_contended_release(lock);
 
-Every time the task enabled preemption the migration thread would schedule
-in, try to migrate the task, fail and let the task continue. But because
-the loop would only enable preemption with migration disabled, it would
-always fail because each time it enabled preemption to read user space,
-the migration thread would try to migrate it.
+This might work on x86, but could increase code size and regress
+performance on arches where spin_unlock() is inlined, such as arm64
+under !PREEMPTION.
 
-To solve this, when the loop fails to read user space without being
-scheduled out, enabled and disable preemption with migration enabled. This
-will allow the migration task to successfully migrate the task and the
-next loop should succeed to read user space without being scheduled out.
+So even a generic release-side tracepoint has nontrivial downsides (not
+to mention lightweight LOCK_STAT, since a disabled tracepoint is about
+as lightweight as it gets, the more stats we add, the less lightweight
+the mechanism becomes).
 
-Cc: stable@vger.kernel.org
-Fixes: 64cf7d058a005 ("tracing: Have trace_marker use per-cpu data to read user space")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://patch.msgid.link/20260303120404.1824b894@gandalf.local.home
-
-- Removed extra whitespace at end of comment line.
-
- kernel/trace/trace.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ebd996f8710e..bb4a62f4b953 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6783,6 +6783,23 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
- 	 */
- 
- 	do {
-+		/*
-+		 * It is possible that something is trying to migrate this
-+		 * task. What happens then, is when preemption is enabled,
-+		 * the migration thread will preempt this task, try to
-+		 * migrate it, fail, then let it run again. That will
-+		 * cause this to loop again and never succeed.
-+		 * On failures, enabled and disable preemption with
-+		 * migration enabled, to allow the migration thread to
-+		 * migrate this task.
-+		 */
-+		if (trys) {
-+			preempt_enable_notrace();
-+			preempt_disable_notrace();
-+			cpu = smp_processor_id();
-+			buffer = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
-+		}
-+
- 		/*
- 		 * If for some reason, copy_from_user() always causes a context
- 		 * switch, this would then cause an infinite loop.
--- 
-2.51.0
-
+The zone lock wrappers provide a practical, production-safe solution to
+observe this specific high-contention lock, if the generic approach
+proves impractical.
