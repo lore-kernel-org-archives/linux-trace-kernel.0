@@ -1,118 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2DB280A21;
-	Mon, 16 Mar 2026 13:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AB023EA8A;
+	Mon, 16 Mar 2026 13:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773667834; cv=none; b=K5gvf5XQbTBizT3WuXzexYkhDA1Nh5Bo9hbtZvuNydNefoU1jmo6zu/B277aM/k6HOOpCKsQac5Hy8PyKQHviCXuhAbzc4f1bA+LTrUbNOI+yd7duOWRZ9picaOnzTsYrBeHK+jP4XgbJDVfp7Gpji2P/VtesDyGGYeJXtyA5ok=
+	t=1773669259; cv=none; b=MYKuiXkO7tA6iml9yIGySHuCeU6bADB5hfW0DCEetAlKnD8W5OvFCkMt2rdffkvqLD3jPinGl1DcG9k3Us1kugvaIbyPQp3Wm7KKZB6EOwpKra3BtxWq7+Xb4+d5+XKHuSG7X7mfXsBEHTNU3yix+0gBbGCoJuBWS1YjLxzDO7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773667834; c=relaxed/simple;
-	bh=12QmHVFW6kvGAsAEHlRgc6k9FaOX+eCOvB+1XSjB85g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kTAIgrBHQLrgcO4IFIEbx3nTnmQSE0phOOz114/pc+rrT/bu6Sus3DbJ3f6KNZ/ivlu8tuYKx6DbFSlX+pJNpoh14rw5qLxKcpQEZ8J9fVri7fDrcDkZbHB7ID4BOpjvr0rL26JS5jA3WasQh7RkKZ7WAMT5gvSuisutlTRLPsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 369FC14BF;
-	Mon, 16 Mar 2026 06:30:25 -0700 (PDT)
-Received: from [10.57.61.116] (unknown [10.57.61.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D4953F778;
-	Mon, 16 Mar 2026 06:30:22 -0700 (PDT)
-Message-ID: <2c7466f5-d952-4356-9b55-9d2ebb3471f2@arm.com>
-Date: Mon, 16 Mar 2026 13:30:19 +0000
+	s=arc-20240116; t=1773669259; c=relaxed/simple;
+	bh=RTeM49aZsC8UTX/69GBo+Qakr8XwjIkDmxjCYSYMtV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IgbA8vRjcjhG0kFQUiRVDh01HLruZetTSr+joA9bfBL3DAN/Me2gI/mN1HDHMOKRA/NzuBspIlK9HBTsQwg3v4IZ1V9A1ro9ruKW34SZdovqRk+TqxA0pScLc94w7QBxBmQiwi8EQ+Jgp3jv6mJxsH8V9ol+FSmNsQqtLi4hkzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0C1E9C1365;
+	Mon, 16 Mar 2026 13:54:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 1F44B20026;
+	Mon, 16 Mar 2026 13:54:07 +0000 (UTC)
+Date: Mon, 16 Mar 2026 09:54:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, elver@google.com, kees@kernel.org,
+ lorenzo.stoakes@oracle.com, brauner@kernel.org,
+ schuster.simon@siemens-energy.com, david@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ guohua.yan@unisoc.com, ke.wang@unisoc.com, jing.xia@unisoc.com
+Subject: Re: [PATCH V2] tracing: Revert "tracing: Remove pid in task_rename
+ tracing output"
+Message-ID: <20260316095430.2080b8bd@gandalf.local.home>
+In-Reply-To: <CAB8ipk8M=Uij65LZCbSAjJPPPsXWYY4kGBQwMm1WqJHHEb33eQ@mail.gmail.com>
+References: <20260306075954.4533-1-xuewen.yan@unisoc.com>
+	<20260306100625.2211675a@gandalf.local.home>
+	<CAB8ipk8M=Uij65LZCbSAjJPPPsXWYY4kGBQwMm1WqJHHEb33eQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 50/61] iommu: Prefer IS_ERR_OR_NULL over manual NULL check
-To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
- apparmor@lists.ubuntu.com, bpf@vger.kernel.org, ceph-devel@vger.kernel.org,
- cocci@inria.fr, dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
- gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
- intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
- kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
- sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
- <20260310-b4-is_err_or_null-v1-50-bd63b656022d@avm.de>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260310-b4-is_err_or_null-v1-50-bd63b656022d@avm.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: h9sp9zn33t6zzyqqdz1qsirxxa9pn3uc
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 1F44B20026
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18m9wy+n8M5gdFeLHtmOjs9y+6m9cjZSiY=
+X-HE-Tag: 1773669247-219968
+X-HE-Meta: U2FsdGVkX19oh2yjI9EpDRw01rRhb9BZGMqwpIXtpA7jG6I7v8DTuaviL/7XCYz7zA9bDr+cgr5lYTrYvnM9Pr1mDYPFY+j2RlBkgtSRoP4toQNd8ahX4wbuyuKrAbL6LyWK7+6xkgUgIPSh7mGl3kNS4ddoUmLg5M41ROE56TKuYpvf1s9q2283bTR1MaCq45EWc136zIJDYD7QbL8dsSAc9WEA7soGxNnk83Mh4vPPOQFZ/Wcigyzqn4HhwCbDCDVdhF8EGuUIwHebo8ihBRUjTry6+nPleypoRljVv58UGK8BwgKijTjAj6J2oRmfwK+hnk75X/5RTmlvu8mjc71psJXtl+nNQ3t4wtb4mlKVLmwihxIGNg==
 
-On 2026-03-10 11:49 am, Philipp Hahn wrote:
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
+On Mon, 16 Mar 2026 10:00:13 +0800
+Xuewen Yan <xuewen.yan94@gmail.com> wrote:
 
-AFAICS it doesn't look possible for the argument to be anything other 
-than valid at both callsites, so *both* conditions here seem in fact to 
-be entirely redundant.
+> Unless there are any further comments, could you please help to take
+> this through the tracing tree?
 
-> Change generated with coccinelle.
+I guess this file doesn't really have an owner, so yeah, I'll take it.
 
-Please use coccinelle responsibly. Mechanical changes are great for 
-scripted API updates, but for cleanup, whilst it's ideal for *finding* 
-areas of code that are worth looking at, the code then wants actually 
-looking at, in its whole context, because meaningful cleanup often goes 
-deeper than trivial replacement.
-
-In particular, anywhere IS_ERR_OR_NULL() is genuinely relevant is 
-usually a sign of bad interface design, so if you're looking at this 
-then you really should be looking first and foremost to remove any 
-checks that are already unnecessary, and for the remainder, to see if 
-the thing being checked can be improved to not mix the two different 
-styles. That would be constructive and (usually) welcome cleanup. Simply 
-churning a bunch of code with this ugly macro that's arguably less 
-readable than what it replaces, not so much.
-
-Thanks,
-Robin.
-
-> To: Joerg Roedel <joro@8bytes.org>
-> To: Will Deacon <will@kernel.org>
-> To: Robin Murphy <robin.murphy@arm.com>
-> Cc: iommu@lists.linux.dev
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
-> ---
->   drivers/iommu/omap-iommu.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-> index 8231d7d6bb6a9202025643639a6b28e6faa84659..500a42b57a997696ff37c76f028a717ab71d01f9 100644
-> --- a/drivers/iommu/omap-iommu.c
-> +++ b/drivers/iommu/omap-iommu.c
-> @@ -881,7 +881,7 @@ static int omap_iommu_attach(struct omap_iommu *obj, u32 *iopgd)
->    **/
->   static void omap_iommu_detach(struct omap_iommu *obj)
->   {
-> -	if (!obj || IS_ERR(obj))
-> +	if (IS_ERR_OR_NULL(obj))
->   		return;
->   
->   	spin_lock(&obj->iommu_lock);
-> 
-
+-- Steve
