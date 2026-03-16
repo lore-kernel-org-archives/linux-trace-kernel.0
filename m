@@ -1,101 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA9B3ED111;
-	Mon, 16 Mar 2026 20:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C28314A9E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Mar 2026 20:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773693574; cv=none; b=UYCXXFJ1HzT5Hhj60T0d58o4hikIdxzBmS+j0rXgk1v8G8ivp3Tx6OpwHEGprGmjBC+S/SCUH4jZIPW0jbIlacJCQyR9iI2LCtFTKE3g9rNxjN/YYB3VknQS2/81zAFHuqmAN8cQ38CZRmyaNighHHK43NHXO+ZRGC2fvfUp7oY=
+	t=1773694067; cv=none; b=nhRlDuKf6BOJTr+vjGqAGQypu6OmjvB1a4UHJ6AVjeWuV22vusyGCt8/lEBB/n1bHVZMELXXqiPMORIFhyPKIWHAS1uGL8Qbvp5n3HgnPbIzqIiALeT+uLRjjnqBSdm6LVQtwjsCxoae8IQht9F3U+e7fLdc69p2TURtwokzKR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773693574; c=relaxed/simple;
-	bh=e3RhwnNiwK1x/eHOGy59Ae3i6XSohKUkLWxBcoMgZBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MINaxekAExsRI8yWGil8rP3fBuLOx2fqHTYDh0k1Y51gA8m3AWrFcvXJc4GbDn8l2IREFAefOodB5sOWXbSPoqqmbFKiZjqoDgBpyeRz+xJM+M8pAWpQCu2uZH4CzoDfAGNhk9VZ+pF/9rwew24HZXYEz/jBVfWXaJ9xXyA0mvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGDr2I5J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773694067; c=relaxed/simple;
+	bh=AX9fT2oSg517IceT/q8HDTzyQi5c1ne+n3RBp9mWc7Q=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=eRWJHaHsZLAbaFsDg0w2AXGRqLz5Xd+z4yLZVuPdP5/1HmR8QK3CfTpQ/fuGPNwAmkJJargfHRuxCOfDLJGhey4aeNvPHsQFLTLi3ZM/QYlj7FUo8cDZIGomjiegRNyJXsrgMKiftZNY58fLmhIvSG2UvQxNv6/7cR25pfJtnGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=MNxTpFZ/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ITAA7F2f; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGDr2I5J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22662C19421;
-	Mon, 16 Mar 2026 20:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773693574;
-	bh=e3RhwnNiwK1x/eHOGy59Ae3i6XSohKUkLWxBcoMgZBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eGDr2I5JcvQ6vJ3DIMejIHnlwRwdvsorfSEnknaKSiitD38CtJ6sFxept3ygj/Q7N
-	 yAHSy9gmn+44EX68ntr5N7Hr8WQ2uFLRO51rUpGyqrMdxu/Fe06F6gFaFDj/J5gVPD
-	 QlxnPuZEhN38bbayFCrU9R8lYGXqH4g8vuJoMzQaxmbWIRSldzdam8TNyC7EY61gKX
-	 /h4z5PoRxc3DjADAzngUsqiWDjBq3d754JXL4IcedLvxbST9Jh8bftxXsnWoVqPBfC
-	 eMpyvvZ+k4OpKkJ98UuclDiF9VFYue2g6aB34fIZRnu2iZFGKN+7STsAmFTQPQBORG
-	 PPVv6vlTlCocw==
-Date: Mon, 16 Mar 2026 22:39:28 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-rdma@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 4/8] dma-mapping: Introduce DMA require coherency
- attribute
-Message-ID: <20260316203928.GN61385@unreal>
-References: <20260316-dma-debug-overlap-v3-0-1dde90a7f08b@nvidia.com>
- <20260316-dma-debug-overlap-v3-4-1dde90a7f08b@nvidia.com>
- <659bd750-c67a-4290-8c2d-58bc13c9e2a6@infradead.org>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="MNxTpFZ/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ITAA7F2f"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id A03757A025C;
+	Mon, 16 Mar 2026 16:47:44 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Mon, 16 Mar 2026 16:47:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1773694064;
+	 x=1773780464; bh=FNSB0OmNCsHutd2/rm2/wsbBMecbJTrq7L6nBbt+bSg=; b=
+	MNxTpFZ/UsS4p60QstXXz9zhL8tXiMjXrrxYCIMNv5qSjOh2HAZXpMTBs0HPKwt3
+	rsgS0VwcWWz+3KK3oidoh8zRjROIqsjcJgHT0FeQE9pgulX2OckHJo60LO+nUvbn
+	N2X0hNfDXiI51Gt+gPGFbJcoSUg87uf3minDBK2tfjgDWhnS1lJXR2LatR5L96xE
+	XW8alxaUrjQ6sAZ4CXD94/X2roVpLKqn3RW1p56VUQ1hxACbAyhSaYY2Mt2uilnJ
+	5Ng+TDXOockgtc5vDAZa3RdHMqhZoZYG/Mn5zF9E37QqK+pdxA2L+2FkMWhKFVz8
+	TE2vm1D0TYak0Sd5d7nVEg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773694064; x=
+	1773780464; bh=FNSB0OmNCsHutd2/rm2/wsbBMecbJTrq7L6nBbt+bSg=; b=I
+	TAA7F2flc7KsEeUFMlwUgq5CgMkC76f6G5WPOOafPAfewHR440o2gqjWfjPP/Ii8
+	/7mCEsfOtYo6z3lWdDp78fRi3P6j3B5L1DZzLwk+8VNhZPkMY/SKwKdsJAiHOHH/
+	KK3aK+fBYczeSQHIB0jvSbkcOarQBv+aDzsYuFgL3l+7So+GoIXSApUW6K/6audK
+	OByJ4zdhanbRLj0NDxkhL5FkqRepyUg09QBStVIeOGWkL9WpSN9tTrzhvChk6Y0b
+	pvr6WZtgGP2xJP8vJCVg/ZIng12BbwyxiB8KFAOGwgvtGLC2YXx/+yTM7aFutoUr
+	9+RCh/zvJ/HfS/YGi2V5Q==
+X-ME-Sender: <xms:cGy4afv8Gogyadhbv7Envm_s5pL2rIflRDoyFVAzVSJahJUVbOummA>
+    <xme:cGy4abQMuu_imXhut-goANbNaoLU9TP_yJ4u78QfivKYhgPDnIDiCIJEs9hWotuGN
+    nfJ4uudQ8U1PtC9A0axJBkSDoq5mfh5Tx1BMNrpH28AJqu-GHKfzZQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvleelfeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepkhgvrhhnvghlqdhtvggrmhesrghnughrohhiugdrtghomhdprhgtph
+    htthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepvhguohhn
+    nhgvfhhorhhtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehmrgiisehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepkhhvmhgrrhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinh
+    hugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:cGy4aZVtLlik54fOeczX4BXl1Dm-yBv9WsmWlhllthZLp4n0xX5ZVA>
+    <xmx:cGy4aTrm4c-dBFmUXp8Iv_Xzg9Az5z0N6URDfHAdOfTSUHc2F0qy1w>
+    <xmx:cGy4aVR-WXV3HJL_mDHyIRLqDDeT4psDWxcstcImxuUjiQb5MHY4Lg>
+    <xmx:cGy4ad08czohvKFatwdo7CzH-18aElXO5peJTL98E542jFFzqy-fjA>
+    <xmx:cGy4adHirsLuOzt9gGs5gYgN8oJWJR44hYSIpJSZ1Gr6VGI1YWynnm3T>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EF49670006A; Mon, 16 Mar 2026 16:47:43 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <659bd750-c67a-4290-8c2d-58bc13c9e2a6@infradead.org>
+X-ThreadId: AI8tLlWNtG-B
+Date: Mon, 16 Mar 2026 21:47:23 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Vincent Donnefort" <vdonnefort@google.com>,
+ "Marc Zyngier" <maz@kernel.org>
+Cc: "Steven Rostedt" <rostedt@goodmis.org>,
+ "Nathan Chancellor" <nathan@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, kernel-team@android.com
+Message-Id: <6d40c8c0-f00a-4031-bd94-7c0a417eb0cf@app.fastmail.com>
+In-Reply-To: <20260316092845.3367411-1-vdonnefort@google.com>
+References: <20260316092845.3367411-1-vdonnefort@google.com>
+Subject: Re: [PATCH v3] tracing: Generate undef symbols allowlist for
+ simple_ring_buffer
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 16, 2026 at 12:17:39PM -0700, Randy Dunlap wrote:
-> 
-> 
-> On 3/16/26 12:06 PM, Leon Romanovsky wrote:
-> > diff --git a/Documentation/core-api/dma-attributes.rst b/Documentation/core-api/dma-attributes.rst
-> > index 48cfe86cc06d7..441bdc9d08318 100644
-> > --- a/Documentation/core-api/dma-attributes.rst
-> > +++ b/Documentation/core-api/dma-attributes.rst
-> > @@ -163,3 +163,19 @@ data corruption.
-> >  
-> >  All mappings that share a cache line must set this attribute to suppress DMA
-> >  debug warnings about overlapping mappings.
-> > +
-> > +DMA_ATTR_REQUIRE_COHERENT
-> > +-------------------------
-> > +
-> > +DMA mapping requests with the DMA_ATTR_REQUIRE_COHERENT fail on any
-> > +system where SWIOTLB or cache management is required. This should only
-> > +be used to support uAPI designs that require continuous HW DMA
-> > +coherence with userspace processes, for example RDMA and DRM. At a
-> > +minimum the memory being mapped must be userspace memory from
-> > +pin_user_pages() or similar.
-> > +
-> > +Drivers should consider using dma_mmap_pages() instead of this
-> > +interface when building their uAPIs, when possible.
-> > +
-> > +It must never be used in an in-kernel driver that only works with
-> > +kernal memory.
-> 
->    kernel
+On Mon, Mar 16, 2026, at 10:28, Vincent Donnefort wrote:
+> Compiler and tooling-generated symbols are difficult to maintain
+> across all supported architectures. Make the allowlist more robust by
+> replacing the harcoded list with a mechanism that automatically detects
+> these symbols.
+>
+> This mechanism generates a C function designed to trigger common
+> compiler-inserted symbols.
+>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-Thanks, let's hope that it is the only one comment :).
+Tested-by: Arnd Bergmann <arnd@arndb.de>
 
-> 
-> -- 
-> ~Randy
-> 
+A few hundred randconfig builds in, I came across a single build failure
+that you missed:
+
+> +UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov 
+> __sanitizer __tsan __ubsan __x86_indirect_thunk \
+> +		      simple_ring_buffer \
+
+This needs "__kmsan" as well, for these symbols:
+
+                 U __msan_chain_origin
+                 U __msan_get_context_state
+                 U __msan_instrument_asm_store
+                 U __msan_metadata_ptr_for_load_4
+                 U __msan_metadata_ptr_for_load_8
+                 U __msan_metadata_ptr_for_store_4
+                 U __msan_metadata_ptr_for_store_8
+                 U __msan_warning
+
+     Arnd
