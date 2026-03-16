@@ -1,219 +1,194 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4046938A723
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Mar 2026 09:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF22241139
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Mar 2026 11:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773653480; cv=none; b=R7cgKTfIlzKD7Scn87Yl5xm2j/ItXbBRUWxMbIazfe19N3s8JoIwgAVkeYs5OmvEfcXxvmNbzO4l7Kh8cm5JgLI52ZdZ2XB5OS72TFZ+3MiBsWyMXVi20m54jH2Vp4A0SxO9rEMwaNgQztS7CYEUtODFcBmXKEHDpw5gCfZc0Uc=
+	t=1773659054; cv=none; b=OsNExYPxS6v6p2YT7pOfPEgo0B2C9zIDeX+LPIaKESb5jW+NiycI0BXiOqmbGTzzzFIa3jbdVgEgQRUQbFCid37I77fBWawPqEuliguFTo9zbKthRGGEoXkDylGDy3DqKWKqwst6kF40zc+EfakyqIkUXJ6ASsStFGtNMgfAOuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773653480; c=relaxed/simple;
-	bh=NuPazOIPt/eiJl0d8nf/kqY0HIF3mB+qFDMIiVADh+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qoWeHsE/6+6nVci+XwpAVcJeBLea9i2PGx6j1OrHxXRYldJTkIvAuExhHaw9F1MRNt6hop3Pkv1fUJWHqELgJb9gP0Rd3hLNys4C79Fo/+KCs9hHpZ/cqlspYhxR0EeIi78wUSSnAlVa8RW+VnZsUYhP/rS9njB/w2GVGlAaQWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PYpKsDIS; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1773659054; c=relaxed/simple;
+	bh=1Z2K5uAxzV9s8L4/BC8KNuwonWVfjkCKvcQHutx8mBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u5H/dUiqG8MQk41Yn8KlVL4qw2hMu/og+jCAhI/fDGfoHgNGwWx/OmKyRThSsYWMk2nwg7ASDpAQFJfGzsSt+qcaJHHUgI1YIzVUwNDKSCYbTFUoOZVag3A/nCYYcfZw3nWOQ2ZsYEKGCfKkvDbyouolALB8Sr18qJZLoUac138=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ICET6ahO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PYpKsDIS"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-439b73f4ab4so4878305f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Mar 2026 02:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773653477; x=1774258277; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9+2cEm3LgZQtQuvqQDE8BJ8R3spEdGYM2Icfc1B4dcM=;
-        b=PYpKsDISboT9eGztoF5JRK6vuTvfsxQX4KBXMOcsVqKsA+z0Yzm65/uzSTl4XlQOs8
-         O4mijXlwNXwmG6CQaI9S584nvulWKaiG+o60cCpfQl9li/tT5Gf0csV4QFIyJkUJ7Y3u
-         Q1HSjx8X2jcLUj8nJTEkUNB2/1vXjPKuPvbShn4CyK+FBsfIC4pb/V6/oPvYTOBYo1y9
-         LZ6WMbkEldX0mSzzfys+2oZswJW7IeQ1eFt806hVnEMIXkE9itMbfiIrDJrvwEIJD4uu
-         ifvFAww7FBHzrL+sEDUanKnP/XdbcVac7LICBj5A2XHhV+i14viknLvcFQPjMHOy9Dlp
-         a7Cw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICET6ahO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773659051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EGzcfaMu1FLaomn7Oe2DL0qLnEzAPj3x2+LI9gIhWi0=;
+	b=ICET6ahOcEmeSuifDilNtqfn6IujVNVMITSg+N695hw1weOf/TEE9NR+TROs2JM8Cu8WyD
+	4RvKYifVMRb3P80EWCBsRXMRegfvwx5SWgy2H3jwY828vKQ//la3PmWgJus+I2rSKa5ziO
+	WH5BvuHC4Pb1QQ9XdxyWwIG0tawGIVI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-263-7iyH6IXrOUqDlI0gKiSs0Q-1; Mon, 16 Mar 2026 07:04:10 -0400
+X-MC-Unique: 7iyH6IXrOUqDlI0gKiSs0Q-1
+X-Mimecast-MFC-AGG-ID: 7iyH6IXrOUqDlI0gKiSs0Q_1773659049
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-43b3a41c62bso1449584f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Mar 2026 04:04:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773653477; x=1774258277;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9+2cEm3LgZQtQuvqQDE8BJ8R3spEdGYM2Icfc1B4dcM=;
-        b=bDhJ/N/q2MF6F0kezVm/UsXWW33UuGRX/mDjBufvnkHJAwB6aYOQR6JI2SZeKufGUX
-         KJCDxo45ZJ2Insjta6TAP43POQPJqOMbBS7bbgzDFZimiPTyGGbNn3Rq8MhFFAJud96H
-         SEYvJeo+OcaswLAnyhc08yMF0Brs6QgnOvio5QECV2NkXHnHHvPPllqD07SNdL2UPOIX
-         1sUjYXl9cJoyItrVwTxT+wHArs6+WjbyXwsGzm5Q8XKPSpLKKYf2LSz0SDVy3R4Rq9On
-         EM9A8qub9UgPQfM7Qhi6T5BiYIcRlXe0UClUFX2RhOOo+aQOUVUFmqnLtjrOyDgQTbTa
-         0yqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWneT6dFWgRuuxhHyBJbb34ZnWCJ1jWPAmcW33asmBwOBqI48A9KEd8MG/NLw0/TDmE2p1hW/9z/mqDnQmiI53WJ4U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI5eeWKKmTkUTMa8azjapgN2XanAFU5m2/lAYYMgbuoz+Ng8dL
-	PLnwiwTZkAFFJQSE5jxODndEslW9G5KXGB3vgUFVu2PEyRUq2XtLFmb9vC0Arb/Bow==
-X-Gm-Gg: ATEYQzwGQzoiFPUdEQFpZa0BL7mr0Yywuz9EtB15sC2NQFB3n5NkEnk15m+hdPXQOCH
-	loji6WsBeXo5pa7EQpoC3+16Zn3RvvrxCQfuYzfct8iZjrlgX5SRNdjkI/2igqhqo3ItRX8pxOl
-	N3RIQEjxafXYK3Yi6Tz9DuzR/z5TjEMEQZJZfZyBqfX9DRIDKVNwF1MfmGQUYzn4iz2C0GuScxr
-	9FxfGNOQ+szu/8I5TwL9NM6Q0oyd4K4p8zMgwHid3YuYp9ZWsRS57vEi/QfA+gz+lGE4AYPGdTS
-	rS+th3GiOpr3SLQocDtVm14pC4vQOwpYY0KPTdaBFdId9mq/gmPilY3HpUMLlfMLssQanmymy24
-	FMTBU/6ZuVNmhg17omP/5fZnXzJAoqy1BW2yjHt9p/+DhZSfevsw6lIxFlk33usWASXCUyFdyK8
-	BBRk+VIOX7KZ8OW4Vmq6aDm/EWerGhdwzpPK3CoztSPCN0dd+mX5XBZqQtnFKpGTN/m1WbM7sPZ
-	RViAg==
-X-Received: by 2002:a05:600c:8489:b0:482:eec4:76d with SMTP id 5b1f17b1804b1-485566f7a2amr213257395e9.17.1773653477134;
-        Mon, 16 Mar 2026 02:31:17 -0700 (PDT)
-Received: from google.com (198.115.140.34.bc.googleusercontent.com. [34.140.115.198])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48557a74266sm84270715e9.17.2026.03.16.02.31.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 02:31:16 -0700 (PDT)
-Date: Mon, 16 Mar 2026 09:31:12 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: maz@kernel.org, rostedt@goodmis.org, arnd@arndb.de,
-	linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	kernel-team@android.com
-Subject: Re: [PATCH v2] tracing: Generate undef symbols allowlist for
- simple_ring_buffer
-Message-ID: <abfN4OEbYVe5h-6H@google.com>
-References: <20260313105829.1214123-1-vdonnefort@google.com>
- <20260313163724.GA2573924@ax162>
+        d=1e100.net; s=20251104; t=1773659049; x=1774263849;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EGzcfaMu1FLaomn7Oe2DL0qLnEzAPj3x2+LI9gIhWi0=;
+        b=TRyrRCO0RgeJRu715AUFmqND0RQzCsJdGDoq1VXnooALxgOPWxJT8K5siE3K86uVFF
+         IlSxllHMCZy5bejUblWTCZSuTycFEP4SKQDuSp15h47gO1VdNZ9PnXZ7Ja68wdnK1wa0
+         eQU9osUyVY2gMT+hlSwEtKA5pA21YEzXZwUDVsNlp+bVMzBJRFZZuaU3chPeHP8ShJXO
+         k0wPKS08IDBMMBmuMVRgjWbbJyt14MUY3VsNkyN9LdlgeZS18gupdaftL62eJpDnh6MO
+         chmaD2HSyYn8wDFWC3BJl3PfFZspcTv+8ij+WAgm/U7gj+7wwvUb/pk8NGONh0PYje3g
+         7qEA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7SkY9o+n1MTUk+xFfbcoiPbZ9TevADUWYTR3MOIKOyoq7cae2bjYQDc0tFIydb8JYAnX7/1amn35Riqjo8yKvakU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1O8WrHfltMVOQht7tLX9tortUAtC+fsqbwA97ewgzU2mIh+0W
+	3eramSG+ffEqmQLbU+INVkBcFyMeIkDFpq1M40nexto6o0lhJyzcsAU1btNplFOUrIe03ObJ/11
+	1SG/6xNbRSDkQGznEEDMTpCZwE1evUY8pXQ66CzYKN3KctgPK6+KIsiQ0qtk2obS0vJ6oM6r7/w
+	==
+X-Gm-Gg: ATEYQzzj0xS7Jeoz1EuwLrmji3ac6FrcY2IFSx9/y6GvF/3BCb0jgPYMYyJdcD0K4NN
+	ls9srxgGHf64URNOyMVKSkdBx74nJfPxw0wQ2aae7bXWKIlltUdjuPSWG0ayDNy1Uznyi+eV9C8
+	wnDOe3fnq2Z28OL53N267NdaVbExqMriisMY7+75+PCsAK5WwtOJw8vPD95JlJCpV4vi8TwyOus
+	xsA9A6WQl0ReT01k7PyhwEnpgynabsfdNavzxQB1T9iGBuSBUgKuUp6+RwaoFC1Wefj9oTvCH3A
+	PzZsuiuJR24526P0DDaiDFQv/If+RxXOZb/Td1SFKi1lSpVxmB6PgUVfAQz1ehT+u60clEHgCxY
+	LKPDgaJu+zpVR7ur18qBEGbFYpYsowUsOZeZzRg6JWeY77zVg+n+E1UE=
+X-Received: by 2002:a05:6000:2901:b0:439:b3d2:376b with SMTP id ffacd0b85a97d-43a04d86856mr21339354f8f.14.1773659049149;
+        Mon, 16 Mar 2026 04:04:09 -0700 (PDT)
+X-Received: by 2002:a05:6000:2901:b0:439:b3d2:376b with SMTP id ffacd0b85a97d-43a04d86856mr21339273f8f.14.1773659048589;
+        Mon, 16 Mar 2026 04:04:08 -0700 (PDT)
+Received: from [192.168.88.32] ([216.128.11.95])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe19aec5sm41595197f8f.4.2026.03.16.04.04.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2026 04:04:08 -0700 (PDT)
+Message-ID: <442cfa35-78b1-48f4-9565-e884e7e60d79@redhat.com>
+Date: Mon, 16 Mar 2026 12:04:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260313163724.GA2573924@ax162>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 05/14] tcp: grow rcvbuf to back scaled-window
+ quantization slack
+To: atwellwea@gmail.com, netdev@vger.kernel.org, davem@davemloft.net,
+ kuba@kernel.org, edumazet@google.com, ncardwell@google.com
+Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ dsahern@kernel.org, horms@kernel.org, kuniyu@google.com,
+ andrew+netdev@lunn.ch, willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
+ skhan@linuxfoundation.org, corbet@lwn.net, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 0x7f454c46@gmail.com
+References: <20260314201348.1786972-1-atwellwea@gmail.com>
+ <20260314201348.1786972-6-atwellwea@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260314201348.1786972-6-atwellwea@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ADj3vIFAosw6rY7ZZIQXqVZaQ_9uR2QS7Wxp80WCBJA_1773659049
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 13, 2026 at 09:37:24AM -0700, Nathan Chancellor wrote:
-> On Fri, Mar 13, 2026 at 10:58:29AM +0000, Vincent Donnefort wrote:
-> > Compiler and tooling-generated symbols are difficult to maintain
-> > across all supported architectures. Make the allowlist more robust by
-> > replacing the harcoded list with a mechanism that automatically detects
-> > these symbols.
-> > 
-> > This mechanism generates a C function designed to trigger common
-> > compiler-inserted symbols.
-> > 
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > 
-> > ---
-> > 
-> > Changes in v2:
-> > 
-> >   - Use filechk (Nathan)
-> >   - Removed deprecated extra-y (Nathan)
-> >   - Added simple_ring_buffer in allowlist (Nathan)
-> >   - Added memcpy() to generate more symbols (Nathan)
-> >   - Added __sancov 
-> > 
-> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> > index beb15936829d..96627a909ecc 100644
-> > --- a/kernel/trace/Makefile
-> > +++ b/kernel/trace/Makefile
-> > @@ -136,17 +136,42 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
-> >  # simple_ring_buffer is used by the pKVM hypervisor which does not have access
-> >  # to all kernel symbols. Fail the build if forbidden symbols are found.
-> >  #
-> > -UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
-> > -UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer llvm_gcda llvm_gcov
-> > -UNDEFINED_ALLOWLIST += .TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
-> > -UNDEFINED_ALLOWLIST += ftrace_likely_update __hwasan_load __hwasan_store __hwasan_tag_memory
-> > -UNDEFINED_ALLOWLIST += warn_bogus_irq_restore __stack_chk_guard
-> > -UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
-> > +# undefsyms_base generates a set of compiler and tooling-generated symbols that can
-> > +# safely be ignored for simple_ring_buffer.
-> > +#
-> > +filechk_undefsyms_base = \
-> > +	echo '$(pound)include <linux/atomic.h>'; \
-> > +	echo '$(pound)include <linux/string.h>'; \
-> > +	echo '$(pound)include <asm/page.h>'; \
-> > +	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);'; \
-> > +	echo 'void undefsyms_base(void *p, int n);'; \
-> > +	echo 'void undefsyms_base(void *p, int n) {'; \
-> > +	echo '	char buffer[256] = { 0 };'; \
-> > +	echo '	u32 u = 0;'; \
-> > +	echo '	memset((char * volatile)page, 8, PAGE_SIZE);'; \
-> > +	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));'; \
-> > +	echo '	memcpy((void * volatile)p, buffer, sizeof(buffer));'; \
-> > +	echo '	cmpxchg((u32 * volatile)&u, 0, 8);'; \
-> > +	echo '	WARN_ON(n == 0xdeadbeef);'; \
-> > +	echo '}'
-> > +
-> > +$(obj)/undefsyms_base.c: FORCE
-> > +	$(call filechk,undefsyms_base)
-> > +
-> > +clean-files += undefsyms_base.c
-> > +
-> > +$(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
-> > +
-> > +targets += undefsyms_base.o
-> > +
-> > +UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
-> > +		      simple_ring_buffer \
-> > +		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
-> >  
-> >  quiet_cmd_check_undefined = NM      $<
-> > -      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
-> > +      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST))`"
-> >  
-> > -$(obj)/%.o.checked: $(obj)/%.o FORCE
-> > +$(obj)/%.o.checked: $(obj)/%.o $(obj)/undefsyms_base.o FORCE
-> >  	$(call if_changed,check_undefined)
-> >  
-> >  always-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o.checked
-> > 
-> > base-commit: 33f2e266515717c4b2df585dadefa0525557726c
-> > -- 
-> > 2.53.0.851.ga537e3e6e9-goog
-> > 
+On 3/14/26 9:13 PM, atwellwea@gmail.com wrote:
+> From: Wesley Atwell <atwellwea@gmail.com>
 > 
-> Thanks! This is almost perfect for my tests, one final thing that I
-> noticed as a result of my full overnight builds. For ARCH=riscv (and
-> some other architectures from a quick grep), there is some logic in
-> their include/asm/string.h files to avoid FORTIFY_SOURCE when KASAN is
-> enabled for the entire build but not enabled for the particular file. As
-> undefsyms_base.o is not linked into vmlinux or modules, it does not
-> automatically have KASAN enabled.
+> Teach TCP to grow sk_rcvbuf when scale rounding would otherwise expose
+> more sender-visible window than the current hard receive-memory backing
+> can cover.
 > 
->   $ cat allmod.config
->   CONFIG_GCOV_KERNEL=n
->   CONFIG_LTO_CLANG_THIN=y
->   CONFIG_WERROR=n
+> The new helper keeps backlog and memory-pressure limits in the same
+> units as the rest of the receive path, while __tcp_select_window()
+> backs any rounding slack before advertising it.
 > 
->   $ make -skj"$(nproc)" ARCH=riscv KCONFIG_ALLCONFIG=1 LLVM=1 mrproper allmodconfig kernel/trace/
->   Unexpected symbols in kernel/trace/simple_ring_buffer.o:
->                    U __fortify_panic
->                    U __write_overflow_field
->   ...
+> Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
+> ---
+>  include/net/tcp.h     | 12 ++++++++++++
+>  net/ipv4/tcp_input.c  | 36 ++++++++++++++++++++++++++++++++++--
+>  net/ipv4/tcp_output.c | 15 +++++++++++++--
+>  3 files changed, 59 insertions(+), 4 deletions(-)
 > 
-> This cures that for me.
-> 
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 260382f62dbf..55af887a90e2 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -164,6 +164,11 @@ $(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index fc22ab6b80d5..5b479ad44f89 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -397,6 +397,7 @@ int tcp_ioctl(struct sock *sk, int cmd, int *karg);
+>  enum skb_drop_reason tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb);
+>  void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
+>  void tcp_rcvbuf_grow(struct sock *sk, u32 newval);
+> +bool tcp_try_grow_rcvbuf(struct sock *sk, int needed);
+>  void tcp_rcv_space_adjust(struct sock *sk);
+>  int tcp_twsk_unique(struct sock *sk, struct sock *sktw, void *twp);
+>  void tcp_twsk_destructor(struct sock *sk);
+> @@ -1844,6 +1845,17 @@ static inline int tcp_rwnd_avail(const struct sock *sk)
+>  	return tcp_rmem_avail(sk) - READ_ONCE(sk->sk_backlog.len);
+>  }
 >  
->  targets += undefsyms_base.o
->  
-> +# ensure KASAN is enabled to avoid logic that may disable FORTIFY_SOURCE when
-> +# KASAN is not enabled. undefsyms_base.o does not automatically get KASAN flags
-> +# because it is not linked into vmlinux.
-> +KASAN_SANITIZE_undefsyms_base.o := y
+> +/* Passive children clone the listener's sk_socket until accept() grafts
+> + * their own struct socket, so only sockets that point back to themselves
+> + * should autotune receive-buffer backing.
+> + */
+> +static inline bool tcp_rcvbuf_grow_allowed(const struct sock *sk)
+> +{
+> +	struct socket *sock = READ_ONCE(sk->sk_socket);
 > +
->  UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
->  		      simple_ring_buffer \
->  		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
-> --
-> 
-> With that addressed:
-> 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> +	return sock && READ_ONCE(sock->sk) == sk;
 
-I've just sent a v3 with all that. I have tested locally with allmodconfig and
-many architectures with both clang and gcc.
+This is executed under the sk socket lock, ONCE annotation not needed.
 
-Thanks a lot for your help!
+> +}
+> +
+>  /* Note: caller must be prepared to deal with negative returns */
+>  static inline int tcp_space(const struct sock *sk)
+>  {
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 352f814a4ff6..32256519a085 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -774,6 +774,38 @@ static void tcp_init_buffer_space(struct sock *sk)
+>  				    (u32)TCP_INIT_CWND * tp->advmss);
+>  }
+>  
+> +/* Try to grow sk_rcvbuf so the hard receive-memory limit covers @needed
+> + * bytes beyond sk_rmem_alloc while preserving sender-visible headroom
+> + * already consumed by sk_backlog.len.
+> + */
+> +bool tcp_try_grow_rcvbuf(struct sock *sk, int needed)
+> +{
+> +	struct net *net = sock_net(sk);
+> +	int backlog;
+> +	int rmem2;
+> +	int target;
+> +
+> +	needed = max(needed, 0);
+> +	backlog = READ_ONCE(sk->sk_backlog.len);
+> +	target = tcp_rmem_used(sk) + backlog + needed;
+> +
+> +	if (target <= READ_ONCE(sk->sk_rcvbuf))
+> +		return true;
+> +
+> +	rmem2 = READ_ONCE(net->ipv4.sysctl_tcp_rmem[2]);
+> +	if (READ_ONCE(sk->sk_rcvbuf) >= rmem2 ||
+> +	    (sk->sk_userlocks & SOCK_RCVBUF_LOCK) ||
+> +	    tcp_under_memory_pressure(sk) ||
+> +	    sk_memory_allocated(sk) >= sk_prot_mem_limits(sk, 0))
+> +		return false;
+> +
+> +	WRITE_ONCE(sk->sk_rcvbuf,
+> +		   min_t(int, rmem2,
+> +			 max_t(int, READ_ONCE(sk->sk_rcvbuf), target)));
+> +
+> +	return target <= READ_ONCE(sk->sk_rcvbuf);
 
---
-Vincent
+Same here, and more cases below.
 
-> 
-> Cheers,
-> Nathan
+/P
+
