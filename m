@@ -1,36 +1,80 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0228D343D8F;
-	Tue, 17 Mar 2026 15:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29C1284880;
+	Tue, 17 Mar 2026 16:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773760212; cv=none; b=M94m3+hmczbR9VqXAVlEEKvmcSHobr+I+eVi4ZoGic/Ni9dvWvm1A8MviM0h087FOQqhG0IpthVvt/NBuXNyBxTq4hG8lfE84cz+TItvxkLVNL+4lrZumxCVbshLvbeye1tmvMQVDuvvJyDTa+V6Ljqqh85/d7uKOywu2lMClmI=
+	t=1773763262; cv=none; b=IvBJD1tUpstreucyZicV1V+yIi7ZSHFUhEHLLmp7BC4+Ajh7ZKy22pgH9jTTmT3IT+h6qqq5YBBJTAI8mRaDYsXhsUS3wFpgGE/ZJk1ht4XfsgDJbNlMPyI0DZBilK9l8aaa3CTEqGYSbIhcrm7vw7wAOHFJU3GNaagUdksT6H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773760212; c=relaxed/simple;
-	bh=m/MgPlruUerNQe0WI6OnSQw+Dlau/fEAWPBTxJRDDwY=;
+	s=arc-20240116; t=1773763262; c=relaxed/simple;
+	bh=GV6iBi3pSdNVXd8yD+APD3iD5U8pEoZAWjKTtickfCc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RCF7Y1lAAawXg7eSil2WFtcsmQKwBibyfOdj2J0mDHGz/NGrqfsde7uRfTJHRqQEWbMl4B7ej8xn4z27oufgiVS5t0CxpAiyy9ibbDx76guZnGzWUgFN1rgnRaoF6TF3CeSItckVVCWklaZ+xD59xG/SwhQIhHowXNQnG+IbFPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=Ik9TulYnmUjn2BZMknzC8cQDR41wnDwSPfmVbpX2aieuHCcBbgZupRxw/wJ1Rd9H2krUjS5LOHmp0PWfBtuTZq+3eFNkoyTgkNVHnoZu8zOOqoiaXM4jAruzVW/SuENdTbCM8GVpudZfEXb767Klx7Wow6UqJ/Rbkmo4HFn8u70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6B98E1C223;
-	Tue, 17 Mar 2026 15:10:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 67E5B80009;
-	Tue, 17 Mar 2026 15:10:01 +0000 (UTC)
-Date: Tue, 17 Mar 2026 11:10:26 -0400
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 86DB61A02AC;
+	Tue, 17 Mar 2026 16:00:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id D0DF733;
+	Tue, 17 Mar 2026 16:00:23 +0000 (UTC)
+Date: Tue, 17 Mar 2026 12:00:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Josh Law <objecting@objecting.org>, linux-trace-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 09/17] lib/bootconfig: validate child node index in
- xbc_verify_tree()
-Message-ID: <20260317111026.62345f9e@gandalf.local.home>
-In-Reply-To: <fbe3dbdd-61a4-47e7-90a1-1042caa71129@web.de>
-References: <20260315122015.55965-10-objecting@objecting.org>
-	<fbe3dbdd-61a4-47e7-90a1-1042caa71129@web.de>
+To: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ Dmitry Ilvokhin <d@ilvokhin.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+ io-uring@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Marcelo Ricardo Leitner
+ <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Jon Maloy
+ <jmaloy@redhat.com>, Aaron Conole <aconole@redhat.com>, Eelco Chaudron
+ <echaudro@redhat.com>, Ilya Maximets <i.maximets@ovn.org>,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-sctp@vger.kernel.org,
+ tipc-discussion@lists.sourceforge.net, dev@openvswitch.org, Oded Gabbay
+ <ogabbay@kernel.org>, Koby Elbaz <koby.elbaz@intel.com>,
+ dri-devel@lists.freedesktop.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, "Gautham R. Shenoy"
+ <gautham.shenoy@amd.com>, Huang Rui <ray.huang@amd.com>, Mario Limonciello
+ <mario.limonciello@amd.com>, Len Brown <lenb@kernel.org>, Srinivas
+ Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-pm@vger.kernel.org,
+ MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park
+ <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Sumit Semwal
+ <sumit.semwal@linaro.org>, linaro-mm-sig@lists.linaro.org, Eddie James
+ <eajames@linux.ibm.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, Joel
+ Stanley <joel@jms.id.au>, linux-fsi@lists.ozlabs.org, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Alex Deucher
+ <alexander.deucher@amd.com>, Danilo Krummrich <dakr@kernel.org>, Matthew
+ Brost <matthew.brost@intel.com>, Philipp Stanner <phasta@kernel.org>, Harry
+ Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ amd-gfx@lists.freedesktop.org, Jiri Kosina <jikos@kernel.org>, Benjamin
+ Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, Mark Brown
+ <broonie@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, linux-spi@vger.kernel.org,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K.
+ Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, Chris
+ Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/15] tracepoint: Avoid double static_branch evaluation
+ at guarded call sites
+Message-ID: <20260317120049.6a60fa88@gandalf.local.home>
+In-Reply-To: <CAO7JXPgHYZ9zF1HFahb2447X85YRZCQQBHB6ihOwKSDtiZi8kQ@mail.gmail.com>
+References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
+	<1e3c2830-765e-4271-89f7-0b6784b37597@efficios.com>
+	<20260312112354.3dd99e36@gandalf.local.home>
+	<219d015d-076b-4c80-8f63-88569115fdad@efficios.com>
+	<20260312114041.5193c729@gandalf.local.home>
+	<1becdbce-2c01-468a-bbab-42b5dea9fdf8@efficios.com>
+	<CAO7JXPjnnruhM5oC6xMgnYaQ9efzYFqMCFiJLNM3HCQ+ZeCiJw@mail.gmail.com>
+	<CAEf4BzbnfyhCqp0ne=2gRnVxp-mdGmuZwDeFRyhRYH+eDcz2-w@mail.gmail.com>
+	<20260312130255.6476e560@gandalf.local.home>
+	<CAO7JXPgHYZ9zF1HFahb2447X85YRZCQQBHB6ihOwKSDtiZi8kQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,42 +82,33 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 67E5B80009
-X-Stat-Signature: g1j1xiabrq45wgao8pfqgie9w58e44fd
-X-Rspamd-Server: rspamout03
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: eiowgk7zro9iwz8nfcjutbggq8cc8mcu
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: D0DF733
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19cZatAR8wnG1Gox5uUagVsFyBO31Gy90s=
-X-HE-Tag: 1773760201-90810
-X-HE-Meta: U2FsdGVkX18siG0/eerHp4cU5YizooporrsiBWFCv7fyndJC/slnCf9tQuTrtMjLWlQ+X6zatxbgKBkjV5/olt5CiUTPgiAI0Yr8pBZQB6QF2ZPGfiu0OANLTVWpQ2OPIAb+StlFDDxI9dPQGDGhcY0m/AsrVqlmJ9P9MazdBs4wHDU8gTfuNSzr7cD1TYYyYT0TxNAXzjc1ZuQQdwUaT2MiH/PxIffho7JnXqejcmMmRyko09/tpiLk8oWZ1jPbquEQ38B6MyiMJ7S/TXKmBVmVY8dphKXufiRzgyZPhe2aMN0nz0G6X/chqIE8PXv7wxeNJKYCHOpRB65u89t8BFoyxDB3/zLp
+X-Session-ID: U2FsdGVkX1/EZ/m41FERFj32TQCYYTyPgc7E7WqasUA=
+X-HE-Tag: 1773763223-363035
+X-HE-Meta: U2FsdGVkX1+o+fNh+z7n3E+PiUwqBZ68nGRwauLM+oVgtgpFs5MonLd3fqHB3rXD6BFYZexukj4pxl1VM45GwWde/4JCtp52s0VQK6pZ4Xqa4tvZvLsT4iKLFRi+KAPOR9ciwGsqu0KypbHl9hRVpw7ii/Socjjk14+RdTNwtL/9W3CF6CygSSKoXB/8hsfV+wEeLIu0+Vu7k1X1TT489JEuNfPyBVCGV+jWtTwa1GJMzmbQZEKNLjPpFlUNh0lxNaKm6XtoF736vhCLAK8SYy2ZwNIf/KDqLxnTevPHb/LrRG7US/kzn6HxPRPvbJNoIgt7v+iuU8ZuIBjndA9wdY4FVl8DtE3i2S6cBnN1WxdJr/SxTYBW2cUmiC+3UkuX
 
-On Tue, 17 Mar 2026 12:03:40 +0100
-Markus Elfring <Markus.Elfring@web.de> wrote:
+On Fri, 13 Mar 2026 10:02:32 -0400
+Vineeth Remanan Pillai <vineeth@bitbyteword.org> wrote:
 
-> =E2=80=A6
-> > +++ b/lib/bootconfig.c
-> > @@ -823,6 +823,10 @@ static int __init xbc_verify_tree(void)
-> >  			return xbc_parse_error("No closing brace",
-> >  				xbc_node_get_data(xbc_nodes + i));
-> >  		}
-> > +		if (xbc_nodes[i].child >=3D xbc_node_num) {
-> > +			return xbc_parse_error("Broken child node",
-> > +				xbc_node_get_data(xbc_nodes + i));
-> > +		}
-> >  	} =20
-> =E2=80=A6
->=20
-> How do you think about to omit curly brackets for this if branch?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/coding-style.rst?h=3Dv7.0-rc4#n197
->=20
+> >
+> > Perhaps: call_trace_foo() ?
+> >  
+> call_trace_foo has one collision with the tracepoint
+> sched_update_nr_running and a function
+> call_trace_sched_update_nr_running. I had considered this and later
+> moved to trace_invoke_foo() because of the collision. But I can rename
+> call_trace_sched_update_nr_running to something else if call_trace_foo
+> is the general consensus.
 
-Markus, please stop. If you don't understand the rules, do not suggest them.
+OK, then lets go with: trace_call__foo()
 
-The brackets *are* appropriate. The rule of omitting the brackets is for
-*single line* statements. The above return statement is long and there's a
-line break, which means, curly brackets *are* required for visibility reaso=
-ns.
+The double underscore should prevent any name collisions.
+
+Does anyone have an objections?
 
 -- Steve
