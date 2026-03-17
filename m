@@ -1,91 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0185B331A5E;
-	Tue, 17 Mar 2026 09:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CFF315D58;
+	Tue, 17 Mar 2026 09:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773738270; cv=none; b=KV5Xb7XG2Tvaceu0CXYLo8LACu2+5IkNQ7MoWu/thuXWZ3dj4Pt9pP8PVwG9x4gQ8cWrNJpsGcnfFXxtu95yN+9w5/kE28e/8MXVh5s6C70r19aloPuUCdSMpP8yr+OKqW7BKD/fkU5d+LXPJ4L8JyCDr+Su+sTzsONU0uvFtks=
+	t=1773740180; cv=none; b=F0YLL2MaWiJElmVtcZ8ymM6y0UKbSZ5lNHJW2ADulRf2buFpoapcBCja+IJzFWnZovBT43IAKlRU92wg6BQ0HNSJBkC9k79d0SBkk2EAIKYrPcwV4fTwDJjV1AUPIDDWxfLjHYsN0C1KD01Bp88dyZxeso21vPICYHAUaFWnulg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773738270; c=relaxed/simple;
-	bh=w492lbPZJ2Gu7Yvm34YT9uTKSyNcaRjWlLbuRFwhjt8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZRKWgB9XDJGmM+xM4mGJ66Up4JioFB5EdpUKogR0ZsC7qM5e3cPB/kx/w99V3Yrf5+//zDFAM5nax4XhqxKBA1mBWNZQGkjchETNnfK6vGduC1yiB7eTS6BUrelmwoybUXVZtLx+ToAgIRTGKSLFfs2RDu+31eMgoaMVug7pg7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJ6JIJZc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773740180; c=relaxed/simple;
+	bh=ZrIRXzeCwdaHt9BYvjYI6HieIvtt0unayHDWHveDKsg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qnmol5ydJpbafDc4XCeUkbc7f1KSKCz+D/1nqEPo3BPCfaXhFmaLBL56PtuWvt2jiBezZS1ZMOsk/pRG4qg5PW7YKm7HKA27tN/YuGFZOmWR6MK11mu9PrOK55v/w6c2mQvxsUcCfCJjngMLtV/PdL2L8eevCoTCtWXPiwy8mRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qt2pJroH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJ6JIJZc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 962F4C4CEF7;
-	Tue, 17 Mar 2026 09:04:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qt2pJroH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F16EC4CEF7;
+	Tue, 17 Mar 2026 09:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773738269;
-	bh=w492lbPZJ2Gu7Yvm34YT9uTKSyNcaRjWlLbuRFwhjt8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lJ6JIJZcOA7lH/7Y0zZyChalvcOPQyVMnh69KB5DwNNn8KgfBlaP1zMHV2GnjrAcq
-	 Ft/ANWPO5tT+sJP881ykZ+SLAjGZSMyVHAA0h/pJXfQ4AGtkhr8ObOZxmoVXVKahY5
-	 XNUV5U7HllD0//dFtM7adjlsURRxKDu7jISMlsGp7MF8L0GfmJp0RHPM+337AmNNI4
-	 kv3PPLgST4Flu7/ZWkPsgRrYrJcNghfgglWt/uW+g1y5f1RwiKfneZ8wt/OHDeYd+R
-	 Nknct1pdgJukeYAO45d3eqHrmmeMeGstyIF2DuXk09Q3OHbnTOl0W4bLYk4BFuIGjf
-	 y1+fY8ib3QNdg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1w2QLj-00000002kPy-1jb2;
-	Tue, 17 Mar 2026 09:04:27 +0000
-Date: Tue, 17 Mar 2026 09:04:27 +0000
-Message-ID: <86qzpi6d44.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
+	s=k20201202; t=1773740180;
+	bh=ZrIRXzeCwdaHt9BYvjYI6HieIvtt0unayHDWHveDKsg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qt2pJroHUy76tGcWzrtuFGVzprYL2fuq1kWGeIGgQcfMDN+9KVqYvquizmF57OcAg
+	 r0a45jjAXuaaWgtomQK01gylBFG5tWTF14SOe57hAmlI9lYwwxfS+9jAS82v40TgLQ
+	 rkGU+YCRMCpZfkve9aujvdRh4ochszJv14H/M8iuGBqo/Cfd/EX0UDXo9a52bHGGGb
+	 yJDiBW2KEVI0Z0RiEp5VMUsIJhdKqc+sTjuivd42K8Pjtv1UYYTyZ7jc7EQ4oVJRmN
+	 zr0Zt15BQ/9+dPllTe7g1Q1Ge6jez71qzqxtv3IxGZCN0IzG7w0FEWnWRupteO4yPn
+	 7ekeKhiYDnxQQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>,
-	arnd@arndb.de,
-	nathan@kernel.org,
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	kernel-team@android.com
-Subject: Re: [PATCH v3] tracing: Generate undef symbols allowlist for simple_ring_buffer
-In-Reply-To: <20260316100929.5402a335@gandalf.local.home>
-References: <20260316092845.3367411-1-vdonnefort@google.com>
-	<20260316100929.5402a335@gandalf.local.home>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Ian Rogers <irogers@google.com>
+Subject: [PATCH v10 0/5] ring-buffer: Making persistent ring buffers robust
+Date: Tue, 17 Mar 2026 18:36:15 +0900
+Message-ID:  <177374017536.2358053.12341235939816794384.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: rostedt@goodmis.org, vdonnefort@google.com, arnd@arndb.de, nathan@kernel.org, linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 16 Mar 2026 14:09:29 +0000,
-Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> On Mon, 16 Mar 2026 09:28:45 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > Compiler and tooling-generated symbols are difficult to maintain
-> > across all supported architectures. Make the allowlist more robust by
-> > replacing the harcoded list with a mechanism that automatically detects
-> > these symbols.
-> > 
-> > This mechanism generates a C function designed to trigger common
-> > compiler-inserted symbols.
-> > 
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> > Tested-by: Nathan Chancellor <nathan@kernel.org>
-> 
-> I take it that Marc will take this?
+Hi,
 
-Yup, now merged.
+Here is the 10th version of improvement patches for making persistent
+ring buffers robust to failures.
+The previous version is here:
 
-Thanks,
+https://lore.kernel.org/all/177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com/
 
-	M.
+In this version, I added a new patch to skip invalid page in rewinding
+process[4/5], add entry_bytes check in the test [5/5] and do not
+compile test code when CONFIG_RING_BUFFER_PERSISTENT_SELFTEST=n[5/5].
 
--- 
-Without deviation from the norm, progress is not possible.
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (5):
+      ring-buffer: Fix to update per-subbuf entries of persistent ring buffer
+      ring-buffer: Flush and stop persistent ring buffer on panic
+      ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
+      ring-buffer: Skip invalid sub-buffers when rewinding persistent ring buffer
+      ring-buffer: Add persistent ring buffer selftest
+
+
+ arch/alpha/include/asm/Kbuild        |    1 
+ arch/arc/include/asm/Kbuild          |    1 
+ arch/arm/include/asm/Kbuild          |    1 
+ arch/arm64/include/asm/ring_buffer.h |   10 ++
+ arch/csky/include/asm/Kbuild         |    1 
+ arch/hexagon/include/asm/Kbuild      |    1 
+ arch/loongarch/include/asm/Kbuild    |    1 
+ arch/m68k/include/asm/Kbuild         |    1 
+ arch/microblaze/include/asm/Kbuild   |    1 
+ arch/mips/include/asm/Kbuild         |    1 
+ arch/nios2/include/asm/Kbuild        |    1 
+ arch/openrisc/include/asm/Kbuild     |    1 
+ arch/parisc/include/asm/Kbuild       |    1 
+ arch/powerpc/include/asm/Kbuild      |    1 
+ arch/riscv/include/asm/Kbuild        |    1 
+ arch/s390/include/asm/Kbuild         |    1 
+ arch/sh/include/asm/Kbuild           |    1 
+ arch/sparc/include/asm/Kbuild        |    1 
+ arch/um/include/asm/Kbuild           |    1 
+ arch/x86/include/asm/Kbuild          |    1 
+ arch/xtensa/include/asm/Kbuild       |    1 
+ include/asm-generic/ring_buffer.h    |   13 ++
+ include/linux/ring_buffer.h          |    1 
+ kernel/trace/Kconfig                 |   15 ++
+ kernel/trace/ring_buffer.c           |  226 ++++++++++++++++++++++++++--------
+ kernel/trace/trace.c                 |    4 +
+ 26 files changed, 233 insertions(+), 56 deletions(-)
+ create mode 100644 arch/arm64/include/asm/ring_buffer.h
+ create mode 100644 include/asm-generic/ring_buffer.h
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
