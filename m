@@ -1,40 +1,40 @@
 Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B7212B94;
-	Tue, 17 Mar 2026 16:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDFD2F39CE;
+	Tue, 17 Mar 2026 16:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773763781; cv=pass; b=nOvMgKWJJ4XnMeD22hbVthrfkaG2DEEFwM7l/V0p8r9sc9yPyMz35Z4so6nVtT95UJX7wanbsrGuaYKv4M6pcoA9cDXVz49hvAqUF7UYSr6Hp7Jqx5Et663BcHCHaeaRDYPYrpzmuIfeuUm3Hc2zGklVv/enG/619Hu+Q3z9Op4=
+	t=1773763782; cv=pass; b=k+/Vnb5+uKqX2LYLpFVHLR1aTjCBfWx580GDpOdwN5WjzkRPfRC/Ba17vlFNyyIAtdvMnHKjNZp0RYnArnk0cWhqrISeFSdvrmx68dTGZ/RME0rXPJduSYPSNMyrb3EZnfiJH9LYgugd9slW9PswOSyAImOe+apgCP4GFaidNS8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773763781; c=relaxed/simple;
-	bh=5DrGSXMEeIUOEdbJ9WiMaf2PnGRbNPGketohz92imfY=;
+	s=arc-20240116; t=1773763782; c=relaxed/simple;
+	bh=DUCDFOLJ57qkCNI68sXQsO7UVxK28h+iRY+VtUQMUrY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RytWsj9mf2pDvDQvoYR8NtjUEIUALRgynyeOscSUUvqTNfxh3YgJsFtxmr590WWKhE7eRL0PW7nMtoMKxwXQ1DaAVvGzQ+7h+OhfkwqmQLNAGzxZBVLmvTcSvfy0CB03iWZhX8THUShGLhhTioh1osK++YkWFo+u10SctKj7yDY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=ieSRB2gr; arc=pass smtp.client-ip=136.143.169.55
+	 MIME-Version; b=jFjrL8HTsoajAashZ9+I0DjYzQYcDB+bW44NRMmNqottemP0f9K2nYQ8jP4DSaKYJSnU2iqqHTFVxikyWY1+oXAdN+SGBDgN9wMbs+8F0f1eyD1jbqppzhMb8gqxvNZeAeMq2IA8PC24MMqgcO1NvFGN8lWWhc9vyye3MdasLTY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=cHd7JeN7; arc=pass smtp.client-ip=136.143.169.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="ieSRB2gr"
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="cHd7JeN7"
 ARC-Seal: i=1; a=rsa-sha256; t=1773763766; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=kBavarqmOAbpMRVYZ9t7UM9v/eLaGFP8K15FyyXt3zvs/AWBJ1Fvt2d0AC/Z/nnGCwsOw32xmTL0JqVjn4qP2afv0j3INDoVP2BgK/79jlBwZ+n+Hlo0j2JT9rqSyzoI/kZpcIlW+6T8no43yDysKJ7YFsW+We4I+iA+Fs5nByI=
+	b=DLJ8SbBrfeT9NAgbgxEQP4/9I9BmftnFk7wxkF6QwQQ0RmJNeiZqwkNVW2lzSGxznmQbdkMcv1C3/y4K8V+h0m4Is+Xf1mdspz6/yOQKHCI9aHLDu4WTwnSztBP4tgjbkecuLMYMlIuCXbWe9pXNwJ2E3z71LWOfx2q7f46Xi5g=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
 	t=1773763766; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3izM0F1cOHEJuEmqlhbjziddkmwLfk1V+4E7AazdxMQ=; 
-	b=AXLiDdMIh1I4o+yuJ8HH+E5mkZ6GmeK9B6f9Gxez4ywoRTUhAIeaDHz++MaFo8JVh4QDi7/1a+Q5ygGKvHx3WkJp1GB3ioGuYANA+gTISIqi73tzeKfB38rkbtF2BqUv85JrzV8eAqf3CwFfnCKwjS47a5EVw6JFqVLU3igbKQI=
+	bh=rp+wuVlETQfmLgKmv7tEFfJBknrCQ1YXaGdK0CbMPg4=; 
+	b=YLlxZvXW41MqJmYr8gwVFZYE832QMX1rGMnDpmX0KJVV4lv5Uv0VWxbpb1lb8fAqV6JeKJvvN0dIyvl54t3JkHeMeOuXORMaKfnrXoktrlDl/65ibXz6KkQnL444JKHQwBTXbeL9rajL+12LEW1tDTfTraa1CMh4+/y/s7DysSw=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773763765;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773763766;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=3izM0F1cOHEJuEmqlhbjziddkmwLfk1V+4E7AazdxMQ=;
-	b=ieSRB2gr5hYNEtjlojwgz2ry9h5dxDR9SAoNpto1grKwgjf4htrBUrZ7bOPrYtwF
-	vfZByo+ROuqOlbwsjInyKG+Grme1B5RtTF6MwTlPB+lKwvHETOA+EuswFrbpWybJxzR
-	00wA6013u8ldMK8otKRQLcRR1U4vrksIlpwNrJ/w=
-Received: by mx.zoho.eu with SMTPS id 17737637640031020.3670628719038;
+	bh=rp+wuVlETQfmLgKmv7tEFfJBknrCQ1YXaGdK0CbMPg4=;
+	b=cHd7JeN7juSuUp17FplRsCsEKSAA84d+vayNymfT2L1ZdIQleeb2mJHmRBwMCVy1
+	65yXXtBghdmsd8AheHT99LZLOZJLlGtHhtRu1sgtolMH8A6VrR9S8zeyTz6QlUEYCAY
+	sfjI0aKl+jOilTjMUI7NL/FN0r9KJctAyBXVD6VM=
+Received: by mx.zoho.eu with SMTPS id 177376376451425.03107281800885;
 	Tue, 17 Mar 2026 17:09:24 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -42,9 +42,9 @@ To: Masami Hiramatsu <mhiramat@kernel.org>,
 Cc: Steven Rostedt <rostedt@goodmis.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v7 12/15] lib/bootconfig: use size_t for strlen result in xbc_node_match_prefix()
-Date: Tue, 17 Mar 2026 16:09:13 +0000
-Message-Id: <20260317160916.33576-13-objecting@objecting.org>
+Subject: [PATCH v7 13/15] lib/bootconfig: use signed type for offset in xbc_init_node()
+Date: Tue, 17 Mar 2026 16:09:14 +0000
+Message-Id: <20260317160916.33576-14-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260317160916.33576-1-objecting@objecting.org>
 References: <20260317160916.33576-1-objecting@objecting.org>
@@ -57,34 +57,36 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-  lib/bootconfig.c:198:19: warning: conversion from 'size_t' to 'int'
-  may change value [-Wconversion]
-  lib/bootconfig.c:200:33: warning: conversion to '__kernel_size_t'
-  from 'int' may change the sign of the result [-Wsign-conversion]
+  lib/bootconfig.c:415:32: warning: conversion to 'long unsigned int'
+  from 'long int' may change the sign of the result [-Wsign-conversion]
 
-strlen() returns size_t but the result was stored in an int.  The value
-is then passed back to strncmp() which expects size_t, causing a second
-sign-conversion warning on the round-trip.  Use size_t throughout to
-match the API types.
+Pointer subtraction yields ptrdiff_t (signed), which was stored in
+unsigned long.  The original unsigned type implicitly caught a negative
+offset (data < xbc_data) because the wrapped value would exceed
+XBC_DATA_MAX.  Make this intent explicit by using a signed long and
+adding an offset < 0 check to the WARN_ON condition.
 
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
- lib/bootconfig.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bootconfig.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index dd639046912c..3c5b6ad32a54 100644
+index 3c5b6ad32a54..119c3d429c1f 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -195,7 +195,7 @@ static bool __init
- xbc_node_match_prefix(struct xbc_node *node, const char **prefix)
- {
- 	const char *p = xbc_node_get_data(node);
--	int len = strlen(p);
-+	size_t len = strlen(p);
+@@ -412,9 +412,9 @@ const char * __init xbc_node_find_next_key_value(struct xbc_node *root,
  
- 	if (strncmp(*prefix, p, len))
- 		return false;
+ static int __init xbc_init_node(struct xbc_node *node, char *data, uint16_t flag)
+ {
+-	unsigned long offset = data - xbc_data;
++	long offset = data - xbc_data;
+ 
+-	if (WARN_ON(offset >= XBC_DATA_MAX))
++	if (WARN_ON(offset < 0 || offset >= XBC_DATA_MAX))
+ 		return -EINVAL;
+ 
+ 	node->data = (uint16_t)offset | flag;
 -- 
 2.34.1
 
