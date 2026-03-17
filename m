@@ -1,155 +1,124 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB993246F8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Mar 2026 17:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773767970; cv=none; b=f67LLDHxeMRcNpWn5PVxwsb3QrJHPIOKnp8XRUHJrB6uryLOklbgyAcPRl5B0z7h8bMHG4u3kgL7LxpmWCjR7jF+wX8n1RiSOPTq5rmrRjqYM6zKzeRnOxIJsaV9sfuY0uTItJcqdc/kOdNIYQ+pyinNoofBSmM406PsXyT/NyE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773767970; c=relaxed/simple;
-	bh=Exi6oVCi6VhRBp7BZRhBR3L5u5FP6mix8iW2MfKA/ow=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nFFANmUA9Ett+6yIiYt0en36i/+X0PwAqp5rz1VtkNRwdfZIorJKSYMBoDboRayVr5kw1E5EE29XVN2aYm5THoWArvYTKMQ2ykOzDS91Op53hgLIqCCFT+NxOdjCGUAl7WsyB3lxFJqFrP3FeEohfwDjE6QP+wmjfP37Ie5v/5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AUhD97HI; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB82E36EAB9;
+	Tue, 17 Mar 2026 17:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773768954; cv=pass; b=ng0Q30Tm3xHxlje5r6vJKCletjZzzUkT+Bwba5ynAhPCsL5VCvvGZ/h7T02K/IlLksRiPvnt0eyJt/l1ShSClefjG9gDZS5N47448ZoUG1k4hBun5LhYX3uDJYSkLvKb0i5uCJ24uwHLM9Z/FAghY1pq0UkdtQrFEiYg+c13hSo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773768954; c=relaxed/simple;
+	bh=mqMivRCdra1WMpVA1OWjXG85kKrY0EuPOfuZjgZBfuQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=fIY8HodpNeW0rSDS2vodtt3dvM8dSD9/aofrQBcxnK1+6j37r8btkcnCqoZKnJ6Zp96updYRIko5lAtDmRhaS4nS3T12sis6V7YiMeGCG3cBSQ+niTwD36zHI08ANttUdpe5PuylJC7U1+Fkqy+UxHVeJcilEmrqIW8zFDxS80s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=YQYAkvWq; arc=pass smtp.client-ip=136.143.169.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUhD97HI"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-48538c5956bso1074385e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Mar 2026 10:19:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773767967; x=1774372767; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k+HcpT6c/Q9q2p72rs/yhYSojh0RamcA3tem6sS6eeY=;
-        b=AUhD97HI5reWzkT8tKoVQuxSCN7h5fgVRjzYjtz/JV3RN8UYkWoypFtiR4k1kMxYji
-         mArI5GcEHMnpaNUrmLHggpKqX1vWKEyDgx2aAB2RZb1hhe3NukxuejX43GUXH5svLMhi
-         gzhf/UD/a8oCJpefy5+rV8JGvFnClk3iRzYhjaMMyTMYKyuIdoLi2MKzL9nZ1pKpA7AM
-         T7XlbvkV+QapHGucckGuyQPPuquPwF5knxIS+V7S27iODEheB+ejozEd7yGuXz+LStah
-         EoK/Rzd/1pDt0jCGQEGvQip83TC5Oo3GrXaAZ2BGtIVBKutcNGHPwsYLn/gJQU2D5J6z
-         PRBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773767967; x=1774372767;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k+HcpT6c/Q9q2p72rs/yhYSojh0RamcA3tem6sS6eeY=;
-        b=YswX5p2NsOHRqBBr4cKba3CMvQ94xM9y3ntHtxfDgnbxbfQFQoi6ORdnX0ZrQ4F3LY
-         C3b2mzHtWOF1yEQOg3CQmcrM0fbJ95EeLtSLTX9nnszqpPIfd+LQ07hodxUE0xc71vtZ
-         UyVhgsuUCZ/rtjyPHcm2mZL9l/ewH1pbcjK8RkcOWabPIdYCR4W4DZqd2dwMycIWdGam
-         i4pT5bwv3ltQmhchpI7BvdE2D+xDFCX3w4/nutb7ZnPpIIfPCv5/RDfFj8oJv4IJWFdM
-         bTUb2/SNQnlXWJBH4DQatGwPUnaVgI1sDZsffCVv86U0qKWk7/ZD84xtdOoSfJNsLsdy
-         xM3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVXuIV4ft8J3cE6u8AnOGjWaQZ5sK25t9jKU7IrdFP6gqgYHJtGrcxEqAvcZhF9j+472zx+D0BpcMtcoDjYswVkIec=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAQtszA5iAxnp3UkkE3v2pQMZzaAO5BPneYOO9ATJTicK6hX5A
-	i8wDYaAVf8x+MvuysL4W8oJVAluenFSHFODLtwAWTNPxe1KSAaXL7W97
-X-Gm-Gg: ATEYQzyLuPbpW7zeR21TuZ2/TdhfoaCiccU9Rj9RkWhnkl3IsOl12ycuhwbcVco2NUK
-	Bl3dugXi29amZPSq82Sj+cAim7dTIXEI1H5R13JIXIXgHHzk3tUGMSdtn9UOASFiPiYlp5kycEC
-	jver4tm/LnAAGlV1dMEeELfaltLxotNl+W9h0hhwQxQlbm4bqkM4nLfKx4kbGorUmK6UKZZcr9r
-	89tMxZmEnQMG3x8MNRcUhv7y0etEdjlDtWsPLGCDF9Jb0zniRCrvHlgn1lZ5R4blLHNwJxmSLp5
-	ZxUyIuICIBUF49lueoteic8pLM6lwOqDTqhiFd9tuLm6Qk10VqjQYyGLcl3T+DUyRVQv8njEfvz
-	k76+VgjuZ8JBjUur+rFW1pgAKN6MiH/UCIH4yLGH/9S1zc1Dpwa4+KE6o7KZcTvIB2m0++ZYvIa
-	ICMFNJ4APuNUKfmImO2NLfBg==
-X-Received: by 2002:a05:600c:a0d:b0:485:3e00:944a with SMTP id 5b1f17b1804b1-486f40c1975mr7774615e9.9.1773767967454;
-        Tue, 17 Mar 2026 10:19:27 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48634a7ac93sm61385985e9.2.2026.03.17.10.19.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2026 10:19:27 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 17 Mar 2026 18:19:25 +0100
-To: Leon Hwang <leon.hwang@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Steven Rostedt <rostedt@kernel.org>
-Subject: Re: [PATCHv3 bpf-next 24/24] selftests/bpf: Add tracing multi attach
- rollback tests
-Message-ID: <abmNHWDXguqKpi1P@krava>
-References: <20260316075138.465430-1-jolsa@kernel.org>
- <20260316075138.465430-25-jolsa@kernel.org>
- <d1bfc6ec-3234-4515-a68f-ff48ab9c1570@linux.dev>
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="YQYAkvWq"
+ARC-Seal: i=1; a=rsa-sha256; t=1773768940; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=BFZO5ondVGzJjynuLD3aODRseRy3Tny9o/Q8xJC8+G85r1CXgtFVCvTnM6odn5/UMQBYRlY4iOqFb+Vzt9CnxOYcsFMcnpLgyGbiGBdSkJbldGqQ2AAGArZrhjC844bF8TDeiWgIzzEI3OGpOxGJx219ANPmO6Mn3nHn11LojjQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1773768940; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xpqeAix+M+JLQ7SACoXaqtH9U6HHeAdc3zVVlBD/804=; 
+	b=hITJlslowpHXk68R5z0lFeeNu75wQ48Uo7crbTC372YEiz5ZFHOhUm5N1Fb8gEpXbQ+B+1EaScyR3woELbG5Qs6S8qcOhjCimtX2775Yw9lnLLBgnsRahQ2NC6RDagUnJIf4kQvlayRDIHL8MipmKlIttt6UFuAlEWeaTTpij7A=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=objecting.org;
+	spf=pass  smtp.mailfrom=objecting@objecting.org;
+	dmarc=pass header.from=<objecting@objecting.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773768940;
+	s=zmail; d=objecting.org; i=objecting@objecting.org;
+	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=xpqeAix+M+JLQ7SACoXaqtH9U6HHeAdc3zVVlBD/804=;
+	b=YQYAkvWqHfRrvasgQUlURm09SpvX5pUD3Fc7K50prxDFncI99NhwKKdNvgRQITVT
+	3bCeW4BeemweRKv2IzOn/V0H9UWSFmdbzX6VCyWFuNqH2vDKl1FORl+r9HrNML98yLZ
+	15kqL1nQYd8QcwVNnlIVqjYV8PmE5hTaO94szkXs=
+Received: by mx.zoho.eu with SMTPS id 1773768937967440.42089534876914;
+	Tue, 17 Mar 2026 18:35:37 +0100 (CET)
+Date: Tue, 17 Mar 2026 17:35:37 +0000
+From: Josh Law <objecting@objecting.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+CC: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_16/17=5D_lib/bootconfig=3A_fix_s?=
+ =?US-ASCII?Q?ign-compare_in_xbc=5Fnode=5Fcompose=5Fkey=5Fafter=28=29?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20260317121507.30735331@gandalf.local.home>
+References: <20260315122015.55965-1-objecting@objecting.org> <20260315122015.55965-17-objecting@objecting.org> <20260317165549.99ea4171d7672f83ec3b6fc4@kernel.org> <20260317121507.30735331@gandalf.local.home>
+Message-ID: <6C24C50A-810F-4A42-A638-19D1288374E2@objecting.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1bfc6ec-3234-4515-a68f-ff48ab9c1570@linux.dev>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-On Tue, Mar 17, 2026 at 11:20:59AM +0800, Leon Hwang wrote:
 
-SNIP
 
-> > +static void test_rollback_unlink(void)
-> > +{
-> > +	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
-> > +	struct tracing_multi_rollback **fillers;
-> > +	struct tracing_multi_rollback *skel;
-> > +	size_t cnt = FUNCS_CNT;
-> > +	__u32 *ids = NULL;
-> > +	int err, max;
-> > +
-> > +	max = get_bpf_max_tramp_links();
-> > +	if (!ASSERT_GE(max, 1, "bpf_max_tramp_links"))
-> > +		return;
-> > +
-> > +	/* Attach maximum allowed programs to bpf_fentry_test10 */
-> > +	fillers = fillers_load_and_link(max);
-> > +	if (!ASSERT_OK_PTR(fillers, "fillers_load_and_link"))
-> > +		return;
-> > +
-> > +	skel = tracing_multi_rollback__open();
-> > +	if (!ASSERT_OK_PTR(skel, "tracing_multi_rollback__open"))
-> > +		goto cleanup;
-> > +
-> > +	bpf_program__set_autoload(skel->progs.test_fentry, true);
-> > +	bpf_program__set_autoload(skel->progs.test_fexit, true);
-> > +
-> > +	/*
-> > +	 * Attach tracing_multi link on bpf_fentry_test1-10, which will
-> > +	 * fail on bpf_fentry_test10 function, because it already has
-> > +	 * maximum allowed programs attached.
-> > +	 *
-> > +	 * The rollback needs to unlink already link-ed trampolines and
-> > +	 * put all of them.
-> > +	 */
-> > +	err = tracing_multi_rollback__load(skel);
-> > +	if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-> > +		goto cleanup;
-> > +
-> > +	ids = get_ids(bpf_fentry_test, cnt, NULL);
-> > +	if (!ASSERT_OK_PTR(ids, "get_ids"))
-> > +		goto cleanup;
-> > +
-> > +	opts.ids = ids;
-> > +	opts.cnt = cnt;
-> > +
-> > +	skel->bss->pid = getpid();
-> > +
-> > +	skel->links.test_fentry = bpf_program__attach_tracing_multi(skel->progs.test_fentry,
-> > +						NULL, &opts);
-> > +	if (!ASSERT_ERR_PTR(skel->links.test_fentry, "bpf_program__attach_tracing_multi"))
-> > +		goto cleanup;
-> > +
-> > +	skel->links.test_fexit = bpf_program__attach_tracing_multi(skel->progs.test_fexit,
-> > +						NULL, &opts);
-> > +	if (!ASSERT_ERR_PTR(skel->links.test_fexit, "bpf_program__attach_tracing_multi"))
-> > +		goto cleanup;
-> > +
-> > +	tracing_multi_rollback_run(skel);
-> > +
-> > +cleanup:
-> 	tracing_multi_rollback__destroy(skel); is missed to destroy skel?
+On 17 March 2026 16:15:07 GMT, Steven Rostedt <rostedt@goodmis=2Eorg> wrot=
+e:
+>On Tue, 17 Mar 2026 16:55:49 +0900
+>Masami Hiramatsu (Google) <mhiramat@kernel=2Eorg> wrote:
+>
+>> > --- a/lib/bootconfig=2Ec
+>> > +++ b/lib/bootconfig=2Ec
+>> > @@ -319,10 +319,10 @@ int __init xbc_node_compose_key_after(struct xb=
+c_node *root,
+>> >  			       depth ? "=2E" : "");
+>> >  		if (ret < 0)
+>> >  			return ret;
+>> > -		if (ret >=3D size) {
+>> > +		if (ret >=3D (int)size) { =20
+>>=20
+>> nit:
+>>=20
+>> 	if ((size_t)ret >=3D size) {
+>>=20
+>> because sizeof(size_t) > sizeof(int)=2E
+>
+>I don't think we need to worry about this=2E But this does bring up an is=
+sue=2E
+>ret comes from:
+>
+>		ret =3D snprintf(buf, size, "%s%s", xbc_node_get_data(node),
+>			       depth ? "=2E" : "");
+>
+>Where size is of type size_t
+>
+>snprintf() takes size_t but returns int=2E
+>
+>snprintf() calls vsnprintf() which has:
+>
+>	size_t len, pos;
+>
+>Where pos is incremented based on fmt, and vsnprintf() returns:
+>
+>	return pos;
+>
+>Which can overflow=2E
+>
+>Now, honestly, we should never have a 2Gig string as that would likely
+>cause other horrible things=2E Does size really need to be size_t?
+>
+>Perhaps we should have:
+>
+>	if (WARN_ON_ONCE(size > MAX_INT))
+>		return -EINVAL;
+>
+>?
+>
+>-- Steve
 
-it is, will add, thanks
 
-jirka
+
+I'm making a separate patch based on this=2E
+
+V/R
+
+Josh Law
