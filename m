@@ -1,121 +1,102 @@
-Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D09391518;
-	Tue, 17 Mar 2026 07:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773732873; cv=pass; b=k1yOISMz0IeG1hqbHqgXzA540Dd7hC13dty25j+9r2qxdB5tIp9NnlQf84S1NFwq/pf6XiNQgcxd430jrGNaDKVSUkS33uzS+zN9rbD+2sbkpku5QzbPSX88C7wNvQA0Zk1gHUBeR0OTQ+3CKnF61IrpDkrhEwAk1/Un2uel9E8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773732873; c=relaxed/simple;
-	bh=vKg77fp7EjQ5/vXw7HIME5OpqJ13OZZGAngHiawOHI4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=BIuleF2A9zinvM6bG5zBFoeMP5WmkbPLVcz0OoGtYl/FCLnVfr3+Fmr7O7jErlb4HqoMnK6mmNwNwfh8EQfpaUv2eu2SCxShoyglUqGhiIDSQmpd2bQBa3A+Z00AvFHHwBr2CLgKnP0Y0FBwHns4yWL73qDYyhG8XRPGpnYYd8g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=if6qUHeo; arc=pass smtp.client-ip=136.143.169.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003203090D9;
+	Tue, 17 Mar 2026 07:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773734152; cv=none; b=gXP+CPSSzNqMRnMcXNwN6mrQiLjY7EHZB2q5r8Cj95xBEFjVi/Nq4vokTHPwarXRLpL6SeG9oOy5Q6fw/wZfcEcydPaG08DL+Zv0Zm96J+YYV5T9z5nhBJ2Wb47ViYnW71FG4x6RLMNcYEE/Fj5AF/BW29XonmBx1KbV+CNXdpw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773734152; c=relaxed/simple;
+	bh=oWMue7rfVl/WbmH3iDFcZaU22QQLUEUXN7ERiTUmWJQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cVkHaiizNkX5Q4uBKUH/f13/yIkDkAgWjAL9OfbfJ1d9THaZ9MpASW6r9hMusG4xqoafT2m+nlPNPFVdbHeIjCKa4yZgYVZ4HD80Z/OInk6QxS72ZNYUoiJmbxJsg2VAEGpRgQR99wFAje/pUHLI2hw2scMR6AByUk7GqJhhmuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H97YzAqL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="if6qUHeo"
-ARC-Seal: i=1; a=rsa-sha256; t=1773732862; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=GB/+sZePmh8S328+yue+OLDhLApENjU0F0QxordB0o406N7hwBnBMuwpnehvB7BI7VvCU7dkxwi90y/wVGz1hoiFZecRfi51X1PfISx5+W9LQ6xWuASOZPsOBrXi5QyIb43dAaASp1SXNigmzlMIemaDxPFqgVNckMsnpKveTvg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773732862; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=WbneL8mMF7Kqg4IIqb8oheS1RHuj3gN2RquuoBUiFoU=; 
-	b=L16d+H9DT29eRp6g+m+KexxfMLUaSiJMcKaR1lszgjVp/sv5uux0gMD/kTqtEY4wBdtPPcTJImg1jW1MKOUan8GE63XVIQSkf65JYCu87fNfL5xPOnjFZ4233GAibbglpOgIZPu26b91kHIxCbrLn2QVNR7Kb+ScGEIlaDLyE0s=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=objecting.org;
-	spf=pass  smtp.mailfrom=objecting@objecting.org;
-	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773732862;
-	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=WbneL8mMF7Kqg4IIqb8oheS1RHuj3gN2RquuoBUiFoU=;
-	b=if6qUHeo55SGnoD8Nn1gScGanYAvOwA/BAfb+9Deb9rapJ0txHP5RjMDPKsR+S3l
-	H/Pcm62J2Po0vslYWlTjZ53XGE//5+lAvttNWguBEJEkQevcBzHjmcceBg+gbJE9NAT
-	lu8nVQ1wahvKNPiJWAlzdOSSFdvlwzCuWk+ZjxYk=
-Received: by mx.zoho.eu with SMTPS id 1773732859514152.36525702964366;
-	Tue, 17 Mar 2026 08:34:19 +0100 (CET)
-Date: Tue, 17 Mar 2026 07:34:20 +0000
-From: Josh Law <objecting@objecting.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-CC: Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H97YzAqL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF58AC4CEF7;
+	Tue, 17 Mar 2026 07:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773734151;
+	bh=oWMue7rfVl/WbmH3iDFcZaU22QQLUEUXN7ERiTUmWJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=H97YzAqLo4E6dD+QwRA/yRldjO0zbhE/n002eB+BTgoVS6uq7N9O1eGgm+M6NcQ9r
+	 HEP3srlE9X6f69eZpXUCQ4Fk6+SGfirg4ZzLPuDhqUqtxIneYvATkK6GHYrni7YLVm
+	 vIGb3vr4JPTnD+Z36zIlFBEXLnkO36In25jl7pAzFG7jPGohYoZzbFzY1bvs/heBtj
+	 vGhnxd0p+HMwjwBUAqAJr514LQheLM8NcC5j16HwVhgbFbmrQnH7uMwF/Aq1d0/D03
+	 /CvpOEFDs/kIrxVZcELzQ1o1rbZDVTG8/rslP3F13a9y7E5/db/YqtMQ8ZzwOQTxK2
+	 hgEAmQgF9426Q==
+Date: Tue, 17 Mar 2026 16:55:49 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Josh Law <objecting@objecting.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_11/17=5D_tools/bootconfig=3A_fix_?=
- =?US-ASCII?Q?fd_leak_in_load=5Fxbc=5Ffile=28=29_on_fstat_failure?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20260317163151.264b0617484d202daba85f0f@kernel.org>
-References: <20260315122015.55965-1-objecting@objecting.org> <20260315122015.55965-12-objecting@objecting.org> <20260317163151.264b0617484d202daba85f0f@kernel.org>
-Message-ID: <11AC8826-E8F6-431F-90DC-19AFF6C45138@objecting.org>
+Subject: Re: [PATCH v6 16/17] lib/bootconfig: fix sign-compare in
+ xbc_node_compose_key_after()
+Message-Id: <20260317165549.99ea4171d7672f83ec3b6fc4@kernel.org>
+In-Reply-To: <20260315122015.55965-17-objecting@objecting.org>
+References: <20260315122015.55965-1-objecting@objecting.org>
+	<20260315122015.55965-17-objecting@objecting.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Sun, 15 Mar 2026 12:20:14 +0000
+Josh Law <objecting@objecting.org> wrote:
+
+>   lib/bootconfig.c:322:25: warning: comparison of integer expressions
+>   of different signedness: 'int' and 'size_t' [-Wsign-compare]
+>   lib/bootconfig.c:325:30: warning: conversion to 'size_t' from 'int'
+>   may change the sign of the result [-Wsign-conversion]
+> 
+> snprintf() returns int but size is size_t, so comparing ret >= size
+> and subtracting size -= ret involve mixed-sign operations.  Cast ret
+> at the comparison and subtraction sites; ret is known non-negative at
+> this point because the ret < 0 early return has already been taken.
+> 
+> Signed-off-by: Josh Law <objecting@objecting.org>
+> ---
+>  lib/bootconfig.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index e318b236e728..68a72dbc38fa 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+> @@ -319,10 +319,10 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
+>  			       depth ? "." : "");
+>  		if (ret < 0)
+>  			return ret;
+> -		if (ret >= size) {
+> +		if (ret >= (int)size) {
+
+nit:
+
+	if ((size_t)ret >= size) {
+
+because sizeof(size_t) > sizeof(int).
+
+Thanks,
+
+>  			size = 0;
+>  		} else {
+> -			size -= ret;
+> +			size -= (size_t)ret;
+>  			buf += ret;
+>  		}
+>  		total += ret;
+> -- 
+> 2.34.1
+> 
+> 
 
 
-
-On 17 March 2026 07:31:51 GMT, Masami Hiramatsu <mhiramat@kernel=2Eorg> wr=
-ote:
->On Sun, 15 Mar 2026 12:20:09 +0000
->Josh Law <objecting@objecting=2Eorg> wrote:
->
->> If fstat() fails after open() succeeds, load_xbc_file() returns
->> -errno without closing the file descriptor=2E  Add the missing close()
->> call on the error path=2E
->>=20
->> Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
->> Signed-off-by: Josh Law <objecting@objecting=2Eorg>
->> ---
->>  tools/bootconfig/main=2Ec | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/tools/bootconfig/main=2Ec b/tools/bootconfig/main=2Ec
->> index 55d59ed507d5=2E=2E8078fee0b75b 100644
->> --- a/tools/bootconfig/main=2Ec
->> +++ b/tools/bootconfig/main=2Ec
->> @@ -162,8 +162,10 @@ static int load_xbc_file(const char *path, char **=
-buf)
->>  	if (fd < 0)
->>  		return -errno;
->>  	ret =3D fstat(fd, &stat);
->> -	if (ret < 0)
->> +	if (ret < 0) {
->> +		close(fd);
->>  		return -errno;
->
->Sashiko=2Edev[1] found that close() will overwrite errno=2E So please mak=
-e it
->
->	ret =3D -errno;
->	close(fd);
->	return ret;
->
->[1] https://sashiko=2Edev/#/patchset/20260315122015=2E55965-1-objecting%4=
-0objecting=2Eorg
->
->Thanks,
->
->> +	}
->> =20
->>  	ret =3D load_xbc_fd(fd, buf, stat=2Est_size);
->> =20
->> --=20
->> 2=2E34=2E1
->>=20
->
->
-
-
-I'm on the computer now, I'm cleaning everything up as requested, expect a=
- patch coming=2E
-
-V/R
-
-Josh Law
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
