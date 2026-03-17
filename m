@@ -1,161 +1,130 @@
 Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4E134BA50;
-	Tue, 17 Mar 2026 20:44:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6473491F1;
+	Tue, 17 Mar 2026 20:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773780244; cv=pass; b=Ru5dSpLUm9h6GX0SoMMvaOlLy6BOYOtOIMpS6Fq8vLzZX96s5VE9OVngJRH0ViOawXxjmriCZCiJ9GyYOFZCqrahNkrPx+sSCXhf2EoY8MV13bsRx3bekrCeiLa/dyUXi3LmF9RyOnBn9x9CHecw/C5Fn0hUC/RknOoTDbXW6cI=
+	t=1773780257; cv=pass; b=uY98P3aIa+rFW5cbDuiFchjIh8c5y/69uPDNlBVgXZku/FkX6WlDy3Px1kJLF0wpQl0FQgCUwoMHcQIiu/9trVRz43g+lhL3v3LlcgU+Dxf213D+MZBoxelLyh9Fsg0ZpcXAK/E1xf0KRifaNznek0kesepmfQstAHx1KAbhlxE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773780244; c=relaxed/simple;
-	bh=dDk9r80tFU4zRbU8i0fAc/L6c54IZ9XCAuBcBUz4n50=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=osF6jT3uectIBn9VY2Rl/m8YyE/tE2DEEeX9AvaFe/Xz4INA4RvqpM90IpTMM3okf2ONSfx3+AXgHINp0dTjqiPNo0rp9mxP5kkFcxkD2bL50ltimEBTFLwZ9cTa/Iko0rHylmGu6VsfwOdlEYHm3hOJTHw/GhK07uAQ6t/b9Os=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=Y+UfrT57; arc=pass smtp.client-ip=136.143.169.55
+	s=arc-20240116; t=1773780257; c=relaxed/simple;
+	bh=FajaaTcCDF7W933H1AkJVqYlC9Mf1H27OTW5bm6qvco=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ftJkytvTTqhm1rRmYXlBFqsJ/VEUytsWxj7tCJ2sMRIFG4+F47vwC7B8OSc8nnbQKN5/0lU7YEGJ3KS9j1Z+VHqitqXWcN+cFZrseumCqyqyj5BV80g+m2t+B0ghczz99anJjVi1aSnSeAsf4MjP7j7CCaJCi69WtXXT3N12+Mg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=YLXEhSkz; arc=pass smtp.client-ip=136.143.169.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="Y+UfrT57"
-ARC-Seal: i=1; a=rsa-sha256; t=1773780230; cv=none; 
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="YLXEhSkz"
+ARC-Seal: i=1; a=rsa-sha256; t=1773780246; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=bZ9IyGCbt/jE98qJmHObYN928G0hL/dRlM2eOWsyznYeNDEQxDavaXj3jFqK31To1WTA2D6UoiP6c4yquXdiM7gW+O3LmWN9s5+/Lz9mbVLPyJQoJIFV0pZgUUsimt5GDw6ps5cM7nPnYZQb3htPyi4h0fQRUhR0RmzDXZX1fp8=
+	b=loAGTEP6TK+bM+3lQcSsz6S6hUL52kfelp9GAPFQOgds+WshQv/HfViY6pKb+1dzuAjzFXLxEtcSmAvAhGvcOphXMyBVK0+Ta5BRf0YP9tIxyKt41f022+oX+daYSS2sDg1nNy2XXWzS+tIJcF3OeBM75fQqe7sF+3jWwMseT10=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773780230; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UaKl6ZiibKY2oq7TN773jd+JD5O9MyVzfpMulHn4d/M=; 
-	b=Fk5bIkRG3K4KdTMdtQRhqx2wnJptJ19/YEccOBtcSRA2fRwIEaYQ50PnOqtSETWttZMDGiFO9hdf004zz5kE+PWFYhlH/6Lh84a+cfWIUr9VsXpvXBE3aYyHmVplv384uq58gJ+ezdlazK33djQoQaXvhR2eTqVfvnV7siVTWjw=
+	t=1773780246; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=FNPONanpcF90VAKkxMUyhRz9rFK/8tyQtAG7fMJAqyg=; 
+	b=hKjDg4X2KPIiuXyHgSFz8cs0UUZw9C7FBW1K58n8pTA+RYR2nBCyQ9L9lhVM2IppAiq46cAWyzljGXJWVSZxOq5lF1kHdsJxZoBU+Uf4bOdkPagppiosUCMpZ4l18/XOnH9u+uAbCMcbzPXsc/U5Yn0dEJ5JUb/LxAtsPVKkByc=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773780230;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773780246;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=UaKl6ZiibKY2oq7TN773jd+JD5O9MyVzfpMulHn4d/M=;
-	b=Y+UfrT57L2XtEmubEBJpt//BICGEjf/cs+mvEs6yxvuydWxMnV3Hjn/1jTeFIQON
-	Ot89hiQux4MkQy3uJNFOJssCH9vpantJEwpS0KQjiawVF4A0Rr1DEEj+vznLb3kdheC
-	p0fXSUbUNF2i6rs+01n1qq2e8owKjMqisfrViwlg=
-Received: by mx.zoho.eu with SMTPS id 1773780228462851.1338673237987;
-	Tue, 17 Mar 2026 21:43:48 +0100 (CET)
-Date: Tue, 17 Mar 2026 20:43:47 +0000
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=FNPONanpcF90VAKkxMUyhRz9rFK/8tyQtAG7fMJAqyg=;
+	b=YLXEhSkzgfGXE1Tlwf+6Mq0rlkkt8A9Ta6NqPqMkv05Ujs41JNafKUCVRV1tdIqt
+	2mJmNLwLqkqfeY7K62CH7ciRrUZoVhkqEJJRTO1qrQ4ouOXUprFX5OH1Fub6KDL2t+/
+	GPk0eRgYpMbtzRPZzg7TD+OkBRS9oLyy8269VsFs=
+Received: by mx.zoho.eu with SMTPS id 1773780244439239.82620473642874;
+	Tue, 17 Mar 2026 21:44:04 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: Masami Hiramatsu <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3=5D_lib/bootconfig=3A_guard_x?=
- =?US-ASCII?Q?bc=5Fnode=5Fcompose=5Fkey=5Fafter=28=29_buffer_size?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20260317163738.3a7863dd@gandalf.local.home>
-References: <20260317181556.53417-1-objecting@objecting.org> <20260317163738.3a7863dd@gandalf.local.home>
-Message-ID: <17CE5F51-0C4D-40C3-8F75-2116B2B950DD@objecting.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4] lib/bootconfig: guard xbc_node_compose_key_after() buffer size
+Date: Tue, 17 Mar 2026 20:44:03 +0000
+Message-Id: <20260317204403.72375-1-objecting@objecting.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
+xbc_node_compose_key_after() passes a size_t buffer length to
+snprintf(), but snprintf() returns int. Guard against size values above
+INT_MAX before the loop so the existing truncation check can continue to
+compare ret against (int)size safely.
 
+Add a small WARN_ON_ONCE shim for the tools/bootconfig userspace build
+so the same source continues to build there.
 
-On 17 March 2026 20:37:38 GMT, Steven Rostedt <rostedt@goodmis=2Eorg> wrot=
-e:
->On Tue, 17 Mar 2026 18:15:56 +0000
->Josh Law <objecting@objecting=2Eorg> wrote:
->
->> xbc_node_compose_key_after() passes a size_t buffer length to
->> snprintf(), but snprintf() returns int=2E Guard against size values abo=
-ve
->> INT_MAX before the loop so the existing truncation check can continue t=
-o
->> compare ret against (int)size safely=2E
->>=20
->> Add a small WARN_ON_ONCE shim for the tools/bootconfig userspace build
->> so the same source continues to build there=2E
->>=20
->> Changes since v2:
->>  - Added a comment explaining the INT_MAX guard=2E
->>=20
->> Changes since v1:
->>  - Removed casting ret to size_t; with the INT_MAX guard, the existing
->>    ret >=3D (int)size check is sufficient, per Steven Rostedt=2E
->>  - Link to v1:
->>    https://lore=2Ekernel=2Eorg/all/20260317173703=2E46092-1-objecting@o=
-bjecting=2Eorg/
->
->The changes need to be below the '---' so that they don't get pulled into
->the git commit=2E
->
->>=20
->> Signed-off-by: Josh Law <objecting@objecting=2Eorg>
->> ---
->
->  <here>
->
->>  lib/bootconfig=2Ec                            | 8 ++++++++
->>  tools/bootconfig/include/linux/bootconfig=2Eh | 5 +++++
->>  2 files changed, 13 insertions(+)
->>=20
->> diff --git a/lib/bootconfig=2Ec b/lib/bootconfig=2Ec
->> index 96cbe6738ffe=2E=2E2a54b51dec5c 100644
->> --- a/lib/bootconfig=2Ec
->> +++ b/lib/bootconfig=2Ec
->> @@ -313,6 +313,14 @@ int __init xbc_node_compose_key_after(struct xbc_n=
-ode *root,
->>  	if (!node && root)
->>  		return -EINVAL;
->> =20
->> +	/*
->> +	 * Bootconfig strings never need multi-GB buffers=2E Reject sizes
->> +	 * above INT_MAX so snprintf()'s int return value cannot overflow
->> +	 * the truncation check below=2E
->> +	 */
->> +	if (WARN_ON_ONCE(size > INT_MAX))
->> +		return -EINVAL;
->> +
->>  	while (--depth >=3D 0) {
->>  		node =3D xbc_nodes + keys[depth];
->>  		ret =3D snprintf(buf, size, "%s%s", xbc_node_get_data(node),
->> diff --git a/tools/bootconfig/include/linux/bootconfig=2Eh b/tools/boot=
-config/include/linux/bootconfig=2Eh
->> index 6784296a0692=2E=2E48383c10e036 100644
->> --- a/tools/bootconfig/include/linux/bootconfig=2Eh
->> +++ b/tools/bootconfig/include/linux/bootconfig=2Eh
->> @@ -8,6 +8,7 @@
->>  #include <stdbool=2Eh>
->>  #include <ctype=2Eh>
->>  #include <errno=2Eh>
->> +#include <limits=2Eh>
->>  #include <string=2Eh>
->> =20
->> =20
->> @@ -19,6 +20,10 @@
->>  	((cond) ? printf("Internal warning(%s:%d, %s): %s\n",	\
->>  			__FILE__, __LINE__, __func__, #cond) : 0)
->> =20
->> +#ifndef WARN_ON_ONCE
->> +#define WARN_ON_ONCE(cond)	WARN_ON(cond)
->> +#endif
->> +
->>  #define unlikely(cond)	(cond)
->> =20
->>  /* Copied from lib/string=2Ec */
->
->Other than that=2E
->
->Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis=2Eorg>
->
->-- Steve
+Signed-off-by: Josh Law <objecting@objecting.org>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v3:
+ - Moved the revision history below the --- separator so it does not
+   become part of the git commit.
+ - Added Reviewed-by from Steven Rostedt.
 
+Changes since v2:
+ - Added a comment explaining the INT_MAX guard.
 
-I'll be convenient,  I'll make a V4 just fixing that, You can just recomme=
-nd the reviewed by tag, thanks a lot
+Changes since v1:
+ - Removed casting ret to size_t; with the INT_MAX guard, the existing
+   ret >= (int)size check is sufficient, per Steven Rostedt.
+ - Link to v1:
+   https://lore.kernel.org/all/20260317173703.46092-1-objecting@objecting.org/
 
+ lib/bootconfig.c                            | 8 ++++++++
+ tools/bootconfig/include/linux/bootconfig.h | 5 +++++
+ 2 files changed, 13 insertions(+)
 
-V/R
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 96cbe6738ffe..2a54b51dec5c 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -313,6 +313,14 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
+ 	if (!node && root)
+ 		return -EINVAL;
+ 
++	/*
++	 * Bootconfig strings never need multi-GB buffers. Reject sizes
++	 * above INT_MAX so snprintf()'s int return value cannot overflow
++	 * the truncation check below.
++	 */
++	if (WARN_ON_ONCE(size > INT_MAX))
++		return -EINVAL;
++
+ 	while (--depth >= 0) {
+ 		node = xbc_nodes + keys[depth];
+ 		ret = snprintf(buf, size, "%s%s", xbc_node_get_data(node),
+diff --git a/tools/bootconfig/include/linux/bootconfig.h b/tools/bootconfig/include/linux/bootconfig.h
+index 6784296a0692..48383c10e036 100644
+--- a/tools/bootconfig/include/linux/bootconfig.h
++++ b/tools/bootconfig/include/linux/bootconfig.h
+@@ -8,6 +8,7 @@
+ #include <stdbool.h>
+ #include <ctype.h>
+ #include <errno.h>
++#include <limits.h>
+ #include <string.h>
+ 
+ 
+@@ -19,6 +20,10 @@
+ 	((cond) ? printf("Internal warning(%s:%d, %s): %s\n",	\
+ 			__FILE__, __LINE__, __func__, #cond) : 0)
+ 
++#ifndef WARN_ON_ONCE
++#define WARN_ON_ONCE(cond)	WARN_ON(cond)
++#endif
++
+ #define unlikely(cond)	(cond)
+ 
+ /* Copied from lib/string.c */
+-- 
+2.34.1
 
-
-Josh Law
