@@ -1,86 +1,100 @@
-Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43FF2FE579;
-	Tue, 17 Mar 2026 16:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773763894; cv=pass; b=u5Qw0iResfc8FX5Oq74VlOP3X4LUxFpblAuXl3Zv4ZQLImlEBbwsJGm8LKyutRDRMZGJVELy4MmZsWU4D8iyXZi9Q65uf9yhYXWnyQthhzoAI35PLFyZLoM/ApPrEyCpK+PIWViKyDhf6FjNZKQ14akcZnXaFFWCYl0tOkyFB8o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773763894; c=relaxed/simple;
-	bh=z4qpI5K5VuCGCL+LIB0Pg02CYIyxZaHnByIH+LUn4eI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eSncwuf+Ri8uRroEQSshtRkBOY5TAmIq2WxqpMC25ruUHunOxeUJV4sA9BPlB/OZUMWG2aQesuXpNGiYdQsXP0mhrtaj2ciWW9/fRvvPhpdPBO3wvHvKhwB+iTwbMF8W/sMeicfkEPgWEYHm+EEw2Tc1ZfocBpL3zrg+yMXuvz0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=VAl36DAp; arc=pass smtp.client-ip=136.143.169.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="VAl36DAp"
-ARC-Seal: i=1; a=rsa-sha256; t=1773763764; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=d1xn7w0qJ0HpQyXTBZ9JwhOil3vVLpqqbFh9i3zc6qFUedRMbRmtEAyx93VTUYD/STIhfOszYvJpFf8A/dopUyRobulRVwyYI3PCfQz4W4CjVINGq+adbt1wlWXm4Me+N5uWtfAX8jYskTLFL/GosnuBcP5OHFtYsB/vl4IockY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773763764; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=stHVeUHtUkhvr3p0PGGWk2OqvHsyK4X6A5Msa7FZmRI=; 
-	b=BFoPljCnB/stVXM/SDZkx168aEv6cpugZGkvbeiYvViY17FnJJyJAH0yEAzkPGTYB2qh6IyC7ytTXpmkIYASgvRMJNlhGyEiZDi15XIgobr9ZMXj9ugzSn6Tw+RiG9b0L7JCFVIpi7jo3GiJAGavTfooPHc1XT/BPfIupKfrhfg=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=objecting.org;
-	spf=pass  smtp.mailfrom=objecting@objecting.org;
-	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773763764;
-	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=stHVeUHtUkhvr3p0PGGWk2OqvHsyK4X6A5Msa7FZmRI=;
-	b=VAl36DApJa9Ka7FhMUqsOfJ8mhl1uZwUGyrpB8Y4rchcH464w7KnmlBYlE+G0jfp
-	lA7DeQ1pVVaRFK5IjYBsRN6daY2HV9YhPbiYCXwdrwcTo8s+P67bRFw5P7jH8zUTGiM
-	OLmsZfL2hQfTTBEsRSzFR+GLwSjDnndMZMBJ1beA=
-Received: by mx.zoho.eu with SMTPS id 1773763760862485.8642777649935;
-	Tue, 17 Mar 2026 17:09:20 +0100 (CET)
-From: Josh Law <objecting@objecting.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v7 06/15] bootconfig: constify xbc_calc_checksum() data parameter
-Date: Tue, 17 Mar 2026 16:09:07 +0000
-Message-Id: <20260317160916.33576-7-objecting@objecting.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260317160916.33576-1-objecting@objecting.org>
-References: <20260317160916.33576-1-objecting@objecting.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA38D2F3622;
+	Tue, 17 Mar 2026 16:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773764086; cv=none; b=EC+NpTNjcr+FiDDh+ASXrx0kKpuPfCq7c/Rj0tVqRpasHTcshx9iTGJ6O6gUh4QMB7AJ90l9nKkseNWWI8b/tj56QlsylcUvWjgEdX85D+3AWyMjOCVNp54Dj7Irb1D5zqOCJjhc/Z5oy+FCUaFPwk2TWjI0QJb9ASB8eWydjvE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773764086; c=relaxed/simple;
+	bh=E79bV8sDdW6myXN8X9o8onTOSGBJnRWNWf1Bcohj57I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oY0FeroOlGBTYlB43abb1yn1+RNFB63xTR5HT4/sHwI3UX2wPhSwmfu/NQnVNW1aOznUJuhyeyr/hSaSjbIzsRjV8Xtvz06v8KhnYBnBEL2JbLXpqfiA0d4/3DCHLkvBmQr4v3D1Jj7aQB0f5QxLM7uH3H51Fm/KT+lqpluPptI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 931381A0247;
+	Tue, 17 Mar 2026 16:14:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id C2A5C32;
+	Tue, 17 Mar 2026 16:14:41 +0000 (UTC)
+Date: Tue, 17 Mar 2026 12:15:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Josh Law <objecting@objecting.org>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 16/17] lib/bootconfig: fix sign-compare in
+ xbc_node_compose_key_after()
+Message-ID: <20260317121507.30735331@gandalf.local.home>
+In-Reply-To: <20260317165549.99ea4171d7672f83ec3b6fc4@kernel.org>
+References: <20260315122015.55965-1-objecting@objecting.org>
+	<20260315122015.55965-17-objecting@objecting.org>
+	<20260317165549.99ea4171d7672f83ec3b6fc4@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: q4naa7r4h8smubg9ay85gzeuy67rt9pi
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: C2A5C32
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19esOO1CQ86SjScBf8kLI4i6zt347Vj1WU=
+X-HE-Tag: 1773764081-444772
+X-HE-Meta: U2FsdGVkX1/0uWKQzLUepXKTDYbLaMav7qmOwrqsJTf6LkBXXCE1m3ZKY+AqUEEwgBEi1lyIrjh97fvGJkXfQxwhyc5K1kRdByyRL4C10GFkIUbfHjVDKA2qAs9iNI5JjgCaKN+8EKW5tqEJqsup08D7XA55UNqCf4mbC8ORIuJlerD5x0kholHnKabkc3x11jd9OHsV9jaTSzb98925OIh5r/3XQUFIqhVnMoV023uU6Opcalml26BdaGbIfvO2OUsa2Dp7vH6V1sudo66Dto4FQktGyNHKTrALA9FEiOuBjV0AfgZC2WiHV58ITxGGiqgy3e+xDOwgUe+QPx1ovTd0sgLECYbu
 
-xbc_calc_checksum() only reads the data buffer, so mark the parameter
-as const void * and the internal pointer as const unsigned char *.
+On Tue, 17 Mar 2026 16:55:49 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Josh Law <objecting@objecting.org>
----
- include/linux/bootconfig.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > --- a/lib/bootconfig.c
+> > +++ b/lib/bootconfig.c
+> > @@ -319,10 +319,10 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
+> >  			       depth ? "." : "");
+> >  		if (ret < 0)
+> >  			return ret;
+> > -		if (ret >= size) {
+> > +		if (ret >= (int)size) {  
+> 
+> nit:
+> 
+> 	if ((size_t)ret >= size) {
+> 
+> because sizeof(size_t) > sizeof(int).
 
-diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-index 25df9260d206..23a96c5edcf3 100644
---- a/include/linux/bootconfig.h
-+++ b/include/linux/bootconfig.h
-@@ -36,9 +36,9 @@ bool __init cmdline_has_extra_options(void);
-  * The checksum will be used with the BOOTCONFIG_MAGIC and the size for
-  * embedding the bootconfig in the initrd image.
-  */
--static inline __init uint32_t xbc_calc_checksum(void *data, uint32_t size)
-+static inline __init uint32_t xbc_calc_checksum(const void *data, uint32_t size)
- {
--	unsigned char *p = data;
-+	const unsigned char *p = data;
- 	uint32_t ret = 0;
- 
- 	while (size--)
--- 
-2.34.1
+I don't think we need to worry about this. But this does bring up an issue.
+ret comes from:
 
+		ret = snprintf(buf, size, "%s%s", xbc_node_get_data(node),
+			       depth ? "." : "");
+
+Where size is of type size_t
+
+snprintf() takes size_t but returns int.
+
+snprintf() calls vsnprintf() which has:
+
+	size_t len, pos;
+
+Where pos is incremented based on fmt, and vsnprintf() returns:
+
+	return pos;
+
+Which can overflow.
+
+Now, honestly, we should never have a 2Gig string as that would likely
+cause other horrible things. Does size really need to be size_t?
+
+Perhaps we should have:
+
+	if (WARN_ON_ONCE(size > MAX_INT))
+		return -EINVAL;
+
+?
+
+-- Steve
