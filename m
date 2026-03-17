@@ -1,101 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942F721257E;
-	Tue, 17 Mar 2026 00:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D80128314E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Mar 2026 03:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773708950; cv=none; b=QeXpToKiMpOyFLLCXU2EBHvw3TTTKvTX93OAWYApNRuvf6+biYt5Ru9NzlAZKGN7eUrUgLhm9OGYVdaihuTrc1bz4cPp7AVrUXCOR9pkbzeRc9Yd/mXqDDl0mfqUaNbhuxH9ntPX8qZA7tvObrWb/aleDbok32UXhvN4dLENKI4=
+	t=1773716719; cv=none; b=CDAKzE5xyGP0JNNdZvituD0vLhIYCcH6B5MWdnfDC1s8K615NyB/B0TiuJEa+C6I2UKGuliHouEp4n5nr2Q8m3E1CyEH3SaRMQq+wfvFrYs8S/ZuqaAit8St+YvnnrMLDVjCeyGHfoVjV6XpNFgVrZAhKKBW/voP97HtPuZCgZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773708950; c=relaxed/simple;
-	bh=sCqe2v24MOgFvbB2MaxHHdh/q91ZomR5Uy07iDyH84s=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mfXpAf5NsL9fdm6dkLdiNAJ+l3EExaA5ewqy42XKa4t2RGBUvd78XgAA3iHYdJXk5dEaVlIfNlv474k9H6D8niJc0TuwnWvYOg4DS7l4wzVgw0jXt3tc++Q8KONnrr6NTNGAHnlN/sClQmbLXbm5PviYGJ1Z5LgWQVdKazuGZlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o6VE6osQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773716719; c=relaxed/simple;
+	bh=Ifuig6/SDB2VvMYkgxQgcrzZfuhs0MKNNNS/qFY7+rg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=in18Na6ljJUtJKpQST2bi9mbfkzfSRKvu8r3DOQZTs6Gjp0fgeFnNsqDcpq5F2CXhaNnD1lnevMTG3gP5cFoL0i+WIYwNjrZmjjnU4dkIEYyRSyVNOop5bTE8d0dKbW56/WFzrYCiV2UZmq/C9aP2Ys03woQDCZC9Vtyo74pBqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jT+QJXHV; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o6VE6osQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68309C19421;
-	Tue, 17 Mar 2026 00:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773708950;
-	bh=sCqe2v24MOgFvbB2MaxHHdh/q91ZomR5Uy07iDyH84s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o6VE6osQ4SXDseWqCiMRzmYIup8fcl3ylKsz9G9CyQkrk8RJmo0GSlU89OQ1DirbM
-	 TOnzgOhzYzb6X27rRzNpr8MqjKWdtpmi8uZhxiUuba8eXqyy3adrG/DeqnupPxOZ8r
-	 6PDrozCVG4KLC1v10ImUJwAusdZobvWj/abl+nmDPMwL3UhNUcLYJ6HFvz8NHeE+L7
-	 6zg7dppbXqgvsu2U+Rah2xjlS+ID1Vi3Oy+Q/fv8skL6GkVNMyaw6C8M4q4QMGSUdF
-	 Fg7nxK0cCrBCjLm90zY8KRhqWv1ZeHLCttrNvInfczYDLh78mqpKMsb6MJPFNdrQUi
-	 iP0jx9nc07G1w==
-Date: Tue, 17 Mar 2026 09:55:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Josh Law <objecting@objecting.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt
- <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 14/17] lib/bootconfig: narrow offset type in
- xbc_init_node()
-Message-Id: <20260317095547.c245a7a21781766d29558c8a@kernel.org>
-In-Reply-To: <20260315122015.55965-15-objecting@objecting.org>
-References: <20260315122015.55965-1-objecting@objecting.org>
-	<20260315122015.55965-15-objecting@objecting.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jT+QJXHV"
+Message-ID: <39113fe0-2e9f-4f11-afe9-efb676a48149@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1773716705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3K8xqYYujevrwbpcWTaZzUPvFrMA65gfvrfVnV2ncmg=;
+	b=jT+QJXHV4cxl6Kcpmbw3P5yPL2XxyKvkRR7itBxHxO6fMxHySTppPMx2XCIu8xjqlyB00U
+	cCKx/7WMklGyLP9d9tp/CHxn9lIlXxuxJIsUXIBwg9d3gx4Suf3jq03gNbt1OOytGFBOSK
+	kQyM6/Scj+lMZHJdLyVSDBjDilwPuIc=
+Date: Tue, 17 Mar 2026 11:04:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Subject: Re: [PATCHv3 bpf-next 17/24] selftests/bpf: Add tracing multi
+ skel/pattern/ids attach tests
+Content-Language: en-US
+To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Martin KaFai Lau <kafai@fb.com>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+ Menglong Dong <menglong8.dong@gmail.com>, Steven Rostedt <rostedt@kernel.org>
+References: <20260316075138.465430-1-jolsa@kernel.org>
+ <20260316075138.465430-18-jolsa@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <20260316075138.465430-18-jolsa@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, 15 Mar 2026 12:20:12 +0000
-Josh Law <objecting@objecting.org> wrote:
-
->   lib/bootconfig.c:415:32: warning: conversion to 'long unsigned int'
->   from 'long int' may change the sign of the result [-Wsign-conversion]
+On 16/3/26 15:51, Jiri Olsa wrote:
+> Adding tests for tracing_multi link attachment via all possible
+> libbpf apis - skeleton, function pattern and btf ids.
 > 
-> Pointer subtraction yields ptrdiff_t (signed long), which was stored in
-> unsigned long.  The offset is immediately checked against XBC_DATA_MAX
-> (32767) and then truncated to uint16_t, so unsigned int is sufficient.
-> Add an explicit cast on the subtraction to suppress the sign-conversion
-> warning.
-> 
-> Signed-off-by: Josh Law <objecting@objecting.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  lib/bootconfig.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/testing/selftests/bpf/Makefile          |   3 +-
+>  .../selftests/bpf/prog_tests/tracing_multi.c  | 245 ++++++++++++++++++
+>  .../bpf/progs/tracing_multi_attach.c          |  40 +++
+>  .../selftests/bpf/progs/tracing_multi_check.c | 150 +++++++++++
+>  4 files changed, 437 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_attach.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_check.c
 > 
-> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> index 995c2ec94cbe..7296df003459 100644
-> --- a/lib/bootconfig.c
-> +++ b/lib/bootconfig.c
-> @@ -412,7 +412,7 @@ const char * __init xbc_node_find_next_key_value(struct xbc_node *root,
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+> index 869b582b1d1f..e09beba5674e 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -485,7 +485,7 @@ SKEL_BLACKLIST := btf__% test_pinning_invalid.c test_sk_assign.c
+>  LINKED_SKELS := test_static_linked.skel.h linked_funcs.skel.h		\
+>  		linked_vars.skel.h linked_maps.skel.h 			\
+>  		test_subskeleton.skel.h test_subskeleton_lib.skel.h	\
+> -		test_usdt.skel.h
+> +		test_usdt.skel.h tracing_multi.skel.h
 >  
->  static int __init xbc_init_node(struct xbc_node *node, char *data, uint16_t flag)
->  {
-> -	unsigned long offset = data - xbc_data;
-> +	unsigned int offset = (unsigned int)(data - xbc_data);
+>  LSKELS := fexit_sleep.c trace_printk.c trace_vprintk.c map_ptr_kern.c 	\
+>  	core_kern.c core_kern_overflow.c test_ringbuf.c			\
+> @@ -511,6 +511,7 @@ test_usdt.skel.h-deps := test_usdt.bpf.o test_usdt_multispec.bpf.o
+>  xsk_xdp_progs.skel.h-deps := xsk_xdp_progs.bpf.o
+>  xdp_hw_metadata.skel.h-deps := xdp_hw_metadata.bpf.o
+>  xdp_features.skel.h-deps := xdp_features.bpf.o
+> +tracing_multi.skel.h-deps := tracing_multi_attach.bpf.o tracing_multi_check.bpf.o
 >  
->  	if (WARN_ON(offset >= XBC_DATA_MAX))
+>  LINKED_BPF_OBJS := $(foreach skel,$(LINKED_SKELS),$($(skel)-deps))
+>  LINKED_BPF_SRCS := $(patsubst %.bpf.o,%.c,$(LINKED_BPF_OBJS))
+> diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> new file mode 100644
+> index 000000000000..cebf4eb68f18
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> @@ -0,0 +1,245 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <test_progs.h>
+> +#include <bpf/btf.h>
+> +#include <search.h>
+> +#include "bpf/libbpf_internal.h"
+> +#include "tracing_multi.skel.h"
+> +#include "trace_helpers.h"
+> +
+> +static const char * const bpf_fentry_test[] = {
+> +	"bpf_fentry_test1",
+> +	"bpf_fentry_test2",
+> +	"bpf_fentry_test3",
+> +	"bpf_fentry_test4",
+> +	"bpf_fentry_test5",
+> +	"bpf_fentry_test6",
+> +	"bpf_fentry_test7",
+> +	"bpf_fentry_test8",
+> +	"bpf_fentry_test9",
+> +	"bpf_fentry_test10",
+> +};
+> +
+> +#define FUNCS_CNT (ARRAY_SIZE(bpf_fentry_test))
+> +
+> +static int compare(const void *ppa, const void *ppb)
+> +{
+> +	const char *pa = *(const char **) ppa;
+> +	const char *pb = *(const char **) ppb;
+> +
+> +	return strcmp(pa, pb);
+> +}
+> +
+> +static __u32 *get_ids(const char * const funcs[], int funcs_cnt, const char *mod)
+> +{
+> +	struct btf *btf, *vmlinux_btf;
+> +	__u32 nr, type_id, cnt = 0;
+> +	void *root = NULL;
+> +	__u32 *ids = NULL;
+> +	int i, err = 0;
+> +
+> +	btf = btf__load_vmlinux_btf();
+> +	if (!ASSERT_OK_PTR(btf, "btf__load_vmlinux_btf"))
+> +		return NULL;
+> +
+> +	if (mod) {
+> +		vmlinux_btf = btf;
+> +		btf = btf__load_module_btf(mod, vmlinux_btf);
+> +		if (!ASSERT_OK_PTR(btf, "btf__load_module_btf"))
+> +			return NULL;
+                        ^ vmlinux_btf does not get released.
 
-OK, then this can be changed to
+> +	}
+> +
+> +	ids = calloc(funcs_cnt, sizeof(ids[0]));
+> +	if (!ids)
+> +		goto out;
+> +
+> +	/*
+> +	 * We sort function names by name and search them
+> +	 * below for each function.
+> +	 */
+> +	for (i = 0; i < funcs_cnt; i++)
+> +		tsearch(&funcs[i], &root, compare);
+                ^ tdestroy() is missing to free tree nodes?
 
-	long offset = data - xbc_data;
+Thanks,
+Leon
 
-	if (WARN_ON(offset < 0 || offset >= XBC_DATA_MAX))
+[...]
 
-The original code is to handle data < xbc_data case (in that
-case, the offset is over LONG_MAX, so offset >= XBC_DATA_MAX
-is also true.) Note that this is for catching broken pointer
-to find program bug (WARN_ON is used for such case).
-
-Thank you,
-
->  		return -EINVAL;
-> -- 
-> 2.34.1
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
