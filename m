@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C302F32B989;
-	Mon, 16 Mar 2026 23:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942F721257E;
+	Tue, 17 Mar 2026 00:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773705464; cv=none; b=ZHNe24eehk042vAvG5FfVa+YfMIySdb3AxXZB8Sg/oiLHHQ1IRQOWNwKsGhVEoIhASj83XPGoRwiQZrAKeboIA0BTZEt2AIg9emjUq3gCVhM6utQA3sM62I/hl8OvjO+m4Bhq2gJaTZA5U1WfzAJXIgWqZYLKNr0tE3WxLx7lfI=
+	t=1773708950; cv=none; b=QeXpToKiMpOyFLLCXU2EBHvw3TTTKvTX93OAWYApNRuvf6+biYt5Ru9NzlAZKGN7eUrUgLhm9OGYVdaihuTrc1bz4cPp7AVrUXCOR9pkbzeRc9Yd/mXqDDl0mfqUaNbhuxH9ntPX8qZA7tvObrWb/aleDbok32UXhvN4dLENKI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773705464; c=relaxed/simple;
-	bh=1NmvH8pmQ8q9dCzOzOTTeLRQgMfsAKAnu6U9VRGjDSU=;
+	s=arc-20240116; t=1773708950; c=relaxed/simple;
+	bh=sCqe2v24MOgFvbB2MaxHHdh/q91ZomR5Uy07iDyH84s=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fgClMFZpq66pIBitzzCclMVgePNUJhgGfYCFRlH7pWGceAxf3UTqIkBIVtPnJBayWIYe3eTFPOHiKpDd/nTd0wzBbcm4z6m6B2utWzmMBMXMb7n6aA/CIkjHuzk2g3reRQI4F4p7XgfgG8AxOQuZo9MJidnldbiAAhJrwNachio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gwj6ae65; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=mfXpAf5NsL9fdm6dkLdiNAJ+l3EExaA5ewqy42XKa4t2RGBUvd78XgAA3iHYdJXk5dEaVlIfNlv474k9H6D8niJc0TuwnWvYOg4DS7l4wzVgw0jXt3tc++Q8KONnrr6NTNGAHnlN/sClQmbLXbm5PviYGJ1Z5LgWQVdKazuGZlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o6VE6osQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gwj6ae65"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B42FC19421;
-	Mon, 16 Mar 2026 23:57:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o6VE6osQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68309C19421;
+	Tue, 17 Mar 2026 00:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773705464;
-	bh=1NmvH8pmQ8q9dCzOzOTTeLRQgMfsAKAnu6U9VRGjDSU=;
+	s=k20201202; t=1773708950;
+	bh=sCqe2v24MOgFvbB2MaxHHdh/q91ZomR5Uy07iDyH84s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Gwj6ae65CX1JQBjOj3AWqQUmY9pfIvLTikmONEJcbfX9GYCVB9VtIXRGpz4RlMNfj
-	 IoAMKGhphtnTeR7CdCzIc6w1ZYnLML0xl9lKeADoo6RTA7Qg45YEMgtqByNJAM4n9c
-	 VIx9An4q1rQX6dy8JBs+7qhHNE7vQ+TTmsBxIoqNerSLlu48PcEoBc6qbKgyLbPLyp
-	 cJCBAt4NTUa450jxGk4GLVExLmNiaZaNqz7U175HqpWpW31Xi3n46RK+HJaz4SrnxF
-	 /E6X32dFxQcQUc3L3Sp2WhXEoOGB3SDQSdbL+ywWeX7MmjCVlqB+yKQUp57Tb/tk/6
-	 6HWb12KLx6/fQ==
-Date: Tue, 17 Mar 2026 08:57:41 +0900
+	b=o6VE6osQ4SXDseWqCiMRzmYIup8fcl3ylKsz9G9CyQkrk8RJmo0GSlU89OQ1DirbM
+	 TOnzgOhzYzb6X27rRzNpr8MqjKWdtpmi8uZhxiUuba8eXqyy3adrG/DeqnupPxOZ8r
+	 6PDrozCVG4KLC1v10ImUJwAusdZobvWj/abl+nmDPMwL3UhNUcLYJ6HFvz8NHeE+L7
+	 6zg7dppbXqgvsu2U+Rah2xjlS+ID1Vi3Oy+Q/fv8skL6GkVNMyaw6C8M4q4QMGSUdF
+	 Fg7nxK0cCrBCjLm90zY8KRhqWv1ZeHLCttrNvInfczYDLh78mqpKMsb6MJPFNdrQUi
+	 iP0jx9nc07G1w==
+Date: Tue, 17 Mar 2026 09:55:47 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Josh Law <objecting@objecting.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt
  <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 12/17] lib/bootconfig: fix signed comparison in
- xbc_node_get_data()
-Message-Id: <20260317085741.7ba7d7464cee2c905193fa08@kernel.org>
-In-Reply-To: <20260315122015.55965-13-objecting@objecting.org>
+Subject: Re: [PATCH v6 14/17] lib/bootconfig: narrow offset type in
+ xbc_init_node()
+Message-Id: <20260317095547.c245a7a21781766d29558c8a@kernel.org>
+In-Reply-To: <20260315122015.55965-15-objecting@objecting.org>
 References: <20260315122015.55965-1-objecting@objecting.org>
-	<20260315122015.55965-13-objecting@objecting.org>
+	<20260315122015.55965-15-objecting@objecting.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,24 +48,17 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 15 Mar 2026 12:20:10 +0000
+On Sun, 15 Mar 2026 12:20:12 +0000
 Josh Law <objecting@objecting.org> wrote:
 
->   lib/bootconfig.c:188:28: warning: comparison of integer expressions
->   of different signedness: 'int' and 'size_t' [-Wsign-compare]
+>   lib/bootconfig.c:415:32: warning: conversion to 'long unsigned int'
+>   from 'long int' may change the sign of the result [-Wsign-conversion]
 > 
-> The local variable 'offset' is declared as int, but xbc_data_size is
-> size_t.  Using ~XBC_VALUE as the mask also involves integer promotion
-> rules that obscure intent.
-> 
-> Change the type to unsigned int and mask with XBC_DATA_MAX (which is
-> the 15-bit data mask) instead of ~XBC_VALUE, making the expression
-> self-documenting and eliminating the signed/unsigned comparison.
-
-Please follow the warning message and use size_t instead.
-
-Thanks,
-
+> Pointer subtraction yields ptrdiff_t (signed long), which was stored in
+> unsigned long.  The offset is immediately checked against XBC_DATA_MAX
+> (32767) and then truncated to uint16_t, so unsigned int is sufficient.
+> Add an explicit cast on the subtraction to suppress the sign-conversion
+> warning.
 > 
 > Signed-off-by: Josh Law <objecting@objecting.org>
 > ---
@@ -73,21 +66,34 @@ Thanks,
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> index 182d9d9bc5a6..806a8f038d24 100644
+> index 995c2ec94cbe..7296df003459 100644
 > --- a/lib/bootconfig.c
 > +++ b/lib/bootconfig.c
-> @@ -183,7 +183,7 @@ struct xbc_node * __init xbc_node_get_next(struct xbc_node *node)
->   */
->  const char * __init xbc_node_get_data(struct xbc_node *node)
->  {
-> -	int offset = node->data & ~XBC_VALUE;
-> +	unsigned int offset = node->data & XBC_DATA_MAX;
+> @@ -412,7 +412,7 @@ const char * __init xbc_node_find_next_key_value(struct xbc_node *root,
 >  
->  	if (WARN_ON(offset >= xbc_data_size))
->  		return NULL;
+>  static int __init xbc_init_node(struct xbc_node *node, char *data, uint16_t flag)
+>  {
+> -	unsigned long offset = data - xbc_data;
+> +	unsigned int offset = (unsigned int)(data - xbc_data);
+>  
+>  	if (WARN_ON(offset >= XBC_DATA_MAX))
+
+OK, then this can be changed to
+
+	long offset = data - xbc_data;
+
+	if (WARN_ON(offset < 0 || offset >= XBC_DATA_MAX))
+
+The original code is to handle data < xbc_data case (in that
+case, the offset is over LONG_MAX, so offset >= XBC_DATA_MAX
+is also true.) Note that this is for catching broken pointer
+to find program bug (WARN_ON is used for such case).
+
+Thank you,
+
+>  		return -EINVAL;
 > -- 
 > 2.34.1
-> 
 > 
 
 
