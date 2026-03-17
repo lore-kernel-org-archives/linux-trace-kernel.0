@@ -1,93 +1,130 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0122C11CD;
-	Tue, 17 Mar 2026 17:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6093B2DF132
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Mar 2026 17:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773767829; cv=none; b=OQRiaorFmpUNsCdRFW8gcySBXJIup5SmeN8lcUBJs7qmmPRW/3kqOZzgCdsGlM3+SPvf8aOgflr90hifijoqFY0xl8aHmQult3sjA4pLDjJrFPVE/gDo27L7yQwIIrn3ZXNIn/r1wXA3jXcy2tRlwmyR+7SecWWoYjfiijlZ9V4=
+	t=1773767917; cv=none; b=iggUHvanHA1BaozSHD54Q7VVeaLeDWSuJMtNw8JT00Y+jmRyKemMOsakjeETPFsUEQwoLh12H24f7p+gGoHCySXjNcCVd7SmwLvZ+4RtldbWonxzO4bNn4lKnq1IZWdAJgvDGbYHEENxy//z8wWJ93poo7Cnbh7MwfwIukirAyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773767829; c=relaxed/simple;
-	bh=pTeY+fLcN95htFrNGBHt7vym3xXoDgwY6cA1oE5cXLo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ACTObsNWr55nXzM3c8US85kz6XMKTSh7d3Ui9LVkzBsivJbMtbDaK5sQBX/mn81iM70mX4rIS0vwPkpTIo50V0zWlzVjYgGVGHce3iI1Lz2QdmUdGIVP2nPWoYt5k/pfTNljHWYt0p6iwHq6AgPTWVuySPJLfYl7oM+WTNGW6sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fW3gcGAV; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1773767917; c=relaxed/simple;
+	bh=JxFonNn25E7MJwXH2RFIoMLNotu2AvqxFyJi6Ff2fgI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eeAe/yXv7HDM0pISSceJIhp8VKB+vRs3HZFKl3O+KpiyfFJ24JQwlD4pplai2yJU5vwmpQuO3aDNGO5reiD4+cukcQNgerTGpUqa+TdJKe3Z5dELPg0LKFwbXGbgp50smorNy8K4aHU7DYYHh4CSA+AHiEyBKmBxPcH8thRtHMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GtVXtJU0; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fW3gcGAV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=v7UGPDzTUVntWZ7B9duUilqk99yTEBA4ZZT8dgC32yk=; b=fW3gcGAVDEtTMh6YEqK00To3LE
-	E4vX2+ido/HbsOQoVJFpyOQG8MkuNFk/E6SWu3xt9EJNv1VepyJPxAoDpYU+4gwA1lqENuoyxQQUU
-	BxZlVyhx5jFqLEXJ4Blo1OEIeYj2mqnPp+tV4oOx8nM/SJ2OjN4XpA50/D1CYXVMAiqxcwljSrxtj
-	aII+ZZGMUiAwqiO5CvsUoVN7Sfu+W2aZAZ1fGEGZt1XszUbplnT20qOWZO8cCD6zxGWS4ip6rIbs/
-	TWmv/FFAmxU0V1/pmR8qpoj7Yta4qbnAGkCr3hDqeg8YIH9UdboGs6mLJ1e+DN2Biah/oGmGRLT8U
-	XYWItKbg==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2Y2R-00000006urx-0KUn;
-	Tue, 17 Mar 2026 17:17:03 +0000
-Message-ID: <68072e04-49e6-4418-a465-6a70dbb01f13@infradead.org>
-Date: Tue, 17 Mar 2026 10:16:59 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtVXtJU0"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8cb3bae8d3eso604449485a.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Mar 2026 10:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773767915; x=1774372715; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zbEuxmyWYaI0lRAPrAH38Js2gsSq0wb5jUj0cHJDWRM=;
+        b=GtVXtJU06eDqriix1TXQBUzsP1Cr27ZomOZ5nMwQ4qfpLiDxWmkAQ3NnADKEFiDqkC
+         Ahb0dx4lsCtw33CRVjfLHpkR23h4O+o9CBfhJh5d9JWJQuuqoWOH0yVfgoT8y9yE6/6G
+         /tgsaZgSsP1rXjMU3yLEg/XVIwjsLj507d9mIQ4AYpoc2xNSHVTRzJIOwJCvWAsN9We8
+         +/Hs0wBm4BvFqE/xLkuh78C5gbZjBVGQzTeUmWD7PCYOvd2DH3OHA9tCh4e5Sw3c0+de
+         cbyNAYeQrjRmMunNd4grmsIUHvlF3mZuRy1fM0KsHzjEK2uDnMk3EiLYqXjBvyaa2nsD
+         VTqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773767915; x=1774372715;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zbEuxmyWYaI0lRAPrAH38Js2gsSq0wb5jUj0cHJDWRM=;
+        b=ApWSe0KRmzujU0masMO4/DHFkxtet7McXY5wfOQP05O6WwXN2bfnvPANnI6mK7XLri
+         v1QZbjZDsC/hml7TrYzf1AGs5aNHbomexq7VYwvCJNoe9AOM2m6lff8iwzExXRoAE1ym
+         hsZmHcTZt5/mA0gHibhYzgkzMf4+83gVdcM9yz/gV33kV5aswMNNRuBIuKa+JFNh49Eg
+         adO4lJbRrdE05C1Vb9ShPrMtAbALtncZHx+kUvxNLuMgllaLFb8v6Ui70GY/qKOE0+jM
+         vbk/vF7vSxJz6jRRuEK4LuOEImtiQW9O5da7aVbQNqjXfX7Q5rVxXgeIAEMhufmKt7H+
+         Euzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTru2enpcAAcWL+kWJ5L4Kbjyp2vtMlte3+tDYUbIl7n03gLYBC+IRB5zB/XVEUNYGWk7sUv7Hy3dM9wnstczRGHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLCu460Eyw6xdGjqe/NNc76zyCG3BQuOtVl7FYJytroOSQ/7KU
+	wAelP/d9Hhck8928w8i+IewE1Fz3CkeK8F0f3JOQ24Zquw20bUZ/vb8D
+X-Gm-Gg: ATEYQzzSVz+I/4V5v9enQRAKAtXG+7ZRwAp5xC9dusLnz9fAgHTHq/B7GMWMdS7bmVJ
+	iXQelQiQJtx3GrPxrp0iAlm4V2B7+k+sVWQBRxHihB2AvHxAy1NVbp8sMKubDUrc/DAFJVYdmQ0
+	zMl1Ba1Fkdq0sCuS8svQ5ro2kkJl7/fQPFUQnGcEqxae5fOUpBiDcx1i5TOjdaruLv+9jd77bsi
+	rtGuFvShAlC0IsiaJMo0AiHQcOdnmm9eqltXCcmBvwoc3ROdr18EFedwx6HcB9X2ma0Djl1Qvbj
+	WRPgK/FlpvoHwh5RV4kozkO/b+6wCENpWkK9Hs43Chgqm1+o0yXrvzjHfn/JLQB7pYbDKYNG+0D
+	9JtNeOa77LWbP4zUhfPX8gDN9+823p401/uCzGKtIWMvotWe8Qw+RKCNI/mDr1D6B9FYKkfvt2M
+	QINNdKuPqC9r4v58zMovDA3Q==
+X-Received: by 2002:a05:622a:146:b0:509:2222:4202 with SMTP id d75a77b69052e-50b149046demr408331cf.71.1773767914098;
+        Tue, 17 Mar 2026 10:18:34 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50b13489f93sm4913381cf.4.2026.03.17.10.18.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2026 10:18:33 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 17 Mar 2026 18:18:29 +0100
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Steven Rostedt <rostedt@kernel.org>
+Subject: Re: [PATCHv3 bpf-next 17/24] selftests/bpf: Add tracing multi
+ skel/pattern/ids attach tests
+Message-ID: <abmM5csLgQiQz3Xa@krava>
+References: <20260316075138.465430-1-jolsa@kernel.org>
+ <20260316075138.465430-18-jolsa@kernel.org>
+ <39113fe0-2e9f-4f11-afe9-efb676a48149@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v15 05/13] mm/khugepaged: generalize
- collapse_huge_page for mTHP collapse
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
- Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
- gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz,
- jackmanb@google.com, jannh@google.com, jglisse@google.com,
- joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, richard.weiyang@gmail.com,
- rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org,
- ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com,
- surenb@google.com, thomas.hellstrom@linux.intel.com, tiwai@suse.de,
- usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com,
- wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org,
- yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com,
- zokeefe@google.com
-References: <20260226031741.230674-1-npache@redhat.com>
- <20260226032427.233282-1-npache@redhat.com>
- <9f0b8790-eace-4caa-a0c0-45f66285887f@lucifer.local>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <9f0b8790-eace-4caa-a0c0-45f66285887f@lucifer.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39113fe0-2e9f-4f11-afe9-efb676a48149@linux.dev>
 
+On Tue, Mar 17, 2026 at 11:04:57AM +0800, Leon Hwang wrote:
 
+SNIP
 
-On 3/17/26 9:51 AM, Lorenzo Stoakes (Oracle) wrote:
-> On Wed, Feb 25, 2026 at 08:24:27PM -0700, Nico Pache wrote:
->> Pass an order and offset to collapse_huge_page to support collapsing anon
->> memory to arbitrary orders within a PMD. order indicates what mTHP size we
->> are attempting to collapse to, and offset indicates were in the PMD to
->> start the collapse attempt.
->>
->> For non-PMD collapse we must leave the anon VMA write locked until after
->> we collapse the mTHP-- in the PMD case all the pages are isolated, but in
-> The '--' seems weird here 🙂 maybe meant to be ' - '?
+> > +static __u32 *get_ids(const char * const funcs[], int funcs_cnt, const char *mod)
+> > +{
+> > +	struct btf *btf, *vmlinux_btf;
+> > +	__u32 nr, type_id, cnt = 0;
+> > +	void *root = NULL;
+> > +	__u32 *ids = NULL;
+> > +	int i, err = 0;
+> > +
+> > +	btf = btf__load_vmlinux_btf();
+> > +	if (!ASSERT_OK_PTR(btf, "btf__load_vmlinux_btf"))
+> > +		return NULL;
+> > +
+> > +	if (mod) {
+> > +		vmlinux_btf = btf;
+> > +		btf = btf__load_module_btf(mod, vmlinux_btf);
+> > +		if (!ASSERT_OK_PTR(btf, "btf__load_module_btf"))
+> > +			return NULL;
+>                         ^ vmlinux_btf does not get released.
 
-"--" is common typewriter(!) style for "dash".
-Single "-" is a hyphen.
+right, needs to be 'goto out'
 
--- 
-~Randy
+> 
+> > +	}
+> > +
+> > +	ids = calloc(funcs_cnt, sizeof(ids[0]));
+> > +	if (!ids)
+> > +		goto out;
+> > +
+> > +	/*
+> > +	 * We sort function names by name and search them
+> > +	 * below for each function.
+> > +	 */
+> > +	for (i = 0; i < funcs_cnt; i++)
+> > +		tsearch(&funcs[i], &root, compare);
+>                 ^ tdestroy() is missing to free tree nodes?
 
+right, will add, thanks
+
+jirka
