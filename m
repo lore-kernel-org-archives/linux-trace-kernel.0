@@ -1,40 +1,39 @@
 Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F883E8662;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4859533120C;
 	Wed, 18 Mar 2026 15:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773849575; cv=pass; b=Ggm/+ltEKBXCUS4uyyzeVkRqgnvoGEGCBsyDwQ2s1RvKzYQMPJUdwVF5n6vcQe3syptfmwX9On4wEnKMJgGsreA8Nqn5uZfmXMKWFrbhaqKr2TgKn0BJYcalkd1pTLIrKCVlm8dCzC4nUr8BBKGMhtgtcSHfoGyJvJzEkF5uuDE=
+	t=1773849575; cv=pass; b=M6sYr3orX+6BWSewS2osqDnAVGKUJTOWo6vIkEg7t1zam8gzMr4E9hdrAUlAAEJOkLpkDW2H99M1cxMhXZV0WuCpWcg9GDe6+sgkPkprcfYFHxY4o6vPxOJcb9sAYz5dn7BeoA+5ZTd1XjqCbFLga7sEVfso3LjIRzkZgHsIG3E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773849575; c=relaxed/simple;
-	bh=wv78ftcSG/DocPbKu+mkVk4aNLSvNs5rs+zIciiAp0Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fyWji/SUgWbbugkDgGzmkC1LsfXoabDJdE+T1UCzbNWME9xbrsVS7V5eQfl1Owe8RRbK7ieGAVTQS9HIdYA6+J8wvmaK4ADIilJdSbe5hy87rUyoQmvFeTsA2SP9K6c+/Z2Uxic72uKQRWZ/0rX5RgSqzbzufCHrFfFhfiIYka0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=e4fBSA+h; arc=pass smtp.client-ip=136.143.169.55
+	bh=qRNFjJS/5sa9mTjqJSCQhAmPsrz8/MNtCZkXa8WajGQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sBHppWSB6REXMl8GEvZSRKBIILpxOKcYbpE4i6Ako7xwUwliuhEpZTi5HwRtJuYGU/PMMRKwNowTzno8vqamm9O5/eX9B2W49dIhQHVHotQrukGuDMjLrhoOQ9SdCW0xioVnz54I2vPPRShLKopSUhzbFDXyGSTqJbss0WxHVBU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=So6xn4Zk; arc=pass smtp.client-ip=136.143.169.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="e4fBSA+h"
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="So6xn4Zk"
 ARC-Seal: i=1; a=rsa-sha256; t=1773849561; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=Dnds9mgZjafeGxV/D/g4K5Wdlp1EyvmMz+yfU7ksNz0yadXK1zA/jT3D0PDosqpln4vpP0e+l1YktmRG+WgjOSNVzbzMfNxx81aKU/KMjV2vOPlmNxo2Mzrci7B4RaL5Nyet+5PXV4M/vtin0BGGcf1KWLuavxIhYDW354EhBX0=
+	b=GnxFhs9bPR8qV22ja4ZhsgAx63gTi2DoojUpcADgno9WWMyI61h/VYfUdvNmYDfAcYWnO8UpI4Eml1tBTE9mvdDiTlN4WcWpJFYn4JFGZf1jnKldcOau73dIzO7bZHaQ8U4eD2NmcRsVbd+bgLlZHIpZ1RZF5hIDiPFlnDxX2bE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773849561; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=G9gVzURcM86LqCKwgrK/9/RXrE3VSY5wkHPGGwsPo4M=; 
-	b=Dll3SjMmtmDosZ8MYFa5NTe1UTLQ5i/ovUYCeh27W7pB47CQgce6Cq3+gizRrxX8s3bFcEsyQ+2W8j5FRzY/j0xai2m0a6yWyQpFinDPtN8hrOggN/BlotXYT2kV2g47yv8TivlmecjzluAVpq0gg8bYCb+G6aXuKM2Z4Z8RkdY=
+	t=1773849561; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kQXauh2o5o5CBIrqPPj630zAvi0I6udapAZ7KPX8akg=; 
+	b=afFdbDFy13ODdq5gm39URQKlUz0a0ozDoM7WyMtG/AirCazwD5ONdV51ReH9XXLrZ668rHsKpP4eLpJweFuivfkcNi9crCepBeOJECqIVGIKleJYhAPKM9SOaUob20WFE+Byacf2lzJQ6LccwyF8KDNzliT8o3yxuMzLSor2udk=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773849561;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=G9gVzURcM86LqCKwgrK/9/RXrE3VSY5wkHPGGwsPo4M=;
-	b=e4fBSA+hwD0U1vBe5xvfTRFGLIz+FfLlYhigwgBHjcptkRN3Lrf1ma4C0jtM6CTR
-	wvroHJ9N03Y9Pzb/F/75E0h5WLV4kTGm0Ogl/K+uXX7TS0dCwAjHn47QuVX4WSsovsf
-	dhHYM1bdQfP0el4OBSHWAUdrEYWWWyobntI4nIvo=
-Received: by mx.zoho.eu with SMTPS id 1773849560627902.4012698322563;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=kQXauh2o5o5CBIrqPPj630zAvi0I6udapAZ7KPX8akg=;
+	b=So6xn4ZkTemNILHWRr9K7uH/qVeavJmvwqvYpcNezxIOXdQ9fzhFPEXwiDSCD5Mw
+	g0Vm96vys7FV24qjuDothDvantcE3b53LE+sWwIG7zYiqDCqdo/RgD7DZDJ6HboM5r8
+	8ZNcYa7EQljrZJVU9H+I0wXRQY+dW5h8jLMTSbtk=
+Received: by mx.zoho.eu with SMTPS id 1773849560087797.4970366547406;
 	Wed, 18 Mar 2026 16:59:20 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -42,12 +41,10 @@ To: Masami Hiramatsu <mhiramat@kernel.org>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Josh Law <objecting@objecting.org>
-Subject: [PATCH v8 01/13] lib/bootconfig: clean up comment typos and bracing
-Date: Wed, 18 Mar 2026 15:59:07 +0000
-Message-Id: <20260318155919.78168-2-objecting@objecting.org>
+Subject: [PATCH v8 00/13] bootconfig: cleanups, correctness, and modernization
+Date: Wed, 18 Mar 2026 15:59:06 +0000
+Message-Id: <20260318155919.78168-1-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260318155919.78168-1-objecting@objecting.org>
-References: <20260318155919.78168-1-objecting@objecting.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,90 +54,81 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Fixes kerneldoc typos ("initiized" and "uder") and adds a missing blank line.
-Also fixes inconsistent if/else bracing in __xbc_add_key() and elsewhere.
+This series addresses a collection of issues found during a review of
+lib/bootconfig.c, include/linux/bootconfig.h, and tools/bootconfig,
+covering off-by-one errors, coding style, signedness/type cleanup, and
+API modernization.
 
-Signed-off-by: Josh Law <objecting@objecting.org>
----
- lib/bootconfig.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+The two patches with Fixes tags (xbc_init_node() override check and
+load_xbc_file() fd leak) have been split into a separate series for
+bootconfig/fixes per Masami's request.
 
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index b0ef1e74e98a..d77b6533ac00 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -79,6 +79,7 @@ static inline void xbc_free_mem(void *addr, size_t size, bool early)
- 	free(addr);
- }
- #endif
-+
- /**
-  * xbc_get_info() - Get the information of loaded boot config
-  * @node_size: A pointer to store the number of nodes.
-@@ -112,7 +113,7 @@ static int __init xbc_parse_error(const char *msg, const char *p)
-  * xbc_root_node() - Get the root node of extended boot config
-  *
-  * Return the address of root node of extended boot config. If the
-- * extended boot config is not initiized, return NULL.
-+ * extended boot config is not initialized, return NULL.
-  */
- struct xbc_node * __init xbc_root_node(void)
- {
-@@ -364,7 +365,7 @@ struct xbc_node * __init xbc_node_find_next_leaf(struct xbc_node *root,
- 			node = xbc_node_get_parent(node);
- 			if (node == root)
- 				return NULL;
--			/* User passed a node which is not uder parent */
-+			/* User passed a node which is not under parent */
- 			if (WARN_ON(!node))
- 				return NULL;
- 		}
-@@ -472,8 +473,9 @@ static struct xbc_node * __init __xbc_add_sibling(char *data, uint32_t flag, boo
- 				sib->next = xbc_node_index(node);
- 			}
- 		}
--	} else
-+	} else {
- 		xbc_parse_error("Too many nodes", data);
-+	}
- 
- 	return node;
- }
-@@ -655,9 +657,9 @@ static int __init __xbc_add_key(char *k)
- 	if (unlikely(xbc_node_num == 0))
- 		goto add_node;
- 
--	if (!last_parent)	/* the first level */
-+	if (!last_parent) {	/* the first level */
- 		node = find_match_node(xbc_nodes, k);
--	else {
-+	} else {
- 		child = xbc_node_get_child(last_parent);
- 		/* Since the value node is the first child, skip it. */
- 		if (child && xbc_node_is_value(child))
-@@ -665,9 +667,9 @@ static int __init __xbc_add_key(char *k)
- 		node = find_match_node(child, k);
- 	}
- 
--	if (node)
-+	if (node) {
- 		last_parent = node;
--	else {
-+	} else {
- add_node:
- 		node = xbc_add_child(k, XBC_KEY);
- 		if (!node)
-@@ -991,8 +993,9 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
- 		if (emsg)
- 			*emsg = xbc_err_msg;
- 		_xbc_exit(true);
--	} else
-+	} else {
- 		ret = xbc_node_num;
-+	}
- 
- 	return ret;
- }
--- 
+Changes since v7:
+  - Split fixes from cleanups/improvements into separate series per
+    maintainer request, so fixes can go into bootconfig/fixes and the
+    rest (this series) into bootconfig/for-next.
+
+Bug fixes:
+  - Fix off-by-one in xbc_verify_tree() where a next-node index equal
+    to xbc_node_num passes the bounds check despite being out of range;
+    a malformed bootconfig could cause an out-of-bounds read of kernel
+    memory during tree traversal at boot time (patch 3).
+  - Move xbc_node_num increment to after xbc_init_node() validation so
+    a failed init does not leave a partially initialized node counted
+    in the array; on a maximum-size bootconfig, the uninitialized node
+    could be traversed leading to unpredictable boot behavior (patch 4).
+  - Validate child node indices in xbc_verify_tree() alongside the
+    existing next-node check; without this, a corrupt bootconfig could
+    trigger an out-of-bounds memory access via an invalid child index
+    during tree traversal (patch 8).
+
+Correctness:
+  - Narrow the flag parameter in node creation helpers from uint32_t to
+    uint16_t to match the xbc_node.data field width (patch 2).
+  - Constify the xbc_calc_checksum() data parameter since it only reads
+    the buffer (patch 6).
+  - Fix strict-GCC signedness and narrowing warnings by aligning local
+    types with strlen() APIs and the node index/data storage in
+    xbc_node_get_data(), xbc_node_match_prefix(), xbc_init_node(),
+    xbc_verify_tree(), and xbc_node_index() (patches 9-13).
+
+Cleanups:
+  - Fix comment typos, missing blank line before kerneldoc, and
+    inconsistent if/else bracing (patch 1).
+  - Drop redundant memset after memblock_alloc which already returns
+    zeroed memory; switch the userspace path from malloc to calloc to
+    match (patch 5).
+
+Modernization:
+  - Replace the catch-all linux/kernel.h include with the specific
+    headers needed: linux/cache.h, linux/compiler.h, and
+    linux/sprintf.h (patch 7).
+
+Build-tested with both the in-kernel build (lib/bootconfig.o,
+init/main.o) and the userspace tools/bootconfig build. All 70
+tools/bootconfig test cases pass.
+
+Josh Law (13):
+  lib/bootconfig: clean up comment typos and bracing
+  lib/bootconfig: narrow flag parameter type from uint32_t to uint16_t
+  lib/bootconfig: fix off-by-one in xbc_verify_tree() next node check
+  lib/bootconfig: increment xbc_node_num after node init succeeds
+  lib/bootconfig: drop redundant memset of xbc_nodes
+  bootconfig: constify xbc_calc_checksum() data parameter
+  lib/bootconfig: replace linux/kernel.h with specific includes
+  lib/bootconfig: validate child node index in xbc_verify_tree()
+  lib/bootconfig: fix signed comparison in xbc_node_get_data()
+  lib/bootconfig: use size_t for strlen result in
+    xbc_node_match_prefix()
+  lib/bootconfig: use signed type for offset in xbc_init_node()
+  lib/bootconfig: use size_t for key length tracking in
+    xbc_verify_tree()
+  lib/bootconfig: change xbc_node_index() return type to uint16_t
+
+ include/linux/bootconfig.h |  6 ++--
+ lib/bootconfig.c           | 62 ++++++++++++++++++++++----------------
+ 2 files changed, 39 insertions(+), 29 deletions(-)
+
+--
 2.34.1
 
