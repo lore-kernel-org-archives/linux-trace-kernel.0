@@ -1,50 +1,50 @@
 Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF77407106;
-	Wed, 18 Mar 2026 15:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8B03F20E8;
+	Wed, 18 Mar 2026 15:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773849583; cv=pass; b=jTblWM+BE5qtlxhT+tK69saRUuxH3FqmkGGIcc4kd6JWuObyVW/j2VvxXklMNPfz4CVXM5sjUp98aFd6IyoIdjEPwHM2dZRoh72IDWUrjQFO3Fw1NflxNdFVpHFodVF/hQ0VC3CRAwIuRbq2YsUMoKmBEG7Y/IO82M2O3+utnds=
+	t=1773849585; cv=pass; b=JU7mJKAHaOaqKHPZkxAMFaSTa7HGQtYeUpRzKYimKWx0NURkEfh3EOCG/EtJr2/TKfQV4+scPOcGRR/ueq5sEajOZFMmZqyR13vl9wTEAhGgNmFjQbCKvp9lt7P+2bA+eLfIwP7wHMSY/cb2vddf2BGCw3BBr3w5QkEYRwxDVMM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773849583; c=relaxed/simple;
-	bh=5DrGSXMEeIUOEdbJ9WiMaf2PnGRbNPGketohz92imfY=;
+	s=arc-20240116; t=1773849585; c=relaxed/simple;
+	bh=7qcTi1Qw1HGoC100WqAdp0msifIJQXAc1FoFoU3K2WI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F8BRXI/0fbEXsgJtci2yXyqGBHEmS5ZKboFC171wj/RHTNXX35wX31o56Lvxt6e3eFlqSQOlxuLvomtBhmTNVyQ/Xuo2TUbqMVmlov+42AtfQIyRHYxOAlf+kaJJcx6HIwNqh4GQYbsoVXXAmMNcets+PImrZPGVEVgoaAyCWR0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=azdOizLL; arc=pass smtp.client-ip=136.143.169.55
+	 MIME-Version; b=vA+rPj9+URjg07lRHn7+BSN+8tmzCmvIaCmerdnApOnFj98Z2y/mEV4w25emI9Mb6m6u+FH3JtJ9ztmCGBVF9iiHWwyBpL5QjDvmUWHB0C6t6PEWZiiaH0pLBmI8NJ4h1vdiDtynMZpmhgm0Qi6eEyAtsNHQ89OTXFel+3br8hI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=kaOcrLmr; arc=pass smtp.client-ip=136.143.169.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="azdOizLL"
-ARC-Seal: i=1; a=rsa-sha256; t=1773849567; cv=none; 
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="kaOcrLmr"
+ARC-Seal: i=1; a=rsa-sha256; t=1773849568; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=Dg87BOQdzK+a9VeCxhMrQ9OaHifXUkWWF8H4saB3gGViZg45LbFgidRQ9ysV8ZFrIjJa1jEFfkSBXPa9/t4xRp0EsjKIH9TDETEfxMuH2LlqESRw8SEq3a6ni8w/W9j9D0hEtQz/un1N6AcUJ5wml/TXrwdgLMFxDS741FB4p2I=
+	b=U6YqkMO+FnPF8KmFZa519CwFE+1m+T1dvMysN8PoJTCPFAluR/wD9wKJMXBAB0hC9Nu60w+RHYLi5/56x55V9M+Ac2hBZbkKfsXsUMClWGt6jcmZLLuopAN1ZyHXctwzsElrJCxYlmLWoyqbDD4Wd/Hs/eHhMPUQMbglnGnYrxo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773849567; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3izM0F1cOHEJuEmqlhbjziddkmwLfk1V+4E7AazdxMQ=; 
-	b=gl6Q9bw557RzJWZvtHw/LVpU6Amkuyg2/amFZGqdnsxFzZp9ji+T7WVEPeR2pmF1NzG29Bd9s7n0WX0/DggMVlNF44adYXYFLjssNTVjYbO8zZ1i2hINDQfpnAjsR4RzTQk+ljqTU4ofdtbcoI4P0Mo1Kc4qe5RrOYeOdoRZOGQ=
+	t=1773849568; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=yaW4QSTW/xvXliENDpTM5TzxDHmHb/cNBlikwq/chqo=; 
+	b=Q8xcSNZv5JqMFwcFu6qcIiBuMl2sWY2KCKxW9P83Flijr0VOIZN7Y7BihCz1PuvzhY6I/jcFFqx7aVey31oOWE6LBAizCDx/o6Wxd6vKVTWd9jseFHqc2SiVJqakeiYUbA0D/4cTt8RlZEcg2KqWM3MPARI2Cs5UOB/JEjLnHt8=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773849567;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773849568;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=3izM0F1cOHEJuEmqlhbjziddkmwLfk1V+4E7AazdxMQ=;
-	b=azdOizLLNN6CsV8Y54PbWCp1oBx0xRJeFYuB7sMZYXdMrXT9Ca4of4jiXrhPioBm
-	v/K3Ivw80ln9iEXQDDxemj4lU9fE4b7vIz0YV4hf44HOuxEybIzAbB4x6q4J0FdfN46
-	hXUvOz0XkOvQGkk/MOxpvZRKVFffmWrCDdZ5y9jE=
-Received: by mx.zoho.eu with SMTPS id 1773849565242328.5993341348583;
-	Wed, 18 Mar 2026 16:59:25 +0100 (CET)
+	bh=yaW4QSTW/xvXliENDpTM5TzxDHmHb/cNBlikwq/chqo=;
+	b=kaOcrLmrqguSO6pma79TwDko4XHccY9CSEGSRsRO7j5g5D6sIYAAU2sriI5IhkBl
+	0ljUBrmf8Imj2BokgcItChxhZ8Lz98zNJisNhEgn6e86ktHn5AS6i2/qejGP4zjX2vv
+	99DXFcnB0sm5/+j5WlX3/z08e2kvuh5Y53pgtNVs=
+Received: by mx.zoho.eu with SMTPS id 1773849566739722.7590972969375;
+	Wed, 18 Mar 2026 16:59:26 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Josh Law <objecting@objecting.org>
-Subject: [PATCH v8 10/13] lib/bootconfig: use size_t for strlen result in xbc_node_match_prefix()
-Date: Wed, 18 Mar 2026 15:59:16 +0000
-Message-Id: <20260318155919.78168-11-objecting@objecting.org>
+Subject: [PATCH v8 13/13] lib/bootconfig: change xbc_node_index() return type to uint16_t
+Date: Wed, 18 Mar 2026 15:59:19 +0000
+Message-Id: <20260318155919.78168-14-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260318155919.78168-1-objecting@objecting.org>
 References: <20260318155919.78168-1-objecting@objecting.org>
@@ -57,34 +57,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-  lib/bootconfig.c:198:19: warning: conversion from 'size_t' to 'int'
+  lib/bootconfig.c:136:21: warning: conversion from 'long int' to
+  'int' may change value [-Wconversion]
+  lib/bootconfig.c:308:33: warning: conversion from 'int' to 'uint16_t'
   may change value [-Wconversion]
-  lib/bootconfig.c:200:33: warning: conversion to '__kernel_size_t'
-  from 'int' may change the sign of the result [-Wsign-conversion]
+  lib/bootconfig.c:467:37: warning: conversion from 'int' to 'uint16_t'
+  may change value [-Wconversion]
+  lib/bootconfig.c:469:40: warning: conversion from 'int' to 'uint16_t'
+  may change value [-Wconversion]
+  lib/bootconfig.c:472:54: warning: conversion from 'int' to 'uint16_t'
+  may change value [-Wconversion]
+  lib/bootconfig.c:476:45: warning: conversion from 'int' to 'uint16_t'
+  may change value [-Wconversion]
 
-strlen() returns size_t but the result was stored in an int.  The value
-is then passed back to strncmp() which expects size_t, causing a second
-sign-conversion warning on the round-trip.  Use size_t throughout to
-match the API types.
+xbc_node_index() returns the position of a node in the xbc_nodes array,
+which has at most XBC_NODE_MAX (8192) entries, well within uint16_t
+range.  Every caller stores the result in a uint16_t field (node->parent,
+node->child, node->next, or the keys[] array in compose_key_after), so
+the int return type causes narrowing warnings at all six call sites.
+
+Change the return type to uint16_t and add an explicit cast on the
+pointer subtraction to match the storage width and eliminate the
+warnings.
 
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
- lib/bootconfig.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/bootconfig.h | 2 +-
+ lib/bootconfig.c           | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+index 23a96c5edcf3..692a5acc2ffc 100644
+--- a/include/linux/bootconfig.h
++++ b/include/linux/bootconfig.h
+@@ -66,7 +66,7 @@ struct xbc_node {
+ 
+ /* Node tree access raw APIs */
+ struct xbc_node * __init xbc_root_node(void);
+-int __init xbc_node_index(struct xbc_node *node);
++uint16_t __init xbc_node_index(struct xbc_node *node);
+ struct xbc_node * __init xbc_node_get_parent(struct xbc_node *node);
+ struct xbc_node * __init xbc_node_get_child(struct xbc_node *node);
+ struct xbc_node * __init xbc_node_get_next(struct xbc_node *node);
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index dd639046912c..3c5b6ad32a54 100644
+index 272d9427e879..57f07e33868e 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -195,7 +195,7 @@ static bool __init
- xbc_node_match_prefix(struct xbc_node *node, const char **prefix)
+@@ -131,9 +131,9 @@ struct xbc_node * __init xbc_root_node(void)
+  *
+  * Return the index number of @node in XBC node list.
+  */
+-int __init xbc_node_index(struct xbc_node *node)
++uint16_t __init xbc_node_index(struct xbc_node *node)
  {
- 	const char *p = xbc_node_get_data(node);
--	int len = strlen(p);
-+	size_t len = strlen(p);
+-	return node - &xbc_nodes[0];
++	return (uint16_t)(node - &xbc_nodes[0]);
+ }
  
- 	if (strncmp(*prefix, p, len))
- 		return false;
+ /**
 -- 
 2.34.1
 
