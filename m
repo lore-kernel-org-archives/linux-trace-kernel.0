@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5176B38655B;
-	Wed, 18 Mar 2026 15:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F2F1ADC7E;
+	Wed, 18 Mar 2026 15:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773847761; cv=none; b=e5L3XIIEYpvfrDbH/FVOOsf8OFV9pW9dLrPWvGGTfp8Hp4FG7Lb28OIfjzbakJ24+H+SWiddlVPBaOBLeBXtmyiD1srREmsk0l9cUEsF9BqQLOgfe7XqgyV9gFSr0oSlrjFJXdRf7399Rf0fnuHc6mBbFgLIMXHFKe5sB/eGBos=
+	t=1773848072; cv=none; b=TjMafT8DWlm7xyOSYkWDjsvXnDdwBBGTe8KVpUM5EH9ls3u6WlrVwoVSlH63FolJn5yH0XUShbxW6YWuLNeso3Gn8Xyx0A90CYv/gGlqbXCf1GIy414EmyTm2mF8inOMgptAIVfx78C1bGtfZNaCSOPzVuDwToAAwlJXkoTgGXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773847761; c=relaxed/simple;
-	bh=06Fq4gORZM1xYV0H1J7LDVH/t7xjq13eQuYnJza8jWc=;
+	s=arc-20240116; t=1773848072; c=relaxed/simple;
+	bh=rVTlQefuITADyaNzM6aWO6QlSclDkSmr0Z77CkSpP3c=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dJNMx8ReeUAKMXO97ghQRxkRSuLNmY9pIQ90VzlzNJW9rr5K504sVBQKe1cc33Wr+eCrSS2jkUVw0fRVicPCdiU1uUP6vt+vD6Hv8l0/kbHesS06xZpu/5H3ilDzTZDBVx8naTxNp0y8M7lySUg70QGKRWthLFaN5E2jjzzEDbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bq7KQciR; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=AZhWQBbJb2vL27RGapB4dag3O/5t8Cx7kxPnOoZq6jVNXKkL2MWYcrMYZh2ca2swK3zFxQM/CrP7J+lM2XUYcNaZj6Cyla6A6FgfYjaFVhVerS9ZbZjmmUaGgLKHWc+7/aKIsVSG9S0RZlEF0uTEjLILgZi925puBlplsLsOpis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0hlX6S8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bq7KQciR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0390CC19421;
-	Wed, 18 Mar 2026 15:29:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0hlX6S8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3969C2BC87;
+	Wed, 18 Mar 2026 15:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773847760;
-	bh=06Fq4gORZM1xYV0H1J7LDVH/t7xjq13eQuYnJza8jWc=;
+	s=k20201202; t=1773848071;
+	bh=rVTlQefuITADyaNzM6aWO6QlSclDkSmr0Z77CkSpP3c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Bq7KQciRST/Uwjx0unXzxGROxmjuju4PmpUDDsrHz7VC4TUAk8/ZSt/n2Bq55yz8K
-	 +s4jtQMkMxSLvFtH5MkR/h2FfZtGyzsL+u93F6fLrqU1xQ7xDBIFqFXHhLkY5LI3se
-	 d1cOu46SXbk3s5p+1E8kTVZXvdGbs+GrRkI25v8l6QJG+SUf9pTGRVvJIjJB8KWt/w
-	 jDwTkQoM6mzQhmdpu06/sxfW1AL3lRYEt/q6pts2lwK1+xq2GJ8dC5a+sBKB1ViuA4
-	 kf9/MgBOdhBQqHvu7VatgEefA2CE03JDQfYOZrNmULi8r4k3NMeORix5rTiTMhuuvA
-	 J7OqxAnZAHSag==
-Date: Thu, 19 Mar 2026 00:29:18 +0900
+	b=c0hlX6S8h63ktvu5fILka49De6Ut7Ru1Jlinq3m68Sxb1bpnEstnbrPLdccsiLrEl
+	 EmCflEgZBFcnw+aQbQ4fXyttSS0bG2F6cWYkY0RQwxcBD0FbmXSNVTQKPbskYLuaHh
+	 b/aAFo0PZIYetYZFo1622Zn4KgKBgzwCMU6oKW956RXa3Q+GP6VesSi4zsuUSfkJZT
+	 lxCB/1UCHOw0jrOLYEyA8FrOC6+xwJxp8aFxfrdDxnypb4C5NT0FyxEO3911WeFmiH
+	 VgniLpo40ZgMnel4/LeNKqJ7vpfb/ngO+MF+0RKn2EPE/yZcfwNEgYmpaSHi2c25Bf
+	 S6kBD8ijzNYsw==
+Date: Thu, 19 Mar 2026 00:34:29 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v9 2/4] ring-buffer: Flush and stop persistent ring
- buffer on panic
-Message-Id: <20260319002918.5768a8ee053dd35373e215f2@kernel.org>
-In-Reply-To: <c91f37bf-97e9-4752-99a9-3d534ce9d2f0@efficios.com>
-References: <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
-	<177319274904.130641.3303707869402603363.stgit@mhiramat.tok.corp.google.com>
-	<20260318231959.717f07ec491a731941aee1d9@kernel.org>
-	<c91f37bf-97e9-4752-99a9-3d534ce9d2f0@efficios.com>
+To: Josh Law <objecting@objecting.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/15] bootconfig: fixes, cleanups, and modernization
+Message-Id: <20260319003429.c006cc1df0ccb4a5f307d4a7@kernel.org>
+In-Reply-To: <20260317160916.33576-1-objecting@objecting.org>
+References: <20260317160916.33576-1-objecting@objecting.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,95 +46,156 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 18 Mar 2026 10:53:26 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+Hi Josh,
 
-> On 2026-03-18 10:19, Masami Hiramatsu (Google) wrote:
-> > On Wed, 11 Mar 2026 10:32:29 +0900
-> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> > 
-> >> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >>
-> >> On real hardware, panic and machine reboot may not flush hardware cache
-> >> to memory. This means the persistent ring buffer, which relies on a
-> >> coherent state of memory, may not have its events written to the buffer
-> >> and they may be lost. Moreover, there may be inconsistency with the
-> >> counters which are used for validation of the integrity of the
-> >> persistent ring buffer which may cause all data to be discarded.
-> >>
-> >> To avoid this issue, stop recording of the ring buffer on panic and
-> >> flush the cache of the ring buffer's memory.
-> > 
-> > Hmm, on some architectures, flush_cache_vmap() is implemented using
-> > on_each_cpu() which waits IPI. But that does not safe in panic notifier
-> > because it is called after smp_send_stop().
-> > 
-> > Since this cache flush issue is currently only confirmed on arm64,
-> > I would like to make it doing nothing (do { } while (0)) by default.
+It is mostly OK, but can you reorder this series as the fixes (which
+has "Fixes" tag, [9/15] and [10/15]) first and others second, so that
+I can cleanly merge it to bootconfig/fixes and bootconfig/for-next?
+
+The patches which has Fixes tag should go into stable tree, but other
+improvements/cleanups should go to next merge window.
+
+Thank you,
+
+
+On Tue, 17 Mar 2026 16:09:01 +0000
+Josh Law <objecting@objecting.org> wrote:
+
+> This series addresses a collection of issues found during a review of
+> lib/bootconfig.c, include/linux/bootconfig.h, and tools/bootconfig,
+> ranging from off-by-one errors and unchecked return values to coding
+> style, signedness/type cleanup, and API modernization.
 > 
-> FWIW, I've sent a related series a while ago about flushing pmem
-> areas to memory on panic:
+> Changes since v6:
+>   - Dropped "add missing __init annotations to static helpers"
+>     (v6 patch 1).
+>   - Dropped "fix sign-compare in xbc_node_compose_key_after()"
+>     (v6 patch 16).
+>   - Updated "fix fd leak in load_xbc_file() on fstat failure" to save
+>     errno before close(), since close() may overwrite it before the
+>     error is returned (patch 10).
+>   - Updated "fix signed comparison in xbc_node_get_data()" to use
+>     size_t for the local offset variable, matching the warning and
+>     xbc_data_size (patch 11).
+>   - Updated "use signed type for offset in xbc_init_node()" to use a
+>     signed long and explicitly check offset < 0 in WARN_ON(), making
+>     the pre-base pointer case explicit instead of relying on unsigned
+>     wraparound (patch 13).
 > 
-> https://lore.kernel.org/lkml/20240618154157.334602-3-mathieu.desnoyers@efficios.com/
+> Changes since v5:
+>   - Folded typo fixes, kerneldoc blank line, and inconsistent bracing
+>     patches (v5 02-05, 07) into a single patch (patch 1).
+>   - Dropped "use __packed macro for struct xbc_node" (v5 11) and
+>     "add __packed definition to tools/bootconfig shim header" (v5 14)
+>     per review feedback.
+>   - Added Fixes: tag to "check xbc_init_node() return in override
+>     path" (patch 9).
+>   - Added Fixes: tag to "fix fd leak in load_xbc_file() on fstat
+>     failure" (patch 10).
 > 
-
-Ah, nice!
-
-> When reading your patch, I feel like I'm missing something, so please bear with
-> me for a few questions:
+> Changes since v4:
+>   - Added six follow-up patches found via static analysis with strict
+>     GCC warnings (patches 11-15, plus the now-dropped v6 patch 16).
+>   - Added "fix signed comparison in xbc_node_get_data()" to match the
+>     local offset type to xbc_data_size and eliminate the sign-compare
+>     warning (patch 11).
+>   - Added "use size_t for strlen result in xbc_node_match_prefix()"
+>     and "use size_t for key length tracking in xbc_verify_tree()" to
+>     match strlen() return types (patches 12, 14).
+>   - Added "use signed type for offset in xbc_init_node()" to make the
+>     offset bounds check explicit and avoid sign-conversion warnings
+>     from pointer subtraction (patch 13).
+>   - Added "change xbc_node_index() return type to uint16_t" to match
+>     the 16-bit storage fields and XBC_NODE_MAX bounds (patch 15).
 > 
-> - What exactly are you trying to flush ? By "flush" do you mean
->    evince cache lines or write back cache lines ? (I expect you aim
->    at the second option)
-
-Yes, I need to write back cache lines, at least it can be
-read after hot reboot. (not evict cache)
-
+> Changes since v3:
+>   - Added commit descriptions to all patches that were missing them.
+>   - Added real-world impact statements to all bug-fix patches.
 > 
-> - AFAIU, you are not trying to evince cache lines after creation
->    of a new virtual mapping (which is the documented intent of
->    flush_cache_vmap).
-
-Ah, OK. That's a good point!
-(anyway I will replace it with do { } while (0) in the next version.)
-
->    
-> - AFAIU flush_cache_vmap maps to no-code on arm64 (asm-generic), what am
->    I missing ? It makes sense to be a no-op because AFAIR arm64 does not
->    have to deal with virtually aliasing caches.
-
-Yeah, so my patch also introduces arm64 specific implementation.
-
+> Changes since v2:
+>   - Added "validate child node index in xbc_verify_tree()" (patch 8).
+>   - Added "check xbc_init_node() return in override path" (patch 9).
+>   - Added "fix fd leak in load_xbc_file() on fstat failure" (patch 10).
 > 
-> see commit 8690bbcf3b7 ("Introduce cpu_dcache_is_aliasing() across all architectures")
-
-OK, let me check.
-
+> Changes since v1:
+>   - Dropped "return empty string instead of NULL from
+>     xbc_node_get_data()" -- returning "" causes false matches in
+>     xbc_node_match_prefix() because strncmp(..., "", 0) always
+>     returns 0.
 > 
-> The arch_wb_cache_pmem is specific to pmem, which is not exactly what you want
-> to use, but on arm64 it's implemented as:
+> Bug fixes:
+>   - Fix off-by-one in xbc_verify_tree() where a next-node index equal
+>     to xbc_node_num passes the bounds check despite being out of range;
+>     a malformed bootconfig could cause an out-of-bounds read of kernel
+>     memory during tree traversal at boot time (patch 3).
+>   - Move xbc_node_num increment to after xbc_init_node() validation so
+>     a failed init does not leave a partially initialized node counted
+>     in the array; on a maximum-size bootconfig, the uninitialized node
+>     could be traversed leading to unpredictable boot behavior (patch 4).
+>   - Validate child node indices in xbc_verify_tree() alongside the
+>     existing next-node check; without this, a corrupt bootconfig could
+>     trigger an out-of-bounds memory access via an invalid child index
+>     during tree traversal (patch 8).
+>   - Check xbc_init_node() return value in the ':=' override path; a
+>     bootconfig using ':=' near the 32KB data limit could silently
+>     retain the old value, meaning a security-relevant boot parameter
+>     override would not take effect (patch 9).
+>   - Fix file descriptor leak in tools/bootconfig load_xbc_file() when
+>     fstat() fails, and preserve errno across close() on that error path
+>     (patch 10).
 > 
->          /* Ensure order against any prior non-cacheable writes */
->          dmb(osh);
->          dcache_clean_pop((unsigned long)addr, (unsigned long)addr + size);
+> Correctness:
+>   - Narrow the flag parameter in node creation helpers from uint32_t to
+>     uint16_t to match the xbc_node.data field width (patch 2).
+>   - Constify the xbc_calc_checksum() data parameter since it only reads
+>     the buffer (patch 6).
+>   - Fix strict-GCC signedness and narrowing warnings by aligning local
+>     types with strlen() APIs and the node index/data storage in
+>     xbc_node_get_data(), xbc_node_match_prefix(), xbc_init_node(),
+>     xbc_verify_tree(), and xbc_node_index() (patches 11-15).
 > 
-> Which I think has the writeback semantic you are looking for, and AFAIU should no
-> require IPIs (at least on arm64) to flush cache lines across the entire system.
-
-Yes, that's what I need.
-
-Thank you!
-
-
+> Cleanups:
+>   - Fix comment typos, missing blank line before kerneldoc, and
+>     inconsistent if/else bracing (patch 1).
+>   - Drop redundant memset after memblock_alloc which already returns
+>     zeroed memory; switch the userspace path from malloc to calloc to
+>     match (patch 5).
 > 
-> Cheers,
+> Modernization:
+>   - Replace the catch-all linux/kernel.h include with the specific
+>     headers needed: linux/cache.h, linux/compiler.h, and
+>     linux/sprintf.h (patch 7).
 > 
-> Mathieu
+> Build-tested with both the in-kernel build (lib/bootconfig.o,
+> init/main.o) and the userspace tools/bootconfig build. All 70
+> tools/bootconfig test cases pass.
+> 
+> Josh Law (15):
+>   lib/bootconfig: clean up comment typos and bracing
+>   lib/bootconfig: narrow flag parameter type from uint32_t to uint16_t
+>   lib/bootconfig: fix off-by-one in xbc_verify_tree() next node check
+>   lib/bootconfig: increment xbc_node_num after node init succeeds
+>   lib/bootconfig: drop redundant memset of xbc_nodes
+>   bootconfig: constify xbc_calc_checksum() data parameter
+>   lib/bootconfig: replace linux/kernel.h with specific includes
+>   lib/bootconfig: validate child node index in xbc_verify_tree()
+>   lib/bootconfig: check xbc_init_node() return in override path
+>   tools/bootconfig: fix fd leak in load_xbc_file() on fstat failure
+>   lib/bootconfig: fix signed comparison in xbc_node_get_data()
+>   lib/bootconfig: use size_t for strlen result in
+>     xbc_node_match_prefix()
+>   lib/bootconfig: use signed type for offset in xbc_init_node()
+>   lib/bootconfig: use size_t for key length tracking in
+>     xbc_verify_tree()
+>   lib/bootconfig: change xbc_node_index() return type to uint16_t
+> 
+>  include/linux/bootconfig.h |  6 ++--
+>  lib/bootconfig.c           | 65 ++++++++++++++++++++++----------------
+>  tools/bootconfig/main.c    |  7 ++--
+>  3 files changed, 46 insertions(+), 32 deletions(-)
 > 
 > -- 
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> https://www.efficios.com
+> 2.34.1
 
 
 -- 
