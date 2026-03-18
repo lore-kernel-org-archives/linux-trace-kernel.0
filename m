@@ -1,170 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C35336CDEB;
-	Wed, 18 Mar 2026 20:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416CE241CB7;
+	Wed, 18 Mar 2026 22:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773867158; cv=none; b=m/5t9bhECYXyR57iZg9hcGnOM+mHrXwKEmSbzOFcXfHBbRMASxOlkh10nswASmUYveoH1yTHXb1t8S/CRW1qAszBnIVzcUiAs8ba4kJZ5W2z4yPRYWgWvJDulydd7dfcQXK8NWdqotrdUCUAdf+/2IsYz7knJLlz09UlhhiTPyg=
+	t=1773874493; cv=none; b=PL7bjFoeWsOEdl4v+U4btkAbnsDRavWAcdi39t4ZCQvIlo8AbfWyRYqzHxV+5EqB967mIqPXzhg8mYeNiN1GLYTVOg3cv4eIgNpRtDrN69WyPSD1nmn8NacbB5S1yXJALM7X+6bg3wLkKDb3XE7CNcQJ8rnvbyDuOt353i1bBd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773867158; c=relaxed/simple;
-	bh=kbGM3c4xh2xtlPKItuu8b0plWdnAptUOEmkS13CYnz8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=khU+CvzlJ6E3i8P/yZqbQ78bHcQSp04efTuoG5gRRpqgKcpxagUxlPHjwfcJfqLGN9j/Nwo1IjJmDSrFWgchtAzkFvs2XSilLw2+C2+Ac6yn9DtJ6h8vS2fJJVsMaUNgOfAdIa/aUYzNUXOF6y41NAcw1QksAQKmKnaiCHHkjmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7zvu5MI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7zvu5MI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EF7BC19421;
-	Wed, 18 Mar 2026 20:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773867157;
-	bh=kbGM3c4xh2xtlPKItuu8b0plWdnAptUOEmkS13CYnz8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k7zvu5MIc5CYIGmjWx+P+mS8/hs2GooJWHfXhDPqFeWyum4sz6NQ2neYQyXlUtlCv
-	 SOoz9lLS4EQYDGViVf0oRa8oUQ4wZWHCy5DjVMkrRZlzhDZfSxX8btIRC6pKKcZtqq
-	 HqFvYKZdPu6NZcu/RPV8yxBpMtnFC8Ki3vcf/rOBJrcG5AcAzdMR2gnTomxyf7IP8H
-	 zHZMPsz/wlq4Amx6dQtpM7EHwIuIilXwCtH35+nfGyIdYuPry8qYRVdyy1g3sS3ITk
-	 esmcmpAq0Qm7xqoPTPtpTIaBIFFTr4xbzEGttviQsDf6G2SgDxhQSQi5C5yhB9KCwG
-	 yOFQuYZFuGWzw==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Potapenko <glider@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Brendan Jackman <jackmanb@google.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Brauner <brauner@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jan Kara <jack@suse.cz>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Marco Elver <elver@google.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Hocko <mhocko@suse.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Rob Herring <robh@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Zi Yan <ziy@nvidia.com>,
-	devicetree@vger.kernel.org,
-	iommu@lists.linux.dev,
-	kasan-dev@googlegroups.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH 9/8] memblock tests: add stubs required for free_reserved_area()
-Date: Wed, 18 Mar 2026 22:52:21 +0200
-Message-ID: <20260318205221.1402161-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260318105827.1358927-1-rppt@kernel.org>
-References: <20260318105827.1358927-1-rppt@kernel.org>
+	s=arc-20240116; t=1773874493; c=relaxed/simple;
+	bh=qtUykCdaYiKQ3x6/bhVS4hawksePbWWSKam/S2vR708=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kGFydvnSGOcVnGmZf7Bth8C+Vf+XWu2YHI3gn3Vw/2u6JTg6kqydGA7NWY/JWqiJm5FvB6vmusvvqRk0LhVg3xHavvF2pfAdYf4+KEfuOsvoJ7Ry55vJucU9YwI0TL1viFpk+QA8bVjqVDSrdLrAqx4bXOXZKjlyUU5jZpu8i+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 1056F5685F;
+	Wed, 18 Mar 2026 22:54:45 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 7578920028;
+	Wed, 18 Mar 2026 22:54:43 +0000 (UTC)
+Date: Wed, 18 Mar 2026 18:55:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] tracing: Fix trace_marker copy link list updates
+Message-ID: <20260318185512.1b6c7db4@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 7578920028
+X-Stat-Signature: 4f6pa7ydd49ygf6zd9d5omxrooxzs61j
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Rqj1dYoUKfaBQGwHgBzcn9qftkQgfJwA=
+X-HE-Tag: 1773874483-703529
+X-HE-Meta: U2FsdGVkX198RuA+S38daQ6wiMi7JL1nw9A+Cgz6m7MUmyFcjACxvV5dviSiqjI96pxI1kcaAnqDtQSWSI6q97/w7DmikfubMMWn2IdNRt0fch3llGBQHhTlKm18OfVPyf4BFel+sHkSZAcblufiuyJWoZ5V6Pai23PjkUdj+j8K5QeQ4qqDecPOP/1UpwJLWO64oqX85NgV5VIWJXcgGaG8jnsdE8FQR6PXO/3rgtnB3MzreRgTfN+HtjGkekmUXPLptOc6kal7NJOzNsFlgZqGVa6IIdDWgbfaVUrZ4s9PqaWk1QqKWn6vuAmBV938d8U6DZUFW8r+qaXuWRsNcnBTynPb1Lt1tkXQNs1N/gtOKAC0xosG29GsEpKs1vj08fj7ZwG4h7n74g6zMXdXlQ==
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-After moving free_reserved_area() function to mm/memblock.c memblock
-tests lack stubs for several functions and macros this function calls.
+When the "copy_trace_marker" option is enabled for an instance, anything
+written into /sys/kernel/tracing/trace_marker is also copied into that
+instances buffer. When the option is set, that instance's trace_array
+descriptor is added to the marker_copies link list. This list is protected
+by RCU, as all iterations uses an RCU protected list traversal.
 
-Add them.
+When the instance is deleted, all the flags that were enabled are cleared.
+This also clears the copy_trace_marker flag and removes the trace_array
+descriptor from the list.
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+The issue is after the flags are called, a direct call to
+update_marker_trace() is performed to clear the flag. This function
+returns true if the state of the flag changed and false otherwise. If it
+returns true here, synchronize_rcu() is called to make sure all readers
+see that its removed from the list.
+
+But since the flag was already cleared, the state does not change and the
+synchronization is never called, leaving a possible UAF bug.
+
+Move the clearing of all flags below the updating of the copy_trace_marker
+option which then makes sure the synchronization is performed.
+
+Also use the flag for checking the state in update_marker_trace() instead
+of looking at if the list is empty.
+
+Cc: stable@vger.kernel.org
+Fixes: 7b382efd5e8a ("tracing: Allow the top level trace_marker to write into another instances")
+Reported-by: Sasha Levin <sashal@kernel.org>
+Closes: https://lore.kernel.org/all/20260225133122.237275-1-sashal@kernel.org/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/include/linux/mm.h          |  1 +
- tools/testing/memblock/internal.h | 28 +++++++++++++++++++++++++---
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ kernel/trace/trace.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/tools/include/linux/mm.h b/tools/include/linux/mm.h
-index 028f3faf46e7..4407d8396108 100644
---- a/tools/include/linux/mm.h
-+++ b/tools/include/linux/mm.h
-@@ -17,6 +17,7 @@
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index bb4a62f4b953..a626211ceb9a 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -555,7 +555,7 @@ static bool update_marker_trace(struct trace_array *tr, int enabled)
+ 	lockdep_assert_held(&event_mutex);
  
- #define __va(x) ((void *)((unsigned long)(x)))
- #define __pa(x) ((unsigned long)(x))
-+#define __pa_symbol(x) ((unsigned long)(x))
+ 	if (enabled) {
+-		if (!list_empty(&tr->marker_list))
++		if (tr->trace_flags & TRACE_ITER(COPY_MARKER))
+ 			return false;
  
- #define pfn_to_page(pfn) ((void *)((pfn) * PAGE_SIZE))
+ 		list_add_rcu(&tr->marker_list, &marker_copies);
+@@ -563,10 +563,10 @@ static bool update_marker_trace(struct trace_array *tr, int enabled)
+ 		return true;
+ 	}
  
-diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
-index 009b97bbdd22..7ff61172ab24 100644
---- a/tools/testing/memblock/internal.h
-+++ b/tools/testing/memblock/internal.h
-@@ -11,9 +11,16 @@ static int memblock_debug = 1;
+-	if (list_empty(&tr->marker_list))
++	if (!(tr->trace_flags & TRACE_ITER(COPY_MARKER)))
+ 		return false;
  
- #define pr_warn_ratelimited(fmt, ...)    printf(fmt, ##__VA_ARGS__)
- 
-+#define K(x) ((x) << (PAGE_SHIFT-10))
-+
- bool mirrored_kernelcore = false;
- 
- struct page {};
-+static inline void *page_address(struct page *page)
-+{
-+	BUG();
-+	return page;
-+}
- 
- void memblock_free_pages(unsigned long pfn, unsigned int order)
- {
-@@ -23,10 +30,25 @@ static inline void accept_memory(phys_addr_t start, unsigned long size)
- {
+-	list_del_init(&tr->marker_list);
++	list_del_rcu(&tr->marker_list);
+ 	tr->trace_flags &= ~TRACE_ITER(COPY_MARKER);
+ 	return true;
  }
+@@ -9761,18 +9761,19 @@ static int __remove_instance(struct trace_array *tr)
  
--static inline unsigned long free_reserved_area(void *start, void *end,
--					       int poison, const char *s)
-+unsigned long free_reserved_area(void *start, void *end, int poison, const char *s);
-+void free_reserved_page(struct page *page);
-+
-+static inline bool deferred_pages_enabled(void)
-+{
-+	return false;
-+}
-+
-+#define for_each_valid_pfn(pfn, start_pfn, end_pfn)			 \
-+	for ((pfn) = (start_pfn); (pfn) < (end_pfn); (pfn)++)
-+
-+static inline void *kasan_reset_tag(const void *addr)
-+{
-+	return (void *)addr;
-+}
-+
-+static inline bool __is_kernel(unsigned long addr)
- {
--	return 0;
-+	return false;
- }
+ 	list_del(&tr->list);
  
- #endif
+-	/* Disable all the flags that were enabled coming in */
+-	for (i = 0; i < TRACE_FLAGS_MAX_SIZE; i++) {
+-		if ((1ULL << i) & ZEROED_TRACE_FLAGS)
+-			set_tracer_flag(tr, 1ULL << i, 0);
+-	}
+-
+ 	if (printk_trace == tr)
+ 		update_printk_trace(&global_trace);
+ 
++	/* Must be done before disabling all the flags */
+ 	if (update_marker_trace(tr, 0))
+ 		synchronize_rcu();
+ 
++	/* Disable all the flags that were enabled coming in */
++	for (i = 0; i < TRACE_FLAGS_MAX_SIZE; i++) {
++		if ((1ULL << i) & ZEROED_TRACE_FLAGS)
++			set_tracer_flag(tr, 1ULL << i, 0);
++	}
++
+ 	tracing_set_nop(tr);
+ 	clear_ftrace_function_probes(tr);
+ 	event_trace_del_tracer(tr);
 -- 
 2.51.0
 
