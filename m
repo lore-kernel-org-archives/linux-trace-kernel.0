@@ -1,102 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE23C1E3DED;
-	Wed, 18 Mar 2026 00:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DF62AEF5;
+	Wed, 18 Mar 2026 00:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773792167; cv=none; b=e9pzBx+bqfFNoBqqe1CDcoYtwHIWcS4yDxxvMdzcfrj2/5/mpZ29ooNiouUZzn6HeSIKus1mkI5BQRseFsnDOGQcqq5IqT2QBiHcpxR/A/0hUB0+TxWnYALRxsPRJNmJ4pnb7viEzD8YL28rVpwhVTFKRO3uySJZPmC6UWdA0QU=
+	t=1773794613; cv=none; b=o4i/dqWgc1c2a16MYHAyYF+qdcbQHdXK7/klfhl0YPSsn2CBzYN9SlNSVnU6sHL9euDMDQ2Q90hDokpEh6olPP7NbGbTvtn3XwSMgDs6kiWgUnXdvs1izGLyMNJzhWFvCUmir5VOQE7t6LH7SVrXtORUhFs0hSivkLp3YvyBD4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773792167; c=relaxed/simple;
-	bh=or4+/ROvIUPRlGXGcAw3OQPc/C0vtyA4B1QhKaj7k8A=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VDpBB9NaJEX4qXdMHnMwurq0wKRYuG5v8h8A3GEAfhJ59eVc8fSTyJh+QWsjmuu594WknX5gvXZTy227yV2nml6I8Lt8LCf6oz6CVY9yootQ6SDSNFubnwZtNUmCdcoYo25ktqU2OVApXGB/gg+JBur5b9RAeGC4hXoy/xE2EeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rayOT5dI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rayOT5dI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08946C4CEF7;
-	Wed, 18 Mar 2026 00:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773792167;
-	bh=or4+/ROvIUPRlGXGcAw3OQPc/C0vtyA4B1QhKaj7k8A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rayOT5dImgqq+0F3lyB4JvuUkKFZCYZZrW88UdL1jmwUmGw0Opz9/J/W/qt3ZDclc
-	 6Q5Q28MUZJO7HUP3PXJuo0hmGWyPPMTUWz7n5Ug/MW+UFbCyyj0nabZVv8F2FnGvS4
-	 XXCFmfEJry1/cyS/BPYEQebE/5e7RKKfzde5KsVpuG76qN/dydBXvwlk8hiZQewCT8
-	 GWGUigs7h14jVjIO4aSqNazwRTTIF0EjBW64EC0EJlEyxhN3rJJv98Q1HGLQW0Anix
-	 HCXzOgtISFVDSQUoH5M1GJ1Boxyv+X6uvDrsq+OnXgz2WlOLo4D4KpHycLlPGpG+iR
-	 imGHRcr9e2KtQ==
-Date: Wed, 18 Mar 2026 09:02:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1773794613; c=relaxed/simple;
+	bh=iOeao65Pgs2YWqQF1Ax7rZss8oQc2fDSoGdzq6eP3ZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UlnrXqumtMVPpfg9gNz8MuXfVDou14GJvQT9aJqHrQU0iFS3VPbCofOqB+Vht8P1U+Ed/WM/WHsTbMso8EdvNY+Dy3m9OW5iJdVKEITWfpQelmS6/dZXJEwPbqJ9QL4Ye5+B+JcelFFtTC5ZVhmOk/aK6/ODFmNSFsIgILRffYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 565F2B9933;
+	Wed, 18 Mar 2026 00:43:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 9559942;
+	Wed, 18 Mar 2026 00:43:28 +0000 (UTC)
+Date: Tue, 17 Mar 2026 20:43:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Josh Law <objecting@objecting.org>, Andrew Morton
  <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v4] lib/bootconfig: guard xbc_node_compose_key_after()
  buffer size
-Message-Id: <20260318090243.7c437f2c5e07a1ce00375102@kernel.org>
-In-Reply-To: <20260317191626.5b6172a9@robin>
+Message-ID: <20260317204327.3c61d0ea@robin>
+In-Reply-To: <20260318090243.7c437f2c5e07a1ce00375102@kernel.org>
 References: <20260317204403.72375-1-objecting@objecting.org>
 	<20260318080351.dae637f4b5909bd9f81b27d2@kernel.org>
 	<20260317191626.5b6172a9@robin>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20260318090243.7c437f2c5e07a1ce00375102@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9559942
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: 66xcak9mi6xehqkw5q1h3fp6e5z36q3b
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/EzUVvOrPJgbXgSUziAR8je8EkaKBwii0=
+X-HE-Tag: 1773794608-463870
+X-HE-Meta: U2FsdGVkX18MwtnC4E1ymgbCuY9AYyZ0mssSnDKgvjLv9D/LWui4cWiaZPeQCvcE5d80i1QNBiZp3oyM12uZkTJKSlJ+ZrAgYYUC7h5RTGjJ4jkMw/zYbg4E3t8zjA6OqEVpqMCIF6zqqadD4jTkhBRGmBT/6qFwUA7aP+g1FczxXNdkSTz+Bk3I6LxOopjwRrwMpbx4TC3pYDhqRl5QxEnL+PzYeovHB8sLQ39gppfjkeSE34A1WlTRflGyYn/0NF6Nchv4I5pYwa++Ulnk9o2AxsEIx5U8/kWqe1w1efoUacIFaDEgPxXq5CRRwYfzVW4taWdzu8CLyAr9xH8HsaCMTBc2iknJ
 
-On Tue, 17 Mar 2026 19:16:26 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 18 Mar 2026 09:02:43 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Wed, 18 Mar 2026 08:03:51 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Tue, 17 Mar 2026 20:44:03 +0000
-> > Josh Law <objecting@objecting.org> wrote:
-> > 
-> > > xbc_node_compose_key_after() passes a size_t buffer length to
-> > > snprintf(), but snprintf() returns int. Guard against size values above
-> > > INT_MAX before the loop so the existing truncation check can continue to
-> > > compare ret against (int)size safely.
-> > > 
-> > > Add a small WARN_ON_ONCE shim for the tools/bootconfig userspace build
-> > > so the same source continues to build there.  
-> > 
-> > NACK.
-> > 
-> > Don't do such over engineering effort.
-> 
-> Hi Masami,
-> 
-> This was somewhat my idea. Why do you think it's over engineering?
-> 
-> This is your code, so you have final say. I'm not going to push it. I'm
-> just curious to your thoughts.
+> Yes, that is checked in vsnprintf(), not its caller.
+> I think linux kernel should ensure the the return value is smaller
+> than INT_MAX, and return -EOVERFLOW if not.
 
-I sent a mail why I thought this is over engineering. I think this
-comes from vsnprintf() interface design. If all user of that needs
-to do this, that is not fair. It should be checked in vsnprintf()
-and caller should just check the returned error.
+Well, there's very few places that could have a buffer size of > 2G.
 
-> 
-> It is interesting that snprintf() takes a size_t size, and the iterator
-> inside is also size_t, but then it returns the value as an int.
+What's the max bootconfig limit? Could you create a bootconfig that is
+greater than 2G?
 
-Yes, that is checked in vsnprintf(), not its caller.
-I think linux kernel should ensure the the return value is smaller
-than INT_MAX, and return -EOVERFLOW if not.
+If not, then yeah, we shouldn't really care about overflows (and that
+includes not worrying about typecasting the size variable to int).
 
-Thank you,
-
-> 
-> That itself just looks wrong (and has nothing to do with your code).
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
