@@ -1,145 +1,197 @@
-Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020110.outbound.protection.outlook.com [52.101.191.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D868F38A71D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 14:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0D33D9042;
+	Wed, 18 Mar 2026 14:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.110
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773845508; cv=pass; b=DR9GoMVU7PYzHOgd8Pp7wOifrf2G5JKmYTFiD8Od4Eoz3oXTlkM1O0JMR1SBPDrRWzLj7cceFY4KJ8/o4fhAAsgMq6TwdnxAoWIlpXPE1XFrmRsRLIPmjnwbtVCb92pacY9s4pDySWzJsnvzXTDg+2epFeoXo7Xxc00NoCWMC9Y=
+	t=1773845619; cv=fail; b=u8I9vUiMjEA+lP2f5PBIfB1o80/WnpV3EN7By1Y3VU83/8WHqvYeGj4lpgO6fGhd7hIQCUqWkKonJb8lR0YAk9poyxiknV0XJEq0Rv3bsw7laji+3XHJeWHvKWBFBU6HnRPb/+UGGXoH9kXCNPPJn9wyMys+RLZdtT7QR/Xlcvc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773845508; c=relaxed/simple;
-	bh=1FISFWtjLoHF5EnuYPOgvH0ljgC076KLVSofovMd6Qc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T675kEVQH1dup4BM3hY5y1fikWRMWhzlCe/+DuDD9w/EzPEL/XNJoHwsBIOeG/QtZS8SG6gx5yJYL3MVTHkQp+xT0T7TTJJU2LdXPjU59DKzX4x2gNHsCPStItoeMQroq54TUaxsIxoPUaRfEktbthDApPbfVxi5s1JRpoVWYd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=XpJ1DAOP; arc=pass smtp.client-ip=74.125.224.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
+	s=arc-20240116; t=1773845619; c=relaxed/simple;
+	bh=Wu8IfpiRHXGGhCAWoosCEyr80bIhR0eHXJDpBcSCi6U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qfd/1R/H3c3SMLlqRVexJN2dAzO59VSq9AprcnH7UTKwkqL1LKsfqz+un9cJJfCXZ6gmYF3F6kaapPLfohcwN3WPsynPfJIQdtLyDYgHf349p3LYygHFcXu/+932b3jHvLtpJgcma0QuOakMzrobqlxFa6nf8qPuIAdDi7qdHIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=AIzTLVGa; arc=fail smtp.client-ip=52.101.191.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="XpJ1DAOP"
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64aedd812baso4287d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 07:51:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773845506; cv=none;
-        d=google.com; s=arc-20240605;
-        b=TUB8Qtw8O2E493ajLnSc/rWPXK7ZidpK6b7k4TWqPaQmeei9YFzrNOWOwWmR4LFABi
-         HbmjNg+U73Sp1ZAuqQGkvIOFemrdn1O1zhNe7JNigGEOXE6oqMWnZJeUitxhsGQtu9QN
-         yz1EEwUuOXX7QbESAhydTYljVF/P8tm0X4ntqpwkqSTHMam+5Hf9ysB5KIuk9oP7EaR4
-         unPgzWcoaLQtEpN8P0GPjAxyPpBv+VJLlOeAlAeenKwni3+s3d499lgzQQclVwlBYc89
-         JJrjHrwonlbOkdTjtEHJgzOdBfNhzW+iuNE+VUvBqGwSMkZ4I6mWuRmmISKs6c+LS7wb
-         3xPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=p+amKP2hSQ8rLALonagLiBWsS/hjEbvlJDIAKI1rnTk=;
-        fh=w5MOAxii0zg3NISFKvtfHpUt4RK+C7pwcrWvYAR8FYg=;
-        b=LvntVtWqkdqJ2kxglo+nSAiiDT73ST//F3nKVClMqd62okvY226DIs7VNaetS2sV7g
-         xKbMzVeZmTdlECBCvdDo44z8ThMjKoJ/w6J6C59Jezi5Nhy+HFXy4a6eDfN/KvVqMu9v
-         kyUZc0gdPw/txN+XcXsAH8z9yHY2TpEGQni6iKvnW0D4swOKAKy3USBcUY+HtWHg1ZDf
-         A4WMBE9FeTK2il/wh/YYGTY6sck0ddUXg212bPMAXGPmnIe7d6fQMlQN5t6OjT8M2hmI
-         jtuMg4LEZ2AA1EmJWtsBAIVxQk16NJDYmjgWt4wTUO3tpb85+q9jtVjrWHd0nB0/KUqR
-         EZww==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1773845506; x=1774450306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p+amKP2hSQ8rLALonagLiBWsS/hjEbvlJDIAKI1rnTk=;
-        b=XpJ1DAOP/4nAdBA8pNInAjErrB1WwzEJFuO8HmuDUIYaj2cg/1BDSwWXXh5Ed05U3Q
-         bEzFS7R7c7xsBrws3lVzQJLQQJFgLEij7/0GOiRjugLMEXl29wR670phhRL3ueHVm8QE
-         3mz3euiuEHCK6YyC5OW3x2Sf/xMXOUyaKql0t8Ag/4IlnklPQeUzQu9MtNvM7KgvNSj9
-         hU5W4AYkFS4Lly5PDu0SI8uDIrK3wmnvFYsRdI0BqlvFNxTf3dNc6SxGRMVenPGgKuF6
-         VF6oqB961lMxoSCe2NtuaTM3bIoXQwAJBwR4oBLXTWquf4IytutPq6FXV/dGE2/rvbWz
-         Kn5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773845506; x=1774450306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=p+amKP2hSQ8rLALonagLiBWsS/hjEbvlJDIAKI1rnTk=;
-        b=Y9IKoFHluVlxJy0DJ+TtMWSIMaf+AxJR8/EE+ucf0Ov3CjkVx/76JxyHMdgbaBHtFp
-         Cw8neTJFwgSA0IXRSESFKXilTzzO25wpiCm+RxHZSIEIOCBUAMfyKov0qlhczQzp9FrW
-         Q10FZyXnRrif1C2wruKIgG4l4VRZbm7JkJvZKq8np36vxYL/sva4LPK09IquVk838p0X
-         iBlVbwaLkF25fjjmY8Eoc/Z+Anny6J61SCJdthKY9ISSS9vrzkktpKGG1VBDZdJumMjB
-         9bW0SVr56PCshYFWazhn8E/j3NJuZGyw/9VbR5aV6vN6nUFhlUsHOwXcwX0cV4W2jkUs
-         0A1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVpRVRfyXOtB9HeXPOGKjG4uNR3/DkD/MTJKUqgKzSsPRMyQcnH2CFOjJPtbnJMMyhb6h8eyjOPKH4oK+NI9k5t0ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCfA0YtYE9ljjTZfu17SRhuYI1fwhLTtFNS4LD0Zd0fTLqoaiJ
-	KoGnN889VFP3NnKyBWZXb/+UGe9YH/OjqsraZRXjaJGH3gFiGJtMH7kvV44aQ87u6iT7hrSRzPP
-	OxZSa7Q+19+2uBTHoKLf2tWGqU8PXgD/u5OYXj7NVXA==
-X-Gm-Gg: ATEYQzzN5BkAy3RnWF7ufiOCMhcFx0YTopH3CwV/9Lc/q7oogYXjkUtixkNsRsrKnUt
-	gpPId3MgrYLjtB7XpLZHZn0aFtXILdJDNfvnnDHBVNed3qYTJ0GrYYr1uFl8l3QQElvS2p1nCgf
-	OPP45GYCyKDwTCfOo7IIejXwmoqoZDTpNTzkJ45JnZ/fYNESsEkpjdmT2LYeIoI5IbDLjaZhZWb
-	kpRd2EZ0AEsUmVDX3VFfl7hz1zC+sJ5LAtE7KZozDg9S6oVeowZKtmYoy0ZV+p13qsgRTasZleO
-	vDt+ykM=
-X-Received: by 2002:a53:b74b:0:b0:64c:f001:f6b with SMTP id
- 956f58d0204a3-64e912fb730mr2882157d50.9.1773845505787; Wed, 18 Mar 2026
- 07:51:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="AIzTLVGa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BrE7A2hnsRn5KS/fBAZHcyp5qKmc4hectYLD/x6j+q9/0XWuo8csUhGCeOZld9todAEyjty74oEUxcGm9g8T0Q/h1DkbgmcPiGZ8efU+99vbO370G9BbpnjZAMAIfKT7NuFWkk7CI+U9c+YyafhbS3JgqY/lp91t/dOi2qAbLddbwXyF7H4H1fcOWcNBTCLC5izkHGixvx9a6rMn5C0Ziy29yltEm0zFQaV181dh0RzgmRZ/rMo0jInPCw1Mh7DMVU0TIMNSFnvQVohJPI+Kl5wDu6whim2zFIXm5Ii4qwwtM8zSG4uZiiuD8t2FPKKGvqzZklf4M6/gWOdmmqrBFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cWycfHgnf3i/73ig+ih2YAEVLRt64SYBLZEWehpKcIs=;
+ b=x22IRA36RROFF2xXDcQoDXhhOPQRgJfFyP6SRoz7e5TjS/Lki1QBcyuTcLRnuT3fpJfTZohdE4cs6caR5ie8ssoYUX0wzJmPU390ahNn9DkP4BY4aiwaYIHrl+tpDPLT1//xWwMtWLfDmiZ2K1yUxbF+rbb1mXcfhZRvsZzN3FkGr0peyVdcoyfyBs/XBWphDDywi4CPO6X1EX4ptEPBKamRVVRDwHGwnwTF7yQZhZuz6eb4aBmDnZ69eVgYVzcaytNc6IS74oKN12iHsFi2Uhx9IPEt66rE2qF/yBV6fA6fPAorQyF23SYEFWXuGEx92ryE99tvXSbglRWRwAGyPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cWycfHgnf3i/73ig+ih2YAEVLRt64SYBLZEWehpKcIs=;
+ b=AIzTLVGa/7OnAvZUTLu4Jwjg/QeQX3dvHdFslxXP22mqjuBchs3aaMgAwEHZQNlJJc+cn6xrXr7vgO/cfxKuYfRWFDWTjXeWKbj7/tuS3hhQbRmCIxUe4NEcFK7YZI3zRNbvkmjVks0J0wX24lTiyBxRewGYkYXoUyNwbtg20zblbfCOz1118ZwjAy0c1Y3SkUWJ0NpCsRIGPQrx6O+GRE4JkfUKEMFK+BkFyQkpm4YYBwa7EVEQ99DY+TdOPrdASlZKcK2sgx2WNN7neh9G9FGa2EUgbegyuQdFg/yuv7cQiX5qh5owrWBswSglME0bMNFTXxXCRca7e14jC4qOpQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YQXPR01MB5498.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:2c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Wed, 18 Mar
+ 2026 14:53:30 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1%3]) with mapi id 15.20.9723.018; Wed, 18 Mar 2026
+ 14:53:29 +0000
+Message-ID: <c91f37bf-97e9-4752-99a9-3d534ce9d2f0@efficios.com>
+Date: Wed, 18 Mar 2026 10:53:26 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/4] ring-buffer: Flush and stop persistent ring buffer
+ on panic
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+References: <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
+ <177319274904.130641.3303707869402603363.stgit@mhiramat.tok.corp.google.com>
+ <20260318231959.717f07ec491a731941aee1d9@kernel.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20260318231959.717f07ec491a731941aee1d9@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR0101CA0348.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6b::25) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
- <20260312150523.2054552-4-vineeth@bitbyteword.org> <abLapcC7YGYDyJ3L@kbusch-mbp>
- <20260312113816.01de2b53@gandalf.local.home>
-In-Reply-To: <20260312113816.01de2b53@gandalf.local.home>
-From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Wed, 18 Mar 2026 10:51:34 -0400
-X-Gm-Features: AaiRm514xL8rsuaoYk7l-YfTLHyaymoFYPgJ2hsw1mDadffK5Tx7pElRtPxoCsU
-Message-ID: <CAO7JXPhV=08g6AFKGmeaP8T9Uuck12Ky3ZmT8yXTJzZkJ5Gq9w@mail.gmail.com>
-Subject: Re: [PATCH 03/15] io_uring: Use trace_invoke_##name() at guarded
- tracepoint call sites
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Keith Busch <kbusch@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YQXPR01MB5498:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8ee07f45-0593-4e2d-910e-08de84fe1dfd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|1800799024|56012099003|7053199007|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	WI07OHb+jZEOTVD8L1BGRT+mrTiBEQn6Sjnx+4PKptde/5l0E57OqxyIbSDnkL0XZ53S+dvDqymvylu+x5+iv+cVBL7vVsbRrjl+s/TtzVJK+ftuRUWLZDi4JYaJ1DfVbaKTMXMhdwhoqBWjrrys4gU8lxxuFTNKOdCNyPXIKHhxpUx0UtEnA3vVsSWpTnNmZE6uiHLcu/Ay+HnlrckIaEH6jNEJ1yIQ5/hoeHAEiPPhsz3MbqEn51jKIh46x2t/JxRMVllHGDxrcH1DmjFpQpHO0k/VLx9O3pRyvqFXwrQw7I/JDjcD8L4rpQPKWySBpH+p27VFHnZqS1GKytWb7SM0nYXqSCvmh87fx5uKDP+b2d4kbFyL2nZH0M++r65S+6lzHhg/3vced16rliHM7eEPrf0goHQKnM01fRymfLzRxf+dnJIhEIqltu0rWL3bhR/ZyVN7bXgHXBGJ/sEY+OIDR3O95mj4xoqwUnWlFosuoz9BBfJArVKPBICLEgPULPqjoRopTtOBf2at8O9CuNnQshGBO6gUwCWcDqx5TjvyxSAC/PaJTxx3ALvtwx4UxHoVzsYtwKRVRTOMR93LTVnfd+zPk4Yq3x54QWXBZ+60lcy7Qe2Eu7DiGc07T9R69PSLafCmQqllKKgiftx5K/nd93GwGeUrfXdN5rZNL2Q=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099003)(7053199007)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RW1LZGJ6NkdNc3k4LzlDZDM4QUxHZ0cvTGFjeWlQMFB0ZWtDbUY1YkRFNGFh?=
+ =?utf-8?B?dThNdnVZdjhydW9hUTdSeXcwR2pjWmpUSFYvbTFlVU44WWthYzhGMTdodEd2?=
+ =?utf-8?B?Zm15cDVvbVdzeGxPV2xKTkdOWFlYYjNjOXE0dG5sUzBGWW1vTEoranFmQmJv?=
+ =?utf-8?B?NDF0d0V3SWpRcUhuS0pMdUZ4UG1rcVI4d0pxblYvZkhLK2Q1MzVEN0I5TkhH?=
+ =?utf-8?B?c3ZrenpjT0RFZGVhYS9CMll5Y25LRi9uTUk2UFRuUGN4TkhSdEhWMkM1eWRI?=
+ =?utf-8?B?ZGc1aWQ4TVFKZEJnQjNDOGsvQXZXZzVQZG02ZGgvL2YxaUgvNC9tbEM5WDdT?=
+ =?utf-8?B?L0ZVeDZDMk4reUNJcU53Q3Y1VlZJUUFRMjhqUjRhYjdkSW8rek9VOURDSGc1?=
+ =?utf-8?B?VnJxRUw1aVY0OENja05OUTNnVm4rT3JEb2NYSSthV2pSOFkxZ2QxZzZJWkgy?=
+ =?utf-8?B?OFFpV1p4RmdRejRUYk9kRm1YUldwd0tLazBQbUJtMTFERk9heG03MG01N0Rm?=
+ =?utf-8?B?d2Rwbmp0N0ZNcSt0endCcFlKeWlzNkVGSExqUit3VDRpN0cwTXJHcHVwMVFZ?=
+ =?utf-8?B?ZFNESzJ0d1ZDcWpZRk8reU9hbEZCNWNwY280aUJzRWVwb25LbmNvMk9kK3g2?=
+ =?utf-8?B?anhYZXd4UXlCTk5xbzJBWmwrL1pLT3VxNUFtSUIvUzYzMXhVa2xWTmYzWUEv?=
+ =?utf-8?B?MzZSL0I1dlFmK1FZdmhMNWVVL1dNNnZzK2FaQkRTNXRYMER4UERDQjRXQ3Fk?=
+ =?utf-8?B?M0dHM0NNUGNRWml2Mlc3dS9SMms2UXRHRlZxd3BVd0ZoVUMwOHhUUURvSGoz?=
+ =?utf-8?B?cmZIVXBQWGNSYWExQk5GWG9jUE42bFAwUTFFc3BaYVg0ZkJaVnl6dHRiV3Vk?=
+ =?utf-8?B?Ymw1SExiU1pMVGdha0V4Mnh5L1VYYk5sV1BQcElxZkk0Q3htaTF6WUJ4VVRO?=
+ =?utf-8?B?Rnk2TTBEVGtBWTRqZklvaVJYaFB4SzFLMGt2ZXNTcFhzK1o3U2o5MVorc3ZD?=
+ =?utf-8?B?OFNNcFFucGkwam5keDZBd3VLUnBTS2xhVVFPV0FJME5mQ1BudEpiRzBQeUp4?=
+ =?utf-8?B?YWxWV1RxVXJHTEZkbGtvZmVEc1FHRDNoRzB0aVBVSFVOZWswMFdxc3hmZEtm?=
+ =?utf-8?B?VUpGbHQ2SUZuMlV2S0NWamVBUmh2N3E1R0tWTGt0OGZ4QXVaYkphNmQ0YmJh?=
+ =?utf-8?B?K1JpaDk3U09mQUl3TU42bkZnbmFNQVNxMjB5c0lLa0JUMmUyMmt3TTU3Q1F2?=
+ =?utf-8?B?NHJsTmtmTEx4dU54OTB5M1dxeFl0dXNsV2svTGpRQUNHQ25KMHRJZGtuMm1C?=
+ =?utf-8?B?Z2s4dFQranRydmxYUVp4OWVrTXduMUpld2huMURWdHFVODhvZldUY2V6RWc1?=
+ =?utf-8?B?M2ROODR6bmFKazhvMkVjSi9kRTVxcTluVDJreXRwS0JKdW9waGpGSHNFSjNP?=
+ =?utf-8?B?TzVUZVpjOUVmUTl2SVB3cHFLdEVvakZndlVIK09QeTBNbmg0aHZ6ZGtXa0VF?=
+ =?utf-8?B?bm91REZPMEFZUUgxWkZTM283WG5rb2dWQ0R5UE9jR0REeXVucWZwT2ZiRll1?=
+ =?utf-8?B?NTYydlZxS1dkUFoxN0d4Vk9MWXBYbExkT0N5NVlGZ1FrR1Z0emowTjV4OEdP?=
+ =?utf-8?B?SUJQRTRiaGZndHNRN1FmdkpjdXorOEEvY3dtZmo1UTh4YjJSRzRGNDlJVjJy?=
+ =?utf-8?B?U0lNb3dxN0dYUEFPRFp6czFCakVPcU5sY1ZnbkQxdlZteEIyMXZ5TkEralhV?=
+ =?utf-8?B?ZmNlYUFkWDhQNmtqKy9EeGhJZXc2d0I4ak1mcTFTYTBwblZFc2J4bTc3Z0w3?=
+ =?utf-8?B?T21IUFdzaUJ2YllnY1BBSTJldXFicmRPdUN3RllTeGhvZ2Z0S1k0MTdUeUNy?=
+ =?utf-8?B?T0JzekdsL1FEVjFmUjJHazZDamY3blQ0NVA0UDdDL0NRNXFYWWxkWW56MCtJ?=
+ =?utf-8?B?ZHJWS2owUHFLdVlqS3FXRndSUkYvNUF0SUpIK09senhXdzBqdHpTQzJrSjNS?=
+ =?utf-8?B?WXA1YUN2bmVhLy90M2RnS0JRWWVoRTBrVzVRY3ZMbDN6VUhzWXhjdlhwSG4x?=
+ =?utf-8?B?MG9KOW5xbnlyS3hLTUZFcmhiSnBhQWV2dzFiL0Z4VHFIOGJkcDd4V05PMEoy?=
+ =?utf-8?B?ZGFMRUIvZkU5cjRObmJ5Y1NFTFZ2T3kvUCtDcFlycjdadTJCM0p0MWZFbUEr?=
+ =?utf-8?B?aGUwZVRsaDQ4b2FoQWttVE1lVmVMM2pLREtFeXVvY2ZndmMyVXFidnVIWkdW?=
+ =?utf-8?B?dVVXYlF3cTYrTDIxMTBWY1Zvajc4ZjVoTDVXZzJ4RHhzaHdBUU1hZTFJeWtB?=
+ =?utf-8?B?OUpVL3hyMWZTOG9PU0p6Z1k5NE5hdDJ5ZGloMnZwNXZIL0J1ZGxnd25kdUpo?=
+ =?utf-8?Q?3K2vMosl3SBvJiIY=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ee07f45-0593-4e2d-910e-08de84fe1dfd
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2026 14:53:29.4643
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7y57ZadbYGC0Kl4qwpnJfpts46UfLutb8rVtlUUERkFhIOJR4bYCfIXMw4/byI0idFQpnKLu39TlwuY4OM7SPBdD00rErUZZ6vvaGaR5pZs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQXPR01MB5498
 
-On Thu, Mar 12, 2026 at 11:38=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Thu, 12 Mar 2026 09:24:21 -0600
-> Keith Busch <kbusch@kernel.org> wrote:
->
-> > On Thu, Mar 12, 2026 at 11:04:58AM -0400, Vineeth Pillai (Google) wrote=
-:
-> > >     if (trace_io_uring_complete_enabled())
-> > > -           trace_io_uring_complete(req->ctx, req, cqe);
-> > > +           trace_invoke_io_uring_complete(req->ctx, req, cqe);
-> >
-> > Curious, this one doesn't follow that pattern of "if (enabed && cond)"
-> > that this cover letter said it was addressing, so why doesn't this call
-> > just drop the 'if' check and go straight to trace_io_uring_complete()? =
-I
-> > followed this usage to commit a0730c738309a06, which says that the
->
-> You mean 'a0727c738309a06'? As I could not find the above 'a0730c738309a0=
-6'
->
-> > compiler was generating code to move args before checking if the trace
-> > was enabled. That commit was a while ago though, and suggests to remove
->
-> It was only 2023.
->
-> > the check if that problem is solved. Is it still a problem?
->
-> We should check.
+On 2026-03-18 10:19, Masami Hiramatsu (Google) wrote:
+> On Wed, 11 Mar 2026 10:32:29 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> On real hardware, panic and machine reboot may not flush hardware cache
+>> to memory. This means the persistent ring buffer, which relies on a
+>> coherent state of memory, may not have its events written to the buffer
+>> and they may be lost. Moreover, there may be inconsistency with the
+>> counters which are used for validation of the integrity of the
+>> persistent ring buffer which may cause all data to be discarded.
+>>
+>> To avoid this issue, stop recording of the ring buffer on panic and
+>> flush the cache of the ring buffer's memory.
+> 
+> Hmm, on some architectures, flush_cache_vmap() is implemented using
+> on_each_cpu() which waits IPI. But that does not safe in panic notifier
+> because it is called after smp_send_stop().
+> 
+> Since this cache flush issue is currently only confirmed on arm64,
+> I would like to make it doing nothing (do { } while (0)) by default.
 
-I shall leave this patch as is for now.
+FWIW, I've sent a related series a while ago about flushing pmem
+areas to memory on panic:
 
-> Which reminds me. There's other places that have that tracepoint_enabled(=
-)
-> in header files that do the above. The C wrapper functions should also
-> convert the callback to the trace_invoke_<event>() call.
->
+https://lore.kernel.org/lkml/20240618154157.334602-3-mathieu.desnoyers@efficios.com/
 
-Thanks for pointing this out. I just had a look and its not too much.
-But I feel it would be better to take it up as a new series. What do
-you think?
+When reading your patch, I feel like I'm missing something, so please bear with
+me for a few questions:
 
-Thanks,
-Vineeth
-> -- Steve
+- What exactly are you trying to flush ? By "flush" do you mean
+   evince cache lines or write back cache lines ? (I expect you aim
+   at the second option)
+
+- AFAIU, you are not trying to evince cache lines after creation
+   of a new virtual mapping (which is the documented intent of
+   flush_cache_vmap).
+   
+- AFAIU flush_cache_vmap maps to no-code on arm64 (asm-generic), what am
+   I missing ? It makes sense to be a no-op because AFAIR arm64 does not
+   have to deal with virtually aliasing caches.
+
+see commit 8690bbcf3b7 ("Introduce cpu_dcache_is_aliasing() across all architectures")
+
+The arch_wb_cache_pmem is specific to pmem, which is not exactly what you want
+to use, but on arm64 it's implemented as:
+
+         /* Ensure order against any prior non-cacheable writes */
+         dmb(osh);
+         dcache_clean_pop((unsigned long)addr, (unsigned long)addr + size);
+
+Which I think has the writeback semantic you are looking for, and AFAIU should no
+require IPIs (at least on arm64) to flush cache lines across the entire system.
+
+Cheers,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
