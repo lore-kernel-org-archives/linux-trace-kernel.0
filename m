@@ -1,40 +1,41 @@
 Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FA43F0AA3;
-	Wed, 18 Mar 2026 15:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDDD3A382E;
+	Wed, 18 Mar 2026 15:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773849545; cv=pass; b=SaSqy5eMMRHHxcTYOileZ0Bw9yxtvh4Gil7qkaCuf3BT3H8Z6/D0v5J+larL7uS1hOOK0nJHoFU8wEL9PbJwhdojUDbyLQF6uTePcpqBWPJzw/dIHLgKlnvvV/q3GLbBaoMwIGMOUc0ee66nVfQTM9xbuhxDgB2a8jJ/5u25CJg=
+	t=1773849546; cv=pass; b=ucR06okDMkRwUxflLlSn5RC55U411hePaq1qK75VsAoCih6TSddUruIgvl+hfw1MeBdoBEqSWbA+3E/dj7IGOl8yrKJNp9xT1q3VGKcaQ+VlW/e8AZMio3cTsVoZo98Ww3mIiC5ZowRFRv2Gtv+VP19M1GitfYzSO7WGABNsPjk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773849545; c=relaxed/simple;
-	bh=+HcyomxWy1PQIKulCzswSpTqDLVvWX9DnDSaTU4aHTI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mNYdNZZGL55+uJnzWMuCDB7o6vDjpxvtmK9oZdTtU0ppCtirgydApwdgow+1zlh0Uuw5nneDCLeTXr4Yxr0rVxy7a47FypE692mnzZm4I60tyl2s7gbV58zStAEOmSa1Eymz6o1Ge6BfRMD3zhVtliexK9Nlac9wNKfkSrbRBmM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=h0c302E3; arc=pass smtp.client-ip=136.143.169.55
+	s=arc-20240116; t=1773849546; c=relaxed/simple;
+	bh=UCGF2iqPoFrqZNf487e+VjLxRdr/pZrbHmHEvFZFg8U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UdKRCrc8AEhZc+Sc2i1gtQFwMMmVc/YFWsAsDL8nlKuezPThGZtRmDyVLO2s0pjp6/G+GmjBoQwVF68ixe9VYPDuwj9qfim+5bPvX6IKw+Kl2YduslwMf2ClS8mSq/Vgm23nnQ1E8USj3/Hvrx5/iUKomerq/GM5c9suC6raVLM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=FDCzrksV; arc=pass smtp.client-ip=136.143.169.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="h0c302E3"
-ARC-Seal: i=1; a=rsa-sha256; t=1773849530; cv=none; 
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="FDCzrksV"
+ARC-Seal: i=1; a=rsa-sha256; t=1773849531; cv=none; 
 	d=zohomail.eu; s=zohoarc; 
-	b=REeDVP4WvRK5wlbSdNDeTPF7O+JtrJ0AyoOVS3vU9+azbERFEZ0ns+1FvfVKRxEMoUZT6kzrRjV70g9313rFLGSrrRvzYAx/GA0abT4Ww0FJW9HPXWElPO5IpUJ1tCU2eUTI9WGiNRvir3Td3Yv7N6KIkGaPpt7MXMvY9VTJKFo=
+	b=ABYeiJNHeZK/EJ9G0/Yajr5VgZTM7IuE4Y/7Iyzw6BsdcoZZizOZI9H1PHx7MH1QUre8VcJFUSbnKR3iTPmA0bMWrHKTCqkEq7cvVbH9OL/p/2TOZ/Bl2fD8ztsmgdf4KjNNrM/npjDYu5CsZKwffr4+dWyafvg0mEn7E4yHMuk=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1773849530; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UbvUiKNE5dMPXW4ssJeNT5xwiCR/C80CpZc0PY4IG5I=; 
-	b=bVnuCv9zs3eJuAPckq4upKUezxbRuZLh4thXC4yGGwcOkmlUIYzcht92DiWFetjX2BMF+Vx1qwTgu77s2I1SgJTjIU2ZVdAQu0NV7BSbWnVlOQ8bi7NzpgXcQdU1KdzgTZKAwuWN2f9wPo2opURnkgDYmHb7Yh0qjXWrsSxlgEw=
+	t=1773849531; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=wQFyRPqlyhXtP7Cik8jB5wy9RJRVH73G8I3fT158msE=; 
+	b=dByjiowwNvOE7rzd1urxlNCUsOYfo7pmkO+TIYJOKca78Sx4BLMl2nsrrDavPJd1MPFP+Kr5HIx6LdZup5yVhFKM5hYydaNzAO+HpVieuramsv3eW2d7krg1Tlk+8jmAwcOl8uu4eOxsji9rANcxBxYbxmpmZLRobur79LQqOgc=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
 	dkim=pass  header.i=objecting.org;
 	spf=pass  smtp.mailfrom=objecting@objecting.org;
 	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773849530;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773849531;
 	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=UbvUiKNE5dMPXW4ssJeNT5xwiCR/C80CpZc0PY4IG5I=;
-	b=h0c302E3nLeu3GqaITPguQFaI8sl4/kSAN1BXUTqaYiNkz5mK5BacLACWuFPG11w
-	A7aYSZNrS0pUxrByW8TpcF1DMIg03LgxX1TcGQ6xRT4iDiIhhCe0p+clQ2KfTT17qrD
-	MqODfibYoBufV+VHQeyUqB2TpNaILYyyBEV57ckk=
-Received: by mx.zoho.eu with SMTPS id 177384952884282.67598424902326;
-	Wed, 18 Mar 2026 16:58:48 +0100 (CET)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=wQFyRPqlyhXtP7Cik8jB5wy9RJRVH73G8I3fT158msE=;
+	b=FDCzrksVuamUHPZTwDilItJ+8lcqSbk3Ou7MnAWyo5xViGrQn6KmyZM6UvULECOs
+	oS3ukS4eyQ2mdZRFc44u7bW7BrTFBx8gvF8KkYszkHJ1c2fcjjunQKrWuGHvH1Yr/GJ
+	B1oX8/EeOX5jLV63++26YeoV2hgzcmzYDgbK+HBQ=
+Received: by mx.zoho.eu with SMTPS id 1773849529411359.27485192489564;
+	Wed, 18 Mar 2026 16:58:49 +0100 (CET)
 From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
@@ -42,10 +43,12 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Josh Law <objecting@objecting.org>
-Subject: [PATCH v8 0/2] bootconfig: targeted fixes for stable
-Date: Wed, 18 Mar 2026 15:58:45 +0000
-Message-Id: <20260318155847.78065-1-objecting@objecting.org>
+Subject: [PATCH v8 1/2] lib/bootconfig: check xbc_init_node() return in override path
+Date: Wed, 18 Mar 2026 15:58:46 +0000
+Message-Id: <20260318155847.78065-2-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260318155847.78065-1-objecting@objecting.org>
+References: <20260318155847.78065-1-objecting@objecting.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,36 +58,39 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Two bug fixes with Fixes tags, split out from the larger cleanup series
-(v7 patches 9/15 and 10/15) per Masami's request so they can go
-cleanly into bootconfig/fixes and from there into stable.
+The ':=' override path in xbc_parse_kv() calls xbc_init_node() to
+re-initialize an existing value node but does not check the return
+value. If xbc_init_node() fails (data offset out of range), parsing
+silently continues with stale node data.
 
-Changes since v7:
-  - Split fixes (this series) from cleanups/improvements into separate
-    series per maintainer request, so fixes can go into bootconfig/fixes
-    and the rest into bootconfig/for-next.
+Add the missing error check to match the xbc_add_node() call path
+which already checks for failure.
 
-Bug fixes:
-  - Check xbc_init_node() return value in the ':=' override path; a
-    bootconfig using ':=' near the 32KB data limit could silently
-    retain the old value, meaning a security-relevant boot parameter
-    override would not take effect (patch 1).
-  - Fix file descriptor leak in tools/bootconfig load_xbc_file() when
-    fstat() fails, and preserve errno across close() on that error path
-    (patch 2).
+In practice, a bootconfig using ':=' to override a value near the
+32KB data limit could silently retain the old value, meaning a
+security-relevant boot parameter override (e.g., a trace filter or
+debug setting) would not take effect as intended.
 
-Build-tested with both the in-kernel build (lib/bootconfig.o,
-init/main.o) and the userspace tools/bootconfig build. All 70
-tools/bootconfig test cases pass.
+Fixes: e5efaeb8a8f5 ("bootconfig: Support mixing a value and subkeys under a key")
+Signed-off-by: Josh Law <objecting@objecting.org>
+---
+ lib/bootconfig.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Josh Law (2):
-  lib/bootconfig: check xbc_init_node() return in override path
-  tools/bootconfig: fix fd leak in load_xbc_file() on fstat failure
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 1adf592cc038..ecc4e8d93547 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -728,7 +728,8 @@ static int __init xbc_parse_kv(char **k, char *v, int op)
+ 		if (op == ':') {
+ 			unsigned short nidx = child->next;
 
- lib/bootconfig.c        | 3 ++-
- tools/bootconfig/main.c | 7 +++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
-
+-			xbc_init_node(child, v, XBC_VALUE);
++			if (xbc_init_node(child, v, XBC_VALUE) < 0)
++				return xbc_parse_error("Failed to override value", v);
+ 			child->next = nidx;	/* keep subkeys */
+ 			goto array;
+ 		}
 --
 2.34.1
 
