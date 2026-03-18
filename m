@@ -1,202 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F2F1ADC7E;
-	Wed, 18 Mar 2026 15:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32C33115B5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 15:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773848072; cv=none; b=TjMafT8DWlm7xyOSYkWDjsvXnDdwBBGTe8KVpUM5EH9ls3u6WlrVwoVSlH63FolJn5yH0XUShbxW6YWuLNeso3Gn8Xyx0A90CYv/gGlqbXCf1GIy414EmyTm2mF8inOMgptAIVfx78C1bGtfZNaCSOPzVuDwToAAwlJXkoTgGXs=
+	t=1773848691; cv=none; b=m0NjU6BOVtddQrycDskPoge8wDVela7RQ7Ern35YfUNlpom3OMPJexWx/tZzY8RBNdeiaQMOuzX3zCMYzY30vgckg4eNvidmSaASAV99Zn19on7PLDrnSY0G0HzhGGAMsjw29CrD+woRHLOax0RXfHt0PF8Cll5bUT5l9EAkCzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773848072; c=relaxed/simple;
-	bh=rVTlQefuITADyaNzM6aWO6QlSclDkSmr0Z77CkSpP3c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AZhWQBbJb2vL27RGapB4dag3O/5t8Cx7kxPnOoZq6jVNXKkL2MWYcrMYZh2ca2swK3zFxQM/CrP7J+lM2XUYcNaZj6Cyla6A6FgfYjaFVhVerS9ZbZjmmUaGgLKHWc+7/aKIsVSG9S0RZlEF0uTEjLILgZi925puBlplsLsOpis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0hlX6S8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773848691; c=relaxed/simple;
+	bh=Qx2NWVA3JwCE/09nWFhvh47FrgRRk1QpCN3BdUvxx50=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hKi2jXAYOMTipi9HGYdpC94gU9tecLhFlPIoLru7l6QBCoZ0cweQqmo0o3ZghAIY729XL5xwtSBB/6oz5c5fSMVaTWpx/Pb3voENdh1Dws7V7aXW9YiG9EK5KUycd8QIv5nP1lCfxAK8INaq909u7eLY0iT8iQrwj3/bwudNUzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IPHDJTt1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0hlX6S8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3969C2BC87;
-	Wed, 18 Mar 2026 15:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773848071;
-	bh=rVTlQefuITADyaNzM6aWO6QlSclDkSmr0Z77CkSpP3c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c0hlX6S8h63ktvu5fILka49De6Ut7Ru1Jlinq3m68Sxb1bpnEstnbrPLdccsiLrEl
-	 EmCflEgZBFcnw+aQbQ4fXyttSS0bG2F6cWYkY0RQwxcBD0FbmXSNVTQKPbskYLuaHh
-	 b/aAFo0PZIYetYZFo1622Zn4KgKBgzwCMU6oKW956RXa3Q+GP6VesSi4zsuUSfkJZT
-	 lxCB/1UCHOw0jrOLYEyA8FrOC6+xwJxp8aFxfrdDxnypb4C5NT0FyxEO3911WeFmiH
-	 VgniLpo40ZgMnel4/LeNKqJ7vpfb/ngO+MF+0RKn2EPE/yZcfwNEgYmpaSHi2c25Bf
-	 S6kBD8ijzNYsw==
-Date: Thu, 19 Mar 2026 00:34:29 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Josh Law <objecting@objecting.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt
- <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/15] bootconfig: fixes, cleanups, and modernization
-Message-Id: <20260319003429.c006cc1df0ccb4a5f307d4a7@kernel.org>
-In-Reply-To: <20260317160916.33576-1-objecting@objecting.org>
-References: <20260317160916.33576-1-objecting@objecting.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IPHDJTt1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773848686;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qx2NWVA3JwCE/09nWFhvh47FrgRRk1QpCN3BdUvxx50=;
+	b=IPHDJTt1MmYucjLp9WAaptr9tHzLtam3xAwMcqInOUh5r2EMmleb8L3JM5xui8uwSp5h21
+	lyYqn2VkJQVM9sXm7TvrM9xhUiT4c4IwmQw3G0aPbcGagyH3XrLuDNlMDVoeKAWldgM0I0
+	BXC6REWPHhObt3SCMLs7jUuBxVO2Jyc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-18-LbRE5MbHMQmxVC8xVk-EzQ-1; Wed, 18 Mar 2026 11:44:39 -0400
+X-MC-Unique: LbRE5MbHMQmxVC8xVk-EzQ-1
+X-Mimecast-MFC-AGG-ID: LbRE5MbHMQmxVC8xVk-EzQ_1773848678
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-43b46b2b161so3291974f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 08:44:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773848678; x=1774453478;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LESUGcaG78coVQnZtnSJQ6wL5uHkv7Ld/Kg5l704lIY=;
+        b=sVB7SFHuReGvwi3AjJxiED2vvtPE2pbkX92utWH5cjgSLkazKTdqU71433O/IMv3ev
+         kDEVpio+E4sr+XXx6KQqcxYCqdYGVXxMPXLxCJsk1nDVUCg63rVJkSfh6mpvbVTeklqq
+         R2vDX1/HhJyfl1MQRXdyaaVLH6SIeQkS6gF9PTqcRAtpsuMYskr4AKN4O9BDVQ/nEw4g
+         m5P1XceVs+uy9NZGSDLaGsVxES0xjF/wOCmL9pBhSLdXgfiXlScOnE1jJ7MSW2eaAi1H
+         gchYk9Z7A8UoUox19uuWFceJMmMM8fFyAb2No8GVK1sxOkz9V0cergQQ2PnkR7sd1/zR
+         LUmw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4PyOuiSTFlQUbmnKGSBzw1rzuHoP7GD3pKcUerRyz8pEl02X57smRJJKZckBSh41cBydo2hZ/dWwUtdle8MRtXtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJJ2gjeyWRPM54kCD09wu0xuZ4V73Qgw0i+7BwHrswQp5gfNfk
+	dY3z0aRuTCjeQoUiE3iJtZPeKQqBN770VL+m4Mc+H4qzJ6Z9ukvdzMxcILpWzzUz8WtizSTerbI
+	uYh3Z72CTNXpPW4vyC26c7DZXIjLIg/WU55cmgR6PvCoBWksqtO1+SLjd9n+xTklw6hGUJb6slA
+	==
+X-Gm-Gg: ATEYQzxI3vU5+m0RMc1n6fgW5Afd0AXsw5UggRtCYgj6b9zee3DaHGbIH4Z4Pfg0Lyf
+	gqp5uRk+mXG8eqPJp/mcBhUmg2RG4bcXqogr9QOuCqhT3wevQ8N9cX3u8CNPLnqdM2fbd+fsrQk
+	PgIWKEH5GdQOVj6KyU53drXZx/CeJ+v22lf9D3toTLxrJSMgdS6H7hLBpj7YpgWqKTpk0sXFXaC
+	jJcchCTG6KoSfErrsvoOr1q7V15olgUaG9adKdxoMSeFg9ZRwXmwyreI7KitM7qcoBYCxUw59qJ
+	1OvlIS2BlLdsLorqJQ9T+0qiu2re6Gklli/fy7VIG0YHveVtXwJaR78gEqDiEk/fLe0TSakA8Kp
+	ux7bJ5l1r71JimuoyQ4eBflJnTQ==
+X-Received: by 2002:a05:6000:2dc5:b0:43b:433f:95c9 with SMTP id ffacd0b85a97d-43b527c4e15mr6772128f8f.35.1773848677995;
+        Wed, 18 Mar 2026 08:44:37 -0700 (PDT)
+X-Received: by 2002:a05:6000:2dc5:b0:43b:433f:95c9 with SMTP id ffacd0b85a97d-43b527c4e15mr6772075f8f.35.1773848677496;
+        Wed, 18 Mar 2026 08:44:37 -0700 (PDT)
+Received: from [192.168.1.166] ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b5184961csm9522411f8f.6.2026.03.18.08.44.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2026 08:44:36 -0700 (PDT)
+Message-ID: <93326862189ea258b17edfd2a272be82834092fa.camel@redhat.com>
+Subject: Re: [PATCH v7 08/15] sched: Add task enqueue/dequeue trace points
+From: gmonaco@redhat.com
+To: Peter Zijlstra <peterz@infradead.org>,
+ linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
+ Juri Lelli <jlelli@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>,  K Prateek Nayak <kprateek.nayak@amd.com>,
+ Tomas Glozar <tglozar@redhat.com>, Clark Williams <williams@redhat.com>, 
+ John Kacur <jkacur@redhat.com>
+Date: Wed, 18 Mar 2026 16:44:34 +0100
+In-Reply-To: <20260310105627.332044-9-gmonaco@redhat.com>
+References: <20260310105627.332044-1-gmonaco@redhat.com>
+	 <20260310105627.332044-9-gmonaco@redhat.com>
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: z6lVCAcyBjRzCfJ6Ft1Ohv78EDBjUM6ejbP8_DO-MP4_1773848678
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Josh,
+Hi Peter,
 
-It is mostly OK, but can you reorder this series as the fixes (which
-has "Fixes" tag, [9/15] and [10/15]) first and others second, so that
-I can cleanly merge it to bootconfig/fixes and bootconfig/for-next?
+On Tue, 2026-03-10 at 11:56 +0100, Gabriele Monaco wrote:
+> From: Nam Cao <namcao@linutronix.de>
+>=20
+> Add trace points into enqueue_task() and dequeue_task().
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
+> Co-developed-by: Gabriele Monaco <gmonaco@redhat.com>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
 
-The patches which has Fixes tag should go into stable tree, but other
-improvements/cleanups should go to next merge window.
+Could I get an Ack for this?
 
-Thank you,
+Thanks,
+Gabriele
 
+>=20
+> Notes:
+> =C2=A0=C2=A0=C2=A0 V7:
+> =C2=A0=C2=A0=C2=A0 * Use cpu_of(rq) helper in tracepoint calls
+> =C2=A0=C2=A0=C2=A0 V5:
+> =C2=A0=C2=A0=C2=A0 * Do not fire enqueue tracepoint for delayed enqueues
+>=20
+> =C2=A0include/trace/events/sched.h |=C2=A0 8 ++++++++
+> =C2=A0kernel/sched/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 12 +++++++++++-
+> =C2=A0kernel/sched/sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 2 ++
+> =C2=A03 files changed, 21 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/trace/events/sched.h
+> b/include/trace/events/sched.h
+> index 7b2645b50e78..5844147ec5fd 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -896,6 +896,14 @@ DECLARE_TRACE(sched_set_need_resched,
+> =C2=A0=09TP_PROTO(struct task_struct *tsk, int cpu, int tif),
+> =C2=A0=09TP_ARGS(tsk, cpu, tif));
+> =C2=A0
+> +DECLARE_TRACE(sched_enqueue,
+> +=09TP_PROTO(struct task_struct *tsk, int cpu),
+> +=09TP_ARGS(tsk, cpu));
+> +
+> +DECLARE_TRACE(sched_dequeue,
+> +=09TP_PROTO(struct task_struct *tsk, int cpu),
+> +=09TP_ARGS(tsk, cpu));
+> +
+> =C2=A0#endif /* _TRACE_SCHED_H */
+> =C2=A0
+> =C2=A0/* This part must be outside protection */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index b7f77c165a6e..c9ca1e048612 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -122,6 +122,8 @@
+> EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
+> =C2=A0EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
+> =C2=A0EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
+> =C2=A0EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_enqueue_tp);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dequeue_tp);
+> =C2=A0
+> =C2=A0DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+> =C2=A0DEFINE_PER_CPU(struct rnd_state, sched_rnd_state);
+> @@ -2094,6 +2096,9 @@ unsigned long get_wchan(struct task_struct *p)
+> =C2=A0
+> =C2=A0void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+> =C2=A0{
+> +=09if (trace_sched_enqueue_tp_enabled() && !(flags &
+> ENQUEUE_DELAYED))
+> +=09=09trace_sched_enqueue_tp(p, cpu_of(rq));
+> +
+> =C2=A0=09if (!(flags & ENQUEUE_NOCLOCK))
+> =C2=A0=09=09update_rq_clock(rq);
+> =C2=A0
+> @@ -2120,6 +2125,8 @@ void enqueue_task(struct rq *rq, struct
+> task_struct *p, int flags)
+> =C2=A0 */
+> =C2=A0inline bool dequeue_task(struct rq *rq, struct task_struct *p, int
+> flags)
+> =C2=A0{
+> +=09bool ret;
+> +
+> =C2=A0=09if (sched_core_enabled(rq))
+> =C2=A0=09=09sched_core_dequeue(rq, p, flags);
+> =C2=A0
+> @@ -2136,7 +2143,10 @@ inline bool dequeue_task(struct rq *rq, struct
+> task_struct *p, int flags)
+> =C2=A0=09 * and mark the task ->sched_delayed.
+> =C2=A0=09 */
+> =C2=A0=09uclamp_rq_dec(rq, p);
+> -=09return p->sched_class->dequeue_task(rq, p, flags);
+> +=09ret =3D p->sched_class->dequeue_task(rq, p, flags);
+> +=09if (trace_sched_dequeue_tp_enabled() && !(flags &
+> DEQUEUE_SLEEP))
+> +=09=09trace_sched_dequeue_tp(p, cpu_of(rq));
+> +=09return ret;
+> =C2=A0}
+> =C2=A0
+> =C2=A0void activate_task(struct rq *rq, struct task_struct *p, int flags)
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 43bbf0693cca..d7ab0aa58a70 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2955,6 +2955,8 @@ static inline void sub_nr_running(struct rq
+> *rq, unsigned count)
+> =C2=A0
+> =C2=A0static inline void __block_task(struct rq *rq, struct task_struct
+> *p)
+> =C2=A0{
+> +=09trace_sched_dequeue_tp(p, cpu_of(rq));
+> +
+> =C2=A0=09if (p->sched_contributes_to_load)
+> =C2=A0=09=09rq->nr_uninterruptible++;
+> =C2=A0
 
-On Tue, 17 Mar 2026 16:09:01 +0000
-Josh Law <objecting@objecting.org> wrote:
-
-> This series addresses a collection of issues found during a review of
-> lib/bootconfig.c, include/linux/bootconfig.h, and tools/bootconfig,
-> ranging from off-by-one errors and unchecked return values to coding
-> style, signedness/type cleanup, and API modernization.
-> 
-> Changes since v6:
->   - Dropped "add missing __init annotations to static helpers"
->     (v6 patch 1).
->   - Dropped "fix sign-compare in xbc_node_compose_key_after()"
->     (v6 patch 16).
->   - Updated "fix fd leak in load_xbc_file() on fstat failure" to save
->     errno before close(), since close() may overwrite it before the
->     error is returned (patch 10).
->   - Updated "fix signed comparison in xbc_node_get_data()" to use
->     size_t for the local offset variable, matching the warning and
->     xbc_data_size (patch 11).
->   - Updated "use signed type for offset in xbc_init_node()" to use a
->     signed long and explicitly check offset < 0 in WARN_ON(), making
->     the pre-base pointer case explicit instead of relying on unsigned
->     wraparound (patch 13).
-> 
-> Changes since v5:
->   - Folded typo fixes, kerneldoc blank line, and inconsistent bracing
->     patches (v5 02-05, 07) into a single patch (patch 1).
->   - Dropped "use __packed macro for struct xbc_node" (v5 11) and
->     "add __packed definition to tools/bootconfig shim header" (v5 14)
->     per review feedback.
->   - Added Fixes: tag to "check xbc_init_node() return in override
->     path" (patch 9).
->   - Added Fixes: tag to "fix fd leak in load_xbc_file() on fstat
->     failure" (patch 10).
-> 
-> Changes since v4:
->   - Added six follow-up patches found via static analysis with strict
->     GCC warnings (patches 11-15, plus the now-dropped v6 patch 16).
->   - Added "fix signed comparison in xbc_node_get_data()" to match the
->     local offset type to xbc_data_size and eliminate the sign-compare
->     warning (patch 11).
->   - Added "use size_t for strlen result in xbc_node_match_prefix()"
->     and "use size_t for key length tracking in xbc_verify_tree()" to
->     match strlen() return types (patches 12, 14).
->   - Added "use signed type for offset in xbc_init_node()" to make the
->     offset bounds check explicit and avoid sign-conversion warnings
->     from pointer subtraction (patch 13).
->   - Added "change xbc_node_index() return type to uint16_t" to match
->     the 16-bit storage fields and XBC_NODE_MAX bounds (patch 15).
-> 
-> Changes since v3:
->   - Added commit descriptions to all patches that were missing them.
->   - Added real-world impact statements to all bug-fix patches.
-> 
-> Changes since v2:
->   - Added "validate child node index in xbc_verify_tree()" (patch 8).
->   - Added "check xbc_init_node() return in override path" (patch 9).
->   - Added "fix fd leak in load_xbc_file() on fstat failure" (patch 10).
-> 
-> Changes since v1:
->   - Dropped "return empty string instead of NULL from
->     xbc_node_get_data()" -- returning "" causes false matches in
->     xbc_node_match_prefix() because strncmp(..., "", 0) always
->     returns 0.
-> 
-> Bug fixes:
->   - Fix off-by-one in xbc_verify_tree() where a next-node index equal
->     to xbc_node_num passes the bounds check despite being out of range;
->     a malformed bootconfig could cause an out-of-bounds read of kernel
->     memory during tree traversal at boot time (patch 3).
->   - Move xbc_node_num increment to after xbc_init_node() validation so
->     a failed init does not leave a partially initialized node counted
->     in the array; on a maximum-size bootconfig, the uninitialized node
->     could be traversed leading to unpredictable boot behavior (patch 4).
->   - Validate child node indices in xbc_verify_tree() alongside the
->     existing next-node check; without this, a corrupt bootconfig could
->     trigger an out-of-bounds memory access via an invalid child index
->     during tree traversal (patch 8).
->   - Check xbc_init_node() return value in the ':=' override path; a
->     bootconfig using ':=' near the 32KB data limit could silently
->     retain the old value, meaning a security-relevant boot parameter
->     override would not take effect (patch 9).
->   - Fix file descriptor leak in tools/bootconfig load_xbc_file() when
->     fstat() fails, and preserve errno across close() on that error path
->     (patch 10).
-> 
-> Correctness:
->   - Narrow the flag parameter in node creation helpers from uint32_t to
->     uint16_t to match the xbc_node.data field width (patch 2).
->   - Constify the xbc_calc_checksum() data parameter since it only reads
->     the buffer (patch 6).
->   - Fix strict-GCC signedness and narrowing warnings by aligning local
->     types with strlen() APIs and the node index/data storage in
->     xbc_node_get_data(), xbc_node_match_prefix(), xbc_init_node(),
->     xbc_verify_tree(), and xbc_node_index() (patches 11-15).
-> 
-> Cleanups:
->   - Fix comment typos, missing blank line before kerneldoc, and
->     inconsistent if/else bracing (patch 1).
->   - Drop redundant memset after memblock_alloc which already returns
->     zeroed memory; switch the userspace path from malloc to calloc to
->     match (patch 5).
-> 
-> Modernization:
->   - Replace the catch-all linux/kernel.h include with the specific
->     headers needed: linux/cache.h, linux/compiler.h, and
->     linux/sprintf.h (patch 7).
-> 
-> Build-tested with both the in-kernel build (lib/bootconfig.o,
-> init/main.o) and the userspace tools/bootconfig build. All 70
-> tools/bootconfig test cases pass.
-> 
-> Josh Law (15):
->   lib/bootconfig: clean up comment typos and bracing
->   lib/bootconfig: narrow flag parameter type from uint32_t to uint16_t
->   lib/bootconfig: fix off-by-one in xbc_verify_tree() next node check
->   lib/bootconfig: increment xbc_node_num after node init succeeds
->   lib/bootconfig: drop redundant memset of xbc_nodes
->   bootconfig: constify xbc_calc_checksum() data parameter
->   lib/bootconfig: replace linux/kernel.h with specific includes
->   lib/bootconfig: validate child node index in xbc_verify_tree()
->   lib/bootconfig: check xbc_init_node() return in override path
->   tools/bootconfig: fix fd leak in load_xbc_file() on fstat failure
->   lib/bootconfig: fix signed comparison in xbc_node_get_data()
->   lib/bootconfig: use size_t for strlen result in
->     xbc_node_match_prefix()
->   lib/bootconfig: use signed type for offset in xbc_init_node()
->   lib/bootconfig: use size_t for key length tracking in
->     xbc_verify_tree()
->   lib/bootconfig: change xbc_node_index() return type to uint16_t
-> 
->  include/linux/bootconfig.h |  6 ++--
->  lib/bootconfig.c           | 65 ++++++++++++++++++++++----------------
->  tools/bootconfig/main.c    |  7 ++--
->  3 files changed, 46 insertions(+), 32 deletions(-)
-> 
-> -- 
-> 2.34.1
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
