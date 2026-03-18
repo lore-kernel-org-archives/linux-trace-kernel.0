@@ -1,165 +1,146 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B113BADA7
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 10:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773831542; cv=pass; b=itvEta2Hzb0VdS9NRWeCOFh8v6EJpFlqzdoKbFZnqqkOXsqesyhjQoaAmUGYzPgXvlaKcTmebmxfJgYf5l7Jw4b54G953t96X7h4Lb0nQNbgIRMCbK2UjNhWkqfKs9CljtZBg5gcpBCf9x2VBVEMbydp6JcLAwy0yUSVrBZHxaU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773831542; c=relaxed/simple;
-	bh=LVVELEXkmiKTU/p+oy+of4jebFSUmNrxF9w9nex4moo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BdZ0gO+QHRYIH9GdMkC+tSWxZ/OZTaYnzgTHpWBosYgpGF4iDsjueqvsp03B7QD+g6BVJR1qaZa77eEz2Zy21FaimEz1gQNu2ZiOwL4wdc6o04HSqMkRmWt9E/Tj2mDxDN/IqUX2z4LAS5+FdcVW7rwmZSfqJ0hq/tbbcbwbO4M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=Y+F4gIrC; arc=pass smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2763BE163;
+	Wed, 18 Mar 2026 10:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773831544; cv=none; b=EPgDyUNdOgS7+q0OmrPTV/8YBENMULs7JMHI0Ef3KgoMPl5WUo6Lj75xNR5BB1Zvq2264B4zG1WBNlpo7VWsDn483wwn3b4wEUK1hiUiB7WEGHF7ns2aPjd27w11r7NpTeRRKO9zXEYAxsY8Z60UAAa3uDl2+N3Ck1Lfkr82m4A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773831544; c=relaxed/simple;
+	bh=eXHAfMqh6RkD93DEJUVdAwdOv0hR8c1CLNcm1BQYW+k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QmeI0WpYzMW9kA920GI6xUXlx8wbAlehoybiarWn4TTggggHypBKQDkK/VlHVj7DeplFuinaN1uZVJwleVSr0aeoBYjzazNrIJBtTa3ockDTWOAMB8BreNpifwff25PEx0MxAMx5sA6ZqKGLctJVKk5QEhqX8XFWIXODcC5ojC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6uE4wnF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="Y+F4gIrC"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-79a60975dc5so23527387b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 03:58:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773831537; cv=none;
-        d=google.com; s=arc-20240605;
-        b=N0hfWzslTyd/RxGGGdPTtTZEsjd8+qodz0rTOrvZze4JktAEuC6KtkADIXWVOWboyd
-         oA51KsD9h0C3/0Kitr516bFUOYbuFAusstN6cFU0btoX2yWSDks1ZH2VwIG02dWk4GaJ
-         RXjVLLx03Mz6+i4Fs0LJUWQtSZKbSPGCdkYrvu+RcjVaVID0cWGZuDjcOytQ5mJIDamX
-         SAG32zvYl62qq7UNS2Pvx/EiQNRAw8WUGq/oedb/owjMm5HArMrQb6es7ze2hnYvuUDm
-         3W1J0QHJQsw+Dt90yDAHfmjqgsKW1GfmrZdWU7FI3UgPuI9uzgB4st643HSsPT4Ld5rx
-         DSIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LVVELEXkmiKTU/p+oy+of4jebFSUmNrxF9w9nex4moo=;
-        fh=fcqPaCaDaOzyJQNe0XksR90/Z3naBgHGZmeiR62DQxM=;
-        b=gPZHhpUvspua/eE1Q/+FS0EgZaRK/2nnS4whLVIO21Au6fbAmgUIsBJuGjXDnaqlxr
-         Au2G/UKitTTNNphCWArMUqQmnVu7hqUcZzcNgLH+cwwbM7WV0li2PjJ3z+dmpLU++i3y
-         Yiypv/9Uo8ofamCNRffphCKhNfTfA5TT/6FYVbLaimgHi+PCFpKFQkvRXN+9eT3DGSim
-         S8ojyCy4I26ZuaCY3CREYC7MzRctRX9EXQ0Q+8/HV49XzzxEs1AuF68ojMmK0sWYbKem
-         mecclQvjhexgRZ10CvuYgKLgSFnU9RydI2de54mp+6B7vCXjC627ZkV4uiBYZJ86XWsO
-         cGaQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1773831537; x=1774436337; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LVVELEXkmiKTU/p+oy+of4jebFSUmNrxF9w9nex4moo=;
-        b=Y+F4gIrCy3AlMDM7CSYzAY8MdpN5nfDAenVYSS8jF8/QGMe0BtbaqtvpoNu4HHsdwI
-         eCHGz033wV+iu7o9yHNzl8ab1W8iVYNVNBYMUrCHRQLI9DZgf1n+KJ5WGJM874ZC8E1f
-         V8AfDwxwo6eY0vCZpRljMsNdbb7jgkZbz3BUBCDiRZdtki+wXyJ231XN2e5CQzBOtHl2
-         RNzehobgF8tA59rhsLrK604RjKLDzwzujNWXDWsClMTvJ5qFhXeMw/pwvPnR1XkeD7qu
-         tmTv/A7/XayQthiGv4k2dz99RPffdzi9GNohb9QPIB0xHVtAoLzYczErYFx/GTFFdjmi
-         QFOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773831537; x=1774436337;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LVVELEXkmiKTU/p+oy+of4jebFSUmNrxF9w9nex4moo=;
-        b=TYG9ln659J/TDiYXtUAo2Rj/WFToP/4lNb24rJtBdTotfrQufVN4/s45iINj7G3RaI
-         SuIzzt3BcP9+g1GzDvmHOhU19yUtQL3X7X8OEkLns/2eV6N5aLsU0qPk88vLnLurno0A
-         JoZkDHZTeoT2sfvfHWgnLuUfUlN2DtDrSfzFMrMOYC08/dgCLok38o0Nc6WT+zxBNx5B
-         THY87/wzUYirJkMxqESXF55aGhy0oousxcMTOnTqEWZ0cwYIuu+9Ewi2nncOU6YjQiPF
-         g3eYc0u5jXpAQ7TUNTzudODw0flkdNYlUtPqvaD3r0XiWDUxGVxX/48cuq6nA1HoSXlL
-         jIew==
-X-Forwarded-Encrypted: i=1; AJvYcCXwrzUdy+NqH3/adie2hK1OSVxHYfMzrDVoYIZ8NpMzWEyqHYKpwq59TskpTJ+X08+FiRhhrakKLrZ1opnkP7qjtFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8d6xcHolXZpa6/I/LJ7B24quICWoxWbd1JUhAIiajL920FBPQ
-	xJfUlYrYxSIp4KuWCkyKgMn6U0nv7iYgbbbVHp3J5KP8tcsQXW+C9d0bvas+u+ZMr1HhSzMr2Xw
-	cnva1uOSfiV2VMK5RNRlvCGycv/xaGgValuu/uwuB8w==
-X-Gm-Gg: ATEYQzzB11Xe5tk8vCyX9OXR1NSQCfZXrkH7NbjpU6PKNUFkWMMDDqgxpaCSFXbEgmR
-	yo22NQJ3erVpQ26gT+k36WqeFXyUOwHjas0l3zwOAkHBA6ZH1tYnyOvcD72bD+bI/XyL4xzJQcc
-	P7WQPSJAyTdCrQjP0bfcmYWBd5fXXvExMW9/4tIWCeYFSj94FFlyzkMe6ZjiWje9iIeo9UuI44x
-	61GqBsp7MYiPDxX+oxlmcoS2oeAfeM/vXfKR3vuZDXlN6K3nAM28A8hFOL0MtrIhKm3S6PD6qik
-	DhcP3yc=
-X-Received: by 2002:a05:690c:c50e:b0:79a:3a33:933 with SMTP id
- 00721157ae682-79a71ad413dmr29714557b3.31.1773831537485; Wed, 18 Mar 2026
- 03:58:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6uE4wnF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4541BC2BCB9;
+	Wed, 18 Mar 2026 10:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773831543;
+	bh=eXHAfMqh6RkD93DEJUVdAwdOv0hR8c1CLNcm1BQYW+k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=F6uE4wnFoYpsxRBiKT/PjPuXliQ4seo8S9062AZ7tk37rf3ZX++agKVae57LX+29I
+	 yOZFWkz8+D78t+J+kBeYs9Qs2oAecfpTnD+o1T2HG0HpEjZo810U5evd+qliij5IiW
+	 IgYK3nOftqn6sOZlY2YDSpVWlBfQ8TEo4vTV4YniZHRCKn43nBCEaPD8oZfh0eyMZ+
+	 QGWYVHomaz+gh+eL5gKQAhKHGEpiUT2Io7PAeJF3RBHLzyCpPPWb8FuXF0KgA94nWR
+	 GlEeCRmq1FL9VNkiAAH6yRt6OeunWDVw1taBsLaZn/I5l4CSyZG2rax4i3zH87YD7F
+	 F+nbWE7Og683g==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Potapenko <glider@google.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Brendan Jackman <jackmanb@google.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jan Kara <jack@suse.cz>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Marco Elver <elver@google.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Rob Herring <robh@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Zi Yan <ziy@nvidia.com>,
+	devicetree@vger.kernel.org,
+	iommu@lists.linux.dev,
+	kasan-dev@googlegroups.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-efi@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH 2/8] powerpc: opal-core: pair alloc_pages_exact() with free_pages_exact()
+Date: Wed, 18 Mar 2026 12:58:21 +0200
+Message-ID: <20260318105827.1358927-3-rppt@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260318105827.1358927-1-rppt@kernel.org>
+References: <20260318105827.1358927-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
- <1e3c2830-765e-4271-89f7-0b6784b37597@efficios.com> <20260312112354.3dd99e36@gandalf.local.home>
- <219d015d-076b-4c80-8f63-88569115fdad@efficios.com> <20260312114041.5193c729@gandalf.local.home>
- <1becdbce-2c01-468a-bbab-42b5dea9fdf8@efficios.com> <CAO7JXPjnnruhM5oC6xMgnYaQ9efzYFqMCFiJLNM3HCQ+ZeCiJw@mail.gmail.com>
- <CAEf4BzbnfyhCqp0ne=2gRnVxp-mdGmuZwDeFRyhRYH+eDcz2-w@mail.gmail.com>
- <20260312130255.6476e560@gandalf.local.home> <CAO7JXPgHYZ9zF1HFahb2447X85YRZCQQBHB6ihOwKSDtiZi8kQ@mail.gmail.com>
- <20260317120049.6a60fa88@gandalf.local.home> <6ca9f884-9566-4a82-9995-4c802a0bf8a0@efficios.com>
-In-Reply-To: <6ca9f884-9566-4a82-9995-4c802a0bf8a0@efficios.com>
-From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Wed, 18 Mar 2026 06:58:46 -0400
-X-Gm-Features: AaiRm52iP799baA3h48fwfLjW02Pe87nEMlmDoXLIPKYRV2LFYQQkuww_KlSUU0
-Message-ID: <CAO7JXPgbERfc_P+aPFB1+nR5ua3mZGbhdkbxCr0TFR4Cr6Khuw@mail.gmail.com>
-Subject: Re: [PATCH 00/15] tracepoint: Avoid double static_branch evaluation
- at guarded call sites
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Dmitry Ilvokhin <d@ilvokhin.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-	io-uring@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, 
-	Jon Maloy <jmaloy@redhat.com>, Aaron Conole <aconole@redhat.com>, 
-	Eelco Chaudron <echaudro@redhat.com>, Ilya Maximets <i.maximets@ovn.org>, netdev@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	tipc-discussion@lists.sourceforge.net, dev@openvswitch.org, 
-	Oded Gabbay <ogabbay@kernel.org>, Koby Elbaz <koby.elbaz@intel.com>, 
-	dri-devel@lists.freedesktop.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Huang Rui <ray.huang@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, linaro-mm-sig@lists.linaro.org, 
-	Eddie James <eajames@linux.ibm.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Joel Stanley <joel@jms.id.au>, linux-fsi@lists.ozlabs.org, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Alex Deucher <alexander.deucher@amd.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Matthew Brost <matthew.brost@intel.com>, Philipp Stanner <phasta@kernel.org>, 
-	Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	amd-gfx@lists.freedesktop.org, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, linux-spi@vger.kernel.org, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
-	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 17, 2026 at 12:02=E2=80=AFPM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> On 2026-03-17 12:00, Steven Rostedt wrote:
-> > On Fri, 13 Mar 2026 10:02:32 -0400
-> > Vineeth Remanan Pillai <vineeth@bitbyteword.org> wrote:
-> >
-> >>>
-> >>> Perhaps: call_trace_foo() ?
-> >>>
-> >> call_trace_foo has one collision with the tracepoint
-> >> sched_update_nr_running and a function
-> >> call_trace_sched_update_nr_running. I had considered this and later
-> >> moved to trace_invoke_foo() because of the collision. But I can rename
-> >> call_trace_sched_update_nr_running to something else if call_trace_foo
-> >> is the general consensus.
-> >
-> > OK, then lets go with: trace_call__foo()
-> >
-> > The double underscore should prevent any name collisions.
-> >
-> > Does anyone have an objections?
-> I'm OK with it.
->
-Great thanks! I shall send a v2 with s/trace_invoke_foo/trace_call__foo/ so=
-on.
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Thanks,
-Vineeth
+opal-core allocates buffers with alloc_pages_exact(), but then
+marks them as reserved and frees using free_reserved_area().
+
+This is completely unnecessary and the pages allocated with
+alloc_pages_exact() can be naturally freed with free_pages_exact().
+
+Replace freeing of memory in opalcore_cleanup() with
+free_pages_exact() and simplify allocation code so that it won't mark
+allocated pages as reserved.
+
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ arch/powerpc/platforms/powernv/opal-core.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/arch/powerpc/platforms/powernv/opal-core.c b/arch/powerpc/platforms/powernv/opal-core.c
+index e76e462f55f6..abd99ddbf21f 100644
+--- a/arch/powerpc/platforms/powernv/opal-core.c
++++ b/arch/powerpc/platforms/powernv/opal-core.c
+@@ -303,7 +303,6 @@ static int __init create_opalcore(void)
+ 	struct device_node *dn;
+ 	struct opalcore *new;
+ 	loff_t opalcore_off;
+-	struct page *page;
+ 	Elf64_Phdr *phdr;
+ 	Elf64_Ehdr *elf;
+ 	int i, ret;
+@@ -329,9 +328,6 @@ static int __init create_opalcore(void)
+ 		return -ENOMEM;
+ 	}
+ 	count = oc_conf->opalcorebuf_sz / PAGE_SIZE;
+-	page = virt_to_page(oc_conf->opalcorebuf);
+-	for (i = 0; i < count; i++)
+-		mark_page_reserved(page + i);
+ 
+ 	pr_debug("opalcorebuf = 0x%llx\n", (u64)oc_conf->opalcorebuf);
+ 
+@@ -437,10 +433,7 @@ static void opalcore_cleanup(void)
+ 
+ 	/* free the buffer used for setting up OPAL core */
+ 	if (oc_conf->opalcorebuf) {
+-		void *end = (void *)((u64)oc_conf->opalcorebuf +
+-				     oc_conf->opalcorebuf_sz);
+-
+-		free_reserved_area(oc_conf->opalcorebuf, end, -1, NULL);
++		free_pages_exact(oc_conf->opalcorebuf, oc_conf->opalcorebuf_sz);
+ 		oc_conf->opalcorebuf = NULL;
+ 		oc_conf->opalcorebuf_sz = 0;
+ 	}
+-- 
+2.51.0
+
