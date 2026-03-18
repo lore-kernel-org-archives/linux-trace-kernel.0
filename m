@@ -1,440 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977893BADA7;
-	Wed, 18 Mar 2026 14:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773843602; cv=none; b=Hwl9DOYXd+49hQCSPA9rywnud6ETMI4vJuXMgIVe6bZ3u7fI+YDQxz5njZV1PZUxyCQrauY4ZkKonArYlg5fj0VsEMSeuYVi6iRdLHYxpabTqfDa0/Rwe2bCoxPrItutBeUvV6Nn7TsIB+SXBijpVaZuGIrMTi+deMmgFOvN4jo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773843602; c=relaxed/simple;
-	bh=i9s+c5eD8ARiSxqL5KlRLD8iafzc8GyQBqFlu9xKexM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iTyo4sBHM7yRexDA5534KoJVGIzSmq6WAdUmImcqb7UJBhyndAi2voY5PnFHg4xEj0BeF/qR1r/VcEzv/DoPNITIKv1eEsa+8cAsz3pOrfYCkJIodd2EJ24kJzzMFDRhgAPGP4xDEBo7KCYlCx/g3OGHeKuezyHKvqDVh8QKSzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOa/48I2; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D868F38A71D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 14:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773845508; cv=pass; b=DR9GoMVU7PYzHOgd8Pp7wOifrf2G5JKmYTFiD8Od4Eoz3oXTlkM1O0JMR1SBPDrRWzLj7cceFY4KJ8/o4fhAAsgMq6TwdnxAoWIlpXPE1XFrmRsRLIPmjnwbtVCb92pacY9s4pDySWzJsnvzXTDg+2epFeoXo7Xxc00NoCWMC9Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773845508; c=relaxed/simple;
+	bh=1FISFWtjLoHF5EnuYPOgvH0ljgC076KLVSofovMd6Qc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T675kEVQH1dup4BM3hY5y1fikWRMWhzlCe/+DuDD9w/EzPEL/XNJoHwsBIOeG/QtZS8SG6gx5yJYL3MVTHkQp+xT0T7TTJJU2LdXPjU59DKzX4x2gNHsCPStItoeMQroq54TUaxsIxoPUaRfEktbthDApPbfVxi5s1JRpoVWYd8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=XpJ1DAOP; arc=pass smtp.client-ip=74.125.224.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOa/48I2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF80C2BCAF;
-	Wed, 18 Mar 2026 14:20:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773843601;
-	bh=i9s+c5eD8ARiSxqL5KlRLD8iafzc8GyQBqFlu9xKexM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GOa/48I2DzGXKgOGAEJorOn6U/NWtL2mXQj2tauTrTEfIYMdauOfEq7LHfIxyt5Md
-	 x/ytndSy9sy7uAfs4w+rV33FIiOi8tkjKhsN8Slc0Ak/Thp6V6FXPfOnNty74mYJnD
-	 mROVtOgqj3ZJbM87k4+AYs8b6Df2IkUP+Fikcu/2SEoMZkA0VJbR63irER/LBC30Gv
-	 GBSFOzhX8STL8zerwig+t2Z+dNXu2UNNHlMKUk7qUzDVLektroP7ZguVfc2/8jYx0U
-	 0dqeomnOS2aM0q/U7m3q2rO2JdDqS+TWgq0To/N22GW1tM663iFhjB9K8fYzHcY9tI
-	 iA39og+xUGYVw==
-Date: Wed, 18 Mar 2026 23:19:59 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v9 2/4] ring-buffer: Flush and stop persistent ring
- buffer on panic
-Message-Id: <20260318231959.717f07ec491a731941aee1d9@kernel.org>
-In-Reply-To: <177319274904.130641.3303707869402603363.stgit@mhiramat.tok.corp.google.com>
-References: <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
-	<177319274904.130641.3303707869402603363.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="XpJ1DAOP"
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64aedd812baso4287d50.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 07:51:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773845506; cv=none;
+        d=google.com; s=arc-20240605;
+        b=TUB8Qtw8O2E493ajLnSc/rWPXK7ZidpK6b7k4TWqPaQmeei9YFzrNOWOwWmR4LFABi
+         HbmjNg+U73Sp1ZAuqQGkvIOFemrdn1O1zhNe7JNigGEOXE6oqMWnZJeUitxhsGQtu9QN
+         yz1EEwUuOXX7QbESAhydTYljVF/P8tm0X4ntqpwkqSTHMam+5Hf9ysB5KIuk9oP7EaR4
+         unPgzWcoaLQtEpN8P0GPjAxyPpBv+VJLlOeAlAeenKwni3+s3d499lgzQQclVwlBYc89
+         JJrjHrwonlbOkdTjtEHJgzOdBfNhzW+iuNE+VUvBqGwSMkZ4I6mWuRmmISKs6c+LS7wb
+         3xPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=p+amKP2hSQ8rLALonagLiBWsS/hjEbvlJDIAKI1rnTk=;
+        fh=w5MOAxii0zg3NISFKvtfHpUt4RK+C7pwcrWvYAR8FYg=;
+        b=LvntVtWqkdqJ2kxglo+nSAiiDT73ST//F3nKVClMqd62okvY226DIs7VNaetS2sV7g
+         xKbMzVeZmTdlECBCvdDo44z8ThMjKoJ/w6J6C59Jezi5Nhy+HFXy4a6eDfN/KvVqMu9v
+         kyUZc0gdPw/txN+XcXsAH8z9yHY2TpEGQni6iKvnW0D4swOKAKy3USBcUY+HtWHg1ZDf
+         A4WMBE9FeTK2il/wh/YYGTY6sck0ddUXg212bPMAXGPmnIe7d6fQMlQN5t6OjT8M2hmI
+         jtuMg4LEZ2AA1EmJWtsBAIVxQk16NJDYmjgWt4wTUO3tpb85+q9jtVjrWHd0nB0/KUqR
+         EZww==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bitbyteword.org; s=google; t=1773845506; x=1774450306; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p+amKP2hSQ8rLALonagLiBWsS/hjEbvlJDIAKI1rnTk=;
+        b=XpJ1DAOP/4nAdBA8pNInAjErrB1WwzEJFuO8HmuDUIYaj2cg/1BDSwWXXh5Ed05U3Q
+         bEzFS7R7c7xsBrws3lVzQJLQQJFgLEij7/0GOiRjugLMEXl29wR670phhRL3ueHVm8QE
+         3mz3euiuEHCK6YyC5OW3x2Sf/xMXOUyaKql0t8Ag/4IlnklPQeUzQu9MtNvM7KgvNSj9
+         hU5W4AYkFS4Lly5PDu0SI8uDIrK3wmnvFYsRdI0BqlvFNxTf3dNc6SxGRMVenPGgKuF6
+         VF6oqB961lMxoSCe2NtuaTM3bIoXQwAJBwR4oBLXTWquf4IytutPq6FXV/dGE2/rvbWz
+         Kn5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773845506; x=1774450306;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=p+amKP2hSQ8rLALonagLiBWsS/hjEbvlJDIAKI1rnTk=;
+        b=Y9IKoFHluVlxJy0DJ+TtMWSIMaf+AxJR8/EE+ucf0Ov3CjkVx/76JxyHMdgbaBHtFp
+         Cw8neTJFwgSA0IXRSESFKXilTzzO25wpiCm+RxHZSIEIOCBUAMfyKov0qlhczQzp9FrW
+         Q10FZyXnRrif1C2wruKIgG4l4VRZbm7JkJvZKq8np36vxYL/sva4LPK09IquVk838p0X
+         iBlVbwaLkF25fjjmY8Eoc/Z+Anny6J61SCJdthKY9ISSS9vrzkktpKGG1VBDZdJumMjB
+         9bW0SVr56PCshYFWazhn8E/j3NJuZGyw/9VbR5aV6vN6nUFhlUsHOwXcwX0cV4W2jkUs
+         0A1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVpRVRfyXOtB9HeXPOGKjG4uNR3/DkD/MTJKUqgKzSsPRMyQcnH2CFOjJPtbnJMMyhb6h8eyjOPKH4oK+NI9k5t0ts=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCfA0YtYE9ljjTZfu17SRhuYI1fwhLTtFNS4LD0Zd0fTLqoaiJ
+	KoGnN889VFP3NnKyBWZXb/+UGe9YH/OjqsraZRXjaJGH3gFiGJtMH7kvV44aQ87u6iT7hrSRzPP
+	OxZSa7Q+19+2uBTHoKLf2tWGqU8PXgD/u5OYXj7NVXA==
+X-Gm-Gg: ATEYQzzN5BkAy3RnWF7ufiOCMhcFx0YTopH3CwV/9Lc/q7oogYXjkUtixkNsRsrKnUt
+	gpPId3MgrYLjtB7XpLZHZn0aFtXILdJDNfvnnDHBVNed3qYTJ0GrYYr1uFl8l3QQElvS2p1nCgf
+	OPP45GYCyKDwTCfOo7IIejXwmoqoZDTpNTzkJ45JnZ/fYNESsEkpjdmT2LYeIoI5IbDLjaZhZWb
+	kpRd2EZ0AEsUmVDX3VFfl7hz1zC+sJ5LAtE7KZozDg9S6oVeowZKtmYoy0ZV+p13qsgRTasZleO
+	vDt+ykM=
+X-Received: by 2002:a53:b74b:0:b0:64c:f001:f6b with SMTP id
+ 956f58d0204a3-64e912fb730mr2882157d50.9.1773845505787; Wed, 18 Mar 2026
+ 07:51:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
+ <20260312150523.2054552-4-vineeth@bitbyteword.org> <abLapcC7YGYDyJ3L@kbusch-mbp>
+ <20260312113816.01de2b53@gandalf.local.home>
+In-Reply-To: <20260312113816.01de2b53@gandalf.local.home>
+From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
+Date: Wed, 18 Mar 2026 10:51:34 -0400
+X-Gm-Features: AaiRm514xL8rsuaoYk7l-YfTLHyaymoFYPgJ2hsw1mDadffK5Tx7pElRtPxoCsU
+Message-ID: <CAO7JXPhV=08g6AFKGmeaP8T9Uuck12Ky3ZmT8yXTJzZkJ5Gq9w@mail.gmail.com>
+Subject: Re: [PATCH 03/15] io_uring: Use trace_invoke_##name() at guarded
+ tracepoint call sites
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Keith Busch <kbusch@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 11 Mar 2026 10:32:29 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Thu, Mar 12, 2026 at 11:38=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Thu, 12 Mar 2026 09:24:21 -0600
+> Keith Busch <kbusch@kernel.org> wrote:
+>
+> > On Thu, Mar 12, 2026 at 11:04:58AM -0400, Vineeth Pillai (Google) wrote=
+:
+> > >     if (trace_io_uring_complete_enabled())
+> > > -           trace_io_uring_complete(req->ctx, req, cqe);
+> > > +           trace_invoke_io_uring_complete(req->ctx, req, cqe);
+> >
+> > Curious, this one doesn't follow that pattern of "if (enabed && cond)"
+> > that this cover letter said it was addressing, so why doesn't this call
+> > just drop the 'if' check and go straight to trace_io_uring_complete()? =
+I
+> > followed this usage to commit a0730c738309a06, which says that the
+>
+> You mean 'a0727c738309a06'? As I could not find the above 'a0730c738309a0=
+6'
+>
+> > compiler was generating code to move args before checking if the trace
+> > was enabled. That commit was a while ago though, and suggests to remove
+>
+> It was only 2023.
+>
+> > the check if that problem is solved. Is it still a problem?
+>
+> We should check.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> On real hardware, panic and machine reboot may not flush hardware cache
-> to memory. This means the persistent ring buffer, which relies on a
-> coherent state of memory, may not have its events written to the buffer
-> and they may be lost. Moreover, there may be inconsistency with the
-> counters which are used for validation of the integrity of the
-> persistent ring buffer which may cause all data to be discarded.
-> 
-> To avoid this issue, stop recording of the ring buffer on panic and
-> flush the cache of the ring buffer's memory.
+I shall leave this patch as is for now.
 
-Hmm, on some architectures, flush_cache_vmap() is implemented using
-on_each_cpu() which waits IPI. But that does not safe in panic notifier
-because it is called after smp_send_stop().
+> Which reminds me. There's other places that have that tracepoint_enabled(=
+)
+> in header files that do the above. The C wrapper functions should also
+> convert the callback to the trace_invoke_<event>() call.
+>
 
-Since this cache flush issue is currently only confirmed on arm64,
-I would like to make it doing nothing (do { } while (0)) by default.
+Thanks for pointing this out. I just had a look and its not too much.
+But I feel it would be better to take it up as a new series. What do
+you think?
 
 Thanks,
-
-> 
-> Fixes: e645535a954a ("tracing: Add option to use memmapped memory for trace boot instance")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v9:
->    - Fix typo of & to &&.
->    - Fix typo of "Generic"
->  Changes in v6:
->    - Introduce asm/ring_buffer.h for arch_ring_buffer_flush_range().
->    - Use flush_cache_vmap() instead of flush_cache_all().
->  Changes in v5:
->    - Use ring_buffer_record_off() instead of ring_buffer_record_disable().
->    - Use flush_cache_all() to ensure flush all cache.
->  Changes in v3:
->    - update patch description.
-> ---
->  arch/alpha/include/asm/Kbuild        |    1 +
->  arch/arc/include/asm/Kbuild          |    1 +
->  arch/arm/include/asm/Kbuild          |    1 +
->  arch/arm64/include/asm/ring_buffer.h |   10 ++++++++++
->  arch/csky/include/asm/Kbuild         |    1 +
->  arch/hexagon/include/asm/Kbuild      |    1 +
->  arch/loongarch/include/asm/Kbuild    |    1 +
->  arch/m68k/include/asm/Kbuild         |    1 +
->  arch/microblaze/include/asm/Kbuild   |    1 +
->  arch/mips/include/asm/Kbuild         |    1 +
->  arch/nios2/include/asm/Kbuild        |    1 +
->  arch/openrisc/include/asm/Kbuild     |    1 +
->  arch/parisc/include/asm/Kbuild       |    1 +
->  arch/powerpc/include/asm/Kbuild      |    1 +
->  arch/riscv/include/asm/Kbuild        |    1 +
->  arch/s390/include/asm/Kbuild         |    1 +
->  arch/sh/include/asm/Kbuild           |    1 +
->  arch/sparc/include/asm/Kbuild        |    1 +
->  arch/um/include/asm/Kbuild           |    1 +
->  arch/x86/include/asm/Kbuild          |    1 +
->  arch/xtensa/include/asm/Kbuild       |    1 +
->  include/asm-generic/ring_buffer.h    |   13 +++++++++++++
->  kernel/trace/ring_buffer.c           |   22 ++++++++++++++++++++++
->  23 files changed, 65 insertions(+)
->  create mode 100644 arch/arm64/include/asm/ring_buffer.h
->  create mode 100644 include/asm-generic/ring_buffer.h
-> 
-> diff --git a/arch/alpha/include/asm/Kbuild b/arch/alpha/include/asm/Kbuild
-> index 483965c5a4de..b154b4e3dfa8 100644
-> --- a/arch/alpha/include/asm/Kbuild
-> +++ b/arch/alpha/include/asm/Kbuild
-> @@ -5,4 +5,5 @@ generic-y += agp.h
->  generic-y += asm-offsets.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += text-patching.h
-> diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
-> index 4c69522e0328..483caacc6988 100644
-> --- a/arch/arc/include/asm/Kbuild
-> +++ b/arch/arc/include/asm/Kbuild
-> @@ -5,5 +5,6 @@ generic-y += extable.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
->  generic-y += parport.h
-> +generic-y += ring_buffer.h
->  generic-y += user.h
->  generic-y += text-patching.h
-> diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-> index 03657ff8fbe3..decad5f2c826 100644
-> --- a/arch/arm/include/asm/Kbuild
-> +++ b/arch/arm/include/asm/Kbuild
-> @@ -3,6 +3,7 @@ generic-y += early_ioremap.h
->  generic-y += extable.h
->  generic-y += flat.h
->  generic-y += parport.h
-> +generic-y += ring_buffer.h
->  
->  generated-y += mach-types.h
->  generated-y += unistd-nr.h
-> diff --git a/arch/arm64/include/asm/ring_buffer.h b/arch/arm64/include/asm/ring_buffer.h
-> new file mode 100644
-> index 000000000000..62316c406888
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/ring_buffer.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef _ASM_ARM64_RING_BUFFER_H
-> +#define _ASM_ARM64_RING_BUFFER_H
-> +
-> +#include <asm/cacheflush.h>
-> +
-> +/* Flush D-cache on persistent ring buffer */
-> +#define arch_ring_buffer_flush_range(start, end)	dcache_clean_pop(start, end)
-> +
-> +#endif /* _ASM_ARM64_RING_BUFFER_H */
-> diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
-> index 3a5c7f6e5aac..7dca0c6cdc84 100644
-> --- a/arch/csky/include/asm/Kbuild
-> +++ b/arch/csky/include/asm/Kbuild
-> @@ -9,6 +9,7 @@ generic-y += qrwlock.h
->  generic-y += qrwlock_types.h
->  generic-y += qspinlock.h
->  generic-y += parport.h
-> +generic-y += ring_buffer.h
->  generic-y += user.h
->  generic-y += vmlinux.lds.h
->  generic-y += text-patching.h
-> diff --git a/arch/hexagon/include/asm/Kbuild b/arch/hexagon/include/asm/Kbuild
-> index 1efa1e993d4b..0f887d4238ed 100644
-> --- a/arch/hexagon/include/asm/Kbuild
-> +++ b/arch/hexagon/include/asm/Kbuild
-> @@ -5,4 +5,5 @@ generic-y += extable.h
->  generic-y += iomap.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += text-patching.h
-> diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
-> index 9034b583a88a..7e92957baf6a 100644
-> --- a/arch/loongarch/include/asm/Kbuild
-> +++ b/arch/loongarch/include/asm/Kbuild
-> @@ -10,5 +10,6 @@ generic-y += qrwlock.h
->  generic-y += user.h
->  generic-y += ioctl.h
->  generic-y += mmzone.h
-> +generic-y += ring_buffer.h
->  generic-y += statfs.h
->  generic-y += text-patching.h
-> diff --git a/arch/m68k/include/asm/Kbuild b/arch/m68k/include/asm/Kbuild
-> index b282e0dd8dc1..62543bf305ff 100644
-> --- a/arch/m68k/include/asm/Kbuild
-> +++ b/arch/m68k/include/asm/Kbuild
-> @@ -3,5 +3,6 @@ generated-y += syscall_table.h
->  generic-y += extable.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += spinlock.h
->  generic-y += text-patching.h
-> diff --git a/arch/microblaze/include/asm/Kbuild b/arch/microblaze/include/asm/Kbuild
-> index 7178f990e8b3..0030309b47ad 100644
-> --- a/arch/microblaze/include/asm/Kbuild
-> +++ b/arch/microblaze/include/asm/Kbuild
-> @@ -5,6 +5,7 @@ generic-y += extable.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
->  generic-y += parport.h
-> +generic-y += ring_buffer.h
->  generic-y += syscalls.h
->  generic-y += tlb.h
->  generic-y += user.h
-> diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-> index 684569b2ecd6..9771c3d85074 100644
-> --- a/arch/mips/include/asm/Kbuild
-> +++ b/arch/mips/include/asm/Kbuild
-> @@ -12,5 +12,6 @@ generic-y += mcs_spinlock.h
->  generic-y += parport.h
->  generic-y += qrwlock.h
->  generic-y += qspinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += user.h
->  generic-y += text-patching.h
-> diff --git a/arch/nios2/include/asm/Kbuild b/arch/nios2/include/asm/Kbuild
-> index 28004301c236..0a2530964413 100644
-> --- a/arch/nios2/include/asm/Kbuild
-> +++ b/arch/nios2/include/asm/Kbuild
-> @@ -5,6 +5,7 @@ generic-y += cmpxchg.h
->  generic-y += extable.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += spinlock.h
->  generic-y += user.h
->  generic-y += text-patching.h
-> diff --git a/arch/openrisc/include/asm/Kbuild b/arch/openrisc/include/asm/Kbuild
-> index cef49d60d74c..8aa34621702d 100644
-> --- a/arch/openrisc/include/asm/Kbuild
-> +++ b/arch/openrisc/include/asm/Kbuild
-> @@ -8,4 +8,5 @@ generic-y += spinlock_types.h
->  generic-y += spinlock.h
->  generic-y += qrwlock_types.h
->  generic-y += qrwlock.h
-> +generic-y += ring_buffer.h
->  generic-y += user.h
-> diff --git a/arch/parisc/include/asm/Kbuild b/arch/parisc/include/asm/Kbuild
-> index 4fb596d94c89..d48d158f7241 100644
-> --- a/arch/parisc/include/asm/Kbuild
-> +++ b/arch/parisc/include/asm/Kbuild
-> @@ -4,4 +4,5 @@ generated-y += syscall_table_64.h
->  generic-y += agp.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += user.h
-> diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
-> index 2e23533b67e3..805b5aeebb6f 100644
-> --- a/arch/powerpc/include/asm/Kbuild
-> +++ b/arch/powerpc/include/asm/Kbuild
-> @@ -5,4 +5,5 @@ generated-y += syscall_table_spu.h
->  generic-y += agp.h
->  generic-y += mcs_spinlock.h
->  generic-y += qrwlock.h
-> +generic-y += ring_buffer.h
->  generic-y += early_ioremap.h
-> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-> index bd5fc9403295..7721b63642f4 100644
-> --- a/arch/riscv/include/asm/Kbuild
-> +++ b/arch/riscv/include/asm/Kbuild
-> @@ -14,5 +14,6 @@ generic-y += ticket_spinlock.h
->  generic-y += qrwlock.h
->  generic-y += qrwlock_types.h
->  generic-y += qspinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += user.h
->  generic-y += vmlinux.lds.h
-> diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
-> index 80bad7de7a04..0c1fc47c3ba0 100644
-> --- a/arch/s390/include/asm/Kbuild
-> +++ b/arch/s390/include/asm/Kbuild
-> @@ -7,3 +7,4 @@ generated-y += unistd_nr.h
->  generic-y += asm-offsets.h
->  generic-y += mcs_spinlock.h
->  generic-y += mmzone.h
-> +generic-y += ring_buffer.h
-> diff --git a/arch/sh/include/asm/Kbuild b/arch/sh/include/asm/Kbuild
-> index 4d3f10ed8275..f0403d3ee8ab 100644
-> --- a/arch/sh/include/asm/Kbuild
-> +++ b/arch/sh/include/asm/Kbuild
-> @@ -3,4 +3,5 @@ generated-y += syscall_table.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
->  generic-y += parport.h
-> +generic-y += ring_buffer.h
->  generic-y += text-patching.h
-> diff --git a/arch/sparc/include/asm/Kbuild b/arch/sparc/include/asm/Kbuild
-> index 17ee8a273aa6..49c6bb326b75 100644
-> --- a/arch/sparc/include/asm/Kbuild
-> +++ b/arch/sparc/include/asm/Kbuild
-> @@ -4,4 +4,5 @@ generated-y += syscall_table_64.h
->  generic-y += agp.h
->  generic-y += kvm_para.h
->  generic-y += mcs_spinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += text-patching.h
-> diff --git a/arch/um/include/asm/Kbuild b/arch/um/include/asm/Kbuild
-> index 1b9b82bbe322..2a1629ba8140 100644
-> --- a/arch/um/include/asm/Kbuild
-> +++ b/arch/um/include/asm/Kbuild
-> @@ -17,6 +17,7 @@ generic-y += module.lds.h
->  generic-y += parport.h
->  generic-y += percpu.h
->  generic-y += preempt.h
-> +generic-y += ring_buffer.h
->  generic-y += runtime-const.h
->  generic-y += softirq_stack.h
->  generic-y += switch_to.h
-> diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-> index 4566000e15c4..078fd2c0d69d 100644
-> --- a/arch/x86/include/asm/Kbuild
-> +++ b/arch/x86/include/asm/Kbuild
-> @@ -14,3 +14,4 @@ generic-y += early_ioremap.h
->  generic-y += fprobe.h
->  generic-y += mcs_spinlock.h
->  generic-y += mmzone.h
-> +generic-y += ring_buffer.h
-> diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-> index 13fe45dea296..e57af619263a 100644
-> --- a/arch/xtensa/include/asm/Kbuild
-> +++ b/arch/xtensa/include/asm/Kbuild
-> @@ -6,5 +6,6 @@ generic-y += mcs_spinlock.h
->  generic-y += parport.h
->  generic-y += qrwlock.h
->  generic-y += qspinlock.h
-> +generic-y += ring_buffer.h
->  generic-y += user.h
->  generic-y += text-patching.h
-> diff --git a/include/asm-generic/ring_buffer.h b/include/asm-generic/ring_buffer.h
-> new file mode 100644
-> index 000000000000..930d96571f23
-> --- /dev/null
-> +++ b/include/asm-generic/ring_buffer.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Generic arch dependent ring_buffer macros.
-> + */
-> +#ifndef __ASM_GENERIC_RING_BUFFER_H__
-> +#define __ASM_GENERIC_RING_BUFFER_H__
-> +
-> +#include <linux/cacheflush.h>
-> +
-> +/* Flush cache on ring buffer range if needed */
-> +#define arch_ring_buffer_flush_range(start, end)	flush_cache_vmap(start, end)
-> +
-> +#endif /* __ASM_GENERIC_RING_BUFFER_H__ */
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 353a5aa1b612..9f4ee9e3803d 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -6,6 +6,7 @@
->   */
->  #include <linux/sched/isolation.h>
->  #include <linux/trace_recursion.h>
-> +#include <linux/panic_notifier.h>
->  #include <linux/trace_events.h>
->  #include <linux/ring_buffer.h>
->  #include <linux/trace_clock.h>
-> @@ -30,6 +31,7 @@
->  #include <linux/oom.h>
->  #include <linux/mm.h>
->  
-> +#include <asm/ring_buffer.h>
->  #include <asm/local64.h>
->  #include <asm/local.h>
->  #include <asm/setup.h>
-> @@ -589,6 +591,7 @@ struct trace_buffer {
->  
->  	unsigned long			range_addr_start;
->  	unsigned long			range_addr_end;
-> +	struct notifier_block		flush_nb;
->  
->  	struct ring_buffer_meta		*meta;
->  
-> @@ -2471,6 +2474,16 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
->  	kfree(cpu_buffer);
->  }
->  
-> +/* Stop recording on a persistent buffer and flush cache if needed. */
-> +static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
-> +{
-> +	struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
-> +
-> +	ring_buffer_record_off(buffer);
-> +	arch_ring_buffer_flush_range(buffer->range_addr_start, buffer->range_addr_end);
-> +	return NOTIFY_DONE;
-> +}
-> +
->  static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
->  					 int order, unsigned long start,
->  					 unsigned long end,
-> @@ -2590,6 +2603,12 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
->  
->  	mutex_init(&buffer->mutex);
->  
-> +	/* Persistent ring buffer needs to flush cache before reboot. */
-> +	if (start && end) {
-> +		buffer->flush_nb.notifier_call = rb_flush_buffer_cb;
-> +		atomic_notifier_chain_register(&panic_notifier_list, &buffer->flush_nb);
-> +	}
-> +
->  	return_ptr(buffer);
->  
->   fail_free_buffers:
-> @@ -2677,6 +2696,9 @@ ring_buffer_free(struct trace_buffer *buffer)
->  {
->  	int cpu;
->  
-> +	if (buffer->range_addr_start && buffer->range_addr_end)
-> +		atomic_notifier_chain_unregister(&panic_notifier_list, &buffer->flush_nb);
-> +
->  	cpuhp_state_remove_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
->  
->  	irq_work_sync(&buffer->irq_work.work);
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Vineeth
+> -- Steve
