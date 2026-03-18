@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926F8346AC6;
-	Wed, 18 Mar 2026 19:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CF127FB0E;
+	Wed, 18 Mar 2026 19:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773863327; cv=none; b=OvgaX1zKU/DizYioByrKRwjS67Qz3asjntj+XoOs9E72oc8SphmON7/LGCMlNBeOkHDH2cpXoAWdGrJJsF/Nvq2KlbbZd+2cow1vhU2iBEdscARODbeBBsd0B1igmTeRqHrWhAGs2qRy4VIkTDXoTICLJDGQVNlfwY1Tz+EWDXk=
+	t=1773863408; cv=none; b=pWGk2TKmyU+nqOI1frBAkZ/fO1Hp8OKfQX1CcWk3Y3okDvJOqY1a+v+DhlT7KvFOG6N4hKyNxVKRjRFGq+8nGDHPbsSIvFAqMPsNyRY5m/QPbWGox7QMHyorbejifmKN1XYGr903g4GZoMAwKEGF5Ycbsau866MRBFA1bEQbUuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773863327; c=relaxed/simple;
-	bh=ro1ebNHdPGXGwrEPD80l5QdBY7tZbfdbxOa/h+jJXaw=;
+	s=arc-20240116; t=1773863408; c=relaxed/simple;
+	bh=aBpoyvqo/+v2d6P9WhuCifdS3XmIawtvNpv71rMyyaA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VlNCFh76FlrtV/lUOXt7lOSSNvdAJwUjjpCSp1aYro1rJFideBPC1s6nOaJrwcsrX699xKBGf6Nl9p2HcMW3VeRYw/aVxqar46lau45UXb1D07g1BQ9VlxrpDJhlvrUsXuGsMN3qfA464rfDtRx+VL6w9x1mHpR5SRDIw4etKj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dv40bhex; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=clJ7KG97I9dRuUCe9cr5xWLRxak3yPAS9U4LvuF74HsYZJMrFaQkkBCShyFWhX1SmYrvFpUpdfF3XXjf/PAosjRN4IoFKil1V16GDgcqKtTlb0k+ceL2lzN38b1evO0G9ZGoRnv1IGvVT9xRnazFhT98nkayUZiNVkU9U8IXdCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxGhvUaN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dv40bhex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C42BC19421;
-	Wed, 18 Mar 2026 19:48:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxGhvUaN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18B2C19421;
+	Wed, 18 Mar 2026 19:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773863327;
-	bh=ro1ebNHdPGXGwrEPD80l5QdBY7tZbfdbxOa/h+jJXaw=;
+	s=k20201202; t=1773863407;
+	bh=aBpoyvqo/+v2d6P9WhuCifdS3XmIawtvNpv71rMyyaA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Dv40bhexuQMuZDLtQm7he+mWmyxt193jYRqlC6QBz2puRXJzfLOClDBMF03eOc0UG
-	 F2CSjew52zK9+MNmUNjFrro4uN/L6kzCnWcbwr93swceQTuKypMchzHD61opvYq1y3
-	 AsSg9CM9rpAN/dHK6e/EkqB77RTVA9qK3h0WBUfh3IEy5myp6AEIlB3MMROVCrA71x
-	 1uT/WWFOkbtjRtN8Eu6oouvUoQmFOK5YjhF0oujTFJm2iAUkMhnkGizS3f8HI0OV1M
-	 HlDzgTt2SxWLnKuloDAzgwJQJSygqEcRnbP1QkaLkJv7pqj+d4B3DDynmCJntAe8XG
-	 E7MP8Kj4SwThA==
-Message-ID: <4774da78-8349-4eda-a09b-7248e82cb26b@kernel.org>
-Date: Wed, 18 Mar 2026 20:48:30 +0100
+	b=YxGhvUaNTocIkJZunC5vXUOgkTErMFxp4CbFY9jx7JCWxCeQGIz8HJ2OUIUkqOhL7
+	 ZrORxqhDaEfi/u7zp0r8Jp9kQE/5XTZw6dOVmgOgig30Bki736Eqm4VevTIvfmshNT
+	 rWzMFyDljK0zd+qeMwbmCx7UFJJVLB3Uc+4Vmy2JGjBm6DeGabx+2QDPdTGIdfUw1z
+	 GeSfSbMYsmoORs88eAwr00VM6k1dGtQH0GPTiRcF6Xz546K2rFrS96tWARQzwin49e
+	 T2kaf4E+NAKEUVKe3hGLybUcHNEoOE4QRgASXtYf9xUVlUD0HUIbFteFN5m2NI9cA0
+	 Sx26EqYHO3Fog==
+Message-ID: <5ecb772b-2f2f-4010-aa6e-8894d188ea10@kernel.org>
+Date: Wed, 18 Mar 2026 20:49:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v15 11/13] mm/khugepaged: avoid unnecessary
- mTHP collapse attempts
+Subject: Re: [PATCH mm-unstable v15 13/13] Documentation: mm: update the admin
+ guide for mTHP collapse
 To: Nico Pache <npache@redhat.com>, "Lorenzo Stoakes (Oracle)"
  <ljs@kernel.org>
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -57,11 +57,12 @@ Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
  thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
  vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
  will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
+ Bagas Sanjaya <bagasdotme@gmail.com>
 References: <20260226031741.230674-1-npache@redhat.com>
- <20260226032631.234234-1-npache@redhat.com>
- <d8028d32-4791-4993-aae3-66506bf6d1bd@lucifer.local>
- <a9ddfa7b-5ee4-4c68-bac0-8a0c6c355bf7@redhat.com>
+ <20260226032706.234519-1-npache@redhat.com>
+ <638caee3-af71-47c7-bdc8-a905d3143387@lucifer.local>
+ <1adffe75-cc91-4c55-bde7-9406bf656c72@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -108,84 +109,32 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <a9ddfa7b-5ee4-4c68-bac0-8a0c6c355bf7@redhat.com>
+In-Reply-To: <1adffe75-cc91-4c55-bde7-9406bf656c72@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/18/26 19:59, Nico Pache wrote:
+On 3/18/26 20:08, Nico Pache wrote:
 > 
 > 
-> On 3/17/26 4:35 AM, Lorenzo Stoakes (Oracle) wrote:
->> On Wed, Feb 25, 2026 at 08:26:31PM -0700, Nico Pache wrote:
->>> There are cases where, if an attempted collapse fails, all subsequent
->>> orders are guaranteed to also fail. Avoid these collapse attempts by
->>> bailing out early.
+> On 3/17/26 5:02 AM, Lorenzo Stoakes (Oracle) wrote:
+>> On Wed, Feb 25, 2026 at 08:27:06PM -0700, Nico Pache wrote:
+>>> Now that we can collapse to mTHPs lets update the admin guide to
+>>> reflect these changes and provide proper guidance on how to utilize it.
 >>>
+>>> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 >>> Signed-off-by: Nico Pache <npache@redhat.com>
 >>
->> With David's concern addressed:
->>
->> Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
->>
->>> ---
->>>  mm/khugepaged.c | 35 ++++++++++++++++++++++++++++++++++-
->>>  1 file changed, 34 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>> index 1c3711ed4513..388d3f2537e2 100644
->>> --- a/mm/khugepaged.c
->>> +++ b/mm/khugepaged.c
->>> @@ -1492,9 +1492,42 @@ static int mthp_collapse(struct mm_struct *mm, unsigned long address,
->>>  			ret = collapse_huge_page(mm, collapse_address, referenced,
->>>  						 unmapped, cc, mmap_locked,
->>>  						 order);
->>> -			if (ret == SCAN_SUCCEED) {
->>> +
->>> +			switch (ret) {
->>> +			/* Cases were we continue to next collapse candidate */
->>> +			case SCAN_SUCCEED:
->>>  				collapsed += nr_pte_entries;
->>> +				fallthrough;
->>> +			case SCAN_PTE_MAPPED_HUGEPAGE:
->>>  				continue;
->>> +			/* Cases were lower orders might still succeed */
->>> +			case SCAN_LACK_REFERENCED_PAGE:
->>> +			case SCAN_EXCEED_NONE_PTE:
->>> +			case SCAN_EXCEED_SWAP_PTE:
->>> +			case SCAN_EXCEED_SHARED_PTE:
->>> +			case SCAN_PAGE_LOCK:
->>> +			case SCAN_PAGE_COUNT:
->>> +			case SCAN_PAGE_LRU:
->>> +			case SCAN_PAGE_NULL:
->>> +			case SCAN_DEL_PAGE_LRU:
->>> +			case SCAN_PTE_NON_PRESENT:
->>> +			case SCAN_PTE_UFFD_WP:
->>> +			case SCAN_ALLOC_HUGE_PAGE_FAIL:
->>> +				goto next_order;
->>> +			/* Cases were no further collapse is possible */
->>> +			case SCAN_CGROUP_CHARGE_FAIL:
->>> +			case SCAN_COPY_MC:
->>> +			case SCAN_ADDRESS_RANGE:
->>> +			case SCAN_NO_PTE_TABLE:
->>> +			case SCAN_ANY_PROCESS:
->>> +			case SCAN_VMA_NULL:
->>> +			case SCAN_VMA_CHECK:
->>> +			case SCAN_SCAN_ABORT:
->>> +			case SCAN_PAGE_ANON:
->>> +			case SCAN_PMD_MAPPED:
->>> +			case SCAN_FAIL:
->>> +			default:
->>
->> Agree with david, let's spell them out please :)
+>> LGTM, but maybe we should mention somewhere about mTHP's max_ptes_none
+>> behaviour?
 > 
-> I believe David is arguing for the opposite. To drop all these spelt out cases
-> and just leave the default case.
-> 
-> @david is that correct or did I misunderstand that.
+> IIRC we decided to strictly leave that out of the manual. I used to have it in
+> here. @david?
 
-Either spell all out (no default) OR add a default.
+I think we argued in the past that we didn't want to document the weird
+scaling part.
 
-I prefer to just ... use the default :)
+Documenting that only two values are currently supported (no scaling)
+makes sense to me.
 
 -- 
 Cheers,
