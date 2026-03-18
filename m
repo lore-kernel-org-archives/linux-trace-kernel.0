@@ -1,277 +1,193 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5933E4C95;
-	Wed, 18 Mar 2026 18:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396D63ED5B3
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 18:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773859567; cv=none; b=CpaznOgBBY/s+dQ+x/w0Mrw41tF6SA5OmiDXU6mV8UcEk9MCrBoA/uCr7hffedxPaMbFdnCdgfbclQ5g0dm6bu/Xoogh398zvGp5874WrzaEzVKyZTxvjFt8HI3Xl1xZzzXlHInFYjSrXRh+EtQGg9bGOD9G5M9GQMLq9OvxqYM=
+	t=1773860384; cv=none; b=r3bQfae0OgG+wVQLDKyvjpKydteKrKSPyup5p0zoi5aOOlXUnN1jmYh0toC7wjuZ6WMKUqE7/CXdAEENhT+WuRoMqXqSI/ZUImxFeQxPepnpFUFtTQvvvXdnia2MS+8bxNxgNW4ame2QOf3zmRMXVIf319J06Ls2/dOtapRu1do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773859567; c=relaxed/simple;
-	bh=uf9RvEv1xcZX6RCRWRBQH7ivqQXNo4FzJkkXzxzJmpo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KThOWVC0Xe+7GA7gFhXSZjeLc10lT+AnACLA+P1RrqvBOTeLq0srvMoGDy1xAuBApZNkoYbLxDbzW25zeiQ7plyaHyivh5SSjkRowtoF4lNckv9X/xzHwtoOT3LHQP/vrEDYkATeI5TPZZ4RtJbu4bkzuvVTn9rZrRKg/xxl6l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=gzii1qN3; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1773860384; c=relaxed/simple;
+	bh=CurqXuQ/vp6aNN3iHT1OjoAxg6zX+Hf2ZpBNspx7VYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FxQtfrL0eRLj84Avp+2r9TkLwUs+AnTlJHngmdh6krFb4dJgQT07N39bg0YfZyLw85exTBFPqlS+/JO9Nop5Yuq4F6vYUN9BKqeuG0+aZAJ8qT6yjzSc/8tpEeiomRDXWyFmyr2NySKhmgWEDWv4P0dLcvFVyQg91M2oCX1TzGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B8XasKqU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="gzii1qN3"
-Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id B906CB3E49;
-	Wed, 18 Mar 2026 18:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1773859554;
-	bh=UoJMtJZBdJt0FTbec+scIJtxKZOmfkRxPSoXFT7NQCU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gzii1qN3ZcHKYIqa7QmKZHgZRA1Jqvy2B437x/KXowu8/6H3zG8LQ/rwgSoiffBwj
-	 9Mxbl+/LOeX4RmEJE/y5eIdj4he16ieFYSOLvHc+fJQ9yxfojsxUq7XU6qjdPaBu0N
-	 uvUjccWiRig8BnciMa5g2jOr1Geng1zDcg8TZzxE=
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Cc: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [RFC PATCH v3 4/4] locking: Add contended_release tracepoint to spinning locks
-Date: Wed, 18 Mar 2026 18:45:21 +0000
-Message-ID: <51aad0415b78c5a39f2029722118fa01eac77538.1773858853.git.d@ilvokhin.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1773858853.git.d@ilvokhin.com>
-References: <cover.1773858853.git.d@ilvokhin.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8XasKqU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773860382;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8fuwby0KHsweEWRKxCnMlD+TvTgOd6VacPqQH1y0xBQ=;
+	b=B8XasKqUYkPxlinzpE9EKUwbeWnJCc1JYWzRkfyvm3AfpLuqrovCaA89HmrZxPPC2KDXVw
+	AoS1zcjpGCmoL0RhJwYr5jSQw/3Ydg1q1wUAIXwhEIJAmgl/Kb4B9cDBFHkwTbfDyf6sFH
+	cOCtTKBt3sfnWZBiTEtr90Ec7lUNmCY=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-635-8qAuol9eMTmNYz-QujSkig-1; Wed, 18 Mar 2026 14:59:40 -0400
+X-MC-Unique: 8qAuol9eMTmNYz-QujSkig-1
+X-Mimecast-MFC-AGG-ID: 8qAuol9eMTmNYz-QujSkig_1773860380
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-89c3d3f5799so21710626d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Mar 2026 11:59:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773860380; x=1774465180;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8fuwby0KHsweEWRKxCnMlD+TvTgOd6VacPqQH1y0xBQ=;
+        b=FyDjC4SmrL52vI1XS1akDDEPo3bgE3tdLWRiyzCYYPo1t7pNF4FZ0Oq7AFFqML0hD5
+         RN2ll9ZjoWUxU0aTqAwCO8vyGvIkTz9i7CJtnEc8haS20u3ZyXvEUksTFP1cAbKehxQe
+         IJ87NwAqt9DuCd6lV2ujz4U1Nf131JroEJAle/grmY83wEytjffk6kBCIHxZcER7Xnjt
+         GuF1XUQV6u33e4Tr8U2gKbd7kV7e+L8kXChJI8zkOAHUxeuqqZh+90R7PD95Sr1V4mBa
+         dX2aRePQCXSLgUVgO3hxBjrHTf/L1cL5DkUltUJHfqlONNVeC7sUiX8o+9E2nVk1i3RA
+         TblA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0DPbhmVPwq3VcHdDBvxU7OjpFAC+1gpOPhPaWmC9y2XKS+rMudgsVEKfE3ODiaDG7HRQdTEjZPhbKAbX1plkNK/4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMXthrShdhArM2E8pxCGylfQG2K0Et+oJRiduS2gZmFoO/3y8J
+	u17EwnhnjvPgZmXBnpyBNHeeuX7SDNhDlUaWRPfnXjx3hL0ucVluEFR2pw/xcKma8FvAsjlQ+yN
+	NmencmMoYCPhOiXFnyw/z3lHwomTKG8jnZjVUEOm8rJG/PgXNGlesUrtHlA/ir5yhmJTFm+rz9g
+	==
+X-Gm-Gg: ATEYQzyXxkKtAkgLfFU0J98CH5D7ynxDYUrt8ub5WUez7tQzZ5lasCG21s2aDdzw55g
+	aljK1L5SmtgNWlOUQu3FCsZrGw7Dlq4ccSsuF3JH6v0USUcTOuJYpyspjKHnwmpWvtn6TY26gKI
+	W0MP1q7mBO8CBGGsYk9I9aC+mtHaKGHlrTENXg9QEAfak+B2ZmY5keWnkUDS+wl/evqObdsXA8R
+	q89mNa9YyyDNAfQS/hmuham1okxzJCJHb5mwzpHkDAXloiJJODPavtRaVvQ7Xu7YCq8JdC8GLCn
+	i8XSx2v7FeTZc8vAqzHdIBOlEC1/oW0y0L2pEsX7Ypa9JlaezQ9IKA3O/cC6epFYNoLgREyv5Fc
+	eT+e9wOGhiE9K2N3F1KFhsGScjTUvYFDaHWMkzBu63jdS6lzNpgPt7bYmuRh6
+X-Received: by 2002:a0c:f089:0:b0:89c:59d0:b056 with SMTP id 6a1803df08f44-89c6b5ca535mr54557586d6.30.1773860379962;
+        Wed, 18 Mar 2026 11:59:39 -0700 (PDT)
+X-Received: by 2002:a0c:f089:0:b0:89c:59d0:b056 with SMTP id 6a1803df08f44-89c6b5ca535mr54557206d6.30.1773860379310;
+        Wed, 18 Mar 2026 11:59:39 -0700 (PDT)
+Received: from [192.168.10.111] (c-76-154-99-94.hsd1.co.comcast.net. [76.154.99.94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89c6b9cea7bsm31502716d6.27.2026.03.18.11.59.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2026 11:59:38 -0700 (PDT)
+Message-ID: <a9ddfa7b-5ee4-4c68-bac0-8a0c6c355bf7@redhat.com>
+Date: Wed, 18 Mar 2026 12:59:34 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mm-unstable v15 11/13] mm/khugepaged: avoid unnecessary
+ mTHP collapse attempts
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>, david@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, lance.yang@linux.dev, Liam.Howlett@oracle.com,
+ lorenzo.stoakes@oracle.com, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
+ peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
+ rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+References: <20260226031741.230674-1-npache@redhat.com>
+ <20260226032631.234234-1-npache@redhat.com>
+ <d8028d32-4791-4993-aae3-66506bf6d1bd@lucifer.local>
+From: Nico Pache <npache@redhat.com>
+In-Reply-To: <d8028d32-4791-4993-aae3-66506bf6d1bd@lucifer.local>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: UBOYxz9MnI_KazzRY4KMVomFjX9tyfB3ZUysVLdDsuc_1773860380
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, en-ZM
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Extend the contended_release tracepoint to queued spinlocks and queued
-rwlocks.
 
-When the tracepoint is disabled, the only addition to the hot path is a
-single NOP instruction (the static branch). When enabled, the contention
-check, trace call, and unlock are combined in an out-of-line function to
-minimize hot path impact, avoiding the compiler needing to preserve the
-lock pointer in a callee-saved register across the trace call.
 
-Binary size impact (x86_64, defconfig):
-  uninlined unlock (common case): +983 bytes  (+0.00%)
-  inlined unlock (worst case):    +71554 bytes (+0.30%)
+On 3/17/26 4:35 AM, Lorenzo Stoakes (Oracle) wrote:
+> On Wed, Feb 25, 2026 at 08:26:31PM -0700, Nico Pache wrote:
+>> There are cases where, if an attempted collapse fails, all subsequent
+>> orders are guaranteed to also fail. Avoid these collapse attempts by
+>> bailing out early.
+>>
+>> Signed-off-by: Nico Pache <npache@redhat.com>
+> 
+> With David's concern addressed:
+> 
+> Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> 
+>> ---
+>>  mm/khugepaged.c | 35 ++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 34 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index 1c3711ed4513..388d3f2537e2 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -1492,9 +1492,42 @@ static int mthp_collapse(struct mm_struct *mm, unsigned long address,
+>>  			ret = collapse_huge_page(mm, collapse_address, referenced,
+>>  						 unmapped, cc, mmap_locked,
+>>  						 order);
+>> -			if (ret == SCAN_SUCCEED) {
+>> +
+>> +			switch (ret) {
+>> +			/* Cases were we continue to next collapse candidate */
+>> +			case SCAN_SUCCEED:
+>>  				collapsed += nr_pte_entries;
+>> +				fallthrough;
+>> +			case SCAN_PTE_MAPPED_HUGEPAGE:
+>>  				continue;
+>> +			/* Cases were lower orders might still succeed */
+>> +			case SCAN_LACK_REFERENCED_PAGE:
+>> +			case SCAN_EXCEED_NONE_PTE:
+>> +			case SCAN_EXCEED_SWAP_PTE:
+>> +			case SCAN_EXCEED_SHARED_PTE:
+>> +			case SCAN_PAGE_LOCK:
+>> +			case SCAN_PAGE_COUNT:
+>> +			case SCAN_PAGE_LRU:
+>> +			case SCAN_PAGE_NULL:
+>> +			case SCAN_DEL_PAGE_LRU:
+>> +			case SCAN_PTE_NON_PRESENT:
+>> +			case SCAN_PTE_UFFD_WP:
+>> +			case SCAN_ALLOC_HUGE_PAGE_FAIL:
+>> +				goto next_order;
+>> +			/* Cases were no further collapse is possible */
+>> +			case SCAN_CGROUP_CHARGE_FAIL:
+>> +			case SCAN_COPY_MC:
+>> +			case SCAN_ADDRESS_RANGE:
+>> +			case SCAN_NO_PTE_TABLE:
+>> +			case SCAN_ANY_PROCESS:
+>> +			case SCAN_VMA_NULL:
+>> +			case SCAN_VMA_CHECK:
+>> +			case SCAN_SCAN_ABORT:
+>> +			case SCAN_PAGE_ANON:
+>> +			case SCAN_PMD_MAPPED:
+>> +			case SCAN_FAIL:
+>> +			default:
+> 
+> Agree with david, let's spell them out please :)
 
-The inlined unlock case could not be achieved through Kconfig options on
-x86_64 as PREEMPT_BUILD unconditionally selects UNINLINE_SPIN_UNLOCK on
-x86_64. The UNINLINE_SPIN_UNLOCK guards were manually inverted to force
-inline the unlock path and estimate the worst case binary size increase.
+I believe David is arguing for the opposite. To drop all these spelt out cases
+and just leave the default case.
 
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- include/asm-generic/qrwlock.h   | 48 +++++++++++++++++++++++++++------
- include/asm-generic/qspinlock.h | 25 +++++++++++++++--
- kernel/locking/qrwlock.c        | 16 +++++++++++
- kernel/locking/qspinlock.c      |  8 ++++++
- 4 files changed, 87 insertions(+), 10 deletions(-)
+@david is that correct or did I misunderstand that.
 
-diff --git a/include/asm-generic/qrwlock.h b/include/asm-generic/qrwlock.h
-index 75b8f4601b28..e24dc537fd66 100644
---- a/include/asm-generic/qrwlock.h
-+++ b/include/asm-generic/qrwlock.h
-@@ -14,6 +14,7 @@
- #define __ASM_GENERIC_QRWLOCK_H
- 
- #include <linux/atomic.h>
-+#include <linux/tracepoint-defs.h>
- #include <asm/barrier.h>
- #include <asm/processor.h>
- 
-@@ -35,6 +36,10 @@
-  */
- extern void queued_read_lock_slowpath(struct qrwlock *lock);
- extern void queued_write_lock_slowpath(struct qrwlock *lock);
-+extern void queued_read_unlock_traced(struct qrwlock *lock);
-+extern void queued_write_unlock_traced(struct qrwlock *lock);
-+
-+DECLARE_TRACEPOINT(contended_release);
- 
- /**
-  * queued_read_trylock - try to acquire read lock of a queued rwlock
-@@ -102,10 +107,16 @@ static inline void queued_write_lock(struct qrwlock *lock)
- }
- 
- /**
-- * queued_read_unlock - release read lock of a queued rwlock
-+ * queued_rwlock_is_contended - check if the lock is contended
-  * @lock : Pointer to queued rwlock structure
-+ * Return: 1 if lock contended, 0 otherwise
-  */
--static inline void queued_read_unlock(struct qrwlock *lock)
-+static inline int queued_rwlock_is_contended(struct qrwlock *lock)
-+{
-+	return arch_spin_is_locked(&lock->wait_lock);
-+}
-+
-+static __always_inline void __queued_read_unlock(struct qrwlock *lock)
- {
- 	/*
- 	 * Atomically decrement the reader count
-@@ -114,22 +125,43 @@ static inline void queued_read_unlock(struct qrwlock *lock)
- }
- 
- /**
-- * queued_write_unlock - release write lock of a queued rwlock
-+ * queued_read_unlock - release read lock of a queued rwlock
-  * @lock : Pointer to queued rwlock structure
-  */
--static inline void queued_write_unlock(struct qrwlock *lock)
-+static inline void queued_read_unlock(struct qrwlock *lock)
-+{
-+	/*
-+	 * Trace and unlock are combined in the traced unlock variant so
-+	 * the compiler does not need to preserve the lock pointer across
-+	 * the function call, avoiding callee-saved register save/restore
-+	 * on the hot path.
-+	 */
-+	if (tracepoint_enabled(contended_release)) {
-+		queued_read_unlock_traced(lock);
-+		return;
-+	}
-+
-+	__queued_read_unlock(lock);
-+}
-+
-+static __always_inline void __queued_write_unlock(struct qrwlock *lock)
- {
- 	smp_store_release(&lock->wlocked, 0);
- }
- 
- /**
-- * queued_rwlock_is_contended - check if the lock is contended
-+ * queued_write_unlock - release write lock of a queued rwlock
-  * @lock : Pointer to queued rwlock structure
-- * Return: 1 if lock contended, 0 otherwise
-  */
--static inline int queued_rwlock_is_contended(struct qrwlock *lock)
-+static inline void queued_write_unlock(struct qrwlock *lock)
- {
--	return arch_spin_is_locked(&lock->wait_lock);
-+	/* See comment in queued_read_unlock(). */
-+	if (tracepoint_enabled(contended_release)) {
-+		queued_write_unlock_traced(lock);
-+		return;
-+	}
-+
-+	__queued_write_unlock(lock);
- }
- 
- /*
-diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
-index bf47cca2c375..8ba463a3b891 100644
---- a/include/asm-generic/qspinlock.h
-+++ b/include/asm-generic/qspinlock.h
-@@ -41,6 +41,7 @@
- 
- #include <asm-generic/qspinlock_types.h>
- #include <linux/atomic.h>
-+#include <linux/tracepoint-defs.h>
- 
- #ifndef queued_spin_is_locked
- /**
-@@ -116,6 +117,19 @@ static __always_inline void queued_spin_lock(struct qspinlock *lock)
- #endif
- 
- #ifndef queued_spin_unlock
-+
-+DECLARE_TRACEPOINT(contended_release);
-+
-+extern void queued_spin_unlock_traced(struct qspinlock *lock);
-+
-+static __always_inline void __queued_spin_unlock(struct qspinlock *lock)
-+{
-+	/*
-+	 * unlock() needs release semantics:
-+	 */
-+	smp_store_release(&lock->locked, 0);
-+}
-+
- /**
-  * queued_spin_unlock - release a queued spinlock
-  * @lock : Pointer to queued spinlock structure
-@@ -123,9 +137,16 @@ static __always_inline void queued_spin_lock(struct qspinlock *lock)
- static __always_inline void queued_spin_unlock(struct qspinlock *lock)
- {
- 	/*
--	 * unlock() needs release semantics:
-+	 * Trace and unlock are combined in queued_spin_unlock_traced()
-+	 * so the compiler does not need to preserve the lock pointer
-+	 * across the function call, avoiding callee-saved register
-+	 * save/restore on the hot path.
- 	 */
--	smp_store_release(&lock->locked, 0);
-+	if (tracepoint_enabled(contended_release)) {
-+		queued_spin_unlock_traced(lock);
-+		return;
-+	}
-+	__queued_spin_unlock(lock);
- }
- #endif
- 
-diff --git a/kernel/locking/qrwlock.c b/kernel/locking/qrwlock.c
-index d2ef312a8611..5f7a0fc2b27a 100644
---- a/kernel/locking/qrwlock.c
-+++ b/kernel/locking/qrwlock.c
-@@ -90,3 +90,19 @@ void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock)
- 	trace_contention_end(lock, 0);
- }
- EXPORT_SYMBOL(queued_write_lock_slowpath);
-+
-+void __lockfunc queued_read_unlock_traced(struct qrwlock *lock)
-+{
-+	if (queued_rwlock_is_contended(lock))
-+		trace_contended_release(lock);
-+	__queued_read_unlock(lock);
-+}
-+EXPORT_SYMBOL(queued_read_unlock_traced);
-+
-+void __lockfunc queued_write_unlock_traced(struct qrwlock *lock)
-+{
-+	if (queued_rwlock_is_contended(lock))
-+		trace_contended_release(lock);
-+	__queued_write_unlock(lock);
-+}
-+EXPORT_SYMBOL(queued_write_unlock_traced);
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index af8d122bb649..1544dcec65fa 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -104,6 +104,14 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
- #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
- #endif
- 
-+void __lockfunc queued_spin_unlock_traced(struct qspinlock *lock)
-+{
-+	if (queued_spin_is_contended(lock))
-+		trace_contended_release(lock);
-+	__queued_spin_unlock(lock);
-+}
-+EXPORT_SYMBOL(queued_spin_unlock_traced);
-+
- #endif /* _GEN_PV_LOCK_SLOWPATH */
- 
- /**
--- 
-2.52.0
+-- Nico
+
+> 
+>> +				return collapsed;
+>>  			}
+>>  		}
+>>
+>> --
+>> 2.53.0
+>>
+> 
 
