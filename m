@@ -1,393 +1,275 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f79.google.com (mail-oa1-f79.google.com [209.85.160.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D82202F71;
-	Thu, 19 Mar 2026 16:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3F63EF0DE
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Mar 2026 17:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773938337; cv=none; b=toLkHXHZCYMh9RVtwmZZAgAhX3j6JjyyJx88/T4zU4qucuA3CDb82DBhnxqubd08wvNTdjJ7kGl0LrF76tcqO6g0Jcl+mt7XA4yR7QIaw606KkHI1k8SSj3nkFKKNKEo955+MDEs47aaAsBNc9sz94oJWZHOTPHsN1vCn/kp0lQ=
+	t=1773941247; cv=none; b=B6Bee4GKKZ0I8qt2VrKrbe4zNylc0jBSIf3dyu3UJemi4r5LFkK0Bjzug4eZofXPRrdI5NMDUYoAFnQH17aPNrWVSzECzpVZ52QmNv6GjSo+HCI6UixVEhcgU/G0vMj4WWSFftU2mD+QFyJBU4Qlvw+hJGSO/LYeYd+PeqA5kHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773938337; c=relaxed/simple;
-	bh=6N9VI8OlJe86dOZ53wIy6bu/hPqupS0IXeW6m1qQ6KA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p3j/X1MG98cWtZY9AL1zIW7taYu5LLc/zIVwsBRKHIYWMTyKLGLD/d15W4Q/ARCpyzDvuThKoa7LwTMgGHHvtlt1Yg/0YiQSHwxM6HVBvOGkiBCHTREmDPto76yWPwViw6fgwh3ocbpq97iV3Nly1EhwHOmQO8D2CsccVlFSF8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Voxj7htg; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Voxj7htg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773938329; x=1805474329;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6N9VI8OlJe86dOZ53wIy6bu/hPqupS0IXeW6m1qQ6KA=;
-  b=Voxj7htg0FmQ/D0cViZ1Ri+jalSa5dAYTTE9u8SzwtHovolmblODQfpp
-   bIniAI53rc37OI9aohuVCEUZpHfv/xdC6mB0e+IySZtNbmVbNW/55Y7c9
-   pRvsOEqFeEANFvE5d1y++CKwEVFGsLtcRu0TuqTyR2RlKztT4AvPOMiPd
-   i+g3QRC+VBwYjgTKcmR78BBmQXupJInQmWkP2kGmYpjo7Dq/SCNPK68wN
-   vRXPZ0ZG7RXqnnsIpDaUHmYSAMBIUlyEt/reQ+mQp7zCULdHag4EGXnSg
-   znI6sw88+nrpQPQgWEXO6ofJePtmEac5EaQpCvsdAemELdn40kt0uWu6i
-   Q==;
-X-CSE-ConnectionGUID: UvypNZbDRf6QDwKSAzZ8ag==
-X-CSE-MsgGUID: m75C3b33SVS7uohGG8LaWg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="75135220"
-X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
-   d="scan'208";a="75135220"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 09:38:48 -0700
-X-CSE-ConnectionGUID: 2SHgaA5/TMinMFLmiGwUXg==
-X-CSE-MsgGUID: C/BN4k2GQte/l8zVGwipfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
-   d="scan'208";a="223040640"
-Received: from lkp-server02.sh.intel.com (HELO a51c2a36b9df) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 19 Mar 2026 09:38:44 -0700
-Received: from kbuild by a51c2a36b9df with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w3GOP-000000001Kb-16OB;
-	Thu, 19 Mar 2026 16:38:41 +0000
-Date: Fri, 20 Mar 2026 00:31:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCHv3 bpf-next 06/24] bpf: Add multi tracing attach types
-Message-ID: <202603200034.0g8Ml43R-lkp@intel.com>
-References: <20260316075138.465430-7-jolsa@kernel.org>
+	s=arc-20240116; t=1773941247; c=relaxed/simple;
+	bh=Ds5fowKxusoVZ881S4ea3LZnL395zPO+K6XJGETEnRY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UDnvpxX0QBTrC7EX0ImFk5egAiD4frXjF53L0OqYApBz4vbtA4x99rcANc3v4UBn3iHnqaphkyBO/4a5GG/4RpnQbu/2gMfO/4AyFX2+zL0lvb62eLQo3kwaTosJPBT4892Qr2Fhlr3GNP99zx5Yjmg2c06vFTDKruTv7IXiZOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.160.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oa1-f79.google.com with SMTP id 586e51a60fabf-4171fdb5a67so10336443fac.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Mar 2026 10:27:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773941240; x=1774546040;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HRkEc4XliWZIb+ZbjM5vjMJz0ZRaz8Ne4UApCAxF2qQ=;
+        b=QXxt50xMIm5451/d81n4U2z75Jq38s1tTanlyf4tOsM4zOfZu9sGgMWlrJ3/p4GSUA
+         nbibmOjmSEpjIyOw3eikxExSi4JknzyO2EZ29tWdAFLhAEB6gwHJC9rCk6Ml54Ut6aBs
+         9zt5Y2hR8J4lExM7/C7q3Ugc9MELooHJGAjvvEza8boE7+tkBgpPMcmFlTNqmTBDIx9X
+         htgHb3PompFO8GXgG+SAHLCYX/OSIC8sypXp3MBfBOSfBDCthU8r4T+2I9jc6CheKMcw
+         7zZaE4uBP3ga1fnjotew1BdYwK0dczTdyrI9LNNzvskXWI7eJjUbt42MK5PjVUwkG4m2
+         fzFA==
+X-Forwarded-Encrypted: i=1; AJvYcCV85tAhcWg1EGWQfdzhkLGXw8AsXJlYm2ytLQO1yCKUxnPvVsOUWJVcKYE9FExoPSZhHHG3Qj1aLH7X3ewj/flj5qI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz+azcVEiYg8cEMh8uh3VIvkZVnRvjGOI2fvvmBhB54fXWRzmu
+	1PDb6Fk1RSle4z2NM7wqx43xtgKmrsVtmp8yCxBo1AvBf91TLoQfJ7RPCb14n2ZbSbsUsCPQnQP
+	UTNm2aVjZ2LO80eXvVxhn/ziz2LPfBpVfariulyZujEZL5f+UPCGedjeldvw=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260316075138.465430-7-jolsa@kernel.org>
+X-Received: by 2002:a05:6820:620:b0:67c:2204:945c with SMTP id
+ 006d021491bc7-67c22f95bb2mr214636eaf.54.1773941240261; Thu, 19 Mar 2026
+ 10:27:20 -0700 (PDT)
+Date: Thu, 19 Mar 2026 10:27:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69bc31f8.050a0220.18f14c.0051.GAE@google.com>
+Subject: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in
+ bpf_trace_run4 (2)
+From: syzbot <syzbot+ca51b6e7e751edd6bbfd@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
+	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jiri,
+Hello,
 
-kernel test robot noticed the following build errors:
+syzbot found the following issue on:
 
-[auto build test ERROR on bpf-next/master]
+HEAD commit:    b29fb8829bff Merge tag 'v7.0-rc3-ksmbd-server-fixes' of gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ab575a580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c5c49ee0942d1cdb
+dashboard link: https://syzkaller.appspot.com/bug?extid=ca51b6e7e751edd6bbfd
+compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jiri-Olsa/ftrace-Add-ftrace_hash_count-function/20260316-160117
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20260316075138.465430-7-jolsa%40kernel.org
-patch subject: [PATCHv3 bpf-next 06/24] bpf: Add multi tracing attach types
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20260320/202603200034.0g8Ml43R-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260320/202603200034.0g8Ml43R-lkp@intel.com/reproduce)
+Unfortunately, I don't have any reproducer for this issue yet.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603200034.0g8Ml43R-lkp@intel.com/
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-b29fb882.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/4fd392c86ab5/vmlinux-b29fb882.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/32f95fb6f35f/bzImage-b29fb882.xz
 
-All errors (new ones prefixed by >>):
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ca51b6e7e751edd6bbfd@syzkaller.appspotmail.com
 
-   kernel/bpf/syscall.c: In function 'bpf_prog_load':
->> kernel/bpf/syscall.c:2967:22: error: implicit declaration of function 'is_tracing_multi' [-Wimplicit-function-declaration]
-    2967 |         multi_func = is_tracing_multi(attr->expected_attach_type);
-         |                      ^~~~~~~~~~~~~~~~
---
-   kernel/bpf/verifier.c: In function 'is_tracing_multi_id':
->> kernel/bpf/verifier.c:25059:16: error: implicit declaration of function 'is_tracing_multi'; did you mean 'is_tracing_multi_id'? [-Wimplicit-function-declaration]
-   25059 |         return is_tracing_multi(prog->expected_attach_type) && bpf_multi_func_btf_id[0] == btf_id;
-         |                ^~~~~~~~~~~~~~~~
-         |                is_tracing_multi_id
+==================================================================
+BUG: KASAN: slab-use-after-free in __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
+BUG: KASAN: slab-use-after-free in bpf_trace_run4+0xe6/0x850 kernel/trace/bpf_trace.c:2131
+Read of size 8 at addr ffff8880361a0318 by task udevd/5299
+
+CPU: 0 UID: 0 PID: 5299 Comm: udevd Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0xba/0x230 mm/kasan/report.c:482
+ kasan_report+0x117/0x150 mm/kasan/report.c:595
+ __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
+ bpf_trace_run4+0xe6/0x850 kernel/trace/bpf_trace.c:2131
+ __traceiter_mm_page_alloc+0x3d/0x60 include/trace/events/kmem.h:180
+ __do_trace_mm_page_alloc include/trace/events/kmem.h:180 [inline]
+ trace_mm_page_alloc+0x149/0x180 include/trace/events/kmem.h:180
+ __alloc_frozen_pages_noprof+0x1de/0x380 mm/page_alloc.c:5272
+ alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2484
+ folio_alloc_mpol_noprof+0x39/0x70 mm/mempolicy.c:2503
+ swap_cache_alloc_folio+0xd5/0x240 mm/swap_state.c:571
+ swap_cluster_readahead+0x369/0x690 mm/swap_state.c:749
+ swapin_readahead+0x196/0xc50 mm/swap_state.c:924
+ do_swap_page+0x56f/0x5a20 mm/memory.c:4802
+ handle_pte_fault mm/memory.c:6320 [inline]
+ __handle_mm_fault mm/memory.c:6455 [inline]
+ handle_mm_fault+0x12d2/0x3310 mm/memory.c:6624
+ do_user_addr_fault+0xa73/0x1340 arch/x86/mm/fault.c:1334
+ handle_page_fault arch/x86/mm/fault.c:1474 [inline]
+ exc_page_fault+0x6a/0xc0 arch/x86/mm/fault.c:1527
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:618
+RIP: 0033:0x55f04dab55f0
+Code: c0 0f 85 0e 19 00 00 4c 8b 73 18 c7 44 24 28 00 00 00 00 49 89 dc 4c 8d 3d e9 95 02 00 4c 89 34 24 66 0f 1f 84 00 00 00 00 00 <41> 0f b6 1e 80 fb 35 0f 87 e3 01 00 00 0f b6 c3 49 63 04 87 4c 01
+RSP: 002b:00007fff48a349c0 EFLAGS: 00010206
+RAX: 000055f051ea3770 RBX: 0000000000000034 RCX: 0000000000000063
+RDX: 0000000000000381 RSI: 000055f051eb5b50 RDI: 000055f051ecfdae
+RBP: 000055f052096b80 R08: 000055f04daf2100 R09: 000055f04daf2140
+R10: 0000000000000000 R11: 0000000000000000 R12: 000055f051eb5270
+R13: 000055f051eb02c0 R14: 000055f051ea4574 R15: 000055f04dadebcc
+ </TASK>
+
+Allocated by task 5326:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x31c/0x660 mm/slub.c:5383
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
+ bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
+ __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6270
+ __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 15:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2692 [inline]
+ slab_free mm/slub.c:6168 [inline]
+ kfree+0x1c1/0x630 mm/slub.c:6486
+ rcu_do_batch kernel/rcu/tree.c:2617 [inline]
+ rcu_core+0x7cd/0x1070 kernel/rcu/tree.c:2869
+ handle_softirqs+0x22a/0x870 kernel/softirq.c:622
+ run_ksoftirqd+0x36/0x60 kernel/softirq.c:1063
+ smpboot_thread_fn+0x541/0xa50 kernel/smpboot.c:160
+ kthread+0x388/0x470 kernel/kthread.c:436
+ ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Last potentially related work creation:
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
+ kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
+ __call_rcu_common kernel/rcu/tree.c:3131 [inline]
+ call_rcu+0xee/0x890 kernel/rcu/tree.c:3251
+ bpf_link_put_direct kernel/bpf/syscall.c:3323 [inline]
+ bpf_link_release+0x6b/0x80 kernel/bpf/syscall.c:3330
+ __fput+0x44f/0xa70 fs/file_table.c:469
+ task_work_run+0x1d9/0x270 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x70f/0x23c0 kernel/exit.c:976
+ do_group_exit+0x21b/0x2d0 kernel/exit.c:1118
+ get_signal+0x1284/0x1330 kernel/signal.c:3034
+ arch_do_signal_or_restart+0xbc/0x830 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:98 [inline]
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:226 [inline]
+ irqentry_exit_to_user_mode_prepare include/linux/irq-entry-common.h:270 [inline]
+ irqentry_exit_to_user_mode include/linux/irq-entry-common.h:339 [inline]
+ irqentry_exit+0x176/0x620 kernel/entry/common.c:219
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:618
+
+The buggy address belongs to the object at ffff8880361a0300
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 24 bytes inside of
+ freed 192-byte region [ffff8880361a0300, ffff8880361a03c0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff8880361a0400 pfn:0x361a0
+flags: 0x4fff00000000200(workingset|node=1|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 04fff00000000200 ffff88801ac413c0 ffffea0000d7ce90 ffffea0000e14e90
+raw: ffff8880361a0400 000000080010000f 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 922, tgid 922 (kworker/0:3), ts 22003490640, free_ts 22003061349
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x231/0x280 mm/page_alloc.c:1889
+ prep_new_page mm/page_alloc.c:1897 [inline]
+ get_page_from_freelist+0x24dc/0x2580 mm/page_alloc.c:3962
+ __alloc_frozen_pages_noprof+0x18d/0x380 mm/page_alloc.c:5250
+ alloc_slab_page mm/slub.c:3296 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3485
+ new_slab mm/slub.c:3543 [inline]
+ refill_objects+0x331/0x3c0 mm/slub.c:7178
+ __pcs_replace_empty_main+0x2f9/0x5e0 mm/slub.c:-1
+ alloc_from_pcs mm/slub.c:4720 [inline]
+ slab_alloc_node mm/slub.c:4854 [inline]
+ __do_kmalloc_node mm/slub.c:5262 [inline]
+ __kmalloc_noprof+0x474/0x760 mm/slub.c:5275
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ virtio_gpu_array_alloc+0x26/0xc0 drivers/gpu/drm/virtio/virtgpu_gem.c:170
+ virtio_gpu_update_dumb_bo drivers/gpu/drm/virtio/virtgpu_plane.c:171 [inline]
+ virtio_gpu_primary_plane_update+0x38d/0x13a0 drivers/gpu/drm/virtio/virtgpu_plane.c:265
+ drm_atomic_helper_commit_planes+0x60f/0xec0 drivers/gpu/drm/drm_atomic_helper.c:3038
+ drm_atomic_helper_commit_tail+0x5f/0x500 drivers/gpu/drm/drm_atomic_helper.c:1989
+ commit_tail+0x29a/0x3a0 drivers/gpu/drm/drm_atomic_helper.c:2074
+ drm_atomic_helper_commit+0xa6e/0xb10 drivers/gpu/drm/drm_atomic_helper.c:2312
+ drm_atomic_commit+0x246/0x2b0 drivers/gpu/drm/drm_atomic.c:1775
+ drm_atomic_helper_dirtyfb+0xdec/0xf80 drivers/gpu/drm/drm_damage_helper.c:183
+ drm_fbdev_shmem_helper_fb_dirty+0x160/0x2d0 drivers/gpu/drm/drm_fbdev_shmem.c:117
+page last free pid 70 tgid 70 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1433 [inline]
+ __free_frozen_pages+0xc2b/0xdb0 mm/page_alloc.c:2978
+ ___free_pages_bulk mm/kasan/shadow.c:333 [inline]
+ __kasan_populate_vmalloc_do mm/kasan/shadow.c:385 [inline]
+ __kasan_populate_vmalloc+0x137/0x1d0 mm/kasan/shadow.c:424
+ kasan_populate_vmalloc include/linux/kasan.h:580 [inline]
+ alloc_vmap_area+0xd73/0x14b0 mm/vmalloc.c:2129
+ __get_vm_area_node+0x1f8/0x300 mm/vmalloc.c:3232
+ __vmalloc_node_range_noprof+0x372/0x1730 mm/vmalloc.c:4024
+ __vmalloc_node_noprof+0xc2/0x100 mm/vmalloc.c:4124
+ alloc_thread_stack_node kernel/fork.c:355 [inline]
+ dup_task_struct+0x228/0x9a0 kernel/fork.c:924
+ copy_process+0x508/0x3cf0 kernel/fork.c:2050
+ kernel_clone+0x248/0x8e0 kernel/fork.c:2654
+ user_mode_thread+0x110/0x180 kernel/fork.c:2730
+ call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
+ process_one_work kernel/workqueue.c:3275 [inline]
+ process_scheduled_works+0xb02/0x1830 kernel/workqueue.c:3358
+ worker_thread+0xa50/0xfc0 kernel/workqueue.c:3439
+ kthread+0x388/0x470 kernel/kthread.c:436
+ ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Memory state around the buggy address:
+ ffff8880361a0200: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880361a0280: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff8880361a0300: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff8880361a0380: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8880361a0400: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-vim +/is_tracing_multi +2967 kernel/bpf/syscall.c
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-  2890	
-  2891	static int bpf_prog_load(union bpf_attr *attr, bpfptr_t uattr, u32 uattr_size)
-  2892	{
-  2893		enum bpf_prog_type type = attr->prog_type;
-  2894		struct bpf_prog *prog, *dst_prog = NULL;
-  2895		struct btf *attach_btf = NULL;
-  2896		struct bpf_token *token = NULL;
-  2897		bool bpf_cap;
-  2898		int err;
-  2899		char license[128];
-  2900		bool multi_func;
-  2901	
-  2902		if (CHECK_ATTR(BPF_PROG_LOAD))
-  2903			return -EINVAL;
-  2904	
-  2905		if (attr->prog_flags & ~(BPF_F_STRICT_ALIGNMENT |
-  2906					 BPF_F_ANY_ALIGNMENT |
-  2907					 BPF_F_TEST_STATE_FREQ |
-  2908					 BPF_F_SLEEPABLE |
-  2909					 BPF_F_TEST_RND_HI32 |
-  2910					 BPF_F_XDP_HAS_FRAGS |
-  2911					 BPF_F_XDP_DEV_BOUND_ONLY |
-  2912					 BPF_F_TEST_REG_INVARIANTS |
-  2913					 BPF_F_TOKEN_FD))
-  2914			return -EINVAL;
-  2915	
-  2916		bpf_prog_load_fixup_attach_type(attr);
-  2917	
-  2918		if (attr->prog_flags & BPF_F_TOKEN_FD) {
-  2919			token = bpf_token_get_from_fd(attr->prog_token_fd);
-  2920			if (IS_ERR(token))
-  2921				return PTR_ERR(token);
-  2922			/* if current token doesn't grant prog loading permissions,
-  2923			 * then we can't use this token, so ignore it and rely on
-  2924			 * system-wide capabilities checks
-  2925			 */
-  2926			if (!bpf_token_allow_cmd(token, BPF_PROG_LOAD) ||
-  2927			    !bpf_token_allow_prog_type(token, attr->prog_type,
-  2928						       attr->expected_attach_type)) {
-  2929				bpf_token_put(token);
-  2930				token = NULL;
-  2931			}
-  2932		}
-  2933	
-  2934		bpf_cap = bpf_token_capable(token, CAP_BPF);
-  2935		err = -EPERM;
-  2936	
-  2937		if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS) &&
-  2938		    (attr->prog_flags & BPF_F_ANY_ALIGNMENT) &&
-  2939		    !bpf_cap)
-  2940			goto put_token;
-  2941	
-  2942		/* Intent here is for unprivileged_bpf_disabled to block BPF program
-  2943		 * creation for unprivileged users; other actions depend
-  2944		 * on fd availability and access to bpffs, so are dependent on
-  2945		 * object creation success. Even with unprivileged BPF disabled,
-  2946		 * capability checks are still carried out for these
-  2947		 * and other operations.
-  2948		 */
-  2949		if (sysctl_unprivileged_bpf_disabled && !bpf_cap)
-  2950			goto put_token;
-  2951	
-  2952		if (attr->insn_cnt == 0 ||
-  2953		    attr->insn_cnt > (bpf_cap ? BPF_COMPLEXITY_LIMIT_INSNS : BPF_MAXINSNS)) {
-  2954			err = -E2BIG;
-  2955			goto put_token;
-  2956		}
-  2957		if (type != BPF_PROG_TYPE_SOCKET_FILTER &&
-  2958		    type != BPF_PROG_TYPE_CGROUP_SKB &&
-  2959		    !bpf_cap)
-  2960			goto put_token;
-  2961	
-  2962		if (is_net_admin_prog_type(type) && !bpf_token_capable(token, CAP_NET_ADMIN))
-  2963			goto put_token;
-  2964		if (is_perfmon_prog_type(type) && !bpf_token_capable(token, CAP_PERFMON))
-  2965			goto put_token;
-  2966	
-> 2967		multi_func = is_tracing_multi(attr->expected_attach_type);
-  2968	
-  2969		/* attach_prog_fd/attach_btf_obj_fd can specify fd of either bpf_prog
-  2970		 * or btf, we need to check which one it is
-  2971		 */
-  2972		if (attr->attach_prog_fd) {
-  2973			dst_prog = bpf_prog_get(attr->attach_prog_fd);
-  2974			if (IS_ERR(dst_prog)) {
-  2975				dst_prog = NULL;
-  2976				attach_btf = btf_get_by_fd(attr->attach_btf_obj_fd);
-  2977				if (IS_ERR(attach_btf)) {
-  2978					err = -EINVAL;
-  2979					goto put_token;
-  2980				}
-  2981				if (!btf_is_kernel(attach_btf)) {
-  2982					/* attaching through specifying bpf_prog's BTF
-  2983					 * objects directly might be supported eventually
-  2984					 */
-  2985					btf_put(attach_btf);
-  2986					err = -ENOTSUPP;
-  2987					goto put_token;
-  2988				}
-  2989			}
-  2990		} else if (attr->attach_btf_id || multi_func) {
-  2991			/* fall back to vmlinux BTF, if BTF type ID is specified */
-  2992			attach_btf = bpf_get_btf_vmlinux();
-  2993			if (IS_ERR(attach_btf)) {
-  2994				err = PTR_ERR(attach_btf);
-  2995				goto put_token;
-  2996			}
-  2997			if (!attach_btf) {
-  2998				err = -EINVAL;
-  2999				goto put_token;
-  3000			}
-  3001			btf_get(attach_btf);
-  3002		}
-  3003	
-  3004		if (bpf_prog_load_check_attach(type, attr->expected_attach_type,
-  3005					       attach_btf, attr->attach_btf_id,
-  3006					       dst_prog, multi_func)) {
-  3007			if (dst_prog)
-  3008				bpf_prog_put(dst_prog);
-  3009			if (attach_btf)
-  3010				btf_put(attach_btf);
-  3011			err = -EINVAL;
-  3012			goto put_token;
-  3013		}
-  3014	
-  3015		/* plain bpf_prog allocation */
-  3016		prog = bpf_prog_alloc(bpf_prog_size(attr->insn_cnt), GFP_USER);
-  3017		if (!prog) {
-  3018			if (dst_prog)
-  3019				bpf_prog_put(dst_prog);
-  3020			if (attach_btf)
-  3021				btf_put(attach_btf);
-  3022			err = -EINVAL;
-  3023			goto put_token;
-  3024		}
-  3025	
-  3026		prog->expected_attach_type = attr->expected_attach_type;
-  3027		prog->sleepable = !!(attr->prog_flags & BPF_F_SLEEPABLE);
-  3028		prog->aux->attach_btf = attach_btf;
-  3029		prog->aux->attach_btf_id = multi_func ? bpf_multi_func_btf_id[0] : attr->attach_btf_id;
-  3030		prog->aux->dst_prog = dst_prog;
-  3031		prog->aux->dev_bound = !!attr->prog_ifindex;
-  3032		prog->aux->xdp_has_frags = attr->prog_flags & BPF_F_XDP_HAS_FRAGS;
-  3033	
-  3034		/* move token into prog->aux, reuse taken refcnt */
-  3035		prog->aux->token = token;
-  3036		token = NULL;
-  3037	
-  3038		prog->aux->user = get_current_user();
-  3039		prog->len = attr->insn_cnt;
-  3040	
-  3041		err = -EFAULT;
-  3042		if (copy_from_bpfptr(prog->insns,
-  3043				     make_bpfptr(attr->insns, uattr.is_kernel),
-  3044				     bpf_prog_insn_size(prog)) != 0)
-  3045			goto free_prog;
-  3046		/* copy eBPF program license from user space */
-  3047		if (strncpy_from_bpfptr(license,
-  3048					make_bpfptr(attr->license, uattr.is_kernel),
-  3049					sizeof(license) - 1) < 0)
-  3050			goto free_prog;
-  3051		license[sizeof(license) - 1] = 0;
-  3052	
-  3053		/* eBPF programs must be GPL compatible to use GPL-ed functions */
-  3054		prog->gpl_compatible = license_is_gpl_compatible(license) ? 1 : 0;
-  3055	
-  3056		if (attr->signature) {
-  3057			err = bpf_prog_verify_signature(prog, attr, uattr.is_kernel);
-  3058			if (err)
-  3059				goto free_prog;
-  3060		}
-  3061	
-  3062		prog->orig_prog = NULL;
-  3063		prog->jited = 0;
-  3064	
-  3065		atomic64_set(&prog->aux->refcnt, 1);
-  3066	
-  3067		if (bpf_prog_is_dev_bound(prog->aux)) {
-  3068			err = bpf_prog_dev_bound_init(prog, attr);
-  3069			if (err)
-  3070				goto free_prog;
-  3071		}
-  3072	
-  3073		if (type == BPF_PROG_TYPE_EXT && dst_prog &&
-  3074		    bpf_prog_is_dev_bound(dst_prog->aux)) {
-  3075			err = bpf_prog_dev_bound_inherit(prog, dst_prog);
-  3076			if (err)
-  3077				goto free_prog;
-  3078		}
-  3079	
-  3080		/*
-  3081		 * Bookkeeping for managing the program attachment chain.
-  3082		 *
-  3083		 * It might be tempting to set attach_tracing_prog flag at the attachment
-  3084		 * time, but this will not prevent from loading bunch of tracing prog
-  3085		 * first, then attach them one to another.
-  3086		 *
-  3087		 * The flag attach_tracing_prog is set for the whole program lifecycle, and
-  3088		 * doesn't have to be cleared in bpf_tracing_link_release, since tracing
-  3089		 * programs cannot change attachment target.
-  3090		 */
-  3091		if (type == BPF_PROG_TYPE_TRACING && dst_prog &&
-  3092		    dst_prog->type == BPF_PROG_TYPE_TRACING) {
-  3093			prog->aux->attach_tracing_prog = true;
-  3094		}
-  3095	
-  3096		/* find program type: socket_filter vs tracing_filter */
-  3097		err = find_prog_type(type, prog);
-  3098		if (err < 0)
-  3099			goto free_prog;
-  3100	
-  3101		prog->aux->load_time = ktime_get_boottime_ns();
-  3102		err = bpf_obj_name_cpy(prog->aux->name, attr->prog_name,
-  3103				       sizeof(attr->prog_name));
-  3104		if (err < 0)
-  3105			goto free_prog;
-  3106	
-  3107		err = security_bpf_prog_load(prog, attr, token, uattr.is_kernel);
-  3108		if (err)
-  3109			goto free_prog_sec;
-  3110	
-  3111		/* run eBPF verifier */
-  3112		err = bpf_check(&prog, attr, uattr, uattr_size);
-  3113		if (err < 0)
-  3114			goto free_used_maps;
-  3115	
-  3116		prog = bpf_prog_select_runtime(prog, &err);
-  3117		if (err < 0)
-  3118			goto free_used_maps;
-  3119	
-  3120		err = bpf_prog_mark_insn_arrays_ready(prog);
-  3121		if (err < 0)
-  3122			goto free_used_maps;
-  3123	
-  3124		err = bpf_prog_alloc_id(prog);
-  3125		if (err)
-  3126			goto free_used_maps;
-  3127	
-  3128		/* Upon success of bpf_prog_alloc_id(), the BPF prog is
-  3129		 * effectively publicly exposed. However, retrieving via
-  3130		 * bpf_prog_get_fd_by_id() will take another reference,
-  3131		 * therefore it cannot be gone underneath us.
-  3132		 *
-  3133		 * Only for the time /after/ successful bpf_prog_new_fd()
-  3134		 * and before returning to userspace, we might just hold
-  3135		 * one reference and any parallel close on that fd could
-  3136		 * rip everything out. Hence, below notifications must
-  3137		 * happen before bpf_prog_new_fd().
-  3138		 *
-  3139		 * Also, any failure handling from this point onwards must
-  3140		 * be using bpf_prog_put() given the program is exposed.
-  3141		 */
-  3142		bpf_prog_kallsyms_add(prog);
-  3143		perf_event_bpf_event(prog, PERF_BPF_EVENT_PROG_LOAD, 0);
-  3144		bpf_audit_prog(prog, BPF_AUDIT_LOAD);
-  3145	
-  3146		err = bpf_prog_new_fd(prog);
-  3147		if (err < 0)
-  3148			bpf_prog_put(prog);
-  3149		return err;
-  3150	
-  3151	free_used_maps:
-  3152		/* In case we have subprogs, we need to wait for a grace
-  3153		 * period before we can tear down JIT memory since symbols
-  3154		 * are already exposed under kallsyms.
-  3155		 */
-  3156		__bpf_prog_put_noref(prog, prog->aux->real_func_cnt);
-  3157		return err;
-  3158	
-  3159	free_prog_sec:
-  3160		security_bpf_prog_free(prog);
-  3161	free_prog:
-  3162		free_uid(prog->aux->user);
-  3163		if (prog->aux->attach_btf)
-  3164			btf_put(prog->aux->attach_btf);
-  3165		bpf_prog_free(prog);
-  3166	put_token:
-  3167		bpf_token_put(token);
-  3168		return err;
-  3169	}
-  3170	
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
