@@ -1,99 +1,58 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253BE28726E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Mar 2026 15:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F0E3E929B;
+	Thu, 19 Mar 2026 15:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773932994; cv=none; b=smAom18Pn78lfUzoXMTI0oSfQ02TN/Q8noqY8/I/e7sBONEcNjK0VNw3dbIkRm2CpDp++tz4+1YnCy7vKi7WGcwljM1wD/htFi7j8gSrdoTCyDfK1gpz4NnjI+TptlHChNpYyx54oV+RXr2cey6HYHHWlhUuPAu4XX/KrAPxOgA=
+	t=1773935947; cv=none; b=oUJOo1rPVCER+S8uT3kc1m3Vk94QniYZeLFp6cmGkdjrbyYkXrNSDrwSJXL+p2AtrcgRmQ4oxn+w1esXXOQVt+UYBLASk0k/f2WRCIYezHLBdzItWX9JlOk3rHRA4+aAUCOnUOxD5WBIYtoktH76n5RyUPrc78HIVbhoHm9MLMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773932994; c=relaxed/simple;
-	bh=w8KECUgZU784nrWzd9pPxP9fep5qk5sRDHZVbyBswlM=;
+	s=arc-20240116; t=1773935947; c=relaxed/simple;
+	bh=Lb4oqU4iPyvZ1i8PhgXMxctkWzAoFzaDDuT6Xm9wAYc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVZR920/apassDAEMIGzjjxynsO2S6b+jK29t3fJzm9hnCm7iCZsFu5XLZAnhsHZuO68dmlbRUmhZvRqDG/rCsH61n9MoiOi9gJDwFUNIY7BcmCb4KYvX2186oNxkrqfyHarl8Tj+aawtlimwoeMwtKD4+kEFvG+3e94O39WT4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=C0vpH9SW; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZBMBMYJ4cwLFoJ0jL3nYfPKd9J8kFPcCYtaFiJ4FfnJcs17yir6cFM1toxE/4ScaV1+MLBNhTCJYUoQsqB5M+0Arg79pMgolWnYidhcWF6cCpE2/tWWCbrCXgWTTGYkaGh31cvME/Q9iws8avXWNdSqQPSdBnhV/g3eq8puqM14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/qOknp+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="C0vpH9SW"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-8cd8d97aa2eso145779085a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Mar 2026 08:09:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1773932992; x=1774537792; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fU4+lilPbMb3EqzTb9SzQ9ED33oth0C4b6/QPTs5sDk=;
-        b=C0vpH9SWmg5mkRuxx2OAekhkBqFlLanK4Nd7TSYqcgTGuQP/sMD4LM2fTlQeb0OQ9Z
-         FVi2G/wIfj0c0mSvqQaHHcJvBoA86gX8moWmnp/uDfgcKsV0mDlednBv646JMGvm6rlM
-         ouwMyUbHspaqnmrkmHtMy8HxLxAv6sKUJYYXj4Ra4XL1MZZzcohL6hYd1Ym3CYFueBYN
-         UgLico9fpfA3E7okO2q5kil682LZkhpbOKPFLCo4nD1N1bN4uZoQ81puEv+yjHMWvgYH
-         Lfv6MFloaUUE7bmyWv/hjRrNk0NiCmCuHL3MfZKPCF6iFD3iJGgWlR1rkQqra+VINZoh
-         0z1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773932992; x=1774537792;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fU4+lilPbMb3EqzTb9SzQ9ED33oth0C4b6/QPTs5sDk=;
-        b=kkvUqVkyxSQrwXNnrjoCbErVipUizZxlbrinQWOwV7wQYDteSvJGMmS6Z5tDn+0SY4
-         PeyzSURa0BEEt/X9hjX7PSJhxBBn7K/NGxKB3QyGeIdHVUhexa38wDKZkng8RZvctz2l
-         zwyV1qoRt/0px8HFbq4JhsLFm3lFyRILkslcAV/wSLHReluHU0SLsAQud4+OK1HRaTW1
-         9DvT3sjuQqGxfEoGmoEnkGRIP73zE/i6F4WGtGOor1SjLdZd+TyEFadqlUabHzZYD2Up
-         DU3BDesYKOqB5qoz/5vPXnc/0DKudFFfBi4vHnL/+ADuIgQisNSbBe/+JF5vPXs4hx3e
-         lYAw==
-X-Forwarded-Encrypted: i=1; AJvYcCV90xrV1kRYm2q+ylP5hPsghS7Sye2THA56AmwYb78uS7uDg7leyof0U7UGvwmk4PqeskNtmN15MecwW3BZ/pvr2KE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1aD5PcDHgs+ivLJ5Ml6XZ1tvS75baYGIKcMSoUX12ecLDfFKB
-	sq9dtfEchXXRYRqMNOJtxZxeEL0J91FXT4QB1R+tUd8nv5AqPWDy9LWC663f7v0m4FQDlDEwt35
-	yFyGg
-X-Gm-Gg: ATEYQzwRPSVuqhIvswZlk1PVq9AsB2caLnkiZuSoDvSU6ZKFEbW7kHfL4fGi2/ZX6N3
-	Q/H2RGblB+qnaI0uXRJ2YToOGHSpcMs5ivHAC8na+Qm9Mbi8FKU3dTocb7mneQISGjMQY8vJ/9y
-	fI987eKkjVlglN+M8oFyt2otQCCHL9b7aVIs9qzwX11W/pNu7hmRJjCoboq2pZ915Mf3xcT8pR2
-	37AEOKRHYNlS7GwcSqngGabmDTJ9ozwX+WgOoifJ1qtfEEOXHfHAzdLtNEW2DnM4e4elYlprZds
-	VGQ8MvN0fk7+ePJ+BRK30jH/gwZV0FuUjot0RtTCTjOck/JYgKUZiURCm/kfjakZ6DZhlV5yRT+
-	u76ph1D3ssvuhdeywBT/Ao3JDpRC24FneI4yqMZsauBwo3oesA6VuVDAnNQTpdMfXrBvF6zLiTn
-	9uN+7jl4HE/sxitKJd2Wgs6F4HoZKHjz8ndvLGo7s2YwVmiB5mxuaE49uPGs7UI4aIRDhtVAK3m
-	VsH01Qlnw==
-X-Received: by 2002:a05:620a:4050:b0:8cd:af31:b421 with SMTP id af79cd13be357-8cfad2c5236mr1047066785a.34.1773932991754;
-        Thu, 19 Mar 2026 08:09:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfad1b1154sm524775785a.35.2026.03.19.08.09.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 08:09:51 -0700 (PDT)
-Date: Thu, 19 Mar 2026 11:09:47 -0400
-From: Gregory Price <gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/qOknp+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D16AC2BCAF;
+	Thu, 19 Mar 2026 15:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773935946;
+	bh=Lb4oqU4iPyvZ1i8PhgXMxctkWzAoFzaDDuT6Xm9wAYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U/qOknp+NF8zfgg9EcPZ92SUhgK1wewr6thkOtev0OirSgVgo8CxM22mhI9t4olCZ
+	 F9QKHOptUpnMSX4t//ajKhF5QZVTFfWiTzSdh88rgLDPci0Uy/5jKPaSIt/ZY+woCQ
+	 1n1O3LjlaVjdze6GVVaNtuWOMomclWrAxCMWuiCtU/Xj6RODTMoR64DPCJ2wrJe3Lu
+	 5XBLLtaNWFj+NSJ+SaQsQ1OkK6AmSV+CFKKwHIvC0xSPoR0rlXgaNxqOHEkmHJfDSu
+	 m0EFEZECCKyxoGkvSvJVq8deNghNUoIIkQ3zHPRhsF2x61w5GnxOB6q4xDOrVKDUW3
+	 CYFk6ohEaWLnw==
+Date: Thu, 19 Mar 2026 15:59:04 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+Cc: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	aarcange@redhat.com, akpm@linux-foundation.org, anshuman.khandual@arm.com, 
+	apopple@nvidia.com, baohua@kernel.org, baolin.wang@linux.alibaba.com, 
+	byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, 
+	hughd@google.com, jack@suse.cz, jackmanb@google.com, jannh@google.com, 
+	jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev, 
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, mathieu.desnoyers@efficios.com, 
+	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, 
+	pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org, 
+	richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
+	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com, 
+	thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, 
+	vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-unstable v15 11/13] mm/khugepaged: avoid unnecessary
+ mTHP collapse attempts
+Message-ID: <b4731810-2ee0-4e89-a193-9cc4ba015e3e@lucifer.local>
+References: <20260226031741.230674-1-npache@redhat.com>
+ <20260226032631.234234-1-npache@redhat.com>
+ <d8028d32-4791-4993-aae3-66506bf6d1bd@lucifer.local>
+ <a9ddfa7b-5ee4-4c68-bac0-8a0c6c355bf7@redhat.com>
+ <4774da78-8349-4eda-a09b-7248e82cb26b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -102,250 +61,91 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+In-Reply-To: <4774da78-8349-4eda-a09b-7248e82cb26b@kernel.org>
 
-On Tue, Mar 17, 2026 at 02:25:29PM +0100, David Hildenbrand (Arm) wrote:
-> On 2/22/26 09:48, Gregory Price wrote:
-> > Topic type: MM
-> 
-> Hi Gregory,
-> 
-> stumbling over this again, some questions whereby I'll just ignore the
-> compressed RAM bits for now and focus on use cases where promotion etc
-> are not relevant :)
-
-A more concrete example up your alley:
-
-I've since been playing with a virtio-net private node.
-
-Normally cloud-hypervisor VMs with virtio-net can't be subject to KSM
-because the entire boot region gets marked shared.  If virtio-net has
-its own private node / region separate from the boot region, the boot
-region is now free to be subject to KSM.
-
-I may have that up as an example sometime before LSF, but i need to
-clean up some networking stack hacks i've made to make it work.
-
-> > 
-> > N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
-> > explicit holes in that isolation to do useful things we couldn't do
-> > before without re-implementing entire portions of mm/ in a driver.
-> 
-> Just to clarify: we don't currently have any mechanism to expose, say,
-> SPM/PMEM/whatsoever to the buddy allocator through the dax/kmem driver
-> and *not* have random allocations end up on it, correct?
+On Wed, Mar 18, 2026 at 08:48:30PM +0100, David Hildenbrand (Arm) wrote:
+> On 3/18/26 19:59, Nico Pache wrote:
+> >
+> >
+> > On 3/17/26 4:35 AM, Lorenzo Stoakes (Oracle) wrote:
+> >> On Wed, Feb 25, 2026 at 08:26:31PM -0700, Nico Pache wrote:
+> >>> There are cases where, if an attempted collapse fails, all subsequent
+> >>> orders are guaranteed to also fail. Avoid these collapse attempts by
+> >>> bailing out early.
+> >>>
+> >>> Signed-off-by: Nico Pache <npache@redhat.com>
+> >>
+> >> With David's concern addressed:
+> >>
+> >> Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> >>
+> >>> ---
+> >>>  mm/khugepaged.c | 35 ++++++++++++++++++++++++++++++++++-
+> >>>  1 file changed, 34 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> >>> index 1c3711ed4513..388d3f2537e2 100644
+> >>> --- a/mm/khugepaged.c
+> >>> +++ b/mm/khugepaged.c
+> >>> @@ -1492,9 +1492,42 @@ static int mthp_collapse(struct mm_struct *mm, unsigned long address,
+> >>>  			ret = collapse_huge_page(mm, collapse_address, referenced,
+> >>>  						 unmapped, cc, mmap_locked,
+> >>>  						 order);
+> >>> -			if (ret == SCAN_SUCCEED) {
+> >>> +
+> >>> +			switch (ret) {
+> >>> +			/* Cases were we continue to next collapse candidate */
+> >>> +			case SCAN_SUCCEED:
+> >>>  				collapsed += nr_pte_entries;
+> >>> +				fallthrough;
+> >>> +			case SCAN_PTE_MAPPED_HUGEPAGE:
+> >>>  				continue;
+> >>> +			/* Cases were lower orders might still succeed */
+> >>> +			case SCAN_LACK_REFERENCED_PAGE:
+> >>> +			case SCAN_EXCEED_NONE_PTE:
+> >>> +			case SCAN_EXCEED_SWAP_PTE:
+> >>> +			case SCAN_EXCEED_SHARED_PTE:
+> >>> +			case SCAN_PAGE_LOCK:
+> >>> +			case SCAN_PAGE_COUNT:
+> >>> +			case SCAN_PAGE_LRU:
+> >>> +			case SCAN_PAGE_NULL:
+> >>> +			case SCAN_DEL_PAGE_LRU:
+> >>> +			case SCAN_PTE_NON_PRESENT:
+> >>> +			case SCAN_PTE_UFFD_WP:
+> >>> +			case SCAN_ALLOC_HUGE_PAGE_FAIL:
+> >>> +				goto next_order;
+> >>> +			/* Cases were no further collapse is possible */
+> >>> +			case SCAN_CGROUP_CHARGE_FAIL:
+> >>> +			case SCAN_COPY_MC:
+> >>> +			case SCAN_ADDRESS_RANGE:
+> >>> +			case SCAN_NO_PTE_TABLE:
+> >>> +			case SCAN_ANY_PROCESS:
+> >>> +			case SCAN_VMA_NULL:
+> >>> +			case SCAN_VMA_CHECK:
+> >>> +			case SCAN_SCAN_ABORT:
+> >>> +			case SCAN_PAGE_ANON:
+> >>> +			case SCAN_PMD_MAPPED:
+> >>> +			case SCAN_FAIL:
+> >>> +			default:
+> >>
+> >> Agree with david, let's spell them out please :)
+> >
+> > I believe David is arguing for the opposite. To drop all these spelt out cases
+> > and just leave the default case.
+> >
+> > @david is that correct or did I misunderstand that.
 >
-> Assume we online the memory to ZONE_MOVABLE, still other (fallback)
-> allocations might end up on that memory.
-> 
-
-Correct, when you hotplug memory into a node, it's a free for all.
-Fallbacks are going to happen.
-
-I see you saw below that one of the extensions is removing the nodes
-from the fallback list.  That is part one, but it's insufficient to
-prevent complete leakage (someone might iterate over the nodes-possible
-list and try migrating memory).
-
-> How would we currently handle something like that? (do we have drivers
-> for that? I'd assume that drivers would only migrate some user memory to
-> ZONE_DEVICE memory.)
-> 
-> Assuming we don't have such a mechanism, I assume that part of your
-> proposal would be very interesting: online the memory to a
-> "special"/"restricted" (you call it private) NUMA node, whereby all
-> memory of that NUMA node will only be consumable through
-> mbind() and friends.
-> 
-
-Basically the only isolation mechanism we have today is ZONE_DEVICE.
-
-Either via mbind and friends, or even just the driver itself managing it
-directly via alloc_pages_node() and exposing some userland interface.
-
-You can imagine a network driver providing an ioctl for a shared buffer
-or a driver exposing a mmap'able file descriptor as the trivial case.
-
-> Any other allocations (including automatic page migration etc) would not
-> end up on that memory.
-
-One of the complications of exposing this memory via mbind is that
-mempolicy.c has a lot of migration mechanics, just to name two:
-
-  - migrate on mbind
-  - cpuset rebinds
-
-So for a completely solution you need to support migration if you
-support mempolicy.  But with the callbacks, you can control how/when
-migration occurs.
-
-tl;dr: many of mm/'s services are actually predicated on migration
-support, so you have to manage that somehow.
-
-> 
-> Thinking of some "terribly slow" or "terribly fast" memory that we don't
-> want to involve in automatic memory tiering, being able to just let
-> selected workloads consume that memory sounds very helpful.
-> 
-> 
-> (wondering if there could be some way allocations might get migrated out
-> of the node, for example, during memory offlining etc, which might also
-> not be desirable)
-> 
-
-in the NP_OPS_MIGRATION patch, this gets covered.
-
-I'm not sure the NP_OPS_* pattern is what we actually want, it's just
-what i came up with to make it clear what's being enabled.
-
-Basically without NP_OPS_MIGRATION, this memory is completely
-non-migratable.  The driver managing it therefore needs to control the
-lifetime, and if hotplug is requested - kill anyone using it (which by
-definition should not the kernel) and either release the pages or take
-them so they can be released while hotplug is spinning.
-
-> I am not sure if __GFP_PRIVATE etc is really required for that. But some
-> mechanism to make that work seems extremely helpful.
-> 
-> Because ...
-> 
-> > /* And now I can use mempolicy with my memory */
-> > buf = mmap(...);
-> > mbind(buf, len, mode, private_node, ...);
-> > buf[0] = 0xdeadbeef;  /* Faults onto private node */
-> 
-> ... just being able to consume that memory through mbind() and having
-> guarantees sounds extremely helpful.
-> 
-
-Yes! :]
-
-> > 
-> >   - Filter allocation requests on __GFP_PRIVATE
-> >     	numa_zone_allowed() excludes them otherwise. 
-> 
-> I think we discussed that in the past, but why can't we find a way that
-> only people requesting __GFP_THISNODE could allocate that memory, for
-> example? I guess we'd have to remove it from all "default NUMA bitmaps"
-> somehow.
+> Either spell all out (no default) OR add a default.
 >
+> I prefer to just ... use the default :)
 
-I experimented with this.  There were two concerns:
+I mean yup that's fine too I guess, all or nothing, something in between is
+weird!
 
-1) as you note, removing it from the default bitmaps, which is actually
-   hard.  You can't remove it from the possible-node bitmap, so that
-   just seemed non-tractable.
+>
+> --
+> Cheers,
+>
+> David
 
-2) __GFP_THISNODE actually means (among other things) "don't fallback".
-   And, in fact, there are some hotplug-time allocations that occur in
-   SLAB (pglist_data) that target the private node that *must* fallback
-   to successfully allocate for successful kernel operation.
-
-So separating PRIVATE from THISNODE and allowing some use of fallback
-mechanics resolves some problems here.
-
-I think #2 is a solvable problem, but #1 i don't think can be addressed.
-I need to investigate the slab interactions a little more.
-
-> >   - Use standard struct page / folio.  No ZONE_DEVICE, no pgmap,
-> >     no struct page metadata limitations.
-> 
-> Good.
-
-Note: I've actually since explored merging this with pgmap, and
-rebranding it as node-scope pgmap.
-
-In that sense, you could think of this as NODE_DEVICE instead of
-NODE_PRIVATE - but maybe I'm inviting too much baggage :]
-
-> > 
-> > Re-use of ZONE_DEVICE Hooks
-> > ===
-> 
-> I think all of that might not be required for the simplistic use case I
-> mentioned above (fast/slow memory only to be consumed by selected user
-> space that opts in through mbind() and friends).
-> 
-> Or are there other use cases for these callbacks
-> 
-
-Many `folio_is_zone_device()` hooks result in the operations being
-a no-op / failing.  We need all those same hooks.
-
-Some hooks I added - such as migration hooks, are combined with the
-zone_device hooks via i helper to demonstrate the pattern is the same
-when the memory is opted into migration.
-
-I do not think all of these hooks are required, I would think of this
-more as an exploration of the whole space, and then we can throw what
-does not have an active use case.
-
-For the compressed ram component I've been designing, the needs are:
-
-- Migration
-- Reclaim
-- Demotion
-- Write Protect (maybe, possibly optional)
-
-But you could argue another user might want the same device to have:
-- Migration
-- Mempolicy
-
-Where they manage things from userland, rather than via reclaim.
-
-The flexibility is kind of the point :]
-
-> [...]
-> > 
-> > 
-> > Flag-gated behavior (NP_OPS_*) controls:
-> > ===
-> > 
-> > We use OPS flags to denote what mm/ services we want to allow on our
-> > private node.   I've plumbed these through so far:
-> > 
-> >   NP_OPS_MIGRATION       - Node supports migration
-> >   NP_OPS_MEMPOLICY       - Node supports mempolicy actions
-> >   NP_OPS_DEMOTION        - Node appears in demotion target lists
-> >   NP_OPS_PROTECT_WRITE   - Node memory is read-only (wrprotect)
-> >   NP_OPS_RECLAIM         - Node supports reclaim
-> >   NP_OPS_NUMA_BALANCING  - Node supports numa balancing
-> >   NP_OPS_COMPACTION      - Node supports compaction
-> >   NP_OPS_LONGTERM_PIN    - Node supports longterm pinning
-> >   NP_OPS_OOM_ELIGIBLE	 - (MIGRATION | DEMOTION), node is reachable
-> >                            as normal system ram storage, so it should
-> > 			   be considered in OOM pressure calculations.
-> 
-> I have to think about all that, and whether that would be required as a
-> first step. I'd assume in a simplistic use case mentioned above we might
-> only forbid the memory to be used as a fallback for any oom etc.
-> 
-> Whether reclaim (e.g., swapout) makes sense is a good question.
-> 
-
-I would simply state: "That depends on the memory device"
-
-Which is kind of the point.  The ability to isolate and poke holes in
-that isolation explictly, while using the same mm/ code, creates a new
-design space we haven't had before.
-
----
-
-I think it would be fair to say all of these would not be required for
-an MVP interface, and should require a use case to merge.  But the code
-is here because I wanted to explore just how far it can go.
-
-In fact, I believe I have gotten to the point where I could add:
-
-  NP_OPS_FALLBACK_NODE  - re-add the node to the fallback list
-                          do not require __GFP_PRIVATE for allocation
-
-Which would require all of the other bits to be turned on.
-
-The result of this is essentially a numa node with otherwise normal
-memory, but for which a driver gets callbacks on certain operations
-(migration, free, etc).  That ALSO seems useful.
-
-It's... an interesting result of the whole exploration.
-
-~Gregory
+Cheers, Lorenzo
