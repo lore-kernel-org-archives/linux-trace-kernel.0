@@ -1,101 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2B13CBE6B
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 17:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F482EB0F;
+	Fri, 20 Mar 2026 18:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774027926; cv=none; b=hCZgK4y65vdMdmiv4dB1Ay57+4PcWb4NFRokfFPDZSVh+71JJwUKHiBtd1VaNonlBwVlWZtEBXpjRvul1HtPvsuiJQxotu0ErKNyxBDhl7uMxV6uMJP8EjFaE0o92vjJJNv0IStle6bumsT3+szUeuanvySk4/YMRtPn+94qFsY=
+	t=1774032492; cv=none; b=Hr2u6EUnVI2Z/va6KU1+2f6AUL0gAPz3usck9cvNSBM2HSTYSehwhdGnrIzSxE9rElo+oNSfoAmxXjoidx7lCpMi37ECluHMCYiXB3buEJFMvEujEyouQFkwfGtvlQ83o/w4Whrfty4rL9UENC0EbLDvHUQOXwZuZC8nqruiq/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774027926; c=relaxed/simple;
-	bh=E6aRQ367u5hgWjKYG0nqKkdIuMauzwGRTL3rsHqFQ2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=LEvJQn0eUk86b9OCc1oSNXQ9EhaMVjXAqgsLkFyW0KLj4HsiERNU05PTCmHf2F80WlJKXLAyy7si7EC9ptT6CU2KlupjEjD32PS5flJO+FH/C/h2TSm/nFArKxuY/84GIB5n1uf8ceHBruBRzUtumD2oqf377+fvb2fXJRvFqvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d7ig9kcy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7ig9kcy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774027923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OpmkD8/1OErEP+Wqm/7F8P6jM8zuQtHg7khB2iRLIYo=;
-	b=d7ig9kcyy4hC9cBivtYak97dAOEzXoKJZtqZl2iEHQ4Kmaz9yT3d23/LdnX5bTqCXvbm6N
-	U13QLTs9zAtoNsNfPdEbueaPWUg8yXhQdfamp4x9wYIC1At2It4XPYiuUecMp2mLTR4QqT
-	eu1Udu6Os4CqEVgca7LSpTlKNhtCx4A=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-56-rhYYQ86JNMONuO5uU-EJVw-1; Fri,
- 20 Mar 2026 13:32:00 -0400
-X-MC-Unique: rhYYQ86JNMONuO5uU-EJVw-1
-X-Mimecast-MFC-AGG-ID: rhYYQ86JNMONuO5uU-EJVw_1774027919
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 50A7C18005B2;
-	Fri, 20 Mar 2026 17:31:59 +0000 (UTC)
-Received: from 192.168.0.121 (unknown [10.22.80.104])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 378C81800361;
-	Fri, 20 Mar 2026 17:31:53 +0000 (UTC)
-Date: Fri, 20 Mar 2026 14:31:52 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
-	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 3/3] rtla: Parse cmdline using libsubcmd
-Message-ID: <ab2D0a32yuwYTO1K@192.168.0.121>
-References: <20260320150651.51057-1-tglozar@redhat.com>
- <20260320150651.51057-4-tglozar@redhat.com>
+	s=arc-20240116; t=1774032492; c=relaxed/simple;
+	bh=3SMy+fd824qCIdYNOZDyUPd/fIiFdFpTn33YJCdb6S8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pXEIpuirXbgUVgbsm5m3lGllUKuZBPy/Qooetg2bfI6cwLIpzOljA4Le8gEEKJlkcp8plcNhzH07fcLCfDSliRQTfLZq1womFP8hPm4Y/iRrCRc+iK5vulozEmErra13lCTmRYUgvbyPwgt8+nOW1fymggT/8fR4k6TMXfCiTdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 9907F57ABB;
+	Fri, 20 Mar 2026 18:48:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 436E26000F;
+	Fri, 20 Mar 2026 18:48:01 +0000 (UTC)
+Date: Fri, 20 Mar 2026 14:48:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ kernel-team@meta.com, Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH] coredump: add tracepoint for coredump events
+Message-ID: <20260320144834.079ba241@gandalf.local.home>
+In-Reply-To: <20260320-erlitt-ergibt-255e86a66414@brauner>
+References: <20260320-coredump_tracepoint-v1-1-34864746cbb3@debian.org>
+	<20260320-erlitt-ergibt-255e86a66414@brauner>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260320150651.51057-4-tglozar@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: yFst8fVAeDoSlmAzRgXvD4yFkjd1RQ8CqEx6BZmhQxY_1774027919
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 436E26000F
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: chfesqnbaef7w77aa1fe88egwbjht8yc
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/t9oc6TpNdFVdvekaWbovUv14NMCMtHVY=
+X-HE-Tag: 1774032481-254845
+X-HE-Meta: U2FsdGVkX1+8IihC5ZZ9Zq/l9es3GNTMqK3dZT/nnqqlBcmocXnbF2763wz+IlNHg4ZkAD83A+rrsDbek8xy3pOEJnWyLMSkn/opCHvKTYaiBnbrVJXZEiTpCbhSpv1eUzf/lqkkcsSGnmpomuvMYlbjzx7Anvwohr0um8VidTTfBwjfmPg2Md3lkuP4x//K4WuFMSpuIS4HiyQjkpcvbH8cRicQPMxb5FZmc0ua6S2ZILm1T1+VI7SXb5vnMqOCd6sfk75DUSUCf+KxHD8AiUYnxsHAah/qzIYzzV10bGUXUOU5rNbwG29EvmaImEiS/oI90e3GoO7fWo/nMeS0Z9Yz5b3BXaMI
 
-On Fri, Mar 20, 2026 at 04:06:51PM +0100, Tomas Glozar wrote:
-> Instead of using getopt_long() directly to parse the command line
-> arguments given to an RTLA tool, use libsubcmd's parse_options().
+On Fri, 20 Mar 2026 14:21:23 +0100
+Christian Brauner <brauner@kernel.org> wrote:
+
+> > +TRACE_EVENT(coredump,
+> > +
+> > +	TP_PROTO(int sig),
+> > +
+> > +	TP_ARGS(sig),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__field(int, sig)
+> > +		__array(char, comm, TASK_COMM_LEN)
+> > +		__field(pid_t, pid)
+> > +	),
+> > +
+> > +	TP_fast_assign(
+> > +		__entry->sig = sig;
+> > +		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
+> > +		__entry->pid = current->pid;  
 > 
-> Utilizing libsubcmd for parsing command line arguments has several
-> benefits:
-> 
-> - A help message is automatically generated by libsubcmd from the
->   specification, removing the need of writing it by hand.
-> - Options are sorted into groups based on which part of tracing (CPU,
->   thread, auto-analysis, tuning, histogram) they relate to.
-> - Common parsing patterns for numerical and boolean values now share
->   code, with the target variable being stored in the option array.
-> 
-> To avoid duplication of the option parsing logic, RTLA-specific
-> macros defining struct option values are created:
-> 
-> - RTLA_OPT_* for options common to all tools
-> - OSNOISE_OPT_* and TIMERLAT_OPT_* for options specific to
+> That's the TID as seen in the global pid namespace.
+> I assume this is what you want but worth noting.
 
-[snip]
+Not to mention the pid is saved in all trace events and is available for
+perf and bpf too. Even the change log showed it:
 
-> -int getopt_auto(int argc, char **argv, const struct option *long_opts);
->  int common_parse_options(int argc, char **argv, struct common_params *common);
+             sleep-634     [036] .....   145.222206: coredump: sig=11 comm=sleep pid=634
 
+                   ^^^                                                               ^^^
 
-The function common_parse_options() body was removed, but the declaration remains.
+So it should not be included. It's duplicate and only wastes space. Now if
+you wanted to save the name space pid, that may be useful.
 
->  int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
-
-[snip]
-
+-- Steve
