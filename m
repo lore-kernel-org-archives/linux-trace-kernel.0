@@ -1,137 +1,526 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4FC39FCC4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 11:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774004999; cv=none; b=W1NgmShSI7PsvNv2muuOLjcoPENpYuIZKoind2YsaWrR+/UHtwJ3+mb+vZohTH2aAkMv6EzmqO4y4mdnEPhJdTVzAMCK0bg5fx4ryTZ4aOHkjk9qSTdVJXti1jqw2a+4/KFI1A+3pJdlLVGnC0S31vY0y5/KS0grHP20jd/bv7Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774004999; c=relaxed/simple;
-	bh=muj+S0CwdCa4Mdabtxh88dHeY5bgveIdxMpzHzByQ6E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=VbHE9mavHApjUbs8mRla5PuO7qPdvc/wWiFxE0kGWMvDoKLcgrARwnUeAqtWy1MoPSH2EvkeqZ/WX6MVA3CCvzr7qJ/2+N0IjtGmUbk98VLEnDSmwJA0+VdGLGALzj2xZjOnRD6ECU57895VMZr+Gm7ChvPlCl5FWxG2vUyqUUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ptyVoPWX; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7B93A9DBA
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 12:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774009409; cv=pass; b=MlYZVmDx+J1HYLY5A0z5CZGavY6gGb8IWEJjNXIknKflmjfHOp3Q3MLWVJG09+FyyRLMeHYTyy5Slob38af+ouWcGdAq5J+hu5ex9RVxAdngSdZnwRtc3/Ft7jJr6Hjfy0H+hzbaTNMRXZMXg4k6JIux59y1wMNRFGSMiteXRDU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774009409; c=relaxed/simple;
+	bh=kOPOC9Q8CqJyJynBbS2Amyh+KAhMS6GefN4TX2txk10=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DQl7+hbu2x+1ci6ib3Iyg8pb4f2afXV1EvsvimSNfYuNx/u+qYaMCAS+ee2puGsABvS/LqxkaFruwXxtaRNSC1VIOsXWVD+oN8Yr8VnOfjdEZJgeZbQjMjWypqSRBGZr8g+dTrbr1DO3t+dgHCHWYLW8KsKootI+ypBTXpo2X/s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Csw0wski; arc=pass smtp.client-ip=74.125.82.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ptyVoPWX"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20260320110956euoutp02d16195b6f3b2f0b874358a0dd76a1e95~eiCUe_FJt1780617806euoutp02E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 11:09:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20260320110956euoutp02d16195b6f3b2f0b874358a0dd76a1e95~eiCUe_FJt1780617806euoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1774004996;
-	bh=pTmqpdf8GjnyZsUw8L2XfkacmPpa02J4Xau6gTuFHFk=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ptyVoPWXcBIi6CFajqz8jBHUc7QxmVLROBIa6B07X05T2gMHSAF3qJV+Mxu2faMdW
-	 uAMswRdsBVr/P6CT4N9vFmq0zmpofYL/qZzw6yGNXtUr+3CNEGQBePtGtm+H/geV65
-	 29SmHCE/UzvDdepCwlLyhLC/iO2gx/kPUCouI5Ys=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260320110955eucas1p27a53a87afc17b63b07866d088aeac78a~eiCUCPSBF0485504855eucas1p2p;
-	Fri, 20 Mar 2026 11:09:55 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260320110953eusmtip1e57b08b4312207c095ed6eee93225c85~eiCR0ORyQ2928429284eusmtip1k;
-	Fri, 20 Mar 2026 11:09:53 +0000 (GMT)
-Message-ID: <b9bdd287-6bd7-4223-be06-7531845c5a19@samsung.com>
-Date: Fri, 20 Mar 2026 12:09:52 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Csw0wski"
+Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-128ce536fe0so7823c88.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 05:23:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774009407; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Hyl6j+n5PixVrVdsgurDAI54g95fCItulIieA5iLiSubR+CHNeTq+3C8frM6mHHnNM
+         9JlekUlgD7lQTaDfZ53taElAD3eg8MToZCWSrBFTznk93pIkZJdNSvYJgP4CCnH8dNiE
+         SanT2O/2u1dr71feS7LqKY+COemvNhpLqdA3NxsZdI1FpkBt1PhfT8tW0tgA9EeUHehk
+         2wO9Vk9poOH3QZ28gisR2XUeCsupmWh3GxIzk+zVHb+yFFcLV5RBlDudfLXkiBngNb4L
+         nhoVVvvkqZLKC7+ejQKwhmdNEMxeLWPM1Z6tomCSPtwGUVyjfqXTZE/BjmIMdDx8rK0e
+         5zeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=SYv24HC7LrXJB439CdGZLPTD4jOYoGyK5TH5q9G2jWw=;
+        fh=VoQXdH+O1o5WEFHQQfq19KlRUIX29PpB/AycN95a8bQ=;
+        b=D1fPjO+e948J/a+JYOKpZDFurGiUxDH/jE8MT+nk/ItQNNVA0BUzGmPQR5X5bkuw0r
+         GB3rNf6IXp0aK9n6VTZnVklqeF9YF67bpY5UD5eBRK744435qoJhHj0B5US/oTKefD2a
+         oYUDrm24tm+r9W41YytvLnlgVyb/3IEPvcPR419gjCBaHCzIUP8hmH+bBE++0lvGQh1F
+         aSpc8tQKV8RNXyNRlo8nqfJ6aIcfO5gfymJxstdyzi77YckHwmb2MjfGSqhkQKxGB6Re
+         NxvQq0jwaAtQ0saNWhKLbPc+eFLfGdc6feE6kqSu/LB6o0Dl2LdFGWfk1iguuL9q5df/
+         WH7Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1774009407; x=1774614207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SYv24HC7LrXJB439CdGZLPTD4jOYoGyK5TH5q9G2jWw=;
+        b=Csw0wskioSL0adiV6y2kimQmXZnvv13vGGFNPIO36E6qg+Z9aPre/Oz0ikxQjf83ab
+         Avx40jYBIOP2zkPh10uAXrQV8HOTnjJhQaC1C5k0VBjHzWkG7jp7m64lhOxR1usq+4Lq
+         tYgi5xa/9y9oFwMPNA44Zg1ZbCJ6dAZKyiiY0EwAkGjgZ0e22qfDuAtscOW7rZ8kxx7s
+         KrN4nXOb0Z8HeDOaVcRo3eDtCOYVGSCSxgF/7jewJfmOBJmkh8YOspy8Z8VocBkishkS
+         1GziMFNRm1R0PyzzTJxzulKzMcl4fu31BZyEXrZPLU1yIe4XYwrEri4IhepuDPYSZbWR
+         gl1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774009407; x=1774614207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SYv24HC7LrXJB439CdGZLPTD4jOYoGyK5TH5q9G2jWw=;
+        b=PPN1ocfO8ZjNJVbCO5GvGGeqoQDTJJm1hVmgYceowMo8rxtkVsiVHXcdD7/NnJuqLM
+         Hk/Q6LXeVdTuT6pbEehNiFQp3BXzdIdMQKybctYR4wPxwMjDOtYGP5yI0gzqjFjTfj9i
+         1xl1XiRFvjmTJpkc75Sh5P6DmHXg2REvnJMhX5LhjtMR1UEWoixQFr0hpjzGvNGx8fJ6
+         QoWnU5IAMTYCgRNIMltJ+Y7yWtfYlQAQcIMDK15iKEQkVww7X0jepFxrH/sjP/9GjKbk
+         mLznDzT8H2mKG2IwQjgcAPsyMUMbIwH7zRQ7KSPs7YJBKxuvYlVJoCKIjKC2PX+xYVzC
+         XhOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWECnvHywkwWd+g8FLymz2dNK94ZISJzYKYcC2r4fv2yqoHo9wX7G9PKLkxhrC5KS9K2P5E5vDG8mG+e2mdEVu8g7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5TkH7kq5+fw0z+9o1QIdfDGenFCSbmZ+YMNHadJnh15h0LNRd
+	VXODh0J5tvvhl2rejMe24vv8q8sFSQrLdbhxIxiMZPqr/jkpmruWvYjA+Mv9I+Ch6sufzX4WGTn
+	JeyJ1OQ3Rnz3FlA0IjeoiBb8T1L3RXl81f8YuhEb+YOeoMAxMAdBGDApZ2kU=
+X-Gm-Gg: ATEYQzxhr6c96pl4h0m/Yfk2mCM6rBuWV8+WPLzwSQR48PtR2dvzWj6OVmLihUKC78w
+	W+IsNODZJszKwWOoJM5JfouMY3Z5QZtQYTXcox4GWguBRDydtaav02L6PCohcIBMSx38GCGAsZG
+	dnb667f1gCkwgSxVbEBfIMfkUh2ITL9Z3hqVWa2GmBiDvx5SHZGpXqxeF1LtH6h0xORIh3yf8a6
+	p1teH486Pwf28gsaTZirHj0Aou6BDMHSpk5bcv0nbOBJpn68cj2giSWhhi3DUDU0T9Nj7LQLc2I
+	vcjpLw==
+X-Received: by 2002:a05:7022:1609:b0:124:9f86:aeb4 with SMTP id
+ a92af1059eb24-12a73085652mr80229c88.1.1774009405841; Fri, 20 Mar 2026
+ 05:23:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v3 0/8] RDMA: Enable operation with DMA debug enabled
-To: Leon Romanovsky <leon@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>, Petr Tesarik <ptesarik@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20260316-dma-debug-overlap-v3-0-1dde90a7f08b@nvidia.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260320110955eucas1p27a53a87afc17b63b07866d088aeac78a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260316190712eucas1p27573f4514f2cf7dca5d58414b3c2b7e8
-X-EPHeader: CA
-X-CMS-RootMailID: 20260316190712eucas1p27573f4514f2cf7dca5d58414b3c2b7e8
-References: <CGME20260316190712eucas1p27573f4514f2cf7dca5d58414b3c2b7e8@eucas1p2.samsung.com>
-	<20260316-dma-debug-overlap-v3-0-1dde90a7f08b@nvidia.com>
+References: <20260319233745.GA769346@ax162> <abzKcGiRSR_E8lLN@hyeyoo>
+In-Reply-To: <abzKcGiRSR_E8lLN@hyeyoo>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Fri, 20 Mar 2026 13:23:13 +0100
+X-Gm-Features: AaiRm50sj-DgG9yMW7k7QcDOnwzXZwETClua3TnV03iPZLva549LNtSM_gJ_Q5c
+Message-ID: <CAAi7L5fqc-DZOO4F-VTbV8_=A1KFmm6qBaXjP=QenjLwiVLwuA@mail.gmail.com>
+Subject: Re: NULL pointer dereference when booting ppc64_guest_defconfig in
+ QEMU on -next
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16.03.2026 20:06, Leon Romanovsky wrote:
-> Add a new DMA_ATTR_REQUIRE_COHERENT attribute to the DMA API to mark
-> mappings that must run on a DMA‑coherent system. Such buffers cannot
-> use the SWIOTLB path, may overlap with CPU caches, and do not depend on
-> explicit cache flushing.
+On Fri, Mar 20, 2026 at 5:18=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com> wr=
+ote:
 >
-> Mappings using this attribute are rejected on systems where cache
-> side‑effects could lead to data corruption, and therefore do not need
-> the cache‑overlap debugging logic. This series also includes fixes for
-> DMA_ATTR_CPU_CACHE_CLEAN handling.
-> Thanks.
+> On Thu, Mar 19, 2026 at 04:37:45PM -0700, Nathan Chancellor wrote:
+> > Hi all,
+> >
+> > I am not really sure whose bug this is, as it only appears when three
+> > seemingly independent patch series are applied together, so I have adde=
+d
+> > the patch authors and their committers (along with the tracing
+> > maintainers) to this thread. Feel free to expand or reduce that list as
+> > necessary.
+> >
+> > Our continuous integration has noticed a crash when booting
+> > ppc64_guest_defconfig in QEMU on the past few -next versions.
+> >
+> >   https://github.com/ClangBuiltLinux/continuous-integration2/actions/ru=
+ns/23311154492/job/67811527112
+> >
+> > This does not appear to be clang related, as it can be reproduced with
+> > GCC 15.2.0 as well. Through multiple bisects, I was able to land on
+> > applying:
+> >
+> >   mm: improve RSS counter approximation accuracy for proc interfaces [1=
+]
+> >   vdso/datastore: Allocate data pages dynamically [2]
+> >   kho: fix deferred init of kho scratch [3]
+> >
+> > and their dependent changes on top of 7.0-rc4 is enough to reproduce
+> > this (at least on two of my machines with the same commands). I have
+> > attached the diff from the result of the following 'git apply' commands
+> > below, done in a linux-next checkout.
+> >
+> >   $ git checkout v7.0-rc4
+> >   HEAD is now at f338e7738378 Linux 7.0-rc4
+> >
+> >   # [1]
+> >   $ git diff 60ddf3eed4999bae440d1cf9e5868ccb3f308b64^..087dd6d2cc12c82=
+945ab859194c32e8e977daae3 | git apply -3v
+> >   ...
+> >
+> >   # [2]
+> >   # Fix trivial conflict in init/main.c around headers
+> >   $ git diff dc432ab7130bb39f5a351281a02d4bc61e85a14a^..05988dba11791cc=
+bb458254484826b32f17f4ad2 | git apply -3v
+> >   ...
+> >
+> >   # [3]
+> >   # Fix conflict in kernel/liveupdate/kexec_handover.c due to lack of k=
+ho_mem_retrieve(), just add pfn_is_kho_scratch()
+> >   $ git show 4a78467ffb537463486968232daef1e8a2f105e3 | git apply -3v
+> >   ...
+> >
+> >   $ make -skj"$(nproc)" ARCH=3Dpowerpc CROSS_COMPILE=3Dpowerpc64-linux-=
+ mrproper ppc64_guest_defconfig vmlinux
+> >
+> >   $ curl -LSs https://github.com/ClangBuiltLinux/boot-utils/releases/do=
+wnload/20241120-044434/ppc64-rootfs.cpio.zst | zstd -d >rootfs.cpio
+> >
+> >   $ qemu-system-ppc64 \
+> >       -display none \
+> >       -nodefaults \
+> >       -cpu power8 \
+> >       -machine pseries \
+> >       -vga none \
+> >       -kernel vmlinux \
+> >       -initrd rootfs.cpio \
+> >       -m 1G \
+> >       -serial mon:stdio
 >
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> Thanks, such a detailed steps to reproduce!
+> Interestingly, the combination of my compiler (GCC 13.3.0) and
+> QEMU (8.2.2) don't trigger this bug.
+>
+> >   [    0.000000][    T0] Linux version 7.0.0-rc4-dirty (nathan@framewor=
+k-amd-ryzen-maxplus-395) (powerpc64-linux-gcc (GCC) 15.2.0, GNU ld (GNU Bin=
+utils) 2.45) #1 SMP PREEMPT Thu Mar 19 15:45:53 MST 2026
+> >   ...
+> >   [    0.216764][    T1] vgaarb: loaded
+> >   [    0.217590][    T1] clocksource: Switched to clocksource timebase
+> >   [    0.221007][   T12] BUG: Kernel NULL pointer dereference at 0x0000=
+0010
+> >   [    0.221049][   T12] Faulting instruction address: 0xc0000000004494=
+7c
+> >   [    0.221237][   T12] Oops: Kernel access of bad area, sig: 11 [#1]
+> >   [    0.221276][   T12] BE PAGE_SIZE=3D64K MMU=3DHash  SMP NR_CPUS=3D2=
+048 NUMA pSeries
+> >   [    0.221359][   T12] Modules linked in:
+> >   [    0.221556][   T12] CPU: 0 UID: 0 PID: 12 Comm: kworker/u4:0 Not t=
+ainted 7.0.0-rc4-dirty #1 PREEMPTLAZY
+> >   [    0.221631][   T12] Hardware name: IBM pSeries (emulated by qemu) =
+POWER8 (architected) 0x4d0200 0xf000004 of:SLOF,HEAD pSeries
+> >   [    0.221765][   T12] Workqueue: trace_init_wq tracer_init_tracefs_w=
+ork_func
+> >   [    0.222065][   T12] NIP:  c00000000044947c LR: c00000000041a584 CT=
+R: c00000000053aa90
+> >   [    0.222084][   T12] REGS: c000000003bc7960 TRAP: 0380   Not tainte=
+d  (7.0.0-rc4-dirty)
+> >   [    0.222111][   T12] MSR:  8000000000009032 <SF,EE,ME,IR,DR,RI>  CR=
+: 44000204  XER: 00000000
+> >   [    0.222287][   T12] CFAR: c000000000449420 IRQMASK: 0
+> >   [    0.222287][   T12] GPR00: c00000000041a584 c000000003bc7c00 c0000=
+00001c08100 c000000002892f20
+> >   [    0.222287][   T12] GPR04: c0000000019cfa68 c0000000019cfa60 00000=
+00000000001 0000000000000064
+> >   [    0.222287][   T12] GPR08: 0000000000000002 0000000000000000 c0000=
+00003bba000 0000000000000010
+> >   [    0.222287][   T12] GPR12: c00000000053aa90 c000000002c50000 c0000=
+00001ab25f8 c000000001626690
+> >   [    0.222287][   T12] GPR16: 0000000000000000 0000000000000000 00000=
+00000000000 0000000000000000
+> >   [    0.222287][   T12] GPR20: c000000001624868 c000000001ab2708 c0000=
+000019cfa08 c000000001a00d18
+> >   [    0.222287][   T12] GPR24: c0000000019cfa18 fffffffffffffef7 c0000=
+00003051205 c0000000019cfa68
+> >   [    0.222287][   T12] GPR28: 0000000000000000 c0000000019cfa60 c0000=
+00002894e90 0000000000000000
+> >   [    0.222526][   T12] NIP [c00000000044947c] __find_event_file+0x9c/=
+0x110
+> >   [    0.222572][   T12] LR [c00000000041a584] init_tracer_tracefs+0x27=
+4/0xcc0
+> >   [    0.222643][   T12] Call Trace:
+> >   [    0.222690][   T12] [c000000003bc7c00] [c000000000b943b0] tracefs_=
+create_file+0x1a0/0x2b0 (unreliable)
+> >   [    0.222766][   T12] [c000000003bc7c50] [c00000000041a584] init_tra=
+cer_tracefs+0x274/0xcc0
+> >   [    0.222791][   T12] [c000000003bc7dc0] [c000000002046f1c] tracer_i=
+nit_tracefs_work_func+0x50/0x320
+> >   [    0.222809][   T12] [c000000003bc7e50] [c000000000276958] process_=
+one_work+0x1b8/0x530
+> >   [    0.222828][   T12] [c000000003bc7f10] [c00000000027778c] worker_t=
+hread+0x1dc/0x3d0
+> >   [    0.222883][   T12] [c000000003bc7f90] [c000000000284c44] kthread+=
+0x194/0x1b0
+> >   [    0.222900][   T12] [c000000003bc7fe0] [c00000000000cf30] start_ke=
+rnel_thread+0x14/0x18
+> >   [    0.222961][   T12] Code: 7c691b78 7f63db78 2c090000 40820018 e89c=
+0000 49107f21 60000000 2c030000 41820048 ebff0000 7c3ff040 41820038 <e93f00=
+10> 7fa3eb78 81490058 e8890018
+> >   [    0.223190][   T12] ---[ end trace 0000000000000000 ]---
+> >   ...
+> >
+> > Interestingly, turning on CONFIG_KASAN appears to hide this, maybe
+> > pointing to some sort of memory corruption (or something timing
+> > related)? If there is any other information I can provide, I am more
+> > than happy to do so.
+>
+> I don't have much idea on how things end up causing
+> NULL-pointer-deref... but let's point out suspicious things.
+>
+> > [1]: https://lore.kernel.org/20260227153730.1556542-4-mathieu.desnoyers=
+@efficios.com/
+>
+> @Mathieu: In patch 1/3 description,
+> > Changes since v7:
+> > - Explicitly initialize the subsystem from start_kernel() right
+> >   after mm_core_init() so it is up and running before the creation of
+> >   the first mm at boot.
+>
+> But how does this work when someone calls mm_cpumask() on init_mm early?
+> Looks like it will behave incorrectly because get_rss_stat_items_size()
+> returns zero?
+>
+> While it doesn't crash on my environment, it triggers a two warnings
+> (with -smp 2 option added). IIUC the cpu bit should have been set in
+> setup_arch(), but at the wrong location. After the
+> percpu_counter_tree_subsystem_init() function is called, the bit doesn't
+> appear to be set.
+>
+> [    1.392787][    T1] ------------[ cut here ]------------
+> [    1.392935][    T1] WARNING: arch/powerpc/mm/mmu_context.c:106 at swit=
+ch_mm_irqs_off+0x190/0x1c0, CPU#0: swapper/0/1
+> [    1.393187][    T1] Modules linked in:
+> [    1.393458][    T1] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 7=
+.0.0-rc4-next-20260319 #1 PREEMPTLAZY
+> [    1.393600][    T1] Hardware name: IBM pSeries (emulated by qemu) POWE=
+R8 (architected) 0x4d0200 0xf000004 of:SLOF,HEAD pSeries
+> [    1.393711][    T1] NIP:  c00000000014e390 LR: c00000000014e30c CTR: 0=
+000000000000000
+> [    1.393752][    T1] REGS: c000000003def7b0 TRAP: 0700   Not tainted  (=
+7.0.0-rc4-next-20260319)
+> [    1.393807][    T1] MSR:  8000000002021032 <SF,VEC,ME,IR,DR,RI>  CR: 2=
+800284a  XER: 00000000
+> [    1.393944][    T1] CFAR: c00000000014e328 IRQMASK: 3
+> [    1.393944][    T1] GPR00: c00000000014e36c c000000003defa50 c00000000=
+1bb8100 c0000000028d8c80
+> [    1.393944][    T1] GPR04: c000000004ddc04a 000000000000000a 000000002=
+2222222 2222222222222222
+> [    1.393944][    T1] GPR08: 2222222222222222 0000000000000000 000000000=
+0000001 0000000000008000
+> [    1.393944][    T1] GPR12: c000000000521e80 c000000002c70000 c00000000=
+000fff0 0000000000000000
+> [    1.393944][    T1] GPR16: 0000000000000000 c00000000606c600 c00000000=
+3623ac0 0000000000000000
+> [    1.393944][    T1] GPR20: c000000004c66300 c00000000606fc00 000000000=
+0000001 0000000000000001
+> [    1.393944][    T1] GPR24: c000000006069c00 c00000000272c500 000000000=
+0000000 0000000000000000
+> [    1.393944][    T1] GPR28: c000000003d68200 0000000000000000 c00000000=
+28d8a80 c00000000272bd00
+> [    1.394355][    T1] NIP [c00000000014e390] switch_mm_irqs_off+0x190/0x=
+1c0
+> [    1.394395][    T1] LR [c00000000014e30c] switch_mm_irqs_off+0x10c/0x1=
+c0
+> [    1.394519][    T1] Call Trace:
+> [    1.394584][    T1] [c000000003defa50] [c00000000014e36c] switch_mm_ir=
+qs_off+0x16c/0x1c0 (unreliable)
+> [    1.394676][    T1] [c000000003defab0] [c0000000006edbf0] begin_new_ex=
+ec+0x534/0xf60
+> [    1.394732][    T1] [c000000003defb20] [c000000000795538] load_elf_bin=
+ary+0x494/0x1d1c
+> [    1.394765][    T1] [c000000003defc70] [c0000000006eb910] bprm_execve+=
+0x380/0x720
+> [    1.394796][    T1] [c000000003defd00] [c0000000006ed5a8] kernel_execv=
+e+0x12c/0x1bc
+> [    1.394831][    T1] [c000000003defd50] [c00000000000eda8] run_init_pro=
+cess+0xf8/0x160
+> [    1.394864][    T1] [c000000003defde0] [c0000000000100b4] kernel_init+=
+0xcc/0x268
+> [    1.394899][    T1] [c000000003defe50] [c00000000000cf14] ret_from_ker=
+nel_user_thread+0x14/0x1c
+> [    1.394946][    T1] ---- interrupt: 0 at 0x0
+> [    1.395205][    T1] Code: 7fe4fb78 7f83e378 48009171 60000000 4bffff98=
+ 60000000 60000000 60000000 0fe00000 4bffff00 60000000 60000000 <0fe00000> =
+4bffff98 60000000 60000000
+> [    1.395420][    T1] ---[ end trace 0000000000000000 ]---
+> [    1.526024][   T67] mount (67) used greatest stack depth: 28432 bytes =
+left
+> [    1.605803][   T69] mount (69) used greatest stack depth: 27872 bytes =
+left
+> [    1.667853][   T71] mkdir (71) used greatest stack depth: 27248 bytes =
+left
+> Saving 256 bits of creditable seed for next boot
+> [    1.926636][   T80] ------------[ cut here ]------------
+> [    1.926719][   T80] WARNING: arch/powerpc/mm/mmu_context.c:51 at switc=
+h_mm_irqs_off+0x180/0x1c0, CPU#0: S01seedrng/80
+> [    1.926782][   T80] Modules linked in:
+> [    1.926910][   T80] CPU: 0 UID: 0 PID: 80 Comm: S01seedrng Tainted: G =
+       W           7.0.0-rc4-next-20260319 #1 PREEMPTLAZY
+> [    1.926990][   T80] Tainted: [W]=3DWARN
+> [    1.927025][   T80] Hardware name: IBM pSeries (emulated by qemu) POWE=
+R8 (architected) 0x4d0200 0xf000004 of:SLOF,HEAD pSeries
+> [    1.927091][   T80] NIP:  c00000000014e380 LR: c00000000014e24c CTR: c=
+000000000232894
+> [    1.927131][   T80] REGS: c000000004d5f800 TRAP: 0700   Tainted: G    =
+    W            (7.0.0-rc4-next-20260319)
+> [    1.927179][   T80] MSR:  8000000000029032 <SF,EE,ME,IR,DR,RI>  CR: 28=
+002828  XER: 20000000
+> [    1.927253][   T80] CFAR: c00000000014e280 IRQMASK: 1
+> [    1.927253][   T80] GPR00: c0000000002328ec c000000004d5faa0 c00000000=
+1bb8100 0000000000000080
+> [    1.927253][   T80] GPR04: c0000000028d8280 c000000004509c00 000000000=
+0000002 c00000000272c700
+> [    1.927253][   T80] GPR08: fffffffffffffffe c0000000028d8280 000000000=
+0000000 0000000048002828
+> [    1.927253][   T80] GPR12: c000000000232894 c000000002c70000 000000000=
+0000000 0000000000000002
+> [    1.927253][   T80] GPR16: 0000000000000000 000001002f0a2958 000001002=
+f0a2950 ffffffffffffffff
+> [    1.927253][   T80] GPR20: 0000000000000000 0000000000000000 c00000000=
+2ab1400 c00000000272c700
+> [    1.927253][   T80] GPR24: 0000000000000000 c0000000028d8a80 000000000=
+0000000 0000000000000000
+> [    1.927253][   T80] GPR28: c000000004509c00 0000000000000000 c00000000=
+272bd00 c0000000028d8280
+> [    1.927629][   T80] NIP [c00000000014e380] switch_mm_irqs_off+0x180/0x=
+1c0
+> [    1.927678][   T80] LR [c00000000014e24c] switch_mm_irqs_off+0x4c/0x1c=
+0
+> [    1.927715][   T80] Call Trace:
+> [    1.927737][   T80] [c000000004d5faa0] [c000000004d5faf0] 0xc000000004=
+d5faf0 (unreliable)
+> [    1.927804][   T80] [c000000004d5fb00] [c0000000002328ec] do_shoot_laz=
+y_tlb+0x58/0x84
+> [    1.927853][   T80] [c000000004d5fb30] [c000000000388304] smp_call_fun=
+ction_many_cond+0x6a0/0x8d8
+> [    1.927902][   T80] [c000000004d5fc20] [c000000000388624] on_each_cpu_=
+cond_mask+0x40/0x7c
+> [    1.927943][   T80] [c000000004d5fc50] [c000000000232ad4] __mmdrop+0x8=
+8/0x2ec
+> [    1.927986][   T80] [c000000004d5fce0] [c000000000242104] do_exit+0x35=
+0/0xde4
+> [    1.928028][   T80] [c000000004d5fdb0] [c000000000242de0] do_group_exi=
+t+0x48/0xbc
+> [    1.928072][   T80] [c000000004d5fdf0] [c000000000242e74] pid_child_sh=
+ould_wake+0x0/0x84
+> [    1.928128][   T80] [c000000004d5fe10] [c000000000030218] system_call_=
+exception+0x148/0x3c0
+> [    1.928176][   T80] [c000000004d5fe50] [c00000000000c6d4] system_call_=
+common+0xf4/0x258
+> [    1.928217][   T80] ---- interrupt: c00 at 0x7fff8ade507c
+> [    1.928253][   T80] NIP:  00007fff8ade507c LR: 00007fff8ade5034 CTR: 0=
+000000000000000
+> [    1.928291][   T80] REGS: c000000004d5fe80 TRAP: 0c00   Tainted: G    =
+    W            (7.0.0-rc4-next-20260319)
+> [    1.928333][   T80] MSR:  800000000280f032 <SF,VEC,VSX,EE,PR,FP,ME,IR,=
+DR,RI>  CR: 24002824  XER: 00000000
+> [    1.928413][   T80] IRQMASK: 0
+> [    1.928413][   T80] GPR00: 00000000000000ea 00007fffe75beb50 00007fff8=
+aed7300 0000000000000000
+> [    1.928413][   T80] GPR04: 0000000000000000 00007fffe75beda0 00007fffe=
+75bedb0 0000000000000000
+> [    1.928413][   T80] GPR08: 0000000000000000 0000000000000000 000000000=
+0000000 0000000000000000
+> [    1.928413][   T80] GPR12: 0000000000000000 00007fff8afaae00 00007fffc=
+a692568 0000000133cf0440
+> [    1.928413][   T80] GPR16: 0000000000000000 000001002f0a2958 000001002=
+f0a2950 ffffffffffffffff
+> [    1.928413][   T80] GPR20: 0000000000000000 0000000000000000 00007fffe=
+75bf838 00007fff8afa0000
+> [    1.928413][   T80] GPR24: 0000000126911328 0000000000000001 00007fff8=
+af9dc00 00007fffe75bf818
+> [    1.928413][   T80] GPR28: 0000000000000003 fffffffffffff000 000000000=
+0000000 00007fff8afa3e10
+> [    1.928765][   T80] NIP [00007fff8ade507c] 0x7fff8ade507c
+> [    1.928795][   T80] LR [00007fff8ade5034] 0x7fff8ade5034
+> [    1.928835][   T80] ---- interrupt: c00
+> [    1.928924][   T80] Code: 7c0803a6 4e800020 60000000 60000000 7fe4fb78=
+ 7f83e378 48009171 60000000 4bffff98 60000000 60000000 60000000 <0fe00000> =
+4bffff00 60000000 60000000
+> [    1.929054][   T80] ---[ end trace 0000000000000000 ]---
+>
+> > [2]: https://lore.kernel.org/20260304-vdso-sparc64-generic-2-v6-3-d8eb3=
+b0e1410@linutronix.de/
+>
+> > [3]: https://lore.kernel.org/20260311125539.4123672-2-mclapinski@google=
+.com/
+>
+> @Michal: Something my AI buddy pointed out... (that I think is valid):
+>
+> > diff --git a/mm/mm_init.c b/mm/mm_init.c
+> > index df34797691bd..7363b5b0d22a 100644
+> > --- a/mm/mm_init.c
+> > +++ b/mm/mm_init.c
+> > @@ -2078,9 +2082,11 @@ deferred_init_memmap_chunk(unsigned long start_p=
+fn, unsigned long end_pfn,
+> >                       unsigned long mo_pfn =3D ALIGN(spfn + 1, MAX_ORDE=
+R_NR_PAGES);
+> >                       unsigned long chunk_end =3D min(mo_pfn, epfn);
+> >
+> > -                     nr_pages +=3D deferred_init_pages(zone, spfn, chu=
+nk_end);
+>
+> Previously, deferred_init_pages() returned nr of pages to add, which is
+> (end_pfn (=3D chunk_end) - spfn).
+>
+> > -                     deferred_free_pages(spfn, chunk_end - spfn);
+> > +                     // KHO scratch is MAX_ORDER_NR_PAGES aligned.
+> > +                     if (!pfn_is_kho_scratch(spfn))
+> > +                             deferred_init_pages(zone, spfn, chunk_end=
+);
+>
+> But since the function is not always called with the change,
+> the calculation is moved to...
+>
+> > +                     deferred_free_pages(spfn, chunk_end - spfn);
+> >                       spfn =3D chunk_end;
+> >
+> >                       if (can_resched)
+> > @@ -2088,6 +2094,7 @@ deferred_init_memmap_chunk(unsigned long start_pf=
+n, unsigned long end_pfn,
+> >                       else
+> >                               touch_nmi_watchdog();
+> >               }
+> > +             nr_pages +=3D epfn - spfn;
+>
+> Here.
+>
+> But this is incorrect, because here we have:
+> > static unsigned long __init
+> > deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_p=
+fn,
+> >                            struct zone *zone, bool can_resched)
+> > {
+> >         int nid =3D zone_to_nid(zone);
+> >         unsigned long nr_pages =3D 0;
+> >         phys_addr_t start, end;
+> >         u64 i =3D 0;
+> >
+> >         for_each_free_mem_range(i, nid, 0, &start, &end, NULL) {
+> >                 unsigned long spfn =3D PFN_UP(start);
+> >                 unsigned long epfn =3D PFN_DOWN(end);
+> >
+> >                 if (spfn >=3D end_pfn)
+> >                         break;
+> >
+> >                 spfn =3D max(spfn, start_pfn);
+> >                 epfn =3D min(epfn, end_pfn);
+> >
+> >                 while (spfn < epfn) {
+>
+> The loop condition is (spfn < epfn), and by the time the loop terminates.=
+..
+>
+> >                         unsigned long mo_pfn =3D ALIGN(spfn + 1, MAX_OR=
+DER_NR_PAGES);
+> >                         unsigned long chunk_end =3D min(mo_pfn, epfn);
+> >
+> >                         // KHO scratch is MAX_ORDER_NR_PAGES aligned.
+> >                         if (!pfn_is_kho_scratch(spfn))
+> >                                 deferred_init_pages(zone, spfn, chunk_e=
+nd);
+> >
+> >                         deferred_free_pages(spfn, chunk_end - spfn);
+> >                         spfn =3D chunk_end;
+> >
+> >                         if (can_resched)
+> >                                 cond_resched();
+> >                         else
+> >                                 touch_nmi_watchdog();
+> >                 }
+> >                 nr_pages +=3D epfn - spfn;
+>
+> epfn - spfn <=3D 0.
+>
+> So the number of pages returned by deferred_init_memmap_chunk() becomes
+> incorrect.
+>
+> The equivalent translation of what's there before would be doing
+> `nr_pages +=3D chunk_end - spfn;` within the loop.
 
-Applied to dma-mapping-fixes. Thanks!
+Good point, thank you. This patch has already been removed from mm-new.
 
-> ---
-> Changes in v3:
-> - Enriched commit messages and documentation
-> - Added ROB tags
-> - Link to v2: https://protect2.fireeye.com/v1/url?k=9c1ba148-fd90b40f-9c1a2a07-000babff99aa-86ebd022a97425b3&q=1&e=3c8e10cc-4c34-4bf6-aa9d-c339877d6a27&u=https%3A%2F%2Fpatch.msgid.link%2F20260311-dma-debug-overlap-v2-0-e00bc2ca346d%40nvidia.com
->
-> Changes in v2:
-> - Added DMA_ATTR_REQUIRE_COHERENT attribute
-> - Added HMM patch which needs this attribute as well
-> - Renamed DMA_ATTR_CPU_CACHE_CLEAN to be DMA_ATTR_DEBUGGING_IGNORE_CACHELINES
-> - Link to v1: https://protect2.fireeye.com/v1/url?k=cc0590de-ad8e8599-cc041b91-000babff99aa-07e4da206b7e0d97&q=1&e=3c8e10cc-4c34-4bf6-aa9d-c339877d6a27&u=https%3A%2F%2Fpatch.msgid.link%2F20260307-dma-debug-overlap-v1-0-c034c38872af%40nvidia.com
->
-> ---
-> Leon Romanovsky (8):
->        dma-debug: Allow multiple invocations of overlapping entries
->        dma-mapping: handle DMA_ATTR_CPU_CACHE_CLEAN in trace output
->        dma-mapping: Clarify valid conditions for CPU cache line overlap
->        dma-mapping: Introduce DMA require coherency attribute
->        dma-direct: prevent SWIOTLB path when DMA_ATTR_REQUIRE_COHERENT is set
->        iommu/dma: add support for DMA_ATTR_REQUIRE_COHERENT attribute
->        RDMA/umem: Tell DMA mapping that UMEM requires coherency
->        mm/hmm: Indicate that HMM requires DMA coherency
->
->   Documentation/core-api/dma-attributes.rst | 38 ++++++++++++++++++++++++-------
->   drivers/infiniband/core/umem.c            |  5 ++--
->   drivers/iommu/dma-iommu.c                 | 21 +++++++++++++----
->   drivers/virtio/virtio_ring.c              | 10 ++++----
->   include/linux/dma-mapping.h               | 15 ++++++++----
->   include/trace/events/dma.h                |  4 +++-
->   kernel/dma/debug.c                        |  9 ++++----
->   kernel/dma/direct.h                       |  7 +++---
->   kernel/dma/mapping.c                      |  6 +++++
->   mm/hmm.c                                  |  4 ++--
->   10 files changed, 86 insertions(+), 33 deletions(-)
-> ---
-> base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
-> change-id: 20260305-dma-debug-overlap-21487c3fa02c
->
-> Best regards,
 > --
-> Leon Romanovsky <leonro@nvidia.com>
->
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+> Cheers,
+> Harry / Hyeonggon
