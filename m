@@ -1,86 +1,108 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F482EB0F;
-	Fri, 20 Mar 2026 18:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4B536EAA8;
+	Fri, 20 Mar 2026 21:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774032492; cv=none; b=Hr2u6EUnVI2Z/va6KU1+2f6AUL0gAPz3usck9cvNSBM2HSTYSehwhdGnrIzSxE9rElo+oNSfoAmxXjoidx7lCpMi37ECluHMCYiXB3buEJFMvEujEyouQFkwfGtvlQ83o/w4Whrfty4rL9UENC0EbLDvHUQOXwZuZC8nqruiq/M=
+	t=1774042181; cv=none; b=Ttajjw3Sy6sTwpzoHypnE1ZMB6A1NNua46+OeqdIJQJrRYiexm9GV2i49GchReG+E51HKepDsCTyzJz5gIGr5zUsVi8CoWYvP7w3HOW98AB8KQWoc8Za6RLqa6d8fK80918aRzk0EuGvls6nzMTtwrS8IJbt+817Cm8VEZCyLAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774032492; c=relaxed/simple;
-	bh=3SMy+fd824qCIdYNOZDyUPd/fIiFdFpTn33YJCdb6S8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pXEIpuirXbgUVgbsm5m3lGllUKuZBPy/Qooetg2bfI6cwLIpzOljA4Le8gEEKJlkcp8plcNhzH07fcLCfDSliRQTfLZq1womFP8hPm4Y/iRrCRc+iK5vulozEmErra13lCTmRYUgvbyPwgt8+nOW1fymggT/8fR4k6TMXfCiTdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 9907F57ABB;
-	Fri, 20 Mar 2026 18:48:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 436E26000F;
-	Fri, 20 Mar 2026 18:48:01 +0000 (UTC)
-Date: Fri, 20 Mar 2026 14:48:34 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
- kernel-team@meta.com, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH] coredump: add tracepoint for coredump events
-Message-ID: <20260320144834.079ba241@gandalf.local.home>
-In-Reply-To: <20260320-erlitt-ergibt-255e86a66414@brauner>
-References: <20260320-coredump_tracepoint-v1-1-34864746cbb3@debian.org>
-	<20260320-erlitt-ergibt-255e86a66414@brauner>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774042181; c=relaxed/simple;
+	bh=XOXr5QvcaVf4iLyQhdg9jMkDSOx+EETplOSbicfRIaI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FYYN1HHpfydGru/Ev1vlwyBOFiqAvREmQ2ae7kbkSZ3x0+5WgUdFqLJrOeWCSUxDJj1ZiK03bzw6KX70HAm+RcYQl0aMik/Hy8qbOGg3XfDJPlimAFDbJ5Tbxar3zEggynj6MEzFyzwJAJ9NBuZ1eJxDt04nXbSAYN3df8VO5Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vtt3VWXt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vtt3VWXt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35337C4CEF7;
+	Fri, 20 Mar 2026 21:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774042181;
+	bh=XOXr5QvcaVf4iLyQhdg9jMkDSOx+EETplOSbicfRIaI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Vtt3VWXtC13b2cGnkkGQ+YNOXvkLuK0B/8v/hZpKxxwkaNKrXlDujWtmfYAPBAo2f
+	 oB6MhVBmVwAujXWs/BfNJSiqghOelEXe9EjU7sPceTKutrFh9Qq9H0J4/nN6WqackL
+	 NU+zqreCKM8Uiwp77gUmBXDjWDWFFcH5N42qJortgGiJvCFcsWGQy96jqr3PrhqELS
+	 A2UfdQgbHx4h7E8+2Q176v5O2ywH2U7/ldmH+kE7/jZwy4YcVz65oUxURkZnZ5Mc3e
+	 aNhUko8LIEJgiL/tEN0pOMChSYT/LaiFJMB164WVsGGFPRKLHIGVe3alTGrP3Eh2z3
+	 iWVqkKOt7aarQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Fri, 20 Mar 2026 14:29:33 -0700
+Subject: [PATCH] tracing: Adjust cmd_check_undefined to show unexpected
+ undefined symbols
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 436E26000F
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: chfesqnbaef7w77aa1fe88egwbjht8yc
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/t9oc6TpNdFVdvekaWbovUv14NMCMtHVY=
-X-HE-Tag: 1774032481-254845
-X-HE-Meta: U2FsdGVkX1+8IihC5ZZ9Zq/l9es3GNTMqK3dZT/nnqqlBcmocXnbF2763wz+IlNHg4ZkAD83A+rrsDbek8xy3pOEJnWyLMSkn/opCHvKTYaiBnbrVJXZEiTpCbhSpv1eUzf/lqkkcsSGnmpomuvMYlbjzx7Anvwohr0um8VidTTfBwjfmPg2Md3lkuP4x//K4WuFMSpuIS4HiyQjkpcvbH8cRicQPMxb5FZmc0ua6S2ZILm1T1+VI7SXb5vnMqOCd6sfk75DUSUCf+KxHD8AiUYnxsHAah/qzIYzzV10bGUXUOU5rNbwG29EvmaImEiS/oI90e3GoO7fWo/nMeS0Z9Yz5b3BXaMI
+Message-Id: <20260320-cmd_check_undefined-verbose-v1-1-54fc5b061f94@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXM4QqCMBSG4VuR87vBNtGgW4mQPOdbnqIZm0og3
+ ntLfz7w8q6UkRSZLtVKCYtmHWOBO1XEwz0+YFSKyVvf2tpbw2/peAC/ujkKgkaIWZD6McOcxTX
+ B1aF1jVA5fFIJvvv9ejuc5/4Jnv5L2rYfmioA+38AAAA=
+X-Change-ID: 20260320-cmd_check_undefined-verbose-7d15f13f615d
+To: Marc Zyngier <maz@kernel.org>, 
+ Vincent Donnefort <vdonnefort@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1884; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=XOXr5QvcaVf4iLyQhdg9jMkDSOx+EETplOSbicfRIaI=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDJl79zjl3rN6+zfBad+X6Kk5V2Uy6l7Ghh7+8fIu2/W9j
+ vHuPnGzO0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBEKhgY/gcoxWVEWP5IerB9
+ c8ThbVea3nzhFIuuesT/ZFeuftgnVmFGhrdvfs+7cKN5G/uR+lTnkiy5SBev4P8XGM6w/7/P8lf
+ djhkA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Fri, 20 Mar 2026 14:21:23 +0100
-Christian Brauner <brauner@kernel.org> wrote:
+When the check_undefined command in kernel/trace/Makefile fails, there
+is no output, making it hard to understand why the build failed. Capture
+the output of the $(NM) + grep command and print it when failing to make
+it clearer what the problem is.
 
-> > +TRACE_EVENT(coredump,
-> > +
-> > +	TP_PROTO(int sig),
-> > +
-> > +	TP_ARGS(sig),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__field(int, sig)
-> > +		__array(char, comm, TASK_COMM_LEN)
-> > +		__field(pid_t, pid)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__entry->sig = sig;
-> > +		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
-> > +		__entry->pid = current->pid;  
-> 
-> That's the TID as seen in the global pid namespace.
-> I assume this is what you want but worth noting.
+Fixes: a717943d8ecc ("tracing: Check for undefined symbols in simple_ring_buffer")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+Commit a717943d8ecc ("tracing: Check for undefined symbols in
+simple_ring_buffer") and its follow up fixes are in the kvmarm tree so
+this should go there as well. This is the rebased version of my
+suggestion in the original thread:
 
-Not to mention the pid is saved in all trace events and is available for
-perf and bpf too. Even the change log showed it:
+https://lore.kernel.org/20260311221816.GA316631@ax162/
+---
+ kernel/trace/Makefile | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-             sleep-634     [036] .....   145.222206: coredump: sig=11 comm=sleep pid=634
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index c5e14ffd36ee..d662c1a64cd5 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -174,7 +174,13 @@ UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitize
+ 		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+ 
+ quiet_cmd_check_undefined = NM      $<
+-      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST))`"
++      cmd_check_undefined = \
++          undefsyms=$$($(NM) -u $< | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST)) || true); \
++          if [ -n "$$undefsyms" ]; then \
++              echo "Unexpected symbols in $<:" >&2; \
++              echo "$$undefsyms" >&2; \
++              false; \
++          fi
+ 
+ $(obj)/%.o.checked: $(obj)/%.o $(obj)/undefsyms_base.o FORCE
+ 	$(call if_changed,check_undefined)
 
-                   ^^^                                                               ^^^
+---
+base-commit: e3d585ed3ff891a00c2284fef4be9cf8581735ab
+change-id: 20260320-cmd_check_undefined-verbose-7d15f13f615d
 
-So it should not be included. It's duplicate and only wastes space. Now if
-you wanted to save the name space pid, that may be useful.
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
 
--- Steve
