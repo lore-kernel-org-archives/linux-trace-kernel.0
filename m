@@ -1,526 +1,205 @@
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7B93A9DBA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 12:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774009409; cv=pass; b=MlYZVmDx+J1HYLY5A0z5CZGavY6gGb8IWEJjNXIknKflmjfHOp3Q3MLWVJG09+FyyRLMeHYTyy5Slob38af+ouWcGdAq5J+hu5ex9RVxAdngSdZnwRtc3/Ft7jJr6Hjfy0H+hzbaTNMRXZMXg4k6JIux59y1wMNRFGSMiteXRDU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774009409; c=relaxed/simple;
-	bh=kOPOC9Q8CqJyJynBbS2Amyh+KAhMS6GefN4TX2txk10=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DQl7+hbu2x+1ci6ib3Iyg8pb4f2afXV1EvsvimSNfYuNx/u+qYaMCAS+ee2puGsABvS/LqxkaFruwXxtaRNSC1VIOsXWVD+oN8Yr8VnOfjdEZJgeZbQjMjWypqSRBGZr8g+dTrbr1DO3t+dgHCHWYLW8KsKootI+ypBTXpo2X/s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Csw0wski; arc=pass smtp.client-ip=74.125.82.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEB53A5E73;
+	Fri, 20 Mar 2026 12:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774010039; cv=none; b=IU4kvxLkRqHPOut9KatbPhS8SEIXtyUxsKZbAumZkjYCBwkcNd4K9pWDYgclbua9ivGr+7hf1hjGNTDyt7w0UHf3xulMBPnwb8/x76eXfAoevX6E7HBLQB5P5wk7o2LWmV85iAdOSYOHebPK1KNCIHFraadAc72yxUxoOqcuqOE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774010039; c=relaxed/simple;
+	bh=W517fSuK7qIKfoSoz6yuhfj99SSpOcghQQhJDRTMM5k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mfnuXs8JH6Sl6OiArQydNQMkF1ZBHNLPBW0CcniHl3vzVmpSsSBmRIbxad3pPS94VEqmsA0kBYKs0sZ14wa6Z6pjUXPcSKuGCrtg8h3T4o8bEf8WCRf22IT2lYjwUEYXjIPnlb2+suhGukufWY3yjsHooxPEbHW32faamGe8+5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=nQDB/FGl; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Csw0wski"
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-128ce536fe0so7823c88.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 05:23:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774009407; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Hyl6j+n5PixVrVdsgurDAI54g95fCItulIieA5iLiSubR+CHNeTq+3C8frM6mHHnNM
-         9JlekUlgD7lQTaDfZ53taElAD3eg8MToZCWSrBFTznk93pIkZJdNSvYJgP4CCnH8dNiE
-         SanT2O/2u1dr71feS7LqKY+COemvNhpLqdA3NxsZdI1FpkBt1PhfT8tW0tgA9EeUHehk
-         2wO9Vk9poOH3QZ28gisR2XUeCsupmWh3GxIzk+zVHb+yFFcLV5RBlDudfLXkiBngNb4L
-         nhoVVvvkqZLKC7+ejQKwhmdNEMxeLWPM1Z6tomCSPtwGUVyjfqXTZE/BjmIMdDx8rK0e
-         5zeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=SYv24HC7LrXJB439CdGZLPTD4jOYoGyK5TH5q9G2jWw=;
-        fh=VoQXdH+O1o5WEFHQQfq19KlRUIX29PpB/AycN95a8bQ=;
-        b=D1fPjO+e948J/a+JYOKpZDFurGiUxDH/jE8MT+nk/ItQNNVA0BUzGmPQR5X5bkuw0r
-         GB3rNf6IXp0aK9n6VTZnVklqeF9YF67bpY5UD5eBRK744435qoJhHj0B5US/oTKefD2a
-         oYUDrm24tm+r9W41YytvLnlgVyb/3IEPvcPR419gjCBaHCzIUP8hmH+bBE++0lvGQh1F
-         aSpc8tQKV8RNXyNRlo8nqfJ6aIcfO5gfymJxstdyzi77YckHwmb2MjfGSqhkQKxGB6Re
-         NxvQq0jwaAtQ0saNWhKLbPc+eFLfGdc6feE6kqSu/LB6o0Dl2LdFGWfk1iguuL9q5df/
-         WH7Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774009407; x=1774614207; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SYv24HC7LrXJB439CdGZLPTD4jOYoGyK5TH5q9G2jWw=;
-        b=Csw0wskioSL0adiV6y2kimQmXZnvv13vGGFNPIO36E6qg+Z9aPre/Oz0ikxQjf83ab
-         Avx40jYBIOP2zkPh10uAXrQV8HOTnjJhQaC1C5k0VBjHzWkG7jp7m64lhOxR1usq+4Lq
-         tYgi5xa/9y9oFwMPNA44Zg1ZbCJ6dAZKyiiY0EwAkGjgZ0e22qfDuAtscOW7rZ8kxx7s
-         KrN4nXOb0Z8HeDOaVcRo3eDtCOYVGSCSxgF/7jewJfmOBJmkh8YOspy8Z8VocBkishkS
-         1GziMFNRm1R0PyzzTJxzulKzMcl4fu31BZyEXrZPLU1yIe4XYwrEri4IhepuDPYSZbWR
-         gl1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774009407; x=1774614207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SYv24HC7LrXJB439CdGZLPTD4jOYoGyK5TH5q9G2jWw=;
-        b=PPN1ocfO8ZjNJVbCO5GvGGeqoQDTJJm1hVmgYceowMo8rxtkVsiVHXcdD7/NnJuqLM
-         Hk/Q6LXeVdTuT6pbEehNiFQp3BXzdIdMQKybctYR4wPxwMjDOtYGP5yI0gzqjFjTfj9i
-         1xl1XiRFvjmTJpkc75Sh5P6DmHXg2REvnJMhX5LhjtMR1UEWoixQFr0hpjzGvNGx8fJ6
-         QoWnU5IAMTYCgRNIMltJ+Y7yWtfYlQAQcIMDK15iKEQkVww7X0jepFxrH/sjP/9GjKbk
-         mLznDzT8H2mKG2IwQjgcAPsyMUMbIwH7zRQ7KSPs7YJBKxuvYlVJoCKIjKC2PX+xYVzC
-         XhOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWECnvHywkwWd+g8FLymz2dNK94ZISJzYKYcC2r4fv2yqoHo9wX7G9PKLkxhrC5KS9K2P5E5vDG8mG+e2mdEVu8g7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5TkH7kq5+fw0z+9o1QIdfDGenFCSbmZ+YMNHadJnh15h0LNRd
-	VXODh0J5tvvhl2rejMe24vv8q8sFSQrLdbhxIxiMZPqr/jkpmruWvYjA+Mv9I+Ch6sufzX4WGTn
-	JeyJ1OQ3Rnz3FlA0IjeoiBb8T1L3RXl81f8YuhEb+YOeoMAxMAdBGDApZ2kU=
-X-Gm-Gg: ATEYQzxhr6c96pl4h0m/Yfk2mCM6rBuWV8+WPLzwSQR48PtR2dvzWj6OVmLihUKC78w
-	W+IsNODZJszKwWOoJM5JfouMY3Z5QZtQYTXcox4GWguBRDydtaav02L6PCohcIBMSx38GCGAsZG
-	dnb667f1gCkwgSxVbEBfIMfkUh2ITL9Z3hqVWa2GmBiDvx5SHZGpXqxeF1LtH6h0xORIh3yf8a6
-	p1teH486Pwf28gsaTZirHj0Aou6BDMHSpk5bcv0nbOBJpn68cj2giSWhhi3DUDU0T9Nj7LQLc2I
-	vcjpLw==
-X-Received: by 2002:a05:7022:1609:b0:124:9f86:aeb4 with SMTP id
- a92af1059eb24-12a73085652mr80229c88.1.1774009405841; Fri, 20 Mar 2026
- 05:23:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="nQDB/FGl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=pkZcwqjPdD2XzUzCM0n8fOxwlXP6XDppxgLEqdtgcNg=; b=nQDB/FGlTKHYHaEc4hnSR300X9
+	X8wqdW7LSAukeTY174pls2+JD1e0rZrh0iDNM7ePsnp7KBR4yepypeNWI0OVpEpYngumJIBsj7llQ
+	hi8BgklnMcNFPR1vQZBGcsBTzZcXprfcNgj9HtehLKBFh/MnUypHRx9a0kxjM5N2QOYiE8MUGShfm
+	Yh3SWgTG1HOBCdSJVXVPxYNMkc/9Mb4M5icrbGIhXJNaQunp/GD3e57OXbzllGuB4ScXO+D+VrMNL
+	5//rb/Ez7I+vyglv5l4surId2cUwGq44i9FupluBjY9lS7FX5V3uPwZkMhOpaGWTs7Syc/8J04gY2
+	qoE5VX3Q==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1w3Z32-005CqL-5o; Fri, 20 Mar 2026 12:33:51 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 20 Mar 2026 05:33:34 -0700
+Subject: [PATCH] coredump: add tracepoint for coredump events
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319233745.GA769346@ax162> <abzKcGiRSR_E8lLN@hyeyoo>
-In-Reply-To: <abzKcGiRSR_E8lLN@hyeyoo>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Fri, 20 Mar 2026 13:23:13 +0100
-X-Gm-Features: AaiRm50sj-DgG9yMW7k7QcDOnwzXZwETClua3TnV03iPZLva549LNtSM_gJ_Q5c
-Message-ID: <CAAi7L5fqc-DZOO4F-VTbV8_=A1KFmm6qBaXjP=QenjLwiVLwuA@mail.gmail.com>
-Subject: Re: NULL pointer dereference when booting ppc64_guest_defconfig in
- QEMU on -next
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260320-coredump_tracepoint-v1-1-34864746cbb3@debian.org>
+X-B4-Tracking: v=1; b=H4sIAJ4+vWkC/yXMQQrCMBAF0KsMs24gTUuhuYqItJOvjmASklSE0
+ ruLunybt3NFUVT2tHPBS6umyJ76jljuS7zBaGBP7Kyb7OCskVQQtme+tLIIctLYzBgwDvMs6Ne
+ JO+JccNX3bz2d/67b+oC0b8XH8QHIsQMLdwAAAA==
+X-Change-ID: 20260320-coredump_tracepoint-4de4399ce1b6
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+ kernel-team@meta.com, Andrii Nakryiko <andrii@kernel.org>, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-363b9
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4205; i=leitao@debian.org;
+ h=from:subject:message-id; bh=W517fSuK7qIKfoSoz6yuhfj99SSpOcghQQhJDRTMM5k=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpvT6qGl8C1U+sBdXcjEGYInO3jwJDU/5bqvCF8
+ HjnXiwL+8GJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCab0+qgAKCRA1o5Of/Hh3
+ bQ9fD/9oujRZ6DOL6hNBBy3J8oe8ZTwZMl0BiVdAbic+F+KaS0rCQvqWLy9gxFie5CXJeDXnovr
+ aNDIs4E6Y1A6ITtEwQlEnWB3eoPZFpFk2N45xDmqb3LIVPS+a9+VksUAuI3XpxHne6xRUBut308
+ GfGUAcLfcv0JYuNTIJk8HFhQPxGV5fTUu5DuiimrSsA/MenNwxL3ryLMD+/b2+A1Jv1ZxRBtfts
+ 4CmnRZvsPVQxNefslIfzXGyWztsjKhCjgjuioV9md8OfeWt41RIilJJd86hWVBgoU+IqwsJSfLa
+ zx1m1z1pfw0pucmnmNAOrE2vCkFEecPvLCGHlIKQbVASznM6x0ghSk1ekgvZB4xbMOylE+Gw8OH
+ tn1HsDnHfjUwDFsHJrrSooaVh2X3NvyQUXuD4PMITT+YDZAKzWxdCJdDoKLTVtzfPIgNqWt4k7y
+ nzGxAsAAK7PY9NEgf0BjPfbfjhQWWCQP7qIOWX0JNtq7zBgZt5mripP4Q9KU7eyMtHD2F+vAKE0
+ kRcY9PIUrIFZ1lrSCbXpgY0kX3j5bDKVgl3ypu8KJ+o/OVXZrIARinXpygla52z06EJyeVpHQN6
+ bfBw9CrLZtD67ovnB3mgjDk9YhaaODyDxhcRyAyMYylQe7ZkZ2ZARKxsxgA+ZgDWI7Pgsromhw9
+ qIYpOS+BGz7ZnkA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On Fri, Mar 20, 2026 at 5:18=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com> wr=
-ote:
->
-> On Thu, Mar 19, 2026 at 04:37:45PM -0700, Nathan Chancellor wrote:
-> > Hi all,
-> >
-> > I am not really sure whose bug this is, as it only appears when three
-> > seemingly independent patch series are applied together, so I have adde=
-d
-> > the patch authors and their committers (along with the tracing
-> > maintainers) to this thread. Feel free to expand or reduce that list as
-> > necessary.
-> >
-> > Our continuous integration has noticed a crash when booting
-> > ppc64_guest_defconfig in QEMU on the past few -next versions.
-> >
-> >   https://github.com/ClangBuiltLinux/continuous-integration2/actions/ru=
-ns/23311154492/job/67811527112
-> >
-> > This does not appear to be clang related, as it can be reproduced with
-> > GCC 15.2.0 as well. Through multiple bisects, I was able to land on
-> > applying:
-> >
-> >   mm: improve RSS counter approximation accuracy for proc interfaces [1=
-]
-> >   vdso/datastore: Allocate data pages dynamically [2]
-> >   kho: fix deferred init of kho scratch [3]
-> >
-> > and their dependent changes on top of 7.0-rc4 is enough to reproduce
-> > this (at least on two of my machines with the same commands). I have
-> > attached the diff from the result of the following 'git apply' commands
-> > below, done in a linux-next checkout.
-> >
-> >   $ git checkout v7.0-rc4
-> >   HEAD is now at f338e7738378 Linux 7.0-rc4
-> >
-> >   # [1]
-> >   $ git diff 60ddf3eed4999bae440d1cf9e5868ccb3f308b64^..087dd6d2cc12c82=
-945ab859194c32e8e977daae3 | git apply -3v
-> >   ...
-> >
-> >   # [2]
-> >   # Fix trivial conflict in init/main.c around headers
-> >   $ git diff dc432ab7130bb39f5a351281a02d4bc61e85a14a^..05988dba11791cc=
-bb458254484826b32f17f4ad2 | git apply -3v
-> >   ...
-> >
-> >   # [3]
-> >   # Fix conflict in kernel/liveupdate/kexec_handover.c due to lack of k=
-ho_mem_retrieve(), just add pfn_is_kho_scratch()
-> >   $ git show 4a78467ffb537463486968232daef1e8a2f105e3 | git apply -3v
-> >   ...
-> >
-> >   $ make -skj"$(nproc)" ARCH=3Dpowerpc CROSS_COMPILE=3Dpowerpc64-linux-=
- mrproper ppc64_guest_defconfig vmlinux
-> >
-> >   $ curl -LSs https://github.com/ClangBuiltLinux/boot-utils/releases/do=
-wnload/20241120-044434/ppc64-rootfs.cpio.zst | zstd -d >rootfs.cpio
-> >
-> >   $ qemu-system-ppc64 \
-> >       -display none \
-> >       -nodefaults \
-> >       -cpu power8 \
-> >       -machine pseries \
-> >       -vga none \
-> >       -kernel vmlinux \
-> >       -initrd rootfs.cpio \
-> >       -m 1G \
-> >       -serial mon:stdio
->
-> Thanks, such a detailed steps to reproduce!
-> Interestingly, the combination of my compiler (GCC 13.3.0) and
-> QEMU (8.2.2) don't trigger this bug.
->
-> >   [    0.000000][    T0] Linux version 7.0.0-rc4-dirty (nathan@framewor=
-k-amd-ryzen-maxplus-395) (powerpc64-linux-gcc (GCC) 15.2.0, GNU ld (GNU Bin=
-utils) 2.45) #1 SMP PREEMPT Thu Mar 19 15:45:53 MST 2026
-> >   ...
-> >   [    0.216764][    T1] vgaarb: loaded
-> >   [    0.217590][    T1] clocksource: Switched to clocksource timebase
-> >   [    0.221007][   T12] BUG: Kernel NULL pointer dereference at 0x0000=
-0010
-> >   [    0.221049][   T12] Faulting instruction address: 0xc0000000004494=
-7c
-> >   [    0.221237][   T12] Oops: Kernel access of bad area, sig: 11 [#1]
-> >   [    0.221276][   T12] BE PAGE_SIZE=3D64K MMU=3DHash  SMP NR_CPUS=3D2=
-048 NUMA pSeries
-> >   [    0.221359][   T12] Modules linked in:
-> >   [    0.221556][   T12] CPU: 0 UID: 0 PID: 12 Comm: kworker/u4:0 Not t=
-ainted 7.0.0-rc4-dirty #1 PREEMPTLAZY
-> >   [    0.221631][   T12] Hardware name: IBM pSeries (emulated by qemu) =
-POWER8 (architected) 0x4d0200 0xf000004 of:SLOF,HEAD pSeries
-> >   [    0.221765][   T12] Workqueue: trace_init_wq tracer_init_tracefs_w=
-ork_func
-> >   [    0.222065][   T12] NIP:  c00000000044947c LR: c00000000041a584 CT=
-R: c00000000053aa90
-> >   [    0.222084][   T12] REGS: c000000003bc7960 TRAP: 0380   Not tainte=
-d  (7.0.0-rc4-dirty)
-> >   [    0.222111][   T12] MSR:  8000000000009032 <SF,EE,ME,IR,DR,RI>  CR=
-: 44000204  XER: 00000000
-> >   [    0.222287][   T12] CFAR: c000000000449420 IRQMASK: 0
-> >   [    0.222287][   T12] GPR00: c00000000041a584 c000000003bc7c00 c0000=
-00001c08100 c000000002892f20
-> >   [    0.222287][   T12] GPR04: c0000000019cfa68 c0000000019cfa60 00000=
-00000000001 0000000000000064
-> >   [    0.222287][   T12] GPR08: 0000000000000002 0000000000000000 c0000=
-00003bba000 0000000000000010
-> >   [    0.222287][   T12] GPR12: c00000000053aa90 c000000002c50000 c0000=
-00001ab25f8 c000000001626690
-> >   [    0.222287][   T12] GPR16: 0000000000000000 0000000000000000 00000=
-00000000000 0000000000000000
-> >   [    0.222287][   T12] GPR20: c000000001624868 c000000001ab2708 c0000=
-000019cfa08 c000000001a00d18
-> >   [    0.222287][   T12] GPR24: c0000000019cfa18 fffffffffffffef7 c0000=
-00003051205 c0000000019cfa68
-> >   [    0.222287][   T12] GPR28: 0000000000000000 c0000000019cfa60 c0000=
-00002894e90 0000000000000000
-> >   [    0.222526][   T12] NIP [c00000000044947c] __find_event_file+0x9c/=
-0x110
-> >   [    0.222572][   T12] LR [c00000000041a584] init_tracer_tracefs+0x27=
-4/0xcc0
-> >   [    0.222643][   T12] Call Trace:
-> >   [    0.222690][   T12] [c000000003bc7c00] [c000000000b943b0] tracefs_=
-create_file+0x1a0/0x2b0 (unreliable)
-> >   [    0.222766][   T12] [c000000003bc7c50] [c00000000041a584] init_tra=
-cer_tracefs+0x274/0xcc0
-> >   [    0.222791][   T12] [c000000003bc7dc0] [c000000002046f1c] tracer_i=
-nit_tracefs_work_func+0x50/0x320
-> >   [    0.222809][   T12] [c000000003bc7e50] [c000000000276958] process_=
-one_work+0x1b8/0x530
-> >   [    0.222828][   T12] [c000000003bc7f10] [c00000000027778c] worker_t=
-hread+0x1dc/0x3d0
-> >   [    0.222883][   T12] [c000000003bc7f90] [c000000000284c44] kthread+=
-0x194/0x1b0
-> >   [    0.222900][   T12] [c000000003bc7fe0] [c00000000000cf30] start_ke=
-rnel_thread+0x14/0x18
-> >   [    0.222961][   T12] Code: 7c691b78 7f63db78 2c090000 40820018 e89c=
-0000 49107f21 60000000 2c030000 41820048 ebff0000 7c3ff040 41820038 <e93f00=
-10> 7fa3eb78 81490058 e8890018
-> >   [    0.223190][   T12] ---[ end trace 0000000000000000 ]---
-> >   ...
-> >
-> > Interestingly, turning on CONFIG_KASAN appears to hide this, maybe
-> > pointing to some sort of memory corruption (or something timing
-> > related)? If there is any other information I can provide, I am more
-> > than happy to do so.
->
-> I don't have much idea on how things end up causing
-> NULL-pointer-deref... but let's point out suspicious things.
->
-> > [1]: https://lore.kernel.org/20260227153730.1556542-4-mathieu.desnoyers=
-@efficios.com/
->
-> @Mathieu: In patch 1/3 description,
-> > Changes since v7:
-> > - Explicitly initialize the subsystem from start_kernel() right
-> >   after mm_core_init() so it is up and running before the creation of
-> >   the first mm at boot.
->
-> But how does this work when someone calls mm_cpumask() on init_mm early?
-> Looks like it will behave incorrectly because get_rss_stat_items_size()
-> returns zero?
->
-> While it doesn't crash on my environment, it triggers a two warnings
-> (with -smp 2 option added). IIUC the cpu bit should have been set in
-> setup_arch(), but at the wrong location. After the
-> percpu_counter_tree_subsystem_init() function is called, the bit doesn't
-> appear to be set.
->
-> [    1.392787][    T1] ------------[ cut here ]------------
-> [    1.392935][    T1] WARNING: arch/powerpc/mm/mmu_context.c:106 at swit=
-ch_mm_irqs_off+0x190/0x1c0, CPU#0: swapper/0/1
-> [    1.393187][    T1] Modules linked in:
-> [    1.393458][    T1] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 7=
-.0.0-rc4-next-20260319 #1 PREEMPTLAZY
-> [    1.393600][    T1] Hardware name: IBM pSeries (emulated by qemu) POWE=
-R8 (architected) 0x4d0200 0xf000004 of:SLOF,HEAD pSeries
-> [    1.393711][    T1] NIP:  c00000000014e390 LR: c00000000014e30c CTR: 0=
-000000000000000
-> [    1.393752][    T1] REGS: c000000003def7b0 TRAP: 0700   Not tainted  (=
-7.0.0-rc4-next-20260319)
-> [    1.393807][    T1] MSR:  8000000002021032 <SF,VEC,ME,IR,DR,RI>  CR: 2=
-800284a  XER: 00000000
-> [    1.393944][    T1] CFAR: c00000000014e328 IRQMASK: 3
-> [    1.393944][    T1] GPR00: c00000000014e36c c000000003defa50 c00000000=
-1bb8100 c0000000028d8c80
-> [    1.393944][    T1] GPR04: c000000004ddc04a 000000000000000a 000000002=
-2222222 2222222222222222
-> [    1.393944][    T1] GPR08: 2222222222222222 0000000000000000 000000000=
-0000001 0000000000008000
-> [    1.393944][    T1] GPR12: c000000000521e80 c000000002c70000 c00000000=
-000fff0 0000000000000000
-> [    1.393944][    T1] GPR16: 0000000000000000 c00000000606c600 c00000000=
-3623ac0 0000000000000000
-> [    1.393944][    T1] GPR20: c000000004c66300 c00000000606fc00 000000000=
-0000001 0000000000000001
-> [    1.393944][    T1] GPR24: c000000006069c00 c00000000272c500 000000000=
-0000000 0000000000000000
-> [    1.393944][    T1] GPR28: c000000003d68200 0000000000000000 c00000000=
-28d8a80 c00000000272bd00
-> [    1.394355][    T1] NIP [c00000000014e390] switch_mm_irqs_off+0x190/0x=
-1c0
-> [    1.394395][    T1] LR [c00000000014e30c] switch_mm_irqs_off+0x10c/0x1=
-c0
-> [    1.394519][    T1] Call Trace:
-> [    1.394584][    T1] [c000000003defa50] [c00000000014e36c] switch_mm_ir=
-qs_off+0x16c/0x1c0 (unreliable)
-> [    1.394676][    T1] [c000000003defab0] [c0000000006edbf0] begin_new_ex=
-ec+0x534/0xf60
-> [    1.394732][    T1] [c000000003defb20] [c000000000795538] load_elf_bin=
-ary+0x494/0x1d1c
-> [    1.394765][    T1] [c000000003defc70] [c0000000006eb910] bprm_execve+=
-0x380/0x720
-> [    1.394796][    T1] [c000000003defd00] [c0000000006ed5a8] kernel_execv=
-e+0x12c/0x1bc
-> [    1.394831][    T1] [c000000003defd50] [c00000000000eda8] run_init_pro=
-cess+0xf8/0x160
-> [    1.394864][    T1] [c000000003defde0] [c0000000000100b4] kernel_init+=
-0xcc/0x268
-> [    1.394899][    T1] [c000000003defe50] [c00000000000cf14] ret_from_ker=
-nel_user_thread+0x14/0x1c
-> [    1.394946][    T1] ---- interrupt: 0 at 0x0
-> [    1.395205][    T1] Code: 7fe4fb78 7f83e378 48009171 60000000 4bffff98=
- 60000000 60000000 60000000 0fe00000 4bffff00 60000000 60000000 <0fe00000> =
-4bffff98 60000000 60000000
-> [    1.395420][    T1] ---[ end trace 0000000000000000 ]---
-> [    1.526024][   T67] mount (67) used greatest stack depth: 28432 bytes =
-left
-> [    1.605803][   T69] mount (69) used greatest stack depth: 27872 bytes =
-left
-> [    1.667853][   T71] mkdir (71) used greatest stack depth: 27248 bytes =
-left
-> Saving 256 bits of creditable seed for next boot
-> [    1.926636][   T80] ------------[ cut here ]------------
-> [    1.926719][   T80] WARNING: arch/powerpc/mm/mmu_context.c:51 at switc=
-h_mm_irqs_off+0x180/0x1c0, CPU#0: S01seedrng/80
-> [    1.926782][   T80] Modules linked in:
-> [    1.926910][   T80] CPU: 0 UID: 0 PID: 80 Comm: S01seedrng Tainted: G =
-       W           7.0.0-rc4-next-20260319 #1 PREEMPTLAZY
-> [    1.926990][   T80] Tainted: [W]=3DWARN
-> [    1.927025][   T80] Hardware name: IBM pSeries (emulated by qemu) POWE=
-R8 (architected) 0x4d0200 0xf000004 of:SLOF,HEAD pSeries
-> [    1.927091][   T80] NIP:  c00000000014e380 LR: c00000000014e24c CTR: c=
-000000000232894
-> [    1.927131][   T80] REGS: c000000004d5f800 TRAP: 0700   Tainted: G    =
-    W            (7.0.0-rc4-next-20260319)
-> [    1.927179][   T80] MSR:  8000000000029032 <SF,EE,ME,IR,DR,RI>  CR: 28=
-002828  XER: 20000000
-> [    1.927253][   T80] CFAR: c00000000014e280 IRQMASK: 1
-> [    1.927253][   T80] GPR00: c0000000002328ec c000000004d5faa0 c00000000=
-1bb8100 0000000000000080
-> [    1.927253][   T80] GPR04: c0000000028d8280 c000000004509c00 000000000=
-0000002 c00000000272c700
-> [    1.927253][   T80] GPR08: fffffffffffffffe c0000000028d8280 000000000=
-0000000 0000000048002828
-> [    1.927253][   T80] GPR12: c000000000232894 c000000002c70000 000000000=
-0000000 0000000000000002
-> [    1.927253][   T80] GPR16: 0000000000000000 000001002f0a2958 000001002=
-f0a2950 ffffffffffffffff
-> [    1.927253][   T80] GPR20: 0000000000000000 0000000000000000 c00000000=
-2ab1400 c00000000272c700
-> [    1.927253][   T80] GPR24: 0000000000000000 c0000000028d8a80 000000000=
-0000000 0000000000000000
-> [    1.927253][   T80] GPR28: c000000004509c00 0000000000000000 c00000000=
-272bd00 c0000000028d8280
-> [    1.927629][   T80] NIP [c00000000014e380] switch_mm_irqs_off+0x180/0x=
-1c0
-> [    1.927678][   T80] LR [c00000000014e24c] switch_mm_irqs_off+0x4c/0x1c=
-0
-> [    1.927715][   T80] Call Trace:
-> [    1.927737][   T80] [c000000004d5faa0] [c000000004d5faf0] 0xc000000004=
-d5faf0 (unreliable)
-> [    1.927804][   T80] [c000000004d5fb00] [c0000000002328ec] do_shoot_laz=
-y_tlb+0x58/0x84
-> [    1.927853][   T80] [c000000004d5fb30] [c000000000388304] smp_call_fun=
-ction_many_cond+0x6a0/0x8d8
-> [    1.927902][   T80] [c000000004d5fc20] [c000000000388624] on_each_cpu_=
-cond_mask+0x40/0x7c
-> [    1.927943][   T80] [c000000004d5fc50] [c000000000232ad4] __mmdrop+0x8=
-8/0x2ec
-> [    1.927986][   T80] [c000000004d5fce0] [c000000000242104] do_exit+0x35=
-0/0xde4
-> [    1.928028][   T80] [c000000004d5fdb0] [c000000000242de0] do_group_exi=
-t+0x48/0xbc
-> [    1.928072][   T80] [c000000004d5fdf0] [c000000000242e74] pid_child_sh=
-ould_wake+0x0/0x84
-> [    1.928128][   T80] [c000000004d5fe10] [c000000000030218] system_call_=
-exception+0x148/0x3c0
-> [    1.928176][   T80] [c000000004d5fe50] [c00000000000c6d4] system_call_=
-common+0xf4/0x258
-> [    1.928217][   T80] ---- interrupt: c00 at 0x7fff8ade507c
-> [    1.928253][   T80] NIP:  00007fff8ade507c LR: 00007fff8ade5034 CTR: 0=
-000000000000000
-> [    1.928291][   T80] REGS: c000000004d5fe80 TRAP: 0c00   Tainted: G    =
-    W            (7.0.0-rc4-next-20260319)
-> [    1.928333][   T80] MSR:  800000000280f032 <SF,VEC,VSX,EE,PR,FP,ME,IR,=
-DR,RI>  CR: 24002824  XER: 00000000
-> [    1.928413][   T80] IRQMASK: 0
-> [    1.928413][   T80] GPR00: 00000000000000ea 00007fffe75beb50 00007fff8=
-aed7300 0000000000000000
-> [    1.928413][   T80] GPR04: 0000000000000000 00007fffe75beda0 00007fffe=
-75bedb0 0000000000000000
-> [    1.928413][   T80] GPR08: 0000000000000000 0000000000000000 000000000=
-0000000 0000000000000000
-> [    1.928413][   T80] GPR12: 0000000000000000 00007fff8afaae00 00007fffc=
-a692568 0000000133cf0440
-> [    1.928413][   T80] GPR16: 0000000000000000 000001002f0a2958 000001002=
-f0a2950 ffffffffffffffff
-> [    1.928413][   T80] GPR20: 0000000000000000 0000000000000000 00007fffe=
-75bf838 00007fff8afa0000
-> [    1.928413][   T80] GPR24: 0000000126911328 0000000000000001 00007fff8=
-af9dc00 00007fffe75bf818
-> [    1.928413][   T80] GPR28: 0000000000000003 fffffffffffff000 000000000=
-0000000 00007fff8afa3e10
-> [    1.928765][   T80] NIP [00007fff8ade507c] 0x7fff8ade507c
-> [    1.928795][   T80] LR [00007fff8ade5034] 0x7fff8ade5034
-> [    1.928835][   T80] ---- interrupt: c00
-> [    1.928924][   T80] Code: 7c0803a6 4e800020 60000000 60000000 7fe4fb78=
- 7f83e378 48009171 60000000 4bffff98 60000000 60000000 60000000 <0fe00000> =
-4bffff00 60000000 60000000
-> [    1.929054][   T80] ---[ end trace 0000000000000000 ]---
->
-> > [2]: https://lore.kernel.org/20260304-vdso-sparc64-generic-2-v6-3-d8eb3=
-b0e1410@linutronix.de/
->
-> > [3]: https://lore.kernel.org/20260311125539.4123672-2-mclapinski@google=
-.com/
->
-> @Michal: Something my AI buddy pointed out... (that I think is valid):
->
-> > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > index df34797691bd..7363b5b0d22a 100644
-> > --- a/mm/mm_init.c
-> > +++ b/mm/mm_init.c
-> > @@ -2078,9 +2082,11 @@ deferred_init_memmap_chunk(unsigned long start_p=
-fn, unsigned long end_pfn,
-> >                       unsigned long mo_pfn =3D ALIGN(spfn + 1, MAX_ORDE=
-R_NR_PAGES);
-> >                       unsigned long chunk_end =3D min(mo_pfn, epfn);
-> >
-> > -                     nr_pages +=3D deferred_init_pages(zone, spfn, chu=
-nk_end);
->
-> Previously, deferred_init_pages() returned nr of pages to add, which is
-> (end_pfn (=3D chunk_end) - spfn).
->
-> > -                     deferred_free_pages(spfn, chunk_end - spfn);
-> > +                     // KHO scratch is MAX_ORDER_NR_PAGES aligned.
-> > +                     if (!pfn_is_kho_scratch(spfn))
-> > +                             deferred_init_pages(zone, spfn, chunk_end=
-);
->
-> But since the function is not always called with the change,
-> the calculation is moved to...
->
-> > +                     deferred_free_pages(spfn, chunk_end - spfn);
-> >                       spfn =3D chunk_end;
-> >
-> >                       if (can_resched)
-> > @@ -2088,6 +2094,7 @@ deferred_init_memmap_chunk(unsigned long start_pf=
-n, unsigned long end_pfn,
-> >                       else
-> >                               touch_nmi_watchdog();
-> >               }
-> > +             nr_pages +=3D epfn - spfn;
->
-> Here.
->
-> But this is incorrect, because here we have:
-> > static unsigned long __init
-> > deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_p=
-fn,
-> >                            struct zone *zone, bool can_resched)
-> > {
-> >         int nid =3D zone_to_nid(zone);
-> >         unsigned long nr_pages =3D 0;
-> >         phys_addr_t start, end;
-> >         u64 i =3D 0;
-> >
-> >         for_each_free_mem_range(i, nid, 0, &start, &end, NULL) {
-> >                 unsigned long spfn =3D PFN_UP(start);
-> >                 unsigned long epfn =3D PFN_DOWN(end);
-> >
-> >                 if (spfn >=3D end_pfn)
-> >                         break;
-> >
-> >                 spfn =3D max(spfn, start_pfn);
-> >                 epfn =3D min(epfn, end_pfn);
-> >
-> >                 while (spfn < epfn) {
->
-> The loop condition is (spfn < epfn), and by the time the loop terminates.=
-..
->
-> >                         unsigned long mo_pfn =3D ALIGN(spfn + 1, MAX_OR=
-DER_NR_PAGES);
-> >                         unsigned long chunk_end =3D min(mo_pfn, epfn);
-> >
-> >                         // KHO scratch is MAX_ORDER_NR_PAGES aligned.
-> >                         if (!pfn_is_kho_scratch(spfn))
-> >                                 deferred_init_pages(zone, spfn, chunk_e=
-nd);
-> >
-> >                         deferred_free_pages(spfn, chunk_end - spfn);
-> >                         spfn =3D chunk_end;
-> >
-> >                         if (can_resched)
-> >                                 cond_resched();
-> >                         else
-> >                                 touch_nmi_watchdog();
-> >                 }
-> >                 nr_pages +=3D epfn - spfn;
->
-> epfn - spfn <=3D 0.
->
-> So the number of pages returned by deferred_init_memmap_chunk() becomes
-> incorrect.
->
-> The equivalent translation of what's there before would be doing
-> `nr_pages +=3D chunk_end - spfn;` within the loop.
+Coredump is a generally useful and interesting event in the lifetime
+of a process. Add a tracepoint so it can be monitored through the
+standard kernel tracing infrastructure.
 
-Good point, thank you. This patch has already been removed from mm-new.
+BPF-based crash monitoring is an advanced approach that
+allows real-time crash interception: by attaching a BPF program at
+this point, tools can use bpf_get_stack() with BPF_F_USER_STACK to
+capture the user-space stack trace at the exact moment of the crash,
+before the process is fully terminated, without waiting for a
+coredump file to be written and parsed.
 
-> --
-> Cheers,
-> Harry / Hyeonggon
+However, there is currently no stable kernel API for this use case.
+Existing tools rely on attaching fentry probes to do_coredump(),
+which is an internal function whose signature changes across kernel
+versions, breaking these tools.
+
+Add a stable tracepoint that fires at the beginning of
+do_coredump(), providing BPF programs a reliable attachment point.
+At tracepoint time, the crashing process context is still live, so
+BPF programs can call bpf_get_stack() with BPF_F_USER_STACK to
+extract the user-space backtrace.
+
+The tracepoint records:
+  - sig: signal number that triggered the coredump
+  - comm: process name
+  - pid: process PID
+
+Example output:
+
+  $ echo 1 > /sys/kernel/tracing/events/coredump/coredump/enable
+  $ sleep 999 &
+  $ kill -SEGV $!
+  $ cat /sys/kernel/tracing/trace
+  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+  #              | |         |   |||||     |         |
+             sleep-634     [036] .....   145.222206: coredump: sig=11 comm=sleep pid=634
+
+Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ fs/coredump.c                   |  5 +++++
+ include/trace/events/coredump.h | 47 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+
+diff --git a/fs/coredump.c b/fs/coredump.c
+index 29df8aa19e2e7..bb6fdb1f458e9 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -63,6 +63,9 @@
+ 
+ #include <trace/events/sched.h>
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/coredump.h>
++
+ static bool dump_vma_snapshot(struct coredump_params *cprm);
+ static void free_vma_snapshot(struct coredump_params *cprm);
+ 
+@@ -1090,6 +1093,8 @@ static inline bool coredump_skip(const struct coredump_params *cprm,
+ static void do_coredump(struct core_name *cn, struct coredump_params *cprm,
+ 			size_t **argv, int *argc, const struct linux_binfmt *binfmt)
+ {
++	trace_coredump(cprm->siginfo->si_signo);
++
+ 	if (!coredump_parse(cn, cprm, argv, argc)) {
+ 		coredump_report_failure("format_corename failed, aborting core");
+ 		return;
+diff --git a/include/trace/events/coredump.h b/include/trace/events/coredump.h
+new file mode 100644
+index 0000000000000..59617eba3dbcf
+--- /dev/null
++++ b/include/trace/events/coredump.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2026 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2026 Breno Leitao <leitao@debian.org>
++ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM coredump
++
++#if !defined(_TRACE_COREDUMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_COREDUMP_H
++
++#include <linux/sched.h>
++#include <linux/tracepoint.h>
++
++/**
++ * coredump - called when a coredump starts
++ * @sig: signal number that triggered the coredump
++ *
++ * This tracepoint fires at the beginning of a coredump attempt,
++ * providing a stable interface for monitoring coredump events.
++ */
++TRACE_EVENT(coredump,
++
++	TP_PROTO(int sig),
++
++	TP_ARGS(sig),
++
++	TP_STRUCT__entry(
++		__field(int, sig)
++		__array(char, comm, TASK_COMM_LEN)
++		__field(pid_t, pid)
++	),
++
++	TP_fast_assign(
++		__entry->sig = sig;
++		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
++		__entry->pid = current->pid;
++	),
++
++	TP_printk("sig=%d comm=%s pid=%d",
++		  __entry->sig, __entry->comm, __entry->pid)
++);
++
++#endif /* _TRACE_COREDUMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+
+---
+base-commit: b5d083a3ed1e2798396d5e491432e887da8d4a06
+change-id: 20260320-coredump_tracepoint-4de4399ce1b6
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
