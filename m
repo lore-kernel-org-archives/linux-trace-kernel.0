@@ -1,148 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9612E38D6A8;
-	Fri, 20 Mar 2026 10:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522AE3A0B3D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 11:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774001947; cv=none; b=VV1mbrh+XPbNi4PE2sjZfLkKK9pCjYfoeUzewKQpyGzDJXBAa4dymsBErK/hPJLgl8rO+TclxXAYe5RTZfB7VMdf1W+CKRwJETGQ1R717W/5V3ozsD6TiNeTx1KUbMgDwv/eqyJfEOJxVhJGKcW4JyaH0jLKqSj5oe6DbcX1j+8=
+	t=1774004925; cv=none; b=F8QaHCsShoaJkBLQvdKqGnnVCKvPImRp1GZrjqq5oOeTYrcrev81/RSV7n+G1INdOayzRorcz6Cd3RQvdXPxVhMoGIKKm8CGwLgzzfbWziTPsI0vufrBU2VxA+QPZFGCZWag8/1zDmmUtMmMCoVJDuhS2WLMizXvNpMzs6676qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774001947; c=relaxed/simple;
-	bh=9xUNeMBUbv50TFhTrU7GhOJSxZ6PPhrSR/Qj7v/5NWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A8e1yjPFc5mnHEaweCQ5Jc+JvHd2z+Jh+UqDPjtDCQMwlz4O8eZ1ZJ04ckQA3v568CHg8LWAMxHkLw9n6IYuTI0ywWYYMI2AzMqGgQ8cjZhSYOi4Do6+Cget3gTJuXLJFoiOiRVKvfFa3gdBNJI+eS+/fSV7OQ8/8VaiRqPHKVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3FGcLQz; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1774004925; c=relaxed/simple;
+	bh=DcSdZ1Od4bjS1xSpPlNiqp2KmerXVT1VSew5Vlvza1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=Uzv3IvM+kjMlHolJC1Peb0DchCkP4JcH3ALDZSrMSM9+6oOVTxxE5PjhexnSLOGSO1rJGOaXjSzFZqodWjfbIK6Ci2P78/z75x3wDbNByj2jyeea5bErDFbdUUVVD5ERRXsd3k/IQJE7aojTWOVQVG2K+ReDOcfeJ9NbdoHcNiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tC3YC+f/; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3FGcLQz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774001938; x=1805537938;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9xUNeMBUbv50TFhTrU7GhOJSxZ6PPhrSR/Qj7v/5NWQ=;
-  b=I3FGcLQzeRTfk76HnulvH+h0zeBVDPzhLDdQKHnFqpABJUjdbGNEZ+C2
-   oIbWtmrhL7yotqGX8SLAdxp1kqfejXPHNjqDNkYww4GXWBLKjfHk68Jwx
-   mPug6e4B5sIMXOUjVOol7OCYEYFDK8Sj+TiFzJnaxH+/SmeJCwYyZDaRl
-   hXZzzO4g8AKm8I/UJAF6Lc6cyNURlD8seF1DUSBW2jOLUn4HukJ8QruMo
-   QMzzNT3NM29DjM9CULiYH/OXvp63/78WTYR6GPPyu5tx/pVB/D+zsxI1u
-   2lzN2flpvCNh70uV3KWnVZVgCt7k0A4nJJxWXvTxDZITacZfKCeLe7CpD
-   g==;
-X-CSE-ConnectionGUID: ihfi/Hy3TvmpFw/rjZqqVw==
-X-CSE-MsgGUID: cRN7TxXZSouGn57h2W3j5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="92658889"
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="92658889"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 03:18:57 -0700
-X-CSE-ConnectionGUID: zLehAkZ/Qu6Cfa49jA9rEA==
-X-CSE-MsgGUID: HEHwKXlOS/6q0uNEFA0sYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="218615516"
-Received: from lkp-server02.sh.intel.com (HELO a51c2a36b9df) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 20 Mar 2026 03:18:53 -0700
-Received: from kbuild by a51c2a36b9df with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w3WwM-000000002G5-2cL7;
-	Fri, 20 Mar 2026 10:18:50 +0000
-Date: Fri, 20 Mar 2026 18:18:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCHv3 bpf-next 08/24] bpf: Add
- bpf_trampoline_multi_attach/detach functions
-Message-ID: <202603201820.zsM5FRDS-lkp@intel.com>
-References: <20260316075138.465430-9-jolsa@kernel.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tC3YC+f/"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260320110837euoutp0113950ed0349ef2c9a0ae6559f13e0893~eiBLHbhHW0560705607euoutp01B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Mar 2026 11:08:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260320110837euoutp0113950ed0349ef2c9a0ae6559f13e0893~eiBLHbhHW0560705607euoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1774004917;
+	bh=4qovv9+aD8RsPS13oGAV/y3xbW2UGToHDWte0hu5auQ=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=tC3YC+f/cwuKn2RlZKFwY2x8rUDgAsDAFY60UyBWpLPBL+67Y08nlVUxai1DNaN5D
+	 sFUfqzCG/9wmcnOrRRU7vo76g8QFm1fOPCix13urNlB577UaZgeKHor7NP4Zw+PBBu
+	 i0Qd/1bii8ZaKPiERbuc0j3N6JUtuaGTgrhxYrZ8=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260320110836eucas1p13ceb4f958f17b568b1b6a89ce9cdbea5~eiBKofPAW2282122821eucas1p1u;
+	Fri, 20 Mar 2026 11:08:36 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260320110835eusmtip2ba021ee90f681f3ad044dd9fe0d2ed25~eiBI-eTqE1236312363eusmtip2w;
+	Fri, 20 Mar 2026 11:08:35 +0000 (GMT)
+Message-ID: <3fe54fb7-8192-4b0c-9f51-d04cb8ac1300@samsung.com>
+Date: Fri, 20 Mar 2026 12:08:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260316075138.465430-9-jolsa@kernel.org>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH v3 0/8] RDMA: Enable operation with DMA debug enabled
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, "Michael S. Tsirkin"
+	<mst@redhat.com>, Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet
+	<corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Jason Wang
+	<jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-rdma@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20260318081858.GE61385@unreal>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20260320110836eucas1p13ceb4f958f17b568b1b6a89ce9cdbea5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20260317190552eucas1p28f3e818f88d252b1e4161332be084177
+X-EPHeader: CA
+X-CMS-RootMailID: 20260317190552eucas1p28f3e818f88d252b1e4161332be084177
+References: <20260316-dma-debug-overlap-v3-0-1dde90a7f08b@nvidia.com>
+	<CGME20260317190552eucas1p28f3e818f88d252b1e4161332be084177@eucas1p2.samsung.com>
+	<20260317190538.GD61385@unreal>
+	<de23ccf6-75ef-48af-8c69-2f416c564f2d@samsung.com>
+	<20260318081858.GE61385@unreal>
 
-Hi Jiri,
+Hi Leon,
 
-kernel test robot noticed the following build errors:
+On 18.03.2026 09:18, Leon Romanovsky wrote:
+> On Wed, Mar 18, 2026 at 09:03:00AM +0100, Marek Szyprowski wrote:
+>> On 17.03.2026 20:05, Leon Romanovsky wrote:
+>>> On Mon, Mar 16, 2026 at 09:06:44PM +0200, Leon Romanovsky wrote:
+>>>> Add a new DMA_ATTR_REQUIRE_COHERENT attribute to the DMA API to mark
+>>>> mappings that must run on a DMA‑coherent system. Such buffers cannot
+>>>> use the SWIOTLB path, may overlap with CPU caches, and do not depend on
+>>>> explicit cache flushing.
+>>>>
+>>>> Mappings using this attribute are rejected on systems where cache
+>>>> side‑effects could lead to data corruption, and therefore do not need
+>>>> the cache‑overlap debugging logic. This series also includes fixes for
+>>>> DMA_ATTR_CPU_CACHE_CLEAN handling.
+>>>> Thanks.
+>>> <...>
+>>>
+>>>> ---
+>>>> Leon Romanovsky (8):
+>>>>         dma-debug: Allow multiple invocations of overlapping entries
+>>>>         dma-mapping: handle DMA_ATTR_CPU_CACHE_CLEAN in trace output
+>>>>         dma-mapping: Clarify valid conditions for CPU cache line overlap
+>>>>         dma-mapping: Introduce DMA require coherency attribute
+>>>>         dma-direct: prevent SWIOTLB path when DMA_ATTR_REQUIRE_COHERENT is set
+>>>>         iommu/dma: add support for DMA_ATTR_REQUIRE_COHERENT attribute
+>>>>         RDMA/umem: Tell DMA mapping that UMEM requires coherency
+>>>>         mm/hmm: Indicate that HMM requires DMA coherency
+>>>>
+>>>>    Documentation/core-api/dma-attributes.rst | 38 ++++++++++++++++++++++++-------
+>>>>    drivers/infiniband/core/umem.c            |  5 ++--
+>>>>    drivers/iommu/dma-iommu.c                 | 21 +++++++++++++----
+>>>>    drivers/virtio/virtio_ring.c              | 10 ++++----
+>>>>    include/linux/dma-mapping.h               | 15 ++++++++----
+>>>>    include/trace/events/dma.h                |  4 +++-
+>>>>    kernel/dma/debug.c                        |  9 ++++----
+>>>>    kernel/dma/direct.h                       |  7 +++---
+>>>>    kernel/dma/mapping.c                      |  6 +++++
+>>>>    mm/hmm.c                                  |  4 ++--
+>>>>    10 files changed, 86 insertions(+), 33 deletions(-)
+>>> Marek,
+>>>
+>>> Despite the "RDMA ..." tag in the subject, the diffstat clearly shows that
+>>> you are the appropriate person to take this patch.
+>> I plan to take the first 2 patches to the dma-mapping-fixes branch
+>> (v7.0-rc) and the next to dma-mapping-for-next. Should I also take the
+>> RDMA and HMM patches, or do You want a stable branch for merging them
+>> via respective subsystem trees?
+> I suggest taking all patches into the -fixes branch, as the "RDMA/..." patch
+> also resolves the dmesg splat. With -fixes, there is no need to worry about
+> a shared branch since we do not expect merge conflicts in that area.
+>
+> If you still prefer to split the series between -fixes and -next, it would be
+> better to use a shared branch in that case. There are patches on the RDMA
+> list targeted for -next that touch ib_umem_get().
 
-[auto build test ERROR on bpf-next/master]
+Okay, I will merge all patches to the -fixes branch then.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jiri-Olsa/ftrace-Add-ftrace_hash_count-function/20260316-160117
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20260316075138.465430-9-jolsa%40kernel.org
-patch subject: [PATCHv3 bpf-next 08/24] bpf: Add bpf_trampoline_multi_attach/detach functions
-config: x86_64-randconfig-075-20260320 (https://download.01.org/0day-ci/archive/20260320/202603201820.zsM5FRDS-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260320/202603201820.zsM5FRDS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603201820.zsM5FRDS-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> kernel/bpf/trampoline.c:1520:8: error: call to undeclared function 'btf_distill_func_proto'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1520 |         err = btf_distill_func_proto(NULL, btf, t, tname, &tgt_info->fmodel);
-         |               ^
-   1 error generated.
-
-
-vim +/btf_distill_func_proto +1520 kernel/bpf/trampoline.c
-
-  1498	
-  1499	static int bpf_get_btf_id_target(struct btf *btf, struct bpf_prog *prog, u32 btf_id,
-  1500					 struct bpf_attach_target_info *tgt_info)
-  1501	{
-  1502		const struct btf_type *t;
-  1503		unsigned long addr;
-  1504		const char *tname;
-  1505		int err;
-  1506	
-  1507		if (!btf_id || !btf)
-  1508			return -EINVAL;
-  1509		t = btf_type_by_id(btf, btf_id);
-  1510		if (!t)
-  1511			return -EINVAL;
-  1512		tname = btf_name_by_offset(btf, t->name_off);
-  1513		if (!tname)
-  1514			return -EINVAL;
-  1515		if (!btf_type_is_func(t))
-  1516			return -EINVAL;
-  1517		t = btf_type_by_id(btf, t->type);
-  1518		if (!btf_type_is_func_proto(t))
-  1519			return -EINVAL;
-> 1520		err = btf_distill_func_proto(NULL, btf, t, tname, &tgt_info->fmodel);
-  1521		if (err < 0)
-  1522			return err;
-  1523		if (btf_is_module(btf)) {
-  1524			/* The bpf program already holds refference to module. */
-  1525			if (WARN_ON_ONCE(!prog->aux->mod))
-  1526				return -EINVAL;
-  1527			addr = find_kallsyms_symbol_value(prog->aux->mod, tname);
-  1528		} else {
-  1529			addr = kallsyms_lookup_name(tname);
-  1530		}
-  1531		if (!addr || !ftrace_location(addr))
-  1532			return -ENOENT;
-  1533		tgt_info->tgt_addr = addr;
-  1534		return 0;
-  1535	}
-  1536	
-
+Best regards
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
