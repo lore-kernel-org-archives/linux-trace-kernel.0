@@ -1,163 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A3F1EEE6;
-	Fri, 20 Mar 2026 13:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB463AC0EE;
+	Fri, 20 Mar 2026 13:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774012889; cv=none; b=Skz+x/3DS2iMq7Y1CALrniP7CjqNIUTl3hCbjk0drprgdGxkMpwciKMf9YZspN7L0CrfHb9l5kchJvk0wzTojzu/XQmBNAI3NSf9LIEPme2Rtai+bYN0FeMzTSX/evv+hMhTAEMEv91lEyaV+jFdb57QBsFBDjjDA6m6Fq2vjRA=
+	t=1774012918; cv=none; b=hY21Apnz/WyLsCkNCKi81/EFNo7/uVxjxT4QkfCRJdgZIYbNIOaXfWu+UfHT7RdPi86aD9J9A/GZ+OTkL47mgkj1wyi4DDTGeYWyaUef5Ty9o2cjxob1oclWDjnAYYKoyPYs1X8dg4gw7OTK5aZXybK6GvFeJUldCb4eOl3tdFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774012889; c=relaxed/simple;
-	bh=qFsuBH7hc/SQe2it9kyWh9hw7Uw23MFvw6yA0QnTAck=;
+	s=arc-20240116; t=1774012918; c=relaxed/simple;
+	bh=MOZqXSoMb5xgzqgJiD9GpmF7ivqWpyudHypDRzlzmWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q7CHJ3+XI72g3Kafc/94Jv/TEzSQhAUj9qNRjYUbQQBJ5tbLj466WqQfKhUp/v7h/HAkzNJNxjM/rz0gnYWqxYfnaAvJMlD1HlD0gngcLE9MhRCesIn2nulBd2+8cBI9IPdkWl+tYUywmqTZdyjt26o43lB1EYdlxsTkiHEZGxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2e17s8e; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QAc1xjRLyylhMocZWP8pVeS2EDPbnkuLX7xzdsEYJky3DjlXcQ5kI6p96SJyK39kqw21imKYf6BzCakp1qF7tvXLuSeT0ZZBywlppqKJwFbjYAdIDFHldqcMr56yTwOT1KAk6ECInzEPHvwOF9D0w1YTkfHFqZFEBu4070lOoS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sH1bvS66; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2e17s8e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DBDC4CEF7;
-	Fri, 20 Mar 2026 13:21:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sH1bvS66"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA160C19425;
+	Fri, 20 Mar 2026 13:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774012888;
-	bh=qFsuBH7hc/SQe2it9kyWh9hw7Uw23MFvw6yA0QnTAck=;
+	s=k20201202; t=1774012917;
+	bh=MOZqXSoMb5xgzqgJiD9GpmF7ivqWpyudHypDRzlzmWM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u2e17s8eLuMYF68mIZ5XjW040CwH0L2d05rjIwLkg2t0iydE6udpU8RfCYQG69alj
-	 iCbVlZiK9C9BNZoxYW1/M2v4RETLOnknNhlFgZZMA4dmaG9s0lMfY8TgjcQGW6M/fb
-	 wlCVUnYomCHeyUvxhdgUomKGdTBJughQZog2e0XD07/3KrW+gOZ4mP2PF0ptg/KT9l
-	 99jGSYtpaFqecdlBBkrqiaOWN9dZb0G4oASTbVM4U0DUUUVyL3hlupiOSH/vU116y0
-	 MKepGk69yRXHtwJxa40w7V41vZOvlUrAJU8mcJKUPxFXN46k1txjd9FfID60K0pH4U
-	 BbRpSsv3LvqkQ==
-Date: Fri, 20 Mar 2026 14:21:23 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com, 
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH] coredump: add tracepoint for coredump events
-Message-ID: <20260320-erlitt-ergibt-255e86a66414@brauner>
-References: <20260320-coredump_tracepoint-v1-1-34864746cbb3@debian.org>
+	b=sH1bvS66tYWyssScB5U5W+6yI64kW9PEgpfUF/sWtKjITnZDYvB9r9QWkxb43jfGM
+	 zenGTMnJrUvbUYr7BSjNH3xYrX4QeMHcdJAG7n0vfv6vC/IDPMlmvZxw/BlGXhfnew
+	 1vxTLMpqKhkujwTmBBc249LCJkqMOZnddRHtuPmR+4mEei4v9vGfiCX0WOveVD5mqE
+	 sBmQz/YP2sxDQxTC+6T+ielbgQmhmOE6GuOPD+Pu/cot6sy7RANs08qGzCmHWcwXja
+	 /XVffeAKWummLz4xiHeuy1RW2l6/RTQxM2PKsI7m5/9UNTGBCav96JgY0HLDtUTu/u
+	 H8NCahNA8DG4Q==
+Date: Fri, 20 Mar 2026 22:21:56 +0900
+From: "Harry Yoo (Oracle)" <harry@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Harry Yoo <harry.yoo@oracle.com>, Nathan Chancellor <nathan@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Michal Clapinski <mclapinski@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: NULL pointer dereference when booting ppc64_guest_defconfig in
+ QEMU on -next
+Message-ID: <ab1J9ODkX5iChu-C@hyeyoo>
+References: <20260319233745.GA769346@ax162>
+ <abzKcGiRSR_E8lLN@hyeyoo>
+ <7780a471-9d99-40a7-ade7-0c4594ac36c7@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260320-coredump_tracepoint-v1-1-34864746cbb3@debian.org>
+In-Reply-To: <7780a471-9d99-40a7-ade7-0c4594ac36c7@efficios.com>
 
-On Fri, Mar 20, 2026 at 05:33:34AM -0700, Breno Leitao wrote:
-> Coredump is a generally useful and interesting event in the lifetime
-> of a process. Add a tracepoint so it can be monitored through the
-> standard kernel tracing infrastructure.
+On Fri, Mar 20, 2026 at 08:35:46AM -0400, Mathieu Desnoyers wrote:
+> On 2026-03-20 00:17, Harry Yoo wrote:
+> [...]
+> > > [1]: https://lore.kernel.org/20260227153730.1556542-4-mathieu.desnoyers@efficios.com/
+> > 
+> > @Mathieu: In patch 1/3 description,
+> > > Changes since v7:
+> > > - Explicitly initialize the subsystem from start_kernel() right
+> > >    after mm_core_init() so it is up and running before the creation of
+> > >    the first mm at boot.
+> > 
+> > But how does this work when someone calls mm_cpumask() on init_mm early?
+> > Looks like it will behave incorrectly because get_rss_stat_items_size()
+> > returns zero?
 > 
-> BPF-based crash monitoring is an advanced approach that
-> allows real-time crash interception: by attaching a BPF program at
-> this point, tools can use bpf_get_stack() with BPF_F_USER_STACK to
-> capture the user-space stack trace at the exact moment of the crash,
-> before the process is fully terminated, without waiting for a
-> coredump file to be written and parsed.
+> It doesn't work as expected at all. I missed that all users of mm_cpumask()
+> end up relying on get_rss_stat_items_size(), which now calls
+> percpu_counter_tree_items_size(), which depends on initialization from
+> percpu_counter_tree_subsystem_init().
 > 
-> However, there is currently no stable kernel API for this use case.
-> Existing tools rely on attaching fentry probes to do_coredump(),
-> which is an internal function whose signature changes across kernel
-> versions, breaking these tools.
+> If you add a call to percpu_counter_tree_subsystem_init in
+> arch/powerpc/kernel/setup_arch() just before:
 > 
-> Add a stable tracepoint that fires at the beginning of
-> do_coredump(), providing BPF programs a reliable attachment point.
-> At tracepoint time, the crashing process context is still live, so
-> BPF programs can call bpf_get_stack() with BPF_F_USER_STACK to
-> extract the user-space backtrace.
+>         VM_WARN_ON(cpumask_test_cpu(smp_processor_id(), mm_cpumask(&init_mm)));
+>         cpumask_set_cpu(smp_processor_id(), mm_cpumask(&init_mm));
 > 
-> The tracepoint records:
->   - sig: signal number that triggered the coredump
->   - comm: process name
->   - pid: process PID
-> 
-> Example output:
-> 
->   $ echo 1 > /sys/kernel/tracing/events/coredump/coredump/enable
->   $ sleep 999 &
->   $ kill -SEGV $!
->   $ cat /sys/kernel/tracing/trace
->   #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->   #              | |         |   |||||     |         |
->              sleep-634     [036] .....   145.222206: coredump: sig=11 comm=sleep pid=634
-> 
-> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  fs/coredump.c                   |  5 +++++
->  include/trace/events/coredump.h | 47 +++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
-> 
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index 29df8aa19e2e7..bb6fdb1f458e9 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -63,6 +63,9 @@
->  
->  #include <trace/events/sched.h>
->  
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/coredump.h>
-> +
->  static bool dump_vma_snapshot(struct coredump_params *cprm);
->  static void free_vma_snapshot(struct coredump_params *cprm);
->  
-> @@ -1090,6 +1093,8 @@ static inline bool coredump_skip(const struct coredump_params *cprm,
->  static void do_coredump(struct core_name *cn, struct coredump_params *cprm,
->  			size_t **argv, int *argc, const struct linux_binfmt *binfmt)
->  {
-> +	trace_coredump(cprm->siginfo->si_signo);
-> +
->  	if (!coredump_parse(cn, cprm, argv, argc)) {
->  		coredump_report_failure("format_corename failed, aborting core");
->  		return;
-> diff --git a/include/trace/events/coredump.h b/include/trace/events/coredump.h
-> new file mode 100644
-> index 0000000000000..59617eba3dbcf
-> --- /dev/null
-> +++ b/include/trace/events/coredump.h
-> @@ -0,0 +1,47 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2026 Meta Platforms, Inc. and affiliates.
-> + * Copyright (c) 2026 Breno Leitao <leitao@debian.org>
-> + */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM coredump
-> +
-> +#if !defined(_TRACE_COREDUMP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_COREDUMP_H
-> +
-> +#include <linux/sched.h>
-> +#include <linux/tracepoint.h>
-> +
-> +/**
-> + * coredump - called when a coredump starts
-> + * @sig: signal number that triggered the coredump
-> + *
-> + * This tracepoint fires at the beginning of a coredump attempt,
-> + * providing a stable interface for monitoring coredump events.
-> + */
-> +TRACE_EVENT(coredump,
-> +
-> +	TP_PROTO(int sig),
-> +
-> +	TP_ARGS(sig),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(int, sig)
-> +		__array(char, comm, TASK_COMM_LEN)
-> +		__field(pid_t, pid)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->sig = sig;
-> +		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
-> +		__entry->pid = current->pid;
+> Does the warning go away ?
 
-That's the TID as seen in the global pid namespace.
-I assume this is what you want but worth noting.
+Hmm it goes away, but I'm not sure if it is it okay to use nr_cpu_ids
+before setup_nr_cpu_ids() is called?
+
+> Alternatively, would could use a lazy initialization invoking
+> percpu_counter_tree_subsystem_init from percpu_counter_tree_items_size
+> when the initialization is not already done.
+
+So this probably isn't a way to go?
+
+Hmm perhaps we should treat init_mm as a special case in
+mm_cpus_allowed() and mm_cpumask().
+
+-- 
+Cheers,
+Harry / Hyeonggon
