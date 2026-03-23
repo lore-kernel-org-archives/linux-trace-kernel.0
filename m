@@ -1,80 +1,98 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22853B8958
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BBF3B9600
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774281676; cv=none; b=Fvnp8ues85reUCUzO8ftJWMZxfzpjI5fBwA9nOEwUfJ/st+86R3EUqKAZqyCZqTk9khvRh/lLVYq0dThzkovJKiFJLS3Fvk6iZu6xLPs0WaJpu9kyuj5d1sCX5Eo3g40JqnMjsunPFhzl1F4Shhf3jHhFHcM9id+61lYi/3RwPM=
+	t=1774281677; cv=none; b=WYThf0+RWpnABrNRGd9v942fP92qoNsVfMygaPSoKu0AQ7I09VIcadeo5Fhf0NgTup8X+L87EOafW8f2PAQdMp0QMmDh02Bk6fI89MGkzbRMqlAuiMXKHbtjY627JnqXghFt4vFU33DTVXKlLOn0vYjI+uNW/Tn24Oo/Bg4inAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774281676; c=relaxed/simple;
-	bh=vDOl4iabfdtMZLOMkSkTWP+zmegQufgvmmN5uFolZIs=;
+	s=arc-20240116; t=1774281677; c=relaxed/simple;
+	bh=xyAGaEXQZTWs4DlMf28kBT1WbT71fLVTUKX8/OJIrfo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FEiItgIo7/gBrOhGwa97f+zwKtp43VPJ5YmXabCcXmNBYMajOMcm0UVX3VFBKejhsp19vtUbG+fvPVH3GLbXyESahNGFNguy5FvrNhRk+LuHwWW/I6OKvILF/p6PQsv3NA5A6qisMyBr1LFYGpPgFkXPnh4Mwy7YE4dCLVN7fOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=MEEnZFHV; arc=none smtp.client-ip=209.85.161.44
+	 MIME-Version; b=kW45t5hNlWhEck7SETnVBX7QRsFCS8XrW1pELB+IIvtCkoL/Ru6lzKFMYbgdELUIxFDiJrS2GI2VVb82cY5RWTUMsVwoqgykfmOe5PjWXZi7Uo13hGXSwK3ffLo+ZwPAOEbs0p8pAELjbh8lvuG368cWwhLZ9dclTTtjC1o19qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=tCiidTFQ; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="MEEnZFHV"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-67bbea1e090so2455002eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="tCiidTFQ"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8cd8a189f44so441417185a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1774281674; x=1774886474; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1774281675; x=1774886475; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/13OoieOh2R3fJi1V1DS4OOCrO67vE76aOedsLQcjW8=;
-        b=MEEnZFHVo6/NFhIPCNbOD3OI2UczkRU55k/Z2YPylmqYZOxMzW6JpTp81sN/7UoIjn
-         LOFxIdtlPW31w0lbWggo1CSbOj6kxfUsHOIwtKWPYOTzKn9lTYzwoJyM/2RYeLvhqfz8
-         ZFhNU4S1Vjaylc0GfWt8a2O/TcoMjmvPgV60ooYB9Aw+KBO5UBhs54+EEL/nJAsULXDh
-         myj4sDlLcJdPEYwpCTtM4iO2SIxAQzBJ0KIV8hr00r99pj7h5ckoTHtWSkMVOQQiv3+i
-         wOImBJgxTUbA29weiUG7UOqn+XFx7v//wb8s3KYV7au1rBhYaS6WhToYikCeFhlmVcGy
-         2Z/w==
+        bh=zzezBvlbzIGXplopQPhzXRTVv1p4U7sUNeKcBaGOoCw=;
+        b=tCiidTFQ7qgvwelsnitMx+MlaYKCt1PDy488Bos+z0M4gALZSPysD6uED5Lay1Joil
+         o8MKnT0KuetxDzQMFZnGLqUvPU+EIztk0uBmJwlI6eJIGZhPrd8lBeL+t9WHoYThcJba
+         hWIWVfuj8x7/1r98kVmYsF0rS4+20hskeiQdqClLDSdXxCr6Qoxh7KfSJVLMpL+dnoxR
+         YiEawU+vuIhGIvv5EgoxcHSsL8VgaAGmhEEWkBWclrzj7kyEou40xDqPsMG/GF4cLmJZ
+         1L5hql6AHYCMgViigflIQ1coZ80elgn5igKHIQUkz2TCZa7DGkooLhtzCi1e2BFsxuLZ
+         WbiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774281674; x=1774886474;
+        d=1e100.net; s=20251104; t=1774281675; x=1774886475;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=/13OoieOh2R3fJi1V1DS4OOCrO67vE76aOedsLQcjW8=;
-        b=r47ugGT2N4zRdPbWmP7NOtL/oEEpsu3WFCMvf4P5Xbgh/WVmKNmD+FeK24GogwjUz/
-         JTlInqSweUqbjfnBnxIhT7FV7+m0T6zZ1iOGLHPMcIcH1a8icsC4cCtjS58buvVhX8kS
-         Wwy8cl31LkTYlAEpNPo6trM26DlSdJgGI8EfQLSLk+DSIoL+lVZynI0k6pFuVmZ08Gx3
-         gjJ5CGyKLzXx+2M/1/1vozPeleb3EbgS/8v9NKs3liHL0AYTSHhYcSWcsVx1/QYwibNv
-         MUL0g01YzJ5OJwMVMvqLMTIVEiBAZc6YcYX7tnh4Y0ef5acVYYtNPe916WQ8uAr3NHrY
-         kRRA==
-X-Forwarded-Encrypted: i=1; AJvYcCV632BBlqnYtOwHBWEBrZfyxAlL/I3J2eDUQGo2iSexF1iaenmKYfQdawDTvTkXeygdRY9VJxDMs8U6d0U46qWjouo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2JU1WFtiNw6ihfCmH+Boli7qLv64vH71aw8R9/KCf7NDlLPjV
-	kBBvA42z095NX/y1t2nadHU7F9i+TGFdR+dSnB+CkoRaCZ6XzsZT6+rOWIaeVN/PJNOS3BMPHhT
-	FRDBXDMg=
-X-Gm-Gg: ATEYQzxmU9g7oT1ddMI3gjGErc4A8yjYRWLVDcyGmrXfCfE0s8Kn1Uf71k8rd8F+qGJ
-	pKOssIQ+kdxj0tXwZEvwp/GxmpyQj144jTwlAqv7EPEt/rGBzzhHQXxlNz9Vjm7i0nVn0QVRbm2
-	Ia671lZjD1zsjYvUWr0XnpRuOTzO98OmkYCd7DbUQ5hW/PpwaY5Nkt9NNC4LUKUix5MhK3zoRqw
-	SwFA4ChRTqy4aoUYzzzdAICvqPpTn4+74sNkFnbY7ABUGMlpxg3Tvs+A2jRYwcZvZOdpT5U8a4c
-	sarUWp2XHBOHURIc8OEOjuq8PaFHOnwOPz/8MeOF2lrv/zrPDLVb0Z7sP8Q1bdzq9trmxmRv6E3
-	p8q8bbY5rocUPThOGUTU4DCOQ3SruFll32uB9Qx834WVEW26PflNsrAL8tV2rF48tCWZ8jpLXEP
-	HXOR9SaHFtvMBV3jpZ9YbflA4WF+baPnKu9ecKp1Ml78M0+YejuxnKm1D0hw70DDMtHA==
-X-Received: by 2002:a05:6820:180e:b0:67b:bcd6:94c5 with SMTP id 006d021491bc7-67c22fbd289mr8856150eaf.35.1774281673547;
-        Mon, 23 Mar 2026 09:01:13 -0700 (PDT)
+        bh=zzezBvlbzIGXplopQPhzXRTVv1p4U7sUNeKcBaGOoCw=;
+        b=ETxjWPpJru6b1vUFg1CUv5a1IPlYZTaRzbz/4Qvfnb47TeZzvvNt0o4pax8l03ktkf
+         ssLMp/t+PzK5M6YYTTguxB0xG48PvrsGzGWMbPCrHh3NVWQoVvsSHxJvC4XomDn45FdX
+         m0DgEwyVE5sF6u1YlKwW3vj+lW3t2aDOM9I48mswDhw3LgF0aA3duy0xRzodN0HO6PlU
+         5ZSURXcUjRwdbGUd+JVEXT0Sh8DodgSWpsKCqNnBnyX2v5ITsiofq1Zya/zG20mVqUnJ
+         APrZ1QlqA1m+4udE/lnFFCT+tRDbIZOZn9HTzfQCcjfg/jWcSls88EwtOb0UtDsoXMPy
+         YEEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4TESZ2NJHYjN1i1u0fAjXGjOVUaxCpapf7Ck5WzEeD7Wrn66iLCyXBCDc+Fj1NOP19zLqJRqADQUBd5fCXVttFbE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMvCz8XOAAfvuhZGNaAiFbh3fSg2w+j69+cVcNh8TEZLxz+9wC
+	hzfNLRoDxtCGO8UPIei111cd916DGjCWU5LkojJxOHT83N5pknXjV92+bBg+/gOoYgM=
+X-Gm-Gg: ATEYQzx5ylPwxmMN0ycx51oFCFEqmdXdR+gr1XgCVFse0D8+B4upZfxqgdrjQuaWhbQ
+	o/7mUDrIco/L3n39P1qgG+On75vHD4Ym2UE6sKhPcfUQVUTPK86B7f0WC0vd9arEJwjMjwnEsxl
+	hWal8ktKXKsJaFyF8XD7d2OZekJ31FWvEuYUkg6UygafRzR1RyJhKg6wnwMDnUEFxCXKVTYHtKB
+	guyxWOrMwm6IkImmfYHObsplyoUAQ5HvOZR+rdtPWKAO9e42LTGbAzDY78FjUH6nSjB8c2TxYuf
+	nxZ3VltZLM+ikxHYLlV+oOgH9vLspIdn9L51OWgqDz2ckQCbdflSs27LurrAE1ggoJgVKEb7F1q
+	Umz3LQNwgMuZRC0PszNGVwXtUVdeVY24kYz/0k/QSz351LdUjIV6r9zHh+C/oVz/9LVovTdgXEm
+	zu7YKCegDs1cBsOo6DxpwaNvtc7jUgV3G2f7M4/oa1IcZe336xdgMne9BfzY7uYRM0tA==
+X-Received: by 2002:a05:620a:4594:b0:8cd:75df:f2fb with SMTP id af79cd13be357-8cfc80dd30cmr1961607085a.65.1774281669680;
+        Mon, 23 Mar 2026 09:01:09 -0700 (PDT)
 Received: from vinmini.lan (c-73-143-21-186.hsd1.vt.comcast.net. [73.143.21.186])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.12
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 09:01:12 -0700 (PDT)
+        Mon, 23 Mar 2026 09:01:09 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 To: 
 Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Koby Elbaz <koby.elbaz@intel.com>,
-	Konstantin Sinyuk <konstantin.sinyuk@intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Aaron Conole <aconole@redhat.com>,
+	Eelco Chaudron <echaudro@redhat.com>,
+	Ilya Maximets <i.maximets@ovn.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Jon Maloy <jmaloy@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Hangbin Liu <liuhangbin@gmail.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	dev@openvswitch.org,
+	linux-sctp@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 05/19] accel/habanalabs: Use trace_call__##name() at guarded tracepoint call sites
-Date: Mon, 23 Mar 2026 12:00:24 -0400
-Message-ID: <20260323160052.17528-6-vineeth@bitbyteword.org>
+Subject: [PATCH v2 04/19] net: Use trace_call__##name() at guarded tracepoint call sites
+Date: Mon, 23 Mar 2026 12:00:23 -0400
+Message-ID: <20260323160052.17528-5-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260323160052.17528-1-vineeth@bitbyteword.org>
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
@@ -97,98 +115,92 @@ Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 Assisted-by: Claude:claude-sonnet-4-6
 ---
- drivers/accel/habanalabs/common/device.c  | 12 ++++++------
- drivers/accel/habanalabs/common/mmu/mmu.c |  3 ++-
- drivers/accel/habanalabs/common/pci/pci.c |  4 ++--
- 3 files changed, 10 insertions(+), 9 deletions(-)
+ net/core/dev.c             | 2 +-
+ net/core/xdp.c             | 2 +-
+ net/openvswitch/actions.c  | 2 +-
+ net/openvswitch/datapath.c | 2 +-
+ net/sctp/outqueue.c        | 2 +-
+ net/tipc/node.c            | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index 09b27bac3a31d..a9ad1edd0bf41 100644
---- a/drivers/accel/habanalabs/common/device.c
-+++ b/drivers/accel/habanalabs/common/device.c
-@@ -132,8 +132,8 @@ static void *hl_dma_alloc_common(struct hl_device *hdev, size_t size, dma_addr_t
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 14a83f2035b93..f7602b1892fea 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6444,7 +6444,7 @@ void netif_receive_skb_list(struct list_head *head)
+ 		return;
+ 	if (trace_netif_receive_skb_list_entry_enabled()) {
+ 		list_for_each_entry(skb, head, list)
+-			trace_netif_receive_skb_list_entry(skb);
++			trace_call__netif_receive_skb_list_entry(skb);
+ 	}
+ 	netif_receive_skb_list_internal(head);
+ 	trace_netif_receive_skb_list_exit(0);
+diff --git a/net/core/xdp.c b/net/core/xdp.c
+index 9890a30584ba7..3003e5c574191 100644
+--- a/net/core/xdp.c
++++ b/net/core/xdp.c
+@@ -362,7 +362,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 		xsk_pool_set_rxq_info(allocator, xdp_rxq);
+ 
+ 	if (trace_mem_connect_enabled() && xdp_alloc)
+-		trace_mem_connect(xdp_alloc, xdp_rxq);
++		trace_call__mem_connect(xdp_alloc, xdp_rxq);
+ 	return 0;
+ }
+ 
+diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+index 792ca44a461da..60823de201417 100644
+--- a/net/openvswitch/actions.c
++++ b/net/openvswitch/actions.c
+@@ -1259,7 +1259,7 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
+ 		int err = 0;
+ 
+ 		if (trace_ovs_do_execute_action_enabled())
+-			trace_ovs_do_execute_action(dp, skb, key, a, rem);
++			trace_call__ovs_do_execute_action(dp, skb, key, a, rem);
+ 
+ 		/* Actions that rightfully have to consume the skb should do it
+ 		 * and return directly.
+diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
+index e209099218b41..2b9755e2e4731 100644
+--- a/net/openvswitch/datapath.c
++++ b/net/openvswitch/datapath.c
+@@ -335,7 +335,7 @@ int ovs_dp_upcall(struct datapath *dp, struct sk_buff *skb,
+ 	int err;
+ 
+ 	if (trace_ovs_dp_upcall_enabled())
+-		trace_ovs_dp_upcall(dp, skb, key, upcall_info);
++		trace_call__ovs_dp_upcall(dp, skb, key, upcall_info);
+ 
+ 	if (upcall_info->portid == 0) {
+ 		err = -ENOTCONN;
+diff --git a/net/sctp/outqueue.c b/net/sctp/outqueue.c
+index f6b8c13dafa4a..4025d863ffc84 100644
+--- a/net/sctp/outqueue.c
++++ b/net/sctp/outqueue.c
+@@ -1267,7 +1267,7 @@ int sctp_outq_sack(struct sctp_outq *q, struct sctp_chunk *chunk)
+ 	/* SCTP path tracepoint for congestion control debugging. */
+ 	if (trace_sctp_probe_path_enabled()) {
+ 		list_for_each_entry(transport, transport_list, transports)
+-			trace_sctp_probe_path(transport, asoc);
++			trace_call__sctp_probe_path(transport, asoc);
  	}
  
- 	if (trace_habanalabs_dma_alloc_enabled() && !ZERO_OR_NULL_PTR(ptr))
--		trace_habanalabs_dma_alloc(&(hdev)->pdev->dev, (u64) (uintptr_t) ptr, *dma_handle,
--						size, caller);
-+		trace_call__habanalabs_dma_alloc(&(hdev)->pdev->dev, (u64) (uintptr_t) ptr,
-+						  *dma_handle, size, caller);
+ 	sack_ctsn = ntohl(sack->cum_tsn_ack);
+diff --git a/net/tipc/node.c b/net/tipc/node.c
+index af442a5ef8f3d..5745d6aa0a054 100644
+--- a/net/tipc/node.c
++++ b/net/tipc/node.c
+@@ -1943,7 +1943,7 @@ static bool tipc_node_check_state(struct tipc_node *n, struct sk_buff *skb,
  
- 	return ptr;
- }
-@@ -206,7 +206,7 @@ int hl_dma_map_sgtable_caller(struct hl_device *hdev, struct sg_table *sgt,
- 		return 0;
- 
- 	for_each_sgtable_dma_sg(sgt, sg, i)
--		trace_habanalabs_dma_map_page(&(hdev)->pdev->dev,
-+		trace_call__habanalabs_dma_map_page(&(hdev)->pdev->dev,
- 					page_to_phys(sg_page(sg)),
- 					sg->dma_address - prop->device_dma_offset_for_host_access,
- #ifdef CONFIG_NEED_SG_DMA_LENGTH
-@@ -249,7 +249,7 @@ void hl_dma_unmap_sgtable_caller(struct hl_device *hdev, struct sg_table *sgt,
- 
- 	if (trace_habanalabs_dma_unmap_page_enabled()) {
- 		for_each_sgtable_dma_sg(sgt, sg, i)
--			trace_habanalabs_dma_unmap_page(&(hdev)->pdev->dev,
-+			trace_call__habanalabs_dma_unmap_page(&(hdev)->pdev->dev,
- 					page_to_phys(sg_page(sg)),
- 					sg->dma_address - prop->device_dma_offset_for_host_access,
- #ifdef CONFIG_NEED_SG_DMA_LENGTH
-@@ -2656,7 +2656,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
- 	u32 val = readl(hdev->rmmio + reg);
- 
- 	if (unlikely(trace_habanalabs_rreg32_enabled()))
--		trace_habanalabs_rreg32(&(hdev)->pdev->dev, reg, val);
-+		trace_call__habanalabs_rreg32(&(hdev)->pdev->dev, reg, val);
- 
- 	return val;
- }
-@@ -2674,7 +2674,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
- inline void hl_wreg(struct hl_device *hdev, u32 reg, u32 val)
- {
- 	if (unlikely(trace_habanalabs_wreg32_enabled()))
--		trace_habanalabs_wreg32(&(hdev)->pdev->dev, reg, val);
-+		trace_call__habanalabs_wreg32(&(hdev)->pdev->dev, reg, val);
- 
- 	writel(val, hdev->rmmio + reg);
- }
-diff --git a/drivers/accel/habanalabs/common/mmu/mmu.c b/drivers/accel/habanalabs/common/mmu/mmu.c
-index 6c7c4ff8a8a95..fdeca1fe5fc78 100644
---- a/drivers/accel/habanalabs/common/mmu/mmu.c
-+++ b/drivers/accel/habanalabs/common/mmu/mmu.c
-@@ -263,7 +263,8 @@ int hl_mmu_unmap_page(struct hl_ctx *ctx, u64 virt_addr, u32 page_size, bool flu
- 		mmu_funcs->flush(ctx);
- 
- 	if (trace_habanalabs_mmu_unmap_enabled() && !rc)
--		trace_habanalabs_mmu_unmap(&hdev->pdev->dev, virt_addr, 0, page_size, flush_pte);
-+		trace_call__habanalabs_mmu_unmap(&hdev->pdev->dev, virt_addr,
-+						  0, page_size, flush_pte);
- 
- 	return rc;
- }
-diff --git a/drivers/accel/habanalabs/common/pci/pci.c b/drivers/accel/habanalabs/common/pci/pci.c
-index 81cbd8697d4cd..bffbde3c399be 100644
---- a/drivers/accel/habanalabs/common/pci/pci.c
-+++ b/drivers/accel/habanalabs/common/pci/pci.c
-@@ -123,7 +123,7 @@ int hl_pci_elbi_read(struct hl_device *hdev, u64 addr, u32 *data)
- 		pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_DATA, data);
- 
- 		if (unlikely(trace_habanalabs_elbi_read_enabled()))
--			trace_habanalabs_elbi_read(&hdev->pdev->dev, (u32) addr, val);
-+			trace_call__habanalabs_elbi_read(&hdev->pdev->dev, (u32) addr, val);
- 
- 		return 0;
+ 	if (trace_tipc_node_check_state_enabled()) {
+ 		trace_tipc_skb_dump(skb, false, "skb for node state check");
+-		trace_tipc_node_check_state(n, true, " ");
++		trace_call__tipc_node_check_state(n, true, " ");
  	}
-@@ -186,7 +186,7 @@ static int hl_pci_elbi_write(struct hl_device *hdev, u64 addr, u32 data)
- 
- 	if ((val & PCI_CONFIG_ELBI_STS_MASK) == PCI_CONFIG_ELBI_STS_DONE) {
- 		if (unlikely(trace_habanalabs_elbi_write_enabled()))
--			trace_habanalabs_elbi_write(&hdev->pdev->dev, (u32) addr, val);
-+			trace_call__habanalabs_elbi_write(&hdev->pdev->dev, (u32) addr, val);
- 		return 0;
- 	}
- 
+ 	l = n->links[bearer_id].link;
+ 	if (!l)
 -- 
 2.53.0
 
