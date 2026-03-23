@@ -1,80 +1,76 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A493BED42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7230D3BED7A
 	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774281698; cv=none; b=Z+107j79alByDUTM15r82GXl2xV374BO4mfBopRvZ51aPnpKKTxy17njhrqLlGxagPKdfOaeYewYL9YZgNyKBhnasjvxyucnMKiJE7i4DFp96hgn/dJP+UIENiG6UFM7QVUW8+XGCsBZaMhZ+1+ZkWwCz+1kgn72Ycp5swhhGOc=
+	t=1774281698; cv=none; b=gF4FdnpDqLidJ/MXUVTsvGzu49wxomqopql7rdiOBljG6PhAJLja83EPr57tUW+mkdXsiYBlgTagu1MnA+jPifYZKb1xqujn4mXUG+m8pjRhjopUNuqIKBYfEdCsL+pV2zl8+xwTEy7jBiD8u0i0deeNrcqfdBbunU83TMumdJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1774281698; c=relaxed/simple;
-	bh=nRir5v+6LbzdGv9qh2mWXxT+gSGB0K8Hs1BfKYmoCMg=;
+	bh=MZnmVAxJf+X6cHJOBPvDd6V2H0nUoF4Hno5Kv0ax+0k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f+Pd2MG6nSveJ1ZD9scqpdgte/B8vOEK4mXkd8K8Lv8WhQEhKsvdiFDma9l6lR1cC9gzrzGEEUgVJtTgr7UlR81TT8PJ68HUpr/C3vzCkUZh3kJ+jTACylwbpi8AvcdDomHRDj0dNzlrfpaZGFN4i1XP3oWWpi5ouoYBWO1eLzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=eL72NYEl; arc=none smtp.client-ip=209.85.222.176
+	 MIME-Version; b=eYuvZ8kSE0PRggW2NF1zCC7y4icy7e0Y0pdZLOWM7ZvV9WaFHinRCA3wDLbZMR3yDLjAma2Tb9R9ahoUSSXAuxadycZVNiAF66gXh2H+9j6K3mBNeQHUCJdiJmA5YMEac2OTKiiqEzD1Yi3QG4my6dtinIcZ74F64a1JN8vrus8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=pObiQh1M; arc=none smtp.client-ip=209.85.160.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="eL72NYEl"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8cfc137464dso456556685a.2
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="pObiQh1M"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-40f1a1f77a6so3079826fac.2
         for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bitbyteword.org; s=google; t=1774281696; x=1774886496; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BV4QS+yC5xdWAGmIg+LeuXzS9pCzT00lLs26Yre9ABc=;
-        b=eL72NYElWH2iC+/O1dmlJJitOP/i4JgbyCbHwvkJIV9nicRPRbCmh3INfW9Cvc+Fss
-         ScNnJgOAjYoj6017h7+Eex+P7DBptEMHyjD3rV0T82bNfAG4FaVJ8M6egqeam5iISaoY
-         yx8Vz3luFBC8AfR4Hc/dG6xaMjTS/TFRgAkORnyNadABV2LxcKQgfM8C6AfwXl4e8Mqc
-         cZue/EyTQ2fFKC7cHvMrSKnuvY82Jk669RhdPK6yEY7yOBAPDjWXmrjigU7Ng36OYif1
-         fBSQwQ0MmidefDnfw1cxSfZ7VGJQ4bp9ok3JQPIqhkjllGoxILlhJ4Y69gEKU+2zAeaB
-         Jf6A==
+        bh=3hqD+qM2Gta/bzpbgYsOccfWP/3yL/YGd5soFmEVY9Q=;
+        b=pObiQh1M3Uzo476arwskTOTfu5mJRY56RVmXEgcOiYczx3bT9M+dzcWDX9KL6jw8M0
+         xRVDVuQiCyzR44SPeMc8FFmjpR4YmaM6TqtOwPhBzHn2mL7+nSRbGw66qF3PtJ2KHJIN
+         a1oPZqCgFkqoZvMHQ7KkHftpbrnB0sgX1rAivw3LXstdsrlTzB1r3IzUj0lCyXqtgB6v
+         GiXbW47ihgEKqUK2XjPRoaGfwhdNWaaGUjWJcwHemf1PMQT8R+94g5oockhCCuQwit5N
+         HBP4bkh/wFW0KlysQ+I5PwKWW3/s7gMAo4rqIBPtLXBCgw/7gV4voYrOPK3KtG/G4EBA
+         2vyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1774281696; x=1774886496;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=BV4QS+yC5xdWAGmIg+LeuXzS9pCzT00lLs26Yre9ABc=;
-        b=Ql2hqeMnzCW5kxvQi70w8jDWxVfGkT7AygHJyjiT+mXwP+ed3JVt5iZF/duOvx2yL5
-         DHrjcCgBn3b1ZI05/MXtba0RMvRtHO1QF5IdEoE85+qwR4QpR+L1letyo8mZ/Oj5n7D8
-         mpui2t/5m7lg4Rg9H+mCD1u7n+uuk1b6EbdpSRJ4EocS00Tg368d41FVazxmGuAXX9OC
-         NrpWlFc74mHpMi6WlJAvhn+zZiXYWUw1Qg08kFpKzpbEUxSZM63sVvfl5FpmpJxgaJSR
-         e2IxKuCSwIxTGvm1gHelvkwjZOhkbL6x0x+WWJ2zUsJniOFZEmofHkeb5HHzooXq80rs
-         16zA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQjKIYrLs+tJ5FIPA2uA1ArtSNyHtdW92AnRc7qjLUy54p7ib+E3xn0XR16LxKvutDWFU64+m8sI+h7R+zUccW5jQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0A89cP/sYWBugtZf3zzU5RDL4ppxDCQsN4br53QUK3xfm0Lwg
-	JOK7SHICSqXbJ6lqoJ+y5OSH990E9LvOFEuVqtp2uK2vWTC24CO/AgKOJisHhCKhvgU=
-X-Gm-Gg: ATEYQzz0iayr0oE08cz1b37BFozs9mlOLadDgC6YNgsPbwKHxBTaGOgcK/sEdCwu0wn
-	sPWlUeHbjGYy+PMQIW3a2EA57bDupZJq1FsBDDW3lULAe95ouF+Bj1HIoKngb1L12ZSi8QnMxah
-	HXm9eC1hYQ9RjogeVnEP966If0mJLWSokyrQ3oLjwlmlns/EEkBeas9rBML2Yz1+eGXwYgNKcLj
-	xV2quto8XvFUqgNN0LSxZy7SUbpERtbFq9ddkyhIx4pnmQTdpbWhd6xEHPzAXNy8VDKwld92XmX
-	5BsrNo6ttYIH2CMpBWcRK6vXMD3ZXOsa20dofvs9hyoJiii9qhFiSukgBJluO8cxP+sqpwPbRbD
-	Fn9NYbHjWGdD9b9RTQOuYhBIKEVmhxlisZLTis1lh5o5gOQPuEZUyALt1sonRFuNZq55mXLZsKI
-	Wej5/LMOB6cIo+pBfdVLo2YJ/XRT0TRAKVF7xab+CnaY8/GCDh970K/vs97erbl7qbfQ==
-X-Received: by 2002:a05:620a:4707:b0:8cf:e933:d5e8 with SMTP id af79cd13be357-8cfe933ee7dmr479191185a.44.1774281696047;
-        Mon, 23 Mar 2026 09:01:36 -0700 (PDT)
+        bh=3hqD+qM2Gta/bzpbgYsOccfWP/3yL/YGd5soFmEVY9Q=;
+        b=FuH+L+H10QEprxatFXdPqLSHCoWr1ARJ4U8cRH8JzqwdJ105g0ZcTD1huhewfYeQv7
+         YxnjWpvW7sgZ7t+KdvGdCy/557uW/bm0LmfDOnR2RHADcr/UaT8D02YMxb2mj7y0V+1G
+         NLqU0Zd9frG1h45TkUTTGe5c+vXBD5hMAl1kLZtHS6SC98hGoaqvr8ZaboenhRNudacP
+         e1Bdr2iGlM76FFAwfbXSkjUZo1MGuN29nscB1KqiHoosK7KxoumJHoENK3t2WBr90Pr4
+         BO4MCCNs+si6ZX7JrMRWpjkCQAXsDXKZGfY58VXFU6BUZbaIjtcYy7IMQL+JQ4jGfLQR
+         n2OA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0vH1QdocQHwRc95ZLtycUZJyVcYGZ+PvkVkyZ5a9WRJ+aXQhEyBBl2QELAoBccUgL2/Vlbb04ukCinMDONRD7T5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLiEA9bAfHtfU0yGDF2LYuA7RPr7Yb+rxHHqze+rTQP/dYZzum
+	ggd00K76kz/djcPnuFVx5q+LxacGvEqJjIxL86CY0hGUp4cxZvagSecszCGjaF3uts0=
+X-Gm-Gg: ATEYQzyMmbqJ4S/bLSBNQ0SEjAgAecJU+TzG0laTdNHSEzJ2MlKpO0ki9pvBgKqhDYQ
+	7nS0dGiaMDTeWi0t6umn6J+WDxdZEELIp8H5FTenmLaur2Uh5dUytfkT+qXaPWWL3zJmCNJqbmk
+	xq4UGdX3cuWsbHKaC7AVVbXuPXCxxLRquO519bcU1WxJAqFbGgwl3Kx6rIE85mCtXdkjD/6HDVk
+	u9aec3/sjMPghN69Qt0oGcbEeCOm8KV8US+Yq3hc+HxhiI836d3XiYJgD1YmfFadPYlbj3RT1PR
+	ORpqZxiuyZ/vaU+mLYZ2CDFw/1/YHnLdwyHYml9NdcQbzJ79CS1hdHFP2QfkAXRjG+EoqUKvo9e
+	JdCPIHHQdl1jrRrIeAyUbZDklEiiLcbEu3gk6ew40e2zzV8ExCPsqyiowFaMY8S9kWKMjpT/JaM
+	TOL4ox0Ks2Nvvnl9Nlqyrij2GtIiAdnKPxExv8H0t23chUo0Crr4V9cc/m7SI1ZJqnow==
+X-Received: by 2002:a05:6820:2085:b0:67b:ab68:b5ed with SMTP id 006d021491bc7-67c22f2703bmr9958074eaf.21.1774281694519;
+        Mon, 23 Mar 2026 09:01:34 -0700 (PDT)
 Received: from vinmini.lan (c-73-143-21-186.hsd1.vt.comcast.net. [73.143.21.186])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.35
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 09:01:35 -0700 (PDT)
+        Mon, 23 Mar 2026 09:01:34 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 To: 
 Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org,
+	Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 16/19] net: devlink: Use trace_call__##name() at guarded tracepoint call sites
-Date: Mon, 23 Mar 2026 12:00:35 -0400
-Message-ID: <20260323160052.17528-17-vineeth@bitbyteword.org>
+Subject: [PATCH v2 15/19] btrfs: Use trace_call__##name() at guarded tracepoint call sites
+Date: Mon, 23 Mar 2026 12:00:34 -0400
+Message-ID: <20260323160052.17528-16-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260323160052.17528-1-vineeth@bitbyteword.org>
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
@@ -86,32 +82,65 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace trace_devlink_trap_report() with trace_call__devlink_trap_report()
-at a site already guarded by tracepoint_enabled(), avoiding a redundant
+Replace trace_foo() with the new trace_call__foo() at sites already
+guarded by trace_foo_enabled(), avoiding a redundant
 static_branch_unlikely() re-evaluation inside the tracepoint.
-trace_call__devlink_trap_report() calls the tracepoint callbacks directly
-without utilizing the static branch again.
+trace_call__foo() calls the tracepoint callbacks directly without
+utilizing the static branch again.
 
 Suggested-by: Steven Rostedt <rostedt@goodmis.org>
 Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+Assisted-by: Claude:claude-sonnet-4-6
 ---
- net/devlink/trap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/extent_map.c | 4 ++--
+ fs/btrfs/raid56.c     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/devlink/trap.c b/net/devlink/trap.c
-index 8edb31654a68a..d54276dcd62fb 100644
---- a/net/devlink/trap.c
-+++ b/net/devlink/trap.c
-@@ -1497,7 +1497,7 @@ void devlink_trap_report(struct devlink *devlink, struct sk_buff *skb,
+diff --git a/fs/btrfs/extent_map.c b/fs/btrfs/extent_map.c
+index 095a561d733f0..9284c0a81befb 100644
+--- a/fs/btrfs/extent_map.c
++++ b/fs/btrfs/extent_map.c
+@@ -1318,7 +1318,7 @@ static void btrfs_extent_map_shrinker_worker(struct work_struct *work)
+ 	if (trace_btrfs_extent_map_shrinker_scan_enter_enabled()) {
+ 		s64 nr = percpu_counter_sum_positive(&fs_info->evictable_extent_maps);
  
- 		devlink_trap_report_metadata_set(&metadata, trap_item,
- 						 in_devlink_port, fa_cookie);
--		trace_devlink_trap_report(devlink, skb, &metadata);
-+		trace_call__devlink_trap_report(devlink, skb, &metadata);
+-		trace_btrfs_extent_map_shrinker_scan_enter(fs_info, nr);
++		trace_call__btrfs_extent_map_shrinker_scan_enter(fs_info, nr);
  	}
- }
- EXPORT_SYMBOL_GPL(devlink_trap_report);
+ 
+ 	while (ctx.scanned < ctx.nr_to_scan && !btrfs_fs_closing(fs_info)) {
+@@ -1358,7 +1358,7 @@ static void btrfs_extent_map_shrinker_worker(struct work_struct *work)
+ 	if (trace_btrfs_extent_map_shrinker_scan_exit_enabled()) {
+ 		s64 nr = percpu_counter_sum_positive(&fs_info->evictable_extent_maps);
+ 
+-		trace_btrfs_extent_map_shrinker_scan_exit(fs_info, nr_dropped, nr);
++		trace_call__btrfs_extent_map_shrinker_scan_exit(fs_info, nr_dropped, nr);
+ 	}
+ 
+ 	atomic64_set(&fs_info->em_shrinker_nr_to_scan, 0);
+diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
+index b4511f560e929..0b5b2432aedf6 100644
+--- a/fs/btrfs/raid56.c
++++ b/fs/btrfs/raid56.c
+@@ -1743,7 +1743,7 @@ static void submit_read_wait_bio_list(struct btrfs_raid_bio *rbio,
+ 			struct raid56_bio_trace_info trace_info = { 0 };
+ 
+ 			bio_get_trace_info(rbio, bio, &trace_info);
+-			trace_raid56_read(rbio, bio, &trace_info);
++			trace_call__raid56_read(rbio, bio, &trace_info);
+ 		}
+ 		submit_bio(bio);
+ 	}
+@@ -2420,7 +2420,7 @@ static void submit_write_bios(struct btrfs_raid_bio *rbio,
+ 			struct raid56_bio_trace_info trace_info = { 0 };
+ 
+ 			bio_get_trace_info(rbio, bio, &trace_info);
+-			trace_raid56_write(rbio, bio, &trace_info);
++			trace_call__raid56_write(rbio, bio, &trace_info);
+ 		}
+ 		submit_bio(bio);
+ 	}
 -- 
 2.53.0
 
