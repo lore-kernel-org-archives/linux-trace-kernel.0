@@ -1,36 +1,44 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097EA38C42B;
-	Mon, 23 Mar 2026 10:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED14639098F;
+	Mon, 23 Mar 2026 10:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774262424; cv=none; b=Z64fkQWAfbsXt83lcXv7dRDcVar3uOwEqN2p5Q2QKDeaAyqgcs5G+ksqrva3z0rqfb7sEHBEoyxHa6+PE9S0xDADOc/uYhQFjBi8VmVzR35UXs5TYsUA5UYdgV4cLDflZKKDHbCdDDcUjt28Gcp8AEeWg6IS4geQTwTm02qzLNY=
+	t=1774263412; cv=none; b=IdqjjiAmed+oAG9bQVbx3anRl4o+IJJWSAW4u7vLtPZS1AybNiv+qD+lMd5iaF7Vx2WwikaccAdKZxTRe97/IvIEjUyABl0rFe6CKs/Lwi9X+XsF/+mNiRuF4ufcT8EIihqzzHYrwmXg3Xhf5dtdbVZE43QvwW1UI416BZRVDB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774262424; c=relaxed/simple;
-	bh=1hCCkmQUs0bLrA/OH4MBJ4sc2NkuG0D52C4RqPnGYSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W+gZTXtOFPNVobH5G9iULe/0ejxJ+rYQyIAI8R/VzFQcxXXsDja6CjwYYTEE1Ls/a0ZbutUtDHhoIUFzhFn92+Vn+Hz43FzY2JlX5Fwy6U950jb5IqTMITBTXKq54hoBgjkplrbIpWFyeLaF8VIcFiQ/AdJAYBU7TiyytBFn8f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-208-105-007.092.208.pools.vodafone-ip.de ([92.208.105.7] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1w4cOk-00000001Wr7-16Ro;
-	Mon, 23 Mar 2026 11:20:38 +0100
-From: Martin Kaiser <martin@kaiser.cx>
+	s=arc-20240116; t=1774263412; c=relaxed/simple;
+	bh=z1xhwzaARyNzuXX3osp8vX55EEiIeSnvx60kQvGXFXo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FeCyh6ekYj1yvKqB3ZKktZ5ItZSwocMt59fTSdsufhLUQNFZkHSfQE2eXoSpOpri/htwU/Nbc8v+Gol46iLXh0McTUuPbZSm844z+MLeRpLdIpGC4fsSQHuUWKH7H4po+rLjDkCBXvXjXmWjhIstwSZWelZJU6Mp/cQYFPE+Xdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNlKCnmC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNlKCnmC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C4BC4CEF7;
+	Mon, 23 Mar 2026 10:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774263411;
+	bh=z1xhwzaARyNzuXX3osp8vX55EEiIeSnvx60kQvGXFXo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VNlKCnmC+m4HxNRedUUp9sCW7E9GaLd4XZLf0Ubw64l61GxrL7ak/CeVMyWnloB+B
+	 JOFd2LMClPf+YtPnW/6NFnKdE/v3YqTkes6vC3SQsn5zIhfeo8DmA4GED5noMUp/W3
+	 lgjellLGmhW+I4vl66rWvyGzcwvBgh6Bv+q4ZASJLXARW2IeUhqsQb6FnhFQtjhM1i
+	 mvhDx29Sc4Jhab0mGwtB+es4F1kk444OqH2LZqIQayN7YXIZQD4uLeTGyjQe9eitge
+	 cU1UUL0GUpFq7BteyiimIjtVW2ppkhmkFdv1Pqxtl+mTbs+3eAqF5ekHdEtvVca8fd
+	 tAgVs+ti1lZGA==
+From: Arnd Bergmann <arnd@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Vincent Donnefort <vdonnefort@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>,
-	stable@vger.kernel.org
-Subject: [PATCH] tracing: fprobe: fix the length of unused fgraph_data
-Date: Mon, 23 Mar 2026 11:19:36 +0100
-Message-ID: <20260323102020.239567-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: samples: avoid warning about __aeabi_unwind_cpp_pr1
+Date: Mon, 23 Mar 2026 11:56:41 +0100
+Message-Id: <20260323105646.590718-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -39,32 +47,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If fprobe_entry does not fill the allocated fgraph_data completely, the
-unused part is zeroed with memset.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Fix the length for this memset call. Both reserved_words and used are in
-units of return stack words, but memset needs the number of bytes.
+The now more verbose check found another symbol missing from the whitelist:
 
-Cc: stable@vger.kernel.org
-Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+         U __aeabi_unwind_cpp_pr1
+
+Add this to the Makefile.
+
+Fixes: 1211907ac0b5 ("tracing: Generate undef symbols allowlist for simple_ring_buffer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/trace/fprobe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index dcadf1d23b8a..6a1192515afd 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -451,7 +451,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
- 		}
- 	}
- 	if (used < reserved_words)
--		memset(fgraph_data + used, 0, reserved_words - used);
-+		memset(fgraph_data + used, 0, (reserved_words - used) * sizeof(long));
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index d662c1a64cd5..aba6a25db17b 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -169,8 +169,8 @@ targets += undefsyms_base.o
+ # because it is not linked into vmlinux.
+ KASAN_SANITIZE_undefsyms_base.o := y
  
- 	/* If any exit_handler is set, data must be used. */
- 	return used != 0;
+-UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
+-		      __msan simple_ring_buffer \
++UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __msan \
++		      __x86_indirect_thunk __aeabi_unwind_cpp simple_ring_buffer \
+ 		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+ 
+ quiet_cmd_check_undefined = NM      $<
 -- 
-2.43.7
+2.39.5
 
