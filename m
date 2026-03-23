@@ -1,57 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A06E3CBE9B;
-	Mon, 23 Mar 2026 17:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717033C9EDD
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 17:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774287744; cv=none; b=MSqr6nilHNHWLWKL67x28Ovvf6ZJrGihPdd3iYV/u/+9klpObayZxwH9i+cy1g7nxQyCHdly9nBmz2pfGEkddKMuI0i2+S8N6Vm6FqNiHPvlGAC9Q20tkbqgVeLDl5EluLMNIp8rcXgbOpJMlYI1yoL86CAt54C5Zl76yhJzCaA=
+	t=1774288408; cv=none; b=fXVr2qLwPdNiarD0gM5boQ9gt3VJJcSwmWLsGehvnbRg7yWuBF6m7+y885XjS7cgjDDGXQHj0nEMtRGI+okLp29RKiWr469I+hATQLEMV4dQ+2AmxxNxltLirL4ATO7Vwtsv2g2g61sdOvK1/e0BvCvvLbszw3RshBFo7s7gU7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774287744; c=relaxed/simple;
-	bh=tV8VB/MvjswR9X2QWfGGB2iCl5dwxmUk2Sf8iHpsbSw=;
+	s=arc-20240116; t=1774288408; c=relaxed/simple;
+	bh=wABEVCaymgDsOAF1C8bFFBLnXQtbAubY7mopUnaE2lE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F7A9gIUSEvoPGK8iPEKeo7dInUZV1XXE/yX0GmXvBg6HLWHg2DzXHpPHSanCTPCelzf/WPxwwkUXIRgo9mfuspwWkV/jkkGsZtWiHicG/zTxdFx2B0pzwlg6R/8fFEQgeY2PvlKGYWGBlhs9f7nfzTgSUqWibaX+Uw59GGRS/3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfeFRz40; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QTxgeAuK8regupg0IJb4dRFZknd7MYyvIA4+g6ryXzeKKKrt+sm+xO5+2rYyLAvQ/vr1lhS40nT7ElF7kkx7ak+aUS99ceNRyg5M9u51x3KwOmvsEpKjTR9SirXNJH9idfiBDKG6bekOJvVIJ7PCaNOux3mjYFN+fyKOguiCVTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q9xCa/0A; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9IZe8hZK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q9xCa/0A; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9IZe8hZK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfeFRz40"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C84C2BC9E;
-	Mon, 23 Mar 2026 17:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774287743;
-	bh=tV8VB/MvjswR9X2QWfGGB2iCl5dwxmUk2Sf8iHpsbSw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GfeFRz40xYwHdw1YaDgLp4KP5s69PwlNE1KUyDAcxjCZRCMegOp07zxFBGagbj+df
-	 iwSTtksVXdCWDdDkKs5umeNLhlFl6ZI5qa63x3T61czhrODMpi8lO2MVczb6OOekSM
-	 I9p1QUsOI+XG3hYCEHKXTc0sqxICDqeXeB9WVXXRohhq3658ZjA0W2LFpQvcbaO2hX
-	 dC7hv7RBQTd50IvW/gt+mP7FHkUP6PlY0l9u1Nop8/Ff+n9AjyQyjhyd+yQ+bAM4kV
-	 5K8GchxfVySXgbtSt0bWE8QPNl2vANa+BQbWuWhKP6tRijhzizCD737Eqyy05F3iqe
-	 KTbsq6DwMlFSw==
-Date: Mon, 23 Mar 2026 07:42:22 -1000
-From: Tejun Heo <tj@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q9xCa/0A";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9IZe8hZK";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q9xCa/0A";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9IZe8hZK"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BD3BD4D364;
+	Mon, 23 Mar 2026 17:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1774288405;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iiJSeib8y2tud2R3DO0GagCuPq+oG5UXOA7+MtsD6X8=;
+	b=Q9xCa/0A878LAsjrb9GpKyTJ5sENDwBnVZ6soEMCamUg7IHmxM1PFIm6teIbEGHi+NhjmJ
+	ecmI0X4sWjhGdncsvZK/WzqlPJEpjvhMYoj47pUdiMeEfisBsJQq1IW6PXpIkaY21PHW7z
+	qDX7Z3QXsX1lzTIpJcyLbo0h1iJTWAI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1774288405;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iiJSeib8y2tud2R3DO0GagCuPq+oG5UXOA7+MtsD6X8=;
+	b=9IZe8hZKLVCMqKMQm+mElS1xXFLwK8up+zge414uSCVKUrm2ePr6hs8+DDVzwK0XqbwcYL
+	q+YHuouj/2VaLODA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1774288405;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iiJSeib8y2tud2R3DO0GagCuPq+oG5UXOA7+MtsD6X8=;
+	b=Q9xCa/0A878LAsjrb9GpKyTJ5sENDwBnVZ6soEMCamUg7IHmxM1PFIm6teIbEGHi+NhjmJ
+	ecmI0X4sWjhGdncsvZK/WzqlPJEpjvhMYoj47pUdiMeEfisBsJQq1IW6PXpIkaY21PHW7z
+	qDX7Z3QXsX1lzTIpJcyLbo0h1iJTWAI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1774288405;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iiJSeib8y2tud2R3DO0GagCuPq+oG5UXOA7+MtsD6X8=;
+	b=9IZe8hZKLVCMqKMQm+mElS1xXFLwK8up+zge414uSCVKUrm2ePr6hs8+DDVzwK0XqbwcYL
+	q+YHuouj/2VaLODA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4BA8B439D7;
+	Mon, 23 Mar 2026 17:53:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hCJIEhV+wWmBdgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 23 Mar 2026 17:53:25 +0000
+Date: Mon, 23 Mar 2026 18:53:24 +0100
+From: David Sterba <dsterba@suse.cz>
 To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Roman Kisel <romank@linux.microsoft.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org,
-	sched-ext@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/19] kernel: Use trace_call__##name() at guarded
+	Peter Zijlstra <peterz@infradead.org>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 15/19] btrfs: Use trace_call__##name() at guarded
  tracepoint call sites
-Message-ID: <acF7fhKhGFWQfAk-@slm.duckdns.org>
+Message-ID: <20260323175324.GP5735@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
- <20260323160052.17528-3-vineeth@bitbyteword.org>
+ <20260323160052.17528-16-vineeth@bitbyteword.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,9 +92,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260323160052.17528-3-vineeth@bitbyteword.org>
+In-Reply-To: <20260323160052.17528-16-vineeth@bitbyteword.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FROM_HAS_DN(0.00)[];
+	URIBL_BLOCKED(0.00)[suse.com:email,suse.cz:replyto,infradead.org:email,goodmis.org:email,twin.jikos.cz:mid];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,goodmis.org:email,suse.com:email,twin.jikos.cz:mid,bitbyteword.org:email,suse.cz:replyto,infradead.org:email]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
 
-On Mon, Mar 23, 2026 at 12:00:21PM -0400, Vineeth Pillai (Google) wrote:
+On Mon, Mar 23, 2026 at 12:00:34PM -0400, Vineeth Pillai (Google) wrote:
 > Replace trace_foo() with the new trace_call__foo() at sites already
 > guarded by trace_foo_enabled(), avoiding a redundant
 > static_branch_unlikely() re-evaluation inside the tracepoint.
@@ -74,9 +132,4 @@ On Mon, Mar 23, 2026 at 12:00:21PM -0400, Vineeth Pillai (Google) wrote:
 > Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 > Assisted-by: Claude:claude-sonnet-4-6
 
-Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks.
-
--- 
-tejun
+Acked-by: David Sterba <dsterba@suse.com>
