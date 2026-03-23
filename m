@@ -1,98 +1,82 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BBF3B9600
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56373BA23B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774281677; cv=none; b=WYThf0+RWpnABrNRGd9v942fP92qoNsVfMygaPSoKu0AQ7I09VIcadeo5Fhf0NgTup8X+L87EOafW8f2PAQdMp0QMmDh02Bk6fI89MGkzbRMqlAuiMXKHbtjY627JnqXghFt4vFU33DTVXKlLOn0vYjI+uNW/Tn24Oo/Bg4inAI=
+	t=1774281678; cv=none; b=k8FLSdxBJ8rlgHi6qPuH101zHm44Kevzb+ocuksQg5ru5ukpKqvPGuz6ZkRdzZ2nvZPgN1q0LcWxWP3tLfUvF+t3QW6DgaYscZz9gQ4X3ropXXmvlb87PPpvZ91UdJ+hupqdid2MLn+6rKRYu2l14LkSCuLHIkpQW5Ogkci4Mhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774281677; c=relaxed/simple;
-	bh=xyAGaEXQZTWs4DlMf28kBT1WbT71fLVTUKX8/OJIrfo=;
+	s=arc-20240116; t=1774281678; c=relaxed/simple;
+	bh=UYWQZ2GP0U++mha636tNmQDeDr1xCrJ4Hne/HQIGbQk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kW45t5hNlWhEck7SETnVBX7QRsFCS8XrW1pELB+IIvtCkoL/Ru6lzKFMYbgdELUIxFDiJrS2GI2VVb82cY5RWTUMsVwoqgykfmOe5PjWXZi7Uo13hGXSwK3ffLo+ZwPAOEbs0p8pAELjbh8lvuG368cWwhLZ9dclTTtjC1o19qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=tCiidTFQ; arc=none smtp.client-ip=209.85.222.182
+	 MIME-Version; b=OG/uOLiS1KcHPzuivpjd5F9kCGZ5ZOo52GMoFGMHwT4jflR14eGdiA0n2E+LLe2ck2MbgzFuzar8UoSc4HQXHvR314SWRUYZROY8RC793F+sbKJsE10HFlBpuqasmZ2Zej5PZa57865jAx14c+PeDFmmY1QzviZjmQXtzSZjjZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=MRJeYg/5; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="tCiidTFQ"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8cd8a189f44so441417185a.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="MRJeYg/5"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7d7eb85fb81so347626a34.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bitbyteword.org; s=google; t=1774281675; x=1774886475; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zzezBvlbzIGXplopQPhzXRTVv1p4U7sUNeKcBaGOoCw=;
-        b=tCiidTFQ7qgvwelsnitMx+MlaYKCt1PDy488Bos+z0M4gALZSPysD6uED5Lay1Joil
-         o8MKnT0KuetxDzQMFZnGLqUvPU+EIztk0uBmJwlI6eJIGZhPrd8lBeL+t9WHoYThcJba
-         hWIWVfuj8x7/1r98kVmYsF0rS4+20hskeiQdqClLDSdXxCr6Qoxh7KfSJVLMpL+dnoxR
-         YiEawU+vuIhGIvv5EgoxcHSsL8VgaAGmhEEWkBWclrzj7kyEou40xDqPsMG/GF4cLmJZ
-         1L5hql6AHYCMgViigflIQ1coZ80elgn5igKHIQUkz2TCZa7DGkooLhtzCi1e2BFsxuLZ
-         WbiQ==
+        bh=alZhVdYENKaCgEyuFWCx1ONcWxmGf0Z0mu4iI7gLWPk=;
+        b=MRJeYg/53vCtQQdVZ5EGQ7rzA+mX1UXmCi8u38vZSN1PYY7KKlq25mnhrJGEoqSJTt
+         6/jmy57s5FIbDh0shGos4MkijwsPQJU7CflSO56jAS5naxUG+NAp7Tdu2WjGEtWQqCN0
+         HeXUCFFNUbeM6LRFjkI3Y1edH9JTHvjI5pqdEJboiuAScB/JI7zgrSAG8eHPcJ5qiGTi
+         JJTlYDxlUSjDs7Dm4VapwPFU0XgLi78A8Ty5M+Wzhm2NV8BmO4CYcJPGZvwEaDILXUsB
+         RyMeUxDP1j5wQ5RlyZlM/zEsWLhW6PcPpVuA/m4p9Vr5reHLRhKIX54Cz6mKnJjpMi8J
+         m8DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1774281675; x=1774886475;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=zzezBvlbzIGXplopQPhzXRTVv1p4U7sUNeKcBaGOoCw=;
-        b=ETxjWPpJru6b1vUFg1CUv5a1IPlYZTaRzbz/4Qvfnb47TeZzvvNt0o4pax8l03ktkf
-         ssLMp/t+PzK5M6YYTTguxB0xG48PvrsGzGWMbPCrHh3NVWQoVvsSHxJvC4XomDn45FdX
-         m0DgEwyVE5sF6u1YlKwW3vj+lW3t2aDOM9I48mswDhw3LgF0aA3duy0xRzodN0HO6PlU
-         5ZSURXcUjRwdbGUd+JVEXT0Sh8DodgSWpsKCqNnBnyX2v5ITsiofq1Zya/zG20mVqUnJ
-         APrZ1QlqA1m+4udE/lnFFCT+tRDbIZOZn9HTzfQCcjfg/jWcSls88EwtOb0UtDsoXMPy
-         YEEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4TESZ2NJHYjN1i1u0fAjXGjOVUaxCpapf7Ck5WzEeD7Wrn66iLCyXBCDc+Fj1NOP19zLqJRqADQUBd5fCXVttFbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMvCz8XOAAfvuhZGNaAiFbh3fSg2w+j69+cVcNh8TEZLxz+9wC
-	hzfNLRoDxtCGO8UPIei111cd916DGjCWU5LkojJxOHT83N5pknXjV92+bBg+/gOoYgM=
-X-Gm-Gg: ATEYQzx5ylPwxmMN0ycx51oFCFEqmdXdR+gr1XgCVFse0D8+B4upZfxqgdrjQuaWhbQ
-	o/7mUDrIco/L3n39P1qgG+On75vHD4Ym2UE6sKhPcfUQVUTPK86B7f0WC0vd9arEJwjMjwnEsxl
-	hWal8ktKXKsJaFyF8XD7d2OZekJ31FWvEuYUkg6UygafRzR1RyJhKg6wnwMDnUEFxCXKVTYHtKB
-	guyxWOrMwm6IkImmfYHObsplyoUAQ5HvOZR+rdtPWKAO9e42LTGbAzDY78FjUH6nSjB8c2TxYuf
-	nxZ3VltZLM+ikxHYLlV+oOgH9vLspIdn9L51OWgqDz2ckQCbdflSs27LurrAE1ggoJgVKEb7F1q
-	Umz3LQNwgMuZRC0PszNGVwXtUVdeVY24kYz/0k/QSz351LdUjIV6r9zHh+C/oVz/9LVovTdgXEm
-	zu7YKCegDs1cBsOo6DxpwaNvtc7jUgV3G2f7M4/oa1IcZe336xdgMne9BfzY7uYRM0tA==
-X-Received: by 2002:a05:620a:4594:b0:8cd:75df:f2fb with SMTP id af79cd13be357-8cfc80dd30cmr1961607085a.65.1774281669680;
-        Mon, 23 Mar 2026 09:01:09 -0700 (PDT)
+        bh=alZhVdYENKaCgEyuFWCx1ONcWxmGf0Z0mu4iI7gLWPk=;
+        b=QlKmrTPLV17dJIp0+eZEJkiEehb+B61OBN8CYKhPyv6VrMY46Ohj25h9ljtsJIPsLo
+         ZJfzpsITb/Kcc3ZGpDaSUUslAL64LPXQTl/+eACm4tPcW6tAaq+Jffh7wTiVfrM9Vh+l
+         //nPdk2DBsQtNWI5MAVs52xyoo4th2cXwdwAab/UjeZCHS7lLtXC6fY9zJKf7dYIFmE3
+         mtULXRHPLcmvHH9Bpwlxv7g8zR3D/GQMtL+aug8pKY39RmVUOJrwQJx1XQCNspOhRVYt
+         7WeqtYghJGE4IXPIuWtKeodkuCpoCqNEG+KhEj1ddf6avM+7ko7SwktPRM3GJVxAR5CM
+         GruA==
+X-Forwarded-Encrypted: i=1; AJvYcCW86JVO3UC4Fk7syQBlTuDjtrYq48uI9ePOFP9AhbRZDjE+Hr7PAi6lEa1Kw/b1ZJBOrdJyBs/q/lxql95yiyV/YEQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznQrIrv19phacfkluXtMHU8AfH8IDn8JOafaXRhPd/p11FBSng
+	4ER5W+9hrRaWi1GBlrwBGN/SY6myrFi5hGdx6+r9tCPKdj4DD0Gu88cZQcIT7QjMTDc=
+X-Gm-Gg: ATEYQzyFgz0qqH2Rj5WkJx7N/mhETskqITS9bLcsCyV0PWtgDODI5quHP02hbessUGo
+	OlBHfF2LBqYrw4BfE6ftGRyPGipzMVRbr9WpSBNXrq305sifMZmRVgvGCsPw0P28UC2WBKoe5GX
+	SqiQmuhzbyTLHjT09HueoyDI9Mk65ZZHnN921jh5UBfZcRPbg4mhKsD7Ejc0qRhHyng98NrBqws
+	JA945hcsb4KNMUtZwiw3M37uQ1QpjOS37ZZG/2Eg08gSzDTBHQb0KfINnyZGDx31KXc3xVbQWjo
+	dgpHGabyE6rMieEdsiGuJ1c+48LcdewgJ8WC75s09Uty/fmgytYVfNrqUAOIM4F3KOThqBbh/jw
+	INQpCPsSvBP6QDvRgr6aoF8sCLHH5IEO39cVR9V3XPzZh3XuVwviOXSbERnMW+85zSnEyg2h6Al
+	CjHK49XXa3w+0kwPS77Jnz4xmimu7rgQ0XWB2Y1gCtZf4n2Auf7ErTQpvxSemeJbsXXA==
+X-Received: by 2002:a05:6820:1a03:b0:67b:f147:4cdc with SMTP id 006d021491bc7-67c22fe7998mr10114283eaf.64.1774281675182;
+        Mon, 23 Mar 2026 09:01:15 -0700 (PDT)
 Received: from vinmini.lan (c-73-143-21-186.hsd1.vt.comcast.net. [73.143.21.186])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.07
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 09:01:09 -0700 (PDT)
+        Mon, 23 Mar 2026 09:01:14 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 To: 
 Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Aaron Conole <aconole@redhat.com>,
-	Eelco Chaudron <echaudro@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Jon Maloy <jmaloy@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Hangbin Liu <liuhangbin@gmail.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	netdev@vger.kernel.org,
+	Huang Rui <ray.huang@amd.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	dev@openvswitch.org,
-	linux-sctp@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 04/19] net: Use trace_call__##name() at guarded tracepoint call sites
-Date: Mon, 23 Mar 2026 12:00:23 -0400
-Message-ID: <20260323160052.17528-5-vineeth@bitbyteword.org>
+Subject: [PATCH v2 06/19] cpufreq: Use trace_call__##name() at guarded tracepoint call sites
+Date: Mon, 23 Mar 2026 12:00:25 -0400
+Message-ID: <20260323160052.17528-7-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260323160052.17528-1-vineeth@bitbyteword.org>
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
@@ -115,92 +99,86 @@ Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 Assisted-by: Claude:claude-sonnet-4-6
 ---
- net/core/dev.c             | 2 +-
- net/core/xdp.c             | 2 +-
- net/openvswitch/actions.c  | 2 +-
- net/openvswitch/datapath.c | 2 +-
- net/sctp/outqueue.c        | 2 +-
- net/tipc/node.c            | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/cpufreq/amd-pstate.c   | 10 +++++-----
+ drivers/cpufreq/cpufreq.c      |  2 +-
+ drivers/cpufreq/intel_pstate.c |  2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 14a83f2035b93..f7602b1892fea 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6444,7 +6444,7 @@ void netif_receive_skb_list(struct list_head *head)
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index 5aa9fcd80cf51..4c47324aa2f73 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -247,7 +247,7 @@ static int msr_update_perf(struct cpufreq_policy *policy, u8 min_perf,
+ 	if (trace_amd_pstate_epp_perf_enabled()) {
+ 		union perf_cached perf = READ_ONCE(cpudata->perf);
+ 
+-		trace_amd_pstate_epp_perf(cpudata->cpu,
++		trace_call__amd_pstate_epp_perf(cpudata->cpu,
+ 					  perf.highest_perf,
+ 					  epp,
+ 					  min_perf,
+@@ -298,7 +298,7 @@ static int msr_set_epp(struct cpufreq_policy *policy, u8 epp)
+ 	if (trace_amd_pstate_epp_perf_enabled()) {
+ 		union perf_cached perf = cpudata->perf;
+ 
+-		trace_amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf,
++		trace_call__amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf,
+ 					  epp,
+ 					  FIELD_GET(AMD_CPPC_MIN_PERF_MASK,
+ 						    cpudata->cppc_req_cached),
+@@ -343,7 +343,7 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
+ 	if (trace_amd_pstate_epp_perf_enabled()) {
+ 		union perf_cached perf = cpudata->perf;
+ 
+-		trace_amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf,
++		trace_call__amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf,
+ 					  epp,
+ 					  FIELD_GET(AMD_CPPC_MIN_PERF_MASK,
+ 						    cpudata->cppc_req_cached),
+@@ -507,7 +507,7 @@ static int shmem_update_perf(struct cpufreq_policy *policy, u8 min_perf,
+ 	if (trace_amd_pstate_epp_perf_enabled()) {
+ 		union perf_cached perf = READ_ONCE(cpudata->perf);
+ 
+-		trace_amd_pstate_epp_perf(cpudata->cpu,
++		trace_call__amd_pstate_epp_perf(cpudata->cpu,
+ 					  perf.highest_perf,
+ 					  epp,
+ 					  min_perf,
+@@ -588,7 +588,7 @@ static void amd_pstate_update(struct amd_cpudata *cpudata, u8 min_perf,
+ 	}
+ 
+ 	if (trace_amd_pstate_perf_enabled() && amd_pstate_sample(cpudata)) {
+-		trace_amd_pstate_perf(min_perf, des_perf, max_perf, cpudata->freq,
++		trace_call__amd_pstate_perf(min_perf, des_perf, max_perf, cpudata->freq,
+ 			cpudata->cur.mperf, cpudata->cur.aperf, cpudata->cur.tsc,
+ 				cpudata->cpu, fast_switch);
+ 	}
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 277884d91913c..58901047eae5a 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2222,7 +2222,7 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+ 
+ 	if (trace_cpu_frequency_enabled()) {
+ 		for_each_cpu(cpu, policy->cpus)
+-			trace_cpu_frequency(freq, cpu);
++			trace_call__cpu_frequency(freq, cpu);
+ 	}
+ 
+ 	return freq;
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 11c58af419006..70be952209144 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -3132,7 +3132,7 @@ static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type, in
  		return;
- 	if (trace_netif_receive_skb_list_entry_enabled()) {
- 		list_for_each_entry(skb, head, list)
--			trace_netif_receive_skb_list_entry(skb);
-+			trace_call__netif_receive_skb_list_entry(skb);
- 	}
- 	netif_receive_skb_list_internal(head);
- 	trace_netif_receive_skb_list_exit(0);
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index 9890a30584ba7..3003e5c574191 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -362,7 +362,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
- 		xsk_pool_set_rxq_info(allocator, xdp_rxq);
  
- 	if (trace_mem_connect_enabled() && xdp_alloc)
--		trace_mem_connect(xdp_alloc, xdp_rxq);
-+		trace_call__mem_connect(xdp_alloc, xdp_rxq);
- 	return 0;
- }
- 
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index 792ca44a461da..60823de201417 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -1259,7 +1259,7 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
- 		int err = 0;
- 
- 		if (trace_ovs_do_execute_action_enabled())
--			trace_ovs_do_execute_action(dp, skb, key, a, rem);
-+			trace_call__ovs_do_execute_action(dp, skb, key, a, rem);
- 
- 		/* Actions that rightfully have to consume the skb should do it
- 		 * and return directly.
-diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-index e209099218b41..2b9755e2e4731 100644
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -335,7 +335,7 @@ int ovs_dp_upcall(struct datapath *dp, struct sk_buff *skb,
- 	int err;
- 
- 	if (trace_ovs_dp_upcall_enabled())
--		trace_ovs_dp_upcall(dp, skb, key, upcall_info);
-+		trace_call__ovs_dp_upcall(dp, skb, key, upcall_info);
- 
- 	if (upcall_info->portid == 0) {
- 		err = -ENOTCONN;
-diff --git a/net/sctp/outqueue.c b/net/sctp/outqueue.c
-index f6b8c13dafa4a..4025d863ffc84 100644
---- a/net/sctp/outqueue.c
-+++ b/net/sctp/outqueue.c
-@@ -1267,7 +1267,7 @@ int sctp_outq_sack(struct sctp_outq *q, struct sctp_chunk *chunk)
- 	/* SCTP path tracepoint for congestion control debugging. */
- 	if (trace_sctp_probe_path_enabled()) {
- 		list_for_each_entry(transport, transport_list, transports)
--			trace_sctp_probe_path(transport, asoc);
-+			trace_call__sctp_probe_path(transport, asoc);
- 	}
- 
- 	sack_ctsn = ntohl(sack->cum_tsn_ack);
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index af442a5ef8f3d..5745d6aa0a054 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -1943,7 +1943,7 @@ static bool tipc_node_check_state(struct tipc_node *n, struct sk_buff *skb,
- 
- 	if (trace_tipc_node_check_state_enabled()) {
- 		trace_tipc_skb_dump(skb, false, "skb for node state check");
--		trace_tipc_node_check_state(n, true, " ");
-+		trace_call__tipc_node_check_state(n, true, " ");
- 	}
- 	l = n->links[bearer_id].link;
- 	if (!l)
+ 	sample = &cpu->sample;
+-	trace_pstate_sample(trace_type,
++	trace_call__pstate_sample(trace_type,
+ 		0,
+ 		old_pstate,
+ 		cpu->pstate.current_pstate,
 -- 
 2.53.0
 
