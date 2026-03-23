@@ -1,75 +1,78 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B273D3BD25E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB693B95F2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774281692; cv=none; b=KCb6ULvF+265KDSkIYg0ZBry7oVb1sPcQjmjsSZYkJnvPK4RdcCm8Q5Z/97KL70aN0hvAmlsSg+YgEwStelLG/1fjAPArxCgrsoFzE2IboIE5n8wDsZT1dw/bVZunwqp2WYrXoFFsba1yvsYVVFKL/6jJZ31NaWaj466qKbppeQ=
+	t=1774281693; cv=none; b=L1lnBGbFzEA+GbL8ceHvLOoR1MOnDYX5D3KUYOfeVTxlF3vyWFIqOLKMc8XxUJmPVEwY7o2fHK80TYlo922jkmcVcG4a5ElzgISqdaMglAERfSRJryoEVI6+m+V4k3Xd74BumUX1JYKqC7T64xiwQRyYAfLa4Tt6OYOODWnaQtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774281692; c=relaxed/simple;
-	bh=c6f01OsvTiyXVnZWo8PZotkO7JnabjBxlucvDk2sbbU=;
+	s=arc-20240116; t=1774281693; c=relaxed/simple;
+	bh=F6O9RM5RWYDbuGEigv+0eVBvS1g36eOTG/dr1zB+7Eg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dA4VZt+SiF12H/cHfRwVdzgXC06UCBgqWZGMJSf/3sGCfky4DHtbsj2oZCkTQuTQldVK8UEdjLV1pDYjqZXgo/UFahN9vRZZOS/RIFmniNakIQaO0U+lU2MhNpoAirueYTzeDLIVwGT24bLFJlPrkWJV1RBMYSe5r4eRX4anrj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=H07E0vD+; arc=none smtp.client-ip=209.85.210.53
+	 MIME-Version; b=HkE2BpLGSY/c2TOOBcCtbyxEzv7ebnzgtw1tODpk5rE286+VKgZJ5kOcaUqOs/+v99Zicdzcay9txUONWJ6EtDXwAsPUSTGm7S3Bx3vP0KQr/4XKBd5J/j6Ht2JXvnu+OcwdE125N8MYp7ngp7DacBJ95v3dDgXY+KYaVMCJMTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=tQzSNPtH; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="H07E0vD+"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7d77b179b52so224685a34.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="tQzSNPtH"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7d750eeaec3so1228879a34.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1774281689; x=1774886489; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1774281691; x=1774886491; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nIpGiwlR+P+YjF46voPKMTMFtfqJy7FG3o7efUKpfWo=;
-        b=H07E0vD+EJFb7Rj7CpD+riSDXztheoLAJz7gJHTfBQOt5mkC6KnZxa0P5Qtx+U8B7W
-         xWdeblvbFUoWhP3UZApKDfnzYDq35+M8dkNJDFwpGx+HDQIy/ktFTsNbTla6P0tDT2Nm
-         FONT01pV66JZlZIybBnvc7fqdIHaOx1Rm6d8BIZ2Ss9w1XcQGKYZFhulUfQrZ2xQQmKY
-         rA2+HbrQRh0jg+Uz2ngR6wW7/HyAGDKG1AuZerZcWW1QD8CEUiD030sffKAYEMyGebKp
-         o5eYdrsiL8EwhHUtmCLLhFNNndr/HcfG4cwzuUgu9Fm1my8sAW/8Sub7GAJJi+fU05pT
-         1UpQ==
+        bh=evO293Sdaw2AMQFWujbeilLvnGlR8j74Ybb8MMUf0FA=;
+        b=tQzSNPtHXeGHglQAz9Wt7Z4K1HBpA5+SwfBQmd1UiP0BIZy9gAQy3k7FmVUhCJrd87
+         3AL0qbAtH7xLtXOsD3MVt75VGyp1EPE+FBq+Q+kAbA+lRpEPFe1CZ+Ku9Z4X1Pom0aEe
+         KWw2HYsSgRAR0wIiky8YUyMFd53BX6uQF6jGIaRrDwfChApiAKyY1N8+AI4ipfKIiUmy
+         xJx00qdxHCxud4vOYuJCcG6bFhwDyRXIhnhumsr/bcHsIO8/NCQlDSN0xQEqL/NByssc
+         PkKz4jryEGfselH0SUKjmx0O/zjmnFHI2qz0aIkB3VQPDkdBMy1bi3hwPA/h1hgjpTw5
+         CKNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774281689; x=1774886489;
+        d=1e100.net; s=20251104; t=1774281691; x=1774886491;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nIpGiwlR+P+YjF46voPKMTMFtfqJy7FG3o7efUKpfWo=;
-        b=C8xvnPTbPq9tY72+danG4e8PQ4M150JwektIKwBr+RORfmvJzwPfzl1UkawuXz745W
-         xI231rD99gHbSWLhu0JqqWywyq8FM5naquWJnbQeVMS94tFpAy5qVNsy4q8jdCDtCd8k
-         0WEEbhD/QAav3ywarg833LRZtTUEF2k+ywXCsUez4LtmkT/AxCWQbV1OqXOvqWWw9HBg
-         h0GJbmQ0pAzOhvgSNilLVLorEK3GMvBwhjzJxrfqsghaZHlAnXCPMsvux8+FmFb3LKVS
-         UOZ4ZtOpib+XSpMyQgN0aWei4pKA5j+oe8LryE3DF+9dcJdeTpn3w8XAL/+/39AE4qqs
-         fwDw==
-X-Forwarded-Encrypted: i=1; AJvYcCX20QpDnsEBfpkvnW6YlUbAAEgUlpdKiaCXPxqb+oIlUYOj7kedvnG03Cr1JH3yJvCOGLbeMuXChBnWK9YMKGZ/4BQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBS3aKz7dg5hz+lsbsnEkA3BQbPYxOOASsKJhYhY+OXZgAgmQC
-	djU7QyyDPRtps2mEu3FkmFhCzmsxFA/HOiGVNRYS+KENwxhbhGrVvJsJxvFycBCY+dE=
-X-Gm-Gg: ATEYQzx87/9mqt6GRuyG0WWwSMbnu/7f7uLUEYdFWEBUE061bhlZ/jDQ7wmFUxVESsi
-	BpEzgJHg9ks785BEFLXpduf5/Jqn/NtKwxJS6v9As4mIPvW8VVHhBRXdvj00bItJyjCwZqiiHlm
-	ohm6ODfOLKQZPSd3X3QXLgXQVRYGgDT5v4nbZbRNvHk96asPZAs9tvCz/A6xFoa5ZNcQxNQuZyw
-	D2qqws0rokkFjZTyrBAkYcko4mieCaaeEIkZahXUGr58aXo6BlGxnaOaI+PP7/c5BM98d+s2CBy
-	gV15ld+wu5ceKJO/RVflLa1LDPYfottcTV56I5CEw87x0HXC5qNJltpDAy3Yo8PVLKHkzqFmIHD
-	7I74sA9/g0ZRKBNdAntwHaQzdznrDxEG8H7DUU0KOBAvvCZWaG+IVgH3M9MdoVbTlmUpq3PQKtU
-	ndUkXUYctNEx2a6wEllCQus6y0pxgFcZtvi7ZxtYk4o0RAAFOZSV/J4o0vMpiy0gvlYg==
-X-Received: by 2002:a05:6820:199a:b0:67d:e8a3:4c30 with SMTP id 006d021491bc7-67de8a34d8bmr3475554eaf.32.1774281688978;
-        Mon, 23 Mar 2026 09:01:28 -0700 (PDT)
+        bh=evO293Sdaw2AMQFWujbeilLvnGlR8j74Ybb8MMUf0FA=;
+        b=Om2ltdabid8MzQxPXgTPpaMoIhZ56K6xWzWUzMkjQYE6si+y99L8irPBejpgZKQvTW
+         hM24a7k6Ls+5lSmIWeTdeGhjBGma4nkvzn2Iyzs9hFZJBR3D0GE+26Dl9PTdEYOW+HQr
+         ZcNAvnC0lin/lFGc1A8RDLxtmpn0WCu3J74UnIKkPF7IfbmTDqhTmnrFU2YNuqBR+Nlg
+         gWdkVN1n97Uuyee1QKKFh5rZjJsaycmQHmuHgHREs25dzc6PjobBwxG5jj7KJt05PTH4
+         l1B99UiAuk4hweK1Hpnsw3eZUTBUkfkEkB2Tv0rXwxUtiizk1u+mApp3lwllq8MGfWul
+         AuPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQsspSK0UXTH0F/sViZg07HQUyiM9sKWb5Y+Nd8yzl+joLkJBEl3v5DTfGKsmxSfKSJsvvSJH9qLK5NgJuH9fOL+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztlBKdhcEVd65zm4J0umE9jjTIJgepsN885e/XQCJW+AlIhXox
+	IFo7pzH1a73v8EoQqF8atwF9gYcEjDXhJPxyE4jpc9cumnmqbbNSwAmEWEcGmXa2tb4=
+X-Gm-Gg: ATEYQzzZGmEX7TSto8dlDJsKpGZwe25KVb398IS4ShrODHOnktbD8z8vYg7JPHCOqwA
+	IImdduEfAVjAFfHyb+lt1PdYGwVSINXfaHboHERvgZnSXlrkuSLY3XR58n6jmbTxWzYjgDafOk+
+	lEdXqRFJ7M59GrbqwumjTrerIemjEtM9BQI8uWGDb71xpOxXJteixMdhl2EXKa6sIN671i8TnYN
+	/iZBsaC1nvpD0dspt9YWrpTWE4gDwdBlp4uDqv57JWTtRd5D3pDnHlYSw83WO9yzcI+RK4x8gLG
+	QMYiORtCxYUPeqwKee7I4abG8TOXoZuaceiOxhvWt6/zylLRuXRIXUKNFfApr0fLdusQ6XjVMxa
+	qmGIxn48oXZD2tQs0axImps5TFbTKkBxPxiNQXGFvePiGzGyqhzl00R9b8HOyi2CcXT5/000WSE
+	bqLP1N4CHBg5gaTnCz3/eBCQGVEc4CS0r3vdccuj8PyqhkWA6iLMfmlJjo2WVhKbY7tA==
+X-Received: by 2002:a05:6820:2016:b0:67d:e9ce:cb3e with SMTP id 006d021491bc7-67de9ced1f2mr3792594eaf.40.1774281690800;
+        Mon, 23 Mar 2026 09:01:30 -0700 (PDT)
 Received: from vinmini.lan (c-73-143-21-186.hsd1.vt.comcast.net. [73.143.21.186])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.28
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 09:01:28 -0700 (PDT)
+        Mon, 23 Mar 2026 09:01:30 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 To: 
 Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 12/19] i2c: Use trace_call__##name() at guarded tracepoint call sites
-Date: Mon, 23 Mar 2026 12:00:31 -0400
-Message-ID: <20260323160052.17528-13-vineeth@bitbyteword.org>
+Subject: [PATCH v2 13/19] spi: Use trace_call__##name() at guarded tracepoint call sites
+Date: Mon, 23 Mar 2026 12:00:32 -0400
+Message-ID: <20260323160052.17528-14-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260323160052.17528-1-vineeth@bitbyteword.org>
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
@@ -92,22 +95,31 @@ Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 Assisted-by: Claude:claude-sonnet-4-6
 ---
- drivers/i2c/i2c-core-slave.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-axi-spi-engine.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-slave.c b/drivers/i2c/i2c-core-slave.c
-index 02ca55c2246bc..bebb7ba67e30d 100644
---- a/drivers/i2c/i2c-core-slave.c
-+++ b/drivers/i2c/i2c-core-slave.c
-@@ -89,7 +89,7 @@ int i2c_slave_event(struct i2c_client *client,
- 	int ret = client->slave_cb(client, event, val);
+diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
+index 48ee5bf481738..02bbc5d0cfc50 100644
+--- a/drivers/spi/spi-axi-spi-engine.c
++++ b/drivers/spi/spi-axi-spi-engine.c
+@@ -953,7 +953,7 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
+ 		struct spi_transfer *xfer;
  
- 	if (trace_i2c_slave_enabled())
--		trace_i2c_slave(client, event, val, ret);
-+		trace_call__i2c_slave(client, event, val, ret);
+ 		list_for_each_entry(xfer, &msg->transfers, transfer_list)
+-			trace_spi_transfer_start(msg, xfer);
++			trace_call__spi_transfer_start(msg, xfer);
+ 	}
  
- 	return ret;
- }
+ 	spin_lock_irqsave(&spi_engine->lock, flags);
+@@ -987,7 +987,7 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
+ 		struct spi_transfer *xfer;
+ 
+ 		list_for_each_entry(xfer, &msg->transfers, transfer_list)
+-			trace_spi_transfer_stop(msg, xfer);
++			trace_call__spi_transfer_stop(msg, xfer);
+ 	}
+ 
+ out:
 -- 
 2.53.0
 
