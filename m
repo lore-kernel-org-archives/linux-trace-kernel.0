@@ -1,93 +1,76 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE683B9611
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11853B8BCB
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774281667; cv=none; b=kQW5g8Rx3mvepnhK5hDijAjlMkVsx22jU4aK2ED+sWkG7ZIiyLgzlcJZvFJ7dIwer5vxlT2Ww9r+IzrO0S0fCGzP87cugendvJYc3pFXNtHwEP2zsEpHcaA/PdNkTckJSpjjJvKXFELzpCtVxhuIWzWaAHexqsPGXwrksPskRyo=
+	t=1774281669; cv=none; b=pC/SVRDkNe3xP08JL52eh6I48pq68eZ9BnUgV5qy5XNTcnxSS6rT/QJd+N1YoCEXDXXWOCsy5oW1bMkBNpK02Wp9iscUSG+oUQJPJBaHy7izuZyT0EnNVleVYnMhimxwoGxUsv1ybax5ZDHOwdtesJqBJMSLSR0pkg5PkWkBR34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774281667; c=relaxed/simple;
-	bh=RwG5fnQARs5R6w5kbCyQKvg9O6oYvqfSlN2LVVEYuJQ=;
+	s=arc-20240116; t=1774281669; c=relaxed/simple;
+	bh=Hj2JhMI5b6Lafwdjdamwe1jMGPYt17fp5OkHh3BHS7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WsAJnR5NXVy1KR0eVnFOdTRp7a1Fxl1tQCFv1dW9R+DNLdN3eQvjcSY1UDUjsNj8aggAA0pP8dQgtVIJzWAdBNoOhXgf0PQPBfhs5lUawCn/hFnSb1avPfxo0nvH+HYC9tud+ORoNqSShUlOR9bHbVMIev0mE32us2fCW2wZCzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=VMd5LvXo; arc=none smtp.client-ip=209.85.161.51
+	 MIME-Version; b=MdFM339zmDMbHpc2yOtfG3VMXACs4dMPMEB4n336doFNPbTDsOEau0vAvFNvD6/dtSY/lAr5Vn5atzpKqakmiNQE1YqpOJ+E5I2spQEMOtOXBg5nOeDfXuOMIemqGcSyVB+m3c27pYSTa7nfm0AGsDBj6re2oAKt53ebNmDdRQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=Q8oFKUkK; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="VMd5LvXo"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-673ee2a98b1so1288886eaf.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="Q8oFKUkK"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8cfdac74050so233119085a.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1774281665; x=1774886465; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1774281667; x=1774886467; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g1yJLLdEgvpPxSlPF3ztc/RqimnbBJ4reWjJi17YehI=;
-        b=VMd5LvXoj5cWX3nnaIdXFw8G2NwaLVhk2MQYekXqwpVlAowqHDdW7wp/+b+jjfEJfe
-         21x7C0he67HZpV4XKugi3SsEPFv05PFXyu8EFRvt2kFv41A5bRrgQFxlxgghAsC+Ftkq
-         ahwphz5bhYsVw4U7m484wxKa575BVheyEd8IgMtPhnYnWzSbpkUY1dMrZZeo0AH8lbCC
-         CdNzWNPhW2ox/wZzOGbwBBSNy5w9o+80pxktd8gbUUj/4bXSWq0bUdzOsn2LTgQWVaeW
-         LuOYYBZuxcmoDSG7usgVSfSHUSlRV7zUQhQq/7cTA8QPc3Nq3QAUihyKkute3BnIgB8d
-         0KDA==
+        bh=a4j4tflgND4Uiq9FcYinLLfKMNOFlVvGkpZDXfO0Vpc=;
+        b=Q8oFKUkKk31RX4VSpufeeZR/L2ttmdhrNRS/xpusWMuJ3uT77h9XdawdBslPDqAxfS
+         QA4JJVHgbpliXhKVMF7XPf1vNWGvVwhLg7FTYKqqCmhLT8bmjFGXuFVuhbDld2OB4Pp8
+         UFe/LC2eQIueylGEa3HPqAVjfzBCSfMM8yfY0kPltCYPQG/zsfa71kGewEvtUK6B3nqQ
+         pT+sysiqFrsDyA0gA8tea8VFyJ+gIpuiVDN5vxxcJRCxzQVgg7FsiPc154vdyUeBXeGH
+         jYvnXi9eNUGijd+xknI9mShD+y8aK3H2hcGpVW89OGqRzcDbZ9TTb+e2hEFnTvBylti1
+         srOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774281665; x=1774886465;
+        d=1e100.net; s=20251104; t=1774281667; x=1774886467;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=g1yJLLdEgvpPxSlPF3ztc/RqimnbBJ4reWjJi17YehI=;
-        b=CNaqtL9azI4Y0uRYsdxtVgBgkpHI1yb/rTwaYZQDvaiZlPsmcaaxqNy76Y/4hKf68F
-         95tr+rM+E9sknhbXJ84ANSL8xtLHJXCJxCIOpwAEfGkM2vw/3SckoF15N9VIXSK8HXJS
-         LAXkUaiIwpiO8ZWnHlwAbGPG14Bu5WrqmU/bUZPUiJqrfjTaOF4OZmLLVopCBLQJgjhb
-         uc9a4aWOMNZ1L6KraGxICFWW9ebv4voaBZUZInXkUrAXmmeN9hOC4cApgijhFmSX+RC6
-         ZVeAP6Hdixoqby0SnLqWemOyI5gK8JhSvnArVszLGVOJVNC0mnAmv527MS6AfXXypGO9
-         NciQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXcjuSRqUmID78tj47k/lLqBSCxi2q6E+liXitzj5teWJPoAIoqqZYbboHgw1+/rRcuCvQyDvq0H9ie165+dPfa2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXpNYFnSbbphfX7tY5KJTU22dEVIeIxW6fbFOXuO88Ws87TU4P
-	iQlMy+trw/+gmmq7pj2Qfs51HncbFRbPky9oUAh/8OMqLGya6xIRHilf3xGTONpaD0I=
-X-Gm-Gg: ATEYQzyem60TRDwFRp3yud+22wNWxdSh1NoKES9F1x7hQKDicL3DxyD1LsUeRRb2ksN
-	ODjHi5rRzvNfTtMF1oqvb69oHs3gaiqLFtZ+zJ/yS2eCmj9GiQdWDWZyJj2fa6YM2lMFaIkrdal
-	8rBVeBcfEneAqiALMMBpvMkVhHzT1wuMCRY47kTnb1gsJL3k03V4/Zf5/Dq1rs5zJT7jLWJS1XJ
-	OvcWbH+0x9AGRqT76D3iZ0fXcWZdTDG3JnF+wf8+oQNommNKM1pwJR+4nLYCzw2GcFeTxcAMPnd
-	ZrrzAerOYLA4MwiAiiy757NiW8HpmXPXsPGHv9uUY3W99+6t0MvBMGYkQE+BfoZ/+ty1qLqw0Jo
-	ufPFIYdZuXsJwkTYTHe2amK8o1r3ppjhr5RbhchhPcM4uXLUSgyXG41cqIl9nqb8qmvb8UuxQ1P
-	XOlZUhqWH+Chs63GXl5+xHondjeZD0kHsxcCFzkkB3xd71lqfaggyQHgAvBTDKSfTDBA==
-X-Received: by 2002:a05:6820:4b06:b0:67b:c567:eebf with SMTP id 006d021491bc7-67c22f0e394mr10655470eaf.31.1774281665205;
-        Mon, 23 Mar 2026 09:01:05 -0700 (PDT)
+        bh=a4j4tflgND4Uiq9FcYinLLfKMNOFlVvGkpZDXfO0Vpc=;
+        b=CZ2XovUSDAHek3wxOONdl3gb86i3W29fwwRyhu4l4kC23hmAYdLq2pnPHAcdb245bV
+         lXBc8BsDHYDGNM5Kr6rBN87sh3Se9QavBMtIOzcAoFr2ff5kOjPVU9Ol8IqgB27cDYhA
+         4wWRgrf/RFk/o3shumHOODZLq5jBio0C8r/YUtQeYxv9HdotrUyzLKnmP5KmFhO4Kxrv
+         e9FzWdOxWD25AVnqyLOeEQX5HPXXKR0u+ESAh/5swD5SdmFj1eMyvKuAWbKqrwVq9ifT
+         HMnQRAJ9uARZrg6v3eu0DTIitkEwrLso2ZaVFZUZPPj0QjpaMIbl0TipcHTCMXcyMlKj
+         Al8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUZJENGPxRZxBe0vTDHkDrFquJwTZgQ9mSiWtBXxuZXbeMIyGKWgp2Az+oAoTlgOncQ+aJ9s0uq/cx7dTsYKKBnDGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvUqEW+ItCWALdyadWVa4y2cUt1XR9rsohVOfa2JtrcFle3M//
+	eicdB6zePtxvE2x1E65gCvJkQlWfpRB2vYLXhVR4kPWHWvhubDGLW+OolTxGqBbSWNw=
+X-Gm-Gg: ATEYQzyJP/Zuicn+gx6Js48lLwc0x9P7rZmSL35UArUs3fKPy94vYnGxa4s3ALt+ZXP
+	xA3pbckUKreNR4uafeMPrXXCbB90X9tJez4S6yJfjJ3HWwJuw/o3JtTMUizs/tEgK5SxZ5K69TK
+	NGfYQ6Q5trOW1wfng0GdJCGuAflh6IcZVKoGKTTQ3n1a0UC+iuJUuf7jaMXu4Mtj1jr89v8B48Z
+	ZwnzwevKT02cN6DJUTyHMJ/MJp5Mf45uR4g9NjR5tBqRnQsHxWn+MzZBd/YigN+4CNh5j4oAt0X
+	ZHsfmKwwOFibV40yimYsCfNJGRSBrks5ZLX8BEuwxCCLr2XnIAdu6VG4G7GKOjY1B2gPdeLjSk6
+	zcDB5sTK+tXBGrviLtmSUESQVlJdfkRN3uzNWEe1n67uiV4hXISvNdD4iMVoacvwsQ1/merYJeN
+	Ni3TtVh9Fs8pUvPrebO0H1uSQMV0NhmXG3PdM55rcB54yKDRJjMe5Y95Z7OdDqwYmq3sXMdwZlj
+	oP7
+X-Received: by 2002:a05:620a:2845:b0:8cd:9033:1724 with SMTP id af79cd13be357-8cfc7b65cb3mr1863344685a.9.1774281666365;
+        Mon, 23 Mar 2026 09:01:06 -0700 (PDT)
 Received: from vinmini.lan (c-73-143-21-186.hsd1.vt.comcast.net. [73.143.21.186])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.03
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 09:01:04 -0700 (PDT)
+        Mon, 23 Mar 2026 09:01:05 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 To: 
 Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Roman Kisel <romank@linux.microsoft.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	io-uring@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	sched-ext@lists.linux.dev,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 02/19] kernel: Use trace_call__##name() at guarded tracepoint call sites
-Date: Mon, 23 Mar 2026 12:00:21 -0400
-Message-ID: <20260323160052.17528-3-vineeth@bitbyteword.org>
+Subject: [PATCH v2 03/19] io_uring: Use trace_call__##name() at guarded tracepoint call sites
+Date: Mon, 23 Mar 2026 12:00:22 -0400
+Message-ID: <20260323160052.17528-4-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260323160052.17528-1-vineeth@bitbyteword.org>
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
@@ -110,50 +93,22 @@ Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 Assisted-by: Claude:claude-sonnet-4-6
 ---
- kernel/irq_work.c  | 2 +-
- kernel/sched/ext.c | 2 +-
- kernel/smp.c       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ io_uring/io_uring.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 73f7e1fd4ab4d..120fd7365fbe2 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -79,7 +79,7 @@ void __weak arch_irq_work_raise(void)
- static __always_inline void irq_work_raise(struct irq_work *work)
- {
- 	if (trace_ipi_send_cpu_enabled() && arch_irq_work_has_interrupt())
--		trace_ipi_send_cpu(smp_processor_id(), _RET_IP_, work->func);
-+		trace_call__ipi_send_cpu(smp_processor_id(), _RET_IP_, work->func);
+diff --git a/io_uring/io_uring.h b/io_uring/io_uring.h
+index 0fa844faf2871..e99975ffdda12 100644
+--- a/io_uring/io_uring.h
++++ b/io_uring/io_uring.h
+@@ -299,7 +299,7 @@ static __always_inline bool io_fill_cqe_req(struct io_ring_ctx *ctx,
+ 	}
  
- 	arch_irq_work_raise();
+ 	if (trace_io_uring_complete_enabled())
+-		trace_io_uring_complete(req->ctx, req, cqe);
++		trace_call__io_uring_complete(req->ctx, req, cqe);
+ 	return true;
  }
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 1594987d637b0..cfbac9cf62f84 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -4494,7 +4494,7 @@ static __printf(2, 3) void dump_line(struct seq_buf *s, const char *fmt, ...)
- 		vscnprintf(line_buf, sizeof(line_buf), fmt, args);
- 		va_end(args);
  
--		trace_sched_ext_dump(line_buf);
-+		trace_call__sched_ext_dump(line_buf);
- 	}
- #endif
- 	/* @s may be zero sized and seq_buf triggers WARN if so */
-diff --git a/kernel/smp.c b/kernel/smp.c
-index f349960f79cad..537cf1f461d75 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -394,7 +394,7 @@ void __smp_call_single_queue(int cpu, struct llist_node *node)
- 		func = CSD_TYPE(csd) == CSD_TYPE_TTWU ?
- 			sched_ttwu_pending : csd->func;
- 
--		trace_csd_queue_cpu(cpu, _RET_IP_, func, csd);
-+		trace_call__csd_queue_cpu(cpu, _RET_IP_, func, csd);
- 	}
- 
- 	/*
 -- 
 2.53.0
 
