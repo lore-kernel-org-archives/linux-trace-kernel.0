@@ -1,79 +1,80 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895F53BBA00
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6143B961B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774281680; cv=none; b=BhvG4A/4kCpwRwS4yu8JsZoPQCHJYWUGOj/TydYt3RweETmTxLuxRW2woWMT2McAaiNY51s3SecBWqAC+nQjjadWCsjs/bOaiyIKfuWiz1Rh0SQNqHBAenkHYJj8P00C3qedtUw+Gont3pDqJ5Qp1XpIfNMRZMl/OSPbeK6/fpo=
+	t=1774281682; cv=none; b=Rq8zz3UFDnakrD6OwQcrhCuZd4xLDMr8fFYDs39rPdxNupvy9Rfc4CklpxNn5OdbZ/K0SIxC4n/glAZOgHTz30AFy0McdF0flEy3QDq0A+nJexAS91hxWdLo24IWbUB6L+T+eAGaAkKRuD8+eFeHAe7y0A09BOT5Qsm7SS61Sc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774281680; c=relaxed/simple;
-	bh=ZopYVyAeHlBFSz+/anofByoCYoLsO3v78kbbq2MzwYU=;
+	s=arc-20240116; t=1774281682; c=relaxed/simple;
+	bh=HeUi+wJsj9zhPE9nwS7pT8jwO1enNKZcn1Eh8Ap3li0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cvb1VM7CrmXAqvpOYDQKG4j0nwNf2pC2Vv9J+sCGkwcgBqlJKzqQOmfc+Ar+pNwS51+zXv5eFcJLjpL2ASjBuuFeBbaYBvc2BLQF4St8ahPhTpVoEu4YfzH8TS8QWRIn/vwE4oAe3UNMb1r13JE5Pj4TYMhz8tnJkB3+vrbkLq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=pU/+tjGP; arc=none smtp.client-ip=209.85.161.52
+	 MIME-Version; b=r9jc1d+59GOa7xXQteK3CKG59WWjkO6XAckToWqpsarbqBxZ/qTUYYpnryD5UMqNWgPnoHgdi/bSuuwcbj+sJzfDeWZTTvO7fiMrqtMBcVWBmXxMaFdGVW34N+vn+LETK7I+PVY8YkBASSRpDXBkef3YW/3y+z5Yb48/vZnYWgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=m7oXvDCE; arc=none smtp.client-ip=209.85.161.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="pU/+tjGP"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-67c281e3fa1so167344eaf.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="m7oXvDCE"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-67c250b84c0so958224eaf.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 09:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1774281678; x=1774886478; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1774281680; x=1774886480; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rmhohN6RlSLZwmw7GnhmaqXlOUkxWsMUSbvXDFRlGSI=;
-        b=pU/+tjGPC+ggbpYMDiWOMwETOyAKB8Sr8a92OBiViizy11szawSQLlypAkz33N4UxN
-         wERdMGV0cqGAKzseKphcaq812WcchreqTidJnVj3t6a2hFsT+i1Lc/QHomUTCSixX/ph
-         MPkIUwLJNQjiO3YaoapafweLs1LEUt7kU+8Ymtvsz4lfoG/D9ex4zo7feMyoSEnIJFNo
-         xQtZlNye8y21J4J2TTGd8SR6EefqsLz6pkMVGFrei68f3cb6lGs2P9jjsO2r+FEEaWH0
-         58BJIGsZsboHUegz4fiyyfeRiIfFsIfB1bz8QLYBgUFxOdbRhdRkdE9NkwiPXzo2QbL9
-         O4gg==
+        bh=mObnim+O/1qM5mBF9TW6/nMqNmbffOtpWCv4mCo57ds=;
+        b=m7oXvDCESvhVKPwFSeugQdvB2miVjxWrknL3LJj+MftYi/oraJ1LOjx5pi3gtfpTPj
+         H63Wh54VqZIFlP7flRye3InTbx24326iMj2LWBBHonkvkZCslovyVfgmkxzgwLBUxQ87
+         pL0GjrJx/yr2KFa5nrDoT2X8RRJWN1GD7BtnSurWQ/Pal50+rtfplkuNb/Jh4UXYTTxL
+         3YEGbqUqNyn8Vc8atG3Ia9iCVKPSys7saXNO8kHJ1z4CrroheF1chubTjmCZTw3ASJvu
+         usv19XM9+aNw84fI5DkdYWZ0e/IFKPyu9T/MeycdYtQE1sbantKDoQ94dY7eBpbb099R
+         r9qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774281678; x=1774886478;
+        d=1e100.net; s=20251104; t=1774281680; x=1774886480;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=rmhohN6RlSLZwmw7GnhmaqXlOUkxWsMUSbvXDFRlGSI=;
-        b=oj7XLbmVst8MhBPE8XzuX200nLjm+jQuaQP8fGAA52j0JEAAto3iVATB4S+9bYrHCD
-         wJa6NbHqauUq00jRL/Sd6UWwSeCpDGMquhHVRA12udikkqEnrPGmN9SieTK8KFo/k4+d
-         hBAtrj89DLr0Sz3aGHSKD46viGx20nxQX7JEGj+KS7wMdyRD1auyquH5tTXALdHu/H84
-         6pl+j6joRRWUqNfYUzzYVQMIrZuN1svqPMy56HtkE3h340Od5DrkIjYNoWB7vD+1mStI
-         SYzPJ5kCIW+nGbmsfKwK3W2flVQYv2PDvWaw/RsjiuPxhe7vGZM5JtU1XXv9Bw1dPOAq
-         2XGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBZQ/RI2UIxE1BQScmnyfKaW6zNjQ2olfLNR9DZ7XF/AVgwn39vS2/6GJW1eWR+xBN1Fx4TGdK54lc+yJuOVxeCH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp/56qqatj+p1Mk34zg+VyL0+JXWR5v73dWeHCqErGyZPnBawm
-	xmYm49vjJAlbjsKbaZUQq7OTBszvzpc+Viqeo9VPcBMNGIeBBEVO6Ip42SPLfTGOEyg=
-X-Gm-Gg: ATEYQzwuDOjdkcCxMdoDTuIZuaUJTFiX4RV/N92Uzl38A/+6lp0mrtD+b9ihWoiBLCx
-	AMxFRMaMsQ9fkh/2zqdYoaOV22DfRynTzQCJug8d2/Mv64g3+c55lcpE5FMRvUiVEeqGxoA1vmh
-	C4SIg0kblhQpvFWn3kC9mgMBhwWXhNqyjCxLXNzcmVhddrXPnDT9c9QCN8ojG/ANVh/oGfHIlaN
-	6opm3KOJOW3wZLtNK9lYCBYaOphFqyqyEv7kKRjh/NaBeBqmdTBJ3r7ZKP6cuNKgRb2E2F0Rhox
-	a5KqD0e/uRHAAnuOUCBiQK3tJHS4EevUsbDOKFyGgypIaVeTiXVbYbmjAu8r86MeD/0sNv43CEL
-	8VLQD1zsZhjMGaJ2EMSz50A0RgfxKOBTbkymhrcRLSDXq8jVV5c7s4q8VffTybDh+5beayoIpNM
-	eHDP1y1cupYHBYkavtXbGybFiCFjZnQu6PEMBTWqgTJpSUzzHumWtvu6b+IuzHZE50j8/1V+u7V
-	DJw
-X-Received: by 2002:a05:6820:179b:b0:67d:6597:4d1f with SMTP id 006d021491bc7-67d65974f79mr5464593eaf.58.1774281678262;
-        Mon, 23 Mar 2026 09:01:18 -0700 (PDT)
+        bh=mObnim+O/1qM5mBF9TW6/nMqNmbffOtpWCv4mCo57ds=;
+        b=a6YoqiJaEYd03SWV7BDY9qxRjn2wOOc+PmML5RNUDSb1ltYW4MXv5l5JrwNYt/EEPR
+         RpE+megOi71e5fgB0a+AYU8dsfvODJFitX5teCSUZ+wZgdWloPPCPu4gD7dK2yPGY1A4
+         eHZHxBecg4vOKHPC2g9h2PVGCo2vx/JgswvlwH/nibx5fuRQVg1VW+bWv4S0bYP96i3s
+         ASWyyxnNw6Zhj6m3zArJ3gNY3yesUASFqjItUFskKB/lh7apd81pWgAkNlLsZJcKF7ck
+         rnbWH+cLPeeONKKJDeHmuWR7JgDaS3tECdo1IT0JKxoDgPmwXpG4hjKcq0FVzt6qdj+G
+         4l5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXnUjL1X+sBrNCwnGmLwCJJxXlji3EdJftJ5ao1XS+06KZqqP5reAuGrIw1RnxWv4OTEJnh+xe4PPFsq5WsutX/H0M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBzHUfI7vIK6dPboevA+feMzqz34QYJ3JwKHUuaZkbfxvPjF27
+	xASZW46rbT7dHs9zNmRw/nOwHwsrbpLEo1hwpf8OlG3KaUuhylZO3au5bgttoV2p0nQ=
+X-Gm-Gg: ATEYQzyaoLqKn/J2xwGwWvf4umLfHwt+rdoo1MyDaDZrX5FosnH0wX7H2mAU6Htud2l
+	h26Syg4F8VfmVgn153LYXwEdj2ZpbZ00jJxYQwB/RjiVrTuJFP2e7X6zwWkMuEPtUX2OmsK2cHg
+	6ERUOyu398bLKkgN+E1Jm9FcV/TX60ogEw5Fxb4EBZeDioXOxgK/iSSLmli+d8XTsk5sgwmJLBv
+	NlJMUziTLRBDKI2vyjE3+Y18bC1QxGIWt9kbBDb7fa5rgrIpu6UuxNO/F8PXyfVFf2iO4rE1c+k
+	G04jmPlIwYgaUTu6/wMvyqZLQfVK3HFnVIrYxiuBfV2qgtymDjVCFLdMVFKO7IcNFI23NjyMkgf
+	zk5pjURnOwewij8zwmFjsIat7eXfvbkUrA4skqqu6NlzDxvEKOAAHoOOPvlVVrZVPNnTfXlty0p
+	qEiSzGVSlDqjPnHkzVjAi8n+h8eW1nD+B4ZnhzZxbi9wFZjHQKDqcBHVMGz7d4QmuwYA==
+X-Received: by 2002:a05:6820:987:b0:67d:ee07:32df with SMTP id 006d021491bc7-67dee0735f2mr1955626eaf.23.1774281680005;
+        Mon, 23 Mar 2026 09:01:20 -0700 (PDT)
 Received: from vinmini.lan (c-73-143-21-186.hsd1.vt.comcast.net. [73.143.21.186])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.17
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cfc9088df1sm843364185a.25.2026.03.23.09.01.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 09:01:17 -0700 (PDT)
+        Mon, 23 Mar 2026 09:01:19 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 To: 
 Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
+	Eddie James <eajames@linux.ibm.com>,
+	Ninad Palsule <ninad@linux.ibm.com>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	linux-fsi@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 08/19] dma-buf: Use trace_call__##name() at guarded tracepoint call sites
-Date: Mon, 23 Mar 2026 12:00:27 -0400
-Message-ID: <20260323160052.17528-9-vineeth@bitbyteword.org>
+Subject: [PATCH v2 09/19] fsi: Use trace_call__##name() at guarded tracepoint call sites
+Date: Mon, 23 Mar 2026 12:00:28 -0400
+Message-ID: <20260323160052.17528-10-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260323160052.17528-1-vineeth@bitbyteword.org>
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
@@ -96,31 +97,22 @@ Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 Assisted-by: Claude:claude-sonnet-4-6
 ---
- drivers/dma-buf/dma-fence.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/fsi/fsi-master-aspeed.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-index 35afcfcac5910..232e92196da43 100644
---- a/drivers/dma-buf/dma-fence.c
-+++ b/drivers/dma-buf/dma-fence.c
-@@ -535,7 +535,7 @@ dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
+diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
+index aa1380cdff338..8313c7d530eb7 100644
+--- a/drivers/fsi/fsi-master-aspeed.c
++++ b/drivers/fsi/fsi-master-aspeed.c
+@@ -229,7 +229,7 @@ static int check_errors(struct fsi_master_aspeed *aspeed, int err)
+ 		opb_readl(aspeed, ctrl_base + FSI_MSTAP0, &mstap0);
+ 		opb_readl(aspeed, ctrl_base + FSI_MESRB0, &mesrb0);
  
- 	if (trace_dma_fence_wait_start_enabled()) {
- 		rcu_read_lock();
--		trace_dma_fence_wait_start(fence);
-+		trace_call__dma_fence_wait_start(fence);
- 		rcu_read_unlock();
- 	}
- 	if (fence->ops->wait)
-@@ -544,7 +544,7 @@ dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
- 		ret = dma_fence_default_wait(fence, intr, timeout);
- 	if (trace_dma_fence_wait_end_enabled()) {
- 		rcu_read_lock();
--		trace_dma_fence_wait_end(fence);
-+		trace_call__dma_fence_wait_end(fence);
- 		rcu_read_unlock();
- 	}
- 	return ret;
+-		trace_fsi_master_aspeed_opb_error(
++		trace_call__fsi_master_aspeed_opb_error(
+ 				be32_to_cpu(mresp0),
+ 				be32_to_cpu(mstap0),
+ 				be32_to_cpu(mesrb0));
 -- 
 2.53.0
 
