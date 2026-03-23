@@ -1,209 +1,294 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4047537F8AC;
-	Mon, 23 Mar 2026 11:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6064F366558;
+	Mon, 23 Mar 2026 11:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774266432; cv=none; b=Oh/XllPzqLyMbRdwwGLk3jPThAQj+fAX3FxUx77C8qx4nihaO8wPTJYvQt8sm931h5Z9MZRcxLHNxWgm0jiPzDzINgM5rtLeu+sKjomWgzY4UNmMVS7zfQOsDWM4tE+CNB6ywivTLVTh1oVRFKEddWV+gCrmmSdAHSCgZ36UrDo=
+	t=1774266613; cv=none; b=DeFbNyS1RY19wq3Ntazz8KZs5fQYD+NkxZ17U4FqNnNVVmszzmuPPJLqP3ExSM2M76JpUJ4LkoXq8gLw+YxX4LsyzOF/jxQsHHhmarFBZofkZXlA0IH+451xrlb1PbClTSd4Yrx5TmyO67uyuEToaVdft66OvM+pypDBo+TT3Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774266432; c=relaxed/simple;
-	bh=lZCVThDM3BRzRypb31rGuUdpQI1V8CmxbHfPeXSGayY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=knjxTvbvf9YoZeGBXyIXkyJ5eSz248kg96ZUK5+9sRz7p0ehqn5g1E8ZWLRpwh7YsL7ya9YprjbOKJApRtJ1MugsHBAZcU1I0diso9QwsS4NwtMv+tcHxizU2kr7uFwvwma2hFbcc4poTmBqb6wyOYqOHTL0VPNQMyUz2KH4oec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=oEU9xOum; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1774266613; c=relaxed/simple;
+	bh=2E2pCXRCjUmFwJ1p11lXSuychCLwf00vUaVSi1BRtIw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gCp6P4MVppfp3oeIyaNRDyw1w/QAE6mGBb0leGxIo6qH5V7glh/SCIE+1DJx0NptObJOCRa5I0Aa0133KdRmN5M1aRD3X/PM2BC8VVxZY8TuwUWAWi/P0bjUOHzDvyUr0FbJn5qlYtrKUxOcmQ1cnSeWvhM3gY/1W/VRdNzk/9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQJ4gOcY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="oEU9xOum"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
-	bh=zq/3dGnYBusKmmjNVvDaRg0ULStVV+ED9EfjGhr4+wo=; b=oEU9xOum35YSOD/0KH+rNTxxop
-	Br3mPQ4ADG04W4RYayaK4LkEBUobGk4HlELj83jzYxI3u3McZ3PLER5kp6wb6CAl3mtdtJv3nOt1u
-	zEkjl7/3kAVuW2o5ttKc1LZWuGXCbMyz8OGRLU19X6rJ3X6xsxNu+n/LplIU2oujgCg9bpHm+tlD/
-	cnft2Uuab52H477awJDc3O2URKANpa0dO8RuGTfFiYCB9B+gOqzr769q1/7fXkrb7UsC9PzQXUaov
-	tuvBV4/6PwGBNmRwbLACli80K9eaPFLjFZbZi/+AzO5TziskBMyo4wxhrpBYZ+ig18quXAeE4DS0U
-	X8gx+4sQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1w4dkQ-007VXT-Ut; Mon, 23 Mar 2026 11:47:06 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 23 Mar 2026 04:46:27 -0700
-Subject: [PATCH v2] coredump: add tracepoint for coredump events
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQJ4gOcY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35974C4CEF7;
+	Mon, 23 Mar 2026 11:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774266613;
+	bh=2E2pCXRCjUmFwJ1p11lXSuychCLwf00vUaVSi1BRtIw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sQJ4gOcYn5CHTLDUzJguOYEsSzHqNQ7pUN9CewGnJ7LFPD2l7Up7MJriZfedUxhMC
+	 24fkswbsYdCWDHa6wAyaaif0aDEGawqXo7Y/q/z6Qfrvji2/KSe6edlhOJ3mSHupik
+	 Qh6eATtzVv606HrLw7aWXR1q+I+hIvoQoN4sK3OTZ1i4IHCdPuvEdOcrAIR3sfVxzA
+	 mMP023nE2ydody6P7mExHD+4mLCV3XCgjuI2I9xD/KKV8kO92A/MF3d/o2bpEFOy87
+	 0SOkNOOnz8wZ/ZOxlJb9PDKRGt4cp1s7Z+iy9OslZaGXxg5cSpCUeFwhcrnWB6pRzo
+	 f09h+Mrqmib/Q==
+Date: Mon, 23 Mar 2026 20:50:09 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, llvm@lists.linux.dev,
+ oe-kbuild-all@lists.linux.dev, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v11 4/5] ring-buffer: Skip invalid sub-buffers when
+ rewinding persistent ring buffer
+Message-Id: <20260323205009.2f4185f62cbd6103a0f892e1@kernel.org>
+In-Reply-To: <202603230725.uMAZiKJx-lkp@intel.com>
+References: <177391156211.193994.7531495945584650297.stgit@mhiramat.tok.corp.google.com>
+	<202603230725.uMAZiKJx-lkp@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260323-coredump_tracepoint-v2-1-afced083b38d@debian.org>
-X-B4-Tracking: v=1; b=H4sIABMowWkC/32NSwqDMBQArxLe2hTzIa2ueo8ixSSv+gpNJInSI
- t69aPddDgwzK2RMhBlatkLChTLFAC2TFQM39mFATh5aBrKWplay5i4m9PNrupfUO5wihcK1R62
- axqGwBioGU8IHvY/qrftxnu0TXdlTuzFSLjF9ju0idu//YRFccKUvRp+1cdaqq0dLfTjFNEC3b
- dsXe/X/7skAAAA=
-X-Change-ID: 20260320-coredump_tracepoint-4de4399ce1b6
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
- kernel-team@meta.com, song@kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.16-dev-3673a
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4327; i=leitao@debian.org;
- h=from:subject:message-id; bh=lZCVThDM3BRzRypb31rGuUdpQI1V8CmxbHfPeXSGayY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpwSg1HPrGxrfr/seGh+FXDPoCtNQ87qgBh3Wdz
- AryDGSagySJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCacEoNQAKCRA1o5Of/Hh3
- bR5FD/sGWRUetzAgEYMIxWLj5oeVglBvntz82YsMf8/9x1Z5pk72rfnoau+oUr2BLN9hqMaH+/3
- ADiTTa39cwJAckwoEkrE5zxCQ7a5R16P8UxamXJlQRA+/mowJIIDb95YUW97Tgv+6rwepveZiaN
- uj49ETDZvBGh7hpt2UW4wa4xuojgjptCSnt0o8fBq0/DRPn2wgnP38/jCyLMgpdWikZ/wCsK4fi
- tFZUVmFulJC97IkmigAW/RyzsvmW0we8GXUtLXKFrfA0XtMYLPVSzYDgS7X29coRpxXBk8SpnSC
- cUILKIlb1XCjC9kQE//11OOrdSHultoWonHk6Wf+lGQBRogKCGQQWCrX/HAK+sb5rF3KAgA2w+1
- VGbKeguNrj5hqlMonZJSqZJyancu7l/mXvJavaNNkUu8Le+QmJktt2P65CUYERxpVa7HKglaC5I
- LA+thD4Q0kqofg3oq5X7WIbLvcGi491BZbUzpDpV4Lck26p1vhIeblYBGIlFjKgqxitdz5aK07U
- +VWkUMP86FbhjH97uBnZqop4x4tdi16w1G2TKX/KXc+GzG7qtIg2TesHzhbaPVFqcps5/z4tJ3z
- qlJyy3a5CV3t8+GMPoca+Kpz+KIDhpwOS6NwzYKSJpqI2vAAAUFsxuwUaMBRkKjCXSytLNy1/nz
- /gbt3ClyPzDDOIg==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
 
-Coredump is a generally useful and interesting event in the lifetime
-of a process. Add a tracepoint so it can be monitored through the
-standard kernel tracing infrastructure.
+On Mon, 23 Mar 2026 07:18:07 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-BPF-based crash monitoring is an advanced approach that
-allows real-time crash interception: by attaching a BPF program at
-this point, tools can use bpf_get_stack() with BPF_F_USER_STACK to
-capture the user-space stack trace at the exact moment of the crash,
-before the process is fully terminated, without waiting for a
-coredump file to be written and parsed.
+> Hi Masami,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on trace/for-next]
+> [also build test ERROR on geert-m68k/for-next geert-m68k/for-linus openrisc/for-next deller-parisc/for-next powerpc/next powerpc/fixes s390/features uml/next tip/x86/core uml/fixes v7.0-rc4 next-20260320]
+> [cannot apply to linus/master]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/ring-buffer-Fix-to-update-per-subbuf-entries-of-persistent-ring-buffer/20260322-122412
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+> patch link:    https://lore.kernel.org/r/177391156211.193994.7531495945584650297.stgit%40mhiramat.tok.corp.google.com
+> patch subject: [PATCH v11 4/5] ring-buffer: Skip invalid sub-buffers when rewinding persistent ring buffer
+> config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260323/202603230725.uMAZiKJx-lkp@intel.com/config)
+> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260323/202603230725.uMAZiKJx-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202603230725.uMAZiKJx-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> kernel/trace/ring_buffer.c:1965:15: error: use of undeclared identifier 'bpage'
+>     1965 |                         local_set(&bpage->entries, 0);
+>          |                                    ^
+>    kernel/trace/ring_buffer.c:1966:15: error: use of undeclared identifier 'bpage'
+>     1966 |                         local_set(&bpage->page->commit, 0);
+>          |                                    ^
+>    2 errors generated.
+> 
+> 
+> vim +/bpage +1965 kernel/trace/ring_buffer.c
+> 
+>   1910	
+>   1911	/* If the meta data has been validated, now validate the events */
+>   1912	static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+>   1913	{
+>   1914		struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+>   1915		struct buffer_page *head_page, *orig_head;
+>   1916		unsigned long entry_bytes = 0;
+>   1917		unsigned long entries = 0;
+>   1918		int discarded = 0;
+>   1919		int ret;
+>   1920		u64 ts;
+>   1921		int i;
+>   1922	
+>   1923		if (!meta || !meta->head_buffer)
+>   1924			return;
+>   1925	
+>   1926		orig_head = head_page = cpu_buffer->head_page;
+>   1927	
+>   1928		/* Do the reader page first */
+>   1929		ret = rb_validate_buffer(cpu_buffer->reader_page, cpu_buffer->cpu, meta);
+>   1930		if (ret < 0) {
+>   1931			pr_info("Ring buffer meta [%d] invalid reader page detected\n",
+>   1932				cpu_buffer->cpu);
+>   1933			discarded++;
+>   1934		} else {
+>   1935			entries += ret;
+>   1936			entry_bytes += rb_page_size(cpu_buffer->reader_page);
+>   1937		}
+>   1938	
+>   1939		ts = head_page->page->time_stamp;
+>   1940	
+>   1941		/*
+>   1942		 * Try to rewind the head so that we can read the pages which already
+>   1943		 * read in the previous boot.
+>   1944		 */
+>   1945		if (head_page == cpu_buffer->tail_page)
+>   1946			goto skip_rewind;
+>   1947	
+>   1948		rb_dec_page(&head_page);
+>   1949		for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
+>   1950	
+>   1951			/* Rewind until tail (writer) page. */
+>   1952			if (head_page == cpu_buffer->tail_page)
+>   1953				break;
+>   1954	
+>   1955			/* Rewind until unused page (no timestamp, no commit). */
+>   1956			if (!head_page->page->time_stamp && rb_page_commit(head_page) == 0)
+>   1957				break;
+>   1958	
+>   1959			/*
+>   1960			 * Skip if the page is invalid, or its timestamp is newer than the
+>   1961			 * previous valid page.
+>   1962			 */
+>   1963			ret = rb_validate_buffer(head_page, cpu_buffer->cpu, meta);
+>   1964			if (ret >= 0 && ts < head_page->page->time_stamp) {
+> > 1965				local_set(&bpage->entries, 0);
+>   1966				local_set(&bpage->page->commit, 0);
 
-However, there is currently no stable kernel API for this use case.
-Existing tools rely on attaching fentry probes to do_coredump(),
-which is an internal function whose signature changes across kernel
-versions, breaking these tools.
+Ooops, sorry, I made a copy & paste mistake. this should be head_page->entries and head_page->page_commit.
+Let me send v12 on the latest tracing/fixes.
 
-Add a stable tracepoint that fires at the beginning of
-do_coredump(), providing BPF programs a reliable attachment point.
-At tracepoint time, the crashing process context is still live, so
-BPF programs can call bpf_get_stack() with BPF_F_USER_STACK to
-extract the user-space backtrace.
+Thanks,
 
-The tracepoint records:
-  - sig: signal number that triggered the coredump
-  - comm: process name
+>   1967				head_page->page->time_stamp = ts;
+>   1968				ret = -1;
+>   1969			}
+>   1970			if (ret < 0) {
+>   1971				if (!discarded)
+>   1972					pr_info("Ring buffer meta [%d] invalid buffer page detected\n",
+>   1973						cpu_buffer->cpu);
+>   1974				discarded++;
+>   1975			} else {
+>   1976				entries += ret;
+>   1977				entry_bytes += rb_page_size(head_page);
+>   1978				if (ret > 0)
+>   1979					local_inc(&cpu_buffer->pages_touched);
+>   1980				ts = head_page->page->time_stamp;
+>   1981			}
+>   1982		}
+>   1983		if (i)
+>   1984			pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
+>   1985	
+>   1986		/* The last rewound page must be skipped. */
+>   1987		if (head_page != orig_head)
+>   1988			rb_inc_page(&head_page);
+>   1989	
+>   1990		/*
+>   1991		 * If the ring buffer was rewound, then inject the reader page
+>   1992		 * into the location just before the original head page.
+>   1993		 */
+>   1994		if (head_page != orig_head) {
+>   1995			struct buffer_page *bpage = orig_head;
+>   1996	
+>   1997			rb_dec_page(&bpage);
+>   1998			/*
+>   1999			 * Insert the reader_page before the original head page.
+>   2000			 * Since the list encode RB_PAGE flags, general list
+>   2001			 * operations should be avoided.
+>   2002			 */
+>   2003			cpu_buffer->reader_page->list.next = &orig_head->list;
+>   2004			cpu_buffer->reader_page->list.prev = orig_head->list.prev;
+>   2005			orig_head->list.prev = &cpu_buffer->reader_page->list;
+>   2006			bpage->list.next = &cpu_buffer->reader_page->list;
+>   2007	
+>   2008			/* Make the head_page the reader page */
+>   2009			cpu_buffer->reader_page = head_page;
+>   2010			bpage = head_page;
+>   2011			rb_inc_page(&head_page);
+>   2012			head_page->list.prev = bpage->list.prev;
+>   2013			rb_dec_page(&bpage);
+>   2014			bpage->list.next = &head_page->list;
+>   2015			rb_set_list_to_head(&bpage->list);
+>   2016			cpu_buffer->pages = &head_page->list;
+>   2017	
+>   2018			cpu_buffer->head_page = head_page;
+>   2019			meta->head_buffer = (unsigned long)head_page->page;
+>   2020	
+>   2021			/* Reset all the indexes */
+>   2022			bpage = cpu_buffer->reader_page;
+>   2023			meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
+>   2024			bpage->id = 0;
+>   2025	
+>   2026			for (i = 1, bpage = head_page; i < meta->nr_subbufs;
+>   2027			     i++, rb_inc_page(&bpage)) {
+>   2028				meta->buffers[i] = rb_meta_subbuf_idx(meta, bpage->page);
+>   2029				bpage->id = i;
+>   2030			}
+>   2031	
+>   2032			/* We'll restart verifying from orig_head */
+>   2033			head_page = orig_head;
+>   2034		}
+>   2035	
+>   2036	 skip_rewind:
+>   2037		/* If the commit_buffer is the reader page, update the commit page */
+>   2038		if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
+>   2039			cpu_buffer->commit_page = cpu_buffer->reader_page;
+>   2040			/* Nothing more to do, the only page is the reader page */
+>   2041			goto done;
+>   2042		}
+>   2043	
+>   2044		/* Iterate until finding the commit page */
+>   2045		for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
+>   2046	
+>   2047			/* Reader page has already been done */
+>   2048			if (head_page == cpu_buffer->reader_page)
+>   2049				continue;
+>   2050	
+>   2051			ret = rb_validate_buffer(head_page, cpu_buffer->cpu, meta);
+>   2052			if (ret < 0) {
+>   2053				if (!discarded)
+>   2054					pr_info("Ring buffer meta [%d] invalid buffer page detected\n",
+>   2055						cpu_buffer->cpu);
+>   2056				discarded++;
+>   2057			} else {
+>   2058				/* If the buffer has content, update pages_touched */
+>   2059				if (ret)
+>   2060					local_inc(&cpu_buffer->pages_touched);
+>   2061	
+>   2062				entries += ret;
+>   2063				entry_bytes += rb_page_size(head_page);
+>   2064			}
+>   2065			if (head_page == cpu_buffer->commit_page)
+>   2066				break;
+>   2067		}
+>   2068	
+>   2069		if (head_page != cpu_buffer->commit_page) {
+>   2070			pr_info("Ring buffer meta [%d] commit page not found\n",
+>   2071				cpu_buffer->cpu);
+>   2072			goto invalid;
+>   2073		}
+>   2074	 done:
+>   2075		local_set(&cpu_buffer->entries, entries);
+>   2076		local_set(&cpu_buffer->entries_bytes, entry_bytes);
+>   2077	
+>   2078		pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
+>   2079			cpu_buffer->cpu, discarded);
+>   2080		return;
+>   2081	
+>   2082	 invalid:
+>   2083		/* The content of the buffers are invalid, reset the meta data */
+>   2084		meta->head_buffer = 0;
+>   2085		meta->commit_buffer = 0;
+>   2086	
+>   2087		/* Reset the reader page */
+>   2088		local_set(&cpu_buffer->reader_page->entries, 0);
+>   2089		local_set(&cpu_buffer->reader_page->page->commit, 0);
+>   2090	
+>   2091		/* Reset all the subbuffers */
+>   2092		for (i = 0; i < meta->nr_subbufs - 1; i++, rb_inc_page(&head_page)) {
+>   2093			local_set(&head_page->entries, 0);
+>   2094			rb_init_page(head_page->page);
+>   2095		}
+>   2096	}
+>   2097	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+> 
 
-Example output:
 
-  $ echo 1 > /sys/kernel/tracing/events/coredump/coredump/enable
-  $ sleep 999 &
-  $ kill -SEGV $!
-  $ cat /sys/kernel/tracing/trace
-  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-  #              | |         |   |||||     |         |
-             sleep-634     [036] .....   145.222206: coredump: sig=11 comm=sleep
-
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changes in v2:
-- Remove the pid from the tracpoint message, given pid is saved in all
-  trace events (Christian, Steven)
-- Link to v1:
-  https://patch.msgid.link/20260320-coredump_tracepoint-v1-1-34864746cbb3@debian.org
----
- fs/coredump.c                   |  5 +++++
- include/trace/events/coredump.h | 45 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 29df8aa19e2e7..bb6fdb1f458e9 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -63,6 +63,9 @@
- 
- #include <trace/events/sched.h>
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/coredump.h>
-+
- static bool dump_vma_snapshot(struct coredump_params *cprm);
- static void free_vma_snapshot(struct coredump_params *cprm);
- 
-@@ -1090,6 +1093,8 @@ static inline bool coredump_skip(const struct coredump_params *cprm,
- static void do_coredump(struct core_name *cn, struct coredump_params *cprm,
- 			size_t **argv, int *argc, const struct linux_binfmt *binfmt)
- {
-+	trace_coredump(cprm->siginfo->si_signo);
-+
- 	if (!coredump_parse(cn, cprm, argv, argc)) {
- 		coredump_report_failure("format_corename failed, aborting core");
- 		return;
-diff --git a/include/trace/events/coredump.h b/include/trace/events/coredump.h
-new file mode 100644
-index 0000000000000..c7b9c53fc4986
---- /dev/null
-+++ b/include/trace/events/coredump.h
-@@ -0,0 +1,45 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2026 Meta Platforms, Inc. and affiliates.
-+ * Copyright (c) 2026 Breno Leitao <leitao@debian.org>
-+ */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM coredump
-+
-+#if !defined(_TRACE_COREDUMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_COREDUMP_H
-+
-+#include <linux/sched.h>
-+#include <linux/tracepoint.h>
-+
-+/**
-+ * coredump - called when a coredump starts
-+ * @sig: signal number that triggered the coredump
-+ *
-+ * This tracepoint fires at the beginning of a coredump attempt,
-+ * providing a stable interface for monitoring coredump events.
-+ */
-+TRACE_EVENT(coredump,
-+
-+	TP_PROTO(int sig),
-+
-+	TP_ARGS(sig),
-+
-+	TP_STRUCT__entry(
-+		__field(int, sig)
-+		__array(char, comm, TASK_COMM_LEN)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->sig = sig;
-+		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
-+	),
-+
-+	TP_printk("sig=%d comm=%s",
-+		  __entry->sig, __entry->comm)
-+);
-+
-+#endif /* _TRACE_COREDUMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-
----
-base-commit: b5d083a3ed1e2798396d5e491432e887da8d4a06
-change-id: 20260320-coredump_tracepoint-4de4399ce1b6
-
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
