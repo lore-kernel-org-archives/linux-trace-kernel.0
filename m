@@ -1,84 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD763B894D;
-	Mon, 23 Mar 2026 16:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8E83B8D5C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Mar 2026 16:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774281822; cv=none; b=p4+42rhUHJS8HbHcpY9eiKj/LgrHd1IidPWLYbhjIwSkbqBwfs5DxzSC/FRIH0uiYqFJn9dXdcADG+cV9vISZj8QsOnwY5NINpvJSnktu/GlKVN9uos+WhASCJk0BDXWpLEhjLBJj2jwDEVtKSoxwgQTa7XZEXpaKqBhdgwbrDc=
+	t=1774284233; cv=none; b=CBcjejKjVHt/qdHSORzl8/qx7LA1kQSJvk9UseqgBvYDkM7A9+mvtxcm3YWI/AfhdPtcVO3XNh5PfTBh/NjM6utgVGm8z/wXfPzeWNvxnVrmfnYQuLQDOm/kYwwgvGGg9xXdR/um8ptLdJybnm3M6ZCLlg++2s/psIF+UAg1fxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774281822; c=relaxed/simple;
-	bh=tfYgaSVsbuMU1gmb9kgnQ+Bw+1i7YuI6A1J5ry0oUuk=;
+	s=arc-20240116; t=1774284233; c=relaxed/simple;
+	bh=tarz1CIJRiWND6xVfnTAuVu8/LmSDdeXDeIbdV6STBM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gn2FdklKGimhYUfFXVM+FIxL0xh551ZW/BMpTPFClaKE3H8ROEve+o9cIm03HrhGi7xTH726Cmd9aPcHVkV4TUJhHkRubgLqpUZ/Bejby4cpqcP/e+VfZDaRaUVj3jYsfuYP6ch11M2h+nXVRQeSa9SEskTZ+ecQ8+usxkTEVtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vKwWPzoz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IBneDVnRFeuBYYiRYDN88Gsam6r4SxUNBOdyrbpT7Mb2r/v/dQ6enH4/pBVrOWHaCmZvkxwRg6BKVI6dqbcLVEbTRzYNrAMWN6RXwzAB3cs2kEfaZLLpLvntbyL9znbKON8roD3Mla6v/UUMI3rx9R78QhHlrwO2B8xLqs+qH3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=QZB5ta7c; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vKwWPzoz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435C7C4CEF7;
-	Mon, 23 Mar 2026 16:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774281822;
-	bh=tfYgaSVsbuMU1gmb9kgnQ+Bw+1i7YuI6A1J5ry0oUuk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vKwWPzozkhT1klWx5Eb3sWTaHEXysVhsQmIeM4JHnn9Az08iMPHtGOSnRhndxQwsb
-	 +o2bpFv8wjT+4OA5BEwzXpTbPKBazw5m1DHCZxVl7jfKNrDCLkmIu4IHIgS+m0WF0z
-	 H6o3c7bKL+Pq6yLiH4ftaw/u6WESMl3CaSckAzt9qOzqgE5uS7bGyD0QYZW7bUL9ZH
-	 ZpJQeOfCEKvgDL3O8qqhBZ1ElnWyaYp2EkGd0Ng33C1Lgbk+5VUAIFyLtzp02z4MEV
-	 HiZ239Vu+E0rGOGT92PCCrEuYJSM0zr7CclEJsis9hgu6WSFB/SpIavUKAcsMkaMUq
-	 eVh/CoosDLYaQ==
-Date: Mon, 23 Mar 2026 16:03:37 +0000
-From: Mark Brown <broonie@kernel.org>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="QZB5ta7c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=4+lL
+	UWZVNvR5PoeDR//xER1BrIVP+xwcLMC44aIHEUI=; b=QZB5ta7cSrhwHbvmBXqC
+	QaQ6QWgav4k39yiltqs46LLAguHjQbj/whbnp0DWWX+tnPIg/HjQSkebUfuwgs1e
+	nC65YCV3cWEozrQqBebE8LB8BPKiyEQ9GDTOg3AYfeq4gn5igQl2ET9O7+etQenU
+	TchSCjSBxjnn4NVN9Xrh9KXE6FdwyBeHczMybkxy6CGQlHUCLXfYDT9Gha2L+WSH
+	XUcoVUvZoAyBNgm6+0PgTu+uZEX+1RYPxkg/72grAvSzS/Dizcnb0gkhc1Ueig21
+	AzODCFDicsKQ/Nm+kfBVeL7KzoiwtYzk5fAy1f0vcjZJjiIzMBNN365tJGnhqQlZ
+	PQ==
+Received: (qmail 2748410 invoked from network); 23 Mar 2026 17:43:50 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 Mar 2026 17:43:50 +0100
+X-UD-Smtp-Session: l3s3148p1@zwlGvbNN7IMujnsq
+Date: Mon, 23 Mar 2026 17:43:50 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>, linux-spi@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>, linux-i2c@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/19] spi: Use trace_call__##name() at guarded
+Subject: Re: [PATCH v2 12/19] i2c: Use trace_call__##name() at guarded
  tracepoint call sites
-Message-ID: <233c401b-e658-47e0-9ae2-b41521276a69@sirena.org.uk>
+Message-ID: <acFtxl7e9mbKn-3p@shikoro>
 References: <20260323160052.17528-1-vineeth@bitbyteword.org>
- <20260323160052.17528-14-vineeth@bitbyteword.org>
+ <20260323160052.17528-13-vineeth@bitbyteword.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YTLD6mE05S2eEcHn"
-Content-Disposition: inline
-In-Reply-To: <20260323160052.17528-14-vineeth@bitbyteword.org>
-X-Cookie: Avoid gunfire in the bathroom tonight.
-
-
---YTLD6mE05S2eEcHn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260323160052.17528-13-vineeth@bitbyteword.org>
 
-On Mon, Mar 23, 2026 at 12:00:32PM -0400, Vineeth Pillai (Google) wrote:
+On Mon, Mar 23, 2026 at 12:00:31PM -0400, Vineeth Pillai (Google) wrote:
 > Replace trace_foo() with the new trace_call__foo() at sites already
 > guarded by trace_foo_enabled(), avoiding a redundant
 > static_branch_unlikely() re-evaluation inside the tracepoint.
 > trace_call__foo() calls the tracepoint callbacks directly without
 > utilizing the static branch again.
+> 
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> Assisted-by: Claude:claude-sonnet-4-6
 
-Acked-by: Mark Brown <broonie@kernel.org>
+If the core of this series is accepted:
 
---YTLD6mE05S2eEcHn
-Content-Type: application/pgp-signature; name="signature.asc"
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
------BEGIN PGP SIGNATURE-----
+"To:"-Field of the message is empty!
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmnBZFgACgkQJNaLcl1U
-h9D2MAf/XiwNHzHQ9gsY5CmvVqSvM6vmhpnqY7Pq9Iw3sd1qfGZSk1bTit6YsL0+
-hhTxFHoc4DBTQRfNwtd8QsTcg42oa2JmNPRT3CyR+kKkYcKqvuCjOiHt33JVH6Ud
-l8VKUwPnHn5VEyxgfCny3eZ9EcpWM8exYNNCQ4A7jnbQPHuE/aCTUaYywRJZM8rQ
-8HPuaZIRiL3DTP+BsClQV4O1lqWIrwGNw0hf6fsXZPkc3jjmh8kQCSfiJay2A68g
-nmqFIV0LNxTsnDYMEEeQ1y856fUTFHzCz+6AZVxvB+qytSLJdvpOULH0wbYI8Tmq
-e4H2qhLiJhuxrJt0bNq1ffEBdHoqLg==
-=a/t7
------END PGP SIGNATURE-----
-
---YTLD6mE05S2eEcHn--
