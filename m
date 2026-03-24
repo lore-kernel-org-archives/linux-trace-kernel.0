@@ -1,40 +1,35 @@
 Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACE42F851;
-	Tue, 24 Mar 2026 21:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16E12459ED;
+	Tue, 24 Mar 2026 21:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774386147; cv=none; b=XPXY7uWOXMxcpGAf4CnCXE+QOGHHqsx7zpWLp6owLNBonAs8aQ3ktUhJQj9RJzUjGD63UHI92D2nX+CetsYexb+KDRWiNCPXAhD2jjJjkkTMdadHhn6UcfoUHmAA1K4Hcp7B8NJ5ZgnpKJXfRikQoL+gtoTkwthm9UdpM6D7M4k=
+	t=1774387520; cv=none; b=ed0lQG5OrIvG8r919ay3kXGbRLPU9M2Y5mZuBeeg0xYvmD8AuLyPAgeyfCcfiIutauM6xja+/v23Vth35U2im5jIMdEMjzbNNG/K9F4Yh9Ll51q/cyw8y6gn8hUcf3Qx2qPsqL8iyPakccn06z6MXfGgXwDzlhY/l2yHI6VVD3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774386147; c=relaxed/simple;
-	bh=GL+qA4pTv4cS7SCbFLA9KwC0gmU65vrrnM/ayKVBi+4=;
+	s=arc-20240116; t=1774387520; c=relaxed/simple;
+	bh=fzShhY+ttYjc+tQTjWjiCVZuWrXKNIcDk5g28UUUx9o=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UMwpHBv5H+09x+JebLZBGUW5OdZqbQAYYfWlMpLkvN97F+5kHDegVRkQq8b8kl6iLmALO5gPHigVyvfUASBmCvfGyhmmhTBFmUISNGFfP/7NmM0Z1VhWwbRM+ympJ4E3aogP3Xd+UZnyB1hwZSL5wtQOQ7CUc+IBRJpBTTWTBI4=
+	 MIME-Version:Content-Type; b=CamfKJBWZaHjdUgfu5dVMn/LkZMp5kfsuod3Y2IpHQE9XDyKyv1BUjUK4SVsYvjHTt9axS0BZ/4nd2dbRGlEA0dQHPF/JgnZISKTca9RNQhW7J5MWbTTYw4XcwkJlnLfkHNGeluYpmSF2Bhmig1UH3ID4fahavUnNCueAMIeSa8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id AEBC5E0519;
-	Tue, 24 Mar 2026 21:02:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 85F4960010;
-	Tue, 24 Mar 2026 21:02:21 +0000 (UTC)
-Date: Tue, 24 Mar 2026 17:03:03 -0400
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 8B4B4B96DD;
+	Tue, 24 Mar 2026 21:25:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 727F12002C;
+	Tue, 24 Mar 2026 21:25:15 +0000 (UTC)
+Date: Tue, 24 Mar 2026 17:25:57 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, jolsa@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-open-source@crowdstrike.com
-Subject: Re: [External] Re: [RFC PATCH bpf-next 2/3] ftrace: Use kallsyms
- binary search for single-symbol lookup
-Message-ID: <20260324170303.06ec4231@gandalf.local.home>
-In-Reply-To: <CAOu3gNiHGBEP2oU07fY73=qOBzLJou+_wUY-6txhrnvRo84pAg@mail.gmail.com>
-References: <20260223215113.924599-1-andrey.grodzovsky@crowdstrike.com>
-	<20260223215113.924599-3-andrey.grodzovsky@crowdstrike.com>
-	<20260225064723.53bcce3e@fedora>
-	<CAOu3gNjdE_GaEEC__L=4v44iMJZt_eBN2Se_FotCDjX0BXwi1w@mail.gmail.com>
-	<20260225183220.7ba404cf@fedora>
-	<CAOu3gNiHGBEP2oU07fY73=qOBzLJou+_wUY-6txhrnvRo84pAg@mail.gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
+ Rogers <irogers@google.com>
+Subject: Re: [PATCH v12 0/4] ring-buffer: Making persistent ring buffers
+ robust
+Message-ID: <20260324172557.04cfc2a9@gandalf.local.home>
+In-Reply-To: <177431040276.3708637.10277850418341653677.stgit@mhiramat.tok.corp.google.com>
+References: <177431040276.3708637.10277850418341653677.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,48 +37,40 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 85F4960010
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: h7fagp4qwrkhaaqayk9owyx783odwzfe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 727F12002C
+X-Stat-Signature: hrseg7pmfk93bpszh8xubhfyhrkhwqkh
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/W8KCwGwVFsfKNqUlrDuuj5/ppcDaWm6I=
-X-HE-Tag: 1774386141-79949
-X-HE-Meta: U2FsdGVkX1+8qHD8qAOGtORFwQ77mN9ZkRRH7e7C3No+2nN5uYlwOS7pRa48mAlnMZyxdnz3kuoqMDyzkVnIWCkSF0DP+l/B5Uho4ziDsLmEImOOwurKJNazORFf8dJHY+2ywNm7lGfinlFcIImSy3DiT/0ujxe/OT9gijqyvf5G3wdUAaIhn15u0159wLmpjO7o2ygmwJaF9NydHmdOjRnFJPSg/mBMcLh5pl1dQ8/xbvfazBj474ALpVSFDz08emphWzvzGqhajgN8U5kYw+f76pN+CudVMFUf/lJJwUroswxyQHcuMoWyMBeD8i/osH/UPDhQI+v7mY14TYKFCi7ndWQXTkL7ScVtZUEO+41VhZ1dBrMW5cElWech7VT7x38somTGoD9ZMi89VlTFPQ==
+X-Session-ID: U2FsdGVkX18D+kqrlQ+/xg5Xm5XQUC/CFxvhBRxru1Y=
+X-HE-Tag: 1774387515-60840
+X-HE-Meta: U2FsdGVkX1+O+0vqnyCdO8rg0aEHtup/+snJWlyMULXUruo+Cs5HpLsB5jM5yJ30jyT0QUOrvjbw1ZBy9ZFd9TAKedtIPwDvO0+ReF4taAlZxyNbGxB4T4JVtcGvL+6dmgZgS3o8veb5MqqkaYYzOUGbd3lnfM99+9OClea1LelgFG97NMqywjXtrt6oSHT9Zs100KVRunK2ZZcTfsLy/xjfF0CVUh7P+r4CPsmQCSz7dvumOazf1f5D3NPdzwg/PJ3e+gXr2ShJk8IJB963OtdL7pwEHSA3cziQDFa0WhzHEPzkKiDMNIgUZ/6rvYdZ6vlktu4QDjLFvNOC76kM1S0J7RNnTbdtZcNoLeUGIeKEkvYWjrBT0w==
 
-On Wed, 25 Feb 2026 20:22:50 -0500
-Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
+On Tue, 24 Mar 2026 09:00:03 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> On Wed, Feb 25, 2026 at 6:32=E2=80=AFPM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Wed, 25 Feb 2026 10:25:04 -0500
-> > Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
-> > =20
-> > > Hey Steve, are there any extra steps required on my side to make this=
- go
-> > > through your tree? =20
-> >
-> > I see you Cc'd linux-trace-kernel which places it into the tracing
-> > patchwork. If there's no dependency on any other patch, I can add it to
-> > my 7.1 queue. That is, after I get some more time to review it a little
-> > deeper.
-> >
-> > -- Steve =20
->=20
-> There are no dependencies, I performed the original optimization in libbpf
-> (patch 1) in hopes this will make session kprobes faster then legacy
-> kprobe/kretprobe pairs and when it didn't, I dug deeper and came up
-> with this second optimization here (patch 2).
->=20
-> Let me know of any issues once you have time to review, in the meantime
-> I will roll V2 with all the fixes per Jiri's comments including this patc=
-h.
+> Hi,
+> 
+> Here is the 12th version of improvement patches for making persistent
+> ring buffers robust to failures.
+> The previous version is here:
+> 
+> https://lore.kernel.org/all/177391152793.193994.8986943289250629418.stgit@mhiramat.tok.corp.google.com/
+> 
+> 
+> In this version, I rebased it on tracing/fixes branch (thus
+> the first fix patch has been removed) and fixed
+> a build error which came from a copy-paste mistake.
+> 
 
-Sorry for the late reply:
+Hi Masami,
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Can you rebase this on the ring-buffer/for-next branch?
+
+It has the remote updates for pkvm tracing, and there's some conflicts.
+That branch is also used by the ARM tree so it can't be rebased.
+
+Thanks,
 
 -- Steve
-
