@@ -1,73 +1,103 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F5336493B;
-	Tue, 24 Mar 2026 08:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCDE3D47AD;
+	Tue, 24 Mar 2026 08:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774342119; cv=none; b=hVmdUvAG2fFg3pp76pziRWWnC8JT/coe1XdP3tKHCN5gK+ddVymX3ZOifn8/eUqidH6AYfo035rSuonwfoiFc7EhTZVmiXW12NlAcNB5+A7RTyJ+HtZxU4p89YzruHBckCykvbxi2SqgpLj4Y5RU7zaojfNCeUkaYmlhRmIQ1EQ=
+	t=1774342720; cv=none; b=qANfQEqInqERwCngbPdj0o1Mr7/6bgcKp5z8Spb6kSOSsVm2D3aDEhhwn5Cr/i+VVMzAYpMGUlUgoZDWTwCyrfuSTTYq1KzAIWzzSSHqYGChHRubQSdOMaIYQE/rbuZZHZxm3SZFFjfMt4MvakCOu4K3MXbg5uFLq+A+nZjU8Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774342119; c=relaxed/simple;
-	bh=wiA3mBNHbtEvp/w1k1i0uwYum5jXhdIm8EzbSFtZ6k4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nEQExx7afXsoh7zAmr7U41j0WL2TbA8lELOGf9ifd+kUAeZHBvZ1m94tqPzDRYesJ/LTYlG0suCiDXsOU4BAhFRJOfnRnk4Q7OIvvK+nUTFCdTqgjyNDJCKi6LLHn0q61YPvVsWAD/5bozaVgPd/DVUqiJx9NcnA+CPJJk55beg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-208-105-007.092.208.pools.vodafone-ip.de ([92.208.105.7] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1w4xR8-00000001fIK-0oit;
-	Tue, 24 Mar 2026 09:48:30 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2] tracing: fprobe: do not zero out unused fgraph_data
-Date: Tue, 24 Mar 2026 09:47:08 +0100
-Message-ID: <20260324084804.375764-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260323102020.239567-1-martin@kaiser.cx>
-References: <20260323102020.239567-1-martin@kaiser.cx>
+	s=arc-20240116; t=1774342720; c=relaxed/simple;
+	bh=DdRGu+zU4PWGAInuW3WV7GbGPB8GnzmEFflSjw7AHhI=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=U0bYckpH/yj7q8G7K3L1RkQY+0ZsJCaYrnBlD4G42WJh9CRCdF7M7laT+jPFNgq1iKkA4RpNN3Fbibv3tF8nppl1QYBLeJGMO3BaJflO2TOpmO6ahLeh3H5JtNlff5zWp2J6DvtUj3s4hupCdq9c/HxlaNGVYGFdhbGyT1HrGaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+7qIfaE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+7qIfaE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DAFC2BC9E;
+	Tue, 24 Mar 2026 08:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774342719;
+	bh=DdRGu+zU4PWGAInuW3WV7GbGPB8GnzmEFflSjw7AHhI=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=F+7qIfaEjWIo+pu0HoRTJRajg4pf9ESMspowiKeHUeUhGn4aNXwNiEsuXNwXzD8Pz
+	 N5CNduztrzWDsGEqEZYZnexY/6HrYEujjfw01J58DRn9sfHG6iPdlVtkjsW3zk7gCa
+	 jaeLTd8MR7VnGb1mafCvpDlTZT6ccyA/4oSn6qiIeUPhfDar3D2k/YqvGZCUqc/eqN
+	 CARQmcJdccy/QvIVLj+41TCVQxLguClSW3C06hiMZLlA/GgBefGkqCzUcJrB9n5luy
+	 VFzSJBpsk6TsbFTWc6PPvJiUGwHuES3RsaS0Cv17/4hcjs+lPz3uss44po36zUz57b
+	 6N1johJJ667Aw==
+Content-Type: multipart/mixed; boundary="===============2899610495426949031=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <164b58d37098843f85298dac240da89e8383c552500148fa53f642d40d72b682@mail.kernel.org>
+In-Reply-To: <20260324081846.2334094-17-jolsa@kernel.org>
+References: <20260324081846.2334094-17-jolsa@kernel.org>
+Subject: Re: [PATCHv4 bpf-next 16/25] libbpf: Add btf_type_is_traceable_func function
+From: bot+bpf-ci@kernel.org
+To: jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
+Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kafai@fb.com,eddyz87@gmail.com,songliubraving@fb.com,yhs@fb.com,menglong8.dong@gmail.com,rostedt@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Tue, 24 Mar 2026 08:58:39 +0000 (UTC)
 
-If fprobe_entry does not fill the allocated fgraph_data completely, the
-unused part does not have to be zeroed.
+--===============2899610495426949031==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-fgraph_data is a short-lived part of the shadow stack. The preceding
-length field allows locating the end regardless of the content.
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index c6cd6ccb870b..139df8484edb 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+[ ... ]
+
+> +bool btf_type_is_traceable_func(const struct btf *btf, const struct btf_type *t)
+> +{
+
+[ ... ]
+
+> +	/* No support for struct/union return argument type. */
+> +	t = btf__type_by_id(btf, proto->type);
+> +	while (t && btf_type_is_modifier(t))
+> +		t = btf__type_by_id(btf, t->type);
+> +
+> +	if (btf_is_struct(t) || btf_is_union(t))
+> +		return false;
+
+It looks like t can be NULL after the while loop exits, since
+btf__type_by_id() returns NULL for out-of-range type ids.
+btf_is_struct() and btf_is_union() would then dereference it.
+
+The kernel's __get_type_size(), which btf_distill_func_proto()
+calls for the same purpose, has this after an identical while loop:
+
+kernel/bpf/btf.c:__get_type_size() {
+    ...
+    while (t && btf_type_is_modifier(t))
+        t = btf_type_by_id(btf, t->type);
+    if (!t)
+        return -EINVAL;
+    ...
+}
+
+Should there be a similar NULL check here before calling
+btf_is_struct(t)?
+
+> +
+> +	for (i = 0; i < nargs; i++) {
+
+[ ... ]
+
+> +	return true;
+> +}
+
+
 ---
-v2:
- - remove the memset instead of fixing the length
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
- kernel/trace/fprobe.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index dcadf1d23b8a..56d145017902 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -450,8 +450,6 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
- 				used += FPROBE_HEADER_SIZE_IN_LONG + size_words;
- 		}
- 	}
--	if (used < reserved_words)
--		memset(fgraph_data + used, 0, reserved_words - used);
- 
- 	/* If any exit_handler is set, data must be used. */
- 	return used != 0;
--- 
-2.43.7
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/23480161822
+--===============2899610495426949031==--
