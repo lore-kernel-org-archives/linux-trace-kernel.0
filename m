@@ -1,149 +1,148 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E51C358388
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Mar 2026 16:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE593D2FFD;
+	Tue, 24 Mar 2026 16:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774368024; cv=none; b=OdwfDs//RRa0lC591FDLzaqMsUMVyswdwXJJKGGe0ip/3TPg/P4JK0PMAyqCESWp4TfErQDFO48o0SIvE0VKmFHcWHojO93+WQpXIGN7gCwb6aNwyp80HKwpE8sVBKiGb9zwhoveSlWte7zR3v+M4D8EoKXS198Cb9H8tslqcag=
+	t=1774369122; cv=none; b=k2QgY2fQpkMFNjG1Ei1IKRnfAZhuNievO/YRcZMR+0N3IOyYGQ0mqqySrP1/ajsFxf7Lr3PE4ye3OgfVglXdEACF4kEVBGImqbVFCQLDSQNExxvYwVBeHMHEBBXTuXmOQ6TxAOkAv7L95DiGjSzHNN0T6TGULxN90fj4KHvxyt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774368024; c=relaxed/simple;
-	bh=o+cMkXZ4AL0yvc8YxODTxfgOpONgzCRH94hoPaiSk6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oQeXOJs4vDISNP0ac+cI7N/qFkNEHCc3CPIMBW7Dwc/tE072SfequGC7KKqcSyMsF6OdpJJFEcWpODGdyWPNja2X4EI1oXHG11CIfzMYXcwqnUD0h+iUlqjouojZKVVprdQaQdgyJcrlkSz4Kw/06LpMn9vnI166z2S9KvpmAwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KkAkN/7n; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KkAkN/7n"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-48557c8ad47so10318645e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Mar 2026 09:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1774368021; x=1774972821; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JZud2txb2+gokYF6qCswpOqRe8hThYc5D0An7F/T1G0=;
-        b=KkAkN/7nZwFHSlOrMHhFIszI7EZfNiGhn2NZaPp3knF8FbvT7qhEsjnixr18ZsPQ8F
-         Np694D1YOe7BoBzB06L6vrk44wLjWMWnkgXEjYUCNuk/nUAcrOazMZ/scQP6rctvOpQ8
-         LlUa3xx/PjV6E1b47uLOkTh4GrxZBh25woSoYps5wJzpOkbCjEWWEtHoIFpGIpZoSFIj
-         FX+VQxihc19Umdtg1EwdS+Qt0Q/v4QCIIVnV5969BwS118bpndgeKe1mzo4Y6KDlWneV
-         JFTCVf11QpRpe1vcHy7jPH+oE6oAejDbwwylsLzsf9nhEs0vc51h886yPsVqpln9Xq5q
-         3JFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774368021; x=1774972821;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JZud2txb2+gokYF6qCswpOqRe8hThYc5D0An7F/T1G0=;
-        b=gbLAJPWSRRUw/s+EnJi8A6JFXUErb556I3NYll2K31rrHdRxUUMMwvG81EGAir1wk2
-         gbapvsNA+wDX49y4lZUh3lX3KMlcSsZQylmbbzsC2QYVTn5Tn3KviJJIvPg/IAfHXMkB
-         De9QFlJodCMXDRG52pdczBzocIbgYL3ohTlOnTRZyVh7MUldWdaDzkeaxvUTPCAVeE1F
-         OZNFi7tRSncCKdS370ttRGck6cuAQotZxqe5HfAwRUqFd4IS6hJAnP/rAWMkrBSPaCp4
-         UC+tay8Klah8dUVQXQTMGSbcgYLnurprU9vpaX7j2DeWAABfLjOfEFv3xvbWUXdgI3O8
-         jK6w==
-X-Forwarded-Encrypted: i=1; AJvYcCV4CZIZT3XdN8tjVr3qfM8Lfb6xWbq/deBL3sTGOyBaJON/qoG+FchpWDp+R90n5q4I9ZCSVnjSmmwQ6Yq0uMky94w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyotgMYPobRpX7JGboRrMp/Fts7MPqn0OXDctcU9hV6QNvgh4XD
-	ewUq2YfBohdSiZ0Sb+seW9aFIq2oT8Q6Z90Xp+hl4lcW6G7eqUWNUcGa9GFvhGl9AHw=
-X-Gm-Gg: ATEYQzzfOeaw4YgV0R1UPMDxORtRnu5kyg/xgJeS46sbS3Yql0XD4OAnETqlmw9Gnry
-	zmHu9T2uDYrq5qGiXJLB6PwICzdvQYdZEsAYAdyf1bSdgodtVd602095is8JTH4hEZXH8JnSIxm
-	q6ForTX2DsiG3RulGUE38e5KHc3ueqDq/aIIMSNCwmh4eZVVkjV4dHKzZwJibVnZ0r3XZUV5d3k
-	0ej4Omh121kbDw9+UvvYz2QvVd0P6pIOyyCQlEZflQo1lVQxH+AlCGKdHjSWkDHo5tw6XegFD5s
-	uMRzklr3bKoc1LD+Ie3isKVlN8RvhYnBAth5iLMjf249CJQd8ATn71O9FkZ2i276EQ6Uf2j2fq1
-	+YdmS9PJQEzscdHDPQw2ANOdzLha6ieRo3GxKxcGPLniM3qgpaQLVhqu9IwxnoapQj1z9GkMDa2
-	hLxc79TfI1s25qiQvaU2Haw+yAw5EKshjQPix/c7i/tHMm
-X-Received: by 2002:a05:600c:8b31:b0:485:30f7:6e88 with SMTP id 5b1f17b1804b1-487160881a5mr4153985e9.31.1774368020765;
-        Tue, 24 Mar 2026 09:00:20 -0700 (PDT)
-Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-487113c4eb3sm68147455e9.0.2026.03.24.09.00.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2026 09:00:20 -0700 (PDT)
-Message-ID: <282574df-7689-4677-929b-b844e7201bd5@suse.com>
-Date: Tue, 24 Mar 2026 17:00:19 +0100
+	s=arc-20240116; t=1774369122; c=relaxed/simple;
+	bh=XWLd2knKWRKJfgzX4ohM9pATxzDgSSdtIM2rxrGnybw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LdtFwY0l8lQQQUL4Cnhlu1wrCObYhRHUJl73LkeQcO3KQvRi9/MRMuI9ky1GRAGBZK+ETE44c9XSiUp8MpwBrSeU94JssGsGMFzdOQM+z35Xyb9QmicXP/yaZIIxLeXrSGcirZMgSE2EAOEdiZFZVZvUycTPL3+ehtjMtV2W7tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id C0F86C1749;
+	Tue, 24 Mar 2026 16:18:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 9C1C440;
+	Tue, 24 Mar 2026 16:18:36 +0000 (UTC)
+Date: Tue, 24 Mar 2026 12:19:18 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: <hu.shengming@zte.com.cn>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <zhang.run@zte.com.cn>, <yang.tao172@zte.com.cn>, <ran.xiaokai@zte.com.cn>,
+ <luo.haiyang@zte.com.cn>
+Subject: Re: [PATCH] tracing/osnoise: fix potential deadlock in cpu hotplug
+Message-ID: <20260324121918.454d6a7b@gandalf.local.home>
+In-Reply-To: <20260324150616953rMo1BWtAZ1nXTNrEFP6hr@zte.com.cn>
+References: <20260324150616953rMo1BWtAZ1nXTNrEFP6hr@zte.com.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] module/kallsyms: sort function symbols and use binary
- search
-To: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
- Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
- Daniel Gomez <da.gomez@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Jordan Rome <linux@jordanrome.com>,
- Viktor Malik <vmalik@redhat.com>
-References: <20260317110423.45481-1-stf_xl@wp.pl>
- <b6030f42-b4d2-4e52-acec-76e25c0f40db@suse.com>
- <20260324125304.GA15972@wp.pl>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20260324125304.GA15972@wp.pl>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9C1C440
+X-Stat-Signature: pwz7918ig4n6sf37aphi14uu1sqtmqcj
+X-Rspamd-Server: rspamout03
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18g94aUZ9l09HEiUxAw+R8+ja7AllMmhBE=
+X-HE-Tag: 1774369116-252273
+X-HE-Meta: U2FsdGVkX18Z9Qx05BLSb+56CuGMEixhjoVv1D1qx8OccXRV9vweRE6DqvjSL+BDhl3WWQzd0FfvjMcGHJp0tE0/bv3JPDeGBOueNCgk7ug6E2rNGyaJZWT6x6U2M40ZqySTvwqFJnNHCq8LztnqoQ5/Q05JzbMAZbwkjuvkBjC2ldJcNxY2IN8wHRW5G7GixJutVQOxUXvz4nIt5hdr6T0PjbokpOOlObbp4BO6i4DkL6zIexL3f/74coro/SngfXMfpc/1bM0JVAzyq4VueZpfUyYXCLsU9zgQXky2YKWa3TbC6B8H7I6tOYMpxlb26tQnCxZFDZ0xvgLIj7EYGQC8u64QEXkIEGJbVoUAxNaeBBZkjZ5JF1IMrPo8c7s1Gm2o0PWMY2dra4xQXgj7SoNjyZy2cEqL3dbxnPXMUs4=
 
-On 3/24/26 1:53 PM, Stanislaw Gruszka wrote:
-> Hi,
+On Tue, 24 Mar 2026 15:06:16 +0800 (CST)
+<hu.shengming@zte.com.cn> wrote:
+
+> From: luohaiyang10243395 <luo.haiyang@zte.com.cn>
 > 
-> On Mon, Mar 23, 2026 at 02:06:43PM +0100, Petr Pavlu wrote:
->> On 3/17/26 12:04 PM, Stanislaw Gruszka wrote:
->>> Module symbol lookup via find_kallsyms_symbol() performs a linear scan
->>> over the entire symtab when resolving an address. The number of symbols
->>> in module symtabs has grown over the years, largely due to additional
->>> metadata in non-standard sections, making this lookup very slow.
->>>
->>> Improve this by separating function symbols during module load, placing
->>> them at the beginning of the symtab, sorting them by address, and using
->>> binary search when resolving addresses in module text.
->>
->> Doesn't considering only function symbols break the expected behavior
->> with CONFIG_KALLSYMS_ALL=y. For instance, when using kdb, is it still
->> able to see all symbols in a module? The module loader should be remain
->> consistent with the main kallsyms code regarding which symbols can be
->> looked up.
+> The following sequence may leads deadlock in cpu hotplug:
 > 
-> We already have a CONFIG_KALLSYMS_ALL=y inconsistency between kernel and 
-> module symbol lookup, independent of this patch. find_kallsyms_symbol()
-> restricts the search to MOD_TEXT (or MOD_INIT_TEXT) address ranges, so
-> it cannot resolve data or rodata symbols.
+>   CPU0                        |  CPU1
+>                               |  schedule_work_on
+>                               |
+>   _cpu_down//set CPU1 offline |
+>   cpus_write_lock             |
+>                               |  osnoise_hotplug_workfn
+>                               |    mutex_lock(&interface_lock);
+>                               |    cpus_read_lock();  //wait cpu_hotplug_lock
+>                               |
+>                               |  cpuhp/1
+>                               |    osnoise_cpu_die
+>                               |      kthread_stop
+>                               |        wait_for_completion //wait osnoise/1 exit
+>                               |
+>                               |  osnoise/1
+>                               |    osnoise_sleep
+>                               |      mutex_lock(&interface_lock); //deadlock
+> 
+> Fix by swap the order of cpus_read_lock() and mutex_lock(&interface_lock).
 
-My understanding is that find_kallsyms_symbol() can identify all symbols
-in a module by their addresses. However, the issue I see with
-MOD_TEXT/MOD_INIT_TEXT is that the function may incorrectly calculate
-the size of symbols that are not within these ranges, which is a bug
-that should be fixed.
+So the deadlock is due to the "wait_for_completion"?
 
-A test using kdb confirms that non-text symbols can be found by their
-addresses. The following shows the current behavior with 7.0-rc5 when
-printing a module parameter in mlx4_en:
+How did you find this bug? Inspection, AI, triggered?
 
-[1]kdb> mds __param_arr_num_vfs
-0xffffffffc1209f20 0000000100000003   ........
-0xffffffffc1209f28 ffffffffc0fbf07c [mlx4_core]num_vfs_argc  
-0xffffffffc1209f30 ffffffff8844bba0 param_ops_byte  
-0xffffffffc1209f38 ffffffffc0fbf080 [mlx4_core]num_vfs  
-0xffffffffc1209f40 000000785f69736d   msi_x...
-0xffffffffc1209f48 656c5f6775626564   debug_le
-0xffffffffc1209f50 00000000006c6576   vel.....
-0xffffffffc1209f58 0000000000000000   ........
-
-.. and the behavior with the proposed patch:
-
-[1]kdb> mds __param_arr_num_vfs
-0xffffffffc1077f20 0000000100000003   ........
-0xffffffffc1077f28 ffffffffc104707c   |p......
-0xffffffffc1077f30 ffffffffb4a4bba0 param_ops_byte  
-0xffffffffc1077f38 ffffffffc1047080   .p......
-0xffffffffc1077f40 000000785f69736d   msi_x...
-0xffffffffc1077f48 656c5f6775626564   debug_le
-0xffffffffc1077f50 00000000006c6576   vel.....
-0xffffffffc1077f58 0000000000000000   ........
-
--- 
 Thanks,
-Petr
+
+-- Steve
+
+
+> 
+> Signed-off-by: Luo Haiyang <luo.haiyang@zte.com.cn>
+> ---
+>  kernel/trace/trace_osnoise.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index dee610e465b9..be6cf0bb3c03 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+> @@ -2073,8 +2073,8 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+>  	if (!osnoise_has_registered_instances())
+>  		return;
+> 
+> -	guard(mutex)(&interface_lock);
+>  	guard(cpus_read_lock)();
+> +	guard(mutex)(&interface_lock);
+> 
+>  	if (!cpu_online(cpu))
+>  		return;
+> @@ -2237,11 +2237,11 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
+>  	if (running)
+>  		stop_per_cpu_kthreads();
+> 
+> -	mutex_lock(&interface_lock);
+>  	/*
+>  	 * avoid CPU hotplug operations that might read options.
+>  	 */
+>  	cpus_read_lock();
+> +	mutex_lock(&interface_lock);
+> 
+>  	retval = cnt;
+> 
+> @@ -2257,8 +2257,8 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
+>  			clear_bit(option, &osnoise_options);
+>  	}
+> 
+> -	cpus_read_unlock();
+>  	mutex_unlock(&interface_lock);
+> +	cpus_read_unlock();
+> 
+>  	if (running)
+>  		start_per_cpu_kthreads();
+> @@ -2345,16 +2345,16 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
+>  	if (running)
+>  		stop_per_cpu_kthreads();
+> 
+> -	mutex_lock(&interface_lock);
+>  	/*
+>  	 * osnoise_cpumask is read by CPU hotplug operations.
+>  	 */
+>  	cpus_read_lock();
+> +	mutex_lock(&interface_lock);
+> 
+>  	cpumask_copy(&osnoise_cpumask, osnoise_cpumask_new);
+> 
+> -	cpus_read_unlock();
+>  	mutex_unlock(&interface_lock);
+> +	cpus_read_unlock();
+> 
+>  	if (running)
+>  		start_per_cpu_kthreads();
+
