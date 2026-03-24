@@ -1,110 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9E13DBD5E;
-	Tue, 24 Mar 2026 15:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB8E23D7E6;
+	Tue, 24 Mar 2026 15:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774366962; cv=none; b=iAM0soZxOSZAo/t6JVKnNXJ8wPWQgbcMPRQBBu3K90bBan1uK8Ne55yWDmR/8vrOhOD0Y5SG5fE2Ta9L7gBggSsrrWR4aQP0bdqyK5AUp1F23Ek+BuB9G6bxI8F2YAvCVZelxv7T25WqZ4AngiH3vx8twXCwMDbdLW2Z18wx2Ro=
+	t=1774367173; cv=none; b=PgGP4kF9Lb4KzZRxOgm9L2Cr7rpNl6B/DzaxCpRWLhxC+Ayp1TCRJku19a1jXHQ+iW4vb3kRF+NkWk8JWc/SIrOB7o1PyLszWUwclHHFyo74JAAMSVJhEjmOx0nfGJCzxCF/9OpbT9ztiniGWPQ8YIakSLdRjBoYiiXpPPPcqFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774366962; c=relaxed/simple;
-	bh=2Zsq8skSNnh/MXXGZNOJx5noaTfOOayvR6/+7n/9yQk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=u950vr2ePy6zQuLJdeJN6Fz83Tv8q+Taiq7qegNaYES1j659qYsGQMkdU84HlOJdV42pyvHvzF9P1JBChwVOFmT2kn/TolH35OePuITmzaqhlDXObUobDf+sBVisdpHwOKg2+RbAVBrEtKizTOEPVm2qyN4u2ah1c6R40Sqw3Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xt9xEVjR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xt9xEVjR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74097C19424;
-	Tue, 24 Mar 2026 15:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774366962;
-	bh=2Zsq8skSNnh/MXXGZNOJx5noaTfOOayvR6/+7n/9yQk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Xt9xEVjRQAy03h/xT4dHGrNbiSNtzplkl0cuifiVSX409f/6fyMyTsESXCWptScD7
-	 dWGIsldm2WS6Y6M5mMzZEj3TJq39ggbLB9YmlDcjM1di0nAOPfW8l7wljVsFc0kFpA
-	 Ns+XDCwYvUlXgbTO1x56OqzDWZpY6dS2GZVHZ/KeN23X9fGwJUOupUfgKUvIdwdmiS
-	 jCTJqPO23SMvRjyAXYRhjp6TyFNZrrj3NCPslpKDtJGhS8tMA5onHfpl1aEJIBXGDs
-	 sFlVF1eXuVojai4DCy6LrUMFoqgspCVtQKU8OQv3KEcc1nQcr8QPi+QqeOVVhe+GFm
-	 drptW/zYQ89wg==
-Date: Wed, 25 Mar 2026 00:42:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Martin Kaiser <martin@kaiser.cx>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: fprobe: do not zero out unused fgraph_data
-Message-Id: <20260325004238.a25e7dc93f891d4cf17f76aa@kernel.org>
-In-Reply-To: <20260324083903.414352aa@gandalf.local.home>
-References: <20260323102020.239567-1-martin@kaiser.cx>
-	<20260324084804.375764-1-martin@kaiser.cx>
-	<20260324083903.414352aa@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774367173; c=relaxed/simple;
+	bh=pLt1XqU3RZcuHwA0yFwsdkAZPuickPwzxs96gflSBRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PKIh1kIbfoyFTXqxeZxZMlXOy6840g9+tH61TaySp891JZd+ZAE//cj5vIO3y3GTt+VeUp/0/Q6HYKI4wgKWe5Aj+0TxfIBVcF2wksaxj+OkcY9yoddqGmvV0QySz8XDLMoCL5NybTkERZGYOieVhV6n7fO+LeWfYiHHuUO35OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id AEFD388B35;
+	Tue, 24 Mar 2026 15:36:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id F093718;
+	Tue, 24 Mar 2026 15:36:48 +0000 (UTC)
+Date: Tue, 24 Mar 2026 11:37:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Aaron Conole <aconole@redhat.com>
+Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, Peter Zijlstra
+ <peterz@infradead.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>, Eelco
+ Chaudron <echaudro@redhat.com>, Ilya Maximets <i.maximets@ovn.org>, Marcelo
+ Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long
+ <lucien.xin@gmail.com>, Jon Maloy <jmaloy@redhat.com>, Willem de Bruijn
+ <willemb@google.com>, Samiullah Khawaja <skhawaja@google.com>, Hangbin Liu
+ <liuhangbin@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ dev@openvswitch.org, linux-sctp@vger.kernel.org,
+ tipc-discussion@lists.sourceforge.net, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/19] net: Use trace_call__##name() at guarded
+ tracepoint call sites
+Message-ID: <20260324113731.5252724e@gandalf.local.home>
+In-Reply-To: <f7ttsu58con.fsf@redhat.com>
+References: <20260323160052.17528-1-vineeth@bitbyteword.org>
+	<20260323160052.17528-5-vineeth@bitbyteword.org>
+	<f7ttsu58con.fsf@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 44qkot3uem9ayugoztbi5z8yeb6k7s7e
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: F093718
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+tQiMn63Ec6IOmabtDBFhjzQTi5TFzBjc=
+X-HE-Tag: 1774366608-75188
+X-HE-Meta: U2FsdGVkX19yuAlxy+EoRVjDrCnH7N5nKRqw/zEwwZC+0iz33Moky87HDcPHBdq7orWI1a5ex/4oOWmHKzFtnBCa+C49FaCGuGESvPmS6eZ+Yg7FW1CDh9GufeoAF7RG0MbJliPUtZnyFah7YBt3MUz8wzRb2slkVWkSdCnPR98osAg1Dv5cNHz+fvo4Rm/FeeyTXJhB3GR7WbPLLUpI27359JqfgGUZpS6mj02gpifyicIXkpQVM1FuCpTPvqu/QS4xU2T3ACQ+LE1YXEEaVkE/QVSk6ud7Bb4rOwYHU5U1cj60+lJz0HkA+QyxmF7zwiw8RbAoZJnkx7LY4I2JZY1LfL8PA3eumh07N3g04fE54z1+OipVfc+XHoobFK4GirBxqASTnUh57Y58A2OK8lhis1Y0GhcDtr3yfvdQzlAyMDeZBI6ofWRESVa6tnikL9TyMHTKDgVoCEHjprrt1Vu5o02xrlYKbo3y1RDFl/c4uV/O65kHRdh7Q5AaVYoZ/RLifpTQl1w=
 
-On Tue, 24 Mar 2026 08:39:03 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 24 Mar 2026 11:33:28 -0400
+Aaron Conole <aconole@redhat.com> wrote:
 
-> On Tue, 24 Mar 2026 09:47:08 +0100
-> Martin Kaiser <martin@kaiser.cx> wrote:
+> "Vineeth Pillai (Google)" <vineeth@bitbyteword.org> writes:
 > 
-> Hi Martin,
+> > Replace trace_foo() with the new trace_call__foo() at sites already
+> > guarded by trace_foo_enabled(), avoiding a redundant
+> > static_branch_unlikely() re-evaluation inside the tracepoint.
+> > trace_call__foo() calls the tracepoint callbacks directly without
+> > utilizing the static branch again.
+> >
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> > Assisted-by: Claude:claude-sonnet-4-6
+> > ---  
 > 
-> First, please do not send a v2 as a reply to v1. A new version should
-> always start a new mail thread.
-> 
-> > If fprobe_entry does not fill the allocated fgraph_data completely, the
-> > unused part does not have to be zeroed.
-> > 
-> > fgraph_data is a short-lived part of the shadow stack. The preceding
-> > length field allows locating the end regardless of the content.
-> > 
-> > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> > ---
-> > v2:
-> 
-> But to maintain a link to the previous version, I recommend adding here:
-> 
-> Changes since v1: https://lore.kernel.org/all/20260324084804.375764-1-martin@kaiser.cx
+> As noted before, I think we can just eliminate the guard in the
+> openvswitch module (and that would probably be a more understandable
+> fix) rather than replacing the call-in.
 
-Ah, this is a good idea for the patch which does not have cover mail.
+That should probably be a separate patch, as it actually changes the
+code beyond the purpose of this patch.
 
-Thanks :)
+Removing the guard first, and then have a patch like this to modify the
+rest.
 
-> 
-> 
-> >  - remove the memset instead of fixing the length
-> > 
-> >  kernel/trace/fprobe.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> > 
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index dcadf1d23b8a..56d145017902 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -450,8 +450,6 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
-> >  				used += FPROBE_HEADER_SIZE_IN_LONG + size_words;
-> >  		}
-> >  	}
-> > -	if (used < reserved_words)
-> > -		memset(fgraph_data + used, 0, reserved_words - used);
-> >  
-> >  	/* If any exit_handler is set, data must be used. */
-> >  	return used != 0;
-> 
-> As for the patch,
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> -- Steve
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
