@@ -1,114 +1,186 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7858405AD9;
-	Tue, 24 Mar 2026 15:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1FB39022D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Mar 2026 15:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774365740; cv=none; b=Zkb84Xz7B4q0TOGJfA4UgvgJn+oZXxr91Qm61beAt8mB2ev5AT8KDR8ddIsvR6L+Ngtkb/08oUk/hkNoioPnGS+pWV1iawAVBzQI4QQM7f3U6djoA+QAVxHk7B+WqazwaOGeOJGiL9kHR2FnqyNbybohm6saLJnjwvJ/gEZe3Ic=
+	t=1774366437; cv=none; b=jJw2UpMdB4mFGsogjGcUKcQOsNxRnlO/keV+wA+YXcx5un6nyAtwF+r3uBteLIf5hGoJ8gPIT88Zq8JOOpuTlVzzZdCSh40DoUTLXAxfbTmBNkw115LnkWvG2ftUjUlTkkz2sXMdigiSGdy/rsSdmujzr7NcD+PgxbROftDnGso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774365740; c=relaxed/simple;
-	bh=5gp3DqJPCe/toMX/HduC+gVZ5oMl0PiKk0s4X1SjLMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mYXTi3KkPfNjn/8nvQ7kVK27+jYX+jQNXamNv1nkuprgfnEkXD0MkQ1W+f9PD7s8pp3AJBp+nQixSc89lSBdyMT9pKCzWopG5FjVaa6nwF+Ij2moCQaxsEjLscXdVkuBjp3Mjr+FKrm3TbbuZZFQLGsvgmnYu6oWRgnBMz1DhzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 065ADE0274;
-	Tue, 24 Mar 2026 15:22:09 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id AA58630;
-	Tue, 24 Mar 2026 15:22:07 +0000 (UTC)
-Date: Tue, 24 Mar 2026 11:22:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, John Kacur <jkacur@redhat.com>, Luis Goncalves
- <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, Costa Shulyupin
- <costa.shul@redhat.com>, Wander Lairson Costa <wander@redhat.com>, LKML
- <linux-kernel@vger.kernel.org>, linux-trace-kernel
- <linux-trace-kernel@vger.kernel.org>, linux-doc
- <linux-doc@vger.kernel.org>, Attila Fazekas <afazekas@redhat.com>
-Subject: Re: [PATCH] Documentation/rtla: Document SIGINT behavior
-Message-ID: <20260324112249.5fe25641@gandalf.local.home>
-In-Reply-To: <20260324123229.152424-1-tglozar@redhat.com>
-References: <20260324123229.152424-1-tglozar@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774366437; c=relaxed/simple;
+	bh=kfjm5yZGiCfEtrhK2jWybCcIIFl5EeW2xNwPyeDQtzM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UmMax7hRWiCeFPT0SKPx+595xJyK8fPTaki+RC2p+DdVAK2pG4VhuRiE9zqnIc1MOu9MyjPUUMCGWluMEb1xPP4+bkOvJMPnS7ZYtWz8L3TEG4NuFDlB7n5To+hbBvlxbA4gl8CqwrpVclk3fvOR3xKqEEdR2kh8EF2Z2251q+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KOw27ufn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KOw27ufn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774366432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z2IIGMuAO+ucZPfz1QK9xPIoH0lITs2rYPhG8mHOgNI=;
+	b=KOw27ufnveZ92uOVONWAT6kQ2vYXNiNyc+6OWCBcGN6Z0cxbNPPSjYjP+WY1svkTgjkaVU
+	jVMy2Lg/L19oglk0f87Z2bKzo0lkU/WrQraXywdACZ6EJNBtn3GRlqVxfGs0BvdBaqieh5
+	Ti7/NbXwfXPVOZZWPoeU2WiFlIzL3kI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-pBWjeCHiMBykKOn1hjiBag-1; Tue,
+ 24 Mar 2026 11:33:46 -0400
+X-MC-Unique: pBWjeCHiMBykKOn1hjiBag-1
+X-Mimecast-MFC-AGG-ID: pBWjeCHiMBykKOn1hjiBag_1774366414
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 78E541800372;
+	Tue, 24 Mar 2026 15:33:33 +0000 (UTC)
+Received: from RHTRH0061144 (unknown [10.17.17.65])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2EADC19560B1;
+	Tue, 24 Mar 2026 15:33:29 +0000 (UTC)
+From: Aaron Conole <aconole@redhat.com>
+To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,  Peter Zijlstra
+ <peterz@infradead.org>,  "David S. Miller" <davem@davemloft.net>,  Eric
+ Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>,  Simon Horman <horms@kernel.org>,  Alexei
+ Starovoitov <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,
+  Jesper Dangaard Brouer <hawk@kernel.org>,  John Fastabend
+ <john.fastabend@gmail.com>,  Stanislav Fomichev <sdf@fomichev.me>,  Eelco
+ Chaudron <echaudro@redhat.com>,  Ilya Maximets <i.maximets@ovn.org>,
+  Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,  Xin Long
+ <lucien.xin@gmail.com>,  Jon Maloy <jmaloy@redhat.com>,  Willem de Bruijn
+ <willemb@google.com>,  Samiullah Khawaja <skhawaja@google.com>,  Hangbin
+ Liu <liuhangbin@gmail.com>,  Kuniyuki Iwashima <kuniyu@google.com>,
+  netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  bpf@vger.kernel.org,  dev@openvswitch.org,  linux-sctp@vger.kernel.org,
+  tipc-discussion@lists.sourceforge.net,
+  linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/19] net: Use trace_call__##name() at guarded
+ tracepoint call sites
+In-Reply-To: <20260323160052.17528-5-vineeth@bitbyteword.org> (Vineeth
+	Pillai's message of "Mon, 23 Mar 2026 12:00:23 -0400")
+References: <20260323160052.17528-1-vineeth@bitbyteword.org>
+	<20260323160052.17528-5-vineeth@bitbyteword.org>
+Date: Tue, 24 Mar 2026 11:33:28 -0400
+Message-ID: <f7ttsu58con.fsf@redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: AA58630
-X-Stat-Signature: f34oq9zmhj6jcdj9fsi97uzdhcn1o5mi
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX181Shg/JIEhs5Hh1/spZpiESdjHce3nxvg=
-X-HE-Tag: 1774365727-469128
-X-HE-Meta: U2FsdGVkX18FZWy5sfmGAjRF1lOT6u/xk99/lTD7bZZfbKeltJgBVZGScW9Af7fiieOfgVwW4r3mkc3uotn57bqwhvTh8etcbqk0Zj8gZGvHR/GzQH8jQaNZVDlggwVrV1jNBHGzIOtPCZC75uvaAv/RbNGzXY2uA86rfSvTEpa8IF7eCo3FE7fPwtZzyZ8B8wd7xGGfQOWMaP90qS6iTUaU/8hqodc/+DN+TdohL5yOTXuJy2N2fMBrFeN+d/8MOwEWB7QUWoWyU7UJGypEi1BC3HMWUzT9PERVEqKZr4nCrRJYRGHdFlmZa85uhAdWT884P2g8EH2vReeN4dHuFBFMWh9uALcCIV9WmMFWaDJIoIsEmlauvlDjwE0mhRWNhE4A5HeBDVu1Iav3YdX4jdHlXyxBH+KR3shQTD/LLoo=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: ZNrVvrTNzLYewpzKYX7srZtCkEA4xZlxeQazKiO7ocw_1774366414
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Tue, 24 Mar 2026 13:32:29 +0100
-Tomas Glozar <tglozar@redhat.com> wrote:
+"Vineeth Pillai (Google)" <vineeth@bitbyteword.org> writes:
 
-> The behavior of RTLA on receiving SIGINT is currently undocumented.
-> 
-> Describe it in RTLA's common appendix that appears in man pages for all
-> RTLA tools to avoid confusion.
-> 
-> Suggested-by: Attila Fazekas <afazekas@redhat.com>
-> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+> Replace trace_foo() with the new trace_call__foo() at sites already
+> guarded by trace_foo_enabled(), avoiding a redundant
+> static_branch_unlikely() re-evaluation inside the tracepoint.
+> trace_call__foo() calls the tracepoint callbacks directly without
+> utilizing the static branch again.
+>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> Assisted-by: Claude:claude-sonnet-4-6
 > ---
-> 
-> Note: There was a bug in SIGINT behavior, fixed in upcoming commit [1].
-> 
-> [1] https://lore.kernel.org/linux-trace-kernel/20260310160725.144443-1-tglozar@redhat.com/
 
-Hmm, this may be interesting enough to add to the change log itself.
+As noted before, I think we can just eliminate the guard in the
+openvswitch module (and that would probably be a more understandable
+fix) rather than replacing the call-in.
 
-> 
->  Documentation/tools/rtla/common_appendix.txt | 21 ++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/tools/rtla/common_appendix.txt b/Documentation/tools/rtla/common_appendix.txt
-> index 53cae7537537..8c90a02588e7 100644
-> --- a/Documentation/tools/rtla/common_appendix.txt
-> +++ b/Documentation/tools/rtla/common_appendix.txt
-> @@ -1,5 +1,26 @@
->  .. SPDX-License-Identifier: GPL-2.0
+>  net/core/dev.c             | 2 +-
+>  net/core/xdp.c             | 2 +-
+>  net/openvswitch/actions.c  | 2 +-
+>  net/openvswitch/datapath.c | 2 +-
+>  net/sctp/outqueue.c        | 2 +-
+>  net/tipc/node.c            | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 14a83f2035b93..f7602b1892fea 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -6444,7 +6444,7 @@ void netif_receive_skb_list(struct list_head *head)
+>  		return;
+>  	if (trace_netif_receive_skb_list_entry_enabled()) {
+>  		list_for_each_entry(skb, head, list)
+> -			trace_netif_receive_skb_list_entry(skb);
+> +			trace_call__netif_receive_skb_list_entry(skb);
+>  	}
+>  	netif_receive_skb_list_internal(head);
+>  	trace_netif_receive_skb_list_exit(0);
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index 9890a30584ba7..3003e5c574191 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -362,7 +362,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+>  		xsk_pool_set_rxq_info(allocator, xdp_rxq);
 >  
-> +SIGINT BEHAVIOR
-> +===============
-> +
-> +On the first SIGINT, RTLA exits after collecting all outstanding samples up to
-> +the point of receiving the signal.
-> +
-> +When receiving more than one SIGINT, RTLA discards any outstanding samples, and
-> +exits while displaying only samples that have already been processed.
-> +
-> +If SIGINT is received during RTLA cleanup, RTLA exits immediately via
-> +the default signal handler.
-> +
-> +Note: For the purpose of SIGINT behavior, the expiry of duration specified via
-> +the -d/--duration option is treated as equivalent to receiving a SIGINT. For
-> +example, a SIGINT received after duration expired but samples have not been
-> +processed yet will drop any outstanding samples.
-> +
-> +Also note that when using the timerlat tool in BPF mode, samples are processed
-> +in-kernel; RTLA only copies them out to display them to the user. A second
-> +SIGINT does not affect in-kernel sample aggregation.
-
-But does it affect the user space side of reading that information?
-
-> +
->  EXIT STATUS
->  ===========
+>  	if (trace_mem_connect_enabled() && xdp_alloc)
+> -		trace_mem_connect(xdp_alloc, xdp_rxq);
+> +		trace_call__mem_connect(xdp_alloc, xdp_rxq);
+>  	return 0;
+>  }
 >  
+> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+> index 792ca44a461da..60823de201417 100644
+> --- a/net/openvswitch/actions.c
+> +++ b/net/openvswitch/actions.c
+> @@ -1259,7 +1259,7 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
+>  		int err = 0;
+>  
+>  		if (trace_ovs_do_execute_action_enabled())
+> -			trace_ovs_do_execute_action(dp, skb, key, a, rem);
+> +			trace_call__ovs_do_execute_action(dp, skb, key, a, rem);
+>  
+>  		/* Actions that rightfully have to consume the skb should do it
+>  		 * and return directly.
+> diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
+> index e209099218b41..2b9755e2e4731 100644
+> --- a/net/openvswitch/datapath.c
+> +++ b/net/openvswitch/datapath.c
+> @@ -335,7 +335,7 @@ int ovs_dp_upcall(struct datapath *dp, struct sk_buff *skb,
+>  	int err;
+>  
+>  	if (trace_ovs_dp_upcall_enabled())
+> -		trace_ovs_dp_upcall(dp, skb, key, upcall_info);
+> +		trace_call__ovs_dp_upcall(dp, skb, key, upcall_info);
+>  
+>  	if (upcall_info->portid == 0) {
+>  		err = -ENOTCONN;
+> diff --git a/net/sctp/outqueue.c b/net/sctp/outqueue.c
+> index f6b8c13dafa4a..4025d863ffc84 100644
+> --- a/net/sctp/outqueue.c
+> +++ b/net/sctp/outqueue.c
+> @@ -1267,7 +1267,7 @@ int sctp_outq_sack(struct sctp_outq *q, struct sctp_chunk *chunk)
+>  	/* SCTP path tracepoint for congestion control debugging. */
+>  	if (trace_sctp_probe_path_enabled()) {
+>  		list_for_each_entry(transport, transport_list, transports)
+> -			trace_sctp_probe_path(transport, asoc);
+> +			trace_call__sctp_probe_path(transport, asoc);
+>  	}
+>  
+>  	sack_ctsn = ntohl(sack->cum_tsn_ack);
+> diff --git a/net/tipc/node.c b/net/tipc/node.c
+> index af442a5ef8f3d..5745d6aa0a054 100644
+> --- a/net/tipc/node.c
+> +++ b/net/tipc/node.c
+> @@ -1943,7 +1943,7 @@ static bool tipc_node_check_state(struct tipc_node *n, struct sk_buff *skb,
+>  
+>  	if (trace_tipc_node_check_state_enabled()) {
+>  		trace_tipc_skb_dump(skb, false, "skb for node state check");
+> -		trace_tipc_node_check_state(n, true, " ");
+> +		trace_call__tipc_node_check_state(n, true, " ");
+>  	}
+>  	l = n->links[bearer_id].link;
+>  	if (!l)
 
-Other than that ... LGTM,
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
