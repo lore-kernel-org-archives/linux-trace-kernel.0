@@ -1,103 +1,192 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FA6361DB4;
-	Tue, 24 Mar 2026 08:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8A3365A08;
+	Tue, 24 Mar 2026 08:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774339527; cv=none; b=mG2IocOA8ifRj8gmCweah9JXhYCwqToe4BJ6Kv+FxUkzPkLuYasLfwbR5VeBl0nBo+ar1YwYa5NOVvyqOp0Rv1E8M778CUa0DemzhaF07FQf1Dn5eQNGE4aZIFc5YPK63jI30mgWfUjkAa48L1+YN0Cv0k10nnvLTQKpa5cx/W4=
+	t=1774340340; cv=none; b=rkUHgr6T9ILAXdFzb9OwlRX0Nb7jwZxY2/das1v0WSqXBq4PNatuZ3EyPfNRg/+8xpy9tMBrRQLXMxAvASbEWfWyE7PVQRFtxcqWN7cwv+Cf41QLFsMwyE8GA8PyInT1pRLZF5q4gy5/jwa5wvqM98jrUnRt86cDUras1+mVXaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774339527; c=relaxed/simple;
-	bh=RpR02r0IgeVLuvhSb5Bajw8DhepqlitnzlTQlPZk+J4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GlgJTj+FwVQD1j32qKyozSw/AxA/pSwyr06A/OyKvrnvtdonkZLcx/xUhEmTrnzf7XlVFXHWN/4AmoTZdBIj/hYvlobYTwfS7u54WtdGHqkdcJ+v/GXXK3Pasr+CusN9Nfcf3zVud4XZPQ6r/ZzqFecoO4i5dOvyxPaOlmtCL1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from martin by akranes.kaiser.cx with local (Exim 4.98.2)
-	(envelope-from <martin@akranes.kaiser.cx>)
-	id 1w4wlE-00000001ey3-2PI2;
-	Tue, 24 Mar 2026 09:05:12 +0100
-Date: Tue, 24 Mar 2026 09:05:12 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] tracing: fprobe: fix the length of unused fgraph_data
-Message-ID: <acJFuICyULkwR8ka@akranes.kaiser.cx>
-References: <20260323102020.239567-1-martin@kaiser.cx>
- <20260323104818.0ad25dd5@gandalf.local.home>
- <20260324093404.58a9b4a1e9d4c38bb9b7065a@kernel.org>
+	s=arc-20240116; t=1774340340; c=relaxed/simple;
+	bh=ZP1fqAasDk3GX97kzqOf84Tgy/Nd3Ugu5ZUEar1SkB8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AWaUXNFsp0BzmU9IIjwTvzWzBOLhKiYH9kYpr+q37NHM57UODiZ5tsXxLR8czE0EcagBFYD8//enyfAtLTJ9PM3ATqA3iMQHTVYr983TYrEPI6L6urUAEIHY35VC/fFU0DLWQeM5XMtkCly2zM62+nf85/eai26m6OK4Xo6nyC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUAZgRIe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUAZgRIe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6AE4C2BC9E;
+	Tue, 24 Mar 2026 08:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774340339;
+	bh=ZP1fqAasDk3GX97kzqOf84Tgy/Nd3Ugu5ZUEar1SkB8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NUAZgRIedZ6JEMvehozelPs3VuITBFCTkDJl1XDe/GWkeY+SdtAP6d8DTiVSRNfj4
+	 s9wLcUQ6mLx6loXNeDZkKAVWdIqnmuNJ91VypTgG88Z3KBaCgZiyRbU8P2nGZGBifD
+	 jGcBPMaqRSAQQTBkTWkMM/dobi7/UWx6vzJyf56sx0XHbgzoWEZaN6ElL8aJfaXZkS
+	 i0Xv+eHz1lewUEFYkCwqh0To8CyNwrSE8ONyOPNcB0HnW+wuFwR4MCtd6zKbi0bmU8
+	 7RwKLnalgVzftvYaKNUhO3LylWYXLmNzgpOmMBrB+xNXu4xEkwfF7IfMWyyvETmt4H
+	 9ZMWzBXNSaywg==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Steven Rostedt <rostedt@kernel.org>
+Subject: [PATCHv4 bpf-next 00/25] bpf: tracing_multi link
+Date: Tue, 24 Mar 2026 09:18:21 +0100
+Message-ID: <20260324081846.2334094-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260324093404.58a9b4a1e9d4c38bb9b7065a@kernel.org>
-Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
+Content-Transfer-Encoding: 8bit
 
-Thus wrote Masami Hiramatsu (mhiramat@kernel.org):
+hi,
+adding tracing_multi link support that allows fast attachment
+of tracing program to many functions.
 
-> On Mon, 23 Mar 2026 10:48:18 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+RFC: https://lore.kernel.org/bpf/20260203093819.2105105-1-jolsa@kernel.org/
+v1: https://lore.kernel.org/bpf/20260220100649.628307-1-jolsa@kernel.org/
+v2: https://lore.kernel.org/bpf/20260304222141.497203-1-jolsa@kernel.org/
+v3: https://lore.kernel.org/bpf/20260316075138.465430-1-jolsa@kernel.org/
 
-> > On Mon, 23 Mar 2026 11:19:36 +0100
-> > Martin Kaiser <martin@kaiser.cx> wrote:
+v4 changes:
+- unlink rollback fix (added ftrace_hash_count) [bot]
+- use const for some bpf_link_create_opts tracing_multi members [bot]
+- adding missing comment for lockdep keys [bot]
+- selftest error path fixes (leaks) and other assorted test fixes [Leon Hwang]
+- several compile fixes wrt CONFIG_BPF_SYSCALL and CONFIG_BPF_JIT [kernel test robot]
+- make ftrace_hash_clear global, because it's needed in rollback
 
-> > > If fprobe_entry does not fill the allocated fgraph_data completely, the
-> > > unused part is zeroed with memset.
+v3 changes:
+- fix module parsing [Leon Hwang]
+- use function traceable check from libbpf [Leon Hwang]
+- use ptr_to_u64 and fix/updated few comments [ci]
+- display cookies as decimal numbers [ci]
+- added link_create.flags check [ci]
+- fix error path in bpf_trampoline_multi_detach [ci]
+- make fentry/fexit.multi not extendable [ci]
+- add missing OPTS_VALID to bpf_program__attach_tracing_multi [ci]
 
-> > > Fix the length for this memset call. Both reserved_words and used are in
-> > > units of return stack words, but memset needs the number of bytes.
+v2 changes:
+- allocate data.unreg in bpf_trampoline_multi_attach for rollback path [ci]
+  and fixed link count setup in rollback path [ci]
+- several small assorted fixes [ci]
+- added loongarch and powerpc changes for struct bpf_tramp_node change
+- added support to attach functions from modules
+- added tests for sleepable programs
+- added rollback tests
 
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
-> > > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> > > ---
-> > >  kernel/trace/fprobe.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-
-> > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > index dcadf1d23b8a..6a1192515afd 100644
-> > > --- a/kernel/trace/fprobe.c
-> > > +++ b/kernel/trace/fprobe.c
-> > > @@ -451,7 +451,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
-> > >  		}
-> > >  	}
-> > >  	if (used < reserved_words)
-> > > -		memset(fgraph_data + used, 0, reserved_words - used);
-> > > +		memset(fgraph_data + used, 0, (reserved_words - used) * sizeof(long));
-
-> > So fgraph_data is only used internally between the fprobe_fgraph_entry()
-> > and fprobe_return() as it only exists on the fgraph shadow stack. I'm not
-> > even sure if the unused portion needs to be zeroed out.
-
-> > Thus, this may be correct, but it doesn't look like a true bug that needs a
-> > stable tag.
-
-> Hmm, indeed. Maybe we'd better just remove this memset from for-next.
-
-Ok, I see your point. I'll send a v2 that removes the memset.
-
-Best regards,
-Martin
-
-> Thanks,
-
-
-> > -- Steve
-
+v1 changes:
+- added ftrace_hash_count as wrapper for hash_count [Steven]
+- added trampoline mutex pool [Andrii]
+- reworked 'struct bpf_tramp_node' separatoin [Andrii]
+  - the 'struct bpf_tramp_node' now holds pointer to bpf_link,
+    which is similar to what we do for uprobe_multi;
+    I understand it's not a fundamental change compared to previous
+    version which used bpf_prog pointer instead, but I don't see better
+    way of doing this.. I'm happy to discuss this further if there's
+    better idea
+- reworked 'struct bpf_fsession_link' based on bpf_tramp_node
+- made btf__find_by_glob_kind function internal helper [Andrii]
+- many small assorted fixes [Andrii,CI]
+- added session support [Leon Hwang]
+- added cookies support
+- added more tests
 
 
-> > >  	/* If any exit_handler is set, data must be used. */
-> > >  	return used != 0;
+Note I plan to send linkinfo support separately, the patchset is big enough.
+
+thanks,
+jirka
 
 
+Cc: Hengqi Chen <hengqi.chen@gmail.com>
+---
+Jiri Olsa (25):
+      ftrace: Add ftrace_hash_count function
+      ftrace: Make ftrace_hash_clear global
+      bpf: Use mutex lock pool for bpf trampolines
+      bpf: Add struct bpf_trampoline_ops object
+      bpf: Add struct bpf_tramp_node object
+      bpf: Factor fsession link to use struct bpf_tramp_node
+      bpf: Add multi tracing attach types
+      bpf: Move sleepable verification code to btf_id_allow_sleepable
+      bpf: Add bpf_trampoline_multi_attach/detach functions
+      bpf: Add support for tracing multi link
+      bpf: Add support for tracing_multi link cookies
+      bpf: Add support for tracing_multi link session
+      bpf: Add support for tracing_multi link fdinfo
+      libbpf: Add bpf_object_cleanup_btf function
+      libbpf: Add bpf_link_create support for tracing_multi link
+      libbpf: Add btf_type_is_traceable_func function
+      libbpf: Add support to create tracing multi link
+      selftests/bpf: Add tracing multi skel/pattern/ids attach tests
+      selftests/bpf: Add tracing multi skel/pattern/ids module attach tests
+      selftests/bpf: Add tracing multi intersect tests
+      selftests/bpf: Add tracing multi cookies test
+      selftests/bpf: Add tracing multi session test
+      selftests/bpf: Add tracing multi attach fails test
+      selftests/bpf: Add tracing multi attach benchmark test
+      selftests/bpf: Add tracing multi attach rollback tests
 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+ arch/arm64/net/bpf_jit_comp.c                                      |  58 +++---
+ arch/loongarch/net/bpf_jit.c                                       |  44 ++---
+ arch/powerpc/net/bpf_jit_comp.c                                    |  46 ++---
+ arch/riscv/net/bpf_jit_comp64.c                                    |  52 ++---
+ arch/s390/net/bpf_jit_comp.c                                       |  44 ++---
+ arch/x86/net/bpf_jit_comp.c                                        |  54 ++---
+ include/linux/bpf.h                                                | 102 +++++++---
+ include/linux/bpf_types.h                                          |   1 +
+ include/linux/bpf_verifier.h                                       |   3 +
+ include/linux/btf_ids.h                                            |   1 +
+ include/linux/ftrace.h                                             |   2 +
+ include/linux/trace_events.h                                       |   6 +
+ include/uapi/linux/bpf.h                                           |   9 +
+ kernel/bpf/bpf_struct_ops.c                                        |  27 +--
+ kernel/bpf/btf.c                                                   |   4 +
+ kernel/bpf/syscall.c                                               |  88 ++++++---
+ kernel/bpf/trampoline.c                                            | 536 ++++++++++++++++++++++++++++++++++++++++---------
+ kernel/bpf/verifier.c                                              | 124 +++++++++---
+ kernel/trace/bpf_trace.c                                           | 149 +++++++++++++-
+ kernel/trace/ftrace.c                                              |   9 +-
+ net/bpf/bpf_dummy_struct_ops.c                                     |  14 +-
+ net/bpf/test_run.c                                                 |   3 +
+ tools/include/uapi/linux/bpf.h                                     |  10 +
+ tools/lib/bpf/bpf.c                                                |   9 +
+ tools/lib/bpf/bpf.h                                                |   5 +
+ tools/lib/bpf/libbpf.c                                             | 337 ++++++++++++++++++++++++++++++-
+ tools/lib/bpf/libbpf.h                                             |  15 ++
+ tools/lib/bpf/libbpf.map                                           |   1 +
+ tools/lib/bpf/libbpf_internal.h                                    |   1 +
+ tools/testing/selftests/bpf/Makefile                               |   9 +-
+ tools/testing/selftests/bpf/prog_tests/tracing_multi.c             | 912 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/tracing_multi_attach.c           |  39 ++++
+ tools/testing/selftests/bpf/progs/tracing_multi_attach_module.c    |  25 +++
+ tools/testing/selftests/bpf/progs/tracing_multi_bench.c            |  12 ++
+ tools/testing/selftests/bpf/progs/tracing_multi_check.c            | 212 ++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/tracing_multi_fail.c             |  18 ++
+ tools/testing/selftests/bpf/progs/tracing_multi_intersect_attach.c |  41 ++++
+ tools/testing/selftests/bpf/progs/tracing_multi_rollback.c         |  43 ++++
+ tools/testing/selftests/bpf/progs/tracing_multi_session_attach.c   |  43 ++++
+ tools/testing/selftests/bpf/trace_helpers.c                        |   6 +-
+ tools/testing/selftests/bpf/trace_helpers.h                        |   1 +
+ 41 files changed, 2749 insertions(+), 366 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_attach.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_attach_module.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_bench.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_check.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_fail.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_intersect_attach.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_rollback.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_session_attach.c
