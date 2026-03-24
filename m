@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669E338C2D0;
-	Tue, 24 Mar 2026 15:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949193F7ABD;
+	Tue, 24 Mar 2026 15:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774366764; cv=none; b=DbOOZuNV0uP2EN2sQ+deWS+4Qme6Vm1p3EqTi/Rkoh2gglVyjNoFHYm09BgKXhQKLycmowkoFzpJtRg4h+R1B4+/o8N7Eer3h/Um+s5a6851UINmmPhHfMSxLdeUcnSWw0jEpIuTexgK4Q7i5l41ceC+KphoD2oLmennX4aE7wg=
+	t=1774366856; cv=none; b=IvqdX+j/yUELRiEvGhRL0tZp+QuW0Ugeikwp3lNWnJoDppibNesuQONul2+39X6E50xLzvlAYmayfw/+GS0DuiRKARuO3TrBqvdLP5tlzeQd9vHEzKQ3FWeQ5L1AUf1qwVEAvr4JAhQy6yVYJzhoydYkO9xmb0tdSMdNHn7Fk+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774366764; c=relaxed/simple;
-	bh=kuLxtRihR8pp1ClK9eVdjkaXDH5qgdYIOdA00tedSHc=;
+	s=arc-20240116; t=1774366856; c=relaxed/simple;
+	bh=jWFuQ3Kdo1D0JtKs3AolKcKwxPfsEtZJqWSbcU608hE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=M0huLlGrkgGej5jwn3itEZ1Kd+pHAE3OkoBdF7DLx4e0UM4RekJW7udXww9uMJfaiYKXeBmZOH7Mt4EPX7BeI9HNGx22IQazKscfrQj+kK7zhGH2SqpPJZssxe/B9yV3lrvgJRul9T0BJqs6Mi5PLh26LgS5daZNhCr9US+2xRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZYWYebX; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=Yk4J2+yb7VqTVVsPPCOpl39BzKs7Sg76QT8iP1DfTTgmnIhI6ylneU4AIRDmr+SFgC2rSDdob/41h5k0OCThxIoMp1EAfVwV82dUaShyMWsE2lGLpM70WQSyxmsxBdgmTh2wDwtkUnjf9Mr0I5RRU1N+K1iCnkQL4QEfNJBr988=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gz27DkUe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZYWYebX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185ADC19424;
-	Tue, 24 Mar 2026 15:39:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gz27DkUe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71B04C19424;
+	Tue, 24 Mar 2026 15:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774366764;
-	bh=kuLxtRihR8pp1ClK9eVdjkaXDH5qgdYIOdA00tedSHc=;
+	s=k20201202; t=1774366856;
+	bh=jWFuQ3Kdo1D0JtKs3AolKcKwxPfsEtZJqWSbcU608hE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UZYWYebXV2XLxogB9BN02dfyxzETak+q3gz9cXodY3NKSvGfphQ/oFLqau8KDdF39
-	 S3hT4cEwW6WWsy7uzoT/P4L0Fa7C6aw0Qr8gI7J4tCx4npSJXZsyitqgyP/nPuCAn6
-	 OlCs82OCXjQ9Fi6GeGeyZtqHQAwS7UqdLKdOZPvU0UV6kepBF5j05oYVOEE2uEPrl2
-	 hmuyiQ0WUfiiVdCENkpvpZpyj2VcI/PHp41qvA4hSuG6XF/uDauWLEA8JWbdMKgctF
-	 8X6lx/GZCJehX3W74WTkADJP1KksAbjCcaFhgq1UDxlScIIC42pWoGEkZf8q59GGSz
-	 ULtjPfOnE1oYw==
-Date: Wed, 25 Mar 2026 00:39:19 +0900
+	b=gz27DkUeBt4CJlk0LdOCTfmZicUy+pCcH95s+Cee0mhqg67sIhlIqTt8F51bLBnCB
+	 k/LaWJnCzT+N6tyJkcUNO0fXb3P7oJFsVVxHJyLbQ/7fODylz+p6aUWTLVD+1gJxX5
+	 Wv1JChAVZ4OGvlDRTiO+mhReJTsOahWmDVuVcrRJMpTfBEoXHlonhuik8NVsNuDCD/
+	 no6vvhkVRmz8cQF9Ez96gCNkB8Bo4wXo3pGMWN1jIXN3AwNuoMsg4WhLBj0x9/dtmt
+	 WeqP0AVYXNGMWiO3EeOiS4zb5DhLIOdiwdGpt7iU5k1VNEtzJj6s7nKPUZvANYNI3B
+	 +pAefur/kvxEA==
+Date: Wed, 25 Mar 2026 00:40:52 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Martin Kaiser <martin@kaiser.cx>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] tracing: fprobe: fix the length of unused fgraph_data
-Message-Id: <20260325003919.3ff18e19709eb0ab3456ce2c@kernel.org>
-In-Reply-To: <acJFuICyULkwR8ka@akranes.kaiser.cx>
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: fprobe: do not zero out unused fgraph_data
+Message-Id: <20260325004052.6f6629965addb617728eac92@kernel.org>
+In-Reply-To: <20260324084804.375764-1-martin@kaiser.cx>
 References: <20260323102020.239567-1-martin@kaiser.cx>
-	<20260323104818.0ad25dd5@gandalf.local.home>
-	<20260324093404.58a9b4a1e9d4c38bb9b7065a@kernel.org>
-	<acJFuICyULkwR8ka@akranes.kaiser.cx>
+	<20260324084804.375764-1-martin@kaiser.cx>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,72 +47,44 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Mar 2026 09:05:12 +0100
+On Tue, 24 Mar 2026 09:47:08 +0100
 Martin Kaiser <martin@kaiser.cx> wrote:
 
-> Thus wrote Masami Hiramatsu (mhiramat@kernel.org):
+> If fprobe_entry does not fill the allocated fgraph_data completely, the
+> unused part does not have to be zeroed.
 > 
-> > On Mon, 23 Mar 2026 10:48:18 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> fgraph_data is a short-lived part of the shadow stack. The preceding
+> length field allows locating the end regardless of the content.
 > 
-> > > On Mon, 23 Mar 2026 11:19:36 +0100
-> > > Martin Kaiser <martin@kaiser.cx> wrote:
-> 
-> > > > If fprobe_entry does not fill the allocated fgraph_data completely, the
-> > > > unused part is zeroed with memset.
-> 
-> > > > Fix the length for this memset call. Both reserved_words and used are in
-> > > > units of return stack words, but memset needs the number of bytes.
-> 
-> > > > Cc: stable@vger.kernel.org
-> > > > Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
-> > > > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> > > > ---
-> > > >  kernel/trace/fprobe.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> > > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > > index dcadf1d23b8a..6a1192515afd 100644
-> > > > --- a/kernel/trace/fprobe.c
-> > > > +++ b/kernel/trace/fprobe.c
-> > > > @@ -451,7 +451,7 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
-> > > >  		}
-> > > >  	}
-> > > >  	if (used < reserved_words)
-> > > > -		memset(fgraph_data + used, 0, reserved_words - used);
-> > > > +		memset(fgraph_data + used, 0, (reserved_words - used) * sizeof(long));
-> 
-> > > So fgraph_data is only used internally between the fprobe_fgraph_entry()
-> > > and fprobe_return() as it only exists on the fgraph shadow stack. I'm not
-> > > even sure if the unused portion needs to be zeroed out.
-> 
-> > > Thus, this may be correct, but it doesn't look like a true bug that needs a
-> > > stable tag.
-> 
-> > Hmm, indeed. Maybe we'd better just remove this memset from for-next.
-> 
-> Ok, I see your point. I'll send a v2 that removes the memset.
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 
-Yeah, thanks!
+OK, thanks for update. Let me pick it.
 
+Thanks,
+
+> ---
+> v2:
+>  - remove the memset instead of fixing the length
 > 
-> Best regards,
-> Martin
+>  kernel/trace/fprobe.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> > Thanks,
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index dcadf1d23b8a..56d145017902 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -450,8 +450,6 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
+>  				used += FPROBE_HEADER_SIZE_IN_LONG + size_words;
+>  		}
+>  	}
+> -	if (used < reserved_words)
+> -		memset(fgraph_data + used, 0, reserved_words - used);
+>  
+>  	/* If any exit_handler is set, data must be used. */
+>  	return used != 0;
+> -- 
+> 2.43.7
 > 
-> 
-> > > -- Steve
-> 
-> 
-> 
-> > > >  	/* If any exit_handler is set, data must be used. */
-> > > >  	return used != 0;
-> 
-> 
-> 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
 -- 
