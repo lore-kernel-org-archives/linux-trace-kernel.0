@@ -1,263 +1,281 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B91531E8;
-	Wed, 25 Mar 2026 02:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CBF282F29;
+	Wed, 25 Mar 2026 02:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774405528; cv=none; b=cdyJkWppVe1Nacdt+SYFsSqpmGiEZBw2p3FcLQHNAQYQaf+l1Rsgm3hdj36XcNLa7LYn+9T1zLPFXw97JiU9l91h8ICvzwSG2EsvfCosVHQOdkbdfkuLV4XQ1LA6gIOXgBRIrcSbo60GvCsNAvF8r8166d7lHRdtF1+7oPXMz4E=
+	t=1774405557; cv=none; b=rCZtNL+2D9ZZtnMsTfQj9qpj3nnt+YjNic2HGklPcdmG34o2/77fhK01kYpWZps6xbgMPhj39W5QDwKvbb1oILFZYQ2tK+P7R/iVS6uOYEmVfqsUN63ft0z5m9Zl7MO3i7BnpsnjMsfZoH6irvDVNxjHXWP84yukbOLINvfpJ8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774405528; c=relaxed/simple;
-	bh=Fko1PvTEGwbkNmnatL73nX8waKA9pBeCk1aSg9U3Hk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jmyppd/Bf//u8t59Sl+N+BI8zP8NgKVhRlPWGBlWxsQ2HaNo8TMGwSkfaIlC19rH6m84lulSDcYR5Zic0p6b5NJYahZuxlijF8Y4i+OpDHayYVL/ISeLS7+g4wG8/H6T3mMYI1KyDx/sVauqo6o52C6bwkov5c7owlKwDIqsciA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRp3eFBL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRp3eFBL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B0BC19424;
-	Wed, 25 Mar 2026 02:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774405528;
-	bh=Fko1PvTEGwbkNmnatL73nX8waKA9pBeCk1aSg9U3Hk0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hRp3eFBLW2kcGwvrckWG4UtEtmGNXgM4fnqL6tQZfQXmKOu/buk23tz3ic5FHuY6t
-	 6J7ozvViBUDp/ZHWp1SUAa1xd77eMaQyNUJnmvaTe/xVGHXzZ+Ash854kmkxjtL8FU
-	 TpHLCCA5sd+oU/RSmDPqxp5KJvTDDqerGVGQcjYPFJoX04yVubTyBrBXF4vo7AWxOu
-	 WjXQDPLQlgq05jIUk2qPyDB55+YMWc48MDKkgI3oos25Pm//aSgoPQ4iSpR1UBVkIa
-	 zqKMONxNUAWrjL1JdDDNPcdy965+7YGuixGawSlVdA14omPfepPYZfktr1QkB7L7Sq
-	 OVGbYGbEqkMBg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Ian Rogers <irogers@google.com>
-Subject: [PATCH v13 4/4] ring-buffer: Add persistent ring buffer selftest
-Date: Wed, 25 Mar 2026 11:25:25 +0900
-Message-ID:  <177440552560.1529621.1405976992959650354.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.53.0.1018.g2bb0e51243-goog
-In-Reply-To:  <177440549083.1529621.15486836623498328967.stgit@mhiramat.tok.corp.google.com>
-References:  <177440549083.1529621.15486836623498328967.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1774405557; c=relaxed/simple;
+	bh=xG2xXzWq8rp51wUHvwWwm7GeB57Dfp6kZbScoQt1/Qo=;
+	h=Message-ID:In-Reply-To:References:Date:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=rneTPUWV6Qj3bTnho/jqA01hoGdXWVZUS4Xfw13zWNN7euJ9QQRznA/qQ5dawLInf9R1Pm7vN5eT4hK0HrSV3T9+B74GjSuv7KcjufegZmb376YNCAEGa4zDlxSxe1k3Wvr6G/BQC5Nd2ktlXM0FqJ0Zl0tmSupnFPSyKFRCXok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4fgW3f1xsxz51Sdb;
+	Wed, 25 Mar 2026 10:25:50 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl1.zte.com.cn with SMTP id 62P2Pf6v062825;
+	Wed, 25 Mar 2026 10:25:41 +0800 (+08)
+	(envelope-from hu.shengming@zte.com.cn)
+Received: from mapi (xaxapp04[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Wed, 25 Mar 2026 10:25:42 +0800 (CST)
+X-Zmail-TransId: 2afb69c347a6704-1282d
+X-Mailer: Zmail v1.0
+Message-ID: <20260325102542300G48VT-wLNp-dOgT_9Qi2f@zte.com.cn>
+In-Reply-To: <20260324121918.454d6a7b@gandalf.local.home>
+References: 20260324150616953rMo1BWtAZ1nXTNrEFP6hr@zte.com.cn,20260324121918.454d6a7b@gandalf.local.home
+Date: Wed, 25 Mar 2026 10:25:42 +0800 (CST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+From: <hu.shengming@zte.com.cn>
+To: <rostedt@goodmis.org>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <zhang.run@zte.com.cn>, <yang.tao172@zte.com.cn>,
+        <ran.xiaokai@zte.com.cn>, <luo.haiyang@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gdHJhY2luZy9vc25vaXNlOiBmaXggcG90ZW50aWFsIGRlYWRsb2NrIGluIGNwdSBob3RwbHVn?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 62P2Pf6v062825
+X-TLS: YES
+X-SPF-DOMAIN: zte.com.cn
+X-ENVELOPE-SENDER: hu.shengming@zte.com.cn
+X-SPF: None
+X-SOURCE-IP: 10.5.228.132 unknown Wed, 25 Mar 2026 10:25:50 +0800
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 69C347AE.000/4fgW3f1xsxz51Sdb
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>On Tue, 24 Mar 2026 15:06:16 +0800 (CST)
+><hu.shengming@zte.com.cn> wrote:
+>
+>> From: luohaiyang10243395 <luo.haiyang@zte.com.cn>
+>> 
+>> The following sequence may leads deadlock in cpu hotplug:
+>> 
+>>   CPU0                        |  CPU1
+>>                               |  schedule_work_on
+>>                               |
+>>   _cpu_down//set CPU1 offline |
+>>   cpus_write_lock             |
+>>                               |  osnoise_hotplug_workfn
+>>                               |    mutex_lock(&interface_lock);
+>>                               |    cpus_read_lock();  //wait cpu_hotplug_lock
+>>                               |
+>>                               |  cpuhp/1
+>>                               |    osnoise_cpu_die
+>>                               |      kthread_stop
+>>                               |        wait_for_completion //wait osnoise/1 exit
+>>                               |
+>>                               |  osnoise/1
+>>                               |    osnoise_sleep
+>>                               |      mutex_lock(&interface_lock); //deadlock
+>> 
+>> Fix by swap the order of cpus_read_lock() and mutex_lock(&interface_lock).
+>
+>So the deadlock is due to the "wait_for_completion"?
 
-Add a self-destractive test for the persistent ring buffer. This
-will invalidate some sub-buffer pages in the persistent ring buffer
-when kernel gets panic, and check whether the number of detected
-invalid pages and the total entry_bytes are the same as record
-after reboot.
+The osnoise_cpu_init callback returns directly, which may allow another CPU offline task to run, 
+the offline task holds the cpu_hotplug_lock while waiting for the osnoise task to exit. 
+osnoise_hotplug_workfn may acquire interface_lock first, causing the offline task to be blocked. 
+This is an ABBA deadlock.
 
-This can ensure the kernel correctly recover partially corrupted
-persistent ring buffer when boot.
+>How did you find this bug? Inspection, AI, triggered?
+>
+>Thanks,
+>
+>-- Steve
 
-The test only runs on the persistent ring buffer whose name is
-"ptracingtest". And user has to fill it up with events before
-kernel panics.
+We run autotests on kernel-6.6, report following hung task warning, and we think the same issue exists
+in linux-stable.
+ [39401.476843] INFO: task cpuhp/7:47 blocked for more than 120 seconds.
+ [39401.483196]       Tainted: G            E      6.6.102-5.2.1.an23.103.aarch64 #1
+ [39401.490581] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ [39401.498398] task:cpuhp/7         state:D stack:0     pid:47    ppid:2      flags:0x00000208
+ [39401.506739] Call trace:
+ [39401.509175]  __switch_to+0x138/0x180
+ [39401.512743]  __schedule+0x250/0x5e8
+ [39401.516220]  schedule+0x60/0x100
+ [39401.519437]  schedule_timeout+0x1a0/0x1c0
+ [39401.523437]  wait_for_completion+0xbc/0x190
+ [39401.527609]  kthread_stop+0x7c/0x268
+ [39401.531175]  stop_kthread+0x8c/0x178
+ [39401.534740]  osnoise_cpu_die+0xc/0x18
+ [39401.538391]  cpuhp_invoke_callback+0x148/0x580
+ [39401.542822]  cpuhp_thread_fun+0xc8/0x1a0
+ [39401.546733]  smpboot_thread_fn+0x224/0x250
+ [39401.550817]  kthread+0xf8/0x110
+ [39401.553947]  ret_from_fork+0x10/0x20
+ [39401.557545] INFO: task sh:28856 blocked for more than 120 seconds.
+ [39401.563713]       Tainted: G            E      6.6.102-5.2.1.an23.103.aarch64 #1
+ [39401.571095] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ [39401.578912] task:sh              state:D stack:0     pid:28856 ppid:1      flags:0x00800004
+ [39401.587251] Call trace:
+ [39401.589685]  __switch_to+0x138/0x180
+ [39401.593250]  __schedule+0x250/0x5e8
+ [39401.596725]  schedule+0x60/0x100
+ [39401.599941]  schedule_timeout+0x1a0/0x1c0
+ [39401.603940]  wait_for_completion+0xbc/0x190
+ [39401.608113]  __flush_work+0x5c/0xa8
+ [39401.611590]  work_on_cpu_key+0x88/0xc0
+ [39401.615331]  cpu_down_maps_locked+0xd0/0xe8
+ [39401.619503]  cpu_device_down+0x38/0x60
+ [39401.623240]  cpu_subsys_offline+0x14/0x28
+ [39401.627238]  device_offline+0xb8/0x130
+ [39401.630976]  online_store+0x64/0xe0
+ [39401.634453]  dev_attr_store+0x1c/0x38
+ [39401.638104]  sysfs_kf_write+0x48/0x60
+ [39401.641756]  kernfs_fop_write_iter+0x118/0x1e8
+ [39401.646188]  vfs_write+0x1a4/0x2f8
+ [39401.649580]  ksys_write+0x70/0x108
+ [39401.652970]  __arm64_sys_write+0x20/0x30
+ [39401.656880]  el0_svc_common.constprop.0+0x60/0x138
+ [39401.661660]  do_el0_svc+0x20/0x30
+ [39401.664964]  el0_svc+0x44/0x1f8
+ [39401.668093]  el0t_64_sync_handler+0xf8/0x128
+ [39401.672352]  el0t_64_sync+0x17c/0x180
+ [39401.875086] INFO: task kworker/7:2:2314252 blocked for more than 121 seconds.
+ [39401.882208]       Tainted: G            E      6.6.102-5.2.1.an23.103.aarch64 #1
+ [39401.889590] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ [39401.897406] task:kworker/7:2     state:D stack:0     pid:2314252 ppid:2      flags:0x00000008
+ [39401.905917] Workqueue: events osnoise_hotplug_workfn
+ [39401.910871] Call trace:
+ [39401.913306]  __switch_to+0x138/0x180
+ [39401.916870]  __schedule+0x250/0x5e8
+ [39401.920345]  schedule+0x60/0x100
+ [39401.923561]  percpu_rwsem_wait+0xfc/0x128
+ [39401.927559]  __percpu_down_read+0x60/0x198
+ [39401.931644]  percpu_down_read.constprop.0+0xac/0xb8
+ [39401.936510]  cpus_read_lock+0x14/0x20
+ [39401.940160]  osnoise_hotplug_workfn+0x54/0xb0
+ [39401.944506]  process_one_work+0x184/0x420
+ [39401.948503]  worker_thread+0x2b4/0x3d8
+ [39401.952241]  kthread+0xf8/0x110
+ [39401.955370]  ret_from_fork+0x10/0x20
+ [39402.125508] INFO: task osnoise/0:2356235 blocked for more than 121 seconds.
+ [39402.132458]       Tainted: G            E      6.6.102-5.2.1.an23.103.aarch64 #1
+ [39402.139840] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ [39402.147656] task:osnoise/0       state:D stack:0     pid:2356235 ppid:2      flags:0x00000008
+ [39402.156168] Call trace:
+ [39402.158602]  __switch_to+0x138/0x180
+ [39402.162166]  __schedule+0x250/0x5e8
+ [39402.165643]  schedule+0x60/0x100
+ [39402.168860]  schedule_preempt_disabled+0x28/0x48
+ [39402.173466]  __mutex_lock.constprop.0+0x324/0x5f8
+ [39402.178158]  __mutex_lock_slowpath+0x18/0x28
+ [39402.182416]  mutex_lock+0x64/0x78
+ [39402.185720]  osnoise_sleep+0x30/0x130
+ [39402.189371]  osnoise_main+0x164/0x190
+ [39402.193021]  kthread+0xf8/0x110
+ [39402.196149]  ret_from_fork+0x10/0x20
+ [39402.199713] INFO: task osnoise/1:2356236 blocked for more than 121 seconds.
+ [39402.206661]       Tainted: G            E      6.6.102-5.2.1.an23.103.aarch64 #1
+ [39402.214044] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ [39402.221860] task:osnoise/1       state:D stack:0     pid:2356236 ppid:2      flags:0x00000008
+ [39402.230372] Call trace:
+ [39402.232804]  __switch_to+0x138/0x180
+ [39402.236368]  __schedule+0x250/0x5e8
+ [39402.239845]  schedule+0x60/0x100
+ [39402.243061]  schedule_preempt_disabled+0x28/0x48
+ [39402.247666]  __mutex_lock.constprop.0+0x324/0x5f8
+ [39402.252359]  __mutex_lock_slowpath+0x18/0x28
+ [39402.256618]  mutex_lock+0x64/0x78
+ [39402.259921]  osnoise_sleep+0x30/0x130
+ [39402.263572]  osnoise_main+0x164/0x190
+ [39402.267223]  kthread+0xf8/0x110
+ [39402.270352]  ret_from_fork+0x10/0x20
+ [39402.273916] INFO: task osnoise/2:2356237 blocked for more than 121 seconds.
+ [39402.280865]       Tainted: G            E      6.6.102-5.2.1.an23.103.aarch64 #1
+ [39402.288247] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ [39402.296064] task:osnoise/2       state:D stack:0     pid:2356237 ppid:2      flags:0x00000008
+ [39402.304575] Call trace:
+ [39402.307010]  __switch_to+0x138/0x180
+ [39402.310574]  __schedule+0x250/0x5e8
+ [39402.314051]  schedule+0x60/0x100
+ [39402.317268]  schedule_preempt_disabled+0x28/0x48
+ [39402.321873]  __mutex_lock.constprop.0+0x324/0x5f8
+ [39402.326566]  __mutex_lock_slowpath+0x18/0x28
+ [39402.330824]  mutex_lock+0x64/0x78
+ [39402.334128]  osnoise_sleep+0x30/0x130
+ [39402.337778]  osnoise_main+0x164/0x190
+ [39402.341429]  kthread+0xf8/0x110
+ [39402.344556]  ret_from_fork+0x10/0x20
+ [39402.348120] Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings
+ [39402.356295] Kernel panic - not syncing: hung_task: blocked tasks 
 
-To run the test, enable CONFIG_RING_BUFFER_PERSISTENT_SELFTEST
-and you have to setup the kernel cmdline;
+Thanks,
+Haiyang
 
- reserve_mem=20M:2M:trace trace_instance=ptracingtest^traceoff@trace
- panic=1
-
-And run following commands after the 1st boot;
-
- cd /sys/kernel/tracing/instances/ptracingtest
- echo 1 > tracing_on
- echo 1 > events/enable
- sleep 3
- echo c > /proc/sysrq-trigger
-
-After panic message, the kernel will reboot and run the verification
-on the persistent ring buffer, e.g.
-
- Ring buffer meta [2] invalid buffer page detected
- Ring buffer meta [2] is from previous boot! (318 pages discarded)
- Ring buffer testing [2] invalid pages: PASSED (318/318)
- Ring buffer testing [2] entry_bytes: PASSED (1300476/1300476)
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v10:
-  - Add entry_bytes test.
-  - Do not compile test code if CONFIG_RING_BUFFER_PERSISTENT_SELFTEST=n.
- Changes in v9:
-  - Test also reader pages.
----
- include/linux/ring_buffer.h |    1 +
- kernel/trace/Kconfig        |   15 +++++++++
- kernel/trace/ring_buffer.c  |   69 +++++++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace.c        |    4 ++
- 4 files changed, 89 insertions(+)
-
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 994f52b34344..0670742b2d60 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -238,6 +238,7 @@ int ring_buffer_subbuf_size_get(struct trace_buffer *buffer);
- 
- enum ring_buffer_flags {
- 	RB_FL_OVERWRITE		= 1 << 0,
-+	RB_FL_TESTING		= 1 << 1,
- };
- 
- #ifdef CONFIG_RING_BUFFER
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index e130da35808f..094d5511bb17 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -1202,6 +1202,21 @@ config RING_BUFFER_VALIDATE_TIME_DELTAS
- 	  Only say Y if you understand what this does, and you
- 	  still want it enabled. Otherwise say N
- 
-+config RING_BUFFER_PERSISTENT_SELFTEST
-+	bool "Enable persistent ring buffer selftest"
-+	depends on RING_BUFFER
-+	help
-+	  Run a selftest on the persistent ring buffer which names
-+	  "ptracingtest" (and its backup) when panic_on_reboot by
-+	  invalidating ring buffer pages.
-+	  Note that user has to enable events on the persistent ring
-+	  buffer manually to fill up ring buffers before rebooting.
-+	  Since this invalidates the data on test target ring buffer,
-+	  "ptracingtest" persistent ring buffer must not be used for
-+	  actual tracing, but only for testing.
-+
-+	  If unsure, say N
-+
- config MMIOTRACE_TEST
- 	tristate "Test module for mmiotrace"
- 	depends on MMIOTRACE && m
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index e5178239f2f9..10443347a6d8 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -64,6 +64,10 @@ struct ring_buffer_cpu_meta {
- 	unsigned long	commit_buffer;
- 	__u32		subbuf_size;
- 	__u32		nr_subbufs;
-+#ifdef CONFIG_RING_BUFFER_PERSISTENT_SELFTEST
-+	__u32		nr_invalid;
-+	__u32		entry_bytes;
-+#endif
- 	int		buffers[];
- };
- 
-@@ -2077,6 +2081,19 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 
- 	pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
- 		cpu_buffer->cpu, discarded);
-+
-+#ifdef CONFIG_RING_BUFFER_PERSISTENT_SELFTEST
-+	if (meta->nr_invalid)
-+		pr_info("Ring buffer testing [%d] invalid pages: %s (%d/%d)\n",
-+			cpu_buffer->cpu,
-+			(discarded == meta->nr_invalid) ? "PASSED" : "FAILED",
-+			discarded, meta->nr_invalid);
-+	if (meta->entry_bytes)
-+		pr_info("Ring buffer testing [%d] entry_bytes: %s (%ld/%ld)\n",
-+			cpu_buffer->cpu,
-+			(entry_bytes == meta->entry_bytes) ? "PASSED" : "FAILED",
-+			(long)entry_bytes, (long)meta->entry_bytes);
-+#endif
- 	return;
- 
-  invalid:
-@@ -2557,12 +2574,64 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 	kfree(cpu_buffer);
- }
- 
-+#ifdef CONFIG_RING_BUFFER_PERSISTENT_SELFTEST
-+static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+	struct ring_buffer_cpu_meta *meta;
-+	struct buffer_data_page *dpage;
-+	u32 entry_bytes = 0;
-+	unsigned long ptr;
-+	int subbuf_size;
-+	int invalid = 0;
-+	int cpu;
-+	int i;
-+
-+	if (!(buffer->flags & RB_FL_TESTING))
-+		return;
-+
-+	guard(preempt)();
-+	cpu = smp_processor_id();
-+
-+	cpu_buffer = buffer->buffers[cpu];
-+	meta = cpu_buffer->ring_meta;
-+	ptr = (unsigned long)rb_subbufs_from_meta(meta);
-+	subbuf_size = meta->subbuf_size;
-+
-+	for (i = 0; i < meta->nr_subbufs; i++) {
-+		int idx = meta->buffers[i];
-+
-+		dpage = (void *)(ptr + idx * subbuf_size);
-+		/* Skip unused pages */
-+		if (!local_read(&dpage->commit))
-+			continue;
-+
-+		/* Invalidate even pages. */
-+		if (!(i & 0x1)) {
-+			local_add(subbuf_size + 1, &dpage->commit);
-+			invalid++;
-+		} else {
-+			/* Count total commit bytes. */
-+			entry_bytes += local_read(&dpage->commit);
-+		}
-+	}
-+
-+	pr_info("Inject invalidated %d pages on CPU%d, total size: %ld\n",
-+		invalid, cpu, (long)entry_bytes);
-+	meta->nr_invalid = invalid;
-+	meta->entry_bytes = entry_bytes;
-+}
-+#else /* !CONFIG_RING_BUFFER_PERSISTENT_SELFTEST */
-+#define rb_test_inject_invalid_pages(buffer)	do { } while (0)
-+#endif
-+
- /* Stop recording on a persistent buffer and flush cache if needed. */
- static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
- {
- 	struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
- 
- 	ring_buffer_record_off(buffer);
-+	rb_test_inject_invalid_pages(buffer);
- 	arch_ring_buffer_flush_range(buffer->range_addr_start, buffer->range_addr_end);
- 	return NOTIFY_DONE;
- }
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4189ec9df6a5..108b0d16badf 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9366,6 +9366,8 @@ static void setup_trace_scratch(struct trace_array *tr,
- 	memset(tscratch, 0, size);
- }
- 
-+#define TRACE_TEST_PTRACING_NAME	"ptracingtest"
-+
- static int
- allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, unsigned long size)
- {
-@@ -9378,6 +9380,8 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, unsigned
- 	buf->tr = tr;
- 
- 	if (tr->range_addr_start && tr->range_addr_size) {
-+		if (!strcmp(tr->name, TRACE_TEST_PTRACING_NAME))
-+			rb_flags |= RB_FL_TESTING;
- 		/* Add scratch buffer to handle 128 modules */
- 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
- 						      tr->range_addr_start,
-
+>> 
+>> Signed-off-by: Luo Haiyang <luo.haiyang@zte.com.cn>
+>> ---
+>>  kernel/trace/trace_osnoise.c | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+>> index dee610e465b9..be6cf0bb3c03 100644
+>> --- a/kernel/trace/trace_osnoise.c
+>> +++ b/kernel/trace/trace_osnoise.c
+>> @@ -2073,8 +2073,8 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+>>      if (!osnoise_has_registered_instances())
+>>          return;
+>> 
+>> -    guard(mutex)(&interface_lock);
+>>      guard(cpus_read_lock)();
+>> +    guard(mutex)(&interface_lock);
+>> 
+>>      if (!cpu_online(cpu))
+>>          return;
+>> @@ -2237,11 +2237,11 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
+>>      if (running)
+>>          stop_per_cpu_kthreads();
+>> 
+>> -    mutex_lock(&interface_lock);
+>>      /*
+>>       * avoid CPU hotplug operations that might read options.
+>>       */
+>>      cpus_read_lock();
+>> +    mutex_lock(&interface_lock);
+>> 
+>>      retval = cnt;
+>> 
+>> @@ -2257,8 +2257,8 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
+>>              clear_bit(option, &osnoise_options);
+>>      }
+>> 
+>> -    cpus_read_unlock();
+>>      mutex_unlock(&interface_lock);
+>> +    cpus_read_unlock();
+>> 
+>>      if (running)
+>>          start_per_cpu_kthreads();
+>> @@ -2345,16 +2345,16 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
+>>      if (running)
+>>          stop_per_cpu_kthreads();
+>> 
+>> -    mutex_lock(&interface_lock);
+>>      /*
+>>       * osnoise_cpumask is read by CPU hotplug operations.
+>>       */
+>>      cpus_read_lock();
+>> +    mutex_lock(&interface_lock);
+>> 
+>>      cpumask_copy(&osnoise_cpumask, osnoise_cpumask_new);
+>> 
+>> -    cpus_read_unlock();
+>>      mutex_unlock(&interface_lock);
+>> +    cpus_read_unlock();
+>> 
+>>      if (running)
+>>          start_per_cpu_kthreads();
