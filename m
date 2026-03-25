@@ -1,128 +1,75 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B34231A21;
-	Wed, 25 Mar 2026 14:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71BE3FEB16
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 14:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449207; cv=none; b=tZXqsd0n4spYxiMgSen0GkEP5JVBD2gPnxF2LXS6yLzwoeZhNt21ZLNcbcwYGGxf2mgwstDqbGbEU41hmAyp4rsSDErHcjjLWYaY+80MW2/mSNjiVj5gxR7FhF08laNtW0NlnsFRhtGPGFJg5g8OJt8dlHBuIm8BWACXds7hUW8=
+	t=1774450763; cv=none; b=i0SRsN1FcaH1URMcVoh6sd4fUXn0aXmEt1A1Sfacg1Q7Uonps5I7mFU/SOgjsNayw8AcfxX9Go6YOSgpcN+VxPbYnoClznENDzFmoTSYeLNnNmjKzfro5U2XaJOCgjG6YgtZZ/96KpQUQR5iGisnSTm3i59Ye34dAcdGUoejSOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449207; c=relaxed/simple;
-	bh=fOnFfoNkggcrlbMGeTqlcxZMa9OEdDG041CKGkGHr6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C/J6YlDJLuZW49zVrZBExZYjEziIqfj5vcVW3sUI0BJnq/yTxS4uGhnTZ/5x2EpKFGkMpnNdQqeGGeTOJRtG8tR3TFCUP86gOdSLhH3noNwrEH4tt0FZIH1RPNyIyYj84gw9KfzfqOeI4bE7INj+qeKkLJiKwaA7dNgDnjFLp0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 1CF1B13B260;
-	Wed, 25 Mar 2026 14:33:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id F3DFF18;
-	Wed, 25 Mar 2026 14:33:21 +0000 (UTC)
-Date: Wed, 25 Mar 2026 10:34:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: <hu.shengming@zte.com.cn>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <zhang.run@zte.com.cn>, <yang.tao172@zte.com.cn>, <ran.xiaokai@zte.com.cn>,
- <luo.haiyang@zte.com.cn>
-Subject: Re: [PATCH] tracing/osnoise: fix potential deadlock in cpu hotplug
-Message-ID: <20260325103406.2ed71054@gandalf.local.home>
-In-Reply-To: <20260325102542300G48VT-wLNp-dOgT_9Qi2f@zte.com.cn>
-References: <20260324121918.454d6a7b@gandalf.local.home>
-	<20260325102542300G48VT-wLNp-dOgT_9Qi2f@zte.com.cn>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774450763; c=relaxed/simple;
+	bh=p1DLT+wcVdLj/4Kmiohl8ABr1NxTDIzvs4lo/8S/GFs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Z4YP5qyfnuDj0oUAd1cUdliT0rN6INcrAFqUcHX7pRi867BLE6PDprlJbqJDSxIFLc77AiNblC8q4egyK+9T8k9DO109vpb6N6K3Z6tJxV3bhNB9dd6RHoJ+bcLBuZjIdvS4Wce3MvgaJvBQzuzz3SiFQEV+f9h+G3igxlRZQ1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MPkD4A8p; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MPkD4A8p"
+Message-ID: <faa5325e-d494-40e5-9dd4-0f6a3fd35432@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774450759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mkRNSjbt5Dyyi/TeRAXrELDQ+rMi5AQhi99mKqQMC9c=;
+	b=MPkD4A8pSL6UKpO19vbDlsUgVeIppyxfuQN69ychRKlnVOa4RiT6TLZzvpczeMC9uTlhLs
+	4DbGQu6W3bjN0df+lURLv5PR0Y+FMNY9JvSogRfcK9J+ITqG49RH99rHz0sC0pgt7ZtnNa
+	7345VeakWtKVc+41nS0s2jxiwjSdKiI=
+Date: Wed, 25 Mar 2026 22:58:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCHv4 bpf-next 00/25] bpf: tracing_multi link
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <songliubraving@fb.com>,
+ Yonghong Song <yhs@fb.com>, Menglong Dong <menglong8.dong@gmail.com>,
+ Steven Rostedt <rostedt@kernel.org>
+References: <20260324081846.2334094-1-jolsa@kernel.org>
+ <7fc7e5ad-ac42-4c7d-8314-bd252f8887a3@linux.dev>
+Content-Language: en-US
+In-Reply-To: <7fc7e5ad-ac42-4c7d-8314-bd252f8887a3@linux.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: F3DFF18
-X-Stat-Signature: hpoo4tfz7xrbbz9gjrqogwfwq5z3z3bo
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18C9T7bfJ0g7n8A/8V+7oLzzpjqZUPKKPc=
-X-HE-Tag: 1774449201-257298
-X-HE-Meta: U2FsdGVkX1+pARm/SsNdAo3pHgf6wWJTHujYSAzor/wlFYDp5buT9IaoBtPXaAPXBEMQLKIGtRxKm//nJ35bL1oxiBRL7g8giYazMovHzacUC6abCM5zjEMWkUgWDaK30Equzm0hzV3zUZEJtYDKA3cIL+AxfPOqam3nnwHZIf2EqH0nHiCb7XVmJZxbjLWR7shTMtSSMGVHeUDG6n3FLAWpDSCVkEJeJ9rluBsEAECLlPkpkojO8cInIbD81+QeodSEhlhJRxDO+hHYKW4JxrRYEL/JZZ2r73XCg48DwAN/mIiT10lFIO1h7lbri46F0aimU0Bht7W1qpnwoNuWaJpRHqNKDPWtnO6LwfhJILc7n6PxpxWlw0q8M9BE8Qff
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 25 Mar 2026 10:25:42 +0800 (CST)
-<hu.shengming@zte.com.cn> wrote:
-
-> >On Tue, 24 Mar 2026 15:06:16 +0800 (CST)
-> ><hu.shengming@zte.com.cn> wrote:
-> >  
-> >> From: luohaiyang10243395 <luo.haiyang@zte.com.cn>
-> >> 
-> >> The following sequence may leads deadlock in cpu hotplug:
-> >> 
-> >>   CPU0                        |  CPU1
-> >>                               |  schedule_work_on
-> >>                               |
-> >>   _cpu_down//set CPU1 offline |
-> >>   cpus_write_lock             |
-> >>                               |  osnoise_hotplug_workfn
-> >>                               |    mutex_lock(&interface_lock);
-> >>                               |    cpus_read_lock();  //wait cpu_hotplug_lock
-> >>                               |
-> >>                               |  cpuhp/1
-> >>                               |    osnoise_cpu_die
-> >>                               |      kthread_stop
-> >>                               |        wait_for_completion //wait osnoise/1 exit
-> >>                               |
-> >>                               |  osnoise/1
-> >>                               |    osnoise_sleep
-> >>                               |      mutex_lock(&interface_lock); //deadlock
-> >> 
-> >> Fix by swap the order of cpus_read_lock() and mutex_lock(&interface_lock).  
-> >
-> >So the deadlock is due to the "wait_for_completion"?  
+On 2026/3/25 14:42, Leon Hwang wrote:
+> Hi Jiri,
 > 
-> The osnoise_cpu_init callback returns directly, which may allow another CPU offline task to run, 
-> the offline task holds the cpu_hotplug_lock while waiting for the osnoise task to exit. 
-> osnoise_hotplug_workfn may acquire interface_lock first, causing the offline task to be blocked. 
-> This is an ABBA deadlock.
-
-Right, as I said, it is due to the "wait_for_completion" and not due to two
-different locks. One is waiting for the osnoise task to exit (the
-"wait_for_completion") but the osnoise task is blocked on the interface_lock().
-
-Better to show it as:
-
-
-    task1		task2		task3
-    -----		-----		-----
-
- mutex_lock(&interface_lock)
-
-		    [CPU GOING OFFLINE]
-
-		    cpus_write_lock();
-		    osnoise_cpu_die();
-		      kthread_stop(task3);
-		        wait_for_completion();
-
-				      osnoise_sleep();
-				        mutex_lock(&interface_lock);
-
- cpus_read_lock();
-
- [DEAD LOCK]
-
+> Nice version for tracing_multi link.
 > 
-> >How did you find this bug? Inspection, AI, triggered?
-> >
-> >Thanks,
-> >
-> >-- Steve  
+> I hope I have time to add tracing_multi link support to bpfsnoop, and
+> test this new tracing feature.
 > 
-> We run autotests on kernel-6.6, report following hung task warning, and we think the same issue exists
-> in linux-stable.
+> I left comments on patches #13, #24, and #25.
+> 
+Hmm, sashiko's reviews [1] cover my comments on patches #24 and #25. I
+should check them first.
 
-Thanks. It's usually good to state how a bug was discovered when fixing it.
+[1]
+https://sashiko.dev/#/patchset/20260324081846.2334094-1-jolsa%40kernel.org
 
-Could you send a v2 with an updated change log?
+Thanks,
+Leon
 
--- Steve
+[...]
+
