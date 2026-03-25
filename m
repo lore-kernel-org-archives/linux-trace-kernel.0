@@ -1,263 +1,144 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AB5175A8A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 06:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BAA396D3C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 08:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774421174; cv=none; b=mOM0zBv1D6vJrttpO1CRvs65Pvq9rG5DRrDGRpjG/puRvarWYrYVxR+mm919lzY6KXOpH45gkjlaWhipbCd3xx5WXigZO5KyXuwCom85vUxQzMOQeR8mcs2dBLk7ZxlfWFZU0qyu98ndK3OPIfPve1fBspxA6kNuvGXpLUtFKrU=
+	t=1774427223; cv=none; b=qWKqScTqOlUzArGdn0vjOVDCxjMW04IH4ptXkJn2oK8iSpQK3zY6s8RCO8y9jDJTDCSzfMet3QXxjAy6I7kWHIB+XAwJkPD4y9NeySOSCxkquUHdrdU1KbvaR5wG6wtvWn33VzyAQsb0JHFUk+WutdmF167IbIrsx9oYqF/lATk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774421174; c=relaxed/simple;
-	bh=RS1a2jKlP6Um4pXoIf8TpbSTmqLpWTcBdNQYy3zRYvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c3qUcg3Dkibburi6DpRgT5/i7UhO14DdCxtsHZi0FOUDx0Z2u5cW7xPKfs1gb3wIujWx0+atZ+5cyr1wE2Q5jRlkDDAGPjlMfzm+bL3nPl+k7Wk8om4FLmzSGfMLQ7EGKewmZdPRZmJoRy4Gzm3B5Ep44u0U1hAdjlwEUuBewMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Iyrot6vf; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1774427223; c=relaxed/simple;
+	bh=gIUNhpBx+7oWQkB6WOG8yHO7M0ecgRUP2Cm3pdCBBT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAX7tbmrDT+3QqyoV5hC14ta7zj2zpW90+oNN32aIgfkdbbjzsWvHPgQuTQxP9ko8t/+Hgk6hhXCD51mImKATmHCfzQwb9zqANSvDxDTIn3FWCNeGJgOfMvP0MlnFpu8fMawy4bYudxPkdvBCPvYbOTdkqk/8q7U3JQb3/b1LhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=YikIByFL; arc=none smtp.client-ip=212.77.101.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Iyrot6vf"
-Message-ID: <f222748c-69ce-4c63-826b-4f2d67fd4ec9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774421171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g8m1UlG3iIRRlBgtvoGcNRikdN9p/VlMBfCiS8LBaYo=;
-	b=Iyrot6vf5QPJwj6J9bNehiB3NQv30fQxskEqAe6/VU5N9+DXb1UzEg1MIgNe9tdPk7xwSw
-	9c5oqJ9Gy9ThW0C8e+/Re16YTGNQ8KBUqqJDRWVSASODyURcHsL3LLZUpwt+A3pga90i1n
-	XrrxrpPvIk0z4LCZFMa7PKBY/4/vyfc=
-Date: Wed, 25 Mar 2026 14:45:59 +0800
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="YikIByFL"
+Received: (wp-smtpd smtp.wp.pl 40096 invoked from network); 25 Mar 2026 09:26:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1774427209; bh=D38tD79X5kbhHnmc5UKWJdVgjAw8jN9cdQd6Fw+5ee8=;
+          h=From:To:Cc:Subject;
+          b=YikIByFLx5YfWiDmp/TOnJhDJOUceZQHqOY4yoDtJE1uEGj1jteT3CGZaC7qadF+E
+           aVa0kZJgUR5BhvEZFZV65vuO2YOCHQuiErVw8dtLoOrN47wSdH2OvJ/MRW2e5LpiE9
+           nUtcGbT9ME850SpP1PAVKT6mPfWD08yYvchnfiZeR7vv2wysXhmoWQ2qb+w5o0jSxo
+           TinxuwijeKOcmtoSAjS8UUvuV5SMT8grf/+2n4CdiHL9fGV2TjIYiZ9cJsm4Onwnd2
+           m/ijxD7ikbCJVznTEC7pZEpulre4MZCg0VvavuJTNm6TzCgM2x1Z42+vrd/1P/GV/u
+           shJxFm6OFUllA==
+Received: from zbigniew33.net.autocom.pl (HELO localhost) (stf_xl@wp.pl@[77.236.6.42])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
+          for <petr.pavlu@suse.com>; 25 Mar 2026 09:26:49 +0100
+Date: Wed, 25 Mar 2026 09:26:48 +0100
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jordan Rome <linux@jordanrome.com>,
+	Viktor Malik <vmalik@redhat.com>
+Subject: Re: [PATCH] module/kallsyms: sort function symbols and use binary
+ search
+Message-ID: <20260325082648.GA18968@wp.pl>
+References: <20260317110423.45481-1-stf_xl@wp.pl>
+ <b6030f42-b4d2-4e52-acec-76e25c0f40db@suse.com>
+ <20260324125304.GA15972@wp.pl>
+ <282574df-7689-4677-929b-b844e7201bd5@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCHv4 bpf-next 25/25] selftests/bpf: Add tracing multi attach
- rollback tests
-Content-Language: en-US
-To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Martin KaFai Lau <kafai@fb.com>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
- Menglong Dong <menglong8.dong@gmail.com>, Steven Rostedt <rostedt@kernel.org>
-References: <20260324081846.2334094-1-jolsa@kernel.org>
- <20260324081846.2334094-26-jolsa@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <20260324081846.2334094-26-jolsa@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <282574df-7689-4677-929b-b844e7201bd5@suse.com>
+X-WP-MailID: 2acdd90e03552bdbe2169eb5f06892c4
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [kUNR]                               
 
-On 24/3/26 16:18, Jiri Olsa wrote:
-> Adding tests for the rollback code when the tracing_multi
-> link won't get attached, covering 2 reasons:
+On Tue, Mar 24, 2026 at 05:00:19PM +0100, Petr Pavlu wrote:
+> On 3/24/26 1:53 PM, Stanislaw Gruszka wrote:
+> > Hi,
+> > 
+> > On Mon, Mar 23, 2026 at 02:06:43PM +0100, Petr Pavlu wrote:
+> >> On 3/17/26 12:04 PM, Stanislaw Gruszka wrote:
+> >>> Module symbol lookup via find_kallsyms_symbol() performs a linear scan
+> >>> over the entire symtab when resolving an address. The number of symbols
+> >>> in module symtabs has grown over the years, largely due to additional
+> >>> metadata in non-standard sections, making this lookup very slow.
+> >>>
+> >>> Improve this by separating function symbols during module load, placing
+> >>> them at the beginning of the symtab, sorting them by address, and using
+> >>> binary search when resolving addresses in module text.
+> >>
+> >> Doesn't considering only function symbols break the expected behavior
+> >> with CONFIG_KALLSYMS_ALL=y. For instance, when using kdb, is it still
+> >> able to see all symbols in a module? The module loader should be remain
+> >> consistent with the main kallsyms code regarding which symbols can be
+> >> looked up.
+> > 
+> > We already have a CONFIG_KALLSYMS_ALL=y inconsistency between kernel and 
+> > module symbol lookup, independent of this patch. find_kallsyms_symbol()
+> > restricts the search to MOD_TEXT (or MOD_INIT_TEXT) address ranges, so
+> > it cannot resolve data or rodata symbols.
 > 
->   - wrong btf id passed by user, where all previously allocated
->     trampolines will be released
->   - trampoline for requested function is fully attached (has already
->     maximum programs attached) and the link fails, the rollback code
->     needs to release all previously link-ed trampolines and release
->     them
+> My understanding is that find_kallsyms_symbol() can identify all symbols
+> in a module by their addresses. However, the issue I see with
+> MOD_TEXT/MOD_INIT_TEXT is that the function may incorrectly calculate
+> the size of symbols that are not within these ranges, which is a bug
+> that should be fixed.
+
+You are right, I misinterpreted the code:
+
+	if (within_module_init(addr, mod))
+		mod_mem = &mod->mem[MOD_INIT_TEXT];
+	else
+		mod_mem = &mod->mem[MOD_TEXT];
+
+	nextval = (unsigned long)mod_mem->base + mod_mem->size;
+
+	bestval = kallsyms_symbol_value(&kallsyms->symtab[best]);
+
+For best = 0, bestval is also 0 as it comes from the ELF null symbol.
+
+> A test using kdb confirms that non-text symbols can be found by their
+> addresses. The following shows the current behavior with 7.0-rc5 when
+> printing a module parameter in mlx4_en:
 > 
-> We need the bpf_fentry_test* unattached for the tests to pass,
-> so the rollback tests are serial.
+> [1]kdb> mds __param_arr_num_vfs
+> 0xffffffffc1209f20 0000000100000003   ........
+> 0xffffffffc1209f28 ffffffffc0fbf07c [mlx4_core]num_vfs_argc  
+> 0xffffffffc1209f30 ffffffff8844bba0 param_ops_byte  
+> 0xffffffffc1209f38 ffffffffc0fbf080 [mlx4_core]num_vfs  
+> 0xffffffffc1209f40 000000785f69736d   msi_x...
+> 0xffffffffc1209f48 656c5f6775626564   debug_le
+> 0xffffffffc1209f50 00000000006c6576   vel.....
+> 0xffffffffc1209f58 0000000000000000   ........
 > 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  .../selftests/bpf/prog_tests/tracing_multi.c  | 213 ++++++++++++++++++
->  .../bpf/progs/tracing_multi_rollback.c        |  43 ++++
->  2 files changed, 256 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_rollback.c
+> .. and the behavior with the proposed patch:
 > 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-> index 6917471e329c..6ff0f72f8c46 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-> @@ -10,6 +10,7 @@
->  #include "tracing_multi_session.skel.h"
->  #include "tracing_multi_fail.skel.h"
->  #include "tracing_multi_bench.skel.h"
-> +#include "tracing_multi_rollback.skel.h"
->  #include "trace_helpers.h"
->  
->  static __u64 bpf_fentry_test_cookies[] = {
-> @@ -669,6 +670,218 @@ void serial_test_tracing_multi_bench_attach(void)
->  	free(ids);
->  }
->  
-> +static void tracing_multi_rollback_run(struct tracing_multi_rollback *skel)
-> +{
-> +	LIBBPF_OPTS(bpf_test_run_opts, topts);
-> +	int err, prog_fd;
-> +
-> +	prog_fd = bpf_program__fd(skel->progs.test_fentry);
-> +	err = bpf_prog_test_run_opts(prog_fd, &topts);
-> +	ASSERT_OK(err, "test_run");
-> +
-> +	/* make sure the rollback code did not leave any program attached */
-> +	ASSERT_EQ(skel->bss->test_result_fentry, 0, "test_result_fentry");
-> +	ASSERT_EQ(skel->bss->test_result_fexit, 0, "test_result_fexit");
-> +}
-> +
-> +static void test_rollback_put(void)
-> +{
-> +	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
-> +	struct tracing_multi_rollback *skel = NULL;
-> +	size_t cnt = FUNCS_CNT;
-> +	__u32 *ids = NULL;
-> +	int err;
-> +
-> +	skel = tracing_multi_rollback__open();
-> +	if (!ASSERT_OK_PTR(skel, "tracing_multi_rollback__open"))
-> +		return;
-> +
-> +	bpf_program__set_autoload(skel->progs.test_fentry, true);
-> +	bpf_program__set_autoload(skel->progs.test_fexit, true);
-> +
-> +	err = tracing_multi_rollback__load(skel);
-> +	if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-> +		goto cleanup;
-> +
-> +	ids = get_ids(bpf_fentry_test, cnt, NULL);
-> +	if (!ASSERT_OK_PTR(ids, "get_ids"))
-> +		goto cleanup;
-> +
-> +	/*
-> +	 * Mangle last id to trigger rollback, which needs to do put
-> +	 * on get-ed trampolines.
-> +	 */
-> +	ids[9] = 0;
-> +
-> +	opts.ids = ids;
-> +	opts.cnt = cnt;
-> +
-> +	skel->bss->pid = getpid();
-> +
-> +	skel->links.test_fentry = bpf_program__attach_tracing_multi(skel->progs.test_fentry,
-> +						NULL, &opts);
-> +	if (!ASSERT_ERR_PTR(skel->links.test_fentry, "bpf_program__attach_tracing_multi"))
-> +		goto cleanup;
-> +
-> +	skel->links.test_fexit = bpf_program__attach_tracing_multi(skel->progs.test_fexit,
-> +						NULL, &opts);
-> +	if (!ASSERT_ERR_PTR(skel->links.test_fexit, "bpf_program__attach_tracing_multi"))
-> +		goto cleanup;
-> +
-> +	/* We don't really attach any program, but let's make sure. */
-> +	tracing_multi_rollback_run(skel);
-> +
-> +cleanup:
-> +	tracing_multi_rollback__destroy(skel);
-> +	free(ids);
-> +}
-> +
-> +
+> [1]kdb> mds __param_arr_num_vfs
+> 0xffffffffc1077f20 0000000100000003   ........
+> 0xffffffffc1077f28 ffffffffc104707c   |p......
+> 0xffffffffc1077f30 ffffffffb4a4bba0 param_ops_byte  
+> 0xffffffffc1077f38 ffffffffc1047080   .p......
+> 0xffffffffc1077f40 000000785f69736d   msi_x...
+> 0xffffffffc1077f48 656c5f6775626564   debug_le
+> 0xffffffffc1077f50 00000000006c6576   vel.....
+> 0xffffffffc1077f58 0000000000000000   ........
 
-NIT: keep one blank line here.
+Thanks for testing and pointing this out. Patch indeed breaks
+the CONFIG_KALLSYMS_ALL case. 
 
-> +static void fillers_cleanup(struct tracing_multi_rollback **skels, int cnt)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < cnt; i++)
-> +		tracing_multi_rollback__destroy(skels[i]);
-> +
-> +	free(skels);
-> +}
-> +
-> +static struct tracing_multi_rollback *extra_load_and_link(void)
-> +{
-> +	struct tracing_multi_rollback *skel;
-> +	int err;
-> +
-> +	skel = tracing_multi_rollback__open();
-> +	if (!ASSERT_OK_PTR(skel, "tracing_multi_rollback__open"))
-> +		goto cleanup;
-> +
-> +	bpf_program__set_autoload(skel->progs.extra, true);
-> +
-> +	err = tracing_multi_rollback__load(skel);
-> +	if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-> +		goto cleanup;
-> +
-> +	skel->links.extra = bpf_program__attach_trace(skel->progs.extra);
-> +	if (!ASSERT_OK_PTR(skel->links.extra, "bpf_program__attach_trace"))
-> +		goto cleanup;
-> +
-> +	return skel;
-> +
-> +cleanup:
-> +	tracing_multi_rollback__destroy(skel);
-> +	return NULL;
-> +}
-> +
-> +static struct tracing_multi_rollback **fillers_load_and_link(int max)
-> +{
-> +	struct tracing_multi_rollback **skels, *skel;
-> +	int i, err;
-> +
-> +	skels = calloc(max + 1, sizeof(*skels));
-> +	if (!ASSERT_OK_PTR(skels, "calloc"))
-> +		return NULL;
-> +
-> +	for (i = 0; i < max; i++) {
-> +		skel = skels[i] = tracing_multi_rollback__open();
-> +		if (!ASSERT_OK_PTR(skels[i], "tracing_multi_rollback__open"))
-> +			goto cleanup;
-> +
-> +		bpf_program__set_autoload(skel->progs.filler, true);
-> +
-> +		err = tracing_multi_rollback__load(skel);
-> +		if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-> +			goto cleanup;
-> +
-> +		skel->links.filler = bpf_program__attach_trace(skel->progs.filler);
-> +		if (!ASSERT_OK_PTR(skels[i]->links.filler, "bpf_program__attach_trace"))
-> +			goto cleanup;
-> +	}
-> +
-> +	return skels;
-> +
-> +cleanup:
-> +	fillers_cleanup(skels, i);
-> +	return NULL;
-> +}
-> +
-> +static void test_rollback_unlink(void)
-> +{
-> +	struct tracing_multi_rollback *skel, *extra;
-> +	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
-> +	struct tracing_multi_rollback **fillers;
-> +	size_t cnt = FUNCS_CNT;
-> +	__u32 *ids = NULL;
-> +	int err, max;
-> +
-> +	max = get_bpf_max_tramp_links();
-> +	if (!ASSERT_GE(max, 1, "bpf_max_tramp_links"))
-> +		return;
-> +
-> +	/* Attach maximum allowed programs to bpf_fentry_test10 */
-> +	fillers = fillers_load_and_link(max);
-> +	if (!ASSERT_OK_PTR(fillers, "fillers_load_and_link"))
-> +		return;
-> +
-> +	extra = extra_load_and_link();
-> +	if (!ASSERT_OK_PTR(extra, "extra_load_and_link"))
+I think, possible fix would be to track the relevant sections in 
+__layout_sections() and use defined symbols from those sections,
+instead of just function symbols. 
 
-Should cleanup fillers here?
-
-Thanks,
-Leon
-
-> +		return;
-> +
-> +	skel = tracing_multi_rollback__open();
-> +	if (!ASSERT_OK_PTR(skel, "tracing_multi_rollback__open"))
-> +		goto cleanup;
-> +
-[...]
-
+Regards
+Stanislaw
