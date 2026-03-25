@@ -1,144 +1,84 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BAA396D3C
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 08:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A0B39A05D;
+	Wed, 25 Mar 2026 08:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774427223; cv=none; b=qWKqScTqOlUzArGdn0vjOVDCxjMW04IH4ptXkJn2oK8iSpQK3zY6s8RCO8y9jDJTDCSzfMet3QXxjAy6I7kWHIB+XAwJkPD4y9NeySOSCxkquUHdrdU1KbvaR5wG6wtvWn33VzyAQsb0JHFUk+WutdmF167IbIrsx9oYqF/lATk=
+	t=1774428569; cv=none; b=KqECQx2Zy8AySSeQ/VHPzPMJo79hmyKqFhY2AKmSdug6bY6SddW71SFNQfFoRIu9BCUnFTagsNNjMCyMWED5NWPaenW+/V42kInlxeLMZncw+WlLFcRf+mtCu1LzNm6mH7lcjXkL67ZMF4JckMshj3Qqvl9GHZvkU65aZim42Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774427223; c=relaxed/simple;
-	bh=gIUNhpBx+7oWQkB6WOG8yHO7M0ecgRUP2Cm3pdCBBT4=;
+	s=arc-20240116; t=1774428569; c=relaxed/simple;
+	bh=xQmO7EJXl1PoTtMOtJVG6NGd02VYJTyAaCn3EEcWWss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vAX7tbmrDT+3QqyoV5hC14ta7zj2zpW90+oNN32aIgfkdbbjzsWvHPgQuTQxP9ko8t/+Hgk6hhXCD51mImKATmHCfzQwb9zqANSvDxDTIn3FWCNeGJgOfMvP0MlnFpu8fMawy4bYudxPkdvBCPvYbOTdkqk/8q7U3JQb3/b1LhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=YikIByFL; arc=none smtp.client-ip=212.77.101.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	 Content-Type:Content-Disposition:In-Reply-To; b=alGCEXT0nZY5XJzkxtvWgdLJNvULSKXqP4sPRXyO+Urz4byTcu27Je9Qd8VED79D4OrAVmQFSnaKe/2bf0n7cBF9VStQ1340KXwd8EmUWHJoqbpRD40d3uCVWbP9vQA0S4ea0qUUieEwNyRkxNiflu43Wt9I7L+sGM0XUrXrtZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etwMqJpS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="YikIByFL"
-Received: (wp-smtpd smtp.wp.pl 40096 invoked from network); 25 Mar 2026 09:26:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1774427209; bh=D38tD79X5kbhHnmc5UKWJdVgjAw8jN9cdQd6Fw+5ee8=;
-          h=From:To:Cc:Subject;
-          b=YikIByFLx5YfWiDmp/TOnJhDJOUceZQHqOY4yoDtJE1uEGj1jteT3CGZaC7qadF+E
-           aVa0kZJgUR5BhvEZFZV65vuO2YOCHQuiErVw8dtLoOrN47wSdH2OvJ/MRW2e5LpiE9
-           nUtcGbT9ME850SpP1PAVKT6mPfWD08yYvchnfiZeR7vv2wysXhmoWQ2qb+w5o0jSxo
-           TinxuwijeKOcmtoSAjS8UUvuV5SMT8grf/+2n4CdiHL9fGV2TjIYiZ9cJsm4Onwnd2
-           m/ijxD7ikbCJVznTEC7pZEpulre4MZCg0VvavuJTNm6TzCgM2x1Z42+vrd/1P/GV/u
-           shJxFm6OFUllA==
-Received: from zbigniew33.net.autocom.pl (HELO localhost) (stf_xl@wp.pl@[77.236.6.42])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
-          for <petr.pavlu@suse.com>; 25 Mar 2026 09:26:49 +0100
-Date: Wed, 25 Mar 2026 09:26:48 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Jordan Rome <linux@jordanrome.com>,
-	Viktor Malik <vmalik@redhat.com>
-Subject: Re: [PATCH] module/kallsyms: sort function symbols and use binary
- search
-Message-ID: <20260325082648.GA18968@wp.pl>
-References: <20260317110423.45481-1-stf_xl@wp.pl>
- <b6030f42-b4d2-4e52-acec-76e25c0f40db@suse.com>
- <20260324125304.GA15972@wp.pl>
- <282574df-7689-4677-929b-b844e7201bd5@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etwMqJpS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 780E7C4CEF7;
+	Wed, 25 Mar 2026 08:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774428569;
+	bh=xQmO7EJXl1PoTtMOtJVG6NGd02VYJTyAaCn3EEcWWss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=etwMqJpS5Ue2xjTIBn/Rrmg0rM3uZ2gmq2jbeysyst1MP7bEAdtOty+h/MGQR6hCv
+	 Kg/Z4iUATK8JJBGSA+mBU/S9NNkJMqGUIaLn1zQbR5HeMdet2DEvDXlu+p+Hn3YnIB
+	 Y0qZ3v027cRBo5GjYoxAEJH4dETv9Om379JWp0WrQ8Mg/1GndcZpLUBFRr0SECBKKm
+	 cKI+keWWgRGAynfHL+0mlC2zBXZeZUaDS5G2MPFpzJpCyZ+nBMGqbbhKVJMRPNR21K
+	 3LaamZ0vWgZZoWDJII9cMgixGcEytoC1WbsjKV+ILkNbIhEa4z+ZCPClkyQTvO10Pa
+	 lujBpsu7X7ARw==
+Date: Wed, 25 Mar 2026 09:49:26 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jingyuan Liang <jingyliang@chromium.org>
+Cc: Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, hbarnor@chromium.org, 
+	tfiga@chromium.org, Jarrett Schultz <jaschultz@microsoft.com>, 
+	Dmitry Antipov <dmanti@microsoft.com>, Angela Czubak <acz@semihalf.com>
+Subject: Re: [PATCH v2 00/11] Add spi-hid transport driver
+Message-ID: <20260325-naughty-hungry-wapiti-658e83@quoll>
+References: <20260324-send-upstream-v2-0-521ce8afff86@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <282574df-7689-4677-929b-b844e7201bd5@suse.com>
-X-WP-MailID: 2acdd90e03552bdbe2169eb5f06892c4
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [kUNR]                               
+In-Reply-To: <20260324-send-upstream-v2-0-521ce8afff86@chromium.org>
 
-On Tue, Mar 24, 2026 at 05:00:19PM +0100, Petr Pavlu wrote:
-> On 3/24/26 1:53 PM, Stanislaw Gruszka wrote:
-> > Hi,
-> > 
-> > On Mon, Mar 23, 2026 at 02:06:43PM +0100, Petr Pavlu wrote:
-> >> On 3/17/26 12:04 PM, Stanislaw Gruszka wrote:
-> >>> Module symbol lookup via find_kallsyms_symbol() performs a linear scan
-> >>> over the entire symtab when resolving an address. The number of symbols
-> >>> in module symtabs has grown over the years, largely due to additional
-> >>> metadata in non-standard sections, making this lookup very slow.
-> >>>
-> >>> Improve this by separating function symbols during module load, placing
-> >>> them at the beginning of the symtab, sorting them by address, and using
-> >>> binary search when resolving addresses in module text.
-> >>
-> >> Doesn't considering only function symbols break the expected behavior
-> >> with CONFIG_KALLSYMS_ALL=y. For instance, when using kdb, is it still
-> >> able to see all symbols in a module? The module loader should be remain
-> >> consistent with the main kallsyms code regarding which symbols can be
-> >> looked up.
-> > 
-> > We already have a CONFIG_KALLSYMS_ALL=y inconsistency between kernel and 
-> > module symbol lookup, independent of this patch. find_kallsyms_symbol()
-> > restricts the search to MOD_TEXT (or MOD_INIT_TEXT) address ranges, so
-> > it cannot resolve data or rodata symbols.
+On Tue, Mar 24, 2026 at 06:39:33AM +0000, Jingyuan Liang wrote:
+> This series picks up the spi-hid driver work originally started by
+> Microsoft. The patch breakdown has been modified and the implementation
+> has been refactored to address upstream feedback and testing issues. We
+> are submitting this as a new series while keeping the original sign-off
+> chain to reflect the history.
 > 
-> My understanding is that find_kallsyms_symbol() can identify all symbols
-> in a module by their addresses. However, the issue I see with
-> MOD_TEXT/MOD_INIT_TEXT is that the function may incorrectly calculate
-> the size of symbols that are not within these ranges, which is a bug
-> that should be fixed.
-
-You are right, I misinterpreted the code:
-
-	if (within_module_init(addr, mod))
-		mod_mem = &mod->mem[MOD_INIT_TEXT];
-	else
-		mod_mem = &mod->mem[MOD_TEXT];
-
-	nextval = (unsigned long)mod_mem->base + mod_mem->size;
-
-	bestval = kallsyms_symbol_value(&kallsyms->symtab[best]);
-
-For best = 0, bestval is also 0 as it comes from the ELF null symbol.
-
-> A test using kdb confirms that non-text symbols can be found by their
-> addresses. The following shows the current behavior with 7.0-rc5 when
-> printing a module parameter in mlx4_en:
+> Same as the original series, there is a change to HID documentation, some
+> HID core changes to support a SPI device, the SPI HID transport driver,
+> and HID over SPI Device Tree binding. We have added the HID over SPI ACPI
+> support, power management, panel follower, and quirks for Ilitek touch
+> controllers.
 > 
-> [1]kdb> mds __param_arr_num_vfs
-> 0xffffffffc1209f20 0000000100000003   ........
-> 0xffffffffc1209f28 ffffffffc0fbf07c [mlx4_core]num_vfs_argc  
-> 0xffffffffc1209f30 ffffffff8844bba0 param_ops_byte  
-> 0xffffffffc1209f38 ffffffffc0fbf080 [mlx4_core]num_vfs  
-> 0xffffffffc1209f40 000000785f69736d   msi_x...
-> 0xffffffffc1209f48 656c5f6775626564   debug_le
-> 0xffffffffc1209f50 00000000006c6576   vel.....
-> 0xffffffffc1209f58 0000000000000000   ........
+> Original authors: Jarrett Schultz <jaschultz@microsoft.com>,
+> 		  Dmitry Antipov <dmanti@microsoft.com>
+> Link: https://lore.kernel.org/r/86b63b7b-afda-d7f4-7bfa-175085d5a8ef@gmail.com
 > 
-> .. and the behavior with the proposed patch:
-> 
-> [1]kdb> mds __param_arr_num_vfs
-> 0xffffffffc1077f20 0000000100000003   ........
-> 0xffffffffc1077f28 ffffffffc104707c   |p......
-> 0xffffffffc1077f30 ffffffffb4a4bba0 param_ops_byte  
-> 0xffffffffc1077f38 ffffffffc1047080   .p......
-> 0xffffffffc1077f40 000000785f69736d   msi_x...
-> 0xffffffffc1077f48 656c5f6775626564   debug_le
-> 0xffffffffc1077f50 00000000006c6576   vel.....
-> 0xffffffffc1077f58 0000000000000000   ........
+> Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
+> ---
+> Changes in v2:
+> - Fix style problems and remove unnecessary fields from the DT binding file
 
-Thanks for testing and pointing this out. Patch indeed breaks
-the CONFIG_KALLSYMS_ALL case. 
+Style and removal? So other comments were skipped?
 
-I think, possible fix would be to track the relevant sections in 
-__layout_sections() and use defined symbols from those sections,
-instead of just function symbols. 
+Please write detailed changelogs, otherwise it feels you just ignore
+parts of the feedback.
 
-Regards
-Stanislaw
+Best regards,
+Krzysztof
+
