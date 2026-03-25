@@ -1,65 +1,65 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3B534CFCA
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 21:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F09233A70A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 21:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774475363; cv=none; b=lojxYttRNCDLP0/i5aRyuzwGitvtfHxLhKH08o6Zat014kAbpeMRyDxqAm9dRJxPYF+nsdalupm16XtCOPM1eWE32JMTw/NQDHmtD/MmJhRjv0QrinO+mLr4ytvAAdlTyg4kou9NiGIl10zI6oqN1+KUCABZKoDoGs/NNaDbgv8=
+	t=1774475380; cv=none; b=J4O6gkZgL736QAjCGAZ26Wevf4EdYN+spi4yyPR3wj5O/sT7af1Te++sepTjqHFVdJjTCW0bDG1Il9sx6daMN7dvODvjrAdICIbmEdEQ23LTVK17iIKR1YfANXMP6NcXri9z2vz9YvdHSPnQ6tqsBkWUv2AYs6cC0vvPx5Glooc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774475363; c=relaxed/simple;
-	bh=eteJZNJv0+GJkkbZzbMz5Pu35XKTbXLZuDbrYjHuTXo=;
+	s=arc-20240116; t=1774475380; c=relaxed/simple;
+	bh=iz1fSpZVNXeLgggcb5xsiGU0Q8slI2axIwIPVuRpvOc=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rqGqjQSogPAK3OdqyaGJVGMsd9B1DQ6hPO7rAuoQ74JF1EYxjCsMrJerknMq2AoQmfduv11pJTJpwOWps+bsnM02uGkc1sAfw4WwwQAHNbIzQL71BkgDzVkSSH3CjOGMB9nlLqxfl9mHeB9UojdTTKV1Rw959bpk+mfoi7ffzAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ssUcAqkb; arc=none smtp.client-ip=209.85.128.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUAMn7bzAsc/qcemwZD/qbla8LWU19bPBGnszT6oxU3IgNe3PZYNm+Frb5u6UNUFTTkM77VtVLevf2+WPfS4Xcso+EbfPkElj5xQW0L0tfMA+1lCcTHD4c/8cVf/Ty6Bk68M+fIdYDkueIEOOmD07o9u8IbDA13DjT8xHLZ8oX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipekr+Dq; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssUcAqkb"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-486fc4725f0so2192875e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 14:49:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipekr+Dq"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-486fe2024a9so2381455e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 14:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774475361; x=1775080161; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774475378; x=1775080178; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rqEmYTe1Fa2oQT5t+NcEaUAzVRoRsWKvubdY/vPfJbo=;
-        b=ssUcAqkb/BnOw+UkZmORxcbo0RpaueHmzqpCrxWhAVZKzkcoWwqXJl3W5hubbjVDUy
-         xYZxBqh5MHftV3deewkYy2ozdlT6DHhPX+dKTPj2dDUnY4iBP9aULdo2E7UUXgr8PGMt
-         yZd1iBufmm2p5cbz8NbqQF9GgzKehh5yA0Tl8MbrFxE48i8Ov8lNZj3TJg0pakk58lmJ
-         qe3hCF/iZh+MvITeVVzoJFYvmB05tamb+ifmU436MfCSex1JKU8i2yo/s/kIOqR+JlLK
-         flRaJbm6f3vRVWSgYAQVBqQT/BbrqT95Y9GRN3s2y1ookCP8lAsiTsGtx+O7d/+VpWDZ
-         TMnA==
+        bh=mz0kcj+ndhoxRF+/ebTLeUq+YLmqb2xPLvFnCoHBQP8=;
+        b=ipekr+Dqnsny0EGTmIEEO9wyP6eO14YaPLriyBCZjD9tXpPQTiAlUGawYgIgoc+8Ak
+         ZNQFmRBPulAd+/A2LekW4p1NIJkCbv6/QeA/Lx+cs+unSsZ3aM05ppKnB9xlLApejlQJ
+         A4xkbXA2uTJmv/LseYp/tvq87A8sKKMbPHrfgdVVxS8liPnEULn7uxelAHB+mJEpafkZ
+         PxBgE3GtAIMJjJWUiNQz6g4hzxLq4IhMpATEiK0tX9O3XI1PRA7biciUXdmQGq9a1oum
+         AkJ/1fnQE/bs3pluSQU0cn0Bdyp8sA/oPVa3LAceiexcjs2fYA5f1S2Y+jax86iJOOWL
+         64fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774475361; x=1775080161;
+        d=1e100.net; s=20251104; t=1774475378; x=1775080178;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rqEmYTe1Fa2oQT5t+NcEaUAzVRoRsWKvubdY/vPfJbo=;
-        b=FECLZmvAhSZw2IWG4RSX6xbl2tWcPDiHsnWdt4s/qDsR9W1dP9sOfAdDERdcbeTFNm
-         fXGxuzPgdWwrp2UahUXl5AlL0kmfaUaDPEclV8tI2kJppxUu7a1C+ySnF7qj1VP/lscL
-         iTaHJYzTrABI+A4S2sUh+QBgqbYLyzvIULdqB6w87VH3jfl3pLYk7wJTgguIRwrarXqe
-         Sznzzf2SyD99Y+7bt8+MUOCGS9QTyVCdMAdOdVieg8jjB2nh0kAfRBcv5tW+tx7QJvT9
-         EtmLXj0L7hiTmj9ZD/UQTOcsi0kRcjomkagdQLA34HIWiJ0d4Zzp1KywWMmOzFqMP3Qg
-         MCiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCjd5OvilxT9oDQqnnNsMNRmtwQT05LulMFAa3yu2v88D32tYauAz4nBPmLjEOgeeq2qBcVowTxpaeaYiWuBG+wxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDGgBzMJ4vvAyeNF/UgaJDecQ+nUxJXb7EesLpLlPftI5ruk/V
-	4brQhDHnnlUS7MHvHpvdhobywmuNipKP66zUIVDhKug62sJaFTpw/Yqe
-X-Gm-Gg: ATEYQzz6EcmNh6CkLqR5bHMZhgJpryd0RRUdu3w8dcojqLjsTLSnv6FDSGRsah7UOEF
-	rsh05ZMDUOdtRfKfsKei4uKG72pvr4ENxBxP9fRN0+hciqI9OtIpNEWpd6EGetPAZHUwQNKoo2j
-	Vp5LaiMNiIfLdZcGWtoh3eU1uq1YjGRExMsBXRwiVJkVEOLK/RPgNuW9KKhu1ddnFLJqfoHZu6Q
-	Ik6+jSlLocbq+zjHRnY9O8VAMbHftG/zvqiH9vlQ+nmsyAgRuLv2yr2ax3avtR353NoTPr8QIf7
-	OcHumRZ4Cd2GjPa5PxqSIVgYR2mmSF+Kql/jdzEHSKQrSx2LZjc11x2pZmc8sXZCyalPkGoGFTf
-	H4En9ZYxgPiZHABzqR50E8HuNbP4dRlKBAVstdfFDmZ3o5AsfAMKAczJoPAhRJsAf8VNhHaphwx
-	eU9aiMuu6pJAtDdPgxah+s5NgL/D8Sb2bLb4uxoea/jQ==
-X-Received: by 2002:a05:600c:37c3:b0:485:3cef:d6ea with SMTP id 5b1f17b1804b1-4871608eb70mr73543525e9.13.1774475360383;
-        Wed, 25 Mar 2026 14:49:20 -0700 (PDT)
+        bh=mz0kcj+ndhoxRF+/ebTLeUq+YLmqb2xPLvFnCoHBQP8=;
+        b=RW4Q50g877HeB1ZzVB9VRqdQA4fD7XfamYdZZh0f+XbZo6BVncHYGeHFxO2h5fnSug
+         ww8kbkIDP3Hr9tgE4YK/1xPCZIIpGDdCsE7loMYtXi+qzvt6RcaJkvJdgIxNnEA0mPOY
+         moEbyy5QPIV7lYv1anCfwdGr+LaBMTTngoDF/XyanWWzbI2sZsqCqQBSF4h2gSa8I07L
+         aW4bQv9nHn2bsbD3Hbis1oGRDcootvyN3XH2h/+RUjiltfTv3f2js3ZxmXWSB1UoFgUx
+         kVzdWVv5bFfPOS3fXiqQA+jObO6Ttw75rxm8vH5lQBJup/BpLwp6Fox5UWEAKVXi/t4y
+         KhPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeniuWXlwJGl0e/Hp2/n80nefbU/p8P1gEG36BSQGWk//eWU6dIRPq/ZP+Oe4chSbyTtjt5jxCPKbGssJ1d+z6bk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1OqO8L5W+uXb8TcTPldeTlpgN6ViePg9MX/kly/jPOy7LfAqu
+	Nzr/C/3E7XUoW0ssQ2QwgIU3zRxcUPXSgAfg29oYwy/zcmT7fksSl5s+
+X-Gm-Gg: ATEYQzyC9RExlQJpTt9XwyKKZU8L7zOeCS1qZRjueeWvCcKKqX2DLkQJEfg3AzbaP3t
+	7ZOtWdHTnhm750kHbvooTjVgkETUim9h2Tf6wuT+YYqXLRBFanZFQ3dbwJU7tCHt5R1EXfzC0rI
+	4tZMiOrfEoT75LkDwFkHF1bxDe5d77XEw/qIXNZvGgQ61/jHOvDpsxCrI7pgGwEA24cAyBf/yij
+	zTfIqQSKj4MxKehGWR2GuPiVMjLpJNtaku/fsRvk9bsZKAdFDZED4sSOfxXkzhsWoB01k8t1bb6
+	RQijCP3at0LG1x5C09RLF5oaV6CcixQcLQt15kzGYlk2+/5i4mlTq633dw8jj9uUW0PJMnHN1Mh
+	xulsROQn8aeDjhpF4L/KYrT/v8oLZhbg8g2kpj3unJboBBgJgDagEt9PiXI5QkFH+zqMqqSmxDY
+	igoruuRG86440mOR7VLgz2h4n1wPJEVtercmDvsm6qBw==
+X-Received: by 2002:a05:600c:a4f:b0:486:fbd1:9dc0 with SMTP id 5b1f17b1804b1-487160350d6mr70549235e9.22.1774475377407;
+        Wed, 25 Mar 2026 14:49:37 -0700 (PDT)
 Received: from krava (h082218179122.host.wavenet.at. [82.218.179.122])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48711764509sm160251685e9.13.2026.03.25.14.49.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4871fb38086sm11724845e9.4.2026.03.25.14.49.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 14:49:19 -0700 (PDT)
+        Wed, 25 Mar 2026 14:49:35 -0700 (PDT)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 25 Mar 2026 22:49:17 +0100
+Date: Wed, 25 Mar 2026 22:49:33 +0100
 To: Leon Hwang <leon.hwang@linux.dev>
 Cc: Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
@@ -69,12 +69,12 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
 	Menglong Dong <menglong8.dong@gmail.com>,
 	Steven Rostedt <rostedt@kernel.org>
-Subject: Re: [PATCHv4 bpf-next 13/25] bpf: Add support for tracing_multi link
- fdinfo
-Message-ID: <acRYXe4a_eHnougG@krava>
+Subject: Re: [PATCHv4 bpf-next 25/25] selftests/bpf: Add tracing multi attach
+ rollback tests
+Message-ID: <acRYbQkfgTWqJAAT@krava>
 References: <20260324081846.2334094-1-jolsa@kernel.org>
- <20260324081846.2334094-14-jolsa@kernel.org>
- <03163163-fae9-4980-8526-a1353cdabcfc@linux.dev>
+ <20260324081846.2334094-26-jolsa@kernel.org>
+ <f222748c-69ce-4c63-826b-4f2d67fd4ec9@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -83,24 +83,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <03163163-fae9-4980-8526-a1353cdabcfc@linux.dev>
+In-Reply-To: <f222748c-69ce-4c63-826b-4f2d67fd4ec9@linux.dev>
 
-On Wed, Mar 25, 2026 at 02:43:19PM +0800, Leon Hwang wrote:
-> On 24/3/26 16:18, Jiri Olsa wrote:
-> > Adding tracing_multi link fdinfo support with following output:
-> > 
-> > pos:    0
-> > flags:  02000000
-> > mnt_id: 19
-> > ino:    3091
-> > link_type:      tracing_multi
-> > link_id:        382
+On Wed, Mar 25, 2026 at 02:45:59PM +0800, Leon Hwang wrote:
+
+SNIP
+
+> > +static void test_rollback_unlink(void)
+> > +{
+> > +	struct tracing_multi_rollback *skel, *extra;
+> > +	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
+> > +	struct tracing_multi_rollback **fillers;
+> > +	size_t cnt = FUNCS_CNT;
+> > +	__u32 *ids = NULL;
+> > +	int err, max;
+> > +
+> > +	max = get_bpf_max_tramp_links();
+> > +	if (!ASSERT_GE(max, 1, "bpf_max_tramp_links"))
+> > +		return;
+> > +
+> > +	/* Attach maximum allowed programs to bpf_fentry_test10 */
+> > +	fillers = fillers_load_and_link(max);
+> > +	if (!ASSERT_OK_PTR(fillers, "fillers_load_and_link"))
+> > +		return;
+> > +
+> > +	extra = extra_load_and_link();
+> > +	if (!ASSERT_OK_PTR(extra, "extra_load_and_link"))
 > 
-> Would better to add attach_type?
-> 
-> attach_type:	[fentry,fexit,fsession]_multi
+> Should cleanup fillers here?
 
-that's seems ok, will add
+yep, should jump to cleanup, thanks
 
-thanks,
 jirka
