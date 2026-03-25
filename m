@@ -1,154 +1,247 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FFC38D00F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Mar 2026 10:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAC73A543C;
+	Wed, 25 Mar 2026 10:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774432938; cv=none; b=LS1dWBFCdRB4W/EwhnBbMsZDcBdXiNMtouXZNDjAvNBWbT7SB3MPWR4ZVbRyy3hT/6YrlCzblTza8Hj7QxnNc/kanmo3wUCkgUaUeDzSFgZce8Fdo5lR7RJ7jRKQJbLuAIjQvvd9xw4m6Qs1fggV/cA/UJcDBAvjsf+tHoHrxRI=
+	t=1774433204; cv=none; b=IZIvib3Jx77APf2EaoC1CBlCKFVzwOkOwPjPtAJbfwW+fjuceJ0Dn70+EcampFFYvJJUekwuySRhIxYY2LVYqJvLtu/z4EHAMPkMSWMQagIrB1/X3EGhsXIpODeH9lnzRsgXVK3jv8huPPVcUb+plYAecHHrAMaluoHFaSpEbPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774432938; c=relaxed/simple;
-	bh=BOHQdiU/gvG8mcDwZGxgkiG7C1zsf4yixpRiH2WNyPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V58opRJ061FiqB9VDRxxdvg8W6J+8CBzyY5C7+2XPnQf0EBX5Zyij9YsY4VCKlCeNQPdEIvzSkxe+YGQvO0EeFesxeRcJb6oeqiHA7qIvTV+1ziYKjk2Gx+pgB0XLD4prUgU/frjX8Qo+3N5M9RNLjeMCOUfDV1ydb3KZFWuPR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=P9l3nviL; arc=none smtp.client-ip=212.77.101.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1774433204; c=relaxed/simple;
+	bh=gqstBkE5KpEtHYJXxjJXNFib5hjXrHq5i5zqeAS3WbM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=M4smCmR8JszJ5yHMkCShRIav7Q8Oe6/fcpFpQqcSW9gKLKWKzhRQfj5o4w2huAqKZ3QpmT3mvNUQ4Hl3NmTU5TX68Ca9EdWw+zGqv8KIEXcxVpOtAGaEODhKlKH+e43D4EWC6HcwqGbe2fPqeM9nrUkeJtGN3U7qUmaU1wqb2mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=deWkSt+X; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="P9l3nviL"
-Received: (wp-smtpd smtp.wp.pl 45216 invoked from network); 25 Mar 2026 11:02:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1774432925; bh=WjvzYWzbjDqBs7Z1emu9dcy8LFxZG9M7Xjaah8E6lgg=;
-          h=From:To:Cc:Subject;
-          b=P9l3nviLmxoMmV1QNHAHt2ufbxAEyY0CuaiZoXFh4aud7k0AwYNFkmb3GK9b8qOBQ
-           ajX63NC4WN5y5MjhwjyL+0VydkI/IfDTpebBofGWsijE8zyYMqotFo7VG2fVZ3U78v
-           ul12DgoZ/6wae7DiCuRz1JXsZCr35nu/fYCT86l9apf0GRe+8cPXdMvLb1JwxAfcYB
-           sNYwXd0Aj/+SQ6Gs03GDbMvSnSfjh69rP9qWuqx4uFhZbUgQ5QFaA4EXDypiHm5Ztr
-           v7A7H2ggp4owWg2zIpZlDjhkBlwETtDe4CwzDo6sPw17pXpMJMpesN7jlzxdTBfkmP
-           W2WR1FlMntI5w==
-Received: from zbigniew33.net.autocom.pl (HELO localhost) (stf_xl@wp.pl@[77.236.6.42])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
-          for <petr.pavlu@suse.com>; 25 Mar 2026 11:02:05 +0100
-Date: Wed, 25 Mar 2026 11:02:02 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Jordan Rome <linux@jordanrome.com>,
-	Viktor Malik <vmalik@redhat.com>
-Subject: Re: [PATCH] module/kallsyms: sort function symbols and use binary
- search
-Message-ID: <20260325100202.GA22612@wp.pl>
-References: <20260317110423.45481-1-stf_xl@wp.pl>
- <b6030f42-b4d2-4e52-acec-76e25c0f40db@suse.com>
- <20260324125304.GA15972@wp.pl>
- <282574df-7689-4677-929b-b844e7201bd5@suse.com>
- <20260325082648.GA18968@wp.pl>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="deWkSt+X"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=7iT+5Op9dAVieVaBzZ4GUWxsOw/gXfMUawtngVu1qjA=; b=deWkSt+XfCx8NU/LPrqt9WvHsr
+	acqnPRZFWBkDdteA6YRs1UZXPOYvmlPfUASi984MM15pXj6BsyBw8bJ3yZkJfIjSjgmI7mFxVZuzq
+	DhrTWDwb/n8WVvoicK7q5mIdv9bUAhvpjNzVQ7lWPGkJ9SebmjvRtZJMXcEHBzN0HjVknuoQwQCsY
+	7vA6euqs2wQZVq5GAyfULM3uRttt5l9BbZe/9FS4NDlhRj/cQ+Wt29J4Pqg2yoAlqVIZER/NFwaPn
+	FDbPZ+ajLh8UBESwPyolUWENXDNM3fBqCrPmTjYM4uLK4J4U8IPDzUrjrk661rO2RIiYkL6J8QGPE
+	//GTNkog==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1w5L8E-008zyK-3A; Wed, 25 Mar 2026 10:06:33 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Wed, 25 Mar 2026 03:05:38 -0700
+Subject: [PATCH v2] bootconfig: Apply early options from embedded config
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260325082648.GA18968@wp.pl>
-X-WP-MailID: 5038ef7f550eeb2bd6590bf38a52a15d
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [UXMR]                               
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
+X-B4-Tracking: v=1; b=H4sIAHKzw2kC/2XNSwqDMBSF4a2EOzYlDxXqqPsoUmK80VtKUpJUK
+ pK9Fy0ddXjg5zsbJIyECTq2QcSFEgUPHVMVAzsbPyGnEToGSqhWaKU5mvhYb0MI2QbvaOIKna0
+ bcTZOj1AxeEZ09D7Ia//d6TXc0ebd2YuZUg5xPT4XuXc/vv7nF8kll1ZgqxrjnGgvIw5k/CnEC
+ fpSygcAnWK0wwAAAA==
+X-Change-ID: 20260323-early_bootconfig-2efc4509af3d
+To: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, 
+ rostedt@goodmis.org, kernel-team@meta.com, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.16-dev-453a6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6622; i=leitao@debian.org;
+ h=from:subject:message-id; bh=gqstBkE5KpEtHYJXxjJXNFib5hjXrHq5i5zqeAS3WbM=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpw7Ol/aODv43YbF3NF7hpBeFqgk9DslYiz4UIy
+ MhWrJbdPi6JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCacOzpQAKCRA1o5Of/Hh3
+ bTroD/4kSbqG12CvIkzSKG6TCGRAUtwTIeEIwxt6PGr9DKxqp8jn3wsrSPI6x7X4UJ+EfX90Ecs
+ xHChUpGjcltNROQuy9fakB3rmdNo1A165fbW/c1ls44WHQ25RwHuJwnvsp1B0zLTqxmINpAcjVi
+ Cm30GmcpsA4CtNto57FDGB++B6LMBie8c2rHjtgSLAMqDZJgw4j3NrkWmadmLrnrBgucV7t7GIj
+ f901oSx6JKCXJ3pPrkJc6fo3n/DNU+5sHkojXTNu00JnhDjHvw+4AljU5AWsPpa7g4i/UMGg87x
+ As20YiQsD7SQMkism1dxvPwRUmLCvFgcDFd6iyUff0vrfZS49ohWsqO5BetKgmnNaw6zvM3NTwI
+ Wd2Ht0lnMaUq5LGy/iecYPA1TiqrkF0Hi3qUIPI0/BUngZFTuA0PhYSIDLSoPqTRJ6qHgJjCVWd
+ oNk5+9rDUY6BmTVYKuw5XKpc4uAZIHnKVXxsHxjPRW48gyCEE/TwNX4Gzr+iXLiznWh44Q3MKnw
+ pGnoV5o3CZsaQ52FHyG5llY0npNvDRUDNo7/E/78mJv/F0ydTG2hBW38In1/O8bvTrDySA5ePAW
+ hKZqejbLwYEs2mZj+17mKUyxe8TntdSH3LBKdi76ADUt4br2Ud9zFiXljIims0Tw+5c7ahxwFCk
+ AaNQRSkCY9nKAQQ==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On Wed, Mar 25, 2026 at 09:26:56AM +0100, Stanislaw Gruszka wrote:
-> On Tue, Mar 24, 2026 at 05:00:19PM +0100, Petr Pavlu wrote:
-> > On 3/24/26 1:53 PM, Stanislaw Gruszka wrote:
-> > > Hi,
-> > > 
-> > > On Mon, Mar 23, 2026 at 02:06:43PM +0100, Petr Pavlu wrote:
-> > >> On 3/17/26 12:04 PM, Stanislaw Gruszka wrote:
-> > >>> Module symbol lookup via find_kallsyms_symbol() performs a linear scan
-> > >>> over the entire symtab when resolving an address. The number of symbols
-> > >>> in module symtabs has grown over the years, largely due to additional
-> > >>> metadata in non-standard sections, making this lookup very slow.
-> > >>>
-> > >>> Improve this by separating function symbols during module load, placing
-> > >>> them at the beginning of the symtab, sorting them by address, and using
-> > >>> binary search when resolving addresses in module text.
-> > >>
-> > >> Doesn't considering only function symbols break the expected behavior
-> > >> with CONFIG_KALLSYMS_ALL=y. For instance, when using kdb, is it still
-> > >> able to see all symbols in a module? The module loader should be remain
-> > >> consistent with the main kallsyms code regarding which symbols can be
-> > >> looked up.
-> > > 
-> > > We already have a CONFIG_KALLSYMS_ALL=y inconsistency between kernel and 
-> > > module symbol lookup, independent of this patch. find_kallsyms_symbol()
-> > > restricts the search to MOD_TEXT (or MOD_INIT_TEXT) address ranges, so
-> > > it cannot resolve data or rodata symbols.
-> > 
-> > My understanding is that find_kallsyms_symbol() can identify all symbols
-> > in a module by their addresses. However, the issue I see with
-> > MOD_TEXT/MOD_INIT_TEXT is that the function may incorrectly calculate
-> > the size of symbols that are not within these ranges, which is a bug
-> > that should be fixed.
-> 
-> You are right, I misinterpreted the code:
-> 
-> 	if (within_module_init(addr, mod))
-> 		mod_mem = &mod->mem[MOD_INIT_TEXT];
-> 	else
-> 		mod_mem = &mod->mem[MOD_TEXT];
-> 
-> 	nextval = (unsigned long)mod_mem->base + mod_mem->size;
-> 
-> 	bestval = kallsyms_symbol_value(&kallsyms->symtab[best]);
-> 
-> For best = 0, bestval is also 0 as it comes from the ELF null symbol.
-> 
-> > A test using kdb confirms that non-text symbols can be found by their
-> > addresses. The following shows the current behavior with 7.0-rc5 when
-> > printing a module parameter in mlx4_en:
-> > 
-> > [1]kdb> mds __param_arr_num_vfs
-> > 0xffffffffc1209f20 0000000100000003   ........
-> > 0xffffffffc1209f28 ffffffffc0fbf07c [mlx4_core]num_vfs_argc  
-> > 0xffffffffc1209f30 ffffffff8844bba0 param_ops_byte  
-> > 0xffffffffc1209f38 ffffffffc0fbf080 [mlx4_core]num_vfs  
-> > 0xffffffffc1209f40 000000785f69736d   msi_x...
-> > 0xffffffffc1209f48 656c5f6775626564   debug_le
-> > 0xffffffffc1209f50 00000000006c6576   vel.....
-> > 0xffffffffc1209f58 0000000000000000   ........
-> > 
-> > .. and the behavior with the proposed patch:
-> > 
-> > [1]kdb> mds __param_arr_num_vfs
-> > 0xffffffffc1077f20 0000000100000003   ........
-> > 0xffffffffc1077f28 ffffffffc104707c   |p......
-> > 0xffffffffc1077f30 ffffffffb4a4bba0 param_ops_byte  
-> > 0xffffffffc1077f38 ffffffffc1047080   .p......
-> > 0xffffffffc1077f40 000000785f69736d   msi_x...
-> > 0xffffffffc1077f48 656c5f6775626564   debug_le
-> > 0xffffffffc1077f50 00000000006c6576   vel.....
-> > 0xffffffffc1077f58 0000000000000000   ........
-> 
-> Thanks for testing and pointing this out. Patch indeed breaks
-> the CONFIG_KALLSYMS_ALL case. 
-> 
-> I think, possible fix would be to track the relevant sections in 
-> __layout_sections() and use defined symbols from those sections,
-> instead of just function symbols. 
+Bootconfig currently cannot be used to configure early kernel
+parameters. For example, the "mitigations=" parameter must be passed
+through traditional boot methods because bootconfig parsing happens
+after these early parameters need to be processed.
 
-I considered sorting data symbols as well, but this is nontrivial, 
-it is difficult to reliably distinguish real data sections from metadata
-sections containing symbols we do not want to include.
+This patch allows early options such as:
 
-An alternative approach is to check the module memory type and fall back to
-a linear search for ranges other than MOD_TEXT. This approach would also
-fix the incorrect nextval/size problem.
+  kernel.mitigations = off
 
-Regards
-Stanislaw
+to be placed in the embedded bootconfig and take effect, without
+requiring them to be on the kernel command line.
+
+Add bootconfig_apply_early_params() which walks all kernel.* keys in the
+parsed XBC tree and calls do_early_param() for each one. It is called
+from setup_boot_config() immediately after a successful xbc_init() on
+the embedded data, which happens before parse_early_param() runs in
+start_kernel().
+
+Early options in initrd bootconfig are still silently ignored, as the
+initrd is only available after the early param window has closed.
+
+Document this behaviour in both Kconfig and the admin guide.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changes in v2:
+- Made val_buf static __initdata to keep 2KB off the stack
+- Removed dead !val branch — xbc_node_find_next_key_value() returns "" for boolean keys, never NULL
+- Added pr_warn + continue when strscpy truncates the value
+- Link to v1: https://patch.msgid.link/20260324-early_bootconfig-v1-1-1c0e625aff06@debian.org
+---
+ Documentation/admin-guide/bootconfig.rst |  4 ++
+ init/Kconfig                             |  6 +++
+ init/main.c                              | 68 +++++++++++++++++++++++++++++++-
+ 3 files changed, 77 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+index f712758472d5c..e820f33d3ad16 100644
+--- a/Documentation/admin-guide/bootconfig.rst
++++ b/Documentation/admin-guide/bootconfig.rst
+@@ -169,6 +169,10 @@ Boot Kernel With a Boot Config
+ There are two options to boot the kernel with bootconfig: attaching the
+ bootconfig to the initrd image or embedding it in the kernel itself.
+ 
++Early options (those registered with ``early_param()``) may only be
++specified in the embedded bootconfig, because the initrd is not yet
++available when early parameters are processed.
++
+ Attaching a Boot Config to Initrd
+ ---------------------------------
+ 
+diff --git a/init/Kconfig b/init/Kconfig
+index 938fbe6a91e15..5e8057e73fe06 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1534,6 +1534,12 @@ config BOOT_CONFIG_EMBED
+ 	  image. But if the system doesn't support initrd, this option will
+ 	  help you by embedding a bootconfig file while building the kernel.
+ 
++	  Unlike bootconfig attached to initrd, the embedded bootconfig also
++	  supports early options (those registered with early_param()). Any
++	  kernel.* key in the embedded bootconfig is applied before
++	  parse_early_param() runs. Early options in initrd bootconfig will
++	  not be applied.
++
+ 	  If unsure, say N.
+ 
+ config BOOT_CONFIG_EMBED_FILE
+diff --git a/init/main.c b/init/main.c
+index 453ac9dff2da0..14a04c283fa48 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -416,9 +416,64 @@ static int __init warn_bootconfig(char *str)
+ 	return 0;
+ }
+ 
++/*
++ * do_early_param() is defined later in this file but called from
++ * bootconfig_apply_early_params() below, so we need a forward declaration.
++ */
++static int __init do_early_param(char *param, char *val,
++				 const char *unused, void *arg);
++
++/*
++ * bootconfig_apply_early_params - dispatch kernel.* keys from the embedded
++ * bootconfig as early_param() calls.
++ *
++ * early_param() handlers must run before most of the kernel initialises
++ * (e.g. before the GIC driver reads irqchip.gicv3_pseudo_nmi).  A bootconfig
++ * attached to the initrd arrives too late for this because the initrd is not
++ * mapped yet when early params are processed.  The embedded bootconfig lives
++ * in the kernel image itself (.init.data), so it is always reachable.
++ *
++ * This function is called from setup_boot_config() which runs in
++ * start_kernel() before parse_early_param(), making the timing correct.
++ */
++static void __init bootconfig_apply_early_params(void)
++{
++	static char val_buf[COMMAND_LINE_SIZE] __initdata;
++	struct xbc_node *knode, *root;
++	const char *val;
++	ssize_t ret;
++
++	root = xbc_find_node("kernel");
++	if (!root)
++		return;
++
++	/*
++	 * Keys that do not match any early_param() handler are silently
++	 * ignored — do_early_param() always returns 0.
++	 */
++	xbc_node_for_each_key_value(root, knode, val) {
++		if (xbc_node_compose_key_after(root, knode, xbc_namebuf, XBC_KEYLEN_MAX) < 0)
++			continue;
++
++		/*
++		 * We need to copy const char *val to a char pointer,
++		 * which is what do_early_param() need, given it might
++		 * call strsep(), strtok() later.
++		 */
++		ret = strscpy(val_buf, val, sizeof(val_buf));
++		if (ret < 0) {
++			pr_warn("ignoring bootconfig value '%s', too long\n",
++				xbc_namebuf);
++			continue;
++		}
++		do_early_param(xbc_namebuf, val_buf, NULL, NULL);
++	}
++}
++
+ static void __init setup_boot_config(void)
+ {
+ 	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
++	bool using_embedded = false;
+ 	const char *msg, *data;
+ 	int pos, ret;
+ 	size_t size;
+@@ -427,8 +482,17 @@ static void __init setup_boot_config(void)
+ 	/* Cut out the bootconfig data even if we have no bootconfig option */
+ 	data = get_boot_config_from_initrd(&size);
+ 	/* If there is no bootconfig in initrd, try embedded one. */
+-	if (!data)
++	if (!data) {
+ 		data = xbc_get_embedded_bootconfig(&size);
++		/*
++		 * Record that we are using the embedded config so that
++		 * bootconfig_apply_early_params() is called below.
++		 * When CONFIG_BOOT_CONFIG_EMBED is not set,
++		 * xbc_get_embedded_bootconfig() is a stub returning NULL, so
++		 * data is always NULL here and using_embedded stays false.
++		 */
++		using_embedded = data;
++	}
+ 
+ 	strscpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+ 	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
+@@ -466,6 +530,8 @@ static void __init setup_boot_config(void)
+ 	} else {
+ 		xbc_get_info(&ret, NULL);
+ 		pr_info("Load bootconfig: %ld bytes %d nodes\n", (long)size, ret);
++		if (using_embedded)
++			bootconfig_apply_early_params();
+ 		/* keys starting with "kernel." are passed via cmdline */
+ 		extra_command_line = xbc_make_cmdline("kernel");
+ 		/* Also, "init." keys are init arguments */
+
+---
+base-commit: 785f0eb2f85decbe7c1ef9ae922931f0194ffc2e
+change-id: 20260323-early_bootconfig-2efc4509af3d
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
