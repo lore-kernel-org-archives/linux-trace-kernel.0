@@ -1,54 +1,54 @@
 Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266753822B3
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409F03859FD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774563894; cv=none; b=sN61xD/DaybEuotN9mMD8dD0hde02RmzC10DdWAv1I16xAS1MvkeWKDRZQOQkOlZSi5mw5s/BEdon7iwWAX8RbPR/YG2H6xusRiK5t8dAOE24Q6gNnlZ+zMznUJSlx9qj/pRQbu2nLPkgPPnm5y7lQGwAMO94e1hSFlZy1NxjVU=
+	t=1774563896; cv=none; b=gWY08JMZO02ApYqmzY6lmNZnu4ghDww8CHrNZq4jsCre9Rc9TZ11Wn4n1cGK9tyc4jam7ZF1SlPcGnhIwoTMgrCWbLruSLh676Tc33ugQUAtIvNrLJ1sDDLxSxrDlHLGSHNI7oE+bJnLplaYNlAQh7B26MT2+oEJZBo2AuBt0AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774563894; c=relaxed/simple;
-	bh=eaxuIPrrRTVlEIpTTwJih/3FgUZ9QiOBP/yNtBEER/o=;
+	s=arc-20240116; t=1774563896; c=relaxed/simple;
+	bh=+lH9JgLOF707IWKJRbslu6RR2YV0S99MONEW8Yc3BZ8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dncsdAwH8ukn0rzsrHP5ncUkHFD1eKT+8Ly/64M2Ue28QVFjRIziihHZ2HFvDsfE4GJ+kjrts8D1Kypvv9qhu+Xb9aGd6nBlSTTBVlqsK4sAzxTdtZL5sFqQl9PXuwgQTvaQ6bNEgIAZ661bpvBd6ofPzO7QqOcnQDBu747MBoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=buJq/DAC; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=WLZ4TGBUsuuCEft8bOP24OA1QFl+v8W9sOkpACHV7hbZEmBywCAmjs0caO+ImSQtFiG00Shf7GJzW8gSI5XJJ4qlWECE/x11v9OTF/neN8/QIYpcqJPsOL3lpI6c/EEDZKRBw7LvZEkAWIijrTNExvInJib6IKZXJvGPlCvNls4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dRGO0fFQ; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="buJq/DAC"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82c83bd48afso628234b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:24:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRGO0fFQ"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82c4664f75fso1143604b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:24:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774563891; x=1775168691; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774563894; x=1775168694; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SRjeBkkI/dZyZ5QjbTq8w6K/fHOt1rR7cB2loz7QmY4=;
-        b=buJq/DACEwwoS8nsqsrOxmNPMMIjskIaYfYzIpgAyf0PxXmMsiLD82c6U1Dj0u9z+R
-         cvD7aD9sxuwbZ3Zu4ZWT+Au82gN+WI6DrT69Zu0MRYr7NEg4cwvGcg8qQLPYg8+RM/1g
-         tdtxRrB+w0aTOlv5FRdTLUo79g5P6+ZwB+Vvx3Crs5he3lVNAZbxjVhhK2qXxD3PzP1e
-         nEcPQvnvui84HaAeWr7EOZex/8I9FN7obuDp/XKAEjivOUV41cQOhIfJkHCBG5FViSV6
-         IpVflg00XBU3ref69sQ/nKtKhZNPrpj5WCTqCu6RMFe6DK1UwTvR3GXx16PWcJA4/DaH
-         jsCg==
+        bh=krjKKoUHOcKbfpf9SpjvgIZEA4m0P+3HWizcMkU39sE=;
+        b=dRGO0fFQcn6iin7wNsdIdxtGeXHBZwU8tVS8u5jJY6Q9DTWYntjVdewCv/zHGxZvfH
+         NpipVC4nbtfAJYp+1qMn4Nfzybvs6fPBC6xjnne+Q63y+S/PhbvImcFan1ZpFui8eDH/
+         ecNZn6QyBECHVjOOtWTl7YGSNwzrlLdA9fZxgnFtgmhxVJTrcN+V8iEKISo/BMVMKL7z
+         4IUhR28XEk+IY6qhI6b5Hvt/8a14klDwFm7Ogu4vCjjwdgbW6vcISGTqrdefLsYRZqck
+         gWyuyovL82/QVthORjyTD/rYEDgFO1LOD8QgJUdT+2JUblQTRchCTDuw13MCpcKdKph/
+         cn7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774563891; x=1775168691;
+        d=1e100.net; s=20251104; t=1774563894; x=1775168694;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SRjeBkkI/dZyZ5QjbTq8w6K/fHOt1rR7cB2loz7QmY4=;
-        b=cDyjzNb+/caQKzC89yQANUgK5MR1adMXW/SWm/76YO4U1Wchcb5wxFrR68if1vHFdY
-         5LfJEtlMRINxLjQv+i4WsSFMWZuSrTRFrYVgZ7Ld+pyBSf7Btgtq7lp0xay2C7jlZR3O
-         c48EX6jPTCQPNfxriOpN/tKpKoWhCh7Wl42sivro1qDS30ZlyU/x5fLj3wfAEn3oZmaW
-         P6TOEI/0XRqNVbuIekdr8NI1nN3tnZ17YohdVgQ+3ZWbrytzGdzMsI2GgfsD6BIpJU11
-         S4OgzxDvxxtxOqU89zSHpv6H2LvP4RYlRAUbxkPRwl5FLmMIw6ldLa4mzqpmOpGYcPvP
-         EsDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXCGjE4bP7p4UHtNYE4Om2bs72k5ySxIiRjzY/kfwH6n9l3y2JIQNzHFWTgIyyZ29dyhnK4Q1U5hKz/h4GKv9r9eHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuptsDAog4bB2OwD7XJ8HCg8b5VOdjYc42r5Itb3yElTa6AasF
-	EU79O906rcQoyf7bm+tZfD5u9c7dU4YnCCZpQEuzEvG1JqB2p2yQNqC45q7XR4+uH20KBqmjI9f
-	vWsMFxQHPVn0D9Fj2BuqP5nhqdw==
-X-Received: from pfbif3.prod.google.com ([2002:a05:6a00:8b03:b0:82c:2477:2e24])
+        bh=krjKKoUHOcKbfpf9SpjvgIZEA4m0P+3HWizcMkU39sE=;
+        b=pZDMHatPvr3mZwTgjyT+TPcloyvaSp/BphSz+DsgqgIjjUj3jE3AzopuyeMgXrLMRO
+         SKCalK1Nv1gH3blJN5mYIwID6d9oKfJBYNyzu54pPtyYxePBnI5JIxZUeooICKlzrtDE
+         PidMthSqtsllD669Y1IDObSZdBVU+jU5XaEbpQf6A+x4hSmupGBqsKRz1nuT4v7qFPtW
+         xxCj++UC2ykJcdwOLWLEYuCC9wV1xhf1z35SNvjWmbni+q/SDeUAl9TTVni9ro+J6Ex5
+         6pTahDkhFUr4AUEKsf//Pb/VnrWZe77UO15TBKRpxW1RwGKWvkQxPnMNaJ37hNSgVmEI
+         YD+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUFrikD0/k6DHzdu5I3YGQWprWGm9i4OhGUeb9EKfZs6hd9aQJvsADg7cqu7W0XfNz3KUdY1OWSlswByYocHYdOVKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8/O4joTVgE8op6JcDaL7HwBpFDiPi2fuZ6nQ6oRwjLiqfT0+h
+	28fxJ9gAxESUpzcBj2Fd+s2YCKOwTE5tVuu4MPqAEcUuU6MN7mCuj+Opqed4WB5gCl6IpfssPpX
+	hOVv52NUerscT95tRg7OAyMJC9w==
+X-Received: from pfbfa24.prod.google.com ([2002:a05:6a00:2d18:b0:829:813e:c970])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:c82:b0:827:2ed6:888f with SMTP id d2e1a72fcca58-82c96035be6mr118926b3a.54.1774563890837;
- Thu, 26 Mar 2026 15:24:50 -0700 (PDT)
-Date: Thu, 26 Mar 2026 15:24:22 -0700
+ 2002:a05:6a00:4b12:b0:829:a127:518 with SMTP id d2e1a72fcca58-82c9605434bmr143072b3a.40.1774563893212;
+ Thu, 26 Mar 2026 15:24:53 -0700 (PDT)
+Date: Thu, 26 Mar 2026 15:24:23 -0700
 In-Reply-To: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,14 +58,13 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=8571;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=3333;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=eaxuIPrrRTVlEIpTTwJih/3FgUZ9QiOBP/yNtBEER/o=; b=K13+dJQF86Un8WqHDlu2mJRGc8cKb+wpv2mI96f+F2KmJrbn1NkIqQIwXR4TQX2NsGMI5IGiJ
- 7CZ1Zrr9V8EDdHQVj3N94MUmpF4t1bK7IW1kpMbQXoeLH/p6zBbG6ha
+ bh=+lH9JgLOF707IWKJRbslu6RR2YV0S99MONEW8Yc3BZ8=; b=M/Gbb884LE5QPF+3EzZzuqSIO6Odv8JZWUawyA7Mhz//bCISt9epGhctguzMXhMlD/ZE6w0Rj
+ EGaXkNBVodNBXGot/DtKS79CF61Z84KbG7KljbyQM3ZQboU3Sv7s68x
 X-Mailer: b4 0.14.3
-Message-ID: <20260326-gmem-inplace-conversion-v4-13-e202fe950ffd@google.com>
-Subject: [PATCH RFC v4 13/44] KVM: guest_memfd: Apply content modes while
- setting memory attributes
+Message-ID: <20260326-gmem-inplace-conversion-v4-14-e202fe950ffd@google.com>
+Subject: [PATCH RFC v4 14/44] KVM: x86: Add support for applying content modes
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -93,219 +92,127 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Provide defined memory content modes so that KVM can make guarantees about
-memory content after setting memory attributes, according to userspace
-requests.
+For x86, override the default implementations of content mode functions to
+handle reporting of supported content modes, and application of requested
+modes based on x86 VM types.
 
-Suggested-by: Sean Christoperson <seanjc@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- Documentation/virt/kvm/api.rst | 61 ++++++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h       |  4 +++
- virt/kvm/guest_memfd.c         | 56 ++++++++++++++++++++++++++++++++++++--
- 3 files changed, 119 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c | 101 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 15148c80cfdb6..90587a9c09d3f 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6571,6 +6571,8 @@ Errors:
-   EAGAIN     Some page within requested range had unexpected refcounts. The
-              offset of the page will be returned in `error_offset`.
-   ENOMEM     Ran out of memory trying to track private/shared state
-+  EOPNOTSUPP There is no way for KVM to guarantee in-memory contents as
-+             requested.
-   ========== ===============================================================
- 
- KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
-@@ -6619,6 +6621,65 @@ on the shared pages, such as refcounts taken by get_user_pages(), and
- try the ioctl again. A possible source of these long term refcounts is
- if the guest_memfd memory was pinned in IOMMU page tables.
- 
-+By default, KVM makes no guarantees about the in-memory values after
-+memory is convert to/from shared/private.  Optionally, userspace may
-+instruct KVM to ensure the contents of memory are zeroed or preserved,
-+e.g. to enable in-place sharing of data, or as an optimization to
-+avoid having to re-zero memory when userspace could have relied on the
-+trusted entity to guarantee the memory will be zeroed as part of the
-+entire conversion process.
-+
-+The content modes available are as follows:
-+
-+``KVM_SET_MEMORY_ATTRIBUTES2_ZERO``
-+
-+  On conversion, KVM guarantees all entities that have "allowed"
-+  access to the memory will read zeros.  E.g. on private to shared
-+  conversion, both trusted and untrusted code will read zeros.
-+
-+  Zeroing is currently only supported for private-to-shared
-+  conversions, as KVM in general is untrusted and thus cannot
-+  guarantee the guest (or any trusted entity) will read zeros after
-+  conversion.  Note, some CoCo implementations do zero memory contents
-+  such that the guest reads zeros after conversion, and the guest may
-+  choose to rely on that behavior.  However, that's a contract between
-+  the trusted CoCo entity and the guest, not between KVM and the
-+  guest.
-+
-+``KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE``
-+
-+  On conversion, KVM guarantees memory contents will be preserved with
-+  respect to the last written unencrypted value.  As a concrete
-+  example, if the host writes ``0xbeef`` to shared memory and converts
-+  the memory to private, the guest will also read ``0xbeef``, even if
-+  the in-memory data is encrypted as part of the conversion.  And vice
-+  versa, if the guest writes ``0xbeef`` to private memory and then
-+  converts the memory to shared, the host (and guest) will read
-+  ``0xbeef`` (if the memory is accessible).
-+
-+Note: These content modes apply to the entire requested range, not
-+just the parts of the range that underwent conversion. For example, if
-+this was the initial state:
-+
-+  * [0x0000, 0x1000): shared
-+  * [0x1000, 0x2000): private
-+  * [0x2000, 0x3000): shared
-+
-+and range [0x0000, 0x3000) was set to shared, the content mode would
-+apply to all memory in [0x0000, 0x3000), not just the range that
-+underwent conversion [0x1000, 0x2000).
-+
-+Note: These content modes apply only to allocated memory. No
-+guarantees are made on offset ranges that do not have memory allocated
-+(yet). For example, if this was the initial state:
-+
-+  * [0x0000, 0x1000): shared
-+  * [0x1000, 0x2000): not allocated
-+  * [0x2000, 0x3000): shared
-+
-+and range [0x0000, 0x3000) was set to shared, the content mode would
-+apply to only to offset ranges [0x0000, 0x1000) and [0x2000, 0x3000).
-+
- See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
- 
- .. _kvm_run:
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 29baaa60de35a..0fc9ad4ea0d93 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1642,6 +1642,10 @@ struct kvm_memory_attributes {
- /* Available with KVM_CAP_MEMORY_ATTRIBUTES2 */
- #define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd2, struct kvm_memory_attributes2)
- 
-+#define KVM_SET_MEMORY_ATTRIBUTES2_MODE_UNSPECIFIED	0
-+#define KVM_SET_MEMORY_ATTRIBUTES2_ZERO		(1ULL << 0)
-+#define KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE	(1ULL << 1)
-+
- struct kvm_memory_attributes2 {
- 	union {
- 		__u64 address;
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index e270e54e030f0..eeac7678fcf4e 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -677,6 +677,19 @@ u64 __weak kvm_arch_gmem_supported_content_modes(struct kvm *kvm)
- 	return 0;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 9c29407712580..3bbc8ffbf489e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -14078,6 +14078,107 @@ void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end)
+ 	kvm_x86_call(gmem_invalidate)(start, end);
  }
- 
-+static bool kvm_gmem_content_mode_is_supported(struct kvm *kvm,
-+					       u64 content_mode,
-+					       bool to_private)
+ #endif
++
++u64 kvm_arch_gmem_supported_content_modes(struct kvm *kvm)
 +{
-+	if (content_mode == KVM_SET_MEMORY_ATTRIBUTES2_MODE_UNSPECIFIED)
-+		return true;
-+
-+	if (content_mode == KVM_SET_MEMORY_ATTRIBUTES2_ZERO && to_private)
-+		return false;
-+
-+	return kvm_arch_gmem_supported_content_modes(kvm) & content_mode;
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++		return KVM_SET_MEMORY_ATTRIBUTES2_ZERO |
++		       KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE;
++	case KVM_X86_SNP_VM:
++	case KVM_X86_TDX_VM:
++		return KVM_SET_MEMORY_ATTRIBUTES2_ZERO;
++	default:
++		return 0;
++	}
 +}
 +
- int kvm_gmem_apply_content_mode_zero(struct inode *inode, pgoff_t start,
- 				     pgoff_t end)
- {
-@@ -736,8 +749,26 @@ int __weak kvm_arch_gmem_apply_content_mode_preserve(struct kvm *kvm,
- 	return -EOPNOTSUPP;
- }
- 
-+static int kvm_gmem_apply_content_mode(struct kvm *kvm, uint64_t content_mode,
-+				       struct inode *inode, pgoff_t start,
-+				       pgoff_t end)
++int kvm_arch_gmem_apply_content_mode_zero(struct kvm *kvm, struct inode *inode,
++					  pgoff_t start, pgoff_t end)
 +{
-+	switch (content_mode) {
-+	case KVM_SET_MEMORY_ATTRIBUTES2_MODE_UNSPECIFIED:
-+		return kvm_arch_gmem_apply_content_mode_unspecified(kvm, inode, start, end);
-+	case KVM_SET_MEMORY_ATTRIBUTES2_ZERO:
-+		return kvm_arch_gmem_apply_content_mode_zero(kvm, inode, start, end);
-+	case KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE:
-+		return kvm_arch_gmem_apply_content_mode_preserve(kvm, inode, start, end);
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++	case KVM_X86_SNP_VM:
++	case KVM_X86_TDX_VM:
++		/*
++		 * TDX firmware will zero on unmapping from the
++		 * Secure-EPTs, but suppose a shared page with
++		 * contents was converted to private, and then
++		 * converted back without ever being mapped into
++		 * Secure-EPTs: guest_memfd can't rely on TDX firmware
++		 * for zeroing then.
++		 */
++		return kvm_gmem_apply_content_mode_zero(inode, start, end);
 +	default:
-+		WARN_ONCE(1, "Unexpected policy requested.");
++		WARN_ONCE(1, "Unexpected request to zero for vm_type.");
 +		return -EOPNOTSUPP;
 +	}
 +}
 +
- static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
- 				     size_t nr_pages, uint64_t attrs,
-+				     struct kvm *kvm, uint64_t content_mode,
- 				     pgoff_t *err_index)
- {
- 	bool to_private = attrs & KVM_MEMORY_ATTRIBUTE_PRIVATE;
-@@ -752,9 +783,23 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
- 
- 	filemap_invalidate_lock(mapping);
- 
-+	if (!kvm_gmem_content_mode_is_supported(kvm, content_mode,
-+						to_private)) {
-+		r = -EOPNOTSUPP;
-+		*err_index = start;
-+		goto out;
++int kvm_arch_gmem_apply_content_mode_preserve(struct kvm *kvm,
++					      struct inode *inode,
++					      pgoff_t start, pgoff_t end)
++{
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++		return 0;
++	default:
++		WARN_ONCE(1, "Unexpected request to preserve for vm_type.");
++		return -EOPNOTSUPP;
++	}
++}
++
++static int __scramble_range(struct inode *inode, pgoff_t start, pgoff_t end)
++{
++	struct address_space *mapping = inode->i_mapping;
++	struct folio_batch fbatch;
++	struct folio *f;
++	char *kaddr;
++	int ret = 0;
++	int i;
++
++	folio_batch_init(&fbatch);
++	while (!ret && filemap_get_folios(mapping, &start, end - 1, &fbatch)) {
++		for (i = 0; !ret && i < folio_batch_count(&fbatch); ++i) {
++			f = fbatch.folios[i];
++
++			folio_lock(f);
++
++			if (folio_test_hwpoison(f)) {
++				ret = -EHWPOISON;
++			} else {
++				/*
++				 * Hard-coding range to scramble since
++				 * guest_memfd only supports PAGE_SIZE
++				 * folios now.
++				 */
++				kaddr = kmap_local_folio(f, 0);
++				get_random_bytes(kaddr, PAGE_SIZE);
++				kunmap_local(kaddr);
++			}
++
++			folio_unlock(f);
++		}
++
++		folio_batch_release(&fbatch);
++		cond_resched();
 +	}
 +
- 	mas_init(&mas, mt, start);
- 
- 	if (kvm_gmem_range_has_attributes(mt, start, nr_pages, attrs)) {
-+		/*
-+		 * Even if no update is required to attributes, the
-+		 * requested content mode is applied.
-+		 */
-+		WARN_ON(kvm_gmem_apply_content_mode(kvm, content_mode,
-+						    inode, start, end));
++	return ret;
++}
 +
- 		r = 0;
- 		goto out;
- 	}
-@@ -786,6 +831,9 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
- 	if (!to_private)
- 		kvm_gmem_invalidate(inode, start, end);
- 
-+	WARN_ON(kvm_gmem_apply_content_mode(kvm, content_mode, inode,
-+					    start, end));
++int kvm_arch_gmem_apply_content_mode_unspecified(struct kvm *kvm,
++						 struct inode *inode,
++						 pgoff_t start, pgoff_t end)
++{
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++		return __scramble_range(inode, start, end);
++	default:
++		return 0;
++	}
++}
 +
- 	mas_store_prealloc(&mas, xa_mk_value(attrs));
+ #endif
  
- 	kvm_gmem_invalidate_end(inode, start, end);
-@@ -807,7 +855,11 @@ static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
- 	if (copy_from_user(&attrs, argp, sizeof(attrs)))
- 		return -EFAULT;
- 
--	if (attrs.flags)
-+	if (attrs.flags & ~(KVM_SET_MEMORY_ATTRIBUTES2_ZERO |
-+			    KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE))
-+		return -EINVAL;
-+	if ((attrs.flags & KVM_SET_MEMORY_ATTRIBUTES2_ZERO) &&
-+	    (attrs.flags & KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE))
- 		return -EINVAL;
- 	if (attrs.error_offset)
- 		return -EINVAL;
-@@ -829,7 +881,7 @@ static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
- 	nr_pages = attrs.size >> PAGE_SHIFT;
- 	index = attrs.offset >> PAGE_SHIFT;
- 	r = __kvm_gmem_set_attributes(inode, index, nr_pages, attrs.attributes,
--				      &err_index);
-+				      f->kvm, attrs.flags, &err_index);
- 	if (r) {
- 		attrs.error_offset = ((uint64_t)err_index) << PAGE_SHIFT;
- 
+ int kvm_spec_ctrl_test_value(u64 value)
 
 -- 
 2.53.0.1018.g2bb0e51243-goog
