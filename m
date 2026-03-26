@@ -1,184 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225313C13ED
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 10:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B043947A5
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 12:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774520655; cv=none; b=TZhc9W0C/+5W/PNe1PUMFJRBSRAREtVEBWFtTXchklS0UKXpefujgGQpaWIZiaFG3rzomkasETNXvbKzmVrEJpnDqC7lKOkeeX/8MdRRzFO2Y4moC1/j1xLjQKug8J0rVwzQ/+JGQNd2f9nIBdJmeXr6Z+w2NXQaaFb7Kh8uH/Y=
+	t=1774528480; cv=none; b=Jy9JvkpBkuzEEz8B4eFZ4J5Ty+MBrKacJxtxDVOUrzVcEyPUWFcYZ/1Z0NabDSJcfIS+ZPruEJindfM+jA3E6U4hzJkro2gWTh/5X9TDY4/QmsexYcbQWRWguQel2pO9K0Yjls7BtgxTzct4383ESKcZO/CyHoVWT1cR173Bx/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774520655; c=relaxed/simple;
-	bh=8z9kuFohHFAEDa+n13oQhOek4ZBpOYRRIr229FgbWHY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sV/aTgP4W8lGAhhxmO21ev3ogU5FjZJnMhBuB1/PXpWfCwY6yDzr5IvPjqQTBn/BxZ7MF9ed0KdMBShPFttpFZeJvNObTOpw5Dpmc3RdC+c7VU05CaWjohAqMrUJuHS+uUOzgdbN9Bl/uje/1AXaUQAO0pvy8R/VXDlwR05MjmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2+2dj+0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2+2dj+0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA1D7C2BCB1
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 10:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774520654;
-	bh=8z9kuFohHFAEDa+n13oQhOek4ZBpOYRRIr229FgbWHY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p2+2dj+0q0hQLPRMMCaGYy+F2mUnFcMtfymh/Jfge6lcuCM53B3nD5ZNUIm57FdDa
-	 n9pvB4PH2uS6SZMogDMMS0JLYSKCoXHa6M0dQg8wtYaohBidhpUgoaG1r83Tt6fZpp
-	 nU2qNVRvSSAnKBvBUh1svpRJK34H6WIZhwbF/VIrQzwSUnb5wREEVOBOjlQ+vlM3mi
-	 rrHjMu9vrZxFF7JnUj/GR1NB9vHpUcNTG5NnfxfcPMM6HOSKQNQ+WYb8BHanjEiF7I
-	 KTcDkUfWT0+80NiXzWkjnSbKBZ1nnKz9fVL68+te/H0dq9cvIG7VY7/OmfwfeMVjTM
-	 vxux6vHvGYShg==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-41c0aae84e5so604280fac.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 03:24:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgaFwxVvX8wTjzrUoguYWhv73l43unFdLAfw3nasiDXnODGmbx2eA5Nye3tJBGD33IfbXMIxG3PNOgzv7CKw54sGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpzVJZZvkxDuUpHx0x/9ks6V+/nwhdK2cx1AUx0R+Uau2DzQyT
-	J0Qd8kw23FjmA2eu8lR5ktsXnhjBPeE7Z1R07PO+zThuPEYY+gJgEOX8Og9sI2ywLENFVZxKrhW
-	wOABW7fubiwU+uN9/0OoU7MsQA6melI4=
-X-Received: by 2002:a05:6870:612a:b0:409:54ac:12ae with SMTP id
- 586e51a60fabf-41ca6d77a2emr3980285fac.8.1774520653834; Thu, 26 Mar 2026
- 03:24:13 -0700 (PDT)
+	s=arc-20240116; t=1774528480; c=relaxed/simple;
+	bh=/wm5asXAYuyHm0O3HDyU+pqM/VRHFW7j7zoS6CUax7Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Z8S0JvgZ/Do8LYpKEHJ1Uh545XbMwuVy5NAVkW9Tgiw7Dx3MOiMshwSk4e8jQnyjfrLUqxL9YFdcw3DH/zZpL4B9KvlfTu0+1LIlVfbzm5fEPJ7bxmkXUGvfTSKyRFCJqPiXBjI9E8N6pYcrfRo3sRcj3XBWcEsn03EJRf8EcRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-67de3f8988cso2575157eaf.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 05:34:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774528478; x=1775133278;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+4PdzwFarQFnC1ElGdyOopJ2Ey3sY8rb8cPtTkX6BgQ=;
+        b=lR3RNB6+4zNYZKgGL2aHwiHTFibDKkH6xa7QqxJJO/DjwXuGA6DgThYDfv1E93wmme
+         CGjHy/8clTyKkwa6FKPNuZu5P8xjJCQRevmV+MfQtJQOQ/FFu/i+3s3TLTfsZLs96ayo
+         8yCHHwmdqjBcks9XZNyuVXOJeIkOntWW+CCUwhdaGPUzpExaXzfRotYZB47ROl4ehgOy
+         RAzoqvrK6vS4UDPS5mdw8YSakzRcoQGfAMl+dCGWxenounIOrbA9utUCjjSdKll7eFW0
+         uwFFlLzIJbSEJ1H+JReOIQNaYYsHUKpKvlenZr1CjdPwJKLYNBCP1RVxFS1yrPXQK8PD
+         Xy4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUISPz2aBndeq224V3ZxPHT3d1P4XyZVJxL3cMyfKg9x7DIuzcj19KfM/TResp3GymfNNzebS9bVOKWZD9uJfnh0PI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU6BB5vd2OL1I7XBtcAM9DNhzUcmqjQ1bOgL4idz2tnfTSss1K
+	G40A7xNdqKJKw2HE8qVjFteL1Of7gzebsjXbo/6JddiNEFBqWtzcJcAnhNdLDmaTWw4QmKb1RsI
+	2HfNkURLKkXpofANq7hvjtujrlXwh3Rtkt47qQoJJlQp/UgmATHiAmHuyXhI=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260323160052.17528-1-vineeth@bitbyteword.org> <20260323160052.17528-7-vineeth@bitbyteword.org>
-In-Reply-To: <20260323160052.17528-7-vineeth@bitbyteword.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 26 Mar 2026 11:24:02 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gkDLLgom1QmAGJ=7UgOt2Dg2sLBtTvU4MExtm31fd6dw@mail.gmail.com>
-X-Gm-Features: AQROBzCJWDEQWM3cP1V3UK44WrPSHg8H9ezEhWFsIFWxE8oG7Mtz9hjw6hhoxOA
-Message-ID: <CAJZ5v0gkDLLgom1QmAGJ=7UgOt2Dg2sLBtTvU4MExtm31fd6dw@mail.gmail.com>
-Subject: Re: [PATCH v2 06/19] cpufreq: Use trace_call__##name() at guarded
- tracepoint call sites
-To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+X-Received: by 2002:a05:6820:4dc2:b0:67b:c122:d29d with SMTP id
+ 006d021491bc7-67dff57525dmr3678055eaf.60.1774528478063; Thu, 26 Mar 2026
+ 05:34:38 -0700 (PDT)
+Date: Thu, 26 Mar 2026 05:34:38 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69c527de.a70a0220.38a0e9.0001.GAE@google.com>
+Subject: [syzbot] Monthly trace report (Mar 2026)
+From: syzbot <syzbot+liste3771d008d599da20ae2@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 23, 2026 at 5:01=E2=80=AFPM Vineeth Pillai (Google)
-<vineeth@bitbyteword.org> wrote:
->
-> Replace trace_foo() with the new trace_call__foo() at sites already
-> guarded by trace_foo_enabled(), avoiding a redundant
-> static_branch_unlikely() re-evaluation inside the tracepoint.
-> trace_call__foo() calls the tracepoint callbacks directly without
-> utilizing the static branch again.
->
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-> Assisted-by: Claude:claude-sonnet-4-6
+Hello trace maintainers/developers,
 
-Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org> # cpufreq core
-& intel_pstate
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
 
-> ---
->  drivers/cpufreq/amd-pstate.c   | 10 +++++-----
->  drivers/cpufreq/cpufreq.c      |  2 +-
->  drivers/cpufreq/intel_pstate.c |  2 +-
->  3 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 5aa9fcd80cf51..4c47324aa2f73 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -247,7 +247,7 @@ static int msr_update_perf(struct cpufreq_policy *pol=
-icy, u8 min_perf,
->         if (trace_amd_pstate_epp_perf_enabled()) {
->                 union perf_cached perf =3D READ_ONCE(cpudata->perf);
->
-> -               trace_amd_pstate_epp_perf(cpudata->cpu,
-> +               trace_call__amd_pstate_epp_perf(cpudata->cpu,
->                                           perf.highest_perf,
->                                           epp,
->                                           min_perf,
-> @@ -298,7 +298,7 @@ static int msr_set_epp(struct cpufreq_policy *policy,=
- u8 epp)
->         if (trace_amd_pstate_epp_perf_enabled()) {
->                 union perf_cached perf =3D cpudata->perf;
->
-> -               trace_amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf=
-,
-> +               trace_call__amd_pstate_epp_perf(cpudata->cpu, perf.highes=
-t_perf,
->                                           epp,
->                                           FIELD_GET(AMD_CPPC_MIN_PERF_MAS=
-K,
->                                                     cpudata->cppc_req_cac=
-hed),
-> @@ -343,7 +343,7 @@ static int shmem_set_epp(struct cpufreq_policy *polic=
-y, u8 epp)
->         if (trace_amd_pstate_epp_perf_enabled()) {
->                 union perf_cached perf =3D cpudata->perf;
->
-> -               trace_amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf=
-,
-> +               trace_call__amd_pstate_epp_perf(cpudata->cpu, perf.highes=
-t_perf,
->                                           epp,
->                                           FIELD_GET(AMD_CPPC_MIN_PERF_MAS=
-K,
->                                                     cpudata->cppc_req_cac=
-hed),
-> @@ -507,7 +507,7 @@ static int shmem_update_perf(struct cpufreq_policy *p=
-olicy, u8 min_perf,
->         if (trace_amd_pstate_epp_perf_enabled()) {
->                 union perf_cached perf =3D READ_ONCE(cpudata->perf);
->
-> -               trace_amd_pstate_epp_perf(cpudata->cpu,
-> +               trace_call__amd_pstate_epp_perf(cpudata->cpu,
->                                           perf.highest_perf,
->                                           epp,
->                                           min_perf,
-> @@ -588,7 +588,7 @@ static void amd_pstate_update(struct amd_cpudata *cpu=
-data, u8 min_perf,
->         }
->
->         if (trace_amd_pstate_perf_enabled() && amd_pstate_sample(cpudata)=
-) {
-> -               trace_amd_pstate_perf(min_perf, des_perf, max_perf, cpuda=
-ta->freq,
-> +               trace_call__amd_pstate_perf(min_perf, des_perf, max_perf,=
- cpudata->freq,
->                         cpudata->cur.mperf, cpudata->cur.aperf, cpudata->=
-cur.tsc,
->                                 cpudata->cpu, fast_switch);
->         }
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 277884d91913c..58901047eae5a 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2222,7 +2222,7 @@ unsigned int cpufreq_driver_fast_switch(struct cpuf=
-req_policy *policy,
->
->         if (trace_cpu_frequency_enabled()) {
->                 for_each_cpu(cpu, policy->cpus)
-> -                       trace_cpu_frequency(freq, cpu);
-> +                       trace_call__cpu_frequency(freq, cpu);
->         }
->
->         return freq;
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstat=
-e.c
-> index 11c58af419006..70be952209144 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -3132,7 +3132,7 @@ static void intel_cpufreq_trace(struct cpudata *cpu=
-, unsigned int trace_type, in
->                 return;
->
->         sample =3D &cpu->sample;
-> -       trace_pstate_sample(trace_type,
-> +       trace_call__pstate_sample(trace_type,
->                 0,
->                 old_pstate,
->                 cpu->pstate.current_pstate,
-> --
-> 2.53.0
->
+During the period, 3 new issues were detected and 1 were fixed.
+In total, 17 issues are still open and 64 have already been fixed.
+
+Some of the still happening issues:
+
+Ref  Crashes Repro Title
+<1>  277     Yes   WARNING in tracepoint_probe_unregister (3)
+                   https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
+<2>  107     Yes   WARNING in blk_register_tracepoints
+                   https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<3>  76      Yes   KASAN: slab-use-after-free Read in bpf_trace_run2 (3)
+                   https://syzkaller.appspot.com/bug?extid=59701a78e84b0bccfe1b
+<4>  75      Yes   INFO: task hung in blk_trace_ioctl (4)
+                   https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+<5>  46      Yes   INFO: task hung in blk_trace_startstop
+                   https://syzkaller.appspot.com/bug?extid=774863666ef5b025c9d0
+<6>  42      No    WARNING in ring_buffer_map_get_reader (2)
+                   https://syzkaller.appspot.com/bug?extid=c7143161d8215214a993
+<7>  27      Yes   INFO: task hung in relay_open (2)
+                   https://syzkaller.appspot.com/bug?extid=16ea22f26882d7e46f35
+<8>  27      Yes   WARNING in get_probe_ref
+                   https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+<9>  18      Yes   INFO: task hung in blk_trace_setup (4)
+                   https://syzkaller.appspot.com/bug?extid=9c1ebb9957045e00ac63
+<10> 2       Yes   possible deadlock in down_trylock (3)
+                   https://syzkaller.appspot.com/bug?extid=c3740bc819eb55460ec3
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
