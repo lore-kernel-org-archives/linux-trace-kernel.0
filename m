@@ -1,54 +1,54 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D702358393
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB68367F20
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774563883; cv=none; b=PlTHKnuuJ6dMfGWI9qbM2//zyKXO6otMEQGTqdBNgpELYwCRn0Q1k2WMvwNUSg4zPPQWO/+MAMbWFQL/Oe8YaB0GVkEldEZERe5F3pc+mXh4HmPiQr9IWFSuZ4lUyi0SmENPyEC+bBfr8tyM5/h/dAH4OxZe25DO3o4cvfUpK4s=
+	t=1774563885; cv=none; b=mGK/S+mxvKnydBQfOl5y9H5cVbM3Wc9YnW6TK60TWwLDwrH5jMTDuCuL7QDBU4itimQQ2PbcMPWWC/trU6Rrnm3LPT62rHE7USsfIfvO7o2jnUVzQKWdYPwWpHwsSoVntfNEnsUUV4QjsRWnOMYwy8C4+xaBeTYCJ+9XzErDURQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774563883; c=relaxed/simple;
-	bh=rr13v0ReufuLtKHyRyN4FDB898pT6Hlku9bGOsppn1A=;
+	s=arc-20240116; t=1774563885; c=relaxed/simple;
+	bh=gE3KclXG+bVXmn4N8I/Pzv4zqyHg9U3PnnxTKQ6BJAA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PCOdzqr6XhOzmEfzIXkAWOEOfkbH/t307TEqFdZLTTkc46ByzViLdkxDibVHgcJPBNMsS4+1tP6jxscrotYeibw6WRwNOVHwHGqecOaGn38/GRK6qFhuN2VBZ819go1FSPBCPaS/SAWENc5/Tpt8xA67PUWsaBh+MCVbKyGHdDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TviceDe0; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=WZT9B5nPsj6eXMTLi8fj8OIpxtgmqv5Ibm69s3IY9SE3BJXj4fP9oYHwKFlyFomgYggOUN15PFlznVEJIJt+RVjDkAcBh0tn7/1C2J+xg7oClaIwP+4ZuY5Eg46dlPScnNut4AcXOosq3MemvRCnwiVOPSed0PDp2bBanhrCnhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sX1/hitR; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TviceDe0"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b630753cc38so3486161a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:24:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sX1/hitR"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82c714cb65eso1209848b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774563881; x=1775168681; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774563883; x=1775168683; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=scH0lZ1p8wn4J/rr93E4hm/58GW/JK+mDvgq+J6pH2U=;
-        b=TviceDe0wyOjgXBHzQTxp5LovD9/kGvj6ZSNw3swqRarD1L1RoJf0RO0U7GOv3zHWd
-         8a0FjAa8yXXjM+erOh8ApsVoKi9bCNvXja8SFAozYHnlxPUptsA+EgAr7IZMHo+SDl4J
-         FyIeN6WjJO3ciR66BQIRECtCj00TvSvYeC+J5VLkrUBVHn7zLrvNHhagcbDaMWOfDVEg
-         UDLWfT6RUnUHn0X0csjZxytfWEv4YWk7bSE8G7Jb08JDynedVtnarMVSJT9tCRwG6fZS
-         MSWU82ObwMtPtYf4t/6g1x+2d68kYOp5tH4A2LlRJ0ZtSZqdHUPRwlo6p5pdyyQV0GQ6
-         YVXw==
+        bh=tmnO4hb2PIIA1EWduI9O/UbYa6yJaVxG6FOYNP/OZJo=;
+        b=sX1/hitRHE9h8u9vOXDMAshvOtEFJibLgOYVrMM50ReUqX6jC99w0z+ICWD0cl8tRL
+         ZNfZCD9jD1rFEKSiqMiK0pcydY13PKEEQMuLNPlrAk1rZTgigmn9oALnSr3xlmST35v0
+         Szl7XvqnKjIGcF9ZZnMG46dIdKYVPGo1kKqgRKMF31XqJPxSRWXbRZIb0QGkFkJqITPi
+         pmoe6tz79S+2ddO2KT541aL24H2Xo6NpytFoaIGMFGJkaly0RgjBbJF2ksBy9jkBZWSy
+         5JUwnI0exuP3nopY+7WJBc566pbdqwfHRej7OCV9nyVFCx3lwZ1xFaWAUxsl1xode42Y
+         w2ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774563881; x=1775168681;
+        d=1e100.net; s=20251104; t=1774563883; x=1775168683;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=scH0lZ1p8wn4J/rr93E4hm/58GW/JK+mDvgq+J6pH2U=;
-        b=F2Y8So8AQvI4YiPBrsiQWdGAuGi3T6ziQQWvYQG9yIwkUqkJX7Wwhv3vpAhg/Gbun8
-         X7k8GOlGemPxyczpD2mZGxExykEuOqKLtt2SAsn5X/OOEwZV4JlEPITLlYZwAqJkJnvB
-         j1ou0mcYQtIW7CMorC3iskkuNRPCBkFocsOgkG6FML22YW3odmBlYOMSe3qS8MxrFk1b
-         PbFH6QbDe6CLy8S1cXdEbNGxDpL4YK8XI40QjX5XXjVsys4GvohIz8sKGbKjjVYpPOm6
-         TsmP95DdQOqhYZwq2I2qMeOoIpFT4ev94PBOyy050c6t/jVPmvVN8137iT3SVRaQwh6G
-         FW8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV4TB9+/wT3Z7ablQizemS3H1qGt6cUBU0oAXDcL57Ci3CRNydoHTgKiS3UkhlVSnX0Pz5IgWOE46AUZplU2LufGRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzECvIgb4G7rYS06bQTK7EGtZ8UO52bFv4v93t8+PjRatbIJ4aP
-	hqeqkYKvHXpqUHYGilaJXMJgqpA17KPKJiJDhW6siQTfPdArW23pVLF6rjck0rsh5MZmJUfLXsv
-	GqlFBEvHpiRGcalY0BnNBzLV9Hg==
-X-Received: from pfbmb26.prod.google.com ([2002:a05:6a00:761a:b0:829:a3d9:9345])
+        bh=tmnO4hb2PIIA1EWduI9O/UbYa6yJaVxG6FOYNP/OZJo=;
+        b=WaawVQqbya2ubyENFESMbwZDY2m8P9y4RFHIwDzDaxpQ6cDR0ocYjd0x/UVctiY/zs
+         U9MdH2OF3UEY+qK/Yk3ytUEQ1EyyWzsIUTkbQBpRizawNpnauu4rXw420oxilXA1vIYK
+         +LcX1ACo2W8W+ARo+rFN6WY698by2gOOsU8eozcowgQC0MyEAEStND5D5wnwLTVBMwvN
+         S6HSFS5HGuQ4RWgqVQw+2/hgeKfIkP/hnNLzwvrTgq2nVxovW8emfv8OQHmDSPZZ1qYC
+         xIfNJY9arzbyffII+IGfOk1LvUmEADoprjkEBQ0VfwBm+AtvCt1XJYFIrcH+rG3ABTHb
+         xH2g==
+X-Forwarded-Encrypted: i=1; AJvYcCW9TxfM8+TOSmpN/EMWC9FpiGg7Wv5l94p11equqirQSJRNhW6JOpfSd+dskAQQFMq/RuV92ldKpFeJ+CV+HO2Ykgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfwSY4whEI1JCwnLM2uxQC/7cxfMJ1E/gnSP0d5kFFFWpaCdBT
+	DT9S0ke6vHyosa0/ein37Z6GBLDVy9dnoUuBCD1WaqP+dt8pC+TKAcAkMVYQc7a0me8iMDSodKb
+	0Ch7okSH5rTM1j+i3jraN1oW72A==
+X-Received: from pfbgi8.prod.google.com ([2002:a05:6a00:63c8:b0:82a:1997:96c2])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:14d1:b0:824:374a:1424 with SMTP id d2e1a72fcca58-82c96045159mr128711b3a.58.1774563880905;
- Thu, 26 Mar 2026 15:24:40 -0700 (PDT)
-Date: Thu, 26 Mar 2026 15:24:17 -0700
+ 2002:a05:6a00:3388:b0:82a:e3de:27c2 with SMTP id d2e1a72fcca58-82c95ff78dfmr127743b3a.41.1774563883057;
+ Thu, 26 Mar 2026 15:24:43 -0700 (PDT)
+Date: Thu, 26 Mar 2026 15:24:18 -0700
 In-Reply-To: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,13 +58,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=7356;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=1337;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=rr13v0ReufuLtKHyRyN4FDB898pT6Hlku9bGOsppn1A=; b=nFeFzTX8ygVbPanVDLq7QCIuwm0m3IM+MkQCg+3Y/ZgpL4egW6yC/P2AYDQ3LIc1fpYcY3/Vc
- q5YdI9LOQx9CHKVyQhNKOkJtQCHUwiYrJZy8/+KcXHHCuWBiotb3HSv
+ bh=FPot4968BrrzY7lVw+wCqRSRqFOGaqVnuLbaco54t84=; b=pT1cKE5qo45twbYLFoifTHiRtxOTgBfSw8h/PmpQsnlghxeqA74ByQ0l7/JmSNZsH3jS0kwEA
+ FZDy0ff5dwLBbaIcg7YIVPXmB7vme9WkWcqdC7GLxJMEVGO2PA4rqXh
 X-Mailer: b4 0.14.3
-Message-ID: <20260326-gmem-inplace-conversion-v4-8-e202fe950ffd@google.com>
-Subject: [PATCH RFC v4 08/44] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
+Message-ID: <20260326-gmem-inplace-conversion-v4-9-e202fe950ffd@google.com>
+Subject: [PATCH RFC v4 09/44] KVM: guest_memfd: Enable INIT_SHARED on
+ guest_memfd for x86 Coco VMs
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -92,213 +93,43 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Introduce a "version 2" of KVM_SET_MEMORY_ATTRIBUTES to support returning
-information back to userspace.
+From: Sean Christopherson <seanjc@google.com>
 
-This new ioctl and structure will, in a later patch, be shared as a
-guest_memfd ioctl, where the padding in the new kvm_memory_attributes2
-structure will be for writing the response from the guest_memfd ioctl to
-userspace.
+Now that guest_memfd supports tracking private vs. shared within gmem
+itself, allow userspace to specify INIT_SHARED on a guest_memfd instance
+for x86 Confidential Computing (CoCo) VMs, so long as per-VM attributes
+are disabled, i.e. when it's actually possible for a guest_memfd instance
+to contain shared memory.
 
-A new ioctl is necessary for these reasons:
-
-1. KVM_SET_MEMORY_ATTRIBUTES is currently a write-only ioctl and does not
-   allow userspace to read fields. There's nothing in code (yet?) that
-   validates this, but using _IOWR for consistency would be prudent.
-
-2. KVM_SET_MEMORY_ATTRIBUTES, when used as a guest_memfd ioctl, will need
-   an additional field to provide userspace with more error details.
-
-Alternatively, a completely new ioctl could be defined, unrelated to
-KVM_SET_MEMORY_ATTRIBUTES, but using the same ioctl number and struct for
-the vm and guest_memfd ioctls streamlines the interface for userspace. In
-addition, any memory attributes, implemented on the vm or guest_memfd
-ioctl, can be easily shared with the other.
-
-Add KVM_CAP_MEMORY_ATTRIBUTES2 to indicate that struct
-kvm_memory_attributes2 exists and can be used either with
-KVM_SET_MEMORY_ATTRIBUTES2 via the vm or guest_memfd ioctl.
-
-Handle KVM_CAP_MEMORY_ATTRIBUTES2 and return the same supported attributes
-as would be returned for KVM_CAP_MEMORY_ATTRIBUTES - the supported
-attributes are the same for now, regardless of the CAP requested.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- Documentation/virt/kvm/api.rst | 32 ++++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h       | 12 ++++++++++++
- virt/kvm/kvm_main.c            | 40 +++++++++++++++++++++++++++++++++++++---
- 3 files changed, 81 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 032516783e962..0b61e2579e1d8 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6359,6 +6359,8 @@ S390:
- Returns -EINVAL if the VM has the KVM_VM_S390_UCONTROL flag set.
- Returns -EINVAL if called on a protected VM.
- 
-+.. _KVM_SET_MEMORY_ATTRIBUTES:
-+
- 4.141 KVM_SET_MEMORY_ATTRIBUTES
- -------------------------------
- 
-@@ -6551,6 +6553,36 @@ KVM_S390_KEYOP_SSKE
-   Sets the storage key for the guest address ``guest_addr`` to the key
-   specified in ``key``, returning the previous value in ``key``.
- 
-+4.145 KVM_SET_MEMORY_ATTRIBUTES2
-+---------------------------------
-+
-+:Capability: KVM_CAP_MEMORY_ATTRIBUTES2
-+:Architectures: x86
-+:Type: vm ioctl
-+:Parameters: struct kvm_memory_attributes2 (in/out)
-+:Returns: 0 on success, <0 on error
-+
-+KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
-+KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
-+userspace.  The original (pre-extension) fields are shared with
-+KVM_SET_MEMORY_ATTRIBUTES identically.
-+
-+Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
-+
-+::
-+
-+  struct kvm_memory_attributes2 {
-+	__u64 address;
-+	__u64 size;
-+	__u64 attributes;
-+	__u64 flags;
-+	__u64 reserved[12];
-+  };
-+
-+  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
-+
-+See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
-+
- .. _kvm_run:
- 
- 5. The kvm_run structure
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 80364d4dbebb0..16567d4a769e5 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -989,6 +989,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_ARM_SEA_TO_USER 245
- #define KVM_CAP_S390_USER_OPEREXEC 246
- #define KVM_CAP_S390_KEYOP 247
-+#define KVM_CAP_MEMORY_ATTRIBUTES2 248
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1637,6 +1638,17 @@ struct kvm_memory_attributes {
- 	__u64 flags;
- };
- 
-+/* Available with KVM_CAP_MEMORY_ATTRIBUTES2 */
-+#define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd2, struct kvm_memory_attributes2)
-+
-+struct kvm_memory_attributes2 {
-+	__u64 address;
-+	__u64 size;
-+	__u64 attributes;
-+	__u64 flags;
-+	__u64 reserved[12];
-+};
-+
- #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
- 
- #define KVM_CREATE_GUEST_MEMFD	_IOWR(KVMIO,  0xd4, struct kvm_create_guest_memfd)
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 70b594dafc5cc..3c261904322f0 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2621,9 +2621,10 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 	return r;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 7e133a9da11f0..9c29407712580 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -14056,14 +14056,13 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
  }
- static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
--					   struct kvm_memory_attributes *attrs)
-+					   struct kvm_memory_attributes2 *attrs)
+ 
+ #ifdef CONFIG_KVM_GUEST_MEMFD
+-/*
+- * KVM doesn't yet support initializing guest_memfd memory as shared for VMs
+- * with private memory (the private vs. shared tracking needs to be moved into
+- * guest_memfd).
+- */
+ bool kvm_arch_supports_gmem_init_shared(struct kvm *kvm)
  {
- 	gfn_t start, end;
-+	int i;
+-	return !kvm_arch_has_private_mem(kvm);
++	/*
++	 * INIT_SHARED isn't supported if the memory attributes are per-VM,
++	 * in which case guest_memfd can _only_ be used for private memory.
++	 */
++	return !vm_memory_attributes || !kvm_arch_has_private_mem(kvm);
+ }
  
- 	/* flags is currently not used. */
- 	if (attrs->flags)
-@@ -2634,6 +2635,10 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
- 		return -EINVAL;
- 	if (!PAGE_ALIGNED(attrs->address) || !PAGE_ALIGNED(attrs->size))
- 		return -EINVAL;
-+	for (i = 0; i < ARRAY_SIZE(attrs->reserved); i++) {
-+		if (attrs->reserved[i])
-+			return -EINVAL;
-+	}
- 
- 	start = attrs->address >> PAGE_SHIFT;
- 	end = (attrs->address + attrs->size) >> PAGE_SHIFT;
-@@ -4966,6 +4971,7 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
- 	case KVM_CAP_DEVICE_CTRL:
- 		return 1;
- #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-+	case KVM_CAP_MEMORY_ATTRIBUTES2:
- 	case KVM_CAP_MEMORY_ATTRIBUTES:
- 		if (!vm_memory_attributes)
- 			return 0;
-@@ -5191,6 +5197,14 @@ do {										\
- 		     sizeof_field(struct kvm_userspace_memory_region2, field));	\
- } while (0)
- 
-+#define SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(field)				\
-+do {										\
-+	BUILD_BUG_ON(offsetof(struct kvm_memory_attributes, field) !=		\
-+		     offsetof(struct kvm_memory_attributes2, field));		\
-+	BUILD_BUG_ON(sizeof_field(struct kvm_memory_attributes, field) !=	\
-+		     sizeof_field(struct kvm_memory_attributes2, field));	\
-+} while (0)
-+
- static long kvm_vm_ioctl(struct file *filp,
- 			   unsigned int ioctl, unsigned long arg)
- {
-@@ -5373,15 +5387,35 @@ static long kvm_vm_ioctl(struct file *filp,
- 	}
- #endif /* CONFIG_HAVE_KVM_IRQ_ROUTING */
- #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-+	case KVM_SET_MEMORY_ATTRIBUTES2:
- 	case KVM_SET_MEMORY_ATTRIBUTES: {
--		struct kvm_memory_attributes attrs;
-+		struct kvm_memory_attributes2 attrs;
-+		unsigned long size;
-+
-+		if (ioctl == KVM_SET_MEMORY_ATTRIBUTES) {
-+			/*
-+			 * Fields beyond struct kvm_memory_attributes shouldn't
-+			 * be accessed, but avoid leaking kernel memory in case
-+			 * of a bug.
-+			 */
-+			memset(&attrs, 0, sizeof(attrs));
-+			size = sizeof(struct kvm_memory_attributes);
-+		} else {
-+			size = sizeof(struct kvm_memory_attributes2);
-+		}
-+
-+		/* Ensure the common parts of the two structs are identical. */
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(address);
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(size);
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(attributes);
-+		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(flags);
- 
- 		r = -ENOTTY;
- 		if (!vm_memory_attributes)
- 			goto out;
- 
- 		r = -EFAULT;
--		if (copy_from_user(&attrs, argp, sizeof(attrs)))
-+		if (copy_from_user(&attrs, argp, size))
- 			goto out;
- 
- 		r = kvm_vm_ioctl_set_mem_attributes(kvm, &attrs);
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
 
 -- 
 2.53.0.1018.g2bb0e51243-goog
