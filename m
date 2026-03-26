@@ -1,54 +1,54 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBA8358396
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943E43E1CED
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774563948; cv=none; b=e6fHfDPWvWwql+CSFVhjS8WFBg+KOjhy2GwunW6SBgrmiriOcmsEf3YjAD0GDMyp08Vse+brozN7C1GlQksjbBa3qRlIf8sjHtFQKlF73p7P4W628XSKlTnQ4LKnFv9CvZfqjHlb+Af4JY5YWS14+COjNyRQuUEPw06FDYmg/1s=
+	t=1774563951; cv=none; b=bHRAkyoP0By+vAj3LOss+bVhiMJ85jMYsKEUGvzl86qJYI5vAbzueQgZ0Lduwq+Uge4t30jtQU3x1GLbEJX/MTkIzuxOqmrJ08Rc5piANhWT3qyE1VNgIVgCtSsyNDZlUgSapuUyZFiScxGVx+luazor3LBd3uUv78uBCun0bWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774563948; c=relaxed/simple;
-	bh=UdkBDo4oFBkXTHel5o8ZsFzPW+C1nVjCh4r6CInrjXo=;
+	s=arc-20240116; t=1774563951; c=relaxed/simple;
+	bh=atM67lZrb3L/4FSuzE/lIWzYT7CU6pwH5U1B0OOVyHY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rg1dvyCwCRcIaDeKL17OWzsht4fwErKSHrYPkSR0lVE36Vqlw17Eu49FNYjs3IP8+DzujeMG3WtGqnnB31xykq9A6EoPqMms5lu27AcA6rlagYRWRrYKn3En0DmWDZGE8bzDYhUg5KyvGCPQOGl61b15JzmlT2FHW9WzmrxOvyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gS5d3kjc; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=UPTYoHlLMZJNaKNwONl9n77Eiy4k+CnT2HlIbYCaIm/2STZRWjogaEFmk69Fujocch0q9y/7wIsrP55hVltZY8OeQ3dCIMEmUrqH+X9RDtnwvNP/COjhxRsRiFpp3TVwUZruPgpdbdWNg5ZT9cxUmcxtqH+QNRiwpZT8eMewwDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vyvdk4GD; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gS5d3kjc"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35bea322389so1723003a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:25:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyvdk4GD"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c741f038f7cso1005841a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:25:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774563947; x=1775168747; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774563949; x=1775168749; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uxISHYd3W3FTll0OYwaGPsDXdAUGKJkLGuwa2uoTRP0=;
-        b=gS5d3kjcf9ZAX9djM5DGOv++dr5JvMipK8mGdW92aRPH5nq3Xny31A8F3wSQlANyuo
-         xQpnmNBU589AewtFsGb75RO3Sxe8YtEeqxTa0kNMF1DAmD85/yIfe6sKomOlSxqWxckT
-         W4EhblZkuSmRG2PSzWVKPhsXj/MK2WjJW0cCV7KjSwhVMHbmsYpD0pf2OZq9rOyMvEDY
-         ztaDcDUpMQ+E3e3qL0Vhi1Srk0uE/U/V0Zn+IqbhCkRaMhcWFnrng7IOFBwVmMlsaKNc
-         1jJs330PH4YktYt5n5U5vjIX8/oxWMkYQFr7Or474mluGLReIypIji+RzMkOoTj9DpVQ
-         NPpA==
+        bh=YsFx8S2ZIsHTA7mxdUPwMmhoKs9OpIzRTtvg/d03faw=;
+        b=vyvdk4GDEpoTi5tqF13UIRCC6EVzVP5ZrEGvShOwfUs1WNUCmwC0LRtzqDu5sDCYWQ
+         JxfgbpfyRWJz4xlye5x+zSNYxOGQYUx2i0CDMpgVqSBxQjfULyPFwCcfNW8dlTJa80CR
+         JbMRI62iov3MW6Q+1a9BUbIiBv7p4XUP9ngoADhXBh784bpv81Ei8LQOIETDXexz2qC7
+         rU02g3qIDRlo/wEkldx1MPWCz0Cm/CaN8sszYIATdzV7wCRWz/tt2hTABeAvhsLyTgRk
+         QJkVh9L5OfN+AxzYPKXstArdCy9g+ZIybpHbp4dv2XFyj/DJfQfrxAK2wIcZ608D+fP7
+         hBkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774563947; x=1775168747;
+        d=1e100.net; s=20251104; t=1774563949; x=1775168749;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uxISHYd3W3FTll0OYwaGPsDXdAUGKJkLGuwa2uoTRP0=;
-        b=Odx26yrCzT4YAgNIcBBi+bKV/fQUw6fnfDcU6Kc9zLn+CAbyjP/RK5Yv/3iHeMDxXk
-         B7iPeHJCEKDEvcggHdsTEdnWnZORQ+nLtTHhv/kaIF4Ijxj3GHP1tHKFml0MNu4oao6f
-         T2fzQanQKEvtt2bE0BFPVvlyO7oAi+9V58MGrNQ9TsAtv88ysud9rlzrPKV8NwBbr6KQ
-         tk7AK+TnALdx1SdcxTMb8RRZzP60fwiv9M5Dhk/2maja8zA/OFv9zUgIBuyynd0SHn84
-         qwBx1ULxCENX7AUIfaowZL4jkk9svBCZmqpSMjcUeXwIyY7VPiYN/zt4gawBVHssJ6jL
-         WVLw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3WkygPIU/wvlHEfZ6Qmb46o3PD4DHVPH3pmjvWi4q8D/jlmdKhq/o7ZiFBlDlSGvHFYfqPfD1MzDJBNjATQqjF9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPFMe+aKRS0JjVNevjqo0P345J1tjVfcHMTXDDQrQ88Emd/BPU
-	y+hN8JEddyTVSemrNMO59vq8rdP1JMJEQD/PJl8YvYmgLp6KDQQ8n03Uaf67SLfLi+bvGNz7man
-	eSEJFu0czQV9/ZrUVl5BHDoO9Jw==
-X-Received: from pgbcr7.prod.google.com ([2002:a05:6a02:4107:b0:c74:42:899a])
+        bh=YsFx8S2ZIsHTA7mxdUPwMmhoKs9OpIzRTtvg/d03faw=;
+        b=bMBbVksyziCKDJpYTxsIFoZg6rZZMeRp8sFxz8CFSfXZfSqUE4gOjL7Egss/aOFJMh
+         SxDwt13SUjOe281ES6H4rUkjh0/5We55SutWzL7KZeCzc6ddSoDFSyFpag5yc0QJz/rb
+         23jYFWU4XPeKWwZQpTPvYkNMbDRAF6bYUQGo4D3u6oFeIrpBc0tqjFA+3vOqTdB6EGtH
+         MibvUhjj2Ku042VG5YJdcdXpvYUHVX5s6UfqzT+ZsNpioS4UUeE4DskEExUxL9A3sVdQ
+         TXZJWqGmLjkwqlSobZ2mXNbU17uGw/Fi+a0kj7FGZRLd2V5cBR3i8vAeEzQSzIHvvkoS
+         DWTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCehl9frP47beOLz3SS1dYmB7Fp6AqNWpbbgIpYrkQGPETw5yAH9VOKRrWHOLAaX83YokJn35TVTTM0jahIAqcoLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy04YYO4wD3XYo40yqu6SEL7bZLTRt3gisLHqD5bp5G8S2c6Lmz
+	NbcIl9eBTV/YxZYfRP0ZmGsyRqzAvP+s2tMU3aoEq7yusk/uVp3Q64RIOaLS4up0cc9OCo8UfX7
+	xCBKRc6RGtZi47DBPTZ1UT6XQJQ==
+X-Received: from pfwy16.prod.google.com ([2002:a05:6a00:1c90:b0:82c:6e7c:ac6d])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4c:b0:359:8eaa:7f42 with SMTP id 98e67ed59e1d1-35c30056c25mr252326a91.18.1774563946580;
- Thu, 26 Mar 2026 15:25:46 -0700 (PDT)
-Date: Thu, 26 Mar 2026 15:24:49 -0700
+ 2002:a05:6a00:b488:b0:82a:60ad:874 with SMTP id d2e1a72fcca58-82c95e9ec0amr174041b3a.19.1774563948768;
+ Thu, 26 Mar 2026 15:25:48 -0700 (PDT)
+Date: Thu, 26 Mar 2026 15:24:50 -0700
 In-Reply-To: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,13 +58,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=5283;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=5336;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=UdkBDo4oFBkXTHel5o8ZsFzPW+C1nVjCh4r6CInrjXo=; b=ekDVL11JYYjJUYvymKIHGTVycixyPeCaJxJvIY0KEoHTIw9VHcxDrJTqDhJsHWWpAaHT93McN
- K08mqT17n/eDM86iL0+q9pH2zxZ9JI8j/SugMW+LvhwJ33ZMYZTlGvK
+ bh=atM67lZrb3L/4FSuzE/lIWzYT7CU6pwH5U1B0OOVyHY=; b=5MuqTkb5deqhYAPqYmfVeS6JWQaZBgzlViovjh0d6q6SQRu7C3TxjQOxMfoLP3N43SByS4Jw5
+ ZnxOUmxggc7B4jsUWt0qDmE7eGPO++o93Lfuw6k6XZIImuFyIUiBC0X
 X-Mailer: b4 0.14.3
-Message-ID: <20260326-gmem-inplace-conversion-v4-40-e202fe950ffd@google.com>
-Subject: [PATCH RFC v4 40/44] KVM: selftests: Make TEST_EXPECT_SIGBUS thread-safe
+Message-ID: <20260326-gmem-inplace-conversion-v4-41-e202fe950ffd@google.com>
+Subject: [PATCH RFC v4 41/44] KVM: selftests: Update private_mem_conversions_test
+ to mmap() guest_memfd
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -92,150 +93,135 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-The TEST_EXPECT_SIGBUS macro is not thread-safe as it uses a global
-sigjmp_buf and installs a global SIGBUS signal handler. If multiple threads
-execute the macro concurrently, they will race on installing the signal
-handler and stomp on other threads' jump buffers, leading to incorrect test
-behavior.
+Update the private memory conversions selftest to also test conversions
+that are done "in-place" via per-guest_memfd memory attributes. In-place
+conversions require the host to be able to mmap() the guest_memfd so that
+the host and guest can share the same backing physical memory.
 
-Make TEST_EXPECT_SIGBUS thread-safe with the following changes:
+This includes several updates, that are conditioned on the system
+supporting per-guest_memfd attributes (kvm_has_gmem_attributes):
 
-Share the KVM tests' global signal handler. sigaction() applies to all
-threads; without sharing a global signal handler, one thread may have
-removed the signal handler that another thread added, hence leading to
-unexpected signals.
+1. Set up guest_memfd requesting MMAP and INIT_SHARED.
 
-The alternative of layering signal handlers was considered, but calling
-sigaction() within TEST_EXPECT_SIGBUS() necessarily creates a race. To
-avoid adding new setup and teardown routines to do sigaction() and keep
-usage of TEST_EXPECT_SIGBUS() simple, share the KVM tests' global signal
-handler.
+2. With in-place conversions, the host's mapping points directly to the
+   guest's memory. When the guest converts a region to private, host access
+   to that region is blocked. Update the test to expect a SIGBUS when
+   attempting to access the host virtual address (HVA) of private memory.
 
-Opportunistically rename report_unexpected_signal to
-catchall_signal_handler.
+3. Use vm_mem_set_memory_attributes(), which chooses how to set memory
+   attributes based on whether kvm_has_gmem_attributes.
 
-To continue to only expect SIGBUS within specific regions of code, use a
-thread-specific variable, expecting_sigbus, to replace installing and
-removing signal handlers.
-
-Make the execution environment for the thread, sigjmp_buf, a
-thread-specific variable.
-
-As part of TEST_EXPECT_SIGBUS(), assert the prerequisite for this setup,
-that the current signal handler is the catchall_signal_handler.
+Restrict the test to using VM_MEM_SRC_SHMEM because guest_memfd's required
+mmap() flags and page sizes happens to align with those of
+VM_MEM_SRC_SHMEM. As long as VM_MEM_SRC_SHMEM is used for src_type,
+vm_mem_add() works as intended.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/kvm/include/test_util.h | 32 +++++++++++++------------
- tools/testing/selftests/kvm/lib/kvm_util.c      | 18 ++++++++++----
- tools/testing/selftests/kvm/lib/test_util.c     |  7 ------
- 3 files changed, 30 insertions(+), 27 deletions(-)
+ .../kvm/x86/private_mem_conversions_test.c         | 46 ++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
-index 2871a42928471..82f6b371fe767 100644
---- a/tools/testing/selftests/kvm/include/test_util.h
-+++ b/tools/testing/selftests/kvm/include/test_util.h
-@@ -80,21 +80,23 @@ do {									\
- 	__builtin_unreachable(); \
- } while (0)
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+index 47f1eb9212591..29c3c5b2f538e 100644
+--- a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
++++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+@@ -306,9 +306,14 @@ static void handle_exit_hypercall(struct kvm_vcpu *vcpu)
+ 	if (do_fallocate)
+ 		vm_guest_mem_fallocate(vm, gpa, size, map_shared);
  
--extern sigjmp_buf expect_sigbus_jmpbuf;
--void expect_sigbus_handler(int signum);
--
--#define TEST_EXPECT_SIGBUS(action)						\
--do {										\
--	struct sigaction sa_old, sa_new = {					\
--		.sa_handler = expect_sigbus_handler,				\
--	};									\
--										\
--	sigaction(SIGBUS, &sa_new, &sa_old);					\
--	if (sigsetjmp(expect_sigbus_jmpbuf, 1) == 0) {				\
--		action;								\
--		TEST_FAIL("'%s' should have triggered SIGBUS", #action);	\
--	}									\
--	sigaction(SIGBUS, &sa_old, NULL);					\
-+extern __thread sigjmp_buf expect_sigbus_jmpbuf;
-+extern __thread volatile sig_atomic_t expecting_sigbus;
-+extern void catchall_signal_handler(int signum);
+-	if (set_attributes)
+-		vm_set_memory_attributes(vm, gpa, size,
+-					 map_shared ? 0 : KVM_MEMORY_ATTRIBUTE_PRIVATE);
++	if (set_attributes) {
++		u64 attrs = map_shared ? 0 : KVM_MEMORY_ATTRIBUTE_PRIVATE;
++		u64 flags = kvm_has_gmem_attributes ?
++			    KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE : 0;
 +
-+#define TEST_EXPECT_SIGBUS(action)					\
-+do {									\
-+	struct sigaction sa = {};					\
-+									\
-+	TEST_ASSERT_EQ(sigaction(SIGBUS, NULL, &sa), 0);		\
-+	TEST_ASSERT_EQ(sa.sa_handler, &catchall_signal_handler);	\
-+									\
-+	expecting_sigbus = true;					\
-+	if (sigsetjmp(expect_sigbus_jmpbuf, 1) == 0) {			\
-+		action;							\
-+		TEST_FAIL("'%s' should have triggered SIGBUS", #action);\
-+	}								\
-+	expecting_sigbus = false;					\
- } while (0)
- 
- size_t parse_size(const char *size);
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 6f7d3adb25d0a..eaa5a1afa1d9b 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -2347,13 +2347,20 @@ __weak void kvm_selftest_arch_init(void)
- {
++		vm_mem_set_memory_attributes(vm, gpa, size, attrs, flags);
++	}
++
+ 	run->hypercall.ret = 0;
  }
  
--static void report_unexpected_signal(int signum)
-+__thread sigjmp_buf expect_sigbus_jmpbuf;
-+__thread volatile sig_atomic_t expecting_sigbus;
+@@ -352,8 +357,20 @@ static void *__test_mem_conversions(void *__vcpu)
+ 				size_t nr_bytes = min_t(size_t, vm->page_size, size - i);
+ 				uint8_t *hva = addr_gpa2hva(vm, gpa + i);
+ 
+-				/* In all cases, the host should observe the shared data. */
+-				memcmp_h(hva, gpa + i, uc.args[3], nr_bytes);
++				/*
++				 * When using per-guest_memfd memory attributes,
++				 * i.e. in-place conversion, host accesses will
++				 * point at guest memory and should SIGBUS when
++				 * guest memory is private.  When using per-VM
++				 * attributes, i.e. separate backing for shared
++				 * vs. private, the host should always observe
++				 * the shared data.
++				 */
++				if (kvm_has_gmem_attributes &&
++				    uc.args[0] == SYNC_PRIVATE)
++					TEST_EXPECT_SIGBUS(READ_ONCE(*hva));
++				else
++					memcmp_h(hva, gpa + i, uc.args[3], nr_bytes);
+ 
+ 				/* For shared, write the new pattern to guest memory. */
+ 				if (uc.args[0] == SYNC_SHARED)
+@@ -382,6 +399,7 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type, uint32_t
+ 	const size_t slot_size = memfd_size / nr_memslots;
+ 	struct kvm_vcpu *vcpus[KVM_MAX_VCPUS];
+ 	pthread_t threads[KVM_MAX_VCPUS];
++	uint64_t gmem_flags;
+ 	struct kvm_vm *vm;
+ 	int memfd, i;
+ 
+@@ -397,12 +415,17 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type, uint32_t
+ 
+ 	vm_enable_cap(vm, KVM_CAP_EXIT_HYPERCALL, (1 << KVM_HC_MAP_GPA_RANGE));
+ 
+-	memfd = vm_create_guest_memfd(vm, memfd_size, 0);
++	if (kvm_has_gmem_attributes)
++		gmem_flags = GUEST_MEMFD_FLAG_MMAP | GUEST_MEMFD_FLAG_INIT_SHARED;
++	else
++		gmem_flags = 0;
 +
-+void catchall_signal_handler(int signum)
++	memfd = vm_create_guest_memfd(vm, memfd_size, gmem_flags);
+ 
+ 	for (i = 0; i < nr_memslots; i++)
+ 		vm_mem_add(vm, src_type, BASE_DATA_GPA + slot_size * i,
+ 			   BASE_DATA_SLOT + i, slot_size / vm->page_size,
+-			   KVM_MEM_GUEST_MEMFD, memfd, slot_size * i, 0);
++			   KVM_MEM_GUEST_MEMFD, memfd, slot_size * i, gmem_flags);
+ 
+ 	for (i = 0; i < nr_vcpus; i++) {
+ 		uint64_t gpa =  BASE_DATA_GPA + i * per_cpu_size;
+@@ -452,17 +475,24 @@ static void usage(const char *cmd)
+ 
+ int main(int argc, char *argv[])
  {
-+	switch (signum) {
-+	case SIGBUS: {
-+		if (expecting_sigbus)
-+			siglongjmp(expect_sigbus_jmpbuf, 1);
+-	enum vm_mem_backing_src_type src_type = DEFAULT_VM_MEM_SRC;
++	enum vm_mem_backing_src_type src_type;
+ 	uint32_t nr_memslots = 1;
+ 	uint32_t nr_vcpus = 1;
+ 	int opt;
+ 
+ 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
+ 
++	src_type = kvm_has_gmem_attributes ? VM_MEM_SRC_SHMEM :
++					     DEFAULT_VM_MEM_SRC;
 +
-+		TEST_FAIL("Unexpected SIGBUS (%d)\n", signum);
-+	}
- #define KVM_CASE_SIGNUM(sig)					\
- 	case sig: TEST_FAIL("Unexpected " #sig " (%d)\n", signum)
--
--	switch (signum) {
--	KVM_CASE_SIGNUM(SIGBUS);
- 	KVM_CASE_SIGNUM(SIGSEGV);
- 	KVM_CASE_SIGNUM(SIGILL);
- 	KVM_CASE_SIGNUM(SIGFPE);
-@@ -2365,12 +2372,13 @@ static void report_unexpected_signal(int signum)
- void __attribute((constructor)) kvm_selftest_init(void)
- {
- 	struct sigaction sig_sa = {
--		.sa_handler = report_unexpected_signal,
-+		.sa_handler = catchall_signal_handler,
- 	};
- 
- 	/* Tell stdout not to buffer its content. */
- 	setbuf(stdout, NULL);
- 
-+	expecting_sigbus = false;
- 	sigaction(SIGBUS, &sig_sa, NULL);
- 	sigaction(SIGSEGV, &sig_sa, NULL);
- 	sigaction(SIGILL, &sig_sa, NULL);
-diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-index 8a1848586a857..03eb99af9b8de 100644
---- a/tools/testing/selftests/kvm/lib/test_util.c
-+++ b/tools/testing/selftests/kvm/lib/test_util.c
-@@ -18,13 +18,6 @@
- 
- #include "test_util.h"
- 
--sigjmp_buf expect_sigbus_jmpbuf;
--
--void __attribute__((used)) expect_sigbus_handler(int signum)
--{
--	siglongjmp(expect_sigbus_jmpbuf, 1);
--}
--
- /*
-  * Random number generator that is usable from guest code. This is the
-  * Park-Miller LCG using standard constants.
+ 	while ((opt = getopt(argc, argv, "hm:s:n:")) != -1) {
+ 		switch (opt) {
+ 		case 's':
+ 			src_type = parse_backing_src_type(optarg);
++			TEST_ASSERT(!kvm_has_gmem_attributes ||
++				    src_type == VM_MEM_SRC_SHMEM,
++				    "Testing in-place conversions, only %s mem_type supported\n",
++				    vm_mem_backing_src_alias(VM_MEM_SRC_SHMEM)->name);
+ 			break;
+ 		case 'n':
+ 			nr_vcpus = atoi_positive("nr_vcpus", optarg);
 
 -- 
 2.53.0.1018.g2bb0e51243-goog
