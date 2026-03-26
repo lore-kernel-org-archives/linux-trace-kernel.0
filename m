@@ -1,54 +1,54 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E603395259
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D42D346E57
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 22:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774563909; cv=none; b=ng36yVpeOw5RAojmOsSIihB1O8UpymriNm+GAORqkcMUzKewCHa1vSNtqA0sSae6E1LmhtJy37vpEWe2ezUItFyADluenL+ubDAGy2819zok0CHET/TIT+qQ0LYwesWaG5qEMBcoqrGCidEqEJFJtGneCQBK4SXiH1aZPr3/WbM=
+	t=1774563911; cv=none; b=loyX7VjacLkMosdvsExmtLSfFcPcBugWab2dgQYsyfyqbIBDCjOgbBQlE1n37fIJPQqirB7fGepvbTuM8iN4PdVs0XRQA27wzbQ/mBtHcI4giMRkNjOgq5cTJ1bj2hS+twN8icMl3B/mF33ZlgnG7QMdzCiLIVIGawPxvJknyak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774563909; c=relaxed/simple;
-	bh=Xyl14WuQ359smVDmZU9FmOAAAQ4mehFnzmF6UoKVLNY=;
+	s=arc-20240116; t=1774563911; c=relaxed/simple;
+	bh=keOumRETk/gmfETxrp2mpR7R5rvo3p/7A7+F96j8jbs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hWnD1g0kpSeRMTW+ISjRktucrFoAaAPZGVqagBPuOPY120+VlKacDHVCIK2kNLY5nKca1Q10VuZHj7gSx79vdwklGA/+U0VqQeArb+o72orR5GBkRB0TsNe9aWIWzs6w2uJyV18RXLMpjBznWzmVEAZ9lrFa8+Q/hIk+v+oZ5co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cvpjw1YZ; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=h7UJNY4ZBnn0P5FdPakcIkFBmaCEDjAetYHSYIsT0P0K/tuf/G9RSWdzsTj9/mFn9KiSOm2XgcIoMwOTWsMNPKn8e270rI+wP4ZXdf+1sEPTKivFybNqpQK/p3990uJ1bMTXc+HEsR81EHlRUOlfCqLvbB5w2DncPe8P+OkX5GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EjvRVFiT; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cvpjw1YZ"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35641c14663so1962967a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:25:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EjvRVFiT"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c741a9ef5f0so1036126a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Mar 2026 15:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774563908; x=1775168708; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1774563910; x=1775168710; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=owzrYdfkye/YERaKc5lVrVSnV0ZRCiFrjdhCMOA3vqA=;
-        b=Cvpjw1YZl9AERnW441AjE0+DXH85VfDZrcb+iQYGzFXzmC5qXe5TCuvyUTuetc8nSv
-         o/7SQXPm0qzNfCAGuTInyPNa93GUU6RuZ9bENo5AvgX5/RIK5OGoL1Jy+ELTF3UZ0V97
-         mYjYXyj/hQ+jGG85weSv395Xjn3+NqCVINldAxldadk07XAae8MqAMsW36ByLe4pPlIk
-         lBxXhQZouXul8cE9zmrVbZ9KjlyzgrCunsct35S490gex6IofDmuUwhkDnfStrLLAUHc
-         jpYkPnV6nwaZmiF1vebbYfkZcwVU98X3+WhMdfStJoZPRKVAQC+ffHdFA58S2I5n1Sbb
-         E6FQ==
+        bh=BKAErh/ctHw4bBFHVNVYhm/xs3KUEiqQAb+NxvlWO48=;
+        b=EjvRVFiTsNPRfXEZqaHCXV2rLd1aDQ3il6HJCo+vVig/NdGpkgIoQZFxzdYVRUmsAc
+         pS7LDDT/ERhVBuzS8wfYGaMFkTq8P+VfnpiBi+v1qpSmTNSkq1wzhdTeG9ARHUL4Oxq5
+         3s9hlSj4hzcQiO3y+cmfYc8OLrewbYVYHqeWVd4RSJ0IXXyJbN0J0XVgGHgojDBoqW+A
+         6hvQxy2uSeWaKu0vT/CiZdHggdMBUl6TIBUKKyyX58DN62/7veyHCridj2xD5wu7qXCI
+         RDBqY5YmJ0jH+ymueQYV5mY/X+/ewia6d81fY/9moEA5TE6W9/3dJfivob8hzZIXvlj1
+         C4GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774563908; x=1775168708;
+        d=1e100.net; s=20251104; t=1774563910; x=1775168710;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=owzrYdfkye/YERaKc5lVrVSnV0ZRCiFrjdhCMOA3vqA=;
-        b=ZUYsgh+vg1kCMUzPA6EVRYiHDwNvqpP7tk6nGigd/CyKEndICurti/0TrpRadRN3LN
-         7uJ2b6FqiI3Dn8ziDZqnLrjIUaXlZkpa3mgxr7IZGLdEFgkNfR3sVDhIohRvZQc4NLHq
-         Qi0oLON7z865yY+cTqz06xDuMIj6Tlm2iMXA705ObdR/bd6cpOZDu+VoFrQ662TydRsm
-         qgO9f6KwkHRgDeC6ALBp6DPYSWHHmTEBu4WhBB05hvSaYFIZShNdwKPrS+r7J/JbMuCD
-         0VKyEdqAwNlcOVZHPEWd7DKOUVYjtnVQStaimVd6Aqyomcjy0rm1NKk90IwuwWzwFJUd
-         xcwg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9/yNpbsSDEI3E0BRaLoFbnJJAfjLlhbC3ntTv9wqL8n+vsIHOAZNxmrOrBv0LoQf3NkbtKHveZdbFzyA2wN/2KiM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaxPiNFi8KGu1AUdgDSx79gO8jegwgN/tOWOjMwfPTBacXgU52
-	oQySjNfIjXyjSK4YVpp9L9A2VxU/QnllU+LCtXWs2DL1khxcLeh5tmNZ7lfHE79gpyw9kZiohC1
-	mACMs/W2gKtpUVlYamweoAJ9ueQ==
-X-Received: from pjbil12.prod.google.com ([2002:a17:90b:164c:b0:35b:9d0e:7821])
+        bh=BKAErh/ctHw4bBFHVNVYhm/xs3KUEiqQAb+NxvlWO48=;
+        b=WwsdL+c8Aa/KXQOb80JMIwNZd43E2f0m110q76x8SIXQ5iudWW+K/k0YQN252mpp8M
+         3wBNg+HjWYOSqgi3nJiYapEp43xJa7WYcsA0qT3h4dTCH4rEMz+dTYd6jBX01LALocV5
+         hq9YidbdOa7wUgoHxslpx/NqM4bdYxJNd7EdixrYG1kFJk1NX3s1ZHNTFFGn4Uu0uStp
+         5DPeb5TsJzKbqynUnYJFf5JY1fO3wI+jw1PSUiScygErJbH387QX9BQL2+tUnM246SD7
+         gym3tjDkI1+V0cdWb96Jl1+M8n9OESEo8Zx07Qx2ZQCZ9Vd0lK4D+fr/DT6UZnP9vTas
+         6RNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcJ9sT6TIT8p4UxpblMtXoxTtFGdlLe1yqGVPHrX5vDq6EE09akbvdIIQvyfZHHGdQ3rQ+Dl10Dx1B/5icjIUCh3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymvBnlb5f6Xfi7gZxNvuelBgKff1/mkTbhnJMXe6kXBx5VKPvg
+	1FayYGhV2VybY+YMMvM/We8JcXo5ume0fj4/4lri26XP3g5saSZetNAvsfBWhrlNrLrjIoTdqZX
+	YvzU5BaT9KzpSabaLh1hG9ab3lQ==
+X-Received: from pfvf6.prod.google.com ([2002:a05:6a00:1ac6:b0:82c:63f8:59dd])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:17cd:b0:35b:e594:503a with SMTP id 98e67ed59e1d1-35c2ffd0ebbmr200447a91.9.1774563907528;
- Thu, 26 Mar 2026 15:25:07 -0700 (PDT)
-Date: Thu, 26 Mar 2026 15:24:30 -0700
+ 2002:a05:6a00:1bcd:b0:829:7b30:92f4 with SMTP id d2e1a72fcca58-82c9696ee44mr32265b3a.16.1774563909447;
+ Thu, 26 Mar 2026 15:25:09 -0700 (PDT)
+Date: Thu, 26 Mar 2026 15:24:31 -0700
 In-Reply-To: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,14 +58,13 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=2424;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774563861; l=1678;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=SPrXtBzhAZ8kM/S0wIFvUys1KOsEIn60uKsPIVirly4=; b=Pb2Ke7FYWhiSBLICKGMsXf4XmOQ7g9IKaopuyp04/7PZlASOeNyYFutPu026ZSgYzfo3iSfAk
- 84jt/X+M0iCCjjNze4tzM8Q5uhhhTW0IjXQ1s4Nh16h/Gz+oHiW+LZG
+ bh=keOumRETk/gmfETxrp2mpR7R5rvo3p/7A7+F96j8jbs=; b=NE1rni1CgJtrAphsc7U2X9T0bOxF0e+UOsyULzNujOmZouX64/8+6HJYWpj4MdSaexkYeIq1A
+ gHippqmvpB1CC16FucD2+hckjbybeObuIuqg4FlEecf9ENkHDM8/f5e
 X-Mailer: b4 0.14.3
-Message-ID: <20260326-gmem-inplace-conversion-v4-21-e202fe950ffd@google.com>
-Subject: [PATCH RFC v4 21/44] KVM: selftests: Add selftests global for guest
- memory attributes capability
+Message-ID: <20260326-gmem-inplace-conversion-v4-22-e202fe950ffd@google.com>
+Subject: [PATCH RFC v4 22/44] KVM: selftests: Update framework to use KVM_SET_MEMORY_ATTRIBUTES2
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -93,66 +92,45 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-From: Sean Christopherson <seanjc@google.com>
+Update KVM selftest framework to use KVM_SET_MEMORY_ATTRIBUTES2 and the
+accompanying struct kvm_memory_attributes2.
 
-Add a global variable, kvm_has_gmem_attributes, to make the result of
-checking for KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES available to all tests.
-
-kvm_has_gmem_attributes is true if guest_memfd tracks memory attributes, as
-opposed to VM-level tracking.
-
-This global variable is synced to the guest for testing convenience, to
-avoid introducing subtle bugs when host/guest state is desynced.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- tools/testing/selftests/kvm/include/test_util.h | 2 ++
- tools/testing/selftests/kvm/lib/kvm_util.c      | 5 +++++
- 2 files changed, 7 insertions(+)
+ tools/testing/selftests/kvm/include/kvm_util.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
-index b4872ba8ed124..2871a42928471 100644
---- a/tools/testing/selftests/kvm/include/test_util.h
-+++ b/tools/testing/selftests/kvm/include/test_util.h
-@@ -113,6 +113,8 @@ struct guest_random_state {
- extern uint32_t guest_random_seed;
- extern struct guest_random_state guest_rng;
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 4e06724cd2935..1e00bfa59dcd5 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -420,7 +420,7 @@ static inline void vm_enable_cap(struct kvm_vm *vm, uint32_t cap, uint64_t arg0)
+ static inline void vm_set_memory_attributes(struct kvm_vm *vm, uint64_t gpa,
+ 					    uint64_t size, uint64_t attributes)
+ {
+-	struct kvm_memory_attributes attr = {
++	struct kvm_memory_attributes2 attr = {
+ 		.attributes = attributes,
+ 		.address = gpa,
+ 		.size = size,
+@@ -428,13 +428,16 @@ static inline void vm_set_memory_attributes(struct kvm_vm *vm, uint64_t gpa,
+ 	};
  
-+extern bool kvm_has_gmem_attributes;
+ 	/*
+-	 * KVM_SET_MEMORY_ATTRIBUTES overwrites _all_ attributes.  These flows
++	 * KVM_SET_MEMORY_ATTRIBUTES2 overwrites _all_ attributes.  These flows
+ 	 * need significant enhancements to support multiple attributes.
+ 	 */
+ 	TEST_ASSERT(!attributes || attributes == KVM_MEMORY_ATTRIBUTE_PRIVATE,
+ 		    "Update me to support multiple attributes!");
+ 
+-	vm_ioctl(vm, KVM_SET_MEMORY_ATTRIBUTES, &attr);
++	__TEST_REQUIRE(kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES2) > 0,
++		       "No valid attributes for VM fd ioctl!");
 +
- struct guest_random_state new_guest_random_state(uint32_t seed);
- uint32_t guest_random_u32(struct guest_random_state *state);
- 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 82d6945efa29a..404efb5318f09 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -24,6 +24,8 @@ uint32_t guest_random_seed;
- struct guest_random_state guest_rng;
- static uint32_t last_guest_seed;
- 
-+bool kvm_has_gmem_attributes;
-+
- static size_t vcpu_mmap_sz(void);
- 
- int __open_path_or_exit(const char *path, int flags, const char *enoent_help)
-@@ -521,6 +523,7 @@ struct kvm_vm *__vm_create(struct vm_shape shape, uint32_t nr_runnable_vcpus,
- 	}
- 	guest_rng = new_guest_random_state(guest_random_seed);
- 	sync_global_to_guest(vm, guest_rng);
-+	sync_global_to_guest(vm, kvm_has_gmem_attributes);
- 
- 	kvm_arch_vm_post_create(vm, nr_runnable_vcpus);
- 
-@@ -2365,6 +2368,8 @@ void __attribute((constructor)) kvm_selftest_init(void)
- 	guest_random_seed = last_guest_seed = random();
- 	pr_info("Random seed: 0x%x\n", guest_random_seed);
- 
-+	kvm_has_gmem_attributes = kvm_has_cap(KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES);
-+
- 	kvm_selftest_arch_init();
++	vm_ioctl(vm, KVM_SET_MEMORY_ATTRIBUTES2, &attr);
  }
+ 
  
 
 -- 
