@@ -1,113 +1,288 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0290A21B9F5;
-	Thu, 26 Mar 2026 14:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1123FB7C2;
+	Thu, 26 Mar 2026 15:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774535448; cv=none; b=R8t31xjTk1tWYQmJ7muOPxUblQrhuKLE2PovonHs3ixpTrDzKSyPr7zZ9Vjnd7Q2YUliYiXykUezMoGyWlOw4U97oWvRvGpoVLsDof2sRBN9/8cRR53dKSyDf0yYn+ZUal3u817Skns01bGN37GcPaa9lgvDQpjqqVmJntfpbX8=
+	t=1774537830; cv=none; b=imVhjkXbbOC8k8L4Ny9N/YW+cqZ9lD7uuBqxKknlzTvNOC6bPjWnqruA8XM0RClNw+q24QitYaGh626i9P+n2pgOi5U8COULthTEiO4UICsYsyXssZolz9i8ke1WmRFtXsQpOexScNGKxZVQhJwqhtVw7RT/HLxQQRe5xktThAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774535448; c=relaxed/simple;
-	bh=vYDPnxFpC03iD43jZeheL6iLUaSs0dhG3IX1X1iA0vE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=p+JRB4ApUynOSIcQ3KvLbBYow6Uj0ptgOredzqGFnfCpNKGGzL95qd710ZVACgd3vpVvyEK2rT7c67pXXmOY4i50qG0nxFTPV6EcqYIqM6/Wn8gpMBa4aeZoaXL/ZhEC/l9vb2n0N/hI14o8HRAQoAPq11lFOfKuZDKhR3eN/UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sdVo0R4f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774537830; c=relaxed/simple;
+	bh=ImpOumTXiHhK2E/RRqtjHi28bu7nryXk7tD/1s0FNio=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AnYZkGy4DMYw+F7RS2e0LVSox5U+FDQ/XN60gUzRqT6QAcPcERHspx7JlG9O3pHihtAJmVQJdN/sidLYdo491y/HYvt0apDS302htnXP8KsSEVOjP6YO7r6Fky5voMdeNnxTFldKyWqCfqSTLwGHwCx4V+YMB0ywYj4m1Bp+jrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=dLLqDI1p; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sdVo0R4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3510C19423;
-	Thu, 26 Mar 2026 14:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774535447;
-	bh=vYDPnxFpC03iD43jZeheL6iLUaSs0dhG3IX1X1iA0vE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sdVo0R4fhDWVa7cQh9ishx/ySDds9RdX7ZA75LXGkh+O6MlbGkWBwaw53nBiRjzWQ
-	 OruKsn+lTYuJWgQza2f32GU4BCGwLTDLX35Qo2jpDPofHkjMeIpkgGcUx5fHcpMfxM
-	 HisOUOvTJAg7nM81bhG/OXn5VNROBcVELOlcQJjWYNSaRndCzvn3KQfnuOi8ONBVw7
-	 5xV+iGLtg5DW7lMc14cy1PHHrg0ai7kWJpDnqmoD7HaitxxL0v92xYmjHqzikzXeHi
-	 HGN0JvjQBR4xdKebJoQkx1PPdKMPcsdo+olc0weRCtPWt8JhYx+TbzlrToGOSgXk7R
-	 x7J9MWv2tL1ng==
-Date: Thu, 26 Mar 2026 23:30:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org,
- kernel-team@meta.com
-Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
-Message-Id: <20260326233042.f52cfc127ec934d52713bce1@kernel.org>
-In-Reply-To: <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
-References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
-	<20260325232204.05edbb21c7602b6408ca007b@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="dLLqDI1p"
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 9D059BDE1E;
+	Thu, 26 Mar 2026 15:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1774537822;
+	bh=vg6orVDTPecMi8OeXzXS8oUaQlC99nRHDPvEe4x4LeU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=dLLqDI1p21R53wCA8eob+BVI6XwqXJpZuprXjmvBjW/iBsJ7cf+ADApcxOKpwSyya
+	 A+lKSNgUYnHa1L7n0SzHyd2w1GjjlxWJLI8NECaewbUXU7VVQTj7a3s0E5eKkMk38Z
+	 dNvaBjriNbIT5ix6kJ00hgEddssmRBYJMPY+afno=
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH v4 5/5] locking: Add contended_release tracepoint to spinning locks
+Date: Thu, 26 Mar 2026 15:10:04 +0000
+Message-ID: <81eb8e0cd90b31e761e12721dbacb967281f840f.1774536681.git.d@ilvokhin.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1774536681.git.d@ilvokhin.com>
+References: <cover.1774536681.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 25 Mar 2026 23:22:04 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Extend the contended_release tracepoint to queued spinlocks and queued
+rwlocks.
 
-> > +	/*
-> > +	 * Keys that do not match any early_param() handler are silently
-> > +	 * ignored — do_early_param() always returns 0.
-> > +	 */
-> > +	xbc_node_for_each_key_value(root, knode, val) {
-> 
-> [sashiko comment]
-> | Does this loop handle array values correctly?
-> | xbc_node_for_each_key_value() only assigns the first value of an array to
-> | the val pointer before advancing to the next key. It does not iterate over
-> | the child nodes of the array.
-> | If the bootconfig contains a multi-value key like
-> | kernel.console = "ttyS0", "tty0", will the subsequent values in the array
-> | be silently dropped instead of passed to the early_param handlers?
-> 
-> Also, good catch :) we need to use xbc_node_for_each_array_value()
-> for inner loop.
+Use the arch-overridable queued_spin_release(), introduced in the
+previous commit, to ensure the tracepoint works correctly across all
+architectures, including those with custom unlock implementations (e.g.
+x86 paravirt).
 
-FYI, xbc_snprint_cmdline() translates the arraied parameter as
-multiple parameters. For example,
+When the tracepoint is disabled, the only addition to the hot path is a
+single NOP instruction (the static branch). When enabled, the contention
+check, trace call, and unlock are combined in an out-of-line function to
+minimize hot path impact, avoiding the compiler needing to preserve the
+lock pointer in a callee-saved register across the trace call.
 
-foo = bar, buz;
+Binary size impact (x86_64, defconfig):
+  uninlined unlock (common case): +983 bytes  (+0.00%)
+  inlined unlock (worst case):    +58165 bytes (+0.24%)
 
-will be converted to
+The inlined unlock case could not be achieved through Kconfig options on
+x86_64 as PREEMPT_BUILD unconditionally selects UNINLINE_SPIN_UNLOCK on
+x86_64. The UNINLINE_SPIN_UNLOCK guards were manually inverted to force
+inline the unlock path and estimate the worst case binary size increase.
 
-foo=bar foo=buz
+Architectures with fully custom qspinlock implementations (e.g.
+PowerPC) are not covered by this change.
 
-Thus, I think we should do the same thing below;
+Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+---
+ include/asm-generic/qrwlock.h   | 48 +++++++++++++++++++++++++++------
+ include/asm-generic/qspinlock.h | 18 +++++++++++++
+ kernel/locking/qrwlock.c        | 16 +++++++++++
+ kernel/locking/qspinlock.c      |  8 ++++++
+ 4 files changed, 82 insertions(+), 8 deletions(-)
 
-> 
-> > +		if (xbc_node_compose_key_after(root, knode, xbc_namebuf, XBC_KEYLEN_MAX) < 0)
-> > +			continue;
-> > +
-> > +		/*
-> > +		 * We need to copy const char *val to a char pointer,
-> > +		 * which is what do_early_param() need, given it might
-> > +		 * call strsep(), strtok() later.
-> > +		 */
-> > +		ret = strscpy(val_buf, val, sizeof(val_buf));
-> > +		if (ret < 0) {
-> > +			pr_warn("ignoring bootconfig value '%s', too long\n",
-> > +				xbc_namebuf);
-> > +			continue;
-> > +		}
-> > +		do_early_param(xbc_namebuf, val_buf, NULL, NULL);
-
-So instead of this;
-
-xbc_array_for_each_value(vnode, val) {
-	do_early_param(xbc_namebuf, val, NULL, NULL);
-}
-
-Maybe it is a good timing to recondier unifying kernel cmdline and bootconfig
-from API viewpoint.
-
-Thanks,
-
+diff --git a/include/asm-generic/qrwlock.h b/include/asm-generic/qrwlock.h
+index 75b8f4601b28..e24dc537fd66 100644
+--- a/include/asm-generic/qrwlock.h
++++ b/include/asm-generic/qrwlock.h
+@@ -14,6 +14,7 @@
+ #define __ASM_GENERIC_QRWLOCK_H
+ 
+ #include <linux/atomic.h>
++#include <linux/tracepoint-defs.h>
+ #include <asm/barrier.h>
+ #include <asm/processor.h>
+ 
+@@ -35,6 +36,10 @@
+  */
+ extern void queued_read_lock_slowpath(struct qrwlock *lock);
+ extern void queued_write_lock_slowpath(struct qrwlock *lock);
++extern void queued_read_unlock_traced(struct qrwlock *lock);
++extern void queued_write_unlock_traced(struct qrwlock *lock);
++
++DECLARE_TRACEPOINT(contended_release);
+ 
+ /**
+  * queued_read_trylock - try to acquire read lock of a queued rwlock
+@@ -102,10 +107,16 @@ static inline void queued_write_lock(struct qrwlock *lock)
+ }
+ 
+ /**
+- * queued_read_unlock - release read lock of a queued rwlock
++ * queued_rwlock_is_contended - check if the lock is contended
+  * @lock : Pointer to queued rwlock structure
++ * Return: 1 if lock contended, 0 otherwise
+  */
+-static inline void queued_read_unlock(struct qrwlock *lock)
++static inline int queued_rwlock_is_contended(struct qrwlock *lock)
++{
++	return arch_spin_is_locked(&lock->wait_lock);
++}
++
++static __always_inline void __queued_read_unlock(struct qrwlock *lock)
+ {
+ 	/*
+ 	 * Atomically decrement the reader count
+@@ -114,22 +125,43 @@ static inline void queued_read_unlock(struct qrwlock *lock)
+ }
+ 
+ /**
+- * queued_write_unlock - release write lock of a queued rwlock
++ * queued_read_unlock - release read lock of a queued rwlock
+  * @lock : Pointer to queued rwlock structure
+  */
+-static inline void queued_write_unlock(struct qrwlock *lock)
++static inline void queued_read_unlock(struct qrwlock *lock)
++{
++	/*
++	 * Trace and unlock are combined in the traced unlock variant so
++	 * the compiler does not need to preserve the lock pointer across
++	 * the function call, avoiding callee-saved register save/restore
++	 * on the hot path.
++	 */
++	if (tracepoint_enabled(contended_release)) {
++		queued_read_unlock_traced(lock);
++		return;
++	}
++
++	__queued_read_unlock(lock);
++}
++
++static __always_inline void __queued_write_unlock(struct qrwlock *lock)
+ {
+ 	smp_store_release(&lock->wlocked, 0);
+ }
+ 
+ /**
+- * queued_rwlock_is_contended - check if the lock is contended
++ * queued_write_unlock - release write lock of a queued rwlock
+  * @lock : Pointer to queued rwlock structure
+- * Return: 1 if lock contended, 0 otherwise
+  */
+-static inline int queued_rwlock_is_contended(struct qrwlock *lock)
++static inline void queued_write_unlock(struct qrwlock *lock)
+ {
+-	return arch_spin_is_locked(&lock->wait_lock);
++	/* See comment in queued_read_unlock(). */
++	if (tracepoint_enabled(contended_release)) {
++		queued_write_unlock_traced(lock);
++		return;
++	}
++
++	__queued_write_unlock(lock);
+ }
+ 
+ /*
+diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
+index df76f34645a0..915a4c2777f6 100644
+--- a/include/asm-generic/qspinlock.h
++++ b/include/asm-generic/qspinlock.h
+@@ -41,6 +41,7 @@
+ 
+ #include <asm-generic/qspinlock_types.h>
+ #include <linux/atomic.h>
++#include <linux/tracepoint-defs.h>
+ 
+ #ifndef queued_spin_is_locked
+ /**
+@@ -129,12 +130,29 @@ static __always_inline void queued_spin_release(struct qspinlock *lock)
+ }
+ #endif
+ 
++DECLARE_TRACEPOINT(contended_release);
++
++extern void queued_spin_release_traced(struct qspinlock *lock);
++
+ /**
+  * queued_spin_unlock - unlock a queued spinlock
+  * @lock : Pointer to queued spinlock structure
++ *
++ * Generic tracing wrapper around the arch-overridable
++ * queued_spin_release().
+  */
+ static __always_inline void queued_spin_unlock(struct qspinlock *lock)
+ {
++	/*
++	 * Trace and release are combined in queued_spin_release_traced() so
++	 * the compiler does not need to preserve the lock pointer across the
++	 * function call, avoiding callee-saved register save/restore on the
++	 * hot path.
++	 */
++	if (tracepoint_enabled(contended_release)) {
++		queued_spin_release_traced(lock);
++		return;
++	}
+ 	queued_spin_release(lock);
+ }
+ 
+diff --git a/kernel/locking/qrwlock.c b/kernel/locking/qrwlock.c
+index d2ef312a8611..5f7a0fc2b27a 100644
+--- a/kernel/locking/qrwlock.c
++++ b/kernel/locking/qrwlock.c
+@@ -90,3 +90,19 @@ void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock)
+ 	trace_contention_end(lock, 0);
+ }
+ EXPORT_SYMBOL(queued_write_lock_slowpath);
++
++void __lockfunc queued_read_unlock_traced(struct qrwlock *lock)
++{
++	if (queued_rwlock_is_contended(lock))
++		trace_contended_release(lock);
++	__queued_read_unlock(lock);
++}
++EXPORT_SYMBOL(queued_read_unlock_traced);
++
++void __lockfunc queued_write_unlock_traced(struct qrwlock *lock)
++{
++	if (queued_rwlock_is_contended(lock))
++		trace_contended_release(lock);
++	__queued_write_unlock(lock);
++}
++EXPORT_SYMBOL(queued_write_unlock_traced);
+diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+index af8d122bb649..c72610980ec7 100644
+--- a/kernel/locking/qspinlock.c
++++ b/kernel/locking/qspinlock.c
+@@ -104,6 +104,14 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
+ #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
+ #endif
+ 
++void __lockfunc queued_spin_release_traced(struct qspinlock *lock)
++{
++	if (queued_spin_is_contended(lock))
++		trace_contended_release(lock);
++	queued_spin_release(lock);
++}
++EXPORT_SYMBOL(queued_spin_release_traced);
++
+ #endif /* _GEN_PV_LOCK_SLOWPATH */
+ 
+ /**
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.52.0
+
