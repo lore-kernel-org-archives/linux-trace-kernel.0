@@ -1,37 +1,37 @@
 Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034D228D8D1;
-	Fri, 27 Mar 2026 10:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1287828D8D1;
+	Fri, 27 Mar 2026 10:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774606024; cv=none; b=pm4vvB0GaZnwTWkPMOHmt8EtdLjjCGdMoqev4fs43c/cW0CdXYDOoJzpaXaqqgY4ftRngAgG75bY0kEE0BPp9fEXKNNxTYf5e+9QQBsAuXkIGfAomjlLJ+nEPf4BfyVCoc0K8qSx+Ir2tIanFOkMmP1fYtEnSjwL258tXbvJJIM=
+	t=1774606724; cv=none; b=ZIN8qy1aYr6LN+FV9narsMy2qIoVjN5nZFerixzvo6FE+tMh9M61xYUllLKnjWRIOBH5om0qykF/5o95Oui20nOmIADPr8OUCmfdHhaL8da7yf/AflstX1IaXyhBEOnwiW1bjk3HsPBJoQ32Ddm0Cesdve7LTB+3MSubU1lInKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774606024; c=relaxed/simple;
-	bh=9hoqf8836qUkHCGwSuoanrTdy8WBwzbnZSoL6IVkKiA=;
+	s=arc-20240116; t=1774606724; c=relaxed/simple;
+	bh=o++TphoTF+Z5OBm9AP8a155sJj6yg4o/UJxBa1U4qUM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q5iER1eOCU7zDnWPQJh1TeSYaX5eXDgZMl8nzgHv39sUJM03RzXMnaN4rIdCTvhgGe3JRtP+5cbPwghlaiDSeJPi3oFOXZyCXhwPqfZy7YdYLVF21gji8kd+VjPT5K5DvotULy+xBtJ8iiqjQ29CZ4RGOmpLDbavMg860HKXegE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=V3evrK8Q; arc=none smtp.client-ip=82.195.75.108
+	 Content-Type:Content-Disposition:In-Reply-To; b=hw+4ZbSbnw7cPWsyJ0HsstsiOJNkAAG18M1+ICJrG+X4rJYUuxgQ04DkmDZNGONw3eQ+iGVUuerN7CKuArwZTFIl2uXpMFyyezcRP3O3IUDi+urqdGy2ClTPy8qxphRjb0W0Qnua6cGJp3VOy2N7ZsiEXxpq/D4xubAUfsWGbjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=DqaB8gum; arc=none smtp.client-ip=82.195.75.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="V3evrK8Q"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="DqaB8gum"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=T5M5vU1ThQjnLaTGimKygXppER6xPWGVctbXzovZmnQ=; b=V3evrK8QsRWoHKUc2Vpt0X+j0c
-	jUlztjZb8QlzR1CZ2xnkyBML9NrZHevWxmsPPbZ9AvVDNqe4EshgwF+PIwr3S7oixI/06tMBkIe1z
-	iSF0xz56SUBvp1aRXovTIyNnTlNy00xNRJ3OlYJ06DdtHGpxVtDY3eI0EiU0XNt1G2qTnp3Fus+OH
-	fOOBbIiwbSXwmQi4ccekOLHzRq5xnS0k4Lo5oLcse42qe+GaoIlZuX5u0PEb13fBq4ca49kLyUZ2n
-	dqC3Z5P8+z8r53LEqj9I7DcLp5cxTt6tRFkZZ2LaDoqqk6oTddvvPzYOSd+bJgEpzhiCUCzA5RqsG
-	XEu3t7vg==;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-ID:Content-Description;
+	bh=0nFJUo05OWIx8JKCyHATNetSJpt2GXS6ZF3hfagU8X8=; b=DqaB8gumKInYUSX5JgnXJjjE5c
+	FHcoe3aV/4MFMNhWRt92tsbE6DdbDLB4qwkZKJ+HdcL7pkCPhWPbAaKdzE35OZrt+sLAHmk8GbIUk
+	E/KAjDPqtMNdp0BUmZVkHoCZYH4+q44JNHkq+eafMTC9H9znRxHCYHOMRONS93rmrH2NUtYjjseIV
+	7sFQe9oeBMxBu60uwA5/a5xI60gqHsMSPepAUXLUuD2M/bFAavD2q2f/u1udrZ+VnRfI7dSeSye9O
+	ai02YkAKrJhqiH6I5NM8VHhLJCivYCWJiKY/GVsE7Gm4CE1S5ebvA0SE/Bh52HGf9OqfIfNs66Nc1
+	yrJ4wwWA==;
 Received: from authenticated user
 	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.94.2)
 	(envelope-from <leitao@debian.org>)
-	id 1w645X-00AY6o-CS; Fri, 27 Mar 2026 10:06:47 +0000
-Date: Fri, 27 Mar 2026 03:06:41 -0700
+	id 1w64Gy-00AYRn-Pa; Fri, 27 Mar 2026 10:18:37 +0000
+Date: Fri, 27 Mar 2026 03:18:31 -0700
 From: Breno Leitao <leitao@debian.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jonathan Corbet <corbet@lwn.net>, 
@@ -39,79 +39,92 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org, 
 	kernel-team@meta.com
 Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
-Message-ID: <acZPZ4XKy4QynznK@gmail.com>
+Message-ID: <acZX_IXQiGwMMi5e@gmail.com>
 References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
  <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+ <20260326233042.f52cfc127ec934d52713bce1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260326233042.f52cfc127ec934d52713bce1@kernel.org>
 X-Debian-User: leitao
 
-Hi Masami,
-
-On Wed, Mar 25, 2026 at 11:22:04PM +0900, Masami Hiramatsu wrote:
-> On Wed, 25 Mar 2026 03:05:38 -0700
-> Breno Leitao <leitao@debian.org> wrote:
-
-> > +/*
-> > + * bootconfig_apply_early_params - dispatch kernel.* keys from the embedded
-> > + * bootconfig as early_param() calls.
-> > + *
-> > + * early_param() handlers must run before most of the kernel initialises
-> > + * (e.g. before the GIC driver reads irqchip.gicv3_pseudo_nmi).  A bootconfig
-> > + * attached to the initrd arrives too late for this because the initrd is not
-> > + * mapped yet when early params are processed.  The embedded bootconfig lives
-> > + * in the kernel image itself (.init.data), so it is always reachable.
-> > + *
-> > + * This function is called from setup_boot_config() which runs in
-> > + * start_kernel() before parse_early_param(), making the timing correct.
-> > + */
-> > +static void __init bootconfig_apply_early_params(void)
+On Thu, Mar 26, 2026 at 11:30:42PM +0900, Masami Hiramatsu wrote:
+> On Wed, 25 Mar 2026 23:22:04 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 >
-> [sashiko comment]
-> | Does this run early enough for architectural parameters?
-> | While setup_boot_config() runs before parse_early_param() in start_kernel(),
-> | it runs after setup_arch(). setup_boot_config() relies on xbc_init() which
-> | uses the memblock allocator, requiring setup_arch() to have already
-> | initialized it.
-> | However, the kernel expects many early parameters (like mem=, earlycon,
-> | noapic, and iommu) to be parsed during setup_arch() via the architecture's
-> | call to parse_early_param(). Since setup_arch() completes before
-> | setup_boot_config() runs, will these architectural early parameters be
-> | silently ignored because the decisions they influence were already
-> | finalized?
+> > > +	/*
+> > > +	 * Keys that do not match any early_param() handler are silently
+> > > +	 * ignored — do_early_param() always returns 0.
+> > > +	 */
+> > > +	xbc_node_for_each_key_value(root, knode, val) {
+> >
+> > [sashiko comment]
+> > | Does this loop handle array values correctly?
+> > | xbc_node_for_each_key_value() only assigns the first value of an array to
+> > | the val pointer before advancing to the next key. It does not iterate over
+> > | the child nodes of the array.
+> > | If the bootconfig contains a multi-value key like
+> > | kernel.console = "ttyS0", "tty0", will the subsequent values in the array
+> > | be silently dropped instead of passed to the early_param handlers?
+> >
+> > Also, good catch :) we need to use xbc_node_for_each_array_value()
+> > for inner loop.
 >
-> This is the major reason that I did not support early parameter
-> in bootconfig. Some archs initialize kernel_cmdline in setup_arch()
-> and setup early parameters in it.
+> FYI, xbc_snprint_cmdline() translates the arraied parameter as
+> multiple parameters. For example,
+>
+> foo = bar, buz;
+>
+> will be converted to
+>
+> foo=bar foo=buz
+>
+> Thus, I think we should do the same thing below;
+>
+> >
+> > > +		if (xbc_node_compose_key_after(root, knode, xbc_namebuf, XBC_KEYLEN_MAX) < 0)
+> > > +			continue;
+> > > +
+> > > +		/*
+> > > +		 * We need to copy const char *val to a char pointer,
+> > > +		 * which is what do_early_param() need, given it might
+> > > +		 * call strsep(), strtok() later.
+> > > +		 */
+> > > +		ret = strscpy(val_buf, val, sizeof(val_buf));
+> > > +		if (ret < 0) {
+> > > +			pr_warn("ignoring bootconfig value '%s', too long\n",
+> > > +				xbc_namebuf);
+> > > +			continue;
+> > > +		}
+> > > +		do_early_param(xbc_namebuf, val_buf, NULL, NULL);
+>
+> So instead of this;
+>
+> xbc_array_for_each_value(vnode, val) {
+> 	do_early_param(xbc_namebuf, val, NULL, NULL);
+> }
+>
+> Maybe it is a good timing to recondier unifying kernel cmdline and bootconfig
+> from API viewpoint.
 
-Would it be feasible to document which parameters are architecture-specific
-and must be processed during setup_arch()?
+I'm not familiar with the history on this topic. Has unifying the APIs been
+previously considered and set aside?
 
-We could potentially introduce a third parameter category alongside the
-existing early_param() and __setup():
+Given all the feedback on this series, I see three types of issues to address:
 
-	* early_param()
-	* __setup()
-	* early_arch_param() (New)
+1) Minor patch improvements
+2) Architecture-specific super early parameters being parsed before bootconfig
+   is available
+3) Unifying kernel cmdline and bootconfig interfaces
 
-This would allow bootconfig to support __setup() and early_param() while
-explicitly excluding early_arch_param() from bootconfig processing.
+Which of these areas would you recommend I prioritize?
 
-This would move break down the early parameters in those that can be
-easily handled.
-
-> To fix this, we need to change setup_arch() for each architecture so
-> that it calls this bootconfig_apply_early_params().
-
-Could we instead integrate this into parse_early_param() itself? That
-approach would avoid the need to modify each architecture individually.
-
-Thanks for looking at it,
+Thanks for the guidance,
 --breno
