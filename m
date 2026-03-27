@@ -1,79 +1,47 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4B03DA7CE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Mar 2026 09:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034D228D8D1;
+	Fri, 27 Mar 2026 10:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774602924; cv=none; b=ZQ94fzFPaDixYoDRNV8DJbYnE+geKVe46dx1f9j1fSSV3SSkMs3qUOGSdY6pucDJKhFpOHg6KLnV2FAQQT2Br5+ZASVqmBptwLLrYlz+vNlz47ZhDYYtvKGhJQZKPZSFMrFPm2kFjB79tFUhqkyMpxd+1TofQamxmaMVheAkHL4=
+	t=1774606024; cv=none; b=pm4vvB0GaZnwTWkPMOHmt8EtdLjjCGdMoqev4fs43c/cW0CdXYDOoJzpaXaqqgY4ftRngAgG75bY0kEE0BPp9fEXKNNxTYf5e+9QQBsAuXkIGfAomjlLJ+nEPf4BfyVCoc0K8qSx+Ir2tIanFOkMmP1fYtEnSjwL258tXbvJJIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774602924; c=relaxed/simple;
-	bh=yIsyHXyRCryuRuOcOXaPz/ctpDnD6BiebwbWh9U77Pk=;
+	s=arc-20240116; t=1774606024; c=relaxed/simple;
+	bh=9hoqf8836qUkHCGwSuoanrTdy8WBwzbnZSoL6IVkKiA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ccGRG216yJSL/G5SriG1gUrK7x7O1sUZlk664XSL6+ey3esGNRUGMOQC7uwA2XgLrZ+GWHeee/h7k5mSpCqfRzrE6nbCS/7rlmD4Vt9hSDev3Tg/8PWqGXRpChMXwk7H+wH89P9idz377MVjTir+gtjRrOdPH0Txrm56AzKZD1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VLqWbUV6; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q5iER1eOCU7zDnWPQJh1TeSYaX5eXDgZMl8nzgHv39sUJM03RzXMnaN4rIdCTvhgGe3JRtP+5cbPwghlaiDSeJPi3oFOXZyCXhwPqfZy7YdYLVF21gji8kd+VjPT5K5DvotULy+xBtJ8iiqjQ29CZ4RGOmpLDbavMg860HKXegE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=V3evrK8Q; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VLqWbUV6"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-439bc14dcf4so2186724f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Mar 2026 02:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1774602920; x=1775207720; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdNRKYDuFQQDug+hfuOfBMl8q0HCBO0fxPZCsqPcCxg=;
-        b=VLqWbUV6xtrQB+VR3bXxCQ6K4/uOjT+zKGLtWIQNTgFDidoBt0LwdEApXRoh4TKERK
-         1/IS86fnyiUwaRaFqtWwRlEe+43P5TUhINojkso4TP706soNn8lAetRHu0vIwmyoIEkJ
-         StT8xQ9bfML4t9hLpN7sFXzKOHVMd2fxAIxBL/2TVCIPdr3EU/OtwcIj+/FIbUSzRQK9
-         HTyNU3yzK1l7NiFRM+0JRASaglwVNLsdW6/TjpfZiwJX3s1w2iRpd7EUoT/bt4KykVUe
-         2UzMFk5KoJCOkuaS3QBfY81+0pet4+XgyxPZfJZD72Av2CVP5ytr7x/DaaclCGq9fpj+
-         /z8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774602920; x=1775207720;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hdNRKYDuFQQDug+hfuOfBMl8q0HCBO0fxPZCsqPcCxg=;
-        b=Pzb2Ox7LCbRXGFxQ/JRprksdTFFRXe+j+N1MkLr3RYcj1dLGjfGoAXq7FgxnUrq8Up
-         jqhtYZrrIjSfOL+v5UoJCeyA8lG4JCSRAnYp+VmTvuVupqh4+mg/bnybsQKTOpB/3cJA
-         +gIgnPrsM8jxEIGIJYyFiI6G9O7/8daYObwyBo+Bj+cXygdhrdBMw3naS+N5a7Aju8Bd
-         dBIL5cV74lLWrZpGs14VTn6F15/IRyoflekVU4iN4a7Kjtsp1NtztB5LtLS8gDLCiQqN
-         KnBwVtMu1uhRzAInCi5FrJvgLor2vpYdM+TOFZ4VHPegDc62GhUd1JrfhTx6qgq8AIHZ
-         c3Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVoGK2nLcBXlSe4QX9U9Wdfl7ZHT0odv+AYf87mhaEsTb44JogKGTwTHIh9LntyIEq4D6j1ECYiIAvTZeIcUUac2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLgkYC5SM66mH/RBNJvtSFG6EU6PuKI30xcGkSYktN7EIFS3A5
-	yWGFYZS/CrbytT32c5kqJw2msJTsoRbz3uIFlZ7HCBcZQQONTCyBsI2jeHylxhKU1W5cTzWpcem
-	la7W8
-X-Gm-Gg: ATEYQzxjMwOsVzAjO1DRLH9SK7r+EbKdfGZBbhJgEQNZNvFS6wBGBLN0iTCuOReLI02
-	wTjRWmz0J2GPD4OlUf30W+5CD1JLWP08RXUuBmpxsBZeSblhcBP2pHhupREv3ZyhlRZbt1rDg/n
-	6A7cwfXts5cSyqRUF63RRlcNM43XYE1k2pJiRoVG0X7pDk8DF8hj8RHe+HDVagUqp7yPG+Fk8RO
-	AYKtGrM/YlZv2BgoD6YbsDnL957qts1m+nmlUUOW7pn+pjXtZ148pi1S1LGquaaffSR1JnUjuwi
-	4u/tY5FdAxiwumoEor5/9gfOYT4/5HjnYzFcTLJo2P2uEak4krb4DCcLuYl2MPf45Qzrr0uSzzp
-	tPR7D+rwO0E5cD5y2G6YDCg+ftXrd0iEuOBLCdI/X0cMDESMF172HMgcmbCts5apP69kh3tKD6Z
-	lfmkDeK+5s0kAzcH4C+sGs/BrXbw==
-X-Received: by 2002:a05:6000:24c6:b0:439:c1a7:9dee with SMTP id ffacd0b85a97d-43b9793753dmr8304327f8f.0.1774602919658;
-        Fri, 27 Mar 2026 02:15:19 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b919cf2bdsm14652097f8f.21.2026.03.27.02.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2026 02:15:19 -0700 (PDT)
-Date: Fri, 27 Mar 2026 10:15:17 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: david.laight.linux@gmail.com
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH next] tracing: Remove spurious default precision from
- show_event_trigger/filter formats
-Message-ID: <acZKpXQDTEPCU813@pathway.suse.cz>
-References: <20260326201824.3919-1-david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="V3evrK8Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=T5M5vU1ThQjnLaTGimKygXppER6xPWGVctbXzovZmnQ=; b=V3evrK8QsRWoHKUc2Vpt0X+j0c
+	jUlztjZb8QlzR1CZ2xnkyBML9NrZHevWxmsPPbZ9AvVDNqe4EshgwF+PIwr3S7oixI/06tMBkIe1z
+	iSF0xz56SUBvp1aRXovTIyNnTlNy00xNRJ3OlYJ06DdtHGpxVtDY3eI0EiU0XNt1G2qTnp3Fus+OH
+	fOOBbIiwbSXwmQi4ccekOLHzRq5xnS0k4Lo5oLcse42qe+GaoIlZuX5u0PEb13fBq4ca49kLyUZ2n
+	dqC3Z5P8+z8r53LEqj9I7DcLp5cxTt6tRFkZZ2LaDoqqk6oTddvvPzYOSd+bJgEpzhiCUCzA5RqsG
+	XEu3t7vg==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1w645X-00AY6o-CS; Fri, 27 Mar 2026 10:06:47 +0000
+Date: Fri, 27 Mar 2026 03:06:41 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
+Message-ID: <acZPZ4XKy4QynznK@gmail.com>
+References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
+ <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,23 +50,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260326201824.3919-1-david.laight.linux@gmail.com>
+In-Reply-To: <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+X-Debian-User: leitao
 
-On Thu 2026-03-26 20:18:24, david.laight.linux@gmail.com wrote:
-> From: David Laight <david.laight.linux@gmail.com>
-> 
-> Change 2d8b7f9bf8e6e ("tracing: Have show_event_trigger/filter format a bit more in columns")
-> added space padding to align the output.
-> However it used ("%*.s", len, "") which requests the default precision.
-> It doesn't matter here whether the userspace default (0) or kernel
-> default (no precision) is used, but the format should be "%*s".
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+Hi Masami,
 
-Makes sense. It does not change the output because it printed
-an empty string "" so the precision did not matter.
+On Wed, Mar 25, 2026 at 11:22:04PM +0900, Masami Hiramatsu wrote:
+> On Wed, 25 Mar 2026 03:05:38 -0700
+> Breno Leitao <leitao@debian.org> wrote:
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > +/*
+> > + * bootconfig_apply_early_params - dispatch kernel.* keys from the embedded
+> > + * bootconfig as early_param() calls.
+> > + *
+> > + * early_param() handlers must run before most of the kernel initialises
+> > + * (e.g. before the GIC driver reads irqchip.gicv3_pseudo_nmi).  A bootconfig
+> > + * attached to the initrd arrives too late for this because the initrd is not
+> > + * mapped yet when early params are processed.  The embedded bootconfig lives
+> > + * in the kernel image itself (.init.data), so it is always reachable.
+> > + *
+> > + * This function is called from setup_boot_config() which runs in
+> > + * start_kernel() before parse_early_param(), making the timing correct.
+> > + */
+> > +static void __init bootconfig_apply_early_params(void)
+>
+> [sashiko comment]
+> | Does this run early enough for architectural parameters?
+> | While setup_boot_config() runs before parse_early_param() in start_kernel(),
+> | it runs after setup_arch(). setup_boot_config() relies on xbc_init() which
+> | uses the memblock allocator, requiring setup_arch() to have already
+> | initialized it.
+> | However, the kernel expects many early parameters (like mem=, earlycon,
+> | noapic, and iommu) to be parsed during setup_arch() via the architecture's
+> | call to parse_early_param(). Since setup_arch() completes before
+> | setup_boot_config() runs, will these architectural early parameters be
+> | silently ignored because the decisions they influence were already
+> | finalized?
+>
+> This is the major reason that I did not support early parameter
+> in bootconfig. Some archs initialize kernel_cmdline in setup_arch()
+> and setup early parameters in it.
 
-Best Regards,
-Petr
+Would it be feasible to document which parameters are architecture-specific
+and must be processed during setup_arch()?
+
+We could potentially introduce a third parameter category alongside the
+existing early_param() and __setup():
+
+	* early_param()
+	* __setup()
+	* early_arch_param() (New)
+
+This would allow bootconfig to support __setup() and early_param() while
+explicitly excluding early_arch_param() from bootconfig processing.
+
+This would move break down the early parameters in those that can be
+easily handled.
+
+> To fix this, we need to change setup_arch() for each architecture so
+> that it calls this bootconfig_apply_early_params().
+
+Could we instead integrate this into parse_early_param() itself? That
+approach would avoid the need to modify each architecture individually.
+
+Thanks for looking at it,
+--breno
