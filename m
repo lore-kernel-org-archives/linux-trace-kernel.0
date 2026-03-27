@@ -1,433 +1,138 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B8F3E5ED6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Mar 2026 11:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D5318A6CF;
+	Fri, 27 Mar 2026 13:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774609230; cv=none; b=a1fbZfKuEl4te8UKSRP1Ven3bj4dqYe5eQmV6I5o2/7tvZQL/MVWnMqSJIEF4nZxDdZhEcWzMOibggvBiJTF/0KGC3JQ/RyYv9aXIvpgNiRvt9n/uaSDOqfexP3fKPYBBLtxtMGV2NXz96COVwY+jSu0xOt+H2X8l8qDd3vQt3M=
+	t=1774618667; cv=none; b=eEbdqi+5zYhWxdvTyBssUhBgsrkiVn9VDTy2Gpe5tM8O3xMqXGiQaMjnY9+Jq93IU9WGDGZ8Zwx74eAHI9mVP8J9m4d5q4FJ1PzFpVaqfeLTpTTJmuVoLVjpStIsFtKftNFoxDXfqb6AnrwSPzbGi8ZCvdfA7ODBVGCT8erwswA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774609230; c=relaxed/simple;
-	bh=iCdJ4QZX9SSl/F5+CfYyEv98uB4723rmljuqg7Z4XAA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Qnq701D5NFzPL+pZ0GHM3HSh1U0nvSFL232yNb8J9l9II2qHREVOxSdDVfu2+WXp16IQZGzr7wUWCeLML4omhw0F+REb30eeYwEpsl/xZKmNzfvVA2jOuZyxwuuvyLeOiW74hDwrLKawcSlYyn0wJiCiePPav1Y9uBpoKUtzxDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=lSHHUv4g; arc=none smtp.client-ip=212.77.101.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1774618667; c=relaxed/simple;
+	bh=ziX8Pb9NteDHOy8jc3iBI5jysPxWYnSF9JhpXzTXk9s=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Kv2KfsHDU5feWbTcwx2J0nHHi7NLm2tI6+wOFReMc+IryP43yOf1JdZrQ1vwH/Rqq/F2Xzv6DWpl3sBHqntoGQP8eFB3XrwOMiiMqIeVJqmQRaEWBYcRg7iWGl8kJMoxKpnpT7CVdxPCSrUvcE2oF/Qzj0y+nZ5QFhbWT2ILwcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZuPSDVD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="lSHHUv4g"
-Received: (wp-smtpd smtp.wp.pl 20921 invoked from network); 27 Mar 2026 12:00:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1774609212; bh=XlX7VNpMwM1n+We30ppZSwEuS4rFHvL/ia/TMGGX0vo=;
-          h=From:To:Cc:Subject;
-          b=lSHHUv4gSlECFhmjgXkj558bF7X1iVUBwUTEFsPhzEa33VUVx1IMWeUgAT4+IH3qS
-           crS9Ze+q6MyuFgIOEuv0ME4NT0ekE0hSWwWGgLlN/ermt3xn+Qu7fnZkUm26JjmEoO
-           v5aH9izeveVa02sKB7CDPjDOEOrgUuKsVx98ON9KdDQGI7BaJRKa/N2XnPGH405sL3
-           z05tgRCkTDaoUIRM7hCnn0ICEcN1Ne2ANqazVD0Y4Ibx9QSQEVRZVk2uIWaRAkkt1n
-           MLKjlgXXRYpFIIGhGLPvj0YeaDrPbn/+5Xttt9BplKe0akmLEqr4xlKWRXZiKki/f3
-           9UyMAZA4rIElQ==
-Received: from 77-236-5-223.static.play.pl (HELO localhost) (stf_xl@wp.pl@[77.236.5.223])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
-          for <linux-modules@vger.kernel.org>; 27 Mar 2026 12:00:12 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: linux-modules@vger.kernel.org,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Jordan Rome <linux@jordanrome.com>,
-	Viktor Malik <vmalik@redhat.com>
-Subject: [PATCH v2 2/2] module/kallsyms: sort function symbols and use binary search
-Date: Fri, 27 Mar 2026 12:00:05 +0100
-Message-Id: <20260327110005.16499-2-stf_xl@wp.pl>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20260327110005.16499-1-stf_xl@wp.pl>
-References: <20260327110005.16499-1-stf_xl@wp.pl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZuPSDVD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB684C19423;
+	Fri, 27 Mar 2026 13:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774618667;
+	bh=ziX8Pb9NteDHOy8jc3iBI5jysPxWYnSF9JhpXzTXk9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aZuPSDVDcvjXC33ASnJUA9ENi3f7SytVBxxqsvU+kbIpc3XOdR0M73jAEog2t1MnG
+	 D+t+PLsn2pLOawWZA1jxQShlxiZ9F+1zVyUBFqanAAR6l+wRaUfnwiaqL6ekcNXSPs
+	 2CM5FM40x17staYnpnNNkFdQO+fEHPdAZ506Ek2xxt+7pcqbFCw509nhrJZeyptKw2
+	 +xOABWwDKsIC6L+0Ew8AffwhRWNLHyeg7oO9RDW1jxOFGMSSdry+6vrjl2C0oSNgLx
+	 9Gl1C6TSvVzL/77SQsobIj0TiW5acvlqkv+LYjR747Etm+uwiu9YWkd1Pc1SVSkJXE
+	 2g5gKwIHiC55g==
+Date: Fri, 27 Mar 2026 22:37:44 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org,
+ kernel-team@meta.com
+Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
+Message-Id: <20260327223744.f246150adc1671f7605a4f0a@kernel.org>
+In-Reply-To: <acZPZ4XKy4QynznK@gmail.com>
+References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
+	<20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+	<acZPZ4XKy4QynznK@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 9b5fb6f572a47d59f4b0eca914a8ce2f
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000002 [AfHC]                               
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Module symbol lookup via find_kallsyms_symbol() performs a linear scan
-over the entire symtab when resolving an address. The number of symbols
-in module symtabs has grown over the years, largely due to additional
-metadata in non-standard sections, making this lookup very slow.
+On Fri, 27 Mar 2026 03:06:41 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-Improve this by separating function symbols during module load, placing
-them at the beginning of the symtab, sorting them by address, and using
-binary search when resolving addresses in module text.
+> Hi Masami,
+> 
+> On Wed, Mar 25, 2026 at 11:22:04PM +0900, Masami Hiramatsu wrote:
+> > On Wed, 25 Mar 2026 03:05:38 -0700
+> > Breno Leitao <leitao@debian.org> wrote:
+> 
+> > > +/*
+> > > + * bootconfig_apply_early_params - dispatch kernel.* keys from the embedded
+> > > + * bootconfig as early_param() calls.
+> > > + *
+> > > + * early_param() handlers must run before most of the kernel initialises
+> > > + * (e.g. before the GIC driver reads irqchip.gicv3_pseudo_nmi).  A bootconfig
+> > > + * attached to the initrd arrives too late for this because the initrd is not
+> > > + * mapped yet when early params are processed.  The embedded bootconfig lives
+> > > + * in the kernel image itself (.init.data), so it is always reachable.
+> > > + *
+> > > + * This function is called from setup_boot_config() which runs in
+> > > + * start_kernel() before parse_early_param(), making the timing correct.
+> > > + */
+> > > +static void __init bootconfig_apply_early_params(void)
+> >
+> > [sashiko comment]
+> > | Does this run early enough for architectural parameters?
+> > | While setup_boot_config() runs before parse_early_param() in start_kernel(),
+> > | it runs after setup_arch(). setup_boot_config() relies on xbc_init() which
+> > | uses the memblock allocator, requiring setup_arch() to have already
+> > | initialized it.
+> > | However, the kernel expects many early parameters (like mem=, earlycon,
+> > | noapic, and iommu) to be parsed during setup_arch() via the architecture's
+> > | call to parse_early_param(). Since setup_arch() completes before
+> > | setup_boot_config() runs, will these architectural early parameters be
+> > | silently ignored because the decisions they influence were already
+> > | finalized?
+> >
+> > This is the major reason that I did not support early parameter
+> > in bootconfig. Some archs initialize kernel_cmdline in setup_arch()
+> > and setup early parameters in it.
+> 
+> Would it be feasible to document which parameters are architecture-specific
+> and must be processed during setup_arch()?
 
-This also should improve times for linear symbol name lookups, as valid
-function symbols are now located at the beginning of the symtab.
+Yeah, at least we can mark what is not available in bootconfig.
+Or, maybe we can export this function to setup_arch() for each
+architecture.
 
-The cost of sorting is small relative to module load time. In repeated
-module load tests [1], depending on .config options, this change
-increases load time between 2% and 4%. With cold caches, the difference
-is not measurable, as memory access latency dominates.
+Anyway, some cmdline options are not possible to be passed via
+bootconfig. IIRC, for example, the initrd image address is
+passed via cmdline (via devicetree) on arm64 from bootloader.
 
-The sorting theoretically could be done in compile time, but much more
-complicated as we would have to simulate kernel addresses resolution
-for symbols, and then correct relocation entries. That would be risky
-if get out of sync.
+> 
+> We could potentially introduce a third parameter category alongside the
+> existing early_param() and __setup():
+> 
+> 	* early_param()
+> 	* __setup()
+> 	* early_arch_param() (New)
+> 
+> This would allow bootconfig to support __setup() and early_param() while
+> explicitly excluding early_arch_param() from bootconfig processing.
 
-The improvement can be observed when listing ftrace filter functions.
+Yeah, that maybe possible.
 
-Before:
+> 
+> This would move break down the early parameters in those that can be
+> easily handled.
+> 
+> > To fix this, we need to change setup_arch() for each architecture so
+> > that it calls this bootconfig_apply_early_params().
+> 
+> Could we instead integrate this into parse_early_param() itself? That
+> approach would avoid the need to modify each architecture individually.
 
-root@nano:~# time cat /sys/kernel/tracing/available_filter_functions | wc -l
-74908
+Ah, indeed. 
 
-real	0m1.315s
-user	0m0.000s
-sys	0m1.312s
+Thanks!
 
-After:
+> 
+> Thanks for looking at it,
+> --breno
 
-root@nano:~# time cat /sys/kernel/tracing/available_filter_functions | wc -l
-74911
 
-real	0m0.167s
-user	0m0.004s
-sys	0m0.175s
-
-(there are three more symbols introduced by the patch)
-
-For livepatch modules, the symtab layout is preserved and the existing
-linear search is used. For this case, it should be possible to keep
-the original ELF symtab instead of copying it 1:1, but that is outside
-the scope of this patch.
-
-Link: https://gist.github.com/sgruszka/09f3fb1dad53a97b1aad96e1927ab117 [1]
-Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
----
-v1 -> v2: 
- - fix searching data symbols for CONFIG_KALLSYMS_ALL
- - use kallsyms_symbol_value() in elf_sym_cmp()
-
- include/linux/module.h   |   1 +
- kernel/module/internal.h |   1 +
- kernel/module/kallsyms.c | 171 +++++++++++++++++++++++++++++----------
- 3 files changed, 130 insertions(+), 43 deletions(-)
-
-diff --git a/include/linux/module.h b/include/linux/module.h
-index ac254525014c..67c053afa882 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -379,6 +379,7 @@ struct module_memory {
- struct mod_kallsyms {
- 	Elf_Sym *symtab;
- 	unsigned int num_symtab;
-+	unsigned int num_func_syms;
- 	char *strtab;
- 	char *typetab;
- };
-diff --git a/kernel/module/internal.h b/kernel/module/internal.h
-index 618202578b42..6a4d498619b1 100644
---- a/kernel/module/internal.h
-+++ b/kernel/module/internal.h
-@@ -73,6 +73,7 @@ struct load_info {
- 	bool sig_ok;
- #ifdef CONFIG_KALLSYMS
- 	unsigned long mod_kallsyms_init_off;
-+	unsigned long num_func_syms;
- #endif
- #ifdef CONFIG_MODULE_DECOMPRESS
- #ifdef CONFIG_MODULE_STATS
-diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-index f23126d804b2..d69e99e67707 100644
---- a/kernel/module/kallsyms.c
-+++ b/kernel/module/kallsyms.c
-@@ -10,6 +10,7 @@
- #include <linux/kallsyms.h>
- #include <linux/buildid.h>
- #include <linux/bsearch.h>
-+#include <linux/sort.h>
- #include "internal.h"
- 
- /* Lookup exported symbol in given range of kernel_symbols */
-@@ -103,6 +104,95 @@ static bool is_core_symbol(const Elf_Sym *src, const Elf_Shdr *sechdrs,
- 	return true;
- }
- 
-+static inline bool is_func_symbol(const Elf_Sym *sym)
-+{
-+	return sym->st_shndx != SHN_UNDEF && sym->st_size != 0 &&
-+	       ELF_ST_TYPE(sym->st_info) == STT_FUNC;
-+}
-+
-+static unsigned int bsearch_func_symbol(struct mod_kallsyms *kallsyms,
-+					unsigned long addr,
-+					unsigned long *bestval,
-+					unsigned long *nextval)
-+
-+{
-+	unsigned int mid, low = 1, high = kallsyms->num_func_syms + 1;
-+	unsigned int best = 0;
-+	unsigned long thisval;
-+
-+	while (low < high) {
-+		mid = low + (high - low) / 2;
-+		thisval = kallsyms_symbol_value(&kallsyms->symtab[mid]);
-+
-+		if (thisval <= addr) {
-+			*bestval = thisval;
-+			best = mid;
-+			low = mid + 1;
-+		} else {
-+			*nextval = thisval;
-+			high = mid;
-+		}
-+	}
-+
-+	return best;
-+}
-+
-+static const char *kallsyms_symbol_name(struct mod_kallsyms *kallsyms,
-+					unsigned int symnum)
-+{
-+	return kallsyms->strtab + kallsyms->symtab[symnum].st_name;
-+}
-+
-+static unsigned int search_kallsyms_symbol(struct mod_kallsyms *kallsyms,
-+					   unsigned long addr,
-+					   unsigned long *bestval,
-+					   unsigned long *nextval)
-+{
-+	unsigned int i, best = 0;
-+
-+	/*
-+	 * Scan for closest preceding symbol and next symbol. (ELF starts
-+	 * real symbols at 1). Skip the initial function symbols range
-+	 * if num_func_syms is non-zero, those are handled separately for
-+	 * the core TEXT segment lookup.
-+	 */
-+	for (i = 1 + kallsyms->num_func_syms; i < kallsyms->num_symtab; i++) {
-+		const Elf_Sym *sym = &kallsyms->symtab[i];
-+		unsigned long thisval = kallsyms_symbol_value(sym);
-+
-+		if (sym->st_shndx == SHN_UNDEF)
-+			continue;
-+
-+		/*
-+		 * We ignore unnamed symbols: they're uninformative
-+		 * and inserted at a whim.
-+		 */
-+		if (*kallsyms_symbol_name(kallsyms, i) == '\0' ||
-+		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
-+			continue;
-+
-+		if (thisval <= addr && thisval > *bestval) {
-+			best = i;
-+			*bestval = thisval;
-+		}
-+		if (thisval > addr && thisval < *nextval)
-+			*nextval = thisval;
-+	}
-+
-+	return best;
-+}
-+
-+static int elf_sym_cmp(const void *a, const void *b)
-+{
-+	unsigned long val_a = kallsyms_symbol_value((const Elf_Sym *)a);
-+	unsigned long val_b = kallsyms_symbol_value((const Elf_Sym *)b);
-+
-+	if (val_a < val_b)
-+		return -1;
-+
-+	return val_a > val_b;
-+}
-+
- /*
-  * We only allocate and copy the strings needed by the parts of symtab
-  * we keep.  This is simple, but has the effect of making multiple
-@@ -115,9 +205,10 @@ void layout_symtab(struct module *mod, struct load_info *info)
- 	Elf_Shdr *symsect = info->sechdrs + info->index.sym;
- 	Elf_Shdr *strsect = info->sechdrs + info->index.str;
- 	const Elf_Sym *src;
--	unsigned int i, nsrc, ndst, strtab_size = 0;
-+	unsigned int i, nsrc, ndst, nfunc, strtab_size = 0;
- 	struct module_memory *mod_mem_data = &mod->mem[MOD_DATA];
- 	struct module_memory *mod_mem_init_data = &mod->mem[MOD_INIT_DATA];
-+	bool is_lp_mod = is_livepatch_module(mod);
- 
- 	/* Put symbol section at end of init part of module. */
- 	symsect->sh_flags |= SHF_ALLOC;
-@@ -129,12 +220,14 @@ void layout_symtab(struct module *mod, struct load_info *info)
- 	nsrc = symsect->sh_size / sizeof(*src);
- 
- 	/* Compute total space required for the core symbols' strtab. */
--	for (ndst = i = 0; i < nsrc; i++) {
--		if (i == 0 || is_livepatch_module(mod) ||
-+	for (ndst = nfunc = i = 0; i < nsrc; i++) {
-+		if (i == 0 || is_lp_mod ||
- 		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
- 				   info->index.pcpu)) {
- 			strtab_size += strlen(&info->strtab[src[i].st_name]) + 1;
- 			ndst++;
-+			if (!is_lp_mod && is_func_symbol(src + i))
-+				nfunc++;
- 		}
- 	}
- 
-@@ -156,6 +249,7 @@ void layout_symtab(struct module *mod, struct load_info *info)
- 	mod_mem_init_data->size = ALIGN(mod_mem_init_data->size,
- 					__alignof__(struct mod_kallsyms));
- 	info->mod_kallsyms_init_off = mod_mem_init_data->size;
-+	info->num_func_syms = nfunc;
- 
- 	mod_mem_init_data->size += sizeof(struct mod_kallsyms);
- 	info->init_typeoffs = mod_mem_init_data->size;
-@@ -169,7 +263,7 @@ void layout_symtab(struct module *mod, struct load_info *info)
-  */
- void add_kallsyms(struct module *mod, const struct load_info *info)
- {
--	unsigned int i, ndst;
-+	unsigned int i, di, nfunc, ndst;
- 	const Elf_Sym *src;
- 	Elf_Sym *dst;
- 	char *s;
-@@ -178,6 +272,7 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
- 	void *data_base = mod->mem[MOD_DATA].base;
- 	void *init_data_base = mod->mem[MOD_INIT_DATA].base;
- 	struct mod_kallsyms *kallsyms;
-+	bool is_lp_mod = is_livepatch_module(mod);
- 
- 	kallsyms = init_data_base + info->mod_kallsyms_init_off;
- 
-@@ -194,19 +289,28 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
- 	mod->core_kallsyms.symtab = dst = data_base + info->symoffs;
- 	mod->core_kallsyms.strtab = s = data_base + info->stroffs;
- 	mod->core_kallsyms.typetab = data_base + info->core_typeoffs;
-+
- 	strtab_size = info->core_typeoffs - info->stroffs;
- 	src = kallsyms->symtab;
--	for (ndst = i = 0; i < kallsyms->num_symtab; i++) {
-+	ndst = info->num_func_syms + 1;
-+
-+	for (nfunc = i = 0; i < kallsyms->num_symtab; i++) {
- 		kallsyms->typetab[i] = elf_type(src + i, info);
--		if (i == 0 || is_livepatch_module(mod) ||
-+		if (i == 0 || is_lp_mod ||
- 		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
- 				   info->index.pcpu)) {
- 			ssize_t ret;
- 
--			mod->core_kallsyms.typetab[ndst] =
--				kallsyms->typetab[i];
--			dst[ndst] = src[i];
--			dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
-+			if (i == 0)
-+				di = 0;
-+			else if (!is_lp_mod && is_func_symbol(src + i))
-+				di = 1 + nfunc++;
-+			else
-+				di = ndst++;
-+
-+			mod->core_kallsyms.typetab[di] = kallsyms->typetab[i];
-+			dst[di] = src[i];
-+			dst[di].st_name = s - mod->core_kallsyms.strtab;
- 			ret = strscpy(s, &kallsyms->strtab[src[i].st_name],
- 				      strtab_size);
- 			if (ret < 0)
-@@ -216,9 +320,13 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
- 		}
- 	}
- 
-+	WARN_ON_ONCE(nfunc != info->num_func_syms);
-+	sort(dst + 1, nfunc, sizeof(Elf_Sym), elf_sym_cmp, NULL);
-+
- 	/* Set up to point into init section. */
- 	rcu_assign_pointer(mod->kallsyms, kallsyms);
- 	mod->core_kallsyms.num_symtab = ndst;
-+	mod->core_kallsyms.num_func_syms = nfunc;
- }
- 
- #if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID)
-@@ -241,11 +349,6 @@ void init_build_id(struct module *mod, const struct load_info *info)
- }
- #endif
- 
--static const char *kallsyms_symbol_name(struct mod_kallsyms *kallsyms, unsigned int symnum)
--{
--	return kallsyms->strtab + kallsyms->symtab[symnum].st_name;
--}
--
- /*
-  * Given a module and address, find the corresponding symbol and return its name
-  * while providing its size and offset if needed.
-@@ -255,7 +358,10 @@ static const char *find_kallsyms_symbol(struct module *mod,
- 					unsigned long *size,
- 					unsigned long *offset)
- {
--	unsigned int i, best = 0;
-+	unsigned int (*search)(struct mod_kallsyms *kallsyms,
-+			       unsigned long addr, unsigned long *bestval,
-+			       unsigned long *nextval);
-+	unsigned int best;
- 	unsigned long nextval, bestval;
- 	struct mod_kallsyms *kallsyms = rcu_dereference(mod->kallsyms);
- 	struct module_memory *mod_mem = NULL;
-@@ -266,6 +372,11 @@ static const char *find_kallsyms_symbol(struct module *mod,
- 			continue;
- #endif
- 		if (within_module_mem_type(addr, mod, type)) {
-+			if (type == MOD_TEXT && kallsyms->num_func_syms > 0)
-+				search = bsearch_func_symbol;
-+			else
-+				search = search_kallsyms_symbol;
-+
- 			mod_mem = &mod->mem[type];
- 			break;
- 		}
-@@ -278,33 +389,7 @@ static const char *find_kallsyms_symbol(struct module *mod,
- 	nextval = (unsigned long)mod_mem->base + mod_mem->size;
- 	bestval = (unsigned long)mod_mem->base - 1;
- 
--	/*
--	 * Scan for closest preceding symbol, and next symbol. (ELF
--	 * starts real symbols at 1).
--	 */
--	for (i = 1; i < kallsyms->num_symtab; i++) {
--		const Elf_Sym *sym = &kallsyms->symtab[i];
--		unsigned long thisval = kallsyms_symbol_value(sym);
--
--		if (sym->st_shndx == SHN_UNDEF)
--			continue;
--
--		/*
--		 * We ignore unnamed symbols: they're uninformative
--		 * and inserted at a whim.
--		 */
--		if (*kallsyms_symbol_name(kallsyms, i) == '\0' ||
--		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
--			continue;
--
--		if (thisval <= addr && thisval > bestval) {
--			best = i;
--			bestval = thisval;
--		}
--		if (thisval > addr && thisval < nextval)
--			nextval = thisval;
--	}
--
-+	best = search(kallsyms, addr, &bestval, &nextval);
- 	if (!best)
- 		return NULL;
- 
 -- 
-2.50.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
