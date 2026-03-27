@@ -1,138 +1,130 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA54331ED80;
-	Fri, 27 Mar 2026 20:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774644423; cv=none; b=IPRuPowfwTUF/Xog7WEofMtDRFggDr87knYGXTTNOUHoyvTWYruA1vo3coD0ELoQmUR6fP0RWbYGTRyx1+FjQY1M+j864DztFVUWVd5sEpI4pwhfjQCvfRjaClRHT5m9MPy/5JqjxT0xUIlkN1S1rLHksbd/FlxOFHlUBbTkH/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774644423; c=relaxed/simple;
-	bh=o0Wv4fhMuEu4YXD4beuFdbFlO259PZnTSgbOpsHiL6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aOXDTj2OymowZJ6Im4auSH1JEmWsDbCUj4rbd0oSQxMtngPAz1VYveJCCsDS2jkuxXNPOcfwwa13Kbt+ZQVzBAk6146ViXmRJ8E51etzaH6OAF/EJkusDLgfXAYXSnL6qtSynmCOslMKt/MESk4A6jeu2z0kjExumzxpWDFXu80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id A31CC1B99E7;
-	Fri, 27 Mar 2026 20:47:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id E3EBF60009;
-	Fri, 27 Mar 2026 20:46:58 +0000 (UTC)
-Date: Fri, 27 Mar 2026 16:47:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
- Rogers <irogers@google.com>
-Subject: Re: [PATCH v13 4/4] ring-buffer: Add persistent ring buffer
- selftest
-Message-ID: <20260327164748.67b6453d@gandalf.local.home>
-In-Reply-To: <20260327162508.6cac690c@gandalf.local.home>
-References: <177440549083.1529621.15486836623498328967.stgit@mhiramat.tok.corp.google.com>
-	<177440552560.1529621.1405976992959650354.stgit@mhiramat.tok.corp.google.com>
-	<20260327162508.6cac690c@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5B7394470
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Mar 2026 22:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774651325; cv=pass; b=CPCzAk9Upva2uXgvzS+eYoutjvmpnMUNrred2WnbzE95uD5sKzAzo4QXiEh9iQzeatSnK0msDTAPqim0PQmg/GHyQ1it5mbrCvInkJ3eJqp+G9m93o96OHqnDLrGE6WGwgDgRJ6KCCMQevHbo0JQ9HGZqRY4vxjIlHaEy5uQVWw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774651325; c=relaxed/simple;
+	bh=IxQSSOkmxjUiH6NbONR0zkZYZXaMZrRICytjG4QVyxw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PuCqJy1XGNDAdUq3gDBdOxgx4QHs9IEVKUXfBWWQL7CsBvc8qo4y6OfcjpVTcIzb2WWoCs/Vn22dGv0/QpgBaXpu+eZrc6sjvneuAYa/dbtBBJ34eTjwgUCEIr8Qwk8nNXbvc2Vh09SkpKrNfvqkw3Bm0wDYUpdiCjI7o/Yjfpg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GaOjsv/Y; arc=pass smtp.client-ip=74.125.82.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaOjsv/Y"
+Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-12a695044a4so3202883c88.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Mar 2026 15:42:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774651323; cv=none;
+        d=google.com; s=arc-20240605;
+        b=CmYor+WmH/5gfBf+tVs46u5gjNX9JSBi0s7ip5jDnJbkhP7VbDG9zV0tu72dSiQ4qC
+         utd9k0MsjDkaJ/I1L9Azq3PzA3+OxC+8XODUVh4X/K65j0bHz2HntaUHp7/M3twcLFPx
+         PlHyhxbTnR5NaDJME/oWMCiiOKeJ/F8c6utpFsEhniSquTOviUMXBCzx4UkiTrQs9ytZ
+         EtH5Hl+kI7rghT2nFPkFdLJdDoxMcz/Q0N2uRbavx4nPUPv38YSZQEB5+F4cPCBok3AX
+         BbYfL73GJFdvUn4T8m7opbnmT3QfSl3HvWmNkNRwOYj+CoqSt3mB+eMItUgoCKLyaapJ
+         TeoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=IxQSSOkmxjUiH6NbONR0zkZYZXaMZrRICytjG4QVyxw=;
+        fh=KRvFATtG+lCnpsVjkBcaLMcwFEaA6SiRSqICTDnUGtY=;
+        b=bQrb1Rb/LAXcCNEKuPSVZqIiVhboXvCziC6xIsYRlF8lvcyDBDDdLUKIV8vggP0i7P
+         5qlXzmmkufBvm5pxqkLVA5/2BtuCnEg5fAEdF8WoZG04EtxgG4cokaB7TcoJX6XvKlzG
+         gmghCCvmZ6dJsl4cSDk+OZDPbWqSekRZHBUC91+Pau7OFbsBY/tYq+7Q7ib2+QT2w9iu
+         tiOJADzfWJdYvIqDWqSAzdL0E8zZ6YUSw5HeyrPUsQi8c25u86KaomMKSjwi9hyUxD0L
+         Z5xgOTMyCzAj+FZKtyZG6N2Ve9hDydIScsZuvn3CjOIPocyiH0VzrP1ueavKNmC02eAk
+         Mt2w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774651323; x=1775256123; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IxQSSOkmxjUiH6NbONR0zkZYZXaMZrRICytjG4QVyxw=;
+        b=GaOjsv/Y75Jf5XKz+3p0wMoDV4OczFGFaqWJlIzc3FplfbQFh09pyvaAcHbn/bw9YY
+         FU4qhoBEksQiuHNr8XTLRVkYbQfhnHnSBx78QMqbrvX110pnoN2LoKQAsSLW091oFHq5
+         IjNw6UNWZzexejPZX1uyn/G8aNkrSW7jE1oA7iWHG8PXm+cKP4yT9+zFWS+UZpz3aYUD
+         7YvYSSS1moQR1jhDqD/6dylgJJ5nR62OJWuPmhdTeoKN9GPtFUFzhDpr9wFMVaDzX6vl
+         hP/r8SXmK3hwduu/9yWcs6Mgck8jrCjdF0TTY07OBqcoLnIFJdA8MRyOaWFzjgBtfoqX
+         7WRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774651323; x=1775256123;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IxQSSOkmxjUiH6NbONR0zkZYZXaMZrRICytjG4QVyxw=;
+        b=KnVfhXfL6C7q414RYYukWBj6AHj/gINwTj3N3pceywn+AZJX1cX+DqypEUXcNS9SRD
+         j2QuHv47LL14c5s9Fdu5jZzyNVquQ32M6zPNT6zCqHQ/AqyoCyWd1DkPcMafhJoMP6pD
+         jas875vhG4BFhWYAhWCB7CwxhIWFkf3r5biLqzkWfQvs10Xdr1DxV/HDUMsHvaUt87SR
+         a0Jj6XqR9G63EaORIFnk/g6dSvUeGi5i0kzzxf3iedeZ6DXRdfJVMrZZzzC3fz9a1VNx
+         8cYj+aPvgH3DJLftwy86YjYXmXOQWi0u3KNFsa/zHs8KWCSIqkLialQAANyuMIdoHANX
+         4v3Q==
+X-Gm-Message-State: AOJu0Yw7/FYEzv25yKWDFsWDP07J2tLjXNlbW+KT1g0XOO+D4OzPftyY
+	2bpFsWsOc7+msJWH0lTH1vdhB0qOzxsB8QVzWbKuGKTVVjjMcStHN8Dg7ASt3DbnyzlpULuyOyj
+	F8tkZMdvjDebxh0Ecga2w/ILk1LyY/XUij141Xrs=
+X-Gm-Gg: ATEYQzzpCQMcoCB5BtowzxOJujRE273QbQQr4fQpH3+ZJhfZbdyvL4wxDELUMVPIJrS
+	y/KzuSfvey0qbd3gT3vhR4eCpiimeVA3gy2fyyg9Nc3ZPgOqutebQoBuvt5DrfikO/wC8rIeSLP
+	wCfOZhOr+U67bbTJ4jqXH6APDxSnAXB6fuuWnsin3nIfziHRvH0B6Q31tltq9DIAbjpJ4SLAIWD
+	/cLh0Xcckr3ajj4ODv5RRWpMVq5/qqJoxm9GqOpfCvNpUUd03ZeAz4wmBjwimwNHcE5wFDsgjPK
+	MLpVK2QuTg+WxRNizEJ3nGDWZe3TyagwCWZ96X0M
+X-Received: by 2002:a05:7022:305:b0:128:bc19:813d with SMTP id
+ a92af1059eb24-12ab28d7b1amr2187393c88.27.1774651323199; Fri, 27 Mar 2026
+ 15:42:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: E3EBF60009
-X-Stat-Signature: edakuf6mazkf6scgcgokcq8k6r6fpnoi
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+cWRtqWLMqTRIXfP1Wlm7As4aJvOtt5xg=
-X-HE-Tag: 1774644418-255010
-X-HE-Meta: U2FsdGVkX19Cfx1v/FYeeKD7f+IhFDpnOKO8SmCRmsCEGGZ/ms3y5ou+dMt471PsnVfqgLwy1Gf9NDbPyITg1Jdsap9ZBBulG3bT2L4qWesHQvrbhoH+hiuEr+AK+Is0a8CXQp15QThRKb8qTp4M/mnSgp+fFZ1GN9cMMjYB9rgzCrwD0aKXEz6jGiwf/edfPhYlqUXsM0ErH9sTqxbfbqQoW1Rg74uK/ehqG69vnYpTnXPHCGR60JbLtl4OrhFfzjSELU0Zcrx5Q9B3DS1xGAbUmvvUhYRVBBknK8k4smhptT0u7XCbQDpWdpbuEEvClazGhKSBFfDW/3LjHfyq+0+I0nMh8R5x5Ej3nRiB9X1TxE3Lq2gvxMfpzPVSaLUG9yJzSyXnp/T34MaKUTVDfXwDuSZQ/UyE
+References: <20260324221326.1395799-1-atwellwea@gmail.com> <20260324221326.1395799-3-atwellwea@gmail.com>
+ <20260327150634.5df3cf4f@gandalf.local.home>
+In-Reply-To: <20260327150634.5df3cf4f@gandalf.local.home>
+From: Wesley Atwell <atwellwea@gmail.com>
+Date: Fri, 27 Mar 2026 16:41:52 -0600
+X-Gm-Features: AQROBzBNrQWL3GPFF6jl3SgQ96HMHPRZMl5piGlughJYpNYaPtjY6bTvSCloM2s
+Message-ID: <CAN=sVvzFMC1m2aGT23aRpPpoddBVP59mQBmEsQyEPKBYm3J_Vw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] tracing: Drain deferred trigger frees if kthread
+ creation fails
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	tom.zanussi@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 27 Mar 2026 16:25:08 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Yes,
 
-> Also, I noticed that there's nothing that reads the RB_MISSING as I thought
-> it might. I'll have to look into how to pass that info to the trace output.
+This kernel command line reliably reaches trigger_data_free() during boot:
 
-And when I cat /sys/kernel/tracing/instances/ptracingtest/per_cpu/cpuX/trace_pipe
+trace_event=sched:sched_switch
+trace_trigger=sched_switch.traceon,sched_switch.traceon
 
-   (where X is the failed buffer)
+On an unpatched tree, that crashes during early boot before userspace.
+The call trace goes through:
 
-It triggered an infinite loop of:
+trigger_data_free()
+__kthread_create_on_node()
+try_to_wake_up()
 
-[  206.549217] ------------[ cut here ]------------
-[  206.550907] WARNING: kernel/trace/ring_buffer.c:5751 at __rb_get_reader_page+0xa6b/0x1040, CPU#2: cat/1197
-[  206.554111] Modules linked in:
-[  206.555331] CPU: 2 UID: 0 PID: 1197 Comm: cat Tainted: G        W           7.0.0-rc4-test-00028-g7b37f48b2c57-dirty #276 PREEMPT(full) 
-[  206.559048] Tainted: [W]=WARN
-[  206.560244] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
-[  206.563212] RIP: 0010:__rb_get_reader_page+0xa6b/0x1040
-[  206.564964] Code: ff df 48 c1 ea 03 80 3c 02 00 0f 85 4a 05 00 00 48 8b 43 10 be 04 00 00 00 4c 8d 60 08 4c 89 e7 e8 9a 2d 63 00 f0 41 ff 04 24 <0f> 0b e9 36 fb ff ff e8 29 39 05 00 fb 0f 1f 44 00 00 4d 85 f6 0f
-[  206.572295] RSP: 0018:ffff888112a77938 EFLAGS: 00010006
-[  206.574095] RAX: 0000000000000001 RBX: ffff888100d6e000 RCX: 0000000000000001
-[  206.576458] RDX: 0000000000000001 RSI: 0000000000000004 RDI: ffff88810027b808
-[  206.578749] RBP: 1ffff1102254ef34 R08: ffffffff909a1556 R09: ffffed102004f701
-[  206.581020] R10: ffffed102004f702 R11: ffff88823443a000 R12: ffff88810027b808
-[  206.583312] R13: ffff888100f65f00 R14: ffff888100f65f00 R15: dffffc0000000000
-[  206.585647] FS:  00007f98e4d80780(0000) GS:ffff88829e3c2000(0000) knlGS:0000000000000000
-[  206.588246] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  206.590179] CR2: 00007f98e4d3e000 CR3: 000000012272e006 CR4: 0000000000172ef0
-[  206.592444] Call Trace:
-[  206.593518]  <TASK>
-[  206.594436]  ? __pfx___rb_get_reader_page+0x10/0x10
-[  206.596148]  ? lock_acquire+0x1b2/0x340
-[  206.597599]  rb_buffer_peek+0x37e/0x520
-[  206.598954]  ring_buffer_peek+0xe9/0x310
-[  206.601956]  peek_next_entry+0x15a/0x280
-[  206.603420]  __find_next_entry+0x39f/0x530
-[  206.604918]  ? __pfx___mutex_lock+0x10/0x10
-[  206.606474]  ? rcu_is_watching+0x15/0xb0
-[  206.616049]  ? __pfx___find_next_entry+0x10/0x10
-[  206.617741]  ? preempt_count_sub+0x10c/0x1c0
-[  206.619242]  ? __pfx_down_read+0x10/0x10
-[  206.620687]  trace_find_next_entry_inc+0x2f/0x240
-[  206.622351]  tracing_read_pipe+0x4e7/0xc60
-[  206.623852]  ? rw_verify_area+0x353/0x5f0
-[  206.625325]  vfs_read+0x171/0xb20
-[  206.626592]  ? __lock_acquire+0x487/0x2220
-[  206.628135]  ? __pfx___handle_mm_fault+0x10/0x10
-[  206.629784]  ? __pfx_vfs_read+0x10/0x10
-[  206.632696]  ? __pfx_css_rstat_updated+0x10/0x10
-[  206.634351]  ? rcu_is_watching+0x15/0xb0
-[  206.635835]  ? trace_preempt_on+0x126/0x160
-[  206.637362]  ? preempt_count_sub+0x10c/0x1c0
-[  206.638880]  ? count_memcg_events+0x10a/0x4b0
-[  206.640455]  ? find_held_lock+0x2b/0x80
-[  206.641908]  ? rcu_read_unlock+0x17/0x60
-[  206.643340]  ? lock_release+0x1ab/0x320
-[  206.644812]  ksys_read+0xff/0x200
-[  206.646127]  ? __pfx_ksys_read+0x10/0x10
-[  206.647651]  do_syscall_64+0x117/0x16c0
-[  206.649035]  ? irqentry_exit+0xd9/0x690
-[  206.650548]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  206.652331] RIP: 0033:0x7f98e4e14eb2
-[  206.653743] Code: 18 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 75 1a 83 e2 39 83 fa 08 75 12 e8 2b ff ff ff 0f 1f 00 49 89 ca 48 8b 44 24 20 0f 05 <48> 83 c4 18 c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 10 ff 74 24 18
-[  206.659364] RSP: 002b:00007ffdc0a8d930 EFLAGS: 00000202 ORIG_RAX: 0000000000000000
-[  206.663251] RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f98e4e14eb2
-[  206.665614] RDX: 0000000000040000 RSI: 00007f98e4d3f000 RDI: 0000000000000003
-[  206.668022] RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-[  206.670306] R10: 0000000000000000 R11: 0000000000000202 R12: 00007f98e4d3f000
-[  206.672624] R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000040000
-[  206.674941]  </TASK>
-[  206.675927] irq event stamp: 7898
-[  206.677154] hardirqs last  enabled at (7897): [<ffffffff90991f6f>] ring_buffer_empty_cpu+0x19f/0x2f0
-[  206.680088] hardirqs last disabled at (7898): [<ffffffff909a277d>] ring_buffer_peek+0x17d/0x310
-[  206.682881] softirqs last  enabled at (7888): [<ffffffff9056cffc>] handle_softirqs+0x5bc/0x7c0
-[  206.685710] softirqs last disabled at (7879): [<ffffffff9056d322>] __irq_exit_rcu+0x112/0x230
-[  206.688483] ---[ end trace 0000000000000000 ]---
+The stack also shows the boot-time trigger registration path:
 
-OK, that RB_MISSED_EVENTS is causing an issue. Something else we need to
-look into. The warning is that __rb_get_reader_page() is trying more than 3
-times. Thus I think it's constantly swapping the head page and the reader
-page. Something to investigate.
+event_trigger_parse()
+trigger_process_regex()
+__trace_early_add_events()
 
-So, I'm holding off pulling in these patches. I may take the first one
-though.
+With v4 applied, the same command line boots successfully. The guest log shows:
 
--- Steve
+Failed to register trigger 'traceon' on event sched_switch
+
+And /sys/kernel/tracing/events/sched/sched_switch/trigger contains:
+
+traceon:unlimited
+
+I also verified patch 1 with repeated trace_trigger= parameters:
+before the patch, only the last parameter was preserved; after the
+patch, both triggers were installed.
+
+Thanks,
+Wesley Atwell
