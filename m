@@ -1,165 +1,182 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AA1256C84;
-	Sun, 29 Mar 2026 03:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88E2269B1C;
+	Sun, 29 Mar 2026 15:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774753801; cv=none; b=j3T5vJR1k2JOROhQz8Ry1jcyDWeOXJ+tQXLvNiBic5ToeMEZPjKOST4KANz6AA8MK6KT+TAsjEiTlQ5kQv0Ynk3XpneiY75bzfdoz8Ruw+sWK1pqGwDlaT+iSC71rWsz7cl90wpwjLCMNcM7wbA3Cj1Blmx34Je/o3a+j/8S94U=
+	t=1774799393; cv=none; b=FdwCZzaGCyZmLVN3YGGeXtx739453ghEsz+q8/ZYgw5C79FwA8B3C33cWxyUul/pMbYMax4jIvaTvhLkjqBSXV48EJcD4a5/vL/ozCmBo7G2EtFoNoMyYkNQpHgWZFrpxIv8HGX4b0tllgBok4UH0JSERFZB+Fvag3Yq5h0CP1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774753801; c=relaxed/simple;
-	bh=kpBdTQ05NqadcVx9Xslb0AF8NWXyG19mgWmBT3EW/Rw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bmvKAUiCcjC2W3pEbH9Kl7yWU5oCRtCeLOZH4GZJU4N3C/q6Ipmr1CuL36Q5wD44xHl7aar2sxIDMfpb/M4e8ENxzpCXo28jzFw3dTTmH3SjwPyojVU60fqyzg2in7Buu+C7liPtTjPbw6M38DY5VUwvOOGO/C2yqU1ydQcCqa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [111.196.245.197])
-	by APP-01 (Coremail) with SMTP id qwCowADnjGj+l8hpxOd8Cw--.807S3;
-	Sun, 29 Mar 2026 11:09:51 +0800 (CST)
-From: Pengpeng Hou <pengpeng@iscas.ac.cn>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	tom.zanussi@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	pengpeng@iscas.ac.cn
-Subject: [PATCH 2/2] tracing/hist: allocate synthetic-field command buffers to fit
-Date: Sun, 29 Mar 2026 11:09:50 +0800
-Message-ID: <20260329030950.32503-2-pengpeng@iscas.ac.cn>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1774799393; c=relaxed/simple;
+	bh=SB9CKjRsH3VMmgiBzPW0LXY/M4OK+DdKzDjVT1KJl5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XgRyDOqEmSCunSmu/TCQC6iI5xuHYYu8+GyWK5rBRAMr++DfqXdzYQlTEtbVMCGiIAQgZ/3gTXwpFIDRYeY8wJT50lxiqgaTGl4rHCyJVpngBpd1/qTgcZ+ioMSsiE1emLHIWqkjZm5E611xhQwFWOZsl47EnIk28yza1ffT7zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id DF7018BA56;
+	Sun, 29 Mar 2026 15:49:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 131F434;
+	Sun, 29 Mar 2026 15:49:42 +0000 (UTC)
+Date: Sun, 29 Mar 2026 11:49:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wesley Atwell <atwellwea@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] tracing: Preserve repeated boot-time tracing
+ parameters
+Message-ID: <20260329114941.25d3541d@robin>
+In-Reply-To: <20260328201842.1782806-1-atwellwea@gmail.com>
+References: <20260324221326.1395799-2-atwellwea@gmail.com>
+	<20260328201842.1782806-1-atwellwea@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADnjGj+l8hpxOd8Cw--.807S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFWDZF18Wr1xJr1xJFyDtrb_yoW5KF17pr
-	WFywn8Ga1DJr4Igr43CF4UCryrCw4kuw1qg3Wa9wn5tr1Yyrs2krWqkry0gas5trWjvwsI
-	gF1qgr98Cws7WFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxd
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r126r
-	1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
-	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
-	0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWx
-	JVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfU8v38UUUU
-	U
-X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: nsaky5a7ycw9forrfqng44emi1uu5dqb
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 131F434
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+Ymt6c4Jv6JGgR2UwcLF7w26w9M5ok7Sw=
+X-HE-Tag: 1774799382-60872
+X-HE-Meta: U2FsdGVkX1/sDxZ2wX40YmXSsfh5ObZNu64ImHJjgOT3iOA48jiqcDoP1pz80UELUrEPHE4S1ql+uMGskGM74xg+9rN5wxPUNHNQVAIiH8RAWELBLOR2kR6t086X1UFwSoaZYu+W5kxIQ/7TMByTisTMYmPdOldqIGoXkf0zc4L+LZOaPJQEbkBUDYdZhihTPUHBDOtRgtpoHP5IvSqpwfOkijPLHg4NOk++h4Aboi36fBOrosJAb7WhXRvGuEsajsel/7Gmu9NCVVvnDZRQcWxqxgvxcyvneL4LeVs5yNO95YkHKSPUom2B6L/1MwdW/iejYV3fVSttbnhuFDWImPAUW6Qx7B2yRvpK5entURu+QToVCilV4g==
 
-The synthetic field helpers currently build temporary names and trigger
-commands in fixed MAX_FILTER_STR_VAL buffers with strcpy() and strcat().
-Long field names, key lists, or saved filters can therefore overrun
-those staging buffers while constructing the synthetic histogram
-command.
+On Sat, 28 Mar 2026 14:18:42 -0600
+Wesley Atwell <atwellwea@gmail.com> wrote:
 
-Allocate the synthetic name and command buffers to the exact size
-required by the current histogram instead of relying on fixed-size
-scratch storage.
+> Some tracing boot parameters already accept delimited value lists, but
+> their __setup() handlers keep only the last instance seen at boot.
+> Make repeated instances append to the same boot-time buffer in the
+> format each parser already consumes.
+> 
+> Use a shared trace_append_boot_param() helper for the ftrace filters,
+> trace_options, and kprobe_event boot parameters. trace_trigger=
+> tokenizes its backing storage in place, so keep a running offset and
+> only parse the newly appended chunk into bootup_triggers[].
+> 
+> This also lets Bootconfig array values work naturally when they expand
+> to repeated param=value entries.
+> 
+> Validated by booting with repeated ftrace_filter=, ftrace_notrace=,
+> ftrace_graph_filter=, ftrace_graph_notrace=, trace_options=,
+> kprobe_event=, and trace_trigger= parameters and confirming that the
+> resulting tracefs state preserved every requested entry. Before this
+> change, only the last instance from each repeated parameter survived
+> boot.
+> 
+> Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
+> ---
+> v5:
 
-Fixes: 02205a6752f2 ("tracing: Add support for 'field variables'")
-Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
----
- kernel/trace/trace_events_hist.c | 46 +++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 18 deletions(-)
+FYI, it's nice to have a daisy chain connection of previous versions. I
+suggest instead of just saying "v5:" use:
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 4a27da628a71..1883bd6d9b95 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -2964,13 +2964,10 @@ find_synthetic_field_var(struct hist_trigger_data *target_hist_data,
- 	struct hist_field *event_var;
- 	char *synthetic_name;
- 
--	synthetic_name = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
-+	synthetic_name = kasprintf(GFP_KERNEL, "synthetic_%s", field_name);
- 	if (!synthetic_name)
- 		return ERR_PTR(-ENOMEM);
- 
--	strcpy(synthetic_name, "synthetic_");
--	strcat(synthetic_name, field_name);
--
- 	event_var = find_event_var(target_hist_data, system, event_name, synthetic_name);
- 
- 	kfree(synthetic_name);
-@@ -3016,6 +3013,8 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	struct hist_field *event_var;
- 	char *saved_filter;
- 	char *cmd;
-+	size_t cmdlen;
-+	size_t off;
- 	int ret;
- 
- 	if (target_hist_data->n_field_var_hists >= SYNTH_FIELDS_MAX) {
-@@ -3053,35 +3052,46 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	if (!var_hist)
- 		return ERR_PTR(-ENOMEM);
- 
--	cmd = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
-+	saved_filter = find_trigger_filter(hist_data, file);
-+
-+	cmdlen = strlen("keys=") + strlen(":synthetic_") +
-+		 strlen(field_name) + strlen("=") + strlen(field_name) + 1;
-+	first = true;
-+	for_each_hist_key_field(i, hist_data) {
-+		key_field = hist_data->fields[i];
-+		if (!first)
-+			cmdlen++;
-+		cmdlen += strlen(key_field->field->name);
-+		first = false;
-+	}
-+
-+	if (saved_filter)
-+		cmdlen += strlen(" if ") + strlen(saved_filter);
-+
-+	cmd = kzalloc(cmdlen, GFP_KERNEL);
- 	if (!cmd) {
- 		kfree(var_hist);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
- 	/* Use the same keys as the compatible histogram */
--	strcat(cmd, "keys=");
-+	off = scnprintf(cmd, cmdlen, "keys=");
-+	first = true;
- 
- 	for_each_hist_key_field(i, hist_data) {
- 		key_field = hist_data->fields[i];
--		if (!first)
--			strcat(cmd, ",");
--		strcat(cmd, key_field->field->name);
-+		off += scnprintf(cmd + off, cmdlen - off, "%s%s",
-+				 first ? "" : ",", key_field->field->name);
- 		first = false;
- 	}
- 
- 	/* Create the synthetic field variable specification */
--	strcat(cmd, ":synthetic_");
--	strcat(cmd, field_name);
--	strcat(cmd, "=");
--	strcat(cmd, field_name);
-+	off += scnprintf(cmd + off, cmdlen - off, ":synthetic_%s=%s",
-+			 field_name, field_name);
- 
- 	/* Use the same filter as the compatible histogram */
--	saved_filter = find_trigger_filter(hist_data, file);
--	if (saved_filter) {
--		strcat(cmd, " if ");
--		strcat(cmd, saved_filter);
--	}
-+	if (saved_filter)
-+		scnprintf(cmd + off, cmdlen - off, " if %s", saved_filter);
- 
- 	var_hist->cmd = kstrdup(cmd, GFP_KERNEL);
- 	if (!var_hist->cmd) {
--- 
-2.50.1 (Apple Git-155)
+Changes since v4: https://lore.kernel.org/all/20260324221326.1395799-2-atwellwea@gmail.com/
 
+> - use int sizes in the shared append helper and trace_trigger bookkeeping
+> - keep a single bounded append path that only inserts the separator after
+>   the first entry
+> - only advance the trace_trigger buffer offset after a successful append
+> 
+>  kernel/trace/ftrace.c       | 12 ++++++++----
+>  kernel/trace/trace.c        | 29 ++++++++++++++++++++++++++++-
+>  kernel/trace/trace.h        |  2 ++
+>  kernel/trace/trace_events.c | 23 ++++++++++++++++++++---
+>  kernel/trace/trace_kprobe.c |  3 ++-
+>  5 files changed, 60 insertions(+), 9 deletions(-)
+> 
+
+> +/*
+> + * Repeated boot parameters, including Bootconfig array expansions, need
+> + * to stay in the delimiter form that the existing parser consumes.
+> + */
+> +void __init trace_append_boot_param(char *buf, const char *str, char sep,
+> +				    int size)
+> +{
+
+This is much better.
+
+> +	int len, needed, str_len;
+> +
+> +	if (!*str)
+> +		return;
+> +
+> +	len = strlen(buf);
+> +	str_len = strlen(str);
+> +	needed = len + str_len + 1;
+
+Perhaps add a comment:
+
+	/* For continuation, account for separator */
+> +	if (len)
+> +		needed++;
+> +	if (needed > size)
+> +		return;
+> +
+> +	if (len)
+> +		buf[len++] = sep;
+> +
+> +	strscpy(buf + len, str, size - len);
+> +}
+> +
+>  static int __init set_cmdline_ftrace(char *str)
+>  {
+>  	strscpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+
+
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -3679,20 +3679,37 @@ static struct boot_triggers {
+>  } bootup_triggers[MAX_BOOT_TRIGGERS];
+>  
+>  static char bootup_trigger_buf[COMMAND_LINE_SIZE];
+> +static int bootup_trigger_buf_len;
+>  static int nr_boot_triggers;
+>  
+>  static __init int setup_trace_triggers(char *str)
+>  {
+> +	char *slot;
+>  	char *trigger;
+>  	char *buf;
+>  	int i;
+>  
+> -	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
+> +	if (bootup_trigger_buf_len >= COMMAND_LINE_SIZE)
+> +		return 1;
+> +
+> +	slot = bootup_trigger_buf + bootup_trigger_buf_len;
+
+The bootup_trigger_buf is a temporary buffer for this function only. It
+works fine as is. There's no reason to modify this function.
+
+-- Steve
+
+> +
+> +	/*
+> +	 * trace_trigger= parsing tokenizes the backing storage in place.
+> +	 * Copy each repeated parameter into fresh space and only parse that
+> +	 * newly copied chunk here.
+> +	 */
+> +	trace_append_boot_param(slot, str, '\0',
+> +				COMMAND_LINE_SIZE - bootup_trigger_buf_len);
+> +	if (!*slot)
+> +		return 1;
+> +
+> +	bootup_trigger_buf_len += strlen(slot) + 1;
+>  	trace_set_ring_buffer_expanded(NULL);
+>  	disable_tracing_selftest("running event triggers");
+>  
+> -	buf = bootup_trigger_buf;
+> -	for (i = 0; i < MAX_BOOT_TRIGGERS; i++) {
+> +	buf = slot;
+> +	for (i = nr_boot_triggers; i < MAX_BOOT_TRIGGERS; i++) {
+>  		trigger = strsep(&buf, ",");
+>  		if (!trigger)
+>  			break;
