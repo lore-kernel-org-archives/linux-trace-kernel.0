@@ -1,35 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C44F313552;
-	Sun, 29 Mar 2026 16:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2195E37D12A;
+	Sun, 29 Mar 2026 18:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774801333; cv=none; b=fAwTRQhO5/VnUwOTUEPb/XqY6G17jIeJSDCRw5fIfvtmbND2pLZ4sYLX1x4AhVQJaktKsA0BJaYPQJHoyg982hq6ixjW3yURoMGdQss36T0aOcB6m7pdgwjmLN8tBTuCsmifhWhyQoLf2MadyLrFKN1grGDSG6aqEU3QPGI7l5I=
+	t=1774809547; cv=none; b=c3Dg/znWd/sxTKAlJ4YcYUPzDrRsOsS39FBCJFZx5Uylpr0x9vQAAcpIBcY6a7wvledqoavVjrpqIv1eWnOLsxoQ09kdVBsvOWTAv4+7wgTieH6CsJhrGf1LBGJ2FHi+eV9D/y5tmwEp0w5LhCkj8/Io63j/1F57x27IDQxnVJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774801333; c=relaxed/simple;
-	bh=CpBhkj/W0kz7vKawTX+Ucu4qBGtniA+jGgXJrWBmgjE=;
+	s=arc-20240116; t=1774809547; c=relaxed/simple;
+	bh=kxUOsvPOR/Kq/RPcD57qK4ySszU2EecAu+y8lwisSdg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SfUcyLzaxAvGw8Tj3bZiiQ+xKh7xECP3RDeZy3Xvp2OukRonftevUgZ5I+e6/S3ZGvbhP3CzoolaCnke0EpHKjX3dnJ3ayict5RsJ0MDNnNAYAblHckyvZpTlMfYse8SsWXOaxbM6tYDYIucSJNlrhj8TZAClm0PbvhYiI3N1yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=QmJRrDj9KslTUkQzN2S6KmNqp1hAGZAQWr9nE/rYJ2q1uwNW0kKXCwtZMTrgyNI5sYn1oBMl3w5Vl0iI7YmUV+UYh9JeCX8Lkr2vVLOZYpjxCKg9bJbeEwlruVXr0tPaPWGUoNCaxCpmDFjMEMMpV/VcXIPYhoY6Uqd1RccQvOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 3B98058FD9;
-	Sun, 29 Mar 2026 16:22:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 82D332F;
-	Sun, 29 Mar 2026 16:22:03 +0000 (UTC)
-Date: Sun, 29 Mar 2026 12:22:02 -0400
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id D31531404F4;
+	Sun, 29 Mar 2026 18:38:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 03D2520029;
+	Sun, 29 Mar 2026 18:38:55 +0000 (UTC)
+Date: Sun, 29 Mar 2026 14:39:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Wander Lairson Costa
- <wander@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] RTLA changes for v7.1
-Message-ID: <20260329122202.65a8b575@robin>
-In-Reply-To: <20260327150237.405973-1-tglozar@redhat.com>
-References: <20260327150237.405973-1-tglozar@redhat.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+To: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing/hist: bound full field-name construction
+Message-ID: <20260329143949.35659b68@gandalf.local.home>
+In-Reply-To: <20260329030950.32503-1-pengpeng@iscas.ac.cn>
+References: <20260329030950.32503-1-pengpeng@iscas.ac.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,79 +38,82 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ttbyph71zat1osz7omxd1jrog8mfc7g1
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 82D332F
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 03D2520029
+X-Stat-Signature: cgwtu6j7yfgcb7jpwahzde7udspx4wq1
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+6ZB5aiIstgnHT1mkbwunl7EVygtSACw8=
-X-HE-Tag: 1774801323-940897
-X-HE-Meta: U2FsdGVkX18pZN4YAl9vizmx6QL6pTAIWTuuNHWePIHTCuLwTCHaqAhz61vLX63NYEVrm8rQ+URZu/YZBZy/0r/xQjNwqJq4/syYFpHPmYKHlSzYsyx+JMlRK5E6MltnuQK4k5Q7iUrE1+s2mFq+fKItMMQimYFWbnprXhDleTtV1a143K/JnICTVinau0/HlkyKXUVZU0hjXVJLvkQ9KvX0U7TOHCGH4sh0XqsvW+UqFwAehfuWCtJkSr4NAoqjJOYF6Z+A41LtR/FC1tJJrTHd2/P1rCSP18vMQsXvQwRPxj+dVnbM2jFg7w0xFrA1nZZXt3DVi80tixaKHmpIlfycjmbZNYNzuQzp29W6FCEXNwzY+5efsw==
+X-Session-ID: U2FsdGVkX1+IZOtreKI8fx1Km0abmjs/QaWg8Ff440Q=
+X-HE-Tag: 1774809535-216554
+X-HE-Meta: U2FsdGVkX1/oqtA3OhOEuzPFYul/79FHNyrVJmG9hrXK2IMAEB4E7RwyanSKMiG/OSGSxOU4cpdwk92vYQcCEegZcHWLurnIBerd1XGnayUIk1/QJH/tqlLwyY5v+rhVePpT4/XU/gFyy4rj/Jo0WdMPUr01Da4VXsDIyOWPF9AZbB+79X9UmgTsGI3rrqhFnnmD6BuvEgH83tQeO2Z5welhuO+K4jHmurfWiFdeRoY4oKNbDQGuIEYpfjiGG/82WbulNzT6v0xnBRN9C28T4iLEgflDrPmH+LoLCj4XVg4PVTGD8DlgSy1iol5hdEn6
 
-On Fri, 27 Mar 2026 16:02:37 +0100
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Sun, 29 Mar 2026 11:09:49 +0800
+Pengpeng Hou <pengpeng@iscas.ac.cn> wrote:
 
-> Steven,
+> hist_field_name() builds a fully qualified synthetic field name in a
+> fixed MAX_FILTER_STR_VAL buffer using repeated strcat() calls. Long
+> system, event, and field names can therefore overflow the static staging
+> buffer.
 > 
-> please pull the following changes for RTLA (more info in tag description).
+> Build the qualified name with snprintf() and fall back to the plain
+> field name if it does not fit.
 
-I can pull this but I just noticed that starting with 7.0-rc1, it fails
-to build without libbpf:
+The fallback breaks 
+> 
+> Fixes: 067fe038e70f ("tracing: Add variable reference handling to hist triggers")
 
-Auto-detecting system features:
-...                           libtraceevent: [ on  ]
-...                              libtracefs: [ on  ]
-...                             libcpupower: [ OFF ]
-...                                  libbpf: [ OFF ]
-...                         clang-bpf-co-re: [ on  ]
-...                       bpftool-skeletons: [ OFF ]
+Do you have any examples where it actually does overflow or is this just theoretical?
 
-libcpupower is missing, building without --deepest-idle-state support.
-Please install libcpupower-dev/kernel-tools-libs-devel
-libbpf is missing, building without BPF skeleton support.
-Please install libbpf-dev/libbpf-devel
-bpftool is missing or not supporting skeletons, building without BPF skeleton support.
-Please install bpftool
-make -f /work/git/linux-trace.git/tools/build/Makefile.build dir=. obj=rtla
-make[1]: Entering directory '/work/git/linux-trace.git/tools/tracing/rtla'
-make[2]: Entering directory '/work/git/linux-trace.git/tools/tracing/rtla'
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/trace.o
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/utils.o
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/actions.o
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/common.o
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/osnoise.o
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/osnoise_top.o
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/osnoise_hist.o
-  CC      /work/git/linux-trace.git/tools/tracing/rtla/src/timerlat.o
-In file included from src/timerlat.c:18:
-src/timerlat_bpf.h:15:10: fatal error: bpf/libbpf.h: No such file or directory
-   15 | #include <bpf/libbpf.h>
-      |          ^~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [/work/git/linux-trace.git/tools/build/Makefile.build:94: /work/git/linux-trace.git/tools/tracing/rtla/src/timerlat.o] Error 1
-make[2]: Leaving directory '/work/git/linux-trace.git/tools/tracing/rtla'
-make[1]: *** [/work/git/linux-trace.git/tools/build/Makefile.build:156: src] Error 2
-make[1]: Leaving directory '/work/git/linux-trace.git/tools/tracing/rtla'
-make: *** [Makefile:104: /work/git/linux-trace.git/tools/tracing/rtla/rtla-in.o] Error 2
+If it's just theoretical, it does not get a "Fixes" tag.
 
-That should probably be fixed on top of v7.0-rcX so that it is not
-broken in 7.0.
+Hmm, but actually I don't see it resetting full_name to a '\0' so I can see
+this concatenating on top of a previous value. THAT would need fixing and
+require a fixes tag. An example of triggering the overflow would also be
+required.
+
+> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+> ---
+>  kernel/trace/trace_events_hist.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 73ea180cad55..4a27da628a71 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1362,12 +1362,12 @@ static const char *hist_field_name(struct hist_field *field,
+>  		if (field->system) {
+>  			static char full_name[MAX_FILTER_STR_VAL];
+>  
+> -			strcat(full_name, field->system);
+> -			strcat(full_name, ".");
+> -			strcat(full_name, field->event_name);
+> -			strcat(full_name, ".");
+> -			strcat(full_name, field->name);
+> -			field_name = full_name;
+> +			if (snprintf(full_name, sizeof(full_name), "%s.%s.%s",
+> +				     field->system, field->event_name,
+> +				     field->name) < sizeof(full_name))
+
+Ug, please do not use a horribly looking if conditional. And it should most
+definitely error on overflow: Break it up:
+
+		if (field->system) {
+  			static char full_name[MAX_FILTER_STR_VAL];
+			int len;
+
+			len = snprintf(full_name, sizeof(full_name), "%s.%s.%s",
+				       field->system, field->event_name,
+				       field->name);
+
+			if (len >= size(full_name))
+				return NULL;
+
+			field_name = full_name;
+
+> +				field_name = full_name;
+> +			else
+> +				field_name = field->name;
+>  		} else
+>  			field_name = field->name;
+>  	} else if (field->flags & HIST_FIELD_FL_TIMESTAMP)
 
 -- Steve
-
-
-> 
-> Thanks,
-> Tomas
-> 
-> The following changes since commit 11439c4635edd669ae435eec308f4ab8a0804808:
-> 
->   Linux 7.0-rc2 (2026-03-01 15:39:31 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git tags/rtla-v7.1
-> 
-> for you to fetch changes up to 82374995b63d2de21414163828a32d52610dcaf2:
-> 
->   Documentation/rtla: Document SIGINT behavior (2026-03-27 10:58:30 +0100)
-
