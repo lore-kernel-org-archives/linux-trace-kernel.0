@@ -1,58 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969F03BD255
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Mar 2026 11:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C2C3B4E9B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Mar 2026 11:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774869034; cv=none; b=KB7u/LMN5qk4JvFASrrKJiedFm/kTXtHeuOnHbeBEI4m3hr0j1FIuSMn5knJnwVZzN3fn8RyC9UgU9OrPhnRrpCiIE7f1DBkHxC/dFYpNfIKtQ6unwKWNqIzlVptaQdFzM2OHLZSlpLjyTx44n5FI43VZPsFMjhd2Z/0/McNJyA=
+	t=1774869038; cv=none; b=XGLB1yha1FrVfXU/x9xn4AMv0FdGPlNVqnYMiNBfCoPgXOOeoleLljdR/+jJJR8zlNHayWrSww6rLA1prm2f4ooiBBvasCaEJt5Jo2n0oaOfaaly6x7uYDKNwuT/nEqxhptunqe0S+mhxxMz3Lnh3MVQ3zeR5jLg1ldkoolpCMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774869034; c=relaxed/simple;
-	bh=Y/bpKzRh4Qy6P4yBCv0qhzfzffuPY7rUj/H9iaNBXbU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=PxYblm3G5282dZKL3LXN2IRouZfdIZ50uRvTJh+yJJnX7mDCeTmn1IsLHAazTBIKTA3uy9fdLrqIp+5ArmgfHxEequEh+U97GmmlgLjH8V2N0RMemXBN+pEW8sl5nUe8bfQqp5iEnb5zz688uaIySXXqyt3qYjetyGm9wJzeRNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eTqg5r06; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1774869038; c=relaxed/simple;
+	bh=kM3hXRnRsUv4yNxRRJsoSnjipNdcG4qqbzrLFjxjznM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=tlKj9SYoeUGkeoL47d4GFPmqkGCb7p1uxRgzHhOQR0X2mGU9k6fo02b0fhAq4qKTNz7eU9t9fo0uC7AvZGTMJQ/rY6J1R101yKaTJAELfl3EbbsNLnDTcToY0w0pHBhtpurV9kxxn3nharT1pDtNDEQGUn9wGoAj4AWcIjQD2V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CyIvFXAW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eTqg5r06"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CyIvFXAW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774869028;
+	s=mimecast20190719; t=1774869030;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=boAMR9iuRYjcMSAEKZLROwnbdNicDsA8/VVNM6E/RWg=;
-	b=eTqg5r06L/L5FpO6pDdcKGM2kW13ynz7nHDlFVA9U3t3NV4BPNHcCRn1IKNf8KdiREHSCs
-	0uj1hC3QBdaC7i/ziRMrQsYpTmugW6gTGmUUva9DbCAwO8BHeSei9aNo9fHlRf4drrVPlz
-	ugV6bJPc/U6cu487s5itTkxY26anwXQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EjLQ+EjJFFYNkkq/pEoKLuQJh/PAAhlE89yEyiSJStE=;
+	b=CyIvFXAWWi24g/a8/xFU/jtTsWTKfK35nj2t0q91/0dFiWhrmiYdcPIsgt3no2aJe4GwAx
+	pMivUmBWm2B3mUmNsNnwMXYEyt4Dn+go7GfKTps7sky1pwkSjPw/mce2zaGL1fICs7LBGc
+	cP69u2EwpvXsehzq+Jkx5vX/x5V/0iY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-390-IWygTljTOE-gQ4sC8hr8FQ-1; Mon,
- 30 Mar 2026 07:10:23 -0400
-X-MC-Unique: IWygTljTOE-gQ4sC8hr8FQ-1
-X-Mimecast-MFC-AGG-ID: IWygTljTOE-gQ4sC8hr8FQ_1774869022
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-9pLDKHXtOZC_SssQ5IVALQ-1; Mon,
+ 30 Mar 2026 07:10:28 -0400
+X-MC-Unique: 9pLDKHXtOZC_SssQ5IVALQ-1
+X-Mimecast-MFC-AGG-ID: 9pLDKHXtOZC_SssQ5IVALQ_1774869027
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9DB041956056;
-	Mon, 30 Mar 2026 11:10:22 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2491C18005B8;
+	Mon, 30 Mar 2026 11:10:27 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.44.33.13])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E257E30001A1;
-	Mon, 30 Mar 2026 11:10:18 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9BCD830001A2;
+	Mon, 30 Mar 2026 11:10:23 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Nam Cao <namcao@linutronix.de>,
-	Juri Lelli <jlelli@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v8 00/12] rv: Add Hybrid Automata monitor type, per-object and deadline monitors
-Date: Mon, 30 Mar 2026 13:09:58 +0200
-Message-ID: <20260330111010.153663-1-gmonaco@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: [PATCH v8 01/12] rv: Unify DA event handling functions across monitor types
+Date: Mon, 30 Mar 2026 13:09:59 +0200
+Message-ID: <20260330111010.153663-2-gmonaco@redhat.com>
+In-Reply-To: <20260330111010.153663-1-gmonaco@redhat.com>
+References: <20260330111010.153663-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,145 +64,416 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: VYKHDPm5N69YaQYvV2GDz2iT-jF-XRnhycKc4iaPGxk_1774869022
+X-Mimecast-MFC-PROC-ID: -WYzuROZKgygaWIox_DTirLYNBFkUwcnvLIX1xGpbXI_1774869027
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-This series contains several related changes, the main areas are:
+The DA event handling functions are mostly duplicated because the
+per-task monitors need to propagate the task struct while others do not.
 
-* hybrid automata
+Unify the functions, handle the difference by always passing an
+identifier which is the task's pid for per-task monitors but is ignored
+for the other types. Only keep the actual tracepoint calling separated.
 
-    Hybrid automata are an extension of deterministic automata where each
-    state transition is validating a constraint on a finite number of
-    environment variables.
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ include/rv/da_monitor.h | 303 +++++++++++++++++-----------------------
+ 1 file changed, 132 insertions(+), 171 deletions(-)
 
-    Hybrid automata can be used to implement timed automata, where the
-    environment variables are clocks.
-
-* per-object monitors
-
-    Define the generic per-object monitor allow RV monitors on any kind
-    of object where the user can specify how to get an id (e.g. pid for
-    tasks) and the data type for the monitor_target (e.g. struct
-    task_struct * for tasks).
-
-    The monitor storage (e.g. the rv monitor, pointer to the target, etc.)
-    is stored in a hash table indexed by id.
-
-* deadline monitors collection
-
-    Add the nomiss monitor to validate timing aspects of the deadline
-    scheduler, as it works for tasks and servers, it's inclusion
-    requires also per-object monitors (for dl entities).
-
-Note: this submission removed all patches depending on enqueue/dequeue
-tracepoints. The current series is ready for inclusion while the other
-patches will be submitted separately.
-
-The entire series can also be found on:
-
-  git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv_hybrid_automata
-
-Changes since V7:
-* Fix wrong title in monitor_deadline docs
-* Warn if kallsyms lookup fails
-* Minor improvement in hybrid automata docs
-* Use u8 instead of uint8_t in deadline tracepoints and models
-* Drop enqueue/dequeue tracepoints and dependent patches from the
-  series, will submit separately
-
-[1] - https://lore.kernel.org/lkml/20260310105627.332044-1-gmonaco@redhat.com
-
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-To: Juri Lelli <jlelli@redhat.com>
-Cc: Tomas Glozar <tglozar@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-
-Gabriele Monaco (12):
-  rv: Unify DA event handling functions across monitor types
-  rv: Add Hybrid Automata monitor type
-  verification/rvgen: Allow spaces in and events strings
-  verification/rvgen: Add support for Hybrid Automata
-  Documentation/rv: Add documentation about hybrid automata
-  rv: Add sample hybrid monitor stall
-  rv: Convert the opid monitor to a hybrid automaton
-  rv: Add support for per-object monitors in DA/HA
-  verification/rvgen: Add support for per-obj monitors
-  sched: Add deadline tracepoints
-  sched/deadline: Move some utility functions to deadline.h
-  rv: Add nomiss deadline monitor
-
- Documentation/tools/rv/index.rst              |   1 +
- Documentation/tools/rv/rv-mon-stall.rst       |  44 ++
- .../trace/rv/deterministic_automata.rst       |   2 +-
- Documentation/trace/rv/hybrid_automata.rst    | 341 ++++++++++
- Documentation/trace/rv/index.rst              |   3 +
- Documentation/trace/rv/monitor_deadline.rst   |  84 +++
- Documentation/trace/rv/monitor_sched.rst      |  62 +-
- Documentation/trace/rv/monitor_stall.rst      |  43 ++
- Documentation/trace/rv/monitor_synthesis.rst  | 117 +++-
- include/linux/rv.h                            |  39 ++
- include/linux/sched/deadline.h                |  27 +
- include/rv/da_monitor.h                       | 644 +++++++++++++-----
- include/rv/ha_monitor.h                       | 478 +++++++++++++
- include/trace/events/sched.h                  |  26 +
- kernel/sched/core.c                           |   5 +
- kernel/sched/deadline.c                       |  51 +-
- kernel/trace/rv/Kconfig                       |  18 +
- kernel/trace/rv/Makefile                      |   3 +
- kernel/trace/rv/monitors/deadline/Kconfig     |  10 +
- kernel/trace/rv/monitors/deadline/deadline.c  |  44 ++
- kernel/trace/rv/monitors/deadline/deadline.h  | 202 ++++++
- kernel/trace/rv/monitors/nomiss/Kconfig       |  15 +
- kernel/trace/rv/monitors/nomiss/nomiss.c      | 293 ++++++++
- kernel/trace/rv/monitors/nomiss/nomiss.h      | 123 ++++
- .../trace/rv/monitors/nomiss/nomiss_trace.h   |  19 +
- kernel/trace/rv/monitors/opid/Kconfig         |  11 +-
- kernel/trace/rv/monitors/opid/opid.c          | 111 +--
- kernel/trace/rv/monitors/opid/opid.h          |  86 +--
- kernel/trace/rv/monitors/opid/opid_trace.h    |   4 +
- kernel/trace/rv/monitors/stall/Kconfig        |  13 +
- kernel/trace/rv/monitors/stall/stall.c        | 150 ++++
- kernel/trace/rv/monitors/stall/stall.h        |  81 +++
- kernel/trace/rv/monitors/stall/stall_trace.h  |  19 +
- kernel/trace/rv/rv_trace.h                    |  67 +-
- tools/verification/models/deadline/nomiss.dot |  41 ++
- tools/verification/models/sched/opid.dot      |  36 +-
- tools/verification/models/stall.dot           |  22 +
- tools/verification/rvgen/__main__.py          |   8 +-
- tools/verification/rvgen/rvgen/automata.py    | 151 +++-
- tools/verification/rvgen/rvgen/dot2c.py       |  47 ++
- tools/verification/rvgen/rvgen/dot2k.py       | 489 ++++++++++++-
- tools/verification/rvgen/rvgen/generator.py   |   4 +-
- .../rvgen/rvgen/templates/dot2k/main.c        |   2 +-
- .../rvgen/templates/dot2k/trace_hybrid.h      |  16 +
- 44 files changed, 3605 insertions(+), 447 deletions(-)
- create mode 100644 Documentation/tools/rv/rv-mon-stall.rst
- create mode 100644 Documentation/trace/rv/hybrid_automata.rst
- create mode 100644 Documentation/trace/rv/monitor_deadline.rst
- create mode 100644 Documentation/trace/rv/monitor_stall.rst
- create mode 100644 include/rv/ha_monitor.h
- create mode 100644 kernel/trace/rv/monitors/deadline/Kconfig
- create mode 100644 kernel/trace/rv/monitors/deadline/deadline.c
- create mode 100644 kernel/trace/rv/monitors/deadline/deadline.h
- create mode 100644 kernel/trace/rv/monitors/nomiss/Kconfig
- create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss.c
- create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss.h
- create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss_trace.h
- create mode 100644 kernel/trace/rv/monitors/stall/Kconfig
- create mode 100644 kernel/trace/rv/monitors/stall/stall.c
- create mode 100644 kernel/trace/rv/monitors/stall/stall.h
- create mode 100644 kernel/trace/rv/monitors/stall/stall_trace.h
- create mode 100644 tools/verification/models/deadline/nomiss.dot
- create mode 100644 tools/verification/models/stall.dot
- create mode 100644 tools/verification/rvgen/rvgen/templates/dot2k/trace_hybrid.h
-
-
-base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index 7511f5464c48..89a0b81d4b3e 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -28,6 +28,13 @@
+ 
+ static struct rv_monitor rv_this;
+ 
++/*
++ * Type for the target id, default to int but can be overridden.
++ */
++#ifndef da_id_type
++#define da_id_type int
++#endif
++
+ static void react(enum states curr_state, enum events event)
+ {
+ 	rv_react(&rv_this,
+@@ -97,90 +104,6 @@ static inline bool da_monitor_handling_event(struct da_monitor *da_mon)
+ 	return 1;
+ }
+ 
+-#if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
+-/*
+- * Event handler for implicit monitors. Implicit monitor is the one which the
+- * handler does not need to specify which da_monitor to manipulate. Examples
+- * of implicit monitor are the per_cpu or the global ones.
+- *
+- * Retry in case there is a race between getting and setting the next state,
+- * warn and reset the monitor if it runs out of retries. The monitor should be
+- * able to handle various orders.
+- */
+-
+-static inline bool da_event(struct da_monitor *da_mon, enum events event)
+-{
+-	enum states curr_state, next_state;
+-
+-	curr_state = READ_ONCE(da_mon->curr_state);
+-	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
+-		next_state = model_get_next_state(curr_state, event);
+-		if (next_state == INVALID_STATE) {
+-			react(curr_state, event);
+-			CONCATENATE(trace_error_, MONITOR_NAME)(
+-				    model_get_state_name(curr_state),
+-				    model_get_event_name(event));
+-			return false;
+-		}
+-		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {
+-			CONCATENATE(trace_event_, MONITOR_NAME)(
+-				    model_get_state_name(curr_state),
+-				    model_get_event_name(event),
+-				    model_get_state_name(next_state),
+-				    model_is_final_state(next_state));
+-			return true;
+-		}
+-	}
+-
+-	trace_rv_retries_error(__stringify(MONITOR_NAME), model_get_event_name(event));
+-	pr_warn("rv: " __stringify(MAX_DA_RETRY_RACING_EVENTS)
+-		" retries reached for event %s, resetting monitor %s",
+-		model_get_event_name(event), __stringify(MONITOR_NAME));
+-	return false;
+-}
+-
+-#elif RV_MON_TYPE == RV_MON_PER_TASK
+-/*
+- * Event handler for per_task monitors.
+- *
+- * Retry in case there is a race between getting and setting the next state,
+- * warn and reset the monitor if it runs out of retries. The monitor should be
+- * able to handle various orders.
+- */
+-
+-static inline bool da_event(struct da_monitor *da_mon, struct task_struct *tsk,
+-			    enum events event)
+-{
+-	enum states curr_state, next_state;
+-
+-	curr_state = READ_ONCE(da_mon->curr_state);
+-	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
+-		next_state = model_get_next_state(curr_state, event);
+-		if (next_state == INVALID_STATE) {
+-			react(curr_state, event);
+-			CONCATENATE(trace_error_, MONITOR_NAME)(tsk->pid,
+-				    model_get_state_name(curr_state),
+-				    model_get_event_name(event));
+-			return false;
+-		}
+-		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {
+-			CONCATENATE(trace_event_, MONITOR_NAME)(tsk->pid,
+-				    model_get_state_name(curr_state),
+-				    model_get_event_name(event),
+-				    model_get_state_name(next_state),
+-				    model_is_final_state(next_state));
+-			return true;
+-		}
+-	}
+-
+-	trace_rv_retries_error(__stringify(MONITOR_NAME), model_get_event_name(event));
+-	pr_warn("rv: " __stringify(MAX_DA_RETRY_RACING_EVENTS)
+-		" retries reached for event %s, resetting monitor %s",
+-		model_get_event_name(event), __stringify(MONITOR_NAME));
+-	return false;
+-}
+-#endif /* RV_MON_TYPE */
+-
+ #if RV_MON_TYPE == RV_MON_GLOBAL
+ /*
+  * Functions to define, init and get a global monitor.
+@@ -335,115 +258,179 @@ static inline void da_monitor_destroy(void)
+ 
+ #if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
+ /*
+- * Handle event for implicit monitor: da_get_monitor() will figure out
+- * the monitor.
++ * Trace events for implicit monitors. Implicit monitor is the one which the
++ * handler does not need to specify which da_monitor to manipulate. Examples
++ * of implicit monitor are the per_cpu or the global ones.
+  */
+ 
+-static inline void __da_handle_event(struct da_monitor *da_mon,
+-				     enum events event)
++static inline void da_trace_event(struct da_monitor *da_mon,
++				  char *curr_state, char *event,
++				  char *next_state, bool is_final,
++				  da_id_type id)
+ {
+-	bool retval;
++	CONCATENATE(trace_event_, MONITOR_NAME)(curr_state, event, next_state,
++						is_final);
++}
+ 
+-	retval = da_event(da_mon, event);
+-	if (!retval)
+-		da_monitor_reset(da_mon);
++static inline void da_trace_error(struct da_monitor *da_mon,
++				  char *curr_state, char *event,
++				  da_id_type id)
++{
++	CONCATENATE(trace_error_, MONITOR_NAME)(curr_state, event);
+ }
+ 
++#elif RV_MON_TYPE == RV_MON_PER_TASK
+ /*
+- * da_handle_event - handle an event
++ * Trace events for per_task monitors, report the PID of the task.
+  */
+-static inline void da_handle_event(enum events event)
+-{
+-	struct da_monitor *da_mon = da_get_monitor();
+-	bool retval;
+ 
+-	retval = da_monitor_handling_event(da_mon);
+-	if (!retval)
+-		return;
++static inline void da_trace_event(struct da_monitor *da_mon,
++				  char *curr_state, char *event,
++				  char *next_state, bool is_final,
++				  da_id_type id)
++{
++	CONCATENATE(trace_event_, MONITOR_NAME)(id, curr_state, event,
++						next_state, is_final);
++}
+ 
+-	__da_handle_event(da_mon, event);
++static inline void da_trace_error(struct da_monitor *da_mon,
++				  char *curr_state, char *event,
++				  da_id_type id)
++{
++	CONCATENATE(trace_error_, MONITOR_NAME)(id, curr_state, event);
+ }
++#endif /* RV_MON_TYPE */
+ 
+ /*
+- * da_handle_start_event - start monitoring or handle event
+- *
+- * This function is used to notify the monitor that the system is returning
+- * to the initial state, so the monitor can start monitoring in the next event.
+- * Thus:
++ * da_event - handle an event for the da_mon
+  *
+- * If the monitor already started, handle the event.
+- * If the monitor did not start yet, start the monitor but skip the event.
++ * This function is valid for both implicit and id monitors.
++ * Retry in case there is a race between getting and setting the next state,
++ * warn and reset the monitor if it runs out of retries. The monitor should be
++ * able to handle various orders.
+  */
+-static inline bool da_handle_start_event(enum events event)
++static inline bool da_event(struct da_monitor *da_mon, enum events event, da_id_type id)
+ {
+-	struct da_monitor *da_mon;
++	enum states curr_state, next_state;
+ 
+-	if (!da_monitor_enabled())
+-		return 0;
++	curr_state = READ_ONCE(da_mon->curr_state);
++	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
++		next_state = model_get_next_state(curr_state, event);
++		if (next_state == INVALID_STATE) {
++			react(curr_state, event);
++			da_trace_error(da_mon, model_get_state_name(curr_state),
++				       model_get_event_name(event), id);
++			return false;
++		}
++		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {
++			da_trace_event(da_mon, model_get_state_name(curr_state),
++				       model_get_event_name(event),
++				       model_get_state_name(next_state),
++				       model_is_final_state(next_state), id);
++			return true;
++		}
++	}
++
++	trace_rv_retries_error(__stringify(MONITOR_NAME), model_get_event_name(event));
++	pr_warn("rv: " __stringify(MAX_DA_RETRY_RACING_EVENTS)
++		" retries reached for event %s, resetting monitor %s",
++		model_get_event_name(event), __stringify(MONITOR_NAME));
++	return false;
++}
+ 
+-	da_mon = da_get_monitor();
++static inline void __da_handle_event_common(struct da_monitor *da_mon,
++					    enum events event, da_id_type id)
++{
++	if (!da_event(da_mon, event, id))
++		da_monitor_reset(da_mon);
++}
+ 
++static inline void __da_handle_event(struct da_monitor *da_mon,
++				     enum events event, da_id_type id)
++{
++	if (da_monitor_handling_event(da_mon))
++		__da_handle_event_common(da_mon, event, id);
++}
++
++static inline bool __da_handle_start_event(struct da_monitor *da_mon,
++					   enum events event, da_id_type id)
++{
++	if (!da_monitor_enabled())
++		return 0;
+ 	if (unlikely(!da_monitoring(da_mon))) {
+ 		da_monitor_start(da_mon);
+ 		return 0;
+ 	}
+ 
+-	__da_handle_event(da_mon, event);
++	__da_handle_event_common(da_mon, event, id);
+ 
+ 	return 1;
+ }
+ 
+-/*
+- * da_handle_start_run_event - start monitoring and handle event
+- *
+- * This function is used to notify the monitor that the system is in the
+- * initial state, so the monitor can start monitoring and handling event.
+- */
+-static inline bool da_handle_start_run_event(enum events event)
++static inline bool __da_handle_start_run_event(struct da_monitor *da_mon,
++					       enum events event, da_id_type id)
+ {
+-	struct da_monitor *da_mon;
+-
+ 	if (!da_monitor_enabled())
+ 		return 0;
+-
+-	da_mon = da_get_monitor();
+-
+ 	if (unlikely(!da_monitoring(da_mon)))
+ 		da_monitor_start(da_mon);
+ 
+-	__da_handle_event(da_mon, event);
++	__da_handle_event_common(da_mon, event, id);
+ 
+ 	return 1;
+ }
+ 
+-#elif RV_MON_TYPE == RV_MON_PER_TASK
++#if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
+ /*
+- * Handle event for per task.
++ * Handle event for implicit monitor: da_get_monitor() will figure out
++ * the monitor.
+  */
+ 
+-static inline void __da_handle_event(struct da_monitor *da_mon,
+-				     struct task_struct *tsk, enum events event)
++/*
++ * da_handle_event - handle an event
++ */
++static inline void da_handle_event(enum events event)
+ {
+-	bool retval;
++	__da_handle_event(da_get_monitor(), event, 0);
++}
+ 
+-	retval = da_event(da_mon, tsk, event);
+-	if (!retval)
+-		da_monitor_reset(da_mon);
++/*
++ * da_handle_start_event - start monitoring or handle event
++ *
++ * This function is used to notify the monitor that the system is returning
++ * to the initial state, so the monitor can start monitoring in the next event.
++ * Thus:
++ *
++ * If the monitor already started, handle the event.
++ * If the monitor did not start yet, start the monitor but skip the event.
++ */
++static inline bool da_handle_start_event(enum events event)
++{
++	return __da_handle_start_event(da_get_monitor(), event, 0);
+ }
+ 
+ /*
+- * da_handle_event - handle an event
++ * da_handle_start_run_event - start monitoring and handle event
++ *
++ * This function is used to notify the monitor that the system is in the
++ * initial state, so the monitor can start monitoring and handling event.
+  */
+-static inline void da_handle_event(struct task_struct *tsk, enum events event)
++static inline bool da_handle_start_run_event(enum events event)
+ {
+-	struct da_monitor *da_mon = da_get_monitor(tsk);
+-	bool retval;
++	return __da_handle_start_run_event(da_get_monitor(), event, 0);
++}
+ 
+-	retval = da_monitor_handling_event(da_mon);
+-	if (!retval)
+-		return;
++#elif RV_MON_TYPE == RV_MON_PER_TASK
++/*
++ * Handle event for per task.
++ */
+ 
+-	__da_handle_event(da_mon, tsk, event);
++/*
++ * da_handle_event - handle an event
++ */
++static inline void da_handle_event(struct task_struct *tsk, enum events event)
++{
++	__da_handle_event(da_get_monitor(tsk), event, tsk->pid);
+ }
+ 
+ /*
+@@ -459,21 +446,7 @@ static inline void da_handle_event(struct task_struct *tsk, enum events event)
+ static inline bool da_handle_start_event(struct task_struct *tsk,
+ 					 enum events event)
+ {
+-	struct da_monitor *da_mon;
+-
+-	if (!da_monitor_enabled())
+-		return 0;
+-
+-	da_mon = da_get_monitor(tsk);
+-
+-	if (unlikely(!da_monitoring(da_mon))) {
+-		da_monitor_start(da_mon);
+-		return 0;
+-	}
+-
+-	__da_handle_event(da_mon, tsk, event);
+-
+-	return 1;
++	return __da_handle_start_event(da_get_monitor(tsk), event, tsk->pid);
+ }
+ 
+ /*
+@@ -485,19 +458,7 @@ static inline bool da_handle_start_event(struct task_struct *tsk,
+ static inline bool da_handle_start_run_event(struct task_struct *tsk,
+ 					     enum events event)
+ {
+-	struct da_monitor *da_mon;
+-
+-	if (!da_monitor_enabled())
+-		return 0;
+-
+-	da_mon = da_get_monitor(tsk);
+-
+-	if (unlikely(!da_monitoring(da_mon)))
+-		da_monitor_start(da_mon);
+-
+-	__da_handle_event(da_mon, tsk, event);
+-
+-	return 1;
++	return __da_handle_start_run_event(da_get_monitor(tsk), event, tsk->pid);
+ }
+ #endif /* RV_MON_TYPE */
+ 
 -- 
 2.53.0
 
