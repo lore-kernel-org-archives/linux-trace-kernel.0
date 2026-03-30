@@ -1,39 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81527377015;
-	Mon, 30 Mar 2026 16:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF99199D8;
+	Mon, 30 Mar 2026 16:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774886665; cv=none; b=gVpdeCmzDgr1cFG0kwSKtzlgbYeaO+UpJjd7R0WkqgnsUe3UzI0Vubr+g++3VInqjoKTzMUgBo+RRb/NAbSxMsU11Aimf1TP41ZYlvk1g/Tj+cFN/55InTT3IRAFIBiHabH5B/7KgcKnh95PmAEEKpZslZw1FUO2kzEKkwjUU/w=
+	t=1774888618; cv=none; b=Vx1GIkvBq3GJDLFaaZ18029ZXucPlWVLc/SvSGPzwYXE9m9TKPRbu18DC967nS6WVYX0VkgacqsX9ILvYb8pupH5q7w7xB59vMy9ek+/L98vMLVscZFWMtxLOOy/Oz21ytNhC7/tWyiqMKTtOzTKw3UULogKWXALIEIAMIpzXWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774886665; c=relaxed/simple;
-	bh=ELf21Y5f7587GI8SKKaMOH/3cFn9GWaccoGl2rrnoac=;
+	s=arc-20240116; t=1774888618; c=relaxed/simple;
+	bh=gLoP6d9cayxGFFF7aUy5nxWkAuv9afR7MDJEtIKf7II=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tpPWqwDoK0qMQCPwQbeIBdET0IAvQFgQvI8yPivSItuQLYyVHQdtU8AWdBfxJHbFTUgZsU/OR02Y33uxvVkqGOEl8yPWc4FVbny5QtBF19VAaUs67VLwu1bvFONM0l0hel5CkWWvu0ssJ4nxWb8nydXDp1ex9/3gHVNzZcrwtP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=kIshkhdTmgs2fcSPxHxlPOdRJFys9UwjIcmH0X3x/8cMKS9/Zazi3DagGWhEKkdeEiFVDHogYnKiwurfaU4wud+94nwfwvQ6K5ZBOjcD5cSXYxhZ9Mr+32SIH2KuzNcE2L6KIX4bGum0Z4sNJxiRikQxJ/bm/70VsaWe7uFNAFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id C1D2E59133;
-	Mon, 30 Mar 2026 16:04:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id A68C818;
-	Mon, 30 Mar 2026 16:04:20 +0000 (UTC)
-Date: Mon, 30 Mar 2026 12:05:16 -0400
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 23720C21A2;
+	Mon, 30 Mar 2026 16:36:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 362F120031;
+	Mon, 30 Mar 2026 16:36:48 +0000 (UTC)
+Date: Mon, 30 Mar 2026 12:37:43 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "kernel test robot" <lkp@intel.com>, LKML
- <linux-kernel@vger.kernel.org>, "Linux trace kernel"
- <linux-trace-kernel@vger.kernel.org>, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Move snapshot code out of trace.c and into
- trace_snapshot.c
-Message-ID: <20260330120516.73aede9b@gandalf.local.home>
-In-Reply-To: <8580f943-4c37-4c66-937d-adee13b72201@app.fastmail.com>
-References: <20260305211810.3f48aa07@robin>
-	<202603070230.Zz4BBLtb-lkp@intel.com>
-	<8580f943-4c37-4c66-937d-adee13b72201@app.fastmail.com>
+To: Wesley Atwell <atwellwea@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] tracing: Preserve repeated boot-time tracing
+ parameters
+Message-ID: <20260330123743.5cd30e56@gandalf.local.home>
+In-Reply-To: <20260330104322.7403c660@gandalf.local.home>
+References: <20260328201842.1782806-1-atwellwea@gmail.com>
+	<20260329184254.1813273-1-atwellwea@gmail.com>
+	<20260330104322.7403c660@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,31 +41,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 39uojos57saj6potqt3mjjtm3xytrezz
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: A68C818
+X-Rspamd-Queue-Id: 362F120031
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: hcxefqe43i64j9y6yjuy4njyssoa1txb
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19o0Dr7UWd35wr6cMG8+TAaj7KnT9PlbX8=
-X-HE-Tag: 1774886660-238916
-X-HE-Meta: U2FsdGVkX18otMBCyLY8DhR+ef/nR9LxqbeVPNSRgt2kG8G8jiM6jMmGaxrtVFYm3T2RrHE27368MwnXOX6wYiiYvnKQzDJERF+znI8Clwraj36qvrn+8efoFP7m0ZRpv7ZBrjiDXk3yJNzwQ3wuoW6eNND0YSZZTr9wzZ3HA6JWdc2QKB1I2ZJ+GwpWS6bnmJzIt8v65/SNDCOjJbS7iPnS0NsLA1MVmrSgiyKa8wW7uWVkqJznIsS4Vml0WTrvbkdSThULBO/OcvufSbyIZiRCk39dAKmHNpH0fLYbB5EqNGyqp1JcXgdopoWxH7Ff
+X-Session-ID: U2FsdGVkX18kb0hZo+lVgboiV6TnomSSZ10SrRPNBWU=
+X-HE-Tag: 1774888608-338937
+X-HE-Meta: U2FsdGVkX19WXGhR6VkGQ0bWhPDSwoAGoC/9lPAB5LfOT6HV7lav6X8idqFkxVQ/J5wGOlTtXdF1ZB+yVgs95AVBNTOfLoqr/KAV9v86C1HHrdmNpUjb34zjuVl9aQegrR5dT8Jl7w/xxrc1E52Y9rgb2UiHsCxu4OsScRWYKaLEXxNCYa9GkRoWAEqd3mczm7m9r8OIaAiPBIf3E1NMUowRdcwPsu8ZmJKyCoZoSOH0+rSRBZFPYU1S4DFJ2aGLlpv3yso9Hix5HJzzTAb2LiFVYxk0DcGFTGSKcW/9r9DPgKhcj9C6rjp4VE+AZKwBE+FzpGivXc3eoB6WSQbq8h7F4NZoknsK2AwlRwfjGyy1nyIQ52d4h/IBYnXDOKyB
 
-On Mon, 30 Mar 2026 16:06:44 +0200
-"Arnd Bergmann" <arnd@arndb.de> wrote:
+On Mon, 30 Mar 2026 10:43:22 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> I saw the same thing and worked around it by removing the function.
-> I then noticed that a bunch of code surrounding it is also unused
-> and I removed that as well (see below). This version passes
-> my randconfig build tests, but I suspect it is still wrong,
-> since the code never had any callers and I don't understand
-> why.
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 9928da636c9d..7754a8adb58a 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -3677,20 +3677,24 @@ static struct boot_triggers {
+>  } bootup_triggers[MAX_BOOT_TRIGGERS];
+>  
+>  static char bootup_trigger_buf[COMMAND_LINE_SIZE];
+> +static int boot_trigger_buf_len;
+>  static int nr_boot_triggers;
+>  
+>  static __init int setup_trace_triggers(char *str)
+>  {
+>  	char *trigger;
+>  	char *buf;
+> +	int len = boot_trigger_buf_len;
+>  	int i;
+>  
+> -	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
+> +	strscpy(bootup_trigger_buf + len , str, COMMAND_LINE_SIZE - len);
+>  	trace_set_ring_buffer_expanded(NULL);
+>  	disable_tracing_selftest("running event triggers");
+>  
+> -	buf = bootup_trigger_buf;
+> -	for (i = 0; i < MAX_BOOT_TRIGGERS; i++) {
+> +	buf = bootup_trigger_buf + len;
+> +	boot_trigger_buf_len += strlen(buf);
 
-Note, this code is in include/linux/tracing_printk.h, and is for debugging
-purposes (just like trace_printk() is). Hence, it shouldn't be removed.
+The above needs to skip the '\0' too:
 
-The purpose is to call tracing_snapshot() when your code detects something
-isn't right (but it doesn't crash), and this will take a snapshot of the
-current trace that lead up to the anomaly.
+	boot_trigger_buf_len += strlen(buf) + 1;
 
-If anything, I should add more to Documentation/trace/debugging.rst about it.
 
--- Steve
+> +
+> +	for (i = nr_boot_triggers; i < MAX_BOOT_TRIGGERS; i++) {
+>  		trigger = strsep(&buf, ",");
+>  		if (!trigger)
+>  			break;
+
