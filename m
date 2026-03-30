@@ -1,63 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538E03C4569
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Mar 2026 11:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020EC3B5851
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Mar 2026 11:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774869080; cv=none; b=l4hIgPu+xmUSSh3wf4PvaCabhIOyUN9iixvUToqOypT90VqiRh4DcPjS7fTTGiLDLFU4lCaBy9tJQjNMP5c7MoK8fODAO7JGN7yQTeTMQHRFWVuEigtd/9M8Vv5wEWATc5aMeKxLTRiU6H2HkfpKDK/U3ijXHVujqHUTyIvt3rs=
+	t=1774869085; cv=none; b=VSGargDHStj53shhfZtcgSPh+i075Wo9tfDlHViqTuDdTkNqq5Uk7SKbzH/jJ/L8EkKQ7q2NZGaciwFksaRvOvDqqpPQb2N85t5hO+FtNh2ROYULEpwci/aJsYrQBjN1/1h6Cr8OZAbbwiJjbIXO/MwXjR7I9maDt1qj5511OIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774869080; c=relaxed/simple;
-	bh=hos1csdaoQzD9pouicrK0xXmglYE4e0ZIFuaIXIHgv4=;
+	s=arc-20240116; t=1774869085; c=relaxed/simple;
+	bh=5kQ4KZqVp+da0Rqa6DFZ/1m0zAOsyvqKX1/inR7542U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=bs4B0yW2c6lb+m0+PNT0Sg9mTwAQQU8ZVV/Rpm9eVkVKeM8e72PZ0MoVRNmFWbyDFrdKK6ctkE6LN8hT+OkJTe7q9vgN8xxPbcB9zPShEDm6pfL78xZ6/GRmQ9xKpYZpt2rAzn98lW92Uwd447CRK0Mi2hyhD3DbLCGthVbS4W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=doUGp0M6; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=LIaClImhFmlkt1MzCheh/jryOXeBHUx1NgatjbZwCmmQ4jSAYkTeo5PfmLnphKvdBrT+pnwNRceO2oS8Z5pxTaQG7Ky2GvICov2OhYsWs1x2yt0aEnE3hAqRUybm/EBJ9sSVoR2Y7Sac5Cw+L0FyTAabBzgZe10RfVukS86/E/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PiQOeRvE; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="doUGp0M6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PiQOeRvE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774869070;
+	s=mimecast20190719; t=1774869073;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eMFw3oT8J/DboUaNao2iXHMPBOcdB5ZMAjS7+SFCxx0=;
-	b=doUGp0M6kMlQUOwTKLnPlSC61QXDV8fOaJMWplqG/ObJEvCk/BW4za0KVyb7C32tYfU4md
-	IcULmQwR8hKf8k9OEOjlvF53lwFvdMvpi8wpLUNqKJPllwtcPaafG8dpeT99358c3+oDp3
-	G+VSllhlaiyp0uuejwuvntB13gfeKug=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=RMuLL3ckH5d4egPdka124g95n4Fl/zkgZ/FOFBRQXKk=;
+	b=PiQOeRvEBeKh3xSbAeJp0v03RYZlpTP76bkhbaYT/Yl1DyJ7Ng3syQ7RJBUzn5hA2sFDNY
+	PNCLHi60ZghZZZbX9y+4KDIliNtaHkA/2u/Zj8l0lkogtNnjA2fA3UE2qSK68JZzyaiKB5
+	VUVpO97Ryz/T5b7DZ/MMJ3mQM4XP7y4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-458-PlRlKAVDOEGKNPjUJ3rMAA-1; Mon,
- 30 Mar 2026 07:11:05 -0400
-X-MC-Unique: PlRlKAVDOEGKNPjUJ3rMAA-1
-X-Mimecast-MFC-AGG-ID: PlRlKAVDOEGKNPjUJ3rMAA_1774869064
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-231-C6nxh9ndNA62krX9-PAZ8A-1; Mon,
+ 30 Mar 2026 07:11:10 -0400
+X-MC-Unique: C6nxh9ndNA62krX9-PAZ8A-1
+X-Mimecast-MFC-AGG-ID: C6nxh9ndNA62krX9-PAZ8A_1774869068
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 05D111800617;
-	Mon, 30 Mar 2026 11:11:04 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFCC218005BD;
+	Mon, 30 Mar 2026 11:11:08 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.44.33.13])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 756A030002D6;
-	Mon, 30 Mar 2026 11:10:59 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5E38730001A1;
+	Mon, 30 Mar 2026 11:11:05 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Nam Cao <namcao@linutronix.de>,
 	Juri Lelli <jlelli@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
+	linux-trace-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v8 07/12] rv: Convert the opid monitor to a hybrid automaton
-Date: Mon, 30 Mar 2026 13:10:05 +0200
-Message-ID: <20260330111010.153663-8-gmonaco@redhat.com>
+Subject: [PATCH v8 08/12] rv: Add support for per-object monitors in DA/HA
+Date: Mon, 30 Mar 2026 13:10:06 +0200
+Message-ID: <20260330111010.153663-9-gmonaco@redhat.com>
 In-Reply-To: <20260330111010.153663-1-gmonaco@redhat.com>
 References: <20260330111010.153663-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -67,505 +64,419 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: KgtSxPTR1uGreUsgyKrGp7UOhxpiIgx4pn3NoAB6i6M_1774869064
+X-Mimecast-MFC-PROC-ID: 75xb78URARnZpXCZBWtZbjW6vYlR8pHEs-s-X0D7SfQ_1774869068
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The opid monitor validates that wakeup and need_resched events only
-occur with interrupts and preemption disabled by following the
-preemptirq tracepoints.
-As reported in [1], those tracepoints might be inaccurate in some
-situations (e.g. NMIs).
+RV deterministic and hybrid automata currently only support global,
+per-cpu and per-task monitors. It isn't possible to write a model that
+would follow some different type of object, like a deadline entity or a
+lock.
 
-Since the monitor doesn't validate other ordering properties, remove the
-dependency on preemptirq tracepoints and convert the monitor to a hybrid
-automaton to validate the constraint during event handling.
-This makes the monitor more robust by also removing the workaround for
-interrupts missing the preemption tracepoints, which was working on
-PREEMPT_RT only and allows the monitor to be built on kernels without
-the preemptirqs tracepoints.
+Define the generic per-object monitor implementation which shares part
+of the implementation with the per-task monitors.
+The user needs to provide an id for the object (e.g. pid for tasks) and
+define the data type for the monitor_target (e.g. struct task_struct *
+for tasks). Both are supplied to the event handlers, as the id may not
+be easily available in the target.
 
-[1] - https://lore.kernel.org/lkml/20250625120823.60600-1-gmonaco@redhat.com
+The monitor storage (e.g. the rv monitor, pointer to the target, etc.)
+is stored in a hash table indexed by id. Monitor storage objects are
+automatically allocated unless specified otherwise (e.g. if the creation
+context is unsafe for allocation).
 
 Reviewed-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- Documentation/trace/rv/monitor_sched.rst   |  62 +++---------
- kernel/trace/rv/monitors/opid/Kconfig      |  11 +-
- kernel/trace/rv/monitors/opid/opid.c       | 111 +++++++--------------
- kernel/trace/rv/monitors/opid/opid.h       |  86 ++++------------
- kernel/trace/rv/monitors/opid/opid_trace.h |   4 +
- kernel/trace/rv/rv_trace.h                 |   2 +-
- tools/verification/models/sched/opid.dot   |  36 ++-----
- 7 files changed, 82 insertions(+), 230 deletions(-)
+ include/linux/rv.h      |   1 +
+ include/rv/da_monitor.h | 300 +++++++++++++++++++++++++++++++++++++++-
+ include/rv/ha_monitor.h |   5 +-
+ 3 files changed, 300 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
-index 3f8381ad9ec7..0b96d6e147c6 100644
---- a/Documentation/trace/rv/monitor_sched.rst
-+++ b/Documentation/trace/rv/monitor_sched.rst
-@@ -346,55 +346,21 @@ Monitor opid
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 0aef9e3c785c..541ba404926a 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -13,6 +13,7 @@
+ #define RV_MON_GLOBAL   0
+ #define RV_MON_PER_CPU  1
+ #define RV_MON_PER_TASK 2
++#define RV_MON_PER_OBJ  3
  
- The operations with preemption and irq disabled (opid) monitor ensures
- operations like ``wakeup`` and ``need_resched`` occur with interrupts and
--preemption disabled or during interrupt context, in such case preemption may
--not be disabled explicitly.
-+preemption disabled.
- ``need_resched`` can be set by some RCU internals functions, in which case it
--doesn't match a task wakeup and might occur with only interrupts disabled::
--
--                 |                     sched_need_resched
--                 |                     sched_waking
--                 |                     irq_entry
--                 |                   +--------------------+
--                 v                   v                    |
--               +------------------------------------------------------+
--  +----------- |                     disabled                         | <+
--  |            +------------------------------------------------------+  |
--  |              |                 ^                                     |
--  |              |          preempt_disable      sched_need_resched      |
--  |       preempt_enable           |           +--------------------+    |
--  |              v                 |           v                    |    |
--  |            +------------------------------------------------------+  |
--  |            |                   irq_disabled                       |  |
--  |            +------------------------------------------------------+  |
--  |                              |             |        ^                |
--  |     irq_entry            irq_entry         |        |                |
--  |     sched_need_resched       v             |   irq_disable           |
--  |     sched_waking +--------------+          |        |                |
--  |           +----- |              |     irq_enable    |                |
--  |           |      |    in_irq    |          |        |                |
--  |           +----> |              |          |        |                |
--  |                  +--------------+          |        |          irq_disable
--  |                     |                      |        |                |
--  | irq_enable          | irq_enable           |        |                |
--  |                     v                      v        |                |
--  |            #======================================================#  |
--  |            H                     enabled                          H  |
--  |            #======================================================#  |
--  |              |                   ^         ^ preempt_enable     |    |
--  |       preempt_disable     preempt_enable   +--------------------+    |
--  |              v                   |                                   |
--  |            +------------------+  |                                   |
--  +----------> | preempt_disabled | -+                                   |
--               +------------------+                                      |
--                 |                                                       |
--                 +-------------------------------------------------------+
--
--This monitor is designed to work on ``PREEMPT_RT`` kernels, the special case of
--events occurring in interrupt context is a shortcut to identify valid scenarios
--where the preemption tracepoints might not be visible, during interrupts
--preemption is always disabled. On non- ``PREEMPT_RT`` kernels, the interrupts
--might invoke a softirq to set ``need_resched`` and wake up a task. This is
--another special case that is currently not supported by the monitor.
-+doesn't match a task wakeup and might occur with only interrupts disabled.
-+The interrupt and preemption status are validated by the hybrid automaton
-+constraints when processing the events::
+ #ifdef CONFIG_RV
+ #include <linux/array_size.h>
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index ab5fe0896a46..39765ff6f098 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -19,6 +19,8 @@
+ #include <linux/stringify.h>
+ #include <linux/bug.h>
+ #include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/hashtable.h>
+ 
+ /*
+  * Per-cpu variables require a unique name although static in some
+@@ -57,6 +59,9 @@ static struct rv_monitor rv_this;
+ 
+ /*
+  * Type for the target id, default to int but can be overridden.
++ * A long type can work as hash table key (PER_OBJ) but will be downgraded to
++ * int in the event tracepoint.
++ * Unused for implicit monitors.
+  */
+ #ifndef da_id_type
+ #define da_id_type int
+@@ -245,9 +250,9 @@ static inline struct da_monitor *da_get_monitor(struct task_struct *tsk)
+ }
+ 
+ /*
+- * da_get_task - return the task associated to the monitor
++ * da_get_target - return the task associated to the monitor
+  */
+-static inline struct task_struct *da_get_task(struct da_monitor *da_mon)
++static inline struct task_struct *da_get_target(struct da_monitor *da_mon)
+ {
+ 	return container_of(da_mon, struct task_struct, rv[task_mon_slot].da_mon);
+ }
+@@ -259,7 +264,7 @@ static inline struct task_struct *da_get_task(struct da_monitor *da_mon)
+  */
+ static inline da_id_type da_get_id(struct da_monitor *da_mon)
+ {
+-	return da_get_task(da_mon)->pid;
++	return da_get_target(da_mon)->pid;
+ }
+ 
+ static void da_monitor_reset_all(void)
+@@ -309,6 +314,221 @@ static inline void da_monitor_destroy(void)
+ 
+ 	da_monitor_reset_all();
+ }
 +
-+   |
-+   |
-+   v
-+ #=========#   sched_need_resched;irq_off == 1
-+ H         H   sched_waking;irq_off == 1 && preempt_off == 1
-+ H   any   H ------------------------------------------------+
-+ H         H                                                 |
-+ H         H <-----------------------------------------------+
-+ #=========#
- 
- References
- ----------
-diff --git a/kernel/trace/rv/monitors/opid/Kconfig b/kernel/trace/rv/monitors/opid/Kconfig
-index 561d32da572b..6d02e239b684 100644
---- a/kernel/trace/rv/monitors/opid/Kconfig
-+++ b/kernel/trace/rv/monitors/opid/Kconfig
-@@ -2,18 +2,13 @@
- #
- config RV_MON_OPID
- 	depends on RV
--	depends on TRACE_IRQFLAGS
--	depends on TRACE_PREEMPT_TOGGLE
- 	depends on RV_MON_SCHED
--	default y if PREEMPT_RT
--	select DA_MON_EVENTS_IMPLICIT
-+	default y
-+	select HA_MON_EVENTS_IMPLICIT
- 	bool "opid monitor"
- 	help
- 	  Monitor to ensure operations like wakeup and need resched occur with
--	  interrupts and preemption disabled or during IRQs, where preemption
--	  may not be disabled explicitly.
--
--	  This monitor is unstable on !PREEMPT_RT, say N unless you are testing it.
-+	  interrupts and preemption disabled.
- 
- 	  For further information, see:
- 	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/opid/opid.c b/kernel/trace/rv/monitors/opid/opid.c
-index 25a40e90fa40..4594c7c46601 100644
---- a/kernel/trace/rv/monitors/opid/opid.c
-+++ b/kernel/trace/rv/monitors/opid/opid.c
-@@ -10,94 +10,63 @@
- #define MODULE_NAME "opid"
- 
- #include <trace/events/sched.h>
--#include <trace/events/irq.h>
--#include <trace/events/preemptirq.h>
- #include <rv_trace.h>
- #include <monitors/sched/sched.h>
- 
- #define RV_MON_TYPE RV_MON_PER_CPU
- #include "opid.h"
--#include <rv/da_monitor.h>
-+#include <rv/ha_monitor.h>
- 
--#ifdef CONFIG_X86_LOCAL_APIC
--#include <asm/trace/irq_vectors.h>
--
--static void handle_vector_irq_entry(void *data, int vector)
-+static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_opid env, u64 time_ns)
- {
--	da_handle_event(irq_entry_opid);
--}
--
--static void attach_vector_irq(void)
--{
--	rv_attach_trace_probe("opid", local_timer_entry, handle_vector_irq_entry);
--	if (IS_ENABLED(CONFIG_IRQ_WORK))
--		rv_attach_trace_probe("opid", irq_work_entry, handle_vector_irq_entry);
--	if (IS_ENABLED(CONFIG_SMP)) {
--		rv_attach_trace_probe("opid", reschedule_entry, handle_vector_irq_entry);
--		rv_attach_trace_probe("opid", call_function_entry, handle_vector_irq_entry);
--		rv_attach_trace_probe("opid", call_function_single_entry, handle_vector_irq_entry);
-+	if (env == irq_off_opid)
-+		return irqs_disabled();
-+	else if (env == preempt_off_opid) {
-+		/*
-+		 * If CONFIG_PREEMPTION is enabled, then the tracepoint itself disables
-+		 * preemption (adding one to the preempt_count). Since we are
-+		 * interested in the preempt_count at the time the tracepoint was
-+		 * hit, we consider 1 as still enabled.
-+		 */
-+		if (IS_ENABLED(CONFIG_PREEMPTION))
-+			return (preempt_count() & PREEMPT_MASK) > 1;
-+		return true;
- 	}
-+	return ENV_INVALID_VALUE;
- }
- 
--static void detach_vector_irq(void)
-+static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
-+				    enum states curr_state, enum events event,
-+				    enum states next_state, u64 time_ns)
- {
--	rv_detach_trace_probe("opid", local_timer_entry, handle_vector_irq_entry);
--	if (IS_ENABLED(CONFIG_IRQ_WORK))
--		rv_detach_trace_probe("opid", irq_work_entry, handle_vector_irq_entry);
--	if (IS_ENABLED(CONFIG_SMP)) {
--		rv_detach_trace_probe("opid", reschedule_entry, handle_vector_irq_entry);
--		rv_detach_trace_probe("opid", call_function_entry, handle_vector_irq_entry);
--		rv_detach_trace_probe("opid", call_function_single_entry, handle_vector_irq_entry);
--	}
-+	bool res = true;
++#elif RV_MON_TYPE == RV_MON_PER_OBJ
++/*
++ * Functions to define, init and get a per-object monitor.
++ */
 +
-+	if (curr_state == any_opid && event == sched_need_resched_opid)
-+		res = ha_get_env(ha_mon, irq_off_opid, time_ns) == 1ull;
-+	else if (curr_state == any_opid && event == sched_waking_opid)
-+		res = ha_get_env(ha_mon, irq_off_opid, time_ns) == 1ull &&
-+		      ha_get_env(ha_mon, preempt_off_opid, time_ns) == 1ull;
-+	return res;
- }
- 
--#else
--/* We assume irq_entry tracepoints are sufficient on other architectures */
--static void attach_vector_irq(void) { }
--static void detach_vector_irq(void) { }
--#endif
--
--static void handle_irq_disable(void *data, unsigned long ip, unsigned long parent_ip)
-+static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-+				 enum states curr_state, enum events event,
-+				 enum states next_state, u64 time_ns)
- {
--	da_handle_event(irq_disable_opid);
--}
-+	if (!ha_verify_guards(ha_mon, curr_state, event, next_state, time_ns))
-+		return false;
- 
--static void handle_irq_enable(void *data, unsigned long ip, unsigned long parent_ip)
--{
--	da_handle_event(irq_enable_opid);
--}
--
--static void handle_irq_entry(void *data, int irq, struct irqaction *action)
--{
--	da_handle_event(irq_entry_opid);
--}
--
--static void handle_preempt_disable(void *data, unsigned long ip, unsigned long parent_ip)
--{
--	da_handle_event(preempt_disable_opid);
--}
--
--static void handle_preempt_enable(void *data, unsigned long ip, unsigned long parent_ip)
--{
--	da_handle_event(preempt_enable_opid);
-+	return true;
- }
- 
- static void handle_sched_need_resched(void *data, struct task_struct *tsk, int cpu, int tif)
- {
--	/* The monitor's intitial state is not in_irq */
--	if (this_cpu_read(hardirq_context))
--		da_handle_event(sched_need_resched_opid);
--	else
--		da_handle_start_event(sched_need_resched_opid);
-+	da_handle_start_run_event(sched_need_resched_opid);
- }
- 
- static void handle_sched_waking(void *data, struct task_struct *p)
- {
--	/* The monitor's intitial state is not in_irq */
--	if (this_cpu_read(hardirq_context))
--		da_handle_event(sched_waking_opid);
--	else
--		da_handle_start_event(sched_waking_opid);
-+	da_handle_start_run_event(sched_waking_opid);
- }
- 
- static int enable_opid(void)
-@@ -108,14 +77,8 @@ static int enable_opid(void)
- 	if (retval)
- 		return retval;
- 
--	rv_attach_trace_probe("opid", irq_disable, handle_irq_disable);
--	rv_attach_trace_probe("opid", irq_enable, handle_irq_enable);
--	rv_attach_trace_probe("opid", irq_handler_entry, handle_irq_entry);
--	rv_attach_trace_probe("opid", preempt_disable, handle_preempt_disable);
--	rv_attach_trace_probe("opid", preempt_enable, handle_preempt_enable);
- 	rv_attach_trace_probe("opid", sched_set_need_resched_tp, handle_sched_need_resched);
- 	rv_attach_trace_probe("opid", sched_waking, handle_sched_waking);
--	attach_vector_irq();
- 
- 	return 0;
- }
-@@ -124,14 +87,8 @@ static void disable_opid(void)
- {
- 	rv_this.enabled = 0;
- 
--	rv_detach_trace_probe("opid", irq_disable, handle_irq_disable);
--	rv_detach_trace_probe("opid", irq_enable, handle_irq_enable);
--	rv_detach_trace_probe("opid", irq_handler_entry, handle_irq_entry);
--	rv_detach_trace_probe("opid", preempt_disable, handle_preempt_disable);
--	rv_detach_trace_probe("opid", preempt_enable, handle_preempt_enable);
- 	rv_detach_trace_probe("opid", sched_set_need_resched_tp, handle_sched_need_resched);
- 	rv_detach_trace_probe("opid", sched_waking, handle_sched_waking);
--	detach_vector_irq();
- 
- 	da_monitor_destroy();
- }
-diff --git a/kernel/trace/rv/monitors/opid/opid.h b/kernel/trace/rv/monitors/opid/opid.h
-index 092992514970..fb0aa4c28aa6 100644
---- a/kernel/trace/rv/monitors/opid/opid.h
-+++ b/kernel/trace/rv/monitors/opid/opid.h
-@@ -8,30 +8,31 @@
- #define MONITOR_NAME opid
- 
- enum states_opid {
--	disabled_opid,
--	enabled_opid,
--	in_irq_opid,
--	irq_disabled_opid,
--	preempt_disabled_opid,
-+	any_opid,
- 	state_max_opid,
- };
- 
- #define INVALID_STATE state_max_opid
- 
- enum events_opid {
--	irq_disable_opid,
--	irq_enable_opid,
--	irq_entry_opid,
--	preempt_disable_opid,
--	preempt_enable_opid,
- 	sched_need_resched_opid,
- 	sched_waking_opid,
- 	event_max_opid,
- };
- 
-+enum envs_opid {
-+	irq_off_opid,
-+	preempt_off_opid,
-+	env_max_opid,
-+	env_max_stored_opid = irq_off_opid,
++struct da_monitor_storage {
++	da_id_type id;
++	monitor_target target;
++	union rv_task_monitor rv;
++	struct hlist_node node;
++	struct rcu_head rcu;
 +};
 +
-+_Static_assert(env_max_stored_opid <= MAX_HA_ENV_LEN, "Not enough slots");
++#ifndef DA_MONITOR_HT_BITS
++#define DA_MONITOR_HT_BITS 10
++#endif
++static DEFINE_HASHTABLE(da_monitor_ht, DA_MONITOR_HT_BITS);
 +
- struct automaton_opid {
- 	char *state_names[state_max_opid];
- 	char *event_names[event_max_opid];
-+	char *env_names[env_max_opid];
- 	unsigned char function[state_max_opid][event_max_opid];
- 	unsigned char initial_state;
- 	bool final_states[state_max_opid];
-@@ -39,68 +40,19 @@ struct automaton_opid {
- 
- static const struct automaton_opid automaton_opid = {
- 	.state_names = {
--		"disabled",
--		"enabled",
--		"in_irq",
--		"irq_disabled",
--		"preempt_disabled",
-+		"any",
- 	},
- 	.event_names = {
--		"irq_disable",
--		"irq_enable",
--		"irq_entry",
--		"preempt_disable",
--		"preempt_enable",
- 		"sched_need_resched",
- 		"sched_waking",
- 	},
-+	.env_names = {
-+		"irq_off",
-+		"preempt_off",
-+	},
- 	.function = {
--		{
--			INVALID_STATE,
--			preempt_disabled_opid,
--			disabled_opid,
--			INVALID_STATE,
--			irq_disabled_opid,
--			disabled_opid,
--			disabled_opid,
--		},
--		{
--			irq_disabled_opid,
--			INVALID_STATE,
--			INVALID_STATE,
--			preempt_disabled_opid,
--			enabled_opid,
--			INVALID_STATE,
--			INVALID_STATE,
--		},
--		{
--			INVALID_STATE,
--			enabled_opid,
--			in_irq_opid,
--			INVALID_STATE,
--			INVALID_STATE,
--			in_irq_opid,
--			in_irq_opid,
--		},
--		{
--			INVALID_STATE,
--			enabled_opid,
--			in_irq_opid,
--			disabled_opid,
--			INVALID_STATE,
--			irq_disabled_opid,
--			INVALID_STATE,
--		},
--		{
--			disabled_opid,
--			INVALID_STATE,
--			INVALID_STATE,
--			INVALID_STATE,
--			enabled_opid,
--			INVALID_STATE,
--			INVALID_STATE,
--		},
-+		{           any_opid,           any_opid },
- 	},
--	.initial_state = disabled_opid,
--	.final_states = { 0, 1, 0, 0, 0 },
-+	.initial_state = any_opid,
-+	.final_states = { 1 },
- };
-diff --git a/kernel/trace/rv/monitors/opid/opid_trace.h b/kernel/trace/rv/monitors/opid/opid_trace.h
-index 3df6ff955c30..b04005b64208 100644
---- a/kernel/trace/rv/monitors/opid/opid_trace.h
-+++ b/kernel/trace/rv/monitors/opid/opid_trace.h
-@@ -12,4 +12,8 @@ DEFINE_EVENT(event_da_monitor, event_opid,
- DEFINE_EVENT(error_da_monitor, error_opid,
- 	     TP_PROTO(char *state, char *event),
- 	     TP_ARGS(state, event));
++/*
++ * da_create_empty_storage - pre-allocate an empty storage
++ */
++static inline struct da_monitor_storage *da_create_empty_storage(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
 +
-+DEFINE_EVENT(error_env_da_monitor, error_env_opid,
-+	     TP_PROTO(char *state, char *event, char *env),
-+	     TP_ARGS(state, event, env));
- #endif /* CONFIG_RV_MON_OPID */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 1661f8fe4a88..9e8072d863a2 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -62,7 +62,6 @@ DECLARE_EVENT_CLASS(error_da_monitor,
- #include <monitors/scpd/scpd_trace.h>
- #include <monitors/snep/snep_trace.h>
- #include <monitors/sts/sts_trace.h>
--#include <monitors/opid/opid_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_IMPLICIT here
++	mon_storage = kmalloc_nolock(sizeof(struct da_monitor_storage),
++				     __GFP_ZERO, NUMA_NO_NODE);
++	if (!mon_storage)
++		return NULL;
++
++	hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
++	mon_storage->id = id;
++	return mon_storage;
++}
++
++/*
++ * da_create_storage - create the per-object storage
++ *
++ * The caller is responsible to synchronise writers, either with locks or
++ * implicitly. For instance, if da_create_storage is only called from a single
++ * event for target (e.g. sched_switch), it's safe to call this without locks.
++ */
++static inline struct da_monitor *da_create_storage(da_id_type id,
++						   monitor_target target,
++						   struct da_monitor *da_mon)
++{
++	struct da_monitor_storage *mon_storage;
++
++	if (da_mon)
++		return da_mon;
++
++	mon_storage = da_create_empty_storage(id);
++	if (!mon_storage)
++		return NULL;
++
++	mon_storage->target = target;
++	return &mon_storage->rv.da_mon;
++}
++
++/*
++ * __da_get_mon_storage - get the monitor storage from the hash table
++ */
++static inline struct da_monitor_storage *__da_get_mon_storage(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
++
++	lockdep_assert_in_rcu_read_lock();
++	hash_for_each_possible_rcu(da_monitor_ht, mon_storage, node, id) {
++		if (mon_storage->id == id)
++			return mon_storage;
++	}
++
++	return NULL;
++}
++
++/*
++ * da_get_monitor - return the monitor for target
++ */
++static struct da_monitor *da_get_monitor(da_id_type id, monitor_target target)
++{
++	struct da_monitor_storage *mon_storage;
++
++	mon_storage = __da_get_mon_storage(id);
++	return mon_storage ? &mon_storage->rv.da_mon : NULL;
++}
++
++/*
++ * da_get_target - return the object associated to the monitor
++ */
++static inline monitor_target da_get_target(struct da_monitor *da_mon)
++{
++	return container_of(da_mon, struct da_monitor_storage, rv.da_mon)->target;
++}
++
++/*
++ * da_get_id - return the id associated to the monitor
++ */
++static inline da_id_type da_get_id(struct da_monitor *da_mon)
++{
++	return container_of(da_mon, struct da_monitor_storage, rv.da_mon)->id;
++}
++
++/*
++ * da_create_or_get - create the per-object storage if not already there
++ *
++ * This needs a lookup so should be guarded by RCU, the condition is checked
++ * directly in da_create_storage()
++ */
++static inline void da_create_or_get(da_id_type id, monitor_target target)
++{
++	guard(rcu)();
++	da_create_storage(id, target, da_get_monitor(id, target));
++}
++
++/*
++ * da_fill_empty_storage - store the target in a pre-allocated storage
++ *
++ * Can be used as a substitute of da_create_storage when starting a monitor in
++ * an environment where allocation is unsafe.
++ */
++static inline struct da_monitor *da_fill_empty_storage(da_id_type id,
++						       monitor_target target,
++						       struct da_monitor *da_mon)
++{
++	if (unlikely(da_mon && !da_get_target(da_mon)))
++		container_of(da_mon, struct da_monitor_storage, rv.da_mon)->target = target;
++	return da_mon;
++}
++
++/*
++ * da_get_target_by_id - return the object associated to the id
++ */
++static inline monitor_target da_get_target_by_id(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
++
++	guard(rcu)();
++	mon_storage = __da_get_mon_storage(id);
++
++	if (unlikely(!mon_storage))
++		return NULL;
++	return mon_storage->target;
++}
++
++/*
++ * da_destroy_storage - destroy the per-object storage
++ *
++ * The caller is responsible to synchronise writers, either with locks or
++ * implicitly. For instance, if da_destroy_storage is called at sched_exit and
++ * da_create_storage can never occur after that, it's safe to call this without
++ * locks.
++ * This function includes an RCU read-side critical section to synchronise
++ * against da_monitor_destroy().
++ */
++static inline void da_destroy_storage(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
++
++	guard(rcu)();
++	mon_storage = __da_get_mon_storage(id);
++
++	if (!mon_storage)
++		return;
++	da_monitor_reset_hook(&mon_storage->rv.da_mon);
++	hash_del_rcu(&mon_storage->node);
++	kfree_rcu(mon_storage, rcu);
++}
++
++static void da_monitor_reset_all(void)
++{
++	struct da_monitor_storage *mon_storage;
++	int bkt;
++
++	rcu_read_lock();
++	hash_for_each_rcu(da_monitor_ht, bkt, mon_storage, node)
++		da_monitor_reset(&mon_storage->rv.da_mon);
++	rcu_read_unlock();
++}
++
++static inline int da_monitor_init(void)
++{
++	hash_init(da_monitor_ht);
++	return 0;
++}
++
++static inline void da_monitor_destroy(void)
++{
++	struct da_monitor_storage *mon_storage;
++	struct hlist_node *tmp;
++	int bkt;
++
++	/*
++	 * This function is called after all probes are disabled, we need only
++	 * worry about concurrency against old events.
++	 */
++	synchronize_rcu();
++	hash_for_each_safe(da_monitor_ht, bkt, tmp, mon_storage, node) {
++		da_monitor_reset_hook(&mon_storage->rv.da_mon);
++		hash_del_rcu(&mon_storage->node);
++		kfree(mon_storage);
++	}
++}
++
++/*
++ * Allow the per-object monitors to run allocation manually, necessary if the
++ * start condition is in a context problematic for allocation (e.g. scheduling).
++ * In such case, if the storage was pre-allocated without a target, set it now.
++ */
++#ifdef DA_SKIP_AUTO_ALLOC
++#define da_prepare_storage da_fill_empty_storage
++#else
++#define da_prepare_storage da_create_storage
++#endif /* DA_SKIP_AUTO_ALLOC */
++
+ #endif /* RV_MON_TYPE */
  
- #ifdef CONFIG_HA_MON_EVENTS_IMPLICIT
-@@ -91,6 +90,7 @@ DECLARE_EVENT_CLASS(error_env_da_monitor,
- 		__get_str(env))
- );
+ #if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
+@@ -342,9 +562,9 @@ static inline da_id_type da_get_id(struct da_monitor *da_mon)
+ 	return 0;
+ }
  
-+#include <monitors/opid/opid_trace.h>
- // Add new monitors based on CONFIG_HA_MON_EVENTS_IMPLICIT here
+-#elif RV_MON_TYPE == RV_MON_PER_TASK
++#elif RV_MON_TYPE == RV_MON_PER_TASK || RV_MON_TYPE == RV_MON_PER_OBJ
+ /*
+- * Trace events for per_task monitors, report the PID of the task.
++ * Trace events for per_task/per_object monitors, report the target id.
+  */
+ 
+ static inline void da_trace_event(struct da_monitor *da_mon,
+@@ -525,6 +745,76 @@ static inline bool da_handle_start_run_event(struct task_struct *tsk,
+ {
+ 	return __da_handle_start_run_event(da_get_monitor(tsk), event, tsk->pid);
+ }
++
++#elif RV_MON_TYPE == RV_MON_PER_OBJ
++/*
++ * Handle event for per object.
++ */
++
++/*
++ * da_handle_event - handle an event
++ */
++static inline void da_handle_event(da_id_type id, monitor_target target, enum events event)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	if (likely(da_mon))
++		__da_handle_event(da_mon, event, id);
++}
++
++/*
++ * da_handle_start_event - start monitoring or handle event
++ *
++ * This function is used to notify the monitor that the system is returning
++ * to the initial state, so the monitor can start monitoring in the next event.
++ * Thus:
++ *
++ * If the monitor already started, handle the event.
++ * If the monitor did not start yet, start the monitor but skip the event.
++ */
++static inline bool da_handle_start_event(da_id_type id, monitor_target target,
++					 enum events event)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	da_mon = da_prepare_storage(id, target, da_mon);
++	if (unlikely(!da_mon))
++		return 0;
++	return __da_handle_start_event(da_mon, event, id);
++}
++
++/*
++ * da_handle_start_run_event - start monitoring and handle event
++ *
++ * This function is used to notify the monitor that the system is in the
++ * initial state, so the monitor can start monitoring and handling event.
++ */
++static inline bool da_handle_start_run_event(da_id_type id, monitor_target target,
++					     enum events event)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	da_mon = da_prepare_storage(id, target, da_mon);
++	if (unlikely(!da_mon))
++		return 0;
++	return __da_handle_start_run_event(da_mon, event, id);
++}
++
++static inline void da_reset(da_id_type id, monitor_target target)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	if (likely(da_mon))
++		da_monitor_reset(da_mon);
++}
+ #endif /* RV_MON_TYPE */
  
  #endif
-diff --git a/tools/verification/models/sched/opid.dot b/tools/verification/models/sched/opid.dot
-index 840052f6952b..511051fce430 100644
---- a/tools/verification/models/sched/opid.dot
-+++ b/tools/verification/models/sched/opid.dot
-@@ -1,35 +1,13 @@
- digraph state_automaton {
- 	center = true;
- 	size = "7,11";
--	{node [shape = plaintext, style=invis, label=""] "__init_disabled"};
--	{node [shape = circle] "disabled"};
--	{node [shape = doublecircle] "enabled"};
--	{node [shape = circle] "enabled"};
--	{node [shape = circle] "in_irq"};
--	{node [shape = circle] "irq_disabled"};
--	{node [shape = circle] "preempt_disabled"};
--	"__init_disabled" -> "disabled";
--	"disabled" [label = "disabled"];
--	"disabled" -> "disabled" [ label = "sched_need_resched\nsched_waking\nirq_entry" ];
--	"disabled" -> "irq_disabled" [ label = "preempt_enable" ];
--	"disabled" -> "preempt_disabled" [ label = "irq_enable" ];
--	"enabled" [label = "enabled", color = green3];
--	"enabled" -> "enabled" [ label = "preempt_enable" ];
--	"enabled" -> "irq_disabled" [ label = "irq_disable" ];
--	"enabled" -> "preempt_disabled" [ label = "preempt_disable" ];
--	"in_irq" [label = "in_irq"];
--	"in_irq" -> "enabled" [ label = "irq_enable" ];
--	"in_irq" -> "in_irq" [ label = "sched_need_resched\nsched_waking\nirq_entry" ];
--	"irq_disabled" [label = "irq_disabled"];
--	"irq_disabled" -> "disabled" [ label = "preempt_disable" ];
--	"irq_disabled" -> "enabled" [ label = "irq_enable" ];
--	"irq_disabled" -> "in_irq" [ label = "irq_entry" ];
--	"irq_disabled" -> "irq_disabled" [ label = "sched_need_resched" ];
--	"preempt_disabled" [label = "preempt_disabled"];
--	"preempt_disabled" -> "disabled" [ label = "irq_disable" ];
--	"preempt_disabled" -> "enabled" [ label = "preempt_enable" ];
-+	{node [shape = plaintext, style=invis, label=""] "__init_any"};
-+	{node [shape = doublecircle] "any"};
-+	"__init_any" -> "any";
-+	"any" [label = "any", color = green3];
-+	"any" -> "any" [ label = "sched_need_resched;irq_off == 1\nsched_waking;irq_off == 1 && preempt_off == 1" ];
- 	{ rank = min ;
--		"__init_disabled";
--		"disabled";
-+		"__init_any";
-+		"any";
- 	}
+diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+index b6cf3b2ba989..d59507e8cb30 100644
+--- a/include/rv/ha_monitor.h
++++ b/include/rv/ha_monitor.h
+@@ -190,7 +190,10 @@ static inline void ha_trace_error_env(struct ha_monitor *ha_mon,
+ {
+ 	CONCATENATE(trace_error_env_, MONITOR_NAME)(curr_state, event, env);
  }
+-#elif RV_MON_TYPE == RV_MON_PER_TASK
++#elif RV_MON_TYPE == RV_MON_PER_TASK || RV_MON_TYPE == RV_MON_PER_OBJ
++
++#define ha_get_target(ha_mon) da_get_target(&ha_mon->da_mon)
++
+ static inline void ha_trace_error_env(struct ha_monitor *ha_mon,
+ 				      char *curr_state, char *event, char *env,
+ 				      da_id_type id)
 -- 
 2.53.0
 
