@@ -1,36 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCCF2BE642;
-	Mon, 30 Mar 2026 20:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3CF244685;
+	Mon, 30 Mar 2026 20:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774902213; cv=none; b=ak7SDQxvdl7U1n7H6mDIeUywsRvUlrtEF6MeFomXVZ5fUCNY3b5blnv/QrF4/5fwYcYu2vPlX2nUDPbBKJKMGaBVgpD9IUzIE8ZeaxXr3W7c6KiuFbCYw+yG9woCCrwGylWPWTX4KzFQ7ql8HwEwqMNxNzNGlMWBjC1/izutXDM=
+	t=1774902456; cv=none; b=rGyXyTQq7+Tr3LfUbI0nSQ63adXwd/SR0uwlkzt1ijtIJN09f8TNxyhhZ/N1abxgOmfZU7OuNsIIv9dCuHKVcCzUOkmexuyybuxqES04jxyWkWKp6RhZc+wkSDZ8l6ZeC/CSummuVqgSrJuhVDENBmgtNHeEFYWQuLIAJC6G0wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774902213; c=relaxed/simple;
-	bh=Ro+zXtlqeaqB6nSrniJgvAxu/w9hupshiNZu46jMvIs=;
+	s=arc-20240116; t=1774902456; c=relaxed/simple;
+	bh=rs1Pr9t8nqH5hZ5ZkHh3djw8IEtk8hUM+gsLcUR/JW8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o4ooO/EgZ5ZjXzINC6l+9Hs/j+z/doH8PqIx8xytPIcib4miv5EhvthLpKKt0eokz3Aq8jNqQFu5p7we+koXCgxYI8lVGZcfbuTRD0bGGozvvUnLIDAYWtHwJfSVPNW3KMUB+wBJoIoGQ+C+KJQ75JIFC0L/0ppEVGi+hVauZTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=K0//RwsHjPibsELtKUts7LMCd3kbLXloqWmZvfOeU40/bnF1P+KFtgwFM7gjrsjQQQrT6CaToJGIl0sAdUWGm5I5Ky1tqr2da83oe3neQvExE9pb23hwjt1KudOBOOdXpDe9irOe0BBtXVWYnTYrpZJjU0HMJQfYSPhpr537yj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id E8A811408EE;
-	Mon, 30 Mar 2026 20:23:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 3AE3A2000D;
-	Mon, 30 Mar 2026 20:23:23 +0000 (UTC)
-Date: Mon, 30 Mar 2026 16:24:19 -0400
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id DCB9DBB0EC;
+	Mon, 30 Mar 2026 20:27:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 2D48220025;
+	Mon, 30 Mar 2026 20:27:26 +0000 (UTC)
+Date: Mon, 30 Mar 2026 16:28:22 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
  Rogers <irogers@google.com>
-Subject: Re: [PATCH v14 5/5] ring-buffer: Add persistent ring buffer
- selftest
-Message-ID: <20260330162419.5e4708fb@gandalf.local.home>
-In-Reply-To: <177487502763.3463592.7901517545360137050.stgit@mhiramat.tok.corp.google.com>
+Subject: Re: [PATCH v14 2/5] ring-buffer: Skip invalid sub-buffers when
+ validating persistent ring buffer
+Message-ID: <20260330162822.54f6bd02@gandalf.local.home>
+In-Reply-To: <20260330162210.5e37b0c3@gandalf.local.home>
 References: <177487498530.3463592.12715592581212799257.stgit@mhiramat.tok.corp.google.com>
-	<177487502763.3463592.7901517545360137050.stgit@mhiramat.tok.corp.google.com>
+	<177487500432.3463592.13753720277119177967.stgit@mhiramat.tok.corp.google.com>
+	<20260330162210.5e37b0c3@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,87 +41,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 3AE3A2000D
-X-Stat-Signature: k4t7fkjtaff6b7re8uiq3mezcfjfriwj
+X-Stat-Signature: xtfyfmi18i7eho4k66erbxemgyrmmbxr
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 2D48220025
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18fxsvhnYv3jXi42emoyn6vKiE16KVlzYQ=
-X-HE-Tag: 1774902203-623798
-X-HE-Meta: U2FsdGVkX1+qBpZD5hn3RBQynQHdA0cnxII0hdn3iiwL6oLEPuwFFxphc6M0fn9ItNgxVKkGaxRfa/H0Pwznq+IaIArqLZ0/LBhKfGJO3Iu5S4E/x39SmG+gypQflyUoPfxYEqabqWFljOvNUkr/BkwrJ2KerOiqbirsf3hW8AKfBOnxyrd1bycy3kEwODORanq935wPi87TAK+kM2+o+loDr5bpQez5AcRl2Hou/omu7LHYU4ZCmGr3MegFDeUIZ2yebl5cKsriqZPBMAJJJGwi77z21rWcq3DC1PcB9+8c5QRRAZbm/0YteUer+/oIEFCYy7XKWwJDqporUGADkN+V27nxPyKI
+X-Session-ID: U2FsdGVkX1/EgCTFQxKB88L/uS3WizZAItwpEKdvy/M=
+X-HE-Tag: 1774902446-234055
+X-HE-Meta: U2FsdGVkX18it7SNbZ4j4r+zB6VnvIQMel7QUBo2CrDheBkqFHw0R51zwTIgSvI0QfX8a2nShwS7Nb2iOfr4/HCdyrfOEViVklktIqflyc6ZLO1IAGaYJkD0p5qi+aXUcY9XgY9hNFxkSkZzNjaX5QTYS6D06Gn4X8/rTbbrDrXHCBkgBX5lUNAs2B3aJwSsGKsUWXRshUIlVSlY9KN/0CwLOSMqGQQP5SM1wBkoVcsYBYS0m7lJ+yCNoUbjiu0K2JlGNiPMF5ogKWLnbYSn0HMj67hu4O6U4F/Dz7LggXQ3PPoJEt5u8Zezl2hTuIv4U4AjJXMC9q2hL+3SSHvPUngGgs3OPx+KycC1aICQbYw6eWh8FtK4W+txL+cxtbDu0pm20ksusYFeuIkoXFgwSw==
 
-On Mon, 30 Mar 2026 21:50:27 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Mon, 30 Mar 2026 16:22:10 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> @@ -2558,12 +2577,64 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
->  	kfree(cpu_buffer);
->  }
->  
-> +#ifdef CONFIG_RING_BUFFER_PERSISTENT_INJECT
-> +static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +	struct ring_buffer_cpu_meta *meta;
-> +	struct buffer_data_page *dpage;
-> +	u32 entry_bytes = 0;
-> +	unsigned long ptr;
-> +	int subbuf_size;
-> +	int invalid = 0;
-> +	int cpu;
-> +	int i;
-> +
-> +	if (!(buffer->flags & RB_FL_TESTING))
-> +		return;
-> +
-> +	guard(preempt)();
-> +	cpu = smp_processor_id();
-> +
-> +	cpu_buffer = buffer->buffers[cpu];
-> +	meta = cpu_buffer->ring_meta;
-> +	ptr = (unsigned long)rb_subbufs_from_meta(meta);
-> +	subbuf_size = meta->subbuf_size;
-> +
-> +	for (i = 0; i < meta->nr_subbufs; i++) {
-> +		int idx = meta->buffers[i];
-> +
-> +		dpage = (void *)(ptr + idx * subbuf_size);
-> +		/* Skip unused pages */
-> +		if (!local_read(&dpage->commit))
-> +			continue;
-> +
-> +		/* Invalidate even pages. */
-> +		if (!(i & 0x1)) {
-> +			local_add(subbuf_size + 1, &dpage->commit);
-> +			invalid++;
-> +		} else {
-> +			/* Count total commit bytes. */
-> +			entry_bytes += local_read(&dpage->commit);
-> +		}
-> +	}
-> +
-> +	pr_info("Inject invalidated %d pages on CPU%d, total size: %ld\n",
-> +		invalid, cpu, (long)entry_bytes);
+> On Mon, 30 Mar 2026 21:50:04 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > @@ -2042,7 +2065,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> >  	local_set(&cpu_buffer->entries, entries);
+> >  	local_set(&cpu_buffer->entries_bytes, entry_bytes);
+> >  
+> > -	pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
+> > +	pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
+> > +		cpu_buffer->cpu, discarded);  
+> 
+> As pages should never be discarded unless something went wrong, let's only
+> print that if there were discarded pages.
+> 
+> 	if (discarded) {
+> 		pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
+> 			cpu_buffer->cpu, discarded);
+> 	} else {
+> 		pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
+> 	}
 
-This is only enabled when testing. Let's make that a pr_warn() as we really
-do want to be able to see it. And it should warn that it is invalidating pages!
-(warn as in pr_warn, it doesn't need a warn as in WARN()).
+Or perhaps:
+
+	pr_info("Ring buffer meta [%d] is from previous boot!", cpu_buffer->cpu);
+	if (discarded)
+		pr_cont(" (%d pages discarded)", discarded);
+	pr_cont("\n");
 
 -- Steve
 
-
-> +	meta->nr_invalid = invalid;
-> +	meta->entry_bytes = entry_bytes;
-> +}
-> +#else /* !CONFIG_RING_BUFFER_PERSISTENT_INJECT */
-> +#define rb_test_inject_invalid_pages(buffer)	do { } while (0)
-> +#endif
-> +
->  /* Stop recording on a persistent buffer and flush cache if needed. */
->  static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
->  {
->  	struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
->  
->  	ring_buffer_record_off(buffer);
-> +	rb_test_inject_invalid_pages(buffer);
->  	arch_ring_buffer_flush_range(buffer->range_addr_start, buffer->range_addr_end);
->  	return NOTIFY_DONE;
->  }
