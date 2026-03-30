@@ -1,91 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E603B3898;
-	Mon, 30 Mar 2026 09:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DA03AEF42
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Mar 2026 09:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774861248; cv=none; b=es/t8zhjVGlE4SPBodY/rgIBnPSJZgeT2qXqbEG74R+HfN4rVVUNZLzQAG9K4a8Xj5wnXBJmoDGMOw3BNRHKrOtivpGwYqhjrUSbOxifj7SJwjxnYgsIZoC4bYeIUxxhYWTyeFyecbRD7+/l6tCDaGlW7C6/MH2CwJ29/BF/HSg=
+	t=1774861958; cv=none; b=laM2Ps9M7f85b0Jw8QsLjLrt70SSOVgSX1R9YzbuTX+2UKHk6JseGCKuJYhEfR1jD733RBwU9jUc7qyIlb2Z59X4Ttc+VaP0V8paqwWIbI61qriE3QJR3nZ9JWYKctxaVMQtVSIMcffpWo4e3S6pjzdLxqQ9sG9p3qSNeS2QEN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774861248; c=relaxed/simple;
-	bh=kryiSL0c5gWoP5Xn33RlQGuB1fDy2r29C8AZwGGNizM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GMmMq3bqTtmK1jmbVL+FDFpZYD4SJWE+ZBHLq/jqvQ0Uf5NtxhKMCYw+lPwr09pXzIoD5tFWwNvxFpSBGQLewvOh2mPjj6TWG6LIb0kA6lpG0D7Hwidm+cl+O9JisKVSLGebcZN4kYticFyp4I2krGhikjHrcvJ6oM3KDujHlRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyVV6yho; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774861958; c=relaxed/simple;
+	bh=y7Q5Ib2UgBOzKCSKBQpKN/ID969aZEB5jkNSBraOAbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=MVDyOms40VQLYY5ePtFfgoTopWfCBXs+RRk9XZX5sQ0QOjnGBzX/0oPRbDYuMGsxOA2bQdxiMCE8mFWnomC2spdrOx9gY/AYLxO/kHYvtatO+T2UZ3y5Y2GzdieiXsbhugy3x5tfVNLghNfzmJTY77k75bIqE527GCXj31Bo8+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ByatIz7i; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyVV6yho"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BC8C4CEF7;
-	Mon, 30 Mar 2026 09:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774861247;
-	bh=kryiSL0c5gWoP5Xn33RlQGuB1fDy2r29C8AZwGGNizM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WyVV6yhoGLHl2DGlMtLNk2PLvv1LoFNZHT4upzyLknoqI3XroAjHB9I1ha+vU4mPX
-	 jqLByu7cdkfcSBvwjAbgeSA7t1FnsQjdZlrHnf9SNnPEyV8aXCVfzuhI/9ayog85j2
-	 ZCfecMUhBhB9NayIQbTF+29vTra1H0L8yHpOy9Fwzj1WruGul10WlXsrznGUH8EUO4
-	 yAVoSQA1pK/w43OyYruiDlv+uPCsaxYtmh6p3C7asR9EeKI1wjuzkpsIcL4izJJluW
-	 H7vlwohlhoQLLz7U0ZJ9f5WNsHXklzmi3Z/jx+6T/BWbr7v0B1OnwuC2GYBfZcweMT
-	 Fa1JpYbf/eG2w==
-Message-ID: <b1c93301-c12a-46a6-ba92-53e8f9a28022@kernel.org>
-Date: Mon, 30 Mar 2026 11:00:37 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByatIz7i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774861956;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Aji3OuIasTbG7nwf/w5iZ+Q2tfC4MvavQKG2epUf4Ok=;
+	b=ByatIz7i9VOnnonPhMtZVXhZTxC2BXMhph//dinFR1prHFsEDCYnnuj3tzpewkkMeepURL
+	XIqxmvd4ht5Dalw/fTsYUEUZqIo7qZclL3emk6fINcqGzto2RxO56IUtJHr2rkkGRpHsbm
+	BpROCABwLzj3olgIL4+7KHxUCOvcV/Q=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-Li13eHcuO-KTXiiK-by_SA-1; Mon,
+ 30 Mar 2026 05:12:33 -0400
+X-MC-Unique: Li13eHcuO-KTXiiK-by_SA-1
+X-Mimecast-MFC-AGG-ID: Li13eHcuO-KTXiiK-by_SA_1774861952
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 358F919560AF;
+	Mon, 30 Mar 2026 09:12:32 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D3D60180075E;
+	Mon, 30 Mar 2026 09:12:28 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] rtla: Fix build without libbpf header
+Date: Mon, 30 Mar 2026 11:12:07 +0200
+Message-ID: <20260330091207.16184-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/9] mm: move free_reserved_area() to mm/memblock.c
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Potapenko <glider@google.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Andreas Larsson <andreas@gaisler.com>, Ard Biesheuvel <ardb@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Brendan Jackman <jackmanb@google.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Christian Brauner <brauner@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>, Dmitry Vyukov <dvyukov@google.com>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
- Johannes Weiner <hannes@cmpxchg.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Marco Elver <elver@google.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Michael Ellerman
- <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>,
- Nicholas Piggin <npiggin@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Saravana Kannan <saravanak@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Will Deacon <will@kernel.org>, Zi Yan <ziy@nvidia.com>,
- devicetree@vger.kernel.org, iommu@lists.linux.dev,
- kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
- linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- sparclinux@vger.kernel.org, x86@kernel.org
-References: <20260323074836.3653702-1-rppt@kernel.org>
- <20260323074836.3653702-5-rppt@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20260323074836.3653702-5-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: rW7NEM6iJwrZKzDKsO9VGU-JyKs94IIlH8NClwbHTHk_1774861952
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On 3/23/26 08:48, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> free_reserved_area() is related to memblock as it frees reserved memory
-> back to the buddy allocator, similar to what memblock_free_late() does.
-> 
-> Move free_reserved_area() to mm/memblock.c to prepare for further
-> consolidation of the functions that free reserved memory.
-> 
-> No functional changes.
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+rtla supports building without libbpf. However, BPF actions
+patchset [1] adds an include of bpf/libbpf.h into timerlat_bpf.h,
+which breaks build on systems that don't have libbpf headers
+installed.
 
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+This is a leftover from a draft version of the patchset where
+timerlat_bpf_set_action() (which takes a struct bpf_program * argument)
+was defined in the header. timerlat_bpf.c already includes bpf/libbpf.h
+via timerlat.skel.h when libbpf is present.
+
+Remove the redundant include to fix build on systems without libbpf
+headers.
+
+[1] https://lore.kernel.org/linux-trace-kernel/20251126144205.331954-1-tglozar@redhat.com/T/
+
+Reported-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Closes: https://lore.kernel.org/linux-trace-kernel/20260329122202.65a8b575@robin/
+Fixes: 8cd0f08ac72e ("rtla/timerlat: Support tail call from BPF program")
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/src/timerlat_bpf.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.h b/tools/tracing/rtla/src/timerlat_bpf.h
+index 169abeaf4363..f7c5675737fe 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.h
++++ b/tools/tracing/rtla/src/timerlat_bpf.h
+@@ -12,7 +12,6 @@ enum summary_field {
+ };
+ 
+ #ifndef __bpf__
+-#include <bpf/libbpf.h>
+ #ifdef HAVE_BPF_SKEL
+ int timerlat_bpf_init(struct timerlat_params *params);
+ int timerlat_bpf_attach(void);
+-- 
+2.53.0
 
