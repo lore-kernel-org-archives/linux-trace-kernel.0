@@ -1,100 +1,97 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFFF1A6810;
-	Tue, 31 Mar 2026 00:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539D21D5CD1;
+	Tue, 31 Mar 2026 01:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774918688; cv=none; b=ovQPCsOzXux+27apUMqRoc42uEhwuxivZhrirCX8OcuDuK8Hva3CTlzXAkih353pJ4dbSiBep4gk+J8vFS5X+4rA5gpfAN1oZ8fSEOvLzVdpHi5vqdJbyUJhrfLFO6uVjNQmDSiooWg44GWC9aCO9zcynihpH3CtVrDPeBll41M=
+	t=1774920297; cv=none; b=o7pwFSHbLgYpc+IyM02oFF44dXuwAfQU/eEpwJLnTmJFdZCwEigf32r5fbfxmm5qY5ejRZFlA6SMXKgtihhNeXyClxy8aEbZN5POhKrSL3oAX9pC2PT5OOZA3NHrVjnQuyHt2yt56S8l+4BHKOq6aQYEgUFP2Yj71h8rfUaC1c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774918688; c=relaxed/simple;
-	bh=y7l7IE1VrnfHT4iipmmjDL2L9hGegYXVrVqY8IBM9VU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EillTGv0/zNko76wHb/UeIPK19cnWEPF8chXB6OgYxyZQW7mKy634T8d3Eu9mbHNTYZYGe7tn61IJI+T7v1MZ/Kl+UAX1IO3AZJAEUF81vmiDuxIzkc42X/nvFl7wn23ark6qv1no8eBdDZGz3ZNBBpODUYh11B0W0dXQAIxjuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id CF4BAC2365;
-	Tue, 31 Mar 2026 00:58:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 3A55460011;
-	Tue, 31 Mar 2026 00:58:04 +0000 (UTC)
-Date: Mon, 30 Mar 2026 20:58:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Remove duplicate latency_fsnotify() stub
-Message-ID: <20260330205859.24c0aae3@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774920297; c=relaxed/simple;
+	bh=uzhnwoV+mM+GNSitKoGUojylzVaJORN//UYYjIRXso8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=F/1QOq6t7k9KB9xePscMxrsN82FuCtLni/Ttr7bvTRdkSjQv1isPWhGfL0rpYtuYnAATOqNrkSvNqj9Yq71eRkyApcJrL7330QRIXj1iak6AxXk9LSlVgcKOSB8idWYTSmBh732EAjO/ksJly72NRrrApTKHb2oUmBodrVGIn68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvY46Ilj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvY46Ilj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254F2C4CEF7;
+	Tue, 31 Mar 2026 01:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774920297;
+	bh=uzhnwoV+mM+GNSitKoGUojylzVaJORN//UYYjIRXso8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JvY46IljQ/bL9eTu8cJJyglyR8PgakZRVdDATd/GA2gxUBr9euComP9hg8V4wfDVT
+	 eOXaMWCfyNzsUv7yy+vH82BCfuVv8KsaFPEgz8X0VQ+EOYlIWQSwu7P5iuvxH5/M/h
+	 FRuZ7isCrSJeOQduqBPLPyOgV/pEi/vnDfqJDfC1wjaJ6hVEUlNV+8vMXAR1N5rD7R
+	 gfOGEFIEHH4Qgg4T8tuq0Csu+FInbTizAT61Rc2QTRuZ2s1FZUWCpnKjW9+el5pzDx
+	 Te/THxUjZdJbOs3wHdeTTB0c4aee4mNvEzvzhQMEgIG6tQW1qjOGzOE0Aa1EE+60ck
+	 pMkidyPVkSpDA==
+Date: Tue, 31 Mar 2026 10:24:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
+ Rogers <irogers@google.com>
+Subject: Re: [PATCH v14 2/5] ring-buffer: Skip invalid sub-buffers when
+ validating persistent ring buffer
+Message-Id: <20260331102454.b94d304562bab25eb6fef63d@kernel.org>
+In-Reply-To: <20260330162822.54f6bd02@gandalf.local.home>
+References: <177487498530.3463592.12715592581212799257.stgit@mhiramat.tok.corp.google.com>
+	<177487500432.3463592.13753720277119177967.stgit@mhiramat.tok.corp.google.com>
+	<20260330162210.5e37b0c3@gandalf.local.home>
+	<20260330162822.54f6bd02@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: q99npdryaj1homo9rxo676sftrh66zxa
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 3A55460011
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19swNYNZAZ9VzpD8rVxaoGlXC5I8gGw7tU=
-X-HE-Tag: 1774918684-545386
-X-HE-Meta: U2FsdGVkX1/+h+N1q2ViMYv7h+JAd5xWs9zVapRk6NVtdH0/8vFvfbaj2eodE8jUlQ10B0nppWc6kiKNySc5sqF16IMQck+Cdy+2CwSVlu7V7ujQWqXHEFVAZeJ0GlC6+Q/dWnGA8UCYRgwg+65vjMfSjTigITDliEw7z1UBs5g4paVsEy6diENRBkLUiFJ/yLSyWohqjAW2Ll6fkAB04pa5re2lquZoKEyNYF7iizD/UUQrZNWChs5TqXQzAeonwg8F4XK6nuzCIMA3McrRLuYc2OkMOh8VHDlnrkRP3q7HGRnqMmeKgLgohWCmFXYCKYoFfTfheKUBKXh1t2uZWO8gM0mJ5HDmFk7j9jbAxYt0XwiiBsoa8xZB8+euKA1pD6gWiJGZpCJV6YkCjdY8KCts6iiB44+1ftxWW4vn86U=
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, 30 Mar 2026 16:28:22 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-When the SNAPSHOT is defined but FSNOTIFY is not the latency_fsnotify()
-function is turned into a static inline stub. But this stub was defined in
-both trace.h and trace_snapshot.c causing a error in build when
-CONFIG_SNAPSHOT is defined but FSNOTIFY is not. The stub is not needed in
-trace_snapshot.c as it will be defined in trace.h, remove it from the C
-file.
+> On Mon, 30 Mar 2026 16:22:10 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Mon, 30 Mar 2026 21:50:04 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > 
+> > > @@ -2042,7 +2065,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  	local_set(&cpu_buffer->entries, entries);
+> > >  	local_set(&cpu_buffer->entries_bytes, entry_bytes);
+> > >  
+> > > -	pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
+> > > +	pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
+> > > +		cpu_buffer->cpu, discarded);  
+> > 
+> > As pages should never be discarded unless something went wrong, let's only
+> > print that if there were discarded pages.
+> > 
+> > 	if (discarded) {
+> > 		pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
+> > 			cpu_buffer->cpu, discarded);
+> > 	} else {
+> > 		pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
+> > 	}
+> 
+> Or perhaps:
+> 
+> 	pr_info("Ring buffer meta [%d] is from previous boot!", cpu_buffer->cpu);
+> 	if (discarded)
+> 		pr_cont(" (%d pages discarded)", discarded);
+> 	pr_cont("\n");
 
-Fixes: bade44fe5462 ("tracing: Move snapshot code out of trace.c and into trace_snapshot.c")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202603310604.lGE9LDBK-lkp@intel.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.h          | 2 +-
- kernel/trace/trace_snapshot.c | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+OK. I'll do this.
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index a3ea735a9ef6..a59d6acdf95d 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -845,13 +845,13 @@ void update_max_tr_single(struct trace_array *tr,
- #if defined(CONFIG_TRACER_MAX_TRACE) && defined(CONFIG_FSNOTIFY)
- # define LATENCY_FS_NOTIFY
- #endif
-+#endif /* CONFIG_TRACER_SNAPSHOT */
- 
- #ifdef LATENCY_FS_NOTIFY
- void latency_fsnotify(struct trace_array *tr);
- #else
- static inline void latency_fsnotify(struct trace_array *tr) { }
- #endif
--#endif /* CONFIG_TRACER_SNAPSHOT */
- 
- #ifdef CONFIG_STACKTRACE
- void __trace_stack(struct trace_array *tr, unsigned int trace_ctx, int skip);
-diff --git a/kernel/trace/trace_snapshot.c b/kernel/trace/trace_snapshot.c
-index 8865b2ef2264..07b43c9863a2 100644
---- a/kernel/trace/trace_snapshot.c
-+++ b/kernel/trace/trace_snapshot.c
-@@ -391,9 +391,8 @@ void latency_fsnotify(struct trace_array *tr)
- 	 */
- 	irq_work_queue(&tr->fsnotify_irqwork);
- }
--#else
--static inline void latency_fsnotify(struct trace_array *tr) { }
- #endif /* LATENCY_FS_NOTIFY */
-+
- static const struct file_operations tracing_max_lat_fops;
- 
- void trace_create_maxlat_file(struct trace_array *tr,
+Thanks for the comment!
+
+> 
+> -- Steve
+> 
+
+
 -- 
-2.51.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
