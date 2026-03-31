@@ -1,46 +1,46 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013027.outbound.protection.outlook.com [40.93.196.27])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012046.outbound.protection.outlook.com [40.107.209.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7B43A5E89;
-	Tue, 31 Mar 2026 22:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2A620B810;
+	Tue, 31 Mar 2026 23:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774997730; cv=fail; b=UsN7ofC4zUxaHx72lR0SrSydlOGnm6EKlbCbnfvHN5b6VwdvGllcDpGrnBuxYEiF6zIXyWLWvTkeKUe1baMC4j9fJAIkaGbrHZ/2UG9YULGoeMmLhvuzkNTkj0jJpdZB8vUwG5RdGt2bMze0EK5YJdTaPBynHQZUtL9Dw+Gr13U=
+	t=1774999929; cv=fail; b=n4z0TQGnv+BfGBVV+eS1tckBe/ZKYSgjbKTHEfOFF/lni4IOnLkggkz7UTLVtiRDMhLFTrQIjBDbmM4lPpEoxTE9UXqvZlZ6pOngJwndS/i3aaFuuOKwjJ/X7Tmzc7tVNRn8V1YQ0WYWxeJTHRC7fBYDnLnY+dSlUx8CyZj7KsE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774997730; c=relaxed/simple;
-	bh=lAasYIA7LEwBGWOK2F3utHrCoZbvrzgBosdR46uFxVk=;
+	s=arc-20240116; t=1774999929; c=relaxed/simple;
+	bh=9fhYEnwKxslfHyjCBLhduWvZUTehNsopBg9K0ZvVxE4=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sUKohqdA033ZVD57VT/6cj6zuXzqSN5WRDbJGcd4vdYgj4ZkEheJG6ir4rKkkPlZxnjU7ABnObCdHGLdA2PwqcPE3iQICyXXgkxRj6t4RDn4jM1pAtZisRmuZXbMyEPmGvVV2ggOlaqF/YSjPVQyWh/qHCYFRp3N+AhXIu6K1b0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jh1TqH22; arc=fail smtp.client-ip=40.93.196.27
+	 Content-Type:Content-Disposition:In-Reply-To; b=qMHNUTJBnNSr5ADi+H/KJE13se1lKzGITmS9ZV68msbRqUV4aEWugdKQIyRw1RCjUr/Ipa+L8PbyeY+PRqjbTf3VZLUqQuHeoRTts7Ehn4hMKR2ebKKgOw8qoUAZX8sStK/V4+f2M+9smOdtBABTZMwkhT24S2cYgP1TwFn1o2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WCEQFoGi; arc=fail smtp.client-ip=40.107.209.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jh1TqH22"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WCEQFoGi"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wM49eExtJ2WtYrAjuMPPFLabozGsemZ6adFEQ/NMOlqYO9myFbgh2hlUA27Ax5o8tVTSk4ElB0NjVc8TovcaiZPA71shQiixBYl70EzT2LruIMkQCn7S5JQ7pBvwwP51q4NSCWS5J3i0gw1UqQLFK4Nb3EcOmI/S6yF4b/49tg+bvzGX6md7xvN152EySdo10fLQQDVDDbuZbQ9BuJWbsv6yXvsiNronoOTNX59TUY+6Q2teP03/yZ1kunLoYGes3PqGDMj9vwfX0nHUlMx2DEG45f9WbjchChe+qVSc2fCh/HDDTYsCeaQXbQAW6ZODo8PfqBvCpdYXrmpqB7dyAA==
+ b=EEap3v3cDwCgOEWxOxBPQGXV393MZyxrdd4U7B6ZfJx2kgJYIvPuaf1dt4ygstfgET59u8d1xFqJZC9jrrWsgGih3eDrCgtcaDJalkSNFHCTJ6/3Kf1231VhopqV09Kb5Xvvqy+6UKwHg7hGpUqvr499m8RHlXgweNBT+JhHGa9JLjS8Up3+yt3eHQDeB0VWS2Bturo5cLKVJ8R7Q8h0nXf2QjJLqlGT6oPnTVU2kPmNpaPYc16J5sxgRVdtEzDzjnWM0AWZdmY65hPQJq5ySBcdUGabCxoIHCTMG+qmf7v3YbRU2736Jn43OwT+N0jOArCiznfmMsSBDG0iDeSOfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xFbbXXSVz573XWlHhiXn82MDK06HAPpzQ+47UHDnMDo=;
- b=cI5bqvX5Uenqw0KmqM4lgPvPu80+60hf4AEGXCQQs1+W6Tz8o851Tpijz5yc+oskFDAKm+OLyH5B4+cSBuDdIpgBjn6TTKg4hv8QTabkL98eij8TMf2htmfHXUmWRR4xXQxnUlgEZwtkGcCYrnHMgfCJqSrLFVJRw1AUSC1TH5EJO6kJTl62QegCVTUFBaJIqvy6yStb/RA85ffovxLx7xXPyixEc0LKGjSyUhg6wAK5+MN79bhfjEWXFNc9tUSMnoyESA5mbpHxNPLLX7rO3IKEWR8Fo93+sJ5GEGvJV6PWg/RsOtXTq1THGE3LHuUbSHgrKAbUX5LWvHMi3Xf7vQ==
+ bh=9i7/L8N61XGOxLN8370xhuHyXq8itLZLu+EjP5vnfc4=;
+ b=BkHqns2FvBfphz9f3vmMvHeOVnmJuxMaAbpcb3VG07EVZnGUMLv6J234p6f/fvdS4ufHW0ooAYMbJcMlsLtDbhybl8VX6mFwlk8KgS4h8zhcJ8O0sFWRfA36d2vPeUVurV2H/rK4xmvQv+3iddZxVXdfvXmC5E5YUdWzkAbGobAtpt5kM0srddRfES4T3tOHe3jCnIWYWd4Pd6YrK/DlDmw2ZbJh8/psa2cs9Uss11pMKjCEEW/dNepABprywvPUwaurcw8Y8+ZY0fpFj1K/EezfSSZoy8jfgLvNygGxpHsP0awD1CiQR1gbrxzsF/ORd30Dhuvmpl1ZhhdDm8j5Lw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xFbbXXSVz573XWlHhiXn82MDK06HAPpzQ+47UHDnMDo=;
- b=jh1TqH22L7C9RM6VGgiveyMjyRO3CGSpLAMsgb2BS0HzOu6fATp5Op7uNcnQlproCYwQHqpt9sNMXKpGN6yA0iF55euXvemj+eQZDZvrFBifAWnG5qAY6Ean5ZEmTgbVLC/29namdSD7qn2SEuebd9XEXcMhAaVqThngib0WWs0=
-Received: from BN9PR03CA0893.namprd03.prod.outlook.com (2603:10b6:408:13c::28)
- by DS0PR12MB8561.namprd12.prod.outlook.com (2603:10b6:8:166::8) with
+ bh=9i7/L8N61XGOxLN8370xhuHyXq8itLZLu+EjP5vnfc4=;
+ b=WCEQFoGiS0y3qC3pRg8tb9+xkBTZcWhz5PefVmGRSoi1iRLkaoOLRIFAtfYGveFz2b2WbhwsL62XJhvAkTd9K7WebRn0VEOsofW2on+zrI+HtXwDgYi8K4f7kvTeiSwCty1wZqMdLqAPdXlMvAMNxaYri6nfYo+it9c8AnVL0UY=
+Received: from PH8PR05CA0024.namprd05.prod.outlook.com (2603:10b6:510:2cc::12)
+ by SA1PR12MB8886.namprd12.prod.outlook.com (2603:10b6:806:375::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.8; Tue, 31 Mar
- 2026 22:55:20 +0000
-Received: from BN1PEPF00005FFC.namprd05.prod.outlook.com
- (2603:10b6:408:13c:cafe::cc) by BN9PR03CA0893.outlook.office365.com
- (2603:10b6:408:13c::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.29 via Frontend Transport; Tue,
- 31 Mar 2026 22:55:20 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Tue, 31 Mar
+ 2026 23:31:54 +0000
+Received: from SA2PEPF000015C8.namprd03.prod.outlook.com
+ (2603:10b6:510:2cc:cafe::c0) by PH8PR05CA0024.outlook.office365.com
+ (2603:10b6:510:2cc::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.15 via Frontend Transport; Tue,
+ 31 Mar 2026 23:31:54 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,14 +48,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BN1PEPF00005FFC.mail.protection.outlook.com (10.167.243.228) with Microsoft
+ SA2PEPF000015C8.mail.protection.outlook.com (10.167.241.198) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9769.17 via Frontend Transport; Tue, 31 Mar 2026 22:55:20 +0000
+ 15.20.9745.21 via Frontend Transport; Tue, 31 Mar 2026 23:31:53 +0000
 Received: from localhost (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 31 Mar
- 2026 17:55:19 -0500
-Date: Tue, 31 Mar 2026 17:53:10 -0500
+ 2026 18:31:53 -0500
+Date: Tue, 31 Mar 2026 18:31:05 -0500
 From: Michael Roth <michael.roth@amd.com>
 To: Ackerley Tng <ackerleytng@google.com>
 CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
@@ -83,10 +83,11 @@ CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
 	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
 	<linux-mm@kvack.org>
-Subject: Re: [PATCH RFC v4 08/44] KVM: Introduce KVM_SET_MEMORY_ATTRIBUTES2
-Message-ID: <cxmtst7txfodp6lo4ipue3trohx2ge7nkagkfzfixfdnlf5qlo@e3jw3tmbe272>
+Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for
+ KVM_SET_MEMORY_ATTRIBUTES2
+Message-ID: <cqkyz4zxosmev6lnbasa32ed5jjfljrx3gr6plyjfhrtbysuwr@rg5noy6y6ayu>
 References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
- <20260326-gmem-inplace-conversion-v4-8-e202fe950ffd@google.com>
+ <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -95,305 +96,564 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20260326-gmem-inplace-conversion-v4-8-e202fe950ffd@google.com>
+In-Reply-To: <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
 X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFC:EE_|DS0PR12MB8561:EE_
-X-MS-Office365-Filtering-Correlation-Id: b0ef29d9-6ae3-4532-d666-08de8f7895b6
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C8:EE_|SA1PR12MB8886:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6dc181f7-1cce-4908-1af8-08de8f7db13c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700016|82310400026|7416014|376014|22082099003|18002099003|56012099003;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700016|7416014|22082099003|56012099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	e0wD2t4shNlRM5Kt8mpEzuCOk3SKT8SPf3uH5+pU6u/rk8ipokzh6hdWLAeiO/fyVJDhZL2Atwx4dif2K+EtWdBo75GrENSC7vF1xRC410aIQxjQzJ+K4UEEi1HUXYntJw7ofdqaTny4GaOHFqmFYyrF5nWojhCYbAtxDnp323fpxOZ3ZPVfn/tZxqsjKKwW7mPvH3nO0eE6xDLHXCIvMxazDVMZQ1kOeDZW/cyACCl3tU44FKvrHsBBgxpRI1LIgnpOon8RrSQpQg+bjLNw9AQILAE8AoTk2h/oxN9vqhH0fvj8txcJTKTLaw8FKqB3Y4Mzd9RPW0wZ5DKg7AMzQv1G5b2tEId/0JxTN1UQgTxBzRnKULFTA3wruITD9MP4lD77L14KIaQsSmd0oUdD/l8ZUsEqaf8PdfzrE1FTPfZkWtDLw4kFXWh75r3tqbHiru9s1EJH5sHUp6KaSd8ynmcD+ggiFYJ2mnzI3yHd49Ztf93S4wk9YaD2ETn8eLFUv2Gg+u9Aq0q2vkwS1PYVsU7yRGdgBRGrAlHslGr022QzGlORijFzmO8vz+okwE4CFhIJH6hI7aNudkW4vK49LRaVPElY5tRez0wrszuR2qMuBm6/bNj690lDjWYJEzBgIx2+/UTAgxWPUlR9/sMBgaCdeHflI0Lzh2wvuOsiexPqcBM8wHKfZDNPt6ZxM7e6t/nwQaonYjDawBf8y1zKDxrW0EZca9Zpx2hTFx4+UAPVMee3gX9ZD6vokOZWtjLYAMIifgDm4h7/65FnGiImuA==
+	EF4RvKvPkuOhPrdw8fXb06hJgmMfWhTc2V6A2rWaibTaY4ONa8dBHERxsCobKJJiOjab39lelvWnT5Ax7mKvGiJajHHy/GQXiZzYVjn4HTjaUwPYxi+jCctsgpnPV0pDjgT6hwvsmecBGWi9J/HzixYOdcxJRYSCFYSQqpwupwytOKQ/a5hIvJFELtHQr8CxmR9N93j7R0Yc8qGzSFsvxtmjUvRFg3T9+gHlUDM3SOYcrGUxOUkNmmZffhGfpTKN0seC0noTzRJlaayDWODN0xGisXGwmKLUJEjB1U3Gbdujhus3LSxqphKx8rVoGd/hDx5sESr84TeZq6nr2cT7vadnyZD5/XByqgW/tO0O0NNiSHaD3H2GJv3vNbus3uyI452ma67m+CYoZFafrwHDyOBdE3be+vybJYDIN3w5Dlr7r9yOhqnsSfGFZJMKdYhxxqUMPTGCHkC7mbPMIJRqN8cnJnFpIvepji0hcMd2Zog7m51tThIjz8GhD/MX4tK7S2V9J5S+q7+Jug3twwK5yM/JS9vNhqgO4ru/I/elzZv9vjj8Mg3r6zFJyTwgnBCP8zZRfaeX8iQ2/J7SIlnFlPQdPdpXr0s8VlogQCTPSAudSrVKnXwL3Ny1nr7X9OS7XJoRRRxELUTwC9iSq5yb4UGnfCzQuEk8YP1/tm8MissxU8kFl+QxTd4w14/VRErXC9mgxaSy/CX4czX1yZwRvXNPltvTJ7ji3HOP/MlEZdDAsjhdODI7SEG43fKUazP7RL5dIH4XBuH60YrxfbWl1w==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(82310400026)(7416014)(376014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700016)(7416014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	xiqtZg7r1vdeHXguBqkSaDPbv8FcpCbvjwG1MW+DIrpe6SL9zebH0hLHGv4NoYVCGt9XBEnUoOCbPofaLRugbL1nYKu4z22SVZFL397tB4FjSr1eTdK3/37VdVq2D5eVX+/snJjQznKFACen0BD07Hm8jX0Akr07urkBGcUVrECwP9/IwEF5Di+cm+VnEkYninwhLyg95f1Vqq3XPCyk/3Iffi2c3Du1nrQWCnceOe8LG3axqLTR/9ryzhiuVsUL6gpYg4ZJjgnZOWz/FdM70NcQYxkCqi23+ibyxBeUmuZXdb1PraQIJfr6M29u5a/Htq8qM6NEcY9WCKunHqWQqJRwcqTwiRCJJsvtiAp/WueYdaJqxWRx57jEF0wHFR64FFpzJbXfzDC8XER/d0/7TphljsWj3jEKVSRRiIGYcyHZwqQUIkAxHvuwkv1LVo9k
+	x0zni7VcSq3tFbnDgfY1IHqGkrFvCM61HfpJdSzL0dQdakILD2CGg4SFM5iX4uX/FlGauWMfKwLtVyBvvHHTToMmJzvVkyhWXIHMIjyJxMpnHKxaoWiZjl8wk7kBsKXQBoQhEvS+eUFKHc7wWeSwcUA4iGulZQcPoajhGAxwHqATsM6N1TEikYv3DIJwFc+IhtB28gWu+nL3llA533iVx1m8qA0/kf/0OYCyYWlODkcZMlA4kMRmpuO8fMUqdErEmSgxGZcnjGnTXLE9AUiLceB7iHyeVilTrMqh/K+GHTrzx+aZfaaKrkd8usTmapPp8cNGPw569e+10R7Y6N5z2J6mtR2dfNk0OMUTkT3kLu+WGRMee9fOlDSJP/GmvTVZlvFioRSeo4mGL+QNbuwcNsFcrw0ZwNM9+maEEG53+q9X3oh1+dKm6ROq7N1uN6K9
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 22:55:20.3390
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 23:31:53.9703
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0ef29d9-6ae3-4532-d666-08de8f7895b6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dc181f7-1cce-4908-1af8-08de8f7db13c
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00005FFC.namprd05.prod.outlook.com
+	SA2PEPF000015C8.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8561
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8886
 
-On Thu, Mar 26, 2026 at 03:24:17PM -0700, Ackerley Tng wrote:
-> Introduce a "version 2" of KVM_SET_MEMORY_ATTRIBUTES to support returning
-> information back to userspace.
+On Thu, Mar 26, 2026 at 03:24:19PM -0700, Ackerley Tng wrote:
+> For shared to private conversions, if refcounts on any of the folios
+> within the range are elevated, fail the conversion with -EAGAIN.
+> 
+> At the point of shared to private conversion, all folios in range are
+> also unmapped. The filemap_invalidate_lock() is held, so no faulting
+> can occur. Hence, from that point on, only transient refcounts can be
+> taken on the folios associated with that guest_memfd.
+> 
+> Hence, it is safe to do the conversion from shared to private.
+> 
+> After conversion is complete, refcounts may become elevated, but that
+> is fine since users of transient refcounts don't actually access
+> memory.
+> 
+> For private to shared conversions, there are no refcount checks, since
+> the guest is the only user of private pages, and guest_memfd will be the
+> only holder of refcounts on private pages.
 
-Hi Ackerley,
-
-Not trying to bikeshed below, but I'm working on getting related QEMU
-patches cleaned up to post soon and was working through some of the new
-uAPI bits, and plumbing some of these capabilities in seems a little
-awkward in a couple places so wondering if we should revisit how some of
-this API is defined...
+I think KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES deserves some mention in
+the commit log.
 
 > 
-> This new ioctl and structure will, in a later patch, be shared as a
-> guest_memfd ioctl, where the padding in the new kvm_memory_attributes2
-> structure will be for writing the response from the guest_memfd ioctl to
-> userspace.
-> 
-> A new ioctl is necessary for these reasons:
-> 
-> 1. KVM_SET_MEMORY_ATTRIBUTES is currently a write-only ioctl and does not
->    allow userspace to read fields. There's nothing in code (yet?) that
->    validates this, but using _IOWR for consistency would be prudent.
-> 
-> 2. KVM_SET_MEMORY_ATTRIBUTES, when used as a guest_memfd ioctl, will need
->    an additional field to provide userspace with more error details.
-> 
-> Alternatively, a completely new ioctl could be defined, unrelated to
-> KVM_SET_MEMORY_ATTRIBUTES, but using the same ioctl number and struct for
-> the vm and guest_memfd ioctls streamlines the interface for userspace. In
-> addition, any memory attributes, implemented on the vm or guest_memfd
-> ioctl, can be easily shared with the other.
-> 
-> Add KVM_CAP_MEMORY_ATTRIBUTES2 to indicate that struct
-> kvm_memory_attributes2 exists and can be used either with
-> KVM_SET_MEMORY_ATTRIBUTES2 via the vm or guest_memfd ioctl.
-
-The guest_memfd support for the KVM_SET_MEMORY_ATTRIBUTES2 ioctl isn't
-added until patch #10, and to scan for it you sort of need to infer it
-via KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES reporting non-zero (i.e.
-KVM_MEMORY_ATTRIBUTE_PRIVATE), so it's confusing to state that
-KVM_CAP_MEMORY_ATTRIBUTES2 means you can use the struct via a guest_memfd
-ioctl.
-
-I think the above is trying to simply say that the corresponding struct
-exists, and remain agnostic about how it can be used. But if that were
-the case, there would be no way to know when KVM_SET_MEMORY_ATTRIBUTES2 is
-available in the first place, so in the case of KVM ioctls at least,
-KVM_CAP_MEMORY_ATTRIBUTES2 is advertising both the struct and the ioctl,
-whereas for guest_memfd it's only advertising the struct and not saying
-anything about whether a similar gmem ioctl is available to use it.
-
-Instead, maybe they should both have the same semantics:
-
-  KVM_CAP_MEMORY_ATTRIBUTES2: *SET_ATTRIBUTES* ioctl exists for KVM that utilizes
-    struct kvm_memory_attributes2
-
-  KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES: *SET_ATTRIBUTES* ioctl exists for
-    guest_memfd that utilizes struct kvm_memory_attributes2
-
-In which case you would leave out any mention of guest_memfd here as far as
-the documentation does, and then in patch #10 you could modify it to be
-something like:
-
-   4.145 KVM_SET_MEMORY_ATTRIBUTES2
-   ---------------------------------
-
-  -:Capability: KVM_CAP_MEMORY_ATTRIBUTES2
-  +:Capability: KVM_CAP_MEMORY_ATTRIBUTES2, KVM_GUEST_MEMFD_CAP_MEMORY_ATTRIBUTES
-  -:Architectures: x86
-  +:Architectures: all
-  -:Type: vm ioctl
-  +:Type: vm, guest_memfd ioctl
-   :Parameters: struct kvm_memory_attributes2 (in/out)
-   :Returns: 0 on success, <0 on error
-
-and *then* add in your mentions of how the usage/fields differ for
-guest_memfd/KVM_GUEST_MEMFD_CAP_MEMORY_ATTRIBUTES case vs. KVM ioctls.
-
-This avoids needing to issue 2 checks for the guest_memfd variant vs. 1
-for KVM, but more importantly avoids subtle differences in how these
-similarly-named capabilities are used/documented that might cause
-unecessary confusion.
-
-Thanks,
-
-Mike
-
-> 
-> Handle KVM_CAP_MEMORY_ATTRIBUTES2 and return the same supported attributes
-> as would be returned for KVM_CAP_MEMORY_ATTRIBUTES - the supported
-> attributes are the same for now, regardless of the CAP requested.
-> 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> Co-developed-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
->  Documentation/virt/kvm/api.rst | 32 ++++++++++++++++++++++++++++++++
->  include/uapi/linux/kvm.h       | 12 ++++++++++++
->  virt/kvm/kvm_main.c            | 40 +++++++++++++++++++++++++++++++++++++---
->  3 files changed, 81 insertions(+), 3 deletions(-)
+>  Documentation/virt/kvm/api.rst |  48 +++++++-
+>  include/linux/kvm_host.h       |  10 ++
+>  include/uapi/linux/kvm.h       |   9 +-
+>  virt/kvm/Kconfig               |   1 +
+>  virt/kvm/guest_memfd.c         | 245 ++++++++++++++++++++++++++++++++++++++---
+>  virt/kvm/kvm_main.c            |  17 ++-
+>  6 files changed, 300 insertions(+), 30 deletions(-)
 > 
 > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 032516783e962..0b61e2579e1d8 100644
+> index 0b61e2579e1d8..15148c80cfdb6 100644
 > --- a/Documentation/virt/kvm/api.rst
 > +++ b/Documentation/virt/kvm/api.rst
-> @@ -6359,6 +6359,8 @@ S390:
->  Returns -EINVAL if the VM has the KVM_VM_S390_UCONTROL flag set.
->  Returns -EINVAL if called on a protected VM.
+> @@ -117,7 +117,7 @@ description:
+>        x86 includes both i386 and x86_64.
 >  
-> +.. _KVM_SET_MEMORY_ATTRIBUTES:
-> +
->  4.141 KVM_SET_MEMORY_ATTRIBUTES
->  -------------------------------
+>    Type:
+> -      system, vm, or vcpu.
+> +      system, vm, vcpu or guest_memfd.
 >  
-> @@ -6551,6 +6553,36 @@ KVM_S390_KEYOP_SSKE
->    Sets the storage key for the guest address ``guest_addr`` to the key
->    specified in ``key``, returning the previous value in ``key``.
+>    Parameters:
+>        what parameters are accepted by the ioctl.
+> @@ -6557,11 +6557,22 @@ KVM_S390_KEYOP_SSKE
+>  ---------------------------------
 >  
-> +4.145 KVM_SET_MEMORY_ATTRIBUTES2
-> +---------------------------------
+>  :Capability: KVM_CAP_MEMORY_ATTRIBUTES2
+> -:Architectures: x86
+> -:Type: vm ioctl
+> +:Architectures: all
+> +:Type: vm, guest_memfd ioctl
+>  :Parameters: struct kvm_memory_attributes2 (in/out)
+>  :Returns: 0 on success, <0 on error
+>  
+> +Errors:
 > +
-> +:Capability: KVM_CAP_MEMORY_ATTRIBUTES2
-> +:Architectures: x86
-> +:Type: vm ioctl
-> +:Parameters: struct kvm_memory_attributes2 (in/out)
-> +:Returns: 0 on success, <0 on error
+> +  ========== ===============================================================
+> +  EINVAL     The specified `offset` or `size` were invalid (e.g. not
+> +             page aligned, causes an overflow, or size is zero).
+> +  EFAULT     The parameter address was invalid.
+> +  EAGAIN     Some page within requested range had unexpected refcounts. The
+> +             offset of the page will be returned in `error_offset`.
+> +  ENOMEM     Ran out of memory trying to track private/shared state
+> +  ========== ===============================================================
 > +
-> +KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
-> +KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
-> +userspace.  The original (pre-extension) fields are shared with
-> +KVM_SET_MEMORY_ATTRIBUTES identically.
+>  KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
+>  KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
+>  userspace.  The original (pre-extension) fields are shared with
+> @@ -6572,15 +6583,42 @@ Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
+>  ::
+>  
+>    struct kvm_memory_attributes2 {
+> -	__u64 address;
+> +	/* in */
+> +	union {
+> +		__u64 address;
+> +		__u64 offset;
+> +	};
+>  	__u64 size;
+>  	__u64 attributes;
+>  	__u64 flags;
+> -	__u64 reserved[12];
+> +	/* out */
+> +	__u64 error_offset;
+> +	__u64 reserved[11];
+>    };
+>  
+>    #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
+>  
+> +Set attributes for a range of offsets within a guest_memfd to
+> +KVM_MEMORY_ATTRIBUTE_PRIVATE to limit the specified guest_memfd backed
+> +memory range for guest_use. Even if KVM_CAP_GUEST_MEMFD_MMAP is
+> +supported, after a successful call to set
+> +KVM_MEMORY_ATTRIBUTE_PRIVATE, the requested range will not be mappable
+> +into host userspace and will only be mappable by the guest.
 > +
-> +Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
+> +To allow the range to be mappable into host userspace again, call
+> +KVM_SET_MEMORY_ATTRIBUTES2 on the guest_memfd again with
+> +KVM_MEMORY_ATTRIBUTE_PRIVATE unset.
 > +
-> +::
+> +If this ioctl returns -EAGAIN, the offset of the page with unexpected
+> +refcounts will be returned in `error_offset`. This can occur if there
+> +are transient refcounts on the pages, taken by other parts of the
+> +kernel.
+
+That's only true for the guest_memfd ioctl, for KVM ioctl these new
+fields and r/w behavior are basically ignored. So you might need to be
+clearer on which fields/behavior are specific to guest_memfd like in
+the preceeding paragraphs..
+
+..or maybe it's better to do the opposite and just have a blanket 'for
+now, all newly-described behavior pertains only to usage via a
+guest_memfd ioctl, and for KVM ioctls only the fields/behaviors common
+with KVM_SET_MEMORY_ATTRIBUTES are applicable.', since it doesn't seem
+like vm_memory_attributes=1 is long for this world and that's the only
+case where KVM memory attribute ioctls seem relevant.
+
+But then it makes me wonder, if we adopt the semantics I mentioned
+earlier and have KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES advertise both
+the gmem ioctl support as well as the struct kvm_memory_attributes2
+support, if we should even advertise KVM_CAP_MEMORY_ATTRIBUTES2 at all
+as part of this series.
+
 > +
-> +  struct kvm_memory_attributes2 {
-> +	__u64 address;
-> +	__u64 size;
-> +	__u64 attributes;
-> +	__u64 flags;
-> +	__u64 reserved[12];
-> +  };
+> +Userspace is expected to figure out how to remove all known refcounts
+> +on the shared pages, such as refcounts taken by get_user_pages(), and
+> +try the ioctl again. A possible source of these long term refcounts is
+> +if the guest_memfd memory was pinned in IOMMU page tables.
+
+One might read this to mean error_offset is used purely for the EAGAIN
+case, so it might be worth touching on the other cases as well.
+
+-Mike
+
 > +
-> +  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
-> +
-> +See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
-> +
+>  See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
+>  
 >  .. _kvm_run:
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 19f026f8de390..1ea14c66fc82e 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -2514,6 +2514,16 @@ static inline bool kvm_memslot_is_gmem_only(const struct kvm_memory_slot *slot)
+>  }
 >  
->  5. The kvm_run structure
+>  #ifdef CONFIG_KVM_MEMORY_ATTRIBUTES
+> +static inline u64 kvm_supported_mem_attributes(struct kvm *kvm)
+> +{
+> +#ifdef kvm_arch_has_private_mem
+> +	if (!kvm || kvm_arch_has_private_mem(kvm))
+> +		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> +#endif
+> +
+> +	return 0;
+> +}
+> +
+>  typedef unsigned long (kvm_get_memory_attributes_t)(struct kvm *kvm, gfn_t gfn);
+>  DECLARE_STATIC_CALL(__kvm_get_memory_attributes, kvm_get_memory_attributes_t);
+>  
 > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 80364d4dbebb0..16567d4a769e5 100644
+> index 16567d4a769e5..29baaa60de35a 100644
 > --- a/include/uapi/linux/kvm.h
 > +++ b/include/uapi/linux/kvm.h
-> @@ -989,6 +989,7 @@ struct kvm_enable_cap {
->  #define KVM_CAP_ARM_SEA_TO_USER 245
+> @@ -990,6 +990,7 @@ struct kvm_enable_cap {
 >  #define KVM_CAP_S390_USER_OPEREXEC 246
 >  #define KVM_CAP_S390_KEYOP 247
-> +#define KVM_CAP_MEMORY_ATTRIBUTES2 248
+>  #define KVM_CAP_MEMORY_ATTRIBUTES2 248
+> +#define KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES 249
 >  
 >  struct kvm_irq_routing_irqchip {
 >  	__u32 irqchip;
-> @@ -1637,6 +1638,17 @@ struct kvm_memory_attributes {
+> @@ -1642,11 +1643,15 @@ struct kvm_memory_attributes {
+>  #define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd2, struct kvm_memory_attributes2)
+>  
+>  struct kvm_memory_attributes2 {
+> -	__u64 address;
+> +	union {
+> +		__u64 address;
+> +		__u64 offset;
+> +	};
+>  	__u64 size;
+>  	__u64 attributes;
 >  	__u64 flags;
+> -	__u64 reserved[12];
+> +	__u64 error_offset;
+> +	__u64 reserved[11];
 >  };
 >  
-> +/* Available with KVM_CAP_MEMORY_ATTRIBUTES2 */
-> +#define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd2, struct kvm_memory_attributes2)
-> +
-> +struct kvm_memory_attributes2 {
-> +	__u64 address;
-> +	__u64 size;
-> +	__u64 attributes;
-> +	__u64 flags;
-> +	__u64 reserved[12];
-> +};
-> +
 >  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
+> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+> index 3fea89c45cfb4..e371e079e2c50 100644
+> --- a/virt/kvm/Kconfig
+> +++ b/virt/kvm/Kconfig
+> @@ -109,6 +109,7 @@ config KVM_VM_MEMORY_ATTRIBUTES
 >  
->  #define KVM_CREATE_GUEST_MEMFD	_IOWR(KVMIO,  0xd4, struct kvm_create_guest_memfd)
+>  config KVM_GUEST_MEMFD
+>         select XARRAY_MULTI
+> +       select KVM_MEMORY_ATTRIBUTES
+>         bool
+>  
+>  config HAVE_KVM_ARCH_GMEM_PREPARE
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index d414ebfcb4c19..0cff9a85a4c53 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -183,10 +183,12 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+>  
+>  static enum kvm_gfn_range_filter kvm_gmem_get_invalidate_filter(struct inode *inode)
+>  {
+> -	if (GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED)
+> -		return KVM_FILTER_SHARED;
+> -
+> -	return KVM_FILTER_PRIVATE;
+> +	/*
+> +	 * TODO: Limit invalidations based on the to-be-invalidated range, i.e.
+> +	 *       invalidate shared/private if and only if there can possibly be
+> +	 *       such mappings.
+> +	 */
+> +	return KVM_FILTER_SHARED | KVM_FILTER_PRIVATE;
+>  }
+>  
+>  static void __kvm_gmem_invalidate_begin(struct gmem_file *f, pgoff_t start,
+> @@ -552,11 +554,235 @@ unsigned long kvm_gmem_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
+>  }
+>  EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_memory_attributes);
+>  
+> +static bool kvm_gmem_range_has_attributes(struct maple_tree *mt,
+> +					  pgoff_t index, size_t nr_pages,
+> +					  u64 attributes)
+> +{
+> +	pgoff_t end = index + nr_pages - 1;
+> +	void *entry;
+> +
+> +	lockdep_assert(mt_lock_is_held(mt));
+> +
+> +	mt_for_each(mt, entry, index, end) {
+> +		if (xa_to_value(entry) != attributes)
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
+> +					    size_t nr_pages, pgoff_t *err_index)
+> +{
+> +	struct address_space *mapping = inode->i_mapping;
+> +	const int filemap_get_folios_refcount = 1;
+> +	pgoff_t last = start + nr_pages - 1;
+> +	struct folio_batch fbatch;
+> +	bool safe = true;
+> +	int i;
+> +
+> +	folio_batch_init(&fbatch);
+> +	while (safe && filemap_get_folios(mapping, &start, last, &fbatch)) {
+> +
+> +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
+> +			struct folio *folio = fbatch.folios[i];
+> +
+> +			if (folio_ref_count(folio) !=
+> +			    folio_nr_pages(folio) + filemap_get_folios_refcount) {
+> +				safe = false;
+> +				*err_index = folio->index;
+> +				break;
+> +			}
+> +		}
+> +
+> +		folio_batch_release(&fbatch);
+> +		cond_resched();
+> +	}
+> +
+> +	return safe;
+> +}
+> +
+> +/*
+> + * Preallocate memory for attributes to be stored on a maple tree, pointed to
+> + * by mas.  Adjacent ranges with attributes identical to the new attributes
+> + * will be merged.  Also sets mas's bounds up for storing attributes.
+> + *
+> + * This maintains the invariant that ranges with the same attributes will
+> + * always be merged.
+> + */
+> +static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
+> +				    pgoff_t start, size_t nr_pages)
+> +{
+> +	pgoff_t end = start + nr_pages;
+> +	pgoff_t last = end - 1;
+> +	void *entry;
+> +
+> +	/* Try extending range. entry is NULL on overflow/wrap-around. */
+> +	mas_set_range(mas, end, end);
+> +	entry = mas_find(mas, end);
+> +	if (entry && xa_to_value(entry) == attributes)
+> +		last = mas->last;
+> +
+> +	if (start > 0) {
+> +		mas_set_range(mas, start - 1, start - 1);
+> +		entry = mas_find(mas, start - 1);
+> +		if (entry && xa_to_value(entry) == attributes)
+> +			start = mas->index;
+> +	}
+> +
+> +	mas_set_range(mas, start, last);
+> +	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
+> +}
+> +
+> +#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_INVALIDATE
+> +static void kvm_gmem_invalidate(struct inode *inode, pgoff_t start, pgoff_t end)
+> +{
+> +	struct folio_batch fbatch;
+> +	pgoff_t next = start;
+> +	int i;
+> +
+> +	folio_batch_init(&fbatch);
+> +	while (filemap_get_folios(inode->i_mapping, &next, end - 1, &fbatch)) {
+> +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
+> +			struct folio *folio = fbatch.folios[i];
+> +			unsigned long pfn = folio_pfn(folio);
+> +
+> +			kvm_arch_gmem_invalidate(pfn, pfn + folio_nr_pages(folio));
+> +		}
+> +
+> +		folio_batch_release(&fbatch);
+> +		cond_resched();
+> +	}
+> +}
+> +#else
+> +static void kvm_gmem_invalidate(struct inode *inode, pgoff_t start, pgoff_t end) {}
+> +#endif
+> +
+> +static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
+> +				     size_t nr_pages, uint64_t attrs,
+> +				     pgoff_t *err_index)
+> +{
+> +	bool to_private = attrs & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> +	struct address_space *mapping = inode->i_mapping;
+> +	struct gmem_inode *gi = GMEM_I(inode);
+> +	pgoff_t end = start + nr_pages;
+> +	struct maple_tree *mt;
+> +	struct ma_state mas;
+> +	int r;
+> +
+> +	mt = &gi->attributes;
+> +
+> +	filemap_invalidate_lock(mapping);
+> +
+> +	mas_init(&mas, mt, start);
+> +
+> +	if (kvm_gmem_range_has_attributes(mt, start, nr_pages, attrs)) {
+> +		r = 0;
+> +		goto out;
+> +	}
+> +
+> +	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
+> +	if (r) {
+> +		*err_index = start;
+> +		goto out;
+> +	}
+> +
+> +	if (to_private) {
+> +		unmap_mapping_pages(mapping, start, nr_pages, false);
+> +
+> +		if (!kvm_gmem_is_safe_for_conversion(inode, start, nr_pages,
+> +						     err_index)) {
+> +			mas_destroy(&mas);
+> +			r = -EAGAIN;
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * From this point on guest_memfd has performed necessary
+> +	 * checks and can proceed to do guest-breaking changes.
+> +	 */
+> +
+> +	kvm_gmem_invalidate_begin(inode, start, end);
+> +
+> +	if (!to_private)
+> +		kvm_gmem_invalidate(inode, start, end);
+> +
+> +	mas_store_prealloc(&mas, xa_mk_value(attrs));
+> +
+> +	kvm_gmem_invalidate_end(inode, start, end);
+> +out:
+> +	filemap_invalidate_unlock(mapping);
+> +	return r;
+> +}
+> +
+> +static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
+> +{
+> +	struct gmem_file *f = file->private_data;
+> +	struct inode *inode = file_inode(file);
+> +	struct kvm_memory_attributes2 attrs;
+> +	pgoff_t err_index;
+> +	size_t nr_pages;
+> +	pgoff_t index;
+> +	int i, r;
+> +
+> +	if (copy_from_user(&attrs, argp, sizeof(attrs)))
+> +		return -EFAULT;
+> +
+> +	if (attrs.flags)
+> +		return -EINVAL;
+> +	if (attrs.error_offset)
+> +		return -EINVAL;
+> +	for (i = 0; i < ARRAY_SIZE(attrs.reserved); i++) {
+> +		if (attrs.reserved[i])
+> +			return -EINVAL;
+> +	}
+> +	if (attrs.attributes & ~kvm_supported_mem_attributes(f->kvm))
+> +		return -EINVAL;
+> +	if (attrs.size == 0 || attrs.offset + attrs.size < attrs.offset)
+> +		return -EINVAL;
+> +	if (!PAGE_ALIGNED(attrs.offset) || !PAGE_ALIGNED(attrs.size))
+> +		return -EINVAL;
+> +
+> +	if (attrs.offset >= inode->i_size ||
+> +	    attrs.offset + attrs.size > inode->i_size)
+> +		return -EINVAL;
+> +
+> +	nr_pages = attrs.size >> PAGE_SHIFT;
+> +	index = attrs.offset >> PAGE_SHIFT;
+> +	r = __kvm_gmem_set_attributes(inode, index, nr_pages, attrs.attributes,
+> +				      &err_index);
+> +	if (r) {
+> +		attrs.error_offset = ((uint64_t)err_index) << PAGE_SHIFT;
+> +
+> +		if (copy_to_user(argp, &attrs, sizeof(attrs)))
+> +			return -EFAULT;
+> +	}
+> +
+> +	return r;
+> +}
+> +
+> +static long kvm_gmem_ioctl(struct file *file, unsigned int ioctl,
+> +			   unsigned long arg)
+> +{
+> +	switch (ioctl) {
+> +	case KVM_SET_MEMORY_ATTRIBUTES2:
+> +		if (vm_memory_attributes)
+> +			return -ENOTTY;
+> +
+> +		return kvm_gmem_set_attributes(file, (void __user *)arg);
+> +	default:
+> +		return -ENOTTY;
+> +	}
+> +}
+> +
+> +
+>  static struct file_operations kvm_gmem_fops = {
+>  	.mmap		= kvm_gmem_mmap,
+>  	.open		= generic_file_open,
+>  	.release	= kvm_gmem_release,
+>  	.fallocate	= kvm_gmem_fallocate,
+> +	.unlocked_ioctl	= kvm_gmem_ioctl,
+>  };
+>  
+>  static int kvm_gmem_migrate_folio(struct address_space *mapping,
+> @@ -942,20 +1168,13 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_pfn);
+>  static bool kvm_gmem_range_is_private(struct gmem_inode *gi, pgoff_t index,
+>  				      size_t nr_pages, struct kvm *kvm, gfn_t gfn)
+>  {
+> -	pgoff_t end = index + nr_pages - 1;
+> -	void *entry;
+> -
+>  	if (vm_memory_attributes)
+>  		return kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + nr_pages,
+>  						       KVM_MEMORY_ATTRIBUTE_PRIVATE,
+>  						       KVM_MEMORY_ATTRIBUTE_PRIVATE);
+>  
+> -	mt_for_each(&gi->attributes, entry, index, end) {
+> -		if (xa_to_value(entry) != KVM_MEMORY_ATTRIBUTE_PRIVATE)
+> -			return false;
+> -	}
+> -
+> -	return true;
+> +	return kvm_gmem_range_has_attributes(&gi->attributes, index, nr_pages,
+> +					     KVM_MEMORY_ATTRIBUTE_PRIVATE);
+>  }
+>  
+>  static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
 > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 70b594dafc5cc..3c261904322f0 100644
+> index 3c261904322f0..85c14197587d4 100644
 > --- a/virt/kvm/kvm_main.c
 > +++ b/virt/kvm/kvm_main.c
-> @@ -2621,9 +2621,10 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
->  	return r;
->  }
->  static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
-> -					   struct kvm_memory_attributes *attrs)
-> +					   struct kvm_memory_attributes2 *attrs)
->  {
->  	gfn_t start, end;
-> +	int i;
+> @@ -2435,16 +2435,6 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
+>  #endif /* CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT */
 >  
->  	/* flags is currently not used. */
->  	if (attrs->flags)
-> @@ -2634,6 +2635,10 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
+>  #ifdef CONFIG_KVM_MEMORY_ATTRIBUTES
+> -static u64 kvm_supported_mem_attributes(struct kvm *kvm)
+> -{
+> -#ifdef kvm_arch_has_private_mem
+> -	if (!kvm || kvm_arch_has_private_mem(kvm))
+> -		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> -#endif
+> -
+> -	return 0;
+> -}
+> -
+>  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+>  static unsigned long kvm_get_vm_memory_attributes(struct kvm *kvm, gfn_t gfn)
+>  {
+> @@ -2635,6 +2625,8 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
 >  		return -EINVAL;
 >  	if (!PAGE_ALIGNED(attrs->address) || !PAGE_ALIGNED(attrs->size))
 >  		return -EINVAL;
-> +	for (i = 0; i < ARRAY_SIZE(attrs->reserved); i++) {
-> +		if (attrs->reserved[i])
-> +			return -EINVAL;
-> +	}
->  
->  	start = attrs->address >> PAGE_SHIFT;
->  	end = (attrs->address + attrs->size) >> PAGE_SHIFT;
-> @@ -4966,6 +4971,7 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
->  	case KVM_CAP_DEVICE_CTRL:
+> +	if (attrs->error_offset)
+> +		return -EINVAL;
+>  	for (i = 0; i < ARRAY_SIZE(attrs->reserved); i++) {
+>  		if (attrs->reserved[i])
+>  			return -EINVAL;
+> @@ -4983,6 +4975,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
 >  		return 1;
->  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-> +	case KVM_CAP_MEMORY_ATTRIBUTES2:
->  	case KVM_CAP_MEMORY_ATTRIBUTES:
->  		if (!vm_memory_attributes)
->  			return 0;
-> @@ -5191,6 +5197,14 @@ do {										\
->  		     sizeof_field(struct kvm_userspace_memory_region2, field));	\
->  } while (0)
->  
-> +#define SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(field)				\
-> +do {										\
-> +	BUILD_BUG_ON(offsetof(struct kvm_memory_attributes, field) !=		\
-> +		     offsetof(struct kvm_memory_attributes2, field));		\
-> +	BUILD_BUG_ON(sizeof_field(struct kvm_memory_attributes, field) !=	\
-> +		     sizeof_field(struct kvm_memory_attributes2, field));	\
-> +} while (0)
+>  	case KVM_CAP_GUEST_MEMFD_FLAGS:
+>  		return kvm_gmem_get_supported_flags(kvm);
+> +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+> +		if (vm_memory_attributes)
+> +			return 0;
 > +
->  static long kvm_vm_ioctl(struct file *filp,
->  			   unsigned int ioctl, unsigned long arg)
->  {
-> @@ -5373,15 +5387,35 @@ static long kvm_vm_ioctl(struct file *filp,
->  	}
->  #endif /* CONFIG_HAVE_KVM_IRQ_ROUTING */
->  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-> +	case KVM_SET_MEMORY_ATTRIBUTES2:
->  	case KVM_SET_MEMORY_ATTRIBUTES: {
-> -		struct kvm_memory_attributes attrs;
-> +		struct kvm_memory_attributes2 attrs;
-> +		unsigned long size;
-> +
-> +		if (ioctl == KVM_SET_MEMORY_ATTRIBUTES) {
-> +			/*
-> +			 * Fields beyond struct kvm_memory_attributes shouldn't
-> +			 * be accessed, but avoid leaking kernel memory in case
-> +			 * of a bug.
-> +			 */
-> +			memset(&attrs, 0, sizeof(attrs));
-> +			size = sizeof(struct kvm_memory_attributes);
-> +		} else {
-> +			size = sizeof(struct kvm_memory_attributes2);
-> +		}
-> +
-> +		/* Ensure the common parts of the two structs are identical. */
-> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(address);
-> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(size);
-> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(attributes);
-> +		SANITY_CHECK_MEMORY_ATTRIBUTES_FIELD(flags);
->  
->  		r = -ENOTTY;
->  		if (!vm_memory_attributes)
->  			goto out;
->  
->  		r = -EFAULT;
-> -		if (copy_from_user(&attrs, argp, sizeof(attrs)))
-> +		if (copy_from_user(&attrs, argp, size))
->  			goto out;
->  
->  		r = kvm_vm_ioctl_set_mem_attributes(kvm, &attrs);
+> +		return kvm_supported_mem_attributes(kvm);
+>  #endif
+>  	default:
+>  		break;
 > 
 > -- 
 > 2.53.0.1018.g2bb0e51243-goog
