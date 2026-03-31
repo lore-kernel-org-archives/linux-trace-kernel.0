@@ -1,101 +1,134 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9275036C5BF
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Mar 2026 19:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D783BC67C;
+	Tue, 31 Mar 2026 20:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774984080; cv=none; b=ZkemMUQJhuBeeyZ8sFM070jPx8BhZLyh3Xr/1627wAEAycIkfLakr/2GLv6s0iMmr8ey30BtMKfE6xI37F2BkgFKWsKCUdfg3+IIJ2uwwYWn8icnVgyJiTmfclrcKgyhtoKFV7ppWMaR5VkXXp+dNg1lolXxbeuxHQF18WnBJ+g=
+	t=1774989510; cv=none; b=TV2jtX6yaFp+1twszuRUNGuWQTyQYXTJVvXIkl7wFIJSjAhP8HZ1orXId7NJ/u9AfG+Qzz1YO9yAPgYJ4dhsVZoNpzOD+PkvePPa2Ho2Bv0hrajXp4Mz+0Z0b3/3sOErAUeQi3zuEdgOZmGH12RRh/GgVwo3Zvib88pnhknuebY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774984080; c=relaxed/simple;
-	bh=WOKISH0jd1mavO/MJ3aV6hRO/EoHDJltYPyElxXPjz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ROobsezBXm+OhCzNoApSFGngFxZVh8Dc0vGzBsRpxd1yx5U149T09yYP6fUzMXT2gmLCZTk4E8QIRNY9jYYmWovhcrlD5VlOTeb1Uhq2oNVvvHRL/7iR+xEeUfXD0GYvfAKs8ourLUg1W8OcKRkNM7AOWxmuS3ifwO7BU7O0Z0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ee5Dm7tm; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ee5Dm7tm"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-46726528f1cso3889186b6e.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Mar 2026 12:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1774984078; x=1775588878; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LZLgJZJAn2n7Hu2UZgX8MJsTEDcLU3dkSL94lyL1JSU=;
-        b=ee5Dm7tmwBMOzIrYjYpgGtRu9rIy9Cq/SZe5rysgHSvQLp0rzuV97ByxEt/h+FUehG
-         AjxRI0DvJpT8Sm07aF4lEzOMeigkxZWUUVb4wsTcyCqzStcpbnI49JSXGxAAoZMsjV7H
-         4KaYXJ5t1eJ+M2HUAo0XtiV3XG9sJfBS31j50=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774984078; x=1775588878;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LZLgJZJAn2n7Hu2UZgX8MJsTEDcLU3dkSL94lyL1JSU=;
-        b=nVoIdAz2AClqPA/cEZOlnmYCMYwLF6NtX8T21tNKkSbZ+BjNCUFdvvLNS5TC4oJXJX
-         UwY+gJ9ed1Sm1SJqsIssIQQL7c3PMZGW4tPCouMGTNeb2W8BoTWnMIyc7xVCXs/ZMHO6
-         5cHm0dYXwNBK4E5bGAP7EBZzQ/rtgVA9sl4m3hFqAbz/zLssLsz5gL1eUBOqObup+FpO
-         woVSvj/kYI8koAGK18T4ErnklhUhe0wyhv9Nk0TxEdWQN7JoS6Ey0jzZxJnT6YXxsCUm
-         ZcHNyljG+uayjsxGoLlZO1nc+WZWWpX0hiyFrrg+Nt1+A5J9xCqlCzibbsVF9mSOeZSr
-         15Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaaT1Uu5hpzlh8R9oGh6ojkwogQVQsb1g4UPY82xxgkJmOXeuiZEoIr9VTuUlB2BLrqENgXYIXsYMfWA1g5iGsXfA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxctUmEMQ5ZiR3LKkB3I9TxChcyEZpiNO4f1GtKBO4CQmnjNu+y
-	bkenD4JxbrbgocgzvyifFn78gOcxVOoVH6Sxdjr5ufwBpCY8eGm6RqcMqHer6K80B0U=
-X-Gm-Gg: ATEYQzwDeEtLSUnVss5YRYQ9ypqSBBMtxMk04IYd5ib9I7vSUleZNxITDuJ5heV8ptC
-	NqWw0SSlfpeG3etxJIgRqhr0LnHxer4MsklE+/jKG0LPqyUxCHut/IznYzq5OW8EC4DQtfqOImh
-	4cUlTxloN0oFirVpNM1brTYh3sOgnUx6R3KQgrZvpvA8ot/hz4CycfZOcUXHd5841KZEwlTa+zX
-	5N0nHHoR1sjgVqgVaKPCREnCBj/8vgHzaChjFtqTJKRiGY8gYefNABBsboUslTIqB5Embr160Gt
-	f3BCvfmbaMwetFEjRKiSKX++upTtvr7Ujs7Vg/QqUbMfgBnenlIg/N9H2K7QIsP3ltiTvj6LxOo
-	auCxQubMx70oy2ZI8Lphhq74PwXp2o57K7U27xB3XVwIDL3yR6fS0N8dPKOGmiUPy0R3gqGlO8t
-	1zxbCWDOOd7Ri/wbD+TG+20pj7Ld8Gu3td41k=
-X-Received: by 2002:a05:6808:15aa:b0:466:f25d:327c with SMTP id 5614622812f47-46ae013eb8bmr366610b6e.25.1774984078528;
-        Tue, 31 Mar 2026 12:07:58 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.187.108])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-46a9fe97980sm7265599b6e.1.2026.03.31.12.07.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2026 12:07:58 -0700 (PDT)
-Message-ID: <0a9c540f-5ee7-4ad9-a533-a86f31c15add@linuxfoundation.org>
-Date: Tue, 31 Mar 2026 13:07:57 -0600
+	s=arc-20240116; t=1774989510; c=relaxed/simple;
+	bh=y/YsXJ9+vTBgnYxGcxqYPOwsCsME/a7rPkIizqAe9WM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=evI2DWHYA+zgV52xFTndWtAYUcL010p28EUMK2MVpL93szrmPc9LwMOThNk+O3dGsyZdIk6QhSCHEEYfsKwaaMGxShpFhlb6twMG3W0h1vB/FHoBCkG2b+OzeIzdpmODouqe8dAY6LqTjgebi4SPt+Kxc0/oU+w3Ms53iY0/yMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 75FD913AA37;
+	Tue, 31 Mar 2026 20:38:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id BC12231;
+	Tue, 31 Mar 2026 20:38:25 +0000 (UTC)
+Date: Tue, 31 Mar 2026 16:39:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, John Stultz <jstultz@google.com>
+Subject: [PATCH] tracing: Allow backup to save persistent ring buffer before
+ it starts
+Message-ID: <20260331163924.6ccb3896@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] selftests/tracing: Fix to make --logdir option work
- again
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
- Gabriele Monaco <gmonaco@redhat.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
- <20260304110425.3858532b6ba092d84a31595a@kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20260304110425.3858532b6ba092d84a31595a@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: rz1aq6i1qmdqt77rd5q77wbmm74za4j6
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: BC12231
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/fgAP/eWcCq+cUg1ZN0gJ5gtgZ8LR8q7g=
+X-HE-Tag: 1774989505-524426
+X-HE-Meta: U2FsdGVkX1+7RTW9Bu7/Cjjjz4c2CMfeaV/usldx8SSYJ/U8sgvNoFC+chdHaMqj0FvlKjx9ff1TmemUZztY2jZl3oCOR0NL8u7OPWKh+OSqrEU0kfMZpRlS6Oo1dX3UMLoIruhvnjnOTzs3ux1LA81oH5FWgNPW75jccHFg7PygY2P/tyzIa8RkFBDtGhf8hAhaJHNSM1te63HwUQ/Eh4mRxGZUbUCIsDN2+7jbOAncUARMEAicKryMrzM5PEiNZEXAXeeyBzRHlLTP2rfU2KedegHCsjHCE6IGt97BjsEIfW2AmCx07PM44ZCvQuQ7mI8Silm+o0QROpZQONlrP4LFB23U2aMKNybHU5i641xClIMOtC07f8GaesMMWhst
 
-On 3/3/26 19:04, Masami Hiramatsu (Google) wrote:
-> Hi Shuah,
-> 
-> Could you pick these 2 patches to the selftests tree or should I pick it?
-> 
-> Thanks,
-> 
-> On Tue, 10 Feb 2026 18:54:12 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
->> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>
->
-Done. Sorry for the delay on this. I applied it to my next to send
-it for Linux 7.1
+From: Steven Rostedt <rostedt@goodmis.org>
 
-thanks,
--- Shuah
+When the persistent ring buffer was first introduced, it did not make
+sense to start tracing for it on the kernel command line. That's because
+if there was a crash, the start of events would invalidate the events from
+the previous boot that had the crash.
+
+But now that there's a "backup" instance that can take a snapshot of the
+persistent ring buffer when boot starts, it is possible to have the
+persistent ring buffer start events at boot up and not lose the old events.
+
+Update the code where the boot events start after all boot time instances
+are created. This will allow the backup instance to copy the persistent
+ring buffer from the previous boot, and allow the persistent ring buffer
+to start tracing new events for the current boot.
+
+  reserve_mem=100M:12M:trace trace_instance=boot_mapped^@trace,sched trace_instance=backup=boot_mapped
+
+The above will create a boot_mapped persistent ring buffer and enabled the
+scheduler events. If there's a crash, a "backup" instance will be created
+holding the events of the persistent ring buffer from the previous boot,
+while the persistent ring buffer will once again start tracing scheduler
+events of the current boot.
+
+Now the user doesn't have to remember to start the persistent ring buffer.
+It will always have the events started at each boot.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 22 ++++++++++++++++++++++
+ kernel/trace/trace.h |  5 ++++-
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ef55b48064da..5b46083f6f94 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -10871,9 +10871,31 @@ __init static void enable_instances(void)
+ 			tr->range_name = no_free_ptr(rname);
+ 		}
+ 
++		/*
++		 * Save the events to start and enabled them after all boot instances
++		 * have been created.
++		 */
++		tr->boot_events = curr_str;
++	}
++
++	/* Enable the events after all boot instances have been created */
++	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
++
++		if (!tr->boot_events || !(*tr->boot_events)) {
++			tr->boot_events = NULL;
++			continue;
++		}
++
++		curr_str = tr->boot_events;
++
++		/* Clear the instance if this is a persistent buffer */
++		if (tr->flags & TRACE_ARRAY_FL_LAST_BOOT)
++			update_last_data(tr);
++
+ 		while ((tok = strsep(&curr_str, ","))) {
+ 			early_enable_events(tr, tok, true);
+ 		}
++		tr->boot_events = NULL;
+ 	}
+ }
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index b001fbba0881..e68f9c2027eb 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -405,7 +405,10 @@ struct trace_array {
+ 	unsigned char		trace_flags_index[TRACE_FLAGS_MAX_SIZE];
+ 	unsigned int		flags;
+ 	raw_spinlock_t		start_lock;
+-	const char		*system_names;
++	union {
++		const char	*system_names;
++		char		*boot_events;
++	};
+ 	struct list_head	err_log;
+ 	struct dentry		*dir;
+ 	struct dentry		*options;
+-- 
+2.51.0
+
