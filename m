@@ -1,81 +1,95 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD01421EE4;
-	Tue, 31 Mar 2026 16:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD8041B37F;
+	Tue, 31 Mar 2026 16:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774973548; cv=none; b=fhABDnNZdvGMwVZKlBiFYF/HeFVwq0n8w0CApKsatBx2vvR4MsGctgZmlT1q1qE08bKQWzQ7DGpmluaEX/eyGAs903Ezx3LS/aEmgdtQJ/NTT1ox2I79NMKtp3xT6TXnGdjydHiLYFhSX7ZXkRMZDoxuq0TuG+ri/coP9vlQUvQ=
+	t=1774974740; cv=none; b=Fzetb/zKUgYrrt62uHZY4UrO54A1fipRjxFN7gYKmoJXCdh7/dU7GLxdjcHmA/Plr6LT3MN/xkoUKzn6zKEBmNlt9WbCoyO2PP2rkGw9t31KZB/dxS6tXGu/jRDyBzXdob09Iz9ceCMCV3s7GHGA7Rqdqm9MUMdeYHk7i+iksdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774973548; c=relaxed/simple;
-	bh=pQLuqPapV8QsQ/YEglNRNOp8+22fgBzZv9DeDuvUDhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IxM/vFSZorWLYUCIbnNMylGxhnifWz36E/nln0PSoQBZnGBJNGCfjJKa8qaE3xxofM9xbrdQ9PnbI9Zou8EPbsiOvN72GuIsHaNamjwiMr+oMhk4+qdThbM9GAUSzoDMHMbouuRDh+18k5+GgrSmSIMgjurTi60BJHjIXyvJ4p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id DA9751602DC;
-	Tue, 31 Mar 2026 16:12:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 250472002B;
-	Tue, 31 Mar 2026 16:12:18 +0000 (UTC)
-Date: Tue, 31 Mar 2026 12:13:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: always provide a prototype for
- tracing_alloc_snapshot()
-Message-ID: <20260331121316.40da8cfe@gandalf.local.home>
-In-Reply-To: <20260331182036.e62143d5a9a59776d8cf7ae2@kernel.org>
-References: <20260331082001.31345-1-bartosz.golaszewski@oss.qualcomm.com>
-	<20260331182036.e62143d5a9a59776d8cf7ae2@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774974740; c=relaxed/simple;
+	bh=ChNDJuMEIjBS4vXqgZDNJqV0FHV3rq35gcKCq69tMaU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F6x5AKbfUYTRsnXxFe/LqG5mgjD4qnhbvu3RUc5Unp+Eqblybj8pwN7H/JMiG9hud0xmhB1MatMDZ7ArVfZ2iGLl5Aa7PbuiNjudI4bmJcPEPmNrMm+RPoWSypiTnKJjt5kDZwo2zZMkQ2a7hCHhuU43DNEKINtCaoVWjJF2V7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WnAvJ9p6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WnAvJ9p6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C68ADC2BCB3;
+	Tue, 31 Mar 2026 16:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774974740;
+	bh=ChNDJuMEIjBS4vXqgZDNJqV0FHV3rq35gcKCq69tMaU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WnAvJ9p6TE2MINHQUdmyWpzEFULWzfCzIf2o/9Q1eOCKVFBgOdn3P0iBjyEVkPknA
+	 IUK/N2L1CoLKLvNNo3XuZ0WpyPEVq9RoxJbxC8ktzubEncJ9PjVC+CW/P0d4QIBWF8
+	 OBebRkuacgo83QHfNIxk7WKPseyKSaV/6AuT4tgCwXLJSrgyVm1x9eDIzX4SSsl14V
+	 yFPjcbkhTqOcJtmoV4SihPbT8C6UqUuqHblloEBNMJexhfe1t8AiXfKtIdRMI0jcEx
+	 cIT7ynQ6AM6dzfEaNnC08xfaehzDQsH7/ijQDTMpWE3xsH/FgvLaB0w/Ana1E6z6xh
+	 wGcDJo5dOtJIA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v9 0/3] tracing: Remove backup instance after read all
+Date: Wed,  1 Apr 2026 01:32:16 +0900
+Message-ID:  <177497473558.569199.6527680985537865638.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.53.0.1118.gaef5881109-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: zmhckaq8kkrtba9gnsbmy4pus78md9cw
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 250472002B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+XShK8goG+xyIvS4wTltEkzXGcS2umLL8=
-X-HE-Tag: 1774973538-849721
-X-HE-Meta: U2FsdGVkX18hJGzx8wxn4MOhM7FJM33n9BOY2rw+Ycfhsy7O8BmGgpz/rw8fzXIHpMxlROZITmNKCmzLU/66M9P4U4HsyFC8rPEs162PVS6mzWJczeRhEwwtNgpjrgLK5Tw6OHRTl14E/FPCOmUE4nM4UttfYRy32mStiBfnxivCGDLxX2Zknk3R6TZuYSj03yCz9Hz/pWjF7MrfCRwfmF97O7TA/am1uRrQYx6vAECwA4iDagjQuDCTl6Picx8U+m+GuXtLfP+vOEbCRrHlCjBM1JHUVnNV99GCFxi4Gn4x1WAbvnJ6uxSmLvBHpCbfsukSdZ+a95cCZO9Ml1uvFVvqJC1/dm5/O5pCAmDA51HIvzZX9k/DFj7G5pBnmo/0Al/rRCohMpRiKCcPtdJvbh5Eb/s6hYJt0tKWh1th1ppqZ8m7djktlujjMMPvUEokD0znSTPoN0M=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 31 Mar 2026 18:20:36 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hi,
 
-> On Tue, 31 Mar 2026 10:20:01 +0200
-> Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com> wrote:
->=20
-> > The tracing_alloc_snapshot() symbol is always exported even with
-> > !CONFIG_TRACER_SNAPSHOT so the prototype too must be always visible or
-> > we'll see the following warning:
-> >=20
-> > kernel/trace/trace.c:820:5: warning: no previous prototype for =E2=80=
-=98tracing_alloc_snapshot=E2=80=99 [-Wmissing-prototypes]
-> >   820 | int tracing_alloc_snapshot(void)
-> >       |     ^~~~~~~~~~~~~~~~~~~~~~
-> >=20
-> > Fixes: bade44fe5462 ("tracing: Move snapshot code out of trace.c and in=
-to trace_snapshot.c")
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.co=
-m> =20
->=20
-> Good catch!
->=20
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Here is the v9 of the series to improve backup instances of
+the persistent ring buffer. The previous version is here:
 
-But is the wrong fix. I already fixed it properly:
+https://lore.kernel.org/all/177071300558.2293046.12057922262682243630.stgit@mhiramat.tok.corp.google.com/
 
-  https://patch.msgid.link/20260328101946.2c4ef4a5@robin
+In this version, I removed bugfixes (those are actual fixes/minor
+updates) and the force permission check in tracefs
+because superuser can modify the permission by itself. Instead,
+simply add read-only and FMODE_WRITE check in the related open()
+file operations[1/3]. Also, I fixed 2 bugs in autoremove patch
+to init dedicated workqueue correctly [2/3].
 
-It's still in the testing phase but will be going to linux-next this week.
+Series Description
+------------------
+Since backup instances are a kind of snapshot of the persistent
+ring buffer, it should be readonly. And if it is readonly
+there is no reason to keep it after reading all data via trace_pipe
+because the data has been consumed. But user should be able to remove
+the readonly instance by rmdir or truncating `trace` file.
 
--- Steve
+Thus, [1/3] makes backup instances readonly (not able to write any
+events, cleanup trace, change buffer size). Also, [2/3] removes the
+backup instance after consuming all data via trace_pipe.
+With this improvements, even if we makes a backup instance (using
+the same amount of memory of the persistent ring buffer), it will
+be removed after reading the data automatically.
+
+Thanks,
+
+---
+
+Masami Hiramatsu (Google) (3):
+      tracing: Make the backup instance non-reusable
+      tracing: Remove the backup instance automatically after read
+      tracing/Documentation: Add a section about backup instance
+
+
+ Documentation/trace/debugging.rst |   19 ++++
+ kernel/trace/trace.c              |  166 +++++++++++++++++++++++++++++--------
+ kernel/trace/trace.h              |   13 +++
+ kernel/trace/trace_boot.c         |    5 +
+ kernel/trace/trace_events.c       |   76 ++++++++++-------
+ 5 files changed, 208 insertions(+), 71 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
