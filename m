@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A4544CF5E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2094544CF59;
 	Tue, 31 Mar 2026 18:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774980815; cv=none; b=rtXP9F5bJxyzp86voFWw/T6imCaZBIDF1CVx25uniyMN2AIGJJt22Ve2ggWTJ4UMyXiurLNafMZTcd/Mi3sp+hCVB4tgQWhYdBNpeJx0b7tVHsP6TNhgRdygOa0MiB6zcvS/5oFLEZIxeGszcFA4RlxFaH/ksOQ9W/a3GXBpRwY=
+	t=1774980815; cv=none; b=Q6nRLQaQWuGpr840+08YmkxVgT30Joifa+S6mdQU1bhzMPwT6etWsW6B3KEASSPwhaPdUI0RaybNXSIaBv+HnsNvB67KWkZ5lpTE4V2PaKu5mXqxLIp7Bf7+AYsplSkI2lKrGBOcMidCqXoVIjYq3UYH0/4RkYwNHiKOxtCunV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1774980815; c=relaxed/simple;
-	bh=Tk38+TRw4xkKSFdeekYweRA+YfY9CMW4lNPi/6d0oqs=;
+	bh=K6u0PspPsS0IqE8W/Ttx61OZoVKvYhh4U0f4jYfu35M=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=rT5KlN7GwZlqvpZRHw1PH/mMhNfkRHPP2nnceJ9j7a/02R12wsbqaVwU6yF2MCg78b3eS9dZ/8ByYSKU4TU2bOgRiCw8JguOjtAuEdCnYCdPnzG/7UrLwvzwuvaQtK4K2klQ9LjK3Xg20HSLGPiYXtrUp8OBMCm0vBYaXjgSq9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJZCST7S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=KQaOAvkm/0Hjfga0Jc+a1DpcwwdzrlsFdGr934kCqcUOLh9M1DVs4HmE/+2r1hkrPXOpt3YmhvvghWLOyOuFEcxEgRx77MGvlRUlylUqK4cYSWTCooX2o2dwwYR7h4J7XUqMikuAZrK6c0DwlRtspk5iAZ8YMiqFgcdiBwjPBw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRFziVgv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJZCST7S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D2CC2BCB5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRFziVgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90570C2BCB3;
 	Tue, 31 Mar 2026 18:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1774980814;
-	bh=Tk38+TRw4xkKSFdeekYweRA+YfY9CMW4lNPi/6d0oqs=;
+	bh=K6u0PspPsS0IqE8W/Ttx61OZoVKvYhh4U0f4jYfu35M=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=IJZCST7Sec29/h5dvWdwkzrurTVN8ch2PEXZ/yL/oetWZrXn8c4ydrEiMAMwCA+Sk
-	 3TSlHVJK0HQQfp/d4cHxKvDiA+JG8Ep2FfxD6fm7YZ4jsYMs1t1dr7r3oklnqAuPss
-	 rQlqLyYTJF0F6tVPifCVFi25GmENKbYG1FkUSlETNXmrN+ENf1JPzVJksS2wZxG/n6
-	 f+nkUmP2zfCRuBDap0F9azt8k4hQbCozTYcR+qadKVno4RRSRXTVuQzDQaXcwxAlLE
-	 i6FwNx2cymFPaMWTuZWhSZ9dYVEkgQdrCigfpB0WpFFRCkzwpN5Xe75D2WlrTzR/++
-	 U0nHzdtaxM9Xg==
+	b=oRFziVgvjRLjw3/Ebt7UIyKv/95MMu6F/DNYRfa8z5F2ESaZZ+DpWa5WrC7v839ZH
+	 +aCH5mYX9JVInXdvRw0lsuJGWe9+X+Q+m61n6bVkF8KUl4wePsMHIFqai4qhjC/IgC
+	 QHc8WcSPHuJ4R0l+AgRrFWcJvWfwjQpWnjK8vyRkg52H2IeHp+VqAgeJpKIvgUDh47
+	 +ZyCRRFf85As4WoTjdrK/P1wlM0rj0EUp+48hKpBsP+ZW/2qjUX84/BkeD/F4x/S+K
+	 MuEUG/bI2v6B7uTSbYD11Pxe3zVmY+NIpg/nev4+SIWP1l8skVUEZUtan3To7a3fAz
+	 dyvjyc/EMTOAw==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1w7dbl-0000000H8u4-1u44;
+	id 1w7dbl-0000000H8ta-1DQo;
 	Tue, 31 Mar 2026 14:14:33 -0400
-Message-ID: <20260331181433.309946057@kernel.org>
+Message-ID: <20260331181433.153334366@kernel.org>
 User-Agent: quilt/0.69
-Date: Tue, 31 Mar 2026 14:13:52 -0400
+Date: Tue, 31 Mar 2026 14:13:51 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -46,7 +46,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  John Stultz <jstultz@google.com>,
  Ian Rogers <irogers@google.com>,
  Suleiman Souhlal <suleiman@google.com>
-Subject: [PATCH v3 3/3] tracing: Show TID and flags for PI futex system call trace event
+Subject: [PATCH v3 2/3] tracing: Update futex syscall trace event to show more commands
 References: <20260331181349.062575155@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,69 +58,374 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-For the futex system call trace event for FUTEX_LOCK_PI and
-FUTEX_UNLOCK_PI commands, show the TID from the value (which is usually in
-hex) as well as translate the flags (DIED and WAITERS).
+Make the futex syscall trace event a little more smart. Have it read the
+futex_op instruction to determine what else it can save and print. For the
+appropriate options, it will read the utime (timespec) parameter and show
+its output as well as the uaddr2.
 
- pi_mutex_hammer-1098    [000] .....   121.876928: sys_futex(uaddr: 0x560f40cc8180 (0x450) tid: 1104, FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7f2f9d4b1e50 (0.000100000))
- pi_mutex_hammer-1128    [000] .....   121.877120: sys_futex(uaddr: 0x560f40cc8180 (0x8000042a) tid: 1066 (WAITERS), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7f2f8e493e50 (0.000100000))
- pi_mutex_hammer-1106    [000] .....   121.877242: sys_futex(uaddr: 0x560f40cc8180 (0x80000452) tid: 1106 (WAITERS), FUTEX_UNLOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
-
-This makes it easier to see the hand off of a mutex and who the owner was.
+ futex_requeue_p-1154    [004] .....   144.568339: sys_futex(uaddr: 0x5652b178d834 (0x482), FUTEX_UNLOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
+ futex_requeue_p-1162    [002] .....   144.568696: sys_futex(uaddr: 0x7f763b7fece0 (2), FUTEX_WAIT|FUTEX_PRIVATE_FLAG, val: 2)
+ futex_requeue_p-1151    [000] .....   144.568700: sys_futex(uaddr: 0x7f763b7fece0 (0), FUTEX_WAKE|FUTEX_PRIVATE_FLAG, val: 1)
+ futex_requeue_p-1162    [002] .....   144.568705: sys_futex(uaddr: 0x7f763b7fece0 (0), FUTEX_WAKE|FUTEX_PRIVATE_FLAG, val: 1)
+ futex_requeue_p-1151    [000] .....   144.568715: sys_futex(uaddr: 0x7f764369e990 (0x483), FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, val: 1155)
+ futex_requeue_p-1155    [005] .....   144.569420: sys_futex(uaddr: 0x5652b178d838 (0), FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7ffdacfba500 (143.890024054), uaddr2: 0x5652b178d834 (0), val3: 0)
+ futex_requeue_p-1155    [005] .....   144.569454: sys_futex(uaddr: 0x5652b178d834 (0), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
 
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/futex/syscalls.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ include/linux/futex.h         |  35 ++++++++-
+ kernel/futex/syscalls.c       |  48 ++++++-------
+ kernel/trace/trace_syscalls.c | 129 +++++++++++++++++++++++++++++-----
+ 3 files changed, 164 insertions(+), 48 deletions(-)
 
+diff --git a/include/linux/futex.h b/include/linux/futex.h
+index 7eaf01ff68cf..ec0d9cfa8a59 100644
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -82,8 +82,35 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+ 	      u32 __user *uaddr2, u32 val2, u32 val3);
+ int futex_hash_prctl(unsigned long arg2, unsigned long arg3, unsigned long arg4);
+ 
++static __always_inline bool futex_cmd_has_timeout(u32 cmd)
++{
++	switch (cmd) {
++	case FUTEX_WAIT:
++	case FUTEX_LOCK_PI:
++	case FUTEX_LOCK_PI2:
++	case FUTEX_WAIT_BITSET:
++	case FUTEX_WAIT_REQUEUE_PI:
++		return true;
++	}
++	return false;
++}
++
++static __always_inline bool futex_cmd_has_addr2(u32 cmd)
++{
++	switch (cmd) {
++	case FUTEX_REQUEUE:
++	case FUTEX_CMP_REQUEUE:
++	case FUTEX_WAKE_OP:
++	case FUTEX_WAIT_REQUEUE_PI:
++		return true;
++	}
++	return false;
++}
++
+ #ifdef CONFIG_FTRACE_SYSCALLS
+-void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u32 *ptr);
++void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
++			 u32 *ptr1, u32 *ptr2, unsigned long *ts1,
++			 unsigned long *ts2);
+ extern const char * __futex_cmds[];
+ #endif
+ 
+@@ -120,7 +147,11 @@ static inline int futex_hash_allocate_default(void)
+ static inline int futex_hash_free(struct mm_struct *mm) { return 0; }
+ static inline int futex_mm_init(struct mm_struct *mm) { return 0; }
+ static inline void futex_print_syscall(struct seq_buf *s, int nr_args,
+-				       unsigned long *args, u32 *ptr) { }
++				       unsigned long *args, u32 *ptr1,
++				       u32 *ptr2, unsigned long *ts1,
++				       unsigned long *ts2) { }
++static __always_inline bool futex_cmd_has_timeout(u32 cmd) { return false; }
++static __always_inline bool futex_cmd_has_addr2(u32 cmd) { return false; }
+ #endif
+ 
+ #endif
 diff --git a/kernel/futex/syscalls.c b/kernel/futex/syscalls.c
-index 265ec0a236d0..8144781a9ff0 100644
+index 3ba8ca017c9c..265ec0a236d0 100644
 --- a/kernel/futex/syscalls.c
 +++ b/kernel/futex/syscalls.c
-@@ -213,6 +213,9 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
+@@ -158,31 +158,6 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+ 	return -ENOSYS;
+ }
+ 
+-static __always_inline bool futex_cmd_has_timeout(u32 cmd)
+-{
+-	switch (cmd) {
+-	case FUTEX_WAIT:
+-	case FUTEX_LOCK_PI:
+-	case FUTEX_LOCK_PI2:
+-	case FUTEX_WAIT_BITSET:
+-	case FUTEX_WAIT_REQUEUE_PI:
+-		return true;
+-	}
+-	return false;
+-}
+-
+-static __always_inline bool futex_cmd_has_addr2(u32 cmd)
+-{
+-	switch (cmd) {
+-	case FUTEX_REQUEUE:
+-	case FUTEX_CMP_REQUEUE:
+-	case FUTEX_WAKE_OP:
+-	case FUTEX_WAIT_REQUEUE_PI:
+-		return true;
+-	}
+-	return false;
+-}
+-
+ static __always_inline int
+ futex_init_timeout(u32 cmd, u32 op, struct timespec64 *ts, ktime_t *t)
+ {
+@@ -231,7 +206,9 @@ const char * __futex_cmds[] =
+ 	"FUTEX_LOCK_PI2", NULL
+ };
+ 
+-void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u32 *ptr)
++void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
++			 u32 *ptr1, u32 *ptr2, unsigned long *ts1,
++			 unsigned long *ts2)
+ {
  	unsigned int op, cmd;
  	bool done = false;
- 
-+	op = args[1];
-+	cmd = op & FUTEX_CMD_MASK;
-+
- 	for (int i = 0; !done && i < nr_args; i++) {
- 
- 		if (seq_buf_has_overflowed(s))
-@@ -227,11 +230,30 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
+@@ -244,8 +221,8 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u3
+ 		switch (i) {
+ 		case 0:
+ 			seq_buf_printf(s, "uaddr: 0x%lx", args[i]);
+-			if (ptr) {
+-				u32 val = *ptr;
++			if (ptr1) {
++				u32 val = *ptr1;
+ 				if (val < 10)
  					seq_buf_printf(s, " (%u)", val);
  				else
- 					seq_buf_printf(s, " (0x%x)", val);
+@@ -287,6 +264,15 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u3
+ 				continue;
+ 
+ 			seq_buf_printf(s, ", timespec: 0x%lx", args[i]);
 +
-+				switch(cmd) {
-+				case FUTEX_LOCK_PI:
-+				case FUTEX_UNLOCK_PI:
-+					seq_buf_printf(s, " tid: %d",
-+						       val & FUTEX_TID_MASK);
++			if (!ts1 || !ts2)
++				continue;
 +
-+					if (!(val & (FUTEX_OWNER_DIED|FUTEX_WAITERS)))
-+						break;
-+
-+					seq_buf_puts(s, " (");
-+					if (val & FUTEX_WAITERS)
-+						seq_buf_puts(s, "WAITERS");
-+					if (val & FUTEX_OWNER_DIED) {
-+						if (op & FUTEX_WAITERS)
-+							seq_buf_putc(s, '|');
-+						seq_buf_puts(s, "DIED");
-+					}
-+					seq_buf_putc(s, ')');
-+					break;
-+				}
- 			}
++			if (!*ts1 && !*ts2) {
++				seq_buf_puts(s, " (0)");
++				continue;
++			}
++			seq_buf_printf(s, " (%lu.%09lu)", *ts1, *ts2);
  			continue;
- 		case 1:
--			op = args[i];
--			cmd = op & FUTEX_CMD_MASK;
- 			if (cmd <= FUTEX_LOCK_PI2)
- 				seq_buf_printf(s, ", %s", __futex_cmds[cmd]);
- 			else
+ 		case 4:
+ 			if (!futex_cmd_has_addr2(cmd)) {
+@@ -294,6 +280,12 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args, u3
+ 				continue;
+ 			}
+ 			seq_buf_printf(s, ", uaddr2: 0x%lx", args[i]);
++
++			if (!ptr2)
++				continue;
++
++			seq_buf_printf(s, " (%x)", *ptr2);
++
+ 			continue;
+ 		case 5:
+ 			seq_buf_printf(s, ", val3: %lu", args[i]);
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index f8213d772f89..0c86986ec7c4 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -239,21 +239,35 @@ sys_enter_openat_print(struct syscall_trace_enter *trace, struct syscall_metadat
+ 	return trace_handle_return(s);
+ }
+ 
++struct futex_data {
++	u32		val1;
++	u32		val2;
++	unsigned long	ts1;
++	unsigned long	ts2;
++};
++
+ static enum print_line_t
+ sys_enter_futex_print(struct syscall_trace_enter *trace, struct syscall_metadata *entry,
+ 		      struct trace_seq *s, struct trace_event *event, int ent_size)
+ {
++	struct futex_data *data;
+ 	void *end = (void *)trace + ent_size;
+-	void *ptr;
++	unsigned long *ts1 = NULL, *ts2 = NULL;
++	u32 *ptr1 = NULL, *ptr2 = NULL;
+ 
+ 	/* Set ptr to the user space copied area */
+-	ptr = (void *)trace->args + sizeof(unsigned long) * entry->nb_args;
+-	if (ptr + 4 > end)
+-		ptr = NULL;
++	data = (void *)trace->args + sizeof(unsigned long) * entry->nb_args;
++	if ((void *)data + sizeof(*data) <= end) {
++		ptr1 = &data->val1;
++		ptr2 = &data->val2;
++		ts1 = &data->ts1;
++		ts2 = &data->ts2;
++	}
+ 
+ 	trace_seq_printf(s, "%s(", entry->name);
+ 
+-	futex_print_syscall(&s->seq, entry->nb_args, trace->args, ptr);
++	futex_print_syscall(&s->seq, entry->nb_args, trace->args, ptr1, ptr2,
++			    ts1, ts2);
+ 
+ 	trace_seq_puts(s, ")\n");
+ 
+@@ -472,9 +486,9 @@ sys_enter_futex_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+ 	pos += snprintf(buf + pos, LEN_OR_ZERO,
+ 			"\"uaddr: 0x%%lx (0x%%lx) cmd=%%s%%s%%s");
+ 	pos += snprintf(buf + pos, LEN_OR_ZERO,
+-			"  val: 0x%%x timeout/val2: 0x%%llx");
++			"  val: 0x%%x timeout/val2: 0x%%llx (%%lu.%%lu)");
+ 	pos += snprintf(buf + pos, LEN_OR_ZERO,
+-			" uaddr2: 0x%%lx val3: 0x%%x\", ");
++			" uaddr2: 0x%%lx (0x%%lx) val3: 0x%%x\", ");
+ 
+ 	pos += snprintf(buf + pos, LEN_OR_ZERO,
+ 			" REC->uaddr,");
+@@ -499,10 +513,12 @@ sys_enter_futex_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+ 			FUTEX_CLOCK_REALTIME);
+ 
+ 	pos += snprintf(buf + pos, LEN_OR_ZERO,
+-			" REC->val, REC->utime,");
++			" REC->val, REC->utime, REC->__ts1, REC->__ts2,");
+ 
+ 	pos += snprintf(buf + pos, LEN_OR_ZERO,
+-			" REC->uaddr, REC->val3");
++			" REC->uaddr,");
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" REC->__value2, REC->val3");
+ 	return pos;
+ }
+ 
+@@ -605,7 +621,39 @@ static int __init futex_fields(struct trace_event_call *call, int offset)
+ 	ret = trace_define_field(call, "u32", arg, offset, sizeof(int), 0,
+ 				 FILTER_OTHER);
+ 	if (ret)
+-		kfree(arg);
++		goto free;
++	offset += sizeof(int);
++
++	arg = kstrdup("__value2", GFP_KERNEL);
++	if (WARN_ON_ONCE(!arg))
++		return -ENOMEM;
++	ret = trace_define_field(call, "u32", arg, offset, sizeof(int), 0,
++				 FILTER_OTHER);
++	if (ret)
++		goto free;
++	offset += sizeof(int);
++
++	arg = kstrdup("__ts1", GFP_KERNEL);
++	if (WARN_ON_ONCE(!arg))
++		return -ENOMEM;
++	ret = trace_define_field(call, "unsigned long", arg, offset,
++				 sizeof(unsigned long), 0, FILTER_OTHER);
++	if (ret)
++		goto free;
++	offset += sizeof(long);
++
++	arg = kstrdup("__ts2", GFP_KERNEL);
++	if (WARN_ON_ONCE(!arg))
++		return -ENOMEM;
++	ret = trace_define_field(call, "unsigned long", arg, offset,
++				 sizeof(unsigned long), 0, FILTER_OTHER);
++	if (ret)
++		goto free;
++
++	return 0;
++
++free:
++	kfree(arg);
+ 	return ret;
+ }
+ 
+@@ -778,11 +826,51 @@ static int syscall_copy_user_array(char *buf, const char __user *ptr,
+ 	return 0;
+ }
+ 
++struct tp_futex_data {
++	u32			cmd;
++	const u32		__user *val1;
++	const u32 		__user *val2;
++	void			__user *timeout;
++};
++
++static int syscall_copy_futex(char *buf, const char __user *ptr,
++			      size_t size, void *data)
++{
++	struct tp_futex_data *tp_data = data;
++	struct futex_data *fdata = (void *)buf;
++	int cmd = tp_data->cmd & FUTEX_CMD_MASK;
++	int ret;
++
++	memset(fdata, 0, sizeof(*fdata));
++
++	if (tp_data->val1) {
++		ret = __copy_from_user(&fdata->val1, tp_data->val1, 4);
++		if (ret)
++			return -1;
++	}
++
++	if (tp_data->val2 && futex_cmd_has_addr2(cmd)) {
++		ret = __copy_from_user(&fdata->val2, tp_data->val2, 4);
++		if (ret)
++			return -1;
++	}
++
++	if (tp_data->timeout && futex_cmd_has_timeout(cmd)) {
++		/* Copies both ts1 and ts2 */
++		ret = __copy_from_user(&fdata->ts1, tp_data->timeout,
++				       sizeof(long) * 2);
++		if (ret)
++			return -1;
++	}
++
++	return 0;
++}
++
+ static int
+ syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
+ {
+ 	struct syscall_user_buffer *sbuf;
+-	const char __user *ptr;
++	struct tp_futex_data tp_data;
+ 
+ 	/* buf_size of zero means user doesn't want user space read */
+ 	if (!buf_size)
+@@ -793,14 +881,18 @@ syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
+ 	if (!sbuf)
+ 		return -1;
+ 
+-	ptr = (char __user *)args[0];
++	tp_data.cmd = args[1];
++	tp_data.val1 = (u32 __user *)args[0];
++	tp_data.val2 = (u32 __user *)args[4];
++	tp_data.timeout = (u64 __user *)args[3];
+ 
+-	*buffer = trace_user_fault_read(&sbuf->buf, ptr, 4, NULL, NULL);
++	*buffer = trace_user_fault_read(&sbuf->buf, NULL, 0,
++					syscall_copy_futex, &tp_data);
+ 	if (!*buffer)
+ 		return -1;
+ 
+-	/* Add room for the value */
+-	*size += 4;
++	/* Add room for values */
++	*size += sizeof(struct futex_data);
+ 
+ 	return 0;
+ }
+@@ -809,12 +901,13 @@ static void syscall_put_futex(struct syscall_metadata *sys_data,
+ 			      struct syscall_trace_enter *entry,
+ 			      char *buffer)
+ {
+-	u32 *ptr;
++	struct futex_data *fdata = (void *)buffer;
++	struct futex_data *data;
+ 
+ 	/* Place the futex key into the storage */
+-	ptr = (void *)entry->args + sizeof(unsigned long) * sys_data->nb_args;
++	data = (void *)entry->args + sizeof(unsigned long) * sys_data->nb_args;
+ 
+-	*ptr = *(u32 *)buffer;
++	*data = *fdata;
+ }
+ 
+ static char *sys_fault_user(unsigned int buf_size,
 -- 
 2.51.0
 
