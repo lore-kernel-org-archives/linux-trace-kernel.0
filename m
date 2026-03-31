@@ -1,41 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECA53A6B77;
-	Tue, 31 Mar 2026 10:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA15337F00F;
+	Tue, 31 Mar 2026 10:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774953038; cv=none; b=O1TgbYY3TCrIP8sXqOOI9DtxJA4YVxqFPhLFBwTOJUKEOQMlodRIYQQO4m/Ur/4z6UJuQClYBNjG4A4vXF3+nSisiqLxC6vF7rzvv0G4ZTpj3IvUkJiVyf89xwG4MBl1cOLdgL07qFTTJT+z9CPnjAiZ9X/3esZF8oEAdOtImOE=
+	t=1774953315; cv=none; b=rrc4sFzGFBwg715GyBXI8pHpmkNDlqAhSrEy/33JfkOZMyt/kUZhqxKcujglSSl8Pg/myFI+zNQfPT8RmQ5nx0V+GbnbN9BNqUQyPX30jsH2inAXvmr7e12NtHE+BsiuRbk3WEQu4qxBoB76+OyGfUoaMraMuOHnvcaL330eTlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774953038; c=relaxed/simple;
-	bh=Epu3xRCRZu/pdTFE0Nu2bcU1YW5f+UvQ2r6cVP/sLBc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zrv18b7Vq2tneZ4VB++l8ch721rxvxRWYo/ZSbODRnogMDwBzuk5mskyjcWV//zndBwMOwKpWRV2gnCmfoUW9SBNYRQV/LuB2KZ1av9/VtURjROjbDdSi28lEMJFtysJ0qxzkrzpGv2gPNiVlcbwnwd4Md7FNAhm9+v34qvMmkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSn8hFXe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774953315; c=relaxed/simple;
+	bh=muUGB/hVsXba530bq091OpV1HBQwDeWHgy3f9fXku+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pXUhhJEPMAYGsA8SxnpAuunCUgE9dncH1MQTZnu4GzcEmV4PIQ43aRrKCU3qlBakDvSlQNb9JcFqi1GAR92EYp886i4zIl6DNe8Cnv9oBbAqlZ1TiTBATI1s5VPlOiUmyTiaLSDisqx6qtD9hkzxkrMi4NABDEdPDN13EXzJE2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=p33ibMJl; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSn8hFXe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407FFC19423;
-	Tue, 31 Mar 2026 10:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774953037;
-	bh=Epu3xRCRZu/pdTFE0Nu2bcU1YW5f+UvQ2r6cVP/sLBc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XSn8hFXeMeU2x06ytGG693IP0Yk0efe7pZCAGeS/vGNTYFoIO9lisKHW2vjlaJ16L
-	 VTUQGueANmfo+hsBEaX+3l+/xo4xHvaWzCs2wiRFry9rCjtsra9STBolQ6dZRgVx/R
-	 joG7WibBGQCEiOCe6tB/fG3Q64bDijP9+2iXLkWWPvHFLkP5GP67ndpjRgMXMV7gD4
-	 8iFIApPTwBxyRJpZTEVtU4RrdxCYq/8cYou9fD2Dr2gBbZh4/XRgITXfbjHR4M9v+2
-	 GLeWKgMc60Cj8JcHmUVI5ATbfAsYTcwV4RI4bvr7OXLfuTlxC4OdFAOk8D4X6K41zZ
-	 34I3Bad6IJBpQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="p33ibMJl"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774953301;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eGoJpSFt6qPU5Tj1tCTJazBok4fp1H7/lxXOEKF1LAE=;
+	b=p33ibMJltLANQa/bsMRalz0WLn9BlHm8C+vEC5ite7qjEZ0cbDSZL23LJhIXOh4mWTMMG4
+	TBKLq9j8Mz6GbrKJDMbOx9Su5uRTDWM/gjU81JtLwKyzFf6t4mVUaxKYeCN9VzzuGjwlZt
+	rIOn5+Mdz2haHATDFp1JJcwSMAvzAHM=
+From: Usama Arif <usama.arif@linux.dev>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Usama Arif <usama.arif@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: remove duplicate  latency_fsnotify() stub
-Date: Tue, 31 Mar 2026 12:30:21 +0200
-Message-Id: <20260331103033.4054780-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v4 3/5] locking: Add contended_release tracepoint to sleepable locks
+Date: Tue, 31 Mar 2026 03:34:50 -0700
+Message-ID: <20260331103451.1070175-1-usama.arif@linux.dev>
+In-Reply-To: <d2e5763278812499335b22a013aafb4979e3324b.1774536681.git.d@ilvokhin.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -43,45 +71,82 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, 26 Mar 2026 15:10:02 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 
-During the move, an extra copy of latency_fsnotify() crept in:
+> Add the contended_release trace event. This tracepoint fires on the
+> holder side when a contended lock is released, complementing the
+> existing contention_begin/contention_end tracepoints which fire on the
+> waiter side.
+> 
+> This enables correlating lock hold time under contention with waiter
+> events by lock address.
+> 
+> Add trace_contended_release() calls to the slowpath unlock paths of
+> sleepable locks: mutex, rtmutex, semaphore, rwsem, percpu-rwsem, and
+> RT-specific rwbase locks.
+> 
+> Where possible, trace_contended_release() fires before the lock is
+> released and before the waiter is woken. For some lock types, the
+> tracepoint fires after the release but before the wake. Making the
+> placement consistent across all lock types is not worth the added
+> complexity.
+> 
+> For reader/writer locks, the tracepoint fires for every reader releasing
+> while a writer is waiting, not only for the last reader.
+> 
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> ---
+>  include/trace/events/lock.h   | 17 +++++++++++++++++
+>  kernel/locking/mutex.c        |  4 ++++
+>  kernel/locking/percpu-rwsem.c | 11 +++++++++++
+>  kernel/locking/rtmutex.c      |  1 +
+>  kernel/locking/rwbase_rt.c    |  6 ++++++
+>  kernel/locking/rwsem.c        | 10 ++++++++--
+>  kernel/locking/semaphore.c    |  4 ++++
+>  7 files changed, 51 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
+> index da978f2afb45..1ded869cd619 100644
+> --- a/include/trace/events/lock.h
+> +++ b/include/trace/events/lock.h
+> @@ -137,6 +137,23 @@ TRACE_EVENT(contention_end,
+>  	TP_printk("%p (ret=%d)", __entry->lock_addr, __entry->ret)
+>  );
+>  
+> +TRACE_EVENT(contended_release,
+> +
+> +	TP_PROTO(void *lock),
+> +
+> +	TP_ARGS(lock),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(void *, lock_addr)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->lock_addr = lock;
+> +	),
+> +
+> +	TP_printk("%p", __entry->lock_addr)
+> +);
+> +
+>  #endif /* _TRACE_LOCK_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+> index 427187ff02db..6c2c9312eb8f 100644
+> --- a/kernel/locking/mutex.c
+> +++ b/kernel/locking/mutex.c
+> @@ -997,6 +997,9 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
+>  		wake_q_add(&wake_q, next);
+>  	}
+>  
+> +	if (trace_contended_release_enabled() && waiter)
+> +		trace_contended_release(lock);
+> +
 
-kernel/trace/trace_snapshot.c:395:20: error: redefinition of 'latency_fsnotify'
-  395 | static inline void latency_fsnotify(struct trace_array *tr) { }
-      |                    ^~~~~~~~~~~~~~~~
-In file included from kernel/trace/trace_snapshot.c:6:
-kernel/trace/trace.h:858:20: note: previous definition of 'latency_fsnotify' with type 'void(struct trace_array *)'
-  858 | static inline void latency_fsnotify(struct trace_array *tr) { }
-      |                    ^~~~~~~~~~~~~~~~
-
-The function is still called from the hwlat and osnoise tracers, so the
-copy in the header file is the one that has to stay.
-
-Remove the extra one from trace_snapshot.c
-
-Fixes: bade44fe5462 ("tracing: Move snapshot code out of trace.c and into trace_snapshot.c")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Please fold into the commit that moves the code, if possible
----
- kernel/trace/trace_snapshot.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/kernel/trace/trace_snapshot.c b/kernel/trace/trace_snapshot.c
-index 8865b2ef2264..a54e9533e79d 100644
---- a/kernel/trace/trace_snapshot.c
-+++ b/kernel/trace/trace_snapshot.c
-@@ -391,8 +391,6 @@ void latency_fsnotify(struct trace_array *tr)
- 	 */
- 	irq_work_queue(&tr->fsnotify_irqwork);
- }
--#else
--static inline void latency_fsnotify(struct trace_array *tr) { }
- #endif /* LATENCY_FS_NOTIFY */
- static const struct file_operations tracing_max_lat_fops;
- 
--- 
-2.39.5
+This won't compile? waiter is declared in the if block, so you are using
+it outside scope here.
 
