@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D33A3B774B;
-	Tue, 31 Mar 2026 00:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD1A24A067;
+	Tue, 31 Mar 2026 00:29:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774915203; cv=none; b=rkG3Ik/dDeOppOQ/zDebhC3rTMudiuCDkdqe96m4fn2OCQ6lzi/MO0NmYdXu7SZQYIgc31itV58zOei4m2sWg6T3uHfm9orSWmcyet48ix6uMVi82gXA4EP0d2vIGGu6gjnhNkohnzzDIfYFkggWeWGBO1C/8JeUZ16byaGYjDY=
+	t=1774916953; cv=none; b=ECe6gjdeWhxHiwnDCERk8mYiR2rId7j7k8SKFW3EX76fZJgr5XgbRvIcnRiMMvlIFvx8vczIP1ah3RKqK07dBCLcXzkPU85PYHfhbtWiy/666BWesKZ9Is3jkgCFhCuNeE6eF8hZbq4n2nZBcfEIsNj5X0ru0aVqh3koE/qnppk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774915203; c=relaxed/simple;
-	bh=nflDkOq0Zqwb58YzrdiSqpPIhkpTAzBKnu8Q3SFxf+0=;
+	s=arc-20240116; t=1774916953; c=relaxed/simple;
+	bh=ThIoBL+FtK2I1zr3RdCUEjl7aiEAYlPso6MdM7tUkyE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=g5809decs2VR/ZFq4ZrQS0fUWYyyEa7Lj9Uhi0Rxc8rFOEGTFk//YWKz7dRPeV0hDyv0vFxN2Xdwzwp8BG18L+bWESdZN6QfjCreIocN6DrpsOkqlCdcl/A5IBl9iRr5QGVT5FJqXIs388kGtbfo1onexqumfM2lQxKAxq24J2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gdh4IsN4; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=f8e9DDq01XQiqE/HiCh0J8NnhTKLZbiCB73q6S4blUtQwhGm9gdmyNEMPxvcBDGknTUDc4cx620YJfPFnb0OWLS7sa4M5mZwBf3/qoeKIpW2VWZJjKBWqIXe04pe8PQcwL1oicV1RslE6wKgEPE826AgJFhFef1a9D1C1F59KTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+iTcwuD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gdh4IsN4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D48C1C4CEF7;
-	Tue, 31 Mar 2026 00:00:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+iTcwuD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1450C4CEF7;
+	Tue, 31 Mar 2026 00:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774915203;
-	bh=nflDkOq0Zqwb58YzrdiSqpPIhkpTAzBKnu8Q3SFxf+0=;
+	s=k20201202; t=1774916952;
+	bh=ThIoBL+FtK2I1zr3RdCUEjl7aiEAYlPso6MdM7tUkyE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Gdh4IsN45OLC64JvdICWSUZT4Z14Unu57CJZxKMY+CdC4C9BmJdY/OsHZ5zxYSmIp
-	 /3PWmy6D+VyDBIZMSv0RJGR5UCtQjAw8ZtsBUHFGYZZLi5q5hf+oeWWQR/ReMgEpbf
-	 DwLxfkFDh2nntt76+0f9BmjWYeLDoscGpmVCVXXiJMjJsVYSrAnKTXXgJk+kSjFG/p
-	 fjrwknbCsLDbeRDlELhsyK114qmvlAaMTUi+bM4MaoNk+D8T724fRWXcw/GG5NMboK
-	 Z5z7TkuUYMPpuUwAMUSBjTQ7+UGxRpmAxt0vZ/3+OGt4mhWlwSHNHkXRcLHGUOi47u
-	 a27FDQBgzQX+A==
-Date: Tue, 31 Mar 2026 09:00:00 +0900
+	b=b+iTcwuDV/Tt4kTXRRyOCxHIkvI4zEl+S30cX7KYDlrJrZ7DH+j2MlPlddvwJkFsG
+	 UCVIhcaCz3p9ns2mJmA1Ft+6fjWDFjtRjQfuMIs6dRJ6rqQJncby8eATNZ+sfwhPTZ
+	 MvthKeBm60wEknuokPE03OFJWj4Elne/diVLeQqomCg4ishXBO/laOhhONVwNeEZyy
+	 GhdFnd8uNb7tBnshl3GWRW9dAgK4M1dPq6kj2ILg2kZ9mYkECqes10UsmMrLZX9b3H
+	 C1IJ6iZ5Cur8fXSOQATrg+Kcrqj9gMjb3pzAlmdp69T2nmupemizxxJlhfydCxRxln
+	 Gnqj9mMVr2Y9w==
+Date: Tue, 31 Mar 2026 09:29:10 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org,
- kernel-team@meta.com
-Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
-Message-Id: <20260331090000.b3be159bb7655449e6c4d230@kernel.org>
-In-Reply-To: <acpzhCBEPh-tKVqg@gmail.com>
-References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
-	<20260325232204.05edbb21c7602b6408ca007b@kernel.org>
-	<acZPZ4XKy4QynznK@gmail.com>
-	<20260327223744.f246150adc1671f7605a4f0a@kernel.org>
-	<acpzhCBEPh-tKVqg@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
+ Rogers <irogers@google.com>
+Subject: Re: [PATCH v14 1/5] ring-buffer: Flush and stop persistent ring
+ buffer on panic
+Message-Id: <20260331092910.0ddb1d190e41cea00f6cb1ee@kernel.org>
+In-Reply-To: <20260330135447.423bc070@gandalf.local.home>
+References: <177487498530.3463592.12715592581212799257.stgit@mhiramat.tok.corp.google.com>
+	<177487499643.3463592.15413057950716995168.stgit@mhiramat.tok.corp.google.com>
+	<20260330135447.423bc070@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,47 +49,32 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Mar 2026 06:15:17 -0700
-Breno Leitao <leitao@debian.org> wrote:
+On Mon, 30 Mar 2026 13:54:47 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri, Mar 27, 2026 at 10:37:44PM +0900, Masami Hiramatsu wrote:
-> > On Fri, 27 Mar 2026 03:06:41 -0700
-> > Breno Leitao <leitao@debian.org> wrote:
+> On Mon, 30 Mar 2026 21:49:56 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> > > > To fix this, we need to change setup_arch() for each architecture so
-> > > > that it calls this bootconfig_apply_early_params().
-> > > 
-> > > Could we instead integrate this into parse_early_param() itself? That
-> > > approach would avoid the need to modify each architecture individually.
-> > 
-> > Ah, indeed. 
+> > diff --git a/arch/arm64/include/asm/ring_buffer.h b/arch/arm64/include/asm/ring_buffer.h
+> > new file mode 100644
+> > index 000000000000..62316c406888
+> > --- /dev/null
+> > +++ b/arch/arm64/include/asm/ring_buffer.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +#ifndef _ASM_ARM64_RING_BUFFER_H
+> > +#define _ASM_ARM64_RING_BUFFER_H
+> > +
+> > +#include <asm/cacheflush.h>
+> > +
+> > +/* Flush D-cache on persistent ring buffer */
+> > +#define arch_ring_buffer_flush_range(start, end)	dcache_clean_pop(start, end)
+> > +
+> > +#endif /* _ASM_ARM64_RING_BUFFER_H */
 > 
-> I investigated integrating bootconfig into parse_early_param() and hit a
-> blocker: xbc_init() and xbc_make_cmdline() depend on memblock_alloc(), but on
-> most architectures (x86, arm64, arm, s390, riscv) parse_early_param() is called
-> from setup_arch() _before_ memblock is initialized.
+> You probably need to get an ack from the arm64 folks.
 
-Yeah, that's right.
-
-> 
-> So, bootconfig will not be available as early as parse_early_param(). 
-> 
-> An alternative is replace memblock allocations in lib/bootconfig.c with static
-> __initdata buffers, similar to Petr's approach in 2023:
-> 
-> 	https://lore.kernel.org/all/20231121231342.193646-3-oss@malat.biz/
-> 
-> But, there was concerns about the allocation size:
-> 
-> 	Petr Malat <oss@malat.biz> wrote: 
-> 	> To allow handling of early options, it's necessary to eliminate allocations
-> 	> from embedded bootconfig handling
-> 
-> 	"Hm, my concern is that this can introduce some sort of overhead to parse the bootconfig."
-> 
-
-As far as we can correctly handle the early params and it is limited only
-with the embedded bootconfig, I think it is OK to allocate it statically.
+OK, I will add them in loop.
 
 Thank you,
 
