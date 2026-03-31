@@ -1,147 +1,81 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5104035AF;
-	Tue, 31 Mar 2026 15:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD01421EE4;
+	Tue, 31 Mar 2026 16:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774970892; cv=none; b=G9dnCE+rQMaO5et6yUD9jwSTjrDCT2OMCuutiIgCA8YnM7kugWZ6uHdlO+0+ju3GNgEE3F9KvH1vmK+8uQ92GdqIu+KdlrDWrfjUOzU1IR7Ng5nKJUw9oGiPBVuDcZIs59ok+X5o8B4FUcmpNy90jJePYUPKSXBmsy7++ktMyIQ=
+	t=1774973548; cv=none; b=fhABDnNZdvGMwVZKlBiFYF/HeFVwq0n8w0CApKsatBx2vvR4MsGctgZmlT1q1qE08bKQWzQ7DGpmluaEX/eyGAs903Ezx3LS/aEmgdtQJ/NTT1ox2I79NMKtp3xT6TXnGdjydHiLYFhSX7ZXkRMZDoxuq0TuG+ri/coP9vlQUvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774970892; c=relaxed/simple;
-	bh=RMUAeb69PPwHEKmTqWmtRn1qmoUYSPBUdmsbBm5anyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bh0AE29ZfOo9PiC9QTnpWJJFCqXUIoXX/Sdro1BsPUY2T7RsndTBe30g/KJfkP5P7Y2I/RvZfO4qNqukfMQNuyiUwcHUHAuoBB/qyPB3N3o2Ta9rtppvyS/S4v5+Aqt+ux0uP3Xw8EAdMBStSaU5IfWPa5l9weAQLbW24V51AQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=b4M+FWIx; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="b4M+FWIx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3vBzhmYF9+iiyfEfsznZLwdZleJyljUxgdY6awsp15o=; b=b4M+FWIxozvX+MqnxEcHgtizwF
-	+xV7IBfqlTYsccpQ2zDMCBTRoG6YbpeHpHmBdfg7KDgvEgnM+lEJdjXcOmWVlXIh+6qlUj0Vl5MVB
-	X8urruVf5DRAiGY60DSVxk9NUHOGw1UnmdMr/DwTz2fTZx0r+VO32Bgw51w1WydwHO70rlSBoysUX
-	UD4eTkXtS32cDszfYqoBKwUQ8Ljkom/EzhfI+hGEpCi8nQtRGKNhD8SV3Y1DScvTNt4drLaxh8DN7
-	ZemFtH5xq78lI4inoI2Gph1PwClBGGLm1iF0TVwEwVseq0N1QBmges3ePVMqxr+O08chxrjZgxRXC
-	hY/zaH+A==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1w7b0f-002JIg-2j;
-	Tue, 31 Mar 2026 15:28:04 +0000
-Date: Tue, 31 Mar 2026 08:27:59 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
-Message-ID: <acvjcCqIAeHyIiQN@gmail.com>
-References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
- <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
- <acZPZ4XKy4QynznK@gmail.com>
- <20260327223744.f246150adc1671f7605a4f0a@kernel.org>
- <acpzhCBEPh-tKVqg@gmail.com>
- <acqJk-zbyjIiy6hJ@gmail.com>
- <20260331125827.157a833882830007ea9b0b31@kernel.org>
+	s=arc-20240116; t=1774973548; c=relaxed/simple;
+	bh=pQLuqPapV8QsQ/YEglNRNOp8+22fgBzZv9DeDuvUDhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IxM/vFSZorWLYUCIbnNMylGxhnifWz36E/nln0PSoQBZnGBJNGCfjJKa8qaE3xxofM9xbrdQ9PnbI9Zou8EPbsiOvN72GuIsHaNamjwiMr+oMhk4+qdThbM9GAUSzoDMHMbouuRDh+18k5+GgrSmSIMgjurTi60BJHjIXyvJ4p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id DA9751602DC;
+	Tue, 31 Mar 2026 16:12:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 250472002B;
+	Tue, 31 Mar 2026 16:12:18 +0000 (UTC)
+Date: Tue, 31 Mar 2026 12:13:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: always provide a prototype for
+ tracing_alloc_snapshot()
+Message-ID: <20260331121316.40da8cfe@gandalf.local.home>
+In-Reply-To: <20260331182036.e62143d5a9a59776d8cf7ae2@kernel.org>
+References: <20260331082001.31345-1-bartosz.golaszewski@oss.qualcomm.com>
+	<20260331182036.e62143d5a9a59776d8cf7ae2@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260331125827.157a833882830007ea9b0b31@kernel.org>
-X-Debian-User: leitao
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: zmhckaq8kkrtba9gnsbmy4pus78md9cw
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 250472002B
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+XShK8goG+xyIvS4wTltEkzXGcS2umLL8=
+X-HE-Tag: 1774973538-849721
+X-HE-Meta: U2FsdGVkX18hJGzx8wxn4MOhM7FJM33n9BOY2rw+Ycfhsy7O8BmGgpz/rw8fzXIHpMxlROZITmNKCmzLU/66M9P4U4HsyFC8rPEs162PVS6mzWJczeRhEwwtNgpjrgLK5Tw6OHRTl14E/FPCOmUE4nM4UttfYRy32mStiBfnxivCGDLxX2Zknk3R6TZuYSj03yCz9Hz/pWjF7MrfCRwfmF97O7TA/am1uRrQYx6vAECwA4iDagjQuDCTl6Picx8U+m+GuXtLfP+vOEbCRrHlCjBM1JHUVnNV99GCFxi4Gn4x1WAbvnJ6uxSmLvBHpCbfsukSdZ+a95cCZO9Ml1uvFVvqJC1/dm5/O5pCAmDA51HIvzZX9k/DFj7G5pBnmo/0Al/rRCohMpRiKCcPtdJvbh5Eb/s6hYJt0tKWh1th1ppqZ8m7djktlujjMMPvUEokD0znSTPoN0M=
 
-hello Masami,
+On Tue, 31 Mar 2026 18:20:36 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On Tue, Mar 31, 2026 at 12:58:27PM +0900, Masami Hiramatsu wrote:
+> On Tue, 31 Mar 2026 10:20:01 +0200
+> Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com> wrote:
+>=20
+> > The tracing_alloc_snapshot() symbol is always exported even with
+> > !CONFIG_TRACER_SNAPSHOT so the prototype too must be always visible or
+> > we'll see the following warning:
+> >=20
+> > kernel/trace/trace.c:820:5: warning: no previous prototype for =E2=80=
+=98tracing_alloc_snapshot=E2=80=99 [-Wmissing-prototypes]
+> >   820 | int tracing_alloc_snapshot(void)
+> >       |     ^~~~~~~~~~~~~~~~~~~~~~
+> >=20
+> > Fixes: bade44fe5462 ("tracing: Move snapshot code out of trace.c and in=
+to trace_snapshot.c")
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.co=
+m> =20
+>=20
+> Good catch!
+>=20
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> > 3) Ensure that early bootconfig parameters don't overwrite the boot command
-> >    line. For example, if the boot command line has foo=bar and bootconfig
-> >    later has foo=baz, the command line value should take precedence.
-> >    This prevents early boot code (in setup_arch()) from seeing a parameter
-> >    value that will be changed later.
->
-> OK, this also needs to be considered. Currently we just pass the bootconfig
-> parameters right before bootloader given parameters as "extra_command_line"
-> if "bootconfig" in cmdline or CONFIG_BOOT_CONFIG_FORCE=y.
->
-> [boot_config(.kernel)]<command_line>[ -- [boot_config(.init)][init_command_line]]
->
-> This is currently expected behavior. The bootconfig parameters are
-> expected to be overridden by command_line or command_line are appended.
+But is the wrong fix. I already fixed it properly:
 
-That's correct, and I have no intention of changing this behavior. Here's
-the current approach:
+  https://patch.msgid.link/20260328101946.2c4ef4a5@robin
 
-1) Early parameters from the bootloader are parsed first in setup_arch()
+It's still in the testing phase but will be going to linux-next this week.
 
-2) Subsequently, bootconfig_apply_early_params() is invoked. Any early
-   parameter that was already parsed from the bootloader (in setup_arch())
-   will be skipped at this stage.
-
-> If we change this for early params, we also should change the expected
-> output of /proc/cmdline too. I think we have 2 options;
->
->  - As before, we expect the parameters provided by the boot configuration
->    to be processed first and then overridden later by the command line.
->
-> Or,
->
->  - ignore all parameters which is given from the command line, this also
->    updates existing setup_boot_config() (means xbc_snprint_cmdline() ).
->
-> Anyway, this behavior change will also be a bit critical... We have
-> to announce it.
-
-As mentioned above, I don't anticipate any changes to existing behavior.
-Bootconfig parsing remains unchanged. The only modification is that
-bootconfig_apply_early_params() will skip any early config parameter
-that's already present in the bootloader command line.
-
-> > +Note that embedded bootconfig is parsed after ``setup_arch()``, so
-> > +early options that are consumed during architecture initialization
-> > +(e.g., ``mem=``, ``memmap=``, ``earlycon``, ``noapic``, ``nolapic``,
-> > +``acpi=``, ``numa=``, ``iommu=``) may not take effect from bootconfig.
-> > +
->
-> This is easy to explain, but it's quite troublesome for users to
-> determine which parameters are unavailable.
-
-Agreed. This turned out to be significantly more complex than I
-initially anticipated.
-
-I'm uncertain whether we can accomplish this without examining every
-early_parameter() implementation in depth.
-
-> Currently we can identify
-> it by `git grep early_param -- arch/${ARCH}`. But it is setup in
-> setup_arch() we need to track the source code. (Or ask AI :))
-
-The challenge extends beyond that. There are numerous early_parameter()
-definitions scattered throughout the kernel that may or may not be
-utilized by setup_arch().
-
-For example, consider `early_param("mitigations", ..)` in
-./kernel/cpu.c. This modifies the cpu_mitigations global variable, which
-is referenced in various locations across different architectures.
-
-It's worth noting that we have over 300 early_parameter() instances in
-the kernel.
-
-Given this, analyzing all these early parameters and examining each one
-individually represents a substantial amount of work.
-
-Are there alternative approaches? At this point, I'm leaning toward
-breaking bootconfig's dependency on memblock, allowing us to invoke it
-before setup_arch(). Is this the only practical solution available?!
-
-Thanks,
---breno
+-- Steve
