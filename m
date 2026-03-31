@@ -1,129 +1,150 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5351339EF2F;
-	Tue, 31 Mar 2026 10:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12826379996;
+	Tue, 31 Mar 2026 12:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774954441; cv=none; b=A7hThfwN+xuZznjXXSosmAZ0hmNR98Hj69nKEdmv1RokXWaApu3MOvPukjOVQu5YkXuq0bmpKDxK2L0RRAOoh1cbMPF4/dW3xpoawNOrVEJ9cisfGa/Ess5M1RkkpgfTfTapj6ZYzS5uVcq24BES05leQGCPybcPv3FZyvISrQE=
+	t=1774959411; cv=none; b=NkG5PTtjNUH9buVwWYTgi+L8NVc/H9WF+pWlLXH8HFM6JaLFSNqsaNNOK8NYJPFDtjRyjbZB01R61k9EdJLFL8od0xv8y12V7/rZI4zQNlRzOAk4t3mButIBLN/67Bwn7B7i9PJ6Bd88qJw8DZBOtpyM8reJVc4pCYs/V6PgQOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774954441; c=relaxed/simple;
-	bh=amEmg934H9HD4owWVyAuDEOFmw6M2IeeWp79hup+Dnw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=elEgPiN5SjfHBFa+8q5FGe+9QO7LaxLWyQFe+i/L0R1xAE9h9pi339FPqTN1t+/AOTFTRZWKAV/HtsVcKAmp63oNIrahB+fUI3SZrBixhj1D9Nr1Tcf1Bn4r09Tu9+nLKJMbtefZBlZosWuKmu7MDozFjmzz1U7745DyTH4f6lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HSicztta; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qmIKNVj1; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1774959411; c=relaxed/simple;
+	bh=TakF1Zagv1YgZI7pZAW/GTp7AUkWn9mqkH1+3mQgg+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dNYQF9+8fzkn6uaCzH7l6nGpZ/R9dCtETEREX4SDJBsCQHOhYytOJZ1Q55Lb9eXWs0bqy/o2ntyGy7tEeWsyoFF8ykc0pG3mq+Kf09oG47tIj3t9tAfIHFsPAOGLzP/7AxDDR3l9xyzQkTls0MUAUFnuLyU+4f4HT1qAfnnLyg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=E9ChVItp; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HSicztta";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qmIKNVj1"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id ACC53EC010D;
-	Tue, 31 Mar 2026 06:53:59 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Tue, 31 Mar 2026 06:53:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1774954439;
-	 x=1775040839; bh=C+IzGmq39t+VP216mNiLCQFGv/FuetYgb6ni6li9zdI=; b=
-	HSiczttannIQBUir2XfxfkJfhkIRAYZo02WhyK+qIJ7/nTFJzdhusGVQ+fSUvtvd
-	+cW+UzV9dYaquveuSwWsE0PYdlXB32xDnxNWoM1ZkcDwFeb9n63OHU9fqFojc29e
-	xNKabMTt3jA0/5jJGlEdk6zCSqQnUtQ5Z8HotTgwJmByA8uNjS3Hbv/izya4ZlW0
-	mdz9KzxPWCuxhhQYOhg8Q+7upZnY9o9TK5upajWXpwc8q1EVbSx/74dhIX/OCcpq
-	cIQoRvUNZTwJahKCVRlb8DRmIyrheKz3/UMc8odPfzonvANWXHp1v82AWlX5vTIL
-	iZALrAVM70h7EO3wJQiBXQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1774954439; x=
-	1775040839; bh=C+IzGmq39t+VP216mNiLCQFGv/FuetYgb6ni6li9zdI=; b=q
-	mIKNVj1fhpvejq2rWn7WkkMJg72IOv8Y4vCsMe0bv3CX2b2E7FAXMV4TpZ+Qt6hy
-	wX6wTC769KhGWm4hMTjwWTCJhIUFx9epa8U7r6jMMD2Lis1REF3II6ELYo4FHc+H
-	LpVLHIXfdpAA7HTt/VQovZrFR+sJjZktpu2JTGtjK5kRls/6GIw50OeXe6lF4nrU
-	PsctaOlnewJ/Gm6TkePU9OSYdu6dqXxECcGazy8yc/Eh0DAjJxyswAFPF3f0m1aS
-	CNb7JXDntuFE5ijDge4m5El/b1b7rfLOlAFjt6OoMDVdH63ZAeeTWA3lzTu/fhfu
-	jgExkyZl7b1sx90mxJdTg==
-X-ME-Sender: <xms:x6fLaXh8u4M3xN3yhCBCMVOdFDWECCS57RPlSPECIbP8bPbPyayOOA>
-    <xme:x6fLae2i1jIXeoxgWN8Nl4g8p1tiHgQA7bdu4Jla8vmGRlKq2E_nJGnfXkTyUmptF
-    y6gJG1CC9yzOPlQE0wDYM3e7Lhq4j9VmwPk9TvzBr7Wg7hImdwnjDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddtudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegrihhl
-    ohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpe
-    foggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegv
-    rhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpe
-    fhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrg
-    hrnhgusgdruggvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehmrghthhhivghurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomh
-    dprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohep
-    lhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhr
-    tghpthhtohepohgvqdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvh
-    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlihhnuhigqdhtrhgrtggvqdhkvghrnhgvlhesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:x6fLaTcamxn3Y5ms-Bgyh2Vas3930ISqu3c2kcUpFgVNaqvA6Mh6FQ>
-    <xmx:x6fLaeJI2CrUUdWOZQWZC7IXYn2SNliBF7ZQbPimQyS_256MrywpEw>
-    <xmx:x6fLaQxEaj3SajuAtVNUC3W7zEw1GDq-fhMFW0sD2gGk49b2axiFjQ>
-    <xmx:x6fLaUt3E9SkWayamyStIv5d0tSTQ6o_IOx_tNrudK3mDW32xEIvUA>
-    <xmx:x6fLaRwQybzSprLjOPq2kiKiOgkXv-MyNdawxv4e9AhL_XzAQELveiIm>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 54DD6700065; Tue, 31 Mar 2026 06:53:59 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="E9ChVItp"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id C7DD3BE242;
+	Tue, 31 Mar 2026 12:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1774959407;
+	bh=fmOnVSldgMRg/8pGDKo6wUzrYFaZS5iOwP+Hm7ivSzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=E9ChVItphVkjUtNNOlIsaXKqbJIKHVd05tZl9VjsTincvkl4+6OIMtozfMyTd9khm
+	 wG63Wu+eCzPfC9aBKGIUFKss7uZL7kLRRjZxL80a35fei1ME7K/m2xG6Ft5zImKYdQ
+	 nXNrJwdEjYs6yNqfZ5evrY6xy632+Hfb5anmMfN0=
+Date: Tue, 31 Mar 2026 12:16:45 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Usama Arif <usama.arif@linux.dev>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v4 3/5] locking: Add contended_release tracepoint to
+ sleepable locks
+Message-ID: <acu7LdegiZ5_-dEW@shell.ilvokhin.com>
+References: <d2e5763278812499335b22a013aafb4979e3324b.1774536681.git.d@ilvokhin.com>
+ <20260331103451.1070175-1-usama.arif@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A1v9eCq-71EB
-Date: Tue, 31 Mar 2026 12:53:38 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: "kernel test robot" <lkp@intel.com>, LKML <linux-kernel@vger.kernel.org>,
- "Linux trace kernel" <linux-trace-kernel@vger.kernel.org>,
- llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>
-Message-Id: <6efebcb6-194e-4c21-8808-fdf09160eac0@app.fastmail.com>
-In-Reply-To: <20260330120516.73aede9b@gandalf.local.home>
-References: <20260305211810.3f48aa07@robin>
- <202603070230.Zz4BBLtb-lkp@intel.com>
- <8580f943-4c37-4c66-937d-adee13b72201@app.fastmail.com>
- <20260330120516.73aede9b@gandalf.local.home>
-Subject: Re: [PATCH] tracing: Move snapshot code out of trace.c and into
- trace_snapshot.c
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260331103451.1070175-1-usama.arif@linux.dev>
 
-On Mon, Mar 30, 2026, at 18:05, Steven Rostedt wrote:
-> On Mon, 30 Mar 2026 16:06:44 +0200 "Arnd Bergmann" <arnd@arndb.de> wrote:
+On Tue, Mar 31, 2026 at 03:34:50AM -0700, Usama Arif wrote:
+> On Thu, 26 Mar 2026 15:10:02 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+> 
+> > Add the contended_release trace event. This tracepoint fires on the
+> > holder side when a contended lock is released, complementing the
+> > existing contention_begin/contention_end tracepoints which fire on the
+> > waiter side.
+> > 
+> > This enables correlating lock hold time under contention with waiter
+> > events by lock address.
+> > 
+> > Add trace_contended_release() calls to the slowpath unlock paths of
+> > sleepable locks: mutex, rtmutex, semaphore, rwsem, percpu-rwsem, and
+> > RT-specific rwbase locks.
+> > 
+> > Where possible, trace_contended_release() fires before the lock is
+> > released and before the waiter is woken. For some lock types, the
+> > tracepoint fires after the release but before the wake. Making the
+> > placement consistent across all lock types is not worth the added
+> > complexity.
+> > 
+> > For reader/writer locks, the tracepoint fires for every reader releasing
+> > while a writer is waiting, not only for the last reader.
+> > 
+> > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> > ---
+> >  include/trace/events/lock.h   | 17 +++++++++++++++++
+> >  kernel/locking/mutex.c        |  4 ++++
+> >  kernel/locking/percpu-rwsem.c | 11 +++++++++++
+> >  kernel/locking/rtmutex.c      |  1 +
+> >  kernel/locking/rwbase_rt.c    |  6 ++++++
+> >  kernel/locking/rwsem.c        | 10 ++++++++--
+> >  kernel/locking/semaphore.c    |  4 ++++
+> >  7 files changed, 51 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
+> > index da978f2afb45..1ded869cd619 100644
+> > --- a/include/trace/events/lock.h
+> > +++ b/include/trace/events/lock.h
+> > @@ -137,6 +137,23 @@ TRACE_EVENT(contention_end,
+> >  	TP_printk("%p (ret=%d)", __entry->lock_addr, __entry->ret)
+> >  );
+> >  
+> > +TRACE_EVENT(contended_release,
+> > +
+> > +	TP_PROTO(void *lock),
+> > +
+> > +	TP_ARGS(lock),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__field(void *, lock_addr)
+> > +	),
+> > +
+> > +	TP_fast_assign(
+> > +		__entry->lock_addr = lock;
+> > +	),
+> > +
+> > +	TP_printk("%p", __entry->lock_addr)
+> > +);
+> > +
+> >  #endif /* _TRACE_LOCK_H */
+> >  
+> >  /* This part must be outside protection */
+> > diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+> > index 427187ff02db..6c2c9312eb8f 100644
+> > --- a/kernel/locking/mutex.c
+> > +++ b/kernel/locking/mutex.c
+> > @@ -997,6 +997,9 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
+> >  		wake_q_add(&wake_q, next);
+> >  	}
+> >  
+> > +	if (trace_contended_release_enabled() && waiter)
+> > +		trace_contended_release(lock);
+> > +
+> 
+> This won't compile? waiter is declared in the if block, so you are using
+> it outside scope here.
 >
->> I saw the same thing and worked around it by removing the function.
->> I then noticed that a bunch of code surrounding it is also unused
->> and I removed that as well (see below). This version passes
->> my randconfig build tests, but I suspect it is still wrong,
->> since the code never had any callers and I don't understand
->> why.
->
-> Note, this code is in include/linux/tracing_printk.h, and is for debugging
-> purposes (just like trace_printk() is). Hence, it shouldn't be removed.
->
-> The purpose is to call tracing_snapshot() when your code detects something
-> isn't right (but it doesn't crash), and this will take a snapshot of the
-> current trace that lead up to the anomaly.
 
-Right, I assumed it had to be something like that, just didn't immediately
-see what. I've sent a patch to just remove the duplicate inline
-function now.
+Thanks for the feedback, Usama.
 
-> If anything, I should add more to Documentation/trace/debugging.rst about it.
-
-Or maybe a samples module that serves to show how the interface
-gets used?
-
-      Arnd
+waiter is declared at function scope, right on top. It's also assigned
+before the if block, so it's still in scope at the tracepoint.
