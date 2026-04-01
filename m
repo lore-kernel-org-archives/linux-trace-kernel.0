@@ -1,123 +1,95 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CC930E0D6
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 05:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4542F25F0;
+	Wed,  1 Apr 2026 06:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775021851; cv=none; b=EDuSHyrr9ojjNlQ/ybuTHXnWRHxZKRV8kKaN+oYxkexrkU5WlGvYkCi8/ewMSVoTBEb4+ZdRLS+xc5VGvtyXSkix2HG4dnEu4cmWly370lHP1D+bkgwz1YOmgAsE/oCInx2Zjg4GVhf1TAmuhFYVxkD83cBRcBrJyv7FXHq5/rg=
+	t=1775025464; cv=none; b=if4iMu9BErar5kiKHLeGGN4l/jnaonBrKYzRukjV5RL8MA4OrYZ476ft3fQPhoT/jo4Cr7WKXZCwO+P+HQHf0oV444MYbA1+saSkzrP57OnBZux3QOFzCZumr/04dzlIhJZ7x9qXxYjRFrFKwtBPRLo8J3xaj3hJGGlAvl9Uc0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775021851; c=relaxed/simple;
-	bh=g7Ed5EWs6irGU3euUlogWHAf8XlbAn4lOy8PpKGTXJ8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UyXqQ9TBCJdRKFMO9comQBdYzf2/RDjOTYhMTPeWkAmCnIy7r7lv5M9w38UGmyY6f/Yn8eRMkWr3Tx5puEJ/dKkh4a7by6xtY0JSHMFP/kc1+JqAesJfeAmRu3/fbpFddovA3NhwFLRxwxuvWsYbckb/OITsq7sbx//ybOQ34EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fW0pWqpn; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1775025464; c=relaxed/simple;
+	bh=uFvolVvUj4GeZV1fy87NvrCdKUCaAySDrJWQiZaymBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nLTFTbwV9/8gNhwvlag8FSwgCwt8cH35ntlebg3FjHu0sG18oMIKytq6ODRz10qhFziW0Q37N6aaOIp2+prQcREstT8ok+iIsmlHNWvNJwWqD8ZtCDz6b5qb5ZIKXNSg2xoWGkkQPm0uSoNd9y8rEib32gr00VniWBvRhgW7hwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RnIiKkCI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fW0pWqpn"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4888020f5daso9205885e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Mar 2026 22:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775021849; x=1775626649; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jBLhbC6YBGjXwUzmIRUHH3YF/N1tH9WoVcrhDPGIIHw=;
-        b=fW0pWqpnNxGobl+hmwt+jaG5DrbH1oONqXM30ldhscnVq/5kasZrBSftdhTYdktU7a
-         QRSlGMGJOM7gLcRCsyPn7mZKzSJWzfUHYZesU9X8vUzIXXwF8zTmI6Kf4wcYnOX5HsUv
-         BjmWjKIKR7tGeeZq6Sk6H7u6L6Tq7gzyS+k4zDGjHoY+JDTtDkWjrMEVPLnFKByWccF1
-         o2qF8hTg4UV6ZAMQcKTGVhNZ4Kklt/0WIcW3MZrk8VfoZ5vVdFl5n1eilra6TAgxC7S2
-         Lermm+SznM5VimAJXg/6nj4DzNb86q5eVy/fXLBKHpzAIvtQAxEwgQxKnHKEEqQz41Qo
-         h/rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775021849; x=1775626649;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jBLhbC6YBGjXwUzmIRUHH3YF/N1tH9WoVcrhDPGIIHw=;
-        b=NQbaYZSebW/fN79ssa/4c2Ya5tkYwYtBQXVn5w1M6hj1rLBXGc3GM59ymz/ES6ZeXy
-         BQi/e6fnk1i3FSiQD8ANW6fN4+DjwfJKB4aw7bIhlrJgLAM95utwoJ1Ye5kbaXc5V+WO
-         O6jhpIgdaVduniz0vbTV8Ce661BK5baZWpWdPE8DXMiXFWuul3DRIE4I8xXm2vYNi3vx
-         gWgcMTTJDeoRCvxKcNp51YlchLuWwQ/osp3oXSERDQQLqYpD9X1El9vC3mViKw3QL50j
-         NkkUnRiTCTOBaqdxFSBTfL7KfJ4v36J6RLobZ+HMch1M1G6ss/hMcpKYyVebPHnRnfhv
-         r90Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUVx9ixhUD37UF9yPkgKXDop5P3hLLMd0z0s0TBuUb/n2OILlSLx9Wx07hRDJoMwQvFZO3wGwyFAjXqGFfAtfRyDwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXAeX/r8h1VXQkYW40dH0aB1uSxAZER8zEqA4z7VUt2iiRGXCS
-	shsDL/8IJ40wOiQYLyNxx9LB0qrZOrVU1bSN9ysJBPA6ZSgjrPCnVOo0dfGfNnnL4h3/eu0CUiw
-	bZ1GFOZa3whpwJlwO1LpRhA==
-X-Received: from wmby19.prod.google.com ([2002:a05:600c:c053:b0:486:7a8:4f4e])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:818f:b0:485:3423:727d with SMTP id 5b1f17b1804b1-48883595de9mr30905495e9.26.1775021848954;
- Tue, 31 Mar 2026 22:37:28 -0700 (PDT)
-Date: Wed,  1 Apr 2026 06:36:59 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RnIiKkCI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3EDC2BC9E;
+	Wed,  1 Apr 2026 06:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775025464;
+	bh=uFvolVvUj4GeZV1fy87NvrCdKUCaAySDrJWQiZaymBE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RnIiKkCIdDiPcDyEAoi0m4iYzoMECOyCYkAyAh/lthYknjxWomgN6IjWeK3aNsPD6
+	 S48H9beHx6GPmyjwjBlnjEmCAy1GmNkAdxEf8i7jJBt9ReSEFJ4QPCjgm0KJqr9HUc
+	 wjesAZr4c1K6hNhO2C6r0YOlVePEIrX/cCcGn7087opB+kuIXgm343mY/RbM3EbnEd
+	 a+ZGwUxoc3yiZBxUDawCZSUxrUXuipodGuM+OEMuDSp5oh0i2aFAamS9k10OJsAyeD
+	 yVYctyoqezZDrvjTcrKUXGtQxG1q0DwLKZg4uRLq6R3XTApaZPZzb6AJWKT1p5PxbG
+	 arMW3TZWoGkjg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v10 0/3] tracing: Remove backup instance after read all
+Date: Wed,  1 Apr 2026 15:37:39 +0900
+Message-ID:  <177502545902.1311542.15822886746171808738.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.53.0.1118.gaef5881109-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.1118.gaef5881109-goog
-Message-ID: <20260401053659.3458961-1-vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Enforce read ordering of trace_buffer cpumask
- and buffers
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On CPU hotplug, if it is the first time a trace_buffer sees a CPU, a
-ring_buffer_per_cpu will be allocated and its corresponding bit toggled
-in the cpumask. Many readers check this cpumask to know if they can
-safely read the ring_buffer_per_cpu but they are doing so without memory
-ordering and may observe the cpumask bit set while having NULL buffer
-pointer.
+Hi,
 
-Enforce the memory read ordering by sending an IPI to all online CPUs.
-The hotplug path is a slow-path anyway and it saves us from adding read
-barriers in numerous call sites.
+Here is the v10 of the series to improve backup instances of
+the persistent ring buffer. The previous version is here:
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+https://lore.kernel.org/all/177497473558.569199.6527680985537865638.stgit@mhiramat.tok.corp.google.com/
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 170170bd83bd..10d2d0404434 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7468,6 +7468,12 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 	return 0;
- }
- 
-+static void rb_cpu_sync(void *data)
-+{
-+	/* Not really needed, but documents what is happening */
-+	smp_rmb();
-+}
-+
- /*
-  * We only allocate new buffers, never free them if the CPU goes down.
-  * If we were to free the buffer, then the user would lose any trace that was in
-@@ -7506,7 +7512,18 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- 		     cpu);
- 		return -ENOMEM;
- 	}
--	smp_wmb();
-+
-+	/*
-+	 * Ensure trace_buffer readers observe the newly allocated
-+	 * ring_buffer_per_cpu before they check the cpumask. Instead of using a
-+	 * read barrier for all readers, send an IPI.
-+	 */
-+	if (unlikely(system_state == SYSTEM_RUNNING)) {
-+		on_each_cpu(rb_cpu_sync, NULL, 1);
-+		/* Not really needed, but documents what is happening */
-+		smp_wmb();
-+	}
-+
- 	cpumask_set_cpu(cpu, buffer->cpumask);
- 	return 0;
- }
+In this version, I fixed to use trace_array_destroy() and
+cancel_work_sync() to avoid possible race. And remove unneeded
+work_pending() check in trace_array_kick_autoremove()
+(for trace_array_cancel_autoremove() to avoid deadlock of
+workqueue, it still use work_pending() check) [2/3] and
+add a newline at EOF [3/3]
 
-base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
--- 
-2.53.0.1118.gaef5881109-goog
+Series Description
+------------------
+Since backup instances are a kind of snapshot of the persistent
+ring buffer, it should be readonly. And if it is readonly
+there is no reason to keep it after reading all data via trace_pipe
+because the data has been consumed. But user should be able to remove
+the readonly instance by rmdir or truncating `trace` file.
 
+Thus, [1/3] makes backup instances readonly (not able to write any
+events, cleanup trace, change buffer size). Also, [2/3] removes the
+backup instance after consuming all data via trace_pipe.
+With this improvements, even if we makes a backup instance (using
+the same amount of memory of the persistent ring buffer), it will
+be removed after reading the data automatically.
+
+Thanks,
+
+---
+
+Masami Hiramatsu (Google) (3):
+      tracing: Make the backup instance non-reusable
+      tracing: Remove the backup instance automatically after read
+      tracing/Documentation: Add a section about backup instance
+
+
+ Documentation/trace/debugging.rst |   19 ++++
+ kernel/trace/trace.c              |  160 ++++++++++++++++++++++++++++---------
+ kernel/trace/trace.h              |   13 +++
+ kernel/trace/trace_boot.c         |    5 +
+ kernel/trace/trace_events.c       |   76 ++++++++++--------
+ 5 files changed, 202 insertions(+), 71 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
