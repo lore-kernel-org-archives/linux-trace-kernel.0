@@ -1,155 +1,232 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E5C43CECB
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 13:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7447436AB4D;
+	Wed,  1 Apr 2026 13:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775051070; cv=none; b=uT2BQuummeUPBLlJSwtRzLhnCHQXvipRm6gGj+hvYCzB8HViwPrHs+mV1C1o/ASqciDrsdN7nyP1u5cP+JNawwcEAw5cok97S0/t2ZzbuAV+O6bOXRF8xhrKrmUtGGcIscH0ICObyF8+GGsqGunEkg4mcm9h2rj09gNmFl0qMXU=
+	t=1775051336; cv=none; b=npxqr8jzKkHRicCO1zF9RQaj+SPFg7tZDsvK3sgsCTR+KmCIMPN2/JZtXaVZYMAggr2lJ05Sbh4cM5ch+UlsAERppg+DPr0uRz84i7fgNWYdEgpLy8DuT5QRB5RMEoP/0tayprpVkwzluFM21MkQK2fbi2M68Z7OjJcYhE/525A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775051070; c=relaxed/simple;
-	bh=h2s8O28EcrY+1RSxqAEZnVYi429hS+7J6DOa2rif8Sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QOFdpWBbM9m/EPC+ir+Hjifk2MAZFaF9gQ6C6quS7OQI719onl86yWSPvJPwYzruN4q8VdPFAQx9zFnzAy0bM4J921YpZDfO8IjiL0kPrgPrtswKLBZ8lbJje64wZiOIL+ngTuxHwQMIpRshme56pl/1rMBQy987m89RfatKnsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nt+M0dh9; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775051336; c=relaxed/simple;
+	bh=xFgnOyg8X+lea0/KUQv/0V6QZGmiCPT35r+GsxSV48Y=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=krEnmGSbPLdjIjiE+vuFu3TlCaZzR4bLldPK8XNapp7myiiXAZ3OFf7nMRCns2MgBZ6Tc4K/qMG+gE/JpwMsIrOL0GyJuHEfAb1eCcrrhgpY7VNitrhZig9anmi+R+iztmETy5F/Dm9+a6Kz1Tk3Ac085806BT3h1cKvBk3SLac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaSufrcF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nt+M0dh9"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-c06cb8004e8so2777220a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 06:44:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775051068; x=1775655868; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5w6DoKofcUymqGz5unmMX3ysJ5+8CgZ32mudZsWBu6U=;
-        b=nt+M0dh9oROWkLqgGBTrGImD/wvqyPC5WrClIxvF8Qe2tiq0Aq+NWHeZdB5dOf+Yi7
-         e4sCIRUEADcHvh9Srpw9mIdrhVlZcUTiPSbGiNfBFVJ3bixYGXDG/3bRsunQy3FIIy7i
-         6P9VpVhW8riz7Z4iLH0BUteK8lDrflMun3kRfhheecVRBEVNIsOWB3WFSn73y5kAS0Qk
-         p0SrzvOy9hOUgRNTqK+PzdLqZZRGFk41dPSwxD3bJ+1mAoqHRifchD5Ylwg75GQjTBYx
-         UfwapeBsH1Uit9c4QVCvj8N/8ayY5L0oMON2a9hk0OkBaEEBrfYAVBhObmtc3TuajVf9
-         qUxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775051068; x=1775655868;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5w6DoKofcUymqGz5unmMX3ysJ5+8CgZ32mudZsWBu6U=;
-        b=gyIjzk6Wvtfqlr0vXx+yzaceTAgfWxOPWnhEgxMY0jW0PtoXj/Sj+41FFMusM0c/1C
-         HIDAEctmRXsTElWi5/5BhXHFwvcljxN/4l0M+BLgkT8njf1iYZ59I7sCHpYIQm2ai+BS
-         pNFCMUQ4OT4Y+iN/05OEjF/uNMRu3IoCtM/ERcCtpzUxBvq7WHfzG3ffBy+ykRKLc0VH
-         fpa14LjxSpLIziUazESIaCSQ2M0SkSBhS5WAzUlstLEJgKYZ+89RqwqZlNhN5NQrX6xS
-         VhBUq2Z3H9fRF+P7MZDebJLWHn17KqvaAqlx+rlA5s6T/h9mvFpjEflWb3dzF2NMk7H9
-         tY8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUz15LW0ODpJPIbZ8p3jbYYBgjj5cxrW1GJ6Xg8txaH1tDvekiXC6S5HdsRSpYn2v1+vmCOGRMP4MsIBTIFIzR/60g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn3Vy145Vufqw0WkrrKEwHbjZqZN5NkWn+UFpQarhmJkvwxCBY
-	d+zYSRaFBX+Bo2u1c8VqQ7KwylsAlHKgISCL+hO/aYHJi/Aygc9Eup1Y
-X-Gm-Gg: ATEYQzxJAeO5ZnEo3ay1n8geCaQtjgr9pom7QlXB7mYcZNjiDS03rpFix8zP0/Q7e5i
-	2hgKJjfSDkHj7jPgyHtW0K2lYNa1xW5rQMHaI5o2zTONJ72Nw3Sfz76DwXYN7e/iXkswPy0Behv
-	nJmKItYehV5LdUaRWgri1XYjpES5WmvSmdPLxRVAUR/m8QvgWyy7aQ5QA1jlxeCuk85yC+S1UBx
-	9Ofy2OFmVlo5NFSwc/NR9VHY6UjnqK+gbIcaVCvMPmC4otIJB36MKBbYIkA8oXONvenJ0gYyw47
-	hZLlPWXyyFg4W3J0kshTSSY9qBXCu8wgrb39hNC1Die6UbUD3cnKYBFRUjm1VV/SGtMvzni7Vz7
-	12ESa5nzu/5j8Qpnn5Yv4SZzADOCM8wbvPxghT3D30FVW4pRR1t33D+L2JnTZc2HtzQH5lYe/ZS
-	8rKlSTkUMVSJLhraWpmgtHUE2uFBt62LQUoN//23Ia
-X-Received: by 2002:a05:6a20:3c8e:b0:398:9923:7492 with SMTP id adf61e73a8af0-39ef769cea2mr3798024637.39.1775051067806;
-        Wed, 01 Apr 2026 06:44:27 -0700 (PDT)
-Received: from computer ([2a09:bac5:40b2:a82::10c:35])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c76917d843esm13795063a12.29.2026.04.01.06.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 06:44:27 -0700 (PDT)
-Date: Wed, 1 Apr 2026 19:14:15 +0530
-From: Varun R Mallya <varunrmallya@gmail.com>
-To: bpf@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, kpsingh@kernel.org,
-	mattbobrowski@google.com, ast@kernel.org, daniel@iogearbox.net,
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
-	memxor@gmail.com, song@kernel.org, yonghong.song@linux.dev,
-	jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
-Subject: [BUG] bpf: kprobe_multi allows BPF_F_SLEEPABLE programs, causing
- sleeping-in-atomic splat
-Message-ID: <ac0hLyMuPHiZfnVc@computer>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaSufrcF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC0BDC4CEF7;
+	Wed,  1 Apr 2026 13:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775051336;
+	bh=xFgnOyg8X+lea0/KUQv/0V6QZGmiCPT35r+GsxSV48Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gaSufrcFiBWIl+QBNrCXCpRVFhDMLErK+CL3DW5vviunWx4NGxz+Fltf3OHM37bmJ
+	 vJfV8D/z01VkLJhvddv5rytXfXdiJNPALucm2QnqmPY0nLBMZw7sNPiD87Lj5x3/OQ
+	 9sIl3if4zmRej4T3LQVP3cXM4CVgFZLccNPN9lpo/ViG+G5HbtawJ39k5xfdzwMq+Q
+	 EWFykxLN7mdga6IcUx4EcNjZqoQJmEtYqSyzYmsFggqEEmseXxv3VI+Vi2I5pSQ0/e
+	 DMRgn15a3y8R0rtan2MawR/TzQu8LHC2VGBOPO/viQIBN1YqtzVUMMizr/0MbGqwFE
+	 sHrecVMsaU9rw==
+Date: Wed, 1 Apr 2026 22:48:53 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org,
+ kernel-team@meta.com
+Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
+Message-Id: <20260401224853.d8ed517a344c4be51d371a9c@kernel.org>
+In-Reply-To: <acvjcCqIAeHyIiQN@gmail.com>
+References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
+	<20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+	<acZPZ4XKy4QynznK@gmail.com>
+	<20260327223744.f246150adc1671f7605a4f0a@kernel.org>
+	<acpzhCBEPh-tKVqg@gmail.com>
+	<acqJk-zbyjIiy6hJ@gmail.com>
+	<20260331125827.157a833882830007ea9b0b31@kernel.org>
+	<acvjcCqIAeHyIiQN@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Breno,
 
-I found a bug in the kprobe_multi BPF link creation path where the kernel
-fails to reject programs with BPF_F_SLEEPABLE set.
+On Tue, 31 Mar 2026 08:27:59 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-kprobe.multi programs run in an atomic/RCU context and cannot sleep.
-However, bpf_link_create() with BPF_TRACE_KPROBE_MULTI does not validate
-whether the program being attached has BPF_F_SLEEPABLE set. This allows
-sleepable helpers such as bpf_copy_from_user() to be invoked from a
-non-sleepable context, triggering a "sleeping function called from invalid
-context" splat.
+> hello Masami,
+> 
+> On Tue, Mar 31, 2026 at 12:58:27PM +0900, Masami Hiramatsu wrote:
+> 
+> > > 3) Ensure that early bootconfig parameters don't overwrite the boot command
+> > >    line. For example, if the boot command line has foo=bar and bootconfig
+> > >    later has foo=baz, the command line value should take precedence.
+> > >    This prevents early boot code (in setup_arch()) from seeing a parameter
+> > >    value that will be changed later.
+> >
+> > OK, this also needs to be considered. Currently we just pass the bootconfig
+> > parameters right before bootloader given parameters as "extra_command_line"
+> > if "bootconfig" in cmdline or CONFIG_BOOT_CONFIG_FORCE=y.
+> >
+> > [boot_config(.kernel)]<command_line>[ -- [boot_config(.init)][init_command_line]]
+> >
+> > This is currently expected behavior. The bootconfig parameters are
+> > expected to be overridden by command_line or command_line are appended.
+> 
+> That's correct, and I have no intention of changing this behavior. Here's
+> the current approach:
+> 
+> 1) Early parameters from the bootloader are parsed first in setup_arch()
+> 
+> 2) Subsequently, bootconfig_apply_early_params() is invoked. Any early
+>    parameter that was already parsed from the bootloader (in setup_arch())
+>    will be skipped at this stage.
 
-Reproducer:
+Ah, I meant if we skip these parameters, we should not show it in the
+command line via extra_command_line. This is still a minor issue at this
+point. It should find early parameters in kernel.* parameters and do not
+show it in extra_command_line, because those parameters are ignored.
+So it is better to make a separated patch to fix that.
 
-  /* crash.bpf.c */
-  SEC("kprobe.multi")
-  int handle_kprobe_multi_crash(struct pt_regs *ctx)
-  {
-      char buf[16];
-      int ret;
-      ret = bpf_copy_from_user(buf, sizeof(buf), (void *)ctx->sp);
-      bpf_printk("bpf_copy_from_user ret: %d\n", ret);
-      return 0;
-  }
+For example, if we pass
 
-  /* loader: manually set BPF_F_SLEEPABLE before load, then attach via
-     bpf_link_create() with BPF_TRACE_KPROBE_MULTI */
-  bpf_program__set_flags(prog, BPF_F_SLEEPABLE);
+kernel.mem=1G
 
-Kernel output (bpf-next 7.0.0-rc5+):
+via bootconfig, it will be shown in the /proc/cmdline, but it is
+not applied. This can confuse user.
 
-[  483.577248] BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:
-169
-[  483.577364] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1787, name: sudo
-[  483.577420] preempt_count: 1, expected: 0
-[  483.577453] RCU nest depth: 2, expected: 0
-[  483.577486] INFO: lockdep is turned off.
-Attachment successful! The bug is confirmed.
-Check 'sudo dmesg -w' for BPF prints and warnings.
-Triggering v[  483.577569] CfsPU: 7 UID: 0 PID: 1787 Comm: sudo Tainted: G        W           _
-rea7.0.0-rc5+ #4 PREEMPT(full) 
-d[  483.577571] T.ainted: [W]=WARN..
 
-Su[  483.577572] Hrvardware name: Bochs Bochs, BIOS iBochs 01/01/2011v
-[  483.577573] Call Trace:
-[  483.577575]  e<TASK>
-[  483.577578]  d!dump_stack_lvl+0x54/0x70
- [  483.577582]  If __might_resched+b0x200/0x220
-p[  483.577585]  f__might_fault+0x_c2c/0x80
-o[  483.577587]  p_copy_from_user+y0x23/0x80
-_[  483.577591]  bpf_copy_from_user+0x27/0x50
-[  483.577594]  fbpf_prog_1906cf6roa66546b5e_handlem__kprobe_multi_crash+0x33/0x4d
-u[  483.577596]  skprobe_multi_linek_handler+0x15d/r re0x260
-[  483.577599]  t? kprobe_multi_lurink_handler+0x99n/0x260
-[  483.577602]  e? __pfx_vfs_readd +0x10/0x10
-0[  483.577604]   in? ksys_read+0x7c/0x100
- [  483.577605]  dm? vfs_read+0x4/0esg, x360
-t[  483.577607]  fprobe_ftrace_entry+0x3b8/0x480
-[  483.577609]  h? ksys_read+0x7ce /0x100
-e[  483.577610]  x? fprobe_ftrace_pentry+0x93/0x480l
-o[  483.577612]  it? lock_release+0x42/0x330
- [  483.577615]  ? vfs_read+0x9/0wx360
-o[  483.577616]  r? __x64_sys_rt_sigaction+0xde/0xke120
-[  483.577619]  ? vfs_read+0x9/0x360
-[  483.577620]  d? ksys_read+0x7c./0x100
-[  483.577622]  
-? do_syscall_64+0x143/0xf80
-[  483.577624]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[  483.577625]  ? trace_irq_disable+0x1d/0xc0
-[  483.577627]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[  483.577631]  </TASK>
+> 
+> > If we change this for early params, we also should change the expected
+> > output of /proc/cmdline too. I think we have 2 options;
+> >
+> >  - As before, we expect the parameters provided by the boot configuration
+> >    to be processed first and then overridden later by the command line.
+> >
+> > Or,
+> >
+> >  - ignore all parameters which is given from the command line, this also
+> >    updates existing setup_boot_config() (means xbc_snprint_cmdline() ).
+> >
+> > Anyway, this behavior change will also be a bit critical... We have
+> > to announce it.
+> 
+> As mentioned above, I don't anticipate any changes to existing behavior.
+> Bootconfig parsing remains unchanged. The only modification is that
+> bootconfig_apply_early_params() will skip any early config parameter
+> that's already present in the bootloader command line.
 
-I am sending in a patch that fixes this.
+Yes, but it is just different from existing one.
+Suppose that if we have "early" and "normal" keys in the kernel, those
+are handled by early_param() and __setup() respectively.
 
-Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
+If we use bootconfig, like
+
+ kernel {
+   early = bconf_val
+   normal = bconf_val
+ }
+ 
+And passes "early=foo normal=bar" via cmdline.
+
+In this case, the /proc/cmdline eventually has
+
+"early=bconf_val normal=bconf_val early=foo normal=bar"
+
+And the "normal" callback called with "bconf_val" and "bar" twice.
+However, "early" callback will be called with "foo" only once.
+
+That can confuse users too.
+I believe it's important for the system to behave in a way that is
+as close as possible to the user's mind model.
+Because the behavior is inconsistent when multiple parameters with
+the same name are specified on the kernel command line, it is
+necessary to ensure that users can later look at it and infer what
+happened.
+
+I mean, if a parameter is skipped, it should not be printed at
+/proc/cmdline, because it can mislead user (and maybe bug reporter)
+when a problem happens.
+
+> 
+> > > +Note that embedded bootconfig is parsed after ``setup_arch()``, so
+> > > +early options that are consumed during architecture initialization
+> > > +(e.g., ``mem=``, ``memmap=``, ``earlycon``, ``noapic``, ``nolapic``,
+> > > +``acpi=``, ``numa=``, ``iommu=``) may not take effect from bootconfig.
+> > > +
+> >
+> > This is easy to explain, but it's quite troublesome for users to
+> > determine which parameters are unavailable.
+> 
+> Agreed. This turned out to be significantly more complex than I
+> initially anticipated.
+
+Yeah, that's complicated.
+
+> 
+> I'm uncertain whether we can accomplish this without examining every
+> early_parameter() implementation in depth.
+
+Agreed. My proposal is something like a divide and conquer approach.
+Since these are implemented architecture by architecture, you need to
+check the implementation for each architecture, and I think it's best
+to implement them one by one using Kconfig.
+
+> 
+> > Currently we can identify
+> > it by `git grep early_param -- arch/${ARCH}`. But it is setup in
+> > setup_arch() we need to track the source code. (Or ask AI :))
+> 
+> The challenge extends beyond that. There are numerous early_parameter()
+> definitions scattered throughout the kernel that may or may not be
+> utilized by setup_arch().
+> 
+> For example, consider `early_param("mitigations", ..)` in
+> ./kernel/cpu.c. This modifies the cpu_mitigations global variable, which
+> is referenced in various locations across different architectures.
+> 
+> It's worth noting that we have over 300 early_parameter() instances in
+> the kernel.
+> 
+> Given this, analyzing all these early parameters and examining each one
+> individually represents a substantial amount of work.
+
+Yes, that may require a substantial amount of work. But to improve
+the kernel framework around the parameter handling, eventually we
+need to examine each early parameter.
+
+> 
+> Are there alternative approaches? At this point, I'm leaning toward
+> breaking bootconfig's dependency on memblock, allowing us to invoke it
+> before setup_arch(). Is this the only practical solution available?!
+
+Basically, the memblock dependency comes from allocating copy of data.
+Only for the embedded bootconfig, we can just pass copy memory block
+to the xbc_init(). Something like;
+
+xbc_init() {
+ xbc_data = memblock_alloc();
+ memcpy(xbc_data, data);
+ __xbc_init(xbc_data);
+}
+
+embedded_xbc_init() {
+  __xbc_init(embedded_bootconfig_data);
+}
+
+Afterwards, we can pass mixture of embedded bootcofnigt and initrd
+bootconfig data to parser again.
+
+(But in this case, we must be careful not to override the early
+ parameters that we have already applied.)
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
