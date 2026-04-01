@@ -1,37 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A40212542;
-	Wed,  1 Apr 2026 14:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79784779A5;
+	Wed,  1 Apr 2026 14:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775054351; cv=none; b=CUobIeZTJJzAhsdgVFuKmAoMlUdN50kEYCpls4N5eMCer/W4XLWs5cpp74S2odbhasKaZ+0r5EgDidPgIAFV8SW15Y1m4/b+wt4jNI+zFNbgi36k2Xao1kvEI+8iI3EzaJ0YYRWAqKPgNxMUIw9N8xuneMncY/s8Rwd7Co4wCFg=
+	t=1775054430; cv=none; b=HNuXIc87zyhklYqN4DyXtAssNOrk/zdApr/oPm4xLCrAeBK+tB8655V/s+DRguuYcp3Hf+dNb3kTCKVJL33P8qWEYv0eRh6w+iYSQXKZtSycEe+iWtavQwTRtKZP1KRfpTcfSK597WNcQ3b/d2aGB1kHSOx+1Ecu3sHXB0uBBWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775054351; c=relaxed/simple;
-	bh=jcIo50MQvGZLquDxrrybnymmuv35Qkplzo1TACjlkoY=;
+	s=arc-20240116; t=1775054430; c=relaxed/simple;
+	bh=Va7sdOM42iHClAcV5UsPJ/Z7QJQwex4SsOc4e6A691k=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dqly9reNaLVOMRC7X29BHybGiUx4SpK9ABVe/CP8KOosPzfzquR0INb4BzPCRLCOCTcAS5TKmXyhKDM3Y5WkrcUtzwmVAxRNboS3QrQK0ptVZP+xJArUv4hhJ9nm76GZTg9ujjvg/P4Oi8kQqQ2FDrWAq3lQ9REE2ewWt/Sbv+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=YM5a9V6M4xP3GRio9R0xM4oR65JTB8LQMUoReTRPXu+b/pRFLgwI2lEpwSYUHYDPwkGmmLq1OJQkELtXen3n/HsMEYueWSKAfOj8SmrY4dGJotFi7TAD0ZfP3AjiMg5dppWYbOlBO2HeC1B7AI5TZVHIyJff+gBqsK+4GWI3Lng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id F15B7BB678;
-	Wed,  1 Apr 2026 14:39:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 3E93F1A;
-	Wed,  1 Apr 2026 14:39:01 +0000 (UTC)
-Date: Wed, 1 Apr 2026 10:40:01 -0400
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id D205514094A;
+	Wed,  1 Apr 2026 14:40:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 01D4720013;
+	Wed,  1 Apr 2026 14:40:19 +0000 (UTC)
+Date: Wed, 1 Apr 2026 10:41:20 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 2/3] tracing: Remove the backup instance
- automatically after read
-Message-ID: <20260401104001.5461c5f0@gandalf.local.home>
-In-Reply-To: <20260401121957.2665d454390aff97593bb996@kernel.org>
+Subject: Re: [PATCH v9 3/3] tracing/Documentation: Add a section about
+ backup instance
+Message-ID: <20260401104120.0e4a364a@gandalf.local.home>
+In-Reply-To: <20260401121541.e2c8c549ae172ccf2d5e3035@kernel.org>
 References: <177497473558.569199.6527680985537865638.stgit@mhiramat.tok.corp.google.com>
-	<177497475349.569199.11513916633426967730.stgit@mhiramat.tok.corp.google.com>
-	<20260331171936.6f84e357@gandalf.local.home>
-	<20260401121957.2665d454390aff97593bb996@kernel.org>
+	<177497476117.569199.18085846838539980210.stgit@mhiramat.tok.corp.google.com>
+	<20260331172105.609d59aa@gandalf.local.home>
+	<20260401121541.e2c8c549ae172ccf2d5e3035@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,69 +41,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: zgiqkrgtmpqfadz5f7esw4wpap45itsu
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 3E93F1A
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 01D4720013
+X-Stat-Signature: gh1po3cyb937saonukdxhdzs94fsm5oa
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX195wfUxamN0/v3zFUuttCix/440qDWNP4s=
-X-HE-Tag: 1775054341-839768
-X-HE-Meta: U2FsdGVkX1/jxoplB1lOCMBL4SkToRwZABfCD6Qj+JXDgEKMaSC17zbnQFic3F257CiHbeMMxNKr+mLJRVH3GVIRObtqo/4hw8WVbbaDd087kuszEQ5M/paWAdKh+O7caCWldBltD4ysj8nLZH5CcKyMqsV27IdGv4HwbOpfXyOGCn7dkqj8jW8d9pbdVx8j68O6Y5vPedgN9feifZOseYxtpjac0hB8Zeqx66E8jSC8HHXSq4PJ+H0gWN/ZjSCHiHqaOafTW1xhXg5m6h5z5ju+4s+KAm8NGp7ogwQQzke2KAUjwrKcD/CvMp/bOGg/te3/QjaxBF4h0udrZTSC8xUUtO5g/rTV
+X-Session-ID: U2FsdGVkX1+ORugR7/XsZXsHFVkD2bE2kkzCXP3+eaw=
+X-HE-Tag: 1775054419-894820
+X-HE-Meta: U2FsdGVkX1+ZvXSFD3OohE0Zm7RJKnbNK5lTmXj2m9geKDELPSNfl5vf6w5BYH19r7z8pPLkDcJPwVtaxMd18L3K0uGOztGpzdB1mkbXGpno44sfcWW0nRxoS45ycWqk9MZljT64XNWdPjOBKO3xpUw52fRe0Eo3dCApq3mSlMf1X+ubSJ0zkV3wBI8ODbYFaz4VyNGHQ7CmaYecGlr05IqgNrDUjbHv2hydpLh1dw/oxUZhJiTBEOYbnNUqsvahMi9nCbgc+QdvuoWJAm7Xw2XSSqQVeK9vPHp+yzJgeaZu87YVJOXYZ1odnf/kWdD+LTs1yLE4YkPaquda+U4YgGofk5LV+b/4
 
-On Wed, 1 Apr 2026 12:19:57 +0900
+On Wed, 1 Apr 2026 12:15:41 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
+> > > +It is also possible to record trace data at system boot time by specifying
+> > > +events with the persistent ring buffer, but in this case the data before the
+> > > +reboot will be lost before it can be read. This problem can be solved by a
+> > > +backup instance. From the kernel command line::
+> > > +
+> > > +  reserve_mem=12M:4096:trace trace_instance=boot_map@trace,sched,irq trace_instance=backup=boot_map  
 > > 
-> >   CPU 0							CPU 1
-> >   -----							-----
-> >   open(trace_pipe);
-> >   read(..);
-> >   close(trace_pipe);
-> >      kick the work queue to delete it....
-> > 						rmdir();
-> > 							[instance deleted]  
+> > The above didn't actually work well without my patch to enable events on
+> > the persistent ring buffer with the backup. But keep it, as it will work
+> > with my patch ;-)  
 > 
-> I thought this requires trace_types_lock, and after kicked the queue,
-> can rmdir() gets the tr? (__trace_array_get() return error if
-> tr->free_on_close is set)
+> Ah, thanks!
+> Let me rebase on it.
 
-rmdir() doesn't use __trace_array_get(), it uses trace_array_find() which
-we shouldn't need to modify.
-
-static int instance_rmdir(const char *name)
-{
-	struct trace_array *tr;
-
-	guard(mutex)(&event_mutex);
-	guard(mutex)(&trace_types_lock);
-
-	tr = trace_array_find(name);
-	if (!tr)
-		return -ENODEV;
-
-	return __remove_instance(tr);
-}
-
-> 
-> > 
-> >   __remove_instance();
-> > 
-> >    [ now the tr is freed, and the remove will crash!]
-> > 
-> > 
-> > What would prevent this is this is to use trace_array_destroy() that checks
-> > this and also adds the proper locking:
-> > 
-> > static void trace_array_autoremove(struct work_struct *work)
-> > {
-> > 	struct trace_array *tr = container_of(work, struct trace_array, autoremove_work);
-> > 
-> > 	trace_array_destroy(tr);
-> > }  
-> 
-> OK, let's use it.
-
-Yes, by using trace_array_destroy(), it will fix this.
-
-Thanks,
+Well, my patch hasn't been added yet ;-)  But don't change anything. When
+this goes upstream both patches should have been applied.
 
 -- Steve
