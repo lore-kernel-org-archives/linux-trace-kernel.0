@@ -1,134 +1,148 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E746295DA6
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 13:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C012D9EFF;
+	Wed,  1 Apr 2026 14:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775051379; cv=none; b=d4AYuDmIzuWlJQ5OfUIMzOxGBeGeqoRN9gp3tJudYUcFW68nzHP5+AP0S/2CfooN3JLYNKlWDQKcI8wTMvA9Dp3caGTBoaJ90H6l4tLqbVn/NuVtw+35ZLaMVGSeg9BQ3A8zLXqjDkVsF1rnLMD4CKNpSsc2X7Ns/pKIhSg5X60=
+	t=1775052180; cv=none; b=agkI65i0zp1kLS4VAgnPDFC7x0wGpd4HFWYcppQ8mY6FP4Mk2s+pqqbi/WC/pXfMEsPzRMzvzPLNJKW8jzfQttW4I4YIqo7AfYnDv+gkH6bqzTD8L3bMyWjQm/RnhEQQCcyhWBs8CTTOhGwcvBo7u/rbuhYhB+Pz2PFXOCBpY9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775051379; c=relaxed/simple;
-	bh=hgeoXRZ5cSNPAxt3Egkd+p+yTdwDhoSYzz++GWpOuak=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c22sk64oMKwq+OYsU+gH6TTzzFxHVtm/TM/1Ka4MXVQ8LefNgeLq2MVXY5IrICaNv2DOhwfSQyHLSZr6O0eQ+6SJ9znwDRye7c9pW5RwrJt/o0wbuhBDFYKA+tCHqMOv8E06+9+LXYDRjGxeVysfjkT3zGKUMxxkAdA8mhkeegY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZiCAwXSW; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775052180; c=relaxed/simple;
+	bh=Ec+Z5yJc4hEbQOdPH/k3oSFFekUyw8YlfWQUNvhd/uA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NYcF0V/SoOFSabyUESuzZcBfnOn+TeHJUFEY5tyMeVqGQjqwfPjaliywO7pow2JB9IyC46BNMOeK9rtHDj7meNBAqs8rLTaX7NCZzlchuFMSDjnxshl7SF1cqSGza9Bi9nO5RCOhAQoZBudeK0hYRjXQfFSnufuEq5qRlTmGVAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnffJurN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiCAwXSW"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b24fcc2b5dso24680345ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 06:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775051378; x=1775656178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WUEKhgyUH+EnaEpKP6HMgut1APyt2IvzBtqO/UudEAg=;
-        b=ZiCAwXSWzm8uZjGm4DcVhn1D718hghhJvMWaYWSnGOtiTHKMeVSRqb31f+njMiRYFT
-         27GxXzKLYc9IivVBowY9QwXd4MV0Kx9zHB0vH/DyPU6ACbgFx2f8dEVYehBOMxLLkKwT
-         VPSeCepbVd/0P6LQ7j8RCvAS+B8n2Z8s+gii32wkD9FBkILJX3rnAG5B66ngBICx5Cp6
-         z/yRJ+LVPSeaSnoIDld/NZXBp90XF3v41fpz1ITw7LQbTeY2VSF1VSa/hOJ7j6HI9QVv
-         AKariArmV27z7rCPd9TNBJGRytPOZAXzzdPFiGK+HqNta4hAyEGzOm5Ixv4trZbHfd9j
-         OT4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775051378; x=1775656178;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WUEKhgyUH+EnaEpKP6HMgut1APyt2IvzBtqO/UudEAg=;
-        b=rTFarGi1R6VihE+DYVXmh/bNcvoN9+V9QtUgEtvSkiW5yZkNuALW6h3iSjF6uA5E3I
-         8vuIb3wzv9qOEcaOs03evyuqu53t/cGo/bSF2fjK4WrEPT84rLfrhJqRV+eLNOcUX07b
-         613iEt4L9k6tVd9eRsrHJCgvvZo1+Y62yRcqjuo4T9hyoxdUFJAUgYfSPVXcEwWqAWh9
-         p7MrQgYn3OWkKQG3yI7Z1use7HJPeX4E4XJIJL2E2mWcuA2SW2+yU2BRQRnUrQIxAa8L
-         AW+CqHB1ygz+ikHL53UdJMlNJuIWBnInkYyvii9VGdV9IjWxRToj/rly2Awq6O4O4U7i
-         slgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqy5D82pi1Vue3aUuFYl3EhWj7vqFDCmPhkUkPqjpc+mDDpg82sBQNDi5suz5JY2ykvAE0liCBZ1J7furdBx5ca/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN+AyRnnDM+y/ZJoMFzIXDtCN+LIPi4Zp8xhJO0V3iaPaPFvDU
-	SP/o/OytkawVf9k/bD3BRW9e55CDoVtj5EkYyVrbT454kdzwxEafu7z3
-X-Gm-Gg: ATEYQzyQSWIr0DI81DW9dx8vkFPwEopPYgq3vOg2EOEWtVDkm35g6xLVEjb2fU+cQf7
-	KcbUxMGZtAJNfdSP/5jnKbcQqejrOzPb8qg1HWmjn01AxAxx5o+qvoCfYOpOISfHJcctMJdauTS
-	NUnRI6tvSdrzfZtyn5qx5VQxbWJBb2prOpfEHGV5z5ZGMj/mQO5aOrODVhqGZhXTC+Jv2TmcMbd
-	uQJeHaS/y11f8TsO56SXUX6m/T2tumn+aaEyqITEZX1Hvejb8xJRWeds1L2zxQtAaI/6jKmN8CP
-	HIx0DtWoJsHtGwOwyGLRZn7Tmkl+Wy/q7aeHYcNyoTkoJa/JmvM+HeZaAJqXic6IO7sSjzBE+YN
-	AN/ZfuJFZUlFDtlDp/s/aDqDDZ0Y6GrdCURl0ypSSkcKPWTP9GLZyAhcRbzy57e8gwzi9GUDSZ1
-	whwF1yygNh4t3SaZgetTixQPiUi7H7Btg2KlCl/cPXnXXhqDm69IDJ8EJlxtAE+dhbwSMUYAQ74
-	vPxlQ==
-X-Received: by 2002:a17:902:f54f:b0:2b2:4d36:7ba with SMTP id d9443c01a7336-2b269977a8cmr33888775ad.0.1775051377662;
-        Wed, 01 Apr 2026 06:49:37 -0700 (PDT)
-Received: from computer.goose-salary.ts.net ([2a09:bac5:40b2:a82::10c:35])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b267ec1615sm36300935ad.57.2026.04.01.06.49.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 06:49:37 -0700 (PDT)
-From: Varun R Mallya <varunrmallya@gmail.com>
-To: varunrmallya@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnffJurN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305A5C4CEF7;
+	Wed,  1 Apr 2026 14:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775052179;
+	bh=Ec+Z5yJc4hEbQOdPH/k3oSFFekUyw8YlfWQUNvhd/uA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bnffJurNg1swkgXlIw8D/cnPCHIQ4tiOMdYQAhCWL55au/LnR0SvOyC8DHrTMg3Qp
+	 jCvJTUnPomcAKjPiuKWIVk4gXSXReVXQITSCaST0ZVzy4caUctLHwhCgd9W6qHWGSI
+	 wXFmFcLMkQGRU8EnI4MhE4sldV3ZaOuitvlNgMceOY6iIMa4QNlIzOfLC7dMV803B8
+	 29tf24Sojaxfl048Rd57Qsx2VYvV3b9+EXwizUKZGH6nwZ3BUz04jE09gsUXc91OE6
+	 kAv/zwZogHMFH8OhjUDyJ87D9VPrIoqQXW2LVrkIQiK7sim5h+f9uY+AiqsBY0eNhp
+	 eLdxQBS2Ft3WA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Breno Leitao <leitao@debian.org>,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	mattbobrowski@google.com,
-	memxor@gmail.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	song@kernel.org,
-	yonghong.song@linux.dev
-Subject: [PATCH bpf] bpf: Reject sleepable kprobe_multi programs at attach time
-Date: Wed,  1 Apr 2026 19:19:21 +0530
-Message-ID: <20260401134921.362148-1-varunrmallya@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <ac0hLyMuPHiZfnVc@computer>
-References: <ac0hLyMuPHiZfnVc@computer>
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] bootconfig: Skip printing early params to cmdline from bootconfig
+Date: Wed,  1 Apr 2026 23:02:55 +0900
+Message-ID:  <177505217508.1807250.22866077077504564.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.53.0.1118.gaef5881109-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-kprobe.multi programs run in atomic/RCU context and cannot sleep.
-However, bpf_kprobe_multi_link_attach() did not validate whether the
-program being attached had the sleepable flag set, allowing sleepable
-helpers such as bpf_copy_from_user() to be invoked from a non-sleepable
-context.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This causes a "sleeping function called from invalid context" splat:
+If user configures `kernel.key` in bootconfig, the 'key' is shown
+in kernel cmdline (/proc/cmdline) and kernel boot parameter
+handler associated with 'key' is invoked. However, since the
+bootconfig does not support the parameter defined with early_param,
+those keys are shown in '/proc/cmdline' but not handled by kernel.
 
-  BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:169
-  in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1787, name: sudo
-  preempt_count: 1, expected: 0
-  RCU nest depth: 2, expected: 0
+This could easily mislead users who expected to be able to specify
+early parameters via the boot configuration, leading them to wonder
+why it doesn't work.
 
-Fix this by rejecting sleepable programs early in
-bpf_kprobe_multi_link_attach(), before any further processing.
+Let's skip printing out early params to cmdline buffer, and warn
+if there is such parameters in bootconfig.
 
-Fixes: 0dcac272540613d41c05e89679e4ddb978b612f1 ("bpf: Add multi kprobe link")
-Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/bpf_trace.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ init/main.c |   30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 0b040a417442..af7079aa0f36 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2752,6 +2752,10 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 	if (!is_kprobe_multi(prog))
- 		return -EINVAL;
+diff --git a/init/main.c b/init/main.c
+index 1cb395dd94e4..095c497ea2df 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -324,10 +324,21 @@ static void * __init get_boot_config_from_initrd(size_t *_size)
  
-+	/* kprobe_multi is not allowed to be sleepable. */
-+	if (prog->sleepable)
-+		return -EINVAL;
+ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+ 
++static bool __init is_early_param(const char *param)
++{
++	const struct obs_kernel_param *p;
 +
- 	/* Writing to context is not allowed for kprobes. */
- 	if (prog->aux->kprobe_write_ctx)
- 		return -EINVAL;
--- 
-2.53.0
++	for (p = __setup_start; p < __setup_end; p++) {
++		if (p->early && parameq(param, p->str))
++			return true;
++	}
++	return false;
++}
++
+ #define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
+ 
+ static int __init xbc_snprint_cmdline(char *buf, size_t size,
+-				      struct xbc_node *root)
++				      struct xbc_node *root, bool is_kernel)
+ {
+ 	struct xbc_node *knode, *vnode;
+ 	char *end = buf + size;
+@@ -340,6 +351,13 @@ static int __init xbc_snprint_cmdline(char *buf, size_t size,
+ 		if (ret < 0)
+ 			return ret;
+ 
++		/* We will skip early params because it is not applied. */
++		if (is_kernel && is_early_param(xbc_namebuf)) {
++			pr_warn_once("early_param(e.g. %s.%s) is not passed to cmdline from bootconfig\n",
++				     xbc_node_get_data(root), xbc_namebuf);
++			continue;
++		}
++
+ 		vnode = xbc_node_get_child(knode);
+ 		if (!vnode) {
+ 			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
+@@ -368,7 +386,7 @@ static int __init xbc_snprint_cmdline(char *buf, size_t size,
+ #undef rest
+ 
+ /* Make an extra command line under given key word */
+-static char * __init xbc_make_cmdline(const char *key)
++static char * __init xbc_make_cmdline(const char *key, bool is_kernel)
+ {
+ 	struct xbc_node *root;
+ 	char *new_cmdline;
+@@ -379,7 +397,7 @@ static char * __init xbc_make_cmdline(const char *key)
+ 		return NULL;
+ 
+ 	/* Count required buffer size */
+-	len = xbc_snprint_cmdline(NULL, 0, root);
++	len = xbc_snprint_cmdline(NULL, 0, root, is_kernel);
+ 	if (len <= 0)
+ 		return NULL;
+ 
+@@ -389,7 +407,7 @@ static char * __init xbc_make_cmdline(const char *key)
+ 		return NULL;
+ 	}
+ 
+-	ret = xbc_snprint_cmdline(new_cmdline, len + 1, root);
++	ret = xbc_snprint_cmdline(new_cmdline, len + 1, root, is_kernel);
+ 	if (ret < 0 || ret > len) {
+ 		pr_err("Failed to print extra kernel cmdline.\n");
+ 		memblock_free(new_cmdline, len + 1);
+@@ -465,9 +483,9 @@ static void __init setup_boot_config(void)
+ 		xbc_get_info(&ret, NULL);
+ 		pr_info("Load bootconfig: %ld bytes %d nodes\n", (long)size, ret);
+ 		/* keys starting with "kernel." are passed via cmdline */
+-		extra_command_line = xbc_make_cmdline("kernel");
++		extra_command_line = xbc_make_cmdline("kernel", true);
+ 		/* Also, "init." keys are init arguments */
+-		extra_init_args = xbc_make_cmdline("init");
++		extra_init_args = xbc_make_cmdline("init", false);
+ 	}
+ 	return;
+ }
 
