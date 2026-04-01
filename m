@@ -1,318 +1,123 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CC4381AE9
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 04:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CC930E0D6
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 05:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775019144; cv=none; b=p+jwO9MQT66K28zjDsGYSiNx3YIcmOChyHsoPpF2DmrvJzwCOeNKTH3hT9rgY4aDKQr3+UTn0rQselb0vhqDm1mgXFL6U5etNth+BtJOPSQTbCL/rhkJdmTFO4cGyWxJ/kO3ZBxXBvv4PIKoD9xQKV/xCeQTnoZkKTdA4reiMyc=
+	t=1775021851; cv=none; b=EDuSHyrr9ojjNlQ/ybuTHXnWRHxZKRV8kKaN+oYxkexrkU5WlGvYkCi8/ewMSVoTBEb4+ZdRLS+xc5VGvtyXSkix2HG4dnEu4cmWly370lHP1D+bkgwz1YOmgAsE/oCInx2Zjg4GVhf1TAmuhFYVxkD83cBRcBrJyv7FXHq5/rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775019144; c=relaxed/simple;
-	bh=LW18+NpzYrBxvjmlql75o7yvp1CeXooy51NbJveuitk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G5PiJKUZvAg2m+2HXh0lFGTg11hslsba1BZne8Dxy5MlbW65SABaKrxEKp0bHfEzrGhH6RQQjK7VfzVJ032Xmg38osWlVOWdGrs042waPIwZNe3QqaV7LGMVK5HCGcsO03vDpwWXTCPWxu/UDlPb6VWfHIs8XGBgeuG67ymuES4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EHwUeYeC; arc=none smtp.client-ip=209.85.221.73
+	s=arc-20240116; t=1775021851; c=relaxed/simple;
+	bh=g7Ed5EWs6irGU3euUlogWHAf8XlbAn4lOy8PpKGTXJ8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UyXqQ9TBCJdRKFMO9comQBdYzf2/RDjOTYhMTPeWkAmCnIy7r7lv5M9w38UGmyY6f/Yn8eRMkWr3Tx5puEJ/dKkh4a7by6xtY0JSHMFP/kc1+JqAesJfeAmRu3/fbpFddovA3NhwFLRxwxuvWsYbckb/OITsq7sbx//ybOQ34EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fW0pWqpn; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EHwUeYeC"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-43d14a4bcd0so564645f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Mar 2026 21:52:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fW0pWqpn"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4888020f5daso9205885e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Mar 2026 22:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775019141; x=1775623941; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lorCFtW6iLrswzeXANX4hHFPPPnND3TRCNrbzm4C2wU=;
-        b=EHwUeYeCmdsyL+3WDb2ZiLZ1QHEhXNVd4+6F4HGY/OyEbuVtkcK4hsfLNOIOxWYbcD
-         NjYGReyGWG0jdRAXP9J5w/Ad5IzOqQI8dakmWQVXeGIGy0lTuKQVuudUN9fZpAQCNiq2
-         dTN46fHbVqvmO86eBe0QtVZuts51IX4DsUQyeRqk8L1dnLkOCgA0ZfsLioTwBtB7JiLq
-         yS3D/YViSDD1/SZ15fqUs2mT0uWYRp+imgz5R5NC5ZnKbwzhun3wtMcPdnzmCYdYlGje
-         nAUqMdBDS4D7mWCgUB9DMI++mGwpSCNwfXn+7wC06LhPWJVYNv1SQzXDXQFlQ+Uff0EF
-         5ouQ==
+        d=google.com; s=20251104; t=1775021849; x=1775626649; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jBLhbC6YBGjXwUzmIRUHH3YF/N1tH9WoVcrhDPGIIHw=;
+        b=fW0pWqpnNxGobl+hmwt+jaG5DrbH1oONqXM30ldhscnVq/5kasZrBSftdhTYdktU7a
+         QRSlGMGJOM7gLcRCsyPn7mZKzSJWzfUHYZesU9X8vUzIXXwF8zTmI6Kf4wcYnOX5HsUv
+         BjmWjKIKR7tGeeZq6Sk6H7u6L6Tq7gzyS+k4zDGjHoY+JDTtDkWjrMEVPLnFKByWccF1
+         o2qF8hTg4UV6ZAMQcKTGVhNZ4Kklt/0WIcW3MZrk8VfoZ5vVdFl5n1eilra6TAgxC7S2
+         Lermm+SznM5VimAJXg/6nj4DzNb86q5eVy/fXLBKHpzAIvtQAxEwgQxKnHKEEqQz41Qo
+         h/rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775019141; x=1775623941;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lorCFtW6iLrswzeXANX4hHFPPPnND3TRCNrbzm4C2wU=;
-        b=KfS4drosyv+uVjK+pJqyK+Z/zH461iGmOcGEjcYQyeCHKGT+RWF5USX3PI74t/ocx2
-         p61DAAoBzL8WkC4G2wb7eiHy6qOCZyjxxG3/wWlfshnx5JZDzOOxghpYFMG0wz5XhXEC
-         8EawTQfMNhrSP2SJcqwK+iW7cD/XffJ7l43thckNwajP2kF1Ig9WRHNtmbcbskV0OcbW
-         d7qXR03EMqoGQ3Kzpfbck+aan1ZGrS4AXdIqKFah9MUEIzvBNrFPbBiP3bhm9d93b9O3
-         5IFNPw9zEqZbrfMYn+jF3TeSalXHa2zB6/krUYHf/A3V1bHv+c7MqCpewmRVL+i19/it
-         Oz4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXKW6RHFcpGTuVUxH8BP9jlQfv+5W+X7PzU4i6VfDgeMlk6bLtZMYpBqPAiWJVTGX0nkHKeBRqACqG6gF8VhCQIv2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwxBIEatkGJpWTEAWvaiw9i5H+VpGFyknfcrY0BMKeBPqMr8Uu
-	5GWkBKy932xkkuc9/Xx7HR1vSj/OcWTFRrmu+aa1TOkc+18rM2rLu35I1pgtaBdaF4PYqvgwdek
-	oVMLl273D3lRLfVRec5dheA==
-X-Received: from wmps7.prod.google.com ([2002:a05:600c:3187:b0:488:8019:449e])
+        d=1e100.net; s=20251104; t=1775021849; x=1775626649;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jBLhbC6YBGjXwUzmIRUHH3YF/N1tH9WoVcrhDPGIIHw=;
+        b=NQbaYZSebW/fN79ssa/4c2Ya5tkYwYtBQXVn5w1M6hj1rLBXGc3GM59ymz/ES6ZeXy
+         BQi/e6fnk1i3FSiQD8ANW6fN4+DjwfJKB4aw7bIhlrJgLAM95utwoJ1Ye5kbaXc5V+WO
+         O6jhpIgdaVduniz0vbTV8Ce661BK5baZWpWdPE8DXMiXFWuul3DRIE4I8xXm2vYNi3vx
+         gWgcMTTJDeoRCvxKcNp51YlchLuWwQ/osp3oXSERDQQLqYpD9X1El9vC3mViKw3QL50j
+         NkkUnRiTCTOBaqdxFSBTfL7KfJ4v36J6RLobZ+HMch1M1G6ss/hMcpKYyVebPHnRnfhv
+         r90Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUVx9ixhUD37UF9yPkgKXDop5P3hLLMd0z0s0TBuUb/n2OILlSLx9Wx07hRDJoMwQvFZO3wGwyFAjXqGFfAtfRyDwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXAeX/r8h1VXQkYW40dH0aB1uSxAZER8zEqA4z7VUt2iiRGXCS
+	shsDL/8IJ40wOiQYLyNxx9LB0qrZOrVU1bSN9ysJBPA6ZSgjrPCnVOo0dfGfNnnL4h3/eu0CUiw
+	bZ1GFOZa3whpwJlwO1LpRhA==
+X-Received: from wmby19.prod.google.com ([2002:a05:600c:c053:b0:486:7a8:4f4e])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:19d0:b0:485:3ff1:d5c5 with SMTP id 5b1f17b1804b1-488835629ffmr30649845e9.7.1775019141201;
- Tue, 31 Mar 2026 21:52:21 -0700 (PDT)
-Date: Wed,  1 Apr 2026 05:51:00 +0100
-In-Reply-To: <20260401045100.3394299-1-vdonnefort@google.com>
+ 2002:a05:600c:818f:b0:485:3423:727d with SMTP id 5b1f17b1804b1-48883595de9mr30905495e9.26.1775021848954;
+ Tue, 31 Mar 2026 22:37:28 -0700 (PDT)
+Date: Wed,  1 Apr 2026 06:36:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260401045100.3394299-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.53.0.1118.gaef5881109-goog
-Message-ID: <20260401045100.3394299-3-vdonnefort@google.com>
-Subject: [PATCH v2 2/2] tracing: selftests: Extend hotplug testing for trace remotes
+Message-ID: <20260401053659.3458961-1-vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Enforce read ordering of trace_buffer cpumask
+ and buffers
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, maz@kernel.org
+	linux-trace-kernel@vger.kernel.org
 Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, 
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The hotplug testing only tries reading a trace remote buffer, loaded
-before a CPU is offline. Extend this testing to cover:
+On CPU hotplug, if it is the first time a trace_buffer sees a CPU, a
+ring_buffer_per_cpu will be allocated and its corresponding bit toggled
+in the cpumask. Many readers check this cpumask to know if they can
+safely read the ring_buffer_per_cpu but they are doing so without memory
+ordering and may observe the cpumask bit set while having NULL buffer
+pointer.
 
-  * A trace remote buffer loaded after a CPU is offline.
-  * A trace remote buffer loaded before a CPU is online.
-
-Because of these added test cases, move the hotplug testing into a
-separate hotplug.tc file.
+Enforce the memory read ordering by sending an IPI to all online CPUs.
+The hotplug path is a slow-path anyway and it saves us from adding read
+barriers in numerous call sites.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
-index 97a09d564a34..05224fac3653 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/functions
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
-@@ -24,12 +24,21 @@ setup_remote_test()
- 
- assert_loaded()
- {
--	grep -q "(loaded)" buffer_size_kb
-+	grep -q "(loaded)" buffer_size_kb || return 1
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 170170bd83bd..10d2d0404434 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7468,6 +7468,12 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 	return 0;
  }
  
- assert_unloaded()
- {
--	grep -q "(unloaded)" buffer_size_kb
-+	grep -q "(unloaded)" buffer_size_kb || return 1
++static void rb_cpu_sync(void *data)
++{
++	/* Not really needed, but documents what is happening */
++	smp_rmb();
 +}
 +
-+reload_remote()
-+{
-+	echo 0 > tracing_on
-+	clear_trace
-+	assert_unloaded
-+	echo 1 > tracing_on
-+	assert_loaded
+ /*
+  * We only allocate new buffers, never free them if the CPU goes down.
+  * If we were to free the buffer, then the user would lose any trace that was in
+@@ -7506,7 +7512,18 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
+ 		     cpu);
+ 		return -ENOMEM;
+ 	}
+-	smp_wmb();
++
++	/*
++	 * Ensure trace_buffer readers observe the newly allocated
++	 * ring_buffer_per_cpu before they check the cpumask. Instead of using a
++	 * read barrier for all readers, send an IPI.
++	 */
++	if (unlikely(system_state == SYSTEM_RUNNING)) {
++		on_each_cpu(rb_cpu_sync, NULL, 1);
++		/* Not really needed, but documents what is happening */
++		smp_wmb();
++	}
++
+ 	cpumask_set_cpu(cpu, buffer->cpumask);
+ 	return 0;
  }
- 
- dump_trace_pipe()
-@@ -79,10 +88,12 @@ get_cpu_ids()
-     sed -n 's/^processor\s*:\s*\([0-9]\+\).*/\1/p' /proc/cpuinfo
- }
- 
--get_page_size() {
-+get_page_size()
-+{
-     sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
- }
- 
--get_selftest_event_size() {
-+get_selftest_event_size()
-+{
-     sed -ne 's/^.*field:.*;.*size:\([0-9][0-9]*\);.*/\1/p' events/*/selftest/format | awk '{s+=$1} END {print s}'
- }
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hotplug.tc b/tools/testing/selftests/ftrace/test.d/remotes/hotplug.tc
-new file mode 100644
-index 000000000000..145617eb8061
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hotplug.tc
-@@ -0,0 +1,88 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test trace remote read with an offline CPU
-+# requires: remotes/test
-+
-+. $TEST_DIR/remotes/functions
-+
-+hotunplug_one_cpu()
-+{
-+	[ "$(get_cpu_ids | wc -l)" -ge 2 ] || return 1
-+
-+	for cpu in $(get_cpu_ids); do
-+		echo 0 > /sys/devices/system/cpu/cpu$cpu/online || return 1
-+		break
-+	done
-+
-+	echo $cpu
-+}
-+
-+# Check non-consuming and consuming read
-+check_read()
-+{
-+    for i in $(seq 1 8); do
-+        echo $i > write_event
-+    done
-+
-+    check_trace 1 8 trace
-+
-+    output=$(dump_trace_pipe)
-+    check_trace 1 8 $output
-+    rm $output
-+}
-+
-+test_hotplug()
-+{
-+    echo 0 > trace
-+    assert_loaded
-+
-+    #
-+    # Test a trace buffer containing an offline CPU
-+    #
-+
-+    cpu=$(hotunplug_one_cpu) || exit_unsupported
-+    trap "echo 1 > /sys/devices/system/cpu/cpu$cpu/online" EXIT
-+
-+    check_read
-+
-+    #
-+    # Test a trace buffer with a missing CPU
-+    #
-+
-+    reload_remote
-+
-+    check_read
-+
-+    #
-+    # Test a trace buffer with a CPU added later
-+    #
-+
-+    echo 1 > /sys/devices/system/cpu/cpu$cpu/online
-+    trap "" EXIT
-+    assert_loaded
-+
-+    check_read
-+
-+    # Test if the ring-buffer for the newly added CPU is both writable and
-+    # readable
-+    for i in $(seq 1 8); do
-+        taskset -c $cpu echo $i > write_event
-+    done
-+
-+    cd per_cpu/cpu$cpu/
-+
-+    check_trace 1 8 trace
-+
-+    output=$(dump_trace_pipe)
-+    check_trace 1 8 $output
-+    rm $output
-+
-+    cd -
-+}
-+
-+if [ -z "$SOURCE_REMOTE_TEST" ]; then
-+    set -e
-+
-+    setup_remote_test
-+    test_hotplug
-+fi
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc
-new file mode 100644
-index 000000000000..580ec32c8f81
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace read with an offline CPU
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/hotplug.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_hotplug
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/trace.tc b/tools/testing/selftests/ftrace/test.d/remotes/trace.tc
-index 170f7648732a..bc9377a70e8d 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/trace.tc
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/trace.tc
-@@ -58,11 +58,7 @@ test_trace()
-     #
- 
-     # Ensure the writer is not on the reader page by reloading the buffer
--    echo 0 > tracing_on
--    echo 0 > trace
--    assert_unloaded
--    echo 1 > tracing_on
--    assert_loaded
-+    reload_remote
- 
-     # Ensure ring-buffer overflow by emitting events from the same CPU
-     for cpu in $(get_cpu_ids); do
-@@ -96,27 +92,6 @@ test_trace()
- 
-         cd - > /dev/null
-     done
--
--    #
--    # Test with hotplug
--    #
--
--    [ "$(get_cpu_ids | wc -l)" -ge 2 ] || return 0
--
--    echo 0 > trace
--
--    for cpu in $(get_cpu_ids); do
--        echo 0 > /sys/devices/system/cpu/cpu$cpu/online || return 0
--        break
--    done
--
--    for i in $(seq 1 8); do
--        echo $i > write_event
--    done
--
--    check_trace 1 8 trace
--
--    echo 1 > /sys/devices/system/cpu/cpu$cpu/online
- }
- 
- if [ -z "$SOURCE_REMOTE_TEST" ]; then
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc
-index 669a7288ed7c..7f7b7b79c490 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc
-@@ -92,31 +92,6 @@ test_trace_pipe()
-         rm $output
-         cd - > /dev/null
-     done
--
--    #
--    # Test interaction with hotplug
--    #
--
--    [ "$(get_cpu_ids | wc -l)" -ge 2 ] || return 0
--
--    echo 0 > trace
--
--    for cpu in $(get_cpu_ids); do
--        echo 0 > /sys/devices/system/cpu/cpu$cpu/online || return 0
--        break
--    done
--
--    for i in $(seq 1 8); do
--        echo $i > write_event
--    done
--
--    output=$(dump_trace_pipe)
--
--    check_trace 1 8 $output
--
--    rm $output
--
--    echo 1 > /sys/devices/system/cpu/cpu$cpu/online
- }
- 
- if [ -z "$SOURCE_REMOTE_TEST" ]; then
+
+base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
 -- 
 2.53.0.1118.gaef5881109-goog
 
