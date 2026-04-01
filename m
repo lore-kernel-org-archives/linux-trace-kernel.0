@@ -1,298 +1,155 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C4D2AD0C;
-	Wed,  1 Apr 2026 13:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E5C43CECB
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 13:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775048921; cv=none; b=ebFOTg+F1kPwZkZkegL6fnkHYyNUBxxNg6HdpsuttW3LajCx3RPLWcvoFHBHERLF4Nurnz9ZomRDw5FJ5GaijIm8WavP1Fm0F+A5UnLHSwBwFuuOrXMPQPjHW/FJniXNB7en8S6KCIl7XWAs5PfCIU7nR9DXCC0/ZLz+nsaja5E=
+	t=1775051070; cv=none; b=uT2BQuummeUPBLlJSwtRzLhnCHQXvipRm6gGj+hvYCzB8HViwPrHs+mV1C1o/ASqciDrsdN7nyP1u5cP+JNawwcEAw5cok97S0/t2ZzbuAV+O6bOXRF8xhrKrmUtGGcIscH0ICObyF8+GGsqGunEkg4mcm9h2rj09gNmFl0qMXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775048921; c=relaxed/simple;
-	bh=GqwrhYwgsMCDt5kccSCHnHtJX2NLLbb3uHCCimeH5Jk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cJTixeWVQx7fDhJIUibIDNqiYMvc3mjJAfcHhub+igRNcAgZ0WQ1eUMLiNczKIG8qf+QQ+GCo0gUcfs7TgCSLXPVl9C+eycwKB9upxglCdy4+lbGEDNubRTfIvSrwk03XeVlDQg5+cFfUGWMEAUpaJVD6Bs4fPCOCt8RAC6If4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dHiHCQHF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MsrIRLW3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1775051070; c=relaxed/simple;
+	bh=h2s8O28EcrY+1RSxqAEZnVYi429hS+7J6DOa2rif8Sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QOFdpWBbM9m/EPC+ir+Hjifk2MAZFaF9gQ6C6quS7OQI719onl86yWSPvJPwYzruN4q8VdPFAQx9zFnzAy0bM4J921YpZDfO8IjiL0kPrgPrtswKLBZ8lbJje64wZiOIL+ngTuxHwQMIpRshme56pl/1rMBQy987m89RfatKnsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nt+M0dh9; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dHiHCQHF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MsrIRLW3"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1775048918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xgyCGkdIq2wxCGMC2Er5N4X9a28MFspP5ge+HtLZZqw=;
-	b=dHiHCQHFyX8+Kyui2FmHBTTb3cjo2in+YXkJPCJM78suy2mm4kQpNf1pE/OZPPvDVxwMAF
-	6Z+TLY9RMN+lsasYKC/5MBzIfaMncAK8ZmHWmTo+oDyvLB/SUWy+xZY6BilrafyNuIh8Bf
-	0HShwHQaXCbsIf10InfUrTUSAkYwDDTG2NHSmCI2aQtvF4NxomlEg3b/EcLQ7i5Rv+FZid
-	x5mcCe4IqLJSHxZrunfIo8MLpDEgfTEdudbq9bzUI14v0ZCewy8tPFe/y3j6qGp6Xjq8YT
-	r2fpZNqHB5wwk0y0wlwd1LvGNFMHRuJFrO5C4xfUsiS72BvuVau1IullJXEbig==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1775048918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xgyCGkdIq2wxCGMC2Er5N4X9a28MFspP5ge+HtLZZqw=;
-	b=MsrIRLW3I9PSOIw9sm/eBHs6D4aS9Y0sxKONZpA/EJ9DApDjCXccy/SnQ5qJeETkpFeFjp
-	kaRquZfkJOXJMLAg==
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v2] rv: Allow epoll in rtapp-sleep monitor
-Date: Wed,  1 Apr 2026 15:08:28 +0200
-Message-ID: <20260401130828.3115428-1-namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nt+M0dh9"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-c06cb8004e8so2777220a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 06:44:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775051068; x=1775655868; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5w6DoKofcUymqGz5unmMX3ysJ5+8CgZ32mudZsWBu6U=;
+        b=nt+M0dh9oROWkLqgGBTrGImD/wvqyPC5WrClIxvF8Qe2tiq0Aq+NWHeZdB5dOf+Yi7
+         e4sCIRUEADcHvh9Srpw9mIdrhVlZcUTiPSbGiNfBFVJ3bixYGXDG/3bRsunQy3FIIy7i
+         6P9VpVhW8riz7Z4iLH0BUteK8lDrflMun3kRfhheecVRBEVNIsOWB3WFSn73y5kAS0Qk
+         p0SrzvOy9hOUgRNTqK+PzdLqZZRGFk41dPSwxD3bJ+1mAoqHRifchD5Ylwg75GQjTBYx
+         UfwapeBsH1Uit9c4QVCvj8N/8ayY5L0oMON2a9hk0OkBaEEBrfYAVBhObmtc3TuajVf9
+         qUxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775051068; x=1775655868;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5w6DoKofcUymqGz5unmMX3ysJ5+8CgZ32mudZsWBu6U=;
+        b=gyIjzk6Wvtfqlr0vXx+yzaceTAgfWxOPWnhEgxMY0jW0PtoXj/Sj+41FFMusM0c/1C
+         HIDAEctmRXsTElWi5/5BhXHFwvcljxN/4l0M+BLgkT8njf1iYZ59I7sCHpYIQm2ai+BS
+         pNFCMUQ4OT4Y+iN/05OEjF/uNMRu3IoCtM/ERcCtpzUxBvq7WHfzG3ffBy+ykRKLc0VH
+         fpa14LjxSpLIziUazESIaCSQ2M0SkSBhS5WAzUlstLEJgKYZ+89RqwqZlNhN5NQrX6xS
+         VhBUq2Z3H9fRF+P7MZDebJLWHn17KqvaAqlx+rlA5s6T/h9mvFpjEflWb3dzF2NMk7H9
+         tY8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUz15LW0ODpJPIbZ8p3jbYYBgjj5cxrW1GJ6Xg8txaH1tDvekiXC6S5HdsRSpYn2v1+vmCOGRMP4MsIBTIFIzR/60g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn3Vy145Vufqw0WkrrKEwHbjZqZN5NkWn+UFpQarhmJkvwxCBY
+	d+zYSRaFBX+Bo2u1c8VqQ7KwylsAlHKgISCL+hO/aYHJi/Aygc9Eup1Y
+X-Gm-Gg: ATEYQzxJAeO5ZnEo3ay1n8geCaQtjgr9pom7QlXB7mYcZNjiDS03rpFix8zP0/Q7e5i
+	2hgKJjfSDkHj7jPgyHtW0K2lYNa1xW5rQMHaI5o2zTONJ72Nw3Sfz76DwXYN7e/iXkswPy0Behv
+	nJmKItYehV5LdUaRWgri1XYjpES5WmvSmdPLxRVAUR/m8QvgWyy7aQ5QA1jlxeCuk85yC+S1UBx
+	9Ofy2OFmVlo5NFSwc/NR9VHY6UjnqK+gbIcaVCvMPmC4otIJB36MKBbYIkA8oXONvenJ0gYyw47
+	hZLlPWXyyFg4W3J0kshTSSY9qBXCu8wgrb39hNC1Die6UbUD3cnKYBFRUjm1VV/SGtMvzni7Vz7
+	12ESa5nzu/5j8Qpnn5Yv4SZzADOCM8wbvPxghT3D30FVW4pRR1t33D+L2JnTZc2HtzQH5lYe/ZS
+	8rKlSTkUMVSJLhraWpmgtHUE2uFBt62LQUoN//23Ia
+X-Received: by 2002:a05:6a20:3c8e:b0:398:9923:7492 with SMTP id adf61e73a8af0-39ef769cea2mr3798024637.39.1775051067806;
+        Wed, 01 Apr 2026 06:44:27 -0700 (PDT)
+Received: from computer ([2a09:bac5:40b2:a82::10c:35])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c76917d843esm13795063a12.29.2026.04.01.06.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2026 06:44:27 -0700 (PDT)
+Date: Wed, 1 Apr 2026 19:14:15 +0530
+From: Varun R Mallya <varunrmallya@gmail.com>
+To: bpf@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kpsingh@kernel.org,
+	mattbobrowski@google.com, ast@kernel.org, daniel@iogearbox.net,
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+	memxor@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+	jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
+Subject: [BUG] bpf: kprobe_multi allows BPF_F_SLEEPABLE programs, causing
+ sleeping-in-atomic splat
+Message-ID: <ac0hLyMuPHiZfnVc@computer>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Since commit 0c43094f8cc9 ("eventpoll: Replace rwlock with spinlock"),
-epoll_wait is real-time-safe syscall for sleeping.
+Hi,
 
-Add epoll_wait to the list of rt-safe sleeping APIs.
+I found a bug in the kprobe_multi BPF link creation path where the kernel
+fails to reject programs with BPF_F_SLEEPABLE set.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
----
-v2: Use ltl_atom_update() instead of ltl_atom_set() in handle_sys_enter()
----
- kernel/trace/rv/monitors/sleep/sleep.c    |  8 ++
- kernel/trace/rv/monitors/sleep/sleep.h    | 98 ++++++++++++-----------
- tools/verification/models/rtapp/sleep.ltl |  1 +
- 3 files changed, 61 insertions(+), 46 deletions(-)
+kprobe.multi programs run in an atomic/RCU context and cannot sleep.
+However, bpf_link_create() with BPF_TRACE_KPROBE_MULTI does not validate
+whether the program being attached has BPF_F_SLEEPABLE set. This allows
+sleepable helpers such as bpf_copy_from_user() to be invoked from a
+non-sleepable context, triggering a "sleeping function called from invalid
+context" splat.
 
-diff --git a/kernel/trace/rv/monitors/sleep/sleep.c b/kernel/trace/rv/monit=
-ors/sleep/sleep.c
-index c1347da69e9d..8dfe5ec13e19 100644
---- a/kernel/trace/rv/monitors/sleep/sleep.c
-+++ b/kernel/trace/rv/monitors/sleep/sleep.c
-@@ -49,6 +49,7 @@ static void ltl_atoms_init(struct task_struct *task, stru=
-ct ltl_monitor *mon, bo
- 		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
- 		ltl_atom_set(mon, LTL_CLOCK_NANOSLEEP, false);
- 		ltl_atom_set(mon, LTL_FUTEX_WAIT, false);
-+		ltl_atom_set(mon, LTL_EPOLL_WAIT, false);
- 		ltl_atom_set(mon, LTL_FUTEX_LOCK_PI, false);
- 		ltl_atom_set(mon, LTL_BLOCK_ON_RT_MUTEX, false);
- 	}
-@@ -63,6 +64,7 @@ static void ltl_atoms_init(struct task_struct *task, stru=
-ct ltl_monitor *mon, bo
- 		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
- 		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
- 		ltl_atom_set(mon, LTL_CLOCK_NANOSLEEP, false);
-+		ltl_atom_set(mon, LTL_EPOLL_WAIT, false);
-=20
- 		if (strstarts(task->comm, "migration/"))
- 			ltl_atom_set(mon, LTL_TASK_IS_MIGRATION, true);
-@@ -162,6 +164,11 @@ static void handle_sys_enter(void *data, struct pt_reg=
-s *regs, long id)
- 			break;
- 		}
- 		break;
-+#ifdef __NR_epoll_wait
-+	case __NR_epoll_wait:
-+		ltl_atom_update(current, LTL_EPOLL_WAIT, true);
-+		break;
-+#endif
- 	}
- }
-=20
-@@ -174,6 +181,7 @@ static void handle_sys_exit(void *data, struct pt_regs =
-*regs, long ret)
- 	ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_MONOTONIC, false);
- 	ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
- 	ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
-+	ltl_atom_set(mon, LTL_EPOLL_WAIT, false);
- 	ltl_atom_update(current, LTL_CLOCK_NANOSLEEP, false);
- }
-=20
-diff --git a/kernel/trace/rv/monitors/sleep/sleep.h b/kernel/trace/rv/monit=
-ors/sleep/sleep.h
-index 2ab46fd218d2..95dc2727c059 100644
---- a/kernel/trace/rv/monitors/sleep/sleep.h
-+++ b/kernel/trace/rv/monitors/sleep/sleep.h
-@@ -15,6 +15,7 @@ enum ltl_atom {
- 	LTL_ABORT_SLEEP,
- 	LTL_BLOCK_ON_RT_MUTEX,
- 	LTL_CLOCK_NANOSLEEP,
-+	LTL_EPOLL_WAIT,
- 	LTL_FUTEX_LOCK_PI,
- 	LTL_FUTEX_WAIT,
- 	LTL_KERNEL_THREAD,
-@@ -40,6 +41,7 @@ static const char *ltl_atom_str(enum ltl_atom atom)
- 		"ab_sl",
- 		"bl_on_rt_mu",
- 		"cl_na",
-+		"ep_wa",
- 		"fu_lo_pi",
- 		"fu_wa",
- 		"ker_th",
-@@ -75,39 +77,41 @@ static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
-=20
- static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
- {
--	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
--	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
--	bool val40 =3D task_is_rcu || task_is_migration;
--	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
--	bool val41 =3D futex_lock_pi || val40;
--	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
--	bool val5 =3D block_on_rt_mutex || val41;
--	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
-);
--	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
--	bool val32 =3D abort_sleep || kthread_should_stop;
- 	bool woken_by_nmi =3D test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
--	bool val33 =3D woken_by_nmi || val32;
- 	bool woken_by_hardirq =3D test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
--	bool val34 =3D woken_by_hardirq || val33;
- 	bool woken_by_equal_or_higher_prio =3D test_bit(LTL_WOKEN_BY_EQUAL_OR_HIG=
-HER_PRIO,
- 	     mon->atoms);
--	bool val14 =3D woken_by_equal_or_higher_prio || val34;
- 	bool wake =3D test_bit(LTL_WAKE, mon->atoms);
--	bool val13 =3D !wake;
--	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
-+	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
-+	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
-+	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
-n->atoms);
- 	bool nanosleep_clock_tai =3D test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms=
-);
- 	bool nanosleep_clock_monotonic =3D test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC=
-, mon->atoms);
--	bool val24 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
--	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
-n->atoms);
--	bool val25 =3D nanosleep_timer_abstime && val24;
--	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
--	bool val18 =3D clock_nanosleep && val25;
-+	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
-);
-+	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
- 	bool futex_wait =3D test_bit(LTL_FUTEX_WAIT, mon->atoms);
--	bool val9 =3D futex_wait || val18;
-+	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
-+	bool epoll_wait =3D test_bit(LTL_EPOLL_WAIT, mon->atoms);
-+	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
-+	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
-+	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
-+	bool val42 =3D task_is_rcu || task_is_migration;
-+	bool val43 =3D futex_lock_pi || val42;
-+	bool val5 =3D block_on_rt_mutex || val43;
-+	bool val34 =3D abort_sleep || kthread_should_stop;
-+	bool val35 =3D woken_by_nmi || val34;
-+	bool val36 =3D woken_by_hardirq || val35;
-+	bool val14 =3D woken_by_equal_or_higher_prio || val36;
-+	bool val13 =3D !wake;
-+	bool val26 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
-+	bool val27 =3D nanosleep_timer_abstime && val26;
-+	bool val18 =3D clock_nanosleep && val27;
-+	bool val20 =3D val18 || epoll_wait;
-+	bool val9 =3D futex_wait || val20;
- 	bool val11 =3D val9 || kernel_thread;
--	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
- 	bool val2 =3D !sleep;
--	bool rt =3D test_bit(LTL_RT, mon->atoms);
- 	bool val1 =3D !rt;
- 	bool val3 =3D val1 || val2;
-=20
-@@ -124,39 +128,41 @@ static void ltl_start(struct task_struct *task, struc=
-t ltl_monitor *mon)
- static void
- ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
-gned long *next)
- {
--	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
--	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
--	bool val40 =3D task_is_rcu || task_is_migration;
--	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
--	bool val41 =3D futex_lock_pi || val40;
--	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
--	bool val5 =3D block_on_rt_mutex || val41;
--	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
-);
--	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
--	bool val32 =3D abort_sleep || kthread_should_stop;
- 	bool woken_by_nmi =3D test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
--	bool val33 =3D woken_by_nmi || val32;
- 	bool woken_by_hardirq =3D test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
--	bool val34 =3D woken_by_hardirq || val33;
- 	bool woken_by_equal_or_higher_prio =3D test_bit(LTL_WOKEN_BY_EQUAL_OR_HIG=
-HER_PRIO,
- 	     mon->atoms);
--	bool val14 =3D woken_by_equal_or_higher_prio || val34;
- 	bool wake =3D test_bit(LTL_WAKE, mon->atoms);
--	bool val13 =3D !wake;
--	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
-+	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
-+	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
-+	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
-n->atoms);
- 	bool nanosleep_clock_tai =3D test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms=
-);
- 	bool nanosleep_clock_monotonic =3D test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC=
-, mon->atoms);
--	bool val24 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
--	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
-n->atoms);
--	bool val25 =3D nanosleep_timer_abstime && val24;
--	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
--	bool val18 =3D clock_nanosleep && val25;
-+	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
-);
-+	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
- 	bool futex_wait =3D test_bit(LTL_FUTEX_WAIT, mon->atoms);
--	bool val9 =3D futex_wait || val18;
-+	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
-+	bool epoll_wait =3D test_bit(LTL_EPOLL_WAIT, mon->atoms);
-+	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
-+	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
-+	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
-+	bool val42 =3D task_is_rcu || task_is_migration;
-+	bool val43 =3D futex_lock_pi || val42;
-+	bool val5 =3D block_on_rt_mutex || val43;
-+	bool val34 =3D abort_sleep || kthread_should_stop;
-+	bool val35 =3D woken_by_nmi || val34;
-+	bool val36 =3D woken_by_hardirq || val35;
-+	bool val14 =3D woken_by_equal_or_higher_prio || val36;
-+	bool val13 =3D !wake;
-+	bool val26 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
-+	bool val27 =3D nanosleep_timer_abstime && val26;
-+	bool val18 =3D clock_nanosleep && val27;
-+	bool val20 =3D val18 || epoll_wait;
-+	bool val9 =3D futex_wait || val20;
- 	bool val11 =3D val9 || kernel_thread;
--	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
- 	bool val2 =3D !sleep;
--	bool rt =3D test_bit(LTL_RT, mon->atoms);
- 	bool val1 =3D !rt;
- 	bool val3 =3D val1 || val2;
-=20
-diff --git a/tools/verification/models/rtapp/sleep.ltl b/tools/verification=
-/models/rtapp/sleep.ltl
-index 6379bbeb6212..6f26c4810f78 100644
---- a/tools/verification/models/rtapp/sleep.ltl
-+++ b/tools/verification/models/rtapp/sleep.ltl
-@@ -5,6 +5,7 @@ RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THRE=
-AD)
-=20
- RT_VALID_SLEEP_REASON =3D FUTEX_WAIT
-                      or RT_FRIENDLY_NANOSLEEP
-+                     or EPOLL_WAIT
-=20
- RT_FRIENDLY_NANOSLEEP =3D CLOCK_NANOSLEEP
-                     and NANOSLEEP_TIMER_ABSTIME
---=20
-2.47.3
+Reproducer:
 
+  /* crash.bpf.c */
+  SEC("kprobe.multi")
+  int handle_kprobe_multi_crash(struct pt_regs *ctx)
+  {
+      char buf[16];
+      int ret;
+      ret = bpf_copy_from_user(buf, sizeof(buf), (void *)ctx->sp);
+      bpf_printk("bpf_copy_from_user ret: %d\n", ret);
+      return 0;
+  }
+
+  /* loader: manually set BPF_F_SLEEPABLE before load, then attach via
+     bpf_link_create() with BPF_TRACE_KPROBE_MULTI */
+  bpf_program__set_flags(prog, BPF_F_SLEEPABLE);
+
+Kernel output (bpf-next 7.0.0-rc5+):
+
+[  483.577248] BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:
+169
+[  483.577364] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1787, name: sudo
+[  483.577420] preempt_count: 1, expected: 0
+[  483.577453] RCU nest depth: 2, expected: 0
+[  483.577486] INFO: lockdep is turned off.
+Attachment successful! The bug is confirmed.
+Check 'sudo dmesg -w' for BPF prints and warnings.
+Triggering v[  483.577569] CfsPU: 7 UID: 0 PID: 1787 Comm: sudo Tainted: G        W           _
+rea7.0.0-rc5+ #4 PREEMPT(full) 
+d[  483.577571] T.ainted: [W]=WARN..
+
+Su[  483.577572] Hrvardware name: Bochs Bochs, BIOS iBochs 01/01/2011v
+[  483.577573] Call Trace:
+[  483.577575]  e<TASK>
+[  483.577578]  d!dump_stack_lvl+0x54/0x70
+ [  483.577582]  If __might_resched+b0x200/0x220
+p[  483.577585]  f__might_fault+0x_c2c/0x80
+o[  483.577587]  p_copy_from_user+y0x23/0x80
+_[  483.577591]  bpf_copy_from_user+0x27/0x50
+[  483.577594]  fbpf_prog_1906cf6roa66546b5e_handlem__kprobe_multi_crash+0x33/0x4d
+u[  483.577596]  skprobe_multi_linek_handler+0x15d/r re0x260
+[  483.577599]  t? kprobe_multi_lurink_handler+0x99n/0x260
+[  483.577602]  e? __pfx_vfs_readd +0x10/0x10
+0[  483.577604]   in? ksys_read+0x7c/0x100
+ [  483.577605]  dm? vfs_read+0x4/0esg, x360
+t[  483.577607]  fprobe_ftrace_entry+0x3b8/0x480
+[  483.577609]  h? ksys_read+0x7ce /0x100
+e[  483.577610]  x? fprobe_ftrace_pentry+0x93/0x480l
+o[  483.577612]  it? lock_release+0x42/0x330
+ [  483.577615]  ? vfs_read+0x9/0wx360
+o[  483.577616]  r? __x64_sys_rt_sigaction+0xde/0xke120
+[  483.577619]  ? vfs_read+0x9/0x360
+[  483.577620]  d? ksys_read+0x7c./0x100
+[  483.577622]  
+? do_syscall_64+0x143/0xf80
+[  483.577624]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  483.577625]  ? trace_irq_disable+0x1d/0xc0
+[  483.577627]  ? entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  483.577631]  </TASK>
+
+I am sending in a patch that fixes this.
+
+Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
