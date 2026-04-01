@@ -1,127 +1,97 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387D130C371;
-	Wed,  1 Apr 2026 15:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D27E35FF75;
+	Wed,  1 Apr 2026 15:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775055723; cv=none; b=q7qyKJAoSkYMPeQdOyBZRWd0BOEVX7KBAn8g1iRnUP5rkQlh5yxT3Q0MQaBiIxhGxkNJCsn/3A/lBy/z8O0HRtuFXRsAU2SwKHdDBQLPiPt2l3g2ZFk2/fgrR/CsYdqzl7oHyJk8NtV8d+zAdQo4h5LMw0RjSjXgwrkj5Qo4qzg=
+	t=1775056124; cv=none; b=m3DXBd9iPl3RgTjfBYn1mAGCi+xqrXbjsxOgz3GmX7HuHNOfN6qaWoFbEehg9CWGOcq9EvbdvVYUdDwPI02h4VZjbhoyMQ6yiVW4+F70IQesfuS7er4Sb70ddU8+J43ue9vC8LE2V4EcNz2sl11nszFc7yNePZaXLSj07yi5Fik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775055723; c=relaxed/simple;
-	bh=/41jHFMLvQEawsHuNLzVPOrLdBt8POZyw+0Y/fllTrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iMsu8D5vdx2YG0w87tQ4ntDCVPNC2dkDt1qY3lOTNDVzAncc5W3qeu2jfxDh9poITq3ux1DDeZ4Q0Y8lyb9J3UpiZSu26mgw1OJ/MZmq+yHBaKXB2cCcaNLWEg4iX+bncgaeF0hRr1XXqRRtm4pXIbm50soaooCzJLUz/UsNs0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=cjbTdYsm; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1775056124; c=relaxed/simple;
+	bh=DiBdUIlE9FOdo5z00k9pSOJoD6cSQ9LThMytkgmQkZo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZSeLUVa50OU3rLCjMr6+c8b/0Trl5uUgdJ9U6VBGFA9saVLben7jIInQDiE6FBaqSws3HMBy9HCf8SgHgL6kfrPjuyEykonyrDy/EJ2cYHW+NbgOgDTXqwl78o1PX+qHVfpWAO71mX5Gjg9GkXHc1kMrNFi9XodMblNHhYiLRZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qVv0VOjs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="cjbTdYsm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+WzoGOwpf75acULbUdLCCSgMRdoRK75E6CWGbOYR5ZQ=; b=cjbTdYsmL1LugDvbI+G1od+x5X
-	U0sjnJlEsTkwTYb4fq9x5jxlzfY3jiMYTWT12dmcSoY7TJpyaZSzBJ3p5pP9eMjZfKu4dVMo60n8L
-	KA/a0G/X1klcmoEwRJX7k1QCZya2esiyqTnXRTmO5II47MA8aIVYXgL1YD9afND/II9K4YcMA3mJm
-	2/Qyqh8mBrFth06DINUoPWVgJKwTAOyudumsJlPpVIJDZcN+Ig/iWa4w/enSz4UbCWc+4lfOOoUjQ
-	LInkGozPY9JYdCZ09QBI/PyKFOvBeNXwD4xvrSj2FcJQa8QLKe/p7HfqdIskdleD81ndLF7vOgPEi
-	JWbqceOQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1w7x4t-0034E6-11;
-	Wed, 01 Apr 2026 15:01:54 +0000
-Date: Wed, 1 Apr 2026 08:01:48 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
-Message-ID: <ac0wz_eW5Zgi4t45@gmail.com>
-References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
- <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
- <acZPZ4XKy4QynznK@gmail.com>
- <20260327223744.f246150adc1671f7605a4f0a@kernel.org>
- <acpzhCBEPh-tKVqg@gmail.com>
- <acqJk-zbyjIiy6hJ@gmail.com>
- <20260331125827.157a833882830007ea9b0b31@kernel.org>
- <acvjcCqIAeHyIiQN@gmail.com>
- <20260401224853.d8ed517a344c4be51d371a9c@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qVv0VOjs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C5BC4CEF7;
+	Wed,  1 Apr 2026 15:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775056123;
+	bh=DiBdUIlE9FOdo5z00k9pSOJoD6cSQ9LThMytkgmQkZo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qVv0VOjsPelnCGGivQwvqNwsFOI4fLxrEvjH+lemQSeCPMi89DolrvaY2W7PnF8js
+	 HAjjyduVwVlQW8TqkhYTTZ6lMdYsfSCzmRRWnErJ/ITh9gY7elaUk2ISe/zTdeP9KX
+	 V9Rs2y+7rUun4zNoh2AfdGsT5ojYr3aZoBK3nomalsnS26xCudegGCKknvicKqB8LF
+	 v8k556pg9UcCVewDCn3ExbOZ/z3uUNGh4aHXD5eYYBTfmGRaKQgXU4gM+7VZfdlAnd
+	 3QFuNdfA7ZANmmLPa9aOLmg86Tj9WB8A9OqPkbJ5xQM/5IRtS4LgrMAxSDwLDNUr21
+	 oU+mIGkHFFG9g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1w7xBR-00000007ufj-295B;
+	Wed, 01 Apr 2026 15:08:41 +0000
+Date: Wed, 01 Apr 2026 16:08:41 +0100
+Message-ID: <861pgy4t1i.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix trace remotes read with an offline CPU
+In-Reply-To: <20260401103159.747ae168@gandalf.local.home>
+References: <20260401025003.3258729-1-vdonnefort@google.com>
+	<20260401103159.747ae168@gandalf.local.home>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260401224853.d8ed517a344c4be51d371a9c@kernel.org>
-X-Debian-User: leitao
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rostedt@goodmis.org, vdonnefort@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Apr 01, 2026 at 10:48:53PM +0900, Masami Hiramatsu wrote:
+On Wed, 01 Apr 2026 15:31:59 +0100,
+Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> On Wed,  1 Apr 2026 03:50:01 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > This small series is fixing non-consuming read of a trace remote when the
+> > trace_buffer is created after a CPU is offline.
+> > 
+> > It also extends hotplug testing coverage to include this test case.
+> > 
+> > I have based this series on top of kvmarm/next which contains the hypervisor
+> > tracing patches.
+> > 
+> > Vincent Donnefort (2):
+> >   tracing: Non-consuming read for trace remotes with an offline CPU
+> >   tracing: selftests: Extend hotplug testing for trace remotes
+> 
+> This looks fine to me. Since they only affect the new remote code and will
+> not conflict with anything I'm doing, they can go on top of the KVM patches
+> in the arm64 tree.
+> 
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> for the series.
 
-> > The challenge extends beyond that. There are numerous early_parameter()
-> > definitions scattered throughout the kernel that may or may not be
-> > utilized by setup_arch().
-> >
-> > For example, consider `early_param("mitigations", ..)` in
-> > ./kernel/cpu.c. This modifies the cpu_mitigations global variable, which
-> > is referenced in various locations across different architectures.
-> >
-> > It's worth noting that we have over 300 early_parameter() instances in
-> > the kernel.
-> >
-> > Given this, analyzing all these early parameters and examining each one
-> > individually represents a substantial amount of work.
->
-> Yes, that may require a substantial amount of work. But to improve
-> the kernel framework around the parameter handling, eventually we
-> need to examine each early parameter.
+Do you want to look at v2 [1], which was sent two hours later?
 
-I'm still uncertain about this approach. The goal is to identify and
-categorize the early parameters that are parsed prior to bootconfig
-initialization.
+	M.
 
-Moreover, this work could become obsolete if bootconfig's initialization
-point shifts earlier or later in the boot sequence, necessitating
-another comprehensive analysis.
+[1] https://lore.kernel.org/r/20260401045100.3394299-1-vdonnefort@google.com
 
-Conversely, if we successfully move bootconfig initialization earlier
-by breaking the dependency of memblock (assuming this is feasible), the
-vast majority of early parameters would execute after bootconfig is
-configured, eliminating the need for this extensive categorization work.
-
-Please, feel free to tell what approach might be better for the project.
-
-> > Are there alternative approaches? At this point, I'm leaning toward
-> > breaking bootconfig's dependency on memblock, allowing us to invoke it
-> > before setup_arch(). Is this the only practical solution available?!
->
-> Basically, the memblock dependency comes from allocating copy of data.
-> Only for the embedded bootconfig, we can just pass copy memory block
-> to the xbc_init(). Something like;
->
-> xbc_init() {
->  xbc_data = memblock_alloc();
->  memcpy(xbc_data, data);
->  __xbc_init(xbc_data);
-> }
->
-> embedded_xbc_init() {
->   __xbc_init(embedded_bootconfig_data);
-> }
->
-> Afterwards, we can pass mixture of embedded bootcofnigt and initrd
-> bootconfig data to parser again.
->
-> (But in this case, we must be careful not to override the early
->  parameters that we have already applied.)
-
-Do you have any additional recommendations if I proceed with this
-approach?
-
-Thank you for your detailed responses and insights.
---breno
+-- 
+Without deviation from the norm, progress is not possible.
