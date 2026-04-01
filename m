@@ -1,142 +1,298 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D10940711B
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 11:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C4D2AD0C;
+	Wed,  1 Apr 2026 13:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775044072; cv=none; b=EhinC46ZfR/qBRqqjwxbJPS6ubygyMopb2tNHxtAeCSUvXIqZbj0z9z9lQdL2RM/zbsVi9odj3VprSKcX35fIPQ0M2J1R8QGjYZ9J467PvM3JYwjN3CJhzewl8k23FwYomtoFKWwsR0DSFzqlLQsAtCaUy4Rv9GnDqXkqGzjSIE=
+	t=1775048921; cv=none; b=ebFOTg+F1kPwZkZkegL6fnkHYyNUBxxNg6HdpsuttW3LajCx3RPLWcvoFHBHERLF4Nurnz9ZomRDw5FJ5GaijIm8WavP1Fm0F+A5UnLHSwBwFuuOrXMPQPjHW/FJniXNB7en8S6KCIl7XWAs5PfCIU7nR9DXCC0/ZLz+nsaja5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775044072; c=relaxed/simple;
-	bh=zatSHNhn3kz3WE8tEQq06UNzCwt7u0XFUsfRa3bGCnU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h/IOs5OLpKiU5Y/1Hde2wmZ4mYjFIv3WxqcI+CWp2QUcs24OdaobzH97BJgL/pks1XaUEhJ5fhulASz09eeolwmdFIEBg0Qcr5wbZCSOckg8u5sFjZf2yInDBl2wULmSJRxfBW5bY6f37dmeTDRioUF0CH+wm6qhpuKX27dN9qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UuKoEqwh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1775048921; c=relaxed/simple;
+	bh=GqwrhYwgsMCDt5kccSCHnHtJX2NLLbb3uHCCimeH5Jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cJTixeWVQx7fDhJIUibIDNqiYMvc3mjJAfcHhub+igRNcAgZ0WQ1eUMLiNczKIG8qf+QQ+GCo0gUcfs7TgCSLXPVl9C+eycwKB9upxglCdy4+lbGEDNubRTfIvSrwk03XeVlDQg5+cFfUGWMEAUpaJVD6Bs4fPCOCt8RAC6If4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dHiHCQHF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MsrIRLW3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UuKoEqwh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775044070;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dHiHCQHF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MsrIRLW3"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1775048918;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zatSHNhn3kz3WE8tEQq06UNzCwt7u0XFUsfRa3bGCnU=;
-	b=UuKoEqwhM1MiBO4SHDSqPEgW4OZpvNN/dIo2jveqvttZACLZxrRdimyKV/29EGRVi6b8iU
-	Q+sHGU9R5c7P/abmGOnP3EWmJYNCiIkf58sfVxxRqR6HeVW6L87VkkGH8f5kZ96o3DXa5U
-	OlBbPxtIz1Auki4/crNGldiy1sbabUs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-151-CJTVSorSPCmK188NUVXJVg-1; Wed, 01 Apr 2026 07:47:47 -0400
-X-MC-Unique: CJTVSorSPCmK188NUVXJVg-1
-X-Mimecast-MFC-AGG-ID: CJTVSorSPCmK188NUVXJVg_1775044066
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-486fc42c83aso54233385e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 04:47:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775044066; x=1775648866;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SeycZ4XowGxMHB7V4ZVlWm1d+k5nSK/rI2Y/d3VTHjQ=;
-        b=bFTt5j4tfBDb7pEwzLGD4yMfkW2gbNU07sbkbeffnEI3sbd3jK2ORmqdDMUCfAghjf
-         qgjCHTUuHjD9bO3xZmiNGiN9zd9XnG12uFtzCmlLt+419SPE82Fw/nC6lAxdJJFzTMWt
-         piSCi7rFatd4MWReJAYlypASoBNZYiXF9SXIE5jqTQ01FLOYIGomJACtcVZxoCjTmZgn
-         pQl7rJentzycniyh1vFfEFabWWLC9QZpiNo6iU3qhHLhUoY2CfgrDxm7t+HNojjXyBFp
-         vgVBv0A7+OYcAoUh6Xzc3Nw26aq4/pafxfudYoB2kV7rzLKNKLJUQnMMeaV5tFMBAbeU
-         WWYA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2CoPeBONuMrDPL/YzYkYgZVcsj0oWZyqUGYT1WS4cvFzHBBKMlwnTFUbyxZDMdengHUWWrAGuyBSEYRu9z8JeDaQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPWDl1E/UQIMquAKElzIIqW5w9uhtEJMXzU4Ha5ljalfSOKkoJ
-	YxNe770fok0I9DEvGqMlRfCwzUfaNjwXJitlnY8ne4KPWld5o3DfdZ+QTty+O29HUC08xMsWMAM
-	NzecOeEn3sIGfvb2oWKKqbU9G8rNDXZSQwVPKwxdhzbjWS+h2NvkJ/OMiOnaJRx0y3NBXLA3dm/
-	t4ZdjxpMlU
-X-Gm-Gg: ATEYQzzIs6k0fsiHwwgS9T1Eeldi4t441NbjQoGhOq0spjlMWLDVS08s+djRjRtaIHK
-	aE+EJGaucoUhysIO6pJJow+B0oWhKj6IYqIrRsuTjWduwcCLTHcsKt4A1CWYzWxjq29faaGDTPg
-	si5BsYciI9bmFx7/IyABP88JV9AC8TUwWpuZAr3j0qMsdWkQGNWvIax8QUMb8PIHQblLp7wLP7e
-	63V+vHzgBkL1jFxLSYeAXVQLHSViI+03QJbk866Kbi6mjGUEaZ0AtLUBTK96zMHg0Q+nsc1OIIT
-	XGEr1MbbEiV+GbGDB2VQ7i7pk6z2dgSY3hMKOdbGGDi0bcu3GdLJBjo8dZxWzNCiQDp+awgdOIC
-	xV7tDMyEscCuY7QNR9fJfXV/Yg9mk5PcEoVpCuLkPcx+FLcIA6+iFmb5RC1KwXhK+cYVs7RGiE9
-	/JrTIJ4RMtp+6OOuo=
-X-Received: by 2002:a05:600c:1e8c:b0:485:46fd:7887 with SMTP id 5b1f17b1804b1-4888356734dmr56518795e9.13.1775044065997;
-        Wed, 01 Apr 2026 04:47:45 -0700 (PDT)
-X-Received: by 2002:a05:600c:1e8c:b0:485:46fd:7887 with SMTP id 5b1f17b1804b1-4888356734dmr56518315e9.13.1775044065472;
-        Wed, 01 Apr 2026 04:47:45 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887c7510d3sm55825315e9.5.2026.04.01.04.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 04:47:44 -0700 (PDT)
-Message-ID: <21c06a117b044e77e6191d6ad7e8691ec8b7b53f.camel@redhat.com>
-Subject: Re: [PATCH] rv: Allow epoll in rtapp-sleep monitor
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xgyCGkdIq2wxCGMC2Er5N4X9a28MFspP5ge+HtLZZqw=;
+	b=dHiHCQHFyX8+Kyui2FmHBTTb3cjo2in+YXkJPCJM78suy2mm4kQpNf1pE/OZPPvDVxwMAF
+	6Z+TLY9RMN+lsasYKC/5MBzIfaMncAK8ZmHWmTo+oDyvLB/SUWy+xZY6BilrafyNuIh8Bf
+	0HShwHQaXCbsIf10InfUrTUSAkYwDDTG2NHSmCI2aQtvF4NxomlEg3b/EcLQ7i5Rv+FZid
+	x5mcCe4IqLJSHxZrunfIo8MLpDEgfTEdudbq9bzUI14v0ZCewy8tPFe/y3j6qGp6Xjq8YT
+	r2fpZNqHB5wwk0y0wlwd1LvGNFMHRuJFrO5C4xfUsiS72BvuVau1IullJXEbig==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1775048918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xgyCGkdIq2wxCGMC2Er5N4X9a28MFspP5ge+HtLZZqw=;
+	b=MsrIRLW3I9PSOIw9sm/eBHs6D4aS9Y0sxKONZpA/EJ9DApDjCXccy/SnQ5qJeETkpFeFjp
+	kaRquZfkJOXJMLAg==
+To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Wed, 01 Apr 2026 13:47:43 +0200
-In-Reply-To: <87v7ec6n1n.fsf@yellow.woof>
-References: <20260331104918.2710853-1-namcao@linutronix.de>
-	 <58674d7f10c260369f5cb78599ba6ecb3804358f.camel@redhat.com>
-	 <87v7ec6n1n.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v2] rv: Allow epoll in rtapp-sleep monitor
+Date: Wed,  1 Apr 2026 15:08:28 +0200
+Message-ID: <20260401130828.3115428-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: AURaFxm766YqfnGFvSo8iymgzOtqZX461CaDYTKn-Fw_1775044066
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-03-31 at 17:23 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > On Tue, 2026-03-31 at 12:49 +0200, Nam Cao wrote:
-> > > diff --git a/kernel/trace/rv/monitors/sleep/sleep.c
-> > > b/kernel/trace/rv/monitors/sleep/sleep.c
-> > > index c1347da69e9d..59091863c17c 100644
-> > > --- a/kernel/trace/rv/monitors/sleep/sleep.c
-> > > +++ b/kernel/trace/rv/monitors/sleep/sleep.c
-> > > @@ -162,6 +164,11 @@ static void handle_sys_enter(void *data, struct
-> > > pt_regs
-> > > *regs, long id)
-> > > =C2=A0=09=09=09break;
-> > > =C2=A0=09=09}
-> > > =C2=A0=09=09break;
-> > > +#ifdef __NR_epoll_wait
-> > > +=09case __NR_epoll_wait:
-> > > +=09=09ltl_atom_set(mon, LTL_EPOLL_WAIT, true);
-> > > +=09=09break;
-> > > +#endif
-> >=20
-> > Sashiko (the AI bot) wonders why this isn't ltl_atom_update() like othe=
-r
-> > things
-> > around here. Is that intentional?
->=20
-> No that's not intentional. It does not affect verification result, but
-> still should be fixed. I will send v2.
->=20
-> Funnily a colleague just told me earlier today about how good AIs are at
-> reviewing..
+Since commit 0c43094f8cc9 ("eventpoll: Replace rwlock with spinlock"),
+epoll_wait is real-time-safe syscall for sleeping.
 
-Well, they're probably already better than (most of) us in those kind of
-consistency assessments..
+Add epoll_wait to the list of rt-safe sleeping APIs.
 
-Anyway, I tried your changes and it seems to work as I'd expect. Feel free =
-to
-send a V2 and I can include it in the pull request.
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+v2: Use ltl_atom_update() instead of ltl_atom_set() in handle_sys_enter()
+---
+ kernel/trace/rv/monitors/sleep/sleep.c    |  8 ++
+ kernel/trace/rv/monitors/sleep/sleep.h    | 98 ++++++++++++-----------
+ tools/verification/models/rtapp/sleep.ltl |  1 +
+ 3 files changed, 61 insertions(+), 46 deletions(-)
 
-Thanks,
-Gabriele
+diff --git a/kernel/trace/rv/monitors/sleep/sleep.c b/kernel/trace/rv/monit=
+ors/sleep/sleep.c
+index c1347da69e9d..8dfe5ec13e19 100644
+--- a/kernel/trace/rv/monitors/sleep/sleep.c
++++ b/kernel/trace/rv/monitors/sleep/sleep.c
+@@ -49,6 +49,7 @@ static void ltl_atoms_init(struct task_struct *task, stru=
+ct ltl_monitor *mon, bo
+ 		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
+ 		ltl_atom_set(mon, LTL_CLOCK_NANOSLEEP, false);
+ 		ltl_atom_set(mon, LTL_FUTEX_WAIT, false);
++		ltl_atom_set(mon, LTL_EPOLL_WAIT, false);
+ 		ltl_atom_set(mon, LTL_FUTEX_LOCK_PI, false);
+ 		ltl_atom_set(mon, LTL_BLOCK_ON_RT_MUTEX, false);
+ 	}
+@@ -63,6 +64,7 @@ static void ltl_atoms_init(struct task_struct *task, stru=
+ct ltl_monitor *mon, bo
+ 		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
+ 		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
+ 		ltl_atom_set(mon, LTL_CLOCK_NANOSLEEP, false);
++		ltl_atom_set(mon, LTL_EPOLL_WAIT, false);
+=20
+ 		if (strstarts(task->comm, "migration/"))
+ 			ltl_atom_set(mon, LTL_TASK_IS_MIGRATION, true);
+@@ -162,6 +164,11 @@ static void handle_sys_enter(void *data, struct pt_reg=
+s *regs, long id)
+ 			break;
+ 		}
+ 		break;
++#ifdef __NR_epoll_wait
++	case __NR_epoll_wait:
++		ltl_atom_update(current, LTL_EPOLL_WAIT, true);
++		break;
++#endif
+ 	}
+ }
+=20
+@@ -174,6 +181,7 @@ static void handle_sys_exit(void *data, struct pt_regs =
+*regs, long ret)
+ 	ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_MONOTONIC, false);
+ 	ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
+ 	ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
++	ltl_atom_set(mon, LTL_EPOLL_WAIT, false);
+ 	ltl_atom_update(current, LTL_CLOCK_NANOSLEEP, false);
+ }
+=20
+diff --git a/kernel/trace/rv/monitors/sleep/sleep.h b/kernel/trace/rv/monit=
+ors/sleep/sleep.h
+index 2ab46fd218d2..95dc2727c059 100644
+--- a/kernel/trace/rv/monitors/sleep/sleep.h
++++ b/kernel/trace/rv/monitors/sleep/sleep.h
+@@ -15,6 +15,7 @@ enum ltl_atom {
+ 	LTL_ABORT_SLEEP,
+ 	LTL_BLOCK_ON_RT_MUTEX,
+ 	LTL_CLOCK_NANOSLEEP,
++	LTL_EPOLL_WAIT,
+ 	LTL_FUTEX_LOCK_PI,
+ 	LTL_FUTEX_WAIT,
+ 	LTL_KERNEL_THREAD,
+@@ -40,6 +41,7 @@ static const char *ltl_atom_str(enum ltl_atom atom)
+ 		"ab_sl",
+ 		"bl_on_rt_mu",
+ 		"cl_na",
++		"ep_wa",
+ 		"fu_lo_pi",
+ 		"fu_wa",
+ 		"ker_th",
+@@ -75,39 +77,41 @@ static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
+=20
+ static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
+ {
+-	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
+-	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
+-	bool val40 =3D task_is_rcu || task_is_migration;
+-	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
+-	bool val41 =3D futex_lock_pi || val40;
+-	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
+-	bool val5 =3D block_on_rt_mutex || val41;
+-	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
+);
+-	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
+-	bool val32 =3D abort_sleep || kthread_should_stop;
+ 	bool woken_by_nmi =3D test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
+-	bool val33 =3D woken_by_nmi || val32;
+ 	bool woken_by_hardirq =3D test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
+-	bool val34 =3D woken_by_hardirq || val33;
+ 	bool woken_by_equal_or_higher_prio =3D test_bit(LTL_WOKEN_BY_EQUAL_OR_HIG=
+HER_PRIO,
+ 	     mon->atoms);
+-	bool val14 =3D woken_by_equal_or_higher_prio || val34;
+ 	bool wake =3D test_bit(LTL_WAKE, mon->atoms);
+-	bool val13 =3D !wake;
+-	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
++	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
++	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
++	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
++	bool rt =3D test_bit(LTL_RT, mon->atoms);
++	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
+n->atoms);
+ 	bool nanosleep_clock_tai =3D test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms=
+);
+ 	bool nanosleep_clock_monotonic =3D test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC=
+, mon->atoms);
+-	bool val24 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
+-	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
+n->atoms);
+-	bool val25 =3D nanosleep_timer_abstime && val24;
+-	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
+-	bool val18 =3D clock_nanosleep && val25;
++	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
+);
++	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
+ 	bool futex_wait =3D test_bit(LTL_FUTEX_WAIT, mon->atoms);
+-	bool val9 =3D futex_wait || val18;
++	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
++	bool epoll_wait =3D test_bit(LTL_EPOLL_WAIT, mon->atoms);
++	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
++	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
++	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
++	bool val42 =3D task_is_rcu || task_is_migration;
++	bool val43 =3D futex_lock_pi || val42;
++	bool val5 =3D block_on_rt_mutex || val43;
++	bool val34 =3D abort_sleep || kthread_should_stop;
++	bool val35 =3D woken_by_nmi || val34;
++	bool val36 =3D woken_by_hardirq || val35;
++	bool val14 =3D woken_by_equal_or_higher_prio || val36;
++	bool val13 =3D !wake;
++	bool val26 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
++	bool val27 =3D nanosleep_timer_abstime && val26;
++	bool val18 =3D clock_nanosleep && val27;
++	bool val20 =3D val18 || epoll_wait;
++	bool val9 =3D futex_wait || val20;
+ 	bool val11 =3D val9 || kernel_thread;
+-	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
+ 	bool val2 =3D !sleep;
+-	bool rt =3D test_bit(LTL_RT, mon->atoms);
+ 	bool val1 =3D !rt;
+ 	bool val3 =3D val1 || val2;
+=20
+@@ -124,39 +128,41 @@ static void ltl_start(struct task_struct *task, struc=
+t ltl_monitor *mon)
+ static void
+ ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
+gned long *next)
+ {
+-	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
+-	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
+-	bool val40 =3D task_is_rcu || task_is_migration;
+-	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
+-	bool val41 =3D futex_lock_pi || val40;
+-	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
+-	bool val5 =3D block_on_rt_mutex || val41;
+-	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
+);
+-	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
+-	bool val32 =3D abort_sleep || kthread_should_stop;
+ 	bool woken_by_nmi =3D test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
+-	bool val33 =3D woken_by_nmi || val32;
+ 	bool woken_by_hardirq =3D test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
+-	bool val34 =3D woken_by_hardirq || val33;
+ 	bool woken_by_equal_or_higher_prio =3D test_bit(LTL_WOKEN_BY_EQUAL_OR_HIG=
+HER_PRIO,
+ 	     mon->atoms);
+-	bool val14 =3D woken_by_equal_or_higher_prio || val34;
+ 	bool wake =3D test_bit(LTL_WAKE, mon->atoms);
+-	bool val13 =3D !wake;
+-	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
++	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
++	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
++	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
++	bool rt =3D test_bit(LTL_RT, mon->atoms);
++	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
+n->atoms);
+ 	bool nanosleep_clock_tai =3D test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms=
+);
+ 	bool nanosleep_clock_monotonic =3D test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC=
+, mon->atoms);
+-	bool val24 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
+-	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
+n->atoms);
+-	bool val25 =3D nanosleep_timer_abstime && val24;
+-	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
+-	bool val18 =3D clock_nanosleep && val25;
++	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
+);
++	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
+ 	bool futex_wait =3D test_bit(LTL_FUTEX_WAIT, mon->atoms);
+-	bool val9 =3D futex_wait || val18;
++	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
++	bool epoll_wait =3D test_bit(LTL_EPOLL_WAIT, mon->atoms);
++	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
++	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
++	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
++	bool val42 =3D task_is_rcu || task_is_migration;
++	bool val43 =3D futex_lock_pi || val42;
++	bool val5 =3D block_on_rt_mutex || val43;
++	bool val34 =3D abort_sleep || kthread_should_stop;
++	bool val35 =3D woken_by_nmi || val34;
++	bool val36 =3D woken_by_hardirq || val35;
++	bool val14 =3D woken_by_equal_or_higher_prio || val36;
++	bool val13 =3D !wake;
++	bool val26 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
++	bool val27 =3D nanosleep_timer_abstime && val26;
++	bool val18 =3D clock_nanosleep && val27;
++	bool val20 =3D val18 || epoll_wait;
++	bool val9 =3D futex_wait || val20;
+ 	bool val11 =3D val9 || kernel_thread;
+-	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
+ 	bool val2 =3D !sleep;
+-	bool rt =3D test_bit(LTL_RT, mon->atoms);
+ 	bool val1 =3D !rt;
+ 	bool val3 =3D val1 || val2;
+=20
+diff --git a/tools/verification/models/rtapp/sleep.ltl b/tools/verification=
+/models/rtapp/sleep.ltl
+index 6379bbeb6212..6f26c4810f78 100644
+--- a/tools/verification/models/rtapp/sleep.ltl
++++ b/tools/verification/models/rtapp/sleep.ltl
+@@ -5,6 +5,7 @@ RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THRE=
+AD)
+=20
+ RT_VALID_SLEEP_REASON =3D FUTEX_WAIT
+                      or RT_FRIENDLY_NANOSLEEP
++                     or EPOLL_WAIT
+=20
+ RT_FRIENDLY_NANOSLEEP =3D CLOCK_NANOSLEEP
+                     and NANOSLEEP_TIMER_ABSTIME
+--=20
+2.47.3
 
