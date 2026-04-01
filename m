@@ -1,253 +1,184 @@
-Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+Received: from flow-b8-smtp.messagingengine.com (flow-b8-smtp.messagingengine.com [202.12.124.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC6D27442;
-	Wed,  1 Apr 2026 07:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CDD3CFF42;
+	Wed,  1 Apr 2026 09:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775028982; cv=none; b=fs2yVgsTqnUMWPcnT10nHRdK7qla4hot3VoNcbulCnLXH/JYumN6uaJVvEj6euwrl8eudISF9LIx1Q64FxWyYckPmnkIW7ZKUKcn7NZtOgCaXXKTT+jhhRjqDMKZ/VckzUWosCsEyUVcekEkvobE7Ej9tV0bKGdR8nnT/FK9+vg=
+	t=1775036439; cv=none; b=MtEbBh3UOzcuDHcntuJ6If4VGbjJlWAGX2bQvHBiqFD4qsSvkOrwpl0/wRyIfV4bPIWw62bvAdR1OU8HZARFihykGDFh+4/NYVzfnHaZ9FT1mAwf0VJgbZqjO6xjuwEq88fcnlc4Ge/eigdg7EW/9D+V/BoMF6AjRaxoM0SvZdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775028982; c=relaxed/simple;
-	bh=KJWoxcgBrmv6aiB7HIluEDRqHjyTg6kZfSNv2QCiz28=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dohBzwoM1qb8n9RkTYLPgrOedIZvEclSNDbawwyKkbrkvR/zUJyzEEpsvicHGVDakokTRR3FWz/3/h0Vitc03f7QRO/sSUu1e39fIxByrCAfqjtX9WvmeVFYExpDW3o8VeFr8CohumeJ1nv27EQ3Y9UPu8Iq/IB+ed+htOglaYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b=e9RLizYc; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+	s=arc-20240116; t=1775036439; c=relaxed/simple;
+	bh=BtRu89iXUmh6y+V0gXx+ybKGUzoMiJjxKREIJodj/To=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JE9WLPaXki4liv6FkV6WdgUXxZlzq/Mw07hrpDGPLRkZKd63HTSyjSRHteBhjYxYSHxdNDKJMwxVDqnkLkOnmusvazIfh7BJUzczpoRuCb3esrTndUSxLcBb3oxAPMEQ4jgn8umqKYfQZy6Y0h/KmdcqDjn7yQs5paIM2ZGXRWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=J/ikEI8h; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fpIXyyV+; arc=none smtp.client-ip=202.12.124.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b="e9RLizYc"
-dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=To:From;
-	bh=CgTvKdo/p2bgLfcLhC67tpYYumUMNTRd/FLgAyX/pIQ=;
-	b=e9RLizYcoe8gkHVBOqL7jxfUkmtOdBuXmz0i9jpqj9M+1oYceFOXiNqyOD3rR09deo8Il143E
-	L6p5gETjJSRBVWmLliaH0KmsZx7cNZTUEXo9oVZ9NyLMPoGgH4UzFWwolQwJJmW3SSxdX/fxk6G
-	TTtGe1u1yIkkdIF9U+2D1ss=
-Received: from w012.hihonor.com (unknown [10.68.27.189])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4flxBN5Kl3zYlYLZ;
-	Wed,  1 Apr 2026 15:17:00 +0800 (CST)
-Received: from TA012.hihonor.com (10.77.228.68) by w012.hihonor.com
- (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Wed, 1 Apr
- 2026 15:17:55 +0800
-Received: from TA011.hihonor.com (10.77.232.85) by TA012.hihonor.com
- (10.77.228.68) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 1 Apr
- 2026 15:17:43 +0800
-Received: from TA011.hihonor.com ([fe80::1391:8a1:1ddc:4344]) by
- TA011.hihonor.com ([fe80::1391:8a1:1ddc:4344%8]) with mapi id 15.02.2562.017;
- Wed, 1 Apr 2026 15:17:54 +0800
-From: wangzhen <wangzhen5@honor.com>
-To: "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-CC: "rostedt@goodmis.org" <rostedt@goodmis.org>, "mhiramat@kernel.org"
-	<mhiramat@kernel.org>, "mathieu.desnoyers@efficios.com"
-	<mathieu.desnoyers@efficios.com>, "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"david@kernel.org" <david@kernel.org>, "mhocko@kernel.org"
-	<mhocko@kernel.org>, "zhengqi.arch@bytedance.com"
-	<zhengqi.arch@bytedance.com>, "shakeel.butt@linux.dev"
-	<shakeel.butt@linux.dev>, "ljs@kernel.org" <ljs@kernel.org>,
-	"axelrasmussen@google.com" <axelrasmussen@google.com>, "yuanchu@google.com"
-	<yuanchu@google.com>, "weixugc@google.com" <weixugc@google.com>,
-	"jiayuan.chen@shopee.com" <jiayuan.chen@shopee.com>, wangzhen
-	<wangzhen5@honor.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
-	<linux-trace-kernel@vger.kernel.org>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "kasong@tencent.com" <kasong@tencent.com>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
-	"baohua@kernel.org" <baohua@kernel.org>
-Subject: [PATCH] mm/vmscan: add tracepoint for changes in min_seq and max_seq
-Thread-Topic: [PATCH] mm/vmscan: add tracepoint for changes in min_seq and
- max_seq
-Thread-Index: AdzBp6diUCgIzLcpTbOIx0zw848r2g==
-Date: Wed, 1 Apr 2026 07:17:54 +0000
-Message-ID: <402fbac2fde14bcda8230c1535186b4e@honor.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="J/ikEI8h";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fpIXyyV+"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id 6EB30130098C;
+	Wed,  1 Apr 2026 05:40:32 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Wed, 01 Apr 2026 05:40:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1775036432; x=
+	1775043632; bh=Y9NnXQxPztrbYHBA9jaAeD7O8AqeRBhf086IpNU0WKc=; b=J
+	/ikEI8hqJofj2hE83LA2940Aj6cjunXx8YwWOWT4cEaFvM+MGmMSpCW9Mkse63uv
+	6p1RZqI4BbJRtcf72XrWBA5YwQArC2StO8zF0ZHyvrAJ0HSaC2cnt2ioLnDbNRQp
+	Fqqfz8pEu1BDAHsLyjoc2ArrCgduAs5WS8JjHzLm5V3f/ARScroxfypPTX8sls07
+	SG4uJPAXSsmc2xeEbuuPh32S4cYTnLzQ3bmWw1SlmLJw/lHbOz1q+MeeDznhqIGs
+	pi9+A63zJrCFzHimDTWYNRmR0C0HH9MoAAMrJJnPEX4wJXiSA2aEa9qhdZFqqvmX
+	10u1KXUtTuWYe3uxUFBiw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1775036432; x=1775043632; bh=Y9NnXQxPztrbYHBA9jaAeD7O8AqeRBhf086
+	IpNU0WKc=; b=fpIXyyV+Ycgc4aEc7y+Nao2+qT/H/0bktagYsuRHsx6SxfcpH1l
+	ABEUOq3L1IcpVibVpAxdCLibiA881AH7p+h6isUbAv/N5NIl7hrUGkw6KrWCCGpJ
+	Z2IuZ99N8IzMJzW5FkJbBWCDzIyNijyEttw2QJTRGqiNqgGFQ91Qo15UrS6FFOFS
+	Q7DjDSeS4sRxk4cweGrWtQQ2DhC9pMpHQPKb6zn+z+2eUtHK5DOKQ41niQMGcQfv
+	wMPpnBXUrD0xRnFz5ujvOFSff2JEIMpsOtxafHVUtb0CptN962A3zV+o3JS6WgK5
+	LDNrqC06+t6rD05d+19Fm8ML4H6AarTtY9Q==
+X-ME-Sender: <xms:D-jMaX7jUOo7NIRCzSzBHJBsFeEG4twJgTbGY1_jPDIr1gsNHq352w>
+    <xme:D-jMaegXxYLrLhTm0626QbmVZEMPx2f9tCD6__jWAqR71MwWiOc9CEmTwtdWHwh0z
+    ukb2Iq7nkhWZTnhIQ6VkTrAa0Fj57ZXrSoCc-w4v40H-1i_gD18-tI>
+X-ME-Received: <xmr:D-jMaSiDB2LLvYXM1iRi6ijk1p5jBlGu8ywa2L2UtCxFpQzgpp2CJlBOSNHWmg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcuufhh
+    uhhtshgvmhgruhcuoehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvgeqnecuggftrf
+    grthhtvghrnhepfeetheejudeujeeikeetudelvdevkeefuddtkedvtdehtdetieeuieet
+    jeeugedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtthhopedvvddp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhhihhrrghmrghtsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehlvghithgrohesuggvsghirghnrdhorhhgpdhrtghpthht
+    oheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepshhkhhgrnheslhhinhhugi
+    hfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhtrhgrtggvqd
+    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
+    qdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhsshesmhgrlh
+    grthdrsghiiidprhgtphhtthhopehprghulhhmtghksehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:D-jMaelu-tv0s68PjzqFcUeqwHEQHQmhdTRN7qKWJu6tKbpTzUYZ2g>
+    <xmx:D-jMaaErDcQUPPrOMXLwA1f2IXsuYipYowL_XjJ8-ugVBGqG0iiWYg>
+    <xmx:D-jMaQMtiycRs6mK4arsJT_T-yqXwn5rVqwwiwSAxjxGYQ_uXLKXew>
+    <xmx:D-jMaRvtolEKypjK-OlD1HgcOEj1SfwcDvwBMVCJAB2hoIh7Ysy0TA>
+    <xmx:EOjMaQguslXKmO5e92MMvrYe5cxtsNTbubvQTfL-74Rk9rz8Av5id3SE>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 1 Apr 2026 05:40:29 -0400 (EDT)
+Date: Wed, 1 Apr 2026 10:40:22 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
+Message-ID: <aczm1TfPmstqvUtU@thinkstation>
+References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
+ <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+ <acueCFv4neO7zQGI@thinkstation>
+ <20260401100237.ff9a37505d041a00e4d8658a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260401100237.ff9a37505d041a00e4d8658a@kernel.org>
 
-From 20f685d13826ebaa86705a689128893be6316c7b Mon Sep 17 00:00:00 2001
-From: w00021541 <wangzhen5@hihonor.com>
-Date: Tue, 31 Mar 2026 16:00:48 +0800
-Subject: [PATCH] mm/vmscan: add tracepoint for changes in min_seq and max_s=
-eq
+On Wed, Apr 01, 2026 at 10:02:37AM +0900, Masami Hiramatsu wrote:
+> On Tue, 31 Mar 2026 11:18:33 +0100
+> Kiryl Shutsemau <kirill@shutemov.name> wrote:
+> 
+> > On Wed, Mar 25, 2026 at 11:22:04PM +0900, Masami Hiramatsu wrote:
+> > > > diff --git a/init/main.c b/init/main.c
+> > > > index 453ac9dff2da0..14a04c283fa48 100644
+> > > > --- a/init/main.c
+> > > > +++ b/init/main.c
+> > > > @@ -416,9 +416,64 @@ static int __init warn_bootconfig(char *str)
+> > > >  	return 0;
+> > > >  }
+> > > >  
+> > > > +/*
+> > > > + * do_early_param() is defined later in this file but called from
+> > > > + * bootconfig_apply_early_params() below, so we need a forward declaration.
+> > > > + */
+> > > > +static int __init do_early_param(char *param, char *val,
+> > > > +				 const char *unused, void *arg);
+> > > > +
+> > > > +/*
+> > > > + * bootconfig_apply_early_params - dispatch kernel.* keys from the embedded
+> > > > + * bootconfig as early_param() calls.
+> > > > + *
+> > > > + * early_param() handlers must run before most of the kernel initialises
+> > > > + * (e.g. before the GIC driver reads irqchip.gicv3_pseudo_nmi).  A bootconfig
+> > > > + * attached to the initrd arrives too late for this because the initrd is not
+> > > > + * mapped yet when early params are processed.  The embedded bootconfig lives
+> > > > + * in the kernel image itself (.init.data), so it is always reachable.
+> > > > + *
+> > > > + * This function is called from setup_boot_config() which runs in
+> > > > + * start_kernel() before parse_early_param(), making the timing correct.
+> > > > + */
+> > > > +static void __init bootconfig_apply_early_params(void)
+> > > 
+> > > [sashiko comment]
+> > > | Does this run early enough for architectural parameters?
+> > > | While setup_boot_config() runs before parse_early_param() in start_kernel(),
+> > > | it runs after setup_arch(). setup_boot_config() relies on xbc_init() which
+> > > | uses the memblock allocator, requiring setup_arch() to have already
+> > > | initialized it.
+> > > | However, the kernel expects many early parameters (like mem=, earlycon,
+> > > | noapic, and iommu) to be parsed during setup_arch() via the architecture's
+> > > | call to parse_early_param(). Since setup_arch() completes before
+> > > | setup_boot_config() runs, will these architectural early parameters be
+> > > | silently ignored because the decisions they influence were already
+> > > | finalized?
+> > > 
+> > > This is the major reason that I did not support early parameter
+> > > in bootconfig. Some archs initialize kernel_cmdline in setup_arch()
+> > > and setup early parameters in it.
+> > > To fix this, we need to change setup_arch() for each architecture so
+> > > that it calls this bootconfig_apply_early_params().
+> > 
+> > Hi Masami,
+> > 
+> > I have a question about bootconfig design. Is it necessary to parse the
+> > bootconfig at boot time?
+> > 
+> > We could avoid a lot of complexity if we flattened the bootconfig into a
+> > simple key-value list before embedding it in the kernel image or
+> > attaching it to the initrd. That would eliminate the need for memory
+> > allocations and allow the config to be used earlier during boot.
+> 
+> Hi Kiryl,
+> 
+> Thanks for a good question.
+> 
+> If it is embedded in the kernel, yes, we can compile it. But if it is
+> attached to initrd, the kernel needs to verify it. So anyway we have to
+> parse the key-value. Of course we can make it a binary data structure,
+> but it still needs verification. Moreover, memory allocation is not
+> required by design (the first design uses a statically allocated data).
+> 
+> Even if it is normalized as key-value, we can not trust the contents
+> without outer verification system, like verified boot. Therefore, our
+> basic strategy is to parse the text.
 
-Currently, when tracking the changes in min_seq and max_seq of mglru,
-it can only be done through debugfs. The granularity of debugfs is too
-coarse when we debug the generations of mglru. there's no way to trace
-the increase in min_seq and max_seq, so we add 2 tracepoints,
-mm_vmscan_lru_inc_min_seq and mm_vmscan_lru_inc_max_seq.
+Hm. I am not sure what issues verification aims to solve. Could you
+elaborate.
 
-Test results:
+With normalized key-value structure, we should be able to extract the
+needed value in the same way as with normal kernel command line, no?
 
-kswapd0-94      [003] d..1.    72.664921: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D87 type=3D0 swappiness=3D140 min_seq=3D2
-kswapd0-94      [003] d..1.    72.664922: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D87 type=3D1 swappiness=3D140 min_seq=3D1
-kswapd0-94      [003] d..1.    72.667303: mm_vmscan_lru_inc_max_seq: memcg_=
-id=3D87 swappiness=3D140 max_seq=3D4
-kswapd0-94      [000] d..1.    72.807691: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D25 type=3D0 swappiness=3D140 min_seq=3D2
-kswapd0-94      [000] d..1.    72.807692: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D25 type=3D1 swappiness=3D140 min_seq=3D1
-kswapd0-94      [000] d..1.    72.810955: mm_vmscan_lru_inc_max_seq: memcg_=
-id=3D25 swappiness=3D140 max_seq=3D4
-kswapd0-94      [005] d..1.    73.482586: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D91 type=3D0 swappiness=3D140 min_seq=3D2
-kswapd0-94      [005] d..1.    73.482588: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D91 type=3D1 swappiness=3D140 min_seq=3D1
-kswapd0-94      [005] d..1.    73.485509: mm_vmscan_lru_inc_max_seq: memcg_=
-id=3D91 swappiness=3D140 max_seq=3D4
-kswapd0-94      [000] d..1.    77.708630: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D88 type=3D0 swappiness=3D140 min_seq=3D1
-kswapd0-94      [000] d..1.    77.709491: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D88 type=3D0 swappiness=3D140 min_seq=3D2
-kswapd0-94      [000] d..1.    77.709491: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D88 type=3D1 swappiness=3D140 min_seq=3D1
-kswapd0-94      [000] d..1.    77.715550: mm_vmscan_lru_inc_max_seq: memcg_=
-id=3D88 swappiness=3D140 max_seq=3D4
-kswapd0-94      [003] d..1.    77.749288: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D4 type=3D0 swappiness=3D140 min_seq=3D2
-kswapd0-94      [003] d..1.    77.749290: mm_vmscan_lru_inc_min_seq: memcg_=
-id=3D4 type=3D1 swappiness=3D140 min_seq=3D1
-kswapd0-94      [003] d..1.    77.763055: mm_vmscan_lru_inc_max_seq: memcg_=
-id=3D4 swappiness=3D140 max_seq=3D4
-
-Signed-off-by: w00021541 <wangzhen5@hihonor.com>
----
- include/trace/events/vmscan.h | 49 +++++++++++++++++++++++++++++++++++
- mm/vmscan.c                   |  6 +++++
- 2 files changed, 55 insertions(+)
-
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index ea58e4656abf..6f2ae5c597fd 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -488,6 +488,55 @@ TRACE_EVENT(mm_vmscan_lru_shrink_active,
- 		show_reclaim_flags(__entry->reclaim_flags))
- );
-=20
-+#ifdef CONFIG_LRU_GEN
-+TRACE_EVENT(mm_vmscan_lru_inc_min_seq,
-+
-+	TP_PROTO(struct mem_cgroup *memcg, int type, int swappiness, unsigned lon=
-g min_seq),
-+
-+	TP_ARGS(memcg, type, swappiness, min_seq),
-+
-+	TP_STRUCT__entry(
-+		__field(int, id)
-+		__field(int, type)
-+		__field(int, swappiness)
-+		__field(unsigned long, min_seq)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->id =3D mem_cgroup_id(memcg);
-+		__entry->type =3D type;
-+		__entry->swappiness =3D swappiness;
-+		__entry->min_seq =3D min_seq;
-+	),
-+
-+	TP_printk("memcg_id=3D%d type=3D%d swappiness=3D%d min_seq=3D%ld",
-+		__entry->id, __entry->type,
-+		__entry->swappiness, __entry->min_seq)
-+);
-+
-+TRACE_EVENT(mm_vmscan_lru_inc_max_seq,
-+
-+	TP_PROTO(struct mem_cgroup *memcg, int swappiness, unsigned long max_seq)=
-,
-+
-+	TP_ARGS(memcg, swappiness, max_seq),
-+
-+	TP_STRUCT__entry(
-+		__field(int, id)
-+		__field(int, swappiness)
-+		__field(unsigned long, max_seq)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->id =3D mem_cgroup_id(memcg);
-+		__entry->swappiness =3D swappiness;
-+		__entry->max_seq =3D max_seq;
-+	),
-+
-+	TP_printk("memcg_id=3D%d swappiness=3D%d max_seq=3D%ld",
-+		__entry->id, __entry->swappiness, __entry->max_seq)
-+);
-+#endif /* CONFIG_LRU_GEN */
-+
- TRACE_EVENT(mm_vmscan_node_reclaim_begin,
-=20
- 	TP_PROTO(int nid, int order, gfp_t gfp_flags),
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 0fc9373e8251..6b5d21ee45ba 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3848,6 +3848,7 @@ static bool inc_min_seq(struct lruvec *lruvec, int ty=
-pe, int swappiness)
- 	int zone;
- 	int remaining =3D MAX_LRU_BATCH;
- 	struct lru_gen_folio *lrugen =3D &lruvec->lrugen;
-+	struct mem_cgroup *memcg =3D lruvec_memcg(lruvec);
- 	int hist =3D lru_hist_from_seq(lrugen->min_seq[type]);
- 	int new_gen, old_gen =3D lru_gen_from_seq(lrugen->min_seq[type]);
-=20
-@@ -3892,6 +3893,7 @@ static bool inc_min_seq(struct lruvec *lruvec, int ty=
-pe, int swappiness)
- done:
- 	reset_ctrl_pos(lruvec, type, true);
- 	WRITE_ONCE(lrugen->min_seq[type], lrugen->min_seq[type] + 1);
-+	trace_mm_vmscan_lru_inc_min_seq(memcg, type, swappiness, lrugen->min_seq[=
-type]);
-=20
- 	return true;
- }
-@@ -3902,6 +3904,7 @@ static bool try_to_inc_min_seq(struct lruvec *lruvec,=
- int swappiness)
- 	bool success =3D false;
- 	bool seq_inc_flag =3D false;
- 	struct lru_gen_folio *lrugen =3D &lruvec->lrugen;
-+	struct mem_cgroup *memcg =3D lruvec_memcg(lruvec);
- 	DEFINE_MIN_SEQ(lruvec);
-=20
- 	VM_WARN_ON_ONCE(!seq_is_valid(lruvec));
-@@ -3947,6 +3950,7 @@ static bool try_to_inc_min_seq(struct lruvec *lruvec,=
- int swappiness)
-=20
- 		reset_ctrl_pos(lruvec, type, true);
- 		WRITE_ONCE(lrugen->min_seq[type], min_seq[type]);
-+		trace_mm_vmscan_lru_inc_min_seq(memcg, type, swappiness, lrugen->min_seq=
-[type]);
- 		success =3D true;
- 	}
-=20
-@@ -3959,6 +3963,7 @@ static bool inc_max_seq(struct lruvec *lruvec, unsign=
-ed long seq, int swappiness
- 	int prev, next;
- 	int type, zone;
- 	struct lru_gen_folio *lrugen =3D &lruvec->lrugen;
-+	struct mem_cgroup *memcg =3D lruvec_memcg(lruvec);
- restart:
- 	if (seq < READ_ONCE(lrugen->max_seq))
- 		return false;
-@@ -4012,6 +4017,7 @@ static bool inc_max_seq(struct lruvec *lruvec, unsign=
-ed long seq, int swappiness
- 	WRITE_ONCE(lrugen->timestamps[next], jiffies);
- 	/* make sure preceding modifications appear */
- 	smp_store_release(&lrugen->max_seq, lrugen->max_seq + 1);
-+	trace_mm_vmscan_lru_inc_max_seq(memcg, swappiness, lrugen->max_seq);
- unlock:
- 	spin_unlock_irq(&lruvec->lru_lock);
-=20
---=20
-2.17.1
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
