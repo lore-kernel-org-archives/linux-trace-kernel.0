@@ -1,214 +1,333 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35293E1D05
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 22:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775083099; cv=pass; b=sQfJSg5E/KpcyOxKflNzOQI63wGsdi/DYo9iI+BfSOJUqlKUsO90Wtn4+0dthtpAgCz28a8w7Gv+c5/OV2VyrwQdETmCfOMF7IfLKtf7emD8104VfKboKtNHug3NjV2KkTgmnZJYG3WULZieWHU/Y0/6KmbSY49wl1SDiLKiNMY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775083099; c=relaxed/simple;
-	bh=jXO8gD8XlEA3fjQ8sPVJzY/ZhuFjBKDxDVzAsc0vY6I=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mn0XyQIgT3hUrnzVKsdt5zzdB+CH+9+aZmH/I7rVDmgI+04jTDNWhFsJWJ8QARsC+r5AHB8hqDFryYZtfpfeGgzUY9LFCbrJyRUaU5ZEtzkmeA0ChiOA26Wrrp5pdJCMTe97Hy06Q8AiZqgcaIIXet6+DjwY2ULobwiZZygOQRc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uCxpQvvc; arc=pass smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uCxpQvvc"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-60581b491a0so67209137.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 15:38:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775083094; cv=none;
-        d=google.com; s=arc-20240605;
-        b=AHJvQ5lLk1dpJMcEr5+Pi2m442YBG+F0sNeTxCcF1D6T+Elz6yuk0wZGONhHTgfJBl
-         4l9fbK7lNd39P67cXYl5BS5pNbW88dA/bOZc14MdXcqW4oJ2kLimosQPNt/1WggZCBwc
-         pEoJoxe5DywoWl5nLhmYBRSrItf5sWfhF/lwwztynVivF3wAg6ll27EPVL+m2YrQFfo1
-         /kvQOaIXtVndfc2tbMXW97Kuu9dvcGS4+ZwByYJX7O1q6fZfgWp3sEhen81gpx4G4Xyj
-         dxHQ/dz3ErR/qheh4aZGhhKCJpBr67N9BluHCJJqV27iJG6qGVdR0Uhxcg4MwttX26GO
-         xagQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=euITMSp/xJeCQhYA18f4lx9pM8JTP5ZhaaxCuXCtMTI=;
-        fh=v4mENWdV4ukH212yi8vd+Oyt2Iad0GQjkwajr2g9EBc=;
-        b=KMUEdEHSDipIwRn6vvEPCYGcyTPp7mS2D46UkzL2AmjUGAlNhPEj2ffkxRLZQ2+icz
-         mOjmPUaHyp4sD4/cNnxvhwjjrwKdNJ1L4cVE3IHWbvsrRyrq6clECZD4YFNBeA6tSB3d
-         DFuxtHs+/y/E084wSLjsxHbkZJoBZ1vdM/zvFzHSlBpad6j0r93dI1MoInNQBxJQpiSF
-         gyguHInCwvLoDO/9erXplCzKVAmr4Z5UbIyoqM5aECaGOMsdO8PbLRtkm629fXijNWA7
-         blG3cF8Rq4i1PTvqQD/zgh0m9AzZ8MLH66CqDvlCz50bB1MUugYtm06nzuOThxf2eooA
-         tRoA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775083094; x=1775687894; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=euITMSp/xJeCQhYA18f4lx9pM8JTP5ZhaaxCuXCtMTI=;
-        b=uCxpQvvc+0hcjsMUN671rmbWXMrSyqwrqTf3/sro5V11OwUvG8Ux4E7yRNXL9y3nJk
-         P674tn4VbUHGQDn44atPoT2jydRhB5IKXGuziuL7PcdPXutGk8rTART8+nyy1xOkCswY
-         uprTVCuySafYSktTyvOuvbxK9+b+nWdPwTNcykQ3dvt4mi41f2SF8JyWJ8BkIVKzuLE6
-         +RJ9QZDZqSaNO3+p4G1aEXqgWLTf0gPd3Ts/BdmJ06GG61NVX3kmAs9JqE77rtNi8RjO
-         UDguyXscnRr21wcD1M/+qN1h1vtswv+mekWziGIOBSxPkCgsRGMaFTkZQeIbH74JCJAd
-         pTlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775083094; x=1775687894;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=euITMSp/xJeCQhYA18f4lx9pM8JTP5ZhaaxCuXCtMTI=;
-        b=XpKpFSNAGMc19rLZhPlpAsE+Xq0U1I0qckXkRBifXZ/kEgvrPE6IBgMGzVPEdJSCHY
-         2eR4C8nbj0IVsspfHn2nZAct+L94UJVQ/Qu3YIPYN+A2/S90XSQeBm4XBZu+YfHno3Y+
-         wbUAxI+3sk5HVDxq+uMmhmqIhKQOIrKzNzxVS6lCJ8YHuvDnP9BTIQKo5J1q8LwyianB
-         Gwfwwdmu/87NFcvOgNrG9MXQPpRKWTdlvfxoXWkEtaF3nRznCFdrbvmzG1Kd6SJ2M9eU
-         BO9zvszmxtenk3jiZdOxOZkvCZU12OJogedSlI4P6LwnVVTMrkp5BQ7V4r84n+TifEg9
-         qD5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXHx1FLE76u+Ra8nKxa3VxijHGp4BqECmeIU8B6g28ePo9IZeaUhH4p0XngTgABY2dGx+yOhFaYoy1QSg9fGBWaw8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVBchIz6z78RWy5uqtNRLJp0/ps4U5hbLOIRiwYfuOhA2IiEw2
-	qK6axnDqqSdKzHUVe3aWLXl6OdIXPGQMRo6SnM220GrAL1UB+Zt2+wqfpNi+LyCK8tUFQKtoo7c
-	CiKvWszE+DIG8Hf+lE261NY+5U5DGv+lL1Q3lJyyN
-X-Gm-Gg: ATEYQzxg89avJTLksHBtZOy3rl3LkYTsnUm81QqOOnE0ZE6lunGfmHizo7ZwjKi/tqp
-	ewFoqXDWYaEq7Pk7dotGSb+PG7P33YQcCSla0VCndw3Kc+dzwrWNJx5mgPOgFVx2xmAS8xz4YC4
-	rISW3oim1sMOu31VJ1wJvE1VUyY3YSCzxk1oDgn4pAlHjLp24adEMtFV96LuXyLXx1gzlIXDR+Y
-	tsju+BxcMbL0EMiCkWN0oJO++visaVTH3d7Nsfp8bDl20QoaFhEDKTKZleAHn3yjBGN3S8O2Hs+
-	4JXDaxqwyQPwHP0LRZTv/UgE/eyAAzqW2BraBp9YcRprVDcDmJQLjMYbGiDli5mGXx+jww==
-X-Received: by 2002:a05:6102:cd0:b0:5f5:40ab:2d65 with SMTP id
- ada2fe7eead31-60583fb718fmr487325137.22.1775083093776; Wed, 01 Apr 2026
- 15:38:13 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 Apr 2026 15:38:13 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 Apr 2026 15:38:12 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3>
-References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
- <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com> <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE81D3EF0B0;
+	Wed,  1 Apr 2026 22:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775083208; cv=none; b=OYv+Qij1ypxBR6g10lfGMkyrLWWZ/OBn9t+gSDnhg9JRqAl3NIJ9oJ6c70+AJt4wr38Tdzq8xDshKdta02coWjy2YTZYROUdegm11rCfw8mwYWBQIxcNjODrDWDWJEsjNsm5Fi6KLj9N3m/L8Waok6lCqkfqoqnukVFzCXvfk1E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775083208; c=relaxed/simple;
+	bh=dTX4I5ZPYTieklXqT8IfGTd3eZ5tJg+/lhm3wnu7Dl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JdcQ5+GbwREFCdWmU8xQawgkxhcaTOlGQdhbWKE2/KgKMn1Mq5shjBmIgBiRVveAqtoqslJqA/HMHfVWCcWR+ACSE7XOCFabfdYXPEtYeQvNJZv7iHmttlmp54Rn7etKN8juPx/pnfNtBWV8ok1fY2tgYf1SFJ9twJs3VsAo2W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 81D2FE0352;
+	Wed,  1 Apr 2026 22:39:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 7438620023;
+	Wed,  1 Apr 2026 22:39:56 +0000 (UTC)
+Date: Wed, 1 Apr 2026 18:40:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
+ Rogers <irogers@google.com>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v15 4/5] ring-buffer: Add persistent ring buffer
+ invalid-page inject test
+Message-ID: <20260401184055.2f932674@gandalf.local.home>
+In-Reply-To: <177494619065.71933.9842685686800241005.stgit@mhiramat.tok.corp.google.com>
+References: <177494615421.71933.3679132057004156013.stgit@mhiramat.tok.corp.google.com>
+	<177494619065.71933.9842685686800241005.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 1 Apr 2026 15:38:12 -0700
-X-Gm-Features: AQROBzCNhmfEK8q5oXqVxD-E8d6K5nvB8FmwqZKQD4ACNG80cfTfNWvs3WVsxNc
-Message-ID: <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
-To: Michael Roth <michael.roth@amd.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jroedel@suse.de, 
-	jthoughton@google.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4epogobj18rrgh3gykjen88bgr7uq4u3
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 7438620023
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+9loO0uPQcdRrACGcallEQYGbxIHK2BJA=
+X-HE-Tag: 1775083196-868687
+X-HE-Meta: U2FsdGVkX1+DtxZ6fGh5PSCmac8SvXwgJMF+ah6/6elT9kqKlWpaklv4XEO8u9LjMnf0tQmnp6I8DfpcgzBMeCouBjJzqYip3Mk4eSz4Pa9CE/dxp9Bdm+UAvfR/9M4oUlunCCZ1d1SEu41IteuuzvNGV9mlmTPS66akoL/aQcm8ULR91oOF+x1Cos3xzAXorXhTOdjRSSEjv9Yz6XQsXC66+N3z+wpiPR/B5/LKGlUE9xPqUkYc6MmKPZqpKrqmW/xzPwRZ6adWKuOH1VD0Dh1q9ktlNwIKafAZckq/WWCwad0uzpGVs3/JM3BGjc2DjtghlvaD9wwxmO588lAnJ1L8ehUWZUjJ
 
-Michael Roth <michael.roth@amd.com> writes:
 
->
-> [...snip...]
->
->>  static unsigned long kvm_get_vm_memory_attributes(struct kvm *kvm, gfn_t gfn)
->>  {
->> @@ -2635,6 +2625,8 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
->>  		return -EINVAL;
->>  	if (!PAGE_ALIGNED(attrs->address) || !PAGE_ALIGNED(attrs->size))
->>  		return -EINVAL;
->> +	if (attrs->error_offset)
->> +		return -EINVAL;
->>  	for (i = 0; i < ARRAY_SIZE(attrs->reserved); i++) {
->>  		if (attrs->reserved[i])
->>  			return -EINVAL;
->> @@ -4983,6 +4975,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
->>  		return 1;
->>  	case KVM_CAP_GUEST_MEMFD_FLAGS:
->>  		return kvm_gmem_get_supported_flags(kvm);
->> +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
->> +		if (vm_memory_attributes)
->> +			return 0;
->> +
->> +		return kvm_supported_mem_attributes(kvm);
->
-> Based on the discussion from the PUCK call this morning,
+I replied with mostly grammar fixes and some rewrites of text.
 
-Thanks for copying the discussion here, I'll start attending PUCK to
-catch those discussions too :)
+On Tue, 31 Mar 2026 17:36:30 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> it sounds like it
-> would be a good idea to limit kvm_supported_mem_attributes() to only
-> reporting KVM_MEMORY_ATTRIBUTE_PRIVATE if the underlying CoCo
-> implementation has all the necessary enablement to support in-place
-> conversion via guest_memfd. In the case of SNP, there is a
-> documentation/parameter check in snp_launch_update() that needs to be
-> relaxed in order for userspace to be able to pass in a NULL 'src'
-> parameter (since, for in-place conversion, it would be initialized in place
-> as shared memory prior to the call, since by the time kvm_gmem_poulate()
-> it will have been set to private and therefore cannot be faulted in via
-> GUP (and if it could, we'd be unecessarily copying the src back on top
-> of itself since src/dst are the same).
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add a self-destractive test for the persistent ring buffer.
 
-Could this be a separate thing? If I'm understanding you correctly, it's
-not strictly a requirement for snp_launch_update() to first support a
-NULL 'src' parameter before this series lands.
+  "self-destractive"? Do you mean "self-destructive"?
 
-Without this series, the startup procedure is to have memory set up in
-non-guest_memfd shared memory, and then snp_launch_update()-ed into
-guest_memfd private memory.
+Probably better to call it a "self-corrupting test".
 
-With this series, it is a little troublesome, but the startup procedure
-can still set up memory in guest_memfd shared memory, then copy
-everything out to some temporary memory, then set guest_memfd memory to
-private, then snp_launch_update() the temporary memory into guest_memfd
-private memory.
+> 
+> This will inject erroneous value to some sub-buffer pages (where
 
-We would be unnecessarily copying the src (now in some temporary memory)
-back onto itself. Can that be a separate patch series?
+            inject an erroneous
 
-Btw, if snp_launch_update() is going to accept a NULL src parameter and
-launch-update the src in-place:
+> the index is even or multiples of 5) in the persistent ring buffer
+> when kernel gets panic, and check whether the number of detected
 
-+ Will userspace have to set that memory to private before calling launch
-  update?
-    + If yes, then would we need some other mode of conversion that is
-      not ZERO and not quite PRESERVE (since PRESERVE is defined as that
-      the guest will see what the host wrote post-encryption, but it
-      sounds like launch update is doing the encryption)
-+ Or should launch update be called when that memory is shared? Will
-  launch update then also set that memory to private in guest_memfd?
+  when the kernel panics, and checks whether
 
->
-> So maybe there should be an arch hook to check a whitelist of VM types
-> that support KVM_MEMORY_ATTRIBUTE_PRIVATE when vm_memory_attributes=0,
-> and if we decide to enable it for SNP as part of this series you could
-> include the 1-2 patches needed there, or I could enable the SNP support
-> separately as a small series and I guess that would then become a prereq
-> for the SNP self-tests?
->
-> Not sure if additional enablement is needed for TDX or not before
-> KVM_MEMORY_ATTRIBUTE_PRIVATE would be advertised, but similar
-> considerations there.
->
-> -Mike
->
->>  #endif
->>  	default:
->>  		break;
->>
->> --
->> 2.53.0.1018.g2bb0e51243-goog
->>
+> invalid pages and the total entry_bytes are the same as recorded
+
+                                                  same as the recorded
+
+> values after reboot.
+> 
+> This can ensure the kernel correctly recover partially corrupted
+
+  This ensures that the kernel can correctly recover a partially corrupted
+
+> persistent ring buffer when boot.
+
+                         after a reboot or panic.
+
+> 
+> The test only runs on the persistent ring buffer whose name is
+> "ptracingtest". And user has to fill it up with events before
+
+                  The user has to fill it with events before a kernel panic.
+
+> kernel panics.
+> 
+> To run the test, enable CONFIG_RING_BUFFER_PERSISTENT_INJECT
+> and you have to setup the kernel cmdline;
+
+  and add the following kernel cmdline:
+
+Note, it's more proper to use a colon (:) than a semi-colon (;) when
+referencing an example on the next line.
+
+> 
+>  reserve_mem=20M:2M:trace trace_instance=ptracingtest^traceoff@trace
+>  panic=1
+> 
+> And run following commands after the 1st boot;
+
+  Run the following commands after the 1st boot:
+
+> 
+>  cd /sys/kernel/tracing/instances/ptracingtest
+>  echo 1 > tracing_on
+>  echo 1 > events/enable
+>  sleep 3
+>  echo c > /proc/sysrq-trigger
+> 
+> After panic message, the kernel will reboot and run the verification
+> on the persistent ring buffer, e.g.
+> 
+>  Ring buffer meta [2] invalid buffer page detected
+>  Ring buffer meta [2] is from previous boot! (318 pages discarded)
+>  Ring buffer testing [2] invalid pages: PASSED (318/318)
+>  Ring buffer testing [2] entry_bytes: PASSED (1300476/1300476)
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v15:
+>   - Use pr_warn() for test result.
+>   - Inject errors on the page index is multiples of 5 so that
+>     this can reproduce contiguous empty pages.
+>  Changes in v14:
+>   - Rename config to CONFIG_RING_BUFFER_PERSISTENT_INJECT.
+>   - Clear meta->nr_invalid/entry_bytes after testing.
+>   - Add test commands in config comment.
+>  Changes in v10:
+>   - Add entry_bytes test.
+>   - Do not compile test code if CONFIG_RING_BUFFER_PERSISTENT_SELFTEST=n.
+>  Changes in v9:
+>   - Test also reader pages.
+> ---
+>  include/linux/ring_buffer.h |    1 +
+>  kernel/trace/Kconfig        |   31 ++++++++++++++++++
+>  kernel/trace/ring_buffer.c  |   74 +++++++++++++++++++++++++++++++++++++++++++
+>  kernel/trace/trace.c        |    4 ++
+>  4 files changed, 110 insertions(+)
+> 
+> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> index 994f52b34344..0670742b2d60 100644
+> --- a/include/linux/ring_buffer.h
+> +++ b/include/linux/ring_buffer.h
+> @@ -238,6 +238,7 @@ int ring_buffer_subbuf_size_get(struct trace_buffer *buffer);
+>  
+>  enum ring_buffer_flags {
+>  	RB_FL_OVERWRITE		= 1 << 0,
+> +	RB_FL_TESTING		= 1 << 1,
+>  };
+>  
+>  #ifdef CONFIG_RING_BUFFER
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index e130da35808f..07305ed6d745 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -1202,6 +1202,37 @@ config RING_BUFFER_VALIDATE_TIME_DELTAS
+>  	  Only say Y if you understand what this does, and you
+>  	  still want it enabled. Otherwise say N
+>  
+> +config RING_BUFFER_PERSISTENT_INJECT
+> +	bool "Enable persistent ring buffer error injection test"
+> +	depends on RING_BUFFER
+> +	help
+> +	  Run a selftest on the persistent ring buffer which names
+> +	  "ptracingtest" (and its backup) when panic_on_reboot by
+
+  Does this do anything with the backup?
+
+> +	  invalidating ring buffer pages.
+
+ 	  This option will have the kernel check if the persistent ring
+ 	  buffer is named "ptracingtest", and if so, it will corrupt some
+ 	  of its pages on a kernel panic. This is used to test if the
+ 	  persistent ring buffer can recover from some of its sub-buffers
+ 	  being corrupted.
+
+[space]
+
+> +	  To use this, boot kernel with "ptracingtest" persistent
+
+                     , boot a kernel with a "ptracingtest" persistent
+
+> +	  ring buffer, e.g.
+> +
+> +	   reserve_mem=20M:2M:trace trace_instance=ptracingtest@trace panic=1
+> +
+> +	  And after the 1st boot, run test command, like;
+
+                               , run the following commands:
+
+> +
+> +	   cd /sys/kernel/tracing/instances/ptracingtest
+> +	   echo 1 > events/enable
+> +	   echo 1 > tracing_on
+> +	   sleep 3
+> +	   echo c > /proc/sysrq-trigger
+> +
+> +	  After panic message, the kernel reboots and show test results
+> +	  on the boot log.
+
+          After the panic message, the kernel will reboot and will show the
+          test results in the console output.
+
+> +
+> +	  Note that user has to enable events on the persistent ring
+> +	  buffer manually to fill up ring buffers before rebooting.
+
+	  Note that events for the ring buffer needs to be enabled prior to
+	  crashing the kernel so that the ring buffer has content that the
+	  test will corrupt.
+
+> +	  Since this invalidates the data on test target ring buffer,
+> +	  "ptracingtest" persistent ring buffer must not be used for
+> +	  actual tracing, but only for testing.
+
+	  As the test will corrupt events in the "ptracingtest" persistent
+	  ring buffer, it should not be used for any other purpose other
+	  than his test.
+
+
+> +
+> +	  If unsure, say N
+> +
+>  config MMIOTRACE_TEST
+>  	tristate "Test module for mmiotrace"
+>  	depends on MMIOTRACE && m
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 5ff632ca3858..fb098b0b4505 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -64,6 +64,10 @@ struct ring_buffer_cpu_meta {
+>  	unsigned long	commit_buffer;
+>  	__u32		subbuf_size;
+>  	__u32		nr_subbufs;
+> +#ifdef CONFIG_RING_BUFFER_PERSISTENT_INJECT
+> +	__u32		nr_invalid;
+> +	__u32		entry_bytes;
+> +#endif
+>  	int		buffers[];
+>  };
+>  
+> @@ -2079,6 +2083,21 @@ static void rb_meta_validate_events(struct
+> 	  ring_buffer_per_cpu *cpu_buffer) if (discarded)
+>  		pr_cont(" (%d pages discarded)", discarded);
+>  	pr_cont("\n");
+> +
+> +#ifdef CONFIG_RING_BUFFER_PERSISTENT_INJECT
+> +	if (meta->nr_invalid)
+> +		pr_warn("Ring buffer testing [%d] invalid pages: %s (%d/%d)\n",
+> +			cpu_buffer->cpu,
+> +			(discarded == meta->nr_invalid) ? "PASSED" : "FAILED",
+> +			discarded, meta->nr_invalid);
+> +	if (meta->entry_bytes)
+> +		pr_warn("Ring buffer testing [%d] entry_bytes: %s (%ld/%ld)\n",
+> +			cpu_buffer->cpu,
+> +			(entry_bytes == meta->entry_bytes) ? "PASSED" : "FAILED",
+> +			(long)entry_bytes, (long)meta->entry_bytes);
+> +	meta->nr_invalid = 0;
+> +	meta->entry_bytes = 0;
+> +#endif
+>  	return;
+>  
+>   invalid:
+> @@ -2559,12 +2578,67 @@ static void rb_free_cpu_buffer(struct
+> 	  ring_buffer_per_cpu *cpu_buffer) kfree(cpu_buffer);
+>  }
+>  
+> +#ifdef CONFIG_RING_BUFFER_PERSISTENT_INJECT
+> +static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	struct ring_buffer_cpu_meta *meta;
+> +	struct buffer_data_page *dpage;
+> +	u32 entry_bytes = 0;
+> +	unsigned long ptr;
+> +	int subbuf_size;
+> +	int invalid = 0;
+> +	int cpu;
+> +	int i;
+> +
+> +	if (!(buffer->flags & RB_FL_TESTING))
+> +		return;
+> +
+> +	guard(preempt)();
+> +	cpu = smp_processor_id();
+> +
+> +	cpu_buffer = buffer->buffers[cpu];
+> +	meta = cpu_buffer->ring_meta;
+> +	ptr = (unsigned long)rb_subbufs_from_meta(meta);
+> +	subbuf_size = meta->subbuf_size;
+> +
+> +	for (i = 0; i < meta->nr_subbufs; i++) {
+> +		int idx = meta->buffers[i];
+> +
+> +		dpage = (void *)(ptr + idx * subbuf_size);
+> +		/* Skip unused pages */
+> +		if (!local_read(&dpage->commit))
+> +			continue;
+> +
+> +		/*
+> +		 * Invalidate even pages or multiples of 5. This will lead 3
+
+							    This will cause 3
+
+-- Steve
+
+> +		 * contiguous invalidated(empty) pages.
+> +		 */
+> +		if (!(i & 0x1) || !(i % 5)) {
+> +			local_add(subbuf_size + 1, &dpage->commit);
+> +			invalid++;
+> +		} else {
+> +			/* Count total commit bytes. */
+> +			entry_bytes += local_read(&dpage->commit);
+> +		}
+> +	}
+> +
+> +	pr_info("Inject invalidated %d pages on CPU%d, total size: %ld\n",
+> +		invalid, cpu, (long)entry_bytes);
+> +	meta->nr_invalid = invalid;
+> +	meta->entry_bytes = entry_bytes;
+> +}
