@@ -1,189 +1,142 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881573F7867;
-	Wed,  1 Apr 2026 11:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D10940711B
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 11:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775042559; cv=none; b=evD6OsjpBsq1Zbd6kyFAeERHwjFP9bi5zaTVO3i0cw3QGICIn33+WtSL1UPV14cWgEeezuGIwTf9ZuGN+sVr2obKY7DZTHXxV50HhqiwnZ2gfQP6EJOK0/7+3cNA1VMKeEpaYJfmNnlyDbG86KBXofbHRavQsBJQN5AkfPP/z9o=
+	t=1775044072; cv=none; b=EhinC46ZfR/qBRqqjwxbJPS6ubygyMopb2tNHxtAeCSUvXIqZbj0z9z9lQdL2RM/zbsVi9odj3VprSKcX35fIPQ0M2J1R8QGjYZ9J467PvM3JYwjN3CJhzewl8k23FwYomtoFKWwsR0DSFzqlLQsAtCaUy4Rv9GnDqXkqGzjSIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775042559; c=relaxed/simple;
-	bh=Bx+tCa9Cg0O972ijwfPaasWig6LowsOhqwwdri2zYUk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mT8rBsZe2QKyluXh0cAOJDx0ObF2UskLpR0JtasYoJnkg1TabiD2iWiRKWWKCdmjMrVNS9Efq7HWVcfri8uMLmocDuFwofFglTe1QNHnn64wnfc/0UOsnQF+nyrHrqNwTybpNBryib8AO7m2MXewqZNuw90uv+xi4y90E3WDdkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [111.196.245.197])
-	by APP-01 (Coremail) with SMTP id qwCowAA34m3y_8xpatzbCw--.6665S3;
-	Wed, 01 Apr 2026 19:22:28 +0800 (CST)
-From: Pengpeng Hou <pengpeng@iscas.ac.cn>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	tom.zanussi@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	pengpeng@iscas.ac.cn
-Subject: [PATCH v2 2/2] tracing/hist: reject synthetic-field strings that exceed MAX_FILTER_STR_VAL
-Date: Wed,  1 Apr 2026 19:22:24 +0800
-Message-ID: <20260401112224.85582-2-pengpeng@iscas.ac.cn>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1775044072; c=relaxed/simple;
+	bh=zatSHNhn3kz3WE8tEQq06UNzCwt7u0XFUsfRa3bGCnU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h/IOs5OLpKiU5Y/1Hde2wmZ4mYjFIv3WxqcI+CWp2QUcs24OdaobzH97BJgL/pks1XaUEhJ5fhulASz09eeolwmdFIEBg0Qcr5wbZCSOckg8u5sFjZf2yInDBl2wULmSJRxfBW5bY6f37dmeTDRioUF0CH+wm6qhpuKX27dN9qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UuKoEqwh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UuKoEqwh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775044070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=zatSHNhn3kz3WE8tEQq06UNzCwt7u0XFUsfRa3bGCnU=;
+	b=UuKoEqwhM1MiBO4SHDSqPEgW4OZpvNN/dIo2jveqvttZACLZxrRdimyKV/29EGRVi6b8iU
+	Q+sHGU9R5c7P/abmGOnP3EWmJYNCiIkf58sfVxxRqR6HeVW6L87VkkGH8f5kZ96o3DXa5U
+	OlBbPxtIz1Auki4/crNGldiy1sbabUs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-151-CJTVSorSPCmK188NUVXJVg-1; Wed, 01 Apr 2026 07:47:47 -0400
+X-MC-Unique: CJTVSorSPCmK188NUVXJVg-1
+X-Mimecast-MFC-AGG-ID: CJTVSorSPCmK188NUVXJVg_1775044066
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-486fc42c83aso54233385e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 04:47:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775044066; x=1775648866;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SeycZ4XowGxMHB7V4ZVlWm1d+k5nSK/rI2Y/d3VTHjQ=;
+        b=bFTt5j4tfBDb7pEwzLGD4yMfkW2gbNU07sbkbeffnEI3sbd3jK2ORmqdDMUCfAghjf
+         qgjCHTUuHjD9bO3xZmiNGiN9zd9XnG12uFtzCmlLt+419SPE82Fw/nC6lAxdJJFzTMWt
+         piSCi7rFatd4MWReJAYlypASoBNZYiXF9SXIE5jqTQ01FLOYIGomJACtcVZxoCjTmZgn
+         pQl7rJentzycniyh1vFfEFabWWLC9QZpiNo6iU3qhHLhUoY2CfgrDxm7t+HNojjXyBFp
+         vgVBv0A7+OYcAoUh6Xzc3Nw26aq4/pafxfudYoB2kV7rzLKNKLJUQnMMeaV5tFMBAbeU
+         WWYA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2CoPeBONuMrDPL/YzYkYgZVcsj0oWZyqUGYT1WS4cvFzHBBKMlwnTFUbyxZDMdengHUWWrAGuyBSEYRu9z8JeDaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPWDl1E/UQIMquAKElzIIqW5w9uhtEJMXzU4Ha5ljalfSOKkoJ
+	YxNe770fok0I9DEvGqMlRfCwzUfaNjwXJitlnY8ne4KPWld5o3DfdZ+QTty+O29HUC08xMsWMAM
+	NzecOeEn3sIGfvb2oWKKqbU9G8rNDXZSQwVPKwxdhzbjWS+h2NvkJ/OMiOnaJRx0y3NBXLA3dm/
+	t4ZdjxpMlU
+X-Gm-Gg: ATEYQzzIs6k0fsiHwwgS9T1Eeldi4t441NbjQoGhOq0spjlMWLDVS08s+djRjRtaIHK
+	aE+EJGaucoUhysIO6pJJow+B0oWhKj6IYqIrRsuTjWduwcCLTHcsKt4A1CWYzWxjq29faaGDTPg
+	si5BsYciI9bmFx7/IyABP88JV9AC8TUwWpuZAr3j0qMsdWkQGNWvIax8QUMb8PIHQblLp7wLP7e
+	63V+vHzgBkL1jFxLSYeAXVQLHSViI+03QJbk866Kbi6mjGUEaZ0AtLUBTK96zMHg0Q+nsc1OIIT
+	XGEr1MbbEiV+GbGDB2VQ7i7pk6z2dgSY3hMKOdbGGDi0bcu3GdLJBjo8dZxWzNCiQDp+awgdOIC
+	xV7tDMyEscCuY7QNR9fJfXV/Yg9mk5PcEoVpCuLkPcx+FLcIA6+iFmb5RC1KwXhK+cYVs7RGiE9
+	/JrTIJ4RMtp+6OOuo=
+X-Received: by 2002:a05:600c:1e8c:b0:485:46fd:7887 with SMTP id 5b1f17b1804b1-4888356734dmr56518795e9.13.1775044065997;
+        Wed, 01 Apr 2026 04:47:45 -0700 (PDT)
+X-Received: by 2002:a05:600c:1e8c:b0:485:46fd:7887 with SMTP id 5b1f17b1804b1-4888356734dmr56518315e9.13.1775044065472;
+        Wed, 01 Apr 2026 04:47:45 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887c7510d3sm55825315e9.5.2026.04.01.04.47.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2026 04:47:44 -0700 (PDT)
+Message-ID: <21c06a117b044e77e6191d6ad7e8691ec8b7b53f.camel@redhat.com>
+Subject: Re: [PATCH] rv: Allow epoll in rtapp-sleep monitor
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Wed, 01 Apr 2026 13:47:43 +0200
+In-Reply-To: <87v7ec6n1n.fsf@yellow.woof>
+References: <20260331104918.2710853-1-namcao@linutronix.de>
+	 <58674d7f10c260369f5cb78599ba6ecb3804358f.camel@redhat.com>
+	 <87v7ec6n1n.fsf@yellow.woof>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAA34m3y_8xpatzbCw--.6665S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrWDJFW7AF1DAr4UAry3twb_yoWrurWxpr
-	WYv3s8G3yUJr1Igr43C3WUCFyrCw4kuw1DG3Wa9ws5tr1Yyrs7KrWjkry8Xas5tryjvwsI
-	gF4DXr98CwsruFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I2
-	62IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcV
-	AFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG
-	0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_Jw1l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUemhwUUUUU
-X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: AURaFxm766YqfnGFvSo8iymgzOtqZX461CaDYTKn-Fw_1775044066
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The synthetic field helpers build a prefixed synthetic field name and a
-hist trigger command in fixed MAX_FILTER_STR_VAL staging buffers. Even
-when each individual field or filter string stays within that limit, the
-combined "keys=...:synthetic_...=... if ..." command can exceed 256
-bytes and overrun the scratch buffer.
+On Tue, 2026-03-31 at 17:23 +0200, Nam Cao wrote:
+> Gabriele Monaco <gmonaco@redhat.com> writes:
+> > On Tue, 2026-03-31 at 12:49 +0200, Nam Cao wrote:
+> > > diff --git a/kernel/trace/rv/monitors/sleep/sleep.c
+> > > b/kernel/trace/rv/monitors/sleep/sleep.c
+> > > index c1347da69e9d..59091863c17c 100644
+> > > --- a/kernel/trace/rv/monitors/sleep/sleep.c
+> > > +++ b/kernel/trace/rv/monitors/sleep/sleep.c
+> > > @@ -162,6 +164,11 @@ static void handle_sys_enter(void *data, struct
+> > > pt_regs
+> > > *regs, long id)
+> > > =C2=A0=09=09=09break;
+> > > =C2=A0=09=09}
+> > > =C2=A0=09=09break;
+> > > +#ifdef __NR_epoll_wait
+> > > +=09case __NR_epoll_wait:
+> > > +=09=09ltl_atom_set(mon, LTL_EPOLL_WAIT, true);
+> > > +=09=09break;
+> > > +#endif
+> >=20
+> > Sashiko (the AI bot) wonders why this isn't ltl_atom_update() like othe=
+r
+> > things
+> > around here. Is that intentional?
+>=20
+> No that's not intentional. It does not affect verification result, but
+> still should be fixed. I will send v2.
+>=20
+> Funnily a colleague just told me earlier today about how good AIs are at
+> reviewing..
 
-Keep MAX_FILTER_STR_VAL as the tracing-side limit and reject synthetic
-field names or generated commands that do not fit in that bound before
-formatting them into the fixed buffers.
+Well, they're probably already better than (most of) us in those kind of
+consistency assessments..
 
-Fixes: 02205a6752f2 ("tracing: Add support for 'field variables'")
-Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
----
-Changes since v1: https://lore.kernel.org/all/20260329030950.32503-1-pengpeng@iscas.ac.cn/
+Anyway, I tried your changes and it seems to work as I'd expect. Feel free =
+to
+send a V2 and I can include it in the pull request.
 
-- keep MAX_FILTER_STR_VAL as the fixed tracing-side limit
-- reject overlong synthetic names and generated commands with -E2BIG
-- drop the previous dynamic-allocation approach
-
- kernel/trace/trace_events_hist.c | 57 +++++++++++++++++++++++---------
- 1 file changed, 41 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index f9c8a4f078ea..4172c91605af 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -2966,12 +2966,16 @@ find_synthetic_field_var(struct hist_trigger_data *target_hist_data,
- 	struct hist_field *event_var;
- 	char *synthetic_name;
- 
-+	if ((sizeof("synthetic_") - 1) + strlen(field_name) >=
-+	    MAX_FILTER_STR_VAL)
-+		return ERR_PTR(-E2BIG);
-+
- 	synthetic_name = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
- 	if (!synthetic_name)
- 		return ERR_PTR(-ENOMEM);
- 
--	strcpy(synthetic_name, "synthetic_");
--	strcat(synthetic_name, field_name);
-+	scnprintf(synthetic_name, MAX_FILTER_STR_VAL, "synthetic_%s",
-+		  field_name);
- 
- 	event_var = find_event_var(target_hist_data, system, event_name, synthetic_name);
- 
-@@ -3018,6 +3022,8 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	struct hist_field *event_var;
- 	char *saved_filter;
- 	char *cmd;
-+	size_t cmdlen;
-+	size_t off;
- 	int ret;
- 
- 	if (target_hist_data->n_field_var_hists >= SYNTH_FIELDS_MAX) {
-@@ -3048,13 +3054,36 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	/* See if a synthetic field variable has already been created */
- 	event_var = find_synthetic_field_var(target_hist_data, subsys_name,
- 					     event_name, field_name);
--	if (!IS_ERR_OR_NULL(event_var))
-+	if (IS_ERR(event_var))
-+		return event_var;
-+	if (event_var)
- 		return event_var;
- 
- 	var_hist = kzalloc_obj(*var_hist);
- 	if (!var_hist)
- 		return ERR_PTR(-ENOMEM);
- 
-+	saved_filter = find_trigger_filter(hist_data, file);
-+
-+	cmdlen = strlen("keys=") + strlen(":synthetic_") +
-+		 strlen(field_name) + strlen("=") + strlen(field_name);
-+	first = true;
-+	for_each_hist_key_field(i, hist_data) {
-+		key_field = hist_data->fields[i];
-+		if (!first)
-+			cmdlen++;
-+		cmdlen += strlen(key_field->field->name);
-+		first = false;
-+	}
-+
-+	if (saved_filter)
-+		cmdlen += strlen(" if ") + strlen(saved_filter);
-+
-+	if (cmdlen >= MAX_FILTER_STR_VAL) {
-+		kfree(var_hist);
-+		return ERR_PTR(-E2BIG);
-+	}
-+
- 	cmd = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
- 	if (!cmd) {
- 		kfree(var_hist);
-@@ -3062,28 +3091,24 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	}
- 
- 	/* Use the same keys as the compatible histogram */
--	strcat(cmd, "keys=");
-+	off = scnprintf(cmd, MAX_FILTER_STR_VAL, "keys=");
-+	first = true;
- 
- 	for_each_hist_key_field(i, hist_data) {
- 		key_field = hist_data->fields[i];
--		if (!first)
--			strcat(cmd, ",");
--		strcat(cmd, key_field->field->name);
-+		off += scnprintf(cmd + off, MAX_FILTER_STR_VAL - off, "%s%s",
-+				 first ? "" : ",", key_field->field->name);
- 		first = false;
- 	}
- 
- 	/* Create the synthetic field variable specification */
--	strcat(cmd, ":synthetic_");
--	strcat(cmd, field_name);
--	strcat(cmd, "=");
--	strcat(cmd, field_name);
-+	off += scnprintf(cmd + off, MAX_FILTER_STR_VAL - off,
-+			 ":synthetic_%s=%s", field_name, field_name);
- 
- 	/* Use the same filter as the compatible histogram */
--	saved_filter = find_trigger_filter(hist_data, file);
--	if (saved_filter) {
--		strcat(cmd, " if ");
--		strcat(cmd, saved_filter);
--	}
-+	if (saved_filter)
-+		scnprintf(cmd + off, MAX_FILTER_STR_VAL - off, " if %s",
-+			  saved_filter);
- 
- 	var_hist->cmd = kstrdup(cmd, GFP_KERNEL);
- 	if (!var_hist->cmd) {
--- 
-2.50.1 (Apple Git-155)
+Thanks,
+Gabriele
 
