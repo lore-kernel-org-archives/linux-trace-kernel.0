@@ -1,158 +1,127 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F1F47A0B4
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 14:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775054602; cv=pass; b=ehnsXFjJcXCi8Xq5JcaZBDf7vHCbqcGU68YdQNSKQ1gyzknPIWE+KmcRTKxFRgMfpxbB2KJBQOsmeH9hbHr6yHUWRjvUaZk2QoIYZvkBk/nXkdMcKtbtSfgGA7oQuIawBoodiFD5WM0N2MVoiiNusRKLMDQHbugzzGP8ZS6NznE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775054602; c=relaxed/simple;
-	bh=X5nfkx4/Qm3d1skqkseBbH+/HkmCh60oDdKDOFooGbo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OfkxXLLJhxeDx7CbvEMoKV6tdbBbV2AOH7FErjFpsuNZJarHHEasklXeryMe3wtgPK73yFDaRnpYWm0zdl1Zln+nw8YHsI3bjR1ArHN4BGbRZYdN3sEePIbvdkoZSDwRIDLNVZTuYPexJcoNIWnhYK5JMwoEnB2zQyuN+WxBzZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FMWfKyj8; arc=pass smtp.client-ip=209.85.221.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387D130C371;
+	Wed,  1 Apr 2026 15:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775055723; cv=none; b=q7qyKJAoSkYMPeQdOyBZRWd0BOEVX7KBAn8g1iRnUP5rkQlh5yxT3Q0MQaBiIxhGxkNJCsn/3A/lBy/z8O0HRtuFXRsAU2SwKHdDBQLPiPt2l3g2ZFk2/fgrR/CsYdqzl7oHyJk8NtV8d+zAdQo4h5LMw0RjSjXgwrkj5Qo4qzg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775055723; c=relaxed/simple;
+	bh=/41jHFMLvQEawsHuNLzVPOrLdBt8POZyw+0Y/fllTrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMsu8D5vdx2YG0w87tQ4ntDCVPNC2dkDt1qY3lOTNDVzAncc5W3qeu2jfxDh9poITq3ux1DDeZ4Q0Y8lyb9J3UpiZSu26mgw1OJ/MZmq+yHBaKXB2cCcaNLWEg4iX+bncgaeF0hRr1XXqRRtm4pXIbm50soaooCzJLUz/UsNs0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=cjbTdYsm; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMWfKyj8"
-Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-43cf5d14d6eso3280312f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 07:43:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775054600; cv=none;
-        d=google.com; s=arc-20240605;
-        b=E1u3hksLuI6XfG7XpUn+89o4TtMlqRew3WaQvQhP0Lppp1kt4OlB5GlfGf5wLpjMI3
-         XKFttGfeYMfqjYkcunayEnHc4nmlu6hfBnDbJM3yZ9c1TQ6iOQAacOKCQ/hKCqPmllIv
-         RsoQX2Hfuq+JeW+mZlhnPPlfWlNa53EOA5FQ2dAxl4K6vXerYtVKINIa7xibUfaIoR5Z
-         dLOvaceQcKwQG/ED2chStk3EByCRKPJqzCobl0TSjbUFZ+pKf56Me2jXGwxAWe5NSRLr
-         bq9UEPGKzs8UNM4rJHhU27hKW1O+6UHmOT0/ZcmUqb1KTsJW+dlBDYMZkGAWYG66nUVj
-         ds0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=XCEkWUgf5f/vT3IihkMjMEhZxsSNLlsM4yI7619bxWg=;
-        fh=RZ3oHHANMy3IqBYQ3BGIrO72wFEwC8BbBhCDa8WwvCo=;
-        b=Ef7tBE7SCicYBn81ytdHRW7aNJOV7L07/MtMXN6s67IH2mCRRX+VX0Y0i4vTJFK719
-         4hIjzTQRLV8FFm5DCLohLGPdW69e74vZAWou1R8/oA/lInKAtOcWJgcVJmf9EAHt+Sf/
-         9Wdn5HbXoeeSOXxeOWyvRKje6ydgX9sU34tUkxGKedy8XY2gbtqu7te4DmafO2ApH5kR
-         mVqeH3+7zLMlmBSVCt0qC1LLaAlqAF2E86PW3OCOsf8KKSzgObUmzBp0rCg1bwh5iABN
-         pZyVNwmLF/iaX9BMvngzcJ7HieHfkxr0Tv7HlMfo0e95ZJCQrNxIikOKph4U5DnFVer1
-         yLsw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775054600; x=1775659400; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCEkWUgf5f/vT3IihkMjMEhZxsSNLlsM4yI7619bxWg=;
-        b=FMWfKyj8jMCudcGedDgnHv3Ck97vQwgToDPyXH5qTJAR9Ir+2lRUQQ6HAR5+nhy9ia
-         g1eZmT51K5MCzfVGThjxFy/ev5mzfKZ9fpxv3DAJDI189/HWV+KOGeTJrxEysZebdOEb
-         xX7xgfHSQZpeTi3g4rVxsy/BYJhd3OPZ4+FfCb0rK+1R1WjKLM1WhuHaT8QGGaVZoyoV
-         li8fmg8R/QjvBfO0v21Ok2FtpOZ6Pn5PUdBqTYSyZAb0MqTj7qwnP+VafqPkh5Y8lJ4P
-         DjaeyqU7cYg9wGvmj5ElZbO6pbGMigf9LtjSgZR4NcqyR+DHmQt+nveaAFhvgF4pPm8N
-         3Zbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775054600; x=1775659400;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XCEkWUgf5f/vT3IihkMjMEhZxsSNLlsM4yI7619bxWg=;
-        b=flURfQOsOGRGB784EX82fAe/fCoVXJSc897ZufzvNUASN1uKera1JjLkR8KVk/edEh
-         pi8vFRuJAkBD/mVsxmJEgrt9ZA6/56W8A9PIaP7tRTjWk4NQmcrlUL2RmL4FyyF9CYLx
-         oV0l/z5yKT7YbEucClgBluaN6xgLRJ0vVgtDkBnWmGb4OywfiJyKae+7fHAfT3TlFNdm
-         CfF+umln5HRUCANgOM6o/1+9MD7iW4yu8dOG5jdS3uWbVRM7ZoyopW92j9ASPlN4bcwg
-         5HZi/SwXP2PUH1YE5OnnHzaFB6z639voBOKYUhaW5G2GosXe1QFARK+I+MvevAZUnXLJ
-         K72g==
-X-Forwarded-Encrypted: i=1; AJvYcCVinPsv+hMn+0AUwTAWaXqK0vn2Kn2docDZ7DDJfULcy3xIsfQurlG4sJZ2lUrbBhYYUpcVH+uqe5UkdRtcx7LDW3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytrJUwT3HmOg7bglWtT+J0PrapoaMf6/1uWHAlkrFGJkF0fmq6
-	Q8qglR+pJk0giSwwbBZiioIHznees6OEzSlFWAIXcqJQd7BTKq6x+Znlq//nvIt31ajkLjYd8Iq
-	XNRWGRKROETCn21EgswPH2RRpkehHblI=
-X-Gm-Gg: ATEYQzzAeqF4HaX9peIjVn5RP4SFy3bDA8PFbRvooCP/hYBPgSsPKNavJXGFtOajVYN
-	Y7IoxhFtietJOMXQeaVPS8J6lxNLF6p1O1RGmV8i6DGDArSYiS9VQrbj8GGxnQgMni2zECENHhU
-	JEr4wvttVHcRZsAyywMVfibt6Vn8nCdNHSVtbVKt1XsjC85p0dIOQpOHwwMjARiBnbz3imHk8Gc
-	2nyNsNgj0js1FqP+KwFRodf2LvKbGoXSgOJtilLITOzY07hRdtUgnBsSTKkBekrC0sqjrBb/HKV
-	w+2NHYTozdggFlymOvE+835TOL/XNzDaGvvCzaGdJdhFiiTI9eUIbHF4Dqw=
-X-Received: by 2002:a05:6000:2409:b0:43b:6a16:17e with SMTP id
- ffacd0b85a97d-43d1505b105mr7181347f8f.11.1775054599060; Wed, 01 Apr 2026
- 07:43:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="cjbTdYsm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+WzoGOwpf75acULbUdLCCSgMRdoRK75E6CWGbOYR5ZQ=; b=cjbTdYsmL1LugDvbI+G1od+x5X
+	U0sjnJlEsTkwTYb4fq9x5jxlzfY3jiMYTWT12dmcSoY7TJpyaZSzBJ3p5pP9eMjZfKu4dVMo60n8L
+	KA/a0G/X1klcmoEwRJX7k1QCZya2esiyqTnXRTmO5II47MA8aIVYXgL1YD9afND/II9K4YcMA3mJm
+	2/Qyqh8mBrFth06DINUoPWVgJKwTAOyudumsJlPpVIJDZcN+Ig/iWa4w/enSz4UbCWc+4lfOOoUjQ
+	LInkGozPY9JYdCZ09QBI/PyKFOvBeNXwD4xvrSj2FcJQa8QLKe/p7HfqdIskdleD81ndLF7vOgPEi
+	JWbqceOQ==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1w7x4t-0034E6-11;
+	Wed, 01 Apr 2026 15:01:54 +0000
+Date: Wed, 1 Apr 2026 08:01:48 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
+Message-ID: <ac0wz_eW5Zgi4t45@gmail.com>
+References: <20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org>
+ <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+ <acZPZ4XKy4QynznK@gmail.com>
+ <20260327223744.f246150adc1671f7605a4f0a@kernel.org>
+ <acpzhCBEPh-tKVqg@gmail.com>
+ <acqJk-zbyjIiy6hJ@gmail.com>
+ <20260331125827.157a833882830007ea9b0b31@kernel.org>
+ <acvjcCqIAeHyIiQN@gmail.com>
+ <20260401224853.d8ed517a344c4be51d371a9c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ac0hLyMuPHiZfnVc@computer> <20260401134921.362148-1-varunrmallya@gmail.com>
- <CAP01T75D7p2smSyoFvyZykgC5bJdobL_cqtk6-w+LmP4NP9SpQ@mail.gmail.com>
-In-Reply-To: <CAP01T75D7p2smSyoFvyZykgC5bJdobL_cqtk6-w+LmP4NP9SpQ@mail.gmail.com>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Wed, 1 Apr 2026 16:42:42 +0200
-X-Gm-Features: AQROBzBw2x8878imdwPXOOGBOW_LkGML6dkWFLRsSFWWVlrdf0uthfaebSWVysg
-Message-ID: <CAP01T74EV11nW1y_DbzO13UMPDx-aq11KHOfdjqT35QdN414Cw@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf: Reject sleepable kprobe_multi programs at attach time
-To: Varun R Mallya <varunrmallya@gmail.com>, jolsa@kernel.org
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	song@kernel.org, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260401224853.d8ed517a344c4be51d371a9c@kernel.org>
+X-Debian-User: leitao
 
-On Wed, 1 Apr 2026 at 16:08, Kumar Kartikeya Dwivedi <memxor@gmail.com> wrote:
->
-> On Wed, 1 Apr 2026 at 15:49, Varun R Mallya <varunrmallya@gmail.com> wrote:
-> >
-> > kprobe.multi programs run in atomic/RCU context and cannot sleep.
-> > However, bpf_kprobe_multi_link_attach() did not validate whether the
-> > program being attached had the sleepable flag set, allowing sleepable
-> > helpers such as bpf_copy_from_user() to be invoked from a non-sleepable
-> > context.
-> >
-> > This causes a "sleeping function called from invalid context" splat:
-> >
-> >   BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:169
-> >   in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1787, name: sudo
-> >   preempt_count: 1, expected: 0
-> >   RCU nest depth: 2, expected: 0
-> >
-> > Fix this by rejecting sleepable programs early in
-> > bpf_kprobe_multi_link_attach(), before any further processing.
-> >
-> > Fixes: 0dcac272540613d41c05e89679e4ddb978b612f1 ("bpf: Add multi kprobe link")
->
-> Please use the right format.
-> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
->
-> You can add the follow to your .gitconfig to generate the fixes tag.
-> [alias]
->     fixes = log -1 --format='Fixes: %h (\"%s\")'
->
-> > Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
-> > ---
-> >  kernel/trace/bpf_trace.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 0b040a417442..af7079aa0f36 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -2752,6 +2752,10 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
-> >         if (!is_kprobe_multi(prog))
-> >                 return -EINVAL;
-> >
-> > +       /* kprobe_multi is not allowed to be sleepable. */
-> > +       if (prog->sleepable)
-> > +               return -EINVAL;
-> > +
->
-> Looks ok to me, Jiri, could you also take a look?
->
-> >         /* Writing to context is not allowed for kprobes. */
-> >         if (prog->aux->kprobe_write_ctx)
-> >                 return -EINVAL;
-> > --
-> > 2.53.0
-> >
+On Wed, Apr 01, 2026 at 10:48:53PM +0900, Masami Hiramatsu wrote:
 
-Also, please add a selftest.
+> > The challenge extends beyond that. There are numerous early_parameter()
+> > definitions scattered throughout the kernel that may or may not be
+> > utilized by setup_arch().
+> >
+> > For example, consider `early_param("mitigations", ..)` in
+> > ./kernel/cpu.c. This modifies the cpu_mitigations global variable, which
+> > is referenced in various locations across different architectures.
+> >
+> > It's worth noting that we have over 300 early_parameter() instances in
+> > the kernel.
+> >
+> > Given this, analyzing all these early parameters and examining each one
+> > individually represents a substantial amount of work.
+>
+> Yes, that may require a substantial amount of work. But to improve
+> the kernel framework around the parameter handling, eventually we
+> need to examine each early parameter.
 
-pw-bot: cr
+I'm still uncertain about this approach. The goal is to identify and
+categorize the early parameters that are parsed prior to bootconfig
+initialization.
+
+Moreover, this work could become obsolete if bootconfig's initialization
+point shifts earlier or later in the boot sequence, necessitating
+another comprehensive analysis.
+
+Conversely, if we successfully move bootconfig initialization earlier
+by breaking the dependency of memblock (assuming this is feasible), the
+vast majority of early parameters would execute after bootconfig is
+configured, eliminating the need for this extensive categorization work.
+
+Please, feel free to tell what approach might be better for the project.
+
+> > Are there alternative approaches? At this point, I'm leaning toward
+> > breaking bootconfig's dependency on memblock, allowing us to invoke it
+> > before setup_arch(). Is this the only practical solution available?!
+>
+> Basically, the memblock dependency comes from allocating copy of data.
+> Only for the embedded bootconfig, we can just pass copy memory block
+> to the xbc_init(). Something like;
+>
+> xbc_init() {
+>  xbc_data = memblock_alloc();
+>  memcpy(xbc_data, data);
+>  __xbc_init(xbc_data);
+> }
+>
+> embedded_xbc_init() {
+>   __xbc_init(embedded_bootconfig_data);
+> }
+>
+> Afterwards, we can pass mixture of embedded bootcofnigt and initrd
+> bootconfig data to parser again.
+>
+> (But in this case, we must be careful not to override the early
+>  parameters that we have already applied.)
+
+Do you have any additional recommendations if I proceed with this
+approach?
+
+Thank you for your detailed responses and insights.
+--breno
