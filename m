@@ -1,151 +1,74 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFC145348A
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Apr 2026 14:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775052534; cv=pass; b=dODozBl5Kfdw5YiQyZ1UTz9pCmcGsu+WUpHaBotlSK3RY/t4b6FON2z0jUESn1gjg3+0feDfTjPmypVAGrRcEcuQwTZVJE4fia39gfBD08TBrV1xXC407RCotastu5Y6uw21a63Vpdg6YFzA2qVIwS4djIObQkRtP24PgMUcuSw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775052534; c=relaxed/simple;
-	bh=hirgCt1PZAXwyuuObnGxxAhuWbF5pVndJu+2sUatshc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FANXRagTYTLD9FBzSuSJy2w6heULqe+HncnoRzeyCmXyQKJldGmy5EJBtZ6++u1CFh1V4gJq+OA/BKdGwl5vQkFqRHMGuD0bkkXwR3PW+29BKjEgdfPqF/NM3TIUQR1MlKad7Ec/SBasjW6AyIyHed+HnvB2jdEDXTk010yoF7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QiHg6Se8; arc=pass smtp.client-ip=209.85.221.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiHg6Se8"
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-43cfd1f9fd1so2345906f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 07:08:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775052529; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZPccKpDcy4nCuMtjw6lrz3Gbi++sCuvj21/84QfF8oZ1hCVUrVmdaIf0ReCa9fICk0
-         eZnalEkuBSteaWClZO865tUCIjJR8w9SJ7Q/KQrpXU24iewipCsFWqYEFu6l21V1WZJM
-         N8Shi+8MbQU+95UV7R7aO1ZwO4x/UmlpobMLXgfN9NYjifB4s9IbfJ0xPM12KVeEh97r
-         t7DBGavLUHWvrLfL8AdnD86KuLkE4fa4q/wAUA2Zbw0RThOokbiWmZYdMQChL3aSoz8i
-         lxPTwOtmqeRBYZFfMsVRTggLNs1axuh/g/2K1FlcWdwIni2L8vG15AaRnHxy0ogeYQMY
-         keFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=a1hIUDWQSXTMNI+xukBaLoexapmPDMcad1HRGKU7yJ0=;
-        fh=MnQHD/VcUQ/DC5CgpeYqJoke4Qxl0VljB7tGQF9j6GI=;
-        b=RKa2CpBba0ZL6PBRJRF04z9IpPSPURrv35eQsDw7wcX7XxvQkg+wSVPMu3QYlcOoQ8
-         4VP9Y7uqjXo7isuhRR860RO6KlzZfyOdGY21IcmHWwghNyVm8C/MWVCAt4GA5z1Zhgap
-         fTnzcBqYKLoGrpBrkOXDYhEO+WCMAdpnb6ZC29NhL3NIST/vVWtTCtPd5SSdNd4Q+OQ7
-         ElAg/aCiJnEe3ktD+ZCgGzVbUrod++ka5oEMjGQ3USaFajycNUpMzI7KhmzseirouFxp
-         h8oYtFm35sjKXJvxiBITI9nEIdzLjuFewNaXE7RxI3USV91FExkaBl8ZMqluMSutj91+
-         bweQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775052529; x=1775657329; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1hIUDWQSXTMNI+xukBaLoexapmPDMcad1HRGKU7yJ0=;
-        b=QiHg6Se8TROA6PrwUEDZ40hAU/jZ8ZBH9/O3d5DS/Cdm4w5K474tLqfoNb/B6pdsGJ
-         QuNl/OLMoL3xcR6iBgwDIuYt14y2m78ruK2Tj1JtjzoyROsnjebTMVn8tMYC8OpQwXUi
-         HZ9dCUdKJGqXnJPcQCLGEH0I1PoU44d4eMDjHEXt9r7U3JC2vD9UHoj74m63mAeiUmoV
-         UgeNWK9R7Rd9LhKEDn8UEQJ1VPYKgGAO3fVEC4Av4DlDsfl0Wd1X0D1pZdxhcSYH3WC/
-         Ip5/9/jiY0Djn+byEckdkEShjH9mL+psGLU0prQaRf66W7G+FrlthFSuALE9PdE+qUl1
-         Yixw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775052529; x=1775657329;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a1hIUDWQSXTMNI+xukBaLoexapmPDMcad1HRGKU7yJ0=;
-        b=mJuL092HGbzcLoUl/BWmOPfblzdUoDYJmcUImHHrRtLbB8FhbPWPjt1fS1+VwDFS8U
-         sUo6v8Oqbm8nc/wsAYQ8nm1BQUTIyfIExTeK4OuB7IYpjPFvVrG4Kw7NlYZe0hf2j8gH
-         DIlqugTW9RAnQySo5WvmkgBleKuUZVtmwEY67vDPsdqpvb9TEvnMH28fk+NLOPpXbK1B
-         QcNsdVo60pJURjkQg5em6ImQOd+reA11EG0Gpg9ur/lCMcjNddSAxGqiVhC4ebDyzlgY
-         Y0RD0A+7DuSgdIx+bKoJjUpjipDaVtNGRK9lXX3tyvzjpbPLG8Qnha2H3YO9Up31lGbp
-         ue3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWWkM3iO6rLp2CMSGHnxtfgre8YNXw6E9qPbmcMmNwumlZVgs1klbsCHFrXPAt5GnlydZlU5S+y4QaT/y3sYD/MdNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd9fSk8CrZ89JQNIRPrMoas+V5XIkZwZ8M+dh2W7KHRV6N62rw
-	uC4X5I4BcZmBycem/kE3xs1IyZQtaBWjjr0zWmfqY/Fbmoryu7oJxVtkb/v0aHupLjKD4TAs9+u
-	fwuHi4Ptzz4PF/Byg6fcI4t2OuGhVfZY=
-X-Gm-Gg: ATEYQzz4CyjXuJEwrU1P9/LjGVUA48RkNvTRxR9/bTM+ypGj6moHkFPRPE7lCtKhGPC
-	y1KPJ2zXM06nT6tTrEqQl1Oe8dRgEAQwFkmlEy44HYKNq3BSxS+1hgbhjRcJv6GuXEUnNlBPn/a
-	fcgNdMHQnoKcjVBOeI2gjTeSgwKPFzj4CcYWRfBdufIArusItmS9HrlfKn1FHJbhm5lxrSO8iGe
-	WJCNE5gdB5ykyABRsFMzaTZMTy07HOfcoaAtaKpEEsQJ/5cXuQKbvCIaaiJxDGbjWM3CmBEImTh
-	lXKKZQrzHO1sntROweViIpk4m6+t3UORuP7TBo83akOBmiw+ug2XX2Oge1w=
-X-Received: by 2002:a05:6000:2909:b0:43d:29a:e42a with SMTP id
- ffacd0b85a97d-43d150c211dmr6936101f8f.29.1775052529247; Wed, 01 Apr 2026
- 07:08:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ADA188713;
+	Wed,  1 Apr 2026 14:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775053864; cv=none; b=UJEO2BDS5xz/FBDCdV22VMI0t5z3OkYG8jbmNpZjg1DBsL1NVxILSgCNXdGPa//ckNjMpm7zBu7ra1izmL7F4cdZfhHvoDsTagbJ5pqXYgnzu/pT95Jwlw/Y4xgOSFgLd4YRci/lL/VExdiu287giGqYC9wivrARJrBv6ktGZJI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775053864; c=relaxed/simple;
+	bh=V1j85KccNP4vzahpbwrU5byKdmReoke5cVrfgNnXFCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f4mrHqGiEMLXhtDsRg0+JiTgdX8q31KbqA9i2fcJpkFrGZUPpw5mcgkpQUgRyUIUZgeiToHtTdtXcxZkehr8GrkvRbIJXEqVZ1f5p7VfcfRmfYxC4QPBqIKwrGdd9p3Z4sv/88elIBRlXLC87QkOAQ1ZAL4t4H7+dLhVztFr7NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 61FE6C9507;
+	Wed,  1 Apr 2026 14:31:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 27C5060011;
+	Wed,  1 Apr 2026 14:30:59 +0000 (UTC)
+Date: Wed, 1 Apr 2026 10:31:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org,
+ kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix trace remotes read with an offline CPU
+Message-ID: <20260401103159.747ae168@gandalf.local.home>
+In-Reply-To: <20260401025003.3258729-1-vdonnefort@google.com>
+References: <20260401025003.3258729-1-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ac0hLyMuPHiZfnVc@computer> <20260401134921.362148-1-varunrmallya@gmail.com>
-In-Reply-To: <20260401134921.362148-1-varunrmallya@gmail.com>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Wed, 1 Apr 2026 16:08:12 +0200
-X-Gm-Features: AQROBzAyPknqbXnEAJ3AwqA7IYVLrAYRqJiT7mIsqGERF9toiQ9NeCx7u4QvpN8
-Message-ID: <CAP01T75D7p2smSyoFvyZykgC5bJdobL_cqtk6-w+LmP4NP9SpQ@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf: Reject sleepable kprobe_multi programs at attach time
-To: Varun R Mallya <varunrmallya@gmail.com>, jolsa@kernel.org
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	song@kernel.org, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 27C5060011
+X-Stat-Signature: hxiu8u6ua6b3ua88smrhfqxkp94uukpd
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+fRI2jEW0cBKVq5BotIDYbxuYgogb14tU=
+X-HE-Tag: 1775053859-255540
+X-HE-Meta: U2FsdGVkX196ci4253e2PZ2LlfWnoCli1tYKsShI+3lDTmajT/PzMgIPo7xqf04B+o5p/Z9N6vkRyHZUUKWOI3OnMYc6NtadV8kLdCP0eXD00EMyKxVrrCoDUG18ZzoB5d3o/A63l8/MKOEpFlSy866nTe1VEO5elrjJP/75xm3vlRtS6qi2Gr60PlcG4uwH9zMdiBXos4QjCuSd12A7OoCj3t0QgWuH9A7SJCCNYgUkWn+I+WWDePCvQkUUgij6i9LRncMZo/zXpbF1KaIOOGkL3Teu9sAhIDpwkQrDwbFhlkkiLf9QNTkB6+ZEa5i8y+2AJNKa4y0YViNWFQWxbCxoes8sNkuufhWuom62p/Yw5cVG3BDvEx+XmC4zmmuW7JqJukk+HLnPeZlAKnVX7Q==
 
-On Wed, 1 Apr 2026 at 15:49, Varun R Mallya <varunrmallya@gmail.com> wrote:
->
-> kprobe.multi programs run in atomic/RCU context and cannot sleep.
-> However, bpf_kprobe_multi_link_attach() did not validate whether the
-> program being attached had the sleepable flag set, allowing sleepable
-> helpers such as bpf_copy_from_user() to be invoked from a non-sleepable
-> context.
->
-> This causes a "sleeping function called from invalid context" splat:
->
->   BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:169
->   in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1787, name: sudo
->   preempt_count: 1, expected: 0
->   RCU nest depth: 2, expected: 0
->
-> Fix this by rejecting sleepable programs early in
-> bpf_kprobe_multi_link_attach(), before any further processing.
->
-> Fixes: 0dcac272540613d41c05e89679e4ddb978b612f1 ("bpf: Add multi kprobe link")
+On Wed,  1 Apr 2026 03:50:01 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Please use the right format.
-Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+> This small series is fixing non-consuming read of a trace remote when the
+> trace_buffer is created after a CPU is offline.
+> 
+> It also extends hotplug testing coverage to include this test case.
+> 
+> I have based this series on top of kvmarm/next which contains the hypervisor
+> tracing patches.
+> 
+> Vincent Donnefort (2):
+>   tracing: Non-consuming read for trace remotes with an offline CPU
+>   tracing: selftests: Extend hotplug testing for trace remotes
 
-You can add the follow to your .gitconfig to generate the fixes tag.
-[alias]
-    fixes = log -1 --format='Fixes: %h (\"%s\")'
+This looks fine to me. Since they only affect the new remote code and will
+not conflict with anything I'm doing, they can go on top of the KVM patches
+in the arm64 tree.
 
-> Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
-> ---
->  kernel/trace/bpf_trace.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 0b040a417442..af7079aa0f36 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2752,6 +2752,10 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->         if (!is_kprobe_multi(prog))
->                 return -EINVAL;
->
-> +       /* kprobe_multi is not allowed to be sleepable. */
-> +       if (prog->sleepable)
-> +               return -EINVAL;
-> +
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Looks ok to me, Jiri, could you also take a look?
+for the series.
 
->         /* Writing to context is not allowed for kprobes. */
->         if (prog->aux->kprobe_write_ctx)
->                 return -EINVAL;
-> --
-> 2.53.0
->
+Thanks,
+
+-- Steve
