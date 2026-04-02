@@ -1,102 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E131299943;
-	Thu,  2 Apr 2026 03:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B290361675
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 04:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775101965; cv=none; b=hdKaIoS6lAdpQ5cexPyMFHm8qCm5uQWM7TfN99858MA95obDxgJhghM3J8m8LRnM37tXuQkXUuIARo6eSeG2zPzFJtbQqWneSLQ2jI4Pi76TXhzBiwR/N9D3I9q7bpAyrT3PWASQYpJOkBvv2/5KFmKnzddR6CCwxebkmLeSmPc=
+	t=1775103210; cv=none; b=C24Esk14nTifmqlwQB1ArVQGJgTJsVXECg2EdpghKxCqVHskm9CRpliaKmLVdRsjT7JTZMxz1/kWA14APwcfZ4EAwbFzKNM/+eiDneSYMus7a5BngaLCx5FEZXibQ/NZ3YJR76LxpAzDgkmJI6EEGFJwaPWL5XM6m75AgxylnEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775101965; c=relaxed/simple;
-	bh=hNmrcDnWgM6OmcyQmaWG+UQvSQwLirqjG/9/hDBhmdA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ID2JMQOUJ3jx7atLk4T/ypp0EUDA1qdJuLyEBetdeHAfyV5qwSDAlKnGLQ4RxSH+iGdAVWsyPn2vwNRuOh12QO9l4Yyc/Ps4NIOxO5fxkk2L+JEPxjaCMNvZIW+WBkNBOcahw1QbtNlrDQ74qkGdZCCsL5VzIbIL0+Z2agTMjoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oovXpSM5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775103210; c=relaxed/simple;
+	bh=EZ5L9/8vCKGwNhWhMjSjHfJAz1UuMsebK0N3Q08CBDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZL8QmUNDZy91QQxyt7F3JHoXmWIGMJug4bc/VCeD8OD4Qhvq9Ukqqiy+SHXypFX6JT1tV2dRePxnegjSdQ89GEC/x0rI8RWAO/3u1eiGOikDZx65BmlsfHZ9P2f3Hrt45j4zIG5vTKsU4QNZ1HmTLOFoR9Rxa/iqIABgCT2EH44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nwQ6P4pw; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oovXpSM5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C66DC19423;
-	Thu,  2 Apr 2026 03:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775101964;
-	bh=hNmrcDnWgM6OmcyQmaWG+UQvSQwLirqjG/9/hDBhmdA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oovXpSM5lGOZMjCl5Z2R67fKz8X2d6Sa5qge7hSgqSjzWtAED++RGIs06RLZJYXWj
-	 2W0Q9KoMvpNlMs+QDM5WP77v/80nfJC208krXx1yLrHMy2pbbJL326NxeMKu9m8Ohl
-	 bbQ+cKr7TYKkpLj1Nzm117iYE98u8U9XxLPV3isA3gvq2AX0Cg/5v9gLLYYC6ZEmWT
-	 JSN2LRe3MtWk9CpSqv8le27Q97Ermyk3UXxWpHBwSzwYLSYHjd+O+cKlQqNvgYSeup
-	 ojyip5MIdc2BRh3Gf8KO2of88TDIp7XdNs/do9Sizps+HrPngmpgoLXKlzuUHxDHBJ
-	 6bDpLBlFVbCUA==
-Date: Thu, 2 Apr 2026 12:52:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] bootconfig: Skip printing early params to cmdline from
- bootconfig
-Message-Id: <20260402125238.a470f6fa5497c55f3484f72d@kernel.org>
-In-Reply-To: <ac0-rrQk8BoS9B5k@gmail.com>
-References: <177505217508.1807250.22866077077504564.stgit@mhiramat.tok.corp.google.com>
-	<ac0-rrQk8BoS9B5k@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nwQ6P4pw"
+Message-ID: <f0342ed8-e390-4913-88c6-4c707017be00@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1775103196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qyDssAxOmEqYRcnBxOmr1uAqXti1Tp5or+KW3X9Gg88=;
+	b=nwQ6P4pwOqzDhTpFlILFqdJtGlw21yGf4JISxn72gQGKv6pobyypFbyVSmyxNwvqmE2K+1
+	WFVWyU62MJKsius6dxf/ckqhZzvxx0nHd1vXm94Qk6jYZ65uCh8i2z3sC6u3vviGurJkx4
+	1MiF4Sn6zLfogeb2YP9XR2DicnnDJEg=
+Date: Thu, 2 Apr 2026 12:13:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Subject: Re: [PATCH bpf v3 1/2] bpf: Reject sleepable kprobe_multi programs at
+ attach time
+Content-Language: en-US
+To: Varun R Mallya <varunrmallya@gmail.com>, bpf@vger.kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, memxor@gmail.com,
+ yonghong.song@linux.dev, jolsa@kernel.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260401191126.440683-1-varunrmallya@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <20260401191126.440683-1-varunrmallya@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 1 Apr 2026 08:51:48 -0700
-Breno Leitao <leitao@debian.org> wrote:
-
-> On Wed, Apr 01, 2026 at 11:02:55PM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > If user configures `kernel.key` in bootconfig, the 'key' is shown
-> > in kernel cmdline (/proc/cmdline) and kernel boot parameter
-> > handler associated with 'key' is invoked. However, since the
-> > bootconfig does not support the parameter defined with early_param,
-> > those keys are shown in '/proc/cmdline' but not handled by kernel.
-> > 
-> > This could easily mislead users who expected to be able to specify
-> > early parameters via the boot configuration, leading them to wonder
-> > why it doesn't work.
-> > 
-> > Let's skip printing out early params to cmdline buffer, and warn
-> > if there is such parameters in bootconfig.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 2/4/26 03:11, Varun R Mallya wrote:
+> kprobe.multi programs run in atomic/RCU context and cannot sleep.
+> However, bpf_kprobe_multi_link_attach() did not validate whether the
+> program being attached had the sleepable flag set, allowing sleepable
+> helpers such as bpf_copy_from_user() to be invoked from a non-sleepable
+> context.
 > 
-> Reviewed-by: Breno Leitao <leitao@debian.org>
-
-Thanks, but sashiko found a problem.
-
-https://sashiko.dev/#/patchset/177505217508.1807250.22866077077504564.stgit%40mhiramat.tok.corp.google.com
-
-| Will this inadvertently filter out parameters that have both early and
-| normal handlers?
-| For example, "console" is defined as both an early parameter and a normal
-| parameter. If a user configures kernel.console in bootconfig, this loop
-| will find the early_param entry and return true.
-
-Let me update it. I need to check (is_early_param() && !is_normal_param()).
-
-Thanks!
-
+> This causes a "sleeping function called from invalid context" splat:
 > 
-> > +static bool __init is_early_param(const char *param)
-> > +{
-> > +	const struct obs_kernel_param *p;
-> > +
-> > +	for (p = __setup_start; p < __setup_end; p++) {
-> > +		if (p->early && parameq(param, p->str))
-> > +			return true;
-> > +	}
+>   BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:169
+>   in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1787, name: sudo
+>   preempt_count: 1, expected: 0
+>   RCU nest depth: 2, expected: 0
 > 
-> nit: I don't think you need the parenthesis ({) for the ifs in here.
+> Fix this by rejecting sleepable programs early in
+> bpf_kprobe_multi_link_attach(), before any further processing.
 > 
+> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+> Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
 
+Acked-by: Leon Hwang <leon.hwang@linux.dev>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The cover letter is missing, and the change logs are missing, too.
+
+[...]
+
