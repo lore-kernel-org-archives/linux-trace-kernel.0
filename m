@@ -1,256 +1,149 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DF81A294
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 04:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD69D2D978C
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 06:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775103244; cv=none; b=V9VcyGU5j82oDsF0grpacJCSfTUwdk/GI71MA1eHTmQ0GudxGgi1eRhemrWATLI3mEnY2K8UkN2SXgDhKLDXkJmhaVMvYZiYoQwsASYqnT7IG1gW8e1eAzyRVQKOoI66NzJ7LdXihokZPEuWeg7G6nfcllsTMSeMl40vrtiQE9c=
+	t=1775110400; cv=none; b=GdypjZaroSD2mBVj43mr4eoXtiCJ6iEy0lC13wXeeNrniOdA5yMbWbedK9YnDYA57GF+XDuucqANgzgnLV+yWnNzZO64l6VOc383XtKvmc8RLsqAaWbWFpEqvQgGdvMKv3++vTP+lbMFITJN+BCE12cNvW1f8V1TekpKxMszbf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775103244; c=relaxed/simple;
-	bh=FUX31B9jO+2YDQ//I9SUc7yjDD/x+fdGS1AQ6NG66K8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HL8mutZxOaQpSPlD7jqid0xu6Zgb6W0li9ZPKfUdr2+0d4YWTvLxpXP2b5OPC8v+yRKUqe6GGkekCyECD8CVIHfZu5OetoRSXGVNmZm5V0YAh6nAI4+gWFjSCxjKoVxvQpXKunyWbbQGYMlsKyB8iGVwlhYgPDZxE8pidpTq0uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ptyE7T95; arc=none smtp.client-ip=95.215.58.189
+	s=arc-20240116; t=1775110400; c=relaxed/simple;
+	bh=xwROnB8ZHZwreos1FVUWmA9xvD2L+dNOy4XxTaASs7Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WCFr6uADOAwZf4HboHLFljLDfKwUXZ99OTXSrpit0DLKQSJlZvkKc66W/osEDh9VtdS3f+6911vXUxY0Jiaog24pgHE6V7cuzcchmuxoty41h9PiDxa+HutetkQ/tovQO8jtGG2VUWXViKpAf/F4NTxxXHdn7i8WJDzO4BqMKzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DvR7wtzy; arc=none smtp.client-ip=95.215.58.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ptyE7T95"
-Message-ID: <a6ed5221-876c-499e-aacf-a9f6cac438f1@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DvR7wtzy"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775103241;
+	t=1775110396;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4cP9KTGZrxxjUnGTO4F59TXW5UOjeg7N0Y/qlqLazzA=;
-	b=ptyE7T95rQqp90FJFQcwnePl4shSKs+OyJo8gP56+M3v46+K+UMxCzzTTBrPA2h59j6YdP
-	7snmzILy5vxC/gSFhqaoYFwy9If89jwvX20gPx3IUKUir4S5Zt/hz2YRAGEhWHBWH6WnCO
-	8r9uNmmF5gfEq6euDolfeHw9x8wnnao=
-Date: Thu, 2 Apr 2026 12:13:49 +0800
+	bh=xlihXvEHaOsXUwuLdGN3XtJu9WHJhoFdD4aqE/VGw5M=;
+	b=DvR7wtzyf7HLbiFsO7vzzGV8m5fC3jA8QrDm2YzRIg7luXJU0cnp/yqmgPntYqWrIMwddZ
+	T5VSLSDM60q0Q+n2oMk9U01rKE2AxcCDYtlndMEVKr6naQ2JiL1n5pzu94N1/xh3Rz3JcW
+	iPFGswgGY3MWmSA2lzRruITkKkUS/tE=
+From: Leon Hwang <leon.hwang@linux.dev>
+To: menglong8.dong@gmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	jiang.biao@linux.dev,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mark.rutland@arm.com,
+	martin.lau@linux.dev,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	sdf@fomichev.me,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	Leon Hwang <leon.hwang@linux.dev>
+Subject: Re: [PATCH bpf-next v3 0/6] bpf trampoline support "jmp" mode
+Date: Thu,  2 Apr 2026 14:12:51 +0800
+Message-ID: <20260402061251.273705-1-leon.hwang@linux.dev>
+In-Reply-To: <20251118123639.688444-1-dongml2@chinatelecom.cn>
+References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf v3 2/2] selftests/bpf: Add test to ensure kprobe_multi
- is not sleepable
-Content-Language: en-US
-To: Varun R Mallya <varunrmallya@gmail.com>, bpf@vger.kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, memxor@gmail.com,
- yonghong.song@linux.dev, jolsa@kernel.org, rostedt@goodmis.org,
- mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260401191126.440683-1-varunrmallya@gmail.com>
- <20260401191126.440683-2-varunrmallya@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <20260401191126.440683-2-varunrmallya@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Above all, I think the test should reproduce the BUG without the fix.
+On Tue, Nov 18, 2025 at 08:36:28PM +0800, Menglong Dong wrote:
+>For now, the bpf trampoline is called by the "call" instruction. However,
+>it break the RSB and introduce extra overhead in x86_64 arch.
+>
+>For example, we hook the function "foo" with fexit, the call and return
+>logic will be like this:
+>  call foo -> call trampoline -> call foo-body ->
+>  return foo-body -> return foo
+>
+>As we can see above, there are 3 call, but 2 return, which break the RSB
+>balance. We can pseudo a "return" here, but it's not the best choice,
+>as it will still cause once RSB miss:
+>  call foo -> call trampoline -> call foo-body ->
+>  return foo-body -> return dummy -> return foo
+>
+>The "return dummy" doesn't pair the "call trampoline", which can also
+>cause the RSB miss.
+>
+>Therefore, we introduce the "jmp" mode for bpf trampoline, as advised by
+>Alexei in [1]. And the logic will become this:
+>  call foo -> jmp trampoline -> call foo-body ->
+>  return foo-body -> return foo
+>
+>As we can see above, the RSB is totally balanced after this series.
+>
 
-I update the test to reproduce the BUG, then verify that the BUG will be
-rejected with the fix.
+Hi, this is a late footnote for this optimization.
 
-The updated test is attached at last.
+As this optimization landed in the 6.19 kernel, the function graph feature
+of bpfsnoop [1] cannot work because of the missing tracee's FP/IP for
+fexit.
 
-On 2/4/26 03:11, Varun R Mallya wrote:
-> Add a selftest to ensure that kprobe_multi programs cannot be attached
-> using the BPF_F_SLEEPABLE flag. This test succeeds when the kernel
-> rejects attachment of kprobe_multi when the BPF_F_SLEEPABLE flag is set.
-> 
-> Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
-> ---
->  .../bpf/prog_tests/kprobe_multi_test.c        | 41 +++++++++++++++++++
->  .../bpf/progs/kprobe_multi_sleepable.c        | 13 ++++++
->  2 files changed, 54 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/progs/kprobe_multi_sleepable.c
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> index 78c974d4ea33..f02fec2b6fda 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> @@ -10,6 +10,7 @@
->  #include "kprobe_multi_session_cookie.skel.h"
->  #include "kprobe_multi_verifier.skel.h"
->  #include "kprobe_write_ctx.skel.h"
-> +#include "kprobe_multi_sleepable.skel.h"
->  #include "bpf/libbpf_internal.h"
->  #include "bpf/hashmap.h"
->  
-> @@ -633,6 +634,44 @@ static void test_attach_write_ctx(void)
->  }
->  #endif
->  
-> +static void test_attach_multi_sleepable(void)
-> +{
-> +	struct kprobe_multi_sleepable *skel;
-> +	int err;
-> +
-> +	skel = kprobe_multi_sleepable__open();
-> +	if (!ASSERT_OK_PTR(skel, "kprobe_multi_sleepable__open"))
-> +		return;
-> +
-> +	err = bpf_program__set_flags(skel->progs.handle_kprobe_multi_sleepable,
-> +				     BPF_F_SLEEPABLE);
-> +	if (!ASSERT_OK(err, "bpf_program__set_flags"))
-> +		goto cleanup;
-> +
-> +	/* Load should succeed even with BPF_F_SLEEPABLE for KPROBE types */
-> +	err = kprobe_multi_sleepable__load(skel);
-> +	if (!ASSERT_OK(err, "kprobe_multi_sleepable__load"))
-> +		goto cleanup;
-> +
-> +	/* Attachment must fail for kprobe.multi + BPF_F_SLEEPABLE.
-> +	 * Also chosen a stable symbol to send into opts
-> +	 */
-> +	LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
-> +	const char *sym = "vfs_read";
+Before this optimization,
 
-They should stay with skel and err. See below.
+caller
+-> call icmp_rcv                caller IP/FP
+   -> call trampoline           icmp_rcv IP/FP
+      -> call icmp_rcv body     trampoline IP/FP
+      <- return to trampoline
+   <- return to caller
 
-> +
-> +	opts.syms = &sym;
-> +	opts.cnt = 1;
-> +
-> +	skel->links.handle_kprobe_multi_sleepable =
-> +		bpf_program__attach_kprobe_multi_opts(skel->progs.handle_kprobe_multi_sleepable,
-> +						      NULL, &opts);
-> +	ASSERT_ERR_PTR(skel->links.handle_kprobe_multi_sleepable,
-> +		       "bpf_program__attach_kprobe_multi_opts");
+After this optimization,
 
-As Kumar suggested, better to also verify the error here.
+caller
+-> call icmp_rcv                caller IP/FP
+   -> jump to trampoline
+      -> call icmp_rcv body     trampoline IP/FP
+      <- return to trampoline
+   <- return to caller
 
-	ASSERT_EQ(libbpf_get_error(skel->links.handle_kprobe_multi_sleepable),
--EINVAL,
-		  "bpf_program__attach_kprobe_multi_opts error");
+As a result, the function call stack entry for icmp_rcv has gone.
 
-> +
-> +cleanup:
-> +	kprobe_multi_sleepable__destroy(skel);
-> +}
-> +
+It can be confirmed by bpf_get_stack*() helpers.
 
-[...]
+$ sudo bpfsnoop -k icmp_rcv --output-stack -v
+
+In 6.14,
+
+0xffff8000802bda44:bpfsnoop_fn+0x6a4
+0xffff8000802bda44:bpfsnoop_fn+0x6a4
+0xffff8000802bd064:bpf_trampoline_6442573163+0xa4
+0xffffc7825c984df0:icmp_rcv+0x8
+0xffffc7825c91bcb8:ip_protocol_deliver_rcu+0x48
+0xffffc7825c91bfd4:ip_local_deliver_finish+0x8c
+0xffffc7825c91c0d0:ip_local_deliver+0x88
+
+In 6.19,
+
+0xffffffffc0209069:bpfsnoop_fn+0x449
+0xffffffffc01ef2a4:bpf_trampoline_6442568724+0x64
+0xffffffffb1085cda:ip_protocol_deliver_rcu+0x1ea
+0xffffffffb1085d96:ip_local_deliver_finish+0x86
+0xffffffffb1085e95:ip_local_deliver+0x65
+
+So, it would surprise users who care about the tracee entry.
+
+[1] https://github.com/bpfsnoop/bpfsnoop
 
 Thanks,
 Leon
 
----
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-index 78c974d4ea33..d59cf840da83 100644
---- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-@@ -10,6 +10,7 @@
- #include "kprobe_multi_session_cookie.skel.h"
- #include "kprobe_multi_verifier.skel.h"
- #include "kprobe_write_ctx.skel.h"
-+#include "kprobe_multi_sleepable.skel.h"
- #include "bpf/libbpf_internal.h"
- #include "bpf/hashmap.h"
-
-@@ -633,6 +634,52 @@ static void test_attach_write_ctx(void)
- }
- #endif
-
-+static void test_attach_multi_sleepable(void)
-+{
-+       struct kprobe_multi_sleepable *skel;
-+       const char *sym = "bpf_fentry_test1";
-+       int err;
-+       LIBBPF_OPTS(bpf_test_run_opts, topts);
-+       LIBBPF_OPTS(bpf_kprobe_multi_opts, opts,
-+                   .syms = &sym,
-+                   .cnt = 1
-+       );
-+
-+       skel = kprobe_multi_sleepable__open();
-+       if (!ASSERT_OK_PTR(skel, "kprobe_multi_sleepable__open"))
-+               return;
-+
-+       skel->bss->user_ptr = skel;
-+
-+       err =
-bpf_program__set_flags(skel->progs.handle_kprobe_multi_sleepable,
-+                                    BPF_F_SLEEPABLE);
-+       if (!ASSERT_OK(err, "bpf_program__set_flags"))
-+               goto cleanup;
-+
-+       /* Load should succeed even with BPF_F_SLEEPABLE for KPROBE types */
-+       err = kprobe_multi_sleepable__load(skel);
-+       if (!ASSERT_OK(err, "kprobe_multi_sleepable__load"))
-+               goto cleanup;
-+
-+       /*
-+        * Attachment must fail for kprobe.multi + BPF_F_SLEEPABLE.
-+        * Also chosen a stable symbol to send into opts
-+        */
-+       skel->links.handle_kprobe_multi_sleepable =
-+
-bpf_program__attach_kprobe_multi_opts(skel->progs.handle_kprobe_multi_sleepable,
-+                                                     NULL, &opts);
-+       ASSERT_ERR_PTR(skel->links.handle_kprobe_multi_sleepable,
-+                      "bpf_program__attach_kprobe_multi_opts");
-+
-ASSERT_EQ(libbpf_get_error(skel->links.handle_kprobe_multi_sleepable),
--EINVAL,
-+                 "attach_multi_sleepable_err");
-+
-+       err =
-bpf_prog_test_run_opts(bpf_program__fd(skel->progs.fentry), &topts);
-+       ASSERT_OK(err, "bpf_prog_test_run_opts");
-+
-+cleanup:
-+       kprobe_multi_sleepable__destroy(skel);
-+}
-+
- void serial_test_kprobe_multi_bench_attach(void)
- {
-        if (test__start_subtest("kernel"))
-@@ -676,5 +723,7 @@ void test_kprobe_multi_test(void)
-                test_unique_match();
-        if (test__start_subtest("attach_write_ctx"))
-                test_attach_write_ctx();
-+       if (test__start_subtest("attach_multi_sleepable"))
-+               test_attach_multi_sleepable();
-        RUN_TESTS(kprobe_multi_verifier);
- }
-diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi_sleepable.c
-b/tools/testing/selftests/bpf/progs/kprobe_multi_sleepable.c
-new file mode 100644
-index 000000000000..932e1d9c72e2
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/kprobe_multi_sleepable.c
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+void *user_ptr = 0;
-+
-+SEC("kprobe.multi")
-+int handle_kprobe_multi_sleepable(struct pt_regs *ctx)
-+{
-+       int a, err;
-+
-+       err = bpf_copy_from_user(&a, sizeof(a), user_ptr);
-+       barrier_var(a);
-+       return err;
-+}
-+
-+SEC("fentry/bpf_fentry_test1")
-+int BPF_PROG(fentry)
-+{
-+       return 0;
-+}
-+
-+char _license[] SEC("license") = "GPL";
-
+[...]
