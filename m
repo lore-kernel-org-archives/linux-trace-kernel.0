@@ -1,253 +1,167 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774D2352FAF
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 15:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905FE3EF658
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 16:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775144757; cv=pass; b=oGj9D1BqltTkC7YQ0eSRXLtiIwwpogOWcy1pR3eLp4vhtS9YsyEJGBkI6DUrBOTc/a+9/evigI4aAqEDDv+dGzL7L8bEF6kgoKWJWjAMfEI5Z3MyKD1aYrEOgolaJKOXlGh+/dHWYz/Avh34DnIdqFjmZIdxW4jWYsz4sQyIC7A=
+	t=1775146833; cv=pass; b=uOw58i24fcOjFfxel6KNe3qjau/zX1y+ZTNa0KZ1doJ6Pb23j7FPiEBoYWJZRSTy/lQcw9OUpbLtK4QueLdXmkLoXZUn3+A5Dbp3osGmDHEVR+xY37Zu0w/S6dFFHNRnIamsDnV1EFi+tirh3G/6kR6lAnJ2ZDqIbReUiLriGlU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775144757; c=relaxed/simple;
-	bh=/pTHh1FwlwKHTpQht+ePSPn6d2XZSZ5XYd3TyLXK26A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dfr96BvmmurZENk1PIsyzQ7mFIqDJr9Wov4IzJrNfdUkDSpd8bcuoHsZEq6AaGpqFAiqRk09cr3EePsiwJ5JBZvjS9RIr56vMXsKaclHHacpzMNq8wkDYULVPEQKH8P5+mJ9FAf6vytwF2FC9g3I5qUEVmOvN3FCVMnaXXnlEfI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yl7+vEM/; arc=pass smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775146833; c=relaxed/simple;
+	bh=j18XohxzMi25YcB7luu3u4i4Qqa/vIrjWdtPngyhd4w=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nB0+nQ8Tp68ZR+O1JXVv09Yvqwa3QOeUqmz7t6a6TjlIR9cI2maNyUWYmHREkYI6w+neJjtHCeMTkGzN/jZ+RZt8yOBuWyTskyWtISVoRK+ZQM/WnuXTjCdP+oW9f5O1JHpzkU7Yc4yAXlv2fzftU7pxoTeYPLVQCL5VaMbLQ6I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MUf//50h; arc=pass smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yl7+vEM/"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a2b636b944so1180133e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Apr 2026 08:45:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775144754; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MUf//50h"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-604f834349cso378785137.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Apr 2026 09:20:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775146831; cv=none;
         d=google.com; s=arc-20240605;
-        b=OZoR377K2AM/Xt/jiMZjyR4HM/CVgSZuE3mzawYofVt/zzGpjjjugGsFSiMwsUhUQr
-         hq8ezqiJ8w/FiFmucnTb1tNjiEHwH0Fp2kW3i0HnTd9V2yCBD57d6Fx2V2rRwqx7Wwuw
-         +95zbRaIlJWSCfwIidmVNy6Xyi6MQdxSu8KJSq1B+dLA1CpWmocrzGn86ejY5QBBeIDp
-         +fypRPNxYyYMCGr71tRq2LvPF0cjL+JLjW/GDcJVIaZOC0Ozw+TzT8fg0nbrp1vh0mcR
-         mqA6z4ZGoWQrSZCgYTEQfeh2jvJTEVDWmrMXRNMzNVlQXK1d6aUJWi2PJhOS7mcemDUJ
-         EoUQ==
+        b=PWvenhX8LsXuWyoVZdsRGeai5Rb4HCboKnEue/t2P+V566j3g/g8x4aeIoHlqWFG8d
+         o5EDDy8Qzoea/Uk6pB+VZ/9RGDh4eLPMgSZSXg/STcyApbmGLoJHwsEnyzO+BF3x58UG
+         ZxSMjjwcjwyRahF0Ec0MKcI8ZjmIh8xMLHfRFgSvg8W/DHXwM/eb6KQeLdWkdvFWw+nQ
+         Lfzj5ioKq1aw+qa6IogSBwWCmsoXwYRX5Mxrc/Hgkjiiy/+tOV2TkDATXlNbynmmVGbm
+         tIbw3h50maHVRhMt9JmvBJDxzkgPA3oNn6P8mgYDITlSyNnQ5yY+QArbGbOlCx3HKXRR
+         fRaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=v8pXqmHG/qA51T0dr7MQi7kX0TYmgPL+L8IrHwbfF3E=;
-        fh=3ahGQkfLn43jU4vzjj8aduu5988WeGFrIK1mKiyLaX0=;
-        b=jJ35jARxMv8LbhpPS7WddjFSzx+1mM+7DI2DEAYw3ASDkAqyEjUsjSoJ/t7QyoKnbL
-         ZOGJaKrx5aYAwCeG3wm3apqcnsyQlWBTQEk4pguYu1i6YClivVEXJT6AENuXAFkwarz6
-         hJtzzFaOmm0T+Q+OfPPk0pSifyW9QpWxl52qOeylsnI0X0emQIMxgjVC+LuIDpbJIWHP
-         sikJzCQlpGAZ+vfycIyIzb7LNgYcFMGEYKv2fxamSH/dHSkOUkdWhB7jGiAZZ/xUxKBq
-         y2/MUt7j0SgWa+Eb1eDd7fUBAA1zF4+8b56KeQY6oscPeBd6GhYIji4hioK1Ec6YqrE5
-         Vqwg==;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=XABnzafTexu8r9STfdSEhkFwL2mOaywT8y1TwNRcZwM=;
+        fh=MH29nKmWSTMHoGlj6qi1RH8kpOXDKqYLnIJus266h/U=;
+        b=b+tKnSl04F89ZUlsZabkQdwSgDJeGzv8xDlNZIWWVcRWbYftjvK8ts0x81KOqpCBDy
+         +9Gmt4W6rgBlEQnyyIFz+Nw2jPeeBbzYwmd1ky0+KejmoGnK/X9nWC5BRicGZ/86upsM
+         45Eh+wILbvPfCVSm4qdlWnCwYvoXSfYHq4JsZDh0N+36vsHoqgeEaQEzm2fbQHh6cHUM
+         HMQ0XcIa/GccBPR0eJUUt1tO09E6c+Kh1OyWn8vTUuJUhURytyxm3Ah8x9ShCIIIl8Xs
+         rWEMbV8FQHIpbHsDGfTv8ksjoKb8bqAAJps1Du7lxr7Gm72BquV0hJzgFP6g1w5xNC42
+         YEmg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775144754; x=1775749554; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=v8pXqmHG/qA51T0dr7MQi7kX0TYmgPL+L8IrHwbfF3E=;
-        b=Yl7+vEM//XPrp7wX+dwUboJmURpCGQYJc2d/beW6DoLNGX4ymoyNKbh6PMK801M2dK
-         junoT4IHnwP5qM+6lL8OHB5NpAJ3JffaDP+iDLrBgcOdt6PkhXQGnGEqsVVtgTv8QlGl
-         bi8bxbvaCtdoyRNl0WHx1FO5e6kSaZTeU8DZKZGmV+/La9ew1Y7gN0OJ7kwItgpyqgud
-         tmV8FjtwLAXBH7wcY3DKufwee/hBk9nzlctrd6Do7e8/vdrMYXaApwdNLtph92wUm6NZ
-         gfrfEbaKCUQ7IleIgrz60/ntJFxmy0ICKlD4Usv9zw0NgVLyXEFy+tDLlscED+N0B7Tm
-         Tjfw==
+        d=google.com; s=20251104; t=1775146831; x=1775751631; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XABnzafTexu8r9STfdSEhkFwL2mOaywT8y1TwNRcZwM=;
+        b=MUf//50hege10NWZS7vB28cKBNOTHzeZ88qsBTYxrg+1d6hord4uRba8qOtgYCQU0b
+         4Ypj3TL3kPBFrvS46bEuoV+TF9i/ScpSyz8buRCn49iRsLFtENRgcgicAKONa1fHWtqZ
+         3poH5y9iBmtZazGCNdcy5/Owh+xikXxAYO4OqbFV77Bl2jZuDYRGgLok6+hy4limIu0R
+         FaJGoJIyAFI06vyuT0M5mgiBLvWbrN7lEEDJ7+hpyd8SLEluf0M5s7KeH7UkvnhuSYpZ
+         mKjdimt359S9hYxLrKLaTqQq+hDurAcE82bzHV3YmQODxpRz6BkzBQIqoqIuKcSJVfFY
+         ti1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775144754; x=1775749554;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v8pXqmHG/qA51T0dr7MQi7kX0TYmgPL+L8IrHwbfF3E=;
-        b=hgnrOdaPQzxbUJuSEnkxZZWwE0NY1PwO0AO4XJjzoFwo+6IuQU01n81ydcM2Gtg5fG
-         Y+nN5swoIQaxmrMKs/E7k4RZM/gx3dhB3QYs1aH+Zl467eN2Aj7JMwFdNhbGX8kgzmVY
-         CZqyl4PEpqdh39V6KeUIAMEc4FbCSgXkJQ1r8w5yBi1n1wbJDfr2PvmlhI9B9aVZenPu
-         K3iitn7LvP5+KjVteVZwuhs6Nmq+sAdJzhtp0ED6teoCqd0KeabAaPoRBImXkbxaNAeI
-         sOj0XqtbROaznLM6GGCSKL/og7oY4popQbQ36+rzv71XLpL220s94OmQPG90HpOjkila
-         9zqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWerOgR8wiiPMTEggOAiP+fFFIvYxo5KR98zHOt3ybZSvYuAdnEmkAGRgExQrKXWgxYJ97DiKqNCIxtAsqKKgFNmv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/nf2xtpc4bOydRbHEIu02+3qGmbr4ajSBj6FqOokn6koO9MIH
-	fPNI9eBq4XSUb64OCC8Ukod4rqLOclBPIcHfam1JlkLr4gZAvc9MimbwHDRaQFXf9BHlk82TA6E
-	RiJxNLVskayC1j1zwhKDFKi/QejNzk/Y=
-X-Gm-Gg: ATEYQzxZGE/9DKxiqzzaTo60S3C1o/g6wGtLnJYdsjj29iBEDmwOl+hcJsHj//VBLML
-	JiQ36NGLTiB3abBBpSMqzN/HhKV7RMt+T4J0XKWjNwFo3L+yiYTHcR7PPnZaDRWbQoLw12d0CCf
-	HYDcwyuEoIudkvLtPTJpuiBpTAu3agekp6yvOW7rl/nHW+N4ZPfo5rFTdosMSikdPBBdveU5Tfi
-	kOyfprxIzz9HJ4AwHEI8a5aIrOvbm1p4qb9j4KK5q4v2g5M0UTJXkmR3s7rHhwfE1lYEBu9mgJO
-	6aXrSjXdfCsBlQrucp/lZMmsfjAIe3EU+86WrcbF+nTDB5r6cUn2IG96KGKLTUWOvxaCbnsfOA=
-	=
-X-Received: by 2002:a05:6512:238e:b0:5a1:26f7:71b with SMTP id
- 2adb3069b0e04-5a2c1c9b911mr3539069e87.0.1775144753402; Thu, 02 Apr 2026
- 08:45:53 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775146831; x=1775751631;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XABnzafTexu8r9STfdSEhkFwL2mOaywT8y1TwNRcZwM=;
+        b=beikOIb0wBfUEvwR5d00Csradi7leWqQq08FcvpA8dPHQhBk1FH1fYmNflPS1Cwj5H
+         AAb7VhomPfzt1Sgj7xDEZSoZrOU97yOmeh4V6Ty5wTAquY/ljUqZMhtYajioaXXMOSxj
+         4Fwknp9Bb4q2cBvNumN9Lo7bJfs24X2AMNQ4AVbSIryeuUTNDEqIgIEAe9LIbH8CcvV2
+         hTur6TBm8sERypO2OMfRGqQpUoGtyt8TzUd7ESrMJaJPk9RwAOJ+Zmb+dERjxmcyZito
+         cfkUVwjiCnCzPltYoPl6UoQTpw3W4ZCTnGKXw6E/FnuWkmkv4mXBeNv8EWbNOr6phGMY
+         tFhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0pPw3AgtqsjhOOoVzW8kPYm7nCWNNLB2zAmdu+ypgC5GVzNvobzHNBhDdLBz7N4JJik1yNjdisjAlCaRk8IIa1lQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9CkBquINg30xqt8fJIsQqpTgZu0EDUrGgK3liBdbrIPfE4gCD
+	yvWTRTt+gidv746zHdGrniZVjFWbEJzJRNHNj8FUUzzZiDVowKYtOiJWR6su9AaBFHSKImNlT99
+	Iakv8AKCX2NHND6mpcC2Ihl2b9yjm8cJIZeKPB6gl
+X-Gm-Gg: ATEYQzyVlEnAdqhDKkb6q+ynbnRe1jvwo8LW56ySTUhI+dApY/6bwc2SxEG1liYOp0p
+	+U23Xld5U3UaEvQioJVPFSTB+UNpbeT05gKkLmW1N2oIh9SGe3cAvk1IcernO9H6TKB/N+aveRm
+	8AHY2G8x6LQyN5jXsZW47XK1NFjTPJFhYW1COLPikO+EG3XZlO54oYWt+9m+J2eVN73E6A3d/vF
+	I4DeyNCRsoiZRTJUrSBNXXF9vOT+EkaM4slwyHyFj3QQ3XRr7sJgJ6RfTSMKJSB6PvQV+06CaWj
+	9kvjNN3vmr4prMmbu6kN5tn2uNrYILx1vsMgxvd23mF0r+62g79qcl3u+tauAqYpv0MvH+GV01f
+	OU7Y=
+X-Received: by 2002:a05:6102:3912:b0:5ff:9d74:967b with SMTP id
+ ada2fe7eead31-60567f98c75mr3137498137.20.1775146830774; Thu, 02 Apr 2026
+ 09:20:30 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 2 Apr 2026 09:20:30 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 2 Apr 2026 09:20:29 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
+References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
+ <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
+ <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3> <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260205135842.20517-1-seokwoo.chung130@gmail.com>
- <20260205135842.20517-5-seokwoo.chung130@gmail.com> <20260324131204.735c60133288e94718f20d31@kernel.org>
-In-Reply-To: <20260324131204.735c60133288e94718f20d31@kernel.org>
-From: Ryan Chung <seokwoo.chung130@gmail.com>
-Date: Thu, 2 Apr 2026 11:45:42 -0400
-X-Gm-Features: AQROBzDhQBJMUd2pX45KTasnqGiAEY84CyM8ttQPZa50vwWtIMxIkKUtK7Q78K4
-Message-ID: <CAB1jyqw_6wepbDaKi7087GDUcJ9t1jQO6qP9pa0DWCjti7ABZg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] selftests/ftrace: Add accept cases for fprobe list syntax
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, corbet@lwn.net, shuah@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+Date: Thu, 2 Apr 2026 09:20:29 -0700
+X-Gm-Features: AQROBzDMmtxznwwWBs0nZ4oqZut-IIYidHQDWkMKzAfittGrfvUDuSGnGYqXsAk
+Message-ID: <CAEvNRgGm9icDK8sK5ZfqHEOEqSbvjwtihE4p9d3vpBq-NfVjmw@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
+To: Michael Roth <michael.roth@amd.com>
+Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
+	ira.weiny@intel.com, jmattson@google.com, jroedel@suse.de, 
+	jthoughton@google.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Masami,
+Ackerley Tng <ackerleytng@google.com> writes:
 
-Thank you for your feedback. Unfortunately, I am not in the position
-to continue working on this patch series for the foreseeable future.
-If you or anyone else on the list would like to pick it up and carry
-it forward, you are welcome to do so. I appreciate your time and
-effort on this.
+>
+> [...snip...]
+>
 
-Best regards,
-Seokwoo Chung
+>> In the case of SNP, there is a
+>> documentation/parameter check in snp_launch_update() that needs to be
+>> relaxed in order for userspace to be able to pass in a NULL 'src'
+>> parameter (since, for in-place conversion, it would be initialized in place
+>> as shared memory prior to the call, since by the time kvm_gmem_poulate()
+>> it will have been set to private and therefore cannot be faulted in via
+>> GUP (and if it could, we'd be unecessarily copying the src back on top
+>> of itself since src/dst are the same).
+>
+>
+> [...snip...]
+>
+>
+> Btw, if snp_launch_update() is going to accept a NULL src parameter and
+> launch-update the src in-place:
+>
+> + Will userspace have to set that memory to private before calling launch
+>   update?
+>     + If yes, then would we need some other mode of conversion that is
+>       not ZERO and not quite PRESERVE (since PRESERVE is defined as that
+>       the guest will see what the host wrote post-encryption, but it
+>       sounds like launch update is doing the encryption)
+> + Or should launch update be called when that memory is shared? Will
+>   launch update then also set that memory to private in guest_memfd?
+>
 
-On Tue, 24 Mar 2026 at 00:12, Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Thu,  5 Feb 2026 08:58:42 -0500
-> "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com> wrote:
->
-> > Add fprobe_list.tc to test the comma-separated symbol list syntax
-> > with :entry/:exit suffixes.  Three scenarios are covered:
-> >
-> >   1. List with default (entry) behavior and ! exclusion
-> >   2. List with explicit :entry suffix
-> >   3. List with :exit suffix for return probes
->
->
-> Could you also add wildcard pattern test?
->
-> >
-> > Each test verifies that the correct functions appear in
-> > enabled_functions and that excluded (!) symbols are absent.
-> >
-> > Note: The existing tests add_remove_fprobe.tc, fprobe_syntax_errors.tc,
-> > and add_remove_fprobe_repeat.tc check their "requires" line against the
-> > tracefs README for the old "%return" syntax pattern.  Since the README
-> > now documents ":entry|:exit" instead, these tests report UNSUPPORTED.
-> > Their "requires" lines need updating in a follow-up patch.
->
-> This means you'll break the selftest. please fix those test first.
-> (This fix must be done before "tracing/fprobe: Support comma-separated
-> symbols and :entry/:exit" so that we can safely bisect it.)
->
-> Thank you,
->
->
-> >
-> > Signed-off-by: Seokwoo Chung (Ryan) <seokwoo.chung130@gmail.com>
-> > ---
-> >  .../ftrace/test.d/dynevent/fprobe_list.tc     | 92 +++++++++++++++++++
-> >  1 file changed, 92 insertions(+)
-> >  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
-> >
-> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
-> > new file mode 100644
-> > index 000000000000..45e57c6f487d
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
-> > @@ -0,0 +1,92 @@
-> > +#!/bin/sh
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# description: Fprobe event list syntax and :entry/:exit suffixes
-> > +# requires: dynamic_events "f[:[<group>/][<event>]] <func-name>[:entry|:exit] [<args>]":README
-> > +
-> > +# Setup symbols to test. These are common kernel functions.
-> > +PLACE=vfs_read
-> > +PLACE2=vfs_write
-> > +PLACE3=vfs_open
-> > +
-> > +echo 0 > events/enable
-> > +echo > dynamic_events
-> > +
-> > +# Get baseline count of enabled functions (should be 0 if clean, but be safe)
-> > +if [ -f enabled_functions ]; then
-> > +     ocnt=`cat enabled_functions | wc -l`
-> > +else
-> > +     ocnt=0
-> > +fi
-> > +
-> > +# Test 1: List default (entry) with exclusion
-> > +# Target: Trace vfs_read and vfs_open, but EXCLUDE vfs_write
-> > +echo "f:test/list_entry $PLACE,!$PLACE2,$PLACE3" >> dynamic_events
-> > +grep -q "test/list_entry" dynamic_events
-> > +test -d events/test/list_entry
-> > +
-> > +echo 1 > events/test/list_entry/enable
-> > +
-> > +grep -q "$PLACE" enabled_functions
-> > +grep -q "$PLACE3" enabled_functions
-> > +! grep -q "$PLACE2" enabled_functions
-> > +
-> > +# Check count (Baseline + 2 new functions)
-> > +cnt=`cat enabled_functions | wc -l`
-> > +if [ $cnt -ne $((ocnt + 2)) ]; then
-> > +     exit_fail
-> > +fi
-> > +
-> > +# Cleanup Test 1
-> > +echo 0 > events/test/list_entry/enable
-> > +echo "-:test/list_entry" >> dynamic_events
-> > +! grep -q "test/list_entry" dynamic_events
-> > +
-> > +# Count should return to baseline
-> > +cnt=`cat enabled_functions | wc -l`
-> > +if [ $cnt -ne $ocnt ]; then
-> > +     exit_fail
-> > +fi
-> > +
-> > +# Test 2: List with explicit :entry suffix
-> > +# (Should behave exactly like Test 1)
-> > +echo "f:test/list_entry_exp $PLACE,!$PLACE2,$PLACE3:entry" >> dynamic_events
-> > +grep -q "test/list_entry_exp" dynamic_events
-> > +test -d events/test/list_entry_exp
-> > +
-> > +echo 1 > events/test/list_entry_exp/enable
-> > +
-> > +grep -q "$PLACE" enabled_functions
-> > +grep -q "$PLACE3" enabled_functions
-> > +! grep -q "$PLACE2" enabled_functions
-> > +
-> > +cnt=`cat enabled_functions | wc -l`
-> > +if [ $cnt -ne $((ocnt + 2)) ]; then
-> > +     exit_fail
-> > +fi
-> > +
-> > +# Cleanup Test 2
-> > +echo 0 > events/test/list_entry_exp/enable
-> > +echo "-:test/list_entry_exp" >> dynamic_events
-> > +
-> > +# Test 3: List with :exit suffix
-> > +echo "f:test/list_exit $PLACE,!$PLACE2,$PLACE3:exit" >> dynamic_events
-> > +grep -q "test/list_exit" dynamic_events
-> > +test -d events/test/list_exit
-> > +
-> > +echo 1 > events/test/list_exit/enable
-> > +
-> > +# Even for return probes, enabled_functions lists the attached symbols
-> > +grep -q "$PLACE" enabled_functions
-> > +grep -q "$PLACE3" enabled_functions
-> > +! grep -q "$PLACE2" enabled_functions
-> > +
-> > +cnt=`cat enabled_functions | wc -l`
-> > +if [ $cnt -ne $((ocnt + 2)) ]; then
-> > +     exit_fail
-> > +fi
-> > +
-> > +# Cleanup Test 3
-> > +echo 0 > events/test/list_exit/enable
-> > +echo "-:test/list_exit" >> dynamic_events
-> > +
-> > +clear_trace
-> > --
-> > 2.43.0
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Update after today's guest_memfd biweekly:
+
+guest_memfd's populate will first check that the memory is shared, then
+also set the memory to private after the populate.
+
+KVM must not make assumptions about any memory that is private, so it
+should actually only be operating on memory that is shared. This is
+aligned with pre-in-place-conversion, since before this series, there
+was no way to populate from private memory anyway.
+
+>>
+>> [...snip...]
+>>
