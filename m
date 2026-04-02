@@ -1,65 +1,64 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAE134D3B0
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 01:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9E0337BB0
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 01:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775095195; cv=none; b=j4oyW+pbenUrf6jpEtigJakRVwLaY6Id9YJqwWezGYkDEMiENspkzTRCvv0WNh/EoabJWtJ/3LUXmRIPcmTKqH9LRh0Lsil1qedUprdfn4Xm2XecVjEB2al2+WrIkulhKGO2WM+wIr9X4C9rkinsXuOYsMOgqAfPveuPXCmU5ZA=
+	t=1775095195; cv=none; b=q11sZC9gqY9zgQxp7bCYzhRJkG3yK+rnfDMt6gWynEWmP4RETLJcrMyxlU6cr1j4/xTyJmhCOF3AZ6HTqE7XCGEjFy678i1pQF96F4n9e0yuNt14mD8PeIvADlyKMS9AxmHhUQdvRYXCaObMwCB6Cb9sP5wm3DwtSA9DgUs0AjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775095195; c=relaxed/simple;
-	bh=G9ErukyjtFQQONiLAGMEclYQ3lC/nZkKFqeuRk5+bII=;
+	bh=GBCgfFdmNxX9+OgrVg4WaE5DIA07uRQnuGXMjbga6H4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mLGBIO+YRMyUc/XXqZTNnerWj70KVwt0j5/UpF6e9XDjs8IgRxAAHHL9mX87v/4e1JfN/oBjVVquOU9qqpwMr1+njEJz27QzwclE/dSEmwIds2bBsKnUCVogNKEJSvgXKMvTIOynMXcl4m9XCh8cwFECzdFjUnIv+7OOYk3sBVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jpZTNAKK; arc=none smtp.client-ip=209.85.216.43
+	 In-Reply-To:To:Cc; b=SHFUg3wvDjzWmir2yvY4dtve01huyaPkNJ0IPLnclylGMaKXPSyWgSs3BEk3MDHs+aPkpWjC8zM9NMCLXMsHa1yt2HP+MmWF3C8/LRrzgoYR9edlzEfUpk4i+zYORHtiwUG8+Qh2xPUoSY2eEn89J2DrWVuVzQl2X1tIhFFjQEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TifoRlnx; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jpZTNAKK"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3590042fa8eso195434a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 18:59:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TifoRlnx"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b0ba3bfe16so11933915ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Apr 2026 18:59:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1775095189; x=1775699989; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1775095191; x=1775699991; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1HRLPCzgG72vKngIOPMMcPHhtLpKEoLGj3vPRDEvTYE=;
-        b=jpZTNAKKcsuq6+jSNZvtl3J9HxWg7l4lLK/mRVHB+SY40WA9ynaQUrLU8yflp3A/lY
-         yOtxjy7s6rAmPmxJFZh7JwAHwZ7YW5El83xBgHBdM4Ul9mPWbxf/A6mcRmtcGF0Ui3Ue
-         zw21cVYOkx6mh5qjwy5yyHkbqscThNNrSSLNo=
+        bh=NWRl/pdZN5I8n4vNv9o2RQjMPPH8QcZcS//VFK8KffE=;
+        b=TifoRlnxA41757qDVJz0Fu17MMURDBQC0VPBin9YmQBqx1UiFSC7SnyicRqxDQUqKp
+         C+5Zrypg4XA2ImPWVHdf4kPWYzQvNQdOBGK7f28vNhzv6idpbwlga7xIhgwC+C1y6g1E
+         OGXrAeBMZl782vFqnUZLNWfxBYSj1Bhiwfj5Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775095189; x=1775699989;
+        d=1e100.net; s=20251104; t=1775095191; x=1775699991;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=1HRLPCzgG72vKngIOPMMcPHhtLpKEoLGj3vPRDEvTYE=;
-        b=JeHV/0QiBoC6pFr71sRtLZCHD3uSu+I4V7AY1a1IVLbSX3uRyzxgrm8n1ocrIb0/Gd
-         FuzQ1pAoT3R22V87OHC6xJED+lQQLb7JL0ZroRGFwZOVSqZbq8rnp1vyRjactPIoA0PL
-         fE0y2+vS/Opc0MIkbBn/qWr7Kpr1owYYWa002UJBM8XVr6TQdAHY4Ic69h1xE6E/Jk5m
-         in+nAfHJe0ZMPfyUbG9P38Sp7KzREa2GfVu81UDLK2wvx0yvyWcgzYulkqWKn1Jy/8vM
-         3++vv6EniFSNxJogst5fibihIcfs1sz2QJyvTzfOpiF84HM0EPzbuwpKvSDCXMb0JoPL
-         rRHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsGo6QLCtVaY2fxxeubAndFzZTam4ebnaZcArAPRu89ei0KmJD7BP8LQt14/2TeHXT4ZupFd23pFS//nkwmeoE8Oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7NgKqzGW1eolszRmAeSUqJEHojeCQHf55wYpNSiy48NHcXU1Q
-	JSlMeqQ1BcmiN6fIgE96ZvFg6i4qRbT6IaAzHeWf38u6EHePNnmMXnV3dbIJeBKiag==
-X-Gm-Gg: ATEYQzyfXs2/dP03G+baHrf2Oxc66LSTk6BJRJa0ssldxnwBQMGHQWaotmPugm2rFKz
-	EM9eB9bXWBThPCuGS4KEoD0HsZgAio3WoyYcKaBgvPedeWbBCuqBPDwz19y2gnpbDVQYcmHuL9F
-	fvrYuAlpVrygadtjbLlCYkOtSVJSzKbnfG2ueZwT7q7yerMnxWFWvoVMqNqtoTn6SA6cNnEeYtv
-	h0WTL68Rgm5UfkXp9iob8Ilxna5Ht9JfSnMaZGeiFbYHBmewS/HZMvycO7duEFMXa6MeHCFxFDx
-	iVG3VffOOvKhyfyAutU8y1s9Fvyg0jkq5J6yNUSJoKT4trOZU2ese4WTX1d+Frg5lG7oaYxCMjn
-	mlmyJuP/BrXuaMlKGuYr9P+HvlLPDbNIEAVyhN12mcoKMU/hd2heoTFS6Ldpq/gSj8oeodZSRQp
-	fsRInQLcsnafQ0wXys+znghz0WQr7yrYwVd/c9CMk5rR/86fzkVLhdHs1cKFumyYPhB7g8RrWCn
-	mmCdUw2KUhLcHvX/syoH5/rdvo3onuKXA==
-X-Received: by 2002:a17:903:22d1:b0:2ae:fc60:2650 with SMTP id d9443c01a7336-2b269c94d5dmr58282855ad.39.1775095188890;
-        Wed, 01 Apr 2026 18:59:48 -0700 (PDT)
+        bh=NWRl/pdZN5I8n4vNv9o2RQjMPPH8QcZcS//VFK8KffE=;
+        b=TOmJ8K5WtviITo/pGu9xTn5GKAHiBVpUsoPShZ95CP1XHmh2btj8NqxMWHE+4nfKbx
+         hOv1KWxh9JjFXuppINwEYbMjC/NTOeI264OWjIfgqIovzj6t2Uh1+DlrlR0IW0wNW1xn
+         TkgQQHynoUNn8f/rOjcCOJaDtKtMBGbO0yI+l3L1OVzG0cjulOiVh+wuILELe7ERF2mf
+         mxEzvJnGCCl55V9JcPkQWrHuIcvUrSjUXn9mA3hMJqSlKLo3C7VMdZLSWXN4hzVUByDw
+         tGV/Qu9na7yhx6aLwvwhj4UaqC+2PImF5A5mmvM+sjl+DiAJamVUWTMuhcZFhwsFgHs+
+         pFWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRSJ52S5MMUK8RsTJ9ncYsRV0DfzrGpNvDU/gxgy4jd0Wks7/o0Y6HpfMjXPfrwY1VhxDcdCw/p59c0y/gUuorxlI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMYxs86vHTY+CiTluoQIm7btIIQ7ZHcZUijQv7h7hKBEEeNpUS
+	UJ9oNdp7D7sDnuRJevBpOCSP4saWImFbuMj7uIYl4NfXWW8fR42TYaIHHtV1sk+UuQ==
+X-Gm-Gg: ATEYQzz1nI25/ytflXh3jhqx7ARKGiAeT4kxyeEmqopcu98SI9xsoY1SzrM3YuG0O2u
+	vAuHUSMhq7+kK5O9M+XPapvkgx7a+TVSYKkMTikVPtiT1bWJeAKt7Vgn09qQcy3eOKoLz05+uZ/
+	nff3tbJ0mipvd9NIcpTZ2Jz8kM3glwF9rjUTDjm12FSPQCSwpaL9s6QTVUiY+gnXKVvc6URZC1D
+	3AKXmbxVhflrVBcREwc6wGhBxuFBoHfrQLBMBhe4p4qW6HelV8rMrORNbUxNiEQEk2BZ8XJfOLb
+	Chm0ebySHDRlLMCQ07esF9IcVeFqE8MmL1TqYh+Ed9hi4n9H/ddwj751MeBPx3W/YvZ6ZwZdjyr
+	c81ci6NeARevdr1b5H6S5E4TAvSxUVCBAYumC3Y4Rutw8MzzeboeKwGAvQZgC3iqT8ayGrFRd0V
+	UWK8tZ11vgSFbBWhaF/E51Y33Wb1+/cyzXl7HvRxYdEio4YBtWHLv85c8usxAHWZf2H6RsdFCfo
+	i802iIC2JVEkO4yNQxI0sszEovpSoPJVg==
+X-Received: by 2002:a17:903:1aee:b0:24b:1585:6350 with SMTP id d9443c01a7336-2b277df754bmr5416395ad.11.1775095190960;
+        Wed, 01 Apr 2026 18:59:50 -0700 (PDT)
 Received: from jingyliang-input-linux.c.googlers.com (111.169.168.34.bc.googleusercontent.com. [34.168.169.111])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b27478cb4fsm11187535ad.29.2026.04.01.18.59.48
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b27478cb4fsm11187535ad.29.2026.04.01.18.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 18:59:48 -0700 (PDT)
+        Wed, 01 Apr 2026 18:59:50 -0700 (PDT)
 From: Jingyuan Liang <jingyliang@chromium.org>
-Date: Thu, 02 Apr 2026 01:59:46 +0000
-Subject: [PATCH v3 09/11] dt-bindings: input: Document hid-over-spi DT
- schema
+Date: Thu, 02 Apr 2026 01:59:48 +0000
+Subject: [PATCH v3 11/11] HID: spi-hid: add panel follower support
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,7 +67,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260402-send-upstream-v3-9-6091c458d357@chromium.org>
+Message-Id: <20260402-send-upstream-v3-11-6091c458d357@chromium.org>
 References: <20260402-send-upstream-v3-0-6091c458d357@chromium.org>
 In-Reply-To: <20260402-send-upstream-v3-0-6091c458d357@chromium.org>
 To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
@@ -83,163 +82,369 @@ Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
  linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  hbarnor@chromium.org, tfiga@chromium.org, 
- Jingyuan Liang <jingyliang@chromium.org>, 
- Dmitry Antipov <dmanti@microsoft.com>, 
- Jarrett Schultz <jaschultz@microsoft.com>
+ Jingyuan Liang <jingyliang@chromium.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1775095180; l=4684;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1775095180; l=10416;
  i=jingyliang@chromium.org; s=20260213; h=from:subject:message-id;
- bh=G9ErukyjtFQQONiLAGMEclYQ3lC/nZkKFqeuRk5+bII=;
- b=ycKoinGQcCRHLiNXC/cPrBW/8Eb646sAYUjTLCBWfa8jeV0fetsq980x3F7Mj3e2GB9rJqrL3
- pMQPugikmo/CIMzn+dRTxihOXhj4JvYuFrgOkwZyMmKNE9uU1LucVvv
+ bh=GBCgfFdmNxX9+OgrVg4WaE5DIA07uRQnuGXMjbga6H4=;
+ b=7f4b91lHmlf5TYFEkbbrgzi8PSgBr3/69XLfgY8PZh2sAcrCKQdt4dNTBD2zvy7mxEXouf84t
+ zT2LB5hJEr2AJxS5Z1czURg1AYqDDJWcLBcQsD+NO2kypaT1TQEg8qG
 X-Developer-Key: i=jingyliang@chromium.org; a=ed25519;
  pk=VTYSdqslTtYOjWWoIGgYoWupGWqNSidrggReKMgfPo4=
 
-Documentation describes the required and optional properties for
-implementing Device Tree for a Microsoft G6 Touch Digitizer that
-supports HID over SPI Protocol 1.0 specification.
+Add support to spi-hid to be a panel follower.
 
-The properties are common to HID over SPI.
-
-Signed-off-by: Dmitry Antipov <dmanti@microsoft.com>
-Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
 Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
 ---
- .../devicetree/bindings/input/hid-over-spi.yaml    | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
+ drivers/hid/spi-hid/spi-hid-core.c | 199 +++++++++++++++++++++++++++++--------
+ drivers/hid/spi-hid/spi-hid-core.h |   7 ++
+ 2 files changed, 163 insertions(+), 43 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/hid-over-spi.yaml b/Documentation/devicetree/bindings/input/hid-over-spi.yaml
-new file mode 100644
-index 000000000000..d1b0a2e26c32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/hid-over-spi.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/hid-over-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hid/spi-hid/spi-hid-core.c b/drivers/hid/spi-hid/spi-hid-core.c
+index 5f7a5bb692d9..9eedd4f1cba7 100644
+--- a/drivers/hid/spi-hid/spi-hid-core.c
++++ b/drivers/hid/spi-hid/spi-hid-core.c
+@@ -246,21 +246,21 @@ static const char *spi_hid_power_mode_string(enum hidspi_power_state power_state
+ 	}
+ }
+ 
+-static void spi_hid_suspend(struct spi_hid *shid)
++static int spi_hid_suspend(struct spi_hid *shid)
+ {
+ 	int error;
+ 	struct device *dev = &shid->spi->dev;
+ 
+ 	guard(mutex)(&shid->power_lock);
+ 	if (shid->power_state == HIDSPI_OFF)
+-		return;
++		return 0;
+ 
+ 	if (shid->hid) {
+ 		error = hid_driver_suspend(shid->hid, PMSG_SUSPEND);
+ 		if (error) {
+ 			dev_err(dev, "%s failed to suspend hid driver: %d",
+ 				__func__, error);
+-			return;
++			return error;
+ 		}
+ 	}
+ 
+@@ -278,21 +278,22 @@ static void spi_hid_suspend(struct spi_hid *shid)
+ 			dev_err(dev, "%s: could not power down.", __func__);
+ 			shid->regulator_error_count++;
+ 			shid->regulator_last_error = error;
+-			return;
++			return error;
+ 		}
+ 
+ 		shid->power_state = HIDSPI_OFF;
+ 	}
++	return 0;
+ }
+ 
+-static void spi_hid_resume(struct spi_hid *shid)
++static int spi_hid_resume(struct spi_hid *shid)
+ {
+ 	int error;
+ 	struct device *dev = &shid->spi->dev;
+ 
+ 	guard(mutex)(&shid->power_lock);
+ 	if (shid->power_state == HIDSPI_ON)
+-		return;
++		return 0;
+ 
+ 	enable_irq(shid->spi->irq);
+ 
+@@ -306,7 +307,7 @@ static void spi_hid_resume(struct spi_hid *shid)
+ 			dev_err(dev, "%s: could not power up.", __func__);
+ 			shid->regulator_error_count++;
+ 			shid->regulator_last_error = error;
+-			return;
++			return error;
+ 		}
+ 		shid->power_state = HIDSPI_ON;
+ 
+@@ -315,10 +316,13 @@ static void spi_hid_resume(struct spi_hid *shid)
+ 
+ 	if (shid->hid) {
+ 		error = hid_driver_reset_resume(shid->hid);
+-		if (error)
++		if (error) {
+ 			dev_err(dev, "%s: failed to reset resume hid driver: %d.",
+ 				__func__, error);
++			return error;
++		}
+ 	}
++	return 0;
+ }
+ 
+ static void spi_hid_stop_hid(struct spi_hid *shid)
+@@ -1215,6 +1219,132 @@ const struct attribute_group *spi_hid_groups[] = {
+ };
+ EXPORT_SYMBOL_GPL(spi_hid_groups);
+ 
++/*
++ * At the end of probe we initialize the device:
++ *   0) assert reset, bias the interrupt line
++ *   1) sleep minimal reset delay
++ *   2) request IRQ
++ *   3) power up the device
++ *   4) deassert reset (high)
++ * After this we expect an IRQ with a reset response.
++ */
++static int spi_hid_dev_init(struct spi_hid *shid)
++{
++	struct spi_device *spi = shid->spi;
++	struct device *dev = &spi->dev;
++	int error;
 +
-+title: HID over SPI Devices
++	shid->ops->assert_reset(shid->ops);
 +
-+maintainers:
-+  - Benjamin Tissoires <benjamin.tissoires@redhat.com>
-+  - Jiri Kosina <jkosina@suse.cz>
++	shid->ops->sleep_minimal_reset_delay(shid->ops);
 +
-+description: |+
-+  HID over SPI provides support for various Human Interface Devices over the
-+  SPI bus. These devices can be for example touchpads, keyboards, touch screens
-+  or sensors.
++	error = devm_request_threaded_irq(dev, spi->irq, NULL, spi_hid_dev_irq,
++					  IRQF_ONESHOT, dev_name(&spi->dev), shid);
++	if (error) {
++		dev_err(dev, "%s: unable to request threaded IRQ.", __func__);
++		return error;
++	}
++	if (device_may_wakeup(dev)) {
++		error = dev_pm_set_wake_irq(dev, spi->irq);
++		if (error) {
++			dev_err(dev, "%s: failed to set wake IRQ.", __func__);
++			return error;
++		}
++	}
 +
-+  The specification has been written by Microsoft and is currently available
-+  here: https://www.microsoft.com/en-us/download/details.aspx?id=103325
++	error = shid->ops->power_up(shid->ops);
++	if (error) {
++		dev_err(dev, "%s: could not power up.", __func__);
++		shid->regulator_error_count++;
++		shid->regulator_last_error = error;
++		return error;
++	}
 +
-+  If this binding is used, the kernel module spi-hid will handle the
-+  communication with the device and the generic hid core layer will handle the
-+  protocol.
++	shid->ops->deassert_reset(shid->ops);
 +
-+allOf:
-+  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
++	return 0;
++}
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - microsoft,g6-touch-digitizer
-+          - const: hid-over-spi
-+      - description: Just "hid-over-spi" alone is allowed, but not recommended.
-+        const: hid-over-spi
++static void spi_hid_panel_follower_work(struct work_struct *work)
++{
++	struct spi_hid *shid = container_of(work, struct spi_hid,
++					    panel_follower_work);
++	int error;
 +
-+  reg:
-+    maxItems: 1
++	if (!shid->desc.hid_version)
++		error = spi_hid_dev_init(shid);
++	else
++		error = spi_hid_resume(shid);
++	if (error)
++		dev_warn(&shid->spi->dev, "Power on failed: %d", error);
++	else
++		WRITE_ONCE(shid->panel_follower_work_finished, true);
 +
-+  interrupts:
-+    maxItems: 1
++	/*
++	 * The work APIs provide a number of memory ordering guarantees
++	 * including one that says that memory writes before schedule_work()
++	 * are always visible to the work function, but they don't appear to
++	 * guarantee that a write that happened in the work is visible after
++	 * cancel_work_sync(). We'll add a write memory barrier here to match
++	 * with spi_hid_panel_unpreparing() to ensure that our write to
++	 * panel_follower_work_finished is visible there.
++	 */
++	smp_wmb();
++}
 +
-+  reset-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO specifier for the digitizer's reset pin (active low). The line must
-+      be flagged with GPIO_ACTIVE_LOW.
++static int spi_hid_panel_follower_resume(struct drm_panel_follower *follower)
++{
++	struct spi_hid *shid = container_of(follower, struct spi_hid, panel_follower);
 +
-+  vdd-supply:
-+    description:
-+      Regulator for the VDD supply voltage.
++	/*
++	 * Powering on a touchscreen can be a slow process. Queue the work to
++	 * the system workqueue so we don't block the panel's power up.
++	 */
++	WRITE_ONCE(shid->panel_follower_work_finished, false);
++	schedule_work(&shid->panel_follower_work);
 +
-+  input-report-header-address:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 0xffffff
-+    description:
-+      A value to be included in the Read Approval packet, listing an address of
-+      the input report header to be put on the SPI bus. This address has 24
-+      bits.
++	return 0;
++}
 +
-+  input-report-body-address:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 0xffffff
-+    description:
-+      A value to be included in the Read Approval packet, listing an address of
-+      the input report body to be put on the SPI bus. This address has 24 bits.
++static int spi_hid_panel_follower_suspend(struct drm_panel_follower *follower)
++{
++	struct spi_hid *shid = container_of(follower, struct spi_hid, panel_follower);
 +
-+  output-report-address:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 0xffffff
-+    description:
-+      A value to be included in the Output Report sent by the host, listing an
-+      address where the output report on the SPI bus is to be written to. This
-+      address has 24 bits.
++	cancel_work_sync(&shid->panel_follower_work);
 +
-+  read-opcode:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description:
-+      Value to be used in Read Approval packets. 1 byte.
++	/* Match with shid_core_panel_follower_work() */
++	smp_rmb();
++	if (!READ_ONCE(shid->panel_follower_work_finished))
++		return 0;
 +
-+  write-opcode:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description:
-+      Value to be used in Write Approval packets. 1 byte.
++	return spi_hid_suspend(shid);
++}
 +
-+required:
-+  - compatible
-+  - interrupts
-+  - reset-gpios
-+  - vdd-supply
-+  - input-report-header-address
-+  - input-report-body-address
-+  - output-report-address
-+  - read-opcode
-+  - write-opcode
++static const struct drm_panel_follower_funcs
++				spi_hid_panel_follower_prepare_funcs = {
++	.panel_prepared = spi_hid_panel_follower_resume,
++	.panel_unpreparing = spi_hid_panel_follower_suspend,
++};
 +
-+additionalProperties: false
++static int spi_hid_register_panel_follower(struct spi_hid *shid)
++{
++	struct device *dev = &shid->spi->dev;
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/gpio/gpio.h>
++	shid->panel_follower.funcs = &spi_hid_panel_follower_prepare_funcs;
 +
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++	/*
++	 * If we're not in control of our own power up/power down then we can't
++	 * do the logic to manage wakeups. Give a warning if a user thought
++	 * that was possible then force the capability off.
++	 */
++	if (device_can_wakeup(dev)) {
++		dev_warn(dev, "Can't wakeup if following panel\n");
++		device_set_wakeup_capable(dev, false);
++	}
 +
-+      hid@0 {
-+        compatible = "microsoft,g6-touch-digitizer", "hid-over-spi";
-+        reg = <0x0>;
-+        interrupts-extended = <&gpio 42 IRQ_TYPE_EDGE_FALLING>;
-+        reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
-+        vdd-supply = <&pm8350c_l3>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&ts_d6_int_bias>;
-+        input-report-header-address = <0x1000>;
-+        input-report-body-address = <0x1004>;
-+        output-report-address = <0x2000>;
-+        read-opcode = /bits/ 8 <0x0b>;
-+        write-opcode = /bits/ 8 <0x02>;
-+      };
-+    };
++	return drm_panel_add_follower(dev, &shid->panel_follower);
++}
++
+ int spi_hid_core_probe(struct spi_device *spi, struct spihid_ops *ops,
+ 		       struct spi_hid_conf *conf)
+ {
+@@ -1234,6 +1364,7 @@ int spi_hid_core_probe(struct spi_device *spi, struct spihid_ops *ops,
+ 	shid->ops = ops;
+ 	shid->conf = conf;
+ 	set_bit(SPI_HID_RESET_PENDING, &shid->flags);
++	shid->is_panel_follower = drm_is_panel_follower(&spi->dev);
+ 
+ 	spi_set_drvdata(spi, shid);
+ 
+@@ -1247,6 +1378,7 @@ int spi_hid_core_probe(struct spi_device *spi, struct spihid_ops *ops,
+ 	init_completion(&shid->output_done);
+ 
+ 	INIT_WORK(&shid->reset_work, spi_hid_reset_work);
++	INIT_WORK(&shid->panel_follower_work, spi_hid_panel_follower_work);
+ 
+ 	/*
+ 	 * We need to allocate the buffer without knowing the maximum
+@@ -1257,42 +1389,18 @@ int spi_hid_core_probe(struct spi_device *spi, struct spihid_ops *ops,
+ 	if (error)
+ 		return error;
+ 
+-	/*
+-	 * At the end of probe we initialize the device:
+-	 *   0) assert reset, bias the interrupt line
+-	 *   1) sleep minimal reset delay
+-	 *   2) request IRQ
+-	 *   3) power up the device
+-	 *   4) deassert reset (high)
+-	 * After this we expect an IRQ with a reset response.
+-	 */
+-
+-	shid->ops->assert_reset(shid->ops);
+-
+-	shid->ops->sleep_minimal_reset_delay(shid->ops);
+-
+-	error = devm_request_threaded_irq(dev, spi->irq, NULL, spi_hid_dev_irq,
+-					  IRQF_ONESHOT, dev_name(&spi->dev), shid);
+-	if (error) {
+-		dev_err(dev, "%s: unable to request threaded IRQ.", __func__);
+-		return error;
+-	}
+-	if (device_may_wakeup(dev)) {
+-		error = dev_pm_set_wake_irq(dev, spi->irq);
++	if (shid->is_panel_follower) {
++		error = spi_hid_register_panel_follower(shid);
+ 		if (error) {
+-			dev_err(dev, "%s: failed to set wake IRQ.", __func__);
++			dev_err(dev, "%s: could not add panel follower.", __func__);
+ 			return error;
+ 		}
++	} else {
++		error = spi_hid_dev_init(shid);
++		if (error)
++			return error;
+ 	}
+ 
+-	error = shid->ops->power_up(shid->ops);
+-	if (error) {
+-		dev_err(dev, "%s: could not power up.", __func__);
+-		return error;
+-	}
+-
+-	shid->ops->deassert_reset(shid->ops);
+-
+ 	dev_dbg(dev, "%s: d3 -> %s.", __func__,
+ 		spi_hid_power_mode_string(shid->power_state));
+ 
+@@ -1306,6 +1414,9 @@ void spi_hid_core_remove(struct spi_device *spi)
+ 	struct device *dev = &spi->dev;
+ 	int error;
+ 
++	if (shid->is_panel_follower)
++		drm_panel_remove_follower(&shid->panel_follower);
++
+ 	spi_hid_stop_hid(shid);
+ 
+ 	shid->ops->assert_reset(shid->ops);
+@@ -1319,18 +1430,20 @@ static int spi_hid_core_pm_suspend(struct device *dev)
+ {
+ 	struct spi_hid *shid = dev_get_drvdata(dev);
+ 
+-	spi_hid_suspend(shid);
++	if (shid->is_panel_follower)
++		return 0;
+ 
+-	return 0;
++	return spi_hid_suspend(shid);
+ }
+ 
+ static int spi_hid_core_pm_resume(struct device *dev)
+ {
+ 	struct spi_hid *shid = dev_get_drvdata(dev);
+ 
+-	spi_hid_resume(shid);
++	if (shid->is_panel_follower)
++		return 0;
+ 
+-	return 0;
++	return spi_hid_resume(shid);
+ }
+ 
+ const struct dev_pm_ops spi_hid_core_pm = {
+diff --git a/drivers/hid/spi-hid/spi-hid-core.h b/drivers/hid/spi-hid/spi-hid-core.h
+index 293e2cfcfbf7..261b2fd7f332 100644
+--- a/drivers/hid/spi-hid/spi-hid-core.h
++++ b/drivers/hid/spi-hid/spi-hid-core.h
+@@ -10,6 +10,8 @@
+ #include <linux/hid-over-spi.h>
+ #include <linux/spi/spi.h>
+ 
++#include <drm/drm_panel.h>
++
+ /* Protocol message size constants */
+ #define SPI_HID_READ_APPROVAL_LEN		5
+ #define SPI_HID_OUTPUT_HEADER_LEN		8
+@@ -56,6 +58,10 @@ struct spi_hid {
+ 	struct spi_hid_input_buf *input;	/* Input buffer. */
+ 	struct spi_hid_input_buf *response;	/* Response buffer. */
+ 
++	struct drm_panel_follower panel_follower;
++	bool	is_panel_follower;
++	bool	panel_follower_work_finished;
++
+ 	u16 response_length;
+ 	u16 bufsize;
+ 
+@@ -66,6 +72,7 @@ struct spi_hid {
+ 	unsigned long flags;	/* device flags. */
+ 
+ 	struct work_struct reset_work;
++	struct work_struct panel_follower_work;
+ 
+ 	/* Control lock to ensure complete output transaction. */
+ 	struct mutex output_lock;
 
 -- 
 2.53.0.1185.g05d4b7b318-goog
