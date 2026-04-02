@@ -1,63 +1,63 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36DD390986
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 09:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAC8392C47
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 09:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775122001; cv=none; b=rDBrcKd4Qt7ISNOCvorydY/K8xCDUvAVuuqYZdvlUcsGk/zR57HYHiexgctl/JwRwU+cWfV18i4Rrq3bdrbtmO+jktBzsj9xocdp0jh2JlfewS5PO+Yd+2VksfZKHqekB4qAX1Ikf8PScfKC5C/FEpkGgatxHXzX+0VUyzUv9g8=
+	t=1775122009; cv=none; b=tdi1Q+UkePTuSwTxLEfUWzm7gj2UA9oD8sZJbXWWEFrzXIBQQ7HPTct5fRrFR0WQnJtgaK2gXcMh1ThAAmfT+7sFJP7DigOK99aum4cvBKJ62MXd+fR9cyfzqDvf4/hbnGiInv1rBRamYbnxSr/LO2XURhvMiPv5h42EOYRVe10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775122001; c=relaxed/simple;
-	bh=ej1QnT2eQaleNxlMgrs1gAsCPfQsz0m2v5hxcKmj2rc=;
+	s=arc-20240116; t=1775122009; c=relaxed/simple;
+	bh=5nMc9qAcFEsGx3C7PmryTlLfGSZTMZVInAVBgvQtejY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OEX83WCNyQl8vupZgmKEg0z/xNmeJASUHaPDLjE6HkuwgV3y3//1QoMAySbZezVC4vaqVRHu80PJVriOC/qykgHu0sGgYYLrE8cXEyoZv25ZS80YZi2y5phJfJMW1wssoLlXqN8TRxZrgWTCvs2MF6rBY8uBWCODbvvnOcJH3bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F03xzT2Z; arc=none smtp.client-ip=209.85.216.45
+	 MIME-Version; b=raJTj3gCMRMyAd5vwUWYZyqz8jSjxSJpSYqxzn0FJT+0WsHuOMKi/QzeHDnPMlR9epHz4UDx/XOrhNISNNch50B8V/4stQQThGFyzBHSKAfFBrtYs6m15C0Jo7UVkwV066fei1WCQloceaJLhRXxk9/hwHDN0ApvhlyUjEXmCq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZG7MGOBv; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F03xzT2Z"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-35d90833cacso346913a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Apr 2026 02:26:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZG7MGOBv"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3567e2b4159so423390a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Apr 2026 02:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775121989; x=1775726789; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775121997; x=1775726797; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SG/JGJww/E4NFDS2ytnaNRFZJ2JnJt66danprE2gSxY=;
-        b=F03xzT2ZtDi9zfHTPvbpiGmxCiZqaXs2IInz/hYR6jKRDhxsREf3+kiceC4XG3YfPI
-         wALlAiGtb8sC4pEAEGeOVl9Zpz71P07gmCrD0e5khcTptydUKVcTxGDw2SuXnmhBTUyA
-         a9B+g14Ggcn3bLyk/SrUZSlGyf7AJnqAYCMPIKvQHMzYFpNnLv9oL8lVaoIw6hzZvqDV
-         acV2y1bGXFO991EZbfJj78HwgTzg2ZFsBc6Ia8Xx59HSBWJPrMk6kS+loq9i1cWhOQR7
-         0yPnWXnbHTt8m8j1P9qA85GCM4cETPCXFd7Am48Sl4XU7TNictnA/RmJSi3jnC0T+jQ1
-         AhBg==
+        bh=81j40jm7xzkIDR0AUEs06y3jjZUfu/jUEFBO6OwZcOw=;
+        b=ZG7MGOBvrOPdrSlJltkWWUZi7E2sgqmqfiuTaPjkWBNPF5s7PnyiRm36zvCIDtr6uX
+         +c5B60RkEJue0Rewey+xsrKzgSWEJ3RGtrBQSHwstOEDhxuaxQbAklu3VtBcvAY/QGit
+         MQKvw1sQbldvJBtUXOyLOcODIUqy+W5uIiM/TcJtYVKAbG97W9VcasXGLAXlbpv5HZay
+         kq+BMPmCzbj4Vtes57fdyohUNWJbkjQW7gH737dCD/A7vXXgzFUMRFjTipV5Th0MRj3G
+         e849m1pvOVsB132tO5tWgEHQa0DMaoiVDR2OLgv4xW+TLnnWTqXxY1bRkVL5sXDVOjhZ
+         Fcpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775121989; x=1775726789;
+        d=1e100.net; s=20251104; t=1775121997; x=1775726797;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=SG/JGJww/E4NFDS2ytnaNRFZJ2JnJt66danprE2gSxY=;
-        b=fwBBkLkIL9GJOk+CeIcaRJxS8foqMi/4i1Txopw7ZIk6MyAqD1tjQHOKEWmb6INT46
-         pKp6SnxOBwMqsE0N6zxn5ku4NSLK4vyoueTXiek/cegQuBqBiNbYqnJYp8SoDV/B+8+t
-         VzzzOhHM28/zXlsa1Ax6kuAuDNFOU0M5R2eJHULECViGjFeujxN2mt3LaX4kKpgRu01/
-         M8Em4Atm93g8KQ9m0Tr7bxdBk9o97zLiWXv9BFsKnTmPa/m76fBT+lkOJ+qQqDqDAI3y
-         1gfreZf3Qtt+slwlKDemlS+wryup4HBVGyd6X+C40QZAnzeBxZMFQFalWGznKex5HhoU
-         cBCw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVzgpUSI9hQkLmd/Du+jpe6kmZvAxeSgquCGhgmAQBBL3qzqnz33bCq9MqfxjQmPpSPme2sty2BPP+qf8kyp++kn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcRUHFhT+WcLlxMmi+Vk+bSIyzprCPsQXg/6m6C456cRwxRc1Y
-	BukxxJtqsWRvRhSJqiWfR5eNaZ0vghm9mVufYkuLEBXTA8zrImu3k6Xn
-X-Gm-Gg: AeBDievtWYxkE1vz5Xvzt1Rlly5w2IxY4UC/0hyrkdFvoIKsYOl6JpxjsrMkX1W4AvC
-	Xg8eYKYXO1swDOt6H5yv4RiLq/CjIDMOCtEzLTmfwxZjZMXHZ2MeMK47aZBP2o/f5kYv6hr3txN
-	PbiyE07n/QC20vT0C0wHRiwtH9eEAuvzv+QaVmtK4+Zji57o4u99tU0PTqonFNcEqfk7OkZUN7C
-	7iQwCGyyfnWd+IVx7sB+Al1hh9Ta2cCSXg4ie7kZDL4FZOV3yAImQs2DRMPKVPRlYLmox+Ah8g7
-	E1CRZcxbOXk7rdyfZanHOXOJrt9siGBMp85hvwoNHPMkdM9JopPM3US4EVEqdvRRBhPODn/kx5/
-	1Qki5ID7Co5XQiyXPw0Ul7XC0zVntMpMBuYXQ0NgJh1Bowi09b+aJQjcyswycOEhtwMQSh1kLE2
-	R0q+a4r3geqX3FtPfN8YB0O7hI2gVyjhz8kZE678qqOVRR
-X-Received: by 2002:a17:90b:3a8b:b0:35d:93ff:2859 with SMTP id 98e67ed59e1d1-35dc6f92e1amr6324093a91.22.1775121989484;
-        Thu, 02 Apr 2026 02:26:29 -0700 (PDT)
+        bh=81j40jm7xzkIDR0AUEs06y3jjZUfu/jUEFBO6OwZcOw=;
+        b=KZaUL3ScAW4S17IXkg14g3Tk6SFe9U5fFWgaSMA4dhw1EvXF542sgzWGGf1KuhE0ps
+         cnrgGEYFbmDe4vkMR0U29kvArtyFYGMbWQ75aJcAeYzMf+z4MvTeP++vBE/65jbzTkLD
+         c0QXIqVy2olDfngGSTYnu3MFQaBwTBcTjwMtkQzxOKCod2NX7XAlLm73jqVLqlx7kwnV
+         dsLCrZXZcs22b1YkatPbOtUbIcwFKM42c95ObBFoG1NZuAQ8YDIWed6Evckuisq0FxmX
+         C+TIHi1i9uINx0Ru/kKUcApZOOiueIEKaptWfc+WSuyS2rQXCB5P1uiCErJKsrTlLbtK
+         t7IA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqsAhehfycn621y3ECcGxCpS66PpySc/8QhNv4Op/A5QwNESX1FKrWgL1ZE1pQ3PVuS/NQC9koVXAgT028li0TtmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVoLNrs2vObQZQUCfq1+1KVtg8bViXNt5ywPauIB14gs+EkZHU
+	AELaFoRIq1vWRHWJhwv2mdkHm3Zz5tekBs5TxK5ZcfRU1pg95n+e+gk7
+X-Gm-Gg: AeBDietE89ztJwG8er03+f49tUrnihqp6CaMPi4WUVFo9MefPK9rRdF936qFD1U8CZN
+	6Ggy0wW6KM1JWHT1Q9yf/znqk81rPdRrOqpVTXaigVkcV5lNo/9hFBZqE6Mz/yqwK8g7UFoYJei
+	9OD6GpAMBNqAEUxTdQuM7V3k7Quffyz0SgM1c2ia4VV8fSLN+eLOZeU2frB/0sMTG6+QU0PAGPg
+	B2ZJ4Gu209r8Pf3FTUqm0cuIIQ+sL0N1XwiAL2sDM72Jm8oCOMp21EI/6gyDWeNW8ovNbcYhVUM
+	i8U7c1Gb9+ieU27+5FG90f9lD05Z6td7HFw9jldxgyj1gvveM9YRqy0v3cZUkFsGHiJNHyPtE0v
+	wUzqC92tLzAej/kABNE0lIGe32c4xVkIni03dc5tkleVsgFgpNdpxCDFd2pjD4LghA0pfA7/Une
+	muhZcwqyTUP0V8itj/oMfqP5mwwZ405izmDLhkorQ/CJbf
+X-Received: by 2002:a17:90b:5350:b0:359:8dfd:64c8 with SMTP id 98e67ed59e1d1-35dc6f3b854mr6703431a91.24.1775121996713;
+        Thu, 02 Apr 2026 02:26:36 -0700 (PDT)
 Received: from yafangs-Air ([2409:891f:1aa0:8613:19f3:7bee:2e41:149e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dd35f50e9sm2227645a91.6.2026.04.02.02.26.22
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dd35f50e9sm2227645a91.6.2026.04.02.02.26.29
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 02 Apr 2026 02:26:29 -0700 (PDT)
+        Thu, 02 Apr 2026 02:26:36 -0700 (PDT)
 From: Yafang Shao <laoar.shao@gmail.com>
 To: jpoimboe@kernel.org,
 	jikos@kernel.org,
@@ -83,9 +83,9 @@ Cc: live-patching@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	Yafang Shao <laoar.shao@gmail.com>
-Subject: [RFC PATCH 1/4] trace: Simplify kprobe overridable function check
-Date: Thu,  2 Apr 2026 17:26:04 +0800
-Message-ID: <20260402092607.96430-2-laoar.shao@gmail.com>
+Subject: [RFC PATCH 2/4] trace: Allow kprobes to override livepatched functions
+Date: Thu,  2 Apr 2026 17:26:05 +0800
+Message-ID: <20260402092607.96430-3-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260402092607.96430-1-laoar.shao@gmail.com>
 References: <20260402092607.96430-1-laoar.shao@gmail.com>
@@ -97,190 +97,108 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplify the logic for checking overridable kprobe functions by removing
-redundant code.
-
-No functional change.
+Introduce the ability for kprobes to override the return values of
+functions that have been livepatched. This functionality is guarded by the
+CONFIG_KPROBE_OVERRIDE_KLP_FUNC configuration option.
 
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 ---
- kernel/trace/bpf_trace.c    | 13 ++++++---
- kernel/trace/trace_kprobe.c | 40 +++++----------------------
- kernel/trace/trace_probe.h  | 54 ++++++++++++++++++++++++++-----------
- 3 files changed, 54 insertions(+), 53 deletions(-)
+ kernel/trace/Kconfig        | 14 ++++++++++++++
+ kernel/trace/bpf_trace.c    |  3 ++-
+ kernel/trace/trace_kprobe.c | 17 +++++++++++++++++
+ kernel/trace/trace_probe.h  |  5 +++++
+ 4 files changed, 38 insertions(+), 1 deletion(-)
 
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 49de13cae428..db712c8cb745 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -1279,6 +1279,20 @@ config HIST_TRIGGERS_DEBUG
+ 
+           If unsure, say N.
+ 
++config KPROBE_OVERRIDE_KLP_FUNC
++	bool "Allow kprobes to override livepatched functions"
++	depends on KPROBES && LIVEPATCH
++	help
++	  This option allows BPF programs to use kprobes to override functions
++	  that have already been patched by Livepatch (KLP).
++
++	  Enabling this provides a mechanism to dynamically control execution
++	  flow without requiring a reboot or a new livepatch module. It
++	  effectively combines the persistence of livepatching with the
++	  programmability of BPF.
++
++	  If unsure, say N.
++
+ source "kernel/trace/rv/Kconfig"
+ 
+ endif # FTRACE
 diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 0b040a417442..c901ace836cb 100644
+index c901ace836cb..08ae2b1a912c 100644
 --- a/kernel/trace/bpf_trace.c
 +++ b/kernel/trace/bpf_trace.c
-@@ -1929,10 +1929,15 @@ int perf_event_attach_bpf_prog(struct perf_event *event,
- 	 * Kprobe override only works if they are on the function entry,
- 	 * and only if they are on the opt-in list.
- 	 */
--	if (prog->kprobe_override &&
--	    (!trace_kprobe_on_func_entry(event->tp_event) ||
--	     !trace_kprobe_error_injectable(event->tp_event)))
--		return -EINVAL;
-+	if (prog->kprobe_override) {
-+		struct trace_kprobe *tp = trace_kprobe_primary_from_call(event->tp_event);
-+
-+		if (!tp)
-+			return -EINVAL;
-+		if (!trace_kprobe_on_func_entry(tp) ||
-+		    !trace_kprobe_error_injectable(tp))
-+			return -EINVAL;
-+	}
- 
- 	mutex_lock(&bpf_event_mutex);
+@@ -1935,7 +1935,8 @@ int perf_event_attach_bpf_prog(struct perf_event *event,
+ 		if (!tp)
+ 			return -EINVAL;
+ 		if (!trace_kprobe_on_func_entry(tp) ||
+-		    !trace_kprobe_error_injectable(tp))
++		    (!trace_kprobe_error_injectable(tp) &&
++		     !trace_kprobe_klp_func_overridable(tp)))
+ 			return -EINVAL;
+ 	}
  
 diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index a5dbb72528e0..768702674a5c 100644
+index 768702674a5c..6f05451fbc76 100644
 --- a/kernel/trace/trace_kprobe.c
 +++ b/kernel/trace/trace_kprobe.c
-@@ -53,17 +53,6 @@ static struct dyn_event_operations trace_kprobe_ops = {
- 	.match = trace_kprobe_match,
- };
- 
--/*
-- * Kprobe event core functions
-- */
--struct trace_kprobe {
--	struct dyn_event	devent;
--	struct kretprobe	rp;	/* Use rp.kp for kprobe use */
--	unsigned long __percpu *nhit;
--	const char		*symbol;	/* symbol name */
--	struct trace_probe	tp;
--};
--
- static bool is_trace_kprobe(struct dyn_event *ev)
- {
- 	return ev->ops == &trace_kprobe_ops;
-@@ -212,33 +201,16 @@ unsigned long trace_kprobe_address(struct trace_kprobe *tk)
- 	return addr;
+@@ -213,6 +213,23 @@ bool trace_kprobe_error_injectable(struct trace_kprobe *tp)
+ 	return within_error_injection_list(trace_kprobe_address(tp));
  }
  
--static nokprobe_inline struct trace_kprobe *
--trace_kprobe_primary_from_call(struct trace_event_call *call)
--{
--	struct trace_probe *tp;
--
--	tp = trace_probe_primary_from_call(call);
--	if (WARN_ON_ONCE(!tp))
--		return NULL;
--
--	return container_of(tp, struct trace_kprobe, tp);
--}
--
--bool trace_kprobe_on_func_entry(struct trace_event_call *call)
-+bool trace_kprobe_on_func_entry(struct trace_kprobe *tp)
- {
--	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
--
--	return tk ? (kprobe_on_func_entry(tk->rp.kp.addr,
--			tk->rp.kp.addr ? NULL : tk->rp.kp.symbol_name,
--			tk->rp.kp.addr ? 0 : tk->rp.kp.offset) == 0) : false;
-+	return !kprobe_on_func_entry(tp->rp.kp.addr,
-+			tp->rp.kp.addr ? NULL : tp->rp.kp.symbol_name,
-+			tp->rp.kp.addr ? 0 : tp->rp.kp.offset);
- }
- 
--bool trace_kprobe_error_injectable(struct trace_event_call *call)
-+bool trace_kprobe_error_injectable(struct trace_kprobe *tp)
- {
--	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
--
--	return tk ? within_error_injection_list(trace_kprobe_address(tk)) :
--	       false;
-+	return within_error_injection_list(trace_kprobe_address(tp));
- }
- 
++bool trace_kprobe_klp_func_overridable(struct trace_kprobe *tp)
++{
++	bool overridable = false;
++#ifdef CONFIG_KPROBE_OVERRIDE_KLP_FUNC
++	struct module *mod;
++	unsigned long addr;
++
++	addr = trace_kprobe_address(tp);
++	rcu_read_lock();
++	mod = __module_address(addr);
++	if (mod && mod->klp)
++		overridable = true;
++	rcu_read_unlock();
++#endif
++	return overridable;
++}
++
  static int register_kprobe_event(struct trace_kprobe *tk);
+ static int unregister_kprobe_event(struct trace_kprobe *tk);
+ 
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 9fc56c937130..958eb78a9068 100644
+index 958eb78a9068..84bd2617db7c 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -30,6 +30,7 @@
- 
- #include "trace.h"
- #include "trace_output.h"
-+#include "trace_dynevent.h"
- 
- #define MAX_TRACE_ARGS		128
- #define MAX_ARGSTR_LEN		63
-@@ -210,21 +211,6 @@ DECLARE_BASIC_PRINT_TYPE_FUNC(symbol);
- #define ASSIGN_FETCH_TYPE_END {}
- #define MAX_ARRAY_LEN	64
- 
--#ifdef CONFIG_KPROBE_EVENTS
--bool trace_kprobe_on_func_entry(struct trace_event_call *call);
--bool trace_kprobe_error_injectable(struct trace_event_call *call);
--#else
--static inline bool trace_kprobe_on_func_entry(struct trace_event_call *call)
--{
--	return false;
--}
--
--static inline bool trace_kprobe_error_injectable(struct trace_event_call *call)
--{
--	return false;
--}
--#endif /* CONFIG_KPROBE_EVENTS */
--
- struct probe_arg {
- 	struct fetch_insn	*code;
- 	bool			dynamic;/* Dynamic array (string) is used */
-@@ -271,6 +257,32 @@ struct event_file_link {
- 	struct list_head		list;
- };
- 
-+/*
-+ * Kprobe event core functions
-+ */
-+struct trace_kprobe {
-+	struct dyn_event	devent;
-+	struct kretprobe	rp;	/* Use rp.kp for kprobe use */
-+	unsigned long __percpu	*nhit;
-+	const char		*symbol;	/* symbol name */
-+	struct trace_probe	tp;
-+};
-+
-+#ifdef CONFIG_KPROBE_EVENTS
-+bool trace_kprobe_on_func_entry(struct trace_kprobe *tp);
-+bool trace_kprobe_error_injectable(struct trace_kprobe *tp);
-+#else
-+static inline bool trace_kprobe_on_func_entry(struct trace_kprobe *tp)
-+{
-+	return false;
-+}
-+
-+static inline bool trace_kprobe_error_injectable(struct trace_kprobe *tp)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_KPROBE_EVENTS */
-+
- static inline unsigned int trace_probe_load_flag(struct trace_probe *tp)
+@@ -271,6 +271,7 @@ struct trace_kprobe {
+ #ifdef CONFIG_KPROBE_EVENTS
+ bool trace_kprobe_on_func_entry(struct trace_kprobe *tp);
+ bool trace_kprobe_error_injectable(struct trace_kprobe *tp);
++bool trace_kprobe_klp_func_overridable(struct trace_kprobe *tp);
+ #else
+ static inline bool trace_kprobe_on_func_entry(struct trace_kprobe *tp)
  {
- 	return smp_load_acquire(&tp->event->flags);
-@@ -329,6 +341,18 @@ trace_probe_primary_from_call(struct trace_event_call *call)
- 	return list_first_entry_or_null(&tpe->probes, struct trace_probe, list);
+@@ -281,6 +282,10 @@ static inline bool trace_kprobe_error_injectable(struct trace_kprobe *tp)
+ {
+ 	return false;
  }
- 
-+static nokprobe_inline struct trace_kprobe *
-+trace_kprobe_primary_from_call(struct trace_event_call *call)
++static inline bool trace_kprobe_klp_func_overridable(struct trace_kprobe *tp)
 +{
-+	struct trace_probe *tp;
-+
-+	tp = trace_probe_primary_from_call(call);
-+	if (WARN_ON_ONCE(!tp))
-+		return NULL;
-+
-+	return container_of(tp, struct trace_kprobe, tp);
++	return false;
 +}
-+
- static inline struct list_head *trace_probe_probe_list(struct trace_probe *tp)
- {
- 	return &tp->event->probes;
+ #endif /* CONFIG_KPROBE_EVENTS */
+ 
+ static inline unsigned int trace_probe_load_flag(struct trace_probe *tp)
 -- 
 2.47.3
 
