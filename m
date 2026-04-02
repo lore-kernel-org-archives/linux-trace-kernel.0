@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37EE34B661;
-	Thu,  2 Apr 2026 13:13:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A6B2E265A;
+	Thu,  2 Apr 2026 13:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775135589; cv=none; b=eb3nDj1A510U3ceL1nApyeE0vtLLhsMoOIZFibwlk0rnghRJf7Zb2Sh6oKRXO/fkO+oJ3qL290qPs4K5M7whESQ07mecntggrlpq+8TDFwc7OQUdAh4F6uKIYcmUQSxd7ErMKjcWe0YrS5QiiwOi90WmvtxYCKkdHeE6AaEk3qQ=
+	t=1775135987; cv=none; b=Mh+34YMDWAg1FzScJU1PjCY4oAN6iKE38Cc1XmM7Nk4LNgB6gbeX3Y/IdXne1ZOfYNH4gqBDVKKGEXIzrtBiqmNASkRJ00Y5F7NEyPxPAZEipUcwxQAfzOxQKd+rtd0PuynJxFOda3VfW+KOGsJVznltWAFz1AEPZ4XfVTXiBBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775135589; c=relaxed/simple;
-	bh=dtvD+0d6PLGlXTzCklFJtpqXzOFx5lbqIcfTjfd1ONg=;
+	s=arc-20240116; t=1775135987; c=relaxed/simple;
+	bh=9j8WRvIb56UiDFwzaCgefEwr2gDtvnU1wDBFvYi1QGo=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lFvWdcCmm7paprGliA7ZtqOFi3cAmmFzCIBg0KyF2Y/8JYR06tEzm/5ArpJP8Jh2tWwahLmOp7Y5GaiDbQtvEk7xmXOJ+rvVBNzmwK8Mo5A2C5R4MOhHuO6J+qcAidxVkfOmmvwVIeXR1wfIsov34uJtyVDf7OqXUdPFXnDuXaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bujKVQcS; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=FhbA+rH7AoCmH4rIzZ4PObgwF7exEeKye4Vyj1ePuea+794G6nfSb5NmJ0BRSXB46466pZcj5unQD0I6Wm7bAFg/AlrtbEH9GtzUJcCn+pO9u7GQos5shXd9cucVXfz8VcLPOdfM4ul95oUXJ8dZIds08x12bYwJ0aiXFv5Kko4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6tRQbwU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bujKVQcS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FA3EC116C6;
-	Thu,  2 Apr 2026 13:13:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6tRQbwU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3446C116C6;
+	Thu,  2 Apr 2026 13:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775135589;
-	bh=dtvD+0d6PLGlXTzCklFJtpqXzOFx5lbqIcfTjfd1ONg=;
+	s=k20201202; t=1775135987;
+	bh=9j8WRvIb56UiDFwzaCgefEwr2gDtvnU1wDBFvYi1QGo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bujKVQcSbihHaZa/0OJotxjt82t00R1fVbxKclchXEJHRtHL2JMyxcpHueykbhql3
-	 NUZJRTRHcgaMkUMiBPukPVpOebbIttbNy2ED+WEI5a82iVlcv1cK60DuaTmqOWlge3
-	 JCtmm8rHTbT98T/VTbBWKDPdr3OKSI25lBlys37JBN0r/n9q1i3duOF4N6aOGAwfPm
-	 caC6GI5HKNtfF1qGqF35ZS+T5rWhGi1Qc5Tt+VaLp/hw9DvhD0y0bqQzyHoA5zimvZ
-	 E4lQxXxfOWriPPcPjubhKlMcquOtIdT/H2kE++RuJvUJMrc560DoL/UwipIrHk33rl
-	 qkfBZcK2m26og==
-Date: Thu, 2 Apr 2026 22:13:01 +0900
+	b=H6tRQbwUi8L33S+E8ee1VsyhIKK8REdiQPB0n9pL2JYni6bk6UFEc9QPOBNyobV9r
+	 RvjC1UXp5reE8AHuUmpcmykkXuyJ+EW3yCijxzpg3miw+4YquAFAXoMsvprDr8gfRq
+	 qeV+zlLtJjpzd6sgHzYTMMvY10wICq8SmheC4e1Zr0cG0ItBZG1QJWabgTVrdZqIWi
+	 nDE6RvouUENrg4+s7V3IhuiJTNIrDoRjDzRaFmtaAWVT9b7v+AQtDjcfohT5PTcGdX
+	 Szt6o8c6jwEzFV17pEk/FVWA/2rc/8tAtQmV6kFiu2LhRQAOH8nBmQXktBCtkvDYFn
+	 0+BJtRXm5ywNA==
+Date: Thu, 2 Apr 2026 22:19:43 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
- joe.lawrence@redhat.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, kpsingh@kernel.org,
- mattbobrowski@google.com, song@kernel.org, jolsa@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com,
- yonghong.song@linux.dev, live-patching@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] trace: Simplify kprobe overridable function
- check
-Message-Id: <20260402221301.88000892c71eb33c0d4a6f79@kernel.org>
-In-Reply-To: <20260402092607.96430-2-laoar.shao@gmail.com>
-References: <20260402092607.96430-1-laoar.shao@gmail.com>
-	<20260402092607.96430-2-laoar.shao@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 2/3] tracing: Remove the backup instance
+ automatically after read
+Message-Id: <20260402221943.e0ba663a6a223f7f857adaf1@kernel.org>
+In-Reply-To: <20260401104001.5461c5f0@gandalf.local.home>
+References: <177497473558.569199.6527680985537865638.stgit@mhiramat.tok.corp.google.com>
+	<177497475349.569199.11513916633426967730.stgit@mhiramat.tok.corp.google.com>
+	<20260331171936.6f84e357@gandalf.local.home>
+	<20260401121957.2665d454390aff97593bb996@kernel.org>
+	<20260401104001.5461c5f0@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,204 +50,72 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  2 Apr 2026 17:26:04 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
+On Wed, 1 Apr 2026 10:40:01 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Simplify the logic for checking overridable kprobe functions by removing
-> redundant code.
+> On Wed, 1 Apr 2026 12:19:57 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> No functional change.
+> > > 
+> > >   CPU 0							CPU 1
+> > >   -----							-----
+> > >   open(trace_pipe);
+> > >   read(..);
+> > >   close(trace_pipe);
+> > >      kick the work queue to delete it....
+> > > 						rmdir();
+> > > 							[instance deleted]  
+> > 
+> > I thought this requires trace_types_lock, and after kicked the queue,
+> > can rmdir() gets the tr? (__trace_array_get() return error if
+> > tr->free_on_close is set)
+> 
+> rmdir() doesn't use __trace_array_get(), it uses trace_array_find() which
+> we shouldn't need to modify.
+> 
+> static int instance_rmdir(const char *name)
+> {
+> 	struct trace_array *tr;
+> 
+> 	guard(mutex)(&event_mutex);
+> 	guard(mutex)(&trace_types_lock);
+> 
+> 	tr = trace_array_find(name);
+> 	if (!tr)
+> 		return -ENODEV;
+> 
+> 	return __remove_instance(tr);
+> }
 
-NACK.
+Oops, OK it must be updated too.
 
-trace_kprobe must be hidden inside the trace_kprobe.c. It is not
-designed to be exposed. 
-
-Thank you,
+Thanks,
 
 > 
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> ---
->  kernel/trace/bpf_trace.c    | 13 ++++++---
->  kernel/trace/trace_kprobe.c | 40 +++++----------------------
->  kernel/trace/trace_probe.h  | 54 ++++++++++++++++++++++++++-----------
->  3 files changed, 54 insertions(+), 53 deletions(-)
+> > 
+> > > 
+> > >   __remove_instance();
+> > > 
+> > >    [ now the tr is freed, and the remove will crash!]
+> > > 
+> > > 
+> > > What would prevent this is this is to use trace_array_destroy() that checks
+> > > this and also adds the proper locking:
+> > > 
+> > > static void trace_array_autoremove(struct work_struct *work)
+> > > {
+> > > 	struct trace_array *tr = container_of(work, struct trace_array, autoremove_work);
+> > > 
+> > > 	trace_array_destroy(tr);
+> > > }  
+> > 
+> > OK, let's use it.
 > 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 0b040a417442..c901ace836cb 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1929,10 +1929,15 @@ int perf_event_attach_bpf_prog(struct perf_event *event,
->  	 * Kprobe override only works if they are on the function entry,
->  	 * and only if they are on the opt-in list.
->  	 */
-> -	if (prog->kprobe_override &&
-> -	    (!trace_kprobe_on_func_entry(event->tp_event) ||
-> -	     !trace_kprobe_error_injectable(event->tp_event)))
-> -		return -EINVAL;
-> +	if (prog->kprobe_override) {
-> +		struct trace_kprobe *tp = trace_kprobe_primary_from_call(event->tp_event);
-> +
-> +		if (!tp)
-> +			return -EINVAL;
-> +		if (!trace_kprobe_on_func_entry(tp) ||
-> +		    !trace_kprobe_error_injectable(tp))
-> +			return -EINVAL;
-> +	}
->  
->  	mutex_lock(&bpf_event_mutex);
->  
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index a5dbb72528e0..768702674a5c 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -53,17 +53,6 @@ static struct dyn_event_operations trace_kprobe_ops = {
->  	.match = trace_kprobe_match,
->  };
->  
-> -/*
-> - * Kprobe event core functions
-> - */
-> -struct trace_kprobe {
-> -	struct dyn_event	devent;
-> -	struct kretprobe	rp;	/* Use rp.kp for kprobe use */
-> -	unsigned long __percpu *nhit;
-> -	const char		*symbol;	/* symbol name */
-> -	struct trace_probe	tp;
-> -};
-> -
->  static bool is_trace_kprobe(struct dyn_event *ev)
->  {
->  	return ev->ops == &trace_kprobe_ops;
-> @@ -212,33 +201,16 @@ unsigned long trace_kprobe_address(struct trace_kprobe *tk)
->  	return addr;
->  }
->  
-> -static nokprobe_inline struct trace_kprobe *
-> -trace_kprobe_primary_from_call(struct trace_event_call *call)
-> -{
-> -	struct trace_probe *tp;
-> -
-> -	tp = trace_probe_primary_from_call(call);
-> -	if (WARN_ON_ONCE(!tp))
-> -		return NULL;
-> -
-> -	return container_of(tp, struct trace_kprobe, tp);
-> -}
-> -
-> -bool trace_kprobe_on_func_entry(struct trace_event_call *call)
-> +bool trace_kprobe_on_func_entry(struct trace_kprobe *tp)
->  {
-> -	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
-> -
-> -	return tk ? (kprobe_on_func_entry(tk->rp.kp.addr,
-> -			tk->rp.kp.addr ? NULL : tk->rp.kp.symbol_name,
-> -			tk->rp.kp.addr ? 0 : tk->rp.kp.offset) == 0) : false;
-> +	return !kprobe_on_func_entry(tp->rp.kp.addr,
-> +			tp->rp.kp.addr ? NULL : tp->rp.kp.symbol_name,
-> +			tp->rp.kp.addr ? 0 : tp->rp.kp.offset);
->  }
->  
-> -bool trace_kprobe_error_injectable(struct trace_event_call *call)
-> +bool trace_kprobe_error_injectable(struct trace_kprobe *tp)
->  {
-> -	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
-> -
-> -	return tk ? within_error_injection_list(trace_kprobe_address(tk)) :
-> -	       false;
-> +	return within_error_injection_list(trace_kprobe_address(tp));
->  }
->  
->  static int register_kprobe_event(struct trace_kprobe *tk);
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 9fc56c937130..958eb78a9068 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -30,6 +30,7 @@
->  
->  #include "trace.h"
->  #include "trace_output.h"
-> +#include "trace_dynevent.h"
->  
->  #define MAX_TRACE_ARGS		128
->  #define MAX_ARGSTR_LEN		63
-> @@ -210,21 +211,6 @@ DECLARE_BASIC_PRINT_TYPE_FUNC(symbol);
->  #define ASSIGN_FETCH_TYPE_END {}
->  #define MAX_ARRAY_LEN	64
->  
-> -#ifdef CONFIG_KPROBE_EVENTS
-> -bool trace_kprobe_on_func_entry(struct trace_event_call *call);
-> -bool trace_kprobe_error_injectable(struct trace_event_call *call);
-> -#else
-> -static inline bool trace_kprobe_on_func_entry(struct trace_event_call *call)
-> -{
-> -	return false;
-> -}
-> -
-> -static inline bool trace_kprobe_error_injectable(struct trace_event_call *call)
-> -{
-> -	return false;
-> -}
-> -#endif /* CONFIG_KPROBE_EVENTS */
-> -
->  struct probe_arg {
->  	struct fetch_insn	*code;
->  	bool			dynamic;/* Dynamic array (string) is used */
-> @@ -271,6 +257,32 @@ struct event_file_link {
->  	struct list_head		list;
->  };
->  
-> +/*
-> + * Kprobe event core functions
-> + */
-> +struct trace_kprobe {
-> +	struct dyn_event	devent;
-> +	struct kretprobe	rp;	/* Use rp.kp for kprobe use */
-> +	unsigned long __percpu	*nhit;
-> +	const char		*symbol;	/* symbol name */
-> +	struct trace_probe	tp;
-> +};
-> +
-> +#ifdef CONFIG_KPROBE_EVENTS
-> +bool trace_kprobe_on_func_entry(struct trace_kprobe *tp);
-> +bool trace_kprobe_error_injectable(struct trace_kprobe *tp);
-> +#else
-> +static inline bool trace_kprobe_on_func_entry(struct trace_kprobe *tp)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline bool trace_kprobe_error_injectable(struct trace_kprobe *tp)
-> +{
-> +	return false;
-> +}
-> +#endif /* CONFIG_KPROBE_EVENTS */
-> +
->  static inline unsigned int trace_probe_load_flag(struct trace_probe *tp)
->  {
->  	return smp_load_acquire(&tp->event->flags);
-> @@ -329,6 +341,18 @@ trace_probe_primary_from_call(struct trace_event_call *call)
->  	return list_first_entry_or_null(&tpe->probes, struct trace_probe, list);
->  }
->  
-> +static nokprobe_inline struct trace_kprobe *
-> +trace_kprobe_primary_from_call(struct trace_event_call *call)
-> +{
-> +	struct trace_probe *tp;
-> +
-> +	tp = trace_probe_primary_from_call(call);
-> +	if (WARN_ON_ONCE(!tp))
-> +		return NULL;
-> +
-> +	return container_of(tp, struct trace_kprobe, tp);
-> +}
-> +
->  static inline struct list_head *trace_probe_probe_list(struct trace_probe *tp)
->  {
->  	return &tp->event->probes;
-> -- 
-> 2.47.3
+> Yes, by using trace_array_destroy(), it will fix this.
 > 
+> Thanks,
+> 
+> -- Steve
 
 
 -- 
