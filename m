@@ -1,122 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A6B2E265A;
-	Thu,  2 Apr 2026 13:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775135987; cv=none; b=Mh+34YMDWAg1FzScJU1PjCY4oAN6iKE38Cc1XmM7Nk4LNgB6gbeX3Y/IdXne1ZOfYNH4gqBDVKKGEXIzrtBiqmNASkRJ00Y5F7NEyPxPAZEipUcwxQAfzOxQKd+rtd0PuynJxFOda3VfW+KOGsJVznltWAFz1AEPZ4XfVTXiBBY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775135987; c=relaxed/simple;
-	bh=9j8WRvIb56UiDFwzaCgefEwr2gDtvnU1wDBFvYi1QGo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FhbA+rH7AoCmH4rIzZ4PObgwF7exEeKye4Vyj1ePuea+794G6nfSb5NmJ0BRSXB46466pZcj5unQD0I6Wm7bAFg/AlrtbEH9GtzUJcCn+pO9u7GQos5shXd9cucVXfz8VcLPOdfM4ul95oUXJ8dZIds08x12bYwJ0aiXFv5Kko4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6tRQbwU; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96923019DC
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 13:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775136095; cv=pass; b=uU+sVJMQDvXv9BQMsI/gmiHD2JS+Q3HurqJyhU3/I6C4yXw80lbDZ1S4cLio4WbOIPEcG18gajTGPBAeX6Ud/6m9KwXAMyT0+dA7P/AgcA0A7hqlIzG7noDM1IekHV3o6auym1LH3+hUSnPm4fZUNWBRwdD5KLZWNxOlSJfVd3A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775136095; c=relaxed/simple;
+	bh=92ifLkSB1QdWZYuCe2bJNqdGfTWsYwdd5FnM5cH+Uek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M0pqorzJiW3Vm+uAtf1eeQc2GA0ZPP0bWIRPyhafpgW2Zh/CadW5TwlbpLS0wkmJFbfFMa9b231YMKE/T4rJ/7wRuBe7RlfmrTbBLQt0fBXNiHroX714xfyzwcsdclmdZLFSHlEnCc1X1v187ZA0NGCSPT4qquHZUFWeetG0XVQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bm440UxV; arc=pass smtp.client-ip=74.125.224.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6tRQbwU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3446C116C6;
-	Thu,  2 Apr 2026 13:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775135987;
-	bh=9j8WRvIb56UiDFwzaCgefEwr2gDtvnU1wDBFvYi1QGo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=H6tRQbwUi8L33S+E8ee1VsyhIKK8REdiQPB0n9pL2JYni6bk6UFEc9QPOBNyobV9r
-	 RvjC1UXp5reE8AHuUmpcmykkXuyJ+EW3yCijxzpg3miw+4YquAFAXoMsvprDr8gfRq
-	 qeV+zlLtJjpzd6sgHzYTMMvY10wICq8SmheC4e1Zr0cG0ItBZG1QJWabgTVrdZqIWi
-	 nDE6RvouUENrg4+s7V3IhuiJTNIrDoRjDzRaFmtaAWVT9b7v+AQtDjcfohT5PTcGdX
-	 Szt6o8c6jwEzFV17pEk/FVWA/2rc/8tAtQmV6kFiu2LhRQAOH8nBmQXktBCtkvDYFn
-	 0+BJtRXm5ywNA==
-Date: Thu, 2 Apr 2026 22:19:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 2/3] tracing: Remove the backup instance
- automatically after read
-Message-Id: <20260402221943.e0ba663a6a223f7f857adaf1@kernel.org>
-In-Reply-To: <20260401104001.5461c5f0@gandalf.local.home>
-References: <177497473558.569199.6527680985537865638.stgit@mhiramat.tok.corp.google.com>
-	<177497475349.569199.11513916633426967730.stgit@mhiramat.tok.corp.google.com>
-	<20260331171936.6f84e357@gandalf.local.home>
-	<20260401121957.2665d454390aff97593bb996@kernel.org>
-	<20260401104001.5461c5f0@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bm440UxV"
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-650182d19e0so1007790d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Apr 2026 06:21:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775136092; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DwtZwGhdBmd6syNEgsEqfPHpjoLmuQX5gmUiZsfDHrE+wNLZNlGk6TZoqjYWi2nnVB
+         fbNQzXql/whxnvGncQDBLftbduv7TGs+GEwBZKm6eALkyQr9zHZObyP5R3BC2wOjMh55
+         UrByRon+b2YCq6LpgYZ5NR+HFmhn0KQZ9bThNBGq77Y+6ZMSnvgxuVU2P+fiDmBD2wdq
+         cwcvwQHPRZ5nNeQ3l20nh0flxbeDQTlLyS4tBeAYIsVoELhk1ODFDrCU5JTutNuhuKic
+         RhRNwq/i40PWLgJRowQv+wwTIktzlOgnRG8/Va7Im5jyzcoYKalanttZBOLyXjVpldR0
+         JV2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=P/+RvF4sr+15hFwCy/1QY5L6R+YF2MZZgsand9uX2p8=;
+        fh=kkIiLkRAgoDJYM5FjwqgBaJS1+JyU607i1JVh3ZKqdc=;
+        b=lplsHpT3beDSJ0zpfkvzfIsUph/EIt+AEBeF7mg3EWGUu0y6o0xOspWqmu1PQ2r6aO
+         ITNtKVD5KYaMcBDThC4tXOqii90VY2nJXjSM8KkhrDWcduIHkiBiz9X5rYEX99l47GoJ
+         wu1NkbEOgnpceSCCnRK/IvqPemuY/uSFEBlrjDyJpdv2Vcuuam81GVec9HqH/io8XXKB
+         zd+lBGXwFCAXmrAD1GEJlZ3vstxkuBx8Y+lanKctBedGWXJ01cgWmnGb4dIQAJLFAGSy
+         m0ElrdD9T0cRL3XEsQUXRhmXDGAKSbGP7cUmoJAG/ZxDLVMtM5P/w4XkNn1UDSEzgyMb
+         NB9w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775136092; x=1775740892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P/+RvF4sr+15hFwCy/1QY5L6R+YF2MZZgsand9uX2p8=;
+        b=bm440UxVqOnXh6b79oWalrfPhYQW4Z4WKNgYdrdUK1TF6rlQ+wO//yT5nDSYwBpe3M
+         3MYDe4jfdPdbEl7PS44Kgmpq8yYKdubvQ47hwwMqs53YJ80dz4kjNeLojz5hgjx3XwTU
+         gJaFWlU6BeYPAubFhHOeQxQ2cuypCd4CETGTOo0weQaD/vJX41vy10Sc9AtyZyljjU+r
+         rLorbuhQ4KlOzPJRLkwqiSgpLGB+PKnB6jKEE8KraTzJfylZ1LVZ7FOcedxsx40wpDEl
+         L4qV9CCZs7MVqHczcsg5xWjAXt48v3RGnbBt9YoZ0YiMnmCIkOjkqIKWS3OZwkje6GRN
+         JbGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775136092; x=1775740892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=P/+RvF4sr+15hFwCy/1QY5L6R+YF2MZZgsand9uX2p8=;
+        b=EfXymPwSakRKdLqJ8KwEqctbgmxX7A4W/fIMCMQg1T2Q5QfOVUmbbxPuMGOH5+zqMt
+         NXqVEAaKLTB9mALZbCcqmO+0P+PjM6v5/bDfMTxB6DJW+TobdHqCKOSXegK6r+TlrbRl
+         MsQ1aQQN8kkPJUPzqoROBBDcedamM82SJrpk/k0jVbiuw3nDDD1LRTEnf8GY0aPHsN6W
+         3Voiva1TYunZTXEq+3akn2Qse3zhnb8QAKDn+uAS9IXfKXitd+iF538MrYantIM0dCxP
+         GVb3B1agRWoGJpevq/faR9LCqJwdrifiCQgvBdyoJAP035vARrfXfEuuHvDRKKxiwFcS
+         sVag==
+X-Forwarded-Encrypted: i=1; AJvYcCVFaXFISQEF0eKWsCnNb8LbTb8kgG/ffZH8DQwf6FyqJ3WZeTsLvGBJZXMMMN3yiYEC6p9tUyRJ6ME9678logeddUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc1y4TelKaJ+Jy8D57vZ76Vm/YUPo00nPuczfK8QgNH7z220ot
+	zosrO/nolUcFAANFYRyyxsF/p5BhXfizQvurmDMmdefxc+Ih+zYTfP/icLepKQIpnVdySM8fxa0
+	fm7+l/K3JZiXR8RbfUfOx/Guu707d1ng=
+X-Gm-Gg: AeBDiesifpD+P73GupvA63+qBGt1FsCY2/H+zTLxiaXoexDsdccMcrDEtsS1x1Mhc1K
+	dzAnJBvuUD2nMARGaX2Ly9D0p3I0noo/tDIfe3ByBy3qBWTgjo16AYBUvsv18wL/6NUspNVKmTm
+	SNus3YkbFHBzS3sWrUpL7/6gPpBGu3mdn9Y51XykC2FpMSHRGrg7l+pSFGbO0k8lTW+6BHKChiW
+	KxWW6F0WwBvtDsh/iiWkLZPum9NHoiTPBPCRsex0o+SS7av2+JNDXbG0Sg3u4X0ze1Ypq/PgGVU
+	aJAsQqw9
+X-Received: by 2002:a05:690e:144b:b0:649:bbf4:121b with SMTP id
+ 956f58d0204a3-6502fd9534cmr7636575d50.2.1775136092404; Thu, 02 Apr 2026
+ 06:21:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20260402092607.96430-1-laoar.shao@gmail.com> <20260402092607.96430-3-laoar.shao@gmail.com>
+ <2261072.irdbgypaU6@7950hx>
+In-Reply-To: <2261072.irdbgypaU6@7950hx>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 2 Apr 2026 21:20:55 +0800
+X-Gm-Features: AQROBzCq379oCyNjtOYZmuBoMyOqOT1_VV-wnZMWv4kRMd3OjGsW1s1XAyz2G-0
+Message-ID: <CALOAHbDnNba_w_nWH3-S9GAXw0+VKuLTh1gy5hy9Yqgeo4C0iA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] trace: Allow kprobes to override livepatched functions
+To: Menglong Dong <menglong.dong@linux.dev>
+Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, 
+	joe.lawrence@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, kpsingh@kernel.org, mattbobrowski@google.com, 
+	song@kernel.org, jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
+	yonghong.song@linux.dev, live-patching@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 1 Apr 2026 10:40:01 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, Apr 2, 2026 at 8:48=E2=80=AFPM Menglong Dong <menglong.dong@linux.d=
+ev> wrote:
+>
+> On 2026/4/2 17:26, Yafang Shao wrote:
+> > Introduce the ability for kprobes to override the return values of
+> > functions that have been livepatched. This functionality is guarded by =
+the
+> > CONFIG_KPROBE_OVERRIDE_KLP_FUNC configuration option.
+>
+> Hi, Yafang. This is a interesting idea.
+>
+> For now, the bpf_override_return() can only be used on the kernel
+> functions that allow error injection to prevent the BPF program from
+> crash the kernel. If we use it on the kernel functions that patched
+> by the KLP, we can crash the kernel easily by return a invalid value
+> with bpf_override_return(), right? (Of course, we can crash the kernel
+> easily with KLP too ;)
 
-> On Wed, 1 Apr 2026 12:19:57 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > > 
-> > >   CPU 0							CPU 1
-> > >   -----							-----
-> > >   open(trace_pipe);
-> > >   read(..);
-> > >   close(trace_pipe);
-> > >      kick the work queue to delete it....
-> > > 						rmdir();
-> > > 							[instance deleted]  
-> > 
-> > I thought this requires trace_types_lock, and after kicked the queue,
-> > can rmdir() gets the tr? (__trace_array_get() return error if
-> > tr->free_on_close is set)
-> 
-> rmdir() doesn't use __trace_array_get(), it uses trace_array_find() which
-> we shouldn't need to modify.
-> 
-> static int instance_rmdir(const char *name)
-> {
-> 	struct trace_array *tr;
-> 
-> 	guard(mutex)(&event_mutex);
-> 	guard(mutex)(&trace_types_lock);
-> 
-> 	tr = trace_array_find(name);
-> 	if (!tr)
-> 		return -ENODEV;
-> 
-> 	return __remove_instance(tr);
-> }
+Right.
+Livepatch already grants the power to modify the kernel at will;
+allowing BPF to override a patched function simply adds a layer of
+runtime programmability to an existing modification.
 
-Oops, OK it must be updated too.
+>
+> I haven't figure out the use case yet. Can KLP be used together with
+> the BPF program that use bpf_override_return()?
 
-Thanks,
+The two mechanisms do not target the same entry point: whileKLP
+modifies the original kernel function, bpf_override_return() is
+applied to the newly patched function provided by the KLP module.
 
-> 
-> > 
-> > > 
-> > >   __remove_instance();
-> > > 
-> > >    [ now the tr is freed, and the remove will crash!]
-> > > 
-> > > 
-> > > What would prevent this is this is to use trace_array_destroy() that checks
-> > > this and also adds the proper locking:
-> > > 
-> > > static void trace_array_autoremove(struct work_struct *work)
-> > > {
-> > > 	struct trace_array *tr = container_of(work, struct trace_array, autoremove_work);
-> > > 
-> > > 	trace_array_destroy(tr);
-> > > }  
-> > 
-> > OK, let's use it.
-> 
-> Yes, by using trace_array_destroy(), it will fix this.
-> 
-> Thanks,
-> 
-> -- Steve
+> The KLP will modify
+> the RIP on the stack, and the bpf_override_return() will modify it too.
+> AFAIK, there can't be two ftrace_ops that both have the
+> FTRACE_OPS_FL_IPMODIFY flag. Did I miss something?
 
+Correct, but as noted, they target different functions
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> It will be helpful for me to understand the use case if a selftests is
+> offered :)
+
+Here is a recent use case from our production environment.
+
+- The livepatch
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_mai=
+n.c
+index e378bbe5705f..047e937bfa6d 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -5175,12 +5175,22 @@ int bond_update_slave_arr(struct bonding
+*bond, struct slave *skipslave)
+        return ret;
+ }
+
++/* noclone to avoid bond_get_slave_hook.constprop.0 */
++__attribute__((__noclone__, __noinline__))
++int bond_get_slave_hook(struct sk_buff *skb, u32 hash, unsigned int count)
++{
++       return -1;
++}
+
+ static struct slave *bond_xmit_3ad_xor_slave_get(struct bonding *bond,
+                                                 struct sk_buff *skb,
+                                                 struct bond_up_slave *slav=
+es)
+ {
+        struct slave *slave;
+        unsigned int count;
++       int slave_idx;
+        u32 hash;
+
+        hash =3D bond_xmit_hash(bond, skb);
+@@ -5188,6 +5198,13 @@ static struct slave
+*bond_xmit_3ad_xor_slave_get(struct bonding *bond,
+        if (unlikely(!count))
+                return NULL;
+
++       /* Try BPF hook first - returns slave index directly */
++       slave_idx =3D bond_get_slave_hook(skb, hash, count);
++       /* If BPF hook returned valid slave index, use it */
++       if (slave_idx >=3D 0 && slave_idx < count) {
++               slave =3D slaves->arr[slave_idx];
++               return slave;
++       }
+        slave =3D slaves->arr[hash % count];
+        return slave;
+ }
+
+- The BPF program
+
+SEC("kprobe/bond_get_slave_hook")
+int BPF_KPROBE(slave_selector, struct sk_buff *skb, u32 hash, u32 count)
+{
+        unsigned short net_hdr_off;
+        unsigned char *head;
+        struct iphdr iph;
+        int *slave_idx;
+        __u32 daddr;
+
+        __u16 proto =3D BPF_CORE_READ(skb, protocol);
+        if (proto !=3D bpf_htons(0x0800))
+                return 0;
+
+        head =3D BPF_CORE_READ(skb, head);
+        net_hdr_off =3D BPF_CORE_READ(skb, network_header);
+
+        if (bpf_probe_read_kernel(&iph, sizeof(iph), head + net_hdr_off) !=
+=3D 0)
+                return 0;
+
+        daddr =3D iph.daddr;
+        slave_idx =3D bpf_map_lookup_elem(&ip_slave_map, &daddr);
+        if (slave_idx) {
+                int idx =3D *slave_idx;
+
+                if (idx >=3D 0 && idx < (int)count)
+                        bpf_override_return(ctx, idx);
+        }
+        return 0;
+}
+
+>
+> BTW, if we allow the usage of bpf_override_return() on the KLP patched
+> function, we should allow the usage of BPF_MODIFY_RETURN on this
+> case too, right?
+
+It's a possibility, but I haven't tested that specifically yet.
+
+--=20
+Regards
+Yafang
