@@ -1,191 +1,145 @@
-Received: from mail-yx1-f65.google.com (mail-yx1-f65.google.com [74.125.224.65])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E573822A9
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 07:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775116327; cv=pass; b=hOpsKHvhLRr+QKR8WEU5HjK5dQkgaKYDO6LgmqbP7zrEO4fCdqsqOgUfq9mZ5kB104+FBLLgpyN0nNzpDcxHTOBGNiJM2BKtYQr0ugA/McIv9luQtUSudsN23dkLMKCf2d6cG9cnK5RNRSjRf4MRkcmMpLVQiwPfPwzAh3BD3Ng=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775116327; c=relaxed/simple;
-	bh=RvSlqOQSZukCTfHZ5R6+udcx9GlCy+uBqLrTdJAgRAU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LiNgRy71LhF1+c/DNh8HaMjoFB6psSjbltPtmqFNUEcFX4fmcoq5b3YIRAu3CLQbO8YfOdQ5WBlA+38+VeN21rppKQtAb/KOCVoehdlXXVj00wrOnkdp+MKQnOZHNQSFXKhtvG2Azo2xpM19fw/0btCqm0cK02m2HitPeZUoL9c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NyzaA7De; arc=pass smtp.client-ip=74.125.224.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E85C386570
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Apr 2026 09:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775121990; cv=none; b=I5khtmCsft4HDLb31g80CpsG729ydE/c3JROrutx7sQYIZoEn+ySlOwv7WzUvWwwNQrnX5Xdaen/vEyxdE+EEyPf7nxWzFeLEeLnJY5KDBn8f3uuQfJCS1FwfkxHK3j54qa5DspuiGkd4Jj3CFCln7YEO/X3XsE3wcqIrgECk/M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775121990; c=relaxed/simple;
+	bh=4ECgb/AfeI/g65ADzXXjhXc34kvosRuBpZwZRATvnTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eRivDGRzhwYoHwjoX8wWckVO8kTQPr16fP0hwRxm6FuDZvMHBoekg3hMZpjqNghYZtT5tFAcdwfizAAIzOYNzphoy2PeQSwVVBH1A757Vh7a8JeT/IPiCYUN5vGh7zM4+P6PfwkiGnCoeHgYO3ymyW9NlXTTdEkrd1xGnQAh/3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PK7aYTF2; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyzaA7De"
-Received: by mail-yx1-f65.google.com with SMTP id 956f58d0204a3-64fc6b21789so445082d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Apr 2026 00:52:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775116325; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HRovH3zGwQ7vXpwdsoc1htd1MvJ5masvPHoKaq7q6pXiZsQ8ItlnxjAvhdGPzTpTA2
-         f791BaK3reX4CayBSCdxUbm4joV3fHOFG5kU5CFIyxbyJKa9oaw87fxJUE09ArQhAkuD
-         cgi0XB5RXw+okYtK1J1xX1z5J4Y6VB0/0OItTym49JBoSdHUpFSASFBo3iSLJKHzm3hI
-         brtbllzgfWqyfZDuQwDTqXu+ErlLfHivHUQKRvqKw3ft1czA3HX6kB9F4JSqTKyaA7sy
-         d4TRF6gxcT4pK7On9yxxH8bdTV8Lmcrxznseglvv/DOwzoSKC9Ha9W2VicqCK3Z1gsyO
-         n1SA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Yyqzj2ci0pj2a+dzQTl8F1rVtzKEVbe+13yhnPyjMTM=;
-        fh=vHPfwBR7DIZ78P3vzgd0VuQ5Pb/krXOYb++cpRjFU1Q=;
-        b=kWL+HD9h8wDjQUYYcPx5LDRokEjuef3DTpxny0xuKRIxeyB+0VxEZSC2kwka3HCV/l
-         OeR5jEsTO1e0+AT/OwBHViIaFYPoZ628klVb/AeWwaxeHe6LM2jHZ1TMWUDbXWul5Hn8
-         SqJOSrdi2YFoLmz6df8mcPGy8ruG6WJPh2FxcAW80/hQiZjliRRjHovNcKnwOc9ZZ6s7
-         oHCtkgf0HJCnxRWpu3BPTfMZWC9JElHb36FwGNc9WUTwpELYNR7FBKoM42n5Lf0f25n2
-         dlySEyFBN/48VR5ExFd3bopRRwLSZLHcBZaP+xdewtYoOmuSKKv8JJxJRThmELuOOyY2
-         gjEg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PK7aYTF2"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-35da2d35eccso390809a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Apr 2026 02:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775116325; x=1775721125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yyqzj2ci0pj2a+dzQTl8F1rVtzKEVbe+13yhnPyjMTM=;
-        b=NyzaA7De80PEFXTB7s8zteRVbCz1xla6Mu7uqpgxd930ZWnSZTBUwLkarlBkvJrhP7
-         LLfU6JqwUC+94oF5Qsl0ce6kD36Cp42NB0XsLhks2ER6xgzx4xj/ZvyHcE0ON3UGm0/D
-         NgZBoRzhPzGFO28JZNxALaqi80dVhhrA3nlm9lgpBIPKm/TSiVdU+Jgr+Q4C8Vh7GdYU
-         GDH6Teglv5QmHypHt6Lr58ZovB7QSIJI7BpShaGtfn86KINAeQe5SVkAeAVE5dIcHm0Q
-         X0JA5qGP5WSLHUjnDByFsKZKTlC7zSQuDDKv2rP6h5BM5OmaR/rWp0fD5bdlHPqbwik1
-         oM0Q==
+        d=gmail.com; s=20251104; t=1775121982; x=1775726782; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJn/mu9tI/GhEXXW9g1aC2S5Xq1EhBmi8P2sfsvCv7U=;
+        b=PK7aYTF2nKbGhR80fVoxFVk22YR5yod0PSzWIb3AzHJgjIksMRbn02SaHf4aoIDKXi
+         AOyBoWjEhaSFB3ynLqe+0EcAvJeW+GZgqx9M+yF3PC0c2G1tcEDr6QV1PvLNT2eygfsL
+         O6lYgU6Uqn1fDjijkiup2AAVfB/qOry1PZ5WUWMilS6Fhj6AtX+4aZ2sijMC0NQLwmIT
+         wWOyEn9Aawj3BQjq65DWW0epcftQsbhCv3t34WKIKC4YueVGBAH94JolYW6bXDYsNKc2
+         PWf+f2H+QUcAc1SqmP64zRsDnNCBd3aSL64+DqFIo0DX6e2HuOHodcHXkkPXHuKvu69a
+         K6sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775116325; x=1775721125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Yyqzj2ci0pj2a+dzQTl8F1rVtzKEVbe+13yhnPyjMTM=;
-        b=S9j5SFUBT9AtszJUi1Yf0HM+DGXacdRg+WFVhpe2YehUpHybsOgW9C17g/ugnDXCaS
-         px1vg2djIu/eufOMEL8kNuq8OYsoHKN/DyTvGogXzd9LTVqN10pY+hXg8bXiTD9jD1FE
-         raiKXsV3XPJS55MdO7PijOkV2ZByDolFiu88ZPzjqpd9skts+IqwRMNVu8Z5ayJmFzoh
-         lwpTro8DxMTQ12AYo61+hOeZsJkm+s4J9nhYIpmFRRDPbx87+YaGy+bdHmfsgMYPy0u2
-         I8qEkcuh+d3uj8L165esK43EqOzB8+iAe51YSetoyy3BdjJZyy8758Jmv7KJTJTsqM59
-         C/tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLaz675+P40U0hw+0nisyn4xPz2fI4RsevlzAiUpYVyeQNQweQtBfbgn4pKEZ65tgIIt+2j1h1PovJffU1rJYhSmo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuTB/TMNvZGaDwLuYhCeLnKDBLcOkDZt5VvNnCkgBRLXj22EXe
-	oYo/bFfY0rgft3dHm8IScNJiLdcgtq4wySV532xFj26fZe0YP6oMquAb6E47OLfsey3U623xo7m
-	0hHkltPwMdvc7KY82I388nthY7Xm97gE=
-X-Gm-Gg: AeBDiev/6bqYgNkXnTVMSpbaD1SphsjedGLv8OqMEfyRU+sf9FQlMGYD11cLBRs3oYj
-	i1X5jrJPVoTEfN4XkTD/z4yIPqP4tzQNuFaJj2iG0r5qF3MlVy1oHNzVYTgyslzeHPZ5XU9a88n
-	Cj7jWjW/mCMRMcLXWVo3N0/qn+atePBMvAnhoHKvphnW/XApHHb1HG9HkJBs9/LlRVlQvL7Td0F
-	KOVmwJOkw9yo0Yy/O9Kj9YuVXnMqXyxyeGR4UdGqQ7C0q+tuw9Qv+5Fi5xnOfNj+ICauMhZjGpr
-	YUNTcX39UQ==
-X-Received: by 2002:a05:690e:2550:b0:64e:f106:60e6 with SMTP id
- 956f58d0204a3-6502fe6a29amr4650514d50.57.1775116325153; Thu, 02 Apr 2026
- 00:52:05 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775121982; x=1775726782;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xJn/mu9tI/GhEXXW9g1aC2S5Xq1EhBmi8P2sfsvCv7U=;
+        b=ZotxM/w28TxxW62yEf4SFrNY+/9FBiD2oBlUtQOca33RCvHTOholhIW6+VXlLh+YeQ
+         rat/2vDrIXiB2/G25+YJe/sc0NFZUgSLs2QNGlkWBfu5aDxg8l2HRh/9qpmxdXwnG6hp
+         i2pVmURmNGEeDasjjgqV9KIVJ+4WZgKIIBIWuB/4R18O8bFm/QLEi7EfV+1IJ7KO1zsQ
+         MALpk0lm9D//GFTTgMDi0zXCpP9VirnwF9dD8Ji/d6dWhJ4feWg+PQhc9R9l3tviatMv
+         oAm0ww9DXYq7iQTt0VJg2BfSwuVP3Z1ZKKstBaZ4GGmqMNk91eObas2Doka9akScbRen
+         z4qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqU0ihK41AQKaY759pk3RBMxlGcF9X6rnB300C+J80gyBcXyogUzFTQB3dLgPQJT9N6k/0acmD1MobGqNK3uEcCAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuYwXhztN652cj1NNw2tDkTwb00dx3cmgVBhG83wiEbjbFEwtv
+	6yz6ebHXyKuESr6kt7moaJJ3ZKtlr+uh5+Cx9j62Apybtv7jQQXHZ1ZV
+X-Gm-Gg: AeBDiev1K+yQyY0v7EcDl1N9MCOZdF2cpcFWby9TktTzuOMm1q+4PozK7/3jjPjb99s
+	t2MrWOIUaI8z6ozvd/55Hffx7fh+/b8roWy1ptcgsMlVR+Zj4YCxNfMhw0kYOsWKfCR2dbeyTkB
+	+6To/flT9niEDjhaCO8FewBph4MBFTokV4noqKjbPcRYeaoXx9JhLPWfTX8UqV58r/Rn/pOsv7M
+	HbbTjLFcdGKMgyF21BagoRB/QvWFgt/3rWTk+peXaKaMeNofpBmJ1mbdKHwmYITRHxLkw+nJUUM
+	7c90x5/f2LuD7ckui4pkXqfALjiDlCNwcVKoa5Ree8zuo8E1CvNLCyPd1spzlg807pNcotgSC+I
+	wHK6yiZFlmzX23jZ/fsAiaIoHvXQPKT10pljXdKs9Lt3BeXfKj+AknpqF5eqMl2m5dJC3lxRoPl
+	/bjyBVnTaRVU/ws7Nktpzl+EWnHbnVv1aV/3zsLs5fim3H
+X-Received: by 2002:a17:90a:c107:b0:35b:a656:a5fe with SMTP id 98e67ed59e1d1-35dc6e77dcemr6086211a91.3.1775121982115;
+        Thu, 02 Apr 2026 02:26:22 -0700 (PDT)
+Received: from yafangs-Air ([2409:891f:1aa0:8613:19f3:7bee:2e41:149e])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dd35f50e9sm2227645a91.6.2026.04.02.02.26.13
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 02 Apr 2026 02:26:21 -0700 (PDT)
+From: Yafang Shao <laoar.shao@gmail.com>
+To: jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	kpsingh@kernel.org,
+	mattbobrowski@google.com,
+	song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	yonghong.song@linux.dev
+Cc: live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Yafang Shao <laoar.shao@gmail.com>
+Subject: [RFC PATCH 0/4] trace, livepatch: Allow kprobe return overriding for livepatched functions
+Date: Thu,  2 Apr 2026 17:26:03 +0800
+Message-ID: <20260402092607.96430-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118123639.688444-1-dongml2@chinatelecom.cn> <20260402061251.273705-1-leon.hwang@linux.dev>
-In-Reply-To: <20260402061251.273705-1-leon.hwang@linux.dev>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Thu, 2 Apr 2026 15:51:51 +0800
-X-Gm-Features: AQROBzBHmTyM7mG6aiqVl7652RBU8GMP1j57JJF9F1xGYP4p9m1mpS4hJciVsSg
-Message-ID: <CADxym3acSo0gXO-K+=ZJvcT+ne-He06S8QcOwCKyzNDHQHRBQQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 0/6] bpf trampoline support "jmp" mode
-To: Leon Hwang <leon.hwang@linux.dev>, ast@kernel.org
-Cc: andrii@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net, 
-	eddyz87@gmail.com, haoluo@google.com, jiang.biao@linux.dev, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mark.rutland@arm.com, martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, sdf@fomichev.me, song@kernel.org, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 2, 2026 at 2:13=E2=80=AFPM Leon Hwang <leon.hwang@linux.dev> wr=
-ote:
->
-> On Tue, Nov 18, 2025 at 08:36:28PM +0800, Menglong Dong wrote:
-> >For now, the bpf trampoline is called by the "call" instruction. However=
-,
-> >it break the RSB and introduce extra overhead in x86_64 arch.
-> >
-[...]
-> >
-> >Therefore, we introduce the "jmp" mode for bpf trampoline, as advised by
-> >Alexei in [1]. And the logic will become this:
-> >  call foo -> jmp trampoline -> call foo-body ->
-> >  return foo-body -> return foo
-> >
-> >As we can see above, the RSB is totally balanced after this series.
-> >
->
-> Hi, this is a late footnote for this optimization.
->
-> As this optimization landed in the 6.19 kernel, the function graph featur=
-e
-> of bpfsnoop [1] cannot work because of the missing tracee's FP/IP for
-> fexit.
->
-> Before this optimization,
->
-> caller
-> -> call icmp_rcv                caller IP/FP
->    -> call trampoline           icmp_rcv IP/FP
->       -> call icmp_rcv body     trampoline IP/FP
->       <- return to trampoline
->    <- return to caller
->
-> After this optimization,
->
-> caller
-> -> call icmp_rcv                caller IP/FP
->    -> jump to trampoline
->       -> call icmp_rcv body     trampoline IP/FP
->       <- return to trampoline
->    <- return to caller
+Livepatching allows for rapid experimentation with new kernel features
+without interrupting production workloads. However, static livepatches lack
+the flexibility required to tune features based on task-specific attributes,
+such as cgroup membership, which is critical in multi-tenant k8s
+environments. Furthermore, hardcoding logic into a livepatch prevents
+dynamic adjustments based on the runtime environment.
 
-Ah, you are right. The target symbol will disappear in
-the stack backtrace in BPF prog, as we jump to the trampoline
-directly.
+To address this, we propose a hybrid approach using BPF. Our production use
+case involves:
 
-We can pretend a RIP in the stack for the address of the
-"function body", therefore the target symbol can show in
-the stack backtrace. I have not tried it yet, but I think it should
-work.
+1. Deploying a Livepatch function to serve as a stable BPF hook.
 
-However, I'm not sure if it is worth it.
+2. Utilizing bpf_override_return() to dynamically modify the return value
+   of that hook based on the current task's context.
 
-Thanks!
-Menglong Dong
+A significant challenge arises when atomic-replace is enabled. In this
+mode, deploying a new livepatch changes the target function's address,
+forcing a re-attachment of the BPF program. This re-attachment latency is
+unacceptable in critical paths, such as those handling networking policies.
 
->
-> As a result, the function call stack entry for icmp_rcv has gone.
->
-> It can be confirmed by bpf_get_stack*() helpers.
->
-> $ sudo bpfsnoop -k icmp_rcv --output-stack -v
->
-> In 6.14,
->
-> 0xffff8000802bda44:bpfsnoop_fn+0x6a4
-> 0xffff8000802bda44:bpfsnoop_fn+0x6a4
-> 0xffff8000802bd064:bpf_trampoline_6442573163+0xa4
-> 0xffffc7825c984df0:icmp_rcv+0x8
-> 0xffffc7825c91bcb8:ip_protocol_deliver_rcu+0x48
-> 0xffffc7825c91bfd4:ip_local_deliver_finish+0x8c
-> 0xffffc7825c91c0d0:ip_local_deliver+0x88
->
-> In 6.19,
->
-> 0xffffffffc0209069:bpfsnoop_fn+0x449
-> 0xffffffffc01ef2a4:bpf_trampoline_6442568724+0x64
-> 0xffffffffb1085cda:ip_protocol_deliver_rcu+0x1ea
-> 0xffffffffb1085d96:ip_local_deliver_finish+0x86
-> 0xffffffffb1085e95:ip_local_deliver+0x65
->
-> So, it would surprise users who care about the tracee entry.
->
-> [1] https://github.com/bpfsnoop/bpfsnoop
->
-> Thanks,
-> Leon
->
-> [...]
+To solve this, we introduce a hybrid livepatch mode that allows specific
+patches to remain non-replaceable, ensuring the function address remains
+stable and the BPF program stays attached.
+
+Furthermore, this mechanism provides a lower-maintenance alternative to
+out-of-tree BPF hooks. Given the complexities of upstreaming custom BPF
+hooks (e.g., [0], [1]), this hybrid mode allows for the maintenance of
+stable, minimal hook points via livepatching with significantly reduced
+maintenance burden.
+
+Link: https://lwn.net/Articles/1054030/ [0]
+Link: https://lwn.net/Articles/1043548/ [1]
+
+Yafang Shao (4):
+  trace: Simplify kprobe overridable function check
+  trace: Allow kprobes to override livepatched functions
+  livepatch: Add "replaceable" attribute to klp_patch
+  livepatch: Implement livepatch hybrid mode
+
+ include/linux/livepatch.h   |  2 ++
+ kernel/livepatch/core.c     | 50 +++++++++++++++++++++++++++++++
+ kernel/trace/Kconfig        | 14 +++++++++
+ kernel/trace/bpf_trace.c    | 14 ++++++---
+ kernel/trace/trace_kprobe.c | 49 ++++++++++++------------------
+ kernel/trace/trace_probe.h  | 59 +++++++++++++++++++++++++++----------
+ 6 files changed, 139 insertions(+), 49 deletions(-)
+
+-- 
+2.47.3
+
