@@ -1,162 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6001A682A;
-	Sat,  4 Apr 2026 16:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A3B1A285
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  5 Apr 2026 16:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775321624; cv=none; b=DDDROPISPnTpjbrTR3i1WhWtih/B3Itl4ztMMI3Qx4S556HT3hPGXGVM8CbzMK9HLLXYBJP9AJMmnSrAUnRyj4fqA1ErOYva8WFkkfRaq9PFwO1Q6Jsp7rTA/UojOSerXuWnU60t4exs1n0tbU6DR7lQ1+KVidhz7YDA/Uyww8M=
+	t=1775407158; cv=none; b=nPWMFL5DszyURkGINIRltGS548uhJ4u24R2TRRybr8NNyS/BF/yurypiPfV3remH7ZYzM/D9mk3wvCvZlUmTdI8hJXZSVJtQdGSP4cWQUPDWsykgqOJKbFgKdZlVQ5SXICy8orjEVGEfYiVGfIw5DyQ46oJc4om7wCRGo8CY5kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775321624; c=relaxed/simple;
-	bh=4ljFbXNE5GaVpD1qooXO+bZe5p57hd2HpLdsSi36i98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qaASr+fRuK5zDWNgOXg1FaBpe9s01VoMLW3vmG/SwzR+NJ9VuXmSOdyizaOvhbzXjJH6AhS08Vrd2u7MG8wxP3x23kelFI//uvqLgOm8r8gr8ulncVtpeuguqziWFr1An8bIzq4//LdQsTU6SwA8bratSqo0mIs9IeFqz+IAo+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoLLbiIx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775407158; c=relaxed/simple;
+	bh=k0u4N4f0VkVrnvs3LQrlN9FOtkjFp5bVcDpGR9ErXNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VzQNb3WgyZMGFIFn/vGNu+2CIBqtdKH0EF78P+wurQ5YenYlURTX7osJ4XYMSWx46WvtMFGjGBadqJcf66qXBYDnMUOo0qYWhnIB1mb+v7dqdkmlVE3gyPfweq857kOuSJtmPocKWZSlwpmNnCnEHH0Ang7A8+BvG+cBfU7g+rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LGX0sbLO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoLLbiIx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EAFCC19421;
-	Sat,  4 Apr 2026 16:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775321624;
-	bh=4ljFbXNE5GaVpD1qooXO+bZe5p57hd2HpLdsSi36i98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uoLLbiIxFbBGZ/vxLYnikvtUkFkVKpK+0+eS4Voj+KIm5HA/M3qyTg3zJr+w+/gsa
-	 mdc7NOsJGiGu5M6W/VfPOHq0EHo0WoThpRYCQ5/2oVF2oh3tgiYy8Tg3LNrLh+L4Mu
-	 uHBZ++P6y2er+rTRp3yfoTo7bKJHU4Url3YYN9yjLOY++ThUbe297jAGjbSy+FF9RI
-	 IKhX2S4k3adTLbqFyVmgH7E+VllDg6fIf6g6zOQIRH/R8AKRKsl0clumvpP8LIeyzU
-	 U5+YLC/LgJludkLgapI6ZyBO6VqWZkDdVHDcGxwtZeLV1WVdrbru/6P1V06EVBmn75
-	 hjx/TgvCHesdQ==
-Date: Sat, 4 Apr 2026 22:23:32 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, 
-	Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGX0sbLO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775407155;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5LiNsMTv/b4oQHjiG7soW1r21z4Wr3WQGLyz0Cz6HLM=;
+	b=LGX0sbLOuoFCEspzFAd0YdZ+EImCWhHlLI2+OqtAYIrL+9QXcDCLexQ5gr+JZDyF8DJM0O
+	sjxKTxg4xBCzOXjWaJ3kYjhY0c7g60EiZlUS9Euh7av/Kh9RhbpTGI/yJ3S7YbYHGUMBKL
+	LlJCbK0p5d0F0Q3Ab2DhQQgiRhonxzc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-4QgX8KeCME2IhG54gA-CRA-1; Sun, 05 Apr 2026 12:39:14 -0400
+X-MC-Unique: 4QgX8KeCME2IhG54gA-CRA-1
+X-Mimecast-MFC-AGG-ID: 4QgX8KeCME2IhG54gA-CRA_1775407153
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-488b171f1a5so924925e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 05 Apr 2026 09:39:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775407153; x=1776011953;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5LiNsMTv/b4oQHjiG7soW1r21z4Wr3WQGLyz0Cz6HLM=;
+        b=TDzgTeIs/NscZsUZjlRao6PhKe9/cW3lS5bdhO7bz1KdeyEDW2TIL6ACp0ro2Lb35v
+         mizZvxSk5EXOQvgXDEvETVTMQnjSajXYYPwOvKznG+/sciuf7qKFmyBeZQXIL5H+iWYO
+         nhh+CQ0w9Wx68Sc6FcWzcIw/EH4R4sZNCvel/WSyXKF3Q4TiWVTAsm+YtLlvqw3Jt+bx
+         aAIetVmBCI0kygVQ+1KmtxbiNcCQ0hWG4Q7hrd4A2dKngdAjFxXuXszc3rs9krYtPwQ3
+         mMxQax2CFa/wv6y5keRGrZ9ZqLrLgUNf3UKXEzZxBzj4XrKbezt+u1+vYjkkqQXmrrLf
+         AWzg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7PoLTs9OdQ+uyIIR5DShZxAHlQ8UFZsnGUELSE4ZJFbyXa3EzepJicKq0dt0l60dg+5z/LmmuTIaMnoWr38CCaTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7HjcqwIVQFI31Uyl2EEnJe0jX2MTJh4AjZN0bI9JuFoR0oWYv
+	qLppHNkGQv7sEipnLKbuC02f22EQ1p5V3rEY1uHL8+0lrCc4ewLI01GkwHQ5l0rgnmnX14X8LKj
+	hMzk8XEXukNhovRdG2BvrxszfXPVk4AJ0tf9PW49UsqN4xbCxtUL+ERXgs8iijl+275hExJoqoQ
+	==
+X-Gm-Gg: AeBDies2elQP5pIktdVGaRoTB33HTy5tIZ47ek7aLIhvSxcjCR00TO4WF78DQaUBmUv
+	NP0NuQFaBuTMWsteErRrynez0VmlN85BMstFeJHgM6B2215HrQ9+41wjShFz0x30yKd2kNkUeZ8
+	mklU8tJnt/P/eKR2U9MsczlMmwgaVA8K+++odxYdl/TosCHczChNSjjI0mVrkdwj31c9KkrfiYV
+	+YAvwo+P799C6jioDLWeMdbWxSwK9YzZiqjY8lpz3HDA7NGeXLyTcTvCXUMSVeKGfXpPRqiix2o
+	HpkUugQ/s0d76MYf5XRXnLBz28uShX/IF9rgmzMiUlR2rnc5jfVZofWB+j2Q35BzmQi4NdOtwn1
+	vRr8Q64v/lHgT1E/GCpgP8F2Y5NqBGeT/hUs=
+X-Received: by 2002:a05:600c:3b23:b0:488:869c:edaf with SMTP id 5b1f17b1804b1-488996df052mr129887875e9.8.1775407153030;
+        Sun, 05 Apr 2026 09:39:13 -0700 (PDT)
+X-Received: by 2002:a05:600c:3b23:b0:488:869c:edaf with SMTP id 5b1f17b1804b1-488996df052mr129887685e9.8.1775407152541;
+        Sun, 05 Apr 2026 09:39:12 -0700 (PDT)
+Received: from costa-tp.bos2.lab ([2a00:a041:e223:1b00:fe51:8bb:7986:c897])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488980e3b55sm72143575e9.8.2026.04.05.09.39.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2026 09:39:12 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] PCI Controller event and LTSSM tracepoint support
-Message-ID: <u2dh2os5qyuuv636uwzttvohfyics7tvqiobheftjzdnuegq33@n77svn2nlqu2>
-References: <1774403912-210670-1-git-send-email-shawn.lin@rock-chips.com>
+Cc: Costa Shulyupin <costa.shul@redhat.com>
+Subject: [PATCH v1] Documentation/rtla: Convert links to RST format
+Date: Sun,  5 Apr 2026 19:38:45 +0300
+Message-ID: <20260405163847.3337981-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: vzQoKeBQNb4Vars-szYGjQ_ggOKRzbFCVv-R3t1XZ8g_1775407153
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1774403912-210670-1-git-send-email-shawn.lin@rock-chips.com>
 
-On Wed, Mar 25, 2026 at 09:58:29AM +0800, Shawn Lin wrote:
-> 
-> This patch-set adds new pci controller event and LTSSM tracepoint used by host drivers
-> which provide LTSSM trace functionality. The first user is pcie-dw-rockchip with a 256
-> Bytes FIFO for recording LTSSM transition.
-> 
+Web links in the documentation are not properly displayed.
 
-Steve, could you please take a look at the tracing part?
+In the man pages web links look like:
+  Osnoise tracer  documentation:  <  <https://www.kernel.org/doc/html/lat‐
+  est/trace/osnoise-tracer.html> >
 
-- Mani
+On web pages the URL caption is the URL itself.
 
-> Testing
-> =========
-> 
-> This series was tested on RK3588/RK3588s EVB1 with NVMe SSD connected to PCIe3 and PCIe2
-> root ports.
-> 
-> echo 1 > /sys/kernel/debug/tracing/events/pci_controller/pcie_ltssm_state_transition/enable
-> cat /sys/kernel/debug/tracing/trace_pipe
-> 
->  # tracer: nop
->  #
->  # entries-in-buffer/entries-written: 64/64   #P:8
->  #
->  #                                _-----=> irqs-off/BH-disabled
->  #                               / _----=> need-resched
->  #                              | / _---=> hardirq/softirq
->  #                              || / _--=> preempt-depth
->  #                              ||| / _-=> migrate-disable
->  #                              |||| /     delay
->  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->  #              | |         |   |||||     |         |
->       kworker/0:0-9       [000] .....     5.600194: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
->       kworker/0:0-9       [000] .....     5.600198: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_WAIT rate: Unknown
->       kworker/0:0-9       [000] .....     5.600199: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
->       kworker/0:0-9       [000] .....     5.600201: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_ACTIVE rate: Unknown
->       kworker/0:0-9       [000] .....     5.600202: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_CONFIG rate: Unknown
->       kworker/0:0-9       [000] .....     5.600204: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_START rate: Unknown
->       kworker/0:0-9       [000] .....     5.600206: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_ACEPT rate: Unknown
->       kworker/0:0-9       [000] .....     5.600207: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_WAI rate: Unknown
->       kworker/0:0-9       [000] .....     5.600208: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_ACEPT rate: Unknown
->       kworker/0:0-9       [000] .....     5.600210: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_COMPLETE rate: Unknown
->       kworker/0:0-9       [000] .....     5.600212: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_IDLE rate: Unknown
->       kworker/0:0-9       [000] .....     5.600213: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 2.5 GT/s
->       kworker/0:0-9       [000] .....     5.600214: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
->       kworker/0:0-9       [000] .....     5.600216: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: Unknown
->       kworker/0:0-9       [000] .....     5.600217: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_SPEED rate: Unknown
->       kworker/0:0-9       [000] .....     5.600218: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
->       kworker/0:0-9       [000] .....     5.600220: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ1 rate: Unknown
->       kworker/0:0-9       [000] .....     5.600221: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ2 rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600222: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ3 rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600224: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600225: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600226: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600227: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600228: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600229: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600231: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600232: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600233: pcie_ltssm_state_transition: dev: a40000000.pcie state: L123_SEND_EIDLE rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600234: pcie_ltssm_state_transition: dev: a40000000.pcie state: L1_IDLE rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600236: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600237: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600238: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
->       kworker/0:0-9       [000] .....     5.600239: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
-> 
-> 
-> Changes in v5:
-> - rebase
-> - use EM/EMe instead
-> - remove reg/unreg function and back to use TRACE_EVENT
-> - use trace_pcie_ltssm_state_transition_enabled()
-> 
-> Changes in v4:
-> - use TRACE_EVENT_FN to notify when to start and stop the tracepoint,
->   and export pci_ltssm_tp_enabled() for host drivers to use
-> - skip trace if pci_ltssm_tp_enabled() is false.(Steven)
-> - wrap into 80 columns(Bjorn)
-> 
-> Changes in v3:
-> - add TRACE_DEFINE_ENUM for all enums(Steven Rostedt)
-> - Add toctree entry in Documentation/trace/index.rst(Bagas Sanjaya)
-> - fix mismatch section underline length(Bagas Sanjaya)
-> - Make example snippets in code block(Bagas Sanjaya)
-> - warp context into 80 columns and fix the file name(Bjorn)
-> - reorder variables(Mani)
-> - rename loop to i; rename en to enable(Mani)
-> - use FIELD_GET(Mani)
-> - add comment about how the FIFO works(Mani)
-> 
-> Changes in v2:
-> - use tracepoint
-> 
-> Shawn Lin (3):
->   PCI: trace: Add PCI controller LTSSM transition tracepoint
->   Documentation: tracing: Add PCI controller event documentation
->   PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
-> 
->  Documentation/trace/events-pci-controller.rst |  42 ++++++++++
->  Documentation/trace/index.rst                 |   1 +
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 111 ++++++++++++++++++++++++++
->  drivers/pci/trace.c                           |   1 +
->  include/trace/events/pci_controller.h         |  58 ++++++++++++++
->  5 files changed, 213 insertions(+)
->  create mode 100644 Documentation/trace/events-pci-controller.rst
->  create mode 100644 include/trace/events/pci_controller.h
-> 
-> -- 
-> 2.7.4
-> 
+Convert tracer documentation links to RST anonymous hyperlink format
+for better rendering. Use newer docs.kernel.org instead of
+www.kernel.org/doc/html/latest for brevity.
 
+After the change, the links in the man pages look like:
+  Osnoise tracer <https://docs.kernel.org/trace/osnoise-tracer.html>
+
+On web pages the captions are the titles of the links.
+
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
+ Documentation/tools/rtla/rtla-hwnoise.rst       | 2 +-
+ Documentation/tools/rtla/rtla-osnoise-hist.rst  | 2 +-
+ Documentation/tools/rtla/rtla-osnoise-top.rst   | 2 +-
+ Documentation/tools/rtla/rtla-osnoise.rst       | 2 +-
+ Documentation/tools/rtla/rtla-timerlat-hist.rst | 2 +-
+ Documentation/tools/rtla/rtla-timerlat-top.rst  | 2 +-
+ Documentation/tools/rtla/rtla-timerlat.rst      | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/tools/rtla/rtla-hwnoise.rst b/Documentation/tools/rtla/rtla-hwnoise.rst
+index 26512b15fe7b..5930bbca4522 100644
+--- a/Documentation/tools/rtla/rtla-hwnoise.rst
++++ b/Documentation/tools/rtla/rtla-hwnoise.rst
+@@ -100,7 +100,7 @@ SEE ALSO
+ 
+ **rtla-osnoise**\(1)
+ 
+-Osnoise tracer documentation: <https://www.kernel.org/doc/html/latest/trace/osnoise-tracer.html>
++`Osnoise tracer <https://docs.kernel.org/trace/osnoise-tracer.html>`__
+ 
+ AUTHOR
+ ======
+diff --git a/Documentation/tools/rtla/rtla-osnoise-hist.rst b/Documentation/tools/rtla/rtla-osnoise-hist.rst
+index 007521c865d9..6ddea2c6d490 100644
+--- a/Documentation/tools/rtla/rtla-osnoise-hist.rst
++++ b/Documentation/tools/rtla/rtla-osnoise-hist.rst
+@@ -59,7 +59,7 @@ SEE ALSO
+ ========
+ **rtla-osnoise**\(1), **rtla-osnoise-top**\(1)
+ 
+-*osnoise* tracer documentation: <https://www.kernel.org/doc/html/latest/trace/osnoise-tracer.html>
++`Osnoise tracer <https://docs.kernel.org/trace/osnoise-tracer.html>`__
+ 
+ AUTHOR
+ ======
+diff --git a/Documentation/tools/rtla/rtla-osnoise-top.rst b/Documentation/tools/rtla/rtla-osnoise-top.rst
+index 6ccadae38945..b91c02ac2bbe 100644
+--- a/Documentation/tools/rtla/rtla-osnoise-top.rst
++++ b/Documentation/tools/rtla/rtla-osnoise-top.rst
+@@ -54,7 +54,7 @@ SEE ALSO
+ 
+ **rtla-osnoise**\(1), **rtla-osnoise-hist**\(1)
+ 
+-Osnoise tracer documentation: <https://www.kernel.org/doc/html/latest/trace/osnoise-tracer.html>
++`Osnoise tracer <https://docs.kernel.org/trace/osnoise-tracer.html>`__
+ 
+ AUTHOR
+ ======
+diff --git a/Documentation/tools/rtla/rtla-osnoise.rst b/Documentation/tools/rtla/rtla-osnoise.rst
+index 540d2bf6c152..decd9e11fcf2 100644
+--- a/Documentation/tools/rtla/rtla-osnoise.rst
++++ b/Documentation/tools/rtla/rtla-osnoise.rst
+@@ -50,7 +50,7 @@ SEE ALSO
+ ========
+ **rtla-osnoise-top**\(1), **rtla-osnoise-hist**\(1)
+ 
+-Osnoise tracer documentation: <https://www.kernel.org/doc/html/latest/trace/osnoise-tracer.html>
++`Osnoise tracer <https://docs.kernel.org/trace/osnoise-tracer.html>`__
+ 
+ AUTHOR
+ ======
+diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+index f56fe546411b..dab75677b06e 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+@@ -104,7 +104,7 @@ SEE ALSO
+ ========
+ **rtla-timerlat**\(1), **rtla-timerlat-top**\(1)
+ 
+-*timerlat* tracer documentation: <https://www.kernel.org/doc/html/latest/trace/timerlat-tracer.html>
++`Timerlat tracer <https://docs.kernel.org/trace/timerlat-tracer.html>`__
+ 
+ AUTHOR
+ ======
+diff --git a/Documentation/tools/rtla/rtla-timerlat-top.rst b/Documentation/tools/rtla/rtla-timerlat-top.rst
+index 72d85e36c193..05959f1a4661 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-top.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-top.rst
+@@ -127,7 +127,7 @@ SEE ALSO
+ --------
+ **rtla-timerlat**\(1), **rtla-timerlat-hist**\(1)
+ 
+-*timerlat* tracer documentation: <https://www.kernel.org/doc/html/latest/trace/timerlat-tracer.html>
++`Timerlat tracer <https://docs.kernel.org/trace/timerlat-tracer.html>`__
+ 
+ AUTHOR
+ ------
+diff --git a/Documentation/tools/rtla/rtla-timerlat.rst b/Documentation/tools/rtla/rtla-timerlat.rst
+index ce9f57e038c3..63718c52aa3f 100644
+--- a/Documentation/tools/rtla/rtla-timerlat.rst
++++ b/Documentation/tools/rtla/rtla-timerlat.rst
+@@ -45,7 +45,7 @@ SEE ALSO
+ ========
+ **rtla-timerlat-top**\(1), **rtla-timerlat-hist**\(1)
+ 
+-*timerlat* tracer documentation: <https://www.kernel.org/doc/html/latest/trace/timerlat-tracer.html>
++`Timerlat tracer <https://docs.kernel.org/trace/timerlat-tracer.html>`__
+ 
+ AUTHOR
+ ======
 -- 
-மணிவண்ணன் சதாசிவம்
+2.53.0
+
