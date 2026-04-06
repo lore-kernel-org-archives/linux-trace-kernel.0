@@ -1,70 +1,97 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A303845D1;
-	Mon,  6 Apr 2026 15:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E756388E5E;
+	Mon,  6 Apr 2026 16:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775488042; cv=none; b=OFyDFN7Ex8B3AYtnKAbjCFCSXCimmzJXVj55UQohLgBtjK9eEsAgbn/xvBoYCKf65imxGbivTNwlG+JNW6t4dbLu36BdyOegcnvOeyuGcgtMySOy/Fw47snlyMZm4pgNlIB8iS4WVpP40aAlU+TwiVUk27TauYpyCRjWNC8hXHg=
+	t=1775492713; cv=none; b=S28nZU38Bm8/kSJvCub6Kgkqrdg0J0HIocKVVjVtEIU+EvROU2PUUvhYiN9p3fGUyXLw+svObneo0pXFbCdM9SRrcYcII+YfF4wxi/KzTv2c6STDm/7g+YU13XPyZHJzqIoVrXrkV+qhJnb0LYFvPnEsD/dms3X5cTmYMFqWKTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775488042; c=relaxed/simple;
-	bh=PM29/z47n2zYsho8v6UFDaJ35khN7jsuy86PKsuhmhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S3OH8eDhFHVj9kqB6lBEcPv7TUZKOHQ7oRSbbExIKppKxSR2l4N6+YMOs94J9qjGaaoOmodJ5zZNxINVl4pcYdG0VKiHrTdilqkBwzKbbdEhQMFg+Hh01dl2/k/aJS+Dp9fIJw+sEQymrqMOhYsYOGimt+mr/dZuhJhAVGYFDMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 327D01B7FCF;
-	Mon,  6 Apr 2026 15:07:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 4EAE930;
-	Mon,  6 Apr 2026 15:07:18 +0000 (UTC)
-Date: Mon, 6 Apr 2026 11:08:29 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas
- <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] PCI Controller event and LTSSM tracepoint
- support
-Message-ID: <20260406110829.12f3e445@gandalf.local.home>
-In-Reply-To: <u2dh2os5qyuuv636uwzttvohfyics7tvqiobheftjzdnuegq33@n77svn2nlqu2>
-References: <1774403912-210670-1-git-send-email-shawn.lin@rock-chips.com>
-	<u2dh2os5qyuuv636uwzttvohfyics7tvqiobheftjzdnuegq33@n77svn2nlqu2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1775492713; c=relaxed/simple;
+	bh=GsmVdYzXrKWRlb+Lg9F21Kzq4MHUyBa0/BHLYIeAR/4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hTfNjXJEHJI3HowgkJl1+R35mCHD+mT8oKk8IOqMjiXBOK94OGP/YoVZvuvA1gZLKoNiqUkEnfOuiYM9i9KU8m+ZUat/hbp3x3tC9X39mOAacf/JGI1IQC+0BI9KxLD4I28N2idOGlRobnS+aTD54+Y04l51HPkkoZS97giqyp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ag3oN2YF; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ag3oN2YF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=P1
+	hgZMrSLq8zzRv5wwydc25xkKXCXmjx+zhVgs+cWtM=; b=Ag3oN2YFlZeqbTBOgZ
+	Q6CmwEySrs0iQRULdlgDUkrYuBJmKqZh/4LBUjTavCQxkhikg/dYgyfX/X6VD5Zd
+	jU7pScIT07Wc8CPFU3IEg5aUTUuZGKqAtj4FINnThi7vZ9xoBfZX4yc2E3c3zLUv
+	pSCRi68nPtmIB8Q3KknacFQbA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3n_9H3tNpsy_CDg--.22472S2;
+	Tue, 07 Apr 2026 00:24:42 +0800 (CST)
+From: CaoRuichuang <create0818@163.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing/ipi: report ipi_raise target CPUs as cpumask
+Date: Tue,  7 Apr 2026 00:24:34 +0800
+Message-Id: <20260406162434.40767-1-create0818@163.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ixe9nnprriq7mxpun5m6gf7xrpof86fk
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 4EAE930
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/uYBeCRxOtEh7TrxbGKZNQKuDClwoTA6I=
-X-HE-Tag: 1775488038-770766
-X-HE-Meta: U2FsdGVkX18p9VDqkHnORGbRcc0QXG5XI9F5Ld8pli7hj98TQXd50dWcWXwmuezbwzTOF//49UhUyN8vmkZhb5O4V6oiYTqoJ0OHNbW4GeD9jH6m4scWiK8gOWNBog8KJ3mwtCtegVRpUAWg37UUFmVKL88Y4IP2AoNCasIDXtokUk/nBJ1CaLVJtBhPtAHo9q4DokbOH9u+1AT3lSJ3XmUCZ/EDUT8i8x9JcCmkhCQalQbiulTpKc4avizmzJbzoWgVok8maeIWCVCKpzq21xyobxhFqOxx/hmE3ntQaCZHBELuEMao8Hp9J9VHmEptllvBa82VzULEnaDiGNp5WeYs5ylaz3o90+7z9tbINzusWfK12+Rq5MhawtuHBnXrzW8d5tshpNkY+aYCvL0Rlg==
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3n_9H3tNpsy_CDg--.22472S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tr17Jw17ur4rGw1DZF47Jwb_yoW8Ar1DpF
+	98Ars0grZ7JFW0gw4Iv3yIqry8J34kG3WqyF4fWry3Aa9xJry5XFWIgr43Aa1rGFZ2gF9r
+	Xa909r40qF4UXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UPpnLUUUUU=
+X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbC5wsZUmnT3ktWjgAA3Q
 
-On Sat, 4 Apr 2026 22:23:32 +0530
-Manivannan Sadhasivam <mani@kernel.org> wrote:
+Bugzilla 217447 points out that ftrace bitmask fields still use the
+legacy dynamic-array format, which makes trace consumers treat them
+as unsigned long arrays instead of bitmaps.
 
-> On Wed, Mar 25, 2026 at 09:58:29AM +0800, Shawn Lin wrote:
-> > 
-> > This patch-set adds new pci controller event and LTSSM tracepoint used by host drivers
-> > which provide LTSSM trace functionality. The first user is pcie-dw-rockchip with a 256
-> > Bytes FIFO for recording LTSSM transition.
-> >   
-> 
-> Steve, could you please take a look at the tracing part?
+This is visible in the ipi events today: ipi_send_cpumask already
+reports its CPU mask as '__data_loc cpumask_t', but ipi_raise still
+exposes target_cpus as '__data_loc unsigned long[]'.
 
-I already have but didn't say anything because I didn't find anything ;-)
+Switch ipi_raise to __cpumask() and the matching helpers so its
+tracefs format matches the existing cpumask representation used by
+the other ipi event. The underlying storage size stays the same, but
+trace data consumers can now recognize the field as a cpumask
+directly.
 
-Anyway, for the tracing part:
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217447
+Signed-off-by: CaoRuichuang <create0818@163.com>
+---
+ include/trace/events/ipi.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+diff --git a/include/trace/events/ipi.h b/include/trace/events/ipi.h
+index 9912f0ded..fae4f8eac 100644
+--- a/include/trace/events/ipi.h
++++ b/include/trace/events/ipi.h
+@@ -68,16 +68,16 @@ TRACE_EVENT(ipi_raise,
+ 	TP_ARGS(mask, reason),
+ 
+ 	TP_STRUCT__entry(
+-		__bitmask(target_cpus, nr_cpumask_bits)
++		__cpumask(target_cpus)
+ 		__field(const char *, reason)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__assign_bitmask(target_cpus, cpumask_bits(mask), nr_cpumask_bits);
++		__assign_cpumask(target_cpus, cpumask_bits(mask));
+ 		__entry->reason = reason;
+ 	),
+ 
+-	TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
++	TP_printk("target_mask=%s (%s)", __get_cpumask(target_cpus), __entry->reason)
+ );
+ 
+ DECLARE_EVENT_CLASS(ipi_handler,
+-- 
+2.39.5 (Apple Git-154)
 
--- Steve
