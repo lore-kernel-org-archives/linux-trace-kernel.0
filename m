@@ -1,71 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A1139C63C;
-	Mon,  6 Apr 2026 20:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4B831280D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 21:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775506511; cv=none; b=O30dvFoZKS3Qoiz5KbHC2vcZ3Gsd4q3vFyUUsn+k9CqDgu2YKdPtcYzpXxvHLMYASSTzzIBKFiMoHdN4AQmmygXgxFAI8TgozlVj7b6AMAYOuh6cuzllsNXCLQMZ1miH4+jYHRLKlf8NZd36pI2Di0q4O+7N5dFUXtBTPEGbKXg=
+	t=1775509944; cv=none; b=toJxPK7IDW0G2C9eTH8dCNxxgDP66OKytvkVEtsab6O4uo6XpQ8YwL+1kkxbBzJG8Fojf5crbnAsueedKTCrNa/JiNd3gsiU+z8VrOem3wFovUAgsV/R2eEHXH9GxSw2VHV64hC3uB3yaAh0gQoD6L3dozwPxEOBu+naeTBS4qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775506511; c=relaxed/simple;
-	bh=B1dXs7ROSHPB7EUdsOFlheNNtZOl8UUlRNXbFuSLjjc=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=YRbVFs2Swd+qKu0DXu3H5tH8t7F9ZCc6ZmYpTgHEmi3i+XwQqb4WDckixIwleZcQS4aKrUV9+fx7b1BmWFiaQrK9JNDxz7FXoeAWeIaQcCxuoLq6Okt3a9PxsRAD9Xiy+thAqkX04KrU0B99IZ2KO6AlV5neyh9LhF4LVy6A1Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SG4+XkI1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775509944; c=relaxed/simple;
+	bh=l7vxEJgC+Ob793xoUL3efo8+VTg3EnXl8F+bVIOAC8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=r21sePu7NqHp4gjOnBKqBq8fvU2uuqrDrCm6PZhc1pP2BcvR+bMAANLSxiBZynHqJQ7V9LNIY1Bws54ieHUlK5jgzDi79kFPditHXRH/edW+fSMIDGhQReQhcQtT+82uka0KT55LVztFVPQ/77faVcTFnrbK4xdlzIw57nCEfys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h8qTvWxW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SG4+XkI1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 726B3C4CEF7;
-	Mon,  6 Apr 2026 20:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775506510;
-	bh=B1dXs7ROSHPB7EUdsOFlheNNtZOl8UUlRNXbFuSLjjc=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=SG4+XkI1h+QXHhQDSEIEYHIuF4pVlHjH7ISFqLIC7+USzu6Jz4PMXUGdMXgMmD4Q/
-	 lXWHsv5C+TsYxFM583GqRfRof+m523NwFkrdosnniYreYaGyN4jMyUR+MQCDWmXWjV
-	 GsLrn/kbjdAbw0C7mjtlm50PbV6zzJQQZukUhPPBA4P2VjeXx9zssjXIeCN37LW4GO
-	 f4O67VN++F4OGbUiEX/mhZF1T5k+rbBaOm9RX5gd8bNrb+Oo9qTltKcR2225zG/2Rj
-	 dO6zTA45L1/hmtyyvq1S3QpmeZjmqxA3+il1Rsh4CuvwB819wZqrvajjNFlZO0uKG6
-	 nQmIycnNRjQQw==
-Content-Type: multipart/mixed; boundary="===============3636165922822587918=="
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h8qTvWxW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775509942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sknxFjh3PzCtxEMIhDuCr7zygcrbfejjCpqHKn1w+TQ=;
+	b=h8qTvWxWlKGCeaPTh9IN5z/JvM6o4Cr3o1+gsFm5RBoBFR5pH2GXPnAwlpEapQerC4ORK3
+	GZX+X/EANZLz6pf/WWkYGjwEHbHFLMgkLKMM42JJvenFe8sLf9FCWPTpim6FAtI8nldyDx
+	nUztwLVv0QMEfuGdFQhZD86OdBKdSUg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-299-mXEQr5PIMhyg2dAXpnV_3w-1; Mon,
+ 06 Apr 2026 17:12:16 -0400
+X-MC-Unique: mXEQr5PIMhyg2dAXpnV_3w-1
+X-Mimecast-MFC-AGG-ID: mXEQr5PIMhyg2dAXpnV_3w_1775509933
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5AB91195608B;
+	Mon,  6 Apr 2026 21:12:12 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.80.40])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0BAF31800576;
+	Mon,  6 Apr 2026 21:12:06 +0000 (UTC)
+Date: Mon, 6 Apr 2026 17:12:04 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: Song Liu <song@kernel.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>,
+	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org,
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, kpsingh@kernel.org,
+	mattbobrowski@google.com, jolsa@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev,
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to
+ klp_patch
+Message-ID: <adQhpBC2W9I6QW-g@redhat.com>
+References: <20260402092607.96430-1-laoar.shao@gmail.com>
+ <20260402092607.96430-4-laoar.shao@gmail.com>
+ <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
+ <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
+ <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+ <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <669779524c357c9790196e8e9ce8da8b21a71756c96e828252fead311fdc44c3@mail.kernel.org>
-In-Reply-To: <20260406193158.754498-2-andrey.grodzovsky@crowdstrike.com>
-References: <20260406193158.754498-2-andrey.grodzovsky@crowdstrike.com>
-Subject: Re: [RFC PATCH bpf-next v5 1/2] tracing: Prefer vmlinux symbols over module symbols for unqualified kprobes
-From: bot+bpf-ci@kernel.org
-To: andrey.grodzovsky@crowdstrike.com,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org
-Cc: ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,jolsa@kernel.org,rostedt@goodmis.org,mhiramat@kernel.org,ihor.solodrai@linux.dev,emil@etsalapatis.com,linux-open-source@crowdstrike.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon,  6 Apr 2026 20:15:10 +0000 (UTC)
+In-Reply-To: <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: BliLoGEcC2LgEn23iDg6ru0UWYVpjpBQ5RrzY_9_KF4_1775509933
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
---===============3636165922822587918==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Mon, Apr 06, 2026 at 11:11:27AM -0700, Song Liu wrote:
+> On Mon, Apr 6, 2026 at 4:08 AM Yafang Shao <laoar.shao@gmail.com> wrote:
+> >
+> > On Sat, Apr 4, 2026 at 5:36 AM Song Liu <song@kernel.org> wrote:
+> > >
+> > > On Fri, Apr 3, 2026 at 1:55 PM Dylan Hatch <dylanbhatch@google.com> wrote:
+> > > [...]
+> > > > > IIRC, the use case for this change is when multiple users load various
+> > > > > livepatch modules on the same system. I still don't believe this is the
+> > > > > right way to manage livepatches. That said, I won't really NACK this
+> > > > > if other folks think this is a useful option.
+> > > >
+> > > > In our production fleet, we apply exactly one cumulative livepatch
+> > > > module, and we use per-kernel build "livepatch release" branches to
+> > > > track the contents of these cumulative livepatches. This model has
+> > > > worked relatively well for us, but there are some painpoints.
+> > > >
+> > > > We are often under pressure to selectively deploy a livepatch fix to
+> > > > certain subpopulations of production. If the subpopulation is running
+> > > > the same build of everything else, this would require us to introduce
+> > > > another branching factor to the "livepatch release" branches --
+> > > > something we do not support due to the added toil and complexity.
+> > > >
+> > > > However, if we had the ability to build "off-band" livepatch modules
+> > > > that were marked as non-replaceable, we could support these selective
+> > > > patches without the additional branching factor. I will have to
+> > > > circulate the idea internally, but to me this seems like a very useful
+> > > > option to have in certain cases.
+> > >
+> > >  IIUC, the plan is:
+> > >
+> > > - The regular livepatches are cumulative, have the replace flag; and
+> > >   are replaceable.
+> > > - The occasional "off-band" livepatches do not have the replace flag,
+> > >   and are not replaceable.
+> > >
+> > > With this setup, for systems with off-band livepatches loaded, we can
+> > > still release a cumulative livepatch to replace the previous cumulative
+> > > livepatch. Is this the expected use case?
+> >
+> > That matches our expected use case.
+> 
+> If we really want to serve use cases like this, I think we can introduce
+> some replace tag concept: Each livepatch will have a tag, u32 number.
+> Newly loaded livepatch will only replace existing livepatch with the
+> same tag. We can even reuse the existing "bool replace" in klp_patch,
+> and make it u32: replace=0 means no replace; replace > 0 are the
+> replace tag.
+> 
+> For current users of cumulative patches, all the livepatch will have the
+> same tag, say 1. For your use case, you can assign each user a
+> unique tag. Then all these users can do atomic upgrades of their
+> own livepatches.
+> 
+> We may also need to check whether two livepatches of different tags
+> touch the same kernel function. When that happens, the later
+> livepatch should fail to load.
+> 
+> Does this make sense?
+> 
 
-> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-> Suggested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+I haven't been following the thread carefully, but could the Livepatch
+system state API (see Documentation/livepatch/system-state.rst) be
+leveraged somehow instead of adding further replace semantics?
 
-This commit fixes a bug introduced when module symbol counting was
-added to number_of_same_symbols(). Would it be worth adding a
-Fixes: tag?
+--
+Joe
 
-Suggested:
-Fixes: 926fe783c8a6 ("tracing/kprobes: Fix symbol counting logic by looking at modules as well")
-
-That commit added module_kallsyms_on_each_symbol() to
-number_of_same_symbols(), which caused unqualified kprobe targets
-matching both vmlinux and a module to return count > 1 and fail
-with -EADDRNOTAVAIL.
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/24047967861
---===============3636165922822587918==--
