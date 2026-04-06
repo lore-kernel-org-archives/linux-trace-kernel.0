@@ -1,174 +1,209 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8faf.mail.infomaniak.ch (smtp-8faf.mail.infomaniak.ch [83.166.143.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A194330B0B
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 11:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775473728; cv=pass; b=WUvsRLavzXuAE6oqIzdABRCBO6xP+n3lEqctF1k5enj993HLBiog/Rx/ajSazzVNXy2tpekCXAuikRCIzjhMbfDAGnX9ibBLo2TyfHMGt/5M6QIS32tQYD0Os19+PPhM0+/B7M7isr99YwFlP0SC1aAXnCc/nSNukkpnV08ML2g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775473728; c=relaxed/simple;
-	bh=3Mn9GDNV4q4vxUyTCDjrB4FuPzCEazKiwy8siM7vem0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kFECXtQiV0gFatawxuHBegEBgsehjquFeSvMsfH98uRunr8nZHne/y70FI+qjNjn/Atu/dKE3pKywx0tWoYwdWnzeqbJgO8snBj6DW9rHVUneTwJt5Od6mU7G4n8G+8eZTEejYxKFHV51sL62Prh+PGkJYaJEvd/sd08d4jahx0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZ4QxFvv; arc=pass smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C3330149F
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 14:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775486255; cv=none; b=B2tA/O2f0TlMoelZSLqbmrJhXdspT+bOKkr4tXZvIDJARAVpUD0hacNYlYXq4OaoadYeoIdiqBST9SqDYVz49u94Plqx5hBObMpnN0sXxngRgAlZucTdp17QXctEixb2AgtfEYA2MnnaiEx1A8wIZmXggIF5MQAAR2Cmjqy9lBE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775486255; c=relaxed/simple;
+	bh=/sUpxD3SiKizTTxPG90VwXj7lny4q31xrklPIUVxL+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rnjfAcKoKijqHoEJeb3TE8luCPhC/8//Yu8XCUgAJZzo/x3v/noUb0aXjDuAWHjrJsRgxbAoINHagwUh8bcsxFFITePneB/7WR/o/PSAcJlzwBN1WCyt5QnJaVAWEgnDxOwzGvJUQmT58nP8l4Nin8SkHbayyh4cysFgzRaaKYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=wYMTUKUn; arc=none smtp.client-ip=83.166.143.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZ4QxFvv"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-79ee5037d44so48681417b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Apr 2026 04:08:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775473726; cv=none;
-        d=google.com; s=arc-20240605;
-        b=D9Nh4fNw6SNFYlHlTjEL+Ef5JKEH68DLZaVDKbHB1RTxqGU9nTL4lpXrNEVlwaSAg9
-         m3F0rgJ3l7vwIjUTBagYRyVOYKG6zdoSAwCSWYdLsRMkOZbsSez758weqS/99mM4cpxz
-         CyXOnE77kSAqVLET2rg+B9PlAakpSap8TUEX6psz9ztP91L7+TazWVW0XcIVwMMdQHjQ
-         ORp8d3td5rCR7GkEnrZIktmH3gTZpBAQyOtrP6NT3ltRk/8JfpTTOAuPzdGi166I0qt2
-         oisT+uDX9i2D/g3S/eFrgkWdwUoNApDLWHqXwkBMUvamUBF89RSOi7OHaXSBOakZBuds
-         H2UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=zRgqqTkqqqhQIPLoGqXnLl2qMP89ZJM8SI/ZvvSsQH0=;
-        fh=HkwiQAwOTeWTC0zKhIYHSBProtnH9oGU/AAzu2TXi30=;
-        b=FI0rJ1idrLU5lVavCGQCSnbcDzenYPFFakrpnYjc49PX+q0ju0SEvYlmr7QzNb+Fhn
-         X4RbzhJQspPjOtbZqOcU2QuY+P8Ai7YjQZzdfP19pqtsresMplHN9OwdmrepiMg0/21J
-         BD1KcKfap0BJlRsUFwU6T60ONoORSRcC3+s5RltJ4iVgQ718AyB+tTZOVUTRto9arxfg
-         Ocovnv4hkt8yMcfRqfWo18MNZFcICOm026k+1yKFPuwtTK04No6/MQCvliLFUnjm1oIj
-         DuhwEs4IT1ghFGRLauxFbjlZFjLxFtcAl71bHa6NT4k5aZiOQvIc4BIGfknMuzTFLzHo
-         UqYA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775473726; x=1776078526; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zRgqqTkqqqhQIPLoGqXnLl2qMP89ZJM8SI/ZvvSsQH0=;
-        b=bZ4QxFvvCM5l3OfS17/UpRJc6ZJYHUz5HZaKqfP8flALIwz3RSXuxVwG0I5ZJkIycL
-         za6eysKesfA0qTLX4yCyCNKpJIaoCIMQrsntOK5NZxezP7j1ZZNMBUOguMZMFoH/ixWP
-         fZmSSqGg5rwuZzBwv4Cnd8OgGluo2uBJuX5dgVEar6b5luVlWgLCS8FlypKqSRWFr8Om
-         JgTdHP3cPcaa4za0n3e0gOd99RUeMQxVxMtc8Oh3rnP8nISVZWxJeLd0Ccz6AWjOk5IZ
-         7JNVANzPpUcQMnoQkrxKlojWRNcO0+Y2RsW1GzgUFGSUdAkUqhuf38puYV1VY8+QCwJI
-         Lyig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775473726; x=1776078526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zRgqqTkqqqhQIPLoGqXnLl2qMP89ZJM8SI/ZvvSsQH0=;
-        b=hhiEp/Epdtgt/hC6i63NdvAIHcgrFdOt7m/5hY3Co+4BsgZAH4qW9eynlfFzxETDIY
-         hAVb0tP51DPvHBm8mWWprpY0EbP1pvmPvJJshMG494YCXcodhIXhFfdT3N4hIPRA73zJ
-         fLe/g2+7E8cN6Yl99RW9f7vpRDIzEZPMdIekDF1gbrCeSwRYD2G12OwomaYxRAlKG4xj
-         gkyDYEgceIyHlxeV7h79uAdE/u83h8TLe+hSns+jdjf9GgLFqcerLjqJLxV/9AM1WGB/
-         ZhUBY+aiC7Da7cpMb7C3v+eY/qctosx/aXLf3PWX592wfUQ7wGoMXEYWrCgQ3dWrw48Q
-         xh6g==
-X-Forwarded-Encrypted: i=1; AJvYcCX94gKy3mJ6ksjIcpfMLdqDgpK5riPMSceJ2X89MpsycjDD752UeTj8waB3Vs2OCDRD/nXEN9bZmWOyU2sH9B+kiCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzMwgPRhjo/WL8GL9z5WoUw+mooR5Pw3AfiwLnL/vs1QyU6+ZC
-	XCzqW2c4faXvM9x93e4MOGchLd0UsEIZ/qM5acdP5NsRvJwLYSGu3pku9vCaXgIlT7d1twuh3X6
-	VxJlZdhDsQN6T0CpfWQU1PaWam5sADW0=
-X-Gm-Gg: AeBDievKi7uAUgcWAuvEPgBLecHjtbq6HQ6ADnq0CwCVPJkwm5o+VhN4A/iZqEfwlv4
-	ZRTFA55tJ2WXdpIWQDsZ+w/nXi1HF9m7BMrUCWPwIq21QFDPrKWLZ4gWSofG4NM7K2iB7QwHLa1
-	rAaCO4HQQSjq4msrORJ+qDFmIB47Oh+rlT5KMopt5rNYodWWZHk4TK//z9JQj3174PHhQhkxbK7
-	N3yAQkTZ1LEIrC5/B/jjITjFaGsnDD2IcS7QAu5d1cIcFtu1QptnjcZ2l/6suiYT6JM21fUNmnX
-	sNGyXNkth6LKpNZM7QZNvR2hZxY0xyJwbKEaEkg=
-X-Received: by 2002:a05:690c:660c:b0:79b:e051:96e8 with SMTP id
- 00721157ae682-7a3bdd81cb4mr120300357b3.19.1775473725931; Mon, 06 Apr 2026
- 04:08:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="wYMTUKUn"
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6b])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqBkF2BG3zxfS;
+	Mon,  6 Apr 2026 16:37:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1775486245;
+	bh=8X9vutfaraZKG57N5TmXyIzR74CkcQyp3ceZUBKuCqw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=wYMTUKUnEusj5znbx7wtGQFJ0LCMMgpAssmGixhFYFLN7XWB82oLxffOTIjdrnozg
+	 m62pTj9B8KPBqZhtO+LA4epAZlDUjy8s4T/5JFZiw/eNrNovtQPTG4cpxnQiwICIDL
+	 ZxaGO2EPDAZwBhI0BXnLyNQgpo5RQHxsuU/40CuA=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqBkD0KnYzgwq;
+	Mon,  6 Apr 2026 16:37:23 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@google.com>,
+	Justin Suess <utilityemal77@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Matthieu Buffet <matthieu@buffet.re>,
+	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
+	Tingmao Wang <m@maowtm.org>,
+	kernel-team@cloudflare.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2 00/17] Landlock tracepoints
+Date: Mon,  6 Apr 2026 16:36:58 +0200
+Message-ID: <20260406143717.1815792-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260402092607.96430-1-laoar.shao@gmail.com> <20260402092607.96430-4-laoar.shao@gmail.com>
- <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
- <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com> <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
-In-Reply-To: <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Mon, 6 Apr 2026 19:08:05 +0800
-X-Gm-Features: AQROBzClNHdpWRN0VTHhIbiSXgzDQrDfqIlpgmQNcrbfQYOo_c0hDREkWaKO-G0
-Message-ID: <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
-To: Song Liu <song@kernel.org>
-Cc: Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, jikos@kernel.org, 
-	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	kpsingh@kernel.org, mattbobrowski@google.com, jolsa@kernel.org, 
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev, 
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Sat, Apr 4, 2026 at 5:36=E2=80=AFAM Song Liu <song@kernel.org> wrote:
->
-> On Fri, Apr 3, 2026 at 1:55=E2=80=AFPM Dylan Hatch <dylanbhatch@google.co=
-m> wrote:
-> [...]
-> > > IIRC, the use case for this change is when multiple users load variou=
-s
-> > > livepatch modules on the same system. I still don't believe this is t=
-he
-> > > right way to manage livepatches. That said, I won't really NACK this
-> > > if other folks think this is a useful option.
-> >
-> > In our production fleet, we apply exactly one cumulative livepatch
-> > module, and we use per-kernel build "livepatch release" branches to
-> > track the contents of these cumulative livepatches. This model has
-> > worked relatively well for us, but there are some painpoints.
-> >
-> > We are often under pressure to selectively deploy a livepatch fix to
-> > certain subpopulations of production. If the subpopulation is running
-> > the same build of everything else, this would require us to introduce
-> > another branching factor to the "livepatch release" branches --
-> > something we do not support due to the added toil and complexity.
-> >
-> > However, if we had the ability to build "off-band" livepatch modules
-> > that were marked as non-replaceable, we could support these selective
-> > patches without the additional branching factor. I will have to
-> > circulate the idea internally, but to me this seems like a very useful
-> > option to have in certain cases.
->
->  IIUC, the plan is:
->
-> - The regular livepatches are cumulative, have the replace flag; and
->   are replaceable.
-> - The occasional "off-band" livepatches do not have the replace flag,
->   and are not replaceable.
->
-> With this setup, for systems with off-band livepatches loaded, we can
-> still release a cumulative livepatch to replace the previous cumulative
-> livepatch. Is this the expected use case?
+Hi,
 
-That matches our expected use case.
+This series adds 13 tracepoints that cover the full Landlock lifecycle,
+from ruleset creation to domain destruction.  They can be used directly
+via /sys/kernel/tracing/events/landlock/* or attached by eBPF programs
+for richer introspection.
 
->
-> I think there are a few issues with this:
-> 1. The "off-band" livepatches cannot be replaced atomically. To upgrade
->    "off-band' livepatches, we will have to unload the old version and loa=
-d
->    the new version later.
+Patches 1-4 refactor Landlock internals: they split struct
+landlock_domain from struct landlock_ruleset and move denial logging
+into a common framework shared by audit and tracing.  Patch 5 adds
+__print_untrusted_str() to the tracing core.  Patches 6-9 add
+lifecycle tracepoints: ruleset creation and destruction, rule addition
+for filesystem and network, domain enforcement and destruction, and
+per-rule access checks.  Patch 10 sets audit_net.sk for socket access
+checks.  Patches 11-12 add denial tracepoints for filesystem, network,
+and scope operations.  Patches 13-16 add selftests and patch 17 adds
+documentation.
 
-Right. That is how the non-atomic-replace patch works.
+Each rule type has a dedicated tracepoint with strongly-typed fields
+(dev/ino for filesystem, port for network), following the same approach
+as the audit logs.
 
-> 2. Any conflict with the off-band livepatches and regular livepatches wil=
-l
->    be difficult to manage.
+This feature is useful to troubleshoot policy issues and should limit
+the need for custom debugging kernel code when developing new Landlock
+features.
 
-We need to manage this conflict with a complex user script. That said,
-everything can be controlled from userspace.
+Landlock already has audit support for logging denied access requests,
+which is useful to identify security issues or sandbox misconfiguration.
+However, audit might not be enough to debug Landlock policies.  The
+main difference with audit events is that traces are disabled by
+default, can be very verbose, and can be filtered according to process
+and Landlock properties (e.g. domain ID).
 
-> IOW, we kind removed the benefit of cumulative
->    livepatches. For example, what shall we do if we really need two fixes
->    to the same kernel functions: one from the original branch, the other
->    from the off-band branch?
+As for audit, tracing may expose sensitive information about all
+sandboxed processes on the system, and must only be accessible to the
+system administrator.  For unprivileged monitoring scoped to a single
+sandbox (e.g., interactive permission prompts), Tingmao Wang's
+"Landlock supervise" RFC [1] proposes a dedicated userspace API.  The
+infrastructure changes in this series (the domain type split, the
+denial framework, and the tracepoint consistency guarantees) benefit
+that approach.
 
-We run tens of livepatches on our production servers and have never
-run into this issue. It's an extremely rare case =E2=80=94 and if it does
-happen, a user script should be able to handle it just fine.
+I will release a companion tool that leverages these tracepoints to
+monitor Landlock events in real time.
 
---=20
-Regards
-Yafang
+This series applies on top of my next branch [2].
+
+Changes since RFC v1:
+https://lore.kernel.org/r/20250523165741.693976-1-mic@digikod.net
+- New patches 1-4: split struct landlock_domain from struct
+  landlock_ruleset; split denial logging from audit into common
+  framework with CONFIG_SECURITY_LANDLOCK_LOG.
+- Patch 5 (was v1 3/5): removed WARN_ON() (pointed out by Steven
+  Rostedt).
+- New patch 6: added create_ruleset and free_ruleset tracepoints
+  (split from the v1 add_rule_fs tracepoint patch).
+- Patch 7 (was v1 4/5): added add_rule_net tracepoint, used
+  ruleset Landlock ID instead of kernel pointer, added version
+  field to struct landlock_ruleset, differentiated d_absolute_path()
+  error cases (suggested by Tingmao Wang), moved
+  DEFINE_FREE(__putname) to include/linux/fs.h (noticed by Tingmao
+  Wang).
+- New patch 8: added restrict_self and free_domain tracepoints.
+- Patch 9 (was v1 5/5): merged find-rule consolidation, added
+  check_rule_net tracepoint.
+- New patch 10: split audit_net.sk fix with Fixes: tag.
+- New patches 11-12: added denial tracepoints for filesystem,
+  network, ptrace, and scope operations.
+- New patches 13-17: split selftests into per-feature commits with
+  documentation.
+
+Regards,
+
+Mickaël Salaün (17):
+  landlock: Prepare ruleset and domain type split
+  landlock: Move domain query functions to domain.c
+  landlock: Split struct landlock_domain from struct landlock_ruleset
+  landlock: Split denial logging from audit into common framework
+  tracing: Add __print_untrusted_str()
+  landlock: Add create_ruleset and free_ruleset tracepoints
+  landlock: Add landlock_add_rule_fs and landlock_add_rule_net
+    tracepoints
+  landlock: Add restrict_self and free_domain tracepoints
+  landlock: Add tracepoints for rule checking
+  landlock: Set audit_net.sk for socket access checks
+  landlock: Add landlock_deny_access_fs and landlock_deny_access_net
+  landlock: Add tracepoints for ptrace and scope denials
+  selftests/landlock: Add trace event test infrastructure and tests
+  selftests/landlock: Add filesystem tracepoint tests
+  selftests/landlock: Add network tracepoint tests
+  selftests/landlock: Add scope and ptrace tracepoint tests
+  landlock: Document tracepoints
+
+ Documentation/admin-guide/LSM/landlock.rst    |  210 ++-
+ Documentation/security/landlock.rst           |   35 +-
+ Documentation/trace/events-landlock.rst       |  160 +++
+ Documentation/trace/index.rst                 |    1 +
+ Documentation/userspace-api/landlock.rst      |   11 +-
+ MAINTAINERS                                   |    1 +
+ include/linux/fs.h                            |    1 +
+ include/linux/trace_events.h                  |    2 +
+ include/trace/events/landlock.h               |  574 ++++++++
+ include/trace/stages/stage3_trace_output.h    |    4 +
+ include/trace/stages/stage7_class_define.h    |    1 +
+ kernel/trace/trace_output.c                   |   41 +
+ security/landlock/Kconfig                     |    5 +
+ security/landlock/Makefile                    |   10 +-
+ security/landlock/access.h                    |    4 +-
+ security/landlock/cred.c                      |    6 +-
+ security/landlock/cred.h                      |   29 +-
+ security/landlock/domain.c                    |  445 ++++++-
+ security/landlock/domain.h                    |  148 ++-
+ security/landlock/fs.c                        |  201 ++-
+ security/landlock/fs.h                        |   30 +
+ security/landlock/id.h                        |    6 +-
+ security/landlock/{audit.c => log.c}          |  261 +++-
+ security/landlock/{audit.h => log.h}          |   25 +-
+ security/landlock/net.c                       |   40 +-
+ security/landlock/ruleset.c                   |  528 ++------
+ security/landlock/ruleset.h                   |  237 ++--
+ security/landlock/syscalls.c                  |   36 +-
+ security/landlock/task.c                      |   22 +-
+ tools/testing/selftests/landlock/audit.h      |   35 +-
+ tools/testing/selftests/landlock/audit_test.c |  187 +++
+ tools/testing/selftests/landlock/common.h     |   47 +
+ tools/testing/selftests/landlock/config       |    2 +
+ tools/testing/selftests/landlock/fs_test.c    |  218 +++
+ tools/testing/selftests/landlock/net_test.c   |  547 +++++++-
+ .../testing/selftests/landlock/ptrace_test.c  |  164 +++
+ .../landlock/scoped_abstract_unix_test.c      |  195 +++
+ .../selftests/landlock/scoped_signal_test.c   |  150 +++
+ tools/testing/selftests/landlock/trace.h      |  640 +++++++++
+ .../selftests/landlock/trace_fs_test.c        |  390 ++++++
+ tools/testing/selftests/landlock/trace_test.c | 1168 +++++++++++++++++
+ tools/testing/selftests/landlock/true.c       |   10 +
+ 42 files changed, 5991 insertions(+), 836 deletions(-)
+ create mode 100644 Documentation/trace/events-landlock.rst
+ create mode 100644 include/trace/events/landlock.h
+ rename security/landlock/{audit.c => log.c} (73%)
+ rename security/landlock/{audit.h => log.h} (74%)
+ create mode 100644 tools/testing/selftests/landlock/trace.h
+ create mode 100644 tools/testing/selftests/landlock/trace_fs_test.c
+ create mode 100644 tools/testing/selftests/landlock/trace_test.c
+
+
+base-commit: 8c6a27e02bc55ab110d1828610048b19f903aaec
+-- 
+2.53.0
+
