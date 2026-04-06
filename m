@@ -1,33 +1,33 @@
-Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B42E33438F
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 14:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29633806DA
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 14:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775486256; cv=none; b=PX4f4Pd3oG67d5Y465FBdjBkUB7sTOYTQ7fcvwISvJ0DKr4G7l77hNT0P66bykT9oKcMrfRWqxfrcJdTxL/QsP5UQl0CAycHo1XgfFsGscBkrRt57iraBavU5y6o+Mckw3Cl4RJ4odp7d9p92oyu334b8x5YRRJRocdvQrgmHIU=
+	t=1775486257; cv=none; b=UeD9TLASJSI6HNuHOaOS113hGk1HopluzHAKNN4zvWSlE7fZwyUiMijvoHqaR5lhYnrApZIHhd8bOTneoR7r5BgEsApqvAvRYUgvhYWOSYcSLtaP8zQFAzYioUVKY/RYCZn5ZQmlwe+cpiZhNivtevXY+9iZKxgXSTvP2IxylsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775486256; c=relaxed/simple;
-	bh=p1bYRZ7jVN/7Rwjha5jdrFWz+wC7x70iVJwvxvZB2hY=;
+	s=arc-20240116; t=1775486257; c=relaxed/simple;
+	bh=f1DmyuWotuZEEGjK8SgH5pAhcPMQ0uEfm7NGpK+J3Ys=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ByYBsDFk6XLqV2XOJQthJgU8/PS8I5NitipKXtOPZMQH4Ja7mLz6tzBxZgZWpU3+MxIxXeBldszfzF1UYgcPzXhbNq9Ld88AEK1hrgMgAwon0N9gkH8uvlHKb0BLaDiFrfdN1Fr6jcVPxxnhpV3Cgw+H6L3OrZkK1wV1lCL7kk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=zj30KS9T; arc=none smtp.client-ip=83.166.143.168
+	 MIME-Version:Content-Type; b=Q67LNG7XU3n2JlTlyLOjlVshvbesksG6ItR/M7I2VnV2Mxiiswdx98COeuHwO4cTMmoBZ4YnKYFmZtttCePH7N0Dr9AbVa3jKeMpCGDMLUjv1RTtUp36DamJ/blxFNf4e/OoQ+iParNvsoG+BG/HYUgt/elLLlaPzinLD44hwYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=PrdTltVr; arc=none smtp.client-ip=83.166.143.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="zj30KS9T"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqBkG56MQzTjW;
-	Mon,  6 Apr 2026 16:37:26 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="PrdTltVr"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqBkP3K1XzRtk;
+	Mon,  6 Apr 2026 16:37:33 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1775486246;
-	bh=0AC+uvCZfloA0nwV++7juRmBsOi0J5drGXRBsTqeMLU=;
+	s=20191114; t=1775486253;
+	bh=pCfR89M+ng/x/lu9SxT6zTqKrwZNtiJM0v7YVG5sbVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=zj30KS9Tbms3p2Kf3ufv2wAreeYAmOuGesPLZamyCjLgu05e3M/qqUAIwaf/Au6z+
-	 dsQqCDAtJoVluDX3SfzZMzxbCtqMyIIgZ+Uw6RhqBZN65uJqjKxv3vZgBsX6mld0ow
-	 856cIb6odp8mYYNe7U7QnbTBTDwl9S1n2kietlt4=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqBkG0gGBzDnW;
-	Mon,  6 Apr 2026 16:37:26 +0200 (CEST)
+	b=PrdTltVru0HRQQQXlaeW1/1EdA6w+Uj43m44hSrIaOuyCLr7ikVc4OGkkhisN28cp
+	 a52Bu+J//636iX680PtDZz1aUkxNyn9LMvam8cWXKPTpZeTWlKP9jxazr6K8eClCsc
+	 9LAs1XZHFrYwzENJdAwfz6+oVtmbvlWJSiTuCrqY=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqBkN6GKpzZYC;
+	Mon,  6 Apr 2026 16:37:32 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
@@ -46,9 +46,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 01/17] landlock: Prepare ruleset and domain type split
-Date: Mon,  6 Apr 2026 16:36:59 +0200
-Message-ID: <20260406143717.1815792-2-mic@digikod.net>
+Subject: [PATCH v2 06/17] landlock: Add create_ruleset and free_ruleset tracepoints
+Date: Mon,  6 Apr 2026 16:37:04 +0200
+Message-ID: <20260406143717.1815792-7-mic@digikod.net>
 In-Reply-To: <20260406143717.1815792-1-mic@digikod.net>
 References: <20260406143717.1815792-1-mic@digikod.net>
 Precedence: bulk
@@ -61,581 +61,306 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Rulesets and domains serve fundamentally different purposes: a ruleset
-is mutable and user-facing, created by landlock_create_ruleset(), while
-a domain is immutable after construction and enforced on tasks via
-landlock_restrict_self().  Today both are represented by struct
-landlock_ruleset, which conflates mutable and immutable state in a
-single type: the lock field is unused by domains, the hierarchy field
-is unused by rulesets, and lifecycle functions must handle both cases.
+Add tracepoints for ruleset lifecycle events: landlock_create_ruleset
+fires from the landlock_create_ruleset() syscall handler, logging the
+ruleset Landlock ID and handled access masks; landlock_free_ruleset
+fires in free_ruleset() before the ruleset is freed, so eBPF programs
+can access the full ruleset state via BTF.
 
-Prepare for a clean type split by introducing two new structures and
-the helpers needed to construct domains from a separate compilation
-unit:
+The create_ruleset TP_PROTO takes only the ruleset pointer.  The handled
+access masks are read from the ruleset in TP_fast_assign rather than
+passed as scalar arguments, so eBPF programs can access the full ruleset
+state (rules, access masks) via BTF on a single pointer.  No lock is
+needed because the ruleset is not yet shared (the file descriptor has
+not been installed).
 
-- struct landlock_rules: holds the red-black tree roots and the rule
-  count.  This storage type is shared by both rulesets and domains.
-  This decouples rule storage from the domain API; the backing data
-  structure could be changed independently (e.g. to a hash table,
-  cf. [1]).
+Create the trace header with a DOC comment documenting the consistency
+guarantees, locking conventions, TP_PROTO safety, and security
+considerations shared by all Landlock tracepoints.  Add
+CREATE_TRACE_POINTS in log.c to generate the tracepoint implementations.
 
-- struct landlock_domain: the immutable domain enforced on tasks.  It
-  has no lock field because its rules and access masks are immutable
-  once construction is complete.  The name reflects the role, not the
-  internal data structure, to decouple the API from the
-  implementation.
+Add an id field to struct landlock_ruleset, assigned from
+landlock_get_id_range() at creation time.  Extend the CONFIG guard on
+landlock_get_id_range() from CONFIG_AUDIT to
+CONFIG_SECURITY_LANDLOCK_LOG so that IDs are available for tracing even
+without audit support.
 
-Embed struct landlock_rules in struct landlock_ruleset, replacing the
-individual root_inode, root_net_port, and num_rules fields.  All field
-accesses are updated mechanically.
+The deallocation events use the "free_" prefix (rather than "drop_")
+because they fire when the object is actually freed.  There is no need
+for allocated/deallocated symmetry because ruleset creation happens with
+the landlock_create_ruleset tracepoint.
 
-Add landlock_get_rule_root() as a static inline helper in the header,
-enabling constant propagation when the key type is known at compile
-time.  Extract landlock_free_rules() so that free_domain() can reuse
-the rule-freeing logic without duplicating it.
+landlock_create_ruleset tracepoint.
 
-Add domain lifecycle functions: landlock_get_domain(),
-landlock_put_domain(), and landlock_put_domain_deferred().  Move
-domain.o from landlock-$(CONFIG_AUDIT) to landlock-y because these
-lifecycle functions are needed unconditionally, not just for audit
-logging.
-
-No behavioral change.  The new types and lifecycle functions are not
-yet used by any caller.
+Unlike audit records which share a record type and need a "status="
+field to distinguish allocation from deallocation, tracepoints provide
+one event type per lifecycle transition, each with a type-safe TP_PROTO
+matching the specific transition.  This enables type-safe eBPF BTF
+access and precise ftrace filtering by event name.
 
 Cc: Günther Noack <gnoack@google.com>
+Cc: Justin Suess <utilityemal77@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tingmao Wang <m@maowtm.org>
-Link: https://lore.kernel.org/r/20250523165741.693976-1-mic@digikod.net [1]
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
 
 Changes since v1:
-- New patch.
+- New patch (split from the v1 add_rule_fs tracepoint patch).
 ---
- security/landlock/Makefile  |  6 +--
- security/landlock/domain.c  | 35 ++++++++++++++++
- security/landlock/domain.h  | 69 +++++++++++++++++++++++++++++++
- security/landlock/ruleset.c | 71 ++++++++++++++++----------------
- security/landlock/ruleset.h | 81 +++++++++++++++++++++++++++----------
- 5 files changed, 201 insertions(+), 61 deletions(-)
+ MAINTAINERS                     |  1 +
+ include/trace/events/landlock.h | 94 +++++++++++++++++++++++++++++++++
+ security/landlock/id.h          |  6 +--
+ security/landlock/log.c         |  5 ++
+ security/landlock/ruleset.c     |  8 +++
+ security/landlock/ruleset.h     |  9 ++++
+ security/landlock/syscalls.c    |  5 ++
+ 7 files changed, 125 insertions(+), 3 deletions(-)
+ create mode 100644 include/trace/events/landlock.h
 
-diff --git a/security/landlock/Makefile b/security/landlock/Makefile
-index ffa7646d99f3..23e13644916f 100644
---- a/security/landlock/Makefile
-+++ b/security/landlock/Makefile
-@@ -8,11 +8,11 @@ landlock-y := \
- 	cred.o \
- 	task.o \
- 	fs.o \
--	tsync.o
-+	tsync.o \
-+	domain.o
- 
- landlock-$(CONFIG_INET) += net.o
- 
- landlock-$(CONFIG_AUDIT) += \
- 	id.o \
--	audit.o \
--	domain.o
-+	audit.o
-diff --git a/security/landlock/domain.c b/security/landlock/domain.c
-index 06b6bd845060..378d86974ffb 100644
---- a/security/landlock/domain.c
-+++ b/security/landlock/domain.c
-@@ -15,14 +15,49 @@
- #include <linux/mm.h>
- #include <linux/path.h>
- #include <linux/pid.h>
-+#include <linux/refcount.h>
- #include <linux/sched.h>
- #include <linux/signal.h>
-+#include <linux/slab.h>
- #include <linux/uidgid.h>
-+#include <linux/workqueue.h>
- 
- #include "access.h"
- #include "common.h"
- #include "domain.h"
- #include "id.h"
-+#include "ruleset.h"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c3fe46d7c4bc..51104faa3951 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14389,6 +14389,7 @@ F:	Documentation/admin-guide/LSM/landlock.rst
+ F:	Documentation/security/landlock.rst
+ F:	Documentation/userspace-api/landlock.rst
+ F:	fs/ioctl.c
++F:	include/trace/events/landlock.h
+ F:	include/uapi/linux/landlock.h
+ F:	samples/landlock/
+ F:	security/landlock/
+diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
+new file mode 100644
+index 000000000000..5e847844fbf7
+--- /dev/null
++++ b/include/trace/events/landlock.h
+@@ -0,0 +1,94 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright © 2025 Microsoft Corporation
++ * Copyright © 2026 Cloudflare
++ */
 +
-+static void free_domain(struct landlock_domain *const domain)
-+{
-+	might_sleep();
-+	landlock_free_rules(&domain->rules);
-+	landlock_put_hierarchy(domain->hierarchy);
-+	kfree(domain);
-+}
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM landlock
 +
-+void landlock_put_domain(struct landlock_domain *const domain)
-+{
-+	might_sleep();
-+	if (domain && refcount_dec_and_test(&domain->usage))
-+		free_domain(domain);
-+}
++#if !defined(_TRACE_LANDLOCK_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_LANDLOCK_H
 +
-+static void free_domain_work(struct work_struct *const work)
-+{
-+	struct landlock_domain *domain;
++#include <linux/tracepoint.h>
 +
-+	domain = container_of(work, struct landlock_domain, work_free);
-+	free_domain(domain);
-+}
++struct landlock_ruleset;
 +
-+void landlock_put_domain_deferred(struct landlock_domain *const domain)
-+{
-+	if (domain && refcount_dec_and_test(&domain->usage)) {
-+		INIT_WORK(&domain->work_free, free_domain_work);
-+		schedule_work(&domain->work_free);
-+	}
-+}
++/**
++ * DOC: Landlock trace events
++ *
++ * Consistency guarantee: every trace event corresponds to an operation
++ * that has irrevocably succeeded.  Lifecycle events fire only after
++ * the point of no return; denial events fire only for denials that
++ * actually happen.  This guarantees that eBPF programs observing the
++ * trace stream can build a faithful model of Landlock state without
++ * reconciliation logic.
++ *
++ * Mutable object pointers in TP_PROTO (e.g., struct landlock_ruleset
++ * for add_rule events) are passed while the caller holds the object's
++ * lock, so that TP_fast_assign and eBPF programs reading via BTF see a
++ * consistent snapshot.  For objects that are immutable at the emission
++ * site (e.g., a domain after creation), no lock is needed.
++ *
++ * All pointer arguments in TP_PROTO are guaranteed non-NULL by the
++ * caller.  eBPF programs can access these pointers via BTF for richer
++ * introspection than the TP_STRUCT__entry fields provide.
++ *
++ * TP_STRUCT__entry fields serve TP_printk display only.  eBPF programs
++ * access the raw TP_PROTO arguments directly.
++ *
++ * Security: as for audit, Landlock trace events may expose sensitive
++ * information about all sandboxed processes on the system.  See
++ * Documentation/admin-guide/LSM/landlock.rst for security considerations
++ * and privilege requirements.
++ */
++
++/**
++ * landlock_create_ruleset - new ruleset created
++ * @ruleset: Newly created ruleset (never NULL); not yet shared via an fd,
++ *           so no lock is needed.  eBPF programs can read the full ruleset
++ *           state via BTF.
++ */
++TRACE_EVENT(
++	landlock_create_ruleset,
++
++	TP_PROTO(const struct landlock_ruleset *ruleset),
++
++	TP_ARGS(ruleset),
++
++	TP_STRUCT__entry(__field(__u64, ruleset_id) __field(access_mask_t,
++							    handled_fs)
++				 __field(access_mask_t, handled_net)
++					 __field(access_mask_t, scoped)),
++
++	TP_fast_assign(__entry->ruleset_id = ruleset->id;
++		       __entry->handled_fs = ruleset->layer.fs;
++		       __entry->handled_net = ruleset->layer.net;
++		       __entry->scoped = ruleset->layer.scope;),
++
++	TP_printk("ruleset=%llx handled_fs=0x%x handled_net=0x%x scoped=0x%x",
++		  __entry->ruleset_id, __entry->handled_fs,
++		  __entry->handled_net, __entry->scoped));
++
++/**
++ * landlock_free_ruleset - Ruleset freed
++ *
++ * Emitted when a ruleset's last reference is dropped (typically when
++ * the creating process closes the ruleset file descriptor).
++ */
++TRACE_EVENT(landlock_free_ruleset,
++
++	    TP_PROTO(const struct landlock_ruleset *ruleset),
++
++	    TP_ARGS(ruleset),
++
++	    TP_STRUCT__entry(__field(__u64, ruleset_id)),
++
++	    TP_fast_assign(__entry->ruleset_id = ruleset->id;),
++
++	    TP_printk("ruleset=%llx", __entry->ruleset_id));
++
++#endif /* _TRACE_LANDLOCK_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/security/landlock/id.h b/security/landlock/id.h
+index 45dcfb9e9a8b..2a43c2b523a8 100644
+--- a/security/landlock/id.h
++++ b/security/landlock/id.h
+@@ -8,18 +8,18 @@
+ #ifndef _SECURITY_LANDLOCK_ID_H
+ #define _SECURITY_LANDLOCK_ID_H
  
- #ifdef CONFIG_AUDIT
+-#ifdef CONFIG_AUDIT
++#ifdef CONFIG_SECURITY_LANDLOCK_LOG
  
-diff --git a/security/landlock/domain.h b/security/landlock/domain.h
-index a9d57db0120d..66333b6122a9 100644
---- a/security/landlock/domain.h
-+++ b/security/landlock/domain.h
-@@ -10,6 +10,7 @@
- #ifndef _SECURITY_LANDLOCK_DOMAIN_H
- #define _SECURITY_LANDLOCK_DOMAIN_H
+ void __init landlock_init_id(void);
  
-+#include <linux/cleanup.h>
- #include <linux/limits.h>
- #include <linux/mm.h>
- #include <linux/path.h>
-@@ -17,9 +18,11 @@
- #include <linux/refcount.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-+#include <linux/workqueue.h>
+ u64 landlock_get_id_range(size_t number_of_ids);
  
- #include "access.h"
- #include "audit.h"
-+#include "ruleset.h"
+-#else /* CONFIG_AUDIT */
++#else /* CONFIG_SECURITY_LANDLOCK_LOG */
  
- enum landlock_log_status {
- 	LANDLOCK_LOG_PENDING = 0,
-@@ -170,4 +173,70 @@ static inline void landlock_put_hierarchy(struct landlock_hierarchy *hierarchy)
- 	}
+ static inline void __init landlock_init_id(void)
+ {
  }
  
-+/**
-+ * struct landlock_domain - Immutable Landlock domain
-+ *
-+ * A domain is created from a ruleset by landlock_merge_ruleset() and enforced
-+ * on a task.  Once created, its rules and access masks are immutable.  Unlike
-+ * &struct landlock_ruleset, a domain has no lock field.
-+ */
-+struct landlock_domain {
-+	/**
-+	 * @rules: Red-black tree storage for rules.
-+	 */
-+	struct landlock_rules rules;
-+	/**
-+	 * @hierarchy: Enables hierarchy identification even when a parent
-+	 * domain vanishes.  This is needed for the ptrace and scope
-+	 * restrictions.
-+	 */
-+	struct landlock_hierarchy *hierarchy;
-+	union {
-+		/**
-+		 * @work_free: Enables to free a domain within a lockless
-+		 * section.  This is only used by landlock_put_domain_deferred()
-+		 * when @usage reaches zero.  The fields @usage, @num_layers and
-+		 * @access_masks are then unused.
-+		 */
-+		struct work_struct work_free;
-+		struct {
-+			/**
-+			 * @usage: Number of credentials referencing this
-+			 * domain.
-+			 */
-+			refcount_t usage;
-+			/**
-+			 * @num_layers: Number of layers that are used in this
-+			 * domain.  This enables to check that all the layers
-+			 * allow an access request.
-+			 */
-+			u32 num_layers;
-+			/**
-+			 * @access_masks: Contains the subset of filesystem and
-+			 * network actions that are restricted by a domain.  A
-+			 * domain saves all layers of merged rulesets in a stack
-+			 * (FAM), starting from the first layer to the last one.
-+			 * These layers are used when merging rulesets, for user
-+			 * space backward compatibility (i.e. future-proof), and
-+			 * to properly handle merged rulesets without
-+			 * overlapping access rights.  These layers are set once
-+			 * and never changed for the lifetime of the domain.
-+			 */
-+			struct access_masks access_masks[];
-+		};
-+	};
-+};
+-#endif /* CONFIG_AUDIT */
++#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
+ 
+ #endif /* _SECURITY_LANDLOCK_ID_H */
+diff --git a/security/landlock/log.c b/security/landlock/log.c
+index c9b506707af0..ef79e4ed0037 100644
+--- a/security/landlock/log.c
++++ b/security/landlock/log.c
+@@ -174,6 +174,11 @@ static void audit_denial(const struct landlock_cred_security *const subject,
+ 
+ #endif /* CONFIG_AUDIT */
+ 
++#ifdef CONFIG_TRACEPOINTS
++#define CREATE_TRACE_POINTS
++#include <trace/events/landlock.h>
++#endif /* CONFIG_TRACEPOINTS */
 +
-+void landlock_put_domain(struct landlock_domain *const domain);
-+void landlock_put_domain_deferred(struct landlock_domain *const domain);
-+
-+DEFINE_FREE(landlock_put_domain, struct landlock_domain *,
-+	    if (!IS_ERR_OR_NULL(_T)) landlock_put_domain(_T))
-+
-+static inline void landlock_get_domain(struct landlock_domain *const domain)
-+{
-+	if (domain)
-+		refcount_inc(&domain->usage);
-+}
-+
- #endif /* _SECURITY_LANDLOCK_DOMAIN_H */
+ static struct landlock_hierarchy *
+ get_hierarchy(const struct landlock_domain *const domain, const size_t layer)
+ {
 diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
-index 181df7736bb9..a6835011af2b 100644
+index c220e0f9cf5f..0d1e3dadb318 100644
 --- a/security/landlock/ruleset.c
 +++ b/security/landlock/ruleset.c
-@@ -38,16 +38,16 @@ static struct landlock_ruleset *create_ruleset(const u32 num_layers)
- 		return ERR_PTR(-ENOMEM);
- 	refcount_set(&new_ruleset->usage, 1);
- 	mutex_init(&new_ruleset->lock);
--	new_ruleset->root_inode = RB_ROOT;
-+	new_ruleset->rules.root_inode = RB_ROOT;
+@@ -22,10 +22,13 @@
+ #include <linux/spinlock.h>
  
- #if IS_ENABLED(CONFIG_INET)
--	new_ruleset->root_net_port = RB_ROOT;
-+	new_ruleset->rules.root_net_port = RB_ROOT;
- #endif /* IS_ENABLED(CONFIG_INET) */
+ #include "access.h"
++#include "id.h"
+ #include "limits.h"
+ #include "object.h"
+ #include "ruleset.h"
  
- 	new_ruleset->num_layers = num_layers;
- 	/*
- 	 * hierarchy = NULL
--	 * num_rules = 0
-+	 * rules.num_rules = 0
- 	 * access_masks[] = 0
- 	 */
- 	return new_ruleset;
-@@ -147,19 +147,7 @@ create_rule(const struct landlock_id id,
- static struct rb_root *get_root(struct landlock_ruleset *const ruleset,
- 				const enum landlock_key_type key_type)
- {
--	switch (key_type) {
--	case LANDLOCK_KEY_INODE:
--		return &ruleset->root_inode;
--
--#if IS_ENABLED(CONFIG_INET)
--	case LANDLOCK_KEY_NET_PORT:
--		return &ruleset->root_net_port;
--#endif /* IS_ENABLED(CONFIG_INET) */
--
--	default:
--		WARN_ON_ONCE(1);
--		return ERR_PTR(-EINVAL);
--	}
-+	return landlock_get_rule_root(&ruleset->rules, key_type);
- }
- 
- static void free_rule(struct landlock_rule *const rule,
-@@ -175,19 +163,24 @@ static void free_rule(struct landlock_rule *const rule,
- 
- static void build_check_ruleset(void)
- {
--	const struct landlock_ruleset ruleset = {
-+	const struct landlock_rules rules = {
- 		.num_rules = ~0,
-+	};
-+	const struct landlock_ruleset ruleset = {
- 		.num_layers = ~0,
- 	};
- 
--	BUILD_BUG_ON(ruleset.num_rules < LANDLOCK_MAX_NUM_RULES);
-+	BUILD_BUG_ON(rules.num_rules < LANDLOCK_MAX_NUM_RULES);
- 	BUILD_BUG_ON(ruleset.num_layers < LANDLOCK_MAX_NUM_LAYERS);
- }
- 
- /**
-- * insert_rule - Create and insert a rule in a ruleset
-+ * insert_rule - Create and insert a rule in a rule set
-  *
-- * @ruleset: The ruleset to be updated.
-+ * @rules: The rule storage to be updated.  The caller is responsible for
-+ *         any required locking.  For rulesets, this means holding
-+ *         landlock_ruleset.lock.  For domains under construction, no lock is
-+ *         needed because the domain is not yet visible to other tasks.
-  * @id: The ID to build the new rule with.  The underlying kernel object, if
-  *      any, must be held by the caller.
-  * @layers: One or multiple layers to be copied into the new rule.
-@@ -195,16 +188,16 @@ static void build_check_ruleset(void)
-  *
-  * When user space requests to add a new rule to a ruleset, @layers only
-  * contains one entry and this entry is not assigned to any level.  In this
-- * case, the new rule will extend @ruleset, similarly to a boolean OR between
-+ * case, the new rule will extend @rules, similarly to a boolean OR between
-  * access rights.
-  *
-  * When merging a ruleset in a domain, or copying a domain, @layers will be
-- * added to @ruleset as new constraints, similarly to a boolean AND between
-- * access rights.
-+ * added to @rules as new constraints, similarly to a boolean AND between access
-+ * rights.
-  *
-  * Return: 0 on success, -errno on failure.
-  */
--static int insert_rule(struct landlock_ruleset *const ruleset,
-+static int insert_rule(struct landlock_rules *const rules,
- 		       const struct landlock_id id,
- 		       const struct landlock_layer (*layers)[],
- 		       const size_t num_layers)
-@@ -215,14 +208,13 @@ static int insert_rule(struct landlock_ruleset *const ruleset,
- 	struct rb_root *root;
- 
- 	might_sleep();
--	lockdep_assert_held(&ruleset->lock);
- 	if (WARN_ON_ONCE(!layers))
- 		return -ENOENT;
- 
- 	if (is_object_pointer(id.type) && WARN_ON_ONCE(!id.key.object))
- 		return -ENOENT;
- 
--	root = get_root(ruleset, id.type);
-+	root = landlock_get_rule_root(rules, id.type);
- 	if (IS_ERR(root))
- 		return PTR_ERR(root);
- 
-@@ -248,7 +240,7 @@ static int insert_rule(struct landlock_ruleset *const ruleset,
- 		if ((*layers)[0].level == 0) {
- 			/*
- 			 * Extends access rights when the request comes from
--			 * landlock_add_rule(2), i.e. @ruleset is not a domain.
-+			 * landlock_add_rule(2), i.e. contained by a ruleset.
- 			 */
- 			if (WARN_ON_ONCE(this->num_layers != 1))
- 				return -EINVAL;
-@@ -276,14 +268,14 @@ static int insert_rule(struct landlock_ruleset *const ruleset,
- 
- 	/* There is no match for @id. */
- 	build_check_ruleset();
--	if (ruleset->num_rules >= LANDLOCK_MAX_NUM_RULES)
-+	if (rules->num_rules >= LANDLOCK_MAX_NUM_RULES)
- 		return -E2BIG;
- 	new_rule = create_rule(id, layers, num_layers, NULL);
- 	if (IS_ERR(new_rule))
- 		return PTR_ERR(new_rule);
- 	rb_link_node(&new_rule->node, parent_node, walker_node);
- 	rb_insert_color(&new_rule->node, root);
--	ruleset->num_rules++;
-+	rules->num_rules++;
- 	return 0;
- }
- 
-@@ -314,7 +306,8 @@ int landlock_insert_rule(struct landlock_ruleset *const ruleset,
- 	} };
- 
- 	build_check_layer();
--	return insert_rule(ruleset, id, &layers, ARRAY_SIZE(layers));
-+	lockdep_assert_held(&ruleset->lock);
-+	return insert_rule(&ruleset->rules, id, &layers, ARRAY_SIZE(layers));
- }
- 
- static int merge_tree(struct landlock_ruleset *const dst,
-@@ -352,7 +345,7 @@ static int merge_tree(struct landlock_ruleset *const dst,
- 
- 		layers[0].access = walker_rule->layers[0].access;
- 
--		err = insert_rule(dst, id, &layers, ARRAY_SIZE(layers));
-+		err = insert_rule(&dst->rules, id, &layers, ARRAY_SIZE(layers));
- 		if (err)
- 			return err;
- 	}
-@@ -426,7 +419,7 @@ static int inherit_tree(struct landlock_ruleset *const parent,
- 			.type = key_type,
- 		};
- 
--		err = insert_rule(child, id, &walker_rule->layers,
-+		err = insert_rule(&child->rules, id, &walker_rule->layers,
- 				  walker_rule->num_layers);
- 		if (err)
- 			return err;
-@@ -480,21 +473,26 @@ static int inherit_ruleset(struct landlock_ruleset *const parent,
- 	return err;
- }
- 
--static void free_ruleset(struct landlock_ruleset *const ruleset)
-+void landlock_free_rules(struct landlock_rules *const rules)
- {
- 	struct landlock_rule *freeme, *next;
- 
- 	might_sleep();
--	rbtree_postorder_for_each_entry_safe(freeme, next, &ruleset->root_inode,
-+	rbtree_postorder_for_each_entry_safe(freeme, next, &rules->root_inode,
- 					     node)
- 		free_rule(freeme, LANDLOCK_KEY_INODE);
- 
- #if IS_ENABLED(CONFIG_INET)
- 	rbtree_postorder_for_each_entry_safe(freeme, next,
--					     &ruleset->root_net_port, node)
-+					     &rules->root_net_port, node)
- 		free_rule(freeme, LANDLOCK_KEY_NET_PORT);
- #endif /* IS_ENABLED(CONFIG_INET) */
-+}
- 
-+static void free_ruleset(struct landlock_ruleset *const ruleset)
-+{
-+	might_sleep();
-+	landlock_free_rules(&ruleset->rules);
- 	landlock_put_hierarchy(ruleset->hierarchy);
- 	kfree(ruleset);
- }
-@@ -594,7 +592,8 @@ landlock_find_rule(const struct landlock_ruleset *const ruleset,
- 	const struct rb_root *root;
- 	const struct rb_node *node;
- 
--	root = get_root((struct landlock_ruleset *)ruleset, id.type);
-+	root = landlock_get_rule_root((struct landlock_rules *)&ruleset->rules,
-+				      id.type);
- 	if (IS_ERR(root))
- 		return NULL;
- 	node = root->rb_node;
-diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
-index 889f4b30301a..e7875a8b15df 100644
---- a/security/landlock/ruleset.h
-+++ b/security/landlock/ruleset.h
-@@ -57,13 +57,12 @@ union landlock_key {
-  */
- enum landlock_key_type {
- 	/**
--	 * @LANDLOCK_KEY_INODE: Type of &landlock_ruleset.root_inode's node
--	 * keys.
-+	 * @LANDLOCK_KEY_INODE: Type of &landlock_rules.root_inode's node keys.
- 	 */
- 	LANDLOCK_KEY_INODE = 1,
- 	/**
--	 * @LANDLOCK_KEY_NET_PORT: Type of &landlock_ruleset.root_net_port's
--	 * node keys.
-+	 * @LANDLOCK_KEY_NET_PORT: Type of &landlock_rules.root_net_port's node
-+	 * keys.
- 	 */
- 	LANDLOCK_KEY_NET_PORT,
- };
-@@ -111,30 +110,44 @@ struct landlock_rule {
- };
- 
- /**
-- * struct landlock_ruleset - Landlock ruleset
-+ * struct landlock_rules - Red-black tree storage for Landlock rules
-  *
-- * This data structure must contain unique entries, be updatable, and quick to
-- * match an object.
-+ * This structure holds the rule trees shared by both rulesets and domains.
-  */
--struct landlock_ruleset {
-+struct landlock_rules {
- 	/**
- 	 * @root_inode: Root of a red-black tree containing &struct
--	 * landlock_rule nodes with inode object.  Once a ruleset is tied to a
--	 * process (i.e. as a domain), this tree is immutable until @usage
--	 * reaches zero.
-+	 * landlock_rule nodes with inode object.  Immutable for domains.
- 	 */
- 	struct rb_root root_inode;
- 
- #if IS_ENABLED(CONFIG_INET)
- 	/**
- 	 * @root_net_port: Root of a red-black tree containing &struct
--	 * landlock_rule nodes with network port. Once a ruleset is tied to a
--	 * process (i.e. as a domain), this tree is immutable until @usage
--	 * reaches zero.
-+	 * landlock_rule nodes with network port.  Immutable for domains.
- 	 */
- 	struct rb_root root_net_port;
- #endif /* IS_ENABLED(CONFIG_INET) */
- 
-+	/**
-+	 * @num_rules: Number of non-overlapping (i.e. not for the same object)
-+	 * rules in this tree storage.
-+	 */
-+	u32 num_rules;
-+};
-+
-+/**
-+ * struct landlock_ruleset - Landlock ruleset
-+ *
-+ * This data structure must contain unique entries, be updatable, and quick to
-+ * match an object.
-+ */
-+struct landlock_ruleset {
-+	/**
-+	 * @rules: Red-black tree storage for rules.
-+	 */
-+	struct landlock_rules rules;
-+
- 	/**
- 	 * @hierarchy: Enables hierarchy identification even when a parent
- 	 * domain vanishes.  This is needed for the ptrace protection.
-@@ -144,9 +157,9 @@ struct landlock_ruleset {
- 		/**
- 		 * @work_free: Enables to free a ruleset within a lockless
- 		 * section.  This is only used by
--		 * landlock_put_ruleset_deferred() when @usage reaches zero.
--		 * The fields @lock, @usage, @num_rules, @num_layers and
--		 * @access_masks are then unused.
-+		 * landlock_put_ruleset_deferred() when @usage reaches zero. The
-+		 * fields @lock, @usage, @num_layers and @access_masks are then
-+		 * unused.
- 		 */
- 		struct work_struct work_free;
- 		struct {
-@@ -160,11 +173,6 @@ struct landlock_ruleset {
- 			 * descriptors referencing this ruleset.
- 			 */
- 			refcount_t usage;
--			/**
--			 * @num_rules: Number of non-overlapping (i.e. not for
--			 * the same object) rules in this ruleset.
--			 */
--			u32 num_rules;
- 			/**
- 			 * @num_layers: Number of layers that are used in this
- 			 * ruleset.  This enables to check that all the layers
-@@ -204,6 +212,8 @@ int landlock_insert_rule(struct landlock_ruleset *const ruleset,
- 			 const struct landlock_id id,
- 			 const access_mask_t access);
- 
-+void landlock_free_rules(struct landlock_rules *const rules);
++#include <trace/events/landlock.h>
 +
  struct landlock_ruleset *
- landlock_merge_ruleset(struct landlock_ruleset *const parent,
- 		       struct landlock_ruleset *const ruleset);
-@@ -212,6 +222,33 @@ const struct landlock_rule *
- landlock_find_rule(const struct landlock_ruleset *const ruleset,
- 		   const struct landlock_id id);
+ landlock_create_ruleset(const access_mask_t fs_access_mask,
+ 			const access_mask_t net_access_mask,
+@@ -49,6 +52,10 @@ landlock_create_ruleset(const access_mask_t fs_access_mask,
+ 	new_ruleset->rules.root_net_port = RB_ROOT;
+ #endif /* IS_ENABLED(CONFIG_INET) */
  
-+/**
-+ * landlock_get_rule_root - Get the root of a rule tree by key type
-+ *
-+ * @rules: The rules storage to look up.
-+ * @key_type: The type of key to select the tree for.
-+ *
-+ * Return: A pointer to the rb_root, or ERR_PTR(-EINVAL) on unknown type.
-+ */
-+static inline struct rb_root *
-+landlock_get_rule_root(struct landlock_rules *const rules,
-+		       const enum landlock_key_type key_type)
-+{
-+	switch (key_type) {
-+	case LANDLOCK_KEY_INODE:
-+		return &rules->root_inode;
++#ifdef CONFIG_SECURITY_LANDLOCK_LOG
++	new_ruleset->id = landlock_get_id_range(1);
++#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
 +
-+#if IS_ENABLED(CONFIG_INET)
-+	case LANDLOCK_KEY_NET_PORT:
-+		return &rules->root_net_port;
-+#endif /* IS_ENABLED(CONFIG_INET) */
-+
-+	default:
-+		WARN_ON_ONCE(1);
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
-+
- static inline void landlock_get_ruleset(struct landlock_ruleset *const ruleset)
+ 	/* Should already be checked in sys_landlock_create_ruleset(). */
+ 	if (fs_access_mask) {
+ 		WARN_ON_ONCE(fs_access_mask !=
+@@ -312,6 +319,7 @@ void landlock_free_rules(struct landlock_rules *const rules)
+ static void free_ruleset(struct landlock_ruleset *const ruleset)
  {
- 	if (ruleset)
+ 	might_sleep();
++	trace_landlock_free_ruleset(ruleset);
+ 	landlock_free_rules(&ruleset->rules);
+ 	kfree(ruleset);
+ }
+diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
+index bf127ff7496e..0d60e7fb8ff2 100644
+--- a/security/landlock/ruleset.h
++++ b/security/landlock/ruleset.h
+@@ -4,6 +4,7 @@
+  *
+  * Copyright © 2016-2020 Mickaël Salaün <mic@digikod.net>
+  * Copyright © 2018-2020 ANSSI
++ * Copyright © 2026 Cloudflare
+  */
+ 
+ #ifndef _SECURITY_LANDLOCK_RULESET_H
+@@ -153,6 +154,14 @@ struct landlock_ruleset {
+ 	 * @usage: Number of file descriptors referencing this ruleset.
+ 	 */
+ 	refcount_t usage;
++
++#ifdef CONFIG_SECURITY_LANDLOCK_LOG
++	/**
++	 * @id: Unique identifier for this ruleset, used for tracing.
++	 */
++	u64 id;
++#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
++
+ 	/**
+ 	 * @layer: Contains the subset of filesystem and network actions that
+ 	 * are handled by this ruleset.
+diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
+index 73ccc32d0afd..b18e83e457c2 100644
+--- a/security/landlock/syscalls.c
++++ b/security/landlock/syscalls.c
+@@ -38,6 +38,8 @@
+ #include "setup.h"
+ #include "tsync.h"
+ 
++#include <trace/events/landlock.h>
++
+ static bool is_initialized(void)
+ {
+ 	if (likely(landlock_initialized))
+@@ -256,6 +258,9 @@ SYSCALL_DEFINE3(landlock_create_ruleset,
+ 	if (IS_ERR(ruleset))
+ 		return PTR_ERR(ruleset);
+ 
++	/* Ruleset is not yet shared (FD not installed), no lock needed. */
++	trace_landlock_create_ruleset(ruleset);
++
+ 	/* Creates anonymous FD referring to the ruleset. */
+ 	ruleset_fd = anon_inode_getfd("[landlock-ruleset]", &ruleset_fops,
+ 				      ruleset, O_RDWR | O_CLOEXEC);
 -- 
 2.53.0
 
