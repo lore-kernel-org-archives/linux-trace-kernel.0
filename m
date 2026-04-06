@@ -1,33 +1,33 @@
-Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA83382F07
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 14:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BD9385506
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 14:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775486264; cv=none; b=riKP8E2Zac8w0LIvqCvyEwKzL6o9jxZu8TRV/VXUKNXg0WpDWtAwy6C+YkFFoVn4TGa0kLHqwUT0eb/wreW8tHBN+0K+7fp+7p3wVnReAUSzgKuBfZ6ZJkpJpPPBwaGC8XlyWyESxFW8vgpn08rI1NThqF/qqhWLdodXx7F1upk=
+	t=1775486264; cv=none; b=PJdAeJ/pQWCEXgeYLupfVv6t1GgzQkprRLxEuMVPyuB+ZzSf+3Ok2eBQfBwHuESVSIph2fEZmVA1MdSOQERK24Eu80G7v+E2YXeRtk4ieh5JD+CQNgeSVf7zyMW/SUIeCcoSsbPvhHT+zPnloPTQKZEbFNdRFF8GCyMpXiVSKEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775486264; c=relaxed/simple;
-	bh=0BHTdU5ODZCyv7FBenPpMXAoX9s5NnRbNht2OszFZzE=;
+	bh=yntYopewjKJlvCgPyMBgTX8bhYuK0ESNq7uiTdHw2+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JWGTRrRg8G4IQH7IKYcmYkXUCA/rwWQSUdFT7mIDbpFTCQsdQvW03lP2IbjX6/KFyM1B+zZGchdxjD6wOBRuIDxE+VOBoTIiX7LNOZaMZxMt4yF018kx6tJErt176DWPQUmixoayeiX9t0hpKQeyu6tDPkwtb5o7inD/qceDHb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ccS8qb5Q; arc=none smtp.client-ip=185.125.25.8
+	 MIME-Version:Content-Type; b=OnHxj/yp2cWUlSCPcdGzq6O/GkHTB9vJwPib61nAU92tT/QwmyVvPyeJNNLD5dSp8QEG5JNvcKb5CD6z9nnEq9vqnpYsNxitsZrjzdkYDxudKIkKA/prvS6Pk6qhOpNoAdHLulkSPY7a+lXtVKtlZU8UHKugeftY90RHUHj5PKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=2DTz5fye; arc=none smtp.client-ip=83.166.143.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ccS8qb5Q"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqBkW3tc7zVk6;
-	Mon,  6 Apr 2026 16:37:39 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="2DTz5fye"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqBkX54ltzSRJ;
+	Mon,  6 Apr 2026 16:37:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1775486259;
-	bh=HjP4hfJRZsXvNfkJhlRzWsb0xfYnntkXkRpnJr2sG/w=;
+	s=20191114; t=1775486260;
+	bh=/Hch2jVap5AfV69zq+H5w0X6oki3orky27Sk7iZOWRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ccS8qb5QgxDOUHlja6gJAIWfeCzM5k+4AuM0Os0b76jWYbzW+A4Pm/nenyAq4UtbG
-	 de+7oLdJR8IlJ/OQNw5yU6HlTSrLzDHfBQvGFqvQ2aPnrs3tHSz6B4whrJQqpbshIq
-	 q0raXd8JxIhcbQ5vpDnXQYATJTibEzITz4/4HLmM=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqBkV6fZQzDqy;
-	Mon,  6 Apr 2026 16:37:38 +0200 (CEST)
+	b=2DTz5fyeSbxDamhg0i6wfzc/XIQnJGESQ3GikXnbu+mF/uJqAQ850spjMYi1Me+B6
+	 9Lz/1gS6qoGoln2gmXNAF+03WdirxUZnAB+VE1ItHjhYYQzW3UashX9Pg537pwULx2
+	 N2kR7ZO7xq6X8ix95fY74cGTL7dRtRDFWp8IbKKA=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqBkX0pdSzCsW;
+	Mon,  6 Apr 2026 16:37:40 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
@@ -46,9 +46,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 11/17] landlock: Add landlock_deny_access_fs and landlock_deny_access_net
-Date: Mon,  6 Apr 2026 16:37:09 +0200
-Message-ID: <20260406143717.1815792-12-mic@digikod.net>
+Subject: [PATCH v2 12/17] landlock: Add tracepoints for ptrace and scope denials
+Date: Mon,  6 Apr 2026 16:37:10 +0200
+Message-ID: <20260406143717.1815792-13-mic@digikod.net>
 In-Reply-To: <20260406143717.1815792-1-mic@digikod.net>
 References: <20260406143717.1815792-1-mic@digikod.net>
 Precedence: bulk
@@ -61,59 +61,35 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add per-type tracepoints emitted from landlock_log_denial() when an
-access is denied: landlock_deny_access_fs for filesystem denials and
-landlock_deny_access_net for network denials.
+Scope and ptrace denials follow a different code path (domain hierarchy
+check) than access-right denials, requiring dedicated tracepoints with
+type-specific TP_PROTO arguments.
 
-The events use the "deny_" prefix (rather than "check_") to make clear
-that they fire only on denial, not on every access check.
+Complete the tracepoint coverage for all Landlock denial types by adding
+tracepoints for ptrace and scope-based denials:
+- landlock_deny_ptrace: emitted when ptrace access is denied due to
+  domain hierarchy mismatch.
+- landlock_deny_scope_signal: emitted when signal delivery is denied by
+  LANDLOCK_SCOPE_SIGNAL.
+- landlock_deny_scope_abstract_unix_socket: emitted when abstract unix
+  socket access is denied by LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET.
 
-These complement the check_rule tracepoints by showing the final denial
-verdict, including the denial-by-absence case (when no rule matches
-along the pathwalk, no check_rule events fire, but the deny_access event
-makes the denial explicit).
+TP_PROTO passes the raw kernel object (struct task_struct or struct
+sock) for eBPF BTF access.  String fields (comm, sun_path) use
+__print_untrusted_str() because they contain untrusted input.
 
-Trace events fire unconditionally, independent of audit configuration
-and user-specified log flags (LANDLOCK_LOG_DISABLED).  The user's
-"disable logging" intent applies to audit records, not to kernel
-tracing.  The LANDLOCK_LOG_DISABLED check is moved into the
-audit-specific path; num_denials and trace emission execute regardless.
+Unlike deny_access_fs and deny_access_net which include a blockers field
+showing which specific access rights were denied, these events omit
+blockers because each event corresponds to exactly one denial type
+identified by the event name itself (e.g., landlock_deny_ptrace can only
+mean a ptrace denial).  A blockers field is always zero since
+scope and ptrace denials do not use access-right bitmasks.
 
-The deny_access events pass the denying hierarchy node (const struct
-landlock_hierarchy *hierarchy) in TP_PROTO, not the task's current
-domain.  The domain_id entry field shows the ID of the specific
-hierarchy node that blocked the access, matching audit record semantics.
-This differs from check_rule events which pass the task's current domain
-(needed for the dynamic per-layer array sizing).
-
-The same_exec field is passed in TP_PROTO because it is computed from
-the credential bitmask, not derivable from the hierarchy pointer alone.
-The events include same_exec, log_same_exec, and log_new_exec fields for
-stateless ftrace filtering that replicates audit's suppression logic.
-
-The denial field is named "blockers" (matching the audit record field)
-rather than "blocked", to enable consistent field-name correlation
-between audit and trace output.
-
-Network denial sport and dport fields use __u64 host-endian, matching
-the landlock_net_port_attr.port UAPI convention.  The caller converts
-from the lsm_network_audit __be16 fields via ntohs() before emitting
-the event.
-
-The filesystem path is resolved via d_absolute_path() (the same helper
-used by landlock_add_rule_fs), producing namespace-independent absolute
-paths.  Audit uses d_path() which resolves relative to the process's
-chroot; the difference is documented but acceptable for tracepoints
-which are designed for deterministic output regardless of the tracer's
-namespace state.  Device numbers use numeric major:minor format (unlike
-audit's string s_id) for machine parseability.
-
-For FS_CHANGE_TOPOLOGY hooks that provide only a dentry, the path is
-resolved via dentry_path_raw() instead of d_absolute_path().
-
-The denial tracepoint allocates PATH_MAX bytes from the heap via
-__getname() for path resolution.  This cost is only paid when a tracer
-is attached.
+Audit records use generic field names (opid, ocomm) for the target
+process, while tracepoints use role-specific names (tracee_pid,
+target_pid, peer_pid).  The tracepoint naming is more descriptive
+because trace events are strongly typed and tied to the semantics of each
+event, while the audit log format is generic.
 
 Cc: Günther Noack <gnoack@google.com>
 Cc: Justin Suess <utilityemal77@gmail.com>
@@ -127,401 +103,208 @@ Signed-off-by: Mickaël Salaün <mic@digikod.net>
 Changes since v1:
 - New patch.
 ---
- include/trace/events/landlock.h | 100 +++++++++++++++++++++
- security/landlock/log.c         | 149 ++++++++++++++++++++++++++------
- security/landlock/log.h         |   9 +-
- 3 files changed, 227 insertions(+), 31 deletions(-)
+ include/trace/events/landlock.h | 135 ++++++++++++++++++++++++++++++++
+ security/landlock/log.c         |  20 +++++
+ 2 files changed, 155 insertions(+)
 
 diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
-index e7bb8fa802bf..1afab091efba 100644
+index 1afab091efba..9f96c9897f44 100644
 --- a/include/trace/events/landlock.h
 +++ b/include/trace/events/landlock.h
-@@ -18,6 +18,7 @@ struct landlock_hierarchy;
- struct landlock_rule;
+@@ -11,6 +11,7 @@
+ #define _TRACE_LANDLOCK_H
+ 
+ #include <linux/tracepoint.h>
++#include <net/af_unix.h>
+ 
+ struct dentry;
+ struct landlock_domain;
+@@ -19,6 +20,7 @@ struct landlock_rule;
  struct landlock_ruleset;
  struct path;
-+struct sock;
+ struct sock;
++struct task_struct;
  
  /**
   * DOC: Landlock trace events
-@@ -50,6 +51,15 @@ struct path;
-  * Network port fields use __u64 in host endianness, matching the
-  * landlock_net_port_attr.port UAPI convention.  Callers convert from
-  * network byte order before emitting the event.
-+ *
-+ * Field ordering convention for denial events: domain ID, same_exec,
-+ * log_same_exec, log_new_exec, then blockers (deny_access events only),
-+ * then type-specific object identification fields, then variable-length
-+ * fields.
-+ *
-+ * The deny_access denial events include same_exec and log_same_exec /
-+ * log_new_exec fields so that both stateless (ftrace filter) and stateful
-+ * (eBPF) consumers can replicate the audit subsystem's filtering logic.
-  */
- 
- /**
-@@ -333,6 +343,96 @@ TRACE_EVENT(landlock_check_rule_net,
- 		      __entry->port,
- 		      __print_dynamic_array(layers, sizeof(access_mask_t))));
+@@ -433,6 +435,139 @@ TRACE_EVENT(
+ 		__entry->log_new_exec, __entry->blockers, __entry->sport,
+ 		__entry->dport));
  
 +/**
-+ * landlock_deny_access_fs - filesystem access denied
-+ * @hierarchy: Hierarchy node that blocked the access (never NULL).
-+ *             Identifies the specific domain in the hierarchy whose
-+ *             rules caused the denial.  eBPF can read hierarchy->id,
-+ *             hierarchy->log_same_exec, hierarchy->log_new_exec, and
-+ *             walk hierarchy->parent for the domain chain.
-+ * @same_exec: Whether the current task is the same executable that
-+ *             called landlock_restrict_self() for the denying hierarchy
-+ *             node.  Computed from the credential bitmask, not derivable
-+ *             from the hierarchy alone.
-+ * @blockers: Access mask that was blocked
-+ * @path: Filesystem path that was denied (never NULL)
-+ * @pathname: Resolved absolute path string (never NULL)
-+ */
-+TRACE_EVENT(
-+	landlock_deny_access_fs,
-+
-+	TP_PROTO(const struct landlock_hierarchy *hierarchy, bool same_exec,
-+		 access_mask_t blockers, const struct path *path,
-+		 const char *pathname),
-+
-+	TP_ARGS(hierarchy, same_exec, blockers, path, pathname),
-+
-+	TP_STRUCT__entry(
-+		__field(__u64, domain_id) __field(bool, same_exec)
-+			__field(u32, log_same_exec) __field(u32, log_new_exec)
-+				__field(access_mask_t, blockers)
-+					__field(dev_t, dev) __field(ino_t, ino)
-+						__string(pathname, pathname)),
-+
-+	TP_fast_assign(__entry->domain_id = hierarchy->id;
-+		       __entry->same_exec = same_exec;
-+		       __entry->log_same_exec = hierarchy->log_same_exec;
-+		       __entry->log_new_exec = hierarchy->log_new_exec;
-+		       __entry->blockers = blockers;
-+		       __entry->dev = path->dentry->d_sb->s_dev;
-+		       __entry->ino = d_backing_inode(path->dentry)->i_ino;
-+		       __assign_str(pathname);),
-+
-+	TP_printk(
-+		"domain=%llx same_exec=%d log_same_exec=%u log_new_exec=%u blockers=0x%x dev=%u:%u ino=%lu path=%s",
-+		__entry->domain_id, __entry->same_exec, __entry->log_same_exec,
-+		__entry->log_new_exec, __entry->blockers, MAJOR(__entry->dev),
-+		MINOR(__entry->dev), __entry->ino,
-+		__print_untrusted_str(pathname)));
-+
-+/**
-+ * landlock_deny_access_net - network access denied
++ * landlock_deny_ptrace - ptrace access denied
 + * @hierarchy: Hierarchy node that blocked the access (never NULL)
-+ * @same_exec: Whether the current task is the same executable that
-+ *             called landlock_restrict_self() for the denying hierarchy
-+ *             node
-+ * @blockers: Access mask that was blocked
-+ * @sk: Socket object (never NULL); eBPF can read socket family, state,
-+ *      local/remote addresses, and options via BTF
-+ * @sport: Source port in host endianness (non-zero for bind denials,
-+ *         zero for connect denials)
-+ * @dport: Destination port in host endianness (non-zero for connect
-+ *         denials, zero for bind denials)
++ * @same_exec: Whether the current task is the same executable that called
++ *             landlock_restrict_self() for the denying hierarchy node
++ * @tracee: Target task (never NULL); eBPF can read pid, comm, cred,
++ *          namespaces, and cgroup via BTF
 + */
 +TRACE_EVENT(
-+	landlock_deny_access_net,
++	landlock_deny_ptrace,
 +
 +	TP_PROTO(const struct landlock_hierarchy *hierarchy, bool same_exec,
-+		 access_mask_t blockers, const struct sock *sk, __u64 sport,
-+		 __u64 dport),
++		 const struct task_struct *tracee),
 +
-+	TP_ARGS(hierarchy, same_exec, blockers, sk, sport, dport),
++	TP_ARGS(hierarchy, same_exec, tracee),
 +
 +	TP_STRUCT__entry(
 +		__field(__u64, domain_id) __field(bool, same_exec)
 +			__field(u32, log_same_exec) __field(u32, log_new_exec)
-+				__field(access_mask_t, blockers)
-+					__field(__u64, sport)
-+						__field(__u64, dport)),
++				__field(pid_t, tracee_pid)
++					__string(tracee_comm, tracee->comm)),
 +
 +	TP_fast_assign(__entry->domain_id = hierarchy->id;
 +		       __entry->same_exec = same_exec;
 +		       __entry->log_same_exec = hierarchy->log_same_exec;
 +		       __entry->log_new_exec = hierarchy->log_new_exec;
-+		       __entry->blockers = blockers; __entry->sport = sport;
-+		       __entry->dport = dport;),
++		       __entry->tracee_pid =
++			       task_tgid_nr((struct task_struct *)tracee);
++		       __assign_str(tracee_comm);),
 +
 +	TP_printk(
-+		"domain=%llx same_exec=%d log_same_exec=%u log_new_exec=%u blockers=0x%x sport=%llu dport=%llu",
++		"domain=%llx same_exec=%d log_same_exec=%u log_new_exec=%u tracee_pid=%d comm=%s",
 +		__entry->domain_id, __entry->same_exec, __entry->log_same_exec,
-+		__entry->log_new_exec, __entry->blockers, __entry->sport,
-+		__entry->dport));
++		__entry->log_new_exec, __entry->tracee_pid,
++		__print_untrusted_str(tracee_comm)));
++
++/**
++ * landlock_deny_scope_signal - signal delivery denied by
++ *                               LANDLOCK_SCOPE_SIGNAL
++ * @hierarchy: Hierarchy node that blocked the access (never NULL)
++ * @same_exec: Whether the current task is the same executable that called
++ *             landlock_restrict_self() for the denying hierarchy node
++ * @target: Signal target task (never NULL); eBPF can read pid, comm, cred,
++ *          namespaces, and cgroup via BTF
++ */
++TRACE_EVENT(
++	landlock_deny_scope_signal,
++
++	TP_PROTO(const struct landlock_hierarchy *hierarchy, bool same_exec,
++		 const struct task_struct *target),
++
++	TP_ARGS(hierarchy, same_exec, target),
++
++	TP_STRUCT__entry(
++		__field(__u64, domain_id) __field(bool, same_exec)
++			__field(u32, log_same_exec) __field(u32, log_new_exec)
++				__field(pid_t, target_pid)
++					__string(target_comm, target->comm)),
++
++	TP_fast_assign(__entry->domain_id = hierarchy->id;
++		       __entry->same_exec = same_exec;
++		       __entry->log_same_exec = hierarchy->log_same_exec;
++		       __entry->log_new_exec = hierarchy->log_new_exec;
++		       __entry->target_pid =
++			       task_tgid_nr((struct task_struct *)target);
++		       __assign_str(target_comm);),
++
++	TP_printk(
++		"domain=%llx same_exec=%d log_same_exec=%u log_new_exec=%u target_pid=%d comm=%s",
++		__entry->domain_id, __entry->same_exec, __entry->log_same_exec,
++		__entry->log_new_exec, __entry->target_pid,
++		__print_untrusted_str(target_comm)));
++
++/**
++ * landlock_deny_scope_abstract_unix_socket - abstract unix socket access
++ *     denied by LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET
++ * @hierarchy: Hierarchy node that blocked the access (never NULL)
++ * @same_exec: Whether the current task is the same executable that called
++ *             landlock_restrict_self() for the denying hierarchy node
++ * @peer: Peer socket (never NULL); eBPF can read sk_peer_pid,
++ *        sk_peer_cred, socket type, and protocol via BTF
++ */
++TRACE_EVENT(
++	landlock_deny_scope_abstract_unix_socket,
++
++	TP_PROTO(const struct landlock_hierarchy *hierarchy, bool same_exec,
++		 const struct sock *peer),
++
++	TP_ARGS(hierarchy, same_exec, peer),
++
++	TP_STRUCT__entry(
++		__field(__u64, domain_id) __field(bool, same_exec)
++			__field(u32, log_same_exec) __field(u32, log_new_exec)
++				__field(pid_t, peer_pid)
++		/*
++		 * Abstract socket names are untrusted binary data from
++		 * user space.  Use __string_len because abstract names
++		 * are not NUL-terminated; their length is determined by
++		 * addr->len.
++		 */
++		__string_len(sun_path,
++			     unix_sk(peer)->addr ?
++				     unix_sk(peer)->addr->name->sun_path + 1 :
++				     "",
++			     unix_sk(peer)->addr ?
++				     unix_sk(peer)->addr->len -
++					     offsetof(struct sockaddr_un,
++						      sun_path) -
++					     1 :
++				     0)),
++
++	TP_fast_assign(struct pid *peer_pid;
++
++		       __entry->domain_id = hierarchy->id;
++		       __entry->same_exec = same_exec;
++		       __entry->log_same_exec = hierarchy->log_same_exec;
++		       __entry->log_new_exec = hierarchy->log_new_exec;
++		       /*
++			* READ_ONCE prevents compiler double-read.  The value
++			* is stable because unix_state_lock(peer) is held by
++			* the caller (hook_unix_stream_connect or
++			* hook_unix_may_send).
++			*/
++		       peer_pid = READ_ONCE(peer->sk_peer_pid);
++		       __entry->peer_pid = peer_pid ? pid_nr(peer_pid) : 0;
++		       __assign_str(sun_path);),
++
++	TP_printk(
++		"domain=%llx same_exec=%d log_same_exec=%u log_new_exec=%u peer_pid=%d sun_path=%s",
++		__entry->domain_id, __entry->same_exec, __entry->log_same_exec,
++		__entry->log_new_exec, __entry->peer_pid,
++		__print_untrusted_str(sun_path)));
 +
  #endif /* _TRACE_LANDLOCK_H */
  
  /* This part must be outside protection */
 diff --git a/security/landlock/log.c b/security/landlock/log.c
-index ab4f982f8184..c81cb7c1c448 100644
+index c81cb7c1c448..a2f61aed81ff 100644
 --- a/security/landlock/log.c
 +++ b/security/landlock/log.c
-@@ -3,6 +3,7 @@
-  * Landlock - Log helpers
-  *
-  * Copyright © 2023-2025 Microsoft Corporation
-+ * Copyright © 2026 Cloudflare
-  */
+@@ -11,6 +11,9 @@
+ #include <linux/bitops.h>
+ #include <linux/lsm_audit.h>
+ #include <linux/pid.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++#include <net/sock.h>
+ #include <uapi/linux/landlock.h>
  
- #include <kunit/test.h>
-@@ -143,6 +144,9 @@ static void audit_denial(const struct landlock_cred_security *const subject,
- {
- 	struct audit_buffer *ab;
- 
-+	if (READ_ONCE(youngest_denied->log_status) == LANDLOCK_LOG_DISABLED)
-+		return;
-+
- 	if (!audit_enabled)
- 		return;
- 
-@@ -172,6 +176,16 @@ static void audit_denial(const struct landlock_cred_security *const subject,
- 	log_domain(youngest_denied);
- }
- 
-+#else /* CONFIG_AUDIT */
-+
-+static inline void
-+audit_denial(const struct landlock_cred_security *const subject,
-+	     const struct landlock_request *const request,
-+	     struct landlock_hierarchy *const youngest_denied,
-+	     const size_t youngest_layer, const access_mask_t missing)
-+{
-+}
-+
- #endif /* CONFIG_AUDIT */
- 
- #include <trace/events/landlock.h>
-@@ -180,6 +194,86 @@ static void audit_denial(const struct landlock_cred_security *const subject,
- #define CREATE_TRACE_POINTS
- #include <trace/events/landlock.h>
- #undef CREATE_TRACE_POINTS
-+
-+#include "fs.h"
-+
-+static void trace_denial(const struct landlock_cred_security *const subject,
-+			 const struct landlock_request *const request,
-+			 const struct landlock_hierarchy *const youngest_denied,
-+			 const size_t youngest_layer,
-+			 const access_mask_t missing)
-+{
-+	const bool same_exec = !!(subject->domain_exec & BIT(youngest_layer));
-+
-+	switch (request->type) {
-+	case LANDLOCK_REQUEST_FS_ACCESS:
-+	case LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY:
-+		if (trace_landlock_deny_access_fs_enabled()) {
-+			char *buf __free(__putname) = __getname();
-+			const char *pathname;
-+			const struct path *path;
-+
-+			/*
-+			 * FS_CHANGE_TOPOLOGY uses either LSM_AUDIT_DATA_PATH or
-+			 * LSM_AUDIT_DATA_DENTRY depending on the hook.  For the
-+			 * dentry case, build a path on the stack with the real
-+			 * dentry so TP_fast_assign can extract dev and ino.
-+			 * The mnt field is unused by TP_fast_assign.
-+			 */
-+			if (request->audit.type == LSM_AUDIT_DATA_DENTRY) {
-+				struct path dentry_path = {
-+					.dentry = request->audit.u.dentry,
-+				};
-+
-+				path = &dentry_path;
-+				pathname =
-+					buf ? dentry_path_raw(
-+						      request->audit.u.dentry,
-+						      buf, PATH_MAX) :
-+					      "<no_mem>";
-+				if (IS_ERR(pathname))
-+					pathname = "<unreachable>";
-+
-+				trace_landlock_deny_access_fs(youngest_denied,
-+							      same_exec,
-+							      missing, path,
-+							      pathname);
-+			} else {
-+				path = &request->audit.u.path;
-+				pathname = buf ? resolve_path_for_trace(path,
-+									buf) :
-+						 "<no_mem>";
-+
-+				trace_landlock_deny_access_fs(youngest_denied,
-+							      same_exec,
-+							      missing, path,
-+							      pathname);
-+			}
-+		}
+ #include "access.h"
+@@ -259,6 +262,23 @@ static void trace_denial(const struct landlock_cred_security *const subject,
+ 				ntohs(request->audit.u.net->sport),
+ 				ntohs(request->audit.u.net->dport));
+ 		break;
++	case LANDLOCK_REQUEST_PTRACE:
++		if (trace_landlock_deny_ptrace_enabled())
++			trace_landlock_deny_ptrace(youngest_denied, same_exec,
++						   request->audit.u.tsk);
 +		break;
-+	case LANDLOCK_REQUEST_NET_ACCESS:
-+		if (trace_landlock_deny_access_net_enabled())
-+			trace_landlock_deny_access_net(
-+				youngest_denied, same_exec, missing,
-+				request->audit.u.net->sk,
-+				ntohs(request->audit.u.net->sport),
-+				ntohs(request->audit.u.net->dport));
++	case LANDLOCK_REQUEST_SCOPE_SIGNAL:
++		if (trace_landlock_deny_scope_signal_enabled())
++			trace_landlock_deny_scope_signal(youngest_denied,
++							 same_exec,
++							 request->audit.u.tsk);
 +		break;
-+	default:
++	case LANDLOCK_REQUEST_SCOPE_ABSTRACT_UNIX_SOCKET:
++		if (trace_landlock_deny_scope_abstract_unix_socket_enabled())
++			trace_landlock_deny_scope_abstract_unix_socket(
++				youngest_denied, same_exec,
++				request->audit.u.net->sk);
 +		break;
-+	}
-+}
-+
-+#else /* CONFIG_TRACEPOINTS */
-+
-+static inline void
-+trace_denial(const struct landlock_cred_security *const subject,
-+	     const struct landlock_request *const request,
-+	     const struct landlock_hierarchy *const youngest_denied,
-+	     const size_t youngest_layer, const access_mask_t missing)
-+{
-+}
-+
- #endif /* CONFIG_TRACEPOINTS */
- 
- static struct landlock_hierarchy *
-@@ -439,9 +533,6 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
- 			get_hierarchy(subject->domain, youngest_layer);
+ 	default:
+ 		break;
  	}
- 
--	if (READ_ONCE(youngest_denied->log_status) == LANDLOCK_LOG_DISABLED)
--		return;
--
- 	/*
- 	 * Consistently keeps track of the number of denied access requests
- 	 * even if audit is currently disabled, or if audit rules currently
-@@ -450,45 +541,25 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
- 	 */
- 	atomic64_inc(&youngest_denied->num_denials);
- 
--#ifdef CONFIG_AUDIT
-+	trace_denial(subject, request, youngest_denied, youngest_layer,
-+		     missing);
- 	audit_denial(subject, request, youngest_denied, youngest_layer,
- 		     missing);
--#endif /* CONFIG_AUDIT */
- }
- 
- #ifdef CONFIG_AUDIT
- 
--/**
-- * landlock_log_free_domain - Create an audit record on domain deallocation
-- *
-- * @hierarchy: The domain's hierarchy being deallocated.
-- *
-- * Only domains which previously appeared in the audit logs are logged again.
-- * This is useful to know when a domain will never show again in the audit log.
-- *
-- * Called in a work queue scheduled by landlock_put_domain_deferred() called by
-- * hook_cred_free().
-- */
--void landlock_log_free_domain(const struct landlock_hierarchy *const hierarchy)
-+static void audit_drop_domain(const struct landlock_hierarchy *const hierarchy)
- {
- 	struct audit_buffer *ab;
- 
--	if (WARN_ON_ONCE(!hierarchy))
--		return;
--
--	trace_landlock_free_domain(hierarchy);
--
- 	if (!audit_enabled)
- 		return;
- 
--	/* Ignores domains that were not logged.  */
-+	/* Ignores domains that were not logged. */
- 	if (READ_ONCE(hierarchy->log_status) != LANDLOCK_LOG_RECORDED)
- 		return;
- 
--	/*
--	 * If logging of domain allocation succeeded, warns about failure to log
--	 * domain deallocation to highlight unbalanced domain lifetime logs.
--	 */
- 	ab = audit_log_start(audit_context(), GFP_KERNEL,
- 			     AUDIT_LANDLOCK_DOMAIN);
- 	if (!ab)
-@@ -499,8 +570,32 @@ void landlock_log_free_domain(const struct landlock_hierarchy *const hierarchy)
- 	audit_log_end(ab);
- }
- 
-+#else /* CONFIG_AUDIT */
-+
-+static inline void
-+audit_drop_domain(const struct landlock_hierarchy *const hierarchy)
-+{
-+}
-+
- #endif /* CONFIG_AUDIT */
- 
-+/**
-+ * landlock_log_free_domain - Log domain deallocation
-+ *
-+ * @hierarchy: The domain's hierarchy being deallocated.
-+ *
-+ * Called from landlock_put_domain_deferred() (via a work queue scheduled by
-+ * hook_cred_free()) or directly from landlock_put_domain().
-+ */
-+void landlock_log_free_domain(const struct landlock_hierarchy *const hierarchy)
-+{
-+	if (WARN_ON_ONCE(!hierarchy))
-+		return;
-+
-+	trace_landlock_free_domain(hierarchy);
-+	audit_drop_domain(hierarchy);
-+}
-+
- #ifdef CONFIG_SECURITY_LANDLOCK_KUNIT_TEST
- 
- static struct kunit_case test_cases[] = {
-diff --git a/security/landlock/log.h b/security/landlock/log.h
-index 4370fff86e45..5615a776c29a 100644
---- a/security/landlock/log.h
-+++ b/security/landlock/log.h
-@@ -3,6 +3,7 @@
-  * Landlock - Log helpers
-  *
-  * Copyright © 2023-2025 Microsoft Corporation
-+ * Copyright © 2026 Cloudflare
-  */
- 
- #ifndef _SECURITY_LANDLOCK_LOG_H
-@@ -28,7 +29,7 @@ enum landlock_request_type {
- /*
-  * We should be careful to only use a variable of this type for
-  * landlock_log_denial().  This way, the compiler can remove it entirely if
-- * CONFIG_AUDIT is not set.
-+ * CONFIG_SECURITY_LANDLOCK_LOG is not set.
-  */
- struct landlock_request {
- 	/* Mandatory fields. */
-@@ -52,14 +53,14 @@ struct landlock_request {
- 	deny_masks_t deny_masks;
- };
- 
--#ifdef CONFIG_AUDIT
-+#ifdef CONFIG_SECURITY_LANDLOCK_LOG
- 
- void landlock_log_free_domain(const struct landlock_hierarchy *const hierarchy);
- 
- void landlock_log_denial(const struct landlock_cred_security *const subject,
- 			 const struct landlock_request *const request);
- 
--#else /* CONFIG_AUDIT */
-+#else /* CONFIG_SECURITY_LANDLOCK_LOG */
- 
- static inline void
- landlock_log_free_domain(const struct landlock_hierarchy *const hierarchy)
-@@ -72,6 +73,6 @@ landlock_log_denial(const struct landlock_cred_security *const subject,
- {
- }
- 
--#endif /* CONFIG_AUDIT */
-+#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
- 
- #endif /* _SECURITY_LANDLOCK_LOG_H */
 -- 
 2.53.0
 
