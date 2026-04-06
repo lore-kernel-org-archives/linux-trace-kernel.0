@@ -1,132 +1,186 @@
-Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835813126A9;
-	Mon,  6 Apr 2026 20:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775505929; cv=none; b=e3kojmUSS7iLuR4P21NmmDMkH5KPHnAI7nuq/jdpPP0LsmENcwI4OVTuVMAehDuPQ6JtaQawGVplJbu9QV+qpt66FjHF/OJz+wp1GL6NaaLDB9kiwnlbdJPInFFck9aHeTR5vTMU+AG6ywLiBHNOG/jV5j/8kIMDnImnvJ8chnI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775505929; c=relaxed/simple;
-	bh=AC+Rwir7wQ8TqEdwv3VYw3uhn6Y5OpJ0ix6JbQrM5g8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X7Aha8dpaHa6kGGVCLLAx0f/B1DzcWPeQUk03Vv15ekuXcrSgJsg6EO3qsgdjKD11WhQPClxMHNJtoUcmtar7FBV6BIwOO3cV+L7hIuSs8BVyb85MPPGAwXjwMLroE8iPPYLzsDlcMU/UsJdPOJ0t9euTX0oLqPPD78wjOzEq0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=yP8TgcE1; arc=none smtp.client-ip=148.163.148.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C469939B950
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 20:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775506348; cv=pass; b=Izjy9Y9V2AP6aVIgOCbk+pXA9pAUlsfhMBMnrBlMD0q5vJy/zpYmG+bLJokalOgQaInC4cjROjpCtFfYRNglytVYbFi9OkTOLz7emSLGHMMeKuzLhM0hI1P8aBpVDZKWhTas0lzp+sDXVo10Du4550ULZcAnR6K8PLYraVHU+Sc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775506348; c=relaxed/simple;
+	bh=s6aJdA58IGADa1+v1zsb7cJg0N/wgNuxNFFyBe9eVf8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tHQt34uV/X1XmKaOjKMEHEyiB0iiZT+tqS9C8n9D3ygQqUtqIf7NqAlSchb/cHt0eOMrEuXSFTEVfIwbah588TIMfMrOHg1cN6ocvIFtmQXBFYRjtMk+aq+TBK+yuBi9HRdp1rLPWAOqFgTSQqUsZlRxMofg+BPB2mu8AFk6IS4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q3Er1+Fo; arc=pass smtp.client-ip=209.85.128.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="yP8TgcE1"
-Received: from pps.filterd (m0354651.ppops.net [127.0.0.1])
-	by mx0a-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636J6fnA2547818;
-	Mon, 6 Apr 2026 19:32:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:message-id:mime-version:subject:to; s=default; bh=ThjhPdJQwTuOp
-	MPIna20fC3u2KE50uJcGQ+pki/m8to=; b=yP8TgcE1g55aFi+IYzG2yrZmCrWQc
-	4PoFiocwZOfK6Z0ttgoZXGnMgf6GgdKbXNyJTTV1V+BjjrIpnHYillRJPWPSzOjh
-	zEioIJNHjXc8C2WNEqJCOTNLJ1rz4s8GWcCekHhQdMFkP9P75StCg91g5j30fwLp
-	TMnqn5G4ZqmFR+ql269/8eClQ99QVa+be9W69/H2fAOKWHOpyAU32LwYGQniDZL1
-	qnPXvRmRqWOQClICVizyQ3TWjGstCPMGAvfdAP5sec/F6kC8X7Fx6pr4F+dHRh2K
-	n0420/EzYkaBQ63453qGaLpMvWMJn/UTnH7W5wqEIrTnwdCGjydM5pyxw==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 4dbdvxqy86-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Apr 2026 19:32:00 +0000 (GMT)
-Received: from LL-DJCZ134.crowdstrike.sys (10.100.11.122) by
- 04WPEXCH006.crowdstrike.sys (10.100.11.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 6 Apr 2026 19:31:58 +0000
-From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-To: <bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-CC: <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-        <jolsa@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <ihor.solodrai@linux.dev>, <emil@etsalapatis.com>,
-        <linux-open-source@crowdstrike.com>
-Subject: [RFC PATCH bpf-next v5 0/2] tracing: Fix kprobe attachment when module shadows vmlinux symbol
-Date: Mon, 6 Apr 2026 15:31:56 -0400
-Message-ID: <20260406193158.754498-1-andrey.grodzovsky@crowdstrike.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3Er1+Fo"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-488ad135063so12427135e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Apr 2026 13:12:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775506345; cv=none;
+        d=google.com; s=arc-20240605;
+        b=l0Ecz8iljphQxPsruXZCbfwNh9sVUa8mMsKmlMbRC7m4J4ZPAqWjuz6mIiWw7kZ9F5
+         QLoip8iPFWGkhXcV9IBbLfFXuwJEPYGeInz1ceegWv4p/O6oO8mzklYwc7Jdf9GCLhz3
+         u5qRlwwoycESn8uTNJrhkTpf2+O6e1Tk2P49/reyYcqAsZTrpfWTW+02EeGfgafi8a+n
+         kEfsLfKk/OcWNkHM9R9lGGNL7TxMe3u5day5aFXhU17qt0GgskzIw9rKphrkLZtHEtxs
+         8DadGIgqg3r4g0WNogenI7Amh2VVLu0ZfT8DkNXz3M3TNTENaLPleTEZiWUA/tvMwmGQ
+         rhiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ECHSIeYJG/ss0cpgInnFbjh0Pdm7oo3N61eH/qs+HT4=;
+        fh=SVwArIvnRNXyaiQzFnqcfMco1TWIuKrtZb5pd7KYqVk=;
+        b=WijctY9l5dgVBGOhnZW4XJXtY8azqTLMllH1R6taZE4EIKUGBbtlxZG8IBU+7qdPE7
+         W3YvxRxaF4KQAUgKpeVXObquvn+grU7z/wExI3qCjdnJk1y+pPFdq4aSLKB9mgz5BfAW
+         r/q8tAWqzMPxOYjI8JMSYCjUDK/Nr14BO125E7vG3TFp8Cj5dBYDJDZRytVzVdh/BqPN
+         g4LKriiXVngOAEFy86uXZD9PiezsStfyAzUvjc6FDhnF3tze5Ha+o63q+BFJEiq26Klw
+         pw5ctcp8aYjEmfsDhYOfdkI6LBegHY1Ra36Y8+aVZktq7EGDuetVlmoiEk7M/KgMJejQ
+         0ZBQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775506345; x=1776111145; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ECHSIeYJG/ss0cpgInnFbjh0Pdm7oo3N61eH/qs+HT4=;
+        b=Q3Er1+Foj2JI++IytQF+1vu2hw0uEAYNR6gyM1YtgJ+qMUcsBRPCtUDmEc9HCS9Bnw
+         lzIzjVUxyyIKn2Zv4bpXyXCJ55gCE2mFg00JvxisKQ1H3JJNS57YKA9L3HVgrK7SvioU
+         tjVaS8jX73mVBQu64uFhWaatYGVRXXFfNs+famwofGp3ZVq4CnjZdl9o7LHwIRM7U97N
+         d6axOoFkiwe+77RaL424r4vv7m3xadw5EBSiHPq9q1A9aMh5yRgTnGPs9rDlwY3v+qTu
+         1pjqHdQ7eOVSYp27GTV7Ei47m+Jc6oVe4Tru6VW6LhUJcrk7FMtdonevgEscoJRi36J5
+         5ttA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775506345; x=1776111145;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ECHSIeYJG/ss0cpgInnFbjh0Pdm7oo3N61eH/qs+HT4=;
+        b=ExmSfR07JfbL/mF3eB0ELwECSfoyWrMh0wofl2OomXmNaFyi2duIJHVuVVZ3z1+fhs
+         8DV6BRFlxcObgqFYj8PiiTZ2QIwkwOMPVr00KbK8O4oejPF1+qnRZP6avqTIZsktmY6S
+         RLLt5JO7YBCEmyjLLlU+myza+hv28pu4rCGxZLofD0Tgwgylar6N5E27zJp6/s8PxTbN
+         yv5T30dB0EEfnL3w3CRARXlIB3XFySljH0tX/P6zVcREiVx8QdnAS90MG8sF/Pib76fY
+         sqdQDAOeCy3m+sYZ6cqvT6o4hzFkLApThaqleYOn4kfnBXCgT8UaAG2S6pTb9qIkdztq
+         J42g==
+X-Forwarded-Encrypted: i=1; AJvYcCWF+lEjHL4AGCtiYl/5+2MulKWtsnxKzVHJuKzOLcP4+EmXpbBZBVkRSEb9QtSp1Z7TlsFG9n8Bnk++AUqyu+FFeys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqUkDZPWppn8mBFqQyhXWf/dx/lpSmn3nSRV195i1BJ40VNztL
+	+EASy5i13O0zk8R42DzFd+rrJpAErZzMFSngbvVCtqmkt0auwat7/D6l0P53z00OJZjzLbidgWh
+	OZjzf797SXMSwO2gyhbh6nmyicwwQeuA=
+X-Gm-Gg: AeBDievd/HDUqIMm2U6AkoKffKRzIqLfUxoh5SPafl+Zzu9ftCo1EMnUA/v1O9m9Xlj
+	97E/XDXh0mxLEcsPGCbgLtH/D1cCaUzTIFKnK+9HT6QjQHx2uowHs69UpqbwKhhq/Hyn/JDANcz
+	4crc8hf2XSWkah1VUUZ5NiQYHl3iknBs+jncXbnIJdVlMEBcKOXXq7mxaBJgkGxqo5CxmZwLnm8
+	9FpDh1JwwKGWXTTi2Fq5mOxBu0KNY7/AYFipwGOZpMi1Dlt+Jl0RC/eagRvtnu2ZjVK2560W3eO
+	ag5+gJJ2HnI83/mffwVlKYeG2PSC3RsB54oe7P2DNWrh0y+CzeCGCTq4/fTE/unxD49ljmV8
+X-Received: by 2002:a5d:5d0f:0:b0:43c:fd92:f432 with SMTP id
+ ffacd0b85a97d-43d2926a133mr20381542f8f.2.1775506344767; Mon, 06 Apr 2026
+ 13:12:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260401191126.440683-1-varunrmallya@gmail.com>
+ <20260401191126.440683-2-varunrmallya@gmail.com> <CAP01T74cudrCFGAJhhNUWdCS+D1Gn5yFNccaS85YcoX8vdgzBQ@mail.gmail.com>
+ <ac47BIEUBBkTch31@krava>
+In-Reply-To: <ac47BIEUBBkTch31@krava>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Mon, 6 Apr 2026 22:11:48 +0200
+X-Gm-Features: AQROBzAzS2x1pnm8GQsphNrgAlMcDdJKIJ2GsYVUVKDUIlO7GIewSXGeCtDX7ec
+Message-ID: <CAP01T75W-idA_7y6HYaaUW17oQ=o08+2gM5dnLBdH+2D0aRdBw@mail.gmail.com>
+Subject: Re: [PATCH bpf v3 2/2] selftests/bpf: Add test to ensure kprobe_multi
+ is not sleepable
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Varun R Mallya <varunrmallya@gmail.com>, bpf@vger.kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, yonghong.song@linux.dev, rostedt@goodmis.org, 
+	mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: 04WPEXCH014.crowdstrike.sys (10.100.11.87) To
- 04WPEXCH006.crowdstrike.sys (10.100.11.70)
-X-Disclaimer: USA
-X-Authority-Analysis: v=2.4 cv=fNQ0HJae c=1 sm=1 tr=0 ts=69d40a30 cx=c_pps
- a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
- a=EjBHVkixTFsA:10 a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=T2KQ53IYiC3MXPrxx8bB:22 a=b3B37AjAgz0HnGB3MuNd:22
- a=VwQbUJbxAAAA:8 a=pl6vuDidAAAA:8 a=YE35s84LRL086BocN2oA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: fFOe9Ow93tyj1hWyny2gud8MrTmhVtr4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA2MDE5MSBTYWx0ZWRfX/tjKJcEqsRR2
- bv2zXVz62Sw+CdWzEYNVHkyM4iB/jPx4RAIlZ7AKuQGZ9XAtyKsbElHUf1qN9Nc5LGCcgw8AtyA
- Q+Gln5dRJqeKfEsWdM7eRWBndw5e8ADMsicoQLXRcA4mBe1Wi/ZQYR5QZibmjXjp3Ph3QwDMGvJ
- pVmcXJ/2fk2ItsCcKaUEzkgqvOydRBgNo++oRJoh/il9tlvxc38xVp1Fv0gXMT0mdJi6DWk1LHj
- 0stnIfOGQBDPLwWM5lzVuW1yzlwcpZSDudkZBn4JB+LQruF557EknfsrsVcWRJtgysNAkNWmLjz
- hl9tSFS8UiZ1ombqKou/6ZfNZyBITAffIMUb1ozKGgdD3ENgPeUjGgNwu/Ni3uTFhjbsEna4TTM
- RHz+9yxMUWoOsTwv4Jp2/kI/EcDc1slTu86wEuvizgF4BaIUHa6ueJOQKIZ780MAIMjfbEyRRcr
- rspP6PwaFVdDZefZ6Kg==
-X-Proofpoint-ORIG-GUID: fFOe9Ow93tyj1hWyny2gud8MrTmhVtr4
-X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11751
- signatures=596818
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 bulkscore=0
- malwarescore=0 phishscore=0 priorityscore=1501 clxscore=1011 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604060191
 
-When a kernel module exports a symbol with the same name as an existing
-vmlinux symbol, kprobe attachment fails with -EADDRNOTAVAIL because
-number_of_same_symbols() counts matches across both vmlinux and all
-loaded modules, returning a count greater than 1.
+On Thu, 2 Apr 2026 at 11:46, Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> On Thu, Apr 02, 2026 at 12:50:10AM +0200, Kumar Kartikeya Dwivedi wrote:
+> > On Wed, 1 Apr 2026 at 21:11, Varun R Mallya <varunrmallya@gmail.com> wrote:
+> > >
+> > > Add a selftest to ensure that kprobe_multi programs cannot be attached
+> > > using the BPF_F_SLEEPABLE flag. This test succeeds when the kernel
+> > > rejects attachment of kprobe_multi when the BPF_F_SLEEPABLE flag is set.
+> > >
+> > > Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
+> > > ---
+> >
+> > Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+> >
+> > >  .../bpf/prog_tests/kprobe_multi_test.c        | 41 +++++++++++++++++++
+> > >  .../bpf/progs/kprobe_multi_sleepable.c        | 13 ++++++
+> > >  2 files changed, 54 insertions(+)
+> > >  create mode 100644 tools/testing/selftests/bpf/progs/kprobe_multi_sleepable.c
+> > >
+> > > diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+> > > index 78c974d4ea33..f02fec2b6fda 100644
+> > > --- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+> > > +++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+> > > @@ -10,6 +10,7 @@
+> > >  #include "kprobe_multi_session_cookie.skel.h"
+> > >  #include "kprobe_multi_verifier.skel.h"
+> > >  #include "kprobe_write_ctx.skel.h"
+> > > +#include "kprobe_multi_sleepable.skel.h"
+> > >  #include "bpf/libbpf_internal.h"
+> > >  #include "bpf/hashmap.h"
+> > >
+> > > @@ -633,6 +634,44 @@ static void test_attach_write_ctx(void)
+> > >  }
+> > >  #endif
+> > >
+> > > +static void test_attach_multi_sleepable(void)
+> > > +{
+> > > +       struct kprobe_multi_sleepable *skel;
+> > > +       int err;
+> > > +
+> > > +       skel = kprobe_multi_sleepable__open();
+> > > +       if (!ASSERT_OK_PTR(skel, "kprobe_multi_sleepable__open"))
+> > > +               return;
+> > > +
+> > > +       err = bpf_program__set_flags(skel->progs.handle_kprobe_multi_sleepable,
+> > > +                                    BPF_F_SLEEPABLE);
+> > > +       if (!ASSERT_OK(err, "bpf_program__set_flags"))
+> > > +               goto cleanup;
+> > > +
+> > > +       /* Load should succeed even with BPF_F_SLEEPABLE for KPROBE types */
+> > > +       err = kprobe_multi_sleepable__load(skel);
+> > > +       if (!ASSERT_OK(err, "kprobe_multi_sleepable__load"))
+> > > +               goto cleanup;
+> > > +
+> > > +       /* Attachment must fail for kprobe.multi + BPF_F_SLEEPABLE.
+> > > +        * Also chosen a stable symbol to send into opts
+> > > +        */
+> > > +       LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
+> > > +       const char *sym = "vfs_read";
+> > > +
+> > > +       opts.syms = &sym;
+> > > +       opts.cnt = 1;
+> > > +
+> > > +       skel->links.handle_kprobe_multi_sleepable =
+> > > +               bpf_program__attach_kprobe_multi_opts(skel->progs.handle_kprobe_multi_sleepable,
+> > > +                                                     NULL, &opts);
+> > > +       ASSERT_ERR_PTR(skel->links.handle_kprobe_multi_sleepable,
+> > > +                      "bpf_program__attach_kprobe_multi_opts");
+> >
+> > Nit: While vfs_read will likely remain stable, the check could
+> > probably be stronger to distinguish an attach error from -EINVAL?
+> > I added a typo to vfs_read and it still passed, because it failed to
+> > attach instead of getting rejected on unfixed kernel.
+> > May not be a big deal since vfs_read is unlikely to break.
+> > I verified it works by adding bpf_copy_from_user to the program and
+> > attaching to SYS_PREFIX sys_getpid and invoking the splat though, so
+> > LGTM otherwise.
+>
+> why not use bpf_fentry_test2 ? you could also put it in pattern argument
+> and bypass opts completely (up to you)
+>
+> also there's test_attach_api_fails test, please move it over there
+>
 
-This series takes a different approach from v1-v4, which implemented a
-libbpf-side fallback parsing /proc/kallsyms and retrying with the
-absolute address. That approach was rejected (Andrii Nakryiko, Ihor
-Solodrai) because ambiguous symbol resolution does not belong in libbpf,
-and because it did not cover the kprobe_multi path.
-
-Following Ihor's suggestion, this series fixes the root cause in the
-kernel: when an unqualified symbol name is given and the symbol is found
-in vmlinux, prefer the vmlinux symbol and do not scan loaded modules.
-This makes the skeleton auto-attach path work transparently with no
-libbpf changes needed.
-
-Patch 1: Kernel fix - return vmlinux-only count from
-         number_of_same_symbols() when the symbol is found in vmlinux,
-         preventing module shadows from causing -EADDRNOTAVAIL.
-Patch 2: Selftests with bpf_testmod_dup_sym.ko test module validating
-         kprobe attachment across all four attach modes with a duplicate
-         symbol present. Unchaged from V4.
-
-Changes since v4 [1]:
-  - Completely rework the approach: move fix from libbpf to the kernel
-    (number_of_same_symbols() in trace_kprobe.c) as suggested by Ihor
-    Solodrai. No libbpf changes needed.
-  - When mod==NULL and vmlinux contains the symbol (count > 0), return
-    the vmlinux-only count immediately, skipping module scan entirely.
-  - Preserves all existing semantics: MOD:SYM qualification unchanged,
-    module-only symbols unchanged, vmlinux-ambiguous symbols unchanged.
-
-[1] https://lore.kernel.org/bpf/20260302210532.381083-1-andrey.grodzovsky@crowdstrike.com/
-
-Andrey Grodzovsky (2):
-  tracing: Prefer vmlinux symbols over module symbols for unqualified
-    kprobes
-  selftests/bpf: Add tests for duplicate kprobe symbol handling
-
- kernel/trace/trace_kprobe.c                   |  7 +++
- tools/testing/selftests/bpf/Makefile          |  2 +-
- .../selftests/bpf/prog_tests/attach_probe.c   | 63 +++++++++++++++++++
- .../testing/selftests/bpf/test_kmods/Makefile |  2 +-
- .../bpf/test_kmods/bpf_testmod_dup_sym.c      | 48 ++++++++++++++
- 5 files changed, 120 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/test_kmods/bpf_testmod_dup_sym.c
-
--- 
-2.34.1
-
+Varun, the selftest is still not applied, only the fix. Please follow
+up and target bpf-next tree this time.
+Thanks.
