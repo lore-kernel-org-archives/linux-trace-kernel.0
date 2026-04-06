@@ -1,33 +1,33 @@
 Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202B837FF66
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 14:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4B5384256
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 14:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775486271; cv=none; b=Mwz2rFxNV5zE3MRM3htdAj88wAek4SfiVVpTj8RS4M52ufUQ8Gr0W96QrZpSXePDXatKSi7zAvlJiFE1f5dSRV6ky6bjEe7t5IBgn8KwOqMhkFKQLDLWhqrK7HAnJ2rLGq0ti65X5UY/GKsluORiqLovYCxbdTvv2ycO3lcT80g=
+	t=1775486272; cv=none; b=gfTNCEqzFWkOgAxQmXnMk8eun4dt/kYQkOQfwMpt7m4lbMsN9fgSwM1QNJzfapwaG0tID8a0IKVRchFryg2hPcIVlGbBxjqVtZZwH1xM3U3vhNFVdI+yHWN50/0fORL3B/B6OwZX1sZKq+inQWQdUGwZvTNPlh6LcPU/B/3HkR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775486271; c=relaxed/simple;
-	bh=3WnWjGxYjlF24q4xn9P+3gP+4KOW7GXRj9gwS/cvLm8=;
+	s=arc-20240116; t=1775486272; c=relaxed/simple;
+	bh=QnFTK7Qtifh4W60p4+Emj3zfNt0SCIuXHADWwidHeAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YU5fpiXfluAZ/kpsi01vy1Zd/XEI1beMzAaGyANYpcGoFmyaNc9G4CVSKjmTWTrvAFvzK2V42LL4X0mpiX+H+UXk/+kJL84trb2XoOXwHSJJS8NPU5jL92aZS8+zNv25sJJJPXducFLSQW7vLzPKja6b9H4iu2jzNReAXTx/TbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=RTvhhMBK; arc=none smtp.client-ip=83.166.143.170
+	 MIME-Version:Content-Type; b=nvGzvkF8vFTvTjUCgSqQ/mgwNqpA4mqha6cK4ePkEvlk85i9zStz9/fcrp5ikPZepETuN+3El6fQlPrmi9R4WnYpHBx5bhSYgJMdq+Xg20HdnMxtpX2daPnyCLKyr/ffBGKMTJwKI0RqtR2l3LCBEVEQcYezr20KS1RHKkodfyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=XTJwCZrR; arc=none smtp.client-ip=83.166.143.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="RTvhhMBK"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqBkb3bmkzWbw;
-	Mon,  6 Apr 2026 16:37:43 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="XTJwCZrR"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqBkg4h2bzX7k;
+	Mon,  6 Apr 2026 16:37:47 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1775486263;
-	bh=WLe9eShLgNZ2pLa1h/bSEvitEy+z+ip1jg6elbYRUAY=;
+	s=20191114; t=1775486267;
+	bh=lbLHDMBM225gobd/q+iEadH2hKLDH83Cvi1YDuRbVmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RTvhhMBKwy9I/0tC/rNnb8G17g6SvCuWGzstAgWvcKjD8UoRX4OjCAmW/9UNTrTvc
-	 zNFYTCU3aDY2SB7Tcbcr4SMe2FR5oiZhLj1zC7y4sBRQd4Lcu40ZR5ApNd3r6QqkHT
-	 3IMyQfHJEhPIFQJ6F77W3XNt1dS+WhcJ9ZcBIFFw=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqBkZ5hynzFy6;
-	Mon,  6 Apr 2026 16:37:42 +0200 (CEST)
+	b=XTJwCZrRt/AUoo5RcLUAnZZRu2crIljRUUAA21e1R+zHKbjNYd4Nvhk+7HG+5TH6U
+	 OntDHJTQ2nSJwD7X1KsjMKm4+FW/sTqXDTwibetg8rNTcyCrod7fXMWYZYOkziH+PF
+	 xs0+raD1MnDqridldzK61Q7Jvl3rqzVKaX6b3Xa4=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqBkf6jfyzZl6;
+	Mon,  6 Apr 2026 16:37:46 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
@@ -46,9 +46,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 14/17] selftests/landlock: Add filesystem tracepoint tests
-Date: Mon,  6 Apr 2026 16:37:12 +0200
-Message-ID: <20260406143717.1815792-15-mic@digikod.net>
+Subject: [PATCH v2 17/17] landlock: Document tracepoints
+Date: Mon,  6 Apr 2026 16:37:15 +0200
+Message-ID: <20260406143717.1815792-18-mic@digikod.net>
 In-Reply-To: <20260406143717.1815792-1-mic@digikod.net>
 References: <20260406143717.1815792-1-mic@digikod.net>
 Precedence: bulk
@@ -61,23 +61,10 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add filesystem-specific trace tests in a dedicated test file, following
-the same pattern as audit tests which live alongside the functional
-tests for each subsystem.
-
-Tests in trace_fs_test.c verify that:
-- landlock_add_rule_fs events fire with correct path and fields,
-- landlock_check_rule_fs events fire when rules match during pathwalk
-  and do not fire for unhandled access types,
-- landlock_deny_access_fs events fire on denied accesses,
-- nested domains produce both check_rule and deny_access events,
-- no trace events fire without a Landlock sandbox (unsandboxed
-  baseline).
-
-Add trace_layout1 fixture tests in fs_test.c for field verification
-(check_rule_fs_fields) and multi-rule pathwalk
-(check_rule_fs_multiple_rules) that reuse the layout1 filesystem
-hierarchy.
+Add tracepoint documentation to the kernel security documentation.
+Describe the complete lifecycle of trace events (create, deny, free),
+the enriched denial fields (same_exec, log_same_exec, log_new_exec), and
+the design for both stateful (eBPF) and stateless (ftrace) consumers.
 
 Cc: Günther Noack <gnoack@google.com>
 Cc: Tingmao Wang <m@maowtm.org>
@@ -87,641 +74,530 @@ Signed-off-by: Mickaël Salaün <mic@digikod.net>
 Changes since v1:
 - New patch.
 ---
- tools/testing/selftests/landlock/fs_test.c    | 218 ++++++++++
- .../selftests/landlock/trace_fs_test.c        | 390 ++++++++++++++++++
- 2 files changed, 608 insertions(+)
- create mode 100644 tools/testing/selftests/landlock/trace_fs_test.c
+ Documentation/admin-guide/LSM/landlock.rst | 210 ++++++++++++++++++++-
+ Documentation/security/landlock.rst        |  35 +++-
+ Documentation/trace/events-landlock.rst    | 160 ++++++++++++++++
+ Documentation/trace/index.rst              |   1 +
+ Documentation/userspace-api/landlock.rst   |  11 +-
+ 5 files changed, 412 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/trace/events-landlock.rst
 
-diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
-index cdb47fc1fc0a..8f1ab43a07a0 100644
---- a/tools/testing/selftests/landlock/fs_test.c
-+++ b/tools/testing/selftests/landlock/fs_test.c
-@@ -44,6 +44,9 @@
+diff --git a/Documentation/admin-guide/LSM/landlock.rst b/Documentation/admin-guide/LSM/landlock.rst
+index 9923874e2156..cad5845b6ec7 100644
+--- a/Documentation/admin-guide/LSM/landlock.rst
++++ b/Documentation/admin-guide/LSM/landlock.rst
+@@ -1,12 +1,13 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ .. Copyright © 2025 Microsoft Corporation
++.. Copyright © 2026 Cloudflare
  
- #include "audit.h"
- #include "common.h"
-+#include "trace.h"
-+
-+#define TRACE_TASK "fs_test"
+ ================================
+ Landlock: system-wide management
+ ================================
  
- #ifndef renameat2
- int renameat2(int olddirfd, const char *oldpath, int newdirfd,
-@@ -7764,4 +7767,219 @@ TEST_F(audit_layout1, mount)
- 	EXPECT_EQ(1, records.domain);
- }
+ :Author: Mickaël Salaün
+-:Date: January 2026
++:Date: April 2026
  
-+/* clang-format off */
-+FIXTURE(trace_layout1) {
-+	/* clang-format on */
-+	int tracefs_ok;
-+};
+ Landlock can leverage the audit framework to log events.
+ 
+@@ -176,11 +177,218 @@ filters to limit noise with two complementary ways:
+   programs,
+ - or with audit rules (see :manpage:`auditctl(8)`).
+ 
++Tracepoints
++===========
 +
-+FIXTURE_SETUP(trace_layout1)
-+{
-+	struct stat st;
++Landlock also provides tracepoints as an alternative to audit for
++debugging and observability.  Tracepoints fire unconditionally,
++independent of audit configuration, ``audit_enabled``, and domain log
++flags.  This makes them suitable for always-on monitoring with eBPF or
++for ad-hoc debugging with ``trace-pipe``.  See
++:doc:`/trace/events-landlock` for the complete event reference.
 +
-+	/*
-+	 * Check tracefs availability before creating the layout, following the
-+	 * layout3_fs pattern: skip before any layout creation to avoid leaving
-+	 * stale TMP_DIR on skip.
-+	 */
-+	if (stat(TRACEFS_LANDLOCK_DIR, &st)) {
-+		self->tracefs_ok = 0;
-+		SKIP(return, "tracefs not available");
-+	}
-+	self->tracefs_ok = 1;
++Enabling tracepoints
++--------------------
 +
-+	/* Isolate tracefs state (PID filter, event enables). */
-+	set_cap(_metadata, CAP_SYS_ADMIN);
-+	ASSERT_EQ(0, unshare(CLONE_NEWNS));
-+	ASSERT_EQ(0, mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, NULL));
-+	clear_cap(_metadata, CAP_SYS_ADMIN);
++Enable individual Landlock tracepoints via tracefs::
 +
-+	prepare_layout(_metadata);
-+	create_layout1(_metadata);
++  # Enable filesystem denial tracing:
++  echo 1 > /sys/kernel/tracing/events/landlock/landlock_deny_access_fs/enable
 +
-+	set_cap(_metadata, CAP_DAC_OVERRIDE);
-+	ASSERT_EQ(0, tracefs_fixture_setup());
-+	ASSERT_EQ(0, tracefs_enable_event(TRACEFS_CHECK_RULE_FS_ENABLE, true));
-+	ASSERT_EQ(0, tracefs_clear());
-+	ASSERT_EQ(0, tracefs_set_pid_filter(getpid()));
-+	clear_cap(_metadata, CAP_DAC_OVERRIDE);
-+}
++  # Enable all Landlock events:
++  echo 1 > /sys/kernel/tracing/events/landlock/enable
 +
-+FIXTURE_TEARDOWN_PARENT(trace_layout1)
-+{
-+	if (!self->tracefs_ok)
-+		return;
++  # Read the trace output:
++  cat /sys/kernel/tracing/trace_pipe
 +
-+	set_cap(_metadata, CAP_DAC_OVERRIDE);
-+	tracefs_enable_event(TRACEFS_CHECK_RULE_FS_ENABLE, false);
-+	tracefs_clear_pid_filter();
-+	tracefs_fixture_teardown();
-+	clear_cap(_metadata, CAP_DAC_OVERRIDE);
++Available events
++----------------
 +
-+	remove_layout1(_metadata);
-+	cleanup_layout(_metadata);
-+}
++**Policy setup events:**
 +
-+/*
-+ * Verifies that check_rule_fs events include correct field values: domain, dev,
-+ * ino, request, and allowed.  All values are verified against stat() of the
-+ * rule path on a deterministic tmpfs layout.
-+ */
-+TEST_F(trace_layout1, check_rule_fs_fields)
-+{
-+	struct stat dir_stat;
-+	char expected_dev[32];
-+	char expected_ino[32];
-+	char expected_req[32];
-+	char *buf;
-+	char field[64];
++- ``landlock_create_ruleset`` -- emitted when a ruleset is created.
++  Fields: ``ruleset`` (ID and version), ``handled_fs``, ``handled_net``,
++  ``scoped``.
 +
-+	if (!self->tracefs_ok)
-+		SKIP(return, "tracefs not available");
++- ``landlock_add_rule_fs``, ``landlock_add_rule_net`` -- emitted when a
++  rule is added.  Fields: ``ruleset`` (ID and version),
++  ``access_rights`` (access mask),
++  target identifier (``dev:ino`` and ``path`` for FS, ``port`` for net).
 +
-+	ASSERT_EQ(0, stat(dir_s1d1, &dir_stat));
-+	snprintf(expected_dev, sizeof(expected_dev), "%u:%u",
-+		 major(dir_stat.st_dev), minor(dir_stat.st_dev));
-+	snprintf(expected_ino, sizeof(expected_ino), "%lu", dir_stat.st_ino);
-+	snprintf(expected_req, sizeof(expected_req), "0x%x",
-+		 (unsigned int)LANDLOCK_ACCESS_FS_READ_DIR);
++- ``landlock_restrict_self`` -- emitted when a task restricts itself.
++  Fields: ``ruleset`` (ID and version), ``domain`` (new domain ID),
++  ``parent`` (parent domain ID or 0).
 +
-+	set_cap(_metadata, CAP_DAC_OVERRIDE);
-+	ASSERT_EQ(0, tracefs_clear());
-+	clear_cap(_metadata, CAP_DAC_OVERRIDE);
++**Access check events (hot path):**
 +
-+	sandbox_child_fs_access(_metadata, dir_s1d1,
-+				LANDLOCK_ACCESS_FS_READ_DIR,
-+				LANDLOCK_ACCESS_FS_READ_DIR, dir_s1d1);
++- ``landlock_check_rule_fs``, ``landlock_check_rule_net`` -- emitted
++  when a rule matches during an access check.  Fires for every matching
++  rule in the pathwalk, regardless of the final outcome (allowed or
++  denied).
 +
-+	set_cap(_metadata, CAP_DAC_OVERRIDE);
-+	buf = tracefs_read_trace();
-+	clear_cap(_metadata, CAP_DAC_OVERRIDE);
-+	ASSERT_NE(NULL, buf);
++**Denial events:**
 +
-+	EXPECT_EQ(1,
-+		  tracefs_count_matches(buf, REGEX_CHECK_RULE_FS(TRACE_TASK)))
-+	{
-+		TH_LOG("Expected 1 check_rule_fs event\n%s", buf);
-+	}
++- ``landlock_deny_access_fs``, ``landlock_deny_access_net`` -- emitted
++  when a filesystem or network access is denied.
++- ``landlock_deny_ptrace``, ``landlock_deny_scope_signal``,
++  ``landlock_deny_scope_abstract_unix_socket`` -- emitted when a scope
++  check denies access.
 +
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_CHECK_RULE_FS(TRACE_TASK),
-+					   "dev", field, sizeof(field)));
-+	EXPECT_STREQ(expected_dev, field)
-+	{
-+		TH_LOG("Expected dev=%s, got %s", expected_dev, field);
-+	}
++  Common fields include:
 +
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_CHECK_RULE_FS(TRACE_TASK),
-+					   "ino", field, sizeof(field)));
-+	EXPECT_STREQ(expected_ino, field)
-+	{
-+		TH_LOG("Expected ino=%s, got %s", expected_ino, field);
-+	}
++  - ``domain`` -- the denying domain's ID
++  - ``blockers`` -- the denied access rights (bitmask,
++    ``deny_access_fs`` and ``deny_access_net`` only)
++  - ``same_exec`` -- whether the task is the same executable that
++    called ``landlock_restrict_self()`` for the denying domain
++  - ``log_same_exec``, ``log_new_exec`` -- the domain's configured log
++    flags (useful for filtering expected denials)
++  - Type-specific fields: ``path`` (FS), ``sport``/``dport`` (net),
++    ``tracee_pid``/``comm`` (ptrace), ``target_pid``/``comm`` (signal),
++    ``peer_pid``/``sun_path`` (abstract unix socket)
 +
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_CHECK_RULE_FS(TRACE_TASK),
-+					   "request", field, sizeof(field)));
-+	EXPECT_STREQ(expected_req, field)
-+	{
-+		TH_LOG("Expected request=%s, got %s", expected_req, field);
-+	}
++**Lifecycle events:**
 +
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_CHECK_RULE_FS(TRACE_TASK),
-+					   "allowed", field, sizeof(field)));
-+	EXPECT_EQ('{', field[0])
-+	{
-+		TH_LOG("Expected allowed={...}, got %s", field);
-+	}
++- ``landlock_free_domain`` -- emitted when a domain is deallocated.
++  Fields: ``domain`` (ID), ``denials`` (total denial count).
++- ``landlock_free_ruleset`` -- emitted when a ruleset is freed.
++  Fields: ``ruleset`` (ID and version).
 +
-+	free(buf);
-+}
++Event samples
++-------------
 +
-+/*
-+ * Verifies check_rule_fs behavior with multiple rules.  With rules at s1d1 and
-+ * s1d2 (a child of s1d1), accessing s1d2 produces only 1 event because the
-+ * pathwalk short-circuits after the first rule fully unmasks the single layer.
-+ */
-+TEST_F(trace_layout1, check_rule_fs_multiple_rules)
-+{
-+	pid_t pid;
-+	int status;
-+	char *buf;
-+	int count;
++A sandboxed program tries to read ``/etc/passwd`` with only ``/tmp``
++writable::
 +
-+	if (!self->tracefs_ok)
-+		SKIP(return, "tracefs not available");
++  $ echo 1 > /sys/kernel/tracing/events/landlock/enable
++  $ LL_FS_RO=/ LL_FS_RW=/tmp ./sandboxer cat /etc/passwd &
++  $ cat /sys/kernel/tracing/trace_pipe
++  sandboxer-286  landlock_create_ruleset: ruleset=10b556c58.0 handled_fs=0xdfff handled_net=0x0 scoped=0x0
++  sandboxer-286  landlock_restrict_self: ruleset=10b556c58.3 domain=10b556c61 parent=0
++  cat-287        landlock_deny_access_fs: domain=10b556c61 same_exec=0 log_same_exec=1 log_new_exec=0 blockers=0x4 dev=254:2 ino=143821 path=/etc/passwd
++  kworker/0:1-12 landlock_free_domain: domain=10b556c61 denials=1
 +
-+	set_cap(_metadata, CAP_DAC_OVERRIDE);
-+	ASSERT_EQ(0, tracefs_clear());
-+	clear_cap(_metadata, CAP_DAC_OVERRIDE);
++Unlike audit, tracepoints fire for all denials regardless of the
++domain's log flags.  This means ``deny_access_*`` events appear even
++when ``LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF`` would suppress the
++corresponding audit record.
 +
-+	pid = fork();
-+	ASSERT_LE(0, pid);
++Filtering with ftrace
++---------------------
 +
-+	if (pid == 0) {
-+		struct landlock_ruleset_attr attr = {
-+			.handled_access_fs = LANDLOCK_ACCESS_FS_READ_DIR,
-+		};
-+		struct landlock_path_beneath_attr path_beneath = {
-+			.allowed_access = LANDLOCK_ACCESS_FS_READ_DIR,
-+		};
-+		int ruleset_fd, fd;
++Use ftrace filter expressions to select specific events::
 +
-+		ruleset_fd = landlock_create_ruleset(&attr, sizeof(attr), 0);
-+		if (ruleset_fd < 0)
-+			_exit(1);
++  # Only show denials that audit would also log:
++  echo 'same_exec == 1 && log_same_exec == 1 || same_exec == 0 && log_new_exec == 1' > \
++    /sys/kernel/tracing/events/landlock/landlock_deny_access_fs/filter
 +
-+		path_beneath.parent_fd =
-+			open(dir_s1d1, O_PATH | O_DIRECTORY | O_CLOEXEC);
-+		if (path_beneath.parent_fd < 0)
-+			_exit(1);
-+		if (landlock_add_rule(ruleset_fd, LANDLOCK_RULE_PATH_BENEATH,
-+				      &path_beneath, 0))
-+			_exit(1);
-+		close(path_beneath.parent_fd);
++Using eBPF
++----------
 +
-+		path_beneath.parent_fd =
-+			open(dir_s1d2, O_PATH | O_DIRECTORY | O_CLOEXEC);
-+		if (path_beneath.parent_fd < 0)
-+			_exit(1);
-+		if (landlock_add_rule(ruleset_fd, LANDLOCK_RULE_PATH_BENEATH,
-+				      &path_beneath, 0))
-+			_exit(1);
-+		close(path_beneath.parent_fd);
++eBPF programs can attach to Landlock tracepoints to build custom
++monitoring.  A stateful eBPF program observes the full event stream and
++maintains per-domain state in BPF maps:
 +
-+		prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+		if (landlock_restrict_self(ruleset_fd, 0))
-+			_exit(1);
-+		close(ruleset_fd);
++1. On ``landlock_restrict_self``: record the domain ID, parent, flags.
++2. On ``landlock_deny_access_*``: look up the domain, decide whether
++   to count, alert, or ignore the denial based on custom policy.
++3. On ``landlock_free_domain``: clean up the per-domain state, log
++   final statistics.
 +
-+		fd = open(dir_s1d2, O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-+		if (fd >= 0)
-+			close(fd);
-+		_exit(0);
-+	}
++This approach requires no kernel modification and no Landlock-specific
++BPF helpers.  The Landlock IDs serve as correlation keys across events.
 +
-+	ASSERT_EQ(pid, waitpid(pid, &status, 0));
-+	ASSERT_TRUE(WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
++.. _landlock_observability:
 +
-+	set_cap(_metadata, CAP_DAC_OVERRIDE);
-+	buf = tracefs_read_trace();
-+	clear_cap(_metadata, CAP_DAC_OVERRIDE);
-+	ASSERT_NE(NULL, buf);
++When to use tracing vs audit
++-----------------------------
 +
-+	/*
-+	 * Only 1 check_rule_fs event: the rule on dir_s1d2 fully unmasked the
-+	 * single layer, so the pathwalk short-circuits before reaching the
-+	 * dir_s1d1 rule.
-+	 */
-+	count = tracefs_count_matches(buf, REGEX_CHECK_RULE_FS(TRACE_TASK));
-+	EXPECT_EQ(1, count)
-+	{
-+		TH_LOG("Expected 1 check_rule_fs event, got %d\n%s", count,
-+		       buf);
-+	}
++Audit and tracing both help diagnose Landlock policy issues:
 +
-+	free(buf);
-+}
++**Audit** records denied accesses with the blockers, domain, and object
++identification (path, port).  Audit is the standard Linux mechanism for
++security events, with a stable record format that is well established
++and already supported by log management systems, SIEM platforms, and EDR
++solutions.  Audit is always active (when ``CONFIG_AUDIT`` is set),
++filtered by log flags to reduce noise in production, and designed for
++long-term security monitoring and compliance.
 +
- TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/landlock/trace_fs_test.c b/tools/testing/selftests/landlock/trace_fs_test.c
++**Tracing** provides deeper introspection for policy debugging.  In
++addition to denied accesses, trace events cover the complete lifecycle
++of Landlock objects (rulesets, domains) and intermediate rule matching
++during access checks.  Trace events are disabled by default (zero
++overhead) and fire unconditionally, regardless of log flags.  eBPF
++programs attached to trace events can access the full kernel context
++(ruleset rules, domain hierarchy, process credentials) via BTF, enabling
++richer analysis than the flat fields in audit records.  For example, an
++eBPF-based live monitoring tool can correlate creation, rule-addition,
++and denial events to build a real-time view of all active Landlock
++domains and their policies.  However, BTF-based access depends on
++internal kernel struct layouts which have no stability guarantee.  CO-RE
++(Compile Once, Run Everywhere) provides best-effort field relocation.
++The ftrace printk format is also not a stable ABI, but is
++self-describing via the per-event ``format`` file, allowing tools to
++adapt dynamically.
++
++Observability guarantees and limitations
++-----------------------------------------
++
++Both audit records and trace events are emitted for every denied access,
++with these exceptions:
++
++- **Log flags** (audit only): ``LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF``,
++  ``LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON``, and
++  ``LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF`` control which denials
++  generate audit records.  Trace events fire regardless of these flags.
++
++- **NOAUDIT hooks**: Some LSM hooks suppress logging for speculative
++  permission probes (e.g., reading ``/proc/<pid>/status`` uses
++  ``PTRACE_MODE_NOAUDIT``).  When NOAUDIT is set, neither audit records
++  nor trace events are emitted, and the denial is not counted in
++  ``denials``.  The denial is still enforced.  This avoids performance
++  overhead and noise from speculative probes that test permissions
++  without performing an actual access.
++
++- **Audit rate limiting**: The audit subsystem may silently drop records
++  when the audit queue is full.  Trace events are not rate-limited.
++
++- **Tracepoint disabled**: When a trace event is disabled (the default
++  state), the tracepoint is a no-op with zero overhead.
++
++When both audit and tracing are active, every logged denial produces both
++an audit record (subject to log flags) and a trace event.  The
++``denials`` count in ``free_domain`` events reflects the total number of
++logged denials, which may be lower than the actual number of enforced
++denials due to NOAUDIT hooks.
++
++.. _landlock_observability_security:
++
++Observability security considerations
++---------------------------------------
++
++Both audit records and trace events expose information about all
++Landlock-sandboxed processes on the system, including filesystem paths
++being accessed, network ports, and process identities.  System
++administrators must ensure that access to audit logs (controlled by the
++audit subsystem configuration) and to trace events (requiring
++``CAP_SYS_ADMIN`` or ``CAP_BPF`` + ``CAP_PERFMON``) is restricted to
++trusted users.
++
++eBPF programs attached to Landlock trace events have access to the full
++kernel context of each event (ruleset rules, domain hierarchy, process
++credentials) via BTF.  This level of access is comparable to
++``CAP_SYS_ADMIN`` and must be treated accordingly.
++
++Audit logs and kernel trace events require elevated privileges and are
++system-wide; they are not designed for per-sandbox unprivileged
++monitoring.
++
+ Additional documentation
+ ========================
+ 
+ * `Linux Audit Documentation`_
+ * Documentation/userspace-api/landlock.rst
++* Documentation/trace/events-landlock.rst
+ * Documentation/security/landlock.rst
+ * https://landlock.io
+ 
+diff --git a/Documentation/security/landlock.rst b/Documentation/security/landlock.rst
+index c5186526e76f..5ef0164fbafb 100644
+--- a/Documentation/security/landlock.rst
++++ b/Documentation/security/landlock.rst
+@@ -1,13 +1,14 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ .. Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
+ .. Copyright © 2019-2020 ANSSI
++.. Copyright © 2026 Cloudflare
+ 
+ ==================================
+ Landlock LSM: kernel documentation
+ ==================================
+ 
+ :Author: Mickaël Salaün
+-:Date: March 2026
++:Date: April 2026
+ 
+ Landlock's goal is to create scoped access-control (i.e. sandboxing).  To
+ harden a whole system, this feature should be available to any process,
+@@ -177,11 +178,43 @@ makes the reasoning much easier and helps avoid pitfalls.
+ .. kernel-doc:: security/landlock/domain.h
+     :identifiers:
+ 
++Denial logging
++==============
++
++Access denials are logged through two independent channels: audit
++records and tracepoints.  Both are managed by the common denial
++framework in ``log.c``, compiled under ``CONFIG_SECURITY_LANDLOCK_LOG``
++(automatically selected by ``CONFIG_AUDIT`` or ``CONFIG_TRACEPOINTS``).
++
++Audit records respect audit configuration, domain log flags, and
++``LANDLOCK_LOG_DISABLED``.  Tracepoints fire unconditionally,
++independent of audit configuration and domain log flags.  The denial
++counter (``num_denials``) is always incremented regardless of logging
++configuration.
++
++See Documentation/admin-guide/LSM/landlock.rst for audit record format,
++tracepoint usage, and filtering examples.
++
++.. kernel-doc:: security/landlock/log.h
++    :identifiers:
++
++Trace events
++------------
++
++See :doc:`/trace/events-landlock` for trace event usage and format details.
++
++.. kernel-doc:: include/trace/events/landlock.h
++    :doc: Landlock trace events
++
++.. kernel-doc:: include/trace/events/landlock.h
++    :internal:
++
+ Additional documentation
+ ========================
+ 
+ * Documentation/userspace-api/landlock.rst
+ * Documentation/admin-guide/LSM/landlock.rst
++* Documentation/trace/events-landlock.rst
+ * https://landlock.io
+ 
+ .. Links
+diff --git a/Documentation/trace/events-landlock.rst b/Documentation/trace/events-landlock.rst
 new file mode 100644
-index 000000000000..60ed63aea049
+index 000000000000..802df09259ce
 --- /dev/null
-+++ b/tools/testing/selftests/landlock/trace_fs_test.c
-@@ -0,0 +1,390 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Landlock tests - Filesystem tracepoints
-+ *
-+ * Copyright © 2026 Cloudflare
-+ */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/landlock.h>
-+#include <sched.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <sys/mount.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#include "common.h"
-+#include "trace.h"
-+
-+#define TRACE_TASK "trace_fs_test"
-+
-+/* clang-format off */
-+FIXTURE(trace_fs) {
-+	/* clang-format on */
-+	int tracefs_ok;
-+};
-+
-+FIXTURE_SETUP(trace_fs)
-+{
-+	int ret;
-+
-+	set_cap(_metadata, CAP_SYS_ADMIN);
-+	ASSERT_EQ(0, unshare(CLONE_NEWNS));
-+	ASSERT_EQ(0, mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, NULL));
-+
-+	ret = tracefs_fixture_setup();
-+	if (ret) {
-+		clear_cap(_metadata, CAP_SYS_ADMIN);
-+		self->tracefs_ok = 0;
-+		SKIP(return, "tracefs not available");
-+	}
-+	self->tracefs_ok = 1;
-+
-+	ASSERT_EQ(0, tracefs_enable_event(TRACEFS_ADD_RULE_FS_ENABLE, true));
-+	ASSERT_EQ(0, tracefs_enable_event(TRACEFS_CHECK_RULE_FS_ENABLE, true));
-+	ASSERT_EQ(0, tracefs_enable_event(TRACEFS_DENY_ACCESS_FS_ENABLE, true));
-+	ASSERT_EQ(0, tracefs_clear());
-+	clear_cap(_metadata, CAP_SYS_ADMIN);
-+}
-+
-+FIXTURE_TEARDOWN(trace_fs)
-+{
-+	if (!self->tracefs_ok)
-+		return;
-+
-+	set_cap(_metadata, CAP_SYS_ADMIN);
-+	tracefs_enable_event(TRACEFS_ADD_RULE_FS_ENABLE, false);
-+	tracefs_enable_event(TRACEFS_CHECK_RULE_FS_ENABLE, false);
-+	tracefs_enable_event(TRACEFS_DENY_ACCESS_FS_ENABLE, false);
-+	tracefs_fixture_teardown();
-+	clear_cap(_metadata, CAP_SYS_ADMIN);
-+}
-+
-+/*
-+ * Baseline: verifies that without Landlock, the operation succeeds and no
-+ * check_rule or deny_access trace events fire.
-+ */
-+TEST_F(trace_fs, unsandboxed)
-+{
-+	char *buf;
-+	int count, status, fd;
-+	pid_t pid;
-+
-+	ASSERT_EQ(0, tracefs_clear_buf());
-+
-+	pid = fork();
-+	ASSERT_LE(0, pid);
-+
-+	if (pid == 0) {
-+		/*
-+		 * No sandbox: verify that a normal FS access does not produce
-+		 * Landlock trace events.
-+		 */
-+		fd = open("/usr", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-+		if (fd >= 0)
-+			close(fd);
-+		_exit(0);
-+	}
-+
-+	ASSERT_EQ(pid, waitpid(pid, &status, 0));
-+	ASSERT_TRUE(WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+
-+	buf = tracefs_read_buf();
-+	ASSERT_NE(NULL, buf);
-+
-+	count = tracefs_count_matches(buf, REGEX_CHECK_RULE_FS(TRACE_TASK));
-+	EXPECT_EQ(0, count);
-+	count = tracefs_count_matches(buf, REGEX_DENY_ACCESS_FS(TRACE_TASK));
-+	EXPECT_EQ(0, count);
-+
-+	free(buf);
-+}
-+
-+/*
-+ * Verifies that adding a filesystem rule emits a landlock_add_rule_fs trace
-+ * event with the expected path and field values: ruleset ID is non-zero,
-+ * access_rights is non-zero, and path matches.
-+ */
-+TEST_F(trace_fs, add_rule_fs)
-+{
-+	struct landlock_ruleset_attr ruleset_attr = {
-+		.handled_access_fs = LANDLOCK_ACCESS_FS_READ_FILE |
-+				     LANDLOCK_ACCESS_FS_WRITE_FILE |
-+				     LANDLOCK_ACCESS_FS_READ_DIR,
-+	};
-+	struct landlock_path_beneath_attr path_beneath = {
-+		.allowed_access = LANDLOCK_ACCESS_FS_READ_FILE,
-+	};
-+	char *buf, field_buf[64];
-+	int ruleset_fd, count;
-+
-+	ruleset_fd =
-+		landlock_create_ruleset(&ruleset_attr, sizeof(ruleset_attr), 0);
-+	ASSERT_LE(0, ruleset_fd);
-+
-+	path_beneath.parent_fd = open("/usr", O_PATH | O_DIRECTORY | O_CLOEXEC);
-+	ASSERT_LE(0, path_beneath.parent_fd);
-+
-+	ASSERT_EQ(0, landlock_add_rule(ruleset_fd, LANDLOCK_RULE_PATH_BENEATH,
-+				       &path_beneath, 0));
-+	ASSERT_EQ(0, close(path_beneath.parent_fd));
-+	ASSERT_EQ(0, close(ruleset_fd));
-+
-+	buf = tracefs_read_buf();
-+	ASSERT_NE(NULL, buf);
-+
-+	count = tracefs_count_matches(buf, REGEX_ADD_RULE_FS(TRACE_TASK));
-+	EXPECT_EQ(1, count)
-+	{
-+		TH_LOG("Expected 1 add_rule_fs event, got %d\n%s", count, buf);
-+	}
-+
-+	/* Ruleset ID should be non-zero. */
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_ADD_RULE_FS(TRACE_TASK),
-+					   "ruleset", field_buf,
-+					   sizeof(field_buf)));
-+	EXPECT_STRNE("0", field_buf);
-+
-+	/* Access rights should be non-zero. */
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_ADD_RULE_FS(TRACE_TASK),
-+					   "access_rights", field_buf,
-+					   sizeof(field_buf)));
-+	EXPECT_STRNE("0x0", field_buf);
-+
-+	/* Path should be /usr. */
-+	ASSERT_EQ(0,
-+		  tracefs_extract_field(buf, REGEX_ADD_RULE_FS(TRACE_TASK),
-+					"path", field_buf, sizeof(field_buf)));
-+	EXPECT_STREQ("/usr", field_buf);
-+
-+	free(buf);
-+}
-+
-+/*
-+ * Verifies that an allowed access emits check_rule events (rule matched during
-+ * pathwalk) but does NOT emit deny_access events (no denial).
-+ */
-+TEST_F(trace_fs, allowed_access)
-+{
-+	char *buf, field_buf[64];
-+	int count;
-+
-+	ASSERT_EQ(0, tracefs_clear_buf());
-+
-+	/* Rule allows READ_DIR for /usr, access /usr which is allowed. */
-+	sandbox_child_fs_access(_metadata, "/usr", LANDLOCK_ACCESS_FS_READ_DIR,
-+				LANDLOCK_ACCESS_FS_READ_DIR, "/usr");
-+
-+	buf = tracefs_read_buf();
-+	ASSERT_NE(NULL, buf);
-+
-+	count = tracefs_count_matches(buf, REGEX_CHECK_RULE_FS(TRACE_TASK));
-+	EXPECT_LE(1, count);
-+
-+	/* Single-layer allowed array: {0x<mask>}. */
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_CHECK_RULE_FS(TRACE_TASK),
-+					   "allowed", field_buf,
-+					   sizeof(field_buf)));
-+	EXPECT_EQ('{', field_buf[0]);
-+
-+	count = tracefs_count_matches(buf, REGEX_DENY_ACCESS_FS(TRACE_TASK));
-+	EXPECT_EQ(0, count);
-+
-+	free(buf);
-+}
-+
-+/*
-+ * Verifies that accessing a path whose access type is not in the handled set
-+ * does not emit landlock_check_rule events.  The ruleset handles READ_FILE,
-+ * but the directory open checks READ_DIR which is unhandled; Landlock has no
-+ * opinion and no rule evaluation occurs.
-+ */
-+TEST_F(trace_fs, check_rule_unhandled)
-+{
-+	char *buf;
-+	int count;
-+
-+	ASSERT_EQ(0, tracefs_clear_buf());
-+
-+	/* Handles READ_FILE only; READ_DIR is unhandled. */
-+	sandbox_child_fs_access(_metadata, "/usr", LANDLOCK_ACCESS_FS_READ_FILE,
-+				LANDLOCK_ACCESS_FS_READ_FILE, "/tmp");
-+
-+	buf = tracefs_read_buf();
-+	ASSERT_NE(NULL, buf);
-+
-+	/* No check_rule events because READ_DIR is not in the handled set. */
-+	count = tracefs_count_matches(buf, REGEX_CHECK_RULE_FS(TRACE_TASK));
-+	EXPECT_EQ(0, count);
-+
-+	free(buf);
-+}
-+
-+/*
-+ * Verifies that nested domains (child sandboxed under a parent domain) emit
-+ * check_rule events from both layers and produce a deny_access event when the
-+ * inner domain's rule does not cover the access.
-+ */
-+TEST_F(trace_fs, check_rule_nested)
-+{
-+	char *buf, field_buf[64], *comma;
-+	size_t first_len, second_len;
-+	int count_rule, count_access, status;
-+	pid_t pid;
-+
-+	ASSERT_EQ(0, tracefs_clear_buf());
-+
-+	pid = fork();
-+	ASSERT_LE(0, pid);
-+
-+	if (pid == 0) {
-+		struct landlock_ruleset_attr ruleset_attr = {
-+			.handled_access_fs = LANDLOCK_ACCESS_FS_READ_DIR,
-+		};
-+		struct landlock_path_beneath_attr path_beneath = {
-+			.allowed_access = LANDLOCK_ACCESS_FS_READ_DIR,
-+		};
-+		int ruleset_fd, fd;
-+
-+		/* First layer: allow /usr. */
-+		ruleset_fd = landlock_create_ruleset(&ruleset_attr,
-+						     sizeof(ruleset_attr), 0);
-+		if (ruleset_fd < 0)
-+			_exit(1);
-+
-+		path_beneath.parent_fd =
-+			open("/usr", O_PATH | O_DIRECTORY | O_CLOEXEC);
-+		if (path_beneath.parent_fd < 0) {
-+			close(ruleset_fd);
-+			_exit(1);
-+		}
-+
-+		if (landlock_add_rule(ruleset_fd, LANDLOCK_RULE_PATH_BENEATH,
-+				      &path_beneath, 0)) {
-+			close(path_beneath.parent_fd);
-+			close(ruleset_fd);
-+			_exit(1);
-+		}
-+		close(path_beneath.parent_fd);
-+
-+		prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+		if (landlock_restrict_self(ruleset_fd, 0)) {
-+			close(ruleset_fd);
-+			_exit(1);
-+		}
-+		close(ruleset_fd);
-+
-+		/* Second layer: also allow /usr. */
-+		ruleset_fd = landlock_create_ruleset(&ruleset_attr,
-+						     sizeof(ruleset_attr), 0);
-+		if (ruleset_fd < 0)
-+			_exit(1);
-+
-+		path_beneath.parent_fd =
-+			open("/usr", O_PATH | O_DIRECTORY | O_CLOEXEC);
-+		if (path_beneath.parent_fd < 0) {
-+			close(ruleset_fd);
-+			_exit(1);
-+		}
-+
-+		if (landlock_add_rule(ruleset_fd, LANDLOCK_RULE_PATH_BENEATH,
-+				      &path_beneath, 0)) {
-+			close(path_beneath.parent_fd);
-+			close(ruleset_fd);
-+			_exit(1);
-+		}
-+		close(path_beneath.parent_fd);
-+
-+		if (landlock_restrict_self(ruleset_fd, 0)) {
-+			close(ruleset_fd);
-+			_exit(1);
-+		}
-+		close(ruleset_fd);
-+
-+		/* Access /usr which is allowed by both layers. */
-+		fd = open("/usr", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-+		if (fd >= 0)
-+			close(fd);
-+
-+		/* Access /tmp which has no rule in either layer. */
-+		fd = open("/tmp", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-+		if (fd >= 0)
-+			close(fd);
-+
-+		_exit(0);
-+	}
-+
-+	ASSERT_EQ(pid, waitpid(pid, &status, 0));
-+	ASSERT_TRUE(WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+
-+	buf = tracefs_read_buf();
-+	ASSERT_NE(NULL, buf);
-+
-+	count_rule =
-+		tracefs_count_matches(buf, REGEX_CHECK_RULE_FS(TRACE_TASK));
-+	EXPECT_LE(1, count_rule);
-+
-+	/*
-+	 * Both layers have the same rule, so the allowed array must
-+	 * have two identical entries: {0x<mask>,0x<mask>}.
-+	 */
-+	ASSERT_EQ(0, tracefs_extract_field(buf, REGEX_CHECK_RULE_FS(TRACE_TASK),
-+					   "allowed", field_buf,
-+					   sizeof(field_buf)));
-+	comma = strchr(field_buf, ',');
-+	EXPECT_NE(0, !!comma);
-+	if (comma) {
-+		/*
-+		 * Verify both entries are identical: compare the
-+		 * substring before the comma with the substring after
-+		 * it (stripping the braces).
-+		 */
-+		first_len = comma - field_buf - 1;
-+		second_len = strlen(comma + 1) - 1;
-+		EXPECT_EQ(first_len, second_len);
-+		EXPECT_EQ(0, strncmp(field_buf + 1, comma + 1, first_len));
-+	}
-+
-+	count_access =
-+		tracefs_count_matches(buf, REGEX_DENY_ACCESS_FS(TRACE_TASK));
-+	EXPECT_LE(1, count_access);
-+
-+	free(buf);
-+}
-+
-+/*
-+ * Verifies that a denied FS access emits a landlock_deny_access_fs trace event
-+ * with the blocked access and path.
-+ */
-+TEST_F(trace_fs, deny_access_fs_denied)
-+{
-+	char *buf;
-+	int count;
-+
-+	ASSERT_EQ(0, tracefs_clear_buf());
-+
-+	/*
-+	 * Rule allows READ_DIR for /usr, but access /tmp which has no rule.
-+	 * READ_DIR access to /tmp is denied by absence and should emit a
-+	 * deny_access_fs event.
-+	 */
-+	sandbox_child_fs_access(_metadata, "/usr", LANDLOCK_ACCESS_FS_READ_DIR,
-+				LANDLOCK_ACCESS_FS_READ_DIR, "/tmp");
-+
-+	buf = tracefs_read_buf();
-+	ASSERT_NE(NULL, buf);
-+
-+	count = tracefs_count_matches(buf, REGEX_DENY_ACCESS_FS(TRACE_TASK));
-+	EXPECT_LE(1, count);
-+
-+	free(buf);
-+}
-+
-+TEST_HARNESS_MAIN
++++ b/Documentation/trace/events-landlock.rst
+@@ -0,0 +1,160 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. Copyright © 2026 Cloudflare
++
++=====================
++Landlock Trace Events
++=====================
++
++:Date: April 2026
++
++Landlock emits trace events for sandbox lifecycle operations and access
++denials.  These events can be consumed by ftrace (for human-readable
++trace output and filtering) and by eBPF programs (for programmatic
++introspection via BTF).
++
++See Documentation/security/landlock.rst for Landlock kernel internals and
++Documentation/admin-guide/LSM/landlock.rst for system administration.
++
++.. warning::
++
++   Landlock trace events, like audit records, expose sensitive
++   information about all sandboxed processes on the system.  See
++   :ref:`landlock_observability_security` for security considerations
++   and privilege requirements.
++
++See Documentation/userspace-api/landlock.rst for the userspace API.
++
++Event overview
++==============
++
++Landlock trace events are organized in four categories:
++
++**Syscall events** are emitted during Landlock system calls:
++
++- ``landlock_create_ruleset``: a new ruleset is created
++- ``landlock_add_rule_fs``: a filesystem rule is added to a ruleset
++- ``landlock_add_rule_net``: a network port rule is added to a ruleset
++- ``landlock_restrict_self``: a new domain is created from a ruleset
++
++**Denial events** are emitted when an access is denied:
++
++- ``landlock_deny_access_fs``: filesystem access denied
++- ``landlock_deny_access_net``: network access denied
++- ``landlock_deny_ptrace``: ptrace access denied
++- ``landlock_deny_scope_signal``: signal delivery denied
++- ``landlock_deny_scope_abstract_unix_socket``: abstract unix socket
++  access denied
++
++**Rule evaluation events** are emitted during rule matching:
++
++- ``landlock_check_rule_fs``: a filesystem rule is evaluated
++- ``landlock_check_rule_net``: a network port rule is evaluated
++
++**Lifecycle events**:
++
++- ``landlock_free_domain``: a domain is freed
++- ``landlock_free_ruleset``: a ruleset is freed
++
++Enabling events
++===============
++
++Enable all Landlock events::
++
++    echo 1 > /sys/kernel/tracing/events/landlock/enable
++
++Enable a specific event::
++
++    echo 1 > /sys/kernel/tracing/events/landlock/landlock_deny_access_fs/enable
++
++Read the trace output::
++
++    cat /sys/kernel/tracing/trace_pipe
++
++Differences from audit records
++==============================
++
++Tracepoints and audit records both log Landlock denials, but differ
++in some field formats:
++
++- **Paths**: Tracepoints use ``d_absolute_path()`` (namespace-independent
++  absolute paths).  Audit uses ``d_path()`` (relative to the process's
++  chroot).  Tracepoint paths are deterministic regardless of the tracer's
++  mount namespace.
++
++- **Device names**: Tracepoints use numeric ``dev=<major>:<minor>``.
++  Audit uses string ``dev="<s_id>"``.  Numeric format is more precise
++  for machine parsing.
++
++- **Denied access field**: The ``deny_access_fs`` and ``deny_access_net``
++  tracepoints use the ``blockers=`` field name (same as audit).
++  Audit uses human-readable access right names (e.g.,
++  ``blockers=fs.read_file``), while tracepoints use a hex bitmask
++  (e.g., ``blockers=0x4``).  Scope and ptrace tracepoints omit
++  ``blockers`` because the event name identifies the denial type.
++
++- **Scope target names**: Tracepoints use role-specific field names
++  (``tracee_pid``, ``target_pid``, ``peer_pid``) that reflect the
++  semantic of each event.  Audit uses generic names (``opid``, ``ocomm``)
++  because the audit log format is not event-type-specific.
++
++- **Process name**: Scope tracepoints include ``comm=`` in the printk
++  output for stateless consumers.  eBPF consumers can read ``comm``
++  directly from the task_struct via BTF.  The ``comm`` value is treated
++  as untrusted input (escaped via ``__print_untrusted_str``).
++
++Ruleset versioning
++==================
++
++Syscall events include a ruleset version (``ruleset=<hex_id>.<version>``)
++that tracks the number of rules added to the ruleset.  The version is
++incremented on each ``landlock_add_rule()`` call and frozen at
++``landlock_restrict_self()`` time.  This enables trace consumers to
++correlate a domain with the exact set of rules it was created from.
++
++eBPF access
++===========
++
++eBPF programs attached via ``BPF_RAW_TRACEPOINT`` can access the
++tracepoint arguments directly through BTF.  The arguments include both
++standard kernel objects and Landlock-internal objects:
++
++- Standard kernel objects (``struct task_struct``, ``struct sock``,
++  ``struct path``, ``struct dentry``) can be used with existing BPF
++  helpers.
++- Landlock-internal objects (``struct landlock_domain``,
++  ``struct landlock_ruleset``, ``struct landlock_rule``,
++  ``struct landlock_hierarchy``) can be read via ``BPF_CORE_READ``.
++  Internal struct layouts may change between kernel versions; use CO-RE
++  for field relocation.
++
++All pointer arguments in the tracepoint prototypes are guaranteed
++non-NULL.
++
++Audit filtering equivalence
++============================
++
++Denial events include ``same_exec``, ``log_same_exec``, and
++``log_new_exec`` fields.  These allow both stateless (ftrace filter)
++and stateful (eBPF) consumers to replicate the audit subsystem's
++filtering logic::
++
++    # Show only denials that audit would also log:
++    echo 'same_exec==1 && log_same_exec==1 || same_exec==0 && log_new_exec==1' > \
++        /sys/kernel/tracing/events/landlock/landlock_deny_access_fs/filter
++
++Event reference
++===============
++
++.. kernel-doc:: include/trace/events/landlock.h
++    :doc: Landlock trace events
++
++.. kernel-doc:: include/trace/events/landlock.h
++    :internal:
++
++Additional documentation
++========================
++
++* Documentation/userspace-api/landlock.rst
++* Documentation/admin-guide/LSM/landlock.rst
++* Documentation/security/landlock.rst
++* https://landlock.io
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 338bc4d7cfab..d60e010e042b 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -54,6 +54,7 @@ applications.
+    events-power
+    events-nmi
+    events-msr
++   events-landlock
+    events-pci
+    boottime-trace
+    histogram
+diff --git a/Documentation/userspace-api/landlock.rst b/Documentation/userspace-api/landlock.rst
+index fd8b78c31f2f..e65370212aa1 100644
+--- a/Documentation/userspace-api/landlock.rst
++++ b/Documentation/userspace-api/landlock.rst
+@@ -8,7 +8,7 @@ Landlock: unprivileged access control
+ =====================================
+ 
+ :Author: Mickaël Salaün
+-:Date: March 2026
++:Date: April 2026
+ 
+ The goal of Landlock is to enable restriction of ambient rights (e.g. global
+ filesystem or network access) for a set of processes.  Because Landlock
+@@ -698,8 +698,12 @@ Starting with the Landlock ABI version 7, it is possible to control logging of
+ Landlock audit events with the ``LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF``,
+ ``LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON``, and
+ ``LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF`` flags passed to
+-sys_landlock_restrict_self().  See Documentation/admin-guide/LSM/landlock.rst
+-for more details on audit.
++sys_landlock_restrict_self().  These flags control audit record generation.
++Landlock tracepoints are not affected by these flags and always fire when
++enabled, providing an alternative observability channel for debugging and
++monitoring.  See :doc:`/admin-guide/LSM/landlock` for more details
++on audit and tracepoints, and :doc:`/trace/events-landlock` for the
++complete trace event reference.
+ 
+ Thread synchronization (ABI < 8)
+ --------------------------------
+@@ -814,6 +818,7 @@ Additional documentation
+ ========================
+ 
+ * Documentation/admin-guide/LSM/landlock.rst
++* Documentation/trace/events-landlock.rst
+ * Documentation/security/landlock.rst
+ * https://landlock.io
+ 
 -- 
 2.53.0
 
