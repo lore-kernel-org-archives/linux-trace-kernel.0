@@ -1,109 +1,132 @@
-Received: from mail-oo1-f80.google.com (mail-oo1-f80.google.com [209.85.161.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6426438E5DA
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 19:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835813126A9;
+	Mon,  6 Apr 2026 20:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775505339; cv=none; b=lDXcG1jjnVniFcLwWvX3xiLnUpNj4PQAJDeTeAuWhCKZUsgwBkw8LAAxQLuZCGHp34qaqBI1I3A5qWcq5N4uNpW2puE3dBVFUmZpYuibGCehMukfhmixHZwy9zaLQEklmA9Z910GpZMSgiXIFkJinH/PXS6yJoeB4PeKP0vT/SU=
+	t=1775505929; cv=none; b=e3kojmUSS7iLuR4P21NmmDMkH5KPHnAI7nuq/jdpPP0LsmENcwI4OVTuVMAehDuPQ6JtaQawGVplJbu9QV+qpt66FjHF/OJz+wp1GL6NaaLDB9kiwnlbdJPInFFck9aHeTR5vTMU+AG6ywLiBHNOG/jV5j/8kIMDnImnvJ8chnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775505339; c=relaxed/simple;
-	bh=rQKXXgAqWTg/Dsw0TFfIaXYDxtgCvJ8D3RvPHxOrsZc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=vB5o/MJLtzr0yzi+0iJaLpggjX7LA7fIL1YbWY/n3yfzs2F36XM1D4szbZxeXBd9J4Fc5XPov/9X4Pffw13UT91bKnPIPrMEyGjVsZzvGw/jlY2MiE1B9mGMA1lKx+QoorYaNemRkigGwvc8Np5GRkYWkB7olvGIsSk+dfZQoNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f80.google.com with SMTP id 006d021491bc7-68582ad07ffso1665209eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Apr 2026 12:55:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775505337; x=1776110137;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uDGeSu520UhCd3KRfrM/IDTj8HADwTneGXTVFyZaoHY=;
-        b=JdOXv93DlqSjWNaZLk3OKYTnVdzfBP6z2OnxMM8PQhqURs3qVjsfc6NnQhtFuOE+LC
-         /Kl8seGYJi3G3RdsR3oWy0uKz8reBtgWg6VpknJ/i27S4J17AbPJ4rwbNSRrroeowhsb
-         Np4rr6pV6n9M1MtrsZE9KlExvuuXUn2sCqQHc9/JJHOvDM6AZvBFvX9uI2k+RY5xtO6S
-         VAYGlXadgPTOenPewwyIR2hhh52Q/kpQHLYv1ZRAxqygyVEqpYF/fwvyMXzgB5sxzpXP
-         z2A2pAuwHsRLNr7uEh1RxRb0LF3R+wR0nsxJ4EVWP7/vej/gVdARSMSBS/NGJnyXjjgo
-         0K9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVEDYvPnlcMdeyZ6w8ZAY7W8zCKDxE96quWeIvJCc1uYvUGfKXU2FvbElqVdQNU9Vh8BNyPUeI/QFg58gheiSIDXEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+KBWE3ZtsRCNqxR266ZJ1VO9BS6pEToX1/suoIV9bGMQqfP2z
-	IZo2Vp1I0mIv3nui0CMCWJis4+5U/u9OOSenAfx/qfMsZBeISYfG73em2wdUBACsx8Y2lP5gFR1
-	+2jkPqgqC+wMr5cMQcaEafIs5X8+gSHEidnm93TZ7FgAy1OTui42fsPKfrO8=
+	s=arc-20240116; t=1775505929; c=relaxed/simple;
+	bh=AC+Rwir7wQ8TqEdwv3VYw3uhn6Y5OpJ0ix6JbQrM5g8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X7Aha8dpaHa6kGGVCLLAx0f/B1DzcWPeQUk03Vv15ekuXcrSgJsg6EO3qsgdjKD11WhQPClxMHNJtoUcmtar7FBV6BIwOO3cV+L7hIuSs8BVyb85MPPGAwXjwMLroE8iPPYLzsDlcMU/UsJdPOJ0t9euTX0oLqPPD78wjOzEq0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=yP8TgcE1; arc=none smtp.client-ip=148.163.148.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="yP8TgcE1"
+Received: from pps.filterd (m0354651.ppops.net [127.0.0.1])
+	by mx0a-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636J6fnA2547818;
+	Mon, 6 Apr 2026 19:32:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=default; bh=ThjhPdJQwTuOp
+	MPIna20fC3u2KE50uJcGQ+pki/m8to=; b=yP8TgcE1g55aFi+IYzG2yrZmCrWQc
+	4PoFiocwZOfK6Z0ttgoZXGnMgf6GgdKbXNyJTTV1V+BjjrIpnHYillRJPWPSzOjh
+	zEioIJNHjXc8C2WNEqJCOTNLJ1rz4s8GWcCekHhQdMFkP9P75StCg91g5j30fwLp
+	TMnqn5G4ZqmFR+ql269/8eClQ99QVa+be9W69/H2fAOKWHOpyAU32LwYGQniDZL1
+	qnPXvRmRqWOQClICVizyQ3TWjGstCPMGAvfdAP5sec/F6kC8X7Fx6pr4F+dHRh2K
+	n0420/EzYkaBQ63453qGaLpMvWMJn/UTnH7W5wqEIrTnwdCGjydM5pyxw==
+Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
+	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 4dbdvxqy86-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 Apr 2026 19:32:00 +0000 (GMT)
+Received: from LL-DJCZ134.crowdstrike.sys (10.100.11.122) by
+ 04WPEXCH006.crowdstrike.sys (10.100.11.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Mon, 6 Apr 2026 19:31:58 +0000
+From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+To: <bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+CC: <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
+        <jolsa@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <ihor.solodrai@linux.dev>, <emil@etsalapatis.com>,
+        <linux-open-source@crowdstrike.com>
+Subject: [RFC PATCH bpf-next v5 0/2] tracing: Fix kprobe attachment when module shadows vmlinux symbol
+Date: Mon, 6 Apr 2026 15:31:56 -0400
+Message-ID: <20260406193158.754498-1-andrey.grodzovsky@crowdstrike.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:2088:b0:67d:ec7b:cc9b with SMTP id
- 006d021491bc7-6821d83c79emr9482036eaf.16.1775505337374; Mon, 06 Apr 2026
- 12:55:37 -0700 (PDT)
-Date: Mon, 06 Apr 2026 12:55:37 -0700
-In-Reply-To: <691367ae.a70a0220.22f260.0141.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69d40fb9.a70a0220.a26f2.003d.GAE@google.com>
-Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_startstop
-From: syzbot <syzbot+774863666ef5b025c9d0@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: 04WPEXCH014.crowdstrike.sys (10.100.11.87) To
+ 04WPEXCH006.crowdstrike.sys (10.100.11.70)
+X-Disclaimer: USA
+X-Authority-Analysis: v=2.4 cv=fNQ0HJae c=1 sm=1 tr=0 ts=69d40a30 cx=c_pps
+ a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
+ a=EjBHVkixTFsA:10 a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=T2KQ53IYiC3MXPrxx8bB:22 a=b3B37AjAgz0HnGB3MuNd:22
+ a=VwQbUJbxAAAA:8 a=pl6vuDidAAAA:8 a=YE35s84LRL086BocN2oA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: fFOe9Ow93tyj1hWyny2gud8MrTmhVtr4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA2MDE5MSBTYWx0ZWRfX/tjKJcEqsRR2
+ bv2zXVz62Sw+CdWzEYNVHkyM4iB/jPx4RAIlZ7AKuQGZ9XAtyKsbElHUf1qN9Nc5LGCcgw8AtyA
+ Q+Gln5dRJqeKfEsWdM7eRWBndw5e8ADMsicoQLXRcA4mBe1Wi/ZQYR5QZibmjXjp3Ph3QwDMGvJ
+ pVmcXJ/2fk2ItsCcKaUEzkgqvOydRBgNo++oRJoh/il9tlvxc38xVp1Fv0gXMT0mdJi6DWk1LHj
+ 0stnIfOGQBDPLwWM5lzVuW1yzlwcpZSDudkZBn4JB+LQruF557EknfsrsVcWRJtgysNAkNWmLjz
+ hl9tSFS8UiZ1ombqKou/6ZfNZyBITAffIMUb1ozKGgdD3ENgPeUjGgNwu/Ni3uTFhjbsEna4TTM
+ RHz+9yxMUWoOsTwv4Jp2/kI/EcDc1slTu86wEuvizgF4BaIUHa6ueJOQKIZ780MAIMjfbEyRRcr
+ rspP6PwaFVdDZefZ6Kg==
+X-Proofpoint-ORIG-GUID: fFOe9Ow93tyj1hWyny2gud8MrTmhVtr4
+X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11751
+ signatures=596818
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 phishscore=0 priorityscore=1501 clxscore=1011 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604060191
 
-syzbot has found a reproducer for the following issue on:
+When a kernel module exports a symbol with the same name as an existing
+vmlinux symbol, kprobe attachment fails with -EADDRNOTAVAIL because
+number_of_same_symbols() counts matches across both vmlinux and all
+loaded modules, returning a count greater than 1.
 
-HEAD commit:    591cd656a1bf Linux 7.0-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=129136ba580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6754c86e8d9e4c91
-dashboard link: https://syzkaller.appspot.com/bug?extid=774863666ef5b025c9d0
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1268ad4e580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1580b3da580000
+This series takes a different approach from v1-v4, which implemented a
+libbpf-side fallback parsing /proc/kallsyms and retrying with the
+absolute address. That approach was rejected (Andrii Nakryiko, Ihor
+Solodrai) because ambiguous symbol resolution does not belong in libbpf,
+and because it did not cover the kprobe_multi path.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6382829d7cc5/disk-591cd656.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/17a325d524d5/vmlinux-591cd656.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0a06ea295210/bzImage-591cd656.xz
+Following Ihor's suggestion, this series fixes the root cause in the
+kernel: when an unqualified symbol name is given and the symbol is found
+in vmlinux, prefer the vmlinux symbol and do not scan loaded modules.
+This makes the skeleton auto-attach path work transparently with no
+libbpf changes needed.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+774863666ef5b025c9d0@syzkaller.appspotmail.com
+Patch 1: Kernel fix - return vmlinux-only count from
+         number_of_same_symbols() when the symbol is found in vmlinux,
+         preventing module shadows from causing -EADDRNOTAVAIL.
+Patch 2: Selftests with bpf_testmod_dup_sym.ko test module validating
+         kprobe attachment across all four attach modes with a duplicate
+         symbol present. Unchaged from V4.
 
-INFO: task syz.2.19:6128 blocked for more than 143 seconds.
-      Not tainted syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.2.19        state:D stack:27960 pid:6128  tgid:6125  ppid:5955   task_flags:0x400040 flags:0x00080002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5298 [inline]
- __schedule+0x15dd/0x52d0 kernel/sched/core.c:6911
- __schedule_loop kernel/sched/core.c:6993 [inline]
- schedule+0x164/0x360 kernel/sched/core.c:7008
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:7065
- __mutex_lock_common kernel/locking/mutex.c:692 [inline]
- __mutex_lock+0x7fe/0x1300 kernel/locking/mutex.c:776
- blk_debugfs_lock_nomemsave block/blk.h:740 [inline]
- blk_trace_startstop+0x8f/0x610 kernel/trace/blktrace.c:903
- blk_trace_ioctl+0x314/0x920 kernel/trace/blktrace.c:949
- blkdev_common_ioctl+0x13a7/0x3250 block/ioctl.c:724
- blkdev_ioctl+0x528/0x740 block/ioctl.c:798
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:597 [inline]
- __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f7f6ab9c819
-RSP: 002b:00007f7f6baad028 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f7f6ae16090 RCX: 00007f7f6ab9c819
-RDX: 0000000000000000 RSI: 0000000000001274 RDI: 0000000000000003
-RBP: 00007f7f6ac32c91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+Changes since v4 [1]:
+  - Completely rework the approach: move fix from libbpf to the kernel
+    (number_of_same_symbols() in trace_kprobe.c) as suggested by Ihor
+    Solodrai. No libbpf changes needed.
+  - When mod==NULL and vmlinux contains the symbol (count > 0), return
+    the vmlinux-only count immediately, skipping module scan entirely.
+  - Preserves all existing semantics: MOD:SYM qualification unchanged,
+    module-only symbols unchanged, vmlinux-ambiguous symbols unchanged.
 
+[1] https://lore.kernel.org/bpf/20260302210532.381083-1-andrey.grodzovsky@crowdstrike.com/
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Andrey Grodzovsky (2):
+  tracing: Prefer vmlinux symbols over module symbols for unqualified
+    kprobes
+  selftests/bpf: Add tests for duplicate kprobe symbol handling
+
+ kernel/trace/trace_kprobe.c                   |  7 +++
+ tools/testing/selftests/bpf/Makefile          |  2 +-
+ .../selftests/bpf/prog_tests/attach_probe.c   | 63 +++++++++++++++++++
+ .../testing/selftests/bpf/test_kmods/Makefile |  2 +-
+ .../bpf/test_kmods/bpf_testmod_dup_sym.c      | 48 ++++++++++++++
+ 5 files changed, 120 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/test_kmods/bpf_testmod_dup_sym.c
+
+-- 
+2.34.1
+
