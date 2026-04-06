@@ -1,267 +1,133 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3B55B21A;
-	Mon,  6 Apr 2026 17:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C382538F644
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 18:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775495444; cv=none; b=NtzeQ7BxuBnDjHafXJKFb9wYUOA3IduPTWm52hDuTOyj2YFiqqsPYDCeKkt1RMxWb295AdiFwEOGhSKQGDBoV9pM+DXbvk5KbwhrAmUFroQ+VHxQ8X/g+2N30zQ8bhGKiFbJdgNfwz1LgB55aOzIN7B8kgNB6nH5KamgM3A2Q7g=
+	t=1775499100; cv=none; b=b48nUMlxgu6PXK58+xxoQZr5s71gbyw6T6dyWEy+LGG0VI/9KVqNk4IkSkjmLlh1qk4fVtAJN5bCt3ib67QtQzrlLqOcwePu5ihUC/X6Oll+Uo63PXn6v0EXJz7MNo8GS9WOEzVZJsTor6VmwHlLjYUBjuCkyA8l+fBSFGGtH0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775495444; c=relaxed/simple;
-	bh=MXWMfm7gYuCy+lH29Ulu+OgomyQFa4RlJVCCUcO2sq0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VDXh1Ry/xDiY+EH/HoXJwFMXdJSixpR2RRfhmJlplrVj6kJzwv/+u/EF830rHemRJbK9VvxF2wPo7dFJbF+wRoYIB79ZBGKGAPnJhJH7zxK0idSDkO5hPs5ely3q+MJp/NIKpp411isaH+RpeBag2OASGzzEHnyWutzHJ0nSOl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=NJWaSml/; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1775499100; c=relaxed/simple;
+	bh=FCmiQ7qR/HkeyDQC1w5V/E7vD9N4Qx2dGVi6447g0h8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dl+JGIFv11N51+KeySX/Q110js41dOZi7OlmLVbS7h6io4K20m1URToQYa+qxI9xB+XNS6RX4IkIpcs4FfpvIgMr2k7Y9exMLfGCz7AtA93DeLiGjxIr4fFRjq1P7u/DAZ6nN62oC+uB0byC5DdAK3McO5Q9AUhG6vaChpeWG+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpHAp4cb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="NJWaSml/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3f
-	/CqEZ6rAhrvqy84EMB+c5jUzWz13pC4lbmPe/95RM=; b=NJWaSml/YpA23MeChR
-	4oneWjsJvUkTDgw37unXxB+bfv2Wid8HF+tCME1qWG+9MetTHso0Rg6DxQi+VMdS
-	VNl8ZUE4e6czH6nEbGQ2PzU2reOKXUmjw1V+22kEeSFANsj+3Jk66kTcGk2cr/09
-	camzlSI/1M5jKJU9dN5hKi+KI=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD31xDd6NNpTvd2Dg--.47409S2;
-	Tue, 07 Apr 2026 01:09:51 +0800 (CST)
-From: Cao Ruichuang <create0818@163.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mcgrof@kernel.org,
-	petr.pavlu@suse.com,
-	da.gomez@kernel.org,
-	samitolvanen@google.com,
-	atomlin@atomlin.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org
-Subject: [PATCH] tracing: preserve module tracepoint strings
-Date: Tue,  7 Apr 2026 01:09:44 +0800
-Message-Id: <20260406170944.51047-1-create0818@163.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpHAp4cb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E297C2BCB5
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Apr 2026 18:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775499100;
+	bh=FCmiQ7qR/HkeyDQC1w5V/E7vD9N4Qx2dGVi6447g0h8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bpHAp4cbwIEmS7F5pVu/nkAAmPhZce79LP8/ERCarEd6gM0oLbACKuGFTDgAuSCxT
+	 sXnMphvgGwshBACkOQzvtgjd4nIqQXwzlhakz+EUND+K7/EJk/EK6pdZUb6ELdkDoB
+	 KOOdl3tPRC/x/FsBn8OOEdq5A8+Ke2kN69+meklvxOxECwgynlLGf9YZ2Kg49QUTWi
+	 lEOa/m2mvrUiUlnwee3YyeVhzYcWi/Yvqln4IUkHCvoC36do67wCSwC3RDOd/pMDE7
+	 XN1dhvaMCG5Vs2uWiQ5SysGtnM0mRg8C45fy2eJSQsBbAg2k8WiGAyQNd8K3I+Ep5Y
+	 LgO0OX4XANIWw==
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8d560ede296so283869585a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Apr 2026 11:11:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUr1cHkc0kXBGmuj52Bfa38RtcA8TwMDPdxrIxa7hocMpIexlMFnJIUgndI3vmSGE999gg+p8L+nP59w7obPxUQuKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQad/pA7TXfateCXRwgHM5FJbmC+Hmo3lCLAeBlihgapwzsjcR
+	SlUqfYUQA+D9wUh0fsThL4pVgZl+6qdpIuQUJaIPPMfF09geP/a8dNmQkLSeMO9rLMmmdIyTyUT
+	Ge0nagJkffOnlhVd4RkkBlg2jKFW1oGY=
+X-Received: by 2002:a05:620a:29c1:b0:8cd:b620:9be2 with SMTP id
+ af79cd13be357-8d41da571fcmr1912531885a.38.1775499099536; Mon, 06 Apr 2026
+ 11:11:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD31xDd6NNpTvd2Dg--.47409S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3WFWDJw1DWr1kCr4fKF47CFg_yoWxuw1Up3
-	Wayr9xtrs8AF4qgFW0g34qkry3GrZ8CryjqFZxCr1fA3Z8t34DZa17tws8Aw18CryUWrya
-	kF1Y9r97Cr48Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbAwsUUUUU=
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCwADB+mnT6OA7JAAA3W
+References: <20260402092607.96430-1-laoar.shao@gmail.com> <20260402092607.96430-4-laoar.shao@gmail.com>
+ <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
+ <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com> <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+In-Reply-To: <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Mon, 6 Apr 2026 11:11:27 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+X-Gm-Features: AQROBzCFxkHfl2egwPNA3sbElolh-AgrieM9ssltLgTibswoiE7pp6N7fR9JnT8
+Message-ID: <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, jikos@kernel.org, 
+	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	kpsingh@kernel.org, mattbobrowski@google.com, jolsa@kernel.org, 
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev, 
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tracepoint_string() is documented as exporting constant strings
-through printk_formats, including when it is used from modules.
-That currently does not work.
+On Mon, Apr 6, 2026 at 4:08=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> w=
+rote:
+>
+> On Sat, Apr 4, 2026 at 5:36=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+> >
+> > On Fri, Apr 3, 2026 at 1:55=E2=80=AFPM Dylan Hatch <dylanbhatch@google.=
+com> wrote:
+> > [...]
+> > > > IIRC, the use case for this change is when multiple users load vari=
+ous
+> > > > livepatch modules on the same system. I still don't believe this is=
+ the
+> > > > right way to manage livepatches. That said, I won't really NACK thi=
+s
+> > > > if other folks think this is a useful option.
+> > >
+> > > In our production fleet, we apply exactly one cumulative livepatch
+> > > module, and we use per-kernel build "livepatch release" branches to
+> > > track the contents of these cumulative livepatches. This model has
+> > > worked relatively well for us, but there are some painpoints.
+> > >
+> > > We are often under pressure to selectively deploy a livepatch fix to
+> > > certain subpopulations of production. If the subpopulation is running
+> > > the same build of everything else, this would require us to introduce
+> > > another branching factor to the "livepatch release" branches --
+> > > something we do not support due to the added toil and complexity.
+> > >
+> > > However, if we had the ability to build "off-band" livepatch modules
+> > > that were marked as non-replaceable, we could support these selective
+> > > patches without the additional branching factor. I will have to
+> > > circulate the idea internally, but to me this seems like a very usefu=
+l
+> > > option to have in certain cases.
+> >
+> >  IIUC, the plan is:
+> >
+> > - The regular livepatches are cumulative, have the replace flag; and
+> >   are replaceable.
+> > - The occasional "off-band" livepatches do not have the replace flag,
+> >   and are not replaceable.
+> >
+> > With this setup, for systems with off-band livepatches loaded, we can
+> > still release a cumulative livepatch to replace the previous cumulative
+> > livepatch. Is this the expected use case?
+>
+> That matches our expected use case.
 
-A small test module that calls
-tracepoint_string("tracepoint_string_test_module_string") loads
-successfully and gets a pointer back, but the string never appears
-in /sys/kernel/tracing/printk_formats. The loader only collects
-__trace_printk_fmt from modules and ignores __tracepoint_str.
+If we really want to serve use cases like this, I think we can introduce
+some replace tag concept: Each livepatch will have a tag, u32 number.
+Newly loaded livepatch will only replace existing livepatch with the
+same tag. We can even reuse the existing "bool replace" in klp_patch,
+and make it u32: replace=3D0 means no replace; replace > 0 are the
+replace tag.
 
-Collect module __tracepoint_str entries too, copy them to stable
-tracing-managed storage like module trace_printk formats, and let
-trace_is_tracepoint_string() recognize those copied strings. This
-makes module tracepoint strings visible through printk_formats and
-keeps them accepted by the trace string safety checks.
+For current users of cumulative patches, all the livepatch will have the
+same tag, say 1. For your use case, you can assign each user a
+unique tag. Then all these users can do atomic upgrades of their
+own livepatches.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217196
-Signed-off-by: Cao Ruichuang <create0818@163.com>
----
- include/linux/module.h      |  2 ++
- kernel/module/main.c        |  4 +++
- kernel/trace/trace_printk.c | 63 ++++++++++++++++++++++++++++---------
- 3 files changed, 54 insertions(+), 15 deletions(-)
+We may also need to check whether two livepatches of different tags
+touch the same kernel function. When that happens, the later
+livepatch should fail to load.
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 14f391b18..e475466a7 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -515,6 +515,8 @@ struct module {
- #ifdef CONFIG_TRACING
- 	unsigned int num_trace_bprintk_fmt;
- 	const char **trace_bprintk_fmt_start;
-+	unsigned int num_tracepoint_strings;
-+	const char **tracepoint_strings_start;
- #endif
- #ifdef CONFIG_EVENT_TRACING
- 	struct trace_event_call **trace_events;
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index c3ce106c7..d7d890138 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -2672,6 +2672,10 @@ static int find_module_sections(struct module *mod, struct load_info *info)
- 	mod->trace_bprintk_fmt_start = section_objs(info, "__trace_printk_fmt",
- 					 sizeof(*mod->trace_bprintk_fmt_start),
- 					 &mod->num_trace_bprintk_fmt);
-+	mod->tracepoint_strings_start =
-+		section_objs(info, "__tracepoint_str",
-+			     sizeof(*mod->tracepoint_strings_start),
-+			     &mod->num_tracepoint_strings);
- #endif
- #ifdef CONFIG_DYNAMIC_FTRACE
- 	/* sechdrs[0].sh_size is always zero */
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index 5ea5e0d76..9f67ce42e 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -22,8 +22,9 @@
- #ifdef CONFIG_MODULES
- 
- /*
-- * modules trace_printk()'s formats are autosaved in struct trace_bprintk_fmt
-- * which are queued on trace_bprintk_fmt_list.
-+ * modules trace_printk() formats and tracepoint_string() strings are
-+ * autosaved in struct trace_bprintk_fmt, which are queued on
-+ * trace_bprintk_fmt_list.
-  */
- static LIST_HEAD(trace_bprintk_fmt_list);
- 
-@@ -33,8 +34,12 @@ static DEFINE_MUTEX(btrace_mutex);
- struct trace_bprintk_fmt {
- 	struct list_head list;
- 	const char *fmt;
-+	unsigned int type;
- };
- 
-+#define TRACE_BPRINTK_TYPE		BIT(0)
-+#define TRACE_TRACEPOINT_TYPE		BIT(1)
-+
- static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
- {
- 	struct trace_bprintk_fmt *pos;
-@@ -49,22 +54,24 @@ static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
- 	return NULL;
- }
- 
--static
--void hold_module_trace_bprintk_format(const char **start, const char **end)
-+static void hold_module_trace_format(const char **start, const char **end,
-+				     unsigned int type)
- {
- 	const char **iter;
- 	char *fmt;
- 
- 	/* allocate the trace_printk per cpu buffers */
--	if (start != end)
-+	if ((type & TRACE_BPRINTK_TYPE) && start != end)
- 		trace_printk_init_buffers();
- 
- 	mutex_lock(&btrace_mutex);
- 	for (iter = start; iter < end; iter++) {
- 		struct trace_bprintk_fmt *tb_fmt = lookup_format(*iter);
- 		if (tb_fmt) {
--			if (!IS_ERR(tb_fmt))
-+			if (!IS_ERR(tb_fmt)) {
-+				tb_fmt->type |= type;
- 				*iter = tb_fmt->fmt;
-+			}
- 			continue;
- 		}
- 
-@@ -76,6 +83,7 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
- 				list_add_tail(&tb_fmt->list, &trace_bprintk_fmt_list);
- 				strcpy(fmt, *iter);
- 				tb_fmt->fmt = fmt;
-+				tb_fmt->type = type;
- 			} else
- 				kfree(tb_fmt);
- 		}
-@@ -85,17 +93,28 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
- 	mutex_unlock(&btrace_mutex);
- }
- 
--static int module_trace_bprintk_format_notify(struct notifier_block *self,
--		unsigned long val, void *data)
-+static int module_trace_format_notify(struct notifier_block *self,
-+				      unsigned long val, void *data)
- {
- 	struct module *mod = data;
-+
-+	if (val != MODULE_STATE_COMING)
-+		return NOTIFY_OK;
-+
- 	if (mod->num_trace_bprintk_fmt) {
- 		const char **start = mod->trace_bprintk_fmt_start;
- 		const char **end = start + mod->num_trace_bprintk_fmt;
- 
--		if (val == MODULE_STATE_COMING)
--			hold_module_trace_bprintk_format(start, end);
-+		hold_module_trace_format(start, end, TRACE_BPRINTK_TYPE);
-+	}
-+
-+	if (mod->num_tracepoint_strings) {
-+		const char **start = mod->tracepoint_strings_start;
-+		const char **end = start + mod->num_tracepoint_strings;
-+
-+		hold_module_trace_format(start, end, TRACE_TRACEPOINT_TYPE);
- 	}
-+
- 	return NOTIFY_OK;
- }
- 
-@@ -171,8 +190,8 @@ static void format_mod_stop(void)
- 
- #else /* !CONFIG_MODULES */
- __init static int
--module_trace_bprintk_format_notify(struct notifier_block *self,
--		unsigned long val, void *data)
-+module_trace_format_notify(struct notifier_block *self,
-+			   unsigned long val, void *data)
- {
- 	return NOTIFY_OK;
- }
-@@ -193,8 +212,8 @@ void trace_printk_control(bool enabled)
- }
- 
- __initdata_or_module static
--struct notifier_block module_trace_bprintk_format_nb = {
--	.notifier_call = module_trace_bprintk_format_notify,
-+struct notifier_block module_trace_format_nb = {
-+	.notifier_call = module_trace_format_notify,
- };
- 
- int __trace_bprintk(unsigned long ip, const char *fmt, ...)
-@@ -254,11 +273,25 @@ EXPORT_SYMBOL_GPL(__ftrace_vprintk);
- bool trace_is_tracepoint_string(const char *str)
- {
- 	const char **ptr = __start___tracepoint_str;
-+#ifdef CONFIG_MODULES
-+	struct trace_bprintk_fmt *tb_fmt;
-+#endif
- 
- 	for (ptr = __start___tracepoint_str; ptr < __stop___tracepoint_str; ptr++) {
- 		if (str == *ptr)
- 			return true;
- 	}
-+
-+#ifdef CONFIG_MODULES
-+	mutex_lock(&btrace_mutex);
-+	list_for_each_entry(tb_fmt, &trace_bprintk_fmt_list, list) {
-+		if ((tb_fmt->type & TRACE_TRACEPOINT_TYPE) && str == tb_fmt->fmt) {
-+			mutex_unlock(&btrace_mutex);
-+			return true;
-+		}
-+	}
-+	mutex_unlock(&btrace_mutex);
-+#endif
- 	return false;
- }
- 
-@@ -824,7 +857,7 @@ fs_initcall(init_trace_printk_function_export);
- 
- static __init int init_trace_printk(void)
- {
--	return register_module_notifier(&module_trace_bprintk_format_nb);
-+	return register_module_notifier(&module_trace_format_nb);
- }
- 
- early_initcall(init_trace_printk);
--- 
-2.39.5 (Apple Git-154)
+Does this make sense?
 
+Thanks,
+Song
