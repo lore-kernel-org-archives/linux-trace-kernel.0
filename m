@@ -1,42 +1,45 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7742938B151;
-	Mon,  6 Apr 2026 16:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3B55B21A;
+	Mon,  6 Apr 2026 17:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775494451; cv=none; b=oxs018guI+ndieFUuJ7bEbCYICUmjYbvgkrlAugOl3aC0yUc5o6Z5BKUs7K1lXgfEISHX2F88H5JtG2iHmP7PPrc+VTLlCrmrS6RlMj85gbL4/UUqVcFkC1UHH6Vk8UHd8dSxKR4O6TmXjEdA08ciLq/CpNoN7aCv23mU/mjJ88=
+	t=1775495444; cv=none; b=NtzeQ7BxuBnDjHafXJKFb9wYUOA3IduPTWm52hDuTOyj2YFiqqsPYDCeKkt1RMxWb295AdiFwEOGhSKQGDBoV9pM+DXbvk5KbwhrAmUFroQ+VHxQ8X/g+2N30zQ8bhGKiFbJdgNfwz1LgB55aOzIN7B8kgNB6nH5KamgM3A2Q7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775494451; c=relaxed/simple;
-	bh=VXV3g4Cku3HtfIu/eMC5bEVsDUc65ZTW4YmIezvUIKY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lTFUuDgw7l7bruO7aI3/EUSJ3lJFT/ImpDWquHSO2NmtQGcPj0T090IIINHuIzqoqEZWL6yatxG1DL/N+7tLoQnS22Dl5gwAIzPyHVny75bFMttu9LIWtNQndE8tEI3ok9gmWlcFqnsXS5N00n4Wj8aMavLL14cqgTuUbxxIW7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JBU8/qc+; arc=none smtp.client-ip=117.135.210.3
+	s=arc-20240116; t=1775495444; c=relaxed/simple;
+	bh=MXWMfm7gYuCy+lH29Ulu+OgomyQFa4RlJVCCUcO2sq0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VDXh1Ry/xDiY+EH/HoXJwFMXdJSixpR2RRfhmJlplrVj6kJzwv/+u/EF830rHemRJbK9VvxF2wPo7dFJbF+wRoYIB79ZBGKGAPnJhJH7zxK0idSDkO5hPs5ely3q+MJp/NIKpp411isaH+RpeBag2OASGzzEHnyWutzHJ0nSOl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=NJWaSml/; arc=none smtp.client-ip=117.135.210.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JBU8/qc+"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="NJWaSml/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=pr
-	2MS4FI2GOrGg5Ix1007P7ftZWqM4souT4XTzB2Iik=; b=JBU8/qc+InYSzbU24R
-	lAZggfd1cdh4Anuk1r1TC79xFg9MQC+LmDrfC+blD1FHqDp3YqGq5HgLuGKIpXOF
-	FnMUpj44FDuRVxyBKqwVVusCrjmJ43PHiUn74Gb4/ZEnKHCmsvCaigAO13/GDEck
-	PcU6rHexcr/dMnPnB9FlG2XNA=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3f
+	/CqEZ6rAhrvqy84EMB+c5jUzWz13pC4lbmPe/95RM=; b=NJWaSml/YpA23MeChR
+	4oneWjsJvUkTDgw37unXxB+bfv2Wid8HF+tCME1qWG+9MetTHso0Rg6DxQi+VMdS
+	VNl8ZUE4e6czH6nEbGQ2PzU2reOKXUmjw1V+22kEeSFANsj+3Jk66kTcGk2cr/09
+	camzlSI/1M5jKJU9dN5hKi+KI=
 Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgCX_FcT5dNpElTMVQ--.562S2;
-	Tue, 07 Apr 2026 00:53:42 +0800 (CST)
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD31xDd6NNpTvd2Dg--.47409S2;
+	Tue, 07 Apr 2026 01:09:51 +0800 (CST)
 From: Cao Ruichuang <create0818@163.com>
 To: rostedt@goodmis.org
 Cc: mhiramat@kernel.org,
 	mathieu.desnoyers@efficios.com,
+	mcgrof@kernel.org,
+	petr.pavlu@suse.com,
+	da.gomez@kernel.org,
+	samitolvanen@google.com,
+	atomlin@atomlin.com,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] ring-buffer: report header_page overwrite as char
-Date: Tue,  7 Apr 2026 00:53:33 +0800
-Message-Id: <20260406165333.46052-1-create0818@163.com>
+	linux-trace-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org
+Subject: [PATCH] tracing: preserve module tracepoint strings
+Date: Tue,  7 Apr 2026 01:09:44 +0800
+Message-Id: <20260406170944.51047-1-create0818@163.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260406162843.41592-1-create0818@163.com>
-References: <20260406162843.41592-1-create0818@163.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,46 +47,221 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgCX_FcT5dNpElTMVQ--.562S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CrWruryxZF47urWrKFykKrg_yoW8Gw18pF
-	y5Kw1DK3yDJr1jka4DuF15ZryrtFs8J34xWa9rG34ftF1DXF1DW34a9r9rGr48tFySqFZx
-	try3ur95Kws7u3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jn-B_UUUUU=
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCwBbNB2nT5RbTiAAA3O
+X-CM-TRANSID:_____wD31xDd6NNpTvd2Dg--.47409S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3WFWDJw1DWr1kCr4fKF47CFg_yoWxuw1Up3
+	Wayr9xtrs8AF4qgFW0g34qkry3GrZ8CryjqFZxCr1fA3Z8t34DZa17tws8Aw18CryUWrya
+	kF1Y9r97Cr48Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbAwsUUUUU=
+X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCwADB+mnT6OA7JAAA3W
 
-The header_page tracefs metadata currently reports overwrite as an
-int field with size 1. That makes parsers warn about a type and
-size mismatch even though the field is only used as a one-byte flag
-within commit.
+tracepoint_string() is documented as exporting constant strings
+through printk_formats, including when it is used from modules.
+That currently does not work.
 
-Keep the shared offset with commit as-is, but report overwrite as
-char so the declared type matches the hardcoded size. The signedness
-is already carried separately by the emitted signed field.
+A small test module that calls
+tracepoint_string("tracepoint_string_test_module_string") loads
+successfully and gets a pointer back, but the string never appears
+in /sys/kernel/tracing/printk_formats. The loader only collects
+__trace_printk_fmt from modules and ignores __tracepoint_str.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216999
+Collect module __tracepoint_str entries too, copy them to stable
+tracing-managed storage like module trace_printk formats, and let
+trace_is_tracepoint_string() recognize those copied strings. This
+makes module tracepoint strings visible through printk_formats and
+keeps them accepted by the trace string safety checks.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217196
 Signed-off-by: Cao Ruichuang <create0818@163.com>
 ---
- kernel/trace/ring_buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/module.h      |  2 ++
+ kernel/module/main.c        |  4 +++
+ kernel/trace/trace_printk.c | 63 ++++++++++++++++++++++++++++---------
+ 3 files changed, 54 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 170170bd8..6811dfffa 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -627,11 +627,11 @@ int ring_buffer_print_page_header(struct trace_buffer *buffer, struct trace_seq
- 			 (unsigned int)sizeof(field.commit),
- 			 (unsigned int)is_signed_type(long));
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 14f391b18..e475466a7 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -515,6 +515,8 @@ struct module {
+ #ifdef CONFIG_TRACING
+ 	unsigned int num_trace_bprintk_fmt;
+ 	const char **trace_bprintk_fmt_start;
++	unsigned int num_tracepoint_strings;
++	const char **tracepoint_strings_start;
+ #endif
+ #ifdef CONFIG_EVENT_TRACING
+ 	struct trace_event_call **trace_events;
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index c3ce106c7..d7d890138 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2672,6 +2672,10 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+ 	mod->trace_bprintk_fmt_start = section_objs(info, "__trace_printk_fmt",
+ 					 sizeof(*mod->trace_bprintk_fmt_start),
+ 					 &mod->num_trace_bprintk_fmt);
++	mod->tracepoint_strings_start =
++		section_objs(info, "__tracepoint_str",
++			     sizeof(*mod->tracepoint_strings_start),
++			     &mod->num_tracepoint_strings);
+ #endif
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 	/* sechdrs[0].sh_size is always zero */
+diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
+index 5ea5e0d76..9f67ce42e 100644
+--- a/kernel/trace/trace_printk.c
++++ b/kernel/trace/trace_printk.c
+@@ -22,8 +22,9 @@
+ #ifdef CONFIG_MODULES
  
--	trace_seq_printf(s, "\tfield: int overwrite;\t"
-+	trace_seq_printf(s, "\tfield: char overwrite;\t"
- 			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
- 			 (unsigned int)offsetof(typeof(field), commit),
- 			 1,
--			 (unsigned int)is_signed_type(long));
-+			 (unsigned int)is_signed_type(char));
+ /*
+- * modules trace_printk()'s formats are autosaved in struct trace_bprintk_fmt
+- * which are queued on trace_bprintk_fmt_list.
++ * modules trace_printk() formats and tracepoint_string() strings are
++ * autosaved in struct trace_bprintk_fmt, which are queued on
++ * trace_bprintk_fmt_list.
+  */
+ static LIST_HEAD(trace_bprintk_fmt_list);
  
- 	trace_seq_printf(s, "\tfield: char data;\t"
- 			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+@@ -33,8 +34,12 @@ static DEFINE_MUTEX(btrace_mutex);
+ struct trace_bprintk_fmt {
+ 	struct list_head list;
+ 	const char *fmt;
++	unsigned int type;
+ };
+ 
++#define TRACE_BPRINTK_TYPE		BIT(0)
++#define TRACE_TRACEPOINT_TYPE		BIT(1)
++
+ static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
+ {
+ 	struct trace_bprintk_fmt *pos;
+@@ -49,22 +54,24 @@ static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
+ 	return NULL;
+ }
+ 
+-static
+-void hold_module_trace_bprintk_format(const char **start, const char **end)
++static void hold_module_trace_format(const char **start, const char **end,
++				     unsigned int type)
+ {
+ 	const char **iter;
+ 	char *fmt;
+ 
+ 	/* allocate the trace_printk per cpu buffers */
+-	if (start != end)
++	if ((type & TRACE_BPRINTK_TYPE) && start != end)
+ 		trace_printk_init_buffers();
+ 
+ 	mutex_lock(&btrace_mutex);
+ 	for (iter = start; iter < end; iter++) {
+ 		struct trace_bprintk_fmt *tb_fmt = lookup_format(*iter);
+ 		if (tb_fmt) {
+-			if (!IS_ERR(tb_fmt))
++			if (!IS_ERR(tb_fmt)) {
++				tb_fmt->type |= type;
+ 				*iter = tb_fmt->fmt;
++			}
+ 			continue;
+ 		}
+ 
+@@ -76,6 +83,7 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
+ 				list_add_tail(&tb_fmt->list, &trace_bprintk_fmt_list);
+ 				strcpy(fmt, *iter);
+ 				tb_fmt->fmt = fmt;
++				tb_fmt->type = type;
+ 			} else
+ 				kfree(tb_fmt);
+ 		}
+@@ -85,17 +93,28 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
+ 	mutex_unlock(&btrace_mutex);
+ }
+ 
+-static int module_trace_bprintk_format_notify(struct notifier_block *self,
+-		unsigned long val, void *data)
++static int module_trace_format_notify(struct notifier_block *self,
++				      unsigned long val, void *data)
+ {
+ 	struct module *mod = data;
++
++	if (val != MODULE_STATE_COMING)
++		return NOTIFY_OK;
++
+ 	if (mod->num_trace_bprintk_fmt) {
+ 		const char **start = mod->trace_bprintk_fmt_start;
+ 		const char **end = start + mod->num_trace_bprintk_fmt;
+ 
+-		if (val == MODULE_STATE_COMING)
+-			hold_module_trace_bprintk_format(start, end);
++		hold_module_trace_format(start, end, TRACE_BPRINTK_TYPE);
++	}
++
++	if (mod->num_tracepoint_strings) {
++		const char **start = mod->tracepoint_strings_start;
++		const char **end = start + mod->num_tracepoint_strings;
++
++		hold_module_trace_format(start, end, TRACE_TRACEPOINT_TYPE);
+ 	}
++
+ 	return NOTIFY_OK;
+ }
+ 
+@@ -171,8 +190,8 @@ static void format_mod_stop(void)
+ 
+ #else /* !CONFIG_MODULES */
+ __init static int
+-module_trace_bprintk_format_notify(struct notifier_block *self,
+-		unsigned long val, void *data)
++module_trace_format_notify(struct notifier_block *self,
++			   unsigned long val, void *data)
+ {
+ 	return NOTIFY_OK;
+ }
+@@ -193,8 +212,8 @@ void trace_printk_control(bool enabled)
+ }
+ 
+ __initdata_or_module static
+-struct notifier_block module_trace_bprintk_format_nb = {
+-	.notifier_call = module_trace_bprintk_format_notify,
++struct notifier_block module_trace_format_nb = {
++	.notifier_call = module_trace_format_notify,
+ };
+ 
+ int __trace_bprintk(unsigned long ip, const char *fmt, ...)
+@@ -254,11 +273,25 @@ EXPORT_SYMBOL_GPL(__ftrace_vprintk);
+ bool trace_is_tracepoint_string(const char *str)
+ {
+ 	const char **ptr = __start___tracepoint_str;
++#ifdef CONFIG_MODULES
++	struct trace_bprintk_fmt *tb_fmt;
++#endif
+ 
+ 	for (ptr = __start___tracepoint_str; ptr < __stop___tracepoint_str; ptr++) {
+ 		if (str == *ptr)
+ 			return true;
+ 	}
++
++#ifdef CONFIG_MODULES
++	mutex_lock(&btrace_mutex);
++	list_for_each_entry(tb_fmt, &trace_bprintk_fmt_list, list) {
++		if ((tb_fmt->type & TRACE_TRACEPOINT_TYPE) && str == tb_fmt->fmt) {
++			mutex_unlock(&btrace_mutex);
++			return true;
++		}
++	}
++	mutex_unlock(&btrace_mutex);
++#endif
+ 	return false;
+ }
+ 
+@@ -824,7 +857,7 @@ fs_initcall(init_trace_printk_function_export);
+ 
+ static __init int init_trace_printk(void)
+ {
+-	return register_module_notifier(&module_trace_bprintk_format_nb);
++	return register_module_notifier(&module_trace_format_nb);
+ }
+ 
+ early_initcall(init_trace_printk);
 -- 
 2.39.5 (Apple Git-154)
 
