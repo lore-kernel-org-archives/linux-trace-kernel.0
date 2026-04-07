@@ -1,211 +1,120 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A9939B96A;
-	Tue,  7 Apr 2026 10:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CFF38B7DB;
+	Tue,  7 Apr 2026 10:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775556815; cv=none; b=XzS/f5Dly5R1dro3QUc6m7yu6Q91+dZ5sNKNDx9Sz8e17dlRK1Ch8rUheRaYRQymVuCPxEV4SmcPvk84cLapyUgSDGCN17o2kIYWXpXuBuKrFN/1buswRshc6KzzV1fgBGtrHRlTVK9GET2LrGGffZCVni01yYtascwBNdcPT5A=
+	t=1775557165; cv=none; b=AMKBJZVNCzSpXWpjHUkVZrOg14nDmXoL48Z5zxDWfsIrvV3BUyVHFCHsjaJI4fyR8Kst2kHqIbxhzgzvIZoLVIbqU4z3Y4VHNKyzCR39WVWYnS3JSVHGPLkzCOd36lSorO7PMAhrTatChAlMUpE2Bd1rYvZwfZTyIvnxXW3ca+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775556815; c=relaxed/simple;
-	bh=8TB9mhnV+UDsCsa+YJUBkm3RCqmydCAOpwWNNY7zJos=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cRA3B9y16gcVcEaXKS3J9/8yp5kprHtBrxoX+AwkvtwbKgkxZEc9oqoR4tls4NXTWzy2oWvRillSMOJBhfw0ym4kBHURLrWBbSHVSd5ZOskgeiiOfZYg6HNkhOaEAR7f5ScQYzVNkMjBpsJgHbuBAk9aFrV8gO8eZmhdSvVMpEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mCyc29DT; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1775557165; c=relaxed/simple;
+	bh=cFu9iV3KLh6c/ypGHNHvXaZZWxQZTF2gBZh7fS9zwAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZsi/7JdIunPl1uXP9AQmDp4VSSLzoSTSd0uq6o6oQkJaXQSofJBMfr6Tv0krztnSX5XH08/lo/wuaEicmEiM75N6JR7bQbhZekD9jXilZlOkKOHIB8N6nRUQC3CSxXl63DDeKxUVAe/GRE2PQiXX/3KCvsKY6gWFX05yMP7Bi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=GOvkyM5G; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mCyc29DT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=jg
-	vPZT0q9a4EzsqYIeRi2BoE4Kq1WDUldFLiTe+/xqg=; b=mCyc29DTWA7y2KKig2
-	qB2AmBPEUbxsN3HEXlMFUkToiahTo1dkBwx2mQDQrERXJxN3YvlgIrfwJcRMmBX4
-	0rwkxxd4+LfeEQCXZlK5nqF6+bqO/59FvDHsLLY/lQ4khtDaKxVmLB8ybWpApceC
-	EfpKoibtN+u8WWDlSglO2qrv0=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wAXOySj2NRpl+1ZDg--.20426S2;
-	Tue, 07 Apr 2026 18:12:53 +0800 (CST)
-From: CaoRuichuang <create0818@163.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	shuah@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Cao Ruichuang <create0818@163.com>
-Subject: [PATCH] selftests/ftrace: Check exact trace_marker_raw payload lengths
-Date: Tue,  7 Apr 2026 18:12:45 +0800
-Message-Id: <20260407101245.78988-1-create0818@163.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="GOvkyM5G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=VFDVchFaNKi+sA5axj4zEOdZ4xD0dqs17PnYt1n9CxA=; b=GOvkyM5G7jzAdaIECXTpX1rw7/
+	eAueMz4oNLqDlnWPSjtO5AFxCddt63pPkjIxjs/opu3PzfJ0OLKQ44ZYIoZsqYrP0vUPYt+4XHOGF
+	JyU4Yyq0hY/4afNIXpgOeNM4mBaB1zZhK8VuQ2vaqdKtMneLgq9r4FM+qL2YBqvQw0HJZyC4yf7N0
+	S0oQUJsbmO4DTU0hcI9qJoM1EDTwul+MnmJNcO7LUkr06yvZIiWdYhanwVs0EiNlRbJ+cUtKW6AQn
+	MGEk3uR8M4mY6U73KE0EsvkqI+ieukyA0fInStERcZBnH1bsAUGHA11/DeE3x84ptqLFKcu2KI95Y
+	HWJjuC0A==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wA3Wd-007ZeC-2m;
+	Tue, 07 Apr 2026 10:19:14 +0000
+Date: Tue, 7 Apr 2026 03:19:09 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, oss@malat.biz, paulmck@kernel.org, rostedt@goodmis.org, 
+	kernel-team@meta.com, Kiryl Shutsemau <kirill@shutemov.name>
+Subject: Re: [PATCH v2] bootconfig: Apply early options from embedded config
+Message-ID: <adTX6h4Ej5jOcONP@gmail.com>
+References: <20260325232204.05edbb21c7602b6408ca007b@kernel.org>
+ <acZPZ4XKy4QynznK@gmail.com>
+ <20260327223744.f246150adc1671f7605a4f0a@kernel.org>
+ <acpzhCBEPh-tKVqg@gmail.com>
+ <acqJk-zbyjIiy6hJ@gmail.com>
+ <20260331125827.157a833882830007ea9b0b31@kernel.org>
+ <acvjcCqIAeHyIiQN@gmail.com>
+ <20260401224853.d8ed517a344c4be51d371a9c@kernel.org>
+ <ac0wz_eW5Zgi4t45@gmail.com>
+ <20260403114519.14e326a4bba019373bf3ff09@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXOySj2NRpl+1ZDg--.20426S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuryDGr4UWw4xCrWDtry8Grg_yoWrAFyfpa
-	ySkFyktrWrJF4jqw1fCw12qryfJ3ZxJ342gFykK34YyryUJrn2q34xKFn0kry7ArZ8JryS
-	va1F9FW8GFs8Z37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR9Z2xUUUUU=
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCvwbuKGnU2KbiEAAA3O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260403114519.14e326a4bba019373bf3ff09@kernel.org>
+X-Debian-User: leitao
 
-From: Cao Ruichuang <create0818@163.com>
+On Fri, Apr 03, 2026 at 11:45:19AM +0900, Masami Hiramatsu wrote:
+> > I'm still uncertain about this approach. The goal is to identify and
+> > categorize the early parameters that are parsed prior to bootconfig
+> > initialization.
+>
+> Yes, if we support early parameters in bootconfig, we need to clarify
+> which parameters are inherently unsupportable, and document it.
+> Currently it is easy to say that it does not support the parameter
+> defined with "early_param()". Similary, maybe we should introduce
+> "arch_param()" or something like it (or support all of them).
+>
+> >
+> > Moreover, this work could become obsolete if bootconfig's initialization
+> > point shifts earlier or later in the boot sequence, necessitating
+> > another comprehensive analysis.
+>
+> If we can init it before calling setup_arch(), yes, we don't need to
+> check it. So that is another option. Do you think it is feasible to
+> support all of them? (Of course, theologically we can do, but the
+> question is the use case and requirements.)
 
-trace_marker_raw.tc currently depends on awk strtonum() and
-assumes that the printed raw-data byte count is rounded up to four
-bytes.
+I don't believe all early parameters can be supported by bootconfig.
+Some are inherently incompatible as far as I understand, while others
+depend on bootconfig's initialization point in the boot sequence.
 
-That makes the test fail on systems that use mawk, and it no longer
-matches the raw_data trace output we want to validate after preserving
-true payload lengths for long records.
+Regarding documenting arch_param(), I need clarification: should we
+document parameters that are currently called before bootconfig (as of
+today), or those that fundamentally cannot be called by bootconfig
+regardless of its location?
 
-Rewrite the test to capture a small sequence of raw marker writes and
-check the exact number of printed payload bytes in order. While doing
-that, use od for the endian probe, switch to a fixed raw marker id so
-the test only varies payload length, and disable pause-on-trace while
-streaming trace_pipe.
+> > Do you have any additional recommendations if I proceed with this
+> > approach?
+>
+> OK,
+>
+> First of all, even if we enable early parameter support in bootconfig,
+> this is only possible if bootconfig is embedded. In that case, we can
+> pass memory that has been pre-allocated at compile time to bootconfig
+> as a working area. However, this will consume a lot of memory, so it
+> needs to be selectable in Kconfig.
+>
+> If you're going to embed this, as Kiryl pointed out[1], it might be better
+> to pass pre-normalized (or compiled) data and avoid using a parser.
+> Compilation itself is relatively easy if you utilize the tools/bootconfig.
+> (However, in this case, there doesn't seem to be much point in using
+>  bootconfig in the first place because we also can use embed kernel
+>  cmdline.)
+>
+> [1] https://lore.kernel.org/all/acueCFv4neO7zQGI@thinkstation/
+>
+> Can you clarify the main reason of requesting this feature and
+> examples?
 
-Signed-off-by: Cao Ruichuang <create0818@163.com>
----
- .../ftrace/test.d/00basic/trace_marker_raw.tc | 93 ++++++++++++-------
- 1 file changed, 59 insertions(+), 34 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-index a2c42e13f..3b37890f8 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-@@ -1,11 +1,11 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Basic tests on writing to trace_marker_raw
--# requires: trace_marker_raw
-+# requires: trace_marker_raw od:program
- # flags: instance
- 
- is_little_endian() {
--	if lscpu | grep -q 'Little Endian'; then
-+	if [ "$(printf '\001\000\000\000' | od -An -tu4 | tr -d '[:space:]')" = "1" ]; then
- 		echo 1;
- 	else
- 		echo 0;
-@@ -34,7 +34,7 @@ make_str() {
- 
- 	data=`printf -- 'X%.0s' $(seq $cnt)`
- 
--	printf "${val}${data}"
-+	printf "%b%s" "${val}" "${data}"
- }
- 
- write_buffer() {
-@@ -47,36 +47,68 @@ write_buffer() {
- 
- 
- test_multiple_writes() {
-+	out_file=$TMPDIR/trace_marker_raw.out
-+	match_file=$TMPDIR/trace_marker_raw.lines
-+	wait_iter=0
-+	pause_on_trace=
-+
-+	if [ -f options/pause-on-trace ]; then
-+		pause_on_trace=`cat options/pause-on-trace`
-+		echo 0 > options/pause-on-trace
-+	fi
-+
-+	: > trace
-+	cat trace_pipe > $out_file &
-+	reader_pid=$!
-+	sleep 1
-+
-+	# Write sizes that cover both the short and long raw-data encodings
-+	# without overflowing the trace buffer before we can verify them.
-+	for i in `seq 1 12`; do
-+		write_buffer 0x12345678 $i
-+	done
- 
--	# Write a bunch of data where the id is the count of
--	# data to write
--	for i in `seq 1 10` `seq 101 110` `seq 1001 1010`; do
--		write_buffer $i $i
-+	while [ "`grep -c ' buf:' $out_file 2> /dev/null || true`" -lt 12 ]; do
-+		wait_iter=$((wait_iter + 1))
-+		if [ $wait_iter -ge 10 ]; then
-+			kill $reader_pid 2> /dev/null || true
-+			wait $reader_pid 2> /dev/null || true
-+			if [ -n "$pause_on_trace" ]; then
-+				echo $pause_on_trace > options/pause-on-trace
-+			fi
-+			return 1
-+		fi
-+		sleep 1
- 	done
- 
- 	# add a little buffer
- 	echo stop > trace_marker
-+	sleep 1
-+	kill $reader_pid 2> /dev/null || true
-+	wait $reader_pid 2> /dev/null || true
-+	if [ -n "$pause_on_trace" ]; then
-+		echo $pause_on_trace > options/pause-on-trace
-+	fi
- 
--	# Check to make sure the number of entries is the id (rounded up by 4)
--	awk '/.*: # [0-9a-f]* / {
--			print;
--			cnt = -1;
--			for (i = 0; i < NF; i++) {
--				# The counter is after the "#" marker
--				if ( $i == "#" ) {
--					i++;
--					cnt = strtonum("0x" $i);
--					num = NF - (i + 1);
--					# The number of items is always rounded up by 4
--					cnt2 = int((cnt + 3) / 4) * 4;
--					if (cnt2 != num) {
--						exit 1;
--					}
--					break;
--				}
--			}
--		}
--	// { if (NR > 30) { exit 0; } } ' trace_pipe;
-+	grep ' buf:' $out_file > $match_file || return 1
-+	if [ "`wc -l < $match_file`" -ne 12 ]; then
-+		cat $match_file
-+		return 1
-+	fi
-+
-+	# Check to make sure the number of byte values matches the id exactly.
-+	for expected in `seq 1 12`; do
-+		line=`sed -n "${expected}p" $match_file`
-+		if [ -z "$line" ]; then
-+			return 1
-+		fi
-+		rest=${line#* buf: }
-+		set -- $rest
-+		if [ "$#" -ne "$expected" ]; then
-+			echo "$line"
-+			return 1
-+		fi
-+	done
- }
- 
- 
-@@ -107,13 +139,6 @@ test_buffer() {
- 
- ORIG=`cat buffer_size_kb`
- 
--# test_multiple_writes test needs at least 12KB buffer
--NEW_SIZE=12
--
--if [ ${ORIG} -lt ${NEW_SIZE} ]; then
--	echo ${NEW_SIZE} > buffer_size_kb
--fi
--
- test_buffer
- if ! test_multiple_writes; then
- 	echo ${ORIG} > buffer_size_kb
--- 
-2.39.5 (Apple Git-154)
-
+My primary objective is to enable early configuration of
+`irqchip.gicv3_pseudo_nmi`, allowing the kernel to support pseudo NMI
+on arm64 by default.
