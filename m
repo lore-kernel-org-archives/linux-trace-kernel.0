@@ -1,320 +1,411 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34723A1E92;
-	Tue,  7 Apr 2026 09:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775553391; cv=none; b=DFiosQfVw/4ROgyOwRVvu7Y/qvHC5RfP0ZMp7jyKlT0sat9o8ofoTPx6K1PvXKzzScX8Jvdjwt9fyb0gJ4Hir5FEwxejVE1C3R2prP5xXUevPmpb936met3lRsoU6qTqTv7mGbZVYtZdESVjDFwZYerGE822EzKVa2EYU8T0FW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775553391; c=relaxed/simple;
-	bh=gBxhHFNYno0dv8TzAKVtDGRkFYkxhHhdIbMctsWg4fM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VNv9YGEoKaPp3F+o4ZEFmNMchZnIh+OKKxMy9q1Shy492CrSpjC48mv8nFpz8a/gRU8CSwOtpOEk+lnTNRjbsLRARFmX/UbSEuDYDfrsmJW2LcqTjApWtsTxAwIvZKOONl2MsQDCnThZPbPHBh3tgRNjDOgcntoB9ITDMBGBo6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UDZoY5U8; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF533A6F07
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 09:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775555174; cv=pass; b=ILj4q8lEVNJARgKTN5SxNjFYpzkfxGxdCSxNHrQC15ZGl4uzI4eSfqU7kUIQRrWezoOfSeJCDklkLWsWgoHmnt48T9egV/ifsFiNdwdxKXKy680/HPaYBFV9Lt9cFqnAptYi2p+xsu44UGHwZhRCSd5q7gdjvfZv/Lh6VHo+ym4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775555174; c=relaxed/simple;
+	bh=h6lhxXkUnK9to4mvDTJLoQRynH+qEyeFNGNMe3B9/Sg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A+OxKb/E0DsYns87tY4wFZHcBfM3lFhA4x7CuhqKloBE/Tyia93OKQ7X2BKinoONsdN9YRDllpzYXiybdBTktRXYnZrbJfRkPdrCFP5xLNWekGaV9Js5YjhX/MQ7N2gs7Fx+fPDDowwbVTtX7sv4cuStuiT1gRR/WD/vvcGMh6s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DDGqBCSI; arc=pass smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UDZoY5U8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=eB
-	L/vrw902qBX3b21thLeqL1AAQC/TNxpOKqcIBjw1g=; b=UDZoY5U8WvjMovVAe1
-	dyUV4jTUqTqQ56jtW2wvU3af7QeC5SkQYgHfhqo2YaSMydy1nSOYevY4KDoIwDLH
-	pL9H1Qh7q1P/FWfJSQYMK5Wy81H/fRhdb6/gAz3rYYCAPg1HMoHsIC7eZOSe6tVa
-	pAPyAijdYt/GHGbUeIZiZK4rs=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDXqB5My9RpoAVQDw--.10006S2;
-	Tue, 07 Apr 2026 17:15:57 +0800 (CST)
-From: Cao Ruichuang <create0818@163.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] ring-buffer: Preserve true payload lengths in long data events
-Date: Tue,  7 Apr 2026 17:15:50 +0800
-Message-Id: <20260407091550.67963-1-create0818@163.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDGqBCSI"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-797ab169454so79200507b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 02:46:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775555168; cv=none;
+        d=google.com; s=arc-20240605;
+        b=I4P/c99u26C7uHQlvDsuFsMd+R5e4u9mGNkDmh9Rc+2xnvggnzlp4BjYqLFBk+O23T
+         bk48Ualt/EvnWU7ronWHhJBi2sDpayxQQFr8EnzA+ZCvQsWDM9w8N+XPdxLXCpuIHwxL
+         6P+aD05bnSC5JfQtLaNhn+N+gUtM648ZH9PaEdIXufL7ExQX2HoYvtPyg/V8Xgv5QSJr
+         wQ4JHDBgpN1geNnJjoQkcfDPpJzx13F9WG4vAbXpt5RBfy6sE+1QWrnyn6MensX/qB96
+         hfZKilbOFsmIUegrqDQUfaZ2vRsC+spUBxAjbrQx7JoiN1smRf4oCuQ0K9ExmHzy/lj0
+         8nlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9E60mk44Eky+PTLd9t+EfmiFZLuGKI0mwfBKJlhAG9Y=;
+        fh=XcDciGBiHj/l7fTgTj+EymKiA/Jn05T7AaHIRsr1A3g=;
+        b=WByD3M95wTklDpZQ6E0JGpug90cm6T3YTH47ACksE9ZWpXJeUfRRyJbMLVYkjNqU+N
+         1c8jR/ds5rgPLT7qar14tihfYR9zV2B0S5hTm7kvb4zev9xyY2/RSmLMMeBNyqBm9Lvn
+         e3dLIu+X2GTI50O61YD0DiiHF+JPddsVjrdup7PsBeDGDt4fwrcbzEpafK8pocSdlOwX
+         lBZwi4vmtblS65tgZhkZnHk2pYQHBv6gmKFbj3wJCP7qqiWaBUQvmIO7qc6sPk7i8drn
+         23ArVh0mdrydOPbXx9/MEj9Q4PKtla4H/poSnsONIMRNVNtG9oXQ9gC4WmhCs7p8kSdS
+         1JIw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775555168; x=1776159968; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9E60mk44Eky+PTLd9t+EfmiFZLuGKI0mwfBKJlhAG9Y=;
+        b=DDGqBCSInwehBp2B1z3jnzM2aWT0BQnQ9xDoQudeZZwVfqPJk0k4Sl/AdnXtEwZE1B
+         hm/PynS6qBFEpyGStOoDUtmIuAtgP94Sih3W6Xe+eHmeD44LzqyRh94G0eDL42wygjoV
+         w2/7QEKaRHAZ8lESkx3jlIRxM9SqsgIoQX5MsTpJzB1AceRn6/nEc0LozvtpDWkpOhWv
+         4ZJy61o1BPNnUCgJhGkI/pEs40CkPSTKmQ6RBdrarASBtkkCvXRyIur2fxvwRUT077I6
+         A+62S1j4uO75SzCakBmOXiT8fsGwr9BgPpxne6Zf5PKOrDUE8NPDF3KTKhmlytl8F5mY
+         /f+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775555168; x=1776159968;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9E60mk44Eky+PTLd9t+EfmiFZLuGKI0mwfBKJlhAG9Y=;
+        b=sSOW0KPR6/+AP8Jdjf19dnVjTTrAf7FcMyKTCcoMuJVGoLsGlHcWZLgux1q4EfsjCt
+         CzlCLSDGDwY6WJd1gHTQ4vqdCbEsEwnzyqqhdxVkayT8xj312kZbhsyqewJYQpjTH6sw
+         HBvyDpI5RKjcNp5OXcKDUWm6yTljUNHpUGOoJn7MozZjtNT7JP0obBgJReFmXJIRygHs
+         IMDFdS0oAJtm9fF+yruHGd9o3sJovNxMhfgXcdZ7ntyomiviANrgh8vs5vJpARYlv1t2
+         NFpsTR9PaKlX0aadtukwj4XoE3pJ+QXRX9J1v5woFjSXIgOi5ymLDIw06uvHlIDZEeb9
+         s59A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3/gtRjMS85OhOvx+9Jj90Xfyfu7U5F59ffKyh03YOKGWhaqnvx5F4l1bSxAGaMq/r9yl0LQ/2LOztbez7Fz0BQc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7YDk++opSAo2lkzxzKnH5jR30+Bxs59m9RpF+q3CWi2wIhscd
+	RAyT4ZvADXdNSNPXfpUOgAnFf6pqaUl741f+dKw9/nylmHJveT5hH39W0gxF/SawyJogBhnTSbK
+	DhPBQY27nSnJQjP2kzAsAFvIbZ7rJHiU=
+X-Gm-Gg: AeBDiesAxQk97+13hOxPZXyjOqy2w/mRtlDbCl1jNAZwPmdJgY6V+KT/oL139yTOvGk
+	ySyhhsS3ih0pTktIWYldVUU/2CU2SEL677rBB+dKFb3g5br96mt3Q5t1pJesU9BgJUnsASmIRO+
+	bixHVeS+r51JwY6W8TT6n4e3SXh6/+6fRh5uKcuBqYJUY9TRUZBkc5fRctzhHn15ioJtHGOQQnm
+	tQvjdcWtIJdE9SBAGExG5lzBWLnEPs2jxnBTHONmndVrEQoPpASotEiD3OmfyC2brWXlCoHoWhS
+	HLfzC1cZDNaEIHFk4aN9Rd2v3rHtEjx8PU+JC/G4L+nKO/kPo2Q=
+X-Received: by 2002:a05:690e:150d:b0:650:131b:6ee4 with SMTP id
+ 956f58d0204a3-6504873abf4mr15220422d50.20.1775555167625; Tue, 07 Apr 2026
+ 02:46:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXqB5My9RpoAVQDw--.10006S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Cw43Wry7GryxWw1DGr13XFb_yoWDWryfpF
-	y3Ka98tw4DXF12vFZ0k3Z8Zry5t3Wvgry7GFZxJw13Xr1UJFnxW3W7Gry2vr4YyrZrKry3
-	tw1UK348C34UZ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j0tC7UUUUU=
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbC6A6VzmnUy04LWgAA3U
+References: <20260402092607.96430-1-laoar.shao@gmail.com> <20260402092607.96430-4-laoar.shao@gmail.com>
+ <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
+ <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
+ <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+ <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+ <adQhpBC2W9I6QW-g@redhat.com> <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
+ <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
+In-Reply-To: <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Tue, 7 Apr 2026 17:45:31 +0800
+X-Gm-Features: AQROBzD5aJ3floxrTMqD4Z-TWySrLI1f76mfxhJm1yktSWIu7d-2oRdLFdvycRA
+Message-ID: <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
+To: Song Liu <song@kernel.org>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>, Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, 
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, kpsingh@kernel.org, 
+	mattbobrowski@google.com, jolsa@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev, 
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Long ring buffer data records currently store the aligned in-buffer size in
-their length field. That makes ring_buffer_event_length() report padded
-sizes, and small TRACE_PRINT / TRACE_RAW_DATA records lose their true
-payload length entirely when they use the short type_len encoding.
+On Tue, Apr 7, 2026 at 11:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
+>
+> On Tue, Apr 7, 2026 at 10:54=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+> >
+> > On Mon, Apr 6, 2026 at 2:12=E2=80=AFPM Joe Lawrence <joe.lawrence@redha=
+t.com> wrote:
+> > [...]
+> > > > > > - The regular livepatches are cumulative, have the replace flag=
+; and
+> > > > > >   are replaceable.
+> > > > > > - The occasional "off-band" livepatches do not have the replace=
+ flag,
+> > > > > >   and are not replaceable.
+> > > > > >
+> > > > > > With this setup, for systems with off-band livepatches loaded, =
+we can
+> > > > > > still release a cumulative livepatch to replace the previous cu=
+mulative
+> > > > > > livepatch. Is this the expected use case?
+> > > > >
+> > > > > That matches our expected use case.
+> > > >
+> > > > If we really want to serve use cases like this, I think we can intr=
+oduce
+> > > > some replace tag concept: Each livepatch will have a tag, u32 numbe=
+r.
+> > > > Newly loaded livepatch will only replace existing livepatch with th=
+e
+> > > > same tag. We can even reuse the existing "bool replace" in klp_patc=
+h,
+> > > > and make it u32: replace=3D0 means no replace; replace > 0 are the
+> > > > replace tag.
+> > > >
+> > > > For current users of cumulative patches, all the livepatch will hav=
+e the
+> > > > same tag, say 1. For your use case, you can assign each user a
+> > > > unique tag. Then all these users can do atomic upgrades of their
+> > > > own livepatches.
+> > > >
+> > > > We may also need to check whether two livepatches of different tags
+> > > > touch the same kernel function. When that happens, the later
+> > > > livepatch should fail to load.
+>
+> That sounds like a viable solution. I'll look into it and see how we
+> can implement it.
 
-Teach long data events to keep the true payload size in array[0], and let
-the ring buffer derive the aligned in-buffer size separately when it needs
-to walk or discard records. Then add a long-reserve helper and use it for
-TRACE_PRINT and TRACE_RAW_DATA so their zero-length-array tails always
-preserve the real payload size.
+Does the following change look good to you ?
 
-The temporary filtered-event buffer keeps the same long-record payload
-length semantics, and a QEMU runtime reproducer for trace_marker_raw now
-reports the expected byte counts again.
+Subject: [PATCH] livepatch: Support scoped atomic replace using replace tag=
+s
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=210173
-Signed-off-by: Cao Ruichuang <create0818@163.com>
+Extend the replace attribute from a boolean to a u32 to act as a replace
+tag. This introduces the following semantics:
+
+  replace =3D 0: Atomic replace is disabled. However, this patch remains
+               eligible to be superseded by others.
+  replace > 0: Enables tagged replace (default is 1). A newly loaded
+               livepatch will only replace existing patches that share the
+               same tag.
+
+To maintain backward compatibility, a patch with replace =3D=3D 0 does not
+trigger an outgoing atomic replace, but remains eligible to be superseded
+by any incoming patch with a valid replace tag.
+
+Suggested-by: Song Liu <song@kernel.org>
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 ---
- include/linux/ring_buffer.h |  2 ++
- kernel/trace/ring_buffer.c  | 56 ++++++++++++++++++++++++++-----------
- kernel/trace/trace.c        |  8 +++---
- kernel/trace/trace.h        | 15 ++++++++++
- kernel/trace/trace_printk.c |  8 +++---
- 5 files changed, 65 insertions(+), 24 deletions(-)
+ .../livepatch/cumulative-patches.rst          | 20 +++++++-----
+ Documentation/livepatch/livepatch.rst         | 31 +++++++++++++------
+ include/linux/livepatch.h                     |  8 +++--
+ kernel/livepatch/core.c                       |  4 +++
+ scripts/livepatch/init.c                      |  6 +---
+ scripts/livepatch/klp-build                   | 11 +++++--
+ 6 files changed, 53 insertions(+), 27 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index d862fa610..a4e46cb53 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -137,6 +137,8 @@ void ring_buffer_change_overwrite(struct trace_buffer *buffer, int val);
- 
- struct ring_buffer_event *ring_buffer_lock_reserve(struct trace_buffer *buffer,
- 						   unsigned long length);
-+struct ring_buffer_event *ring_buffer_lock_reserve_long(struct trace_buffer *buffer,
-+							unsigned long length);
- int ring_buffer_unlock_commit(struct trace_buffer *buffer);
- int ring_buffer_write(struct trace_buffer *buffer,
- 		      unsigned long length, void *data);
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 170170bd8..c9ade62df 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -206,10 +206,14 @@ rb_event_data_length(struct ring_buffer_event *event)
- 	unsigned length;
- 
- 	if (event->type_len)
--		length = event->type_len * RB_ALIGNMENT;
--	else
--		length = event->array[0];
--	return length + RB_EVNT_HDR_SIZE;
-+		return event->type_len * RB_ALIGNMENT + RB_EVNT_HDR_SIZE;
-+
-+	/*
-+	 * Long records store the true payload size in array[0], but still
-+	 * consume an aligned amount of space in the buffer.
-+	 */
-+	length = event->array[0] + RB_EVNT_HDR_SIZE + sizeof(event->array[0]);
-+	return ALIGN(length, RB_ARCH_ALIGNMENT);
- }
- 
- /*
-@@ -276,12 +280,13 @@ unsigned ring_buffer_event_length(struct ring_buffer_event *event)
- 	if (extended_time(event))
- 		event = skip_time_extend(event);
- 
-+	if (!event->type_len)
-+		return event->array[0];
-+
- 	length = rb_event_length(event);
- 	if (event->type_len > RINGBUF_TYPE_DATA_TYPE_LEN_MAX)
- 		return length;
- 	length -= RB_EVNT_HDR_SIZE;
--	if (length > RB_MAX_SMALL_DATA + sizeof(event->array[0]))
--                length -= sizeof(event->array[0]);
- 	return length;
- }
- EXPORT_SYMBOL_GPL(ring_buffer_event_length);
-@@ -463,9 +468,11 @@ struct rb_event_info {
- 	u64			delta;
- 	u64			before;
- 	u64			after;
-+	unsigned long		data_length;
- 	unsigned long		length;
- 	struct buffer_page	*tail_page;
- 	int			add_timestamp;
-+	bool			force_long;
- };
- 
- /*
-@@ -3796,14 +3803,15 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	event->time_delta = delta;
- 	length -= RB_EVNT_HDR_SIZE;
--	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT) {
-+	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT ||
-+	    info->force_long) {
- 		event->type_len = 0;
--		event->array[0] = length;
-+		event->array[0] = info->data_length;
- 	} else
- 		event->type_len = DIV_ROUND_UP(length, RB_ALIGNMENT);
- }
- 
--static unsigned rb_calculate_event_length(unsigned length)
-+static unsigned int rb_calculate_event_length(unsigned int length, bool force_long)
- {
- 	struct ring_buffer_event event; /* Used only for sizeof array */
- 
-@@ -3811,7 +3819,7 @@ static unsigned rb_calculate_event_length(unsigned length)
- 	if (!length)
- 		length++;
- 
--	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT)
-+	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT || force_long)
- 		length += sizeof(event.array[0]);
- 
- 	length += RB_EVNT_HDR_SIZE;
-@@ -4605,7 +4613,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- static __always_inline struct ring_buffer_event *
- rb_reserve_next_event(struct trace_buffer *buffer,
- 		      struct ring_buffer_per_cpu *cpu_buffer,
--		      unsigned long length)
-+		      unsigned long length, bool force_long)
- {
- 	struct ring_buffer_event *event;
- 	struct rb_event_info info;
-@@ -4641,7 +4649,9 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	}
- #endif
- 
--	info.length = rb_calculate_event_length(length);
-+	info.length = rb_calculate_event_length(length, force_long);
-+	info.data_length = length ? : 1;
-+	info.force_long = force_long;
- 
- 	if (ring_buffer_time_stamp_abs(cpu_buffer->buffer)) {
- 		add_ts_default = RB_ADD_STAMP_ABSOLUTE;
-@@ -4698,8 +4708,9 @@ rb_reserve_next_event(struct trace_buffer *buffer,
-  * Must be paired with ring_buffer_unlock_commit, unless NULL is returned.
-  * If NULL is returned, then nothing has been allocated or locked.
-  */
--struct ring_buffer_event *
--ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
-+static struct ring_buffer_event *
-+__ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length,
-+			   bool force_long)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_event *event;
-@@ -4727,7 +4738,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
- 	if (unlikely(trace_recursive_lock(cpu_buffer)))
- 		goto out;
- 
--	event = rb_reserve_next_event(buffer, cpu_buffer, length);
-+	event = rb_reserve_next_event(buffer, cpu_buffer, length, force_long);
- 	if (!event)
- 		goto out_unlock;
- 
-@@ -4739,8 +4750,21 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
- 	preempt_enable_notrace();
- 	return NULL;
- }
-+
-+struct ring_buffer_event *
-+ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
-+{
-+	return __ring_buffer_lock_reserve(buffer, length, false);
-+}
- EXPORT_SYMBOL_GPL(ring_buffer_lock_reserve);
- 
-+struct ring_buffer_event *
-+ring_buffer_lock_reserve_long(struct trace_buffer *buffer, unsigned long length)
-+{
-+	return __ring_buffer_lock_reserve(buffer, length, true);
-+}
-+EXPORT_SYMBOL_GPL(ring_buffer_lock_reserve_long);
-+
- /*
-  * Decrement the entries to the page that an event is on.
-  * The event does not even need to exist, only the pointer
-@@ -4874,7 +4898,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
- 	if (unlikely(trace_recursive_lock(cpu_buffer)))
- 		return -EBUSY;
- 
--	event = rb_reserve_next_event(buffer, cpu_buffer, length);
-+	event = rb_reserve_next_event(buffer, cpu_buffer, length, false);
- 	if (!event)
- 		goto out_unlock;
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a626211ce..ffc1b1e9c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6503,8 +6503,8 @@ static ssize_t write_marker_to_buffer(struct trace_array *tr, const char *buf,
- 	size = cnt + meta_size;
- 
- 	buffer = tr->array_buffer.buffer;
--	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
--					    tracing_gen_ctx());
-+	event = __trace_buffer_lock_reserve_long(buffer, TRACE_PRINT, size,
-+						 tracing_gen_ctx());
- 	if (unlikely(!event)) {
- 		/*
- 		 * If the size was greater than what was allowed, then
-@@ -6917,8 +6917,8 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
- 	if (size > ring_buffer_max_event_size(buffer))
- 		return -EINVAL;
- 
--	event = __trace_buffer_lock_reserve(buffer, TRACE_RAW_DATA, size,
--					    tracing_gen_ctx());
-+	event = __trace_buffer_lock_reserve_long(buffer, TRACE_RAW_DATA, size,
-+						 tracing_gen_ctx());
- 	if (!event)
- 		/* Ring buffer disabled, return as if not open for write */
- 		return -EBADF;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b8f380458..da55717c9 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1613,6 +1613,21 @@ __trace_buffer_lock_reserve(struct trace_buffer *buffer,
- 	return event;
- }
- 
-+static __always_inline struct ring_buffer_event *
-+__trace_buffer_lock_reserve_long(struct trace_buffer *buffer,
-+				 int type,
-+				 unsigned long len,
-+				 unsigned int trace_ctx)
-+{
-+	struct ring_buffer_event *event;
-+
-+	event = ring_buffer_lock_reserve_long(buffer, len);
-+	if (event != NULL)
-+		trace_event_setup(event, type, trace_ctx);
-+
-+	return event;
-+}
-+
- static __always_inline void
- __buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
- {
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index 9f67ce42e..1441b2bd4 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -444,8 +444,8 @@ int __trace_array_puts(struct trace_array *tr, unsigned long ip,
- 	trace_ctx = tracing_gen_ctx();
- 	buffer = tr->array_buffer.buffer;
- 	guard(ring_buffer_nest)(buffer);
--	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc,
--					    trace_ctx);
-+	event = __trace_buffer_lock_reserve_long(buffer, TRACE_PRINT, alloc,
-+						 trace_ctx);
- 	if (!event)
- 		return 0;
- 
-@@ -725,8 +725,8 @@ int __trace_array_vprintk(struct trace_buffer *buffer,
- 
- 	size = sizeof(*entry) + len + 1;
- 	scoped_guard(ring_buffer_nest, buffer) {
--		event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
--						    trace_ctx);
-+		event = __trace_buffer_lock_reserve_long(buffer, TRACE_PRINT, size,
-+							 trace_ctx);
- 		if (!event)
- 			goto out;
- 		entry = ring_buffer_event_data(event);
--- 
-2.39.5 (Apple Git-154)
+diff --git a/Documentation/livepatch/cumulative-patches.rst
+b/Documentation/livepatch/cumulative-patches.rst
+index 1931f318976a..06e90dc5967c 100644
+--- a/Documentation/livepatch/cumulative-patches.rst
++++ b/Documentation/livepatch/cumulative-patches.rst
+@@ -12,23 +12,26 @@ modified the same function in different ways.
 
+ An elegant solution comes with the feature called "Atomic Replace". It all=
+ows
+ creation of so called "Cumulative Patches". They include all wanted change=
+s
+-from all older livepatches and completely replace them in one transition.
++from older livepatches with a matching tag and replace them in one transit=
+ion.
+
+ Usage
+ -----
+
+-The atomic replace can be enabled by setting "replace" flag in struct
+klp_patch,
+-for example::
++he atomic replace can be enabled by setting a non-zero value to the "repla=
+ce"
++attribute in ``struct klp_patch``. This value acts as a **replace tag**,
++defining the scope of the replacement.
++
++For example::
+
+        static struct klp_patch patch =3D {
+                .mod =3D THIS_MODULE,
+                .objs =3D objs,
+-               .replace =3D true,
++               .replace =3D 1,
+        };
+
+ All processes are then migrated to use the code only from the new patch.
+-Once the transition is finished, all older patches are automatically
+-disabled.
++Once the transition is finished, all older patches with the same replace t=
+ag
++are automatically disabled. Patches with different tags remain active.
+
+ Ftrace handlers are transparently removed from functions that are no
+ longer modified by the new cumulative patch.
+@@ -62,9 +65,10 @@ Limitations:
+ ------------
+
+   - Once the operation finishes, there is no straightforward way
+-    to reverse it and restore the replaced patches atomically.
++    to reverse it and restore the replaced patches (with the same tag)
++    atomically.
+
+-    A good practice is to set .replace flag in any released livepatch.
++    A good practice is to set a consistent .replace tag in related livepat=
+ches.
+     Then re-adding an older livepatch is equivalent to downgrading
+     to that patch. This is safe as long as the livepatches do _not_ do
+     extra modifications in (un)patching callbacks or in the module_init()
+diff --git a/Documentation/livepatch/livepatch.rst
+b/Documentation/livepatch/livepatch.rst
+index acb90164929e..1fc1543a22c3 100644
+--- a/Documentation/livepatch/livepatch.rst
++++ b/Documentation/livepatch/livepatch.rst
+@@ -347,15 +347,28 @@ to '0'.
+ 5.3. Replacing
+ --------------
+
+-All enabled patches might get replaced by a cumulative patch that
+-has the .replace flag set.
+-
+-Once the new patch is enabled and the 'transition' finishes then
+-all the functions (struct klp_func) associated with the replaced
+-patches are removed from the corresponding struct klp_ops. Also
+-the ftrace handler is unregistered and the struct klp_ops is
+-freed when the related function is not modified by the new patch
+-and func_stack list becomes empty.
++All currently enabled patches may be superseded by a cumulative patch that
++has the ``.replace`` attribute enabled. The behavior of the replacement
++depends on the value assigned to the replace tag:
++
++replace =3D 0
++    Atomic replace is disabled. However, this patch remains eligible to be
++    superseded by others.
++
++replace > 0
++    Enables tagged atomic replace. Once the new patch is enabled and the
++    transition finishes, the livepatching core identifies all existing
++    patches that share the same replace tag.
++
++Once the transition is complete, all functions (``struct klp_func``)
++associated with the matching replaced patches are removed from the
++corresponding ``struct klp_ops``. If a function is no longer modified by
++the new patch and its ``func_stack`` list becomes empty, the ftrace
++handler is unregistered and the ``struct klp_ops`` is freed.
++
++Patches with a different replace tag are not affected by this process
++and remain active. This allows for the independent management and
++stacking of multiple, non-conflicting livepatch sets.
+
+ See Documentation/livepatch/cumulative-patches.rst for more details.
+
+diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+index ba9e3988c07c..417c67a17b99 100644
+--- a/include/linux/livepatch.h
++++ b/include/linux/livepatch.h
+@@ -123,7 +123,11 @@ struct klp_state {
+  * @mod:       reference to the live patch module
+  * @objs:      object entries for kernel objects to be patched
+  * @states:    system states that can get modified
+- * @replace:   replace all actively used patches
++ * @replace:   replace tag:
++ *             =3D 0: Atomic replace is disabled; however, this patch rema=
+ins
++ *                  eligible to be superseded by others.
++ *             > 0: Atomic replace is enabled. Only existing patches with =
+a
++ *                  matching replace tag will be superseded.
+  * @list:      list node for global list of actively used patches
+  * @kobj:      kobject for sysfs resources
+  * @obj_list:  dynamic list of the object entries
+@@ -137,7 +141,7 @@ struct klp_patch {
+        struct module *mod;
+        struct klp_object *objs;
+        struct klp_state *states;
+-       bool replace;
++       unsigned int replace;
+
+        /* internal */
+        struct list_head list;
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 28d15ba58a26..e4e5c03b0724 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -793,6 +793,8 @@ void klp_free_replaced_patches_async(struct
+klp_patch *new_patch)
+        klp_for_each_patch_safe(old_patch, tmp_patch) {
+                if (old_patch =3D=3D new_patch)
+                        return;
++               if (old_patch->replace && old_patch->replace !=3D
+new_patch->replace)
++                       continue;
+                klp_free_patch_async(old_patch);
+        }
+ }
+@@ -1194,6 +1196,8 @@ void klp_unpatch_replaced_patches(struct
+klp_patch *new_patch)
+        klp_for_each_patch(old_patch) {
+                if (old_patch =3D=3D new_patch)
+                        return;
++               if (old_patch->replace && old_patch->replace !=3D
+new_patch->replace)
++                       continue;
+
+                old_patch->enabled =3D false;
+                klp_unpatch_objects(old_patch);
+diff --git a/scripts/livepatch/init.c b/scripts/livepatch/init.c
+index f14d8c8fb35f..cd00e278a1d2 100644
+--- a/scripts/livepatch/init.c
++++ b/scripts/livepatch/init.c
+@@ -72,11 +72,7 @@ static int __init livepatch_mod_init(void)
+
+        /* TODO patch->states */
+
+-#ifdef KLP_NO_REPLACE
+-       patch->replace =3D false;
+-#else
+-       patch->replace =3D true;
+-#endif
++       patch->replace =3D KLP_REPLACE_TAG;
+
+        return klp_enable_patch(patch);
+
+diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
+index 7b82c7503c2b..9f6a7673304f 100755
+--- a/scripts/livepatch/klp-build
++++ b/scripts/livepatch/klp-build
+@@ -118,6 +118,7 @@ Options:
+    -j, --jobs=3D<jobs>           Build jobs to run simultaneously
+[default: $JOBS]
+    -o, --output=3D<file.ko>      Output file [default: livepatch-<patch-na=
+me>.ko]
+        --no-replace            Disable livepatch atomic replace
++   -t, --replace-tag=3D<tag>     Set the atomic replace tag for this livep=
+atch
+    -v, --verbose               Pass V=3D1 to kernel/module builds
+
+ Advanced Options:
+@@ -142,8 +143,8 @@ process_args() {
+        local long
+        local args
+
+-       short=3D"hfj:o:vdS:T"
+-       long=3D"help,show-first-changed,jobs:,output:,no-replace,verbose,de=
+bug,short-circuit:,keep-tmp"
++       short=3D"hfj:o:t:vdS:T"
++       long=3D"help,show-first-changed,jobs:,output:,no-replace,replace-ta=
+g:,verbose,debug,short-circuit:,keep-tmp"
+
+        args=3D$(getopt --options "$short" --longoptions "$long" -- "$@") |=
+| {
+                echo; usage; exit
+@@ -176,6 +177,10 @@ process_args() {
+                                REPLACE=3D0
+                                shift
+                                ;;
++                       -t | --replace-tag)
++                               REPLACE=3D"$2"
++                               shift 2
++                               ;;
+                        -v | --verbose)
+                                VERBOSE=3D"V=3D1"
+                                shift
+@@ -759,7 +764,7 @@ build_patch_module() {
+
+        cflags=3D("-ffunction-sections")
+        cflags+=3D("-fdata-sections")
+-       [[ $REPLACE -eq 0 ]] && cflags+=3D("-DKLP_NO_REPLACE")
++       cflags+=3D("-DKLP_REPLACE_TAG=3D$REPLACE")
+
+        cmd=3D("make")
+        cmd+=3D("$VERBOSE")
+
+
+--
+Regards
+Yafang
