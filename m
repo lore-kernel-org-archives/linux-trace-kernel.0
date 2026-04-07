@@ -1,177 +1,151 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FB83BA25E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 13:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297082236EE
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 14:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775569929; cv=none; b=s2yjLpIJ84zHs8YETlgdA/2ojYO2szcgaGbO2MMsByJQ/PZzUuX0CMHhmJkFWSbducHyzGvLGD43IJnhpsyU1hVkQT4+787zrQ5TADjEfEGy2Tz0amxhrtzYsjTCaXCr3cokfqmgK0FEgygAlCIxQPJ48/NzrjQfUDG04S0Jq+E=
+	t=1775573039; cv=none; b=Sn7k//7yWqRpckp5r1vtcUGD2u7LUuJpvDn4anhudVELIeGeiT7KShSiYx6lDiu/BrD780a3IzGr067dbJkdYmbz8kluXP3oY7ZVfYJLdDZ/+/Y1k4prwoyrZcLYXWo6r76eXO4QHVPWclIHMaCpGdAEJDfXRTt+mHWkzm5CQ+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775569929; c=relaxed/simple;
-	bh=sZK7slSStiXifygBueGYf8FwIze5xkgJ1HepAoo0Yt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KnV7QVzpVUHOyY9hDlLJhUZ7v6KVFBsEs+BNiPiS/eNrqlK5VH6O1M8OoG8aGP2Rf9IGyTNIeqZoEY7ISIuUSHcBJ42aOaqlm/R6X1XTzhxHihQz9kGFdj2sjD9cAsFZegzMP3L1RkfqShE6QLZq+8X1wbGeDwoJqhCQZaQEWww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CaTXx7l8; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1775573039; c=relaxed/simple;
+	bh=Rg2L4nRM/rmCCsatjSqa4HCUG4hnfLEj0hiBmiJumio=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=uv4qvpkT4y/JtRi1ia/lzp/BOwafva/ItzxIEN+QBzQdEqsxJx4rYFIlttdZiQOh0JnLlgTxd48+++892qc2Pn/7GV3bzWiO+4Ova5s00X79eXoY64RNbV2nXR2oeMBNVB53zSDBEmcIK9X6U5bUP4yam46WfbeN1paDxQtaZSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ntLJzeLG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=OG+wUWl/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CaTXx7l8"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43d23305225so3973242f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 06:52:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ntLJzeLG";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="OG+wUWl/"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 637CcSTO2328037
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 7 Apr 2026 14:43:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	00NWTnAGV7yhJd8/Q9KklSPqk81RRr1EXW2S+gNTCtk=; b=ntLJzeLGPTvhrN8A
+	KfnK88vXvr4V3kMaUnRyELTWksVqxFt3EwUdwALIin+rSWejoZTnq95Sx4yZFyXX
+	cpaOAmTHXlUI6WnREw9WNERNS6Z/NMAk84stup2KAm/HLTkv89nJbeWFmm9nUgh2
+	OCW1iKOpd/CkrbJMUDLUCXiisI/H19Yoi0vUWIIgJTwU1An1p16OWXWIjBMBlX9p
+	QiqUwtilSvDjBiZ7PjFfSd5q12dWeWm/uEUDUkRO2YiC9LSXhlAs7Kisuky5hgFi
+	Ybqq1YH/EgHwBTfKZNXxN0E2thJkfaPDC1UyWZNZNjlY7uxFJ7MshuAVhLhawdFH
+	EBXfYQ==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dcms4u5wp-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 14:43:57 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-35d99c2908cso4457264a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 07:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1775569926; x=1776174726; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9Rj0iJqaS4GtsGFAM2U1MRAy3OlGygjlwynVu1x1N0M=;
-        b=CaTXx7l8HvWAG6a+GaR1PCJsnZRuG1nKQ1Na5vl8yACtI2DLG+vYXeRG5OZUTYGI8D
-         As21YQRdoYqk3RaXvHYcbcvJa3MqrlTVx3XlZpLzl4FzKpuNOpDq8RdFkpz/lYZKqnNk
-         SdzNwjiRS51zUJFHsmvFRzGayGVsId9dis1pEHCq4hOU0wPPstP8BvXW4BfjbhDwPbw8
-         McjyCpuY5obJ+EctwPK3NyCV9iXk96lxFRYH3/KXu7GqUQrWF790QRTCEDRdBmn/lhfV
-         NrsQY1QGEs60/3rbweSty0SdMInRSXaTJaadJA98vjnOo52rkgTzaoyz7AaMBNLOus7g
-         hwSg==
+        d=oss.qualcomm.com; s=google; t=1775573036; x=1776177836; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=00NWTnAGV7yhJd8/Q9KklSPqk81RRr1EXW2S+gNTCtk=;
+        b=OG+wUWl/LLYgLglPLVNXvR0S0f3p78TPPVyq2GdlDCoMkUXEb1Ao6Ls/Bk1SFkg+yA
+         ydoZ7irvihVDgj7A5PdEdbCPYE8GQ6+iSenQYrpZZ+ju4bFfnEsoVLxZTXHfpfLq1wX8
+         8QCu6220ZoUr+OPqAff34b3GDKqcDe0/jCaUf8vYJItkka3LfY2RmhY9ld/jOPI5v+vq
+         BdbBh8y7eVe2eQJQcWhF91gUaJwNMtNCMutepoIrZyamwRh25UCfLQXiR+CTF3To/E7V
+         lVFCQkYFxpVlhzStejCrouALOzr2InWnLEuPvmM+laVfOcMV1z5zojWtHBYJJD8LVpOg
+         ZAWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775569926; x=1776174726;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Rj0iJqaS4GtsGFAM2U1MRAy3OlGygjlwynVu1x1N0M=;
-        b=cXlycHrgvGXhvzdIJOazM/p/b02UubZQjuohKEpMFqWZDGjPd8C9kE2Xjdkv1/a9rj
-         H5dIzIebz1sGB8K08uo3PQBr+Bm3oaoDXykQWDuFI0CpVUvhcdc6Dt/U1zkcxO2Nr08J
-         AMqA5YuAeiZxUIL5jELr4gmKH7h4NUheYc645IkmLocmn1cY1p/iUkvpLB5TegwB/xqd
-         xlbjuiYMhfnX14peoIAyukRBenqoJRyMdMy12ww7Ou2+eN9hINC3VKQ5MVVAIMlroANe
-         k7VZ8MPNTP7BNyHWVK0+DaJgIT6Tv3e65mz7luiDUd5RX6wu6Vdiq+H+Nhg7HZA/7JWX
-         bJdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKDyhUDT0PF8LPM/Fhkz+Ssn50Fu1Op1J0gytwSvyTrzKhXWBjQOAoxY5VO7Fvgm1+286Xp7pex7gRIKMfx2ON+7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSVFXkfNOlZwZ0fJP0LHqzqk4N5154IVoM7+LcBf/ZbGeg0cS0
-	ZxGXAYC+bJzCAtpC3gStwg1g2SQi7kV2JFKQRAKpTJQNdoD8WSLLpRU9Flt0MMmmpzQ=
-X-Gm-Gg: AeBDietSvcVx/vMsSHwHe05UoHeID9MysevxZBExmjoV5ONjLW+yi+UJE7EBH9Bb8M5
-	o27Alzq88Fwu7014HBYWfC08bTpaQRgy612cdwrHiiwGxZvaNgV/KUnP5F6bLgg6qxGtUDrzxFS
-	1TuBYQrveun9tNQNI1e8eeM7TAlnC/x37cK2ekbSUBIm3x1oPTBWuuQDEB1TOxw7GcqVsjKWzVS
-	KuNeM1/wqJJFsM+y0/Y65lnD//FcbwwloQ3y9jeKKVCRH/AVxqPUYgns84/iIN1O+aqKv/Neff5
-	lyUaEK6zlhVV8iM3z29VmGOmghpC57CXuR3vHpfy+8SrF1dNXwxwljbN3/ERSo71GMMD9wqgEKa
-	tiMpujnpCWkoFhaJ82zeN6WubekiPZRrldWOrpBZHLAbfiY4hma178i2oiiRzZGV8NB+kyjjYPT
-	/kP+kOKkZlfQW1ursSOGf+ylftLvQW/S5zS4QbOnoT
-X-Received: by 2002:a05:6000:4282:b0:43b:4352:1bdd with SMTP id ffacd0b85a97d-43d292df38bmr25373308f8f.39.1775569925715;
-        Tue, 07 Apr 2026 06:52:05 -0700 (PDT)
-Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e2c637asm48288462f8f.14.2026.04.07.06.52.03
+        d=1e100.net; s=20251104; t=1775573036; x=1776177836;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=00NWTnAGV7yhJd8/Q9KklSPqk81RRr1EXW2S+gNTCtk=;
+        b=ZTFCld1ItkLvPw8DR7w85nb6v57htOKhiZ3n4//9IHgpzs/kZLIhwAwzv1fZOW+mce
+         CzLwpBPJEEGiU66Ejopr0Tgkemjeynzzw6exNbq5NutU8F2YnrIx96Xs1tNcAxuKkaQs
+         10Pu2OemgpOw38jPcjs7B34VPkTEwAYarwGYTLuW3bV03z3osV/uqAAWf4TxmpDFQI8L
+         Z+EzygDuGqFQhH9R71jO17NPb8KXfMpGwvvILKxJHbiCaBMVwIgfhn4Psjsi7LwsSely
+         LkP9GhgBa19VO/o0nFXU/1hEggKWZfim4bgT6ta14jd3RJ3C6dyZYoUiaXaOMPXr2clj
+         1Z6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUFy/TW0weHCqLR/yCnF+rKzi+Gqgcn+IPbdMd2svdp1REtIfkticQgQVEvqone1XTb+LNagRLy6oD8G30Ei8wybUM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZj9Y2t5LYWX19o0dFkwk1MIcPQbqAXNpYboilyQUHZ6dqHGSB
+	bQmYg4YzvVmarsQJ37SXyLfDexZwuXD8kRQTxAl2gz/GPwgowtJGU8SSZg5Xasf0zFNhp1pc22d
+	uWV6JYlx3I/WWizwPXnCEjKVoEVvjqi83Vm7XuF6jd5AnYa+7vBX/MPYwaAPWczKNIY005huP/K
+	4BNi2N5ug=
+X-Gm-Gg: AeBDieuk/mEnekHvn8CRJiQI+1rO4eHuJzkVNQmhVIIa8thwyFMASWDb2FBqZHJOmSu
+	9VZHS5CYLn9QbM/mg37piyfAU2Bi3uIvxdg74wGfwky3l3LzejeCSR2xd8P0VSBucWS/jApOi5w
+	lIF47QtG0jPsrxpO0uD3csdM/Gh8J6JEzFia3WtTjmIWM1MAXr5ub1K5RZp0EKmhTot9eTNght8
+	rJiJ254EMnj3yHUYfCA6q7SWIaRwoGrCKgCE5mfQMd15aYEBHunTPPSn3mfXWgSXz6El0TOdlhe
+	aaXG9O/OAVGk/ptUnVl5KgzcqWwRM3+c9hGexUJZDDUPoA4khga25BA/EU2yJ93Ldu0S3Vml7GA
+	QF3I//b+r/4ZAWzgaJwZ7
+X-Received: by 2002:a17:90b:2b50:b0:35d:a559:5c1c with SMTP id 98e67ed59e1d1-35de660a07fmr15496008a91.0.1775573036235;
+        Tue, 07 Apr 2026 07:43:56 -0700 (PDT)
+X-Received: by 2002:a17:90b:2b50:b0:35d:a559:5c1c with SMTP id 98e67ed59e1d1-35de660a07fmr15495973a91.0.1775573035680;
+        Tue, 07 Apr 2026 07:43:55 -0700 (PDT)
+Received: from [192.168.1.102] ([120.60.133.76])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dd35e34f9sm17067098a91.1.2026.04.07.07.43.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2026 06:52:05 -0700 (PDT)
-Date: Tue, 7 Apr 2026 15:52:02 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: Song Liu <song@kernel.org>, Dylan Hatch <dylanbhatch@google.com>,
-	jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz,
-	joe.lawrence@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, kpsingh@kernel.org,
-	mattbobrowski@google.com, jolsa@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev,
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to
- klp_patch
-Message-ID: <adUMAsZRAC3dDKsK@pathway.suse.cz>
-References: <20260402092607.96430-1-laoar.shao@gmail.com>
- <20260402092607.96430-4-laoar.shao@gmail.com>
- <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
- <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
- <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
- <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+        Tue, 07 Apr 2026 07:43:54 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+In-Reply-To: <1774403912-210670-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1774403912-210670-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v5 0/3] PCI Controller event and LTSSM tracepoint
+ support
+Message-Id: <177557303192.289344.2616682402332241807.b4-ty@b4>
+Date: Tue, 07 Apr 2026 20:13:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDEzNCBTYWx0ZWRfX5V0rdVHfJdSz
+ ktMA06IJ0UA+a5dePGJVKyZF/uOuvxSqYiTx7bh8pvz2dYv9jDZuVXRdCYdR6U242fH8eC6Zzrb
+ bVtrM5XfP2o14A2JoL0po9wHIVhHAq8HUrhBLOZ3zP6w3P9NXqhWVGxTipl3LUK0ByK52BNKJcv
+ cBOyOXYKW9vjWkm0l5m1nQ2Dx9w3E7V/MFlZdnIfYV7YB1DT9KgnnSKSm8kZHHurpa+LkoOr7NR
+ 7ZuWafbxxAkFZ+tLG0dSS3UJ6xO//rrpVBXHlG/UpTfyPUkEZoA2WhQ8lgy6XJ8tRkzpeg7hyu4
+ 5TaBzk2BqkZOqLBZZFykbCf5tTdl4XvZ2uYKbL3q0bPy5ok7ghf25saDa5uzwRPUABbMaUonxCm
+ 4PPsKrHdYenqHtJmQ/DbLRzKadJsDY2cg3YDsQENl4wlp/8OZxEGC5z/2/RZEocWw/bGytzPV35
+ 9DKHA7/OPvyCxQDWOmA==
+X-Proofpoint-ORIG-GUID: lr_EzkjPFCvRsoqhFs5Xutt3RbK-Xmep
+X-Authority-Analysis: v=2.4 cv=WNZPmHsR c=1 sm=1 tr=0 ts=69d5182d cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=yDxY/ZQAnAaCL67VaoekCQ==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
+ a=VwQbUJbxAAAA:8 a=QCXkDXtUJjd1gO50qw4A:9 a=QEXdDO2ut3YA:10
+ a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-GUID: lr_EzkjPFCvRsoqhFs5Xutt3RbK-Xmep
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-07_03,2026-04-07_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 phishscore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1011 malwarescore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070134
 
-On Mon 2026-04-06 19:08:05, Yafang Shao wrote:
-> On Sat, Apr 4, 2026 at 5:36 AM Song Liu <song@kernel.org> wrote:
-> >
-> > On Fri, Apr 3, 2026 at 1:55 PM Dylan Hatch <dylanbhatch@google.com> wrote:
-> > [...]
-> > > > IIRC, the use case for this change is when multiple users load various
-> > > > livepatch modules on the same system. I still don't believe this is the
-> > > > right way to manage livepatches. That said, I won't really NACK this
-> > > > if other folks think this is a useful option.
-> > >
-> > > In our production fleet, we apply exactly one cumulative livepatch
-> > > module, and we use per-kernel build "livepatch release" branches to
-> > > track the contents of these cumulative livepatches. This model has
-> > > worked relatively well for us, but there are some painpoints.
-> > >
-> > > We are often under pressure to selectively deploy a livepatch fix to
-> > > certain subpopulations of production. If the subpopulation is running
-> > > the same build of everything else, this would require us to introduce
-> > > another branching factor to the "livepatch release" branches --
-> > > something we do not support due to the added toil and complexity.
-> > >
-> > > However, if we had the ability to build "off-band" livepatch modules
-> > > that were marked as non-replaceable, we could support these selective
-> > > patches without the additional branching factor. I will have to
-> > > circulate the idea internally, but to me this seems like a very useful
-> > > option to have in certain cases.
-> >
-> >  IIUC, the plan is:
-> >
-> > - The regular livepatches are cumulative, have the replace flag; and
-> >   are replaceable.
-> > - The occasional "off-band" livepatches do not have the replace flag,
-> >   and are not replaceable.
-> >
-> > With this setup, for systems with off-band livepatches loaded, we can
-> > still release a cumulative livepatch to replace the previous cumulative
-> > livepatch. Is this the expected use case?
+
+On Wed, 25 Mar 2026 09:58:29 +0800, Shawn Lin wrote:
+> This patch-set adds new pci controller event and LTSSM tracepoint used by host drivers
+> which provide LTSSM trace functionality. The first user is pcie-dw-rockchip with a 256
+> Bytes FIFO for recording LTSSM transition.
 > 
-> That matches our expected use case.
+> Testing
+> =========
 > 
-> >
-> > I think there are a few issues with this:
-> > 1. The "off-band" livepatches cannot be replaced atomically. To upgrade
-> >    "off-band' livepatches, we will have to unload the old version and load
-> >    the new version later.
-> 
-> Right. That is how the non-atomic-replace patch works.
-> 
-> > 2. Any conflict with the off-band livepatches and regular livepatches will
-> >    be difficult to manage.
-> 
-> We need to manage this conflict with a complex user script. That said,
-> everything can be controlled from userspace.
->
-> > IOW, we kind removed the benefit of cumulative
-> >    livepatches. For example, what shall we do if we really need two fixes
-> >    to the same kernel functions: one from the original branch, the other
-> >    from the off-band branch?
-> 
-> We run tens of livepatches on our production servers and have never
-> run into this issue. It's an extremely rare case — and if it does
-> happen, a user script should be able to handle it just fine.
+> [...]
 
-Could you please share the script? Or at least summarize the situations
-when this script detect a conflict and refuse loading a livepatch?
+Applied, thanks!
 
-I believe that most/all of these checks can be implemented in the kernel.
-And if we agreed to add a hybrid mode than it should be added
-together with the checks.
+[1/3] PCI: trace: Add PCI controller LTSSM transition tracepoint
+      commit: d1b7add89c004295cd48d7cd49946ed5cb5cbb55
+[2/3] Documentation: tracing: Add PCI controller event documentation
+      commit: a3966a6f915ea7d1af0941ea26848d921e574c45
+[3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
+      commit: a276c0d802d8d2a22088b7919d9e82e936995cf4
 
-We have already invested a lot of effort into make the kernel
-livepatching as safe as possible. From my POV, the most important
-parts are:
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
 
-  + consistency model: Tasks are transitioned separately when they
-       do not use any livepatched function.
-
-  + atomic replace: Transition all livepatched functions at once.
-
-If we agree to add the hybrid model then we should add it with
-some safety belts as well. And it would be nice to get inspiration
-about the safety checks from your script.
-
-Best Regards,
-Petr
