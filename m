@@ -1,329 +1,320 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA80391824;
-	Tue,  7 Apr 2026 08:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34723A1E92;
+	Tue,  7 Apr 2026 09:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775551533; cv=none; b=VUgigVI0HOc4XsCvII/W0WO4XSjhvG9V3qCoho86e/3F5RxU5TtoXjqxrkjx6CKjloFIqdpuitXawUGn3s39S84S7s0A+m5RFE1QkMC0I6fQgLwxFjhqcIMNghHw9QdakIxTLbZG+EGbwr9933P1ZQVtJguO+ZCGdjRtxHrS71k=
+	t=1775553391; cv=none; b=DFiosQfVw/4ROgyOwRVvu7Y/qvHC5RfP0ZMp7jyKlT0sat9o8ofoTPx6K1PvXKzzScX8Jvdjwt9fyb0gJ4Hir5FEwxejVE1C3R2prP5xXUevPmpb936met3lRsoU6qTqTv7mGbZVYtZdESVjDFwZYerGE822EzKVa2EYU8T0FW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775551533; c=relaxed/simple;
-	bh=dvGjIh3oEHuy+ilfQXyNrATuhs+DAJQwGcG8J1TobQk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RPrGCrlNSCZeExz3KBUmzzfm0a2OPx8pkMx9onlleKwaVJmPxhitl/XgRGJdnwnzF5Yv5bD3+PY6RMQhLPzRSg0+yAXulFcbwaKYvSgm8aiTjhN9wkl3fN5coNT/ApVNjmNb7DMUhBrXwkbVngdwq0iDL2NtKOuc6wdR/VM5fRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ud8Bu3YU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775553391; c=relaxed/simple;
+	bh=gBxhHFNYno0dv8TzAKVtDGRkFYkxhHhdIbMctsWg4fM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VNv9YGEoKaPp3F+o4ZEFmNMchZnIh+OKKxMy9q1Shy492CrSpjC48mv8nFpz8a/gRU8CSwOtpOEk+lnTNRjbsLRARFmX/UbSEuDYDfrsmJW2LcqTjApWtsTxAwIvZKOONl2MsQDCnThZPbPHBh3tgRNjDOgcntoB9ITDMBGBo6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UDZoY5U8; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ud8Bu3YU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4124C2BCAF;
-	Tue,  7 Apr 2026 08:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775551533;
-	bh=dvGjIh3oEHuy+ilfQXyNrATuhs+DAJQwGcG8J1TobQk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ud8Bu3YUEFK0ZTsplVqLFyFfPsvaUwyvgrQqaFGggGoDGAoOjIIQtC262lRoxfc7R
-	 4TX/ofhw54MMLQ6UNC4SOKmxQILQAXveIgGJmfsjCmTSQsu49cxwiwbQ6nv+wqGfny
-	 uinPjBDne3M719khbsxA/hiFeqFPiMdfd4SxeoLswxRtu3LxzQNcl+MWH/mW/CwTCz
-	 UA8vQH8lj0TQEWQUXEqb7a9hmZ85TuQz7gJhMzspMGQZ/d3lKh3NUt3wMvNkJqyffM
-	 18ySzsXqj7kM8g76dbV90AwyRSfG1ZDYKy1PJQb94XtPMwxMZe43HfKLK2H38v1Avs
-	 tS5aeGw6jswRg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 07 Apr 2026 10:45:17 +0200
-Subject: [PATCH net-next v2 1/2] mptcp: better mptcp-level RTT estimator
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UDZoY5U8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=eB
+	L/vrw902qBX3b21thLeqL1AAQC/TNxpOKqcIBjw1g=; b=UDZoY5U8WvjMovVAe1
+	dyUV4jTUqTqQ56jtW2wvU3af7QeC5SkQYgHfhqo2YaSMydy1nSOYevY4KDoIwDLH
+	pL9H1Qh7q1P/FWfJSQYMK5Wy81H/fRhdb6/gAz3rYYCAPg1HMoHsIC7eZOSe6tVa
+	pAPyAijdYt/GHGbUeIZiZK4rs=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDXqB5My9RpoAVQDw--.10006S2;
+	Tue, 07 Apr 2026 17:15:57 +0800 (CST)
+From: Cao Ruichuang <create0818@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ring-buffer: Preserve true payload lengths in long data events
+Date: Tue,  7 Apr 2026 17:15:50 +0800
+Message-Id: <20260407091550.67963-1-create0818@163.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260407-net-next-mptcp-reduce-rbuf-v2-1-0d1d135bf6f6@kernel.org>
-References: <20260407-net-next-mptcp-reduce-rbuf-v2-0-0d1d135bf6f6@kernel.org>
-In-Reply-To: <20260407-net-next-mptcp-reduce-rbuf-v2-0-0d1d135bf6f6@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-trace-kernel@vger.kernel.org
-X-Mailer: b4 0.15.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9337; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=6lUJaWCm4aVkC9FsBGIYrnT59bA4kVFx4b9nMMfLbcw=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKvHFFnns7QHLZ2b7z8ubOW0i77vpp/PXJX1JyrQXpua
- qnSrAczO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbyU5nhn1aRiELZN9+THVc2
- 14qzmNspnHaumvrKc0LWN2WdXvu21Qx/BQ7UJS+MT3y9xKzGv3XyeSar/hWW6w6cXW8no6hxfRk
- fAwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXqB5My9RpoAVQDw--.10006S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Cw43Wry7GryxWw1DGr13XFb_yoWDWryfpF
+	y3Ka98tw4DXF12vFZ0k3Z8Zry5t3Wvgry7GFZxJw13Xr1UJFnxW3W7Gry2vr4YyrZrKry3
+	tw1UK348C34UZ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j0tC7UUUUU=
+X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbC6A6VzmnUy04LWgAA3U
 
-From: Paolo Abeni <pabeni@redhat.com>
+Long ring buffer data records currently store the aligned in-buffer size in
+their length field. That makes ring_buffer_event_length() report padded
+sizes, and small TRACE_PRINT / TRACE_RAW_DATA records lose their true
+payload length entirely when they use the short type_len encoding.
 
-The current MPTCP-level RTT estimator has several issues. On high speed
-links, the MPTCP-level receive buffer auto-tuning happens with a
-frequency well above the TCP-level's one. That in turn can cause
-excessive/unneeded receive buffer increase.
+Teach long data events to keep the true payload size in array[0], and let
+the ring buffer derive the aligned in-buffer size separately when it needs
+to walk or discard records. Then add a long-reserve helper and use it for
+TRACE_PRINT and TRACE_RAW_DATA so their zero-length-array tails always
+preserve the real payload size.
 
-On such links, the initial rtt_us value is considerably higher than the
-actual delay, and the current mptcp_rcv_space_adjust() updates
-msk->rcvq_space.rtt_us with a period equal to the such field previous
-value. If the initial rtt_us is 40ms, its first update will happen after
-40ms, even if the subflows see actual RTT orders of magnitude lower.
+The temporary filtered-event buffer keeps the same long-record payload
+length semantics, and a QEMU runtime reproducer for trace_marker_raw now
+reports the expected byte counts again.
 
-Additionally:
-- setting the msk RTT to the maximum among all the subflows RTTs makes
-  DRS constantly overshooting the rcvbuf size when a subflow has
-  considerable higher latency than the other(s).
-
-- during unidirectional bulk transfers with multiple active subflows,
-  the TCP-level RTT estimator occasionally sees considerably higher
-  value than the real link delay, i.e. when the packet scheduler reacts
-  to an incoming ACK on given subflow pushing data on a different
-  subflow.
-
-- currently inactive but still open subflows (i.e. switched to backup
-  mode) are always considered when computing the msk-level RTT.
-
-Address the all the issues above with a more accurate RTT estimation
-strategy: the MPTCP-level RTT is set to the minimum of all the subflows
-actually feeding data into the MPTCP receive buffer, using a small
-sliding window.
-
-While at it, also use EWMA to compute the msk-level scaling_ratio, to
-that MPTCP can avoid traversing the subflow list is
-mptcp_rcv_space_adjust().
-
-Use some care to avoid updating msk and ssk level fields too often.
-
-Fixes: a6b118febbab ("mptcp: add receive buffer auto-tuning")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=210173
+Signed-off-by: Cao Ruichuang <create0818@163.com>
 ---
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
----
-v2:
- - samples[0] was read without READ_ONCE, prev_rtt_us was not used (AI).
----
- include/trace/events/mptcp.h |  2 +-
- net/mptcp/protocol.c         | 63 ++++++++++++++++++++++++--------------------
- net/mptcp/protocol.h         | 37 +++++++++++++++++++++++++-
- 3 files changed, 72 insertions(+), 30 deletions(-)
+ include/linux/ring_buffer.h |  2 ++
+ kernel/trace/ring_buffer.c  | 56 ++++++++++++++++++++++++++-----------
+ kernel/trace/trace.c        |  8 +++---
+ kernel/trace/trace.h        | 15 ++++++++++
+ kernel/trace/trace_printk.c |  8 +++---
+ 5 files changed, 65 insertions(+), 24 deletions(-)
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 269d949b2025..04521acba483 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -219,7 +219,7 @@ TRACE_EVENT(mptcp_rcvbuf_grow,
- 		__be32 *p32;
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index d862fa610..a4e46cb53 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -137,6 +137,8 @@ void ring_buffer_change_overwrite(struct trace_buffer *buffer, int val);
  
- 		__entry->time = time;
--		__entry->rtt_us = msk->rcvq_space.rtt_us >> 3;
-+		__entry->rtt_us = mptcp_rtt_us_est(msk) >> 3;
- 		__entry->copied = msk->rcvq_space.copied;
- 		__entry->inq = mptcp_inq_hint(sk);
- 		__entry->space = msk->rcvq_space.space;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2f4776a4f06a..70a090a95299 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -879,6 +879,32 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
- 	return moved;
+ struct ring_buffer_event *ring_buffer_lock_reserve(struct trace_buffer *buffer,
+ 						   unsigned long length);
++struct ring_buffer_event *ring_buffer_lock_reserve_long(struct trace_buffer *buffer,
++							unsigned long length);
+ int ring_buffer_unlock_commit(struct trace_buffer *buffer);
+ int ring_buffer_write(struct trace_buffer *buffer,
+ 		      unsigned long length, void *data);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 170170bd8..c9ade62df 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -206,10 +206,14 @@ rb_event_data_length(struct ring_buffer_event *event)
+ 	unsigned length;
+ 
+ 	if (event->type_len)
+-		length = event->type_len * RB_ALIGNMENT;
+-	else
+-		length = event->array[0];
+-	return length + RB_EVNT_HDR_SIZE;
++		return event->type_len * RB_ALIGNMENT + RB_EVNT_HDR_SIZE;
++
++	/*
++	 * Long records store the true payload size in array[0], but still
++	 * consume an aligned amount of space in the buffer.
++	 */
++	length = event->array[0] + RB_EVNT_HDR_SIZE + sizeof(event->array[0]);
++	return ALIGN(length, RB_ARCH_ALIGNMENT);
  }
  
-+static void mptcp_rcv_rtt_update(struct mptcp_sock *msk,
-+				 struct mptcp_subflow_context *subflow)
-+{
-+	const struct tcp_sock *tp = tcp_sk(subflow->tcp_sock);
-+	u32 rtt_us = tp->rcv_rtt_est.rtt_us;
-+	int id;
+ /*
+@@ -276,12 +280,13 @@ unsigned ring_buffer_event_length(struct ring_buffer_event *event)
+ 	if (extended_time(event))
+ 		event = skip_time_extend(event);
+ 
++	if (!event->type_len)
++		return event->array[0];
 +
-+	/* Update once per subflow per rcvwnd to avoid touching the msk
-+	 * too often.
-+	 */
-+	if (!rtt_us || tp->rcv_rtt_est.seq == subflow->prev_rtt_seq)
-+		return;
-+
-+	subflow->prev_rtt_seq = tp->rcv_rtt_est.seq;
-+
-+	/* Pairs with READ_ONCE() in mptcp_rtt_us_est(). */
-+	id = msk->rcv_rtt_est.next_sample;
-+	WRITE_ONCE(msk->rcv_rtt_est.samples[id], rtt_us);
-+	if (++msk->rcv_rtt_est.next_sample == MPTCP_RTT_SAMPLES)
-+		msk->rcv_rtt_est.next_sample = 0;
-+
-+	/* EWMA among the incoming subflows */
-+	msk->scaling_ratio = ((msk->scaling_ratio << 3) - msk->scaling_ratio +
-+			     tp->scaling_ratio) >> 3;
-+}
-+
- void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-@@ -892,6 +918,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- 		return;
- 
- 	mptcp_data_lock(sk);
-+	mptcp_rcv_rtt_update(msk, subflow);
- 	if (!sock_owned_by_user(sk)) {
- 		/* Wake-up the reader only for in-sequence data */
- 		if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
-@@ -2095,7 +2122,6 @@ static void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk)
- 
- 	msk->rcvspace_init = 1;
- 	msk->rcvq_space.copied = 0;
--	msk->rcvq_space.rtt_us = 0;
- 
- 	/* initial rcv_space offering made to peer */
- 	msk->rcvq_space.space = min_t(u32, tp->rcv_wnd,
-@@ -2106,15 +2132,15 @@ static void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk)
- 
- /* receive buffer autotuning.  See tcp_rcv_space_adjust for more information.
-  *
-- * Only difference: Use highest rtt estimate of the subflows in use.
-+ * Only difference: Use lowest rtt estimate of the subflows in use, see
-+ * mptcp_rcv_rtt_update() and mptcp_rtt_us_est().
-  */
- static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	u8 scaling_ratio = U8_MAX;
--	u32 time, advmss = 1;
--	u64 rtt_us, mstamp;
-+	u32 time, rtt_us;
-+	u64 mstamp;
- 
- 	msk_owned_by_me(msk);
- 
-@@ -2129,29 +2155,8 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
- 	mstamp = mptcp_stamp();
- 	time = tcp_stamp_us_delta(mstamp, READ_ONCE(msk->rcvq_space.time));
- 
--	rtt_us = msk->rcvq_space.rtt_us;
--	if (rtt_us && time < (rtt_us >> 3))
--		return;
--
--	rtt_us = 0;
--	mptcp_for_each_subflow(msk, subflow) {
--		const struct tcp_sock *tp;
--		u64 sf_rtt_us;
--		u32 sf_advmss;
--
--		tp = tcp_sk(mptcp_subflow_tcp_sock(subflow));
--
--		sf_rtt_us = READ_ONCE(tp->rcv_rtt_est.rtt_us);
--		sf_advmss = READ_ONCE(tp->advmss);
--
--		rtt_us = max(sf_rtt_us, rtt_us);
--		advmss = max(sf_advmss, advmss);
--		scaling_ratio = min(tp->scaling_ratio, scaling_ratio);
--	}
--
--	msk->rcvq_space.rtt_us = rtt_us;
--	msk->scaling_ratio = scaling_ratio;
--	if (time < (rtt_us >> 3) || rtt_us == 0)
-+	rtt_us = mptcp_rtt_us_est(msk);
-+	if (rtt_us == U32_MAX || time < (rtt_us >> 3))
- 		return;
- 
- 	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
-@@ -3015,6 +3020,7 @@ static void __mptcp_init_sock(struct sock *sk)
- 	msk->timer_ival = TCP_RTO_MIN;
- 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
- 	msk->backlog_len = 0;
-+	mptcp_init_rtt_est(msk);
- 
- 	WRITE_ONCE(msk->first, NULL);
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-@@ -3460,6 +3466,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	msk->bytes_retrans = 0;
- 	msk->rcvspace_init = 0;
- 	msk->fastclosing = 0;
-+	mptcp_init_rtt_est(msk);
- 
- 	/* for fallback's sake */
- 	WRITE_ONCE(msk->ack_seq, 0);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1208f317ac33..e1d4783db02f 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -269,6 +269,13 @@ struct mptcp_data_frag {
- 	struct page *page;
+ 	length = rb_event_length(event);
+ 	if (event->type_len > RINGBUF_TYPE_DATA_TYPE_LEN_MAX)
+ 		return length;
+ 	length -= RB_EVNT_HDR_SIZE;
+-	if (length > RB_MAX_SMALL_DATA + sizeof(event->array[0]))
+-                length -= sizeof(event->array[0]);
+ 	return length;
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_event_length);
+@@ -463,9 +468,11 @@ struct rb_event_info {
+ 	u64			delta;
+ 	u64			before;
+ 	u64			after;
++	unsigned long		data_length;
+ 	unsigned long		length;
+ 	struct buffer_page	*tail_page;
+ 	int			add_timestamp;
++	bool			force_long;
  };
  
-+/* Arbitrary compromise between as low as possible to react timely to subflow
-+ * close event and as big as possible to avoid being fouled by biased large
-+ * samples due to peer sending data on a different subflow WRT to the incoming
-+ * ack.
-+ */
-+#define MPTCP_RTT_SAMPLES	5
-+
- /* MPTCP connection sock */
- struct mptcp_sock {
- 	/* inet_connection_sock must be the first member */
-@@ -341,11 +348,17 @@ struct mptcp_sock {
- 				 */
- 	struct mptcp_pm_data	pm;
- 	struct mptcp_sched_ops	*sched;
-+
-+	/* Most recent rtt_us observed by in use incoming subflows. */
-+	struct {
-+		u32	samples[MPTCP_RTT_SAMPLES];
-+		u32	next_sample;
-+	} rcv_rtt_est;
-+
- 	struct {
- 		int	space;	/* bytes copied in last measurement window */
- 		int	copied; /* bytes copied in this measurement window */
- 		u64	time;	/* start time of measurement window */
--		u64	rtt_us; /* last maximum rtt of subflows */
- 	} rcvq_space;
- 	u8		scaling_ratio;
- 	bool		allow_subflows;
-@@ -423,6 +436,27 @@ static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *sk)
- 	return msk->first_pending;
+ /*
+@@ -3796,14 +3803,15 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	event->time_delta = delta;
+ 	length -= RB_EVNT_HDR_SIZE;
+-	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT) {
++	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT ||
++	    info->force_long) {
+ 		event->type_len = 0;
+-		event->array[0] = length;
++		event->array[0] = info->data_length;
+ 	} else
+ 		event->type_len = DIV_ROUND_UP(length, RB_ALIGNMENT);
  }
  
-+static inline void mptcp_init_rtt_est(struct mptcp_sock *msk)
-+{
-+	int i;
-+
-+	for (i = 0; i < MPTCP_RTT_SAMPLES; ++i)
-+		msk->rcv_rtt_est.samples[i] = U32_MAX;
-+	msk->rcv_rtt_est.next_sample = 0;
-+	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
-+}
-+
-+static inline u32 mptcp_rtt_us_est(const struct mptcp_sock *msk)
-+{
-+	u32 rtt_us = READ_ONCE(msk->rcv_rtt_est.samples[0]);
-+	int i;
-+
-+	/* Lockless access of collected samples. */
-+	for (i = 1; i < MPTCP_RTT_SAMPLES; ++i)
-+		rtt_us = min(rtt_us, READ_ONCE(msk->rcv_rtt_est.samples[i]));
-+	return rtt_us;
-+}
-+
- static inline struct mptcp_data_frag *mptcp_send_next(struct sock *sk)
+-static unsigned rb_calculate_event_length(unsigned length)
++static unsigned int rb_calculate_event_length(unsigned int length, bool force_long)
  {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -524,6 +558,7 @@ struct mptcp_subflow_context {
- 	u32	map_data_len;
- 	__wsum	map_data_csum;
- 	u32	map_csum_len;
-+	u32	prev_rtt_seq;
- 	u32	request_mptcp : 1,  /* send MP_CAPABLE */
- 		request_join : 1,   /* send MP_JOIN */
- 		request_bkup : 1,
-
+ 	struct ring_buffer_event event; /* Used only for sizeof array */
+ 
+@@ -3811,7 +3819,7 @@ static unsigned rb_calculate_event_length(unsigned length)
+ 	if (!length)
+ 		length++;
+ 
+-	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT)
++	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT || force_long)
+ 		length += sizeof(event.array[0]);
+ 
+ 	length += RB_EVNT_HDR_SIZE;
+@@ -4605,7 +4613,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ static __always_inline struct ring_buffer_event *
+ rb_reserve_next_event(struct trace_buffer *buffer,
+ 		      struct ring_buffer_per_cpu *cpu_buffer,
+-		      unsigned long length)
++		      unsigned long length, bool force_long)
+ {
+ 	struct ring_buffer_event *event;
+ 	struct rb_event_info info;
+@@ -4641,7 +4649,9 @@ rb_reserve_next_event(struct trace_buffer *buffer,
+ 	}
+ #endif
+ 
+-	info.length = rb_calculate_event_length(length);
++	info.length = rb_calculate_event_length(length, force_long);
++	info.data_length = length ? : 1;
++	info.force_long = force_long;
+ 
+ 	if (ring_buffer_time_stamp_abs(cpu_buffer->buffer)) {
+ 		add_ts_default = RB_ADD_STAMP_ABSOLUTE;
+@@ -4698,8 +4708,9 @@ rb_reserve_next_event(struct trace_buffer *buffer,
+  * Must be paired with ring_buffer_unlock_commit, unless NULL is returned.
+  * If NULL is returned, then nothing has been allocated or locked.
+  */
+-struct ring_buffer_event *
+-ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
++static struct ring_buffer_event *
++__ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length,
++			   bool force_long)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_event *event;
+@@ -4727,7 +4738,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
+ 	if (unlikely(trace_recursive_lock(cpu_buffer)))
+ 		goto out;
+ 
+-	event = rb_reserve_next_event(buffer, cpu_buffer, length);
++	event = rb_reserve_next_event(buffer, cpu_buffer, length, force_long);
+ 	if (!event)
+ 		goto out_unlock;
+ 
+@@ -4739,8 +4750,21 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
+ 	preempt_enable_notrace();
+ 	return NULL;
+ }
++
++struct ring_buffer_event *
++ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
++{
++	return __ring_buffer_lock_reserve(buffer, length, false);
++}
+ EXPORT_SYMBOL_GPL(ring_buffer_lock_reserve);
+ 
++struct ring_buffer_event *
++ring_buffer_lock_reserve_long(struct trace_buffer *buffer, unsigned long length)
++{
++	return __ring_buffer_lock_reserve(buffer, length, true);
++}
++EXPORT_SYMBOL_GPL(ring_buffer_lock_reserve_long);
++
+ /*
+  * Decrement the entries to the page that an event is on.
+  * The event does not even need to exist, only the pointer
+@@ -4874,7 +4898,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
+ 	if (unlikely(trace_recursive_lock(cpu_buffer)))
+ 		return -EBUSY;
+ 
+-	event = rb_reserve_next_event(buffer, cpu_buffer, length);
++	event = rb_reserve_next_event(buffer, cpu_buffer, length, false);
+ 	if (!event)
+ 		goto out_unlock;
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index a626211ce..ffc1b1e9c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6503,8 +6503,8 @@ static ssize_t write_marker_to_buffer(struct trace_array *tr, const char *buf,
+ 	size = cnt + meta_size;
+ 
+ 	buffer = tr->array_buffer.buffer;
+-	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
+-					    tracing_gen_ctx());
++	event = __trace_buffer_lock_reserve_long(buffer, TRACE_PRINT, size,
++						 tracing_gen_ctx());
+ 	if (unlikely(!event)) {
+ 		/*
+ 		 * If the size was greater than what was allowed, then
+@@ -6917,8 +6917,8 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
+ 	if (size > ring_buffer_max_event_size(buffer))
+ 		return -EINVAL;
+ 
+-	event = __trace_buffer_lock_reserve(buffer, TRACE_RAW_DATA, size,
+-					    tracing_gen_ctx());
++	event = __trace_buffer_lock_reserve_long(buffer, TRACE_RAW_DATA, size,
++						 tracing_gen_ctx());
+ 	if (!event)
+ 		/* Ring buffer disabled, return as if not open for write */
+ 		return -EBADF;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index b8f380458..da55717c9 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1613,6 +1613,21 @@ __trace_buffer_lock_reserve(struct trace_buffer *buffer,
+ 	return event;
+ }
+ 
++static __always_inline struct ring_buffer_event *
++__trace_buffer_lock_reserve_long(struct trace_buffer *buffer,
++				 int type,
++				 unsigned long len,
++				 unsigned int trace_ctx)
++{
++	struct ring_buffer_event *event;
++
++	event = ring_buffer_lock_reserve_long(buffer, len);
++	if (event != NULL)
++		trace_event_setup(event, type, trace_ctx);
++
++	return event;
++}
++
+ static __always_inline void
+ __buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
+ {
+diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
+index 9f67ce42e..1441b2bd4 100644
+--- a/kernel/trace/trace_printk.c
++++ b/kernel/trace/trace_printk.c
+@@ -444,8 +444,8 @@ int __trace_array_puts(struct trace_array *tr, unsigned long ip,
+ 	trace_ctx = tracing_gen_ctx();
+ 	buffer = tr->array_buffer.buffer;
+ 	guard(ring_buffer_nest)(buffer);
+-	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc,
+-					    trace_ctx);
++	event = __trace_buffer_lock_reserve_long(buffer, TRACE_PRINT, alloc,
++						 trace_ctx);
+ 	if (!event)
+ 		return 0;
+ 
+@@ -725,8 +725,8 @@ int __trace_array_vprintk(struct trace_buffer *buffer,
+ 
+ 	size = sizeof(*entry) + len + 1;
+ 	scoped_guard(ring_buffer_nest, buffer) {
+-		event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
+-						    trace_ctx);
++		event = __trace_buffer_lock_reserve_long(buffer, TRACE_PRINT, size,
++							 trace_ctx);
+ 		if (!event)
+ 			goto out;
+ 		entry = ring_buffer_event_data(event);
 -- 
-2.53.0
+2.39.5 (Apple Git-154)
 
