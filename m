@@ -1,217 +1,163 @@
-Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019BB37267C
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 03:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3A4487BE
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 03:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775531671; cv=pass; b=tvkuUh7GiB5LM6hkJ8kmb7JCvzISXOwabGM8E//5uBVjsINNkFwpCWqhDs9sixJlLIPP7r3enyDGmghdrHUIQpaUjevU621JOi2plOwx//T0D0wHOt05A0zkND45MKhfsTJlne4ARcCLmOQnw4ab7TPfBSTxQisJWcMxxcq1AGY=
+	t=1775531854; cv=pass; b=Ymq1vDgXI1a5ah2bIQJWCb0ej7x9MhI7PYYb5dEmnVEOtPDJ2QV9rEGDzVqKG5ShwEVSm4PTcvoFKAxyzg9wEgiYaap6YlA6KUfu4q/C4WDgucIyKDhd/43ewb1j5FXety6Q2+F8jc+9FcpqKh9Np3drBvSi/TqZEkZ5CMd0H6A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775531671; c=relaxed/simple;
-	bh=squ6n2HGdHi3UxLO+I4JuWRPtoqYf/aQUuDGYO1d7Ec=;
+	s=arc-20240116; t=1775531854; c=relaxed/simple;
+	bh=6CnKNasyITD4j1QE4XtIgi0X7ZJLQxlz/57w101u5co=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tdpMk4JqFv+oJHC+oAdL9Yl6Y/a0JNBaA2d+tC/fBsevfbJ/i0rtl2y3JIe8VjGjTfIX2usevgOZfeiqXxJhV+W6KboYsKrUf2nzdoFv8Wch1vLnn+sC7byyJHvP6Ifw4U91SahYm8GPQn1KpP4ud9AuGa55+slMJNYzuhwenyA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ahofZkd/; arc=pass smtp.client-ip=74.125.224.43
+	 To:Cc:Content-Type; b=eDjEJZlS6qMiS09jNkw0dI9LamiNajKU/Bol2Zq4PfOSpUtb4CxLp68MEs2Vc52SCLnC926YosbqUutKY3W2LSA2AFflSxgTP1LYE7UsmV64sQYbu7qNybOztHC0qtN+1W26Jqggp+mJYX3LPEvFPq11lACY+oTnLzzrIzk6fBs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s1kt9KFh; arc=pass smtp.client-ip=209.85.128.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahofZkd/"
-Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-6507a9303fbso406405d50.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Apr 2026 20:14:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775531669; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1kt9KFh"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-79ea87af213so80746477b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Apr 2026 20:17:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775531853; cv=none;
         d=google.com; s=arc-20240605;
-        b=JLl4FFi36dGbiJw5+kn2H1ddgt89xtqzfY/fkV4MGuoWknq8SHzYcq2HFCoRRu5KGZ
-         nFJIRvY9N8/hgzotbP2hTLzcMWwzDY723CyrFJEpS6LKB9/o72zSJG/tWiwY43L2P5hH
-         304HudRwyk7XD5sEN6mXtAxVcl5hYdXp1e5qf/0z3N9qtojJThp1BlqmLj8z2LFiF7WK
-         eOmH0ZOVWqsruRxrUK5nvJ1kVbevSlRAPn5wNdKDF+blBAIBbUaB2zn4JmTNloh5urET
-         BmDIi4Uz0ebyvBV+U9+k62uSUy9Daw1s2Y2FvS0UO1/cOinfC9IwVD8eI5z5IYhXUnMz
-         iqSQ==
+        b=HbhgxygKbMcma8pqQuav9dJcFiCrrO4RekUmDP+r4QuGsnWoI+SNs+vPUSV7ePXbf9
+         6WEA+XGeg0VXVq5tob0yGAVJSnDpg4yIpPe0zCRpu3ZQl+58Qs21fEC5rqCiM5PKjZ3N
+         +cYRXaymygVEDJ1fnAisXe/TgcwNrpfGlC9Mp396QKGgn4DNiYZuO6UiqcX4grxXUjEE
+         F8SHl1uI+H9b2+so5YNfiZfzNzEtv16H93fK9D4UHaX7SilKNVKznv/xUAMndkWpRanE
+         v9YZSJGX1AZ4UrlDTxU80xm4viMLW1S6p00XZYB3UsbjqIC99ShlgminYUg8Y0LftX08
+         6qtA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=YxsYtPm2hx4YrAVsbIcCgtwuR/ec20rxpqySMN9Lw4g=;
-        fh=KINmeNlSC0yEo9kSJDQdzQHXPj1pnuEWgwg4lclR0cs=;
-        b=WGq3LyqeqItW5MPj/Um5OmFGm45hPtjT8f8wZNBEOLnXKk5VayAjCoTkHNeYUtyEHa
-         BfRTV5DRkfFNX0RBPosaf83LjVdc7hC9Mn6ao7gC6u7sdp/rxb+s532hQ+Hpk/0dJn3M
-         I+lSaA9OyyAffzmi4myjbfm4+ZiMMs2iX2TctIAARU4mR78srldumX9l8cdvGwUgVTVm
-         yi18ERKv65LX2ILcQ9WExWPnpVNVNkbLCNRwLD7pg1naFerPXoeSKNxTY2BghIge/dNQ
-         tS24jn5O9hhgLzrZFaB+pzG3zYt+3Xe+M06ytU+1de0SYz+cLh6tXDpw6ItY8wczWYCC
-         quXQ==;
+        bh=n13KGfoQXw/JheUE7BLN4ftaWLYzsgUyZfU3shLQ6UE=;
+        fh=aN258enkUWLQvsq7RhHl8HwpwOJSMq4vMufaycdSpus=;
+        b=T6ybx/ujdqJPXgQFSeLEirkbAP70S8EVuKgvh56NdnZG1Vi4givmt2TsxiMcDMcG4x
+         Xg6xpMtzKqw6jS5r+NBuGTgFyiytUNvlgE11OonRDkaDcCNqjDaSVJob5Yjr47ZafaZZ
+         hd+WlXwBB4xeVjBst+Ou8nU9UqA22QEUKZ3zdOclkQh5QzUBmS6dH4BIsaJqulCCwVFm
+         7z2B8IrGWUVv0UFtrhfCOiGYk7WHmgG1/Ljf8k0iIl6fudn/lZ2vMEwCzx3ncaYe5UKs
+         9ZKMguLGYeCm/Essse9jyj3CrgtNbbp0dzvr+QwVQAF+eyuu/qDyDACyXTLKavJ3H65c
+         /kjw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775531669; x=1776136469; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775531853; x=1776136653; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YxsYtPm2hx4YrAVsbIcCgtwuR/ec20rxpqySMN9Lw4g=;
-        b=ahofZkd/LDlzScpDFA08CbGu322YcV4lsdhPZDiDybFzOFhhNMo91dxCK37eMiltP6
-         piG9ccJBTZzI9Z/BFScbfzMqc+xrZPrjgPZU1WBhVsJuhi6LAMexV8yl5LrnTe0c9Dxb
-         Ys/7q0YZL+Coc3YuQUyijjudvKeiRt8F/aGq5F0ybfwNVSlyRLzxyPJNYHTr8zVkCWWB
-         7ruYtyD2gMzC55+bnislk1Iye22fSsO9r2fnoT4j/fX4wZkTwSGb2cIwL/ZYFcgKgZfR
-         b+aP2My5fP72z7x0UvXM6thljPQ9IB6X619zMo7zgTyo8oe1bofWQ041jthxJzV3k1HL
-         dBsw==
+        bh=n13KGfoQXw/JheUE7BLN4ftaWLYzsgUyZfU3shLQ6UE=;
+        b=s1kt9KFh5RKKNomECIut4vs912QYz8t6mRnyIuks8WbKpdymCjd99HDaBQf0ZMKu6A
+         tDF/q+L3Yodlx5dhvQwJRmFlggUPqJ27A4GcIL5YagBNkhdyJgOAO/i78q55J4SE4lJa
+         GOlx12r59F7wbWfjlmfta+70FjXODYtV1mxacIrr2aLt3UYcZQPptsdMxfm8r3hXfui3
+         k3dd3JjxvPwJ2lX1Q/yU8jxr4fPtof5A9s1rSbgeIMZWXzTYbVPCQccBCiDPi8+M3gRF
+         tKHUgYZu8stbCmEgclbqWCzC24m8QVX8b6FVHIR3Wt/hCVON11rxhaFDQ7y++FnpFhGF
+         4n0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775531669; x=1776136469;
+        d=1e100.net; s=20251104; t=1775531853; x=1776136653;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=YxsYtPm2hx4YrAVsbIcCgtwuR/ec20rxpqySMN9Lw4g=;
-        b=LcaElnPaZMHRdpfNWZG55zGgBi8b/jfBozYR9zPXVZgSRHoEQ5jTag/GJ2T8sBNF1j
-         9JA+HxjwnU7EV9Pug+KMlYPtpNaFraNyT4UduCHpTLJKZq2lloU7QyVkLHWCBYytYGs1
-         ok25MgaW8nJkccfNwrQC72cZt7qZWK14N9JtITX7pXXdW97LDrrUFtMoRro09TBw69Uz
-         0ZOdOlgelrDKKhgtD+xs1VodrXbfon98d6ICooHMYdaUKgcGHPGSYp6x+dybHCZ3nkGb
-         of648vK8vFOwReNQcoq2RmNYzk2L6bVJlFfV56tHIAwbHP79risahE5hkm/CzSrpkZyw
-         EfmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUT9UMbJzWhQaFDw1kDEilwDBE66WhRSbX2ILgupCJtQItAQsQXKv8a6e5WHq/ws58VWKXIYkrdKmwpuXQacQ2fv6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx58B2h38eKEh/4G2MtBLt/ZMYGAYkVN9Y0O+OOTGQUqO9kul5v
-	jggILBOTzOqIa5LkCGLA74FgDbPNZugXUsUmEWbHQQ++jzi/dc15Rqlcc/8JMF4ahQf/J8YFpY9
-	loiXt9e7o1vZej9Cy3/HqvorSX2fGsQw=
-X-Gm-Gg: AeBDiesNlHRjs0VPemdIIkFmeq9EqVcEtBms4yFkE/3vOfd0oMfhyyVyI3JWhXudhEf
-	XKmnrMIGZNQYn2S2samWdwVNx1QigAuMMgi3Pjsir4Ty+GSOjPpZPjsyG2E8+8H5+ZDpLO+gzI3
-	2SdMQPhYW33OzqKNVpFxCHhUw5T+DTEn2i3x6PbsplGY+Ap7VoeCVJDYk13TE/aB+0NToKinQKd
-	zp5mfgoO9dCr21LgURi6u0WbPeIhuynox/WYswmi3lW8XqDOb1ZCHhaNzJl55QfMfgnLR+yxrgQ
-	5fI7eLB7/PIo3oyGrMoXKSb170kz4641ysKhZsRv
-X-Received: by 2002:a05:690e:304:b0:650:3bbc:57a7 with SMTP id
- 956f58d0204a3-65048746577mr10316392d50.25.1775531668967; Mon, 06 Apr 2026
- 20:14:28 -0700 (PDT)
+        bh=n13KGfoQXw/JheUE7BLN4ftaWLYzsgUyZfU3shLQ6UE=;
+        b=searNl+5Eez9RAP5blPTc9Ba5zmY30oxzcurwtNWpyCWz1naBktbFJzc9mGJAnw8cl
+         g0jzX9C0QPTd2ILzlUTUQVy4wDVCyi60WjZziA4Z3V0yfwpYs6/PX68f5VrzBQQiN3r4
+         OBmKJHHyQ7EoTJiwOEnPELzlanBDEnQFEWM1eTGNfOAx3E8Gn4DmZ6VqKK2Up9Omn+5D
+         xo+iOCe8TYHRvPpYeERyT4PMOjzLgV+Yt9I9WHNhCmBKPGnNNgc09bEBPl64GaPHV4w1
+         VdDxgVNMfOgpddgMkR0C1kBFggraoy8ANdnh/QdZjYHtym9fC6gpd2VyxDwBLR3qL6vu
+         0+zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbqyp7VyUZ2IfTJO0a+lTct0nZzQmcfxlFdCEkiUQU4a1W3vAxzSLsjCYnsK9BHkuNKMD7HhaSlV0PbvPXdvywCew=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz80uNHapq9ObQj+jadPaG+aH8GR3y9V+P581WxKWK1BCEJJEIu
+	8IOTYsVVUyu4BjPEBP3IP2O8y98snBDjzPCIB1/Xtfg8wsvpVb2lrFtqE0I0fR/FwSXhTILSFer
+	QxO7AW+b7NDyn0LOaYU3TryWy+4i3mUg=
+X-Gm-Gg: AeBDietINvgmsRADnJ+3BDNzVsW1akjhbLP3o9QMne9UwB26esOFjyVc5By4qh73+JD
+	fWaLP4M+OQ5vbFBScShq8lwJC1ZXAxQv/sNZPEXSFuCx4LA3nGJaAgltFZNm/c2ou+q1hgzMW7a
+	DZC67VKJuJ7FmOhY/e5xPMU+KuMeEwSZvKj59Bbzr0m4EQcz7rKPHPZnr8m7w0HTNVs1b179MgY
+	HaIFs7rA2QgOZ3+Zu6nQ0FISzC4MdvZv60zljJ2Zkj6ZQG9zi9sOoE/faJ3NDTo8w7B/rq/lt+5
+	OAzT6B9s9UZsp0aB4L43da+D89HVxr9SdssvCVG2H3vMIXY3Ghw=
+X-Received: by 2002:a05:690e:1c09:b0:650:7b9f:2cdd with SMTP id
+ 956f58d0204a3-6507b9f3331mr921741d50.19.1775531852696; Mon, 06 Apr 2026
+ 20:17:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260402092607.96430-1-laoar.shao@gmail.com> <CAPhsuW7Y5KksWM49TrGH_Hohaq02XO8qs7G99Y6D8=0usLFSrQ@mail.gmail.com>
- <CALOAHbDG8=eUV53kF+xn=izs2rpydCk=a9RznU-EEOzmkB8mQg@mail.gmail.com>
- <CAPhsuW73qFybHgOnZ=oFC1PvdWkYWDk7gsAoiBXe4xWYagPrmA@mail.gmail.com>
- <CALOAHbC0hqk+yrUZay01EBRNOHgyj1MAavzNK-06XJKK9ARMqQ@mail.gmail.com> <CAPhsuW5MN6ikKmxgqby5RJ3_gvjJ4B77X74OvfbTQoFO8iUgzA@mail.gmail.com>
-In-Reply-To: <CAPhsuW5MN6ikKmxgqby5RJ3_gvjJ4B77X74OvfbTQoFO8iUgzA@mail.gmail.com>
+References: <20260402092607.96430-1-laoar.shao@gmail.com> <20260402092607.96430-4-laoar.shao@gmail.com>
+ <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
+ <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
+ <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+ <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+ <adQhpBC2W9I6QW-g@redhat.com> <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
+In-Reply-To: <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
 From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 7 Apr 2026 11:13:51 +0800
-X-Gm-Features: AQROBzAwoTocrSdgLlq9jjuaEvd25BiOxk_ha4-MCiHen7ISJudiyPIWC0L9dTA
-Message-ID: <CALOAHbAmTAfamStF9sZtO6efWYJ1sbXJp3PbsVapZf7dba91ig@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] trace, livepatch: Allow kprobe return overriding
- for livepatched functions
+Date: Tue, 7 Apr 2026 11:16:56 +0800
+X-Gm-Features: AQROBzAxg6OOezCNjm_WO_2NQj3cYCfJeAVYvX9rzsZKOm4J2VwnmP_iFBuGkkQ
+Message-ID: <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
 To: Song Liu <song@kernel.org>
-Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, 
-	joe.lawrence@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, kpsingh@kernel.org, mattbobrowski@google.com, 
-	jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
-	yonghong.song@linux.dev, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+Cc: Joe Lawrence <joe.lawrence@redhat.com>, Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, 
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, kpsingh@kernel.org, 
+	mattbobrowski@google.com, jolsa@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev, 
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 7, 2026 at 10:47=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+On Tue, Apr 7, 2026 at 10:54=E2=80=AFAM Song Liu <song@kernel.org> wrote:
 >
-> On Mon, Apr 6, 2026 at 7:22=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com>=
- wrote:
-> >
-> > On Tue, Apr 7, 2026 at 2:26=E2=80=AFAM Song Liu <song@kernel.org> wrote=
-:
-> > >
-> > > On Mon, Apr 6, 2026 at 3:55=E2=80=AFAM Yafang Shao <laoar.shao@gmail.=
+> On Mon, Apr 6, 2026 at 2:12=E2=80=AFPM Joe Lawrence <joe.lawrence@redhat.=
 com> wrote:
-> > > >
-> > > > On Sat, Apr 4, 2026 at 12:07=E2=80=AFAM Song Liu <song@kernel.org> =
-wrote:
+> [...]
+> > > > > - The regular livepatches are cumulative, have the replace flag; =
+and
+> > > > >   are replaceable.
+> > > > > - The occasional "off-band" livepatches do not have the replace f=
+lag,
+> > > > >   and are not replaceable.
 > > > > >
-> > > > > Hi Yafang,
-> > > > >
-> > > > > On Thu, Apr 2, 2026 at 2:26=E2=80=AFAM Yafang Shao <laoar.shao@gm=
-ail.com> wrote:
-> > > > > >
-> > > > > > Livepatching allows for rapid experimentation with new kernel f=
-eatures
-> > > > > > without interrupting production workloads. However, static live=
-patches lack
-> > > > > > the flexibility required to tune features based on task-specifi=
-c attributes,
-> > > > > > such as cgroup membership, which is critical in multi-tenant k8=
-s
-> > > > > > environments. Furthermore, hardcoding logic into a livepatch pr=
-events
-> > > > > > dynamic adjustments based on the runtime environment.
-> > > > > >
-> > > > > > To address this, we propose a hybrid approach using BPF. Our pr=
-oduction use
-> > > > > > case involves:
-> > > > > >
-> > > > > > 1. Deploying a Livepatch function to serve as a stable BPF hook=
-.
-> > > > > >
-> > > > > > 2. Utilizing bpf_override_return() to dynamically modify the re=
-turn value
-> > > > > >    of that hook based on the current task's context.
-> > > > >
-> > > > > Could you please provide a specific use case that can benefit fro=
-m this?
-> > > > > AFAICT, livepatch is more flexible but risky (may cause crash); w=
-hile
-> > > > > BPF is safe, but less flexible. The combination you are proposing=
- seems
-> > > > > to get the worse of the two sides. Maybe it can indeed get the be=
-nefit of
-> > > > > both sides in some cases, but I cannot think of such examples.
-> > > > >
+> > > > > With this setup, for systems with off-band livepatches loaded, we=
+ can
+> > > > > still release a cumulative livepatch to replace the previous cumu=
+lative
+> > > > > livepatch. Is this the expected use case?
 > > > >
-> > > > Here is an example we recently deployed on our production servers:
-> > > >
-> > > >   https://lore.kernel.org/bpf/CALOAHbDnNba_w_nWH3-S9GAXw0+VKuLTh1gy=
-5hy9Yqgeo4C0iA@mail.gmail.com/
-> > > >
-> > > > In one of our specific clusters, we needed to send BGP traffic out
-> > > > through specific NICs based on the destination IP. To achieve this
-> > > > without interrupting service, we live-patched
-> > > > bond_xmit_3ad_xor_slave_get(), added a new hook called
-> > > > bond_get_slave_hook(), and then ran a BPF program attached to that
-> > > > hook to select the outgoing NIC from the SKB. This allowed us to
-> > > > rapidly deploy the feature with zero downtime.
+> > > > That matches our expected use case.
 > > >
-> > > I guess the idea here is: keep the risk part simple, and implement
-> > > it in module/livepatch, then use BPF for the flexible and programmabl=
-e
-> > > part safe.
-> >
-> > Right
-> >
+> > > If we really want to serve use cases like this, I think we can introd=
+uce
+> > > some replace tag concept: Each livepatch will have a tag, u32 number.
+> > > Newly loaded livepatch will only replace existing livepatch with the
+> > > same tag. We can even reuse the existing "bool replace" in klp_patch,
+> > > and make it u32: replace=3D0 means no replace; replace > 0 are the
+> > > replace tag.
 > > >
-> > > Can we use struct_ops instead of bpf_override_return for this case?
-> > > This should make the solution more flexible.
-> >
-> > Upstreaming struct_ops based BPF hooks is a challenging process, as
-> > seen in these examples:
-> >
-> >   https://lwn.net/Articles/1054030/
-> >   https://lwn.net/Articles/1043548/
-> >
-> > Even when successful, upstreaming can take a significant amount of
-> > time=E2=80=94often longer than our production requirements allow. To br=
-idge
-> > this gap, we developed this livepatch+BPF solution. This allows us to
-> > rapidly deploy new features without maintaining custom hooks in our
-> > local kernel. Because these livepatch-based hooks are lightweight,
-> > they minimize maintenance overhead and simplify kernel upgrades (e.g.,
-> > from 6.1 to 6.18).
->
-> I didn't mean upstream struct_ops.
->
-> We can define the struct_ops in an OOT kernel module. Then we
-> can attach BPF programs to the struct_ops. We may need
-> livepatch to connect the new struct_ops to original kernel logic.
->
-> I think kernel side of this solution is mostly available, but we may
-> need some work on the toolchain side.
->
-> Does this make sense?
+> > > For current users of cumulative patches, all the livepatch will have =
+the
+> > > same tag, say 1. For your use case, you can assign each user a
+> > > unique tag. Then all these users can do atomic upgrades of their
+> > > own livepatches.
+> > >
+> > > We may also need to check whether two livepatches of different tags
+> > > touch the same kernel function. When that happens, the later
+> > > livepatch should fail to load.
 
-Are there actual benefits to using struct_ops instead of
-bpf_override_return? So far, I=E2=80=99ve only found it adds complexity
-without much gain.
-Can we add something like ALLOW_LIVEPATCH_ERROR_INJECTION() to allow
-error injection on functions defined inside a livepatch?
+That sounds like a viable solution. I'll look into it and see how we
+can implement it.
+
+> > >
+> > > Does this make sense?
+> > >
+> >
+> > I haven't been following the thread carefully, but could the Livepatch
+> > system state API (see Documentation/livepatch/system-state.rst) be
+> > leveraged somehow instead of adding further replace semantics?
+>
+> AFAICT, system state will not help Yafang's use case.
+
+Right.
 
 --=20
 Regards
