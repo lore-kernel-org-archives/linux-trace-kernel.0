@@ -1,258 +1,71 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741FA35F5FE
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 15:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF4D3C0602;
+	Tue,  7 Apr 2026 15:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775574488; cv=none; b=tWrNckNWWoUWhHcgRkx8KTRjCh9Oqaapv4F350hK+tBvicHs5GO3MR+HNvZSfTwgMP3JjdwtRhRBFn9MkYuoPxzD+EbextBMcmLg/4EAUCX+FSi5nZlTi6hS7RhIzyI0EEH6gKLM6Pj6RU9iuHuFFQlJytHweIUNmE4DMjvmmuk=
+	t=1775576831; cv=none; b=BiPvF5H3ufw0b37LArcvN7GzT1pzwKH/Fy2DFxSbcdUo+mXrOM2ZDa8j731oJg7quwGk/a0IVaS0QHCRgbbb/vX0Av1+ZQffd/vclzif9HMk4yJQPdrCeV9HpiZV8LAsMg9mzVxDrORql6yuW9OxHmVVwDlV4+48yqpbhPM9SYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775574488; c=relaxed/simple;
-	bh=ty0KOjKQyTnZaKdoshASSXSZqQBi5bCYN1Ysfs56ZTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7moHkB4Fmkg5l0NnsLhitPLc9IPO9KwY/zeidWXfdedq0O8s+Uo23uRrW241HbkUE+eCdVgHGl57Row4sY5QiHwRaWoelT4ecvBhlNN92mREwQ2m+izrs9144j6WvjtBv3iRifKyjxLkEVrkZiXG5wMSkb1kIlYJaeGaRtWN6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fdh61hJ2; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fdh61hJ2"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488a29e6110so32888875e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 08:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1775574485; x=1776179285; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iGjzV8IRrkdKa9tu7b5Wnqj/M+3GwqIJMX4TAs0mafs=;
-        b=Fdh61hJ2egMuHDvAbE6gAEG/65sTZblgScVS+1N3Vj1HG+HKR43vGkI0SxB6dluWUn
-         onOkN9rBRgcJ9rtrNZijPd0J19K4tq4AU9Q9ZqTQHWaw4ZvLTGUIaawaWSmzHKF1emy+
-         N947KqfTVR1hijj1VCrVR6wrLIhVNr6MUmUD+7EPTpCv7eSEskkIFRo1shKkZkTuNCzD
-         wdrqhes8jYnbjdBPzU1ryaGArly3DhzaQbWX9Q5IrvkW61ZJQAHL1RhTZkWITIV8nwEb
-         DuhMeFtjHXFc+FqRGPjhR8r4LbRXvwMQHHcCZyEEyQjyfRv1fgrB9B7PHNXHYqo6Gem6
-         ZJkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775574485; x=1776179285;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iGjzV8IRrkdKa9tu7b5Wnqj/M+3GwqIJMX4TAs0mafs=;
-        b=C9irJyQP7I4W0Ipvieyx6XJAtolFhwDORseoUmOmmbyy8kwyzXWdRMi7ohu2w4wiET
-         RM55/YR3QOR/lYThL0BskYXtILmdzDkRIUw5IuDr9/uQONrImsjQlBFfWnuLlS/UXLhn
-         C4mP3E4phk972f6WuiXnRboMsjnrRLPsfqIXUHrRGOFBzS5HVtNCW0JM7vSTajZK/fK3
-         8ddYf8ILyRy/KDmbeDKGDK0V2BYIppsYaBQXuHAEj2w11W48kmKtUHn0Cr0V09n+sNCO
-         cOHRUAjhul4mRt+ajHFLu8V+MSNBu0B6AJFAqUMSdnECbD+lLGYDa4u6lVHHxu09gO09
-         pVyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCu6XaoMLgDOM1norCtuusskR/jHyK9ZkXN0/eIwHk5InMrV1FHr3VX8qzHskZeqnOUuR6SU+dStdlnw8DQWFx9FY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR07WsRkfTMnL7pKYDM4Uqpvz1IyyZra2pjynjVRVkXOb9xy5d
-	/dYpI4ZLGRcjgrwS3iubiJFEkMvEx34pzDAyCB61hMbztJnd5S6UhKfNjh1w03auO2Q=
-X-Gm-Gg: AeBDieso2sZoETyNAdFOcFyiRReb0lQ+jCLn3EtgJxbMltmLhy+jr7C8dqNCdN79HEj
-	9cCpdYoZRrPgS+IdKS5qoCKG5Pd7CkaFXhAppt0QMjlnwIsWwXSau2XCkS8Qvd6yc0wRthixXCC
-	MJesqRezTxPHE6p0CsTDKGUm/xSVb6vPMwytaRmhk8fohnpPuua0uL62HFIuqJ8Z4SjbC7z7Awh
-	SmcTM29UkZocTs64oX6w+4H2nTKmy08EkTd4IVXFhRQ1C6EIctVAn5tZSuwb15+QEz5z9+cwH/5
-	Q2LHCJHbbsyWjuZSsbDPNC1+U0+kbeOHcCWD6SYSOJrO6LP6K3hpPRh3uINngc8e8QnspqlCSr/
-	jSuj5dWedUFJEXy+euM4devqSwMWpLVZCAAhXM1UTwFuPsKylCVCJPWsFTxDVD6IdXJFUHKYU7x
-	ejdPpuLgHW5V5yzn7yqMxPdRlCfdDQ+bSEYlSCY5BjVeVDECwCCXw=
-X-Received: by 2002:a05:600c:138f:b0:47e:e076:c7a5 with SMTP id 5b1f17b1804b1-4889970e3c4mr239821275e9.11.1775574484681;
-        Tue, 07 Apr 2026 08:08:04 -0700 (PDT)
-Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4888a7165aasm555642275e9.14.2026.04.07.08.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2026 08:08:03 -0700 (PDT)
-Date: Tue, 7 Apr 2026 17:08:00 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: Song Liu <song@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>,
-	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org,
-	jikos@kernel.org, mbenes@suse.cz, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	kpsingh@kernel.org, mattbobrowski@google.com, jolsa@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com,
-	yonghong.song@linux.dev, live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to
- klp_patch
-Message-ID: <adUd0Mojbtrwmeod@pathway.suse.cz>
-References: <20260402092607.96430-4-laoar.shao@gmail.com>
- <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
- <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
- <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
- <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
- <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
- <adQhpBC2W9I6QW-g@redhat.com>
- <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
- <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
- <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
+	s=arc-20240116; t=1775576831; c=relaxed/simple;
+	bh=7QdUQu4v4RC+MLrL/mwbYjVHQzEnZN7pTHsm0bn27Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BVPOItHememcNeqnc8OqUjE3B9+CSmst+y44EYxiRRXM4el6o8liGvx5Kv68e5RBXcqc46xE0nsVvXDCBrLjrb0NqOV3/Pre3xwR4+53Bp/t08onsy4wynS93ykNQWCRugn1+mGdUT3qkNGNHriY4xuMpT9fRmjn+M1YvUqQZBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 68C711B8BA4;
+	Tue,  7 Apr 2026 15:47:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 96DA21B;
+	Tue,  7 Apr 2026 15:46:58 +0000 (UTC)
+Date: Tue, 7 Apr 2026 11:48:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Cao Ruichuang <create0818@163.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: Preserve true payload lengths in long data
+ events
+Message-ID: <20260407114812.580c27d5@gandalf.local.home>
+In-Reply-To: <20260407091550.67963-1-create0818@163.com>
+References: <20260407091550.67963-1-create0818@163.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 96DA21B
+X-Stat-Signature: j4syg4ww95xeahdbhpfs5ph4wky7esbx
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18NHeQbL8gUtHGXVGtCh9p3KLKhkodjSgI=
+X-HE-Tag: 1775576818-756129
+X-HE-Meta: U2FsdGVkX1/9rKCwKKdublgl/jHmXE24KI4qr+vNt4zDQ9ZNhrAQkaSjdhCyf6OwIfvlsoLmHXg+16B9wLpwUk8fZqWnkBGQDzI7FyM3d/tm9He92k0V5JBq6ozGEym2A0Qu5JP1W3OTR51QgXjQudXfv3GaqiQloDd00a6gvollZxwO5VIczjdVbvm59debO0ls6+Pvcopt5zX6zOHK8D968G86WYz8JySdfeLja2OpZqLQnGlY9F+E9Blwq2oeBNOgDi1SaSp1WhUlTbLC8kNpKnIIGM33JvIXURhzw1iN/9pZ0kxgkoCM5rc5uFHHxLIss1t8/AMEmGlCpR+PT+snbRpYdR28
 
-On Tue 2026-04-07 17:45:31, Yafang Shao wrote:
-> On Tue, Apr 7, 2026 at 11:16 AM Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > On Tue, Apr 7, 2026 at 10:54 AM Song Liu <song@kernel.org> wrote:
-> > >
-> > > On Mon, Apr 6, 2026 at 2:12 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
-> > > [...]
-> > > > > > > - The regular livepatches are cumulative, have the replace flag; and
-> > > > > > >   are replaceable.
-> > > > > > > - The occasional "off-band" livepatches do not have the replace flag,
-> > > > > > >   and are not replaceable.
-> > > > > > >
-> > > > > > > With this setup, for systems with off-band livepatches loaded, we can
-> > > > > > > still release a cumulative livepatch to replace the previous cumulative
-> > > > > > > livepatch. Is this the expected use case?
-> > > > > >
-> > > > > > That matches our expected use case.
-> > > > >
-> > > > > If we really want to serve use cases like this, I think we can introduce
-> > > > > some replace tag concept: Each livepatch will have a tag, u32 number.
-> > > > > Newly loaded livepatch will only replace existing livepatch with the
-> > > > > same tag. We can even reuse the existing "bool replace" in klp_patch,
-> > > > > and make it u32: replace=0 means no replace; replace > 0 are the
-> > > > > replace tag.
-> > > > >
-> > > > > For current users of cumulative patches, all the livepatch will have the
-> > > > > same tag, say 1. For your use case, you can assign each user a
-> > > > > unique tag. Then all these users can do atomic upgrades of their
-> > > > > own livepatches.
-> > > > >
-> > > > > We may also need to check whether two livepatches of different tags
-> > > > > touch the same kernel function. When that happens, the later
-> > > > > livepatch should fail to load.
+On Tue,  7 Apr 2026 17:15:50 +0800
+Cao Ruichuang <create0818@163.com> wrote:
 
-I still think how to make the hybrid mode more secure:
-
-    + The isolated sets of livepatched functions look like a good rule.
-    + What about isolating the shadow variables/states as well?
-
-> > That sounds like a viable solution. I'll look into it and see how we
-> > can implement it.
+> Long ring buffer data records currently store the aligned in-buffer size in
+> their length field. That makes ring_buffer_event_length() report padded
+> sizes, and small TRACE_PRINT / TRACE_RAW_DATA records lose their true
+> payload length entirely when they use the short type_len encoding.
 > 
-> Does the following change look good to you ?
-> 
-> Subject: [PATCH] livepatch: Support scoped atomic replace using replace tags
-> 
-> Extend the replace attribute from a boolean to a u32 to act as a replace
-> tag. This introduces the following semantics:
-> 
->   replace = 0: Atomic replace is disabled. However, this patch remains
->                eligible to be superseded by others.
->   replace > 0: Enables tagged replace (default is 1). A newly loaded
->                livepatch will only replace existing patches that share the
->                same tag.
-> 
-> To maintain backward compatibility, a patch with replace == 0 does not
-> trigger an outgoing atomic replace, but remains eligible to be superseded
-> by any incoming patch with a valid replace tag.
-> 
-> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> index ba9e3988c07c..417c67a17b99 100644
-> --- a/include/linux/livepatch.h
-> +++ b/include/linux/livepatch.h
-> @@ -123,7 +123,11 @@ struct klp_state {
->   * @mod:       reference to the live patch module
->   * @objs:      object entries for kernel objects to be patched
->   * @states:    system states that can get modified
-> - * @replace:   replace all actively used patches
-> + * @replace:   replace tag:
-> + *             = 0: Atomic replace is disabled; however, this patch remains
-> + *                  eligible to be superseded by others.
+> Teach long data events to keep the true payload size in array[0], and let
+> the ring buffer derive the aligned in-buffer size separately when it needs
+> to walk or discard records. Then add a long-reserve helper and use it for
+> TRACE_PRINT and TRACE_RAW_DATA so their zero-length-array tails always
+> preserve the real payload size.
 
-This is weird semantic. Which livepatch tag would be allowed to
-supersede it, please?
+Sorry, I'm against this change. I made a conscious decision to have the
+ring buffer meta data record the size allocated and not the size requested.
 
-Do we still need this category?
+If an event needs to know the actual size, then it needs to add that
+information itself. That's not the job of the ring buffer code.
 
-> + *             > 0: Atomic replace is enabled. Only existing patches with a
-> + *                  matching replace tag will be superseded.
->   * @list:      list node for global list of actively used patches
->   * @kobj:      kobject for sysfs resources
->   * @obj_list:  dynamic list of the object entries
-> @@ -137,7 +141,7 @@ struct klp_patch {
->         struct module *mod;
->         struct klp_object *objs;
->         struct klp_state *states;
-> -       bool replace;
-> +       unsigned int replace;
+NAK.
 
-This already breaks the backward compatibility by changing the type
-and semantic of this field. I would also change the name to better
-match the new semantic. What about using:
-
-
-  * @replace_set: Livepatch using the same @replace_set will get
-		atomically replaced, see also conflicts[*].
-
-	unsigned int replace_set;
-
-[*] A livepatch module, livepatching an already livepatches function,
-    can be loaded only when it has the same @replace_set number.
-
-    By other words, two livepatches conflict when they have a different
-    @replace_set number and have at least one livepatched version
-    in common.
-
-> 
->         /* internal */
->         struct list_head list;
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index 28d15ba58a26..e4e5c03b0724 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -793,6 +793,8 @@ void klp_free_replaced_patches_async(struct
-> klp_patch *new_patch)
->         klp_for_each_patch_safe(old_patch, tmp_patch) {
->                 if (old_patch == new_patch)
->                         return;
-> +               if (old_patch->replace && old_patch->replace !=
-> new_patch->replace)
-> +                       continue;
->                 klp_free_patch_async(old_patch);
->         }
->  }
-> @@ -1194,6 +1196,8 @@ void klp_unpatch_replaced_patches(struct
-> klp_patch *new_patch)
->         klp_for_each_patch(old_patch) {
->                 if (old_patch == new_patch)
->                         return;
-> +               if (old_patch->replace && old_patch->replace !=
-> new_patch->replace)
-> +                       continue;
-> 
->                 old_patch->enabled = false;
->                 klp_unpatch_objects(old_patch);
-
-This handles only the freeing part. More changes will be
-necessary:
-
-   + klp_is_patch_compatible() must check also conflicts
-     between livepatches with different @replace_set.
-     The conflicts might be in the lists of:
-
-	+ livepatched functions
-	+ state IDs (aka callbacks and shadow variables IDs)
-
-   + klp_add_nops() must skip livepatches with another @replace_set
-
-   + klp_unpatch_replaced_patches() should unpatch only
-     patches with the same @replace_set
-
-Finally, we would need to update existing selftests
-plus add new selftests.
-
-It is possible that I have missed something.
-
-Anyway, you should wait for more feedback before you do too much
-coding, especially the selftests are not needed at RFC stage.
-
-Best Regards,
-Petr
+-- Steve
