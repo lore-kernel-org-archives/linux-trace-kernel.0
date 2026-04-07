@@ -1,411 +1,211 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF533A6F07
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 09:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775555174; cv=pass; b=ILj4q8lEVNJARgKTN5SxNjFYpzkfxGxdCSxNHrQC15ZGl4uzI4eSfqU7kUIQRrWezoOfSeJCDklkLWsWgoHmnt48T9egV/ifsFiNdwdxKXKy680/HPaYBFV9Lt9cFqnAptYi2p+xsu44UGHwZhRCSd5q7gdjvfZv/Lh6VHo+ym4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775555174; c=relaxed/simple;
-	bh=h6lhxXkUnK9to4mvDTJLoQRynH+qEyeFNGNMe3B9/Sg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A+OxKb/E0DsYns87tY4wFZHcBfM3lFhA4x7CuhqKloBE/Tyia93OKQ7X2BKinoONsdN9YRDllpzYXiybdBTktRXYnZrbJfRkPdrCFP5xLNWekGaV9Js5YjhX/MQ7N2gs7Fx+fPDDowwbVTtX7sv4cuStuiT1gRR/WD/vvcGMh6s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DDGqBCSI; arc=pass smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A9939B96A;
+	Tue,  7 Apr 2026 10:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775556815; cv=none; b=XzS/f5Dly5R1dro3QUc6m7yu6Q91+dZ5sNKNDx9Sz8e17dlRK1Ch8rUheRaYRQymVuCPxEV4SmcPvk84cLapyUgSDGCN17o2kIYWXpXuBuKrFN/1buswRshc6KzzV1fgBGtrHRlTVK9GET2LrGGffZCVni01yYtascwBNdcPT5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775556815; c=relaxed/simple;
+	bh=8TB9mhnV+UDsCsa+YJUBkm3RCqmydCAOpwWNNY7zJos=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cRA3B9y16gcVcEaXKS3J9/8yp5kprHtBrxoX+AwkvtwbKgkxZEc9oqoR4tls4NXTWzy2oWvRillSMOJBhfw0ym4kBHURLrWBbSHVSd5ZOskgeiiOfZYg6HNkhOaEAR7f5ScQYzVNkMjBpsJgHbuBAk9aFrV8gO8eZmhdSvVMpEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mCyc29DT; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDGqBCSI"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-797ab169454so79200507b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 02:46:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775555168; cv=none;
-        d=google.com; s=arc-20240605;
-        b=I4P/c99u26C7uHQlvDsuFsMd+R5e4u9mGNkDmh9Rc+2xnvggnzlp4BjYqLFBk+O23T
-         bk48Ualt/EvnWU7ronWHhJBi2sDpayxQQFr8EnzA+ZCvQsWDM9w8N+XPdxLXCpuIHwxL
-         6P+aD05bnSC5JfQtLaNhn+N+gUtM648ZH9PaEdIXufL7ExQX2HoYvtPyg/V8Xgv5QSJr
-         wQ4JHDBgpN1geNnJjoQkcfDPpJzx13F9WG4vAbXpt5RBfy6sE+1QWrnyn6MensX/qB96
-         hfZKilbOFsmIUegrqDQUfaZ2vRsC+spUBxAjbrQx7JoiN1smRf4oCuQ0K9ExmHzy/lj0
-         8nlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=9E60mk44Eky+PTLd9t+EfmiFZLuGKI0mwfBKJlhAG9Y=;
-        fh=XcDciGBiHj/l7fTgTj+EymKiA/Jn05T7AaHIRsr1A3g=;
-        b=WByD3M95wTklDpZQ6E0JGpug90cm6T3YTH47ACksE9ZWpXJeUfRRyJbMLVYkjNqU+N
-         1c8jR/ds5rgPLT7qar14tihfYR9zV2B0S5hTm7kvb4zev9xyY2/RSmLMMeBNyqBm9Lvn
-         e3dLIu+X2GTI50O61YD0DiiHF+JPddsVjrdup7PsBeDGDt4fwrcbzEpafK8pocSdlOwX
-         lBZwi4vmtblS65tgZhkZnHk2pYQHBv6gmKFbj3wJCP7qqiWaBUQvmIO7qc6sPk7i8drn
-         23ArVh0mdrydOPbXx9/MEj9Q4PKtla4H/poSnsONIMRNVNtG9oXQ9gC4WmhCs7p8kSdS
-         1JIw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775555168; x=1776159968; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9E60mk44Eky+PTLd9t+EfmiFZLuGKI0mwfBKJlhAG9Y=;
-        b=DDGqBCSInwehBp2B1z3jnzM2aWT0BQnQ9xDoQudeZZwVfqPJk0k4Sl/AdnXtEwZE1B
-         hm/PynS6qBFEpyGStOoDUtmIuAtgP94Sih3W6Xe+eHmeD44LzqyRh94G0eDL42wygjoV
-         w2/7QEKaRHAZ8lESkx3jlIRxM9SqsgIoQX5MsTpJzB1AceRn6/nEc0LozvtpDWkpOhWv
-         4ZJy61o1BPNnUCgJhGkI/pEs40CkPSTKmQ6RBdrarASBtkkCvXRyIur2fxvwRUT077I6
-         A+62S1j4uO75SzCakBmOXiT8fsGwr9BgPpxne6Zf5PKOrDUE8NPDF3KTKhmlytl8F5mY
-         /f+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775555168; x=1776159968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9E60mk44Eky+PTLd9t+EfmiFZLuGKI0mwfBKJlhAG9Y=;
-        b=sSOW0KPR6/+AP8Jdjf19dnVjTTrAf7FcMyKTCcoMuJVGoLsGlHcWZLgux1q4EfsjCt
-         CzlCLSDGDwY6WJd1gHTQ4vqdCbEsEwnzyqqhdxVkayT8xj312kZbhsyqewJYQpjTH6sw
-         HBvyDpI5RKjcNp5OXcKDUWm6yTljUNHpUGOoJn7MozZjtNT7JP0obBgJReFmXJIRygHs
-         IMDFdS0oAJtm9fF+yruHGd9o3sJovNxMhfgXcdZ7ntyomiviANrgh8vs5vJpARYlv1t2
-         NFpsTR9PaKlX0aadtukwj4XoE3pJ+QXRX9J1v5woFjSXIgOi5ymLDIw06uvHlIDZEeb9
-         s59A==
-X-Forwarded-Encrypted: i=1; AJvYcCV3/gtRjMS85OhOvx+9Jj90Xfyfu7U5F59ffKyh03YOKGWhaqnvx5F4l1bSxAGaMq/r9yl0LQ/2LOztbez7Fz0BQc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7YDk++opSAo2lkzxzKnH5jR30+Bxs59m9RpF+q3CWi2wIhscd
-	RAyT4ZvADXdNSNPXfpUOgAnFf6pqaUl741f+dKw9/nylmHJveT5hH39W0gxF/SawyJogBhnTSbK
-	DhPBQY27nSnJQjP2kzAsAFvIbZ7rJHiU=
-X-Gm-Gg: AeBDiesAxQk97+13hOxPZXyjOqy2w/mRtlDbCl1jNAZwPmdJgY6V+KT/oL139yTOvGk
-	ySyhhsS3ih0pTktIWYldVUU/2CU2SEL677rBB+dKFb3g5br96mt3Q5t1pJesU9BgJUnsASmIRO+
-	bixHVeS+r51JwY6W8TT6n4e3SXh6/+6fRh5uKcuBqYJUY9TRUZBkc5fRctzhHn15ioJtHGOQQnm
-	tQvjdcWtIJdE9SBAGExG5lzBWLnEPs2jxnBTHONmndVrEQoPpASotEiD3OmfyC2brWXlCoHoWhS
-	HLfzC1cZDNaEIHFk4aN9Rd2v3rHtEjx8PU+JC/G4L+nKO/kPo2Q=
-X-Received: by 2002:a05:690e:150d:b0:650:131b:6ee4 with SMTP id
- 956f58d0204a3-6504873abf4mr15220422d50.20.1775555167625; Tue, 07 Apr 2026
- 02:46:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mCyc29DT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=jg
+	vPZT0q9a4EzsqYIeRi2BoE4Kq1WDUldFLiTe+/xqg=; b=mCyc29DTWA7y2KKig2
+	qB2AmBPEUbxsN3HEXlMFUkToiahTo1dkBwx2mQDQrERXJxN3YvlgIrfwJcRMmBX4
+	0rwkxxd4+LfeEQCXZlK5nqF6+bqO/59FvDHsLLY/lQ4khtDaKxVmLB8ybWpApceC
+	EfpKoibtN+u8WWDlSglO2qrv0=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wAXOySj2NRpl+1ZDg--.20426S2;
+	Tue, 07 Apr 2026 18:12:53 +0800 (CST)
+From: CaoRuichuang <create0818@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Cao Ruichuang <create0818@163.com>
+Subject: [PATCH] selftests/ftrace: Check exact trace_marker_raw payload lengths
+Date: Tue,  7 Apr 2026 18:12:45 +0800
+Message-Id: <20260407101245.78988-1-create0818@163.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260402092607.96430-1-laoar.shao@gmail.com> <20260402092607.96430-4-laoar.shao@gmail.com>
- <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
- <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
- <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
- <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
- <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
- <adQhpBC2W9I6QW-g@redhat.com> <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
- <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
-In-Reply-To: <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 7 Apr 2026 17:45:31 +0800
-X-Gm-Features: AQROBzD5aJ3floxrTMqD4Z-TWySrLI1f76mfxhJm1yktSWIu7d-2oRdLFdvycRA
-Message-ID: <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
-To: Song Liu <song@kernel.org>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>, Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, 
-	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, kpsingh@kernel.org, 
-	mattbobrowski@google.com, jolsa@kernel.org, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev, 
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAXOySj2NRpl+1ZDg--.20426S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuryDGr4UWw4xCrWDtry8Grg_yoWrAFyfpa
+	ySkFyktrWrJF4jqw1fCw12qryfJ3ZxJ342gFykK34YyryUJrn2q34xKFn0kry7ArZ8JryS
+	va1F9FW8GFs8Z37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR9Z2xUUUUU=
+X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCvwbuKGnU2KbiEAAA3O
 
-On Tue, Apr 7, 2026 at 11:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
->
-> On Tue, Apr 7, 2026 at 10:54=E2=80=AFAM Song Liu <song@kernel.org> wrote:
-> >
-> > On Mon, Apr 6, 2026 at 2:12=E2=80=AFPM Joe Lawrence <joe.lawrence@redha=
-t.com> wrote:
-> > [...]
-> > > > > > - The regular livepatches are cumulative, have the replace flag=
-; and
-> > > > > >   are replaceable.
-> > > > > > - The occasional "off-band" livepatches do not have the replace=
- flag,
-> > > > > >   and are not replaceable.
-> > > > > >
-> > > > > > With this setup, for systems with off-band livepatches loaded, =
-we can
-> > > > > > still release a cumulative livepatch to replace the previous cu=
-mulative
-> > > > > > livepatch. Is this the expected use case?
-> > > > >
-> > > > > That matches our expected use case.
-> > > >
-> > > > If we really want to serve use cases like this, I think we can intr=
-oduce
-> > > > some replace tag concept: Each livepatch will have a tag, u32 numbe=
-r.
-> > > > Newly loaded livepatch will only replace existing livepatch with th=
-e
-> > > > same tag. We can even reuse the existing "bool replace" in klp_patc=
-h,
-> > > > and make it u32: replace=3D0 means no replace; replace > 0 are the
-> > > > replace tag.
-> > > >
-> > > > For current users of cumulative patches, all the livepatch will hav=
-e the
-> > > > same tag, say 1. For your use case, you can assign each user a
-> > > > unique tag. Then all these users can do atomic upgrades of their
-> > > > own livepatches.
-> > > >
-> > > > We may also need to check whether two livepatches of different tags
-> > > > touch the same kernel function. When that happens, the later
-> > > > livepatch should fail to load.
->
-> That sounds like a viable solution. I'll look into it and see how we
-> can implement it.
+From: Cao Ruichuang <create0818@163.com>
 
-Does the following change look good to you ?
+trace_marker_raw.tc currently depends on awk strtonum() and
+assumes that the printed raw-data byte count is rounded up to four
+bytes.
 
-Subject: [PATCH] livepatch: Support scoped atomic replace using replace tag=
-s
+That makes the test fail on systems that use mawk, and it no longer
+matches the raw_data trace output we want to validate after preserving
+true payload lengths for long records.
 
-Extend the replace attribute from a boolean to a u32 to act as a replace
-tag. This introduces the following semantics:
+Rewrite the test to capture a small sequence of raw marker writes and
+check the exact number of printed payload bytes in order. While doing
+that, use od for the endian probe, switch to a fixed raw marker id so
+the test only varies payload length, and disable pause-on-trace while
+streaming trace_pipe.
 
-  replace =3D 0: Atomic replace is disabled. However, this patch remains
-               eligible to be superseded by others.
-  replace > 0: Enables tagged replace (default is 1). A newly loaded
-               livepatch will only replace existing patches that share the
-               same tag.
-
-To maintain backward compatibility, a patch with replace =3D=3D 0 does not
-trigger an outgoing atomic replace, but remains eligible to be superseded
-by any incoming patch with a valid replace tag.
-
-Suggested-by: Song Liu <song@kernel.org>
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Cao Ruichuang <create0818@163.com>
 ---
- .../livepatch/cumulative-patches.rst          | 20 +++++++-----
- Documentation/livepatch/livepatch.rst         | 31 +++++++++++++------
- include/linux/livepatch.h                     |  8 +++--
- kernel/livepatch/core.c                       |  4 +++
- scripts/livepatch/init.c                      |  6 +---
- scripts/livepatch/klp-build                   | 11 +++++--
- 6 files changed, 53 insertions(+), 27 deletions(-)
+ .../ftrace/test.d/00basic/trace_marker_raw.tc | 93 ++++++++++++-------
+ 1 file changed, 59 insertions(+), 34 deletions(-)
 
-diff --git a/Documentation/livepatch/cumulative-patches.rst
-b/Documentation/livepatch/cumulative-patches.rst
-index 1931f318976a..06e90dc5967c 100644
---- a/Documentation/livepatch/cumulative-patches.rst
-+++ b/Documentation/livepatch/cumulative-patches.rst
-@@ -12,23 +12,26 @@ modified the same function in different ways.
-
- An elegant solution comes with the feature called "Atomic Replace". It all=
-ows
- creation of so called "Cumulative Patches". They include all wanted change=
-s
--from all older livepatches and completely replace them in one transition.
-+from older livepatches with a matching tag and replace them in one transit=
-ion.
-
- Usage
- -----
-
--The atomic replace can be enabled by setting "replace" flag in struct
-klp_patch,
--for example::
-+he atomic replace can be enabled by setting a non-zero value to the "repla=
-ce"
-+attribute in ``struct klp_patch``. This value acts as a **replace tag**,
-+defining the scope of the replacement.
-+
-+For example::
-
-        static struct klp_patch patch =3D {
-                .mod =3D THIS_MODULE,
-                .objs =3D objs,
--               .replace =3D true,
-+               .replace =3D 1,
-        };
-
- All processes are then migrated to use the code only from the new patch.
--Once the transition is finished, all older patches are automatically
--disabled.
-+Once the transition is finished, all older patches with the same replace t=
-ag
-+are automatically disabled. Patches with different tags remain active.
-
- Ftrace handlers are transparently removed from functions that are no
- longer modified by the new cumulative patch.
-@@ -62,9 +65,10 @@ Limitations:
- ------------
-
-   - Once the operation finishes, there is no straightforward way
--    to reverse it and restore the replaced patches atomically.
-+    to reverse it and restore the replaced patches (with the same tag)
-+    atomically.
-
--    A good practice is to set .replace flag in any released livepatch.
-+    A good practice is to set a consistent .replace tag in related livepat=
-ches.
-     Then re-adding an older livepatch is equivalent to downgrading
-     to that patch. This is safe as long as the livepatches do _not_ do
-     extra modifications in (un)patching callbacks or in the module_init()
-diff --git a/Documentation/livepatch/livepatch.rst
-b/Documentation/livepatch/livepatch.rst
-index acb90164929e..1fc1543a22c3 100644
---- a/Documentation/livepatch/livepatch.rst
-+++ b/Documentation/livepatch/livepatch.rst
-@@ -347,15 +347,28 @@ to '0'.
- 5.3. Replacing
- --------------
-
--All enabled patches might get replaced by a cumulative patch that
--has the .replace flag set.
--
--Once the new patch is enabled and the 'transition' finishes then
--all the functions (struct klp_func) associated with the replaced
--patches are removed from the corresponding struct klp_ops. Also
--the ftrace handler is unregistered and the struct klp_ops is
--freed when the related function is not modified by the new patch
--and func_stack list becomes empty.
-+All currently enabled patches may be superseded by a cumulative patch that
-+has the ``.replace`` attribute enabled. The behavior of the replacement
-+depends on the value assigned to the replace tag:
-+
-+replace =3D 0
-+    Atomic replace is disabled. However, this patch remains eligible to be
-+    superseded by others.
-+
-+replace > 0
-+    Enables tagged atomic replace. Once the new patch is enabled and the
-+    transition finishes, the livepatching core identifies all existing
-+    patches that share the same replace tag.
-+
-+Once the transition is complete, all functions (``struct klp_func``)
-+associated with the matching replaced patches are removed from the
-+corresponding ``struct klp_ops``. If a function is no longer modified by
-+the new patch and its ``func_stack`` list becomes empty, the ftrace
-+handler is unregistered and the ``struct klp_ops`` is freed.
-+
-+Patches with a different replace tag are not affected by this process
-+and remain active. This allows for the independent management and
-+stacking of multiple, non-conflicting livepatch sets.
-
- See Documentation/livepatch/cumulative-patches.rst for more details.
-
-diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-index ba9e3988c07c..417c67a17b99 100644
---- a/include/linux/livepatch.h
-+++ b/include/linux/livepatch.h
-@@ -123,7 +123,11 @@ struct klp_state {
-  * @mod:       reference to the live patch module
-  * @objs:      object entries for kernel objects to be patched
-  * @states:    system states that can get modified
-- * @replace:   replace all actively used patches
-+ * @replace:   replace tag:
-+ *             =3D 0: Atomic replace is disabled; however, this patch rema=
-ins
-+ *                  eligible to be superseded by others.
-+ *             > 0: Atomic replace is enabled. Only existing patches with =
-a
-+ *                  matching replace tag will be superseded.
-  * @list:      list node for global list of actively used patches
-  * @kobj:      kobject for sysfs resources
-  * @obj_list:  dynamic list of the object entries
-@@ -137,7 +141,7 @@ struct klp_patch {
-        struct module *mod;
-        struct klp_object *objs;
-        struct klp_state *states;
--       bool replace;
-+       unsigned int replace;
-
-        /* internal */
-        struct list_head list;
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 28d15ba58a26..e4e5c03b0724 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -793,6 +793,8 @@ void klp_free_replaced_patches_async(struct
-klp_patch *new_patch)
-        klp_for_each_patch_safe(old_patch, tmp_patch) {
-                if (old_patch =3D=3D new_patch)
-                        return;
-+               if (old_patch->replace && old_patch->replace !=3D
-new_patch->replace)
-+                       continue;
-                klp_free_patch_async(old_patch);
-        }
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+index a2c42e13f..3b37890f8 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+@@ -1,11 +1,11 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: Basic tests on writing to trace_marker_raw
+-# requires: trace_marker_raw
++# requires: trace_marker_raw od:program
+ # flags: instance
+ 
+ is_little_endian() {
+-	if lscpu | grep -q 'Little Endian'; then
++	if [ "$(printf '\001\000\000\000' | od -An -tu4 | tr -d '[:space:]')" = "1" ]; then
+ 		echo 1;
+ 	else
+ 		echo 0;
+@@ -34,7 +34,7 @@ make_str() {
+ 
+ 	data=`printf -- 'X%.0s' $(seq $cnt)`
+ 
+-	printf "${val}${data}"
++	printf "%b%s" "${val}" "${data}"
  }
-@@ -1194,6 +1196,8 @@ void klp_unpatch_replaced_patches(struct
-klp_patch *new_patch)
-        klp_for_each_patch(old_patch) {
-                if (old_patch =3D=3D new_patch)
-                        return;
-+               if (old_patch->replace && old_patch->replace !=3D
-new_patch->replace)
-+                       continue;
+ 
+ write_buffer() {
+@@ -47,36 +47,68 @@ write_buffer() {
+ 
+ 
+ test_multiple_writes() {
++	out_file=$TMPDIR/trace_marker_raw.out
++	match_file=$TMPDIR/trace_marker_raw.lines
++	wait_iter=0
++	pause_on_trace=
++
++	if [ -f options/pause-on-trace ]; then
++		pause_on_trace=`cat options/pause-on-trace`
++		echo 0 > options/pause-on-trace
++	fi
++
++	: > trace
++	cat trace_pipe > $out_file &
++	reader_pid=$!
++	sleep 1
++
++	# Write sizes that cover both the short and long raw-data encodings
++	# without overflowing the trace buffer before we can verify them.
++	for i in `seq 1 12`; do
++		write_buffer 0x12345678 $i
++	done
+ 
+-	# Write a bunch of data where the id is the count of
+-	# data to write
+-	for i in `seq 1 10` `seq 101 110` `seq 1001 1010`; do
+-		write_buffer $i $i
++	while [ "`grep -c ' buf:' $out_file 2> /dev/null || true`" -lt 12 ]; do
++		wait_iter=$((wait_iter + 1))
++		if [ $wait_iter -ge 10 ]; then
++			kill $reader_pid 2> /dev/null || true
++			wait $reader_pid 2> /dev/null || true
++			if [ -n "$pause_on_trace" ]; then
++				echo $pause_on_trace > options/pause-on-trace
++			fi
++			return 1
++		fi
++		sleep 1
+ 	done
+ 
+ 	# add a little buffer
+ 	echo stop > trace_marker
++	sleep 1
++	kill $reader_pid 2> /dev/null || true
++	wait $reader_pid 2> /dev/null || true
++	if [ -n "$pause_on_trace" ]; then
++		echo $pause_on_trace > options/pause-on-trace
++	fi
+ 
+-	# Check to make sure the number of entries is the id (rounded up by 4)
+-	awk '/.*: # [0-9a-f]* / {
+-			print;
+-			cnt = -1;
+-			for (i = 0; i < NF; i++) {
+-				# The counter is after the "#" marker
+-				if ( $i == "#" ) {
+-					i++;
+-					cnt = strtonum("0x" $i);
+-					num = NF - (i + 1);
+-					# The number of items is always rounded up by 4
+-					cnt2 = int((cnt + 3) / 4) * 4;
+-					if (cnt2 != num) {
+-						exit 1;
+-					}
+-					break;
+-				}
+-			}
+-		}
+-	// { if (NR > 30) { exit 0; } } ' trace_pipe;
++	grep ' buf:' $out_file > $match_file || return 1
++	if [ "`wc -l < $match_file`" -ne 12 ]; then
++		cat $match_file
++		return 1
++	fi
++
++	# Check to make sure the number of byte values matches the id exactly.
++	for expected in `seq 1 12`; do
++		line=`sed -n "${expected}p" $match_file`
++		if [ -z "$line" ]; then
++			return 1
++		fi
++		rest=${line#* buf: }
++		set -- $rest
++		if [ "$#" -ne "$expected" ]; then
++			echo "$line"
++			return 1
++		fi
++	done
+ }
+ 
+ 
+@@ -107,13 +139,6 @@ test_buffer() {
+ 
+ ORIG=`cat buffer_size_kb`
+ 
+-# test_multiple_writes test needs at least 12KB buffer
+-NEW_SIZE=12
+-
+-if [ ${ORIG} -lt ${NEW_SIZE} ]; then
+-	echo ${NEW_SIZE} > buffer_size_kb
+-fi
+-
+ test_buffer
+ if ! test_multiple_writes; then
+ 	echo ${ORIG} > buffer_size_kb
+-- 
+2.39.5 (Apple Git-154)
 
-                old_patch->enabled =3D false;
-                klp_unpatch_objects(old_patch);
-diff --git a/scripts/livepatch/init.c b/scripts/livepatch/init.c
-index f14d8c8fb35f..cd00e278a1d2 100644
---- a/scripts/livepatch/init.c
-+++ b/scripts/livepatch/init.c
-@@ -72,11 +72,7 @@ static int __init livepatch_mod_init(void)
-
-        /* TODO patch->states */
-
--#ifdef KLP_NO_REPLACE
--       patch->replace =3D false;
--#else
--       patch->replace =3D true;
--#endif
-+       patch->replace =3D KLP_REPLACE_TAG;
-
-        return klp_enable_patch(patch);
-
-diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
-index 7b82c7503c2b..9f6a7673304f 100755
---- a/scripts/livepatch/klp-build
-+++ b/scripts/livepatch/klp-build
-@@ -118,6 +118,7 @@ Options:
-    -j, --jobs=3D<jobs>           Build jobs to run simultaneously
-[default: $JOBS]
-    -o, --output=3D<file.ko>      Output file [default: livepatch-<patch-na=
-me>.ko]
-        --no-replace            Disable livepatch atomic replace
-+   -t, --replace-tag=3D<tag>     Set the atomic replace tag for this livep=
-atch
-    -v, --verbose               Pass V=3D1 to kernel/module builds
-
- Advanced Options:
-@@ -142,8 +143,8 @@ process_args() {
-        local long
-        local args
-
--       short=3D"hfj:o:vdS:T"
--       long=3D"help,show-first-changed,jobs:,output:,no-replace,verbose,de=
-bug,short-circuit:,keep-tmp"
-+       short=3D"hfj:o:t:vdS:T"
-+       long=3D"help,show-first-changed,jobs:,output:,no-replace,replace-ta=
-g:,verbose,debug,short-circuit:,keep-tmp"
-
-        args=3D$(getopt --options "$short" --longoptions "$long" -- "$@") |=
-| {
-                echo; usage; exit
-@@ -176,6 +177,10 @@ process_args() {
-                                REPLACE=3D0
-                                shift
-                                ;;
-+                       -t | --replace-tag)
-+                               REPLACE=3D"$2"
-+                               shift 2
-+                               ;;
-                        -v | --verbose)
-                                VERBOSE=3D"V=3D1"
-                                shift
-@@ -759,7 +764,7 @@ build_patch_module() {
-
-        cflags=3D("-ffunction-sections")
-        cflags+=3D("-fdata-sections")
--       [[ $REPLACE -eq 0 ]] && cflags+=3D("-DKLP_NO_REPLACE")
-+       cflags+=3D("-DKLP_REPLACE_TAG=3D$REPLACE")
-
-        cmd=3D("make")
-        cmd+=3D("$VERBOSE")
-
-
---
-Regards
-Yafang
