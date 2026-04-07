@@ -1,257 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AE53BAD81;
-	Tue,  7 Apr 2026 13:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FB83BA25E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 13:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775568197; cv=none; b=ExeW+G5aZmgogKPWDo4SvvrRoLCfTefkFA88BhQalQbyA85G6SiCABOKcuHRL30T3Ink6xQ7mHNajwr/HWplukaBxuBLeMLoWd4hHxJkT2CEzok6mC7WHCRFb6i4Du1V8CqsGPpR7dzBchQMxsHVYPzo7RjE8Dj2TZeXjmUmYO4=
+	t=1775569929; cv=none; b=s2yjLpIJ84zHs8YETlgdA/2ojYO2szcgaGbO2MMsByJQ/PZzUuX0CMHhmJkFWSbducHyzGvLGD43IJnhpsyU1hVkQT4+787zrQ5TADjEfEGy2Tz0amxhrtzYsjTCaXCr3cokfqmgK0FEgygAlCIxQPJ48/NzrjQfUDG04S0Jq+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775568197; c=relaxed/simple;
-	bh=N+ewIUhqIHe2sDtA5GLxcBpX3A61fz037ixhW7ZLoZc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JhGsoTKN0Ow/LMmcuB1pvkjH8+qlg4Uicp1srwsEaCZTRp0UngVm4l5zYzxvA95NR83cUF2cwp9AUYNEDJiANRrJ8y5mRVS0rZDPEMRk3Qt7rkunMb+yzZehuzlvJHGMjZ4x7maV4D0jcwRzrB/vyrhSuQPszl5Ty9uEKSAwzIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFNvnC1m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775569929; c=relaxed/simple;
+	bh=sZK7slSStiXifygBueGYf8FwIze5xkgJ1HepAoo0Yt0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnV7QVzpVUHOyY9hDlLJhUZ7v6KVFBsEs+BNiPiS/eNrqlK5VH6O1M8OoG8aGP2Rf9IGyTNIeqZoEY7ISIuUSHcBJ42aOaqlm/R6X1XTzhxHihQz9kGFdj2sjD9cAsFZegzMP3L1RkfqShE6QLZq+8X1wbGeDwoJqhCQZaQEWww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CaTXx7l8; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFNvnC1m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B05E5C2BCB0;
-	Tue,  7 Apr 2026 13:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775568197;
-	bh=N+ewIUhqIHe2sDtA5GLxcBpX3A61fz037ixhW7ZLoZc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gFNvnC1mh9D5Q4e5Ek+oTW8wD3m7CTunKFG3jPBMs6aGuF1d92bur6Yc7Hjbkp6dX
-	 Z2hsqmh9Ogv0WcG56IJioer3zXABXpacPa1lqjtqlR0dSZArNLbtsIHg1o+m5yl+Qp
-	 GxnHsrFrc2Vz5VqfMCLejBcHHI7uXOstookDIRyKgJJudBogDDDL40kmqyuaHscX51
-	 fpmMYxe+5dwh+7y8GoUm7o5ldswW3asthI6+bXqC2Z3B6uP/GYw/gBPE9HpNOMBhiI
-	 hXaU1VY1Ub+5dsu5kFqWD0crrPefmZOspqq/rx7Lapg3+evO6Qoco/t8xa11JAcF4r
-	 o14FDuCCIa02Q==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 07 Apr 2026 09:21:37 -0400
-Subject: [PATCH 24/24] nfsd: add support to CB_NOTIFY for dir attribute
- changes
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CaTXx7l8"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43d23305225so3973242f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 06:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1775569926; x=1776174726; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9Rj0iJqaS4GtsGFAM2U1MRAy3OlGygjlwynVu1x1N0M=;
+        b=CaTXx7l8HvWAG6a+GaR1PCJsnZRuG1nKQ1Na5vl8yACtI2DLG+vYXeRG5OZUTYGI8D
+         As21YQRdoYqk3RaXvHYcbcvJa3MqrlTVx3XlZpLzl4FzKpuNOpDq8RdFkpz/lYZKqnNk
+         SdzNwjiRS51zUJFHsmvFRzGayGVsId9dis1pEHCq4hOU0wPPstP8BvXW4BfjbhDwPbw8
+         McjyCpuY5obJ+EctwPK3NyCV9iXk96lxFRYH3/KXu7GqUQrWF790QRTCEDRdBmn/lhfV
+         NrsQY1QGEs60/3rbweSty0SdMInRSXaTJaadJA98vjnOo52rkgTzaoyz7AaMBNLOus7g
+         hwSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775569926; x=1776174726;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Rj0iJqaS4GtsGFAM2U1MRAy3OlGygjlwynVu1x1N0M=;
+        b=cXlycHrgvGXhvzdIJOazM/p/b02UubZQjuohKEpMFqWZDGjPd8C9kE2Xjdkv1/a9rj
+         H5dIzIebz1sGB8K08uo3PQBr+Bm3oaoDXykQWDuFI0CpVUvhcdc6Dt/U1zkcxO2Nr08J
+         AMqA5YuAeiZxUIL5jELr4gmKH7h4NUheYc645IkmLocmn1cY1p/iUkvpLB5TegwB/xqd
+         xlbjuiYMhfnX14peoIAyukRBenqoJRyMdMy12ww7Ou2+eN9hINC3VKQ5MVVAIMlroANe
+         k7VZ8MPNTP7BNyHWVK0+DaJgIT6Tv3e65mz7luiDUd5RX6wu6Vdiq+H+Nhg7HZA/7JWX
+         bJdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKDyhUDT0PF8LPM/Fhkz+Ssn50Fu1Op1J0gytwSvyTrzKhXWBjQOAoxY5VO7Fvgm1+286Xp7pex7gRIKMfx2ON+7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSVFXkfNOlZwZ0fJP0LHqzqk4N5154IVoM7+LcBf/ZbGeg0cS0
+	ZxGXAYC+bJzCAtpC3gStwg1g2SQi7kV2JFKQRAKpTJQNdoD8WSLLpRU9Flt0MMmmpzQ=
+X-Gm-Gg: AeBDietSvcVx/vMsSHwHe05UoHeID9MysevxZBExmjoV5ONjLW+yi+UJE7EBH9Bb8M5
+	o27Alzq88Fwu7014HBYWfC08bTpaQRgy612cdwrHiiwGxZvaNgV/KUnP5F6bLgg6qxGtUDrzxFS
+	1TuBYQrveun9tNQNI1e8eeM7TAlnC/x37cK2ekbSUBIm3x1oPTBWuuQDEB1TOxw7GcqVsjKWzVS
+	KuNeM1/wqJJFsM+y0/Y65lnD//FcbwwloQ3y9jeKKVCRH/AVxqPUYgns84/iIN1O+aqKv/Neff5
+	lyUaEK6zlhVV8iM3z29VmGOmghpC57CXuR3vHpfy+8SrF1dNXwxwljbN3/ERSo71GMMD9wqgEKa
+	tiMpujnpCWkoFhaJ82zeN6WubekiPZRrldWOrpBZHLAbfiY4hma178i2oiiRzZGV8NB+kyjjYPT
+	/kP+kOKkZlfQW1ursSOGf+ylftLvQW/S5zS4QbOnoT
+X-Received: by 2002:a05:6000:4282:b0:43b:4352:1bdd with SMTP id ffacd0b85a97d-43d292df38bmr25373308f8f.39.1775569925715;
+        Tue, 07 Apr 2026 06:52:05 -0700 (PDT)
+Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e2c637asm48288462f8f.14.2026.04.07.06.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2026 06:52:05 -0700 (PDT)
+Date: Tue, 7 Apr 2026 15:52:02 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Song Liu <song@kernel.org>, Dylan Hatch <dylanbhatch@google.com>,
+	jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz,
+	joe.lawrence@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, kpsingh@kernel.org,
+	mattbobrowski@google.com, jolsa@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev,
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to
+ klp_patch
+Message-ID: <adUMAsZRAC3dDKsK@pathway.suse.cz>
+References: <20260402092607.96430-1-laoar.shao@gmail.com>
+ <20260402092607.96430-4-laoar.shao@gmail.com>
+ <CAPhsuW51Hh7XfN6xXm_uMAoDXBBQoNQ5ynqom+wVNdqCt81f2A@mail.gmail.com>
+ <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
+ <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260407-dir-deleg-v1-24-aaf68c478abd@kernel.org>
-References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
-In-Reply-To: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Amir Goldstein <amir73il@gmail.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6108; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=N+ewIUhqIHe2sDtA5GLxcBpX3A61fz037ixhW7ZLoZc=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp1QULdWggYOsqOFrE5WckiwisWouEGdFj9at6Y
- K+0O926hcCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCadUFCwAKCRAADmhBGVaC
- FQrQD/wOQFTlBqMq/w6845qcUCWDAmcaqx/7T6LwaqaXVLify8aVCP1tQ2dtVivZ6WjqZLJEB8x
- utek04ufjR366rxLUTx4cBjRK+gq+uHFzxWJ8XnO1evG3Xq6JrcHj71CSgDt10fBoXTpsiiaxcf
- RAv1ht2izBWmnK198hJqDNBA7ApaEhhI90pmxAlWJ1EP2PVKt0+49Ry6CfEvxYEoCNU9hHLEI9A
- RFYTltJqmQdQsEc7Ks9KbIpOaKsCwXRJlHYVsaGAO8zjqJIQFb/euUOm4CEZ3SwmZmfrxECkOL3
- 5rhCPwi/2IfK9SpbgW0OjCVeathPDG1WrKYYQGX2pI+IpCb4PbxnDbkqXQ119VAECVEhH3deFTm
- V8hoSXfmmYY74RF3DkcvnpgoXx10lioaoGgiGdTrVy1GO31/e1FipS7rfp3BhFS7UEPhoOKqUAG
- QtC+VXY3JUS/NVQr4414nU5GQuZ+IghEVukonE5fSzias/Ebsm75IQ5qxjy0h2OKBACsoKxrOz7
- 8SCMmxGOS38y1xSsty5ah74uTAbKPKwggmrKrpbCM0DHKyHUbcJhtclWo0cZfxwNSVWZJVy/Ooy
- f+G1c8aAYRXvvBvW/hCgWnqdRWEqYMw2trVFnsLy0dutOMsJO3rcX1sUcQJEfkzyMQZNsidZwPl
- 59j2LDserQjS3pQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
 
-If the client requested dir attribute change notifications, send those
-alongside any set of add/remove/rename events. Note that the server will
-still recall the delegation on a SETATTR, so these are only sent for
-changes to child dirents.
+On Mon 2026-04-06 19:08:05, Yafang Shao wrote:
+> On Sat, Apr 4, 2026 at 5:36 AM Song Liu <song@kernel.org> wrote:
+> >
+> > On Fri, Apr 3, 2026 at 1:55 PM Dylan Hatch <dylanbhatch@google.com> wrote:
+> > [...]
+> > > > IIRC, the use case for this change is when multiple users load various
+> > > > livepatch modules on the same system. I still don't believe this is the
+> > > > right way to manage livepatches. That said, I won't really NACK this
+> > > > if other folks think this is a useful option.
+> > >
+> > > In our production fleet, we apply exactly one cumulative livepatch
+> > > module, and we use per-kernel build "livepatch release" branches to
+> > > track the contents of these cumulative livepatches. This model has
+> > > worked relatively well for us, but there are some painpoints.
+> > >
+> > > We are often under pressure to selectively deploy a livepatch fix to
+> > > certain subpopulations of production. If the subpopulation is running
+> > > the same build of everything else, this would require us to introduce
+> > > another branching factor to the "livepatch release" branches --
+> > > something we do not support due to the added toil and complexity.
+> > >
+> > > However, if we had the ability to build "off-band" livepatch modules
+> > > that were marked as non-replaceable, we could support these selective
+> > > patches without the additional branching factor. I will have to
+> > > circulate the idea internally, but to me this seems like a very useful
+> > > option to have in certain cases.
+> >
+> >  IIUC, the plan is:
+> >
+> > - The regular livepatches are cumulative, have the replace flag; and
+> >   are replaceable.
+> > - The occasional "off-band" livepatches do not have the replace flag,
+> >   and are not replaceable.
+> >
+> > With this setup, for systems with off-band livepatches loaded, we can
+> > still release a cumulative livepatch to replace the previous cumulative
+> > livepatch. Is this the expected use case?
+> 
+> That matches our expected use case.
+> 
+> >
+> > I think there are a few issues with this:
+> > 1. The "off-band" livepatches cannot be replaced atomically. To upgrade
+> >    "off-band' livepatches, we will have to unload the old version and load
+> >    the new version later.
+> 
+> Right. That is how the non-atomic-replace patch works.
+> 
+> > 2. Any conflict with the off-band livepatches and regular livepatches will
+> >    be difficult to manage.
+> 
+> We need to manage this conflict with a complex user script. That said,
+> everything can be controlled from userspace.
+>
+> > IOW, we kind removed the benefit of cumulative
+> >    livepatches. For example, what shall we do if we really need two fixes
+> >    to the same kernel functions: one from the original branch, the other
+> >    from the off-band branch?
+> 
+> We run tens of livepatches on our production servers and have never
+> run into this issue. It's an extremely rare case — and if it does
+> happen, a user script should be able to handle it just fine.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 25 ++++++++++++++++++++--
- fs/nfsd/nfs4xdr.c   | 61 +++++++++++++++++++++++++++++++++++++++++++++--------
- fs/nfsd/xdr4.h      |  2 ++
- 3 files changed, 77 insertions(+), 11 deletions(-)
+Could you please share the script? Or at least summarize the situations
+when this script detect a conflict and refuse loading a livepatch?
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c4b6f4d65a47..01a2fb11dc0e 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3470,10 +3470,15 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	struct nfsd_notify_event *events[NOTIFY4_EVENT_QUEUE_SIZE];
- 	struct xdr_buf xdr = { .buflen = PAGE_SIZE * NOTIFY4_PAGE_ARRAY_SIZE,
- 			       .pages  = ncn->ncn_pages };
-+	int limit = NOTIFY4_EVENT_QUEUE_SIZE;
- 	struct xdr_stream stream;
- 	struct nfsd_file *nf;
--	int count, i;
- 	bool error = false;
-+	int count, i;
-+
-+	/* Save a slot for dir attr update if requested */
-+	if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS))
-+		--limit;
- 
- 	xdr_init_encode_pages(&stream, &xdr);
- 
-@@ -3487,7 +3492,7 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	}
- 
- 	/* we can't keep up! */
--	if (count > NOTIFY4_EVENT_QUEUE_SIZE) {
-+	if (count > limit) {
- 		spin_unlock(&ncn->ncn_lock);
- 		goto out_recall;
- 	}
-@@ -3534,6 +3539,22 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 		nfsd_notify_event_put(nne);
- 	}
- 	if (!error) {
-+		if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)) {
-+			u32 *maskp = (u32 *)xdr_reserve_space(&stream, sizeof(*maskp));
-+
-+			if (maskp) {
-+				u8 *p = nfsd4_encode_dir_attr_change(&stream, dp, nf);
-+
-+				if (p) {
-+					*maskp = BIT(NOTIFY4_CHANGE_DIR_ATTRS);
-+					ncn->ncn_nf[count].notify_mask.count = 1;
-+					ncn->ncn_nf[count].notify_mask.element = maskp;
-+					ncn->ncn_nf[count].notify_vals.data = p;
-+					ncn->ncn_nf[count].notify_vals.len = (u8 *)stream.p - p;
-+					++count;
-+				}
-+			}
-+		}
- 		ncn->ncn_nf_cnt = count;
- 		nfsd_file_put(nf);
- 		return true;
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 35646809becb..6e76502ca149 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4152,11 +4152,11 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 			  struct nfsd_file *nf, char *name, u32 namelen)
- {
- 	struct nfs4_file *fi = dp->dl_stid.sc_file;
--	struct path path =  { .mnt = nf->nf_file->f_path.mnt,
--			      .dentry = dentry };
-+	struct path path = nf->nf_file->f_path;
- 	struct nfsd4_fattr_args args = { };
- 	uint32_t *attrmask;
- 	__be32 status;
-+	bool parent;
- 	int ret;
- 
- 	/* Reserve space for attrmask */
-@@ -4168,6 +4168,9 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 	ne->ne_file.len = namelen;
- 	ne->ne_attrs.attrmask.element = attrmask;
- 
-+	parent = (dentry == path.dentry);
-+	path.dentry = dentry;
-+
- 	/* FIXME: d_find_alias for inode ? */
- 	if (!path.dentry || !d_inode(path.dentry))
- 		goto noattrs;
-@@ -4183,15 +4186,20 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 
- 	args.change_attr = nfsd4_change_attribute(&args.stat);
- 
--	attrmask[0] = dp->dl_child_attrs[0];
--	attrmask[1] = dp->dl_child_attrs[1];
--	attrmask[2] = 0;
-+	if (parent) {
-+		attrmask[0] = dp->dl_dir_attrs[0];
-+		attrmask[1] = dp->dl_dir_attrs[1];
-+	} else {
-+		attrmask[0] = dp->dl_child_attrs[0];
-+		attrmask[1] = dp->dl_child_attrs[1];
- 
--	if (!setup_notify_fhandle(dentry, fi, nf, &args))
--		attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
-+		if (!setup_notify_fhandle(dentry, fi, nf, &args))
-+			attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
- 
--	if (!(args.stat.result_mask & STATX_BTIME))
--		attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+		if (!(args.stat.result_mask & STATX_BTIME))
-+			attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+	}
-+	attrmask[2] = 0;
- 
- 	ne->ne_attrs.attrmask.count = 2;
- 	ne->ne_attrs.attr_vals.data = (u8 *)xdr->p;
-@@ -4283,6 +4291,41 @@ u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *
- 	return NULL;
- }
- 
-+/**
-+ * nfsd4_encode_dir_attr_change
-+ * @xdr: stream to which to encode the fattr4
-+ * @dp: delegation where the event occurred
-+ * @nf: nfsd_file opened on the directory
-+ *
-+ * Encode a dir attr change event.
-+ */
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp,
-+				 struct nfsd_file *nf)
-+{
-+	struct dentry *dentry = nf->nf_file->f_path.dentry;
-+	struct notify_attr4 na = { };
-+	struct name_snapshot n;
-+	bool ret;
-+	u8 *p = NULL;
-+
-+	if (!(dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)))
-+		return NULL;
-+
-+	take_dentry_name_snapshot(&n, dentry);
-+	ret = nfsd4_setup_notify_entry4(&na.na_changed_entry, xdr,
-+					dentry, dp, nf, (char *)n.name.name,
-+					n.name.len);
-+
-+	/* Don't bother with the event if we're not encoding attrs */
-+	if (ret && na.na_changed_entry.ne_attrs.attr_vals.len) {
-+		p = (u8 *)xdr->p;
-+		if (!xdrgen_encode_notify_attr4(xdr, &na))
-+			p = NULL;
-+	}
-+	release_dentry_name_snapshot(&n);
-+	return p;
-+}
-+
- static void svcxdr_init_encode_from_buffer(struct xdr_stream *xdr,
- 				struct xdr_buf *buf, __be32 *p, int bytes)
- {
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index d276840aca50..cf7f0df68d63 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -958,6 +958,8 @@ __be32 nfsd4_encode_fattr_to_buf(__be32 **p, int words,
- u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *nne,
- 			      struct nfs4_delegation *dd, struct nfsd_file *nf,
- 			      u32 *notify_mask);
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp,
-+				 struct nfsd_file *nf);
- extern __be32 nfsd4_setclientid(struct svc_rqst *rqstp,
- 		struct nfsd4_compound_state *, union nfsd4_op_u *u);
- extern __be32 nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
+I believe that most/all of these checks can be implemented in the kernel.
+And if we agreed to add a hybrid mode than it should be added
+together with the checks.
 
--- 
-2.53.0
+We have already invested a lot of effort into make the kernel
+livepatching as safe as possible. From my POV, the most important
+parts are:
 
+  + consistency model: Tasks are transitioned separately when they
+       do not use any livepatched function.
+
+  + atomic replace: Transition all livepatched functions at once.
+
+If we agree to add the hybrid model then we should add it with
+some safety belts as well. And it would be nice to get inspiration
+about the safety checks from your script.
+
+Best Regards,
+Petr
