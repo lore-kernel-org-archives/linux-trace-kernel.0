@@ -1,131 +1,182 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A3C3B636A
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 12:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCE63B6368
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 13:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775566773; cv=none; b=ZBMJy5IGEiWSYILwe3km9+v79B54tQ3VRUonlZgGYBUYlAYUIP9QqJ6BKRspcZ3KhcZIeJWweqUyrzSMW29o6hEY+wgrWkoXSbiOfhpdGuIj+7rmOfezk2rPtnqNJM3l0dShxiv97SlP7eeEtXREuO78lmPs/vGNRyN2vKcIocc=
+	t=1775566838; cv=none; b=HreKgPSnSKGpGpCMUP1kkuohc24NGyDONXOjZPbaP305c6CzMLqnMpSyjmNj4DI04P0ZCQ3AKh0gT+tyeixkUxl/lgsLNKEzn9mBGiVbjYarhialyvcgmr3fr+1ReIAOFxckjyOL838iq+LsbvsRJCiLnFiVCINPjS34Bgk7EmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775566773; c=relaxed/simple;
-	bh=Xgt0yKnI3R51jfRlpHewLRsZbOBbN1ll4V1KpUJWSZI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AHjvqpSG4KwnU5CTtrmB6xCnoTK9FZO452WZartHH1Cb9XBjKHM2lWzkvpblzkCabWqQigFIgBnOQ4uAFQyj1UOarene+YkySz74PHqJJRSIRtcS/BXko/WnwUn8xLZUmJs7KX+QryiR/GOhTzoY2Z9hy7JGHyZcxY7ECeGl9Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FSmTs+G3; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775566838; c=relaxed/simple;
+	bh=n69LQER+gpzAtUXozptn9ySUKii4kDCxgzw5XwT4DRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXi4bMOQOQF7oIUvkfB+AuP6PhV/nb4AY+gETvlFCTrDguohXzZT8ewEyEkib32ERs01w/jUVJHHJwATWuL+ndDuVjyCd1/bqzBXaJfi09q/ncl6EVHJvQ9BuxjUuq19oioa5pr17d0MRY4MCOf9PrIa+5D7jcYpWy2EuWK+RcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=X1HQ/Mft; arc=none smtp.client-ip=185.125.25.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSmTs+G3"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-43cff5dafc3so4394580f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Apr 2026 05:59:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775566770; x=1776171570; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RF2eQ/e3Z+XWoNNXFRS5Nhax4dGCTs+V8hdOEp9z2VY=;
-        b=FSmTs+G39Er3O63YqgSNXUAQ6zOrrylO0kBEbasKqcQFjI3KWxqeiEHVAfLawUanL2
-         bQVTgu6xVDqlB21+m4oVtqS7T/hpXtu/gjna4yhjYMJGHGxXyBn5Y+RDj+QZRr+vsPFB
-         aWhizCjRC7LEyFXl94ZKyJMHj8yFUL2UeOzW6fCX5pHRT3i8xyISYmDh+6kuEGsf/XVA
-         NIegkCxBlzhfppERcR1dWt0xoe50qvrMB70pQKf65aKBz2F7xzY0xSKpPRYAZlDtEmic
-         eKK/HzPQLDm5AErB+FSBuPxKN1frJAfcijYmG0KKeqrpw5mb3DmUimfbPiNNXTOEoP21
-         19yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775566770; x=1776171570;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RF2eQ/e3Z+XWoNNXFRS5Nhax4dGCTs+V8hdOEp9z2VY=;
-        b=MneGSEt9dTQd7wmQDPwUTjs//RMLg5Xx8PjPkS8lu/tFOJ7mHYwap2diWxzlXG6nHy
-         LnXDMCkf7Gr78U4t3lu3S6/Eb0eqJxhuGqmR7H1gxI2CTeSZ6v+bbmUdDhcalWaiBJS9
-         mFC0FIIx6Fvqxgs0nV2+xow5Pq3iHhyI72I461MsMeFFb364H4ukBiDth7NKXN5jp9HG
-         tmf6Xldy2kist65URn1CTMIiI0xzLhckdv3r8gtowmp0eNrIcpUDdmkJsisOE+FZjy3+
-         gc+VwMGuxDBDlenznqcxAgjQLJDNbLpoNVs2qp5u3mRtFHCNEgyQIOQOkaPhKc3UjbCc
-         gCWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlCP10vPRuHv2DPwl2JYajxOkyuX5XY7vIpCWZ3Dk/2FZuvDGq6iknqOX+GgUh2xdws3KGBcyrNRHDuMJjeYJf1F0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZYtkuAnXTcVJ1l7S7uPMiWsLD67RVvOmkaf6JHvjWKW4xTjT+
-	ETYMdm+yHvUI3Q3RoiCyCkPlQXeu3ipt8H6Vjbn2ttwXifUfZDuhsLgG
-X-Gm-Gg: AeBDietbmddQkXHmC3rdgGjDUBB+HD8cth1q3kXs3kgR+8GWzIPd2n0dwRjpiPIKzBQ
-	n0z/FYo3wN5ODh8Tepf7qKXc05SHz2swNTYQG9enSN8g7Ix+qbJcQ5CY1dF0jV7gR4d1QSfZNqv
-	7PknWRbcfAYufnEIh7zWZNAsqn2VG+i+B3quXbyCsFqEEG7HynobQQ4aBeZ1b7O3fP18XRzSERF
-	bxVp6TmOIEfS7mKhLQ7EPHtNiLcfMgwzOsWCcTv5F2Qcdxt8NHFSOBNchxGBJwLfMslQXHPe0WC
-	FFfgXCkqFyOACWNUJaatW2YQPrwfZ5c5WvS6JUi/vnVU4eKjJQG3el2ZnQ2xdBvpq/WEWQPlzlO
-	ZoFmvXru1sfN/Ix57ZuQ+sTKNdqCMYNRfeODlZ5/nFypowXsEvuNcar04VCoBEtA3Q4V7HKZImC
-	fvnzgKuasQ2y0XeszKlJrlCQ==
-X-Received: by 2002:a05:6000:1a8d:b0:43d:3ce:ecc1 with SMTP id ffacd0b85a97d-43d292e2501mr22709595f8f.43.1775566770076;
-        Tue, 07 Apr 2026 05:59:30 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4f52easm51273781f8f.36.2026.04.07.05.59.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2026 05:59:29 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 7 Apr 2026 14:59:28 +0200
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, ihor.solodrai@linux.dev, emil@etsalapatis.com,
-	linux-open-source@crowdstrike.com
-Subject: Re: [RFC PATCH bpf-next v5 1/2] tracing: Prefer vmlinux symbols over
- module symbols for unqualified kprobes
-Message-ID: <adT_sBF_i_6oedFe@krava>
-References: <20260406193158.754498-1-andrey.grodzovsky@crowdstrike.com>
- <20260406193158.754498-2-andrey.grodzovsky@crowdstrike.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="X1HQ/Mft"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fqmX06NxFzNjv;
+	Tue,  7 Apr 2026 15:00:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1775566832;
+	bh=8ZxPSXWDIoiuY5G2zijl5txUNOYBhI92nA1iVSSfllo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X1HQ/MftNpwfQzzWsM/qUT8sNrr4dRSGYIVauVfY8Vb+O3i8VT1Fwkj0ZXmxUdkrC
+	 athEYlil+TY5HuCphBRyRBIDpL2ZMOqX/q6dRPOGEq+PAKbJ0t7+28kjOpAjAy9KE0
+	 +yAfw9LOy6zjg4ulROelMcOBQtX2yPlLAYjU86sQ=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fqmWz5bgFzCQy;
+	Tue,  7 Apr 2026 15:00:31 +0200 (CEST)
+Date: Tue, 7 Apr 2026 15:00:27 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
+	Justin Suess <utilityemal77@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/17] landlock: Add tracepoints for ptrace and scope
+ denials
+Message-ID: <20260407.Aesoo2sairai@digikod.net>
+References: <20260406143717.1815792-1-mic@digikod.net>
+ <20260406143717.1815792-13-mic@digikod.net>
+ <20260406110123.4072a765@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260406193158.754498-2-andrey.grodzovsky@crowdstrike.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260406110123.4072a765@gandalf.local.home>
+X-Infomaniak-Routing: alpha
 
-On Mon, Apr 06, 2026 at 03:31:57PM -0400, Andrey Grodzovsky wrote:
-> When an unqualified kprobe target exists in both vmlinux and a loaded
-> module, number_of_same_symbols() returns a count greater than 1,
-> causing kprobe attachment to fail with -EADDRNOTAVAIL even though the
-> vmlinux symbol is unambiguous.
+On Mon, Apr 06, 2026 at 11:01:23AM -0400, Steven Rostedt wrote:
+> On Mon,  6 Apr 2026 16:37:10 +0200
+> Mickaël Salaün <mic@digikod.net> wrote:
 > 
-> When no module qualifier is given and the symbol is found in vmlinux,
-> return the vmlinux-only count without scanning loaded modules. This
-> preserves the existing behavior for all other cases:
-> - Symbol only in a module: vmlinux count is 0, falls through to module
->   scan as before.
-> - Symbol qualified with MOD:SYM: mod != NULL, unchanged path.
-> - Symbol ambiguous within vmlinux itself: count > 1 is returned as-is.
+> > ---
+> >  include/trace/events/landlock.h | 135 ++++++++++++++++++++++++++++++++
+> >  security/landlock/log.c         |  20 +++++
+> >  2 files changed, 155 insertions(+)
+> > 
+> > diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
+> > index 1afab091efba..9f96c9897f44 100644
+> > --- a/include/trace/events/landlock.h
+> > +++ b/include/trace/events/landlock.h
+> > @@ -11,6 +11,7 @@
+> >  #define _TRACE_LANDLOCK_H
+> >  
+> >  #include <linux/tracepoint.h>
+> > +#include <net/af_unix.h>
+> >  
+> >  struct dentry;
+> >  struct landlock_domain;
+> > @@ -19,6 +20,7 @@ struct landlock_rule;
+> >  struct landlock_ruleset;
+> >  struct path;
+> >  struct sock;
+> > +struct task_struct;
+> >  
+> >  /**
+> >   * DOC: Landlock trace events
+> > @@ -433,6 +435,139 @@ TRACE_EVENT(
+> >  		__entry->log_new_exec, __entry->blockers, __entry->sport,
+> >  		__entry->dport));
+> >  
+> > +/**
+> > + * landlock_deny_ptrace - ptrace access denied
+> > + * @hierarchy: Hierarchy node that blocked the access (never NULL)
+> > + * @same_exec: Whether the current task is the same executable that called
+> > + *             landlock_restrict_self() for the denying hierarchy node
+> > + * @tracee: Target task (never NULL); eBPF can read pid, comm, cred,
+> > + *          namespaces, and cgroup via BTF
+> > + */
+> > +TRACE_EVENT(
+> > +	landlock_deny_ptrace,
+> > +
+> > +	TP_PROTO(const struct landlock_hierarchy *hierarchy, bool same_exec,
+> > +		 const struct task_struct *tracee),
+> > +
+> > +	TP_ARGS(hierarchy, same_exec, tracee),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__field(__u64, domain_id) __field(bool, same_exec)
+> > +			__field(u32, log_same_exec) __field(u32, log_new_exec)
+> > +				__field(pid_t, tracee_pid)
+> > +					__string(tracee_comm, tracee->comm)),
 > 
-> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-> Suggested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
-
-lgtm, kprobe_multi seems to behave like that already, maybe you could add test for that as well
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-jirka
-
-
-> ---
->  kernel/trace/trace_kprobe.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Event formats are different than normal macro formatting. Please use the
+> event formatting. The above is a defined structure that is being created
+> for use. Keep it looking like a structure:
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index a5dbb72528e0..99c41ea8b6d7 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -765,6 +765,13 @@ static unsigned int number_of_same_symbols(const char *mod, const char *func_nam
->  	if (!mod)
->  		kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
->  
-> +	/* If the symbol is found in vmlinux, use vmlinux resolution only.
-> +	 * This prevents module symbols from shadowing vmlinux symbols
-> +	 * and causing -EADDRNOTAVAIL for unqualified kprobe targets.
-> +	 */
-> +	if (!mod && ctx.count > 0)
-> +		return ctx.count;
-> +
->  	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
->  
->  	return ctx.count;
-> -- 
-> 2.34.1
+> 	TP_STRUCT__entry(
+> 		__field(	__u64,		domain_id)
+> 		__field(	bool,		same_exec)
+> 		__field(	u32,		log_same_exec)
+> 		__field(	u32,		log_new_exec)
+> 		__field(	pid_t,		tracee_pid)
+> 		__string(	tracee_comm,	tracee->comm)
+> 	),
+
+I was using clang-format, but it doesn't make sense here, I'll fix it.
+
+> 
+> See how the above resembles:
+> 
+> struct entry {
+> 	__u64		domain_id;
+> 	bool		same_exec;
+> 	u32		log_same_exec;
+> 	u32		log_new_exec;
+> 	pid_t		tracee_pid;
+> 	string		tracee_comm;
+> };
+> 
+> Because that's pretty much what the trace event TP_STRUCT__entry() is going
+> to do with it. (The string will obviously be something else).
+> 
+> This way it's also easy to spot wholes in the structure that is written
+> into the ring buffer. The "same_exec" being a bool followed by two u32
+> types, is going to cause a hole. Move it to between tracee_pid and
+> tracee_comm.
+
+Actually, the log_* field should be bool too.  Anyway, is it a concern
+that the ring buffer leaks (previous event) kernel memory or is the
+concern mostly about avoiding wasted space and making easy to spot holes
+even if it's OK?
+
+> 
+> Please fix the other events too.
+
+Sure. Thanks!
+
+> 
+> -- Steve
+> 
+> 
+> > +
+> > +	TP_fast_assign(__entry->domain_id = hierarchy->id;
+> > +		       __entry->same_exec = same_exec;
+> > +		       __entry->log_same_exec = hierarchy->log_same_exec;
+> > +		       __entry->log_new_exec = hierarchy->log_new_exec;
+> > +		       __entry->tracee_pid =
+> > +			       task_tgid_nr((struct task_struct *)tracee);
+> > +		       __assign_str(tracee_comm);),
+> > +
+> > +	TP_printk(
+> > +		"domain=%llx same_exec=%d log_same_exec=%u log_new_exec=%u tracee_pid=%d comm=%s",
+> > +		__entry->domain_id, __entry->same_exec, __entry->log_same_exec,
+> > +		__entry->log_new_exec, __entry->tracee_pid,
+> > +		__print_untrusted_str(tracee_comm)));
+
+Are you OK with this new helper?
+
+> > +
+> >
 > 
