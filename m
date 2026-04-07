@@ -1,74 +1,100 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC7935A948;
-	Tue,  7 Apr 2026 16:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DA410F2
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Apr 2026 18:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775580801; cv=none; b=Azq/Q8Az8h8RXbIH46FHFrOc7Sf3hZvNe43mWUv+ynYpgD4iqJL1rqv+wX8DOVcB2Nsa6xGFrVOf8k2jx/MNt7UIJHOLmhkILINcrQXpr1QXRw90a++Hrtntx5juCX8wFjSLDnp+pCuz7HyIRgiqNFnWyxU9lDrcKgraLdlVfZs=
+	t=1775587380; cv=none; b=hKKCUw3ujUHhL5nSLXopaFPxBzJ8mx2YU+Yqx384luJjCxO5u9jNGFRQ7Gq/n2nz8rAm67c/tulkHXtrz/gJ+pUodifnMXsL3nEtOJwF0/FB2ZSp9MKNBw6RJn5WFyPAKUgania1HZEJNkLqDLY1k7Qr95Nf/kRZonmAWPU3pJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775580801; c=relaxed/simple;
-	bh=2Lv7HWSfDk06JcXpFH/v7BnnV8bcpLCE/WA2SofRaGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qBb8fIfedoVzyiGQF9QkhgHCxcAQ/p/BB4ZrGzYI3ab2x3JF4ylWZiW4AIlO2t1shNo5Su6cC6QUNrnk6KBN2K+UL0bXfB/Dn4H8SARhz/POdu54jUhQIbgExgvPDFvls1AY1esJWAooubqcvrQ+GU+bQHjZe3oxdCDoC5p1u3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 80C0C5B39E;
-	Tue,  7 Apr 2026 16:53:12 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 7E04620028;
-	Tue,  7 Apr 2026 16:53:10 +0000 (UTC)
-Date: Tue, 7 Apr 2026 12:54:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: CaoRuichuang <create0818@163.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Check exact trace_marker_raw payload
- lengths
-Message-ID: <20260407125424.7c2d88ea@gandalf.local.home>
-In-Reply-To: <20260407101245.78988-1-create0818@163.com>
-References: <20260407101245.78988-1-create0818@163.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1775587380; c=relaxed/simple;
+	bh=BqZZ88ZyfFtV1iG7o0x13A7i3m7UwZk8dz6w/VKAK8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZTAAkrA81WpG6+Cm/3h4HG0Rv61clnSJk0WyyPQMhE31L1x9gjK0xQdKDoW8CVdIJYvkgRmhXZ/1nCQeWKx/sMQdOKgIvYtQREAq3IBSD21RyDlzUG6/dFPYdtllsColh+wlSgoo4rJGtBdV+VQUyh3mfJ3cGU6fOlc7ljoTYz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LcDWftGR; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LcDWftGR"
+Message-ID: <f96f82ea-2c39-4b3b-b177-38fb93bc6169@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1775587376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DHzoTtQhom8Iy/wMxziQ3JMK0R5Gn0tKEllnnrR7caU=;
+	b=LcDWftGRPXFRioM9jQ0gbFbRf/XvA3VogphJWAdO2XdUBp7Mra6IO7FD3zFQwrGXU0wX9r
+	EiKr/bG7atjCMRBo1+2+5W119WeT799KCJzUL1gCPKh3RJncEccGTyj7ZMvWbxl781Vid8
+	7U8D2XS9B0Db51HJALbLzEZHlsb7a6k=
+Date: Tue, 7 Apr 2026 11:42:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH bpf-next v6 1/2] tracing: Prefer vmlinux symbols over
+ module symbols for unqualified kprobes
+To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>,
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, jolsa@kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, emil@etsalapatis.com,
+ linux-open-source@crowdstrike.com
+References: <20260407165145.1651061-1-andrey.grodzovsky@crowdstrike.com>
+ <20260407165145.1651061-2-andrey.grodzovsky@crowdstrike.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <20260407165145.1651061-2-andrey.grodzovsky@crowdstrike.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 94r3c4zp9psqjpid3megebhknrg1xstq
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 7E04620028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/Kvom6OC3+xh4MOvxv6UEX/a/Y8sCtumw=
-X-HE-Tag: 1775580790-17587
-X-HE-Meta: U2FsdGVkX19BZIlxSmwngDeNcKYyk63XjNHONa/VJb7bZuKMcxQ9lvmXKkqz/LY3Z82G+J7suauesnHGDdG7Kggc+7Gu0ofbwhTF2qfFCvgvQ9vwb23QeAJ03m5j3Vebhzev2NNwzuAsc//FH3RWJZt5sJkiUFzRt6HU123XmKN66SFrCQqdqAalzGQGE+Ct7UmpASHyhGAAj7nj3Pil68ZO3fhkgDIvmBAwIQ2PYlDbDtWmpekKqNtJ3tsGcWihXf4shMuCcJJLxtQWCBnu6xFCO1pHlkWkTKAohAn2ijpEv7RXUpYz//zjty1LqVjw5cBkiH/kZWpeIv1AfYDZ2OSNF5ASl7z8
+X-Migadu-Flow: FLOW_OUT
 
-On Tue,  7 Apr 2026 18:12:45 +0800
-CaoRuichuang <create0818@163.com> wrote:
+On 4/7/26 9:51 AM, Andrey Grodzovsky wrote:
+> When an unqualified kprobe target exists in both vmlinux and a loaded
+> module, number_of_same_symbols() returns a count greater than 1,
+> causing kprobe attachment to fail with -EADDRNOTAVAIL even though the
+> vmlinux symbol is unambiguous.
+> 
+> When no module qualifier is given and the symbol is found in vmlinux,
+> return the vmlinux-only count without scanning loaded modules. This
+> preserves the existing behavior for all other cases:
+> - Symbol only in a module: vmlinux count is 0, falls through to module
+>   scan as before.
+> - Symbol qualified with MOD:SYM: mod != NULL, unchanged path.
+> - Symbol ambiguous within vmlinux itself: count > 1 is returned as-is.
+> 
+> Fixes: 926fe783c8a6 ("tracing/kprobes: Fix symbol counting logic by looking at modules as well")
+> Fixes: 9d8616034f16 ("tracing/kprobes: Add symbol counting check when module loads")
+> Suggested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> ---
+>  kernel/trace/trace_kprobe.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index a5dbb72528e0..99c41ea8b6d7 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -765,6 +765,13 @@ static unsigned int number_of_same_symbols(const char *mod, const char *func_nam
+>  	if (!mod)
+>  		kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
+>  
+> +	/* If the symbol is found in vmlinux, use vmlinux resolution only.
+> +	 * This prevents module symbols from shadowing vmlinux symbols
+> +	 * and causing -EADDRNOTAVAIL for unqualified kprobe targets.
+> +	 */
+> +	if (!mod && ctx.count > 0)
+> +		return ctx.count;
 
-> From: Cao Ruichuang <create0818@163.com>
-> 
-> trace_marker_raw.tc currently depends on awk strtonum() and
-> assumes that the printed raw-data byte count is rounded up to four
-> bytes.
-> 
-> That makes the test fail on systems that use mawk, and it no longer
-> matches the raw_data trace output we want to validate after preserving
-> true payload lengths for long records.
-> 
-> Rewrite the test to capture a small sequence of raw marker writes and
-> check the exact number of printed payload bytes in order. While doing
-> that, use od for the endian probe, switch to a fixed raw marker id so
-> the test only varies payload length, and disable pause-on-trace while
-> streaming trace_pipe.
-> 
+Nice to see this actually works.
 
-The tests are to validate the code and if the tests fail when the code is
-working as designed, it is the test that is at fault, and the fix is to fix
-the tests. Not to make the code match the test.
+Acked-by: Ihor Solodrai <ihor.solodrai@linux.dev>
 
--- Steve
+> +
+>  	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
+>  
+>  	return ctx.count;
+
