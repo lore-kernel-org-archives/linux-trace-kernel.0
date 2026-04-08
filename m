@@ -1,155 +1,168 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB8739183A;
-	Wed,  8 Apr 2026 20:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279663914F0
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 20:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775679832; cv=none; b=PFzqHPBtwbfx2iPQqOHTIJ3/WLl0CBSFT8tj/WUPUZoBacKLfZ9sm+BX/FBKcBjEV0PBhtPznhvyaZy5ViDruE1yLu7lXa6jCKSQB31e6XQLI1oGo1OlyGmLeAk19mgciNkVC4fwRQeGC4v3HxKdT7D4rm3fZyWeccqzt+EBIxU=
+	t=1775679848; cv=none; b=BFigVNhYryeXu8usuGDzf886zuP3o0kV2/m3Znqm1nqTryUNXbHX647JocsiX9UZ8tEx/it4N86Dc8Wg+2hhVFUauRJ2Ow9AQ8MPp+/NTDM1wzVVFnK3r7vvwngiQdFvWHpN186amLA++fZrBpZqrOSYuYA1xkDzCy996pgQjPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775679832; c=relaxed/simple;
-	bh=6hchUHPBWNltcVqXDOinPWMbWFynq+4Kg5g1kDB7ZJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SD4BKtaUFIxljvjF8RpFfyWsNHQ9i+afYTm7vtGGnes25MHxMnVZu3tO3Fzv59y2zxmcEuRxdK5C/XqC7hc/4BdziDbRSk4JGSYeRcwDT+CJqFgxFu7PqO0mgYW/9ASHz9zgEerYF5pQBP/uMYOdo7v9uEJmHz2fwgKR93hlsF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 2B71A1B44D4;
-	Wed,  8 Apr 2026 20:23:44 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 5CA702E;
-	Wed,  8 Apr 2026 20:23:42 +0000 (UTC)
-Date: Wed, 8 Apr 2026 16:24:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: abhijithsriram95@gmail.com
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org (open
- list:TRACING), linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: Re: [PATCH v4] kernel/trace: fixed static warnings
-Message-ID: <20260408162459.6b8f4b01@gandalf.local.home>
-In-Reply-To: <20260406072834.243491-2-abhijithsriram95@gmail.com>
-References: <20260406072834.243491-2-abhijithsriram95@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1775679848; c=relaxed/simple;
+	bh=M/LjiKecfzVTG8HRl4m3JA7iq2zgvUsjbNQ4AnBHvSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YssnG8BkI++5kfVaoTn4pGp3y8QT4VwDp6sV1ih4M6ATZt0piwUE2ihJRZ0O7nznL70WV40jMpFp6aVIk4nY4m+NtTNYyXRa7s4mVThf98zRPtwHQfcEbCCiSoEiAm6rBPXiBH8nlIRxZjZoH0I9F28qalX6QlOzV74HZVOpHPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flbmwE/K; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flbmwE/K"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-35da9c0c007so195625a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 13:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775679846; x=1776284646; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UthiWrjG1Hwt/0nbiWEQ1KZeqkoIURhsJh3Eb3JdJ/8=;
+        b=flbmwE/Kaz/ysnc/p7I3LFzNeBn0PhsXsyUeICI3DU2yymftWFnoMS54OlI/gh3kZq
+         1nPTRmysaQh9e2NhImBXEDN31GXW/o83HpUwoGLm9feJjcrupoECWC6nnQfMGhKjRNE7
+         We7X9uC2sdUjPZ+6UaRzJgyA8RjGC255wjqau1LB0q3rFqlg7vqUpMp98Q6XRC/um4Il
+         bZHr6ia1SmLTDY9Go/69nRXnkStv3L+KzmB4lO/YPJ/FS8H42ZpFL4Vqe4I1FHWnv9la
+         twUCJxE/bQW7CpPf0vpoaI0c9tUMJONVdV4rPUJ8BHGdONVZ6Z24LeWLgeQGpbAcMH4J
+         5d3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775679846; x=1776284646;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UthiWrjG1Hwt/0nbiWEQ1KZeqkoIURhsJh3Eb3JdJ/8=;
+        b=a9oUCUfGb1cC0VoEVYjLbAEMDiD9FKxqUAqMoisXMciwKFH4s37AUKk4Dc8JPmpO3z
+         KE57qmM3dwmclvkm4iPIKX8TVHgg5eE5pRvZ2AQOkvM61QpBLdO8Y+4LgxXzSCxNXsr3
+         HeIB6a+nmNr5Oo4y0k7pfupaIHeuEpzc7jsQBo93hF0314fozeOIg2Ho45iTpJAeZHew
+         CrqW3nSIH2e1VoELOs5qX5U4Cc2sUhJl1nHO7YTdA4gfZJICe+bsupIO1kgsHyyrCLTT
+         2BJ4O0VddJAfMQSM1pQLLOS01olNJvajjcXpxl2DdIfZFeEOpfqmYCoz5MrBXenyuT6L
+         ZNZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBqFCuEzM1lYOmUdRF4HzlK3lmvwJwahE2ZzMPCjtvyNXM4c11voGv1FJlYf8YOQXMZi2faXm/KWmkJC0hfGDycJQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhUA3+mEQchRKHv3+7rNTAC3O+SBf9EhI9ier50k+/NBibbJJu
+	TXSPFm62siFfFqoK8MM1qf4YtyRbT/g16OqPH/smhhSKCIyVPnm7DuOWu3dp1C2t
+X-Gm-Gg: AeBDietCtvazfoP7FON6d14aH9nih9O4bKPMVMKzSQYVL1c1w3X7DqZW2WZMzyQ33TH
+	JtFoQ78zuX+tLL0SWd6jng3vbmwAKOGBWekAZcdm9T3lYAfaM79QxyLXUeF4E7Sf1w+IQYvdZx9
+	4f/Bt9570DWLaoh4sUZ7qfbQ7qTvWDqYGq9lUMe+n8UNkKfRfR07vYzZfmG39DTxguytoQwXUh+
+	tcuTLd7gIZIINQvH1mHFooguocyhpB/3LhfsBoFG+IBpaJtArNULQKEu53FP60lQ9Qcugn9y3S9
+	bP3AlPmvWuQa5dz8J9bp9svsvlldT1+ZBGfFNj6hRASazeOD3xJSbpebIho+OTJvbCg7t3Nd9TQ
+	bFxUD2Mjz27QEr7/QvOGjGTyzT/nV7r6R19Du9Sc9dMkkzLbH+IDmKnAEqekYeVravnlnIjWO/Q
+	p9mfMkpkj/++1G0jI9vVeVxXV1ldfqDdKYmBSCBPUj/R57mF1xx20MarTiGczbJryw9noRtkDWU
+	JKmwNQMPw69oE8=
+X-Received: by 2002:a17:90b:5583:b0:35a:329:73d8 with SMTP id 98e67ed59e1d1-35de67a0817mr21268988a91.4.1775679846102;
+        Wed, 08 Apr 2026 13:24:06 -0700 (PDT)
+Received: from localhost.localdomain ([103.10.31.106])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35e34fd383dsm704288a91.6.2026.04.08.13.24.02
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 08 Apr 2026 13:24:05 -0700 (PDT)
+From: Shuvam Pandey <shuvampandey1@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	David Gow <david@davidgow.net>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	shuvampandey1@gmail.com
+Subject: [PATCH v3] seq_buf: Export seq_buf_putmem_hex() and add KUnit tests
+Date: Thu,  9 Apr 2026 02:08:51 +0545
+Message-ID: <20260408202351.21829-1-shuvampandey1@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 5CA702E
-X-Stat-Signature: nnz6dpwbeymgbcz6z43rit9ain6mrxn3
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19G/5FHFKUhUcofEssekgIdJ5DPAaYzZV8=
-X-HE-Tag: 1775679822-120174
-X-HE-Meta: U2FsdGVkX18zRVtd3Q/xgBGRYWom4HmaBQSZ2spJCVxSY7wMh7oV16e+S1L4MSnyk2SMQCwOnjgS0G6aI73ZbgUIQBuMKVWZTEBXLm9H/KbufCY4Q8Ux9fQNnbFSiCewnIGEc7hyWJxFJ5jaqbJ6A5Ia1WwyhbtnTgqgjrw7fGIhzH9du5jMWZS0a9q59sySeGQeebPShzWWm56zrufIJ86+P19cx3vkdxM7FmnlKhtcimAaGHv7bA2k/N8zu3g8NlKQ7+gB0mzHp2xvLtwPBu7jrIUjFlOdit14UaRigNtA/1wIkrFX4UJX4V/9oPndQ6V4BuV7MOXOQkfHWCNX/Py0blUYyoZAaW1re4tanZ+kzQ0KyN9FCA==
+Content-Transfer-Encoding: 8bit
 
+seq_buf: Export seq_buf_putmem_hex() and add KUnit tests
 
-Subject should be:
+The seq_buf KUnit suite does not exercise seq_buf_putmem_hex().
 
- tracing: Fixed static checker warnings
+Add one test for the len > 8 chunking path and one overflow test
+where a later chunk no longer fits in the buffer.
 
-On Mon,  6 Apr 2026 09:28:34 +0200
-abhijithsriram95@gmail.com wrote:
+Export seq_buf_putmem_hex() as well so SEQ_BUF_KUNIT_TEST=m links
+cleanly. Without the export, modpost reports seq_buf_putmem_hex as
+undefined when seq_buf_kunit is built as a module.
 
-> From: Abhijith Sriram <abhijithsriram95@gmail.com>
-> 
-> The change in the function argument description
-> was due to the static code checker script reading
-> the word filter back to back
-> 
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Shuvam Pandey <shuvampandey1@gmail.com>
+---
+Changes since v1: https://lore.kernel.org/all/20260406033728.25998-1-shuvampandey1@gmail.com/
+- export seq_buf_putmem_hex() so SEQ_BUF_KUNIT_TEST=m links cleanly
+- validate with a fresh arm64 build using CONFIG_KUNIT=y and CONFIG_SEQ_BUF_KUNIT_TEST=m
+- send as a new thread
+- capitalize the subject for seq_buf/tracing style
 
-The below changes should be beneath the '---'
+ lib/seq_buf.c             |  1 +
+ lib/tests/seq_buf_kunit.c | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
-> Changes in v2:
-
-The last change should be first. In fact, I only care about the last change
-as the previous versions should have the description of what changed.
-
-> - corrected *m = file->private_data to m = file->private_data
-> 
-> Changes in v3:
-> - reverted the changes for struct seq_file *m and
->   added a new empty line instead
-> 
-> Changes in v4:
-
-That said, this should really be:
-
- Changes since v3: https://lore.kernel.org/all/20260406060046.223496-2-abhijithsriram95@gmail.com/
-
-
-> - added a new empty line before char *buf ...
->   previously this line was relocated to avoid the
->   static check warning.
-> 
-> Signed-off-by: Abhijith Sriram <abhijithsriram95@gmail.com>
-> ---
->  kernel/trace/trace_events_trigger.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-> index 655db2e82513..664283bcd9ea 100644
-> --- a/kernel/trace/trace_events_trigger.c
-> +++ b/kernel/trace/trace_events_trigger.c
-> @@ -246,7 +246,7 @@ event_triggers_post_call(struct trace_event_file *file,
->  }
->  EXPORT_SYMBOL_GPL(event_triggers_post_call);
->  
-> -#define SHOW_AVAILABLE_TRIGGERS	(void *)(1UL)
-> +#define SHOW_AVAILABLE_TRIGGERS	((void *)(1UL))
->  
->  static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
->  {
-> @@ -352,6 +352,7 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
->  		ret = seq_open(file, &event_triggers_seq_ops);
->  		if (!ret) {
->  			struct seq_file *m = file->private_data;
-> +
-
-This blank line makes the code look worse. Yes, we usually want a blank
-line between the variable declarations and the code, but when it comes to
-code blocks (not functions) that rule is not as strict.
-
-Get rid of this newline.
-
-
->  			m->private = file;
->  		}
->  	}
-> @@ -390,6 +391,7 @@ static ssize_t event_trigger_regex_write(struct file *file,
->  {
->  	struct trace_event_file *event_file;
->  	ssize_t ret;
-> +
->  	char *buf __free(kfree) = NULL;
-
-The char *buf is a declaration. It no new line is expected before it.
-
->  
->  	if (!cnt)
-> @@ -633,6 +635,7 @@ clear_event_triggers(struct trace_array *tr)
->  
->  	list_for_each_entry(file, &tr->events, list) {
->  		struct event_trigger_data *data, *n;
-> +
-
-Again, if it's in a code block, don't change it.
-
--- Steve
-
->  		list_for_each_entry_safe(data, n, &file->triggers, list) {
->  			trace_event_trigger_enable_disable(file, 0);
->  			list_del_rcu(&data->list);
-> @@ -785,7 +788,7 @@ static void unregister_trigger(char *glob,
->   *   cmd               - the trigger command name
->   *   glob              - the trigger command name optionally prefaced with '!'
->   *   param_and_filter  - text following cmd and ':'
-> - *   param             - text following cmd and ':' and stripped of filter
-> + *   param             - text following cmd and ':' and filter removed
->   *   filter            - the optional filter text following (and including) 'if'
->   *
->   * To illustrate the use of these components, here are some concrete
-
+diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+index f3f3436d60a9403eae5b1ef9b091b027881f14fb..b59488fa8135cdb0340fbeb43d8d74db8ae13146 100644
+--- a/lib/seq_buf.c
++++ b/lib/seq_buf.c
+@@ -298,6 +298,7 @@ int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
+ 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(seq_buf_putmem_hex);
+ 
+ /**
+  * seq_buf_path - copy a path into the sequence buffer
+diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
+index 8a01579a978e655cd09024d0ea9c4c9cd095263f..eb466386bbefb1c81773cdae65a8ac3df91cd8ea 100644
+--- a/lib/tests/seq_buf_kunit.c
++++ b/lib/tests/seq_buf_kunit.c
+@@ -184,6 +184,38 @@ static void seq_buf_get_buf_commit_test(struct kunit *test)
+ 	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
+ }
+ 
++static void seq_buf_putmem_hex_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 24);
++	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
++#ifdef __BIG_ENDIAN
++	const char *expected = "0001020304050607 0809 ";
++#else
++	const char *expected = "0706050403020100 0908 ";
++#endif
++
++	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), 0);
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), strlen(expected));
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
++}
++
++static void seq_buf_putmem_hex_overflow_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 20);
++	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
++#ifdef __BIG_ENDIAN
++	const char *expected = "0001020304050607 ";
++#else
++	const char *expected = "0706050403020100 ";
++#endif
++
++	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), -1);
++	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 20);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
++}
++
+ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_init_test),
+ 	KUNIT_CASE(seq_buf_declare_test),
+@@ -194,6 +226,8 @@ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_printf_test),
+ 	KUNIT_CASE(seq_buf_printf_overflow_test),
+ 	KUNIT_CASE(seq_buf_get_buf_commit_test),
++	KUNIT_CASE(seq_buf_putmem_hex_test),
++	KUNIT_CASE(seq_buf_putmem_hex_overflow_test),
+ 	{}
+ };
+ 
