@@ -1,145 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DCC1A682F
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 12:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026E23D16E0
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 13:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775652103; cv=none; b=d/N53yl4ylkSNcKp1YEl4GmO7mRmwhAKA7u15X9bbTsZL7J71+DfsA6ynToKMgeUgOVq0ZoGSsIkDrHNfwJZGRhEtElRvqgJmMlSRfKXTe9M9LJH/pS42oWwVJXxf2RhMGmWZyx7g0L9a9Yem85W5N6aADo/+p0Wf+jclQqL3KI=
+	t=1775655915; cv=none; b=LsYbnTrVb7pNwSlPujBOXmYID7/e+rEiBw68sZbxN9XxKJzJ9p+WVBCh6tk6WEQ/63hqJMu4ntyT/sOGbifaCpzlOfcFvaHjNw1F16YcXSF1i4CWSeTEGnAfZ3n7uGFJ/9Juxz31Q7zjkw9gugh/0nndKh3Te7WKHiT4BNZs2xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775652103; c=relaxed/simple;
-	bh=Iwt4Tb6hOZuRBYvyF+IF0ofToj5rdqJvUvflMnV6VU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rnT8mcMKxaw013asLID2pddnOpAfJHoIgX7f14I6Eas5Vq3dLAT/XgfHn5eIpCrIt3NXEIj4kPiqM2jHZ/6mataP5zXtyanlic9uSlDHyIdSGI053xG8HmvgdtBB6GoywoGu0lVodL4riFvjl4l8L0nqJGduB6WcbEj0uKUe1+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iFeZ0QWk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1775655915; c=relaxed/simple;
+	bh=96pqWyn6sg9V9CtrdwIXS4q1G7kDDB0OegRtHC3KUGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZjsLM5Cm26DaV4vKVGDswIoMWPQTwim0v9DnwiazmjwKBGp2tFp39vLfDFYXKLdhsTkfypNmowYuzr4Jbs4QOBRV3i2Vj73oFNTHGfptLmyCneXcFkUoDVK4MBOXb8tCGk0kOlWi1T57JKjGCn8mQiay+ok+kRJNJUIIBRGlhZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2/KRW6DL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EXLGe7QT; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2/KRW6DL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EXLGe7QT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iFeZ0QWk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775652100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fmfA0Hm9tvRCD5nJvyEjImPcNYwXbm+DPWKpmcQx18A=;
-	b=iFeZ0QWkCTIjwNwDD8rc3hw+2Cz5f3eE/QOl848yXGJOdimqHAf20ZqM1Nv3wzwOmBrM40
-	xVKqB1CuwYGiIDo4la1vwgcHrGuBt+eyqTG1/WkHr3zJiUY+DHWAlT1EQ9AtjznYX+cSuZ
-	4+7lr2nDzDOvoEv92c4SGzukyBWIzwI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-30-13Naxm8CPQSPorcNcMyAHw-1; Wed,
- 08 Apr 2026 08:41:37 -0400
-X-MC-Unique: 13Naxm8CPQSPorcNcMyAHw-1
-X-Mimecast-MFC-AGG-ID: 13Naxm8CPQSPorcNcMyAHw_1775652095
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2/KRW6DL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EXLGe7QT";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2/KRW6DL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EXLGe7QT"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 34C4119560A7;
-	Wed,  8 Apr 2026 12:41:34 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.74.80.247])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E59C300019F;
-	Wed,  8 Apr 2026 12:41:25 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH] perf: enable unprivileged syscall tracing with perf trace
-Date: Wed,  8 Apr 2026 08:39:47 -0400
-Message-ID: <20260408123947.23779-2-ashelat@redhat.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 556344E9ED;
+	Wed,  8 Apr 2026 13:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1775655912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=2/KRW6DLy38ko0+FKOgsrCg79uq/lN6y7ccGVBZ1S50/vsiStlcgoF7TM7CWN6K7NnFLcq
+	LtwNzgdPktx22ylYwoCdejd3ggHrZF+Pzb5ALuyUhCMhHShA8Le0fhniOsf+ZIIaOaD7CM
+	d4oKhxQ/Z5Ki5bnLq/jVV0eyiY9nhvA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1775655912;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=EXLGe7QTULOkdrTE+oBvw2r0u+WLTQnh+BXVz5AMbm40b7twK1HqsLJh+DNXHbD3MOi++f
+	VNFM3Yhn5SpTs/CQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1775655912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=2/KRW6DLy38ko0+FKOgsrCg79uq/lN6y7ccGVBZ1S50/vsiStlcgoF7TM7CWN6K7NnFLcq
+	LtwNzgdPktx22ylYwoCdejd3ggHrZF+Pzb5ALuyUhCMhHShA8Le0fhniOsf+ZIIaOaD7CM
+	d4oKhxQ/Z5Ki5bnLq/jVV0eyiY9nhvA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1775655912;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=EXLGe7QTULOkdrTE+oBvw2r0u+WLTQnh+BXVz5AMbm40b7twK1HqsLJh+DNXHbD3MOi++f
+	VNFM3Yhn5SpTs/CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 490CA4A0B3;
+	Wed,  8 Apr 2026 13:45:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vDnPEehb1mn/NQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 08 Apr 2026 13:45:12 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E399CA0A7E; Wed,  8 Apr 2026 15:45:07 +0200 (CEST)
+Date: Wed, 8 Apr 2026 15:45:07 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Alexander Aring <alex.aring@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Calum Mackay <calum.mackay@oracle.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/24] filelock: add support for ignoring deleg breaks
+ for dir change events
+Message-ID: <snnggefctfffpb3rsyhjdwmxozqdklqmweiojmxy7owettksgz@6vud2iacgeqc>
+References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
+ <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: SGuV0M8_h73Noa3HOU60DuLdZ1CkJpV1byXokMcCoiQ_1775652095
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
+X-Spam-Score: -2.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:email]
+X-Spam-Flag: NO
 
-Allow unprivileged users to trace their own processes' syscalls using
-perf trace, similar to strace without the intrusive overhead of ptrace().
+On Tue 07-04-26 09:21:14, Jeff Layton wrote:
+> If a NFS client requests a directory delegation with a notification
+> bitmask covering directory change events, the server shouldn't recall
+> the delegation. Instead the client will be notified of the change after
+> the fact.
+> 
+> Add support for ignoring lease breaks on directory changes. Add a new
+> flags parameter to try_break_deleg() and teach __break_lease how to
+> ignore certain types of delegation break events.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Currently, perf trace requires CAP_PERFMON or paranoid level ≤ 1 even
-though the kernel has existing infrastructure (TRACE_EVENT_FL_CAP_ANY)
-specifically designed to mark syscall tracepoints as safe for
-unprivileged access. To fix this:
+Looks good. Feel free to add:
 
-1. Loosen the condition in perf_event_open() which requires priviliges
-for all events with exclude_kernel=0. This allows perf_event_open() to
-bypass the paranoid check for task-attached tracepoint events.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-2. Make the format and id tracefs files world-readable only for tracepoints
-   with TRACE_EVENT_FL_CAP_ANY, allowing unprivileged users to see
-syscall tracepoint ids without exposing sensitive information.
+> @@ -222,6 +225,10 @@ struct file_lease *locks_alloc_lease(void);
+>  #define LEASE_BREAK_LAYOUT		BIT(2)	// break layouts only
+>  #define LEASE_BREAK_NONBLOCK		BIT(3)	// non-blocking break
+>  #define LEASE_BREAK_OPEN_RDONLY		BIT(4)	// readonly open event
+> +#define LEASE_BREAK_DIR_CREATE		BIT(6)  // dir deleg create event
+> +#define LEASE_BREAK_DIR_DELETE		BIT(7)  // dir deleg delete event
+> +#define LEASE_BREAK_DIR_RENAME		BIT(8)  // dir deleg rename event
 
-Example usage after this change:
-  $ perf trace ls          # works as unprivileged user
-  $ perf trace             # system-wide, still requires privileges
-  $ perf trace -p 1234     # requires ptrace permission on pid 1234
+Just curious why you've left out bit 5 here... :)
 
-Assisted-by: Claude:claude-sonnet-4.5
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
----
- kernel/events/core.c        | 2 +-
- kernel/trace/trace_events.c | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+								Honza
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 89b40e439717..71d99ea4bea4 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13833,7 +13833,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 	if (err)
- 		return err;
- 
--	if (!attr.exclude_kernel) {
-+	if (!attr.exclude_kernel && !(attr.type == PERF_TYPE_TRACEPOINT && pid != -1)) {
- 		err = perf_allow_kernel();
- 		if (err)
- 			return err;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 249d1cba72c0..6250b2529376 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3051,7 +3051,9 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- 	struct trace_event_call *call = file->event_call;
- 
- 	if (strcmp(name, "format") == 0) {
--		*mode = TRACE_MODE_READ;
-+		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
-+			(TRACE_MODE_READ | 0004) :
-+			TRACE_MODE_READ;
- 		*fops = &ftrace_event_format_fops;
- 		return 1;
- 	}
-@@ -3087,7 +3089,9 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- #ifdef CONFIG_PERF_EVENTS
- 	if (call->event.type && call->class->reg &&
- 	    strcmp(name, "id") == 0) {
--		*mode = TRACE_MODE_READ;
-+		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
-+		(TRACE_MODE_READ | 0004) :
-+		TRACE_MODE_READ;
- 		*data = (void *)(long)call->event.type;
- 		*fops = &ftrace_event_id_fops;
- 		return 1;
 -- 
-2.53.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
