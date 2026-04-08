@@ -1,31 +1,30 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861F62F4A18;
-	Wed,  8 Apr 2026 20:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4A52F4A18;
+	Wed,  8 Apr 2026 20:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775678897; cv=none; b=l910CrR4LVjXh8ui7FIDJGzIh/nmCPBkl73xDUdWM6SjL0v2CuSZA+3xyO2/w1zd5X3fI3qxp2NVW9HWXGtftvQysN/NgauUDebBNtmfDn/82ytgSNfF4IG2yx7NtPet8zyMigAyCmSw71k6nRD5NuU9swoniAREpNAB7d+YOcc=
+	t=1775678909; cv=none; b=mg8116OZ7BRbwu+UOUuxp+S7abT+ddaDy1cvti4YlnsySZ239MZLF767CzD4efGpnCorW0Lbu5fn1eNlBudM3mX2HBhQPpJzBn8/v/ggqvVuzF6SyRafGTZPlXKxetfy2kEbeXJvwlH13a4p259vtUPIGpa9+njVlJVYHbQZaMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775678897; c=relaxed/simple;
+	s=arc-20240116; t=1775678909; c=relaxed/simple;
 	bh=7ADR1Pew6O6jN0rrcwJdgCfKxMgy0ANJIf0jv2xB2bs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SL2uscwEtYDJ3XQ5uOWtRhGtkHeWmZSHaRjU+D/jwMMrxPVKwf2GXzWwD/8ZfCXNDGspWonjdsWEFjrYXLyjefd0PyudG4psD7sKXx4eGsPwGzK3uaX+L6O7vECgN0DwjzSMR2kUcfK9LtM1csCp419l7xrAB5BWKVcWn3R8zVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=YKEfdwKWU+3uyvBVUcgzX7eCXSF7WNU/O/BdEmxTZwnNgqBVNJWbouY4HoVPJZ66DkSjw7t6bGspotocQtZsBmyvvQLw+WhHTL2Iu+oFhlP+0UTvNKLIUgpJA4GMsNLXNRrJShLgr/bM+DePdpFamzBLfiZuzwCBj05wBIvWd4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 0F7D38995A;
-	Wed,  8 Apr 2026 20:08:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 1E1492002D;
-	Wed,  8 Apr 2026 20:08:12 +0000 (UTC)
-Date: Wed, 8 Apr 2026 16:09:28 -0400
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id DD4191399CC;
+	Wed,  8 Apr 2026 20:08:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 02E781C;
+	Wed,  8 Apr 2026 20:08:19 +0000 (UTC)
+Date: Wed, 8 Apr 2026 16:09:36 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Shuvam Pandey <shuvampandey1@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, David Gow
- <david@davidgow.net>
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] seq_buf: export seq_buf_putmem_hex() and add KUnit
  tests
 Message-ID: <20260408160928.32ce8554@gandalf.local.home>
@@ -42,12 +41,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Stat-Signature: w3tkjfcq5dxgoorg3omis3h3b86bqbmu
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 1E1492002D
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 02E781C
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+OLIf7+LLa01mK1PVoEuBUaKFpGPnJd0E=
-X-HE-Tag: 1775678892-179200
-X-HE-Meta: U2FsdGVkX19nlF8YRnpqOg/L/OyjX8ZSy6DV0uNVPvpN7u3vJtaePTB4SzQXC4ozQI5xtFD33+wLDF4fSsbk8hlAwwmel50MgbD/letXco9wOV8Qx/rG0yb4w78si8gMlff5JwMEOe0ihK1KquEWXWES2Gck1I1HaCjXzRmukeL6aVGY7fR3w283IMr02GChyt0Hti5pfUEHws2wU6xef86+EiCqJk/Gb74YTtLysA8WZp5LQnrFLVEXsqzAUbdcttqJYYcvQdZe+9hrVi5RtOY1p9xlPFv4kKLI/kn7vEuMBSQUi5jPSFugFOubS0j/S/3AdJkwpt6t2SMcvNv+Ej0EpzS2sTS4oy0S6eWxVeEiBSmYZ0D80/KgV/Qg6AxKwr+7zINctacxET5hpCRZUVLkoPsaXrEJUpi9vnPxdwQ=
+X-Session-ID: U2FsdGVkX1+1wc4s2kTWsC4mPH+ePcHnMu5D6wkSsUQ=
+X-HE-Tag: 1775678899-127594
+X-HE-Meta: U2FsdGVkX19VAaFXT4co0/x07rzezdTQr/8ifguHJdMGHizfhzvRJcrh42IUMowluc+rP+YxNT8qh71ms0vcsL5LfDqSRHY60x4LwmEwNA0BnT3KNfPpbL93NwHbnY3QCxeDQfR62wpqr1pECU3st3T0Rrb/PzbH224fuohLdCr2lT/tOuAnBrHrVRsvAg4GLjOQi5EfGBE5Kl8MkCCxC5//VYcXByS6JJLiViLgmntsHTs5ZNG6QWPOfxj+xVY1rBFviUpCPZ3Dhm75UaorXxLqAYyaZR8eQ3XL722WEnjtg/6sd0AVRxmx6NQ8g4TF/Y5d8VfbhB8JCMmg/4dd+gNMtu8HAJf8khzqZ7fQBRTGwGlFdOMR9qFif8U4w3k+NMDyiNdh9Xkd6jnJEUcdeHOYduzxIQA+RRB39RXZ6EQ=
+Message-ID: <20260408200936.G-vcbA7Rjvx1RRAj9Kg62Q_PjcWlxaEiHKNp01MpdII@z>
 
 On Wed,  8 Apr 2026 20:29:49 +0545
 Shuvam Pandey <shuvampandey1@gmail.com> wrote:
