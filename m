@@ -1,226 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF745347517;
-	Wed,  8 Apr 2026 19:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF13038D007;
+	Wed,  8 Apr 2026 20:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775677995; cv=none; b=M/P+hijZBJkBFrNe89KyqO+8fCVrkX6jGet7sLkXt3AYPSTuSET/4GqSWtDjZ14zG8+H/N+Xoq0RUWjCnKu4TS9HVHc2cYtExIxx2BUGmyzcWu0w92oeZQliVHTcMn/KjKK11F6/Z8COuFEfi8upozqo7lU8YgGwhWxSuXyfkK4=
+	t=1775678581; cv=none; b=TjzvU0YnM6c0WqZ+i1Sx2KRAyBvhIbjHmQvif0ybwC+EMfSO1jzpTdOCRdvctdzrofCXXDEAlXeNREWroXr90ecZ4TiUDWXYOzpL/bwoZFOt4qSuK7YFC+PQUNm3A2OzjKoGqUmBxMPNrGCQ1AFfCY83HaU9H2l0lBBeNYfnXyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775677995; c=relaxed/simple;
-	bh=KEp0Sx73qDFpLx5wCuQRwISOpjvDRMeCBmiVHRjniJw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J9V4YdgyPtmzYYxzd4qqN5AxFPcR5cYDuzlwjIAfBK9yIQ1qK3sFrnP2xSP7aZioJOUGzIz7ltRjj5EuC7C6IcujGG8TlcLvK6Wxu1RT4ix/GahQLDbZN3E+xhorVUvsgvlPERlVjLfG+6ly2IkHcymBw2Q8vo3DV3u3+QdCFUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+cEvuN4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+cEvuN4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EDE0C19421;
-	Wed,  8 Apr 2026 19:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775677995;
-	bh=KEp0Sx73qDFpLx5wCuQRwISOpjvDRMeCBmiVHRjniJw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=m+cEvuN4W4C0urrYWtTGPymX3h1QUtEV2IyZKxNF+gNgjgBxI7XsLIXLFkbZoAvt7
-	 1zmRxl1SmL+q20J4D+y2unTnG6DuhmUCBlbf/VeOibGUyL5EvhoMn9T0W9UfNrxoqY
-	 P0sbawUhHpgrIafn4qxGtC8a1ssIEVEgWLwCYmFFv2dgXHC1W7evFj9xqLxMJSk/Xc
-	 3POk7H8k1WsIWFRjdEfrF/zG7N65jm/5slN59hlBq12j5ijRWBa1MNQGe+2caIkeai
-	 fvlKTANQtaQn9ncv7OrYQOaQGM+uXvlv4HbBXxYWsSSyxwWCeV10n4q2JLhfgmK8bI
-	 vr5frDOK8KNEA==
-Message-ID: <411738fab73b3625e0e4728e2749a24bfadb1773.camel@kernel.org>
-Subject: Re: [PATCH 12/24] nfsd: add data structures for handling CB_NOTIFY
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck
- Lever	 <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers	 <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan	 <skhan@linuxfoundation.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia	 <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,  Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Amir Goldstein
- <amir73il@gmail.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Wed, 08 Apr 2026 15:53:11 -0400
-In-Reply-To: <8a6dbbee-5d59-4833-b0f6-22b1e46dfd11@app.fastmail.com>
-References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
-	 <20260407-dir-deleg-v1-12-aaf68c478abd@kernel.org>
-	 <8a6dbbee-5d59-4833-b0f6-22b1e46dfd11@app.fastmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1775678581; c=relaxed/simple;
+	bh=yI0gf8gI4SVLBBvRbXbDhKekxGCVbzCyZg+rugJd84Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nf0uSv5eASdRcMaR8R7ZdQtxbaXhpad90HcZjdaJ6HwyXzJUew0IgDcXNfALMswDnehj1GKaZMds4q5XRSy8AXgRNsDcvDdYVU2kUwmC94f3m4C6VJA3124+yDOEeLwii4L74nBV6axPGj+tFTOb//avi+xVxSJT94TxoA0Qmaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id D3F52138162;
+	Wed,  8 Apr 2026 20:02:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id F130320026;
+	Wed,  8 Apr 2026 20:02:48 +0000 (UTC)
+Date: Wed, 8 Apr 2026 16:04:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Li Chen <me@linux.beauty>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, Theodore Ts'o <tytso@mit.edu>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Baokun Li
+ <libaokun@linux.alibaba.com>, Jan Kara <jack@suse.cz>, Ojaswin Mujoo
+ <ojaswin@linux.ibm.com>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ Zhang Yi <yi.zhang@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC v6 6/7] ext4: fast commit: add lock_updates tracepoint
+Message-ID: <20260408160405.45a5ee09@gandalf.local.home>
+In-Reply-To: <20260408112020.716706-7-me@linux.beauty>
+References: <20260408112020.716706-1-me@linux.beauty>
+	<20260408112020.716706-7-me@linux.beauty>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: F130320026
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: 31f3wkxzr7b1o9rbmffjuiurwxs7afg4
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+fNRqLMKHLva9mfCIRC3qtfuY8KaONfJs=
+X-HE-Tag: 1775678568-265512
+X-HE-Meta: U2FsdGVkX18aAJWzRtF34Vi9zUSLx49mvEH+R9xkDO1iO/T6NoLAGMimOxsRrT7nU6Ww9B/VRzMcJV6Mhkj9S3CAE7VXwLM0CbV9tiELPqIsbXoPnmAX1saMakuxvCU4wDOMZvzzXJbkk/5n10QK0/9uR0sy7KPhBlLWaXbS7Y8Ky0SM7gXd5ht0si9JNB0k8ltzMrKVZGoOjag1lVH05TUd9HNc/LRPBgf4jUJT41C8Kzvik3MPSLVshoYDL3FdZINYV7wTl/GDG15bKQcuo0SFvkUX9MotBS8QhjogsaRPUnA/K5ppkBnIwsfmwApC7N/jCTdCdU5nYPMtyRTapTC3iuBh8SztvyrAciTFUvAWLD5Z4SY8qhA9ZF8AGVF9
 
-On Wed, 2026-04-08 at 14:39 -0400, Chuck Lever wrote:
-> On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
-> > Add the data structures, allocation helpers, and callback operations
-> > needed for directory delegation CB_NOTIFY support:
-> >=20
-> > - struct nfsd_notify_event: carries fsnotify events for CB_NOTIFY
-> > - struct nfsd4_cb_notify: per-delegation state for notification handlin=
-g
-> > - Union dl_cb_fattr with dl_cb_notify in nfs4_delegation since a
-> >   delegation is either a regular file delegation or a directory
-> >   delegation, never both
-> >=20
-> > Refactor alloc_init_deleg() into a common __alloc_init_deleg() base
-> > with a pluggable sc_free callback, and add alloc_init_dir_deleg() which
-> > allocates the page array and notify4 buffer needed for CB_NOTIFY
-> > encoding.
-> >=20
-> > Add skeleton nfsd4_cb_notify_ops with done/release handlers that will
-> > be filled in when the notification path is wired up.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 4afe7e68fb51..b2b8c454fc0f 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
->=20
-> > @@ -3381,6 +3440,30 @@ nfsd4_cb_getattr_release(struct nfsd4_callback=
-=20
-> > *cb)
-> >  	nfs4_put_stid(&dp->dl_stid);
-> >  }
-> >=20
-> > +static int
-> > +nfsd4_cb_notify_done(struct nfsd4_callback *cb,
-> > +				struct rpc_task *task)
-> > +{
-> > +	switch (task->tk_status) {
-> > +	case -NFS4ERR_DELAY:
-> > +		rpc_delay(task, 2 * HZ);
-> > +		return 0;
-> > +	default:
-> > +		return 1;
-> > +	}
-> > +}
-> > +
-> > +static void
-> > +nfsd4_cb_notify_release(struct nfsd4_callback *cb)
-> > +{
-> > +	struct nfsd4_cb_notify *ncn =3D
-> > +			container_of(cb, struct nfsd4_cb_notify, ncn_cb);
-> > +	struct nfs4_delegation *dp =3D
-> > +			container_of(ncn, struct nfs4_delegation, dl_cb_notify);
-> > +
-> > +	nfs4_put_stid(&dp->dl_stid);
-> > +}
-> > +
-> >  static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops =3D {
-> >  	.done		=3D nfsd4_cb_recall_any_done,
-> >  	.release	=3D nfsd4_cb_recall_any_release,
->=20
-> So when a client responds with NFS4ERR_DELAY, the RPC framework retries
-> after 2s. On retry, prepare() is called again, but ncn_evt_cnt is
-> already 0 (drained in the first prepare). prepare returns false, which
-> destroys the callback.
->=20
+On Wed,  8 Apr 2026 19:20:17 +0800
+Li Chen <me@linux.beauty> wrote:
 
-This is actually not a problem. When ->done() returns 0,
-rpc_restart_call_prepare retries the RPC through the RPC-level prepare
-(nfsd4_cb_prepare at nfs4callback.c:1479), which just acquires a
-session slot and calls rpc_call_start. It does not call cb_ops->prepare
-again =E2=80=94 the same encoded XDR is re-sent in that case.
+> Commit-time fast commit snapshots run under jbd2_journal_lock_updates(),
+> so it is useful to quantify the time spent with updates locked and to
+> understand why snapshotting can fail.
+> 
+> Add a new tracepoint, ext4_fc_lock_updates, reporting the time spent in
+> the updates-locked window along with the number of snapshotted inodes
+> and ranges. Record the first snapshot failure reason in a stable snap_err
+> field for tooling.
+> 
 
-> Events arriving during the retry window are dropped because
-> nfsd4_run_cb_notify() returns early when NFSD4_CALLBACK_RUNNING is set.
-> After the callback is destroyed, future events can queue a new CB_NOTIFY,
-> but the window's events are lost.                                        =
-                                               =20
->=20
-> The result is that the client misses notifications. Does this impact
-> behavioral correctness or spec compliance? Is there a way for that
-> client to detect the loss and recover?
->=20
+[..]
 
-There _is_ a problem, however. Events that arrive while the job is
-running queue up, but won't get sent until the _next_ event arrives. We
-need to make the ->release handler check for new events and requeue the
-callback if there are any. I'll plan to fix that up.
+> @@ -1338,13 +1375,13 @@ static int ext4_fc_perform_commit(journal_t *journal)
+>  	if (ret)
+>  		return ret;
+>  
+> -
+>  	ret = ext4_fc_alloc_snapshot_inodes(sb, &inodes, &inodes_size);
+>  	if (ret)
+>  		return ret;
+>  
+>  	/* Step 4: Mark all inodes as being committed. */
+>  	jbd2_journal_lock_updates(journal);
+> +	lock_start = ktime_get();
 
-Thanks for all the review! I'll plan to send another version soon (but
-probably not until after next week's testing event).
---=20
-Jeff Layton <jlayton@kernel.org>
+ktime_get() is rather quick but if you care about micro-optimizations, you
+could have:
+
+	if (trace_ext4_fc_lock_updates_enabled())
+		lock_start = ktime_get();
+	else	
+		lock_start = 0;
+
+>  	/*
+>  	 * The journal is now locked. No more handles can start and all the
+>  	 * previous handles are now drained. Snapshotting happens in this
+> @@ -1358,8 +1395,15 @@ static int ext4_fc_perform_commit(journal_t *journal)
+>  	}
+>  	ext4_fc_unlock(sb, alloc_ctx);
+>  
+> -	ret = ext4_fc_snapshot_inodes(journal, inodes, inodes_size);
+> +	ret = ext4_fc_snapshot_inodes(journal, inodes, inodes_size,
+> +				      &snap_inodes, &snap_ranges, &snap_err);
+>  	jbd2_journal_unlock_updates(journal);
+> +	if (trace_ext4_fc_lock_updates_enabled()) {
+
+	if (trace_ext4_fc_lock_updates_enabled() && lock_start) {
+
+But feel free to ignore this if the overhead of always calling ktime_get()
+is not an issue.
+
+
+> +		locked_ns = ktime_to_ns(ktime_sub(ktime_get(), lock_start));
+> +		trace_ext4_fc_lock_updates(sb, commit_tid, locked_ns,
+> +					   snap_inodes, snap_ranges, ret,
+> +					   snap_err);
+> +	}
+>  	kvfree(inodes);
+>  	if (ret)
+>  		return ret;
+> @@ -1564,7 +1608,7 @@ int ext4_fc_commit(journal_t *journal, tid_t commit_tid)
+>  		journal_ioprio = EXT4_DEF_JOURNAL_IOPRIO;
+>  	set_task_ioprio(current, journal_ioprio);
+>  	fc_bufs_before = (sbi->s_fc_bytes + bsize - 1) / bsize;
+> -	ret = ext4_fc_perform_commit(journal);
+> +	ret = ext4_fc_perform_commit(journal, commit_tid);
+>  	if (ret < 0) {
+>  		if (ret == -EAGAIN || ret == -E2BIG || ret == -ECANCELED)
+>  			status = EXT4_FC_STATUS_INELIGIBLE;
+> diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
+> index f493642cf121..7028a28316fa 100644
+> --- a/include/trace/events/ext4.h
+> +++ b/include/trace/events/ext4.h
+> @@ -107,6 +107,26 @@ TRACE_DEFINE_ENUM(EXT4_FC_REASON_VERITY);
+>  TRACE_DEFINE_ENUM(EXT4_FC_REASON_MOVE_EXT);
+>  TRACE_DEFINE_ENUM(EXT4_FC_REASON_MAX);
+>  
+> +#undef EM
+> +#undef EMe
+> +#define EM(a)	TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
+> +#define EMe(a)	TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
+> +
+> +#define TRACE_SNAP_ERR						\
+> +	EM(NONE)						\
+> +	EM(ES_MISS)						\
+> +	EM(ES_DELAYED)						\
+> +	EM(ES_OTHER)						\
+> +	EM(INODES_CAP)						\
+> +	EM(RANGES_CAP)						\
+> +	EM(NOMEM)						\
+> +	EMe(INODE_LOC)
+> +
+> +TRACE_SNAP_ERR
+> +
+> +#undef EM
+> +#undef EMe
+> +
+>  #define show_fc_reason(reason)						\
+>  	__print_symbolic(reason,					\
+>  		{ EXT4_FC_REASON_XATTR,		"XATTR"},		\
+> @@ -2818,6 +2838,47 @@ TRACE_EVENT(ext4_fc_commit_stop,
+>  		  __entry->num_fc_ineligible, __entry->nblks_agg, __entry->tid)
+>  );
+>  
+> +#define EM(a)	{ EXT4_FC_SNAP_ERR_##a, #a },
+> +#define EMe(a)	{ EXT4_FC_SNAP_ERR_##a, #a }
+> +
+> +TRACE_EVENT(ext4_fc_lock_updates,
+> +	    TP_PROTO(struct super_block *sb, tid_t commit_tid, u64 locked_ns,
+> +		     unsigned int nr_inodes, unsigned int nr_ranges, int err,
+> +		     int snap_err),
+> +
+> +	TP_ARGS(sb, commit_tid, locked_ns, nr_inodes, nr_ranges, err, snap_err),
+> +
+> +	TP_STRUCT__entry(/* entry */
+> +		__field(dev_t, dev)
+> +		__field(tid_t, tid)
+> +		__field(u64, locked_ns)
+> +		__field(unsigned int, nr_inodes)
+> +		__field(unsigned int, nr_ranges)
+> +		__field(int, err)
+> +		__field(int, snap_err)
+> +	),
+> +
+> +	TP_fast_assign(/* assign */
+> +		__entry->dev = sb->s_dev;
+> +		__entry->tid = commit_tid;
+> +		__entry->locked_ns = locked_ns;
+> +		__entry->nr_inodes = nr_inodes;
+> +		__entry->nr_ranges = nr_ranges;
+> +		__entry->err = err;
+> +		__entry->snap_err = snap_err;
+> +	),
+> +
+> +	TP_printk("dev %d,%d tid %u locked_ns %llu nr_inodes %u nr_ranges %u err %d snap_err %s",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
+> +		  __entry->locked_ns, __entry->nr_inodes, __entry->nr_ranges,
+> +		  __entry->err, __print_symbolic(__entry->snap_err,
+> +						 TRACE_SNAP_ERR))
+> +);
+> +
+> +#undef EM
+> +#undef EMe
+> +#undef TRACE_SNAP_ERR
+> +
+>  #define FC_REASON_NAME_STAT(reason)					\
+>  	show_fc_reason(reason),						\
+>  	__entry->fc_ineligible_rc[reason]
+
+As for the rest:
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+[ Please add this reviewed-by to any new versions so I remember I already
+  looked at it. ]
+
+Thanks,
+
+-- Steve
