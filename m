@@ -1,35 +1,34 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D2A3DA7F4;
-	Wed,  8 Apr 2026 20:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B7725B2FA;
+	Wed,  8 Apr 2026 21:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775680291; cv=none; b=rn113PQrqd4226OkjsA1JAJIILrJXWKDxzGlh/wv7ebufwGfZVLYRlxyCVkcFipuioX7dGonBPZ9g8q/9MTlIz3XlUhWpJtiAdbjTGhx5FXZwQ7cniALpFyg07Z8DAYehb2SOUT35sa6IsnyBAaCVbSYWUKCubD7Ii9vcRWm27A=
+	t=1775683040; cv=none; b=I208U8sHm/M0eo3oxxNRCQ7zDb4EHdZtOdg9n+d+6duy/W7bxsuZoavbgxpkZOYb48aSs4Cmv9oaKxXwugvjXu+VC/PDtSJBZEBFrlblJYMKwI9RAzCKftPGDq082M8h9Deaqx8ogJBoPISUChZJXiTxdTccxmuVy1/YvekMuic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775680291; c=relaxed/simple;
-	bh=l2TKk7RqXY/yMRSmUxdi7j2QnQh7YNKuTn7QDnQrWmY=;
+	s=arc-20240116; t=1775683040; c=relaxed/simple;
+	bh=kL4JIANbRkLCjsk/v05rCxdjsPuz7hyQ3m06eD+7240=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YwnW8FXlkYDH6t3l3T7ljejgLz3FhFmr4UokBDUKx66RC9SPLff6uDxVqcv6a3loNKkrkcK1KlB6knhanDQaG9UGdF7HNen78F//ydLo7g5403jLUygMuf3R4nf0fZc3I6hFDCY3rPtIvm0s1eoxRREiqPN7ih870oEZfM0Q5bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=lWVNQw2sxlF5hlJ4PJVqPdaEiJDi0aIkNlxT22pXpXmQ06+nqaSvDzAZBwug8EirDOK48IPayYMrjZ+6o+4OKXJshj6rxeQ1QYDT5FNVk/DzN3trfJAPkz5W/wMaJxm60OIqkctroSRJehEzFPgW1IGDLsKt8kA5h4VSTKksJNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id B45BB8A939;
-	Wed,  8 Apr 2026 20:31:27 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 4B9A93D;
-	Wed,  8 Apr 2026 20:31:25 +0000 (UTC)
-Date: Wed, 8 Apr 2026 16:32:41 -0400
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 7E7C4C1473;
+	Wed,  8 Apr 2026 21:17:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 7B27820010;
+	Wed,  8 Apr 2026 21:17:14 +0000 (UTC)
+Date: Wed, 8 Apr 2026 17:18:31 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Cao Ruichuang <create0818@163.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, mcgrof@kernel.org,
- petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
- atomlin@atomlin.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-modules@vger.kernel.org
-Subject: Re: [PATCH] tracing: preserve module tracepoint strings
-Message-ID: <20260408163241.20723018@gandalf.local.home>
-In-Reply-To: <20260406170944.51047-1-create0818@163.com>
-References: <20260406170944.51047-1-create0818@163.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] selftests/ftrace: Quote check_requires comparisons
+Message-ID: <20260408171831.69520c50@gandalf.local.home>
+In-Reply-To: <20260408043212.8063-1-create0818@163.com>
+References: <20260408043212.8063-1-create0818@163.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,39 +38,84 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4B9A93D
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: qz54nsrq8xuy37mcmdyur6po33pfkf3t
+X-Stat-Signature: qggikak9uuwqsaubqgdnoumrbc8tkozr
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 7B27820010
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+iwW7Gtqwsk+QAjNp3uRmGVuX1BXG0bag=
-X-HE-Tag: 1775680285-191952
-X-HE-Meta: U2FsdGVkX1/rUfSbfUF7EOXAQ/GusUWaam3Jn4qgGJJoYvLXr4GFTy+zki6MXBbqNPsL8B06K40XFi0izN0ZiFTolPovPQwV2yMHjGENYNFn5Ftp5pDFrHUgHxIGeLe5kJYy05TIamBhX4GeSWn0r2QhH1APLAJge47svX3PC1+hpriOBhKS25Kvf6ah6SR14F/4WOkbOu3UT443jFn9g+KCWNadeEig28I0kBS4xoD2MmHyH9BZQr6ZM+Mzz11EtgKdV7/9ngwMs1sjHscO7aysyHRnraPVDjfKdFvCQDZil86pMxJiRttHFTBJ/ViOLS2mnWUkGl7DjVPCOj7aCRr0XMq5Aa+/r2b2seRbCIeayXo5b0LuTQ==
+X-Session-ID: U2FsdGVkX1/GA0BHY3Qdn+SBbEeagXI+9QeaobFAzLs=
+X-HE-Tag: 1775683034-244701
+X-HE-Meta: U2FsdGVkX182U5ZUSLlNzQU9MUzBlRa9DQUhfZ0PvfdWkpyNZxJ5/9wZNno4//2tqUIaUyuZukqoJXHgANNou6Se1we0VyH4iFbjAj+ZuDhddyzRmKLIRRaXUEpMPQxUwvl3fsc7jrVDfZM22he5vBfY+RavZS8Lmp+XHMmaAW73Bl2tRw2XrE0bMpOrTMAaHYjf87s9+SPYgUFiszp9ycaYUrG+d5U/2g+GSmZrm3dbwW0imfINYPjC53U1t2Fv0U/ofTflL4KHjge5WM2rJJ/qtyzRtVCWunWFDbg71zKhPOtVhDZbAsq6GWE6ZHUE0kcQcgubbhr+38f0A3z0z2Q8GYI/rFZQTwidb5jbul2zSAxU4PsQ6o8ROabSQGa8seiIDa/hCJOGLjnIHmBhbA==
 
-On Tue,  7 Apr 2026 01:09:44 +0800
+On Wed,  8 Apr 2026 12:32:12 +0800
 Cao Ruichuang <create0818@163.com> wrote:
 
-> tracepoint_string() is documented as exporting constant strings
-> through printk_formats, including when it is used from modules.
-> That currently does not work.
+> check_requires() compares requirement strings that can contain shell
+> pattern characters such as '[' and ']'. Under /bin/sh, the unquoted
+> test expressions can emit 'unexpected operator' warnings while parsing
+> README-backed requirements.
 > 
-> A small test module that calls
-> tracepoint_string("tracepoint_string_test_module_string") loads
-> successfully and gets a pointer back, but the string never appears
-> in /sys/kernel/tracing/printk_formats. The loader only collects
-> __trace_printk_fmt from modules and ignores __tracepoint_str.
+> Quote the relevant comparisons and path checks so the helper handles
+> those patterns without spurious shell warnings.
 > 
-> Collect module __tracepoint_str entries too, copy them to stable
-> tracing-managed storage like module trace_printk formats, and let
-> trace_is_tracepoint_string() recognize those copied strings. This
-> makes module tracepoint strings visible through printk_formats and
-> keeps them accepted by the trace string safety checks.
+> Validated by rerunning fprobe_syntax_errors.tc and confirming the
+> previous '/bin/sh: unexpected operator' lines disappear from the
+> detailed ftracetest log.
 > 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217196
 > Signed-off-by: Cao Ruichuang <create0818@163.com>
-> ---
 
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-As this is not a trivial change, and affects module code, I'm going to hold
-off until after v7.1-rc1 to apply it.
+Shuah,
+
+Care to take this through your tree?
 
 -- Steve
+
+> ---
+>  tools/testing/selftests/ftrace/test.d/functions | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+> index e8e718139..442aa28ff 100644
+> --- a/tools/testing/selftests/ftrace/test.d/functions
+> +++ b/tools/testing/selftests/ftrace/test.d/functions
+> @@ -145,13 +145,13 @@ check_requires() { # Check required files and tracers
+>  	p=${i%:program}
+>          r=${i%:README}
+>          t=${i%:tracer}
+> -	if [ $p != $i ]; then
+> -	    if ! which $p ; then
+> +	if [ "$p" != "$i" ]; then
+> +	    if ! which "$p" ; then
+>                  echo "Required program $p is not found."
+>                  exit_unresolved
+>  	    fi
+> -        elif [ $t != $i ]; then
+> -            if ! grep -wq $t available_tracers ; then
+> +        elif [ "$t" != "$i" ]; then
+> +            if ! grep -wq "$t" available_tracers ; then
+>                  echo "Required tracer $t is not configured."
+>                  exit_unsupported
+>              fi
+> @@ -162,11 +162,11 @@ check_requires() { # Check required files and tracers
+>  	    else
+>  		test=$TRACING_DIR
+>  	    fi
+> -            if ! grep -Fq "$r" $test/README ; then
+> +            if ! grep -Fq "$r" "$test"/README ; then
+>                  echo "Required feature pattern \"$r\" is not in README."
+>                  exit_unsupported
+>              fi
+> -        elif [ ! -e $i ]; then
+> +        elif [ ! -e "$i" ]; then
+>              echo "Required feature interface $i doesn't exist."
+>              exit_unsupported
+>          fi
+> @@ -223,4 +223,4 @@ get_mnt_options() {
+>  	local opts=$(mount | grep -m1 "$mnt_point" | sed -e 's/.*(\(.*\)).*/\1/')
+>  
+>  	echo "$opts"
+> -}
+> \ No newline at end of file
+> +}
+
