@@ -1,116 +1,137 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCECA3D47D9
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 15:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9734B3559F8;
+	Wed,  8 Apr 2026 15:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775661897; cv=none; b=VPI6GRa53dM1yDhOyn2ewWd1mYmi2Mp80Cr4pyVEzrTA7/wyseJUkUmn2QOtrXOWBzGGXenfbE5H5Nli+E4PIfBvdeOjUDC/Db45MCZ9B29ZgHf5DnZlQem8qsh7tm0lkLQTAjAuLT7wxGqdceH1v0yfLqaeP9oVuiv0HVsCP+A=
+	t=1775662418; cv=none; b=k4i8xCZomGBtPESCqy9toD9sYU88D/6yMilikmXUp4J3k1uKNXK95dJ9hxueL0/gxKci/v+IrSlODMy/2cLE10wBL+UsPa70vTanRzNUlff9sJJTXIGT68l85M6hSKprRvZWFJ/28o0hPfKpqqj3Gapf0d+1OhOsCn/4FYEhoRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775661897; c=relaxed/simple;
-	bh=Xvx5NbnOpNGEloDoPzkjBb0luYYTDDyuKVmozJ9v8uc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LwgM/wORMCcNa1k+Gi3mcwqrqiY/RI742ZNVdbCbLLNfcc4cdex17SDzaQx/q53nQNRD5UwMRovju6uyKeD1CYxE792e5nFlpanJAFgFpePyaRsrvuRguDmAymG+Ge9MYPOj2dgXEfVGt4eaCsGKo0cnu/WaqBvI2yvA7CKu7oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IvuKMKQ9; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1775662418; c=relaxed/simple;
+	bh=pBktVFYzsIAdZIy+AuRggPzGormErCwvYrjSX4sj3Ho=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nDbW7lpHwnedCKN+e3sstbu0syMhzceLGlzHevenZdfTZkpDSSvKAVBtbWI9cNhYsHElBlQ7OomrCe8lgOVq45TDmsQdITZN4OpyR3d7Yy58xEHiHitel/RFEX5n+bluklzouSxlYGlI8L2uR7yNBJ/sGumuvEBaLVmuDInlp0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MGMFyqw0; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IvuKMKQ9"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488ba840146so23225345e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 08:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1775661894; x=1776266694; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=laiXp2rBEiPl8a2Z73ajRETlDqB8PAbCI44ILQPyqZU=;
-        b=IvuKMKQ9jtZ/dVP06vkY7CTiZM4OuHmVnp8SRil2wsw+5I0ykRWCnGsExOFOYPKIZg
-         U6Ymn0/O77U8r+O+X+q0jabDGdfKvl4xj/EVc6AbKwQCSaWk7TWUeaiWfTalUFOZIYwj
-         UPJFmGWJvvQm1KCG/J4smh5BcB6Glm8/m6U7SDcCyZtDb2okWxp0w60hXrLmar/TF+uG
-         MekJaoDfdS/tOTqmOE8U+XkxteSIrZUp/94aBnnQvTa+1ktb38KpLj5hY7MeUbXy0zdj
-         /RUTGXZgXYhP2IYM0fqk90rFWks8YnbcCt0VLrYVoKTIjbP0yFZlQ6Zl6euxmwuC8P9O
-         TdzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775661894; x=1776266694;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=laiXp2rBEiPl8a2Z73ajRETlDqB8PAbCI44ILQPyqZU=;
-        b=gifGXJ90qZKXy0QjMAQseCO4uB/wwTiphWwVSt/8yxxbTyI30sNcYGKL4iiDKR+fr3
-         q6kx/Pgm9a0zfi9cTePRRuFiyoa9Ek/ykzLZP+gxJMeQ+WKmbGIvx2SpCk6iiabpJW4c
-         pw22a+5TtGBiwTXyCJeMq9u5sAM36SW97XVOXWdkin0z5yIV4MERjFRpdH+Kf9B56J0N
-         oPuBcaJIaS2476zLGdaJ1+8JexfLCshsR8INMV2ryrxQ0f3Nmh8K/89uI3sc0G5RFBbL
-         GUeolp27S4WWfJkVupF9osqqaZwNCsqyj/R63dj+7i1imypJhGq/kER1/Hdh6epx7Jj0
-         Rrkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcgBWXXyP1sxGgC5ZdX2Uw1j8HWL/LF1vMDZnHMjY9mmCR3dmBsbQggjnJTwE2IBsYpX8byXjrCM2JthoSFNnK3wI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWln3nLIqHSVSdPZSjCDaVEp789AH8ySNzmWwDFb8JD5rPcxCg
-	CeGo+A1wzPq63bjFpmxifB+R4OTTIXxcLCTPnOl1C8cN3gJgoW/n13mnBXS6wHw7zeg=
-X-Gm-Gg: AeBDieu4wu9Y4qsI45aFjSkmjPELG3tWaBat4aBtClxxrZK7PyU4uF8Pyn2XOqGffvb
-	YG4hEd6K0claxXqY4Jdk4Z1gODOvVli1HKe76R2XsLJt7j9hlSx8l7iqox3e5NBOLTfDoLhiIM9
-	6Oki5FQdwBAoenfoQj+zdDblRqQJ3gaSPbRJbajs0yEKYw0g5JgRn6mZPo9XdSMiNJgecw/G4aT
-	z9xl2zYfsw/n07tvujAJd8wTPu8wQ1oaI6EbXU/jg+JDr+q30k0deLFZqZQItJsE2SvoT9RZcYg
-	4U1TgQl5g+ZcpNM0qPniGbb+wGBPb8oJmMYx4qyeHTDXddbEIsPTXD+5qAU48aOlx2ylOO3HCkK
-	Z1okx/HHqcgPi5//VtBXvsY3I5DT4T31I/9RM4mWj+Jz2pjWOkgiRBrB8ZxTfhNUH2xp3egpCvj
-	iR8N++FBN1Sk8fEh1Q6OUtW+LZRIatTFn7qbnwpPAEteM+
-X-Received: by 2002:a05:600c:6208:b0:488:aa3d:fab1 with SMTP id 5b1f17b1804b1-488ccfc0554mr2091505e9.17.1775661894090;
-        Wed, 08 Apr 2026 08:24:54 -0700 (PDT)
-Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd1bb778sm32985e9.7.2026.04.08.08.24.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2026 08:24:53 -0700 (PDT)
-Message-ID: <999772c1-ec48-407a-a0fe-64665620d855@suse.com>
-Date: Wed, 8 Apr 2026 17:24:53 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MGMFyqw0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=m3
+	v3zp6YOjlmkyjzFU98l0AI8rJygb4GlywSbbSCQ88=; b=MGMFyqw0Ipo9tPmvBc
+	0rNDAQbr6zLy9vdnYQ0KAtBpEreY2hu5cGFkGqxRtXbeYejY6BcxDHarmiiCDYB0
+	abBdcjT0I5tlBSZ1NBc0rLRsU5HsXOFMDRuwP0jFLCP2gnvVOHgy1TPIyXZkHDlD
+	zQMZ9zaxGuuquYNl9YN05pfGk=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wC3_rofddZpBIHhDg--.36317S2;
+	Wed, 08 Apr 2026 23:32:52 +0800 (CST)
+From: Cao Ruichuang <create0818@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 1/2] tracing: Store trace_marker_raw payload length in events
+Date: Wed,  8 Apr 2026 23:32:40 +0800
+Message-Id: <20260408153241.15391-1-create0818@163.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] module/kallsyms: fix nextval for data symbol
- lookup
-To: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
- Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
- Daniel Gomez <da.gomez@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Jordan Rome <linux@jordanrome.com>,
- Viktor Malik <vmalik@redhat.com>
-References: <20260327110005.16499-1-stf_xl@wp.pl>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20260327110005.16499-1-stf_xl@wp.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3_rofddZpBIHhDg--.36317S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXr43uryrJFWUtFWDXryxKrg_yoW5Aw4kpa
+	43tr9xGr4kJF4jqryI9an5ArWfZ34kJry3Ka95W34Fvr1ktr12qF9rXFyjv3yFqwn3K34f
+	KFyj9rWjkw47Zr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jOzVbUUUUU=
+X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCwAR2r2nWdSQV0wAA31
 
-On 3/27/26 12:00 PM, Stanislaw Gruszka wrote:
-> The symbol lookup code assumes the queried address resides in either
-> MOD_TEXT or MOD_INIT_TEXT. This breaks for addresses in other module
-> memory regions (e.g. rodata or data), resulting in incorrect upper
-> bounds and wrong symbol size.
-> 
-> Select the module memory region the address belongs to instead of
-> hardcoding text sections. Also initialize the lower bound to the start
-> of that region, as searching from address 0 is unnecessary.
-> 
-> Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
+trace_marker_raw currently records its bytes in TRACE_RAW_DATA events,
+but the event output path derives the byte count from the padded record
+size in the ring buffer. As a result, the printed raw-data payload is
+rounded up and small writes do not preserve their true length.
 
-Looks ok to me. Feel free to add:
+Keep the true payload length in the TRACE_RAW_DATA event itself and use
+that field when printing the bytes. This leaves the ring buffer record
+size semantics unchanged while letting trace_marker_raw report the exact
+payload that was written.
 
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+Signed-off-by: Cao Ruichuang <create0818@163.com>
+---
+ kernel/trace/trace.c         | 11 ++++++-----
+ kernel/trace/trace_entries.h |  1 +
+ kernel/trace/trace_output.c  |  4 ++--
+ 3 files changed, 9 insertions(+), 7 deletions(-)
 
-As a side note, I wonder if manually determining symbol sizes this way
-is the best approach for modules, instead of simply returning the
-st_size of the symbol. The logic comes from the original implementation
-in "[PATCH] kallsyms for new modules" [1]. Unfortunately, the
-description doesn't explain this aspect but considering that the patch
-rewrote both the main and module kallsyms code, I expect it was done
-this way for consistency between vmlinux and modules.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/mpe/linux-fullhistory.git/commit/?id=d069cf94ca296b7fb4c7e362e8f27e2c8aca70f1
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index a626211ce..d9cb643b8 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6906,11 +6906,13 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
+ 	struct ring_buffer_event *event;
+ 	struct trace_buffer *buffer;
+ 	struct raw_data_entry *entry;
++	size_t payload_len;
+ 	ssize_t written;
+ 	size_t size;
+ 
+ 	/* cnt includes both the entry->id and the data behind it. */
+-	size = struct_offset(entry, id) + cnt;
++	payload_len = cnt - sizeof(entry->id);
++	size = struct_offset(entry, buf) + payload_len;
+ 
+ 	buffer = tr->array_buffer.buffer;
+ 
+@@ -6924,10 +6926,9 @@ static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
+ 		return -EBADF;
+ 
+ 	entry = ring_buffer_event_data(event);
+-	unsafe_memcpy(&entry->id, buf, cnt,
+-		      "id and content already reserved on ring buffer"
+-		      "'buf' includes the 'id' and the data."
+-		      "'entry' was allocated with cnt from 'id'.");
++	memcpy(&entry->id, buf, sizeof(entry->id));
++	entry->len = payload_len;
++	memcpy(entry->buf, buf + sizeof(entry->id), payload_len);
+ 	written = cnt;
+ 
+ 	__buffer_unlock_commit(buffer, event);
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 54417468f..5f867a144 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -288,6 +288,7 @@ FTRACE_ENTRY(raw_data, raw_data_entry,
+ 
+ 	F_STRUCT(
+ 		__field(	unsigned int,	id	)
++		__field(unsigned int, len)
+ 		__dynamic_array(	char,	buf	)
+ 	),
+ 
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 1996d7aba..4e1edfa05 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1817,13 +1817,13 @@ static enum print_line_t trace_raw_data(struct trace_iterator *iter, int flags,
+ 					 struct trace_event *event)
+ {
+ 	struct raw_data_entry *field;
+-	int i;
++	unsigned int i;
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+ 	trace_seq_printf(&iter->seq, "# %x buf:", field->id);
+ 
+-	for (i = 0; i < iter->ent_size - offsetof(struct raw_data_entry, buf); i++)
++	for (i = 0; i < field->len; i++)
+ 		trace_seq_printf(&iter->seq, " %02x",
+ 				 (unsigned char)field->buf[i]);
+ 
 -- 
-Thanks,
-Petr
+2.39.5 (Apple Git-154)
+
