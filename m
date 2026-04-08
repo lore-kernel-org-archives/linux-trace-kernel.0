@@ -1,141 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50673B0ADA
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0003B3C11
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:20:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775672215; cv=none; b=RK35xhZvyDdG/y3NwVnkvUDSEf/Z+UwH1amEThAg/Vg2ckWJKds7+TimkXoIi2YTlgE30XqLaxfmGHKAepX8PHh+Avbq4GrK2gvWDxRSYe0Gm9xbe/ld5JZkOXc2kOoRSZuHu6kj6SgMa+9GbsM0pEeXNWcKduBBhopM+1tLUcU=
+	t=1775672403; cv=none; b=Y8xFGgV/Sos96C/KipdK2kchSP7qKxWl6Bsn+Oj5qcD+9YTInejfyBz027WliTUBivtGqHtNi6JmqFYcG9MfyzSCSVV/Z7tQ2ZZ6ZyZ8qOTUhv1m89ob1GO5FHa6BFVOzKRSA1YbVoV8VAavX9w7xO0ME/p/ZF2K9ZtO5mxJqXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775672215; c=relaxed/simple;
-	bh=HKHxPoblaork2H0d6qRNs+Qxh9dmFv1KNw8j/ngGj2k=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=G2ZJ+0YmUc+a7AYtFq1a9YQPOsdBqAztjMvG9W2xWF15Y5/rzp1BpKy+V0XXfVIDQhGoveLt7nigoE6HoV6/Jc6CVPJ0XnZ5aTfcOgCZ9rGvU2FSsIpRjs4mnYsX22PY7AgTSNiJFF6Iy0HRy2nIl71w/cNZ2vBC5/zbWbZaWaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrd3Vq+f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775672403; c=relaxed/simple;
+	bh=QWyyjb8yrf7T4LkpQ/fS0bsphkrKWYfnmeHKmwhlNjM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aQqLCe38IZREmUpCxVHKW3wrtOvqaczWW9zDni6I7IskUMR7ntJc4b2QaQIiieg3U7h/7+ptS5PSVzjgPomSBiBJHOOGzoEBhTPm5Th5ARrK89stAiuevVORo2Ay9X5KUohdArqStGxStb9A+wPv5X08CEqYV8sYHEC0LBComlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZDp/B/s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrd3Vq+f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF52C2BC9E;
-	Wed,  8 Apr 2026 18:16:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZDp/B/s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C1CC2BCB2
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775672214;
-	bh=HKHxPoblaork2H0d6qRNs+Qxh9dmFv1KNw8j/ngGj2k=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=rrd3Vq+fpd2blfg6wopfmOudbeG4wNDSlpCfejvmvd9EMcoPsT5k51gL7CuUaYk8b
-	 CpHgEcnumiCYVsoUwEVKTzSkoA/DVcdCU+DX3KHP2lXzv4YXjSXHuElsMVzZ8VZNaF
-	 mnCA9VD3Q974qfsAM7/mh5BiUph3l8bViDzZ4Wt3RsjC9DHTgC0R++6fU7MAY3ViK8
-	 fep2ac1qhUEMg4BJqE/fnCyhwpxcEteOSOopRmtr0JdkXz4HaLZIWkW0zTlPiKWibw
-	 viZJiaSqhgue58xJCCwHiW3Zpv37EyeLmBL+v3mjOw7OWGvECH+WmbkdD6RXkg+GTx
-	 tDGbFufErBw8Q==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 036AEF4006C;
-	Wed,  8 Apr 2026 14:16:53 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 08 Apr 2026 14:16:53 -0400
-X-ME-Sender: <xms:lJvWaSvFhNZ43WDSF4xUIs6h7WSKhuTbM8ny4RZXenhN05SWE55zww>
-    <xme:lJvWaSRp34g1uyADOBSHkG683H72946qbjCgw08XMh_E942eiYKOwFFr73cJGcLzS
-    _ychiMARQA5cFpBaXc9AUgNy-tsOdFITn8Rpvv0lSPJ1udqMzygP8PH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvgedvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehmrghthhhivghurd
-    guvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegrlhgvgidr
-    rghrihhnghesghhmrghilhdrtghomhdprhgtphhtthhopegrmhhirhejfehilhesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhgruhhnvg
-    hrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:lJvWadfwdEbgHY50jIRm349uKUZoi4dIykahtitCUgzU-qDa0jnh-A>
-    <xmx:lJvWac5QvBsdH_8b0EyXVCQ53CXGlvAU2LZ3Dvd5A7hJOw-v281LXQ>
-    <xmx:lJvWaZ8srh66Ha6yOnd5dPMBZe86eMzFqX6S6cRH6t_Z_s4hH5_cvQ>
-    <xmx:lJvWaWzPQupnYV0SPbhEsvYqUN5lmSqjdY0QzIFVlPNh9gdBGgEVig>
-    <xmx:lJvWaQG2yajAQ8V64yXwD0sO-FDVUo7XOMuAJq6b2G-JRpJ3Lc7Krz8K>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C882B780070; Wed,  8 Apr 2026 14:16:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1775672403;
+	bh=QWyyjb8yrf7T4LkpQ/fS0bsphkrKWYfnmeHKmwhlNjM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PZDp/B/sp0vMV5vF2b1qu39xrSKO0SkoFzfiZGVngTU5HPADqjrucR6GiY/HhGsMT
+	 Ak7NEIvzB8HZ3Vo66tfHKKV84vVnQo9ZV93e5kuoAk5oiZr8pmTvnsjGR9pb0t3C2S
+	 JzzefvHFPoH77XqjXVMO2XWz+kMfXwkKOlc8fL9ZjqkcTOaH/1uE0cIILPgJaoZe+n
+	 2a60pvwx/DqN0PB3aOrNBsb+rBdH/zirkWhod5SdNXZzwKhVHMnSGgXQUAeyC0au4Q
+	 ysbljTp5wzjI6PKwUTpZrdfHcFApzeVDIhyschnFVQUxOWA3xzktWHjMAEe0b5Qx1b
+	 EpZ0Q+ujwBjtQ==
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8a049a767c3so700076d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 11:20:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWpHpImJ/UfEeSS7/vmn/0JfxaiyFVDkMTCLhEo51YVUcuMUd/md2vPVg/nNq4M/M6NzwcuAjFhJu9THgSRgZWN1wQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp72XAl8o0cWuwfVdXfu/1pdd1x1JfsYcd/NivmRhTRTGqO82a
+	ca2cxMjrmKePZKC4mHu8atN45Wy3TcQuJIFkdiZ0Y1kowjyj2KX5nHW3RZds60zeK4ij+RYdm3d
+	/0IgjTxtsvj9MgMTSuttNINfGb0BAQ0k=
+X-Received: by 2002:a05:6214:4699:b0:8a7:164c:d5c8 with SMTP id
+ 6a1803df08f44-8ac746bec7fmr8189476d6.24.1775672402156; Wed, 08 Apr 2026
+ 11:20:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A5DZmuaHBpig
-Date: Wed, 08 Apr 2026 14:16:32 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
- NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>
-Cc: "Calum Mackay" <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Message-Id: <bb4fc3da-765d-4284-9282-dd04d286f671@app.fastmail.com>
-In-Reply-To: <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
-References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
- <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
-Subject: Re: [PATCH 01/24] filelock: add support for ignoring deleg breaks for dir
- change events
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
+ <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+ <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+ <adQhpBC2W9I6QW-g@redhat.com> <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
+ <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
+ <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
+ <adUd0Mojbtrwmeod@pathway.suse.cz> <CALOAHbDG9mq1iJv5suct=cqJ+2r8VvJ-dXN=nuvMw0XYqnUjxA@mail.gmail.com>
+ <adY_WgA54CDtWBq6@pathway.suse.cz>
+In-Reply-To: <adY_WgA54CDtWBq6@pathway.suse.cz>
+From: Song Liu <song@kernel.org>
+Date: Wed, 8 Apr 2026 11:19:50 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
+X-Gm-Features: AQROBzDWe_vpf5f0DrH1BpfkbDrq31L-0Z60zRTstiTlWDjm9dqpqQwJLlcic4k
+Message-ID: <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
+To: Petr Mladek <pmladek@suse.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>, Joe Lawrence <joe.lawrence@redhat.com>, 
+	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, jikos@kernel.org, 
+	mbenes@suse.cz, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, kpsingh@kernel.org, mattbobrowski@google.com, 
+	jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
+	yonghong.song@linux.dev, live-patching@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
-> If a NFS client requests a directory delegation with a notification
-> bitmask covering directory change events, the server shouldn't recall
-> the delegation. Instead the client will be notified of the change after
-> the fact.
+On Wed, Apr 8, 2026 at 4:43=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
+:
+[...]
+> > >
+> > > This is weird semantic. Which livepatch tag would be allowed to
+> > > supersede it, please?
+> > >
+> > > Do we still need this category?
+> >
+> > It can be superseded by any livepatch that has a non-zero tag set.
 >
-> Add support for ignoring lease breaks on directory changes. Add a new
-> flags parameter to try_break_deleg() and teach __break_lease how to
-> ignore certain types of delegation break events.
+> And this exactly the weird thing.
 >
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
+> A patch with the .replace flag set is supposed to obsolete all already
+> installed livepatches. It means that it should provide all existing
+> fixes and features.
+>
+> Now, we want to introduce a replace flag/set which would allow to
+> replace/obsolete only the livepatch with the same tag/set number.
+> And we want to prevent conflicts by making sure that livepatches with
+> different tag/set number will never livepatch the same function.
+>
+> Obviously, livepatches with different tag/set number could not
+> obsolete the same no-replace livepatch. They would need to livepatch
+> the same functions touched by the no-replace livepatch and would
+> conflict.
+>
+> So, I suggest to remove the no-replace mode completely. It should
+> not be needed. A livepatch which should be installed in parallel
+> will simply use another unique tag/set number.
 
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 8e44b1f6c15a..dafa0752fdce 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
+I think I see your point now. Existing code works as:
+- replace=3Dfalse doesn't replace anything
+- replace=3Dtrue replaces everything
 
-> @@ -1670,7 +1709,7 @@ int __break_lease(struct inode *inode, unsigned int flags)
->  			locks_delete_lock_ctx(&fl->c, &dispose);
->  	}
-> 
-> -	if (list_empty(&ctx->flc_lease))
-> +	if (!visible_leases_remaining(inode, flags))
->  		goto out;
-> 
->  	if (flags & LEASE_BREAK_NONBLOCK) {
+If we assume false=3D0 and true=3D1, it is technically possible to define:
+- replace_set=3D0 doesn't replace anything
+- replace_set=3D1 replaces everything
+- replace_set=3D2+ only replace the same replace_set
 
-After breaking visible leases, the restart: label calls any_leases_conflict()
-which does not filter ignored dir-delegation leases. When only ignored leases
-remain, any_leases_conflict returns true, but visible_leases_remaining also
-returned true (triggering the wait). The code picks the first lease (possibly
-ignored), computes break_time = 1 jiffy, blocks, then loops.                                                     
+This is probably a little too complicated.
 
-For example, suppose you have two directory delegations on a directory, one
-with FL_IGN_DIR_DELETE and one without. After the non-ignored one is broken
-and removed, the ignored one keeps any_leases_conflict returning true. The
-loop spins at 1-jiffy intervals until the ignored delegation is released.  
+> > This ensures backward compatibility: while a non-atomic-replace
+> > livepatch can be superseded by an atomic-replace one, the reverse is
+> > not permitted=E2=80=94an atomic-replace livepatch cannot be superseded =
+by a
+> > non-atomic one.
+>
+> IMHO, the backward compatibility would just create complexity and mess
+> in this case.
 
-Should the restart: block skip ignored leases?
+Given that livepatch is for expert users, I think we can make this work
+without backward compatibility. But breaking compatibility is always not
+preferred.
 
-
--- 
-Chuck Lever
+Thanks,
+Song
