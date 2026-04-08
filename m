@@ -1,36 +1,44 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335A321FF23;
-	Wed,  8 Apr 2026 00:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB2E26A1AC;
+	Wed,  8 Apr 2026 00:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775608579; cv=none; b=gK9hrdNWwllfiKX5fsNIuEqwr043g0Jm8wEbs7vEVfizQo8UhMDs/W6SiSK2BSj4Z5kF09I+PVJuOScOk/cM6/sKTilfp0+befU7eLnRwlNCadQtlV43RitgG2uB0svN6SPiS8yBWzooNqGcXEwsJZwHPKE0MZmqog1Gw/ySoEM=
+	t=1775608853; cv=none; b=scv9kOwn5r7si42KZEYLHocQ3IOxLhubCNT9RWVwTjINEz6Gfm2k1OQsKeLzqAxUVMj3yxrMCeykkuK4UNwZB4U0OTYP/n1SQb1mYJo2zfUah2L+3+7maFzbwkvY6fEVGRmVvRrxGzyjknxm7G2yK8uPG4AVl5SaLVlH9PH3g2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775608579; c=relaxed/simple;
-	bh=DSHMKtcMrFlc2mTpnSw9/onSDzVkuubQ5CqhnzJlKbc=;
+	s=arc-20240116; t=1775608853; c=relaxed/simple;
+	bh=Cegwari8vptxDKvjR+0BLUPedC0qGVpLh1ZQOMxlgvc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XBEB242w1asFr7KrpBBFMy9ZmpaJQPlS6ycBotTYnrvTP1Xp3SpkXNXO83VrmOzzBhhLQvTwlpP0bKLV5wo5Yr1ov6v3p3Gx++BmHREdAtBIUoxlQlgcdl1fhT6dbHyqRm3QEucwXeYl+ofaxI4u7PHOvRY4yufPQuiUgQEKn+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=LruoB2JA32kpBlYEfbOprdQvPxpHvLdhow9663kiCI56t7nfr7ndoR6H/wISH2Aavh2W4e+Ofri5+2pjuEhS89VeOG5aubKkPAqm/6MNJFuFJZq6XjeZrMpDv0xZQ3cqDW3qJblDbKWL6j8sLnu+GOgjprZrqRCINsEO3q+9Zf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id AD3EE1A0A18;
-	Wed,  8 Apr 2026 00:36:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 7A0B880014;
-	Wed,  8 Apr 2026 00:36:13 +0000 (UTC)
-Date: Tue, 7 Apr 2026 20:37:27 -0400
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id C376B1B83A4;
+	Wed,  8 Apr 2026 00:40:41 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id D6ACD20012;
+	Wed,  8 Apr 2026 00:40:36 +0000 (UTC)
+Date: Tue, 7 Apr 2026 20:41:50 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: CaoRuichuang <create0818@163.com>, Shuah Khan
- <skhan@linuxfoundation.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever
+ <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>, Amir Goldstein <amir73il@gmail.com>, Calum
+ Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Drop invalid top-level local in
- test_ownership
-Message-ID: <20260407203727.442b583c@gandalf.local.home>
-In-Reply-To: <20260407102613.81419-1-create0818@163.com>
-References: <20260407102613.81419-1-create0818@163.com>
+ linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 14/24] nfsd: add tracepoint to dir_event handler
+Message-ID: <20260407204150.6bc1cd73@gandalf.local.home>
+In-Reply-To: <20260407-dir-deleg-v1-14-aaf68c478abd@kernel.org>
+References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
+	<20260407-dir-deleg-v1-14-aaf68c478abd@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,60 +48,25 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: nxms7hr86n7fhxgry7oowca85x1u35yg
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 7A0B880014
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: D6ACD20012
+X-Stat-Signature: a58i7egn919wo5bfc1dijgryt4aruch5
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/V1biiv5PEsKfAB4ePCeL1+ugMHb2vifI=
-X-HE-Tag: 1775608573-971609
-X-HE-Meta: U2FsdGVkX19TXhA7rYYC5HSaQAk4z9SqOsfhHTZUDcBiiOzF8BbuiGNT0cDkaEpPUOaaxEFq/5xiLwUNUN2g84kJU9lZNYAAa33gVPQYun/PC6B4T3KEnRaRo34kYzWb+t8e6r0coic1EncfSMh6BUyvIzrUgh3I15MIlr9oDkgSKkGiY1AMfh9zsKFXrSW5vlrpzZJ7jIuYeb8dx4Ri0UNLnRKK8DYolpWBiBl8yHqHoo5WRd6myD9L6H/nGvuv0WmhTM54X3UtXgxj4+SlSKI04w5HSGswKnxwjLBOJmcEBsgRsZ1JF2ce9DNBGlg5xGh1y43kf7VPQnU6b+v00KzCRdPiV8daHY5S40sRGqVEpO/bh/DOxsrbo27UvcuLWRbwd8/ODfY+gJYYg+tGwVyr3IA48ZJsLPbnOolZY8o=
+X-Session-ID: U2FsdGVkX19wpl42ANRPgMmD+SVWM2QxvjbmYGpmFKs=
+X-HE-Tag: 1775608836-706489
+X-HE-Meta: U2FsdGVkX18ILWolfDCcJNYxXZsXn6fYE/yJQ0Hd5qi1oONwm0/67OtFIHaBlcfJprHD1QzYu1HPkBTF6L5jaUy2cun50LXyY7G1rVbBMMRgYdtW2LTvIh84r+ttFdtCPpKLr/FJGl7f45ETWiNnVGC90PW8QIA41Opt245d7/SUyNWV0EPWuS0WJU6Joqv9kQIYTZaEIeo8kpKbEEOL/faCQzqLp9vTto3WflI/UV16ylb0YNjjr0IhKl3mhrxqFieedMMtgX2Ki+UzQcIKPOi0Nprsj+C5xeNA2qhhWgRilHph8Sp1YO4y30MCBrihOGQH8nJdhdmf8RHadW0eta95IALDOfcIxsm/xyXPVgC1jE1lb5zjGM6YASEfCky9ZgSLHHns3Fsgi6Q1p7LKVQ==
 
+On Tue, 07 Apr 2026 09:21:27 -0400
+Jeff Layton <jlayton@kernel.org> wrote:
 
-Shuah,
-
-Care to take this through your tree. Probably could even add:
-
-Cc: stable@vger.kernel.org
-Fixes: 8b55572e51805 ("tracing/selftests: Add tracefs mount options test")
-
-As well as:
+> Add some extra visibility around the fsnotify handlers.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/nfsd/nfs4state.c |  2 ++
+>  fs/nfsd/trace.h     | 20 ++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
 
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
-
-
-On Tue,  7 Apr 2026 18:26:13 +0800
-CaoRuichuang <create0818@163.com> wrote:
-
-> From: Cao Ruichuang <create0818@163.com>
-> 
-> test_ownership.tc is sourced by ftracetest under /bin/sh.
-> 
-> The script currently declares mount_point with local at file scope,
-> which makes /bin/sh abort with "local: not in a function" before the
-> test can reach the eventfs ownership checks.
-> 
-> Replace the top-level local declaration with a normal shell variable so
-> kernels that support the gid= tracefs mount option can run the test at
-> all.
-> 
-> Signed-off-by: Cao Ruichuang <create0818@163.com>
-> ---
->  tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> index e71cc3ad0..6d00d3c0f 100644
-> --- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> @@ -6,7 +6,7 @@
->  original_group=`stat -c "%g" .`
->  original_owner=`stat -c "%u" .`
->  
-> -local mount_point=$(get_mount_point)
-> +mount_point=$(get_mount_point)
->  
->  mount_options=$(get_mnt_options "$mount_point")
->  
-
