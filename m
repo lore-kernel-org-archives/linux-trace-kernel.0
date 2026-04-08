@@ -1,171 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231431FC0EA;
-	Wed,  8 Apr 2026 14:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BDD2F39B8
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 14:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775658561; cv=none; b=VRqIk0OreGI558cniOW/CrrdvQQWnsg/VurkehNKiV2FYiZPAYW5P5WOYl9ocv5ZsjdC0gRu61Trjoj7tBuSFW9qKvNH0jQv58TqpvltpJtS1Pa3kwQXlBuegKYRsLMI36Zh7z60x2ksrUR95Ae2sGQOi0bhrCQEFmPzd8waork=
+	t=1775659522; cv=none; b=Ryjwue6QUFEjbpQnF26cZrQJDl54/ySmsLc/5mWWFddNaeFxFExk2RZ4OxwrVrgNQtVx4xJXKb7T8Xra/rqyDYH4apjkuSjDnrR8QUo4ZSgSwf8bMXgRR5U3VxZnGC7la4hO1+CHlgkT/mynyw80NB6bOBfQE53hOwO8l0Ls1GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775658561; c=relaxed/simple;
-	bh=afzwQipiDUAb0KqTXFw3pZfQwo4aWaoCWc2HekCQF1M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jV01TVDjtzFvf3hUpZg9JyUrEmsjzTPgQQrpEQl9fxMqCxBWZ7bFehtxmFdaEi1nXM18sG6chDw4lI+ohlOcTd5MSOjYMaq8vGSoj9YNc18almyotL7vCh3QBeY5YdGMWSucwDkfCuskdIwvLs+uN2ANjtLYOi0bMfs4ddmHRIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8FH0MMs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775659522; c=relaxed/simple;
+	bh=a6x2OhReSVc3Z1dCtiMclRTOwCsIuCnXoMbbim9keHo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hEv/6sAmafKUy3qRgLv6S4b6U/dVHZxZx46t1o5pZn7m7dB1+XMoXN1v771BzqDZwv5BWlcCN7llj0a1TMmcvxqIcf0lUVmyz/Uw6GsxU9Klf2OjaPHrPRJsGmn00HSSgJ+gU7Ek6ZcID25O/dkzgKaTKDySS2f+PYc7/AtCyu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ew3b1Crz; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8FH0MMs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 890E4C19421;
-	Wed,  8 Apr 2026 14:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775658560;
-	bh=afzwQipiDUAb0KqTXFw3pZfQwo4aWaoCWc2HekCQF1M=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=X8FH0MMsadR6WD1vBtBzVNCgOd13mbti0aKINsB7SziPl4zQtxwOdeqET3JB75rG9
-	 nPz8hTFr9KYZxwRPqv4sn61VIoh26wVR0rWes0OHDNfb/+n9KqKu1YUkH73D/SuWuh
-	 ++/lecgG2dvZxO9qjrn75erTLnnBGb1Bot3LG2dsTK/4lVOg3TLHhOKyZeb9MTsf3q
-	 EIUuSa0J1tzklwzNdGsyXqm2fRPS0O00lda2SWdvbr/pdDdbOH+Pb5w3RQOBX5NfW1
-	 vwM7qwe4jxgcP6DWIPWpIWIN5MBcVR6gAdPrxYVFXAhkbG0PxkTdUyijcjDCUjcGiu
-	 O233TD3X5VLxg==
-Message-ID: <cd26618e451bee7e9af0e77b11197b2fd501cba7.camel@kernel.org>
-Subject: Re: [PATCH 01/24] filelock: add support for ignoring deleg breaks
- for dir change events
-From: Jeff Layton <jlayton@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Alexander Aring
-	 <alex.aring@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu	 <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Jonathan Corbet	 <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, NeilBrown	 <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo	 <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, Trond Myklebust	 <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Amir Goldstein	 <amir73il@gmail.com>, Calum
- Mackay <calum.mackay@oracle.com>, 	linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-nfs@vger.kernel.org
-Date: Wed, 08 Apr 2026 10:29:16 -0400
-In-Reply-To: <snnggefctfffpb3rsyhjdwmxozqdklqmweiojmxy7owettksgz@6vud2iacgeqc>
-References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
-	 <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
-	 <snnggefctfffpb3rsyhjdwmxozqdklqmweiojmxy7owettksgz@6vud2iacgeqc>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew3b1Crz"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ad617d5b80so34479755ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 07:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775659521; x=1776264321; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M53r6SkdFKKJnPXXmzaN0o7kYfdxnvwHZHkbphF/YkQ=;
+        b=Ew3b1CrzzRe3ZZjVSbuvMOcN6Qp2qg/r7SFEL7M6NShme40+wsQ3pnDH0uweWm27ty
+         CMc+vD92EX0mvJBrF7WzC/BIEkyYMXr9H9wuRQptyO2HH7fCkWt4cJsQOc23cOQchNiv
+         kcNkMgJS9OGrULsnptQztlXw8dipRKu9rZwxs28Q8Sdi1Zm/oAQXbn/dP7HtHQmcBUkN
+         6LE803Rq5f6T3rJdlSarOMGDadruP3JwL6O4i1e2VhZS2laQXnOzG6BQ1EdcD78rkiiu
+         lLh+Vsqh+DXcRTv3bwRR9ajYNX8oC7WukHw8GyEay+Re5/dzhHIz4nh0nhl0ejWZ2RIb
+         5Ixw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775659521; x=1776264321;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=M53r6SkdFKKJnPXXmzaN0o7kYfdxnvwHZHkbphF/YkQ=;
+        b=sl+BsuPyuefzBh37c6kIFyitfpbbAvuOzNIsPkseGVH2uYqGPVJOC9UMMVIN3qlT6P
+         WdyXZZDIa7WiBIvf6miIA4xBbyDTW+trcwA5KFmzHLDxfJOw7r9IOMuNwK9/2eeGvZUp
+         9LHDyyCjvSbXv57HQ5vtT47ulDuBUFmXvypcZNryw+xoY9vDpKSZEPJn/Lf96Qc71cYf
+         lVtUbM1mWxCMzEzoyusO6uvLngPiWMAo/2SQS1BNRUobCM7znTP9xnEXpOCInn1wwWud
+         6RuOeWx63ogRQxHHvA2BFM5bJ9UsF5RLSybrYD/CmvuXeUGOq0Z7YnvgR0Y5E0uZUNyT
+         3/pg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFcoX98zOAA5assSqcli2sQUkZeL1aMCxs0BNRSye7FHj9BTL6MEKAAVEx3L/auCgpsBdhKSGV778etptXIwtfU6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYZqRJxE2ag5pIt5aeqhmlGgPZyC1pN2zxa90ytEzmEQAfZZRE
+	tqvw6IM4IyeKzE2sSF/XMgnuxaU43cHteqGbjpNhAv8SWzaIZPV/Zchh
+X-Gm-Gg: AeBDievL89vDjk7OgtX1joh8LD7h8AIJUAlT5UT0T1F/A3vKS1CkMw7dhORfdp/P1mu
+	4kAj0fw1D3nVENT8X6y/2BuD7fbFMFAN8Td/zwj4HW3uAz0iiRMVF6fuUdq/H3mKrjbb97X6KQu
+	W9qzMj0Mu7hkAMPJSJNhb9zV7jcghVApFaVH2qhZwevFgmv074/h6oRGIGw+QF+SKIPKp2l4H5X
+	q4EurkBPRpKWC+gNonxA0UqvOcjO0BIMedrB8nPj6dn7hK0GEGmgDfnpvJabaJmcgvgXAvxysUI
+	fsnKznJNyyQ32OAidwC52xKn4/DFJVNHZOxWQ1r3XN0pQn8BHKgd1NukAOr56DpZEEtbEGNJ1xF
+	KHxCc87CQQhmDH06aRUfLBIOiK4TU4DBTZxMrgpJ4XdPONDAnu5mcR5e502o76IBJuY1F88AYQp
+	f+A7NnNmH1MkT06pQ+JMIjtw8utiQVCTYKMmipYvWB80DOS7jcIp2I4pogxwgL81bvhjKk1Ft/T
+	k6b52GCIeAxjSU=
+X-Received: by 2002:a17:903:191:b0:2b2:5637:1487 with SMTP id d9443c01a7336-2b28178f0b7mr220740205ad.34.1775659520719;
+        Wed, 08 Apr 2026 07:45:20 -0700 (PDT)
+Received: from localhost.localdomain ([103.10.31.106])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b274756621sm203094795ad.20.2026.04.08.07.45.17
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 08 Apr 2026 07:45:20 -0700 (PDT)
+From: Shuvam Pandey <shuvampandey1@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	shuvampandey1@gmail.com
+Subject: [PATCH v2] seq_buf: export seq_buf_putmem_hex() and add KUnit tests
+Date: Wed,  8 Apr 2026 20:29:49 +0545
+Message-ID: <20260408144449.57375-1-shuvampandey1@gmail.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260406033728.25998-1-shuvampandey1@gmail.com>
+References: <20260406033728.25998-1-shuvampandey1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-04-08 at 15:45 +0200, Jan Kara wrote:
-> On Tue 07-04-26 09:21:14, Jeff Layton wrote:
-> > If a NFS client requests a directory delegation with a notification
-> > bitmask covering directory change events, the server shouldn't recall
-> > the delegation. Instead the client will be notified of the change after
-> > the fact.
-> >=20
-> > Add support for ignoring lease breaks on directory changes. Add a new
-> > flags parameter to try_break_deleg() and teach __break_lease how to
-> > ignore certain types of delegation break events.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> Looks good. Feel free to add:
->=20
-> Reviewed-by: Jan Kara <jack@suse.cz>
->=20
-> > @@ -222,6 +225,10 @@ struct file_lease *locks_alloc_lease(void);
-> >  #define LEASE_BREAK_LAYOUT		BIT(2)	// break layouts only
-> >  #define LEASE_BREAK_NONBLOCK		BIT(3)	// non-blocking break
-> >  #define LEASE_BREAK_OPEN_RDONLY		BIT(4)	// readonly open event
-> > +#define LEASE_BREAK_DIR_CREATE		BIT(6)  // dir deleg create event
-> > +#define LEASE_BREAK_DIR_DELETE		BIT(7)  // dir deleg delete event
-> > +#define LEASE_BREAK_DIR_RENAME		BIT(8)  // dir deleg rename event
->=20
-> Just curious why you've left out bit 5 here... :)
->=20
-> 								Honza
+seq_buf: export seq_buf_putmem_hex() and add KUnit tests
 
-No reason. I've had this series for a couple of years now, and I think
-bit 5 got removed at some point after I originally did this patch, and
-I didn't notice when I fixed up the conflict. I'll plan to renumber
-this for neatness sake.
+The seq_buf KUnit suite does not exercise seq_buf_putmem_hex().
 
-Thanks for the review!
---=20
-Jeff Layton <jlayton@kernel.org>
+Add one test for the len > 8 chunking path and one overflow test
+where a later chunk no longer fits in the buffer.
+
+Export seq_buf_putmem_hex() as well so SEQ_BUF_KUNIT_TEST=m links
+cleanly. Without the export, modpost reports seq_buf_putmem_hex as
+undefined when seq_buf_kunit is built as a module.
+
+Signed-off-by: Shuvam Pandey <shuvampandey1@gmail.com>
+---
+v2:
+- export seq_buf_putmem_hex() so SEQ_BUF_KUNIT_TEST=m links cleanly
+- validate with a fresh arm64 build using CONFIG_KUNIT=y and CONFIG_SEQ_BUF_KUNIT_TEST=m
+
+ lib/seq_buf.c             |  1 +
+ lib/tests/seq_buf_kunit.c | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+
+diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+index f3f3436d60a9403eae5b1ef9b091b027881f14fb..b59488fa8135cdb0340fbeb43d8d74db8ae13146 100644
+--- a/lib/seq_buf.c
++++ b/lib/seq_buf.c
+@@ -298,6 +298,7 @@ int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
+ 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(seq_buf_putmem_hex);
+ 
+ /**
+  * seq_buf_path - copy a path into the sequence buffer
+diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
+index 8a01579a978e655cd09024d0ea9c4c9cd095263f..eb466386bbefb1c81773cdae65a8ac3df91cd8ea 100644
+--- a/lib/tests/seq_buf_kunit.c
++++ b/lib/tests/seq_buf_kunit.c
+@@ -184,6 +184,38 @@ static void seq_buf_get_buf_commit_test(struct kunit *test)
+ 	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
+ }
+ 
++static void seq_buf_putmem_hex_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 24);
++	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
++#ifdef __BIG_ENDIAN
++	const char *expected = "0001020304050607 0809 ";
++#else
++	const char *expected = "0706050403020100 0908 ";
++#endif
++
++	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), 0);
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), strlen(expected));
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
++}
++
++static void seq_buf_putmem_hex_overflow_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 20);
++	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
++#ifdef __BIG_ENDIAN
++	const char *expected = "0001020304050607 ";
++#else
++	const char *expected = "0706050403020100 ";
++#endif
++
++	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), -1);
++	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 20);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
++}
++
+ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_init_test),
+ 	KUNIT_CASE(seq_buf_declare_test),
+@@ -194,6 +226,8 @@ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_printf_test),
+ 	KUNIT_CASE(seq_buf_printf_overflow_test),
+ 	KUNIT_CASE(seq_buf_get_buf_commit_test),
++	KUNIT_CASE(seq_buf_putmem_hex_test),
++	KUNIT_CASE(seq_buf_putmem_hex_overflow_test),
+ 	{}
+ };
+ 
