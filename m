@@ -1,110 +1,256 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07DDCA45;
-	Wed,  8 Apr 2026 01:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D24487BE;
+	Wed,  8 Apr 2026 01:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775610233; cv=none; b=aodO7s3QNfZFPOeM/2NuO/iXbQJFR/fsKqbvw52QhReXI2hkTmLX5kuluxyONQPbWzKzmIIqwjr3jBdKkNwwBj2Nr9J6uFRRzAK2w1Kjzs6qTNK8rtTHc7mJx/jdXZ8+QbXcRxLYNyghqq8f0/op85nUxnKMW0qQv6f0NQ195yQ=
+	t=1775610472; cv=none; b=qK6tZwEgSroQBBfYHB6+lMVZWGp6H6H36s4YU4T1DUvh5muhpH0xCaToWnp6wPelIkxPAnED5QCbJ3fX06/gDexL6T3L0+93hS1ijTdTwN1TexGrQAYPb8tjqTjzfy9HFJWpXOTisSGn1gXdNHK/dfiNe13B0cwQG9UB49lPdYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775610233; c=relaxed/simple;
-	bh=a3xhaVGY/SxMDfx3Hn2Tszl14EUFFGLwxQ7gDxOgNDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uXeCmxBKzkKVAM8nsOMhHhGiu33kCm0Vz2vsJsJuw0qqUjSSPtTi/bPmdF8l23nsc4MHqwoigAqRkhqXsTcK8b/orM5xEbuylEoKMG9Khqit5cgxGgF6sI/IoJqKPbRDr37keNnKkRCri2VNG4aaxXTLdJ2Ua0R++gtcawJCesQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 3E57913BEA8;
-	Wed,  8 Apr 2026 01:03:50 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 562F22001E;
-	Wed,  8 Apr 2026 01:03:48 +0000 (UTC)
-Date: Tue, 7 Apr 2026 21:05:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Pengpeng Hou <pengpeng@iscas.ac.cn>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Tom
- Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v2 1/2] tracing/hist: rebuild full_name on each
- hist_field_name() call
-Message-ID: <20260407210502.102e5d37@gandalf.local.home>
-In-Reply-To: <20260401112224.85582-1-pengpeng@iscas.ac.cn>
-References: <20260401112224.85582-1-pengpeng@iscas.ac.cn>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1775610472; c=relaxed/simple;
+	bh=wfR5HZf+4BIjFePtnRblEBRH17ol/UQ6L9E3R+cKiUc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=OBlR3391GLcucCT85OUGlz/qyeaRIStctxcykWN8MaR4IK41qkffefkrJTs5cIXjW/SacaTWttmsFIeRd/ZaCrlxQ3k+xu8uUAYcacCjPAqc9ht4sQdWczpdwak1azE6vD5/kT7lyZvIaTvLypkf70sAUc8eO47VdsevUMHibi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnPUDM2T; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnPUDM2T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8523BC116C6;
+	Wed,  8 Apr 2026 01:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775610472;
+	bh=wfR5HZf+4BIjFePtnRblEBRH17ol/UQ6L9E3R+cKiUc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UnPUDM2TBHJd2cGof6psR+AclN6uf/p5PJALCXAtu/TI4x8AfezHkg7RWZUD+URFL
+	 KaCntmFSGSApGxvQ+zxdZGWNb9dt2DiHmMBu5vtNsVQp8econRvzX30lmQP+09INOy
+	 Ppn9UWREnCsvoH3qeLfMKTScRXLln0/BFtZ0e3CB2Tgx/8pNJHmi8rFwFq2foTPiCL
+	 Qrrh87i9iHNLsk/RQ8fIjH380YeBwCP82Z1sQDEntC+xfG4F/TvsRxRmoMRhpD1VSN
+	 4o/h/XjhVuOg4oKue33nUCOw+WUDO4PN5IMYi5S5mbeyyRFdiQkc4p9jRyuwapwBou
+	 LG0ldNz8uKLBg==
+Date: Wed, 8 Apr 2026 10:07:49 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Menglong Dong
+ <menglong8.dong@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/fprobe: Check the same type fprobe on table as
+ the unregistered one
+Message-Id: <20260408100749.24a082590f8638d57e247b46@kernel.org>
+In-Reply-To: <177555745233.1441308.6535024692186959381.stgit@mhiramat.tok.corp.google.com>
+References: <177555745233.1441308.6535024692186959381.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: bgmgdzr4zkpry4x1a65ara8776udhkkt
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 562F22001E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18aTlfnHz/MOk/n+YQ2rFjoF75g/Q30ieU=
-X-HE-Tag: 1775610228-994174
-X-HE-Meta: U2FsdGVkX1+mOEx/h7s19oHvkIq6Ruu2DOZsa3N9Z8f3671wiNoOL3r39MPjycAYxngh3lKTQXabaaDWLwRJ3mEy4IBX8hMN+5SCO3KlO31845Qyl6Jr0j0Y1zwmLW6mbbllijNSLNG+1+ToIkS/DWAcvs+w0Wf74R1MX9ajrrjI/LERKGtUCGH8PmeDhDwYPArEk9eveFWM5VCTnG7Li7DmLb56n9p2XijPngv3GqorMLGFmlww7L2mH71lJmz/MMH8gr3VXFpeHrriM6IJnQL3Zu/y7pqzytUCz7MzZaqaeX6TpJeJinKgXTegQEPGDAxSrrsq+lNBLGd+VlHIm4Bv5jO8bsFq
 
+Hi,
 
-Tom,
+Sashiko reported another concern in module callback [1].
+Let me fix it.
 
-On Wed,  1 Apr 2026 19:22:23 +0800
-Pengpeng Hou <pengpeng@iscas.ac.cn> wrote:
+[1] https://sashiko.dev/#/patchset/177555745233.1441308.6535024692186959381.stgit%40mhiramat.tok.corp.google.com
 
-> hist_field_name() uses a static MAX_FILTER_STR_VAL buffer for fully
-> qualified variable-reference names, but it currently appends into that
-> buffer with strcat() without rebuilding it first. As a result, repeated
-> calls append a new "system.event.field" name onto the previous one,
-> which can eventually run past the end of full_name.
+Thanks,
+
+On Tue,  7 Apr 2026 19:24:12 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Build the name with snprintf() on each call and return NULL if the fully
-> qualified name does not fit in MAX_FILTER_STR_VAL.
+> Commit 2c67dc457bc6 ("tracing: fprobe: optimization for entry only case")
+> introduced a different ftrace_ops for entry-only fprobes.
 > 
-> Fixes: 067fe038e70f ("tracing: Add variable reference handling to hist triggers")
-> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+> However, when unregistering an fprobe, the kernel only checks if another
+> fprobe exists at the same address, without checking which type of fprobe
+> it is.
+> If different fprobes are registered at the same address, the same address
+> will be registered in both fgraph_ops and ftrace_ops, but only one of
+> them will be deleted when unregistering. (the one removed first will not
+> be deleted from the ops).
+> 
+> This results in junk entries remaining in either fgraph_ops or ftrace_ops.
+> For example:
+>  =======
+>  cd /sys/kernel/tracing
+> 
+>  # 'Add entry and exit events on the same place'
+>  echo 'f:event1 vfs_read' >> dynamic_events
+>  echo 'f:event2 vfs_read%return' >> dynamic_events
+> 
+>  # 'Enable both of them'
+>  echo 1 > events/fprobes/enable
+>  cat enabled_functions
+> vfs_read (2)            ->arch_ftrace_ops_list_func+0x0/0x210
+> 
+>  # 'Disable and remove exit event'
+>  echo 0 > events/fprobes/event2/enable
+>  echo -:event2 >> dynamic_events
+> 
+>  # 'Disable and remove all events'
+>  echo 0 > events/fprobes/enable
+>  echo > dynamic_events
+> 
+>  # 'Add another event'
+>  echo 'f:event3 vfs_open%return' > dynamic_events
+>  cat dynamic_events
+> f:fprobes/event3 vfs_open%return
+> 
+>  echo 1 > events/fprobes/enable
+>  cat enabled_functions
+> vfs_open (1)            tramp: 0xffffffffa0001000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60    subops: {ent:fprobe_fgraph_entry+0x0/0x620 ret:fprobe_return+0x0/0x150}
+> vfs_read (1)            tramp: 0xffffffffa0001000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60    subops: {ent:fprobe_fgraph_entry+0x0/0x620 ret:fprobe_return+0x0/0x150}
+>  =======
+> 
+> As you can see, an entry for the vfs_read remains.
+> 
+> To fix this issue, when unregistering, the kernel should also check if
+> there is the same type of fprobes still exist at the same address, and
+> if not, delete its entry from either fgraph_ops or ftrace_ops.
+> 
+> Fixes: 2c67dc457bc6 ("tracing: fprobe: optimization for entry only case")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
-> Changes since v1: https://lore.kernel.org/all/20260329030950.32503-1-pengpeng@iscas.ac.cn/
+>  kernel/trace/fprobe.c |   77 +++++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 62 insertions(+), 15 deletions(-)
 > 
-> - rebuild full_name on each call instead of falling back to field->name
-> - return NULL on overflow as suggested
-> - split out the snprintf() length check instead of using an inline if
-> 
->  kernel/trace/trace_events_hist.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 73ea180cad55..f9c8a4f078ea 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -1361,12 +1361,14 @@ static const char *hist_field_name(struct hist_field *field,
->  		 field->flags & HIST_FIELD_FL_VAR_REF) {
->  		if (field->system) {
->  			static char full_name[MAX_FILTER_STR_VAL];
-> +			int len;
-> +
-> +			len = snprintf(full_name, sizeof(full_name), "%s.%s.%s",
-> +				       field->system, field->event_name,
-> +				       field->name);
-> +			if (len >= sizeof(full_name))
-> +				return NULL;
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index dcadf1d23b8a..7f75e6e4462c 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -85,11 +85,9 @@ static int insert_fprobe_node(struct fprobe_hlist_node *node)
+>  	return rhltable_insert(&fprobe_ip_table, &node->hlist, fprobe_rht_params);
+>  }
 >  
-> -			strcat(full_name, field->system);
-> -			strcat(full_name, ".");
-> -			strcat(full_name, field->event_name);
-> -			strcat(full_name, ".");
-> -			strcat(full_name, field->name);
->  			field_name = full_name;
+> -/* Return true if there are synonims */
+> -static bool delete_fprobe_node(struct fprobe_hlist_node *node)
+> +static void delete_fprobe_node(struct fprobe_hlist_node *node)
+>  {
+>  	lockdep_assert_held(&fprobe_mutex);
+> -	bool ret;
+>  
+>  	/* Avoid double deleting */
+>  	if (READ_ONCE(node->fp) != NULL) {
+> @@ -97,13 +95,6 @@ static bool delete_fprobe_node(struct fprobe_hlist_node *node)
+>  		rhltable_remove(&fprobe_ip_table, &node->hlist,
+>  				fprobe_rht_params);
+>  	}
+> -
+> -	rcu_read_lock();
+> -	ret = !!rhltable_lookup(&fprobe_ip_table, &node->addr,
+> -				fprobe_rht_params);
+> -	rcu_read_unlock();
+> -
+> -	return ret;
+>  }
+>  
+>  /* Check existence of the fprobe */
+> @@ -337,6 +328,32 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
+>  	return !fp->exit_handler;
+>  }
+>  
+> +static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace)
+> +{
+> +	struct rhlist_head *head, *pos;
+> +	struct fprobe_hlist_node *node;
+> +	struct fprobe *fp;
+> +
+> +	guard(rcu)();
+> +	head = rhltable_lookup(&fprobe_ip_table, &ip,
+> +				fprobe_rht_params);
+> +	if (!head)
+> +		return false;
+> +	/* We have to check the same type on the list. */
+> +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> +		if (node->addr != ip)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		if (likely(fp)) {
+> +			if ((!ftrace && fp->exit_handler) ||
+> +			    (ftrace && !fp->exit_handler))
+> +				return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  #ifdef CONFIG_MODULES
+>  static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
+>  			   int reset)
+> @@ -360,6 +377,29 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
+>  	return false;
+>  }
+>  
+> +static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace __maybe_unused)
+> +{
+> +	struct rhlist_head *head, *pos;
+> +	struct fprobe_hlist_node *node;
+> +	struct fprobe *fp;
+> +
+> +	guard(rcu)();
+> +	head = rhltable_lookup(&fprobe_ip_table, &ip,
+> +				fprobe_rht_params);
+> +	if (!head)
+> +		return false;
+> +	/* We only need to check fp is there. */
+> +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> +		if (node->addr != ip)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		if (likely(fp))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  #ifdef CONFIG_MODULES
+>  static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
+>  			   int reset)
+> @@ -574,15 +614,20 @@ static int fprobe_addr_list_add(struct fprobe_addr_list *alist, unsigned long ad
+>  static void fprobe_remove_node_in_module(struct module *mod, struct fprobe_hlist_node *node,
+>  					 struct fprobe_addr_list *alist)
+>  {
+> +	lockdep_assert_in_rcu_read_lock();
+> +
+>  	if (!within_module(node->addr, mod))
+>  		return;
+> -	if (delete_fprobe_node(node))
+> -		return;
+> +
+> +	delete_fprobe_node(node);
+>  	/*
+> -	 * If failed to update alist, just continue to update hlist.
+> +	 * Ignore failure of updating alist, but continue to update hlist.
+>  	 * Therefore, at list user handler will not hit anymore.
+> +	 * And don't care the type here, because all fprobes on the same
+> +	 * address must be removed eventually.
+>  	 */
+> -	fprobe_addr_list_add(alist, node->addr);
+> +	if (!rhltable_lookup(&fprobe_ip_table, &node->addr, fprobe_rht_params))
+> +		fprobe_addr_list_add(alist, node->addr);
+>  }
+>  
+>  /* Handle module unloading to manage fprobe_ip_table. */
+> @@ -943,7 +988,9 @@ int unregister_fprobe(struct fprobe *fp)
+>  	/* Remove non-synonim ips from table and hash */
+>  	count = 0;
+>  	for (i = 0; i < hlist_array->size; i++) {
+> -		if (!delete_fprobe_node(&hlist_array->array[i]))
+> +		delete_fprobe_node(&hlist_array->array[i]);
+> +		if (!fprobe_exists_on_hash(hlist_array->array[i].addr,
+> +					   fprobe_is_ftrace(fp)))
+>  			addrs[count++] = hlist_array->array[i].addr;
+>  	}
+>  	del_fprobe_hash(fp);
+> 
 
-I wanted to test this but I can't find anything that triggers this path.
-How does a field here get its ->system set?
 
-If there's no way to hit this path, I much rather remove it than "fix" it.
-
--- Steve
-
-
->  		} else
->  			field_name = field->name;
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
