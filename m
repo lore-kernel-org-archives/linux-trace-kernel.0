@@ -1,257 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24DB3D6CB9;
-	Wed,  8 Apr 2026 18:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB033D6CB9
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775673265; cv=none; b=gejEnP6W2ZWbAc8PeDet7o5RYJhp/54gT7KAfOoEFtYirDflgfDVActjX8EvzsaGxLbiIMq5lGmFh+7SXAg2vbecLe1Q2O4Ve5Srq4eB0xQ35/VRyyJFmKsLB7abVQJdxS6kMl423JFjKdxZSh8fqVLP1wBez5eSfWHp7eKahqU=
+	t=1775673365; cv=none; b=bTbop9uYKZf8aAvBDvfTrb+6HMuN5OR4CCQ6Rn7av3YzRBIidtXQHjwt0wkgAAdzP9AodchOtV9rQnKfCK561HXe+dGwJYsVsjQIJ/13/jR3/kgTLk7SE1Dv/5/KXFOv9K1fEzd4NNBwWVVWuLKjCGjV7cElMGmwrOVMg7d3yOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775673265; c=relaxed/simple;
-	bh=I4u6+dMDZjz2zON2p+h0huowpaR5+d4uLStEtJs9Q7w=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=YzNGy4svHxXW3QTbFLxw4xcQJBzpe5e4xNbd5QIgHNLr0qzyMZit5LNjx5Na5xVOD9bhC6AJqVH1+FGPTOddOVOV9Yb8P88hJn8miwKUifzttxw8RL2Y2t8B2K2z3dkr+YfieIFIeiT4y4EQBNm8bRRDJDha/aeriHG/slYbWVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lj0YTCG3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775673365; c=relaxed/simple;
+	bh=QkNqJWdiHPGsG4cNBuwXpj/Znwg2gcVxzViiz/Qan1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bw2OfDxqEAtUx9MsJ9Fs92VNogeKtRyoW9U6pmqyKzRl2iXJTXdALsS1PkOOspPzbq7Bk3wSJ6ziE48TMCerjlCjyghuID0oSG68+pUQBkKvZmroIkBgQvOAxMp3SUObqocBvrNT48Sdx6hgxggTmG8y13moqNRrASIBk6viHdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqpKOGHQ; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lj0YTCG3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C634AC19421;
-	Wed,  8 Apr 2026 18:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775673265;
-	bh=I4u6+dMDZjz2zON2p+h0huowpaR5+d4uLStEtJs9Q7w=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Lj0YTCG3BYBj0nqHt6ZCjmmgcyo+eWHux5VLPBZW+D9/BrciMPLNRSwD2QexZ1Heu
-	 Xf/wfadMVF4FLG88L6ky1Xffe2Qkhl7CSod2Nor8Sd7dQDTnrckwj5NzG+Uupb4wXF
-	 o2OQ7QMt5csOcVjzy7H5N9NzYLajyp8e9ay0QZzlOlWC7V+8mzEPz4EWWkOpptG30D
-	 6toDSw242lU7/YxvoRgEei/jnErjdVOgOT5XjmSQyd9wtAPg/OPeel03S0rIOIoWAW
-	 +yNmCCMIXJUZuLVgWaU7/ml7wQRPTjZAENxg2ZwnkY9D39CisiFFPo089XzaoWqDtr
-	 6pFISp9QCCN0g==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id B204FF4006C;
-	Wed,  8 Apr 2026 14:34:23 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 08 Apr 2026 14:34:23 -0400
-X-ME-Sender: <xms:r5_WaTWJYu9x3MkegsZsi-na07_hYiwU0ZyfgqBeEh-8FGuf5tk-Yw>
-    <xme:r5_WaWbdpMIBCtzX_AhShvS5Ni6y3mnV4vgFmao_HO5P6c_ruVOBM0A4vZDS2g4I5
-    rXeXKYtW_1DDjJwaYrAgOaNCoYwscTB5um5rTfyIu1Y-qJ9ES4Tx_c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvgeeftdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehmrghthhhivghurd
-    guvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegrlhgvgidr
-    rghrihhnghesghhmrghilhdrtghomhdprhgtphhtthhopegrmhhirhejfehilhesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhgruhhnvg
-    hrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:r5_WaeG1Q9v4HiyAccuef0GLt7dki2tAp2Z5rwH4L5Iwlcp6soXJwQ>
-    <xmx:r5_WaRAyBY5FdB25G_F2QlE9gw9NGAT_4z24g94kfYWuB5NZt9JKdA>
-    <xmx:r5_Wablh7yaztfGf-ocozil_smhj4FrcQcIuuXeRTwwpsJ_R7cgEcw>
-    <xmx:r5_WaX7Hs4NJdk_dIo71nDYz1ALuZPUb18AwUSb1XMQqN8mqYdabOA>
-    <xmx:r5_WaauBW8nHVi81VUBxfOrjR61gavNV_B1yP0Jo5ojs-JGlGNfQaHr7>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8310A780070; Wed,  8 Apr 2026 14:34:23 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqpKOGHQ"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-82cebbdbdccso40928b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 11:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775673363; x=1776278163; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o/ARlU+1nW3k8dDz7lLQIusgUbHwPm589AVKJkGX+KM=;
+        b=EqpKOGHQuYnzSkLz6Ru1tayxL4jeciq6Qg7ffvDGuNckPdVYPv8vsWLrbZ0JAaMdvb
+         Q1lIRpbTUUueVcbLwdib1S+k5dzKactMHsG1cM16hNvkksp4L0YayrX1/Fw5F8xeA9xC
+         GAtC6yJaKRVLSWx+xclaCATZXATI9AaCpnoql9MMe2kgl0bWdD0v2FAZr3ouH+qIJBkj
+         9NNgFSQe43SkHwv/hSS9U34jJCMG/oCc4uNB/F6gcuxnjI+77aoa+grYOQbs3qSWLnVg
+         47G6G2gXudCH9wBKi62qTEy9y5yTH8xdZxXWP8iPuQW+7KFxd//uC+OIrAkagl6CZu9S
+         pt+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775673363; x=1776278163;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o/ARlU+1nW3k8dDz7lLQIusgUbHwPm589AVKJkGX+KM=;
+        b=kHr0LvYrMoEEPLZhvuzxYACZICfCr2I4KZyrY0xMrI0ZT/ZkGOuQZ5aT3J1+8DlSnl
+         zKoGS6TDGx3pxlfXx2AplaAbPU9cqxrBWyblRfPnCgI5D/tHhFejCefjmOR6Mkw9C0rQ
+         rgX33CjMF5hZng6Q2qLqXVmw9PrrcaBt643VqNCw9zt+1JY6oP2PcIV1ZZYBiZpHMXE9
+         N6ocjpGUEjSgHL+6Ra+W8Kwz5utvDJ+XsbYd+KCYRMcq6NjK/Xla6FI7kya8WSv09o4F
+         9zFg6Ai0DAe3XDFVimZrZUnJOkLm/CJqTsNBJXIYR/Pi+RoTfbFHZw/FXOUZRNG5Mw4P
+         GzZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrwF9UKQOqCEZd2e1x4lzMN1fyTgCkYsSywg2oR2p91NqoEIl13q8PqPuhiZ76xnDXTzuFrrg9MWMmLD128Egm9gE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIfyrRYe10yQDbIu13s1oDBIK78pNTvy1JXtCzd23xzGFBWpvH
+	LfL6dQSAA+eMBAKBfvoYwN3ld7wb904PLGLfbV+bkm6Ktxwg3c94evFU
+X-Gm-Gg: AeBDietFbkmGMGfOvJwa97C/KEYbGp6TjipF3AqUDxxTkVAigg2ap9y94N3mDhU5LeW
+	EMLSXqdbOGC0Qjcjf+ireg8s+nvPJ2FDXDXcoUNuQ4IHgYzi9v9Q2zYbn2KEFc5gjz/VS/mDNxz
+	MUs5BzOg4h2BVGvHCELYeMYj1QQV4sDLbVIy7pI6FIHVJQPojXwc/ITGYSjBm9+I+TTb4/LBoRW
+	Wub03jpua1v0TiQ0CxIcwn+A1vv619Y3rPoQ6xVtHDJzBjJsU1TfMNUT+qcOmkVkyUN3z9AnmOy
+	dDnjP1fM2Ge6P3zEEFXmZdDLElJyl+wMSyF3j2ttikJev+LClZYgCSU9vYN7P+FPW1GFPzfN3ig
+	c6EpX1HwL8Ji/uE9VBtxyqlbM20vSxFdiJ6ZJyOdDZBpdDT6hyj7EiPU6S8tTSQ04t4k0dJloVb
+	AB9fCneHsjL3mtctDVSXfOJKvbm2IREU6RMDZpTBNJ6jc7dTLB1RCU4UpbEgOtCHFeINGt
+X-Received: by 2002:a05:6a00:230a:b0:81c:5bca:8104 with SMTP id d2e1a72fcca58-82dd8b3a2bfmr488089b3a.24.1775673362420;
+        Wed, 08 Apr 2026 11:36:02 -0700 (PDT)
+Received: from computer.goose-salary.ts.net ([2a09:bac5:40b2:1a96::2a6:4e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9b21c92sm23113251b3a.11.2026.04.08.11.35.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2026 11:36:02 -0700 (PDT)
+From: Varun R Mallya <varunrmallya@gmail.com>
+To: bpf@vger.kernel.org,
+	leon.hwang@linux.dev,
+	memxor@gmail.com,
+	jolsa@kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	yonghong.song@linux.dev,
+	rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	varunrmallya@gmail.com
+Subject: [PATCH bpf-next v4 0/2] Reject sleepable kprobe_multi programs at attach time
+Date: Thu,  9 Apr 2026 00:05:47 +0530
+Message-ID: <20260408183549.92990-1-varunrmallya@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AvVyrhjrLPWN
-Date: Wed, 08 Apr 2026 14:34:02 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
- NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>
-Cc: "Calum Mackay" <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Message-Id: <f60c8d0f-45b6-4d4e-8944-dfd69f2cf9bf@app.fastmail.com>
-In-Reply-To: <20260407-dir-deleg-v1-13-aaf68c478abd@kernel.org>
-References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
- <20260407-dir-deleg-v1-13-aaf68c478abd@kernel.org>
-Subject: Re: [PATCH 13/24] nfsd: add notification handlers for dir events
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+These patches fix an issue where sleepable kprobe_multi programs
+were allowed to attach, leading to "sleeping function called from invalid
+context" splats.
 
+Because kprobe.multi programs run in atomic/RCU context, they cannot
+sleep. However, `bpf_kprobe_multi_link_attach()` previously lacked
+validation for the `prog->sleepable` flag. This allowed sleepable
+helpers, such as `bpf_copy_from_user()`, to be invoked from an invalid
+non-sleepable context.
 
-On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
-> Add the necessary parts to accept a fsnotify callback for directory
-> change event and create a CB_NOTIFY request for it. When a dir nfsd_file
-> is created set a handle_event callback to handle the notification.
->
-> Use that to allocate a nfsd_notify_event object and then hand off a
-> reference to each delegation's CB_NOTIFY. If anything fails along the
-> way, recall any affected delegations.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+This series addresses the issue by:
+1. Rejecting sleepable kprobe_multi programs early in
+   `bpf_kprobe_multi_link_attach()` by returning -EINVAL.
+2. Adding selftests to explicitly verify that attaching a sleepable
+   kprobe_multi program is rejected by the kernel.
 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index b2b8c454fc0f..339c3d0bb575 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
+P.S: The first of these two commits has been applied to the bpf tree.
 
-> @@ -9796,3 +9887,118 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state 
-> *cstate,
->  	put_nfs4_file(fp);
->  	return ERR_PTR(status);
->  }
-> +
-> +static void
-> +nfsd4_run_cb_notify(struct nfsd4_cb_notify *ncn)
-> +{
-> +	struct nfs4_delegation *dp = container_of(ncn, struct 
-> nfs4_delegation, dl_cb_notify);
-> +
-> +	if (test_and_set_bit(NFSD4_CALLBACK_RUNNING, &ncn->ncn_cb.cb_flags))
-> +		return;
-> +
-> +	if (!refcount_inc_not_zero(&dp->dl_stid.sc_count))
-> +		clear_bit(NFSD4_CALLBACK_RUNNING, &ncn->ncn_cb.cb_flags);
-> +	else
-> +		nfsd4_run_cb(&ncn->ncn_cb);
-> +}
-> +
-> +static struct nfsd_notify_event *
-> +alloc_nfsd_notify_event(u32 mask, const struct qstr *q, struct dentry 
-> *dentry)
-> +{
-> +	struct nfsd_notify_event *ne;
-> +
-> +	ne = kmalloc(sizeof(*ne) + q->len + 1, GFP_KERNEL);
-> +	if (!ne)
-> +		return NULL;
-> +
-> +	memcpy(&ne->ne_name, q->name, q->len);
-> +	refcount_set(&ne->ne_ref, 1);
-> +	ne->ne_mask = mask;
-> +	ne->ne_name[q->len] = '\0';
-> +	ne->ne_namelen = q->len;
-> +	ne->ne_dentry = dget(dentry);
-> +	return ne;
-> +}
-> +
-> +static bool
-> +should_notify_deleg(u32 mask, struct file_lease *fl)
-> +{
-> +	/* Only nfsd leases */
-> +	if (fl->fl_lmops != &nfsd_lease_mng_ops)
-> +		return false;
-> +
-> +	/* Skip if this event wasn't ignored by the lease */
-> +	if ((mask & FS_DELETE) && !(fl->c.flc_flags & FL_IGN_DIR_DELETE))
-> +		return false;
-> +	if ((mask & FS_CREATE) && !(fl->c.flc_flags & FL_IGN_DIR_CREATE))
-> +		return false;
-> +	if ((mask & FS_RENAME) && !(fl->c.flc_flags & FL_IGN_DIR_RENAME))
-> +		return false;
-> +
-> +	return true;
-> +}
+Changes:
+v1->v2:
+- v1: https://lore.kernel.org/bpf/20260401134921.362148-1-varunrmallya@gmail.com/
+- Defective selftest added
+v2->v3:
+- v2: https://lore.kernel.org/bpf/CAP01T74YgnKop-dgwBToOcfg4_D44t1wUBopFYPMquirCmaLfg@mail.gmail.com/
+- Selftest separated from change into different commit.
+v3->v4:
+- v3: https://lore.kernel.org/bpf/20260401191126.440683-1-varunrmallya@gmail.com/
+- Selftest moved to test_attach_api_fails.
+- Changed attachment symbol to bpf_fentry_test1 for stability.
+- Changes suggested by Leon implemented.
 
-For a cross-directory rename, vfs_rename calls try_break_deleg(old_dir,
-LEASE_BREAK_DIR_DELETE, ...). A delegation with FL_IGN_DIR_DELETE
-(subscribed to NOTIFY4_REMOVE_ENTRY) suppresses the lease break, which
-is correct.
+Varun R Mallya (2):
+  bpf: Reject sleepable kprobe_multi programs at attach time
+  selftests/bpf: Add test to ensure kprobe_multi is not sleepable
 
-But fsnotify delivers FS_RENAME on old_dir, not FS_DELETE. In
-should_notify_deleg(), the check (mask & FS_RENAME) &&
-!(fl->c.flc_flags & FL_IGN_DIR_RENAME) fails, because the delegation
-has FL_IGN_DIR_DELETE but not FL_IGN_DIR_RENAME. No notification is
-sent.
-
-IIUC, a client subscribed to NOTIFY4_REMOVE_ENTRY for old_dir sees
-neither a lease break nor a CB_NOTIFY when a child is renamed out of
-the directory. Is that behavior correct?
-
-
-> +
-> +static void
-> +nfsd_recall_all_dir_delegs(const struct inode *dir)
-> +{
-> +	struct file_lock_context *ctx = locks_inode_context(dir);
-> +	struct file_lock_core *flc;
-> +
-> +	spin_lock(&ctx->flc_lock);
-> +	list_for_each_entry(flc, &ctx->flc_lease, flc_list) {
-> +		struct file_lease *fl = container_of(flc, struct file_lease, c);
-> +
-> +		if (fl->fl_lmops == &nfsd_lease_mng_ops)
-> +			nfsd_break_deleg_cb(fl);
-> +	}
-> +	spin_unlock(&ctx->flc_lock);
-> +}
-> +
-> +int
-> +nfsd_handle_dir_event(u32 mask, const struct inode *dir, const void 
-> *data,
-> +		      int data_type, const struct qstr *name)
-> +{
-> +	struct dentry *dentry = fsnotify_data_dentry(data, data_type);
-> +	struct file_lock_context *ctx;
-> +	struct file_lock_core *flc;
-> +	struct nfsd_notify_event *evt;
-> +
-> +	/* Don't do anything if this is not an expected event */
-> +	if (!(mask & (FS_CREATE|FS_DELETE|FS_RENAME)))
-> +		return 0;
-> +
-> +	ctx = locks_inode_context(dir);
-> +	if (!ctx || list_empty(&ctx->flc_lease))
-> +		return 0;
-> +
-> +	evt = alloc_nfsd_notify_event(mask, name, dentry);
-> +	if (!evt) {
-> +		nfsd_recall_all_dir_delegs(dir);
-> +		return 0;
-> +	}
-> +
-> +	spin_lock(&ctx->flc_lock);
-> +	list_for_each_entry(flc, &ctx->flc_lease, flc_list) {
-> +		struct file_lease *fl = container_of(flc, struct file_lease, c);
-> +		struct nfs4_delegation *dp = flc->flc_owner;
-> +		struct nfsd4_cb_notify *ncn = &dp->dl_cb_notify;
-> +
-> +		if (!should_notify_deleg(mask, fl))
-> +			continue;
-> +
-> +		spin_lock(&ncn->ncn_lock);
-> +		if (ncn->ncn_evt_cnt >= NOTIFY4_EVENT_QUEUE_SIZE) {
-> +			/* We're generating notifications too fast. Recall. */
-> +			spin_unlock(&ncn->ncn_lock);
-> +			nfsd_break_deleg_cb(fl);
-> +			continue;
-> +		}
-> +		ncn->ncn_evt[ncn->ncn_evt_cnt++] = nfsd_notify_event_get(evt);
-> +		spin_unlock(&ncn->ncn_lock);
-> +
-> +		nfsd4_run_cb_notify(ncn);
-> +	}
-> +	spin_unlock(&ctx->flc_lock);
-> +	nfsd_notify_event_put(evt);
-> +	return 0;
-> +}
-
+ kernel/trace/bpf_trace.c                      |  4 +
+ .../bpf/prog_tests/kprobe_multi_test.c        | 78 ++++++++++++++++++-
+ .../bpf/progs/kprobe_multi_sleepable.c        | 25 ++++++
+ 3 files changed, 106 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/kprobe_multi_sleepable.c
 
 -- 
-Chuck Lever
+2.53.0
+
