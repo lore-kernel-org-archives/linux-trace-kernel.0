@@ -1,74 +1,141 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156133D75D4;
-	Wed,  8 Apr 2026 17:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50673B0ADA
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775669984; cv=none; b=bNNS5P8/6i3UKmMgp/0nIbvbPNImpcu7NiLSIWWQ7wFgrgJ/KSYU71YuI3rzI+q69r/1aLeZ2retL2kWQVIk9IgvGiP1CJ0jrfgqBJCVrgRppS5p1y8u7dk6osz6nQYA5gamc5lLqjHKNOwytYd7FMDV5uc9ZJP5FXDTaIK4T2U=
+	t=1775672215; cv=none; b=RK35xhZvyDdG/y3NwVnkvUDSEf/Z+UwH1amEThAg/Vg2ckWJKds7+TimkXoIi2YTlgE30XqLaxfmGHKAepX8PHh+Avbq4GrK2gvWDxRSYe0Gm9xbe/ld5JZkOXc2kOoRSZuHu6kj6SgMa+9GbsM0pEeXNWcKduBBhopM+1tLUcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775669984; c=relaxed/simple;
-	bh=U85ad5cEAztluCg8Cg1x+q/gNsYNqCa3ODaZ6FfCiKw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q1dIZX1uUJ9ymrOr8nkct3jYXMBzDKcIrls6MQB3ngGXxkb3Yvp9jAASsiB9QwojIpFymC5gb1DLBLeZKQL4Fa5HR5q46JugtfPXxOkaZ7FDDTLDEvbIweumVIHQYU1hgoAZbqNkq86iLQMq9dNao7tjUj08mDt+4yq/Cj5BS3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id C8D19140258;
-	Wed,  8 Apr 2026 17:39:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id B3F6320012;
-	Wed,  8 Apr 2026 17:39:32 +0000 (UTC)
-Date: Wed, 8 Apr 2026 13:39:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Cao Ruichuang <create0818@163.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing: Store trace_marker_raw payload length in
- events
-Message-ID: <20260408133931.5755684f@robin>
-In-Reply-To: <20260408153241.15391-1-create0818@163.com>
-References: <20260408153241.15391-1-create0818@163.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1775672215; c=relaxed/simple;
+	bh=HKHxPoblaork2H0d6qRNs+Qxh9dmFv1KNw8j/ngGj2k=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=G2ZJ+0YmUc+a7AYtFq1a9YQPOsdBqAztjMvG9W2xWF15Y5/rzp1BpKy+V0XXfVIDQhGoveLt7nigoE6HoV6/Jc6CVPJ0XnZ5aTfcOgCZ9rGvU2FSsIpRjs4mnYsX22PY7AgTSNiJFF6Iy0HRy2nIl71w/cNZ2vBC5/zbWbZaWaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrd3Vq+f; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrd3Vq+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF52C2BC9E;
+	Wed,  8 Apr 2026 18:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775672214;
+	bh=HKHxPoblaork2H0d6qRNs+Qxh9dmFv1KNw8j/ngGj2k=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=rrd3Vq+fpd2blfg6wopfmOudbeG4wNDSlpCfejvmvd9EMcoPsT5k51gL7CuUaYk8b
+	 CpHgEcnumiCYVsoUwEVKTzSkoA/DVcdCU+DX3KHP2lXzv4YXjSXHuElsMVzZ8VZNaF
+	 mnCA9VD3Q974qfsAM7/mh5BiUph3l8bViDzZ4Wt3RsjC9DHTgC0R++6fU7MAY3ViK8
+	 fep2ac1qhUEMg4BJqE/fnCyhwpxcEteOSOopRmtr0JdkXz4HaLZIWkW0zTlPiKWibw
+	 viZJiaSqhgue58xJCCwHiW3Zpv37EyeLmBL+v3mjOw7OWGvECH+WmbkdD6RXkg+GTx
+	 tDGbFufErBw8Q==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 036AEF4006C;
+	Wed,  8 Apr 2026 14:16:53 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 08 Apr 2026 14:16:53 -0400
+X-ME-Sender: <xms:lJvWaSvFhNZ43WDSF4xUIs6h7WSKhuTbM8ny4RZXenhN05SWE55zww>
+    <xme:lJvWaSRp34g1uyADOBSHkG683H72946qbjCgw08XMh_E942eiYKOwFFr73cJGcLzS
+    _ychiMARQA5cFpBaXc9AUgNy-tsOdFITn8Rpvv0lSPJ1udqMzygP8PH>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvgedvjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehmrghthhhivghurd
+    guvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegrlhgvgidr
+    rghrihhnghesghhmrghilhdrtghomhdprhgtphhtthhopegrmhhirhejfehilhesghhmrg
+    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
+    tghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhgruhhnvg
+    hrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:lJvWadfwdEbgHY50jIRm349uKUZoi4dIykahtitCUgzU-qDa0jnh-A>
+    <xmx:lJvWac5QvBsdH_8b0EyXVCQ53CXGlvAU2LZ3Dvd5A7hJOw-v281LXQ>
+    <xmx:lJvWaZ8srh66Ha6yOnd5dPMBZe86eMzFqX6S6cRH6t_Z_s4hH5_cvQ>
+    <xmx:lJvWaWzPQupnYV0SPbhEsvYqUN5lmSqjdY0QzIFVlPNh9gdBGgEVig>
+    <xmx:lJvWaQG2yajAQ8V64yXwD0sO-FDVUo7XOMuAJq6b2G-JRpJ3Lc7Krz8K>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C882B780070; Wed,  8 Apr 2026 14:16:52 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-ThreadId: A5DZmuaHBpig
+Date: Wed, 08 Apr 2026 14:16:32 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Alexander Aring" <alex.aring@gmail.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>
+Cc: "Calum Mackay" <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Message-Id: <bb4fc3da-765d-4284-9282-dd04d286f671@app.fastmail.com>
+In-Reply-To: <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
+References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
+ <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
+Subject: Re: [PATCH 01/24] filelock: add support for ignoring deleg breaks for dir
+ change events
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B3F6320012
-X-Stat-Signature: s3d4qbg4h5fwgxok3oyyomn19dkerhde
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/be3bnzo6PI5XWALwdpZItzz7OxGifuuY=
-X-HE-Tag: 1775669972-831830
-X-HE-Meta: U2FsdGVkX19A6AH4/kzL0kZ2oI78VJP4jdS4xSIDd5hXYZQT3XiDb/vDv6xRw4L0vckVaj4LLzIrH91ORbQto9DVfFx18TBxiNZXdN4d98Op6Fqb/1lwfrOByarIPAcf9dymupDgOrkU+Xc3uHVMeb76k5RqwVGfLrxbspJdjkeAycx3zzPGK1aImu8j0l9JTwK9UFzWm7K7KOe4M5UfrcAJ8w5/PsK/em1lZhh9EEdp0ZrjSBxhWDebtwhP0pLiHqywooNhe5Htz8K3bFPQDTRnQ1vfxrtLOmD0IMdoQ1KGrSdWANxbTlordoCOgF8yrY0XMTrv9a4NBXMm1kI+1mnMEij7EUy0
 
-On Wed,  8 Apr 2026 23:32:40 +0800
-Cao Ruichuang <create0818@163.com> wrote:
 
-> trace_marker_raw currently records its bytes in TRACE_RAW_DATA events,
-> but the event output path derives the byte count from the padded record
-> size in the ring buffer. As a result, the printed raw-data payload is
-> rounded up and small writes do not preserve their true length.
+On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
+> If a NFS client requests a directory delegation with a notification
+> bitmask covering directory change events, the server shouldn't recall
+> the delegation. Instead the client will be notified of the change after
+> the fact.
+>
+> Add support for ignoring lease breaks on directory changes. Add a new
+> flags parameter to try_break_deleg() and teach __break_lease how to
+> ignore certain types of delegation break events.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 8e44b1f6c15a..dafa0752fdce 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+
+> @@ -1670,7 +1709,7 @@ int __break_lease(struct inode *inode, unsigned int flags)
+>  			locks_delete_lock_ctx(&fl->c, &dispose);
+>  	}
 > 
-> Keep the true payload length in the TRACE_RAW_DATA event itself and use
-> that field when printing the bytes. This leaves the ring buffer record
-> size semantics unchanged while letting trace_marker_raw report the exact
-> payload that was written.
+> -	if (list_empty(&ctx->flc_lease))
+> +	if (!visible_leases_remaining(inode, flags))
+>  		goto out;
+> 
+>  	if (flags & LEASE_BREAK_NONBLOCK) {
 
-May I ask why?  The above describes what is happening but fails to
-leave out the why? Why does the payload length need to be added to the
-event? I mean, it's recording raw data, and the user who writes to it
-already knows the length as this was made for applications to write
-structures directly into the buffer. When reading back from the buffer
-the structure size is the length.
+After breaking visible leases, the restart: label calls any_leases_conflict()
+which does not filter ignored dir-delegation leases. When only ignored leases
+remain, any_leases_conflict returns true, but visible_leases_remaining also
+returned true (triggering the wait). The code picks the first lease (possibly
+ignored), computes break_time = 1 jiffy, blocks, then loops.                                                     
 
-Thus, why record the length? I see no reason to. The length wastes
-precious space in the ring buffer when the user of trace_marker_raw
-should already know its length.
+For example, suppose you have two directory delegations on a directory, one
+with FL_IGN_DIR_DELETE and one without. After the non-ignored one is broken
+and removed, the ignored one keeps any_leases_conflict returning true. The
+loop spins at 1-jiffy intervals until the ignored delegation is released.  
 
--- Steve
+Should the restart: block skip ignored leases?
+
+
+-- 
+Chuck Lever
