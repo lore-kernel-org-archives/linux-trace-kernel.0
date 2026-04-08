@@ -1,168 +1,116 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BDD2F39B8
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 14:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCECA3D47D9
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 15:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775659522; cv=none; b=Ryjwue6QUFEjbpQnF26cZrQJDl54/ySmsLc/5mWWFddNaeFxFExk2RZ4OxwrVrgNQtVx4xJXKb7T8Xra/rqyDYH4apjkuSjDnrR8QUo4ZSgSwf8bMXgRR5U3VxZnGC7la4hO1+CHlgkT/mynyw80NB6bOBfQE53hOwO8l0Ls1GU=
+	t=1775661897; cv=none; b=VPI6GRa53dM1yDhOyn2ewWd1mYmi2Mp80Cr4pyVEzrTA7/wyseJUkUmn2QOtrXOWBzGGXenfbE5H5Nli+E4PIfBvdeOjUDC/Db45MCZ9B29ZgHf5DnZlQem8qsh7tm0lkLQTAjAuLT7wxGqdceH1v0yfLqaeP9oVuiv0HVsCP+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775659522; c=relaxed/simple;
-	bh=a6x2OhReSVc3Z1dCtiMclRTOwCsIuCnXoMbbim9keHo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hEv/6sAmafKUy3qRgLv6S4b6U/dVHZxZx46t1o5pZn7m7dB1+XMoXN1v771BzqDZwv5BWlcCN7llj0a1TMmcvxqIcf0lUVmyz/Uw6GsxU9Klf2OjaPHrPRJsGmn00HSSgJ+gU7Ek6ZcID25O/dkzgKaTKDySS2f+PYc7/AtCyu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ew3b1Crz; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775661897; c=relaxed/simple;
+	bh=Xvx5NbnOpNGEloDoPzkjBb0luYYTDDyuKVmozJ9v8uc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LwgM/wORMCcNa1k+Gi3mcwqrqiY/RI742ZNVdbCbLLNfcc4cdex17SDzaQx/q53nQNRD5UwMRovju6uyKeD1CYxE792e5nFlpanJAFgFpePyaRsrvuRguDmAymG+Ge9MYPOj2dgXEfVGt4eaCsGKo0cnu/WaqBvI2yvA7CKu7oE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IvuKMKQ9; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew3b1Crz"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ad617d5b80so34479755ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 07:45:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IvuKMKQ9"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488ba840146so23225345e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 08:24:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775659521; x=1776264321; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M53r6SkdFKKJnPXXmzaN0o7kYfdxnvwHZHkbphF/YkQ=;
-        b=Ew3b1CrzzRe3ZZjVSbuvMOcN6Qp2qg/r7SFEL7M6NShme40+wsQ3pnDH0uweWm27ty
-         CMc+vD92EX0mvJBrF7WzC/BIEkyYMXr9H9wuRQptyO2HH7fCkWt4cJsQOc23cOQchNiv
-         kcNkMgJS9OGrULsnptQztlXw8dipRKu9rZwxs28Q8Sdi1Zm/oAQXbn/dP7HtHQmcBUkN
-         6LE803Rq5f6T3rJdlSarOMGDadruP3JwL6O4i1e2VhZS2laQXnOzG6BQ1EdcD78rkiiu
-         lLh+Vsqh+DXcRTv3bwRR9ajYNX8oC7WukHw8GyEay+Re5/dzhHIz4nh0nhl0ejWZ2RIb
-         5Ixw==
+        d=suse.com; s=google; t=1775661894; x=1776266694; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=laiXp2rBEiPl8a2Z73ajRETlDqB8PAbCI44ILQPyqZU=;
+        b=IvuKMKQ9jtZ/dVP06vkY7CTiZM4OuHmVnp8SRil2wsw+5I0ykRWCnGsExOFOYPKIZg
+         U6Ymn0/O77U8r+O+X+q0jabDGdfKvl4xj/EVc6AbKwQCSaWk7TWUeaiWfTalUFOZIYwj
+         UPJFmGWJvvQm1KCG/J4smh5BcB6Glm8/m6U7SDcCyZtDb2okWxp0w60hXrLmar/TF+uG
+         MekJaoDfdS/tOTqmOE8U+XkxteSIrZUp/94aBnnQvTa+1ktb38KpLj5hY7MeUbXy0zdj
+         /RUTGXZgXYhP2IYM0fqk90rFWks8YnbcCt0VLrYVoKTIjbP0yFZlQ6Zl6euxmwuC8P9O
+         TdzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775659521; x=1776264321;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=M53r6SkdFKKJnPXXmzaN0o7kYfdxnvwHZHkbphF/YkQ=;
-        b=sl+BsuPyuefzBh37c6kIFyitfpbbAvuOzNIsPkseGVH2uYqGPVJOC9UMMVIN3qlT6P
-         WdyXZZDIa7WiBIvf6miIA4xBbyDTW+trcwA5KFmzHLDxfJOw7r9IOMuNwK9/2eeGvZUp
-         9LHDyyCjvSbXv57HQ5vtT47ulDuBUFmXvypcZNryw+xoY9vDpKSZEPJn/Lf96Qc71cYf
-         lVtUbM1mWxCMzEzoyusO6uvLngPiWMAo/2SQS1BNRUobCM7znTP9xnEXpOCInn1wwWud
-         6RuOeWx63ogRQxHHvA2BFM5bJ9UsF5RLSybrYD/CmvuXeUGOq0Z7YnvgR0Y5E0uZUNyT
-         3/pg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFcoX98zOAA5assSqcli2sQUkZeL1aMCxs0BNRSye7FHj9BTL6MEKAAVEx3L/auCgpsBdhKSGV778etptXIwtfU6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYZqRJxE2ag5pIt5aeqhmlGgPZyC1pN2zxa90ytEzmEQAfZZRE
-	tqvw6IM4IyeKzE2sSF/XMgnuxaU43cHteqGbjpNhAv8SWzaIZPV/Zchh
-X-Gm-Gg: AeBDievL89vDjk7OgtX1joh8LD7h8AIJUAlT5UT0T1F/A3vKS1CkMw7dhORfdp/P1mu
-	4kAj0fw1D3nVENT8X6y/2BuD7fbFMFAN8Td/zwj4HW3uAz0iiRMVF6fuUdq/H3mKrjbb97X6KQu
-	W9qzMj0Mu7hkAMPJSJNhb9zV7jcghVApFaVH2qhZwevFgmv074/h6oRGIGw+QF+SKIPKp2l4H5X
-	q4EurkBPRpKWC+gNonxA0UqvOcjO0BIMedrB8nPj6dn7hK0GEGmgDfnpvJabaJmcgvgXAvxysUI
-	fsnKznJNyyQ32OAidwC52xKn4/DFJVNHZOxWQ1r3XN0pQn8BHKgd1NukAOr56DpZEEtbEGNJ1xF
-	KHxCc87CQQhmDH06aRUfLBIOiK4TU4DBTZxMrgpJ4XdPONDAnu5mcR5e502o76IBJuY1F88AYQp
-	f+A7NnNmH1MkT06pQ+JMIjtw8utiQVCTYKMmipYvWB80DOS7jcIp2I4pogxwgL81bvhjKk1Ft/T
-	k6b52GCIeAxjSU=
-X-Received: by 2002:a17:903:191:b0:2b2:5637:1487 with SMTP id d9443c01a7336-2b28178f0b7mr220740205ad.34.1775659520719;
-        Wed, 08 Apr 2026 07:45:20 -0700 (PDT)
-Received: from localhost.localdomain ([103.10.31.106])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b274756621sm203094795ad.20.2026.04.08.07.45.17
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 08 Apr 2026 07:45:20 -0700 (PDT)
-From: Shuvam Pandey <shuvampandey1@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	shuvampandey1@gmail.com
-Subject: [PATCH v2] seq_buf: export seq_buf_putmem_hex() and add KUnit tests
-Date: Wed,  8 Apr 2026 20:29:49 +0545
-Message-ID: <20260408144449.57375-1-shuvampandey1@gmail.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260406033728.25998-1-shuvampandey1@gmail.com>
-References: <20260406033728.25998-1-shuvampandey1@gmail.com>
+        d=1e100.net; s=20251104; t=1775661894; x=1776266694;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=laiXp2rBEiPl8a2Z73ajRETlDqB8PAbCI44ILQPyqZU=;
+        b=gifGXJ90qZKXy0QjMAQseCO4uB/wwTiphWwVSt/8yxxbTyI30sNcYGKL4iiDKR+fr3
+         q6kx/Pgm9a0zfi9cTePRRuFiyoa9Ek/ykzLZP+gxJMeQ+WKmbGIvx2SpCk6iiabpJW4c
+         pw22a+5TtGBiwTXyCJeMq9u5sAM36SW97XVOXWdkin0z5yIV4MERjFRpdH+Kf9B56J0N
+         oPuBcaJIaS2476zLGdaJ1+8JexfLCshsR8INMV2ryrxQ0f3Nmh8K/89uI3sc0G5RFBbL
+         GUeolp27S4WWfJkVupF9osqqaZwNCsqyj/R63dj+7i1imypJhGq/kER1/Hdh6epx7Jj0
+         Rrkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcgBWXXyP1sxGgC5ZdX2Uw1j8HWL/LF1vMDZnHMjY9mmCR3dmBsbQggjnJTwE2IBsYpX8byXjrCM2JthoSFNnK3wI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWln3nLIqHSVSdPZSjCDaVEp789AH8ySNzmWwDFb8JD5rPcxCg
+	CeGo+A1wzPq63bjFpmxifB+R4OTTIXxcLCTPnOl1C8cN3gJgoW/n13mnBXS6wHw7zeg=
+X-Gm-Gg: AeBDieu4wu9Y4qsI45aFjSkmjPELG3tWaBat4aBtClxxrZK7PyU4uF8Pyn2XOqGffvb
+	YG4hEd6K0claxXqY4Jdk4Z1gODOvVli1HKe76R2XsLJt7j9hlSx8l7iqox3e5NBOLTfDoLhiIM9
+	6Oki5FQdwBAoenfoQj+zdDblRqQJ3gaSPbRJbajs0yEKYw0g5JgRn6mZPo9XdSMiNJgecw/G4aT
+	z9xl2zYfsw/n07tvujAJd8wTPu8wQ1oaI6EbXU/jg+JDr+q30k0deLFZqZQItJsE2SvoT9RZcYg
+	4U1TgQl5g+ZcpNM0qPniGbb+wGBPb8oJmMYx4qyeHTDXddbEIsPTXD+5qAU48aOlx2ylOO3HCkK
+	Z1okx/HHqcgPi5//VtBXvsY3I5DT4T31I/9RM4mWj+Jz2pjWOkgiRBrB8ZxTfhNUH2xp3egpCvj
+	iR8N++FBN1Sk8fEh1Q6OUtW+LZRIatTFn7qbnwpPAEteM+
+X-Received: by 2002:a05:600c:6208:b0:488:aa3d:fab1 with SMTP id 5b1f17b1804b1-488ccfc0554mr2091505e9.17.1775661894090;
+        Wed, 08 Apr 2026 08:24:54 -0700 (PDT)
+Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd1bb778sm32985e9.7.2026.04.08.08.24.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2026 08:24:53 -0700 (PDT)
+Message-ID: <999772c1-ec48-407a-a0fe-64665620d855@suse.com>
+Date: Wed, 8 Apr 2026 17:24:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] module/kallsyms: fix nextval for data symbol
+ lookup
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+ Daniel Gomez <da.gomez@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Jordan Rome <linux@jordanrome.com>,
+ Viktor Malik <vmalik@redhat.com>
+References: <20260327110005.16499-1-stf_xl@wp.pl>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20260327110005.16499-1-stf_xl@wp.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-seq_buf: export seq_buf_putmem_hex() and add KUnit tests
+On 3/27/26 12:00 PM, Stanislaw Gruszka wrote:
+> The symbol lookup code assumes the queried address resides in either
+> MOD_TEXT or MOD_INIT_TEXT. This breaks for addresses in other module
+> memory regions (e.g. rodata or data), resulting in incorrect upper
+> bounds and wrong symbol size.
+> 
+> Select the module memory region the address belongs to instead of
+> hardcoding text sections. Also initialize the lower bound to the start
+> of that region, as searching from address 0 is unnecessary.
+> 
+> Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
 
-The seq_buf KUnit suite does not exercise seq_buf_putmem_hex().
+Looks ok to me. Feel free to add:
 
-Add one test for the len > 8 chunking path and one overflow test
-where a later chunk no longer fits in the buffer.
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 
-Export seq_buf_putmem_hex() as well so SEQ_BUF_KUNIT_TEST=m links
-cleanly. Without the export, modpost reports seq_buf_putmem_hex as
-undefined when seq_buf_kunit is built as a module.
+As a side note, I wonder if manually determining symbol sizes this way
+is the best approach for modules, instead of simply returning the
+st_size of the symbol. The logic comes from the original implementation
+in "[PATCH] kallsyms for new modules" [1]. Unfortunately, the
+description doesn't explain this aspect but considering that the patch
+rewrote both the main and module kallsyms code, I expect it was done
+this way for consistency between vmlinux and modules.
 
-Signed-off-by: Shuvam Pandey <shuvampandey1@gmail.com>
----
-v2:
-- export seq_buf_putmem_hex() so SEQ_BUF_KUNIT_TEST=m links cleanly
-- validate with a fresh arm64 build using CONFIG_KUNIT=y and CONFIG_SEQ_BUF_KUNIT_TEST=m
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/mpe/linux-fullhistory.git/commit/?id=d069cf94ca296b7fb4c7e362e8f27e2c8aca70f1
 
- lib/seq_buf.c             |  1 +
- lib/tests/seq_buf_kunit.c | 34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
-
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index f3f3436d60a9403eae5b1ef9b091b027881f14fb..b59488fa8135cdb0340fbeb43d8d74db8ae13146 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -298,6 +298,7 @@ int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
- 	}
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(seq_buf_putmem_hex);
- 
- /**
-  * seq_buf_path - copy a path into the sequence buffer
-diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
-index 8a01579a978e655cd09024d0ea9c4c9cd095263f..eb466386bbefb1c81773cdae65a8ac3df91cd8ea 100644
---- a/lib/tests/seq_buf_kunit.c
-+++ b/lib/tests/seq_buf_kunit.c
-@@ -184,6 +184,38 @@ static void seq_buf_get_buf_commit_test(struct kunit *test)
- 	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
- }
- 
-+static void seq_buf_putmem_hex_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 24);
-+	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-+#ifdef __BIG_ENDIAN
-+	const char *expected = "0001020304050607 0809 ";
-+#else
-+	const char *expected = "0706050403020100 0908 ";
-+#endif
-+
-+	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), 0);
-+	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), strlen(expected));
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
-+}
-+
-+static void seq_buf_putmem_hex_overflow_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 20);
-+	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-+#ifdef __BIG_ENDIAN
-+	const char *expected = "0001020304050607 ";
-+#else
-+	const char *expected = "0706050403020100 ";
-+#endif
-+
-+	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), -1);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 20);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
-+}
-+
- static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_init_test),
- 	KUNIT_CASE(seq_buf_declare_test),
-@@ -194,6 +226,8 @@ static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_printf_test),
- 	KUNIT_CASE(seq_buf_printf_overflow_test),
- 	KUNIT_CASE(seq_buf_get_buf_commit_test),
-+	KUNIT_CASE(seq_buf_putmem_hex_test),
-+	KUNIT_CASE(seq_buf_putmem_hex_overflow_test),
- 	{}
- };
- 
+-- 
+Thanks,
+Petr
