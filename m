@@ -1,111 +1,285 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096E8393DD8
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 21:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4605026F29B;
+	Wed,  8 Apr 2026 21:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775683363; cv=none; b=f+j+on88QT7fDQP5vz5iWGp2Tj9yYPlhJUlOl3DG7/STesQ94DDLQb6xtyn+GC+8jh3EqHnHojjCNu8Rnacuyia1BUs6Xj1aQGDYi4OlvzLMOgQ3jv8TRkRVbeFGTh/iyF51f//xPmiNsXqRrRYg4nHH3X7oD0CjAeT1faaL+v0=
+	t=1775683561; cv=none; b=KH4ecwPypyJszr5rdop2A3bHm27wV3OVKwBpeiTrmpUOTcmvURWPvLT6VgwzU69T5LrM9by4l6jeOvuwspGshFfjdIhpvi+CjZCekgBqquYaIM2mK/OUsP0aDJ1l8KOONm5llKMvtCmqLYH/txEJ4t5v1ZVUWjInHJk/Jcu9E1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775683363; c=relaxed/simple;
-	bh=6BeHkxLyWctFUSR46MfqmCh8uAhV3DyrDuxgljfGSGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c5aeOWT0YyX1eQ+COiPji3gnOGpB7MZqRNvAgAYs4jeb3uivOiv8x5CvphpAclgGd/Qf8NnVmCIOFpSHhizT0AuOGmUx6wFA1K5AvHAZna1NnYkO/0fXf46bWvDJPjLRYBwt8RFLWViyABo+/o8GSxek7oII031S1FnbrOufxhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fc9oSzG8; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fc9oSzG8"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7d556c1a79eso287311a34.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 14:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1775683359; x=1776288159; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SP33wRSGcLjNkqt9PmKyMhjJTYVxYcQC6XjnQNqNNFs=;
-        b=fc9oSzG87Zf6UlihO7nchOxdHK9zLnEToTfCJ9ovupyoVT1dNBAK4iKkymuusKSUt4
-         pxA3WSznsQkRy0bcFgJbVKoPzaacVBV6DB0nEN2fATHuc36sbRUlH/um6zN63jccKKAL
-         X/PnC3XO5tdXQjsDpBsfb1n4RI2DFhILYVNKM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775683359; x=1776288159;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SP33wRSGcLjNkqt9PmKyMhjJTYVxYcQC6XjnQNqNNFs=;
-        b=FtPliQcyrdYg5F5/NsWCiS5AaMYveuTxzaJMnwZjBm27FSUHZl47Tc+O4Qn/NK3TMZ
-         LhiQEW8PyIa/uKCGEqpJ+abPQ/61h9TjGINYV3PfAEukI5KeuJ1J6teHXhb6ECp0hV4I
-         7YpxkzF1vj5F6fzYsJBFSyNRIcRTWmbo5jYIebXM69S4C4bcXim4KjABgQrvOHVkyPvy
-         c9O1wwKOo6/uRBXmk4R80egQXjZJb7OF4tMefCmQMidOfLELNyzx4/4mbMeD8wMif/xE
-         QhsTH2vwH4iDJOrW00FZcWREZHKnwiN4kGEsLGAOF29F8FDLe0VlTjybd8CySwrsggCi
-         MeeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUICQRZk9pCQ7xMGUGEAtqclC9LWE/Mv2r93Evpx1rsWZ4sGF0Ekv27nZ88rapP6DP3Kp6rDIfXlgO+de/qE9N/BLo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCbxiXov1W2sbRwemFR7Pf2kp/Xy7cmgM2uD8AIuwPQ6jxaZwG
-	spCx5WMQqZRoHT6mEKRgCYPiSxF4SHU8WenyOktVmkeNoCqhgu4mpBQ2k+zLdF/xzbBlvYeP8/G
-	zHGRXBWg=
-X-Gm-Gg: AeBDieuLXOPlszppTMXpzniqOTKbRuCs9Cmly9ytdsxqiaI4xuGJcdPTQ2kqGM7l1c7
-	OfUnkcWp93vlQyqoK79oM+eRfgFA0RIbQWwClSkLcruMkwAfmJyJRxxkEnlGtblJS6WdRHbSqTj
-	75NFj3D2K7iav1wlgzS2g/a9pK5jRfHNxtgjp9j7xEikhC9qLeydT1IKtXvYVlQali7GeQLCYvi
-	q+vuNAZ4oM/6YawHK794yaK1D11lK5ZxdL9jsh0WML3X27iS/VWch4uEv6/QKkEe4NckXYwk+iJ
-	1Hro8MM2Cf2wdis3EBYCDjCRjZQFhfPapMAvPFvBm5vNWkjq+9MfkPI2Pyhecj+P2PciOeUh7nh
-	B2EhorK22dTqBYeHkeQehcLcw+KOxu+tVK0oj95Ek37ECnhn4MudjmcrzO9a0R4khAdToU3z6L7
-	hR6a6NowF6Kx/yvqBjTypjafbMXzwSXmpNFro=
-X-Received: by 2002:a05:6830:91f:b0:7d7:ccc7:c546 with SMTP id 46e09a7af769-7dbb755b224mr15665376a34.23.1775683358738;
-        Wed, 08 Apr 2026 14:22:38 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.187.108])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7dbfc1cb79esm3531705a34.15.2026.04.08.14.22.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2026 14:22:38 -0700 (PDT)
-Message-ID: <eb5022d6-a09b-4521-b847-a9a5d66c144a@linuxfoundation.org>
-Date: Wed, 8 Apr 2026 15:22:37 -0600
+	s=arc-20240116; t=1775683561; c=relaxed/simple;
+	bh=vrU38oo5mk0tQ8vxZypC7+4pf8hBttoghWsoPLAxZz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QfGy2mENZi9p7EE8VqtsuKnY1TgYuPxeuaToOiwXDE0lAo00o5gFzoBhNBE0G+n92Ee0PAaRWDr6MQ2fuWp4F9OnkL7yaoHHj9Kb4sDB3CSsH/fab39BGKDeSZmlk9cKZMFTDZWjHMMTr/4CF3r3CsVQUtcgxEpqbqXAFEAsIKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 21D881B6E42;
+	Wed,  8 Apr 2026 21:25:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 6A6F620024;
+	Wed,  8 Apr 2026 21:25:57 +0000 (UTC)
+Date: Wed, 8 Apr 2026 17:27:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/hist: bound expression string construction
+Message-ID: <20260408172714.77343880@gandalf.local.home>
+In-Reply-To: <20260407153001.1-tracing-hist-expr-pengpeng@iscas.ac.cn>
+References: <20260407153001.1-tracing-hist-expr-pengpeng@iscas.ac.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ftrace: Quote check_requires comparisons
-To: Steven Rostedt <rostedt@goodmis.org>, Cao Ruichuang <create0818@163.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20260408043212.8063-1-create0818@163.com>
- <20260408171831.69520c50@gandalf.local.home>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20260408171831.69520c50@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: zax6grwrnajaesgz8aitg3p3co3b3jec
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 6A6F620024
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18DzHfA4Or+MSaAob5CT8/CfNJ/5TfSXyU=
+X-HE-Tag: 1775683557-372231
+X-HE-Meta: U2FsdGVkX1/m8/ujZv99/UOCnZeyoo55Gv2owYxnrTvd430YaLOP1CBAGza12EkP53TwwZfSNEB30u7r8QCqwsun7C+tyi9G+O/VMfLlkCJT/U+vCp3XJ3aSL7oeS5jPDDvToVTny/P0VnBhJWmEc3cGA00gWsu/C42+TDa4DAw2hi7/TWrergc/MM/XwxjxYJNOyIKp5k0rj92FBK1LwTlXkcr/PsIACi6KLcrOxIRpENljIXqT0NJCkh+Ivha/1jqfy3BhH4j8h9Ajr1TRxOOKB72UghsCIqqb3J3MGgqIFS54fhAqzB0EBjoAzVrE
 
-On 4/8/26 15:18, Steven Rostedt wrote:
-> On Wed,  8 Apr 2026 12:32:12 +0800
-> Cao Ruichuang <create0818@163.com> wrote:
-> 
->> check_requires() compares requirement strings that can contain shell
->> pattern characters such as '[' and ']'. Under /bin/sh, the unquoted
->> test expressions can emit 'unexpected operator' warnings while parsing
->> README-backed requirements.
->>
->> Quote the relevant comparisons and path checks so the helper handles
->> those patterns without spurious shell warnings.
->>
->> Validated by rerunning fprobe_syntax_errors.tc and confirming the
->> previous '/bin/sh: unexpected operator' lines disappear from the
->> detailed ftracetest log.
->>
->> Signed-off-by: Cao Ruichuang <create0818@163.com>
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> Shuah,
-> 
-> Care to take this through your tree?
-> 
-> -- Steve
+On Tue, 7 Apr 2026 14:09:10 +0800
+Pengpeng Hou <pengpeng@iscas.ac.cn> wrote:
 
-Yes - I can take this for the merge window.
+> expr_str() allocates a fixed MAX_FILTER_STR_VAL buffer and then builds
+> expression names with a series of raw strcat() appends. Nested operands,
+> constants and field flags can push the rendered string past that fixed
+> limit before the name is attached to the hist field.
+> 
+> Convert the construction helpers to explicit bounded appends and
+> propagate failures back to the expression parser when the rendered name
+> would exceed MAX_FILTER_STR_VAL.
+> 
+> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+> ---
+>  kernel/trace/trace_events_hist.c | 101 +++++++++++++++++++++++--------
+>  1 file changed, 76 insertions(+), 25 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 73ea180cad55..caaa262360d2 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1738,85 +1738,121 @@ static const char *get_hist_field_flags(struct hist_field *hist_field)
+>  	return flags_str;
+>  }
+>  
+> -static void expr_field_str(struct hist_field *field, char *expr)
+> +static bool expr_append(char *expr, size_t *len, const char *str)
+>  {
+> -	if (field->flags & HIST_FIELD_FL_VAR_REF)
+> -		strcat(expr, "$");
+> -	else if (field->flags & HIST_FIELD_FL_CONST) {
+> +	size_t str_len = strlen(str);
+> +
+> +	if (*len + str_len >= MAX_FILTER_STR_VAL)
+> +		return false;
+> +
+> +	memcpy(expr + *len, str, str_len + 1);
+> +	*len += str_len;
+> +	return true;
+> +}
+> +
 
-thanks,
--- Shuah
+This looks like a better job for seq_buf.
+
+
+> +static bool expr_field_str(struct hist_field *field, char *expr, size_t *len)
+> +{
+
+	struct seq_buf s;
+
+	seq_buf_init(&s, expr, MAX_FILTER_STR_VAL);
+
+> +	if (field->flags & HIST_FIELD_FL_VAR_REF) {
+> +		if (!expr_append(expr, len, "$"))
+> +			return false;
+
+		seq_buf_putc(&s, '$');
+
+> +	} else if (field->flags & HIST_FIELD_FL_CONST) {
+>  		char str[HIST_CONST_DIGITS_MAX];
+> +		int ret;
+> +
+> +		ret = snprintf(str, sizeof(str), "%llu", field->constant);
+> +		if (ret >= sizeof(str))
+> +			return false;
+>  
+> -		snprintf(str, HIST_CONST_DIGITS_MAX, "%llu", field->constant);
+> -		strcat(expr, str);
+
+		seq_buf_printf(&s, "%llu", field->constant);
+
+> +		if (!expr_append(expr, len, str))
+> +			return false;
+>  	}
+>  
+> -	strcat(expr, hist_field_name(field, 0));
+
+	seq_buf_puts(&s, hist_field_name(field, 0));
+
+> +	if (!expr_append(expr, len, hist_field_name(field, 0)))
+> +		return false;
+>  
+>  	if (field->flags && !(field->flags & HIST_FIELD_FL_VAR_REF)) {
+>  		const char *flags_str = get_hist_field_flags(field);
+>  
+>  		if (flags_str) {
+> -			strcat(expr, ".");
+> -			strcat(expr, flags_str);
+
+			seq_buf_printf(&s, ".%s", flags_str);
+
+> +			if (!expr_append(expr, len, ".") ||
+> +			    !expr_append(expr, len, flags_str))
+> +				return false;
+>  		}
+>  	}
+
+	/* Add terminating character */
+	seq_buf_str(&s);
+
+	return seq_buf_overflow(&s) ? false : true;
+
+> +
+> +	return true;
+>  }
+>  
+>  static char *expr_str(struct hist_field *field, unsigned int level)
+>  {
+>  	char *expr;
+> +	size_t len = 0;
+>  
+
+This could all be converted too.
+
+-- Steve
+
+>  	if (level > 1)
+> -		return NULL;
+> +		return ERR_PTR(-EINVAL);
+>  
+>  	expr = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
+>  	if (!expr)
+> -		return NULL;
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	if (!field->operands[0]) {
+> -		expr_field_str(field, expr);
+> +		if (!expr_field_str(field, expr, &len))
+> +			goto free;
+>  		return expr;
+>  	}
+>  
+>  	if (field->operator == FIELD_OP_UNARY_MINUS) {
+>  		char *subexpr;
+>  
+> -		strcat(expr, "-(");
+> +		if (!expr_append(expr, &len, "-("))
+> +			goto free;
+>  		subexpr = expr_str(field->operands[0], ++level);
+>  		if (!subexpr) {
+> -			kfree(expr);
+> -			return NULL;
+> +			goto free;
+> +		}
+> +		if (!expr_append(expr, &len, subexpr) ||
+> +		    !expr_append(expr, &len, ")")) {
+> +			kfree(subexpr);
+> +			goto free;
+>  		}
+> -		strcat(expr, subexpr);
+> -		strcat(expr, ")");
+>  
+>  		kfree(subexpr);
+>  
+>  		return expr;
+>  	}
+>  
+> -	expr_field_str(field->operands[0], expr);
+> +	if (!expr_field_str(field->operands[0], expr, &len))
+> +		goto free;
+>  
+>  	switch (field->operator) {
+>  	case FIELD_OP_MINUS:
+> -		strcat(expr, "-");
+> +		if (!expr_append(expr, &len, "-"))
+> +			goto free;
+>  		break;
+>  	case FIELD_OP_PLUS:
+> -		strcat(expr, "+");
+> +		if (!expr_append(expr, &len, "+"))
+> +			goto free;
+>  		break;
+>  	case FIELD_OP_DIV:
+> -		strcat(expr, "/");
+> +		if (!expr_append(expr, &len, "/"))
+> +			goto free;
+>  		break;
+>  	case FIELD_OP_MULT:
+> -		strcat(expr, "*");
+> +		if (!expr_append(expr, &len, "*"))
+> +			goto free;
+>  		break;
+>  	default:
+> -		kfree(expr);
+> -		return NULL;
+> +		goto free;
+>  	}
+>  
+> -	expr_field_str(field->operands[1], expr);
+> +	if (!expr_field_str(field->operands[1], expr, &len))
+> +		goto free;
+>  
+>  	return expr;
+> +
+> +free:
+> +	kfree(expr);
+> +	return ERR_PTR(-E2BIG);
+>  }
+>  
+>  /*
+> @@ -2630,6 +2666,11 @@ static struct hist_field *parse_unary(struct hist_trigger_data *hist_data,
+>  	expr->is_signed = operand1->is_signed;
+>  	expr->operator = FIELD_OP_UNARY_MINUS;
+>  	expr->name = expr_str(expr, 0);
+> +	if (IS_ERR(expr->name)) {
+> +		ret = PTR_ERR(expr->name);
+> +		expr->name = NULL;
+> +		goto free;
+> +	}
+>  	expr->type = kstrdup_const(operand1->type, GFP_KERNEL);
+>  	if (!expr->type) {
+>  		ret = -ENOMEM;
+> @@ -2842,6 +2883,11 @@ static struct hist_field *parse_expr(struct hist_trigger_data *hist_data,
+>  		destroy_hist_field(operand1, 0);
+>  
+>  		expr->name = expr_str(expr, 0);
+> +		if (IS_ERR(expr->name)) {
+> +			ret = PTR_ERR(expr->name);
+> +			expr->name = NULL;
+> +			goto free_expr;
+> +		}
+>  	} else {
+>  		/* The operand sizes should be the same, so just pick one */
+>  		expr->size = operand1->size;
+> @@ -2855,6 +2901,11 @@ static struct hist_field *parse_expr(struct hist_trigger_data *hist_data,
+>  		}
+>  
+>  		expr->name = expr_str(expr, 0);
+> +		if (IS_ERR(expr->name)) {
+> +			ret = PTR_ERR(expr->name);
+> +			expr->name = NULL;
+> +			goto free_expr;
+> +		}
+>  	}
+>  
+>  	return expr;
+
