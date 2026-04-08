@@ -1,129 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0003B3C11
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFED3D6CB9;
+	Wed,  8 Apr 2026 18:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775672403; cv=none; b=Y8xFGgV/Sos96C/KipdK2kchSP7qKxWl6Bsn+Oj5qcD+9YTInejfyBz027WliTUBivtGqHtNi6JmqFYcG9MfyzSCSVV/Z7tQ2ZZ6ZyZ8qOTUhv1m89ob1GO5FHa6BFVOzKRSA1YbVoV8VAavX9w7xO0ME/p/ZF2K9ZtO5mxJqXc=
+	t=1775672702; cv=none; b=aXjWNEx0a8erfD5EI52fd6a4Dh90tESoivyi9l4JTnCee7/7og3KCnzRG80urRj9SyaW6DiHCP7n00lUpr8UCMOkoMstsjHIK08ktrsFbhZAVgEtYYzxGIXklMc1sDj85Fk3qzLkzJ6RusiiFZlstetECWxALD2oL1GzU6CcNDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775672403; c=relaxed/simple;
-	bh=QWyyjb8yrf7T4LkpQ/fS0bsphkrKWYfnmeHKmwhlNjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aQqLCe38IZREmUpCxVHKW3wrtOvqaczWW9zDni6I7IskUMR7ntJc4b2QaQIiieg3U7h/7+ptS5PSVzjgPomSBiBJHOOGzoEBhTPm5Th5ARrK89stAiuevVORo2Ay9X5KUohdArqStGxStb9A+wPv5X08CEqYV8sYHEC0LBComlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZDp/B/s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775672702; c=relaxed/simple;
+	bh=7AJ729q4Cp/bXTUy72jIeNaMdH0XzQ6V8oT9kikfxxQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AXrDLHd4iQYwQh7uuZxHUyycrzmrAIu01n2uokyacsCapcssJBLGRNU+8R20a3+suKDvFOyKv8spBz8iBkQ6ZQPoDxUXknIsjFvjs5Sv7D2PbQgNmJ440XXRNCDS0HqZ7/R4u796rgyZUKESG0eEoQeGTjT5kIAYbMMnPYNPc3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JCkLGMis; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZDp/B/s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C1CC2BCB2
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:20:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JCkLGMis"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6445C2BCB0;
+	Wed,  8 Apr 2026 18:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775672403;
-	bh=QWyyjb8yrf7T4LkpQ/fS0bsphkrKWYfnmeHKmwhlNjM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PZDp/B/sp0vMV5vF2b1qu39xrSKO0SkoFzfiZGVngTU5HPADqjrucR6GiY/HhGsMT
-	 Ak7NEIvzB8HZ3Vo66tfHKKV84vVnQo9ZV93e5kuoAk5oiZr8pmTvnsjGR9pb0t3C2S
-	 JzzefvHFPoH77XqjXVMO2XWz+kMfXwkKOlc8fL9ZjqkcTOaH/1uE0cIILPgJaoZe+n
-	 2a60pvwx/DqN0PB3aOrNBsb+rBdH/zirkWhod5SdNXZzwKhVHMnSGgXQUAeyC0au4Q
-	 ysbljTp5wzjI6PKwUTpZrdfHcFApzeVDIhyschnFVQUxOWA3xzktWHjMAEe0b5Qx1b
-	 EpZ0Q+ujwBjtQ==
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8a049a767c3so700076d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 11:20:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWpHpImJ/UfEeSS7/vmn/0JfxaiyFVDkMTCLhEo51YVUcuMUd/md2vPVg/nNq4M/M6NzwcuAjFhJu9THgSRgZWN1wQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp72XAl8o0cWuwfVdXfu/1pdd1x1JfsYcd/NivmRhTRTGqO82a
-	ca2cxMjrmKePZKC4mHu8atN45Wy3TcQuJIFkdiZ0Y1kowjyj2KX5nHW3RZds60zeK4ij+RYdm3d
-	/0IgjTxtsvj9MgMTSuttNINfGb0BAQ0k=
-X-Received: by 2002:a05:6214:4699:b0:8a7:164c:d5c8 with SMTP id
- 6a1803df08f44-8ac746bec7fmr8189476d6.24.1775672402156; Wed, 08 Apr 2026
- 11:20:02 -0700 (PDT)
+	s=k20201202; t=1775672702;
+	bh=7AJ729q4Cp/bXTUy72jIeNaMdH0XzQ6V8oT9kikfxxQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=JCkLGMisN5LRUINrQOqRYSNjDZ0Aul9bboyB7CbMNVHbEZxPta+JoUsraZx+bB+RO
+	 hvIhu83GA50rOAhv7In/EpUb8bnbRQ9loGhZljpbU8NLnIT9mdycCLANHFf6e/lhrg
+	 CHmU7Tn1zwstAKqoq0PHR1o71uTFjqelMpkYK7uaa0r8dwD0q/TdNB7wwrM5kBbVB+
+	 XK5dRQLegPnfL0/NB3ZIwKpJoJVAh9eYiDWtfJ7VVulfWsXS+/xOMvWZ3s/dCJnqUG
+	 n5nso+ziBkpnmRp9RBtvMPM9wazQBUb331VywGES9twIkpiRVv7B9QOnINvJbBDJ4p
+	 mulP706T/rgHw==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D0076F40071;
+	Wed,  8 Apr 2026 14:24:59 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 08 Apr 2026 14:24:59 -0400
+X-ME-Sender: <xms:e53WaYw4uNiZE-YUE3iZiKmXJ05oRSYxpq3DbmDvGkpmVkpLLngeIQ>
+    <xme:e53WaXGv3C3GUclKeJU3S8IrLtSmUg3D5fTomiCT4AFs9VXpp-NZwt2RW8GlflFaX
+    rFEsJGlteWFWc3vWz6Y-Sp4F5VDk7ta2sf2AZAlheSdR9r1dlO6bWY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvgedvkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehmrghthhhivghurd
+    guvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegrlhgvgidr
+    rghrihhnghesghhmrghilhdrtghomhdprhgtphhtthhopegrmhhirhejfehilhesghhmrg
+    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
+    tghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhgruhhnvg
+    hrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:e53Wabg6dllu-SP3M2AEFMA7RNiZb8uEn2osvqZlAmN7haYNw6D9oQ>
+    <xmx:e53WaZvrFJWZwqTNX4eZexSNCIODQChXjBEOydigwokvoImfCygIpA>
+    <xmx:e53WaehDeN88kO5wDhHDjQnPk6Isx48yjr_pUo05Jplx-O5YPVrnnQ>
+    <xmx:e53WaYFPhlYRqNR1L08XS3-8QYHITU3Ka4zhYCWE-tAwDHW2yTARFg>
+    <xmx:e53WafIc9q-O16GVLd0x500J7DPSGK1r-YRgJXJ0NLXsiADAcvrBdeOR>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A8E2C780070; Wed,  8 Apr 2026 14:24:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
- <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
- <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
- <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
- <adQhpBC2W9I6QW-g@redhat.com> <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
- <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
- <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
- <adUd0Mojbtrwmeod@pathway.suse.cz> <CALOAHbDG9mq1iJv5suct=cqJ+2r8VvJ-dXN=nuvMw0XYqnUjxA@mail.gmail.com>
- <adY_WgA54CDtWBq6@pathway.suse.cz>
-In-Reply-To: <adY_WgA54CDtWBq6@pathway.suse.cz>
-From: Song Liu <song@kernel.org>
-Date: Wed, 8 Apr 2026 11:19:50 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
-X-Gm-Features: AQROBzDWe_vpf5f0DrH1BpfkbDrq31L-0Z60zRTstiTlWDjm9dqpqQwJLlcic4k
-Message-ID: <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
-To: Petr Mladek <pmladek@suse.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>, Joe Lawrence <joe.lawrence@redhat.com>, 
-	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, jikos@kernel.org, 
-	mbenes@suse.cz, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, kpsingh@kernel.org, mattbobrowski@google.com, 
-	jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
-	yonghong.song@linux.dev, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Am-qK5lmH61J
+Date: Wed, 08 Apr 2026 14:24:39 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Alexander Aring" <alex.aring@gmail.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>
+Cc: "Calum Mackay" <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Message-Id: <412e143e-1e99-42a6-a959-654bde4e7038@app.fastmail.com>
+In-Reply-To: <20260407-dir-deleg-v1-8-aaf68c478abd@kernel.org>
+References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
+ <20260407-dir-deleg-v1-8-aaf68c478abd@kernel.org>
+Subject: Re: [PATCH 08/24] nfsd: update the fsnotify mark when setting or removing a
+ dir delegation
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 8, 2026 at 4:43=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
-:
-[...]
-> > >
-> > > This is weird semantic. Which livepatch tag would be allowed to
-> > > supersede it, please?
-> > >
-> > > Do we still need this category?
-> >
-> > It can be superseded by any livepatch that has a non-zero tag set.
+
+On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
+> Add a new helper function that will update the mask on the nfsd_file's
+> fsnotify_mark to be a union of all current directory delegations on an
+> inode. Call that when directory delegations are added or removed.
 >
-> And this exactly the weird thing.
->
-> A patch with the .replace flag set is supposed to obsolete all already
-> installed livepatches. It means that it should provide all existing
-> fixes and features.
->
-> Now, we want to introduce a replace flag/set which would allow to
-> replace/obsolete only the livepatch with the same tag/set number.
-> And we want to prevent conflicts by making sure that livepatches with
-> different tag/set number will never livepatch the same function.
->
-> Obviously, livepatches with different tag/set number could not
-> obsolete the same no-replace livepatch. They would need to livepatch
-> the same functions touched by the no-replace livepatch and would
-> conflict.
->
-> So, I suggest to remove the no-replace mode completely. It should
-> not be needed. A livepatch which should be installed in parallel
-> will simply use another unique tag/set number.
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-I think I see your point now. Existing code works as:
-- replace=3Dfalse doesn't replace anything
-- replace=3Dtrue replaces everything
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index c8fb84c38637..9a4cff08c67d 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
 
-If we assume false=3D0 and true=3D1, it is technically possible to define:
-- replace_set=3D0 doesn't replace anything
-- replace_set=3D1 replaces everything
-- replace_set=3D2+ only replace the same replace_set
+> @@ -1266,6 +1297,7 @@ static void nfs4_unlock_deleg_lease(struct 
+> nfs4_delegation *dp)
+>  	WARN_ON_ONCE(!fp->fi_delegees);
+> 
+>  	nfsd4_finalize_deleg_timestamps(dp, nf->nf_file);
+> +	nfsd_fsnotify_recalc_mask(nf);
+>  	kernel_setlease(nf->nf_file, F_UNLCK, NULL, (void **)&dp);
+>  	put_deleg_file(fp);
+>  }
 
-This is probably a little too complicated.
+The grant path in nfsd_get_dir_deleg() uses a different ordering
+(setlease first, recalc_mask after).
 
-> > This ensures backward compatibility: while a non-atomic-replace
-> > livepatch can be superseded by an atomic-replace one, the reverse is
-> > not permitted=E2=80=94an atomic-replace livepatch cannot be superseded =
-by a
-> > non-atomic one.
->
-> IMHO, the backward compatibility would just create complexity and mess
-> in this case.
+Here, since the delegation being removed is still in flc_lease,
+inode_lease_ignore_mask() includes its ignore flags. The mask is
+computed as if the delegation is still present.
 
-Given that livepatch is for expert users, I think we can make this work
-without backward compatibility. But breaking compatibility is always not
-preferred.
+The result is that stale FS_CREATE/FS_DELETE/FS_RENAME bits remain
+in the fsnotify mark. It might be harmless in practice since the
+handler finds no leases and returns early, but it creates
+unnecessary work.
 
-Thanks,
-Song
+Should nfs4_unlock_deleg_lease call nfsd_fsnotify_recalc_mask()
+after kernel_setlease(F_UNLCK)?
+
+
+-- 
+Chuck Lever
