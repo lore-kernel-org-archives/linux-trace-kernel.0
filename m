@@ -1,62 +1,64 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CAA2857C1
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 19:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A4135C1B5
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 19:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775674935; cv=none; b=RagFPIGz7aK+ICgpuixx1HrDKGQ5+pIRM/YJnJ3t8sMyaetV86fYacxJe5QRMX6NOXJdA2sWcuC4uEuYyqaDDkgQqDuzy8YjGHSeyf5UBetCd5eqPNddZKHlEmtU4M2cPUxqX+G6iCCniFMGuVmVe8DvzyNMYvhXyNKBkEU7KOg=
+	t=1775674940; cv=none; b=cOeXTrwFiG7ahRuar8192UmIZXKHKePa6tEGelW61/K+NiQ5ulgWhKPR+LKB+d/5Fu3bcPTbwv/laIsA5zulsG7DmBCkL4UUpjjtn6ksDNSxWW6BHRuaJPFAdLjRyPrQcQznCl2l5BscSAZ1/63VQ72rmfFkFUhjSXHYvEsCU9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775674935; c=relaxed/simple;
-	bh=1TRc0F+pxHZ7qBjE9nq3utn2aEfuFmKm3mLNbUw2pr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=chFh6+ikxBkJjNTql7/ECQ4vVNbR1MDnmN2qCRLfnbduezC2yYnRFi/GvcTudIZLo6yUW4tknvpZQGz/I9lDRzOx2ZV+XB99yLRrK0c+wBrlYnGGJUFZBvkQVHLJ0N05c1ttS0OeVPCW+iQCqx+V+SW2HJ9pOMxd2EpWUk+lGpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kXH7cr0J; arc=none smtp.client-ip=209.85.216.48
+	s=arc-20240116; t=1775674940; c=relaxed/simple;
+	bh=VdFKMNT5L/KA3XzmFwN0Fhycm4d6g0VlevgEnt/1Rz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o9pLBRz5ceNtfYbBh4CaPK5jaA9iOyHkakACl3e+u4Y2Jyo5iSD2JP70b7xjN4TqzF7z6mRajk/SQzwO4X7OYBoLxZ3I0etul39XgkmokBVelnkgMnGNUgfy8n2kwrqIiSnaMOWhXxW0256Q3j0SCnkFLeNk+GxEqpTsykzdkiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJCUpkEU; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXH7cr0J"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-35d9c7bf9a1so132812a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 12:02:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJCUpkEU"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-35d96be7c13so82054a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 12:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775674933; x=1776279733; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0nesqW8fDLklcjrRw63qDNiqcszXblDoKfTOnToW0Sg=;
-        b=kXH7cr0J0qYWahH1YtFmpoHcxwPb1m6/aIYju/4B0AUIv0yIEDBGqawlfdOey6gUKZ
-         5wN4EG6Zw9kSXTcbPJsw4iymyyafceTFf4+bCPcWREOrdmvOhdbusaGuIwh2Al6yCONb
-         FHd4rCdt3XAMhWYMrxTf8Cjn8FCGf+hQvIa+4z2sl8LucXTJE8K6L0BkiRh9vD4Ub4sF
-         NUVrzKpQoAgVqrU3xMKbU3kuE20fQHa59QRPz0OSylO/NbTgQM8PR84I1wxUlBon+NMX
-         9ZYUxeMHF3WXoi4eAh+IiZvzFpE6xhsyA21pdEow9ft0PsbGSja01aoBmA3cyPwHiTo9
-         UPIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775674933; x=1776279733;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1775674939; x=1776279739; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0nesqW8fDLklcjrRw63qDNiqcszXblDoKfTOnToW0Sg=;
-        b=MY3wcaWpUCgj4e46n1PQDf1eGuO9f+G7xrCXBF7Id80WUGeqiBmyWK1JWI1nUuTpzg
-         Wv5N68C3zeheiLszE4XP7G6CRnTgdcppIBnnJ2L4w0AQGt/TQSyA56Fw3uATdwQOOI2X
-         mgDWN+eqAtbWgyRMtV81GKCizJslk31wcRPc1ub+GhWT3SGy612cXgZ/M+h+zNkiyYSu
-         VM/A/9v+fj4VZw7GDImYzddPW7isQpf6xqsrbiitX9t9dPslgEZ4zo8GKZsp+9Amsq7P
-         qZ1zzVvLdZSH6d8TfmsDcomaojRb2Kt7NwePH/IP3Gt250ceHmgcVJWPktEaw0Eg6UTv
-         2Nsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWR+7wxkKi5sYQ9OwIGFbdEK4TUHVNPcJoa13fT7/gOHW0sGMBboJWfNL7WedjcpW/HSyi65Ve5VjcAzFa3hiJ97oE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTY4mx4uEwnilfUBDqetLY39INdGZxIiMt5+NcwzC7oYe/BJOe
-	fi6/ICVEhaXRJsmz39iU7Neyrr7/jmFVmydIAD4jihAXUiurEZvgKdJS
-X-Gm-Gg: AeBDiesM5AeHR/q75rJgRzTtjJfGSshyJdWYqoLdn3BNG46BNoEQg6NVf7SoD8WG2u6
-	LBnK5uAd+C/tWp16QYHZM8zpChv1LTE9a6EJUZ0/a4EDP9YTx+tyuGxO01QtPKiqBCTQg+yFoFF
-	U7MofeO//fhUtHopK0Vrr9JF/4KnD0byTALDl8sYb8VPbIAV+eYNKNqOVYgR9YDWLLcxoBRqEDA
-	nubXBtGNvIedVfdfEHW6e/HnyVbD0wL/E+cY25V4OmLld7A4SkaPjMZfUQ+0tNINiRhyg+ZMC+2
-	JeTV5+bu7P9Iu/TX6Y0yQdcudK8xufXQuUjtlqFTd7OObCsKQX8RmoUgH6GG7ydttTf0xX+fW0H
-	cI3dNPSozgqpqq+3DS2x+9kjf6cBr12HWQjjOWL2F7KcS5AnRnxL+fkg4+3hbFL63StLeLd0yom
-	RtTIXfZHxnbkTddRMG/EfBjEv88kK82G2zwptPc/cVZ1snST+tQkhhWeyHXTSBdm+Zfdjt8WKkE
-	70Tf8s=
-X-Received: by 2002:a17:90b:3811:b0:359:1130:1047 with SMTP id 98e67ed59e1d1-35de68ebf53mr22776643a91.17.1775674932556;
-        Wed, 08 Apr 2026 12:02:12 -0700 (PDT)
+        bh=auGuTYgvSyaul+AIxfXecK4Li8tZkkMpaNVTbE1iobg=;
+        b=KJCUpkEUXLavTfEXdGu8UcW9AjH2FuYU9D0O70J0g39i9QOMQaLCfF5+JnZHbajGYC
+         hipwoHo2JXgLUOhPSjwfBr71a82vzbDUu1ftqFdjATr0quPNvh7LQyAsU75cmG12xGan
+         CneJhmTGbUPnjAHHzsfN0a/hFDogOXADcSlP7d3xuaReh2qr2CS/Zvx+2Miev8qJPUrk
+         VNgStMU/hhBQyP1uEo3OUtBXkuOaoH9Pv07ucYPKX0dEnhZApgW8M/bfZSaXg6gl910a
+         l8OESx6MXsGUIxA3oRYPpD9dPlZa0pfkPE/D94PLhxXKqRcVZWMVmjJVOPWoqt5y/dna
+         ukIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775674939; x=1776279739;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=auGuTYgvSyaul+AIxfXecK4Li8tZkkMpaNVTbE1iobg=;
+        b=MEo+1IedqAyTQUoZ4ksjVT/OeMdn9XlN+j5YFkcYt+t43VoA94Sq2NAQmiMG/AESZ6
+         GGqiWPaOBwbdVax0ZDCqqWxDZraP5Sy7ThxXjzygMdP2eliTmmuoz9qWwdspD3mEmVcj
+         AuhWBAX9S3mxzBVS2bSjlxym5W+rwpNCjqoy2nxmAB5R68przdbMQ+PG8mM2k1iFPme+
+         8OKeEZyEXnNfGNRWipq7534ey5kfhiMuP+WKfivQNFSZuECQoObWay5lHISU49H9c1cx
+         UQHQuviB3poADKDPube511pn7CBziG8cWdO4JtqG5P1ztj7q5RULg5rcTFKcWmYTa76q
+         IS3w==
+X-Forwarded-Encrypted: i=1; AJvYcCW1jMZj/EjMh9ISDGoiW7X6pjuvcAM44NwBNjw+m10B20nP0lBVCojAz6NvVz4scXdwk3HW54EgaKZabOdSEY48JRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPhoiFK6bt69kwOUtZ/KcRQsh7tIbsoRSZfFVdzokcSE7HDTeD
+	7FX6QIpGQa9Lv9jrUBSG+46TDWlSuDSKxMcCbP033C/SUnX1pShy1U8P
+X-Gm-Gg: AeBDietDP9jUDRotlbHcolWRRiReQQLVY6O8NgR3X16rDBC2YWMXLxHpanEcKOrEu2d
+	mzljfdW6CQHXHJMCpwdIotrg7ksCjL8bLUXKrvYklYHupTutDWSM2O//n7RlLA8Eo+PSNwCWYI+
+	yIg/5vS5Ub5/kYZFuCmc706L2MA9RUZqa5VWIp3KNXjLIOHPt0c4mzC4AV0+hJzewbZTeh7xl4H
+	j9X4WXmATN7w0k4MFJmP9Ign1UHJlzpMr/H7laeXgezfESFShLcJLb8hfekJnFppg9FFi1L8K7K
+	qefQnQCiXW5rdDKBhTUyQbPH3zPAkNg2Lat68WF69EOm8VXlbi1JBKb4QJ9lyxPE6HQu+yGDswI
+	0klPLm1A5pW8TxAbHAiCtsmBX6ACjsUrRKqfkgrvz48XCh9HjbzL2CSiR71i7H/UmZBC87tlbAx
+	F0QBL4Kdu2jR0JJbvU7jGXRDW8TNoy2+6UrD3zIP3yaIURDxxtqJOcmNYLCaF9UhimNwegdvZQ6
+	NA++l4=
+X-Received: by 2002:a17:90b:3e81:b0:359:8df1:8553 with SMTP id 98e67ed59e1d1-35e3542917bmr500387a91.9.1775674938847;
+        Wed, 08 Apr 2026 12:02:18 -0700 (PDT)
 Received: from computer.goose-salary.ts.net ([2a09:bac5:40b2:1a96::2a6:4e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35e34d0d9efsm143630a91.8.2026.04.08.12.02.06
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35e34d0d9efsm143630a91.8.2026.04.08.12.02.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2026 12:02:12 -0700 (PDT)
+        Wed, 08 Apr 2026 12:02:18 -0700 (PDT)
 From: Varun R Mallya <varunrmallya@gmail.com>
 To: bpf@vger.kernel.org,
 	leon.hwang@linux.dev,
@@ -69,10 +71,12 @@ Cc: ast@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	varunrmallya@gmail.com
-Subject: [PATCH bpf-next v5 0/2] Reject sleepable kprobe_multi programs at attach time
-Date: Thu,  9 Apr 2026 00:31:35 +0530
-Message-ID: <20260408190137.101418-1-varunrmallya@gmail.com>
+Subject: [PATCH bpf-next v5 1/2] bpf: Reject sleepable kprobe_multi programs at attach time
+Date: Thu,  9 Apr 2026 00:31:36 +0530
+Message-ID: <20260408190137.101418-2-varunrmallya@gmail.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260408190137.101418-1-varunrmallya@gmail.com>
+References: <20260408190137.101418-1-varunrmallya@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,51 +85,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These patches fix an issue where sleepable kprobe_multi programs
-were allowed to attach, leading to "sleeping function called from invalid
-context" splats.
+kprobe.multi programs run in atomic/RCU context and cannot sleep.
+However, bpf_kprobe_multi_link_attach() did not validate whether the
+program being attached had the sleepable flag set, allowing sleepable
+helpers such as bpf_copy_from_user() to be invoked from a non-sleepable
+context.
 
-Because kprobe.multi programs run in atomic/RCU context, they cannot
-sleep. However, `bpf_kprobe_multi_link_attach()` previously lacked
-validation for the `prog->sleepable` flag. This allowed sleepable
-helpers, such as `bpf_copy_from_user()`, to be invoked from an invalid
-non-sleepable context.
+This causes a "sleeping function called from invalid context" splat:
 
-This series addresses the issue by:
-1. Rejecting sleepable kprobe_multi programs early in
-   `bpf_kprobe_multi_link_attach()` by returning -EINVAL.
-2. Adding selftests to explicitly verify that attaching a sleepable
-   kprobe_multi program is rejected by the kernel.
+  BUG: sleeping function called from invalid context at ./include/linux/uaccess.h:169
+  in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1787, name: sudo
+  preempt_count: 1, expected: 0
+  RCU nest depth: 2, expected: 0
 
-P.S: The first of these two commits has been applied to the bpf tree.
+Fix this by rejecting sleepable programs early in
+bpf_kprobe_multi_link_attach(), before any further processing.
 
-Changes:
-v1->v2:
-- v1: https://lore.kernel.org/bpf/20260401134921.362148-1-varunrmallya@gmail.com/
-- Defective selftest added
-v2->v3:
-- v2: https://lore.kernel.org/bpf/CAP01T74YgnKop-dgwBToOcfg4_D44t1wUBopFYPMquirCmaLfg@mail.gmail.com/
-- Selftest separated from change into different commit.
-v3->v4:
-- v3: https://lore.kernel.org/bpf/20260401191126.440683-1-varunrmallya@gmail.com/
-- Selftest moved to test_attach_api_fails.
-- Changed attachment symbol to bpf_fentry_test1 for stability.
-- Changes suggested by Leon implemented.
-v4->v5:
-- v4: https://lore.kernel.org/bpf/20260408183549.92990-1-varunrmallya@gmail.com/
-- fix the mistake of leaving test_attach_multi_sleepable after changing
-  location.
+Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+Signed-off-by: Varun R Mallya <varunrmallya@gmail.com>
+Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Acked-by: Leon Hwang <leon.hwang@linux.dev>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Varun R Mallya (2):
-  bpf: Reject sleepable kprobe_multi programs at attach time
-  selftests/bpf: Add test to ensure kprobe_multi is not sleepable
+---
+ kernel/trace/bpf_trace.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- kernel/trace/bpf_trace.c                      |  4 +++
- .../bpf/prog_tests/kprobe_multi_test.c        | 35 ++++++++++++++++++-
- .../bpf/progs/kprobe_multi_sleepable.c        | 25 +++++++++++++
- 3 files changed, 63 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/bpf/progs/kprobe_multi_sleepable.c
-
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 0b040a417442..af7079aa0f36 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2752,6 +2752,10 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	if (!is_kprobe_multi(prog))
+ 		return -EINVAL;
+ 
++	/* kprobe_multi is not allowed to be sleepable. */
++	if (prog->sleepable)
++		return -EINVAL;
++
+ 	/* Writing to context is not allowed for kprobes. */
+ 	if (prog->aux->kprobe_write_ctx)
+ 		return -EINVAL;
 -- 
 2.53.0
 
