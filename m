@@ -1,171 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5C73D8125;
-	Wed,  8 Apr 2026 18:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7093D8125
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 18:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775673591; cv=none; b=LSt8RoSzVOSUbdZFwp6Ie7kHqtLWjytcYYC1vXVlDmAO9/jiA7DTuO99Xxt6rXFcf3aUqlYKFAxb3hOY+Y3eB0aAavMJ20uUWyZttyJb7AEFsKGxA3sAhmgbyrP+L91xVuXrn3JB61tyZAOt1GIjSjtGjBsc+DjedsGA/faJVOg=
+	t=1775674085; cv=none; b=rHfDI/3RHsoDLSE/YWi9tTR3sOCO2/MTK4RSgnpW9b8HIncznsgCTuWbOxaRAT0Ig/8gJwWW/m+aUKA6mSQgUn1Bi43Ks/To5WW0mFSLYlUkOwm9d0zj2EgntL0b2VtB2oNG5eKFNmKnDqcKtz0bzBltlUsPg323qlajn2KNFh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775673591; c=relaxed/simple;
-	bh=RN/pTYJvDuq0Qv3c6dA7MoCNt5qgsAS3+mnHAfe4A88=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lhdOCMnCWk578hmrDgC1MxWDURslgt5RlhQWzZpFa7jV/O75aG6fE2dHwOxD5uYXK3Upp+8Cxp9zvpcRskC5S5WNZYAzILoOpTv5YGGCBsWs/aDKzfwA6bESeTBkM5kPkYbmV1fhjkTkoJ7L8fM43bb6SSCdxGsDSWLNgP8nKRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezk59P9j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775674085; c=relaxed/simple;
+	bh=gOaQf4EGrfhdLSblSYsJNJz6b7mr125ZrbWEbOUEmjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cqawdDmsainmepUY1yakYCBCWDJNB1rXP8OjflMiSp0lZ7TrXDdyMLaLWNWTTi+USfbk4otJOtdQDyywwz0u2m+xNQR6GycZZ3SATU+6pXhLbdi8psAudV3q0k5dSqT2WcOhpNAVY952NBfZzpHShF2PC6FFDy6AxyxON6wLa2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRZEdCP3; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezk59P9j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDD0C4AF0B;
-	Wed,  8 Apr 2026 18:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775673591;
-	bh=RN/pTYJvDuq0Qv3c6dA7MoCNt5qgsAS3+mnHAfe4A88=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ezk59P9jOO4M4Li89V2OKZzmcoHRfxRGiqUVCO26Q3YrcIn0VvUNZXsmiqZULrP3F
-	 lHJzLI5+p+eFTqVekD60H8R74fbFau5e5xiEIM9H2SW5Tt88gRuph4AeK2Jw2mu7dW
-	 bDz73qk7CIPg0WjTLAAjXIeJgv4l9DjJ/3HUojxNbChWKGWQCrcMyveHco4EHFf5KC
-	 F7bOWWzrg3II4BknJnIMLL+JxQqL1gjmKVe329jfxJSpGvmthqrZgcIx7oMxFVp5fo
-	 RroG63DKpzNmS2WecLJU7rnEX1okrXDyFm4CT5tr2U+BNnfMP3NcmC+rCIE1y5YBje
-	 fxaUkQCnTDDtQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 83E04F4007F;
-	Wed,  8 Apr 2026 14:39:49 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 08 Apr 2026 14:39:49 -0400
-X-ME-Sender: <xms:9aDWaSlT-9YJbg0ItDVJJzBCs4Dxjinx9KDLifjShTizqRNcLE9WbQ>
-    <xme:9aDWaUoSFGnoC5IXFjwOHGJaiF1F5TjMKOVDAoaeCm9DeYTTdLL2jRubfW7FpzmF2
-    jSpRmpIVldGqhEHO6NvQGPQlOmGYTU0f0S9owXOLIxIgQm0sAx8C3EH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvgeefudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehmrghthhhivghurd
-    guvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopegrlhgvgidr
-    rghrihhnghesghhmrghilhdrtghomhdprhgtphhtthhopegrmhhirhejfehilhesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
-    tghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhgruhhnvg
-    hrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:9aDWadWxLr_0AVhJmAWi17_5Cj6gJxZeZbQ1m8qFQmn4m6rkAYwWig>
-    <xmx:9aDWafSwX5SulzE7FJOQn5x8EN20Yd_Hi8LdBfrW2NE1lqt28fiBAQ>
-    <xmx:9aDWac1AqNvcCx8HBhSPwhYwdI3N3cQFiurjcpIFka2hI-_4tGr3Kw>
-    <xmx:9aDWaQK7Ro3Q5sk57SQFnguLEeM2kGpYWpIusKgu0-Ps4n1jfjraGA>
-    <xmx:9aDWad_IZdnh80WrYY0WAJQV3KmxevvGIs7ccq50QGp5tusZeUOg0dVy>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F16B4780076; Wed,  8 Apr 2026 14:39:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRZEdCP3"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-82cd98be655so64625b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 11:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775674083; x=1776278883; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A01CdZuB33Wj5+SKXeS+zYt/ped83rGhK3336weaV3I=;
+        b=SRZEdCP34hP9QtPtN8vVV8i5Ucq7NA89BmTP95WqMn54y3cxreHz6cSpewKGTmzyKp
+         t6OAO2hHs7vldCllhrQtVBp/feK7QzW7z7posdML5rwCkJ8Ph8ryc0HLyAwNFp+BPwUz
+         oQkrTFdbawLonU8r+7alzCQqQ9bZ1HuFnR0PzMm/dD05UZ9/AeF2yJem9SptmCub0Nxj
+         5owzRFNKalglVahBkKbI3HfGXa6Rv7riB32wkr5Mt3ICpQvDXaCsoNV6NA+TQOA+2+ql
+         ylgiB9+B2iPUIR2Wy6iOJreXB5Md8zSfQk6tpMvdndsicpT4av8yPerndILtYXB/OGpR
+         wO4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775674083; x=1776278883;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A01CdZuB33Wj5+SKXeS+zYt/ped83rGhK3336weaV3I=;
+        b=gb65YsBtRwFXSnuj55pLo22Iv5XayrMxeycnCVkLXOkvPWfPkEH3lLRA3apEoBgimt
+         CbSpcTJ9IK/b0yUZwt2+/V+Eb3bdIYuPrER9lRR39Bg3+IIYNrZ6ZeYGxXzZkeHbqe1Y
+         xfJAD6Eb/okls5DBkgv4TI5e+svpAlf346fJh3NGpDGmN9TXeoo45BW8bVT1Bp00fNVQ
+         HG8N7h7Nb52JhXAZ+ZNwHqIbZ/CYU7r5z8rPo8XHunycyEAnv69RMmhwSLF9csL3PLfn
+         A6d+8ypJP5bWSPFLGOjfXLqDKVkBjNDh5yv/XHgFSAwvgmmjV1oLwlVARsfkOmlJ2rdf
+         xY+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWNSTBIUvmYbI/mx0pAjweTCUj+TSb8Loi/TyVARj94c6PEi99YG06AysUIy9f5RtoakpTCKeqp0PB0HZ/aMtCvAK8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVDfURYYBMZSGU8skZjgK14WcLeGyO/38nWMjPejdPZWGHyW0d
+	8L41Fsr3mdtY8uPERSCAUXt6JYB+HIY14HxIOkRm+I0ukte5RIAjWWNi
+X-Gm-Gg: AeBDietKgCj66l+f7MQSSHhWHm3W/X/V9PVusfq25GCw3ebhnTKK9EYJHPT4kVwBXHp
+	fPbBqm0gNxMLk0ZjwM5YsNgyZWpzVgakaeDOKb5l/L7Y19mT1fYlwyQdOjfcYluvVyf+8wAXqxZ
+	xNRe+ifERDi/uOajnWXFLOKFEZC6U2fXc5+KA0VeN9nu2BdzfYUWEDTeZ3ErOQIWkS99BtRCf8f
+	YQtVhmXvzvkLFDtyC9oiZqxWP0dcRIEqplqZHdPK+eMdxEmdYIwOnaAsJq1k5Ji+SvXYYJB8jGg
+	cinhObhkIkbImQXZ0SS1eMqoCju37QBjMJECpR1ljXp/BHQnWrWx6T0Ym5tSjMkjpWwRuMyQr7H
+	u6Uxlc1m8CsfU3+9LtUdvUcXc1vHavnzVJBQw4nXd67a7L/1gEawkB0JQkx8dY5jfFysB7oWkHE
+	3PajAOjC9x4Bn1BQnjB5sIiGzmdfGayc97syf3cTY1kah5/jscXzkN
+X-Received: by 2002:a05:6a00:3306:b0:82c:2555:b9b2 with SMTP id d2e1a72fcca58-82d0da4fe1amr20587352b3a.10.1775674083319;
+        Wed, 08 Apr 2026 11:48:03 -0700 (PDT)
+Received: from computer ([2a09:bac5:40b2:1a96::2a6:4e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9b5fb22sm27435747b3a.26.2026.04.08.11.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2026 11:48:03 -0700 (PDT)
+Date: Thu, 9 Apr 2026 00:17:54 +0530
+From: Varun R Mallya <varunrmallya@gmail.com>
+To: bpf@vger.kernel.org, leon.hwang@linux.dev, memxor@gmail.com,
+	jolsa@kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, yonghong.song@linux.dev,
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Add test to ensure
+ kprobe_multi is not sleepable
+Message-ID: <adai2mXaRGpf1Kvb@computer>
+References: <20260408183549.92990-1-varunrmallya@gmail.com>
+ <20260408183549.92990-3-varunrmallya@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: As-Fl2EJbHmB
-Date: Wed, 08 Apr 2026 14:39:28 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
- NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>
-Cc: "Calum Mackay" <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Message-Id: <8a6dbbee-5d59-4833-b0f6-22b1e46dfd11@app.fastmail.com>
-In-Reply-To: <20260407-dir-deleg-v1-12-aaf68c478abd@kernel.org>
-References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
- <20260407-dir-deleg-v1-12-aaf68c478abd@kernel.org>
-Subject: Re: [PATCH 12/24] nfsd: add data structures for handling CB_NOTIFY
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260408183549.92990-3-varunrmallya@gmail.com>
 
-
-On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
-> Add the data structures, allocation helpers, and callback operations
-> needed for directory delegation CB_NOTIFY support:
->
-> - struct nfsd_notify_event: carries fsnotify events for CB_NOTIFY
-> - struct nfsd4_cb_notify: per-delegation state for notification handling
-> - Union dl_cb_fattr with dl_cb_notify in nfs4_delegation since a
->   delegation is either a regular file delegation or a directory
->   delegation, never both
->
-> Refactor alloc_init_deleg() into a common __alloc_init_deleg() base
-> with a pluggable sc_free callback, and add alloc_init_dir_deleg() which
-> allocates the page array and notify4 buffer needed for CB_NOTIFY
-> encoding.
->
-> Add skeleton nfsd4_cb_notify_ops with done/release handlers that will
-> be filled in when the notification path is wired up.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 4afe7e68fb51..b2b8c454fc0f 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-
-> @@ -3381,6 +3440,30 @@ nfsd4_cb_getattr_release(struct nfsd4_callback 
-> *cb)
->  	nfs4_put_stid(&dp->dl_stid);
->  }
+On Thu, Apr 09, 2026 at 12:05:49AM +0530, Varun R Mallya wrote:
+> @@ -676,5 +750,7 @@ void test_kprobe_multi_test(void)
+>  		test_unique_match();
+>  	if (test__start_subtest("attach_write_ctx"))
+>  		test_attach_write_ctx();
+> +	if (test__start_subtest("attach_multi_sleepable"))
+> +		test_attach_multi_sleepable();
+>  	RUN_TESTS(kprobe_multi_verifier);
+Please ignore this patch. I will send a v5 in a few minutes. I forgot to
+remove the selftest from the previous location after moving it into
+attach_api_fails.
+> +}
+> +
+> +char _license[] SEC("license") = "GPL";
+> -- 
+> 2.53.0
 > 
-> +static int
-> +nfsd4_cb_notify_done(struct nfsd4_callback *cb,
-> +				struct rpc_task *task)
-> +{
-> +	switch (task->tk_status) {
-> +	case -NFS4ERR_DELAY:
-> +		rpc_delay(task, 2 * HZ);
-> +		return 0;
-> +	default:
-> +		return 1;
-> +	}
-> +}
-> +
-> +static void
-> +nfsd4_cb_notify_release(struct nfsd4_callback *cb)
-> +{
-> +	struct nfsd4_cb_notify *ncn =
-> +			container_of(cb, struct nfsd4_cb_notify, ncn_cb);
-> +	struct nfs4_delegation *dp =
-> +			container_of(ncn, struct nfs4_delegation, dl_cb_notify);
-> +
-> +	nfs4_put_stid(&dp->dl_stid);
-> +}
-> +
->  static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops = {
->  	.done		= nfsd4_cb_recall_any_done,
->  	.release	= nfsd4_cb_recall_any_release,
-
-So when a client responds with NFS4ERR_DELAY, the RPC framework retries
-after 2s. On retry, prepare() is called again, but ncn_evt_cnt is
-already 0 (drained in the first prepare). prepare returns false, which
-destroys the callback.
-
-Events arriving during the retry window are dropped because
-nfsd4_run_cb_notify() returns early when NFSD4_CALLBACK_RUNNING is set.
-After the callback is destroyed, future events can queue a new CB_NOTIFY,
-but the window's events are lost.                                                                                        
-
-The result is that the client misses notifications. Does this impact
-behavioral correctness or spec compliance? Is there a way for that
-client to detect the loss and recover?
-
-
--- 
-Chuck Lever
