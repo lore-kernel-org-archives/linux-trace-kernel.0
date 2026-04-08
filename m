@@ -1,40 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF13038D007;
-	Wed,  8 Apr 2026 20:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861F62F4A18;
+	Wed,  8 Apr 2026 20:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775678581; cv=none; b=TjzvU0YnM6c0WqZ+i1Sx2KRAyBvhIbjHmQvif0ybwC+EMfSO1jzpTdOCRdvctdzrofCXXDEAlXeNREWroXr90ecZ4TiUDWXYOzpL/bwoZFOt4qSuK7YFC+PQUNm3A2OzjKoGqUmBxMPNrGCQ1AFfCY83HaU9H2l0lBBeNYfnXyk=
+	t=1775678897; cv=none; b=l910CrR4LVjXh8ui7FIDJGzIh/nmCPBkl73xDUdWM6SjL0v2CuSZA+3xyO2/w1zd5X3fI3qxp2NVW9HWXGtftvQysN/NgauUDebBNtmfDn/82ytgSNfF4IG2yx7NtPet8zyMigAyCmSw71k6nRD5NuU9swoniAREpNAB7d+YOcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775678581; c=relaxed/simple;
-	bh=yI0gf8gI4SVLBBvRbXbDhKekxGCVbzCyZg+rugJd84Y=;
+	s=arc-20240116; t=1775678897; c=relaxed/simple;
+	bh=7ADR1Pew6O6jN0rrcwJdgCfKxMgy0ANJIf0jv2xB2bs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nf0uSv5eASdRcMaR8R7ZdQtxbaXhpad90HcZjdaJ6HwyXzJUew0IgDcXNfALMswDnehj1GKaZMds4q5XRSy8AXgRNsDcvDdYVU2kUwmC94f3m4C6VJA3124+yDOEeLwii4L74nBV6axPGj+tFTOb//avi+xVxSJT94TxoA0Qmaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=SL2uscwEtYDJ3XQ5uOWtRhGtkHeWmZSHaRjU+D/jwMMrxPVKwf2GXzWwD/8ZfCXNDGspWonjdsWEFjrYXLyjefd0PyudG4psD7sKXx4eGsPwGzK3uaX+L6O7vECgN0DwjzSMR2kUcfK9LtM1csCp419l7xrAB5BWKVcWn3R8zVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id D3F52138162;
-	Wed,  8 Apr 2026 20:02:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id F130320026;
-	Wed,  8 Apr 2026 20:02:48 +0000 (UTC)
-Date: Wed, 8 Apr 2026 16:04:05 -0400
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 0F7D38995A;
+	Wed,  8 Apr 2026 20:08:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 1E1492002D;
+	Wed,  8 Apr 2026 20:08:12 +0000 (UTC)
+Date: Wed, 8 Apr 2026 16:09:28 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Li Chen <me@linux.beauty>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, Theodore Ts'o <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Baokun Li
- <libaokun@linux.alibaba.com>, Jan Kara <jack@suse.cz>, Ojaswin Mujoo
- <ojaswin@linux.ibm.com>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Zhang Yi <yi.zhang@huawei.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC v6 6/7] ext4: fast commit: add lock_updates tracepoint
-Message-ID: <20260408160405.45a5ee09@gandalf.local.home>
-In-Reply-To: <20260408112020.716706-7-me@linux.beauty>
-References: <20260408112020.716706-1-me@linux.beauty>
-	<20260408112020.716706-7-me@linux.beauty>
+To: Shuvam Pandey <shuvampandey1@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, David Gow
+ <david@davidgow.net>
+Subject: Re: [PATCH v2] seq_buf: export seq_buf_putmem_hex() and add KUnit
+ tests
+Message-ID: <20260408160928.32ce8554@gandalf.local.home>
+In-Reply-To: <20260408144449.57375-1-shuvampandey1@gmail.com>
+References: <20260406033728.25998-1-shuvampandey1@gmail.com>
+	<20260408144449.57375-1-shuvampandey1@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,173 +41,52 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: F130320026
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: 31f3wkxzr7b1o9rbmffjuiurwxs7afg4
+X-Stat-Signature: w3tkjfcq5dxgoorg3omis3h3b86bqbmu
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 1E1492002D
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+fNRqLMKHLva9mfCIRC3qtfuY8KaONfJs=
-X-HE-Tag: 1775678568-265512
-X-HE-Meta: U2FsdGVkX18aAJWzRtF34Vi9zUSLx49mvEH+R9xkDO1iO/T6NoLAGMimOxsRrT7nU6Ww9B/VRzMcJV6Mhkj9S3CAE7VXwLM0CbV9tiELPqIsbXoPnmAX1saMakuxvCU4wDOMZvzzXJbkk/5n10QK0/9uR0sy7KPhBlLWaXbS7Y8Ky0SM7gXd5ht0si9JNB0k8ltzMrKVZGoOjag1lVH05TUd9HNc/LRPBgf4jUJT41C8Kzvik3MPSLVshoYDL3FdZINYV7wTl/GDG15bKQcuo0SFvkUX9MotBS8QhjogsaRPUnA/K5ppkBnIwsfmwApC7N/jCTdCdU5nYPMtyRTapTC3iuBh8SztvyrAciTFUvAWLD5Z4SY8qhA9ZF8AGVF9
+X-Session-ID: U2FsdGVkX1+OLIf7+LLa01mK1PVoEuBUaKFpGPnJd0E=
+X-HE-Tag: 1775678892-179200
+X-HE-Meta: U2FsdGVkX19nlF8YRnpqOg/L/OyjX8ZSy6DV0uNVPvpN7u3vJtaePTB4SzQXC4ozQI5xtFD33+wLDF4fSsbk8hlAwwmel50MgbD/letXco9wOV8Qx/rG0yb4w78si8gMlff5JwMEOe0ihK1KquEWXWES2Gck1I1HaCjXzRmukeL6aVGY7fR3w283IMr02GChyt0Hti5pfUEHws2wU6xef86+EiCqJk/Gb74YTtLysA8WZp5LQnrFLVEXsqzAUbdcttqJYYcvQdZe+9hrVi5RtOY1p9xlPFv4kKLI/kn7vEuMBSQUi5jPSFugFOubS0j/S/3AdJkwpt6t2SMcvNv+Ej0EpzS2sTS4oy0S6eWxVeEiBSmYZ0D80/KgV/Qg6AxKwr+7zINctacxET5hpCRZUVLkoPsaXrEJUpi9vnPxdwQ=
 
-On Wed,  8 Apr 2026 19:20:17 +0800
-Li Chen <me@linux.beauty> wrote:
+On Wed,  8 Apr 2026 20:29:49 +0545
+Shuvam Pandey <shuvampandey1@gmail.com> wrote:
 
-> Commit-time fast commit snapshots run under jbd2_journal_lock_updates(),
-> so it is useful to quantify the time spent with updates locked and to
-> understand why snapshotting can fail.
+> seq_buf: export seq_buf_putmem_hex() and add KUnit tests
 > 
-> Add a new tracepoint, ext4_fc_lock_updates, reporting the time spent in
-> the updates-locked window along with the number of snapshotted inodes
-> and ranges. Record the first snapshot failure reason in a stable snap_err
-> field for tooling.
+> The seq_buf KUnit suite does not exercise seq_buf_putmem_hex().
+> 
+> Add one test for the len > 8 chunking path and one overflow test
+> where a later chunk no longer fits in the buffer.
+> 
+> Export seq_buf_putmem_hex() as well so SEQ_BUF_KUNIT_TEST=m links
+> cleanly. Without the export, modpost reports seq_buf_putmem_hex as
+> undefined when seq_buf_kunit is built as a module.
 > 
 
-[..]
+Please always send a new version as its own thread and not as a reply to
+the old version.
 
-> @@ -1338,13 +1375,13 @@ static int ext4_fc_perform_commit(journal_t *journal)
->  	if (ret)
->  		return ret;
->  
-> -
->  	ret = ext4_fc_alloc_snapshot_inodes(sb, &inodes, &inodes_size);
->  	if (ret)
->  		return ret;
->  
->  	/* Step 4: Mark all inodes as being committed. */
->  	jbd2_journal_lock_updates(journal);
-> +	lock_start = ktime_get();
+Also, for tracing and seq_buf, use capital letters in the subject:
 
-ktime_get() is rather quick but if you care about micro-optimizations, you
-could have:
+  seq_buf: Export seq_buf_putmem_hex() and add KUnit tests
 
-	if (trace_ext4_fc_lock_updates_enabled())
-		lock_start = ktime_get();
-	else	
-		lock_start = 0;
+> Signed-off-by: Shuvam Pandey <shuvampandey1@gmail.com>
+> ---
+> v2:
 
->  	/*
->  	 * The journal is now locked. No more handles can start and all the
->  	 * previous handles are now drained. Snapshotting happens in this
-> @@ -1358,8 +1395,15 @@ static int ext4_fc_perform_commit(journal_t *journal)
->  	}
->  	ext4_fc_unlock(sb, alloc_ctx);
->  
-> -	ret = ext4_fc_snapshot_inodes(journal, inodes, inodes_size);
-> +	ret = ext4_fc_snapshot_inodes(journal, inodes, inodes_size,
-> +				      &snap_inodes, &snap_ranges, &snap_err);
->  	jbd2_journal_unlock_updates(journal);
-> +	if (trace_ext4_fc_lock_updates_enabled()) {
+This should be:
 
-	if (trace_ext4_fc_lock_updates_enabled() && lock_start) {
-
-But feel free to ignore this if the overhead of always calling ktime_get()
-is not an issue.
+ Changes since v1: https://lore.kernel.org/all/20260406033728.25998-1-shuvampandey1@gmail.com/
 
 
-> +		locked_ns = ktime_to_ns(ktime_sub(ktime_get(), lock_start));
-> +		trace_ext4_fc_lock_updates(sb, commit_tid, locked_ns,
-> +					   snap_inodes, snap_ranges, ret,
-> +					   snap_err);
-> +	}
->  	kvfree(inodes);
->  	if (ret)
->  		return ret;
-> @@ -1564,7 +1608,7 @@ int ext4_fc_commit(journal_t *journal, tid_t commit_tid)
->  		journal_ioprio = EXT4_DEF_JOURNAL_IOPRIO;
->  	set_task_ioprio(current, journal_ioprio);
->  	fc_bufs_before = (sbi->s_fc_bytes + bsize - 1) / bsize;
-> -	ret = ext4_fc_perform_commit(journal);
-> +	ret = ext4_fc_perform_commit(journal, commit_tid);
->  	if (ret < 0) {
->  		if (ret == -EAGAIN || ret == -E2BIG || ret == -ECANCELED)
->  			status = EXT4_FC_STATUS_INELIGIBLE;
-> diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
-> index f493642cf121..7028a28316fa 100644
-> --- a/include/trace/events/ext4.h
-> +++ b/include/trace/events/ext4.h
-> @@ -107,6 +107,26 @@ TRACE_DEFINE_ENUM(EXT4_FC_REASON_VERITY);
->  TRACE_DEFINE_ENUM(EXT4_FC_REASON_MOVE_EXT);
->  TRACE_DEFINE_ENUM(EXT4_FC_REASON_MAX);
->  
-> +#undef EM
-> +#undef EMe
-> +#define EM(a)	TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
-> +#define EMe(a)	TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
-> +
-> +#define TRACE_SNAP_ERR						\
-> +	EM(NONE)						\
-> +	EM(ES_MISS)						\
-> +	EM(ES_DELAYED)						\
-> +	EM(ES_OTHER)						\
-> +	EM(INODES_CAP)						\
-> +	EM(RANGES_CAP)						\
-> +	EM(NOMEM)						\
-> +	EMe(INODE_LOC)
-> +
-> +TRACE_SNAP_ERR
-> +
-> +#undef EM
-> +#undef EMe
-> +
->  #define show_fc_reason(reason)						\
->  	__print_symbolic(reason,					\
->  		{ EXT4_FC_REASON_XATTR,		"XATTR"},		\
-> @@ -2818,6 +2838,47 @@ TRACE_EVENT(ext4_fc_commit_stop,
->  		  __entry->num_fc_ineligible, __entry->nblks_agg, __entry->tid)
->  );
->  
-> +#define EM(a)	{ EXT4_FC_SNAP_ERR_##a, #a },
-> +#define EMe(a)	{ EXT4_FC_SNAP_ERR_##a, #a }
-> +
-> +TRACE_EVENT(ext4_fc_lock_updates,
-> +	    TP_PROTO(struct super_block *sb, tid_t commit_tid, u64 locked_ns,
-> +		     unsigned int nr_inodes, unsigned int nr_ranges, int err,
-> +		     int snap_err),
-> +
-> +	TP_ARGS(sb, commit_tid, locked_ns, nr_inodes, nr_ranges, err, snap_err),
-> +
-> +	TP_STRUCT__entry(/* entry */
-> +		__field(dev_t, dev)
-> +		__field(tid_t, tid)
-> +		__field(u64, locked_ns)
-> +		__field(unsigned int, nr_inodes)
-> +		__field(unsigned int, nr_ranges)
-> +		__field(int, err)
-> +		__field(int, snap_err)
-> +	),
-> +
-> +	TP_fast_assign(/* assign */
-> +		__entry->dev = sb->s_dev;
-> +		__entry->tid = commit_tid;
-> +		__entry->locked_ns = locked_ns;
-> +		__entry->nr_inodes = nr_inodes;
-> +		__entry->nr_ranges = nr_ranges;
-> +		__entry->err = err;
-> +		__entry->snap_err = snap_err;
-> +	),
-> +
-> +	TP_printk("dev %d,%d tid %u locked_ns %llu nr_inodes %u nr_ranges %u err %d snap_err %s",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
-> +		  __entry->locked_ns, __entry->nr_inodes, __entry->nr_ranges,
-> +		  __entry->err, __print_symbolic(__entry->snap_err,
-> +						 TRACE_SNAP_ERR))
-> +);
-> +
-> +#undef EM
-> +#undef EMe
-> +#undef TRACE_SNAP_ERR
-> +
->  #define FC_REASON_NAME_STAT(reason)					\
->  	show_fc_reason(reason),						\
->  	__entry->fc_ineligible_rc[reason]
+> - export seq_buf_putmem_hex() so SEQ_BUF_KUNIT_TEST=m links cleanly
+> - validate with a fresh arm64 build using CONFIG_KUNIT=y and CONFIG_SEQ_BUF_KUNIT_TEST=m
+> 
+>  lib/seq_buf.c             |  1 +
+>  lib/tests/seq_buf_kunit.c | 34 ++++++++++++++++++++++++++++++++++
 
-As for the rest:
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-[ Please add this reviewed-by to any new versions so I remember I already
-  looked at it. ]
-
-Thanks,
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
+
