@@ -1,30 +1,29 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF6E33F36B;
-	Wed,  8 Apr 2026 04:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF79634F48A;
+	Wed,  8 Apr 2026 04:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775622370; cv=none; b=MeYooO+vkjlJGjYfljLYvfAtSXJgHrYz1BdSePw2pawf9P90ejdeV9zjIcYCECpa4UtZ0xJwbl1XAAtuCOziTf+YjdbUYJreSU1Ra023wzaVXIuA6zdZJTpJXNESwv1qfowlvw5rF6+uk6lJigwCWKitSgfh60xMPNOz2njBouw=
+	t=1775622766; cv=none; b=ECJftcLVH8bEoRGle7uCL96YAlipqY6PlhvXankt3MNb9lhubLjnwM66LXdtxtwyBVQqglW6dDGcFcdneXfIFKpQp1//SVNI2GLXLV6C86/Pd3F5cm7BigSogVsoqidG99neso1p5cxpHC3zD2YI18T18lmdx46uXTOnZXXoVgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775622370; c=relaxed/simple;
-	bh=l4r64N5D+I1XHeVrOoaYWl25atsmHBXYJXxj2m+gyXo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oe8NODz+yZ5uYOMwx4V72Sk5OHn3l0UVJLSRHIu1Tb2EkkaxGKsgr/psm0Me1mLt5NeZjokg1GSIDUoJvKwTDavCWfMzzcC7tw3dToRR6z5S8+M/ntTp9NBlwuzcUMkCNTRQ2eRDp8QLHy7rhLRuZX3tx7coQ74l86yq4m45abo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HW6eqgww; arc=none smtp.client-ip=117.135.210.3
+	s=arc-20240116; t=1775622766; c=relaxed/simple;
+	bh=9MYLGKoExxzqbYH+tXIMtfX2X2p2rbS+DesZGGvbBL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UlpmNy8SIdVwM+vW97+GQwa+Z/qPbXXMzTgLShBxSI7mbYoPiYl3+Zy2cR1wRjjYgg0Vandl0DDzdAChAWsuKwDh4FVjej2q0U7QIn9bVHuz+DcrKL9HswLO20m41RlrHBi0SGoRY3HoMgFzHSZm1xqcZakTcR+PqPR63494voQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ehZce+PB; arc=none smtp.client-ip=220.197.31.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HW6eqgww"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ehZce+PB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=SE
-	AFFlxTxORcT/Rrq6uKhFb/2kqO8DF1rSnsERgmDXw=; b=HW6eqgwwBgeU0Jl1ej
-	5FG7Hclzn4e29DTfa4ey1EBeG2RV2Ed4abGMAMX/2kHBKgbr7QpNFuREQQbxmZOt
-	kBsta/RvcgVA3XhEKXA+AMWU0EtDd+z+aKifTILYPzJJoH0m9rUqfpJ6sXRE7ro2
-	MTtkqIqo4hkicpz8Vvodv7z1Y=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=p/
+	ZM/4kHelLiyLL8DHfGbrRahrKh1nTWWuGX6Oj+uks=; b=ehZce+PBzOZ32VQYdW
+	UZ30kFRybbshcCP7goWt1rTanwUHVhCr9cpYY+/CMubfRhk3gGW5/jG/jDwsmdkW
+	F+J52FtXHb0ZN3mHyjE6na8oJFNOuFLg1QZP17DVaVDKQ8YfFTxVlnP6Gdvz3lpG
+	ETAOw5V0k5RLJhjrl1NcStYhY=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wAHbg7B2NVpAwvfDw--.4309S2;
-	Wed, 08 Apr 2026 12:25:39 +0800 (CST)
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wCn+sBS2tVpCHSdDw--.35311S2;
+	Wed, 08 Apr 2026 12:32:20 +0800 (CST)
 From: Cao Ruichuang <create0818@163.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org
@@ -33,12 +32,10 @@ Cc: mathieu.desnoyers@efficios.com,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2] selftests/ftrace: Account for fprobe attachment before enable
-Date: Wed,  8 Apr 2026 12:25:32 +0800
-Message-Id: <20260408042532.6741-1-create0818@163.com>
+Subject: [PATCH] selftests/ftrace: Quote check_requires comparisons
+Date: Wed,  8 Apr 2026 12:32:12 +0800
+Message-Id: <20260408043212.8063-1-create0818@163.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260407115751.96184-1-create0818@163.com>
-References: <20260407115751.96184-1-create0818@163.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -46,74 +43,73 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAHbg7B2NVpAwvfDw--.4309S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KrWxZr43Kr47tF47WF13XFb_yoW8tF1Dp3
-	97G3Z0kr1kGayI9343Jr4rtr1xKFW8Jrs8JrnrJ343Zw4UZFn2qFZ7KFWY9F13GrZ5tr1f
-	Z3WIqF13XFyUAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jrdb8UUUUU=
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbC6AQ3cGnV2MS5wQAA3z
+X-CM-TRANSID:_____wCn+sBS2tVpCHSdDw--.35311S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CF13GryftFW7CF17WFWruFg_yoW8ur4Up3
+	93WFyqk3s5KF43t34UCr1DuFWxKF4ku3yUtw1rJFWUXw15Zas2qw1SkF13KFZ7Z3s8X34S
+	9393ZF17KF4DZ37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJR67UUUUU=
+X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbC6BSb1GnV2lTa4AAA37
 
-add_remove_fprobe.tc assumes that enabling an fprobe event is what
-adds its target function to enabled_functions.
+check_requires() compares requirement strings that can contain shell
+pattern characters such as '[' and ']'. Under /bin/sh, the unquoted
+test expressions can emit 'unexpected operator' warnings while parsing
+README-backed requirements.
 
-After resetting tracing state with initialize_system(), the current
-kernel still attaches the target functions as soon as the probe events
-are created. Enabling the three events does not increase the
-enabled_functions count further, and the original testcase fails on the
-check after enabling myevent3.
+Quote the relevant comparisons and path checks so the helper handles
+those patterns without spurious shell warnings.
 
-Record the baseline after creating the fprobe events and verify that
-subsequent enables keep that attachment set unchanged.
+Validated by rerunning fprobe_syntax_errors.tc and confirming the
+previous '/bin/sh: unexpected operator' lines disappear from the
+detailed ftracetest log.
 
 Signed-off-by: Cao Ruichuang <create0818@163.com>
 ---
-v2:
-- rerun in a reset tracing environment after initialize_system()
-- keep the fix focused on the failing myevent3 assumption and drop the
-  unnecessary myevent4 changes
+ tools/testing/selftests/ftrace/test.d/functions | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
- .../ftrace/test.d/dynevent/add_remove_fprobe.tc | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-index 47067a5e3..a55179f5d 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-@@ -27,22 +27,29 @@ grep -q myevent3 dynamic_events
- test -d events/fprobes/myevent1
- test -d events/fprobes/myevent2
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index e8e718139..442aa28ff 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -145,13 +145,13 @@ check_requires() { # Check required files and tracers
+ 	p=${i%:program}
+         r=${i%:README}
+         t=${i%:tracer}
+-	if [ $p != $i ]; then
+-	    if ! which $p ; then
++	if [ "$p" != "$i" ]; then
++	    if ! which "$p" ; then
+                 echo "Required program $p is not found."
+                 exit_unresolved
+ 	    fi
+-        elif [ $t != $i ]; then
+-            if ! grep -wq $t available_tracers ; then
++        elif [ "$t" != "$i" ]; then
++            if ! grep -wq "$t" available_tracers ; then
+                 echo "Required tracer $t is not configured."
+                 exit_unsupported
+             fi
+@@ -162,11 +162,11 @@ check_requires() { # Check required files and tracers
+ 	    else
+ 		test=$TRACING_DIR
+ 	    fi
+-            if ! grep -Fq "$r" $test/README ; then
++            if ! grep -Fq "$r" "$test"/README ; then
+                 echo "Required feature pattern \"$r\" is not in README."
+                 exit_unsupported
+             fi
+-        elif [ ! -e $i ]; then
++        elif [ ! -e "$i" ]; then
+             echo "Required feature interface $i doesn't exist."
+             exit_unsupported
+         fi
+@@ -223,4 +223,4 @@ get_mnt_options() {
+ 	local opts=$(mount | grep -m1 "$mnt_point" | sed -e 's/.*(\(.*\)).*/\1/')
  
--echo 1 > events/fprobes/myevent1/enable
--# Make sure the event is attached.
- grep -q $PLACE enabled_functions
-+grep -q $PLACE2 enabled_functions
- cnt=`cat enabled_functions | wc -l`
--if [ $cnt -eq $ocnt ]; then
-+if [ $cnt -le $ocnt ]; then
-+	exit_fail
-+fi
-+
-+echo 1 > events/fprobes/myevent1/enable
-+cnt1=`cat enabled_functions | wc -l`
-+if [ $cnt1 -ne $cnt ]; then
- 	exit_fail
- fi
- 
- echo 1 > events/fprobes/myevent2/enable
- cnt2=`cat enabled_functions | wc -l`
-+if [ $cnt2 -ne $cnt1 ]; then
-+	exit_fail
-+fi
- 
- echo 1 > events/fprobes/myevent3/enable
--# If the function is different, the attached function should be increased
- grep -q $PLACE2 enabled_functions
- cnt=`cat enabled_functions | wc -l`
--if [ $cnt -eq $cnt2 ]; then
-+if [ $cnt -ne $cnt2 ]; then
- 	exit_fail
- fi
- 
+ 	echo "$opts"
+-}
+\ No newline at end of file
++}
 -- 
 2.39.5 (Apple Git-154)
 
