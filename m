@@ -1,168 +1,77 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279663914F0
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 20:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D2A3DA7F4;
+	Wed,  8 Apr 2026 20:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775679848; cv=none; b=BFigVNhYryeXu8usuGDzf886zuP3o0kV2/m3Znqm1nqTryUNXbHX647JocsiX9UZ8tEx/it4N86Dc8Wg+2hhVFUauRJ2Ow9AQ8MPp+/NTDM1wzVVFnK3r7vvwngiQdFvWHpN186amLA++fZrBpZqrOSYuYA1xkDzCy996pgQjPI=
+	t=1775680291; cv=none; b=rn113PQrqd4226OkjsA1JAJIILrJXWKDxzGlh/wv7ebufwGfZVLYRlxyCVkcFipuioX7dGonBPZ9g8q/9MTlIz3XlUhWpJtiAdbjTGhx5FXZwQ7cniALpFyg07Z8DAYehb2SOUT35sa6IsnyBAaCVbSYWUKCubD7Ii9vcRWm27A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775679848; c=relaxed/simple;
-	bh=M/LjiKecfzVTG8HRl4m3JA7iq2zgvUsjbNQ4AnBHvSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YssnG8BkI++5kfVaoTn4pGp3y8QT4VwDp6sV1ih4M6ATZt0piwUE2ihJRZ0O7nznL70WV40jMpFp6aVIk4nY4m+NtTNYyXRa7s4mVThf98zRPtwHQfcEbCCiSoEiAm6rBPXiBH8nlIRxZjZoH0I9F28qalX6QlOzV74HZVOpHPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flbmwE/K; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flbmwE/K"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-35da9c0c007so195625a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 13:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775679846; x=1776284646; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UthiWrjG1Hwt/0nbiWEQ1KZeqkoIURhsJh3Eb3JdJ/8=;
-        b=flbmwE/Kaz/ysnc/p7I3LFzNeBn0PhsXsyUeICI3DU2yymftWFnoMS54OlI/gh3kZq
-         1nPTRmysaQh9e2NhImBXEDN31GXW/o83HpUwoGLm9feJjcrupoECWC6nnQfMGhKjRNE7
-         We7X9uC2sdUjPZ+6UaRzJgyA8RjGC255wjqau1LB0q3rFqlg7vqUpMp98Q6XRC/um4Il
-         bZHr6ia1SmLTDY9Go/69nRXnkStv3L+KzmB4lO/YPJ/FS8H42ZpFL4Vqe4I1FHWnv9la
-         twUCJxE/bQW7CpPf0vpoaI0c9tUMJONVdV4rPUJ8BHGdONVZ6Z24LeWLgeQGpbAcMH4J
-         5d3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775679846; x=1776284646;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UthiWrjG1Hwt/0nbiWEQ1KZeqkoIURhsJh3Eb3JdJ/8=;
-        b=a9oUCUfGb1cC0VoEVYjLbAEMDiD9FKxqUAqMoisXMciwKFH4s37AUKk4Dc8JPmpO3z
-         KE57qmM3dwmclvkm4iPIKX8TVHgg5eE5pRvZ2AQOkvM61QpBLdO8Y+4LgxXzSCxNXsr3
-         HeIB6a+nmNr5Oo4y0k7pfupaIHeuEpzc7jsQBo93hF0314fozeOIg2Ho45iTpJAeZHew
-         CrqW3nSIH2e1VoELOs5qX5U4Cc2sUhJl1nHO7YTdA4gfZJICe+bsupIO1kgsHyyrCLTT
-         2BJ4O0VddJAfMQSM1pQLLOS01olNJvajjcXpxl2DdIfZFeEOpfqmYCoz5MrBXenyuT6L
-         ZNZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBqFCuEzM1lYOmUdRF4HzlK3lmvwJwahE2ZzMPCjtvyNXM4c11voGv1FJlYf8YOQXMZi2faXm/KWmkJC0hfGDycJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhUA3+mEQchRKHv3+7rNTAC3O+SBf9EhI9ier50k+/NBibbJJu
-	TXSPFm62siFfFqoK8MM1qf4YtyRbT/g16OqPH/smhhSKCIyVPnm7DuOWu3dp1C2t
-X-Gm-Gg: AeBDietCtvazfoP7FON6d14aH9nih9O4bKPMVMKzSQYVL1c1w3X7DqZW2WZMzyQ33TH
-	JtFoQ78zuX+tLL0SWd6jng3vbmwAKOGBWekAZcdm9T3lYAfaM79QxyLXUeF4E7Sf1w+IQYvdZx9
-	4f/Bt9570DWLaoh4sUZ7qfbQ7qTvWDqYGq9lUMe+n8UNkKfRfR07vYzZfmG39DTxguytoQwXUh+
-	tcuTLd7gIZIINQvH1mHFooguocyhpB/3LhfsBoFG+IBpaJtArNULQKEu53FP60lQ9Qcugn9y3S9
-	bP3AlPmvWuQa5dz8J9bp9svsvlldT1+ZBGfFNj6hRASazeOD3xJSbpebIho+OTJvbCg7t3Nd9TQ
-	bFxUD2Mjz27QEr7/QvOGjGTyzT/nV7r6R19Du9Sc9dMkkzLbH+IDmKnAEqekYeVravnlnIjWO/Q
-	p9mfMkpkj/++1G0jI9vVeVxXV1ldfqDdKYmBSCBPUj/R57mF1xx20MarTiGczbJryw9noRtkDWU
-	JKmwNQMPw69oE8=
-X-Received: by 2002:a17:90b:5583:b0:35a:329:73d8 with SMTP id 98e67ed59e1d1-35de67a0817mr21268988a91.4.1775679846102;
-        Wed, 08 Apr 2026 13:24:06 -0700 (PDT)
-Received: from localhost.localdomain ([103.10.31.106])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35e34fd383dsm704288a91.6.2026.04.08.13.24.02
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 08 Apr 2026 13:24:05 -0700 (PDT)
-From: Shuvam Pandey <shuvampandey1@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	David Gow <david@davidgow.net>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	shuvampandey1@gmail.com
-Subject: [PATCH v3] seq_buf: Export seq_buf_putmem_hex() and add KUnit tests
-Date: Thu,  9 Apr 2026 02:08:51 +0545
-Message-ID: <20260408202351.21829-1-shuvampandey1@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1775680291; c=relaxed/simple;
+	bh=l2TKk7RqXY/yMRSmUxdi7j2QnQh7YNKuTn7QDnQrWmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YwnW8FXlkYDH6t3l3T7ljejgLz3FhFmr4UokBDUKx66RC9SPLff6uDxVqcv6a3loNKkrkcK1KlB6knhanDQaG9UGdF7HNen78F//ydLo7g5403jLUygMuf3R4nf0fZc3I6hFDCY3rPtIvm0s1eoxRREiqPN7ih870oEZfM0Q5bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id B45BB8A939;
+	Wed,  8 Apr 2026 20:31:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 4B9A93D;
+	Wed,  8 Apr 2026 20:31:25 +0000 (UTC)
+Date: Wed, 8 Apr 2026 16:32:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Cao Ruichuang <create0818@163.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, mcgrof@kernel.org,
+ petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
+ atomlin@atomlin.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-modules@vger.kernel.org
+Subject: Re: [PATCH] tracing: preserve module tracepoint strings
+Message-ID: <20260408163241.20723018@gandalf.local.home>
+In-Reply-To: <20260406170944.51047-1-create0818@163.com>
+References: <20260406170944.51047-1-create0818@163.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4B9A93D
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: qz54nsrq8xuy37mcmdyur6po33pfkf3t
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+iwW7Gtqwsk+QAjNp3uRmGVuX1BXG0bag=
+X-HE-Tag: 1775680285-191952
+X-HE-Meta: U2FsdGVkX1/rUfSbfUF7EOXAQ/GusUWaam3Jn4qgGJJoYvLXr4GFTy+zki6MXBbqNPsL8B06K40XFi0izN0ZiFTolPovPQwV2yMHjGENYNFn5Ftp5pDFrHUgHxIGeLe5kJYy05TIamBhX4GeSWn0r2QhH1APLAJge47svX3PC1+hpriOBhKS25Kvf6ah6SR14F/4WOkbOu3UT443jFn9g+KCWNadeEig28I0kBS4xoD2MmHyH9BZQr6ZM+Mzz11EtgKdV7/9ngwMs1sjHscO7aysyHRnraPVDjfKdFvCQDZil86pMxJiRttHFTBJ/ViOLS2mnWUkGl7DjVPCOj7aCRr0XMq5Aa+/r2b2seRbCIeayXo5b0LuTQ==
 
-seq_buf: Export seq_buf_putmem_hex() and add KUnit tests
+On Tue,  7 Apr 2026 01:09:44 +0800
+Cao Ruichuang <create0818@163.com> wrote:
 
-The seq_buf KUnit suite does not exercise seq_buf_putmem_hex().
+> tracepoint_string() is documented as exporting constant strings
+> through printk_formats, including when it is used from modules.
+> That currently does not work.
+> 
+> A small test module that calls
+> tracepoint_string("tracepoint_string_test_module_string") loads
+> successfully and gets a pointer back, but the string never appears
+> in /sys/kernel/tracing/printk_formats. The loader only collects
+> __trace_printk_fmt from modules and ignores __tracepoint_str.
+> 
+> Collect module __tracepoint_str entries too, copy them to stable
+> tracing-managed storage like module trace_printk formats, and let
+> trace_is_tracepoint_string() recognize those copied strings. This
+> makes module tracepoint strings visible through printk_formats and
+> keeps them accepted by the trace string safety checks.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217196
+> Signed-off-by: Cao Ruichuang <create0818@163.com>
+> ---
 
-Add one test for the len > 8 chunking path and one overflow test
-where a later chunk no longer fits in the buffer.
 
-Export seq_buf_putmem_hex() as well so SEQ_BUF_KUNIT_TEST=m links
-cleanly. Without the export, modpost reports seq_buf_putmem_hex as
-undefined when seq_buf_kunit is built as a module.
+As this is not a trivial change, and affects module code, I'm going to hold
+off until after v7.1-rc1 to apply it.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Shuvam Pandey <shuvampandey1@gmail.com>
----
-Changes since v1: https://lore.kernel.org/all/20260406033728.25998-1-shuvampandey1@gmail.com/
-- export seq_buf_putmem_hex() so SEQ_BUF_KUNIT_TEST=m links cleanly
-- validate with a fresh arm64 build using CONFIG_KUNIT=y and CONFIG_SEQ_BUF_KUNIT_TEST=m
-- send as a new thread
-- capitalize the subject for seq_buf/tracing style
-
- lib/seq_buf.c             |  1 +
- lib/tests/seq_buf_kunit.c | 34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
-
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index f3f3436d60a9403eae5b1ef9b091b027881f14fb..b59488fa8135cdb0340fbeb43d8d74db8ae13146 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -298,6 +298,7 @@ int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
- 	}
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(seq_buf_putmem_hex);
- 
- /**
-  * seq_buf_path - copy a path into the sequence buffer
-diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
-index 8a01579a978e655cd09024d0ea9c4c9cd095263f..eb466386bbefb1c81773cdae65a8ac3df91cd8ea 100644
---- a/lib/tests/seq_buf_kunit.c
-+++ b/lib/tests/seq_buf_kunit.c
-@@ -184,6 +184,38 @@ static void seq_buf_get_buf_commit_test(struct kunit *test)
- 	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
- }
- 
-+static void seq_buf_putmem_hex_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 24);
-+	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-+#ifdef __BIG_ENDIAN
-+	const char *expected = "0001020304050607 0809 ";
-+#else
-+	const char *expected = "0706050403020100 0908 ";
-+#endif
-+
-+	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), 0);
-+	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), strlen(expected));
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
-+}
-+
-+static void seq_buf_putmem_hex_overflow_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 20);
-+	const u8 data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-+#ifdef __BIG_ENDIAN
-+	const char *expected = "0001020304050607 ";
-+#else
-+	const char *expected = "0706050403020100 ";
-+#endif
-+
-+	KUNIT_EXPECT_EQ(test, seq_buf_putmem_hex(&s, data, sizeof(data)), -1);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 20);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
-+}
-+
- static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_init_test),
- 	KUNIT_CASE(seq_buf_declare_test),
-@@ -194,6 +226,8 @@ static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_printf_test),
- 	KUNIT_CASE(seq_buf_printf_overflow_test),
- 	KUNIT_CASE(seq_buf_get_buf_commit_test),
-+	KUNIT_CASE(seq_buf_putmem_hex_test),
-+	KUNIT_CASE(seq_buf_putmem_hex_overflow_test),
- 	{}
- };
- 
+-- Steve
