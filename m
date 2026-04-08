@@ -1,84 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070B633FE27;
-	Wed,  8 Apr 2026 01:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AFD1448E0;
+	Wed,  8 Apr 2026 01:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775611237; cv=none; b=SAeFgoGDNJ4AS5HbmDH0NHC9whF44MDJs5vGKc+3HNqBsX0GNF6qYO9/mGRjo0Wp9uQvKJBTXs/ys0oS1xqnabsPswBVbtEkd/2Bo6jSrxcTAGxOKUwkuDZjYDyUEo8n/CXc9aCE6U/r7Gn7ZuZsIUryu2IcvICdHqJ9QvhXHJU=
+	t=1775612372; cv=none; b=ddbGrPrpQhntNivIaF1kosb+OlsmDhK5j7dkKpK96/H7IbNmCZjU48m3erTH5h084wEi5oNOOrq88f/XXUqaGC/bsbTynUvuuApQAbdajBp3nw0spYcghFmliRl59wRIvUeOSnZpFC/Oo4WpZqt0EYnWEDqipm8t57EIN9gvzyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775611237; c=relaxed/simple;
-	bh=wnMsjgtaRk5JZMUEyxFKsze0Quamegckjuhh+EfyLz8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=N9Xh+eow3b8Sg/xRm8sF2NOdyD/WPD+c47DPLSl43XX/30gVjCu1h31O8qgsFtPEEaxnI9RDB3hdN7nPUrE0qi0SIiJmATk7pHLAIMyvz4xfBfC6twn68LDdjOEHL+ZsJRCCr0K48HEeR19Wb2fVpl5ZlY3eIxfHRozCHKV1h68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjzoli58; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjzoli58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8319FC19424;
-	Wed,  8 Apr 2026 01:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775611236;
-	bh=wnMsjgtaRk5JZMUEyxFKsze0Quamegckjuhh+EfyLz8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cjzoli58PIHE+fl1pkYsVci7+dW75uh4mcpchqdV7t6m31aN2HzwM2gKWu2iXbAN6
-	 ceiK8+Vq7lhb/13OPi6gOANjEH9GnwD16x7QECIu8m8QBMuJwGOZ+qdXcZfoIU45/s
-	 vv6PBqrXyU7bKQdNCAkpEO3Jq1c1wxCpU3RrU248yxxtp/RQVnCzIW655jXK2x4j9L
-	 +xCxUqogfyhE5DGI6mDS6MZwngmkNtpLfrsqvKV7aR6bRcC3h8spLIQtiqu3+3t+SN
-	 jf/KvaVzR/Ffvqod9hCE+JZITZnNVwWqmx0nWBR6fscI3Bb+spNLCmbDiEGrzH0L5A
-	 OYdwrNYn4tLbA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 02C893809A3D;
-	Wed,  8 Apr 2026 01:20:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1775612372; c=relaxed/simple;
+	bh=NRdm1ir1VaM4HbG9RUoh+TOm8VmWd/TgMPF++GgtE54=;
+	h=From:Date:Message-ID:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CMEO6Pd6Z1LSb0CxP9Y3VUiolth1FUm2oppNVburTGk4tVCKi2FkLql//SeykAaXNKj4aOJF0co+Lcursn3N2pmoYIZp+6leonXZGRwA+Q0MnsKmvlOL3NABGPj4k/Wdrwm5HzAHIrrIyk+lfiaE8jiipmol/fi6fuM/ysavwhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from reply.eml (unknown [111.196.245.197])
+	by APP-01 (Coremail) with SMTP id qwCowAAXwWzKsdVp1jCUDA--.51320S2;
+	Wed, 08 Apr 2026 09:39:22 +0800 (CST)
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Date: Wed, 8 Apr 2026 10:15:00 +0800
+Message-ID: <20260408101500.1-tracing-hist-reachability-reply-pengpeng@iscas.ac.cn>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, pengpeng@iscas.ac.cn
+Subject: Re: [PATCH v2 1/2] tracing/hist: rebuild full_name on each hist_field_name() call
+In-Reply-To: <20260401112224.85582-1-pengpeng@iscas.ac.cn>
+References: <20260329030950.32503-1-pengpeng@iscas.ac.cn> <20260401112224.85582-1-pengpeng@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v7 0/2] tracing: Fix kprobe attachment when
- module
- shadows vmlinux symbol
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177561121379.25865.559402724947422501.git-patchwork-notify@kernel.org>
-Date: Wed, 08 Apr 2026 01:20:13 +0000
-References: <20260407203912.1787502-1-andrey.grodzovsky@crowdstrike.com>
-In-Reply-To: <20260407203912.1787502-1-andrey.grodzovsky@crowdstrike.com>
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, jolsa@kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, ihor.solodrai@linux.dev,
- emil@etsalapatis.com, linux-open-source@crowdstrike.com
+X-CM-TRANSID:qwCowAAXwWzKsdVp1jCUDA--.51320S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruFW5ur4rAFyxuFyUCF45KFg_yoWkKrb_WF
+	Z2qas3Cw17JFsakasxJFnxtFZ3WrZ3Gw1kZr1xt347KrWfXFWa9FykJw1xCa4fJrW3Arn0
+	kr93Zr1aqrn29jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb48FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
+	U==
+X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 
-Hello:
+Hi Steve,
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Thanks for looking at this.
 
-On Tue, 7 Apr 2026 16:39:10 -0400 you wrote:
-> When a kernel module exports a symbol with the same name as an existing
-> vmlinux symbol, kprobe attachment fails with -EADDRNOTAVAIL because
-> number_of_same_symbols() counts matches across both vmlinux and all
-> loaded modules, returning a count greater than 1.
-> 
-> This series takes a different approach from v1-v4, which implemented a
-> libbpf-side fallback parsing /proc/kallsyms and retrying with the
-> absolute address. That approach was rejected (Andrii Nakryiko, Ihor
-> Solodrai) because ambiguous symbol resolution does not belong in libbpf.
-> 
-> [...]
+I believe this path is reachable.
 
-Here is the summary with links:
-  - [bpf-next,v7,1/2] tracing: Prefer vmlinux symbols over module symbols for unqualified kprobes
-    https://git.kernel.org/bpf/bpf-next/c/1870ddcd94b0
-  - [bpf-next,v7,2/2] selftests/bpf: Add tests for kprobe attachment with duplicate symbols
-    https://git.kernel.org/bpf/bpf-next/c/cea4323f1cfe
+field->system is set when a VAR_REF is created with an event-qualified
+reference. The assignment happens in init_var_ref(), which is called
+from create_var_ref().
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+The parser accepts fully qualified references of the form
+
+  system.event.$var
+
+and parse_expr() passes the parsed system/event strings into
+create_var_ref(). trace_action_create() also accepts explicitly
+qualified action parameters in the same form and passes those strings
+into create_var_ref().
+
+This is also documented in Documentation/trace/histogram.rst:
+
+  fully-qualified name is of the form 'system.event_name.$var_name'
+  or 'system.event_name.field'.
+
+The path is user-visible because reading back the trigger goes through
+
+  event_hist_trigger_print() -> hist_field_print() -> hist_field_name()
+
+so creating a hist trigger that uses an inter-event variable reference
+in fully qualified form is enough to exercise it.
+
+So I don't think this is dead code. If you would prefer a different way
+of handling the printed name, I can respin accordingly, but I don't
+think the current branch is unreachable.
+
+Thanks,
+Pengpeng
 
 
