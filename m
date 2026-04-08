@@ -1,186 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7CD264A65;
-	Wed,  8 Apr 2026 11:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8702E8B8A
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 11:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775646135; cv=none; b=bNm8BSMGBiOWUnvS57UGmfVCWNDFDMy3u+WPTYlL9WmXOhzgWZ544ko1gfBvd0T036ZSgd6uwjy6GyO4tIlh9tpEYlo8B7E1J7HSRZgRUnJcxMzUR2ndoVee/ngVijB7bf6yQFGb7BRV2E9EWqnQZ6IHbKvoa/Kkgb5dvjDRhJc=
+	t=1775646660; cv=none; b=CxiKpVe/w3t1R7QG9uItM5eaQT7RvIIgM5TwB7aqSrElcg/dmQ0ggVdwWZZiZ9mrZ2kR7dpmSpBD2GIjilZHUK3SJdWzagD+D2lzBA4Tt+Fxr7OF7lkJMX4xYr0VJ0QBUPk/ARkKhKllUjqaajguy81vXfKopSeZLB5gxSR3DZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775646135; c=relaxed/simple;
-	bh=BcjAsJfFFdxOuFJG+yx8h9dEcchCwv67qshCeNpQzVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HcVYniisuoRS9K/E72987FwyQpBA+2pzwMrgQu8ZPejBd+dr/hmbbz0atnle7whcuoAuYaf7nYGA3L8hz+w0lyEtt8SsVTR3cqIaNrJBdvjk1cW/Y6VcGKgITm5iF/AQ3dm7kusxK26Zq1qGePNI/4t2qA7cRzb/1b4KoG0xPH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=j0m/Wl5D; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1775646660; c=relaxed/simple;
+	bh=jFZjtktr1182f8BWsVbMJEHb9H4MNzz+xm/vLv4K1D8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FcracJmxuYZ2IS3Zh8IC03t3En3J03MY3IgXX9ekO/MHJ5Qrdk8BtL+BljE6Aqq1Cewbgej8mOs3P91w1X8eW/tB38PIf8WLgyNMKMM3wmzoWXXifg16ql200Qh1uW3snUYzqDHFBrMH7LxTMJk1meC9sJ/2+SJsgvdzcVoC6ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Scmo/EJ+; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="j0m/Wl5D"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0959832E3;
-	Wed,  8 Apr 2026 04:02:07 -0700 (PDT)
-Received: from [10.57.32.88] (unknown [10.57.32.88])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DE403F632;
-	Wed,  8 Apr 2026 04:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1775646132; bh=BcjAsJfFFdxOuFJG+yx8h9dEcchCwv67qshCeNpQzVY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j0m/Wl5DLNS3bb0LPJygmxr64zm8k47jOHhnUdaH8o4hEg7UUONrE66mssRlJ7NT2
-	 6bzBCKlVrr+w2+XGl2eztRQqDLePKhvx7aHRms/5lUbXVIvqBABzatYJU+Jw6NrJnn
-	 B0h8Vu2G1rPcddUOVHZq+00sZ9LGtr5cxfhIEmOY=
-Message-ID: <9c8ddc37-a236-446b-a85a-261f370d644e@arm.com>
-Date: Wed, 8 Apr 2026 12:01:59 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Scmo/EJ+"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-43b87970468so4712332f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 04:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1775646656; x=1776251456; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vfllRBgwiwa3h1YU32+J/3Xslzo7VJyKCR+sEXLOPdc=;
+        b=Scmo/EJ+ekij29gx2CQSx27ITvBa/vg71uKIqGTyxtvEoc4ODr3I/8+pVOEglOpK5I
+         SdoOTFP/ha9+eVfICmbo0AzaEr19G0QV/cuuk1hpEbANdcMkGMfbx+aWtl8hzDIW4BYr
+         jh3bse40AqusVWoyFJ6OXswjb3tJ+cistJiPXnDN4VH/eeSTUcUjDVAs0thGX3gj84nM
+         120ormNdhG6+CXwLNBhFFxSBrOPv6HEKau4TWb+kov0R4vstoPeApF6eKOom2WziCJXg
+         hIpV6UhWkn1RNLiIwElYZdwXLNDEqIapPndFCkO97e6UYivlHNWsGpcc6NfE1DxXokHM
+         bd6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775646656; x=1776251456;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfllRBgwiwa3h1YU32+J/3Xslzo7VJyKCR+sEXLOPdc=;
+        b=khKr2K8Mdb9gQ7MjuOWRfguohWdupOQL2/sxkLUWtCf/GnCHdhUigo0H3OuOa9W5pD
+         eroeYdKtqBIqC3qqlvMcNnN2LGMTkzMIpnE8XLvSFuLJirataGYhAobq6+6PpKzZy3pc
+         06/3U6rKQw4H3MTRlDgf5fDqnoBnhbOcLzMesvaftse6XhT+ea6067KEBCq1kub7FMqI
+         +os/hEr3yUf0dAFMHBepYyJsr1VvG3YX+cMZxPd2A6GTQEKG6gxBT2s+diQxURP7GX9W
+         lEiQDq1PHsrkhnapXhu8/3Hz+nqFIaSo1pJu4fdAT+ecaG0pFC9TLI0ot2esTWhpKTLh
+         saPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPB/kgU8PHO1nDi+CysdXpLO01qCcahoXwQ8CGR4s4p1Da2jymprq1ML6ljkiltwPeE/9pWeJwKTlaznItdffe/+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqkkHCFYcYhRZbcSeVIMInO3wq4S3gZj0syd25QMYy1GTxh2T8
+	CnPM93D8LXmwxj1Te2eFol5wfAZhKzJLIIaSNzAGDUHfZjDlu0OPVLMLBfpCO5vOaoU=
+X-Gm-Gg: AeBDieuEaE5i9LE81M8CFVcWpuUrlai9FcNHilTnC5NwrspMMwqgHeZESf53xVBNAuv
+	xan08Pyfrx8LcKdhL1hddkJ7QPzAzmGo+bUMSNvqbpCQXjsQVclR4ZllV6/iHhgwUaHNp/AWPZ6
+	fmLIcRvuOg3iK+pvfnx+m1kKP6RH9vECy/+nvFkHQo/dt91csY8jAXOGEi3e9PkGxPdSy4BHinK
+	/Bu5Ms+/CdS0jajkuCwNcRiZ7G2/qAM2cX9zHrJuneQnLB1D/h72jbrvGc+qA1MNW3fox0SIS2c
+	PyBWjHBQ+YhtYOIEmBJObisP06Xyh5zFalnWYHWQ5mhIVRYL7+Kc+Eo6GuFbZ04IscgAekoC9Wk
+	+X+9sn4tKgCwiyPOg97ULdV3yyf/aji/b9fo9srLW3FPpuy3fQ7fqcEn0PFFIxOcM81m+VEz+8N
+	IoZlqnCiZ11xP35CF8NcTyhZvv6w==
+X-Received: by 2002:a05:6000:2282:b0:43b:54c9:85f4 with SMTP id ffacd0b85a97d-43d292df407mr31359155f8f.39.1775646656473;
+        Wed, 08 Apr 2026 04:10:56 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e2a6f73sm61649889f8f.8.2026.04.08.04.10.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2026 04:10:55 -0700 (PDT)
+Date: Wed, 8 Apr 2026 13:10:53 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Song Liu <song@kernel.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org,
+	jikos@kernel.org, mbenes@suse.cz, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	kpsingh@kernel.org, mattbobrowski@google.com, jolsa@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com,
+	yonghong.song@linux.dev, live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to
+ klp_patch
+Message-ID: <adY3vej2kt5joAg4@pathway.suse.cz>
+References: <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
+ <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+ <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+ <adQhpBC2W9I6QW-g@redhat.com>
+ <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
+ <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
+ <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
+ <adUd0Mojbtrwmeod@pathway.suse.cz>
+ <CAPhsuW7JhtbniZHFWGMrzeqdS=-EjCySFPgiOBv0zKJNRwzONA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for
- KVM_SET_MEMORY_ATTRIBUTES2
-To: Vishal Annapurve <vannapurve@google.com>,
- Michael Roth <michael.roth@amd.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
- andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
- chao.p.peng@linux.intel.com, david@kernel.org, ira.weiny@intel.com,
- jmattson@google.com, jthoughton@google.com, oupton@kernel.org,
- pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
- rientjes@google.com, shivankg@amd.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
- Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>,
- Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org
-References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
- <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
- <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3>
- <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
- <CAEvNRgGm9icDK8sK5ZfqHEOEqSbvjwtihE4p9d3vpBq-NfVjmw@mail.gmail.com>
- <CAEvNRgEtigp7+PVDkyu_DH947CUqDt312d+P+hWjjd2fHONiag@mail.gmail.com>
- <yvfwexsub7nrogh67hzcsupbrkzer6a7kbeao5tlq4elrzc2iz@xrwdjd7p32pp>
- <CAGtprH-kgRByFvvCYeWMXtsvpb6qpaWAo8k-3PEnioyPg-LEvA@mail.gmail.com>
-Content-Language: en-GB
-From: Steven Price <steven.price@arm.com>
-In-Reply-To: <CAGtprH-kgRByFvvCYeWMXtsvpb6qpaWAo8k-3PEnioyPg-LEvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW7JhtbniZHFWGMrzeqdS=-EjCySFPgiOBv0zKJNRwzONA@mail.gmail.com>
 
-On 07/04/2026 22:50, Vishal Annapurve wrote:
-> On Tue, Apr 7, 2026 at 2:09 PM Michael Roth <michael.roth@amd.com> wrote:
->>
->>> TLDR:
->>>
->>> + Think of populate ioctls not as KVM touching memory, but platform
->>>   handling population.
->>> + KVM code (kvm_gmem_populate) still doesn't touch memory contents
->>> + post_populate is platform-specific code that handles loading into
->>>   private destination memory just to support legacy non-in-place
->>>   conversion.
->>> + Don't complicate populate ioctls by doing conversion just to support
->>>   legacy use-cases where platform-specific code has to do copying on
->>>   the host.
->>
->> That's a good point: these are only considerations in the context of
->> actually copying from src->dst, but with in-place conversion the
->> primary/more-performant approach will be for userspace to initial
->> directly. I.e. if we enforced that, then gmem could right ascertain that
->> it isn't even writing to private pages via these hooks and any
->> manipulation of that memory is purely on the part of the trusted entity
->> handling initial encryption/etc.
->>
->> I understand that we decided to keep the option of allowing separate
->> src/dst even with in-place conversion, but it doesn't seem worthwhile if
->> that necessarily means we need to glue population+conversion together in
->> 1 clumsy interface that needs to handle partial return/error responses to
->> userspace (or potentially get stuck forever in the conversion path).
+On Tue 2026-04-07 16:09:39, Song Liu wrote:
+> On Tue, Apr 7, 2026 at 8:08 AM Petr Mladek <pmladek@suse.com> wrote:
+> [...]
+> > > + * @replace:   replace tag:
+> > > + *             = 0: Atomic replace is disabled; however, this patch remains
+> > > + *                  eligible to be superseded by others.
+> >
+> > This is weird semantic. Which livepatch tag would be allowed to
+> > supersede it, please?
+> >
+> > Do we still need this category?
+> >
+> > > + *             > 0: Atomic replace is enabled. Only existing patches with a
+> > > + *                  matching replace tag will be superseded.
+> > >   * @list:      list node for global list of actively used patches
+> > >   * @kobj:      kobject for sysfs resources
+> > >   * @obj_list:  dynamic list of the object entries
+> > > @@ -137,7 +141,7 @@ struct klp_patch {
+> > >         struct module *mod;
+> > >         struct klp_object *objs;
+> > >         struct klp_state *states;
+> > > -       bool replace;
+> > > +       unsigned int replace;
+> >
+> > This already breaks the backward compatibility by changing the type
+> > and semantic of this field.
 > 
-> I think ARM needs userspace to specify separate source and destination
-> memory ranges for initial population as ARM doesn't support in-place
-> memory encryption. [1]
+> I was thinking if replace=0 means no replace, it is still backward
+> compatible. Did I miss something?
 
-Indeed - CCA requires KVM to first "delegate" the page (effectively the
-shared->private conversion) which will destroy the contents. Then we can
-populate the data (but that obviously has to come from elsewhere).
+IMHO, the semantic of the no-replace mode would be strange if
+we introduce the hybrid mode. Especially, it would be strange when
+it can be replaced by any livepatch with random replace tag/set.
+Also it would just complicate the definition and detection of conflicts.
 
-The closest CCA can do to an in-place conversion is for the kernel to
-copy the data to another temporary buffer and then the firmware can copy
-it back after the delegation. An early version of the CCA Linux patches
-did this (long before guest_memfd). However this is slower than it needs
-to be (two copies) and difficult to size the temporary buffer. Too small
-and you round-trip to the firmware more than you need to, too large and
-you waste memory. And, with increasing support for huge pages in
-guest_memfd and the CCA firmware (aka RMM), it's also challenging to
-preserve huge pages while doing this dance so I want to avoid it if
-possible.
+I am going to provide more details in the reply to Yafang.
 
-> [1] https://lore.kernel.org/kvm/20260318155413.793430-25-steven.price@arm.com/
-> 
->>
->> So I agree with Ackerley's proposal (which I guess is the same as what's
->> in this series).
->>
->> However, 1 other alternative would be to do what was suggested on the
->> call, but require userspace to subsequently handle the shared->private
->> conversion. I think that would be workable too.
-> 
-> IIUC, Converting memory ranges to private after it essentially is
-> treated as private by the KVM CC backend will expose the
-> implementation to the same risk of userspace being able to access
-> private memory and compromise host safety which guest_memfd was
-> invented to address.
-
-At least in the Arm CCA case the "exposure" of the private memory is
-only in terms of allowing population - and only before the guest has
-run. The host isn't able to access the memory in any direct way after
-the memory has been delegated. But the RMM provides this populate method
-to copy data into memory (in a measured/controlled manner).
-
-From a CCA perspective the logical flow is to mark the memory as private
-and then call the platform-specific function to populate the memory. But
-obviously we can fit in a KVM API which is different.
-
-Note that CCA has a specific VM property called 'RIPAS' (Realm IPA
-State). This is the guest's view of whether memory exists at a
-particular physical address. My current series takes the view that all
-guest_memfd memory is private RAM and the guest will have to
-specifically request that it is converted to shared. I'm hoping this
-series might provide a way for the VMM to configure this (before the
-guest starts executing).
-
-Thanks,
-Steve
-
->>
->> One other benefit to Ackerley's/current approach however is that it allows
->> us to potentially keep hugepages intact in the populate path, since
->> prep'ing/encrypting everything while it's in a shared state means gmem will
->> split the hugepage and all the firmware/RMP/etc. data structures will only
->> be able to handle individual 4K pages. I still suspect doing things like
->> encoding the initial 2MB OVMF image as a single hugepage might yield
->> enough benefit to explore this (at some point). So there's some niceness
->> in knowing that Ackerley's approach would allow for that eventually and
->> not require a complete rethink on these same topics.
->>
->> Thanks,
->>
->> Mike
->>
->>>
->>>>>>
->>>>>> [...snip...]
->>>>>>
-
+Best Regards,
+Petr
