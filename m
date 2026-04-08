@@ -1,664 +1,226 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC09D3815D9
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 19:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF745347517;
+	Wed,  8 Apr 2026 19:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775677746; cv=none; b=gDwsRzTLyJVjJLc2asuSZwhXkv7ShVvnPVvylNUHnaVgFY3VzJNyjk0KzG1X2Al88yXQbbvIC++lbnqaTioWOy+vtF4fOqcP7CK7JViYR4BSpRSo770Fv/lebv5+Rg4e6IZtg/JpNb2LI8iiGipOU3iCdAn2BzWTkfL50PTzAdE=
+	t=1775677995; cv=none; b=M/P+hijZBJkBFrNe89KyqO+8fCVrkX6jGet7sLkXt3AYPSTuSET/4GqSWtDjZ14zG8+H/N+Xoq0RUWjCnKu4TS9HVHc2cYtExIxx2BUGmyzcWu0w92oeZQliVHTcMn/KjKK11F6/Z8COuFEfi8upozqo7lU8YgGwhWxSuXyfkK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775677746; c=relaxed/simple;
-	bh=AeOjg4Jddf5MO5WmWnokhyLQPgGJ785kavbAxEYTZbA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=romFOKxHZsvbOZX9WAMr5KaGqkifMvLaHZIvxNlfmhNTVV1LSXg/8dOUqnU2PINvMVuq6A+rdBMp/804Ej5NMzN3SToLZtlujcQg4us6IW5wvDx64RAsNodYICpnln/o2M1C/m5fpBjbs7UGp1af6NrXnfZ7DgpfQNc6nZPAlBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VmgmjUyr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1775677995; c=relaxed/simple;
+	bh=KEp0Sx73qDFpLx5wCuQRwISOpjvDRMeCBmiVHRjniJw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=J9V4YdgyPtmzYYxzd4qqN5AxFPcR5cYDuzlwjIAfBK9yIQ1qK3sFrnP2xSP7aZioJOUGzIz7ltRjj5EuC7C6IcujGG8TlcLvK6Wxu1RT4ix/GahQLDbZN3E+xhorVUvsgvlPERlVjLfG+6ly2IkHcymBw2Q8vo3DV3u3+QdCFUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+cEvuN4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VmgmjUyr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775677741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s6lebmAFqUc0VWZTv0HOUyslnYO3ZnOF7fQDUUciAcQ=;
-	b=VmgmjUyrbHu3XU+hBtBqvlaIcHruzqZq/RFpdHVFFaxYYjNCiWKhYOd+II3TDcsNQ9REV1
-	TzzGITWPW6CJtEu6Sx3Be+CD5OVhgpvGZVj2PiEqRfvovHIs1DfrG6NqMmtEAJ7tGhHwhR
-	ydm38VMFMbmo6nSOfGPw351UAZeoo5M=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-379-YwVSFEQPM_-DQueees4gGg-1; Wed, 08 Apr 2026 15:48:59 -0400
-X-MC-Unique: YwVSFEQPM_-DQueees4gGg-1
-X-Mimecast-MFC-AGG-ID: YwVSFEQPM_-DQueees4gGg_1775677738
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-7a5f9d43c48so2209997b3.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 12:48:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775677738; x=1776282538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=s6lebmAFqUc0VWZTv0HOUyslnYO3ZnOF7fQDUUciAcQ=;
-        b=IE8kBXzuyKjcQSMDzBYT4vFgPICHb4H4/TRZh3SJXYVeZZ8H6dYmew9Th+eYnuFIw8
-         uEjNlGUiO/owru7N2uS19CO0ueyN+VUlTe29e4wNUj8FNBLXv//+ynxMGT5xlVOaYQDq
-         uKpU0IFwgVdkLU+G9BDDaw1vMPV+fMweNz27mAuN53frAqJJoANS99cT1X/mR3/cnD42
-         xJvhqyhmeGKm0GTXbXzlvw4ppS3Sn8lqj3gN9QwPYtA872robaeClofZ5Y4Mxwud4scc
-         pbNzDvQh1N/ZKMZv+BSoKdhhl+M0A63BRUE+F2OFuSeK7q/D/68xptpYfv+GXDTGlVCD
-         N5bA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Z7sRhN60tJDqY/AvPOFUEmP0yHKjy9t0KKymjLrlIOKm2hiSARCnr8cdztVxWq5XGYdeD4W1MtixDXoTexsdrcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPLSZkIUMt1/TvIEZ6YAHb9dQmpFiZX2w8ShJMUzitHSq3Vg+e
-	cSAK2UiFSM8wu0Wycv6QZzK5FCbcH44mtmEEGE3HYjVaJ//0eSCbbCcLhjhVWVijncOBpZHpkNh
-	U8SfkP9qJc6Tw1dR+w5yWxRtBPAmA7GD1Jnty5LU5jya1B4W5mHRhA8io/VwOp2AoCYqVUUt1xo
-	QEFPOXdnJSdtHH4uy8m5FlsbLPNDp+X4QJanG8ixTyIzZ5mIeX
-X-Gm-Gg: AeBDieuVX3ypVYUW5N1QRp0uTltutNIcgnWNcLC+iJSGvZdEXjDyGCMgL1xekWpZvvU
-	Bs13c8WiObmCvPl7B24JR4gjQEywomno65ol3lwZt5JHxNM4vAzqYKdNqGhe+H0NSaeBSVD/Pub
-	eStX/Pq0NdHpKroZSTfxUOCfVnY1LbChMhHx6b1Na1dGlQ2XjOGG1Z7ErF3UdO0h6bNylDDc1G0
-	kUAsZVr
-X-Received: by 2002:a05:690e:1501:b0:64e:a976:dc0f with SMTP id 956f58d0204a3-6504870ac04mr22045461d50.19.1775677738214;
-        Wed, 08 Apr 2026 12:48:58 -0700 (PDT)
-X-Received: by 2002:a05:690e:1501:b0:64e:a976:dc0f with SMTP id
- 956f58d0204a3-6504870ac04mr22045409d50.19.1775677737724; Wed, 08 Apr 2026
- 12:48:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+cEvuN4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EDE0C19421;
+	Wed,  8 Apr 2026 19:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775677995;
+	bh=KEp0Sx73qDFpLx5wCuQRwISOpjvDRMeCBmiVHRjniJw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=m+cEvuN4W4C0urrYWtTGPymX3h1QUtEV2IyZKxNF+gNgjgBxI7XsLIXLFkbZoAvt7
+	 1zmRxl1SmL+q20J4D+y2unTnG6DuhmUCBlbf/VeOibGUyL5EvhoMn9T0W9UfNrxoqY
+	 P0sbawUhHpgrIafn4qxGtC8a1ssIEVEgWLwCYmFFv2dgXHC1W7evFj9xqLxMJSk/Xc
+	 3POk7H8k1WsIWFRjdEfrF/zG7N65jm/5slN59hlBq12j5ijRWBa1MNQGe+2caIkeai
+	 fvlKTANQtaQn9ncv7OrYQOaQGM+uXvlv4HbBXxYWsSSyxwWCeV10n4q2JLhfgmK8bI
+	 vr5frDOK8KNEA==
+Message-ID: <411738fab73b3625e0e4728e2749a24bfadb1773.camel@kernel.org>
+Subject: Re: [PATCH 12/24] nfsd: add data structures for handling CB_NOTIFY
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck
+ Lever	 <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers	 <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan	 <skhan@linuxfoundation.org>,
+ NeilBrown <neil@brown.name>, Olga Kornievskaia	 <okorniev@redhat.com>, Dai
+ Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,  Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Amir Goldstein
+ <amir73il@gmail.com>
+Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Date: Wed, 08 Apr 2026 15:53:11 -0400
+In-Reply-To: <8a6dbbee-5d59-4833-b0f6-22b1e46dfd11@app.fastmail.com>
+References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
+	 <20260407-dir-deleg-v1-12-aaf68c478abd@kernel.org>
+	 <8a6dbbee-5d59-4833-b0f6-22b1e46dfd11@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260226031741.230674-1-npache@redhat.com> <20260226032347.232939-1-npache@redhat.com>
- <8a4568de-e0f9-471b-bc94-1062d4af3938@kernel.org> <ee39e605-0d9f-433b-9dfa-f70fd92edfac@kernel.org>
- <c4e80668-9018-48fc-883c-5d52a5950065@kernel.org>
-In-Reply-To: <c4e80668-9018-48fc-883c-5d52a5950065@kernel.org>
-From: Nico Pache <npache@redhat.com>
-Date: Wed, 8 Apr 2026 13:48:43 -0600
-X-Gm-Features: AQROBzAhFnBMl7uCD_-PNdDxiKciHJ1I9BsrODaSd6nYngTKfPDHydTd_07lxzo
-Message-ID: <CAA1CXcA8nE2PZrB4J1gV5v16PeQ7X2AiwjJ3gO1Q8hW7tyTtPQ@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v15 03/13] mm/khugepaged: generalize
- __collapse_huge_page_* for mTHP support
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
-	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, 
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com, 
-	catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
-	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, 
-	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
-	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
-	lance.yang@linux.dev, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, 
-	mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, 
-	raquini@redhat.com, rdunlap@infradead.org, richard.weiyang@gmail.com, 
-	rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
-	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, 
-	surenb@google.com, thomas.hellstrom@linux.intel.com, tiwai@suse.de, 
-	usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
-	zokeefe@google.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ckes-HYNo1yzXNUEGCzY0UnaVPDm9moiDgOZRKFM7a0_1775677738
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 12, 2026 at 2:56=E2=80=AFPM David Hildenbrand (Arm)
-<david@kernel.org> wrote:
->
-> On 3/12/26 21:36, David Hildenbrand (Arm) wrote:
-> > On 3/12/26 21:32, David Hildenbrand (Arm) wrote:
-> >> On 2/26/26 04:23, Nico Pache wrote:
-> >>> generalize the order of the __collapse_huge_page_* functions
-> >>> to support future mTHP collapse.
-> >>>
-> >>> mTHP collapse will not honor the khugepaged_max_ptes_shared or
-> >>> khugepaged_max_ptes_swap parameters, and will fail if it encounters a
-> >>> shared or swapped entry.
-> >>>
-> >>> No functional changes in this patch.
-> >>>
-> >>> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> >>> Reviewed-by: Lance Yang <lance.yang@linux.dev>
-> >>> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> >>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> >>> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> >>> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> >>> Signed-off-by: Nico Pache <npache@redhat.com>
-> >>> ---
-> >>>  mm/khugepaged.c | 73 +++++++++++++++++++++++++++++++----------------=
---
-> >>>  1 file changed, 47 insertions(+), 26 deletions(-)
-> >>>
-> >>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> >>> index a9b645402b7f..ecdbbf6a01a6 100644
-> >>> --- a/mm/khugepaged.c
-> >>> +++ b/mm/khugepaged.c
-> >>> @@ -535,7 +535,7 @@ static void release_pte_pages(pte_t *pte, pte_t *=
-_pte,
-> >>>
-> >>>  static enum scan_result __collapse_huge_page_isolate(struct vm_area_=
-struct *vma,
-> >>>             unsigned long start_addr, pte_t *pte, struct collapse_con=
-trol *cc,
-> >>> -           struct list_head *compound_pagelist)
-> >>> +           unsigned int order, struct list_head *compound_pagelist)
-> >>>  {
-> >>>     struct page *page =3D NULL;
-> >>>     struct folio *folio =3D NULL;
-> >>> @@ -543,15 +543,17 @@ static enum scan_result __collapse_huge_page_is=
-olate(struct vm_area_struct *vma,
-> >>>     pte_t *_pte;
-> >>>     int none_or_zero =3D 0, shared =3D 0, referenced =3D 0;
-> >>>     enum scan_result result =3D SCAN_FAIL;
-> >>> +   const unsigned long nr_pages =3D 1UL << order;
-> >>> +   int max_ptes_none =3D khugepaged_max_ptes_none >> (HPAGE_PMD_ORDE=
-R - order);
-> >>
-> >> It might be a bit more readable to move "const unsigned long
-> >> nr_pages =3D 1UL << order;" all the way to the top.
-> >>
-> >> Then, have here
-> >>
-> >>      int max_ptes_none =3D 0;
-> >>
-> >> and do at the beginning of the function:
-> >>
-> >>      /* For MADV_COLLAPSE, we always collapse ... */
-> >>      if (!cc->is_khugepaged)
-> >>              max_ptes_none =3D HPAGE_PMD_NR;
-> >>      /*  ... except if userfaultf relies on MISSING faults. */
-> >>      if (!userfaultfd_armed(vma))
-> >>              max_ptes_none =3D khugepaged_max_ptes_none >> (HPAGE_PMD_=
-ORDER - order);
-> >>
-> >> (but see below regarding helper function)
-> >>
-> >> then the code below becomes ...
-> >>
-> >>>
-> >>> -   for (_pte =3D pte; _pte < pte + HPAGE_PMD_NR;
-> >>> +   for (_pte =3D pte; _pte < pte + nr_pages;
-> >>>          _pte++, addr +=3D PAGE_SIZE) {
-> >>>             pte_t pteval =3D ptep_get(_pte);
-> >>>             if (pte_none_or_zero(pteval)) {
-> >>>                     ++none_or_zero;
-> >>>                     if (!userfaultfd_armed(vma) &&
-> >>>                         (!cc->is_khugepaged ||
-> >>> -                        none_or_zero <=3D khugepaged_max_ptes_none))=
- {
-> >>> +                        none_or_zero <=3D max_ptes_none)) {
-> >>
-> >> ...
-> >>
-> >>      if (none_or_zero <=3D max_ptes_none) {
-> >>
-> >>
-> >> I see that you do something like that (but slightly different) in the =
-next
-> >> patch. You could easily extend the above by it.
-> >>
-> >> Or go one step further and move all of that conditional into collapse_=
-max_ptes_none(), whereby
-> >> you simply also pass the cc and the vma.
-> >>
-> >> Then this all gets cleaned up and you'd end up above with
-> >>
-> >> max_ptes_none =3D collapse_max_ptes_none(cc, vma, order);
-> >> if (max_ptes_none < 0)
-> >>      return result;
-> >>
-> >> I'd do all that in this patch here, getting rid of #4.
-> >>
-> >>
-> >>>                             continue;
-> >>>                     } else {
-> >>>                             result =3D SCAN_EXCEED_NONE_PTE;
-> >>> @@ -585,8 +587,14 @@ static enum scan_result __collapse_huge_page_iso=
-late(struct vm_area_struct *vma,
-> >>>             /* See collapse_scan_pmd(). */
-> >>>             if (folio_maybe_mapped_shared(folio)) {
-> >>>                     ++shared;
-> >>> -                   if (cc->is_khugepaged &&
-> >>> -                       shared > khugepaged_max_ptes_shared) {
-> >>> +                   /*
-> >>> +                    * TODO: Support shared pages without leading to =
-further
-> >>> +                    * mTHP collapses. Currently bringing in new page=
-s via
-> >>> +                    * shared may cause a future higher order collaps=
-e on a
-> >>> +                    * rescan of the same range.
-> >>> +                    */
-> >>> +                   if (!is_pmd_order(order) || (cc->is_khugepaged &&
-> >>> +                       shared > khugepaged_max_ptes_shared)) {
-> >>
-> >> That's not how we indent within a nested ().
-> >>
-> >> To make this easier to read, what about similarly having at the beginn=
-ing
-> >> of the function:
-> >>
-> >> int max_ptes_shared =3D 0;
-> >>
-> >> /* For MADV_COLLAPSE, we always collapse. */
-> >> if (cc->is_khugepaged)
-> >>      max_ptes_none =3D HPAGE_PMD_NR;
-> >> /* TODO ... */
-> >> if (is_pmd_order(order))
-> >>      max_ptes_none =3D khugepaged_max_ptes_shared;
-> >>
-> >> to turn this code into a
-> >>
-> >>      if (shared > khugepaged_max_ptes_shared)
-> >>
-> >> Also, here, might make sense to have a collapse_max_ptes_swap(cc, orde=
-r)
-> >> to do that and clean it up.
-> >>
-> >>
-> >>>                             result =3D SCAN_EXCEED_SHARED_PTE;
-> >>>                             count_vm_event(THP_SCAN_EXCEED_SHARED_PTE=
-);
-> >>>                             goto out;
-> >>> @@ -679,18 +687,18 @@ static enum scan_result __collapse_huge_page_is=
-olate(struct vm_area_struct *vma,
-> >>>  }
-> >>>
-> >>>  static void __collapse_huge_page_copy_succeeded(pte_t *pte,
-> >>> -                                           struct vm_area_struct *vm=
-a,
-> >>> -                                           unsigned long address,
-> >>> -                                           spinlock_t *ptl,
-> >>> -                                           struct list_head *compoun=
-d_pagelist)
-> >>> +           struct vm_area_struct *vma, unsigned long address,
-> >>> +           spinlock_t *ptl, unsigned int order,
-> >>> +           struct list_head *compound_pagelist)
-> >>>  {
-> >>> -   unsigned long end =3D address + HPAGE_PMD_SIZE;
-> >>> +   unsigned long end =3D address + (PAGE_SIZE << order);
-> >>>     struct folio *src, *tmp;
-> >>>     pte_t pteval;
-> >>>     pte_t *_pte;
-> >>>     unsigned int nr_ptes;
-> >>> +   const unsigned long nr_pages =3D 1UL << order;
-> >>
-> >> Move it further to the top.
-> >>
-> >>>
-> >>> -   for (_pte =3D pte; _pte < pte + HPAGE_PMD_NR; _pte +=3D nr_ptes,
-> >>> +   for (_pte =3D pte; _pte < pte + nr_pages; _pte +=3D nr_ptes,
-> >>>          address +=3D nr_ptes * PAGE_SIZE) {
-> >>>             nr_ptes =3D 1;
-> >>>             pteval =3D ptep_get(_pte);
-> >>> @@ -743,13 +751,11 @@ static void __collapse_huge_page_copy_succeeded=
-(pte_t *pte,
-> >>>  }
-> >>>
-> >>>  static void __collapse_huge_page_copy_failed(pte_t *pte,
-> >>> -                                        pmd_t *pmd,
-> >>> -                                        pmd_t orig_pmd,
-> >>> -                                        struct vm_area_struct *vma,
-> >>> -                                        struct list_head *compound_p=
-agelist)
-> >>> +           pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
-> >>> +           unsigned int order, struct list_head *compound_pagelist)
-> >>>  {
-> >>>     spinlock_t *pmd_ptl;
-> >>> -
-> >>> +   const unsigned long nr_pages =3D 1UL << order;
-> >>>     /*
-> >>>      * Re-establish the PMD to point to the original page table
-> >>>      * entry. Restoring PMD needs to be done prior to releasing
-> >>> @@ -763,7 +769,7 @@ static void __collapse_huge_page_copy_failed(pte_=
-t *pte,
-> >>>      * Release both raw and compound pages isolated
-> >>>      * in __collapse_huge_page_isolate.
-> >>>      */
-> >>> -   release_pte_pages(pte, pte + HPAGE_PMD_NR, compound_pagelist);
-> >>> +   release_pte_pages(pte, pte + nr_pages, compound_pagelist);
-> >>>  }
-> >>>
-> >>>  /*
-> >>> @@ -783,16 +789,16 @@ static void __collapse_huge_page_copy_failed(pt=
-e_t *pte,
-> >>>   */
-> >>>  static enum scan_result __collapse_huge_page_copy(pte_t *pte, struct=
- folio *folio,
-> >>>             pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
-> >>> -           unsigned long address, spinlock_t *ptl,
-> >>> +           unsigned long address, spinlock_t *ptl, unsigned int orde=
-r,
-> >>>             struct list_head *compound_pagelist)
-> >>>  {
-> >>>     unsigned int i;
-> >>>     enum scan_result result =3D SCAN_SUCCEED;
-> >>> -
-> >>> +   const unsigned long nr_pages =3D 1UL << order;
-> >>
-> >> Same here, all the way to the top.
-> >>
-> >>>     /*
-> >>>      * Copying pages' contents is subject to memory poison at any ite=
-ration.
-> >>>      */
-> >>> -   for (i =3D 0; i < HPAGE_PMD_NR; i++) {
-> >>> +   for (i =3D 0; i < nr_pages; i++) {
-> >>>             pte_t pteval =3D ptep_get(pte + i);
-> >>>             struct page *page =3D folio_page(folio, i);
-> >>>             unsigned long src_addr =3D address + i * PAGE_SIZE;
-> >>> @@ -811,10 +817,10 @@ static enum scan_result __collapse_huge_page_co=
-py(pte_t *pte, struct folio *foli
-> >>>
-> >>>     if (likely(result =3D=3D SCAN_SUCCEED))
-> >>>             __collapse_huge_page_copy_succeeded(pte, vma, address, pt=
-l,
-> >>> -                                               compound_pagelist);
-> >>> +                                               order, compound_pagel=
-ist);
-> >>>     else
-> >>>             __collapse_huge_page_copy_failed(pte, pmd, orig_pmd, vma,
-> >>> -                                            compound_pagelist);
-> >>> +                                            order, compound_pagelist=
-);
-> >>>
-> >>>     return result;
-> >>>  }
-> >>> @@ -985,12 +991,12 @@ static enum scan_result check_pmd_still_valid(s=
-truct mm_struct *mm,
-> >>>   * Returns result: if not SCAN_SUCCEED, mmap_lock has been released.
-> >>>   */
-> >>>  static enum scan_result __collapse_huge_page_swapin(struct mm_struct=
- *mm,
-> >>> -           struct vm_area_struct *vma, unsigned long start_addr, pmd=
-_t *pmd,
-> >>> -           int referenced)
-> >>> +           struct vm_area_struct *vma, unsigned long start_addr,
-> >>> +           pmd_t *pmd, int referenced, unsigned int order)
-> >>>  {
-> >>>     int swapped_in =3D 0;
-> >>>     vm_fault_t ret =3D 0;
-> >>> -   unsigned long addr, end =3D start_addr + (HPAGE_PMD_NR * PAGE_SIZ=
-E);
-> >>> +   unsigned long addr, end =3D start_addr + (PAGE_SIZE << order);
-> >>>     enum scan_result result;
-> >>>     pte_t *pte =3D NULL;
-> >>>     spinlock_t *ptl;
-> >>> @@ -1022,6 +1028,19 @@ static enum scan_result __collapse_huge_page_s=
-wapin(struct mm_struct *mm,
-> >>>                 pte_present(vmf.orig_pte))
-> >>>                     continue;
-> >>>
-> >>> +           /*
-> >>> +            * TODO: Support swapin without leading to further mTHP
-> >>> +            * collapses. Currently bringing in new pages via swapin =
-may
-> >>> +            * cause a future higher order collapse on a rescan of th=
-e same
-> >>> +            * range.
-> >>> +            */
-> >>> +           if (!is_pmd_order(order)) {
-> >>> +                   pte_unmap(pte);
-> >>> +                   mmap_read_unlock(mm);
-> >>> +                   result =3D SCAN_EXCEED_SWAP_PTE;
-> >>> +                   goto out;
-> >>> +           }
-> >>> +
-> >>
-> >> Interesting, we just swapin everything we find :)
-> >>
-> >> But do we really need this check here? I mean, we just found it to be =
-present.
-> >>
-> >> In the rare event that there was a race, do we really care? It was jus=
-t
-> >> present, now it's swapped. Bad luck. Just swap it in.
-> >>
-> >
-> > Okay, now I am confused. Why are you not taking care of
-> > collapse_scan_pmd() in the same context?
-> >
-> > Because if you make sure that we properly check against a max_ptes_swap
-> > similar as in the style above, we'd rule out swapin right from the star=
-t?
-> >
-> > Also, I would expect that all other parameters in there are similarly
-> > handled?
-> >
->
-> Okay, I think you should add the following:
+On Wed, 2026-04-08 at 14:39 -0400, Chuck Lever wrote:
+> On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
+> > Add the data structures, allocation helpers, and callback operations
+> > needed for directory delegation CB_NOTIFY support:
+> >=20
+> > - struct nfsd_notify_event: carries fsnotify events for CB_NOTIFY
+> > - struct nfsd4_cb_notify: per-delegation state for notification handlin=
+g
+> > - Union dl_cb_fattr with dl_cb_notify in nfs4_delegation since a
+> >   delegation is either a regular file delegation or a directory
+> >   delegation, never both
+> >=20
+> > Refactor alloc_init_deleg() into a common __alloc_init_deleg() base
+> > with a pluggable sc_free callback, and add alloc_init_dir_deleg() which
+> > allocates the page array and notify4 buffer needed for CB_NOTIFY
+> > encoding.
+> >=20
+> > Add skeleton nfsd4_cb_notify_ops with done/release handlers that will
+> > be filled in when the notification path is wired up.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>=20
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index 4afe7e68fb51..b2b8c454fc0f 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+>=20
+> > @@ -3381,6 +3440,30 @@ nfsd4_cb_getattr_release(struct nfsd4_callback=
+=20
+> > *cb)
+> >  	nfs4_put_stid(&dp->dl_stid);
+> >  }
+> >=20
+> > +static int
+> > +nfsd4_cb_notify_done(struct nfsd4_callback *cb,
+> > +				struct rpc_task *task)
+> > +{
+> > +	switch (task->tk_status) {
+> > +	case -NFS4ERR_DELAY:
+> > +		rpc_delay(task, 2 * HZ);
+> > +		return 0;
+> > +	default:
+> > +		return 1;
+> > +	}
+> > +}
+> > +
+> > +static void
+> > +nfsd4_cb_notify_release(struct nfsd4_callback *cb)
+> > +{
+> > +	struct nfsd4_cb_notify *ncn =3D
+> > +			container_of(cb, struct nfsd4_cb_notify, ncn_cb);
+> > +	struct nfs4_delegation *dp =3D
+> > +			container_of(ncn, struct nfs4_delegation, dl_cb_notify);
+> > +
+> > +	nfs4_put_stid(&dp->dl_stid);
+> > +}
+> > +
+> >  static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops =3D {
+> >  	.done		=3D nfsd4_cb_recall_any_done,
+> >  	.release	=3D nfsd4_cb_recall_any_release,
+>=20
+> So when a client responds with NFS4ERR_DELAY, the RPC framework retries
+> after 2s. On retry, prepare() is called again, but ncn_evt_cnt is
+> already 0 (drained in the first prepare). prepare returns false, which
+> destroys the callback.
+>=20
 
-Hey! Thanks for all your reviews here.
+This is actually not a problem. When ->done() returns 0,
+rpc_restart_call_prepare retries the RPC through the RPC-level prepare
+(nfsd4_cb_prepare at nfs4callback.c:1479), which just acquires a
+session slot and calls rpc_call_start. It does not call cb_ops->prepare
+again =E2=80=94 the same encoded XDR is re-sent in that case.
 
-For multiple reasons, here is the solution I developed:
+> Events arriving during the retry window are dropped because
+> nfsd4_run_cb_notify() returns early when NFSD4_CALLBACK_RUNNING is set.
+> After the callback is destroyed, future events can queue a new CB_NOTIFY,
+> but the window's events are lost.                                        =
+                                               =20
+>=20
+> The result is that the client misses notifications. Does this impact
+> behavioral correctness or spec compliance? Is there a way for that
+> client to detect the loss and recover?
+>=20
 
-Add a patch before the generalize __collapse.. patch that reworks the
-max_ptes* handling and introduces the helpers (no functional changes).
+There _is_ a problem, however. Events that arrive while the job is
+running queue up, but won't get sent until the _next_ event arrives. We
+need to make the ->release handler check for new events and requeue the
+callback if there are any. I'll plan to fix that up.
 
-I later updated these functions to follow the specific mthp rules in
-the generalization patch. Honestly, refactoring much of this has been
-very hard without one large patch, which is why we split it up
-initially.
-
-How does that sound?
-
--- Nico
-
->
-> From 17bce81ab93f3b16e044ac2f4f62be19aac38180 Mon Sep 17 00:00:00 2001
-> From: "David Hildenbrand (Arm)" <david@kernel.org>
-> Date: Thu, 12 Mar 2026 21:54:22 +0100
-> Subject: [PATCH] tmp
->
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  mm/khugepaged.c | 89 +++++++++++++++++++++++++++++--------------------
->  1 file changed, 53 insertions(+), 36 deletions(-)
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index b7b4680d27ab..6a3773bfa0a2 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -318,6 +318,34 @@ static ssize_t max_ptes_shared_store(struct kobject =
-*kobj,
->         return count;
->  }
->
-> +static int collapse_max_ptes_none(struct collapse_control *cc,
-> +               struct vm_area_struct *vma)
-> +{
-> +       /* We don't mess with MISSING faults. */
-> +       if (vma && userfaultfd_armed(vma))
-> +               return 0;
-> +       /* MADV_COLLAPSE always collapses. */
-> +       if (!cc->is_khugepaged)
-> +               return HPAGE_PMD_NR;
-> +       return khugepaged_max_ptes_none;
-> +}
-> +
-> +static int collapse_max_ptes_shared(struct collapse_control *cc)
-> +{
-> +       /* MADV_COLLAPSE always collapses. */
-> +       if (!cc->is_khugepaged)
-> +               return HPAGE_PMD_NR;
-> +       return khugepaged_max_ptes_shared;
-> +}
-> +
-> +static int collapse_max_ptes_swap(struct collapse_control *cc)
-> +{
-> +       /* MADV_COLLAPSE always collapses. */
-> +       if (!cc->is_khugepaged)
-> +               return HPAGE_PMD_NR;
-> +       return khugepaged_max_ptes_swap;
-> +}
-> +
->  static struct kobj_attribute khugepaged_max_ptes_shared_attr =3D
->         __ATTR_RW(max_ptes_shared);
->
-> @@ -539,6 +567,8 @@ static enum scan_result __collapse_huge_page_isolate(=
-struct vm_area_struct *vma,
->                 unsigned long start_addr, pte_t *pte, struct collapse_con=
-trol *cc,
->                 struct list_head *compound_pagelist)
->  {
-> +       const int max_ptes_none =3D collapse_max_ptes_none(cc, vma);
-> +       const int max_ptes_shared =3D collapse_max_ptes_shared(cc);
->         struct page *page =3D NULL;
->         struct folio *folio =3D NULL;
->         unsigned long addr =3D start_addr;
-> @@ -550,16 +580,12 @@ static enum scan_result __collapse_huge_page_isolat=
-e(struct vm_area_struct *vma,
->              _pte++, addr +=3D PAGE_SIZE) {
->                 pte_t pteval =3D ptep_get(_pte);
->                 if (pte_none_or_zero(pteval)) {
-> -                       ++none_or_zero;
-> -                       if (!userfaultfd_armed(vma) &&
-> -                           (!cc->is_khugepaged ||
-> -                            none_or_zero <=3D khugepaged_max_ptes_none))=
- {
-> -                               continue;
-> -                       } else {
-> +                       if (++none_or_zero > max_ptes_none) {
->                                 result =3D SCAN_EXCEED_NONE_PTE;
->                                 count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
->                                 goto out;
->                         }
-> +                       continue;
->                 }
->                 if (!pte_present(pteval)) {
->                         result =3D SCAN_PTE_NON_PRESENT;
-> @@ -586,9 +612,7 @@ static enum scan_result __collapse_huge_page_isolate(=
-struct vm_area_struct *vma,
->
->                 /* See hpage_collapse_scan_pmd(). */
->                 if (folio_maybe_mapped_shared(folio)) {
-> -                       ++shared;
-> -                       if (cc->is_khugepaged &&
-> -                           shared > khugepaged_max_ptes_shared) {
-> +                       if (++shared > max_ptes_shared) {
->                                 result =3D SCAN_EXCEED_SHARED_PTE;
->                                 count_vm_event(THP_SCAN_EXCEED_SHARED_PTE=
-);
->                                 goto out;
-> @@ -1247,6 +1271,9 @@ static enum scan_result hpage_collapse_scan_pmd(str=
-uct mm_struct *mm,
->                 struct vm_area_struct *vma, unsigned long start_addr,
->                 bool *mmap_locked, struct collapse_control *cc)
->  {
-> +       const int max_ptes_none =3D collapse_max_ptes_none(cc, vma);
-> +       const int max_ptes_swap =3D collapse_max_ptes_swap(cc);
-> +       const int max_ptes_shared =3D collapse_max_ptes_shared(cc);
->         pmd_t *pmd;
->         pte_t *pte, *_pte;
->         int none_or_zero =3D 0, shared =3D 0, referenced =3D 0;
-> @@ -1280,36 +1307,28 @@ static enum scan_result hpage_collapse_scan_pmd(s=
-truct mm_struct *mm,
->
->                 pte_t pteval =3D ptep_get(_pte);
->                 if (pte_none_or_zero(pteval)) {
-> -                       ++none_or_zero;
-> -                       if (!userfaultfd_armed(vma) &&
-> -                           (!cc->is_khugepaged ||
-> -                            none_or_zero <=3D khugepaged_max_ptes_none))=
- {
-> -                               continue;
-> -                       } else {
-> +                       if (++none_or_zero > max_ptes_none) {
->                                 result =3D SCAN_EXCEED_NONE_PTE;
->                                 count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
->                                 goto out_unmap;
->                         }
-> +                       continue;
->                 }
->                 if (!pte_present(pteval)) {
-> -                       ++unmapped;
-> -                       if (!cc->is_khugepaged ||
-> -                           unmapped <=3D khugepaged_max_ptes_swap) {
-> -                               /*
-> -                                * Always be strict with uffd-wp
-> -                                * enabled swap entries.  Please see
-> -                                * comment below for pte_uffd_wp().
-> -                                */
-> -                               if (pte_swp_uffd_wp_any(pteval)) {
-> -                                       result =3D SCAN_PTE_UFFD_WP;
-> -                                       goto out_unmap;
-> -                               }
-> -                               continue;
-> -                       } else {
-> +                       if (++unmapped > max_ptes_swap) {
->                                 result =3D SCAN_EXCEED_SWAP_PTE;
->                                 count_vm_event(THP_SCAN_EXCEED_SWAP_PTE);
->                                 goto out_unmap;
->                         }
-> +                       /*
-> +                        * Always be strict with uffd-wp enabled swap ent=
-ries.
-> +                        * See the comment below for pte_uffd_wp().
-> +                        */
-> +                       if (pte_swp_uffd_wp_any(pteval)) {
-> +                               result =3D SCAN_PTE_UFFD_WP;
-> +                               goto out_unmap;
-> +                       }
-> +                       continue;
->                 }
->                 if (pte_uffd_wp(pteval)) {
->                         /*
-> @@ -1348,9 +1367,7 @@ static enum scan_result hpage_collapse_scan_pmd(str=
-uct mm_struct *mm,
->                  * is shared.
->                  */
->                 if (folio_maybe_mapped_shared(folio)) {
-> -                       ++shared;
-> -                       if (cc->is_khugepaged &&
-> -                           shared > khugepaged_max_ptes_shared) {
-> +                       if (++shared > max_ptes_shared) {
->                                 result =3D SCAN_EXCEED_SHARED_PTE;
->                                 count_vm_event(THP_SCAN_EXCEED_SHARED_PTE=
-);
->                                 goto out_unmap;
-> @@ -2305,6 +2322,8 @@ static enum scan_result hpage_collapse_scan_file(st=
-ruct mm_struct *mm,
->                 unsigned long addr, struct file *file, pgoff_t start,
->                 struct collapse_control *cc)
->  {
-> +       const int max_ptes_none =3D collapse_max_ptes_none(cc, NULL);
-> +       const int max_ptes_swap =3D collapse_max_ptes_swap(cc);
->         struct folio *folio =3D NULL;
->         struct address_space *mapping =3D file->f_mapping;
->         XA_STATE(xas, &mapping->i_pages, start);
-> @@ -2323,8 +2342,7 @@ static enum scan_result hpage_collapse_scan_file(st=
-ruct mm_struct *mm,
->
->                 if (xa_is_value(folio)) {
->                         swap +=3D 1 << xas_get_order(&xas);
-> -                       if (cc->is_khugepaged &&
-> -                           swap > khugepaged_max_ptes_swap) {
-> +                       if (swap > max_ptes_swap) {
->                                 result =3D SCAN_EXCEED_SWAP_PTE;
->                                 count_vm_event(THP_SCAN_EXCEED_SWAP_PTE);
->                                 break;
-> @@ -2395,8 +2413,7 @@ static enum scan_result hpage_collapse_scan_file(st=
-ruct mm_struct *mm,
->                 cc->progress +=3D HPAGE_PMD_NR;
->
->         if (result =3D=3D SCAN_SUCCEED) {
-> -               if (cc->is_khugepaged &&
-> -                   present < HPAGE_PMD_NR - khugepaged_max_ptes_none) {
-> +               if (present < HPAGE_PMD_NR - max_ptes_none) {
->                         result =3D SCAN_EXCEED_NONE_PTE;
->                         count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
->                 } else {
-> --
-> 2.43.0
->
->
-> Then extend it by passing an order + return value check in this patch her=
-e. You can
-> directly squash changes from patch #4 in here then.
->
-> --
-> Cheers,
->
-> David
->
-
+Thanks for all the review! I'll plan to send another version soon (but
+probably not until after next week's testing event).
+--=20
+Jeff Layton <jlayton@kernel.org>
