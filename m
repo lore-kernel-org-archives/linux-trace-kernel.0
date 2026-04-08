@@ -1,122 +1,186 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FCE3B27FF
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Apr 2026 10:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7CD264A65;
+	Wed,  8 Apr 2026 11:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775642599; cv=none; b=p/5h5WUD1xpim5lN4jnG91Rs6gjelSbCNoSWy7yQP4zmQXPv1hJPHlqSb6RGDn8QTH3cwXZbZk8MPEaWBJBYDFtiXPJyLwXW8BYhr6EkUkHSij17cLIxGI7nDzg0YDWwtCyyq2SRbWwaL9lm0UulBrjQ7IhLpJjR6fD5QVFI1Ug=
+	t=1775646135; cv=none; b=bNm8BSMGBiOWUnvS57UGmfVCWNDFDMy3u+WPTYlL9WmXOhzgWZ544ko1gfBvd0T036ZSgd6uwjy6GyO4tIlh9tpEYlo8B7E1J7HSRZgRUnJcxMzUR2ndoVee/ngVijB7bf6yQFGb7BRV2E9EWqnQZ6IHbKvoa/Kkgb5dvjDRhJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775642599; c=relaxed/simple;
-	bh=DXs5JCpWJKCEkc7iuBQoDcwCbXCOV4p16Pl+XZolqC8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hRhhpGhHJF3r3j1HNvYDOdbcfaXLjxR8CB1irn80e2Of3NifA9/HGW3yB+2RQMVxfVf/0Bb8wO0SHdPIHwMZgHYqQNMaKS1dsCPXuBsfiILNiO2/S+6NhgmFeG+q1c2EnRl7nckKvk71+r1lATDSs3XbGDj6lUXAkRATr5JxgDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YMPqL0/1; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775646135; c=relaxed/simple;
+	bh=BcjAsJfFFdxOuFJG+yx8h9dEcchCwv67qshCeNpQzVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HcVYniisuoRS9K/E72987FwyQpBA+2pzwMrgQu8ZPejBd+dr/hmbbz0atnle7whcuoAuYaf7nYGA3L8hz+w0lyEtt8SsVTR3cqIaNrJBdvjk1cW/Y6VcGKgITm5iF/AQ3dm7kusxK26Zq1qGePNI/4t2qA7cRzb/1b4KoG0xPH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=j0m/Wl5D; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMPqL0/1"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-82a67ce6969so4245183b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Apr 2026 03:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775642591; x=1776247391; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AU2utJvkUidUfp4jkj+rsm9KrKFB7YOYVa4X+ttSgRw=;
-        b=YMPqL0/1UUVP7yy5lTgHdAMS31hjcqNnrqPOSXzfTOquTfv7k8OhhjFpnyo8gUBwgu
-         lgBnsEewW5Gok3jpuYkFBdKbaaXBmxRL3GG6U2s6L1pM1Li50BpVfxd7gu9nVXL05E2n
-         OPmeEBM4zK4W1Zd9CkuOUbvwSSPiU5A/Np7hFd+4iLdeav+IBLZBHCEEkdhR7gtj7wRt
-         kBFbuJn1EFkCw1ZykRCk4s18nMaBLIMPmy48hsuwgOZvzjcRVXQOPX/+wW0FsGttpY4N
-         QLGeI62uGu0JVvuE6Xq8mQh8hG6g5RUBRMbXDzlmrSDdTr5b2mpaSOsfatNdVgGDWQuL
-         KTvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775642591; x=1776247391;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AU2utJvkUidUfp4jkj+rsm9KrKFB7YOYVa4X+ttSgRw=;
-        b=crsVPrkNeHqYqAVKQklEps2w/cuI2tqpQeYTd0gYSX/Bjzuj+AmogzIWoBKo3hVt6B
-         tHrYW4th/Mw6UVx396GszcTxadRNwXEgNwB6HCob0bI2GCUYIMEIPr1x5bF16JObTJyF
-         aubugXGaz3jqWB1T9zjSaTiN3BA6DJaILb7brMto9xdX2YpiNalsuYPQtZMXKaCEA54W
-         MGnrIJVxvpICi2i/Ma9Bv98z49zsZDxKSHGP3Cmo0utqkS6IBEy/K1ObQDVUtdlyMVR3
-         oDE3BELWkvfKHVSZ8vkfF7Lnt22t3XCUNfiVvTXOi1Uo//BR6ZTbJHkNvlIvA9Iqbhoj
-         lL/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWdO6naXfQEWn3EFwfGk1m2Fbp80HNOUVloIigrEG3TVojuMql8xH9WKm7NB27IBLV3TcD21KAem3KL3B+Iex8MRVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL62guFWJsAWxdA3zq/PXZsU/wMt8nxccqRMhaT9P+uyA+Fkiw
-	BkSCEi8oUUbhSWEXlXNhtICoPFOdRkM7VsU3/dmBCcBqCTZTGrTQC9vA
-X-Gm-Gg: AeBDieswvfrQtUIwVyMCUJjDMb1imh29LC+E2I1KKV33AC2NBsjGgfNGWxVNyg4F6nT
-	w9qIbJ7GIuEkvCKDvjpcgzEu12eZ3DeYIY9moIEBxnit5IkHLRl9mpGeAJvazkwunUETz9tZQED
-	siHzXDE9K3aCojjvs7vcRd5vqa9XJ6QwSUirayUqF759fAJXyD8uPBNg56CzDzcKU817HGyrVFk
-	sq4lEIFt5fCxA5RIyMRZGoUZN1Fd9C3vVmtEfHnJpr+kyB1GxDIirW0t7CvLjKitPMehSRQ1Vc7
-	3OzSqhgrPSHPBDsc/amIIzwXpYXzZ3iU6ZJjsSuymIB6YwPXvWgTMdOhJyMugAwAX/F+cPBDhMB
-	C7p0352jZnSFlc1zGHnEnTGmfDVNFPFmqmdDp1R+aB0eS9Plb6oxK1+jJ9VjHogR2zJnWO9ZH5n
-	KyCDiFWCmzFgKWjBAk/bKcjO76zxXUnPnRrs/ScWoeSl2vu0AQ9YhlYaRCPmdi7k40
-X-Received: by 2002:a05:6a00:950d:b0:82c:9f73:a33 with SMTP id d2e1a72fcca58-82d0dbb9944mr21611486b3a.44.1775642591429;
-        Wed, 08 Apr 2026 03:03:11 -0700 (PDT)
-Received: from LAPTOP-KU1E7KI5.fudan.edu.cn ([202.120.235.189])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9b3ccc8sm25654756b3a.19.2026.04.08.03.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2026 03:03:10 -0700 (PDT)
-From: Keenan Dong <keenanat2000@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mhiramat@kernel.org,
-	oleg@redhat.com
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	andrii@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Keenan Dong <keenanat2000@gmail.com>
-Subject: [PATCH] uprobes: clear extra_consumers before pooling return instances
-Date: Wed,  8 Apr 2026 18:02:47 +0800
-Message-ID: <20260408100247.2065245-1-keenanat2000@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="j0m/Wl5D"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0959832E3;
+	Wed,  8 Apr 2026 04:02:07 -0700 (PDT)
+Received: from [10.57.32.88] (unknown [10.57.32.88])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DE403F632;
+	Wed,  8 Apr 2026 04:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1775646132; bh=BcjAsJfFFdxOuFJG+yx8h9dEcchCwv67qshCeNpQzVY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j0m/Wl5DLNS3bb0LPJygmxr64zm8k47jOHhnUdaH8o4hEg7UUONrE66mssRlJ7NT2
+	 6bzBCKlVrr+w2+XGl2eztRQqDLePKhvx7aHRms/5lUbXVIvqBABzatYJU+Jw6NrJnn
+	 B0h8Vu2G1rPcddUOVHZq+00sZ9LGtr5cxfhIEmOY=
+Message-ID: <9c8ddc37-a236-446b-a85a-261f370d644e@arm.com>
+Date: Wed, 8 Apr 2026 12:01:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for
+ KVM_SET_MEMORY_ATTRIBUTES2
+To: Vishal Annapurve <vannapurve@google.com>,
+ Michael Roth <michael.roth@amd.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
+ andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
+ chao.p.peng@linux.intel.com, david@kernel.org, ira.weiny@intel.com,
+ jmattson@google.com, jthoughton@google.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>,
+ Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
+ <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
+ <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3>
+ <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
+ <CAEvNRgGm9icDK8sK5ZfqHEOEqSbvjwtihE4p9d3vpBq-NfVjmw@mail.gmail.com>
+ <CAEvNRgEtigp7+PVDkyu_DH947CUqDt312d+P+hWjjd2fHONiag@mail.gmail.com>
+ <yvfwexsub7nrogh67hzcsupbrkzer6a7kbeao5tlq4elrzc2iz@xrwdjd7p32pp>
+ <CAGtprH-kgRByFvvCYeWMXtsvpb6qpaWAo8k-3PEnioyPg-LEvA@mail.gmail.com>
+Content-Language: en-GB
+From: Steven Price <steven.price@arm.com>
+In-Reply-To: <CAGtprH-kgRByFvvCYeWMXtsvpb6qpaWAo8k-3PEnioyPg-LEvA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-ri_pool_push() returns a return_instance to the per-task pool for
-later reuse. The pool reset clears cons_cnt, but it leaves
-extra_consumers behind.
+On 07/04/2026 22:50, Vishal Annapurve wrote:
+> On Tue, Apr 7, 2026 at 2:09 PM Michael Roth <michael.roth@amd.com> wrote:
+>>
+>>> TLDR:
+>>>
+>>> + Think of populate ioctls not as KVM touching memory, but platform
+>>>   handling population.
+>>> + KVM code (kvm_gmem_populate) still doesn't touch memory contents
+>>> + post_populate is platform-specific code that handles loading into
+>>>   private destination memory just to support legacy non-in-place
+>>>   conversion.
+>>> + Don't complicate populate ioctls by doing conversion just to support
+>>>   legacy use-cases where platform-specific code has to do copying on
+>>>   the host.
+>>
+>> That's a good point: these are only considerations in the context of
+>> actually copying from src->dst, but with in-place conversion the
+>> primary/more-performant approach will be for userspace to initial
+>> directly. I.e. if we enforced that, then gmem could right ascertain that
+>> it isn't even writing to private pages via these hooks and any
+>> manipulation of that memory is purely on the part of the trusted entity
+>> handling initial encryption/etc.
+>>
+>> I understand that we decided to keep the option of allowing separate
+>> src/dst even with in-place conversion, but it doesn't seem worthwhile if
+>> that necessarily means we need to glue population+conversion together in
+>> 1 clumsy interface that needs to handle partial return/error responses to
+>> userspace (or potentially get stuck forever in the conversion path).
+> 
+> I think ARM needs userspace to specify separate source and destination
+> memory ranges for initial population as ARM doesn't support in-place
+> memory encryption. [1]
 
-A reused return_instance can later grow a fresh extra_consumers
-array and then reach the cleanup path with a stale pointer from its
-previous lifetime, leading to a double free of the recycled object.
+Indeed - CCA requires KVM to first "delegate" the page (effectively the
+shared->private conversion) which will destroy the contents. Then we can
+populate the data (but that obviously has to come from elsewhere).
 
-Free and clear extra_consumers before putting the instance back into
-the pool so every reused entry starts from a clean state.
+The closest CCA can do to an in-place conversion is for the kernel to
+copy the data to another temporary buffer and then the firmware can copy
+it back after the delegation. An early version of the CCA Linux patches
+did this (long before guest_memfd). However this is slower than it needs
+to be (two copies) and difficult to size the temporary buffer. Too small
+and you round-trip to the firmware more than you need to, too large and
+you waste memory. And, with increasing support for huge pages in
+guest_memfd and the CCA firmware (aka RMM), it's also challenging to
+preserve huge pages while doing this dance so I want to avoid it if
+possible.
 
-Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
-Reported-by: Keenan Dong <keenanat2000@gmail.com>
-Signed-off-by: Keenan Dong <keenanat2000@gmail.com>
----
- kernel/events/uprobes.c | 2 ++
- 1 file changed, 2 insertions(+)
+> [1] https://lore.kernel.org/kvm/20260318155413.793430-25-steven.price@arm.com/
+> 
+>>
+>> So I agree with Ackerley's proposal (which I guess is the same as what's
+>> in this series).
+>>
+>> However, 1 other alternative would be to do what was suggested on the
+>> call, but require userspace to subsequently handle the shared->private
+>> conversion. I think that would be workable too.
+> 
+> IIUC, Converting memory ranges to private after it essentially is
+> treated as private by the KVM CC backend will expose the
+> implementation to the same risk of userspace being able to access
+> private memory and compromise host safety which guest_memfd was
+> invented to address.
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 923b24b321cc..24b9884a2667 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1945,6 +1945,8 @@ unsigned long uprobe_get_trap_addr(struct pt_regs *regs)
- 
- static void ri_pool_push(struct uprobe_task *utask, struct return_instance *ri)
- {
-+	kfree(ri->extra_consumers);
-+	ri->extra_consumers = NULL;
- 	ri->cons_cnt = 0;
- 	ri->next = utask->ri_pool;
- 	utask->ri_pool = ri;
--- 
-2.43.0
+At least in the Arm CCA case the "exposure" of the private memory is
+only in terms of allowing population - and only before the guest has
+run. The host isn't able to access the memory in any direct way after
+the memory has been delegated. But the RMM provides this populate method
+to copy data into memory (in a measured/controlled manner).
+
+From a CCA perspective the logical flow is to mark the memory as private
+and then call the platform-specific function to populate the memory. But
+obviously we can fit in a KVM API which is different.
+
+Note that CCA has a specific VM property called 'RIPAS' (Realm IPA
+State). This is the guest's view of whether memory exists at a
+particular physical address. My current series takes the view that all
+guest_memfd memory is private RAM and the guest will have to
+specifically request that it is converted to shared. I'm hoping this
+series might provide a way for the VMM to configure this (before the
+guest starts executing).
+
+Thanks,
+Steve
+
+>>
+>> One other benefit to Ackerley's/current approach however is that it allows
+>> us to potentially keep hugepages intact in the populate path, since
+>> prep'ing/encrypting everything while it's in a shared state means gmem will
+>> split the hugepage and all the firmware/RMP/etc. data structures will only
+>> be able to handle individual 4K pages. I still suspect doing things like
+>> encoding the initial 2MB OVMF image as a single hugepage might yield
+>> enough benefit to explore this (at some point). So there's some niceness
+>> in knowing that Ackerley's approach would allow for that eventually and
+>> not require a complete rethink on these same topics.
+>>
+>> Thanks,
+>>
+>> Mike
+>>
+>>>
+>>>>>>
+>>>>>> [...snip...]
+>>>>>>
 
