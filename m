@@ -1,65 +1,173 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E398027E04C;
-	Thu,  9 Apr 2026 05:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8365837B018
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Apr 2026 07:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775711942; cv=none; b=au0jUizB/WRIJoxqvPnr5syPgPi4aymHVVf91aYfH4tJ2TCCl7vbNQoKDOLqxdwiKiOd+SQnP4iNcE0gZsHFXt/rMLYmoUob9raK/sFhBrK6k3FQZsAoyFMp1uofCWC6xYXG2QgIKJ93dhqoBo0gB+btE2ZXISuvb3mfW1F3vEU=
+	t=1775720201; cv=none; b=ScFnG7j3DSD51QIhB3wcaZqPlKLXqTh6B1d6uda4MHR0q+K/fqemJ73Mp6rxAVmql0mpPufFTvlN/Q7xRLXH2Owq/7t+maXh2ogx6LTeBtjNtS+NEYCvZPaeLLpCMih0EIWg9dwAfpncWGk4Dv2+zLV/Z9rVIXkDYiuYnJUw/Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775711942; c=relaxed/simple;
-	bh=GFsYLMNUr3uVsVvY1jLqpD+R2zFlh3BtjgwnSq2+Dig=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-Id; b=EP7IoESxvjKGdYwMXP7NcIvI86xqNVQ9exUI6nPFATwiRdHUr05xfB65mwZYAFQLMs3Qxm8RFNZZzpgQXxfPR6MjjdBXoMkyQ8x4M/Q4Aa+oVvYVbpdYczSUustqChTvtux4w/vUgi+bV2BLFwTgw28C/PD3r7+1j4o4uxGCrhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UhT0gShD; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1775720201; c=relaxed/simple;
+	bh=bWM+n0PuIclSzxSg8yrCMqDB9BwasgmhRhRSh6nIcUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C5PoSW8r+EeUQNNOENtExIwOWU38jbVBS36Z5XJJOe+ZU+qhcncHxTEXhL8hoLYpEqanNuKE3VyU05tGHJ52WkG2vqs+LwVZpx0RXtT4JjR8AwVC64Nlg5s6HB3jXyiP4QeGbogvoTQqeCoUdBiLfjg/qSLeEDXzwFflp4Nskc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cBCYfFvr; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UhT0gShD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id; bh=GFsYLMNUr3uVsVv
-	Y1jLqpD+R2zFlh3BtjgwnSq2+Dig=; b=UhT0gShDQqPC9zl/QH2hvKUisogWv6I
-	mFg90ApTyo8OC0Lzggs+XED/KkrVJddB/kPZ14UCoUOZgceya6NCOaMDJRvji2S9
-	25CD67JK7CENXFiQec4uNy1WvVddFN2Kp0mzNuliGjz0Ji6i05kweUf7+JCBtwaG
-	77Hs/F5Rn7a8=
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAni46cNtdprldwEA--.4156S2;
-	Thu, 09 Apr 2026 13:18:21 +0800 (CST)
-From: Cao Ruichuang <create0818@163.com>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject:
- Re: [PATCH] selftests/ftrace: Account for fprobe attachment at creation
-In-Reply-To: <20260408094920.417cbb5e64220afc2bf1b2aa@kernel.org>
-References: <20260407115751.96184-1-create0818@163.com>
- <20260408094920.417cbb5e64220afc2bf1b2aa@kernel.org>
-Date: Thu, 09 Apr 2026 13:18:19 +0800
-Message-Id: <177571189990.17594.14983613605049028604@163.com>
-X-CM-TRANSID:_____wAni46cNtdprldwEA--.4156S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUOPfHDUUUU
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCvx4FPmnXNp5RPwAA3i
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cBCYfFvr"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-488d2079582so1232005e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Apr 2026 00:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1775720195; x=1776324995; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SFIAOrBx/Kk6hQbOqlmoeLP19Ql72j2A2UxB1/jbKYA=;
+        b=cBCYfFvrs1geXGepneF48LzQAgmUYgVNSWs7NXsWvzAB3JeKpKS0eBD5D5iChjgId+
+         XNhLodDX3OaRT+lCWCtHl9GTXt/zd38gGDyImjK8v9vMtNhrHkXOOMzmj6Fdg2Furs96
+         CXJTnqHnFDvRGXQxeCu2v0MTKtkmYolX5VYeXL2UMLxG1wGALEF8xs4oouz47G6tMxnT
+         bPdop31V4ZUG1STY5xZiVloB76UIThDBi4FQmNNDVxG/14vJ5zFWqYi6lZgzj2+Q9Oyl
+         e5fFK3GsAcb7JbJ94z0YXEon477481XH7PfwuKCFveYFAPEEucllZwaOSVVhuP7X7a4J
+         betQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775720195; x=1776324995;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SFIAOrBx/Kk6hQbOqlmoeLP19Ql72j2A2UxB1/jbKYA=;
+        b=KzB4bAwdDMsD1ktA0Ggs0hJ6BEe7MfqTDVBkVRFYlrDXOyszEwZ4+pJko4rrXaT9Dr
+         W2rR20pAxfsB2VxWdeWsHsN0wRSTVRvpEDoKRrJotgvQh1VBXvb/AP52LKtxZRA3+9yd
+         6I4p+kSKpdmC4uwXM7HcThFc+i7LuMf/8MLw99tKvpGgJxM48PSZif3L4P8dAQJ8X9Su
+         lPw8Ybhven1o45SDLOmn+2P6AZMk1D3EErYKSjGnkolF1Ehhq99fCnJ/kaEAd4NVDzbO
+         HN11wmP29fgbibc8Vrz1cI6I+JYhmiPfy1m/hOfFSpj0WPrgolnWzr5cDRay/xzo6c0Q
+         H1jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1NhoWNlOxOKVySeVFJHAjglfnmVMdcBBDFeIauZZX253kas7UR0K6FhggOz+YQ4cFPOK4OBZyxo0CIIHUyn80K/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx433XD9KZSvfelTTek5lw41jQtqHiqHN0yCyJGyrjGCgcjhaQf
+	PTDWpdyZdK5kJn6yWsrIYBfgr4b1BoToHJ45GuH2LTLwMjSny8d/oyu6nfbeJM7AuB4=
+X-Gm-Gg: AeBDiesJTfrpGEvGs3vNq8F9l2gDBKTDVTldS6Nk1iHAy7laQQ+5QpSUwgH9f0R+fbh
+	BfcENEA/QdxqVK5cuNLiBlL6KksoqSlW5jiwHEr5vy6yyi2nlXpTbJryJI6hCVqcF77G3UZliTx
+	raqarYRU5NeKILjs/593hrVCqkWz4Ncp9REQMOgzDxhc01u6S34DkKllIO8SzAcfZ7vPHTUh4xO
+	5sGOawZOV6dxPqhZXxFbt44V0n2P20uHQnkbXcf9I0IqqIJikBs9kNW35vUbAuHC325ggMFYMG9
+	+2qOKmbZ24546byFZR2R4hXx4KUArL7nXf4igRLibxovYRCf45hudVrBfbswUV2PboxTlQND2aq
+	Cr8kvpSsevfI/Nua5N/y+p/NYl82G4u454A4zgysKuBpFqpBk5PP9jLwDXpUaE25x3qdMSxs1lr
+	shxarXNVrMY1c5eouflIFPzmv4mw==
+X-Received: by 2002:a05:600c:4753:b0:486:fcc7:d6a with SMTP id 5b1f17b1804b1-4889976eb60mr333821525e9.13.1775720194684;
+        Thu, 09 Apr 2026 00:36:34 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd19ea83sm81192215e9.1.2026.04.09.00.36.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2026 00:36:34 -0700 (PDT)
+Date: Thu, 9 Apr 2026 09:36:31 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Song Liu <song@kernel.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org,
+	jikos@kernel.org, mbenes@suse.cz, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	kpsingh@kernel.org, mattbobrowski@google.com, jolsa@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com,
+	yonghong.song@linux.dev, live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to
+ klp_patch
+Message-ID: <addW_-whBavyHY-Z@pathway.suse.cz>
+References: <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+ <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+ <adQhpBC2W9I6QW-g@redhat.com>
+ <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
+ <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
+ <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
+ <adUd0Mojbtrwmeod@pathway.suse.cz>
+ <CALOAHbDG9mq1iJv5suct=cqJ+2r8VvJ-dXN=nuvMw0XYqnUjxA@mail.gmail.com>
+ <adY_WgA54CDtWBq6@pathway.suse.cz>
+ <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
 
-Hi Masami,
+On Wed 2026-04-08 11:19:50, Song Liu wrote:
+> On Wed, Apr 8, 2026 at 4:43 AM Petr Mladek <pmladek@suse.com> wrote:
+> [...]
+> > > >
+> > > > This is weird semantic. Which livepatch tag would be allowed to
+> > > > supersede it, please?
+> > > >
+> > > > Do we still need this category?
+> > >
+> > > It can be superseded by any livepatch that has a non-zero tag set.
+> >
+> > And this exactly the weird thing.
+> >
+> > A patch with the .replace flag set is supposed to obsolete all already
+> > installed livepatches. It means that it should provide all existing
+> > fixes and features.
+> >
+> > Now, we want to introduce a replace flag/set which would allow to
+> > replace/obsolete only the livepatch with the same tag/set number.
+> > And we want to prevent conflicts by making sure that livepatches with
+> > different tag/set number will never livepatch the same function.
+> >
+> > Obviously, livepatches with different tag/set number could not
+> > obsolete the same no-replace livepatch. They would need to livepatch
+> > the same functions touched by the no-replace livepatch and would
+> > conflict.
+> >
+> > So, I suggest to remove the no-replace mode completely. It should
+> > not be needed. A livepatch which should be installed in parallel
+> > will simply use another unique tag/set number.
+> 
+> I think I see your point now. Existing code works as:
+> - replace=false doesn't replace anything
+> - replace=true replaces everything
+> 
+> If we assume false=0 and true=1, it is technically possible to define:
+> - replace_set=0 doesn't replace anything
+> - replace_set=1 replaces everything
+> - replace_set=2+ only replace the same replace_set
 
-I reran this in a clean QEMU boot environment with only the minimal
-tracefs setup and the add_remove_fprobe sequence.
+Yes. This well describes my point.
 
-I saw the same behavior there: after creating myevent1/2/3,
-enabled_functions went from 2 to 4 before any event was enabled, and
-enabling myevent1/2/3 did not increase the count further. After cleanup,
-it returned to the original baseline again.
+> This is probably a little too complicated.
+> 
+> > > This ensures backward compatibility: while a non-atomic-replace
+> > > livepatch can be superseded by an atomic-replace one, the reverse is
+> > > not permitted—an atomic-replace livepatch cannot be superseded by a
+> > > non-atomic one.
+> >
+> > IMHO, the backward compatibility would just create complexity and mess
+> > in this case.
+> 
+> Given that livepatch is for expert users, I think we can make this work
+> without backward compatibility. But breaking compatibility is always not
+> preferred.
 
-So this does not look like a dirty tracing environment issue. The
-failing testcase assumption appears to be that the attachment happens on
-enable, while on the current kernel it is already visible after create.
+I believe that it is acceptable because:
 
-Thanks,
-Cao Ruichuang
+  1. It was always hard to combine no-replace and replace livepatches.
+     I wonder if anyone combines them at all.
 
+  2. I believe that nobody tries to load the same livepatch module on
+     different kernel versions. Instead, everyone prepares a custom
+     livepatch module for each livepatched kernel version/release.
+
+     And the tooling for creating livepatches will need to be updated
+     to use "number" instead of "true/false" anyway.
+
+That said, it is easier to always use "0" for non-replace patches
+instead of assigning an unique "number" to avoid replacing. But
+I do not think that this would justify the complexity of having
+different semantic for 0, 1, and 2+ replace_set numbers.
+
+Best Regards,
+Petr
