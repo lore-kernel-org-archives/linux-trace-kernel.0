@@ -1,229 +1,120 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961BA3A6B68
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Apr 2026 12:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775736471; cv=pass; b=Dbcsi8F2Y8ZIH2ly2Uv/nHRRtN/rAMKeNE9lH44V3yQOgwg3LK1oSDW9SsAEI6fFFTvaokaEpZKQv1B/7qsAJPu1tNV2OoAQ9A/8LweSRAcdEI5to4HJh/gWECvqbAhaLlphqpy6RHnqU+mIROvvVs2jCA7gGn7c79JJjgPiTTo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775736471; c=relaxed/simple;
-	bh=X1lrPbSfhwBphUNrl7QHa4edg7PTaaemDhLjC1KzkjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dfjA6IjZSJK+iTYnbE72K88JjtoddriXahX3Gy4e1muiVHOS0spUjTN8E7Ih41IkWLDJmJFDHybACvBQTWhCRSXdi0lUGtUt6MTqBQuf7EHJ79m3AGitZ47NT49MAe9xXU8p/h+D8HdwiN1OGkucrpijWAWrKLuUSMSCt5nBLSc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmKPHrAq; arc=pass smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EFC3B9DAD
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Apr 2026 12:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775738240; cv=none; b=il2EXNDFNSpgJ59Hx3REuJGHWg4+Psmz5IeKIc+KWD8FLGDBmxq1OvyK8N9hCX/lxyzwFNG3/GAPp2OcBCWTs+0Id749voXybi1GloopN6oOPZVb3fF5CligCb4S3mhJfTemUnUATnFp684w2RMM+ueA13H6w8s7UxtNhLt1yzY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775738240; c=relaxed/simple;
+	bh=kXqVC67K7Ok0URFdMQss6lTIGbLrxnPL13nMpdUnN/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dX/ALoN84T5nvxWfCCquiANQVpX4mASwF66SYAauZpX4QM+MB4aTV7c87ASUcfEDsv8VbaPNWeLp/wxY8AuKANPGGEjNZAo4PdY7lOSi3+YRIoQeKmOnLugFYZ+55CD0hJfBPcdYRTusv/xfRlPV6qe7QvpDVEIuIrczjoUZPrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SueCztIF; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmKPHrAq"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2b4520f6b32so624395eec.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Apr 2026 05:07:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775736469; cv=none;
-        d=google.com; s=arc-20240605;
-        b=IjX1vzenPGI3C0cY2Sm08mAx7FzpxiUS30unc5hgcc0nIDA+quYDSeE5atPlecQ0aS
-         yJisW0z4mWM52YAzA+dsteKUkq7AdA4azqSaoZky/8Af7LaNDx3iKra0q4fBqFO7o6f/
-         e3sZ8dQRMXb8PetEUA92IjHQhIr/4Pe8NoHOHlBhZcvVcuJJMgcPTZ5ILodVRVJKsqg+
-         NXNVqVX/bJkGAbnVW3rnnRsnav5OzQwrZ+2IZVCKe6KiMk4kvE1Ej7hmfYqBk7xpHyoc
-         aiYm4E3+PO6wwtIHRjYGfMJfZJF/7JVEgiigZP2IzRgYBVn5SJ4TIA8xyDV0eytuWos6
-         RqPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=uDQF4/A02+r6NSMCX1kA6MHS3pMk2RySt5Y0g8eT3Hc=;
-        fh=wJ4qn6WIURH7cbpI4FQYFdGtG+VBzntbXTjyU2N5OEw=;
-        b=Bn1mTPA3kyibbWBX9JyetmwXhMnRsxmA4atExT564fDp53mseywaMc6G+3Mm1CjRvZ
-         J21Yo0/94PdVCHEMlFqZayrlM+HJY89JY3yQGs+vxwAWtwrlawaQNx3mnbTNsIEfjUFt
-         iHEP+ouWFHdj4GccWO8ciiIHQL0L3hIBnm8rgFAp8/cUG967DO5kALaejV333Ngum/j8
-         PSSh9x5dOrWZPVAxDWnRIiZLx9DLQpSQdUACoIiddtTUianxTd3/KlxmXpZqvq8phw5s
-         zJPiUI6l96bIVJt9R/x7CvmIt8wJZTaVwyDdoZjPRYfxwC2H3RRQbp9bWwqmIjj2SZlo
-         KCYg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SueCztIF"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488a9033b2cso9570805e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Apr 2026 05:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775736469; x=1776341269; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uDQF4/A02+r6NSMCX1kA6MHS3pMk2RySt5Y0g8eT3Hc=;
-        b=PmKPHrAqdWjRkeO0hlVr0JOImG0k1GwtF25zTsYDE46dxTA3TqMu2UjbvPIOAZ6nbj
-         DeAlrsRPgcJavj6TkiKOF7iHGeUxPZaUfUfUfWdg1T2kf9k80cw2E5MhCvFf3cmeoCgV
-         nlr8D3ENttF82Ybim06QEKYN7qWCa8eHq5Gu3Yw298YjDwA/5ZdSsmYXDK8wZOd9fxof
-         MTHm3VouPR/a3VYw7K9lMiuiw2OVIvKuQhEIO5qbsGuWbKJ3ZB6+fS/p77ZKDtQLnLjV
-         Gmui/DGENXT7aUqrMHRdswRtrcBLUZvJHA/h21nVunnDjbnqTl3Sg2CNvqBqit09B/sm
-         XsTA==
+        d=suse.com; s=google; t=1775738238; x=1776343038; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DXMv5P2otA71oVxzctM87KJsMKwFOqSK4K4FBNtEt2c=;
+        b=SueCztIFgURyMdqUY2D5JdT1xiLTmI/DfOmKuqUjDrd2r7hrlpHxDhhSrvnzauD/Db
+         gd6XWOToDf651nfNocXYFmCXeSjWtm1/Re1Kwuimr/GaBtNn5hFcjPIsAsGQC5UFemDo
+         DXcEOPpGOFkj+crkWm/fpAb8KgP6izmquk/0l8LF/z4z+bWAF6p9yXDUAqFW5xyfCb8e
+         QlYTEztF/CbIN8HI2K7HJBXnyiS3LBmN30ag8w4ksIpVltauPn/itCWb88qd5hCDc1lH
+         EtLAvTKieQDEOYzX0KAMdhEDB3F9CdwpTFy3Ko4/nrVwS9IA0r1iocNFM8HhdcxD2Q56
+         MqJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775736469; x=1776341269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uDQF4/A02+r6NSMCX1kA6MHS3pMk2RySt5Y0g8eT3Hc=;
-        b=Pr+RemqfLwlezMMsAXgY4ZDzFwEAYhztcwCmE7OjRicXorRKZVLrVCjJk+JXZOIz7A
-         OCt6IlQCGl0OFXvlapXG2T4h0DFPIfwl373EOb40em6a7Dhtj9W4VTKgMr6LtuDI6hOP
-         ISV2+Esglbib7uVDKV/y42U56OOA3LpOEIKNDXZ44/o5nY0MHSzYwqprJb13QR/v4stE
-         ViWGqtJv2gSQqTVI2fod98uhKx3KetGxZXFihKTvF/ias+Wev4IeJBlrHw0Rjz7ZSOJk
-         dLpolW7D2IBDUrQrfYQ4fMNem1EHdUjrRLHGRyRh9j00FEef6v6Xji+A6j06JyhSI+/P
-         00BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyFAMSQormhzKXQF6jsmuOXxbA7x6KoqKSeh4LweQvT8W7tmPY1RZBZy0joznmoTGOKk1UpIwc8Yi6hDOyyXhGFPo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbHxHE0SSQMo0iiCvOV9p3jD9pbUDYW3aUhz0UDUADwB5JgUlQ
-	+w4s2hIHTxoHVBM/xcxhf0g7YkMKTsj2qaCAt9kCEbapG1PvXIHtksCLcAWOLtjV0/5Kp3UCKzn
-	qbEWkpKIZe/nlZTEpkFEsPaWUZ4NKlvo=
-X-Gm-Gg: AeBDievCC5caqh1QKwnvWlgnQrGvzmXzFPDZ9aH3SSVwHjTYHIrbSquHGp8qPtHv6+6
-	j9Kf46Kln+30zZViS5PRPvZdg4KXRHHQJHkt6aWLWTfbpe+tSfig6v2UHJkp4TNBWSUesLe4ldC
-	VYmUq+KchNP+KbftdtSzLjhDtGcaIJRtGBtCix9vWw60LeUdS2lqNJkL6Q/Q4r3xhVlNnpTRo2o
-	Dlmh1LoxbwGLDWwlxSv81/6VTTu02HFTnXASqmB3St7Ol3TaLe4cZ2SGCnydaPggxTyq8xrSBGq
-	gq67FBy4YHTrEwq77xhg2Uq0fNG29o3x7IEKBlA=
-X-Received: by 2002:a05:7301:5793:b0:2c5:d833:a4f3 with SMTP id
- 5a478bee46e88-2cbfb995d30mr13213703eec.18.1775736468682; Thu, 09 Apr 2026
- 05:07:48 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775738238; x=1776343038;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DXMv5P2otA71oVxzctM87KJsMKwFOqSK4K4FBNtEt2c=;
+        b=ad4jDoXU2flkuJgN+8wOlZFEUsZHKYXT+gk/evJUo/tNq8dG8lJLtGHr/F+VC1ilVw
+         Wm4b5bbrHK4fVEw78QIf3Ai7PaMS48v0LQZAy1JxKsGfYM4l4sjT+6/DKySCe4/z4MyY
+         xAS2++47RGxjAb2Ok/msW38dJHQdgfzF73RJjYvuIf6BkwJncawOo1TCOe4kj9xIkI9y
+         MiOt1+qSga9hTc1JZCbXiFyyNDpko526ByG4tuACpofa+Vjfx9T/DOotO5qSFGI5POZ/
+         ha69eqXGoyWEohAlsjhPfhdt2bYHaEy1d1qwrwjqPgrJrie0QIsHpLDxqojXjJG6Gmxz
+         /rSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqw9UxTIfZUo7/eeRJzg5TmXFziU4u0DSSGhmsHcx3IgOdV4mprKB93g4nrh0p/eLei3qn1PqU8K3QVc1+awcyuhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY0qhFolI7OHE0akb0Kxkza6vv+CCNTwOL1JDzlXCZQXLx8Vbf
+	puHO0fmXcyjvyGqu2MXgs9z22hJPuMprUh38A2tpwkQQvNP4naa9HxZS5V2k3AdeWTJvTUvP2Da
+	Orm57BoU=
+X-Gm-Gg: AeBDieuHoPZU79dn6BT3gFtvvdHEurS4+iisYO0lNvAzuUzDQlehsm5/ae7MvBlxPuP
+	LhTkuXBkxjXg7J4Li44ANiNoz8PxZI7XKy4khaOTrqj9ar2pBHSH00xgEEypnH8sjcKQSZMKcJU
+	vFuYwX0J5URohB/ECKshdhYd0dni9TnrtTLZaFQ+bgGLG+QsyQ9PYqeVFHNRGa4eQFQvMb1HeqX
+	gl1/SwTy/Y/g6dSZ/IH6zSdyIMdyYp7Sj5qCvct0b7ZBS0D+tceBUL3rEEPlVy03vdjQwd9ez6G
+	wBxzHgYL8k/8WTZfmWh50rt7RRiCAtWQHoXl2w+SIiedzibcnndlWX3/Dln3Yi6BgPR0YJMQ4eQ
+	uVfe3YWowyqE+/0f2dqBAhTvbTde41nxRc/yX4zXY/1/SUgBbOdGfgxquYE0niC+HOgs3u0J7Zw
+	tvzEgMGuNJEatqPMv45PhCSwHaEbdTiZL2GnDZXgBCUPaT
+X-Received: by 2002:a05:600c:314d:b0:488:bc6a:5285 with SMTP id 5b1f17b1804b1-488bc6a538bmr157487535e9.30.1775738238024;
+        Thu, 09 Apr 2026 05:37:18 -0700 (PDT)
+Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cfa75ae2sm100719905e9.14.2026.04.09.05.37.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2026 05:37:17 -0700 (PDT)
+Message-ID: <47cd7c31-c914-433c-82d8-22875c32122c@suse.com>
+Date: Thu, 9 Apr 2026 14:37:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260406072834.243491-2-abhijithsriram95@gmail.com> <20260408162459.6b8f4b01@gandalf.local.home>
-In-Reply-To: <20260408162459.6b8f4b01@gandalf.local.home>
-From: Abhijith Sriram <abhijithsriram95@gmail.com>
-Date: Thu, 9 Apr 2026 14:07:36 +0200
-X-Gm-Features: AQROBzDNTUx5myf1ZCtCM7E2Cin4CZd-mP8okUgPqJZ74QtNuVuyoXXkhOoWbVY
-Message-ID: <CAMTgpFcDFqpmOx197sRZzOP8PSYsX+w8vmaTDUMSXanv2S0Ywg@mail.gmail.com>
-Subject: Re: [PATCH v4] kernel/trace: fixed static warnings
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	"open list:TRACING" <linux-kernel@vger.kernel.org>, 
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: preserve module tracepoint strings
+To: Cao Ruichuang <create0818@163.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mcgrof@kernel.org, da.gomez@kernel.org, samitolvanen@google.com,
+ atomlin@atomlin.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-modules@vger.kernel.org
+References: <20260406170944.51047-1-create0818@163.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20260406170944.51047-1-create0818@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 8, 2026 at 10:23=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
->
-> Subject should be:
->
->  tracing: Fixed static checker warnings
->
-> On Mon,  6 Apr 2026 09:28:34 +0200
-> abhijithsriram95@gmail.com wrote:
->
-> > From: Abhijith Sriram <abhijithsriram95@gmail.com>
-> >
-> > The change in the function argument description
-> > was due to the static code checker script reading
-> > the word filter back to back
-> >
->
-> The below changes should be beneath the '---'
->
-> > Changes in v2:
->
-> The last change should be first. In fact, I only care about the last chan=
-ge
-> as the previous versions should have the description of what changed.
->
-> > - corrected *m =3D file->private_data to m =3D file->private_data
-> >
-> > Changes in v3:
-> > - reverted the changes for struct seq_file *m and
-> >   added a new empty line instead
-> >
-> > Changes in v4:
->
-> That said, this should really be:
->
->  Changes since v3: https://lore.kernel.org/all/20260406060046.223496-2-ab=
-hijithsriram95@gmail.com/
->
->
-> > - added a new empty line before char *buf ...
-> >   previously this line was relocated to avoid the
-> >   static check warning.
-> >
-> > Signed-off-by: Abhijith Sriram <abhijithsriram95@gmail.com>
-> > ---
-> >  kernel/trace/trace_events_trigger.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_e=
-vents_trigger.c
-> > index 655db2e82513..664283bcd9ea 100644
-> > --- a/kernel/trace/trace_events_trigger.c
-> > +++ b/kernel/trace/trace_events_trigger.c
-> > @@ -246,7 +246,7 @@ event_triggers_post_call(struct trace_event_file *f=
-ile,
-> >  }
-> >  EXPORT_SYMBOL_GPL(event_triggers_post_call);
-> >
-> > -#define SHOW_AVAILABLE_TRIGGERS      (void *)(1UL)
-> > +#define SHOW_AVAILABLE_TRIGGERS      ((void *)(1UL))
-> >
-> >  static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
-> >  {
-> > @@ -352,6 +352,7 @@ static int event_trigger_regex_open(struct inode *i=
-node, struct file *file)
-> >               ret =3D seq_open(file, &event_triggers_seq_ops);
-> >               if (!ret) {
-> >                       struct seq_file *m =3D file->private_data;
-> > +
->
-> This blank line makes the code look worse. Yes, we usually want a blank
-> line between the variable declarations and the code, but when it comes to
-> code blocks (not functions) that rule is not as strict.
->
-> Get rid of this newline.
->
->
-> >                       m->private =3D file;
-> >               }
-> >       }
-> > @@ -390,6 +391,7 @@ static ssize_t event_trigger_regex_write(struct fil=
-e *file,
-> >  {
-> >       struct trace_event_file *event_file;
-> >       ssize_t ret;
-> > +
-> >       char *buf __free(kfree) =3D NULL;
->
-> The char *buf is a declaration. It no new line is expected before it.
->
-> >
-> >       if (!cnt)
-> > @@ -633,6 +635,7 @@ clear_event_triggers(struct trace_array *tr)
-> >
-> >       list_for_each_entry(file, &tr->events, list) {
-> >               struct event_trigger_data *data, *n;
-> > +
->
-> Again, if it's in a code block, don't change it.
->
-> -- Steve
->
-> >               list_for_each_entry_safe(data, n, &file->triggers, list) =
-{
-> >                       trace_event_trigger_enable_disable(file, 0);
-> >                       list_del_rcu(&data->list);
-> > @@ -785,7 +788,7 @@ static void unregister_trigger(char *glob,
-> >   *   cmd               - the trigger command name
-> >   *   glob              - the trigger command name optionally prefaced =
-with '!'
-> >   *   param_and_filter  - text following cmd and ':'
-> > - *   param             - text following cmd and ':' and stripped of fi=
-lter
-> > + *   param             - text following cmd and ':' and filter removed
-> >   *   filter            - the optional filter text following (and inclu=
-ding) 'if'
-> >   *
-> >   * To illustrate the use of these components, here are some concrete
->
+On 4/6/26 7:09 PM, Cao Ruichuang wrote:
+> tracepoint_string() is documented as exporting constant strings
+> through printk_formats, including when it is used from modules.
+> That currently does not work.
+> 
+> A small test module that calls
+> tracepoint_string("tracepoint_string_test_module_string") loads
+> successfully and gets a pointer back, but the string never appears
+> in /sys/kernel/tracing/printk_formats. The loader only collects
+> __trace_printk_fmt from modules and ignores __tracepoint_str.
+> 
+> Collect module __tracepoint_str entries too, copy them to stable
+> tracing-managed storage like module trace_printk formats, and let
+> trace_is_tracepoint_string() recognize those copied strings. This
+> makes module tracepoint strings visible through printk_formats and
+> keeps them accepted by the trace string safety checks.
 
-Shall we totally scrap these changes? Apart from introducing new lines
-the only other
-changes are to add some brackets and reframe the comments. We are not addin=
-g
-a lot of value from this change. I will take this as a positive first
-time experience
-into linux kernel dev and focus on other meaningful changes.
+The documentation for tracepoint_string() in include/linux/tracepoint.h
+contains:
 
---=20
-Regards
-Abhijith Sriram
+ * The @str used must be a constant string and persistent as it would not
+ * make sense to show a string that no longer exists. But it is still fine
+ * to be used with modules, because when modules are unloaded, if they
+ * had tracepoints, the ring buffers are cleared too. As long as the string
+ * does not change during the life of the module, it is fine to use
+ * tracepoint_string() within a module.
+
+The implemented approach copies all strings referenced by
+__tracepoint_str and keeps them for the kernel's lifetime. I wonder if
+the code could directly reference the original data and handle its
+removal when the module is unloaded, or if the quoted comment should be
+updated to reflect the new behavior.
+
+-- 
+Thanks,
+Petr
