@@ -1,173 +1,146 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8365837B018
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Apr 2026 07:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36C738B7DD;
+	Thu,  9 Apr 2026 08:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775720201; cv=none; b=ScFnG7j3DSD51QIhB3wcaZqPlKLXqTh6B1d6uda4MHR0q+K/fqemJ73Mp6rxAVmql0mpPufFTvlN/Q7xRLXH2Owq/7t+maXh2ogx6LTeBtjNtS+NEYCvZPaeLLpCMih0EIWg9dwAfpncWGk4Dv2+zLV/Z9rVIXkDYiuYnJUw/Pg=
+	t=1775722479; cv=none; b=Q7h+4oOcFxSnIKFAhslsVkq9T0Dfg4lNP/lrNYS3iUTEJIXFFkpPEQw6Trgqo/A3Ir8OV0/SgckMmcRKHhX2HAbG5WZ7oYucTZYt33Sg+4CxA9SfMWuTKoT+NvUVGIp/GXOwq0MKImI8uoU7wC7ymh8yHYDXtIiIfflGdv7YBDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775720201; c=relaxed/simple;
-	bh=bWM+n0PuIclSzxSg8yrCMqDB9BwasgmhRhRSh6nIcUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C5PoSW8r+EeUQNNOENtExIwOWU38jbVBS36Z5XJJOe+ZU+qhcncHxTEXhL8hoLYpEqanNuKE3VyU05tGHJ52WkG2vqs+LwVZpx0RXtT4JjR8AwVC64Nlg5s6HB3jXyiP4QeGbogvoTQqeCoUdBiLfjg/qSLeEDXzwFflp4Nskc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cBCYfFvr; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1775722479; c=relaxed/simple;
+	bh=3G5Y64fdJYhpPq7ZwMBZEixlrfHpeuaE8YXrRUfjeMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=esAg1qeBVxxpCzH69ppNRBqQe1GnwOHDEQMTYTSy4WAjPGDCVqCDSgG8zEvePm3o4wxdTVrt9FyFB6cdUxNhgJ7e/NIbXSbIP8i7ub/fRtTXXaf9sRS5+Zew8DAmNnO0G1xudkH8JusFumh1SAiSupegdhsS+yRtNzN4mCkLVAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzHoVBeR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cBCYfFvr"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-488d2079582so1232005e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Apr 2026 00:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1775720195; x=1776324995; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SFIAOrBx/Kk6hQbOqlmoeLP19Ql72j2A2UxB1/jbKYA=;
-        b=cBCYfFvrs1geXGepneF48LzQAgmUYgVNSWs7NXsWvzAB3JeKpKS0eBD5D5iChjgId+
-         XNhLodDX3OaRT+lCWCtHl9GTXt/zd38gGDyImjK8v9vMtNhrHkXOOMzmj6Fdg2Furs96
-         CXJTnqHnFDvRGXQxeCu2v0MTKtkmYolX5VYeXL2UMLxG1wGALEF8xs4oouz47G6tMxnT
-         bPdop31V4ZUG1STY5xZiVloB76UIThDBi4FQmNNDVxG/14vJ5zFWqYi6lZgzj2+Q9Oyl
-         e5fFK3GsAcb7JbJ94z0YXEon477481XH7PfwuKCFveYFAPEEucllZwaOSVVhuP7X7a4J
-         betQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775720195; x=1776324995;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SFIAOrBx/Kk6hQbOqlmoeLP19Ql72j2A2UxB1/jbKYA=;
-        b=KzB4bAwdDMsD1ktA0Ggs0hJ6BEe7MfqTDVBkVRFYlrDXOyszEwZ4+pJko4rrXaT9Dr
-         W2rR20pAxfsB2VxWdeWsHsN0wRSTVRvpEDoKRrJotgvQh1VBXvb/AP52LKtxZRA3+9yd
-         6I4p+kSKpdmC4uwXM7HcThFc+i7LuMf/8MLw99tKvpGgJxM48PSZif3L4P8dAQJ8X9Su
-         lPw8Ybhven1o45SDLOmn+2P6AZMk1D3EErYKSjGnkolF1Ehhq99fCnJ/kaEAd4NVDzbO
-         HN11wmP29fgbibc8Vrz1cI6I+JYhmiPfy1m/hOfFSpj0WPrgolnWzr5cDRay/xzo6c0Q
-         H1jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1NhoWNlOxOKVySeVFJHAjglfnmVMdcBBDFeIauZZX253kas7UR0K6FhggOz+YQ4cFPOK4OBZyxo0CIIHUyn80K/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx433XD9KZSvfelTTek5lw41jQtqHiqHN0yCyJGyrjGCgcjhaQf
-	PTDWpdyZdK5kJn6yWsrIYBfgr4b1BoToHJ45GuH2LTLwMjSny8d/oyu6nfbeJM7AuB4=
-X-Gm-Gg: AeBDiesJTfrpGEvGs3vNq8F9l2gDBKTDVTldS6Nk1iHAy7laQQ+5QpSUwgH9f0R+fbh
-	BfcENEA/QdxqVK5cuNLiBlL6KksoqSlW5jiwHEr5vy6yyi2nlXpTbJryJI6hCVqcF77G3UZliTx
-	raqarYRU5NeKILjs/593hrVCqkWz4Ncp9REQMOgzDxhc01u6S34DkKllIO8SzAcfZ7vPHTUh4xO
-	5sGOawZOV6dxPqhZXxFbt44V0n2P20uHQnkbXcf9I0IqqIJikBs9kNW35vUbAuHC325ggMFYMG9
-	+2qOKmbZ24546byFZR2R4hXx4KUArL7nXf4igRLibxovYRCf45hudVrBfbswUV2PboxTlQND2aq
-	Cr8kvpSsevfI/Nua5N/y+p/NYl82G4u454A4zgysKuBpFqpBk5PP9jLwDXpUaE25x3qdMSxs1lr
-	shxarXNVrMY1c5eouflIFPzmv4mw==
-X-Received: by 2002:a05:600c:4753:b0:486:fcc7:d6a with SMTP id 5b1f17b1804b1-4889976eb60mr333821525e9.13.1775720194684;
-        Thu, 09 Apr 2026 00:36:34 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd19ea83sm81192215e9.1.2026.04.09.00.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2026 00:36:34 -0700 (PDT)
-Date: Thu, 9 Apr 2026 09:36:31 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Song Liu <song@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org,
-	jikos@kernel.org, mbenes@suse.cz, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	kpsingh@kernel.org, mattbobrowski@google.com, jolsa@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com,
-	yonghong.song@linux.dev, live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to
- klp_patch
-Message-ID: <addW_-whBavyHY-Z@pathway.suse.cz>
-References: <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
- <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
- <adQhpBC2W9I6QW-g@redhat.com>
- <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
- <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
- <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
- <adUd0Mojbtrwmeod@pathway.suse.cz>
- <CALOAHbDG9mq1iJv5suct=cqJ+2r8VvJ-dXN=nuvMw0XYqnUjxA@mail.gmail.com>
- <adY_WgA54CDtWBq6@pathway.suse.cz>
- <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzHoVBeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABD9C4CEF7;
+	Thu,  9 Apr 2026 08:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775722479;
+	bh=3G5Y64fdJYhpPq7ZwMBZEixlrfHpeuaE8YXrRUfjeMs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OzHoVBeRvY/SsR06SwsiSiPOpUf/NeNeO4KCQ0hNXg00N+yKidPIAkYDUEm9IdNrk
+	 vDmreE9oiiil6bCPRhEF5TIaV1mw68kw+UTV3PZWmYnOatG48gpRcTxuLy9ItYjpDu
+	 YAUfI0+rdR/p6aO03Jj4W47eLSmjPhAxh0rOeFzu8ScWCrbR9K6YodD9JXmfUxC664
+	 23hIyo1iVYlLo71vl+7Fg3stF4il+ImnBRfqZz24TFfGraJ8LbG5DJBTZHuzcWK5hg
+	 9EPm1kjYUet+TSleyKr50u/2zBfC/jB9m2maCM8/sqitwoiNXOHAO34bYEb0Rr09iD
+	 UxfM9W1yZ++wA==
+Message-ID: <2e3f7c8c-c443-4e71-ad60-36c5203de09b@kernel.org>
+Date: Thu, 9 Apr 2026 10:14:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mm-unstable v15 03/13] mm/khugepaged: generalize
+ __collapse_huge_page_* for mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, lance.yang@linux.dev, Liam.Howlett@oracle.com,
+ lorenzo.stoakes@oracle.com, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
+ peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
+ rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+References: <20260226031741.230674-1-npache@redhat.com>
+ <20260226032347.232939-1-npache@redhat.com>
+ <8a4568de-e0f9-471b-bc94-1062d4af3938@kernel.org>
+ <ee39e605-0d9f-433b-9dfa-f70fd92edfac@kernel.org>
+ <c4e80668-9018-48fc-883c-5d52a5950065@kernel.org>
+ <CAA1CXcA8nE2PZrB4J1gV5v16PeQ7X2AiwjJ3gO1Q8hW7tyTtPQ@mail.gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <CAA1CXcA8nE2PZrB4J1gV5v16PeQ7X2AiwjJ3gO1Q8hW7tyTtPQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
 
-On Wed 2026-04-08 11:19:50, Song Liu wrote:
-> On Wed, Apr 8, 2026 at 4:43 AM Petr Mladek <pmladek@suse.com> wrote:
-> [...]
-> > > >
-> > > > This is weird semantic. Which livepatch tag would be allowed to
-> > > > supersede it, please?
-> > > >
-> > > > Do we still need this category?
-> > >
-> > > It can be superseded by any livepatch that has a non-zero tag set.
-> >
-> > And this exactly the weird thing.
-> >
-> > A patch with the .replace flag set is supposed to obsolete all already
-> > installed livepatches. It means that it should provide all existing
-> > fixes and features.
-> >
-> > Now, we want to introduce a replace flag/set which would allow to
-> > replace/obsolete only the livepatch with the same tag/set number.
-> > And we want to prevent conflicts by making sure that livepatches with
-> > different tag/set number will never livepatch the same function.
-> >
-> > Obviously, livepatches with different tag/set number could not
-> > obsolete the same no-replace livepatch. They would need to livepatch
-> > the same functions touched by the no-replace livepatch and would
-> > conflict.
-> >
-> > So, I suggest to remove the no-replace mode completely. It should
-> > not be needed. A livepatch which should be installed in parallel
-> > will simply use another unique tag/set number.
+On 4/8/26 21:48, Nico Pache wrote:
+> On Thu, Mar 12, 2026 at 2:56 PM David Hildenbrand (Arm)
+> <david@kernel.org> wrote:
+>>
+>> On 3/12/26 21:36, David Hildenbrand (Arm) wrote:
+>>>
+>>> Okay, now I am confused. Why are you not taking care of
+>>> collapse_scan_pmd() in the same context?
+>>>
+>>> Because if you make sure that we properly check against a max_ptes_swap
+>>> similar as in the style above, we'd rule out swapin right from the start?
+>>>
+>>> Also, I would expect that all other parameters in there are similarly
+>>> handled?
+>>>
+>>
+>> Okay, I think you should add the following:
 > 
-> I think I see your point now. Existing code works as:
-> - replace=false doesn't replace anything
-> - replace=true replaces everything
+> Hey! Thanks for all your reviews here.
 > 
-> If we assume false=0 and true=1, it is technically possible to define:
-> - replace_set=0 doesn't replace anything
-> - replace_set=1 replaces everything
-> - replace_set=2+ only replace the same replace_set
-
-Yes. This well describes my point.
-
-> This is probably a little too complicated.
+> For multiple reasons, here is the solution I developed:
 > 
-> > > This ensures backward compatibility: while a non-atomic-replace
-> > > livepatch can be superseded by an atomic-replace one, the reverse is
-> > > not permitted—an atomic-replace livepatch cannot be superseded by a
-> > > non-atomic one.
-> >
-> > IMHO, the backward compatibility would just create complexity and mess
-> > in this case.
-> 
-> Given that livepatch is for expert users, I think we can make this work
-> without backward compatibility. But breaking compatibility is always not
-> preferred.
+> Add a patch before the generalize __collapse.. patch that reworks the
+> max_ptes* handling and introduces the helpers (no functional changes).
 
-I believe that it is acceptable because:
+I assume that's roughly the patch I shared below? If so, sounds good to me.
 
-  1. It was always hard to combine no-replace and replace livepatches.
-     I wonder if anyone combines them at all.
+-- 
+Cheers,
 
-  2. I believe that nobody tries to load the same livepatch module on
-     different kernel versions. Instead, everyone prepares a custom
-     livepatch module for each livepatched kernel version/release.
-
-     And the tooling for creating livepatches will need to be updated
-     to use "number" instead of "true/false" anyway.
-
-That said, it is easier to always use "0" for non-replace patches
-instead of assigning an unique "number" to avoid replacing. But
-I do not think that this would justify the complexity of having
-different semantic for 0, 1, and 2+ replace_set numbers.
-
-Best Regards,
-Petr
+David
