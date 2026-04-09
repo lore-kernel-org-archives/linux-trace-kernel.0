@@ -1,72 +1,85 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFF43DEADB;
-	Thu,  9 Apr 2026 15:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B822BEC43;
+	Thu,  9 Apr 2026 15:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775749849; cv=none; b=FDKQaXeEmBsLLgTxEc+nBNXhjvQobaH6+Bg1zFrAjUiqEDqTCMXNpHV7psVvF2Jv6m2ftcsqarT8aehYYPChnn9PhQRw7KD58xOxGzs1f1brw0STWdkPmrr0pFccfmzLeui2IpjcZrzJjlZwwKj8jm+jvx0FSzXIuwCuKjKTARM=
+	t=1775750361; cv=none; b=uWSx7rG54ftNAcKqsdw4zzE9sYvdRIr+gEBfOTaQWVA3tATQNfaA5toay9IJi8o8UWCIuUvoaJ+DpDsjbNlcE28wuHlLrWJcJop7eucVNVIK0Du9qIrIBTYKV/ii/9RMRIVhmdmRH44ncSVQ4RWdlRNr3mCFA4rK6wMjQW/6z+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775749849; c=relaxed/simple;
-	bh=wpvklQMA0hDtCCBjrVbwuPyAMpw4aMa9pQz1l3Al3RI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E10cf61dlu6adMI/Fy+7JDM9JykzW4UzBS5KzzZO+CBPdNMxRI8GL7V1BLUE7OrcE4DnFjjjeM32ImHgGewVxKsFeyqR3HVYn0A/anzeGwc+swmNPcYt4+8oe1gBcvIFz9qbJfYYpWhpLsohjsUpS4oOFWDZ1IgslKVBwCt4+j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 69D4F1408D4;
-	Thu,  9 Apr 2026 15:50:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 6319920027;
-	Thu,  9 Apr 2026 15:50:43 +0000 (UTC)
-Date: Thu, 9 Apr 2026 11:52:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jonathan Corbet <corbet@lwn.net>
+	s=arc-20240116; t=1775750361; c=relaxed/simple;
+	bh=U9CKN3OU7mysW9YtNEoWjz0fVYEYdpdZw3L+IKx437A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qwqnPC3HYpurNlp18uLEkKv09/FPJLUHCmcyAzdVViqnF1ATryDmnoLHv09FDNHEn9ismxciM5wdrKloxon2DWab199yBwdBtNbkSj4kt/Rb2m88CLsMWPPXaFGPvp2XEjdpmeNTfH7SV+xTXEQetpo50gKDWAdAvaN/5rGg1xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=mc1EB6Dt; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="mc1EB6Dt"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net C365140B2D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1775750358; bh=oqUXX3RHjScrdzQ2jd+6JPTj/DA3k6L/Y3rrpbUINI0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mc1EB6DtAbrOH0+GWdNAOYljJfIF0YPUAfCz9HJ6WqTLtQFclqe9I4W1JssD23rwv
+	 AnQ/JMjX/L6keH1Me9hSTlsP99em8P/xhSG9T/SamoLteLcTbvc1fDnwq11uWG0GoK
+	 ic95hUYwF/0645Mmif4lug4JxgbhDo/lixqE0YsoYlwLkOzK9ff0hIEfKPV2f+8FFg
+	 bdiEm4F8nPBNQC9tpTZpfobEhtJb9GQaG2TxQbFp2Qp/5xElUpW1QYy68/39VeeFNd
+	 yzv2tRDwh2kHtIOEhBaE2l+XBqEnJ+NFU4UPzl9OSPedUEril5Xl1W6M71OpE09FDd
+	 QQ4rNHRXfVRDw==
+Received: from localhost (c-71-229-227-126.hsd1.co.comcast.net [71.229.227.126])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id C365140B2D;
+	Thu,  9 Apr 2026 15:59:18 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linux
  Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Tom Zanussi <zanussi@kernel.org>
 Subject: Re: [PATCH] tracing: Documentation: Update histogram-design.rst for
  fn() handling
-Message-ID: <20260409115200.45883a07@gandalf.local.home>
-In-Reply-To: <87bjfsb37x.fsf@trenco.lwn.net>
+In-Reply-To: <20260409115200.45883a07@gandalf.local.home>
 References: <20260126181742.03e8f0d5@gandalf.local.home>
-	<20260305110347.31d6bae5@gandalf.local.home>
-	<87bjfsb37x.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20260305110347.31d6bae5@gandalf.local.home>
+ <87bjfsb37x.fsf@trenco.lwn.net>
+ <20260409115200.45883a07@gandalf.local.home>
+Date: Thu, 09 Apr 2026 09:59:17 -0600
+Message-ID: <87tstk9lbe.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: n6xmx31ixtdr5woyi7ebr6t5w7ox7zz4
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 6319920027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+tGIud1ExAUO/pLP/e8m3SraoUysR0b1A=
-X-HE-Tag: 1775749843-565787
-X-HE-Meta: U2FsdGVkX19UG9TQnpcq0VZEdA+h8kT2PJCe6IZpLapSLSGqP8V1fWNW4kzX244E2sy7kH+RayM56kTpkBPJTiXwF78nlPPjgGXoljLWMe50gHhvf4I77ALwzQHkILzS2ykNpfIHRXCTLwBbgat2icjCNuzQuJ22w4lI/97DUxTrlNu5Pas/5oM9kG4UL59FOxG1lAAgQWcXTy67w/D0mMwx+8cbuGPOoYGHgFakni1NmrZudby6+d8rpKQgDZy37yy3IpDGYZBWK1qff2eLJhfTpAkI8/D+1VIPYxboMlHJHrlGbsZPSvsp4gqC/Ev+3MRZsxqp5peNzS60+kPoKFrKmQMIH7+95iGLQ1+JGPRvLNI9gDGrVEagWF3CF5IfwWZ7/bbqY5M353EYPlkhzfUnutta7bQefwDOLLYcLe0BcoP6luqMlDIWsVoOKMS2
+Content-Type: text/plain
 
-On Thu, 09 Apr 2026 08:47:14 -0600
-Jonathan Corbet <corbet@lwn.net> wrote:
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-> Steven Rostedt <rostedt@goodmis.org> writes:
-> 
-> > Hi Jon,
-> >
-> > Can you take this through your tree?  
-> 
-> Somehow it fell through a crack in my inbox, but I have, finally, done
-> that.  Sorry for the delay.
+> On Thu, 09 Apr 2026 08:47:14 -0600
+> Jonathan Corbet <corbet@lwn.net> wrote:
+>
+>> Steven Rostedt <rostedt@goodmis.org> writes:
+>> 
+>> > Hi Jon,
+>> >
+>> > Can you take this through your tree?  
+>> 
+>> Somehow it fell through a crack in my inbox, but I have, finally, done
+>> that.  Sorry for the delay.
+>
+> Thanks, it has happened to me too often but not as much when I started
+> using patchwork. Is there a patchwork monitoring linux-doc? If not, I
+> highly recommend it. I stopped missing almost all patches when I started
+> managing patches with patchwork. The few times I missed patches was when I
+> accidentally incorrectly changed the status of a patch. But that's usually
+> due to my own negligence and not simply because it was lost in my INBOX.
 
-Thanks, it has happened to me too often but not as much when I started
-using patchwork. Is there a patchwork monitoring linux-doc? If not, I
-highly recommend it. I stopped missing almost all patches when I started
-managing patches with patchwork. The few times I missed patches was when I
-accidentally incorrectly changed the status of a patch. But that's usually
-due to my own negligence and not simply because it was lost in my INBOX.
+No patchwork ... but there is a *massive* pile of stuff that lands on
+linux-doc that I'm not meant to touch.  I think that "b4 review" might
+be my way forward here.
 
--- Steve
+Thanks,
+
+jon
