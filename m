@@ -1,122 +1,299 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED613A3E8F
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Apr 2026 10:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B2A37C10C;
+	Thu,  9 Apr 2026 10:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775729316; cv=none; b=TAgyyIWe5dBR/vZHAgBBoQEBvnitEJ6JfOOtqpLgjKY9uU1gUzDM5c6AlZ0Cmqu1BnZB4sX/1K5Qbx3sl/ZOWVoxRf8bPJIOUohSKb9C6cUa6vo8p2jhG+oOQqQdKI9Xpb17NOd59apBhQ1uOoo/Dhen0oWl1UAR6hEiEL8MSPQ=
+	t=1775730894; cv=none; b=cBjl8dOgt1xho/J/dVsm2PEMaW6k54WjKIR6iSZRC/q8XBa7o2b5RgQeo1lEDT15GLybC6Ulu0N99DpwVaIyp0BJ6WDQHQR5A1n+hAS4N2neuvxoAjx4ojW3yPBJlGgs2PiPPa2Hm4DS3crcgDnnXstseJyy8FVSdHik6gonZaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775729316; c=relaxed/simple;
-	bh=QK1HlenAL6ONmxS8R6XHJojcLwfa9/hk+hay9qkClu4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=I+BoflgpkThhmEQpa9CX/banieN3NrjxEXLMh/8VVVgPTBnGs9TdJyTHe0PkVkL2/+GLBn+qp2EuHNHMjiTRoqHVVEtrDc2Qiv7b4GIzEMnyZp2UWtIa3s0e3Fm+3ziiJK1dkv7S/JDs/0xGu/VSKTXXlAaK/RIUDghSqQuAfec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LhBo2qrX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QJIDTV/X; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LhBo2qrX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QJIDTV/X; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1775730894; c=relaxed/simple;
+	bh=TYbR6YNgEJ9OPB7a4kSY2YSUDCBSFQ5do4hn/+fq0a4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=PBnq/kcnWAsmHv6FX+EL7R4ItXg1Hb/Hu77AoE/TFvApuDIpVoz9i8RVzLuJSbe2z2p8Unn7yI8VgJHKIHkovhOJeLS86EGUd0fMG62ozE+DeKz6F4rR9DOALa8dBwChKZoT8lo4GxLQqf55BVnt0L1BmwImG61vtQKpL60XXs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBg7LKP3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LhBo2qrX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QJIDTV/X";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LhBo2qrX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QJIDTV/X"
-Received: from pobox.suse.cz (unknown [10.128.32.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BABFC4EE9C;
-	Thu,  9 Apr 2026 10:08:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1775729313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/4YHUZBuBWUA7o0h5dWVSLlyfPkU18QmDDLBi+t5/uU=;
-	b=LhBo2qrXJqcmczNFHHWVdGcsLQsVIL1yREAVlsVVK0OjK80a1uZffAT+f5r+nLAGij6iNQ
-	bZNLoskMZTXkpKlsBVWFo09oiK0oBHgGgLynsmW8/c2r8RxYV7aE+0ogdhlRmHLT6OP67x
-	BKSkw9RHeeIM7qmC3attuKB0ztgRhHE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1775729313;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/4YHUZBuBWUA7o0h5dWVSLlyfPkU18QmDDLBi+t5/uU=;
-	b=QJIDTV/XnUqaZWaQIHo/n4/fcGYqQPkaFAEdqeFfHYj85pC3LyfGdeQKmWuLPjbcNHB2uN
-	x4oRvJbBw7LeIWCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1775729313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/4YHUZBuBWUA7o0h5dWVSLlyfPkU18QmDDLBi+t5/uU=;
-	b=LhBo2qrXJqcmczNFHHWVdGcsLQsVIL1yREAVlsVVK0OjK80a1uZffAT+f5r+nLAGij6iNQ
-	bZNLoskMZTXkpKlsBVWFo09oiK0oBHgGgLynsmW8/c2r8RxYV7aE+0ogdhlRmHLT6OP67x
-	BKSkw9RHeeIM7qmC3attuKB0ztgRhHE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1775729313;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/4YHUZBuBWUA7o0h5dWVSLlyfPkU18QmDDLBi+t5/uU=;
-	b=QJIDTV/XnUqaZWaQIHo/n4/fcGYqQPkaFAEdqeFfHYj85pC3LyfGdeQKmWuLPjbcNHB2uN
-	x4oRvJbBw7LeIWCA==
-Date: Thu, 9 Apr 2026 12:08:33 +0200 (CEST)
-From: Miroslav Benes <mbenes@suse.cz>
-To: Yafang Shao <laoar.shao@gmail.com>
-cc: Song Liu <song@kernel.org>, jpoimboe@kernel.org, jikos@kernel.org, 
-    pmladek@suse.com, joe.lawrence@redhat.com, rostedt@goodmis.org, 
-    mhiramat@kernel.org, mathieu.desnoyers@efficios.com, kpsingh@kernel.org, 
-    mattbobrowski@google.com, jolsa@kernel.org, ast@kernel.org, 
-    daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-    eddyz87@gmail.com, memxor@gmail.com, yonghong.song@linux.dev, 
-    live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] trace, livepatch: Allow kprobe return overriding
- for livepatched functions
-In-Reply-To: <CALOAHbAmTAfamStF9sZtO6efWYJ1sbXJp3PbsVapZf7dba91ig@mail.gmail.com>
-Message-ID: <alpine.LSU.2.21.2604091205250.31526@pobox.suse.cz>
-References: <20260402092607.96430-1-laoar.shao@gmail.com> <CAPhsuW7Y5KksWM49TrGH_Hohaq02XO8qs7G99Y6D8=0usLFSrQ@mail.gmail.com> <CALOAHbDG8=eUV53kF+xn=izs2rpydCk=a9RznU-EEOzmkB8mQg@mail.gmail.com> <CAPhsuW73qFybHgOnZ=oFC1PvdWkYWDk7gsAoiBXe4xWYagPrmA@mail.gmail.com>
- <CALOAHbC0hqk+yrUZay01EBRNOHgyj1MAavzNK-06XJKK9ARMqQ@mail.gmail.com> <CAPhsuW5MN6ikKmxgqby5RJ3_gvjJ4B77X74OvfbTQoFO8iUgzA@mail.gmail.com> <CALOAHbAmTAfamStF9sZtO6efWYJ1sbXJp3PbsVapZf7dba91ig@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBg7LKP3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60247C4CEF7;
+	Thu,  9 Apr 2026 10:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775730894;
+	bh=TYbR6YNgEJ9OPB7a4kSY2YSUDCBSFQ5do4hn/+fq0a4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aBg7LKP3r8NEV/xakEQTOkI4qW68PyK3O6H0CmGDJ4OQxyGdvkmXI7Ofialci73rU
+	 RbP/bXPo65UZLj5lgp+nlZ1DwGKpGSHWgAFWWS3ZmOI5bGvntFhHNc33WGOr6q6p/y
+	 O2DVB+p10pCU9IAJlnY7UIW4OI7yyPMGK070GS4lEEoJABUNNroxBDRzwYkA0oAVGK
+	 38GRAefsOvLcpmUo5PwFG+6eHqel0IhA7KAEuaGoW4Jo//g81lNaXpqN0uN1Y5GOcA
+	 n9wr1NUZ+9A3xnSfhVdG7uCDgbV8ZwbFLURl/DQp0wLRkOH3CWhn71opmmXEu1zqfS
+	 P8smM2GKIJWmA==
+Date: Thu, 9 Apr 2026 19:34:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Menglong Dong
+ <menglong8.dong@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/fprobe: Check the same type fprobe on table as
+ the unregistered one
+Message-Id: <20260409193451.f57f409b88d61e8eb0cd0a02@kernel.org>
+In-Reply-To: <20260408110237.08d982fab08356bc8d48af45@kernel.org>
+References: <177555745233.1441308.6535024692186959381.stgit@mhiramat.tok.corp.google.com>
+	<20260408110237.08d982fab08356bc8d48af45@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -2.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_ZERO(0.00)[0];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,suse.com,redhat.com,goodmis.org,efficios.com,google.com,iogearbox.net,linux.dev,gmail.com,vger.kernel.org];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 7bit
 
-> Can we add something like ALLOW_LIVEPATCH_ERROR_INJECTION() to allow
-> error injection on functions defined inside a livepatch?
+On Wed, 8 Apr 2026 11:02:37 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-No.
+> Hmm,
+> 
+> I also found another problem when probing module with fprobe.
+> 
+> /sys/kernel/tracing # insmod xt_LOG.ko 
+> /sys/kernel/tracing # echo 'f:test log_tg*' > dynamic_events 
+> /sys/kernel/tracing # echo 1 > events/fprobes/test/enable 
+> /sys/kernel/tracing # cat enabled_functions 
+> log_tg [xt_LOG] (1)             tramp: 0xffffffffa0004000 (fprobe_ftrace_entry+0x0/0x490) ->fprobe_ftrace_entry+0x0/0x490
+> log_tg_check [xt_LOG] (1)               tramp: 0xffffffffa0004000 (fprobe_ftrace_entry+0x0/0x490) ->fprobe_ftrace_entry+0x0/0x490
+> log_tg_destroy [xt_LOG] (1)             tramp: 0xffffffffa0004000 (fprobe_ftrace_entry+0x0/0x490) ->fprobe_ftrace_entry+0x0/0x490
+> /sys/kernel/tracing # wc -l enabled_functions 
+> 3 enabled_functions
+> /sys/kernel/tracing # rmmod xt_LOG
+> /sys/kernel/tracing # wc -l enabled_functions 
+> 34085 enabled_functions
+> 
+> It seems to reverse the selected functions if the hash is empty...
 
-I am sorry but you always seem to find band aids to your set up and how 
-you deal with live patches internally. While I can see that something like 
-a hybrid mode might be useful to people if done right (and we are not 
-there yet), the combination of it with bpf overrides or anything like that 
-is not something I would like to see in upstream.
+So I think there are several ways to fix this issue.
 
-Miroslav
+ - Introduce a new flag for ftrace_ops, which is "empty means empty".
+
+ - Improve ftrace to automatically remove module function entries
+   from registered ftrace_ops. (currently it is done for the ftrace_ops
+   in trace_array list, but not for ftrace_ops list.)
+
+ - While walking over the fprobe_ip_tables, try to find existing
+   enabled fprobe node. If it does not exist, unregister ftrace_ops.
+
+ - Count the ftrace_ops hash table size and if it is expected to be 0,
+   unregister the ftrace_ops.
+
+The first 2 are changing ftrace (but cleaner). The latter 2 only
+changes fprobes, but relatively ugly. I think the 2nd one will be
+the best because we already have done for ftrace_ops of ring-buffer
+instances.
+
+Thanks,
+
+
+> 
+> Thanks,
+> 
+> On Tue,  7 Apr 2026 19:24:12 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Commit 2c67dc457bc6 ("tracing: fprobe: optimization for entry only case")
+> > introduced a different ftrace_ops for entry-only fprobes.
+> > 
+> > However, when unregistering an fprobe, the kernel only checks if another
+> > fprobe exists at the same address, without checking which type of fprobe
+> > it is.
+> > If different fprobes are registered at the same address, the same address
+> > will be registered in both fgraph_ops and ftrace_ops, but only one of
+> > them will be deleted when unregistering. (the one removed first will not
+> > be deleted from the ops).
+> > 
+> > This results in junk entries remaining in either fgraph_ops or ftrace_ops.
+> > For example:
+> >  =======
+> >  cd /sys/kernel/tracing
+> > 
+> >  # 'Add entry and exit events on the same place'
+> >  echo 'f:event1 vfs_read' >> dynamic_events
+> >  echo 'f:event2 vfs_read%return' >> dynamic_events
+> > 
+> >  # 'Enable both of them'
+> >  echo 1 > events/fprobes/enable
+> >  cat enabled_functions
+> > vfs_read (2)            ->arch_ftrace_ops_list_func+0x0/0x210
+> > 
+> >  # 'Disable and remove exit event'
+> >  echo 0 > events/fprobes/event2/enable
+> >  echo -:event2 >> dynamic_events
+> > 
+> >  # 'Disable and remove all events'
+> >  echo 0 > events/fprobes/enable
+> >  echo > dynamic_events
+> > 
+> >  # 'Add another event'
+> >  echo 'f:event3 vfs_open%return' > dynamic_events
+> >  cat dynamic_events
+> > f:fprobes/event3 vfs_open%return
+> > 
+> >  echo 1 > events/fprobes/enable
+> >  cat enabled_functions
+> > vfs_open (1)            tramp: 0xffffffffa0001000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60    subops: {ent:fprobe_fgraph_entry+0x0/0x620 ret:fprobe_return+0x0/0x150}
+> > vfs_read (1)            tramp: 0xffffffffa0001000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60    subops: {ent:fprobe_fgraph_entry+0x0/0x620 ret:fprobe_return+0x0/0x150}
+> >  =======
+> > 
+> > As you can see, an entry for the vfs_read remains.
+> > 
+> > To fix this issue, when unregistering, the kernel should also check if
+> > there is the same type of fprobes still exist at the same address, and
+> > if not, delete its entry from either fgraph_ops or ftrace_ops.
+> > 
+> > Fixes: 2c67dc457bc6 ("tracing: fprobe: optimization for entry only case")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/fprobe.c |   77 +++++++++++++++++++++++++++++++++++++++----------
+> >  1 file changed, 62 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index dcadf1d23b8a..7f75e6e4462c 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -85,11 +85,9 @@ static int insert_fprobe_node(struct fprobe_hlist_node *node)
+> >  	return rhltable_insert(&fprobe_ip_table, &node->hlist, fprobe_rht_params);
+> >  }
+> >  
+> > -/* Return true if there are synonims */
+> > -static bool delete_fprobe_node(struct fprobe_hlist_node *node)
+> > +static void delete_fprobe_node(struct fprobe_hlist_node *node)
+> >  {
+> >  	lockdep_assert_held(&fprobe_mutex);
+> > -	bool ret;
+> >  
+> >  	/* Avoid double deleting */
+> >  	if (READ_ONCE(node->fp) != NULL) {
+> > @@ -97,13 +95,6 @@ static bool delete_fprobe_node(struct fprobe_hlist_node *node)
+> >  		rhltable_remove(&fprobe_ip_table, &node->hlist,
+> >  				fprobe_rht_params);
+> >  	}
+> > -
+> > -	rcu_read_lock();
+> > -	ret = !!rhltable_lookup(&fprobe_ip_table, &node->addr,
+> > -				fprobe_rht_params);
+> > -	rcu_read_unlock();
+> > -
+> > -	return ret;
+> >  }
+> >  
+> >  /* Check existence of the fprobe */
+> > @@ -337,6 +328,32 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
+> >  	return !fp->exit_handler;
+> >  }
+> >  
+> > +static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace)
+> > +{
+> > +	struct rhlist_head *head, *pos;
+> > +	struct fprobe_hlist_node *node;
+> > +	struct fprobe *fp;
+> > +
+> > +	guard(rcu)();
+> > +	head = rhltable_lookup(&fprobe_ip_table, &ip,
+> > +				fprobe_rht_params);
+> > +	if (!head)
+> > +		return false;
+> > +	/* We have to check the same type on the list. */
+> > +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> > +		if (node->addr != ip)
+> > +			break;
+> > +		fp = READ_ONCE(node->fp);
+> > +		if (likely(fp)) {
+> > +			if ((!ftrace && fp->exit_handler) ||
+> > +			    (ftrace && !fp->exit_handler))
+> > +				return true;
+> > +		}
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  #ifdef CONFIG_MODULES
+> >  static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
+> >  			   int reset)
+> > @@ -360,6 +377,29 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
+> >  	return false;
+> >  }
+> >  
+> > +static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace __maybe_unused)
+> > +{
+> > +	struct rhlist_head *head, *pos;
+> > +	struct fprobe_hlist_node *node;
+> > +	struct fprobe *fp;
+> > +
+> > +	guard(rcu)();
+> > +	head = rhltable_lookup(&fprobe_ip_table, &ip,
+> > +				fprobe_rht_params);
+> > +	if (!head)
+> > +		return false;
+> > +	/* We only need to check fp is there. */
+> > +	rhl_for_each_entry_rcu(node, pos, head, hlist) {
+> > +		if (node->addr != ip)
+> > +			break;
+> > +		fp = READ_ONCE(node->fp);
+> > +		if (likely(fp))
+> > +			return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  #ifdef CONFIG_MODULES
+> >  static void fprobe_set_ips(unsigned long *ips, unsigned int cnt, int remove,
+> >  			   int reset)
+> > @@ -574,15 +614,20 @@ static int fprobe_addr_list_add(struct fprobe_addr_list *alist, unsigned long ad
+> >  static void fprobe_remove_node_in_module(struct module *mod, struct fprobe_hlist_node *node,
+> >  					 struct fprobe_addr_list *alist)
+> >  {
+> > +	lockdep_assert_in_rcu_read_lock();
+> > +
+> >  	if (!within_module(node->addr, mod))
+> >  		return;
+> > -	if (delete_fprobe_node(node))
+> > -		return;
+> > +
+> > +	delete_fprobe_node(node);
+> >  	/*
+> > -	 * If failed to update alist, just continue to update hlist.
+> > +	 * Ignore failure of updating alist, but continue to update hlist.
+> >  	 * Therefore, at list user handler will not hit anymore.
+> > +	 * And don't care the type here, because all fprobes on the same
+> > +	 * address must be removed eventually.
+> >  	 */
+> > -	fprobe_addr_list_add(alist, node->addr);
+> > +	if (!rhltable_lookup(&fprobe_ip_table, &node->addr, fprobe_rht_params))
+> > +		fprobe_addr_list_add(alist, node->addr);
+> >  }
+> >  
+> >  /* Handle module unloading to manage fprobe_ip_table. */
+> > @@ -943,7 +988,9 @@ int unregister_fprobe(struct fprobe *fp)
+> >  	/* Remove non-synonim ips from table and hash */
+> >  	count = 0;
+> >  	for (i = 0; i < hlist_array->size; i++) {
+> > -		if (!delete_fprobe_node(&hlist_array->array[i]))
+> > +		delete_fprobe_node(&hlist_array->array[i]);
+> > +		if (!fprobe_exists_on_hash(hlist_array->array[i].addr,
+> > +					   fprobe_is_ftrace(fp)))
+> >  			addrs[count++] = hlist_array->array[i].addr;
+> >  	}
+> >  	del_fprobe_hash(fp);
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
