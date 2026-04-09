@@ -1,83 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984AD2594B9;
-	Thu,  9 Apr 2026 01:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B15835B631;
+	Thu,  9 Apr 2026 02:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775697632; cv=none; b=Kq3VIpaXhE4tpxZ79QgSGGUjtgRq6BKRs0YxHGgr6Ivqv62r2tUQ0vRNHZTCU+yt5wWTVaJ7S1ryalMHvfnQN5/j7CQNEq328mdwnYZSre80BCW1qRWY3QB2SZs39/3+XMRMM1HgLUXR3k5VMDAOS9dZ2uUsCvlaI019DGregIs=
+	t=1775702039; cv=none; b=KA5CC8ttwRQtCRc2N52RSQ5U3NfEl9WxlPuORhXNZJ0YJPLcKHiTzQS4DJBNN2Myg1E1uHikEWhDvG3oMfLhGsBqxP3JUj0mFIOkx5Vfn9epmyTMrp4BD87KuUAH3fASuOzxQFhAk3lscSe1NWVKzxGuiFoSAxFUmH8+UA2bOGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775697632; c=relaxed/simple;
-	bh=jffhaj7XtvWEHrEQlXWo93RdtoyPK03UBjowjBvGjP8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CEjqgjEkZAGBVIcnXM1furTiupgOezZDef65lIf5MbNsMxpOElFiTcKXG2BPa9kkbA4ym6e2PjaJCyJ/mFWF5R7z0x6GAG+nENBHgTKX75uzJIdRLQWl2koEyM0jBAwghSHX2qr7NpL76IwHN/Klw6IGnRosdemqa9EUVChwGU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gryz7yrq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gryz7yrq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E8DC19421;
-	Thu,  9 Apr 2026 01:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775697632;
-	bh=jffhaj7XtvWEHrEQlXWo93RdtoyPK03UBjowjBvGjP8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Gryz7yrqaPJrjCZGSIT8NbDvEiJeYzjfBfvVleJy8s/QH2qqqbaZiIRy0C7g80mUN
-	 LBF7D8AjuGm9gunEzOgrl1cP/fUcf8uKyyhRHJN2DZBdh+pOxGndtS/MQ5APle5FtL
-	 RpvjV+plg0FySjOcpMJoLDV/RsxeKHsKvRW1E32l+FTEobFZpfMC4vDzTFpZ/+N4Po
-	 WRaOES0dehfEtbTX6E6CkuVZ8LLm6hf8a9sxNpqGJMDxXTTZAVMp+L+ZtvprugdK+j
-	 XSqBvIhfUsS816pjZm7Mj9rHd5uz8ArOmWWDPNDb+iNQAlRD2z7U3T3sfIQHkptgbC
-	 rWBD1R9muTmeg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA0233930793;
-	Thu,  9 Apr 2026 01:20:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1775702039; c=relaxed/simple;
+	bh=epsiyXiccB7VM7RTtd97wRFP0aA36T0y5ASy8AxTFp0=;
+	h=From:Date:Message-ID:To:Cc:In-Reply-To:References:Subject; b=kiRBDewSLcFHEDH0Kx8V9Z/aGi+H+PSP/n2gNtRzxcDJ802V9dH+IjRUTYSQDPTvVfSTwOo6dBqXvcvAZWRdTcR1bz4B421zTvnCPdmjRxU441+Y4E1QG89taScGUDYVtsA+5rS1u28JL6PVc7ZzbBAotu466s6JzRja+YbFFI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from 0001-tracing-hist-synth-v3.eml (unknown [111.196.245.116])
+	by APP-03 (Coremail) with SMTP id rQCowABXdt0LENdpmn5wDQ--.52706S2;
+	Thu, 09 Apr 2026 10:33:47 +0800 (CST)
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Date: Thu, 9 Apr 2026 10:19:43 +0800
+Message-ID: <20260409103001.1-tracing-hist-synth-v3-pengpeng@iscas.ac.cn>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, pengpeng@iscas.ac.cn
+In-Reply-To: <20260401112224.85582-2-pengpeng@iscas.ac.cn>
+References: <20260329030950.32503-2-pengpeng@iscas.ac.cn> <20260401112224.85582-2-pengpeng@iscas.ac.cn>
+Subject: [PATCH v3] tracing/hist: bound synthetic-field strings with seq_buf
+X-CM-TRANSID:rQCowABXdt0LENdpmn5wDQ--.52706S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF1UJryxArWUXFW8tr4DXFb_yoWrZr1DpF
+	W5Awn8K3y5Jr12gr4fCF4qkr95Aw4kuw1DKF1akws5try5tr4v9FWq9ry5WasYqrWI9w13
+	WF4DWrZ8Cws8ZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_
+	Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUUUU=
+X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v5 0/2] Reject sleepable kprobe_multi programs at
- attach time
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177569760855.941108.1194858936384188273.git-patchwork-notify@kernel.org>
-Date: Thu, 09 Apr 2026 01:20:08 +0000
-References: <20260408190137.101418-1-varunrmallya@gmail.com>
-In-Reply-To: <20260408190137.101418-1-varunrmallya@gmail.com>
-To: Varun R Mallya <varunrmallya@gmail.com>
-Cc: bpf@vger.kernel.org, leon.hwang@linux.dev, memxor@gmail.com,
- jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- yonghong.song@linux.dev, rostedt@goodmis.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
 
-Hello:
+The synthetic field helpers build a prefixed synthetic variable name and
+a generated hist command in fixed MAX_FILTER_STR_VAL buffers. The
+current code appends those strings with raw strcat(), so long key lists,
+field names, or saved filters can run past the end of the staging
+buffers.
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Build both strings with seq_buf and propagate -E2BIG if either the
+synthetic variable name or the generated command exceeds
+MAX_FILTER_STR_VAL. This keeps the existing tracing-side limit while
+using the helper intended for bounded command construction.
 
-On Thu,  9 Apr 2026 00:31:35 +0530 you wrote:
-> These patches fix an issue where sleepable kprobe_multi programs
-> were allowed to attach, leading to "sleeping function called from invalid
-> context" splats.
-> 
-> Because kprobe.multi programs run in atomic/RCU context, they cannot
-> sleep. However, `bpf_kprobe_multi_link_attach()` previously lacked
-> validation for the `prog->sleepable` flag. This allowed sleepable
-> helpers, such as `bpf_copy_from_user()`, to be invoked from an invalid
-> non-sleepable context.
-> 
-> [...]
+Fixes: 02205a6752f2 ("tracing: Add support for 'field variables'")
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+---
+Changes since v2: https://lore.kernel.org/all/20260401112224.85582-2-pengpeng@iscas.ac.cn/
 
-Here is the summary with links:
-  - [bpf-next,v5,1/2] bpf: Reject sleepable kprobe_multi programs at attach time
-    (no matching commit)
-  - [bpf-next,v5,2/2] selftests/bpf: Add test to ensure kprobe_multi is not sleepable
-    https://git.kernel.org/bpf/bpf-next/c/c7cab53f9d52
+- switch the synthetic name and generated command construction to seq_buf
+  as suggested by Steven Rostedt
+- keep MAX_FILTER_STR_VAL as the tracing-side limit and return -E2BIG on
+  overflow
 
-You are awesome, thank you!
+ kernel/trace/trace_events_hist.c | 44 ++++++++++++++++++++++----------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 73ea180cad55..7c3873719beb 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -8,6 +8,7 @@
+ #include <linux/module.h>
+ #include <linux/kallsyms.h>
+ #include <linux/security.h>
++#include <linux/seq_buf.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/stacktrace.h>
+@@ -2962,14 +2963,21 @@ find_synthetic_field_var(struct hist_trigger_data *target_hist_data,
+ 			 char *system, char *event_name, char *field_name)
+ {
+ 	struct hist_field *event_var;
++	struct seq_buf s;
+ 	char *synthetic_name;
+ 
+ 	synthetic_name = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
+ 	if (!synthetic_name)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	strcpy(synthetic_name, "synthetic_");
+-	strcat(synthetic_name, field_name);
++	seq_buf_init(&s, synthetic_name, MAX_FILTER_STR_VAL);
++	seq_buf_puts(&s, "synthetic_");
++	seq_buf_puts(&s, field_name);
++	seq_buf_str(&s);
++	if (seq_buf_has_overflowed(&s)) {
++		kfree(synthetic_name);
++		return ERR_PTR(-E2BIG);
++	}
+ 
+ 	event_var = find_event_var(target_hist_data, system, event_name, synthetic_name);
+ 
+@@ -3014,6 +3022,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
+ 	struct trace_event_file *file;
+ 	struct hist_field *key_field;
+ 	struct hist_field *event_var;
++	struct seq_buf s;
+ 	char *saved_filter;
+ 	char *cmd;
+ 	int ret;
+@@ -3046,41 +3055,48 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
+ 	/* See if a synthetic field variable has already been created */
+ 	event_var = find_synthetic_field_var(target_hist_data, subsys_name,
+ 					     event_name, field_name);
+-	if (!IS_ERR_OR_NULL(event_var))
++	if (IS_ERR(event_var))
++		return event_var;
++	if (event_var)
+ 		return event_var;
+ 
+ 	var_hist = kzalloc_obj(*var_hist);
+ 	if (!var_hist)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	saved_filter = find_trigger_filter(hist_data, file);
++
+ 	cmd = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
+ 	if (!cmd) {
+ 		kfree(var_hist);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
++	seq_buf_init(&s, cmd, MAX_FILTER_STR_VAL);
++
+ 	/* Use the same keys as the compatible histogram */
+-	strcat(cmd, "keys=");
++	seq_buf_puts(&s, "keys=");
+ 
+ 	for_each_hist_key_field(i, hist_data) {
+ 		key_field = hist_data->fields[i];
+ 		if (!first)
+-			strcat(cmd, ",");
+-		strcat(cmd, key_field->field->name);
++			seq_buf_putc(&s, ',');
++		seq_buf_puts(&s, key_field->field->name);
+ 		first = false;
+ 	}
+ 
+ 	/* Create the synthetic field variable specification */
+-	strcat(cmd, ":synthetic_");
+-	strcat(cmd, field_name);
+-	strcat(cmd, "=");
+-	strcat(cmd, field_name);
++	seq_buf_printf(&s, ":synthetic_%s=%s", field_name, field_name);
+ 
+ 	/* Use the same filter as the compatible histogram */
+-	saved_filter = find_trigger_filter(hist_data, file);
+-	if (saved_filter) {
+-		strcat(cmd, " if ");
+-		strcat(cmd, saved_filter);
++	if (saved_filter)
++		seq_buf_printf(&s, " if %s", saved_filter);
++
++	seq_buf_str(&s);
++	if (seq_buf_has_overflowed(&s)) {
++		kfree(cmd);
++		kfree(var_hist);
++		return ERR_PTR(-E2BIG);
+ 	}
+ 
+ 	var_hist->cmd = kstrdup(cmd, GFP_KERNEL);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.50.1 (Apple Git-155)
 
