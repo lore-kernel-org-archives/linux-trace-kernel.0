@@ -1,102 +1,103 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126F58C1F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 12:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1271DD0D4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 12:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775825140; cv=none; b=rv8vDvA9shOXx8+6o/9bfqPDvwAf7FC/M3AuKseSNvTrlsj4lIf4fW94rywH6mWjwRDNnfmyEG7sbPT9BkT1XhEoOf2rKp2PQeZHyppH/Ty2ljjqA5xzg+k0fTB6FVRJXtRdgUReiORHRNvLKIu3kXaRuyx/q9G99DWiZhBy42A=
+	t=1775825218; cv=none; b=rG4NqJk/nBAsWHSU4noVOtCe1WBx5FCmp30pQuOHN70O5x4pZ3a83GZ4CmMxPQe3IFG9A5kl3XKZBVh7BOnaFIpJweFSlgm1vXRrjStxnkDEex82gNZ6+ELuCy2lLDwiJJtMxh1136UKKriXS55etmBiK2OM2nUDpzC/Z2ANfNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775825140; c=relaxed/simple;
-	bh=QHiukfKSmwMd57SgXEaDANZ0GnMRsME8FwRdtZB9Mtc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VG9m6d3vXa5etJKkOa8H+Svqn7Yjf8Z3yUHFceEuN0ItTBC6GzRiXW6ULj7ArRBFbSaniW1EiQzoEDW7Tr1HS1HpJR7iePy3vA9zBIOAyTg9Y1Wn9PPoKOqGOixrsgcgnnc8boa4IXMExhNi4Jsz3DyVtl/9265C/wNJQ0G1fRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GZLqt15T; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1775825218; c=relaxed/simple;
+	bh=UiG4yHUwYikgqMByAvWLqJ+G1mR3bcCQ6U10nnGXNm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I+Elg6StORfF1LxvqZE6HzvBrLW5nqacUPhuAcrFLk3D7KLemejlKJZGwLVMOBa2LSSaS4UsF+YLO8mzTeHRcl0YVPxcqvlm6tzLlSmDKuQJcasvRGe+kyzcYbU4CvY1PbmmTKBe+93JCtzuB6yIwXIM3CQ9AauxGO5LrgSLZkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jChmAZGH; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GZLqt15T"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-488d64eba6eso5264285e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 05:45:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jChmAZGH"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-66d24c6963bso3519480a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 05:46:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775825137; x=1776429937; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=apY7Ejl8X5JBwAsC8h7VHQdCvb1Zq/PpjmokFJg+xQw=;
-        b=GZLqt15T+z2W8h9fqW4QmSCLGS9Ja1PnIeZub+3U3fgkVyirr0y5WxbXWhDyg92EBX
-         A7/IybLZNR6CO6lo14AXj62vI8H/5vqIFjqsSWdNFXPuvQPJ87dFgT7Tg/MINJO/T7EP
-         WeoiUj6Xp2jc2J5B1EpxPDwjy7vI/entKwLKtwN8o+LQJWwckErXZf70kDyEI1A1jj52
-         Uk+H2tN2kyoZvKLrPdZyZvV9RjTnnuzwXN25w25BhfFDN8pELgg35wLgRqzozMOJ8Eaw
-         dwQeMUn71il+mWG6Tx8tPmeCCCvpZ4CCKMRbT/qSTXbYXWjssPps8rnbP5dOLp8sNSKg
-         nt2w==
+        d=google.com; s=20251104; t=1775825215; x=1776430015; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iD1Gru4E4GCn+KUuiU59fyOxdMeWJaLwzenw6NOVkUU=;
+        b=jChmAZGH/obpoo3e/AgyjPTiqZh7gPzf6KGf2SyI0Uc4s8q4+jOTN6Zal4e0Bj59cr
+         +2wp/1NOko9+aPDu8qtmdpX02b1nft+6IpLjF9sv78QQsILy50UDVQU6K0GA+Ry6PixD
+         1zuYPNRauiOLXvBh6MWtpVT08PxZtRCsmzepgSMhAQNcvg9MrwGoryG5hfSAqmvluUDr
+         rdOERi2cMQtfDi3qXd4K7RGUY7uvL/BToz1uRpWq7TF4Q4HJZblA66ALRRXwxoFHc4e+
+         g8MnGulHlDnHa3vHcsxxhhRiIL4u/jdZBD93Y74xv7ZpiARvA4N44X4QBDjP4lCT9FtQ
+         kQpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775825137; x=1776429937;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=apY7Ejl8X5JBwAsC8h7VHQdCvb1Zq/PpjmokFJg+xQw=;
-        b=N3LaK5iYQ5OLauvIJFOvG4EkUrR9aWZ6LL5rXSihXVUyyRjqpzL4TQDqhcGAFxLbbr
-         5jdsHaJJHBK1yNc8r86VL3noe248EODlZS1KnPsHNqrKnks6rHj0bp9rL1p8+C4BHWUn
-         74Liq0QcJbhH11CwzjsY1Opv3VYRg0h4rbtkLTgR+rNTpEJPYEW4GyVJ3HMqgBKUGKHC
-         jYtLIibnivxOAhTrnByRqDapfTAdNvfbc+qepR94DCIF5TTcaAgrkQ9wMd5+idb+esx7
-         /xKeLrJuHeJMkG5M4UR15FMizf1pnXAmNQQQwrhb9d0Vx9QQgJ4KO1CZDV517U5qtea9
-         9Ndw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCOwB0PgIbQNmfROfy646P073l0q0c1e+5AR53HS8c5I238Dpfp6uK66qfnQ9EWh/4IVz1MbfMQzA2rccax2b6Y04=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzACAo6VqXOm2o95Ge2ZDefPBAGrdN+FUm6/Cq9chx86h2eNhjw
-	Ujkw+KhovXzVvVQI7+BrMZ16FmqyBrewNqocmusHSQh3Th9EQ1wP8iSrSPm6RIsjMnI3VDWXS4o
-	3c46QYgKaXMCT0vKamVf5pA==
-X-Received: from wmoo3.prod.google.com ([2002:a05:600d:103:b0:480:6b05:6b94])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:45ce:b0:488:a8f0:35bd with SMTP id 5b1f17b1804b1-488d67df745mr38438805e9.8.1775825137170;
- Fri, 10 Apr 2026 05:45:37 -0700 (PDT)
-Date: Fri, 10 Apr 2026 13:45:27 +0100
+        d=1e100.net; s=20251104; t=1775825215; x=1776430015;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iD1Gru4E4GCn+KUuiU59fyOxdMeWJaLwzenw6NOVkUU=;
+        b=LluuxcnHK58IbdOlUmD+XdCHZ1gDIk7g+Z4NcyzeovOBYYI+ibF7+OpRIwz0nroRTV
+         gLiK56iEFJXaUJRIEK/ZGy++1dc64jMfdrJT8p8W1Y/FBu8cwuc/BLEZdjyGKK4qtfjr
+         TKUs+EaIg6I6uTvayeABBlBmMJDGT3W6jO2HRcED5pi7fwXaGB0dHPI7X1uA4lPA9SKh
+         jxxXMTQ40rNWBZF5Ktcuqid2oFEm1fLJAHXiHU2SY+QaF0/EXJzLTXUwGDPE0AnPTEZ5
+         bICviPEZ1TBhLWw6qEJCkklw+gXVx7WJGiF4NyXaBD2ivh4dYjWS+AvlSkgmX7B6NvL7
+         wTpg==
+X-Gm-Message-State: AOJu0YwPx/YqOhHgf68mcjp+JYyY/o9Snc3BYw32Kp9E+8CD/kT9j3vK
+	OTfZdneJqhC7VAUplvDjc3byP2h9gKdyiZkWyDJqKdZqZFlog422fmkQ+H1VUXGB5g==
+X-Gm-Gg: AeBDieuEqFhJSw/fgUb1HGx/mmjdy5PAcvuJ9nhznPoYWLNsZ2ugb/F/N1h/uqZkPTM
+	gjxDKaA/qk6FiDY1aUhMIAb6E97ZN59Ys7nOVbn5YSxQD/FTXAOiVDsREReFiJ+nSwELq1hqhdV
+	0xOEM3iCJ8Q4HPDFx1vEsadokTh1CMsYcpBgwCRqK0dRmaM8PVrq4gwGFwYmCgb83zW8hg+0Lgx
+	Xe8KgA2BIzqCYVzTW2CZ/qC7kUs8vhag9sRz7ZEQXsAuVvMdOV90X114I+K+sGcV+6SaHp38V0S
+	Yw5LxojbVLvlMiT6uQrIm6DZZkMxR3PNetyfxvKEZesgosY3HgQ/qEwgZc6hlUsImPNtxJ2QXOc
+	ZNXe5yDvF+njdtWSq18xSuNgBwmWqtN1OAdDXlZtVtHr6tvw2R0OhyqeMowng+1TQnyUBpZRQkn
+	c745RL37xxNhjAzYD7+i1SM4ixEaeUWoXZEd6KRVfuVEUSwdsRg/NEWVRm6Adt+5vpE2BEm3iRR
+	PEMBg==
+X-Received: by 2002:a05:6402:3506:b0:66b:f154:2e81 with SMTP id 4fb4d7f45d1cf-6707af159a4mr1548801a12.20.1775825214721;
+        Fri, 10 Apr 2026 05:46:54 -0700 (PDT)
+Received: from google.com (198.115.140.34.bc.googleusercontent.com. [34.140.115.198])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-67070826607sm538044a12.27.2026.04.10.05.46.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2026 05:46:51 -0700 (PDT)
+Date: Fri, 10 Apr 2026 13:46:46 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Dan Carpenter <error27@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [bug report] ring-buffer: Introduce ring-buffer remotes
+Message-ID: <adjxNnzgRleH3ll5@google.com>
+References: <adjN-1ydA_kPPhmG@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-Message-ID: <20260410124527.3563970-1-vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Prevent off-by-one array access in ring_buffer_desc_page()
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	Vincent Donnefort <vdonnefort@google.com>, Dan Carpenter <error27@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adjN-1ydA_kPPhmG@stanley.mountain>
 
-As pointed out by Smatch, the ring-buffer descriptor array page_va is
-counted by nr_page_va, but the accessor ring_buffer_desc_page() allows
-access off by one.
+On Fri, Apr 10, 2026 at 01:16:27PM +0300, Dan Carpenter wrote:
+> Hello Vincent Donnefort,
+> 
+> Commit 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
+> from Mar 9, 2026 (linux-next), leads to the following Smatch static
+> checker warning:
+> 
+> 	kernel/trace/ring_buffer.c:2243 ring_buffer_desc_page()
+> 	warn: array off by one? 'desc->page_va[page_id]'
+> 
+> kernel/trace/ring_buffer.c
+>     2241 static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, int page_id)
+>     2242 {
+> --> 2243         return page_id > desc->nr_page_va ? NULL : (void *)desc->page_va[page_id];
+>                                 ^
+> Based on the len = struct_size(desc, page_va, desc->nr_page_va), in
+> ring_buffer_desc(), I'm pretty sure this should be >= instead of >.
 
-Currently, this does not cause problems, as the page ID always comes
-from a trusted source. Nonetheless, ensure robustness and fix the
-accessor. While at it, make the page_id unsigned.
+You are right. Thanks for the report, I have sent a fix.
 
-Reported-by: Dan Carpenter <error27@gmail.com>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-
---- 
-
-Currently based on kvmarm/next.
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 96e0d80d492b..2c77020e7aac 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2238,9 +2238,9 @@ static struct ring_buffer_desc *ring_buffer_desc(struct trace_buffer_desc *trace
- 	return NULL;
- }
- 
--static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, int page_id)
-+static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, unsigned int page_id)
- {
--	return page_id > desc->nr_page_va ? NULL : (void *)desc->page_va[page_id];
-+	return page_id >= desc->nr_page_va ? NULL : (void *)desc->page_va[page_id];
- }
- 
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
-
-base-commit: 94b4ae79ebb42a8a6f2124b4d4b033b15a98e4f9
--- 
-2.53.0.1213.gd9a14994de-goog
-
+> 
+>     2244 }
+> 
+> This email is a free service from the Smatch-CI project [smatch.sf.net].
+> 
+> regards,
+> dan carpenter
