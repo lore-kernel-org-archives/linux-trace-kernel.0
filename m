@@ -1,201 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016491CDFCA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 13:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAC23DD53C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 15:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775828153; cv=none; b=hLLLWEC0+ITLoGL9CKquDb8LpHR0aO6u0HYYPf+jlD96izCC3qI9br/n84QiztnEL9n/eutlxbyVZWiZ4yRlNzGJwg01Wmdpp95ZT8UoYza8+skverJzajqUA1VqbFSDAYeWOAnXF9vJEZXnlD1af2O9Gu1WoafKUX1p01buitA=
+	t=1775834342; cv=none; b=B2bmusPFVVuExVq59KrnskEUWrdt217RgooBQNmS9NK2tRM4bDoXs9iX5arSe/G23TWiywt7EKnMv/oS+g56brSi1ltgdY1NJe1g7Rf1hIZmdA6wOebcJAGNHknTmsJlVhDbBbSRaRI7HFfJgDrpbUd8utm4vHA299KuP54Qx7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775828153; c=relaxed/simple;
-	bh=qzFDBlW38Y9drkwi3zJmnsk/zi2a2A6uLtHX7FlJS9s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eiiyeqyh+zmLxH4z1UcfW5H2ffnmU8Ve28vAx9T/WZjcDOVsrtfQ/3oQwB/N++4Gb0V7g8j+8fRp0QiurERXkED3ZLN6uISxzHt7AeSwr3GD0TbB9oa5UulIt3Ujhr5N/nzXwwYKcOrCOXLFJ7J+sycRSB+bUx9p+1F0iJ/YK+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QV9R+Le7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1775834342; c=relaxed/simple;
+	bh=2PJcapuxUWWHQgHKuYh+AB0Bg9+uWPE8WWtuj/kl/pY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JEeC5uBRI6p16bRE0Z9lMvHQCONG/CFJxmOHICOMXfrKel0yI2UbqEb24nwUJg39vxOvWzM57I+rxJ5Y3U+8gvUjJE8cQlAnVg0wtIeZHSntcPHMK6/Ej2MBWaI3BZEt0+YDtRX2xelC1XWvn4N5K1lTxH++aliSkuxxj0MOCfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=VPk6fsRQ; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QV9R+Le7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775828151;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xtIpjYDOHdSv0lZJ3NJBv+5doRQrU2DW+0WPWnC9oQw=;
-	b=QV9R+Le7kyqwkACi6C7+3d/FCRRBdT4scLi7wdDPjJb7DZ1zXtAKB4xt+b801eUZbOwtEi
-	w+AU7Wj2zitKuqr9f8APaD1lmSXTaz5L55Tj3s88NEQU54xxr+3jiybdqnxAD8ZzgDww18
-	Vvc7xy0O8JYda8c7/zdnSIG2/Q9Zh6Y=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-408-7b17dJy5NN6MgbR4JAz4OA-1; Fri,
- 10 Apr 2026 09:35:49 -0400
-X-MC-Unique: 7b17dJy5NN6MgbR4JAz4OA-1
-X-Mimecast-MFC-AGG-ID: 7b17dJy5NN6MgbR4JAz4OA_1775828147
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F7451956080;
-	Fri, 10 Apr 2026 13:35:46 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.74.64.26])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD8FC1955F2E;
-	Fri, 10 Apr 2026 13:35:38 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: mpetlan@redhat.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH v2] perf: enable unprivileged syscall tracing with perf trace
-Date: Fri, 10 Apr 2026 09:35:28 -0400
-Message-ID: <20260410133529.21947-1-ashelat@redhat.com>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="VPk6fsRQ"
+Received: from trampoline.thunk.org (pool-173-48-116-90.bstnma.fios.verizon.net [173.48.116.90])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 63AFIoOX015852
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Apr 2026 11:18:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1775834332; bh=eTlXD+fEi5OyNbu4TxRTwpDmEzFd2ThBwniicSqJG9M=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=VPk6fsRQSXd/5Nh8TyOtre/wyuiwILVUqAvKliAeAoP9NWxPWea1Q4bx2oJrpWurM
+	 p0KwKN2oR00yADJbGywtFxHrkSJG+7akpDxyNmS3k4sITB9+LAQ7TS8gLOxrGyZcxm
+	 iD4ByRUzuod5KLDmmiVM+UapW56A71UlQ86DKwTjUgLnxxFdmaZEmaxScOtN1jt83o
+	 KncTyarsQsfg740s5ZTPNDrP3EVWK9I1eaZQ8RpFbx0tpkzHLOeLlgiMDfG5/h1trz
+	 DW2Ox+J23d04yMQY9WVUywWKP2CKxWAo6qH71mwqDeJ5+jdH6erLL9AAKNO/NyVKi7
+	 5qupF6y+RLfJA==
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 0D7462E00E1; Fri, 10 Apr 2026 11:18:48 -0400 (EDT)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
+        bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
+        dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
+        gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mm@kvack.org,
+        linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
+        sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
+        Philipp Hahn <phahn-oss@avm.de>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>
+Subject: Re: [PATCH 04/61] ext4: Prefer IS_ERR_OR_NULL over manual NULL check
+Date: Fri, 10 Apr 2026 11:18:40 -0400
+Message-ID: <177583430870.2758959.6171961359325912353.b4-ty@b4>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260310-b4-is_err_or_null-v1-4-bd63b656022d@avm.de>
+References: <20260310-b4-is_err_or_null-v1-4-bd63b656022d@avm.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: VpT6tc9iUb_Bl5wl_ZX3xpRAelUpP4Luf6bg1caxras_1775828147
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Allow unprivileged users to trace their own processes' syscalls using
-perf trace, similar to strace without the intrusive overhead of ptrace().
 
-Currently, perf trace requires CAP_PERFMON or paranoid level ≤ 1 even
-though the kernel has existing infrastructure (TRACE_EVENT_FL_CAP_ANY)
-specifically designed to mark syscall tracepoints as safe for
-unprivileged access. To fix this:
+On Tue, 10 Mar 2026 12:48:30 +0100, Philipp Hahn wrote:
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
+> 
+> Change generated with coccinelle.
 
-1. Loosen the condition in perf_event_open() which requires priviliges
-for all events with exclude_kernel=0. This allows perf_event_open() to
-bypass the paranoid check for task-attached tracepoint events. Ensure
-that sample types which can expose kernel addresses to unprivileged
-users are blocked.
+Applied, thanks!
 
-2. Make the format and id tracefs files world-readable only for tracepoints
-with TRACE_EVENT_FL_CAP_ANY, allowing unprivileged users to see syscall
-tracepoint ids without exposing sensitive information.
+[04/61] ext4: Prefer IS_ERR_OR_NULL over manual NULL check
+        commit: 1d749e110277ce4103f27bd60d6181e52c0cc1e3
 
-Also add a check to perf_trace_event_perm() to ensure only TRACE_EVENT_FL_CAP_ANY
-events can be traced.
-
-Example usage after this change:
-  $ perf trace ls          # works as unprivileged user
-  $ perf trace             # system-wide, still requires privileges
-  $ perf trace -p 1234     # requires ptrace permission on pid 1234
-
-Assisted-by: Claude:claude-sonnet-4.5
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
----
-Changes in v2:
-- Add check to block sample types that bypass KASLR, suggested by
-  sashiko.
-- Link to v1: https://lore.kernel.org/linux-perf-users/20260408123947.23779-2-ashelat@redhat.com/
----
- kernel/events/core.c            | 22 +++++++++++++++++++---
- kernel/trace/trace_event_perf.c | 12 +++++++++++-
- kernel/trace/trace_events.c     |  8 ++++++--
- 3 files changed, 36 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 89b40e439717..db8c674704b2 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13834,9 +13834,25 @@ SYSCALL_DEFINE5(perf_event_open,
- 		return err;
- 
- 	if (!attr.exclude_kernel) {
--		err = perf_allow_kernel();
--		if (err)
--			return err;
-+		bool tp_bypass = false;
-+
-+		if (attr.type == PERF_TYPE_TRACEPOINT && pid != -1) {
-+			/*
-+			 * Block sample types that expose kernel addresses to
-+			 * prevent KASLR bypass
-+			 */
-+			u64 kaddr_leak = PERF_SAMPLE_CALLCHAIN |
-+					 PERF_SAMPLE_BRANCH_STACK |
-+					 PERF_SAMPLE_ADDR;
-+
-+			tp_bypass = !(attr.sample_type & kaddr_leak);
-+		}
-+
-+		if (!tp_bypass) {
-+			err = perf_allow_kernel();
-+			if (err)
-+				return err;
-+		}
- 	}
- 
- 	if (attr.namespaces) {
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index a6bb7577e8c5..e8347df7ede5 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -73,8 +73,18 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
- 	}
- 
- 	/* No tracing, just counting, so no obvious leak */
--	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW))
-+	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW)) {
-+		/*
-+		 * Only allow CAP_ANY tracepoints for unprivileged
-+		 * task-attached events in case kernel context is exposed.
-+		 */
-+		if (!p_event->attr.exclude_kernel && !perfmon_capable()) {
-+			if (!(p_event->attach_state == PERF_ATTACH_TASK &&
-+			      (tp_event->flags & TRACE_EVENT_FL_CAP_ANY)))
-+				return -EACCES;
-+		}
- 		return 0;
-+	}
- 
- 	/* Some events are ok to be traced by non-root users... */
- 	if (p_event->attach_state == PERF_ATTACH_TASK) {
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 249d1cba72c0..6250b2529376 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3051,7 +3051,9 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- 	struct trace_event_call *call = file->event_call;
- 
- 	if (strcmp(name, "format") == 0) {
--		*mode = TRACE_MODE_READ;
-+		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
-+			(TRACE_MODE_READ | 0004) :
-+			TRACE_MODE_READ;
- 		*fops = &ftrace_event_format_fops;
- 		return 1;
- 	}
-@@ -3087,7 +3089,9 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- #ifdef CONFIG_PERF_EVENTS
- 	if (call->event.type && call->class->reg &&
- 	    strcmp(name, "id") == 0) {
--		*mode = TRACE_MODE_READ;
-+		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
-+		(TRACE_MODE_READ | 0004) :
-+		TRACE_MODE_READ;
- 		*data = (void *)(long)call->event.type;
- 		*fops = &ftrace_event_id_fops;
- 		return 1;
+Best regards,
 -- 
-2.53.0
-
+Theodore Ts'o <tytso@mit.edu>
