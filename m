@@ -1,76 +1,103 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD8A3242AB
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 01:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAED1A5B8A;
+	Fri, 10 Apr 2026 04:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775783947; cv=none; b=YhKjG39PRFXLe8eLHUujNMXB97DZfXqohKfxX+QLy8K98fIKCMQPDw8tqbIJanz7mSaCXwh2hApaq4BDsaXvI9qU9OEe4JgPQoCWuEG4n2rov938vI2snHYWB4Wjzm1yJLsmw/TOuab+uqVMoIBH3G4Mxovu14anIXQ4iLxodI4=
+	t=1775795612; cv=none; b=ZxjNMEYN1OpcQqrJcq2j+smQPahaeXb36kkgjhKdrczNfHSu8PyTT6Erami5cmYKhOtA3JF/tU3NWrrgMsjTl/nRM0j+ixt4upTJ/RQwfMUXAmakEVk5F6VSNZkIBjOw6CyDECH6jCnkyNlrl9wqK+RQnNoWVhGKiXBp1DQ1goQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775783947; c=relaxed/simple;
-	bh=JHT5fHED+RNfSNkBCsKJYEWjBPITIG6/eDgn4xajX8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z2LmZ/zlJloxHC0mUpu000NhhNXPOYZy+/9JzHzN7kycwk4mFn44WYskcD2f3UCO+YRWq3usfPnFLn4TdZAJjSAurzm6vNZCFEREO9moT4kvmPvlcy1U42PnUySHMQLC4PKnYh2OuIOMmhuHaXBWr3bSmahQ3o8pF/WlZpWN5Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=LmCP2O2I; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1775795612; c=relaxed/simple;
+	bh=SMGsPyxBD/ferwmLgwJAfUSrtW9ZZquY0BZGfcDQGtI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QoGqLusPS9JViYmjMS9jvqIhwr6aPBN7PkQ1TwM5I7OUhz6Tkb0J0O0kP6VAprJupkwf0x6/xVTM1gG1vci7YuLgwvV35UYYnOZg8uZklnK+jCk988rcf7kKIhqFTy8seLisCFI/OInSQC+KAyCdExnuktUKFFuIavOgRi15PDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=csSv6NPg; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="LmCP2O2I"
-Received: from macsyma.thunk.org (pool-173-48-116-90.bstnma.fios.verizon.net [173.48.116.90])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 63A1Iheq013479
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 9 Apr 2026 21:18:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1775783926; bh=3YBV0vZ4W8UlqgCo56mF/1Rz8B4mWIam+oveebrWqc8=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=LmCP2O2IdCCJhFUey7WJkY6ZlFgQ+AMfWuVVeP2xe2shw/HuOjkv1XHWSlyMk3QmH
-	 qlX5aRkJIqeflRWbh5jA/Mf/SnGMbitBQLHQr3RhC1qnDj8CopCQ8f9mrUCLvaNh9w
-	 DMWyIP4Tc05aHrHZYeoG0GA8G0LvmogeGaKEUVlWUEas6t+OisNS0l4hCpHmYHmAVa
-	 IIzSa+ZE+8F3zGuRN2yrP6TEpb6LSJfx8xMwER6SAdvD/M1kX6cabl6M4O5O+7meFj
-	 vc9ODrQ4SXM6/kNPj19WEcBOde+P68PKBzUiaJTFbqFrfBJiWtLBdeolVH+NvS/nWp
-	 6rZVsaaVzetUA==
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id 59EF66271A52; Thu,  9 Apr 2026 21:18:43 -0400 (EDT)
-Date: Thu, 9 Apr 2026 21:18:43 -0400
-From: "Theodore Tso" <tytso@mit.edu>
-To: Li Chen <me@linux.beauty>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-ext4@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC v4 0/7] ext4: fast commit: snapshot inode state for FC log
-Message-ID: <20260410011843.GD99725@macsyma-wired.lan>
-References: <20260120112538.132774-1-me@linux.beauty>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="csSv6NPg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=yI
+	Pgk9Fvc5GGb1n+c5WvNVrrivP3Qxx7uj2ePzLbvCE=; b=csSv6NPgQ8WBTudhut
+	WmlG+w3NqlmDNrE5Id0ORKCp5S3rtOaJfTS6WpOXLAgML++Hb8QHSCXmxM0m3t1r
+	urTEyxZD6o+xR1fMYI3tECGnZ35VKKtYeQXLm8KmCSWA7nagnVDmgY/MqRYJWzos
+	08Px+KWQWcbYIW47pMcTEhWp4=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDX38lufdhpbcrDAQ--.9S2;
+	Fri, 10 Apr 2026 12:32:51 +0800 (CST)
+From: Cao Ruichuang <create0818@163.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Cao Ruichuang <create0818@163.com>,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	shuah@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Account for fprobe attachment at creation
+Date: Fri, 10 Apr 2026 12:32:43 +0800
+Message-Id: <20260410043243.65800-1-create0818@163.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20260409172955.98e2d20a7f7736a1a9834816@kernel.org>
+References: <20260407115751.96184-1-create0818@163.com> <20260409172955.98e2d20a7f7736a1a9834816@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260120112538.132774-1-me@linux.beauty>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgDX38lufdhpbcrDAQ--.9S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar17JF43JryrGrWDtrW8WFg_yoW8Jw15pa
+	9Ykwn8Kr1kta4rKa9xXw1FkFn5ArZrXrs8GF97G393Ww1DZF1kJw4vvF47XF1jvrWkGF1Y
+	gF4FgF1Fqw45Aa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUemhrUUUUU=
+X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCwBMMRWnYfXNeuAAA3D
 
-On Tue, Jan 20, 2026 at 07:25:29PM +0800, Li Chen wrote:
-> Hi,
-> 
-> (This RFC v4 series is based on linux-next tag next-20260106, plus the
-> prerequisite patch "ext4: fast commit: make s_fc_lock reclaim-safe" posted at:
-> https://lore.kernel.org/all/20260106120621.440126-1-me@linux.beauty/)
+Hi Masami,
 
-Can you take a look at the Sashiko reviews here:
+I reran this in clean QEMU on two kernels and got different results.
 
-    https://sashiko.dev/#/patchset/20260408112020.716706-1-me%40linux.beauty
+1. Ubuntu distro kernel:
+   Linux 6.8.0-100-generic #100-Ubuntu SMP PREEMPT_DYNAMIC
+   Tue Jan 13 16:40:06 UTC 2026
 
-There seems to be at least one legitimate concern, which is the
-potential cur_lblk overflow.  There are a couple of others which I
-think is real; could you please look at their review comments?
+   baseline count=2
+   after_create123 count=4
+   after_enable1/2/3 count=4
+
+   baseline enabled_functions:
+     __hid_bpf_tail_call ...
+
+   after_create123 enabled_functions:
+     kernel_clone (2) R ->arch_ftrace_ops_list_func+0x0/0x280
+     kmem_cache_free (1) R tramp: ... ->fprobe_handler+0x0/0x40
+     __hid_bpf_tail_call ...
+
+2. Current source-tree kernel built from the clean snapshot of my patch
+   branch:
+   Linux 7.0.0-rc6 #2 SMP PREEMPT_DYNAMIC Fri Apr 10 12:19:39 CST 2026
+
+   baseline count=0
+   after_create123 count=0
+   after_enable1 count=1
+   after_enable2 count=1
+   after_enable3 count=2
+
+   after_create123 enabled_functions:
+     <empty>
+
+   after_enable3 enabled_functions:
+     kernel_clone (2) ->arch_ftrace_ops_list_func+0x0/0x200
+     kmem_cache_free (1) tramp: ... ->fprobe_ftrace_entry+0x0/0x220
+
+So the behavior I reported earlier reproduces on that Ubuntu 6.8 kernel,
+but not on the current source-tree kernel. I think my earlier conclusion
+was too broad.
+
+I will stop pushing this testcase change for now unless I can narrow down
+which kernel change caused the difference.
 
 Thanks,
+Cao Ruichuang
 
-					- Ted
