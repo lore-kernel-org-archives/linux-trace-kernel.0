@@ -1,103 +1,201 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1271DD0D4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 12:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016491CDFCA
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 13:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775825218; cv=none; b=rG4NqJk/nBAsWHSU4noVOtCe1WBx5FCmp30pQuOHN70O5x4pZ3a83GZ4CmMxPQe3IFG9A5kl3XKZBVh7BOnaFIpJweFSlgm1vXRrjStxnkDEex82gNZ6+ELuCy2lLDwiJJtMxh1136UKKriXS55etmBiK2OM2nUDpzC/Z2ANfNA=
+	t=1775828153; cv=none; b=hLLLWEC0+ITLoGL9CKquDb8LpHR0aO6u0HYYPf+jlD96izCC3qI9br/n84QiztnEL9n/eutlxbyVZWiZ4yRlNzGJwg01Wmdpp95ZT8UoYza8+skverJzajqUA1VqbFSDAYeWOAnXF9vJEZXnlD1af2O9Gu1WoafKUX1p01buitA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775825218; c=relaxed/simple;
-	bh=UiG4yHUwYikgqMByAvWLqJ+G1mR3bcCQ6U10nnGXNm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+Elg6StORfF1LxvqZE6HzvBrLW5nqacUPhuAcrFLk3D7KLemejlKJZGwLVMOBa2LSSaS4UsF+YLO8mzTeHRcl0YVPxcqvlm6tzLlSmDKuQJcasvRGe+kyzcYbU4CvY1PbmmTKBe+93JCtzuB6yIwXIM3CQ9AauxGO5LrgSLZkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jChmAZGH; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1775828153; c=relaxed/simple;
+	bh=qzFDBlW38Y9drkwi3zJmnsk/zi2a2A6uLtHX7FlJS9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eiiyeqyh+zmLxH4z1UcfW5H2ffnmU8Ve28vAx9T/WZjcDOVsrtfQ/3oQwB/N++4Gb0V7g8j+8fRp0QiurERXkED3ZLN6uISxzHt7AeSwr3GD0TbB9oa5UulIt3Ujhr5N/nzXwwYKcOrCOXLFJ7J+sycRSB+bUx9p+1F0iJ/YK+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QV9R+Le7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jChmAZGH"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-66d24c6963bso3519480a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Apr 2026 05:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775825215; x=1776430015; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iD1Gru4E4GCn+KUuiU59fyOxdMeWJaLwzenw6NOVkUU=;
-        b=jChmAZGH/obpoo3e/AgyjPTiqZh7gPzf6KGf2SyI0Uc4s8q4+jOTN6Zal4e0Bj59cr
-         +2wp/1NOko9+aPDu8qtmdpX02b1nft+6IpLjF9sv78QQsILy50UDVQU6K0GA+Ry6PixD
-         1zuYPNRauiOLXvBh6MWtpVT08PxZtRCsmzepgSMhAQNcvg9MrwGoryG5hfSAqmvluUDr
-         rdOERi2cMQtfDi3qXd4K7RGUY7uvL/BToz1uRpWq7TF4Q4HJZblA66ALRRXwxoFHc4e+
-         g8MnGulHlDnHa3vHcsxxhhRiIL4u/jdZBD93Y74xv7ZpiARvA4N44X4QBDjP4lCT9FtQ
-         kQpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775825215; x=1776430015;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iD1Gru4E4GCn+KUuiU59fyOxdMeWJaLwzenw6NOVkUU=;
-        b=LluuxcnHK58IbdOlUmD+XdCHZ1gDIk7g+Z4NcyzeovOBYYI+ibF7+OpRIwz0nroRTV
-         gLiK56iEFJXaUJRIEK/ZGy++1dc64jMfdrJT8p8W1Y/FBu8cwuc/BLEZdjyGKK4qtfjr
-         TKUs+EaIg6I6uTvayeABBlBmMJDGT3W6jO2HRcED5pi7fwXaGB0dHPI7X1uA4lPA9SKh
-         jxxXMTQ40rNWBZF5Ktcuqid2oFEm1fLJAHXiHU2SY+QaF0/EXJzLTXUwGDPE0AnPTEZ5
-         bICviPEZ1TBhLWw6qEJCkklw+gXVx7WJGiF4NyXaBD2ivh4dYjWS+AvlSkgmX7B6NvL7
-         wTpg==
-X-Gm-Message-State: AOJu0YwPx/YqOhHgf68mcjp+JYyY/o9Snc3BYw32Kp9E+8CD/kT9j3vK
-	OTfZdneJqhC7VAUplvDjc3byP2h9gKdyiZkWyDJqKdZqZFlog422fmkQ+H1VUXGB5g==
-X-Gm-Gg: AeBDieuEqFhJSw/fgUb1HGx/mmjdy5PAcvuJ9nhznPoYWLNsZ2ugb/F/N1h/uqZkPTM
-	gjxDKaA/qk6FiDY1aUhMIAb6E97ZN59Ys7nOVbn5YSxQD/FTXAOiVDsREReFiJ+nSwELq1hqhdV
-	0xOEM3iCJ8Q4HPDFx1vEsadokTh1CMsYcpBgwCRqK0dRmaM8PVrq4gwGFwYmCgb83zW8hg+0Lgx
-	Xe8KgA2BIzqCYVzTW2CZ/qC7kUs8vhag9sRz7ZEQXsAuVvMdOV90X114I+K+sGcV+6SaHp38V0S
-	Yw5LxojbVLvlMiT6uQrIm6DZZkMxR3PNetyfxvKEZesgosY3HgQ/qEwgZc6hlUsImPNtxJ2QXOc
-	ZNXe5yDvF+njdtWSq18xSuNgBwmWqtN1OAdDXlZtVtHr6tvw2R0OhyqeMowng+1TQnyUBpZRQkn
-	c745RL37xxNhjAzYD7+i1SM4ixEaeUWoXZEd6KRVfuVEUSwdsRg/NEWVRm6Adt+5vpE2BEm3iRR
-	PEMBg==
-X-Received: by 2002:a05:6402:3506:b0:66b:f154:2e81 with SMTP id 4fb4d7f45d1cf-6707af159a4mr1548801a12.20.1775825214721;
-        Fri, 10 Apr 2026 05:46:54 -0700 (PDT)
-Received: from google.com (198.115.140.34.bc.googleusercontent.com. [34.140.115.198])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-67070826607sm538044a12.27.2026.04.10.05.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 05:46:51 -0700 (PDT)
-Date: Fri, 10 Apr 2026 13:46:46 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Dan Carpenter <error27@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [bug report] ring-buffer: Introduce ring-buffer remotes
-Message-ID: <adjxNnzgRleH3ll5@google.com>
-References: <adjN-1ydA_kPPhmG@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QV9R+Le7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775828151;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xtIpjYDOHdSv0lZJ3NJBv+5doRQrU2DW+0WPWnC9oQw=;
+	b=QV9R+Le7kyqwkACi6C7+3d/FCRRBdT4scLi7wdDPjJb7DZ1zXtAKB4xt+b801eUZbOwtEi
+	w+AU7Wj2zitKuqr9f8APaD1lmSXTaz5L55Tj3s88NEQU54xxr+3jiybdqnxAD8ZzgDww18
+	Vvc7xy0O8JYda8c7/zdnSIG2/Q9Zh6Y=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-408-7b17dJy5NN6MgbR4JAz4OA-1; Fri,
+ 10 Apr 2026 09:35:49 -0400
+X-MC-Unique: 7b17dJy5NN6MgbR4JAz4OA-1
+X-Mimecast-MFC-AGG-ID: 7b17dJy5NN6MgbR4JAz4OA_1775828147
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F7451956080;
+	Fri, 10 Apr 2026 13:35:46 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.74.64.26])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD8FC1955F2E;
+	Fri, 10 Apr 2026 13:35:38 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH v2] perf: enable unprivileged syscall tracing with perf trace
+Date: Fri, 10 Apr 2026 09:35:28 -0400
+Message-ID: <20260410133529.21947-1-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adjN-1ydA_kPPhmG@stanley.mountain>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: VpT6tc9iUb_Bl5wl_ZX3xpRAelUpP4Luf6bg1caxras_1775828147
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 10, 2026 at 01:16:27PM +0300, Dan Carpenter wrote:
-> Hello Vincent Donnefort,
-> 
-> Commit 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
-> from Mar 9, 2026 (linux-next), leads to the following Smatch static
-> checker warning:
-> 
-> 	kernel/trace/ring_buffer.c:2243 ring_buffer_desc_page()
-> 	warn: array off by one? 'desc->page_va[page_id]'
-> 
-> kernel/trace/ring_buffer.c
->     2241 static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, int page_id)
->     2242 {
-> --> 2243         return page_id > desc->nr_page_va ? NULL : (void *)desc->page_va[page_id];
->                                 ^
-> Based on the len = struct_size(desc, page_va, desc->nr_page_va), in
-> ring_buffer_desc(), I'm pretty sure this should be >= instead of >.
+Allow unprivileged users to trace their own processes' syscalls using
+perf trace, similar to strace without the intrusive overhead of ptrace().
 
-You are right. Thanks for the report, I have sent a fix.
+Currently, perf trace requires CAP_PERFMON or paranoid level ≤ 1 even
+though the kernel has existing infrastructure (TRACE_EVENT_FL_CAP_ANY)
+specifically designed to mark syscall tracepoints as safe for
+unprivileged access. To fix this:
 
-> 
->     2244 }
-> 
-> This email is a free service from the Smatch-CI project [smatch.sf.net].
-> 
-> regards,
-> dan carpenter
+1. Loosen the condition in perf_event_open() which requires priviliges
+for all events with exclude_kernel=0. This allows perf_event_open() to
+bypass the paranoid check for task-attached tracepoint events. Ensure
+that sample types which can expose kernel addresses to unprivileged
+users are blocked.
+
+2. Make the format and id tracefs files world-readable only for tracepoints
+with TRACE_EVENT_FL_CAP_ANY, allowing unprivileged users to see syscall
+tracepoint ids without exposing sensitive information.
+
+Also add a check to perf_trace_event_perm() to ensure only TRACE_EVENT_FL_CAP_ANY
+events can be traced.
+
+Example usage after this change:
+  $ perf trace ls          # works as unprivileged user
+  $ perf trace             # system-wide, still requires privileges
+  $ perf trace -p 1234     # requires ptrace permission on pid 1234
+
+Assisted-by: Claude:claude-sonnet-4.5
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+---
+Changes in v2:
+- Add check to block sample types that bypass KASLR, suggested by
+  sashiko.
+- Link to v1: https://lore.kernel.org/linux-perf-users/20260408123947.23779-2-ashelat@redhat.com/
+---
+ kernel/events/core.c            | 22 +++++++++++++++++++---
+ kernel/trace/trace_event_perf.c | 12 +++++++++++-
+ kernel/trace/trace_events.c     |  8 ++++++--
+ 3 files changed, 36 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 89b40e439717..db8c674704b2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13834,9 +13834,25 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		return err;
+ 
+ 	if (!attr.exclude_kernel) {
+-		err = perf_allow_kernel();
+-		if (err)
+-			return err;
++		bool tp_bypass = false;
++
++		if (attr.type == PERF_TYPE_TRACEPOINT && pid != -1) {
++			/*
++			 * Block sample types that expose kernel addresses to
++			 * prevent KASLR bypass
++			 */
++			u64 kaddr_leak = PERF_SAMPLE_CALLCHAIN |
++					 PERF_SAMPLE_BRANCH_STACK |
++					 PERF_SAMPLE_ADDR;
++
++			tp_bypass = !(attr.sample_type & kaddr_leak);
++		}
++
++		if (!tp_bypass) {
++			err = perf_allow_kernel();
++			if (err)
++				return err;
++		}
+ 	}
+ 
+ 	if (attr.namespaces) {
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index a6bb7577e8c5..e8347df7ede5 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -73,8 +73,18 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
+ 	}
+ 
+ 	/* No tracing, just counting, so no obvious leak */
+-	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW))
++	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW)) {
++		/*
++		 * Only allow CAP_ANY tracepoints for unprivileged
++		 * task-attached events in case kernel context is exposed.
++		 */
++		if (!p_event->attr.exclude_kernel && !perfmon_capable()) {
++			if (!(p_event->attach_state == PERF_ATTACH_TASK &&
++			      (tp_event->flags & TRACE_EVENT_FL_CAP_ANY)))
++				return -EACCES;
++		}
+ 		return 0;
++	}
+ 
+ 	/* Some events are ok to be traced by non-root users... */
+ 	if (p_event->attach_state == PERF_ATTACH_TASK) {
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 249d1cba72c0..6250b2529376 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3051,7 +3051,9 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+ 	struct trace_event_call *call = file->event_call;
+ 
+ 	if (strcmp(name, "format") == 0) {
+-		*mode = TRACE_MODE_READ;
++		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
++			(TRACE_MODE_READ | 0004) :
++			TRACE_MODE_READ;
+ 		*fops = &ftrace_event_format_fops;
+ 		return 1;
+ 	}
+@@ -3087,7 +3089,9 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+ #ifdef CONFIG_PERF_EVENTS
+ 	if (call->event.type && call->class->reg &&
+ 	    strcmp(name, "id") == 0) {
+-		*mode = TRACE_MODE_READ;
++		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
++		(TRACE_MODE_READ | 0004) :
++		TRACE_MODE_READ;
+ 		*data = (void *)(long)call->event.type;
+ 		*fops = &ftrace_event_id_fops;
+ 		return 1;
+-- 
+2.53.0
+
