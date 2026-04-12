@@ -1,33 +1,80 @@
-Received: from mail.189.cn (189sx01-ptr.21cn.com [125.88.204.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C88B1D130E;
-	Sun, 12 Apr 2026 14:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=125.88.204.37
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B94CF4F1;
+	Sun, 12 Apr 2026 16:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776003059; cv=none; b=Sg2/Ed4KrEVHC98XYAwBGVFSKuAkpifI82sAdsXi8mSVZCJ+wtKCQkee4laj8UNvt0s7eyMfS1HlL8ZXJxEo6kIF442qF3iLCABYqwxI1+OgCpWtWtMT6Q+N/gHZE+LiwbxZbI70Aa43FXdlTcjPP3ugQltFimYudHEFLmzyHN0=
+	t=1776011279; cv=none; b=OJ7ik9Sry0136AfAmL08ZUG+N1STRPo0kRMIyeyup7IyK6H0We9ebHUuZsM8sw1jYyxX9SdkwKdO3yWFAQROpl0NzBrUYJc5M8fMajg9h8Prv0Rk78KinnYvkMIUQao3pit/WeL+Z7Abj0Jlcq4EKtKch8fbsGEQ+u/iVySZ7W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776003059; c=relaxed/simple;
-	bh=tjc5iA5/ozTIRXHnu8IdHTw93PzAQJPc6iB3DoAvfkc=;
+	s=arc-20240116; t=1776011279; c=relaxed/simple;
+	bh=OpwoOxLcnMDQCVU/RHu5iwpItaucQdoTlJZBJ0oMpVI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cofka6B6BOcgDoiDTtjB5NhOYlD7UIWQjBpWTgSGOKJyTLhhSIacrB1R+IboRs29CIpBhm8bSp2fDACUvrjO2P1U8l6TcoDVokkRxYAfl/YYSJCrwthkBJziCYOct1rOzgau+AIfAo96hX0t7ASz7nl72ThR5e4cGYx9Hyyufog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=125.88.204.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
-HMM_SOURCE_IP:10.158.243.18:0.740051472
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-111.162.143.142 (unknown [10.158.243.18])
-	by mail.189.cn (HERMES) with SMTP id 39A0840029F;
-	Sun, 12 Apr 2026 22:10:46 +0800 (CST)
-Received: from  ([111.162.143.142])
-	by gateway-153622-dep-76cc7bc9cd-8dbpn with ESMTP id a7f5d2f936e74b1dbc442e4419dc0d7f for pmladek@suse.com;
-	Sun, 12 Apr 2026 22:10:48 CST
-X-Transaction-ID: a7f5d2f936e74b1dbc442e4419dc0d7f
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 111.162.143.142
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-Message-ID: <4037aa19-1b01-4076-b823-5cc0e43becac@189.cn>
-Date: Sun, 12 Apr 2026 22:10:45 +0800
+	 In-Reply-To:Content-Type; b=kzkYKxnnvlvDeJqzBNAYqdjjxCK1nuheOvq41fAyrpEeKNs/Om9S3py1jHgdr9iH1e98i0c7E3y3h1fQANdAtLe/ksJGUNI+lGvKeFEESA5Us9Pse0eEPy0hWDmPGGODMjKUWHkL2J3ah/3ghEAtOR/vIHZnHdAmilYaaZyVr3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=f6nuTFWm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RhwSn3qg; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="f6nuTFWm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RhwSn3qg"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id E8A257A0278;
+	Sun, 12 Apr 2026 12:27:55 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Sun, 12 Apr 2026 12:27:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1776011275;
+	 x=1776097675; bh=JFcI1aAXqRNOoIOGiNBuFSHH+AnFP5VFrvO+zV0HEFM=; b=
+	f6nuTFWmCTkmQVgbIdnO8vQeeZADALKFQLbKYso6b7sLXSvjrJ4ZRTOoDRnReK7g
+	sIMtoV/4rwNiLP7eLPoeKscCG8UZj6NbavO2Ogi+f6rEdQg+AQTCuboAtvmdQ+xF
+	rJqZGMEBdd9xifSIX6IoJkDrxLLrMFJX7suok2Lfe2QfF2BNZO+2ZpAhFMaEAwfH
+	SJRuLAG8FVLsY1lH0kiF6OmJQbKE+tDOYCXIRj6TGtpI4gy2KDvsoeBQPorUBv0X
+	br9Exof1TCk9IgwcKNkPvIqkWPPrsu6cd0kPTjqpFiFJO5OfeozizE7LWAibKhFj
+	EvmQHbJYdtWmOqnlysoRdQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776011275; x=
+	1776097675; bh=JFcI1aAXqRNOoIOGiNBuFSHH+AnFP5VFrvO+zV0HEFM=; b=R
+	hwSn3qg9ndUGaCvi75f5R+mf0Yfgh8f47XC87+VfHAfkCUTlhJEFhUU6Es/lppqn
+	J0BhTo3YFLDkiIk5hT1nEAM4MjH3aGy9M9n2DbmecqNU8VkhwlVRI0/r+6dKb27e
+	1uTkGicip9KmjIFQvcYGy/HHbyAEUDG13CIa7WdkinWzT3O8OMYxCxm7xP+D77Wm
+	tvtLJi/uKjAGVupmjSnrpln6NIMgi8sQLBthuC/6sE5tP7WVxGIEPMIGHXsqiTqa
+	NdVn2X/1QUc3zco8cT10HrfsCbAEnCpRt8S61OcFarbSzs+QspR/+FWeJAEyXRVk
+	fmq2yvFmuDpfDEQ7vvtug==
+X-ME-Sender: <xms:CsjbaX0J939HAS5zUeVq7B-p6HN6PCszX7oNc4nwjCN42SnuSL4tbQ>
+    <xme:Csjbabq3pEdYiu5tfj4SzvJR8-TS9k-MSaacIZFyvJmwNZXwwAbTH_2QU6iUkCEz7
+    Gnaa_7zH3boQrTQPiAhYMdCfCCNvGWweFgIjn3IMFLN-XR-mqglpA>
+X-ME-Received: <xmr:CsjbaRfe_D35lJOPDgVi_Jmb6OAGJYrMi2ShqgCd2GalCUmDfTyNt349Cmx_fqHDCT2yRFJPkxJL1pAP2g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdefheejlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhinhhgmhgr
+    ohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqeenucggtffrrghtthgvrhhnpeduke
+    evhfegvedvveeihedvvdeghfeglefgudegfeetvdekiefgledtheeggefhgfenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmsehmrghofihtmh
+    drohhrghdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepghhnohgrtghksehgoh
+    hoghhlvgdrtghomhdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepjh
+    grnhhnhhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhgvfhhfgihusehgohhoghhl
+    vgdrtghomhdprhgtphhtthhopehuthhilhhithihvghmrghljeejsehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmhhhi
+    rhgrmhgrtheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:Csjbadt37SJQTWwLIeSFuT_ZFngEvdUvdPJyokSztCbLvR_utJlO0w>
+    <xmx:CsjbaRXmqhac2sZJOHovh5IiMWJZDyIh4N1jGHZvZt8oIqQenG9bkg>
+    <xmx:Csjbaa8gPVR2p5CYxmBmkOtPA8_AsvxOHV2R6dRSiYJ3k0zu327k1g>
+    <xmx:CsjbaV5it3wJoPCgm-qz3P1petXUQStRCRkkcS4eX4w-8qThKgwm1w>
+    <xmx:C8jbaT-owS9aTivucahXq9gG_GoRTfFCpO_N_aUncfcEaU6DFpL6YXbD>
+Feedback-ID: i580e4893:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 12 Apr 2026 12:27:52 -0400 (EDT)
+Message-ID: <4e2adbc9-22df-45a1-b270-674bb9224bb7@maowtm.org>
+Date: Sun, 12 Apr 2026 17:27:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,155 +82,101 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kernel/trace/ftrace: introduce ftrace module notifier
-To: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Miroslav Benes <mbenes@suse.cz>,
- mcgrof@kernel.org, petr.pavlu@suse.com, da.gomez@kernel.org,
- samitolvanen@google.com, atomlin@atomlin.com, mhiramat@kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
- linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20260225054639.21637-1-chensong_2000@189.cn>
- <20260225192724.48ed165e@fedora>
- <e18ed5f4-3917-46e7-bca9-78063e6e4457@189.cn>
- <alpine.LSU.2.21.2602261147150.5739@pobox.suse.cz>
- <20260226123014.2197d9b7@gandalf.local.home>
- <321d4670-27cb-453f-a50d-426c83894074@189.cn>
- <aaqk-GrpCTqO36xj@pathway.suse.cz>
+Subject: Re: [PATCH v2 03/17] landlock: Split struct landlock_domain from
+ struct landlock_ruleset
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@google.com>, Justin Suess <utilityemal77@gmail.com>,
+ Kees Cook <kees@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Matthieu Buffet <matthieu@buffet.re>,
+ Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
+ kernel-team@cloudflare.com, linux-fsdevel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20260406143717.1815792-1-mic@digikod.net>
+ <20260406143717.1815792-4-mic@digikod.net>
 Content-Language: en-US
-From: Song Chen <chensong_2000@189.cn>
-In-Reply-To: <aaqk-GrpCTqO36xj@pathway.suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Tingmao Wang <m@maowtm.org>
+In-Reply-To: <20260406143717.1815792-4-mic@digikod.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+On 4/6/26 15:37, Mickaël Salaün wrote:
+> [...]
+> @@ -197,10 +179,10 @@ static void build_check_ruleset(void)
+>   *
+>   * Return: 0 on success, -errno on failure.
+>   */
+> -static int insert_rule(struct landlock_rules *const rules,
+> -		       const struct landlock_id id,
+> -		       const struct landlock_layer (*layers)[],
+> -		       const size_t num_layers)
+> +int landlock_rule_insert(struct landlock_rules *const rules,
+> +			 const struct landlock_id id,
+> +			 const struct landlock_layer (*layers)[],
+> +			 const size_t num_layers)
 
+Maybe this is slightly off topic, but previously I've found this function,
+along with create_rule and merge_tree, to be quite confusing, because the
+logic for three different use cases (creating a copy of an old domain,
+merging a new layer into this domain, and inserting a new rule into an
+unmerged ruleset) are mixed in the code, and personally now that I'm
+reading it again I still find these functions to be hard to reason about.
+Therefore, given that we're refactoring these areas, I think this might be
+a good opportunity to rewrite them (while getting the necessary testing
+for this rewrite "for free" as part of this whole domain refactor).
 
-在 2026/3/6 17:57, Petr Mladek 写道:
-> On Fri 2026-02-27 09:34:59, Song Chen wrote:
->> Hi,
->>
->> 在 2026/2/27 01:30, Steven Rostedt 写道:
->>> On Thu, 26 Feb 2026 11:51:53 +0100 (CET)
->>> Miroslav Benes <mbenes@suse.cz> wrote:
->>>
->>>>> Let me see if there is any way to use notifier and remain below calling
->>>>> sequence:
->>>>>
->>>>> ftrace_module_enable
->>>>> klp_module_coming
->>>>> blocking_notifier_call_chain_robust(MODULE_STATE_COMING)
->>>>>
->>>>> blocking_notifier_call_chain(MODULE_STATE_GOING)
->>>>> klp_module_going
->>>>> ftrace_release_mod
->>>>
->>>> Both klp and ftrace used module notifiers in the past. We abandoned that
->>>> and opted for direct calls due to issues with ordering at the time. I do
->>>> not have the list of problems at hand but I remember it was very fragile.
->>>>
->>>> See commits 7dcd182bec27 ("ftrace/module: remove ftrace module
->>>> notifier"), 7e545d6eca20 ("livepatch/module: remove livepatch module
->>>> notifier") and their surroundings.
->>>>
->>>> So unless there is a reason for the change (which should be then carefully
->>>> reviewed and properly tested), I would prefer to keep it as is. What is
->>>> the motivation? I am failing to find it in the commit log.
->>
->> There is no special motivation, i just read btf initialization in module
->> loading and found direct calls of ftrace and klp, i thought they were just
->> forgotten to use notifier and i even didn't search git log to verify, sorry
->> about that.
->>
->>>
->>> Honestly, I do think just decoupling ftrace and live kernel patching from
->>> modules is rationale enough, as it makes the code a bit cleaner. But to do
->>> so, we really need to make sure there is absolutely no regressions.
->>>
->>> Thus, to allow such a change, I would ask those that are proposing it, show
->>> a full work flow of how ftrace, live kernel patching, and modules work with
->>> each other and why those functions are currently injected in the module code.
->>>
->>> As Miroslav stated, we tried to do it via notifiers in the past and it
->>> failed. I don't want to find out why they failed by just adding them back
->>> to notifiers again. Instead, the reasons must be fully understood and
->>> updates made to make sure they will not fail in the future.
->>
->> Yes, you are right, i read commit msg of 7dcd182bec27, this patch just
->> reverses it simply and will introduce order issue back. I will try to find
->> out the problem in the past at first.
-> 
-> AFAIK, the root of the problem is that livepatch uses the ftrace
-> framework. It means that:
-> 
->     + ftrace must be initialized before livepatch gets enabled
->     + livepatch must be disabled before ftrace support gets removed
-> 
-> My understanding is that this can't be achieved by notifiers easily
-> because they are always proceed in the same order.
-> 
-> An elegant solution would be to introduce  notifier_reverse_call_chain()
-> which would process the callbacks in the reverse order. But it might
-> be non-trivial:
-> 
->    + We would need to make sure that it does not break some
->      existing "hidden" dependencies.
-> 
-Thanks so much, this is the solution i'm working on. I replaced next 
-with a list_head in notifier_block and implemented 
-anotifier_call_chain_reverse to address the order issues, like your 
-suggestion. And a new robust revision for rolling back.
+For example, for this snippet:
 
-+static int notifier_call_chain_reverse(struct list_head *nl,
-+                    struct notifier_block *start,
-+                    unsigned long val, void *v,
-+                    int nr_to_call, int *nr_calls)
-+{
-+    int ret = NOTIFY_DONE;
-+    struct notifier_block *nb;
-+    bool do_call = (start == NULL);
-+
-+    if (!nr_to_call)
-+        return ret;
-+
-+    list_for_each_entry_reverse(nb, nl, entry) {
-+        if (!do_call) {
-+            if (nb == start)
-+                do_call = true;
-+            continue;
-+        }
-+#ifdef CONFIG_DEBUG_NOTIFIERS
-+        if (unlikely(!func_ptr_is_kernel_text(nb->notifier_call))) {
-+            WARN(1, "Invalid notifier called!");
-+            continue;
-+        }
-+#endif
-+        trace_notifier_run((void *)nb->notifier_call);
-+        ret = nb->notifier_call(nb, val, v);
-+
-+        if (nr_calls)
-+            (*nr_calls)++;
-+
-+        if (ret & NOTIFY_STOP_MASK)
-+            break;
-+
-+        if (nr_to_call-- == 0)
-+            break;
-+    }
-+    return ret;
-+}
-+NOKPROBE_SYMBOL(notifier_call_chain_reverse);
+		/* Only a single-level layer should match an existing rule. */
+		if (WARN_ON_ONCE(num_layers != 1))
+			return -EINVAL;
 
-I'll send the patches for review soon.
+Someone unfamiliar with how this function is being used by its caller may
+not realize that the reason the comment is true is because the only use
+case where we have multiple layers in @layers being passed into this
+function is when we're copying an existing domain into a new domain, and
+so we should never match something that already exists.
 
-Best regards
+Also, further along in this function, there is this snippet:
 
-Song
->    + notifier_call_chain() uses RCU to process the list of registered
->      callbacks. I am not sure how complicated would be to make it safe
->      in both directions.
-> 
-> Best Regards,
-> Petr
-> 
-> 
+		/*
+		 * Intersects access rights when it is a merge between a
+		 * ruleset and a domain.
+		 */
+		new_rule = create_rule(id, &this->layers, this->num_layers,
+				       &(*layers)[0]);
+
+I also found the comment to be confusing because it's not "intersect"ing
+anything (it's adding a new layer to an existing rule in the domain when
+the object pointed to by "id" exists already in the domain, and the
+intersection is only a consequence of how Landlock works when there are
+multiple layers).  This realization is made harder by the fact that a few
+lines above we just OR'd the access rights (for modification of an
+unmerged ruleset), and so it makes it sound like it's doing a similar
+thing except with AND instead of OR.
+
+I think it might make sense to have separate functions, even if they result in some slight code duplication, for use by:
+
+1. Copying a domain: inherit_ruleset() -> inherit_tree() -> _____()
+    RB tree search to find the insertion point + create_rule().  Maybe
+    this logic could just be in inherit_tree() without creating a separate
+    function?
+2. Merging a rule into a domain: merge_ruleset() -> merge_tree() -> _____()
+    insert_or_append_rule()?  RB tree search, call create_rule() to create
+    a new rule with the new layer added, then either
+    rb_link_node()+rb_insert_color() or rb_replace_node().
+
+Neither functions above will contain any actual logical AND/OR.
+
+3. Inserting a new rule into an unmerged ruleset: landlock_add_rule() -> ... -> _____()
+    insert_or_update_rule()?  RB tree search, and either update the access
+    rights of an existing rule in-place (as we currently do), or create a
+    new rule if the search fails.
+
+We could create a utility static function or macro for the shared RB tree
+search code.
+
+How does this sound?
