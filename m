@@ -1,100 +1,99 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F021C36B071
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 12:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0327F3537D4
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 12:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775995797; cv=pass; b=r9wuZtzQ1uLmYm23wAZKebhZdRto98BPQBNfgvnrHauKokeC/csUTKJMb7uqh+1zfcIbs7mJykVN4sUhqs0Tq9nFfNQQB2KbOD0cus92BIzQKNnII1SZKkx6/vgYuOC6cYw+hgB8ntHpshiajSqBWtTjy1tP1lHCZwdQN3BKZqs=
+	t=1775996339; cv=pass; b=U/RMni18bOFSnKX+m5MSoWTcq6CHbNeaW8fJgblmcdixW24txwBGCw9fMMtxgMXh0Vhay1a0HDHBtY8Y30UeyQE8rcm2d+kdrm99FVaEm3KXXvjJ8WnZGtW4mVs0IsTY0ENf1Po5jfha0tTQZcB6QrrgKmgX4W9dHwz/JqwfsPE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775995797; c=relaxed/simple;
-	bh=SVTNVJLn1VqDWx0HDz8tbsYxcEIfkMoVv4id3LOHg7s=;
+	s=arc-20240116; t=1775996339; c=relaxed/simple;
+	bh=uafX2bQpJrLfg9yfw+DCfmB3m9g7ysXsoTFfZ75pRt0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fDi0cijOb2o4jHTwWn3pYLLtbxxS3gVMtj3oZYo7jWcspdeEg01Wz3gAAQU1IdbTIjTOsxYMMWSHXZTzaXSdMulVwgW+poYMPQEVhcfQcfH+atKASeh1Tmzt1sm9BfLG+gHuu4JQ7698A5TnPTifJzQMJgV1HgRzN4BPRGCOOSI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jrduKbKu; arc=pass smtp.client-ip=209.85.128.169
+	 To:Cc:Content-Type; b=jqQGCRGoRGgCSxhz6pwGRi8ACV/OwT/1tqc0uVh1/QlFS5EC9lsHgm77YAz2NLORopy0scPjMKHxdEscYxmKglcLuMmUBZaexs5aaXtSnISxTTQ4Y6qMeb76pQslxrhDPDhIBtEluj88+QFyW+sBxmRQ34DGD2OGI6uykHG5QjU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1w7iWpP; arc=pass smtp.client-ip=74.125.224.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrduKbKu"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7986e0553bdso33470387b3.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 05:09:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775995795; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1w7iWpP"
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-651c366f7efso185842d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 05:18:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775996337; cv=none;
         d=google.com; s=arc-20240605;
-        b=hY2ooEmOVnDt+J/zI3jaqt+NVX66dUGk3zJ2rkcYuBY9MgRN3u0YTYNxpQMBYEH/kK
-         4CDr0Uc151l6czyuOgABWYN5PXdZJilPYyZylegY4Yug5eWfeD7KXcbq3nOCYAAMn72o
-         N22ZGS5XfVWRAt+MFtJdykNuIXWsv+6i7IZi0ybwm/hpANpJPAxgXWu+2uWfcm97xDwx
-         YuQjcoWhmR9WEAkyekVHZCF7jxqazrVlIaTy+BkqY1zItdNS7reHUnZswY8yHA7sFqYM
-         UOuVCx4EeECDsS/s2L5J3+gU2cIkDXYzB4DUy9IqJ0ZRWdPrAGWAkTJP0oprLHwk88ts
-         H8KQ==
+        b=j9Ol+dFEgq9jHUvqoybtLHyTMuXXSCL7+hixBcqlYBEE31PuYGL1Nc0uu60Ribhu1I
+         KPR9Rh+rVRLFGwdQZ34wk3IMzop9rophr2cmMiWAByisNi9CArNPwtgV4FvNQwpt4Xv2
+         MV0GH0tYr26MkmM6s4qQvyryS0sw1S1EfmeHbY818qSE2nJ4X/aFkG6uQGNsWUJUTlId
+         AElxtGmoyqjuV0oPZT066NsVNG4B/01+doSjh0bz+D2nW8USclkk2ovnWiPGxCnzONvX
+         oyaEiUzNqkT+I7fjxw+OA76JJEMExcU6xOGS0nQB4gR52K4ynQAJ0M2DWKKCUg9xRdTM
+         hjpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=3yi7Jufl9MZ6r9E9T+DntWdpQRPYoo/vSgS2eY9Rp+c=;
-        fh=MZ/sNo4TJQoTfQsyqqm7Uiww1gf54VY73PKo/jvSZFk=;
-        b=PoiVTOF7/fveNGi77/qxM6URlaz/pZvx59wQdqoA0TPserFTwMyKoawrapDEKjEmmC
-         pCKQPRDpS45GKTv+9Sfr0k1IJte3AYKpqrV3fYkusQMgthnIyXwRepKOVABRCk6nLJCU
-         2aK99AqHY3OzfQyqCIYl2ysW4ecMuhKwWChZA1BTFtBRMqBDmeF8W/lhyc0C8RbqoSUD
-         9XiVWGZAUacEnuGakXmRXCisvIx9KOGl5BCbUozX9NeB22/i2+9KknYC4ryh6Z8uPMA4
-         yYDmSIsPSQoyXx2cpDMRDnDV93s928qMHksA7vsny6lqDZ5DIwh0IYRwuODLCgj+s55a
-         vHfw==;
+        bh=pDCtYpSt5MQDUqGRaPZuhMEbLqOBYANHADybtg+qQXY=;
+        fh=PisLT4rnkpmhGYGU+NWER1fw3k0qWq4KxkLXQaGaRD4=;
+        b=hoQDJEZG3jt7mvQkOMfVcWCX7GIw/XEoA3AJh+AQlJkNPYtBugyYzB5yqyNAyljXiB
+         LM2IrpJ6NXiNNcdrNipetmrj5x5fJbOPDb/qqReVn81C8d+I3y7i/74BpdnN2LmIFCjr
+         lXjL1nuyclmzdgRCZ87xUkNPqMa/9b4jTLyps9HrSFkTzYrxeWZR5VsGhZGz2Zk33SNF
+         8AZ8dghLLYU68Nn2ksXakdVi31vPCE4BQcyxAOW4f8P0t3l4U4epvkWnPx+9pMDi57A3
+         NSTAQchLsj3ooWlaBh+DU2rf7wfq4DJ2c+M3vtUKQs2f/egY/9/PRjBEz3jpqiJKjcFV
+         PJDQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775995795; x=1776600595; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775996337; x=1776601137; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3yi7Jufl9MZ6r9E9T+DntWdpQRPYoo/vSgS2eY9Rp+c=;
-        b=jrduKbKucOJ0CrdEhOzQjksun3glLXXyDIsHC29QDod3cu+as1tdU/z//zLc3j771F
-         Ww0mpRkjrNeekX5PJhDel6R4DMkc6Ea5uPdNN8QAEvd2w2v9BWeqEgh81fUyMRKCYoaz
-         PKjzJ1ADdJLkpXk9OsWoHjE4qpRTULett3nyv/g16kMfC/HsuxD/CBtq7KDTa/Q50WfX
-         IGmN9R4IaIlJhNnocOiKpGnjeqM6Ob+Ym6X/+JxHmIEuW+GzceECvAJan3e9NKQ5tB8t
-         4SnhUenVs+FFcdLic6qX9rVRaofoOzUPQ6B4l5TAYm2AmbSyukIT2c/v4XbvLqPuvyd4
-         SlhA==
+        bh=pDCtYpSt5MQDUqGRaPZuhMEbLqOBYANHADybtg+qQXY=;
+        b=L1w7iWpPjeegHoc9cP6BaGEAqFGK/8eCGY7df9Mu6T7TiPe6jg8yrlfT5j7X6WhBZS
+         JCZf2TZlC/ol2ltgkb2jLz+ZBfnaddtYmm7F2xg9ysRtaKPYEIIj6Kc3fMIWXVRQhfS/
+         Rv0lcdIXCgI16EFL0Z8jQJqxDECvrtcyPN0s9S5J4Q9Ac2X/MxNBac78S1FhVR1+aDbn
+         mKfrDac9sl7Lf8IZ8AxVCoHAyODdkNQMhgvyOhwOlgaUNvf871kGs/tzQ9Y5Q99GPL7T
+         roUWoyD+oGDJmTDhegrO0nRZOlBkMQKlLi8EulyjkxfBm0psBw1b1Xa7X+laho44JjdZ
+         +Kqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775995795; x=1776600595;
+        d=1e100.net; s=20251104; t=1775996337; x=1776601137;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=3yi7Jufl9MZ6r9E9T+DntWdpQRPYoo/vSgS2eY9Rp+c=;
-        b=ddlr3iNBEFnWS7rpF3b/1y/4/jtggN5nOtLCWkcAd4LumADGkbeAC2UtSmmvK02t+h
-         81yaQ+X5IxcPdabz0J3bqKA4YQSfyQl1Ko51GkUtRnifIQxEsk1a7QaXGJqQloWbrqZr
-         WJ7+Yud8wPJJx3mOO3764TPtf29Pd63x/OOAU5+zVwSMNhgoYiLP/lMm/Yxrl+2khcfl
-         ktpfwWRz3cm3TsxaQk9+JTbQegVfuQ+jE7Yir4wDHxTHg57R+XRNsTdSiAWQatf17lm0
-         1LJEH5BytTwzeBgyNzWyar78QP/k1VzRipo6+qJL1oOYWEZWU4pCTRcoAWK/Pf0Fe79S
-         Lw4w==
-X-Forwarded-Encrypted: i=1; AFNElJ+1nc6BnXYnqv1nDkUOWX0HFFbwRTccambMM3Zno3LTdaCrI4YOVobBShe/Xr6ctUNTCDZEerXw/kHFmPZLEJ8Rq0g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMJitMpHh72ISBmy2qWtcQj3ZYEy2vZp7bUqiGXm5dXhla4W0y
-	iiYdMav7Z6sNa2n05Qj9qnwV7NPbFuTNwBvPikNCdIW6vvCfWb1LJdd/DwaskDugf8BL55FM/mK
-	xhC3/pfHq7DTIF6EojvzSlpsY16uttLw=
-X-Gm-Gg: AeBDiev4hGUH5BPkN53YVHsuDrksD7pQEb6mvqI68KnvVY1v5IIKuiWQfys9pfMzD5s
-	FnzVc3c3ozCXU47ZZv2LYnxB213WqRrasepqYCDFkF90/suDXjDQfp2cGg286MUoHNR4t060GJT
-	TfoR0uRsogcwjZj6Whf5oo0rCLkO0ykbkevc1cTQjb5+F4MMcU7nagiaxdZl3SfsAyhJ2bncqum
-	eQmgkDG63gwhDam9YYasILTsGuo38W7GQi7YmRYFFBDOaJ2GjYYIaTknfEEBwHFjnOG/DE1H6BK
-	HOYrxWiSI2M3heUz95yeoymuXMvdXz+URMfTR5mi
-X-Received: by 2002:a05:690c:dc3:b0:79a:cc64:886e with SMTP id
- 00721157ae682-7af7282b96bmr107487127b3.52.1775995794798; Sun, 12 Apr 2026
- 05:09:54 -0700 (PDT)
+        bh=pDCtYpSt5MQDUqGRaPZuhMEbLqOBYANHADybtg+qQXY=;
+        b=E5Urg1IfEjdn0oYOqgyhLHn4r/clatjrd5tS2qbynyANfSDPXVyWh3OHyKLO1iMap3
+         3BherpB6+NSnNilhyFeCOLrYYd1gKMFr7hi810cWujQL6SXZg+GOH6pzZAVQuHHLZ/BB
+         3x7gPYgN8XJv6sTEM9pspOAIWb2c81qGRAgcpWvrwCOJoxxOZf/tG4BF7DPFcioqEIIx
+         hdm+fyuNCzOlYiWKvi19hEtNX+dOEx+ISPZ1n6JNzbo1yKjkvmkDYp6q5VyTU+DrPsDt
+         nBdKgeh6axWclU53fcWudqFIpvIKZiAfOenagNBXlwzgdqutibsqq8ErGCbuGD3ZlVss
+         SlFg==
+X-Forwarded-Encrypted: i=1; AFNElJ++9u/cVxP4fOQlWRUjMkA1kBONNhRYsFqcLyiNOF4R1E6SXVMWTfH1GqQQxCW6jdOOr334gdYiV5CXkCbtO5uMq2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZGjTSLGUIMIQxyXZt3illtL0EQypc+rUA7/lqqJ1HjGkwDK6I
+	juI6L9X/bAKkINnH9YG2CrQrLpA8oD9vjCjIvRCHFNESxHh50AcoxG9njD0yxEoHqJrCA7C0yaS
+	9SRPh9VfSSk3dnDol7WBUSeOMWfuG9KA=
+X-Gm-Gg: AeBDievP9NihPX/mxuDNrcjfyH7AWAqTH3Hn+7+NybrbJ2OcMGxMfZ2kj7HQLsv3J2g
+	AiklV043tGiaB+nYb5q1YOgEBGRC8+D363XbWb99DUCmCPj7IxqlXVEhacAIPIzP9lRDZp4bOek
+	XMzBeKKSKyEyt4v/LJ04LBHhZRwPwszQSzltF0v6b0CLeB4irfW7ab6fGFh9ZQiU2X8C6RqfLUU
+	AbGt29eSNV8rILEQ4bL7r8C669XqM5tsXPO53OONCS7V7X9GxsTNra1TynnnsW/DX3/OJM34b9l
+	rhSl808PRS8b/Y+QzxmGSZ381H/v4kxbjxQHzLZP
+X-Received: by 2002:a05:690e:e8b:b0:650:70da:bc25 with SMTP id
+ 956f58d0204a3-65198c71a1amr8599414d50.58.1775996337015; Sun, 12 Apr 2026
+ 05:18:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
- <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
- <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+References: <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
  <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
  <adQhpBC2W9I6QW-g@redhat.com> <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
  <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
  <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
  <adUd0Mojbtrwmeod@pathway.suse.cz> <CALOAHbDG9mq1iJv5suct=cqJ+2r8VvJ-dXN=nuvMw0XYqnUjxA@mail.gmail.com>
- <adY_WgA54CDtWBq6@pathway.suse.cz>
-In-Reply-To: <adY_WgA54CDtWBq6@pathway.suse.cz>
+ <adY_WgA54CDtWBq6@pathway.suse.cz> <CAPhsuW42WqGuZ1Z-RG0yzifZ7rh=XKUa5hKb6JxLeTWdc4s4-A@mail.gmail.com>
+ <addW_-whBavyHY-Z@pathway.suse.cz>
+In-Reply-To: <addW_-whBavyHY-Z@pathway.suse.cz>
 From: Yafang Shao <laoar.shao@gmail.com>
-Date: Sun, 12 Apr 2026 20:09:18 +0800
-X-Gm-Features: AQROBzCu-w_ClAxqsNaksL5y_dXr6lYJTZQFfWsBZznnXM9_LWPtoFPm4-st89c
-Message-ID: <CALOAHbB8Kt-RTVUcy66Bx__Bqu_YWKjgJoRBRNTGXk=CNmXGPQ@mail.gmail.com>
+Date: Sun, 12 Apr 2026 20:18:21 +0800
+X-Gm-Features: AQROBzAAbQj2joTRPhJ-lyVJz17Ih4lLYbyXLH4mJVa2clLa9rohXScgqMMq5Wg
+Message-ID: <CALOAHbB-b6YUx4zQjp-AgV0gYp26pKjwrjABd8+XJHNsW=0EtQ@mail.gmail.com>
 Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
 To: Petr Mladek <pmladek@suse.com>
 Cc: Song Liu <song@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>, 
@@ -109,86 +108,101 @@ Cc: Song Liu <song@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 8, 2026 at 7:43=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrote=
+On Thu, Apr 9, 2026 at 3:36=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrote=
 :
 >
-> On Wed 2026-04-08 10:40:10, Yafang Shao wrote:
-> > On Tue, Apr 7, 2026 at 11:08=E2=80=AFPM Petr Mladek <pmladek@suse.com> =
-wrote:
-> > >
-> > > On Tue 2026-04-07 17:45:31, Yafang Shao wrote:
-> > > > On Tue, Apr 7, 2026 at 11:16=E2=80=AFAM Yafang Shao <laoar.shao@gma=
-il.com> wrote:
+> On Wed 2026-04-08 11:19:50, Song Liu wrote:
+> > On Wed, Apr 8, 2026 at 4:43=E2=80=AFAM Petr Mladek <pmladek@suse.com> w=
+rote:
+> > [...]
 > > > > >
-> > > > > On Tue, Apr 7, 2026 at 10:54=E2=80=AFAM Song Liu <song@kernel.org=
-> wrote:
-> > > > > >
-> > > > > > On Mon, Apr 6, 2026 at 2:12=E2=80=AFPM Joe Lawrence <joe.lawren=
-ce@redhat.com> wrote:
-> > > > > > [...]
-> > > > > > > > > > - The regular livepatches are cumulative, have the repl=
-ace flag; and
-> > > > > > > > > >   are replaceable.
-> > > > > > > > > > - The occasional "off-band" livepatches do not have the=
- replace flag,
-> > > > > > > > > >   and are not replaceable.
-> > > > > > > > > >
-> > > > > > > > > > With this setup, for systems with off-band livepatches =
-loaded, we can
-> > > > > > > > > > still release a cumulative livepatch to replace the pre=
-vious cumulative
-> > > > > > > > > > livepatch. Is this the expected use case?
-> > > > > > > > >
-> > > > > > > > > That matches our expected use case.
-> > > > > > > >
-> > > > > > > > If we really want to serve use cases like this, I think we =
-can introduce
-> > > > > > > > some replace tag concept: Each livepatch will have a tag, u=
-32 number.
-> > > > > > > > Newly loaded livepatch will only replace existing livepatch=
- with the
-> > > > > > > > same tag. We can even reuse the existing "bool replace" in =
-klp_patch,
-> > > > > > > > and make it u32: replace=3D0 means no replace; replace > 0 =
-are the
-> > > > > > > > replace tag.
-> > > > > > > >
-> > > > > > > > For current users of cumulative patches, all the livepatch =
-will have the
-> > > > > > > > same tag, say 1. For your use case, you can assign each use=
-r a
-> > > > > > > > unique tag. Then all these users can do atomic upgrades of =
-their
-> > > > > > > > own livepatches.
-> > > > > > > >
-> > > > > > > > We may also need to check whether two livepatches of differ=
-ent tags
-> > > > > > > > touch the same kernel function. When that happens, the late=
-r
-> > > > > > > > livepatch should fail to load.
+> > > > > This is weird semantic. Which livepatch tag would be allowed to
+> > > > > supersede it, please?
+> > > > >
+> > > > > Do we still need this category?
+> > > >
+> > > > It can be superseded by any livepatch that has a non-zero tag set.
 > > >
-> > > I still think how to make the hybrid mode more secure:
+> > > And this exactly the weird thing.
 > > >
-> > >     + The isolated sets of livepatched functions look like a good rul=
-e.
-> > >     + What about isolating the shadow variables/states as well?
+> > > A patch with the .replace flag set is supposed to obsolete all alread=
+y
+> > > installed livepatches. It means that it should provide all existing
+> > > fixes and features.
+> > >
+> > > Now, we want to introduce a replace flag/set which would allow to
+> > > replace/obsolete only the livepatch with the same tag/set number.
+> > > And we want to prevent conflicts by making sure that livepatches with
+> > > different tag/set number will never livepatch the same function.
+> > >
+> > > Obviously, livepatches with different tag/set number could not
+> > > obsolete the same no-replace livepatch. They would need to livepatch
+> > > the same functions touched by the no-replace livepatch and would
+> > > conflict.
+> > >
+> > > So, I suggest to remove the no-replace mode completely. It should
+> > > not be needed. A livepatch which should be installed in parallel
+> > > will simply use another unique tag/set number.
 > >
-> > We might consider extending the klp_shadow_* API to support the new
-> > livepatch tag.
+> > I think I see your point now. Existing code works as:
+> > - replace=3Dfalse doesn't replace anything
+> > - replace=3Dtrue replaces everything
+> >
+> > If we assume false=3D0 and true=3D1, it is technically possible to defi=
+ne:
+> > - replace_set=3D0 doesn't replace anything
+> > - replace_set=3D1 replaces everything
+> > - replace_set=3D2+ only replace the same replace_set
 >
-> It would be nice to associate shadow variables with states so that
-> we could check which shadow variables are used by each livepatch.
+> Yes. This well describes my point.
 >
-> It is partially implemented in my earlier RFC, see
-> https://lore.kernel.org/all/20250115082431.5550-3-pmladek@suse.com/
+> > This is probably a little too complicated.
+> >
+> > > > This ensures backward compatibility: while a non-atomic-replace
+> > > > livepatch can be superseded by an atomic-replace one, the reverse i=
+s
+> > > > not permitted=E2=80=94an atomic-replace livepatch cannot be superse=
+ded by a
+> > > > non-atomic one.
+> > >
+> > > IMHO, the backward compatibility would just create complexity and mes=
+s
+> > > in this case.
+> >
+> > Given that livepatch is for expert users, I think we can make this work
+> > without backward compatibility. But breaking compatibility is always no=
+t
+> > preferred.
+>
+> I believe that it is acceptable because:
+>
+>   1. It was always hard to combine no-replace and replace livepatches.
+>      I wonder if anyone combines them at all.
 
-This patch is still pending acceptance, but it offers a nice
-improvement. With your modifications, the remaining task would be to
-integrate a new replace_set into klp_state and update the API
-accordingly
+Because 'replace' patches can supersede 'no-replace' ones, users have
+to maintain a strict loading order. I doubt anyone actually combines
+them in production.
 
-[...]
+>
+>   2. I believe that nobody tries to load the same livepatch module on
+>      different kernel versions. Instead, everyone prepares a custom
+>      livepatch module for each livepatched kernel version/release.
 
---=20
+Correct. We always build and apply distinct livepatches for each
+specific kernel version.
+
+>
+>      And the tooling for creating livepatches will need to be updated
+>      to use "number" instead of "true/false" anyway.
+>
+> That said, it is easier to always use "0" for non-replace patches
+> instead of assigning an unique "number" to avoid replacing. But
+> I do not think that this would justify the complexity of having
+> different semantic for 0, 1, and 2+ replace_set numbers.
+
+Fair enough. Let's drop backward compatibility to keep the
+implementation simple.
+
+--
 Regards
 Yafang
