@@ -1,245 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6683932DC;
-	Fri, 10 Apr 2026 17:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775842507; cv=none; b=pb+jCFW/Q24RbBnwvKOSa8dlXm5zHieUplaqqF1FzieeWG3SkOb5Uhfq7pEpvqqX2KDwCXldkANho4mKRWZ5vSjdhh5dlH3txbOurTJZq2rtXPACq/dv4vxCFH0Oo0mQ/OloDwpAOjVrxqsIDvTpN7ngoqdmfgd6bq9HIVFAldk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775842507; c=relaxed/simple;
-	bh=h1W+nyCu3AOJVaJuJJ/UvEnAIZZjEkoSXon0451Q0vk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IzmpkuAaH/y1FaJjKSx/TwuRMODYAk5JPBgnyzeRZb2POphmq0EAkmDoeM86pRnKC/Mi1kTpQmUQhJmmYa0nCFvPjOL9pmruMlFE9zSMfTNTXq2SJ5+BhvVSPA3jLKJ2Cg1dP1sj+jt+n5sHcSnOU7d6QEKJCleW/j+3MFIaOXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1mT/k3H; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F021C36B071
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 12:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775995797; cv=pass; b=r9wuZtzQ1uLmYm23wAZKebhZdRto98BPQBNfgvnrHauKokeC/csUTKJMb7uqh+1zfcIbs7mJykVN4sUhqs0Tq9nFfNQQB2KbOD0cus92BIzQKNnII1SZKkx6/vgYuOC6cYw+hgB8ntHpshiajSqBWtTjy1tP1lHCZwdQN3BKZqs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775995797; c=relaxed/simple;
+	bh=SVTNVJLn1VqDWx0HDz8tbsYxcEIfkMoVv4id3LOHg7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fDi0cijOb2o4jHTwWn3pYLLtbxxS3gVMtj3oZYo7jWcspdeEg01Wz3gAAQU1IdbTIjTOsxYMMWSHXZTzaXSdMulVwgW+poYMPQEVhcfQcfH+atKASeh1Tmzt1sm9BfLG+gHuu4JQ7698A5TnPTifJzQMJgV1HgRzN4BPRGCOOSI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jrduKbKu; arc=pass smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1mT/k3H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B12C19421;
-	Fri, 10 Apr 2026 17:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775842507;
-	bh=h1W+nyCu3AOJVaJuJJ/UvEnAIZZjEkoSXon0451Q0vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O1mT/k3HhTHNYK81OxaH3vAGpsRsnuAV1awUyf8HE7TVdol8gDe6cz8YN44ypy5iV
-	 vZELjyydPtVCl+2LrVweRR5qe+pBzJzt5p9862QVldQF9wrtRBtG6bemEVgPwhFtVs
-	 pK3faRODfqyul8Q7/mz/Qzte2uXgcRJhyM9HbV3nfz9OZdAW3gAPzjhcQ9l9jIeQ6n
-	 5epLNxpS7vRjxJDiGuHoGI7nyx5DJ1ujPvmYqL8UDERWEJU3K2y7StZj4okRKuG+25
-	 EIiALU8mP4PsNuVGfUdUzHsgWrbuv5VC+TzzaqgEnmKgPfE68hpNFYpDLiLDUIDgF+
-	 wCw9Udl7NTiBA==
-Date: Fri, 10 Apr 2026 18:35:00 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jingyuan Liang <jingyliang@chromium.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, hbarnor@chromium.org,
-	tfiga@chromium.org, Dmitry Antipov <dmanti@microsoft.com>,
-	Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH v3 09/11] dt-bindings: input: Document hid-over-spi DT
- schema
-Message-ID: <20260410-sake-dollop-9f253ddb0749@spud>
-References: <20260402-send-upstream-v3-0-6091c458d357@chromium.org>
- <20260402-send-upstream-v3-9-6091c458d357@chromium.org>
- <20260409-defuse-thank-4b038128fac5@spud>
- <adfdkwq_bF9dirAq@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrduKbKu"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7986e0553bdso33470387b3.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 05:09:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775995795; cv=none;
+        d=google.com; s=arc-20240605;
+        b=hY2ooEmOVnDt+J/zI3jaqt+NVX66dUGk3zJ2rkcYuBY9MgRN3u0YTYNxpQMBYEH/kK
+         4CDr0Uc151l6czyuOgABWYN5PXdZJilPYyZylegY4Yug5eWfeD7KXcbq3nOCYAAMn72o
+         N22ZGS5XfVWRAt+MFtJdykNuIXWsv+6i7IZi0ybwm/hpANpJPAxgXWu+2uWfcm97xDwx
+         YuQjcoWhmR9WEAkyekVHZCF7jxqazrVlIaTy+BkqY1zItdNS7reHUnZswY8yHA7sFqYM
+         UOuVCx4EeECDsS/s2L5J3+gU2cIkDXYzB4DUy9IqJ0ZRWdPrAGWAkTJP0oprLHwk88ts
+         H8KQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=3yi7Jufl9MZ6r9E9T+DntWdpQRPYoo/vSgS2eY9Rp+c=;
+        fh=MZ/sNo4TJQoTfQsyqqm7Uiww1gf54VY73PKo/jvSZFk=;
+        b=PoiVTOF7/fveNGi77/qxM6URlaz/pZvx59wQdqoA0TPserFTwMyKoawrapDEKjEmmC
+         pCKQPRDpS45GKTv+9Sfr0k1IJte3AYKpqrV3fYkusQMgthnIyXwRepKOVABRCk6nLJCU
+         2aK99AqHY3OzfQyqCIYl2ysW4ecMuhKwWChZA1BTFtBRMqBDmeF8W/lhyc0C8RbqoSUD
+         9XiVWGZAUacEnuGakXmRXCisvIx9KOGl5BCbUozX9NeB22/i2+9KknYC4ryh6Z8uPMA4
+         yYDmSIsPSQoyXx2cpDMRDnDV93s928qMHksA7vsny6lqDZ5DIwh0IYRwuODLCgj+s55a
+         vHfw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775995795; x=1776600595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3yi7Jufl9MZ6r9E9T+DntWdpQRPYoo/vSgS2eY9Rp+c=;
+        b=jrduKbKucOJ0CrdEhOzQjksun3glLXXyDIsHC29QDod3cu+as1tdU/z//zLc3j771F
+         Ww0mpRkjrNeekX5PJhDel6R4DMkc6Ea5uPdNN8QAEvd2w2v9BWeqEgh81fUyMRKCYoaz
+         PKjzJ1ADdJLkpXk9OsWoHjE4qpRTULett3nyv/g16kMfC/HsuxD/CBtq7KDTa/Q50WfX
+         IGmN9R4IaIlJhNnocOiKpGnjeqM6Ob+Ym6X/+JxHmIEuW+GzceECvAJan3e9NKQ5tB8t
+         4SnhUenVs+FFcdLic6qX9rVRaofoOzUPQ6B4l5TAYm2AmbSyukIT2c/v4XbvLqPuvyd4
+         SlhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775995795; x=1776600595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3yi7Jufl9MZ6r9E9T+DntWdpQRPYoo/vSgS2eY9Rp+c=;
+        b=ddlr3iNBEFnWS7rpF3b/1y/4/jtggN5nOtLCWkcAd4LumADGkbeAC2UtSmmvK02t+h
+         81yaQ+X5IxcPdabz0J3bqKA4YQSfyQl1Ko51GkUtRnifIQxEsk1a7QaXGJqQloWbrqZr
+         WJ7+Yud8wPJJx3mOO3764TPtf29Pd63x/OOAU5+zVwSMNhgoYiLP/lMm/Yxrl+2khcfl
+         ktpfwWRz3cm3TsxaQk9+JTbQegVfuQ+jE7Yir4wDHxTHg57R+XRNsTdSiAWQatf17lm0
+         1LJEH5BytTwzeBgyNzWyar78QP/k1VzRipo6+qJL1oOYWEZWU4pCTRcoAWK/Pf0Fe79S
+         Lw4w==
+X-Forwarded-Encrypted: i=1; AFNElJ+1nc6BnXYnqv1nDkUOWX0HFFbwRTccambMM3Zno3LTdaCrI4YOVobBShe/Xr6ctUNTCDZEerXw/kHFmPZLEJ8Rq0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMJitMpHh72ISBmy2qWtcQj3ZYEy2vZp7bUqiGXm5dXhla4W0y
+	iiYdMav7Z6sNa2n05Qj9qnwV7NPbFuTNwBvPikNCdIW6vvCfWb1LJdd/DwaskDugf8BL55FM/mK
+	xhC3/pfHq7DTIF6EojvzSlpsY16uttLw=
+X-Gm-Gg: AeBDiev4hGUH5BPkN53YVHsuDrksD7pQEb6mvqI68KnvVY1v5IIKuiWQfys9pfMzD5s
+	FnzVc3c3ozCXU47ZZv2LYnxB213WqRrasepqYCDFkF90/suDXjDQfp2cGg286MUoHNR4t060GJT
+	TfoR0uRsogcwjZj6Whf5oo0rCLkO0ykbkevc1cTQjb5+F4MMcU7nagiaxdZl3SfsAyhJ2bncqum
+	eQmgkDG63gwhDam9YYasILTsGuo38W7GQi7YmRYFFBDOaJ2GjYYIaTknfEEBwHFjnOG/DE1H6BK
+	HOYrxWiSI2M3heUz95yeoymuXMvdXz+URMfTR5mi
+X-Received: by 2002:a05:690c:dc3:b0:79a:cc64:886e with SMTP id
+ 00721157ae682-7af7282b96bmr107487127b3.52.1775995794798; Sun, 12 Apr 2026
+ 05:09:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Y/RXBM/umoYzjiEA"
-Content-Disposition: inline
-In-Reply-To: <adfdkwq_bF9dirAq@google.com>
-
-
---Y/RXBM/umoYzjiEA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CADBMgpy3e25EH5xbKMN5GeOK47jE6uzviknbt35V49_Y7zFj8A@mail.gmail.com>
+ <CAPhsuW6p3YOv3_M_c0ThMcrNqNjT=7i46ekJBrWO_oGzQkxrxA@mail.gmail.com>
+ <CALOAHbCbcw2jpjk9JD9yyf+SMpQ-s9FAonSaz7Gs4XUeP+w+2g@mail.gmail.com>
+ <CAPhsuW4B00-grg9XJa+AO3xgGwM_u8FC+GH3JrkYZOJx4PuV8Q@mail.gmail.com>
+ <adQhpBC2W9I6QW-g@redhat.com> <CAPhsuW66tuF+QZ0pVheWb5sC4NQ-9CXikq=zMrPBXTHcsVPjdg@mail.gmail.com>
+ <CALOAHbDN_t-ZRO0g9_sQFCv0J6SPDFfwJCcwSzd4ww5XRkU0QA@mail.gmail.com>
+ <CALOAHbCxPA0dtsx7L2kYn8wwBdM=krZyOpfRTBiDW9qfA_zmzQ@mail.gmail.com>
+ <adUd0Mojbtrwmeod@pathway.suse.cz> <CALOAHbDG9mq1iJv5suct=cqJ+2r8VvJ-dXN=nuvMw0XYqnUjxA@mail.gmail.com>
+ <adY_WgA54CDtWBq6@pathway.suse.cz>
+In-Reply-To: <adY_WgA54CDtWBq6@pathway.suse.cz>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Sun, 12 Apr 2026 20:09:18 +0800
+X-Gm-Features: AQROBzCu-w_ClAxqsNaksL5y_dXr6lYJTZQFfWsBZznnXM9_LWPtoFPm4-st89c
+Message-ID: <CALOAHbB8Kt-RTVUcy66Bx__Bqu_YWKjgJoRBRNTGXk=CNmXGPQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] livepatch: Add "replaceable" attribute to klp_patch
+To: Petr Mladek <pmladek@suse.com>
+Cc: Song Liu <song@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>, 
+	Dylan Hatch <dylanbhatch@google.com>, jpoimboe@kernel.org, jikos@kernel.org, 
+	mbenes@suse.cz, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, kpsingh@kernel.org, mattbobrowski@google.com, 
+	jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
+	yonghong.song@linux.dev, live-patching@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 09, 2026 at 10:16:46AM -0700, Dmitry Torokhov wrote:
-> On Thu, Apr 09, 2026 at 05:02:11PM +0100, Conor Dooley wrote:
-> > On Thu, Apr 02, 2026 at 01:59:46AM +0000, Jingyuan Liang wrote:
-> > > Documentation describes the required and optional properties for
-> > > implementing Device Tree for a Microsoft G6 Touch Digitizer that
-> > > supports HID over SPI Protocol 1.0 specification.
-> > >=20
-> > > The properties are common to HID over SPI.
-> > >=20
-> > > Signed-off-by: Dmitry Antipov <dmanti@microsoft.com>
-> > > Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-> > > Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
-> > > ---
-> > >  .../devicetree/bindings/input/hid-over-spi.yaml    | 126 +++++++++++=
-++++++++++
-> > >  1 file changed, 126 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/input/hid-over-spi.yam=
-l b/Documentation/devicetree/bindings/input/hid-over-spi.yaml
-> > > new file mode 100644
-> > > index 000000000000..d1b0a2e26c32
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/hid-over-spi.yaml
-> > > @@ -0,0 +1,126 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/input/hid-over-spi.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: HID over SPI Devices
-> > > +
-> > > +maintainers:
-> > > +  - Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > +  - Jiri Kosina <jkosina@suse.cz>
-> >=20
-> > Why them and not you, the developers of the series?
-> >=20
-> > > +
-> > > +description: |+
-> > > +  HID over SPI provides support for various Human Interface Devices =
-over the
-> > > +  SPI bus. These devices can be for example touchpads, keyboards, to=
-uch screens
-> > > +  or sensors.
-> > > +
-> > > +  The specification has been written by Microsoft and is currently a=
-vailable
-> > > +  here: https://www.microsoft.com/en-us/download/details.aspx?id=3D1=
-03325
-> > > +
-> > > +  If this binding is used, the kernel module spi-hid will handle the
-> > > +  communication with the device and the generic hid core layer will =
-handle the
-> > > +  protocol.
-> >=20
-> > This is not relevant to the binding, please remove it.
-> >=20
-> > > +
-> > > +allOf:
-> > > +  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - items:
-> > > +          - enum:
-> > > +              - microsoft,g6-touch-digitizer
-> > > +          - const: hid-over-spi
-> > > +      - description: Just "hid-over-spi" alone is allowed, but not r=
-ecommended.
-> > > +        const: hid-over-spi
-> >=20
-> > Why is it allowed but not recommended? Seems to me like we should
-> > require device-specific compatibles.
->=20
-> Why would we want to change the driver code to add a new compatible each
-> time a vendor decides to create a chip that is fully hid-spi-protocol
-> compliant? Or is the plan to still allow "hid-over-spi" fallback but
-> require device-specific compatible that will be ignored unless there is
-> device-specific quirk needed?
+On Wed, Apr 8, 2026 at 7:43=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrote=
+:
+>
+> On Wed 2026-04-08 10:40:10, Yafang Shao wrote:
+> > On Tue, Apr 7, 2026 at 11:08=E2=80=AFPM Petr Mladek <pmladek@suse.com> =
+wrote:
+> > >
+> > > On Tue 2026-04-07 17:45:31, Yafang Shao wrote:
+> > > > On Tue, Apr 7, 2026 at 11:16=E2=80=AFAM Yafang Shao <laoar.shao@gma=
+il.com> wrote:
+> > > > >
+> > > > > On Tue, Apr 7, 2026 at 10:54=E2=80=AFAM Song Liu <song@kernel.org=
+> wrote:
+> > > > > >
+> > > > > > On Mon, Apr 6, 2026 at 2:12=E2=80=AFPM Joe Lawrence <joe.lawren=
+ce@redhat.com> wrote:
+> > > > > > [...]
+> > > > > > > > > > - The regular livepatches are cumulative, have the repl=
+ace flag; and
+> > > > > > > > > >   are replaceable.
+> > > > > > > > > > - The occasional "off-band" livepatches do not have the=
+ replace flag,
+> > > > > > > > > >   and are not replaceable.
+> > > > > > > > > >
+> > > > > > > > > > With this setup, for systems with off-band livepatches =
+loaded, we can
+> > > > > > > > > > still release a cumulative livepatch to replace the pre=
+vious cumulative
+> > > > > > > > > > livepatch. Is this the expected use case?
+> > > > > > > > >
+> > > > > > > > > That matches our expected use case.
+> > > > > > > >
+> > > > > > > > If we really want to serve use cases like this, I think we =
+can introduce
+> > > > > > > > some replace tag concept: Each livepatch will have a tag, u=
+32 number.
+> > > > > > > > Newly loaded livepatch will only replace existing livepatch=
+ with the
+> > > > > > > > same tag. We can even reuse the existing "bool replace" in =
+klp_patch,
+> > > > > > > > and make it u32: replace=3D0 means no replace; replace > 0 =
+are the
+> > > > > > > > replace tag.
+> > > > > > > >
+> > > > > > > > For current users of cumulative patches, all the livepatch =
+will have the
+> > > > > > > > same tag, say 1. For your use case, you can assign each use=
+r a
+> > > > > > > > unique tag. Then all these users can do atomic upgrades of =
+their
+> > > > > > > > own livepatches.
+> > > > > > > >
+> > > > > > > > We may also need to check whether two livepatches of differ=
+ent tags
+> > > > > > > > touch the same kernel function. When that happens, the late=
+r
+> > > > > > > > livepatch should fail to load.
+> > >
+> > > I still think how to make the hybrid mode more secure:
+> > >
+> > >     + The isolated sets of livepatched functions look like a good rul=
+e.
+> > >     + What about isolating the shadow variables/states as well?
+> >
+> > We might consider extending the klp_shadow_* API to support the new
+> > livepatch tag.
+>
+> It would be nice to associate shadow variables with states so that
+> we could check which shadow variables are used by each livepatch.
+>
+> It is partially implemented in my earlier RFC, see
+> https://lore.kernel.org/all/20250115082431.5550-3-pmladek@suse.com/
 
-This has nothing to do with the driver, just the oddity of having a
-comment saying that not having a device specific compatible was
-permitted by not recommended in a binding. Requiring device-specific
-compatibles is the norm after all and a comment like this makes draws
-more attention to the fact that this is abnormal. Regardless of what the
-driver does, device-specific compatibles should be required.
+This patch is still pending acceptance, but it offers a nice
+improvement. With your modifications, the remaining task would be to
+integrate a new replace_set into klp_state and update the API
+accordingly
 
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  reset-gpios:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      GPIO specifier for the digitizer's reset pin (active low). The=
- line must
-> > > +      be flagged with GPIO_ACTIVE_LOW.
-> > > +
-> > > +  vdd-supply:
-> > > +    description:
-> > > +      Regulator for the VDD supply voltage.
-> > > +
-> > > +  input-report-header-address:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    minimum: 0
-> > > +    maximum: 0xffffff
-> > > +    description:
-> > > +      A value to be included in the Read Approval packet, listing an=
- address of
-> > > +      the input report header to be put on the SPI bus. This address=
- has 24
-> > > +      bits.
-> > > +
-> > > +  input-report-body-address:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    minimum: 0
-> > > +    maximum: 0xffffff
-> > > +    description:
-> > > +      A value to be included in the Read Approval packet, listing an=
- address of
-> > > +      the input report body to be put on the SPI bus. This address h=
-as 24 bits.
-> > > +
-> > > +  output-report-address:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    minimum: 0
-> > > +    maximum: 0xffffff
-> > > +    description:
-> > > +      A value to be included in the Output Report sent by the host, =
-listing an
-> > > +      address where the output report on the SPI bus is to be writte=
-n to. This
-> > > +      address has 24 bits.
-> > > +
-> > > +  read-opcode:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint8
-> > > +    description:
-> > > +      Value to be used in Read Approval packets. 1 byte.
-> > > +
-> > > +  write-opcode:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint8
-> > > +    description:
-> > > +      Value to be used in Write Approval packets. 1 byte.
-> >=20
-> > Why can none of these things be determined from the device's compatible?
-> > On the surface, they like the kinds of things that could/should be.
->=20
-> Why would we want to keep tables of these values in the kernel and again
-> have to update the driver for each new chip?
+[...]
 
-That's pretty normal though innit? It's what match data does.
-If someone wants to have properties that communicate data that
-can be determined from the compatible, they need to provide
-justification why it is being done.
-
-> It also probably firmware-dependent.
-
-
---Y/RXBM/umoYzjiEA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCadk0wQAKCRB4tDGHoIJi
-0oXEAQDSWNAocQ7MVn24Zy2B1nO6Pq/WY3ecja9nGfaWTvDSXQEApF/WEBk8cXP0
-lP16gSN1Sk/PgPbZlHSiBOGQckqj/Qo=
-=fNLv
------END PGP SIGNATURE-----
-
---Y/RXBM/umoYzjiEA--
+--=20
+Regards
+Yafang
