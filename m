@@ -1,153 +1,177 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738D6271456;
-	Sun, 12 Apr 2026 16:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240D536309B
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 19:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776011371; cv=none; b=lDNPF32exfEjEMySiga7q1vrQtCpt+mypgqESLKK0B5HIGD5Pdx3JheHnjZohjZZfcBHw8/8cl2MvZ7kfuDTEXXM8Fp3ha9dVHkGhWhufVH1k5WFloBqEMoOL7jctJhKNxuLF1LHpiR3qlje15NneEfMvVzQZxeG3WzetV+k+PA=
+	t=1776022072; cv=none; b=VFMNp8R5ZC+V3mjctIb6CRbRjrtl3LnZv+iiOQdP8CzmfCE2tA7fR7wBU55+HQKD3Oo9XGvZPCZ0+Gm+tgQikqI9dcFx+imsECWgw6LtFFwjUHJDCAlci1eeGtNVJK9bwuakTwajxdFa8szOzjQe05wxy8v+tp2Vcq/jJbe7/Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776011371; c=relaxed/simple;
-	bh=RByfpH+PZ0mnQDZT7rC2TxNtViuclKa4ObQpONWapzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tZ+j4lLuDr7tJQSApZNbWeHBYcFU2sYEsyJdCPBcYHgH8llvanl1U1QxyOVlxtnG6UrDJTLyeOUzG27WXk/bBsOrk4+qBaAsOYJ7GS31hBDzLlvBmzW+x1Mo9aA6748xHw2+zx2FPzathKJAbjmnD0Z1rkcDUFwR66TOKklDegA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=ISMQQS1P; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LeDOI44y; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+	s=arc-20240116; t=1776022072; c=relaxed/simple;
+	bh=gR0eIzfMGuiIr8rdev80ueh8iRD/nyUXB3LT0N1Pb0Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cipr6N6PmtxRV1TdCEMafDx2cRpem/aemvoNIuDaVElybioz8OaP5zbLRhHeAZSxO7dcl/K3AhmBkS0HkSNqOQcZ+hJt7CiHZBlpDreHLsVK4Cgl7W6iTCzDl1ALJhvTxjOXV66D0I9OsOuhOzErm5fjWrRd7rdHXcng6AYq87g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VASexpai; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="ISMQQS1P";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LeDOI44y"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 67C087A0275;
-	Sun, 12 Apr 2026 12:29:28 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Sun, 12 Apr 2026 12:29:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1776011368;
-	 x=1776097768; bh=wU7xx4y42EqftV+K9QOvqUvU2b/Vk9fw+6/QZjqjueM=; b=
-	ISMQQS1PBMY9rVEMYQLixDDKvLIGh0PsctpdnhhUyedmY6FO6ERYafFB42DYtnvF
-	4VFHf+4cP1Qh3xawJJmVOtEj6YYJVJmeW4SHXqxUeJKroI9EV3l4ZwcRptY1rEm1
-	2talhFvCEf2KmdeqUlo839xuUCT2/n1CSecBcTfm7xNn7B8QCrMGtJzC4zrcBDKg
-	aqkKalRODYsLhjo7BbfZGxb5or0Bv5rzD2Hc1BlZfhMC3VEufcmnDh19WOqdkt3b
-	bxw/skA9aOUF1O4y2t5eHY5mmZcEX+6jfS5rrmE2tIuO3ohlXxyirqUU1Tluhba/
-	/syNjzvEwXbPliz6mSCILw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776011368; x=
-	1776097768; bh=wU7xx4y42EqftV+K9QOvqUvU2b/Vk9fw+6/QZjqjueM=; b=L
-	eDOI44yaG47XsQHgo/zW3ds4SepAV/KrrNUff4uhckShNJmNTUB+5gLGpNYcL+W9
-	LirDkiklrVj8QEyYTKN3vltnnnfKuFYEtYRFGR0g9bp7Ceh945nNAeYJVLED8K9S
-	Vl1YTMj5r8JOo5mwequxUMErd5BW0ZiWKDWObVNB5Xmokue/exPtlTojGjcMIMk5
-	WgmlJAPNoZOLd1GUjFXk8PIY6gZ10n7osZ27qLvA7rOdFIGCbCv/bmKWcRUoIvk6
-	0uhFfPf1tErC9SaAEzHGwBT6V4Qix3YHSTjLoy3+qb4fdU5ZipSYIrIzFdgYvRvl
-	YdRBSI/Hax1thAkhpA2Bw==
-X-ME-Sender: <xms:Z8jbaXesUfiCEi8ku9FVjBoScbVMbdi9PAbW8WqfZ7JhDqZam6Al_Q>
-    <xme:Z8jbaSy4IP_Rf6NpkaPDoPGA8__vCK7dZMQCus3HEgIZfG2ZC5qpBcZu5C86lhcGc
-    Bjucs_n_ZYSQ8BM3XzXjEonbEoueK_EnnnMY2_Gb71vBMwsA_Aovs8>
-X-ME-Received: <xmr:Z8jbaaF6Rwu4QaEm_bjiiksFrpuvMGl084_xAr9uuc5M529l9F1wzcb5oZUA0QPjTcu_ka9OBq4un4LGyA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdefheejlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhinhhgmhgr
-    ohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqeenucggtffrrghtthgvrhhnpeduke
-    evhfegvedvveeihedvvdeghfeglefgudegfeetvdekiefgledtheeggefhgfenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmsehmrghofihtmh
-    drohhrghdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepsghrrghunhgvrheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepghhnohgrtghksehgohhoghhlvgdrtghomhdp
-    rhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepjh
-    grnhhnhhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhgvfhhfgihusehgohhoghhl
-    vgdrtghomhdprhgtphhtthhopehuthhilhhithihvghmrghljeejsehgmhgrihhlrdgtoh
-    hmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmhhhi
-    rhgrmhgrtheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:Z8jbaZ0ajo9BbkliiflQfuCaz4fEPc-ZZ8hUuTy76MXYv7D6H2BezQ>
-    <xmx:Z8jbaa9-IvCZGB1TaLQ64lhffDON0SMN_ccwL_8Tf-7F8PKhGksRlA>
-    <xmx:Z8jbaUF2O5nJW1ffiII7TfSak7KfqBfndY33f6fOYVjBTDFu4qqHSQ>
-    <xmx:Z8jbaYj9etyeGzFDBLCbnPguFqzjH23J-dXOQsnj4Ap92kTCD84oEA>
-    <xmx:aMjbackfNn6uWAGtq5xfGIhw9Us7NLf-RSKN4FJfJPZSjAAYwlY0-iZn>
-Feedback-ID: i580e4893:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 12 Apr 2026 12:29:25 -0400 (EDT)
-Message-ID: <0e6fe895-9c3e-443d-a928-35640ba8c184@maowtm.org>
-Date: Sun, 12 Apr 2026 17:29:24 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VASexpai"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776022069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pyE5uA5HN1JUalaWHgdiNixqwIgYZsSQxevGzVDaSms=;
+	b=VASexpai0rVF2pfQLPM/fex5U/Nwd30ApAEnJ6heawk6uL3Bo6m34vyqA3qnOj4hixmYQc
+	2E6dZaO2GiaHOePGBBNOGLvKOsF9NvjWdYJmmvdT3Drdew9GKEetb810//jFtcqfVuJUXI
+	ZQIrpYUXSNo/OL2ALLtL7ymsM8Qvv1Y=
+From: wen.yang@linux.dev
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wen Yang <wen.yang@linux.dev>
+Subject: [RFC PATCH 0/4] rv/tlob: Add task latency over budget RV monitor
+Date: Mon, 13 Apr 2026 03:27:17 +0800
+Message-Id: <cover.1776020428.git.wen.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/17] landlock: Prepare ruleset and domain type split
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: Christian Brauner <brauner@kernel.org>, =?UTF-8?Q?G=C3=BCnther_Noack?=
- <gnoack@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>,
- Justin Suess <utilityemal77@gmail.com>, Kees Cook <kees@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Matthieu Buffet <matthieu@buffet.re>,
- Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
- kernel-team@cloudflare.com, linux-fsdevel@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20260406143717.1815792-1-mic@digikod.net>
- <20260406143717.1815792-2-mic@digikod.net>
-Content-Language: en-US
-From: Tingmao Wang <m@maowtm.org>
-In-Reply-To: <20260406143717.1815792-2-mic@digikod.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 4/6/26 15:36, Mickaël Salaün wrote:
-> [...]
+From: Wen Yang <wen.yang@linux.dev>
 
-Hi Mickaël,
+This series introduces tlob (task latency over budget), a new per-task
+Runtime Verification monitor.
 
-I like this approach, as I basically ended up doing similar refactoring
-previously for the hashtable / array-based domain changes, and having this
-done first should make it easier to adopt the domain data structure
-changes in the future.
+Background
+----------
+The RV framework formalises kernel behavioural properties as
+deterministic automata. Existing monitors (wwnr, sssw, opid, etc.) cover
+scheduling and locking invariants; none tracks wall-clock latency of
+a per-task code path, including off-CPU time. This property is needed
+in ADAS perception/planning pipelines, industrial real-time
+controllers, and similar mixed-criticality deployments.
 
-I assume it's fine for me to add:
-Reviewed-by: Tingmao Wang <m@maowtm.org>
+tlob adds this capability. A caller demarcates a code path via a
+start/stop pair; the kernel arms a per-task hrtimer for the requested
+budget. If the task has not called TRACE_STOP before the timer fires,
+a violation is recorded, the stop call returns -EOVERFLOW, and an
+event is pushed to the caller's mmap ring.
 
-> @@ -175,19 +163,24 @@ static void free_rule(struct landlock_rule *const rule,
->  
->  static void build_check_ruleset(void)
->  {
-> -	const struct landlock_ruleset ruleset = {
-> +	const struct landlock_rules rules = {
->  		.num_rules = ~0,
-> +	};
-> +	const struct landlock_ruleset ruleset = {
->  		.num_layers = ~0,
->  	};
->  
-> -	BUILD_BUG_ON(ruleset.num_rules < LANDLOCK_MAX_NUM_RULES);
-> +	BUILD_BUG_ON(rules.num_rules < LANDLOCK_MAX_NUM_RULES);
->  	BUILD_BUG_ON(ruleset.num_layers < LANDLOCK_MAX_NUM_LAYERS);
->  }
->  
->  /**
-> - * insert_rule - Create and insert a rule in a ruleset
-> + * insert_rule - Create and insert a rule in a rule set
-                                                  ^^^^^^^^
+The tracefs interface requires only tracefs write permissions, avoiding
+the CAP_BPF privilege needed for equivalent eBPF-based approaches. The
+DA model (patch 1) can be independently verified with standard model-
+checking tools.
 
-Should this be rule storage to be consistent with the next 2 lines?
+Design
+------
+The monitor is a three-state deterministic automaton (DA):
 
-Alternatively maybe we can just say "struct landlock_rules" to avoid
-inventing new names?
+  unmonitored --trace_start--> on_cpu
+  on_cpu       --switch_out--> off_cpu
+  off_cpu      --switch_in---> on_cpu
+  {on_cpu, off_cpu} --{trace_stop, budget_expired}--> unmonitored
 
->   *
-> - * @ruleset: The ruleset to be updated.
-> + * @rules: The rule storage to be updated.  The caller is responsible for
-> + *         any required locking.  For rulesets, this means holding
-> + *         landlock_ruleset.lock.  For domains under construction, no lock is
-> + *         needed because the domain is not yet visible to other tasks.
->   * @id: The ID to build the new rule with.  The underlying kernel object, if
->   *      any, must be held by the caller.
->   * @layers: One or multiple layers to be copied into the new rule.
+Per-task state lives in a fixed-size hash table (TLOB_MAX_MONITORED
+slots) with RCU-deferred free. Timing is based on CLOCK_MONOTONIC
+(ktime_get()), so budgets account for off-CPU time.
+
+Two userspace interfaces are provided:
+
+  tracefs: uprobe pair registration via the monitor/enable files; no
+           new UAPI required.
+
+  /dev/rv ioctls (CONFIG_RV_CHARDEV):
+    TLOB_IOCTL_TRACE_START  — arm the budget for a target task
+    TLOB_IOCTL_TRACE_STOP   — disarm; returns -EOVERFLOW on violation
+
+  Each /dev/rv file descriptor has a per-fd mmap ring (a physically
+  contiguous control page struct tlob_mmap_page followed by an array of
+  struct tlob_event records). Head/tail/dropped are userspace-readable
+  without locking; overflow uses a drop-new policy.
+
+New UAPI (include/uapi/linux/rv.h): tlob_start_args, tlob_event,
+tlob_mmap_page, ioctl numbers (RV_IOC_MAGIC=0xB9, registered in
+Documentation/userspace-api/ioctl/ioctl-number.rst).
+
+Testing
+-------
+KUnit (patch 3): six suites (38 cases) gated on CONFIG_TLOB_KUNIT_TEST.
+
+  ./tools/testing/kunit/kunit.py run \
+    --kunitconfig kernel/trace/rv/monitors/tlob/.kunitconfig
+
+  Coverage: automaton state transitions, start/stop API error paths,
+  scheduler context-switch accounting, tracepoint payload fields,
+  ring-buffer push/overflow/wakeup, and the uprobe line parser.
+
+kselftest (patch 4): 19 TAP test points under
+tools/testing/selftests/rv/. Requires CONFIG_RV_MON_TLOB=y,
+CONFIG_RV_CHARDEV=y, and root.
+
+  make -C tools/testing/selftests/rv
+  sudo ./test_tlob.sh
+
+Patch overview
+--------------
+Patch 1 — DOT model: formal automaton specification for verification.
+Patch 2 — monitor implementation, UAPI, and documentation.
+Patch 3 — KUnit in-kernel unit tests.
+Patch 4 — kselftest user-space integration tests.
+
+Wen Yang (4):
+  rv/tlob: Add tlob model DOT file
+  rv/tlob: Add tlob deterministic automaton monitor
+  rv/tlob: Add KUnit tests for the tlob monitor
+  selftests/rv: Add selftest for the tlob monitor
+
+ Documentation/trace/rv/index.rst              |    1 +
+ Documentation/trace/rv/monitor_tlob.rst       |  381 ++++++
+ .../userspace-api/ioctl/ioctl-number.rst      |    1 +
+ MAINTAINERS                                   |    3 +
+ include/uapi/linux/rv.h                       |  181 +++
+ kernel/trace/rv/Kconfig                       |   17 +
+ kernel/trace/rv/Makefile                      |    3 +
+ kernel/trace/rv/monitors/tlob/.kunitconfig    |    5 +
+ kernel/trace/rv/monitors/tlob/Kconfig         |   63 +
+ kernel/trace/rv/monitors/tlob/tlob.c          |  987 ++++++++++++++
+ kernel/trace/rv/monitors/tlob/tlob.h          |  145 ++
+ kernel/trace/rv/monitors/tlob/tlob_kunit.c    | 1194 +++++++++++++++++
+ kernel/trace/rv/monitors/tlob/tlob_trace.h    |   42 +
+ kernel/trace/rv/rv.c                          |    4 +
+ kernel/trace/rv/rv_dev.c                      |  602 +++++++++
+ kernel/trace/rv/rv_trace.h                    |   50 +
+ tools/include/uapi/linux/rv.h                 |   54 +
+ tools/testing/selftests/rv/Makefile           |   18 +
+ tools/testing/selftests/rv/test_tlob.sh       |  563 ++++++++
+ tools/testing/selftests/rv/tlob_helper.c      |  994 ++++++++++++++
+ .../testing/selftests/rv/tlob_uprobe_target.c |  108 ++
+ tools/verification/models/tlob.dot            |   25 +
+ 22 files changed, 5441 insertions(+)
+ create mode 100644 Documentation/trace/rv/monitor_tlob.rst
+ create mode 100644 include/uapi/linux/rv.h
+ create mode 100644 kernel/trace/rv/monitors/tlob/.kunitconfig
+ create mode 100644 kernel/trace/rv/monitors/tlob/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob.c
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob.h
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob_kunit.c
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob_trace.h
+ create mode 100644 kernel/trace/rv/rv_dev.c
+ create mode 100644 tools/include/uapi/linux/rv.h
+ create mode 100644 tools/testing/selftests/rv/Makefile
+ create mode 100755 tools/testing/selftests/rv/test_tlob.sh
+ create mode 100644 tools/testing/selftests/rv/tlob_helper.c
+ create mode 100644 tools/testing/selftests/rv/tlob_uprobe_target.c
+ create mode 100644 tools/verification/models/tlob.dot
+
+-- 
+2.43.0
+
