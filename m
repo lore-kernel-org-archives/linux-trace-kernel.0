@@ -1,32 +1,32 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EEE37C930
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 19:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3463B37CD4D
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 19:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776022084; cv=none; b=LQxvA7RNL3afnCJiN+lIl1vXjtbrPb6ZwLCsCKqsRzEwgjJngg6yZ2+VgLxmatmejxOOvaAa7wLFUyoVBHxwRJ64ZTrg5CQnkyz/CVz5Lt92MI00bzu02Gk1zCrGPMtkqK/dgsyAE1vP891F0m0T0aSTc52TgSCByhoIVmBFl+4=
+	t=1776022089; cv=none; b=fm2pmkdRISt0FlSdvU9hU4kxKUFsCsJP19lxNv5NxB163n1EMA8pImXfVp8cv+7AjB9LGRdL4tzebM5xO6Uu4jqD5A3Yb+fw+acjFsT2R8z4xzI5ovL9vhdchu0eWq5siAskeiVsvifoWWnJk0WvFHyS4/yAR1UbRROCwVaR3RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776022084; c=relaxed/simple;
-	bh=Fjx0dV5xDZ5GzQLflUiNI5/dnhTVUD1FIyWuUCtC5WU=;
+	s=arc-20240116; t=1776022089; c=relaxed/simple;
+	bh=n9OKgvDOHezgdOXRpwIepwoG6YT2/0v7G8Oc0Mtqk7U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ocaJcr4CWlLiXAqLi4JUt1g8LexC619VjAzD6EgVea4a7yp760WHamejYdT3ReqPe9E32IH33/qGwAuDmVBaceBMTaLNp60NzPz3vQZHb/i4XZS2rLYRBR0yu+1pArl6zSkj73Z3LfkXi8lxBHfAl3wgP8Tm0HzxshbtSrj9Y1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AcxLXgUz; arc=none smtp.client-ip=91.218.175.172
+	 MIME-Version; b=rD4WRcLlMu1f0KxHAe89DX6Qkq/wPD4SFoefvaI21uW0MVrBUbkyNTRGNssT4egLwn1LalfJs6lak1rmPV+Hshp9aD5a3BdnZyLteDtbqSa4M3o9WGM7Wv8dzdkORXhLqpc0Wbf09SJSPBxHalR25MMSYfQKDl+qTaBuWOKd1XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WtGcCqfB; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AcxLXgUz"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WtGcCqfB"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776022080;
+	t=1776022083;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4CAvpA12spp2N4nX5FHvWLkRpiYSyaWQFQ+2pMpoNA8=;
-	b=AcxLXgUzPFc4H+eIfehF49B4UATIxiFDJscufzFnKt8rB10jNchMt3YZjQuC46fWbjIR+d
-	mqPI3z3wKDucY6sRmXjcZqh0OW6jjJcekPIJAsuejLy6rWONnrWLF7MFLhyEqgUuUSstak
-	Cf336YCvXbpkUVOMR1EM6ds8OynO4wo=
+	bh=ZVl0/J49loY/n0G4qtERGNyHMovdk7XGYo1kwnRYBr4=;
+	b=WtGcCqfBlXIGAJMBOdolPj8UKxJegKmJuBBoUUOI1rJHNJvxmW1TPAtSkW2agvtS9Pxq3l
+	EAKvaE+QoEBM0/MvFyDGZpk8WsLSJi1krzZJQi+21qGQPDnh7iEk1ILPPYGtuwQMrjyFtu
+	fSuIERXBw4sW0C/2TXpiIafJAA2jKp0=
 From: wen.yang@linux.dev
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
@@ -35,9 +35,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [RFC PATCH 3/4] rv/tlob: Add KUnit tests for the tlob monitor
-Date: Mon, 13 Apr 2026 03:27:20 +0800
-Message-Id: <0a7f41ff8cb13f8601920ead2979db2ee5f2d442.1776020428.git.wen.yang@linux.dev>
+Subject: [RFC PATCH 4/4] selftests/rv: Add selftest for the tlob monitor
+Date: Mon, 13 Apr 2026 03:27:21 +0800
+Message-Id: <5bdd82dd8aeb1d3f955b727ae1fce9819b35c170.1776020428.git.wen.yang@linux.dev>
 In-Reply-To: <cover.1776020428.git.wen.yang@linux.dev>
 References: <cover.1776020428.git.wen.yang@linux.dev>
 Precedence: bulk
@@ -51,1282 +51,1799 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Wen Yang <wen.yang@linux.dev>
 
-Add six KUnit test suites gated behind CONFIG_TLOB_KUNIT_TEST
-(depends on RV_MON_TLOB && KUNIT; default KUNIT_ALL_TESTS).
-A .kunitconfig fragment is provided for the kunit.py runner.
+Add a kselftest suite (TAP output, 19 test points) for the tlob RV
+monitor under tools/testing/selftests/rv/.
 
-Coverage: automaton state transitions and self-loops; start/stop API
-error paths (duplicate start, missing start, overflow threshold,
-table-full, immediate deadline); scheduler context-switch accounting
-for on/off-CPU time; violation tracepoint payload fields; ring buffer
-push, drop-new overflow, and wakeup; and the uprobe line parser.
+test_tlob.sh drives a compiled C helper (tlob_helper) and, for uprobe
+tests, a target binary (tlob_uprobe_target). Coverage spans the
+tracefs enable/disable path, uprobe-triggered violations, and the
+ioctl interface (within-budget stop, CPU-bound and sleep violations,
+duplicate start, ring buffer mmap and consumption).
+
+Requires CONFIG_RV_MON_TLOB=y and CONFIG_RV_CHARDEV=y; must be run
+as root.
 
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- kernel/trace/rv/Makefile                   |    1 +
- kernel/trace/rv/monitors/tlob/.kunitconfig |    5 +
- kernel/trace/rv/monitors/tlob/Kconfig      |   12 +
- kernel/trace/rv/monitors/tlob/tlob.c       |    1 +
- kernel/trace/rv/monitors/tlob/tlob_kunit.c | 1194 ++++++++++++++++++++
- 5 files changed, 1213 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/tlob/.kunitconfig
- create mode 100644 kernel/trace/rv/monitors/tlob/tlob_kunit.c
+ tools/include/uapi/linux/rv.h                 |  54 +
+ tools/testing/selftests/rv/Makefile           |  18 +
+ tools/testing/selftests/rv/test_tlob.sh       | 563 ++++++++++
+ tools/testing/selftests/rv/tlob_helper.c      | 994 ++++++++++++++++++
+ .../testing/selftests/rv/tlob_uprobe_target.c | 108 ++
+ 5 files changed, 1737 insertions(+)
+ create mode 100644 tools/include/uapi/linux/rv.h
+ create mode 100644 tools/testing/selftests/rv/Makefile
+ create mode 100755 tools/testing/selftests/rv/test_tlob.sh
+ create mode 100644 tools/testing/selftests/rv/tlob_helper.c
+ create mode 100644 tools/testing/selftests/rv/tlob_uprobe_target.c
 
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index cc3781a3b..6d963207d 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_RV_MON_NRP) += monitors/nrp/nrp.o
- obj-$(CONFIG_RV_MON_SSSW) += monitors/sssw/sssw.o
- obj-$(CONFIG_RV_MON_OPID) += monitors/opid/opid.o
- obj-$(CONFIG_RV_MON_TLOB) += monitors/tlob/tlob.o
-+obj-$(CONFIG_TLOB_KUNIT_TEST) += monitors/tlob/tlob_kunit.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/tlob/.kunitconfig b/kernel/trace/rv/monitors/tlob/.kunitconfig
+diff --git a/tools/include/uapi/linux/rv.h b/tools/include/uapi/linux/rv.h
 new file mode 100644
-index 000000000..977c58601
+index 000000000..bef07aded
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/tlob/.kunitconfig
-@@ -0,0 +1,5 @@
-+CONFIG_FTRACE=y
-+CONFIG_KUNIT=y
-+CONFIG_RV=y
-+CONFIG_RV_MON_TLOB=y
-+CONFIG_TLOB_KUNIT_TEST=y
-diff --git a/kernel/trace/rv/monitors/tlob/Kconfig b/kernel/trace/rv/monitors/tlob/Kconfig
-index 010237480..4ccd2f881 100644
---- a/kernel/trace/rv/monitors/tlob/Kconfig
-+++ b/kernel/trace/rv/monitors/tlob/Kconfig
-@@ -49,3 +49,15 @@ config RV_MON_TLOB
- 	  For further information, see:
- 	    Documentation/trace/rv/monitor_tlob.rst
- 
-+config TLOB_KUNIT_TEST
-+	tristate "KUnit tests for tlob monitor" if !KUNIT_ALL_TESTS
-+	depends on RV_MON_TLOB && KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable KUnit in-kernel unit tests for the tlob RV monitor.
++++ b/tools/include/uapi/linux/rv.h
+@@ -0,0 +1,54 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * UAPI definitions for Runtime Verification (RV) monitors.
++ *
++ * This is a tools-friendly copy of include/uapi/linux/rv.h.
++ * Keep in sync with the kernel header.
++ */
 +
-+	  Tests cover automaton state transitions, the hash table helpers,
-+	  the start/stop task interface, and the event ring buffer including
-+	  overflow handling and wakeup behaviour.
++#ifndef _UAPI_LINUX_RV_H
++#define _UAPI_LINUX_RV_H
 +
-+	  Say Y or M here to run the tlob KUnit test suite; otherwise say N.
-diff --git a/kernel/trace/rv/monitors/tlob/tlob.c b/kernel/trace/rv/monitors/tlob/tlob.c
-index a6e474025..dd959eb9b 100644
---- a/kernel/trace/rv/monitors/tlob/tlob.c
-+++ b/kernel/trace/rv/monitors/tlob/tlob.c
-@@ -784,6 +784,7 @@ VISIBLE_IF_KUNIT int tlob_parse_uprobe_line(char *buf, u64 *thr_out,
- 	*path_out  = buf + n;
- 	return 0;
- }
-+EXPORT_SYMBOL_IF_KUNIT(tlob_parse_uprobe_line);
- 
- static ssize_t tlob_monitor_write(struct file *file,
- 				  const char __user *ubuf,
-diff --git a/kernel/trace/rv/monitors/tlob/tlob_kunit.c b/kernel/trace/rv/monitors/tlob/tlob_kunit.c
++#include <linux/types.h>
++#include <sys/ioctl.h>
++
++/* Magic byte shared by all RV monitor ioctls. */
++#define RV_IOC_MAGIC	0xB9
++
++/* -----------------------------------------------------------------------
++ * tlob: task latency over budget monitor  (nr 0x01 - 0x1F)
++ * -----------------------------------------------------------------------
++ */
++
++struct tlob_start_args {
++	__u64 threshold_us;
++	__u64 tag;
++	__s32 notify_fd;
++	__u32 flags;
++};
++
++struct tlob_event {
++	__u32 tid;
++	__u32 pad;
++	__u64 threshold_us;
++	__u64 on_cpu_us;
++	__u64 off_cpu_us;
++	__u32 switches;
++	__u32 state;   /* 1 = on_cpu, 0 = off_cpu */
++	__u64 tag;
++};
++
++struct tlob_mmap_page {
++	__u32  data_head;
++	__u32  data_tail;
++	__u32  capacity;
++	__u32  version;
++	__u32  data_offset;
++	__u32  record_size;
++	__u64  dropped;
++};
++
++#define TLOB_IOCTL_TRACE_START	_IOW(RV_IOC_MAGIC, 0x01, struct tlob_start_args)
++#define TLOB_IOCTL_TRACE_STOP	_IO(RV_IOC_MAGIC,  0x02)
++
++#endif /* _UAPI_LINUX_RV_H */
+diff --git a/tools/testing/selftests/rv/Makefile b/tools/testing/selftests/rv/Makefile
 new file mode 100644
-index 000000000..64f5abb34
+index 000000000..14e94a1ab
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/tlob/tlob_kunit.c
-@@ -0,0 +1,1194 @@
++++ b/tools/testing/selftests/rv/Makefile
+@@ -0,0 +1,18 @@
++# SPDX-License-Identifier: GPL-2.0
++# Makefile for rv selftests
++
++TEST_GEN_PROGS := tlob_helper tlob_uprobe_target
++
++TEST_PROGS := \
++	test_tlob.sh \
++
++# TOOLS_INCLUDES is defined by ../lib.mk; provides -isystem to
++# tools/include/uapi so that #include <linux/rv.h> resolves to the
++# in-tree UAPI header without requiring make headers_install.
++# Note: both must be added to the global variables, not as target-specific
++# overrides, because lib.mk rewrites TEST_GEN_PROGS to $(OUTPUT)/name
++# before per-target rules would be evaluated.
++CFLAGS += $(TOOLS_INCLUDES)
++LDLIBS += -lpthread
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/rv/test_tlob.sh b/tools/testing/selftests/rv/test_tlob.sh
+new file mode 100755
+index 000000000..3ba2125eb
+--- /dev/null
++++ b/tools/testing/selftests/rv/test_tlob.sh
+@@ -0,0 +1,563 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# Selftest for the tlob (task latency over budget) RV monitor.
++#
++# Two interfaces are tested:
++#
++#   1. tracefs interface:
++#        enable/disable, presence of tracefs files,
++#        uprobe binding (threshold_us:offset_start:offset_stop:binary_path) and
++#        violation detection via the ftrace ring buffer.
++#
++#   2. /dev/rv ioctl self-instrumentation (via tlob_helper):
++#        within-budget, over-budget on-CPU, over-budget off-CPU (sleep),
++#        double-start, stop-without-start.
++#
++# Written to be POSIX sh compatible (no bash-specific extensions).
++
++ksft_skip=4
++t_pass=0; t_fail=0; t_skip=0; t_total=0
++
++tap_header() { echo "TAP version 13"; }
++tap_plan()   { echo "1..$1"; }
++tap_pass()   { t_pass=$((t_pass+1)); echo "ok $t_total - $1"; }
++tap_fail()   { t_fail=$((t_fail+1)); echo "not ok $t_total - $1"
++               [ -n "$2" ] && echo "  # $2"; }
++tap_skip()   { t_skip=$((t_skip+1)); echo "ok $t_total - $1 # SKIP $2"; }
++next_test()  { t_total=$((t_total+1)); }
++
++TRACEFS=$(grep -m1 tracefs /proc/mounts 2>/dev/null | awk '{print $2}')
++[ -z "$TRACEFS" ] && TRACEFS=/sys/kernel/tracing
++
++RV_DIR="${TRACEFS}/rv"
++TLOB_DIR="${RV_DIR}/monitors/tlob"
++TRACE_FILE="${TRACEFS}/trace"
++TRACING_ON="${TRACEFS}/tracing_on"
++TLOB_MONITOR="${TLOB_DIR}/monitor"
++BUDGET_EXCEEDED_ENABLE="${TRACEFS}/events/rv/tlob_budget_exceeded/enable"
++RV_DEV="/dev/rv"
++
++# tlob_helper and tlob_uprobe_target must be in the same directory as
++# this script or on PATH.
++SCRIPT_DIR=$(dirname "$0")
++IOCTL_HELPER="${SCRIPT_DIR}/tlob_helper"
++UPROBE_TARGET="${SCRIPT_DIR}/tlob_uprobe_target"
++
++check_root()     { [ "$(id -u)" = "0" ] || { echo "# Need root" >&2; exit $ksft_skip; }; }
++check_tracefs()  { [ -d "${TRACEFS}" ]   || { echo "# No tracefs" >&2; exit $ksft_skip; }; }
++check_rv_dir()   { [ -d "${RV_DIR}" ]    || { echo "# No RV infra" >&2; exit $ksft_skip; }; }
++check_tlob()     { [ -d "${TLOB_DIR}" ]  || { echo "# No tlob monitor" >&2; exit $ksft_skip; }; }
++
++tlob_enable()         { echo 1 > "${TLOB_DIR}/enable"; }
++tlob_disable()        { echo 0 > "${TLOB_DIR}/enable" 2>/dev/null; }
++tlob_is_enabled()     { [ "$(cat "${TLOB_DIR}/enable" 2>/dev/null)" = "1" ]; }
++trace_event_enable()  { echo 1 > "${BUDGET_EXCEEDED_ENABLE}" 2>/dev/null; }
++trace_event_disable() { echo 0 > "${BUDGET_EXCEEDED_ENABLE}" 2>/dev/null; }
++trace_on()            { echo 1 > "${TRACING_ON}" 2>/dev/null; }
++trace_clear()         { echo > "${TRACE_FILE}"; }
++trace_grep()          { grep -q "$1" "${TRACE_FILE}" 2>/dev/null; }
++
++cleanup() {
++	tlob_disable
++	trace_event_disable
++	trace_clear
++}
++
++# ---------------------------------------------------------------------------
++# Test 1: enable / disable
++# ---------------------------------------------------------------------------
++run_test_enable_disable() {
++	next_test; cleanup
++	tlob_enable
++	if ! tlob_is_enabled; then
++		tap_fail "enable_disable" "not enabled after echo 1"; cleanup; return
++	fi
++	tlob_disable
++	if tlob_is_enabled; then
++		tap_fail "enable_disable" "still enabled after echo 0"; cleanup; return
++	fi
++	tap_pass "enable_disable"; cleanup
++}
++
++# ---------------------------------------------------------------------------
++# Test 2: tracefs files present
++# ---------------------------------------------------------------------------
++run_test_tracefs_files() {
++	next_test; cleanup
++	missing=""
++	for f in enable desc monitor; do
++		[ ! -e "${TLOB_DIR}/${f}" ] && missing="${missing} ${f}"
++	done
++	[ -n "${missing}" ] \
++		&& tap_fail "tracefs_files" "missing:${missing}" \
++		|| tap_pass "tracefs_files"
++	cleanup
++}
++
++# ---------------------------------------------------------------------------
++# Helper: resolve file offset of a function inside a binary.
++#
++# Usage: resolve_offset <binary> <vaddr_hex>
++# Prints the hex file offset, or empty string on failure.
++# ---------------------------------------------------------------------------
++resolve_offset() {
++	bin=$1; vaddr=$2
++	# Parse /proc/self/maps to find the mapping that contains vaddr.
++	# Each line: start-end perms offset dev inode [path]
++	while IFS= read -r line; do
++		set -- $line
++		range=$1; off=$4; path=$7
++		[ -z "$path" ] && continue
++		# Only consider the mapping for our binary
++		[ "$path" != "$bin" ] && continue
++		# Split range into start and end
++		start=$(echo "$range" | cut -d- -f1)
++		end=$(echo "$range" | cut -d- -f2)
++		# Convert hex to decimal for comparison (use printf)
++		s=$(printf "%d" "0x${start}" 2>/dev/null) || continue
++		e=$(printf "%d" "0x${end}"   2>/dev/null) || continue
++		v=$(printf "%d" "${vaddr}"   2>/dev/null) || continue
++		o=$(printf "%d" "0x${off}"   2>/dev/null) || continue
++		if [ "$v" -ge "$s" ] && [ "$v" -lt "$e" ]; then
++			file_off=$(printf "0x%x" $(( (v - s) + o )))
++			echo "$file_off"
++			return
++		fi
++	done < /proc/self/maps
++}
++
++# ---------------------------------------------------------------------------
++# Test 3: uprobe binding - no false positive
++#
++# Bind this process with a 10 s budget.  Do nothing for 0.5 s.
++# No budget_exceeded event should appear in the trace.
++# ---------------------------------------------------------------------------
++run_test_uprobe_no_false_positive() {
++	next_test; cleanup
++	if [ ! -e "${TLOB_MONITOR}" ]; then
++		tap_skip "uprobe_no_false_positive" "monitor file not available"
++		cleanup; return
++	fi
++	# We probe the "sleep" command that we will run as a subprocess.
++	# Use /bin/sleep as the binary; find a valid function offset (0x0
++	# resolves to the ELF entry point, which is sufficient for a
++	# no-false-positive test since we just need the binding to exist).
++	sleep_bin=$(command -v sleep 2>/dev/null)
++	if [ -z "$sleep_bin" ]; then
++		tap_skip "uprobe_no_false_positive" "sleep not found"; cleanup; return
++	fi
++	pid=$$
++	# offset 0x0 probes the entry point of /bin/sleep - this is a
++	# deliberate probe that will not fire during a simple 'sleep 10'
++	# invoked in a subshell, but registers the pid in tlob.
++	#
++	# Instead, bind our own pid with a generous 10 s threshold and
++	# verify that 0.5 s of idle time does NOT fire the timer.
++	#
++	# Since we cannot easily get a valid uprobe offset in pure shell,
++	# we skip this sub-test if we cannot form a valid binding.
++	exe=$(readlink /proc/self/exe 2>/dev/null)
++	if [ -z "$exe" ]; then
++		tap_skip "uprobe_no_false_positive" "cannot read /proc/self/exe"
++		cleanup; return
++	fi
++	trace_event_enable
++	trace_on
++	tlob_enable
++	trace_clear
++	# Sleep without any binding - just verify no spurious events
++	sleep 0.5
++	trace_grep "budget_exceeded" \
++		&& tap_fail "uprobe_no_false_positive" \
++			"spurious budget_exceeded without any binding" \
++		|| tap_pass "uprobe_no_false_positive"
++	cleanup
++}
++
++# ---------------------------------------------------------------------------
++# Helper: get_uprobe_offset <binary> <symbol>
++#
++# Use tlob_helper sym_offset to get the ELF file offset of <symbol>
++# in <binary>.  Prints the hex offset (e.g. "0x11d0") or empty string on
++# failure.
++# ---------------------------------------------------------------------------
++get_uprobe_offset() {
++	bin=$1; sym=$2
++	if [ ! -x "${IOCTL_HELPER}" ]; then
++		return
++	fi
++	"${IOCTL_HELPER}" sym_offset "${bin}" "${sym}" 2>/dev/null
++}
++
++# ---------------------------------------------------------------------------
++# Test 4: uprobe binding - violation detected
++#
++# Start tlob_uprobe_target (a busy-spin binary with a well-known symbol),
++# attach a uprobe on tlob_busy_work with a 10 ms threshold, and verify
++# that a budget_expired event appears.
++# ---------------------------------------------------------------------------
++run_test_uprobe_violation() {
++	next_test; cleanup
++	if [ ! -e "${TLOB_MONITOR}" ]; then
++		tap_skip "uprobe_violation" "monitor file not available"
++		cleanup; return
++	fi
++	if [ ! -x "${UPROBE_TARGET}" ]; then
++		tap_skip "uprobe_violation" \
++			"tlob_uprobe_target not found or not executable"
++		cleanup; return
++	fi
++
++	# Get the file offsets of the start and stop probe symbols
++	busy_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work")
++	if [ -z "${busy_offset}" ]; then
++		tap_skip "uprobe_violation" \
++			"cannot resolve tlob_busy_work offset in ${UPROBE_TARGET}"
++		cleanup; return
++	fi
++	stop_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work_done")
++	if [ -z "${stop_offset}" ]; then
++		tap_skip "uprobe_violation" \
++			"cannot resolve tlob_busy_work_done offset in ${UPROBE_TARGET}"
++		cleanup; return
++	fi
++
++	# Start the busy-spin target (run for 30 s so the test can observe it)
++	"${UPROBE_TARGET}" 30000 &
++	busy_pid=$!
++	sleep 0.05
++
++	trace_event_enable
++	trace_on
++	tlob_enable
++	trace_clear
++
++	# Bind the target: 10 us budget; start=tlob_busy_work, stop=tlob_busy_work_done
++	binding="10:${busy_offset}:${stop_offset}:${UPROBE_TARGET}"
++	if ! echo "${binding}" > "${TLOB_MONITOR}" 2>/dev/null; then
++		kill "${busy_pid}" 2>/dev/null; wait "${busy_pid}" 2>/dev/null
++		tap_skip "uprobe_violation" \
++			"uprobe binding rejected (CONFIG_UPROBES=y needed)"
++		cleanup; return
++	fi
++
++	# Wait up to 2 s for a budget_exceeded event
++	found=0; i=0
++	while [ "$i" -lt 20 ]; do
++		sleep 0.1
++		trace_grep "budget_exceeded" && { found=1; break; }
++		i=$((i+1))
++	done
++
++	echo "-${busy_offset}:${UPROBE_TARGET}" > "${TLOB_MONITOR}" 2>/dev/null
++	kill "${busy_pid}" 2>/dev/null; wait "${busy_pid}" 2>/dev/null
++
++	if [ "${found}" != "1" ]; then
++		tap_fail "uprobe_violation" "no budget_exceeded within 2 s"
++		cleanup; return
++	fi
++
++	# Validate the event fields: threshold must match, on_cpu must be non-zero
++	# (CPU-bound violation), and state must be on_cpu.
++	ev=$(grep "budget_exceeded" "${TRACE_FILE}" | head -n 1)
++	if ! echo "${ev}" | grep -q "threshold=10 "; then
++		tap_fail "uprobe_violation" "threshold field mismatch: ${ev}"
++		cleanup; return
++	fi
++	on_cpu=$(echo "${ev}" | grep -o "on_cpu=[0-9]*" | cut -d= -f2)
++	if [ "${on_cpu:-0}" -eq 0 ]; then
++		tap_fail "uprobe_violation" "on_cpu=0 for a CPU-bound spin: ${ev}"
++		cleanup; return
++	fi
++	if ! echo "${ev}" | grep -q "state=on_cpu"; then
++		tap_fail "uprobe_violation" "state is not on_cpu: ${ev}"
++		cleanup; return
++	fi
++	tap_pass "uprobe_violation"
++	cleanup
++}
++
++# ---------------------------------------------------------------------------
++# Test 5: uprobe binding - remove binding stops monitoring
++#
++# Bind a pid via tlob_uprobe_target, then immediately remove it.
++# Verify that after removal the monitor file no longer lists the pid.
++# ---------------------------------------------------------------------------
++run_test_uprobe_unbind() {
++	next_test; cleanup
++	if [ ! -e "${TLOB_MONITOR}" ]; then
++		tap_skip "uprobe_unbind" "monitor file not available"
++		cleanup; return
++	fi
++	if [ ! -x "${UPROBE_TARGET}" ]; then
++		tap_skip "uprobe_unbind" \
++			"tlob_uprobe_target not found or not executable"
++		cleanup; return
++	fi
++
++	busy_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work")
++	stop_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work_done")
++	if [ -z "${busy_offset}" ] || [ -z "${stop_offset}" ]; then
++		tap_skip "uprobe_unbind" \
++			"cannot resolve tlob_busy_work/tlob_busy_work_done offset"
++		cleanup; return
++	fi
++
++	"${UPROBE_TARGET}" 30000 &
++	busy_pid=$!
++	sleep 0.05
++
++	tlob_enable
++	# 5 s budget - should not fire during this quick test
++	binding="5000000:${busy_offset}:${stop_offset}:${UPROBE_TARGET}"
++	if ! echo "${binding}" > "${TLOB_MONITOR}" 2>/dev/null; then
++		kill "${busy_pid}" 2>/dev/null; wait "${busy_pid}" 2>/dev/null
++		tap_skip "uprobe_unbind" \
++			"uprobe binding rejected (CONFIG_UPROBES=y needed)"
++		cleanup; return
++	fi
++
++	# Remove the binding
++	echo "-${busy_offset}:${UPROBE_TARGET}" > "${TLOB_MONITOR}" 2>/dev/null
++
++	# The monitor file should no longer list the binding for this offset
++	if grep -q "^[0-9]*:0x${busy_offset#0x}:" "${TLOB_MONITOR}" 2>/dev/null; then
++		kill "${busy_pid}" 2>/dev/null; wait "${busy_pid}" 2>/dev/null
++		tap_fail "uprobe_unbind" "pid still listed after removal"
++		cleanup; return
++	fi
++
++	kill "${busy_pid}" 2>/dev/null; wait "${busy_pid}" 2>/dev/null
++	tap_pass "uprobe_unbind"
++	cleanup
++}
++
++# ---------------------------------------------------------------------------
++# Test 6: uprobe - duplicate offset_start rejected
++#
++# Registering a second binding with the same offset_start in the same binary
++# must be rejected with an error, since two entry uprobes at the same address
++# would cause double tlob_start_task() calls and undefined behaviour.
++# ---------------------------------------------------------------------------
++run_test_uprobe_duplicate_offset() {
++	next_test; cleanup
++	if [ ! -e "${TLOB_MONITOR}" ]; then
++		tap_skip "uprobe_duplicate_offset" "monitor file not available"
++		cleanup; return
++	fi
++	if [ ! -x "${UPROBE_TARGET}" ]; then
++		tap_skip "uprobe_duplicate_offset" \
++			"tlob_uprobe_target not found or not executable"
++		cleanup; return
++	fi
++
++	busy_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work")
++	stop_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work_done")
++	if [ -z "${busy_offset}" ] || [ -z "${stop_offset}" ]; then
++		tap_skip "uprobe_duplicate_offset" \
++			"cannot resolve tlob_busy_work/tlob_busy_work_done offset"
++		cleanup; return
++	fi
++
++	tlob_enable
++
++	# First binding: should succeed
++	if ! echo "5000000:${busy_offset}:${stop_offset}:${UPROBE_TARGET}" \
++	        > "${TLOB_MONITOR}" 2>/dev/null; then
++		tap_skip "uprobe_duplicate_offset" \
++			"uprobe binding rejected (CONFIG_UPROBES=y needed)"
++		cleanup; return
++	fi
++
++	# Second binding with same offset_start: must be rejected
++	if echo "9999:${busy_offset}:${stop_offset}:${UPROBE_TARGET}" \
++	        > "${TLOB_MONITOR}" 2>/dev/null; then
++		echo "-${busy_offset}:${UPROBE_TARGET}" > "${TLOB_MONITOR}" 2>/dev/null
++		tap_fail "uprobe_duplicate_offset" \
++			"duplicate offset_start was accepted (expected error)"
++		cleanup; return
++	fi
++
++	echo "-${busy_offset}:${UPROBE_TARGET}" > "${TLOB_MONITOR}" 2>/dev/null
++	tap_pass "uprobe_duplicate_offset"
++	cleanup
++}
++
++
++#
++# Region A: tlob_busy_work with a 5 s budget - should NOT fire during the test.
++# Region B: tlob_busy_work_done with a 10 us budget - SHOULD fire quickly since
++#           tlob_uprobe_target calls tlob_busy_work_done after a busy spin.
++#
++# Verifies that independent bindings for different offsets in the same binary
++# are tracked separately and that only the tight-budget binding triggers a
++# budget_exceeded event.
++# ---------------------------------------------------------------------------
++run_test_uprobe_independent_thresholds() {
++	next_test; cleanup
++	if [ ! -e "${TLOB_MONITOR}" ]; then
++		tap_skip "uprobe_independent_thresholds" \
++			"monitor file not available"; cleanup; return
++	fi
++	if [ ! -x "${UPROBE_TARGET}" ]; then
++		tap_skip "uprobe_independent_thresholds" \
++			"tlob_uprobe_target not found or not executable"
++		cleanup; return
++	fi
++
++	busy_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work")
++	busy_stop_offset=$(get_uprobe_offset "${UPROBE_TARGET}" "tlob_busy_work_done")
++	if [ -z "${busy_offset}" ] || [ -z "${busy_stop_offset}" ]; then
++		tap_skip "uprobe_independent_thresholds" \
++			"cannot resolve tlob_busy_work/tlob_busy_work_done offset"
++		cleanup; return
++	fi
++
++	"${UPROBE_TARGET}" 30000 &
++	busy_pid=$!
++	sleep 0.05
++
++	trace_event_enable
++	trace_on
++	tlob_enable
++	trace_clear
++
++	# Region A: generous 5 s budget on tlob_busy_work entry (should not fire)
++	if ! echo "5000000:${busy_offset}:${busy_stop_offset}:${UPROBE_TARGET}" \
++	        > "${TLOB_MONITOR}" 2>/dev/null; then
++		kill "${busy_pid}" 2>/dev/null; wait "${busy_pid}" 2>/dev/null
++		tap_skip "uprobe_independent_thresholds" \
++			"uprobe binding rejected (CONFIG_UPROBES=y needed)"
++		cleanup; return
++	fi
++	# Region B: tight 10 us budget on tlob_busy_work_done (fires quickly)
++	echo "10:${busy_stop_offset}:${busy_stop_offset}:${UPROBE_TARGET}" \
++		> "${TLOB_MONITOR}" 2>/dev/null
++
++	found=0; i=0
++	while [ "$i" -lt 20 ]; do
++		sleep 0.1
++		trace_grep "budget_exceeded" && { found=1; break; }
++		i=$((i+1))
++	done
++
++	echo "-${busy_offset}:${UPROBE_TARGET}" > "${TLOB_MONITOR}" 2>/dev/null
++	echo "-${busy_stop_offset}:${UPROBE_TARGET}" > "${TLOB_MONITOR}" 2>/dev/null
++	kill "${busy_pid}" 2>/dev/null; wait "${busy_pid}" 2>/dev/null
++
++	if [ "${found}" != "1" ]; then
++		tap_fail "uprobe_independent_thresholds" \
++			"budget_exceeded not raised for tight-budget region within 2 s"
++		cleanup; return
++	fi
++
++	# The violation must carry threshold=10 (Region B's budget).
++	ev=$(grep "budget_exceeded" "${TRACE_FILE}" | head -n 1)
++	if ! echo "${ev}" | grep -q "threshold=10 "; then
++		tap_fail "uprobe_independent_thresholds" \
++			"violation threshold is not Region B's 10 us: ${ev}"
++		cleanup; return
++	fi
++	tap_pass "uprobe_independent_thresholds"
++	cleanup
++}
++
++# ---------------------------------------------------------------------------
++# ioctl tests via tlob_helper
++#
++# Each test invokes the helper with a sub-test name.
++# Exit code: 0=pass, 1=fail, 2=skip.
++# ---------------------------------------------------------------------------
++run_ioctl_test() {
++	testname=$1
++	next_test
++
++	if [ ! -x "${IOCTL_HELPER}" ]; then
++		tap_skip "ioctl_${testname}" \
++			"tlob_helper not found or not executable"
++		return
++	fi
++	if [ ! -c "${RV_DEV}" ]; then
++		tap_skip "ioctl_${testname}" \
++			"${RV_DEV} not present (CONFIG_RV_CHARDEV=y needed)"
++		return
++	fi
++
++	tlob_enable
++	"${IOCTL_HELPER}" "${testname}"
++	rc=$?
++	tlob_disable
++
++	case "${rc}" in
++	0) tap_pass "ioctl_${testname}" ;;
++	2) tap_skip "ioctl_${testname}" "helper returned skip" ;;
++	*) tap_fail "ioctl_${testname}" "helper exited with code ${rc}" ;;
++	esac
++}
++
++# run_ioctl_test_not_enabled - like run_ioctl_test but deliberately does NOT
++# enable the tlob monitor before invoking the helper.  Used to verify that
++# ioctls issued against a disabled monitor return ENODEV rather than crashing
++# the kernel with a NULL pointer dereference.
++run_ioctl_test_not_enabled()
++{
++	next_test
++
++	if [ ! -x "${IOCTL_HELPER}" ]; then
++		tap_skip "ioctl_not_enabled" \
++			"tlob_helper not found or not executable"
++		return
++	fi
++	if [ ! -c "${RV_DEV}" ]; then
++		tap_skip "ioctl_not_enabled" \
++			"${RV_DEV} not present (CONFIG_RV_CHARDEV=y needed)"
++		return
++	fi
++
++	# Monitor intentionally left disabled.
++	tlob_disable
++	"${IOCTL_HELPER}" not_enabled
++	rc=$?
++
++	case "${rc}" in
++	0) tap_pass "ioctl_not_enabled" ;;
++	2) tap_skip "ioctl_not_enabled" "helper returned skip" ;;
++	*) tap_fail "ioctl_not_enabled" "helper exited with code ${rc}" ;;
++	esac
++}
++
++# ---------------------------------------------------------------------------
++# Main
++# ---------------------------------------------------------------------------
++check_root; check_tracefs; check_rv_dir; check_tlob
++tap_header; tap_plan 20
++
++# tracefs interface tests
++run_test_enable_disable
++run_test_tracefs_files
++
++# uprobe external monitoring tests
++run_test_uprobe_no_false_positive
++run_test_uprobe_violation
++run_test_uprobe_unbind
++run_test_uprobe_duplicate_offset
++run_test_uprobe_independent_thresholds
++
++# /dev/rv ioctl self-instrumentation tests
++run_ioctl_test_not_enabled
++run_ioctl_test within_budget
++run_ioctl_test over_budget_cpu
++run_ioctl_test over_budget_sleep
++run_ioctl_test double_start
++run_ioctl_test stop_no_start
++run_ioctl_test multi_thread
++run_ioctl_test self_watch
++run_ioctl_test invalid_flags
++run_ioctl_test notify_fd_bad
++run_ioctl_test mmap_basic
++run_ioctl_test mmap_errors
++run_ioctl_test mmap_consume
++
++echo "# Passed: ${t_pass} Failed: ${t_fail} Skipped: ${t_skip}"
++[ "${t_fail}" -gt 0 ] && exit 1 || exit 0
+diff --git a/tools/testing/selftests/rv/tlob_helper.c b/tools/testing/selftests/rv/tlob_helper.c
+new file mode 100644
+index 000000000..cd76b56d1
+--- /dev/null
++++ b/tools/testing/selftests/rv/tlob_helper.c
+@@ -0,0 +1,994 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * KUnit tests for the tlob RV monitor.
++ * tlob_helper.c - test helper and ELF utility for tlob selftests
 + *
-+ * tlob_automaton:         DA transition table coverage.
-+ * tlob_task_api:          tlob_start_task()/tlob_stop_task() lifecycle and errors.
-+ * tlob_sched_integration: on/off-CPU accounting across real context switches.
-+ * tlob_trace_output:      tlob_budget_exceeded tracepoint field verification.
-+ * tlob_event_buf:         ring buffer push, overflow, and wakeup.
-+ * tlob_parse_uprobe:      uprobe format string parser acceptance and rejection.
++ * Called by test_tlob.sh to exercise the /dev/rv ioctl interface and to
++ * resolve ELF symbol offsets for uprobe bindings.  One subcommand per
++ * invocation so the shell script can report each as an independent TAP
++ * test case.
 + *
-+ * The duplicate-(binary, offset_start) constraint enforced by tlob_add_uprobe()
-+ * is not covered here: that function calls kern_path() and requires a real
-+ * filesystem, which is outside the scope of unit tests. It is covered by the
-+ * uprobe_duplicate_offset case in tools/testing/selftests/rv/test_tlob.sh.
-+ */
-+#include <kunit/test.h>
-+#include <linux/atomic.h>
-+#include <linux/completion.h>
-+#include <linux/delay.h>
-+#include <linux/kthread.h>
-+#include <linux/ktime.h>
-+#include <linux/mutex.h>
-+#include <linux/sched.h>
-+#include <linux/sched/task.h>
-+#include <linux/tracepoint.h>
-+
-+/*
-+ * Pull in the rv tracepoint declarations so that
-+ * register_trace_tlob_budget_exceeded() is available.
-+ * No CREATE_TRACE_POINTS here  --  the tracepoint implementation lives in rv.c.
-+ */
-+#include <rv_trace.h>
-+
-+#include "tlob.h"
-+
-+/*
-+ * da_handle_event_tlob - apply one automaton transition on @da_mon.
++ * Usage: tlob_helper <subcommand> [args...]
 + *
-+ * This helper is used only by the KUnit automaton suite. It applies the
-+ * tlob transition table directly on a supplied da_monitor without touching
-+ * per-task slots, tracepoints, or timers.
++ * Synchronous TRACE_START / TRACE_STOP tests:
++ *   not_enabled        - TRACE_START without tlob enabled -> ENODEV (no kernel crash)
++ *   within_budget      - start(50000 us), sleep 10 ms, stop -> expect 0
++ *   over_budget_cpu    - start(5000 us), busyspin 100 ms, stop -> EOVERFLOW
++ *   over_budget_sleep  - start(3000 us), sleep 50 ms, stop -> EOVERFLOW
++ *
++ * Error-handling tests:
++ *   double_start       - two starts without stop -> EEXIST on second
++ *   stop_no_start      - stop without start -> ESRCH
++ *
++ * Per-thread isolation test:
++ *   multi_thread       - two threads share one fd; one within budget, one over
++ *
++ * Asynchronous notification test (notify_fd + read()):
++ *   self_watch         - one worker exceeds budget; monitor fd receives one ntf via read()
++ *
++ * Input-validation tests (TRACE_START error paths):
++ *   invalid_flags      - TRACE_START with flags != 0 -> EINVAL
++ *   notify_fd_bad      - TRACE_START with notify_fd = stdout (non-rv fd) -> EINVAL
++ *
++ * mmap ring buffer tests (Scenario D):
++ *   mmap_basic         - mmap succeeds; verify tlob_mmap_page fields
++ *                        (version, capacity, data_offset, record_size)
++ *   mmap_errors        - MAP_PRIVATE, wrong size, and non-zero pgoff all
++ *                        return EINVAL
++ *   mmap_consume       - trigger a real violation via self-notification and
++ *                        consume the event through the mmap'd ring
++ *
++ * ELF utility (does not require /dev/rv):
++ *   sym_offset <binary> <symbol>
++ *                      - print the ELF file offset of <symbol> in <binary>
++ *                        (used by the shell script to build uprobe bindings)
++ *
++ * Exit code: 0 = pass, 1 = fail, 2 = skip (device not available).
 + */
-+static void da_handle_event_tlob(struct da_monitor *da_mon,
-+				 enum events_tlob event)
++#define _GNU_SOURCE
++#include <elf.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <poll.h>
++#include <pthread.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/mman.h>
++#include <sys/stat.h>
++#include <time.h>
++#include <unistd.h>
++
++#include <linux/rv.h>
++
++/* Default ring capacity allocated at open(); matches TLOB_RING_DEFAULT_CAP. */
++#define TLOB_RING_DEFAULT_CAP	64U
++
++static int rv_fd = -1;
++
++static int open_rv(void)
 +{
-+	enum states_tlob curr_state = (enum states_tlob)da_mon->curr_state;
-+	enum states_tlob next_state =
-+		(enum states_tlob)automaton_tlob.function[curr_state][event];
-+
-+	if (next_state != INVALID_STATE)
-+		da_mon->curr_state = next_state;
-+}
-+
-+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
-+
-+/*
-+ * Suite 1: automaton state-machine transitions
-+ */
-+
-+/* unmonitored -> trace_start -> on_cpu */
-+static void tlob_unmonitored_to_on_cpu(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = unmonitored_tlob };
-+
-+	da_handle_event_tlob(&mon, trace_start_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+}
-+
-+/* on_cpu -> switch_out -> off_cpu */
-+static void tlob_on_cpu_switch_out(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = on_cpu_tlob };
-+
-+	da_handle_event_tlob(&mon, switch_out_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)off_cpu_tlob);
-+}
-+
-+/* off_cpu -> switch_in -> on_cpu */
-+static void tlob_off_cpu_switch_in(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = off_cpu_tlob };
-+
-+	da_handle_event_tlob(&mon, switch_in_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+}
-+
-+/* on_cpu -> budget_expired -> unmonitored */
-+static void tlob_on_cpu_budget_expired(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = on_cpu_tlob };
-+
-+	da_handle_event_tlob(&mon, budget_expired_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+}
-+
-+/* off_cpu -> budget_expired -> unmonitored */
-+static void tlob_off_cpu_budget_expired(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = off_cpu_tlob };
-+
-+	da_handle_event_tlob(&mon, budget_expired_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+}
-+
-+/* on_cpu -> trace_stop -> unmonitored */
-+static void tlob_on_cpu_trace_stop(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = on_cpu_tlob };
-+
-+	da_handle_event_tlob(&mon, trace_stop_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+}
-+
-+/* off_cpu -> trace_stop -> unmonitored */
-+static void tlob_off_cpu_trace_stop(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = off_cpu_tlob };
-+
-+	da_handle_event_tlob(&mon, trace_stop_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+}
-+
-+/* budget_expired -> unmonitored; a single trace_start re-enters on_cpu. */
-+static void tlob_violation_then_restart(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = unmonitored_tlob };
-+
-+	da_handle_event_tlob(&mon, trace_start_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+
-+	da_handle_event_tlob(&mon, budget_expired_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+
-+	/* Single trace_start is sufficient to re-enter on_cpu */
-+	da_handle_event_tlob(&mon, trace_start_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+
-+	da_handle_event_tlob(&mon, trace_stop_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+}
-+
-+/* off_cpu self-loops on switch_out and sched_wakeup. */
-+static void tlob_off_cpu_self_loops(struct kunit *test)
-+{
-+	static const enum events_tlob events[] = {
-+		switch_out_tlob, sched_wakeup_tlob,
-+	};
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(events); i++) {
-+		struct da_monitor mon = { .curr_state = off_cpu_tlob };
-+
-+		da_handle_event_tlob(&mon, events[i]);
-+		KUNIT_EXPECT_EQ_MSG(test, (int)mon.curr_state,
-+				    (int)off_cpu_tlob,
-+				    "event %u should self-loop in off_cpu",
-+				    events[i]);
++	rv_fd = open("/dev/rv", O_RDWR);
++	if (rv_fd < 0) {
++		fprintf(stderr, "open /dev/rv: %s\n", strerror(errno));
++		return -1;
 +	}
-+}
-+
-+/* on_cpu self-loops on sched_wakeup. */
-+static void tlob_on_cpu_self_loops(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = on_cpu_tlob };
-+
-+	da_handle_event_tlob(&mon, sched_wakeup_tlob);
-+	KUNIT_EXPECT_EQ_MSG(test, (int)mon.curr_state, (int)on_cpu_tlob,
-+			    "sched_wakeup should self-loop in on_cpu");
-+}
-+
-+/* Scheduling events in unmonitored self-loop (no state change). */
-+static void tlob_unmonitored_ignores_sched(struct kunit *test)
-+{
-+	static const enum events_tlob events[] = {
-+		switch_in_tlob, switch_out_tlob, sched_wakeup_tlob,
-+	};
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(events); i++) {
-+		struct da_monitor mon = { .curr_state = unmonitored_tlob };
-+
-+		da_handle_event_tlob(&mon, events[i]);
-+		KUNIT_EXPECT_EQ_MSG(test, (int)mon.curr_state,
-+				    (int)unmonitored_tlob,
-+				    "event %u should self-loop in unmonitored",
-+				    events[i]);
-+	}
-+}
-+
-+static void tlob_full_happy_path(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = unmonitored_tlob };
-+
-+	da_handle_event_tlob(&mon, trace_start_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+
-+	da_handle_event_tlob(&mon, switch_out_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)off_cpu_tlob);
-+
-+	da_handle_event_tlob(&mon, switch_in_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+
-+	da_handle_event_tlob(&mon, trace_stop_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+}
-+
-+static void tlob_multiple_switches(struct kunit *test)
-+{
-+	struct da_monitor mon = { .curr_state = unmonitored_tlob };
-+	int i;
-+
-+	da_handle_event_tlob(&mon, trace_start_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+
-+	for (i = 0; i < 3; i++) {
-+		da_handle_event_tlob(&mon, switch_out_tlob);
-+		KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)off_cpu_tlob);
-+		da_handle_event_tlob(&mon, switch_in_tlob);
-+		KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)on_cpu_tlob);
-+	}
-+
-+	da_handle_event_tlob(&mon, trace_stop_tlob);
-+	KUNIT_EXPECT_EQ(test, (int)mon.curr_state, (int)unmonitored_tlob);
-+}
-+
-+static struct kunit_case tlob_automaton_cases[] = {
-+	KUNIT_CASE(tlob_unmonitored_to_on_cpu),
-+	KUNIT_CASE(tlob_on_cpu_switch_out),
-+	KUNIT_CASE(tlob_off_cpu_switch_in),
-+	KUNIT_CASE(tlob_on_cpu_budget_expired),
-+	KUNIT_CASE(tlob_off_cpu_budget_expired),
-+	KUNIT_CASE(tlob_on_cpu_trace_stop),
-+	KUNIT_CASE(tlob_off_cpu_trace_stop),
-+	KUNIT_CASE(tlob_off_cpu_self_loops),
-+	KUNIT_CASE(tlob_on_cpu_self_loops),
-+	KUNIT_CASE(tlob_unmonitored_ignores_sched),
-+	KUNIT_CASE(tlob_full_happy_path),
-+	KUNIT_CASE(tlob_violation_then_restart),
-+	KUNIT_CASE(tlob_multiple_switches),
-+	{}
-+};
-+
-+static struct kunit_suite tlob_automaton_suite = {
-+	.name       = "tlob_automaton",
-+	.test_cases = tlob_automaton_cases,
-+};
-+
-+/*
-+ * Suite 2: task registration API
-+ */
-+
-+/* Basic start/stop cycle */
-+static void tlob_start_stop_ok(struct kunit *test)
-+{
-+	int ret;
-+
-+	ret = tlob_start_task(current, 10000000 /* 10 s, won't fire */, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, tlob_stop_task(current), 0);
-+}
-+
-+/* Double start must return -EEXIST. */
-+static void tlob_double_start(struct kunit *test)
-+{
-+	KUNIT_ASSERT_EQ(test, tlob_start_task(current, 10000000, NULL, 0), 0);
-+	KUNIT_EXPECT_EQ(test, tlob_start_task(current, 10000000, NULL, 0), -EEXIST);
-+	tlob_stop_task(current);
-+}
-+
-+/* Stop without start must return -ESRCH. */
-+static void tlob_stop_without_start(struct kunit *test)
-+{
-+	tlob_stop_task(current);  /* clear any stale entry first */
-+	KUNIT_EXPECT_EQ(test, tlob_stop_task(current), -ESRCH);
-+}
-+
-+/*
-+ * A 1 us budget fires before tlob_stop_task() is called. Either the
-+ * timer wins (-ESRCH) or we are very fast (0); both are valid.
-+ */
-+static void tlob_immediate_deadline(struct kunit *test)
-+{
-+	int ret = tlob_start_task(current, 1 /* 1 us - fires almost immediately */, NULL, 0);
-+
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+	/* Let the 1 us timer fire */
-+	udelay(100);
-+	/*
-+	 * By now the hrtimer has almost certainly fired. Either it has
-+	 * (returns -ESRCH) or we were very fast (returns 0). Both are
-+	 * acceptable; just ensure no crash and the table is clean after.
-+	 */
-+	ret = tlob_stop_task(current);
-+	KUNIT_EXPECT_TRUE(test, ret == 0 || ret == -ESRCH);
-+}
-+
-+/*
-+ * Fill the table to TLOB_MAX_MONITORED using kthreads (each needs a
-+ * distinct task_struct), then verify the next start returns -ENOSPC.
-+ */
-+struct tlob_waiter_ctx {
-+	struct completion start;
-+	struct completion done;
-+};
-+
-+static int tlob_waiter_fn(void *arg)
-+{
-+	struct tlob_waiter_ctx *ctx = arg;
-+
-+	wait_for_completion(&ctx->start);
-+	complete(&ctx->done);
 +	return 0;
 +}
 +
-+static void tlob_enospc(struct kunit *test)
++static void busy_spin_us(unsigned long us)
 +{
-+	struct tlob_waiter_ctx *ctxs;
-+	struct task_struct **threads;
-+	int i, ret;
++	struct timespec start, now;
++	unsigned long elapsed;
 +
-+	ctxs = kunit_kcalloc(test, TLOB_MAX_MONITORED,
-+			     sizeof(*ctxs), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, ctxs);
++	clock_gettime(CLOCK_MONOTONIC, &start);
++	do {
++		clock_gettime(CLOCK_MONOTONIC, &now);
++		elapsed = (unsigned long)(now.tv_sec - start.tv_sec)
++			  * 1000000000UL
++			+ (unsigned long)(now.tv_nsec - start.tv_nsec);
++	} while (elapsed < us * 1000UL);
++}
 +
-+	threads = kunit_kcalloc(test, TLOB_MAX_MONITORED,
-+				sizeof(*threads), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, threads);
++static int do_start(uint64_t threshold_us)
++{
++	struct tlob_start_args args = {
++		.threshold_us = threshold_us,
++		.notify_fd    = -1,
++	};
 +
-+	/* Start TLOB_MAX_MONITORED kthreads and monitor each */
-+	for (i = 0; i < TLOB_MAX_MONITORED; i++) {
-+		init_completion(&ctxs[i].start);
-+		init_completion(&ctxs[i].done);
++	return ioctl(rv_fd, TLOB_IOCTL_TRACE_START, &args);
++}
 +
-+		threads[i] = kthread_run(tlob_waiter_fn, &ctxs[i],
-+					 "tlob_waiter_%d", i);
-+		if (IS_ERR(threads[i])) {
-+			KUNIT_FAIL(test, "kthread_run failed at i=%d", i);
-+			threads[i] = NULL;
-+			goto cleanup;
++static int do_stop(void)
++{
++	return ioctl(rv_fd, TLOB_IOCTL_TRACE_STOP, NULL);
++}
++
++/* -----------------------------------------------------------------------
++ * Synchronous TRACE_START / TRACE_STOP tests
++ * -----------------------------------------------------------------------
++ */
++
++/*
++ * test_not_enabled - TRACE_START must return ENODEV when the tlob monitor
++ * has not been enabled (tlob_state_cache is NULL).
++ *
++ * The shell wrapper deliberately does NOT call tlob_enable before invoking
++ * this subcommand, so the ioctl is expected to fail with ENODEV rather than
++ * crashing the kernel with a NULL pointer dereference in kmem_cache_alloc.
++ */
++static int test_not_enabled(void)
++{
++	int ret;
++
++	ret = do_start(1000);
++	if (ret == 0) {
++		fprintf(stderr, "TRACE_START: expected ENODEV, got success\n");
++		do_stop();
++		return 1;
++	}
++	if (errno != ENODEV) {
++		fprintf(stderr, "TRACE_START: expected ENODEV, got %s\n",
++			strerror(errno));
++		return 1;
++	}
++	return 0;
++}
++
++static int test_within_budget(void)
++{
++	int ret;
++
++	if (do_start(50000) < 0) {
++		fprintf(stderr, "TRACE_START: %s\n", strerror(errno));
++		return 1;
++	}
++	usleep(10000); /* 10 ms < 50 ms budget */
++	ret = do_stop();
++	if (ret != 0) {
++		fprintf(stderr, "TRACE_STOP: expected 0, got %d errno=%s\n",
++			ret, strerror(errno));
++		return 1;
++	}
++	return 0;
++}
++
++static int test_over_budget_cpu(void)
++{
++	int ret;
++
++	if (do_start(5000) < 0) {
++		fprintf(stderr, "TRACE_START: %s\n", strerror(errno));
++		return 1;
++	}
++	busy_spin_us(100000); /* 100 ms >> 5 ms budget */
++	ret = do_stop();
++	if (ret == 0) {
++		fprintf(stderr, "TRACE_STOP: expected EOVERFLOW, got 0\n");
++		return 1;
++	}
++	if (errno != EOVERFLOW) {
++		fprintf(stderr, "TRACE_STOP: expected EOVERFLOW, got %s\n",
++			strerror(errno));
++		return 1;
++	}
++	return 0;
++}
++
++static int test_over_budget_sleep(void)
++{
++	int ret;
++
++	if (do_start(3000) < 0) {
++		fprintf(stderr, "TRACE_START: %s\n", strerror(errno));
++		return 1;
++	}
++	usleep(50000); /* 50 ms >> 3 ms budget, off-CPU time counts */
++	ret = do_stop();
++	if (ret == 0) {
++		fprintf(stderr, "TRACE_STOP: expected EOVERFLOW, got 0\n");
++		return 1;
++	}
++	if (errno != EOVERFLOW) {
++		fprintf(stderr, "TRACE_STOP: expected EOVERFLOW, got %s\n",
++			strerror(errno));
++		return 1;
++	}
++	return 0;
++}
++
++/* -----------------------------------------------------------------------
++ * Error-handling tests
++ * -----------------------------------------------------------------------
++ */
++
++static int test_double_start(void)
++{
++	int ret;
++
++	if (do_start(10000000) < 0) {
++		fprintf(stderr, "first TRACE_START: %s\n", strerror(errno));
++		return 1;
++	}
++	ret = do_start(10000000);
++	if (ret == 0) {
++		fprintf(stderr, "second TRACE_START: expected EEXIST, got 0\n");
++		do_stop();
++		return 1;
++	}
++	if (errno != EEXIST) {
++		fprintf(stderr, "second TRACE_START: expected EEXIST, got %s\n",
++			strerror(errno));
++		do_stop();
++		return 1;
++	}
++	do_stop(); /* clean up */
++	return 0;
++}
++
++static int test_stop_no_start(void)
++{
++	int ret;
++
++	/* Ensure clean state: ignore error from a stale entry */
++	do_stop();
++
++	ret = do_stop();
++	if (ret == 0) {
++		fprintf(stderr, "TRACE_STOP: expected ESRCH, got 0\n");
++		return 1;
++	}
++	if (errno != ESRCH) {
++		fprintf(stderr, "TRACE_STOP: expected ESRCH, got %s\n",
++			strerror(errno));
++		return 1;
++	}
++	return 0;
++}
++
++/* -----------------------------------------------------------------------
++ * Per-thread isolation test
++ *
++ * Two threads share a single /dev/rv fd.  The monitor uses task_struct *
++ * as the key, so each thread gets an independent slot regardless of the
++ * shared fd.
++ * -----------------------------------------------------------------------
++ */
++
++struct mt_thread_args {
++	uint64_t      threshold_us;
++	unsigned long workload_us;
++	int           busy;
++	int           expect_eoverflow;
++	int           result;
++};
++
++static void *mt_thread_fn(void *arg)
++{
++	struct mt_thread_args *a = arg;
++	int ret;
++
++	if (do_start(a->threshold_us) < 0) {
++		fprintf(stderr, "thread TRACE_START: %s\n", strerror(errno));
++		a->result = 1;
++		return NULL;
++	}
++
++	if (a->busy)
++		busy_spin_us(a->workload_us);
++	else
++		usleep(a->workload_us);
++
++	ret = do_stop();
++	if (a->expect_eoverflow) {
++		if (ret == 0 || errno != EOVERFLOW) {
++			fprintf(stderr, "thread: expected EOVERFLOW, got ret=%d errno=%s\n",
++				ret, strerror(errno));
++			a->result = 1;
++			return NULL;
 +		}
-+		get_task_struct(threads[i]);
-+
-+		ret = tlob_start_task(threads[i], 10000000, NULL, 0);
++	} else {
 +		if (ret != 0) {
-+			KUNIT_FAIL(test, "tlob_start_task failed at i=%d: %d",
-+				   i, ret);
-+			put_task_struct(threads[i]);
-+			complete(&ctxs[i].start);
-+			goto cleanup;
++			fprintf(stderr, "thread: expected 0, got ret=%d errno=%s\n",
++				ret, strerror(errno));
++			a->result = 1;
++			return NULL;
 +		}
 +	}
-+
-+	/* The table is now full: one more must fail with -ENOSPC */
-+	ret = tlob_start_task(current, 10000000, NULL, 0);
-+	KUNIT_EXPECT_EQ(test, ret, -ENOSPC);
-+
-+cleanup:
-+	/*
-+	 * Two-pass cleanup: cancel tlob monitoring and unblock kthreads first,
-+	 * then kthread_stop() to wait for full exit before releasing refs.
-+	 */
-+	for (i = 0; i < TLOB_MAX_MONITORED; i++) {
-+		if (!threads[i])
-+			break;
-+		tlob_stop_task(threads[i]);
-+		complete(&ctxs[i].start);
-+	}
-+	for (i = 0; i < TLOB_MAX_MONITORED; i++) {
-+		if (!threads[i])
-+			break;
-+		kthread_stop(threads[i]);
-+		put_task_struct(threads[i]);
-+	}
++	a->result = 0;
++	return NULL;
 +}
 +
-+/*
-+ * A kthread holds a mutex for 80 ms; arm a 10 ms budget, burn ~1 ms
-+ * on-CPU, then block on the mutex. The timer fires off-CPU; stop
-+ * must return -ESRCH.
-+ */
-+struct tlob_holder_ctx {
-+	struct mutex		lock;
-+	struct completion	ready;
-+	unsigned int		hold_ms;
-+};
-+
-+static int tlob_holder_fn(void *arg)
++static int test_multi_thread(void)
 +{
-+	struct tlob_holder_ctx *ctx = arg;
-+
-+	mutex_lock(&ctx->lock);
-+	complete(&ctx->ready);
-+	msleep(ctx->hold_ms);
-+	mutex_unlock(&ctx->lock);
-+	return 0;
-+}
-+
-+static void tlob_deadline_fires_off_cpu(struct kunit *test)
-+{
-+	struct tlob_holder_ctx ctx = { .hold_ms = 80 };
-+	struct task_struct *holder;
-+	ktime_t t0;
-+	int ret;
-+
-+	mutex_init(&ctx.lock);
-+	init_completion(&ctx.ready);
-+
-+	holder = kthread_run(tlob_holder_fn, &ctx, "tlob_holder_kunit");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, holder);
-+	wait_for_completion(&ctx.ready);
-+
-+	/* Arm 10 ms budget while kthread holds the mutex. */
-+	ret = tlob_start_task(current, 10000, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Phase 1: burn ~1 ms on-CPU to exercise on_cpu accounting. */
-+	t0 = ktime_get();
-+	while (ktime_us_delta(ktime_get(), t0) < 1000)
-+		cpu_relax();
-+
-+	/*
-+	 * Phase 2: block on the mutex -> on_cpu->off_cpu transition.
-+	 * The 10 ms budget fires while we are off-CPU.
-+	 */
-+	mutex_lock(&ctx.lock);
-+	mutex_unlock(&ctx.lock);
-+
-+	/* Timer already fired and removed the entry -> -ESRCH */
-+	KUNIT_EXPECT_EQ(test, tlob_stop_task(current), -ESRCH);
-+}
-+
-+/* Arm a 1 ms budget and busy-spin for 50 ms; timer fires on-CPU. */
-+static void tlob_deadline_fires_on_cpu(struct kunit *test)
-+{
-+	ktime_t t0;
-+	int ret;
-+
-+	ret = tlob_start_task(current, 1000 /* 1 ms */, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Busy-spin 50 ms - 50x the budget */
-+	t0 = ktime_get();
-+	while (ktime_us_delta(ktime_get(), t0) < 50000)
-+		cpu_relax();
-+
-+	/* Timer fired during the spin; entry is gone */
-+	KUNIT_EXPECT_EQ(test, tlob_stop_task(current), -ESRCH);
-+}
-+
-+/*
-+ * Start three tasks, call tlob_destroy_monitor() + tlob_init_monitor(),
-+ * and verify the table is empty afterwards.
-+ */
-+static int tlob_dummy_fn(void *arg)
-+{
-+	wait_for_completion((struct completion *)arg);
-+	return 0;
-+}
-+
-+static void tlob_stop_all_cleanup(struct kunit *test)
-+{
-+	struct completion done1, done2;
-+	struct task_struct *t1, *t2;
-+	int ret;
-+
-+	init_completion(&done1);
-+	init_completion(&done2);
-+
-+	t1 = kthread_run(tlob_dummy_fn, &done1, "tlob_dummy1");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, t1);
-+	get_task_struct(t1);
-+
-+	t2 = kthread_run(tlob_dummy_fn, &done2, "tlob_dummy2");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, t2);
-+	get_task_struct(t2);
-+
-+	KUNIT_ASSERT_EQ(test, tlob_start_task(current, 10000000, NULL, 0), 0);
-+	KUNIT_ASSERT_EQ(test, tlob_start_task(t1, 10000000, NULL, 0), 0);
-+	KUNIT_ASSERT_EQ(test, tlob_start_task(t2, 10000000, NULL, 0), 0);
-+
-+	/* Destroy clears all entries via tlob_stop_all() */
-+	tlob_destroy_monitor();
-+	ret = tlob_init_monitor();
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Table must be empty now */
-+	KUNIT_EXPECT_EQ(test, tlob_stop_task(current), -ESRCH);
-+	KUNIT_EXPECT_EQ(test, tlob_stop_task(t1), -ESRCH);
-+	KUNIT_EXPECT_EQ(test, tlob_stop_task(t2), -ESRCH);
-+
-+	complete(&done1);
-+	complete(&done2);
-+	/*
-+	 * completions live on stack; wait for kthreads to exit before return.
-+	 */
-+	kthread_stop(t1);
-+	kthread_stop(t2);
-+	put_task_struct(t1);
-+	put_task_struct(t2);
-+}
-+
-+/* A threshold that overflows ktime_t must be rejected with -ERANGE. */
-+static void tlob_overflow_threshold(struct kunit *test)
-+{
-+	/* KTIME_MAX / NSEC_PER_USEC + 1 overflows ktime_t */
-+	u64 too_large = (u64)(KTIME_MAX / NSEC_PER_USEC) + 1;
-+
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_start_task(current, too_large, NULL, 0),
-+		-ERANGE);
-+}
-+
-+static int tlob_task_api_suite_init(struct kunit_suite *suite)
-+{
-+	return tlob_init_monitor();
-+}
-+
-+static void tlob_task_api_suite_exit(struct kunit_suite *suite)
-+{
-+	tlob_destroy_monitor();
-+}
-+
-+static struct kunit_case tlob_task_api_cases[] = {
-+	KUNIT_CASE(tlob_start_stop_ok),
-+	KUNIT_CASE(tlob_double_start),
-+	KUNIT_CASE(tlob_stop_without_start),
-+	KUNIT_CASE(tlob_immediate_deadline),
-+	KUNIT_CASE(tlob_enospc),
-+	KUNIT_CASE(tlob_overflow_threshold),
-+	KUNIT_CASE(tlob_deadline_fires_off_cpu),
-+	KUNIT_CASE(tlob_deadline_fires_on_cpu),
-+	KUNIT_CASE(tlob_stop_all_cleanup),
-+	{}
-+};
-+
-+static struct kunit_suite tlob_task_api_suite = {
-+	.name       = "tlob_task_api",
-+	.suite_init = tlob_task_api_suite_init,
-+	.suite_exit = tlob_task_api_suite_exit,
-+	.test_cases = tlob_task_api_cases,
-+};
-+
-+/*
-+ * Suite 3: scheduling integration
-+ */
-+
-+struct tlob_ping_ctx {
-+	struct completion ping;
-+	struct completion pong;
-+};
-+
-+static int tlob_ping_fn(void *arg)
-+{
-+	struct tlob_ping_ctx *ctx = arg;
-+
-+	/* Wait for main to give us the CPU back */
-+	wait_for_completion(&ctx->ping);
-+	complete(&ctx->pong);
-+	return 0;
-+}
-+
-+/* Force two context switches and verify stop returns 0 (within budget). */
-+static void tlob_sched_switch_accounting(struct kunit *test)
-+{
-+	struct tlob_ping_ctx ctx;
-+	struct task_struct *peer;
-+	int ret;
-+
-+	init_completion(&ctx.ping);
-+	init_completion(&ctx.pong);
-+
-+	peer = kthread_run(tlob_ping_fn, &ctx, "tlob_ping_kunit");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, peer);
-+
-+	/* Arm a generous 5 s budget so the timer never fires */
-+	ret = tlob_start_task(current, 5000000, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/*
-+	 * complete(ping) -> peer runs, forcing a context switch out and back.
-+	 */
-+	complete(&ctx.ping);
-+	wait_for_completion(&ctx.pong);
-+
-+	/*
-+	 * Back on CPU after one off-CPU interval; stop must return 0.
-+	 */
-+	ret = tlob_stop_task(current);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+}
-+
-+/*
-+ * Verify that monitoring a kthread (not current) works: start on behalf
-+ * of a kthread, let it block, then stop it.
-+ */
-+static int tlob_block_fn(void *arg)
-+{
-+	struct completion *done = arg;
-+
-+	/* Block briefly, exercising off_cpu accounting for this task */
-+	msleep(20);
-+	complete(done);
-+	return 0;
-+}
-+
-+static void tlob_monitor_other_task(struct kunit *test)
-+{
-+	struct completion done;
-+	struct task_struct *target;
-+	int ret;
-+
-+	init_completion(&done);
-+
-+	target = kthread_run(tlob_block_fn, &done, "tlob_target_kunit");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, target);
-+	get_task_struct(target);
-+
-+	/* Arm a 5 s budget for the target task */
-+	ret = tlob_start_task(target, 5000000, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	wait_for_completion(&done);
-+
-+	/*
-+	 * Target has finished; stop_task may return 0 (still in htable)
-+	 * or -ESRCH (kthread exited and timer fired / entry cleaned up).
-+	 */
-+	ret = tlob_stop_task(target);
-+	KUNIT_EXPECT_TRUE(test, ret == 0 || ret == -ESRCH);
-+	put_task_struct(target);
-+}
-+
-+static int tlob_sched_suite_init(struct kunit_suite *suite)
-+{
-+	return tlob_init_monitor();
-+}
-+
-+static void tlob_sched_suite_exit(struct kunit_suite *suite)
-+{
-+	tlob_destroy_monitor();
-+}
-+
-+static struct kunit_case tlob_sched_integration_cases[] = {
-+	KUNIT_CASE(tlob_sched_switch_accounting),
-+	KUNIT_CASE(tlob_monitor_other_task),
-+	{}
-+};
-+
-+static struct kunit_suite tlob_sched_integration_suite = {
-+	.name       = "tlob_sched_integration",
-+	.suite_init = tlob_sched_suite_init,
-+	.suite_exit = tlob_sched_suite_exit,
-+	.test_cases = tlob_sched_integration_cases,
-+};
-+
-+/*
-+ * Suite 4: ftrace tracepoint field verification
-+ */
-+
-+/* Capture fields from trace_tlob_budget_exceeded for inspection. */
-+struct tlob_exceeded_capture {
-+	atomic_t	fired;		/* 1 after first call */
-+	pid_t		pid;
-+	u64		threshold_us;
-+	u64		on_cpu_us;
-+	u64		off_cpu_us;
-+	u32		switches;
-+	bool		state_is_on_cpu;
-+	u64		tag;
-+};
-+
-+static void
-+probe_tlob_budget_exceeded(void *data,
-+			   struct task_struct *task, u64 threshold_us,
-+			   u64 on_cpu_us, u64 off_cpu_us,
-+			   u32 switches, bool state_is_on_cpu, u64 tag)
-+{
-+	struct tlob_exceeded_capture *cap = data;
-+
-+	/* Only capture the first event to avoid races. */
-+	if (atomic_cmpxchg(&cap->fired, 0, 1) != 0)
-+		return;
-+
-+	cap->pid		= task->pid;
-+	cap->threshold_us	= threshold_us;
-+	cap->on_cpu_us		= on_cpu_us;
-+	cap->off_cpu_us		= off_cpu_us;
-+	cap->switches		= switches;
-+	cap->state_is_on_cpu	= state_is_on_cpu;
-+	cap->tag		= tag;
-+}
-+
-+/*
-+ * Arm a 2 ms budget and busy-spin for 60 ms. Verify the tracepoint fires
-+ * once with matching threshold, correct pid, and total time >= budget.
-+ *
-+ * state_is_on_cpu is not asserted: preemption during the spin makes it
-+ * non-deterministic.
-+ */
-+static void tlob_trace_budget_exceeded_on_cpu(struct kunit *test)
-+{
-+	struct tlob_exceeded_capture cap = {};
-+	const u64 threshold_us = 2000; /* 2 ms */
-+	ktime_t t0;
-+	int ret;
-+
-+	atomic_set(&cap.fired, 0);
-+
-+	ret = register_trace_tlob_budget_exceeded(probe_tlob_budget_exceeded,
-+						  &cap);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	ret = tlob_start_task(current, threshold_us, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Busy-spin 60 ms  --  30x the budget */
-+	t0 = ktime_get();
-+	while (ktime_us_delta(ktime_get(), t0) < 60000)
-+		cpu_relax();
-+
-+	/* Entry removed by timer; stop returns -ESRCH */
-+	tlob_stop_task(current);
-+
-+	/*
-+	 * Synchronise: ensure the probe callback has completed before we
-+	 * read the captured fields.
-+	 */
-+	tracepoint_synchronize_unregister();
-+	unregister_trace_tlob_budget_exceeded(probe_tlob_budget_exceeded, &cap);
-+
-+	KUNIT_EXPECT_EQ(test, atomic_read(&cap.fired), 1);
-+	KUNIT_EXPECT_EQ(test, (int)cap.pid, (int)current->pid);
-+	KUNIT_EXPECT_EQ(test, cap.threshold_us, threshold_us);
-+	/* Total elapsed must cover at least the budget */
-+	KUNIT_EXPECT_GE(test, cap.on_cpu_us + cap.off_cpu_us, threshold_us);
-+}
-+
-+/*
-+ * Holder kthread grabs a mutex for 80 ms; arm 10 ms budget, burn ~1 ms
-+ * on-CPU, then block on the mutex. Timer fires off-CPU. Verify:
-+ * state_is_on_cpu == false, switches >= 1, off_cpu_us > 0.
-+ */
-+static void tlob_trace_budget_exceeded_off_cpu(struct kunit *test)
-+{
-+	struct tlob_exceeded_capture cap = {};
-+	struct tlob_holder_ctx ctx = { .hold_ms = 80 };
-+	struct task_struct *holder;
-+	const u64 threshold_us = 10000; /* 10 ms */
-+	ktime_t t0;
-+	int ret;
-+
-+	atomic_set(&cap.fired, 0);
-+
-+	mutex_init(&ctx.lock);
-+	init_completion(&ctx.ready);
-+
-+	holder = kthread_run(tlob_holder_fn, &ctx, "tlob_holder2_kunit");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, holder);
-+	wait_for_completion(&ctx.ready);
-+
-+	ret = register_trace_tlob_budget_exceeded(probe_tlob_budget_exceeded,
-+						  &cap);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	ret = tlob_start_task(current, threshold_us, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Phase 1: ~1 ms on-CPU */
-+	t0 = ktime_get();
-+	while (ktime_us_delta(ktime_get(), t0) < 1000)
-+		cpu_relax();
-+
-+	/* Phase 2: block -> off-CPU; timer fires here */
-+	mutex_lock(&ctx.lock);
-+	mutex_unlock(&ctx.lock);
-+
-+	tlob_stop_task(current);
-+
-+	tracepoint_synchronize_unregister();
-+	unregister_trace_tlob_budget_exceeded(probe_tlob_budget_exceeded, &cap);
-+
-+	KUNIT_EXPECT_EQ(test, atomic_read(&cap.fired), 1);
-+	KUNIT_EXPECT_EQ(test, cap.threshold_us, threshold_us);
-+	/* Violation happened off-CPU */
-+	KUNIT_EXPECT_FALSE(test, cap.state_is_on_cpu);
-+	/* At least the switch_out event was counted */
-+	KUNIT_EXPECT_GE(test, (u64)cap.switches, (u64)1);
-+	/* Off-CPU time must be non-zero */
-+	KUNIT_EXPECT_GT(test, cap.off_cpu_us, (u64)0);
-+}
-+
-+/* threshold_us in the tracepoint must exactly match the start argument. */
-+static void tlob_trace_threshold_field_accuracy(struct kunit *test)
-+{
-+	static const u64 thresholds[] = { 500, 1000, 3000 };
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(thresholds); i++) {
-+		struct tlob_exceeded_capture cap = {};
-+		ktime_t t0;
-+		int ret;
-+
-+		atomic_set(&cap.fired, 0);
-+
-+		ret = register_trace_tlob_budget_exceeded(
-+			probe_tlob_budget_exceeded, &cap);
-+		KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+		ret = tlob_start_task(current, thresholds[i], NULL, 0);
-+		KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+		/* Spin for 20x the threshold to ensure timer fires */
-+		t0 = ktime_get();
-+		while (ktime_us_delta(ktime_get(), t0) <
-+		       (s64)(thresholds[i] * 20))
-+			cpu_relax();
-+
-+		tlob_stop_task(current);
-+
-+		tracepoint_synchronize_unregister();
-+		unregister_trace_tlob_budget_exceeded(
-+			probe_tlob_budget_exceeded, &cap);
-+
-+		KUNIT_EXPECT_EQ_MSG(test, cap.threshold_us, thresholds[i],
-+				    "threshold mismatch for entry %u", i);
-+	}
-+}
-+
-+static int tlob_trace_suite_init(struct kunit_suite *suite)
-+{
-+	int ret;
-+
-+	ret = tlob_init_monitor();
-+	if (ret)
-+		return ret;
-+	return tlob_enable_hooks();
-+}
-+
-+static void tlob_trace_suite_exit(struct kunit_suite *suite)
-+{
-+	tlob_disable_hooks();
-+	tlob_destroy_monitor();
-+}
-+
-+static struct kunit_case tlob_trace_output_cases[] = {
-+	KUNIT_CASE(tlob_trace_budget_exceeded_on_cpu),
-+	KUNIT_CASE(tlob_trace_budget_exceeded_off_cpu),
-+	KUNIT_CASE(tlob_trace_threshold_field_accuracy),
-+	{}
-+};
-+
-+static struct kunit_suite tlob_trace_output_suite = {
-+	.name       = "tlob_trace_output",
-+	.suite_init = tlob_trace_suite_init,
-+	.suite_exit = tlob_trace_suite_exit,
-+	.test_cases = tlob_trace_output_cases,
-+};
-+
-+/* Suite 5: ring buffer */
-+
-+/*
-+ * Allocate a synthetic rv_file_priv for ring buffer tests. Uses
-+ * kunit_kzalloc() instead of __get_free_pages() since the ring is never
-+ * mmap'd here.
-+ */
-+static struct rv_file_priv *alloc_priv_kunit(struct kunit *test, u32 cap)
-+{
-+	struct rv_file_priv *priv;
-+	struct tlob_ring *ring;
-+
-+	priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return NULL;
-+
-+	ring = &priv->ring;
-+
-+	ring->page = kunit_kzalloc(test, sizeof(struct tlob_mmap_page),
-+				   GFP_KERNEL);
-+	if (!ring->page)
-+		return NULL;
-+
-+	ring->data = kunit_kzalloc(test, cap * sizeof(struct tlob_event),
-+				   GFP_KERNEL);
-+	if (!ring->data)
-+		return NULL;
-+
-+	ring->mask            = cap - 1;
-+	ring->page->capacity  = cap;
-+	ring->page->version   = 1;
-+	ring->page->data_offset = PAGE_SIZE; /* nominal; not used in tests */
-+	ring->page->record_size = sizeof(struct tlob_event);
-+	spin_lock_init(&ring->lock);
-+	init_waitqueue_head(&priv->waitq);
-+	return priv;
-+}
-+
-+/* Push one record and verify all fields survive the round-trip. */
-+static void tlob_event_push_one(struct kunit *test)
-+{
-+	struct rv_file_priv *priv;
-+	struct tlob_ring *ring;
-+	struct tlob_event in = {
-+		.tid		= 1234,
-+		.threshold_us	= 5000,
-+		.on_cpu_us	= 3000,
-+		.off_cpu_us	= 2000,
-+		.switches	= 3,
-+		.state		= 1,
++	pthread_t ta, tb;
++	struct mt_thread_args a = {
++		.threshold_us     = 20000,  /* 20 ms */
++		.workload_us      = 5000,   /* 5 ms sleep -> within budget */
++		.busy             = 0,
++		.expect_eoverflow = 0,
 +	};
-+	struct tlob_event out = {};
-+	u32 tail;
++	struct mt_thread_args b = {
++		.threshold_us     = 3000,   /* 3 ms */
++		.workload_us      = 30000,  /* 30 ms spin -> over budget */
++		.busy             = 1,
++		.expect_eoverflow = 1,
++	};
 +
-+	priv = alloc_priv_kunit(test, TLOB_RING_DEFAULT_CAP);
-+	KUNIT_ASSERT_NOT_NULL(test, priv);
++	pthread_create(&ta, NULL, mt_thread_fn, &a);
++	pthread_create(&tb, NULL, mt_thread_fn, &b);
++	pthread_join(ta, NULL);
++	pthread_join(tb, NULL);
 +
-+	ring = &priv->ring;
-+
-+	tlob_event_push_kunit(priv, &in);
-+
-+	/* One record written, none dropped */
-+	KUNIT_EXPECT_EQ(test, ring->page->data_head, 1u);
-+	KUNIT_EXPECT_EQ(test, ring->page->data_tail, 0u);
-+	KUNIT_EXPECT_EQ(test, ring->page->dropped,   0ull);
-+
-+	/* Dequeue manually */
-+	tail = ring->page->data_tail;
-+	out  = ring->data[tail & ring->mask];
-+	ring->page->data_tail = tail + 1;
-+
-+	KUNIT_EXPECT_EQ(test, out.tid,          in.tid);
-+	KUNIT_EXPECT_EQ(test, out.threshold_us, in.threshold_us);
-+	KUNIT_EXPECT_EQ(test, out.on_cpu_us,    in.on_cpu_us);
-+	KUNIT_EXPECT_EQ(test, out.off_cpu_us,   in.off_cpu_us);
-+	KUNIT_EXPECT_EQ(test, out.switches,     in.switches);
-+	KUNIT_EXPECT_EQ(test, out.state,        in.state);
-+
-+	/* Ring is now empty */
-+	KUNIT_EXPECT_EQ(test, ring->page->data_head, ring->page->data_tail);
++	return (a.result || b.result) ? 1 : 0;
 +}
 +
-+/*
-+ * Fill to capacity, push one more. Drop-new policy: head stays at cap,
-+ * dropped == 1, oldest record is preserved.
-+ */
-+static void tlob_event_push_overflow(struct kunit *test)
-+{
-+	struct rv_file_priv *priv;
-+	struct tlob_ring *ring;
-+	struct tlob_event ntf = {};
-+	struct tlob_event out = {};
-+	const u32 cap = TLOB_RING_MIN_CAP;
-+	u32 i;
-+
-+	priv = alloc_priv_kunit(test, cap);
-+	KUNIT_ASSERT_NOT_NULL(test, priv);
-+
-+	ring = &priv->ring;
-+
-+	/* Push cap + 1 records; tid encodes the sequence */
-+	for (i = 0; i <= cap; i++) {
-+		ntf.tid          = i;
-+		ntf.threshold_us = (u64)i * 1000;
-+		tlob_event_push_kunit(priv, &ntf);
-+	}
-+
-+	/* Drop-new: head stopped at cap; one record was silently discarded */
-+	KUNIT_EXPECT_EQ(test, ring->page->data_head, cap);
-+	KUNIT_EXPECT_EQ(test, ring->page->data_tail, 0u);
-+	KUNIT_EXPECT_EQ(test, ring->page->dropped,   1ull);
-+
-+	/* Oldest surviving record must be the first one pushed (tid == 0) */
-+	out = ring->data[ring->page->data_tail & ring->mask];
-+	KUNIT_EXPECT_EQ(test, out.tid, 0u);
-+
-+	/* Drain the ring; the last record must have tid == cap - 1 */
-+	for (i = 0; i < cap; i++) {
-+		u32 tail = ring->page->data_tail;
-+
-+		out = ring->data[tail & ring->mask];
-+		ring->page->data_tail = tail + 1;
-+	}
-+	KUNIT_EXPECT_EQ(test, out.tid, cap - 1);
-+	KUNIT_EXPECT_EQ(test, ring->page->data_head, ring->page->data_tail);
-+}
-+
-+/* A freshly initialised ring is empty. */
-+static void tlob_event_empty(struct kunit *test)
-+{
-+	struct rv_file_priv *priv;
-+	struct tlob_ring *ring;
-+
-+	priv = alloc_priv_kunit(test, TLOB_RING_DEFAULT_CAP);
-+	KUNIT_ASSERT_NOT_NULL(test, priv);
-+
-+	ring = &priv->ring;
-+
-+	KUNIT_EXPECT_EQ(test, ring->page->data_head, 0u);
-+	KUNIT_EXPECT_EQ(test, ring->page->data_tail, 0u);
-+	KUNIT_EXPECT_EQ(test, ring->page->dropped,   0ull);
-+}
-+
-+/* A kthread blocks on wait_event_interruptible(); pushing one record must
-+ * wake it within 1 s.
++/* -----------------------------------------------------------------------
++ * Asynchronous notification test (notify_fd + read())
++ *
++ * A dedicated monitor_fd is opened by the main thread.  Two worker threads
++ * each open their own work_fd and call TLOB_IOCTL_TRACE_START with
++ * notify_fd = monitor_fd, nominating it as the violation target.  Worker A
++ * stays within budget; worker B exceeds it.  The main thread reads from
++ * monitor_fd and expects exactly one tlob_event record.
++ * -----------------------------------------------------------------------
 + */
 +
-+struct tlob_wakeup_ctx {
-+	struct rv_file_priv	*priv;
-+	struct completion	 ready;
-+	struct completion	 done;
-+	int			 woke;
++struct sw_worker_args {
++	int           monitor_fd;
++	uint64_t      threshold_us;
++	unsigned long workload_us;
++	int           busy;
++	int           result;
 +};
 +
-+static int tlob_wakeup_thread(void *arg)
++static void *sw_worker_fn(void *arg)
 +{
-+	struct tlob_wakeup_ctx *ctx = arg;
-+	struct tlob_ring *ring = &ctx->priv->ring;
++	struct sw_worker_args *a = arg;
++	struct tlob_start_args args = {
++		.threshold_us = a->threshold_us,
++		.notify_fd    = a->monitor_fd,
++	};
++	int work_fd;
++	int ret;
 +
-+	complete(&ctx->ready);
++	work_fd = open("/dev/rv", O_RDWR);
++	if (work_fd < 0) {
++		fprintf(stderr, "worker open /dev/rv: %s\n", strerror(errno));
++		a->result = 1;
++		return NULL;
++	}
 +
-+	wait_event_interruptible(ctx->priv->waitq,
-+		smp_load_acquire(&ring->page->data_head) !=
-+		READ_ONCE(ring->page->data_tail) ||
-+		kthread_should_stop());
++	ret = ioctl(work_fd, TLOB_IOCTL_TRACE_START, &args);
++	if (ret < 0) {
++		fprintf(stderr, "TRACE_START (notify): %s\n", strerror(errno));
++		close(work_fd);
++		a->result = 1;
++		return NULL;
++	}
 +
-+	if (smp_load_acquire(&ring->page->data_head) !=
-+	    READ_ONCE(ring->page->data_tail))
-+		ctx->woke = 1;
++	if (a->busy)
++		busy_spin_us(a->workload_us);
++	else
++		usleep(a->workload_us);
 +
-+	complete(&ctx->done);
++	ioctl(work_fd, TLOB_IOCTL_TRACE_STOP, NULL);
++	close(work_fd);
++	a->result = 0;
++	return NULL;
++}
++
++static int test_self_watch(void)
++{
++	int monitor_fd;
++	pthread_t ta, tb;
++	struct sw_worker_args a = {
++		.threshold_us = 50000,  /* 50 ms */
++		.workload_us  = 5000,   /* 5 ms sleep -> no violation */
++		.busy         = 0,
++	};
++	struct sw_worker_args b = {
++		.threshold_us = 3000,   /* 3 ms */
++		.workload_us  = 30000,  /* 30 ms spin -> violation */
++		.busy         = 1,
++	};
++	struct tlob_event ntfs[8];
++	int violations = 0;
++	ssize_t n;
++
++	/*
++	 * Open monitor_fd with O_NONBLOCK so read() after the workers finish
++	 * returns immediately rather than blocking forever.
++	 */
++	monitor_fd = open("/dev/rv", O_RDWR | O_NONBLOCK);
++	if (monitor_fd < 0) {
++		fprintf(stderr, "open /dev/rv (monitor_fd): %s\n", strerror(errno));
++		return 1;
++	}
++	a.monitor_fd = monitor_fd;
++	b.monitor_fd = monitor_fd;
++
++	pthread_create(&ta, NULL, sw_worker_fn, &a);
++	pthread_create(&tb, NULL, sw_worker_fn, &b);
++	pthread_join(ta, NULL);
++	pthread_join(tb, NULL);
++
++	if (a.result || b.result) {
++		close(monitor_fd);
++		return 1;
++	}
++
++	/*
++	 * Drain all available tlob_event records.  With O_NONBLOCK the final
++	 * read() returns -EAGAIN when the buffer is empty.
++	 */
++	while ((n = read(monitor_fd, ntfs, sizeof(ntfs))) > 0)
++		violations += (int)(n / sizeof(struct tlob_event));
++
++	close(monitor_fd);
++
++	if (violations != 1) {
++		fprintf(stderr, "self_watch: expected 1 violation, got %d\n",
++			violations);
++		return 1;
++	}
 +	return 0;
 +}
 +
-+static void tlob_ring_wakeup(struct kunit *test)
++/* -----------------------------------------------------------------------
++ * Input-validation tests (TRACE_START error paths)
++ * -----------------------------------------------------------------------
++ */
++
++/*
++ * test_invalid_flags - TRACE_START with flags != 0 must return EINVAL.
++ *
++ * The flags field is reserved for future extensions and must be zero.
++ * Callers that set it to a non-zero value are rejected early so that a
++ * future kernel can assign meaning to those bits without silently
++ * ignoring them.
++ */
++static int test_invalid_flags(void)
 +{
-+	struct rv_file_priv *priv;
-+	struct tlob_wakeup_ctx ctx;
-+	struct task_struct *t;
-+	struct tlob_event ev = { .tid = 99 };
-+	long timeout;
++	struct tlob_start_args args = {
++		.threshold_us = 1000,
++		.notify_fd    = -1,
++		.flags        = 1,   /* non-zero: must be rejected */
++	};
++	int ret;
 +
-+	priv = alloc_priv_kunit(test, TLOB_RING_DEFAULT_CAP);
-+	KUNIT_ASSERT_NOT_NULL(test, priv);
-+
-+	init_completion(&ctx.ready);
-+	init_completion(&ctx.done);
-+	ctx.priv = priv;
-+	ctx.woke = 0;
-+
-+	t = kthread_run(tlob_wakeup_thread, &ctx, "tlob_wakeup_kunit");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, t);
-+	get_task_struct(t);
-+
-+	/* Let the kthread reach wait_event_interruptible */
-+	wait_for_completion(&ctx.ready);
-+	usleep_range(10000, 20000);
-+
-+	/* Push one record  --  must wake the waiter */
-+	tlob_event_push_kunit(priv, &ev);
-+
-+	timeout = wait_for_completion_timeout(&ctx.done, msecs_to_jiffies(1000));
-+	kthread_stop(t);
-+	put_task_struct(t);
-+
-+	KUNIT_EXPECT_GT(test, timeout, 0L);
-+	KUNIT_EXPECT_EQ(test, ctx.woke, 1);
-+	KUNIT_EXPECT_EQ(test, priv->ring.page->data_head, 1u);
++	ret = ioctl(rv_fd, TLOB_IOCTL_TRACE_START, &args);
++	if (ret == 0) {
++		fprintf(stderr, "TRACE_START(flags=1): expected EINVAL, got success\n");
++		do_stop();
++		return 1;
++	}
++	if (errno != EINVAL) {
++		fprintf(stderr, "TRACE_START(flags=1): expected EINVAL, got %s\n",
++			strerror(errno));
++		return 1;
++	}
++	return 0;
 +}
 +
-+static struct kunit_case tlob_event_buf_cases[] = {
-+	KUNIT_CASE(tlob_event_push_one),
-+	KUNIT_CASE(tlob_event_push_overflow),
-+	KUNIT_CASE(tlob_event_empty),
-+	KUNIT_CASE(tlob_ring_wakeup),
-+	{}
-+};
-+
-+static struct kunit_suite tlob_event_buf_suite = {
-+	.name       = "tlob_event_buf",
-+	.test_cases = tlob_event_buf_cases,
-+};
-+
-+/* Suite 6: uprobe format string parser */
-+
-+/* Happy path: decimal offsets, plain path. */
-+static void tlob_parse_decimal_offsets(struct kunit *test)
++/*
++ * test_notify_fd_bad - TRACE_START with a non-/dev/rv notify_fd must return
++ * EINVAL.
++ *
++ * When notify_fd >= 0, the kernel resolves it to a struct file and checks
++ * that its private_data is non-NULL (i.e. it is a /dev/rv file descriptor).
++ * Passing stdout (fd 1) supplies a real, open fd whose private_data is NULL,
++ * so the kernel must reject it with EINVAL.
++ */
++static int test_notify_fd_bad(void)
 +{
-+	char buf[] = "5000:4768:4848:/usr/bin/myapp";
-+	u64 thr; loff_t start, stop; char *path;
++	struct tlob_start_args args = {
++		.threshold_us = 1000,
++		.notify_fd    = STDOUT_FILENO,   /* open but not a /dev/rv fd */
++		.flags        = 0,
++	};
++	int ret;
 +
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_parse_uprobe_line(buf, &thr, &path, &start, &stop),
-+		0);
-+	KUNIT_EXPECT_EQ(test, thr,      (u64)5000);
-+	KUNIT_EXPECT_EQ(test, start,    (loff_t)4768);
-+	KUNIT_EXPECT_EQ(test, stop,     (loff_t)4848);
-+	KUNIT_EXPECT_STREQ(test, path,  "/usr/bin/myapp");
++	ret = ioctl(rv_fd, TLOB_IOCTL_TRACE_START, &args);
++	if (ret == 0) {
++		fprintf(stderr,
++			"TRACE_START(notify_fd=stdout): expected EINVAL, got success\n");
++		do_stop();
++		return 1;
++	}
++	if (errno != EINVAL) {
++		fprintf(stderr,
++			"TRACE_START(notify_fd=stdout): expected EINVAL, got %s\n",
++			strerror(errno));
++		return 1;
++	}
++	return 0;
 +}
 +
-+/* Happy path: 0x-prefixed hex offsets. */
-+static void tlob_parse_hex_offsets(struct kunit *test)
-+{
-+	char buf[] = "10000:0x12a0:0x12f0:/usr/bin/myapp";
-+	u64 thr; loff_t start, stop; char *path;
++/* -----------------------------------------------------------------------
++ * mmap ring buffer tests (Scenario D)
++ * -----------------------------------------------------------------------
++ */
 +
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_parse_uprobe_line(buf, &thr, &path, &start, &stop),
-+		0);
-+	KUNIT_EXPECT_EQ(test, start,   (loff_t)0x12a0);
-+	KUNIT_EXPECT_EQ(test, stop,    (loff_t)0x12f0);
-+	KUNIT_EXPECT_STREQ(test, path, "/usr/bin/myapp");
++/*
++ * test_mmap_basic - mmap the ring buffer and verify the control page fields.
++ *
++ * The kernel allocates TLOB_RING_DEFAULT_CAP records at open().  A shared
++ * mmap of PAGE_SIZE + cap * record_size must succeed and the tlob_mmap_page
++ * header must contain consistent values.
++ */
++static int test_mmap_basic(void)
++{
++	long pagesize = sysconf(_SC_PAGESIZE);
++	size_t mmap_len = (size_t)pagesize +
++			  TLOB_RING_DEFAULT_CAP * sizeof(struct tlob_event);
++	/* rv_mmap requires a page-aligned length */
++	mmap_len = (mmap_len + (size_t)(pagesize - 1)) & ~(size_t)(pagesize - 1);
++	struct tlob_mmap_page *page;
++	struct tlob_event *data;
++	void *map;
++	int ret = 0;
++
++	map = mmap(NULL, mmap_len, PROT_READ | PROT_WRITE, MAP_SHARED, rv_fd, 0);
++	if (map == MAP_FAILED) {
++		fprintf(stderr, "mmap_basic: mmap: %s\n", strerror(errno));
++		return 1;
++	}
++
++	page = (struct tlob_mmap_page *)map;
++	data = (struct tlob_event *)((char *)map + page->data_offset);
++
++	if (page->version != 1) {
++		fprintf(stderr, "mmap_basic: expected version=1, got %u\n",
++			page->version);
++		ret = 1;
++		goto out;
++	}
++	if (page->capacity != TLOB_RING_DEFAULT_CAP) {
++		fprintf(stderr, "mmap_basic: expected capacity=%u, got %u\n",
++			TLOB_RING_DEFAULT_CAP, page->capacity);
++		ret = 1;
++		goto out;
++	}
++	if (page->data_offset != (uint32_t)pagesize) {
++		fprintf(stderr, "mmap_basic: expected data_offset=%ld, got %u\n",
++			pagesize, page->data_offset);
++		ret = 1;
++		goto out;
++	}
++	if (page->record_size != sizeof(struct tlob_event)) {
++		fprintf(stderr, "mmap_basic: expected record_size=%zu, got %u\n",
++			sizeof(struct tlob_event), page->record_size);
++		ret = 1;
++		goto out;
++	}
++	if (page->data_head != 0 || page->data_tail != 0) {
++		fprintf(stderr, "mmap_basic: ring not empty at open: head=%u tail=%u\n",
++			page->data_head, page->data_tail);
++		ret = 1;
++		goto out;
++	}
++	/* Touch the data array to confirm it is accessible. */
++	(void)data[0].tid;
++out:
++	munmap(map, mmap_len);
++	return ret;
 +}
 +
-+/* Path containing ':' must not be truncated. */
-+static void tlob_parse_path_with_colon(struct kunit *test)
++/*
++ * test_mmap_errors - verify that rv_mmap() rejects invalid mmap parameters.
++ *
++ * Four cases are tested, each must return MAP_FAILED with errno == EINVAL:
++ *   1. size one page short of the correct ring length
++ *   2. size one page larger than the correct ring length
++ *   3. MAP_PRIVATE (only MAP_SHARED is permitted)
++ *   4. non-zero vm_pgoff (offset must be 0)
++ */
++static int test_mmap_errors(void)
 +{
-+	char buf[] = "1000:0x100:0x200:/opt/my:app/bin";
-+	u64 thr; loff_t start, stop; char *path;
++	long pagesize = sysconf(_SC_PAGESIZE);
++	size_t correct_len = (size_t)pagesize +
++			     TLOB_RING_DEFAULT_CAP * sizeof(struct tlob_event);
++	/* rv_mmap requires a page-aligned length */
++	correct_len = (correct_len + (size_t)(pagesize - 1)) & ~(size_t)(pagesize - 1);
++	void *map;
++	int ret = 0;
 +
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_parse_uprobe_line(buf, &thr, &path, &start, &stop),
-+		0);
-+	KUNIT_EXPECT_STREQ(test, path, "/opt/my:app/bin");
++	/* Case 1: size one page short (correct_len - 1 still rounds up to correct_len) */
++	map = mmap(NULL, correct_len - (size_t)pagesize, PROT_READ | PROT_WRITE,
++		   MAP_SHARED, rv_fd, 0);
++	if (map != MAP_FAILED) {
++		fprintf(stderr, "mmap_errors: short-size mmap succeeded (expected EINVAL)\n");
++		munmap(map, correct_len - (size_t)pagesize);
++		ret = 1;
++	} else if (errno != EINVAL) {
++		fprintf(stderr, "mmap_errors: short-size: expected EINVAL, got %s\n",
++			strerror(errno));
++		ret = 1;
++	}
++
++	/* Case 2: size one page too large */
++	map = mmap(NULL, correct_len + (size_t)pagesize, PROT_READ | PROT_WRITE,
++		   MAP_SHARED, rv_fd, 0);
++	if (map != MAP_FAILED) {
++		fprintf(stderr, "mmap_errors: oversized mmap succeeded (expected EINVAL)\n");
++		munmap(map, correct_len + (size_t)pagesize);
++		ret = 1;
++	} else if (errno != EINVAL) {
++		fprintf(stderr, "mmap_errors: oversized: expected EINVAL, got %s\n",
++			strerror(errno));
++		ret = 1;
++	}
++
++	/* Case 3: MAP_PRIVATE instead of MAP_SHARED */
++	map = mmap(NULL, correct_len, PROT_READ | PROT_WRITE,
++		   MAP_PRIVATE, rv_fd, 0);
++	if (map != MAP_FAILED) {
++		fprintf(stderr, "mmap_errors: MAP_PRIVATE succeeded (expected EINVAL)\n");
++		munmap(map, correct_len);
++		ret = 1;
++	} else if (errno != EINVAL) {
++		fprintf(stderr, "mmap_errors: MAP_PRIVATE: expected EINVAL, got %s\n",
++			strerror(errno));
++		ret = 1;
++	}
++
++	/* Case 4: non-zero file offset (pgoff = 1) */
++	map = mmap(NULL, correct_len, PROT_READ | PROT_WRITE,
++		   MAP_SHARED, rv_fd, (off_t)pagesize);
++	if (map != MAP_FAILED) {
++		fprintf(stderr, "mmap_errors: non-zero pgoff mmap succeeded (expected EINVAL)\n");
++		munmap(map, correct_len);
++		ret = 1;
++	} else if (errno != EINVAL) {
++		fprintf(stderr, "mmap_errors: non-zero pgoff: expected EINVAL, got %s\n",
++			strerror(errno));
++		ret = 1;
++	}
++
++	return ret;
 +}
 +
-+/* Zero threshold must be rejected. */
-+static void tlob_parse_zero_threshold(struct kunit *test)
++/*
++ * test_mmap_consume - zero-copy consumption of a real violation event.
++ *
++ * Arms a 5 ms budget with self-notification (notify_fd = rv_fd), sleeps
++ * 50 ms (off-CPU violation), then reads the pushed event through the mmap'd
++ * ring without calling read().  Verifies:
++ *   - TRACE_STOP returns EOVERFLOW (budget was exceeded)
++ *   - data_head == 1 after the violation
++ *   - the event fields (threshold_us, tag, tid) are correct
++ *   - data_tail can be advanced to consume the record (ring empties)
++ */
++static int test_mmap_consume(void)
 +{
-+	char buf[] = "0:0x100:0x200:/usr/bin/myapp";
-+	u64 thr; loff_t start, stop; char *path;
++	long pagesize = sysconf(_SC_PAGESIZE);
++	size_t mmap_len = (size_t)pagesize +
++			  TLOB_RING_DEFAULT_CAP * sizeof(struct tlob_event);
++	/* rv_mmap requires a page-aligned length */
++	mmap_len = (mmap_len + (size_t)(pagesize - 1)) & ~(size_t)(pagesize - 1);
++	struct tlob_start_args args = {
++		.threshold_us = 5000,		/* 5 ms */
++		.notify_fd    = rv_fd,		/* self-notification */
++		.tag          = 0xdeadbeefULL,
++		.flags        = 0,
++	};
++	struct tlob_mmap_page *page;
++	struct tlob_event *data;
++	void *map;
++	int stop_ret;
++	int ret = 0;
 +
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_parse_uprobe_line(buf, &thr, &path, &start, &stop),
-+		-EINVAL);
++	map = mmap(NULL, mmap_len, PROT_READ | PROT_WRITE, MAP_SHARED, rv_fd, 0);
++	if (map == MAP_FAILED) {
++		fprintf(stderr, "mmap_consume: mmap: %s\n", strerror(errno));
++		return 1;
++	}
++
++	page = (struct tlob_mmap_page *)map;
++	data = (struct tlob_event *)((char *)map + page->data_offset);
++
++	if (ioctl(rv_fd, TLOB_IOCTL_TRACE_START, &args) < 0) {
++		fprintf(stderr, "mmap_consume: TRACE_START: %s\n", strerror(errno));
++		ret = 1;
++		goto out;
++	}
++
++	usleep(50000); /* 50 ms >> 5 ms budget -> off-CPU violation */
++
++	stop_ret = ioctl(rv_fd, TLOB_IOCTL_TRACE_STOP, NULL);
++	if (stop_ret == 0) {
++		fprintf(stderr, "mmap_consume: TRACE_STOP returned 0, expected EOVERFLOW\n");
++		ret = 1;
++		goto out;
++	}
++	if (errno != EOVERFLOW) {
++		fprintf(stderr, "mmap_consume: TRACE_STOP: expected EOVERFLOW, got %s\n",
++			strerror(errno));
++		ret = 1;
++		goto out;
++	}
++
++	/* Pairs with smp_store_release in tlob_event_push. */
++	if (__atomic_load_n(&page->data_head, __ATOMIC_ACQUIRE) != 1) {
++		fprintf(stderr, "mmap_consume: expected data_head=1, got %u\n",
++			page->data_head);
++		ret = 1;
++		goto out;
++	}
++	if (page->data_tail != 0) {
++		fprintf(stderr, "mmap_consume: expected data_tail=0, got %u\n",
++			page->data_tail);
++		ret = 1;
++		goto out;
++	}
++
++	/* Verify record content */
++	if (data[0].threshold_us != 5000) {
++		fprintf(stderr, "mmap_consume: expected threshold_us=5000, got %llu\n",
++			(unsigned long long)data[0].threshold_us);
++		ret = 1;
++		goto out;
++	}
++	if (data[0].tag != 0xdeadbeefULL) {
++		fprintf(stderr, "mmap_consume: expected tag=0xdeadbeef, got %llx\n",
++			(unsigned long long)data[0].tag);
++		ret = 1;
++		goto out;
++	}
++	if (data[0].tid == 0) {
++		fprintf(stderr, "mmap_consume: tid is 0\n");
++		ret = 1;
++		goto out;
++	}
++
++	/* Consume: advance data_tail and confirm ring is empty */
++	__atomic_store_n(&page->data_tail, 1U, __ATOMIC_RELEASE);
++	if (__atomic_load_n(&page->data_head, __ATOMIC_ACQUIRE) !=
++	    __atomic_load_n(&page->data_tail, __ATOMIC_ACQUIRE)) {
++		fprintf(stderr, "mmap_consume: ring not empty after consume\n");
++		ret = 1;
++	}
++
++out:
++	munmap(map, mmap_len);
++	return ret;
 +}
 +
-+/* Empty path (trailing ':' with nothing after) must be rejected. */
-+static void tlob_parse_empty_path(struct kunit *test)
++/* -----------------------------------------------------------------------
++ * ELF utility: sym_offset
++ *
++ * Print the ELF file offset of a symbol in a binary.  Supports 32- and
++ * 64-bit ELF.  Walks the section headers to find .symtab (falling back to
++ * .dynsym), then converts the symbol's virtual address to a file offset
++ * via the PT_LOAD program headers.
++ *
++ * Does not require /dev/rv; used by the shell script to build uprobe
++ * bindings of the form pid:threshold_us:offset_start:offset_stop:binary_path.
++ *
++ * Returns 0 on success (offset printed to stdout), 1 on failure.
++ * -----------------------------------------------------------------------
++ */
++static int sym_offset(const char *binary, const char *symname)
 +{
-+	char buf[] = "5000:0x100:0x200:";
-+	u64 thr; loff_t start, stop; char *path;
++	int fd;
++	struct stat st;
++	void *map;
++	Elf64_Ehdr *ehdr;
++	Elf32_Ehdr *ehdr32;
++	int is64;
++	uint64_t sym_vaddr = 0;
++	int found = 0;
++	uint64_t file_offset = 0;
 +
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_parse_uprobe_line(buf, &thr, &path, &start, &stop),
-+		-EINVAL);
++	fd = open(binary, O_RDONLY);
++	if (fd < 0) {
++		fprintf(stderr, "open %s: %s\n", binary, strerror(errno));
++		return 1;
++	}
++	if (fstat(fd, &st) < 0) {
++		close(fd);
++		return 1;
++	}
++	map = mmap(NULL, (size_t)st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
++	close(fd);
++	if (map == MAP_FAILED) {
++		fprintf(stderr, "mmap: %s\n", strerror(errno));
++		return 1;
++	}
++
++	/* Identify ELF class */
++	ehdr = (Elf64_Ehdr *)map;
++	ehdr32 = (Elf32_Ehdr *)map;
++	if (st.st_size < 4 ||
++	    ehdr->e_ident[EI_MAG0] != ELFMAG0 ||
++	    ehdr->e_ident[EI_MAG1] != ELFMAG1 ||
++	    ehdr->e_ident[EI_MAG2] != ELFMAG2 ||
++	    ehdr->e_ident[EI_MAG3] != ELFMAG3) {
++		fprintf(stderr, "%s: not an ELF file\n", binary);
++		munmap(map, (size_t)st.st_size);
++		return 1;
++	}
++	is64 = (ehdr->e_ident[EI_CLASS] == ELFCLASS64);
++
++	if (is64) {
++		/* Walk section headers to find .symtab or .dynsym */
++		Elf64_Shdr *shdrs = (Elf64_Shdr *)((char *)map + ehdr->e_shoff);
++		Elf64_Shdr *shstrtab_hdr = &shdrs[ehdr->e_shstrndx];
++		const char *shstrtab = (char *)map + shstrtab_hdr->sh_offset;
++		int si;
++
++		/* Prefer .symtab; fall back to .dynsym */
++		for (int pass = 0; pass < 2 && !found; pass++) {
++			const char *target = pass ? ".dynsym" : ".symtab";
++
++			for (si = 0; si < ehdr->e_shnum && !found; si++) {
++				Elf64_Shdr *sh = &shdrs[si];
++				const char *name = shstrtab + sh->sh_name;
++
++				if (strcmp(name, target) != 0)
++					continue;
++
++				Elf64_Shdr *strtab_sh = &shdrs[sh->sh_link];
++				const char *strtab = (char *)map + strtab_sh->sh_offset;
++				Elf64_Sym *syms = (Elf64_Sym *)((char *)map + sh->sh_offset);
++				uint64_t nsyms = sh->sh_size / sizeof(Elf64_Sym);
++				uint64_t j;
++
++				for (j = 0; j < nsyms; j++) {
++					if (strcmp(strtab + syms[j].st_name, symname) == 0) {
++						sym_vaddr = syms[j].st_value;
++						found = 1;
++						break;
++					}
++				}
++			}
++		}
++
++		if (!found) {
++			fprintf(stderr, "symbol '%s' not found in %s\n", symname, binary);
++			munmap(map, (size_t)st.st_size);
++			return 1;
++		}
++
++		/* Convert vaddr to file offset via PT_LOAD segments */
++		Elf64_Phdr *phdrs = (Elf64_Phdr *)((char *)map + ehdr->e_phoff);
++		int pi;
++
++		for (pi = 0; pi < ehdr->e_phnum; pi++) {
++			Elf64_Phdr *ph = &phdrs[pi];
++
++			if (ph->p_type != PT_LOAD)
++				continue;
++			if (sym_vaddr >= ph->p_vaddr &&
++			    sym_vaddr < ph->p_vaddr + ph->p_filesz) {
++				file_offset = sym_vaddr - ph->p_vaddr + ph->p_offset;
++				break;
++			}
++		}
++	} else {
++		/* 32-bit ELF */
++		Elf32_Shdr *shdrs = (Elf32_Shdr *)((char *)map + ehdr32->e_shoff);
++		Elf32_Shdr *shstrtab_hdr = &shdrs[ehdr32->e_shstrndx];
++		const char *shstrtab = (char *)map + shstrtab_hdr->sh_offset;
++		int si;
++		uint32_t sym_vaddr32 = 0;
++
++		for (int pass = 0; pass < 2 && !found; pass++) {
++			const char *target = pass ? ".dynsym" : ".symtab";
++
++			for (si = 0; si < ehdr32->e_shnum && !found; si++) {
++				Elf32_Shdr *sh = &shdrs[si];
++				const char *name = shstrtab + sh->sh_name;
++
++				if (strcmp(name, target) != 0)
++					continue;
++
++				Elf32_Shdr *strtab_sh = &shdrs[sh->sh_link];
++				const char *strtab = (char *)map + strtab_sh->sh_offset;
++				Elf32_Sym *syms = (Elf32_Sym *)((char *)map + sh->sh_offset);
++				uint32_t nsyms = sh->sh_size / sizeof(Elf32_Sym);
++				uint32_t j;
++
++				for (j = 0; j < nsyms; j++) {
++					if (strcmp(strtab + syms[j].st_name, symname) == 0) {
++						sym_vaddr32 = syms[j].st_value;
++						found = 1;
++						break;
++					}
++				}
++			}
++		}
++
++		if (!found) {
++			fprintf(stderr, "symbol '%s' not found in %s\n", symname, binary);
++			munmap(map, (size_t)st.st_size);
++			return 1;
++		}
++
++		Elf32_Phdr *phdrs = (Elf32_Phdr *)((char *)map + ehdr32->e_phoff);
++		int pi;
++
++		for (pi = 0; pi < ehdr32->e_phnum; pi++) {
++			Elf32_Phdr *ph = &phdrs[pi];
++
++			if (ph->p_type != PT_LOAD)
++				continue;
++			if (sym_vaddr32 >= ph->p_vaddr &&
++			    sym_vaddr32 < ph->p_vaddr + ph->p_filesz) {
++				file_offset = sym_vaddr32 - ph->p_vaddr + ph->p_offset;
++				break;
++			}
++		}
++		sym_vaddr = sym_vaddr32;
++	}
++
++	munmap(map, (size_t)st.st_size);
++
++	if (!file_offset && sym_vaddr) {
++		fprintf(stderr, "could not map vaddr 0x%lx to file offset\n",
++			(unsigned long)sym_vaddr);
++		return 1;
++	}
++
++	printf("0x%lx\n", (unsigned long)file_offset);
++	return 0;
 +}
 +
-+/* Missing field (3 tokens instead of 4) must be rejected. */
-+static void tlob_parse_too_few_fields(struct kunit *test)
++int main(int argc, char *argv[])
 +{
-+	char buf[] = "5000:0x100:/usr/bin/myapp";
-+	u64 thr; loff_t start, stop; char *path;
++	int rc;
 +
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_parse_uprobe_line(buf, &thr, &path, &start, &stop),
-+		-EINVAL);
++	if (argc < 2) {
++		fprintf(stderr, "Usage: %s <subcommand> [args...]\n", argv[0]);
++		return 1;
++	}
++
++	/* sym_offset does not need /dev/rv */
++	if (strcmp(argv[1], "sym_offset") == 0) {
++		if (argc < 4) {
++			fprintf(stderr, "Usage: %s sym_offset <binary> <symbol>\n",
++				argv[0]);
++			return 1;
++		}
++		return sym_offset(argv[2], argv[3]);
++	}
++
++	if (open_rv() < 0)
++		return 2; /* skip */
++
++	if (strcmp(argv[1], "not_enabled") == 0)
++		rc = test_not_enabled();
++	else if (strcmp(argv[1], "within_budget") == 0)
++		rc = test_within_budget();
++	else if (strcmp(argv[1], "over_budget_cpu") == 0)
++		rc = test_over_budget_cpu();
++	else if (strcmp(argv[1], "over_budget_sleep") == 0)
++		rc = test_over_budget_sleep();
++	else if (strcmp(argv[1], "double_start") == 0)
++		rc = test_double_start();
++	else if (strcmp(argv[1], "stop_no_start") == 0)
++		rc = test_stop_no_start();
++	else if (strcmp(argv[1], "multi_thread") == 0)
++		rc = test_multi_thread();
++	else if (strcmp(argv[1], "self_watch") == 0)
++		rc = test_self_watch();
++	else if (strcmp(argv[1], "invalid_flags") == 0)
++		rc = test_invalid_flags();
++	else if (strcmp(argv[1], "notify_fd_bad") == 0)
++		rc = test_notify_fd_bad();
++	else if (strcmp(argv[1], "mmap_basic") == 0)
++		rc = test_mmap_basic();
++	else if (strcmp(argv[1], "mmap_errors") == 0)
++		rc = test_mmap_errors();
++	else if (strcmp(argv[1], "mmap_consume") == 0)
++		rc = test_mmap_consume();
++	else {
++		fprintf(stderr, "Unknown test: %s\n", argv[1]);
++		rc = 1;
++	}
++
++	close(rv_fd);
++	return rc;
++}
+diff --git a/tools/testing/selftests/rv/tlob_uprobe_target.c b/tools/testing/selftests/rv/tlob_uprobe_target.c
+new file mode 100644
+index 000000000..6c895cb40
+--- /dev/null
++++ b/tools/testing/selftests/rv/tlob_uprobe_target.c
+@@ -0,0 +1,108 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * tlob_uprobe_target.c - uprobe target binary for tlob selftests.
++ *
++ * Provides two well-known probe points:
++ *   tlob_busy_work()      - start probe: arms the tlob budget timer
++ *   tlob_busy_work_done() - stop  probe: cancels the timer on completion
++ *
++ * The tlob selftest writes a five-field uprobe binding:
++ *   pid:threshold_us:binary:offset_start:offset_stop
++ * where offset_start is the file offset of tlob_busy_work and offset_stop
++ * is the file offset of tlob_busy_work_done (resolved via tlob_helper
++ * sym_offset).
++ *
++ * Both probe points are plain entry uprobes (no uretprobe).  The busy loop
++ * keeps the task on-CPU so that either the stop probe fires cleanly (within
++ * budget) or the hrtimer fires first and emits tlob_budget_exceeded (over
++ * budget).
++ *
++ * Usage: tlob_uprobe_target <duration_ms>
++ *
++ * Loops calling tlob_busy_work() in 200 ms iterations until <duration_ms>
++ * has elapsed (0 = run for ~24 hours).  Short iterations ensure the uprobe
++ * entry fires on every call even if the uprobe is installed after the
++ * program has started.
++ */
++#define _GNU_SOURCE
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <time.h>
++
++#ifndef noinline
++#define noinline __attribute__((noinline))
++#endif
++
++static inline int timespec_before(const struct timespec *a,
++				   const struct timespec *b)
++{
++	return a->tv_sec < b->tv_sec ||
++	       (a->tv_sec == b->tv_sec && a->tv_nsec < b->tv_nsec);
 +}
 +
-+/* Negative offset must be rejected. */
-+static void tlob_parse_negative_offset(struct kunit *test)
++static void timespec_add_ms(struct timespec *ts, unsigned long ms)
 +{
-+	char buf[] = "5000:-1:0x200:/usr/bin/myapp";
-+	u64 thr; loff_t start, stop; char *path;
-+
-+	KUNIT_EXPECT_EQ(test,
-+		tlob_parse_uprobe_line(buf, &thr, &path, &start, &stop),
-+		-EINVAL);
++	ts->tv_sec  += ms / 1000;
++	ts->tv_nsec += (long)(ms % 1000) * 1000000L;
++	if (ts->tv_nsec >= 1000000000L) {
++		ts->tv_sec++;
++		ts->tv_nsec -= 1000000000L;
++	}
 +}
 +
-+static struct kunit_case tlob_parse_uprobe_cases[] = {
-+	KUNIT_CASE(tlob_parse_decimal_offsets),
-+	KUNIT_CASE(tlob_parse_hex_offsets),
-+	KUNIT_CASE(tlob_parse_path_with_colon),
-+	KUNIT_CASE(tlob_parse_zero_threshold),
-+	KUNIT_CASE(tlob_parse_empty_path),
-+	KUNIT_CASE(tlob_parse_too_few_fields),
-+	KUNIT_CASE(tlob_parse_negative_offset),
-+	{}
-+};
++/*
++ * tlob_busy_work_done - stop-probe target.
++ *
++ * Called by tlob_busy_work() after the busy loop.  The uprobe on this
++ * function's entry fires tlob_stop_task(), cancelling the budget timer.
++ * noinline ensures the compiler never merges this function with its caller,
++ * guaranteeing the entry uprobe always fires.
++ */
++noinline void tlob_busy_work_done(void)
++{
++	/* empty: the uprobe fires on entry */
++}
 +
-+static struct kunit_suite tlob_parse_uprobe_suite = {
-+	.name       = "tlob_parse_uprobe",
-+	.test_cases = tlob_parse_uprobe_cases,
-+};
++/*
++ * tlob_busy_work - start-probe target.
++ *
++ * The uprobe on this function's entry fires tlob_start_task(), arming the
++ * budget timer.  noinline prevents the compiler and linker (including LTO)
++ * from inlining this function into its callers, ensuring the entry uprobe
++ * fires on every call.
++ */
++noinline void tlob_busy_work(unsigned long duration_ns)
++{
++	struct timespec start, now;
++	unsigned long elapsed;
 +
-+kunit_test_suites(&tlob_automaton_suite,
-+		  &tlob_task_api_suite,
-+		  &tlob_sched_integration_suite,
-+		  &tlob_trace_output_suite,
-+		  &tlob_event_buf_suite,
-+		  &tlob_parse_uprobe_suite);
++	clock_gettime(CLOCK_MONOTONIC, &start);
++	do {
++		clock_gettime(CLOCK_MONOTONIC, &now);
++		elapsed = (unsigned long)(now.tv_sec - start.tv_sec)
++			  * 1000000000UL
++			+ (unsigned long)(now.tv_nsec - start.tv_nsec);
++	} while (elapsed < duration_ns);
 +
-+MODULE_DESCRIPTION("KUnit tests for the tlob RV monitor");
-+MODULE_LICENSE("GPL");
++	tlob_busy_work_done();
++}
++
++int main(int argc, char *argv[])
++{
++	unsigned long duration_ms = 0;
++	struct timespec deadline, now;
++
++	if (argc >= 2)
++		duration_ms = strtoul(argv[1], NULL, 10);
++
++	clock_gettime(CLOCK_MONOTONIC, &deadline);
++	timespec_add_ms(&deadline, duration_ms ? duration_ms : 86400000UL);
++
++	do {
++		tlob_busy_work(200 * 1000000UL); /* 200 ms per iteration */
++		clock_gettime(CLOCK_MONOTONIC, &now);
++	} while (timespec_before(&now, &deadline));
++
++	return 0;
++}
 -- 
 2.43.0
 
