@@ -1,187 +1,189 @@
-Received: from mail-yx1-f51.google.com (mail-yx1-f51.google.com [74.125.224.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539C72BD11
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 13:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776001870; cv=pass; b=TAGPX0EizenWO+RTjN1yfRcJOnNYDAx9sZr0RNeeTHIebDWZSMIUVJXil59XEnG0TN3te+FfCK2cXcW+/Ik1fHMjmB21RPbq+KR9WEf8fkp9iwXmEndyIZQuNBLxxjhulOciFCTX1oANdkcuex+cf1RTo4gtuAYa/FGvEWeF3OI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776001870; c=relaxed/simple;
-	bh=Vm+QvtQZE23sVbgK/tEkRjhUlOBlrvQ/gGRliE28Mbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aUD25kZBCByQDsDkiQRZ1HloTDE8m23RkQMbSDTT/rwrx+v97+gw3ldGGmI8YuW0Ua3fj+Ao1mWncIDHMHz2zbGWD+baZbqAWUBIuTeFYAd95t/R3vijZx0Ny9pa+lAlKQmPGt5dawQEeB6vC4WmXz/9HQGcfcBB5ZogWn3Id48=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9EpLx+G; arc=pass smtp.client-ip=74.125.224.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9EpLx+G"
-Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-65075c2ba66so4257282d50.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Apr 2026 06:51:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776001868; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PNUDr1DgYEpFtSZoIQp65WF+Y8za61UfsioNHKRXnXxtAkVm4AiaOWwflHgFK/WY+L
-         7txsgDq4Zlr43PxSquAglDraacz+/YDNk9nQbxTnOwKz64C1SBRs8cjOjeEXgW6j2ln6
-         aWumDKrAUgz7JLTW51RlvqaWwhJ3UWPUf4QE6OUDI6JAOmfem7+D7/+jcR40r7qKK6Dn
-         Q+2Y0iC71IjfHPJ+ETaunusfLkCyLhzGd0qtua1EAKzIyPQylFnH6yPQVYb5MygTWTjx
-         Q7zkMnDbR+rQ2PvJHPSbhVPV9fPKn1HkPsfKPw3ECjBZeNhaLCmw9KqPoUPFmuzfS8hm
-         qFkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=mdsrFw8g8Bu97byW04CT8KXQ2lpv8OYnpWUOna6h/+A=;
-        fh=ZBcIyWMoeSQHmfF3eX2HcDHO4lDemYS1rV1VBc/UGRw=;
-        b=PpEsqLAqn8KmLCcXbSfVbAW3LXqMM3+kLcV3QYmJhTb9OR+zmzlFl+bCa2DmbAjzdG
-         9kWh79T5A1cAf/oU+cE+/YtUSjZUhKl++JunBWowUvUb94eiklnf+V7KuD76hIYIosbF
-         o4RAMLz/E+GtDWdqpR5gGEtBylJrBuLT7pXJShHv8GimiuMC4Alcq+P65h/YVDg0F4Lx
-         ElySU4MplxabSlHtMw0vPdiN6l+HRgholSYOS2xoEuiJEKFq3ild9wtgtkBYLEps4SRc
-         muWdPQA2Kie2pvQ014B8umRbSTslQRyQd1u9JPyNK04dttI6C6L4ZQFtNZ7JkXyXIXhH
-         ZnyA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776001868; x=1776606668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mdsrFw8g8Bu97byW04CT8KXQ2lpv8OYnpWUOna6h/+A=;
-        b=C9EpLx+G3IANRDKis1pKPomgySzvwrG/DTrjgtOykO1b4WyF3+cMHefL7ElWXKi1FU
-         CeYm5P+RLOwAP1N249Neu8WTFkgGtw5FjimXN1muGdRIrzADFh+Uq3Go1DbLWIXT7RjX
-         V07TzjpDIxbj7Oc/EFLBW0w7CQ4HHrvyUJ7wHNLEwrDPgS1Yw9gOm8oDkmsOnVwJYd3u
-         To0SeMQSipn0oCThDiy4jRix087DHW9zam1PJ/H8bxZ77aBwnIj0uKulpEq4DjCtYRbg
-         u6OhiOFwAcxkzhM2L+cbQcodjM+mQfGnKAzlqKb42c8jnt1MikHeiFpTgFWx37F2Doem
-         QqGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776001868; x=1776606668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mdsrFw8g8Bu97byW04CT8KXQ2lpv8OYnpWUOna6h/+A=;
-        b=kSmggk6im95JbVRzSRZYRc2CkYCs/DC2gGNM094wNF2AlMd49pJaCy6VJB8HOU/8FY
-         REnlLcsoxwBOpT4JifCkuLiItcdrRS8+ANfNI0137MP1HAgMqS5BcLgy+FiPe6SaDKYg
-         5ETlm++BoO3HaWU0JTQRy8A/Eix66OnPDLPq+N59B0mqPSGGPZfNnymNG1knFo5NxnXi
-         CrZfPQZGMti+nj7Cfj4uot4YIms6zMz/24+fTg0zcYCkrlh6LdlpS9GGWIYkzxek4WQt
-         7b+GJghmviYGhfw1UwgsYTu757PqE9Wdi82gTgNfPxcCcGn5v19j6aTkdOW9PRt7N3IP
-         Bgcg==
-X-Forwarded-Encrypted: i=1; AFNElJ9YFPBQ3Ayut03icBnGrBQTocRPET57bIlIdPmyzsO2sFaqX+yCPpajGkGwFE45nz4pCQHjgNehr7ZuIw+DbWEYFgg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOTNBv0tJtKxVYu8GdNcmkHi4NkwprAz/cxpOl3Wklw05PZ7h8
-	mSPdJ2y9pljs/S4WKZ63QJJ9ASNMXo3HARIsnyWafZjGGBJj30G+TYeJYM6EJFX1DIYVCs5MXun
-	4clDwvUNJTs2Rl7nqmqQwo8X/ZMz11G8=
-X-Gm-Gg: AeBDievbB4NxYojvRwtfDwoLqakPj+AmDOuDdRdYmFi0DprG/TlYNv/dPrrXSjE6wfd
-	o0YtKXlVdpSpOWcDZZZHWgVSWFv+qH1G2JcZrjiqNLBeJIUBEB5f6lSKtVVntmSDNB1WhLj5Euu
-	FT6bjRwpK+pYP6LDYtXoBoRK/TgwJWNr6zfuPGdE6LfqgfyaoD+lFFfTuuF8ozPhqYLWZhOI9r9
-	z7GuxPST499jCIbn04MlDHhgymmSR7iotdzvvU3VID1nvBZNmbYXTnqGqns6002YVNc95twFcQZ
-	X5rQFvOz/ZvuX2UYC/tORWXxTACLNhjlwVDq6Ku0
-X-Received: by 2002:a53:d246:0:b0:650:77f5:1410 with SMTP id
- 956f58d0204a3-65198b47128mr6848061d50.33.1776001868315; Sun, 12 Apr 2026
- 06:51:08 -0700 (PDT)
+Received: from mail.189.cn (189sx01-ptr.21cn.com [125.88.204.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C88B1D130E;
+	Sun, 12 Apr 2026 14:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=125.88.204.37
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776003059; cv=none; b=Sg2/Ed4KrEVHC98XYAwBGVFSKuAkpifI82sAdsXi8mSVZCJ+wtKCQkee4laj8UNvt0s7eyMfS1HlL8ZXJxEo6kIF442qF3iLCABYqwxI1+OgCpWtWtMT6Q+N/gHZE+LiwbxZbI70Aa43FXdlTcjPP3ugQltFimYudHEFLmzyHN0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776003059; c=relaxed/simple;
+	bh=tjc5iA5/ozTIRXHnu8IdHTw93PzAQJPc6iB3DoAvfkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cofka6B6BOcgDoiDTtjB5NhOYlD7UIWQjBpWTgSGOKJyTLhhSIacrB1R+IboRs29CIpBhm8bSp2fDACUvrjO2P1U8l6TcoDVokkRxYAfl/YYSJCrwthkBJziCYOct1rOzgau+AIfAo96hX0t7ASz7nl72ThR5e4cGYx9Hyyufog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=125.88.204.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
+HMM_SOURCE_IP:10.158.243.18:0.740051472
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-111.162.143.142 (unknown [10.158.243.18])
+	by mail.189.cn (HERMES) with SMTP id 39A0840029F;
+	Sun, 12 Apr 2026 22:10:46 +0800 (CST)
+Received: from  ([111.162.143.142])
+	by gateway-153622-dep-76cc7bc9cd-8dbpn with ESMTP id a7f5d2f936e74b1dbc442e4419dc0d7f for pmladek@suse.com;
+	Sun, 12 Apr 2026 22:10:48 CST
+X-Transaction-ID: a7f5d2f936e74b1dbc442e4419dc0d7f
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 111.162.143.142
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+Message-ID: <4037aa19-1b01-4076-b823-5cc0e43becac@189.cn>
+Date: Sun, 12 Apr 2026 22:10:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260402092607.96430-1-laoar.shao@gmail.com> <20260410133844.56ab7964da7628d1c3482acb@kernel.org>
-In-Reply-To: <20260410133844.56ab7964da7628d1c3482acb@kernel.org>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Sun, 12 Apr 2026 21:50:31 +0800
-X-Gm-Features: AQROBzBaWJkKG21AiORGSzFrR-pHHuRCQzMa1l_wXUruYUno8uNhz0WAA12-V04
-Message-ID: <CALOAHbAOx=C4b+4xQwRf59xvY0vbMPfOjO5LMDghC4Ryksv++Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] trace, livepatch: Allow kprobe return overriding
- for livepatched functions
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, 
-	joe.lawrence@redhat.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, 
-	kpsingh@kernel.org, mattbobrowski@google.com, song@kernel.org, 
-	jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
-	yonghong.song@linux.dev, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kernel/trace/ftrace: introduce ftrace module notifier
+To: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Miroslav Benes <mbenes@suse.cz>,
+ mcgrof@kernel.org, petr.pavlu@suse.com, da.gomez@kernel.org,
+ samitolvanen@google.com, atomlin@atomlin.com, mhiramat@kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
+References: <20260225054639.21637-1-chensong_2000@189.cn>
+ <20260225192724.48ed165e@fedora>
+ <e18ed5f4-3917-46e7-bca9-78063e6e4457@189.cn>
+ <alpine.LSU.2.21.2602261147150.5739@pobox.suse.cz>
+ <20260226123014.2197d9b7@gandalf.local.home>
+ <321d4670-27cb-453f-a50d-426c83894074@189.cn>
+ <aaqk-GrpCTqO36xj@pathway.suse.cz>
+Content-Language: en-US
+From: Song Chen <chensong_2000@189.cn>
+In-Reply-To: <aaqk-GrpCTqO36xj@pathway.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 10, 2026 at 12:38=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.=
-org> wrote:
->
-> Hi Yafang,
->
-> On Thu,  2 Apr 2026 17:26:03 +0800
-> Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> > Livepatching allows for rapid experimentation with new kernel features
-> > without interrupting production workloads. However, static livepatches =
-lack
-> > the flexibility required to tune features based on task-specific attrib=
-utes,
-> > such as cgroup membership, which is critical in multi-tenant k8s
-> > environments. Furthermore, hardcoding logic into a livepatch prevents
-> > dynamic adjustments based on the runtime environment.
-> >
-> > To address this, we propose a hybrid approach using BPF. Our production=
- use
-> > case involves:
-> >
-> > 1. Deploying a Livepatch function to serve as a stable BPF hook.
-> >
-> > 2. Utilizing bpf_override_return() to dynamically modify the return val=
-ue
-> >    of that hook based on the current task's context.
->
-> First of all, I don't like this approach to test a new feature in the
-> kernel, because it sounds like allowing multiple different generations
-> of implementations to coexist simultaneously. The standard kernel code
-> is not designed to withstand such implementations.
+Hi,
 
-However, this approach is invaluable for rapidly deploying new kernel
-features to production servers without downtime. Upgrading kernels
-across a large fleet remains a significant challenge.
 
->
-> For example, if you implement a well-designed framework in a specific
-> subsystem, like Schedext, which allows multiple implementations extended
-> with BPF to coexist, there's no problem (at least it's debatable).
->
-> But if it is for any function, it is dangerous feature. Bugs that occur
-> in kernels that use this functionality cannot be addressed here. They
-> need to be treated the same way as out-of-tree drivers or forked kernels.
-> I mean, add a tainted flag for this feature. And we don't care of it.
+在 2026/3/6 17:57, Petr Mladek 写道:
+> On Fri 2026-02-27 09:34:59, Song Chen wrote:
+>> Hi,
+>>
+>> 在 2026/2/27 01:30, Steven Rostedt 写道:
+>>> On Thu, 26 Feb 2026 11:51:53 +0100 (CET)
+>>> Miroslav Benes <mbenes@suse.cz> wrote:
+>>>
+>>>>> Let me see if there is any way to use notifier and remain below calling
+>>>>> sequence:
+>>>>>
+>>>>> ftrace_module_enable
+>>>>> klp_module_coming
+>>>>> blocking_notifier_call_chain_robust(MODULE_STATE_COMING)
+>>>>>
+>>>>> blocking_notifier_call_chain(MODULE_STATE_GOING)
+>>>>> klp_module_going
+>>>>> ftrace_release_mod
+>>>>
+>>>> Both klp and ftrace used module notifiers in the past. We abandoned that
+>>>> and opted for direct calls due to issues with ordering at the time. I do
+>>>> not have the list of problems at hand but I remember it was very fragile.
+>>>>
+>>>> See commits 7dcd182bec27 ("ftrace/module: remove ftrace module
+>>>> notifier"), 7e545d6eca20 ("livepatch/module: remove livepatch module
+>>>> notifier") and their surroundings.
+>>>>
+>>>> So unless there is a reason for the change (which should be then carefully
+>>>> reviewed and properly tested), I would prefer to keep it as is. What is
+>>>> the motivation? I am failing to find it in the commit log.
+>>
+>> There is no special motivation, i just read btf initialization in module
+>> loading and found direct calls of ftrace and klp, i thought they were just
+>> forgotten to use notifier and i even didn't search git log to verify, sorry
+>> about that.
+>>
+>>>
+>>> Honestly, I do think just decoupling ftrace and live kernel patching from
+>>> modules is rationale enough, as it makes the code a bit cleaner. But to do
+>>> so, we really need to make sure there is absolutely no regressions.
+>>>
+>>> Thus, to allow such a change, I would ask those that are proposing it, show
+>>> a full work flow of how ftrace, live kernel patching, and modules work with
+>>> each other and why those functions are currently injected in the module code.
+>>>
+>>> As Miroslav stated, we tried to do it via notifiers in the past and it
+>>> failed. I don't want to find out why they failed by just adding them back
+>>> to notifiers again. Instead, the reasons must be fully understood and
+>>> updates made to make sure they will not fail in the future.
+>>
+>> Yes, you are right, i read commit msg of 7dcd182bec27, this patch just
+>> reverses it simply and will introduce order issue back. I will try to find
+>> out the problem in the past at first.
+> 
+> AFAIK, the root of the problem is that livepatch uses the ftrace
+> framework. It means that:
+> 
+>     + ftrace must be initialized before livepatch gets enabled
+>     + livepatch must be disabled before ftrace support gets removed
+> 
+> My understanding is that this can't be achieved by notifiers easily
+> because they are always proceed in the same order.
+> 
+> An elegant solution would be to introduce  notifier_reverse_call_chain()
+> which would process the callbacks in the reverse order. But it might
+> be non-trivial:
+> 
+>    + We would need to make sure that it does not break some
+>      existing "hidden" dependencies.
+> 
+Thanks so much, this is the solution i'm working on. I replaced next 
+with a list_head in notifier_block and implemented 
+anotifier_call_chain_reverse to address the order issues, like your 
+suggestion. And a new robust revision for rolling back.
 
-Agreed. This should be handled as an OOT module rather than part of
-the core kernel.
++static int notifier_call_chain_reverse(struct list_head *nl,
++                    struct notifier_block *start,
++                    unsigned long val, void *v,
++                    int nr_to_call, int *nr_calls)
++{
++    int ret = NOTIFY_DONE;
++    struct notifier_block *nb;
++    bool do_call = (start == NULL);
++
++    if (!nr_to_call)
++        return ret;
++
++    list_for_each_entry_reverse(nb, nl, entry) {
++        if (!do_call) {
++            if (nb == start)
++                do_call = true;
++            continue;
++        }
++#ifdef CONFIG_DEBUG_NOTIFIERS
++        if (unlikely(!func_ptr_is_kernel_text(nb->notifier_call))) {
++            WARN(1, "Invalid notifier called!");
++            continue;
++        }
++#endif
++        trace_notifier_run((void *)nb->notifier_call);
++        ret = nb->notifier_call(nb, val, v);
++
++        if (nr_calls)
++            (*nr_calls)++;
++
++        if (ret & NOTIFY_STOP_MASK)
++            break;
++
++        if (nr_to_call-- == 0)
++            break;
++    }
++    return ret;
++}
++NOKPROBE_SYMBOL(notifier_call_chain_reverse);
 
->
-> >
-> > A significant challenge arises when atomic-replace is enabled. In this
-> > mode, deploying a new livepatch changes the target function's address,
-> > forcing a re-attachment of the BPF program. This re-attachment latency =
-is
-> > unacceptable in critical paths, such as those handling networking polic=
-ies.
-> >
-> > To solve this, we introduce a hybrid livepatch mode that allows specifi=
-c
-> > patches to remain non-replaceable, ensuring the function address remain=
-s
-> > stable and the BPF program stays attached.
->
-> Can you share your actual problem to be solved?
+I'll send the patches for review soon.
 
-Here is an example we recently deployed on our production servers:
+Best regards
 
-  https://lore.kernel.org/bpf/CALOAHbDnNba_w_nWH3-S9GAXw0+VKuLTh1gy5hy9Yqge=
-o4C0iA@mail.gmail.com/
-
-In one of our specific clusters, we needed to send BGP traffic out
-through specific NICs based on the destination IP. To achieve this
-without interrupting service, we live-patched
-bond_xmit_3ad_xor_slave_get(), added a new hook called
-bond_get_slave_hook(), and then ran a BPF program attached to that
-hook to select the outgoing NIC from the SKB. This allowed us to
-rapidly deploy the feature with zero downtime.
-
-[...]
-
---=20
-Regards
-Yafang
+Song
+>    + notifier_call_chain() uses RCU to process the list of registered
+>      callbacks. I am not sure how complicated would be to make it safe
+>      in both directions.
+> 
+> Best Regards,
+> Petr
+> 
+> 
