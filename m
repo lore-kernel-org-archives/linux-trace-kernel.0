@@ -1,478 +1,253 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5150C3BBA17;
-	Mon, 13 Apr 2026 12:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776083715; cv=none; b=bjZCNJDM2+ShNA7Q3f3INMJW/Pz2PgW0/M6P1UxAjESkXJQNgEI1q4/8L8zFUKLL7i3ktCASx2T0jwH6W/U1Nmu0t3a5G1hQ4rFwSFALtv0/9W669KI8cL8Xm5cai5pdwyGtncuhav058Odn8aL30YEIt/RH9o/WpgtqIX0u+DI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776083715; c=relaxed/simple;
-	bh=UDvQEDzACJaIGhbKUuVN22MGWQ63Mq6g0ApY5MwLZPM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IxK58huzWG/ihqKX9bNN2bLViyYqm0SETPQVFvx+rCsoKZoq5CNhAvjXz+ZicISvw1C9SowZv4MJX83g3s1Zagwnwa3CkD1bTkARtCLrNfdvZy34btWPO+qcPjNm0OkrPGX6xQJkLxirilp7GS/wWyJ9fzuo/W4pkEH6Iy11JwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qGwjJx/S; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D98835B659;
+	Mon, 13 Apr 2026 12:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776085129; cv=pass; b=sZ6STDBauFdm2QNjv1LN/zZ5FeukeUqSfeh1X1M5gRjLl1fYgvH9yD7CcmipQTqmxgfZxi5bSCvZEoj9/5/cRsyPCoW5wovd8uWzqe1rRePO+j19qs2juUjkRsOg7p2tmf7Pa8J5z0sI4e3p+klvv7BRpYPNsV4jbJgqxkz4kUk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776085129; c=relaxed/simple;
+	bh=cXdkLXwq7Xwzvgz37Nv3CF3yfZGhaoPAQ/lX82GVBoE=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=tR2NcK6heCqDy/J6dLsbda50zgyodrzW678Am043g9IYCwEUiSxK8MoNcBZxHg6GaOXggsARUTjxFplP+YcxmqJevH9GD2Y49PGuUeUsqzM98GAd/bqGVmH5DchUfqr7lGHwjV+1uyhFjHLVMbSxB0KfwPxTxMUYAbJzxiT5PL8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=KuvYusmn; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qGwjJx/S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=ly
-	eFqWeoKodPerbWa60q7LIpP05vh+z9Tryut9Xskk0=; b=qGwjJx/SaQge9o51vu
-	KxsBnS2zE7VfpSqEOIQ2XkFbUsD+8wMkl5vEyj9/cBDQHi31bIqh5GzqbRy+F3Bx
-	E0zq6dqwb7RrD6cbFJ2mUM1YEuCGidqQUfgNNIOOSQBFeq0Je8OpFSfIiC4tfwRb
-	LL0/ydNm5sagWxRIwRQNXxHBw=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wAnJqbH4txprg+pEw--.12037S2;
-	Mon, 13 Apr 2026 20:34:40 +0800 (CST)
-From: Cao Ruichuang <create0818@163.com>
-To: petr.pavlu@suse.com
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	Cao Ruichuang <create0818@163.com>
-Subject: [PATCH] tracing: separate module tracepoint strings from trace_printk formats
-Date: Mon, 13 Apr 2026 20:33:59 +0800
-Message-Id: <20260413123359.32517-1-create0818@163.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <41e81533-0fd6-49f5-b7c1-b4e172affd2a@suse.com>
-References: <41e81533-0fd6-49f5-b7c1-b4e172affd2a@suse.com>
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="KuvYusmn"
+ARC-Seal: i=1; a=rsa-sha256; t=1776085102; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=EahS+tTmOMhjHbCFylZeg8F4L/JY36UK1o4kXT92fLJkWv3wVtJJhYvq7LVH9WnXw+PooVI1bABe7zUJoep6vatPlnGBOVfGtuXsuuwLQ2CymrdWDEMYv1AuEJ8wlPVRP3TS3c5Ef3RJHzI2Xz6UMqBe+Evw4ZRVoro2+YUwjAw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1776085102; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=HrbHs38rBBU+0LG97kiTuX3QSRvWfEGGGf9SzO2HNr8=; 
+	b=bokMICCH17SFPFG/eYFkmL9sTfUKwaPX7Gpt56nPqhIwaTS0bbda7VxglCe7JKHsW4f2iA6UK1RT+xwCMnX3UTspKpJkJ6b5+eJ3I9lejrRX9c2PCf8Bq/rth2g+GYCIyApp7M1/7I/XFRd/ssjy6FE+U0unZ3vwndbyM/hmqTw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776085102;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=HrbHs38rBBU+0LG97kiTuX3QSRvWfEGGGf9SzO2HNr8=;
+	b=KuvYusmnvMWHG2CK9ks0zzE64smUUTSZRoX9TqZmDfrv3FLGI8W/jjMejLgFCKQj
+	PleDfRdzHBjaiH1BWqebnTsumvsw6i60RI+NWAvGOoWDiLd0oov7eitZv5VSW0yoZB+
+	snAPiyY8QzwUbZFSufQ4UxZ7TEl+JvniP+5PIlnQ=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1776085096273431.4644491260433; Mon, 13 Apr 2026 05:58:16 -0700 (PDT)
+Date: Mon, 13 Apr 2026 20:58:16 +0800
+From: Li Chen <me@linux.beauty>
+To: "Steven Rostedt" <rostedt@goodmis.org>
+Cc: "Zhang Yi" <yi.zhang@huaweicloud.com>, "Theodore Ts'o" <tytso@mit.edu>,
+	"Andreas Dilger" <adilger.kernel@dilger.ca>,
+	"Baokun Li" <libaokun@linux.alibaba.com>, "Jan Kara" <jack@suse.cz>,
+	"Ojaswin Mujoo" <ojaswin@linux.ibm.com>,
+	"Ritesh Harjani" <ritesh.list@gmail.com>,
+	"Zhang Yi" <yi.zhang@huawei.com>,
+	"Masami Hiramatsu" <mhiramat@kernel.org>,
+	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+	"linux-ext4" <linux-ext4@vger.kernel.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>
+Message-ID: <19d86ebd732.2bd14e621132527.1624681536327289755@linux.beauty>
+In-Reply-To: <20260408160405.45a5ee09@gandalf.local.home>
+References: <20260408112020.716706-1-me@linux.beauty>
+	<20260408112020.716706-7-me@linux.beauty> <20260408160405.45a5ee09@gandalf.local.home>
+Subject: Re: [RFC v6 6/7] ext4: fast commit: add lock_updates tracepoint
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAnJqbH4txprg+pEw--.12037S2
-X-Coremail-Antispam: 1Uf129KBjvAXoW3CF4rWw1fKrWDtryrtr1xAFb_yoW8GFWxZo
-	W7Z3Z0vw10gF1xJayxG34kJa1rZFW0gFW5J34Fqr4q9Fyvqw1rJ3y7AwsYv3W5GF45JFW5
-	Za17Xay5JF48JFyfn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjTRqFALUUUUU
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbCvwKCu2nc4uIn6AAA3+
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-The previous module tracepoint_string() fix took the smallest
-implementation path and reused the existing module trace_printk format
-storage.
+Hi Steven,
 
-That was enough to make module __tracepoint_str entries show up in
-printk_formats and be accepted by trace_is_tracepoint_string(), but it
-also made those copied mappings persist after module unload. That does
-not match the expected module lifetime semantics.
+ ---- On Thu, 09 Apr 2026 04:02:56 +0800  Steven Rostedt <rostedt@goodmis.o=
+rg> wrote ---=20
+ > On Wed,  8 Apr 2026 19:20:17 +0800
+ > Li Chen <me@linux.beauty> wrote:
+ >=20
+ > > Commit-time fast commit snapshots run under jbd2_journal_lock_updates(=
+),
+ > > so it is useful to quantify the time spent with updates locked and to
+ > > understand why snapshotting can fail.
+ > >=20
+ > > Add a new tracepoint, ext4_fc_lock_updates, reporting the time spent i=
+n
+ > > the updates-locked window along with the number of snapshotted inodes
+ > > and ranges. Record the first snapshot failure reason in a stable snap_=
+err
+ > > field for tooling.
+ > >=20
+ >=20
+ > [..]
+ >=20
+ > > @@ -1338,13 +1375,13 @@ static int ext4_fc_perform_commit(journal_t *j=
+ournal)
+ > >      if (ret)
+ > >          return ret;
+ > > =20
+ > > -
+ > >      ret =3D ext4_fc_alloc_snapshot_inodes(sb, &inodes, &inodes_size);
+ > >      if (ret)
+ > >          return ret;
+ > > =20
+ > >      /* Step 4: Mark all inodes as being committed. */
+ > >      jbd2_journal_lock_updates(journal);
+ > > +    lock_start =3D ktime_get();
+ >=20
+ > ktime_get() is rather quick but if you care about micro-optimizations, y=
+ou
+ > could have:
+ >=20
+ >     if (trace_ext4_fc_lock_updates_enabled())
+ >         lock_start =3D ktime_get();
+ >     else   =20
+ >         lock_start =3D 0;
+ >=20
+ > >      /*
+ > >       * The journal is now locked. No more handles can start and all t=
+he
+ > >       * previous handles are now drained. Snapshotting happens in this
+ > > @@ -1358,8 +1395,15 @@ static int ext4_fc_perform_commit(journal_t *jo=
+urnal)
+ > >      }
+ > >      ext4_fc_unlock(sb, alloc_ctx);
+ > > =20
+ > > -    ret =3D ext4_fc_snapshot_inodes(journal, inodes, inodes_size);
+ > > +    ret =3D ext4_fc_snapshot_inodes(journal, inodes, inodes_size,
+ > > +                      &snap_inodes, &snap_ranges, &snap_err);
+ > >      jbd2_journal_unlock_updates(journal);
+ > > +    if (trace_ext4_fc_lock_updates_enabled()) {
+ >=20
+ >     if (trace_ext4_fc_lock_updates_enabled() && lock_start) {
+ >=20
+ > But feel free to ignore this if the overhead of always calling ktime_get=
+()
+ > is not an issue.
+ >=20
+ >=20
+ > > +        locked_ns =3D ktime_to_ns(ktime_sub(ktime_get(), lock_start))=
+;
+ > > +        trace_ext4_fc_lock_updates(sb, commit_tid, locked_ns,
+ > > +                       snap_inodes, snap_ranges, ret,
+ > > +                       snap_err);
+ > > +    }
+ > >      kvfree(inodes);
+ > >      if (ret)
+ > >          return ret;
+ > > @@ -1564,7 +1608,7 @@ int ext4_fc_commit(journal_t *journal, tid_t com=
+mit_tid)
+ > >          journal_ioprio =3D EXT4_DEF_JOURNAL_IOPRIO;
+ > >      set_task_ioprio(current, journal_ioprio);
+ > >      fc_bufs_before =3D (sbi->s_fc_bytes + bsize - 1) / bsize;
+ > > -    ret =3D ext4_fc_perform_commit(journal);
+ > > +    ret =3D ext4_fc_perform_commit(journal, commit_tid);
+ > >      if (ret < 0) {
+ > >          if (ret =3D=3D -EAGAIN || ret =3D=3D -E2BIG || ret =3D=3D -EC=
+ANCELED)
+ > >              status =3D EXT4_FC_STATUS_INELIGIBLE;
+ > > diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
+ > > index f493642cf121..7028a28316fa 100644
+ > > --- a/include/trace/events/ext4.h
+ > > +++ b/include/trace/events/ext4.h
+ > > @@ -107,6 +107,26 @@ TRACE_DEFINE_ENUM(EXT4_FC_REASON_VERITY);
+ > >  TRACE_DEFINE_ENUM(EXT4_FC_REASON_MOVE_EXT);
+ > >  TRACE_DEFINE_ENUM(EXT4_FC_REASON_MAX);
+ > > =20
+ > > +#undef EM
+ > > +#undef EMe
+ > > +#define EM(a)    TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
+ > > +#define EMe(a)    TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
+ > > +
+ > > +#define TRACE_SNAP_ERR                        \
+ > > +    EM(NONE)                        \
+ > > +    EM(ES_MISS)                        \
+ > > +    EM(ES_DELAYED)                        \
+ > > +    EM(ES_OTHER)                        \
+ > > +    EM(INODES_CAP)                        \
+ > > +    EM(RANGES_CAP)                        \
+ > > +    EM(NOMEM)                        \
+ > > +    EMe(INODE_LOC)
+ > > +
+ > > +TRACE_SNAP_ERR
+ > > +
+ > > +#undef EM
+ > > +#undef EMe
+ > > +
+ > >  #define show_fc_reason(reason)                        \
+ > >      __print_symbolic(reason,                    \
+ > >          { EXT4_FC_REASON_XATTR,        "XATTR"},        \
+ > > @@ -2818,6 +2838,47 @@ TRACE_EVENT(ext4_fc_commit_stop,
+ > >            __entry->num_fc_ineligible, __entry->nblks_agg, __entry->ti=
+d)
+ > >  );
+ > > =20
+ > > +#define EM(a)    { EXT4_FC_SNAP_ERR_##a, #a },
+ > > +#define EMe(a)    { EXT4_FC_SNAP_ERR_##a, #a }
+ > > +
+ > > +TRACE_EVENT(ext4_fc_lock_updates,
+ > > +        TP_PROTO(struct super_block *sb, tid_t commit_tid, u64 locked=
+_ns,
+ > > +             unsigned int nr_inodes, unsigned int nr_ranges, int err,
+ > > +             int snap_err),
+ > > +
+ > > +    TP_ARGS(sb, commit_tid, locked_ns, nr_inodes, nr_ranges, err, sna=
+p_err),
+ > > +
+ > > +    TP_STRUCT__entry(/* entry */
+ > > +        __field(dev_t, dev)
+ > > +        __field(tid_t, tid)
+ > > +        __field(u64, locked_ns)
+ > > +        __field(unsigned int, nr_inodes)
+ > > +        __field(unsigned int, nr_ranges)
+ > > +        __field(int, err)
+ > > +        __field(int, snap_err)
+ > > +    ),
+ > > +
+ > > +    TP_fast_assign(/* assign */
+ > > +        __entry->dev =3D sb->s_dev;
+ > > +        __entry->tid =3D commit_tid;
+ > > +        __entry->locked_ns =3D locked_ns;
+ > > +        __entry->nr_inodes =3D nr_inodes;
+ > > +        __entry->nr_ranges =3D nr_ranges;
+ > > +        __entry->err =3D err;
+ > > +        __entry->snap_err =3D snap_err;
+ > > +    ),
+ > > +
+ > > +    TP_printk("dev %d,%d tid %u locked_ns %llu nr_inodes %u nr_ranges=
+ %u err %d snap_err %s",
+ > > +          MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
+ > > +          __entry->locked_ns, __entry->nr_inodes, __entry->nr_ranges,
+ > > +          __entry->err, __print_symbolic(__entry->snap_err,
+ > > +                         TRACE_SNAP_ERR))
+ > > +);
+ > > +
+ > > +#undef EM
+ > > +#undef EMe
+ > > +#undef TRACE_SNAP_ERR
+ > > +
+ > >  #define FC_REASON_NAME_STAT(reason)                    \
+ > >      show_fc_reason(reason),                        \
+ > >      __entry->fc_ineligible_rc[reason]
+ >=20
+ > As for the rest:
+ >=20
+ > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+ >=20
+ > [ Please add this reviewed-by to any new versions so I remember I alread=
+y
+ >   looked at it. ]
 
-Handle module tracepoint_string() mappings separately instead of mixing
-them into the module trace_printk format list. Keep copying the strings
-into tracing-managed storage while the module is loaded, but track them
-on their own list and drop them again on MODULE_STATE_GOING.
+Sure, thanks a lot for your thoughtful review!
 
-Keep module trace_printk format handling unchanged.
-
-This split is intentional: module trace_printk formats and module
-tracepoint_string() mappings do not have the same lifetime requirements.
-Keeping them in one shared structure would either preserve
-tracepoint_string() mappings too long again, or require mixed
-ownership/refcount rules in a trace_printk-oriented structure.
-
-The separate module tracepoint_string() list intentionally keeps one
-copied mapping per module entry instead of trying to share copies across
-modules by string contents. printk_formats is address-based, and sharing
-those copies would add another layer of shared ownership/refcounting
-without changing the lifetime rule this fix is trying to restore.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217196
-Signed-off-by: Cao Ruichuang <create0818@163.com>
----
- include/linux/tracepoint.h  |   9 +-
- kernel/trace/trace_printk.c | 250 ++++++++++++++++++++++--------------
- 2 files changed, 157 insertions(+), 102 deletions(-)
-
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index f14da542402..aec598a4017 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -479,11 +479,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-  *
-  * For built-in code, the tracing system uses the original string address.
-  * For modules, the tracing code saves tracepoint strings into
-- * tracing-managed storage when the module loads, so their mappings remain
-- * available through printk_formats and trace string checks even after the
-- * module's own memory goes away. As long as the string does not change
-- * during the life of the module, it is fine to use tracepoint_string()
-- * within a module.
-+ * tracing-managed storage while the module is loaded, and drops those
-+ * mappings again when the module unloads. As long as the string does not
-+ * change during the life of the module, it is fine to use
-+ * tracepoint_string() within a module.
-  */
- #define tracepoint_string(str)						\
- 	({								\
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index 9f67ce42ef6..0420ffcff93 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -21,24 +21,24 @@
- 
- #ifdef CONFIG_MODULES
- 
--/*
-- * modules trace_printk() formats and tracepoint_string() strings are
-- * autosaved in struct trace_bprintk_fmt, which are queued on
-- * trace_bprintk_fmt_list.
-- */
-+/* module trace_printk() formats are autosaved on trace_bprintk_fmt_list. */
- static LIST_HEAD(trace_bprintk_fmt_list);
-+/* module tracepoint_string() copies live on tracepoint_string_list. */
-+static LIST_HEAD(tracepoint_string_list);
- 
--/* serialize accesses to trace_bprintk_fmt_list */
-+/* serialize accesses to module format and tracepoint-string lists */
- static DEFINE_MUTEX(btrace_mutex);
- 
- struct trace_bprintk_fmt {
- 	struct list_head list;
- 	const char *fmt;
--	unsigned int type;
- };
- 
--#define TRACE_BPRINTK_TYPE		BIT(0)
--#define TRACE_TRACEPOINT_TYPE		BIT(1)
-+struct tracepoint_string_entry {
-+	struct list_head list;
-+	struct module *mod;
-+	const char *str;
-+};
- 
- static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
- {
-@@ -54,24 +54,21 @@ static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
- 	return NULL;
- }
- 
--static void hold_module_trace_format(const char **start, const char **end,
--				     unsigned int type)
-+static void hold_module_trace_bprintk_format(const char **start, const char **end)
- {
- 	const char **iter;
- 	char *fmt;
- 
- 	/* allocate the trace_printk per cpu buffers */
--	if ((type & TRACE_BPRINTK_TYPE) && start != end)
-+	if (start != end)
- 		trace_printk_init_buffers();
- 
- 	mutex_lock(&btrace_mutex);
- 	for (iter = start; iter < end; iter++) {
- 		struct trace_bprintk_fmt *tb_fmt = lookup_format(*iter);
- 		if (tb_fmt) {
--			if (!IS_ERR(tb_fmt)) {
--				tb_fmt->type |= type;
-+			if (!IS_ERR(tb_fmt))
- 				*iter = tb_fmt->fmt;
--			}
- 			continue;
- 		}
- 
-@@ -83,7 +80,6 @@ static void hold_module_trace_format(const char **start, const char **end,
- 				list_add_tail(&tb_fmt->list, &trace_bprintk_fmt_list);
- 				strcpy(fmt, *iter);
- 				tb_fmt->fmt = fmt;
--				tb_fmt->type = type;
- 			} else
- 				kfree(tb_fmt);
- 		}
-@@ -93,89 +89,156 @@ static void hold_module_trace_format(const char **start, const char **end,
- 	mutex_unlock(&btrace_mutex);
- }
- 
-+static void hold_module_tracepoint_strings(struct module *mod,
-+					   const char **start,
-+					   const char **end)
-+{
-+	const char **iter;
-+
-+	mutex_lock(&btrace_mutex);
-+	for (iter = start; iter < end; iter++) {
-+		struct tracepoint_string_entry *tp_entry;
-+		char *str;
-+
-+		tp_entry = kmalloc_obj(*tp_entry);
-+		if (!tp_entry)
-+			continue;
-+
-+		str = kstrdup(*iter, GFP_KERNEL);
-+		if (!str) {
-+			kfree(tp_entry);
-+			continue;
-+		}
-+
-+		tp_entry->mod = mod;
-+		tp_entry->str = str;
-+		list_add_tail(&tp_entry->list, &tracepoint_string_list);
-+		*iter = tp_entry->str;
-+	}
-+	mutex_unlock(&btrace_mutex);
-+}
-+
-+static void release_module_tracepoint_strings(struct module *mod)
-+{
-+	struct tracepoint_string_entry *tp_entry, *n;
-+
-+	mutex_lock(&btrace_mutex);
-+	list_for_each_entry_safe(tp_entry, n, &tracepoint_string_list, list) {
-+		if (tp_entry->mod != mod)
-+			continue;
-+		list_del(&tp_entry->list);
-+		kfree(tp_entry->str);
-+		kfree(tp_entry);
-+	}
-+	mutex_unlock(&btrace_mutex);
-+}
-+
- static int module_trace_format_notify(struct notifier_block *self,
- 				      unsigned long val, void *data)
- {
- 	struct module *mod = data;
- 
--	if (val != MODULE_STATE_COMING)
--		return NOTIFY_OK;
-+	switch (val) {
-+	case MODULE_STATE_COMING:
-+		if (mod->num_trace_bprintk_fmt) {
-+			const char **start = mod->trace_bprintk_fmt_start;
-+			const char **end = start + mod->num_trace_bprintk_fmt;
- 
--	if (mod->num_trace_bprintk_fmt) {
--		const char **start = mod->trace_bprintk_fmt_start;
--		const char **end = start + mod->num_trace_bprintk_fmt;
-+			hold_module_trace_bprintk_format(start, end);
-+		}
-+
-+		if (mod->num_tracepoint_strings) {
-+			const char **start = mod->tracepoint_strings_start;
-+			const char **end = start + mod->num_tracepoint_strings;
- 
--		hold_module_trace_format(start, end, TRACE_BPRINTK_TYPE);
-+			hold_module_tracepoint_strings(mod, start, end);
-+		}
-+		break;
-+	case MODULE_STATE_GOING:
-+		release_module_tracepoint_strings(mod);
-+		break;
- 	}
- 
--	if (mod->num_tracepoint_strings) {
--		const char **start = mod->tracepoint_strings_start;
--		const char **end = start + mod->num_tracepoint_strings;
-+	return NOTIFY_OK;
-+}
- 
--		hold_module_trace_format(start, end, TRACE_TRACEPOINT_TYPE);
-+static const char **find_first_mod_entry(void)
-+{
-+	struct trace_bprintk_fmt *tb_fmt;
-+	struct tracepoint_string_entry *tp_entry;
-+
-+	if (!list_empty(&trace_bprintk_fmt_list)) {
-+		tb_fmt = list_first_entry(&trace_bprintk_fmt_list,
-+					  typeof(*tb_fmt), list);
-+		return &tb_fmt->fmt;
- 	}
- 
--	return NOTIFY_OK;
-+	if (!list_empty(&tracepoint_string_list)) {
-+		tp_entry = list_first_entry(&tracepoint_string_list,
-+					    typeof(*tp_entry), list);
-+		return &tp_entry->str;
-+	}
-+
-+	return NULL;
- }
- 
--/*
-- * The debugfs/tracing/printk_formats file maps the addresses with
-- * the ASCII formats that are used in the bprintk events in the
-- * buffer. For userspace tools to be able to decode the events from
-- * the buffer, they need to be able to map the address with the format.
-- *
-- * The addresses of the bprintk formats are in their own section
-- * __trace_printk_fmt. But for modules we copy them into a link list.
-- * The code to print the formats and their addresses passes around the
-- * address of the fmt string. If the fmt address passed into the seq
-- * functions is within the kernel core __trace_printk_fmt section, then
-- * it simply uses the next pointer in the list.
-- *
-- * When the fmt pointer is outside the kernel core __trace_printk_fmt
-- * section, then we need to read the link list pointers. The trick is
-- * we pass the address of the string to the seq function just like
-- * we do for the kernel core formats. To get back the structure that
-- * holds the format, we simply use container_of() and then go to the
-- * next format in the list.
-- */
--static const char **
--find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
-+static struct trace_bprintk_fmt *lookup_mod_format_ptr(const char **fmt_ptr)
- {
--	struct trace_bprintk_fmt *mod_fmt;
-+	struct trace_bprintk_fmt *tb_fmt;
- 
--	if (list_empty(&trace_bprintk_fmt_list))
--		return NULL;
-+	list_for_each_entry(tb_fmt, &trace_bprintk_fmt_list, list) {
-+		if (fmt_ptr == &tb_fmt->fmt)
-+			return tb_fmt;
-+	}
- 
--	/*
--	 * v will point to the address of the fmt record from t_next
--	 * v will be NULL from t_start.
--	 * If this is the first pointer or called from start
--	 * then we need to walk the list.
--	 */
--	if (!v || start_index == *pos) {
--		struct trace_bprintk_fmt *p;
--
--		/* search the module list */
--		list_for_each_entry(p, &trace_bprintk_fmt_list, list) {
--			if (start_index == *pos)
--				return &p->fmt;
--			start_index++;
-+	return NULL;
-+}
-+
-+static struct tracepoint_string_entry *lookup_mod_tracepoint_ptr(const char **str_ptr)
-+{
-+	struct tracepoint_string_entry *tp_entry;
-+
-+	list_for_each_entry(tp_entry, &tracepoint_string_list, list) {
-+		if (str_ptr == &tp_entry->str)
-+			return tp_entry;
-+	}
-+
-+	return NULL;
-+}
-+
-+static const char **find_next_mod_entry(int start_index, void *v, loff_t *pos)
-+{
-+	struct trace_bprintk_fmt *tb_fmt;
-+	struct tracepoint_string_entry *tp_entry;
-+
-+	if (!v || start_index == *pos)
-+		return find_first_mod_entry();
-+
-+	tb_fmt = lookup_mod_format_ptr(v);
-+	if (tb_fmt) {
-+		if (tb_fmt->list.next != &trace_bprintk_fmt_list) {
-+			tb_fmt = list_next_entry(tb_fmt, list);
-+			return &tb_fmt->fmt;
- 		}
--		/* pos > index */
-+
-+		if (!list_empty(&tracepoint_string_list)) {
-+			tp_entry = list_first_entry(&tracepoint_string_list,
-+						    typeof(*tp_entry), list);
-+			return &tp_entry->str;
-+		}
-+
- 		return NULL;
- 	}
- 
--	/*
--	 * v points to the address of the fmt field in the mod list
--	 * structure that holds the module print format.
--	 */
--	mod_fmt = container_of(v, typeof(*mod_fmt), fmt);
--	if (mod_fmt->list.next == &trace_bprintk_fmt_list)
-+	tp_entry = lookup_mod_tracepoint_ptr(v);
-+	if (!tp_entry)
- 		return NULL;
- 
--	mod_fmt = container_of(mod_fmt->list.next, typeof(*mod_fmt), list);
-+	if (tp_entry->list.next == &tracepoint_string_list)
-+		return NULL;
- 
--	return &mod_fmt->fmt;
-+	tp_entry = list_next_entry(tp_entry, list);
-+	return &tp_entry->str;
- }
- 
- static void format_mod_start(void)
-@@ -195,8 +258,8 @@ module_trace_format_notify(struct notifier_block *self,
- {
- 	return NOTIFY_OK;
- }
--static inline const char **
--find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
-+static inline const char **find_next_mod_entry(int start_index, void *v,
-+					       loff_t *pos)
- {
- 	return NULL;
- }
-@@ -274,7 +337,7 @@ bool trace_is_tracepoint_string(const char *str)
- {
- 	const char **ptr = __start___tracepoint_str;
- #ifdef CONFIG_MODULES
--	struct trace_bprintk_fmt *tb_fmt;
-+	struct tracepoint_string_entry *tp_entry;
- #endif
- 
- 	for (ptr = __start___tracepoint_str; ptr < __stop___tracepoint_str; ptr++) {
-@@ -284,8 +347,8 @@ bool trace_is_tracepoint_string(const char *str)
- 
- #ifdef CONFIG_MODULES
- 	mutex_lock(&btrace_mutex);
--	list_for_each_entry(tb_fmt, &trace_bprintk_fmt_list, list) {
--		if ((tb_fmt->type & TRACE_TRACEPOINT_TYPE) && str == tb_fmt->fmt) {
-+	list_for_each_entry(tp_entry, &tracepoint_string_list, list) {
-+		if (str == tp_entry->str) {
- 			mutex_unlock(&btrace_mutex);
- 			return true;
- 		}
-@@ -297,9 +360,8 @@ bool trace_is_tracepoint_string(const char *str)
- 
- static const char **find_next(void *v, loff_t *pos)
- {
--	const char **fmt = v;
- 	int start_index;
--	int last_index;
-+	int next_index;
- 
- 	start_index = __stop___trace_bprintk_fmt - __start___trace_bprintk_fmt;
- 
-@@ -307,25 +369,19 @@ static const char **find_next(void *v, loff_t *pos)
- 		return __start___trace_bprintk_fmt + *pos;
- 
- 	/*
--	 * The __tracepoint_str section is treated the same as the
--	 * __trace_printk_fmt section. The difference is that the
--	 * __trace_printk_fmt section should only be used by trace_printk()
--	 * in a debugging environment, as if anything exists in that section
--	 * the trace_prink() helper buffers are allocated, which would just
--	 * waste space in a production environment.
--	 *
--	 * The __tracepoint_str sections on the other hand are used by
--	 * tracepoints which need to map pointers to their strings to
--	 * the ASCII text for userspace.
-+	 * Built-in __tracepoint_str entries are exported directly from the
-+	 * core section. Module tracepoint_string() mappings are kept on a
-+	 * separate tracing-managed list below, because their lifetime is tied
-+	 * to module load/unload and differs from module trace_printk() formats.
- 	 */
--	last_index = start_index;
-+	next_index = start_index;
- 	start_index = __stop___tracepoint_str - __start___tracepoint_str;
- 
--	if (*pos < last_index + start_index)
--		return __start___tracepoint_str + (*pos - last_index);
-+	if (*pos < next_index + start_index)
-+		return __start___tracepoint_str + (*pos - next_index);
- 
--	start_index += last_index;
--	return find_next_mod_format(start_index, v, fmt, pos);
-+	start_index += next_index;
-+	return find_next_mod_entry(start_index, v, pos);
- }
- 
- static void *
--- 
-2.39.5 (Apple Git-154)
+Regards,
+Li=E2=80=8B
 
