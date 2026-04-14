@@ -1,144 +1,284 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26787242D70
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Apr 2026 18:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B9B26F293;
+	Tue, 14 Apr 2026 23:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776192771; cv=none; b=mZzdl+VMTBu2qAUdArYg5+9t47+WuLqiRAyDaIhgQjTrvSjEbSkYJPj4iEZ+VaV/2UkGwyspAKMIIT7Z15rX3YAWuMSqN8qCT28Cmfp5335GTcdR5x5DRQvBNdnsV7LPTq2Bat5zuNyhzkQkpFyp2oi2WZzP4fFP1TmABIrzWXw=
+	t=1776208170; cv=none; b=qvPa0Dmd2Aosq44PtFhYfkhmeKDB1i7pL+qKmOurkMu88ThrBipmh+XHmfpAFnld662UsH36aamgzktyApczJAG0VGnBX31uRmvtGkTsMDXRYZZG99PWSc0o+xSRM+n7dTicQIkbG8eIXCNDVgb1L15Cwjne41DYIOnDgBiHDxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776192771; c=relaxed/simple;
-	bh=iD0ZF7xWF+2sVtQwlST8KB8qH/3DKQ7tgMmKSda8tHM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=R9lJIXFrFPgJYmIRGOilF/irCyY1b05IGQtKWdaZTIhc5YahMvDCzljp1sxPWkbyylv5ROHRx7U+VeEKUlJTgEUcsG4nEDwu3PMGNmv6eQo4QOcwuJfzN6i0jtgvTQMSVe4CM9FuooamtIpy3xZdFMwMiBq9YWoUxinAc1DE2ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fcnOZnMP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1776208170; c=relaxed/simple;
+	bh=m0W/Ernt03ORrUvvuWlaV+yJl5KaCu8uMNwKRgnc1JU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OdqAxGJ/15T2adqQiMymz/Kn0o4o174jffktMJw8yi3qRMCdlKfIS3xglpz1ve9MJfL0W4tx590wsa2fj/wAm7kraLeJbiQPP1+zRUd8szWA/UcpjKAI2HWtMhGYdwo2Dwsf4MKqmeiOJ+BIimk9o3yG4tVhX/Xj19YYbxd2KTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBelCepT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fcnOZnMP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776192769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dxnIBcIE5Kfe2JHvPjc6ftOkdYUyuSbi6e55M5bzZZE=;
-	b=fcnOZnMPDpePUnSk41fbBZSeWTe+0YTxxewLDu0pkZXYSBv5RKI+Hsiidb4vgchusHfaeF
-	oKdoZBkdwZrtBL13k87VLc8Irl/RKOBJsaNYWnUSdOD0R/PGX94tNFsJol/1OMYu+1nNHv
-	/qnwu8Z4hXWFp37WzRP0rVmGFnodwHo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-179-KoDJyeAXOcKk_v5ALU7KTw-1; Tue, 14 Apr 2026 14:52:45 -0400
-X-MC-Unique: KoDJyeAXOcKk_v5ALU7KTw-1
-X-Mimecast-MFC-AGG-ID: KoDJyeAXOcKk_v5ALU7KTw_1776192765
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4836abfc742so44216585e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Apr 2026 11:52:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776192764; x=1776797564;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dxnIBcIE5Kfe2JHvPjc6ftOkdYUyuSbi6e55M5bzZZE=;
-        b=dGxqUe/AsRSB/50RJXC0ACTRrCjsdM47YZYjqNcwGT5+IjWkdvQ1ZYt3xwg4D8/NKR
-         u+g0kp+42Y8uPWjD8WYM406+oVxwa5zzM0nvKuHJ3RV4h+vJEcBx4pU+XxAIkavos6u3
-         diwHMLX5jyloakADkVtTjBoDTYZMTlU4QhzJ6G3WMmNTKulvNA2hy5InNjjPxS2WuvCF
-         XBSfMNNs7n/lV/e3B79LJH7ynScCHpmoo+DTXyJKBpD2qPVVFV3KV1Xvq0A/0X2dL04e
-         bBDPcHerrynCSSi/MeVb6x6bx5XqUxNsGwKRU/j4rU+mi1U6IVkOlJWXIZJP1oyMZE9F
-         dvrA==
-X-Forwarded-Encrypted: i=1; AFNElJ9iwBOHhw5O/7AYfd0ws0M7M/YqAaGZB6cAYEJ2xqJEZaYluJh1D7kr8KfOcrLFC+HNwH672KUmd8j3LHJp7v2nXT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhmQwRQxpcwe5bR+s8R9PeNhZjPrRCOkyol7etPIU51SMSYxlI
-	oFTeXzC+HiYia/1v9BK1myrR72d1Hfp3PG8TFd3Uq/03vaHvuIYfO+Ls5F+QK1CuF4OIwGeMbSa
-	3FnN2HFEO7WbX/99UH4ODTnvNBxHlLyrrDpw96UOQDMj26Gm3NabXQdDkfwc5oc6trmGdbUnilg
-	==
-X-Gm-Gg: AeBDiesm7U8E3DSPYiO3a1gkPgwMLqSl9lBQBErCsTrBi982EF9ZzbMBMZTKn5gZFUe
-	1g+t/ahsQg26V8k22c447AQBz/bcAaBEQnfJFN+P34DOhdQNl3cNgsmrVWH9NhMeGYNl7c2ZU4U
-	0+7tVkSDRKBr/Cag7Zm60krCOsqvRRQ4EnXKqnaZbuVDH/ABOROsru2PlMO+vPH5B5fnmipfuUN
-	rKnjJHiEZcFcJ0BZq5uVDnDxOTS25wpTRyzhd8qFGcOKNhVWw//F3WXL51nfbw86QfcF5q2upTl
-	Rc+RnzzrO9I2PcAdOMhnGqyLbBNmIkRWdP632ZwMx5q8VoIlD4gM2dhlNTlpIypMMDrgDhntj7C
-	knBdKR0ozhvh4qFw7J3cin+iVGNCV4/ccjv8=
-X-Received: by 2002:a05:600c:628b:b0:487:1fbf:e0bb with SMTP id 5b1f17b1804b1-488d680851fmr246364345e9.6.1776192764459;
-        Tue, 14 Apr 2026 11:52:44 -0700 (PDT)
-X-Received: by 2002:a05:600c:628b:b0:487:1fbf:e0bb with SMTP id 5b1f17b1804b1-488d680851fmr246363955e9.6.1776192763960;
-        Tue, 14 Apr 2026 11:52:43 -0700 (PDT)
-Received: from localhost ([2a00:a041:e223:1b00:fe51:8bb:7986:c897])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488f0964ed7sm3513105e9.4.2026.04.14.11.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2026 11:52:43 -0700 (PDT)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] tools/rtla: Fix --dump-tasks usage in timerlat
-Date: Tue, 14 Apr 2026 21:52:18 +0300
-Message-ID: <20260414185223.65353-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBelCepT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6918DC19425;
+	Tue, 14 Apr 2026 23:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776208170;
+	bh=m0W/Ernt03ORrUvvuWlaV+yJl5KaCu8uMNwKRgnc1JU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=qBelCepTc9lFdVUgh+o5h1aXWx6734PGrt1TsMYUW8hNHRDFGGvbQBnbL7dkpco6k
+	 FOWMq2sxkQ//wmRKXPFKM2vXXv6BS3Sv3GEPKQgc9sNlUbSKK0Z3Ea5TZwC/uq1yAx
+	 XmarXC3/Ng/MOmZpZtC2AlgJFzmvc9Ns3XgKRXeNVliCghDA1lZzITubKE4U5WMow4
+	 aLNVnwqvUSMw7gjHi2mEqYtiDu3lfqxpFZHxsZI966VlBMLNFolgMJDx3pPmVkSeKs
+	 jkTzJ9lwTV80UFCo9VCmOvVlg94JahYcn8tZKQTzVofGTAOdvXmkjGvWtz5BmsTKPW
+	 7sluvHMU/cwXg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 0224ECE13BF; Tue, 14 Apr 2026 16:09:29 -0700 (PDT)
+Date: Tue, 14 Apr 2026 16:09:29 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v4 3/5] locking: Add contended_release tracepoint to
+ sleepable locks
+Message-ID: <2d2a6584-2b75-44e9-953e-e6244ff2abc9@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <cover.1774536681.git.d@ilvokhin.com>
+ <d2e5763278812499335b22a013aafb4979e3324b.1774536681.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zvg3OP3tjIDmGSbuGJ2cpJPn7iXLv3xbrbLdJnA0EbE_1776192765
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2e5763278812499335b22a013aafb4979e3324b.1774536681.git.d@ilvokhin.com>
 
-Fix --dump-task to --dump-tasks in timerlat_hist usage string
-and getopt_long table for consistency with timerlat_top.
+On Thu, Mar 26, 2026 at 03:10:02PM +0000, Dmitry Ilvokhin wrote:
+> Add the contended_release trace event. This tracepoint fires on the
+> holder side when a contended lock is released, complementing the
+> existing contention_begin/contention_end tracepoints which fire on the
+> waiter side.
+> 
+> This enables correlating lock hold time under contention with waiter
+> events by lock address.
+> 
+> Add trace_contended_release() calls to the slowpath unlock paths of
+> sleepable locks: mutex, rtmutex, semaphore, rwsem, percpu-rwsem, and
+> RT-specific rwbase locks.
+> 
+> Where possible, trace_contended_release() fires before the lock is
+> released and before the waiter is woken. For some lock types, the
+> tracepoint fires after the release but before the wake. Making the
+> placement consistent across all lock types is not worth the added
+> complexity.
+> 
+> For reader/writer locks, the tracepoint fires for every reader releasing
+> while a writer is waiting, not only for the last reader.
+> 
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 
-Add missing --dump-tasks to timerlat_top usage synopsis.
+Looks plausible:
 
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
-v2:
-- Address comments of Crystal Wood.
----
- tools/tracing/rtla/src/timerlat_hist.c | 4 ++--
- tools/tracing/rtla/src/timerlat_top.c  | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 79142af4f566..3a15a85b7d72 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -694,7 +694,7 @@ static void timerlat_hist_usage(void)
- 		"[-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] \\",
- 		"         [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
- 		"	  [-P priority] [-E N] [-b N] [--no-irq] [--no-thread] [--no-header] [--no-summary] \\",
--		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C [cgroup_name]] [--no-aa] [--dump-task] [-u|-k]",
-+		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C [cgroup_name]] [--no-aa] [--dump-tasks] [-u|-k]",
- 		"	  [--warm-up s] [--deepest-idle-state n]",
- 		NULL,
- 	};
-@@ -808,7 +808,7 @@ static struct common_params
- 			{"filter",		required_argument,	0, '7'},
- 			{"dma-latency",		required_argument,	0, '8'},
- 			{"no-aa",		no_argument,		0, '9'},
--			{"dump-task",		no_argument,		0, '\1'},
-+			{"dump-tasks",		no_argument,		0, '\1'},
- 			{"warm-up",		required_argument,	0, '\2'},
- 			{"trace-buffer-size",	required_argument,	0, '\3'},
- 			{"deepest-idle-state",	required_argument,	0, '\4'},
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 64cbdcc878b0..e3a374005690 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -467,7 +467,8 @@ static void timerlat_top_usage(void)
- 	static const char *const msg_start[] = {
- 		"[-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
- 		"	  [[-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
--		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C [cgroup_name]] [-u|-k] [--warm-up s] [--deepest-idle-state n]",
-+		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C [cgroup_name]] [--dump-tasks] [-u|-k] [--warm-up s]\\",
-+		"	  [--deepest-idle-state n]",
- 		NULL,
- 	};
- 
--- 
-2.53.0
-
+> ---
+>  include/trace/events/lock.h   | 17 +++++++++++++++++
+>  kernel/locking/mutex.c        |  4 ++++
+>  kernel/locking/percpu-rwsem.c | 11 +++++++++++
+>  kernel/locking/rtmutex.c      |  1 +
+>  kernel/locking/rwbase_rt.c    |  6 ++++++
+>  kernel/locking/rwsem.c        | 10 ++++++++--
+>  kernel/locking/semaphore.c    |  4 ++++
+>  7 files changed, 51 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
+> index da978f2afb45..1ded869cd619 100644
+> --- a/include/trace/events/lock.h
+> +++ b/include/trace/events/lock.h
+> @@ -137,6 +137,23 @@ TRACE_EVENT(contention_end,
+>  	TP_printk("%p (ret=%d)", __entry->lock_addr, __entry->ret)
+>  );
+>  
+> +TRACE_EVENT(contended_release,
+> +
+> +	TP_PROTO(void *lock),
+> +
+> +	TP_ARGS(lock),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(void *, lock_addr)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->lock_addr = lock;
+> +	),
+> +
+> +	TP_printk("%p", __entry->lock_addr)
+> +);
+> +
+>  #endif /* _TRACE_LOCK_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+> index 427187ff02db..6c2c9312eb8f 100644
+> --- a/kernel/locking/mutex.c
+> +++ b/kernel/locking/mutex.c
+> @@ -997,6 +997,9 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
+>  		wake_q_add(&wake_q, next);
+>  	}
+>  
+> +	if (trace_contended_release_enabled() && waiter)
+> +		trace_contended_release(lock);
+> +
+>  	if (owner & MUTEX_FLAG_HANDOFF)
+>  		__mutex_handoff(lock, next);
+>  
+> @@ -1194,6 +1197,7 @@ EXPORT_SYMBOL(ww_mutex_lock_interruptible);
+>  
+>  EXPORT_TRACEPOINT_SYMBOL_GPL(contention_begin);
+>  EXPORT_TRACEPOINT_SYMBOL_GPL(contention_end);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(contended_release);
+>  
+>  /**
+>   * atomic_dec_and_mutex_lock - return holding mutex if we dec to 0
+> diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+> index f3ee7a0d6047..46b5903989b8 100644
+> --- a/kernel/locking/percpu-rwsem.c
+> +++ b/kernel/locking/percpu-rwsem.c
+> @@ -263,6 +263,9 @@ void percpu_up_write(struct percpu_rw_semaphore *sem)
+>  {
+>  	rwsem_release(&sem->dep_map, _RET_IP_);
+>  
+> +	if (trace_contended_release_enabled() && wq_has_sleeper(&sem->waiters))
+> +		trace_contended_release(sem);
+> +
+>  	/*
+>  	 * Signal the writer is done, no fast path yet.
+>  	 *
+> @@ -292,6 +295,14 @@ EXPORT_SYMBOL_GPL(percpu_up_write);
+>  void __percpu_up_read(struct percpu_rw_semaphore *sem)
+>  {
+>  	lockdep_assert_preemption_disabled();
+> +	/*
+> +	 * After percpu_up_write() completes, rcu_sync_is_idle() can still
+> +	 * return false during the grace period, forcing readers into this
+> +	 * slowpath. Only trace when a writer is actually waiting for
+> +	 * readers to drain.
+> +	 */
+> +	if (trace_contended_release_enabled() && rcuwait_active(&sem->writer))
+> +		trace_contended_release(sem);
+>  	/*
+>  	 * slowpath; reader will only ever wake a single blocked
+>  	 * writer.
+> diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+> index ccaba6148b61..3db8a840b4e8 100644
+> --- a/kernel/locking/rtmutex.c
+> +++ b/kernel/locking/rtmutex.c
+> @@ -1466,6 +1466,7 @@ static void __sched rt_mutex_slowunlock(struct rt_mutex_base *lock)
+>  		raw_spin_lock_irqsave(&lock->wait_lock, flags);
+>  	}
+>  
+> +	trace_contended_release(lock);
+>  	/*
+>  	 * The wakeup next waiter path does not suffer from the above
+>  	 * race. See the comments there.
+> diff --git a/kernel/locking/rwbase_rt.c b/kernel/locking/rwbase_rt.c
+> index 82e078c0665a..74da5601018f 100644
+> --- a/kernel/locking/rwbase_rt.c
+> +++ b/kernel/locking/rwbase_rt.c
+> @@ -174,6 +174,8 @@ static void __sched __rwbase_read_unlock(struct rwbase_rt *rwb,
+>  static __always_inline void rwbase_read_unlock(struct rwbase_rt *rwb,
+>  					       unsigned int state)
+>  {
+> +	if (trace_contended_release_enabled() && rt_mutex_owner(&rwb->rtmutex))
+> +		trace_contended_release(rwb);
+>  	/*
+>  	 * rwb->readers can only hit 0 when a writer is waiting for the
+>  	 * active readers to leave the critical section.
+> @@ -205,6 +207,8 @@ static inline void rwbase_write_unlock(struct rwbase_rt *rwb)
+>  	unsigned long flags;
+>  
+>  	raw_spin_lock_irqsave(&rtm->wait_lock, flags);
+> +	if (trace_contended_release_enabled() && rt_mutex_has_waiters(rtm))
+> +		trace_contended_release(rwb);
+>  	__rwbase_write_unlock(rwb, WRITER_BIAS, flags);
+>  }
+>  
+> @@ -214,6 +218,8 @@ static inline void rwbase_write_downgrade(struct rwbase_rt *rwb)
+>  	unsigned long flags;
+>  
+>  	raw_spin_lock_irqsave(&rtm->wait_lock, flags);
+> +	if (trace_contended_release_enabled() && rt_mutex_has_waiters(rtm))
+> +		trace_contended_release(rwb);
+>  	/* Release it and account current as reader */
+>  	__rwbase_write_unlock(rwb, WRITER_BIAS - 1, flags);
+>  }
+> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> index bf647097369c..602d5fd3c91a 100644
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -1387,6 +1387,8 @@ static inline void __up_read(struct rw_semaphore *sem)
+>  	rwsem_clear_reader_owned(sem);
+>  	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
+>  	DEBUG_RWSEMS_WARN_ON(tmp < 0, sem);
+> +	if (trace_contended_release_enabled() && (tmp & RWSEM_FLAG_WAITERS))
+> +		trace_contended_release(sem);
+>  	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
+>  		      RWSEM_FLAG_WAITERS)) {
+>  		clear_nonspinnable(sem);
+> @@ -1413,8 +1415,10 @@ static inline void __up_write(struct rw_semaphore *sem)
+>  	preempt_disable();
+>  	rwsem_clear_owner(sem);
+>  	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
+> -	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
+> +	if (unlikely(tmp & RWSEM_FLAG_WAITERS)) {
+> +		trace_contended_release(sem);
+>  		rwsem_wake(sem);
+> +	}
+>  	preempt_enable();
+>  }
+>  
+> @@ -1437,8 +1441,10 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
+>  	tmp = atomic_long_fetch_add_release(
+>  		-RWSEM_WRITER_LOCKED+RWSEM_READER_BIAS, &sem->count);
+>  	rwsem_set_reader_owned(sem);
+> -	if (tmp & RWSEM_FLAG_WAITERS)
+> +	if (tmp & RWSEM_FLAG_WAITERS) {
+> +		trace_contended_release(sem);
+>  		rwsem_downgrade_wake(sem);
+> +	}
+>  	preempt_enable();
+>  }
+>  
+> diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
+> index 74d41433ba13..35ac3498dca5 100644
+> --- a/kernel/locking/semaphore.c
+> +++ b/kernel/locking/semaphore.c
+> @@ -230,6 +230,10 @@ void __sched up(struct semaphore *sem)
+>  		sem->count++;
+>  	else
+>  		__up(sem, &wake_q);
+> +
+> +	if (trace_contended_release_enabled() && !wake_q_empty(&wake_q))
+> +		trace_contended_release(sem);
+> +
+>  	raw_spin_unlock_irqrestore(&sem->lock, flags);
+>  	if (!wake_q_empty(&wake_q))
+>  		wake_up_q(&wake_q);
+> -- 
+> 2.52.0
+> 
