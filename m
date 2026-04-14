@@ -1,299 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011026.outbound.protection.outlook.com [52.101.62.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8981358367;
-	Tue, 14 Apr 2026 23:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776208827; cv=none; b=HdseBldzfA1IG8a9EQ49w+0rkIgoynosSYjcb4j0+HI1Yt4600Amv26MG3JJ2NJRwfNpL+dKjOc85/F0b879wUSXI8+kqZRRZSarvcjIHt/XxUK97u1b7blXiXdht+y0CJjfNoyyLWqQVgKOjbFho1+vQS/glm2JooTBfrOwFBs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776208827; c=relaxed/simple;
-	bh=hKC8Rq5NfJNZWW7OdEl3J1osacHazL7oouQZKOMFRnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dyPjUpMWTCdbJwaGnPUbSe4KakhS+nutxw5gxhrGBY17XKdgq1G5Ksc7dKDPcBOP4DFdfJM7QaX4cxmzXIzkoNMTTZUcDbiZ+4bjXM4c+Wyf7xyxV7mALNBhByQQXGut3kbh6qszEFJSFIGL2u6Bttupkp+jtuQP3cWju7j6SCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dr1H9aPW; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5F43CB2EC;
+	Tue, 14 Apr 2026 23:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776209916; cv=fail; b=pfniDKtq9g3nhiuqO9OVfes7mzYSjDU9sO3Mz9c0rpaFp7+XZjrTZfI94CktZLU1vNqQDO7lcSgScKdvp0kLfzgl94B+tw6jjBIr+2ZGy2QbpvNVghoIVPKmU7Q/upImvkuPBIJGF1R3MCeIM70xyAXNg5bugcoWaOJCIVxIEIk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776209916; c=relaxed/simple;
+	bh=QH6ybq6nzZXAWB+3VcquMDMn8xF6d+0Z/XziO+1q1Uk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jPuneH9b1S3ORn3A4qjvfuKsRPf3Np9dD4EHRXenbSv+qJPjT2D+5VaPGVZaHeQco2bNN09J9Poj2yZz3NTWYHqwHN3VWGcvkkWcN0LpYtaZlrClGLQU+uTXIPjHX3f/fPp9wc9Sl1gKhLpRSeEnNpSC0HeLlWBFC27+kcp7Y3o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kxl0BsN0; arc=fail smtp.client-ip=52.101.62.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dr1H9aPW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A8AC19425;
-	Tue, 14 Apr 2026 23:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776208827;
-	bh=hKC8Rq5NfJNZWW7OdEl3J1osacHazL7oouQZKOMFRnM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Dr1H9aPWj8lP+ZM1jtp+jHMcbG37rN6rK6GTAbADb7vRIrIUZcg/cFXZIMoDEgMuB
-	 22O5uanPHclLc5ci5ycIRepqK4T1IUjYD110E4S88wp19FND3ZEcXDKNPJALRjNX3f
-	 ZU3oQMGHqaRnymhESqVuhgS1xd6nbP5RxFf25yRDyPhd193/F7LUp2q2g3C8OVzJuD
-	 T87eAtW28GXdVtUnzm4++bOL/fk/kz+ccBGv5sncSZzIQpW0xxffWjD6Z3eM5F3YkJ
-	 nk73mP07aE+kCNZP11DJnXLomg87Yd3/ZPa5ouxuAimKxZaz434j/8wRZGu4equQnR
-	 spGbw0Uru4ykA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id C71C8CE13BF; Tue, 14 Apr 2026 16:20:26 -0700 (PDT)
-Date: Tue, 14 Apr 2026 16:20:26 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v4 5/5] locking: Add contended_release tracepoint to
- spinning locks
-Message-ID: <8d98d9f4-ccab-4864-b406-d3eb684cab45@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <cover.1774536681.git.d@ilvokhin.com>
- <81eb8e0cd90b31e761e12721dbacb967281f840f.1774536681.git.d@ilvokhin.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kxl0BsN0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AfY+AS2Q2Nue+D6Li89mh5eRfH2MpTj6BtFgwoaSzfY5TE8f1xwQ1/7PlVQJqJy7az54ZdC/bCCLTh5j2IykGn+BtuL2XmlHrZ81wFW/3SVMHsfsXieSQZ9KFJxt61Ay1FyfMf+vsYBN2MbzgoHiASIZiCasWDDhuquKtNp1k+ivz7iSKh0UjOsENgUWjmGMYno8uNYbTyJ3N1sjeHsZ+Wfi2ahNXjfNPXYsRykSDlxThW0vx2G3hb9yu/1b+bauVeSSMKWI3kElZfqV58kpHqMmu718I5U/2wEnlfZKn88bchUrsoF1VgOP5oEtMkqd4CW/iiOHmEEvi8zEWwIVZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uQZV6DXglvF+U23BzePtiGc0FKpBMuAPNbSOWy2UM74=;
+ b=a+9RiFdmrImikg+XJDUsyLTZc2EHf8cGdaKO0EzGxm/RDNdQFuE9+8gyW23UVsD7c58F0KddAVI2m2whuY8NBbWbElwVS3s3Unj35x4iEhuPaYC0iu/hf9p0nesTzwihld6Sh0BGXy9Dj6DE7cgREMzun80gWwMNuzJlsUG3vC1k/MGKEd0QgaOFVQaehHy5/HwWjNzdUodp3BtXGvhlTteyVe8vEZaPl4y/+4oiKNz7CJPW0R7HjhUVTNfBzQZ1JqAp7UCk19d4dQpUWAHXp5AftKpN6K5QuvIyvysKjyNkmg3Px9/zPzjtKUHII2hmSyr/9omM4New05oXg2uw+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQZV6DXglvF+U23BzePtiGc0FKpBMuAPNbSOWy2UM74=;
+ b=kxl0BsN0LPYzov225g2HuHphtIZ8OjkpPBwOKtGOWXurxRKgfTNE7qgm58iaipglQiEMMi0wedwHOpBn6lJTf6X0hAYBR1md7goZOuKjclGrWMrV3040qYe/rI8o91JIF1QSuiPgaLgGMfEovFauoLfVzQeXwcSOxW7LBpNU2lk=
+Received: from PH7P221CA0076.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:328::32)
+ by DS7PR12MB6167.namprd12.prod.outlook.com (2603:10b6:8:98::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.48; Tue, 14 Apr
+ 2026 23:38:27 +0000
+Received: from CY4PEPF0000EDD3.namprd03.prod.outlook.com
+ (2603:10b6:510:328:cafe::31) by PH7P221CA0076.outlook.office365.com
+ (2603:10b6:510:328::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.49 via Frontend Transport; Tue,
+ 14 Apr 2026 23:38:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CY4PEPF0000EDD3.mail.protection.outlook.com (10.167.241.199) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9769.17 via Frontend Transport; Tue, 14 Apr 2026 23:38:27 +0000
+Received: from localhost (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 14 Apr
+ 2026 18:37:25 -0500
+Date: Tue, 14 Apr 2026 18:37:00 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: Ackerley Tng <ackerleytng@google.com>
+CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
+	<brauner@kernel.org>, <chao.p.peng@linux.intel.com>, <david@kernel.org>,
+	<ira.weiny@intel.com>, <jmattson@google.com>, <jroedel@suse.de>,
+	<jthoughton@google.com>, <oupton@kernel.org>, <pankaj.gupta@amd.com>,
+	<qperret@google.com>, <rick.p.edgecombe@intel.com>, <rientjes@google.com>,
+	<shivankg@amd.com>, <steven.price@arm.com>, <tabba@google.com>,
+	<willy@infradead.org>, <wyihan@google.com>, <yan.y.zhao@intel.com>,
+	<forkloop@google.com>, <pratyush@kernel.org>, <suzuki.poulose@arm.com>,
+	<aneesh.kumar@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, "Sean
+ Christopherson" <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song
+	<baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
+	<yuanchu@google.com>, Wei Xu <weixugc@google.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-mm@kvack.org>
+Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for
+ KVM_SET_MEMORY_ATTRIBUTES2
+Message-ID: <eiiecl7jvywvqb4drq7cchmcabcrdka25wxr77uavxqineeedm@rfcnhdz6xoxf>
+References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
+ <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
+ <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3>
+ <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <81eb8e0cd90b31e761e12721dbacb967281f840f.1774536681.git.d@ilvokhin.com>
+In-Reply-To: <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD3:EE_|DS7PR12MB6167:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd1c4a6f-9fa0-4503-5b46-08de9a7eed4d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700016|18002099003|56012099003|22082099003|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	PbBhOMyNNmD5llc6UmW++rxqCagqLoVd9lhHyyhsLCKCLED7oe0NmHrqzbyBxrTnuRyHGfiYFx40k06a3WL0CRr/zBQ36Ea5g2CsC/fe+nV+Qz7rzGEk7uBOR57akzzy1kGCwZryK6077qi83U1Wfpjhp/M1kStIh5tu+5OLLkTyuIrC7C2rbieDtViFbJ580SzFAvT9VfJxecxpZFEQo5alDYJARb3D//kfhIF0IeeRc2ezyxgbF8hC9VrxIW7J3fiPcbcZIXpWypdyqqk26reEQEJW8+Sk4w6DgCQ3X6D8Y8EJzclwu/OlDnfDH8QWwGAz4tbZrgdtUZ5zcrcYtfpANb+wskKzH7iBGqQFqpKF3gwLo8yenFMJaZcCRVcUn5AnfV9QIYQUdKXoEuS2KrwgFo7EP5y7zjL8eMrnaUbLWxlPwb6TUgpMV/HNWFbnFkjvrZchRJ4PPSeQ/CiQCO8fYEaH6V0yGzA8H/3jaJaDg9XK3UJujd6t0lncrYWBuh7UHFm5EWzWom0S2ob7DtDrS+E6a28eUz6v1//aO9WYAzGqOCws/w9aTrzZkPOb0jUtJrzHbP6ULeB8SNQhr7IgBH1uve2AlqhyoGMvBGRviz1x/IxXdQj/NOJUvYZIksyBkKJv7NhVZV/ZiSRb20KQMpmah8yt/DYhvR3dlUl68/NW+m89JhAUJY1J1qmgX9RLKFpPiJFoN6jEuK3rwaM8tgKZSDkyKCch1CD5cGVNMgl6Xvub6K5F2NI7nlQn39TjQrDsPJRNf+6Qzd1NHEZugMg0GWqoD59wLivnHrA=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700016)(18002099003)(56012099003)(22082099003)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	d9hGQy/bRYA2R7+0jF4qfJY6DLe7JA3LpOTCg/lzsMSZK9U3EBnTLnbkFB/hQGMFYtdTobJNHRSas9Q151SGzyZ1x+Eu8rss7hXk3M/OjWAGQzEVMvp0EXpBbnWOaxm2x9/RDzsEulBKh06befZZz7p98qGjiw87KtQ2dtxLbvEGFXuKIaJ8fKDTEzi8j0AkJ75Mv05GdSOnYHVHF6rxcFcNGEFr1sGa3+1dgolIolt4qWFqLx+RW4HKxLh+NOn39B2Ht2tkQaKRKQaBuameb3XDptCIQHePoqVcPv2OIun5b0Goh0QhCKDpWUJmhymMRv120YAEAjZGeo262ap+AtPT8UpO0fbPn51qxB8E6Qh8GbyBoo94rlCS9nLZ3ZSiCOnMGtKfWUVaZlw75I1hQ9PzA2FFOvGiz7J4lIXDXLTs4SGMRjq0hpz6dHFi4d/G
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2026 23:38:27.0133
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd1c4a6f-9fa0-4503-5b46-08de9a7eed4d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EDD3.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6167
 
-On Thu, Mar 26, 2026 at 03:10:04PM +0000, Dmitry Ilvokhin wrote:
-> Extend the contended_release tracepoint to queued spinlocks and queued
-> rwlocks.
+On Wed, Apr 01, 2026 at 03:38:12PM -0700, Ackerley Tng wrote:
+> Michael Roth <michael.roth@amd.com> writes:
 > 
-> Use the arch-overridable queued_spin_release(), introduced in the
-> previous commit, to ensure the tracepoint works correctly across all
-> architectures, including those with custom unlock implementations (e.g.
-> x86 paravirt).
+> >
+> > [...snip...]
+> >
+> >>  static unsigned long kvm_get_vm_memory_attributes(struct kvm *kvm, gfn_t gfn)
+> >>  {
+> >> @@ -2635,6 +2625,8 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
+> >>  		return -EINVAL;
+> >>  	if (!PAGE_ALIGNED(attrs->address) || !PAGE_ALIGNED(attrs->size))
+> >>  		return -EINVAL;
+> >> +	if (attrs->error_offset)
+> >> +		return -EINVAL;
+> >>  	for (i = 0; i < ARRAY_SIZE(attrs->reserved); i++) {
+> >>  		if (attrs->reserved[i])
+> >>  			return -EINVAL;
+> >> @@ -4983,6 +4975,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+> >>  		return 1;
+> >>  	case KVM_CAP_GUEST_MEMFD_FLAGS:
+> >>  		return kvm_gmem_get_supported_flags(kvm);
+> >> +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+> >> +		if (vm_memory_attributes)
+> >> +			return 0;
+> >> +
+> >> +		return kvm_supported_mem_attributes(kvm);
+> >
+> > Based on the discussion from the PUCK call this morning,
 > 
-> When the tracepoint is disabled, the only addition to the hot path is a
-> single NOP instruction (the static branch). When enabled, the contention
-> check, trace call, and unlock are combined in an out-of-line function to
-> minimize hot path impact, avoiding the compiler needing to preserve the
-> lock pointer in a callee-saved register across the trace call.
+> Thanks for copying the discussion here, I'll start attending PUCK to
+> catch those discussions too :)
 > 
-> Binary size impact (x86_64, defconfig):
->   uninlined unlock (common case): +983 bytes  (+0.00%)
->   inlined unlock (worst case):    +58165 bytes (+0.24%)
+> > it sounds like it
+> > would be a good idea to limit kvm_supported_mem_attributes() to only
+> > reporting KVM_MEMORY_ATTRIBUTE_PRIVATE if the underlying CoCo
+> > implementation has all the necessary enablement to support in-place
+> > conversion via guest_memfd. In the case of SNP, there is a
+> > documentation/parameter check in snp_launch_update() that needs to be
+> > relaxed in order for userspace to be able to pass in a NULL 'src'
+> > parameter (since, for in-place conversion, it would be initialized in place
+> > as shared memory prior to the call, since by the time kvm_gmem_poulate()
+> > it will have been set to private and therefore cannot be faulted in via
+> > GUP (and if it could, we'd be unecessarily copying the src back on top
+> > of itself since src/dst are the same).
 > 
-> The inlined unlock case could not be achieved through Kconfig options on
-> x86_64 as PREEMPT_BUILD unconditionally selects UNINLINE_SPIN_UNLOCK on
-> x86_64. The UNINLINE_SPIN_UNLOCK guards were manually inverted to force
-> inline the unlock path and estimate the worst case binary size increase.
-> 
-> Architectures with fully custom qspinlock implementations (e.g.
-> PowerPC) are not covered by this change.
-> 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> ---
->  include/asm-generic/qrwlock.h   | 48 +++++++++++++++++++++++++++------
->  include/asm-generic/qspinlock.h | 18 +++++++++++++
->  kernel/locking/qrwlock.c        | 16 +++++++++++
->  kernel/locking/qspinlock.c      |  8 ++++++
->  4 files changed, 82 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/asm-generic/qrwlock.h b/include/asm-generic/qrwlock.h
-> index 75b8f4601b28..e24dc537fd66 100644
-> --- a/include/asm-generic/qrwlock.h
-> +++ b/include/asm-generic/qrwlock.h
-> @@ -14,6 +14,7 @@
->  #define __ASM_GENERIC_QRWLOCK_H
->  
->  #include <linux/atomic.h>
-> +#include <linux/tracepoint-defs.h>
->  #include <asm/barrier.h>
->  #include <asm/processor.h>
->  
-> @@ -35,6 +36,10 @@
->   */
->  extern void queued_read_lock_slowpath(struct qrwlock *lock);
->  extern void queued_write_lock_slowpath(struct qrwlock *lock);
-> +extern void queued_read_unlock_traced(struct qrwlock *lock);
-> +extern void queued_write_unlock_traced(struct qrwlock *lock);
-> +
-> +DECLARE_TRACEPOINT(contended_release);
->  
->  /**
->   * queued_read_trylock - try to acquire read lock of a queued rwlock
-> @@ -102,10 +107,16 @@ static inline void queued_write_lock(struct qrwlock *lock)
->  }
->  
->  /**
-> - * queued_read_unlock - release read lock of a queued rwlock
-> + * queued_rwlock_is_contended - check if the lock is contended
->   * @lock : Pointer to queued rwlock structure
-> + * Return: 1 if lock contended, 0 otherwise
->   */
-> -static inline void queued_read_unlock(struct qrwlock *lock)
-> +static inline int queued_rwlock_is_contended(struct qrwlock *lock)
-> +{
-> +	return arch_spin_is_locked(&lock->wait_lock);
-> +}
-> +
-> +static __always_inline void __queued_read_unlock(struct qrwlock *lock)
->  {
->  	/*
->  	 * Atomically decrement the reader count
-> @@ -114,22 +125,43 @@ static inline void queued_read_unlock(struct qrwlock *lock)
->  }
->  
->  /**
-> - * queued_write_unlock - release write lock of a queued rwlock
-> + * queued_read_unlock - release read lock of a queued rwlock
->   * @lock : Pointer to queued rwlock structure
->   */
-> -static inline void queued_write_unlock(struct qrwlock *lock)
-> +static inline void queued_read_unlock(struct qrwlock *lock)
-> +{
-> +	/*
-> +	 * Trace and unlock are combined in the traced unlock variant so
-> +	 * the compiler does not need to preserve the lock pointer across
-> +	 * the function call, avoiding callee-saved register save/restore
-> +	 * on the hot path.
-> +	 */
-> +	if (tracepoint_enabled(contended_release)) {
-> +		queued_read_unlock_traced(lock);
-> +		return;
-> +	}
-> +
-> +	__queued_read_unlock(lock);
-> +}
+> Could this be a separate thing? If I'm understanding you correctly, it's
+> not strictly a requirement for snp_launch_update() to first support a
+> NULL 'src' parameter before this series lands.
 
-Shouldn't this refactoring be its own separate patch, similar to 4/5?
+I think we are already sync'd up on this during PUCK, but for the benefit
+of others: Sean pointed out that if we don't then we'll need to add yet
+another capability so userspace can determine when it can actually do
+in-place conversion for SNP.
 
-That would probably clean up this diff a bit.
+Right now, this series effectively advertises in place conversion at the
+point where KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES reports
+'KVM_MEMORY_ATTRIBUTE_PRIVATE', so I slightly reworked the series to
+include the snp_launch_update() change prior to that point in time in
+the series. Thanks to prereqs and changes/requirements you've already
+pulled in, it's just one additional patch now:
 
-> +
-> +static __always_inline void __queued_write_unlock(struct qrwlock *lock)
->  {
->  	smp_store_release(&lock->wlocked, 0);
->  }
->  
->  /**
-> - * queued_rwlock_is_contended - check if the lock is contended
-> + * queued_write_unlock - release write lock of a queued rwlock
->   * @lock : Pointer to queued rwlock structure
-> - * Return: 1 if lock contended, 0 otherwise
->   */
-> -static inline int queued_rwlock_is_contended(struct qrwlock *lock)
-> +static inline void queued_write_unlock(struct qrwlock *lock)
->  {
-> -	return arch_spin_is_locked(&lock->wait_lock);
-> +	/* See comment in queued_read_unlock(). */
-> +	if (tracepoint_enabled(contended_release)) {
-> +		queued_write_unlock_traced(lock);
-> +		return;
-> +	}
-> +
-> +	__queued_write_unlock(lock);
+ KVM: SEV: Make 'uaddr' parameter optional for KVM_SEV_SNP_LAUNCH_UPDATE 
 
-And the same here, so one patch for interposing __queued_read_unlock()
-and another for interposing __queued_write_unlock().
+I also did some minor updates (prefixed with a "[squash]" tag) to advertise
+the KVM_SET_MEMORY_ATTRIBUTES2_PRESERVED flag so it can be used by
+userspace for SNP/TDX in the kvm_gmem_populate() path as agreed upon
+during PUCK.
 
->  }
->  
->  /*
-> diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
-> index df76f34645a0..915a4c2777f6 100644
-> --- a/include/asm-generic/qspinlock.h
-> +++ b/include/asm-generic/qspinlock.h
-> @@ -41,6 +41,7 @@
->  
->  #include <asm-generic/qspinlock_types.h>
->  #include <linux/atomic.h>
-> +#include <linux/tracepoint-defs.h>
->  
->  #ifndef queued_spin_is_locked
->  /**
-> @@ -129,12 +130,29 @@ static __always_inline void queued_spin_release(struct qspinlock *lock)
->  }
->  #endif
->  
-> +DECLARE_TRACEPOINT(contended_release);
-> +
-> +extern void queued_spin_release_traced(struct qspinlock *lock);
-> +
->  /**
->   * queued_spin_unlock - unlock a queued spinlock
->   * @lock : Pointer to queued spinlock structure
-> + *
-> + * Generic tracing wrapper around the arch-overridable
-> + * queued_spin_release().
->   */
->  static __always_inline void queued_spin_unlock(struct qspinlock *lock)
->  {
-> +	/*
-> +	 * Trace and release are combined in queued_spin_release_traced() so
-> +	 * the compiler does not need to preserve the lock pointer across the
-> +	 * function call, avoiding callee-saved register save/restore on the
-> +	 * hot path.
-> +	 */
-> +	if (tracepoint_enabled(contended_release)) {
-> +		queued_spin_release_traced(lock);
-> +		return;
-> +	}
->  	queued_spin_release(lock);
->  }
->  
-> diff --git a/kernel/locking/qrwlock.c b/kernel/locking/qrwlock.c
-> index d2ef312a8611..5f7a0fc2b27a 100644
-> --- a/kernel/locking/qrwlock.c
-> +++ b/kernel/locking/qrwlock.c
+The branch is here, with the patches moved to where I think they
+should remain (or be squashed in for the [squash] ones):
 
-And is it possible to have one patch for qspinlock and another for qrwlock?
-It *looks* like it should be.
+  https://github.com/AMDESE/linux/commits/guest_memfd-inplace-conversion-v4-snp2/
 
-							Thanx, Paul
+I've also updated the QEMU patches to use the agreed-upon API flow and
+pushed them here:
 
-> @@ -90,3 +90,19 @@ void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock)
->  	trace_contention_end(lock, 0);
->  }
->  EXPORT_SYMBOL(queued_write_lock_slowpath);
-> +
-> +void __lockfunc queued_read_unlock_traced(struct qrwlock *lock)
-> +{
-> +	if (queued_rwlock_is_contended(lock))
-> +		trace_contended_release(lock);
-> +	__queued_read_unlock(lock);
-> +}
-> +EXPORT_SYMBOL(queued_read_unlock_traced);
-> +
-> +void __lockfunc queued_write_unlock_traced(struct qrwlock *lock)
-> +{
-> +	if (queued_rwlock_is_contended(lock))
-> +		trace_contended_release(lock);
-> +	__queued_write_unlock(lock);
-> +}
-> +EXPORT_SYMBOL(queued_write_unlock_traced);
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index af8d122bb649..c72610980ec7 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -104,6 +104,14 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
->  #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
->  #endif
->  
-> +void __lockfunc queued_spin_release_traced(struct qspinlock *lock)
-> +{
-> +	if (queued_spin_is_contended(lock))
-> +		trace_contended_release(lock);
-> +	queued_spin_release(lock);
-> +}
-> +EXPORT_SYMBOL(queued_spin_release_traced);
-> +
->  #endif /* _GEN_PV_LOCK_SLOWPATH */
->  
->  /**
-> -- 
-> 2.52.0
-> 
+  https://github.com/AMDESE/qemu/commits/snp-inplace-for-v4-wip2/
+
+To start an SNP guest with in-place conversion:
+
+  qemu-system-x86 \
+  -machine q35,confidential-guest-support=sev0,memory-backend=ram1 \
+  -object sev-snp-guest,id=sev0,...,convert-in-place=true \
+  -object memory-backend-memfd,id=ram1,size=16G,share=true,reserve=false
+
+To start an normal non-CoCo guest backed by guest_memfd with shared memory:
+
+  qemu-system-x86 \
+  -machine q35,confidential-guest-support=sev0,memory-backend=ram1 \
+  -object memory-backend-memfd,id=ram1,size=16G,share=true,reserve=false
+
+Thanks,
+
+Mike
