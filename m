@@ -1,155 +1,141 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4950913635C;
-	Tue, 14 Apr 2026 09:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+Received: from mailgw2.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9636913635C;
+	Tue, 14 Apr 2026 09:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776157817; cv=none; b=KtTMRkCqIe32SyjapUQXCLv4sL1TqAcNO+UaQasOztQHb+VDg0INomBIqKb7H28t7kUcIMEaNKjx12IakU1IVgB6NjS8ljANGKlBPD9RsM14e3fHOd/AxrtjxMqOPojPmRC3I9/ZV/98VctUG8PHiV8HGBawo0cLMPcqmMtsqqI=
+	t=1776157919; cv=none; b=dRj4Uf+hi8hZRxKDrbTzR4gbZNhnKL95dgTyQnWmhd5/bb/kcB/EUZ1UPsFxSzTZH2eNC2n7ZxDWASrA18St4lvfJzY+bKl2IYxmX7DPFZ8XssmK3WLlbK7f8LvFbZvJClxpWa6kLitW3EP8Ug1kjJNu8bNoFOOYMgLGPxHL+VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776157817; c=relaxed/simple;
-	bh=l5950Y1fLVwL/RbEHDN4aOqJkRB/TiXnYRkkxZ4hSBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=my/7HPirA7NIpRNWOTsjxggoHz7U2YJGgn78swaXq88EacllLgwMWKKtaUQasbqS8J1T707vxywFoST/A+E0pMeLYv7zwojJfhVyuAvAuQB4C1Jpkmy/QZpWmGpBwm7kR9H+arWztxqw/k8kJRFZdFJHsvtLM7Q6CWBFTPnzn94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 1AC8EB994F;
-	Tue, 14 Apr 2026 09:10:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 0075334;
-	Tue, 14 Apr 2026 09:10:12 +0000 (UTC)
-Date: Tue, 14 Apr 2026 05:10:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Pengpeng Hou <pengpeng@iscas.ac.cn>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/hist: bound expression strings with seq_buf
-Message-ID: <20260414051010.200075d8@robin>
-In-Reply-To: <20260409123001.1-tracing-hist-expr-v2-pengpeng@iscas.ac.cn>
-References: <20260407153001.1-tracing-hist-expr-pengpeng@iscas.ac.cn>
-	<20260409123001.1-tracing-hist-expr-v2-pengpeng@iscas.ac.cn>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1776157919; c=relaxed/simple;
+	bh=dHodftB+OpB9l4u4KD3gPbiUNw83vdZCZYrASb/dXlA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ldJS3SSJjyUcaFTRCScSdeJ/x26VtKKFR+JEEXwtDCN4ZjrEvnR5gf5D2XU/iTHftCqm7gBViJjxJ+zLz5m5h0pcc3DJCpRgRbgqR/2VZJZSOVApsKdmy8m6zeNeTn+yzbQm4v2CVQIaoGTw+c84svNZPvaW4FlXzcGnHrx9fiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fvz6Y1Vswz1YQpmJ;
+	Tue, 14 Apr 2026 17:11:33 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fvz6V6YZ3z1YQpmJ;
+	Tue, 14 Apr 2026 17:11:30 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id 75DAD3005A41;
+	Tue, 14 Apr 2026 17:09:35 +0800 (CST)
+Received: from hsj-2U-Workstation (172.19.20.61) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 14 Apr
+ 2026 17:11:28 +0800
+Date: Tue, 14 Apr 2026 17:11:26 +0800
+From: Huang Shijie <huangsj@hygon.cn>
+To: Mateusz Guzik <mjguzik@gmail.com>
+CC: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+	<muchun.song@linux.dev>, <osalvador@suse.de>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>
+Subject: Re: [PATCH 0/3] mm: split the file's i_mmap tree for NUMA
+Message-ID: <ad4EvoDcAKE2Sl4+@hsj-2U-Workstation>
+References: <20260413062042.804-1-huangsj@hygon.cn>
+ <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: xfr8pjtxo6wkmimgj7eizd19qq7aynpf
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 0075334
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX186NpDt74eEdFgmsicjtZ/cpl6ElvPDlMo=
-X-HE-Tag: 1776157812-678636
-X-HE-Meta: U2FsdGVkX1/1QERJXK5AuwR10WUT6ye2M8oykD9clkaONbK/glNWgRHrKYW1czoFGle6NGFI8Elb7HZGO+PSd1TrsSL/Niyn5uPjQuFBmTnWANpzoqOOnj9JLzz4Tue9B+eyi/Fq7SwzqRugNsRc/90Z4n0Fb2a692E7ZfaDWA0rh1/OLcKpgRCoOAch57VwqyQzmB+Rj1MGCAC8LTHxC0g6+r5eOx4Y26fpOMn6XgMjmpk28EchpkCuDP+ualshmQHScZjfA1De42uwhdfq4XKp+rb2Eq7f2CKPY8QExMeIlaRikDUaP8E/6xBGyW7g
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
+X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-On Thu, 9 Apr 2026 10:56:28 +0800
-Pengpeng Hou <pengpeng@iscas.ac.cn> wrote:
-
-Hi Pengpeng,
-
-Again, subject should be:
-
-  tracing: Bound histogram expression strings with seq_buf
-
-> expr_str() allocates a fixed MAX_FILTER_STR_VAL buffer and then builds
-> expression names with a series of raw strcat() appends. Nested operands,
-> constants and field flags can push the rendered string past that fixed
-> limit before the name is attached to the hist field.
+On Mon, Apr 13, 2026 at 05:33:21PM +0200, Mateusz Guzik wrote:
+> On Mon, Apr 13, 2026 at 02:20:39PM +0800, Huang Shijie wrote:
+> >   In NUMA, there are maybe many NUMA nodes and many CPUs.
+> > For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
+> > In the UnixBench tests, there is a test "execl" which tests
+> > the execve system call.
+> > 
+> >   When we test our server with "./Run -c 384 execl",
+> > the test result is not good enough. The i_mmap locks contended heavily on
+> > "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have 
+> > over 6000 VMAs, all the VMAs can be in different NUMA mode.
+> > The insert/remove operations do not run quickly enough.
+> > 
+> > patch 1 & patch 2 are try to hide the direct access of i_mmap.
+> > patch 3 splits the i_mmap into sibling trees, and we can get better 
+> > performance with this patch set:
+> >     we can get 77% performance improvement(10 times average)
+> > 
 > 
-> Build the expression strings with seq_buf and propagate failures back to
-> the expression parser when the rendered name would exceed
-> MAX_FILTER_STR_VAL.
+> To my reading you kept the lock as-is and only distributed the protected
+> state.
 > 
-> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
-> ---
-> Changes since v1:
-> - replace the previous bounded append helper and manual length tracking
->   with seq_buf as suggested by Steven Rostedt
-> - keep the -E2BIG propagation back into parse_unary() and parse_expr()
+> While I don't doubt the improvement, I'm confident should you take a
+> look at the profile you are going to find this still does not scale with
+> rwsem being one of the problems (there are other global locks, some of
+> which have experimental patches for).
+IMHO, when the number of VMAs in the i_mmap is very large, only optimise the rwsem
+lock does not help too much for our NUMA case.
+
+In our NUMA server, the remote access could be the major issue.
+
+
 > 
->  kernel/trace/trace_events_hist.c | 93 ++++++++++++++++++++++----------
->  1 file changed, 64 insertions(+), 29 deletions(-)
+> Apart from that this does nothing to help high core systems which are
+> all one node, which imo puts another question mark on this specific
+> proposal.
+Yes, this patch set only focus on the NUMA case.
+The one-node case should use the original i_mmap.
+
+Maybe I can add a new config, CONFIG_SPILT_I_MMAP. The config is disabled
+by default, and enabled when the NUMA node is not one.
+
 > 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 73ea180cad55..09aaedb92993 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -8,6 +8,7 @@
->  #include <linux/module.h>
->  #include <linux/kallsyms.h>
->  #include <linux/security.h>
-> +#include <linux/seq_buf.h>
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
->  #include <linux/stacktrace.h>
-> @@ -1738,85 +1739,104 @@ static const char *get_hist_field_flags(struct hist_field *hist_field)
->  	return flags_str;
->  }
->  
-> -static void expr_field_str(struct hist_field *field, char *expr)
-> +static bool expr_field_str(struct hist_field *field, struct seq_buf *s)
->  {
-> +	const char *field_name;
-> +
->  	if (field->flags & HIST_FIELD_FL_VAR_REF)
-> -		strcat(expr, "$");
-> -	else if (field->flags & HIST_FIELD_FL_CONST) {
-> -		char str[HIST_CONST_DIGITS_MAX];
-> +		seq_buf_putc(s, '$');
-> +	else if (field->flags & HIST_FIELD_FL_CONST)
-> +		seq_buf_printf(s, "%llu", field->constant);
->  
-> -		snprintf(str, HIST_CONST_DIGITS_MAX, "%llu", field->constant);
-> -		strcat(expr, str);
-> -	}
-> +	field_name = hist_field_name(field, 0);
-> +	if (!field_name)
-> +		return false;
->  
-> -	strcat(expr, hist_field_name(field, 0));
-> +	seq_buf_puts(s, field_name);
->  
->  	if (field->flags && !(field->flags & HIST_FIELD_FL_VAR_REF)) {
->  		const char *flags_str = get_hist_field_flags(field);
->  
-> -		if (flags_str) {
-> -			strcat(expr, ".");
-> -			strcat(expr, flags_str);
-> -		}
-> +		if (flags_str)
-> +			seq_buf_printf(s, ".%s", flags_str);
->  	}
-> +
-> +	return !seq_buf_has_overflowed(s);
->  }
->  
->  static char *expr_str(struct hist_field *field, unsigned int level)
->  {
->  	char *expr;
-> +	struct seq_buf s;
-> +	int ret = -E2BIG;
->  
->  	if (level > 1)
-> -		return NULL;
-> +		return ERR_PTR(-EINVAL);
->  
->  	expr = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
->  	if (!expr)
-> -		return NULL;
-> +		return ERR_PTR(-ENOMEM);
+> Of course one may question whether a RB tree is the right choice here,
+> it may be the lock-protected cost can go way down with merely a better
+> data structure.
+> 
+> Regardless of that, for actual scalability, there will be no way around
+> decentralazing locking around this and partitioning per some core count
+> (not just by numa awareness).
+> 
+> Decentralizing locking is definitely possible, but I have not looked
+> into specifics of how problematic it is. Best case scenario it will
+> merely with separate locks. Worst case scenario something needs a fully
+> stabilized state for traversal, in that case another rw lock can be
+Yes. 
 
-A patch should do one thing at a time. This patch appears to be doing
-two things: fixing the bound strings, returning errors instead of NULL.
+The traversal may need to hold many locks.
 
-Please split this up into two patches. One that changes the return
-values from NULL to ERR_PTR() and the other to use seq_buf.
+> slapped around this, creating locking order read lock -> per-subset
+> write lock -- this will suffer scalability due to the read locking, but
+> it will still scale drastically better as apart from that there will be
+> no serialization. In this setting the problematic consumer will write
+> lock the new thing to stabilize the state.
+> 
+> So my non-maintainer opinion is that the patchset is not worth it as it
+> fails to address anything for significantly more common and already
+> affected setups.
+This patch set is to reduce the remote access latency for insert/remove VMA
+in NUMA.
 
-Thanks,
+> 
+> Have you looked into splitting the lock?
+> 
+I ever tried. 
 
--- Steve
+But there are two disadvantages:
+  1.) The traversal may need to hold many locks which makes the
+      code very horrible.
+
+  2.) Even we split the locks. Each lock protects a tree, when the tree becomes
+      big enough, the VMA insert/remove will also become slow in NUMA.
+      The reason is that the tree has VMAs in different NUMA nodes.
+      
+
+Thanks
+Huang Shijie
 
