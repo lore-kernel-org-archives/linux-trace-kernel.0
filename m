@@ -1,38 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B07C3B6347;
-	Tue, 14 Apr 2026 08:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4950913635C;
+	Tue, 14 Apr 2026 09:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776157138; cv=none; b=i8uQIKR/PvK0zcW57aVUEamzTDe1oY3ioolU2iB+Jt0nkfe9G5IPbzVNm3ED1Xkv4ly2aAFk54yFYOmHIU5oMHqTjiDPqlTmfzwpc8PrDuwfhjM/wuv37nFnXhoB+wl3c/lFMiloqspiEce65KWwT4/8hfUmA/hdEsejcIjGlQc=
+	t=1776157817; cv=none; b=KtTMRkCqIe32SyjapUQXCLv4sL1TqAcNO+UaQasOztQHb+VDg0INomBIqKb7H28t7kUcIMEaNKjx12IakU1IVgB6NjS8ljANGKlBPD9RsM14e3fHOd/AxrtjxMqOPojPmRC3I9/ZV/98VctUG8PHiV8HGBawo0cLMPcqmMtsqqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776157138; c=relaxed/simple;
-	bh=IuOOkPXsj4e2HOsaeRBKmn5S8Lv7l2tZGXBhnKZxPkw=;
+	s=arc-20240116; t=1776157817; c=relaxed/simple;
+	bh=l5950Y1fLVwL/RbEHDN4aOqJkRB/TiXnYRkkxZ4hSBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XwaODWoPy76Mgcwjll/cnkzNwJxJhvOs1uYTaterd2PaH7Du18feUybNVYehBwJ6zlLmWYwdr5prlGmceOcEKRU4mdvRnViKqboPlRLah5ZtYg7jexS/UOGLqNsEDNKboBUfBnKfx+rdQFJVraEj9m78UqH/+Qzf7YOfor6c6Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=my/7HPirA7NIpRNWOTsjxggoHz7U2YJGgn78swaXq88EacllLgwMWKKtaUQasbqS8J1T707vxywFoST/A+E0pMeLYv7zwojJfhVyuAvAuQB4C1Jpkmy/QZpWmGpBwm7kR9H+arWztxqw/k8kJRFZdFJHsvtLM7Q6CWBFTPnzn94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 960DEE38D0;
-	Tue, 14 Apr 2026 08:58:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 4C8C420012;
-	Tue, 14 Apr 2026 08:58:52 +0000 (UTC)
-Date: Tue, 14 Apr 2026 04:58:48 -0400
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 1AC8EB994F;
+	Tue, 14 Apr 2026 09:10:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 0075334;
+	Tue, 14 Apr 2026 09:10:12 +0000 (UTC)
+Date: Tue, 14 Apr 2026 05:10:10 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Pengpeng Hou <pengpeng@iscas.ac.cn>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Tom Zanussi
- <tom.zanussi@linux.intel.com>, Mathieu Desnoyers
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing/hist: bound synthetic-field strings with
- seq_buf
-Message-ID: <20260414045848.23c82548@robin>
-In-Reply-To: <20260409103001.1-tracing-hist-synth-v3-pengpeng@iscas.ac.cn>
-References: <20260329030950.32503-2-pengpeng@iscas.ac.cn>
-	<20260401112224.85582-2-pengpeng@iscas.ac.cn>
-	<20260409103001.1-tracing-hist-synth-v3-pengpeng@iscas.ac.cn>
+Subject: Re: [PATCH v2] tracing/hist: bound expression strings with seq_buf
+Message-ID: <20260414051010.200075d8@robin>
+In-Reply-To: <20260409123001.1-tracing-hist-expr-v2-pengpeng@iscas.ac.cn>
+References: <20260407153001.1-tracing-hist-expr-pengpeng@iscas.ac.cn>
+	<20260409123001.1-tracing-hist-expr-v2-pengpeng@iscas.ac.cn>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,50 +39,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: rpnnbjhr5fdoz5yixoa4hda9y5u31sg7
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 4C8C420012
+X-Stat-Signature: xfr8pjtxo6wkmimgj7eizd19qq7aynpf
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 0075334
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18gKX1bR7+Lo9qiVsLC/KPbxQNXM1nC9Lo=
-X-HE-Tag: 1776157132-198335
-X-HE-Meta: U2FsdGVkX18PbFAm5lws+YUFULo0Y1BTDH4DKX3os5fuCIr4xYPtx/bBAQmPu0DTxcYRRGVNQpWzbkccOIUDhm0p2aVxZt3lwaA+XrfMVkL0nylpL8t5u5m1Q9LP45ELwkyPdrZr0urWUwOiJw0HX8Mw0EMuRO+jAXnQ/NWXwlV/N4Tjja0L9nw1esFURUyEOsRvtkdKl5cidzfz/BASwnmp/8lm2zWUqquPFhQJunDWqtqZaw9x9CGnTusHOmCtSXcDk1rKBW3e4/IB3HanY89u1DWqwNHXUNJYpLrk5F9yW8XSXk/CkM/0VDoa8/bYatMxf7sLdYxkpIFIyMRg7geWE4jUq8CX
+X-Session-ID: U2FsdGVkX186NpDt74eEdFgmsicjtZ/cpl6ElvPDlMo=
+X-HE-Tag: 1776157812-678636
+X-HE-Meta: U2FsdGVkX1/1QERJXK5AuwR10WUT6ye2M8oykD9clkaONbK/glNWgRHrKYW1czoFGle6NGFI8Elb7HZGO+PSd1TrsSL/Niyn5uPjQuFBmTnWANpzoqOOnj9JLzz4Tue9B+eyi/Fq7SwzqRugNsRc/90Z4n0Fb2a692E7ZfaDWA0rh1/OLcKpgRCoOAch57VwqyQzmB+Rj1MGCAC8LTHxC0g6+r5eOx4Y26fpOMn6XgMjmpk28EchpkCuDP+ualshmQHScZjfA1De42uwhdfq4XKp+rb2Eq7f2CKPY8QExMeIlaRikDUaP8E/6xBGyW7g
 
-On Thu, 9 Apr 2026 10:19:43 +0800
+On Thu, 9 Apr 2026 10:56:28 +0800
 Pengpeng Hou <pengpeng@iscas.ac.cn> wrote:
 
 Hi Pengpeng,
 
-Note, the tracing subsystem uses capital letters in the subject:
+Again, subject should be:
 
- Subject: tracing: Bound synthetic-field strings with seq_buf
+  tracing: Bound histogram expression strings with seq_buf
 
-
-> The synthetic field helpers build a prefixed synthetic variable name and
-> a generated hist command in fixed MAX_FILTER_STR_VAL buffers. The
-> current code appends those strings with raw strcat(), so long key lists,
-> field names, or saved filters can run past the end of the staging
-> buffers.
+> expr_str() allocates a fixed MAX_FILTER_STR_VAL buffer and then builds
+> expression names with a series of raw strcat() appends. Nested operands,
+> constants and field flags can push the rendered string past that fixed
+> limit before the name is attached to the hist field.
 > 
-> Build both strings with seq_buf and propagate -E2BIG if either the
-> synthetic variable name or the generated command exceeds
-> MAX_FILTER_STR_VAL. This keeps the existing tracing-side limit while
-> using the helper intended for bounded command construction.
+> Build the expression strings with seq_buf and propagate failures back to
+> the expression parser when the rendered name would exceed
+> MAX_FILTER_STR_VAL.
 > 
-> Fixes: 02205a6752f2 ("tracing: Add support for 'field variables'")
 > Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
 > ---
-> Changes since v2: https://lore.kernel.org/all/20260401112224.85582-2-pengpeng@iscas.ac.cn/
+> Changes since v1:
+> - replace the previous bounded append helper and manual length tracking
+>   with seq_buf as suggested by Steven Rostedt
+> - keep the -E2BIG propagation back into parse_unary() and parse_expr()
 > 
-> - switch the synthetic name and generated command construction to seq_buf
->   as suggested by Steven Rostedt
-> - keep MAX_FILTER_STR_VAL as the tracing-side limit and return -E2BIG on
->   overflow
-> 
->  kernel/trace/trace_events_hist.c | 44 ++++++++++++++++++++++----------
->  1 file changed, 30 insertions(+), 14 deletions(-)
+>  kernel/trace/trace_events_hist.c | 93 ++++++++++++++++++++++----------
+>  1 file changed, 64 insertions(+), 29 deletions(-)
 > 
 > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 73ea180cad55..7c3873719beb 100644
+> index 73ea180cad55..09aaedb92993 100644
 > --- a/kernel/trace/trace_events_hist.c
 > +++ b/kernel/trace/trace_events_hist.c
 > @@ -8,6 +8,7 @@
@@ -96,120 +87,69 @@ Note, the tracing subsystem uses capital letters in the subject:
 >  #include <linux/mutex.h>
 >  #include <linux/slab.h>
 >  #include <linux/stacktrace.h>
-> @@ -2962,14 +2963,21 @@ find_synthetic_field_var(struct hist_trigger_data *target_hist_data,
->  			 char *system, char *event_name, char *field_name)
+> @@ -1738,85 +1739,104 @@ static const char *get_hist_field_flags(struct hist_field *hist_field)
+>  	return flags_str;
+>  }
+>  
+> -static void expr_field_str(struct hist_field *field, char *expr)
+> +static bool expr_field_str(struct hist_field *field, struct seq_buf *s)
 >  {
->  	struct hist_field *event_var;
+> +	const char *field_name;
+> +
+>  	if (field->flags & HIST_FIELD_FL_VAR_REF)
+> -		strcat(expr, "$");
+> -	else if (field->flags & HIST_FIELD_FL_CONST) {
+> -		char str[HIST_CONST_DIGITS_MAX];
+> +		seq_buf_putc(s, '$');
+> +	else if (field->flags & HIST_FIELD_FL_CONST)
+> +		seq_buf_printf(s, "%llu", field->constant);
+>  
+> -		snprintf(str, HIST_CONST_DIGITS_MAX, "%llu", field->constant);
+> -		strcat(expr, str);
+> -	}
+> +	field_name = hist_field_name(field, 0);
+> +	if (!field_name)
+> +		return false;
+>  
+> -	strcat(expr, hist_field_name(field, 0));
+> +	seq_buf_puts(s, field_name);
+>  
+>  	if (field->flags && !(field->flags & HIST_FIELD_FL_VAR_REF)) {
+>  		const char *flags_str = get_hist_field_flags(field);
+>  
+> -		if (flags_str) {
+> -			strcat(expr, ".");
+> -			strcat(expr, flags_str);
+> -		}
+> +		if (flags_str)
+> +			seq_buf_printf(s, ".%s", flags_str);
+>  	}
+> +
+> +	return !seq_buf_has_overflowed(s);
+>  }
+>  
+>  static char *expr_str(struct hist_field *field, unsigned int level)
+>  {
+>  	char *expr;
 > +	struct seq_buf s;
->  	char *synthetic_name;
+> +	int ret = -E2BIG;
 >  
->  	synthetic_name = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
->  	if (!synthetic_name)
->  		return ERR_PTR(-ENOMEM);
+>  	if (level > 1)
+> -		return NULL;
+> +		return ERR_PTR(-EINVAL);
 >  
-> -	strcpy(synthetic_name, "synthetic_");
-> -	strcat(synthetic_name, field_name);
-> +	seq_buf_init(&s, synthetic_name, MAX_FILTER_STR_VAL);
-> +	seq_buf_puts(&s, "synthetic_");
-> +	seq_buf_puts(&s, field_name);
+>  	expr = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
+>  	if (!expr)
+> -		return NULL;
+> +		return ERR_PTR(-ENOMEM);
 
-Should have a comment here specifying what the seq_buf_str() is doing:
+A patch should do one thing at a time. This patch appears to be doing
+two things: fixing the bound strings, returning errors instead of NULL.
 
-	/* Terminate synthetic_name with a nul */
-> +	seq_buf_str(&s);
+Please split this up into two patches. One that changes the return
+values from NULL to ERR_PTR() and the other to use seq_buf.
 
-> +	if (seq_buf_has_overflowed(&s)) {
-> +		kfree(synthetic_name);
-> +		return ERR_PTR(-E2BIG);
-> +	}
->  
->  	event_var = find_event_var(target_hist_data, system, event_name, synthetic_name);
->  
-> @@ -3014,6 +3022,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
->  	struct trace_event_file *file;
->  	struct hist_field *key_field;
->  	struct hist_field *event_var;
-> +	struct seq_buf s;
->  	char *saved_filter;
->  	char *cmd;
->  	int ret;
-> @@ -3046,41 +3055,48 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
->  	/* See if a synthetic field variable has already been created */
->  	event_var = find_synthetic_field_var(target_hist_data, subsys_name,
->  					     event_name, field_name);
-
-
-> -	if (!IS_ERR_OR_NULL(event_var))
-> +	if (IS_ERR(event_var))
-> +		return event_var;
-> +	if (event_var)
->  		return event_var;
-
-Note, the above is equivalent to:
-
-	if (event_var)
-		return event_var;
-
-And since it is a separate issue than the bounding of the string, it
-should be a separate patch.
-
->  
->  	var_hist = kzalloc_obj(*var_hist);
->  	if (!var_hist)
->  		return ERR_PTR(-ENOMEM);
->  
-> +	saved_filter = find_trigger_filter(hist_data, file);
-
-Why did you move this up here?
-
-> +
->  	cmd = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
->  	if (!cmd) {
->  		kfree(var_hist);
->  		return ERR_PTR(-ENOMEM);
->  	}
->  
-> +	seq_buf_init(&s, cmd, MAX_FILTER_STR_VAL);
-> +
->  	/* Use the same keys as the compatible histogram */
-> -	strcat(cmd, "keys=");
-> +	seq_buf_puts(&s, "keys=");
->  
->  	for_each_hist_key_field(i, hist_data) {
->  		key_field = hist_data->fields[i];
->  		if (!first)
-> -			strcat(cmd, ",");
-> -		strcat(cmd, key_field->field->name);
-> +			seq_buf_putc(&s, ',');
-> +		seq_buf_puts(&s, key_field->field->name);
->  		first = false;
->  	}
->  
->  	/* Create the synthetic field variable specification */
-> -	strcat(cmd, ":synthetic_");
-> -	strcat(cmd, field_name);
-> -	strcat(cmd, "=");
-> -	strcat(cmd, field_name);
-> +	seq_buf_printf(&s, ":synthetic_%s=%s", field_name, field_name);
->  
->  	/* Use the same filter as the compatible histogram */
-> -	saved_filter = find_trigger_filter(hist_data, file);
-
-It makes more sense to define saved_filter next to where it is used.
-
-> -	if (saved_filter) {
-> -		strcat(cmd, " if ");
-> -		strcat(cmd, saved_filter);
-> +	if (saved_filter)
-> +		seq_buf_printf(&s, " if %s", saved_filter);
-> +
-> +	seq_buf_str(&s);
-> +	if (seq_buf_has_overflowed(&s)) {
-> +		kfree(cmd);
-> +		kfree(var_hist);
-> +		return ERR_PTR(-E2BIG);
->  	}
->  
->  	var_hist->cmd = kstrdup(cmd, GFP_KERNEL);
+Thanks,
 
 -- Steve
+
