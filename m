@@ -1,101 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E85C25F7A5;
-	Wed, 15 Apr 2026 09:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1988A2FE056
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Apr 2026 09:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776245420; cv=none; b=Y0DXWjTytqb63vqqhK8QU85Av5HfBVhN62fr9kAmJiycdBSajPawnl0aMnUKIA7H5qi41atCfZjG5ZrlaMlVrCQPVAIytEMuFNQ4Ycd3kY4rqltlU0AYJN6jprw1As42NEpWg2b1CJMWlyxkwUjKoX7/rvMy+1NbEZTb+O61ht0=
+	t=1776246446; cv=none; b=JdLap64pjH3QAl7C5d35aiOD7B4M12PBD+huAvwHU/w8ExjpRCDnDXJuZqTPMfguA+SYQZkd7T+tlyTZNWTFGI+TSpzXQ641Unjo+i/VEQBCcmhRN3BrqlPr+xiVP2BZxaALQR80aEF20jcQ3P22kTXKhINpbAqWSzIa+ffOxYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776245420; c=relaxed/simple;
-	bh=O2cCcmR1LYmG6vTxtBAdqDKbf0ht7ri89RMbF0xuKP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jyCRj3hSVCjpn1xjwQLwch8CeC2hEI7YctjR8KaDvG1ji9hEWc//gnVSKkNLbX0buUQDLmnBspXbHmAZ/b9jBg2IOHiJlSC9AxwQ/blMFE6eGTL7oQ/Mv0OFei8WG2jJv5de035Tsj213DfAMBDTdpA351Yh89vyU5zqOqc7ei4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imLNiECj; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1776246446; c=relaxed/simple;
+	bh=kxkYX65oty5ZJyyR0uLChjjifebitlwlvDs+iCCd+uo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mS4niBQ05yBAPSphTeHJ3dbiBZNqMMZ4i/xiUuuWA6XIljs9WzdJH3gynJKqQNtLY/Aqnguw9IS9ltuUDbQ+BrT1hC20Pvw09KEWxY/5dl0SMSK9kaDnv80QEJDFhB6JT63nolnGqADKDH3ICFY3IVBSgxhHbCFJ1I0xzi7v14c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tb0IW+9w; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imLNiECj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776245419; x=1807781419;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O2cCcmR1LYmG6vTxtBAdqDKbf0ht7ri89RMbF0xuKP0=;
-  b=imLNiECjbj5yVsqkreFpJtQ6dk1WXcVsayIWlRwbETWqqap7a54Ye7sn
-   /0iYo/jObQK3RMxHa25XFU/RrddiEsllXOQJLzL84O40QXZnZC1pGxWKM
-   pLCXYIs72+ENVyD/9d0PvRZDk6nP2mYG5d9W2gXNWitCCYXfQ7j0sOOxE
-   9+Od/YTHBDQnRi2uX7tm6HhUWKD1LzZttX2RVtoNqRAXlGEWet3unhQr/
-   bxg+yAJ/7bCxa3b8Y1WQf97NisZ30FeiKv8yiMm+OQ7HLE8mSCF3DS1sx
-   4x/on4x7oQnuxnsGCDaY9wGGi+yUxW8gzfclUTXLueSpmMYKyz1B0STWY
-   Q==;
-X-CSE-ConnectionGUID: L3efuRuqRciQOlHH3ca6vw==
-X-CSE-MsgGUID: N8oxEOwzS+Gb/DQrEhmw/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="88296711"
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="88296711"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 02:30:18 -0700
-X-CSE-ConnectionGUID: uPnI7DrNQ/ira3fR3we6Ng==
-X-CSE-MsgGUID: BNC/IQO1Q5mninYRMB244Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="230595800"
-Received: from igk-lkp-server01.igk.intel.com (HELO bdf09bfdbd5f) ([10.211.93.152])
-  by orviesa007.jf.intel.com with ESMTP; 15 Apr 2026 02:30:17 -0700
-Received: from kbuild by bdf09bfdbd5f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wCwZa-000000000hx-46OU;
-	Wed, 15 Apr 2026 09:30:14 +0000
-Date: Wed, 15 Apr 2026 11:29:57 +0200
-From: kernel test robot <lkp@intel.com>
-To: Cao Ruichuang <create0818@163.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: Preserve true payload lengths in long data
- events
-Message-ID: <202604151102.OQ1HyH3F-lkp@intel.com>
-References: <20260407091550.67963-1-create0818@163.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tb0IW+9w"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776246443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HB6zRRlrlYrPWRP9aSTwtdoAU/y3NBjU7G2J51q5r6E=;
+	b=tb0IW+9wrk7aagT11guOhZ0C2h2gw7216OISwvKSLgfKIEXzuA8rDAIx3vSpM/z3KmYMAb
+	hZK/d5IP/SU85gnEEiZlDfevhSfVDbP1DCAtPzU5gdVEdKtRyMmVvoCwZANKGIumGIyCeF
+	1YWH/lhSLuaLx2/cu3XRC1vsW5pfk80=
+From: Menglong Dong <menglong.dong@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Menglong Dong <menglong8.dong@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v6 2/5] tracing/fprobe: Remove fprobe from hash in failure path
+Date: Wed, 15 Apr 2026 17:47:11 +0800
+Message-ID: <2405872.ElGaqSPkdT@7940hx>
+In-Reply-To:
+ <177615809677.1165997.619922394559783590.stgit@mhiramat.tok.corp.google.com>
+References:
+ <177615807787.1165997.921227352050738693.stgit@mhiramat.tok.corp.google.com>
+ <177615809677.1165997.619922394559783590.stgit@mhiramat.tok.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260407091550.67963-1-create0818@163.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-Migadu-Flow: FLOW_OUT
 
-Hi Cao,
+On 2026/4/14 17:14 Masami Hiramatsu (Google) <mhiramat@kernel.org> write:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> When register_fprobe_ips() fails, it tries to remove a list of
+> fprobe_hash_node from fprobe_ip_table, but it missed to remove
+> fprobe itself from fprobe_table. Moreover, when removing
+> the fprobe_hash_node which is added to rhltable once, it must
+> use kfree_rcu() after removing from rhltable.
+> 
+> To fix these issues, this reuses unregister_fprobe() internal
+> code to rollback the half-way registered fprobe.
+> 
+> Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+[...]
+>  
+> +static int unregister_fprobe_nolock(struct fprobe *fp, bool force);
+> +
+>  /**
+>   * register_fprobe_ips() - Register fprobe to ftrace by address.
+>   * @fp: A fprobe data structure to be registered.
+> @@ -847,29 +855,26 @@ int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
+>  	if (ret)
+>  		return ret;
 
-kernel test robot noticed the following build warnings:
+Hi, Masami. The logic of unregister_fprobe_nolock() looks a little
+messy. How about we make the logic here like this:
 
-[auto build test WARNING on trace/for-next]
-[also build test WARNING on linus/master v7.0 next-20260414]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+for (i = 0; i < hlist_array->size; i++) {
+    // The node->fp is NULL, so it's safe to add the node before
+    // fprobe_ftrace_add_ips(), right?
+    ret = insert_fprobe_node(&hlist_array->array[i], fp);
+    if (ret)
+        goto fallback_err;
+}
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Cao-Ruichuang/ring-buffer-Preserve-true-payload-lengths-in-long-data-events/20260415-040554
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20260407091550.67963-1-create0818%40163.com
-patch subject: [PATCH] ring-buffer: Preserve true payload lengths in long data events
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260415/202604151102.OQ1HyH3F-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260415/202604151102.OQ1HyH3F-lkp@intel.com/reproduce)
+if (fprobe_is_ftrace(fp))
+    ret = fprobe_ftrace_add_ips(addrs, num);
+else
+    ret = fprobe_graph_add_ips(addrs, num);
+if (ret)
+    goto fallback_err;
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604151102.OQ1HyH3F-lkp@intel.com/
+add_fprobe_hash(fp);
+for (i = 0; i < hlist_array->size; i++)
+    WRITE_ONCE(hlist_array->array[i].fp, fp);
 
-All warnings (new ones prefixed by >>):
+return 0;
 
->> Warning: kernel/trace/ring_buffer.c:4786 function parameter 'force_long' not described in '__ring_buffer_lock_reserve'
->> Warning: kernel/trace/ring_buffer.c:4786 expecting prototype for ring_buffer_lock_reserve(). Prototype was for __ring_buffer_lock_reserve() instead
+fallback_err:
+for (i--; i >= 0; i--)
+    delete_fprobe_node(&hlist_array->array[i]);
+fprobe_fail_cleanup(fp);
+return ret;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Then, we don't need to change unregister_fprobe_nolock and
+insert_fprobe_node.
+
+Thanks!
+Menglong Dong
+
+>  
+> -	hlist_array = fp->hlist_array;
+>  	if (fprobe_is_ftrace(fp))
+>  		ret = fprobe_ftrace_add_ips(addrs, num);
+>  	else
+>  		ret = fprobe_graph_add_ips(addrs, num);
+> +	if (ret) {
+> +		fprobe_fail_cleanup(fp);
+> +		return ret;
+> +	}
+>  
+> -	if (!ret) {
+> -		add_fprobe_hash(fp);
+> -		for (i = 0; i < hlist_array->size; i++) {
+> -			ret = insert_fprobe_node(&hlist_array->array[i]);
+> -			if (ret)
+> -				break;
+> -		}
+> -		/* fallback on insert error */
+> +	hlist_array = fp->hlist_array;
+> +	add_fprobe_hash(fp);
+> +	for (i = 0; i < hlist_array->size; i++) {
+> +		ret = insert_fprobe_node(&hlist_array->array[i], fp);
+>  		if (ret) {
+> -			for (i--; i >= 0; i--)
+> -				delete_fprobe_node(&hlist_array->array[i]);
+> +			if (unregister_fprobe_nolock(fp, true))
+> +				pr_warn("Failed to cleanup fprobe after insertion failure.\n");
+> +			break;
+>  		}
+>  	}
+>  
+> -	if (ret)
+> -		fprobe_fail_cleanup(fp);
+> -
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(register_fprobe_ips);
+> @@ -912,37 +917,29 @@ bool fprobe_is_registered(struct fprobe *fp)
+>  	return true;
+>  }
+>  
+> -/**
+> - * unregister_fprobe() - Unregister fprobe.
+> - * @fp: A fprobe data structure to be unregistered.
+> - *
+> - * Unregister fprobe (and remove ftrace hooks from the function entries).
+> - *
+> - * Return 0 if @fp is unregistered successfully, -errno if not.
+> - */
+> -int unregister_fprobe(struct fprobe *fp)
+> +static int unregister_fprobe_nolock(struct fprobe *fp, bool force)
+>  {
+> -	struct fprobe_hlist *hlist_array;
+> +	struct fprobe_hlist *hlist_array = fp->hlist_array;
+>  	unsigned long *addrs = NULL;
+> -	int ret = 0, i, count;
+> +	int i, count;
+>  
+> -	mutex_lock(&fprobe_mutex);
+> -	if (!fp || !fprobe_registered(fp)) {
+> -		ret = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> -	hlist_array = fp->hlist_array;
+>  	addrs = kcalloc(hlist_array->size, sizeof(unsigned long), GFP_KERNEL);
+> -	if (!addrs) {
+> -		ret = -ENOMEM;	/* TODO: Fallback to one-by-one loop */
+> -		goto out;
+> -	}
+> +	if (!addrs && !force)
+> +		return -ENOMEM;
+> +	/*
+> +	 * If @force is set, this function will remove fprobe_hash_node
+> +	 * from the hash table even if memory allocation fails. However,
+> +	 * ftrace_ops will not be updated. Anyway, when the last fprobe
+> +	 * is unregistered, ftrace_ops is also unregistered.
+> +	 */
+>  
+>  	/* Remove non-synonim ips from table and hash */
+>  	count = 0;
+>  	for (i = 0; i < hlist_array->size; i++) {
+> -		if (!delete_fprobe_node(&hlist_array->array[i]))
+> +		if (delete_fprobe_node(&hlist_array->array[i]))
+> +			continue;
+> +
+> +		if (addrs)
+>  			addrs[count++] = hlist_array->array[i].addr;
+>  	}
+>  	del_fprobe_hash(fp);
+> @@ -951,15 +948,35 @@ int unregister_fprobe(struct fprobe *fp)
+>  		fprobe_ftrace_remove_ips(addrs, count);
+>  	else
+>  		fprobe_graph_remove_ips(addrs, count);
+> +	/*
+> +	 * If count == 0, instead of calling ftrace_set_filter_ips(),
+> +	 * we must wait for RCU grace period to finish del_fprobe_hash().
+> +	 */
+> +	if (!count)
+> +		synchronize_rcu();
+>  
+>  	kfree_rcu(hlist_array, rcu);
+>  	fp->hlist_array = NULL;
+> +	kfree(addrs);
+>  
+> -out:
+> -	mutex_unlock(&fprobe_mutex);
+> +	return !addrs ? -ENOMEM : 0;
+> +}
+>  
+> -	kfree(addrs);
+> -	return ret;
+> +/**
+> + * unregister_fprobe() - Unregister fprobe.
+> + * @fp: A fprobe data structure to be unregistered.
+> + *
+> + * Unregister fprobe (and remove ftrace hooks from the function entries).
+> + *
+> + * Return 0 if @fp is unregistered successfully, -errno if not.
+> + */
+> +int unregister_fprobe(struct fprobe *fp)
+> +{
+> +	guard(mutex)(&fprobe_mutex);
+> +	if (!fp || !fprobe_registered(fp))
+> +		return -EINVAL;
+> +
+> +	return unregister_fprobe_nolock(fp, false);
+>  }
+>  EXPORT_SYMBOL_GPL(unregister_fprobe);
+>  
+> 
+> 
+> 
+
+
+
+
