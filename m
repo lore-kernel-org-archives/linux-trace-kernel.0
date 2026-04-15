@@ -1,59 +1,53 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB74538AC7D;
-	Wed, 15 Apr 2026 07:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D987838B146;
+	Wed, 15 Apr 2026 08:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776238826; cv=none; b=MzE7KK/3ImGpI3q6eXnH3ZJBZ3vCV5Vx14Mrwi0+nzSSuwBkPlw5r7Q/rUrYN/CDTMbSsnXpDQSHDVt2uEbdUhVlVi84xg6soSU7ixRz/NIzJRLKv+Rk7nBUg+qntiiz8lIZ7kw4oBLBfDU6dOSf/qKIJ928nptnLAXQRolWlWU=
+	t=1776242494; cv=none; b=uiUgNR+J0PPSlY4dbGl36VIVpvMsKEFzn0WLI6DPk7XX7KoblguJjJ2HFei/MgNGua8+QEVMf+wdT9kQnD/zs1s7H2kY97q8T8rj7KhXYSF1MTWnyf+kgqji/CnuX11KWD9NrcXU8AJUrBfqsgt2ELX/Wq6I/wNmQGkM2vIm0Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776238826; c=relaxed/simple;
-	bh=FVy8jCFlUIveZkRvfAIgAH4jdv76uLaL71KeKyWWa0A=;
+	s=arc-20240116; t=1776242494; c=relaxed/simple;
+	bh=eNe90dnGEwFYmwMJ23lPtYLzIduu9ItXjVHRdlA/aWw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UDmgt0vUBD6lMePu3/+cLZCuS174JxuXY0I5/ZXtt1Go/uQclbD4hoFg+kg0jendx1u/fz316liD3fxAQtdILi7azijKos+awsFEPVAvTOrk6YlneSQQzu6ql2g28BIFzlcolYFXZWkkCKZUWAUf1B4G59YXav0uZARzpW8ZAz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GRC7t/3b; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=oe7BINMxO7xkauVaq9rfBeDRjPPeCqWS/pFVFh/vnG/lcMe9DHQkYf/6Ucu8gRpD9GiigxKLsXvczkzrxIg0T7me68ipuyVyWz7F6Kq+eQ/4JhqcLIrKYmoo1jzCLIXElEoXHwZ4cd+qjIFI+uOK1ubOP3cbR6aVwv7o9La7nHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ec21mLYw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GRC7t/3b"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NQ3FGyj3bB3s3TzgG2AxlTj+u1qB1K3Y0IxoIVLKrvk=; b=GRC7t/3bI7JrNSLxeAMHgwX0K3
-	xAtrXImzdHW7DjijCOvWl5uo9/a2L4na/HS9F/pxZocXEzRMU9/3W/DbnhQtfjmntUMumfaekHgVs
-	JkymKksYscQDAWhsY7kaP5ZNlpkKxH790qgELBntdnQznef/Q7gbpvWEjZjYwEWaDeBReSTC31Vz9
-	0/CNYrcSJDjOUbJO0e8rx/bKOLGKBkSTdCrQ4PvelVDl+p7o76807HnUjeXj973wAqCmNGzxM63WD
-	75DdlQQAK05ZULtWENPz2ItUB2af6iD5mfwoGpmuXIYGFtnoqIRoCIa0Grmtn6PPrY8x33yj9B1cg
-	ULLy052g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCur6-00000000k4p-0j2C;
-	Wed, 15 Apr 2026 07:40:12 +0000
-Date: Wed, 15 Apr 2026 00:40:12 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: chensong_2000@189.cn
-Cc: rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, viresh.kumar@linaro.org, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, bmarzins@redhat.com,
-	song@kernel.org, yukuai@fnnas.com, linan122@huawei.com,
-	jason.wessel@windriver.com, danielt@kernel.org,
-	dianders@chromium.org, horms@kernel.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	paulmck@kernel.org, frederic@kernel.org, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	atomlin@atomlin.com, jpoimboe@kernel.org, jikos@kernel.org,
-	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
-	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, live-patching@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] kernel/notifier: replace single-linked list with
- double-linked list for reverse traversal
-Message-ID: <ad9A3JahjIcVkkQG@infradead.org>
-References: <20260415070137.17860-1-chensong_2000@189.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ec21mLYw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFF1C19424;
+	Wed, 15 Apr 2026 08:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776242494;
+	bh=eNe90dnGEwFYmwMJ23lPtYLzIduu9ItXjVHRdlA/aWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ec21mLYwBJtwXg4pvb0psVyizRk3Rxx8Q6ZlZwMtJd88qQ1zvgiwRtRJdGW6niMr5
+	 ReVMO3HrLyBPRwDT1vhdoEt94SQeIVq5xZYMgCYOpPMvacbjJgKM2zXSkT3Hri5m4v
+	 2BqqYLEuGWGNu9KUeU4ElXuBYNwLGHvCdWFLHxL2CWsRIOmGsgik+MapokezdgBzao
+	 X7t/Obv3uQvm4VGQ9DliPuBqAYHDW4eXCyrWgMVGIy8txaH4fyxtbYpFr8irnadfh8
+	 YT1sRaN/v0bCLXS8HQDxpSVLWQYjeTsOOB7YQMQabPQWeESit7ZHQUmIzVd4vytT9i
+	 3E/CyLxdIxqhQ==
+Date: Wed, 15 Apr 2026 10:41:27 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Rob Herring <robh@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Conor Dooley <conor@kernel.org>, 
+	Jingyuan Liang <jingyliang@chromium.org>, Jiri Kosina <jikos@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, hbarnor@chromium.org, 
+	tfiga@chromium.org, Dmitry Antipov <dmanti@microsoft.com>, 
+	Jarrett Schultz <jaschultz@microsoft.com>
+Subject: Re: [PATCH v3 09/11] dt-bindings: input: Document hid-over-spi DT
+ schema
+Message-ID: <ad9MbUYT12b61Ymo@beelink>
+References: <20260402-send-upstream-v3-0-6091c458d357@chromium.org>
+ <20260402-send-upstream-v3-9-6091c458d357@chromium.org>
+ <20260409-defuse-thank-4b038128fac5@spud>
+ <adfdkwq_bF9dirAq@google.com>
+ <20260410-sake-dollop-9f253ddb0749@spud>
+ <20260413223439.GA3647847-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,23 +56,197 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260415070137.17860-1-chensong_2000@189.cn>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20260413223439.GA3647847-robh@kernel.org>
 
-On Wed, Apr 15, 2026 at 03:01:37PM +0800, chensong_2000@189.cn wrote:
-> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> index 132a9df98471..b776dbd5a382 100644
-> --- a/drivers/acpi/sleep.c
-> +++ b/drivers/acpi/sleep.c
-> @@ -56,7 +56,6 @@ static int tts_notify_reboot(struct notifier_block *this,
->  
->  static struct notifier_block tts_notifier = {
->  	.notifier_call	= tts_notify_reboot,
-> -	.next		= NULL,
->  	.priority	= 0,
+On Apr 13 2026, Rob Herring wrote:
+> On Fri, Apr 10, 2026 at 06:35:00PM +0100, Conor Dooley wrote:
+> > On Thu, Apr 09, 2026 at 10:16:46AM -0700, Dmitry Torokhov wrote:
+> > > On Thu, Apr 09, 2026 at 05:02:11PM +0100, Conor Dooley wrote:
+> > > > On Thu, Apr 02, 2026 at 01:59:46AM +0000, Jingyuan Liang wrote:
+> > > > > Documentation describes the required and optional properties for
+> > > > > implementing Device Tree for a Microsoft G6 Touch Digitizer that
+> > > > > supports HID over SPI Protocol 1.0 specification.
+> > > > > 
+> > > > > The properties are common to HID over SPI.
+> > > > > 
+> > > > > Signed-off-by: Dmitry Antipov <dmanti@microsoft.com>
+> > > > > Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
+> > > > > Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
+> > > > > ---
+> > > > >  .../devicetree/bindings/input/hid-over-spi.yaml    | 126 +++++++++++++++++++++
+> > > > >  1 file changed, 126 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/input/hid-over-spi.yaml b/Documentation/devicetree/bindings/input/hid-over-spi.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..d1b0a2e26c32
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/input/hid-over-spi.yaml
+> > > > > @@ -0,0 +1,126 @@
+> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/input/hid-over-spi.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: HID over SPI Devices
+> > > > > +
+> > > > > +maintainers:
+> > > > > +  - Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > > > +  - Jiri Kosina <jkosina@suse.cz>
+> > > > 
+> > > > Why them and not you, the developers of the series?
+> > > > 
+> > > > > +
+> > > > > +description: |+
+> > > > > +  HID over SPI provides support for various Human Interface Devices over the
+> > > > > +  SPI bus. These devices can be for example touchpads, keyboards, touch screens
+> > > > > +  or sensors.
+> > > > > +
+> > > > > +  The specification has been written by Microsoft and is currently available
+> > > > > +  here: https://www.microsoft.com/en-us/download/details.aspx?id=103325
+> > > > > +
+> > > > > +  If this binding is used, the kernel module spi-hid will handle the
+> > > > > +  communication with the device and the generic hid core layer will handle the
+> > > > > +  protocol.
+> > > > 
+> > > > This is not relevant to the binding, please remove it.
+> > > > 
+> > > > > +
+> > > > > +allOf:
+> > > > > +  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    oneOf:
+> > > > > +      - items:
+> > > > > +          - enum:
+> > > > > +              - microsoft,g6-touch-digitizer
+> > > > > +          - const: hid-over-spi
+> > > > > +      - description: Just "hid-over-spi" alone is allowed, but not recommended.
+> > > > > +        const: hid-over-spi
+> > > > 
+> > > > Why is it allowed but not recommended? Seems to me like we should
+> > > > require device-specific compatibles.
+> > > 
+> > > Why would we want to change the driver code to add a new compatible each
+> > > time a vendor decides to create a chip that is fully hid-spi-protocol
+> > > compliant? Or is the plan to still allow "hid-over-spi" fallback but
+> > > require device-specific compatible that will be ignored unless there is
+> > > device-specific quirk needed?
+> 
+> The plan is the latter case (the 1st entry up above). The comment is 
+> remove the 2nd entry (with 'Just "hid-over-spi" alone is allowed, but 
+> not recommended.').
+> 
+> > This has nothing to do with the driver, just the oddity of having a
+> > comment saying that not having a device specific compatible was
+> > permitted by not recommended in a binding. Requiring device-specific
+> > compatibles is the norm after all and a comment like this makes draws
+> > more attention to the fact that this is abnormal. Regardless of what the
+> > driver does, device-specific compatibles should be required.
+> > 
+> > > > > +
+> > > > > +  reg:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  interrupts:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  reset-gpios:
+> > > > > +    maxItems: 1
+> > > > > +    description:
+> > > > > +      GPIO specifier for the digitizer's reset pin (active low). The line must
+> > > > > +      be flagged with GPIO_ACTIVE_LOW.
+> > > > > +
+> > > > > +  vdd-supply:
+> > > > > +    description:
+> > > > > +      Regulator for the VDD supply voltage.
+> > > > > +
+> > > > > +  input-report-header-address:
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > > +    minimum: 0
+> > > > > +    maximum: 0xffffff
+> > > > > +    description:
+> > > > > +      A value to be included in the Read Approval packet, listing an address of
+> > > > > +      the input report header to be put on the SPI bus. This address has 24
+> > > > > +      bits.
+> > > > > +
+> > > > > +  input-report-body-address:
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > > +    minimum: 0
+> > > > > +    maximum: 0xffffff
+> > > > > +    description:
+> > > > > +      A value to be included in the Read Approval packet, listing an address of
+> > > > > +      the input report body to be put on the SPI bus. This address has 24 bits.
+> > > > > +
+> > > > > +  output-report-address:
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > > +    minimum: 0
+> > > > > +    maximum: 0xffffff
+> > > > > +    description:
+> > > > > +      A value to be included in the Output Report sent by the host, listing an
+> > > > > +      address where the output report on the SPI bus is to be written to. This
+> > > > > +      address has 24 bits.
+> > > > > +
+> > > > > +  read-opcode:
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint8
+> > > > > +    description:
+> > > > > +      Value to be used in Read Approval packets. 1 byte.
+> > > > > +
+> > > > > +  write-opcode:
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint8
+> > > > > +    description:
+> > > > > +      Value to be used in Write Approval packets. 1 byte.
+> > > > 
+> > > > Why can none of these things be determined from the device's compatible?
+> > > > On the surface, they like the kinds of things that could/should be.
+> > > 
+> > > Why would we want to keep tables of these values in the kernel and again
+> > > have to update the driver for each new chip?
+> > 
+> > That's pretty normal though innit? It's what match data does.
+> > If someone wants to have properties that communicate data that
+> > can be determined from the compatible, they need to provide
+> > justification why it is being done.
+> 
+> IIRC, it was explained in prior versions the spec itself says these 
+> values vary by device. If we expect variation, then I think these 
+> properties are fine. But please capture the reasoning for them in this 
+> patch or we will just keep asking the same questions over and over. 
+> 
 
-IFF this becomes important for some reason (and right now I don't see
-it), please start by using proper wrappers for notifiers so that the
-implementation details don't leak into the users.  That would actually
-be useful on it's own even.
+Dmitry, FWIW, we roughly had the exact same of argument with Rob with
+i2c-hid :)
 
+It took me a while, but I finally understood the rationale and agreed to
+it (using the i2c-hid examples):
+
+Most i2c-hid devices are following the spec and rely purely on ACPI and
+the DT declaration of i2c-hid -> they are working fine and we don't need
+anything else for them. They declare their compatible and the i2c-hid
+compatible, and they work great.
+
+But some devices need a reset line. But the i2c-hid spec doesn't mention
+a reset line at all. And some other devices need a reset line with a
+different timing. etc... Relying purely on the i2c-hid driver means that
+the driver needs to now the platform the device is on and the exact
+device we have in front of us. i2c-hid provide a VID/PID through the
+protocol, but we are still lacking information: in some cases, the
+timing of the reset line for the same device differs depending on the
+platform they run.
+
+Having a device specific compatible means that we can make use of it
+before we load i2c-hid. This is why we have i2c-hid-core and module
+specifics on the side. Those extra module can do all the oddities they
+want, like having 2 or 3 reset lines, but in the end they are using the
+core i2c-hid once they are set up.
+
+Think of it as a way to quirk the device upfront without polluting the
+i2c-hid processing.
+
+That allowed us to clean up the i2c-hid code by removing the non
+standard regulators, reset lines, quirks that are device specific and
+keep it closer to the spec.
+
+Cheers,
+Benjamin
