@@ -1,215 +1,427 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E436F40DFA7;
-	Wed, 15 Apr 2026 19:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776279901; cv=none; b=PuWJiUzU2RLbNxPhxMflgZPnngrTiYvC/uYfZhLRdTLZIHN2usCNrKFvbrAUGO+vP61qhkSIuHzfNci1SCkB1CnI8+b+DcFfeTMkv9EWTbLYL27sWwRy8kyzCdeW+yKXgrtaTBGiiC11ujejURwU7wYfFmVjqSkZF6mTeRhefG8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776279901; c=relaxed/simple;
-	bh=gVVPxbvdn0cCwIIKCjiY3NHeFS6oYMS7bCJlpf9Xv8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VXdoIV1VUoyT3A5R93CmHO+BzNgNVIuL9v0V7YIWg6fw8EjagTiMT+18hYBdBqjjESLUFRYwHFJxmLQbox0lQzyLF2+TJ/kaF0r1e4gP0vkRlCkED6+B/KR5aRBepIFOUS4L8zCnnHZ6xlg/G2yvM0sweNapponqYIfhaQ5/YH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F9FDC19424;
-	Wed, 15 Apr 2026 19:04:56 +0000 (UTC)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: jiri@resnulli.us
-Cc: andrew+netdev@lunn.ch,
-	chuck.lever@oracle.com,
-	cjubran@nvidia.com,
-	corbet@lwn.net,
-	daniel.zahka@gmail.com,
-	davem@davemloft.net,
-	donald.hunter@gmail.com,
-	edumazet@google.com,
-	horms@kernel.org,
-	kuba@kernel.org,
-	leon@kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	matttbe@kernel.org,
-	mbloch@nvidia.com,
-	mhiramat@kernel.org,
-	mschmidt@redhat.com,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	przemyslaw.kitszel@intel.com,
-	rostedt@goodmis.org,
-	saeedm@nvidia.com,
-	skhan@linuxfoundation.org,
-	tariqt@nvidia.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 04/13] devlink: allow to use devlink index as a command handle
-Date: Wed, 15 Apr 2026 21:04:54 +0200
-Message-ID: <20260415190454.2632348-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260312100407.551173-5-jiri@resnulli.us>
-References: <20260312100407.551173-5-jiri@resnulli.us>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1CF309EFA
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Apr 2026 19:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776282485; cv=pass; b=W1+KsKGdmEGAlSUuXf++vHOrg+UMTpd5/DA5O5tU/bIulXc8I7nG8SwZyX7gM9XlCoWEVqBOPQ5EHDSfUrIFgKICe3fm8zW4ewOdo6/Ap9oArpCcVtMAk53HuTGa1SleEBEvG+fxPlHY45CvHubuCKLTGVNTLHXwuEFzSdBaR6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776282485; c=relaxed/simple;
+	bh=bTKITcODyC33aRzhtGD6NO5LshHbAyzyPqYrtdm77LE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X6IFJnnsQ/AUs4TUpbP92IhnusCVxLTEu2GhM9q+ZHcfGzavAdFuyKHwq9TLqijAYN7ugz4GzrXAaCiMKbj0NuWxkqeTT9WXkcZ8Rq/Oui2xMiFiAzK9lEP5lZGyB/DtUHdonMDOAa72bWV1Ksj4pseTQzQSFzm6KgoWGwAtkMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FTIOxfHa; arc=pass smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FTIOxfHa"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488879dcbc3so50235e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Apr 2026 12:48:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776282482; cv=none;
+        d=google.com; s=arc-20240605;
+        b=dv0ksVCM6haf7B+XFKzDwMoP3obrEvOA40cMzLB55z1vMcDO6htECqPCIP1eRcXb+0
+         z6ZR9Z/rs07tSu+B8Wrvu3bWlaJa0bvUL/imEJwlKhhJgH+6XerUUIPu0pb3pWUHTQR6
+         PFE8wz7Y5fzfVIT1rB9VXfOovXmSORVYqi6h8rk1t7hRsJtIjrwNfQ21a4lkyjRdZodL
+         +qcasaT6KCRJgf3npNE8YoiCwpT5Xilo/1d+Jj6f+7mUFoMzepe3YnQTUXlQKQ/2AMXR
+         x+LtSJH81S0HgvxqZQ0VmhJg9rfCh8cVFPk7xirxc7+gQlYslazJJjcyNs6vKaE/kILb
+         DG5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+7EyRQT4jMuTzXDYdte1riRfSEGUZuTfSDGM7Pop5YI=;
+        fh=+pL3Oi58cD636IdVdJM9MzAzYb46nNlHviH3bjRntbo=;
+        b=P3h4HUfsY7rgeh2eqhE5ttJDP6auhfuBMdb9Vkrt4xEkR9cKKfadOyyB8Vk/JHbxzz
+         pKGxOcxcTs3ZOnPV0uQkf4s9xq42gwlRrSDqkgqwJryZMGUp3DdRgrSNnqQOmOhcymnl
+         x71WIisLUnUNYysULjyiriaz5lzNTm52blb73ZYr2JhR2rs8kHgTg3thmaU0RetAUYby
+         y6Y7ROt5vq9kPcO6mmjbfzp4d24nPXFiQLCg9fA9yRW7dGA5iFNMW1mUoTJVxswcI0Fx
+         axhvZLK8xvR7p6Cd+1kdIMQYxgwQTeBPEfILf/IidkboO67RygksA5T+z5Wuf0Egeyd4
+         s7zw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776282482; x=1776887282; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+7EyRQT4jMuTzXDYdte1riRfSEGUZuTfSDGM7Pop5YI=;
+        b=FTIOxfHaSG8bu3WpKE+MiMFLgGuIG03o4ruPvjXKf+JziNg7G88zsypJp/MDjFf6rr
+         /UKkCUXoppsk3KxH7VAO9WQoOjU4POlNLh8389mbSQumaX3+UHSMPDCR1SHuvoHTVPFq
+         AnO2rbFPpv8MYR2AO6KyYgK99210iSuqTlBiFPIYjVZDNaenZoaXIz/e9UJ3NXIQwdg5
+         sG+3KAeklIv/LaesKDgUWgln3YgQBIMPp27hd/4gx3TSJsueHwYq30CREnBiZ4RHfr7X
+         3MEDdNbKYmxd0Vvti4Glz+xI8/qOiD9Hlsfm3NOJbqh484JXQe4PvpZk3gYxZAC2IaHF
+         UrSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776282482; x=1776887282;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+7EyRQT4jMuTzXDYdte1riRfSEGUZuTfSDGM7Pop5YI=;
+        b=qnghtdVANvN2HZ9/0ckIytj8BbcEYkeQoR4ef6ckdS0Ec66skdvG+DcnXBDE5gvYNu
+         LOXwEZMMrj3jVuNIb9wSkrEFX8pjshmRzrbgAd7PXlfp4JOaIxCMi5ankiUPPrPLlIhF
+         Bfq52jvXQcRFMHLQBPXuPzyNF6wLqmkQFA94GTObQHb5x99S3bO5qlx14Zh+NLH06WJO
+         wYaOcdgMJihmtbd8O7QxkzbDxaHgRK3nmOFskJRt+EIQXJXqNwqU9d+8FzHu+Vvg/mXg
+         lipm6Spmh+EBhCqJ8xMpuFochCrztjrxgNNsmIPOiAencvGAxEz/AwTWFNvwuFwSOx3W
+         xM9Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9bKSkiDCAuIBiut8uyxIfe10haJzgxvo7bwMmysqhhylS+1MwS3ycDuuqMhqK/bxVtPPsAK7q1oP1hK/A9tb8EnAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3PVOF9/QmuGu+Bvsm2AzTMvVdv0PnpgXrQIf8ANwsPWjvOTX3
+	iUHrO/Ai0KzpZfwbEn5GnWeBCzr2K7MPn2gvlxRfITqSpICjMpDfKx/aqgDpyIWDjYKHfFsHrpe
+	iDRxMvrQicgrx5ULKRiqq4TtY2nIWItcM1csCD4Wj
+X-Gm-Gg: AeBDiesaNwg97zE9+ed3c4/ZZg8Fkbg4c105d/NuDHkRm177F+2Ct2WTYtAl1NMv9U3
+	G5lonFrrDlPMm0XPMZelcIv1PVLI7/beB8uf50zslI58Voec5QQPqvx4KPdjTUH/NwY8gXL7hM2
+	twJXuLEtKHq+1zKimN7P+9rCWy/lixW5zDdZbGWN+IsDA86H4NElFFuov3+XooZdZrgAlYIEvc7
+	l1sH8OgyRidOUE4l7EwgFRVeD3GEMlNhiuiTgWIbdJrH+RhLNeGLtLfPeGeMfpMHa7O2JUDYTRs
+	T1h8Z+GVi0dFg8F34r01vhwR4EiK
+X-Received: by 2002:a05:600c:529a:b0:485:1a54:9407 with SMTP id
+ 5b1f17b1804b1-488f49f7b15mr240485e9.0.1776282481776; Wed, 15 Apr 2026
+ 12:48:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260222084842.1824063-1-gourry@gourry.net> <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+ <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F> <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
+ <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F> <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
+ <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
+In-Reply-To: <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
+From: Frank van der Linden <fvdl@google.com>
+Date: Wed, 15 Apr 2026 12:47:50 -0700
+X-Gm-Features: AQROBzCIVwgyF1A8foGoMoeg1wgH05cQMGevG1TSqfVdQKYctSN8Xrxoo27rHlc
+Message-ID: <CAPTztWajm_JLpp9BjRcX=h72r25ELrXeGkOXVachybBxLJGS=g@mail.gmail.com>
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+To: Gregory Price <gourry@gourry.net>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, lsf-pc@lists.linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, 
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com, 
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
+	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com, 
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com, 
+	mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com, 
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com, 
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, 
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, 
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn, 
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com, 
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com, 
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org, 
+	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com, 
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 12 Mar 2026, Jiri Pirko wrote:
-> Currently devlink instances are addressed bus_name/dev_name tuple.
-> Allow the newly introduced DEVLINK_ATTR_INDEX to be used as
-> an alternative handle for all devlink commands.
-> 
-> When DEVLINK_ATTR_INDEX is present in the request, use it for a direct
-> xarray lookup instead of iterating over all instances comparing
-> bus_name/dev_name strings.
-> 
-> Signed-off-by: Jiri Pirko <jiri@nvidia.com>
+On Wed, Apr 15, 2026 at 8:18=E2=80=AFAM Gregory Price <gourry@gourry.net> w=
+rote:
+>
+> On Wed, Apr 15, 2026 at 11:49:59AM +0200, David Hildenbrand (Arm) wrote:
+> > On 4/13/26 19:05, Gregory Price wrote:
+>
+> As a preface - the current RFC was informed by ZONE_DEVICE patterns.
+>
+> I think that was useful as a way to find existing friction points - but
+> ultimately wrong for this new interface.
+>
+> I don't thinks an ops struct here is the right design, and I think there
+> are only a few patterns that actually make sense for device memory using
+> nodes this way.
+>
+> So there's going to be a *major* contraction in the complexity of this
+> patch series (hopefully I'll have something next week), and much of what
+> you point out below is already in-flight.
+>
+> > > On Mon, Apr 13, 2026 at 03:11:12PM +0200, David Hildenbrand (Arm) wro=
+te:
+> > >
+> > > This is because the virtio-net device / network stack does GFP_KERNEL
+> > > allocations and then pins them on the host to allow zero-copy - so al=
+l
+> > > of ZONE_NORMAL is a valid target.
+> > >
+> > > (At least that's my best understanding of the entire setup).
+> >
+> ... snip ...
+> >
+> > A related series proposed some  MEM_READ/WRITE backend requests [1]
+> >
+> > [1] https://lists.nongnu.org/archive/html/qemu-devel/2024-09/msg02693.h=
+tml
+> >
+>
+> Oh interesting, thank you for the reference here.
+>
+> >
+> > Something else people were discussing in the past was to physically
+> > limit the area where virtio queues could be placed.
+> >
+>
+> That is functionally what I did - the idea was pretty simple, just have
+> a separate memfd/node dedicated for the queues:
+>
+> guest_memory =3D memfd(MAP_PRIVATE)
+> net_memory =3D memfd(MAP_SHARED)
+>
+> And boom, you get what you want.
+>
+> So yeah "It works" - but there's likely other ways to do this too, and
+> as you note re: compatibility, i'm not sure virtio actually wants this,
+> but it's a nice proof-of-concept for a network device on the host that
+> carries its own memory.
+>
+> I'll try post my hack as an example with the next RFC version, as I
+> think it's informative.
+>
+> > >
+> > > This partially answers your question about slub fallback allocations,
+> > > there are slab allocations like this that depend on fallbacks (more
+> > > below on this explicitly).
+> >
+> > But that's a different "fallback" problem, no?
+> >
+> > You want allocations that target the "special node" to fallback to
+> > *other* nodes, but not other allocations to fallback to *this special* =
+node.
+> >
+> ... snip - slight reordering to put thoughts together ...
+> > >
+> > > __GFP_PRIVATE vs GFP_PRIVATE then is just a matter of use case.
+> > >
+> > > For mbind() it probably makes sense we'd use GFP_PRIVATE - either it
+> > > succeeds or it OOMs.
+> >
+> > Needs a second thought regarding fallback logic I raised above.
+> >
+> > What I think would have to be audited is the usage of __GFP_THISNODE by
+> > kernel allocations, where we would not actually want to allocate from
+> > this private node.
+> >
+>
+> This is fair, and I a re-visit is absolutely warranted.
+>
+> Re-examining the quick audit from my last response suggests - I should
+> never have seen leakage in those cases, but the fallbacks are needed.
+>
+> So yes, this all requires a second look (and a third, and a ninth).
+>
+> I'm not married to __GFP_PRIVATE, but it has been reliable for me.
+>
+> > Maybe we could just outright refuse *any* non-user (movable) allocation=
+s
+> > that target the node, even with __GFP_THISNODE.
+> >
+> > Because, why would we want kernel allocations to even end up on a
+> > private node that is supposed to only be consumed by user space? Or
+> > which use cases are there where we would want to place kernel
+> > allocations on there?
+> >
+>
+> As a start, maybe? But as a permanent invariant?  I would wonder whether
+> the decision here would lock us into a design.
+>
+> But then - this is all kernel internal, so i think it would be feasible
+> to change this out from under users without backward compatibility pain.
+>
+> So far I have done my best to avoid changing any userland interfaces in
+> a way that would fundamentally change the contracts.  If anything
+> private-node other than just the node's `has_memory_private` attribute
+> leaks into userland, someone messed up.
+>
+> So... I think that's reasonable.
+>
+> >
+> > I assume you will be as LSF/MM? Would be good to discuss some of that i=
+n
+> > person.
+> >
+>
+> Yes, looking forward to it :]
+>
+>
+> > > One note here though - OOM conditions and allocation failures are not
+> > > intuitive, especially when THP/non-order-0 allocations are involved.
+> > >
+> > > But that might just mean this minimal setup should only allow order-0
+> > > allocations - which is fiiiiiiiiiiiiiine :P.
+> >
+> >
+> > Again, I am not sure about compaction and khugepaged. All we want to
+> > guarantee is that our memory does not leave the private node.
+> >
+> > That doesn't require any __GFP_PRIVATE magic, just en-lighting these
+> > subsystems that private nodes must use __GFP_THISNODE and must not leak
+> > to other nodes.
+>
+> This is where specific use-cases matter.
+>
+> In the compressed memory example - the device doesn't care about memory
+> leaving - but it cares about memory arriving and *and being modified*.
+> (more on this in your next question)
+>
+> So i'm not convinced *all possible devices* would always want to support
+> move_pages(), mbind(), and set_mempolicy().
+>
+> But, I do want to give this serious thought, and I agree the absolute
+> minimal patch set could just be the fallback control mechanism and
+> mm/ component filters/audit on __GFP_*.
+>
+>
+> > > If you want the mbind contract to stay intact:
+> > >
+> > >    NP_OPS_MIGRATION (mbind can generate migrations)
+> > >    NP_OPS_MEMPOLICY (this just tells mempolicy.c to allow the node)
+> >
+> > I'm missing why these are even opt-in. What's the problem with allowing
+> > mbind and mempolicy to use these nodes in some of your drivers?
+> >
+>
+> First:
+>
+> In my latest working branch these two flags have been folded into just
+> _OPS_MEMPOLICY and any other migration interaction is just handled by
+> filtering with the GFP flag.
+>
+>
+> on always allowing mbind and mempolicy vs opt-in
+> ---
+>
+> A proper compressed memory solution should not allow mbind/mempolicy.
+>
+> Compressed memory is different from normal memory - as the kernel can
+> percieves free memory (many unused struct page in the buddy) when the
+> device knows there's none left (the physical capacity is actually full).
+>
+> Any form of write to a compressed memory device is essentially a
+> dangerous condition (OOMs =3D poison, not oom_kill()).
+>
+> So you need two controls:  Allocation and (userland) Write protection
+> I implemented via:
+>     - Demotion-only (allocations only happen in reclaim path)
+>     - Write-protecting the entire node
+>
+> (I fully accept that a write-protection extension here might be a bridge
+>  to far, but please stick with me for the sake of exploration).
+>
+>
+> There's a serious argument to limit these devices to using an mbind
+> pattern, but I wanted to make a full-on attempt to integrate this device
+> into the demotion path as a transparent tier (kinda like zswap).
+>
+> I could not square write-protection with mempolicy, so i had to make
+> them both optional and mutually exclusive.
+>
+> If you limit the device to mbind interactions, you do limit what can
+> crash - but this forces userland software to be less portable by design:
+>
+>   - am i running on a system where this device is present?
+>   - is that device exposing its memory on a node?
+>   - which node?
+>   - what memory can i put on that node? (can you prevent a process from
+>     putting libc on that node?)
+>   - how much compression ratio is left on the device?
+>   - can i safety write to this virtual address?
+>   - should i write-protect compressed VMAs? Can i handle those faults?
+>   - many more
+>
+> That sounds a lot like re-implementing a bunch of mm/ in userland, and
+> that's exactly where we were at with DAX.  We know this pattern failed.
+>
+> I'm trying to very much avoid repeating these mistakes, and so I'm very
+> much trying to find a good path forward here that results in transparent
+> usage of this memory.
+>
+>
+> > I also have some questions about longterm pinnings, but that's better
+> > discussed in person :)
+> >
+>
+> The longterm pin extention came from auditing existing zone_device
+> filters.
+>
+> tl;dr: informative mechanism - but it probably should be dropped,
+> it makes no sense (it's device memory, pinnings mean nothing?).
+>
+>
+> > >
+> > > The task dies and frees the pages back to the buddy - the question is
+> > > whether the 4-5 free_folio paths (put_folio, put_unref_folios, etc) c=
+an
+> > > all eat an ops.free_folio() callback to inform the driver the memory =
+has
+> > > been freed.
+> >
+> > Right, that's rather invasive.
+> >
+>
+> Yeah i'm trying to avoid it, and the answer may actually just exist in
+> the task-death and VMA cleanup path rather than the folio-free path.
+>
+> From what i've seen of accelerator drivers that implement this, when you
+> inform the driver of a memory region with a task, the driver should have
+> a mechanism to take references on that VMA (or something like this) - so
+> that when the task dies the driver has a way to be notified of the VMA
+> being cleaned up.
+>
+> This probably exists - I just haven't gotten there yet.
+>
+> ~Gregory
 
-Thanks for your patch, which is now commit d85a8af57da87196 ("devlink:
-allow to use devlink index as a command handle").
+This has been a really great discussion. I just wanted to add a few
+points that I think I have mentioned in other forums, but not here.
 
-This has a rather large impact on kernel size.
-For e.g. m68k/atari_defconfig, bloat-o-meter reports:
+In essence, this is a discussion about memory properties and the level
+at which they should be dealt with. Right now there are basically 3
+levels: pageblocks, zones and nodes. While these levels exist for good
+reasons, they also sometimes lead to issues. There's duplication of
+functionality. MIGRATE_CMA and ZONE_MOVABLE both implement the same
+basic property, but at different levels (attempts have been made to
+merge them, but it didn't work out). There's also memory with clashing
+properties inhabiting the same data structure: LRUs. Having strictly
+movable memory on the same LRU as unmovable memory is a mismatch. It
+leads to the well known problem of reclaim done in the name of an
+unmovable allocation attempt can be entirely pointless in the face of
+large amounts of ZONE_MOVABLE or MIGRATE_CMA memory: the anon LRU will
+be chock full of movable-only pages. Reclaiming them is useless for
+your allocation, and skipping them leads to locking up the system
+because you're holding on to the LRU lock a long time.
 
-    add/remove: 4/1 grow/shrink: 72/1 up/down: 65804/-76 (65728)
-    Function                                     old     new   delta
-    devlink_trap_policer_get_dump_nl_policy       24    1480   +1456
-    devlink_trap_group_get_dump_nl_policy         24    1480   +1456
-    devlink_trap_get_dump_nl_policy               24    1480   +1456
-    devlink_selftests_get_nl_policy               24    1480   +1456
-    devlink_sb_tc_pool_bind_get_dump_nl_policy      24    1480   +1456
-    devlink_sb_port_pool_get_dump_nl_policy       24    1480   +1456
-    devlink_sb_pool_get_dump_nl_policy            24    1480   +1456
-    devlink_sb_get_dump_nl_policy                 24    1480   +1456
-    devlink_resource_dump_nl_policy               24    1480   +1456
-    devlink_region_get_dump_nl_policy             24    1480   +1456
-    devlink_rate_get_dump_nl_policy               24    1480   +1456
-    devlink_port_get_dump_nl_policy               24    1480   +1456
-    devlink_param_get_dump_nl_policy              24    1480   +1456
-    devlink_linecard_get_dump_nl_policy           24    1480   +1456
-    devlink_info_get_nl_policy                    24    1480   +1456
-    devlink_get_nl_policy                         24    1480   +1456
-    devlink_eswitch_get_nl_policy                 24    1480   +1456
-    devlink_dpipe_headers_get_nl_policy           24    1480   +1456
-    devlink_port_unsplit_nl_policy                32    1480   +1448
-    devlink_port_param_set_nl_policy              32    1480   +1448
-    devlink_port_param_get_nl_policy              32    1480   +1448
-    devlink_port_get_do_nl_policy                 32    1480   +1448
-    devlink_port_del_nl_policy                    32    1480   +1448
-    devlink_notify_filter_set_nl_policy           32    1480   +1448
-    devlink_health_reporter_get_dump_nl_policy      32    1480   +1448
-    devlink_port_split_nl_policy                  80    1480   +1400
-    devlink_sb_occ_snapshot_nl_policy             96    1480   +1384
-    devlink_sb_occ_max_clear_nl_policy            96    1480   +1384
-    devlink_sb_get_do_nl_policy                   96    1480   +1384
-    devlink_sb_port_pool_get_do_nl_policy        144    1480   +1336
-    devlink_sb_pool_get_do_nl_policy             144    1480   +1336
-    devlink_sb_pool_set_nl_policy                168    1480   +1312
-    devlink_sb_port_pool_set_nl_policy           176    1480   +1304
-    devlink_sb_tc_pool_bind_set_nl_policy        184    1480   +1296
-    devlink_sb_tc_pool_bind_get_do_nl_policy     184    1480   +1296
-    devlink_dpipe_table_get_nl_policy            240    1480   +1240
-    devlink_dpipe_entries_get_nl_policy          240    1480   +1240
-    devlink_dpipe_table_counters_set_nl_policy     272    1480   +1208
-    devlink_eswitch_set_nl_policy                504    1480    +976
-    devlink_resource_set_nl_policy               544    1480    +936
-    devlink_param_get_do_nl_policy               656    1480    +824
-    devlink_region_get_do_nl_policy              712    1480    +768
-    devlink_region_new_nl_policy                 744    1480    +736
-    devlink_region_del_nl_policy                 744    1480    +736
-    devlink_health_reporter_test_nl_policy       928    1480    +552
-    devlink_health_reporter_recover_nl_policy     928    1480    +552
-    devlink_health_reporter_get_do_nl_policy     928    1480    +552
-    devlink_health_reporter_dump_get_nl_policy     928    1480    +552
-    devlink_health_reporter_dump_clear_nl_policy     928    1480    +552
-    devlink_health_reporter_diagnose_nl_policy     928    1480    +552
-    devlink_trap_get_do_nl_policy               1048    1480    +432
-    devlink_trap_set_nl_policy                  1056    1480    +424
-    devlink_trap_group_get_do_nl_policy         1088    1480    +392
-    devlink_trap_policer_get_do_nl_policy       1144    1480    +336
-    devlink_trap_group_set_nl_policy            1144    1480    +336
-    devlink_trap_policer_set_nl_policy          1160    1480    +320
-    devlink_port_set_nl_policy                  1168    1480    +312
-    devlink_flash_update_nl_policy              1224    1480    +256
-    devlink_reload_nl_policy                    1248    1480    +232
-    devlink_port_new_nl_policy                  1320    1480    +160
-    devlink_rate_get_do_nl_policy               1352    1480    +128
-    devlink_rate_del_nl_policy                  1352    1480    +128
-    devlink_linecard_get_do_nl_policy           1376    1480    +104
-    __devlinks_xa_find_get                         -      96     +96
-    devlink_linecard_set_nl_policy              1392    1480     +88
-    devlink_selftests_run_nl_policy             1416    1480     +64
-    devlink_get_from_attrs_lock                  262     314     +52
-    devlink_region_read_nl_policy               1440    1480     +40
-    devlink_rate_set_nl_policy                  1448    1480     +32
-    devlink_rate_new_nl_policy                  1448    1480     +32
-    devlinks_xa_lookup_get                         -      30     +30
-    devlink_health_reporter_set_nl_policy       1456    1480     +24
-    devlink_attr_index_range                       -      16     +16
-    devlink_param_set_nl_policy                 1472    1480      +8
-    devlink_nl_dumpit                            276     282      +6
-    __initcall__kmod_core__670_573_devlink_init4       -       4      +4
-    __initcall__kmod_core__670_561_devlink_init4       4       -      -4
-    devlinks_xa_find_get                          96      24     -72
-    Total: Before=5203976, After=5269704, chg +1.26%
+So, looking at having some properties set at the node level makes
+sense to me even in the non-device case. But perhaps that is out of
+scope for the initial discussion.
 
-> --- a/net/devlink/netlink_gen.c
-> +++ b/net/devlink/netlink_gen.c
-> @@ -11,6 +11,11 @@
->  
->  #include <uapi/linux/devlink.h>
->  
-> +/* Integer value ranges */
-> +static const struct netlink_range_validation devlink_attr_index_range = {
-> +	.max	= U32_MAX,
-> +};
-> +
->  /* Sparse enums validation callbacks */
->  static int
->  devlink_attr_param_type_validate(const struct nlattr *attr,
-> @@ -56,37 +61,42 @@ const struct nla_policy devlink_dl_selftest_id_nl_policy[DEVLINK_ATTR_SELFTEST_I
->  };
->  
->  /* DEVLINK_CMD_GET - do */
-> -static const struct nla_policy devlink_get_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
-> +static const struct nla_policy devlink_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+One use case that seems like a good match for private nodes is guest
+memory. Guest memory is special enough to want to allocate / maintain
+it separately, which is acknowledged by the introduction of
+guest_memfd.
 
-Unrelated to this change, but the explicit sizing of these arrays is not
-needed, as the compiler will take care of that.
+I'm interested in enabling guest_memfd allocation from private nodes.
+I've been playing around with setting aside memory at boot, and
+assigning it to private nodes (one private node per physical NUMA
+node), and making it available to guest_memfd only. There are issues
+to be solved there, but the private node abstraction seems to fit
+well, and provides for useful hooks to manage guest memory.
 
->  	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
->  	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
-> +	[DEVLINK_ATTR_INDEX] = NLA_POLICY_FULL_RANGE(NLA_UINT, &devlink_attr_index_range),
+Some properties that I'm interested in for this use case:
 
-This array, and many others below, are sparse, with large gaps (up to
-1456 or 2912 bytes on 32-bit resp. 64-bit systems) before the last
-entries.
+1) is the memory in the direct map or not? Should that be configurable
+for a private node? I know there are patches right now to remove
+memory from the direct map for guest_memfd, but what if there was a
+private node whose memory is not in the direct map by default?
+2) Default page size. devdax, a ZONE_DEVICE user, allows for memory
+setup on hotplug that initializes things with HVO-ed large pages.
+Could the page size be a property of the node? That would make it easy
+to hand out larger pages to guests.  Of course, if you use anything
+but 4k, the argument of 'we can use the general buddy allocator' goes
+out the window, unless it's made to deal with a per-node base page
+size.
 
->  };
->  
->  /* DEVLINK_CMD_PORT_GET - do */
-> -static const struct nla_policy devlink_port_get_do_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
-> +static const struct nla_policy devlink_port_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
->  	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
->  	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
-> +	[DEVLINK_ATTR_INDEX] = NLA_POLICY_FULL_RANGE(NLA_UINT, &devlink_attr_index_range),
-
-Shouldn't this be inserted at the end, as DEVLINK_ATTR_INDEX >
-DEVLINK_ATTR_PORT_INDEX, for readability?
-
->  	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
->  };
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+- Frank
