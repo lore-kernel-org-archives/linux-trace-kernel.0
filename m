@@ -1,100 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460AF33FE1F;
-	Wed, 15 Apr 2026 10:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FA53254AE;
+	Wed, 15 Apr 2026 10:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776249479; cv=none; b=S2/Q4zNE37vJhqEPr4ppRf02zqnesxHmAGGjty6R/ajNyI40D+Me+DhsfnL9T63BsG2ZfYLtl2cuYaDwB6bspscO8mIx04F2+8BUDGGvdErZf/oa+rdi/1mm1HD2xfCF1AkHIHCfM9S6W2tHUHV+9wcUOdql7so/4VdiHnQOzrw=
+	t=1776250285; cv=none; b=uUxpY1bcavGa13dCuM9KV6sOFn6TNNhFr2kiWXaiZR3whlLrJhnUuudZ/k46FABb0HHfCGHB/R3h+pgEhJO7G328f+SfALlbqBHqL/ucCeJ9dEEW4WW/NdK4neP2O+t/m6tTuaaBZEoY0+ElQZczzUhmCWRyVrdcvfGGE96UfH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776249479; c=relaxed/simple;
-	bh=l6b3SK+q03o5YL9QJb9jfzyHo1l45dSmPkSeuYkbRJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mFWT2fY9j0JslR9W4s0/XvQPArzTI2g1yUpxvWmtd6mIWvoJrTeJoh6CrGGEfjow/OKs3VtOFwC/bV0QzhkeS/c+gehfc8NEVCcqrpqy3qi+drAb6t2eq4Rcs0oLf6tcxURxqXiBbjJUZhxk/0t8ywtByb1N6gF6tCUvSzGJ61o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U/NwrhBo; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1776250285; c=relaxed/simple;
+	bh=CyU74KXJoPVy9wHhzaaCz/ocAzvNPsFB8F9Y5DxkgUo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fqlnA24QH48EVNKdfOBiNLsQdgEgx5IS5y8VS0UyRr6nCVtQ/al91CIdpyhwLpoj7g5gMYsK/fjVxjfsDcMntTaZlOTuVzJ8QFb3i518oYD7JOdBeFvKJpyX1LrN5qNH+5HBx5MRNuMH0WK/r0rKDLD2TVqsey1f3ZWxfVZZB9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=grNVi3Zw; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U/NwrhBo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776249478; x=1807785478;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=l6b3SK+q03o5YL9QJb9jfzyHo1l45dSmPkSeuYkbRJk=;
-  b=U/NwrhBoTe3QAiOMJGwv9p8KUyHI9UDY9y65HC2CbeAX1fiejAuhDoYf
-   IXnypeyeR+NuxTNSEK9dNnY5viLfXRTyk1cqAay2cA/qZAXWnppsl2k/e
-   fa4GbtwhauSt03td/LQCfDOzz4K7mrh0goM8tvhTfUyM3GBXXYnk0c2Ti
-   aSKOGds+rWKThZ0MtKQzMaTjRmk7UJqSPbp6SYYh2XHeGlFJEjVMdkTjw
-   /gyu/uzegsQU0aJ4UcnCljjG/kBrY5iY81klr2kt9jiCZfeKnhBXvU2op
-   lYnHkJdQT43kT+y+EsHo/KeAjlBKXvxZG3vGWYAbk8qTtEH10sfiGp+3r
-   g==;
-X-CSE-ConnectionGUID: c5v918ZuRpKhypfP+zaeBA==
-X-CSE-MsgGUID: jZebY0IqTPKEpy9LUk67SQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="87529097"
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="87529097"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 03:37:58 -0700
-X-CSE-ConnectionGUID: XDBVv4cvRW6dAvQxSOZO3A==
-X-CSE-MsgGUID: EL7WmNfKR1qPYqzqlnsfaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="229529500"
-Received: from lkp-server01.sh.intel.com (HELO 7f3b36e5d6a5) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 15 Apr 2026 03:37:56 -0700
-Received: from kbuild by 7f3b36e5d6a5 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wCxd3-000000000Oz-1Bod;
-	Wed, 15 Apr 2026 10:37:53 +0000
-Date: Wed, 15 Apr 2026 18:36:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Cao Ruichuang <create0818@163.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: Preserve true payload lengths in long data
- events
-Message-ID: <202604151837.uakVEVAS-lkp@intel.com>
-References: <20260407091550.67963-1-create0818@163.com>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="grNVi3Zw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-Id:Date:Subject:From:Reply-To:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=vh9FM8OdczURJnYgSMA2Jda5I3uk3ZYXssjNmN3rIR0=; b=grNVi3ZwgllC2oiuO4vyPjU0dk
+	tyGpF6575DAAqszkTcDcgyzkZ/NEsEbv/wCmO/BpH/VvRRLRxDkmQbdW08nE3dniBh2Hm6cWZ1P9K
+	yMpPtcb+eJZBk8jedaoJ46FpFJAyugUjLcR3ePn+zurD0Samx2pYwitU7JtP4RoKpBauVaFks/S8b
+	AN5sRHIsdBacu28CL6xHqIKDDKwZH95ANN/IO7tr3Cb+CSlCTcW6irYpwsItgk5aNluKTw5x/zLc5
+	oNZqjHBC6XlXGn88sjlJBrkk+wgE0x4S5v71Xh14Deqc4rGl3UnwtTyBGicwYj51Ap+KGZG6Xa0on
+	PCvMs87A==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wCxq1-00DmiH-0a;
+	Wed, 15 Apr 2026 10:51:17 +0000
+From: Breno Leitao <leitao@debian.org>
+Subject: [PATCH 0/3] bootconfig: break dependency from memblock
+Date: Wed, 15 Apr 2026 03:51:09 -0700
+Message-Id: <20260415-bootconfig_earlier-v1-0-cf160175de5e@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260407091550.67963-1-create0818@163.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ1t32kC/yXMSwrCMBQF0K087riBprR+shURSeJtfSKJJFUKp
+ XsXdXgmZ0VlUVY4WVH41qo5wYltBPHm00SjVzhB13a7tre9CTnPMadRpwt9eSiLOdIehsiwt55
+ oBM/CUZdfejr/XV/hzjh/J2zbBxl2C5N2AAAA
+X-Change-ID: 20260414-bootconfig_earlier-9e185ceb71ae
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: oss@malat.biz, paulmck@kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ kernel-team@meta.com, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.16-dev-453a6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2190; i=leitao@debian.org;
+ h=from:subject:message-id; bh=CyU74KXJoPVy9wHhzaaCz/ocAzvNPsFB8F9Y5DxkgUo=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBp322h34xhjNldpM4y/J07wtv1NXskunAY7feH3
+ NpDOZK7NjyJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCad9toQAKCRA1o5Of/Hh3
+ bVmHD/wLGGz0Gt86J2uGTZL88r0+dT7xaR49B+WUyVtkPW9wSKagHLm6KC1n+sdpzRWvBYk6XUF
+ 4OHmouisaNCeUOP8udCjMnYy51NI4K/Xk0YyaXoUTfcEqilbJJiJSlfGoan2m4EKGbWKj3HSuWj
+ XKmkQ7+RrYfqxs3l+diURW65rX2uqQ1aDYxyVH2D4SccqQsFHmuSgBhSpf1m5AvPdsLZUnnDqtc
+ Eo8R0QyYIrhDZGX2d9nubeyVlZn7BcI3MfJFdodhZSwtunfVejbiuohp3Uuhz121kwvK+RZCH5e
+ W/S1UCv68265/6HEVpEhK4jj0vk5XUAds8W7nTlyFAcXsUL+RYZf0mT9RdL7WRMNeBG8e2g+YQH
+ YkuT6/r/eZ+x8DEo5uUsSbtpLbNzQluYGxL9HJHHfH7L1cMoy9nJd2HWQsE+IFqvGXpycP14Wei
+ NMzUKitJNkxQfUKm78ihlKJ2hsCdpjLqD0RnTcsrfXGi0RSFDBHJBNEfLmaHiaivFHmRnLotcdY
+ JRqlQjVeWCAPn/Uf4w3FrX9EmV7qA2vhLpX+DzHRU7cAN+QYVz+Gd3L8NxaQlVY4VOw/vFlf6jx
+ TwaVJfhN3WyL/Vm+2RH15N0DGJkS1xCSYsi7W8rfikBmvq0KjwHGPCSzcIjBYWRCs7DkOCM7NFI
+ LbwZs6Vm01PVV2w==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-Hi Cao,
+This series moves embedded bootconfig (CONFIG_BOOT_CONFIG_EMBED) parsing
+before setup_arch() in start_kernel(). The goal is to prepare for a
+follow-up change that will allow bootconfig to provide early_param()
+parameters (e.g. memblock=debug, loglevel) that are consumed during
+architecture-specific setup.
 
-kernel test robot noticed the following build warnings:
+Currently, bootconfig depends on memblock for memory allocation, which
+is not available until setup_arch() initializes it. This series removes
+that dependency by replacing memblock allocations with static __initdata
+buffers (~96KB total, freed after init), then splits the bootconfig
+loading into an early embedded path and a late initrd path.
 
-[auto build test WARNING on trace/for-next]
-[also build test WARNING on linus/master v7.0 next-20260414]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The static buffers are used by both the kernel and the userspace
+tools/bootconfig parser, which simplifies the code by removing the
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Cao-Ruichuang/ring-buffer-Preserve-true-payload-lengths-in-long-data-events/20260415-040554
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20260407091550.67963-1-create0818%40163.com
-patch subject: [PATCH] ring-buffer: Preserve true payload lengths in long data events
-config: arc-defconfig (https://download.01.org/0day-ci/archive/20260415/202604151837.uakVEVAS-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260415/202604151837.uakVEVAS-lkp@intel.com/reproduce)
+These patches alone do not change user-visible behavior. Bootconfig
+parameters are still stored in extra_command_line, which gets merged
+into boot_command_line by setup_command_line() after setup_arch().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604151837.uakVEVAS-lkp@intel.com/
+Making parse_early_param() see bootconfig values during setup_arch()
+is a separate change that will follow once this infrastructure is
+accepted.
 
-All warnings (new ones prefixed by >>):
+Keeping the two efforts separate simplifies review, since the
+early_param() integration is a non-trivial change on its own.
 
->> Warning: kernel/trace/ring_buffer.c:4786 function parameter 'force_long' not described in '__ring_buffer_lock_reserve'
->> Warning: kernel/trace/ring_buffer.c:4786 expecting prototype for ring_buffer_lock_reserve(). Prototype was for __ring_buffer_lock_reserve() instead
+Some discussion that led to this decision:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+1) It is not trivial to parse early param after setup_arch()
+https://lore.kernel.org/all/20260325-early_bootconfig-v2-1-6b05a36fbfb5@debian.org/
+
+2) An similar proposal from Petr 3 years ago:
+https://lore.kernel.org/all/20231121231342.193646-2-oss@malat.biz/
+
+---
+Breno Leitao (3):
+      bootconfig: use static buffers instead of memblock allocation
+      init: use static buffers for bootconfig extra command line
+      init: move embedded bootconfig parsing before setup_arch()
+
+ init/main.c      | 91 +++++++++++++++++++++++++++++++++++++++++---------------
+ lib/bootconfig.c | 56 +++++++---------------------------
+ 2 files changed, 77 insertions(+), 70 deletions(-)
+---
+base-commit: 1c7cc4904160c6fc6377564140062d68a3dc93a0
+change-id: 20260414-bootconfig_earlier-9e185ceb71ae
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
