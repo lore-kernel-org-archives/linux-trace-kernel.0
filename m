@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB95314A60;
-	Wed, 15 Apr 2026 10:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54B52288CB;
+	Wed, 15 Apr 2026 10:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776247725; cv=none; b=ojJ/qblKxkb3VhijlPMFawq9pzHQq5CTEDtIcGmsmcyzXsPfCX/dizLMVdfmPp9Q8xHAJyWrHtSIzXUx34eu+tdADTzMRzwMa9eqAckCOBPr+4pgawbxI9p6YGVf7/PUX4Nzqn5G/tHGbZM9SgH9ThldDKN3ePleR/PKFySojpY=
+	t=1776247733; cv=none; b=dIJI3e+acLxYa/WEv3iPVG/TSGf5Qix+mdbhB81V3Q9k9YxXKTr7/9m4GYv+wqVUCfxijDzr+O0yz9XsMUS6tDrSZ4gtDn8T8zFWJnWEcqURTPoUQVRp+3pppZh83HvF2CJdCM8sH8ZtexhN46fhCyYASWzZeW4+2cbjRWzYrVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776247725; c=relaxed/simple;
-	bh=rqs+M1PyAlmYt6BIh4c8u/Ci2zxPhYMYAfWmhLkdOIg=;
+	s=arc-20240116; t=1776247733; c=relaxed/simple;
+	bh=gN1BRrqXMRbChB0x61xF2kukdXPqZcRjnyQOsPmr+Ig=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cNMcQ0YdORciIsblnxPYg0UWsmToX0tKJZSStrxSX7wYT16TGfCilttsGy9G1ALe0IUowMUe7phlob825ZqOIB3QpOzq33Yezi1rYbnSKHUMuIuuNQUmI8huvx6PDmVyeZW5+r8hJ27dTSKJRuTRScblvQBKj1w0JTkf3vg1ogA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKNjs56O; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=OghIwFtaQKik+XRC9ZpFf7sOUc97+8ntJULaxKcUhEDwHsi8MpB0Bq4RzejfeRlw7kNvBIHwpGnvfydRPuYZ9r0Vgc5l9re+4ZQpl7rt3Dx+U1Z+Qz+c2dOQRbjybNK8e5ZznHFztAFrpoHWphUEJBntcARce8PzkV2ahxLbnaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPql3u9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKNjs56O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F80C19424;
-	Wed, 15 Apr 2026 10:08:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPql3u9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FAF8C19424;
+	Wed, 15 Apr 2026 10:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776247724;
-	bh=rqs+M1PyAlmYt6BIh4c8u/Ci2zxPhYMYAfWmhLkdOIg=;
+	s=k20201202; t=1776247732;
+	bh=gN1BRrqXMRbChB0x61xF2kukdXPqZcRjnyQOsPmr+Ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iKNjs56OdDhf14GyqgobValCarJnw8OJ2FwxfnnOPoTyNHLiWO2Og4ZQAZnohPqqP
-	 YEHONAh3YQLd22c3G49s9vHlcZ+QDRJsVVqBvto0HeBwIOGPIFhld5NnBTwgC8Nejn
-	 Qj5Gngh72VEFMFm6ctOtI7mMiann8MfN7vUhGvkuskMLfWooyCYE13ZZ/Dx6I7/gDp
-	 FBqGB5nS2hoPWjG2K/3ATOTgUcw8UCs3q6PbYgAHM/MDCXKAHUIF2Ofz+BTegen5AU
-	 WPp95ukB+Bc9bcPOmbkY7I+KgnHL/zZF2yS6xIeBnwiUxqynpiaptHQld9GSvq3NQ4
-	 kEpbhvd7G3fbw==
+	b=oPql3u9UYGsOEhgsQcyl3pPSgsnSw4qLHQ3kp94Fq7YI2djUg6fVLMcDQQDHtH3wZ
+	 qMYvJvyvFJLdIZeTDsLzEfvY8hMkGSKrBUutD/Ips3tbCpxognxYQPfQgvqDZUtUw9
+	 +LpPw80kMaTUkSVnUmzL5JyDJTQy5p3OVz2h8i+2nEdSNKVQRvKGWbNP0CVcDEAkFK
+	 rgUpNtHoHegetfwGj6TLDuHJ0iEdOMIYtEx4FYP1WTkI3Mndtos/8+SD7aIv1eCnwh
+	 x4aLZsTEuo3x7GHa5Wa/D0g+zFlpheufj2AzNvcBiOQRjwFgEdw8y4EMn+DAuokIZq
+	 OsEWXTNKMpKuw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -34,9 +34,9 @@ Cc: Menglong Dong <menglong8.dong@gmail.com>,
 	jiang.biao@linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v7 1/6] tracing/fprobe: Reject registration of a registered fprobe before init
-Date: Wed, 15 Apr 2026 19:08:42 +0900
-Message-ID:  <177624772205.2407691.8530954581518787436.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH v7 2/6] tracing/fprobe: Unregister fprobe even if memory allocation fails
+Date: Wed, 15 Apr 2026 19:08:50 +0900
+Message-ID:  <177624772989.2407691.17449580584634294999.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
 In-Reply-To:  <177624771150.2407691.15764846647014540969.stgit@mhiramat.tok.corp.google.com>
 References:  <177624771150.2407691.15764846647014540969.stgit@mhiramat.tok.corp.google.com>
@@ -52,112 +52,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Reject registration of a registered fprobe which is on the fprobe
-hash table before initializing fprobe.
-The add_fprobe_hash() checks this re-register fprobe, but since
-fprobe_init() clears hlist_array field, it is too late to check it.
-It has to check the re-registration before touncing fprobe.
+unregister_fprobe() can fail under memory pressure because of memory
+allocation failure, but this maybe called from module unloading, and
+usually there is no way to retry it. Moreover. trace_fprobe does not
+check the return value.
+
+To fix this problem, unregister fprobe and fprobe_hash_node even if
+working memory allocation fails.
+Anyway, if the last fprobe is removed, the filter will be freed.
 
 Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v6:
+ Changes in v7:
   - Newly added.
 ---
- kernel/trace/fprobe.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ kernel/trace/fprobe.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index dcadf1d23b8a..fc7018b28fdd 100644
+index fc7018b28fdd..d634eb8e8b9e 100644
 --- a/kernel/trace/fprobe.c
 +++ b/kernel/trace/fprobe.c
-@@ -4,6 +4,7 @@
-  */
- #define pr_fmt(fmt) "fprobe: " fmt
+@@ -934,15 +934,19 @@ int unregister_fprobe(struct fprobe *fp)
  
-+#include <linux/cleanup.h>
- #include <linux/err.h>
- #include <linux/fprobe.h>
- #include <linux/kallsyms.h>
-@@ -107,7 +108,7 @@ static bool delete_fprobe_node(struct fprobe_hlist_node *node)
- }
- 
- /* Check existence of the fprobe */
--static bool is_fprobe_still_exist(struct fprobe *fp)
-+static bool fprobe_registered(struct fprobe *fp)
- {
- 	struct hlist_head *head;
- 	struct fprobe_hlist *fph;
-@@ -120,7 +121,7 @@ static bool is_fprobe_still_exist(struct fprobe *fp)
- 	}
- 	return false;
- }
--NOKPROBE_SYMBOL(is_fprobe_still_exist);
-+NOKPROBE_SYMBOL(fprobe_registered);
- 
- static int add_fprobe_hash(struct fprobe *fp)
- {
-@@ -132,9 +133,6 @@ static int add_fprobe_hash(struct fprobe *fp)
- 	if (WARN_ON_ONCE(!fph))
- 		return -EINVAL;
- 
--	if (is_fprobe_still_exist(fp))
--		return -EEXIST;
--
- 	head = &fprobe_table[hash_ptr(fp, FPROBE_HASH_BITS)];
- 	hlist_add_head_rcu(&fp->hlist_array->hlist, head);
- 	return 0;
-@@ -149,7 +147,7 @@ static int del_fprobe_hash(struct fprobe *fp)
- 	if (WARN_ON_ONCE(!fph))
- 		return -EINVAL;
- 
--	if (!is_fprobe_still_exist(fp))
-+	if (!fprobe_registered(fp))
- 		return -ENOENT;
- 
- 	fph->fp = NULL;
-@@ -482,7 +480,7 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
- 		if (!fp)
- 			break;
- 		curr += FPROBE_HEADER_SIZE_IN_LONG;
--		if (is_fprobe_still_exist(fp) && !fprobe_disabled(fp)) {
-+		if (fprobe_registered(fp) && !fprobe_disabled(fp)) {
- 			if (WARN_ON_ONCE(curr + size > size_words))
- 				break;
- 			fp->exit_handler(fp, trace->func, ret_ip, fregs,
-@@ -841,12 +839,14 @@ int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
- 	struct fprobe_hlist *hlist_array;
- 	int ret, i;
- 
-+	guard(mutex)(&fprobe_mutex);
-+	if (fprobe_registered(fp))
-+		return -EEXIST;
-+
- 	ret = fprobe_init(fp, addrs, num);
- 	if (ret)
- 		return ret;
- 
--	mutex_lock(&fprobe_mutex);
--
  	hlist_array = fp->hlist_array;
- 	if (fprobe_is_ftrace(fp))
- 		ret = fprobe_ftrace_add_ips(addrs, num);
-@@ -866,7 +866,6 @@ int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
- 				delete_fprobe_node(&hlist_array->array[i]);
- 		}
- 	}
--	mutex_unlock(&fprobe_mutex);
+ 	addrs = kcalloc(hlist_array->size, sizeof(unsigned long), GFP_KERNEL);
+-	if (!addrs) {
+-		ret = -ENOMEM;	/* TODO: Fallback to one-by-one loop */
+-		goto out;
+-	}
++	/*
++	 * This will remove fprobe_hash_node from the hash table even if
++	 * memory allocation fails. However, ftrace_ops will not be updated.
++	 * Anyway, when the last fprobe is unregistered, ftrace_ops is also
++	 * unregistered.
++	 */
++	if (!addrs)
++		pr_warn("Failed to allocate working array. ftrace_ops may not sync.\n");
  
- 	if (ret)
- 		fprobe_fail_cleanup(fp);
-@@ -928,7 +927,7 @@ int unregister_fprobe(struct fprobe *fp)
- 	int ret = 0, i, count;
- 
- 	mutex_lock(&fprobe_mutex);
--	if (!fp || !is_fprobe_still_exist(fp)) {
-+	if (!fp || !fprobe_registered(fp)) {
- 		ret = -EINVAL;
- 		goto out;
+ 	/* Remove non-synonim ips from table and hash */
+ 	count = 0;
+ 	for (i = 0; i < hlist_array->size; i++) {
+-		if (!delete_fprobe_node(&hlist_array->array[i]))
++		if (!delete_fprobe_node(&hlist_array->array[i]) && addrs)
+ 			addrs[count++] = hlist_array->array[i].addr;
  	}
+ 	del_fprobe_hash(fp);
 
