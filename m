@@ -1,286 +1,260 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012062.outbound.protection.outlook.com [52.101.43.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D541BD9D0
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Apr 2026 01:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776302705; cv=none; b=lNFBrxgndWiklq9vYBGTmzDTrFRnZqfa0FapcoAX6SFa+RlNUQ6bUKMaTZ0sv0cvnqBxPHnHvdzHcUxNWO0DAJD6V8t2fdi9ymi/4Oglp+5zOIOYA2D/bkzqiIOcTG7r/BiPeCInC4wycMWqlPJmSLYnIhQnbNyIyXnViRFX848=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776302705; c=relaxed/simple;
-	bh=Fp1CWQFZhoQan9vy0Uw+XPprLq5wH18fTjKWUBYQg18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qb6AA/nzOFUEBySA/aiSWFeG+z457PjwuAiDpudczG0N6A5vk6fPUUeoBNaw6R/l2dwyGi6/9+3kLcGRROgqr0LgyGn8eoLKymPS9BRyNXpjH7uKuUE3/Z1ohO6mrMyyT8xB9nY6/QyuK9Fl5SODhFFUft/FL5CZA9GkkCxgvlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Rh8mmNfw; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E61845038;
+	Thu, 16 Apr 2026 03:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776308775; cv=fail; b=M/vt1D5o0VICpeCmNPY8VeoDravLaoSv00yllzzMLXDR7PgSVs/MGCtazkmM/G4PSI98PUtk4wttTtfGVRsyPAbPoBGlmID31/lHV3P3hWb+4mPUSA7uTnrOoLAINfc++/ZYbx45LGWNOyBWe3V9wdWOU9YeOpfX6mVJpHWqN30=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776308775; c=relaxed/simple;
+	bh=fNPa5veoi8rH3HXH4LjEe2gSmboPep7Ue9Tiet7b95M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BMJWnl8suqq2fBTArAPcnNXqKxEuV2xZOJLoB2uggA1l+4ls1Rh6DBZyOERMGiBOcr4Z2ZPVhGd8lNPbrrmpfUp0H2VjL2zNanJGCemjP9mZWjRYzKFxbluhOl2KQ3IiKv8FQ83UniUP8hPuQ3Btiov90zUabWFmYULCJGrMIqs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=S4DS8fx8; arc=fail smtp.client-ip=52.101.43.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Rh8mmNfw"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-50b3488fb31so2086901cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Apr 2026 18:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776302702; x=1776907502; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L0GVcI8Mcl8O7u/nlxfa5xhicBajYIQOeBkH2STJXfY=;
-        b=Rh8mmNfwNmVC7LDtFVtV6tGl0KJDGXyvkyp3IgM12BVmL8xinNHXHP+iqbka0LbMhd
-         TtWLEWLNxOkIhOoll4IOY4PdbzlqJmVQsO3qP7IL32YmeGGzgmGgNFDeiaU4BFItjXDb
-         yRCO09FxW9nh4Y8xJMzzIYqGAvA/9kYQY7NZ/Gws2T0P7aBwOQjkLI7zMKYXVF+IHH7A
-         CMKLFxr9flu2JlHdUcqVMQpzN6Kz9SSBMfPOP+FzLNtzxfvoGsCkz43bFw3SoKRqESaO
-         zmB+vTOlepZytLt2h7ifvEf4rZrCe4+e22FDSuju28VbAty9H01gSQL2fLJ6STPUAELp
-         EOZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776302702; x=1776907502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L0GVcI8Mcl8O7u/nlxfa5xhicBajYIQOeBkH2STJXfY=;
-        b=bwv9ukAPEi1GcLYVgXSFmU4FMa1G1aZg+WsdFySvSb5c9AvasCLvr0YbctxT9BFSP0
-         YYlPS+lyGKeWaf7j8H9WZsNDXrNkfb/3Uyytdss0e7kVPOCiKU5fkAj0G1413j5mdVbR
-         FxVfj5sNvgN72mCcL04rIzIOih7tyRnsa4VXPWNLHKYF7WYFadWif/9M+okAyWnaITYe
-         bCGgCUXZ/2jG6A8WOGohF8qqXS/EUlqNfszt+U8M/8uBnVccST6Vc5I5ZFK0y/8ii5QY
-         Y2k+XlYLjeqGLpntiQt2VNXFAHC/VQcgrtA2doAJhh0VkJUTsJ6oGHa2J1fQWg3YUaPb
-         uT3A==
-X-Forwarded-Encrypted: i=1; AFNElJ+7Oy8HP7jsvzfWI3I6WXLpOCfhKysRG0++Ou8AZexlzYjak16pyGCXYQ3IIcHBUtq1hG3Xc1JImxvSCLGnmS93noY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwnVuwKKnV6+yxAPQZ8eTuei6RC90CFP6bIUvIKZvob79xE0du
-	+So3Jo4RUANVzqzvXp7eVqlYOtY//8GgA25QT/BJyjFzlpMFBUy0vmNvLF5oUsULl7U=
-X-Gm-Gg: AeBDieucgx0QiOfCTNHsrsikmOT/WfjEgSz5bUXJXzY1IFrvhD/SwRTSnUdHeI7dAxz
-	Sk8H92lFpMgV3ExBibzqaQkWeR8iZliv57U0HnAwN3m5mFTRr0lY2AEfadmfJCkFQFkSE24CSzz
-	EnixEpf7D2ab5CNDbNHoiQ6qv2bs5vcljYF4K8cJprg0sUtXDPXaNyAWbSRzZwLqXP+dBv1YXWm
-	nFJNue/OJZTx5oW+Sj2oEQSa5ANSwtB+x/ih6CZzQUoVYpZThKR6WIwvmfxOf/Qh26fgxfnKQ8M
-	XUBdWtyUPn8NPf/YfULwCnMYedtCn+2nY901kk/HjdSemx19hYY2e9JgeGNuReQWuUICCgXuk2Y
-	qcSp8BtGQfxvK0i4YCMBiyYgKXcbgryg8XoedNBk+pFmdGrRkQ3He9EWOjDBOO40Tz79C6njIis
-	wBJo/8uJjVSQ0kNaR+aVDv/vy0FmsdEwHoDygjX5jBcbEjwUKEUiuT0iVUlpYM1RwNti96ulqIn
-	S3c6X9mYwAiFIo/a5FMbdw=
-X-Received: by 2002:a05:622a:d1c:b0:509:1b5c:fe25 with SMTP id d75a77b69052e-50e24b8e774mr23717671cf.23.1776302702216;
-        Wed, 15 Apr 2026 18:25:02 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-108-28-184-130.washdc.fios.verizon.net. [108.28.184.130])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e1adbcf10sm24957831cf.10.2026.04.15.18.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2026 18:25:00 -0700 (PDT)
-Date: Wed, 15 Apr 2026 21:24:56 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Frank van der Linden <fvdl@google.com>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aeA6aNDpQ-U5UJCs@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
- <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
- <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
- <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
- <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
- <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
- <CAPTztWajm_JLpp9BjRcX=h72r25ELrXeGkOXVachybBxLJGS=g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="S4DS8fx8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VmljPDRBunZfQEMv7paxzmJJ0rnVD1e+1tp4TM5o8TEidSUOmExzBnDbToKejHflH1AxyzSmhz5h1t/W+WXzf93q0TNx/GshKaMxhPsySKOu+gMTqAgao95xnCZ3LLrLDcBxmVHMGsqvls2xNpGieL86SI3fzxagxsdRopRRDq/ZIgWC0DVxrlXvFWFSgufS1ADA6qvyPzoe8KkBL2Ss+pagUkWunlGTLRltWTrqnOOfkjsgGuyXrkfx2KzDfWMLnU9CpXoT6DhfDWoNoJIuJP9IBFJ4vzaiz+Wb2DNKPFDczwfELGcAPk7zTNekU20OeWkQ1rR5EP/ITFq+mEx9NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SfB1la0BQ+f5QF5Nfi4aoLs9hdI3G61W/EKVxvz+7YY=;
+ b=AL3K3d0fK8A0WmMlK9IJRt8kYS+NjmKM1nCPUnTYN8rLbQrphxxyRLcx9Vdr4MpdKoVTaXSMc8wu8KgQz6breteZTMcn5wNKaLu+Pnwp5Qv59JgiHZB5u8SGzQW/Ca/4ON1K0r/FGRMM4yXbYRTb3nJWcSh6oxkLlctuvmT1OX2PSkXsHXC8rGc3sVuxWfLbKRsGeHWCvuPVuFZ1UiLbd8p8RTb7Fz6VMJtj9orDYk8wWShhznnchDXkDlGbxbl+YZKoDFxfTnO0efJ+9GqBUf50sT6pK5vCKmFN+ByJHaTf6nMEDF4X6SVoRiJmjZ/t400uOp3851p7jnpiGMP/5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SfB1la0BQ+f5QF5Nfi4aoLs9hdI3G61W/EKVxvz+7YY=;
+ b=S4DS8fx8yxCmPdFtsLbW26XiHAuKS8CLwmcCNfczuR8n+p0537SO7dceDrrdn80jLFRy7tBKq6WN2dLY3U4af1L06XOq/Hd4/Wx+wMUVpxeM1YOhIENDS/Sensebqrs8EnNuv13O5rvLtsLhUvua2esbbfLfaly682pD4i/67Ag=
+Received: from SA1P222CA0034.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2d0::7)
+ by SJ2PR12MB9192.namprd12.prod.outlook.com (2603:10b6:a03:55d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Thu, 16 Apr
+ 2026 03:06:08 +0000
+Received: from SA2PEPF000015C7.namprd03.prod.outlook.com
+ (2603:10b6:806:2d0:cafe::e) by SA1P222CA0034.outlook.office365.com
+ (2603:10b6:806:2d0::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.51 via Frontend Transport; Thu,
+ 16 Apr 2026 03:06:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SA2PEPF000015C7.mail.protection.outlook.com (10.167.241.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9769.17 via Frontend Transport; Thu, 16 Apr 2026 03:06:08 +0000
+Received: from localhost (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 15 Apr
+ 2026 22:06:00 -0500
+Date: Wed, 15 Apr 2026 22:05:32 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: Ackerley Tng <ackerleytng@google.com>
+CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
+	<brauner@kernel.org>, <chao.p.peng@linux.intel.com>, <david@kernel.org>,
+	<ira.weiny@intel.com>, <jmattson@google.com>, <jroedel@suse.de>,
+	<jthoughton@google.com>, <oupton@kernel.org>, <pankaj.gupta@amd.com>,
+	<qperret@google.com>, <rick.p.edgecombe@intel.com>, <rientjes@google.com>,
+	<shivankg@amd.com>, <steven.price@arm.com>, <tabba@google.com>,
+	<willy@infradead.org>, <wyihan@google.com>, <yan.y.zhao@intel.com>,
+	<forkloop@google.com>, <pratyush@kernel.org>, <suzuki.poulose@arm.com>,
+	<aneesh.kumar@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, "Sean
+ Christopherson" <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song
+	<baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
+	<yuanchu@google.com>, Wei Xu <weixugc@google.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-mm@kvack.org>
+Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for
+ KVM_SET_MEMORY_ATTRIBUTES2
+Message-ID: <a4zojsqgf4bzguys75fujw55gz5fe3glyrc6z7bfawdtyrflmx@rkzrvzbo3j6k>
+References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
+ <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
+ <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3>
+ <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
+ <eiiecl7jvywvqb4drq7cchmcabcrdka25wxr77uavxqineeedm@rfcnhdz6xoxf>
+ <3blpenhpvysb2ig7efegedx4v3flppl5ftnz6vhpqlatfk3ycn@vmmhs7mvjieg>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAPTztWajm_JLpp9BjRcX=h72r25ELrXeGkOXVachybBxLJGS=g@mail.gmail.com>
+In-Reply-To: <3blpenhpvysb2ig7efegedx4v3flppl5ftnz6vhpqlatfk3ycn@vmmhs7mvjieg>
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C7:EE_|SJ2PR12MB9192:EE_
+X-MS-Office365-Filtering-Correlation-Id: 042b3f0b-77f5-4a70-92e8-08de9b651b07
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700016|7416014|376014|82310400026|13003099007|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	O8ccTRFjliHYNqgea4Oy5NhcMVI+j0n3qhVv0QTvfSM1N/k/w8+6e5gW9mhId4yNnKik6G0z/9M6WhBrO8AV2CZyYdmD+eID4mYU8PvwBCe5VIqh5cVXwP5Pdk9pXTY40Mbdp8JN8gmyzg4qTA59TomIFS69onQ4vBbnMmYXL+BXztjURb9jAEhNvswTomtTFZhE1cvu+bBrtFYhu4TRfy17S2MNRZtWcF7mnfrBc/aDFdYY0tOMx9RUb9JFm3BZ1BnFS6RZw13NWQ/Z2gcSuIv69C3BtG7bMUpE5JXJtyUJXLsJ9v89I+viEyZ8fazFNpWLDdjIkUCR5bGUxsYDpfuX5R4ioMzDpbvmoPct12t+0/tGgrG051qixAzk/RKZASRUQHquGeQ/mCI2pexbL7E2piURBxSTkUf43SuuHwVbX6vTGyj2pRUvU949Zm2uoZp6EgEzbMN6UHbDfqFv2QzOhXfEjVEutSd9xAdvtsYtE0FUBTVlMcB1wpYGs4O1RGXABuLZkU/AcSAFFFb9EZJTcQgIhTqWygdktRCffKSScbEJWKQG/bMvaXuo/5KYULUg98uzc2Vzxm9JR0yfMqWiGsDMMSqtf9qsWaed/JChdNzSf50o5tYMuRFgOPC2J83V88J1RwUWHse5jF9k8rl8UoQfttcBkj+eDCynncQICTkjubxrdsUDS08Cvds4CMYuRYfN53o7BXj6m8MTfVBZQkol9xDBa3ozuW1J2C2jsVqVX1cdO29f2JAvqrRkzXHCmoellYeOfjB3JEuqFc/b0yNUEsfBrDMoJn4AymA=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(7416014)(376014)(82310400026)(13003099007)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	DtVcdwd8v3o0iTxlGvTLPtE3Jn/SDDcEIEtnH9vwdvEngaX5xXxz+ZQgZurnJ5SoTAd/kVGvv6gP4zOPLFTnQw7p3GY+ems0/4JbfaCix8Fvz8PV1l5vZfYBajps7FJQJUnuswD+LG0WMY5JFtwTKklNFoX87o4eoP08pe141a2Zq75F+LbyzhiWd7sbxXs1dcdmYCRIcIjazahLKpjO0tl4DdBZEGtrrPaog0vznPZ9lsvdaCFjqYCbm/FPyp3Vv7S9q5GxreTl41z74pVljxk0Giiu0csE0bJfJmfWVl46QCOWcuDen8fal370MQoUJnl/Ysgd42xGx2ZcqcdxgSSgVWc0SMXpK5e0O4LIFLC++EdzHq57naXJi8Ry1POv/uRImYN1z0HXYf7kdYZwW8stFKHzsj0CDl6H/f/m7yfexssFDhKjq+Eb/5lG7CPB
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2026 03:06:08.0006
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 042b3f0b-77f5-4a70-92e8-08de9b651b07
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C7.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9192
 
-On Wed, Apr 15, 2026 at 12:47:50PM -0700, Frank van der Linden wrote:
+On Wed, Apr 15, 2026 at 01:20:41PM -0500, Michael Roth wrote:
+> On Tue, Apr 14, 2026 at 06:37:00PM -0500, Michael Roth wrote:
+> > On Wed, Apr 01, 2026 at 03:38:12PM -0700, Ackerley Tng wrote:
+> > > Michael Roth <michael.roth@amd.com> writes:
+> > > 
+> > > >
+> > > > [...snip...]
+> > > >
+> > > >>  static unsigned long kvm_get_vm_memory_attributes(struct kvm *kvm, gfn_t gfn)
+> > > >>  {
+> > > >> @@ -2635,6 +2625,8 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
+> > > >>  		return -EINVAL;
+> > > >>  	if (!PAGE_ALIGNED(attrs->address) || !PAGE_ALIGNED(attrs->size))
+> > > >>  		return -EINVAL;
+> > > >> +	if (attrs->error_offset)
+> > > >> +		return -EINVAL;
+> > > >>  	for (i = 0; i < ARRAY_SIZE(attrs->reserved); i++) {
+> > > >>  		if (attrs->reserved[i])
+> > > >>  			return -EINVAL;
+> > > >> @@ -4983,6 +4975,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+> > > >>  		return 1;
+> > > >>  	case KVM_CAP_GUEST_MEMFD_FLAGS:
+> > > >>  		return kvm_gmem_get_supported_flags(kvm);
+> > > >> +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+> > > >> +		if (vm_memory_attributes)
+> > > >> +			return 0;
+> > > >> +
+> > > >> +		return kvm_supported_mem_attributes(kvm);
+> > > >
+> > > > Based on the discussion from the PUCK call this morning,
+> > > 
+> > > Thanks for copying the discussion here, I'll start attending PUCK to
+> > > catch those discussions too :)
+> > > 
+> > > > it sounds like it
+> > > > would be a good idea to limit kvm_supported_mem_attributes() to only
+> > > > reporting KVM_MEMORY_ATTRIBUTE_PRIVATE if the underlying CoCo
+> > > > implementation has all the necessary enablement to support in-place
+> > > > conversion via guest_memfd. In the case of SNP, there is a
+> > > > documentation/parameter check in snp_launch_update() that needs to be
+> > > > relaxed in order for userspace to be able to pass in a NULL 'src'
+> > > > parameter (since, for in-place conversion, it would be initialized in place
+> > > > as shared memory prior to the call, since by the time kvm_gmem_poulate()
+> > > > it will have been set to private and therefore cannot be faulted in via
+> > > > GUP (and if it could, we'd be unecessarily copying the src back on top
+> > > > of itself since src/dst are the same).
+> > > 
+> > > Could this be a separate thing? If I'm understanding you correctly, it's
+> > > not strictly a requirement for snp_launch_update() to first support a
+> > > NULL 'src' parameter before this series lands.
+> > 
+> > I think we are already sync'd up on this during PUCK, but for the benefit
+> > of others: Sean pointed out that if we don't then we'll need to add yet
+> > another capability so userspace can determine when it can actually do
+> > in-place conversion for SNP.
 > 
-> This has been a really great discussion. I just wanted to add a few
-> points that I think I have mentioned in other forums, but not here.
+> (in-place conversion for SNP during pre-launch/populate phase, I meant)
 > 
-> In essence, this is a discussion about memory properties and the level
-> at which they should be dealt with. Right now there are basically 3
-> levels: pageblocks, zones and nodes. While these levels exist for good
-> reasons, they also sometimes lead to issues. There's duplication of
-> functionality. MIGRATE_CMA and ZONE_MOVABLE both implement the same
-> basic property, but at different levels (attempts have been made to
-> merge them, but it didn't work out).
-
-I have made this observation as well.  ZONEs in particular are a bit
-odd because they're somehow simultaneously too broad and too narrow in
-terms of what they control and what they're used for.
-
-1GB ZONE_MOVABLE HugeTLBFS Pages is an example weird carve-out, because
-the memory is in ZONE_MOVABLE to help make 1GB allocations more
-reliable, but 1GB movable pages were removed from the kernel because
-they're not easily migrated (and therefore may block hot-unplug).
-
-(Thankfully they're back now, so VMs can live on this memory :P)
-
-So you have competing requirements, which suggests zone is the wrong
-abstraction at some level - but it's what we've got.
-
-> There's also memory with clashing
-> properties inhabiting the same data structure: LRUs. Having strictly
-> movable memory on the same LRU as unmovable memory is a mismatch. It
-> leads to the well known problem of reclaim done in the name of an
-> unmovable allocation attempt can be entirely pointless in the face of
-> large amounts of ZONE_MOVABLE or MIGRATE_CMA memory: the anon LRU will
-> be chock full of movable-only pages. Reclaiming them is useless for
-> your allocation, and skipping them leads to locking up the system
-> because you're holding on to the LRU lock a long time.
->
-
-This is an interesting observation that should be solvable.
-
-For example - i'm pretty sure mlock'd pages are on an unevictable LRU
-for exactly this reason (to just skip scanning them during reclaim).
-
-Which is a different pain point I have - since they're still migratable,
-they could be demoted to make room for local hot pages.
-
-> So, looking at having some properties set at the node level makes
-> sense to me even in the non-device case. But perhaps that is out of
-> scope for the initial discussion.
+> > 
+> > Right now, this series effectively advertises in place conversion at the
+> > point where KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES reports
+> > 'KVM_MEMORY_ATTRIBUTE_PRIVATE', so I slightly reworked the series to
+> > include the snp_launch_update() change prior to that point in time in
+> > the series. Thanks to prereqs and changes/requirements you've already
+> > pulled in, it's just one additional patch now:
+> > 
+> >  KVM: SEV: Make 'uaddr' parameter optional for KVM_SEV_SNP_LAUNCH_UPDATE 
+> > 
+> > I also did some minor updates (prefixed with a "[squash]" tag) to advertise
+> > the KVM_SET_MEMORY_ATTRIBUTES2_PRESERVED flag so it can be used by
 > 
-> One use case that seems like a good match for private nodes is guest
-> memory. Guest memory is special enough to want to allocate / maintain
-> it separately, which is acknowledged by the introduction of
-> guest_memfd.
+> Though I'm not sure how we deal with it if SNP/TDX at some point become
+> capable of using the PRESERVED flag *after* populate... but maybe that's
+> too unlikely to worry about? If we wanted to address it though, we could
+> have both PRESERVED and PRESERVED_BEFORE_LAUNCH so they can be
+> enumerated separately from the start.
 > 
-> I'm interested in enabling guest_memfd allocation from private nodes.
-> I've been playing around with setting aside memory at boot, and
-> assigning it to private nodes (one private node per physical NUMA
-> node), and making it available to guest_memfd only. There are issues
-> to be solved there, but the private node abstraction seems to fit
-> well, and provides for useful hooks to manage guest memory.
+> > userspace for SNP/TDX in the kvm_gmem_populate() path as agreed upon
+> > during PUCK.
+> > 
+> > The branch is here, with the patches moved to where I think they
+> > should remain (or be squashed in for the [squash] ones):
+> > 
+> >   https://github.com/AMDESE/linux/commits/guest_memfd-inplace-conversion-v4-snp2/
+
+Argh! Sorry (again), I just now realized there was a typo here, this is the
+tree I'd intended to push (and what was described in the original email):
+
+  https://github.com/AMDESE/linux/commits/guest_memfd-inplace-conversion-v4-snp3/
+
+-Mike
+
+> > 
+> > I've also updated the QEMU patches to use the agreed-upon API flow and
+> > pushed them here:
+> > 
+> >   https://github.com/AMDESE/qemu/commits/snp-inplace-for-v4-wip2/
+> > 
+> > To start an SNP guest with in-place conversion:
+> > 
+> >   qemu-system-x86 \
+> >   -machine q35,confidential-guest-support=sev0,memory-backend=ram1 \
+> >   -object sev-snp-guest,id=sev0,...,convert-in-place=true \
+> >   -object memory-backend-memfd,id=ram1,size=16G,share=true,reserve=false
 > 
-
-I have wondered about this use case, but I haven't really played with
-guest_memfd to know what the implications are here, so it's nice to hear
-someone is looking at this.  It will be nice to hear your input on where
-the abstraction could be better.
-
-> Some properties that I'm interested in for this use case:
+> Sorry, that should've been:
 > 
-> 1) is the memory in the direct map or not? Should that be configurable
-> for a private node? I know there are patches right now to remove
-> memory from the direct map for guest_memfd, but what if there was a
-> private node whose memory is not in the direct map by default?
-
-Presuming a page was not in the direct map and it was in the buddy
-(strong assumption here), there's a handful of things that would
-straight up break:
-
-  - init_on_alloc (post_alloc_hook) / __GFP_ZERO (clear_highpage)
-  - init_on_free (free_pages_prepare)
-  - kernel_poison_pages (accesses the page contents)
-  - CONFIG_DEBUG_PAGEALLOC
-
-But... these things seem eminently skippable based on a node attribute.
-
-I think this could be done, but there is added concern about spewing
-an ever increasing numbers of hooks throughout mm/ as the number of
-attributes increase.
-
-But in this case I think the contract would require that an NP_OPS_NOMAP
-would have to be mutually exclusive with all other node attributes (too
-many places that touch the mapping, it would be too fragile).
-
-There's a few catches here though
-
-  1) you lose the ability to zero out the page after allocation, so
-     whatever is in the memory already is going into the guest.
-
-     That seems problematic for a variety of reasons.
-
-     I guess you can use kmap_local_page?
-     But then why not just unmap after allocation?
-
-     If never mapping is a hard requirement, if that memory lives on
-     a device with a sanitize function, you maybe could massage kernel
-     free-page-reporting to offload the zeroing without having the
-     kernel map it - as long as you can take a delay after free before
-     the page becomes available again.
-
-  2) the current mempolicy guest_memfd patches would not apply because
-     I can't see how OPS_MEMPOLICY & OPS_NOMAP co-exist.  A user program
-     could call mbind(nomap_node) on a random VMA - and there would be
-     kernel OOPS everywhere.
-
-     That would just mean pre-setting the node backing for all
-     guest_memfd VMAs, rather than using mbind().
-
-Something like (cribbing from the memfd code with absolutely no
-context, so there's a pile of assumptions being made here)
-
-  struct kvm_create_guest_memfd {
-        __u64 size;
-        __u64 flags;
-        __s32 numa_node;  /* Set at creation */
-        __u32 pad;
-        __u64 reserved[5];
-  };
-
-  #define GUEST_MEMFD_FLAG_NUMA_NODE    (1ULL << 2)
-
-  if (gmem->flags & GUEST_MEMFD_FLAG_NUMA_NODE)
-      folio = __folio_alloc(gfp | __GFP_PRIVATE, order,
-                            gmem->numa_node, NULL);
-  else
-      /* existing mempolicy / default path */
-      folio = __filemap_get_folio_mpol(...);
-
-Which may even be preferable to the recently upstreamed pattern.
-
-> 2) Default page size. devdax, a ZONE_DEVICE user, allows for memory
-> setup on hotplug that initializes things with HVO-ed large pages.
-> Could the page size be a property of the node? That would make it easy
-> to hand out larger pages to guests.  Of course, if you use anything
-> but 4k, the argument of 'we can use the general buddy allocator' goes
-> out the window, unless it's made to deal with a per-node base page
-> size.
+>   -object memory-backend-guest-memfd,id=ram1,size=16G,share=true,reserve=false
 > 
-
-Per-node page sizes are probably a bridge too far, that's seems like
-a change that would echo through most of the buddy infrastructure, not
-just a few hooks to prevent certain interactions.
-
-However, I also don't think this is a requirement.
-
-I know there is some work to try to raise the max page order to allow
-THP to support 1GB huge pages - if max size is a concern, there's hope.
-
-On fragmentation though...
-
-If the consumer of a private node only ever allocates a specific order
-(order-9) - the buddy never fragments smaller than that (it maybe
-spends time coalescing for no value, but it'll never fragment smaller).
-
-So is the concern here that you want to guarantee a minimum page size
-to deal with the fragmentation problem on normal general-purpose nodes,
-or do you want to guarantee a minimum page size because you can't limit
-the allocations to be of a base order?
-
-i.e.: is limiting guest_memfd allocations on a private node to a single
-order (or a minimum order? 2MB?) a feasible option?  (Pretend i know
-very little about the guest_memfd specific memory management code).
-
-~Gregory
+> > 
+> > To start an normal non-CoCo guest backed by guest_memfd with shared memory:
+> > 
+> >   qemu-system-x86 \
+> >   -machine q35,confidential-guest-support=sev0,memory-backend=ram1 \
+> >   -object memory-backend-memfd,id=ram1,size=16G,share=true,reserve=false
+> 
+> and:
+> 
+>   -object memory-backend-guest-memfd,id=ram1,size=16G,share=true,reserve=false
+> 
+> (and both require kvm.vm_memory_attributes=0)
+> 
+> -Mike
+> 
+> > 
+> > Thanks,
+> > 
+> > Mike
