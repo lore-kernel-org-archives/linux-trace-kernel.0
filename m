@@ -1,223 +1,200 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D462367CF
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Apr 2026 11:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+Received: from mailgw2.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B593B25A357;
+	Thu, 16 Apr 2026 11:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776338315; cv=none; b=Np8JnTd4I9B6S/5I/PCvv9jgaZVVdX7zw4ksa1I6avUWdw4QbbmOzdXapEdHYkHEk1+PzpWDqqYm1MZke10mIyjx2QrAI3Lz8kjvzuqESp++6jaE1/7CN0sh2BsrQBsQs0OcyohNVQJFGcNtbU+euuboBM9FAuhR7RtrUz+qG2k=
+	t=1776340131; cv=none; b=n7vztheC25PJ42u+XM3Vyu3vWQuPeliSPE+teGWXHhC46/4VfWORoeOJ6iP0yXFj5hmiCuqTQ0wck8Yu4cUf03SST5ZXjRBFECK8T6YkKd5LdtBc5Cb97TtIp0M+Mkoct4nD3SC5JOBRlA4lzmdU1A9ai2P/ptEPwTHfW9fTDi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776338315; c=relaxed/simple;
-	bh=0I1hQQOfuGn7nbMyH5rccfAqTH9pDQIfcJ5oxQD7bhU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E4EQYIpPDKe6SMSFkykYL4inXo5iFGk6ONGzGfTU4zmaVZleSi+2IblQ+qqhVhnXr5OSHJaokh7yvRRcqR0pQQuptZl4yJ3tAG61uWuZibW7vtI/R6mFJpR/BWrTIQdjr3+rvlQ5/Zmh4dO8UpNePrvHJwNe6LoZkKufGWCjhzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QPsa6x4S; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QPsa6x4S"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4887ca8e529so4029025e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Apr 2026 04:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1776338312; x=1776943112; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qd1VopekJz5FiTxyx67UMNjXFF9UUIXLsOl680XCCf0=;
-        b=QPsa6x4SOVHFIcDZBLBIeYk2JTeQWGgH1I/3lTPPEg1m3CfUzXMuqkg1W7krRJmT8j
-         9PXwgbaKw1ChOtXp26dqLlViRMzLu2DIJH1nHlwCGOHuo0AorVSeI1xTup0gRAjK2bQq
-         h2BSS8KanKLcEwhgMrGj/RBly7Hb6Evel3xOgFrrlH8ZgdGbtI87vgHZknkFSC6QYc0y
-         d55RgDHO4PWB//XwatZe0m+EOVhgp3plLy2baygOj2HBXeeG0OwHFIqcV8WGnHEDVEXZ
-         v1AnAsdtZ6KLTgLiH/Fejvk9cpuu1fdVQ3GsqGpmBMFw9AxIVSFKWzwDj2V/vREOJjHz
-         /XlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776338312; x=1776943112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qd1VopekJz5FiTxyx67UMNjXFF9UUIXLsOl680XCCf0=;
-        b=DEVNKJHo6pPQAOa6pGCENUd3QmKmS+bNIqdZIkwqFUw2qXFZcxiZ8COk3EhftRj/Fw
-         co7fgD8d3JyZdvMI+GN1+iZpMtc8tFUDYoHTHR1hALE7o3NxG/BkNarVH+SlS99baLIR
-         nKCijvIDBjY03OmMk73mX63d1gfuhjWAZc6qyeoyu/XQhH9yBhj7gPWVVPnC+NFNY4hJ
-         uYp0TspRpU4s8S06Fuqnu8Ty9GP02zJ++EhktSUIp5Cw7vHmOZwfrAO4o9RX1Q6qgkby
-         gGHydJ+kNGJkvDZmBkFD5udci9dIpKnhdetKWLgEh71N3I+JfSQ/YPayUYAjJ/I+tWzQ
-         DdXg==
-X-Forwarded-Encrypted: i=1; AFNElJ+t4vqrpootzWI/SUMl/Rb4o1l8cxKDlS/NTPbKqDNwYb8bx5C8epLJ/JZYkFMseCpPQL78xA/F3Eq/JhesPukVM2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymkbE2aSn5XOz+NUoj3NIk+DDyFmoUINGixpquAQS63Mlu1ebv
-	LaU2yfemEDhYP/sPdKMQ0oqA6ODfcs82EEyvg0uj+Wm4xPV1Vidpcad9Rk37IfYVPZg=
-X-Gm-Gg: AeBDietwBV+hksAFfPbK01nNngXZcLF0TQdXIv/QA+sv1odOXOxMKNJ/gU1jjcKRxz5
-	6e1tnzggva1HtSAv6Ui61KBKxROzdopqDOXhaacmypMq/2qDd11DNM+bj69+RFn4BfqJ5onUEEh
-	Cmyx6Nt+UQBBQKKBN0353StU/pzdV2obtkJ0cwPUXjEYL4sLsblOZDWRiUHbIn2HS9+ZOjKaT6c
-	67xScYK5dxoNWteKWXviSXBK/kH0pCYfnNPPVtkY2GKhAl4peVSzbyCyFoAcSxFxGmRIzCeGnRz
-	G0jswn3XKldTQeIZvxwOUJLY3N6DHfxVrWt0QLzSn/+FpCBualWNVYqb3rMZGsQkVH7iVZ4gpJH
-	4hnKNijxD/H+Cxahvo9+kmSdzy/X0mwG0bDMwFwPg1AD9J0DR9uOt1zQPlaczfgSFTPzys8AxLF
-	+I2Cn4Z2biThc6vNaaCap0mtGGVUXBEFB+bwEvlG9wmY6EE6u4eHMQHecQuBHtx1NJNzm+NcSz2
-	mJpz7Jeh+MgMMPtfzONBkifCx5jBGVBgzb5AJDT3zVc5NP8iw5BmOPHq0LjMsU3ZkuahRg4+GDo
-	AGaq
-X-Received: by 2002:a05:600c:31a9:b0:485:3038:72c2 with SMTP id 5b1f17b1804b1-488f4804d19mr27439205e9.17.1776338312207;
-        Thu, 16 Apr 2026 04:18:32 -0700 (PDT)
-Received: from ?IPV6:2a00:1028:838d:271e:8e3b:4aff:fe4c:a100? (dynamic-2a00-1028-838d-271e-8e3b-4aff-fe4c-a100.ipv6.o2.cz. [2a00:1028:838d:271e:8e3b:4aff:fe4c:a100])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43ead3d5ea9sm13089525f8f.21.2026.04.16.04.18.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2026 04:18:31 -0700 (PDT)
-Message-ID: <1db425bf-58a9-4768-8c38-3ae25d7662a5@suse.com>
-Date: Thu, 16 Apr 2026 13:18:30 +0200
+	s=arc-20240116; t=1776340131; c=relaxed/simple;
+	bh=zyZe1jx0hO5jVoW7hrnjF3AvZ7XWdFK+r/bsC+RDY5w=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvvqxOxm5zElrMjEgTeVVxYQMnp6Vj8j9jaxj24xlQEq6YVmPjuVNdXhASCrNwvB4FMuLfRZLJG0JfpHDck9hbIJK8zgUa+YkLDWmOT3S7Lrx2G7x3xYo/THOIxod1HKqBEoJb+YsxocKSbIn4kLP3CM9n3Zs+5EWea2wJafU7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fxGVj1kD1z1YQpmX;
+	Thu, 16 Apr 2026 19:48:29 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 4fxGVh5pwfz1YQpmX;
+	Thu, 16 Apr 2026 19:48:28 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id CC695300D1F6;
+	Thu, 16 Apr 2026 19:46:31 +0800 (CST)
+Received: from SH-HV00110.Hygon.cn (172.19.26.208) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 16 Apr
+ 2026 19:48:27 +0800
+Date: Thu, 16 Apr 2026 19:48:24 +0800
+From: Huang Shijie <huangsj@hygon.cn>
+To: Mateusz Guzik <mjguzik@gmail.com>
+CC: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+	<muchun.song@linux.dev>, <osalvador@suse.de>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>
+Subject: Re: [PATCH 0/3] mm: split the file's i_mmap tree for NUMA
+Message-ID: <aeDMiBqscm-CZA6D@SH-HV00110.Hygon.cn>
+References: <20260413062042.804-1-huangsj@hygon.cn>
+ <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
+ <ad4EvoDcAKE2Sl4+@hsj-2U-Workstation>
+ <CAGudoHGLaoc+CoBPNCvFRYojnj+6E_Lsdv7NaJWxFMoHezemMQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] kernel/module: Decouple klp and ftrace from
- load_module
-To: Song Chen <chensong_2000@189.cn>
-Cc: rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
- sboyd@kernel.org, viresh.kumar@linaro.org, agk@redhat.com,
- snitzer@kernel.org, mpatocka@redhat.com, bmarzins@redhat.com,
- song@kernel.org, yukuai@fnnas.com, linan122@huawei.com,
- jason.wessel@windriver.com, danielt@kernel.org, dianders@chromium.org,
- horms@kernel.org, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, paulmck@kernel.org, frederic@kernel.org,
- mcgrof@kernel.org, da.gomez@kernel.org, samitolvanen@google.com,
- atomlin@atomlin.com, jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz,
- pmladek@suse.com, joe.lawrence@redhat.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
- linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
- live-patching@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-raid@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
- netdev@vger.kernel.org
-References: <20260413080701.180976-1-chensong_2000@189.cn>
- <1191caf5-6a61-4622-a15e-854d3701f4fc@suse.com>
- <a35f5f94-7d5a-4347-974b-b270c89ef241@189.cn>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <a35f5f94-7d5a-4347-974b-b270c89ef241@189.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHGLaoc+CoBPNCvFRYojnj+6E_Lsdv7NaJWxFMoHezemMQ@mail.gmail.com>
+X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-On 4/15/26 8:43 AM, Song Chen wrote:
-> On 4/14/26 22:33, Petr Pavlu wrote:
->> On 4/13/26 10:07 AM, chensong_2000@189.cn wrote:
->>> diff --git a/include/linux/module.h b/include/linux/module.h
->>> index 14f391b186c6..0bdd56f9defd 100644
->>> --- a/include/linux/module.h
->>> +++ b/include/linux/module.h
->>> @@ -308,6 +308,14 @@ enum module_state {
->>>       MODULE_STATE_COMING,    /* Full formed, running module_init. */
->>>       MODULE_STATE_GOING,    /* Going away. */
->>>       MODULE_STATE_UNFORMED,    /* Still setting it up. */
->>> +    MODULE_STATE_FORMED,
->>
->> I don't see a reason to add a new module state. Why is it necessary and
->> how does it fit with the existing states?
->>
-> because once notifier fails in state MODULE_STATE_UNFORMED (now only ftrace has someting to do in this state), notifier chain will roll back by calling blocking_notifier_call_chain_robust, i'm afraid MODULE_STATE_GOING is going to jeopardise the notifers which don't handle it appropriately, like:
+On Thu, Apr 16, 2026 at 12:29:50PM +0200, Mateusz Guzik wrote:
+> On Tue, Apr 14, 2026 at 11:11 AM Huang Shijie <huangsj@hygon.cn> wrote:
+> >
+> > On Mon, Apr 13, 2026 at 05:33:21PM +0200, Mateusz Guzik wrote:
+> > > On Mon, Apr 13, 2026 at 02:20:39PM +0800, Huang Shijie wrote:
+> > > >   In NUMA, there are maybe many NUMA nodes and many CPUs.
+> > > > For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
+> > > > In the UnixBench tests, there is a test "execl" which tests
+> > > > the execve system call.
+> > > >
+> > > >   When we test our server with "./Run -c 384 execl",
+> > > > the test result is not good enough. The i_mmap locks contended heavily on
+> > > > "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have
+> > > > over 6000 VMAs, all the VMAs can be in different NUMA mode.
+> > > > The insert/remove operations do not run quickly enough.
+> > > >
+> > > > patch 1 & patch 2 are try to hide the direct access of i_mmap.
+> > > > patch 3 splits the i_mmap into sibling trees, and we can get better
+> > > > performance with this patch set:
+> > > >     we can get 77% performance improvement(10 times average)
+> > > >
+> > >
+> > > To my reading you kept the lock as-is and only distributed the protected
+> > > state.
+> > >
+> > > While I don't doubt the improvement, I'm confident should you take a
+> > > look at the profile you are going to find this still does not scale with
+> > > rwsem being one of the problems (there are other global locks, some of
+> > > which have experimental patches for).
+> > IMHO, when the number of VMAs in the i_mmap is very large, only optimise the rwsem
+> > lock does not help too much for our NUMA case.
+> >
+> > In our NUMA server, the remote access could be the major issue.
+> >
 > 
-> case MODULE_STATE_COMING:
->      kmalloc();
-> case MODULE_STATE_GOING:
->      kfree();
+> I'm confused how this is not supposed to help. You moved your data to
+> be stored per-domain. With my proposal the lock itself will also get
+> that treatment.
+> 
+> Modulo the issue of what to do with code wanting to iterate the entire
+> thing, this is blatantly faster.
+> 
 
-My understanding is that the current module "state machine" operates as
-follows. Transitions marked with an asterisk (*) are announced via the
-module notifier.
+I tested an old lock patch yesterday. It really helps a lot.
+The lock patch is from this link:
+  https://lkml.org/lkml/2024/9/14/280
 
----> UNFORMED --*> COMING --*> LIVE --*> GOING -.
-        ^            |                     ^    |
-        |            '---------------------*    |
-        '---------------------------------------'
+The test results:
+   v7.0-rc5 + (lock patch)                    : improve about %60%
+   v7.0-rc5 + (lock patch) + (this patch set) : improve about 130%			   
 
-The new code aims to replace the current ftrace_module_init() call in
-load_module(). To achieve this, it adds a notification for the UNFORMED
-state (only when loading a module) and introduces a new FORMED state for
-rollback. FORMED is purely a fake state because it never appears in
-module::state. The new structure is as follows:
+						
+> >
+> > >
+> > > Apart from that this does nothing to help high core systems which are
+> > > all one node, which imo puts another question mark on this specific
+> > > proposal.
+> > Yes, this patch set only focus on the NUMA case.
+> > The one-node case should use the original i_mmap.
+> >
+> > Maybe I can add a new config, CONFIG_SPILT_I_MMAP. The config is disabled
+> > by default, and enabled when the NUMA node is not one.
+> >
+> > >
+> > > Of course one may question whether a RB tree is the right choice here,
+> > > it may be the lock-protected cost can go way down with merely a better
+> > > data structure.
+> > >
+> > > Regardless of that, for actual scalability, there will be no way around
+> > > decentralazing locking around this and partitioning per some core count
+> > > (not just by numa awareness).
+> > >
+> > > Decentralizing locking is definitely possible, but I have not looked
+> > > into specifics of how problematic it is. Best case scenario it will
+> > > merely with separate locks. Worst case scenario something needs a fully
+> > > stabilized state for traversal, in that case another rw lock can be
+> > Yes.
+> >
+> > The traversal may need to hold many locks.
+> >
+> 
+> The very paragraph you partially quoted answers what to do in that
+> case: wrap everything with a new rwsem taken for reading when
+> adding/removing entries and taken for writing when iterating the
+> entire thing. Then the iteration sticks to one lock.
+> 
+> The new rw lock puts an upper ceiling on scalability of the thing, but
+> it is way higher than the current state.
+Could you tell me the patch about it?
+Is this lock patch merged ? or not?
 
-        ,--*> (FORMED)
-        |
---*> UNFORMED --*> COMING --*> LIVE --*> GOING -.
-        ^            |                     ^    |
-        |            '---------------------*    |
-        '---------------------------------------'
-
-I'm afraid this is quite complex and inconsistent. Unless it can be kept
-simple, we would be just replacing one special handling with a different
-complexity, which is not worth it.
-
->>
->>> +    if (err)
->>> +        goto ddebug_cleanup;
->>>         /* Finally it's fully formed, ready to start executing. */
->>>       err = complete_formation(mod, info);
->>> -    if (err)
->>> +    if (err) {
->>> +        blocking_notifier_call_chain_reverse(&module_notify_list,
->>> +                MODULE_STATE_FORMED, mod);
->>>           goto ddebug_cleanup;
->>> +    }
->>>   -    err = prepare_coming_module(mod);
->>> +    err = prepare_module_state_transaction(mod,
->>> +                MODULE_STATE_COMING, MODULE_STATE_GOING);
->>>       if (err)
->>>           goto bug_cleanup;
->>>   @@ -3522,7 +3519,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
->>>       destroy_params(mod->kp, mod->num_kp);
->>>       blocking_notifier_call_chain(&module_notify_list,
->>>                        MODULE_STATE_GOING, mod);
->>
->> My understanding is that all notifier chains for MODULE_STATE_GOING
->> should be reversed.
-> yes, all, from lowest priority notifier to highest.
-> I will resend patch 1 which was failed due to my proxy setting.
-
-What I meant here is that the call:
-
-blocking_notifier_call_chain(&module_notify_list, MODULE_STATE_GOING, mod);
-
-should be replaced with:
-
-blocking_notifier_call_chain_reverse(&module_notify_list, MODULE_STATE_GOING, mod);
+I can test it.
 
 > 
->>
->>> -    klp_module_going(mod);
->>>    bug_cleanup:
->>>       mod->state = MODULE_STATE_GOING;
->>>       /* module_bug_cleanup needs module_mutex protection */
->>
->> The patch removes the klp_module_going() cleanup call in load_module().
->> Similarly, the ftrace_release_mod() call under the ddebug_cleanup label
->> should be removed and appropriately replaced with a cleanup via
->> a notifier.
->>
->     err = prepare_module_state_transaction(mod,
->                 MODULE_STATE_UNFORMED, MODULE_STATE_FORMED);
->     if (err)
->         goto ddebug_cleanup;
+> Given the extra overhead associated with it one could consider
+> sticking to one centralized state by default and switching to
+> distributed state if there is enough contention.
 > 
-> ftrace will be cleanup in blocking_notifier_call_chain_robust rolling back.
+> > > slapped around this, creating locking order read lock -> per-subset
+> > > write lock -- this will suffer scalability due to the read locking, but
+> > > it will still scale drastically better as apart from that there will be
+> > > no serialization. In this setting the problematic consumer will write
+> > > lock the new thing to stabilize the state.
+> > >
+> > > So my non-maintainer opinion is that the patchset is not worth it as it
+> > > fails to address anything for significantly more common and already
+> > > affected setups.
+> > This patch set is to reduce the remote access latency for insert/remove VMA
+> > in NUMA.
+> >
 > 
->     err = prepare_module_state_transaction(mod,
->                 MODULE_STATE_COMING, MODULE_STATE_GOING);
-> 
-> each notifier including ftrace and klp will be cleanup in blocking_notifier_call_chain_robust rolling back.
-> 
-> if all notifiers are successful in MODULE_STATE_COMING, they all will be clean up in
->  coming_cleanup:
->     mod->state = MODULE_STATE_GOING;
->     destroy_params(mod->kp, mod->num_kp);
->     blocking_notifier_call_chain(&module_notify_list,
->                      MODULE_STATE_GOING, mod);
-> 
-> if  something wrong underneath.
+> And I am saying the mmap semaphore is a significant problem already on
+> high-core no-numa setups. Addressing scalability in that case would
+> sort out the problem in your setup and to a significantly higher
+> extent.
+I am afraid even the lock patch resolves the scalability high-core no-numa setups,
+we still need to split the i_mmap for NUMA.
 
-My point is that the patch leaves a call to ftrace_release_mod() in
-load_module(), which I expected to be handled via a notifier.
+> 
+> > >
+> > > Have you looked into splitting the lock?
+> > >
+> > I ever tried.
+> >
+> > But there are two disadvantages:
+> >   1.) The traversal may need to hold many locks which makes the
+> >       code very horrible.
+> >
+> 
+> I already above this is avoidable.
+> 
+> >   2.) Even we split the locks. Each lock protects a tree, when the tree becomes
+> >       big enough, the VMA insert/remove will also become slow in NUMA.
+> >       The reason is that the tree has VMAs in different NUMA nodes.
+> >
+> 
+> This is orthogonal to my proposal. In fact, if one is to pretend this
+> is never a factor with your patch, I would like to point out it will
+> remain not a factor if the per-numa struct gets its own lock.
+Yes. It is orthogonal to your proposal.
 
--- 
-Thanks,
-Petr
+Thanks
+Huang Shijie
+
