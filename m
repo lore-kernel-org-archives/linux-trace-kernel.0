@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51860335554;
-	Thu, 16 Apr 2026 17:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E434233688D;
+	Thu, 16 Apr 2026 17:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776360941; cv=none; b=IaKUopuiUvCJKIXPMoc/RWA0s6/buHBc0ouJQzWzXb62wQAP4u3kQRFob6s2XRWaeMV9kQEZyaTEXdT7FgXHafKMEvImQMw4eBnKnDDNXSmMP2wJ9p7oJC/F2pDzYSlTvailw72jjPT6eS0+GSV3l2Qnof76apf8vhxJZc00Ook=
+	t=1776360942; cv=none; b=f6g8tkXbCM+zCQJYGftuQz7bOHwfYvD1QITDYuJzuTicdZh1K6QRRh/DCCYOXekV9cfbLhl9A5XRHfnn4ktpPfx5eJTDV6e/An+M9rczi05sdqMWCcUP/nUDqlvvT5xi06pjWYYQmFyby5PTv2pFID9sVKon4IOxNJqcu8xJqM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776360941; c=relaxed/simple;
-	bh=JPuUub7ZoVIR3lKaHdVQ99YpUWe8z2ubqieFVVVxAmU=;
+	s=arc-20240116; t=1776360942; c=relaxed/simple;
+	bh=R9/KzrvxYF+4HefdcqVALy0RSfXF1sXeb+jfYdn8ZC4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FFFEnGsktfv/UwLnFu0dzbp0xXnifezBv4Jyi1nrgnNIHQYf2Z7OwFUSlw82sWFRfI5bPJ1Qdx6Erhhi/bnEE6n0Z5PRcKYk3k0AMn4Pr3zptOEt80X6cFlEgXv4B0LNtHKAOyD/GQkjKzcolc3bw2ZVIG0F5n3WdyRks8xTGA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJZNcGH0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=EeaYX6bQE+02ZajB4BCQ+zocy6hecdjd2AJEY+xg+TA2VwOHyUq4o8fyVIopzcsLhVxaaH0rTYOLaIoQPf1od20n0w0PAF3V2TtNjPWsJ3LLdkMIlZU4ZG8mwBc53/PmgrZ0GQl/tVIW9zrh4g+JOpGWbeCisg3Xkq2rD2xyP/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y/f/dG8f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJZNcGH0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C05C2BCB8;
-	Thu, 16 Apr 2026 17:35:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/f/dG8f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26F25C2BCB5;
+	Thu, 16 Apr 2026 17:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776360940;
-	bh=JPuUub7ZoVIR3lKaHdVQ99YpUWe8z2ubqieFVVVxAmU=;
+	s=k20201202; t=1776360941;
+	bh=R9/KzrvxYF+4HefdcqVALy0RSfXF1sXeb+jfYdn8ZC4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NJZNcGH0kf0c4iQoCjif3NQ4hczSmLnHXeIPBNSCfXKWIcyeUjcFh+4M2Y27ZfTpD
-	 mHMCOyXrxmPeJm4ITv3dcP2//zcvx8K/pRJRkVrFHdQFuJXC8l9XBVbyJA40Ubufcg
-	 Vu9muF4mgO99joN15HwLmllInhT+1KdxlKb/fNgHI18/EE0nmcEoJb/q5HF0B2G2Mt
-	 B+TN9UEBNKjUKw0G7IVaSEVBponlH1gRcdDflFe1SWpnGD4azo2XwFnd66/xOezQab
-	 3+2cRHOvvlA2/ZmNEkWfiB6nPX3lRP1PhH5BHrnPcN4360XycG22qxZSSq02teM7bn
-	 mwLQ9BT8Puwbg==
+	b=Y/f/dG8fjaPkXewYTR48yfAteWcMqzLSv6AYSAv2b27HUvDq3gJIBfIzhCkFpVLl4
+	 +x4FrK+YxLaUuWm5mwlUIyA6QytvvKgG65cWEzlgS2jWI7msKe/kyo5TvN0//96ulC
+	 la/sl7nw6r0PxuWYXZFtUGkSe7XCCfgTgC5Etw+sMMk7WsiLl+0lQ9oasUl/WBLcMU
+	 BG+47EqnPQOeewJQBzCsQI5VLXwesXMVBRZjkMgN/tYSPOpqiSYJVFgBHq4riH6LZ1
+	 9NMZ1vLaEpY0fBEFzpH7hHEtMJ6G1+dZX/5rSNNr+INF9xwY5xKGHO8sIwHRmR+VP2
+	 sMj74S8/EF2EA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 16 Apr 2026 10:35:04 -0700
-Subject: [PATCH v2 03/28] filelock: add a tracepoint to start of
- break_lease()
+Date: Thu, 16 Apr 2026 10:35:06 -0700
+Subject: [PATCH v2 05/28] fsnotify: new tracepoint in fsnotify()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260416-dir-deleg-v2-3-851426a550f6@kernel.org>
+Message-Id: <20260416-dir-deleg-v2-5-851426a550f6@kernel.org>
 References: <20260416-dir-deleg-v2-0-851426a550f6@kernel.org>
 In-Reply-To: <20260416-dir-deleg-v2-0-851426a550f6@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -58,89 +57,153 @@ Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2144; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=JPuUub7ZoVIR3lKaHdVQ99YpUWe8z2ubqieFVVVxAmU=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4R3hhDHtZ2kdmL1V/EJQPbDZuO3kgR4jcEy7J
- i7ej4j/0vGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEd4QAKCRAADmhBGVaC
- FUJ6D/0c1hJyv1gKxxIoafujMCgQe0/RImc+hwNc+tdYdG1Y0YIZ6yR/R9fNMyYLeqVoUIRfzCL
- raJtveA+S0f0xCOVCDbTsN84j/k0DTqPZGKQysmLkoaxLA7BN8b7tnDOykku0NnYDiCLfYFEqdQ
- ss2nnluZ2Q+XxUZ7LBlAnx+T6aRnqwK8xMf7GHg2Jr8KG5op+6Lz4vuvlWvyI04gVTGYGOgp6sU
- BCXKRQ/D1l2YsTeB8++DlrsIZVRlyMe7ssMXdxySCEQd18b3m4yJGVM8aWh5/a/ZXHZ52E7IBPQ
- QkXiJrQ0ml/E2Y79EUfbwiT6Yzl3oCyc6xctngYIJYXHNwPfUnlgX4q4Xjo17M88Fn5BkQABT7j
- C2B77M1ZTG5tBvApEK2MMvtd8k1mPV5EvJ++KGLvaD7Ok0YGUyKKHQT1KLkYyY+Bhp/Ixh58W51
- Q2HfnNfDnBUGD9v989ncYyXSYtH0Sr1Ygl2fY14gGzCA4anfKApTd7NA0n4orFysXODNMsGGSUU
- hCyqwSsOFr0zmE4Ssbini4UwW6O12A4UVduR46l9ZSUu48rJLxsfsLuuFH9dqy5dT86xpNhEnRx
- mQjfJKaaaZXrFTeJnksPF2s7BZQw3ck8j7LHYQkz/PWnGEhtTerntZkmjAp7W0mp+lRwL85VJkx
- OyieSAgSPTUnoaA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4161; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=R9/KzrvxYF+4HefdcqVALy0RSfXF1sXeb+jfYdn8ZC4=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4R3isBcKAZx/y9q3gnPFeIoBe4jcPQE6b3R2T
+ kJWIdp+us6JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEd4gAKCRAADmhBGVaC
+ FRfkEACgId4LV7zIg+FpqVPrtl2adQ3hZRcbA0FVnYLtLmqVgihoqZZKtcCBWeyzzCxbNSVH91C
+ ABi/9cYoOeo67BggHD5GcGhGBMg466OQltsAklVHbDgvaXwKrDj5uW/g1ViRkI+HLjZ8Brfi2e+
+ 8rux9Hj28SRSuRHiKM8TVTqsdDD8yj3K+lHoLjQ8N7cn/qjT0rkezP13Y9U8W/ptVIONKKYT9Ic
+ MDQjeWYoC0gZk5TnHMOmyS2bPkuo9s4Q7hjXktOfOD4Q60bo6weifOBj56ZLyuirQe+H6AHoA4u
+ 4VIfrmH/09J4CjRglDFqVeXMUdny8gImesJYntjmOM6rcDgWCUK5++9lrPMbKyJrdUP0Bfzp6Mo
+ 8BdubwNJI2FrWDpzmvbj7tVtWctrnGsMu3DEfrFnYoADuwbn0hD2OFQP48LKYGdEdTd5p75bF6m
+ 5cdpt/7ZuH9yUlRqkEwBEHdVuT54u4YBA021cUpNs7O7Ewv+SoLsjxDdLdcJXNUSnXyIBrEiIzi
+ +IN6Ab5JqoJ0WYf1dli78Dqmzq3RJosP5hu9n6v+V/y3Ipqj2MbEO8/TwoBZa1wpAd5gocLTBx5
+ eejGaY85O6Jw/n2Y8wf8atQCaRmb+afKe5RBkkVfnZ4+SZQAWTAlgK6bbCYymY3wmdc5cjmX43r
+ m14mfYPl+fxBcjQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-...mostly to show the LEASE_BREAK_* flags.
+Add a tracepoint so we can see exactly how this is being called.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/locks.c                      |  2 ++
- include/trace/events/filelock.h | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ fs/notify/fsnotify.c            |  5 ++++
+ include/trace/events/fsnotify.h | 51 +++++++++++++++++++++++++++++++++++++++++
+ include/trace/misc/fsnotify.h   | 35 ++++++++++++++++++++++++++++
+ 3 files changed, 91 insertions(+)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 8b5958f34b61..792c3920b33a 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1651,6 +1651,8 @@ int __break_lease(struct inode *inode, unsigned int flags)
- 	bool want_write = !(flags & LEASE_BREAK_OPEN_RDONLY);
- 	int error = 0;
+diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
+index 9995de1710e5..5448738635f6 100644
+--- a/fs/notify/fsnotify.c
++++ b/fs/notify/fsnotify.c
+@@ -14,6 +14,9 @@
+ #include <linux/fsnotify_backend.h>
+ #include "fsnotify.h"
  
-+	trace_break_lease(inode, flags);
++#define CREATE_TRACE_POINTS
++#include <trace/events/fsnotify.h>
 +
- 	type = break_lease_flags_to_type(flags);
- 	if (!type)
- 		return -EINVAL;
-diff --git a/include/trace/events/filelock.h b/include/trace/events/filelock.h
-index ef4bb0afb86a..fff0ee2d452d 100644
---- a/include/trace/events/filelock.h
-+++ b/include/trace/events/filelock.h
-@@ -120,6 +120,39 @@ DEFINE_EVENT(filelock_lock, flock_lock_inode,
- 		TP_PROTO(struct inode *inode, struct file_lock *fl, int ret),
- 		TP_ARGS(inode, fl, ret));
+ /*
+  * Clear all of the marks on an inode when it is being evicted from core
+  */
+@@ -504,6 +507,8 @@ int fsnotify(__u32 mask, const void *data, int data_type, struct inode *dir,
+ 	int ret = 0;
+ 	__u32 test_mask, marks_mask = 0;
  
-+#define show_lease_break_flags(val)					\
-+	__print_flags(val, "|",						\
-+		{ LEASE_BREAK_LEASE,		"LEASE" },		\
-+		{ LEASE_BREAK_DELEG,		"DELEG" },		\
-+		{ LEASE_BREAK_LAYOUT,		"LAYOUT" },		\
-+		{ LEASE_BREAK_NONBLOCK,		"NONBLOCK" },		\
-+		{ LEASE_BREAK_OPEN_RDONLY,	"OPEN_RDONLY" },	\
-+		{ LEASE_BREAK_DIR_CREATE,	"DIR_CREATE" },		\
-+		{ LEASE_BREAK_DIR_DELETE,	"DIR_DELETE" },		\
-+		{ LEASE_BREAK_DIR_RENAME,	"DIR_RENAME" })
++	trace_fsnotify(mask, data, data_type, dir, file_name, inode, cookie);
 +
-+TRACE_EVENT(break_lease,
-+	TP_PROTO(struct inode *inode, unsigned int flags),
+ 	if (path)
+ 		mnt = real_mount(path->mnt);
+ 
+diff --git a/include/trace/events/fsnotify.h b/include/trace/events/fsnotify.h
+new file mode 100644
+index 000000000000..341bbd57a39b
+--- /dev/null
++++ b/include/trace/events/fsnotify.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM fsnotify
 +
-+	TP_ARGS(inode, flags),
++#if !defined(_TRACE_FSNOTIFY_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_FSNOTIFY_H
++
++#include <linux/tracepoint.h>
++
++#include <trace/misc/fsnotify.h>
++
++TRACE_EVENT(fsnotify,
++	TP_PROTO(__u32 mask, const void *data, int data_type,
++		 struct inode *dir, const struct qstr *file_name,
++		 struct inode *inode, u32 cookie),
++
++	TP_ARGS(mask, data, data_type, dir, file_name, inode, cookie),
 +
 +	TP_STRUCT__entry(
-+		__field(unsigned long, i_ino)
++		__field(__u32, mask)
++		__field(unsigned long, dir_ino)
++		__field(unsigned long, ino)
 +		__field(dev_t, s_dev)
-+		__field(unsigned int, flags)
++		__field(int, data_type)
++		__field(u32, cookie)
++		__string(file_name, file_name ? (const char *)file_name->name : "")
 +	),
 +
 +	TP_fast_assign(
-+		__entry->s_dev = inode->i_sb->s_dev;
-+		__entry->i_ino = inode->i_ino;
-+		__entry->flags = flags;
++		__entry->mask = mask;
++		__entry->dir_ino = dir ? dir->i_ino : 0;
++		__entry->ino = inode ? inode->i_ino : 0;
++		__entry->s_dev = dir ? dir->i_sb->s_dev :
++				 inode ? inode->i_sb->s_dev : 0;
++		__entry->data_type = data_type;
++		__entry->cookie = cookie;
++		__assign_str(file_name);
 +	),
 +
-+	TP_printk("dev=0x%x:0x%x ino=0x%lx flags=%s",
++	TP_printk("dev=%d:%d dir=%lu ino=%lu data_type=%d cookie=0x%x mask=0x%x %s name=%s",
 +		  MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
-+		  __entry->i_ino, show_lease_break_flags(__entry->flags))
++		  __entry->dir_ino, __entry->ino,
++		  __entry->data_type, __entry->cookie,
++		  __entry->mask, show_fsnotify_mask(__entry->mask),
++		  __get_str(file_name))
 +);
 +
- DECLARE_EVENT_CLASS(filelock_lease,
- 	TP_PROTO(struct inode *inode, struct file_lease *fl),
- 
++#endif /* _TRACE_FSNOTIFY_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/include/trace/misc/fsnotify.h b/include/trace/misc/fsnotify.h
+new file mode 100644
+index 000000000000..a201e1bd6d8c
+--- /dev/null
++++ b/include/trace/misc/fsnotify.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Display helpers for fsnotify events
++ */
++
++#include <linux/fsnotify_backend.h>
++
++#define show_fsnotify_mask(mask) \
++	__print_flags(mask, "|", \
++		{ FS_ACCESS,		"ACCESS" }, \
++		{ FS_MODIFY,		"MODIFY" }, \
++		{ FS_ATTRIB,		"ATTRIB" }, \
++		{ FS_CLOSE_WRITE,	"CLOSE_WRITE" }, \
++		{ FS_CLOSE_NOWRITE,	"CLOSE_NOWRITE" }, \
++		{ FS_OPEN,		"OPEN" }, \
++		{ FS_MOVED_FROM,	"MOVED_FROM" }, \
++		{ FS_MOVED_TO,		"MOVED_TO" }, \
++		{ FS_CREATE,		"CREATE" }, \
++		{ FS_DELETE,		"DELETE" }, \
++		{ FS_DELETE_SELF,	"DELETE_SELF" }, \
++		{ FS_MOVE_SELF,		"MOVE_SELF" }, \
++		{ FS_OPEN_EXEC,		"OPEN_EXEC" }, \
++		{ FS_UNMOUNT,		"UNMOUNT" }, \
++		{ FS_Q_OVERFLOW,	"Q_OVERFLOW" }, \
++		{ FS_ERROR,		"ERROR" }, \
++		{ FS_OPEN_PERM,		"OPEN_PERM" }, \
++		{ FS_ACCESS_PERM,	"ACCESS_PERM" }, \
++		{ FS_OPEN_EXEC_PERM,	"OPEN_EXEC_PERM" }, \
++		{ FS_PRE_ACCESS,	"PRE_ACCESS" }, \
++		{ FS_MNT_ATTACH,	"MNT_ATTACH" }, \
++		{ FS_MNT_DETACH,	"MNT_DETACH" }, \
++		{ FS_EVENT_ON_CHILD,	"EVENT_ON_CHILD" }, \
++		{ FS_RENAME,		"RENAME" }, \
++		{ FS_DN_MULTISHOT,	"DN_MULTISHOT" }, \
++		{ FS_ISDIR,		"ISDIR" })
 
 -- 
 2.53.0
