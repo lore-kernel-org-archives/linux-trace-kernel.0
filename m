@@ -1,230 +1,252 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E694637F8B3
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Apr 2026 10:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776335408; cv=pass; b=frVbBtuzfa66Wnse3PGbTB7jErwW9u2ojSz2ZPVhCLcAD9gGjTniXgL8H7UtudksbYuMIAvuOBoGIBfyA3meU69bKUeZ8kNuzmUGhEoETL6cVEiQp9a3VsuG26cwD02zQhU1it1oBeDG/sUdYjuBNuK7ulo3NuuuRf+w4DQh5uk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776335408; c=relaxed/simple;
-	bh=waJiDzOo49cMRleBM9fFS7wM9KT+ZlkCB7xqbkKrq9M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CF/Vz7LZlR/LKxrWoZ8jZTkHmCSTgVOUX1jH9WF9DXnQUlNhECNSJ0GjEil5IQdiJgR3KPh4G5WRUwv0WbYOAnlYyAClEpQ9l0wkhc/3obZH1LKeFw2ZPK6/XWNIYt/MIkMHTmBquiAQ1AwCqJ4QF431+zCbvuo2VmBj+Yr9sWg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4q8woPu; arc=pass smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862F53A5E87
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Apr 2026 10:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776335634; cv=none; b=FFnznlpRpJoK9AR6ePli1Mg/86ihWBE8fruzRzMseOqaM9QPiQVFE6ze8wczTTIfisyjv70pOzy5d1k8krFGVNYzCe064bmlQx19245VhHpBYyggWdnYr3ZZ281Mz8+O58SHWB4NUkiQIHBbUscbbSjiCY5g9GA7lJlXKN18bww=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776335634; c=relaxed/simple;
+	bh=PnkhtnPlWqR69u9/G7kOgPwF0gnYlgcUF1nrMIPg0fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8YiN9s99PKVsrLBcGO3a6sg8BpF9sPBfQZagp4bUh8xv6/GewHa48gj4WIr2iclZO3zlRlaorwWfGbD1yMk1FxXW+UFdQeFY5yTHwOSZhtB5O2P0t4irYk8Z9/tuVMDat/FVlmMJvo+d8ZsqmdiJuyoSt6KBaJVBiUHzP0GNFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Yw99Yy5m; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4q8woPu"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-66d65646c65so1068023a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Apr 2026 03:30:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776335404; cv=none;
-        d=google.com; s=arc-20240605;
-        b=l12oT3uhuUGES/Z/w/4tXFOOrPsPn/0xB6e9n1v1ylTrhPKL2NXbgRUpn+a+nEpCxM
-         3aRXPchI11Xqfps9/ecnEEZpIw1IWzoXT01oKdTEx6PstR0aLID/0kH1l2SyVAYDPnsT
-         wyO+AqB1PibLDTyoiqhN9zhRkT8ZT0VtP9eeR8siArz90L1r6UzoHApOP4dKZ/Sza5Q8
-         OfH2QgUwltxZsb06dlj94e7QN4VJ0RWIOyWFw2GBc/juUk4qk7CjiOFOKlivOYZ+a9N2
-         ppA2KtA5X1hehHV+BnhxTA5sKP/SXbULWkXy/4/lKK0nB9mP+tyAFloMkkG8h5JBzley
-         PEIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=O4x/p20rCdbt363tjV0+ABHeJuaMLyMj2lG+gRWDekg=;
-        fh=bVLpw8AB9Uw4NPhxDHyLXaG8R4VjTdZEQ+Mdm/EtZJg=;
-        b=i0wrh3NCnQhVe+Geq4GmG8qip1XSRiC8L/lYMLO9Gc7eD9rTZEpw0ZrAVWDeXj6R/e
-         sDlQMPIFBqyLKgmQ9EScQPLRBY6TjEFTrbzCPHg6knAI/dLQJwsgtSV1w5SAtMxK/Rey
-         BisonFbbntbUo6lPRJmFsdrMHUctmKCpWOkdRcUaF2XcILMK2K6Ur8ymRpqC6FJqWYyi
-         El3llGdSQzlweprb/LFo5VHKo4muFN5YF5a8pdW3o6BhYCDZK52nFzyvVbaPUUI3I+JI
-         fX6E+H1gEMkUJft9EXBNOBf63bI81C/7bLteLQMElZVjnkM37jZ0bnJO7BUyRQ1fqX2u
-         VcXg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Yw99Yy5m"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488a041eae5so58285445e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Apr 2026 03:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776335404; x=1776940204; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O4x/p20rCdbt363tjV0+ABHeJuaMLyMj2lG+gRWDekg=;
-        b=H4q8woPuewhmnSwupiWyXSO0br9VwrNdTqx3AAh0ZdoHsn8P/BS3W229QhJTRcQenA
-         +Y2Se9s2vPVFdlsVmVqd3G7OMhH5sWT9y/KQCXJUIPXiIj6tBp0FclX+43XoNBm4Q00J
-         HLKZxkcODRGNbGQZH+p9TjyrhfFWO1VenoSfyNuiUD7XwkrsNGMKjxhHmmojJoWTPZ+f
-         XAx6l/cdSeqXldmngMI7ZdM3/7aUgiPqM1XYoNaWgYjROSQFpApE8By4FC0FnYt02omZ
-         orazUsYImFAG/GLW27GIwCI/pd/MuDH9xavNw85VG3mt1LN4tItpAUD5qfUd2Ialatuu
-         tQiA==
+        d=suse.com; s=google; t=1776335627; x=1776940427; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PFX0kfy1JVc6bVB6CE0bGMq+YH6jFLY5/9CO0YM6hrU=;
+        b=Yw99Yy5m7kvN1KSa9pxCJ+rj4LVOuiacf7mjAZ1+hedrfUk5JyPIN6zYHYbyElzPIe
+         x9JebNsVvvlrV/hoQwDjPkr/KB/PctEr7qKlO6OLJoafdSkZB9jeLeiL/a4vvE1M0t3/
+         om3eA/uaTfwen6E5V1J4ngTZ+wAbgwElWypa4jFVmTWBptmpaTJTIPBbe6XRWVKrTzwu
+         tebPL2lxwUgYQLNII1kDn9OyLAGJsxMAwVBH4Hvo76H6AxeHISu9mKkqAdAa5je+hRlh
+         rg54EVzzcMHE6qqQpg2GAWy6DRWd74af5HXg0FkOYrlGVCqvUn9fRdyfGdcpNr1UxK7W
+         J7gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776335404; x=1776940204;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=O4x/p20rCdbt363tjV0+ABHeJuaMLyMj2lG+gRWDekg=;
-        b=Wb3FVs/CVs/y8Fl/8z/MkcOnIgv/+6LEXqTBuPqj3wKKPJtIUcSWLnzgerXb4jtUeH
-         7PIFV52A4a2ONDdQVcxSBUNkFeya59M+D+8ln3Srj28njJsmo1j78qifYtgwChRZlfWT
-         5A7xGPSXXq/Y5KvfKKF4x2YFHNgy8+YkwX3niNTHWchZpJRMHJ0p3z8QZGi+eCjtB5Mi
-         tezodlCvuBBn9UN/j/nVVhvQs4RTnlzJ6o/J1ETbrs5++aws+drrdviPJcXbJEiyzO4B
-         tAFS7lvIBMDzE0a3uMGLyCgHSpnGGBeK8sNuiqKPQ8r44wta032N8CLK03ZS006EKHB4
-         Geng==
-X-Forwarded-Encrypted: i=1; AFNElJ/WNGmbFLh2rBOltxtjbADSa5NNFmUiDl69Kstm/ujAKai8iah1hgEycmi6gzkIXmhQpVKh/4UB0RR7ksuCf3TCJHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVKk3bFKrxJ+JYqU/LHWM4/E0F9Q21+SpVIoPI9dOeh2+X3/65
-	l8BGk8b7SsAvbui6elVH3aP1cOyHxy/Tr4qtpRqfStmVXa41gIx+lQKoHLbCPioszmD8G8icrC3
-	3imchaSEk3XTgznC1ltVyJOOOdlRYgAw=
-X-Gm-Gg: AeBDievZOUY9m254Udn+DLoxPxC6BG5HTz+vSbJ6hPL0IgKxDDamVWqUWH1dMPrxrkl
-	W4qXzPKp4feRhba/AASaK5ANSe0JOOIi3yi3yqZc6Hv8PvwEgon830EhWvJsU50gZl/JUe15KV/
-	ssbGG0xMDF0yn6vUre2Fvm75y0k9JGjx/4p6oya3/yF2q15+9BiGNJqDf88FJekpv+rngbg0laG
-	Uug199Cu2VmMpsEAxCdnFaqo/TSztxFXNJURg2ZTWKqXHad3m/V9+m8Hvt6sNdWRKHna4PYi+Oe
-	hhackGzJim+rEcSWfpshRZEO3GQxvzEIPtTW90B7PrVkygshhQ==
-X-Received: by 2002:a05:6402:1bd0:b0:66e:103b:6350 with SMTP id
- 4fb4d7f45d1cf-67271085617mr945994a12.7.1776335403710; Thu, 16 Apr 2026
- 03:30:03 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1776335627; x=1776940427;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PFX0kfy1JVc6bVB6CE0bGMq+YH6jFLY5/9CO0YM6hrU=;
+        b=k3CliaDnGYBSIUBaHK79yfO0sP2kMmBzhH/1KdMjehZT5FR8Bme+f9Wxh+z7z+/4lw
+         tgTIASw/df0wJFVyfhNixV+j67FEMsPZh9AVZHwovGBImAlcb0m7prEofIXWz+P5ywY9
+         Y2DbQpPHlPD7k6pOwWpeI2rw90YJoUDcggD7mEa+tYvAi0evz5QVBCoJotcca4A5qZju
+         JMhsFaR0vE5ur/VxNNVRU5xRO5HGwQn+xdE8tzA9DfkbyR6l2UjicfLVYQYJP0O68Ae0
+         dGyHn20K75+wdZ2xBmWj/an2EOn1CBAknePkLIduXDWXTW2iAi0aJXvKafYQHvpWDJkO
+         KHWQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8p+U2Lk7i+FzoJL2AelpwdUXjAKj+amTjxwdgwP7j36dqprHv7iorebc2NHxc6Kkz1tlmAbKKhr6oJo110ayWL2f8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOB//rTq5prthhU2rTJ2vkPRT4d0tAdv18BHF3iZJa2hyQ75M2
+	Lz0eSBpcxRLwFHQxXNXzvdlk77ULGswX7amzyk+ZIWv5FS/XEfmNVJTyiTXsHVHb448=
+X-Gm-Gg: AeBDies7rTYLL//aQ+UORqCeI7k89ZnviMZRYTzEvwULb6jIsRXcPhRrY3P9iedHzN6
+	sBjXhuvTjPEfeBGfepydiCw8lpCuwXWPYTPK3gy+WFWLQZlHieyJmA2/L2kljIkLw3cvjmQEYFX
+	nDBsW/iiWsduTvCvW36ShHCOAOa5g80iny6Muo2a/zxy0On8n6VXh+26gTJAwFnUijFmrixGCz7
+	SSVc4BAqPTsEQ3KAGZuW28qyigOiU9isL9YzoGwBJzOFmbp1bPSAtz4Xb0tTZb9M0cdV4sKu3jF
+	9RWBdi9fq2sbsJhjNy87sAMEr53YfDG9utHzPlQpDE7Bw++AaFuvH/53Y7YiaUQwhvhPJu6P17R
+	X0IlqHR+YRDJKo6Y8JG+NRnWM4XiWxub/ZE+yCmji55vnf06eQ981WgFZhQV6BeQ/hC3aHiBB8I
+	ocbPkKMfvS4NyQK9IBU97KPC+kOg==
+X-Received: by 2002:a05:600c:3b96:b0:488:b098:b653 with SMTP id 5b1f17b1804b1-488d67f0a8amr350880245e9.13.1776335626808;
+        Thu, 16 Apr 2026 03:33:46 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43ead402ee8sm12369872f8f.37.2026.04.16.03.33.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2026 03:33:46 -0700 (PDT)
+Date: Thu, 16 Apr 2026 12:33:43 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: chensong_2000@189.cn
+Cc: rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, viresh.kumar@linaro.org, agk@redhat.com,
+	snitzer@kernel.org, mpatocka@redhat.com, bmarzins@redhat.com,
+	song@kernel.org, yukuai@fnnas.com, linan122@huawei.com,
+	jason.wessel@windriver.com, danielt@kernel.org,
+	dianders@chromium.org, horms@kernel.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	paulmck@kernel.org, frederic@kernel.org, mcgrof@kernel.org,
+	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
+	atomlin@atomlin.com, jpoimboe@kernel.org, jikos@kernel.org,
+	mbenes@suse.cz, joe.lawrence@redhat.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, live-patching@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] kernel/notifier: replace single-linked list with
+ double-linked list for reverse traversal
+Message-ID: <aeC7ByGA5MHBcGQR@pathway.suse.cz>
+References: <20260415070137.17860-1-chensong_2000@189.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260413062042.804-1-huangsj@hygon.cn> <76pfiwabdgsej6q2yxfh3efuqvsyg7mt7rvl5itzzjyhdrto5r@53viaxsackzv>
- <ad4EvoDcAKE2Sl4+@hsj-2U-Workstation>
-In-Reply-To: <ad4EvoDcAKE2Sl4+@hsj-2U-Workstation>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 16 Apr 2026 12:29:50 +0200
-X-Gm-Features: AQROBzC-j8c2wDPnYX4NqzriRAjav7sQoMIZaVyLzvRZ8lq-CJThcPkUuW_xSxI
-Message-ID: <CAGudoHGLaoc+CoBPNCvFRYojnj+6E_Lsdv7NaJWxFMoHezemMQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] mm: split the file's i_mmap tree for NUMA
-To: Huang Shijie <huangsj@hygon.cn>
-Cc: akpm@linux-foundation.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	muchun.song@linux.dev, osalvador@suse.de, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	nvdimm@lists.linux.dev, zhongyuan@hygon.cn, fangbaoshun@hygon.cn, 
-	yingzhiwei@hygon.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260415070137.17860-1-chensong_2000@189.cn>
 
-On Tue, Apr 14, 2026 at 11:11=E2=80=AFAM Huang Shijie <huangsj@hygon.cn> wr=
-ote:
->
-> On Mon, Apr 13, 2026 at 05:33:21PM +0200, Mateusz Guzik wrote:
-> > On Mon, Apr 13, 2026 at 02:20:39PM +0800, Huang Shijie wrote:
-> > >   In NUMA, there are maybe many NUMA nodes and many CPUs.
-> > > For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
-> > > In the UnixBench tests, there is a test "execl" which tests
-> > > the execve system call.
-> > >
-> > >   When we test our server with "./Run -c 384 execl",
-> > > the test result is not good enough. The i_mmap locks contended heavil=
-y on
-> > > "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can=
- have
-> > > over 6000 VMAs, all the VMAs can be in different NUMA mode.
-> > > The insert/remove operations do not run quickly enough.
-> > >
-> > > patch 1 & patch 2 are try to hide the direct access of i_mmap.
-> > > patch 3 splits the i_mmap into sibling trees, and we can get better
-> > > performance with this patch set:
-> > >     we can get 77% performance improvement(10 times average)
-> > >
-> >
-> > To my reading you kept the lock as-is and only distributed the protecte=
-d
-> > state.
-> >
-> > While I don't doubt the improvement, I'm confident should you take a
-> > look at the profile you are going to find this still does not scale wit=
-h
-> > rwsem being one of the problems (there are other global locks, some of
-> > which have experimental patches for).
-> IMHO, when the number of VMAs in the i_mmap is very large, only optimise =
-the rwsem
-> lock does not help too much for our NUMA case.
->
-> In our NUMA server, the remote access could be the major issue.
->
+On Wed 2026-04-15 15:01:37, chensong_2000@189.cn wrote:
+> From: Song Chen <chensong_2000@189.cn>
+> 
+> The current notifier chain implementation uses a single-linked list
+> (struct notifier_block *next), which only supports forward traversal
+> in priority order. This makes it difficult to handle cleanup/teardown
+> scenarios that require notifiers to be called in reverse priority order.
+> 
+> A concrete example is the ordering dependency between ftrace and
+> livepatch during module load/unload. see the detail here [1].
+> 
+> This patch replaces the single-linked list in struct notifier_block
+> with a struct list_head, converting the notifier chain into a
+> doubly-linked list sorted in descending priority order. Based on
+> this, a new function notifier_call_chain_reverse() is introduced,
+> which traverses the chain in reverse (ascending priority order).
+> The corresponding blocking_notifier_call_chain_reverse() is also
+> added as the locking wrapper for blocking notifier chains.
+> 
+> The internal notifier_call_chain_robust() is updated to use
+> notifier_call_chain_reverse() for rollback: on error, it records
+> the failing notifier (last_nb) and the count of successfully called
+> notifiers (nr), then rolls back exactly those nr-1 notifiers in
+> reverse order starting from last_nb's predecessor, without needing
+> to know the total length of the chain.
+> 
+> With this change, subsystems with symmetric setup/teardown ordering
+> requirements can register a single notifier_block with one priority
+> value, and rely on blocking_notifier_call_chain() for forward
+> traversal and blocking_notifier_call_chain_reverse() for reverse
+> traversal, without needing hard-coded call sequences or separate
+> notifier registrations for each direction.
+> 
+> [1]:https://lore.kernel.org/all
+> 	/alpine.LNX.2.00.1602172216491.22700@cbobk.fhfr.pm/
+> 
+> --- a/include/linux/notifier.h
+> +++ b/include/linux/notifier.h
+> @@ -53,41 +53,41 @@ typedef	int (*notifier_fn_t)(struct notifier_block *nb,
+[...]
+>  struct notifier_block {
+>  	notifier_fn_t notifier_call;
+> -	struct notifier_block __rcu *next;
+> +	struct list_head __rcu entry;
+>  	int priority;
+>  };
+[...]
+>  #define ATOMIC_INIT_NOTIFIER_HEAD(name) do {	\
+>  		spin_lock_init(&(name)->lock);	\
+> -		(name)->head = NULL;		\
+> +		INIT_LIST_HEAD(&(name)->head);		\
 
-I'm confused how this is not supposed to help. You moved your data to
-be stored per-domain. With my proposal the lock itself will also get
-that treatment.
+I would expect the RCU variant here, aka INIT_LIST_HEAD_RCU().
 
-Modulo the issue of what to do with code wanting to iterate the entire
-thing, this is blatantly faster.
+> --- a/kernel/notifier.c
+> +++ b/kernel/notifier.c
+> @@ -14,39 +14,47 @@
+>   *	are layered on top of these, with appropriate locking added.
+>   */
+>  
+> -static int notifier_chain_register(struct notifier_block **nl,
+> +static int notifier_chain_register(struct list_head *nl,
+>  				   struct notifier_block *n,
+>  				   bool unique_priority)
+>  {
+> -	while ((*nl) != NULL) {
+> -		if (unlikely((*nl) == n)) {
+> +	struct notifier_block *cur;
+> +
+> +	list_for_each_entry(cur, nl, entry) {
+> +		if (unlikely(cur == n)) {
+>  			WARN(1, "notifier callback %ps already registered",
+>  			     n->notifier_call);
+>  			return -EEXIST;
+>  		}
+> -		if (n->priority > (*nl)->priority)
+> -			break;
+> -		if (n->priority == (*nl)->priority && unique_priority)
+> +
+> +		if (n->priority == cur->priority && unique_priority)
+>  			return -EBUSY;
+> -		nl = &((*nl)->next);
+> +
+> +		if (n->priority > cur->priority) {
+> +			list_add_tail(&n->entry, &cur->entry);
+> +			goto out;
+> +		}
+>  	}
+> -	n->next = *nl;
+> -	rcu_assign_pointer(*nl, n);
+> +
+> +	list_add_tail(&n->entry, nl);
 
->
-> >
-> > Apart from that this does nothing to help high core systems which are
-> > all one node, which imo puts another question mark on this specific
-> > proposal.
-> Yes, this patch set only focus on the NUMA case.
-> The one-node case should use the original i_mmap.
->
-> Maybe I can add a new config, CONFIG_SPILT_I_MMAP. The config is disabled
-> by default, and enabled when the NUMA node is not one.
->
-> >
-> > Of course one may question whether a RB tree is the right choice here,
-> > it may be the lock-protected cost can go way down with merely a better
-> > data structure.
-> >
-> > Regardless of that, for actual scalability, there will be no way around
-> > decentralazing locking around this and partitioning per some core count
-> > (not just by numa awareness).
-> >
-> > Decentralizing locking is definitely possible, but I have not looked
-> > into specifics of how problematic it is. Best case scenario it will
-> > merely with separate locks. Worst case scenario something needs a fully
-> > stabilized state for traversal, in that case another rw lock can be
-> Yes.
->
-> The traversal may need to hold many locks.
->
+I would expect list_add_tail_rcu() here.
 
-The very paragraph you partially quoted answers what to do in that
-case: wrap everything with a new rwsem taken for reading when
-adding/removing entries and taken for writing when iterating the
-entire thing. Then the iteration sticks to one lock.
+> @@ -59,25 +67,25 @@ static int notifier_chain_unregister(struct notifier_block **nl,
+>   *			value of this parameter is -1.
+>   *	@nr_calls:	Records the number of notifications sent. Don't care
+>   *			value of this field is NULL.
+> + *	@last_nb:  Records the last called notifier block for rolling back
+>   *	Return:		notifier_call_chain returns the value returned by the
+>   *			last notifier function called.
+>   */
+> -static int notifier_call_chain(struct notifier_block **nl,
+> +static int notifier_call_chain(struct list_head *nl,
+>  			       unsigned long val, void *v,
+> -			       int nr_to_call, int *nr_calls)
+> +			       int nr_to_call, int *nr_calls,
+> +				   struct notifier_block **last_nb)
+>  {
+>  	int ret = NOTIFY_DONE;
+> -	struct notifier_block *nb, *next_nb;
+> -
+> -	nb = rcu_dereference_raw(*nl);
+> +	struct notifier_block *nb;
+>  
+> -	while (nb && nr_to_call) {
+> -		next_nb = rcu_dereference_raw(nb->next);
+> +	if (!nr_to_call)
+> +		return ret;
+>  
+> +	list_for_each_entry(nb, nl, entry) {
 
-The new rw lock puts an upper ceiling on scalability of the thing, but
-it is way higher than the current state.
+I would expect the RCU variant here, aka list_for_each_rcu()
 
-Given the extra overhead associated with it one could consider
-sticking to one centralized state by default and switching to
-distributed state if there is enough contention.
+These are just two random examples which I found by a quick look.
 
-> > slapped around this, creating locking order read lock -> per-subset
-> > write lock -- this will suffer scalability due to the read locking, but
-> > it will still scale drastically better as apart from that there will be
-> > no serialization. In this setting the problematic consumer will write
-> > lock the new thing to stabilize the state.
-> >
-> > So my non-maintainer opinion is that the patchset is not worth it as it
-> > fails to address anything for significantly more common and already
-> > affected setups.
-> This patch set is to reduce the remote access latency for insert/remove V=
-MA
-> in NUMA.
->
+I guess that the notifier API is very old and it does not use all
+the RCU API features which allow to track safety when
+CONFIG_PROVE_RCU and CONFIG_PROVE_RCU_LIST are enabled.
 
-And I am saying the mmap semaphore is a significant problem already on
-high-core no-numa setups. Addressing scalability in that case would
-sort out the problem in your setup and to a significantly higher
-extent.
+It actually might be worth to audit the code and make it right.
 
-> >
-> > Have you looked into splitting the lock?
-> >
-> I ever tried.
->
-> But there are two disadvantages:
->   1.) The traversal may need to hold many locks which makes the
->       code very horrible.
->
+>  #ifdef CONFIG_DEBUG_NOTIFIERS
+>  		if (unlikely(!func_ptr_is_kernel_text(nb->notifier_call))) {
+>  			WARN(1, "Invalid notifier called!");
+> -			nb = next_nb;
+>  			continue;
+>  		}
+>  #endif
 
-I already above this is avoidable.
+That said, I am not sure if the ftrace/livepatching handlers are
+the right motivation for this. Especially when I see the
+complexity of the 2nd patch [*]
 
->   2.) Even we split the locks. Each lock protects a tree, when the tree b=
-ecomes
->       big enough, the VMA insert/remove will also become slow in NUMA.
->       The reason is that the tree has VMAs in different NUMA nodes.
->
+After thinking more about it. I am not even sure that the ftrace and
+livepatching callbacks are good candidates for generic notifiers.
+They are too special. It is not only about ordering them against
+each other. But it is also about ordering them against other
+notifiers. The ftrace/livepatching callbacks must be the first/last
+during module load/release.
 
-This is orthogonal to my proposal. In fact, if one is to pretend this
-is never a factor with your patch, I would like to point out it will
-remain not a factor if the per-numa struct gets its own lock.
+[*] The 2nd patch is not archived by lore for some reason.
+    I have found only a review but it gives a good picture, see
+    https://lore.kernel.org/all/1191caf5-6a61-4622-a15e-854d3701f4fc@suse.com/
+
+Best Regards,
+Petr
