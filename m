@@ -1,67 +1,68 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF39C3C0637
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Apr 2026 14:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7562A3C1977
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Apr 2026 15:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776437159; cv=none; b=cD6+bdcvj/use2zD0DkqpKXgi23gPuTg2F8wwa6hvR3XdQCUy8TXksuNVQ8UEURV38CYi9exNT/jZXuKzwRn5jOTA78JSTu9GvxEpW/eHw6ROe0soVgl8aAt7CzdGsjhhkwAFU0PTht0hPFVra8heKQ7LcafAiVxIecCJ3zGBtU=
+	t=1776438479; cv=none; b=VMxfxmfJixskTaJjLQwP74Csv52jrUDMJ4y710S0AEOjyB4BqxrEJGVYefZFktdNI5YvtiHfREUiHFRsKh6wMloUaMDA8/iqLq05NXTcHKqGMjy14Q+QJ46/1gMIcCRC9aQxLteAVJ0Se+3RIZEcAhT0xkMWBtLRXMkzyUqUavU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776437159; c=relaxed/simple;
-	bh=UNrb3fspU9BdkXegwdmwqukr2NvwEt0LLiivOVSbqvk=;
+	s=arc-20240116; t=1776438479; c=relaxed/simple;
+	bh=4pOvxWvA/yj5xSsYSUbpCo6Kkeq+uF64q1hqZjlP4T0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpID1MRWqeC5AyRGgJ/6ia7z6L52+bD/N+84BCESa6BLUlQtmP8M+Os2gOcpS8+X8l0uoKy1HBnd32pbLBck3FVbrhoUSMzyWq/k0+6E4MFZX/4KrPI8lawJ4ird33PaixFzeH0K4VlxpobuadlCzTZgqkaw8JC/Ye4lz9uKckY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LFMvbAhk; arc=none smtp.client-ip=209.85.160.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=u9lIOu9e/zTGFvkKY95ixFv/68d6qiW4Ju0XvZBgmQQrQD1je7JXkH/cMqm1dYTeRbK8LTMOoC/9kHGqdsyVGksml1EacYh8LZAc0PS8GIutelbS4o3/Y5cWxjEBaNehah/fQtc6QBFkWKTac1od2YKAWMk2qEl1ed+7vDTywjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MuXvucRS; arc=none smtp.client-ip=209.85.217.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LFMvbAhk"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-50baafd6c4aso8739731cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Apr 2026 07:45:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MuXvucRS"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-60fd9b71745so294435137.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Apr 2026 08:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776437157; x=1777041957; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1776438477; x=1777043277; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Jkzv2KvncmaDlTxMf9kep+UrjgSD3pdlFDgixpHVA0=;
-        b=LFMvbAhkQucFdmfedNUtfb8qvWQ7VnK58a7nArceqK/1C0On7wFdqMfppjGPDfSbwD
-         eP7ceaWSbGp9tVxj2KyC1OGt+0zLfdWYlCgsuXs7Wgnd4TMWQ8Z+wKxA9HcJrmI52UCE
-         ofesP6jeG7tpRSCfFKz3WcpZddvAUa4m9CIAClDKphsbxYpqCD/Z4jDNW1NXKU/O0Tnc
-         FpIWR1ACgc9tXR9vvtXTyA/PM1Hx3LsbNA4lNFX+MRjh+hWDIuij3leDSSrcjCz5cak2
-         +L1162DjOMNIUdXbuzKYHJiEylXL3t+ULpyxhanC7CmyibQ3f0/LQQybUZ2GFxL3mMZz
-         hTQg==
+        bh=l8hmn8cP8J8LvjQAqTAHhf9pkwu4llVl8k7YZT9Lr2w=;
+        b=MuXvucRSPryIvwYoaQCiGTb9aT275yNFutcZ8S6ZOCNgBzvAKq7D9d+rhXkd2xbJqZ
+         FWEK6FwCH8erIvtPT0O7vKzSm3Rr4npcFBMD/omrKxxHttXdAoMZ1CU2NbexWyfowXXY
+         BK1I/UOka5u3OVfPDrWoxsEjUED2U+CStdw/czC6gqtUMv+huF8cu3wC42LVGI9zBeP9
+         t++KjE5+/VVnbuTtP8Vhgc/c8oIjrO8Pml5joMhi1D1gMIA3QspaijVqGmC9oDPKeroO
+         ubS/lBY7qL8QVEDbun0mNhpoSOZDZyCEIYgM5XoHlYIf+kkcyhnXT7HPY6yvprnf7qQ1
+         E2wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776437157; x=1777041957;
+        d=1e100.net; s=20251104; t=1776438477; x=1777043277;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6Jkzv2KvncmaDlTxMf9kep+UrjgSD3pdlFDgixpHVA0=;
-        b=faxW8nnJySSbVuxIf+A37SlGgjtMoxMwdAxKDcWXEw/NPM0eLrnIRD7c3IeV+zEgWK
-         SUunqyJ4QBMvETY5q2nq/MImDsrN52bjk1LvXqoEgLL0E6KIjxv8TmbBahuOMOSToD0k
-         iDfaCe1oF6Ga3ZlT9DUEpWRi9RWKrHdvWX+8gbjkaG+20syZWKMaDubtzudRbSozzEaq
-         2goP5I7mXwVRSKP2kZMPyG9BKt+lJ5GuFshm1FNdNIOulTkfRcnEb0v1WAWuRK86gR5p
-         hkYTt2j61/NZmrPfiTtYxhh1gjhD0nNHgcOtFCqx8z3a7TPu7CA6zVac3k6Ctq5NCd/n
-         cGWg==
-X-Forwarded-Encrypted: i=1; AFNElJ8KkERy7CtUysK1BnDbeOt4GMg0GeLEiqLbmz6kdnY8g87I8lXc2FglRPJTP7oV40x/9KZTvimOtzWti2ffO+L+Avg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMmvwA0Ium6suSFWGR8IPXvfo89P69xEHfT6mbpRt9t3dLssiF
-	54s1wokTWrinmXRz5BwEbRNBcis1bRKZjs+sUEJ3uRy2f7eKj/hyFXBLhOfzQCGv5Z4=
-X-Gm-Gg: AeBDieuFc9g+loTLsanyhY5S/n2otp+BJJV+pNM0vDKLJPbgZKC5Ox8W3PHYUuPB/gP
-	Lo17j5g8PWZpJ/jSv90JCYzMqBt9B+CtBTRmbLix0/a1uqk5yfUFL1xv2IaE9eRVtHSB6CnCQAt
-	rQDhYLdCtn45htsLL7qTu6XELvKVJAag6gmA63d1YYl4jDthg28UKq0yzADUbZPC5wH1j9zIkFX
-	fVto7s199NC3n0nJyx/KaaRiJc0ok7Q/Rv4o6bUc126jwLEugSgpkS2EBtUleno+NUxOTszBdC2
-	+ZxU3YnZt9j9ZgIGvkyshfsfOBm8Z60a/mWSllT3LH4VhSCcMBN1zFkrPrUziKgZK0lGyi3T5O9
-	blu4/HmFl32ztS/ItofPfQIkcmTX1HgTYFZZoA8Rs4/CpV8QLgJsr7yrt7SgzCLLb7XrqGmXc2d
-	HQv/ZLWwhD3B6HG54un2ufwYpE6JKNrCTdUv4W4Pt5Cm38WogvFm7rf9+Gd/S3oY4rX54kOfVn3
-	47WrwGMGSb3OFxzDgZn
-X-Received: by 2002:a05:622a:15d3:b0:50d:b1fc:c7cf with SMTP id d75a77b69052e-50e36ebc865mr44534921cf.39.1776437156692;
-        Fri, 17 Apr 2026 07:45:56 -0700 (PDT)
+        bh=l8hmn8cP8J8LvjQAqTAHhf9pkwu4llVl8k7YZT9Lr2w=;
+        b=qG+FO4u+QIKnPENKHXVNv2e+1my9/G7xfbw5dJSYkggTheivXTpC2Z5zfOG0RCRDaL
+         HQyyENeLF+8G7db3KWMhHqdGERzl3oKKg7rPFgLJqHfqBg/R3seO1VRhhOVI+oZQDrhW
+         Ae6keTwSe15AzyIK+8PyVKhodXHmIbLNhyntvcUcIQz2GFSbNAOBGJ5B0tfzI0uYN88D
+         mQqztn5YCznYXQ/A70q3JGinARNBicR8hp2ZC43a67U+jqOiulZF6ZWxhTZQRnJyGV1j
+         q4dlHOvNV3dKWfA5GsXOTo3dXkWgokolLpb2qYuXkZat6nc2gXV//idwXxSo7EJVruCu
+         FvSw==
+X-Forwarded-Encrypted: i=1; AFNElJ+TebwrW5Uc+x4MUs2b/gSRTVR5ptFq9Mx8rXcNLrrAXxbfDAypC45UFfeWeXvg9JGNFCff0U/Kgmd3SlFRLnNqnRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkAH8honJazTWhN78eURIPqtJ41MzZDTbgDYrt9j3xFNBsh8EP
+	tl8SF8w9nfKKqS2wCa3iqmy4oGAm8u9AdGfXi8h/kO5xt+0YATf6qqxlnZqWlOLo9dE=
+X-Gm-Gg: AeBDiespRbuJWiXCYtL4LYQ0bbwKAeb8/Qkv2w+1vm2HDC8ZhqNxCXkiLobfXOS3FYF
+	Zyzyh1S8OkLyIuDr/eJf4lVIrckqf8JixaJrrn5Eq1kBZhYDPpCBz9nkxQ78/Qs9VgiEDYT0JN7
+	gnNlOdNlz+vY2tEL6uo9Dm+TyC/P3Cp8yvQHVmMug0azJs+7TnP9Je88NFJ3m2LVnGKdAga0cRT
+	fpwDg9d8mc+bk5Mr0uD4O+YZN3m2qbocVELvKYwgcMLlFreO9TLIcxKmm+KtEzVdmoidtc8clIn
+	/LrA1UM4rsIjp71fytrbKviIAhVE8GePlr9eOWgAaFNApRyEtvxBJ7mVN6MY/GX3h1iNPsegWwR
+	6X6TIJ7pURIYmHbh/4GvZW8vEUiu87W2dRlwmiT+3I7EnnRT+/CRMbZ0zPHk3u0xjLLenTSrP1R
+	LOx2b71C/Y+f9VMCcCmf3woXK7TjgwJj9bn1r3YVNqwaUVsa6w+ecgX7DbLKCzc3LW9rGkNzR0b
+	SrSc5VkHfVcd9LWACW4
+X-Received: by 2002:a05:6102:162a:b0:613:6b44:3fa9 with SMTP id ada2fe7eead31-616f71ff8c8mr1462957137.20.1776438477197;
+        Fri, 17 Apr 2026 08:07:57 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-108-18-109-80.washdc.ftas.verizon.net. [108.18.109.80])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e393ffe6fsm13613881cf.16.2026.04.17.07.45.47
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02ac6c3e7sm13032726d6.13.2026.04.17.08.07.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 07:45:55 -0700 (PDT)
-Date: Fri, 17 Apr 2026 10:45:45 -0400
+        Fri, 17 Apr 2026 08:07:56 -0700 (PDT)
+Date: Fri, 17 Apr 2026 11:07:53 -0400
 From: Gregory Price <gourry@gourry.net>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+Cc: Frank van der Linden <fvdl@google.com>,
+	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
 	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
 	damon@lists.linux.dev, kernel-team@meta.com,
@@ -90,7 +91,7 @@ Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
 	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
 Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
  Compressed RAM)
-Message-ID: <aeJHmSpGYBafAgWC@gourry-fedora-PF4VCD3F>
+Message-ID: <aeJMyYMQWLyiGTRb@gourry-fedora-PF4VCD3F>
 References: <20260222084842.1824063-1-gourry@gourry.net>
  <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
  <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
@@ -98,7 +99,9 @@ References: <20260222084842.1824063-1-gourry@gourry.net>
  <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
  <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
  <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
- <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
+ <CAPTztWajm_JLpp9BjRcX=h72r25ELrXeGkOXVachybBxLJGS=g@mail.gmail.com>
+ <aeA6aNDpQ-U5UJCs@gourry-fedora-PF4VCD3F>
+ <6d4f702c-5ad6-4f84-a73e-c9e34965be98@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -107,173 +110,65 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
+In-Reply-To: <6d4f702c-5ad6-4f84-a73e-c9e34965be98@kernel.org>
 
-On Fri, Apr 17, 2026 at 11:37:36AM +0200, David Hildenbrand (Arm) wrote:
-> > 
-> > I'm not married to __GFP_PRIVATE, but it has been reliable for me.
-> 
-> Yes, we should carefully describe which semantics we want to achieve, to
-> then figure out how we could achieve them.
->
-
-Yeah, __GFP_THISNODE does seem similar enough at first look - but its
-semantic is actually backwards from the problem we're trying to solve.
-
-__GFP_THISNODE says:  Don't fall back   (restrict access)
-__GFP_PRIVATE says:   Enable Allocation (allow access)
-
-But I think there is merit in asking the question whether the problem
-is a GFP flag or the current node iterations thoughout the system.
-
-My concern is essentially some driver doing something like:
-
-   for node in possible_nodes:
-       alloc_pages_node(..., node, __GFP_THISNODE);
-
-Which, while silly looking, its not hard to imagine such a pattern
-accidentally creeping into code in a less obvious form.
-
-I'll take some time to chew on it - maybe the answer is private nodes
-should not be in the default node iteration macros either.
-
-I had briefly considered this, but had moved on when I figured out
-removing these nodes from the fallback lists.
-
-> >> Again, I am not sure about compaction and khugepaged. All we want to
-> >> guarantee is that our memory does not leave the private node.
+On Fri, Apr 17, 2026 at 11:50:58AM +0200, David Hildenbrand (Arm) wrote:
+> On 4/16/26 03:24, Gregory Price wrote:
+> > On Wed, Apr 15, 2026 at 12:47:50PM -0700, Frank van der Linden wrote:
 > >>
-> >> That doesn't require any __GFP_PRIVATE magic, just en-lighting these
-> >> subsystems that private nodes must use __GFP_THISNODE and must not leak
-> >> to other nodes.
+> > 1GB ZONE_MOVABLE HugeTLBFS Pages is an example weird carve-out, because
+> > the memory is in ZONE_MOVABLE to help make 1GB allocations more
+> > reliable, but 1GB movable pages were removed from the kernel because
+> > they're not easily migrated (and therefore may block hot-unplug).
 > > 
-> > This is where specific use-cases matter.
-> > 
-> > In the compressed memory example - the device doesn't care about memory
-> > leaving - but it cares about memory arriving and *and being modified*.
-> > (more on this in your next question)
+> > (Thankfully they're back now, so VMs can live on this memory :P)
 > 
-> Right, but naive me would say that that's a memory allocation problem,
-> right?
+> Heh, but longterm-pinning would fail on them (making vfio with VMs
+> angry). Similar to CMA hugetlb.
 > 
 
-Allocation is only 1 part of the problem - the second is modification.
+Yeah, depends how you configure things.  As long as you expose those
+pages on a separate memfd and online it in ZONE_MOVABLE in the guest
+to avoid vfio from touching it - you can have your cake and eat it too.
 
-Putting aside that I don't think this memory should be mempolicy
-enabled for the moment - the problem is best described in code:
+It's a bit of bodge but it works.
 
-    /* We have a 512MB compressed memory region */
-    buf = malloc(1GB);
-    mbind(buf, compressed_node); 
+However...
 
-    /* Nothing is faulted yet - our first chance to catch OOM */
-    memset(buf, 0x42, 1GB);  /* Allocation - compressed nicely */
-
-    /* Pages are now faulted and have R/W PTEs */
-    memcpy(buf, uncompressible, 1GB); 
-
-    /* There is a bear chasing you now, run fast. */
-
-
-There is nothing an operating system can do to slow down the writer in
-this scenario - the memory is faulted and mapped R/W in the page tables.
-
-Another way to think about this is that modification is basically a
-"Re-allocation" on the device with the CPU and OS removed from the loop.
-
-So you need both allocation control (private node, dmeotion only) and
-modification control (PTE write-protection) to make this reliable.
-
-> khugepaged() wants to allocate a 2M page to collapse. Goes to the buddy
-> to allocate it.
+> In the latter case, we should have a way to identify "this allocation is
+> actually from the CMA owner, so longterm pinning is perfectly fine".
+> Checking the CMA alloc state would be one approach, but that's rather
+> nasty. I guess there would be ways to make that work.
 > 
-> Buddy has to say no if the device cannot support it.
+> I'd assume that people barely rely on 1GB ZONE_MOVABLE HugeTLBFS Pages
+> (iow, mixing kernel-cmdline ZONE_MOVABLE creation with kernel-cmdline
+> hugetlb reservation).
 > 
-> So there are free pages but we just don't want to hand them out.
->
-
-On the allocation side - I think we can borrow from kernel free page
-reporting and/or ballooning to control this aspect.
-
-But on the khugepaged observation... hmm
-
-If we regularly scanned the compressed node, we could soft-protect them
-similar to the way numa balancing sets prot_none.
-
-Combined with the node being demotion-only, this might be sufficient
-unless you're riding the line pretty hard.
-
-If a write-protect node attribute is a bridge too far, this might be
-the best we can do.
-
-Hmmmm. As usual, you have given me something very interesting to chew on
-- thank you David.
-
-> > 
-> > tl;dr: informative mechanism - but it probably should be dropped,
-> > it makes no sense (it's device memory, pinnings mean nothing?).
-> 
-> What I was thinking: We still have different zone options for this memory.
-> 
-> Expose memory to ZONE_MOVABLE -> no longterm pinning allowed.
-> 
-> Expose memory to ZONE_NORMAL -> longterm pinning allowed.
->
-
-Yeah I have this in my pile of notes somewhere and it just fell out of
-my context window.
-
-This is actually a nice example of how isolation is better dealt with at
-the node level, while ZONE suddenly becomes just another attribute bit.
-
-In my response to Alistair, I pointed out that zones almost become
-meaningless on a private node (almost).
-
-If you have a private node in ZONE_NORMAL, and your services are in full
-control of how the allocations occur and what code touches them - you
-can still (in theory) guarantee the unpluggability of that memory with
-proper startup/teardown of the service.
-
-So what's the use in ZONE_MOVABLE existing for a private node? :]
-
-> > 
-> > Yeah i'm trying to avoid it, and the answer may actually just exist in
-> > the task-death and VMA cleanup path rather than the folio-free path.
-> > 
-> > From what i've seen of accelerator drivers that implement this, when you
-> > inform the driver of a memory region with a task, the driver should have
-> > a mechanism to take references on that VMA (or something like this) - so
-> > that when the task dies the driver has a way to be notified of the VMA
-> > being cleaned up.
-> > 
-> > This probably exists - I just haven't gotten there yet.
-> 
-> That sounds reasonable. Alternatively, maybe the buddy can just inform
-> the driver about pages getting freed?
->
-> Again, just a another random thought. But if these nodes are already
-> special-private, then why not enlighten the buddy in some way.
-> 
-> That also aligns with my "buddy rejects to hand out free pages if the
-> device says no" case.
-> 
-> Something to thinker about.
+> I'll note that there was long long ago a proposal of converting
+> ZONE_MOVABLE to "sticky-movable" page blocks. It wouldn't really solve
+> this problem, though, where the early boot code just does something
+> that's rather stupid.
 > 
 
-The only thing i'll push back on here is this implies an ops callback
-in the buddy (on free, at least - alloc could be a bitcheck on pgdat).
+I have been toying with hotpluggable CMA regions.
 
-But yes, the current RFC has a free_folio() callback just like
-zone_device.  The problem starts to become obvious when you let
-other parts of mm/ touch those pages.
+Interesting opportunity:
 
-There are at least 3 or 4 different paths back into the buddy that
-would need to be instrumented this way.
+  Hotplug on a private node w/ (RECLAIM | DEMOTION | CMA | HUGETLBFS)
 
-Some of them are called in NMI contexts.
+Now you have exactly two enabled consumers:
+   1) HugeTLBFS
+   2) vmscan.c demotion logic
 
-The questions about "What is safe" start piling up very quick, and they
-are hard to answer definitively.  I think we should at make strong attempt
-to avoid such things entirely if possible.
+In this regard, HugeTLBFS is the only one that can reach these pages in
+a way that could result in the pages being pinned.
+
+All other pages on the node are - by definition - movable, because they
+can only reach the node via migration (demotion).
+
+The system can't do fallback allocations to the node, so it operates a
+bit slower as a general purpose memory pool - but if you decide you want
+to optimize for that you can unplug/hotplug the memory back to a normal
+node in ZONE_MOVABLE - without rebooting.
 
 ~Gregory
