@@ -1,131 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807C02ECE86;
-	Thu, 16 Apr 2026 23:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C3D25E469;
+	Fri, 17 Apr 2026 01:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776383702; cv=none; b=AIrM/Hj9ZKbZ9jU1CHBK2SD5sr0CZXixE/9dwpo5o7G8/LlmF4wmJGGgS/nxO532s0PznrGIJS1kBZnuw7pL/wwOvEUAXNAjl9gaPT6eDKgqSpesOPNhkU20LGO9O5LYGdDLznBVEpnWytEuRvkLvpo2c6oU1ZV0h2owuEOU17U=
+	t=1776390279; cv=none; b=nDzJL+Dog1dU7rn8XFJXcmrXgJ3FyKHAvJvC/mqN1haa/j8TodXhtWAe1WRFKTxGgsN5o/i/MI4E+bynx5QmqfcrY8KnD1PHg0pxGqbTtd2+dtNqK6+02oCrAnXN0pmUZUsIIf7AxpgiWjJdSHzRT7AG1rVWWwbs41ve219YNuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776383702; c=relaxed/simple;
-	bh=VTowxyWg+zn9j8jiuGeLbEeSc6Y2b6QIg8VcHWlfoL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUlgFILoWaMXXzqvlFvRV9OxiOtD2LS2OwbdnaLMSzjsvR5iDPJcHhlfEAzrqTBoh/zqjoe1Gfke5HdQvNDK19sWY07GENI2ujhbmIr0bZm7vu/CkRES09Nqo8T8sIW8NlFEgfqv0HbC/YcZNh9s7W8JJghsNV2HBQoAlD9B3Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCqhKot0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776390279; c=relaxed/simple;
+	bh=aPpqYZ6wa2JGgq/5yZ8HWAy7XD4fYiLYSVf6EHgEcqk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=M9KcHhdOsHw+8CJ7jJ0dT0pmihW8wtaeodmf1Q+Vy9IRLoJfyQUOLXUIwEFRnEo19sEmQpCLx/M2t423ZBtYpzYD2nIkvtw/Crs+ldynkaFXxlEWXPMA4hzwFG901JeKhoRbSOFpMVVMJ0rrXsX56U23BMeUICRysy0x5rNpKwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+yWEF5i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCqhKot0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16048C2BCAF;
-	Thu, 16 Apr 2026 23:55:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+yWEF5i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57682C2BCAF;
+	Fri, 17 Apr 2026 01:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776383702;
-	bh=VTowxyWg+zn9j8jiuGeLbEeSc6Y2b6QIg8VcHWlfoL8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=dCqhKot02DjEDRVLSZr9RuE7g9LL4Qrx848zBV/INJJfrG4sVFSC6GWQkW4UyxuYy
-	 ogGiJ25N7Trul2F0hQcRp3pEI0zdZ7ZvO14S9J9pk55q9bmZXOYo0Nqi7iJ6rABh2w
-	 jjBFC7EGmcZoZ1sCA3gfdq3ZwDvx2mt2wTlsOzWK1UeuggY0d+J+1jf/veyDtH6CH5
-	 +7tqt12j7Uvvhs5gD9SrntZFo299kcV0JGXHsJEUViiZPAepLW9nz0bKSNuFTmsPmM
-	 xqm9iuh+bNCp6Y4awDa+oF9EZCOIXckdVMTpYDRr+S6ZXLsNVHJkjGW+sk3+74stuC
-	 WRMGCLsr1REmQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A524FCE08B2; Thu, 16 Apr 2026 16:55:01 -0700 (PDT)
-Date: Thu, 16 Apr 2026 16:55:01 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 6/7] locking: Factor out
- __queued_read_unlock()/__queued_write_unlock()
-Message-ID: <6445a6da-158f-40f1-ada0-fd5628b127da@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <cover.1776350944.git.d@ilvokhin.com>
- <eabc9de3347ca042eb0593c9b81c8e48254a4874.1776350944.git.d@ilvokhin.com>
+	s=k20201202; t=1776390279;
+	bh=aPpqYZ6wa2JGgq/5yZ8HWAy7XD4fYiLYSVf6EHgEcqk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X+yWEF5iykhozQFcXWnTq6i/sgY85XwWu1OVEpgPFLX2AvpV2P2Gt6u122PeyP6bu
+	 ihxrdBGM+ZJqQqh8Q2pwrjFKmzewssJYicaZEJvtvvU431hmcsoOAPEDfW6cnLlL8h
+	 a+D1LkIvPmHdaV0SS6JzxoghUMXoJcSVdmNWf5va8Qfm69WX021SgPCtNdcSgp4esb
+	 QZDjWkI2eudcnilQ3Btkzc2r3V4SXVbFvHhqp04ELSFPbdXgTZkRI3Ox4TDrmTKoe0
+	 xRIBNaaQTZ+x6Puo1RuZbCHu7f29qiJSkOQRTvdjQPxLMEVHeF1Mnev4y7+cbG4ALH
+	 mjy8xs0Wjq0qg==
+Date: Fri, 17 Apr 2026 10:44:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, oss@malat.biz,
+ paulmck@kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH 2/3] init: use static buffers for bootconfig extra
+ command line
+Message-Id: <20260417104436.ece29fd5e2cb7a59c8cf8ac1@kernel.org>
+In-Reply-To: <20260415-bootconfig_earlier-v1-2-cf160175de5e@debian.org>
+References: <20260415-bootconfig_earlier-v1-0-cf160175de5e@debian.org>
+	<20260415-bootconfig_earlier-v1-2-cf160175de5e@debian.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eabc9de3347ca042eb0593c9b81c8e48254a4874.1776350944.git.d@ilvokhin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 16, 2026 at 03:05:12PM +0000, Dmitry Ilvokhin wrote:
-> This is a preparatory refactoring for the next commit, which adds
-> contended_release tracepoint instrumentation and needs to call the
-> unlock from both traced and non-traced paths.
+On Wed, 15 Apr 2026 03:51:11 -0700
+Breno Leitao <leitao@debian.org> wrote:
+
+> Replace memblock_alloc/memblock_free in xbc_make_cmdline() with
+> static __initdata buffers. This removes the last memblock dependency
+> from the bootconfig loading path, completing the prerequisite for
+> running bootconfig parsing before memblock is available.
 > 
-> No functional change.
-> 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  include/asm-generic/qrwlock.h | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
+>  init/main.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 > 
-> diff --git a/include/asm-generic/qrwlock.h b/include/asm-generic/qrwlock.h
-> index 75b8f4601b28..4b627bafba8b 100644
-> --- a/include/asm-generic/qrwlock.h
-> +++ b/include/asm-generic/qrwlock.h
-> @@ -101,16 +101,26 @@ static inline void queued_write_lock(struct qrwlock *lock)
->  	queued_write_lock_slowpath(lock);
+> diff --git a/init/main.c b/init/main.c
+> index 96f93bb06c490..b9feca55e01f9 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -369,11 +369,18 @@ static int __init xbc_snprint_cmdline(char *buf, size_t size,
 >  }
+>  #undef rest
 >  
-> +static __always_inline void __queued_read_unlock(struct qrwlock *lock)
-> +{
-> +	/*
-> +	 * Atomically decrement the reader count
-> +	 */
-> +	(void)atomic_sub_return_release(_QR_BIAS, &lock->cnts);
-> +}
+> +/*
+> + * Static buffers for bootconfig-generated command line parameters.
+> + * Two separate buffers are needed because both "kernel" and "init"
+> + * parameters are stored simultaneously.
+> + */
+> +static char extra_cmdline_buf[COMMAND_LINE_SIZE] __initdata;
+> +static char extra_initargs_buf[COMMAND_LINE_SIZE] __initdata;
+
+This is not good to me, since bootconfig supports bigger config file
+than COMMAND_LINE_SIZE. Even if we limits the size for embedded
+bootconfig file, it should depends on CONFIG_BOOT_CONFIG_EMBED.
+
+Please use XBC_DATA_MAX instead of COMMAND_LINE_SIZE, or calculate
+expected data length when compiling kernel.
+
+But if we can do it, should we continue using bootconfig? I mean
+it is easy to make a tool (or add a feature in tools/bootconfig)
+which converts bootconfig file to command line string and embeds
+it in the kernel. Hmm.
+
+Thanks,
+
 > +
->  /**
->   * queued_read_unlock - release read lock of a queued rwlock
->   * @lock : Pointer to queued rwlock structure
->   */
->  static inline void queued_read_unlock(struct qrwlock *lock)
+>  /* Make an extra command line under given key word */
+> -static char * __init xbc_make_cmdline(const char *key)
+> +static char * __init xbc_make_cmdline(const char *key, char *new_cmdline)
 >  {
-> -	/*
-> -	 * Atomically decrement the reader count
-> -	 */
-> -	(void)atomic_sub_return_release(_QR_BIAS, &lock->cnts);
-> +	__queued_read_unlock(lock);
-> +}
-> +
-> +static __always_inline void __queued_write_unlock(struct qrwlock *lock)
-> +{
-> +	smp_store_release(&lock->wlocked, 0);
->  }
+>  	struct xbc_node *root;
+> -	char *new_cmdline;
+>  	int ret, len = 0;
 >  
->  /**
-> @@ -119,7 +129,7 @@ static inline void queued_read_unlock(struct qrwlock *lock)
->   */
->  static inline void queued_write_unlock(struct qrwlock *lock)
->  {
-> -	smp_store_release(&lock->wlocked, 0);
-> +	__queued_write_unlock(lock);
->  }
+>  	root = xbc_find_node(key);
+> @@ -382,19 +389,12 @@ static char * __init xbc_make_cmdline(const char *key)
 >  
->  /**
+>  	/* Count required buffer size */
+>  	len = xbc_snprint_cmdline(NULL, 0, root);
+> -	if (len <= 0)
+> +	if (len <= 0 || len >= COMMAND_LINE_SIZE)
+>  		return NULL;
+>  
+> -	new_cmdline = memblock_alloc(len + 1, SMP_CACHE_BYTES);
+> -	if (!new_cmdline) {
+> -		pr_err("Failed to allocate memory for extra kernel cmdline.\n");
+> -		return NULL;
+> -	}
+> -
+>  	ret = xbc_snprint_cmdline(new_cmdline, len + 1, root);
+>  	if (ret < 0 || ret > len) {
+>  		pr_err("Failed to print extra kernel cmdline.\n");
+> -		memblock_free(new_cmdline, len + 1);
+>  		return NULL;
+>  	}
+>  
+> @@ -467,9 +467,9 @@ static void __init setup_boot_config(void)
+>  		xbc_get_info(&ret, NULL);
+>  		pr_info("Load bootconfig: %ld bytes %d nodes\n", (long)size, ret);
+>  		/* keys starting with "kernel." are passed via cmdline */
+> -		extra_command_line = xbc_make_cmdline("kernel");
+> +		extra_command_line = xbc_make_cmdline("kernel", extra_cmdline_buf);
+>  		/* Also, "init." keys are init arguments */
+> -		extra_init_args = xbc_make_cmdline("init");
+> +		extra_init_args = xbc_make_cmdline("init", extra_initargs_buf);
+>  	}
+>  	return;
+>  }
+> 
 > -- 
 > 2.52.0
 > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
