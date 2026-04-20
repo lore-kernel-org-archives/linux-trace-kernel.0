@@ -1,127 +1,124 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382A532ED39
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Apr 2026 15:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931CC212D7C;
+	Mon, 20 Apr 2026 23:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776699427; cv=none; b=pW20rP9s9BDln9ZcTJyZn7tLqw7rj9RiimBZRJ51Q6mdP/jcTLaF8qLsKP8AX7pVyTJzmtX+AK87FmPV/xdyD/1dMPIpIYp58M6VUOEAfISyO8Mhhg6MZrhD2M1ofU3Vp1Reo7eEmWsV0gKK44HaiKIAyQDEP4/u4SapHg65DH4=
+	t=1776729448; cv=none; b=rPNOa4cR4+QeznOtH6i8bmakZaeQkO1WuAq78IljZobulML53KufMqbbXFl13u6LcQWHkKwoTWJz57EX3l/dPf2F/MYBs1GzgUeSHBz2tqDKWkIPlNK+tQjj/d+7uZdzd7WcH5m2YlRhuk7TQsc3Swn+BBzMkcdOD0AFyZpmzLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776699427; c=relaxed/simple;
-	bh=+imE8epIy9NkalbHxs3meJ15GdHHssni65dx+hm5PNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=efTrLbn/kK5dwfHPoE2sdCYGEIweX0p8MBHOXw3df/Awjo12N7rTjF7pm7/WiqtZmQxj9mvDVvO1fG/jWh3ApxMrxI24Lh7Pp5MpKHOP97b7H1roFEMZSBh3fDhsVAZ44vIDCiCKrIssmkvMFYZqj3434nDJzXcHz6CudtA6i/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TolJBDx7; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1776729448; c=relaxed/simple;
+	bh=SgbK2Ycca8ktwcDxfzwexeOL/UiqLEfnnFekZIG/eLA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=f2M1AvVPYNT/mQH+mDz/rQ5HW0u7jPmi6EK8idSbB+f5wW9/toyBqpe5iHS72yRSLy7cL6/5DfPLyHb4UoS54UNDy/ZI3mkLYpnhTaa/hI2PridfyaXM1CpkTcCVVeog2aft6taoGVMsSXnlAIkekdN11+A00EkVsC8LsUFFZWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1VWzgzh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TolJBDx7"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776699422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bhKXz21irPByGBa7VXYiJn8tYPqBAC8fQ5GrPsI59Tk=;
-	b=TolJBDx7xE/H9YRYEOaaa2c59QbAENz915P8NEt1sDN2YLJOzN6LkfmvImpF9Dh5/0Xs6+
-	gf9i+ca+ZqcN2IT85QX0vNIVoGwAprWrxdRqy8IuT2/vM2+BprjQmXu6llX+CEoU0R5Swi
-	XILVICuLYFXBJDmwoW5IMq2RfMhlvs8=
-From: Usama Arif <usama.arif@linux.dev>
-To: Nico Pache <npache@redhat.com>
-Cc: Usama Arif <usama.arif@linux.dev>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	anshuman.khandual@arm.com,
-	apopple@nvidia.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	byungchul@sk.com,
-	catalin.marinas@arm.com,
-	cl@gentwo.org,
-	corbet@lwn.net,
-	dave.hansen@linux.intel.com,
-	david@kernel.org,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jackmanb@google.com,
-	jannh@google.com,
-	jglisse@google.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	lance.yang@linux.dev,
-	Liam.Howlett@oracle.com,
-	ljs@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	matthew.brost@intel.com,
-	mhiramat@kernel.org,
-	mhocko@suse.com,
-	peterx@redhat.com,
-	pfalcato@suse.de,
-	rakie.kim@sk.com,
-	raquini@redhat.com,
-	rdunlap@infradead.org,
-	richard.weiyang@gmail.com,
-	rientjes@google.com,
-	rostedt@goodmis.org,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shivankg@amd.com,
-	sunnanyong@huawei.com,
-	surenb@google.com,
-	thomas.hellstrom@linux.intel.com,
-	tiwai@suse.de,
-	usamaarif642@gmail.com,
-	vbabka@suse.cz,
-	vishal.moola@gmail.com,
-	wangkefeng.wang@huawei.com,
-	will@kernel.org,
-	willy@infradead.org,
-	yang@os.amperecomputing.com,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	zokeefe@google.com
-Subject: Re: [PATCH 7.2 v16 06/13] mm/khugepaged: skip collapsing mTHP to smaller orders
-Date: Mon, 20 Apr 2026 08:36:40 -0700
-Message-ID: <20260420153641.215894-1-usama.arif@linux.dev>
-In-Reply-To: <20260419185750.260784-7-npache@redhat.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1VWzgzh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76C4C19425;
+	Mon, 20 Apr 2026 23:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776729448;
+	bh=SgbK2Ycca8ktwcDxfzwexeOL/UiqLEfnnFekZIG/eLA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=P1VWzgzhKoGyzO4Rl1xPscbFQcIMcZuTr4h7e3kz0Q1dpLi/YTYYYnXqL0w56mklI
+	 Ar/Y/TGUm3kwesvEEllPzL5Yr8Wq1JZbcndlyeQfx780KRyCmKS7w9w2FhDKA5BC8b
+	 CT8GGBU7TXNN27FPdyznccTMWhcxHfoanD2WcRz5jvvHic/wxC01qaIODQeIM5OxUR
+	 x4UflF0c1sMZ3J5QP3bzyPZ2gb0cQtwnSFiIrGWGQULg5Cw32wxDXPEh8F628Gu0BE
+	 E0mtU9UqzHyvWx3tOkJhiFZN3bLkSMs8wtCUwqxBNvDB5+p0YhrcUobTY5+iOdEb1W
+	 2KVTXxSjfFmnA==
+Date: Tue, 21 Apr 2026 08:57:25 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@elte.hu>, Frederic
+ Weisbecker <fweisbec@gmail.com>, Steven Rostedt <srostedt@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ paulmck@kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] tracing: branch: Fix inverted check on stat tracer
+ registration
+Message-Id: <20260421085725.4e5c8ebf3a5e0470bab61e4e@kernel.org>
+In-Reply-To: <20260420-tracing-v1-1-d8f4cd0d6af1@debian.org>
+References: <20260420-tracing-v1-1-d8f4cd0d6af1@debian.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, 19 Apr 2026 12:57:43 -0600 Nico Pache <npache@redhat.com> wrote:
+On Mon, 20 Apr 2026 06:25:09 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-> khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
-> some pages being unmapped. Skip these cases until we have a way to check
-> if its ok to collapse to a smaller mTHP size (like in the case of a
-> partially mapped folio). This check is also not done during the scan phase
-> as the current collapse order is unknown at that time.
+> init_annotated_branch_stats() and all_annotated_branch_stats() check the
+> return value of register_stat_tracer() with "if (!ret)", but
+> register_stat_tracer() returns 0 on success and a negative errno on
+> failure. The inverted check causes the warning to be printed on every
+> successful registration, e.g.:
 > 
-> This patch is inspired by Dev Jain's work on khugepaged mTHP support [1].
+>   Warning: could not register annotated branches stats
 > 
-> [1] https://lore.kernel.org/lkml/20241216165105.56185-11-dev.jain@arm.com/
+> while leaving real failures silent. The initcall also returned a
+> hard-coded 1 instead of the actual error.
 > 
-> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org> 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
+> Invert the check and propagate ret so that the warning fires on real
+> errors and the initcall reports the correct status.
+> 
+
+Good catch!
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Fixes: 002bb86d8d42 ("tracing/ftrace: separate events tracing and stats tracing engine")
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  mm/khugepaged.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  kernel/trace/trace_branch.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
+> index 6809b370e991d..d1564db95a8f5 100644
+> --- a/kernel/trace/trace_branch.c
+> +++ b/kernel/trace/trace_branch.c
+> @@ -373,10 +373,10 @@ __init static int init_annotated_branch_stats(void)
+>  	int ret;
+>  
+>  	ret = register_stat_tracer(&annotated_branch_stats);
+> -	if (!ret) {
+> +	if (ret) {
+>  		printk(KERN_WARNING "Warning: could not register "
+>  				    "annotated branches stats\n");
+> -		return 1;
+> +		return ret;
+>  	}
+>  	return 0;
+>  }
+> @@ -438,10 +438,10 @@ __init static int all_annotated_branch_stats(void)
+>  	int ret;
+>  
+>  	ret = register_stat_tracer(&all_branch_stats);
+> -	if (!ret) {
+> +	if (ret) {
+>  		printk(KERN_WARNING "Warning: could not register "
+>  				    "all branches stats\n");
+> -		return 1;
+> +		return ret;
+>  	}
+>  	return 0;
+>  }
+> 
+> ---
+> base-commit: c7275b05bc428c7373d97aa2da02d3a7fa6b9f66
+> change-id: 20260420-tracing-3f1367ee4b93
+> 
+> Best regards,
+> --  
+> Breno Leitao <leitao@debian.org>
 > 
 
-Acked-by: Usama Arif <usama.arif@linux.dev>
- 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
