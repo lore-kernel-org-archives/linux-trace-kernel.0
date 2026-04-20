@@ -1,105 +1,176 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B1B2D7D3A
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Apr 2026 19:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4691509AB;
+	Mon, 20 Apr 2026 01:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776625597; cv=none; b=oYGVeXYga/SbXqqKMbwiKVBTJyDlAWJaU5gUKIjciCVOaiK39UzjrefPnUOnI6XolxBG7hus8W/JGYqYi1k8QVy+deX3IkCA527dXLCfqpnCoCUKAafRycw+QO6y/tPQk06BeDPqNp4YYVxsShbUGp0V2V+FZgmfQUgpnwOtX9M=
+	t=1776649344; cv=none; b=CBMMCLYKWylCgUj4rJwH9AI+QkE53e94nvbmFUlHYQrJ496eKWbkY/qdd3G+odDjFRcsmJVNwdaR/OoHaWnj8citb/Zp6JTLAiOuipY83oba9WfaDo8gntSB35t8uvIpaMIzoCrbE+0EqNRFVomhXMbB3+M7SZvVKsBvYOe6rd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776625597; c=relaxed/simple;
-	bh=toOFf2xg142rVKdQsq5pdhGPVdznNk8pu3Hk5d0NOts=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YRuMPZCHbBL/OcwT3vxOO6D1P4PCkaZzVsmw2MY7dwOgriWtbZVnN+lp67AZKqQ+QaMXkq6cHSiQMdiLmAdIWy0+0tkjl2MYsmOKdF1p9cEzdzyeuo5uqVrFVDF9yp6Pksll8hGArDvs1RyUZ9dP1tB4xslFCLB9hXsydo1vN7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WTeUfGQR; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776649344; c=relaxed/simple;
+	bh=2fTaUVDOEn7ljswtnXmtAe8f02ApAbuE93fVLmMvkNA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=qs/3AdfQsVYmxUAIhNvMkMzQnsPgNpBT8yY0LggT5L1sHZb0f/H2T6Xz3CP0MjBJbwZ/IgCuONnIcVhNFkNAYqMNAiwTDg/WOyS3HwJI7mrx5h1L04T4gPZrqgqFzgbzSnt4sD8SaoynOA0NuqSq2nPcTYGRLCMMHJwYH5pzBW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4kXFLye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTeUfGQR"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ab39b111b9so9060645ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Apr 2026 12:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776625596; x=1777230396; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xYwumL6ukXBAj/RoXbmDU80+PEG893ZgwxOy7tBa+0w=;
-        b=WTeUfGQRH0GwJ71BnR2Q8ONqp1pYQOF5fB3LbkpfMWv8/kqWOSNgxTecNIWTH+bAbw
-         zqPLRumgAkiziz7pcobaPz9GnAAZqMSlgwT5S+742lPYZRb0SCvtbzfy6jdqubBe/RCa
-         rrb+pw7xibhU0FQVpdPEeb971mYzYRdBbNH8CbJ29nEJU6tTBILRkPhNUzpsgvzHjIO6
-         65k4N6AugHi50yENYA7zLIVfaNjs/MeyivTGDg69jcSAWUXhECpCLjQHf010r4F1z+Cz
-         LvtsrmLXdlCBdkx/Pk/OP6cuEj71xa3QhtjJRBzYVNLMP2xoMXBPI3+2qBY749JIyjtI
-         nnVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776625596; x=1777230396;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xYwumL6ukXBAj/RoXbmDU80+PEG893ZgwxOy7tBa+0w=;
-        b=hn16slNfSHsZJkxdPfhgWfnFdT5OqeQrj8ueRBvFRWxG4nhWIWAlfU+hrHJxufeekI
-         nZ6v9MCWh6NaNfjTbiefwZw2aH8YNl4aCdtgVO6bYAN8MqVgOwjhXYS2Ir1d/eZBaI10
-         w/N9ybQup2vwFDih/OlEPiKq52rObzW9MlDjg0e/qENrKNjsaM9ff3kUNsr0r00Usqzr
-         sDMOXd7JDlP/HsIe7wN8k7deqvztjC27xAGmYe59oRnOUydgnZOsG0Uvnp5o6DGqwCG0
-         KHgw4FDmN0xj5vRohMfIktL6R/3YlQCET3OHUloCv8Hsga+LFMIyz9+J9FIChMZTl1OD
-         z4+A==
-X-Gm-Message-State: AOJu0Yyq+2E7yb2+z39tj5lkSD2khKE8HhVibIGP/u8tjglc1htVmfac
-	Qd9xd9nyhrk6lM14eHHUXyzo+XTJkEJP/tRSCcZ/CBQ8rzveeVk/Hv1w
-X-Gm-Gg: AeBDieugRzRW9kUBLLID+1xcVHLgdTkKHsA4Kv/j2tmi5SuSyz8DYi13vVGWZu7Lg9P
-	4MmS4PkV4PBvFkyneYg1zWK45jZVnmOTkivYTNaxNu1X8j3bvR8EHUv9it0dINBqREhHtdU0CHL
-	AcaTyT7tEq3KlvKBa9PaqgVRMQYeVajx7ZGqymmLyIYAa6jW2c0TAZsc4mz4+J3WBSEeGMnyrNn
-	0O93mGrCp5SqvSSXz18mHEfCwjIOGYGabqUsL2DhefzksHnPhpwg6QqZZCuzKf8gQDxCM9Yb7VX
-	JBd7p1Hw2il7CmRDys1+sh7zariaoh9ft3VI8z9cSPxiJgWf4mCQpkcG8rKqU//93udhv/WjAAw
-	ABa2Crlv2WJ0YGtpNRSXhqMFCrjruHaXCodrSDB00hYfOJ6clH0DcxaMB6WZXykWqRH0ylDuPsS
-	imXI+G5XJXIPuf8t25HToQ+08QS/s72xEATI0bb4WS83nB3wgOxnFmeSfYk2jbS3z/gl4xPwhcj
-	4l+BtEuMTFk3hvPww==
-X-Received: by 2002:a17:902:da8f:b0:2ae:cb0e:fd59 with SMTP id d9443c01a7336-2b5f9e773f5mr115776375ad.8.1776625595761;
-        Sun, 19 Apr 2026 12:06:35 -0700 (PDT)
-Received: from fedora ([103.181.54.97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5faa17632sm81585585ad.24.2026.04.19.12.06.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2026 12:06:35 -0700 (PDT)
-From: Ninad Naik <ninadnaik07@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	me@brighamcampbell.com,
-	linux-kernel-mentees@lists.linux.dev,
-	Ninad Naik <ninadnaik07@gmail.com>
-Subject: [PATCH] Documentation: fix spelling mistake "stucture" -> "structure"
-Date: Mon, 20 Apr 2026 00:15:27 +0530
-Message-ID: <20260419184527.779828-1-ninadnaik07@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4kXFLye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89CE8C2BCAF;
+	Mon, 20 Apr 2026 01:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776649344;
+	bh=2fTaUVDOEn7ljswtnXmtAe8f02ApAbuE93fVLmMvkNA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Z4kXFLyeamtt9lx8dz+wNsmTKJPo7kRmCv3X4Ms+FdgdkAE6fkLos7qp/iQCPRh8I
+	 wyez7QiVoA0oRP2d9EDYuCo3HIwWdjoP0texdOIGj6RSsffw7LkXRlBtSrgmxA6l5z
+	 BLgG4IAl68r0FSoN/Ca1otXGWcmPwsPieONjSR1wGE1mdEVolu8sVcU1dREmXTUIbz
+	 xUvjDkZdqAr7ZfgFI3C5m48NdCiQLGyRVJs+jzEyOJnzGCtbELo+qudWYBXmxfmoJq
+	 Efn8smbMzgm7elrfJiNP6cxiM6X+Ikdh3L3BIkmfmyf8UZwixVSL+A88OyENfJ1X08
+	 ms6r5hp/A1xMA==
+Date: Mon, 20 Apr 2026 10:42:20 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Menglong Dong
+ <menglong8.dong@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 7/8] selftests/ftrace: Add a testcase for fprobe
+ events on module
+Message-Id: <20260420104220.625bb541f7e8127513f91a2a@kernel.org>
+In-Reply-To: <177644271967.584467.9751522686479464647.stgit@mhiramat.tok.corp.google.com>
+References: <177644266147.584467.8179035927318998910.stgit@mhiramat.tok.corp.google.com>
+	<177644271967.584467.9751522686479464647.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Fixing a spelling mistake in Documentation/trace/histogram-design.rst.
+On Sat, 18 Apr 2026 01:18:39 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Ninad Naik <ninadnaik07@gmail.com>
----
- Documentation/trace/histogram-design.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add a testcase for fprobe events on module, which unloads a kernel
+> module on which fprobe events are probing and ensure the ftrace
+> hash map is cleared correctly.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v9:
+>  - Use "trace-events-sample" instead of "trace_events_sample"
+>  - Add checking unload module and remove core-kernel event case.
+>  - Check test module exists when unloading it in EXIT.
+>  Changes in v8:
+>  - Newly added.
+> ---
+>  .../test.d/dynevent/add_remove_fprobe_module.tc    |   87 ++++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
+> new file mode 100644
+> index 000000000000..c358c5071f15
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
+> @@ -0,0 +1,87 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Generic dynamic event - add/remove fprobe events on module
+> +# requires: dynamic_events "f[:[<group>/][<event>]] <func-name>[%return] [<args>]":README enabled_functions
+> +
+> +rmmod trace-events-sample ||:
+> +if ! modprobe trace-events-sample ; then
+> +  echo "No trace-events sample module - please make CONFIG_SAMPLE_TRACE_EVENTS=m"
+> +  exit_unresolved;
+> +fi
+> +trap "lsmod | grep -q trace-event-sample && rmmod trace-events-sample" EXIT
 
-diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
-index e92f56ebd0b5..41a726cd3536 100644
---- a/Documentation/trace/histogram-design.rst
-+++ b/Documentation/trace/histogram-design.rst
-@@ -247,7 +247,7 @@ field's size and offset, is used to grab that subkey's data from the
- current trace record.
- 
- Note, the hist field function use to be a function pointer in the
--hist_field stucture. Due to spectre mitigation, it was converted into
-+hist_field structure. Due to spectre mitigation, it was converted into
- a fn_num and hist_fn_call() is used to call the associated hist field
- function that corresponds to the fn_num of the hist_field structure.
- 
+Oops, we need to check "trace_events_sample".
+
+Thanks,
+
+> +
+> +echo 0 > events/enable
+> +echo > dynamic_events
+> +
+> +FUNC1='foo_bar*'
+> +FUNC2='vfs_read'
+> +
+> +:;: "Add an event on the test module" ;:
+> +echo "f:test1 $FUNC1" >> dynamic_events
+> +echo 1 > events/fprobes/test1/enable
+> +
+> +:;: "Ensure it is enabled" ;:
+> +funcs=`cat enabled_functions | wc -l`
+> +test $funcs -ne 0
+> +
+> +:;: "Check the enabled_functions is cleared on unloading" ;:
+> +rmmod trace-events-sample
+> +funcs=`cat enabled_functions | wc -l`
+> +test $funcs -eq 0
+> +
+> +:;: "Check it is kept clean" ;:
+> +modprobe trace-events-sample
+> +echo 1 > events/fprobes/test1/enable || echo "OK"
+> +funcs=`cat enabled_functions | wc -l`
+> +test $funcs -eq 0
+> +
+> +:;: "Add another event not on the test module" ;:
+> +echo "f:test2 $FUNC2" >> dynamic_events
+> +echo 1 > events/fprobes/test2/enable
+> +
+> +:;: "Ensure it is enabled" ;:
+> +ofuncs=`cat enabled_functions | wc -l`
+> +test $ofuncs -ne 0
+> +
+> +:;: "Disable and remove the first event"
+> +echo 0 > events/fprobes/test1/enable
+> +echo "-:fprobes/test1" >> dynamic_events
+> +funcs=`cat enabled_functions | wc -l`
+> +test $ofuncs -eq $funcs
+> +
+> +:;: "Disable and remove other events" ;:
+> +echo 0 > events/fprobes/enable
+> +echo > dynamic_events
+> +funcs=`cat enabled_functions | wc -l`
+> +test $funcs -eq 0
+> +
+> +rmmod trace-events-sample
+> +
+> +:;: "Add events on kernel and test module" ;:
+> +modprobe trace-events-sample
+> +echo "f:test1 $FUNC1" >> dynamic_events
+> +echo 1 > events/fprobes/test1/enable
+> +echo "f:test2 $FUNC2" >> dynamic_events
+> +echo 1 > events/fprobes/test2/enable
+> +ofuncs=`cat enabled_functions | wc -l`
+> +test $ofuncs -ne 0
+> +
+> +:;: "Unload module (ftrace entry should be removed)" ;:
+> +rmmod trace-events-sample
+> +funcs=`cat enabled_functions | wc -l`
+> +test $funcs -ne 0
+> +test $ofuncs -ne $funcs
+> +
+> +:;: "Disable and remove core-kernel fprobe event" ;:
+> +echo 0 > events/fprobes/test2/enable
+> +echo "-:fprobes/test2" >> dynamic_events
+> +
+> +:;: "Ensure ftrace is disabled." ;:
+> +funcs=`cat enabled_functions | wc -l`
+> +test $funcs -eq 0
+> +
+> +echo 0 > events/fprobes/enable
+> +echo > dynamic_events
+> +
+> +trap "" EXIT
+> +clear_trace
+> 
+
+
 -- 
-2.53.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
