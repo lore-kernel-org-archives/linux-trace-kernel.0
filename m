@@ -1,103 +1,102 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7353C13AA2F;
-	Mon, 20 Apr 2026 09:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776677840; cv=pass; b=IIdT5tHyu+I1/Rl5xAGxMOC5dIT5FxryDzGp3TA9X95sa7TlIsr3nAlGRDUJGfTySvCzZWD+OfnOUGoRRPrehWpXo3HSS8oGcGWg0M7L6S7PHwld86ts8cGUrKgVkRr2V/aQTwYLEnpGC7xHLj0HEpjQKwAqz8aRuMu51A+YeTE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776677840; c=relaxed/simple;
-	bh=+Mn7HI+O1Risb5b4c09+GnfDkqMve5PgHTnlKsfVV0U=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=CQ0nLTJhr8vjD4rcjOD6I26ZsosVG3b8oBhM89UYLACYfNeYgJQAzWQhdlxCIE49NvKfqZbpTVQdKADi5MSr4rLKIMPAUUatHph+6ngMhYPF0uFJ906aPzopU7AP9WH9ILrZnM546ekmBZHej5fgMaMKUBbzvuKCzTaF8Mwej4A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=sfYnBYxn; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA89F3939BA
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Apr 2026 10:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776679965; cv=none; b=pGGzsSx1ibFFkk1h/3QvBWApNcuXGsEQfKsykg1+LifaciL8HX9M7ZCOPMQ6DcIXntV7IrbGNGme3REUiUwzi7eXRncscwiA1QfLngCvARL6r4Pj/Rsx0GYkaVBMlGeBy5QKW13nfRkMMb/Sai2KnVvz7ChUgphADZxY4ASYahA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776679965; c=relaxed/simple;
+	bh=wA4pb5TYsZCbVGerj9AMDdSKH1HM3A5MXAwM35sraP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iuLw8vNfbMWrQNqpvcti3zx4ZeWZuMDvuFZVCDc7hPDH9KPqXmf30EhAHuZcyTS3qbr2YNCCForwWU3i3uZg0SdVR6+NKyCrg4+4sgfI56M9Qe/zb/GJBufwGjAq+pQRO5g+s8GphXuDFxzqCPJJ6+Ia2PBXWEJoKzf0BdKmeIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bWKRb4lU; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="sfYnBYxn"
-ARC-Seal: i=1; a=rsa-sha256; t=1776677828; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NtBwkSDIrYwMyyrRSRB7c4iQn5E72WMQFME8gJVoNRFZbFpmIHwpBXzcSoLjF9Qitqx9Q1+H4sX0Mf116bV4AnsWnZWfhMXmTX5iSJOqOYmZAMVzggwkXyXlKO98HsvoQx95WfglDVOg6dNFD5zHiWTPRcg2dJ9KOz81ARMQuQk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1776677828; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3nkZU0OGVm9sAS0m+p5KNBkUjb4lcYBwbSn6ftdUGMc=; 
-	b=GaOnn6NoDmuhREz6WV5hfhqhf2izF5rqUywIvKeJB5eR56R8jBVU5mWAfF7MXZPwPX9QcvilvCmH56B/NWXcV2fKTEueFgJCT1ItQsDy9cCpOQ03uq3DhGJH8h6iLUSwRkjWlj8zN8rx7iFWBiKiC2E4ulFOe43/vv78Ikxls9w=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776677828;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=3nkZU0OGVm9sAS0m+p5KNBkUjb4lcYBwbSn6ftdUGMc=;
-	b=sfYnBYxnTgwDsE0SmEml2NPzMsSK3elsWfk3a3uvX8ZX0e87951D1rJPg9VyxrQJ
-	dIa3pm21VRP/gmXceGTOSVCU0tTDQeycYrFMCtte3rjd+UNKjXDFhw8d1VYeh1fiXcL
-	2RF7DNC9M3e0MvbPdz/yRIGGFqlVr13Jm9GBm8M0=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1776677822245708.6024512424901; Mon, 20 Apr 2026 02:37:02 -0700 (PDT)
-Date: Mon, 20 Apr 2026 17:37:02 +0800
-From: Li Chen <me@linux.beauty>
-To: "Theodore Tso" <tytso@mit.edu>
-Cc: "Zhang Yi" <yi.zhang@huaweicloud.com>,
-	"Andreas Dilger" <adilger.kernel@dilger.ca>,
-	"Steven Rostedt" <rostedt@goodmis.org>,
-	"Masami Hiramatsu" <mhiramat@kernel.org>,
-	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
-	"linux-ext4" <linux-ext4@vger.kernel.org>,
-	"linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <19daa401f13.167eb5bb5258134.3788270263630358850@linux.beauty>
-In-Reply-To: <20260413131244.GB20496@macsyma-wired.lan>
-References: <20260120112538.132774-1-me@linux.beauty>
- <20260410011843.GD99725@macsyma-wired.lan>
- <19d86eec635.f7072461135455.4960134919814592320@linux.beauty> <20260413131244.GB20496@macsyma-wired.lan>
-Subject: Re: [RFC v4 0/7] ext4: fast commit: snapshot inode state for FC log
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWKRb4lU"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-82fa8d6425bso520488b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Apr 2026 03:12:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776679963; x=1777284763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=triQtU58dGrA9pODEehX+8XkzYrOtE0BAdNOw387JIc=;
+        b=bWKRb4lUL26HHA9zKOVh0KVcVr3cHzdSoxmQ9y1zGXSPm5gvljOQ+6IkniYk/oC/mV
+         xyWyXeXhLl1tk1TC0zS5IAhUX0EfKJFwBZOYQcRVL9cZPQmy5hgeUd0aDHsitpgNIvzJ
+         zwQoqaw5bBWzQ8I6TstqTAc1Wx3cqvnwxJrDj6FmYTyZ/FN8dPvl5Fq8QzbhkuCqq/Xp
+         X+rhvfBnwOIZqBotAmSljtMEoocsCGwAhQL6zsYyRtLx0JkpoavHopED34w/xmKBKzQm
+         35m7qm19UNjjqubDhgbsVI1wqZN0soAA9nuYqhdzwcpXg3XLnRxeIz6/Y8TDDJ/sEJz9
+         Cfjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776679963; x=1777284763;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=triQtU58dGrA9pODEehX+8XkzYrOtE0BAdNOw387JIc=;
+        b=MUNQvNOtWHvLUFQHhZlxIGUoEYYsgojQ31u0Tss93m8LMDNs1hIhhB9OxkLiAZ2Ax9
+         /F/lRPbkzS2l9BfO2Mk9wKGWK+MDB2CCEqVYV5uaU1DhweBCSXVgyhbfFx5CyjpLGgKZ
+         +IS/TzCnxO0hfZITK5dNCeAcBikFU8d7OrXbGpyIv5TWjNoaipDnTSpno3JqNtZxMtos
+         xGK3n7Gy5BO3Ps0v3MqeBw4zVtjDC7BbPWcQJIZQB5qW5utGZT6G5KGSkcmn/1aZUJp+
+         cRDfgUeP6yDArVdSdaMA0mo6s5q6giGkCvLib4Aqr6F3Dv2nGZdSLRcXYJGplr3wborA
+         uApQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+fqwFwMYwtkuqAB9HjjVepRpBt6WNMR7Cm8trBrzsJ/ylw+LvjsbusRamD1oNkVWxTc1cN/Ztk1s9qlZCYynDcYFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0dHg2sE591dudcPyEKShMr+jBd40xs3ChNpVANxILVN5IpfoB
+	I0Eb33F31fcKxjrunToP1XKaez/1hRNeAaVmiRDG/m3b0an/WrsbRajU94zTpReG
+X-Gm-Gg: AeBDiesdUD4v9lBcNEq37nIRhN6q2gipCKqfGWfKddl9w+7dsVn+wVSQMa7/Bd9l4y1
+	MVmxnCFuvswyBVe17SCuRiUW/5HBKWyaUzs7NUhAJetQxIUEu9+qhxd5AnRZ57qp7xf+qk3iLrZ
+	kDuxPRKsdjCfY/hMHdGeUOCUmbE2wFmsaBsL82CbNyHt5PrnSV7smlGDGWrgkEEbR5hXNPz6yg0
+	J7nSX+yLvw2gKASH209mZVg0ja9+aLreNxnnZDvHr2PQIirZDQcG+RlsMH08qUwZJAzkcros2Pb
+	uSizyKVCYz5fwxYPuA8RwEhEj4oSuOSzLAvGVyp/tY525+PevPefaqjBMrav5gM6fUramXlrNN2
+	wwIeiVio7t/cDXejLUzvDsBrRA+NrzUAo4vsozSuraqDPp4NY9WBq3tUWfxD3aBHGY6KtWaBbbj
+	fyFs0WBa3RXnD8GOGFoVbKP9KBBG14oE9i7/nHbYiZOaSqepy3N8dAtjs=
+X-Received: by 2002:a05:6a00:4104:b0:82c:e9cc:f62f with SMTP id d2e1a72fcca58-82f8c82eab4mr12622215b3a.7.1776679963281;
+        Mon, 20 Apr 2026 03:12:43 -0700 (PDT)
+Received: from yash-Bravo-15-B5DD.local ([14.99.167.142])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ebb3f31sm12509843b3a.37.2026.04.20.03.12.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2026 03:12:42 -0700 (PDT)
+From: Yash Suthar <yashsuthar983@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yash Suthar <yashsuthar983@gmail.com>
+Subject: [PATCH] trace: remove the dead IS_ERR() check in trace_pipe_open()
+Date: Mon, 20 Apr 2026 15:42:36 +0530
+Message-ID: <20260420101236.223919-1-yashsuthar983@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Transfer-Encoding: 8bit
 
-Hi Theodore,
+in trace_pipe_open() already check the IS_ERR(iter) and
+return early on error,so iter after will be valid and
+it is safe to return 0 at end.
 
- ---- On Mon, 13 Apr 2026 21:12:44 +0800  Theodore Tso <tytso@mit.edu> wrot=
-e ---=20
- > On Mon, Apr 13, 2026 at 09:01:28PM +0800, Li Chen wrote:
- > > Absolutely! It's great to learn about the Sashiko development site.
- > > I will address the real issues in the next version.
- >=20
- > Note that Sashiko will sometimes report a pre-existing issue as if it
- > were a problem with the commit.  If that happens, feel free to ignore
- > its complaint; what I consider best practice is to either (a) fix it
- > in the a subsequent patch or patch series, or (b) leave a TODO in the
- > code.
- >=20
- > I've asked the Sashiko folks to add way for URI's for each issue that
- > are identified by Sashiko, so we can put a URL in the TODO comment for
- > someone who wants to fix it later, and to make it easier for Sashiko
- > to identified pre-existing issues so it doesn't comment on the same
- > issue across multiple commit reviews (and perhaps save on the some LLM
- > token budget :-).
- >=20
- > In the next few days, for patches sent to linux-ext4, Sashiko will
- > start e-mailing its reviews to the patch submitter and to me as the
- > maintainer.  Once we can reduce the false positive rate, I'll ask that
- > the reviews be cc'ed to the linux-ext4 mailing list.  But it seems
- > good enough that to send e-mails to the patch submitter and the
- > maintainer --- but that's a decision that each subsystem maintainer
- > will be making on their own.
+Signed-off-by: Yash Suthar <yashsuthar983@gmail.com>
+---
+ kernel/trace/trace_remote.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Got it, thanks. I'll treat Sashiko as a review aid, fix the real issues in =
-the next version,=20
-and leave unrelated pre-existing issues for follow-up or a TODO.
-
-Regards,
-Li=E2=80=8B
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index d6c3f94d67cd..2a6cc000ec98 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -602,7 +602,7 @@ static int trace_pipe_open(struct inode *inode, struct file *filp)
+ 
+ 	filp->private_data = iter;
+ 
+-	return IS_ERR(iter) ? PTR_ERR(iter) : 0;
++	return 0;
+ }
+ 
+ static int trace_pipe_release(struct inode *inode, struct file *filp)
+-- 
+2.43.0
 
