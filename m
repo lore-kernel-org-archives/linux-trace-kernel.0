@@ -1,109 +1,188 @@
-Received: from www2881.sakura.ne.jp (www2881.sakura.ne.jp [49.212.198.91])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECABD3128B8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Apr 2026 11:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.198.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE929A9E9;
+	Mon, 20 Apr 2026 12:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776686086; cv=none; b=fHiYwC7aIZRje2bdxJ2zhlpuGHM095e4Ox1eYJpFrnAdUT/sSh3DtPqCWAP1P0hm1SKrmlVWu9QhnfpRoGakAQyjhmYlX4/5mu3Oi3621S7iZr4m/XBwEaL0+hvwqrvcp+1E5L8Lq1biSncju5UevrhCf7sR+P4zt16Q7ysxugc=
+	t=1776688609; cv=none; b=o9CCCxpWjqpdEIGHJp71MejK5xvGbMQjiec/ww7d9xAeaWyHE7CDPNrD7bHaD0xJ6EBcsAXf4MjNQm9jcrT+Lr5htqel8ikp8msLib7e/C5vUtaWsGmcDs49peuT8VyUk2aPnN7TNo8Jnk0T/UeJqB8t+rSozWEZDe9yJDTzgos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776686086; c=relaxed/simple;
-	bh=WVdGZp9554SnWtFKvi7uy4dxvYcb+OYIS8Nm7G5T5Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YnvD5MHnMvoTpUkvSMn1ZJX0x49RsoFWh3M7CWeHUseHTHICwT5JLofkUspe1ez+2P4KFC7wwodfjvnNBdrLRgU+amPItErFlRP20EH1YIxF7DGKl65M0oJdKD2ghfAwbz45oWzbFJbLuPTxc2RqAQKCu1BGYQFbvgzN1Z/NWVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enjuk.jp; spf=pass smtp.mailfrom=enjuk.jp; dkim=pass (2048-bit key) header.d=enjuk.jp header.i=@enjuk.jp header.b=OoaLV34H; arc=none smtp.client-ip=49.212.198.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enjuk.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enjuk.jp
+	s=arc-20240116; t=1776688609; c=relaxed/simple;
+	bh=0cf+45GINUGOImVFWN83LA1Mu26YMmVq2U3kUFyXOCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m7sF1HZ4Ecof3XDdaEmBk+Dy6a2w6waUWqfP6R6Xdfxzghl+EXQbB/FZtqUHGnne+Ip4lkXcqmLAwSHg+Q0Z/fnAs2lZQj3pzFnHuUjIQPC6XI2mmjMbf9GeV3fg1HUGqMMrbhoKEFL8/4/nNGhUbRk2QN+uDYJ/vA3aPKQ0SjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Cv6/mwSo; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=enjuk.jp header.i=@enjuk.jp header.b="OoaLV34H"
-Received: from x1 (232.154.13.160.dy.iij4u.or.jp [160.13.154.232])
-	(authenticated bits=0)
-	by www2881.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 63KBsfn0010776
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 20 Apr 2026 20:54:42 +0900 (JST)
-	(envelope-from kohei@enjuk.jp)
-DKIM-Signature: a=rsa-sha256; bh=mLyLgYNG35p23O+WNAqn9hmPYz/m1CGJ031eEkBqKmo=;
-        c=relaxed/relaxed; d=enjuk.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20251215; t=1776686082; v=1;
-        b=OoaLV34HkWT/IJt7fNcS9qKT1yf6xd4Rgr0cEckBVEg0F33zDGB82eAFJWq7yPrY
-         Mi37LrqV5/AzONXQT4X+jKcIsiXJKTtivO3dH8/XV35AfFSEqGN0ewoIqpCMO2e5
-         u34ZtFRljdG/QLXHIITX62sGRyH8gv2uHGLz7uN5MFVJnUT2HzOzvZx00kIT0sPE
-         Vw+Mw5vWv+Ydf55VrormBsjYLwaZ17mYmTwAgkxk2adJld9ynWRdArfKgU/9sPzW
-         kR8VcrvDzw0RkZFeLNaJtdnnicoHNe1GfkAFxLYYjkwo1Gd+Hx5+Z/Aw0Fo4nBRr
-         rEDmpldW7VdTtSxTljNdqA==
-Date: Mon, 20 Apr 2026 20:54:41 +0900
-From: Kohei Enju <kohei@enjuk.jp>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH net v1] net: validate skb->napi_id in RX tracepoints
-Message-ID: <aeYTImGIRuOf72mi@x1>
-References: <20260420105427.162816-1-kohei@enjuk.jp>
- <b943ec1e-417c-4157-ab19-b34aa6d63688@linux.dev>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Cv6/mwSo"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63JMqb1a3300702;
+	Mon, 20 Apr 2026 12:35:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=aCNrzI
+	TNVxl4yTUtKDFANgAVBHA4yTO8UXj6JrWcXYM=; b=Cv6/mwSo4DJXeV5lnGAdOQ
+	s2aNOOnXrBmvJlazNEKls0qSiMpS30NO4vGuxCWKikVlrU4Sb8xZrEwkECWcTO1/
+	5KZlJhCCMbPgw5xpos347+Mkz9msF6SOtszSVIO/cK++mioCh+IErqYW18Qt2+kU
+	vPFHN/saqkt0LcntqEgVW9d0Fs6W7Y4AAEo8Vl0J9sJ1Rtqzn6Zg5PMXIIS987oU
+	QGOMfx+xtGUlgQ0V57CkNzKOOJE23eqYT2FTUl0lD7fJVJbAs/OlJTACQuwkKebx
+	4W9tuRwRPAD2zXkpPBUkk4WCtqAo4q/hp1Bzxu4F1aQST6IKHIo9mSzRiNYMwp5A
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2k4yr9q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Apr 2026 12:35:49 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63KCZYP2015012;
+	Mon, 20 Apr 2026 12:35:48 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dmpgg4k70-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Apr 2026 12:35:48 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63KCZj5M18219320
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Apr 2026 12:35:45 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 044892004D;
+	Mon, 20 Apr 2026 12:35:45 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 58B4220040;
+	Mon, 20 Apr 2026 12:35:43 +0000 (GMT)
+Received: from [9.111.165.155] (unknown [9.111.165.155])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 20 Apr 2026 12:35:43 +0000 (GMT)
+Message-ID: <898449ac-f7eb-4d52-a4e6-ff356fcba6c5@linux.ibm.com>
+Date: Mon, 20 Apr 2026 14:35:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b943ec1e-417c-4157-ab19-b34aa6d63688@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 17/18] unwind_user/sframe/x86: Enable sframe unwinding
+ on x86
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+        Steven Rostedt <rostedt@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Michal Hocko
+ <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+References: <20260127150554.2760964-1-jremus@linux.ibm.com>
+ <20260127150554.2760964-18-jremus@linux.ibm.com>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20260127150554.2760964-18-jremus@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: h3AoDj-44Wmt0hRRhlhEyQIgXzwjY-6V
+X-Proofpoint-ORIG-GUID: MG0BEFiON0tlFDeZyKyNDhb7WjUzOo-N
+X-Authority-Analysis: v=2.4 cv=VP7tWdPX c=1 sm=1 tr=0 ts=69e61da6 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
+ a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIwMDEyMSBTYWx0ZWRfX8/lw1wSomI2y
+ lYC/8lq7Cy/Svc0dtCcdW472D061uFnbuNoa/VGW3T9O6YaynasdmU+Q3BEZ9OAGr9MpeyHd51m
+ Pdk19TK/gCT9lYFLfkA6QvhkEZqrsmN8Xjcs1RMYLmLi/v7+ZBKN1Qai3qh+7kO4LFMBn2YqUnh
+ aWHiYtPLP5GUvv0BryA+d+esOkhIMMSLWXVWgpi6SAQ5Y5x7m7C/QCX+CC1yNi0WIITN8/j50Tr
+ 1P0SC2FqvLWHjht4FX/dHzpQgyOEnqgW8ngaS5qpHnuF8ltWklHRWd/JQP4S5XYrdutFDqCNajR
+ JA1iRSu3Ax43sZ1tVl1TF7PwkDIMlwTFy/1BXxBXoff3VzrlVYRCB8+Rk/TnVESvtR76utaCtAR
+ 2og6LL6euZqswjLM8xhfi4x01dibDabTTkyCCcGqrPNr1Tgo8s5uDSxCwOXVyBkjc2ESjbXiTFz
+ Eihaj9aWs4OyRFvkWDA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-20_02,2026-04-17_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 impostorscore=0 suspectscore=0 priorityscore=1501 adultscore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604200121
 
-On 04/20 19:27, Jiayuan Chen wrote:
-> 
-> On 4/20/26 6:54 PM, Kohei Enju wrote:
-> > Since commit 2bd82484bb4c ("xps: fix xps for stacked devices"),
-> > skb->napi_id shares storage with sender_cpu. RX tracepoints using
-> > net_dev_rx_verbose_template read skb->napi_id directly and can therefore
-> > report sender_cpu values as if they were NAPI IDs.
-> > 
-> > For example, on the loopback path this can report 1 as napi_id, where 1
-> So I think veth_forward_skb->__netif_rx could be affected as well?
+On 1/27/2026 4:05 PM, Jens Remus wrote:
 
-Yes. Just in case, I've confirmed the same behavior in the veth path.
-The mentioned loopback path is just a single example of possibly
-affected paths.
+> diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
 
-Thanks,
-Kohei
+> @@ -15,6 +15,40 @@ static inline int unwind_user_word_size(struct pt_regs *regs)
+>  	return user_64bit_mode(regs) ? 8 : 4;
+>  }
+>  
+> +static inline int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
+> +{
+> +#ifdef CONFIG_X86_64
+> +	const struct pt_regs *regs = task_pt_regs(current);
+> +
+> +	switch (regnum) {
+> +	/* DWARF register numbers 0..15 */
+> +	case  0: *val = regs->ax; break;
+> +	case  1: *val = regs->dx; break;
+> +	case  2: *val = regs->cx; break;
+> +	case  3: *val = regs->bx; break;
+> +	case  4: *val = regs->si; break;
+> +	case  5: *val = regs->di; break;
+> +	case  6: *val = regs->bp; break;
+> +	case  7: *val = regs->sp; break;
+> +	case  8: *val = regs->r8; break;
+> +	case  9: *val = regs->r9; break;
+> +	case 10: *val = regs->r10; break;
+> +	case 11: *val = regs->r11; break;
+> +	case 12: *val = regs->r12; break;
+> +	case 13: *val = regs->r13; break;
+> +	case 14: *val = regs->r14; break;
+> +	case 15: *val = regs->r15; break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +#else /* !CONFIG_X86_64 */
+> +	return -EINVAL;
+> +#endif /* !CONFIG_X86_64 */
+> +
 
-> > comes from raw_smp_processor_id() + 1 in the XPS path:
-> > 
-> >    # bpftrace -e 'tracepoint:net:netif_rx_entry{ print(args->napi_id); }'
-> >    # taskset -c 0 ping -c 1 ::1
-> > 
-> > Report only valid NAPI IDs in these tracepoints and use 0 otherwise.
-> > 
-> > Fixes: 2bd82484bb4c ("xps: fix xps for stacked devices")
-> > Signed-off-by: Kohei Enju <kohei@enjuk.jp>
-> > ---
-> >   include/trace/events/net.h | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/trace/events/net.h b/include/trace/events/net.h
-> > index fdd9ad474ce3..dbc2c5598e35 100644
-> > --- a/include/trace/events/net.h
-> > +++ b/include/trace/events/net.h
-> > @@ -10,6 +10,7 @@
-> >   #include <linux/if_vlan.h>
-> >   #include <linux/ip.h>
-> >   #include <linux/tracepoint.h>
-> > +#include <net/busy_poll.h>
-> >   TRACE_EVENT(net_dev_start_xmit,
-> > @@ -208,7 +209,8 @@ DECLARE_EVENT_CLASS(net_dev_rx_verbose_template,
-> >   	TP_fast_assign(
-> >   		__assign_str(name);
-> >   #ifdef CONFIG_NET_RX_BUSY_POLL
-> > -		__entry->napi_id = skb->napi_id;
-> > +		__entry->napi_id = napi_id_valid(skb->napi_id) ?
-> > +				   skb->napi_id : 0;
-> >   #else
-> >   		__entry->napi_id = 0;
-> >   #endif
+Nit: Superfluous empty line.
+
+> +}
+> +#define unwind_user_get_reg unwind_user_get_reg
+> +
+>  #endif /* CONFIG_UNWIND_USER */
+>  
+>  #ifdef CONFIG_HAVE_UNWIND_USER_FP
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
