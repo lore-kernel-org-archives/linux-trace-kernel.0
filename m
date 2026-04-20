@@ -1,256 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6235F375F67;
-	Mon, 20 Apr 2026 02:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819C937E309
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Apr 2026 02:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776652038; cv=none; b=fEQM5S4BMg80tD6ejfOMMfLx5X/zVxz0N88ICrEhc72rFGjkVhUwmcSZiNP3g4Z+R51pZLuSwRMVoR/dfiKSBJupUb8De0c78zkZdxxO5z622dd3WerzgoyIBObKLyXE/yT1Fl7WVKWy2lTL0K2nn6rX9Jv7nAxJPlbGLhtJpEc=
+	t=1776653787; cv=none; b=avM4/7D//PkSjmWAMbeSk8gsGOf6vLQ2zjJeTg/CqbHsEWdmpFS9iWgD5TINOyI4cAzW1bI01eRWW3yz3eQylgXK8/Rxmwp/oT8Q4rLUVI/5d90/HZ9tZaHOYmo29PBI0LpxwOLl517MD4O297UUrkjq42bItNi9KJAKqOjk3xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776652038; c=relaxed/simple;
-	bh=ITFfxWVYZShfg8ObCYl+/A7sDctvchvGVKnsu2Q0ZLU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Gv2ejwE8Op1pVdr6ONsXyI0Z9V+AmHg6DPXJnZM8gJuP5vYmk3AADkiOgnmpfybVZ/adtzwLlI7gd1VBkxou9u39j6C2drD5/+4iH3P6uGY1k5XNpXR494DVhySCpfh55PwLzdYOxyVEfYPQxp0FQoJ6LQhF9SbpklQpJu1jDGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/f2q8Yr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776653787; c=relaxed/simple;
+	bh=Gy7C5LgAy0+dNJVh3a/spG3LUsjag46Tvhe61CPzqjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OrZVNCpOw4JvkAjPQOBFD/QhH88CZo4BWg5lo7AtjbTsWRZsUixD6p0NncfOtL5LagRt6Y8IiDkbpuHC0tvb3/FZM+O+sohQz1Np5sqtDYPAqnORfhSUms6uVGmtqrSsRrDFhW5w+tKhAJtml59pQKLwJNZrdTN/vyMr49M+g30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=t1b3S+bk; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/f2q8Yr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F54C2BCAF;
-	Mon, 20 Apr 2026 02:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776652038;
-	bh=ITFfxWVYZShfg8ObCYl+/A7sDctvchvGVKnsu2Q0ZLU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=q/f2q8YrNja2t4MOJ3XZm+daEZl1FcXY4nfOVvtrtjvqt5MbZxWUYOT3wirQo6FaB
-	 lOqgywkLPOjS1VIVUdoCXgyBgeqdQRzNwaylQtig4w+yS3qEz3gmO+SVZmZJKlQIS1
-	 5YnVfgyEXKpTOb6PrQd5kn+uZtfBKDFQ/8OCcifN8EDAPaZwjDRm8Zr0mh3XQALHBh
-	 Up6SdMQEWfpLr4yC73WCFbktXDXdQ7dXOqJfGS3V/MWdgRmzjD+Y1d8LwFkLfl9Ev0
-	 jN9uHYhQzEihNOM9Uulk+1xe1nQar6NN7XIMU3fvu8QzHpDFat9SPtxyteXUC9ijgd
-	 FqU1Wkd4FKflw==
-Date: Mon, 20 Apr 2026 11:27:07 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Song Chen <chensong_2000@189.cn>,
- rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
- sboyd@kernel.org, viresh.kumar@linaro.org, agk@redhat.com,
- snitzer@kernel.org, mpatocka@redhat.com, bmarzins@redhat.com,
- song@kernel.org, yukuai@fnnas.com, linan122@huawei.com,
- jason.wessel@windriver.com, danielt@kernel.org, dianders@chromium.org,
- horms@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, paulmck@kernel.org,
- frederic@kernel.org, mcgrof@kernel.org, da.gomez@kernel.org,
- samitolvanen@google.com, atomlin@atomlin.com, jpoimboe@kernel.org,
- jikos@kernel.org, mbenes@suse.cz, joe.lawrence@redhat.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org, live-patching@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
- kgdb-bugreport@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] kernel/module: Decouple klp and ftrace from
- load_module
-Message-Id: <20260420112707.aa3627ca9f975eeaf7d8ea0e@kernel.org>
-In-Reply-To: <aeD2_FrFL6E3dbAC@pathway.suse.cz>
-References: <20260413080701.180976-1-chensong_2000@189.cn>
-	<1191caf5-6a61-4622-a15e-854d3701f4fc@suse.com>
-	<a35f5f94-7d5a-4347-974b-b270c89ef241@189.cn>
-	<1db425bf-58a9-4768-8c38-3ae25d7662a5@suse.com>
-	<aeD2_FrFL6E3dbAC@pathway.suse.cz>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="t1b3S+bk"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8eb5ad01402so36880585a.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Apr 2026 19:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1776653784; x=1777258584; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tugQt2aIOJgoqj0Ob37lQ1a1TrVKhZ7jSIgjv7qjxfc=;
+        b=t1b3S+bkTXE3j00v5UNCH8rPHlmuEMJsB+F6lwv8trpr/PskjdnmsL4XxF9lpDjdF0
+         hzhD9hJ/y1a/SqHQ9k6S04uBN6tyzhw5ddh6/Dr0Efbu75Z1tYBl2rwLwqjXkXjwnWgi
+         zo99c5KrKmAg31ptTacy0m7WGoFP2qXpCPOewg5RUjcFmBnHyEsPkQ3CXu4Ap0yWF8Jp
+         y2Tsuja+wRqOw1p5f5NtBwF5g9oGJSKcc6UHi76irOasuXa4l6PJP9bbsi4xnRWezIZd
+         Dv7TbLaOn+YYUq/YkJ20RultXKWF5eKRrsoyZjlEXfxwcliifnoOs3LV8VCvxdCBCLUA
+         uHww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776653784; x=1777258584;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tugQt2aIOJgoqj0Ob37lQ1a1TrVKhZ7jSIgjv7qjxfc=;
+        b=eppPJPIZF+1QhIIouEEmTER0YoSHbt7TLPcS6JXTOLkpVTijlLS78BmJ5PTljU0Z3/
+         x7oJx1ERJgeD9MFMMyZN9p94x4FpEVs63hu3NDQZGAzEXkFF6QMEe5KLATe7WMWIBj53
+         QhxdyNTX6A7pb/soAtZv1XBtccHlHaNWIgNS18IoOealOgqxjNA0cU0PPEiIjLYjzlA3
+         O5Do3hSFwnD0prBxTAC76nOswNgYV/R34RVHZ4rlScn+wneZtm//E4IldEyabGoIvmPi
+         Rzn5AIiqghWSh3gWAjACnI2RPq8wdosjulo+gvQPqg64wFaELT7hrWbg/z7RfF8a49es
+         n3lg==
+X-Forwarded-Encrypted: i=1; AFNElJ8wYypgurhVdzgGMC8o4blge5bz3aQcb5yf7Pr10JCzeRFT6UXds7S/nXG2daclxgcA1TS6cIEkrb+h5HY5qmKViBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyybvM1Ozgv2BU4URVpvebm2/SDx1vQqhkIvHBZLViGEFtsT1UP
+	1n3IFyWiZs648SZkjDibogjDym7aQK2iGg5dZicn6KeNuzVwRa97+SWtr+UU3A44RLM=
+X-Gm-Gg: AeBDieuQrzTNJZCPfeRqa2lKc29tpvm4wohlxnBxs1IGjSWew6jYi3N507lRgDMaLgx
+	UO6J1IU/7dV5DoSYB7nNDygloN3ArcWHthGYbuLkJ8dnS5r88Q1U7CSMFuqOrrWcuDSImmkBtMp
+	I4SlYAlHXg+X1/hhjaCZF/uLtF21UXJOIJBLJQI9PBe40/O70AemuyOxKm2Y0xGMJ8CLkPHJjvH
+	gJ2jpPTZ9JiH1xnD1b+4DNntK8s8B8XBeuWBIH1mRk74S43HpePZ5eN24eLpftS9dAqSWf9fYcx
+	JXvvWtD8ye9R5x6zR9N7lVLYfKXbm/+/UjvAVh7+aS7h4DUGnlod5NKwyUUnSn9N4BtJhnD7Oym
+	PjA+WmyllDKX0gxZiR4AdmNV870YwN+gv8mS5rS3046hQ2rkQ3+3ejWWC9SZdFYTDzvPOgo1cRG
+	gEuiR1uRr6zE2nHtmUBhy9e8yN9NNcT7s25LtAqzWQSeSrXag6f/m8/JsCt3MAaVnQM9LZl4k0w
+	jidpMZrlfBDGE+R/0hxVFw=
+X-Received: by 2002:a05:620a:a2c3:10b0:8e8:bedd:14b2 with SMTP id af79cd13be357-8e8bedd1701mr799144185a.43.1776653784400;
+        Sun, 19 Apr 2026 19:56:24 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-108-28-184-223.washdc.fios.verizon.net. [108.28.184.223])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8e7d5fe9638sm706089185a.1.2026.04.19.19.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2026 19:56:23 -0700 (PDT)
+Date: Sun, 19 Apr 2026 22:56:20 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aeWV1CvP9ImZ3eEG@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+ <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
+ <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
+ <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
+ <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
+ <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
+ <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
 
-On Thu, 16 Apr 2026 16:49:32 +0200
-Petr Mladek <pmladek@suse.com> wrote:
-
-> On Thu 2026-04-16 13:18:30, Petr Pavlu wrote:
-> > On 4/15/26 8:43 AM, Song Chen wrote:
-> > > On 4/14/26 22:33, Petr Pavlu wrote:
-> > >> On 4/13/26 10:07 AM, chensong_2000@189.cn wrote:
-> > >>> diff --git a/include/linux/module.h b/include/linux/module.h
-> > >>> index 14f391b186c6..0bdd56f9defd 100644
-> > >>> --- a/include/linux/module.h
-> > >>> +++ b/include/linux/module.h
-> > >>> @@ -308,6 +308,14 @@ enum module_state {
-> > >>>       MODULE_STATE_COMING,    /* Full formed, running module_init. */
-> > >>>       MODULE_STATE_GOING,    /* Going away. */
-> > >>>       MODULE_STATE_UNFORMED,    /* Still setting it up. */
-> > >>> +    MODULE_STATE_FORMED,
-> > >>
-> > >> I don't see a reason to add a new module state. Why is it necessary and
-> > >> how does it fit with the existing states?
-> > >>
-> > > because once notifier fails in state MODULE_STATE_UNFORMED (now only ftrace has someting to do in this state), notifier chain will roll back by calling blocking_notifier_call_chain_robust, i'm afraid MODULE_STATE_GOING is going to jeopardise the notifers which don't handle it appropriately, like:
-> > > 
-> > > case MODULE_STATE_COMING:
-> > >      kmalloc();
-> > > case MODULE_STATE_GOING:
-> > >      kfree();
+On Fri, Apr 17, 2026 at 11:37:36AM +0200, David Hildenbrand (Arm) wrote:
+> On 4/15/26 17:17, Gregory Price wrote:
+> 
+> >> Needs a second thought regarding fallback logic I raised above.
+> >>
+> >> What I think would have to be audited is the usage of __GFP_THISNODE by
+> >> kernel allocations, where we would not actually want to allocate from
+> >> this private node.
+> >>
 > > 
-> > My understanding is that the current module "state machine" operates as
-> > follows. Transitions marked with an asterisk (*) are announced via the
-> > module notifier.
+> > This is fair, and I a re-visit is absolutely warranted.
 > > 
-> > ---> UNFORMED --*> COMING --*> LIVE --*> GOING -.
-> >         ^            |                     ^    |
-> >         |            '---------------------*    |
-> >         '---------------------------------------'
+> > Re-examining the quick audit from my last response suggests - I should
+> > never have seen leakage in those cases, but the fallbacks are needed.
 > > 
-> > The new code aims to replace the current ftrace_module_init() call in
-> > load_module(). To achieve this, it adds a notification for the UNFORMED
-> > state (only when loading a module) and introduces a new FORMED state for
-> > rollback. FORMED is purely a fake state because it never appears in
-> > module::state. The new structure is as follows:
+> > So yes, this all requires a second look (and a third, and a ninth).
 > > 
-> >         ,--*> (FORMED)
-> >         |
-> > --*> UNFORMED --*> COMING --*> LIVE --*> GOING -.
-> >         ^            |                     ^    |
-> >         |            '---------------------*    |
-> >         '---------------------------------------'
-> > 
-> > I'm afraid this is quite complex and inconsistent. Unless it can be kept
-> > simple, we would be just replacing one special handling with a different
-> > complexity, which is not worth it.
+> > I'm not married to __GFP_PRIVATE, but it has been reliable for me.
 > 
-> > >>
-> > >>> +    if (err)
-> > >>> +        goto ddebug_cleanup;
-> > >>>         /* Finally it's fully formed, ready to start executing. */
-> > >>>       err = complete_formation(mod, info);
-> > >>> -    if (err)
-> > >>> +    if (err) {
-> > >>> +        blocking_notifier_call_chain_reverse(&module_notify_list,
-> > >>> +                MODULE_STATE_FORMED, mod);
-> > >>>           goto ddebug_cleanup;
-> > >>> +    }
-> > >>>   -    err = prepare_coming_module(mod);
-> > >>> +    err = prepare_module_state_transaction(mod,
-> > >>> +                MODULE_STATE_COMING, MODULE_STATE_GOING);
-> > >>>       if (err)
-> > >>>           goto bug_cleanup;
-> > >>>   @@ -3522,7 +3519,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
-> > >>>       destroy_params(mod->kp, mod->num_kp);
-> > >>>       blocking_notifier_call_chain(&module_notify_list,
-> > >>>                        MODULE_STATE_GOING, mod);
-> > >>
-> > >> My understanding is that all notifier chains for MODULE_STATE_GOING
-> > >> should be reversed.
-> > > yes, all, from lowest priority notifier to highest.
-> > > I will resend patch 1 which was failed due to my proxy setting.
-> > 
-> > What I meant here is that the call:
-> > 
-> > blocking_notifier_call_chain(&module_notify_list, MODULE_STATE_GOING, mod);
-> > 
-> > should be replaced with:
-> > 
-> > blocking_notifier_call_chain_reverse(&module_notify_list, MODULE_STATE_GOING, mod);
-> > 
-> > > 
-> > >>
-> > >>> -    klp_module_going(mod);
-> > >>>    bug_cleanup:
-> > >>>       mod->state = MODULE_STATE_GOING;
-> > >>>       /* module_bug_cleanup needs module_mutex protection */
-> > >>
-> > >> The patch removes the klp_module_going() cleanup call in load_module().
-> > >> Similarly, the ftrace_release_mod() call under the ddebug_cleanup label
-> > >> should be removed and appropriately replaced with a cleanup via
-> > >> a notifier.
-> > >>
-> > >     err = prepare_module_state_transaction(mod,
-> > >                 MODULE_STATE_UNFORMED, MODULE_STATE_FORMED);
-> > >     if (err)
-> > >         goto ddebug_cleanup;
-> > > 
-> > > ftrace will be cleanup in blocking_notifier_call_chain_robust rolling back.
-> > > 
-> > >     err = prepare_module_state_transaction(mod,
-> > >                 MODULE_STATE_COMING, MODULE_STATE_GOING);
-> > > 
-> > > each notifier including ftrace and klp will be cleanup in blocking_notifier_call_chain_robust rolling back.
-> > > 
-> > > if all notifiers are successful in MODULE_STATE_COMING, they all will be clean up in
-> > >  coming_cleanup:
-> > >     mod->state = MODULE_STATE_GOING;
-> > >     destroy_params(mod->kp, mod->num_kp);
-> > >     blocking_notifier_call_chain(&module_notify_list,
-> > >                      MODULE_STATE_GOING, mod);
-> > > 
-> > > if  something wrong underneath.
-> > 
-> > My point is that the patch leaves a call to ftrace_release_mod() in
-> > load_module(), which I expected to be handled via a notifier.
-> 
-> I think that I have got it. The ftrace code needs two notifiers when
-> the module is being loaded and two when it is going.
-> 
-> This is why Sond added the new state. But I think that we would
-> need two new states to call:
-> 
->     + ftrace_module_init() in MODULE_STATE_UNFORMED
->     + ftrace_module_enable() in MODULE_STATE_FORMED
-> 
-> and
-> 
->     + ftrace_free_mem() in MODULE_STATE_PRE_GOING
->     + ftrace_free_mem() in MODULE_STATE_GOING
-> 
-> 
-> By using the ascii art:
-> 
->  -*> UNFORMED -*> FORMED -> COMING -*> LIVE -*> PRE_GOING -*> GOING -.
->               |          |         |                ^           ^    ^
->               |          |         '----------------'           |    |
->               |          '--------------------------------------'    |
->               '------------------------------------------------------'
-> 
-> 
-> But I think that this is not worth it.
-
-Agree.
-
-If this needs to be ordered so strictly, why we will use a "single"
-module notifier chain for this complex situation?
-
-I think the notifier call chain is just for notice a single signal,
-instead of sending several different signals, especially if there is
-any dependency among the callbacks.
-
-If notification callbacks need to be ordered, they are currently
-sorted by representing priority numerically, but this is quite
-fragile for updating. It has to look up other registered priorities
-and adjust the order among dependencies each time. For this reason,
-this mechanism is not suitable for global ordering. (It's like line
-numbers in BASIC.)
-It is probably only useful for representing dependencies between
-two components maintained by the same maintainer.
-
-I'm against a general-purpose system that makes everything modular.
-It unnecessarily complicates things. If there are processes that
-require strict ordering, especially processes that must be performed
-before each stage as part of the framework, they should be called
-directly from the framework, not via notification callbacks.
-
-This makes it simpler and more robust to maintain.
-
-Only the framework's end users should utilize notification callbacks.
-
-Thank you,
-
-
-> 
-> Best Regards,
-> Petr
+> Yes, we should carefully describe which semantics we want to achieve, to
+> then figure out how we could achieve them.
 > 
 
+Ah, I finally dug up my notes on this.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+If we overload __GFP_THISNODE - then we have to audit all gfp_mask's
+with THISNODE against the use of any of the following *forever*:
+
+#define node_online_map         node_states[N_ONLINE]
+#define node_possible_map       node_states[N_POSSIBLE]
+#define for_each_node(node)        for_each_node_state(node, N_POSSIBLE)
+#define for_each_online_node(node) for_each_node_state(node, N_ONLINE)
+
+  or
+
+cgroup.cpuset.mems_allowed / mems_effective
+
+
+Anyone that attempts to do:
+
+    for_each_online_node(node):
+        buf = alloc_pages_node(node, __GFP_THISNODE, NULL)
+
+*will* get incidental access to private node memory, and it won't be
+obvious to existing tooling that this should be considered a bug.
+
+
+rate of occurance in the current code:
+-----------------
+node_online_map       -  21 instances
+node_possible_map     -  25 instances
+for_each_node         -  346 instances
+for_each_online_node  -  67 instances
+GFP_THISNODE          -  58 instances
+(notes don't have mems_allowed/mems_effective instances)
+
+
+But it's not always going to be obvious - since nodemasks and gfp_masks
+get passed around as variables all throughout the kernel.
+
+I ultimately determined that auditing this in-tree is already a fools
+errand - and suggesting we try to validate this never occurs for all
+future code moving forward is just not realistic in any sense.
+
+I could not come up with a way to remove private nodes from
+node_online/possible_map - and private nodes must be added to
+cpuset.mems_allowed to allow cpuset control (otherwise all userland
+access is blanket denied).
+
+So I moved back to __GFP_PRIVATE.
+
+=== TL;DR:
+
+The core premise of private nodes is isolation first.
+
+So we want this code:
+
+   for node in cpuset.mems_allowed / online_map
+       buf = alloc_pages_node(node, __GFP_THISNODE, NULL)
+
+To explicitly fail - so that the caller knows they can't use these
+masks this way anymore (it was already potentially a bug, but could
+have been masked if all online nodes had memory).
+
+~Gregory
