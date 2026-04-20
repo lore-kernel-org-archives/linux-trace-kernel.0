@@ -1,130 +1,108 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5F83AB27F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Apr 2026 13:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644223A5E92;
+	Mon, 20 Apr 2026 13:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776690989; cv=none; b=OnfN8Gc+UG+aUtrBOdBY0SfjBUhxBUSJuLzWOPwLUuWyUt+x5xhv6/WpM0h5n4MAvK4zZazUmSoruwZBlPU5Ywb8OLeGLWYnev8xW4w2j1GuTuz32Uex6MnU90WqJnJ69eyDVkefG33R0nchVA1/grV6ZY4mVQOGirlmlI6Xn0Y=
+	t=1776691039; cv=none; b=jZSzAXFzNUckddNJ/AURAQ8NF3+aZ+6CP17olgqeqnWk8VWkv/xfXYLbpCHax95Vcslzqg4A6Jm25oFNdB77a7OLgDov5qg9wOMctMm5zdDW2HDj241TAWnfbvuIy68slhRFkWwN1Jfi7A/Q1tA0MhZvB9oVKjlfp/WwVn9kpMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776690989; c=relaxed/simple;
-	bh=JIo7dZkT6VZYhrI91hnDATjlBULDOeJvY7ZXahco84I=;
+	s=arc-20240116; t=1776691039; c=relaxed/simple;
+	bh=NWaMfhADkFs8adYX4BONkjmh2cuUY93pvd7Wvpcbq2E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZJ8IPqp0xo5/qL8DTKyvI/MDIgrfw2KxAWC3iYvtLMZneZB65a3k72UVFeb/DVlXE6oukBdNr9KEyeNeqc2jxe8IgxVrv4xBohw+NyVApcI4y2LLaFg9WuL/BJ2JFhRLZ9fofqw1PgO1U8d7jG7ExSwR++cJ6Z8zbYzMJThpc1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=T2LV6+Is; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 MIME-Version; b=N+sHL7SOhEqOqyHYjXpQyF8wqFlEneHiqaeZaw97Z0u/11cCU+k0nXj0/ms6FapNfZubB6VXA9f1mhKRDUF19WwLW3230XIZg5JsNGpWic0Hao4YTSMBMGcHM7xKoadaLKfT8NecHP3zAnSGKaJh6mF2tchdYb2X/Ufpq+tf7GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ip+OD/nq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="T2LV6+Is"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776690974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BsatqlpFXZFNi8Kl9ZLgdLvl4wOAHcOCp2o0dzIKpJY=;
-	b=T2LV6+IsNzeXUOci7LW3i7gkiXJBoEaQxrMm8jqfQoQgsCiebwzcF3GmF6j5s+nonfNmAl
-	ihVck8om9+Gy2IOQu2HefU5g4FAUS4zaBANZdgWWntieO5VCLJfyqhW7Y5foXCOqj5+976
-	y6CLSWU58gqI2rcnbNAfmn6UjTr3xLA=
-From: Usama Arif <usama.arif@linux.dev>
-To: Nico Pache <npache@redhat.com>
-Cc: Usama Arif <usama.arif@linux.dev>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	anshuman.khandual@arm.com,
-	apopple@nvidia.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	byungchul@sk.com,
-	catalin.marinas@arm.com,
-	cl@gentwo.org,
-	corbet@lwn.net,
-	dave.hansen@linux.intel.com,
-	david@kernel.org,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jackmanb@google.com,
-	jannh@google.com,
-	jglisse@google.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	lance.yang@linux.dev,
-	Liam.Howlett@oracle.com,
-	ljs@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	matthew.brost@intel.com,
-	mhiramat@kernel.org,
-	mhocko@suse.com,
-	peterx@redhat.com,
-	pfalcato@suse.de,
-	rakie.kim@sk.com,
-	raquini@redhat.com,
-	rdunlap@infradead.org,
-	richard.weiyang@gmail.com,
-	rientjes@google.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ip+OD/nq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C3BC19425;
+	Mon, 20 Apr 2026 13:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776691039;
+	bh=NWaMfhADkFs8adYX4BONkjmh2cuUY93pvd7Wvpcbq2E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ip+OD/nq2ETmHoGAArfGZ9a6mxIAqIjiLRRXiX/JiBQmR/+06C9RkWNe0lXRia4Xu
+	 QbdFU43WJ3OTvAb+6xBaAZQa9wbVDe+fRSxinb+9FraDS0HlQRKas3D8z1im837sCf
+	 xvsRreBWCuy5UTbVbH/xbNYNy6r8W8DukoElGTBQ4G8Dloi8xrnMtyerQCzaI6Ej1c
+	 QPZ4zTzeZLB9FRaRfb0c0X4Pbphl17068iajvXsCUJy4UIEPa1gKJ3imqYf9i1DhVc
+	 SVWL7cLEasl7Y/kAtY+blkUHdNCLpv73zl3yxq1WUeJeCifHO8aya1rvrsXxG9jpyq
+	 SmTs+a7U05kIw==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Goldwyn Rodrigues <rgoldwyn@suse.de>,
+	Boris Burkov <boris@bur.io>,
+	Goldwyn Rodrigues <rgoldwyn@suse.com>,
+	David Sterba <dsterba@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	clm@fb.com,
 	rostedt@goodmis.org,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shivankg@amd.com,
-	sunnanyong@huawei.com,
-	surenb@google.com,
-	thomas.hellstrom@linux.intel.com,
-	tiwai@suse.de,
-	usamaarif642@gmail.com,
-	vbabka@suse.cz,
-	vishal.moola@gmail.com,
-	wangkefeng.wang@huawei.com,
-	will@kernel.org,
-	willy@infradead.org,
-	yang@os.amperecomputing.com,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	zokeefe@google.com
-Subject: Re: [PATCH 7.2 v16 03/13] mm/khugepaged: rework max_ptes_* handling with helper functions
-Date: Mon, 20 Apr 2026 06:15:48 -0700
-Message-ID: <20260420131549.3673619-1-usama.arif@linux.dev>
-In-Reply-To: <20260419185750.260784-4-npache@redhat.com>
-References: 
+	mhiramat@kernel.org,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.18] btrfs: tracepoints: get correct superblock from dentry in event btrfs_sync_file()
+Date: Mon, 20 Apr 2026 09:08:44 -0400
+Message-ID: <20260420131539.986432-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260420131539.986432-1-sashal@kernel.org>
+References: <20260420131539.986432-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.18.23
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On Sun, 19 Apr 2026 12:57:40 -0600 Nico Pache <npache@redhat.com> wrote:
+From: Goldwyn Rodrigues <rgoldwyn@suse.de>
 
-> The following cleanup reworks all the max_ptes_* handling into helper
-> functions. This increases the code readability and will later be used to
-> implement the mTHP handling of these variables.
-> 
-> With these changes we abstract all the madvise_collapse() special casing
-> (dont respect the sysctls) away from the functions that utilize them. And
-> will later in this series to cleanly restrict mTHP collapses behaviors.
-> 
-> Suggested-by: David Hildenbrand <david@kernel.org>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 114 +++++++++++++++++++++++++++++++++---------------
->  1 file changed, 78 insertions(+), 36 deletions(-)
-> 
+[ Upstream commit a85b46db143fda5869e7d8df8f258ccef5fa1719 ]
 
-The old code re-read khugepaged_max_ptes_* on every loop iteration; the new
-code snapshots them once per scan call. If userspace writes the sysctl
-mid-scan, old behavior reacted within the scan, new behavior uses the value
-sampled at entry. This is completely ok IMO, but might be good to call out.
+If overlay is used on top of btrfs, dentry->d_sb translates to overlay's
+super block and fsid assignment will lead to a crash.
 
-Also might be good to write no functional change intended apart from
-above in the commit message?
+Use file_inode(file)->i_sb to always get btrfs_sb.
 
-Acked-by: Usama Arif <usama.arif@linux.dev>
+Reviewed-by: Boris Burkov <boris@bur.io>
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+LLM Generated explanations, may be completely bogus:
+
+Error: Failed to generate final synthesis
+
+ include/trace/events/btrfs.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
+index 125bdc166bfed..0864700f76e0a 100644
+--- a/include/trace/events/btrfs.h
++++ b/include/trace/events/btrfs.h
+@@ -769,12 +769,15 @@ TRACE_EVENT(btrfs_sync_file,
+ 	),
+ 
+ 	TP_fast_assign(
+-		const struct dentry *dentry = file->f_path.dentry;
+-		const struct inode *inode = d_inode(dentry);
++		struct dentry *dentry = file_dentry(file);
++		struct inode *inode = file_inode(file);
++		struct dentry *parent = dget_parent(dentry);
++		struct inode *parent_inode = d_inode(parent);
+ 
+-		TP_fast_assign_fsid(btrfs_sb(file->f_path.dentry->d_sb));
++		dput(parent);
++		TP_fast_assign_fsid(btrfs_sb(inode->i_sb));
+ 		__entry->ino		= btrfs_ino(BTRFS_I(inode));
+-		__entry->parent		= btrfs_ino(BTRFS_I(d_inode(dentry->d_parent)));
++		__entry->parent		= btrfs_ino(BTRFS_I(parent_inode));
+ 		__entry->datasync	= datasync;
+ 		__entry->root_objectid	= btrfs_root_id(BTRFS_I(inode)->root);
+ 	),
+-- 
+2.53.0
 
