@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15A934D4DE;
-	Mon, 20 Apr 2026 14:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE39134E741;
+	Mon, 20 Apr 2026 14:01:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776693682; cv=none; b=IuM4DW/TwSECpulLrn6uzlwlggeY6+MpRXpLOFytbrT11zbIX/NW/NlPRjOOkYJ4f0ObksiqMvIj3QSf31WRrr/gkB/+f9wolpUXMeNCVXQdoTFn2c4vhnPwLEw0yKx5ieAz2jN3Rz3dydSMlMTcnftfPLILoEBedPoLLXxutJQ=
+	t=1776693690; cv=none; b=bdsNJifysqbFpmBHZArMC/+gW+e6lXLSfqjPjgwilfu/R5ZFZkmhddsajRfi0W/UhDW0JsSyZtLS08X4fjAzIlvQQcVfGvWl+Ci/mA/ix5MdZJ3KOVP5TRDWn3TERwervZhV/3vq3q73TiBZEw34x7ERlzzxAP/NWDp0LPAcEHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776693682; c=relaxed/simple;
-	bh=wK3IAcW3J1cHindRXASbOj4dn56uxwoHlOYqZRtaq1k=;
+	s=arc-20240116; t=1776693690; c=relaxed/simple;
+	bh=7DbW4/aJrHn1nTLmgN/QxGJRygwpkyZ84qf/sjT8AoU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=giXhZG2MyA6uLCCnXPmqZz0NI/VRDLuHQKDp8h8zC5F7jaQZEYf4I6A3mXghQpxQ6pEgEIlWIyyQ3t19AfHtBc9F8YMmof8gj6vWGOneCjqzwvnudwrnP3Sj5gkWYAoFT6U7vyWyNhFjnpeRt8+vmRmCyIy5SwXB4ytZA7dExgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=py5A7eMw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uLp50YntR2d/uDUYzsbaL84tgoqPOdxNmtI73H18YyGiAW+TvPycwMp0cHuVlgEdgiZY6u/BGUSuSVnWxGbh6sHC5xgh0qCbjgYqqT2ySwzdrKv/bCwyQhNmZH3iinyXBcpsPSyZQt4eGAqFaEWal75ExrxjoiIOuABHcV7y2j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXZ8dt7e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="py5A7eMw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927E8C19425;
-	Mon, 20 Apr 2026 14:01:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXZ8dt7e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 703BAC19425;
+	Mon, 20 Apr 2026 14:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776693682;
-	bh=wK3IAcW3J1cHindRXASbOj4dn56uxwoHlOYqZRtaq1k=;
+	s=k20201202; t=1776693690;
+	bh=7DbW4/aJrHn1nTLmgN/QxGJRygwpkyZ84qf/sjT8AoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=py5A7eMw4PLRDE+RPnun+Ck3Pi2pzJKuzFs9g7u2AgjenQc4Qb+8gb/Nx1rjwzasp
-	 boeoMATHmaHwqyQzPO5lvMJQdul+tdKySPTL0uQnenEiO2bC4ZtGK5OB2gxOOcawbO
-	 SzAuCpSoFQUGBDipbPors4xkrnMIcDWqmFBrfsQ8UXj420c3K6rwTOpNNl6Y+MSNwG
-	 /VafdKd8Ux6xzHIOEjgihEN20lM2brYDFmSY38QAbkwoePLQ/I3HDez0fXrzAznf80
-	 f9Yt0i+4Sa8sOxTPQNfV4DwSNZBEsZ8YqQ8yl1WP/b3MllImv/A4nF4PGYK5N5aEoX
-	 OujAxlWJp5C5Q==
+	b=LXZ8dt7e12ac5HPZCvafMliPU4bvE2Py/40A5QJSPBvG8F7f/I7WD+7mZfCWNLDEp
+	 +2joS3HBro1rEZZP41lHOaiZyr8hkxlY/Y9utIHEzJA2bWj9K5nfWBa2gV8baj8H/j
+	 G7d6hsIcgR+Cwxp3oLIXriJIJSQ+gFOOFwyVJ1W7uOcg4YO7DrbTNEJtvXsZCd1wX/
+	 AOT1uahst+WOtpumTg2sAsPEBCzoNNTU9wswWWbQw8XqYSRxUWstW20c+WZPf9Xyrk
+	 Y7BFLbaOs+RinyR6LGzulTwlR7ugT4g+HnuJ1KYAVMyFgyW+JOpQ3f+xjE2kj+bRa0
+	 2Ph2U+O0kq37A==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -34,9 +34,9 @@ Cc: Menglong Dong <menglong8.dong@gmail.com>,
 	jiang.biao@linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v10 5/8] tracing/fprobe: Check the same type fprobe on table as the unregistered one
-Date: Mon, 20 Apr 2026 23:01:20 +0900
-Message-ID:  <177669367993.132053.10553046138528674802.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH v10 6/8] tracing/fprobe: Fix to unregister ftrace_ops if it is empty on module unloading
+Date: Mon, 20 Apr 2026 23:01:27 +0900
+Message-ID:  <177669368776.132053.10042301916765771279.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.54.0.rc1.513.gad8abe7a5a-goog
 In-Reply-To:  <177669363667.132053.12454670015890859277.stgit@mhiramat.tok.corp.google.com>
 References:  <177669363667.132053.12454670015890859277.stgit@mhiramat.tok.corp.google.com>
@@ -52,197 +52,365 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Commit 2c67dc457bc6 ("tracing: fprobe: optimization for entry only case")
-introduced a different ftrace_ops for entry-only fprobes.
+Fix fprobe to unregister ftrace_ops if corresponding type of fprobe
+does not exist on the fprobe_ip_table and it is expected to be empty
+when unloading modules.
 
-However, when unregistering an fprobe, the kernel only checks if another
-fprobe exists at the same address, without checking which type of fprobe
-it is.
-If different fprobes are registered at the same address, the same address
-will be registered in both fgraph_ops and ftrace_ops, but only one of
-them will be deleted when unregistering. (the one removed first will not
-be deleted from the ops).
+Since ftrace thinks that the empty hash means everything to be traced,
+if we set fprobes only on the unloaded module, all functions are traced
+unexpectedly after unloading module.
+e.g.
 
-This results in junk entries remaining in either fgraph_ops or ftrace_ops.
-For example:
- =======
- cd /sys/kernel/tracing
+ # modprobe xt_LOG.ko
+ # echo 'f:test log_tg*' > dynamic_events
+ # echo 1 > events/fprobes/test/enable
+ # cat enabled_functions
+log_tg [xt_LOG] (1)             tramp: 0xffffffffa0004000 (fprobe_ftrace_entry+0x0/0x490) ->fprobe_ftrace_entry+0x0/0x490
+log_tg_check [xt_LOG] (1)               tramp: 0xffffffffa0004000 (fprobe_ftrace_entry+0x0/0x490) ->fprobe_ftrace_entry+0x0/0x490
+log_tg_destroy [xt_LOG] (1)             tramp: 0xffffffffa0004000 (fprobe_ftrace_entry+0x0/0x490) ->fprobe_ftrace_entry+0x0/0x490
+ # rmmod xt_LOG
+ # wc -l enabled_functions
+34085 enabled_functions
 
- # 'Add entry and exit events on the same place'
- echo 'f:event1 vfs_read' >> dynamic_events
- echo 'f:event2 vfs_read%return' >> dynamic_events
-
- # 'Enable both of them'
- echo 1 > events/fprobes/enable
- cat enabled_functions
-vfs_read (2)            ->arch_ftrace_ops_list_func+0x0/0x210
-
- # 'Disable and remove exit event'
- echo 0 > events/fprobes/event2/enable
- echo -:event2 >> dynamic_events
-
- # 'Disable and remove all events'
- echo 0 > events/fprobes/enable
- echo > dynamic_events
-
- # 'Add another event'
- echo 'f:event3 vfs_open%return' > dynamic_events
- cat dynamic_events
-f:fprobes/event3 vfs_open%return
-
- echo 1 > events/fprobes/enable
- cat enabled_functions
-vfs_open (1)            tramp: 0xffffffffa0001000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60    subops: {ent:fprobe_fgraph_entry+0x0/0x620 ret:fprobe_return+0x0/0x150}
-vfs_read (1)            tramp: 0xffffffffa0001000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60    subops: {ent:fprobe_fgraph_entry+0x0/0x620 ret:fprobe_return+0x0/0x150}
- =======
-
-As you can see, an entry for the vfs_read remains.
-
-To fix this issue, when unregistering, the kernel should also check if
-there is the same type of fprobes still exist at the same address, and
-if not, delete its entry from either fgraph_ops or ftrace_ops.
-
-Fixes: 2c67dc457bc6 ("tracing: fprobe: optimization for entry only case")
-Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/fprobe.c |   82 +++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 65 insertions(+), 17 deletions(-)
+ Changes in v10:
+  - Even if the removed node count is 0 because of the memory allocation
+    fails, call __fprobe_f*_unregister() if the number of ftrace_hash_node
+    is 0.
+ Changes in v9:
+  - Remove fprobe_graph_active and fprobe_ftrace_active to fix
+    remove fprobe after unload module case.
+ Changes in v8:
+  - Fix to check fprobe_graph/ftrace_registered flag directly
+    when registering ftrace_ops.
+ Changes in v7:
+  - Fix to split checking whether ftrace_ops is registered from
+    the number of registered fprobes, because ftrace_ops can be
+    unregistered in module unloading.
+ Changes in v6:
+  - Newly added.
+---
+ kernel/trace/fprobe.c |  224 +++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 159 insertions(+), 65 deletions(-)
 
 diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 9b913facfd36..d0a68a2c5eaf 100644
+index d0a68a2c5eaf..cc49ebd2a773 100644
 --- a/kernel/trace/fprobe.c
 +++ b/kernel/trace/fprobe.c
-@@ -92,11 +92,8 @@ static int insert_fprobe_node(struct fprobe_hlist_node *node, struct fprobe *fp)
+@@ -79,7 +79,7 @@ static const struct rhashtable_params fprobe_rht_params = {
+ };
+ 
+ /* Node insertion and deletion requires the fprobe_mutex */
+-static int insert_fprobe_node(struct fprobe_hlist_node *node, struct fprobe *fp)
++static int __insert_fprobe_node(struct fprobe_hlist_node *node, struct fprobe *fp)
+ {
+ 	int ret;
+ 
+@@ -92,7 +92,7 @@ static int insert_fprobe_node(struct fprobe_hlist_node *node, struct fprobe *fp)
  	return ret;
  }
  
--/* Return true if there are synonims */
--static bool delete_fprobe_node(struct fprobe_hlist_node *node)
-+static void delete_fprobe_node(struct fprobe_hlist_node *node)
+-static void delete_fprobe_node(struct fprobe_hlist_node *node)
++static void __delete_fprobe_node(struct fprobe_hlist_node *node)
  {
--	bool ret;
--
  	lockdep_assert_held(&fprobe_mutex);
  
- 	/* Avoid double deleting and non-inserted nodes */
-@@ -105,13 +102,6 @@ static bool delete_fprobe_node(struct fprobe_hlist_node *node)
- 		rhltable_remove(&fprobe_ip_table, &node->hlist,
- 				fprobe_rht_params);
- 	}
--
--	rcu_read_lock();
--	ret = !!rhltable_lookup(&fprobe_ip_table, &node->addr,
--				fprobe_rht_params);
--	rcu_read_unlock();
--
--	return ret;
+@@ -250,7 +250,65 @@ static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent
+ 	return ret;
  }
  
- /* Check existence of the fprobe */
-@@ -343,6 +333,32 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
- 	return !fp->exit_handler;
- }
- 
-+static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace)
-+{
-+	struct rhlist_head *head, *pos;
-+	struct fprobe_hlist_node *node;
-+	struct fprobe *fp;
++static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
++			       struct ftrace_regs *fregs);
++static void fprobe_return(struct ftrace_graph_ret *trace,
++			  struct fgraph_ops *gops,
++			  struct ftrace_regs *fregs);
 +
-+	guard(rcu)();
-+	head = rhltable_lookup(&fprobe_ip_table, &ip,
-+				fprobe_rht_params);
-+	if (!head)
-+		return false;
-+	/* We have to check the same type on the list. */
-+	rhl_for_each_entry_rcu(node, pos, head, hlist) {
-+		if (node->addr != ip)
-+			break;
-+		fp = READ_ONCE(node->fp);
-+		if (likely(fp)) {
-+			if ((!ftrace && fp->exit_handler) ||
-+			    (ftrace && !fp->exit_handler))
-+				return true;
++static struct fgraph_ops fprobe_graph_ops = {
++	.entryfunc	= fprobe_fgraph_entry,
++	.retfunc	= fprobe_return,
++};
++/* Number of fgraph fprobe nodes */
++static int nr_fgraph_fprobes;
++/* Is fprobe_graph_ops registered? */
++static bool fprobe_graph_registered;
++
++/* Add @addrs to the ftrace filter and register fgraph if needed. */
++static int fprobe_graph_add_ips(unsigned long *addrs, int num)
++{
++	int ret;
++
++	lockdep_assert_held(&fprobe_mutex);
++
++	ret = ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 0, 0);
++	if (ret)
++		return ret;
++
++	if (!fprobe_graph_registered) {
++		ret = register_ftrace_graph(&fprobe_graph_ops);
++		if (WARN_ON_ONCE(ret)) {
++			ftrace_free_filter(&fprobe_graph_ops.ops);
++			return ret;
 +		}
++		fprobe_graph_registered = true;
 +	}
-+
-+	return false;
++	return 0;
 +}
 +
- #ifdef CONFIG_MODULES
- static void fprobe_remove_ips(unsigned long *ips, unsigned int cnt)
- {
-@@ -365,6 +381,29 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
- 	return false;
- }
- 
-+static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace __maybe_unused)
++static void __fprobe_graph_unregister(void)
 +{
-+	struct rhlist_head *head, *pos;
-+	struct fprobe_hlist_node *node;
-+	struct fprobe *fp;
-+
-+	guard(rcu)();
-+	head = rhltable_lookup(&fprobe_ip_table, &ip,
-+				fprobe_rht_params);
-+	if (!head)
-+		return false;
-+	/* We only need to check fp is there. */
-+	rhl_for_each_entry_rcu(node, pos, head, hlist) {
-+		if (node->addr != ip)
-+			break;
-+		fp = READ_ONCE(node->fp);
-+		if (likely(fp))
-+			return true;
++	if (fprobe_graph_registered) {
++		unregister_ftrace_graph(&fprobe_graph_ops);
++		ftrace_free_filter(&fprobe_graph_ops.ops);
++		fprobe_graph_registered = false;
 +	}
-+
-+	return false;
 +}
 +
- #ifdef CONFIG_MODULES
- static void fprobe_remove_ips(unsigned long *ips, unsigned int cnt)
- {
-@@ -551,18 +590,25 @@ struct fprobe_addr_list {
- static int fprobe_remove_node_in_module(struct module *mod, struct fprobe_hlist_node *node,
- 					 struct fprobe_addr_list *alist)
- {
-+	lockdep_assert_in_rcu_read_lock();
++/* Remove @addrs from the ftrace filter and unregister fgraph if possible. */
++static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
++{
++	lockdep_assert_held(&fprobe_mutex);
 +
- 	if (!within_module(node->addr, mod))
- 		return 0;
++	if (!nr_fgraph_fprobes)
++		__fprobe_graph_unregister();
++	else if (num)
++		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
++}
++
+ #if defined(CONFIG_DYNAMIC_FTRACE_WITH_ARGS) || defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
++
+ /* ftrace_ops callback, this processes fprobes which have only entry_handler. */
+ static void fprobe_ftrace_entry(unsigned long ip, unsigned long parent_ip,
+ 	struct ftrace_ops *ops, struct ftrace_regs *fregs)
+@@ -293,7 +351,10 @@ static struct ftrace_ops fprobe_ftrace_ops = {
+ 	.func	= fprobe_ftrace_entry,
+ 	.flags	= FTRACE_OPS_FL_SAVE_ARGS,
+ };
+-static int fprobe_ftrace_active;
++/* Number of ftrace fprobe nodes */
++static int nr_ftrace_fprobes;
++/* Is fprobe_ftrace_ops registered? */
++static bool fprobe_ftrace_registered;
  
--	if (delete_fprobe_node(node))
--		return 0;
-+	delete_fprobe_node(node);
- 	/* If no address list is available, we can't track this address. */
- 	if (!alist->addrs)
- 		return 0;
-+	/*
-+	 * Don't care the type here, because all fprobes on the same
-+	 * address must be removed eventually.
-+	 */
-+	if (!rhltable_lookup(&fprobe_ip_table, &node->addr, fprobe_rht_params)) {
-+		alist->addrs[alist->index++] = node->addr;
-+		if (alist->index == alist->size)
-+			return -ENOSPC;
-+	}
+ static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
+ {
+@@ -305,26 +366,33 @@ static int fprobe_ftrace_add_ips(unsigned long *addrs, int num)
+ 	if (ret)
+ 		return ret;
  
--	alist->addrs[alist->index++] = node->addr;
--	if (alist->index == alist->size)
--		return -ENOSPC;
+-	if (!fprobe_ftrace_active) {
++	if (!fprobe_ftrace_registered) {
+ 		ret = register_ftrace_function(&fprobe_ftrace_ops);
+ 		if (ret) {
+ 			ftrace_free_filter(&fprobe_ftrace_ops);
+ 			return ret;
+ 		}
++		fprobe_ftrace_registered = true;
+ 	}
+-	fprobe_ftrace_active++;
  	return 0;
  }
  
-@@ -933,7 +979,9 @@ static int unregister_fprobe_nolock(struct fprobe *fp)
- 	/* Remove non-synonim ips from table and hash */
- 	count = 0;
- 	for (i = 0; i < hlist_array->size; i++) {
--		if (!delete_fprobe_node(&hlist_array->array[i]) && addrs)
-+		delete_fprobe_node(&hlist_array->array[i]);
-+		if (addrs && !fprobe_exists_on_hash(hlist_array->array[i].addr,
-+						    fprobe_is_ftrace(fp)))
- 			addrs[count++] = hlist_array->array[i].addr;
- 	}
- 	del_fprobe_hash(fp);
++static void __fprobe_ftrace_unregister(void)
++{
++	if (fprobe_ftrace_registered) {
++		unregister_ftrace_function(&fprobe_ftrace_ops);
++		ftrace_free_filter(&fprobe_ftrace_ops);
++		fprobe_ftrace_registered = false;
++	}
++}
++
+ static void fprobe_ftrace_remove_ips(unsigned long *addrs, int num)
+ {
+ 	lockdep_assert_held(&fprobe_mutex);
+ 
+-	fprobe_ftrace_active--;
+-	if (!fprobe_ftrace_active) {
+-		unregister_ftrace_function(&fprobe_ftrace_ops);
+-		ftrace_free_filter(&fprobe_ftrace_ops);
+-	} else if (num)
++	if (!nr_ftrace_fprobes)
++		__fprobe_ftrace_unregister();
++	else if (num)
+ 		ftrace_set_filter_ips(&fprobe_ftrace_ops, addrs, num, 1, 0);
+ }
+ 
+@@ -333,6 +401,40 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
+ 	return !fp->exit_handler;
+ }
+ 
++/* Node insertion and deletion requires the fprobe_mutex */
++static int insert_fprobe_node(struct fprobe_hlist_node *node, struct fprobe *fp)
++{
++	int ret;
++
++	lockdep_assert_held(&fprobe_mutex);
++
++	ret = __insert_fprobe_node(node, fp);
++	if (!ret) {
++		if (fprobe_is_ftrace(fp))
++			nr_ftrace_fprobes++;
++		else
++			nr_fgraph_fprobes++;
++	}
++
++	return ret;
++}
++
++static void delete_fprobe_node(struct fprobe_hlist_node *node)
++{
++	struct fprobe *fp;
++
++	lockdep_assert_held(&fprobe_mutex);
++
++	fp = READ_ONCE(node->fp);
++	if (fp) {
++		if (fprobe_is_ftrace(fp))
++			nr_ftrace_fprobes--;
++		else
++			nr_fgraph_fprobes--;
++	}
++	__delete_fprobe_node(node);
++}
++
+ static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace)
+ {
+ 	struct rhlist_head *head, *pos;
+@@ -362,8 +464,15 @@ static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace)
+ #ifdef CONFIG_MODULES
+ static void fprobe_remove_ips(unsigned long *ips, unsigned int cnt)
+ {
+-	ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, 1, 0);
+-	ftrace_set_filter_ips(&fprobe_ftrace_ops, ips, cnt, 1, 0);
++	if (!nr_fgraph_fprobes)
++		__fprobe_graph_unregister();
++	else if (cnt)
++		ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, 1, 0);
++
++	if (!nr_ftrace_fprobes)
++		__fprobe_ftrace_unregister();
++	else if (cnt)
++		ftrace_set_filter_ips(&fprobe_ftrace_ops, ips, cnt, 1, 0);
+ }
+ #endif
+ #else
+@@ -381,6 +490,32 @@ static bool fprobe_is_ftrace(struct fprobe *fp)
+ 	return false;
+ }
+ 
++/* Node insertion and deletion requires the fprobe_mutex */
++static int insert_fprobe_node(struct fprobe_hlist_node *node, struct fprobe *fp)
++{
++	int ret;
++
++	lockdep_assert_held(&fprobe_mutex);
++
++	ret = __insert_fprobe_node(node, fp);
++	if (!ret)
++		nr_fgraph_fprobes++;
++
++	return ret;
++}
++
++static void delete_fprobe_node(struct fprobe_hlist_node *node)
++{
++	struct fprobe *fp;
++
++	lockdep_assert_held(&fprobe_mutex);
++
++	fp = READ_ONCE(node->fp);
++	if (fp)
++		nr_fgraph_fprobes--;
++	__delete_fprobe_node(node);
++}
++
+ static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace __maybe_unused)
+ {
+ 	struct rhlist_head *head, *pos;
+@@ -407,7 +542,10 @@ static bool fprobe_exists_on_hash(unsigned long ip, bool ftrace __maybe_unused)
+ #ifdef CONFIG_MODULES
+ static void fprobe_remove_ips(unsigned long *ips, unsigned int cnt)
+ {
+-	ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, 1, 0);
++	if (!nr_fgraph_fprobes)
++		__fprobe_graph_unregister();
++	else if (cnt)
++		ftrace_set_filter_ips(&fprobe_graph_ops.ops, ips, cnt, 1, 0);
+ }
+ #endif
+ #endif /* !CONFIG_DYNAMIC_FTRACE_WITH_ARGS && !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+@@ -535,48 +673,6 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
+ }
+ NOKPROBE_SYMBOL(fprobe_return);
+ 
+-static struct fgraph_ops fprobe_graph_ops = {
+-	.entryfunc	= fprobe_fgraph_entry,
+-	.retfunc	= fprobe_return,
+-};
+-static int fprobe_graph_active;
+-
+-/* Add @addrs to the ftrace filter and register fgraph if needed. */
+-static int fprobe_graph_add_ips(unsigned long *addrs, int num)
+-{
+-	int ret;
+-
+-	lockdep_assert_held(&fprobe_mutex);
+-
+-	ret = ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 0, 0);
+-	if (ret)
+-		return ret;
+-
+-	if (!fprobe_graph_active) {
+-		ret = register_ftrace_graph(&fprobe_graph_ops);
+-		if (WARN_ON_ONCE(ret)) {
+-			ftrace_free_filter(&fprobe_graph_ops.ops);
+-			return ret;
+-		}
+-	}
+-	fprobe_graph_active++;
+-	return 0;
+-}
+-
+-/* Remove @addrs from the ftrace filter and unregister fgraph if possible. */
+-static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+-{
+-	lockdep_assert_held(&fprobe_mutex);
+-
+-	fprobe_graph_active--;
+-	/* Q: should we unregister it ? */
+-	if (!fprobe_graph_active) {
+-		unregister_ftrace_graph(&fprobe_graph_ops);
+-		ftrace_free_filter(&fprobe_graph_ops.ops);
+-	} else if (num)
+-		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
+-}
+-
+ #ifdef CONFIG_MODULES
+ 
+ #define FPROBE_IPS_BATCH_INIT 128
+@@ -653,16 +749,14 @@ static int fprobe_module_callback(struct notifier_block *nb,
+ 	} while (node == ERR_PTR(-EAGAIN) && !retry);
+ 	rhashtable_walk_exit(&iter);
+ 	/* Remove any ips from hash table(s) */
+-	if (alist.index > 0) {
+-		fprobe_remove_ips(alist.addrs, alist.index);
+-		/*
+-		 * If we break rhashtable walk loop except for -EAGAIN, we need
+-		 * to restart looping from start for safety. Anyway, this is
+-		 * not a hotpath.
+-		 */
+-		if (retry)
+-			goto again;
+-	}
++	fprobe_remove_ips(alist.addrs, alist.index);
++	/*
++	 * If we break rhashtable walk loop except for -EAGAIN, we need
++	 * to restart looping from start for safety. Anyway, this is
++	 * not a hotpath.
++	 */
++	if (retry)
++		goto again;
+ 
+ 	mutex_unlock(&fprobe_mutex);
+ 
 
