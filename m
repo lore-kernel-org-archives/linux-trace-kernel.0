@@ -1,188 +1,157 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4700C39446D;
-	Tue, 21 Apr 2026 08:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1023A0E95
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 08:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776760129; cv=none; b=APTk4dhRcSn+g44bSZpnqWr3tgqRWSQ+JCqnASg/Eqklgm8+GoraWxsD1YIZUjESYBXQHPdiNIYZBoGYKHaDKuVIImMgdXfbYa3kdA5jOp4AHPNzUA9JDmpS+Xx1elgeH+ZXYy1BXD5d6lAHGR8WHeXy2ab1IpX79+917jWCXN4=
+	t=1776761685; cv=none; b=lSm0WahZV4eN4BvO23Um1vLcKe1OPIlLF36z4w0c+lAFFLoaxrO9LTc/lJwNzeAez7hSEzRg9cGqYRcCbKwGB5uX4Nby4EvyjZaMuu/g/Ac33UxpBDv1DuXc9JksN/VUuciOj1pjmNUW7aPMuJhSiSEUpPxVfhJY5itBY2pXcoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776760129; c=relaxed/simple;
-	bh=0kkbFYs28tq82k7Xb8Kxwalq0Tlu7xnGoxTLb0ZTNeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e6pdi9H2342ossCkvbIumzqXb/SEhBn3zG9Vu0gwEa99xXIiaCIAk74X6kRtkcViPzvQz8Q+75DvFB97y6vOPC/xQXDK0IlgzLPkl7pltgob3tNeDz086bFf17uOsEIMyyQ4VLfwEMYxSQIE0+xARNCsRNcmwglgB4DphjnNgPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b/enU9GW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1776761685; c=relaxed/simple;
+	bh=3Rm0j0jpOm7x8JB70ao9c9n0Rm6yAuqSFxiPxK37h98=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tL6zcT47ecMwdaMy3uztm97d+OU8XTNnjYuUskHf30nUhUx868/OD7LJicCrWti28CRjt8PgdhpejYy2cTNLgvVBInj0UxVHEO/eybfaxbxJVi7ZOcaICKRoM4lu6L2BcpdWSTjITUEDmQ1Jd/wu0obaFVjsFtTAnp3idKWLBj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzIBhvCz; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b/enU9GW"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KJgnN12037786;
-	Tue, 21 Apr 2026 08:27:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=S37y6H
-	E7oOJ4CNhNQJ8fCZpfyA4jum10NN4frBS0PCM=; b=b/enU9GW2mN3NHfq5I40+J
-	yH8Jqw9uJBlV4dTdBU7tcEgO6iup7Q3QE5YY5sfaI+A0j/ASnR45eDJoFDHyoiVJ
-	CjZajRXWfCd4u5PBKOn1zW/Sl+MbEG1ilAOecqGYpk08gK4DoTblfrFWCitxmyUL
-	Bs9sP1rN6/dFGzbTuXiN3A1W42+bWiH6qlwEt9ranzl6TdIDloWUM+kds60UTEli
-	jAim5bX5ak2cxyJpvGJKEkz/yBQQUVSxf0cQuvcHOLD1zk5sXpFbISeBlNRSuAeC
-	wOuUTrIqZqYGhtEenYDt4nMdQRBvs9T3yqcnIbcG4rXcPAnVHZGLgxzASX8QYhvQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2h9jnv7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 08:27:53 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63L8KFKo008086;
-	Tue, 21 Apr 2026 08:27:52 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmn9jyxwr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 08:27:52 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63L8Rl2p12255652
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Apr 2026 08:27:47 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A135C20043;
-	Tue, 21 Apr 2026 08:27:47 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F358F20040;
-	Tue, 21 Apr 2026 08:27:45 +0000 (GMT)
-Received: from [9.52.200.195] (unknown [9.52.200.195])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 21 Apr 2026 08:27:45 +0000 (GMT)
-Message-ID: <9115d2bc-781b-4e5f-9772-c0ebeecac91b@linux.ibm.com>
-Date: Tue, 21 Apr 2026 10:27:45 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzIBhvCz"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-43eb05b1875so2313888f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 01:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776761680; x=1777366480; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZEBDw/CHdgROimN+5rHeTkzLPXnxJmB91Vu74p3MB2g=;
+        b=LzIBhvCzNXEH6KjJgVHGWXX2Te9CLdOCeNkEdJ7U/93fLVAa6beKynxzE9ts5/kY31
+         zhKkauGux7nAe3RmZfwfl40J3aLbkzmofznSzO7y8SOiZFAIt9w3CtUHtKDtt8Fsxyn8
+         E4Yvsx0wh+sXAcGIUEOpwh5gZFTdB5tGvm2or1cV7ogxe1QdRiB2BkHl+vxpFJkAa3dk
+         6W6XiEgugPoqvq3ZZP6vDwsJSAth1ygjfATTBcow2BTFnY0HWfaRHfrV2bPnBA81pHvf
+         a6V/4ZswGpHGJvVDYF7GqtWXL5srN4hTLUgitjUN167V5VNeVIktMElAWQzO1B9tYKVq
+         E1sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776761680; x=1777366480;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZEBDw/CHdgROimN+5rHeTkzLPXnxJmB91Vu74p3MB2g=;
+        b=e4ZVt83SuW+dxlFNFKLOf782SVW/mERjiHM9wkhNN5bY5epSJfUiFovfFATAYFbQ2k
+         FoigkbR9zoTyJ/8ouAuG08kCXS8mjYpBrSFP/+6ijdpO5SRBkMCCmsbQsVNnjhkJsj2W
+         Db8Na4i1Adlq8HQCNHJalVNg1FcVbVd3MwZ2BOdN63BOswGn2PAVuuuGW+qbUmfTvixc
+         NzwI9iklUD3RWe+aTzXNN+W9yizd7R9kav6VC1/mvHb7POuot6Td5Wf6+yVYrOfoSEkc
+         AWdccEkxSiCM6312ZEaMKGMOMd0YaLoSTP4Ulj/OhzDzN7iv+9pQEcYkyTGBfVeIORf0
+         ehWw==
+X-Forwarded-Encrypted: i=1; AFNElJ85kRWc1ehOv54xC2/pZwTxwYMg25EYyvuSuPMxrYSHjcjUGId6xYsaE89ug292G8yBnfHu/N6A95eTJkqgpJkUQCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkmImT6W4hXNUZEeTEC/pmTZQfLhmMzIgz7A/tSVkpgvgidjqa
+	vVareOsxnDO/RUZIDWzznKr2ZHngwnitaykepAVqmbw3arzg+HDrAmwc
+X-Gm-Gg: AeBDievzPj1axBqqwMTdxigYAXCTttnrZOkqzSPnJTGn9UABuS46nRdUVpZRs7NGgfT
+	3viZNRIThLkX+YjFpgpqnUYfR/ISfoVcsmbWhbZD2aTNf53yKVhjr9FmzkEwN7d8VeR157U/zrG
+	iu1ZnSTobwgwdgOJKmnnTp91ClDxP8UNEnGz7sD+SXtnOjtEPHkxtz9WiaNAhkoSEtVbfYZpZoX
+	kOc7FIj9BrhF7r8n5DyjQZq0eBdl1ys5Qfc0dCNeNCpuetjIUTGME0LDT285IFnN9hpAIsJhGZW
+	v1D2vFm8pNeZHV7Y1oK4Slf8AkDnYsieip4r1UR03GZjOqBEJlfq9JFos4qDQmtXLwYpSoIG7X5
+	qnr7n/Za47khUE1BL24Nh3g18yq6D52Cu20QuFMC5S2gltKY/NWB1tIGxGmyiCqyuZ+6xqC+CIN
+	qNL/xQkgE=
+X-Received: by 2002:a5d:5889:0:b0:43c:f8b4:e58 with SMTP id ffacd0b85a97d-43fe3e0c7ebmr27454724f8f.41.1776761680216;
+        Tue, 21 Apr 2026 01:54:40 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::d99c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4dc24cfsm35813045f8f.16.2026.04.21.01.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2026 01:54:39 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 21 Apr 2026 10:54:37 +0200
+To: bot+bpf-ci@kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
+	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
+	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCHv5 bpf-next 21/28] selftests/bpf: Add tracing multi
+ skel/pattern/ids attach tests
+Message-ID: <aec7Ta9m8Q86N4l2@krava>
+References: <20260417192502.194548-22-jolsa@kernel.org>
+ <1ab81cf709ce7d536a898695ffad30c15c8a6a7bf48dcb7271239952dd270315@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 04/18] unwind_user/sframe: Add support for reading
- .sframe contents
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        Steven Rostedt <rostedt@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
-        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
-        Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        Michal Hocko
- <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        Indu Bhagat <ibhagatgnu@gmail.com>
-References: <20260127150554.2760964-1-jremus@linux.ibm.com>
- <20260127150554.2760964-5-jremus@linux.ibm.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260127150554.2760964-5-jremus@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: 1goWuCKfC-7KiyC8K84-VTn1qdBVnTzk
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDA4MCBTYWx0ZWRfXx0veQ28IaQW6
- fPpGKE4AGs52FLXRq6Os3Xi7WV4PA62uhAW5W5FYHNjTyGzvxoBYcO+upsEji4XkUq45iwHMnPa
- 5uXe82pmmIHwh8j+XiOtB3QJgqbgEAJ3/nZGi3mxK1KJ8xn//G3zAIbnMl7vegYyhLS6kqtnFKl
- UU2LTeYDnNT9Ug9l0P9gDNLYsSWZdKb/n/eZpr/dZGX/UWb9W7Iw7+6d+M3hOlEbUTgFoPPTf/2
- FrAHbNm5p95qGcAThxOl52GrNE+iDowxuLDF6IRTKCHY2sv+z/Zumc5muCysXEGiyY2cVHjB199
- jr78obbMbd8xZJFoIlqxqqucb3hiNVm6TM/4K4Nc3rhgwrnMGBZ8FwBTnptCyruvZ4upXzRvruZ
- kztMNtG3p4Wrl882vpsH1sm+AsvYQMTYbE4Y8O0wTJn8ajhxRFAYSvMhcqqUW+7D4yplyA5jpbq
- mezHHgL1OpRdsRhZwTA==
-X-Authority-Analysis: v=2.4 cv=XLYAjwhE c=1 sm=1 tr=0 ts=69e7350a cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=rIsWgEjAf_fsY0NmbdQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: GDOmWqtYOiKgBotIL32-m-aTBWQC6JcH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-21_01,2026-04-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
- definitions=main-2604210080
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ab81cf709ce7d536a898695ffad30c15c8a6a7bf48dcb7271239952dd270315@mail.kernel.org>
 
-On 1/27/2026 4:05 PM, Jens Remus wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
+On Fri, Apr 17, 2026 at 08:10:22PM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
 > 
-> In preparation for using sframe to unwind user space stacks, add an
-> sframe_find() interface for finding the sframe information associated
-> with a given text address.
+> [ ... ]
 > 
-> For performance, use user_read_access_begin() and the corresponding
-> unsafe_*() accessors.  Note that use of pr_debug() in uaccess-enabled
-> regions would break noinstr validation, so there aren't any debug
-> messages yet.  That will be added in a subsequent commit.
+> > @@ -0,0 +1,256 @@
+> > +static __u32 *get_ids(const char * const funcs[], int funcs_cnt, const char *mod)
+> > +{
+> > +	struct btf *btf, *vmlinux_btf = NULL;
+> > +	__u32 nr, type_id, cnt = 0;
+> > +	void *root = NULL;
+> > +	__u32 *ids = NULL;
+> > +	int i, err = 0;
+> > +
+> > +	btf = btf__load_vmlinux_btf();
+> > +	if (!ASSERT_OK_PTR(btf, "btf__load_vmlinux_btf"))
+> > +		return NULL;
+> > +
+> > +	if (mod) {
+> > +		vmlinux_btf = btf;
+> > +		btf = btf__load_module_btf(mod, vmlinux_btf);
+> > +		if (!ASSERT_OK_PTR(btf, "btf__load_module_btf")) {
+> > +			btf__free(vmlinux_btf);
+> > +			goto out;
+> > +		}
+> > +	}
 > 
-> Link: https://lore.kernel.org/all/77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org/
-> Link: https://lore.kernel.org/all/b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com/
+> [ ... ]
 > 
-> [ Jens Remus: Add initial support for SFrame V3 (limited to regular
-> FDEs).  Add support for PC-relative FDE function start offset.  Simplify
-> logic by using an internal FDE representation.  Rename struct sframe_fre
-> to sframe_fre_internal to align with struct sframe_fde_internal.
-> Cleanup includes.  Fix checkpatch errors "spaces required around that
-> ':'". ]
+> > +out:
+> > +	tdestroy(root, tdestroy_free_nop);
+> > +	btf__free(vmlinux_btf);
+> > +	btf__free(btf);
+> > +	return ids;
+> > +}
+> 
+> Does this code double-free vmlinux_btf when btf__load_module_btf() fails?
+> If btf__load_module_btf(mod, vmlinux_btf) fails, the error path at
+> ASSERT_OK_PTR calls btf__free(vmlinux_btf) and then jumps to the out:
+> label, which calls btf__free(vmlinux_btf) again on the same pointer.
+> 
+> The first free happens here:
+> 
+> 	if (mod) {
+> 		vmlinux_btf = btf;
+> 		btf = btf__load_module_btf(mod, vmlinux_btf);
+> 		if (!ASSERT_OK_PTR(btf, "btf__load_module_btf")) {
+> 			btf__free(vmlinux_btf);  <-- FIRST FREE
+> 			goto out;
+> 		}
+> 	}
+> 
+> Then at the out: label:
+> 
+> out:
+> 	tdestroy(root, tdestroy_free_nop);
+> 	btf__free(vmlinux_btf);  <-- SECOND FREE
+> 	btf__free(btf);
+> 
+> The btf__free() implementation in tools/lib/bpf/btf.c checks only
+> IS_ERR_OR_NULL(btf) and does not guard against already-freed memory,
+> so this would trigger a double-free that glibc would detect and abort.
+> 
+> In the current commit, get_ids() is only called with mod=NULL from
+> test_link_api_ids(), so this path is latent. However, a subsequent commit
+> (4dda98b9e4d0, "selftests/bpf: Add tracing multi skel/pattern/ids module
+> attach tests") adds a caller get_ids(bpf_testmod_fentry_test, cnt,
+> "bpf_testmod") that activates the buggy path.
 
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+yep, double free, will fix
 
-> +static __always_inline int __read_fde(struct sframe_section *sec,
-> +				      unsigned int fde_num,
-> +				      struct sframe_fde_internal *fde)
-> +{
-> +	unsigned long fde_addr, fda_addr, func_addr;
-> +	struct sframe_fde_v3 _fde;
-> +	struct sframe_fda_v3 _fda;
-> +
-> +	fde_addr = sec->fdes_start + (fde_num * sizeof(struct sframe_fde_v3));
-> +	unsafe_copy_from_user(&_fde, (void __user *)fde_addr,
-> +			      sizeof(struct sframe_fde_v3), Efault);
-> +
-> +	func_addr = fde_addr + _fde.func_start_off;
-> +	if (func_addr < sec->text_start || func_addr > sec->text_end)
-
-sec->text_end points after the last byte of the .text section.
-Therefore the check for whether FDE function start address is within the
-section must be:
-
-	if (func_addr < sec->text_start || func_addr >= sec->text_end)
-
-> +		return -EINVAL;
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+jirka
