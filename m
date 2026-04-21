@@ -1,167 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ED53537CE;
-	Tue, 21 Apr 2026 21:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BBF39DBCA
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 22:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776808300; cv=none; b=freBOxrK11j+mZ4eTGVYcHFZa+8Br7gZdfZVQVt4JBI99fxtmHApmgkFUBbGPoUnKbo5X3g+LjCL4ryVwyiZE2KWSluZxDZMZF4IGMLIrbj9FGoSM2iQbzRocoRJ4XHEQQG9m4+KmG4ADwg5R8b8FvWiV50ajENSoiMWqMWRD64=
+	t=1776811258; cv=none; b=qr9+zVOy099S9FDBacsRyj1OFVOj65QQYjq59Vx5ZvJTxmBP80Nmyi9sZRkuVPyaPQ7vU9U6NAbQiQmegqY0IS3WWH2kj44aRc0385bzK5K9E5nclY+AqscCOaBGGD0yBw27wCw4Xu7iMjarZh/oypcSPtXwvdIpVfiDGAsa3UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776808300; c=relaxed/simple;
-	bh=e8khfY+cFY85RCCUdY/+9cWHVCfWjH1ZA3LYAAwUCyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mw1xrIrUsbkpnabLj0DWVEGPDPVOq69lJZpuExJZHDwqSg6SFsUHedRdhpPAmM+byTbvsrTN4lSg9WL3n9HKR4eba19goRoZ8cKzLswSBj5NPR1O4hiu2Ye/7hzREwdsjHC3zoCretq2l0RjIpkdKlUBWbNZS8UY4Z1y4GwxU1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SI5KPqSS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776811258; c=relaxed/simple;
+	bh=+8Ta7U3L4TbgcUEZFLK/HPCsnWeYOSpoEcpgWOXF5ic=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BqIjFpxMdefjZtOFsgApAB0vtPVDiT3h97Nd8kr+6vp5K+SacQhOsz9ZuBpAe3Hv3qNpUjlqdf+6Vte4X2aOldHwz5bcpbsgEF2o4NHvytIwuloB3kJ55kdDrFXYUyqq/149i3opel9MGtZA/AiLAariiXCo2I+hfnjpdH+GvXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dl+2IoGH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SI5KPqSS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2412C2BCB5;
-	Tue, 21 Apr 2026 21:51:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dl+2IoGH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D9FC2BCC7
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 22:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776808299;
-	bh=e8khfY+cFY85RCCUdY/+9cWHVCfWjH1ZA3LYAAwUCyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SI5KPqSS6PI9nIybbOlKTmKJzGEkpUEtaSpQYkVOSMasHZFMgD8HH16qGWceIZh/p
-	 HWx8Yh+/4L1jYD4DEmxx/gFtDDRJxpNo0byS0UgXK/HnhxbbkbzXUdNsKzN8cCVS9B
-	 suZyA0yM2KirZGVhZ2/lr77wGwI7K2vtFJS8rvwXbDF874R3b195arZqCWCrvmF6SM
-	 YlkYXqDnERbd9pBGatD1xzDeDsWaLEn+fki5ayk/Vjcq80kj2RoqG2eiMLXfXQVcfg
-	 rp/wVFQg3tmMNpjeB2Elq93MkXy7lhZdgd9oFfRqyrP3bhxzrv1sIUuijZqZfrMpOR
-	 jhENS3pOR3kAg==
-Date: Tue, 21 Apr 2026 14:51:35 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	torvalds@linux-foundation.org, rostedt@goodmis.org,
-	Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel: trace: do not generate undefsyms_base.c
-Message-ID: <20260421215135.GA367904@ax162>
-References: <20260421100455.324333-1-pbonzini@redhat.com>
+	s=k20201202; t=1776811258;
+	bh=+8Ta7U3L4TbgcUEZFLK/HPCsnWeYOSpoEcpgWOXF5ic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dl+2IoGHcD1abPM6p0ta768cK+nV2WWCgU73PSgqaFXccXH/cYV9gXqhpZEboWUeU
+	 AywPOXscswc7xbP4PMlieq7wUEKXMMAFDxORoMfQ2MwWzNXsee70vIsJOnUgHGOCZA
+	 ONJChqX95VHr2zTRXNIXVG+wQTvu5RwPtnvUZkSXhUqVO2uIII+VlKPqkvSP8eVA+x
+	 xI0ZT6IYAOIiAiKdy6juCrNxvbQBtZXivBHmrm64V4k71OvlPu8LWL/2r0v2KsUR/x
+	 h70jSFv/s4OWfpUvFWIASrwwRJ3h9LWQTte5VC6W9qzjhRXg8DbcxjOEUrRLccZKzG
+	 WzKNnkTiMV1ug==
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8d7e7f48499so531493085a.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 15:40:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8ufmzbGFQ4xvf8jU7ukkRO2/5U6xWbFxgq94EdKSnftttiN5rAP49PJGNzDHZhJ2RK9b7pyxP5FOtklbwB54tQtBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1oR571o67rmxtc/anv4wwov0mIkoopbo9xBoyrH8VAqqafh7C
+	gOPBoDNlUlHFIXM/zogC/lJTFj8NftDGaUCj6Pr54E4+dVkxUk7bBr24GbDLi2ZbMasnixgMyO7
+	QR2lnFf9golXr4SySqzYvmtK5s47iUdw=
+X-Received: by 2002:a05:620a:2953:b0:8cd:7952:d449 with SMTP id
+ af79cd13be357-8e7918a34b8mr2892702785a.29.1776811257679; Tue, 21 Apr 2026
+ 15:40:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260421100455.324333-1-pbonzini@redhat.com>
+References: <20260225054639.21637-1-chensong_2000@189.cn> <20260225192724.48ed165e@fedora>
+ <e18ed5f4-3917-46e7-bca9-78063e6e4457@189.cn> <alpine.LSU.2.21.2602261147150.5739@pobox.suse.cz>
+ <20260226123014.2197d9b7@gandalf.local.home> <321d4670-27cb-453f-a50d-426c83894074@189.cn>
+ <aaqk-GrpCTqO36xj@pathway.suse.cz> <4037aa19-1b01-4076-b823-5cc0e43becac@189.cn>
+In-Reply-To: <4037aa19-1b01-4076-b823-5cc0e43becac@189.cn>
+From: Song Liu <song@kernel.org>
+Date: Tue, 21 Apr 2026 15:40:46 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4TkxEQAZt0ggbAO7+fm2RabTGb_vsnQ9rFXGacm3RAtw@mail.gmail.com>
+X-Gm-Features: AQROBzAvMTYSV5nNLSiUr2ZDdV1n0E9WLV1CWsr3dpVAQqPMW5tLMYBS9_AZ9MQ
+Message-ID: <CAPhsuW4TkxEQAZt0ggbAO7+fm2RabTGb_vsnQ9rFXGacm3RAtw@mail.gmail.com>
+Subject: Re: [PATCH] kernel/trace/ftrace: introduce ftrace module notifier
+To: Song Chen <chensong_2000@189.cn>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Miroslav Benes <mbenes@suse.cz>, mcgrof@kernel.org, petr.pavlu@suse.com, 
+	da.gomez@kernel.org, samitolvanen@google.com, atomlin@atomlin.com, 
+	mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 21, 2026 at 11:04:55AM +0100, Paolo Bonzini wrote:
-> The code to autogenerate undefsyms_base.c in the Makefile is larger
-> than the file itself.
-> 
-> Remove the "echo" indirection that creates the file, which keeps
-> the build system sane and makes it much easier to edit it if/when
-> new situations arrive.
-> 
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Hi,
 
-Yeah, I don't really know how I did not see this originally :/ tunnel
-vision is real I suppose.
+I am replying partially to make sure folks know there are two
+persons with the same first name.
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+On Sun, Apr 12, 2026 at 7:11=E2=80=AFAM Song Chen <chensong_2000@189.cn> wr=
+ote:
+[...]
+> >
+> >    + We would need to make sure that it does not break some
+> >      existing "hidden" dependencies.
+> >
+> Thanks so much, this is the solution i'm working on. I replaced next
+> with a list_head in notifier_block and implemented
+> anotifier_call_chain_reverse to address the order issues, like your
+> suggestion. And a new robust revision for rolling back.
 
-> ---
->  kernel/trace/.gitignore       |  1 -
->  kernel/trace/Makefile         | 35 ++++-------------------------------
->  kernel/trace/undefsyms_base.c | 28 ++++++++++++++++++++++++++++
->  3 files changed, 32 insertions(+), 32 deletions(-)
->  delete mode 100644 kernel/trace/.gitignore
->  create mode 100644 kernel/trace/undefsyms_base.c
-> 
-> diff --git a/kernel/trace/.gitignore b/kernel/trace/.gitignore
-> deleted file mode 100644
-> index 6adbb09d6deb..000000000000
-> --- a/kernel/trace/.gitignore
-> +++ /dev/null
-> @@ -1 +0,0 @@
-> -/undefsyms_base.c
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 4d4229e5eec4..1decdce8cbef 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -133,41 +133,14 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
->  obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
->  obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
->  
-> -#
->  # simple_ring_buffer is used by the pKVM hypervisor which does not have access
->  # to all kernel symbols. Fail the build if forbidden symbols are found.
-> -#
-> -# undefsyms_base generates a set of compiler and tooling-generated symbols that can
-> -# safely be ignored for simple_ring_buffer.
-> -#
-> -filechk_undefsyms_base = \
-> -	echo '$(pound)include <linux/atomic.h>'; \
-> -	echo '$(pound)include <linux/string.h>'; \
-> -	echo '$(pound)include <asm/page.h>'; \
-> -	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);'; \
-> -	echo 'void undefsyms_base(void *p, int n);'; \
-> -	echo 'void undefsyms_base(void *p, int n) {'; \
-> -	echo '	char buffer[256] = { 0 };'; \
-> -	echo '	u32 u = 0;'; \
-> -	echo '	memset((char * volatile)page, 8, PAGE_SIZE);'; \
-> -	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));'; \
-> -	echo '	memcpy((void * volatile)p, buffer, sizeof(buffer));'; \
-> -	echo '	cmpxchg((u32 * volatile)&u, 0, 8);'; \
-> -	echo '	WARN_ON(n == 0xdeadbeef);'; \
-> -	echo '}'
-> -
-> -$(obj)/undefsyms_base.c: FORCE
-> -	$(call filechk,undefsyms_base)
-> -
-> -clean-files += undefsyms_base.c
-> -
-> -$(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
->  
-> +# Basic compiler and tooling-generated symbols that can safely be left
-> +# undefined. Ensure KASAN is enabled to avoid logic that may disable
-> +# FORTIFY_SOURCE when KASAN is not enabled. undefsyms_base.o does not
-> +# automatically get KASAN flags because it is not linked into vmlinux.
->  targets += undefsyms_base.o
-> -
-> -# Ensure KASAN is enabled to avoid logic that may disable FORTIFY_SOURCE when
-> -# KASAN is not enabled. undefsyms_base.o does not automatically get KASAN flags
-> -# because it is not linked into vmlinux.
->  KASAN_SANITIZE_undefsyms_base.o := y
->  
->  UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
-> diff --git a/kernel/trace/undefsyms_base.c b/kernel/trace/undefsyms_base.c
-> new file mode 100644
-> index 000000000000..e65baf58e6ff
-> --- /dev/null
-> +++ b/kernel/trace/undefsyms_base.c
-> @@ -0,0 +1,28 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * simple_ring_buffer is used by the pKVM hypervisor which does not have access
-> + * to all kernel symbols.  Whatever is undefined when compiling this file is
-> + * compiler and tooling-generated symbols that can safely be ignored for
-> + * simple_ring_buffer.
-> + */
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/string.h>
-> +#include <asm/page.h>
-> +
-> +void undefsyms_base(void *p, int n);
-> +
-> +static char page[PAGE_SIZE] __aligned(PAGE_SIZE);
-> +
-> +void undefsyms_base(void *p, int n)
-> +{
-> +	char buffer[256] = { 0 };
-> +
-> +	u32 u = 0;
-> +	memset((char * volatile)page, 8, PAGE_SIZE);
-> +	memset((char * volatile)buffer, 8, sizeof(buffer));
-> +	memcpy((void * volatile)p, buffer, sizeof(buffer));
-> +	cmpxchg((u32 * volatile)&u, 0, 8);
-> +	WARN_ON(n == 0xdeadbeef);
-> +}
-> -- 
-> 2.53.0
-> 
+I personally don't think there is strong enough motivation to make
+changes like the following. If there is indeed strong motivations,
+please make it clear in the next revision.
+
+Thanks,
+Song
