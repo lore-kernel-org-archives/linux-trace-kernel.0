@@ -1,106 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D781377004;
-	Tue, 21 Apr 2026 16:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C3F33F8BC;
+	Tue, 21 Apr 2026 19:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776789200; cv=none; b=l+k0N9UNPpJ1IdToKijNs417zn6PnhlfYJ9QLO/PTtVugEluzEswXTEawfZ36/Xx7Pj8yr/2sahKUD5/FSH71T78lwnYed4WWhNjDiUk5IEChRRoulv7tXVehfvVFpKWr2EHJPFa3LtTsDjWX9U4WN2ICjtnNlbtqCJZPIi2bOw=
+	t=1776801418; cv=none; b=oqs9Lg758ZBOGaPq3+9Ns1aYeYB4drxw7FIKG8/nyRk/6JokR9pGkcl5/S8LxlYVVlFqvpAVBI2vhBMTYyahczpHUc8m00Oz8S7OJDEWUDFOQlCo6/VdBHbj3HQgyaVFygASoRpHNRGy1u1kuko7uGCOxx0b+/fI//SkLlqi0aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776789200; c=relaxed/simple;
-	bh=ck+/1JcnR8lax3S93FFASNLkLcRjRvKPDzNieJgqEsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GrQABiJWTq7yeR+ICM+UyeRnqpafXtvHiUlfZEtt8aA8pe61cbFPy+xh8flOcRji6ZykSqzdPoBFHL24lZRZwWgs6l45wo2RISjjC9pZ7rX+M1N8ClCxUpXnJQlQaadDppMuBKrTCYpaM/Rozwfh0Unb3ZInR23nK8wZ0bpR2ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1fFbg9+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1fFbg9+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3FB0C2BCB3;
-	Tue, 21 Apr 2026 16:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776789200;
-	bh=ck+/1JcnR8lax3S93FFASNLkLcRjRvKPDzNieJgqEsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I1fFbg9+ownra5GmuueQclj8fiLFudWpERkbB9Q0mKmOgFBKkZrFArMafq2ufGmar
-	 2za6MSZud4cU06VzuQQcb1j9WbuSs/tu/lVpFz3AIq1ar7WRo8CMeXrb9lQ3NVXQ+X
-	 qJFC10VyBOUCNuHOKRKN5iVmkK8qCOrCefJTh6DP/jfRwcNxkhqBcrzVxNfYdzOR3Y
-	 rrDz8SDuUtp/sO36Y4fbF9xQS3SOIb0/CKtvOBvDjufEGEGQdKSH8aBHLVk++8I35e
-	 8QHmI0g+lisPkWGIReJvZD0+BukmTpdifyOruquHWlwYylosEs61lkhq/icPesljEF
-	 kEX67PswAoHmQ==
-Date: Tue, 21 Apr 2026 17:33:15 +0100
-From: Simon Horman <horms@kernel.org>
-To: Kohei Enju <kohei@enjuk.jp>
-Cc: netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH net v1] net: validate skb->napi_id in RX tracepoints
-Message-ID: <20260421163315.GG651125@horms.kernel.org>
-References: <20260420105427.162816-1-kohei@enjuk.jp>
+	s=arc-20240116; t=1776801418; c=relaxed/simple;
+	bh=niCvdpm0wIZP8xZOBBO1+jv6evBcb0YQHPiyck+Lfmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SnDyL1JnwyvfTgRS39t2cZoyrmkZX3Yl77mdYY6xCzMiBtY2ndU7VHilpy2yzZhRxTaXmgU3/VMH+tLh09DFaEanyWlN7dWLC1Zyvf5yzLPJcrOWsJOxZQaXjFcACpoP8u6mL0KH4+RoRbSx5xEGVk1xQYEUH+zkgBkRJpP6erE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id E4C681A0D32;
+	Tue, 21 Apr 2026 19:56:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id D5E6E32;
+	Tue, 21 Apr 2026 19:56:52 +0000 (UTC)
+Date: Tue, 21 Apr 2026 15:56:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, torvalds@linux-foundation.org, Arnd Bergmann
+ <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: trace: do not generate undefsyms_base.c
+Message-ID: <20260421155647.328a3ece@gandalf.local.home>
+In-Reply-To: <CABgObfam470W_Cq-jFHXc7H=xkr4CRMOGrbuLd-HtkepvwA3AQ@mail.gmail.com>
+References: <20260421100455.324333-1-pbonzini@redhat.com>
+	<20260421100209.7535e26f@gandalf.local.home>
+	<86ik9k1jqs.wl-maz@kernel.org>
+	<CABgObfam470W_Cq-jFHXc7H=xkr4CRMOGrbuLd-HtkepvwA3AQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260420105427.162816-1-kohei@enjuk.jp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: hegu7z8n7ikj3xmhmo683hs41zgtzbtx
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: D5E6E32
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18wC/StXPrugJH+/7DwLdkoiVbXk504UAc=
+X-HE-Tag: 1776801412-919911
+X-HE-Meta: U2FsdGVkX1/ADf7IUcOjthzU1uO5cLrwCa5AQnUqtxi0W0jihlpfCCHWo3Wm2VAhMzk/UZv2v0xe0VWc8fcExLV1QfgDB5giGCQVFntmor07F7dwA7Pit1MlfhmaWaUs3awSCnECMm9MA/VMTJPBn//CuUSowAnxEbA1Nv6lmzw8SqAVwhT5/vkwH7L5QS8RT6FR7deO/UMkooq70lfHkWYjqn/dvwdsjMbeb94vRllnhUeaijWv7DAoET01o02rZWYvoV+bLBXdjpN9pF9SQ7qRR6c4vOp+WIVYmxF9Z0SycHY1KI89XOTTddl7qim7goXOOUTaU0dKQsgdVD3HisyW91jQsfDuCZEwUlNy6OptAf3NpO8d9Uh1qmq3jNOf4IQ7q7D2TzBawC0ynS7MbWMTmKc6fhandXv4j6v/IK4=
 
-On Mon, Apr 20, 2026 at 10:54:23AM +0000, Kohei Enju wrote:
-> Since commit 2bd82484bb4c ("xps: fix xps for stacked devices"),
-> skb->napi_id shares storage with sender_cpu. RX tracepoints using
-> net_dev_rx_verbose_template read skb->napi_id directly and can therefore
-> report sender_cpu values as if they were NAPI IDs.
-> 
-> For example, on the loopback path this can report 1 as napi_id, where 1
-> comes from raw_smp_processor_id() + 1 in the XPS path:
-> 
->   # bpftrace -e 'tracepoint:net:netif_rx_entry{ print(args->napi_id); }'
->   # taskset -c 0 ping -c 1 ::1
-> 
-> Report only valid NAPI IDs in these tracepoints and use 0 otherwise.
-> 
-> Fixes: 2bd82484bb4c ("xps: fix xps for stacked devices")
-> Signed-off-by: Kohei Enju <kohei@enjuk.jp>
+On Tue, 21 Apr 2026 15:21:19 +0100
+Paolo Bonzini <pbonzini@redhat.com> wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> On Tue, Apr 21, 2026 at 3:18=E2=80=AFPM Marc Zyngier <maz@kernel.org> wro=
+te:
+> > On Tue, 21 Apr 2026 15:02:09 +0100, Steven Rostedt <rostedt@goodmis.org=
+> wrote: =20
+> > > Marc beat you to it by a few minutes ;-)
+> > >
+> > >   https://lore.kernel.org/all/20260421095446.2951646-1-maz@kernel.org/
+> > >
+> > > Although he didn't Cc linux-trace-kernel@vger.kernel.org :-p
+> > >
+> > > But anyway, it ended up in my internal Patchwork. I'll take his as th=
+ey are
+> > > both pretty much the same patch. =20
+> >
+> > On the other hand, Paolo's patch has the SPDX tag on the new file,
+> > which I forgot to add. Your call, anyway. =20
 
-> ---
->  include/trace/events/net.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/net.h b/include/trace/events/net.h
-> index fdd9ad474ce3..dbc2c5598e35 100644
-> --- a/include/trace/events/net.h
-> +++ b/include/trace/events/net.h
-> @@ -10,6 +10,7 @@
->  #include <linux/if_vlan.h>
->  #include <linux/ip.h>
->  #include <linux/tracepoint.h>
-> +#include <net/busy_poll.h>
->  
->  TRACE_EVENT(net_dev_start_xmit,
->  
-> @@ -208,7 +209,8 @@ DECLARE_EVENT_CLASS(net_dev_rx_verbose_template,
->  	TP_fast_assign(
->  		__assign_str(name);
->  #ifdef CONFIG_NET_RX_BUSY_POLL
-> -		__entry->napi_id = skb->napi_id;
-> +		__entry->napi_id = napi_id_valid(skb->napi_id) ?
-> +				   skb->napi_id : 0;
+Ah, OK. I'll take Paolo's.
 
-Note to self: they key is that if the storage at napi_id is
-being used as a sender_cpu then napi_id_valid because
-the valid values for a sender_cpu are disjoint from those
-of a valid napi_id. This can be seen clearly in the
-implementation of napi_id_valid() and the comment above it.
+>=20
+> Yeah if you want to get the best of both worlds, take the commit
+> message from Marc's and the code from mine; he has more complete
+> trailers whereas I have slightly cleaner formatting and more comments.
+> But otherwise it's not a big deal.
 
->  #else
->  		__entry->napi_id = 0;
->  #endif
-> -- 
-> 2.51.0
-> 
+I'll update the subject and change log slightly, but otherwise, it's your
+patch.
+
+-- Steve
+
