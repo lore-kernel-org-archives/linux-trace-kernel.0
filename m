@@ -1,160 +1,202 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2613A0B13
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 09:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4DC3B19CC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 10:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776762328; cv=none; b=PL/Zh3JcStHe/INC8HjATixPRMB1Ks4AisoZe+Tm1LdcNB4Is6Dsbi9zbiJ/7BpEoX8aAA5HF81aAc1iaS6jWZ8x3AbdnMMc5oCs9V6GA9ZSC2+vyhOKCJ6y5mp3OfwvMlovdBR2dweJpf47ktWMJfg9gueOcXuGxWG3kwtNEro=
+	t=1776765905; cv=none; b=AoaZOYxavhC46m2wh0wpZxmGcKHbzaQ8V5tWmOcB7NXf6GiX3UTvO91k25nDgCcuApUTSRP+BTMJMXL+Cyc643/wu+j4wZAXY8Da1fGL5XK/kzL1SPYtSTBOJon9QC6rUWBDdF5GjVNYgIo8gbSWb4C3PKaHzvpzMvxCPJ3dfb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776762328; c=relaxed/simple;
-	bh=jNS11TxrGCzC/ayr6dWUKwMQYFcjJbkoMNjsM92foRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ht0B4d+QI1/hHajtWBAA/scuasz2eMPJ8ZhyLNhMfsej9cjxqCpR9D0v5f0ZnVPTDLl91rWqVV1Jh1Vov6Cq76PG0FFYKuyhf0exKsytQ6v8kz8B8BKTnzaNQPL4amX2mxCPoJRcpwI3PwfT6cX6v2YojPfwpkq6wvnCfM8th7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Xcc1CP1c; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1776765905; c=relaxed/simple;
+	bh=yfBmJxKFE2B8sFZRFT6pz/Bmzuj/HOGPpJ9ua1lUQAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=gXZ6KsEEF5iubu9VuZRYOR10tkx3elJxcKBOfbyNWMoXa8XeOImeQc9B/95ukdAc2S6EktkCwgYze/7N3ROlSJUSKPN6Bsrb8FDuanu2qJgs1gPoAPGi0W7Tin1C6mJGS0fkmjdpKpR/P6xsihlPN2O32wJo2vzKMXa8cEJvY38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JrIjtzy5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Xcc1CP1c"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-43d734223e4so2706089f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 02:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1776762325; x=1777367125; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bq9QG9cvLvgk2UCX7BCWel9Xe8wLb+Jo7joT5Pt0764=;
-        b=Xcc1CP1cnpjrdwUmB5v0J4Irq7DUhlBQD21ey2Ch8Kf6N2zXz11+vDy6TZgmIaAUJC
-         +zoEz8FhqsnU8ZDeplIlW5qDu4M1jS604a2J+/T4WHykYlPpreT7WCgIS73DUOordZhU
-         GSQpP79dJgdMCPtm+L0j6TbNe5PuLwUFNi+EpHD1QPWzLgzk5WJ2OJHQfvHv7r2ufHNM
-         nX6nSDXwcL1hB+Q6aa5W7/7q/7STQTSZPxNsZMvv51vHikW+kMIXBLc6pQtRVKpk8XIr
-         0PPbT4gMMmh5vdD5GsAgJgoWAemXJ+aXAnYSthNEwj6jZRtccCdx87/R/FK10xXMgnxj
-         3nYg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JrIjtzy5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1776765902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gLpMq3bvSknPmfM0Vr8rolbKX4splOg+Lf8VMaqkFw8=;
+	b=JrIjtzy58tWNx8iH81oKU8Bw3VJN4enT299DywL4BRUfaG9n18N8CzJ+jBbv4SLLByrN9c
+	mi9wD/G5YsUcaxa48xsOLhpyTahc/H6Mh7irixeoGsmSNXkf4N1DOsE5qBo92ZaWS+w6+6
+	33queT2e5zCsanDlurydNDxy3SX3MO8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-492-putkV_2gPyiao6H0nilvQA-1; Tue, 21 Apr 2026 06:05:01 -0400
+X-MC-Unique: putkV_2gPyiao6H0nilvQA-1
+X-Mimecast-MFC-AGG-ID: putkV_2gPyiao6H0nilvQA_1776765900
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-488be33b7a6so28911925e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 03:05:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776762325; x=1777367125;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bq9QG9cvLvgk2UCX7BCWel9Xe8wLb+Jo7joT5Pt0764=;
-        b=iKRsNGq2j+wcb/geOBUN9mIPKqjzR5huGDyx+y7Ulknpr4muIKD8FEKQxBEXCfZO29
-         ujzEKUznDpmd82laBiLD2vVXn9hqGtY9nMCUQEShJ6CWL5i5l8U6M+RwQpEPBLXjl4dl
-         fAuYJFt4tr+mAvFtTfCxOj55Ve9oUvGn4eFaJoa14X1sCBR1ltFuhViULoEVR68AxWPL
-         9XIVZdMNd3C7CdGUKG99EcH2KEuuscZIZ5Myn2eT3LVQG99EStxy1eQU/2lWvls4Eij6
-         y+UzRUI0WtXqo1cgVJhM5r+MFbVOgPtUPykwBggS0kjBUBhLxby0kPUXkQMnzpXGTdnl
-         GZzA==
-X-Forwarded-Encrypted: i=1; AFNElJ8pezw0Vfcwmc4ELXimcG3DSBLAVgg7tnr7/NqxPty99wrnIjlwNZxFjYXHfpeINepcgE4xv6tBIq12nSzWNWmg7tw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOtnj/s/IOQkwJlx4bvksvJT5AERYadHAAod82k8bkV2a40bsX
-	9nCzGUEpfbipoh1srvj+v8TIijM12daaNjTVLijx8RYeyT8PzjRw0F4K1wKoXJnDbfk=
-X-Gm-Gg: AeBDieswKmA62aQg1LvU+DdobS9mXDGd0wQeh2r8ZvsmJHSIU9Tv9Ck8fZ+htZ8o1jF
-	5+dnAC2qGdjlJr7KNIgpVnAPs0btiy9FBY8d8RFpku0qBlpwwRgxjAUyP0gCMAjs9GM+ISrLZih
-	Ge43bXhQJZAg8Tf/zBoBdd65s71ePKo6KYTKdf7NCAeL2UvsZwxM8HogrPyG/1Y2dCLb6Vm7QUE
-	B2p2n1Ja+KuQCCBRPtdBBsiDPkf43oyDNN68qoNBLOE0NTgkBMu64HNqTM/obJcaxyTi4LxzyqW
-	R05V/yL0G7Uks2n8ZgAaz+x+jX3kFRNkxgUepkV0P9VtyEKNtIyR+D104ThLhxNLN5ORmJr50Wa
-	SR5IVf89H9ss9eKo4es3sE11uBTWDhdj1OeAOC4oAdN0k6XPyT4cpLP8y9zLdO8D9mwOIQ8+YxQ
-	hiqGgE+i0y7uTJTDTINNNME7UtWuEB/qB/zGkzooS4mY+O8G9eKW4=
-X-Received: by 2002:a5d:5c81:0:b0:43d:729e:f23a with SMTP id ffacd0b85a97d-43fe408dab9mr19081632f8f.22.1776762324596;
-        Tue, 21 Apr 2026 02:05:24 -0700 (PDT)
-Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4cb135asm39945351f8f.6.2026.04.21.02.05.22
+        d=1e100.net; s=20251104; t=1776765900; x=1777370700;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gLpMq3bvSknPmfM0Vr8rolbKX4splOg+Lf8VMaqkFw8=;
+        b=cJfC3st3hf8BzyMh4M7plRc7hFOJI1t+tv+s+e50JY7p2AACQypAlEa1F939kMmF3n
+         7rx219swIEtt4HQVNuZx4XaoiXs2886HZAsA5Jbr9jyOXJr9bh8Buad0r3vRwuWTwN38
+         NO70zjN2v/UqMUzJzxaipT5pDihEJcqtHfZ7tqPZ847isMaoJEneo5ra5TFnHyI8lgKT
+         yfhgA7FDE2J2Kwuvbs+zWj7xXFfSDdFcJeLCsDmHlGwmthJ7hbjAj4y5KbWh0YOB6di4
+         cDiKqynPFK0WRW27RYh+aqvjmR8TJqt06yUtD4Dr2SD9HyLOs8+G8421UGY153FFLF0Z
+         OxEQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/NKW9FnojLnZBYrdrLPp8FfCC1pJfWPcQipTBaCOkGnPkOv2SWOvfRFGqbaPS+4GWHfVenmdvFPKthj+45c11MkME=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd8SVJurAAR4n0julVdpM5m22wI+uqZBK3OSWY+tk7kWYvOIzT
+	xUtVUpqqoLPHrkJX7I0jeptKBW3lp26K0SOl/V78yMVe31vACdjtYlI485KypvpTOBOnwYpX6je
+	qijBBe3UdDx6BpgrlYvBtSrQ6uxRjBFYwWsInggSvou8L51IkMG5Kckf3Vul1oYPKt7iJLe5DiA
+	==
+X-Gm-Gg: AeBDievKhUfIKZ8hzbQq1G77dVLubJvrVDHzfLHYDgGETAyPDgKqHPrPnlFH1PO/vhB
+	oafzqlknXeNuRX8J7lCdQxvmwmSZ8TUcmsEwz6HFk46uro8MQM7tHSJ3xju87hDUqmABC+zRTNe
+	G5VF5/qKfwHS32vZeLgO9bc67KPd1N5pY2XtA1t5AzMvbP5v1OzeYRA6oxmVuaa+icPhPg8hFB4
+	BCfJ3nhk/dRbkpSF/0nTGwCkdiPhMAto1CEtWQ+8G7dSLM8TDNfT8EblYqUPibMcpa0nBIOII5o
+	b2lPwQB/oqZaLyKa+QpQ3+zuw0ncedgXZAlszg+3gWtY1phgGyrSIHsKFBjE8RAk0NyM6qh7bYv
+	2uOnoUSXvJ5zwe2QX/81G4MEm46hrOqXM2kxsb9TyZSWy9zJ55htJmQ/6Chf2woSuRyMFMFUcmt
+	G29mPFSTV4Czs0YlH9AUkQziHZH+TQXmXPVb0=
+X-Received: by 2002:a05:600c:a00c:b0:488:c51f:e04e with SMTP id 5b1f17b1804b1-488fb765e65mr233926785e9.13.1776765899879;
+        Tue, 21 Apr 2026 03:04:59 -0700 (PDT)
+X-Received: by 2002:a05:600c:a00c:b0:488:c51f:e04e with SMTP id 5b1f17b1804b1-488fb765e65mr233926275e9.13.1776765899402;
+        Tue, 21 Apr 2026 03:04:59 -0700 (PDT)
+Received: from [172.20.57.158] ([129.41.46.54])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fb72d365sm172202905e9.1.2026.04.21.03.04.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2026 02:05:24 -0700 (PDT)
-Date: Tue, 21 Apr 2026 11:05:21 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: chensong_2000@189.cn, rafael@kernel.org, lenb@kernel.org,
-	mturquette@baylibre.com, sboyd@kernel.org, viresh.kumar@linaro.org,
-	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-	bmarzins@redhat.com, song@kernel.org, yukuai@fnnas.com,
-	linan122@huawei.com, jason.wessel@windriver.com, danielt@kernel.org,
-	dianders@chromium.org, horms@kernel.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	paulmck@kernel.org, frederic@kernel.org, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	atomlin@atomlin.com, jpoimboe@kernel.org, jikos@kernel.org,
-	mbenes@suse.cz, joe.lawrence@redhat.com, rostedt@goodmis.org,
-	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-	live-patching@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-	netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] kernel/notifier: replace single-linked list with
- double-linked list for reverse traversal
-Message-ID: <aec90caYZDHDAHgw@pathway.suse.cz>
-References: <20260415070137.17860-1-chensong_2000@189.cn>
- <20260420144429.57b45f2beece690bceea96ec@kernel.org>
+        Tue, 21 Apr 2026 03:04:57 -0700 (PDT)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: torvalds@linux-foundation.org,
+	rostedt@goodmis.org,
+	Marc Zyngier <maz@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] kernel: trace: do not generate undefsyms_base.c
+Date: Tue, 21 Apr 2026 11:04:55 +0100
+Message-ID: <20260421100455.324333-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260420144429.57b45f2beece690bceea96ec@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: mtUHMH_aSsfV8Ip29QP0lgfWDio6Ysy13l3UPkE8FN8_1776765900
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Mon 2026-04-20 14:44:29, Masami Hiramatsu wrote:
-> Hi Song,
-> 
-> On Wed, 15 Apr 2026 15:01:37 +0800
-> chensong_2000@189.cn wrote:
-> 
-> > From: Song Chen <chensong_2000@189.cn>
-> > 
-> > The current notifier chain implementation uses a single-linked list
-> > (struct notifier_block *next), which only supports forward traversal
-> > in priority order. This makes it difficult to handle cleanup/teardown
-> > scenarios that require notifiers to be called in reverse priority order.
-> 
-> What about introducing a new notification callback API that allows you
-> to describe dependencies between callback functions?
-> 
-> For example, when registering a callback, you could register a string
-> as an ID and specify whether to call it before or after that ID,
-> or you could register a comparison function that is called when adding
-> to a list. (I prefer @name and @depends fields so that it can be easily
-> maintained.)
+The code to autogenerate undefsyms_base.c in the Makefile is larger
+than the file itself.
 
-This looks too complex. It would make sense only
-when this API has more users.
+Remove the "echo" indirection that creates the file, which keeps
+the build system sane and makes it much easier to edit it if/when
+new situations arrive.
 
-Also this won't be enough for the ftrace/livepatch callbacks.
-They need to be ordered against against each other. But they
-also need to be called before/after all other callbacks.
-For example, when the module is loaded:
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ kernel/trace/.gitignore       |  1 -
+ kernel/trace/Makefile         | 35 ++++-------------------------------
+ kernel/trace/undefsyms_base.c | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 32 insertions(+), 32 deletions(-)
+ delete mode 100644 kernel/trace/.gitignore
+ create mode 100644 kernel/trace/undefsyms_base.c
 
-   + 1st frace
-   + 2nd livepatch
-   + then other notifiers
-
-See the commit c1bf08ac26e92122 ("ftrace: Be first to run code
-modification on modules").
-
-> This would allow for better dependency building when adding to the list.
+diff --git a/kernel/trace/.gitignore b/kernel/trace/.gitignore
+deleted file mode 100644
+index 6adbb09d6deb..000000000000
+--- a/kernel/trace/.gitignore
++++ /dev/null
+@@ -1 +0,0 @@
+-/undefsyms_base.c
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 4d4229e5eec4..1decdce8cbef 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -133,41 +133,14 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
+ obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
+ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
  
-> > 
-> > A concrete example is the ordering dependency between ftrace and
-> > livepatch during module load/unload. see the detail here [1].
-> 
-> If this only concerns notification callback issues with the ftrace
-> and livepatch modules, it's far more robust to simply call the
-> necessary processing directly when the modules load and unload,
-> rather than registering notification callbacks externally.
-> 
-> There are fprobe, kprobe and its trace-events, all of them are using
-> ftrace as its fundation layer. In this case, I always needs to
-> consider callback order when a module is unloaded.
-> 
-> If ftrace is working as a part of module callbacks, it will conflict
-> with fprobe/kprobe module callback. Of course we can reorder it with
-> modifying its priority. But this is ugly, because when we introduce
-> a new other feature which depends on another layer, we need to
-> reorder the callback's priority number on the list.
-> 
-> Based on the above, I don't think this can be resolved simply by
-> changing the list of notification callbacks to a bidirectional list.
+-#
+ # simple_ring_buffer is used by the pKVM hypervisor which does not have access
+ # to all kernel symbols. Fail the build if forbidden symbols are found.
+-#
+-# undefsyms_base generates a set of compiler and tooling-generated symbols that can
+-# safely be ignored for simple_ring_buffer.
+-#
+-filechk_undefsyms_base = \
+-	echo '$(pound)include <linux/atomic.h>'; \
+-	echo '$(pound)include <linux/string.h>'; \
+-	echo '$(pound)include <asm/page.h>'; \
+-	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);'; \
+-	echo 'void undefsyms_base(void *p, int n);'; \
+-	echo 'void undefsyms_base(void *p, int n) {'; \
+-	echo '	char buffer[256] = { 0 };'; \
+-	echo '	u32 u = 0;'; \
+-	echo '	memset((char * volatile)page, 8, PAGE_SIZE);'; \
+-	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));'; \
+-	echo '	memcpy((void * volatile)p, buffer, sizeof(buffer));'; \
+-	echo '	cmpxchg((u32 * volatile)&u, 0, 8);'; \
+-	echo '	WARN_ON(n == 0xdeadbeef);'; \
+-	echo '}'
+-
+-$(obj)/undefsyms_base.c: FORCE
+-	$(call filechk,undefsyms_base)
+-
+-clean-files += undefsyms_base.c
+-
+-$(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
+ 
++# Basic compiler and tooling-generated symbols that can safely be left
++# undefined. Ensure KASAN is enabled to avoid logic that may disable
++# FORTIFY_SOURCE when KASAN is not enabled. undefsyms_base.o does not
++# automatically get KASAN flags because it is not linked into vmlinux.
+ targets += undefsyms_base.o
+-
+-# Ensure KASAN is enabled to avoid logic that may disable FORTIFY_SOURCE when
+-# KASAN is not enabled. undefsyms_base.o does not automatically get KASAN flags
+-# because it is not linked into vmlinux.
+ KASAN_SANITIZE_undefsyms_base.o := y
+ 
+ UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
+diff --git a/kernel/trace/undefsyms_base.c b/kernel/trace/undefsyms_base.c
+new file mode 100644
+index 000000000000..e65baf58e6ff
+--- /dev/null
++++ b/kernel/trace/undefsyms_base.c
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * simple_ring_buffer is used by the pKVM hypervisor which does not have access
++ * to all kernel symbols.  Whatever is undefined when compiling this file is
++ * compiler and tooling-generated symbols that can safely be ignored for
++ * simple_ring_buffer.
++ */
++
++#include <linux/atomic.h>
++#include <linux/string.h>
++#include <asm/page.h>
++
++void undefsyms_base(void *p, int n);
++
++static char page[PAGE_SIZE] __aligned(PAGE_SIZE);
++
++void undefsyms_base(void *p, int n)
++{
++	char buffer[256] = { 0 };
++
++	u32 u = 0;
++	memset((char * volatile)page, 8, PAGE_SIZE);
++	memset((char * volatile)buffer, 8, sizeof(buffer));
++	memcpy((void * volatile)p, buffer, sizeof(buffer));
++	cmpxchg((u32 * volatile)&u, 0, 8);
++	WARN_ON(n == 0xdeadbeef);
++}
+-- 
+2.53.0
 
-I agree. I would keep it as is (hardcoded).
-
-Best Regards,
-Petr
