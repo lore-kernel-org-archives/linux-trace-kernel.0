@@ -1,87 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BBF39DBCA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 22:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF782F851
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Apr 2026 01:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776811258; cv=none; b=qr9+zVOy099S9FDBacsRyj1OFVOj65QQYjq59Vx5ZvJTxmBP80Nmyi9sZRkuVPyaPQ7vU9U6NAbQiQmegqY0IS3WWH2kj44aRc0385bzK5K9E5nclY+AqscCOaBGGD0yBw27wCw4Xu7iMjarZh/oypcSPtXwvdIpVfiDGAsa3UE=
+	t=1776822954; cv=none; b=ff/jVXhyU0Ie5A+MoQBuJsTHkIpJwu4FYJgUIHShRut1PAYXeBb1tDwHlsMh0dFU2Jg8uCeL4BaxkYurCZrr0CEa8MR1R16waW1DWQus3zK6bAm2ENrsdMseMapL00w7mSvib00NQ2/11VJltSwcZkShrFI1MmbUvcscgyJWFd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776811258; c=relaxed/simple;
-	bh=+8Ta7U3L4TbgcUEZFLK/HPCsnWeYOSpoEcpgWOXF5ic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BqIjFpxMdefjZtOFsgApAB0vtPVDiT3h97Nd8kr+6vp5K+SacQhOsz9ZuBpAe3Hv3qNpUjlqdf+6Vte4X2aOldHwz5bcpbsgEF2o4NHvytIwuloB3kJ55kdDrFXYUyqq/149i3opel9MGtZA/AiLAariiXCo2I+hfnjpdH+GvXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dl+2IoGH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776822954; c=relaxed/simple;
+	bh=FsPj7/rcEceeVIbL/Lon/HzNlRrgPw9fr2OEh/b8gD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=exju8j9ygKzWcblHM00VwSmxS3GgEH86JK+u51wZpGDBjJrQdAs/ROEvFW4PnrIikRjv43HBPG3GrxJ61lm/HSHjz7J6mWHntsKN/xYnmFDg6rseGzXqD3XoTQw0JJ0CZbLF/x0qOGZPktNu/LfiRYgSwhKpuCamzYU/XYqim+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tRBhKfDw; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dl+2IoGH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D9FC2BCC7
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 22:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776811258;
-	bh=+8Ta7U3L4TbgcUEZFLK/HPCsnWeYOSpoEcpgWOXF5ic=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dl+2IoGHcD1abPM6p0ta768cK+nV2WWCgU73PSgqaFXccXH/cYV9gXqhpZEboWUeU
-	 AywPOXscswc7xbP4PMlieq7wUEKXMMAFDxORoMfQ2MwWzNXsee70vIsJOnUgHGOCZA
-	 ONJChqX95VHr2zTRXNIXVG+wQTvu5RwPtnvUZkSXhUqVO2uIII+VlKPqkvSP8eVA+x
-	 xI0ZT6IYAOIiAiKdy6juCrNxvbQBtZXivBHmrm64V4k71OvlPu8LWL/2r0v2KsUR/x
-	 h70jSFv/s4OWfpUvFWIASrwwRJ3h9LWQTte5VC6W9qzjhRXg8DbcxjOEUrRLccZKzG
-	 WzKNnkTiMV1ug==
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8d7e7f48499so531493085a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Apr 2026 15:40:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8ufmzbGFQ4xvf8jU7ukkRO2/5U6xWbFxgq94EdKSnftttiN5rAP49PJGNzDHZhJ2RK9b7pyxP5FOtklbwB54tQtBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1oR571o67rmxtc/anv4wwov0mIkoopbo9xBoyrH8VAqqafh7C
-	gOPBoDNlUlHFIXM/zogC/lJTFj8NftDGaUCj6Pr54E4+dVkxUk7bBr24GbDLi2ZbMasnixgMyO7
-	QR2lnFf9golXr4SySqzYvmtK5s47iUdw=
-X-Received: by 2002:a05:620a:2953:b0:8cd:7952:d449 with SMTP id
- af79cd13be357-8e7918a34b8mr2892702785a.29.1776811257679; Tue, 21 Apr 2026
- 15:40:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tRBhKfDw"
+Message-ID: <6eeac9ec-76f6-43ae-a943-942d1d5da1d6@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776822941;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FsPj7/rcEceeVIbL/Lon/HzNlRrgPw9fr2OEh/b8gD0=;
+	b=tRBhKfDw62rsBxeomp4gyZqvJv1RoYf0TgmkeC0a2vMdOSuVuzBZN8zxboWWCm2TnqCe+V
+	je1b2WlLGWK9F1hL7rEwEwt/0Ijb2b20JDWrrTHfd+YF8mxOGwziPDjEmERzQroGFrAK3l
+	Vk/FQk8Kwr2Hu3DBx+HXSplYMRoYlHE=
+Date: Wed, 22 Apr 2026 09:55:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260225054639.21637-1-chensong_2000@189.cn> <20260225192724.48ed165e@fedora>
- <e18ed5f4-3917-46e7-bca9-78063e6e4457@189.cn> <alpine.LSU.2.21.2602261147150.5739@pobox.suse.cz>
- <20260226123014.2197d9b7@gandalf.local.home> <321d4670-27cb-453f-a50d-426c83894074@189.cn>
- <aaqk-GrpCTqO36xj@pathway.suse.cz> <4037aa19-1b01-4076-b823-5cc0e43becac@189.cn>
-In-Reply-To: <4037aa19-1b01-4076-b823-5cc0e43becac@189.cn>
-From: Song Liu <song@kernel.org>
-Date: Tue, 21 Apr 2026 15:40:46 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4TkxEQAZt0ggbAO7+fm2RabTGb_vsnQ9rFXGacm3RAtw@mail.gmail.com>
-X-Gm-Features: AQROBzAvMTYSV5nNLSiUr2ZDdV1n0E9WLV1CWsr3dpVAQqPMW5tLMYBS9_AZ9MQ
-Message-ID: <CAPhsuW4TkxEQAZt0ggbAO7+fm2RabTGb_vsnQ9rFXGacm3RAtw@mail.gmail.com>
-Subject: Re: [PATCH] kernel/trace/ftrace: introduce ftrace module notifier
-To: Song Chen <chensong_2000@189.cn>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Miroslav Benes <mbenes@suse.cz>, mcgrof@kernel.org, petr.pavlu@suse.com, 
-	da.gomez@kernel.org, samitolvanen@google.com, atomlin@atomlin.com, 
-	mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net v1] net: validate skb->napi_id in RX tracepoints
+To: Kohei Enju <kohei@enjuk.jp>
+Cc: netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20260420105427.162816-1-kohei@enjuk.jp>
+ <b943ec1e-417c-4157-ab19-b34aa6d63688@linux.dev> <aeYTImGIRuOf72mi@x1>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+In-Reply-To: <aeYTImGIRuOf72mi@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
 
-I am replying partially to make sure folks know there are two
-persons with the same first name.
+On 4/20/26 7:54 PM, Kohei Enju wrote:
+> On 04/20 19:27, Jiayuan Chen wrote:
+>> On 4/20/26 6:54 PM, Kohei Enju wrote:
+>>> Since commit 2bd82484bb4c ("xps: fix xps for stacked devices"),
+>>> skb->napi_id shares storage with sender_cpu. RX tracepoints using
+>>> net_dev_rx_verbose_template read skb->napi_id directly and can therefore
+>>> report sender_cpu values as if they were NAPI IDs.
+>>>
+>>> For example, on the loopback path this can report 1 as napi_id, where 1
+>> So I think veth_forward_skb->__netif_rx could be affected as well?
+> Yes. Just in case, I've confirmed the same behavior in the veth path.
+> The mentioned loopback path is just a single example of possibly
+> affected paths.
+>
+> Thanks,
+> Kohei
+>
 
-On Sun, Apr 12, 2026 at 7:11=E2=80=AFAM Song Chen <chensong_2000@189.cn> wr=
-ote:
-[...]
-> >
-> >    + We would need to make sure that it does not break some
-> >      existing "hidden" dependencies.
-> >
-> Thanks so much, this is the solution i'm working on. I replaced next
-> with a list_head in notifier_block and implemented
-> anotifier_call_chain_reverse to address the order issues, like your
-> suggestion. And a new robust revision for rolling back.
+Reviewed-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-I personally don't think there is strong enough motivation to make
-changes like the following. If there is indeed strong motivations,
-please make it clear in the next revision.
-
-Thanks,
-Song
