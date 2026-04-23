@@ -1,176 +1,117 @@
-Received: from smtp186.sjtu.edu.cn (smtp186.sjtu.edu.cn [202.120.2.186])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D51C3C552C;
-	Thu, 23 Apr 2026 10:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5F63EE1F2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 13:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776940738; cv=none; b=aBGQpn8fpiIHBcO5eUcyhjElIBu4nyynxJA67OYyWbA+FK0oOkwdR1u8N2baupOPOxCjQ37F9wTfczxQh3QKBbrgq5tr8RJjkNbn8e8ASj53928WJ7ma+q25g/lAGqUstUR/6m1BxY591XiwJEnuJLJbmvgB7Hsg0lPAwn6G2bE=
+	t=1776949571; cv=none; b=Cepkm7WjfmFLvherinNnUN1///2wios5wJ0CV3zERcZEslR8V5Erv+gGwoVJsblvOogzijFdlT0PM0HR3xcCksIVKK4NxDZIXZSb2ffTTW5EfDL8hFkirIip9hPOoQDbUOH9PWFyium074Pdmp40oUx2jdfMH1w/mQbrj9Mww74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776940738; c=relaxed/simple;
-	bh=WoAUdJzUqsQfgh5VrXLb9IfmlbZi+FOYG3Sa/+HhqJU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jg6qONuDn4YD0LodPGVwxmsmCpgg35492WPMuT26LwEmNnFEp/2PQYeiHb/jS3TYX56sofUJp9EoEU0h6MUn0hEaj8qgUezMVx91FSzk7ZxySRdc85eMwtwxBIUQ0ObC+ZLVKwm4tfxdQd47Z0tFa4LkYDxT1n2XSpBBfPaczow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b=NujBjdf2; arc=none smtp.client-ip=202.120.2.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
+	s=arc-20240116; t=1776949571; c=relaxed/simple;
+	bh=bErhPwJtC3k6B+veFzZ7MD++BBe8ZfIVOUEKpPY8Ix4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=ufRRb1rZgBPp1kYgaUnXUz92UwZwYbuw+jdyd3Hd492Pi/t7hClIVnXQY985oUF90Mu1sXRmLcVUrnEjbUi9F4oljz0VMDoAiSx6RdeImS3efWUqwRFLYIYqiUj29e9rx/vOO1wbzpRBLGJCCps4Jwn2ARs4+1Ps/+M5UlkNpGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VwgROWT7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b="NujBjdf2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sjtu.edu.cn;
-	s=default; t=1776940730;
-	bh=WoAUdJzUqsQfgh5VrXLb9IfmlbZi+FOYG3Sa/+HhqJU=;
-	h=From:To:Cc:Subject:Date;
-	b=NujBjdf2PIB7JhAebhgFkq8k4puxf6qTa1Hb3qohXDMTaQnJBZy71UUZ3u0YdNp+2
-	 51O3t86uCae8QBRn6x4nJbaxtAYmLvligv4lQhjogqTxv1spKZkQgE6OpFAIfunVnq
-	 le5JKYEYgung8Yz6RfPrLI+4WEc3hFywTuzYhd5Uos9bsaIbuKfrn+951h7YvAA5KF
-	 5ephRerTHac5djhFRjz1W24mQe9yozT45CHo2gWO9dvRxfVu2meJ8bDAdPFoGLyWoV
-	 297WD0z//86RxG8jnFax663mj1OXkMKfpBcg4Emnvy4NgQ6ThrZYx97Z1fFkvGw0s+
-	 EtUDiD6FWeUxA==
-Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp186.sjtu.edu.cn (Postfix) with ESMTPS id 77D9B2FF4AE;
-	Thu, 23 Apr 2026 10:38:50 +0000 (UTC)
-Received: from dynamic.ipv6.sjtu.edu.cn (unknown [10.180.122.86])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 1E9C637C8F7;
-	Thu, 23 Apr 2026 18:38:50 +0800 (CST)
-From: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
-To: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: david@kernel.org,
-	mhocko@kernel.org,
-	zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev,
-	ljs@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
-Subject: [PATCH] mm/vmscan: add balance_pgdat begin/end tracepoints
-Date: Thu, 23 Apr 2026 18:37:53 +0800
-Message-ID: <20260423103753.546582-1-b.suvonov@sjtu.edu.cn>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VwgROWT7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1776949569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5Gu7S5uQnBwkhg8dgiMV01s5iWC2mPTvA2R3srVlDyk=;
+	b=VwgROWT7rwDHLZRZF5Phx4bsbyq7d3Iw4DM1n1R58wnM/3AuoOYNEu61jpwhHSAbZ8mrWV
+	mHK1TwWTzD/Hls8BMs+JnBfvsp3aEQmjbKO0QGfgnh7KlwBnMhSiHHWXk5p/vjltTCVyWv
+	fb4gpIArQkj9PZak+9CoTpirdQKzOEg=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-676--ghvFFmyOwaIPbPSrlCv3g-1; Thu,
+ 23 Apr 2026 09:06:06 -0400
+X-MC-Unique: -ghvFFmyOwaIPbPSrlCv3g-1
+X-Mimecast-MFC-AGG-ID: -ghvFFmyOwaIPbPSrlCv3g_1776949565
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3256B195606E;
+	Thu, 23 Apr 2026 13:06:05 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8D5031800906;
+	Thu, 23 Apr 2026 13:06:02 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH 0/9] rtla/tests: Extend runtime test coverage
+Date: Thu, 23 Apr 2026 15:05:49 +0200
+Message-ID: <20260423130558.882022-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: R4MgT5Z9xK3TOPSmCldj7jr9JHz53oFKmzor-oZKbws_1776949565
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Vmscan has six main reclaim entry points: try_to_free_pages() for
-direct reclaim, try_to_free_mem_cgroup_pages() for memcg reclaim,
-mem_cgroup_shrink_node() for memcg soft limit reclaim, node_reclaim()
-for node reclaim, shrink_all_memory() for hibernation reclaim, and
-balance_pgdat() for kswapd reclaim.
+This patchset introduces some new tests to cover more options, especially
+histogram and thread options. Most of the new tests use positive and negative
+output matches, sometimes in combination with action scripts, to verify that
+RTLA is applying the settings correctly.
 
-All of them, except for shrink_all_memory() and balance_pgdat(), already
-have begin/end tracepoints. This makes it harder to trace which reclaim
-path is responsible for memory reclaim activity, because kswapd reclaim
-cannot be identified as cleanly as other reclaim entry points, even
-though it is the main background reclaim path under memory pressure.
-There may be no need to trace shrink_all_memory() as it is primarily
-used during hibernation. So this patch adds the missing tracepoint pair
-for balance_pgdat().
+Tests were reorganized a little, adding two new sections: thread tests and
+histogram tests, next to basic tests.
 
-The begin tracepoint records the node id, requested reclaim order, and
-highest_zoneidx. The end tracepoint records the node id, reclaim order
-that balance_pgdat() finished with, highest_zoneidx, and nr_reclaimed.
-Together, they show the requested reclaim order and zone bound, whether
-reclaim fell back to a lower order, and how much reclaim work was done.
+Additionally, coverage of existing tests is extended by adding new matches and
+by extending tests to cover both top and hist tools where possible. For the
+latter, new helpers check_top_hist and check_top_q_hist are added to engine.sh.
 
-Signed-off-by: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
----
- include/trace/events/vmscan.h | 52 +++++++++++++++++++++++++++++++++++
- mm/vmscan.c                   |  5 ++++
- 2 files changed, 57 insertions(+)
+As part of the new action scripts, detection of measurement threads is made more
+robust by following child processes of either RTLA (user workload) or kthreadd
+(kernel workload) rather than grepping through the comms of all processes, which
+might have lead to false positives.
 
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index 4445a8d9218d..b4bf7b8def1f 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -96,6 +96,58 @@ TRACE_EVENT(mm_vmscan_kswapd_wake,
- 		__entry->order)
- );
- 
-+TRACE_EVENT(mm_vmscan_balance_pgdat_begin,
-+
-+	TP_PROTO(int nid, int order, int highest_zoneidx),
-+
-+	TP_ARGS(nid, order, highest_zoneidx),
-+
-+	TP_STRUCT__entry(
-+		__field(int, nid)
-+		__field(int, order)
-+		__field(int, highest_zoneidx)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->nid = nid;
-+		__entry->order = order;
-+		__entry->highest_zoneidx = highest_zoneidx;
-+	),
-+
-+	TP_printk("nid=%d order=%d highest_zoneidx=%-8s",
-+		__entry->nid,
-+		__entry->order,
-+		__print_symbolic(__entry->highest_zoneidx, ZONE_TYPE))
-+);
-+
-+TRACE_EVENT(mm_vmscan_balance_pgdat_end,
-+
-+	TP_PROTO(int nid, int order, int highest_zoneidx,
-+		 unsigned long nr_reclaimed),
-+
-+	TP_ARGS(nid, order, highest_zoneidx, nr_reclaimed),
-+
-+	TP_STRUCT__entry(
-+		__field(int, nid)
-+		__field(int, order)
-+		__field(int, highest_zoneidx)
-+		__field(unsigned long, nr_reclaimed)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->nid = nid;
-+		__entry->order = order;
-+		__entry->highest_zoneidx = highest_zoneidx;
-+		__entry->nr_reclaimed = nr_reclaimed;
-+	),
-+
-+	TP_printk("nid=%d order=%d highest_zoneidx=%-8s nr_reclaimed=%lu",
-+		__entry->nid,
-+		__entry->order,
-+		__print_symbolic(__entry->highest_zoneidx, ZONE_TYPE),
-+		__entry->nr_reclaimed)
-+);
-+
- TRACE_EVENT(mm_vmscan_wakeup_kswapd,
- 
- 	TP_PROTO(int nid, int zid, int order, gfp_t gfp_flags),
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index bd1b1aa12581..b2d89ed69d22 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -7121,6 +7121,8 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
- 		.may_unmap = 1,
- 	};
- 
-+	trace_mm_vmscan_balance_pgdat_begin(pgdat->node_id, order,
-+					    highest_zoneidx);
- 	set_task_reclaim_state(current, &sc.reclaim_state);
- 	psi_memstall_enter(&pflags);
- 	__fs_reclaim_acquire(_THIS_IP_);
-@@ -7314,6 +7316,9 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
- 	psi_memstall_leave(&pflags);
- 	set_task_reclaim_state(current, NULL);
- 
-+	trace_mm_vmscan_balance_pgdat_end(pgdat->node_id, sc.order,
-+					  highest_zoneidx, sc.nr_reclaimed);
-+
- 	/*
- 	 * Return the order kswapd stopped reclaiming at as
- 	 * prepare_kswapd_sleep() takes it into account. If another caller
+These changes significantly improve test coverage and make the test suite more
+against false positives from unrelated processes.
+
+Tomas Glozar (9):
+  rtla/tests: Cover both top and hist tools where possible
+  rtla/tests: Add get_workload_pids() helper
+  rtla/tests: Check -c/--cpus thread affinity
+  rtla/tests: Use negative match when testing --aa-only
+  rtla/tests: Extend timerlat top --aa-only coverage
+  rtla/tests: Cover all hist options in runtime tests
+  rtla/tests: Add runtime test for -H/--house-keeping
+  rtla/tests: Add runtime test for -k and -u options
+  rtla/tests: Add runtime tests for -C/--cgroup
+
+ tools/tracing/rtla/tests/engine.sh            |  15 +++
+ tools/tracing/rtla/tests/osnoise.t            |  73 +++++++----
+ .../rtla/tests/scripts/check-cgroup-match.sh  |  17 +++
+ .../tracing/rtla/tests/scripts/check-cpus.sh  |   9 ++
+ .../tests/scripts/check-housekeeping-cpus.sh  |   4 +
+ .../rtla/tests/scripts/check-priority.sh      |   8 +-
+ .../scripts/check-user-kernel-threads.sh      |  16 +++
+ .../tests/scripts/lib/get_workload_pids.sh    |  11 ++
+ tools/tracing/rtla/tests/timerlat.t           | 113 +++++++++++-------
+ 9 files changed, 194 insertions(+), 72 deletions(-)
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-cgroup-match.sh
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-cpus.sh
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-housekeeping-cpus.sh
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-user-kernel-threads.sh
+ create mode 100644 tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh
+
 -- 
 2.53.0
 
