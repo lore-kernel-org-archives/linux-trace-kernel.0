@@ -1,101 +1,176 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp186.sjtu.edu.cn (smtp186.sjtu.edu.cn [202.120.2.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5F03537D5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 08:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D51C3C552C;
+	Thu, 23 Apr 2026 10:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776933361; cv=none; b=AsbbA5COzdtPYBSxc3GxlQohxawwWy9zeLOmHSuXmu1gl9AX4Czyl5I5Ar1T4ABvq9D7t0PT4dxesU0A3VuItAmavaeeFJpcY/Kb/2BX12sv8fM8uXpkxtmiMQ6g5I5korCLtP30hXX+Jlu4bCWr8nmrJKxxw+LJ55n8HKQ1gfg=
+	t=1776940738; cv=none; b=aBGQpn8fpiIHBcO5eUcyhjElIBu4nyynxJA67OYyWbA+FK0oOkwdR1u8N2baupOPOxCjQ37F9wTfczxQh3QKBbrgq5tr8RJjkNbn8e8ASj53928WJ7ma+q25g/lAGqUstUR/6m1BxY591XiwJEnuJLJbmvgB7Hsg0lPAwn6G2bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776933361; c=relaxed/simple;
-	bh=cGAg77A9vGAqO01N9puooMvj1PtUM0QhbRn4oKLxUtA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYylZTWoh2gQIU+XOEtqA/99syFvwq3R++dva4VmKxkIvp259YdRv5rgL7wJ2UL09RkCwrAiEWM5nSjRSBvRMRlTJ8xrgxU43ad0LcnIh1vFrQwqvW+6nEco0z9v+SkUadgydZzZmR9nMLYw3XHLVTsEbvJwS94ZWUgrBW0+xFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DsZmm+UN; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776940738; c=relaxed/simple;
+	bh=WoAUdJzUqsQfgh5VrXLb9IfmlbZi+FOYG3Sa/+HhqJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jg6qONuDn4YD0LodPGVwxmsmCpgg35492WPMuT26LwEmNnFEp/2PQYeiHb/jS3TYX56sofUJp9EoEU0h6MUn0hEaj8qgUezMVx91FSzk7ZxySRdc85eMwtwxBIUQ0ObC+ZLVKwm4tfxdQd47Z0tFa4LkYDxT1n2XSpBBfPaczow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b=NujBjdf2; arc=none smtp.client-ip=202.120.2.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsZmm+UN"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso58698225e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 01:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776933358; x=1777538158; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pX8X61NK9tT2Owfg7advdmy2f2BYjZERfDDXJtbjaAw=;
-        b=DsZmm+UN6pd3bQ+4HicCbv9Gz0rZ7v2vHQUh/mc8Jf0r21+aL7sSHSSnCOmWiibIEk
-         0ynTYj3svKjGpwud4trt8JGWvt5NIMG3+n+aT9nFiYX1nb9k5tv21YYbQe6+9zAMVdqH
-         RldjEO66z+Ay17AR1XbbF/fKE9fK1KsJrVdA6c2AxxuouU7qy6q7ZIxxHYrF2t20u6WV
-         cEo5/8cpXEP3LoBlyS3+9PoSme1R2AiNCCRpp03jU2uLISpx1QgdadIvr23qeSXGFx8Z
-         K7xnYf0iqkqLfGiCA+dxaqyPihy6mEnPpJ6bulTC6RTZ7xAWMD9aLQal+8tFEGfix/jb
-         74uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776933358; x=1777538158;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pX8X61NK9tT2Owfg7advdmy2f2BYjZERfDDXJtbjaAw=;
-        b=Nc2lQ+7esaMShtXr8KjbCNfTwBM2FVPLnVRLw98YTwgWDgCVPFLgifVungUmgnGzsm
-         Vva5fVrt84iIaS1yOGx8H++y8CZhDz0RdnCW0ewB3HbmDUR9OT8DUsmYILNPLOLRPslD
-         w7jDPr1Zpb8CnPWH8vQ9j6dugK5RZGAliayOqGnCg3mOrsue4ur/38uR+dEBb4OeIamG
-         qBbj7MZ9xbuTSM1zTwee9gK0sG31Ktqtd9w98ld/QzKjQM7UBZsXXZ25vlzXiXAWj5LN
-         bcihy3avy4EwtU2WvAPMaewIMfsfJSkzaquCwNU42427HvYjjQZy1Kw/w+GqSfRqYdPS
-         TFsw==
-X-Forwarded-Encrypted: i=1; AFNElJ/Rx54XURzpxbUPZdDvC576U+uUpGUMvzDYYB6G84HCdinDmEz8R+1Tf1hscHjNOqttThgGhkj171X4xL+96y6KlzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXfdhxsxZtCJUWO69zmzBwNfPzWmIxRbnRgRsvhXT+cMMVX5Bk
-	KdgdUVYXjYuLqCr4aey0PBuMAHHDzSUAFJH6K419Lsce9KzQaJ5dk31G
-X-Gm-Gg: AeBDiesNUfBszHiRXFP6fe+fsD/luYc5eaV3Hd8m2cPdCR5KKUmzzrrzG/W2bf9knoE
-	vnsbvvpaqfIfPbaNSn9MOMi8GU8mkgWzVYsYNYgFEi4wQV0fYsXZnu7k2pWM3laZz5dM8BAjbSD
-	9jCjaS80FdC36O0E5m6pSH0UrdW/AyRi8DmJCjt11LIlkoDM4YR/o6/VS4/PSzQFXTJbY2ryc4L
-	DficqhJUl/rRMcEuAuWOFpuMsN/hcw7OXhmM/08OIVgnS9n6UDrwZPINICBMxsIgHah/gUBtpls
-	ZkaB5HU1iamjttSbs0m5gHQYFIIC6pfm/HA55tbm+2IpkKUeI801mu1cOElppyTDVwCWHWx5f6C
-	B5wZLxp5qssA03LX0j/ViDlpiugZyXom/eHtTtcClU7g+XrKelsulkgFS1RiDdnMATkU40M/MvT
-	2CHGtPXCpYT9Ebe8Rr5A==
-X-Received: by 2002:a05:600c:888b:b0:485:4bd1:4c64 with SMTP id 5b1f17b1804b1-488fb796f95mr301870745e9.31.1776933357937;
-        Thu, 23 Apr 2026 01:35:57 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200::d99c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc100162sm518612495e9.5.2026.04.23.01.35.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2026 01:35:57 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 23 Apr 2026 10:35:55 +0200
-To: XIAO WU <shawdoxwu@gmail.com>
-Cc: bot+bpf-ci@kernel.org, andrii@kernel.org, ast@kernel.org,
-	bpf@vger.kernel.org, clm@meta.com, daniel@iogearbox.net,
-	eddyz87@gmail.com, ihor.solodrai@linux.dev, kafai@fb.com,
-	linux-trace-kernel@vger.kernel.org, martin.lau@kernel.org,
-	menglong8.dong@gmail.com, rostedt@kernel.org, songliubraving@fb.com,
-	yhs@fb.com, yonghong.song@linux.dev
-Subject: Re: [PATCH bpf-next 10/17] bpf: Add support for tracing_multi link
- session
-Message-ID: <aenZ68-4ZeNhlXr1@krava>
-References: <0520af2c467a82b82aa3014b7e721f95bfde9e91324bb2e183b099e5a37bbc3e@mail.kernel.org>
- <20260423160724.00004f6d@gmail.com>
+	dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b="NujBjdf2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sjtu.edu.cn;
+	s=default; t=1776940730;
+	bh=WoAUdJzUqsQfgh5VrXLb9IfmlbZi+FOYG3Sa/+HhqJU=;
+	h=From:To:Cc:Subject:Date;
+	b=NujBjdf2PIB7JhAebhgFkq8k4puxf6qTa1Hb3qohXDMTaQnJBZy71UUZ3u0YdNp+2
+	 51O3t86uCae8QBRn6x4nJbaxtAYmLvligv4lQhjogqTxv1spKZkQgE6OpFAIfunVnq
+	 le5JKYEYgung8Yz6RfPrLI+4WEc3hFywTuzYhd5Uos9bsaIbuKfrn+951h7YvAA5KF
+	 5ephRerTHac5djhFRjz1W24mQe9yozT45CHo2gWO9dvRxfVu2meJ8bDAdPFoGLyWoV
+	 297WD0z//86RxG8jnFax663mj1OXkMKfpBcg4Emnvy4NgQ6ThrZYx97Z1fFkvGw0s+
+	 EtUDiD6FWeUxA==
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp186.sjtu.edu.cn (Postfix) with ESMTPS id 77D9B2FF4AE;
+	Thu, 23 Apr 2026 10:38:50 +0000 (UTC)
+Received: from dynamic.ipv6.sjtu.edu.cn (unknown [10.180.122.86])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 1E9C637C8F7;
+	Thu, 23 Apr 2026 18:38:50 +0800 (CST)
+From: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
+To: akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: david@kernel.org,
+	mhocko@kernel.org,
+	zhengqi.arch@bytedance.com,
+	shakeel.butt@linux.dev,
+	ljs@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
+Subject: [PATCH] mm/vmscan: add balance_pgdat begin/end tracepoints
+Date: Thu, 23 Apr 2026 18:37:53 +0800
+Message-ID: <20260423103753.546582-1-b.suvonov@sjtu.edu.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260423160724.00004f6d@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 23, 2026 at 04:07:24PM +0800, XIAO WU wrote:
+Vmscan has six main reclaim entry points: try_to_free_pages() for
+direct reclaim, try_to_free_mem_cgroup_pages() for memcg reclaim,
+mem_cgroup_shrink_node() for memcg soft limit reclaim, node_reclaim()
+for node reclaim, shrink_all_memory() for hibernation reclaim, and
+balance_pgdat() for kswapd reclaim.
 
-SNIP
+All of them, except for shrink_all_memory() and balance_pgdat(), already
+have begin/end tracepoints. This makes it harder to trace which reclaim
+path is responsible for memory reclaim activity, because kswapd reclaim
+cannot be identified as cleanly as other reclaim entry points, even
+though it is the main background reclaim path under memory pressure.
+There may be no need to trace shrink_all_memory() as it is primarily
+used during hibernation. So this patch adds the missing tracepoint pair
+for balance_pgdat().
 
-> I agree the patch should be made bisect-safe. I will post a follow-up
-> that ensures BPF_TRACE_FSESSION_MULTI cannot enter this uninitialized
-> fexit path (either by initializing it consistently where needed, or
-> rejecting this attach route and keeping it exclusive to
-> bpf_tracing_multi_attach()).
-> 
-> Signed-off-by: XIAO WU <shawdoxwu@gmail.com>
-> 
-> Thanks
+The begin tracepoint records the node id, requested reclaim order, and
+highest_zoneidx. The end tracepoint records the node id, reclaim order
+that balance_pgdat() finished with, highest_zoneidx, and nr_reclaimed.
+Together, they show the requested reclaim order and zone bound, whether
+reclaim fell back to a lower order, and how much reclaim work was done.
 
-fyi there's v5 already https://lore.kernel.org/bpf/20260417192502.194548-1-jolsa@kernel.org/
+Signed-off-by: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
+---
+ include/trace/events/vmscan.h | 52 +++++++++++++++++++++++++++++++++++
+ mm/vmscan.c                   |  5 ++++
+ 2 files changed, 57 insertions(+)
 
-jirka
+diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+index 4445a8d9218d..b4bf7b8def1f 100644
+--- a/include/trace/events/vmscan.h
++++ b/include/trace/events/vmscan.h
+@@ -96,6 +96,58 @@ TRACE_EVENT(mm_vmscan_kswapd_wake,
+ 		__entry->order)
+ );
+ 
++TRACE_EVENT(mm_vmscan_balance_pgdat_begin,
++
++	TP_PROTO(int nid, int order, int highest_zoneidx),
++
++	TP_ARGS(nid, order, highest_zoneidx),
++
++	TP_STRUCT__entry(
++		__field(int, nid)
++		__field(int, order)
++		__field(int, highest_zoneidx)
++	),
++
++	TP_fast_assign(
++		__entry->nid = nid;
++		__entry->order = order;
++		__entry->highest_zoneidx = highest_zoneidx;
++	),
++
++	TP_printk("nid=%d order=%d highest_zoneidx=%-8s",
++		__entry->nid,
++		__entry->order,
++		__print_symbolic(__entry->highest_zoneidx, ZONE_TYPE))
++);
++
++TRACE_EVENT(mm_vmscan_balance_pgdat_end,
++
++	TP_PROTO(int nid, int order, int highest_zoneidx,
++		 unsigned long nr_reclaimed),
++
++	TP_ARGS(nid, order, highest_zoneidx, nr_reclaimed),
++
++	TP_STRUCT__entry(
++		__field(int, nid)
++		__field(int, order)
++		__field(int, highest_zoneidx)
++		__field(unsigned long, nr_reclaimed)
++	),
++
++	TP_fast_assign(
++		__entry->nid = nid;
++		__entry->order = order;
++		__entry->highest_zoneidx = highest_zoneidx;
++		__entry->nr_reclaimed = nr_reclaimed;
++	),
++
++	TP_printk("nid=%d order=%d highest_zoneidx=%-8s nr_reclaimed=%lu",
++		__entry->nid,
++		__entry->order,
++		__print_symbolic(__entry->highest_zoneidx, ZONE_TYPE),
++		__entry->nr_reclaimed)
++);
++
+ TRACE_EVENT(mm_vmscan_wakeup_kswapd,
+ 
+ 	TP_PROTO(int nid, int zid, int order, gfp_t gfp_flags),
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index bd1b1aa12581..b2d89ed69d22 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -7121,6 +7121,8 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 		.may_unmap = 1,
+ 	};
+ 
++	trace_mm_vmscan_balance_pgdat_begin(pgdat->node_id, order,
++					    highest_zoneidx);
+ 	set_task_reclaim_state(current, &sc.reclaim_state);
+ 	psi_memstall_enter(&pflags);
+ 	__fs_reclaim_acquire(_THIS_IP_);
+@@ -7314,6 +7316,9 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 	psi_memstall_leave(&pflags);
+ 	set_task_reclaim_state(current, NULL);
+ 
++	trace_mm_vmscan_balance_pgdat_end(pgdat->node_id, sc.order,
++					  highest_zoneidx, sc.nr_reclaimed);
++
+ 	/*
+ 	 * Return the order kswapd stopped reclaiming at as
+ 	 * prepare_kswapd_sleep() takes it into account. If another caller
+-- 
+2.53.0
+
