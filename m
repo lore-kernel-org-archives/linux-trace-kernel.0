@@ -1,42 +1,42 @@
 Received: from gz.d.sender-sib.com (gz.d.sender-sib.com [77.32.148.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA5C31E84C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 14:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BB7309F1C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 14:44:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.32.148.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776954060; cv=none; b=hJtNthyOhozUlXHxInjBLq2VsIOfk8GyIG8pVqIeFw4ijGgq82AY5/fNTNE7kf3N7uUms1B4hBsVzVX+0ol3Q396RvcvHanMnwoCm4LOU/zXoFx6raHmUdiAy4F/6cuVay+gmoTcRNZi6QvpsI/rdiBWMBKpWjmFeYCcm1Qez1Q=
+	t=1776955490; cv=none; b=HDkpDQDVDcJBExMhpQDl6u8REaQuJ1Q8jsL4HY1bh+AZudln9lxdWsnyRr++SvFhyUJWHWAau1k9nwb2B0GJHpz0Jueti5QMsa5I/WoPGt7vsi22qSpWgC2ngax8LP7oaffFNIoT0ObS5Z/XySwLyXJCxrT1gOTyDb6gEGmIqfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776954060; c=relaxed/simple;
-	bh=PrOvaYNqLl6FZL25hsxuCziM5y+aRurnLiO/Mc1MISM=;
-	h=Subject:Message-Id:From:To:Cc:Date:Mime-Version; b=YOeEJEW6jA4F3grxZR+HLdr3hqFJUfHj3XdmnvKOztXtz6YXgBKDSWotHgExDT0Xc6AGzMusaYgFM/umlOpNPl6rBNPot5elW29rYbFEIFKmjKz3oQNGjKecnH3qAYUXunexFtE5SaoZZ8urc70d1u+xiTEl9WvooqwqGeiIYqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz; spf=pass smtp.mailfrom=gz.d.sender-sib.com; dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b=b5nAplWx; arc=none smtp.client-ip=77.32.148.26
+	s=arc-20240116; t=1776955490; c=relaxed/simple;
+	bh=FLmw8y9bee+jgkpgyqiqwkyTo5kSNs5Qv3xG11mv+X8=;
+	h=Date:Subject:To:Cc:Message-Id:From:Mime-Version; b=o4wUD7SGx6N4WRGe9vY/EV26EtZNKvKD977//nbvnAb7eh9y2DXtLzEs8OmXQ7MF2ji6BYyHVV/7vIfwneaBgLKkmkeTEdDOwIAROwAWC6n1DFeD41z319xYmDFn+Dt8+gRTU2sOaRz9ZrNtVH1bdtiwPGsyZ1YslXuG6vynoOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz; spf=pass smtp.mailfrom=gz.d.sender-sib.com; dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b=jAOigZyM; arc=none smtp.client-ip=77.32.148.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gz.d.sender-sib.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b="b5nAplWx"
+	dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b="jAOigZyM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unknownbbqr.xyz;
- q=dns/txt; s=brevo1; bh=qWvxM+0TvRd0RhcKfb07zqlfXN4cg1w6cMRoZUQsfHw=;
+ q=dns/txt; s=brevo1; bh=VxMzBlGGP8LlVdqve9WqVnkfaP5ve6f8jlSoq6iivKQ=;
  h=from:subject:date:to:cc:mime-version:content-transfer-encoding:list-unsubscribe:x-csa-complaints:list-unsubscribe-post:message-id:x-sib-id:feedback-id;
-        b=b5nAplWxDq8GnTkFJn5hgyoBevpn2UCR3L62OMHIqPcrvQ+qLE7DuZmJdMWqgWnqfs+uQacoUam6
-        8hGlDmENyqacihiuSrD0qOoktYtJutPHBGnSwshUvPcNqEn4kNmK37zl+Lzit8kAUp61wXim4Q3s
-        pM9qzogk5QPgQql5wdv7OHUcgDGNzRmyajUxq9clKmdczXiGsaB5Cj799ok2nfDSnLUDo8a9r6e9
-        LZoxMzlfsvN0hFxyyznNkPI1s3asLEMl57cDomFP6U0eATJGlOER7rPRFpoZ72/ZN/SxVTjzDZa2
-        XPAdC2dDbWXncaN0WUTR8kbxgvc+18L3kNH5hg==
-Subject: [PATCH 1/1] tools/rv: ensure monitor name and desc are NUL-terminated
-X-sib-id: sp0VQd3XrBv6EOXu293iJhbJLcn37PW2qZMhtbD9dT0tGRwG1AdhWJ-51BHwgsVa31q6TFXKNZ1aUpgdclWTJFG9OUycw4wdtt8_HdG2PUYDwXx4j-w32C_vxaOGD3j2CodINipKW_byMU93O3p93MRDvFsOkBMTrpj2WG6SExcIBVEGWTmQemMI50H7Y2dpTg
-Message-Id: <dc9ea036-de62-4e1f-be63-8e14d675bcca@smtp-relay.sendinblue.com>
-Origin-messageId: <20260423141944.1866-1-dev@unknownbbqr.xyz>
+        b=jAOigZyMsOsEs7THH2wqQqyBVBNTp3lHZNXfRLNLCxyee4bzYpJOvwfxdzmevvGyBqeCqBwKmRWX
+        VenjEykERkVm/WS1Owf3DBAHgDeYou4EcpSmnv1L1DyNLccGjTl6MEqgMBfOhEsC4hC2SMXkYQYY
+        cL0H8FlLikKC13Me++yszrJ0UaEUMFg9bbSkQbmrdeBkImKTF9Hm/JuZglLtRW1l6bygvTIcPGQe
+        sdzlp4b79j5ADlAGpAgpx9uRZnF0qgAyc8RbKv0mgK6tXgxcPCwPIKUv4QsEJNWGb2yuoTCizMQ4
+        fPOGS9TYt1eRWKUpAikWC2ozQReSPKcJCs949g==
+X-Mailin-EID: NDQzNzMzMzgyfmxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmd%2BPDIwMjYwNDIzMTQ0NDQxLjI5OTUtMS1kZXZAdW5rbm93bmJicXIueHl6Pn5nei5kLnNlbmRlci1zaWIuY29t
+Date: Thu, 23 Apr 2026 17:44:41 +0300
+Subject: [PATCH] tools/rv: harden monitor name lookup bounds checks
+Origin-messageId: <20260423144441.2995-1-dev@unknownbbqr.xyz>
+Feedback-ID: 77.32.148.26:10473219_-1:10473219:Sendinblue
+To: <rostedt@goodmis.org>,<gmonaco@redhat.com>
+X-sib-id: yanvLB4YNvXvl65L95zD-wFPAGsa3zLgsPqrrPPDBhX8CYETrKeJizZSDphmTFfbuoYzldAnHqZhVzcA7KIIvF4-IjtvxQXtXRtTMsn8TbMm4wPiAs_tdpmrz4pbEG7cB-sXBoOH82tx1Ftg_qfH6YBnTFxAfTG2lO8ds4Q2FYKuoSDgZHm2_3VIia-v4E3X_g
+Cc: <linux-trace-kernel@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,  "unknownbbqrx" <dev@unknownbbqr.xyz>
+Message-Id: <69972ccf-31ee-4906-9907-0ead76bd60b9@smtp-relay.sendinblue.com>
 List-Unsubscribe-Post: List-Unsubscribe=One-Click
 From: "unknownbbqrx" <dev@unknownbbqr.xyz>
 X-CSA-Complaints: csa-complaints@eco.de
-X-Mailin-EID: NDQzNzMzMzgyfmxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmd%2BPDIwMjYwNDIzMTQxOTQ0LjE4NjYtMS1kZXZAdW5rbm93bmJicXIueHl6Pn5nei5kLnNlbmRlci1zaWIuY29t
-To: <rostedt@goodmis.org>,<gmonaco@redhat.com>
-Cc: <linux-trace-kernel@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,  "unknownbbqrx" <dev@unknownbbqr.xyz>
-Feedback-ID: 77.32.148.26:10473219_-1:10473219:Sendinblue
-Date: Thu, 23 Apr 2026 17:19:44 +0300
-Content-Transfer-Encoding: quoted-printable
 X-Mailer: git-send-email 2.53.0
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -45,39 +45,93 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 
 
-ikm_fill_monitor_definition() copies monitor name and description with
-strncpy(), but does not guarantee NUL termination when source strings are
-equal to or longer than the destination buffers.
+Bound monitor-name derived copies in __ikm_find_monitor_name() and avoid un=
+bounded writes from sprintf()/memcpy().
 
-Clamp copies to sizeof(dst) - 1 and explicitly append '\0' for both fields
-to keep them safe for later string operations.
+Pass the output buffer size from the caller, validate extracted line length=
+ from rv/available_monitors, and use snprintf() with truncation checks when=
+ building container monitor names.
 
 Signed-off-by: unknownbbqrx <dev@unknownbbqr.xyz>
 ---
- tools/verification/rv/src/in_kernel.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/verification/rv/src/in_kernel.c | 34 +++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
 diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/=
 src/in_kernel.c
-index 4bb746ea6..d32453824 100644
+index d32453824..f17eac9b6 100644
 --- a/tools/verification/rv/src/in_kernel.c
 +++ b/tools/verification/rv/src/in_kernel.c
-@@ -215,10 +215,11 @@ static int ikm_fill_monitor_definition(char *name, st=
-ruct monitor *ikm, char *co
- 		return -1;
+@@ -56,9 +56,12 @@ static int __ikm_read_enable(char *monitor_name)
+  * The string out_name is populated with the full name, which can be
+  * equal to monitor_name or container/monitor_name if nested
+  */
+-static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
++static int __ikm_find_monitor_name(char *monitor_name, char *out_name,
++				  size_t out_name_size)
+ {
+-	char *available_monitors, container[MAX_DA_NAME_LEN+1], *cursor, *end;
++	char *available_monitors, container[MAX_DA_NAME_LEN + 2], *cursor, *end;
++	size_t len;
++	int n;
+ 	int retval =3D 1;
+=20
+ 	available_monitors =3D tracefs_instance_file_read(NULL, "rv/available_mon=
+itors", NULL);
+@@ -72,17 +75,34 @@ static int __ikm_find_monitor_name(char *monitor_name, =
+char *out_name)
  	}
 =20
--	strncpy(ikm->name, nested_name, MAX_DA_NAME_LEN);
-+	strncpy(ikm->name, nested_name, sizeof(ikm->name) - 1);
-+	ikm->name[sizeof(ikm->name) - 1] =3D '\0';
- 	ikm->enabled =3D enabled;
--	strncpy(ikm->desc, desc, MAX_DESCRIPTION);
--
-+	strncpy(ikm->desc, desc, sizeof(ikm->desc) - 1);
-+	ikm->desc[sizeof(ikm->desc) - 1] =3D '\0';
- 	free(desc);
+ 	for (; cursor > available_monitors; cursor--)
+-		if (*(cursor-1) =3D=3D '\n')
++		if (*(cursor - 1) =3D=3D '\n')
+ 			break;
++
+ 	end =3D strstr(cursor, "\n");
+-	memcpy(out_name, cursor, end-cursor);
+-	out_name[end-cursor] =3D '\0';
++	if (!end) {
++		retval =3D -1;
++		goto out_free;
++	}
++
++	len =3D end - cursor;
++	if (len >=3D out_name_size) {
++		retval =3D -1;
++		goto out_free;
++	}
++
++	memcpy(out_name, cursor, len);
++	out_name[len] =3D '\0';
 =20
- 	return 0;
+ 	cursor =3D strstr(out_name, ":");
+ 	if (cursor)
+ 		*cursor =3D '/';
+ 	else {
+-		sprintf(container, "%s:", monitor_name);
++		n =3D snprintf(container, sizeof(container), "%s:", monitor_name);
++		if (n < 0 || (size_t)n >=3D sizeof(container)) {
++			retval =3D -1;
++			goto out_free;
++		}
++
+ 		if (strstr(available_monitors, container))
+ 			config_is_container =3D 1;
+ 	}
+@@ -782,7 +802,7 @@ int ikm_run_monitor(char *monitor_name, int argc, char =
+**argv)
+ 	else
+ 		nested_name =3D monitor_name;
+=20
+-	retval =3D __ikm_find_monitor_name(monitor_name, full_name);
++	retval =3D __ikm_find_monitor_name(monitor_name, full_name, sizeof(full_n=
+ame));
+ 	if (!retval)
+ 		return 0;
+ 	if (retval < 0) {
+
+base-commit: 2e68039281932e6dc37718a1ea7cbb8e2cda42e6
+prerequisite-patch-id: b61dd51dee390277603975bf729a687113185c3a
 --=20
 2.53.0
 
