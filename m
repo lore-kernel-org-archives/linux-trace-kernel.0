@@ -1,133 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6753236AB5B;
-	Thu, 23 Apr 2026 08:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5F03537D5
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 08:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776932764; cv=none; b=kyWvMNmRDSGMEZyAPCWFdA7Gu9l5oh5qU0F4Z19wLFZQfrxHJ2eTS4A1BJyzCIDYYJP6UctnEddOMG3Gs10kAG6+tBKVZaIosIrpL8lQrQCMSr7Pk7SGRId270ML8ree5dtD+8KQmypv7HSqsHwqvMgVLhV/wmAoFyjNmFV+H4I=
+	t=1776933361; cv=none; b=AsbbA5COzdtPYBSxc3GxlQohxawwWy9zeLOmHSuXmu1gl9AX4Czyl5I5Ar1T4ABvq9D7t0PT4dxesU0A3VuItAmavaeeFJpcY/Kb/2BX12sv8fM8uXpkxtmiMQ6g5I5korCLtP30hXX+Jlu4bCWr8nmrJKxxw+LJ55n8HKQ1gfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776932764; c=relaxed/simple;
-	bh=IjL8twB+4d9z4gO+zDoSjmB2/hJ0XW6r2E+wUwSomso=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jQzhqPMWPJIRiwJ7dppyQje+cH62I0yCX1QxNhU+g9BAgZGZPwbCDFCe97F4k7ZBMmlf03H9N+qrJwzoJ0U+W/Oy2rTpTGqAs0zcJNxKy3ib0VByutmefViqFWWIoOJDnwtWxxJro1SX4a2NlRBmDhLiRXyRcJP5YWUIMetfULk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTYKDCTz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776933361; c=relaxed/simple;
+	bh=cGAg77A9vGAqO01N9puooMvj1PtUM0QhbRn4oKLxUtA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EYylZTWoh2gQIU+XOEtqA/99syFvwq3R++dva4VmKxkIvp259YdRv5rgL7wJ2UL09RkCwrAiEWM5nSjRSBvRMRlTJ8xrgxU43ad0LcnIh1vFrQwqvW+6nEco0z9v+SkUadgydZzZmR9nMLYw3XHLVTsEbvJwS94ZWUgrBW0+xFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DsZmm+UN; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTYKDCTz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD419C2BCAF;
-	Thu, 23 Apr 2026 08:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776932763;
-	bh=IjL8twB+4d9z4gO+zDoSjmB2/hJ0XW6r2E+wUwSomso=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OTYKDCTzOUzTH4mt3kNkQ8qy0pysslUAGpHK6g0dZ6Qscu1saFiktKCF6yFfNUEwh
-	 TxPdidgm8eInOeaNdayfmqU0RevjYbNYROwkoxVFNsYs8Blp54fU0Z58ydpUzKM9YF
-	 T/Dx0GXkRLJr4Tj+FdSQljoKYAwrVWIjMx3A+RATNsLweYNfKW68+DXn98PCs4usow
-	 eOBlcLgb8ttn7i60oG+d/HSzt2lbVDqi75OrlEjC22DkvWZA1IIb8uVfbdDO8Yi30f
-	 VwNbZctEQuC0XOZlhHiGNq8p09FQ1S9OmWzjsHvizsTj6C59yRdplG7X26eu0bvrJQ
-	 29SUM8xi6h+9A==
-Date: Thu, 23 Apr 2026 17:26:01 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v17 0/5] ring-buffer: Making persistent ring buffers
- robust
-Message-Id: <20260423172601.735884be696225c050566060@kernel.org>
-In-Reply-To: <177687458572.932171.10907864814735342737.stgit@mhiramat.tok.corp.google.com>
-References: <177687458572.932171.10907864814735342737.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsZmm+UN"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso58698225e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 01:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776933358; x=1777538158; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pX8X61NK9tT2Owfg7advdmy2f2BYjZERfDDXJtbjaAw=;
+        b=DsZmm+UN6pd3bQ+4HicCbv9Gz0rZ7v2vHQUh/mc8Jf0r21+aL7sSHSSnCOmWiibIEk
+         0ynTYj3svKjGpwud4trt8JGWvt5NIMG3+n+aT9nFiYX1nb9k5tv21YYbQe6+9zAMVdqH
+         RldjEO66z+Ay17AR1XbbF/fKE9fK1KsJrVdA6c2AxxuouU7qy6q7ZIxxHYrF2t20u6WV
+         cEo5/8cpXEP3LoBlyS3+9PoSme1R2AiNCCRpp03jU2uLISpx1QgdadIvr23qeSXGFx8Z
+         K7xnYf0iqkqLfGiCA+dxaqyPihy6mEnPpJ6bulTC6RTZ7xAWMD9aLQal+8tFEGfix/jb
+         74uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776933358; x=1777538158;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pX8X61NK9tT2Owfg7advdmy2f2BYjZERfDDXJtbjaAw=;
+        b=Nc2lQ+7esaMShtXr8KjbCNfTwBM2FVPLnVRLw98YTwgWDgCVPFLgifVungUmgnGzsm
+         Vva5fVrt84iIaS1yOGx8H++y8CZhDz0RdnCW0ewB3HbmDUR9OT8DUsmYILNPLOLRPslD
+         w7jDPr1Zpb8CnPWH8vQ9j6dugK5RZGAliayOqGnCg3mOrsue4ur/38uR+dEBb4OeIamG
+         qBbj7MZ9xbuTSM1zTwee9gK0sG31Ktqtd9w98ld/QzKjQM7UBZsXXZ25vlzXiXAWj5LN
+         bcihy3avy4EwtU2WvAPMaewIMfsfJSkzaquCwNU42427HvYjjQZy1Kw/w+GqSfRqYdPS
+         TFsw==
+X-Forwarded-Encrypted: i=1; AFNElJ/Rx54XURzpxbUPZdDvC576U+uUpGUMvzDYYB6G84HCdinDmEz8R+1Tf1hscHjNOqttThgGhkj171X4xL+96y6KlzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXfdhxsxZtCJUWO69zmzBwNfPzWmIxRbnRgRsvhXT+cMMVX5Bk
+	KdgdUVYXjYuLqCr4aey0PBuMAHHDzSUAFJH6K419Lsce9KzQaJ5dk31G
+X-Gm-Gg: AeBDiesNUfBszHiRXFP6fe+fsD/luYc5eaV3Hd8m2cPdCR5KKUmzzrrzG/W2bf9knoE
+	vnsbvvpaqfIfPbaNSn9MOMi8GU8mkgWzVYsYNYgFEi4wQV0fYsXZnu7k2pWM3laZz5dM8BAjbSD
+	9jCjaS80FdC36O0E5m6pSH0UrdW/AyRi8DmJCjt11LIlkoDM4YR/o6/VS4/PSzQFXTJbY2ryc4L
+	DficqhJUl/rRMcEuAuWOFpuMsN/hcw7OXhmM/08OIVgnS9n6UDrwZPINICBMxsIgHah/gUBtpls
+	ZkaB5HU1iamjttSbs0m5gHQYFIIC6pfm/HA55tbm+2IpkKUeI801mu1cOElppyTDVwCWHWx5f6C
+	B5wZLxp5qssA03LX0j/ViDlpiugZyXom/eHtTtcClU7g+XrKelsulkgFS1RiDdnMATkU40M/MvT
+	2CHGtPXCpYT9Ebe8Rr5A==
+X-Received: by 2002:a05:600c:888b:b0:485:4bd1:4c64 with SMTP id 5b1f17b1804b1-488fb796f95mr301870745e9.31.1776933357937;
+        Thu, 23 Apr 2026 01:35:57 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::d99c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc100162sm518612495e9.5.2026.04.23.01.35.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2026 01:35:57 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 23 Apr 2026 10:35:55 +0200
+To: XIAO WU <shawdoxwu@gmail.com>
+Cc: bot+bpf-ci@kernel.org, andrii@kernel.org, ast@kernel.org,
+	bpf@vger.kernel.org, clm@meta.com, daniel@iogearbox.net,
+	eddyz87@gmail.com, ihor.solodrai@linux.dev, kafai@fb.com,
+	linux-trace-kernel@vger.kernel.org, martin.lau@kernel.org,
+	menglong8.dong@gmail.com, rostedt@kernel.org, songliubraving@fb.com,
+	yhs@fb.com, yonghong.song@linux.dev
+Subject: Re: [PATCH bpf-next 10/17] bpf: Add support for tracing_multi link
+ session
+Message-ID: <aenZ68-4ZeNhlXr1@krava>
+References: <0520af2c467a82b82aa3014b7e721f95bfde9e91324bb2e183b099e5a37bbc3e@mail.kernel.org>
+ <20260423160724.00004f6d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260423160724.00004f6d@gmail.com>
 
-Hi,
+On Thu, Apr 23, 2026 at 04:07:24PM +0800, XIAO WU wrote:
 
-Sashiko[1] pointed out other problems. Let me review it.
-I also found one mistake (not by this series), so I will fix it too.
+SNIP
 
-[1] https://sashiko.dev/#/patchset/177687458572.932171.10907864814735342737.stgit%40mhiramat.tok.corp.google.com
+> I agree the patch should be made bisect-safe. I will post a follow-up
+> that ensures BPF_TRACE_FSESSION_MULTI cannot enter this uninitialized
+> fexit path (either by initializing it consistently where needed, or
+> rejecting this attach route and keeping it exclusive to
+> bpf_tracing_multi_attach()).
+> 
+> Signed-off-by: XIAO WU <shawdoxwu@gmail.com>
+> 
+> Thanks
 
-Thanks,
+fyi there's v5 already https://lore.kernel.org/bpf/20260417192502.194548-1-jolsa@kernel.org/
 
-On Thu, 23 Apr 2026 01:16:26 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-
-> Hi,
-> 
-> Here is the 17th version of improvement patches for making persistent
-> ring buffers robust to failures.
-> The previous version is here:
-> 
-> https://lore.kernel.org/all/177547105523.259641.14385891517704197263.stgit@mhiramat.tok.corp.google.com/
-> 
-> This version fixes some review comments from Sashiko[1], which
-> includes:
-> [2/5] Fix to use rb_page_size() of rewound pages for entry_bytes.
-> [3/5] - Fix to verify head_page at first before using its timestamp.
->       - Reset timestamp if the page is invalid.
-> [4/5] - In rb_test_inject_invalid_pages(), changed entry_bytes and
->        idx to unsigned long
->       - Added NULL checks for cpu_buffer and meta.
->       - In allocate_trace_buffer(), added a NULL check for tr->name
->        before comparing it with strcmp.
-> [5/5] Added NULL check for dpage in rbm_show in ring_buffer.c.
-> 
-> [1] https://sashiko.dev/#/patchset/177552432201.853249.5125045538812833325.stgit%40mhiramat.tok.corp.google.com
-> 
-> Thank you,
-> 
-> Masami Hiramatsu (Google) (5):
->       ring-buffer: Flush and stop persistent ring buffer on panic
->       ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
->       ring-buffer: Skip invalid sub-buffers when rewinding persistent ring buffer
->       ring-buffer: Add persistent ring buffer invalid-page inject test
->       ring-buffer: Show commit numbers in buffer_meta file
-> 
-> 
->  arch/alpha/include/asm/Kbuild        |    1 
->  arch/arc/include/asm/Kbuild          |    1 
->  arch/arm/include/asm/Kbuild          |    1 
->  arch/arm64/include/asm/ring_buffer.h |   10 +
->  arch/csky/include/asm/Kbuild         |    1 
->  arch/hexagon/include/asm/Kbuild      |    1 
->  arch/loongarch/include/asm/Kbuild    |    1 
->  arch/m68k/include/asm/Kbuild         |    1 
->  arch/microblaze/include/asm/Kbuild   |    1 
->  arch/mips/include/asm/Kbuild         |    1 
->  arch/nios2/include/asm/Kbuild        |    1 
->  arch/openrisc/include/asm/Kbuild     |    1 
->  arch/parisc/include/asm/Kbuild       |    1 
->  arch/powerpc/include/asm/Kbuild      |    1 
->  arch/riscv/include/asm/Kbuild        |    1 
->  arch/s390/include/asm/Kbuild         |    1 
->  arch/sh/include/asm/Kbuild           |    1 
->  arch/sparc/include/asm/Kbuild        |    1 
->  arch/um/include/asm/Kbuild           |    1 
->  arch/x86/include/asm/Kbuild          |    1 
->  arch/xtensa/include/asm/Kbuild       |    1 
->  include/asm-generic/ring_buffer.h    |   13 ++
->  include/linux/ring_buffer.h          |    1 
->  kernel/trace/Kconfig                 |   34 ++++
->  kernel/trace/ring_buffer.c           |  275 ++++++++++++++++++++++++++--------
->  kernel/trace/trace.c                 |    4 
->  26 files changed, 290 insertions(+), 67 deletions(-)
->  create mode 100644 arch/arm64/include/asm/ring_buffer.h
->  create mode 100644 include/asm-generic/ring_buffer.h
-> 
-> 
-> base-commit: 6170922f137231b98fc568571befef63e1edff3f
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+jirka
