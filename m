@@ -1,79 +1,69 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D1137B40B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Apr 2026 17:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D015200C2;
+	Thu, 23 Apr 2026 20:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776966424; cv=none; b=mAoxYW6Y5XNTIqB+/pBmmN8BcKW6pp0c+JOQTC2XEfm+GLzkxH6dTxseq+1+x58ASJR6j7hI3b+txzHhxIB3PTfOmC9vEOWG4SLCMToDQdtekS8p5wNTsGbAPD+YtHNuUYX4ZHXMjQN95AfLdl7FqiKGyQXPNACXPjvz+/3ri3g=
+	t=1776976229; cv=none; b=TkFnP8uVhIArL2p2n2cxcl4KXXJPazrLOsXckc/sqK0+cQuNpovpWrfd6mH4laGlwyOYKVRm1zybBqsbXSpTJZZdH8+/pKFN/UgIjX2YeHMUSU22M6VqXijraxFiMaJ0H8Bhu0r7piPmYeghnmOU9SJ1ef7B9J4bPsyP2BYlZjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776966424; c=relaxed/simple;
-	bh=vjIKe7kl5sDZofM3PgeyAZu6CZ2DHx1btatU9tOUE1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L2VvmV98068K+BxXS0Aw/LtGIwp16QP4mBGnUO9qZDfTyoFa7p+T20LpTAolX8mAM4lsnR/2reiZsr0mpCMdeS5TgDb9H5QY9OZqNY9/rlAGdxP0c+3M+6y8hCT3oT71EsAPtbkW0UtuQhjFfuXAle2DOapLeUOIOvU1WgsV2j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vQQu5ula; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1776976229; c=relaxed/simple;
+	bh=oCV9JFYj7k90WIS0590/2O8/cTgDcMiI0hAXUbdj4F4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DB23ZPIv5QzWL1oIU8ilZ9XYR0GQzZvgx25f00ZC6cLm8IjWgrKVW+e7ZsZYzgyiaFKt2nXqsFbaeaa0hgyY08HwdnhR+muWTWfMNJsYXZpq3O0K7vS0JIjgpCeUGhvo4gXKcHMlBMBiyK3mwUR3mUWggvQ6UI4/HWiiCSu3aFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OGpNXtGB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vQQu5ula"
-Date: Thu, 23 Apr 2026 10:46:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776966420;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hxsr+udpgbwIYSFqjXA38j1VeRgFqtPhxMcbAqGt65A=;
-	b=vQQu5ulazW72Tyv0T5UWjs7MxU9nwVAXIS1eg0GWewP+Ht1SgXyT4DnYC6k6AFCp0fJZ9t
-	Ql1oxZJ58pQzxwVJADzvXumiZQxlta99GSevB52Xg2XhkBBEopVx7tMNMg2Ctd6f9MGIhr
-	diPBR6XAbkR69VRGs6Yndoz3BmgewHM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, rostedt@goodmis.org, 
-	mhiramat@kernel.org, david@kernel.org, mhocko@kernel.org, zhengqi.arch@bytedance.com, 
-	ljs@kernel.org, mathieu.desnoyers@efficios.com, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/vmscan: add balance_pgdat begin/end tracepoints
-Message-ID: <aepavbLy7H3odp6p@linux.dev>
-References: <20260423103753.546582-1-b.suvonov@sjtu.edu.cn>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OGpNXtGB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 647A1C2BCAF;
+	Thu, 23 Apr 2026 20:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1776976229;
+	bh=oCV9JFYj7k90WIS0590/2O8/cTgDcMiI0hAXUbdj4F4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OGpNXtGBm0ruwTxfn2i7ZXK2qzTVTfRRlgjZtDGJ1BJ+WMeCNqr5DeRM8NaZT4mHt
+	 NPaiy4BrlDOIJzcF1E3mvczFs5rzBD3ZIk8+myZi0Tsxj0D7wrlksSBTSe+PYD26Ra
+	 zeAKoN7VcqwQMJTj+YJNTFXrUsiZgTlBomWxL+bU=
+Date: Thu, 23 Apr 2026 13:30:26 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
+ gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz,
+ jackmanb@google.com, jannh@google.com, jglisse@google.com,
+ joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
+ Liam.Howlett@oracle.com, ljs@kernel.org, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
+ peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
+ rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH 7.2 v16 00/13] khugepaged: mTHP support
+Message-Id: <20260423133026.cbd3bc5429d4ca4eccdccda0@linux-foundation.org>
+In-Reply-To: <20260419185750.260784-1-npache@redhat.com>
+References: <20260419185750.260784-1-npache@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260423103753.546582-1-b.suvonov@sjtu.edu.cn>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 23, 2026 at 06:37:53PM +0800, Bunyod Suvonov wrote:
-> Vmscan has six main reclaim entry points: try_to_free_pages() for
-> direct reclaim, try_to_free_mem_cgroup_pages() for memcg reclaim,
-> mem_cgroup_shrink_node() for memcg soft limit reclaim, node_reclaim()
-> for node reclaim, shrink_all_memory() for hibernation reclaim, and
-> balance_pgdat() for kswapd reclaim.
-> 
-> All of them, except for shrink_all_memory() and balance_pgdat(), already
-> have begin/end tracepoints. This makes it harder to trace which reclaim
-> path is responsible for memory reclaim activity, because kswapd reclaim
-> cannot be identified as cleanly as other reclaim entry points, even
-> though it is the main background reclaim path under memory pressure.
-> There may be no need to trace shrink_all_memory() as it is primarily
-> used during hibernation. So this patch adds the missing tracepoint pair
-> for balance_pgdat().
-> 
-> The begin tracepoint records the node id, requested reclaim order, and
-> highest_zoneidx. The end tracepoint records the node id, reclaim order
-> that balance_pgdat() finished with, highest_zoneidx, and nr_reclaimed.
+On Sun, 19 Apr 2026 12:57:37 -0600 Nico Pache <npache@redhat.com> wrote:
 
-Do we need to trace highest_zoneidx at the end? Can it change within
-balance_pgdat()?
+> The following series provides khugepaged with the capability to collapse
+> anonymous memory regions to mTHPs.
 
-> Together, they show the requested reclaim order and zone bound, whether
-> reclaim fell back to a lower order, and how much reclaim work was done.
-> 
-> Signed-off-by: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
-
-Overall looks good. 
-
+Thanks, I added this to mm.git's mm-new branch for testing while review
+is being completed.  I added notes regarding Usana's comments, so they
+don't get lost.
