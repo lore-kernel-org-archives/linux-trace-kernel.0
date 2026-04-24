@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64A4823DD;
-	Fri, 24 Apr 2026 06:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C869E282F3A;
+	Fri, 24 Apr 2026 06:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777013525; cv=none; b=qWZLC9FtdsJZgQCBc/ZZxW1N/n9vYewfYIbk/yUrLsrBjS6iBkAxz8iELs8sLt+HV7andS1gCPLSdl5AMm7L6pU0WugC8WEswkRERgGg6DSz59O7ONdd1XvDWUUm42IolcI7kHIDz+ztOKTMANfQtk0Mhadc9Vgn/QwaD0ARmko=
+	t=1777013533; cv=none; b=JfmCLiaRJp3E/QlyV5g7Uh27IRlhBEudwlOc3rxjKkfEYiz0AxYQyQT3EK8x5XB6eouJHvpZdFoRcC+aFgAkSRJVveYsK8xjafewwWWa+7zqYfjvyPqAEWsYwGLr+gu8KV4KDSCAKp4Q/sbyoE5SO50bjTATnh9zPGXM4IgFHjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777013525; c=relaxed/simple;
-	bh=3Pkgxb3AaO1XuEUmAmnS4l7BYM6AORThEKZp5fWQTI0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AXjm0zklh9rnUHXQPp1EvGAc9tFI7woqgGYNRXwKDx+cC3+XD+z4HWLO5DGQedDGi4T1T3mDLiQyhEqUka12iW6djCXm149yu/wPleyrjkEJqlZ8UaLzCY0hFPoHgVuqTeSu+4zdv3d/oKmgCK4MZHGYW2KGAmqJ0tTWTvtNDyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=umEbRDaF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777013533; c=relaxed/simple;
+	bh=h5zNnOePiy153/WH9cKYLW8qOY+CjSEhvKYyYDJAmoE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nDTcceOIPMEoRvmiM0bqIDcZnOM5PE64OAnD4CLL3nxOa1pB2ztGXUY2xaN1LOGoT5axBOmftvShFB4iE/n2d7w3lF1x8B3KuD32LTdxjUOILu1xV0nS4mDIvq6yc8QOxoWLpFHzM2ooYv54U7MonXofbQlcrOTHZB6w1zkc8rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tAoNMtXv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="umEbRDaF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39244C19425;
-	Fri, 24 Apr 2026 06:52:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tAoNMtXv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBF9C19425;
+	Fri, 24 Apr 2026 06:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777013525;
-	bh=3Pkgxb3AaO1XuEUmAmnS4l7BYM6AORThEKZp5fWQTI0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=umEbRDaFAgKrUbp5k24rIFyf59WDdYS0hUE5hImkUf3jyg+J8yglF7Ow2FhkgHiS7
-	 0sJmyxiyZMzYij5THZnDg+jv1DAjqpJYw+OsGJ9ZdMrPQYQrzuEr47q9uFRNT8OWcz
-	 KzwP9RZ9Pm1GxSLKJX45PXv3XxNZ+TDVMV1wCVB6LswHuAw8I0vxG6Ot5w3gfYbRcW
-	 DrJpzFGOFCXCPmlsUS9pLwoeWZncTV4D00LOeNcPNS93dGUtEIGALLQCs6R5XWdUmq
-	 3DVShoF6wARZx7VzaIvzwcY2J6gF5z5/lK4wpOErypXdx8PNMWhtrn49bcQRL95Bd0
-	 5ikQ6GFQNowMw==
+	s=k20201202; t=1777013533;
+	bh=h5zNnOePiy153/WH9cKYLW8qOY+CjSEhvKYyYDJAmoE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tAoNMtXv74hEbgNY1L1Rtu/4DdcndEZuuA+SEK+FkFDHKf/MLRN9Fh58TzP2H9Uct
+	 iRr/N2gkwutKpYcRvA0R9dFcl3S5usDAdnPew+dY6L2r0CHhnSS8q5H90uVDYQVk5E
+	 gMbzObb31iQhR7CkU4kmIdaYBhVoVTm39CpDfFMXijRZ3HYL5h8gzpMuxgmRnRT5vD
+	 4Lv9G1Cd/xQ6rmZd3wYfYBhmyhjVp5Nls6mUUhRHxYiQighonwajMzzuEN3IEaPhVr
+	 BRb0ukRGBptMi2HrSLQX+ebj1I3Sf3keRxhwUbVn+RCaQCVVzmm0G1kG7HyfyyJ+9h
+	 pQ2iAgIWkoCMg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
@@ -35,10 +36,12 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org,
 	Ian Rogers <irogers@google.com>,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v18 0/8] ring-buffer: Making persistent ring buffers robust
-Date: Fri, 24 Apr 2026 15:51:59 +0900
-Message-ID:  <177701351903.2223789.17087009302463188638.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH v18 1/8] ring-buffer: Do not double count the reader_page
+Date: Fri, 24 Apr 2026 15:52:10 +0900
+Message-ID:  <177701353063.2223789.1471163147644103306.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
+In-Reply-To:  <177701351903.2223789.17087009302463188638.stgit@mhiramat.tok.corp.google.com>
+References:  <177701351903.2223789.17087009302463188638.stgit@mhiramat.tok.corp.google.com>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,74 +52,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 18th version of improvement patches for making persistent
-ring buffers robust to failures.
-The previous version is here:
+Since the cpu_buffer->reader_page is updated if there are unwound
+pages. After that update, we should skip the page if it is the
+original reader_page, because the original reader_page is already
+checked.
 
-https://lore.kernel.org/all/177687458572.932171.10907864814735342737.stgit@mhiramat.tok.corp.google.com/
+Fixes: ca296d32ece3 ("tracing: ring_buffer: Rewind persistent ring buffer on reboot")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Changes in v18:
+  - Newly added.
+---
+ kernel/trace/ring_buffer.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-This version fixes a newly found bug and some review comments from
-Sashiko[1], also, add 2 cleanups, which includes:
-[1/8] Do not double count the reader_page when verifying persistent
-      ring buffer.
-[2/8] Add Geert's Ack (Thanks!)
-[3/8] Fix to substract BUF_PAGE_HDR_SIZE from meta->subbuf_size
-      to make the limit of commit size.
-[4/8] Reset timestamp of reader_page when the entire cpu_buffer is
-      invalid.
-[5/8] In rb_test_inject_invalid_pages(), changed entry_bytes and
-      idx to unsigned long.
-[7/8] Cleanup persistent ring buffer validation code.
-[8/8] Cleanup buffer_data_page related code.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index cef49f8871d2..5326924615a4 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1884,7 +1884,7 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+-	struct buffer_page *head_page, *orig_head;
++	struct buffer_page *head_page, *orig_head, *orig_reader;
+ 	unsigned long entry_bytes = 0;
+ 	unsigned long entries = 0;
+ 	int ret;
+@@ -1895,16 +1895,17 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return;
+ 
+ 	orig_head = head_page = cpu_buffer->head_page;
++	orig_reader = cpu_buffer->reader_page;
+ 
+ 	/* Do the reader page first */
+-	ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu);
++	ret = rb_validate_buffer(orig_reader->page, cpu_buffer->cpu);
+ 	if (ret < 0) {
+ 		pr_info("Ring buffer reader page is invalid\n");
+ 		goto invalid;
+ 	}
+ 	entries += ret;
+-	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+-	local_set(&cpu_buffer->reader_page->entries, ret);
++	entry_bytes += local_read(&orig_reader->page->commit);
++	local_set(&orig_reader->entries, ret);
+ 
+ 	ts = head_page->page->time_stamp;
+ 
+@@ -2007,8 +2008,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	/* Iterate until finding the commit page */
+ 	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
+ 
+-		/* Reader page has already been done */
+-		if (head_page == cpu_buffer->reader_page)
++		/* The original reader page has already been checked/counted. */
++		if (head_page == orig_reader)
+ 			continue;
+ 
+ 		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
 
-[1] https://sashiko.dev/#/patchset/177687458572.932171.10907864814735342737.stgit%40mhiramat.tok.corp.google.com
-
-Thank you,
-
-Masami Hiramatsu (Google) (8):
-      ring-buffer: Do not double count the reader_page
-      ring-buffer: Flush and stop persistent ring buffer on panic
-      ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
-      ring-buffer: Skip invalid sub-buffers when rewinding persistent ring buffer
-      ring-buffer: Add persistent ring buffer invalid-page inject test
-      ring-buffer: Show commit numbers in buffer_meta file
-      ring-buffer: Cleanup persistent ring buffer validation
-      ring-buffer: Cleanup buffer_data_page related code
-
-
- arch/alpha/include/asm/Kbuild        |    1 
- arch/arc/include/asm/Kbuild          |    1 
- arch/arm/include/asm/Kbuild          |    1 
- arch/arm64/include/asm/ring_buffer.h |   10 +
- arch/csky/include/asm/Kbuild         |    1 
- arch/hexagon/include/asm/Kbuild      |    1 
- arch/loongarch/include/asm/Kbuild    |    1 
- arch/m68k/include/asm/Kbuild         |    1 
- arch/microblaze/include/asm/Kbuild   |    1 
- arch/mips/include/asm/Kbuild         |    1 
- arch/nios2/include/asm/Kbuild        |    1 
- arch/openrisc/include/asm/Kbuild     |    1 
- arch/parisc/include/asm/Kbuild       |    1 
- arch/powerpc/include/asm/Kbuild      |    1 
- arch/riscv/include/asm/Kbuild        |    1 
- arch/s390/include/asm/Kbuild         |    1 
- arch/sh/include/asm/Kbuild           |    1 
- arch/sparc/include/asm/Kbuild        |    1 
- arch/um/include/asm/Kbuild           |    1 
- arch/x86/include/asm/Kbuild          |    1 
- arch/xtensa/include/asm/Kbuild       |    1 
- include/asm-generic/ring_buffer.h    |   13 +
- include/linux/ring_buffer.h          |    1 
- kernel/trace/Kconfig                 |   34 ++
- kernel/trace/ring_buffer.c           |  472 +++++++++++++++++++++++-----------
- kernel/trace/trace.c                 |    4 
- 26 files changed, 395 insertions(+), 159 deletions(-)
- create mode 100644 arch/arm64/include/asm/ring_buffer.h
- create mode 100644 include/asm-generic/ring_buffer.h
-
-
-base-commit: 6170922f137231b98fc568571befef63e1edff3f
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
