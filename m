@@ -1,74 +1,55 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp186.sjtu.edu.cn (smtp186.sjtu.edu.cn [202.120.2.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805581D9A66
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Apr 2026 01:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF72175A70;
+	Sat, 25 Apr 2026 09:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777081463; cv=none; b=Zg/8OXrKiUfsQl2J8EiSMKzpajmgd+vcfEeoVtAduQV1ULZX4zD9aNb2CKPk4RAZZxi7U+zWDBu6bCVom3IkBgZjSmmmlB/DtoY3t4cbZ6WRucgMDMyDzmFNVsemdrC+yVXzz8kGJw4UtHRgsR+p7uBrVFf20BvsRRjqHzu90Qw=
+	t=1777108453; cv=none; b=HAFWyU74X/rJpbr+bDerZeubCsnKg1W4Q6YetRRVFxopWRCnlNjc9+8mUBOubcyWbLfarXmrDDI/uNVIJ0bqSyebdFimvIa5caVeMRFjW4Gf6tSV1OTPN8dIRynN9igaX6WsuGOFoTX6qRfHP5V5WhMvhdepWsyMxNzyNQd6zQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777081463; c=relaxed/simple;
-	bh=WbM8aoFDL1xInf9fk989KxgvWM34KxbOYADLDMviZ7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aKTKhmL51QhNGF1paxcg8P859/+tJ7VUde/Wo8N/2f+BCojM6jWvkot8kTRwSWZ9n4r1kSCNMG+SuRTgjg7ikUQpGkkImmdsfwiJUKYWLiW/Iw7Z0N7ntTHUVE2U7xzjpQz/WYCVP2xEoBM+zXR62JhRsah/lYU0g/6k01wg0Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pHYl6JtV; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777108453; c=relaxed/simple;
+	bh=0o9y/jPA68LJvW1ebkXs+XPjp5lX/gb5yWnx4ETqriI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A0PGKw3T3jyz3amCVBJsAwvGgxSxqrcEmrnIqjg0CNTu6sdsbjUVBI2SbopoIYz0aZET6wnOoNp3NCjKjxjJZfSnzqSYIcXWQKVsE7xnmEZ5sG51qKrehWzHRILXSqxh0n424TegzWv5A9TrWEarhBKVK3k4Z5CdHs7CLDQ3MYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b=LGwCbYzK; arc=none smtp.client-ip=202.120.2.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHYl6JtV"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2ad4d639db3so42689235ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Apr 2026 18:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777081461; x=1777686261; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j1KowH/KQePREcpPaMinSKl3adwCAV357FzMEtXwkvI=;
-        b=pHYl6JtVgluhk/YnrjUZTxkVirDurvSI6PENKtrhUYncW0S9UA5EGQHeWJqjh8YP/o
-         TW+Gklo3Vp4PpcB/0+PVk2A7tHJPEr8RPEG4prEWpSlwWY3fRaLFnshy5uPxZyPjvTHT
-         fXAYc14c6DZF/QUc9Y3T2C6mlr8JcZY/cd2v5Hs0KfbzDQHDDE5TYjSGnydUISJS51DS
-         82chxJGRMXIwcNtkpOAsY35PLmpC6ub+olGy8gYzI3JtytksaOSnfl8GM1leRxPnrL0V
-         xWIaquYcra4AwK6cCIvU1vFjuKC1cdchkw3HOB2ZcPqMLv/uco5Foa57p7MeaWsu1X74
-         bjvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777081461; x=1777686261;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j1KowH/KQePREcpPaMinSKl3adwCAV357FzMEtXwkvI=;
-        b=KyCa+NrxHea120bxe4HXJCjmTqX0tJEWa7m43F9alHVp3ywSEbxzKfT3vUc/v3mqNq
-         +cseX1943LLe1dHPDJLWBa+ZQ3e4eDtxgIc97rekuya3VfDCw0WCMEnz7rZW1zemVyjw
-         w1pL6/SOeJY7O1N8VKCrcQqUNcxOlopWPXCjRGllzKvSSMTw/hZ0Uw7z/c2bzM9igkdq
-         TV/43bK9n2iqSz080udHaEBcDw/+DypLEDDpvNdvrbXX6z3/SaDyeFtc+fDL++OxyPXG
-         sbU2AeOIEBP3lwTCEv2vAEn263TC8D+uMX52v1W8nuvMxUX9LASeWGqLwe0CjYvxCq5Q
-         TiVA==
-X-Gm-Message-State: AOJu0YzgB7FBQUFlHNb68gEU6vBOBe+lIzAmoZXkGSg5XBEVLVNnYY6l
-	2DPqWJ6yzZD3+/DJN9R8e11w1Pw10vuTJfRu/ZScE7iEDW+lbUQ3SU0mmoYLOw==
-X-Gm-Gg: AeBDievfgBl1koBGwn/5z04HuilJoVKhaHN/BObiUrUEoGd0j/WUxP/9n9/45c19dug
-	b6dC/xN6uECPtynG/qIMbPwxgDXkbsvqpSHQ3t9mO+bpvIjhBcVljbb2NGuJ/PtubYvrm/vXveZ
-	HW4cs5k8F0hNLNfyqV7vmGyQo8rfK/kA5YGWir0kMo0pdUMSMLSlR4ewyBJoSBC2iSG7FJchQGh
-	ilUZod1xXwrkACOmGcmFXZnsBkuxD3q1mI60ptwEayrxZaj1vfbt1CLJ1tq3GRJVe/mBomIk3Dx
-	QHLrMpqs2EdA757wuGOwmcrkjdOLNaUlNlTEKyw3rigrANwwoDqIeibV4EXVJ2mpBOSD41S9NLG
-	5UEwkBon0KLSn6aOa+SUgZwtXw/yGCc3TlhRV0B8moFpDSFh9XBK7LjLC3JUEBZJVtnE6Wq7yrZ
-	HbZ4KFK1Cl7RAiVo+iW1BQ9KpS9RteJkn7AkpYzze5W3p94XMVJIpmIND2JPgPPZlaGKe7jmFdQ
-	Fb7inzZoZFhMlQWo75Y3jrwew==
-X-Received: by 2002:a17:903:200d:b0:2b2:5597:bad4 with SMTP id d9443c01a7336-2b5f9ffa730mr262055295ad.30.1777081461529;
-        Fri, 24 Apr 2026 18:44:21 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fa9ff918sm254121425ad.13.2026.04.24.18.44.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 18:44:20 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] tracing: simplify pages allocation
-Date: Fri, 24 Apr 2026 18:44:03 -0700
-Message-ID: <20260425014403.440786-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b="LGwCbYzK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sjtu.edu.cn;
+	s=default; t=1777108440;
+	bh=0o9y/jPA68LJvW1ebkXs+XPjp5lX/gb5yWnx4ETqriI=;
+	h=From:To:Cc:Subject:Date;
+	b=LGwCbYzKUoeAO2Dnv7Fkazn0dJBNNX1Ct6+9tB0o/cc9yIwkA2/hhtq59U2F+VQlX
+	 WY/4vnC/OsB8VEwhpSlz1r/GZj/RZNKHbSGB7uyFFX8l9rI5ljHdi99g1XHIt5erCU
+	 xurUgLjlRWB1xBqvzpNs2g0RDnS64wW8FflCYL/blvnlV65IuSPTE5Xii9ihNN3wEu
+	 wroYn5F9NjSBXPrZLRgttFrmVlHK27i6Ru22ly7fhyg0TZGadbdUIKauDJmFakLLow
+	 tz4XmndOKX2jcDvh27nir1SwuylJsQHDhc5Gk9xcPUcyzjSTF4PEYx6ap/zdfqGYuN
+	 qBqvu08HtyCTw==
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp186.sjtu.edu.cn (Postfix) with ESMTPS id 84E2E2FF4E5;
+	Sat, 25 Apr 2026 09:14:00 +0000 (UTC)
+Received: from dynamic.ipv6.sjtu.edu.cn (unknown [10.180.122.86])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id EFE6337C921;
+	Sat, 25 Apr 2026 17:13:59 +0800 (CST)
+From: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
+To: akpm@linux-foundation.org,
+	vbabka@kernel.org,
+	linux-mm@kvack.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	jackmanb@google.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
+Subject: [PATCH] mm/page_alloc: add tracepoint for PCP refills
+Date: Sat, 25 Apr 2026 17:13:35 +0800
+Message-ID: <20260425091335.346504-1-b.suvonov@sjtu.edu.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,101 +58,74 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Change to a flexible array member to allocate together with the array
-struct.
+The page allocator already has mm_page_pcpu_drain to trace pages
+drained from the per-cpu page lists back to the buddy allocator. There
+is no matching tracepoint for the opposite direction, where
+rmqueue_bulk() refills a PCP list from the buddy allocator.
 
-Simplifies code slightly by removing no longer correct null checks for
-pages and removing kfrees.
+mm_page_alloc_zone_locked is not a good substitute for this. It is
+emitted from __rmqueue_smallest(), which is used both by rmqueue_bulk()
+and by the direct buddy allocation path. Its percpu_refill field is
+derived from the allocation order and migratetype, so it does not
+reliably identify whether the allocation came from a PCP refill.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Add mm_page_pcpu_refill and emit it from rmqueue_bulk() for each page
+added to the PCP list. The new tracepoint uses the same page, order and
+migratetype fields as mm_page_pcpu_drain, making refill and drain
+activity directly comparable.
+
+Signed-off-by: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
 ---
- kernel/trace/tracing_map.c | 32 +++++++++++---------------------
- kernel/trace/tracing_map.h |  2 +-
- 2 files changed, 12 insertions(+), 22 deletions(-)
+ include/trace/events/kmem.h | 23 +++++++++++++++++++++++
+ mm/page_alloc.c             |  1 +
+ 2 files changed, 24 insertions(+)
 
-diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-index bf1a507695b6..627cc3fdf69e 100644
---- a/kernel/trace/tracing_map.c
-+++ b/kernel/trace/tracing_map.c
-@@ -288,9 +288,6 @@ static void tracing_map_array_clear(struct tracing_map_array *a)
- {
- 	unsigned int i;
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index cd7920c81f85..16985604fc51 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -243,6 +243,29 @@ DEFINE_EVENT(mm_page, mm_page_alloc_zone_locked,
+ 	TP_ARGS(page, order, migratetype, percpu_refill)
+ );
  
--	if (!a->pages)
--		return;
--
- 	for (i = 0; i < a->n_pages; i++)
- 		memset(a->pages[i], 0, PAGE_SIZE);
- }
-@@ -302,44 +299,37 @@ static void tracing_map_array_free(struct tracing_map_array *a)
- 	if (!a)
- 		return;
- 
--	if (!a->pages)
--		goto free;
--
- 	for (i = 0; i < a->n_pages; i++) {
- 		if (!a->pages[i])
- 			break;
- 		kmemleak_free(a->pages[i]);
- 		free_page((unsigned long)a->pages[i]);
- 	}
--
--	kfree(a->pages);
--
-- free:
--	kfree(a);
- }
- 
- static struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
- 						  unsigned int entry_size)
- {
- 	struct tracing_map_array *a;
-+	unsigned int entry_size_shift;
-+	unsigned int entries_per_page;
-+	unsigned int n_pages;
- 	unsigned int i;
- 
--	a = kzalloc_obj(*a);
-+	entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
-+	entries_per_page = PAGE_SIZE / (1 << entry_size_shift);
-+	n_pages = max(1, n_elts / entries_per_page);
++TRACE_EVENT(mm_page_pcpu_refill,
 +
-+	a = kzalloc_flex(*a, pages, n_pages);
- 	if (!a)
- 		return NULL;
++	TP_PROTO(struct page *page, unsigned int order, int migratetype),
++
++	TP_ARGS(page, order, migratetype),
++
++	TP_STRUCT__entry(
++		__field(	unsigned long,	pfn		)
++		__field(	unsigned int,	order		)
++		__field(	int,		migratetype	)
++	),
++
++	TP_fast_assign(
++		__entry->pfn		= page ? page_to_pfn(page) : -1UL;
++		__entry->order		= order;
++		__entry->migratetype	= migratetype;
++	),
++
++	TP_printk("page=%p pfn=0x%lx order=%d migratetype=%d",
++		pfn_to_page(__entry->pfn), __entry->pfn,
++		__entry->order, __entry->migratetype)
++);
++
+ TRACE_EVENT(mm_page_pcpu_drain,
  
--	a->entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
--	a->entries_per_page = PAGE_SIZE / (1 << a->entry_size_shift);
--	a->n_pages = n_elts / a->entries_per_page;
--	if (!a->n_pages)
--		a->n_pages = 1;
-+	a->entry_size_shift = entry_size_shift;
-+	a->entries_per_page = entries_per_page;
-+	a->n_pages = n_pages;
- 	a->entry_shift = fls(a->entries_per_page) - 1;
- 	a->entry_mask = (1 << a->entry_shift) - 1;
+ 	TP_PROTO(struct page *page, unsigned int order, int migratetype),
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 65e205111553..a60b73ed39a4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2544,6 +2544,7 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
+ 		 * pages are ordered properly.
+ 		 */
+ 		list_add_tail(&page->pcp_list, list);
++		trace_mm_page_pcpu_refill(page, order, migratetype);
+ 	}
+ 	spin_unlock_irqrestore(&zone->lock, flags);
  
--	a->pages = kcalloc(a->n_pages, sizeof(void *), GFP_KERNEL);
--	if (!a->pages)
--		goto free;
--
- 	for (i = 0; i < a->n_pages; i++) {
- 		a->pages[i] = (void *)get_zeroed_page(GFP_KERNEL);
- 		if (!a->pages[i])
-diff --git a/kernel/trace/tracing_map.h b/kernel/trace/tracing_map.h
-index 99c37eeebc16..18a02959d77b 100644
---- a/kernel/trace/tracing_map.h
-+++ b/kernel/trace/tracing_map.h
-@@ -167,7 +167,7 @@ struct tracing_map_array {
- 	unsigned int entry_shift;
- 	unsigned int entry_mask;
- 	unsigned int n_pages;
--	void **pages;
-+	void *pages[] __counted_by(n_pages);
- };
- 
- #define TRACING_MAP_ARRAY_ELT(array, idx)				\
 -- 
-2.54.0
+2.53.0
 
