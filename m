@@ -1,93 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E85F3542D1;
-	Sun, 26 Apr 2026 12:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8A52BEC43;
+	Sun, 26 Apr 2026 14:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777206897; cv=none; b=oj/dyvOGs1S7LSqFmijCej1+xihp5B4Awi9IEcFSbiDd8migEQ3Y1RL4/ByZTzb+5a4CFB9wciousDwG0t1WWfrNJdOLWw9dP3O7gsKQtlUqk3iAOw3K3lhIULmzanRmt+MCdLFZWi1XxWnqbAo+2N5aWX7i0uEqZ+j3NE+mhpQ=
+	t=1777212101; cv=none; b=fNnxC8e632xyBtRjul6WKexVSm1iRXuWMiB0cSshCoYsBqKAQ/E/K1CUXzjHCnyCYjPyf5qOvpP+qmZZ63HLjOkzfvuphtEm8lhovqgW72NGcpAgGEeRFkMyEEEjUWgK4W7AoMkn7LtNG39pQn+8PWCXOrYOyu441ayAL42zkqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777206897; c=relaxed/simple;
-	bh=BaSaKLFcdJ+SYi5Kybvkce1qiCJ+Moij9HYFUQ8DY2M=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=M7gzCUafmyNDMFOpUhoZKUCWPHIwwyS6WDdrSHfIR7N2//6shi1eWyG+Nf3U3MGZtEcf3SQxC7aAv1vRq+LfKZx/iByQwzc/yrRfe133q3jVcklacbZpV8VBMDNQG0L5cU+EAx+wfoNddPno0p9mEL/3xnMkii1jpdQOfk4yLMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fcxiKN5r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777212101; c=relaxed/simple;
+	bh=1EWd3FHK/NUyYRjrPUv26hddlhWeaeFiowafrqz4J6I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PQ3YRqbiWlw5FZ7K5ZFEGH8ys41/9ZkPkKTZQUMeRfJuRZqizloPsX8zsInnqNLdizKEcCqA0ja41TNAvs4ziBMVmKPwd8zbrX1oY6aID1/szGjLjaGVtBKzmhCI9bfHY5gSFZif51/hZCDtRIhJRYMGUJmT/PB2Mpvd0J0iPQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Gfz8tGph; arc=none smtp.client-ip=117.135.210.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fcxiKN5r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BA71C2BCAF;
-	Sun, 26 Apr 2026 12:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1777206897;
-	bh=BaSaKLFcdJ+SYi5Kybvkce1qiCJ+Moij9HYFUQ8DY2M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fcxiKN5rSz+bLNRnfPlWCVNiwZdMQHiXq8jp8dmXPVZ5kTaH+NOl8+71ePWUnWN0e
-	 NhdjG8fmfRLFCbhVLPF3TELHbG/hLx18MhzGBq8F46N2vsuUCITTWM2BtUNoU67RoD
-	 /6H+5HN+eQBtHXsXcG41Yhd5rrZtFQ4pe8eZPsCs=
-Date: Sun, 26 Apr 2026 05:34:55 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, David Hildenbrand <david@kernel.org>, Lorenzo
- Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Mike
- Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, Ritesh Harjani
- <ritesh.list@gmail.com>, Christoph Hellwig <hch@infradead.org>, Kairui Song
- <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
- <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
- <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Chuck Lever <chuck.lever@oracle.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] testing: add nfsd-io-bench NFS server benchmark
- suite
-Message-Id: <20260426053455.4c06140446976964e6fbb8ab@linux-foundation.org>
-In-Reply-To: <20260426-dontcache-v3-3-79eb37da9547@kernel.org>
-References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
-	<20260426-dontcache-v3-3-79eb37da9547@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Gfz8tGph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=VObAGbTW+9A0YlT8RDgNBAL8kbf8Bp4GNC/bJiVMM38=;
+	b=Gfz8tGph2KWgVIskV7kFH/2JPRot07G06I1K2xbCam83mOtshbvOugP3G7Jyqo
+	ai37Dr1ofQD7wUpqZRBL3mxeK1hyR12P/5uwp0yunrzAchjxANOPZenxC08kKLYx
+	5hJRvTmihsx0Vyjm1RkYPJzh1rEdFERh8U8wZYoIfh//U=
+Received: from [IPV6:2408:8210:480a:2590:ec66:74e8:68a7:a44b] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PykvCgD3_9WEGe5pvjEhEA--.25861S2;
+	Sun, 26 Apr 2026 21:56:23 +0800 (CST)
+Message-ID: <30411bd3-2c92-495b-9d87-d6660b5cf3a3@126.com>
+Date: Sun, 26 Apr 2026 21:56:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/2] kernel/notifier: replace single-linked list with
+ double-linked list for reverse traversal
+To: Petr Mladek <pmladek@suse.com>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: chensong_2000@189.cn, rafael@kernel.org, lenb@kernel.org,
+ mturquette@baylibre.com, sboyd@kernel.org, viresh.kumar@linaro.org,
+ agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+ bmarzins@redhat.com, song@kernel.org, yukuai@fnnas.com, linan122@huawei.com,
+ jason.wessel@windriver.com, danielt@kernel.org, dianders@chromium.org,
+ horms@kernel.org, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, paulmck@kernel.org, frederic@kernel.org,
+ mcgrof@kernel.org, petr.pavlu@suse.com, da.gomez@kernel.org,
+ samitolvanen@google.com, atomlin@atomlin.com, jpoimboe@kernel.org,
+ jikos@kernel.org, mbenes@suse.cz, joe.lawrence@redhat.com,
+ rostedt@goodmis.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+ live-patching@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-raid@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+ netdev@vger.kernel.org
+References: <20260415070137.17860-1-chensong_2000@189.cn>
+ <20260420144429.57b45f2beece690bceea96ec@kernel.org>
+ <aec90caYZDHDAHgw@pathway.suse.cz>
+Content-Language: en-US
+From: Song Chen <chensong_2000@126.com>
+In-Reply-To: <aec90caYZDHDAHgw@pathway.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PykvCgD3_9WEGe5pvjEhEA--.25861S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGr48trW5Xw1rurW8KFy5twb_yoW5Wry5pF
+	90gF4SkF4kJr92kFn2gw18WF1Y9FZ5GFWqqr18GrySkwn0grnFvrZrtw15uFykur48Ar12
+	vrWUXasru34DZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UXyCJUUUUU=
+X-CM-SenderInfo: xfkh02prqjsjqqqqqiyswou0bp/xtbBpQd9-GnuGYeunwAA3L
 
-On Sun, 26 Apr 2026 07:56:09 -0400 Jeff Layton <jlayton@kernel.org> wrote:
+Hi,
 
-> Add a benchmark suite for testing NFSD I/O mode performance using fio
-> with the libnfs backend against an NFS server on localhost.  Tests
-> buffered, dontcache, and direct I/O modes via NFSD debugfs controls.
+On 4/21/26 17:05, Petr Mladek wrote:
+> On Mon 2026-04-20 14:44:29, Masami Hiramatsu wrote:
+>> Hi Song,
+>>
+>> On Wed, 15 Apr 2026 15:01:37 +0800
+>> chensong_2000@189.cn wrote:
+>>
+>>> From: Song Chen <chensong_2000@189.cn>
+>>>
+>>> The current notifier chain implementation uses a single-linked list
+>>> (struct notifier_block *next), which only supports forward traversal
+>>> in priority order. This makes it difficult to handle cleanup/teardown
+>>> scenarios that require notifiers to be called in reverse priority order.
+>>
+>> What about introducing a new notification callback API that allows you
+>> to describe dependencies between callback functions?
+>>
+>> For example, when registering a callback, you could register a string
+>> as an ID and specify whether to call it before or after that ID,
+>> or you could register a comparison function that is called when adding
+>> to a list. (I prefer @name and @depends fields so that it can be easily
+>> maintained.)
 > 
-> Includes:
->  - fio job files for sequential/random read/write, multi-writer,
->    noisy-neighbor, and latency-sensitive reader workloads
->  - run-benchmarks.sh: orchestrates test matrix with mode switching
->  - parse-results.sh: extracts metrics from fio JSON output
->  - setup-server.sh: configures NFS export for testing
+> This looks too complex. It would make sense only
+> when this API has more users.
 > 
-> Assisted-by: Claude:claude-opus-4-6
+> Also this won't be enough for the ftrace/livepatch callbacks.
+> They need to be ordered against against each other. But they
+> also need to be called before/after all other callbacks.
+> For example, when the module is loaded:
+> 
+>     + 1st frace
+>     + 2nd livepatch
+>     + then other notifiers
+> 
+> See the commit c1bf08ac26e92122 ("ftrace: Be first to run code
+> modification on modules").
+> 
+>> This would allow for better dependency building when adding to the list.
+>   
+>>>
+>>> A concrete example is the ordering dependency between ftrace and
+>>> livepatch during module load/unload. see the detail here [1].
+>>
+>> If this only concerns notification callback issues with the ftrace
+>> and livepatch modules, it's far more robust to simply call the
+>> necessary processing directly when the modules load and unload,
+>> rather than registering notification callbacks externally.
+>>
+>> There are fprobe, kprobe and its trace-events, all of them are using
+>> ftrace as its fundation layer. In this case, I always needs to
+>> consider callback order when a module is unloaded.
+>>
+>> If ftrace is working as a part of module callbacks, it will conflict
+>> with fprobe/kprobe module callback. Of course we can reorder it with
+>> modifying its priority. But this is ugly, because when we introduce
+>> a new other feature which depends on another layer, we need to
+>> reorder the callback's priority number on the list.
+>>
+>> Based on the above, I don't think this can be resolved simply by
+>> changing the list of notification callbacks to a bidirectional list.
+> 
+> I agree. I would keep it as is (hardcoded).
+> 
+> Best Regards,
+> Petr
+> 
 
-OK, question.
 
->  10 files changed, 1024 insertions(+)
+Thanks for the feedback, the necessity doesn't convincing enough. I will 
+try the proposal from Masami Hiramatsu.
 
-Seems that this code was largely machine-generated.  So I assume that
-you're in possession of the scripts/prompts/whatever which were used to
-generate this code.
+Best regards,
 
-(Can you please briefly describe the process which you used here?)
+Song
 
-So how are we to maintain this?  Will other developers have to go in
-and hack this machine-generated output by hand?  Or would it be better
-to provide (in-tree) other developers with the means to regenerate this code,
-presumably using Claude?
-
-IOW, this feels a bit like shipping the .s file without giving us the .c
-file!
