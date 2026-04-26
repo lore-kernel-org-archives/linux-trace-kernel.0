@@ -1,192 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C2F35E93C;
-	Sun, 26 Apr 2026 14:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FBC2236EB;
+	Sun, 26 Apr 2026 14:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777212723; cv=none; b=lTjnsWBRMAyJbONgUjLWxBVBOSLXvymnwJYElOWjIR2qVHX2Kjl3KbbZyOFilOAlgXlc485IS+E/qbfRoSqPiCJw3sPvya1xG9Lu/XeMYZecuoNhv/0+FON5+W+3nlYBg9qi1UpaBNsRo7Bp8r48FreNHDHvU9zCnVFOiQ34NgI=
+	t=1777213064; cv=none; b=SLy6lOZBOWRlcm8xhnOgCmUm3ueuMH6Pzbi4rqqES/u1EkRVKyzScr3MloWphH9nTzBQRFOJNScK8GpS42G0IpXTW8/MvUA/GuTkIkzxaqoai38bxc2YhaQI+BQMVLZ4DDYCl7DFmMfoJC2Om/H0V/uyHeyZ1BXoLCO3fCgmNSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777212723; c=relaxed/simple;
-	bh=IRJJiiWDnfkZo3XiMcLry7109Jt3Fee6f9sFz863eWk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=buBXHqTkAIBx175o6bWeq6TXU3f/zhPp36Hc+7xIboTD/FeS5KL6AkpolC4gvy6H/96tp1AZyRP+JwyY/rNwRws0pxPl5sTQBw6WWzzZbTzrxrm5TKDppT+rL2x9jhVT0jkXCVysT0S48Qvfeg3+EHOTyZdjEYRqgnoKnmHrTHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbS+owDk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777213064; c=relaxed/simple;
+	bh=PpgkP1YKmlbuFUrJNXhMVv1K4LUZT2tLz09Jj+Nnro0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gfQC2aqZalEToTQeUvXFbomjsBRuldvj1Nk1Y6i/6aGZSfkSgvLcS4N+7pwMxjL+TJAHJbDgQDylzgTg0D/s5IgvIse9H7ho7lxJSPtA+9Cm39MvJPhQIH4LATHrP/09tJAtBBETDVt38r/oEkOr04YgVbX9irudt9ODhJTub/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=MiHDuQ3a; arc=none smtp.client-ip=117.135.210.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbS+owDk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD22C2BCAF;
-	Sun, 26 Apr 2026 14:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777212723;
-	bh=IRJJiiWDnfkZo3XiMcLry7109Jt3Fee6f9sFz863eWk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=sbS+owDkb+Z6IQpYoYT79Ic65NymGwKhoyCQIan/oSu29or04JEu9p8piPBG2MMjx
-	 8ZqFJzx5pQjQ56T0JAjG2QuWKbTGaTyv6GxSWKvGcKjvrhYDWSFBU6KcImBFG38JKT
-	 LiDH0l0mUaePnvDMuxrGVwaRtp9igTEYCNY8kXp7zU1CmWGR4Ir0k1FnEfE9aqTEwY
-	 lrYws+O9sUW6NSs4tADsIlcV1yJd4oR0JmtinLwJVPzAuHj5S6sWWaUuYX8TBnMycn
-	 HABqFbdEjhzZukfuB1QzFmNwS63LYDeIjTPBAqDHnfTTSXsUEEFeCbPX7d5zFmwBnX
-	 W9RI3RnkIkW4w==
-Message-ID: <a1e784d7006fe5d4331d41a0638be117ac67fb21.camel@kernel.org>
-Subject: Re: [PATCH v3 3/4] testing: add nfsd-io-bench NFS server benchmark
- suite
-From: Jeff Layton <jlayton@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Matthew Wilcox (Oracle)"	
- <willy@infradead.org>, David Hildenbrand <david@kernel.org>, Lorenzo
- Stoakes	 <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka	 <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan	 <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Mike Snitzer	 <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, Ritesh
- Harjani	 <ritesh.list@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Kairui Song	 <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel
- Butt	 <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel
- Rasmussen	 <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu	 <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu	 <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Chuck Lever <chuck.lever@oracle.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Date: Sun, 26 Apr 2026 10:11:57 -0400
-In-Reply-To: <20260426053455.4c06140446976964e6fbb8ab@linux-foundation.org>
-References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
-		<20260426-dontcache-v3-3-79eb37da9547@kernel.org>
-	 <20260426053455.4c06140446976964e6fbb8ab@linux-foundation.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="MiHDuQ3a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=buJnxB7ZO086rGZFo2LRvhB0nYMnOVMe4qEqFrdkycM=;
+	b=MiHDuQ3aM0w40MkZuRTZDrM885olgYuK7xbsTOXHp4lT/cD7bkwpwZZ5XVkNrZ
+	r81nQvRWVagRR3hk6K4kEm4G+n6t/UKXjfxhvevhUatCqlPXKtOEpl8/Yc8ooebv
+	GLgKMdGai9+gq1Q85IKLbNypuUgpj9yVPZRD36EWDEneo=
+Received: from [IPV6:2408:8210:480a:2590:ec66:74e8:68a7:a44b] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PykvCgD3X9rhHe5pse0hEA--.31129S2;
+	Sun, 26 Apr 2026 22:15:00 +0800 (CST)
+Message-ID: <7b73e122-8bca-410d-a14f-a8f55a79305c@126.com>
+Date: Sun, 26 Apr 2026 22:14:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/2] kernel/notifier: replace single-linked list with
+ double-linked list for reverse traversal
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
+ sboyd@kernel.org, viresh.kumar@linaro.org, agk@redhat.com,
+ snitzer@kernel.org, mpatocka@redhat.com, bmarzins@redhat.com,
+ song@kernel.org, yukuai@fnnas.com, linan122@huawei.com,
+ jason.wessel@windriver.com, danielt@kernel.org, dianders@chromium.org,
+ horms@kernel.org, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, paulmck@kernel.org, frederic@kernel.org,
+ mcgrof@kernel.org, petr.pavlu@suse.com, da.gomez@kernel.org,
+ samitolvanen@google.com, atomlin@atomlin.com, jpoimboe@kernel.org,
+ jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
+ rostedt@goodmis.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+ live-patching@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-raid@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+ netdev@vger.kernel.org
+References: <20260415070137.17860-1-chensong_2000@189.cn>
+ <20260420144429.57b45f2beece690bceea96ec@kernel.org>
+Content-Language: en-US
+From: Song Chen <chensong_2000@126.com>
+In-Reply-To: <20260420144429.57b45f2beece690bceea96ec@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PykvCgD3X9rhHe5pse0hEA--.31129S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AF4DuFWxKw45Ww15ZF1DWrg_yoW8KF13pa
+	4qgr4fCF4kJr92yFs2qw1xWFyYga95JFWUJF18C34Sywn0gF9FvrWxtw45uFWkCws3Zry2
+	9w4UXwnrua4DZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UXBMNUUUUU=
+X-CM-SenderInfo: xfkh02prqjsjqqqqqiyswou0bp/xtbBpASWFmnuHeTUYwAA3p
 
-On Sun, 2026-04-26 at 05:34 -0700, Andrew Morton wrote:
-> On Sun, 26 Apr 2026 07:56:09 -0400 Jeff Layton <jlayton@kernel.org> wrote=
-:
->=20
-> > Add a benchmark suite for testing NFSD I/O mode performance using fio
-> > with the libnfs backend against an NFS server on localhost.  Tests
-> > buffered, dontcache, and direct I/O modes via NFSD debugfs controls.
-> >=20
-> > Includes:
-> >  - fio job files for sequential/random read/write, multi-writer,
-> >    noisy-neighbor, and latency-sensitive reader workloads
-> >  - run-benchmarks.sh: orchestrates test matrix with mode switching
-> >  - parse-results.sh: extracts metrics from fio JSON output
-> >  - setup-server.sh: configures NFS export for testing
-> >=20
-> > Assisted-by: Claude:claude-opus-4-6
->=20
-> OK, question.
->=20
-> >  10 files changed, 1024 insertions(+)
->=20
-> Seems that this code was largely machine-generated.  So I assume that
-> you're in possession of the scripts/prompts/whatever which were used to
-> generate this code.
->=20
-> (Can you please briefly describe the process which you used here?)
->=20
+Hi Hiramatsu san,
 
-It's been a while since it generated these, but I think I just asked it
-to concoct a set of benchmarks for DONTCACHE writes when that involved
-file sizes that were larger than the machine's memory.=20
 
-I ended up asking it to make some changes (e.g. the mixed-mode test,
-and some of the perf stuff), but it seemed to do a reasonable job of
-creating it.
+On 4/20/26 13:44, Masami Hiramatsu (Google) wrote:
+> Hi Song,
+> 
+> On Wed, 15 Apr 2026 15:01:37 +0800
+> chensong_2000@189.cn wrote:
+> 
+>> From: Song Chen <chensong_2000@189.cn>
+>>
+>> The current notifier chain implementation uses a single-linked list
+>> (struct notifier_block *next), which only supports forward traversal
+>> in priority order. This makes it difficult to handle cleanup/teardown
+>> scenarios that require notifiers to be called in reverse priority order.
+> 
+> What about introducing a new notification callback API that allows you
+> to describe dependencies between callback functions?
+> 
+> For example, when registering a callback, you could register a string
+> as an ID and specify whether to call it before or after that ID,
+> or you could register a comparison function that is called when adding
+> to a list. (I prefer @name and @depends fields so that it can be easily
+> maintained.)
+> 
+> This would allow for better dependency building when adding to the list.
+> 
 
-> So how are we to maintain this?  Will other developers have to go in
-> and hack this machine-generated output by hand?  Or would it be better
-> to provide (in-tree) other developers with the means to regenerate this c=
-ode,
-> presumably using Claude?
->=20
-> IOW, this feels a bit like shipping the .s file without giving us the .c
-> file!
+Is the new notification callback API going to replace 
+blocking_notifier_chain in module loader? or an expansion inside 
+blocking_notifier_chain but introducing less complexity?
+>>
+>> A concrete example is the ordering dependency between ftrace and
+>> livepatch during module load/unload. see the detail here [1].
+> 
+> If this only concerns notification callback issues with the ftrace
+> and livepatch modules, it's far more robust to simply call the
+> necessary processing directly when the modules load and unload,
+> rather than registering notification callbacks externally.
+> 
+> There are fprobe, kprobe and its trace-events, all of them are using
+> ftrace as its fundation layer. In this case, I always needs to
+> consider callback order when a module is unloaded.
+> 
+> If ftrace is working as a part of module callbacks, it will conflict
+> with fprobe/kprobe module callback. Of course we can reorder it with
+> modifying its priority. But this is ugly, because when we introduce
+> a new other feature which depends on another layer, we need to
+> reorder the callback's priority number on the list.
+> 
+> Based on the above, I don't think this can be resolved simply by
+> changing the list of notification callbacks to a bidirectional list.
+> 
+> Thank you,
+> 
 
-As I mentioned in the cover letter, I mostly included this in the
-series to demonstrate how this was tested. I'm not sure if the two
-benchmark suites are suitable for inclusion. I'm fine with leaving
-those two patches out of the merge. I found the testcases useful for
-this, but they are indeed AI slop, and I'm not sure they have long-term
-value or will be maintainable.
---=20
-Jeff Layton <jlayton@kernel.org>
+understood, many thanks for your proposal, i will think  about it.
+
+best regards,
+
+Song
+
