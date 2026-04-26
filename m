@@ -1,76 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12E727B357;
-	Sun, 26 Apr 2026 19:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002B538F620;
+	Sun, 26 Apr 2026 20:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777231889; cv=none; b=aefFjSRVwITt8ouHX2sDVyB14AghG4ETk2LR2iGZg5FIGjjGcGa9JnF8fb+DU1I3tY1d0csPYaS9RJ6+qq1cl+4r0IxuWPy8xDCHbcwMIuXBUA4PgB4RfCE9ogA/DtOW/9GVJBnmzD66kWzcjPRSUUPzkJKH3stY72cswZaKrOk=
+	t=1777236297; cv=none; b=IvE32w302fzl0vQZ3fFvGivnWFoyMalACRoI1qr3mBSfQ0p9wLKaNqKY4fhSF5PLkjKGaGDi8QraKnBD4klRrPe51xPUCONHTyIQBCNOgy3zfksmyDe2zrpzkC6cgDKTMg2uvuyd5b0LwgvHr9vXOq+pu/mUXK6X10Qtv5ETEdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777231889; c=relaxed/simple;
-	bh=4tHvdx6TSi/pE4+uHCV/opn0vKxPFOFkJhVFTnizMW0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r+inEOZLGYVImoZVUgLaVCvEWqqMmn6QZMODaZiVqceedXGEudL7WD6/F3DnZn1wEagZuUeEqQjc6rjtP96sKvkH/IRt43KDTX4JVzzkxB7XXgbS/vf1MWApGM0uxD5uya1Mr4JUTQRA4g/fa9tny1aPvKbxnJwCKdLxMyAgrjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ecgvEWfo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777236297; c=relaxed/simple;
+	bh=A4cX4SCoQqheLqNNtb4gR1vv39pWcfx9UbYePfIDCiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmQusQCtFnF6XU4vGnaPgtymaPxFtCf/orpBqkd14NGjmuYnGSmnx4QSyZZ72Mpyj9vHibkWosuWkGt5hbKTdmuE9y+zeWPybodoL3xQqVL3awkxNGtD9byVRcSG2HbW6p1nm94AJU3cArO0dk53BiDVidcjAoUbbnDgZIWONCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=S4pLnzvZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ecgvEWfo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C29F2C2BCAF;
-	Sun, 26 Apr 2026 19:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777231889;
-	bh=4tHvdx6TSi/pE4+uHCV/opn0vKxPFOFkJhVFTnizMW0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ecgvEWfoOCQW+9FcinGb/eNNBQ5wVGjaz9PTP/nTxJS8UV1yCIvLTT+ZL8uvWgSK5
-	 IXDpkq3+Lfvvwcy65ImxVZA5awY6MMEDSoektVgQ61cptvIBMHu7SfO1Z+MhoJ/Edo
-	 csVppEq7QzYxM+eoTe5aE/23uhCiuPkz75kbUaCZrI+jf6lD92McFB99sRINzq9JEX
-	 DL+QX/coAOamnQDV4ksTRFrGvQ/knGBdl21litoSY59yBxCAD9zFh3s7efkWwtghBd
-	 J82LDP5pB5c1nUbmiBnTjY/sviZeKKrGmHOkBzTOqiiy5Ru49gLTSErNajqAaoGEZP
-	 wNJUQoE2ezQjA==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	"# 7 . 0 . x" <stable@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S4pLnzvZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=I/fTyPP7bqTqt5fNYUoxgKpJh1vpEuR3aFaCVhySFZA=; b=S4pLnzvZn8wrgvL75yH/njOHFS
+	qi3So9o5mDIDheJ6DeCD+gLAKuPaApFP2a8iw+bbRYYCoD/CnPn4F/8/qF9X0VR82yMqoVLxjrGXD
+	TJeQqJOfcmOUSNfU3NU4CENu6sp4ZXRaXpZAhne0g/1iAKHtEthPIWv7t8ZaiUYqynOAJAElxhNWZ
+	xEfa8BbC6KdRILxUzJq1iyPFoHLd/DVKd4aDMy+TQq7ZRG161vtP/TDWWUAV4n7Q/AaBcDJxsR6C8
+	LjDHkjlkKkPE5BdVjJlG2EGpbcUcbDhERYKOxZ5FbtGCS/ZPdO1ogRAMxRRB8lLq9Vn0ntAHBRU81
+	GOxj8lHw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wH6LD-00000000zSI-3g9m;
+	Sun, 26 Apr 2026 20:44:35 +0000
+Date: Sun, 26 Apr 2026 21:44:35 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Mike Snitzer <snitzer@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] mm/damon: fix damos_stat tracepoint format for sz_applied
-Date: Sun, 26 Apr 2026 12:31:17 -0700
-Message-ID: <20260426193119.88095-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] mm: kick writeback flusher for IOCB_DONTCACHE
+ with targeted dirty tracking
+Message-ID: <ae55M8xBIVYZXPFN@casper.infradead.org>
+References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
+ <20260426-dontcache-v3-2-79eb37da9547@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260426-dontcache-v3-2-79eb37da9547@kernel.org>
 
-The print format is wrongly marking sz_applied as sz_tried.  Fix it.
+On Sun, Apr 26, 2026 at 07:56:08AM -0400, Jeff Layton wrote:
+>   Mixed-mode noisy neighbor (dontcache writer + buffered readers):
+>                        baseline    patched     change
+>   writer (MB/s)         1297.6     1471.1     +13.4%
+>   readers avg (MB/s)     855.0      462.4     -45.9%
 
-Fixes: 804c26b961da ("mm/damon/core: add trace point for damos stat per apply interval")
-Cc: <stable@vger.kernel.org> # 7.0.x
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/trace/events/damon.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+hm.  This wasn't what I thought of when I thought of "noisy neighbour".
+I'd have process A doing DONTCACHE writes to file A and process B doing
+normal buffered writes to file B.
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-index 24fc402ab3c85..7e25f4469b81b 100644
---- a/include/trace/events/damon.h
-+++ b/include/trace/events/damon.h
-@@ -41,7 +41,7 @@ TRACE_EVENT(damos_stat_after_apply_interval,
- 	),
- 
- 	TP_printk("ctx_idx=%u scheme_idx=%u nr_tried=%lu sz_tried=%lu "
--			"nr_applied=%lu sz_tried=%lu sz_ops_filter_passed=%lu "
-+			"nr_applied=%lu sz_applied=%lu sz_ops_filter_passed=%lu "
- 			"qt_exceeds=%lu nr_snapshots=%lu",
- 			__entry->context_idx, __entry->scheme_idx,
- 			__entry->nr_tried, __entry->sz_tried,
-
-base-commit: 2e98f54b5a2b874905c71f3bc40eb8c0e8e757f0
--- 
-2.47.3
