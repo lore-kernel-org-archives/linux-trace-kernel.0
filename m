@@ -1,248 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C763D6683
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 15:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596E23D34B7;
+	Mon, 27 Apr 2026 16:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777302786; cv=none; b=dWx/cCvuCVjW2nDBx3nZw87nYIISDztcqcnBHFS1FpcSN1BPLm95QGSVH631L6mbhrWYyvlPBUSYvPHiVq8CFIKQZTrNqUr2Qb3VKojLOf8dgPuBgyIizt6MOxJqpwd437QNffZqcR5vf+p7nPR5/wqpiCRKH9xt4O6FtRMr63s=
+	t=1777308073; cv=none; b=T6LHwpkbutBypCu2D8Ndryaot2mVDfRJiV8/f5MKQswfd/qyJJVD8Qzkxm3QKKPJzMCy9sxjncKWihbE3wznNer2472GWI+E55oMi0wAtHe31FlblG3Nirx8d2Qu4llO3hi2D/4CHqDGOdb2qGzTBIdm5K33xrgYccxpe/hU/yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777302786; c=relaxed/simple;
-	bh=rN3qRNw9cOspQwr/4vIiuMsbZhlrlkaNLivb13A+NKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Us/wcMYIsTlhu5CGsndLpQ8sVCrguQ+BIiB5q6wTKa5Qy0XNMOHcA8iYeO+PXhXh1NLSc/QFXwKzz3SWdSFmH5SyP1z4CnR04IACFTfU95jLNurfz7V/DJ6b7Z7sHSwuvtSZhOXsd6Rx5td2ah64KJnQRyGUqzlBkRxRQMXucwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EHygoTx1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EHygoTx1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777302781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0MGT5bt/FyhygSpKbLK2htxM7S+wZ3TuN0nSI7tYEyE=;
-	b=EHygoTx1CMbBqahrFIOzm0qvWd5QnXOgzhO50H7uA3GCaZCfZ9inWt+HUAh+aOp9i1Io91
-	7bXHZOXE7/UiBFanomlFfE/XIkhHQiDjsHhHUK2VKKdLs/RPvMbA5OagjXzXAiRE/85g4Y
-	XJhOlP6AZ3EzP+cTdtTNodCj0g5rXJg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-3l_wa5DgOHyx_zqpD-3eUQ-1; Mon,
- 27 Apr 2026 11:12:58 -0400
-X-MC-Unique: 3l_wa5DgOHyx_zqpD-3eUQ-1
-X-Mimecast-MFC-AGG-ID: 3l_wa5DgOHyx_zqpD-3eUQ_1777302777
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1424E18005AA;
-	Mon, 27 Apr 2026 15:12:57 +0000 (UTC)
-Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DD6FF195608E;
-	Mon, 27 Apr 2026 15:12:53 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Nam Cao <namcao@linutronix.de>,
-	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
-	Tomas Glozar <tglozar@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [RFC PATCH 12/12] rv: Add KUnit tests for some LTL monitors
-Date: Mon, 27 Apr 2026 17:11:34 +0200
-Message-ID: <20260427151134.192971-13-gmonaco@redhat.com>
-In-Reply-To: <20260427151134.192971-1-gmonaco@redhat.com>
-References: <20260427151134.192971-1-gmonaco@redhat.com>
+	s=arc-20240116; t=1777308073; c=relaxed/simple;
+	bh=0wPH/Fl3RB62b5MLKmyh8mpdOjOulQAC7ohtud3SMP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RJjaQJbwdwEYl9pRWgK71TYp8sH8z1XoQxaMewGF+KaJwhtCZW+KuSEiZVeFNzaQU/dMd7fnjJOip8eEqUbGqcOx0+GlSPmFDAGTXyMN1tgJHpKUu/GzxS6yexRWk7fuyBZICh1TutbygG+74WogWGMqnQfecqBaWHM905qkjpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 3ADDE4052A;
+	Mon, 27 Apr 2026 16:38:40 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 7FE6E2002F;
+	Mon, 27 Apr 2026 16:38:36 +0000 (UTC)
+Date: Mon, 27 Apr 2026 12:38:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: axboe@kernel.dk, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ bvanassche@acm.org, johannes.thumshirn@wdc.com, kch@nvidia.com,
+ dlemoal@kernel.org, ritesh.list@gmail.com, loberman@redhat.com,
+ neelx@suse.com, sean@ashe.io, mproche@gmail.com, chjohnst@gmail.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] blk-mq: add tracepoint block_rq_tag_wait
+Message-ID: <20260427123848.1e6b63d2@gandalf.local.home>
+In-Reply-To: <20260427020142.358912-2-atomlin@atomlin.com>
+References: <20260427020142.358912-1-atomlin@atomlin.com>
+	<20260427020142.358912-2-atomlin@atomlin.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: X3go5k5YkvkwloxQmyLeEi7rnXzxdww9kCYEYw9Vyn8_1777302777
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: c8q7uzk37jdeojro1hdsgzgz8514oasf
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 7FE6E2002F
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+ezFbHvfao1EGoVLpXuzorTHt2Yl/LyF8=
+X-HE-Tag: 1777307916-952419
+X-HE-Meta: U2FsdGVkX19D95yn3snxCao9QXEhOmUtHRvqZ56CHwoRM3MWL4Zb/dNq77gR4SpiCUAIs+8464BCPdpZmBSq96Y8YAxV59YzomGqBOSkhBIi2FYim19s8WP0OBzD2YrG8xqIqtipiZLT/3sX/mXe6U+bzl8UNo2zytLtFL2hXOUNlff3NhqfU4U2U17MrVGyJxC970UNHxwwYGsaLj9/Rn1MjWA1bWJG0P2Z+v4FuVHX8NZIjRhpaJrKkP0o3T2fBKHPj3SmOrCp3LsCNeAXVQ48mfv+hKQ7KmrzrpkPl/BYp8sIgsYM8+r9J93KKvpd6oY7EmgqVVr1oC6Zyso4XCx1cZmW4kSBJGZbH9xqSU4W2LJ76vgw/xzaDB/o9Rlf
 
-Validate the functionality of LTL monitors by injecting events in a
-controlled environment (KUnit) and expecting reactions, just like it is
-done in DA monitors.
+On Sun, 26 Apr 2026 22:01:41 -0400
+Aaron Tomlin <atomlin@atomlin.com> wrote:
 
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- include/rv/ltl_monitor.h                      | 31 ++++++++++++++
- .../trace/rv/monitors/pagefault/pagefault.c   | 24 +++++++++++
- kernel/trace/rv/monitors/sleep/sleep.c        | 42 +++++++++++++++++++
- kernel/trace/rv/rv_monitors_test.c            |  2 +
- kernel/trace/rv/rv_monitors_test.h            | 18 ++++++++
- 5 files changed, 117 insertions(+)
+> +TRACE_EVENT(block_rq_tag_wait,
+> +
+> +	TP_PROTO(struct request_queue *q, struct blk_mq_hw_ctx *hctx, bool is_sched_tag),
+> +
+> +	TP_ARGS(q, hctx, is_sched_tag),
+> +
+> +	TP_STRUCT__entry(
+> +		__field( dev_t,		dev			)
+> +		__field( u32,		hctx_id			)
+> +		__field( u32,		nr_tags			)
+> +		__field( bool,		is_sched_tag		)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		= q->disk ? disk_devt(q->disk);
 
-diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
-index 0f2c3820b9b8..49e680b769f6 100644
---- a/include/rv/ltl_monitor.h
-+++ b/include/rv/ltl_monitor.h
-@@ -172,3 +172,34 @@ static void __maybe_unused ltl_atom_pulse(struct task_struct *task, enum ltl_ato
- 	ltl_atom_set(mon, atom, !value);
- 	ltl_validate(task, mon);
- }
-+
-+#ifdef CONFIG_RV_MONITORS_KUNIT_TEST
-+#include <kunit/test.h>
-+
-+/*
-+ * rv_prepare_test - Disable the monitor for a kunit test
-+ */
-+static inline void ltl_teardown_test(void *arg)
-+{
-+	struct rv_monitor *rv_this = arg;
-+
-+	rv_this->enabled = 0;
-+	ltl_monitor_destroy();
-+}
-+
-+/*
-+ * rv_prepare_test - Enable the monitor for a kunit test
-+ *
-+ * Do the bare minimum to set up the monitor, make sure it is not active and
-+ * real tracepoint handlers are NOT attached.
-+ */
-+static inline void ltl_prepare_test(struct kunit *test, struct rv_monitor *rv_this)
-+{
-+	KUNIT_ASSERT_FALSE(test, rv_this->enabled);
-+	ltl_monitor_init();
-+	rv_this->enabled = 1;
-+
-+	KUNIT_ASSERT_EQ(test, 0,
-+			kunit_add_action_or_reset(test, ltl_teardown_test, rv_this));
-+}
-+#endif /* CONFIG_RV_MONITORS_KUNIT_TEST */
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c b/kernel/trace/rv/monitors/pagefault/pagefault.c
-index 56abe5079676..1849d7b81545 100644
---- a/kernel/trace/rv/monitors/pagefault/pagefault.c
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
-@@ -86,3 +86,27 @@ module_exit(unregister_pagefault);
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
- MODULE_DESCRIPTION("pagefault: Monitor that RT tasks do not raise page faults");
-+
-+#ifdef CONFIG_RV_MONITORS_KUNIT_TEST
-+#include "rv_monitors_test.h"
-+
-+void rv_test_pagefault(struct kunit *test)
-+{
-+	static struct task_struct *target;
-+	struct rv_kunit_ctx *ctx = test->priv;
-+
-+	ltl_prepare_test(test, &rv_pagefault);
-+	target = kunit_kzalloc(test, sizeof(struct task_struct), GFP_KERNEL);
-+	target->policy = SCHED_FIFO;
-+	target->prio = MAX_RT_PRIO - 1;
-+	handle_task_newtask(NULL, target, 0);
-+
-+	ltl_attempt_start(target, ltl_get_monitor(target));
-+
-+	/* RT task has a page fault */
-+	rv_mock_current(ctx, target);
-+	handle_page_fault(NULL, 0, NULL, 0);
-+	RV_KUNIT_EXPECT_REACTION(test, ctx);
-+}
-+EXPORT_SYMBOL_GPL(rv_test_pagefault);
-+#endif
-diff --git a/kernel/trace/rv/monitors/sleep/sleep.c b/kernel/trace/rv/monitors/sleep/sleep.c
-index 7c16967add70..9388ffb55aa9 100644
---- a/kernel/trace/rv/monitors/sleep/sleep.c
-+++ b/kernel/trace/rv/monitors/sleep/sleep.c
-@@ -247,3 +247,45 @@ module_exit(unregister_sleep);
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
- MODULE_DESCRIPTION("sleep: Monitor that RT tasks do not undesirably sleep");
-+
-+#ifdef CONFIG_RV_MONITORS_KUNIT_TEST
-+#include "rv_monitors_test.h"
-+
-+void rv_test_sleep(struct kunit *test)
-+{
-+	static struct task_struct *target, *other;
-+	struct rv_kunit_ctx *ctx = test->priv;
-+	unsigned long args[6];
-+	struct pt_regs regs;
-+
-+	ltl_prepare_test(test, &rv_sleep);
-+	target = kunit_kzalloc(test, sizeof(struct task_struct), GFP_KERNEL);
-+	target->policy = SCHED_FIFO;
-+	target->prio = MAX_RT_PRIO - 2;
-+	other = kunit_kzalloc(test, sizeof(struct task_struct), GFP_KERNEL);
-+	other->policy = SCHED_FIFO;
-+	other->prio = MAX_RT_PRIO - 1;
-+	handle_task_newtask(NULL, target, 0);
-+
-+	/* RT task sleeps on a non RT-friendly nanosleep */
-+	rv_mock_current(ctx, target);
-+	args[0] = CLOCK_REALTIME;
-+	syscall_set_arguments(target, &regs, args);
-+	handle_sys_enter(NULL, &regs, __NR_clock_nanosleep);
-+	handle_sys_exit(NULL, NULL, 0);
-+	handle_sched_set_state(NULL, target, TASK_INTERRUPTIBLE);
-+	RV_KUNIT_EXPECT_REACTION(test, ctx);
-+
-+	/* RT task woken up by lower priority task */
-+	args[1] = FUTEX_WAIT;
-+	syscall_set_arguments(target, &regs, args);
-+	rv_mock_current(ctx, target);
-+	handle_sys_enter(NULL, &regs, __NR_futex);
-+	handle_sched_set_state(NULL, target, TASK_INTERRUPTIBLE);
-+	rv_mock_current(ctx, other);
-+	handle_sched_waking(NULL, target);
-+	handle_sched_wakeup(NULL, target);
-+	RV_KUNIT_EXPECT_REACTION(test, ctx);
-+}
-+EXPORT_SYMBOL_GPL(rv_test_sleep);
-+#endif
-diff --git a/kernel/trace/rv/rv_monitors_test.c b/kernel/trace/rv/rv_monitors_test.c
-index a57a40932d34..78af77310d56 100644
---- a/kernel/trace/rv/rv_monitors_test.c
-+++ b/kernel/trace/rv/rv_monitors_test.c
-@@ -81,6 +81,8 @@ static struct kunit_case rv_trigger_test_cases[] = {
- 	KUNIT_CASE(rv_test_sts),
- 	KUNIT_CASE(rv_test_opid),
- 	KUNIT_CASE(rv_test_nomiss),
-+	KUNIT_CASE(rv_test_pagefault),
-+	KUNIT_CASE(rv_test_sleep),
- 	{}
- };
- 
-diff --git a/kernel/trace/rv/rv_monitors_test.h b/kernel/trace/rv/rv_monitors_test.h
-index 3015943c5dda..c745edc85991 100644
---- a/kernel/trace/rv/rv_monitors_test.h
-+++ b/kernel/trace/rv/rv_monitors_test.h
-@@ -70,3 +70,21 @@ static inline void rv_test_nomiss(struct kunit *test)
- 	kunit_skip(test, "Monitor not enabled\n");
- }
- #endif
-+
-+#ifdef CONFIG_RV_MON_PAGEFAULT
-+extern void rv_test_pagefault(struct kunit *test);
-+#else
-+static inline void rv_test_pagefault(struct kunit *test)
-+{
-+	kunit_skip(test, "Monitor not enabled\n");
-+}
-+#endif
-+
-+#ifdef CONFIG_RV_MON_SLEEP
-+extern void rv_test_sleep(struct kunit *test);
-+#else
-+static inline void rv_test_sleep(struct kunit *test)
-+{
-+	kunit_skip(test, "Monitor not enabled\n");
-+}
-+#endif
--- 
-2.53.0
+Hmm, does the above even compile?
 
+-- Steve
+
+> +		__entry->hctx_id	= hctx->queue_num;
+> +		__entry->is_sched_tag	= is_sched_tag;
+> +
+> +		if (is_sched_tag)
+> +			__entry->nr_tags = hctx->sched_tags->nr_tags;
+> +		else
+> +			__entry->nr_tags = hctx->tags->nr_tags;
+> +	),
+> +
+> +	TP_printk("%d,%d hctx=%u starved on %s tags (depth=%u)",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->hctx_id,
+> +		  __entry->is_sched_tag ? "scheduler" : "hardware",
+> +		  __entry->nr_tags)
+> +);
+> +
