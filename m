@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80943329C48
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 15:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5661E32ED55
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 15:12:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777302725; cv=none; b=tP+HDd9KOjGdv5zMBZp8GZGNkwXp4vAJH++uwZ0mY31BHwf1h0K87pF1cp6+pXYrYvEF48XY5XQgoNIY5fx63m2C8QmVo7UpZV4VQiDkz2bx9vC2Sq1Bnr1pk0PJ/cZdmiP3Rq+eCW5SwPUuCIrG+2MeF2mWURjnzOQhDm8yY2U=
+	t=1777302731; cv=none; b=ejD1MZT8mOVOQYbzNtXRO7aeFC83jkwQpEoYiSSEwAQJfxQUEsmyBscj5wlmZMc4cqPXK53E37AJOyXXcfMh+ziH6pVqi0Ef38hAuqdd9XtFChOXK4TG7x0Wr2yCOOeVhW3ILM/a+u+56cp9t7HNWb6TXGXRl1wYKRcPs4BVHo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777302725; c=relaxed/simple;
-	bh=EwuoDjuH2L2AHR/liN5WQQiaFdedpKkY0KAZL5ARV5A=;
+	s=arc-20240116; t=1777302731; c=relaxed/simple;
+	bh=UWUZk4hkdNL4huLX6YHY2/guG7GJc3afMyJjsvaS+Cg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=DOUZdod9xj1EhRsgA29MuwzwhJIamr6WJ4ClCf+3SOe887xtqnHsPoyWV3ziyTx4ejgeeeABvpSoW04UCTXdKjo4k4vB+xlfOXBBf45s3rmQeZU9hnLAUeBk/hnhpghWyuhb24YO8ii/5iXL1GxyGB1XdLZ0q2HAnnctOKh+kao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JCX908ai; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=Fz8wf4X1X+OQgN0SpCOtm5jMVMndyeKnLYKrH4/FVkoCMlcqSlyVTvcrKWP3CoD/R4kVpGhwvk6WFGVz8gZIWXv0Vl/ywn+s5FsTpuRh15ok98/cr0YV3WCFzSoM3n0YjpWQHzj2WPpWIaH8MUBezYXk6R/tG5iIFaKAZHl1nUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hbn5fJ3Y; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JCX908ai"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hbn5fJ3Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777302722;
+	s=mimecast20190719; t=1777302729;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MmBNXsdb7Q8XvflqmKh8X5KCTV2PWqisH1cnCugKrPM=;
-	b=JCX908aiyZTeNtiYCvygE3YuOxjxiTmRw8NfFStZLt2ASyM139L+fwdynpkIyjQe+VVk7y
-	2WxdBwmjmw96zlBzUSbmA/6sodLFvEAdvoaagP4OiDCDetVkxApsEhHlU9UCO3SyS8OoEj
-	2oLiK+ktI9nKaVYDVgxBifAWH5HM0Kg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=MPiuStO13Gz3S6Lb9B0sQWvORmksHJAodsDQJ8FhIAQ=;
+	b=hbn5fJ3YHMLhQAn1TvhQRJ6SodtENDiqeaaz1B9XIPW/KMJ//l/J+iA8vmbKEINrMF4MPZ
+	m1XnVh3pzP2vEQEmskjxKSBjz9UupVOngcFFcBHd77TBHEgqm2jBMaeZKkkqBoD2AEIwgz
+	LQb4Bhc1KToeYT55fmWK+tLIAsUCbhE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-52-iPKg-v43MFesykaZQDkQ_g-1; Mon,
- 27 Apr 2026 11:11:59 -0400
-X-MC-Unique: iPKg-v43MFesykaZQDkQ_g-1
-X-Mimecast-MFC-AGG-ID: iPKg-v43MFesykaZQDkQ_g_1777302718
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-UwQGU9B5N-2YeNfAEn8hLQ-1; Mon,
+ 27 Apr 2026 11:12:03 -0400
+X-MC-Unique: UwQGU9B5N-2YeNfAEn8hLQ-1
+X-Mimecast-MFC-AGG-ID: UwQGU9B5N-2YeNfAEn8hLQ_1777302722
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 11528195608D;
-	Mon, 27 Apr 2026 15:11:58 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74F5118002D1;
+	Mon, 27 Apr 2026 15:12:02 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 56FE6196B8FB;
-	Mon, 27 Apr 2026 15:11:55 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2ACCB195608E;
+	Mon, 27 Apr 2026 15:11:58 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [RFC PATCH 02/12] tools/rv: Fix substring match when listing container monitors
-Date: Mon, 27 Apr 2026 17:11:24 +0200
-Message-ID: <20260427151134.192971-3-gmonaco@redhat.com>
+Subject: [RFC PATCH 03/12] tools/rv: Fix exit status when monitor execution fails
+Date: Mon, 27 Apr 2026 17:11:25 +0200
+Message-ID: <20260427151134.192971-4-gmonaco@redhat.com>
 In-Reply-To: <20260427151134.192971-1-gmonaco@redhat.com>
 References: <20260427151134.192971-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,43 +64,35 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: Vprcziui8uef9cqDSgJ1TXDnbEl7xk7XDyksltERjmo_1777302718
+X-Mimecast-MFC-PROC-ID: 8xignP48u8WYlHraBw2kmix8ivtJII9PLs15MCSXaSQ_1777302722
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-When listing monitors within a specific container (rv list <container>),
-the tool incorrectly matched monitors if the requested container name
-was only a prefix of the actual container (e.g., 'rv list sche' would
-incorrectly list monitors from 'sched:').
+When running "rv mon" on a monitor that is already enabled, the tool
+fails to start but incorrectly exits with a success status (0).
 
-Fix this by ensuring the container name is an exact match and is
-immediately followed by the ':' separator.
+Fix the exit condition to ensure it returns a failure code on any
+execution error.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rv/src/in_kernel.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/verification/rv/src/rv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index a200b63f4509..95adae321c11 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -193,8 +193,12 @@ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *co
- 	nested_name = strstr(name, ":");
- 	if (nested_name) {
- 		/* it belongs in container if it starts with "container:" */
--		if (container && strstr(name, container) != name)
--			return 1;
-+		if (container) {
-+			int len = strlen(container);
-+
-+			if (strncmp(name, container, len) || name[len] != ':')
-+				return 1;
-+		}
- 		*nested_name = '/';
- 		++nested_name;
- 		ikm->nested = 1;
+diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
+index b8fe24a87d97..6d65f4037581 100644
+--- a/tools/verification/rv/src/rv.c
++++ b/tools/verification/rv/src/rv.c
+@@ -127,7 +127,7 @@ static void rv_mon(int argc, char **argv)
+ 
+ 	if (!run)
+ 		err_msg("rv: monitor %s does not exist\n", monitor_name);
+-	exit(!run);
++	exit(run <= 0);
+ }
+ 
+ static void usage(int exit_val, const char *fmt, ...)
 -- 
 2.53.0
 
