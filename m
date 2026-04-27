@@ -1,218 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A4E386C31;
-	Mon, 27 Apr 2026 12:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313263B895A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 12:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777291804; cv=none; b=SNqsUFJ5tvHRw52DFpyken7FtD1Zg/wSmutVvYFvpSDz3hPVCvnMlwW7pKTIgPlcMfy7ZZw9xFZPjNYiuXUiIdraPKGF9VQTDZ2O8adlo0bAPLBChbAIPeMkw6skL4n5oNLtLsMFRx8L764hJOAezQSZLU1ieKKTRA21faTQgVw=
+	t=1777292420; cv=none; b=bXlIEe8KgaBY19KcLZs3nrkfmf0hhti5q0O2H33B/Kb/mHxTAlLEztfsHHv7thg11DoCwUuoHPa9JpZ+l7hY/RHihvIaOQlfweKun90sELoyzRTao6qQb4aJlR+jeGaqdHVgv9QXrmM6fWIXtQa0Sz5tnRxPxYR20h7PBu6LU0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777291804; c=relaxed/simple;
-	bh=bV2ndRXStbhZ2JNRS2ODSnm9jpg5L9ozE8bdTGsPo48=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sIxwnelDZh8fHp5TGIvtp587KLpt/z8Fe72sGpvApgp8vn5nw4Xg5FCr1CCtzw5eBIBbVqBsNATolx9Af0/c8NuFplPTa7RK3T+fqPMIk+5DNeOOiThUj6feO+HooIrycfJCa3Xg9qckIrvlLlbk1v3kpbuk8rGRjKoeOtijEIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMwH+xOC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777292420; c=relaxed/simple;
+	bh=vfwoasfNMWJSpfAsK91lcEgHR2U+YXlN33dahW6hJhQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=fpSNgV86WsceECl4yUzRtP0WfY3zeGBIXmCz+pbWf4qq1H5g7gpX01lKeBVFiBHR8uGcIyAGDAzy2bOEFWUdyEg92yCLwRZRac68TKXGAcfhdVhCLb6b8etRQO69JtmiU/YQ2Ul7JcEgtjnZfU2rzuSLUYfjuyac0LyMp8qj/9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IXpgWz2r; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMwH+xOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE5FFC19425;
-	Mon, 27 Apr 2026 12:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777291803;
-	bh=bV2ndRXStbhZ2JNRS2ODSnm9jpg5L9ozE8bdTGsPo48=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eMwH+xOCVlLRba18hcp6Fp537KYBQzyl7+AtZ10zXKSEKdlA3hZUXc9LjPhjzyOD0
-	 6Xl+WZPw4VeNwydLy+LjqyuPtdweiJmmmGY7au0BZtGamI+Bo+zg4olocoadZrLhnK
-	 Q+Eb4wwL/Al5DLbKm+PyTxfAep1z6L5h7gxZsEDav46Lfrb9dxIpKwImVfwvtC8QVm
-	 Fhir1ZuKk2q5XOruUfjegceCdO2f6ePVIn6eUYj4rmi7NzxGItKYjZU9YLlah/2WH5
-	 GwEx0Xd4frColjlLgigmcI+lZogDKaE1S10OV/WWTZVb+rMXrjkNCgVU9k+jcDEZWl
-	 B9pHfUddbft9g==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] fprobe: Add unregister_fprobe_sync() for synchronous unregistration
-Date: Mon, 27 Apr 2026 21:09:58 +0900
-Message-ID:  <177729179863.401400.6063130067239479972.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IXpgWz2r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777292418;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gQCC3LXbAisJgiqfxp2+is0RYrYavB+fY/mgCdio8cg=;
+	b=IXpgWz2rEyvqDor5GYwqlerpn7oVYTVk6BBn6w0rteA2RA6Xb+7OA4PuCJxj/YUulB14Q9
+	7s2fpQGc8vzbHQOxqEkuwDa91TIRuGlM8sVU3za0ze3tSH/8NaPf86LI5+VGSlodeIxVyE
+	HEC88jXgiXJ8Bf8VvfnRLHFBpfGF9n4=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-244-aCvH4pPQMOqGkHWQoYxhOA-1; Mon,
+ 27 Apr 2026 08:20:14 -0400
+X-MC-Unique: aCvH4pPQMOqGkHWQoYxhOA-1
+X-Mimecast-MFC-AGG-ID: aCvH4pPQMOqGkHWQoYxhOA_1777292413
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B28D81800464;
+	Mon, 27 Apr 2026 12:20:13 +0000 (UTC)
+Received: from 192.168.0.21 (unknown [10.22.88.120])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 92E2A3000707;
+	Mon, 27 Apr 2026 12:20:10 +0000 (UTC)
+Date: Mon, 27 Apr 2026 09:20:09 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/9] rtla/tests: Extend runtime test coverage
+Message-ID: <ae9UZFr5Tr-6XB1M@192.168.0.21>
+References: <20260423130558.882022-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260423130558.882022-1-tglozar@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: 2wHzwP1mkqYIBOb_Sso-aVK91uRqzrCxInGxr1slcQg_1777292413
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Apr 23, 2026 at 03:05:49PM +0200, Tomas Glozar wrote:
+> This patchset introduces some new tests to cover more options, especially
+> histogram and thread options. Most of the new tests use positive and negative
+> output matches, sometimes in combination with action scripts, to verify that
+> RTLA is applying the settings correctly.
+> 
+> Tests were reorganized a little, adding two new sections: thread tests and
+> histogram tests, next to basic tests.
+> 
+> Additionally, coverage of existing tests is extended by adding new matches and
+> by extending tests to cover both top and hist tools where possible. For the
+> latter, new helpers check_top_hist and check_top_q_hist are added to engine.sh.
+> 
+> As part of the new action scripts, detection of measurement threads is made more
+> robust by following child processes of either RTLA (user workload) or kthreadd
+> (kernel workload) rather than grepping through the comms of all processes, which
+> might have lead to false positives.
+> 
+> These changes significantly improve test coverage and make the test suite more
+> against false positives from unrelated processes.
 
-Currently, unregister_fprobe() removes the ftrace hooks but does not
-wait for the RCU grace period to expire. This is efficient for batch
-unregistration of multiple fprobes (to avoid multiple RCU grace period
-latencies), but it leaves a window where probe handlers might still be
-running on other CPUs after the function returns.
-If a caller needs to free the fprobe structure or unload the module
-immediately after unregistration, they must manually call
-synchronize_rcu() to prevent use-after-free issues.
+Reviewed-by: Wander Lairson Costa <wander@redhat.com>
 
-To simplify this use case, introduce unregister_fprobe_sync(). This
-function unregisters the fprobe and waits for the RCU grace period to
-complete before returning.
-
-Also, update the documentation of unregister_fprobe() to clarify its
-non-blocking behavior and suggest using unregister_fprobe_sync() for the
-last probe in a batch. Finally, update the fprobe sample module to use
-the synchronous version on exit to ensure safe module unloading.
-And add a fix to use synchronous version in the sample code and
-trace_fprobe (unexpected error case).
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Documentation/trace/fprobe.rst  |   15 ++++++++++++---
- include/linux/fprobe.h          |    5 +++++
- kernel/trace/fprobe.c           |   30 ++++++++++++++++++++++++++++++
- kernel/trace/trace_fprobe.c     |    9 +++++++--
- samples/fprobe/fprobe_example.c |    2 +-
- 5 files changed, 55 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 95998b189ae3..eee4860ab29a 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -65,6 +65,12 @@ To disable (remove from functions) this fprobe, call::
- 
-   unregister_fprobe(&fp);
- 
-+Or if you need to wait for the RCU grace period to ensure no handlers
-+are running on any CPU (e.g., before freeing the `fprobe` structure),
-+use::
-+
-+  unregister_fprobe_sync(&fp);
-+
- You can temporally (soft) disable the fprobe by::
- 
-   disable_fprobe(&fp);
-@@ -81,9 +87,12 @@ Same as ftrace, the registered callbacks will start being called some time
- after the register_fprobe() is called and before it returns. See
- Documentation/trace/ftrace.rst.
- 
--Also, the unregister_fprobe() will guarantee that both enter and exit
--handlers are no longer being called by functions after unregister_fprobe()
--returns as same as unregister_ftrace_function().
-+Also, the `unregister_fprobe_sync()` will guarantee that both enter and exit
-+handlers are no longer being called by functions after it returns.
-+On the other hand, `unregister_fprobe()` does not wait for the RCU grace period,
-+so handlers might still be running on other CPUs for a short time after it returns.
-+This is useful when you unregister multiple fprobes in a batch to avoid
-+waiting for the RCU grace period for each one.
- 
- The fprobe entry/exit handler
- =============================
-diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
-index 0a3bcd1718f3..6ae452e250a1 100644
---- a/include/linux/fprobe.h
-+++ b/include/linux/fprobe.h
-@@ -94,6 +94,7 @@ int register_fprobe(struct fprobe *fp, const char *filter, const char *notfilter
- int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num);
- int register_fprobe_syms(struct fprobe *fp, const char **syms, int num);
- int unregister_fprobe(struct fprobe *fp);
-+int unregister_fprobe_sync(struct fprobe *fp);
- bool fprobe_is_registered(struct fprobe *fp);
- int fprobe_count_ips_from_filter(const char *filter, const char *notfilter);
- #else
-@@ -113,6 +114,10 @@ static inline int unregister_fprobe(struct fprobe *fp)
- {
- 	return -EOPNOTSUPP;
- }
-+static inline int unregister_fprobe_sync(struct fprobe *fp)
-+{
-+	return -EOPNOTSUPP;
-+}
- static inline bool fprobe_is_registered(struct fprobe *fp)
- {
- 	return false;
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index cc49ebd2a773..5f3e48385a47 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -1097,6 +1097,9 @@ static int unregister_fprobe_nolock(struct fprobe *fp)
-  * @fp: A fprobe data structure to be unregistered.
-  *
-  * Unregister fprobe (and remove ftrace hooks from the function entries).
-+ * Note: This function does not wait for RCU grace period, since user
-+ * may use several fprobes (and then unregister them one by one). In that
-+ * case, it is recommended to use unregister_fprobe_sync() for the last fprobe.
-  *
-  * Return 0 if @fp is unregistered successfully, -errno if not.
-  */
-@@ -1110,6 +1113,33 @@ int unregister_fprobe(struct fprobe *fp)
- }
- EXPORT_SYMBOL_GPL(unregister_fprobe);
- 
-+/**
-+ * unregister_fprobe_sync() - Unregister fprobe synchronously with RCU grace period.
-+ * @fp: A fprobe data structure to be unregistered.
-+ *
-+ * Unregister fprobe (and remove ftrace hooks from the function entries) and
-+ * wait for the RCU grace period to finish. This is useful for preventing
-+ * the fprobe from being used after it is unregistered.
-+ *
-+ * Return 0 if @fp is unregistered successfully, -errno if not.
-+ */
-+int unregister_fprobe_sync(struct fprobe *fp)
-+{
-+	int ret;
-+
-+	guard(mutex)(&fprobe_mutex);
-+	if (!fp || !fprobe_registered(fp))
-+		return -EINVAL;
-+
-+	ret = unregister_fprobe_nolock(fp);
-+	if (ret)
-+		return ret;
-+
-+	synchronize_rcu();
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(unregister_fprobe_sync);
-+
- static int __init fprobe_initcall(void)
- {
- 	rhltable_init(&fprobe_ip_table, &fprobe_rht_params);
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 9f5f08c0e7c2..fa5b41f7f306 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -845,8 +845,13 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
- /* Internal unregister function - just handle fprobe and flags */
- static void __unregister_trace_fprobe(struct trace_fprobe *tf)
- {
--	if (trace_fprobe_is_registered(tf))
--		unregister_fprobe(&tf->fp);
-+	/*
-+	 * Here, @tf must NOT be busy, so it MUST be unregistered already.
-+	 * But if it is unexpectedly registered, unregister it synchronously.
-+	 */
-+	if (WARN_ON_ONCE(trace_fprobe_is_registered(tf)))
-+		unregister_fprobe_sync(&tf->fp);
-+
- 	if (tf->tuser) {
- 		tracepoint_user_put(tf->tuser);
- 		tf->tuser = NULL;
-diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
-index bfe98ce826f3..382d2f67672a 100644
---- a/samples/fprobe/fprobe_example.c
-+++ b/samples/fprobe/fprobe_example.c
-@@ -142,7 +142,7 @@ static int __init fprobe_init(void)
- 
- static void __exit fprobe_exit(void)
- {
--	unregister_fprobe(&sample_probe);
-+	unregister_fprobe_sync(&sample_probe);
- 
- 	pr_info("fprobe at %s unregistered. %ld times hit, %ld times missed\n",
- 		symbol, nhit, sample_probe.nmissed);
+> 
+> Tomas Glozar (9):
+>   rtla/tests: Cover both top and hist tools where possible
+>   rtla/tests: Add get_workload_pids() helper
+>   rtla/tests: Check -c/--cpus thread affinity
+>   rtla/tests: Use negative match when testing --aa-only
+>   rtla/tests: Extend timerlat top --aa-only coverage
+>   rtla/tests: Cover all hist options in runtime tests
+>   rtla/tests: Add runtime test for -H/--house-keeping
+>   rtla/tests: Add runtime test for -k and -u options
+>   rtla/tests: Add runtime tests for -C/--cgroup
+> 
+>  tools/tracing/rtla/tests/engine.sh            |  15 +++
+>  tools/tracing/rtla/tests/osnoise.t            |  73 +++++++----
+>  .../rtla/tests/scripts/check-cgroup-match.sh  |  17 +++
+>  .../tracing/rtla/tests/scripts/check-cpus.sh  |   9 ++
+>  .../tests/scripts/check-housekeeping-cpus.sh  |   4 +
+>  .../rtla/tests/scripts/check-priority.sh      |   8 +-
+>  .../scripts/check-user-kernel-threads.sh      |  16 +++
+>  .../tests/scripts/lib/get_workload_pids.sh    |  11 ++
+>  tools/tracing/rtla/tests/timerlat.t           | 113 +++++++++++-------
+>  9 files changed, 194 insertions(+), 72 deletions(-)
+>  create mode 100755 tools/tracing/rtla/tests/scripts/check-cgroup-match.sh
+>  create mode 100755 tools/tracing/rtla/tests/scripts/check-cpus.sh
+>  create mode 100755 tools/tracing/rtla/tests/scripts/check-housekeeping-cpus.sh
+>  create mode 100755 tools/tracing/rtla/tests/scripts/check-user-kernel-threads.sh
+>  create mode 100644 tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh
+> 
+> -- 
+> 2.53.0
+> 
 
