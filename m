@@ -1,113 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D713C3C1E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 13:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586EA3C8705;
+	Mon, 27 Apr 2026 13:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777295906; cv=none; b=la29PyqKbtQin6raW72jSaW+olXlwkw2GiLZ4upW6osDWJZnemmK0ydBDVT0Sg+Ubt93slwddQv71TIAdvxIqLYWarELrqBqkEf5ZIWIUb36goDmeVi7GgWGs27zMg9KfmRprYOXEdjzqC6FBBDhFmLOSpgP3YHe4WDoJkExDfw=
+	t=1777297388; cv=none; b=hNtnomqRbSfZFvhGdI3bzptu3ZdSv5mY950hKMcHXa4YXSmh7yUn/d+t+dKDAhiCVsBJaKwzwxmeyjxnkhmULbDgI8VfoIafiOk52yeCVy9XbsTXgoVLs/pcX7noIM6IcbvBTwMQbGSMtGJ0spdx0+Rw2s8zHJQ/NKT80RHz4Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777295906; c=relaxed/simple;
-	bh=NwAOthm99zFxWhLQ9aKvtF0eA1BH5/4WTnlSf259zC8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=fxKXReDz76BJwYVYYAIOpGA9CVCRy9sH7bJR1xNIj1HXCKgQDNSEuHbbSkcm4wsJYB8D5iJwB0fx3z55/UDZvsE8YkgGohNRJWNwAD3lz5NWaIAWBVBt1SpqUQPpw+6XHuLr09mX5arcrvY9tVP2/e4Kw8rSVhWRMJlltCSqzZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TEXwdgeO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777297388; c=relaxed/simple;
+	bh=HYpZWzyqAIY0fKVdx1G8AWuk4ggGTSoGNuwwIO5d2iQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=EliIs7/DDKxv2jgUAhkKr4kJ5DbqZcdCSZhyQTbewPCX6JUeJS7Ne5L1Nmfz7Pv8Wf0KPj97WHXdRfQu4UOjUKXSHBxOcW2gGH2ME5Algq+Jjm4sd/fv1t+qM7EZaEY7/dF3g+eg2R/K59816ZwPZTLyLAooSpE8pmcITMh0Nfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oTje4ElN; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEXwdgeO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777295902;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=yRgs59r3qAD41EfRJtu78JhJSt1v0Ckc4btL9xnEnVc=;
-	b=TEXwdgeOFBRmex2tXr2y0FrtqWEYNoNfY91wGWfgcMNPCrVGNe7gt5Mh5z15CSC2FlnElX
-	VPSVE8nKzXhOO+uMDHGLgCjGUE6C7FWwWuo7UpDoSmcnsvDOSMY/DjxsuVjy14k9nW6Zv3
-	EqI15XqGW69kOt7nCwt8xKmPjJy6KU0=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-BYutafAHNvyqp0A4W7B_tQ-1; Mon,
- 27 Apr 2026 09:18:17 -0400
-X-MC-Unique: BYutafAHNvyqp0A4W7B_tQ-1
-X-Mimecast-MFC-AGG-ID: BYutafAHNvyqp0A4W7B_tQ_1777295895
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD65719560A3;
-	Mon, 27 Apr 2026 13:18:14 +0000 (UTC)
-Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 691D31800446;
-	Mon, 27 Apr 2026 13:18:10 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: rdunlap@infradead.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: matteo.martelli@codethink.co.uk,
-	skhan@linuxfoundation.org
-Subject: [PATCH v2] Documentation/rv: Replace stale website link
-Date: Mon, 27 Apr 2026 15:17:09 +0200
-Message-ID: <20260427131709.170505-2-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oTje4ElN"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260427134302epoutp0196401e6a027f43e9f7a2a8e4ec37def5~qOo2fjOBb1175011750epoutp01L;
+	Mon, 27 Apr 2026 13:43:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260427134302epoutp0196401e6a027f43e9f7a2a8e4ec37def5~qOo2fjOBb1175011750epoutp01L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1777297383;
+	bh=HYpZWzyqAIY0fKVdx1G8AWuk4ggGTSoGNuwwIO5d2iQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oTje4ElNm4xecU1VG1Jrx86EY3Gpl1Vu+7Eg8igCfRDmuEWp0LdNN4Ssf0cEWBOKp
+	 03qrQy7Mwh4wQ/opBqnoORCUo1z8aoZlbY7D0/ViobxGIRXTFLcHW7dWyX9aTsl2N3
+	 Eh24v5hHa9Vb0gAdrDBssQHqG7CW+ElPnJnUatLc=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20260427134302epcas5p214d5e003586bc14fd5c926391fd2af9c~qOo16jVbi1491214912epcas5p24;
+	Mon, 27 Apr 2026 13:43:02 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4g44Wp1ZR3z3hhT3; Mon, 27 Apr
+	2026 13:43:02 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0~qNwDrt8ay0098400984epcas5p1l;
+	Mon, 27 Apr 2026 12:38:00 +0000 (GMT)
+Received: from green245.gost (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260427123748epsmtip257b0d1b83f2086e0e46dbf256b9f1ff0~qNv5BJqIr2057720577epsmtip23;
+	Mon, 27 Apr 2026 12:37:48 +0000 (GMT)
+Date: Mon, 27 Apr 2026 18:02:57 +0530
+From: Arun George <arun.george@samsung.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+	mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+	jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+	riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com, gost.dev@samsung.com,
+	arungeorge05@gmail.com, cpgs@samsung.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: j-UbJPM5AjFx7CeRISRkLkx1G_oXmaqcGrbPELtxmgY_1777295895
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
+X-CMS-MailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
+References: <20260222084842.1824063-1-gourry@gourry.net>
+	<CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
 
-The sched monitor page was linking to Daniel's website which is now
-down. The main purpose of the link was to point to a source for the
-models from the original author and that can be found also in his
-published paper.
+------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Replace the link with a reference to Daniel's "A thread synchronization
-model for the PREEMPT_RT Linux kernel" which can be found online and
-includes the models definitions as well as the work behind them (not the
-original patches but since they're based on a 5.0 kernel and are mostly
-included upstream, there's little value in keeping them in the docs).
+On 22/02/26 03:48AM, Gregory Price wrote:
+>Topic type: MM
+>
+>Presenter: Gregory Price <gourry@gourry.net>
+>
+>This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
+>managed by the buddy allocator but excluded from normal allocations.
+>
+>I present it with an end-to-end Compressed RAM service (mm/cram.c)
+>that would otherwise not be possible (or would be considerably more
+>difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
+>
+>
+>TL;DR
+>===
+>
+Appreciate the work as we also chase the same problem statement.
+A few queries please.
 
-Fixes: 03abeaa63c08 ("Documentation/rv: Add docs for the sched monitors")
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
-V2: Add link to the PDF and fixed RST references
+I see the current support relies on read-only mappings which might
+limit the performance. Any particular workload you are targeting with
+this (which can tolerate this latency)?
 
- Documentation/trace/rv/monitor_sched.rst | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Any deployments you think of where the goal is a capacity expansion
+with a compromise in performance?
 
-diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
-index 0b96d6e147c6..d3ba7edc202f 100644
---- a/Documentation/trace/rv/monitor_sched.rst
-+++ b/Documentation/trace/rv/monitor_sched.rst
-@@ -36,7 +36,7 @@ Specifications
- --------------
- 
- The specifications included in sched are currently a work in progress, adapting the ones
--defined in by Daniel Bristot in [1].
-+defined by Daniel Bristot in [1]_.
- 
- Currently we included the following:
- 
-@@ -365,4 +365,7 @@ constraints when processing the events::
- References
- ----------
- 
--[1] - https://bristot.me/linux-task-model
-+.. [1] Daniel Bristot de Oliveira et al.:
-+       `A thread synchronization model for the PREEMPT_RT Linux kernel
-+       <https://www.iris.sssup.it/bitstream/11382/533630/1/Elsevier-JSA-2020.pdf>`_,
-+       J. Syst. Archit., 2020.
+On the device side, are you targeting beyond compressed RAM like
+devices such as memory with NAND etc.?
 
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
--- 
-2.53.0
+The TL;DR talked about mmap/mbind way of user space allocation from
+the private node. But the allocation is controlled by GFP flag
+N_MEMORY_PRIVATE. Does the user space path of allocation set this
+flag along the way?
+
+And I believe the bear-proof cage might work in the normal scenarios,
+but may not work for all. We might not be able to rely on the control
+path (backpressure) fully. The control path could go slow, slower and
+even die as well. Should the device respond with something like
+'bus error' if the host tries to write when it is not capable of
+taking any more writes?
+
+Are there any workloads (VM?) where this 'bus error'or similar error
+could be an OK / recoverable scenario?
+
+This is assuming that checking with the device on every operation
+(whether it is safe to write or not) could be slow.
+
+--- Arun George
+
+------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_
+Content-Type: text/plain; charset="utf-8"
+
+
+------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_--
 
