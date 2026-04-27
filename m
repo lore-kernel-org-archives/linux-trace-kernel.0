@@ -1,110 +1,75 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0584B2F28FC;
-	Mon, 27 Apr 2026 16:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E293DA5B5;
+	Mon, 27 Apr 2026 16:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777308661; cv=none; b=FIPI60IAypEKLFQcVX+H1ms4zqAk6BWl8g0WZXmodPkr/sf/AeciC1VAVx9aU+pe0/bzhr0EFyLzPOAD+KDU4nHdnUgnhDsHYzCG0vHUMa4kaKryk0Hen82MO3xRL4Oh5Tramp33YDVWb0Z/ujzSmrc9tM8/YDgRo8eDQ3D0vGI=
+	t=1777308894; cv=none; b=ruEEVG3J6slq0EmjGMyqjRFSMbLay9sJUehe1CbfAldIc9pvKqYTnQ4YjojgfWsYEt8OrGwCOjdTRe5LuJzwJwApK1wFJXLE7sRNDc60vH9GlJadTtkFBvY1vh1RQymzj4A6V87UZx77WrA2hw787vA0/52DfYFwhD+zlt+JHtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777308661; c=relaxed/simple;
-	bh=6r3XAMpgYbyM2eyCP4NpvBlVyLsyGxzHZWs+M3qjJG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uaKDsErU9WKbhKgDHSqvAG/PuqfKIEJgLHH5anLb8xydJm6Mdp5aVk9jea2srWywmq6D7W5GxMlIVDFWChXVTF7PkoqhYCdulbXhm3Jvf0AZ6YM27zbDCwt+CRq8RW7uX7bKSb94cKdNW5pH4GhAj3CdFuaM4I5Vsgyu0LJs0fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TjE3dI91; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TjE3dI91"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=WEpbWAMzRMwdAe2pI34IchbmL7/zApzmHQrs2eWfTVs=; b=TjE3dI91e7viFgl/PYJ3axr6aq
-	Faf9nVzEvJSwoPt2vbyUWngq03yJ/CouTv8UTPUxDXYXW45v4KUgiGV0P9AkNK87yB2kGzOHV9H67
-	gWVrLhF0Bfc+3F+25ySR1cGx3h0D0Ks5TDW38QM0yrqOizkJxZOVUU3Olg7/57V6/6CreuC+35WtL
-	ljlGgqGteIt1UXLV6oqyacipxWJoOblxTWa0WjSVutWPrhn2WZQYDibfskLSK+HZ+M1YBIttZ9OdU
-	Ay3FX2ULxaNuwCgCwFlM/CYvEIIZIvibDhfaxdhAoOj6aX39CF/fhi+nUB3Gsbr7QEKKwFD02iD/q
-	b03crZ5A==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHPAb-0000000HOA2-4Amg;
-	Mon, 27 Apr 2026 16:50:54 +0000
-Message-ID: <f841e9f6-9d0b-4e10-a930-fdd74a74b9b9@infradead.org>
-Date: Mon, 27 Apr 2026 09:50:53 -0700
+	s=arc-20240116; t=1777308894; c=relaxed/simple;
+	bh=1TBRRPrFLk2bz0suI62lFmFUtQ4JnpN6ZZb7MUXCn3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UQIjx2biAwOhSbXGASFJAprrdgMc9vCa6cUXTEzYs4bUWaSNVp2FV2ca2q+eKeGVjjGSChFiuJ8VHKWqtQ9AvoT+pAEqPeSpkl/3jCzYEQ2/Qcs1IM2PKQF2Bfp0ISJThRqiKBx0slZYXZfCgYd2H/CCNK+smPrQX7/II3foj+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 6E4711A022D;
+	Mon, 27 Apr 2026 16:45:20 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 51E122001C;
+	Mon, 27 Apr 2026 16:45:18 +0000 (UTC)
+Date: Mon, 27 Apr 2026 12:45:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, rdunlap@infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, matteo.martelli@codethink.co.uk,
+ skhan@linuxfoundation.org
+Subject: Re: [PATCH] Documentation/rv: Replace stale website link
+Message-ID: <20260427124530.69cbb711@gandalf.local.home>
+In-Reply-To: <93666b516d93f880ed14c3b9309e203014a7deb0.camel@redhat.com>
+References: <b845c448-1655-4860-9b6d-93d6f8426740@infradead.org>
+	<20260427085526.111835-1-gmonaco@redhat.com>
+	<875x5crb4g.fsf@trenco.lwn.net>
+	<6d7e529c7cb0ad599669e3f33e5b6168e92a8861.camel@redhat.com>
+	<87340gpvdg.fsf@trenco.lwn.net>
+	<93666b516d93f880ed14c3b9309e203014a7deb0.camel@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Documentation/rv: Replace stale website link
-To: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt
- <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: matteo.martelli@codethink.co.uk, skhan@linuxfoundation.org
-References: <20260427131709.170505-2-gmonaco@redhat.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260427131709.170505-2-gmonaco@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 51E122001C
+X-Stat-Signature: gy1bpu36qat3h9zdf97qwysazhsm1ngm
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/oe6Boibh4hGCiF8SyQDlU43dwDND20jo=
+X-HE-Tag: 1777308318-462931
+X-HE-Meta: U2FsdGVkX1+qukr/rxrsDPI+RgpiKfpE2+25PGYf6wG8ZYRYn0+snH0K1UfJ32QLFGOS5bLXE/uM0M4K5JSRECg+1gdScUubPlS30ql8b2pgxWZ7R2tP7XUgEXFcCOMetdMLX6lJLHv990MmfaMrBvdajkebOlSN+7lK82NGnYRPZYFBYkqQ3NlbQZ13lLTq6S4re+wmUTfGqdORJzDchCm+uguBtcZIhxPbV5r3yaenSIK0qe1E8dmjtm7BOl3b2e0Te/a5Ns+EnoCKqGQeTl36/VaLDcfnzBS1PHbaDQsYNYLLrhZBrZ/wlEu34i+o4SLAd0RraDily1Yq7XXEoD/xmLEg46U0cztrdeO269iG50q8gj2SAMDlRSP77W8rWLWN0e6OMQY5j+LviqxHAbaDSdkR91xJJneeBa1Spn47ev7TsAjJ7Q==
 
+On Mon, 27 Apr 2026 14:56:46 +0200
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
+> >=20
+> > I will defer to others in the end, but to me it seems that we should
+> > make life easier for our readers whenever we can.=C2=A0 Providing a link
+> > seems better than requiring them to search for it themselves. =20
+>=20
+> Alright, makes sense. I'm going to send a V2 with [1] (the open access
+> PDF), in the remote case the link stops working, we can update it.
 
-On 4/27/26 6:17 AM, Gabriele Monaco wrote:
-> The sched monitor page was linking to Daniel's website which is now
-> down. The main purpose of the link was to point to a source for the
-> models from the original author and that can be found also in his
-> published paper.
-> 
-> Replace the link with a reference to Daniel's "A thread synchronization
-> model for the PREEMPT_RT Linux kernel" which can be found online and
-> includes the models definitions as well as the work behind them (not the
-> original patches but since they're based on a 5.0 kernel and are mostly
-> included upstream, there's little value in keeping them in the docs).
-> 
-> Fixes: 03abeaa63c08 ("Documentation/rv: Add docs for the sched monitors")
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> ---
-> V2: Add link to the PDF and fixed RST references
-> 
->  Documentation/trace/rv/monitor_sched.rst | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
-> index 0b96d6e147c6..d3ba7edc202f 100644
-> --- a/Documentation/trace/rv/monitor_sched.rst
-> +++ b/Documentation/trace/rv/monitor_sched.rst
-> @@ -36,7 +36,7 @@ Specifications
->  --------------
->  
->  The specifications included in sched are currently a work in progress, adapting the ones
-> -defined in by Daniel Bristot in [1].
-> +defined by Daniel Bristot in [1]_.
->  
->  Currently we included the following:
->  
-> @@ -365,4 +365,7 @@ constraints when processing the events::
->  References
->  ----------
->  
-> -[1] - https://bristot.me/linux-task-model
-> +.. [1] Daniel Bristot de Oliveira et al.:
-> +       `A thread synchronization model for the PREEMPT_RT Linux kernel
-> +       <https://www.iris.sssup.it/bitstream/11382/533630/1/Elsevier-JSA-2020.pdf>`_,
-> +       J. Syst. Archit., 2020.
-> 
-> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+Can you add both?
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+[1] - Daniel Bristot de Oliveira et al.: A thread synchronization model for=
+ the PREEMPT_RT Linux kernel, J. Syst. Archit., 2020.
+      https://www.iris.sssup.it/bitstream/11382/533630/1/Elsevier-JSA-2020.=
+pdf
 
-although I don't care for the "J. Syst. Archit." abbreviation.
-Does JSA use that? Not that I can see.
+ ?
 
-thanks.
--- 
-~Randy
+-- Steve
