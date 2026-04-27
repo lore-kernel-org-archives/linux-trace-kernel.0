@@ -1,302 +1,113 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FA7157487;
-	Mon, 27 Apr 2026 13:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D713C3C1E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 13:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777295784; cv=none; b=Ac6XZIYqAQTORppAA5akU3AOilbYxv/hfh6Qyk8NTEX708ZSGyVQV4WQaUo+xP0c/6oib62e7V0xovI/MItZJCcdj9Ao19l4N8NOcKNSpKkOhWL0jpA5QgWpB+0vS+++j09CvMqGc9mCUx4GjZ8KUWBbhcuHGUjjydzoeCCxvCk=
+	t=1777295906; cv=none; b=la29PyqKbtQin6raW72jSaW+olXlwkw2GiLZ4upW6osDWJZnemmK0ydBDVT0Sg+Ubt93slwddQv71TIAdvxIqLYWarELrqBqkEf5ZIWIUb36goDmeVi7GgWGs27zMg9KfmRprYOXEdjzqC6FBBDhFmLOSpgP3YHe4WDoJkExDfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777295784; c=relaxed/simple;
-	bh=9D3kSfGEhcTJtXAEVO0dJzxfTeTQl0IDfHqFrldNpYA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Bis0NqqKB5JAhDjFBsxEJ6CNmMaIZ2zAoBn/NAfhzb8rwomrM0azP7pCfj2k41J/f8rQqk3AnDAs2VbHKRS59/1EM70wIt638eiDTuqlIj8g8H/INqzPdY8Hf5jsF8sUl9yrhe3ZKF8ghKg65iR8MKF3dckTeEwksJeL4LByYYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com; spf=pass smtp.mailfrom=huawei-partners.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei-partners.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4g43wn4p6qzJ467g;
-	Mon, 27 Apr 2026 21:16:09 +0800 (CST)
-Received: from mscpeml500003.china.huawei.com (unknown [7.188.49.51])
-	by mail.maildlp.com (Postfix) with ESMTPS id EDF944058E;
-	Mon, 27 Apr 2026 21:16:11 +0800 (CST)
-Received: from [10.123.123.154] (10.123.123.154) by
- mscpeml500003.china.huawei.com (7.188.49.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 27 Apr 2026 16:16:07 +0300
-Message-ID: <14036b07-413e-4dcd-a363-e7f834d85da3@huawei-partners.com>
-Date: Mon, 27 Apr 2026 16:16:07 +0300
+	s=arc-20240116; t=1777295906; c=relaxed/simple;
+	bh=NwAOthm99zFxWhLQ9aKvtF0eA1BH5/4WTnlSf259zC8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=fxKXReDz76BJwYVYYAIOpGA9CVCRy9sH7bJR1xNIj1HXCKgQDNSEuHbbSkcm4wsJYB8D5iJwB0fx3z55/UDZvsE8YkgGohNRJWNwAD3lz5NWaIAWBVBt1SpqUQPpw+6XHuLr09mX5arcrvY9tVP2/e4Kw8rSVhWRMJlltCSqzZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TEXwdgeO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEXwdgeO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777295902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=yRgs59r3qAD41EfRJtu78JhJSt1v0Ckc4btL9xnEnVc=;
+	b=TEXwdgeOFBRmex2tXr2y0FrtqWEYNoNfY91wGWfgcMNPCrVGNe7gt5Mh5z15CSC2FlnElX
+	VPSVE8nKzXhOO+uMDHGLgCjGUE6C7FWwWuo7UpDoSmcnsvDOSMY/DjxsuVjy14k9nW6Zv3
+	EqI15XqGW69kOt7nCwt8xKmPjJy6KU0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-BYutafAHNvyqp0A4W7B_tQ-1; Mon,
+ 27 Apr 2026 09:18:17 -0400
+X-MC-Unique: BYutafAHNvyqp0A4W7B_tQ-1
+X-Mimecast-MFC-AGG-ID: BYutafAHNvyqp0A4W7B_tQ_1777295895
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD65719560A3;
+	Mon, 27 Apr 2026 13:18:14 +0000 (UTC)
+Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 691D31800446;
+	Mon, 27 Apr 2026 13:18:10 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: rdunlap@infradead.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matteo.martelli@codethink.co.uk,
+	skhan@linuxfoundation.org
+Subject: [PATCH v2] Documentation/rv: Replace stale website link
+Date: Mon, 27 Apr 2026 15:17:09 +0200
+Message-ID: <20260427131709.170505-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/19] mm/damon: introduce data attributes monitoring
-To: SeongJae Park <sj@kernel.org>
-CC: "Liam R. Howlett" <liam@infradead.org>, Andrew Morton
-	<akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Jonathan
- Corbet <corbet@lwn.net>, Lorenzo Stoakes <ljs@kernel.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, Shuah Khan
-	<shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil
- Babka <vbabka@kernel.org>, <damon@lists.linux.dev>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20260426205222.93895-1-sj@kernel.org>
-Content-Language: en-US
-From: Gutierrez Asier <gutierrez.asier@huawei-partners.com>
-In-Reply-To: <20260426205222.93895-1-sj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: mscpeml500004.china.huawei.com (7.188.26.250) To
- mscpeml500003.china.huawei.com (7.188.49.51)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: j-UbJPM5AjFx7CeRISRkLkx1G_oXmaqcGrbPELtxmgY_1777295895
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi SeonJae,
+The sched monitor page was linking to Daniel's website which is now
+down. The main purpose of the link was to point to a source for the
+models from the original author and that can be found also in his
+published paper.
 
-On 4/26/2026 11:52 PM, SeongJae Park wrote:
-> TL; DR
-> ======
-> 
-> Extend DAMON for monitoring general data attributes other than accesses.
-> This is for enabling light-weight page type (e.g., belonging cgroup)
-> aware monitoring in short term.  In long term, this will help extending
-> DAMON for multiple access events capture primitives (e.g., page faults
-> and PMU) and eventually pivotting DAMON to a "Data Attributes Monitoring
-> and Operations eNgine" in long term.
+Replace the link with a reference to Daniel's "A thread synchronization
+model for the PREEMPT_RT Linux kernel" which can be found online and
+includes the models definitions as well as the work behind them (not the
+original patches but since they're based on a 5.0 kernel and are mostly
+included upstream, there's little value in keeping them in the docs).
 
-Very interesting. Looking forward to seeing this in upstream.
+Fixes: 03abeaa63c08 ("Documentation/rv: Add docs for the sched monitors")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+V2: Add link to the PDF and fixed RST references
 
-> 
-> Background: High Cost of Page Level Properties Monitoring
-> =========================================================
-> 
-> DAMON is initially introduced as a Data Access MONitor.  It has been
-> extended for not only access monitoring but also data access-aware
-> system operations (DAMOS).  But still the monitoring part is only for
-> data accesses.
-> 
-> Data access patterns is good information, but some users need more
-> holistic views.  Particularly, users want to show the access pattern
-> information together with the types of the memory.  For example, users
-> who work for making huge pages efficiently want to know how much of
-> DAMON-found hot/cold regions are backed by huge pages.  Users who run
-> multiple workloads with different cgroups want to know how much of
-> DAMON-found hot/cold regions belong to specific cgroups.
-> 
-> For the user demand, we developed a DAMOS extension for page level
-> properties based monitoring [1], which has landed on 6.14.  Using the
-> feature, users can inform the page level data properties that they are
-> interested in, in a flexible format that uses DAMOS filters.  Then,
-> DAMON applies the filters to each folio of the entire DAMON region and
-> lets users know how many bytes of memory in each DAMON region passed the
-> given filters.
-> 
-> This gives page level detailed and deterministic information to users.
-> But, because the operation is done at page level, the overhead is
-> proportional to the memory size.  It was useful for test or debugging
-> purposes on a small number of machines.  But it was obviously too heavy
-> to be enabled always on all machines running the real user workloads.
-> For real world workloads, it was recommended to use the feature with
-> user-space controlled sampling approaches.  For example, users could do
-> the page level monitoring only once per hour, on randomly selected one
-> percent of machines of their fleet.  If the runtime and the  size of the
-> fleet is long and big enough, it should provide statistically meaningful
-> data.
-> 
-> But users are too busy to implement such controls on their own.
-> 
-> Data Attributes Monitoring
-> ==========================
-> 
-> Extend DAMON to monitor not only data accesses, but also general data
-> attributes.  Do the extension while keeping the main promise of DAMON,
-> the bounded and best-effort minimum overhead.
-> 
-> Allow users to specify what data attributes in addition to the data
-> access they want to monitor.  Users can install one 'data probe' per
-> data attribute of their interest for this purpose.  The 'data probe'
-> should be able to be applied to any memory, and determine if the given
-> memory has the appropriate data attribute.  E.g., if memory of physical
-> address 42 belongs to cgroup A.  Each 'data probe' is configured with
-> filters that are very similar to the DAMOS filters.
-> 
-> When DAMON checks if each sampling address memory of each region is
-> accessed since the last check, it applies data probes if registered.
-> Same to the number of access check-positive samples accounting
-> (nr_accesses), it accounts the number of each data probe-positive
-> samples in another per-region counters array, namely 'probe_hits'. When
-> DAMON resets nr_accesses every aggregation interval, it resets
-> 'probe_hits' together.
-> 
-> Users can read 'probe_hits' just before the values are reset.  In this
-> way, users can know how many hot/cold memory regions have data
-> attributes of their interest.  E.g., 30 percent of this system's hot
-> memory is belonging to cgroup A and 80 percent of the hot cgroup A
-> memory is backed by huge pages.
-> 
-> Patches Sequence
-> ================
-> 
-> First eight patches implement the core feature, interface and the
-> working support.  Patch 1 introduces data probe data structure, namely
-> damon_probe.  Patch 2 extends damon_ctx for installing data probes.
-> Patch 3 introduces another data structure for filters of each data
-> probe, namely damon_filter.  Patch 4 updates damon_ctx commit function
-> to handle the probes.  Patch 5 extends damon_region for the per-region
-> per-probe positive samples counter, namely probe_hits.  Patch 6 extends
-> damon_operations for applying probes on the underlying DAMON operations
-> implementation.  Patch 7 updates kdamond_fn() to invoke the probes
-> applying callback.  Patch 8 finally implements the probes support on
-> paddr ops.
-> 
-> Eight changes for user interface (patches 9-16) come next.  Patches 9-13
-> implements sysfs directories and files for setting data probes, namely
-> probes directory, probe directory, filters directory, filter directory
-> and filter directory internal files, respectively.  Patch 14 connects
-> the user inputs that are made via the sysfs files to DAMON core.
-> Patch 15 implements sysfs files for showing the per-region per-probe
-> positive samples count, namely probe_hits.  Patch 16 introduces a new
-> tracepoint for showing the counts via tracefs.
-> 
-> Patch 14 adds a selftest for the sysfs files.
-> 
-> Patches 15 and 16 documents the design and usage of the new feature,
-> respectively.
-> 
-> Discussions
-> ===========
-> 
-> This allows the page properties monitoring with overhead that is low
-> enough to be enabled always on real world workloads.  Because the
-> sampling time for access check is reused for data attributes check,  the
-> upper-bounded and best-effort minimum overhead of DAMON is kept.
-> Because the sampling memory for access check is reused for data
-> attributes check, additional overhead is minimum.
-> 
-> Still DAMOS-based page level properties monitoring should be useful,
-> because it provides a deterministic page level information.  When in
-> doubt of the sampling based information, running DAMOS-based one
-> together and comparing the results would be useful, for debugging and
-> tuning.
-> 
-> Plan for Dropping RFC tag
-> =========================
-> 
-> The user ABI for reading probe_hits is not yet convincing.  It is
-> exposed to users by a tracepoint and new sysfs file.  For the
-> tracepoint, a new one namely damon:damon_aggregated_v2 is introduced.
-> The name is not convincing, and its internal mechanism seems to have
-> room to be improved before dropping RFC.  For the sysfs, a file under
-> the DAMOS-tried region directory namely 'probe_hits' is added.  Reading
-> it returns four probe_hits values with ',' as a separator.  With the
-> maximum number of data probes, this should work.  This can make future
-> changes of the limit difficult.  I will try to find a better way before
-> dropping the RFC tag.  Maybe 'probe_hits/' directory having files of
-> name '0' to 'N-1' for each of user-registered 'N' data probes.
-> 
-> I'm currently hoping to drop the RFC tag by 7.2-rc1.
-> 
-> Future Works: Short Term
-> ========================
-> 
-> This series is introducing only a single type of data attribute:
-> anonymous page.  Once this is landed, I will extend it for
-> cgroup-belonging, so that we can do cgroup-level monitoring with low
-> overhead.  After that, I may further work on supporting all DAMOS filter
-> types.  And as demands are found, we could extend the types.
-> 
-> This version of implementation is limiting the maximum number of data
-> probes to four.  I will try to find a way to remove the limit in future,
-> if it is easy to do.  I personally think it should be enough for common
-> use cases, though, and therefore not giving high priority at the moment.
-> 
-> Future Works: Long Term
-> =======================
-> 
-> There are user requests for extending DAMON with detailed access
-> information, for example, per-CPUs/threads/read/writes monitoring.  For
-> that, I was working [2] on extending DAMON to use page fault events as
-> another access check primitives, and making the infrastructure flexible
-> for future use of yet another access check primitive.  Actually there is
-> another ongoing work [3] for extending DAMON with PMU events.  The
-> motivation of the work is reducing the overhead, though.
-> 
-> In my work [2], I was introducing a new interface for access sampling
-> primitives control.  Now I think this data probe interface can be used
-> for that, too.  That is, data access becomes just one type of data
-> attribute.  Also, pg_idle-confirmed access, page fault-confirmed access,
-> and PMU event-confirmed access will be different types of data
-> attributes.
-> 
-> The regions adjustment mechanism is currently working based on the
-> access information.  That's because DAMON is designed for data access
-> monitoring.  That is, data access information is the primary interest,
-> and therefore DAMON adjusts regions in a way that can best-present the
-> information.
-> 
-> Once data access becomes just one of data attributes, there is no reason
-> to think data access that special.  There might be some users not
-> interested in access at all but want to know the location of memory of
-> specific type.  Data probes interface will allow doing that.  Further,
-> we could extend the interface to let users set any data attribute as the
-> 'primary' attribute.  Then, DAMON will split and merge regions in a way
-> that can best-present the 'primary' attributes.
-> 
-> DAMOS will also be extended, to specify targets based on not only the
-> data access pattern, but all user-registered data attributes.  From this
-> stage, we may be able to call DAMON as a "Data Attributes Monitoring and
-> Operations eNgine".
-> 
-> [1] https://lore.kernel.org/20250106193401.109161-1-sj@kernel.org
-> [2] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org/
-> [3] https://lore.kernel.org/20260423004211.7037-1-akinobu.mita@gmail.com
-> 
-> SeongJae Park (19):
->   mm/damon/core: introduce struct damon_probe
->   mm/damon/core: embed damon_probe objects in damon_ctx
->   mm/damon/core: introduce damon_filter
->   mm/damon/core: commit probes
->   mm/damon/core: introduce damon_region->probe_hits
->   mm/damon/core: introduce damon_ops->apply_probes
->   mm/damon/core: do data attributes monitoring
->   mm/damon/paddr: support data attributes monitoring
->   mm/damon/sysfs: implement probes dir
->   mm/damon/sysfs: implement probe dir
->   mm/damon/sysfs: implement filters directory
->   mm/damon/sysfs: implement filter dir
->   mm/damon/sysfs: implement filter dir files
->   mm/damon/sysfs: setup probes on DAMON core API parameters
->   mm/damon/sysfs-schemes: implement tried_region/probe_hits file
->   mm/damon: trace probe_hits
->   selftests/damon/sysfs.sh: test probes dir
->   Docs/mm/damon/design: document data attributes monitoring
->   Docs/admin-guide/mm/damon/usage: document data attributes monitoring
-> 
->  Documentation/admin-guide/mm/damon/usage.rst |  44 +-
->  Documentation/mm/damon/design.rst            |  37 ++
->  include/linux/damon.h                        |  60 +++
->  include/trace/events/damon.h                 |  41 ++
->  mm/damon/core.c                              | 182 +++++++
->  mm/damon/paddr.c                             |  45 ++
->  mm/damon/sysfs-schemes.c                     |  30 ++
->  mm/damon/sysfs.c                             | 502 +++++++++++++++++++
->  tools/testing/selftests/damon/sysfs.sh       |  48 ++
->  9 files changed, 982 insertions(+), 7 deletions(-)
-> 
-> 
-> base-commit: 8f22aa2e28454419ed2031119ad32ea4a6c9f1f1
+ Documentation/trace/rv/monitor_sched.rst | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-My main concern is about potential pollution of sysfs. DAMON is already
-complex to set up, with a lot of knobs. Adding more configuration options
-may make admin's job more complex.
+diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
+index 0b96d6e147c6..d3ba7edc202f 100644
+--- a/Documentation/trace/rv/monitor_sched.rst
++++ b/Documentation/trace/rv/monitor_sched.rst
+@@ -36,7 +36,7 @@ Specifications
+ --------------
+ 
+ The specifications included in sched are currently a work in progress, adapting the ones
+-defined in by Daniel Bristot in [1].
++defined by Daniel Bristot in [1]_.
+ 
+ Currently we included the following:
+ 
+@@ -365,4 +365,7 @@ constraints when processing the events::
+ References
+ ----------
+ 
+-[1] - https://bristot.me/linux-task-model
++.. [1] Daniel Bristot de Oliveira et al.:
++       `A thread synchronization model for the PREEMPT_RT Linux kernel
++       <https://www.iris.sssup.it/bitstream/11382/533630/1/Elsevier-JSA-2020.pdf>`_,
++       J. Syst. Archit., 2020.
 
-Do you plan to support this extension in damo user space?
-
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 -- 
-Asier Gutierrez
-Huawei
+2.53.0
 
