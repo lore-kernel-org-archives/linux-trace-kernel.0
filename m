@@ -1,167 +1,218 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551E63B7B9D;
-	Mon, 27 Apr 2026 10:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A4E386C31;
+	Mon, 27 Apr 2026 12:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777287076; cv=none; b=NKt3snEz8U5FNp+J0Lu0PT+ujR1Iz0Sew+4tQYsh4zzR8+l075k80ko9yuQMLP7zjasZd+8KATpxTm/37v7Gors5cOlmKC5F51CxfcRTe4kmQwsIAn3Ha7KImH48p2aGRhEwLVNnjZr+PEGEInrQhp3+RK6lLxbXy1rog7ohmW4=
+	t=1777291804; cv=none; b=SNqsUFJ5tvHRw52DFpyken7FtD1Zg/wSmutVvYFvpSDz3hPVCvnMlwW7pKTIgPlcMfy7ZZw9xFZPjNYiuXUiIdraPKGF9VQTDZ2O8adlo0bAPLBChbAIPeMkw6skL4n5oNLtLsMFRx8L764hJOAezQSZLU1ieKKTRA21faTQgVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777287076; c=relaxed/simple;
-	bh=4y5Hx2p1vfu1q6BX9Nc9yJRTCjDae/1D0McLv8t6YTM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bcFoN2LtaLGzgvFZy83kKJWMZJVEwZekv7FCsRga1iJKSd/ToER0HHVDH1vLKu2xkrxvaOXgPYoAMXeRb3R/Ba0NrjCKJR+i+QS8lGNAUwp9PQBVJD5mUkDwAdC7YiKqwIUIEo236xJ5olcc1/HtDXXhkJEfHzhyW67UBpdvQuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6S5CIiR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777291804; c=relaxed/simple;
+	bh=bV2ndRXStbhZ2JNRS2ODSnm9jpg5L9ozE8bdTGsPo48=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sIxwnelDZh8fHp5TGIvtp587KLpt/z8Fe72sGpvApgp8vn5nw4Xg5FCr1CCtzw5eBIBbVqBsNATolx9Af0/c8NuFplPTa7RK3T+fqPMIk+5DNeOOiThUj6feO+HooIrycfJCa3Xg9qckIrvlLlbk1v3kpbuk8rGRjKoeOtijEIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMwH+xOC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6S5CIiR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2D2C19425;
-	Mon, 27 Apr 2026 10:51:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMwH+xOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE5FFC19425;
+	Mon, 27 Apr 2026 12:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777287075;
-	bh=4y5Hx2p1vfu1q6BX9Nc9yJRTCjDae/1D0McLv8t6YTM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=J6S5CIiRa1hWNaETencFFnmkhauL2uLmQ4xAcfCSHFSp4l4k/ekAF1+quBzg4NbQ2
-	 Tqyd5GRu/aEDA0asIOYFH+ircHMN78CQKpHNZNkPzYP6w60dXmWICU8wlWsF6d4u43
-	 CDXAHomkg2d4IKoKgsBp9fRERU1lej7BhnTJmKhAFIcwmX1C55NRtqx+h9/9C0D1g6
-	 5oBHHL5oGl+UfpYp62dXFp0lfLADZbXBTjncWjrpjGWbnPvmHLC/EmVaKfBv2Y8fHn
-	 ZHuUHMciTEPJ1WZhrkvOoBNey+nLDBICmObfl5Qz63DcxYAOots+b7JMkDt1z3DGoY
-	 FDtZ4m7RUwQQw==
-Message-ID: <ca981318a1d114c5d0e4f428e32f429e187d4ed2.camel@kernel.org>
-Subject: Re: [PATCH v3 2/4] mm: kick writeback flusher for IOCB_DONTCACHE
- with targeted dirty tracking
-From: Jeff Layton <jlayton@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Andrew Morton	
- <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Lorenzo
- Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka	 <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan	 <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Mike Snitzer	 <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, Ritesh
- Harjani	 <ritesh.list@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Kairui Song	 <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel
- Butt	 <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel
- Rasmussen	 <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu	 <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu	 <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Chuck Lever <chuck.lever@oracle.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Date: Mon, 27 Apr 2026 11:51:07 +0100
-In-Reply-To: <ae55M8xBIVYZXPFN@casper.infradead.org>
-References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
-	 <20260426-dontcache-v3-2-79eb37da9547@kernel.org>
-	 <ae55M8xBIVYZXPFN@casper.infradead.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=k20201202; t=1777291803;
+	bh=bV2ndRXStbhZ2JNRS2ODSnm9jpg5L9ozE8bdTGsPo48=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eMwH+xOCVlLRba18hcp6Fp537KYBQzyl7+AtZ10zXKSEKdlA3hZUXc9LjPhjzyOD0
+	 6Xl+WZPw4VeNwydLy+LjqyuPtdweiJmmmGY7au0BZtGamI+Bo+zg4olocoadZrLhnK
+	 Q+Eb4wwL/Al5DLbKm+PyTxfAep1z6L5h7gxZsEDav46Lfrb9dxIpKwImVfwvtC8QVm
+	 Fhir1ZuKk2q5XOruUfjegceCdO2f6ePVIn6eUYj4rmi7NzxGItKYjZU9YLlah/2WH5
+	 GwEx0Xd4frColjlLgigmcI+lZogDKaE1S10OV/WWTZVb+rMXrjkNCgVU9k+jcDEZWl
+	 B9pHfUddbft9g==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH] fprobe: Add unregister_fprobe_sync() for synchronous unregistration
+Date: Mon, 27 Apr 2026 21:09:58 +0900
+Message-ID:  <177729179863.401400.6063130067239479972.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2026-04-26 at 21:44 +0100, Matthew Wilcox wrote:
-> On Sun, Apr 26, 2026 at 07:56:08AM -0400, Jeff Layton wrote:
-> >   Mixed-mode noisy neighbor (dontcache writer + buffered readers):
-> >                        baseline    patched     change
-> >   writer (MB/s)         1297.6     1471.1     +13.4%
-> >   readers avg (MB/s)     855.0      462.4     -45.9%
->=20
-> hm.  This wasn't what I thought of when I thought of "noisy neighbour".
-> I'd have process A doing DONTCACHE writes to file A and process B doing
-> normal buffered writes to file B.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Originally, I was benchmarking this via nfsd and only later did I add
-the suite for local benchmarks. With nfsd, setting the iomode affects
-all reads or writes.
+Currently, unregister_fprobe() removes the ftrace hooks but does not
+wait for the RCU grace period to expire. This is efficient for batch
+unregistration of multiple fprobes (to avoid multiple RCU grace period
+latencies), but it leaves a window where probe handlers might still be
+running on other CPUs after the function returns.
+If a caller needs to free the fprobe structure or unload the module
+immediately after unregistration, they must manually call
+synchronize_rcu() to prevent use-after-free issues.
 
-So initially, I had it testing them with both reads and writes set to
-the same setting, but then later I decided to play with different modes
-for reads and writes. The best performing one was buffered reads +
-dontcache writes. It's possible a mix of different modes will be better
-on a local fs.
+To simplify this use case, introduce unregister_fprobe_sync(). This
+function unregisters the fprobe and waits for the RCU grace period to
+complete before returning.
 
-I can't easily do a benchmark like you're suggesting with nfsd, but it
-should be possible on a local benchmark. I'll see what I can come up
-with.
+Also, update the documentation of unregister_fprobe() to clarify its
+non-blocking behavior and suggest using unregister_fprobe_sync() for the
+last probe in a batch. Finally, update the fprobe sample module to use
+the synchronous version on exit to ensure safe module unloading.
+And add a fix to use synchronous version in the sample code and
+trace_fprobe (unexpected error case).
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Documentation/trace/fprobe.rst  |   15 ++++++++++++---
+ include/linux/fprobe.h          |    5 +++++
+ kernel/trace/fprobe.c           |   30 ++++++++++++++++++++++++++++++
+ kernel/trace/trace_fprobe.c     |    9 +++++++--
+ samples/fprobe/fprobe_example.c |    2 +-
+ 5 files changed, 55 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
+index 95998b189ae3..eee4860ab29a 100644
+--- a/Documentation/trace/fprobe.rst
++++ b/Documentation/trace/fprobe.rst
+@@ -65,6 +65,12 @@ To disable (remove from functions) this fprobe, call::
+ 
+   unregister_fprobe(&fp);
+ 
++Or if you need to wait for the RCU grace period to ensure no handlers
++are running on any CPU (e.g., before freeing the `fprobe` structure),
++use::
++
++  unregister_fprobe_sync(&fp);
++
+ You can temporally (soft) disable the fprobe by::
+ 
+   disable_fprobe(&fp);
+@@ -81,9 +87,12 @@ Same as ftrace, the registered callbacks will start being called some time
+ after the register_fprobe() is called and before it returns. See
+ Documentation/trace/ftrace.rst.
+ 
+-Also, the unregister_fprobe() will guarantee that both enter and exit
+-handlers are no longer being called by functions after unregister_fprobe()
+-returns as same as unregister_ftrace_function().
++Also, the `unregister_fprobe_sync()` will guarantee that both enter and exit
++handlers are no longer being called by functions after it returns.
++On the other hand, `unregister_fprobe()` does not wait for the RCU grace period,
++so handlers might still be running on other CPUs for a short time after it returns.
++This is useful when you unregister multiple fprobes in a batch to avoid
++waiting for the RCU grace period for each one.
+ 
+ The fprobe entry/exit handler
+ =============================
+diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
+index 0a3bcd1718f3..6ae452e250a1 100644
+--- a/include/linux/fprobe.h
++++ b/include/linux/fprobe.h
+@@ -94,6 +94,7 @@ int register_fprobe(struct fprobe *fp, const char *filter, const char *notfilter
+ int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num);
+ int register_fprobe_syms(struct fprobe *fp, const char **syms, int num);
+ int unregister_fprobe(struct fprobe *fp);
++int unregister_fprobe_sync(struct fprobe *fp);
+ bool fprobe_is_registered(struct fprobe *fp);
+ int fprobe_count_ips_from_filter(const char *filter, const char *notfilter);
+ #else
+@@ -113,6 +114,10 @@ static inline int unregister_fprobe(struct fprobe *fp)
+ {
+ 	return -EOPNOTSUPP;
+ }
++static inline int unregister_fprobe_sync(struct fprobe *fp)
++{
++	return -EOPNOTSUPP;
++}
+ static inline bool fprobe_is_registered(struct fprobe *fp)
+ {
+ 	return false;
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index cc49ebd2a773..5f3e48385a47 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -1097,6 +1097,9 @@ static int unregister_fprobe_nolock(struct fprobe *fp)
+  * @fp: A fprobe data structure to be unregistered.
+  *
+  * Unregister fprobe (and remove ftrace hooks from the function entries).
++ * Note: This function does not wait for RCU grace period, since user
++ * may use several fprobes (and then unregister them one by one). In that
++ * case, it is recommended to use unregister_fprobe_sync() for the last fprobe.
+  *
+  * Return 0 if @fp is unregistered successfully, -errno if not.
+  */
+@@ -1110,6 +1113,33 @@ int unregister_fprobe(struct fprobe *fp)
+ }
+ EXPORT_SYMBOL_GPL(unregister_fprobe);
+ 
++/**
++ * unregister_fprobe_sync() - Unregister fprobe synchronously with RCU grace period.
++ * @fp: A fprobe data structure to be unregistered.
++ *
++ * Unregister fprobe (and remove ftrace hooks from the function entries) and
++ * wait for the RCU grace period to finish. This is useful for preventing
++ * the fprobe from being used after it is unregistered.
++ *
++ * Return 0 if @fp is unregistered successfully, -errno if not.
++ */
++int unregister_fprobe_sync(struct fprobe *fp)
++{
++	int ret;
++
++	guard(mutex)(&fprobe_mutex);
++	if (!fp || !fprobe_registered(fp))
++		return -EINVAL;
++
++	ret = unregister_fprobe_nolock(fp);
++	if (ret)
++		return ret;
++
++	synchronize_rcu();
++	return 0;
++}
++EXPORT_SYMBOL_GPL(unregister_fprobe_sync);
++
+ static int __init fprobe_initcall(void)
+ {
+ 	rhltable_init(&fprobe_ip_table, &fprobe_rht_params);
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index 9f5f08c0e7c2..fa5b41f7f306 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -845,8 +845,13 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
+ /* Internal unregister function - just handle fprobe and flags */
+ static void __unregister_trace_fprobe(struct trace_fprobe *tf)
+ {
+-	if (trace_fprobe_is_registered(tf))
+-		unregister_fprobe(&tf->fp);
++	/*
++	 * Here, @tf must NOT be busy, so it MUST be unregistered already.
++	 * But if it is unexpectedly registered, unregister it synchronously.
++	 */
++	if (WARN_ON_ONCE(trace_fprobe_is_registered(tf)))
++		unregister_fprobe_sync(&tf->fp);
++
+ 	if (tf->tuser) {
+ 		tracepoint_user_put(tf->tuser);
+ 		tf->tuser = NULL;
+diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
+index bfe98ce826f3..382d2f67672a 100644
+--- a/samples/fprobe/fprobe_example.c
++++ b/samples/fprobe/fprobe_example.c
+@@ -142,7 +142,7 @@ static int __init fprobe_init(void)
+ 
+ static void __exit fprobe_exit(void)
+ {
+-	unregister_fprobe(&sample_probe);
++	unregister_fprobe_sync(&sample_probe);
+ 
+ 	pr_info("fprobe at %s unregistered. %ld times hit, %ld times missed\n",
+ 		symbol, nhit, sample_probe.nmissed);
+
