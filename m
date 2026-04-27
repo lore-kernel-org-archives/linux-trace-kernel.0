@@ -1,75 +1,136 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E293DA5B5;
-	Mon, 27 Apr 2026 16:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4883EF0AB;
+	Mon, 27 Apr 2026 19:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777308894; cv=none; b=ruEEVG3J6slq0EmjGMyqjRFSMbLay9sJUehe1CbfAldIc9pvKqYTnQ4YjojgfWsYEt8OrGwCOjdTRe5LuJzwJwApK1wFJXLE7sRNDc60vH9GlJadTtkFBvY1vh1RQymzj4A6V87UZx77WrA2hw787vA0/52DfYFwhD+zlt+JHtk=
+	t=1777318910; cv=none; b=EN7oSY3fuHJuEXukaooTsFVqR8amqDCrQajoCVq5qaqy6LJw50BKdRSVWpiKoxOa3jvsFArG+i37Jcf/6nMGDCS9bpggAZQVRnw2bpoUyVOBUvnfh2roPdt6lpZtoOgLQJxowsO5xi6rNPVJ52yXESjTyRVCmPV+JdO6PmviYbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777308894; c=relaxed/simple;
-	bh=1TBRRPrFLk2bz0suI62lFmFUtQ4JnpN6ZZb7MUXCn3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UQIjx2biAwOhSbXGASFJAprrdgMc9vCa6cUXTEzYs4bUWaSNVp2FV2ca2q+eKeGVjjGSChFiuJ8VHKWqtQ9AvoT+pAEqPeSpkl/3jCzYEQ2/Qcs1IM2PKQF2Bfp0ISJThRqiKBx0slZYXZfCgYd2H/CCNK+smPrQX7/II3foj+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 6E4711A022D;
-	Mon, 27 Apr 2026 16:45:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 51E122001C;
-	Mon, 27 Apr 2026 16:45:18 +0000 (UTC)
-Date: Mon, 27 Apr 2026 12:45:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, rdunlap@infradead.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, matteo.martelli@codethink.co.uk,
- skhan@linuxfoundation.org
-Subject: Re: [PATCH] Documentation/rv: Replace stale website link
-Message-ID: <20260427124530.69cbb711@gandalf.local.home>
-In-Reply-To: <93666b516d93f880ed14c3b9309e203014a7deb0.camel@redhat.com>
-References: <b845c448-1655-4860-9b6d-93d6f8426740@infradead.org>
-	<20260427085526.111835-1-gmonaco@redhat.com>
-	<875x5crb4g.fsf@trenco.lwn.net>
-	<6d7e529c7cb0ad599669e3f33e5b6168e92a8861.camel@redhat.com>
-	<87340gpvdg.fsf@trenco.lwn.net>
-	<93666b516d93f880ed14c3b9309e203014a7deb0.camel@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1777318910; c=relaxed/simple;
+	bh=jqHLqVhMq+si5t6zdmANYEG+sciG4MaJhOm7qVM3/XM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VNGPYBbmaQ1TMIP1s3xuPxny/YG5ELxgMP/7qtF9dmwgYUqnmv4Sg2DbEC2xZiT/j9wj8bCudP0ro1uY9LX+PbKdyjY3iTv1tqtktUQnmf8LW8ZiRTjBmP1Q6uqHCpciwCjgCnw+FeF2ZaBy/fpthTIKzhiT1jX9SaEdAdtSHyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJ2sQPBU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJ2sQPBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D844AC19425;
+	Mon, 27 Apr 2026 19:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777318910;
+	bh=jqHLqVhMq+si5t6zdmANYEG+sciG4MaJhOm7qVM3/XM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YJ2sQPBUIylRzAo3mxf6Nhm724kU65Z9v+W/MDzEsLK94GAuVoZhPwwWZCXj5Il90
+	 ylbki6bnVxWgs89zBNMtLu6rhC0K0vCojZYgJd/+kyOP74CwyHwQX46D6ybpo0QAsy
+	 oQCJGNTLEnyIrzPcfcN4gcLvxRKVqIE5E2NEV+lUm3Bcf2BRAVes0TDuq4IF/Ob/wq
+	 dAQXlAYNZmAjK+1TRurBmgbmdfvRX160CR8pq/uzHTcTsgWMhZKAMruNFvOCuPw6/q
+	 emV3S/kESWt7U6fOJogxNMJytyjLj7geapaYIZf4rvYKepFWg8R9Y3FuGNn6+hNAT7
+	 j3h4J0KO+Hqsw==
+Message-ID: <06c7e6a7-60af-480e-afd9-700e985ca2ba@kernel.org>
+Date: Mon, 27 Apr 2026 21:41:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7.2 v16 02/13] mm/khugepaged: generalize
+ alloc_charge_folio()
+To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: aarcange@redhat.com, akpm@linux-foundation.org,
+ anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org,
+ baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com,
+ cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com,
+ dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com,
+ jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com,
+ joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
+ Liam.Howlett@oracle.com, ljs@kernel.org, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
+ peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
+ rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+References: <20260419185750.260784-1-npache@redhat.com>
+ <20260419185750.260784-3-npache@redhat.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260419185750.260784-3-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 51E122001C
-X-Stat-Signature: gy1bpu36qat3h9zdf97qwysazhsm1ngm
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/oe6Boibh4hGCiF8SyQDlU43dwDND20jo=
-X-HE-Tag: 1777308318-462931
-X-HE-Meta: U2FsdGVkX1+qukr/rxrsDPI+RgpiKfpE2+25PGYf6wG8ZYRYn0+snH0K1UfJ32QLFGOS5bLXE/uM0M4K5JSRECg+1gdScUubPlS30ql8b2pgxWZ7R2tP7XUgEXFcCOMetdMLX6lJLHv990MmfaMrBvdajkebOlSN+7lK82NGnYRPZYFBYkqQ3NlbQZ13lLTq6S4re+wmUTfGqdORJzDchCm+uguBtcZIhxPbV5r3yaenSIK0qe1E8dmjtm7BOl3b2e0Te/a5Ns+EnoCKqGQeTl36/VaLDcfnzBS1PHbaDQsYNYLLrhZBrZ/wlEu34i+o4SLAd0RraDily1Yq7XXEoD/xmLEg46U0cztrdeO269iG50q8gj2SAMDlRSP77W8rWLWN0e6OMQY5j+LviqxHAbaDSdkR91xJJneeBa1Spn47ev7TsAjJ7Q==
+Content-Transfer-Encoding: 7bit
 
-On Mon, 27 Apr 2026 14:56:46 +0200
-Gabriele Monaco <gmonaco@redhat.com> wrote:
+On 4/19/26 20:57, Nico Pache wrote:
+> From: Dev Jain <dev.jain@arm.com>
+> 
+> Pass order to alloc_charge_folio() and update mTHP statistics.
+> 
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Co-developed-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 
-> >=20
-> > I will defer to others in the end, but to me it seems that we should
-> > make life easier for our readers whenever we can.=C2=A0 Providing a link
-> > seems better than requiring them to search for it themselves. =20
->=20
-> Alright, makes sense. I'm going to send a V2 with [1] (the open access
-> PDF), in the remote case the link stops working, we can update it.
+Your SOB should come last, the order represents the history of this patch:
 
-Can you add both?
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+Co-developed-by: Nico Pache <npache@redhat.com>
+Signed-off-by: Nico Pache <npache@redhat.com>
 
-[1] - Daniel Bristot de Oliveira et al.: A thread synchronization model for=
- the PREEMPT_RT Linux kernel, J. Syst. Archit., 2020.
-      https://www.iris.sssup.it/bitstream/11382/533630/1/Elsevier-JSA-2020.=
-pdf
+-- 
+Cheers,
 
- ?
-
--- Steve
+David
