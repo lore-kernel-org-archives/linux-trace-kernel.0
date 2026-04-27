@@ -1,172 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E86D31F984;
-	Mon, 27 Apr 2026 20:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B767A39768D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 22:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777321519; cv=none; b=AWQnfde00u4jDVsrsw8Vr7fKGJDO/wK3y/C/Rairmu1pHUZo03pvubP8f+lTcO1TQbtFmlH5+eU0nceS4rav2wT7KS94DFwuVCneSe/pEFws/Qjw4f6L87ookKtQ2y+oYMCyCrU6kBVaxGB6pbgpDC7lwUT46y3lDfH2ADEDL0Y=
+	t=1777328892; cv=none; b=kNKX+T+ov87VUK6DK33o5uV2fjets+VdYo0EjnXbIE3iE3qeXyDBTQCZPgdoZzFKpNycCLEaXW/qMtay/bu47HLm4a4jUckEEUGAbF9wI58xn5roUyFGnK+6t3R1G7yC5nOpj2tQE67Jdm9/9mYAoDMzwroP3dPd75S6mXQ2ST8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777321519; c=relaxed/simple;
-	bh=wZ62JJbJbBFYxmz4nXsEdURZ9ZvZQcCgwl8lIq3rVHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VqrEqID2SEVW9OxSwqgWrSIfmMfPw6j/lDtycnYBfUCfhMttTwySbZIcffxwq10b5TryHZSocT56g9vlxIuw6/s8pHP8OR8nIS1QY5VV6et6Ibn/9iB9rB8dTTQAcfMHBMHj1lkgV/oc0gXyO3xMkzfk1sjBGwMZG/nfshMuHQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkxKUB71; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777328892; c=relaxed/simple;
+	bh=OWUivCv4zEIft7NtrxbKIzy+5mPXal2rztDt74M075w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bg/Lthnw9rjxmK6WOi7RX75jS9bhcCIZuGqWGY/rD+5b+D2eOShGZHWilmwJCe7eWdMkavw7qQuZeXj/L607ctR9lh7jreA2XHvsheaQTPg9AyYq0dpDG+aPpTBH4VWhJnxKfGnp9A03GtG2wY8b72QUh2ZvxbCAG1UrUUloUHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=P/zKgAuS; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkxKUB71"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF12C19425;
-	Mon, 27 Apr 2026 20:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777321519;
-	bh=wZ62JJbJbBFYxmz4nXsEdURZ9ZvZQcCgwl8lIq3rVHI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gkxKUB71RDl0C8Txlx3EhD82nFBtJoCkuZlpTFV1lUNcqsSh8sMHSpg9Gd2zDckOX
-	 d57E0mKovidPdCFENazaUlbeAwBZzgv6VWMK4AyLbVsRZ31Ky1K0r1lo8HN83yFxFP
-	 i5YUdGj4UPCvbyv14v45UZO72SJn+Tq40WipfZVuxjJbQ/X0vysEoxqBKYqq9rBuDN
-	 jvpMIXGkqcYdvy9jGQ7rpQWMfjUc4Dsd8Wm6tHbTfcBWjXy/IDMCDd4wOFM2/1RUnU
-	 HbYmg7WocFt5sWdAoDVRF9or3z5fNBwhHIBblyV35zwihyDmmm1YU9+O2iFTbzliLT
-	 zlb7HcaNpqRUQ==
-Message-ID: <5564e170-d052-4445-9914-70bfd852d3b1@kernel.org>
-Date: Mon, 27 Apr 2026 22:24:59 +0200
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="P/zKgAuS"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so91822265e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 15:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1777328889; x=1777933689; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P9hfpEncvlzWZw9qEgc5pnCnun8WUnWYl5bmHD7iYIU=;
+        b=P/zKgAuSLzLPSH789XAOwV+rhQrJmoWPiMm0nHbuVnH4U0baGk44DJkGTfRAlhQITb
+         F1kfFZ1Y9XRfzgAOCEmFOi50HyphqmijoTnYZaAWgvP4bMEH1mGHdoJf18VArbZ7sqhb
+         QO3sVqvUj+qu3K5jHJ/FW11MR+9R65VIoxVpzgBsZz3HOktQqtwZVazL2LrFqwOi5yBs
+         yY1gyjpVc/RU7JZsoR3g/c4UevytCygkCjvJnsz+suv2rsefA7oWNXAfLh6vLoTh+FVo
+         lu9b/S78ovpMilPOrEb8Psbg6pNznBG/UEgF3pw7M/Rm2hCZyojPU7EBIpPYGhUc+j4K
+         Ibpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777328889; x=1777933689;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P9hfpEncvlzWZw9qEgc5pnCnun8WUnWYl5bmHD7iYIU=;
+        b=lziN1Ry3TdlzfmXRuKJvYGuZNu3zRnFiUrd4rtMkX11w6K4oBdT6bT1ZLdY8nVIF2J
+         owYH2bppAewDFw9z4o3uiXYsVmlBW3R5xfy2ivyjHwzeZJMHNqku3UX4DIgFt7CteemB
+         YYvxibXiZj3FKd9DD3saNsni5CZRGrSjGlrMIhoar/nNhi15aWF9bkVytYNzKA5Mw5TI
+         PCd9K7gN4DP7LLLoCGd/BrMVkCUAdbku0nwBhDDFdJq5kE/N2Z8PojiVfmCOEZoIv2lM
+         7r5QJwfSntahMUaNlxbrbLT2LIMR37KaHdtp7IjlqLbUCkC0VOSyozhs/H0o0PqaXp7W
+         jHQQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9zxgeFa1ChFIDysMjNvI7w8FT8PLt6/SQN9YJlP5AizEh54f+axtr8FNGeNtDFqbYU/W8hAnzTRO1mK8SYGVNoVCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlMXXkeSIAa+Wmfw3jLMVarOQUWtwomWT15EqBQF3cBo3aIxFt
+	YtX5hSt/xlyB1dHo6pSBTYXva0B1c+uAghvB+P68TIq03mD7jDWEDH+1mLI9d5KQWIo=
+X-Gm-Gg: AeBDiet0LtEGE4toqcoSefUUbccQ042gDcGFZg58LXX++sctjf9o7SNyxJyh8bTMTmC
+	14jmy9LnFNtpFpDumAI63gA/kcqA9A4VYEVvlo36UxsNyNZTHUHxGyb/Nhb6KUvwadcCDn6qvBn
+	86r6oXrDJBmmS50msOnziq8S8h4fNQYIJyoluMxu9K4Mv0ZInjwtM0agdMiyLT9gmiYlHPR/AcR
+	OmRLJkJ+Rg7FdBG1ToaIMDmiEhDFL/xfjL6kKAHf3jNuyBaRJesPJH+nVjV6uwGp4ssjdFHyarD
+	jQEF+dIRArpdGOr3kkTGy+2vPnApJHaPBFLxL8nMia97KKEdx2D35azw6dLZiktZSLLeG8yQKyT
+	3+dCIxxrvynTDpORlTVvbGCCvlzFOW1sbpDDS2BSrzhHkrAsUcmEkgMw9Xux9eEduY+rIRJlsGN
+	dIQVl5AxvzR6WtquTi6Bj0AO5H2+Ms1K7X8L/5L0w=
+X-Received: by 2002:a05:600c:46c5:b0:483:64b4:79da with SMTP id 5b1f17b1804b1-48a77b22e28mr7190105e9.26.1777328888562;
+        Mon, 27 Apr 2026 15:28:08 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2a00:23c8:67a7:3101::e3b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a77afabcdsm15735785e9.8.2026.04.27.15.28.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2026 15:28:07 -0700 (PDT)
+Date: Mon, 27 Apr 2026 23:28:04 +0100
+From: Gregory Price <gourry@gourry.net>
+To: Arun George <arun.george@samsung.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
+	gost.dev@samsung.com, arungeorge05@gmail.com, cpgs@samsung.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
+ <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7.2 v16 09/13] mm/khugepaged: introduce
- collapse_allowable_orders helper function
-To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-Cc: aarcange@redhat.com, akpm@linux-foundation.org,
- anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org,
- baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com,
- cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com,
- dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com,
- jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com,
- joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
- Liam.Howlett@oracle.com, ljs@kernel.org, mathieu.desnoyers@efficios.com,
- matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
- peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
- rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
- rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
- shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
- thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
- vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
- will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-References: <20260419185750.260784-1-npache@redhat.com>
- <20260419185750.260784-10-npache@redhat.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260419185750.260784-10-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
 
-On 4/19/26 20:57, Nico Pache wrote:
-> Add collapse_allowable_orders() to generalize THP order eligibility. The
-> function determines which THP orders are permitted based on collapse
-> context (khugepaged vs madv_collapse).
+On Mon, Apr 27, 2026 at 06:02:57PM +0530, Arun George wrote:
 > 
-> This consolidates collapse configuration logic and provides a clean
-> interface for future mTHP collapse support where the orders may be
-> different.
+> Appreciate the work as we also chase the same problem statement.
+> A few queries please.
 > 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
+> I see the current support relies on read-only mappings which might
+> limit the performance. Any particular workload you are targeting with
+> this (which can tolerate this latency)?
+>
+> Any deployments you think of where the goal is a capacity expansion
+> with a compromise in performance?
+>
 
+Primary use cases for us are any workload that benefits from zswap -
+which is many, many (many, many [many, many]) workloads.
 
-[...]
+That said, performance is quite irrelevant if you cannot guarantee
+correctness.
 
->  	cc = kmalloc_obj(*cc);
-> diff --git a/mm/vma.c b/mm/vma.c
-> index 377321b48734..c0398fb597b3 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -989,7 +989,7 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
->  		goto abort;
->  
->  	vma_set_flags_mask(vmg->target, sticky_flags);
-> -	khugepaged_enter_vma(vmg->target, vmg->vm_flags);
-> +	khugepaged_enter_vma(vmg->target);
->  	vmg->state = VMA_MERGE_SUCCESS;
->  	return vmg->target;
->  
-> @@ -1110,7 +1110,7 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
->  	 * following VMA if we have VMAs on both sides.
->  	 */
->  	if (vmg->target && !vma_expand(vmg)) {
-> -		khugepaged_enter_vma(vmg->target, vmg->vm_flags);
-> +		khugepaged_enter_vma(vmg->target);
->  		vmg->state = VMA_MERGE_SUCCESS;
->  		return vmg->target;
->  	}
-> @@ -2589,7 +2589,7 @@ static int __mmap_new_vma(struct mmap_state *map, struct vm_area_struct **vmap,
->  	 * call covers the non-merge case.
->  	 */
->  	if (!vma_is_anonymous(vma))
-> -		khugepaged_enter_vma(vma, map->vm_flags);
-> +		khugepaged_enter_vma(vma);
->  	*vmap = vma;
+In a scenario where a multi-threaded CPU can write many many GB/s to
+a compressed device - I can't see a scenario where completely
+uncontended writes to such a device can provide reliability.
 
-Are you sure that in all cases, vma->vm_flags already corresponds to
-vmg->vm_flags / map->vm_flags?
+I suppose you could increase the latency of a writable cacheline from
+Xns to NXns - but you've only slowed the bear down.  Meanwhile, running
+away from said bear includes trying to migrate stuff off the device...
+presumably to swap - so your migration process has to have higher
+throughput than whatever writes are coming in from the CPU.
 
+Meanwhile - the system is clearly already pressured, and is likely to
+continue demoting new data to the compressed tier.
 
-That's a change that makes this patch unnecessary hard to follow, in particular,
-because it's not documented in the patch description.
+So you end up, at best, in a footrace hoping the bear loses interest,
+or at worst in a fight hoping to dodge its claws (generating poison on
+some write that fails).
 
-If you think the change is fine, you should better move that into a separate
-cleanup patch where you only drop the flags parameter from  khugepaged_enter_vma().
+> On the device side, are you targeting beyond compressed RAM like
+> devices such as memory with NAND etc.?
+> 
 
--- 
-Cheers,
+For private nodes - I have been collecting use cases, but I haven't seen
+a NAND proposal.  Unless someone is willing to demonstrate such a device
+actually working without causing bus-lockup issues, most believe the
+error-recovery overhead for NAND is too expensive to service cacheline
+fetches.
 
-David
+> The TL;DR talked about mmap/mbind way of user space allocation from
+> the private node. But the allocation is controlled by GFP flag
+> N_MEMORY_PRIVATE. Does the user space path of allocation set this
+> flag along the way?
+> 
+
+No.  Userspace does mbind() and it works - if the device's driver (or
+service) has opted that node into allowing mempolicy syscalls.
+
+The kernel injects the __GFP_PRIVATE for the relevant VMA in the vma
+fault path if that VMA has a nodemask with a valid private node.
+
+> And I believe the bear-proof cage might work in the normal scenarios,
+> but may not work for all.
+
+If it can't work for all workloads, then it's likely not general purpose
+enough to find core kernel support and should seek to use the existing
+interfaces (DAX and friends).
+
+> We might not be able to rely on the control
+> path (backpressure) fully. The control path could go slow, slower and
+> even die as well. Should the device respond with something like
+> 'bus error' if the host tries to write when it is not capable of
+> taking any more writes?
+> 
+
+You need two controls over compressed RAM for it to be reliable:
+
+  - Allocation control (acquiring new struct page to write to)
+  - Write-control (preventing new writes to compressed pages)
+
+Private nodes provide the allocation control.
+
+A read-only mapping, and guarantee that only memory that can reach
+the device is userland memory - is the only way to control the cpu
+writes from the OS perspective.
+
+(Bonus: page cache can't live here, because buffered I/O bypasses
+ this by using direct writes from the kernel).
+
+Slowing the bus down just puts you in competition with swap, and bus
+error is basically equivalent to poison being reported at write time.
+
+That's basically the whole story.
+
+Loosening the write-protection can be seen as trading optimization
+for risk - where the risk is hitting poison in userland-only memory.
+
+In the next version of the RFC i'll demonstrate cram.c as a new swap
+backend that allows for read-only mappings to be soft-faulted in,
+migration on write, isolation to ANON memory, and some optional 
+settings that allow a device or administrator a "writable budget" 
+which allows some number of pages to be made writable without migration.
+
+~Gregory
