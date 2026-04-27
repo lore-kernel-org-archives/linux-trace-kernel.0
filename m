@@ -1,153 +1,430 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586EA3C8705;
-	Mon, 27 Apr 2026 13:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5FE3DB636
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 13:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777297388; cv=none; b=hNtnomqRbSfZFvhGdI3bzptu3ZdSv5mY950hKMcHXa4YXSmh7yUn/d+t+dKDAhiCVsBJaKwzwxmeyjxnkhmULbDgI8VfoIafiOk52yeCVy9XbsTXgoVLs/pcX7noIM6IcbvBTwMQbGSMtGJ0spdx0+Rw2s8zHJQ/NKT80RHz4Po=
+	t=1777297897; cv=none; b=Qcn8BGfW6vkvUmaQS9g74/FCSLTzFKkrWf2peKNHGzgsGiez1gTqXjjDpeRYrHelZiGAX9OwyaSBPssBx+KaGqWKZJAmH1z8zf3lSnGrsR8gYDpB5UBC6BUGnlpqUcZ5JJ/1jiuwmlHQfs5g39ESE8BTIKeMrN4oVHsXS8U26+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777297388; c=relaxed/simple;
-	bh=HYpZWzyqAIY0fKVdx1G8AWuk4ggGTSoGNuwwIO5d2iQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=EliIs7/DDKxv2jgUAhkKr4kJ5DbqZcdCSZhyQTbewPCX6JUeJS7Ne5L1Nmfz7Pv8Wf0KPj97WHXdRfQu4UOjUKXSHBxOcW2gGH2ME5Algq+Jjm4sd/fv1t+qM7EZaEY7/dF3g+eg2R/K59816ZwPZTLyLAooSpE8pmcITMh0Nfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oTje4ElN; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1777297897; c=relaxed/simple;
+	bh=BUNNBL75JlgyYl1f+kaaTDb0zhLanoFrSlMfvZwNLkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P+7pBieZ7xSPaWfRCcn2/dSSxZr46rxJ8swoAixThHm7vXoLvuvHilNXo0gYWjmPkn7Nn5hVOKuDGFNg60Dvv6UDpFom/tV3o9fvN3GTFLNLYXxmZ2dOFRIqMQ6rPuWfUU2+t7GlzKY61fh1MvarKSUEQLB9+ZoiP8ni2zh/hGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PBFqn9Ej; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oTje4ElN"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260427134302epoutp0196401e6a027f43e9f7a2a8e4ec37def5~qOo2fjOBb1175011750epoutp01L;
-	Mon, 27 Apr 2026 13:43:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260427134302epoutp0196401e6a027f43e9f7a2a8e4ec37def5~qOo2fjOBb1175011750epoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1777297383;
-	bh=HYpZWzyqAIY0fKVdx1G8AWuk4ggGTSoGNuwwIO5d2iQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oTje4ElNm4xecU1VG1Jrx86EY3Gpl1Vu+7Eg8igCfRDmuEWp0LdNN4Ssf0cEWBOKp
-	 03qrQy7Mwh4wQ/opBqnoORCUo1z8aoZlbY7D0/ViobxGIRXTFLcHW7dWyX9aTsl2N3
-	 Eh24v5hHa9Vb0gAdrDBssQHqG7CW+ElPnJnUatLc=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20260427134302epcas5p214d5e003586bc14fd5c926391fd2af9c~qOo16jVbi1491214912epcas5p24;
-	Mon, 27 Apr 2026 13:43:02 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4g44Wp1ZR3z3hhT3; Mon, 27 Apr
-	2026 13:43:02 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0~qNwDrt8ay0098400984epcas5p1l;
-	Mon, 27 Apr 2026 12:38:00 +0000 (GMT)
-Received: from green245.gost (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260427123748epsmtip257b0d1b83f2086e0e46dbf256b9f1ff0~qNv5BJqIr2057720577epsmtip23;
-	Mon, 27 Apr 2026 12:37:48 +0000 (GMT)
-Date: Mon, 27 Apr 2026 18:02:57 +0530
-From: Arun George <arun.george@samsung.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
-	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
-	mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
-	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
-	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
-	jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
-	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
-	riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
-	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
-	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
-	zhengqi.arch@bytedance.com, terry.bowman@amd.com, gost.dev@samsung.com,
-	arungeorge05@gmail.com, cpgs@samsung.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PBFqn9Ej"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-488af9fdaa7so61064825e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 06:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1777297894; x=1777902694; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1cYp2AU5vjHi+KVV4ru0tdDsKrXMa/utyY7506Y2ajU=;
+        b=PBFqn9Ej99m4KkvJ8FneieEJhPtjz8Dre/19vCy4gjNCnFA65ymFQRTqFt4cpMfLMN
+         scKTMjBkZzWJTAhbGMDSDO/pIQ4vHdlgtEaTMS0afiUSDWOyR3HQhS7rbNWLD9STixpg
+         sE5Ztq01/amMtW7QYJrtls1yaugp2JYJkULut9wu0d8Hsiyho+5zwTAWNtTJGGon8fY6
+         T9GaDDtkR9cxQwExmrzoue/bs0ykVvCG1oWobIyDj/yp+S6NwDgEtU0RnE9SQnK8Ie0X
+         o72gzs39ugs/hM/EWSQyaco/vZRMkpzBVaInlytWTb6xHAWhQ/g8ywVs+ItMoa4NYAFk
+         8A8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777297894; x=1777902694;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1cYp2AU5vjHi+KVV4ru0tdDsKrXMa/utyY7506Y2ajU=;
+        b=j5on/6fJ9I1NhBHr4tUgRrKTmTQFb74oVW7tLXIBa1b0hrUpESQM/jbC4ZYqbDDtwg
+         cABnhlm4DVlQ1xrcFGYaBzdJX5H7+vHLytXt3Tw6I19fw3PSERHKOisn02NHvygQny58
+         toWZb6ClVvHWyRuv+GyKPhvmoJ1TDJd5BBqkxnrVy/oUeUZ7WiVEw4Nq5Bza7fB7oiPG
+         fmZViDgYo0QxczwdWeXB7pBCp+hc+J/2sSkEw8pEuDfKTfYL3KywQvVNds57kt1l9UtL
+         HjLMjknAlGw+dG0RowSdKKe1xAh1GOnF5Ll3kQ9ypmxG0L795PILgJyOvEPr/yfUWC+z
+         dNBA==
+X-Forwarded-Encrypted: i=1; AFNElJ+nlwuyBSrOXACLvOzLcoS28yEQiFxJhj7dpWhzG07B7h8jzywEEJe6j5IF1TU9Vyoet4zVNS3tFV0hfo8cowiC/Rw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXU0QqExrpZDREpfKu+52zE6dHJxNED1cc7RLsV/6dQudOL3VP
+	KGC7vHbM6vZFsbzBW1NRFuPElWcDlrusRw7BEQdNWO7OZvgTdGhqsfsgjl/7AdqTcGA=
+X-Gm-Gg: AeBDiesCkGjyKssNBvkR9n+lPsLG6xARwsNr4BtTYFTYoJl81tQsFsd6iy95eRj/UXF
+	U4HYc75LqrcxzTZ7SeLZDiaX+0Pl/u6/sGQIAVlUm5EpPOp+zuq5beoJwlwWrxDGUa0PIeUk17E
+	PAuHoiKZpNMLTV129C31gGhnbBj/SoijItakXMRInY8vfMyU6PuusIuNkUEeHcXxQqfnQAdUn6M
+	m+zgCoBkn5ct3UeFq6ckTKnLp8aXaWeO6THg687YtEibJ/K0cMx0qRKEU/3kPb0UDAVLkC57oIv
+	V0FT3VTR+yCB0aaRAr7IXWlYy7MHDqun45SKCeBd/IJYRkK/xqNPdbMFQ8we2YJ++NnwHoxPdcV
+	ddbTwmeaaAmctxqhgSP4ZI7WzfE3vgncau6fGabNjQeQb3UjJlHkI1xC0YxDNpubKQyuSjBIKQD
+	txfhA/QCq7mNMtNZUBS79xcelqVzTDhri+99IZx34/Y74olGI9BbeKyBnAQmbuTEBicw==
+X-Received: by 2002:a05:600c:5297:b0:485:9a50:3370 with SMTP id 5b1f17b1804b1-488fb74a431mr664904745e9.8.1777297893506;
+        Mon, 27 Apr 2026 06:51:33 -0700 (PDT)
+Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a5c4b9e8dsm119134175e9.7.2026.04.27.06.51.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2026 06:51:32 -0700 (PDT)
+Message-ID: <88ae41dc-e5e0-442a-9b95-5125adf31e75@suse.com>
+Date: Mon, 27 Apr 2026 15:51:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
-X-CMS-MailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
-References: <20260222084842.1824063-1-gourry@gourry.net>
-	<CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] module/kallsyms: sort function symbols and use
+ binary search
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+ Daniel Gomez <da.gomez@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Jordan Rome <linux@jordanrome.com>,
+ Viktor Malik <vmalik@redhat.com>
+References: <20260327110005.16499-1-stf_xl@wp.pl>
+ <20260327110005.16499-2-stf_xl@wp.pl>
+ <11c8e139-f9f3-4b22-863a-4e021a3947e7@suse.com>
+ <20260424091330.GA31168@wp.pl>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20260424091330.GA31168@wp.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On 4/24/26 11:13 AM, Stanislaw Gruszka wrote:
+> On Thu, Apr 23, 2026 at 04:00:04PM +0200, Petr Pavlu wrote:
+>> On 3/27/26 12:00 PM, Stanislaw Gruszka wrote:
+[...]
+>>> diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
+>>> index f23126d804b2..d69e99e67707 100644
+>>> --- a/kernel/module/kallsyms.c
+>>> +++ b/kernel/module/kallsyms.c
+>>> @@ -10,6 +10,7 @@
+>>>  #include <linux/kallsyms.h>
+>>>  #include <linux/buildid.h>
+>>>  #include <linux/bsearch.h>
+>>> +#include <linux/sort.h>
+>>>  #include "internal.h"
+>>>  
+>>>  /* Lookup exported symbol in given range of kernel_symbols */
+>>> @@ -103,6 +104,95 @@ static bool is_core_symbol(const Elf_Sym *src, const Elf_Shdr *sechdrs,
+>>>  	return true;
+>>>  }
+>>>  
+>>> +static inline bool is_func_symbol(const Elf_Sym *sym)
+>>> +{
+>>> +	return sym->st_shndx != SHN_UNDEF && sym->st_size != 0 &&
+>>> +	       ELF_ST_TYPE(sym->st_info) == STT_FUNC;
+>>> +}
+>>> +
+>>> +static unsigned int bsearch_func_symbol(struct mod_kallsyms *kallsyms,
+>>> +					unsigned long addr,
+>>> +					unsigned long *bestval,
+>>> +					unsigned long *nextval)
+>>> +
+>>> +{
+>>> +	unsigned int mid, low = 1, high = kallsyms->num_func_syms + 1;
+>>> +	unsigned int best = 0;
+>>> +	unsigned long thisval;
+>>> +
+>>> +	while (low < high) {
+>>> +		mid = low + (high - low) / 2;
+>>> +		thisval = kallsyms_symbol_value(&kallsyms->symtab[mid]);
+>>> +
+>>> +		if (thisval <= addr) {
+>>> +			*bestval = thisval;
+>>> +			best = mid;
+>>> +			low = mid + 1;
+>>
+>> If thisval == addr, the search moves to the right and finds the last
+>> symbol with the same address. I believe it should do the opposite and
+>> return the first symbol to match the behavior of
+>> search_kallsyms_symbol().
+> 
+> In the case of multiple symbols sharing the same address, we have
+> to pick one and ignore the others. I don’t think it matters much which
+> one is chosen in practice. Also, I expect function symbol addresses
+> to be unique, so this shouldn’t be a real issue.
 
-On 22/02/26 03:48AM, Gregory Price wrote:
->Topic type: MM
->
->Presenter: Gregory Price <gourry@gourry.net>
->
->This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
->managed by the buddy allocator but excluded from normal allocations.
->
->I present it with an end-to-end Compressed RAM service (mm/cram.c)
->that would otherwise not be possible (or would be considerably more
->difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
->
->
->TL;DR
->===
->
-Appreciate the work as we also chase the same problem statement.
-A few queries please.
+I think that the code should consistently pick the same answer. If
+someone uses aliases for their functions, the logic shouldn't
+arbitrarily return one of them, but preferably the first one, which
+should normally be the actual implementation.
 
-I see the current support relies on read-only mappings which might
-limit the performance. Any particular workload you are targeting with
-this (which can tolerate this latency)?
+> 
+>>> +		} else {
+>>> +			*nextval = thisval;
+>>> +			high = mid;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return best;
+>>> +}
+>>> +
+>>> +static const char *kallsyms_symbol_name(struct mod_kallsyms *kallsyms,
+>>> +					unsigned int symnum)
+>>> +{
+>>> +	return kallsyms->strtab + kallsyms->symtab[symnum].st_name;
+>>> +}
+>>> +
+>>> +static unsigned int search_kallsyms_symbol(struct mod_kallsyms *kallsyms,
+>>> +					   unsigned long addr,
+>>> +					   unsigned long *bestval,
+>>> +					   unsigned long *nextval)
+>>> +{
+>>> +	unsigned int i, best = 0;
+>>> +
+>>> +	/*
+>>> +	 * Scan for closest preceding symbol and next symbol. (ELF starts
+>>> +	 * real symbols at 1). Skip the initial function symbols range
+>>> +	 * if num_func_syms is non-zero, those are handled separately for
+>>> +	 * the core TEXT segment lookup.
+>>> +	 */
+>>> +	for (i = 1 + kallsyms->num_func_syms; i < kallsyms->num_symtab; i++) {
+>>> +		const Elf_Sym *sym = &kallsyms->symtab[i];
+>>> +		unsigned long thisval = kallsyms_symbol_value(sym);
+>>> +
+>>> +		if (sym->st_shndx == SHN_UNDEF)
+>>> +			continue;
+>>> +
+>>> +		/*
+>>> +		 * We ignore unnamed symbols: they're uninformative
+>>> +		 * and inserted at a whim.
+>>> +		 */
+>>> +		if (*kallsyms_symbol_name(kallsyms, i) == '\0' ||
+>>> +		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
+>>> +			continue;
+>>> +
+>>> +		if (thisval <= addr && thisval > *bestval) {
+>>> +			best = i;
+>>> +			*bestval = thisval;
+>>> +		}
+>>> +		if (thisval > addr && thisval < *nextval)
+>>> +			*nextval = thisval;
+>>> +	}
+>>> +
+>>> +	return best;
+>>> +}
+>>> +
+>>> +static int elf_sym_cmp(const void *a, const void *b)
+>>> +{
+>>> +	unsigned long val_a = kallsyms_symbol_value((const Elf_Sym *)a);
+>>> +	unsigned long val_b = kallsyms_symbol_value((const Elf_Sym *)b);
+>>> +
+>>> +	if (val_a < val_b)
+>>> +		return -1;
+>>> +
+>>> +	return val_a > val_b;
+>>
+>> Does this comparison function and the sort() call result in stable
+>> sorting? If val_a and val_b are the same, the sorting should preserve
+>> the original order.
+> 
+> The kernel’s sort() implementation is not stable.
 
-Any deployments you think of where the goal is a capacity expansion
-with a compromise in performance?
+Ok, I see it is a heapsort. It would require additional data to keep
+information about the original indexes for elf_sym_cmp() to use as
+a tiebreaker.
 
-On the device side, are you targeting beyond compressed RAM like
-devices such as memory with NAND etc.?
+> 
+>>> +}
+>>> +
+>>>  /*
+>>>   * We only allocate and copy the strings needed by the parts of symtab
+>>>   * we keep.  This is simple, but has the effect of making multiple
+>>> @@ -115,9 +205,10 @@ void layout_symtab(struct module *mod, struct load_info *info)
+>>>  	Elf_Shdr *symsect = info->sechdrs + info->index.sym;
+>>>  	Elf_Shdr *strsect = info->sechdrs + info->index.str;
+>>>  	const Elf_Sym *src;
+>>> -	unsigned int i, nsrc, ndst, strtab_size = 0;
+>>> +	unsigned int i, nsrc, ndst, nfunc, strtab_size = 0;
+>>>  	struct module_memory *mod_mem_data = &mod->mem[MOD_DATA];
+>>>  	struct module_memory *mod_mem_init_data = &mod->mem[MOD_INIT_DATA];
+>>> +	bool is_lp_mod = is_livepatch_module(mod);
+>>>  
+>>>  	/* Put symbol section at end of init part of module. */
+>>>  	symsect->sh_flags |= SHF_ALLOC;
+>>> @@ -129,12 +220,14 @@ void layout_symtab(struct module *mod, struct load_info *info)
+>>>  	nsrc = symsect->sh_size / sizeof(*src);
+>>>  
+>>>  	/* Compute total space required for the core symbols' strtab. */
+>>> -	for (ndst = i = 0; i < nsrc; i++) {
+>>> -		if (i == 0 || is_livepatch_module(mod) ||
+>>> +	for (ndst = nfunc = i = 0; i < nsrc; i++) {
+>>> +		if (i == 0 || is_lp_mod ||
+>>>  		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+>>>  				   info->index.pcpu)) {
+>>>  			strtab_size += strlen(&info->strtab[src[i].st_name]) + 1;
+>>>  			ndst++;
+>>> +			if (!is_lp_mod && is_func_symbol(src + i))
+>>> +				nfunc++;
+>>>  		}
+>>>  	}
+>>>  
+>>> @@ -156,6 +249,7 @@ void layout_symtab(struct module *mod, struct load_info *info)
+>>>  	mod_mem_init_data->size = ALIGN(mod_mem_init_data->size,
+>>>  					__alignof__(struct mod_kallsyms));
+>>>  	info->mod_kallsyms_init_off = mod_mem_init_data->size;
+>>> +	info->num_func_syms = nfunc;
+>>>  
+>>>  	mod_mem_init_data->size += sizeof(struct mod_kallsyms);
+>>>  	info->init_typeoffs = mod_mem_init_data->size;
+>>> @@ -169,7 +263,7 @@ void layout_symtab(struct module *mod, struct load_info *info)
+>>>   */
+>>>  void add_kallsyms(struct module *mod, const struct load_info *info)
+>>>  {
+>>> -	unsigned int i, ndst;
+>>> +	unsigned int i, di, nfunc, ndst;
+>>>  	const Elf_Sym *src;
+>>>  	Elf_Sym *dst;
+>>>  	char *s;
+>>> @@ -178,6 +272,7 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+>>>  	void *data_base = mod->mem[MOD_DATA].base;
+>>>  	void *init_data_base = mod->mem[MOD_INIT_DATA].base;
+>>>  	struct mod_kallsyms *kallsyms;
+>>> +	bool is_lp_mod = is_livepatch_module(mod);
+>>>  
+>>>  	kallsyms = init_data_base + info->mod_kallsyms_init_off;
+>>
+>> This code is followed by the initialization of kallsyms:
+>>
+>> 	kallsyms->symtab = (void *)symsec->sh_addr;
+>> 	kallsyms->num_symtab = symsec->sh_size / sizeof(Elf_Sym);
+>> 	/* Make sure we get permanent strtab: don't use info->strtab. */
+>> 	kallsyms->strtab = (void *)info->sechdrs[info->index.str].sh_addr;
+>> 	kallsyms->typetab = init_data_base + info->init_typeoffs;
+>>
+>> I suggest adding 'kallsyms->num_func_syms = 0;' after the initialization
+>> of kallsyms->num_symtab.
+> 
+> I relied on zeroed memory initialization, but I can add this explicitly
+> for clarity.
+> 
+>>> @@ -194,19 +289,28 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+>>>  	mod->core_kallsyms.symtab = dst = data_base + info->symoffs;
+>>>  	mod->core_kallsyms.strtab = s = data_base + info->stroffs;
+>>>  	mod->core_kallsyms.typetab = data_base + info->core_typeoffs;
+>>> +
+>>>  	strtab_size = info->core_typeoffs - info->stroffs;
+>>>  	src = kallsyms->symtab;
+>>> -	for (ndst = i = 0; i < kallsyms->num_symtab; i++) {
+>>> +	ndst = info->num_func_syms + 1;
+>>> +
+>>> +	for (nfunc = i = 0; i < kallsyms->num_symtab; i++) {
+>>>  		kallsyms->typetab[i] = elf_type(src + i, info);
+>>> -		if (i == 0 || is_livepatch_module(mod) ||
+>>> +		if (i == 0 || is_lp_mod ||
+>>>  		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+>>>  				   info->index.pcpu)) {
+>>>  			ssize_t ret;
+>>>  
+>>> -			mod->core_kallsyms.typetab[ndst] =
+>>> -				kallsyms->typetab[i];
+>>> -			dst[ndst] = src[i];
+>>> -			dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
+>>> +			if (i == 0)
+>>> +				di = 0;
+>>> +			else if (!is_lp_mod && is_func_symbol(src + i))
+>>> +				di = 1 + nfunc++;
+>>> +			else
+>>> +				di = ndst++;
+>>> +
+>>> +			mod->core_kallsyms.typetab[di] = kallsyms->typetab[i];
+>>> +			dst[di] = src[i];
+>>> +			dst[di].st_name = s - mod->core_kallsyms.strtab;
+>>>  			ret = strscpy(s, &kallsyms->strtab[src[i].st_name],
+>>>  				      strtab_size);
+>>>  			if (ret < 0)
+>>> @@ -216,9 +320,13 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+>>>  		}
+>>>  	}
+>>>  
+>>> +	WARN_ON_ONCE(nfunc != info->num_func_syms);
+>>> +	sort(dst + 1, nfunc, sizeof(Elf_Sym), elf_sym_cmp, NULL);
+>>> +
+>>
+>> The code sorts mod->core_kallsyms.symtab but mod->core_kallsyms.typetab
+>> is not reordered accordingly.
+> 
+> Right, but for function symbols the typetab entries are all 't',
+> so swapping them does not change the type value. The 'T' vs 't'
+> distinction is handled later when printing (based on export status).
+> But the comment explaining skiping adjusting of
+> mod->core_kallsyms.typetab is needed.
 
-The TL;DR talked about mmap/mbind way of user space allocation from
-the private node. But the allocation is controlled by GFP flag
-N_MEMORY_PRIVATE. Does the user space path of allocation set this
-flag along the way?
+Modules can also contain weak functions with elf_type() = 'w'.
 
-And I believe the bear-proof cage might work in the normal scenarios,
-but may not work for all. We might not be able to rely on the control
-path (backpressure) fully. The control path could go slow, slower and
-even die as well. Should the device respond with something like
-'bus error' if the host tries to write when it is not capable of
-taking any more writes?
+> 
+>>>  	/* Set up to point into init section. */
+>>>  	rcu_assign_pointer(mod->kallsyms, kallsyms);
+>>>  	mod->core_kallsyms.num_symtab = ndst;
+>>> +	mod->core_kallsyms.num_func_syms = nfunc;
+>>>  }
+>>>  
+>>>  #if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID)
+>>> @@ -241,11 +349,6 @@ void init_build_id(struct module *mod, const struct load_info *info)
+>>>  }
+>>>  #endif
+>>>  
+>>> -static const char *kallsyms_symbol_name(struct mod_kallsyms *kallsyms, unsigned int symnum)
+>>> -{
+>>> -	return kallsyms->strtab + kallsyms->symtab[symnum].st_name;
+>>> -}
+>>> -
+>>>  /*
+>>>   * Given a module and address, find the corresponding symbol and return its name
+>>>   * while providing its size and offset if needed.
+>>> @@ -255,7 +358,10 @@ static const char *find_kallsyms_symbol(struct module *mod,
+>>>  					unsigned long *size,
+>>>  					unsigned long *offset)
+>>>  {
+>>> -	unsigned int i, best = 0;
+>>> +	unsigned int (*search)(struct mod_kallsyms *kallsyms,
+>>> +			       unsigned long addr, unsigned long *bestval,
+>>> +			       unsigned long *nextval);
+>>> +	unsigned int best;
+>>>  	unsigned long nextval, bestval;
+>>>  	struct mod_kallsyms *kallsyms = rcu_dereference(mod->kallsyms);
+>>>  	struct module_memory *mod_mem = NULL;
+>>> @@ -266,6 +372,11 @@ static const char *find_kallsyms_symbol(struct module *mod,
+>>>  			continue;
+>>>  #endif
+>>>  		if (within_module_mem_type(addr, mod, type)) {
+>>> +			if (type == MOD_TEXT && kallsyms->num_func_syms > 0)
+>>> +				search = bsearch_func_symbol;
+>>
+>> I'm not sure if it is ok to limit the search only to function symbols
+>> when the address lies in MOD_TEXT. The text can theoretically contain
+>> non-function symbols.
+> 
+> Yes, the patch assumes that the only valid symbols in the MOD_TEXT
+> are functions. If there are defined OBJECT symbols in .text, the patch
+> would break lookup for those.
+> 
+> While it’s theoretically possible (e.g. hand-written assembly placing
+> data in .text ?), I’m not sure this is a practical concern. In general,
+> having data in executable segments is discouraged for security reasons. 
+> 
+>> Could this optimization be adjusted to sort all
+>> MOD_TEXT symbols (excluding anonymous and mapping symbols) and move them
+>> to the front of the symbol table?
+> 
+> That’s possible. We could track .text sections indices in
+> __layout_sections() and include all valid symbols from those sections,
+> and also reorder typetab accordingly.
+> 
+> However, this adds complexity. I would prefer to first confirm whether
+> OBJECT symbols in MOD_TEXT is a real issue before going in that direction.
 
-Are there any workloads (VM?) where this 'bus error'or similar error
-could be an OK / recoverable scenario?
+I'm not aware of specific OBJECT symbols that end up in MOD_TEXT.
+Nonetheless, it is a valid case and it is preferable that an
+optimization doesn't break their lookup by address.
 
-This is assuming that checking with the device on every operation
-(whether it is safe to write or not) could be slow.
+In general, I'm worried about the several edge cases and inconsistencies
+that this optimization introduces. This also includes the fact that it
+doesn't work for livepatch modules.
 
---- Arun George
+An alternative could be to keep the symbol table untouched and have
+a separate array with symbol indexes that is sorted by their addresses,
+but it requires evaluation if the additional memory usage is worth it.
 
-------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_
-Content-Type: text/plain; charset="utf-8"
-
-
-------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_--
-
+-- 
+Thanks,
+Petr
