@@ -1,58 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C7C329C6B
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 15:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6D1329C48
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 15:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777302717; cv=none; b=NjJUtSr3xdecvf1069RqP29+j8OBPijQxGzejIfn75nrplX45mbn2kJLxi2AnJOTNHHZplNvH54Cud+Qlf8sUenYJb7DlZt6dIa3N/HV43EE8QfNl9bt4Pcsog8LTkL+u6BxZsSAuFw5Qn0ZsXiRywbJ6wwh4LnqWqq7ScwWZQQ=
+	t=1777302719; cv=none; b=BtuQvFqUukHSoXWySGqVbM7i2q7PmLTGdHbD0KCkVFyzsDulazvaNj9iBC2juRhrq0sRAULEEE25tQbjpXKfaMRvI9h1NM/gSpgMfSs8vvhgcwArRkc7W/oH7HLoho8YZ/eh+0CD/g0Ehi2hOo8TPeAzfp1UKk8HMqyvuL+ek1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777302717; c=relaxed/simple;
-	bh=aVAqdCXdV6eJozKW7db/vaawPWlfqGLQK+rT7vDrqv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=Vt5E4U2r5HhFvj0PZufx9Yi96pKu2ruVSo6Ur8JFgWSnOBT+G5UeGDnQapxE0Rp8bTdNWtFgNnoWaXNBudIRKH1yG0yTDKFNzZOj2n2qkXaukPl277qIHMMS1+4SuFuqvnzvpNde+W4kj3AoZfi3j52p+shtMNicIMyEf68xYWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IZXTcaXK; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1777302719; c=relaxed/simple;
+	bh=6vx7EVUEeXu+w4Q4EMKcVbjcZH3hUDGdi+p13lmJFzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=rxMrVFDuwHvctk+wvhB5TeS67fUOkXPJYBAi3dLkGIE47f1sopQdIRHVD1G4QCinBkzkjCk1Utojmo6jgvucX9UgKL9s3bm5yNswxXe8jbwsGvRJ3+jsZWpMy86OmQQuvYrBrz/TxH3VfD0LTIT2hsfeZgU62YUUIogOVKTvZis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XAm5qBAx; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IZXTcaXK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XAm5qBAx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777302715;
+	s=mimecast20190719; t=1777302716;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+Tly+ExAMxdGd6yARGJk0tySw/vRfTsEdgmbQxE8NRY=;
-	b=IZXTcaXK8WL2k8r14tCjOSdG18lfjeHR8S1SMGyKBAQnEqdQiwyWog39hKSWA1wH0XnPi5
-	lGIQTo4bZAjBLa1hOtcLK2ifeC55F9DjnY8pHcGMFiQyifkV+mBPJk6kNQuqySn5tvoFwO
-	5JgBFAkhw6OISeJ3ysih+hqNZfYbQdQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4d8rayQv9Te5MjRAGc+HYTqoPOPUAIqg0Cp2spaG8Zw=;
+	b=XAm5qBAxrCWycoT6b608MZ7gvxxscbGZObPATdMsVxFk2yVpQcN5p47apCaYn7NlrsjdI8
+	qDxEEgibLLBO3bSjOmNJiu0cmGxQq4ylzZJvdq8lfLWXn2l+R+dsoED4AjOW/YdMxXTKUK
+	9ot+VtrIY98ijK0O6jMhaqf0Eyfpwv0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-275-W3cm3LJrOvaBRAtl0w4kug-1; Mon,
- 27 Apr 2026 11:11:51 -0400
-X-MC-Unique: W3cm3LJrOvaBRAtl0w4kug-1
-X-Mimecast-MFC-AGG-ID: W3cm3LJrOvaBRAtl0w4kug_1777302710
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-2YCjGELPOl6Nysi9yQ852g-1; Mon,
+ 27 Apr 2026 11:11:55 -0400
+X-MC-Unique: 2YCjGELPOl6Nysi9yQ852g-1
+X-Mimecast-MFC-AGG-ID: 2YCjGELPOl6Nysi9yQ852g_1777302714
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F3AC31956088;
-	Mon, 27 Apr 2026 15:11:49 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 393DE19560B8;
+	Mon, 27 Apr 2026 15:11:54 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E24A7195608E;
-	Mon, 27 Apr 2026 15:11:46 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3CD56195608E;
+	Mon, 27 Apr 2026 15:11:50 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>,
 	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [RFC PATCH 00/12] rv: Add selftests to tools and KUnit tests
-Date: Mon, 27 Apr 2026 17:11:22 +0200
-Message-ID: <20260427151134.192971-1-gmonaco@redhat.com>
+Subject: [RFC PATCH 01/12] tools/rv: Fix substring match bug in monitor name search
+Date: Mon, 27 Apr 2026 17:11:23 +0200
+Message-ID: <20260427151134.192971-2-gmonaco@redhat.com>
+In-Reply-To: <20260427151134.192971-1-gmonaco@redhat.com>
+References: <20260427151134.192971-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,172 +64,91 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: co5ZslB-uVM3qjvp93kizYqKQqoOrxMNUIhHUXpD0uM_1777302710
+X-Mimecast-MFC-PROC-ID: nV47acFdifShISRgkoQ5-lRZbhjygojOnNzF662KhsM_1777302714
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-This series adds support to the make check target in the rv userspace
-tool and the rvgen script, this allows to quickly validate its
-functionality. The selftest framework is inspired by the one used in
-RTLA.
+__ikm_find_monitor_name() relies on strstr() to find a monitor by name,
+which fails if the target monitor is a substring of a previously listed
+monitor.
 
-A few bugs in both tools were also discovered and are fixed as part of
-this series.
+Fix it by tokenizing the available_monitors file and matching full
+tokens instead.
 
-Additionally it adds unit tests for models. This is achieved by running
-the handlers functions directly within KUnit, emulating all modules
-paths as if real kernel events fired.
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ tools/verification/rv/src/in_kernel.c | 48 ++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 23 deletions(-)
 
-Unit tests emulate a series of events that are expected to trigger
-violations and checks that a reaction occurred, stub structs and
-functions are used so the kernel is not affected by the test.
-
-To: linux-trace-kernel@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>
-Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>
-Cc: Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Wen Yang <wen.yang@linux.dev>
-
-Gabriele Monaco (12):
-  tools/rv: Fix substring match bug in monitor name search
-  tools/rv: Fix substring match when listing container monitors
-  tools/rv: Fix exit status when monitor execution fails
-  tools/rv: Fix cleanup after failed trace setup
-  tools/rv: Add selftests
-  verification/rvgen: Fix options shared among commands
-  verification/rvgen: Add golden and spec folders for tests
-  verification/rvgen: Add selftests
-  rv: Add KUnit stub to rv_react() and rv_*_task_monitor_slot()
-  rv: Add KUnit tests for some DA/HA monitors
-  rv: Add KUnit stubs for current and smp_processor_id()
-  rv: Add KUnit tests for some LTL monitors
-
- include/rv/da_monitor.h                       |  32 +++
- include/rv/kunit_stubs.h                      |  17 ++
- include/rv/ltl_monitor.h                      |  32 +++
- kernel/trace/rv/Kconfig                       |  14 +
- kernel/trace/rv/Makefile                      |   3 +
- kernel/trace/rv/monitors/nomiss/nomiss.c      |  30 +++
- kernel/trace/rv/monitors/opid/opid.c          |  27 ++
- .../trace/rv/monitors/pagefault/pagefault.c   |  26 +-
- kernel/trace/rv/monitors/sco/sco.c            |  23 ++
- kernel/trace/rv/monitors/sleep/sleep.c        |  64 ++++-
- kernel/trace/rv/monitors/sssw/sssw.c          |  27 ++
- kernel/trace/rv/monitors/sts/sts.c            |  35 +++
- kernel/trace/rv/rv.c                          |   5 +
- kernel/trace/rv/rv_monitors_test.c            |  99 +++++++
- kernel/trace/rv/rv_monitors_test.h            |  90 +++++++
- kernel/trace/rv/rv_reactors.c                 |   3 +
- tools/verification/rv/Makefile                |   5 +-
- tools/verification/rv/src/in_kernel.c         |  58 ++--
- tools/verification/rv/src/rv.c                |   2 +-
- tools/verification/rv/tests/rv_list.t         |  48 ++++
- tools/verification/rv/tests/rv_mon.t          |  95 +++++++
- tools/verification/rvgen/Makefile             |   4 +
- tools/verification/rvgen/__main__.py          |  10 +-
- .../rvgen/tests/golden/da_global/Kconfig      |   9 +
- .../rvgen/tests/golden/da_global/da_global.c  |  95 +++++++
- .../rvgen/tests/golden/da_global/da_global.h  |  47 ++++
- .../tests/golden/da_global/da_global_trace.h  |  15 ++
- .../tests/golden/da_perobj_parent/Kconfig     |  11 +
- .../da_perobj_parent/da_perobj_parent.c       | 110 ++++++++
- .../da_perobj_parent/da_perobj_parent.h       |  64 +++++
- .../da_perobj_parent/da_perobj_parent_trace.h |  15 ++
- .../tests/golden/da_pertask_desc/Kconfig      |   9 +
- .../golden/da_pertask_desc/da_pertask_desc.c  | 105 ++++++++
- .../golden/da_pertask_desc/da_pertask_desc.h  |  64 +++++
- .../da_pertask_desc/da_pertask_desc_trace.h   |  15 ++
- .../rvgen/tests/golden/ha_percpu/Kconfig      |   9 +
- .../rvgen/tests/golden/ha_percpu/ha_percpu.c  | 244 +++++++++++++++++
- .../rvgen/tests/golden/ha_percpu/ha_percpu.h  |  72 +++++
- .../tests/golden/ha_percpu/ha_percpu_trace.h  |  19 ++
- .../rvgen/tests/golden/ltl_pertask/Kconfig    |   9 +
- .../tests/golden/ltl_pertask/ltl_pertask.c    | 107 ++++++++
- .../tests/golden/ltl_pertask/ltl_pertask.h    | 108 ++++++++
- .../golden/ltl_pertask/ltl_pertask_trace.h    |  14 +
- .../rvgen/tests/golden/test_container/Kconfig |   5 +
- .../golden/test_container/test_container.c    |  35 +++
- .../golden/test_container/test_container.h    |   3 +
- .../rvgen/tests/golden/test_da/Kconfig        |   9 +
- .../rvgen/tests/golden/test_da/test_da.c      |  95 +++++++
- .../rvgen/tests/golden/test_da/test_da.h      |  47 ++++
- .../tests/golden/test_da/test_da_trace.h      |  15 ++
- .../rvgen/tests/golden/test_ha/Kconfig        |   9 +
- .../rvgen/tests/golden/test_ha/test_ha.c      | 247 ++++++++++++++++++
- .../rvgen/tests/golden/test_ha/test_ha.h      |  72 +++++
- .../tests/golden/test_ha/test_ha_trace.h      |  19 ++
- .../rvgen/tests/golden/test_ltl/Kconfig       |  11 +
- .../rvgen/tests/golden/test_ltl/test_ltl.c    | 108 ++++++++
- .../rvgen/tests/golden/test_ltl/test_ltl.h    | 108 ++++++++
- .../tests/golden/test_ltl/test_ltl_trace.h    |  14 +
- .../rvgen/tests/rvgen_container.t             |  20 ++
- .../verification/rvgen/tests/rvgen_monitor.t  |  87 ++++++
- .../rvgen/tests/specs/test_da.dot             |  16 ++
- .../rvgen/tests/specs/test_da2.dot            |  18 ++
- .../rvgen/tests/specs/test_ha.dot             |  27 ++
- .../rvgen/tests/specs/test_invalid.dot        |   8 +
- .../rvgen/tests/specs/test_invalid.ltl        |   1 +
- .../rvgen/tests/specs/test_invalid_ha.dot     |  16 ++
- .../rvgen/tests/specs/test_ltl.ltl            |   1 +
- tools/verification/tests/engine.sh            | 156 +++++++++++
- 68 files changed, 2993 insertions(+), 44 deletions(-)
- create mode 100644 include/rv/kunit_stubs.h
- create mode 100644 kernel/trace/rv/rv_monitors_test.c
- create mode 100644 kernel/trace/rv/rv_monitors_test.h
- create mode 100644 tools/verification/rv/tests/rv_list.t
- create mode 100644 tools/verification/rv/tests/rv_mon.t
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global.c
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.c
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.c
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.c
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.h
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.c
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.h
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_container/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_container/test_container.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_container/test_container.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl_trace.h
- create mode 100644 tools/verification/rvgen/tests/rvgen_container.t
- create mode 100644 tools/verification/rvgen/tests/rvgen_monitor.t
- create mode 100644 tools/verification/rvgen/tests/specs/test_da.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_da2.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_ha.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_invalid.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_invalid.ltl
- create mode 100644 tools/verification/rvgen/tests/specs/test_invalid_ha.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_ltl.ltl
- create mode 100644 tools/verification/tests/engine.sh
-
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index 4bb746ea6e17..a200b63f4509 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -58,38 +58,40 @@ static int __ikm_read_enable(char *monitor_name)
+  */
+ static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
+ {
+-	char *available_monitors, container[MAX_DA_NAME_LEN+1], *cursor, *end;
+-	int retval = 1;
++	char *available_monitors, *cursor, *line;
++	int len = strlen(monitor_name);
++	int found = 0;
+ 
+ 	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
+ 	if (!available_monitors)
+ 		return -1;
+ 
+-	cursor = strstr(available_monitors, monitor_name);
+-	if (!cursor) {
+-		retval = 0;
+-		goto out_free;
+-	}
++	config_is_container = 0;
++	cursor = available_monitors;
++	while ((line = strsep(&cursor, "\n"))) {
++		char *colon = strchr(line, ':');
+ 
+-	for (; cursor > available_monitors; cursor--)
+-		if (*(cursor-1) == '\n')
+-			break;
+-	end = strstr(cursor, "\n");
+-	memcpy(out_name, cursor, end-cursor);
+-	out_name[end-cursor] = '\0';
+-
+-	cursor = strstr(out_name, ":");
+-	if (cursor)
+-		*cursor = '/';
+-	else {
+-		sprintf(container, "%s:", monitor_name);
+-		if (strstr(available_monitors, container))
+-			config_is_container = 1;
++		if (strcmp(line, monitor_name) && (!colon || strcmp(colon + 1, monitor_name)))
++			continue;
++
++		strncpy(out_name, line, 2 * MAX_DA_NAME_LEN);
++		out_name[2 * MAX_DA_NAME_LEN - 1] = '\0';
++
++		if (colon) {
++			out_name[colon - line] = '/';
++		} else {
++			/* If there are children, they are on the next line. */
++			line = strsep(&cursor, "\n");
++			if (line && !strncmp(line, monitor_name, len) && line[len] == ':')
++				config_is_container = 1;
++		}
++
++		found = 1;
++		break;
+ 	}
+ 
+-out_free:
+ 	free(available_monitors);
+-	return retval;
++	return found;
+ }
+ 
+ /*
 -- 
 2.53.0
 
