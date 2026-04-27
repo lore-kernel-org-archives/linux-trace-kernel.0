@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE862EAB61;
-	Mon, 27 Apr 2026 20:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205D6332EC8;
+	Mon, 27 Apr 2026 20:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777320829; cv=none; b=bZyR1mFIURCe8QzPEkrIjBIcwGv0gfBZQD6Dir2IZjtWpevpPW+bBERNMPnbF95y/NuN9kWl9m73mg0X8L5HVOVl5ts/td1ZB6boIeGEOeJh3YkHpzy+g25GfC0Rp+FuCyBM89aBGQzpHypUcaCvObTLRYrKyJAHpFoZsVbWuWo=
+	t=1777321289; cv=none; b=lYGOJ2S9c6uJISAJOrL7XGbV3xw9013I1uG/OD2U4kMS3mE9HLCIRqN3x31tapqQhnB4Na7KASMVQ/g18OQl6rR4mypSFQWvNk2+R2IkgYzWT2IfUob6i83dI9vw/5K8qci7VYmtQLoTiMh8ESFs/hoxvCra72dD6cWaATF8gWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777320829; c=relaxed/simple;
-	bh=xRwli7GW6thWpU6EobkQOMk6t9ZJU2wEmi/d4jlIFl4=;
+	s=arc-20240116; t=1777321289; c=relaxed/simple;
+	bh=LfEO2GoA4tssIBvxQvA9KN/YDpW25UUMbOSLYE27780=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=itRDWLxTiueySvOf9MWN54wk+iCEZMYKPqz2Sxz27RSRmj1/zCG8+NVAahs+/XnNFiMCvCWvSsmG4R+F/Xdb/IMxxyCCPnd7VRg4KUYgFyjKVHTbGJ1+gXJ6lu55ClndkX5MRWblFaLxXgIVcE7nmPZeUWRJMOIkN+P3lCG5WDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyos5hQ7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Be/PQeLskA+trWBNziv0O5ht6ue9trsOhz+w302OzI7tZG9S9ohjJcF4hjRCn9vhN5gIIJyqFDkJij8pR/HPYHLGGow22Dm6HaGlBZcWLS7334E4Ckn4ZBykCDp5PB24bf5fAGqV66xmStAP59WCSCtEaUBB+bbxPo9g5SRN0go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scn2FMus; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyos5hQ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5433AC19425;
-	Mon, 27 Apr 2026 20:13:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scn2FMus"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ECBFC19425;
+	Mon, 27 Apr 2026 20:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777320828;
-	bh=xRwli7GW6thWpU6EobkQOMk6t9ZJU2wEmi/d4jlIFl4=;
+	s=k20201202; t=1777321288;
+	bh=LfEO2GoA4tssIBvxQvA9KN/YDpW25UUMbOSLYE27780=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cyos5hQ7hZFe9Z2mkBILoxF+VUCYkf2nLEB1NHVkFWDBTNAcK5xef1Iq/xLiKSXIO
-	 jLfo6+LpHwn3NqCk316tOl/kynQgFx/CqR4oEeviuRq/+ITyiBAgj9FqmFJ6rA3saw
-	 movh6YS789KqwkB/L5JqwzGF9NRcBMHnEXfJDzVsTUivXWqcXRHvLB+27ZUdQcrSNC
-	 e0EGwegRgyTOcPyEkyQBTQ9R0RK7r4yMRgH+UrY117rVaHYMhKPCERBrB0bVxPnRTr
-	 oICm0dq4m/O7XjgBLSBZGor4R0hD17ZMrfvyxfoU8nvOjvICk2b0UBbZf5mC3vPStQ
-	 ItnxEIRqHHo7Q==
-Message-ID: <6025c087-378b-4754-b1f2-3c5448b49d6c@kernel.org>
-Date: Mon, 27 Apr 2026 22:13:27 +0200
+	b=scn2FMus/b0JjqogLdL1wDKbOhtjb4L+4fyveZh+6uhBqW7Y0g/71/8fbdUzOr3SN
+	 QLG50KMOmamw+Y1/wXVXBqMm2LDSFWLU5TSDbwfgNlxpM/aZKD9rysUOEjIrftifAx
+	 F14WVFAnNNEEis874EELBsfe7CwrOLJDwFBNdUBN7LRz91k5xHPhn3za0ga5vYC/du
+	 NoOO6W1ZDCxyeII4mvcuOR6RFMenXxzNPetoA1GFxiqrAU7cEQ4s5doIZvEApqndOz
+	 eOsM3q6AFxWuMN0rIaoEouIjHCumxMVBhMbrAQ9xh1/qUkEZUyMhNgl7SJ8Eo7AgHp
+	 LnIkrFJ/wFRNw==
+Message-ID: <f05f4506-2930-44ba-918a-e0e5bcb9d0f9@kernel.org>
+Date: Mon, 27 Apr 2026 22:21:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7.2 v16 05/13] mm/khugepaged: generalize
- collapse_huge_page for mTHP collapse
+Subject: Re: [PATCH 7.2 v16 07/13] mm/khugepaged: add per-order mTHP collapse
+ failure statistics
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -58,7 +58,7 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
 References: <20260419185750.260784-1-npache@redhat.com>
- <20260419185750.260784-6-npache@redhat.com>
+ <20260419185750.260784-8-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -105,109 +105,110 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260419185750.260784-6-npache@redhat.com>
+In-Reply-To: <20260419185750.260784-8-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 4/19/26 20:57, Nico Pache wrote:
-> Pass an order and offset to collapse_huge_page to support collapsing anon
-> memory to arbitrary orders within a PMD. order indicates what mTHP size we
-> are attempting to collapse to, and offset indicates were in the PMD to
-> start the collapse attempt.
+> Add three new mTHP statistics to track collapse failures for different
+> orders when encountering swap PTEs, excessive none PTEs, and shared PTEs:
 > 
-> For non-PMD collapse we must leave the anon VMA write locked until after
-> we collapse the mTHP-- in the PMD case all the pages are isolated, but in
-> the mTHP case this is not true, and we must keep the lock to prevent
-> access/changes to the page tables. This can happen if the rmap walkers hit
-> a pmd_none while the PMD entry is currently unavailable due to being
-> temporarily removed during the collapse phase.
+> - collapse_exceed_swap_pte: Increment when mTHP collapse fails due to swap
+> 	PTEs
+> 
+> - collapse_exceed_none_pte: Counts when mTHP collapse fails due to
+>   	exceeding the none PTE threshold for the given order
+> 
+> - collapse_exceed_shared_pte: Counts when mTHP collapse fails due to shared
+>   	PTEs
+> 
+> These statistics complement the existing THP_SCAN_EXCEED_* events by
+> providing per-order granularity for mTHP collapse attempts. The stats are
+> exposed via sysfs under
+> `/sys/kernel/mm/transparent_hugepage/hugepages-*/stats/` for each
+> supported hugepage size.
+> 
+> As we currently dont support collapsing mTHPs that contain a swap or
+
+s/dont/do not/
+
+> shared entry, those statistics keep track of how often we are
+> encountering failed mTHP collapses due to these restrictions.
+> 
+> Now that we plan to support mTHP collapse for anon pages, lets also track
+
+"We will add support for mTHP collapse for anonymous pages next; let's also ..."
+
+> when this happens at the PMD level within the per-mTHP stats.
+
+What about file collapse? For example, we do adjust
+count_vm_event(THP_SCAN_EXCEED_SWAP_PTE) and
+count_vm_event(THP_SCAN_EXCEED_NONE_PTE) there.
+
+Wouldn't we want to update the HPAGE_PMD_ORDER side of things there already? or
+would we want to use a different counter for that?
+
 > 
 > Signed-off-by: Nico Pache <npache@redhat.com>
 > ---
->  mm/khugepaged.c | 103 +++++++++++++++++++++++++++---------------------
->  1 file changed, 57 insertions(+), 46 deletions(-)
+>  Documentation/admin-guide/mm/transhuge.rst | 24 ++++++++++++++++++++++
+>  include/linux/huge_mm.h                    |  3 +++
+>  mm/huge_memory.c                           |  7 +++++++
+>  mm/khugepaged.c                            | 21 +++++++++++++++++--
+>  4 files changed, 53 insertions(+), 2 deletions(-)
 > 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 283bb63854a5..ff6f9f1883ed 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1198,42 +1198,36 @@ static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_stru
->  	return SCAN_SUCCEED;
->  }
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> index c51932e6275d..eebb1f6bbc6c 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -714,6 +714,30 @@ nr_anon_partially_mapped
+>         an anonymous THP as "partially mapped" and count it here, even though it
+>         is not actually partially mapped anymore.
 >  
-> -static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long address,
-> -		int referenced, int unmapped, struct collapse_control *cc)
-> +static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long start_addr,
-> +		int referenced, int unmapped, struct collapse_control *cc,
-> +		unsigned int order)
->  {
->  	LIST_HEAD(compound_pagelist);
->  	pmd_t *pmd, _pmd;
-> -	pte_t *pte;
-> +	pte_t *pte = NULL;
->  	pgtable_t pgtable;
->  	struct folio *folio;
->  	spinlock_t *pmd_ptl, *pte_ptl;
->  	enum scan_result result = SCAN_FAIL;
->  	struct vm_area_struct *vma;
->  	struct mmu_notifier_range range;
-> +	bool anon_vma_locked = false;
-> +	const unsigned long pmd_addr = start_addr & HPAGE_PMD_MASK;
-> +	const unsigned long end_addr = start_addr + (PAGE_SIZE << order);
+> +collapse_exceed_none_pte
+> +       The number of collapse attempts that failed due to exceeding the
+> +       max_ptes_none threshold. For mTHP collapse, Currently only max_ptes_none
+> +       values of 0 and (HPAGE_PMD_NR - 1) are supported. Any other value will
+> +       emit a warning and no mTHP collapse will be attempted. khugepaged will
+> +       try to collapse to the largest enabled (m)THP size; if it fails, it will
+> +       try the next lower enabled mTHP size. This counter records the number of
+> +       times a collapse attempt was skipped for exceeding the max_ptes_none
+> +       threshold, and khugepaged will move on to the next available mTHP size.
 
-In general, const read better when they are at the very top of this list.
+Why is everything after the first sentence worth documenting here? This doesn't
+read like it belongs to a failure counter?
 
->  
-> -	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
-> -
-> -	/*
-> -	 * Before allocating the hugepage, release the mmap_lock read lock.
-> -	 * The allocation can take potentially a long time if it involves
-> -	 * sync compaction, and we do not need to hold the mmap_lock during
-> -	 * that. We will recheck the vma after taking it again in write mode.
-> -	 */
-> -	mmap_read_unlock(mm);
-> -
+> +
+> +collapse_exceed_swap_pte
+> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
+> +       to containing at least one swap PTE. Currently khugepaged does not
+> +       support collapsing mTHP regions that contain a swap PTE. This counter can
+> +       be used to monitor the number of khugepaged mTHP collapses that failed
+> +       due to the presence of a swap PTE.
 
-You should spell out that locking change (moving it to the caller), and why it
-is required, in the patch description.
+Can we similarly simplify that (and make it consistent with the one above) to
 
-I'd even have put this into a separate patch, as it's independent to the
-order-passing changes.
+"The number of collapse attempts that failed due to exceeding the max_ptes_swap
+threshold."
+
+> +
+> +collapse_exceed_shared_pte
+> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
+> +       to containing at least one shared PTE. Currently khugepaged does not
+> +       support collapsing mTHP PTE ranges that contain a shared PTE. This
+> +       counter can be used to monitor the number of khugepaged mTHP collapses
+> +       that failed due to the presence of a shared PTE.
+
+Same here
+
+"The number of collapse attempts that failed due to exceeding the
+max_ptes_shared threshold."
+
+?
+
+> +
+
 [...]
-
->  	 */
->  	__folio_mark_uptodate(folio);
-> -	pgtable = pmd_pgtable(_pmd);
-> -
->  	spin_lock(pmd_ptl);
-> -	BUG_ON(!pmd_none(*pmd));
-> -	pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> -	map_anon_folio_pmd_nopf(folio, pmd, vma, address);
-> +	WARN_ON_ONCE(!pmd_none(*pmd));
-> +	if (is_pmd_order(order)) { /* PMD collapse */
-> +		pgtable = pmd_pgtable(_pmd);
-> +		pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> +		map_anon_folio_pmd_nopf(folio, pmd, vma, pmd_addr);
-> +	} else { /* mTHP collapse */
-
-Do both these comments (PMD collapse ...) really add any value? I'd say it's
-pretty self-documenting code already.
-
-> +		map_anon_folio_pte_nopf(folio, pte, vma, start_addr, /*uffd_wp=*/ false);
-> +		smp_wmb(); /* make PTEs visible before PMD. See pmd_install() */
-> +		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
-> +	}
->  	spin_unlock(pmd_ptl);
->  
->  	folio = NULL;
->  
->  	result = SCAN_SUCCEED;
->  out_up_write:
-> +	if (anon_vma_locked)
-> +		anon_vma_unlock_write(vma->anon_vma);
-> +	if (pte)
-> +		pte_unmap(pte);
 
 -- 
 Cheers,
