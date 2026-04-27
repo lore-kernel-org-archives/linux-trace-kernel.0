@@ -1,186 +1,102 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1CA37E2F2;
-	Mon, 27 Apr 2026 07:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE1C28C5B1
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Apr 2026 08:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777275388; cv=none; b=LcxqjD8xMpezOzCVJ/P2N6kxq1ibA1hcTaarjW/6cEx4tpP6Baxbn8Uk08RFeB5Ld1TVMKkWTv6Jd0heJXjJP95zC9fQGrUMfQ2NF8ygcD+FJ8+N9WDBqaJMu2iDtbO4qwNa4mbEsCcSj1ZWBCmYuNjLQHgXc35bzBFr7AQdwR0=
+	t=1777280162; cv=none; b=Np9Lf9zeUjAxU28OdweMO70fbXkeUihAdpdFoyIC1AQPKGY9TXDrx7M3DC3mncEGLx1eaFljXLgDHFwnOGgq0ZGc0JkxgtAR9+mzS93kaA0eIsJ1n0SVd7no+kgqRlyd45PO6bjQ5EI9mLa/fgzHX2WlUVRIKm25fyuz+PfqzG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777275388; c=relaxed/simple;
-	bh=BmIv9uDaWGl2BsLjmW6P7Fd2alD9SELik5QJjIs6rNo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jtoyuRrQppPNf8NKxRtpqWwV7a6M2LJkyuq9eYBiV2+XCk5XH1e26dojSK7SYw5Eix/zUFWdXLPuxXUoWJVemIO1dN9qbbfiE4hA4wl8O2tSAppHvhKl9XCePS4IxsBTVDIRA3OnHYJ9bdEB1PkpPWPUpWVCYW3tKQufMrstBq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=p25QGms6; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	s=arc-20240116; t=1777280162; c=relaxed/simple;
+	bh=e0ZEwjP6zD/rHV0Vqf4IhTgvBZ9ZV3aiRT8Rjtw6vew=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=D83Ul3mkHvJpOaBB6Gs+5AGo7cEZkvlTimU7q59Xay/zVDR53mhmoLUJY5z2XIzO7XXba1rMhi4mqP6m2LxXD/S26ssYXZiEXbMKYfxEagkDsFLXESBrXnZc02c7w71FhVfSFAh6zr1kydw0oAGo1mexPriZElPHQ/94rsl/6C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bo7znAPh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="p25QGms6"
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63R4hqVi2793495;
-	Mon, 27 Apr 2026 07:35:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:message-id:mime-version:subject:to; s=PPS06212021; bh=f67sUy0Fk
-	VF2WqulClpkvvF+yIicieX9w6ew9YdyzuI=; b=p25QGms6U107VTfUv8hFVf+ea
-	5YYjpDXCEVVeyy/aFulyhAHX1DEREuYUaNTsmxymMSznr66SkoZBtzosDJ8aMWws
-	E67nikNujPHdPpk2u0S3UeLCB0cfOnnrF70Kfh+GkDrWzFpUI2pEpvIheEaJtWGZ
-	PfS2W5qc8lVd4bnmURqKvVd4QfoDVemtLapEs3Yyx/fxd6ImrLDqE52yTifOoIhT
-	o30AI9gTzswQc1uh5DjY/ErzRwF9tFwYG8nkO79dHboJn02EuRFYdP9dM1laX/aQ
-	dFEEK1j7e7gPC4s5EuX3lkvhOYuI0nJy96lZv8mB+E1XosADVtGzNi4BwRHvg==
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [128.224.246.37])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4drju09r9w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 27 Apr 2026 07:35:49 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
- ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.61; Mon, 27 Apr 2026 00:35:48 -0700
-Received: from pek-lpggp9.wrs.com (10.11.232.110) by
- ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
- 15.1.2507.61 via Frontend Transport; Mon, 27 Apr 2026 00:35:45 -0700
-From: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
-To: <naveen@kernel.org>, <davem@davemloft.net>, <mhiramat@kernel.org>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>,
-        Jianpeng Chang <jianpeng.chang.cn@windriver.com>
-Subject: [PATCH] kprobes: skip non-symbol addresses in kprobe_add_ksym_blacklist()
-Date: Mon, 27 Apr 2026 15:35:44 +0800
-Message-ID: <20260427073545.3656835-1-jianpeng.chang.cn@windriver.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bo7znAPh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777280160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bdy7/E7tkeTBGH0DMuZvkxgqLNb/8QzaFC1QjP7ThlA=;
+	b=Bo7znAPh7b5jhi5RPPWa6rBLShDuaM6XUA06Emi/ux4VcxZ4x2mGyITkuSC/KAlA3g3AX/
+	0KzvK4N3CWzNJlWR9lbvljqbBjkNbcA4U1Nhxa/E4xSzLZX1j6fjoTeCi3CisBLtmhKwwJ
+	oiEKYf80ZktNJ2szVI0DbYs3SCE3oEs=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-97-A77rpIBbOyeDLZquVehGew-1; Mon,
+ 27 Apr 2026 04:55:58 -0400
+X-MC-Unique: A77rpIBbOyeDLZquVehGew-1
+X-Mimecast-MFC-AGG-ID: A77rpIBbOyeDLZquVehGew_1777280156
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0908119560B4;
+	Mon, 27 Apr 2026 08:55:56 +0000 (UTC)
+Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ED2DC1800352;
+	Mon, 27 Apr 2026 08:55:52 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: rdunlap@infradead.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matteo.martelli@codethink.co.uk,
+	skhan@linuxfoundation.org
+Subject: [PATCH] Documentation/rv: Replace stale website link
+Date: Mon, 27 Apr 2026 10:55:24 +0200
+Message-ID: <20260427085526.111835-1-gmonaco@redhat.com>
+In-Reply-To: <b845c448-1655-4860-9b6d-93d6f8426740@infradead.org>
+References: <b845c448-1655-4860-9b6d-93d6f8426740@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: ZCiVkSpjJ38vNQkK-AkUrSKB6rwCG2YuLN8r18heeyM_1777280156
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=J+SaKgnS c=1 sm=1 tr=0 ts=69ef11d5 cx=c_pps
- a=Lg6ja3A245NiLSnFpY5YKQ==:117 a=Lg6ja3A245NiLSnFpY5YKQ==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
- a=klDOsUkWDRETUCZYPvoE:22 a=t7CeM3EgAAAA:8 a=5DZcFgTl-RdOG2hZ3NwA:9
- a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: aKj4uyfhAoZRw7PlaAPC0czNkP3t4UZH
-X-Proofpoint-ORIG-GUID: aKj4uyfhAoZRw7PlaAPC0czNkP3t4UZH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI3MDA3OSBTYWx0ZWRfX1M35TX5ulHAd
- wuDi5EHD7vV+HdoAKp+GgZDuCCul0lqqY9X99AmHYN4rnBhhD8qWx+Xrsx7ppxsMkJEeQhCAunh
- A9zbOdBrBtXzrXNK/zcc05VUVkm081o19ZivOO+3P1+UeGDm51HbQAFfaH8Qaj9oJ12bW4YAJVM
- wjRG4PVRjLrawm75i8uGjpcv+qkmHQP625O5FUbbStO9KEePrydCZi3Mr3ZaCwzXH5OBwGdyX8C
- WPCCRFMG4noNdDcs9nqOWvuzTHtmTiORBSRDH+AjnWuGWG0WXoq5hZFfwn5kDaVc//G2jSdcFeA
- KBWc4NA4FQAckSGmWkN2ybj8dYgzuuKa5siasC6n+W2g90EzC9ZWmW8zs92kWEl20pcrIyijbMT
- /w4fpiywvydgiZXrRFSR9P2tbdNVmuLGc5sV6kZjkpcrCbHIA6uEweK7JY1hAiBYnITACYpCA8e
- poaOqsQIdfDptO5j3ZQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-27_02,2026-04-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 malwarescore=0
- phishscore=0 clxscore=1011 priorityscore=1501 spamscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604270079
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-When kprobe_add_area_blacklist() iterates through a section like
-.kprobes.text, the start address may not correspond to a named symbol.
-On ARM64 with CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=y (introduced by
-commit baaf553d3bc3 ("arm64: Implement
-HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")), the compiler flag
--fpatchable-function-entry=4,2 inserts 2 NOPs before each function entry
-point for ftrace call_ops. These pre-function NOPs sit at the section base
-address, before the first named function symbol. The compiler emits a $x
-mapping symbol at offset 0x00 to mark the start of code, but
-find_kallsyms_symbol() ignores mapping symbols.
+The sched monitor page was linking to Daniel's website which is now
+down. The main purpose of the link was to point to a source for the
+models from the original author and that can be found also in his
+published paper.
 
-Without CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS (e.g. defconfig), no
-pre-function NOPs are inserted, the first function starts at offset
-0x00, and the bug does not trigger.
+Replace the link with a reference to Daniel's "A thread synchronization
+model for the PREEMPT_RT Linux kernel" which can be found online and
+includes the models definitions as well as the work behind them (not the
+original patches but since they're based on a 5.0 kernel and are mostly
+included upstream, there's little value in keeping them in the docs).
 
-This only affects modules that have a .kprobes.text section (i.e. those
-using the __kprobes annotation). Modules using NOKPROBE_SYMBOL() instead
-(like kretprobe_example.ko) blacklist exact function addresses via the
-_kprobe_blacklist section and are not affected.
-
-For kprobe_example.ko on ARM64 with -fpatchable-function-entry=4,2,
-the .kprobes.text section layout is:
-
-  offset 0x00: $x + 2 NOPs    (mapping symbol + ftrace preamble)
-  offset 0x08: handler_post   (64 bytes)
-  offset 0x50: handler_pre    (68 bytes)
-
-kprobe_add_area_blacklist() starts iterating from the section base
-address (offset 0x00), which only has the $x mapping symbol.
-kprobe_add_ksym_blacklist() then calls kallsyms_lookup_size_offset()
-for this address, which goes through:
-
-  kallsyms_lookup_size_offset()
-    -> module_address_lookup()
-      -> find_kallsyms_symbol()
-
-find_kallsyms_symbol() scans all module symbols to find the closest
-preceding symbol.
-
-Since no named text symbol exists at offset 0x00,
-find_kallsyms_symbol() picks __UNIQUE_ID_vermagic (a .modinfo symbol
-whose address is in the temporary image) as the "best" match. The
-computed "size" = next_text_symbol - modinfo_symbol spans across
-these two unrelated memory regions, creating a blacklist entry with
-a bogus range of tens of terabytes.
-
-Whether this causes a visible failure depends on address randomization,
-here is what happens on Raspberry Pi 4/5:
-
-  - On RPi5, the bogus size was ~35 TB. start + size stayed within
-    64-bit range, so the blacklist entry covered the entire kernel
-    text. register_kprobe() in the module's own init function failed
-    with -EINVAL.
-
-  - On RPi4, the bogus size was ~75 TB. start + size overflowed
-    64 bits and wrapped to a small address near zero. The range
-    check (addr >= start && addr < end) then failed because end
-    wrapped around, so the bogus entry was accidentally harmless
-    and kprobes worked by luck.
-
-The same bug exists on both machines, but randomization determines whether
-the integer overflow masks it or not.
-
-Fix this by checking the offset returned by kallsyms_lookup_size_offset().
-A non-zero offset means the address is not at a symbol boundary, so skip
-forward to the next symbol instead of creating a blacklist entry with a
-wrong size.
-
-Fixes: baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")
-Signed-off-by: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
-Hi,
+ Documentation/trace/rv/monitor_sched.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch skips non-symbol addresses, fixes the bogus blacklist entry,
-but leaves the NOP gap at the start of .kprobes.text unblacklisted.
-
-We can continue alloc the ent without return to add the gap to
-blacklist, or do some more works to add the gap to the first symbol in
-blacklist. I'm not sure if is this necessary, or is there a better way?
-
-Thanks,
-Jianpeng
-
- kernel/kprobes.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index bfc89083daa9..be700fb03198 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2503,6 +2503,10 @@ int kprobe_add_ksym_blacklist(unsigned long entry)
- 	    !kallsyms_lookup_size_offset(entry, &size, &offset))
- 		return -EINVAL;
+diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
+index 0b96d6e147c6..661171bd7c5e 100644
+--- a/Documentation/trace/rv/monitor_sched.rst
++++ b/Documentation/trace/rv/monitor_sched.rst
+@@ -365,4 +365,4 @@ constraints when processing the events::
+ References
+ ----------
  
-+	/* Not on a symbol boundary -- skip to the next symbol */
-+	if (offset)
-+		return (int)(size - offset);
-+
- 	ent = kmalloc_obj(*ent);
- 	if (!ent)
- 		return -ENOMEM;
+-[1] - https://bristot.me/linux-task-model
++[1] - Daniel Bristot de Oliveira et al.: A thread synchronization model for the PREEMPT_RT Linux kernel, J. Syst. Archit., 2020.
+
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 -- 
-2.54.0
+2.53.0
 
