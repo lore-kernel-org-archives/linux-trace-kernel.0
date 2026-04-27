@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D912D7DD4;
-	Mon, 27 Apr 2026 20:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5C22DCF55;
+	Mon, 27 Apr 2026 20:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777320382; cv=none; b=op60MZ+6eyF3LQnb5PeuRE6TiPdGheGBAPgIXLNm4J+LVChN0r/X2YodiHT026vmWWs0XgDa5RXKabscCyLEhdv4kzi8JaJINtjWdrLsBhoKR6HAjKmIkc6kcrfG9F+cZ36s8ykVDzyRz7boQwOr6w87faeMI6t2CzoB3SpOtTg=
+	t=1777320470; cv=none; b=L2WEdUag0JF+tURTceJAjGICnsrW2qpcoP6y83Pk4mCyB/lYYrVgUkmtfggwxPOVWt6axDE7eVY1RXHZ+OxaL88Esc1gNsp1gI4InlcPjYY2NB/AAboMitxenDxisrl1qvw4xAqlfEB72K2+itvnQ2ylstDbq/FQZcz7bNgrjkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777320382; c=relaxed/simple;
-	bh=fv0JqyTf9qsZGD2A+KMfMgq2gCyaBP1nCHd0vigXPHQ=;
+	s=arc-20240116; t=1777320470; c=relaxed/simple;
+	bh=3QIV0MJbKDOFI+5S69Yek5xkk5s7Hl4gG821v64OYf0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TQET1274l4YEZSETavDGfGrOQfoMZdcm8WJ73ZK7BXeMJxGZgRU1qQHLi2TADh2J1gDLAvox7qL56CwoC75ywNP95Iz+ncB5wl1Q9oNcFM4mtgZEkSuRiv10Hv5w/OZEPr7VyNAZ1uPUf6r3ZTXi+ZiMQdXsfmQCUHjMTlWl+3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouPioV8C; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=dqnVPO8OMooVXx3I4sD7AQoFlzn9bYFCSJ0aMRxf1N4dcZw5GzVImb47Vtl/gcxAAHdb0v/8SSONSSRhaD1wGpeZgMmV2MeCoTWDYPKYSEWrS+jf6G8sV1bwBPuJREwRaiFmhJFE6L8LdnsVLf9DylvOnw4G1YL5Nhx0NBuH8Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljLG6oPR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouPioV8C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD152C19425;
-	Mon, 27 Apr 2026 20:06:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljLG6oPR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B801C19425;
+	Mon, 27 Apr 2026 20:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777320382;
-	bh=fv0JqyTf9qsZGD2A+KMfMgq2gCyaBP1nCHd0vigXPHQ=;
+	s=k20201202; t=1777320469;
+	bh=3QIV0MJbKDOFI+5S69Yek5xkk5s7Hl4gG821v64OYf0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ouPioV8CWjhERioQebI+56NgMMJRid1vb5ijj2LqJJ6hXO2Q5aIq/KfWFufzJT/hD
-	 qxeJdGmfn3cOtcJgc7Oz6eegcTuRqS3k49uwzju0ubI6b54KEqpXHHOciAlCy9LZME
-	 IRMK/eJW9ESYjq88RVrXub3jBogxMh/fUjxXf05W60Mr5I0XZrn9VHEPJoQda6L+wn
-	 23eSyGenUFdiKY4KrLNgeXNW+otQm3oXoCzlPG6yZZVl9H71OxlZxq1MjmF8Agyli/
-	 FOGRnrWSHgaGO2ZyhnZPM6TjQekj5JA+RzLeEVIHm71Z34S9YvPXGaw/NIJhozVUBL
-	 bAzi2fbqDpdzg==
-Message-ID: <4dc7e142-9761-4b32-ad75-4b2ff45e9604@kernel.org>
-Date: Mon, 27 Apr 2026 22:06:02 +0200
+	b=ljLG6oPRLq0PdXDhyYGX4mnzgq/vfkbTe8ja5YEaTR1YGQdu7HWrq3GdboV3MkoFy
+	 TVWGPln+urzsJ8nQTcLHZH2c2Yry3UNHM5gzvTM9va55kqMubChxRKYPJgF56Ffjay
+	 4KAOm/qNQ0coq7JBJyuzOkaVE2N35QK9WN61o2FgxOup1fGVIwYGX46ysZVQ97Z8qd
+	 Wepw5r8J+CFZgE5dLZI+9rRuR+G0G71F9unVdwvf3Jpp02u23YidrEqbnKuvLfK+fO
+	 5W94nYWb3bdXESII+T0qLbKY5eS2M3ywfjXlkcnqt8h448MaD1dJlO3lGIdQgQbm3P
+	 5CXMouNZEi06A==
+Message-ID: <e9dbe863-d125-4fe5-8ecc-91ad7293e5cf@kernel.org>
+Date: Mon, 27 Apr 2026 22:07:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,27 +37,28 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 7.2 v16 04/13] mm/khugepaged: generalize
  __collapse_huge_page_* for mTHP support
-To: Usama Arif <usama.arif@linux.dev>, Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
- hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
- jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
- kas@kernel.org, lance.yang@linux.dev, Liam.Howlett@oracle.com,
- ljs@kernel.org, mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
+To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: aarcange@redhat.com, akpm@linux-foundation.org,
+ anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org,
+ baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com,
+ cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com,
+ dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com,
+ jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com,
+ joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
+ Liam.Howlett@oracle.com, ljs@kernel.org, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
+ peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
+ rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-References: <20260420135554.27067-1-usama.arif@linux.dev>
+References: <20260419185750.260784-1-npache@redhat.com>
+ <20260419185750.260784-5-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -104,21 +105,147 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260420135554.27067-1-usama.arif@linux.dev>
+In-Reply-To: <20260419185750.260784-5-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 4/19/26 20:57, Nico Pache wrote:
+> generalize the order of the __collapse_huge_page_* and collapse_max_*
+> functions to support future mTHP collapse.
+> 
+> The current mechanism for determining collapse with the
+> khugepaged_max_ptes_none value is not designed with mTHP in mind. This
+> raises a key design issue: if we support user defined max_pte_none values
+> (even those scaled by order), a collapse of a lower order can introduces
+> an feedback loop, or "creep", when max_ptes_none is set to a value greater
+> than HPAGE_PMD_NR / 2.
+> 
+> With this configuration, a successful collapse to order N will populate
+> enough pages to satisfy the collapse condition on order N+1 on the next
+> scan. This leads to unnecessary work and memory churn.
+
+You could add a link here to previous discussions.
 
 > 
->> +	pr_warn_once("mTHP collapse only supports max_ptes_none values of 0 or %u\n",
->> +		      KHUGEPAGED_MAX_PTES_LIMIT);
+> To fix this issue introduce a helper function that will limit mTHP
+> collapse support to two max_ptes_none values, 0 and HPAGE_PMD_NR - 1.
+> This effectively supports two modes:
 > 
-> IMO, warn_once can get lost quickly in dmesg. Maybe pr_warn_ratelimited?
+> - max_ptes_none=0: never introduce new none-pages for mTHP collapse.
+
+"introduce" reads wrong in this context. And I don't know what a "none-page" is :)
+
+"never collapses if it encounters an empty PTE or a PTE that maps the shared
+zeropage. Consequently, no memory bloat."
+
+> - max_ptes_none=511 (on 4k pagesz): Always collapse to the highest
+>   available mTHP order.
 > 
-> Not sure what others opinions are..
+> This removes the possiblilty of "creep", while not modifying any uAPI
+> expectations. A warning will be emitted if any non-supported
+> max_ptes_none value is configured with mTHP enabled.
+> 
+> mTHP collapse will not honor the khugepaged_max_ptes_shared or
+> khugepaged_max_ptes_swap parameters, and will fail if it encounters a
+> shared or swapped entry.
+> 
+> No functional changes in this patch; however it defines future behavior
+> for mTHP collapse.
+> 
+> Co-developed-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  mm/khugepaged.c | 124 ++++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 88 insertions(+), 36 deletions(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index f42b55421191..283bb63854a5 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -352,51 +352,86 @@ static bool pte_none_or_zero(pte_t pte)
+>   * collapse_max_ptes_none - Calculate maximum allowed empty PTEs for collapse
+>   * @cc: The collapse control struct
+>   * @vma: The vma to check for userfaultfd
+> + * @order: The folio order being collapsed to
+>   *
+>   * If we are not in khugepaged mode use HPAGE_PMD_NR to allow any
+> - * empty page.
+> + * empty page. For PMD-sized collapses (order == HPAGE_PMD_ORDER), use the
+> + * configured khugepaged_max_ptes_none value.
+> + *
+> + * For mTHP collapses, we currently only support khugepaged_max_pte_none values
+> + * of 0 or (KHUGEPAGED_MAX_PTES_LIMIT). Any other value will emit a warning and
+> + * no mTHP collapse will be attempted
 
-pr_warn_ratelimited() still creates *a lot* of noise from a system daemon ...
+Not sure if we discussed it (and maybe I had a different opinion back then ...),
+but could we simply to fallback to max_ptes_none=0, so we can avoid returning
+errors here?
 
+max_ptes_none=0 is ok, because we will not waste any memory. The warning clearly
+tells the user that this combination is not supported as is.
+
+... and it would make this function a lot easier to handle. In the warning, we
+can just state that "falling back to ... "max_ptes_non = 0".
+
+
+[...]
+
+>  
+>  /**
+>   * collapse_max_ptes_shared - Calculate maximum allowed shared PTEs for collapse
+>   * @cc: The collapse control struct
+> + * @order: The folio order being collapsed to
+>   *
+>   * If we are not in khugepaged mode use HPAGE_PMD_NR to allow any
+>   * shared page.
+>   *
+> + * For mTHP collapses, we currently dont support collapsing memory with
+> + * shared memory.
+
+"do not"
+
+"shared memory" is misleading, as we do support shmem. What you mean is maybe
+"collapsing with anonymous memory pages that are shared between processes
+through CoW" or soemthing like that?
+
+> + *
+>   * Return: Maximum number of shared PTEs allowed for the collapse operation
+>   */
+> -static unsigned int collapse_max_ptes_shared(struct collapse_control *cc)
+> +static unsigned int collapse_max_ptes_shared(struct collapse_control *cc,
+> +		unsigned int order)
+>  {
+>  	if (!cc->is_khugepaged)
+>  		return HPAGE_PMD_NR;
+> +	if (!is_pmd_order(order))
+> +		return 0;
+> +
+>  	return khugepaged_max_ptes_shared;
+>  }
+>  
+>  /**
+>   * collapse_max_ptes_swap - Calculate maximum allowed swap PTEs for collapse
+>   * @cc: The collapse control struct
+> + * @order: The folio order being collapsed to
+>   *
+>   * If we are not in khugepaged mode use HPAGE_PMD_NR to allow any
+>   * swap page.
+>   *
+> + * For PMD-sized collapses (order == HPAGE_PMD_ORDER), use the configured
+> + * khugepaged_max_ptes_swap value.
+> + *
+> + * For mTHP collapses, we currently dont support collapsing memory with
+> + * swapped out memory.
+
+"do not". Given that this is also used for the pagecache, can we make this clearer?
+
+> + *
+>   * Return: Maximum number of swap PTEs allowed for the collapse operation
+>   */
+> -static unsigned int collapse_max_ptes_swap(struct collapse_control *cc)
+> +static unsigned int collapse_max_ptes_swap(struct collapse_control *cc,
+> +		unsigned int order)
 -- 
 Cheers,
 
