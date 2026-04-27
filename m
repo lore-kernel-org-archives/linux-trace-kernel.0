@@ -1,83 +1,186 @@
-Received: from smtp185.sjtu.edu.cn (smtp185.sjtu.edu.cn [202.120.2.185])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA392370D54;
-	Mon, 27 Apr 2026 06:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1CA37E2F2;
+	Mon, 27 Apr 2026 07:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777271412; cv=none; b=He57IwPJ8iaMnkAKhU2fgyoyQtPZ5Uz0ai5OBFcRYdy0JgJAwu1TUYcNYjPQnDb5Ve4hYi/QS96wfYee+lw45KX8QwIPtjMT+eNvqAedwGbbtFlr97H2TaGdn/IyaBaz4Js7P9BrB889gZTEv3m2uUrE4DaBHarFk333tOcT+/U=
+	t=1777275388; cv=none; b=LcxqjD8xMpezOzCVJ/P2N6kxq1ibA1hcTaarjW/6cEx4tpP6Baxbn8Uk08RFeB5Ld1TVMKkWTv6Jd0heJXjJP95zC9fQGrUMfQ2NF8ygcD+FJ8+N9WDBqaJMu2iDtbO4qwNa4mbEsCcSj1ZWBCmYuNjLQHgXc35bzBFr7AQdwR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777271412; c=relaxed/simple;
-	bh=k7FXG2e/EV/GJJSCGDqsYjbBQrgk+18Y2MXRX65qSoU=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=ofw7qP8dKfw/byPPUa/5nUukmGpzGmipcQbuC1SDufqkG4KRYEoa9tAxcv9AKgXE7AHxTGYzdygz+ReACZklLAeELY2HIt7P56SPNvJoWVHTz+MjNWndCBGeJEF3a2SqFn4N4EfZ/yW10BjGjf50czIj6i26awaF62fyT5XM4hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b=CSwgEdst; arc=none smtp.client-ip=202.120.2.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sjtu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
+	s=arc-20240116; t=1777275388; c=relaxed/simple;
+	bh=BmIv9uDaWGl2BsLjmW6P7Fd2alD9SELik5QJjIs6rNo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jtoyuRrQppPNf8NKxRtpqWwV7a6M2LJkyuq9eYBiV2+XCk5XH1e26dojSK7SYw5Eix/zUFWdXLPuxXUoWJVemIO1dN9qbbfiE4hA4wl8O2tSAppHvhKl9XCePS4IxsBTVDIRA3OnHYJ9bdEB1PkpPWPUpWVCYW3tKQufMrstBq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=p25QGms6; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sjtu.edu.cn header.i=@sjtu.edu.cn header.b="CSwgEdst"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sjtu.edu.cn;
-	s=default; t=1777270866;
-	bh=k7FXG2e/EV/GJJSCGDqsYjbBQrgk+18Y2MXRX65qSoU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=CSwgEdstly7B72IwKWTHhbDtU1N7meh5Pfl9ZqiNWq+Gic8lcBgwzyCxl726lhz/U
-	 u9KVRBx7Tb0UHBRCJ6NcmpEuBjPSE3eAzP0ehQXZEVGD5vS2Wap/3ebIu0dB5R0deu
-	 djA9gfE3NKxJ7DAja1D0htzIYLYuTXFKoqXDBTGC8pcMi1OW3Z3QRh+hZJPdyyoZic
-	 zdMrsD20NEY9yXOodq3VF40T88eVRtp1eBIv0HUoTVy5TeeHTu6btQyD6j3zexqY1p
-	 Lua4RdWxp/ahZev4oEC/BVGs+Ut3bzf2jaJqjIGtOTodk6OfHPEvFNUyC5tFU/BRzn
-	 I+Ead7DoH3R7A==
-Received: from mta90.sjtu.edu.cn (unknown [10.118.0.90])
-	by smtp185.sjtu.edu.cn (Postfix) with ESMTPS id EC18E385A6E;
-	Mon, 27 Apr 2026 06:21:05 +0000 (UTC)
-Received: from mstore137.sjtu.edu.cn (unknown [10.118.0.137])
-	by mta90.sjtu.edu.cn (Postfix) with ESMTP id B841737C878;
-	Mon, 27 Apr 2026 14:21:05 +0800 (CST)
-Date: Mon, 27 Apr 2026 14:21:05 +0800 (CST)
-From: SUVONOV BUNYOD <b.suvonov@sjtu.edu.cn>
-To: akpm <akpm@linux-foundation.org>, vbabka@kernel.org, 
-	linux-mm <linux-mm@kvack.org>
-Cc: rostedt <rostedt@goodmis.org>, mhiramat <mhiramat@kernel.org>, 
-	mathieu desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, surenb@google.com, 
-	mhocko@suse.com, jackmanb@google.com, hannes <hannes@cmpxchg.org>, 
-	ziy@nvidia.com, david <david@kernel.org>, 
-	vishal moola <vishal.moola@gmail.com>, corbet@lwn.net, 
-	skhan@linuxfoundation.org, linux-doc@vger.kernel.org
-Message-ID: <222049437.2315342.1777270865090.JavaMail.zimbra@sjtu.edu.cn>
-In-Reply-To: <20260427060142.131055-1-b.suvonov@sjtu.edu.cn>
-References: <20260425091335.346504-1-b.suvonov@sjtu.edu.cn> <20260427060142.131055-1-b.suvonov@sjtu.edu.cn>
-Subject: Re: [PATCH v2] mm/page_alloc: trace PCP refills and PCP zone lock
- usage
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="p25QGms6"
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63R4hqVi2793495;
+	Mon, 27 Apr 2026 07:35:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=PPS06212021; bh=f67sUy0Fk
+	VF2WqulClpkvvF+yIicieX9w6ew9YdyzuI=; b=p25QGms6U107VTfUv8hFVf+ea
+	5YYjpDXCEVVeyy/aFulyhAHX1DEREuYUaNTsmxymMSznr66SkoZBtzosDJ8aMWws
+	E67nikNujPHdPpk2u0S3UeLCB0cfOnnrF70Kfh+GkDrWzFpUI2pEpvIheEaJtWGZ
+	PfS2W5qc8lVd4bnmURqKvVd4QfoDVemtLapEs3Yyx/fxd6ImrLDqE52yTifOoIhT
+	o30AI9gTzswQc1uh5DjY/ErzRwF9tFwYG8nkO79dHboJn02EuRFYdP9dM1laX/aQ
+	dFEEK1j7e7gPC4s5EuX3lkvhOYuI0nJy96lZv8mB+E1XosADVtGzNi4BwRHvg==
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [128.224.246.37])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4drju09r9w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 27 Apr 2026 07:35:49 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
+ ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.61; Mon, 27 Apr 2026 00:35:48 -0700
+Received: from pek-lpggp9.wrs.com (10.11.232.110) by
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
+ 15.1.2507.61 via Frontend Transport; Mon, 27 Apr 2026 00:35:45 -0700
+From: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+To: <naveen@kernel.org>, <davem@davemloft.net>, <mhiramat@kernel.org>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>,
+        Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+Subject: [PATCH] kprobes: skip non-symbol addresses in kprobe_add_ksym_blacklist()
+Date: Mon, 27 Apr 2026 15:35:44 +0800
+Message-ID: <20260427073545.3656835-1-jianpeng.chang.cn@windriver.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 10.0.18_GA_4835 (ZimbraWebClient - FF149 (Linux)/10.0.18_GA_4828)
-Thread-Topic: mm/page_alloc: trace PCP refills and PCP zone lock usage
-Thread-Index: cvNpGKS1fD456U+LMNaVmpa/8ckf2g==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=J+SaKgnS c=1 sm=1 tr=0 ts=69ef11d5 cx=c_pps
+ a=Lg6ja3A245NiLSnFpY5YKQ==:117 a=Lg6ja3A245NiLSnFpY5YKQ==:17
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
+ a=klDOsUkWDRETUCZYPvoE:22 a=t7CeM3EgAAAA:8 a=5DZcFgTl-RdOG2hZ3NwA:9
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: aKj4uyfhAoZRw7PlaAPC0czNkP3t4UZH
+X-Proofpoint-ORIG-GUID: aKj4uyfhAoZRw7PlaAPC0czNkP3t4UZH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI3MDA3OSBTYWx0ZWRfX1M35TX5ulHAd
+ wuDi5EHD7vV+HdoAKp+GgZDuCCul0lqqY9X99AmHYN4rnBhhD8qWx+Xrsx7ppxsMkJEeQhCAunh
+ A9zbOdBrBtXzrXNK/zcc05VUVkm081o19ZivOO+3P1+UeGDm51HbQAFfaH8Qaj9oJ12bW4YAJVM
+ wjRG4PVRjLrawm75i8uGjpcv+qkmHQP625O5FUbbStO9KEePrydCZi3Mr3ZaCwzXH5OBwGdyX8C
+ WPCCRFMG4noNdDcs9nqOWvuzTHtmTiORBSRDH+AjnWuGWG0WXoq5hZFfwn5kDaVc//G2jSdcFeA
+ KBWc4NA4FQAckSGmWkN2ybj8dYgzuuKa5siasC6n+W2g90EzC9ZWmW8zs92kWEl20pcrIyijbMT
+ /w4fpiywvydgiZXrRFSR9P2tbdNVmuLGc5sV6kZjkpcrCbHIA6uEweK7JY1hAiBYnITACYpCA8e
+ poaOqsQIdfDptO5j3ZQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-27_02,2026-04-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ phishscore=0 clxscore=1011 priorityscore=1501 spamscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604270079
 
-Thank you for reviewing v1 Vishal,
+When kprobe_add_area_blacklist() iterates through a section like
+.kprobes.text, the start address may not correspond to a named symbol.
+On ARM64 with CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=y (introduced by
+commit baaf553d3bc3 ("arm64: Implement
+HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")), the compiler flag
+-fpatchable-function-entry=4,2 inserts 2 NOPs before each function entry
+point for ftrace call_ops. These pre-function NOPs sit at the section base
+address, before the first named function symbol. The compiler emits a $x
+mapping symbol at offset 0x00 to mark the start of code, but
+find_kallsyms_symbol() ignores mapping symbols.
 
-All of your concerns except for the last one should be covered in v2.
+Without CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS (e.g. defconfig), no
+pre-function NOPs are inserted, the first function starts at offset
+0x00, and the bug does not trigger.
 
-> If you're trying to trace all pages as they come onto the pcp lists,
-> should you also account for the free_frozen_page_commit() path?
->
->>          }
->>          spin_unlock_irqrestore(&zone->lock, flags);
+This only affects modules that have a .kprobes.text section (i.e. those
+using the __kprobes annotation). Modules using NOKPROBE_SYMBOL() instead
+(like kretprobe_example.ko) blacklist exact function addresses via the
+_kprobe_blacklist section and are not affected.
 
-No, the intent is not to trace every insertion into PCP lists. This patch
-is trying to make buddy <-> PCP traffic observable by adding a new
-mm_page_pcpu_refill event symmetric with the existing mm_page_pcpu_drain
-event.
+For kprobe_example.ko on ARM64 with -fpatchable-function-entry=4,2,
+the .kprobes.text section layout is:
 
-I also added additional zone_locked tracepoints because my research is
-focusing on analyzing which kernel mm subsystems and other parts are
-under stress for a given workload. The best way to see it for PCP would
-be to count zone lock acquirings as the whole purpose of PCP is to lower
-number of zone lock acquiring in first place.
+  offset 0x00: $x + 2 NOPs    (mapping symbol + ftrace preamble)
+  offset 0x08: handler_post   (64 bytes)
+  offset 0x50: handler_pre    (68 bytes)
+
+kprobe_add_area_blacklist() starts iterating from the section base
+address (offset 0x00), which only has the $x mapping symbol.
+kprobe_add_ksym_blacklist() then calls kallsyms_lookup_size_offset()
+for this address, which goes through:
+
+  kallsyms_lookup_size_offset()
+    -> module_address_lookup()
+      -> find_kallsyms_symbol()
+
+find_kallsyms_symbol() scans all module symbols to find the closest
+preceding symbol.
+
+Since no named text symbol exists at offset 0x00,
+find_kallsyms_symbol() picks __UNIQUE_ID_vermagic (a .modinfo symbol
+whose address is in the temporary image) as the "best" match. The
+computed "size" = next_text_symbol - modinfo_symbol spans across
+these two unrelated memory regions, creating a blacklist entry with
+a bogus range of tens of terabytes.
+
+Whether this causes a visible failure depends on address randomization,
+here is what happens on Raspberry Pi 4/5:
+
+  - On RPi5, the bogus size was ~35 TB. start + size stayed within
+    64-bit range, so the blacklist entry covered the entire kernel
+    text. register_kprobe() in the module's own init function failed
+    with -EINVAL.
+
+  - On RPi4, the bogus size was ~75 TB. start + size overflowed
+    64 bits and wrapped to a small address near zero. The range
+    check (addr >= start && addr < end) then failed because end
+    wrapped around, so the bogus entry was accidentally harmless
+    and kprobes worked by luck.
+
+The same bug exists on both machines, but randomization determines whether
+the integer overflow masks it or not.
+
+Fix this by checking the offset returned by kallsyms_lookup_size_offset().
+A non-zero offset means the address is not at a symbol boundary, so skip
+forward to the next symbol instead of creating a blacklist entry with a
+wrong size.
+
+Fixes: baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")
+Signed-off-by: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+---
+Hi,
+
+This patch skips non-symbol addresses, fixes the bogus blacklist entry,
+but leaves the NOP gap at the start of .kprobes.text unblacklisted.
+
+We can continue alloc the ent without return to add the gap to
+blacklist, or do some more works to add the gap to the first symbol in
+blacklist. I'm not sure if is this necessary, or is there a better way?
+
+Thanks,
+Jianpeng
+
+ kernel/kprobes.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index bfc89083daa9..be700fb03198 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2503,6 +2503,10 @@ int kprobe_add_ksym_blacklist(unsigned long entry)
+ 	    !kallsyms_lookup_size_offset(entry, &size, &offset))
+ 		return -EINVAL;
+ 
++	/* Not on a symbol boundary -- skip to the next symbol */
++	if (offset)
++		return (int)(size - offset);
++
+ 	ent = kmalloc_obj(*ent);
+ 	if (!ent)
+ 		return -ENOMEM;
+-- 
+2.54.0
+
