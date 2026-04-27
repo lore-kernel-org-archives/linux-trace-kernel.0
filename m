@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205D6332EC8;
-	Mon, 27 Apr 2026 20:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E86D31F984;
+	Mon, 27 Apr 2026 20:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777321289; cv=none; b=lYGOJ2S9c6uJISAJOrL7XGbV3xw9013I1uG/OD2U4kMS3mE9HLCIRqN3x31tapqQhnB4Na7KASMVQ/g18OQl6rR4mypSFQWvNk2+R2IkgYzWT2IfUob6i83dI9vw/5K8qci7VYmtQLoTiMh8ESFs/hoxvCra72dD6cWaATF8gWg=
+	t=1777321519; cv=none; b=AWQnfde00u4jDVsrsw8Vr7fKGJDO/wK3y/C/Rairmu1pHUZo03pvubP8f+lTcO1TQbtFmlH5+eU0nceS4rav2wT7KS94DFwuVCneSe/pEFws/Qjw4f6L87ookKtQ2y+oYMCyCrU6kBVaxGB6pbgpDC7lwUT46y3lDfH2ADEDL0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777321289; c=relaxed/simple;
-	bh=LfEO2GoA4tssIBvxQvA9KN/YDpW25UUMbOSLYE27780=;
+	s=arc-20240116; t=1777321519; c=relaxed/simple;
+	bh=wZ62JJbJbBFYxmz4nXsEdURZ9ZvZQcCgwl8lIq3rVHI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Be/PQeLskA+trWBNziv0O5ht6ue9trsOhz+w302OzI7tZG9S9ohjJcF4hjRCn9vhN5gIIJyqFDkJij8pR/HPYHLGGow22Dm6HaGlBZcWLS7334E4Ckn4ZBykCDp5PB24bf5fAGqV66xmStAP59WCSCtEaUBB+bbxPo9g5SRN0go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scn2FMus; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VqrEqID2SEVW9OxSwqgWrSIfmMfPw6j/lDtycnYBfUCfhMttTwySbZIcffxwq10b5TryHZSocT56g9vlxIuw6/s8pHP8OR8nIS1QY5VV6et6Ibn/9iB9rB8dTTQAcfMHBMHj1lkgV/oc0gXyO3xMkzfk1sjBGwMZG/nfshMuHQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkxKUB71; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scn2FMus"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ECBFC19425;
-	Mon, 27 Apr 2026 20:21:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkxKUB71"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF12C19425;
+	Mon, 27 Apr 2026 20:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777321288;
-	bh=LfEO2GoA4tssIBvxQvA9KN/YDpW25UUMbOSLYE27780=;
+	s=k20201202; t=1777321519;
+	bh=wZ62JJbJbBFYxmz4nXsEdURZ9ZvZQcCgwl8lIq3rVHI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=scn2FMus/b0JjqogLdL1wDKbOhtjb4L+4fyveZh+6uhBqW7Y0g/71/8fbdUzOr3SN
-	 QLG50KMOmamw+Y1/wXVXBqMm2LDSFWLU5TSDbwfgNlxpM/aZKD9rysUOEjIrftifAx
-	 F14WVFAnNNEEis874EELBsfe7CwrOLJDwFBNdUBN7LRz91k5xHPhn3za0ga5vYC/du
-	 NoOO6W1ZDCxyeII4mvcuOR6RFMenXxzNPetoA1GFxiqrAU7cEQ4s5doIZvEApqndOz
-	 eOsM3q6AFxWuMN0rIaoEouIjHCumxMVBhMbrAQ9xh1/qUkEZUyMhNgl7SJ8Eo7AgHp
-	 LnIkrFJ/wFRNw==
-Message-ID: <f05f4506-2930-44ba-918a-e0e5bcb9d0f9@kernel.org>
-Date: Mon, 27 Apr 2026 22:21:08 +0200
+	b=gkxKUB71RDl0C8Txlx3EhD82nFBtJoCkuZlpTFV1lUNcqsSh8sMHSpg9Gd2zDckOX
+	 d57E0mKovidPdCFENazaUlbeAwBZzgv6VWMK4AyLbVsRZ31Ky1K0r1lo8HN83yFxFP
+	 i5YUdGj4UPCvbyv14v45UZO72SJn+Tq40WipfZVuxjJbQ/X0vysEoxqBKYqq9rBuDN
+	 jvpMIXGkqcYdvy9jGQ7rpQWMfjUc4Dsd8Wm6tHbTfcBWjXy/IDMCDd4wOFM2/1RUnU
+	 HbYmg7WocFt5sWdAoDVRF9or3z5fNBwhHIBblyV35zwihyDmmm1YU9+O2iFTbzliLT
+	 zlb7HcaNpqRUQ==
+Message-ID: <5564e170-d052-4445-9914-70bfd852d3b1@kernel.org>
+Date: Mon, 27 Apr 2026 22:24:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7.2 v16 07/13] mm/khugepaged: add per-order mTHP collapse
- failure statistics
+Subject: Re: [PATCH 7.2 v16 09/13] mm/khugepaged: introduce
+ collapse_allowable_orders helper function
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -58,7 +58,7 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
 References: <20260419185750.260784-1-npache@redhat.com>
- <20260419185750.260784-8-npache@redhat.com>
+ <20260419185750.260784-10-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -105,110 +105,66 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260419185750.260784-8-npache@redhat.com>
+In-Reply-To: <20260419185750.260784-10-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 4/19/26 20:57, Nico Pache wrote:
-> Add three new mTHP statistics to track collapse failures for different
-> orders when encountering swap PTEs, excessive none PTEs, and shared PTEs:
+> Add collapse_allowable_orders() to generalize THP order eligibility. The
+> function determines which THP orders are permitted based on collapse
+> context (khugepaged vs madv_collapse).
 > 
-> - collapse_exceed_swap_pte: Increment when mTHP collapse fails due to swap
-> 	PTEs
+> This consolidates collapse configuration logic and provides a clean
+> interface for future mTHP collapse support where the orders may be
+> different.
 > 
-> - collapse_exceed_none_pte: Counts when mTHP collapse fails due to
->   	exceeding the none PTE threshold for the given order
-> 
-> - collapse_exceed_shared_pte: Counts when mTHP collapse fails due to shared
->   	PTEs
-> 
-> These statistics complement the existing THP_SCAN_EXCEED_* events by
-> providing per-order granularity for mTHP collapse attempts. The stats are
-> exposed via sysfs under
-> `/sys/kernel/mm/transparent_hugepage/hugepages-*/stats/` for each
-> supported hugepage size.
-> 
-> As we currently dont support collapsing mTHPs that contain a swap or
-
-s/dont/do not/
-
-> shared entry, those statistics keep track of how often we are
-> encountering failed mTHP collapses due to these restrictions.
-> 
-> Now that we plan to support mTHP collapse for anon pages, lets also track
-
-"We will add support for mTHP collapse for anonymous pages next; let's also ..."
-
-> when this happens at the PMD level within the per-mTHP stats.
-
-What about file collapse? For example, we do adjust
-count_vm_event(THP_SCAN_EXCEED_SWAP_PTE) and
-count_vm_event(THP_SCAN_EXCEED_NONE_PTE) there.
-
-Wouldn't we want to update the HPAGE_PMD_ORDER side of things there already? or
-would we want to use a different counter for that?
-
-> 
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 > Signed-off-by: Nico Pache <npache@redhat.com>
 > ---
->  Documentation/admin-guide/mm/transhuge.rst | 24 ++++++++++++++++++++++
->  include/linux/huge_mm.h                    |  3 +++
->  mm/huge_memory.c                           |  7 +++++++
->  mm/khugepaged.c                            | 21 +++++++++++++++++--
->  4 files changed, 53 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index c51932e6275d..eebb1f6bbc6c 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -714,6 +714,30 @@ nr_anon_partially_mapped
->         an anonymous THP as "partially mapped" and count it here, even though it
->         is not actually partially mapped anymore.
->  
-> +collapse_exceed_none_pte
-> +       The number of collapse attempts that failed due to exceeding the
-> +       max_ptes_none threshold. For mTHP collapse, Currently only max_ptes_none
-> +       values of 0 and (HPAGE_PMD_NR - 1) are supported. Any other value will
-> +       emit a warning and no mTHP collapse will be attempted. khugepaged will
-> +       try to collapse to the largest enabled (m)THP size; if it fails, it will
-> +       try the next lower enabled mTHP size. This counter records the number of
-> +       times a collapse attempt was skipped for exceeding the max_ptes_none
-> +       threshold, and khugepaged will move on to the next available mTHP size.
 
-Why is everything after the first sentence worth documenting here? This doesn't
-read like it belongs to a failure counter?
-
-> +
-> +collapse_exceed_swap_pte
-> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
-> +       to containing at least one swap PTE. Currently khugepaged does not
-> +       support collapsing mTHP regions that contain a swap PTE. This counter can
-> +       be used to monitor the number of khugepaged mTHP collapses that failed
-> +       due to the presence of a swap PTE.
-
-Can we similarly simplify that (and make it consistent with the one above) to
-
-"The number of collapse attempts that failed due to exceeding the max_ptes_swap
-threshold."
-
-> +
-> +collapse_exceed_shared_pte
-> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
-> +       to containing at least one shared PTE. Currently khugepaged does not
-> +       support collapsing mTHP PTE ranges that contain a shared PTE. This
-> +       counter can be used to monitor the number of khugepaged mTHP collapses
-> +       that failed due to the presence of a shared PTE.
-
-Same here
-
-"The number of collapse attempts that failed due to exceeding the
-max_ptes_shared threshold."
-
-?
-
-> +
 
 [...]
+
+>  	cc = kmalloc_obj(*cc);
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 377321b48734..c0398fb597b3 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -989,7 +989,7 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
+>  		goto abort;
+>  
+>  	vma_set_flags_mask(vmg->target, sticky_flags);
+> -	khugepaged_enter_vma(vmg->target, vmg->vm_flags);
+> +	khugepaged_enter_vma(vmg->target);
+>  	vmg->state = VMA_MERGE_SUCCESS;
+>  	return vmg->target;
+>  
+> @@ -1110,7 +1110,7 @@ struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg)
+>  	 * following VMA if we have VMAs on both sides.
+>  	 */
+>  	if (vmg->target && !vma_expand(vmg)) {
+> -		khugepaged_enter_vma(vmg->target, vmg->vm_flags);
+> +		khugepaged_enter_vma(vmg->target);
+>  		vmg->state = VMA_MERGE_SUCCESS;
+>  		return vmg->target;
+>  	}
+> @@ -2589,7 +2589,7 @@ static int __mmap_new_vma(struct mmap_state *map, struct vm_area_struct **vmap,
+>  	 * call covers the non-merge case.
+>  	 */
+>  	if (!vma_is_anonymous(vma))
+> -		khugepaged_enter_vma(vma, map->vm_flags);
+> +		khugepaged_enter_vma(vma);
+>  	*vmap = vma;
+
+Are you sure that in all cases, vma->vm_flags already corresponds to
+vmg->vm_flags / map->vm_flags?
+
+
+That's a change that makes this patch unnecessary hard to follow, in particular,
+because it's not documented in the patch description.
+
+If you think the change is fine, you should better move that into a separate
+cleanup patch where you only drop the flags parameter from  khugepaged_enter_vma().
 
 -- 
 Cheers,
