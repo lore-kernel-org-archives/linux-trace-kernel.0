@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDFB3D9051;
-	Tue, 28 Apr 2026 23:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04523A545A;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777418721; cv=none; b=d5JOZAbGjTj2pPC6GaP3jylYIRaWUgyL4z1dBbTMApnvS3CS1w1wgeEDu0OxBjGdg1JK/WmXQawF9RPFinft78srwSJ+bH93AKaVKN3FrW9WI/shNNpmajVDb2mzR5iiCvPVjMyVEwon34i7YBniFDFfUamDlQ6noRAwKSmGBmo=
+	t=1777418720; cv=none; b=N0m/eQ9SQpdf1mVvJ6kd/I8uky58dvgoerElFG+oS4Sw1ppOEZ6TRz+tmtSM7Ndxho7/Rb5PzAJmID8eWLjdC4rQPHACZ5Xoler8ct5cDC32IK4sspZpXWI/ZzFpQxgxzf5otmVr64WeAgysvcBfzQzOEipZ+l2tXn5rA7yHjZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777418721; c=relaxed/simple;
-	bh=77AfCyy0TZKZY8M+m/fRDXWBuiG8frWm/87F2tNKLKU=;
+	s=arc-20240116; t=1777418720; c=relaxed/simple;
+	bh=Tb5TguUqj83q6EkDS3KK98jP7mZKk3DZAdSKTO+qVyE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Gpt8nWGUnMUycHTf5sZP00zIkwYqTyhcftWhWfc8I6SwNZdPcG4cn4k5NIKJaTGMN1qYodBje/vxHbPYEE2P9XTpRd+Isdv0ila952ajIsz4DAkIudfCxZH3h2WDEm44tjwgRy6r29X2K5bAWHYBeXryLVTiQWt4f+QU/GgdGr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4vK3oO7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QO0Nc9oxqXgzt8+m5z2D9IMX4sSyqsOhLII3rd2O/9nR2RuoyZMxPlf7G2S8HD83lhIxJ5J15GreAbwETEAiGFqIUA3puz6ZVFqTEbl3fN6vG27eaFwTqzG+6lIMtLvVmGw8jeM/swdPw7rGxl2481Pyp46K82rxMmTh8dWqtcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDSTg4WS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4vK3oO7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 67221C2BCF4;
-	Tue, 28 Apr 2026 23:25:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDSTg4WS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CF426C2BCB3;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777418721;
-	bh=77AfCyy0TZKZY8M+m/fRDXWBuiG8frWm/87F2tNKLKU=;
+	s=k20201202; t=1777418719;
+	bh=Tb5TguUqj83q6EkDS3KK98jP7mZKk3DZAdSKTO+qVyE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=V4vK3oO7RZ8jWuVqNxCJtfzBIxG/R2HLeirUs3CLmcnHv1X9IOMHxf4kDdf2GuXva
-	 rxQpgkML9qbn4RnJ+4CshDhGBWO/GJYRX3GLkagI3BmRBFK301S5kP4u1a0U2gsxsc
-	 lamT7spts5F9EofouwKNOuFiztv4vo6ZniOlUkiDx1lx8lMByB8aOzmDANxOvRW2l8
-	 YVma+UnjjdFwjacCIpagTYwZdj4bNKpKX1fgXIV4MElAuLkCDTKkL0OChyr0CkvcK1
-	 AXrYN9R3oWKBf+HnvjQCU4mq3TBLN09EvcIGWSXOhIyhAwAoiMoof2821G44rksz93
-	 44WbRxAJd8K7Q==
+	b=KDSTg4WSIZFOC5Ne9UPdjPf11FJ2ufRAsp7BnH1g63i8+JvnsKb1bwRa7IkczuiPz
+	 fpYVsVUxrkjgtxLek+knPsaeFBrqT4IVzST2ph6s+zhTp8oJ+coEphM9oVvLpFBtMN
+	 bs1FL17Ck7z8IKneb3i7RO4PGF/RADSxwCrp1GqL3Q7VlYPqfo4EMrRW2kd3Cqi110
+	 1akzhK4luTxaYhC3WMAQATv0oETiZj+2Yg6/NSkSASCJjJESareUF2ogoqxZO/DD6u
+	 cLSA7FVdL7fHukrZPStXG5d7TrXAB9IyjC8wOH8+KwoDPeEtzuAFPzPDdZ+zTC8UfI
+	 gmeixg9KrIrmg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAA6FF887E;
-	Tue, 28 Apr 2026 23:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C589FFF8875;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Apr 2026 16:25:44 -0700
-Subject: [PATCH RFC v5 49/53] KVM: selftests: Make TEST_EXPECT_SIGBUS
- thread-safe
+Date: Tue, 28 Apr 2026 16:25:26 -0700
+Subject: [PATCH RFC v5 31/53] KVM: selftests: Add support for mmap() on
+ guest_memfd in core library
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-gmem-inplace-conversion-v5-49-d8608ccfca22@google.com>
+Message-Id: <20260428-gmem-inplace-conversion-v5-31-d8608ccfca22@google.com>
 References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 In-Reply-To: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,11 +74,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=5282;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=5449;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=0FRAfF/jF5XXL7xhsrzKptfhFbdK2TYEtnUzquHFP9I=;
- b=qB3KieSgkAM8PqZhU/SxTptXaG604bVeELOKgLnMk0D44YFLH7hxE/g/9rLtr6RzQc1o9AIji
- Nnjk8PoXK40B4kU/M3q2Rau4Wd7tkPFGg+1iSJJ3/lZUn81V9Jpmdxb
+ bh=9LuZKo8RnG3pI99RA8uUaagBn7KtPFHLhC8KQm9YV7Q=;
+ b=a5nVRdhvKlIKuUk1DfR/yQJcWLS2+TX8K8rJWDhgYQaX3s6oiuHHkvhGzXMmyHNeeQ16C+zSY
+ 45XzSUi64ncDaYSqmwLop1tZ3QU92mUwgcnpg8HmfrsWfw5lBZhlUqM
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -86,152 +86,129 @@ X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
 X-Original-From: Ackerley Tng <ackerleytng@google.com>
 Reply-To: ackerleytng@google.com
 
-From: Ackerley Tng <ackerleytng@google.com>
+From: Sean Christopherson <seanjc@google.com>
 
-The TEST_EXPECT_SIGBUS macro is not thread-safe as it uses a global
-sigjmp_buf and installs a global SIGBUS signal handler. If multiple threads
-execute the macro concurrently, they will race on installing the signal
-handler and stomp on other threads' jump buffers, leading to incorrect test
-behavior.
+Accept gmem_flags in vm_mem_add() to be able to create a guest_memfd within
+vm_mem_add().
 
-Make TEST_EXPECT_SIGBUS thread-safe with the following changes:
+When vm_mem_add() is used to set up a guest_memfd for a memslot, set up the
+provided (or created) gmem_fd as the fd for the user memory region. This
+makes it available to be mmap()-ed from just like fds from other memory
+sources. mmap() from guest_memfd using the provided gmem_flags and
+gmem_offset.
 
-Share the KVM tests' global signal handler. sigaction() applies to all
-threads; without sharing a global signal handler, one thread may have
-removed the signal handler that another thread added, hence leading to
-unexpected signals.
+Add a kvm_slot_to_fd() helper to provide convenient access to the file
+descriptor of a memslot.
 
-The alternative of layering signal handlers was considered, but calling
-sigaction() within TEST_EXPECT_SIGBUS() necessarily creates a race. To
-avoid adding new setup and teardown routines to do sigaction() and keep
-usage of TEST_EXPECT_SIGBUS() simple, share the KVM tests' global signal
-handler.
+Update existing callers of vm_mem_add() to pass 0 for gmem_flags to
+preserve existing behavior.
 
-Opportunistically rename report_unexpected_signal to
-catchall_signal_handler.
-
-To continue to only expect SIGBUS within specific regions of code, use a
-thread-specific variable, expecting_sigbus, to replace installing and
-removing signal handlers.
-
-Make the execution environment for the thread, sigjmp_buf, a
-thread-specific variable.
-
-As part of TEST_EXPECT_SIGBUS(), assert the prerequisite for this setup,
-that the current signal handler is the catchall_signal_handler.
-
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+[For guest_memfds, mmap() using gmem_offset instead of 0 all the time.]
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- tools/testing/selftests/kvm/include/test_util.h | 32 +++++++++++++------------
- tools/testing/selftests/kvm/lib/kvm_util.c      | 18 ++++++++++----
- tools/testing/selftests/kvm/lib/test_util.c     |  7 ------
- 3 files changed, 30 insertions(+), 27 deletions(-)
+ tools/testing/selftests/kvm/include/kvm_util.h        |  7 ++++++-
+ tools/testing/selftests/kvm/lib/kvm_util.c            | 19 +++++++++++--------
+ .../selftests/kvm/x86/private_mem_conversions_test.c  |  2 +-
+ 3 files changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
-index c280c3233f502..6907b99fe564b 100644
---- a/tools/testing/selftests/kvm/include/test_util.h
-+++ b/tools/testing/selftests/kvm/include/test_util.h
-@@ -82,21 +82,23 @@ do {									\
- 	__builtin_unreachable(); \
- } while (0)
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index f19383376ee8e..fb54694e6568b 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -700,7 +700,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+ 				 gpa_t gpa, u32 slot, u64 npages, u32 flags);
+ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 		gpa_t gpa, u32 slot, u64 npages, u32 flags,
+-		int gmem_fd, u64 gmem_offset);
++		int gmem_fd, u64 gmem_offset, u64 gmem_flags);
  
--extern sigjmp_buf expect_sigbus_jmpbuf;
--void expect_sigbus_handler(int signum);
--
--#define TEST_EXPECT_SIGBUS(action)						\
--do {										\
--	struct sigaction sa_old, sa_new = {					\
--		.sa_handler = expect_sigbus_handler,				\
--	};									\
--										\
--	sigaction(SIGBUS, &sa_new, &sa_old);					\
--	if (sigsetjmp(expect_sigbus_jmpbuf, 1) == 0) {				\
--		action;								\
--		TEST_FAIL("'%s' should have triggered SIGBUS", #action);	\
--	}									\
--	sigaction(SIGBUS, &sa_old, NULL);					\
-+extern __thread sigjmp_buf expect_sigbus_jmpbuf;
-+extern __thread volatile sig_atomic_t expecting_sigbus;
-+extern void catchall_signal_handler(int signum);
+ #ifndef vm_arch_has_protected_memory
+ static inline bool vm_arch_has_protected_memory(struct kvm_vm *vm)
+@@ -732,6 +732,11 @@ void *addr_gva2hva(struct kvm_vm *vm, gva_t gva);
+ gpa_t addr_hva2gpa(struct kvm_vm *vm, void *hva);
+ void *addr_gpa2alias(struct kvm_vm *vm, gpa_t gpa);
+ 
++static inline int kvm_slot_to_fd(struct kvm_vm *vm, u32 slot)
++{
++	return memslot2region(vm, slot)->fd;
++}
 +
-+#define TEST_EXPECT_SIGBUS(action)					\
-+do {									\
-+	struct sigaction sa = {};					\
-+									\
-+	TEST_ASSERT_EQ(sigaction(SIGBUS, NULL, &sa), 0);		\
-+	TEST_ASSERT_EQ(sa.sa_handler, &catchall_signal_handler);	\
-+									\
-+	expecting_sigbus = true;					\
-+	if (sigsetjmp(expect_sigbus_jmpbuf, 1) == 0) {			\
-+		action;							\
-+		TEST_FAIL("'%s' should have triggered SIGBUS", #action);\
-+	}								\
-+	expecting_sigbus = false;					\
- } while (0)
- 
- size_t parse_size(const char *size);
+ #ifndef vcpu_arch_put_guest
+ #define vcpu_arch_put_guest(mem, val) do { (mem) = (val); } while (0)
+ #endif
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 29b3f4e9fb4a7..216d6e037153c 100644
+index 11da9b7546d03..ff301e7c22b2f 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -2269,13 +2269,20 @@ __weak void kvm_selftest_arch_init(void)
+@@ -979,12 +979,13 @@ void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ /* FIXME: This thing needs to be ripped apart and rewritten. */
+ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 		gpa_t gpa, u32 slot, u64 npages, u32 flags,
+-		int gmem_fd, u64 gmem_offset)
++		int gmem_fd, u64 gmem_offset, u64 gmem_flags)
  {
+ 	int ret;
+ 	struct userspace_mem_region *region;
+ 	size_t backing_src_pagesz = get_backing_src_pagesz(src_type);
+ 	size_t mem_size = npages * vm->page_size;
++	off_t mmap_offset = 0;
+ 	size_t alignment = 1;
+ 
+ 	TEST_REQUIRE_SET_USER_MEMORY_REGION2();
+@@ -1056,8 +1057,6 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 
+ 	if (flags & KVM_MEM_GUEST_MEMFD) {
+ 		if (gmem_fd < 0) {
+-			u32 gmem_flags = 0;
+-
+ 			TEST_ASSERT(!gmem_offset,
+ 				    "Offset must be zero when creating new guest_memfd");
+ 			gmem_fd = vm_create_guest_memfd(vm, mem_size, gmem_flags);
+@@ -1078,13 +1077,17 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 	}
+ 
+ 	region->fd = -1;
+-	if (backing_src_is_shared(src_type))
++	if (flags & KVM_MEM_GUEST_MEMFD && gmem_flags & GUEST_MEMFD_FLAG_MMAP) {
++		region->fd = kvm_dup(gmem_fd);
++		mmap_offset = gmem_offset;
++	} else if (backing_src_is_shared(src_type)) {
+ 		region->fd = kvm_memfd_alloc(region->mmap_size,
+ 					     src_type == VM_MEM_SRC_SHARED_HUGETLB);
++	}
+ 
+-	region->mmap_start = kvm_mmap(region->mmap_size, PROT_READ | PROT_WRITE,
+-				      vm_mem_backing_src_alias(src_type)->flag,
+-				      region->fd);
++	region->mmap_start = __kvm_mmap(region->mmap_size, PROT_READ | PROT_WRITE,
++					vm_mem_backing_src_alias(src_type)->flag,
++					region->fd, mmap_offset);
+ 
+ 	TEST_ASSERT(!is_backing_src_hugetlb(src_type) ||
+ 		    region->mmap_start == align_ptr_up(region->mmap_start, backing_src_pagesz),
+@@ -1144,7 +1147,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+ 				 enum vm_mem_backing_src_type src_type,
+ 				 gpa_t gpa, u32 slot, u64 npages, u32 flags)
+ {
+-	vm_mem_add(vm, src_type, gpa, slot, npages, flags, -1, 0);
++	vm_mem_add(vm, src_type, gpa, slot, npages, flags, -1, 0, 0);
  }
  
--static void report_unexpected_signal(int signum)
-+__thread sigjmp_buf expect_sigbus_jmpbuf;
-+__thread volatile sig_atomic_t expecting_sigbus;
-+
-+void catchall_signal_handler(int signum)
- {
-+	switch (signum) {
-+	case SIGBUS: {
-+		if (expecting_sigbus)
-+			siglongjmp(expect_sigbus_jmpbuf, 1);
-+
-+		TEST_FAIL("Unexpected SIGBUS (%d)\n", signum);
-+	}
- #define KVM_CASE_SIGNUM(sig)					\
- 	case sig: TEST_FAIL("Unexpected " #sig " (%d)\n", signum)
--
--	switch (signum) {
--	KVM_CASE_SIGNUM(SIGBUS);
- 	KVM_CASE_SIGNUM(SIGSEGV);
- 	KVM_CASE_SIGNUM(SIGILL);
- 	KVM_CASE_SIGNUM(SIGFPE);
-@@ -2287,12 +2294,13 @@ static void report_unexpected_signal(int signum)
- void __attribute((constructor)) kvm_selftest_init(void)
- {
- 	struct sigaction sig_sa = {
--		.sa_handler = report_unexpected_signal,
-+		.sa_handler = catchall_signal_handler,
- 	};
- 
- 	/* Tell stdout not to buffer its content. */
- 	setbuf(stdout, NULL);
- 
-+	expecting_sigbus = false;
- 	sigaction(SIGBUS, &sig_sa, NULL);
- 	sigaction(SIGSEGV, &sig_sa, NULL);
- 	sigaction(SIGILL, &sig_sa, NULL);
-diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-index bab1bd2b775b6..30eb701e4becd 100644
---- a/tools/testing/selftests/kvm/lib/test_util.c
-+++ b/tools/testing/selftests/kvm/lib/test_util.c
-@@ -18,13 +18,6 @@
- 
- #include "test_util.h"
- 
--sigjmp_buf expect_sigbus_jmpbuf;
--
--void __attribute__((used)) expect_sigbus_handler(int signum)
--{
--	siglongjmp(expect_sigbus_jmpbuf, 1);
--}
--
  /*
-  * Random number generator that is usable from guest code. This is the
-  * Park-Miller LCG using standard constants.
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+index 1d2f5d4fd45d7..861baff201e78 100644
+--- a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
++++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+@@ -399,7 +399,7 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type, u32 nr_v
+ 	for (i = 0; i < nr_memslots; i++)
+ 		vm_mem_add(vm, src_type, BASE_DATA_GPA + slot_size * i,
+ 			   BASE_DATA_SLOT + i, slot_size / vm->page_size,
+-			   KVM_MEM_GUEST_MEMFD, memfd, slot_size * i);
++			   KVM_MEM_GUEST_MEMFD, memfd, slot_size * i, 0);
+ 
+ 	for (i = 0; i < nr_vcpus; i++) {
+ 		gpa_t gpa =  BASE_DATA_GPA + i * per_cpu_size;
 
 -- 
 2.54.0.545.g6539524ca2-goog
