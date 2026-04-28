@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AF439DBEE;
-	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7466A3A3E75;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777418718; cv=none; b=YUYWoHY7dKELLgspL5wQPu8axAEi9TkJSXa4apMA5+BAtTGNT5DtW/evOoLWlzfFwz1NUOBAA9FsBTu19spCZBzbqwofXbfAS0rjq4AGjPgC9p35d0pmuufj6NldLUtqgVtr3jnaex4xILP1pKgYGPpt2WEvlo8X7Y2DeCjk7r8=
+	t=1777418719; cv=none; b=TzNZHIVG5O63AW6yuDfOXJx9CIRODvbvbaIauwUbfqD17ekOlULYs9ELcYDUUgUasUdR+X8bHfNG35rbt/1QXMj/ACmhs7VKSCjrXlimc8qkhINaQdNOstq0foPJsVbmgOqzmBkKk5gVfN0klbLsyMfnkRpfM5TyhmySyjLUsWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777418718; c=relaxed/simple;
-	bh=a2aEfJ6m0j8ZM/bqFoAVOYelACqW9/aXk15li5HxPEQ=;
+	s=arc-20240116; t=1777418719; c=relaxed/simple;
+	bh=zncE2hxQkprEk/co3eBc2SR0h1oYBU1WvKX4YOZi9bM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kwR8Xoshc7lD1MffUKUhFQdLY8J/7+XJ1BvKRdB3YJaq8xfw5SkiJnmjz3LUc0smoxqYGCxkgs2XLkse3QkvM4iYIRBc7KhMEYilM3U/ohOYNN0G0MBuKqDKhzjOjJVeNf5YtH0QhWMglm9Ts1ZNF9hsWYQvcZokrY8qQ/WFRbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F89sJtWJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=YsDr90TROPqrjHQXZCxNDYWfj38QFuQ0Nk6Aj5R9F0cqMGCImV6ZGxLRP1KnIb83kB7iRqXeJtB8iSC/zSnLyoJHdE8ZMrJKv1v6N2nrPJ+csMVc3pfINH1t71BBMXqVeC592xXswc5fo9fDDjbvVBDOCDIdLBMCNfGkWIpt8aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUZBH2j5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F89sJtWJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 78745C2BD00;
-	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUZBH2j5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 407DDC2BCB8;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777418718;
-	bh=a2aEfJ6m0j8ZM/bqFoAVOYelACqW9/aXk15li5HxPEQ=;
+	s=k20201202; t=1777418719;
+	bh=zncE2hxQkprEk/co3eBc2SR0h1oYBU1WvKX4YOZi9bM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=F89sJtWJeVjLD9ZPKyzElsVWRALpeCoSfBqOf7qa/fY6Ukl2W+mrJJCaDStQkYgh6
-	 SkhG1T1FEd6yY+Hmc/WCEiY6jsFtNMCFtnzP7VNsqYb8iKOtNKZ8X9LTRLgCnvt7Cq
-	 Tq7eE6+aAV7EkIVvZcn7BZyGLRZZ7qR0cgaMjxmQEZb07qvr1ftXqb12qrjgPplQn3
-	 0dJj4PU0ToiR4Y797W2dY9yA5jiJhsDmN//UBFTvX0ypD0Aw/R3nxrUUIwalQmgF39
-	 Al/U0yOHF3qrjA1zyDpn4SeCG+KsycPrQBsHMfZmS6HQKvYyMbzo3Jlq/zdbh3D8zy
-	 0p3lIHeoCeZRg==
+	b=KUZBH2j5InYqZEArSttoYJSjeqs4A/ExMhyoDcp25A8Wz8G9/mSZcuLXBAodSZ1gl
+	 H+1NyM1FpGLECjTF4lXRXex+qmXR7w2YczKNVE7aC5uAH6PfnOC1t8bNkI+CXxpOCb
+	 IbsFwKAvIyJ3lkupbeSAizS6VBtk6uCiMgR8oc07MRuR1NoJvL/jfidW7dzpFLZk7b
+	 AXsPioKlZqSzlS/QuVwy0nCbbROpVmRVh46/8byaGXZVxoJC5WUclq58cLgnkwEYD9
+	 WcBTlO8VhgdYVxMSG7JJ5ALHLXHVPHnk6PjD95vSto/EySxo9zvPWfdXqUOo8IG219
+	 SMnIfeS3T+BOw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667CDFF887B;
-	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37697FF8877;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Apr 2026 16:25:11 -0700
-Subject: [PATCH RFC v5 16/53] KVM: guest_memfd: Use actual size for
- invalidation in kvm_gmem_release()
+Date: Tue, 28 Apr 2026 16:25:19 -0700
+Subject: [PATCH RFC v5 24/53] KVM: SEV: Make 'uaddr' parameter optional for
+ KVM_SEV_SNP_LAUNCH_UPDATE
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-gmem-inplace-conversion-v5-16-d8608ccfca22@google.com>
+Message-Id: <20260428-gmem-inplace-conversion-v5-24-d8608ccfca22@google.com>
 References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 In-Reply-To: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,11 +74,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=1535;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=6631;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=8s9srRWtz7f/qUsN6cgFXL8UzY6gobQjxcKA3FAKF1g=;
- b=nLJzPo61vJJymn23yVtDUejpJ5Rclc0DHXvhXZeTco5UgcVOiVM2sLw/Sj9DreTWilBHd6/8Z
- E8OVvmbj6tdC7PZj5nGP+GWZKGH+JQXBiitkgPeHEIBwyAL9CCzFqF9
+ bh=6I5qY356QuKhvOxH1JQe8xcoUJLrBsuBlWTdyFO/bYI=;
+ b=3BKZsofxSpmgNd3PfWxQbf4StcoBe8YmYcPFtSyrf7dW6HwahUfNHnny0P0z2E9XtxJTwkPtk
+ oW/xZZKZ1dNAcwDaMXpkp9YNj3ce2/puK45bRgGtx1pY7P5UFEHe9vZ
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -86,46 +86,132 @@ X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
 X-Original-From: Ackerley Tng <ackerleytng@google.com>
 Reply-To: ackerleytng@google.com
 
-From: Ackerley Tng <ackerleytng@google.com>
+From: Michael Roth <michael.roth@amd.com>
 
-__kvm_gmem_invalidate_begin() and __kvm_gmem_invalidate_end() actually do
-not specially handle -1ul. -1ul is used as a huge number, which legal
-indices do not exceed, and hence the invalidation works as expected.
+For vm_memory_attributes=1, in-place conversion/population is not
+supported, so the initial contents necessarily must need to come
+from a separate src address, which is enforced by the current
+implementation. However, for vm_memory_attributes=0, it is possible for
+guest memory to be initialized directly from userspace by mmap()'ing the
+guest_memfd and writing to it while the corresponding GPA ranges are in
+a 'shared' state before converting them to the 'private' state expected
+by KVM_SEV_SNP_LAUNCH_UPDATE.
 
-Since a later patch is going to make use of the exact range, calculate the
-size of the guest_memfd inode and use it as the end range for invalidating
-SPTEs.
+Update the handling/documentation for KVM_SEV_SNP_LAUNCH_UPDATE to allow
+for 'uaddr' to be set to NULL when vm_memory_attributes=0, which
+SNP_LAUNCH_UPDATE will then use to determine when it should/shouldn't
+copy in data from a separate memory location. Continue to enforce
+non-NULL for the original vm_memory_attributes=1 case.
 
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+[Added src_page check in error handling path when the firmware command fails]
+[Dropped ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES]
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- virt/kvm/guest_memfd.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/virt/kvm/x86/amd-memory-encryption.rst | 19 +++++++++++++++----
+ arch/x86/kvm/svm/sev.c                               | 18 +++++++++++++-----
+ virt/kvm/kvm_main.c                                  |  1 +
+ 3 files changed, 29 insertions(+), 9 deletions(-)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 18dec87dd4baa..a8a5e37c982a4 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -376,6 +376,7 @@ static int kvm_gmem_release(struct inode *inode, struct file *file)
- 	struct kvm_memory_slot *slot;
- 	struct kvm *kvm = f->kvm;
- 	unsigned long index;
-+	pgoff_t end;
+diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+index b2395dd4769de..3b9f36a55a95b 100644
+--- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+@@ -503,7 +503,12 @@ secrets.
  
- 	/*
- 	 * Prevent concurrent attempts to *unbind* a memslot.  This is the last
-@@ -402,9 +403,10 @@ static int kvm_gmem_release(struct inode *inode, struct file *file)
- 	 * Zap all SPTEs pointed at by this file.  Do not free the backing
- 	 * memory, as its lifetime is associated with the inode, not the file.
+ It is required that the GPA ranges initialized by this command have had the
+ KVM_MEMORY_ATTRIBUTE_PRIVATE attribute set in advance. See the documentation
+-for KVM_SET_MEMORY_ATTRIBUTES for more details on this aspect.
++for KVM_SET_MEMORY_ATTRIBUTES/KVM_SET_MEMORY_ATTRIBUTES2 for more details on
++this aspect. If running with kvm.vm_memory_attributes=0 (to allow for
++guest_memfd to handle memory attributes and allow for in-place conversion of
++pages between shared/private), the 'PRESERVED' flag/content mode (which is
++only available via the KVM_SET_MEMORY_ATTRIBUTES2 interface) must be used
++when setting the range to private prior to issuing this ioctl.
+ 
+ Upon success, this command is not guaranteed to have processed the entire
+ range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+@@ -511,9 +516,15 @@ range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+ remaining range that has yet to be processed. The caller should continue
+ calling this command until those fields indicate the entire range has been
+ processed, e.g. ``len`` is 0, ``gfn_start`` is equal to the last GFN in the
+-range plus 1, and ``uaddr`` is the last byte of the userspace-provided source
+-buffer address plus 1. In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO,
+-``uaddr`` will be ignored completely.
++range plus 1, and ``uaddr`` (if specified) is the last byte of the
++userspace-provided source buffer address plus 1.
++
++In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO, ``uaddr`` will be
++ignored completely. Otherwise, ``uaddr`` is required if
++kvm.vm_memory_attributes=0 and optional if kvm.vm_memory_attributes=1, since
++in the latter case guest memory can be initialized directly from userspace
++prior to converting it to private and passing the GPA range on to this
++interface.
+ 
+ Parameters (in): struct  kvm_sev_snp_launch_update
+ 
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index c2126b3c30724..bf10d24907a00 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -2343,7 +2343,15 @@ static int sev_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+ 	int level;
+ 	int ret;
+ 
+-	if (WARN_ON_ONCE(sev_populate_args->type != KVM_SEV_SNP_PAGE_TYPE_ZERO && !src_page))
++	/*
++	 * For vm_memory_attributes=1, in-place conversion/population is not
++	 * supported, so the initial contents necessarily need to come from a
++	 * separate src address. For vm_memory_attributes=0, this isn't
++	 * necessarily the case, since the pages may have been populated
++	 * directly from userspace before calling KVM_SEV_SNP_LAUNCH_UPDATE.
++	 */
++	if (vm_memory_attributes &&
++	    sev_populate_args->type != KVM_SEV_SNP_PAGE_TYPE_ZERO && !src_page)
+ 		return -EINVAL;
+ 
+ 	ret = snp_lookup_rmpentry((u64)pfn, &assigned, &level);
+@@ -2390,7 +2398,7 @@ static int sev_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
  	 */
--	__kvm_gmem_invalidate_begin(f, 0, -1ul,
-+	end = i_size_read(inode) >> PAGE_SHIFT;
-+	__kvm_gmem_invalidate_begin(f, 0, end,
- 				    kvm_gmem_get_invalidate_filter(inode));
--	__kvm_gmem_invalidate_end(f, 0, -1ul);
-+	__kvm_gmem_invalidate_end(f, 0, end);
+ 	if (ret && !snp_page_reclaim(kvm, pfn) &&
+ 	    sev_populate_args->type == KVM_SEV_SNP_PAGE_TYPE_CPUID &&
+-	    sev_populate_args->fw_error == SEV_RET_INVALID_PARAM) {
++	    sev_populate_args->fw_error == SEV_RET_INVALID_PARAM && src_page) {
+ 		void *src_vaddr = kmap_local_page(src_page);
+ 		void *dst_vaddr = kmap_local_pfn(pfn);
  
- 	list_del(&f->entry);
+@@ -2422,8 +2430,8 @@ static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	if (copy_from_user(&params, u64_to_user_ptr(argp->data), sizeof(params)))
+ 		return -EFAULT;
  
+-	pr_debug("%s: GFN start 0x%llx length 0x%llx type %d flags %d\n", __func__,
+-		 params.gfn_start, params.len, params.type, params.flags);
++	pr_debug("%s: GFN start 0x%llx length 0x%llx type %d flags %d src %llx\n", __func__,
++		 params.gfn_start, params.len, params.type, params.flags, params.uaddr);
+ 
+ 	if (!params.len || !PAGE_ALIGNED(params.len) || params.flags ||
+ 	    (params.type != KVM_SEV_SNP_PAGE_TYPE_NORMAL &&
+@@ -2479,7 +2487,7 @@ static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 
+ 	params.gfn_start += count;
+ 	params.len -= count * PAGE_SIZE;
+-	if (params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO)
++	if (src && params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO)
+ 		params.uaddr += count * PAGE_SIZE;
+ 
+ 	if (copy_to_user(u64_to_user_ptr(argp->data), &params, sizeof(params)))
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index ba195bb239aaa..3bf212fd99193 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -105,6 +105,7 @@ module_param(allow_unsafe_mappings, bool, 0444);
+ #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+ bool vm_memory_attributes = true;
+ module_param(vm_memory_attributes, bool, 0444);
++EXPORT_SYMBOL_FOR_KVM_INTERNAL(vm_memory_attributes);
+ #endif
+ DEFINE_STATIC_CALL_RET0(__kvm_get_memory_attributes, kvm_get_memory_attributes_t);
+ EXPORT_SYMBOL_FOR_KVM_INTERNAL(STATIC_CALL_KEY(__kvm_get_memory_attributes));
 
 -- 
 2.54.0.545.g6539524ca2-goog
