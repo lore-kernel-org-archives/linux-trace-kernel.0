@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFE13A4527;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6323A4523;
 	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777418719; cv=none; b=Ck/n2aC+T4D/LGxDohgL1fEtJhHubFGP+OA9DgCYg+nZVGEgBsPlDL5GUXNR2B/UJfDGPHp/0+oWRgTxZQUdjOTiLu+IMq5wOWeIQoYE3IFPPbCHD7DmVH9VJGd0hnCVUCRsWfc5WegdPY2FTRbhzqIZiqF1/p1gcBxRK31Nvtg=
+	t=1777418719; cv=none; b=eMYib1y9F/aahQOFny7vZx1Wc/0CKky30QXasNj9wyx5bRKYGlbunfO8lCN69KDAQOZYKMJUiOnH3+D5U46sfpdTfXjJqhA82K+LojQs5zDSewVnJ4eDLZwec4cJ9XMlSeHwVF6CoCZHbyhg1UknXyds1s2XpTRcM7OMksgWQfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777418719; c=relaxed/simple;
-	bh=W95IiIrObMcGrhAhPOa1Lzdp+cLl7f0y7x5Z4Hm0jDM=;
+	bh=yIQ1qb/5thBEPl1WW7+A4KzPierGynmKhGiUR/3Ml6c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Bcht6QIghu11XoiK+1rRvccKpADha0BNKRXnzrFd5kC/9F+iyS/SZe7EeCPoTs9gA83ebrFpnPzxJU24hzp7O7OpYZfPWW+ujRa8bLv6mQ1XcJJidUyjhaOd6IvSSsKDPoUnNqrlYG+HaE5ibI9O90g3ht6/Zsl0RBNq0EDSiNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuXGvioN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XqEaT6JGDXqdgesbmVFh/YZ4cGvMSg4xdJY6F7CjQgcPvGD/2IxN1941YadEYrz8r/lTlmecLFgDxNem8UHXrUXEJQRn/FtRrNlQHy4EKMYMiuw26lj67/9ny5EHuf+0pQRnQiyvjkyri4taodfHRdPwiXOdA868SRac4LkNh+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqzkNOfj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuXGvioN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B95CC2BD05;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqzkNOfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 540A2C2BCF7;
 	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1777418719;
-	bh=W95IiIrObMcGrhAhPOa1Lzdp+cLl7f0y7x5Z4Hm0jDM=;
+	bh=yIQ1qb/5thBEPl1WW7+A4KzPierGynmKhGiUR/3Ml6c=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tuXGvioN52WoQt0JOaZJgEyfTYb1wwe1yCUqqeHib62/xvuhEUZ31BqZd44hMhToV
-	 6qOrYvQ80z8gHDqsw/freo5a0rQPhmRRZL7wi6NXmfLlO8INMI9TgZSE01FxocsyZh
-	 PdgbAqT9LB5AnA4k4rD9AwQcSBbDqJjqxKre+9vst80kxdHbSo9NR4JQVKjpz5/8tu
-	 2ZXKwuurxDjsN6bKzHA0WGJAkjcLNVMY+jUQtW1zzPQ9WfgFctAiHu4tjULtMbefBV
-	 0erieBB/MVon+2fFpzaSFknk4l6nJhG1DfdxKJmh9IL+obK+cgZZOs2M8Qbq6+2YEa
-	 AgDMxdyHPupvw==
+	b=iqzkNOfjetQv0OkOlMI4tZoTh+sRABN+hK+ANmOFw/Y0SQPFWkuEL1h8joP+JXUaw
+	 holJDjTe6B+rq4XlfKj3mAaSD488WXovSxw7VjFVbkk31MlIsZriCcQAUobgbbS5+4
+	 U3vufYnU831eYzE7hnJgsAplr2Sf/lQetR74SIaW6TYCvLC9TnTHOVdX1yhvunNxmR
+	 sAZhmVuNPo8Ha+M+kQdBEXi3e+yI+rAc5yHBoH4kzECyKbbnVWSU33aaWelmlFVaur
+	 YvVc8MESc7z18FYFcuPypzKc/GC7Ywh8zipYDdvDfBE6GhtkEphZ+kVUEtljAgqH/I
+	 bH4JGvvE8VGtw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727BAFF8875;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B007FF8875;
 	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Apr 2026 16:25:22 -0700
-Subject: [PATCH RFC v5 27/53] KVM: x86: Bug CoCo VM on page fault before
- finalizing
+Date: Tue, 28 Apr 2026 16:25:20 -0700
+Subject: [PATCH RFC v5 25/53] KVM: TDX: Make source page optional for
+ KVM_TDX_INIT_MEM_REGION
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-gmem-inplace-conversion-v5-27-d8608ccfca22@google.com>
+Message-Id: <20260428-gmem-inplace-conversion-v5-25-d8608ccfca22@google.com>
 References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 In-Reply-To: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,11 +74,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=1213;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=2077;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=tiTenJm2569v5eEA4Z7Xk+parAwNdRT4spl4m/ukMSc=;
- b=Ddok4n3bkINYasSG44K3iwGimZ3Lx7mZtFodZ99SfqY6+rmIB6rUmN3BUBBQoCmaMltcVCYvA
- 9LeCHnRTzRhCqSGRL1TQUNOKoyvJhWw8WcEOLkkGetGbfg7UvhxOVAp
+ bh=ZUVil0lCIwc17luhnyQSnbr0drwWGJzhuW+VIyBKAEE=;
+ b=7+JgXh5IsJ8zEo/B+5TkhpuCJ+LAfF3PUrxanugOqLUqBAxiPXjz3BKUNbVG/YL3JTPBaLNVM
+ Arrpar2DOqaCNzQACmKnSm35p43EbE0LBLcBBsBuSJO2Q79UgEO9KPL
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -88,38 +88,54 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-In-place conversion of guest_memfd memory to private is allowed with the
-PRESERVE flag to enable populating guest memory only before CoCo VMs are
-finalized.
+Update tdx_gmem_post_populate() to handle cases where a source page is
+not explicitly provided. Instead of returning -EOPNOTSUPP when src_page
+is NULL, default to using the page associated with the destination PFN.
 
-Allowing CoCo VMs to fault memory could mess up memory contents. Hence, as
-a second layer check, bug CoCo VMs if they try to fault in memory from
-guest_memfd before the VMs are finalized.
+This change allows for in-place memory conversion where the data is
+already present in the target PFN, ensuring the TDX module has a valid
+source page reference for the TDH.MEM.PAGE.ADD operation.
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/virt/kvm/x86/intel-tdx.rst | 4 ++++
+ arch/x86/kvm/vmx/tdx.c                   | 8 ++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index d3da387340a9d..8c5a3d2a7470b 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4599,6 +4599,13 @@ static int kvm_mmu_faultin_pfn_gmem(struct kvm_vcpu *vcpu,
- 		return -EFAULT;
- 	}
+diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
+index 6a222e9d09541..fbc0f179dc750 100644
+--- a/Documentation/virt/kvm/x86/intel-tdx.rst
++++ b/Documentation/virt/kvm/x86/intel-tdx.rst
+@@ -158,6 +158,10 @@ KVM_TDX_INIT_MEM_REGION
+ Initialize @nr_pages TDX guest private memory starting from @gpa with userspace
+ provided data from @source_addr. @source_addr must be PAGE_SIZE-aligned.
  
-+	/* Cannot fault from guest_memfd before CoCo VM is finalized. */
-+	if (KVM_BUG_ON(vcpu->kvm->arch.has_protected_state &&
-+			       !vcpu->kvm->arch.pre_fault_allowed,
-+		       vcpu->kvm)) {
-+		return -EFAULT;
-+	}
++If memory attributes are tracked in guest_memfd, pass NULL for
++@source_addr to initialize the memory region using memory contents
++already populated in guest_memfd memory.
 +
- 	r = kvm_gmem_get_pfn(vcpu->kvm, fault->slot, fault->gfn, &fault->pfn,
- 			     &fault->refcounted_page, &max_order);
- 	if (r) {
+ Note, before calling this sub command, memory attribute of the range
+ [gpa, gpa + nr_pages] needs to be private.  Userspace can use
+ KVM_SET_MEMORY_ATTRIBUTES to set the attribute.
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 04ce321ebdf39..10373e606242a 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -3116,8 +3116,12 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+ 	if (KVM_BUG_ON(kvm_tdx->page_add_src, kvm))
+ 		return -EIO;
+ 
+-	if (!src_page)
+-		return -EOPNOTSUPP;
++	if (!src_page) {
++		if (vm_memory_attributes)
++			return -EOPNOTSUPP;
++
++		src_page = pfn_to_page(pfn);
++	}
+ 
+ 	kvm_tdx->page_add_src = src_page;
+ 	ret = kvm_tdp_mmu_map_private_pfn(arg->vcpu, gfn, pfn);
 
 -- 
 2.54.0.545.g6539524ca2-goog
