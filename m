@@ -1,38 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD49328B77;
-	Tue, 28 Apr 2026 16:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC477328B62;
+	Tue, 28 Apr 2026 17:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777393370; cv=none; b=RqJqcBCn8B6bKWnaBfyiGX+0FOtisoDGqC5GuCqYW1bJl2o/964SI/LNpfZaUdOq2MAvfHBPypslz3N6SKHwMVLfb3QBAyWmpD18EJcMVd9AO4mUUwGvcO+wIFoMt9JYESa6DsWeghvhmshwhF6iUndzNgw0V0nSnqcH3pgepDM=
+	t=1777396303; cv=none; b=O7cN0TrL3tSZ3mEs1OtAE/BKXKJWw9dBYj+jPzL7q4Bcl5icuH8cVjX6EkxVSap1U4ZC5GI8YqQilVWGGVhBBAeEJuECH3X02H5nn0O3KwPfsLjhFdNChy0G0F/7NZh3uYtPJ4bpwh+JvKxPE/RdvOV6nPPqoAloYYvM8H/7HjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777393370; c=relaxed/simple;
-	bh=qeeT2TjKCQF7xHWRLdW1EzTPAdOfSLgRCwcy+uVCJaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Dv6y7AeWshsGHTn2MzTV6NAWQEOYwkH/JIzYZTcAgzUXBp5nIhWFwM+1qOpUcw+aDY7VLjEun0J08OC11RpxcxMUnUnh0uDSAhWU6bd5dkDDX0wryj0i3kP6W23Ysjv3yXAvWiuVnbN+9aN1K497+hEB7bzwHfVCqo/zPsa/a28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fL0t97xo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fL0t97xo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE36C2BCAF;
-	Tue, 28 Apr 2026 16:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777393370;
-	bh=qeeT2TjKCQF7xHWRLdW1EzTPAdOfSLgRCwcy+uVCJaU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=fL0t97xoVve3R+N/l1gypwfNS+tNcIijD3W4sYOwqG12Dk9kYxsnpKjs9+uhJD/Iy
-	 4PV4Q0GFQ/A3Wl/hSjD2Oe0WW4uw1Cvi0lNom2bG1XHT+hUPQlCzHCW89xsztLR9L6
-	 YtouYPrVtnYVQWvUjYa7ILe9eUfeNbgF7/VV3I/e98gDGcmVLqmEhCn7+Rs7LNWPiU
-	 L8zujMzniRLWcYLgQ+krct708dkLl1PWhZLjG5oYsglaPtWwQqNTHkaGimvneaNdOe
-	 hzWiorEOfwzuVB7OyP0D1DA/+STFirmc4XkA3YQO6yJhTKBYB7YeqY73ecaWYwidVb
-	 4S1blGCHlhuOQ==
-Date: Tue, 28 Apr 2026 12:23:02 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing/probes: Limit size of event probe to 3K
-Message-ID: <20260428122302.706610ba@gandalf.local.home>
+	s=arc-20240116; t=1777396303; c=relaxed/simple;
+	bh=3IEVvhyoAwMsqSlZN1pE1/BSuSg3iJlo8V4AUulUOhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i6yhTu7jdn7QpVUhaB1s3j3RN5e3fiEylVJiBwSg/SlM7o0eNOoN4ts3jtLeaEx/pFOMlEz14hKYgfdBQc6371zONc5XQhlZUkZDCn6BzbHZ8wqE4YZsok0d/O0EnYso9eGzA7Ehf08U4ZIJdjHwNJckrXII3XzOHSMLUgJRSDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id F0944A00B7;
+	Tue, 28 Apr 2026 17:11:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 26E9C2002B;
+	Tue, 28 Apr 2026 17:11:33 +0000 (UTC)
+Date: Tue, 28 Apr 2026 13:11:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Yash Suthar <yashsuthar983@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace: remove the dead IS_ERR() check in
+ trace_pipe_open()
+Message-ID: <20260428131147.08fdbe1e@gandalf.local.home>
+In-Reply-To: <20260420101236.223919-1-yashsuthar983@gmail.com>
+References: <20260420101236.223919-1-yashsuthar983@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,65 +38,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 26E9C2002B
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: 3az1pk3wx5wptzskabn8orrdar8qmaxq
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18KDwoI78GMHSM1d7h4lnT8LQ86Syck7/g=
+X-HE-Tag: 1777396293-450845
+X-HE-Meta: U2FsdGVkX18dd6V6bi9RKrxjPv0CURQBLZiyLVaop2Fls/YP5GEJYhBRr9HI9rpP/PoWRMRuIcRGIA/Pagu+dnphmNEmlnbqBgTAHVjtIThY5LxAjGH2F9aPOttQhLDits3Qc7wm52hvZo/aXPsQsilWsRsR1D8WopEwrANhwYtjoSvijlUw0ozj4VUpGETAzAD3kxZL/wJWesbnuWvBsIL1ZngdSS5HXgpFzyK4dxuCo9vY+s0PXMieXDDsVV30glfeg8ZhOqP7+AuTpCA/vq5l57M26zzc7wvRKLRbxYD63HyjvoSCpBhRzx84Mo5dRA2ANzIzy9fhIorsCWvvHXgaJ5PEbOrn
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, 20 Apr 2026 15:42:36 +0530
+Yash Suthar <yashsuthar983@gmail.com> wrote:
 
-There currently isn't a max limit an event probe can be. One could make an
-event greater than PAGE_SIZE, which makes the event useless because if
-it's bigger than the max event that can be recorded into the ring buffer,
-then it will never be recorded.
+"remove the dead"? What is this? a horror flick? ;-)
 
-A event probe should never need to be greater than 3K, so make that the
-max size. As long as the max is less than the max that can be recorded
-onto the ring buffer, it should be fine.
+The subsystem is "tracing" not "trace" and the first word should be
+capitalized. I changed the subject to:
 
-Cc: stable@vger.kernel.org
-Fixes: 93ccae7a22274 ("tracing/kprobes: Support basic types on dynamic events")
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- kernel/trace/trace_probe.c | 6 ++++++
- kernel/trace/trace_probe.h | 4 +++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+  [PATCH] tracing: Remove redundant IS_ERR() check in trace_pipe_open()
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index e1c73065dae5..e0d3a0da26af 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1523,6 +1523,12 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 	parg->offset = *size;
- 	*size += parg->type->size * (parg->count ?: 1);
- 
-+	if (*size > MAX_PROBE_EVENT_SIZE) {
-+		ret = -E2BIG;
-+		trace_probe_log_err(ctx->offset, EVENT_TOO_BIG);
-+		goto fail;
-+	}
-+
- 	if (parg->count) {
- 		len = strlen(parg->type->fmttype) + 6;
- 		parg->fmt = kmalloc(len, GFP_KERNEL);
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 9fc56c937130..262d8707a3df 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -38,6 +38,7 @@
- #define MAX_BTF_ARGS_LEN	128
- #define MAX_DENTRY_ARGS_LEN	256
- #define MAX_STRING_SIZE		PATH_MAX
-+#define MAX_PROBE_EVENT_SIZE	3072
- 
- /* Reserved field names */
- #define FIELD_STRING_IP		"__probe_ip"
-@@ -561,7 +562,8 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 	C(BAD_TYPE4STR,		"This type does not fit for string."),\
- 	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
- 	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
--	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),
-+	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
-+	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),
- 
- #undef C
- #define C(a, b)		TP_ERR_##a
--- 
-2.53.0
+And pulled it in.
+
+When submitting changes to a subsystem, please do a git log --no-merges to
+see how other commits are done in that subsystem.
+
+Thanks,
+
+-- Steve
+
+> in trace_pipe_open() already check the IS_ERR(iter) and
+> return early on error,so iter after will be valid and
+> it is safe to return 0 at end.
+> 
+> Signed-off-by: Yash Suthar <yashsuthar983@gmail.com>
+> ---
+>  kernel/trace/trace_remote.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index d6c3f94d67cd..2a6cc000ec98 100644
+> --- a/kernel/trace/trace_remote.c
+> +++ b/kernel/trace/trace_remote.c
+> @@ -602,7 +602,7 @@ static int trace_pipe_open(struct inode *inode, struct file *filp)
+>  
+>  	filp->private_data = iter;
+>  
+> -	return IS_ERR(iter) ? PTR_ERR(iter) : 0;
+> +	return 0;
+>  }
+>  
+>  static int trace_pipe_release(struct inode *inode, struct file *filp)
 
