@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D0139DBF6;
-	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C79F395276;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777418718; cv=none; b=uFTPDVnNLOLZK6rLU1g6bviB/H/0UoXpJ0E4PnXW+nPxmUCyBRnYpD+lpoPByhq/mFS5vVaOhc+E7hS6lB4at+RwbRsurvhxzhDRRQVIgFXzReyK5p4/2wNcEnTAaOYT/yhaxYCZ//kQAKRB+ERqK2RK53lQNqYm4jnkW9zIK90=
+	t=1777418719; cv=none; b=Sz3+kzrijbvh4niyne0a2mOvHUqx/CEdPQgmsY8stTwvF/b1e8J4mSfl9WhZ7YLtMy09n3DLFoZcnq+Bsv81ZvEYKXn+aOFf/Kke5erFPwX+Tf8ws2QigmLiMRCJmyCHmWNdguSX4UgOJsySVEwHuNXMIsl3asQosSbzRzxBme0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777418718; c=relaxed/simple;
-	bh=pnzJsSOdQ2ZKpf+yB2E9JY952czQ9HO2EsQs+cwWkSM=;
+	s=arc-20240116; t=1777418719; c=relaxed/simple;
+	bh=O5EusdRtRRcBsbLXs41Iht6PiU+kaHavayRHgykcm70=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DFthl02nN45WkB2yqTUpWmJ9p2qvrPspt+0bLXZdG+41pBWtEXgU+hUWj5QJutir0ajGMU7Fhbzq2U09YJclCAjwzAdJQv5gSyQdlFjf/neV7kCKoMrzG7MCtExNXkeWofp3WWQniLXLPsGU9RnKTKkQt81alDt9QsdQJHAQmrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gt0OTQq2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=iD1AOchk1KyylMPn+BT/+HVPfEIOobd5DjZO2ks6eksYz9nAJlubUSIbFOb5TOsktRUQLGthGdltbombPFe2tisU3ZQaXo8Pm7WeIImFx6A1yTHN6YbTaM+Q9+6/TPnhyZXjPpo71f8ATlbBUNTEnNXhwmitYqdE2DL/WFWlrL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILyLZIk7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gt0OTQq2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 87DABC2BCC6;
-	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILyLZIk7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D89AC2BCAF;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777418718;
-	bh=pnzJsSOdQ2ZKpf+yB2E9JY952czQ9HO2EsQs+cwWkSM=;
+	s=k20201202; t=1777418719;
+	bh=O5EusdRtRRcBsbLXs41Iht6PiU+kaHavayRHgykcm70=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gt0OTQq2PVfMjCGZ7b46e19ZN8f2WG6JX+4v1Itr92agtRpaD7mm1R5ZFRQzW2PDk
-	 t1rp6nxNsK99HQE4ZpGq/hJLkM9wyIJNM/+XswEWUi1QJtFmK3HJpHzgX6CvoRTmUh
-	 y3FYzIuSaaNxV3eJ8VUebU9Os5b/VEjQUylrVnTzVN2B2MYSXASICyy9dCI1XmT7uk
-	 K34dykLI8MXbtMCQY1xFL0R1MGCSfh/jqlpuugyuD1ggWco0PsRBSzO/loYRndaaiS
-	 J4gL1H4XUgNSY/DwFwKd0ddegjRgiV9dY/470EaG8mSEI8HJNWnIlEAtwNfsXF0mQD
-	 xLXW+8JQhuRRw==
+	b=ILyLZIk7mLcRdFizYiNm5+SQt8Rlc0tM/h5WbkdME+trzC0BLp+ecwawGTzp7X8II
+	 DyOCuQHsDjEiKr3ElyRdA9StEXtC2u0lcl+vBpq3qruQkTKF7ILo2PWH1qrxFuEUqR
+	 labSI41SqA0y78nZAvZwTa4v1OSrnwqtTBEQ5gDvBOaMyjPGtUXHfk6RW10uLHEtdv
+	 hMw93TrV2EjkWkIO0aa0v41/BfUU4ut4DUNRHwSOdUvcdlh6VBc1teBRCTY2afGGDV
+	 UI0k7eDX5mu96a/iXr8rn5vo49LfAMB3Z+Q4qdLdrFaN6X+UpYGIFuVd0u2ubwumMc
+	 WxYFtlz+uRxhA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D967FF887E;
-	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23281FF887B;
+	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Apr 2026 16:25:12 -0700
-Subject: [PATCH RFC v5 17/53] KVM: guest_memfd: Determine invalidation
- filter from memory attributes
+Date: Tue, 28 Apr 2026 16:25:18 -0700
+Subject: [PATCH RFC v5 23/53] KVM: x86: Support SW_PROTECTED_VM in applying
+ content modes
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-gmem-inplace-conversion-v5-17-d8608ccfca22@google.com>
+Message-Id: <20260428-gmem-inplace-conversion-v5-23-d8608ccfca22@google.com>
 References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 In-Reply-To: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,11 +74,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=3498;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=3447;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=rTbN5ompOLk/ZM+5Duak/FZnd2bH0M3Khx+/Wu0/ecI=;
- b=jwLlCIM76PVRy74xhSINNK9Fe1Gutkg13fkABnTajm9j32KOHvBXPseR/nyk0iXTwD6iNKArG
- Z7SowX0SxpdBl5ecYYavp5YgGIN4Z8bbR2+vwATRdLwTvw3pj01u7lb
+ bh=9ksW1lIO9ZmZXIT5xvo0JGaOScZO9eFAx8q/FWxGah8=;
+ b=Cy4xUfQRFEwNJDgZS17EsIHexFRRfCGZCJzHnrfM2HPN/NoecocgbvmuMuwK8/LWmqP1BNxCk
+ G0AVsZtj4TUBD2z0PWLopI3VJCmZQUh+/Miluf8cH7GpfDGSe8Qxxx0
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -88,92 +88,128 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Before conversion, the range filter doesn't really matter:
+Override the architecture-specific guest_memfd content mode functions for
+x86 to provide support for KVM_X86_SW_PROTECTED_VM.
 
-+ For non-CoCo VMs that use guest_memfd, they have no mirrored tdp, so
-  KVM_DIRECT_ROOTS would have been invalidated anyway.
-+ CoCo VMs could not use INIT_SHARED, and there's no conversion support, so
-  always using KVM_FILTER_PRIVATE would have worked.
+For software-protected VMs, specify KVM_SET_MEMORY_ATTRIBUTES2_ZERO and
+KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE as supported content modes. Implement
+the logic for these modes as follows:
 
-Now with conversion support, update kvm_gmem_get_invalidate_filter to
-inspect the memory attributes maple tree for a given range.
-
-Instead of determining the invalidation filter based on static inode
-flags, iterate through the attributes maple tree for the specific range
-being invalidated. This allows KVM to identify if the range contains
-private pages, shared pages, or both, and set the filter bits
-accordingly.
-
-Update kvm_gmem_invalidate_begin and kvm_gmem_release to pass the range
-parameters to the filter helper to ensure invalidation accurately
-targets the memory types present in the affected range.
++ ZERO: Zero out the memory using the generic guest_memfd helper.
++ PRESERVE: Maintain the existing memory content without modification.
++ UNSPECIFIED: KVM_X86_SW_PROTECTED_VM is guest_memfd's testing
+  vehicle. Scramble the memory range by filling it with random bytes so
+  test behavior will differ from that of PRESERVE.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- virt/kvm/guest_memfd.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ arch/x86/kvm/x86.c | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index a8a5e37c982a4..85e8b3a981307 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -199,12 +199,24 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 	return folio;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 6609957ecfea3..e8abff71001eb 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -14194,6 +14194,99 @@ void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end)
+ 	kvm_x86_call(gmem_invalidate)(start, end);
  }
- 
--static enum kvm_gfn_range_filter kvm_gmem_get_invalidate_filter(struct inode *inode)
-+static enum kvm_gfn_range_filter kvm_gmem_get_invalidate_filter(
-+		struct inode *inode, pgoff_t start, pgoff_t end)
- {
--	if (GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED)
--		return KVM_FILTER_SHARED;
-+	struct gmem_inode *gi = GMEM_I(inode);
-+	enum kvm_gfn_range_filter filter = 0;
-+	void *entry;
+ #endif
 +
-+	lockdep_assert(mt_lock_is_held(&gi->attributes));
-+
-+	mt_for_each(&gi->attributes, entry, start, end - 1) {
-+		filter |= (xa_to_value(entry) & KVM_MEMORY_ATTRIBUTE_PRIVATE) ?
-+			  KVM_FILTER_PRIVATE : KVM_FILTER_SHARED;
-+
-+		if (filter == (KVM_FILTER_PRIVATE | KVM_FILTER_SHARED))
-+			break;
++u64 kvm_arch_gmem_supported_content_modes(struct kvm *kvm, bool to_private)
++{
++	if (!kvm) {
++		return KVM_SET_MEMORY_ATTRIBUTES2_ZERO |
++		       KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE;
 +	}
++
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++		return KVM_SET_MEMORY_ATTRIBUTES2_ZERO |
++		       KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE;
++	default:
++		return 0;
++	}
++}
++
++int kvm_arch_gmem_apply_content_mode_zero(struct kvm *kvm, struct inode *inode,
++					  pgoff_t start, pgoff_t end)
++{
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++		return kvm_gmem_apply_content_mode_zero(inode, start, end);
++	default:
++		return 0;
++	}
++}
++
++int kvm_arch_gmem_apply_content_mode_preserve(struct kvm *kvm,
++					      struct inode *inode,
++					      pgoff_t start, pgoff_t end)
++{
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++		/* Do nothing to preserve content. */
++		return 0;
++	default:
++		/* Not a valid content mode for other types, so do nothing. */
++		return 0;
++	}
++}
++
++static int __scramble_range(struct inode *inode, pgoff_t start, pgoff_t end)
++{
++	struct address_space *mapping = inode->i_mapping;
++	struct folio_batch fbatch;
++	struct folio *f;
++	char *kaddr;
++	int ret = 0;
++	int i;
++
++	folio_batch_init(&fbatch);
++	while (!ret && filemap_get_folios(mapping, &start, end - 1, &fbatch)) {
++		for (i = 0; !ret && i < folio_batch_count(&fbatch); ++i) {
++			f = fbatch.folios[i];
++
++			folio_lock(f);
++
++			if (folio_test_hwpoison(f)) {
++				ret = -EHWPOISON;
++			} else {
++				/*
++				 * Hard-coding range to scramble since
++				 * guest_memfd only supports PAGE_SIZE
++				 * folios now.
++				 */
++				kaddr = kmap_local_folio(f, 0);
++				get_random_bytes(kaddr, PAGE_SIZE);
++				kunmap_local(kaddr);
++			}
++
++			folio_unlock(f);
++		}
++
++		folio_batch_release(&fbatch);
++		cond_resched();
++	}
++
++	return ret;
++}
++
++int kvm_arch_gmem_apply_content_mode_unspecified(struct kvm *kvm,
++						 struct inode *inode,
++						 pgoff_t start, pgoff_t end)
++{
++	switch (kvm->arch.vm_type) {
++	case KVM_X86_SW_PROTECTED_VM:
++		return __scramble_range(inode, start, end);
++	default:
++		return 0;
++	}
++}
++
+ #endif
  
--	return KVM_FILTER_PRIVATE;
-+	return filter;
- }
- 
- static void __kvm_gmem_invalidate_begin(struct gmem_file *f, pgoff_t start,
-@@ -250,7 +262,7 @@ static void kvm_gmem_invalidate_begin(struct inode *inode, pgoff_t start,
- 	enum kvm_gfn_range_filter attr_filter;
- 	struct gmem_file *f;
- 
--	attr_filter = kvm_gmem_get_invalidate_filter(inode);
-+	attr_filter = kvm_gmem_get_invalidate_filter(inode, start, end);
- 
- 	kvm_gmem_for_each_file(f, inode)
- 		__kvm_gmem_invalidate_begin(f, start, end, attr_filter);
-@@ -373,6 +385,7 @@ static long kvm_gmem_fallocate(struct file *file, int mode, loff_t offset,
- static int kvm_gmem_release(struct inode *inode, struct file *file)
- {
- 	struct gmem_file *f = file->private_data;
-+	enum kvm_gfn_range_filter filter;
- 	struct kvm_memory_slot *slot;
- 	struct kvm *kvm = f->kvm;
- 	unsigned long index;
-@@ -404,8 +417,8 @@ static int kvm_gmem_release(struct inode *inode, struct file *file)
- 	 * memory, as its lifetime is associated with the inode, not the file.
- 	 */
- 	end = i_size_read(inode) >> PAGE_SHIFT;
--	__kvm_gmem_invalidate_begin(f, 0, end,
--				    kvm_gmem_get_invalidate_filter(inode));
-+	filter = kvm_gmem_get_invalidate_filter(inode, 0, end);
-+	__kvm_gmem_invalidate_begin(f, 0, end, filter);
- 	__kvm_gmem_invalidate_end(f, 0, end);
- 
- 	list_del(&f->entry);
+ int kvm_spec_ctrl_test_value(u64 value)
 
 -- 
 2.54.0.545.g6539524ca2-goog
