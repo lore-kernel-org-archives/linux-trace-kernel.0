@@ -1,86 +1,415 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB8A3BD22F;
-	Tue, 28 Apr 2026 07:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B0C3D4123
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Apr 2026 08:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360616; cv=none; b=TaKzxA1qSMGfPtIPgmzqGTkRloG2T/YiNDxH0uhJ+EXXxqyVp9jVGmJoyXoGdkmDisVzcnjGkiLjRdszDh68eC1huiw4wwNJ3eDtph7RsYIoStmHBzr45bT873iq0Q57QkpROIERbhHqB6DmFv/QDLEPITfi2qYmrmO6ozpmM8U=
+	t=1777364624; cv=none; b=hDLMbfgNHivX+U6NYiq9bbRuPPBql6DIN5GaZfpKJK61z8S8YziRhqAdVbXb2Qf5rH9m5xTWF+nLrmcGpFF6OlvNN138M0HqppC6rWydFbkIgiKQgaQCgbWGF2Zzy0b58dVjG3Ho3PU00904S2LIkwg25Y6DCt0Q8FBNI+j+vKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360616; c=relaxed/simple;
-	bh=dbrUFbqJ78b2jcWIF0af1PiDl7uQgyKVtVnPGQD4pwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dwP/Zv0ECLaLgEwsys6fqW2y8JeNcR01fvM3NuvKfXcnqZyJzNz8YeBC10fFgVgaiNd/CvIoXHqNyS/ZCNNhKHSjLfx7MFovh54ewcviZtnTeccczYbxLk2KrRfM+cch7EPGM1p889oQwhcEKTDzvIuRikD3Ini4V+jub9i92Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=J9BNO9sD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1777364624; c=relaxed/simple;
+	bh=aTG1OnhM0q4O7ovbn63FHtI/IaA7ykD5ip7PyBCI64M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RF/MXnOBW7aserOV2enXOdwXt5Dh2eE6d6Yqk5Qd4UNeZqWf5dBIsKcacPbpJEtU9HuZmTk8EcjH0UarHQyXHRBZh1qq6SDiwlXdQiTipc1fkWQUlR4i+V6OWjmFxEtv0Cv8BUSDJqDZUIOXEKVQvunb2d0IMaYYhrAPV+D8Nvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=lj7cbJDn; arc=none smtp.client-ip=212.77.101.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J9BNO9sD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=lQWQrrV7LpwR+/cOPe5HTNIVTtQ7JeeBsdba0Hiaywo=; b=J9BNO9sDHBu1jD7ZMf060MuCGF
-	cXdFW0rK83ItmOdyNf+AvK6bF3jK1dHIJIw1Ag3Kj8TLKKUfsBAxW49YOrzhrQoEILtLNZ+tvAY7W
-	IrEx5a+g9i7oDTVdUtwStiJyjblsMJ4JUFaELcrdrTn5INHGDWpSMLLPfPQQag95TXLTxZ6hlQDeq
-	RvKjTjLQCzth5bV+i9TEL/7rm2oXgDLWOQidsgAG2FGtAy9/I/gWM0W3QE6SaLlfz+EWdFg1ArQ3l
-	L4H0Vq0EEM7ISxdcN9rp48091QZNcZIL4NHcilHr5yGSNXxnjUXNWViY+IzCDQmv+pLZoi8iH6zZ4
-	ScF0pTAw==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHcgd-00000000g4p-3lB4;
-	Tue, 28 Apr 2026 07:16:51 +0000
-Message-ID: <fd8f548a-b4c1-4ff0-a8e2-7d5deb0878b3@infradead.org>
-Date: Tue, 28 Apr 2026 00:16:50 -0700
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="lj7cbJDn"
+Received: (wp-smtpd smtp.wp.pl 7141 invoked from network); 28 Apr 2026 10:23:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1777364610; bh=qX63PCsIwyOdz05DaBXHiBpg7GteZqGb4PzqBQh4x14=;
+          h=From:To:Cc:Subject;
+          b=lj7cbJDnSsdLfu1v48VzJO1KusXkqd9fOkT4C262raoNotxyHt0yVkZgBkt0IxgFd
+           FCNedehNT8Hrgztz4/ey94vNOHdLM2bRry9C1I8gkKdg+qMjyv8JsYs0Yex46iAV1V
+           +rHm10LkA9mGRyR2zj2WRJIZZ3s/lopUtg2s8n9y+c81mA1VX1ccGo4A07jt8ZhtwQ
+           adoCbRsv4EUoIRJisKltUH8U0AuTv1ci+tnNQ4T2RFOkuZptdIDRo7EG0xgDLmBNK9
+           WGAqvLKLWt0iF5pjgOAJT6kz8MagB2OKl3n9V3sQYlxC0gVY/hQUn5vLMD67kMdgFC
+           lbVFm7gafi1Pw==
+Received: from 77-236-11-114.static.play.pl (HELO localhost) (stf_xl@wp.pl@[77.236.11.114])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
+          for <petr.pavlu@suse.com>; 28 Apr 2026 10:23:30 +0200
+Date: Tue, 28 Apr 2026 10:23:30 +0200
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jordan Rome <linux@jordanrome.com>,
+	Viktor Malik <vmalik@redhat.com>
+Subject: Re: [PATCH v2 2/2] module/kallsyms: sort function symbols and use
+ binary search
+Message-ID: <20260428082330.GA2757@wp.pl>
+References: <20260327110005.16499-1-stf_xl@wp.pl>
+ <20260327110005.16499-2-stf_xl@wp.pl>
+ <11c8e139-f9f3-4b22-863a-4e021a3947e7@suse.com>
+ <20260424091330.GA31168@wp.pl>
+ <88ae41dc-e5e0-442a-9b95-5125adf31e75@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Documentation/rv: Replace stale website link
-To: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt
- <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: matteo.martelli@codethink.co.uk, skhan@linuxfoundation.org
-References: <20260427131709.170505-2-gmonaco@redhat.com>
- <f841e9f6-9d0b-4e10-a930-fdd74a74b9b9@infradead.org>
- <75eeb7196b3e65b4b5d5144f87aabd8b57793ebc.camel@redhat.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <75eeb7196b3e65b4b5d5144f87aabd8b57793ebc.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88ae41dc-e5e0-442a-9b95-5125adf31e75@suse.com>
+X-WP-MailID: 233e91416d8436367f2e4dd9f0437bce
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000003 [kQBB]                               
 
-
-
-On 4/28/26 12:06 AM, Gabriele Monaco wrote:
-> On Mon, 2026-04-27 at 09:50 -0700, Randy Dunlap wrote:
->> Tested-by: Randy Dunlap <rdunlap@infradead.org>
->> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+On Mon, Apr 27, 2026 at 03:51:31PM +0200, Petr Pavlu wrote:
+> On 4/24/26 11:13 AM, Stanislaw Gruszka wrote:
+> > On Thu, Apr 23, 2026 at 04:00:04PM +0200, Petr Pavlu wrote:
+> >> On 3/27/26 12:00 PM, Stanislaw Gruszka wrote:
+> [...]
+> >>> diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
+> >>> index f23126d804b2..d69e99e67707 100644
+> >>> --- a/kernel/module/kallsyms.c
+> >>> +++ b/kernel/module/kallsyms.c
+> >>> @@ -10,6 +10,7 @@
+> >>>  #include <linux/kallsyms.h>
+> >>>  #include <linux/buildid.h>
+> >>>  #include <linux/bsearch.h>
+> >>> +#include <linux/sort.h>
+> >>>  #include "internal.h"
+> >>>  
+> >>>  /* Lookup exported symbol in given range of kernel_symbols */
+> >>> @@ -103,6 +104,95 @@ static bool is_core_symbol(const Elf_Sym *src, const Elf_Shdr *sechdrs,
+> >>>  	return true;
+> >>>  }
+> >>>  
+> >>> +static inline bool is_func_symbol(const Elf_Sym *sym)
+> >>> +{
+> >>> +	return sym->st_shndx != SHN_UNDEF && sym->st_size != 0 &&
+> >>> +	       ELF_ST_TYPE(sym->st_info) == STT_FUNC;
+> >>> +}
+> >>> +
+> >>> +static unsigned int bsearch_func_symbol(struct mod_kallsyms *kallsyms,
+> >>> +					unsigned long addr,
+> >>> +					unsigned long *bestval,
+> >>> +					unsigned long *nextval)
+> >>> +
+> >>> +{
+> >>> +	unsigned int mid, low = 1, high = kallsyms->num_func_syms + 1;
+> >>> +	unsigned int best = 0;
+> >>> +	unsigned long thisval;
+> >>> +
+> >>> +	while (low < high) {
+> >>> +		mid = low + (high - low) / 2;
+> >>> +		thisval = kallsyms_symbol_value(&kallsyms->symtab[mid]);
+> >>> +
+> >>> +		if (thisval <= addr) {
+> >>> +			*bestval = thisval;
+> >>> +			best = mid;
+> >>> +			low = mid + 1;
+> >>
+> >> If thisval == addr, the search moves to the right and finds the last
+> >> symbol with the same address. I believe it should do the opposite and
+> >> return the first symbol to match the behavior of
+> >> search_kallsyms_symbol().
+> > 
+> > In the case of multiple symbols sharing the same address, we have
+> > to pick one and ignore the others. I don’t think it matters much which
+> > one is chosen in practice. Also, I expect function symbol addresses
+> > to be unique, so this shouldn’t be a real issue.
 > 
-> Thanks for the ack!
+> I think that the code should consistently pick the same answer. If
+> someone uses aliases for their functions, the logic shouldn't
+> arbitrarily return one of them, but preferably the first one, which
+> should normally be the actual implementation.
 > 
->> although I don't care for the "J. Syst. Archit." abbreviation.
->> Does JSA use that? Not that I can see.
+> > 
+> >>> +		} else {
+> >>> +			*nextval = thisval;
+> >>> +			high = mid;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	return best;
+> >>> +}
+> >>> +
+> >>> +static const char *kallsyms_symbol_name(struct mod_kallsyms *kallsyms,
+> >>> +					unsigned int symnum)
+> >>> +{
+> >>> +	return kallsyms->strtab + kallsyms->symtab[symnum].st_name;
+> >>> +}
+> >>> +
+> >>> +static unsigned int search_kallsyms_symbol(struct mod_kallsyms *kallsyms,
+> >>> +					   unsigned long addr,
+> >>> +					   unsigned long *bestval,
+> >>> +					   unsigned long *nextval)
+> >>> +{
+> >>> +	unsigned int i, best = 0;
+> >>> +
+> >>> +	/*
+> >>> +	 * Scan for closest preceding symbol and next symbol. (ELF starts
+> >>> +	 * real symbols at 1). Skip the initial function symbols range
+> >>> +	 * if num_func_syms is non-zero, those are handled separately for
+> >>> +	 * the core TEXT segment lookup.
+> >>> +	 */
+> >>> +	for (i = 1 + kallsyms->num_func_syms; i < kallsyms->num_symtab; i++) {
+> >>> +		const Elf_Sym *sym = &kallsyms->symtab[i];
+> >>> +		unsigned long thisval = kallsyms_symbol_value(sym);
+> >>> +
+> >>> +		if (sym->st_shndx == SHN_UNDEF)
+> >>> +			continue;
+> >>> +
+> >>> +		/*
+> >>> +		 * We ignore unnamed symbols: they're uninformative
+> >>> +		 * and inserted at a whim.
+> >>> +		 */
+> >>> +		if (*kallsyms_symbol_name(kallsyms, i) == '\0' ||
+> >>> +		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
+> >>> +			continue;
+> >>> +
+> >>> +		if (thisval <= addr && thisval > *bestval) {
+> >>> +			best = i;
+> >>> +			*bestval = thisval;
+> >>> +		}
+> >>> +		if (thisval > addr && thisval < *nextval)
+> >>> +			*nextval = thisval;
+> >>> +	}
+> >>> +
+> >>> +	return best;
+> >>> +}
+> >>> +
+> >>> +static int elf_sym_cmp(const void *a, const void *b)
+> >>> +{
+> >>> +	unsigned long val_a = kallsyms_symbol_value((const Elf_Sym *)a);
+> >>> +	unsigned long val_b = kallsyms_symbol_value((const Elf_Sym *)b);
+> >>> +
+> >>> +	if (val_a < val_b)
+> >>> +		return -1;
+> >>> +
+> >>> +	return val_a > val_b;
+> >>
+> >> Does this comparison function and the sort() call result in stable
+> >> sorting? If val_a and val_b are the same, the sorting should preserve
+> >> the original order.
+> > 
+> > The kernel’s sort() implementation is not stable.
 > 
-> That's the citation format I got from semanticscholar.org , it's indeed
-> a bit ugly but it's apparently the ISO 4 abbreviation [1].
+> Ok, I see it is a heapsort. It would require additional data to keep
+> information about the original indexes for elf_sym_cmp() to use as
+> a tiebreaker.
+> 
+> > 
+> >>> +}
+> >>> +
+> >>>  /*
+> >>>   * We only allocate and copy the strings needed by the parts of symtab
+> >>>   * we keep.  This is simple, but has the effect of making multiple
+> >>> @@ -115,9 +205,10 @@ void layout_symtab(struct module *mod, struct load_info *info)
+> >>>  	Elf_Shdr *symsect = info->sechdrs + info->index.sym;
+> >>>  	Elf_Shdr *strsect = info->sechdrs + info->index.str;
+> >>>  	const Elf_Sym *src;
+> >>> -	unsigned int i, nsrc, ndst, strtab_size = 0;
+> >>> +	unsigned int i, nsrc, ndst, nfunc, strtab_size = 0;
+> >>>  	struct module_memory *mod_mem_data = &mod->mem[MOD_DATA];
+> >>>  	struct module_memory *mod_mem_init_data = &mod->mem[MOD_INIT_DATA];
+> >>> +	bool is_lp_mod = is_livepatch_module(mod);
+> >>>  
+> >>>  	/* Put symbol section at end of init part of module. */
+> >>>  	symsect->sh_flags |= SHF_ALLOC;
+> >>> @@ -129,12 +220,14 @@ void layout_symtab(struct module *mod, struct load_info *info)
+> >>>  	nsrc = symsect->sh_size / sizeof(*src);
+> >>>  
+> >>>  	/* Compute total space required for the core symbols' strtab. */
+> >>> -	for (ndst = i = 0; i < nsrc; i++) {
+> >>> -		if (i == 0 || is_livepatch_module(mod) ||
+> >>> +	for (ndst = nfunc = i = 0; i < nsrc; i++) {
+> >>> +		if (i == 0 || is_lp_mod ||
+> >>>  		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+> >>>  				   info->index.pcpu)) {
+> >>>  			strtab_size += strlen(&info->strtab[src[i].st_name]) + 1;
+> >>>  			ndst++;
+> >>> +			if (!is_lp_mod && is_func_symbol(src + i))
+> >>> +				nfunc++;
+> >>>  		}
+> >>>  	}
+> >>>  
+> >>> @@ -156,6 +249,7 @@ void layout_symtab(struct module *mod, struct load_info *info)
+> >>>  	mod_mem_init_data->size = ALIGN(mod_mem_init_data->size,
+> >>>  					__alignof__(struct mod_kallsyms));
+> >>>  	info->mod_kallsyms_init_off = mod_mem_init_data->size;
+> >>> +	info->num_func_syms = nfunc;
+> >>>  
+> >>>  	mod_mem_init_data->size += sizeof(struct mod_kallsyms);
+> >>>  	info->init_typeoffs = mod_mem_init_data->size;
+> >>> @@ -169,7 +263,7 @@ void layout_symtab(struct module *mod, struct load_info *info)
+> >>>   */
+> >>>  void add_kallsyms(struct module *mod, const struct load_info *info)
+> >>>  {
+> >>> -	unsigned int i, ndst;
+> >>> +	unsigned int i, di, nfunc, ndst;
+> >>>  	const Elf_Sym *src;
+> >>>  	Elf_Sym *dst;
+> >>>  	char *s;
+> >>> @@ -178,6 +272,7 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+> >>>  	void *data_base = mod->mem[MOD_DATA].base;
+> >>>  	void *init_data_base = mod->mem[MOD_INIT_DATA].base;
+> >>>  	struct mod_kallsyms *kallsyms;
+> >>> +	bool is_lp_mod = is_livepatch_module(mod);
+> >>>  
+> >>>  	kallsyms = init_data_base + info->mod_kallsyms_init_off;
+> >>
+> >> This code is followed by the initialization of kallsyms:
+> >>
+> >> 	kallsyms->symtab = (void *)symsec->sh_addr;
+> >> 	kallsyms->num_symtab = symsec->sh_size / sizeof(Elf_Sym);
+> >> 	/* Make sure we get permanent strtab: don't use info->strtab. */
+> >> 	kallsyms->strtab = (void *)info->sechdrs[info->index.str].sh_addr;
+> >> 	kallsyms->typetab = init_data_base + info->init_typeoffs;
+> >>
+> >> I suggest adding 'kallsyms->num_func_syms = 0;' after the initialization
+> >> of kallsyms->num_symtab.
+> > 
+> > I relied on zeroed memory initialization, but I can add this explicitly
+> > for clarity.
+> > 
+> >>> @@ -194,19 +289,28 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+> >>>  	mod->core_kallsyms.symtab = dst = data_base + info->symoffs;
+> >>>  	mod->core_kallsyms.strtab = s = data_base + info->stroffs;
+> >>>  	mod->core_kallsyms.typetab = data_base + info->core_typeoffs;
+> >>> +
+> >>>  	strtab_size = info->core_typeoffs - info->stroffs;
+> >>>  	src = kallsyms->symtab;
+> >>> -	for (ndst = i = 0; i < kallsyms->num_symtab; i++) {
+> >>> +	ndst = info->num_func_syms + 1;
+> >>> +
+> >>> +	for (nfunc = i = 0; i < kallsyms->num_symtab; i++) {
+> >>>  		kallsyms->typetab[i] = elf_type(src + i, info);
+> >>> -		if (i == 0 || is_livepatch_module(mod) ||
+> >>> +		if (i == 0 || is_lp_mod ||
+> >>>  		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+> >>>  				   info->index.pcpu)) {
+> >>>  			ssize_t ret;
+> >>>  
+> >>> -			mod->core_kallsyms.typetab[ndst] =
+> >>> -				kallsyms->typetab[i];
+> >>> -			dst[ndst] = src[i];
+> >>> -			dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
+> >>> +			if (i == 0)
+> >>> +				di = 0;
+> >>> +			else if (!is_lp_mod && is_func_symbol(src + i))
+> >>> +				di = 1 + nfunc++;
+> >>> +			else
+> >>> +				di = ndst++;
+> >>> +
+> >>> +			mod->core_kallsyms.typetab[di] = kallsyms->typetab[i];
+> >>> +			dst[di] = src[i];
+> >>> +			dst[di].st_name = s - mod->core_kallsyms.strtab;
+> >>>  			ret = strscpy(s, &kallsyms->strtab[src[i].st_name],
+> >>>  				      strtab_size);
+> >>>  			if (ret < 0)
+> >>> @@ -216,9 +320,13 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+> >>>  		}
+> >>>  	}
+> >>>  
+> >>> +	WARN_ON_ONCE(nfunc != info->num_func_syms);
+> >>> +	sort(dst + 1, nfunc, sizeof(Elf_Sym), elf_sym_cmp, NULL);
+> >>> +
+> >>
+> >> The code sorts mod->core_kallsyms.symtab but mod->core_kallsyms.typetab
+> >> is not reordered accordingly.
+> > 
+> > Right, but for function symbols the typetab entries are all 't',
+> > so swapping them does not change the type value. The 'T' vs 't'
+> > distinction is handled later when printing (based on export status).
+> > But the comment explaining skiping adjusting of
+> > mod->core_kallsyms.typetab is needed.
+> 
+> Modules can also contain weak functions with elf_type() = 'w'.
 
-OK then. Leave it.
-Thanks.
+Good point.
 
-> Not sure if it would be neater to just use JSA which looks more
-> official.
+> >>>  	/* Set up to point into init section. */
+> >>>  	rcu_assign_pointer(mod->kallsyms, kallsyms);
+> >>>  	mod->core_kallsyms.num_symtab = ndst;
+> >>> +	mod->core_kallsyms.num_func_syms = nfunc;
+> >>>  }
+> >>>  
+> >>>  #if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID)
+> >>> @@ -241,11 +349,6 @@ void init_build_id(struct module *mod, const struct load_info *info)
+> >>>  }
+> >>>  #endif
+> >>>  
+> >>> -static const char *kallsyms_symbol_name(struct mod_kallsyms *kallsyms, unsigned int symnum)
+> >>> -{
+> >>> -	return kallsyms->strtab + kallsyms->symtab[symnum].st_name;
+> >>> -}
+> >>> -
+> >>>  /*
+> >>>   * Given a module and address, find the corresponding symbol and return its name
+> >>>   * while providing its size and offset if needed.
+> >>> @@ -255,7 +358,10 @@ static const char *find_kallsyms_symbol(struct module *mod,
+> >>>  					unsigned long *size,
+> >>>  					unsigned long *offset)
+> >>>  {
+> >>> -	unsigned int i, best = 0;
+> >>> +	unsigned int (*search)(struct mod_kallsyms *kallsyms,
+> >>> +			       unsigned long addr, unsigned long *bestval,
+> >>> +			       unsigned long *nextval);
+> >>> +	unsigned int best;
+> >>>  	unsigned long nextval, bestval;
+> >>>  	struct mod_kallsyms *kallsyms = rcu_dereference(mod->kallsyms);
+> >>>  	struct module_memory *mod_mem = NULL;
+> >>> @@ -266,6 +372,11 @@ static const char *find_kallsyms_symbol(struct module *mod,
+> >>>  			continue;
+> >>>  #endif
+> >>>  		if (within_module_mem_type(addr, mod, type)) {
+> >>> +			if (type == MOD_TEXT && kallsyms->num_func_syms > 0)
+> >>> +				search = bsearch_func_symbol;
+> >>
+> >> I'm not sure if it is ok to limit the search only to function symbols
+> >> when the address lies in MOD_TEXT. The text can theoretically contain
+> >> non-function symbols.
+> > 
+> > Yes, the patch assumes that the only valid symbols in the MOD_TEXT
+> > are functions. If there are defined OBJECT symbols in .text, the patch
+> > would break lookup for those.
+> > 
+> > While it’s theoretically possible (e.g. hand-written assembly placing
+> > data in .text ?), I’m not sure this is a practical concern. In general,
+> > having data in executable segments is discouraged for security reasons. 
+> > 
+> >> Could this optimization be adjusted to sort all
+> >> MOD_TEXT symbols (excluding anonymous and mapping symbols) and move them
+> >> to the front of the symbol table?
+> > 
+> > That’s possible. We could track .text sections indices in
+> > __layout_sections() and include all valid symbols from those sections,
+> > and also reorder typetab accordingly.
+> > 
+> > However, this adds complexity. I would prefer to first confirm whether
+> > OBJECT symbols in MOD_TEXT is a real issue before going in that direction.
 > 
-> Thanks,
-> Gabriele
+> I'm not aware of specific OBJECT symbols that end up in MOD_TEXT.
+> Nonetheless, it is a valid case and it is preferable that an
+> optimization doesn't break their lookup by address.
+>
+> In general, I'm worried about the several edge cases and inconsistencies
+> that this optimization introduces. This also includes the fact that it
+> doesn't work for livepatch modules.
 > 
-> [1] - https://dblp.org/db/journals/jsa/index.html
-> 
+> An alternative could be to keep the symbol table untouched and have
+> a separate array with symbol indexes that is sorted by their addresses,
+> but it requires evaluation if the additional memory usage is worth it.
 
--- 
-~Randy
+I personally prefer not to over-engineer for cases that may never occur.
+That said, your concerns about edge cases, consistency, and livepatch 
+handling are valid.
 
+Let me take some time to think this through and experiment with possible
+solutions that handle these cases properly. I can’t work on this
+immediately, but I’ll get back to it.
+
+Regards
+Stanislaw
