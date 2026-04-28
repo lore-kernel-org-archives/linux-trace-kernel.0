@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC9739F188;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35B039DBDD;
 	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777418719; cv=none; b=a/AC8btwNrLq1xLdVVAD/4UfrP//xSX2ZgRSyS/gMUn6SqdCihDHkH60VNvbNRWWT3EL8N8g1ktCe0tIUSTn4LPBnVcNQOLEAob5JxHqWqMHjmCIweJhEUvrHrJIc4d1ILF5QybkDBX1/064eY1muR35+cPr4ApE1pSTplRStMw=
+	t=1777418718; cv=none; b=AOOY79cpr3S6MwagA5B8StTQy/xCqx//2aZlY6BRCf0+ZifCA0qxqXwv8YMg3T2E7YKpMp3RsWAVDi8PNrx/8lR4FyfRBmRaKE5BDPoE9uG1KwPc+xDsTiHmFllH660RJ/KnNUBZrlyhDtcvvNy9/sOjKDzX/Mj+YUrH1L1+0zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777418719; c=relaxed/simple;
-	bh=UjB3Q8xP2+/jLCiODH+4GnaWPfVWe36CvWf3Dh0lyNw=;
+	s=arc-20240116; t=1777418718; c=relaxed/simple;
+	bh=HhJ8C2ULYSnKpU02/tGXtPPTADB2EfVQtqS/uHVIzYg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t0otwK7ohEU1g22HVMM1AFWDTB1CU/p6a37Vf8bVFCbvTtnew6i16Es6E248FAr8G3Bu4qnXw6wkk67Yy+znqN6RDWPRW0cr6hVwKzgR+cHimz7T2/xPWOz0epRmuwKcuCi8RbeoB8p4y9zOV4MY5p0aAfGPLJLm6iRLbJzpNXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tk8v8nB7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FRFQgQUIb/SoiHGVBwl7TKEf/mfTYtNvks4DN1+/IS+cuS/9ArgUdgkum3sixigHjaL/fzPykpZjaMvt5WqxQVh+MrCvgLrOm1xVDOPg1mwc74oqS8ONqPNFDqVtoQuvzStvlAK/xBu1U9w9eRuGaW8shG9DNoW9S0BwKIaAkyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSugz+H3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tk8v8nB7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CF6DFC4AF19;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSugz+H3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 638E1C2BCC4;
 	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1777418718;
-	bh=UjB3Q8xP2+/jLCiODH+4GnaWPfVWe36CvWf3Dh0lyNw=;
+	bh=HhJ8C2ULYSnKpU02/tGXtPPTADB2EfVQtqS/uHVIzYg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tk8v8nB7bwg2HgNUKy/3dSbh1sX2By5WJlLidJ1Av30V2f3k8yXSOmd3d+RIsUiTG
-	 FKfPonFTqIELdBlrt1T2Ywoi5P6ZM4bQIS8EFRNrUskt+Wspz90GIXlWQhWORJshWf
-	 H7K7bd4oD2xfuKY2gyqJZeb89PAcC87zJvPQz97dJjle3Q5+ztTFAk3SvnakeKdPE7
-	 axiMB8p1x8M+XFyPbHFq9CBisWa9EuoFmU2VCWYyK2961IoaKOrxGnTvCveRQ2u4s0
-	 SB+exL1U3B6OIz1E8XCK3DHJaiWTF7AdW3OtQI9znXEO7A03DDQnaFocSs8sFDcrwY
-	 oIiepIJK9AfVQ==
+	b=tSugz+H3r/bI8vLM/FsW49w2uoH13PWHVcTzFRtrZgLmztYlbaddalMvd/GPTH+OA
+	 iybcJYb2OEuzlGIC6yNJfTEkpiT83ARkUZ2JPgi2lXgvwhA8MqYV3aQ8sUW1X83nPU
+	 C5w0QpKbTOd/Fs6e787e59kCqffkVfninVVTqOK+iY3ZxBzCmQ1Tr93k/WviiOttt6
+	 ta4n3L6M7bOsywGHXUMUzRNqlaLjeH7/a/Yx5K5BtO4VQp2asnw4k5AnF80Iul28GE
+	 xW/Z9ZjMM9oUrbE4k3Y89z0drmZzmP/JwrfdMCuUFnHGJa73yQmhc2IMaiV2HlM7PO
+	 U7mb5V9fIagpQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD332FF8875;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFC5FF8875;
 	Tue, 28 Apr 2026 23:25:18 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Apr 2026 16:25:15 -0700
-Subject: [PATCH RFC v5 20/53] KVM: guest_memfd: Enable INIT_SHARED on
- guest_memfd for x86 Coco VMs
+Date: Tue, 28 Apr 2026 16:25:10 -0700
+Subject: [PATCH RFC v5 15/53] KVM: guest_memfd: Handle lru_add fbatch
+ refcounts during conversion safety check
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-gmem-inplace-conversion-v5-20-d8608ccfca22@google.com>
+Message-Id: <20260428-gmem-inplace-conversion-v5-15-d8608ccfca22@google.com>
 References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 In-Reply-To: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,11 +74,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=1390;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=2931;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=9LP/svD9TvgxKqvednNMupCSsWJ+AFS+3tUCHtCnRqA=;
- b=7TverXUJlngRxhJ4vEWJkucYIO7XShyfSISUb/HZPT3irzIwFpodwZIaXKo0xt09LhSOu99cl
- vzzDW2Ybw7TASLiyA7ny4f0JXMSI7+HJSNDTw51rwwdQnOzO+yzu59J
+ bh=bFm4QUlwLsCLqMqV3YPlW4ZQKVQMPLtcpdDZUrpsyS4=;
+ b=jnKXP7vtqQUPCENWxWAGbQ0dyHE7F1LL90NmrM8GuZj1v4CE7P3RePJ10i1Bn0oSZ+kBtpsLM
+ 59D3dWe3a+IA5MdRKM63mYMm4SKWGoeTvHRJZSGf2oiZZKLmvyKMBTn
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -86,44 +86,95 @@ X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
 X-Original-From: Ackerley Tng <ackerleytng@google.com>
 Reply-To: ackerleytng@google.com
 
-From: Sean Christopherson <seanjc@google.com>
+From: Ackerley Tng <ackerleytng@google.com>
 
-Now that guest_memfd supports tracking private vs. shared within gmem
-itself, allow userspace to specify INIT_SHARED on a guest_memfd instance
-for x86 Confidential Computing (CoCo) VMs, so long as per-VM attributes
-are disabled, i.e. when it's actually possible for a guest_memfd instance
-to contain shared memory.
+When checking if a guest_memfd folio is safe for conversion, its refcount
+is examined. A folio may be present in a per-CPU lru_add fbatch, which
+temporarily increases its refcount. This can lead to a false positive,
+incorrectly indicating that the folio is in use and preventing the
+conversion, even if it is otherwise safe. The conversion process might not
+be on the same CPU that holds the folio in its fbatch, making a simple
+per-CPU check insufficient.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+To address this, drain all CPUs' lru_add fbatches if an unexpectedly high
+refcount is encountered during the safety check. This is performed at most
+once per conversion request. Draining only if the folio in question may be
+lru cached.
+
+guest_memfd folios are unevictable, so they can only reside in the lru_add
+fbatch. If the folio's refcount is still unsafe after draining, then the
+conversion is truly deemed unsafe.
+
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- arch/x86/kvm/x86.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ mm/swap.c              |  2 ++
+ virt/kvm/guest_memfd.c | 18 ++++++++++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 1560de1e95be0..6609957ecfea3 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -14172,14 +14172,13 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
- }
+diff --git a/mm/swap.c b/mm/swap.c
+index 5cc44f0de9877..3134d9d3d7c30 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -37,6 +37,7 @@
+ #include <linux/page_idle.h>
+ #include <linux/local_lock.h>
+ #include <linux/buffer_head.h>
++#include <linux/kvm_types.h>
  
- #ifdef CONFIG_KVM_GUEST_MEMFD
--/*
-- * KVM doesn't yet support initializing guest_memfd memory as shared for VMs
-- * with private memory (the private vs. shared tracking needs to be moved into
-- * guest_memfd).
-- */
- bool kvm_arch_supports_gmem_init_shared(struct kvm *kvm)
- {
--	return !kvm_arch_has_private_mem(kvm);
-+	/*
-+	 * INIT_SHARED isn't supported if the memory attributes are per-VM,
-+	 * in which case guest_memfd can _only_ be used for private memory.
-+	 */
-+	return !vm_memory_attributes || !kvm_arch_has_private_mem(kvm);
- }
+ #include "internal.h"
  
- #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
+@@ -904,6 +905,7 @@ void lru_add_drain_all(void)
+ 	lru_add_drain();
+ }
+ #endif /* CONFIG_SMP */
++EXPORT_SYMBOL_FOR_KVM(lru_add_drain_all);
+ 
+ atomic_t lru_disable_count = ATOMIC_INIT(0);
+ 
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index d8bdb51c50cf0..18dec87dd4baa 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -8,6 +8,7 @@
+ #include <linux/mempolicy.h>
+ #include <linux/pseudo_fs.h>
+ #include <linux/pagemap.h>
++#include <linux/swap.h>
+ 
+ #include "kvm_mm.h"
+ 
+@@ -608,18 +609,27 @@ static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
+ 	const int filemap_get_folios_refcount = 1;
+ 	pgoff_t last = start + nr_pages - 1;
+ 	struct folio_batch fbatch;
++	bool lru_drained = false;
+ 	bool safe = true;
+ 	int i;
+ 
+ 	folio_batch_init(&fbatch);
+ 	while (safe && filemap_get_folios(mapping, &start, last, &fbatch)) {
+ 
+-		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
++		for (i = 0; i < folio_batch_count(&fbatch);) {
+ 			struct folio *folio = fbatch.folios[i];
+ 
+-			if (folio_ref_count(folio) !=
+-			    folio_nr_pages(folio) + filemap_get_folios_refcount) {
+-				safe = false;
++			safe = (folio_ref_count(folio) ==
++				folio_nr_pages(folio) +
++				filemap_get_folios_refcount);
++
++			if (safe) {
++				++i;
++			} else if (folio_may_be_lru_cached(folio) &&
++				   !lru_drained) {
++				lru_add_drain_all();
++				lru_drained = true;
++			} else {
+ 				*err_index = folio->index;
+ 				break;
+ 			}
 
 -- 
 2.54.0.545.g6539524ca2-goog
