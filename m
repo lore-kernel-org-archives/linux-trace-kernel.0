@@ -1,112 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC3C346E5A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Apr 2026 07:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B6D346E5A;
+	Tue, 28 Apr 2026 07:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360004; cv=none; b=PYRe1tGmKoesJQKP4pvtG6/69UWq6BLzZLCugvGB4biDykUJJDFb0/uOKKf7vfvm4c0ArrqEw0Vj4yCk0kgh2L841f/1D856oTyCYPQRiiMsZcRMzFYqahjMuoRuMMYLmBQbpZ5GUTXmpqr6vDWelLiSQk7IQbDwcJPgomCVfrU=
+	t=1777360219; cv=none; b=Q025l4EVMcjx/tE8JbsOno1/n+o6p580zdsnaOkymdSq1QB5sp6E2f0DeJpIb2yjPEJrw1/eb8jLFJO1yfpOksoVe0QailTNfcCIUbbw8BMTdJIMZ7zIRox9nJqRhy26mZiJBawIS/QjDZQkt5Vs1Wj+2R6Ve0skYEbuq0wX1Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360004; c=relaxed/simple;
-	bh=jWnnU2GAmGy56FDiHBeXBrscnH0kfpAc22pKr7Qeghk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ddvrOX+fkhgV18ztsLM69XcJo2rA0qVz0sKid2CGMbFoRd4435YAQGJF6UR9WjtRH/4CI6ijXvPNInO5gqYoM21klsjiakNcjWyM5VbBBixkxxUnbBSaj0GJPjepD9lOaf+H3rIPCRoRqxpzQqL3+T0t+qC45fpZms2lUxntf/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZbxL3vAl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777360219; c=relaxed/simple;
+	bh=AmYIhqMveqzQKfRQ+Tso/XDGewsUSIByDx6eftf4/Vw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uWuaEm5RemKBuhwGkX9i5QHofn59p+aNbUKrsJOC9JisCfJJn4qVOp8bdprmlPQB75U5zVPdmQvnfvcH4tQ7zqitpTjyLzHe8WSeswNhnvO8CRTVwJy5S2JWflq4nieUEwyucuPS00Fb84z1j8+9wzTgijcsL8xob4gXfNHAhXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pKhk+L6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZbxL3vAl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777360002;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jWnnU2GAmGy56FDiHBeXBrscnH0kfpAc22pKr7Qeghk=;
-	b=ZbxL3vAlyoygkV+HaA3uF04MxDOWg6JJXYMAok2+PLYscsH7U34v4jLebDM1dTYnYrALZB
-	54p22waliRjweL+BgCI54NQegQU1BelTTbDUifUnQmQHzmIWYWTCIfTS1e7RgafdAB5U1f
-	6dRt6Ti1aBYreCMtAuKO0lF5rUu+LjQ=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-126-lixrJF_cNMewk5iBaS0s-g-1; Tue, 28 Apr 2026 03:06:41 -0400
-X-MC-Unique: lixrJF_cNMewk5iBaS0s-g-1
-X-Mimecast-MFC-AGG-ID: lixrJF_cNMewk5iBaS0s-g_1777360000
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-50fae95c82cso211357461cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Apr 2026 00:06:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777360000; x=1777964800;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jWnnU2GAmGy56FDiHBeXBrscnH0kfpAc22pKr7Qeghk=;
-        b=ldXr9RPOYDeU+8ei309CnrbutixyWRqTwIZfpRg+riWzXYpO8LoK1SlBTAAyeSQGNK
-         PpHVuGCAsy9BlEkfafb5vVIF3riouFGx8CZOIViL4LZQw+qqwkyCw/HgRL9ouWNphIY2
-         dStGWAPeR8V9sbNZxf5XOSC7bWPXYYk4s8RQOpvZtYzqy/6ntm8+rhsv4OyxX961ElcA
-         H7A19LxIjkvuoEt4UJndrpkT5eusljKZDRY4kipbs9YOiwp+IMc/yQG75rJesx4PIwnq
-         XUm1+qh/XhYrpHd+XqZCl/NYRlACcvXGFws+D8fnssV3r3nSMrVIcsMxJzNrgbI1diEo
-         rVVg==
-X-Forwarded-Encrypted: i=1; AFNElJ/S++ICc0mOVGzwCqu5UDFQzyH4XMqldoTfMOnPUdblarNRK8TZZZp8z0i0vggmE8V2OCyGnGMhgHEsAUbhHxIqwaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU90j3IyWzC9SqoJiG6rvoOanu0CIL+Mfv/hbc9mX7BHgSSCBm
-	W3NVoyEQe6fug/H+O+1XdpVLkDZhSBFPvRM7yP7t7mLhVQoPbA0x21WMRIx/XpBxmckjlM7TL0D
-	/GnAgHKdqx2pQsVLZ/7eVGmWGE9WerG8PE4zqzXkE1YRKFXeaWH7uBSdODTkkOvHJni1z7GX1lg
-	==
-X-Gm-Gg: AeBDievYgxzIepJVy1CZi0BCSrvFZVZ0n39S/ThExt9lmI2ALybQwYOzkslvCHAaMUz
-	oAgkaoL1E5VAti3aG6GItdo9mgPtOor5lVYjyGU9di6/i4XtSI7pJYgTqy9KggJhs7RAQXyE3un
-	CPZ0povR3wO8WY5W36sCOrBb3JZ83jUjJPF91lYC6HH+CHhs/j4EdsFn7RH4MP+IPm1ZdsXbDHX
-	wwHDgBq/zWjlCg8aad5tlFd+fFUPbd3Maqzcs9JvS/+fY2j1DIAh6iriG2ouV+auW5QTpORKPwK
-	FU0wwEWpfdFqvZAXd/0sfQlTwZ0jItA43MBQbZxvbDsuN1lxKIAN6beCCtKnQiS8RWleDZhxjTs
-	gyv6gwuKXQ43aBA8HRPJ4BwY02V8twdeZIpky
-X-Received: by 2002:a05:622a:4d06:b0:50d:9033:f2ec with SMTP id d75a77b69052e-5100e1db2fdmr23108311cf.50.1777360000224;
-        Tue, 28 Apr 2026 00:06:40 -0700 (PDT)
-X-Received: by 2002:a05:622a:4d06:b0:50d:9033:f2ec with SMTP id d75a77b69052e-5100e1db2fdmr23108031cf.50.1777359999774;
-        Tue, 28 Apr 2026 00:06:39 -0700 (PDT)
-Received: from [192.168.1.167] ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5100db89c03sm11207781cf.27.2026.04.28.00.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 00:06:39 -0700 (PDT)
-Message-ID: <75eeb7196b3e65b4b5d5144f87aabd8b57793ebc.camel@redhat.com>
-Subject: Re: [PATCH v2] Documentation/rv: Replace stale website link
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Randy Dunlap <rdunlap@infradead.org>, Steven Rostedt
- <rostedt@goodmis.org>,  Jonathan Corbet	 <corbet@lwn.net>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: matteo.martelli@codethink.co.uk, skhan@linuxfoundation.org
-Date: Tue, 28 Apr 2026 09:06:35 +0200
-In-Reply-To: <f841e9f6-9d0b-4e10-a930-fdd74a74b9b9@infradead.org>
-References: <20260427131709.170505-2-gmonaco@redhat.com>
-	 <f841e9f6-9d0b-4e10-a930-fdd74a74b9b9@infradead.org>
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pKhk+L6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E67A0C2BCB5;
+	Tue, 28 Apr 2026 07:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777360218;
+	bh=AmYIhqMveqzQKfRQ+Tso/XDGewsUSIByDx6eftf4/Vw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=pKhk+L6W9knf/V1b4vj/m7DngqW5ab3qjYiseiIOeflGSJS/CC+T7vJHjH24dehDo
+	 VtgjE0dIUc/TJo+/rr+pdWJfRG8m/RYHKgNvaVkJqusCQqMQYQ+RV/oyGBgJ7S7pGJ
+	 q1JduBcxOrp11Nw9tRTaP1/BwyDfSyNyhoGjUYOCvjyhSqxuN/nSkC+nEcRFHXLiPD
+	 9eil8Hb25lFSToGw2N9eFXtwNiEqNuTAyMx4RONZ6VxLm55+TPTc/2Bg/R9rpN/KuS
+	 eqwzPIOUnlm3uJxCEYsXvHQCJYis0tXsogSrLvSrfIcTjDIQ3YIb8DRsVVtN408LWw
+	 FK2Jl4uKjutbQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v3 00/28] vfs/nfsd: add support for CB_NOTIFY callbacks in
+ directory delegations
+Date: Tue, 28 Apr 2026 08:09:44 +0100
+Message-Id: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fzhH_C1SuTsaATvvQFgNQ-_eJMxlfXpjL-IGAEOAWkE_1777360000
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/1WMQQ6CMBBFr0K6tmba0gFdeQ/jotIBGgmYqWk0h
+ LtbcIPL9/Pfm0UkDhTFuZgFUwoxTGMGcyhE07uxIxl8ZqFBIxhtpQ8sPQ3USWNOgOi9AlWJ/H8
+ yteG9ta63zH2Ir4k/Wzqpdf1VSqh2laQkSOdarJuyqt3dXx7EIw3HiTuxZpLeqQr3qs5qbVWp0
+ VkLLf6py7J8AWSEhgjeAAAA
+X-Change-ID: 20260325-dir-deleg-339066dd1017
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Alexander Aring <alex.aring@gmail.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Amir Goldstein <amir73il@gmail.com>
+Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5576; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=AmYIhqMveqzQKfRQ+Tso/XDGewsUSIByDx6eftf4/Vw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1INoeAqKEOdsnNsnGaOqmUtfQ1yWu/eeh+v
+ NsM9tZi91iJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdSAAKCRAADmhBGVaC
+ FcqvD/99cz9n7VDbUshwQR3u8R9CsITwbjKfXJXjFp/Bs6bbjdyWhurp/T1wHIlMEe8HD3xBx/y
+ ogBQFbB8QytByjy5k7bZ2VYglnlKHiZwcGtihNHaByewTxZg/dODFwQeaPuc3+cz5N0R4lpxOZ9
+ GTOOGZmZH/sh+tGEq+GKDdITduBS353XVR7EmP5Pn9ftBvbSe/x2ZeAFeixGVWVVC0SdKQZQxsW
+ vyN9yC9MhkrGVjVxiAgncA1Vjc2w2BQjkYucaarxBUo9d6JtoYsIIUZH1e/HnpXc72bF+mtdDW3
+ Tu+zc9b3oF5ARtEZluDbLQINsVvz/c64ctp6de4a5fI0VCm+j5mJXVn39t2fYAwiTwUhWQeDm9e
+ JkNEMF59JLcNsh4sw4WEg40kVY04TVO1QtrUGQiCTUVzmCbrVHeFma7PhUFzTDSfIUcOQHaPOVL
+ HehwoAc/6lmJ0yY6hgEPr0vieCcI0KgdqVxhRat6hReqVKZg+OfyunDAVTf7Ra1+zz7K72fCgur
+ u7mE4G5sNVkxX8urd5Mx6h1eHaAhRX2q1RYB3KMmNB2fURNq4eAUfFYiGAGeAN2b/gClEffk0eq
+ R2bJVzLWcfCUwhdU+Qp4bUmyvbuf8wmLopjd1/CLr9/K+SihbIerEERMucxsW65uB/f65FL5ljB
+ LeBQnJ5lZ7PJcww==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Mon, 2026-04-27 at 09:50 -0700, Randy Dunlap wrote:
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Re-posting the set per Christian's request. The only difference in this
+version is a small error handling fix in alloc_init_dir_deleg(). The old
+version could crash since release_pages() can't handle an array with
+NULL pointers in it.
 
-Thanks for the ack!
+---------------------------------8<------------------------------------
 
-> although I don't care for the "J. Syst. Archit." abbreviation.
-> Does JSA use that? Not that I can see.
+This patchset builds on the directory delegation work we did a few
+months ago, to add support for CB_NOTIFY callbacks for some events. In
+particular, creates, unlinks and renames. The server also sends updated
+directory attributes in the notifications. With this support, the client
+can register interest in a directory and get notifications about changes
+within it without losing its lease.
 
-That's the citation format I got from semanticscholar.org , it's indeed
-a bit ugly but it's apparently the ISO 4 abbreviation [1].
+The series starts with patches to allow the vfs to ignore certain types
+of events on directories. nfsd can then request these sorts of
+delegations on directories, and then set up inotify watches on the
+directory to trigger sending CB_NOTIFY events.
 
-Not sure if it would be neater to just use JSA which looks more
-official.
+This has mainly been tested with pynfs, with some new testcases that
+I'll be posting soon. They seem to work fine with those tests, but I
+don't think we'll want to merge these until we have a complete
+client-side implementation to test against.
 
-Thanks,
-Gabriele
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v3:
+- Fix error handling in alloc_init_dir_deleg()
+- Link to v2: https://lore.kernel.org/r/20260416-dir-deleg-v2-0-851426a550f6@kernel.org
 
-[1] - https://dblp.org/db/journals/jsa/index.html
+Changes in v2:
+- Fix __break_lease handling with different lease types on flc_lease list
+- Add FSNOTIFY_EVENT_RENAME data type to properly handle cross-directory rename events
+- Display fsnotify mask symbolically in tracepoints
+- New tracepoint in fsnotify()
+- Recalc fsnotify mask after unlocking lease instead of before
+- Don't notify client that is making the changes
+- After sending CB_NOTIFY, requeue if new events came in while running
+- Document removal of NFS4_VERIFIER_SIZE/NFS4_FHSIZE from UAPI headers
+- Properly release nfsd_dir_fsnotify_group on server shutdown
+- Link to v1: https://lore.kernel.org/r/20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org
+
+---
+Jeff Layton (28):
+      filelock: pass current blocking lease to trace_break_lease_block() rather than "new_fl"
+      filelock: add support for ignoring deleg breaks for dir change events
+      filelock: add a tracepoint to start of break_lease()
+      filelock: add an inode_lease_ignore_mask helper
+      fsnotify: new tracepoint in fsnotify()
+      fsnotify: add fsnotify_modify_mark_mask()
+      fsnotify: add FSNOTIFY_EVENT_RENAME data type
+      nfsd: check fl_lmops in nfsd_breaker_owns_lease()
+      nfsd: add protocol support for CB_NOTIFY
+      nfs_common: add new NOTIFY4_* flags proposed in RFC8881bis
+      nfsd: allow nfsd to get a dir lease with an ignore mask
+      nfsd: update the fsnotify mark when setting or removing a dir delegation
+      nfsd: make nfsd4_callback_ops->prepare operation bool return
+      nfsd: add callback encoding and decoding linkages for CB_NOTIFY
+      nfsd: use RCU to protect fi_deleg_file
+      nfsd: add data structures for handling CB_NOTIFY
+      nfsd: add notification handlers for dir events
+      nfsd: add tracepoint to dir_event handler
+      nfsd: apply the notify mask to the delegation when requested
+      nfsd: add helper to marshal a fattr4 from completed args
+      nfsd: allow nfsd4_encode_fattr4_change() to work with no export
+      nfsd: send basic file attributes in CB_NOTIFY
+      nfsd: allow encoding a filehandle into fattr4 without a svc_fh
+      nfsd: add a fi_connectable flag to struct nfs4_file
+      nfsd: add the filehandle to returned attributes in CB_NOTIFY
+      nfsd: properly track requested child attributes
+      nfsd: track requested dir attributes
+      nfsd: add support to CB_NOTIFY for dir attribute changes
+
+ Documentation/sunrpc/xdr/nfs4_1.x    | 264 ++++++++++++++-
+ fs/attr.c                            |   2 +-
+ fs/locks.c                           | 118 +++++--
+ fs/namei.c                           |  31 +-
+ fs/nfsd/filecache.c                  |  70 +++-
+ fs/nfsd/nfs4callback.c               |  60 +++-
+ fs/nfsd/nfs4layouts.c                |   5 +-
+ fs/nfsd/nfs4proc.c                   |  17 +
+ fs/nfsd/nfs4state.c                  | 551 ++++++++++++++++++++++++++++----
+ fs/nfsd/nfs4xdr.c                    | 323 +++++++++++++++++--
+ fs/nfsd/nfs4xdr_gen.c                | 601 ++++++++++++++++++++++++++++++++++-
+ fs/nfsd/nfs4xdr_gen.h                |  20 +-
+ fs/nfsd/state.h                      |  72 ++++-
+ fs/nfsd/trace.h                      |  23 ++
+ fs/nfsd/xdr4.h                       |   5 +
+ fs/nfsd/xdr4cb.h                     |  12 +
+ fs/notify/fsnotify.c                 |   5 +
+ fs/notify/mark.c                     |  29 ++
+ fs/posix_acl.c                       |   4 +-
+ fs/xattr.c                           |   4 +-
+ include/linux/filelock.h             |  54 +++-
+ include/linux/fsnotify.h             |   8 +-
+ include/linux/fsnotify_backend.h     |  21 ++
+ include/linux/nfs4.h                 | 127 --------
+ include/linux/sunrpc/xdrgen/nfs4_1.h | 291 ++++++++++++++++-
+ include/trace/events/filelock.h      |  38 ++-
+ include/trace/events/fsnotify.h      |  51 +++
+ include/trace/misc/fsnotify.h        |  35 ++
+ include/uapi/linux/nfs4.h            |   2 -
+ 29 files changed, 2519 insertions(+), 324 deletions(-)
+---
+base-commit: f4d71dd7fd9cec357c32431fa55c107b96008312
+change-id: 20260325-dir-deleg-339066dd1017
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
