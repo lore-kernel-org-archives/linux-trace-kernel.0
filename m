@@ -1,453 +1,251 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD2842EEDD;
-	Tue, 28 Apr 2026 12:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF7A199FAC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Apr 2026 15:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777379966; cv=none; b=ESozig/gZPf41+PJf5R3zj76Oefdcr2isD9IAfNRvXuOt3ACkt2MFGjUzgsZEW7Dm8TwqtuKW7J/Oa7N01tyyTeoubm4MkDlNbYyUAmO4Lwhw56ShpALepRbCxHRMOnpExqfl5mQH9VjllmovYwqpj8qpHPhn7nBl1CIxQR5E9I=
+	t=1777388992; cv=none; b=GdBw929SgMQHd+FCbx1guJfX+svyIwyjhOYZpVGFgUSCoBnUAtBNKWeDh/pVnmUNJQlSgB6/B5g5qb9TxtvkXQJhVgqNk04lbhhuFFsAJ0kLLFqxpgz+eC/JReIQFXieVqDtbGSYgKhXX1swUra+SVK6IrQ9mbC1pqW1IjAtkzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777379966; c=relaxed/simple;
-	bh=SZ1CXBw/NfhfqRS2VN/q6FDL7egSg3rka216eYGV9uQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JnUEh8OVs+Syz7/ecalMENk1BpdUpuqEWjKvTQchWNT4OFtPPYIABxsiggXc0xPYNJKJsPWrGgcTwPzAntONhsNAnSNVZcH6ETyKAMEiNTtcH2Hpt3A2tKStZ1qmh8eQRjyUBVSfRMQMObTU19ddFRDmhg72Y7rkb6JQ2Tbiii8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 8F08212013A;
-	Tue, 28 Apr 2026 12:39:09 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 898EA20018;
-	Tue, 28 Apr 2026 12:39:07 +0000 (UTC)
-Date: Tue, 28 Apr 2026 08:39:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Cao Ruichuang <create0818@163.com>
-Cc: petr.pavlu@suse.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Daniel
- Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v2] tracing: export live module tracepoint strings in
- printk_formats
-Message-ID: <20260428083920.4a64eaf6@gandalf.local.home>
-In-Reply-To: <20260420061911.97066-1-create0818@163.com>
-References: <20260413123359.32517-1-create0818@163.com>
-	<20260420061911.97066-1-create0818@163.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1777388992; c=relaxed/simple;
+	bh=OAT0hm/a/JMX4tI2LveGi2OkPav3C/inCWkWxw4uJRU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kmUz6aXb2JyRHZ2DTmckclplb8TgcVNJM8gacaDNVWcRbi3msLB6po4hOmIghNjSvdZhZFFbmHjYeRiWGQ9EsQ5ff8pylL4D3vUVCoW8j3Jhas/lrwaWVmOsn8aAcnuwqfjzK8GuEC4pUW1hDn3s+SXvBxdNl8nbDmT1KbgFXPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=omDfdTre; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="omDfdTre"
+Message-ID: <d0c1fe9d-8d51-4c4f-897b-45444de1286d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1777388987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hIB7EHw0XVe8J9biJw0DmGVo/3UVd+n37GjnX2Eg4U0=;
+	b=omDfdTreNEfntfEEPgMyY8fh7p72t7lj/0Bq1mm3QJ1VqdPdhm8erv8tkvMpV7qYxeNmsq
+	Q/qIvxYjZAQTg67XfHtaJ+AyGchZNYTRPNrrjo9v7eu3G6GjC0iBJzL4uGUAVjXkxZkpcV
+	slb1gKN8ZPakg3kMktEIeyefOuau9ZE=
+Date: Tue, 28 Apr 2026 23:09:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: cyk6pcnsc1op6fkh1ib1y6g8ezbtimmk
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 898EA20018
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/PR3UCCHvZ95sp09AT6VuBzU9gYV425cI=
-X-HE-Tag: 1777379947-886855
-X-HE-Meta: U2FsdGVkX1/+hd73w3/JKkYauzdQ/kvSvg4DF1WRauig6IMFJxgfMbumdwOii/TQY5HjbWK24tj/Tt0rZKfKNR7YDteiJw3Yd5yiFzo0paMTduU5+mbVwVYIxZhsOG8jDCKTXyIDKhrtz7WLm3NBmMwrIO/kGLikYkBehO/R0OrWhFRz/OdNx2fGKXc4t37YuP5sj+91R1fpk3yHXo2drjKWFjQNqymt6ujHO83rM9FiNylwQgz46E2A6GHHTGXTWo/tDkiWB1OqrAYTnMa5x7vPzKTwbAAzsrikzCEdxH4hY0cppKvCOF520IzvtZqaxHgAvLh521Nw8kgFepJFziqe7U7aacDmT8+Wd3InrZ5qGLGf+TiD7Q==
+Subject: Re: [RFC PATCH 00/12] rv: Add selftests to tools and KUnit tests
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>,
+ Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
+ Tomas Glozar <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>
+References: <20260427151134.192971-1-gmonaco@redhat.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Wen Yang <wen.yang@linux.dev>
+In-Reply-To: <20260427151134.192971-1-gmonaco@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
-[ Adding more module maintainers ]
 
-
-Note, tracing subsystem uses capital letters in subject:
-
-  [PATCH v2] tracing: Export live module tracepoint strings in printk_formats
-
-
-On Mon, 20 Apr 2026 14:19:11 +0800
-Cao Ruichuang <create0818@163.com> wrote:
-
-> tracepoint_string() documents that its strings are exported through
-> printk_formats so that user space can decode pointer fields recorded in
-> trace buffers.
+On 4/27/26 23:11, Gabriele Monaco wrote:
+> This series adds support to the make check target in the rv userspace
+> tool and the rvgen script, this allows to quickly validate its
+> functionality. The selftest framework is inspired by the one used in
+> RTLA.
 > 
-> That already works for built-in __tracepoint_str entries, but module
-> __tracepoint_str sections are not collected or exported today. As a
-> result, module tracepoint_string() users still show raw pointer values
-> in printk_formats consumers such as trace.dat decoders.
+> A few bugs in both tools were also discovered and are fixed as part of
+> this series.
 > 
-> Record module __tracepoint_str sections when modules are loaded, expose
-> their live ranges through printk_formats, and teach
-> trace_is_tracepoint_string() to accept those live module strings too.
+> Additionally it adds unit tests for models. This is achieved by running
+> the handlers functions directly within KUnit, emulating all modules
+> paths as if real kernel events fired.
 > 
-> Keep the lifetime semantics tied to the module itself. This does not
-> copy strings into tracing-owned storage and does not preserve the
-> mappings after module unload.
+> Unit tests emulate a series of events that are expected to trigger
+> violations and checks that a reaction occurred, stub structs and
+> functions are used so the kernel is not affected by the test.
 > 
-> On MODULE_STATE_GOING, the live module string ranges are removed again.
-> This relies on the existing tracing module notifier ordering: trace
-> event teardown runs first and resets module event buffers before these
-> auxiliary string mappings are dropped.
+
+Hi Gabriele,
+
+Good direction overall. The approach of calling event handlers directly
+inside KUnit is clean and avoids the complexity of setting up real
+tracepoints. Patches 1-4 (bug fixes) look correct.
+
+We are planning to build the KUnit and selftest coverage for the tlob
+monitor on top of this infrastructure, so getting this merged would be
+useful for us as well.
+
+- One issue found in the KUnit patches:
+
+   patch 10: nomiss test
+   kernel/trace/rv/monitors/nomiss/nomiss.c:
+     udelay(10 / 1000);
+
+   The compiler folds it silently as udelay(0).
+   Presumably intended as udelay(10)?
+
+- minor: copyright year range
+   rv_monitors_test.c: Copyright (C) 2025-2028
+   kunit_stubs.h:      Copyright (C) 2026-2029
+
+   Kernel copyright entries conventionally use only the year(s) the work
+was actually created，eg:
+https://lkml.indiana.edu/2510.0/01897.html
+
+
+Reviewed-by: Wen Yang <wen.yang@linux.dev>
+
+--
+Best wishes,
+Wen
+
+
+> To: linux-trace-kernel@vger.kernel.org
+> To: linux-kernel@vger.kernel.org
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Nam Cao <namcao@linutronix.de>
+> Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>
+> Cc: Tomas Glozar <tglozar@redhat.com>
+> Cc: John Kacur <jkacur@redhat.com>
+> Cc: Wen Yang <wen.yang@linux.dev>
 > 
-> If the small auxiliary registry allocation fails, warn and continue
-> loading the module. printk_formats exposure is degraded in that case,
-> but tracing should not fail module load for missing debug metadata.
+> Gabriele Monaco (12):
+>    tools/rv: Fix substring match bug in monitor name search
+>    tools/rv: Fix substring match when listing container monitors
+>    tools/rv: Fix exit status when monitor execution fails
+>    tools/rv: Fix cleanup after failed trace setup
+>    tools/rv: Add selftests
+>    verification/rvgen: Fix options shared among commands
+>    verification/rvgen: Add golden and spec folders for tests
+>    verification/rvgen: Add selftests
+>    rv: Add KUnit stub to rv_react() and rv_*_task_monitor_slot()
+>    rv: Add KUnit tests for some DA/HA monitors
+>    rv: Add KUnit stubs for current and smp_processor_id()
+>    rv: Add KUnit tests for some LTL monitors
 > 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217196
-> Assisted-by: Codex:GPT-5.4
-> Signed-off-by: Cao Ruichuang <create0818@163.com>
-> ---
-> v2:
-> - replace the previous copied-string approach with live module section ranges
-> - record module __tracepoint_str ranges in struct module
-> - export only live module tracepoint strings in printk_formats
-> - remove module mappings on MODULE_STATE_GOING
-> - keep auxiliary registry allocation failure non-fatal and warn instead
-> - add explicit notifier priority and document the teardown ordering dependency
+>   include/rv/da_monitor.h                       |  32 +++
+>   include/rv/kunit_stubs.h                      |  17 ++
+>   include/rv/ltl_monitor.h                      |  32 +++
+>   kernel/trace/rv/Kconfig                       |  14 +
+>   kernel/trace/rv/Makefile                      |   3 +
+>   kernel/trace/rv/monitors/nomiss/nomiss.c      |  30 +++
+>   kernel/trace/rv/monitors/opid/opid.c          |  27 ++
+>   .../trace/rv/monitors/pagefault/pagefault.c   |  26 +-
+>   kernel/trace/rv/monitors/sco/sco.c            |  23 ++
+>   kernel/trace/rv/monitors/sleep/sleep.c        |  64 ++++-
+>   kernel/trace/rv/monitors/sssw/sssw.c          |  27 ++
+>   kernel/trace/rv/monitors/sts/sts.c            |  35 +++
+>   kernel/trace/rv/rv.c                          |   5 +
+>   kernel/trace/rv/rv_monitors_test.c            |  99 +++++++
+>   kernel/trace/rv/rv_monitors_test.h            |  90 +++++++
+>   kernel/trace/rv/rv_reactors.c                 |   3 +
+>   tools/verification/rv/Makefile                |   5 +-
+>   tools/verification/rv/src/in_kernel.c         |  58 ++--
+>   tools/verification/rv/src/rv.c                |   2 +-
+>   tools/verification/rv/tests/rv_list.t         |  48 ++++
+>   tools/verification/rv/tests/rv_mon.t          |  95 +++++++
+>   tools/verification/rvgen/Makefile             |   4 +
+>   tools/verification/rvgen/__main__.py          |  10 +-
+>   .../rvgen/tests/golden/da_global/Kconfig      |   9 +
+>   .../rvgen/tests/golden/da_global/da_global.c  |  95 +++++++
+>   .../rvgen/tests/golden/da_global/da_global.h  |  47 ++++
+>   .../tests/golden/da_global/da_global_trace.h  |  15 ++
+>   .../tests/golden/da_perobj_parent/Kconfig     |  11 +
+>   .../da_perobj_parent/da_perobj_parent.c       | 110 ++++++++
+>   .../da_perobj_parent/da_perobj_parent.h       |  64 +++++
+>   .../da_perobj_parent/da_perobj_parent_trace.h |  15 ++
+>   .../tests/golden/da_pertask_desc/Kconfig      |   9 +
+>   .../golden/da_pertask_desc/da_pertask_desc.c  | 105 ++++++++
+>   .../golden/da_pertask_desc/da_pertask_desc.h  |  64 +++++
+>   .../da_pertask_desc/da_pertask_desc_trace.h   |  15 ++
+>   .../rvgen/tests/golden/ha_percpu/Kconfig      |   9 +
+>   .../rvgen/tests/golden/ha_percpu/ha_percpu.c  | 244 +++++++++++++++++
+>   .../rvgen/tests/golden/ha_percpu/ha_percpu.h  |  72 +++++
+>   .../tests/golden/ha_percpu/ha_percpu_trace.h  |  19 ++
+>   .../rvgen/tests/golden/ltl_pertask/Kconfig    |   9 +
+>   .../tests/golden/ltl_pertask/ltl_pertask.c    | 107 ++++++++
+>   .../tests/golden/ltl_pertask/ltl_pertask.h    | 108 ++++++++
+>   .../golden/ltl_pertask/ltl_pertask_trace.h    |  14 +
+>   .../rvgen/tests/golden/test_container/Kconfig |   5 +
+>   .../golden/test_container/test_container.c    |  35 +++
+>   .../golden/test_container/test_container.h    |   3 +
+>   .../rvgen/tests/golden/test_da/Kconfig        |   9 +
+>   .../rvgen/tests/golden/test_da/test_da.c      |  95 +++++++
+>   .../rvgen/tests/golden/test_da/test_da.h      |  47 ++++
+>   .../tests/golden/test_da/test_da_trace.h      |  15 ++
+>   .../rvgen/tests/golden/test_ha/Kconfig        |   9 +
+>   .../rvgen/tests/golden/test_ha/test_ha.c      | 247 ++++++++++++++++++
+>   .../rvgen/tests/golden/test_ha/test_ha.h      |  72 +++++
+>   .../tests/golden/test_ha/test_ha_trace.h      |  19 ++
+>   .../rvgen/tests/golden/test_ltl/Kconfig       |  11 +
+>   .../rvgen/tests/golden/test_ltl/test_ltl.c    | 108 ++++++++
+>   .../rvgen/tests/golden/test_ltl/test_ltl.h    | 108 ++++++++
+>   .../tests/golden/test_ltl/test_ltl_trace.h    |  14 +
+>   .../rvgen/tests/rvgen_container.t             |  20 ++
+>   .../verification/rvgen/tests/rvgen_monitor.t  |  87 ++++++
+>   .../rvgen/tests/specs/test_da.dot             |  16 ++
+>   .../rvgen/tests/specs/test_da2.dot            |  18 ++
+>   .../rvgen/tests/specs/test_ha.dot             |  27 ++
+>   .../rvgen/tests/specs/test_invalid.dot        |   8 +
+>   .../rvgen/tests/specs/test_invalid.ltl        |   1 +
+>   .../rvgen/tests/specs/test_invalid_ha.dot     |  16 ++
+>   .../rvgen/tests/specs/test_ltl.ltl            |   1 +
+>   tools/verification/tests/engine.sh            | 156 +++++++++++
+>   68 files changed, 2993 insertions(+), 44 deletions(-)
+>   create mode 100644 include/rv/kunit_stubs.h
+>   create mode 100644 kernel/trace/rv/rv_monitors_test.c
+>   create mode 100644 kernel/trace/rv/rv_monitors_test.h
+>   create mode 100644 tools/verification/rv/tests/rv_list.t
+>   create mode 100644 tools/verification/rv/tests/rv_mon.t
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_global/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_container/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_container/test_container.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_container/test_container.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_da/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ha/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/Kconfig
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl.c
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl.h
+>   create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl_trace.h
+>   create mode 100644 tools/verification/rvgen/tests/rvgen_container.t
+>   create mode 100644 tools/verification/rvgen/tests/rvgen_monitor.t
+>   create mode 100644 tools/verification/rvgen/tests/specs/test_da.dot
+>   create mode 100644 tools/verification/rvgen/tests/specs/test_da2.dot
+>   create mode 100644 tools/verification/rvgen/tests/specs/test_ha.dot
+>   create mode 100644 tools/verification/rvgen/tests/specs/test_invalid.dot
+>   create mode 100644 tools/verification/rvgen/tests/specs/test_invalid.ltl
+>   create mode 100644 tools/verification/rvgen/tests/specs/test_invalid_ha.dot
+>   create mode 100644 tools/verification/rvgen/tests/specs/test_ltl.ltl
+>   create mode 100644 tools/verification/tests/engine.sh
 > 
-> Tested in QEMU:
-> - basic repro showing module tracepoint_string() entries in printk_formats
-> - load/unload validation confirming mappings are removed after rmmod
-> - failed module init after MODULE_STATE_COMING with no stale mapping left
-> - targeted failslab injection on the notifier-time auxiliary allocation,
->   confirming module load still succeeds, a warning is emitted, and the
->   module mapping is not exported
 > 
->  include/linux/module.h      |   2 +
->  kernel/module/main.c        |   4 +
->  kernel/trace/trace_printk.c | 153 ++++++++++++++++++++++++++++++++++--
->  3 files changed, 152 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 14f391b186c..e475466a785 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -515,6 +515,8 @@ struct module {
->  #ifdef CONFIG_TRACING
->  	unsigned int num_trace_bprintk_fmt;
->  	const char **trace_bprintk_fmt_start;
-> +	unsigned int num_tracepoint_strings;
-> +	const char **tracepoint_strings_start;
-
-Would be more compact on 64 bit systems to put the two ints together.
-
-	unsigned int num_trace_bprintk_fmt;
-	unsigned int num_tracepoint_strings;
-	const char **trace_bprintk_fmt_start;
-	const char **tracepoint_strings_start;
-
-
->  #endif
->  #ifdef CONFIG_EVENT_TRACING
->  	struct trace_event_call **trace_events;
-> diff --git a/kernel/module/main.c b/kernel/module/main.c
-> index c3ce106c70a..d7d890138ac 100644
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -2672,6 +2672,10 @@ static int find_module_sections(struct module *mod, struct load_info *info)
->  	mod->trace_bprintk_fmt_start = section_objs(info, "__trace_printk_fmt",
->  					 sizeof(*mod->trace_bprintk_fmt_start),
->  					 &mod->num_trace_bprintk_fmt);
-> +	mod->tracepoint_strings_start =
-> +		section_objs(info, "__tracepoint_str",
-> +			     sizeof(*mod->tracepoint_strings_start),
-> +			     &mod->num_tracepoint_strings);
->  #endif
->  #ifdef CONFIG_DYNAMIC_FTRACE
->  	/* sechdrs[0].sh_size is always zero */
-> diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-> index 5ea5e0d76f0..2d41b0a63b3 100644
-> --- a/kernel/trace/trace_printk.c
-> +++ b/kernel/trace/trace_printk.c
-> @@ -13,6 +13,7 @@
->  #include <linux/string.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/rcupdate.h>
->  #include <linux/ctype.h>
->  #include <linux/list.h>
->  #include <linux/slab.h>
-> @@ -24,10 +25,15 @@
->  /*
->   * modules trace_printk()'s formats are autosaved in struct trace_bprintk_fmt
->   * which are queued on trace_bprintk_fmt_list.
-> + *
-> + * modules tracepoint_string() entries are kept as ranges into the owning
-> + * module's __tracepoint_str section and are removed again when the module
-> + * goes away.
->   */
->  static LIST_HEAD(trace_bprintk_fmt_list);
-> +static LIST_HEAD(tracepoint_str_list);
->  
-> -/* serialize accesses to trace_bprintk_fmt_list */
-> +/* serialize accesses to module trace printk and tracepoint string lists */
->  static DEFINE_MUTEX(btrace_mutex);
->  
->  struct trace_bprintk_fmt {
-> @@ -35,6 +41,13 @@ struct trace_bprintk_fmt {
->  	const char *fmt;
->  };
->  
-> +struct tracepoint_mod_str {
-> +	struct list_head list;
-
-Perhaps add a rcu_head here?
-
-> +	struct module *mod;
-> +	const char **start;
-> +	unsigned int num;
-> +};
-> +
->  static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
->  {
->  	struct trace_bprintk_fmt *pos;
-> @@ -85,16 +98,70 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
->  	mutex_unlock(&btrace_mutex);
->  }
->  
-> +static void hold_module_tracepoint_strings(struct module *mod)
-> +{
-> +	struct tracepoint_mod_str *tp_str;
-> +
-> +	if (!mod->num_tracepoint_strings)
-> +		return;
-> +
-> +	tp_str = kmalloc_obj(*tp_str);
-> +	if (!tp_str) {
-> +		pr_warn("tracing: Failed to expose module tracepoint strings for %s\n",
-> +			mod->name);
-> +		return;
-> +	}
-> +
-> +	tp_str->mod = mod;
-> +	tp_str->start = mod->tracepoint_strings_start;
-> +	tp_str->num = mod->num_tracepoint_strings;
-> +
-> +	mutex_lock(&btrace_mutex);
-> +	list_add_tail_rcu(&tp_str->list, &tracepoint_str_list);
-> +	mutex_unlock(&btrace_mutex);
-> +}
-> +
-> +static void release_module_tracepoint_strings(struct module *mod)
-> +{
-> +	struct tracepoint_mod_str *tp_str, *next;
-> +	struct tracepoint_mod_str *found = NULL;
-> +
-> +	mutex_lock(&btrace_mutex);
-> +	list_for_each_entry_safe(tp_str, next, &tracepoint_str_list, list) {
-> +		if (tp_str->mod != mod)
-> +			continue;
-> +
-> +		list_del_rcu(&tp_str->list);
-
-Does this really need to be rcu protected? (See below).
-
-> +		found = tp_str;
-> +		break;
-> +	}
-> +	mutex_unlock(&btrace_mutex);
-> +
-> +	if (found) {
-> +		synchronize_rcu();
-> +		kfree(found);
-
-Should use kfree_rcu() to not slow down module unload anymore than needed
-(hence the need for the rcu_head above). But if we keep it used under the
-mutex instead of RCU, we don't even need to do that.
-
-And honestly, the iteration happens only on module load, so the only time
-the read would intersect with the write is if a module was being loaded at
-the same time another module was being unloaded. I don't think that can
-happen.
-
-> +	}
-> +}
-> +
->  static int module_trace_bprintk_format_notify(struct notifier_block *self,
->  		unsigned long val, void *data)
->  {
->  	struct module *mod = data;
-> -	if (mod->num_trace_bprintk_fmt) {
-> -		const char **start = mod->trace_bprintk_fmt_start;
-> -		const char **end = start + mod->num_trace_bprintk_fmt;
->  
-> -		if (val == MODULE_STATE_COMING)
-> +	switch (val) {
-> +	case MODULE_STATE_COMING:
-> +		if (mod->num_trace_bprintk_fmt) {
-> +			const char **start = mod->trace_bprintk_fmt_start;
-> +			const char **end = start + mod->num_trace_bprintk_fmt;
-> +
->  			hold_module_trace_bprintk_format(start, end);
-> +		}
-> +		hold_module_tracepoint_strings(mod);
-> +		break;
-> +	case MODULE_STATE_GOING:
-> +		/* trace event teardown runs first and clears module event buffers. */
-> +		release_module_tracepoint_strings(mod);
-> +		break;
->  	}
->  	return NOTIFY_OK;
->  }
-> @@ -159,6 +226,55 @@ find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
->  	return &mod_fmt->fmt;
->  }
->  
-> +static int count_mod_formats(void)
-> +{
-> +	struct trace_bprintk_fmt *p;
-> +	int count = 0;
-> +
-> +	list_for_each_entry(p, &trace_bprintk_fmt_list, list)
-> +		count++;
-
-This counter needs to be stored somewhere and not calculated every time.
-
- int trace_bprintk_fmt_cnt;
-
-And updated on creation and deletion.
-
-> +
-> +	return count;
-> +}
-> +
-> +static const char **
-> +find_next_mod_tracepoint_str(int start_index, loff_t *pos)
-> +{
-> +	struct tracepoint_mod_str *tp_str;
-> +	int index = start_index;
-> +	unsigned int i;
-> +
-> +	list_for_each_entry(tp_str, &tracepoint_str_list, list) {
-> +		for (i = 0; i < tp_str->num; i++) {
-> +			if (index == *pos)
-> +				return tp_str->start + i;
-> +			index++;
-> +		}
-
-The above is horribly inefficient. Should have:
-
-	list_for_each_entry(tp_str, &tracepoint_str_list, list) {
-
-		if (index + tp_str->num <= *pos) {
-			index += tp_str->num;
-			continue;
-		}
-
-		for (i = 0; i < tp_str->num; i++) {
-			if (index == *pos)
-				return tp_str->start + i;
-			index++;
-		}
-
-		/* Should not hit here */
-		WARN_ONCE(1);
-		return NULL;
-	}
-
-
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static bool is_module_tracepoint_string(const char *str)
-> +{
-> +	struct tracepoint_mod_str *tp_str;
-> +	unsigned int i;
-> +	bool found = false;
-> +
-> +	rcu_read_lock();
-
-This is not a fast path, why not take the btrace_mutex?
-
-Either way, for rcu, this should be:
-
-	guard(rcu)();
-
-or for the mutex:
-
-	guard(mutex)(&btrace_mutex);
-
-> +	list_for_each_entry_rcu(tp_str, &tracepoint_str_list, list) {
-> +		for (i = 0; i < tp_str->num; i++) {
-> +			if (str == tp_str->start[i]) {
-> +				found = true;
-
-This should be:
-
-				return true;
-
-> +				goto out;
-> +			}
-> +		}
-> +	}
-
-Remove the below and have:
-
-	return false;
-
--- Steve
-
-> +out:
-> +	rcu_read_unlock();
-> +	return found;
-> +}
-> +
->  static void format_mod_start(void)
->  {
->  	mutex_lock(&btrace_mutex);
-> @@ -181,6 +297,22 @@ find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
->  {
->  	return NULL;
->  }
-> +
-> +static inline int count_mod_formats(void)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline const char **
-> +find_next_mod_tracepoint_str(int start_index, loff_t *pos)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline bool is_module_tracepoint_string(const char *str)
-> +{
-> +	return false;
-> +}
->  static inline void format_mod_start(void) { }
->  static inline void format_mod_stop(void) { }
->  #endif /* CONFIG_MODULES */
-> @@ -195,6 +327,7 @@ void trace_printk_control(bool enabled)
->  __initdata_or_module static
->  struct notifier_block module_trace_bprintk_format_nb = {
->  	.notifier_call = module_trace_bprintk_format_notify,
-> +	.priority = 0,
->  };
->  
->  int __trace_bprintk(unsigned long ip, const char *fmt, ...)
-> @@ -259,12 +392,13 @@ bool trace_is_tracepoint_string(const char *str)
->  		if (str == *ptr)
->  			return true;
->  	}
-> -	return false;
-> +	return is_module_tracepoint_string(str);
->  }
->  
->  static const char **find_next(void *v, loff_t *pos)
->  {
->  	const char **fmt = v;
-> +	int mod_formats;
->  	int start_index;
->  	int last_index;
->  
-> @@ -292,7 +426,12 @@ static const char **find_next(void *v, loff_t *pos)
->  		return __start___tracepoint_str + (*pos - last_index);
->  
->  	start_index += last_index;
-> -	return find_next_mod_format(start_index, v, fmt, pos);
-> +	mod_formats = count_mod_formats();
-> +	if (*pos < start_index + mod_formats)
-> +		return find_next_mod_format(start_index, v, fmt, pos);
-> +
-> +	start_index += mod_formats;
-> +	return find_next_mod_tracepoint_str(start_index, pos);
->  }
->  
->  static void *
-
+> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
