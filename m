@@ -1,180 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389613D6CDA;
-	Tue, 28 Apr 2026 09:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D10B3D4123;
+	Tue, 28 Apr 2026 09:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777369404; cv=none; b=KQVU4ZfFNxhmmjPdZuH0tUGSe3DdBsfAcIbWPKIuHx/KIUWX1CMHQ0p+iFc1I80x86e5xDoInLTWU1GU654sFw/kwT5Ubv7FnTqEu7nqpDCpPifbGRoAPXX0yE5OI3ZvxMDsur+N0IYtej7BRiO1OC8oYG7OVFSu06+9dxog2tY=
+	t=1777369831; cv=none; b=StZmrxTAYDi1cBGjGVtVQZLVgG3/VGGNcHTBRBU/hTRYA25TqsRi/MgJLn0N4Qfr1qUNkZDssY2tWp+aSoWsf4JWhzPeYTkyndGiMKNEOHJ0AlOr/Ai32LFClKGjllYXEj4PuSgUjHc6muJvVKLYUjOyDj0TYjjkrurtDfLE444=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777369404; c=relaxed/simple;
-	bh=TYiXYjzHA8JHToeY0LvSF4bFP7UXxBQJ3HYswXAb9xU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ED5y8EZKDsrQTXXnqM7SA6rKAJJnJsB0EkNT8hR01r+5fuSzwAFoeE6uXB1jTtW0fPpQA3J7pbuUr9kENRT5nMcSvdfzznhmad93UL4mZ397w4TUKTOa7vgiynPWseXt7kj5fQL90TJP2khG/7fFuHFICoPH8k9dJlIKa7GhrkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=urwQz9pP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777369831; c=relaxed/simple;
+	bh=71r5PCoyKE2q6CjGvtlENM/Tn18UAB8o/79zayB5am4=;
+	h=Date:Message-ID:From:To:In-Reply-To:References:Cc:Subject:
+	 MIME-Version:Content-Type; b=a+svyJ23O1+ap40iMwbz76NIgcfxInlMGlIiUtsZbQbGVDG2sRn80x/PrvRPQRhhFqPcsYLKBa1MbjQRGOIu/CrOXiymVaDe0qMPRLQG/p66oUVvBFqgO6kWTGVGvU2+oYBp/8qVdNk1MjdzsSwwYn0jhxXuayjEmNGtSm73YSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=ZCmOshS5; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="urwQz9pP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5353C2BCAF;
-	Tue, 28 Apr 2026 09:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777369403;
-	bh=TYiXYjzHA8JHToeY0LvSF4bFP7UXxBQJ3HYswXAb9xU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=urwQz9pPf2VrThLNS4hjIltM02UDZkMfyQFH/YMuroDy0q/QkFs3qkya6pQaG4MH1
-	 gzzvQVMDhr4I4yOKChdCZljSg3iBiZshWNSNUasDL8IBnpUbWJ9MPYLqcxte8o7hy6
-	 VRkmLNz+NJwMGipYttmSkuP4YKJcTucNkLO78gFvaCRB/oH8LV63lliUYRJcoqRZ3m
-	 9Kz84yMWOiwnTNsnsOs+MQn4stBgQqpf85SM+5uY3MRe2Hk3TegaD5OJHKXFSnf9ic
-	 hQPXyE8XfEs1an9gHzh+a6wB1jEacivarxa7nGYahNEt9cybuDLaaIHfJ+N5vc3ZZX
-	 7LKx05O6V9QNA==
-Date: Tue, 28 Apr 2026 18:43:21 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
-Cc: <naveen@kernel.org>, <davem@davemloft.net>, <catalin.marinas@arm.com>,
- <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH] kprobes: skip non-symbol addresses in
- kprobe_add_ksym_blacklist()
-Message-Id: <20260428184321.309a48036892b8d23a08b566@kernel.org>
-In-Reply-To: <20260427073545.3656835-1-jianpeng.chang.cn@windriver.com>
-References: <20260427073545.3656835-1-jianpeng.chang.cn@windriver.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="ZCmOshS5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Subject:Cc:References:In-Reply-To:To:From:Message-ID:Date:
+	Reply-To; bh=puMIIGNSAbNeV6wpOztNjxLzxg4uw3qbrjqOibpKvTg=; b=ZCmOshS57pYBTDVZ
+	HrFvOuMsqstaN9Agfb/IXg+fVolQjH8eyICjuPeOmSwrgQ259oUmQbL3s9IeQLWnf/4jhnwG3lYzL
+	L9T0rmwIodaQW0Bnr+FZBdxWJNcoeLKXcQYAAAZjiWjLc2m3fukbh5aa1oRPlaM+9+8OvfFEuAlyy
+	GwAbt3a0ICQalbwEs5O7siiSP6JXVh2prYl2Dr6JdmJu1wO9yn1t3fauML5m6iGvs+EJ0Qv1t6sBL
+	6U1SB9xbpywglYf1tifwKZykyu6aXtpyJMCzwIEOncnjdbi63AEKwmGpxCgPs4sAj59QJilL7mHzw
+	yl1ASelV0Ww05p9S1g==;
+Received: from host-79-43-52-27.retail.telecomitalia.it ([79.43.52.27] helo=localhost)
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1wHeTm-000MMJ-Fj; Tue, 28 Apr 2026 10:11:42 +0100
+Date: Tue, 28 Apr 2026 11:11:41 +0200
+Message-ID: <d0a66f985640388ab13fda6f7d66c5ad@codethink.co.uk>
+From: Matteo Martelli <matteo.martelli@codethink.co.uk>
+To: Gabriele Monaco <gmonaco@redhat.com>, rdunlap@infradead.org, Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Jonathan Corbet <corbet@lwn.net>, linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260427131709.170505-2-gmonaco@redhat.com>
+References: <20260427131709.170505-2-gmonaco@redhat.com>
+Cc: skhan@linuxfoundation.org
+Subject: Re: [PATCH v2] Documentation/rv: Replace stale website link
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Sender: matteo.martelli@codethink.co.uk
 
-Hi,
 
-On Mon, 27 Apr 2026 15:35:44 +0800
-Jianpeng Chang <jianpeng.chang.cn@windriver.com> wrote:
+Hi Gabriele,
 
-> When kprobe_add_area_blacklist() iterates through a section like
-> .kprobes.text, the start address may not correspond to a named symbol.
-> On ARM64 with CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=y (introduced by
-> commit baaf553d3bc3 ("arm64: Implement
-> HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")), the compiler flag
-> -fpatchable-function-entry=4,2 inserts 2 NOPs before each function entry
-> point for ftrace call_ops. These pre-function NOPs sit at the section base
-> address, before the first named function symbol. The compiler emits a $x
-> mapping symbol at offset 0x00 to mark the start of code, but
-> find_kallsyms_symbol() ignores mapping symbols.
+On Mon, 27 Apr 2026 15:17:09 +0200, Gabriele Monaco <gmonaco@redhat.com> wrote:
+> The sched monitor page was linking to Daniel's website which is now
+> down. The main purpose of the link was to point to a source for the
+> models from the original author and that can be found also in his
+> published paper.
 > 
-> Without CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS (e.g. defconfig), no
-> pre-function NOPs are inserted, the first function starts at offset
-> 0x00, and the bug does not trigger.
+> Replace the link with a reference to Daniel's "A thread synchronization
+> model for the PREEMPT_RT Linux kernel" which can be found online and
+> includes the models definitions as well as the work behind them (not the
+> original patches but since they're based on a 5.0 kernel and are mostly
+> included upstream, there's little value in keeping them in the docs).
 > 
-> This only affects modules that have a .kprobes.text section (i.e. those
-> using the __kprobes annotation). Modules using NOKPROBE_SYMBOL() instead
-> (like kretprobe_example.ko) blacklist exact function addresses via the
-> _kprobe_blacklist section and are not affected.
-> 
-> For kprobe_example.ko on ARM64 with -fpatchable-function-entry=4,2,
-> the .kprobes.text section layout is:
-> 
->   offset 0x00: $x + 2 NOPs    (mapping symbol + ftrace preamble)
->   offset 0x08: handler_post   (64 bytes)
->   offset 0x50: handler_pre    (68 bytes)
-
-Ah, OK. It is for __kprobes attribute. I recommend user to use NOKPROBE_SYMBOL()
-but I understand the situation.
-
-> 
-> kprobe_add_area_blacklist() starts iterating from the section base
-> address (offset 0x00), which only has the $x mapping symbol.
-> kprobe_add_ksym_blacklist() then calls kallsyms_lookup_size_offset()
-> for this address, which goes through:
-> 
->   kallsyms_lookup_size_offset()
->     -> module_address_lookup()
->       -> find_kallsyms_symbol()
-> 
-> find_kallsyms_symbol() scans all module symbols to find the closest
-> preceding symbol.
-> 
-> Since no named text symbol exists at offset 0x00,
-> find_kallsyms_symbol() picks __UNIQUE_ID_vermagic (a .modinfo symbol
-> whose address is in the temporary image) as the "best" match. The
-> computed "size" = next_text_symbol - modinfo_symbol spans across
-> these two unrelated memory regions, creating a blacklist entry with
-> a bogus range of tens of terabytes.
-> 
-> Whether this causes a visible failure depends on address randomization,
-> here is what happens on Raspberry Pi 4/5:
-> 
->   - On RPi5, the bogus size was ~35 TB. start + size stayed within
->     64-bit range, so the blacklist entry covered the entire kernel
->     text. register_kprobe() in the module's own init function failed
->     with -EINVAL.
-> 
->   - On RPi4, the bogus size was ~75 TB. start + size overflowed
->     64 bits and wrapped to a small address near zero. The range
->     check (addr >= start && addr < end) then failed because end
->     wrapped around, so the bogus entry was accidentally harmless
->     and kprobes worked by luck.
-> 
-> The same bug exists on both machines, but randomization determines whether
-> the integer overflow masks it or not.
-> 
-> Fix this by checking the offset returned by kallsyms_lookup_size_offset().
-> A non-zero offset means the address is not at a symbol boundary, so skip
-> forward to the next symbol instead of creating a blacklist entry with a
-> wrong size.
-> 
-> Fixes: baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")
-> Signed-off-by: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+> Fixes: 03abeaa63c08 ("Documentation/rv: Add docs for the sched monitors")
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 > ---
-> Hi,
+> V2: Add link to the PDF and fixed RST references
 > 
-> This patch skips non-symbol addresses, fixes the bogus blacklist entry,
-> but leaves the NOP gap at the start of .kprobes.text unblacklisted.
-
-That is OK because those NOPs are not executed in kprobe handler.
-
+>  Documentation/trace/rv/monitor_sched.rst | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> We can continue alloc the ent without return to add the gap to
-> blacklist, or do some more works to add the gap to the first symbol in
-> blacklist. I'm not sure if is this necessary, or is there a better way?
-
-Are there any compiler option or attribute to avoid inserting these
-NOPs to the specific section? (like notrace?)
-
-Also, as you can see there is an alias symbol whose size is 0. and
-in that case, we move the entry + 1 and call kprobe_add_ksym_blacklist()
-again. Thus, the offset becomes 1. Please make sure it is correctly
-handled.
-
-Thanks,
-
-> 
-> Thanks,
-> Jianpeng
-> 
->  kernel/kprobes.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index bfc89083daa9..be700fb03198 100644
-> --- a/kernel/kprobes.c>
-> +++ b/kernel/kprobes.c
-> @@ -2503,6 +2503,10 @@ int kprobe_add_ksym_blacklist(unsigned long entry)
->  	    !kallsyms_lookup_size_offset(entry, &size, &offset))
->  		return -EINVAL;
+> diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
+> index 0b96d6e147c6..d3ba7edc202f 100644
+> --- a/Documentation/trace/rv/monitor_sched.rst
+> +++ b/Documentation/trace/rv/monitor_sched.rst
+> @@ -36,7 +36,7 @@ Specifications
+>  --------------
 >  
-> +	/* Not on a symbol boundary -- skip to the next symbol */
-> +	if (offset)
-> +		return (int)(size - offset);
-> +
->  	ent = kmalloc_obj(*ent);
->  	if (!ent)
->  		return -ENOMEM;
+>  The specifications included in sched are currently a work in progress, adapting the ones
+> -defined in by Daniel Bristot in [1].
+> +defined by Daniel Bristot in [1]_.
+>  
+>  Currently we included the following:
+>  
+> @@ -365,4 +365,7 @@ constraints when processing the events::
+>  References
+>  ----------
+>  
+> -[1] - https://bristot.me/linux-task-model
+> +.. [1] Daniel Bristot de Oliveira et al.:
+> +       `A thread synchronization model for the PREEMPT_RT Linux kernel
+> +       <https://www.iris.sssup.it/bitstream/11382/533630/1/Elsevier-JSA-2020.pdf>`_,
+> +       J. Syst. Archit., 2020.
+> 
+> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 > -- 
-> 2.54.0
+> 2.53.0
+> 
 > 
 
+Thanks for addressing this. FWIW this looks good to me, however I've just
+noticed that the same article is also referenced in rv/runtime-verification.rst
+with a slightly different format and no link. I think that it might be more
+clear if we had a References section in rv/runtime-verification.rst, add links
+to publicly available articles, and then let the other pages point to that
+section when needed instead of duplicating the references like in this case. But
+that could probably be addressed as a further clean-up patch.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Matteo Martelli <matteo.martelli@codethink.co.uk>
+Tested-by: Matteo Martelli <matteo.martelli@codethink.co.uk>
+
+Best regards,
+Matteo Martelli
