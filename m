@@ -1,257 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474403CFF44;
-	Tue, 28 Apr 2026 07:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB8A3BD22F;
+	Tue, 28 Apr 2026 07:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360354; cv=none; b=Al/YWEvK60x8syK/MmaHRlBR3RgfPKYFx0dGNXa6BJ1jyyMxqjtoTSDruLRW1gr22AyqHpb0vFqLc094BvL6eK8Z6O3tadv0tLlCtIx8IVPKZmSTXhbgn1c0ao1VZNcBjrCAY0bf996t84Fqc3+phnYfjWDC8NeoR7U5iTy/SY0=
+	t=1777360616; cv=none; b=TaKzxA1qSMGfPtIPgmzqGTkRloG2T/YiNDxH0uhJ+EXXxqyVp9jVGmJoyXoGdkmDisVzcnjGkiLjRdszDh68eC1huiw4wwNJ3eDtph7RsYIoStmHBzr45bT873iq0Q57QkpROIERbhHqB6DmFv/QDLEPITfi2qYmrmO6ozpmM8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360354; c=relaxed/simple;
-	bh=n7GdOLLaGScAngpOva5caCcXl1A9DB2/nfeO+8CVTPU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AnHt3BU7cFEIPiYZphVpcrUwxATKv/MmmpTODcb/S9a3gw2g+B1LeICgSgxpPVYFLDnEUkIqOmX9MF/Gz4Fk5YnBAUpRNVkCVoQBuovvvN+6z8XUhAwn3JqV/jg+VlxrGGo0Z6HQ0zyL++OTEKuJ70lT5+xaCLJrtvMWE8Gv9V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTjvE2vl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777360616; c=relaxed/simple;
+	bh=dbrUFbqJ78b2jcWIF0af1PiDl7uQgyKVtVnPGQD4pwQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dwP/Zv0ECLaLgEwsys6fqW2y8JeNcR01fvM3NuvKfXcnqZyJzNz8YeBC10fFgVgaiNd/CvIoXHqNyS/ZCNNhKHSjLfx7MFovh54ewcviZtnTeccczYbxLk2KrRfM+cch7EPGM1p889oQwhcEKTDzvIuRikD3Ini4V+jub9i92Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=J9BNO9sD; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTjvE2vl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00B4C2BCB6;
-	Tue, 28 Apr 2026 07:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777360354;
-	bh=n7GdOLLaGScAngpOva5caCcXl1A9DB2/nfeO+8CVTPU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qTjvE2vl9NTM6X/sSrSMTSYv4O9H/7JNqp9pke581D5n2G8MCv6l327mGjmx1AYNd
-	 OOIrDoiEGx1wwS9Z0TYXvmO4Fxzd7NB4JI9l11XXmYnuBy7hL/s6YxZwWDIrmQhtTZ
-	 x97RL7k+SatUC2+jrsR5ig2x8kA13pPCbdvtIryhKwLM3Mxbo/N4fIdscpI4lL+p2j
-	 Le33GM9WaR1cKbC9mesn/YHKKyPDKFElHznCftDlGmoQeX9rgWe17WxWLx1Y1PFXa4
-	 miNcWDx5qewn9DYBNigCQIyHgeAPTdUJHdPjh3+r6ghcCicsqigOYMbxpFX+DpuIht
-	 WxqY8J8RY8Bjw==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 28 Apr 2026 08:10:12 +0100
-Subject: [PATCH v3 28/28] nfsd: add support to CB_NOTIFY for dir attribute
- changes
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J9BNO9sD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=lQWQrrV7LpwR+/cOPe5HTNIVTtQ7JeeBsdba0Hiaywo=; b=J9BNO9sDHBu1jD7ZMf060MuCGF
+	cXdFW0rK83ItmOdyNf+AvK6bF3jK1dHIJIw1Ag3Kj8TLKKUfsBAxW49YOrzhrQoEILtLNZ+tvAY7W
+	IrEx5a+g9i7oDTVdUtwStiJyjblsMJ4JUFaELcrdrTn5INHGDWpSMLLPfPQQag95TXLTxZ6hlQDeq
+	RvKjTjLQCzth5bV+i9TEL/7rm2oXgDLWOQidsgAG2FGtAy9/I/gWM0W3QE6SaLlfz+EWdFg1ArQ3l
+	L4H0Vq0EEM7ISxdcN9rp48091QZNcZIL4NHcilHr5yGSNXxnjUXNWViY+IzCDQmv+pLZoi8iH6zZ4
+	ScF0pTAw==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wHcgd-00000000g4p-3lB4;
+	Tue, 28 Apr 2026 07:16:51 +0000
+Message-ID: <fd8f548a-b4c1-4ff0-a8e2-7d5deb0878b3@infradead.org>
+Date: Tue, 28 Apr 2026 00:16:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Documentation/rv: Replace stale website link
+To: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: matteo.martelli@codethink.co.uk, skhan@linuxfoundation.org
+References: <20260427131709.170505-2-gmonaco@redhat.com>
+ <f841e9f6-9d0b-4e10-a930-fdd74a74b9b9@infradead.org>
+ <75eeb7196b3e65b4b5d5144f87aabd8b57793ebc.camel@redhat.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <75eeb7196b3e65b4b5d5144f87aabd8b57793ebc.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-dir-deleg-v3-28-5a0780ba9def@kernel.org>
-References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
-In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Amir Goldstein <amir73il@gmail.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6108; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=n7GdOLLaGScAngpOva5caCcXl1A9DB2/nfeO+8CVTPU=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1VHt9GAAJhBiVzD5jvGxxI3FTEFiOwGx4nh
- Su7jWNAD7uJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdVQAKCRAADmhBGVaC
- FbfjEADBe7PvfHWU5fC99nWsu80EifSmzJlkeDlt/wfTqGsYSxLv9E6/EKzQ/+0mAOGyRSVujKR
- xoggJ77lPm7P6H78lxNwU37jPXypeJq7BoNYwkDpL2jmcwnhOVb9hMjHxOeDiry7n3+UnHCgxD4
- YQmn9AuwyPpTXA/GzRvu2yaEpIHlMpGZ/ltV3BS7BFCcjRBuwMbxcoPwesn0vf6/bxA0xs9abcW
- K2lPLRpp7QQFSjrDwup8ftGlDge5oTaTgdOZiVzKhw8tRT8J6oyETGyiYJw+oI3aHVQXqh2GyPf
- qpkeR/i9rrYmiidy2JN0fX9IYwnW34SNG+0cnHmGu+9O7/Opi6rqa3Fge4uGzred3drSXPierg4
- 6n8gEoX/bMc2kknxjVFYRpNZaUThAAk85CRWMIPGqKjwYKAelr8BRTpKUMLS/V1Og/ULzRjCtX9
- xHeT1iE20bb9PNoRWctfkj7eTKu0OVjtcvvshmWaz3P4owZUTLo3vmVimlU6PvaPn6gfpcFYZLn
- SOm1RqTdUWyNR9gZODNkMqPo2TnJZjlIyhX79fA/eEvi3hxkysXLXMeegLEn2nNL0JAUEeby5pI
- KlXIDubBdmojT6UJqLvG8vCROIpNmdKOT8iWpHLz3rOsExuC8IUGWlE6HB45kFGaWftDxqMM7D6
- s3D+OiXHbLTj/WQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-If the client requested dir attribute change notifications, send those
-alongside any set of add/remove/rename events. Note that the server will
-still recall the delegation on a SETATTR, so these are only sent for
-changes to child dirents.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 25 ++++++++++++++++++++--
- fs/nfsd/nfs4xdr.c   | 61 +++++++++++++++++++++++++++++++++++++++++++++--------
- fs/nfsd/xdr4.h      |  2 ++
- 3 files changed, 77 insertions(+), 11 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b60aa2cf1eba..bb9093e3933f 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3479,10 +3479,15 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	struct nfsd_notify_event *events[NOTIFY4_EVENT_QUEUE_SIZE];
- 	struct xdr_buf xdr = { .buflen = PAGE_SIZE * NOTIFY4_PAGE_ARRAY_SIZE,
- 			       .pages  = ncn->ncn_pages };
-+	int limit = NOTIFY4_EVENT_QUEUE_SIZE;
- 	struct xdr_stream stream;
- 	struct nfsd_file *nf;
--	int count, i;
- 	bool error = false;
-+	int count, i;
-+
-+	/* Save a slot for dir attr update if requested */
-+	if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS))
-+		--limit;
- 
- 	xdr_init_encode_pages(&stream, &xdr);
- 
-@@ -3496,7 +3501,7 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	}
- 
- 	/* we can't keep up! */
--	if (count > NOTIFY4_EVENT_QUEUE_SIZE) {
-+	if (count > limit) {
- 		spin_unlock(&ncn->ncn_lock);
- 		goto out_recall;
- 	}
-@@ -3543,6 +3548,22 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 		nfsd_notify_event_put(nne);
- 	}
- 	if (!error) {
-+		if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)) {
-+			u32 *maskp = (u32 *)xdr_reserve_space(&stream, sizeof(*maskp));
-+
-+			if (maskp) {
-+				u8 *p = nfsd4_encode_dir_attr_change(&stream, dp, nf);
-+
-+				if (p) {
-+					*maskp = BIT(NOTIFY4_CHANGE_DIR_ATTRS);
-+					ncn->ncn_nf[count].notify_mask.count = 1;
-+					ncn->ncn_nf[count].notify_mask.element = maskp;
-+					ncn->ncn_nf[count].notify_vals.data = p;
-+					ncn->ncn_nf[count].notify_vals.len = (u8 *)stream.p - p;
-+					++count;
-+				}
-+			}
-+		}
- 		ncn->ncn_nf_cnt = count;
- 		nfsd_file_put(nf);
- 		return true;
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index bd1142590d2b..73f2fdf929ed 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4152,11 +4152,11 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 			  struct nfsd_file *nf, char *name, u32 namelen)
- {
- 	struct nfs4_file *fi = dp->dl_stid.sc_file;
--	struct path path =  { .mnt = nf->nf_file->f_path.mnt,
--			      .dentry = dentry };
-+	struct path path = nf->nf_file->f_path;
- 	struct nfsd4_fattr_args args = { };
- 	uint32_t *attrmask;
- 	__be32 status;
-+	bool parent;
- 	int ret;
- 
- 	/* Reserve space for attrmask */
-@@ -4168,6 +4168,9 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 	ne->ne_file.len = namelen;
- 	ne->ne_attrs.attrmask.element = attrmask;
- 
-+	parent = (dentry == path.dentry);
-+	path.dentry = dentry;
-+
- 	/* FIXME: d_find_alias for inode ? */
- 	if (!path.dentry || !d_inode(path.dentry))
- 		goto noattrs;
-@@ -4183,15 +4186,20 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 
- 	args.change_attr = nfsd4_change_attribute(&args.stat);
- 
--	attrmask[0] = dp->dl_child_attrs[0];
--	attrmask[1] = dp->dl_child_attrs[1];
--	attrmask[2] = 0;
-+	if (parent) {
-+		attrmask[0] = dp->dl_dir_attrs[0];
-+		attrmask[1] = dp->dl_dir_attrs[1];
-+	} else {
-+		attrmask[0] = dp->dl_child_attrs[0];
-+		attrmask[1] = dp->dl_child_attrs[1];
- 
--	if (!setup_notify_fhandle(dentry, fi, nf, &args))
--		attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
-+		if (!setup_notify_fhandle(dentry, fi, nf, &args))
-+			attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
- 
--	if (!(args.stat.result_mask & STATX_BTIME))
--		attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+		if (!(args.stat.result_mask & STATX_BTIME))
-+			attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+	}
-+	attrmask[2] = 0;
- 
- 	ne->ne_attrs.attrmask.count = 2;
- 	ne->ne_attrs.attr_vals.data = (u8 *)xdr->p;
-@@ -4308,6 +4316,41 @@ u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *
- 	return NULL;
- }
- 
-+/**
-+ * nfsd4_encode_dir_attr_change
-+ * @xdr: stream to which to encode the fattr4
-+ * @dp: delegation where the event occurred
-+ * @nf: nfsd_file opened on the directory
-+ *
-+ * Encode a dir attr change event.
-+ */
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp,
-+				 struct nfsd_file *nf)
-+{
-+	struct dentry *dentry = nf->nf_file->f_path.dentry;
-+	struct notify_attr4 na = { };
-+	struct name_snapshot n;
-+	bool ret;
-+	u8 *p = NULL;
-+
-+	if (!(dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)))
-+		return NULL;
-+
-+	take_dentry_name_snapshot(&n, dentry);
-+	ret = nfsd4_setup_notify_entry4(&na.na_changed_entry, xdr,
-+					dentry, dp, nf, (char *)n.name.name,
-+					n.name.len);
-+
-+	/* Don't bother with the event if we're not encoding attrs */
-+	if (ret && na.na_changed_entry.ne_attrs.attr_vals.len) {
-+		p = (u8 *)xdr->p;
-+		if (!xdrgen_encode_notify_attr4(xdr, &na))
-+			p = NULL;
-+	}
-+	release_dentry_name_snapshot(&n);
-+	return p;
-+}
-+
- static void svcxdr_init_encode_from_buffer(struct xdr_stream *xdr,
- 				struct xdr_buf *buf, __be32 *p, int bytes)
- {
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index d276840aca50..cf7f0df68d63 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -958,6 +958,8 @@ __be32 nfsd4_encode_fattr_to_buf(__be32 **p, int words,
- u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *nne,
- 			      struct nfs4_delegation *dd, struct nfsd_file *nf,
- 			      u32 *notify_mask);
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp,
-+				 struct nfsd_file *nf);
- extern __be32 nfsd4_setclientid(struct svc_rqst *rqstp,
- 		struct nfsd4_compound_state *, union nfsd4_op_u *u);
- extern __be32 nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
+On 4/28/26 12:06 AM, Gabriele Monaco wrote:
+> On Mon, 2026-04-27 at 09:50 -0700, Randy Dunlap wrote:
+>> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+>> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Thanks for the ack!
+> 
+>> although I don't care for the "J. Syst. Archit." abbreviation.
+>> Does JSA use that? Not that I can see.
+> 
+> That's the citation format I got from semanticscholar.org , it's indeed
+> a bit ugly but it's apparently the ISO 4 abbreviation [1].
+
+OK then. Leave it.
+Thanks.
+
+> Not sure if it would be neater to just use JSA which looks more
+> official.
+> 
+> Thanks,
+> Gabriele
+> 
+> [1] - https://dblp.org/db/journals/jsa/index.html
+> 
 
 -- 
-2.54.0
+~Randy
 
