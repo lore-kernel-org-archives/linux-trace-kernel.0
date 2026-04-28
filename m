@@ -1,116 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FE83D47A9
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Apr 2026 09:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389613D6CDA;
+	Tue, 28 Apr 2026 09:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777369150; cv=none; b=OyFclVzxSkZ14DjCWdLLM7nW9zdfbpbatAWCOVGWmuXP1C/Gy9Ayehizk2gBQruV1j3ZOUk7fhXZ8dz8pNW6pC6UvtwTHnUtjIvHoBkz74mjZdIuPFUVvJsmErUhG9MkZslao68DtllJvwg1WJmnL/E3nTb1lWGB3o0oFUj40U8=
+	t=1777369404; cv=none; b=KQVU4ZfFNxhmmjPdZuH0tUGSe3DdBsfAcIbWPKIuHx/KIUWX1CMHQ0p+iFc1I80x86e5xDoInLTWU1GU654sFw/kwT5Ubv7FnTqEu7nqpDCpPifbGRoAPXX0yE5OI3ZvxMDsur+N0IYtej7BRiO1OC8oYG7OVFSu06+9dxog2tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777369150; c=relaxed/simple;
-	bh=6FGqR85BhZJ6h8elPP/cyihqUcN7Hm8wATEVHCmTtkc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dkj5VHVFtZ1+ygA6SSMa/8pnM4qTpw2bbi6c4m8UP2QfjuMT+ecrfEVX6IQ9zciQ6cpn9a96ujs4x+l/GwvYf0aScvldgnAiuUjtCut7ESZmc8GtRHI7WJYdI4cG5kHGzEJMbiEzgmwpMaE1PetaIZqnQTo19UCL5xaU4fbrDmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V1xSssYY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777369404; c=relaxed/simple;
+	bh=TYiXYjzHA8JHToeY0LvSF4bFP7UXxBQJ3HYswXAb9xU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ED5y8EZKDsrQTXXnqM7SA6rKAJJnJsB0EkNT8hR01r+5fuSzwAFoeE6uXB1jTtW0fPpQA3J7pbuUr9kENRT5nMcSvdfzznhmad93UL4mZ397w4TUKTOa7vgiynPWseXt7kj5fQL90TJP2khG/7fFuHFICoPH8k9dJlIKa7GhrkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=urwQz9pP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V1xSssYY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777369148;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6FGqR85BhZJ6h8elPP/cyihqUcN7Hm8wATEVHCmTtkc=;
-	b=V1xSssYYKrvg5oGAwU6Cw3o03RdMUeTuJ+Zg90zx4WKbclgMqW7wIhFP0Zq4XTv9f3FUBi
-	W34SfWy3aTMSGa3KKtzsAvexxjbeqPIOWi09bhWvv+anwCKtMg013TtkievuA+lWjtgrdx
-	xo0OyOuFnx5T8ekRI/asyFaHjugLwSE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-128-iq6uH_GeMLWxsF1CyL83sQ-1; Tue, 28 Apr 2026 05:39:07 -0400
-X-MC-Unique: iq6uH_GeMLWxsF1CyL83sQ-1
-X-Mimecast-MFC-AGG-ID: iq6uH_GeMLWxsF1CyL83sQ_1777369146
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50eb8bad331so78058451cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Apr 2026 02:39:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777369146; x=1777973946;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6FGqR85BhZJ6h8elPP/cyihqUcN7Hm8wATEVHCmTtkc=;
-        b=HR7Qp1SI2dH0RcDdVbinC3IyIqGnu0qGFIfs6iTCULRDa59VdkF9LSYpEN6XmWzOuK
-         9MlzHOqxpvvCQHXJo187n+HGw9DtQZjFCw9QJ+/OdEvE0k4xyxpQVCm3Nlz29je5YI/Z
-         2kzsIrIJYyReiAgMGZ+w08uUatiZzftZ+S6T12+tt+QDJ0o3XcbvB97JEj4foM3i8dvv
-         yz1KPWSp/lujNvRiSPp9LPflLDkQA+0USzMKRUikVYNM87FX7AT9FyERtgaGMXDLth4T
-         t1cLypaGW4sUS7x2J2ZDWTz3y7IaKTsd74Etd7nPFGPlr6Arm5asmee0lyDaEi9d+ejb
-         YbtQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/m0dhMoyH5Z2Pvf5pJvB73s8PCU7QwtQRQJczUiGaUFdhSKCtwuWy3Nii/ZSsnXy7H1DwegDfE4fA9ftFGZDtgXlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkBgzL894drM6gijY5rK+zFg5ZF+iSs8zQRLOZ13dszScxHGWZ
-	3bENKizUWMHWJr4i/9fdEc/eL+yQvF/8z4tS8/muM6TS4GrxBbQYCvvS6boVoOKdQq56bH5xLj/
-	4U0VEQKt6T+FhxURb1LYA/Zm0VfzkxTQ6prykj3ZYMl5moe5R7sshIk29M7z1LzuAi+PY7dlkqA
-	==
-X-Gm-Gg: AeBDiesulwh/z9AyAuSeazQ2iknpTpLXze6hMfYKrhAEReLX2AttAJojYh8qEXfSd1/
-	PXnpVWQslJgffVvlIOkNC3OcntUNR9fa0W/6IGhT/n3S1bRxuNaSBce/RjrJdh30pzW9UYzhewm
-	MgfSei0O6sCdh37cCDPYtH/CMNmrdtCTcjWlB6CJ4oE3wiynEUrbUeH3nstTaRHNvXosQmizGpq
-	jbAZq0plYplrY6lqsJ4nndyw1Sm5cNv1dJiZ6lLNEVsBcLskEY26LuWTnsnC2wg70oIXdCpzz9u
-	s47rF8xKMmrkmVbDQc6q8lhd90WRwTM0tk4tt4DmwqZz+BDnPLoIPT9i7YZIcRpUfBwoFNv8kqh
-	JpwTrKwd7IplhxcrBEjXX7O/xyfkb3vFYolol
-X-Received: by 2002:a05:622a:590c:b0:50e:578e:bb18 with SMTP id d75a77b69052e-5100e1d5c86mr30854671cf.47.1777369146461;
-        Tue, 28 Apr 2026 02:39:06 -0700 (PDT)
-X-Received: by 2002:a05:622a:590c:b0:50e:578e:bb18 with SMTP id d75a77b69052e-5100e1d5c86mr30854401cf.47.1777369146052;
-        Tue, 28 Apr 2026 02:39:06 -0700 (PDT)
-Received: from [192.168.1.167] ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5100da4d2a7sm13443931cf.6.2026.04.28.02.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 02:39:05 -0700 (PDT)
-Message-ID: <b4a0f46f1b04462409b61f240aafbcaf6603c5a4.camel@redhat.com>
-Subject: Re: [PATCH v2] Documentation/rv: Replace stale website link
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Matteo Martelli <matteo.martelli@codethink.co.uk>,
- rdunlap@infradead.org,  Steven Rostedt <rostedt@goodmis.org>, Jonathan
- Corbet <corbet@lwn.net>, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org
-Date: Tue, 28 Apr 2026 11:39:02 +0200
-In-Reply-To: <d0a66f985640388ab13fda6f7d66c5ad@codethink.co.uk>
-References: <20260427131709.170505-2-gmonaco@redhat.com>
-	 <d0a66f985640388ab13fda6f7d66c5ad@codethink.co.uk>
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="urwQz9pP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5353C2BCAF;
+	Tue, 28 Apr 2026 09:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777369403;
+	bh=TYiXYjzHA8JHToeY0LvSF4bFP7UXxBQJ3HYswXAb9xU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=urwQz9pPf2VrThLNS4hjIltM02UDZkMfyQFH/YMuroDy0q/QkFs3qkya6pQaG4MH1
+	 gzzvQVMDhr4I4yOKChdCZljSg3iBiZshWNSNUasDL8IBnpUbWJ9MPYLqcxte8o7hy6
+	 VRkmLNz+NJwMGipYttmSkuP4YKJcTucNkLO78gFvaCRB/oH8LV63lliUYRJcoqRZ3m
+	 9Kz84yMWOiwnTNsnsOs+MQn4stBgQqpf85SM+5uY3MRe2Hk3TegaD5OJHKXFSnf9ic
+	 hQPXyE8XfEs1an9gHzh+a6wB1jEacivarxa7nGYahNEt9cybuDLaaIHfJ+N5vc3ZZX
+	 7LKx05O6V9QNA==
+Date: Tue, 28 Apr 2026 18:43:21 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+Cc: <naveen@kernel.org>, <davem@davemloft.net>, <catalin.marinas@arm.com>,
+ <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH] kprobes: skip non-symbol addresses in
+ kprobe_add_ksym_blacklist()
+Message-Id: <20260428184321.309a48036892b8d23a08b566@kernel.org>
+In-Reply-To: <20260427073545.3656835-1-jianpeng.chang.cn@windriver.com>
+References: <20260427073545.3656835-1-jianpeng.chang.cn@windriver.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3dHs9vrVygW5tVPLDj4MaudipON53JM30hr8u7hL65o_1777369146
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Matteo,
+Hi,
 
-On Tue, 2026-04-28 at 11:11 +0200, Matteo Martelli wrote:
-> Thanks for addressing this. FWIW this looks good to me, however I've
-> just noticed that the same article is also referenced in
-> rv/runtime-verification.rst with a slightly different format and no
-> link. I think that it might be more clear if we had a References
-> section in rv/runtime-verification.rst, add links to publicly
-> available articles, and then let the other pages point to that
-> section when needed instead of duplicating the references like in
-> this case. But that could probably be addressed as a further clean-up
-> patch.
->=20
-> Acked-by: Matteo Martelli <matteo.martelli@codethink.co.uk>
-> Tested-by: Matteo Martelli <matteo.martelli@codethink.co.uk>
+On Mon, 27 Apr 2026 15:35:44 +0800
+Jianpeng Chang <jianpeng.chang.cn@windriver.com> wrote:
 
-Thanks for the ack!
+> When kprobe_add_area_blacklist() iterates through a section like
+> .kprobes.text, the start address may not correspond to a named symbol.
+> On ARM64 with CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=y (introduced by
+> commit baaf553d3bc3 ("arm64: Implement
+> HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")), the compiler flag
+> -fpatchable-function-entry=4,2 inserts 2 NOPs before each function entry
+> point for ftrace call_ops. These pre-function NOPs sit at the section base
+> address, before the first named function symbol. The compiler emits a $x
+> mapping symbol at offset 0x00 to mark the start of code, but
+> find_kallsyms_symbol() ignores mapping symbols.
+> 
+> Without CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS (e.g. defconfig), no
+> pre-function NOPs are inserted, the first function starts at offset
+> 0x00, and the bug does not trigger.
+> 
+> This only affects modules that have a .kprobes.text section (i.e. those
+> using the __kprobes annotation). Modules using NOKPROBE_SYMBOL() instead
+> (like kretprobe_example.ko) blacklist exact function addresses via the
+> _kprobe_blacklist section and are not affected.
+> 
+> For kprobe_example.ko on ARM64 with -fpatchable-function-entry=4,2,
+> the .kprobes.text section layout is:
+> 
+>   offset 0x00: $x + 2 NOPs    (mapping symbol + ftrace preamble)
+>   offset 0x08: handler_post   (64 bytes)
+>   offset 0x50: handler_pre    (68 bytes)
 
-That's a good point, I agree it's better to go ahead with this small
-patch and I can make a deeper documentation cleanup later.
+Ah, OK. It is for __kprobes attribute. I recommend user to use NOKPROBE_SYMBOL()
+but I understand the situation.
+
+> 
+> kprobe_add_area_blacklist() starts iterating from the section base
+> address (offset 0x00), which only has the $x mapping symbol.
+> kprobe_add_ksym_blacklist() then calls kallsyms_lookup_size_offset()
+> for this address, which goes through:
+> 
+>   kallsyms_lookup_size_offset()
+>     -> module_address_lookup()
+>       -> find_kallsyms_symbol()
+> 
+> find_kallsyms_symbol() scans all module symbols to find the closest
+> preceding symbol.
+> 
+> Since no named text symbol exists at offset 0x00,
+> find_kallsyms_symbol() picks __UNIQUE_ID_vermagic (a .modinfo symbol
+> whose address is in the temporary image) as the "best" match. The
+> computed "size" = next_text_symbol - modinfo_symbol spans across
+> these two unrelated memory regions, creating a blacklist entry with
+> a bogus range of tens of terabytes.
+> 
+> Whether this causes a visible failure depends on address randomization,
+> here is what happens on Raspberry Pi 4/5:
+> 
+>   - On RPi5, the bogus size was ~35 TB. start + size stayed within
+>     64-bit range, so the blacklist entry covered the entire kernel
+>     text. register_kprobe() in the module's own init function failed
+>     with -EINVAL.
+> 
+>   - On RPi4, the bogus size was ~75 TB. start + size overflowed
+>     64 bits and wrapped to a small address near zero. The range
+>     check (addr >= start && addr < end) then failed because end
+>     wrapped around, so the bogus entry was accidentally harmless
+>     and kprobes worked by luck.
+> 
+> The same bug exists on both machines, but randomization determines whether
+> the integer overflow masks it or not.
+> 
+> Fix this by checking the offset returned by kallsyms_lookup_size_offset().
+> A non-zero offset means the address is not at a symbol boundary, so skip
+> forward to the next symbol instead of creating a blacklist entry with a
+> wrong size.
+> 
+> Fixes: baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")
+> Signed-off-by: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+> ---
+> Hi,
+> 
+> This patch skips non-symbol addresses, fixes the bogus blacklist entry,
+> but leaves the NOP gap at the start of .kprobes.text unblacklisted.
+
+That is OK because those NOPs are not executed in kprobe handler.
+
+> 
+> We can continue alloc the ent without return to add the gap to
+> blacklist, or do some more works to add the gap to the first symbol in
+> blacklist. I'm not sure if is this necessary, or is there a better way?
+
+Are there any compiler option or attribute to avoid inserting these
+NOPs to the specific section? (like notrace?)
+
+Also, as you can see there is an alias symbol whose size is 0. and
+in that case, we move the entry + 1 and call kprobe_add_ksym_blacklist()
+again. Thus, the offset becomes 1. Please make sure it is correctly
+handled.
 
 Thanks,
-Gabriele
 
+> 
+> Thanks,
+> Jianpeng
+> 
+>  kernel/kprobes.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index bfc89083daa9..be700fb03198 100644
+> --- a/kernel/kprobes.c>
+> +++ b/kernel/kprobes.c
+> @@ -2503,6 +2503,10 @@ int kprobe_add_ksym_blacklist(unsigned long entry)
+>  	    !kallsyms_lookup_size_offset(entry, &size, &offset))
+>  		return -EINVAL;
+>  
+> +	/* Not on a symbol boundary -- skip to the next symbol */
+> +	if (offset)
+> +		return (int)(size - offset);
+> +
+>  	ent = kmalloc_obj(*ent);
+>  	if (!ent)
+>  		return -ENOMEM;
+> -- 
+> 2.54.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
