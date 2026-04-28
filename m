@@ -1,40 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991DE17B505;
-	Tue, 28 Apr 2026 18:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FF140627F;
+	Tue, 28 Apr 2026 18:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777400614; cv=none; b=nB0N+iEyzR32yE5zpvDOe+htVGrl/mOXpaKhlEuQ3ICDYGFMM+0jrZi24Z/H0HWZ0mFj4eiKQ+AfAEwsU4Bk8g6qH9FBI9bAZn60xxu9B1BHuFrx7dwlUUU6ZX9n5VSSzlerwRoA72dlL0d5k2HfYx9iKWz8w0ZUnIm6XjUIqKw=
+	t=1777400845; cv=none; b=QPo7xDAc/e29xnCjlCEXUeJPdcY1i/5XlAaEYGH5uh9Q3rJdY3HdR3/QD+L98Z8UFQyQjzPy5egV1MLKEjfzQDsnIAEEDxQLnZEp6+iWjV3XmBtajKyjGkyWiMJscAC7Fo+5UGEs0P0KiUNhsfBxvO6t4iymj11q8LeV8QHTE7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777400614; c=relaxed/simple;
-	bh=w5NRPvOzrfOcdegk8n0OeOI6W/Dm/3D4ge28Mpaj5II=;
+	s=arc-20240116; t=1777400845; c=relaxed/simple;
+	bh=HywBnkKdZA41zZF8oYOd484/6z4d9oU/qhCCivlL0MA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r+9m+D3JdWsA1CLnLu+59iOfq076FhA10d4TbFpguPzhCrvNS0VGOnGQxfhhMOzyv4JvEC9Xq9/GjpjijqRxkXbHvScdCo/Zg97w/QyxE8z2HqdEGI1Vi2BKf8S5iWHRM76yvpkbnkQE0jmbU7/UfkuaxjUavYG5Wyl1FirhJwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=ENKDdgAz70k4WxD23SyTaLNNjSkpS1TWAFRm+AwPHj4fJIhWH8hCwongb9zUtU+Pmw83jcHaYBduvqXlJc+H79ETtHfOUA1pJGj9JTbXAP/L1qgRQuTZy2oSmkChLc490NOkvHkFkUbsTA9wDV811GO/8LNDrHfamBSQrOMKfv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id CAAAD1A019F;
-	Tue, 28 Apr 2026 18:23:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 18B901A;
-	Tue, 28 Apr 2026 18:23:20 +0000 (UTC)
-Date: Tue, 28 Apr 2026 14:23:35 -0400
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 5863C1201A9;
+	Tue, 28 Apr 2026 18:27:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 71F262002E;
+	Tue, 28 Apr 2026 18:27:21 +0000 (UTC)
+Date: Tue, 28 Apr 2026 14:27:36 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Bunyod Suvonov <b.suvonov@sjtu.edu.cn>
-Cc: akpm@linux-foundation.org, vbabka@kernel.org, linux-mm@kvack.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- surenb@google.com, mhocko@suse.com, jackmanb@google.com,
- hannes@cmpxchg.org, ziy@nvidia.com, david@kernel.org,
- vishal.moola@gmail.com, corbet@lwn.net, skhan@linuxfoundation.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_alloc: trace PCP refills and PCP zone lock
- usage
-Message-ID: <20260428142335.3bca0166@gandalf.local.home>
-In-Reply-To: <20260427060142.131055-1-b.suvonov@sjtu.edu.cn>
-References: <20260425091335.346504-1-b.suvonov@sjtu.edu.cn>
-	<20260427060142.131055-1-b.suvonov@sjtu.edu.cn>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
+ <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] fprobe: Add unregister_fprobe_sync() for synchronous
+ unregistration
+Message-ID: <20260428142736.11f5211a@gandalf.local.home>
+In-Reply-To: <177729179863.401400.6063130067239479972.stgit@mhiramat.tok.corp.google.com>
+References: <177729179863.401400.6063130067239479972.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,82 +40,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 18B901A
-X-Stat-Signature: azhpryjtjnjdyigxqnnox89n13h3sinn
+X-Rspamd-Queue-Id: 71F262002E
+X-Stat-Signature: 3r6wkzxz7tkw1wyxx4t1bojjcko83o8z
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+UFa9J6ZZ2ZCYIdHrHbaM4b3uPpjbsHn0=
-X-HE-Tag: 1777400600-860295
-X-HE-Meta: U2FsdGVkX1/1l2zYtyLHECIBTXZzaTsijdArxXDL4dGI03ymfn0eos1R7Rf+Ej3EUn4kWeGDWlbhwXewVl034g/zeL6EG9CH+GSQ8Y/65m0p8EEr+n1xRHjJ5cFgWMn3j6I/sfs/b99G5BwuBXrYlkQRznZSlEFLJcUughZb5sAYSlTghZ7hPj1ytx3ftMELzol4OThU1AlAnEAyefusg1kLtNCjN+wJPn8Qc8HoGTLxaHIp9q5sQPPVJiFKvNURHMHPNPbcdob79uFscTR05YKjPdvaM+/u7earOlCco1y6I7PcA9+iXuNPVCyMbA7X
+X-Session-ID: U2FsdGVkX1+ZJUySwb6+P1ji8MOOtnB0NWQY8ra/NuY=
+X-HE-Tag: 1777400841-737513
+X-HE-Meta: U2FsdGVkX1/UE7vYaCD4ySjves3psgKeZmfDJcbgw+R9vWVWQL7DGSv2oJCG7qf7dNposyZNUXuH5YOA6YI54ntPX2a35xTf/tOMvrJ+E4Pnvemt692IAD9eOWw6nmyBZFnJde182E9IVgSmnrDLnLOlUF6n3Hhd7VXnlhSjTr3/eBQZW9pNxjRCzOcoAn446ITiAWeh1l76sYFmIebVOWG38xiMQwA66UgTjZZUTwSGClNPvw5RrX/8s+6gkEFQikpaDFeMtJI5dArpPdXVaGYOwVSOtkDInf85iEQWlHai+F122ikt4TMHVWOaxbCHaQyHFAzFmXhn6P7C7me0T5G5k1bbqieF
 
-On Mon, 27 Apr 2026 14:01:42 +0800
-Bunyod Suvonov <b.suvonov@sjtu.edu.cn> wrote:
+On Mon, 27 Apr 2026 21:09:58 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> +	TP_STRUCT__entry(
-> +		__field(int, nid)
-> +		__field(int, zid)
-> +		__field(unsigned long, nr_pages)
-> +	),
+> +/**
+> + * unregister_fprobe_sync() - Unregister fprobe synchronously with RCU grace period.
+> + * @fp: A fprobe data structure to be unregistered.
+> + *
+> + * Unregister fprobe (and remove ftrace hooks from the function entries) and
+> + * wait for the RCU grace period to finish. This is useful for preventing
+> + * the fprobe from being used after it is unregistered.
+> + *
+> + * Return 0 if @fp is unregistered successfully, -errno if not.
+> + */
+> +int unregister_fprobe_sync(struct fprobe *fp)
+> +{
+> +	int ret;
 > +
-> +	TP_fast_assign(
-> +		__entry->nid		= nid;
-> +		__entry->zid		= zid;
-> +		__entry->nr_pages	= nr_pages;
-> +	),
+> +	guard(mutex)(&fprobe_mutex);
+> +	if (!fp || !fprobe_registered(fp))
+> +		return -EINVAL;
 > +
-> +	TP_printk("nid=%d zid=%d nr_pages=%lu",
-> +		__entry->nid, __entry->zid, __entry->nr_pages)
-> +);
+> +	ret = unregister_fprobe_nolock(fp);
+> +	if (ret)
+> +		return ret;
 > +
-> +DEFINE_EVENT(mm_page_pcpu_zone_locked, mm_page_pcpu_refill_zone_locked,
-> +
-> +	TP_PROTO(int nid, int zid, unsigned long nr_pages),
-> +
-> +	TP_ARGS(nid, zid, nr_pages)
-> +);
-> +
-> +DEFINE_EVENT(mm_page_pcpu_zone_locked, mm_page_pcpu_drain_zone_locked,
-> +
-> +	TP_PROTO(int nid, int zid, unsigned long nr_pages),
-> +
-> +	TP_ARGS(nid, zid, nr_pages)
-> +);
-> +
-> +DECLARE_EVENT_CLASS(mm_page_pcpu,
->  
->  	TP_PROTO(struct page *page, unsigned int order, int migratetype),
->  
->  	TP_ARGS(page, order, migratetype),
->  
->  	TP_STRUCT__entry(
-> -		__field(	unsigned long,	pfn		)
-> -		__field(	unsigned int,	order		)
-> -		__field(	int,		migratetype	)
-> +		__field(unsigned long, pfn)
-> +		__field(unsigned int, order)
-> +		__field(int, migratetype)
+> +	synchronize_rcu();
 
-Why this change? It makes it much harder to understand.
-
-The above is not a normal macro. Ignore any checkpatch warnings about it.
-The proper way to do the TP_STRUCT__entry() is to make it just like a struct:
-
-struct {
-	unsigned long		pfn;
-	unsigned int		order;
-	int			migratetype;
-};
-
-Thus, the macro should be:
-
-	TP_STRUCT__entry(
-		__field(	unsigned long,	pfn		)
-		__field(	unsigned int,	order		)
-		__field(	int,		migratetype	)
-	),
+Hmm, do we really need to hold the fprobe_mutex when doing the
+synchronize_rcu()? This could cause other updates to have to wait longer
+too.
 
 -- Steve
 
 
-
->  	),
->  
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(unregister_fprobe_sync);
