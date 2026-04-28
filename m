@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7494D3A3E7B;
-	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A363A63FE;
+	Tue, 28 Apr 2026 23:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777418719; cv=none; b=l0wDXB3ZHDp0D/2wck6yZKRSM6Q8qcukmJelq4ny8Ooq0lbD8emGMs9d8Z6vtxWaVEy6/RezHvtVF+xk6ZHXVHG4R/ZXndk2UeNd9sTXewohdGo+hLsTmMBQ3tBtWvGlofZN3l+MI9l0N/0/XRyIZrq/3/8Gerklis1MmCViyAc=
+	t=1777418720; cv=none; b=damhxgq/8S0DJn+XtFM6pV7paFAs2AOG6/4L9EqgBGopbqirn3so+Zg5frUuKVG9T4qCQJRi7Td9MudPA6UvZlJ5XrmS1pvNo/b4C3e2B3eP+pqnB9VoJuXREfVDXxt85VwxdtdfGFSlvLaTMyJp2xjJpyWbuaiSz6fmeW02Z+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777418719; c=relaxed/simple;
-	bh=m2bOW0DUVfOZna9REsWxASypSF6X/t2k8+SwYTvUrgc=;
+	s=arc-20240116; t=1777418720; c=relaxed/simple;
+	bh=oaMCVr675WJC546KIj/mKMjwWvZZUtAMLOTjcjvW/Zg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OUx82iUYw0i8aUPNFG38VB+mA88DQjIPXa9gQ56DRE8Bo5Apr61VP6uYjz+esW/MzWyHKMkAS9X8NaH3odxpxTDc+0gkcoQbSSX4XP2ORbxIg/hAmu3iWxD6OoR2uJLH3I9IRF259Edw+7uG9Em5W6Iv+ivelGjWsfze+64qfLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJlnpg58; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=fv/Eibs89Zh/ghAGd6soe/sy4ruxsoq2Xl/vxNy16BcUIk0MMHG6sT33R7ZRL658OWhVRbnHg2N8Q1CitDeTo8vuQRP8IoC77bba8x+PTkaJFG2lvTAfSSIhYeWuxX/Bai+MHwQY+3CTE3Y/I7eJOsJTv/7XX105RAt5xAb0w9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhCaGfkS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJlnpg58"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 20591C4AF0F;
-	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhCaGfkS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 03283C4AF10;
+	Tue, 28 Apr 2026 23:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777418719;
-	bh=m2bOW0DUVfOZna9REsWxASypSF6X/t2k8+SwYTvUrgc=;
+	s=k20201202; t=1777418720;
+	bh=oaMCVr675WJC546KIj/mKMjwWvZZUtAMLOTjcjvW/Zg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=WJlnpg58o/wMHP8oA2epKzXvuu0F2uImhLPh4i+yCuIuUFUijKUcfQmk+2uN/pT7h
-	 0cWGPK1gsPZsRGlY6uEWokR92R6JrFtTMZNz/hOPFIUyvlJDtPLmgpNGxkQ7BeooAj
-	 dXdSHhbv52GEyuZHyAoqqCj8Ggc6dPfwE6ETRPWQ7+uEs90xRB4/aZ5gLE5GdccoCd
-	 BepwaMv/5kjxDgHxS+6ycmPBriizSk/vDHl9jYlE2ON+EBB9gKhNOB3vl5A93+hgfg
-	 6uNDvW5/2JlGSqtPjhVPmjyd6jIISjqN47JhWDQGSf+PsEuGcOs/6QTQ1ka9++XE3d
-	 ASdkLEjLfl5MA==
+	b=MhCaGfkSo2e0Gx1wfvAoSnhHc+4VT5ecU+eVZ/vtVAio4FyMM1MQiJebO9BrKagrC
+	 DXFx/CFhL29aDunYDYpfewVQ3Kcm5C9Vh7vOJz0jPyoVWSJZNei979sHo2FU3779B3
+	 hszG4qs2ZssVUAIRRtom2lCQ7Z2wlpWgWCu1NSbAUI0jxS+AA/iWUbTsIudcE45TNZ
+	 D60St3rZWyjumZDKxD5ICUOu2qr4AFy7V2LZnz+K4/8xHEt85g2jq/ncUHu5qyd4Bw
+	 TXikXygO7GVg6BtIGG0h7yZTfG+2wup58/Qn9FtZU9jP11vqtSHkI4ioSSsTep+J3z
+	 x/DFudyL0eO7Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5E0FF8875;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB594CCFA13;
 	Tue, 28 Apr 2026 23:25:19 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Apr 2026 16:25:17 -0700
-Subject: [PATCH RFC v5 22/53] KVM: guest_memfd: Apply content modes while
- setting memory attributes
+Date: Tue, 28 Apr 2026 16:25:28 -0700
+Subject: [PATCH RFC v5 33/53] KVM: selftests: Add helpers for calling
+ ioctls on guest_memfd
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-gmem-inplace-conversion-v5-22-d8608ccfca22@google.com>
+Message-Id: <20260428-gmem-inplace-conversion-v5-33-d8608ccfca22@google.com>
 References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 In-Reply-To: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,11 +74,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=8609;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=5522;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=MUDFg3cF6c9zZj9eh+GrJ3J5VFbXgeIVHlW3jinLVHw=;
- b=2XGqE3iV+Vi1bSn0hlNODYxtik3QyF9m9aUmkOk9DiJ6SyFSFBLsOf07/9slTvV8WlFojh1kw
- cm5zpBbGFbjByQhM6jLEcwU3cELZfDgCodbO76TBbTHf8UHrktag1mF
+ bh=Zmzepwj0e0uEpvYD+9DInZXExTZ0/J8Xq30KnpI8mbA=;
+ b=WLwccZvFc1hCrzmS+LvCeTiboGB43iB+VTrZ0c3nbl0lNS6dz2+yJAg8q+WpCndvJ8J5zsEhY
+ wuhBVOSWSDFAaKh15J/o5yGY/95Y172ex+GGyvsxHevl9jj/bJCUyV6
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -86,218 +86,166 @@ X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
 X-Original-From: Ackerley Tng <ackerleytng@google.com>
 Reply-To: ackerleytng@google.com
 
-From: Ackerley Tng <ackerleytng@google.com>
+From: Sean Christopherson <seanjc@google.com>
 
-Provide defined memory content modes so that KVM can make guarantees about
-memory content after setting memory attributes, according to userspace
-requests.
+Add helper functions to kvm_util.h to support calling ioctls, specifically
+KVM_SET_MEMORY_ATTRIBUTES2, on a guest_memfd file descriptor.
 
-Suggested-by: Sean Christoperson <seanjc@google.com>
+Introduce gmem_ioctl() and __gmem_ioctl() macros, modeled after the
+existing vm_ioctl() helpers, to provide a standard way to call ioctls
+on a guest_memfd.
+
+Add gmem_set_memory_attributes() and its derivatives (gmem_set_private(),
+gmem_set_shared()) to set memory attributes on a guest_memfd region.
+Also provide "__" variants that return the ioctl error code instead of
+aborting the test. These helpers will be used by upcoming guest_memfd
+tests.
+
+To avoid code duplication, factor out the check for supported memory
+attributes into a new macro, TEST_ASSERT_SUPPORTED_ATTRIBUTES, and use
+it in both the existing vm_set_memory_attributes() and the new
+gmem_set_memory_attributes() helpers.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- Documentation/virt/kvm/api.rst | 61 ++++++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h       |  4 +++
- virt/kvm/guest_memfd.c         | 56 ++++++++++++++++++++++++++++++++++++--
- 3 files changed, 119 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kvm/include/kvm_util.h | 98 +++++++++++++++++++++++---
+ 1 file changed, 90 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 6ce10c8ddb634..61b9974ba52e9 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6573,6 +6573,8 @@ Errors:
-   EAGAIN     Some page within requested range had unexpected refcounts. The
-              offset of the page will be returned in `error_offset`.
-   ENOMEM     Ran out of memory trying to track private/shared state
-+  EOPNOTSUPP There is no way for KVM to guarantee in-memory contents as
-+             requested.
-   ========== ===============================================================
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index fb54694e6568b..62d917a2d2b19 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -392,6 +392,16 @@ static __always_inline void static_assert_is_vcpu(struct kvm_vcpu *vcpu) { }
+ 	__TEST_ASSERT_VM_VCPU_IOCTL(!ret, #cmd, ret, (vcpu)->vm);	\
+ })
  
- KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
-@@ -6621,6 +6623,65 @@ on the shared pages, such as refcounts taken by get_user_pages(), and
- try the ioctl again. A possible source of these long term refcounts is
- if the guest_memfd memory was pinned in IOMMU page tables.
- 
-+By default, KVM makes no guarantees about the in-memory values after
-+memory is convert to/from shared/private.  Optionally, userspace may
-+instruct KVM to ensure the contents of memory are zeroed or preserved,
-+e.g. to enable in-place sharing of data, or as an optimization to
-+avoid having to re-zero memory when userspace could have relied on the
-+trusted entity to guarantee the memory will be zeroed as part of the
-+entire conversion process.
++#define __gmem_ioctl(gmem_fd, cmd, arg)				\
++	kvm_do_ioctl(gmem_fd, cmd, arg)
 +
-+The content modes available are as follows:
++#define gmem_ioctl(gmem_fd, cmd, arg)				\
++({								\
++	int ret = __gmem_ioctl(gmem_fd, cmd, arg);		\
++								\
++	TEST_ASSERT(!ret, __KVM_IOCTL_ERROR(#cmd, ret));	\
++})
 +
-+``KVM_SET_MEMORY_ATTRIBUTES2_ZERO``
-+
-+  On conversion, KVM guarantees all entities that have "allowed"
-+  access to the memory will read zeros.  E.g. on private to shared
-+  conversion, both trusted and untrusted code will read zeros.
-+
-+  Zeroing is currently only supported for private-to-shared
-+  conversions, as KVM in general is untrusted and thus cannot
-+  guarantee the guest (or any trusted entity) will read zeros after
-+  conversion.  Note, some CoCo implementations do zero memory contents
-+  such that the guest reads zeros after conversion, and the guest may
-+  choose to rely on that behavior.  However, that's a contract between
-+  the trusted CoCo entity and the guest, not between KVM and the
-+  guest.
-+
-+``KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE``
-+
-+  On conversion, KVM guarantees memory contents will be preserved with
-+  respect to the last written unencrypted value.  As a concrete
-+  example, if the host writes ``0xbeef`` to shared memory and converts
-+  the memory to private, the guest will also read ``0xbeef``, even if
-+  the in-memory data is encrypted as part of the conversion.  And vice
-+  versa, if the guest writes ``0xbeef`` to private memory and then
-+  converts the memory to shared, the host (and guest) will read
-+  ``0xbeef`` (if the memory is accessible).
-+
-+Note: These content modes apply to the entire requested range, not
-+just the parts of the range that underwent conversion. For example, if
-+this was the initial state:
-+
-+  * [0x0000, 0x1000): shared
-+  * [0x1000, 0x2000): private
-+  * [0x2000, 0x3000): shared
-+
-+and range [0x0000, 0x3000) was set to shared, the content mode would
-+apply to all memory in [0x0000, 0x3000), not just the range that
-+underwent conversion [0x1000, 0x2000).
-+
-+Note: These content modes apply only to allocated memory. No
-+guarantees are made on offset ranges that do not have memory allocated
-+(yet). For example, if this was the initial state:
-+
-+  * [0x0000, 0x1000): shared
-+  * [0x1000, 0x2000): not allocated
-+  * [0x2000, 0x3000): shared
-+
-+and range [0x0000, 0x3000) was set to shared, the content mode would
-+apply to only to offset ranges [0x0000, 0x1000) and [0x2000, 0x3000).
-+
- See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
- 
- .. _kvm_run:
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index f437fd0f1350c..c7cc6c22c2023 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1652,6 +1652,10 @@ struct kvm_memory_attributes {
- /* Available with KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES */
- #define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd2, struct kvm_memory_attributes2)
- 
-+#define KVM_SET_MEMORY_ATTRIBUTES2_MODE_UNSPECIFIED	0
-+#define KVM_SET_MEMORY_ATTRIBUTES2_ZERO		(1ULL << 0)
-+#define KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE	(1ULL << 1)
-+
- struct kvm_memory_attributes2 {
- 	union {
- 		__u64 address;
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index b0e4bb554cdf3..5c1db67e6fd35 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -699,6 +699,19 @@ u64 __weak kvm_arch_gmem_supported_content_modes(struct kvm *kvm, bool to_privat
- 	return 0;
+ /*
+  * Looks up and returns the value corresponding to the capability
+  * (KVM_CAP_*) given by cap.
+@@ -418,8 +428,16 @@ static inline void vm_enable_cap(struct kvm_vm *vm, u32 cap, u64 arg0)
+ 	vm_ioctl(vm, KVM_ENABLE_CAP, &enable_cap);
  }
  
-+static bool kvm_gmem_content_mode_is_supported(struct kvm *kvm,
-+					       u64 content_mode,
-+					       bool to_private)
-+{
-+	if (content_mode == KVM_SET_MEMORY_ATTRIBUTES2_MODE_UNSPECIFIED)
-+		return true;
++/*
++ * KVM_SET_MEMORY_ATTRIBUTES{,2} overwrites _all_ attributes.  These
++ * flows need significant enhancements to support multiple attributes.
++ */
++#define TEST_ASSERT_SUPPORTED_ATTRIBUTES(attributes)				\
++	TEST_ASSERT(!(attributes) || (attributes) == KVM_MEMORY_ATTRIBUTE_PRIVATE,	\
++		    "Update me to support multiple attributes!")
 +
-+	if (content_mode == KVM_SET_MEMORY_ATTRIBUTES2_ZERO && to_private)
-+		return false;
-+
-+	return kvm_arch_gmem_supported_content_modes(kvm, to_private) & content_mode;
-+}
-+
- int kvm_gmem_apply_content_mode_zero(struct inode *inode, pgoff_t start,
- 				     pgoff_t end)
+ static inline void vm_set_memory_attributes(struct kvm_vm *vm, gpa_t gpa,
+-					    u64 size, u64 attributes)
++					    size_t size, u64 attributes)
  {
-@@ -759,8 +772,26 @@ int __weak kvm_arch_gmem_apply_content_mode_preserve(struct kvm *kvm,
- 	return -EOPNOTSUPP;
+ 	struct kvm_memory_attributes attr = {
+ 		.attributes = attributes,
+@@ -428,17 +446,11 @@ static inline void vm_set_memory_attributes(struct kvm_vm *vm, gpa_t gpa,
+ 		.flags = 0,
+ 	};
+ 
+-	/*
+-	 * KVM_SET_MEMORY_ATTRIBUTES overwrites _all_ attributes.  These flows
+-	 * need significant enhancements to support multiple attributes.
+-	 */
+-	TEST_ASSERT(!attributes || attributes == KVM_MEMORY_ATTRIBUTE_PRIVATE,
+-		    "Update me to support multiple attributes!");
++	TEST_ASSERT_SUPPORTED_ATTRIBUTES(attributes);
+ 
+ 	vm_ioctl(vm, KVM_SET_MEMORY_ATTRIBUTES, &attr);
  }
  
-+static int kvm_gmem_apply_content_mode(struct kvm *kvm, uint64_t content_mode,
-+				       struct inode *inode, pgoff_t start,
-+				       pgoff_t end)
+-
+ static inline void vm_mem_set_private(struct kvm_vm *vm, gpa_t gpa,
+ 				      u64 size)
+ {
+@@ -451,6 +463,76 @@ static inline void vm_mem_set_shared(struct kvm_vm *vm, gpa_t gpa,
+ 	vm_set_memory_attributes(vm, gpa, size, 0);
+ }
+ 
++static inline int __gmem_set_memory_attributes(int fd, loff_t offset,
++					       size_t size, u64 attributes,
++					       loff_t *error_offset,
++					       u64 flags)
 +{
-+	switch (content_mode) {
-+	case KVM_SET_MEMORY_ATTRIBUTES2_MODE_UNSPECIFIED:
-+		return kvm_arch_gmem_apply_content_mode_unspecified(kvm, inode, start, end);
-+	case KVM_SET_MEMORY_ATTRIBUTES2_ZERO:
-+		return kvm_arch_gmem_apply_content_mode_zero(kvm, inode, start, end);
-+	case KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE:
-+		return kvm_arch_gmem_apply_content_mode_preserve(kvm, inode, start, end);
-+	default:
-+		WARN_ONCE(1, "Unexpected policy requested.");
-+		return -EOPNOTSUPP;
-+	}
++	struct kvm_memory_attributes2 attr = {
++		.attributes = attributes,
++		.offset = offset,
++		.size = size,
++		.flags = flags,
++		.error_offset = error_offset ? *error_offset : 0,
++	};
++	int r;
++
++	TEST_ASSERT_SUPPORTED_ATTRIBUTES(attributes);
++
++	r = __gmem_ioctl(fd, KVM_SET_MEMORY_ATTRIBUTES2, &attr);
++
++	/* Copy error_offset regardless of r so caller can check. */
++	if (error_offset)
++		*error_offset = attr.error_offset;
++
++	return r;
 +}
 +
- static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
- 				     size_t nr_pages, uint64_t attrs,
-+				     struct kvm *kvm, uint64_t content_mode,
- 				     pgoff_t *err_index)
- {
- 	bool to_private = attrs & KVM_MEMORY_ATTRIBUTE_PRIVATE;
-@@ -775,7 +806,21 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
- 
- 	filemap_invalidate_lock(mapping);
- 
-+	if (!kvm_gmem_content_mode_is_supported(kvm, content_mode,
-+						to_private)) {
-+		r = -EOPNOTSUPP;
-+		*err_index = start;
-+		goto out;
-+	}
++static inline int __gmem_set_private(int fd, loff_t offset, size_t size,
++				     loff_t *error_offset, u64 flags)
++{
++	return __gmem_set_memory_attributes(fd, offset, size,
++					    KVM_MEMORY_ATTRIBUTE_PRIVATE,
++					    error_offset, flags);
++}
 +
- 	if (kvm_gmem_range_has_attributes(mt, start, nr_pages, attrs)) {
-+		/*
-+		 * Even if no update is required to attributes, the
-+		 * requested content mode is applied.
-+		 */
-+		WARN_ON(kvm_gmem_apply_content_mode(kvm, content_mode,
-+						    inode, start, end));
++static inline int __gmem_set_shared(int fd, loff_t offset, size_t size,
++				    loff_t *error_offset, u64 flags)
++{
++	return __gmem_set_memory_attributes(fd, offset, size, 0,
++					    error_offset, flags);
++}
 +
- 		r = 0;
- 		goto out;
- 	}
-@@ -808,6 +853,9 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
- 	if (!to_private)
- 		kvm_gmem_invalidate(inode, start, end);
- 
-+	WARN_ON(kvm_gmem_apply_content_mode(kvm, content_mode, inode,
-+					    start, end));
++static inline void gmem_set_memory_attributes(int fd, loff_t offset,
++					      size_t size, u64 attributes,
++					      u64 flags)
++{
++	struct kvm_memory_attributes2 attr = {
++		.attributes = attributes,
++		.offset = offset,
++		.size = size,
++		.flags = flags,
++	};
 +
- 	mas_store_prealloc(&mas, xa_mk_value(attrs));
- 
- 	kvm_gmem_invalidate_end(inode, start, end);
-@@ -829,7 +877,11 @@ static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
- 	if (copy_from_user(&attrs, argp, sizeof(attrs)))
- 		return -EFAULT;
- 
--	if (attrs.flags)
-+	if (attrs.flags & ~(KVM_SET_MEMORY_ATTRIBUTES2_ZERO |
-+			    KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE))
-+		return -EINVAL;
-+	if ((attrs.flags & KVM_SET_MEMORY_ATTRIBUTES2_ZERO) &&
-+	    (attrs.flags & KVM_SET_MEMORY_ATTRIBUTES2_PRESERVE))
- 		return -EINVAL;
- 	for (i = 0; i < ARRAY_SIZE(attrs.reserved); i++) {
- 		if (attrs.reserved[i])
-@@ -849,7 +901,7 @@ static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
- 	nr_pages = attrs.size >> PAGE_SHIFT;
- 	index = attrs.offset >> PAGE_SHIFT;
- 	r = __kvm_gmem_set_attributes(inode, index, nr_pages, attrs.attributes,
--				      &err_index);
-+				      f->kvm, attrs.flags, &err_index);
- 	if (r) {
- 		attrs.error_offset = ((uint64_t)err_index) << PAGE_SHIFT;
++	TEST_ASSERT_SUPPORTED_ATTRIBUTES(attributes);
++
++	__TEST_REQUIRE(kvm_check_cap(KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES) > 0,
++		       "No valid attributes for guest_memfd ioctl!");
++
++	gmem_ioctl(fd, KVM_SET_MEMORY_ATTRIBUTES2, &attr);
++}
++
++static inline void gmem_set_private(int fd, loff_t offset, size_t size, u64 flags)
++{
++	gmem_set_memory_attributes(fd, offset, size,
++				   KVM_MEMORY_ATTRIBUTE_PRIVATE, flags);
++}
++
++static inline void gmem_set_shared(int fd, loff_t offset, size_t size, u64 flags)
++{
++	gmem_set_memory_attributes(fd, offset, size, 0, flags);
++}
++
+ void vm_guest_mem_fallocate(struct kvm_vm *vm, gpa_t gpa, u64 size,
+ 			    bool punch_hole);
  
 
 -- 
