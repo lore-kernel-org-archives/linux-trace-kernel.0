@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59D93D3336;
-	Tue, 28 Apr 2026 23:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0725B3D412D;
+	Tue, 28 Apr 2026 23:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777418720; cv=none; b=YywaVd1ccjRNUFsaDrkwmx30eCLL/FnPn7bMQn9kKBvZ4w0p7CgWb9wycpZWA261dEmeraauAHIJ8ccuyntPrKQA9iaGeP12bnq31aP6LyKKTuq1yd9D9XyceMtwhKFFqhZXRoH4rm9mBtfYPpIRjmp8HEYn4gCiuCDfY/DR444=
+	t=1777418721; cv=none; b=cA1r1v44y/GBmrRc63INfDwz1C+t8q3yL4DeyqRl1VcW3lolcAAZKQKjk7HHtFhqWYv02WM0oL1RbnUbLKi1lriw2Qjw1wcRxSGfHRsNSPszYTw/SfGE8K/Udx3HK8YN+Yqt9rDFWPF2B9DcvXJovfpW0KQ7JMjGRHErta/vBr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777418720; c=relaxed/simple;
-	bh=IkAEdxgFQSCePcOD0KI1OLzhhzwrFCotUetQZ59Ws/c=;
+	s=arc-20240116; t=1777418721; c=relaxed/simple;
+	bh=Vgze5D+bN0AcyWszSG1YlA0S2f1gEtod7TQDybNpW/k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dZalwm9SoZNSHI199TsMFrTBGcor4fGs9NwDxdsNV+19nGvi1fpgVJLzs6WAoT2PuFirBRWunAGFkLWgPwoMsyFHtmClMcNa0OeUSWbwceHk0rv5NonaQdbekm1ZFy6h0hWyxQzvSxkMcSyIanCnNwajSG+OFCnOAu3L2wZW7qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5SAxy13; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=cP84kN6m/lVkbx8j3ZX4vS64PkAYyEyqJ/B0Q0qRnsfK14hiLoBpa6XZxzPQlFtQfg2S4uIkvdi4lsAAX+Z35vEBRivHpLW5BGq/INuSni6d2Bo/4G1SG5y6m8j3q83c06g5yt82BorCWfXJA6YOt4Uqxz35Ikm23biJZqu95ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcXbivY7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5SAxy13"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B70D3C2BCB9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcXbivY7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD9E0C2BCF4;
 	Tue, 28 Apr 2026 23:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1777418720;
-	bh=IkAEdxgFQSCePcOD0KI1OLzhhzwrFCotUetQZ59Ws/c=;
+	bh=Vgze5D+bN0AcyWszSG1YlA0S2f1gEtod7TQDybNpW/k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=a5SAxy130HMQEbD8PsBjsAfQVJ8v5McxRo1t0frjQsvW+fhm/mdth96pFJvKEw5km
-	 iFXSxPCCSbFwmHfgHuAXjGfzRcO7nmJ187/MjgpGpD2YeMMcP1lXBvyN/GVhoJJvG7
-	 7lvDBH5ysmzlD/sV6xntrX4TBgtzwUDPGbe+spSBoXTMzmGENv8SZ/SgkSRyhEDqU9
-	 +whyviMabBlg+/7saH6ETlKbn+Dd62+XH/AZIEF3rwGBM6i4llNXNcuZGW9+egxZET
-	 ZcQ1n7xhxAb/XkzsEwWJvw8nYbCYXL16h4IBnnqlqYGKpwaohzHfHUXmo8G1KbjnsZ
-	 hM3C6FdqJ66Ng==
+	b=HcXbivY7zdv/RmF1UVmwhwUKKrjRdHI4Pitvra7t/6Sr8tS0A7tyunNzyMPwnwdRV
+	 NZJmyGLoA1nSGDuCm6QPXSuHgfTrMv36avF+EcQe/UPPrfralU+t57Ny6qFLfUJXJV
+	 7gq0aZ8pSdlm2k2tvfK34LKR5LzCkgxKmKGzU7LMxOTHJKZiHosi/JRdd8DI+fPpjK
+	 q2zE2/eTZjQMkpg7v+55vBlah5Xqtua7lNusx2XZJ5trpGKEu1yc2bMMha1J0F6wm5
+	 KC3OO4ja5fK8B+J7GV8W8GTjIoN5aRrcgcGLsNdBe8V03ZMpgInh1RPc4GckwbKFnI
+	 lhUfIiTaYjfyw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD820FF887E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4581FF8877;
 	Tue, 28 Apr 2026 23:25:20 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Apr 2026 16:25:37 -0700
-Subject: [PATCH RFC v5 42/53] KVM: selftests: Test that conversion to
- private does not support ZERO
+Date: Tue, 28 Apr 2026 16:25:39 -0700
+Subject: [PATCH RFC v5 44/53] KVM: selftests: Test that not specifying a
+ conversion flag scrambles memory contents
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-gmem-inplace-conversion-v5-42-d8608ccfca22@google.com>
+Message-Id: <20260428-gmem-inplace-conversion-v5-44-d8608ccfca22@google.com>
 References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 In-Reply-To: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,11 +74,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=1307;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777418714; l=2091;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=1/xHeFjZTWhRZczDGwQ1Jx9lj8BRoFI4Rw461HTrIgs=;
- b=9CgTbYMxC9JsFpzII614O+d7fbdprDVtfo6d7D8lw8ni08UNZgZcln0uVEjpkx6k04MiPFJfg
- QxJe2dg02RkACTOyS3Hdd2KOFVsbBQx6ftQ808D36NvFDwoR9KUB/VQ
+ bh=Avy1yjuj5TLXjW+gFYQvsB+PRbonfW+tVbhN8u3NZik=;
+ b=fb9rZViAfwmrwJD9SGoXVoob6TT9WaSRJ4Wrr/TWhXnHc57g7FFxpcP7viuqXx3r+qwjvVnmr
+ KXKhGbWj4CZCYiavrYR0ULbUfm3YqEoUTcfGzy/jE7G4hkJglBe7CP0
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -88,36 +88,53 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Test that conversion to private specifying the
-KVM_SET_MEMORY_ATTRIBUTES2_ZERO flag returns -1 and sets errno to
-EOPNOTSUPP.
+When using KVM_SET_MEMORY_ATTRIBUTES2, not specifying flags for the ioctl
+implies no guarantees on memory contents.
+
+For KVM_X86_SW_PROTECTED_VM, this mode is implemented by scrambling
+contents of converted memory ranges. Add a test to check that the
+unspecified conversion mode was handled in KVM by checking the expected
+behavior, that existing memory contents are scrambled.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../selftests/kvm/x86/guest_memfd_conversions_test.c      | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../kvm/x86/guest_memfd_conversions_test.c         | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-index 13bbc361eaeda..922261ebaff96 100644
+index 57adb6d84a053..f4705dc700879 100644
 --- a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
 +++ b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-@@ -488,6 +488,21 @@ GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(elevated_refcount, 4)
- 	}
+@@ -512,6 +512,34 @@ GMEM_CONVERSION_TEST_INIT_SHARED(convert_to_private_does_not_support_zero)
+ 	TEST_ASSERT_EQ(error_offset, start_offset);
  }
  
-+GMEM_CONVERSION_TEST_INIT_SHARED(convert_to_private_does_not_support_zero)
++GMEM_CONVERSION_TEST_INIT_SHARED(convert_mode_unspecified_scrambles)
 +{
-+	const loff_t start_offset = 0;
 +	loff_t error_offset = 0;
 +	int ret;
 +
-+	ret = __gmem_set_private(t->gmem_fd, start_offset, nr_pages * page_size,
-+				 &error_offset,
-+				 KVM_SET_MEMORY_ATTRIBUTES2_ZERO);
++	test_shared(t, 0, 0, 'A', 'B');
++	ret = __gmem_set_private(t->gmem_fd, 0, nr_pages * page_size,
++				 &error_offset, 0);
++	TEST_ASSERT_EQ(ret, 0);
++	TEST_ASSERT_EQ(error_offset, 0);
 +
-+	TEST_ASSERT_EQ(ret, -1);
-+	TEST_ASSERT_EQ(errno, EOPNOTSUPP);
-+	TEST_ASSERT_EQ(error_offset, start_offset);
++	/*
++	 * Since the content mode 0 scrambles data in memory, there is
++	 * a small chance that this test will falsely fail when the
++	 * scrambled value matches the initial value.
++	 */
++	run_guest_do_rmw(t->vcpu, 0, 'B', 'C', true);
++
++	ret = __gmem_set_shared(t->gmem_fd, 0, nr_pages * page_size,
++				&error_offset, 0);
++	TEST_ASSERT_EQ(ret, 0);
++	TEST_ASSERT_EQ(error_offset, 0);
++
++	/* Same small chance of falsely failing test applies here. */
++	TEST_ASSERT(READ_ONCE(t->mem[0]) != 'C',
++		    "Conversion without specifying mode should scramble memory.");
 +}
 +
  int main(int argc, char *argv[])
