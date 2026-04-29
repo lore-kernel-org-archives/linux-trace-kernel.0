@@ -1,145 +1,224 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2040E3C8731;
-	Wed, 29 Apr 2026 13:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B320A3FE657;
+	Wed, 29 Apr 2026 13:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777469497; cv=none; b=luPsXEV9cp5f+wrxhKkZahnNN92pXFMRhxIjAkX+SVTMmIKNVf1v/36cQFIeuOkZ4BR3jb/Kz30nIlFi85WJOm+NAEtrGMxbpI69PdSD+dMFD+mw9jMo/W9uFsFjoA2HCntw5G2PJH9yTDXIma+UYNz4BUbFH9OCWCt/bPP+IYk=
+	t=1777470095; cv=none; b=Ot3OBr5E4Duy7pDZLKgQYUAv6Pj34qNSbR3C+wi0aJ17LYaAlAzabmD8yschlrZdhqE/dtl7TbYOe1LC7wXuEM07jpljZqWyH9IkjF8KZ1kqMViEAjJph3KdHJ3tU/LmZnWMUJu+5kg2c4RwqzM+0oBiEhbDSS0IRADRPj+fLcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777469497; c=relaxed/simple;
-	bh=TyNwwgGZSaQ5uL41nEjLXgK8OXpxf8GlXcLnI51RXSw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q9KGhYyjrflyZu6SHEGIOQgDoSIT289GdeuhlzKT6E5BeFV/d0PqtEBSDdstMrcNfleke8qU7YuxTJCJvu9K5KtmtF4TZnZvMGV0VwFuClNjasRmtaTCWv7r2zpFUFl5x7sDINADuLQ1KIVbVMh5gbXmaYK/4x15XEhqskxx/qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZyWwFsx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777470095; c=relaxed/simple;
+	bh=AbmPDiLMo35LZVw+xaDp8x+ViqIl5t2Bms1xbcVtE5U=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CXvzoI2CWoF0PqdHpSJ1g8BhPzmOAlMZYbd4UraLZ6oEfpSs1vfmmtuEv/dG1POUN+XzAAdc5VKo/miNCR/IGf6NP6f5BFlkYSrUotw2OlgpZGweP8gt0TBILZWBnf4wX309A1XfqKCQ7B5ovg7hkvNeQ9vJHKsa4pAZp2MBpjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZquV9jf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZyWwFsx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82326C19425;
-	Wed, 29 Apr 2026 13:31:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZquV9jf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59ABAC4AF09;
+	Wed, 29 Apr 2026 13:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777469496;
-	bh=TyNwwgGZSaQ5uL41nEjLXgK8OXpxf8GlXcLnI51RXSw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gZyWwFsxbl9VO4ExQ7RswjDD98S4DYNllnrro2IpwpXiDJhyehCp3w1quVs6/vnj7
-	 BuicI92tEkOUJXDM0IGjZ2HKg1hUEdgGEOlH0JaJIKvKUINYb9omTyuI6mHU54X8kB
-	 YKeexiahHyt07jEM1tBa5j4kj9e45kU0AT5bl/6zZpHUxuotbiyZdtxZ9jA48Px9no
-	 mUK67MPxfltdVdqxioaOh2P1m4c2+FFmwtuim7WkcoG87/gNl3XHHVNqvuXl4Tkbxy
-	 39b2pcO3eCv/HQ0Ou5l/SvQ8Hm5QlOKCDIORxAdGzHIofWoOzz3AJPoyw8zmcgMry1
-	 UClQ96VFlf7Ww==
-Message-ID: <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
-Date: Wed, 29 Apr 2026 15:31:30 +0200
+	s=k20201202; t=1777470095;
+	bh=AbmPDiLMo35LZVw+xaDp8x+ViqIl5t2Bms1xbcVtE5U=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=YZquV9jfYH5w/wC+soXVf/JNKI1K/XIJ7I5XCZeIS8sbSDkkcAS5x2bjz/5lBH2wx
+	 CttusplS+qBnECTLYYroEskGaCL0cn9jlR8axH5hyNqLqaAHfZ7J/IA3rhde03+lrd
+	 odfq7O2lJzSJYgCKohpnkQHgDjyt7IQy9gyjFWrt8F3c8QICs83ZAGM1uA8wBLOZhN
+	 JE0SWAWeZcHsV0W/mkgOCU2tHtwT+9b0YkPTguPMOIzHBj9Rwhbb+rTIuUKlcH3prB
+	 70KsjJEuKx16+kvJzKXvy3irgRCsD3xJct0cGHe7SdGu8nHDSektshBNW2VZvFD33c
+	 uUwrWimLZP1Dg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 460EDF40068;
+	Wed, 29 Apr 2026 09:41:33 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 29 Apr 2026 09:41:33 -0400
+X-ME-Sender: <xms:jQryaSQHFzntyBx-jomblrJhtzbOen6R4iuCOpHPo4gRNj7tinAEDQ>
+    <xme:jQryaSk296dZuhIQkQEK_f2EHNBkX-7riWofWTk0phchaKd_qiSHmKhkEBLEn8DYN
+    RzhRn1CjoxbnJJ-CuJKnYNccFjRUAF0IuxJIZSZwqFQEHFhVLs1_vKH>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekgeehkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epjeevhfduheeltedvjefhjeevgffhleegjeevvdfgudeuffefgedtjeeuhfeiudeknecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpegthhhutghklhgvvhgvrhdomhgvshhmthhprghuthhh
+    phgvrhhsohhnrghlihhthidqudeifeegleelleehledqfedvleekgeegvdefqdgtvghlpe
+    epkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpthhtohep
+    vdegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnvghilhessghrohifnhdrnh
+    grmhgvpdhrtghpthhtohepmhgrthhhihgvuhdruggvshhnohihvghrshesvghffhhitghi
+    ohhsrdgtohhmpdhrtghpthhtoheprghlvgigrdgrrhhinhhgsehgmhgrihhlrdgtohhmpd
+    hrtghpthhtoheprghmihhrjeefihhlsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhho
+    shhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopegrnhhnrgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhhihhrrg
+    hmrghtsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:jQryaVDlYB1TdmPkCsoSJMtD1Ig_-AZ56-UySqiHekH40H-tO8fn3w>
+    <xmx:jQryaVMeZOkGKSqz9lA7BTw-KSyhBXPKuzUADcnv-56s0PwVNstu2A>
+    <xmx:jQryaUAsYj5qYDg8Vog6nLLy0ykeKPf5gOJIUECayWL1fUV4BEWXPg>
+    <xmx:jQryaflM_WfAdEBfMGiT-NJ4_MKWpMtzj9f-vCyESEoteRVvmjCMwQ>
+    <xmx:jQryaQrZ-cFoNbjEtfFW9cbVymZSHRFDPz8LkrLDkvlbMNV-i6QvRLaI>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 198F0780070; Wed, 29 Apr 2026 09:41:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
- MADV_DONTNEED
-To: Darko Tominac <dtominac@cisco.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
- Jann Horn <jannh@google.com>
-Cc: xe-linux-external@cisco.com, danielwa@cisco.com,
+X-ThreadId: AJifn_5JDXrR
+Date: Wed, 29 Apr 2026 09:41:12 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Alexander Aring" <alex.aring@gmail.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>
+Cc: "Calum Mackay" <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org
-References: <20260429131522.4049054-1-dtominac@cisco.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260429131522.4049054-1-dtominac@cisco.com>
-Content-Type: text/plain; charset=UTF-8
+ linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Message-Id: <d6e54da6-3f7f-4c56-b08a-5b14beecaa48@app.fastmail.com>
+In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
+References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
+Subject: Re: [PATCH v3 00/28] vfs/nfsd: add support for CB_NOTIFY callbacks in
+ directory delegations
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 4/29/26 15:15, Darko Tominac wrote:
-> When uprobes are active, MADV_DONTNEED can discard file-backed pages
-> that contain uprobe software breakpoint instructions.  Because the
 
-If my memory serves me right, uprobes can only be installed in MAP_PRIVATE fil
-mappings. Installing a uprobe breaks CoW by installing an anonymous page.
 
-Not a file-backed page.
+On Tue, Apr 28, 2026, at 3:09 AM, Jeff Layton wrote:
+> Re-posting the set per Christian's request. The only difference in this
+> version is a small error handling fix in alloc_init_dir_deleg(). The old
+> version could crash since release_pages() can't handle an array with
+> NULL pointers in it.
+>
+> ---------------------------------8<------------------------------------
+>
+> This patchset builds on the directory delegation work we did a few
+> months ago, to add support for CB_NOTIFY callbacks for some events. In
+> particular, creates, unlinks and renames. The server also sends updated
+> directory attributes in the notifications. With this support, the client
+> can register interest in a directory and get notifications about changes
+> within it without losing its lease.
+>
+> The series starts with patches to allow the vfs to ignore certain types
+> of events on directories. nfsd can then request these sorts of
+> delegations on directories, and then set up inotify watches on the
+> directory to trigger sending CB_NOTIFY events.
+>
+> This has mainly been tested with pynfs, with some new testcases that
+> I'll be posting soon. They seem to work fine with those tests, but I
+> don't think we'll want to merge these until we have a complete
+> client-side implementation to test against.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v3:
+> - Fix error handling in alloc_init_dir_deleg()
+> - Link to v2: 
+> https://lore.kernel.org/r/20260416-dir-deleg-v2-0-851426a550f6@kernel.org
+>
+> Changes in v2:
+> - Fix __break_lease handling with different lease types on flc_lease 
+> list
+> - Add FSNOTIFY_EVENT_RENAME data type to properly handle 
+> cross-directory rename events
+> - Display fsnotify mask symbolically in tracepoints
+> - New tracepoint in fsnotify()
+> - Recalc fsnotify mask after unlocking lease instead of before
+> - Don't notify client that is making the changes
+> - After sending CB_NOTIFY, requeue if new events came in while running
+> - Document removal of NFS4_VERIFIER_SIZE/NFS4_FHSIZE from UAPI headers
+> - Properly release nfsd_dir_fsnotify_group on server shutdown
+> - Link to v1: 
+> https://lore.kernel.org/r/20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org
+>
+> ---
+> Jeff Layton (28):
+>       filelock: pass current blocking lease to 
+> trace_break_lease_block() rather than "new_fl"
+>       filelock: add support for ignoring deleg breaks for dir change 
+> events
+>       filelock: add a tracepoint to start of break_lease()
+>       filelock: add an inode_lease_ignore_mask helper
+>       fsnotify: new tracepoint in fsnotify()
+>       fsnotify: add fsnotify_modify_mark_mask()
+>       fsnotify: add FSNOTIFY_EVENT_RENAME data type
+>       nfsd: check fl_lmops in nfsd_breaker_owns_lease()
+>       nfsd: add protocol support for CB_NOTIFY
+>       nfs_common: add new NOTIFY4_* flags proposed in RFC8881bis
+>       nfsd: allow nfsd to get a dir lease with an ignore mask
+>       nfsd: update the fsnotify mark when setting or removing a dir 
+> delegation
+>       nfsd: make nfsd4_callback_ops->prepare operation bool return
+>       nfsd: add callback encoding and decoding linkages for CB_NOTIFY
+>       nfsd: use RCU to protect fi_deleg_file
+>       nfsd: add data structures for handling CB_NOTIFY
+>       nfsd: add notification handlers for dir events
+>       nfsd: add tracepoint to dir_event handler
+>       nfsd: apply the notify mask to the delegation when requested
+>       nfsd: add helper to marshal a fattr4 from completed args
+>       nfsd: allow nfsd4_encode_fattr4_change() to work with no export
+>       nfsd: send basic file attributes in CB_NOTIFY
+>       nfsd: allow encoding a filehandle into fattr4 without a svc_fh
+>       nfsd: add a fi_connectable flag to struct nfs4_file
+>       nfsd: add the filehandle to returned attributes in CB_NOTIFY
+>       nfsd: properly track requested child attributes
+>       nfsd: track requested dir attributes
+>       nfsd: add support to CB_NOTIFY for dir attribute changes
+>
+>  Documentation/sunrpc/xdr/nfs4_1.x    | 264 ++++++++++++++-
+>  fs/attr.c                            |   2 +-
+>  fs/locks.c                           | 118 +++++--
+>  fs/namei.c                           |  31 +-
+>  fs/nfsd/filecache.c                  |  70 +++-
+>  fs/nfsd/nfs4callback.c               |  60 +++-
+>  fs/nfsd/nfs4layouts.c                |   5 +-
+>  fs/nfsd/nfs4proc.c                   |  17 +
+>  fs/nfsd/nfs4state.c                  | 551 ++++++++++++++++++++++++++++----
+>  fs/nfsd/nfs4xdr.c                    | 323 +++++++++++++++++--
+>  fs/nfsd/nfs4xdr_gen.c                | 601 ++++++++++++++++++++++++++++++++++-
+>  fs/nfsd/nfs4xdr_gen.h                |  20 +-
+>  fs/nfsd/state.h                      |  72 ++++-
+>  fs/nfsd/trace.h                      |  23 ++
+>  fs/nfsd/xdr4.h                       |   5 +
+>  fs/nfsd/xdr4cb.h                     |  12 +
+>  fs/notify/fsnotify.c                 |   5 +
+>  fs/notify/mark.c                     |  29 ++
+>  fs/posix_acl.c                       |   4 +-
+>  fs/xattr.c                           |   4 +-
+>  include/linux/filelock.h             |  54 +++-
+>  include/linux/fsnotify.h             |   8 +-
+>  include/linux/fsnotify_backend.h     |  21 ++
+>  include/linux/nfs4.h                 | 127 --------
+>  include/linux/sunrpc/xdrgen/nfs4_1.h | 291 ++++++++++++++++-
+>  include/trace/events/filelock.h      |  38 ++-
+>  include/trace/events/fsnotify.h      |  51 +++
+>  include/trace/misc/fsnotify.h        |  35 ++
+>  include/uapi/linux/nfs4.h            |   2 -
+>  29 files changed, 2519 insertions(+), 324 deletions(-)
+> ---
+> base-commit: f4d71dd7fd9cec357c32431fa55c107b96008312
+> change-id: 20260325-dir-deleg-339066dd1017
+>
+> Best regards,
+> -- 
+> Jeff Layton <jlayton@kernel.org>
 
-> uprobe infrastructure does not re-instrument pages on individual page
-> faults (uprobe_mmap() is only called during VMA creation, not on
-> page-in), the breakpoints are silently lost once the discarded pages are
-> re-read from the backing file.  The probes stop firing with no error
-> indication, and the only recovery is to unregister and re-register the
-> affected uprobes.
+For the series:
 
-Right. Don't MADV_DONTNEED uprobes, just like you are not supposed to
-MADV_DONTNEED debugger breakpoints/set data etc. :)
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 
-> 
-> Note that MADV_FREE is not affected: it only operates on anonymous VMAs
-> (madvise_free_single_vma() rejects non-anonymous VMAs with -EINVAL),
-> while uprobes only instrument file-backed mappings, so the two can never
-> overlap.
-> 
-> A concrete example is a userspace memory reclamation subsystem that
-> periodically calls madvise(MADV_DONTNEED) on file-backed text pages to
-> release memory. 
-
-It shouldn't do that on a MAP_PRIVATE file-backed VMA. It breaks the programn,
-including uprobes and anything else that breaks CoW in there.
-
-If it's using MADV_DONTNEED, it is damaging the application.
-
-MADV_DONTNEED is not for memory reclaim.
 
 -- 
-Cheers,
-
-David
+Chuck Lever
