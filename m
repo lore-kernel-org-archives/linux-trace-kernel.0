@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4271764;
-	Wed, 29 Apr 2026 08:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404AE3AE704;
+	Wed, 29 Apr 2026 08:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777451458; cv=none; b=pRi4ZB0ZE2NyUZsmX5cj8KSOctHYUqL6RzDbCvdZpNmbPRhtFo8ZFyE8z5pD2wsnn19r1LNMPHuyJPJ0rgydZCbKzaCUEiMzHbZMh6npG+xtjsI1qx7FwtHcHNWIf4QG3D5Vts7YlSEx9RMkJtwtvQp0ackbK7X6eKDcjbve3y8=
+	t=1777452058; cv=none; b=FMtRu6sK4Q/zrWRvz/4RKGp5jTNX8XS3zsQjQW3nAgwWkT//+gIhOo9RDJenH4ly0UyVFQ8mqmrDwVs2n3LeJ51soxlNvumZk2siNooTtY53IMK8af+GTyZNBlTI5j5+/7TQJPNMPdiDp9GT/P05xxN6MPAo9uqDw+wZ/oFz/2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777451458; c=relaxed/simple;
-	bh=vcY38yTKvWkxySh/dD05p89rm20lKz93L1O70nV5J54=;
+	s=arc-20240116; t=1777452058; c=relaxed/simple;
+	bh=pnnPZcCkAy9nsHmuIEq6UodUMe/4RgyIp3EeaUJLPnw=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=neyRCkwWNZOngwX5dIXHoi0/QP8PRQ0szcQcXN5lBiCZLU8HOLsU4GNQz41ZEUAuAu/BBorLoC4Y2i4lRkWny1XfB/IF5kCIUTKG6Zpzdrv/De6EDQOyFpD/5mFlRnzVPF5ddG+iFfMhycUAzKJcKTDeG3/2zxDCuoJ1UwDP7SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLtDEt5n; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=anhjJeDwv+y2Gt1+8AmsdZFgOglnqF1kQOlhNQdfWN90CUMHWKPKNIPA+lOPGry05thjRrZCiJ3k/xBzDoB/n9MHGPGLao/tf5B10ygYwTOp28ccjt1ek9VhrJBmdt1BJ6PeVUfI3GSwk9CP2EhMtsX22l3nLU37j6HgPt8r/ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9qd/sIL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLtDEt5n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A02EC19425;
-	Wed, 29 Apr 2026 08:30:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9qd/sIL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4372C19425;
+	Wed, 29 Apr 2026 08:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777451457;
-	bh=vcY38yTKvWkxySh/dD05p89rm20lKz93L1O70nV5J54=;
+	s=k20201202; t=1777452057;
+	bh=pnnPZcCkAy9nsHmuIEq6UodUMe/4RgyIp3EeaUJLPnw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hLtDEt5nzmTCHxFreB34FsVERb6gaI9wed9EeSHBYVqdAuvzbGqRJjqr7j5qWUJ9n
-	 gKqaL4f4Ns8MyixQl/W4Rxl5kGkPPRCJZ52yz8/pIzwdIbNZT1ztJ2LpcTnrXICHrw
-	 RL5hAwq2glnqoRsmitRP5ZTGeMbW3jnGhsD9js8axnFCqNHScZpl3A8GEmwjsdZYT2
-	 JG1VP3bXq89VKzWQS9AAWYj5kQ+vi0oJhci7EdsrJLkgFqNWTv/CMb81mYCG7xcGSI
-	 gWfLV3Iihgn/Zc69LMRFUvocXjWjzbr4f7v3TQBrZYHG68tYQcYfCgAK01uALxdzEW
-	 19UQRjxgBkLng==
-Date: Wed, 29 Apr 2026 17:30:54 +0900
+	b=M9qd/sILJwri7mFnJJmRHSWfspRweez1/Xk+YqPTZLQTl3AM0SaBkGKhsYHlaB9ae
+	 cM+HSXZHOFSd4QspAEimztfMrLUgBeZRMOqcsskB3DEGj8lObDEwnNwNNgn1fk2NN2
+	 YkhcAye/rma9M/WOGlO0GWMgWJywTrqvBg4h0NECbbmXdDjUhnt43sk1JF4tpOXurV
+	 fMFWUJRDiQvBd+2a1xKEUkzuMzJJLa/Ep0eQbJwg9pwHmt9Pr+mJnc/4lpiQvdA9yu
+	 pd1y074pXmO+JnOVCdtQL/VOBYWMxPbUBtvC4NhI1uO/Ej+gorHAgjed4b8Pxx8iJj
+	 iy6dTJarOpplA==
+Date: Wed, 29 Apr 2026 17:40:53 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
-Cc: naveen@kernel.org, davem@davemloft.net, catalin.marinas@arm.com,
- mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] kprobes: skip non-symbol addresses in
- kprobe_add_ksym_blacklist()
-Message-Id: <20260429173054.a3420e0a49fe8946f6eaf7f5@kernel.org>
-In-Reply-To: <a298419e-c581-41c9-b6d5-9319c24b7995@windriver.com>
-References: <20260427073545.3656835-1-jianpeng.chang.cn@windriver.com>
-	<20260428184321.309a48036892b8d23a08b566@kernel.org>
-	<a298419e-c581-41c9-b6d5-9319c24b7995@windriver.com>
+To: Shijia Hu <hushijia1@uniontech.com>
+Cc: naveen@kernel.org, davem@davemloft.net, ananth@in.ibm.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Remove dead child probes from aggrprobe list
+ on module unload
+Message-Id: <20260429174053.b66f3a0032408f544128afd4@kernel.org>
+In-Reply-To: <20260429032919.208790-1-hushijia1@uniontech.com>
+References: <20260429032919.208790-1-hushijia1@uniontech.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,159 +44,147 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 29 Apr 2026 16:16:44 +0800
-Jianpeng Chang <jianpeng.chang.cn@windriver.com> wrote:
+On Wed, 29 Apr 2026 11:29:19 +0800
+Shijia Hu <hushijia1@uniontech.com> wrote:
 
-> 
-> 
-> 在 2026/4/28 下午5:43, Masami Hiramatsu (Google) 写道:
-> > CAUTION: This email comes from a non Wind River email account! Do
-> > not click links or open attachments unless you recognize the sender
-> > and know the content is safe.
-> > 
-> > Hi,
-> > 
-> > On Mon, 27 Apr 2026 15:35:44 +0800 Jianpeng Chang
-> > <jianpeng.chang.cn@windriver.com> wrote:
-> > 
-> >> When kprobe_add_area_blacklist() iterates through a section like 
-> >> .kprobes.text, the start address may not correspond to a named
-> >> symbol. On ARM64 with CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=y
-> >> (introduced by commit baaf553d3bc3 ("arm64: Implement 
-> >> HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")), the compiler flag -
-> >> fpatchable-function-entry=4,2 inserts 2 NOPs before each function
-> >> entry point for ftrace call_ops. These pre-function NOPs sit at
-> >> the section base address, before the first named function symbol.
-> >> The compiler emits a $x mapping symbol at offset 0x00 to mark the
-> >> start of code, but find_kallsyms_symbol() ignores mapping symbols.
-> >> 
-> >> Without CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS (e.g. defconfig), no 
-> >> pre-function NOPs are inserted, the first function starts at
-> >> offset 0x00, and the bug does not trigger.
-> >> 
-> >> This only affects modules that have a .kprobes.text section (i.e.
-> >> those using the __kprobes annotation). Modules using
-> >> NOKPROBE_SYMBOL() instead (like kretprobe_example.ko) blacklist
-> >> exact function addresses via the _kprobe_blacklist section and are
-> >> not affected.
-> >> 
-> >> For kprobe_example.ko on ARM64 with -fpatchable-function-
-> >> entry=4,2, the .kprobes.text section layout is:
-> >> 
-> >> offset 0x00: $x + 2 NOPs    (mapping symbol + ftrace preamble) 
-> >> offset 0x08: handler_post   (64 bytes) offset 0x50: handler_pre
-> >> (68 bytes)
-> > 
-> > Ah, OK. It is for __kprobes attribute. I recommend user to use
-> > NOKPROBE_SYMBOL() but I understand the situation.
-> > 
-> >> 
-> >> kprobe_add_area_blacklist() starts iterating from the section base 
-> >> address (offset 0x00), which only has the $x mapping symbol. 
-> >> kprobe_add_ksym_blacklist() then calls
-> >> kallsyms_lookup_size_offset() for this address, which goes
-> >> through:
-> >> 
-> >> kallsyms_lookup_size_offset() -> module_address_lookup() ->
-> >> find_kallsyms_symbol()
-> >> 
-> >> find_kallsyms_symbol() scans all module symbols to find the
-> >> closest preceding symbol.
-> >> 
-> >> Since no named text symbol exists at offset 0x00, 
-> >> find_kallsyms_symbol() picks __UNIQUE_ID_vermagic (a .modinfo
-> >> symbol whose address is in the temporary image) as the "best"
-> >> match. The computed "size" = next_text_symbol - modinfo_symbol
-> >> spans across these two unrelated memory regions, creating a
-> >> blacklist entry with a bogus range of tens of terabytes.
-> >> 
-> >> Whether this causes a visible failure depends on address
-> >> randomization, here is what happens on Raspberry Pi 4/5:
-> >> 
-> >> - On RPi5, the bogus size was ~35 TB. start + size stayed within 
-> >> 64-bit range, so the blacklist entry covered the entire kernel 
-> >> text. register_kprobe() in the module's own init function failed 
-> >> with -EINVAL.
-> >> 
-> >> - On RPi4, the bogus size was ~75 TB. start + size overflowed 64
-> >> bits and wrapped to a small address near zero. The range check
-> >> (addr >= start && addr < end) then failed because end wrapped
-> >> around, so the bogus entry was accidentally harmless and kprobes
-> >> worked by luck.
-> >> 
-> >> The same bug exists on both machines, but randomization determines
-> >> whether the integer overflow masks it or not.
-> >> 
-> >> Fix this by checking the offset returned by
-> >> kallsyms_lookup_size_offset(). A non-zero offset means the address
-> >> is not at a symbol boundary, so skip forward to the next symbol
-> >> instead of creating a blacklist entry with a wrong size.
-> >> 
-> >> Fixes: baaf553d3bc3 ("arm64: Implement
-> >> HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS") Signed-off-by: Jianpeng Chang
-> >> <jianpeng.chang.cn@windriver.com> --- Hi,
-> >> 
-> >> This patch skips non-symbol addresses, fixes the bogus blacklist
-> >> entry, but leaves the NOP gap at the start of .kprobes.text
-> >> unblacklisted.
-> > 
-> > That is OK because those NOPs are not executed in kprobe handler.
-> > 
-> >> 
-> >> We can continue alloc the ent without return to add the gap to 
-> >> blacklist, or do some more works to add the gap to the first
-> >> symbol in blacklist. I'm not sure if is this necessary, or is
-> >> there a better way?
-> > 
-> > Are there any compiler option or attribute to avoid inserting these 
-> > NOPs to the specific section? (like notrace?)
-> > 
-> > Also, as you can see there is an alias symbol whose size is 0. and 
-> > in that case, we move the entry + 1 and call
-> > kprobe_add_ksym_blacklist() again. Thus, the offset becomes 1.
-> > Please make sure it is correctly handled.
-> > 
-> Regarding the alias symbol concern: kallsyms_lookup_size_offset() 
-> computes size as the distance to the next different-address symbol, not 
-> from ELF st_size. I tested with a module containing alias symbols in 
-> .kprobes.text (created via __attribute__((alias))), and the lookup 
-> returned a correct size with offset=0 — the if (ret == 0) ret = 1 path 
-> was never triggered.
-> 
-> That said, #define __kprobes notrace __section(".kprobes.text") is a 
-> cleaner fix. The NOPs in .kprobes.text are unnecessary since these 
-> functions should never be traced by ftrace. I've tested this on RPi5 — 
-> the bug is resolved and all .kprobes.text functions are correctly 
-> blacklisted. I'll send the notrace approach in v2.
+> When a kernel module that registered kprobes is unloaded without calling
+> unregister_kprobe(), kprobes_module_callback() calls kill_kprobe() to
+> mark the probe(s) GONE.  If the probe is an aggrprobe, kill_kprobe()
+> also marks all child probes GONE, but it does not remove them from
+> the aggrprobe's list.
 
-Ah, great! thanks!
+That sounds like a bug in the module.
 
 > 
-> Thanks,
-> Jianpeng> Thanks,
-> > 
-> >> 
-> >> Thanks, Jianpeng
-> >> 
-> >> kernel/kprobes.c | 4 ++++ 1 file changed, 4 insertions(+)
-> >> 
-> >> diff --git a/kernel/kprobes.c b/kernel/kprobes.c index
-> >> bfc89083daa9..be700fb03198 100644 --- a/kernel/kprobes.c> +++ b/
-> >> kernel/kprobes.c @@ -2503,6 +2503,10 @@ int
-> >> kprobe_add_ksym_blacklist(unsigned long entry) !
-> >> kallsyms_lookup_size_offset(entry, &size, &offset)) return -
-> >> EINVAL;
-> >> 
-> >> +     /* Not on a symbol boundary -- skip to the next symbol */ 
-> >> +     if (offset) +             return (int)(size - offset); + ent
-> >> = kmalloc_obj(*ent); if (!ent) return -ENOMEM; -- 2.54.0
-> >> 
-> > 
-> > 
-> > -- Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> The problem is that child probes whose struct kprobe resides in the
+> unloading module's memory are freed along with the module, yet they
+> remain on the aggrprobe's list.  Later, when another caller registers
+> a kprobe at the same address, __get_valid_kprobe() walks that list
+> and dereferences the freed child probe, causing a use-after-free.
+> 
+> Reproduction steps:
+> 
+>     1) Load module A which registers two kprobes on the same kernel
+>        function address (e.g., do_nanosleep), causing them to be
+>        aggregated under one aggrprobe.
+> 
+>     2) Unload module A without calling unregister_kprobe().
+>        Module A's memory is freed, but its two child probes remain
+>        on the aggrprobe's list as dangling pointers.
+
+Would you mean "load a buggy kernel module and unload it, the kernel cause
+use-after-free."? for example:
+
+----
+struct kprobe my_probe = {...};
+
+init_module() {
+	register_kprobe(&my_probe);
+}
+exit_module() {
+	/* do nothing */
+}
+----
+
+Yes, this cause UAF because that module has a bug. Please call
+unregister_kprobe().
+
+Thanks,
+
+> 
+>     3) Load module B and register a kprobe on the same address
+>        (e.g., do_nanosleep). register_kprobe() -> __get_valid_kprobe()
+>        traverses the aggrprobe's list and dereferences the freed child
+>        probe from module A, triggering a use-after-free and kernel panic.
+> 
+> The resulting crash looks like:
+>     [  464.950864] BUG: kernel NULL pointer dereference, address: 0000000000000000
+>     [  464.950872] #PF: supervisor read access in kernel mode
+>     [  464.950874] #PF: error_code(0x0000) - not-present page
+>     ...
+>     [  464.950915] Call Trace:
+>     [  464.950922]  <TASK>
+>     [  464.950923]  register_kprobe+0x65/0x2e0
+>     [  464.950928]  ? __pfx_stage2_init+0x10/0x10 [kprobe_leak_stage2]
+>     [  464.950933]  stage2_init+0x37/0xff0 [kprobe_leak_stage2]
+>     [  464.950938]  ? __pfx_stage2_init+0x10/0x10 [kprobe_leak_stage2]
+>     [  464.950942]  do_one_initcall+0x56/0x2e0
+>     [  464.950948]  do_init_module+0x60/0x230
+>     ...
+> 
+>   Fix this by adding selective cleanup in kprobes_module_callback():
+>   after calling kill_kprobe() on the aggrprobe, iterate its child list
+>   and remove any child probe whose struct kprobe is inside the going
+>   module's memory range (within_module_init / within_module_core).
+> 
+>   This is done in kprobes_module_callback() rather than kill_kprobe()
+>   because kill_kprobe()'s semantic is "the probed code is going away,
+>   mark probes GONE".  The lifetime of a probe is bound to the probed
+>   code, not to the module containing the struct kprobe.  Child probes
+>   owned by other still-loaded modules or by kmalloc (ftrace, perf,
+>   kprobe-events) must stay on the list so they can be unregistered
+>   later.  Only child probes whose memory is about to be freed need to
+>   be removed from the list to prevent dangling pointers.
+> 
+> Fixes: e8386a0cb22f4 ("kprobes: support probing module __exit function")
+> Signed-off-by: Shijia Hu <hushijia1@uniontech.com>
+> ---
+>  kernel/kprobes.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index bfc89083daa9..ff277314183c 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2664,6 +2664,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
+>  				   unsigned long val, void *data)
+>  {
+>  	struct module *mod = data;
+> +	struct hlist_node *tmp;
+>  	struct hlist_head *head;
+>  	struct kprobe *p;
+>  	unsigned int i;
+> @@ -2685,7 +2686,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
+>  	 */
+>  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+>  		head = &kprobe_table[i];
+> -		hlist_for_each_entry(p, head, hlist)
+> +		hlist_for_each_entry_safe(p, tmp, head, hlist) {
+>  			if (within_module_init((unsigned long)p->addr, mod) ||
+>  			    (checkcore &&
+>  			     within_module_core((unsigned long)p->addr, mod))) {
+> @@ -2702,6 +2703,26 @@ static int kprobes_module_callback(struct notifier_block *nb,
+>  				 */
+>  				kill_kprobe(p);
+>  			}
+> +
+> +			/*
+> +			 * Child probes are not on the kprobe hash list, so
+> +			 * the above loop can not find them. If a child probe
+> +			 * is allocated in the module's memory, it will become
+> +			 * a dangling pointer after the module is freed.
+> +			 */
+> +			if (kprobe_aggrprobe(p)) {
+> +				struct kprobe *kp, *kptmp;
+> +
+> +				list_for_each_entry_safe(kp, kptmp, &p->list, list) {
+> +					if (within_module_init((unsigned long)kp, mod) ||
+> +					    (checkcore &&
+> +					     within_module_core((unsigned long)kp, mod))) {
+> +						kp->flags |= KPROBE_FLAG_GONE;
+> +						list_del_rcu(&kp->list);
+> +					}
+> +				}
+> +			}
+> +		}
+>  	}
+>  	if (val == MODULE_STATE_GOING)
+>  		remove_module_kprobe_blacklist(mod);
+> -- 
+> 2.20.1
 > 
 
 
