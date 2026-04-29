@@ -1,117 +1,219 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45FC302750;
-	Wed, 29 Apr 2026 17:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D260E41C30A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Apr 2026 18:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777484552; cv=none; b=dYOiKmcJVWUoBPKTPU/m0ODE39Iu/gHZ/V5RhcuktqqY9Egbtny8dvGQY+B/WAy4WqnbdPnawrkmHnbsmcY6EEmMRcrAUI1jxbyhpa0fjNWxi0SuKn3q8rzG+YBtsQ4MLSxV8OuzfVg+wghSrflGlevODCNmRo8Q5rH/g8y0uc8=
+	t=1777486905; cv=none; b=DcPZ0a/RRcl8VSrdVv5M/u815S9I2FVtWGfGmixhsFdGUWm69S3ZYEXAWiwbbHNxHjwBKTWQngXnUNr4WZxS1sp1mvyOi3CQtfi3ki+J2rNiF7Fmr7fHc7cXUo307jElIyXaOASr1cjorTdklodZWF3CEdKsUWn/yH20kTQZL7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777484552; c=relaxed/simple;
-	bh=GnQNlE3dLkd5eY5ofU0G0Lz9m7FTkHEbUyzh4lF36ZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q3w8dmIAPVuF5CPvdmfzHBPuqe8ivSbXkIBp7pdSdGoeNLCPQYbUUO8glQI5ixnoLnNqOx5LztcO0QjIqR3PpjF0P2s5gAdJGNfzdlvkZcdykVFxl3bLyHaiFlUDcUIZLLnjpjc4RvLgsi1wFMI+wt/5XQ75F370WGHeOJg4LR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 4328C1B95F8;
-	Wed, 29 Apr 2026 17:42:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 859072001E;
-	Wed, 29 Apr 2026 17:42:27 +0000 (UTC)
-Date: Wed, 29 Apr 2026 13:42:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Qian-Yu Lin <tiffany019230@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace_printk: replace _______STR with __UNIQUE_ID(STR)
-Message-ID: <20260429134226.49e95e9d@robin>
-In-Reply-To: <20260429165707.7020-1-tiffany019230@gmail.com>
-References: <20260429165707.7020-1-tiffany019230@gmail.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1777486905; c=relaxed/simple;
+	bh=zOH4706QFtvPpHCn7hxOyOFo31Xjg5Ci7H1MCZS6+GE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uBtZW3dyRvVHb1Im6vGlah2hqaErb6sE2BX8nV4Tq/G0QyW55PL4NVnZ4vdZiYSjAwle7bF52ae8Kk0jNtrCW6hq5UgNxjz+/VZtTOICFX25wDzj6udOIpV+vUoZ5VRkll+W84VyDbvyKG7fxpqyob/b97g2tv8qGIQNExC2+V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KAs2Mady; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KAs2Mady"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777486902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Dxp2OvQZDPavnweLX6lwyfQ94IEOmBtp4q9eBxrMuPM=;
+	b=KAs2Madys8XHdJCOMOvp/H/va/oJaHBVf7G6WRjO9C3UsYjFPj2CXjST8g6KA+RvEKwixu
+	1gLyqqoOweMJhohwOHQ+OE5lUgxP9/ByDUodoirabpcRy7knDbBzJsZ+zxJKlF+7g0Zv4S
+	8yUbZaanxwOa7f4mCox0kDT6GGpI5so=
+Received: from mail-yx1-f72.google.com (mail-yx1-f72.google.com
+ [74.125.224.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-292-BDhhy-eqPv-cDpoQgVYffg-1; Wed, 29 Apr 2026 14:21:39 -0400
+X-MC-Unique: BDhhy-eqPv-cDpoQgVYffg-1
+X-Mimecast-MFC-AGG-ID: BDhhy-eqPv-cDpoQgVYffg_1777486899
+Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-651bd9b4bccso51595d50.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Apr 2026 11:21:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777486899; x=1778091699;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dxp2OvQZDPavnweLX6lwyfQ94IEOmBtp4q9eBxrMuPM=;
+        b=frt0yitTBm/DTi2ItKqi0MuSQyZ8Cah5cRgILjj50wycGGyMa3LS7g6BQKOgegntbL
+         QRKBANar71X0Ds3T86o8IQAgrHPy+D8HkZC3eRxyDyc8rAokU8AalBd831/mq/b9SWde
+         ebRQ6ZFuoBiP4LnnHoh6mzUwMqOOV0NOeWtEEku3ChBciBHLq3qxbQclMl9sZLWx2rVv
+         ZNv5syqvsZYjTpF62aatQd6bI5SoHSqkGBRhQVD2t0ns6BUKtYgCZppNuokcM9cOinJf
+         r9DQnPHTaKbyPCzVkMkQpyPo8b1IG4yYWtr5f7xhSaYvCsC7rdIxonz+34tYMEVy876B
+         RxJw==
+X-Forwarded-Encrypted: i=1; AFNElJ9t5JwSxNOnJQc6kqF+AlrYIKKv9xL+SLxAJjmZxk/T9xZ8miNFbG0KjgzKw9/CG8E8E8bpQNYmDpHObA2KYxXDmSE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfVK/cn2tVw1I1PDnhV5y/CjvIktg3LiJ4gbQXLX7X1kqspM2o
+	KtNO3TXLg751Y8c0HYD3ep4efLEyrNboeoQGGX00601z7g3biWOECXU8U4+ORwVLKmVGsS6M4Xg
+	nBIkvDVyi64fjPeCKS9nt/lHUpPLGhktoWaAl1zX182RuXhpeyZsyKalUspFFFLRjoByQWNt0I3
+	s/HWsEGBi0YBW31iuxChXWW8daWiibMCKbz4inmPMOucaIFeYo
+X-Gm-Gg: AeBDietiWPlWgOzeUL0A+zMLzRkiM6WdCZZob2IR7Ds6JUxaWdDXJji8h1+zZsVtKXT
+	DivflUh6iHrMd0CxB4L9PxXLHmvGBgBXm1MbIQ+0xTJ45hRzL7+SD59KngQj0mzwO6qDllcqhKF
+	EDgGdYRcvNH6KuMAa/INxmetdcQgFLyIkSImqS3m3wU6gLoAD5TeTbLiYYJdzilEfR/rKPxKmfW
+	FpYbsI/dvuPZ7uLDW4oA7TFdWNpYpAfdqcVIm0j70WID7/Z3pc=
+X-Received: by 2002:a05:690e:118a:b0:651:d047:caf5 with SMTP id 956f58d0204a3-65beeba82dbmr8444912d50.0.1777486899067;
+        Wed, 29 Apr 2026 11:21:39 -0700 (PDT)
+X-Received: by 2002:a05:690e:118a:b0:651:d047:caf5 with SMTP id
+ 956f58d0204a3-65beeba82dbmr8444840d50.0.1777486898433; Wed, 29 Apr 2026
+ 11:21:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: xegnp5oihgq8myp3op38afesg6nqasf9
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 859072001E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19sTfFgLojF2y2IW0Pol4bsqu/lGfU/m0Y=
-X-HE-Tag: 1777484547-570017
-X-HE-Meta: U2FsdGVkX194Pdo0vy0xgymXnY6teuFRbDlBSWDgAvkvI1zqtojXTef7RmHsFUjw4EkDAhwa4chZrzwUsyzgBCMAuQfFce7qhpPemFu7mGp/qmVBKPQeSd1Kd2G16E4QC2NnkwM1Axv19zOmpMsUop5uTUu2cZ7KYFnY3aCXVliHXkBSolQcv5O+a8twXFEFocAXBLUeNsXFiKRTiPl5Drgl74/tzzdow5HVz9a6OBsgw5KKKgSLz7UOdp/tlS1F1qJgTM29IsTG9BArV9bDtbdvt496PAUAQQfAtqs+IccGIBQTPkYsdwUXpmaq3/9cfiXMEJxrxYNa2p1wRNfOvBStALHsWyWeIPw3idN47GT/uI4xnYrz3rbX2nncjTTo
+References: <20260419185750.260784-1-npache@redhat.com> <20260419185750.260784-8-npache@redhat.com>
+ <f05f4506-2930-44ba-918a-e0e5bcb9d0f9@kernel.org>
+In-Reply-To: <f05f4506-2930-44ba-918a-e0e5bcb9d0f9@kernel.org>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 29 Apr 2026 12:21:44 -0600
+X-Gm-Features: AVHnY4J7CcVYR4f6zugXAbo8lWmkYfpdhB-nBSIbQmMf8QVrNFkAXtwT9seofNU
+Message-ID: <CAA1CXcA-YtEiWYZaBW05Y9B_JMixu4SXaQO9KZoG-hNCF9oPHA@mail.gmail.com>
+Subject: Re: [PATCH 7.2 v16 07/13] mm/khugepaged: add per-order mTHP collapse
+ failure statistics
+To: "David Hildenbrand (Arm)" <david@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: aarcange@redhat.com, akpm@linux-foundation.org, anshuman.khandual@arm.com, 
+	apopple@nvidia.com, baohua@kernel.org, baolin.wang@linux.alibaba.com, 
+	byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, 
+	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
+	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
+	lance.yang@linux.dev, Liam.Howlett@oracle.com, ljs@kernel.org, 
+	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, 
+	mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, 
+	raquini@redhat.com, rdunlap@infradead.org, richard.weiyang@gmail.com, 
+	rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
+	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, 
+	surenb@google.com, thomas.hellstrom@linux.intel.com, tiwai@suse.de, 
+	usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
+	zokeefe@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: NABblgcz816OObPGGuC4XWVoyEj9BXM29BfdUz1MhUY_1777486899
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 30 Apr 2026 00:57:07 +0800
-Qian-Yu Lin <tiffany019230@gmail.com> wrote:
+On 4/27/26 2:21 PM, David Hildenbrand (Arm) wrote:
+> On 4/19/26 20:57, Nico Pache wrote:
+>> Add three new mTHP statistics to track collapse failures for different
+>> orders when encountering swap PTEs, excessive none PTEs, and shared PTEs:
+>>
+>> - collapse_exceed_swap_pte: Increment when mTHP collapse fails due to swap
+>>      PTEs
+>>
+>> - collapse_exceed_none_pte: Counts when mTHP collapse fails due to
+>>      exceeding the none PTE threshold for the given order
+>>
+>> - collapse_exceed_shared_pte: Counts when mTHP collapse fails due to shared
+>>      PTEs
+>>
+>> These statistics complement the existing THP_SCAN_EXCEED_* events by
+>> providing per-order granularity for mTHP collapse attempts. The stats are
+>> exposed via sysfs under
+>> `/sys/kernel/mm/transparent_hugepage/hugepages-*/stats/` for each
+>> supported hugepage size.
+>>
+>> As we currently dont support collapsing mTHPs that contain a swap or
+>
+> s/dont/do not/
+>
+>> shared entry, those statistics keep track of how often we are
+>> encountering failed mTHP collapses due to these restrictions.
+>>
+>> Now that we plan to support mTHP collapse for anon pages, lets also track
+>
+> "We will add support for mTHP collapse for anonymous pages next; let's also ..."
+>
+>> when this happens at the PMD level within the per-mTHP stats.
+>
+> What about file collapse? For example, we do adjust
+> count_vm_event(THP_SCAN_EXCEED_SWAP_PTE) and
+> count_vm_event(THP_SCAN_EXCEED_NONE_PTE) there.
+>
+> Wouldn't we want to update the HPAGE_PMD_ORDER side of things there already? or
+> would we want to use a different counter for that?
 
-> The macro trace_printk() uses a hardcoded identifier _______STR
-> within a statement expression, which can lead to variable name
-> shadowing if a caller happens to use the same name in its scope.
+Maybe? My thought process was that because we dont support mTHP in Shmem
+that those stats shouldnt be updated? not sure the right answer tbh--
+hence why this comment says "now that.. for anon pages, lets track..".
 
-Has this ever been a problem?
+>
+>>
+>> Signed-off-by: Nico Pache <npache@redhat.com>
+>> ---
+>>   Documentation/admin-guide/mm/transhuge.rst | 24 ++++++++++++++++++++++
+>>   include/linux/huge_mm.h                    |  3 +++
+>>   mm/huge_memory.c                           |  7 +++++++
+>>   mm/khugepaged.c                            | 21 +++++++++++++++++--
+>>   4 files changed, 53 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+>> index c51932e6275d..eebb1f6bbc6c 100644
+>> --- a/Documentation/admin-guide/mm/transhuge.rst
+>> +++ b/Documentation/admin-guide/mm/transhuge.rst
+>> @@ -714,6 +714,30 @@ nr_anon_partially_mapped
+>>          an anonymous THP as "partially mapped" and count it here, even though it
+>>          is not actually partially mapped anymore.
+>>
+>> +collapse_exceed_none_pte
+>> +       The number of collapse attempts that failed due to exceeding the
+>> +       max_ptes_none threshold. For mTHP collapse, Currently only max_ptes_none
+>> +       values of 0 and (HPAGE_PMD_NR - 1) are supported. Any other value will
+>> +       emit a warning and no mTHP collapse will be attempted. khugepaged will
+>> +       try to collapse to the largest enabled (m)THP size; if it fails, it will
+>> +       try the next lower enabled mTHP size. This counter records the number of
+>> +       times a collapse attempt was skipped for exceeding the max_ptes_none
+>> +       threshold, and khugepaged will move on to the next available mTHP size.
+>
+> Why is everything after the first sentence worth documenting here? This doesn't
+> read like it belongs to a failure counter?
+>
+>> +
+>> +collapse_exceed_swap_pte
+>> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
+>> +       to containing at least one swap PTE. Currently khugepaged does not
+>> +       support collapsing mTHP regions that contain a swap PTE. This counter can
+>> +       be used to monitor the number of khugepaged mTHP collapses that failed
+>> +       due to the presence of a swap PTE.
+>
+> Can we similarly simplify that (and make it consistent with the one above) to
+>
+> "The number of collapse attempts that failed due to exceeding the max_ptes_swap
+> threshold."
+>
+>> +
+>> +collapse_exceed_shared_pte
+>> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
+>> +       to containing at least one shared PTE. Currently khugepaged does not
+>> +       support collapsing mTHP PTE ranges that contain a shared PTE. This
+>> +       counter can be used to monitor the number of khugepaged mTHP collapses
+>> +       that failed due to the presence of a shared PTE.
+>
+> Same here
+>
+> "The number of collapse attempts that failed due to exceeding the
+> max_ptes_shared threshold."
 
-> 
-> Following the pattern in commit 24ba53017e18 ("rcu: Replace ________p1
-> and _________p1 with __UNIQUE_ID(rcu)") and commit 589a9785ee3a
->  ("min/max: remove sparse warnings when they're nested"), replace the
->  hardcoded identifier with __UNIQUE_ID(STR).
-> 
-> Since __UNIQUE_ID() must be expanded once to remain consistent across
-> declaration and sizeof() within the statement expression, introduce a
-> nested helper macro ___trace_printk.
+These all used to be very similar to what you have here. But Lorenzo
+asked me to expand all this (IIRC) several times. So here we are! I
+believe I even mentioned in the V15 that these are probably the "best"
+defined counters in the whole doc lol.
 
-Hmm, so we are replacing one name with underscores with another name
-with underscores?
+Cheers,
 
-> 
-> Signed-off-by: Qian-Yu Lin <tiffany019230@gmail.com>
-> ---
->  include/linux/trace_printk.h | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/trace_printk.h b/include/linux/trace_printk.h
-> index 2670ec7f4262..060eccb40838 100644
-> --- a/include/linux/trace_printk.h
-> +++ b/include/linux/trace_printk.h
-> @@ -2,6 +2,7 @@
->  #ifndef _LINUX_TRACE_PRINTK_H
->  #define _LINUX_TRACE_PRINTK_H
->  
-> +#include <linux/compiler.h>
+-- Nico
 
-People are already saying that trace_printk.h slows down the compile.
-Does this add any overhead to the compile?
-
--- Steve
-
-
->  #include <linux/compiler_attributes.h>
->  #include <linux/instruction_pointer.h>
->  #include <linux/stddef.h>
-> @@ -84,15 +85,18 @@ do {									\
->   * let gcc optimize the rest.
->   */
->  
-> -#define trace_printk(fmt, ...)				\
-> +#define ___trace_printk(fmt, str, ...)				\
->  do {							\
-> -	char _______STR[] = __stringify((__VA_ARGS__));	\
-> -	if (sizeof(_______STR) > 3)			\
-> +	char str[] = __stringify((__VA_ARGS__));	\
-> +	if (sizeof(str) > 3)			\
->  		do_trace_printk(fmt, ##__VA_ARGS__);	\
->  	else						\
->  		trace_puts(fmt);			\
->  } while (0)
->  
-> +#define trace_printk(fmt, ...) \
-> +	___trace_printk(fmt, __UNIQUE_ID(str), ##__VA_ARGS__)
-> +
->  #define do_trace_printk(fmt, args...)					\
->  do {									\
->  	static const char *trace_printk_fmt __used			\
+>
+> ?
+>
+>> +
+>
+> [...]
+>
 
