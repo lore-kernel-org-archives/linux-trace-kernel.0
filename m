@@ -1,39 +1,39 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC67377ED7;
-	Wed, 29 Apr 2026 16:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330F3361DAB;
+	Wed, 29 Apr 2026 16:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777480365; cv=none; b=i7Sn5uZHSN+SOzXBTYtkzYfe1OhPLkJJ9WL+E/QSo3KnodPnK7XGXnQqIMPDwWvvs569//zcHCTHcMQuz8iLioCSWVpGPbm+3nyEZS74ESlXaKM9F1ITPfouN/9zyO/fUhB/31qxNwbKdHPtTK+ALMDwIbNTi7Y1yMo62lcGN+s=
+	t=1777480760; cv=none; b=gSLYrHJpWM6M8epSNm7Sf0Psz9/mIEIffxDHKrdJOfK/xkv9uVtAnC53smikZfnsAVMazVHrRdMRtpsutCSCID2oqZMjNGpmgUlgrwVA+DpRS2UxfjHJBA24x1BiTWPFYnvqIA1Bez+lhAPM80RZ51M5lNI2ensEaEVs4Zll4uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777480365; c=relaxed/simple;
-	bh=c0WxikUppz2uMPqndHhtnnyFjZtw/M53lIEgzbcNhf0=;
+	s=arc-20240116; t=1777480760; c=relaxed/simple;
+	bh=LuooT5/c9U9R6Wxb5os317o2rYPmO+PrUlkceOzZqFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UgTTSIIlPjzBdazKTgnuXL0hhfCX2nttnutNKd+XjrtxcPeamMpRdQRGqYe1YDvX1vIo7315ZQ7fsvhdst3+JNCW//LFgY3PwJ7P19EK7BhNfS+vMXO4qEdqQWNUgF7yO366wntw/G8P1KY64iWpxKwqizIv+qDqFZA5oi1MyS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=BnRl/N7TWwX/+YhOXZqiSeoWxmYBOXfWUs/hFdWE7qUlXCUzAcLnowaFooQZ6YftUCpYRlLJz//lQk3wgXwIoQyZ45YhARvtU8BgyUaOw2ZJjo54fBlgODxqefMiNeVKq2ky5xdaqslFAfslh2AxaGaOX01J9MaXmhdGHPUD0qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 3103614034F;
-	Wed, 29 Apr 2026 16:32:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 02EE32000E;
-	Wed, 29 Apr 2026 16:32:38 +0000 (UTC)
-Date: Wed, 29 Apr 2026 12:32:56 -0400
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 4C6988B340;
+	Wed, 29 Apr 2026 16:39:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 4AA7520033;
+	Wed, 29 Apr 2026 16:39:09 +0000 (UTC)
+Date: Wed, 29 Apr 2026 12:39:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
  <will@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
  Rogers <irogers@google.com>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v18 3/8] ring-buffer: Skip invalid sub-buffers when
- validating persistent ring buffer
-Message-ID: <20260429123256.5172d581@gandalf.local.home>
-In-Reply-To: <20260430001559.a2d0489d956c06059e13e58d@kernel.org>
+Subject: Re: [PATCH v18 4/8] ring-buffer: Skip invalid sub-buffers when
+ rewinding persistent ring buffer
+Message-ID: <20260429123926.204893bc@gandalf.local.home>
+In-Reply-To: <20260430002023.b19608c27a746284e8f73b80@kernel.org>
 References: <177701351903.2223789.17087009302463188638.stgit@mhiramat.tok.corp.google.com>
-	<177701354681.2223789.14633430761021638378.stgit@mhiramat.tok.corp.google.com>
-	<20260428155508.4f47279e@gandalf.local.home>
-	<20260430001559.a2d0489d956c06059e13e58d@kernel.org>
+	<177701355481.2223789.8929563537404268817.stgit@mhiramat.tok.corp.google.com>
+	<20260428162146.78e52988@gandalf.local.home>
+	<20260430002023.b19608c27a746284e8f73b80@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,37 +43,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 02EE32000E
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: 595h9ut9b6nuepdf88sn1susbafq418f
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 4AA7520033
+X-Stat-Signature: iu88zayeg6ne7c8wjgbd3qfdoysmewpm
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+38fsHwXaVeeKb/tR0TBTEd3NZpLiw37E=
-X-HE-Tag: 1777480358-669733
-X-HE-Meta: U2FsdGVkX180m1p5vGF6wqvR/Xb5tM1EK6BvWIBUmlDbVxNeLWhRk0nFBuWNyo0u14cD4tmCZze/urXDylalHowEEGoHEvHGoXcWledyIo09DvsOAIpSdFWtkfptbW1+NnUljSPIdlX9ftWRxK12z2C9ALg8EHEVNVlj/wj/NcH4gupNrebgSjHWQbX/C8Rx8K4i7AUpe6plGIxXOgRE7A8fCESjJmQ2pNOKfp1RiOVwaJFwQZUGH1RNLlm5BtBp9mfyhWJPL+j9Ix3Xich7iFJDDeWu2/Hmol5N7e8j2uunAJjv9fqUXMUrJ1/PbDwgh1Q7ChqSDGf1tPar4XeglFWC2hX/3A5a
+X-Session-ID: U2FsdGVkX18HVNhk5oli4waG8dH1zzmr57zUTbTPRqY=
+X-HE-Tag: 1777480749-847527
+X-HE-Meta: U2FsdGVkX18e8tf31RS8/ePPO45W5EQbETJbQmuhbtYRO3flXKvGNpFTlfQOxozfw2x0F8o5SZ24KpKDIRsJyDQsgLPPNmM+OMMhUFH/KHPV3R1bOpN1quUmn/WHRsLwVts66aZCHuiaQ4f3/xoG+XQZ54brVKYrmM4Z5N/T7zvsfOE28zjVzFeZ7wWIgImrgmK/7EagSALJ443zlzSUb7E95RnsoNNOdmUpqOOip9zZBmrB0R460zlnCPbxlvAJTPeragkYS3GwWZtIn8sEVhO/sgGChC/+d+yuNw8trgPH8xyIfn4qpZu+KBF7mSFc1VRcSqeVH9SCwhLV+4OlaQj0BhrIdX4EzDwqPunOXvxrJMqrJPM1ZrOLQdudPP1iwc7WBWn6C5IuO0ExIDxWWA==
 
-On Thu, 30 Apr 2026 00:15:59 +0900
+On Thu, 30 Apr 2026 00:20:23 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> It should not be a never ending loop (there are other exit conditions),
-> but I agreed. What about limiting with nr_subbufs?
+> On Tue, 28 Apr 2026 16:21:46 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 5326924615a4..aa89ec96e964 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -5630,7 +5630,8 @@ __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
->  	 * a case where we will loop three times. There should be no
->  	 * reason to loop four times (that I know of).
->  	 */
-> -	if (RB_WARN_ON(cpu_buffer, ++nr_loops > 3)) {
-> +	if (RB_WARN_ON(cpu_buffer,
-> +		++nr_loops > (cpu_buffer->ring_meta ? cpu_buffer->nr_subbufs : 3))) {
->  		reader = NULL;
->  		goto out;
->  	}
+> > On Fri, 24 Apr 2026 15:52:35 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> >   
+> > > @@ -1892,9 +1895,19 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu,
+> > >  	 * subbuf_size is considered invalid.
+> > >  	 */
+> > >  	tail = local_read(&dpage->commit) & ~RB_MISSED_MASK;
+> > > -	if (tail > meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+> > > -		return -1;
+> > > -	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+> > > +	if (tail <= meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+> > > +		ret = rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+> > > +  
+> > 
+> > This code seriously needs comments.  
+> 
+> OK, I'll add it, or let code explain clearer?
+> 
+> 	if (tail <= meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+> 		ret = rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+> 	else
+> 		ret = -1;
 
-Yeah, this looks more reasonable.
+That's better...
 
-Thanks,
+> 
+> Thanks,
+> 
+
+The below should have some explanation too. I can figure it out, but it
+wasted more brain cycles than I would have liked ;-)
 
 -- Steve
+
+
+> >   
+> > > +	if (ret < 0 || (prev_ts && prev_ts > ts) || (next_ts && ts > next_ts)) {
+> > > +		local_set(&bpage->entries, 0);
+> > > +		local_set(&bpage->page->commit, 0);
+> > > +		bpage->page->time_stamp = prev_ts ? prev_ts : next_ts;
+> > > +		ret = -1;
+> > > +	} else {
+> > > +		local_set(&bpage->entries, ret);
+> > > +	}
+> > > +
+> > > +	return ret;
+> > >  }
+> > >    
+> 
+> 
+
