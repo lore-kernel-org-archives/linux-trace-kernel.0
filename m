@@ -1,33 +1,26 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D522EFDA4;
-	Wed, 29 Apr 2026 18:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EA641B376;
+	Wed, 29 Apr 2026 18:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777488899; cv=none; b=P0fti1RAy+qPSSpdkXEEn9EyxMM0UlXnbJmdT4NPrN39UCGnUqAlRiqFWuxx7VLJg6F60OGCoLrrCW2moFWg4eL84d0NVNeQUbm7YBpjom9glmMcGNjsY0x11X+GZNnMvqr9DNbTA/9NPMF4w63wK0/ll5zNAkMY5L7zM3DmzZw=
+	t=1777489092; cv=none; b=iowN5bGjGP7vChVGDw/h8Wd6NQNtRPRYM5ChGDRRMH7RS5UMQNYP51s5X8aico+soeZVMbziTAgZY1MeCm5yHsKvtMsBZmtKHZl2rL25XRCAJZsTLrwSJI2moc/2CWmEuhZT/UHOhrcRjVjDJm5msYG3bVCXYcJIBQKEH8UDvDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777488899; c=relaxed/simple;
-	bh=cHlnP9nNZLu9/uqqABygV8ieWNDMxnbOd7qtRJLxecY=;
+	s=arc-20240116; t=1777489092; c=relaxed/simple;
+	bh=EXYSq3eb/M9eGCH9xkydk9hYRIIugYYEGIMDoKuGMek=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Eqf2timJyMjAxW1CzeMPaOAUaaZc+0wwyhCX5IYAjTm98wfUvfiBjv/vDvLa08g09ku4f+PDnw110wL7HNj5yCWFpAnvRz/WGG9fBKiYrbTUxEDyEv2lbtBC20cPrPAQG7mafEgNhKvLOLa93bAxisOpOrLxonHlbmPNWLK2xw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIbZVLuy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIbZVLuy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4AFCC19425;
-	Wed, 29 Apr 2026 18:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777488899;
-	bh=cHlnP9nNZLu9/uqqABygV8ieWNDMxnbOd7qtRJLxecY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eIbZVLuy8A7jpExFrOOi5Vw1auoYpfQbBeatuGausg7UCgpqIwrc5yI1fFILMFuFM
-	 41DpLtr2yZN8REAbzky8Kr6NnhxnyBY6aq0lw8LZ2oekGonF0MS0gD2BEZjjK+XbBJ
-	 lTkDvuI7QmUO5oY8WMqdauOO8ed+hzCsY+gwHJiL6bZ51Y9lpeZcNX2SyycPmytkCW
-	 5NumxxFcTt5yIVwBLr2s6mdz1ugvc5goc0FTOorj52rnqHAKXYSxCLG5LbyHl4i1TS
-	 KvycgHnrb1tGuFIr3xijy1pHcncf2/ni6pPYfqM4UvhEa/pQuM1vDyMfH/zil3a2rp
-	 zqnOLuyA7wucA==
-Date: Wed, 29 Apr 2026 14:55:12 -0400
-From: Steven Rostedt <rostedt@kernel.org>
+	 MIME-Version:Content-Type; b=EGTVwkcFIsAcnD7JDUXoHhkTMY+eQNfM+zT2Jw4AF42o8l5eSq1S8qzHY7RBcyielJ6yCFFYtSEkaFmh3buwIMbvZ/vvAPZiPSpsGszpBki2/4gmto21M5LPl9eAyXgo3dDRbxYHrT4W94N+rLPohesKUVJ2o3F06st1uy/2MhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 236ED1C0622;
+	Wed, 29 Apr 2026 18:58:06 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 595FE2002D;
+	Wed, 29 Apr 2026 18:57:58 +0000 (UTC)
+Date: Wed, 29 Apr 2026 14:58:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
@@ -49,10 +42,11 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens
  <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
 Subject: Re: [RFC][PATCH] unwind: Add stacktrace_setup system call
-Message-ID: <20260429145512.461e09fe@gandalf.local.home>
-In-Reply-To: <ade15347-6eca-4204-9f64-9b2eed9e9aec@efficios.com>
+Message-ID: <20260429145815.69dcb1c0@gandalf.local.home>
+In-Reply-To: <20260429145512.461e09fe@gandalf.local.home>
 References: <20260429114355.6c712e6a@gandalf.local.home>
 	<ade15347-6eca-4204-9f64-9b2eed9e9aec@efficios.com>
+	<20260429145512.461e09fe@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,72 +56,31 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: kfqaa388bws9dkwpgzb69bxjr1i8y4zt
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 595FE2002D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+CDL54GLX4jsqANF76IoHpHRuRwRQ0SOw=
+X-HE-Tag: 1777489078-919524
+X-HE-Meta: U2FsdGVkX19mu+R92NgDc6fAQlTPpbkSINSlCOL43j0YXdgroAC9cMdaHVi5iB5dvw9Um4q8TWNgohALdJciE5myYwayTJWBcz1qjwavhIZEbzvHmmjplTv1NbuZONMTBab92kpGLlv2h9r2256scIyNh8JgAELd1GjQ2YHd82JuQ+eR5lUwyvkvGrg3dwwyFOBsmKHDLTB5iiSxkPh69k2T37JxLaQZHp/KFIfjhfuwUqqMVvsYN/8lUgudOwwNCQM8JDxm5FM3WZFwXPDme3MgIVl/cIMNsVNSHTfXRajIgCo/abLpPR4msPD57i50Bbp+Vy4Q4mWOSqcVMOpWXJTu31EGEr2TU48+5/ip5G8ne997WEYhLg==
 
-On Wed, 29 Apr 2026 14:42:52 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Wed, 29 Apr 2026 14:55:12 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-> On 2026-04-29 11:43, Steven Rostedt wrote:
-> [...]
+> > > + *
+> > > + * This system call is used by dynamic library utilities to inform the kernel    
+> > 
+> > Out of curiosity: what would happen if the application chooses to invoke
+> > this system call to register sframe for the main executable ? Should it be
+> > allowed ?  
 > 
-> AFAIU this is a functional iteration of my prior RFC here:
+> I haven't tried, and should look at the code. Ideally, no two sframes
+> sections should cover the same code. I think it should error out if it does.
 > 
-> https://lore.kernel.org/lkml/2fa31347-3021-4604-bec3-e5a2d57b77b5@efficios.com/
-> 
-> perhaps it would be valuable to refer to that thread ?
+> If the main executable doesn't have a sframe section, I don't see why this
+> shouldn't be allowed to add one.
 
-Thanks, I actually decided to start this from scratch as I took a slightly
-different approach than yours. But you're right, I should have mentioned it
-anyway.
-
-> 
-> >   }
-> > +
-> > +/**
-> > + * sys_stacktrace_setup - register an address for user space stacktrace walking.
-> > + * @op: Type of operation to perform
-> > + * @addr_start: The virtual address of the stacktrace information
-> > + * @addr_length: The length of the stacktrace information
-> > + * @text_start: The virtual address of the text that @addr_start represents
-> > + * @text_length: The length of teh text  
-> 
-> the
-> 
-> also, perhaps add @flags just in case ? This allows changing the
-> behavior without having to insert entirely new set of ops.
-
-I thought about it and decided it was somewhat redundant to the ops. After
-working on the futex code, I thought following that API was a better
-approach.
-
-> 
-> > + *
-> > + * This system call is used by dynamic library utilities to inform the kernel  
-> 
-> Out of curiosity: what would happen if the application chooses to invoke
-> this system call to register sframe for the main executable ? Should it be
-> allowed ?
-
-I haven't tried, and should look at the code. Ideally, no two sframes
-sections should cover the same code. I think it should error out if it does.
-
-If the main executable doesn't have a sframe section, I don't see why this
-shouldn't be allowed to add one.
-
-> 
-> > + * of meta data that it loaded that can be used by the kernel to know how
-> > + * to stack walk the given text locations.
-> > + *
-> > + * Currently only sframes are supported, but in the future, this may be used
-> > + * to tell the kernel about JIT code which will most likely have a different
-> > + * format.
-> > + *
-> > + * The type command may be extended and parameters may be used for other
-> > + * purposes.  
-> 
-> "type" or "op" ?
-
-Bah, I originally had called it "type" and then renamed it to "op" (to
-be consistent with the futex commands). I missed updating this. Thanks for
-catching that.
+The address is added via mtree_insert_range() which states it will return
+-EEXISTS if the range is occupied.
 
 -- Steve
