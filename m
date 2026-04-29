@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6509D3B6BEB;
-	Wed, 29 Apr 2026 08:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E94344052;
+	Wed, 29 Apr 2026 08:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777452142; cv=none; b=VY02xLtJW1Nq3bskmgxbWhuLrjpeaooChK94Fh8M9rcsk/U1A70OP7xELPWJO8q6Z5ySI0do18RPSAWONwkmSNTu2SHqN0pxJLBzRFGjQiayoyklQo/oICMiLuzJVPDnnxozo2oWKeLCPu1+ON03/jtbiVATDKySLAP2F7LjyBc=
+	t=1777452708; cv=none; b=L6jr4vtQZJAzwbsk9c7eb7ld+1oN9AOrhrKxxdtuvU7MDLGfq+Yad1ahCAVlicxIcYO76j/wBBUIO8hkjHmHi1yQdZJGP/aSHys13kJIzEa2zeuQPUroGRetr35tZZb+tDojPqCajeeUTCYN0G3Uys80Q6m3WJcx+l50wLJTOOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777452142; c=relaxed/simple;
-	bh=t7kSSrP3dnf/fxojWIQ7BrwwsPqrfP6Uq/dJpl/ryJM=;
+	s=arc-20240116; t=1777452708; c=relaxed/simple;
+	bh=PTzfX/fwmBD3R0/iLa8YziPXZF2MiVguZWu9y+6RSwk=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fa0GFfgG8wcAMLsKCVi4nw7Lw66+58VdkxheWyuSixvGMMvw87gzZSsd9VEJYAFmpUkJeaQfK74I7ifPqHsBcx9ylin9uEYVnnV/C4SCQtDDTo6bTqKFm0EKWoWvngd571coXiHLk6Ewlo3RcY1Z6sp5pfTA9NEicqL2SMsC5g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME2PcfkF; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=VUCNp9AKNyt1N+BVriPDSqrzhsJiFR7KxHQpWnwCA08QFYKWSu27/7hVVMNOnxnUIzMw+bWa9nWloSSzio/vhipbJftQCcefa59wcHsRwS5D3tFqFuy+rxMzHOKanvMlCpEBPNL10PBt2kzmUn5ITsI3alj4pT0Dhg7vf/SjElQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2X27LGw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME2PcfkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5070EC19425;
-	Wed, 29 Apr 2026 08:42:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2X27LGw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DC3C19425;
+	Wed, 29 Apr 2026 08:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777452141;
-	bh=t7kSSrP3dnf/fxojWIQ7BrwwsPqrfP6Uq/dJpl/ryJM=;
+	s=k20201202; t=1777452708;
+	bh=PTzfX/fwmBD3R0/iLa8YziPXZF2MiVguZWu9y+6RSwk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ME2PcfkFZfU1i4Dx7wd4PioBRya3Oayl2roa5ohq/bwtJcPfTNkbOm2HfVckNqejl
-	 ofkMcP0AcnoBpo4oW2CU86ACtdHkRAELs1SC9mulOnlRwPqH1/0fzgeoTBLK77f8vT
-	 J0eL7zjUpXNXOSpthfWaTsqUpV3AptZWkG8deP8nl53hjs3//bDH85Tk2qm6Yhaw8a
-	 mfnyTEzMmUkziVQp13/Zt1RLd4GB4S5Mcuj4wpKht9/Xr1XpT4YFXuMYvKBaxdjcTh
-	 m9eQBqaWIBHDaZSUcVfg9yKZE3NtFuqtTuMmT7+CANq17/VhNBrJeV+BnEmKEuT2kF
-	 JAV0+Yw2HrvoQ==
-Date: Wed, 29 Apr 2026 17:42:18 +0900
+	b=o2X27LGwU2slbXmcdkVMwguiF77QaiQQw02haMRXzn+wZPprXEItuy9ZJcucqhZ2d
+	 yqlLDlkE0ecQCVMCe5dLMBxCXVEVDCerpl7PG8B6FuyoNk8vsW3ERjjP/gOvpwu9pH
+	 upRE9edZHURJxjpXxBiBYUuvEJ1dXwu+UQb2/OjtVjp0qvHEyji9g81UL4cWY3mw0c
+	 g6ftc8jf0JSVpk6HbvXKZAFCRXaM1XF+upOOaUGlgBs9Vf/E0rYyf+Ji0NcM3T4ZoG
+	 rN8ZKKbvgT79EJNI3GoHTNlhU7Tfj4f6BNuzGny+LIzxgSFCasnfBrebrmfIwgcqrB
+	 9YuFo6YqUY/gA==
+Date: Wed, 29 Apr 2026 17:51:44 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Subject: Re: [PATCH] tracing/probes: Limit size of event probe to 3K
-Message-Id: <20260429174218.97dd03b66db5df6a7eea8d83@kernel.org>
+Message-Id: <20260429175144.9d3d6e13e935f1dfd480f6a0@kernel.org>
 In-Reply-To: <20260428122302.706610ba@gandalf.local.home>
 References: <20260428122302.706610ba@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
@@ -45,6 +45,25 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+
+Hi Steve,
+
+BTW, to prevent regressions during future expansions, how about adding the following line?
+
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 2cabf8a23ec5..c5ee7920dec6 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -979,6 +979,7 @@ static struct uprobe_cpu_buffer *prepare_uprobe_buffer(struct trace_uprobe *tu,
+ 	ucb = uprobe_buffer_get();
+ 	ucb->dsize = tu->tp.size + dsize;
+ 
++	BUILD_BUG_ON(MAX_UCB_BUFFER_SIZE < MAX_PROBE_EVENT_SIZE);
+ 	if (WARN_ON_ONCE(ucb->dsize > MAX_UCB_BUFFER_SIZE)) {
+ 		ucb->dsize = MAX_UCB_BUFFER_SIZE;
+ 		dsize = MAX_UCB_BUFFER_SIZE - tu->tp.size;
+
+Thanks,
 
 On Tue, 28 Apr 2026 12:23:02 -0400
 Steven Rostedt <rostedt@kernel.org> wrote:
@@ -59,13 +78,6 @@ Steven Rostedt <rostedt@kernel.org> wrote:
 > A event probe should never need to be greater than 3K, so make that the
 > max size. As long as the max is less than the max that can be recorded
 > onto the ring buffer, it should be fine.
-
-This looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
 > 
 > Cc: stable@vger.kernel.org
 > Fixes: 93ccae7a22274 ("tracing/kprobes: Support basic types on dynamic events")
