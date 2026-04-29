@@ -1,36 +1,42 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8A4329C66;
-	Wed, 29 Apr 2026 15:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6CF36E467;
+	Wed, 29 Apr 2026 15:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777478199; cv=none; b=tik2hIA/HeEX5AAJFgcaqfqE0q9F3wmC/swlhk0NdJpbbjt1ADHOjK8Qi9/XjwkbgkbTx3FAKhN8RY14zEJCgWx0Y4XCgs5tkigOtOQrotKRy9+KK8DEjmV829XJwt7M95K9SdK5oJd38oh8AVqnsKGZrW1UOZTo85b8PlgK5uQ=
+	t=1777478257; cv=none; b=ShX3J1OhcBOR7NdKZPDa1p3B4GZE6XskjMEP2LML67DwadoP8vMRjb7MyCeydSzykYK0MddexagQoDQrYSZ+NJpeoPtKUqMm8FxYv41T7XrRh7BDXgjOeS4l5muMoTr0NRvvxl1DqjwB0LeGYp2yl9/cQZCm/qRkdhGPfVPs458=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777478199; c=relaxed/simple;
-	bh=pqIbsxN/EwcJBeoV9NPnm7E2TV7unU5nHJekgs7X/fM=;
+	s=arc-20240116; t=1777478257; c=relaxed/simple;
+	bh=W3aAqhgNLh1ST2Eodh9VcOC2+rBVkz1uRY1/DBQc2TQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AWesLLlBSGSI7jgGfKHnt6zYXzq2Z3aaaf3846DmONjUEGHYO21YZmWbpjVUffZG5KNcdbGHhx1CWv2l7f52e7ijOHdZjuubE3dVJuxljCihpLGJGfdOsyG9ZUppfRp3kaZQgZX1eqhJCbLbmXtjmC2JOssf9ydTu8BEQP/dU7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 2C0E61B92D6;
-	Wed, 29 Apr 2026 15:56:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 0054920032;
-	Wed, 29 Apr 2026 15:56:27 +0000 (UTC)
-Date: Wed, 29 Apr 2026 11:56:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
+	 MIME-Version:Content-Type; b=aa2OBfBeeyeaH+AgKqMX6poNyPOLP/jNhjvv1U9N0FmbrFfaGiOMu1XGDJ2T6h4m0gm8GVN0+BJDUa2QnJuTo6yeX0bn+LQvhjkfgfAaYuw/9WGW8EKUrW1pQIhqKHay5pvKwfXZCt+4KLRHTE4ga6Q3th8aGV7cWIs9Ksd/8pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7TTd+pl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7TTd+pl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A58C19425;
+	Wed, 29 Apr 2026 15:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777478256;
+	bh=W3aAqhgNLh1ST2Eodh9VcOC2+rBVkz1uRY1/DBQc2TQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=H7TTd+plUVa4wzQ/fHqQjG0iriLs4wpCz6j5WCh8aC+F3cKzoD1j7pRzMa8T2s+C0
+	 88RF2XIB0uOhGePQm/6C+GbKSMseS/qUjr8UofH48qO/KF9lQwIpTq5/1h0oocDY6V
+	 Qq8GWIpZJhhjxVl+/gjvBla7PMthRe9G/M0gPPEMZR9jAdlf+Z6OHp2f/Xuv+cHN+N
+	 yIjGZfB3uOmgB6nfCpXnCzdIeLj/F0bzP5cnNm1Ycrj6cDWEdMhgqKtLUUrFveqyGS
+	 R2LZ4l14/Izp7AnzL9bogvm9rgJudd6T0AcRneJGFpll2pKY9SZ5Q81iHuRxcpwaPt
+	 yVIarw9SYNZFQ==
+Date: Wed, 29 Apr 2026 11:57:52 -0400
+From: Steven Rostedt <rostedt@kernel.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Shijia Hu <hushijia1@uniontech.com>, naveen@kernel.org,
- davem@davemloft.net, ananth@in.ibm.com, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Remove dead child probes from aggrprobe list
- on module unload
-Message-ID: <20260429115645.793f15ea@gandalf.local.home>
-In-Reply-To: <20260429174053.b66f3a0032408f544128afd4@kernel.org>
-References: <20260429032919.208790-1-hushijia1@uniontech.com>
-	<20260429174053.b66f3a0032408f544128afd4@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing/probes: Limit size of event probe to 3K
+Message-ID: <20260429115752.6a87a3e3@gandalf.local.home>
+In-Reply-To: <20260429175144.9d3d6e13e935f1dfd480f6a0@kernel.org>
+References: <20260428122302.706610ba@gandalf.local.home>
+	<20260429175144.9d3d6e13e935f1dfd480f6a0@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,71 +46,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ahihr74x1n8k55th8a1oihcpq4x39fy3
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 0054920032
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+RdtdRScI0xd+b53wofa9S9aEogKv7eQ4=
-X-HE-Tag: 1777478187-618838
-X-HE-Meta: U2FsdGVkX1/XyZmBda+DuqDwrCAnPyCXkUOeJamj3seLp8Gjh03aDXvIAAJ8jh84FSAXKMCkkfj0rdsCsgWqhbUXzqaSZCM/e2SSOxf1RflzeTmI4UO/dIo/oKULmqU272Pi4H0QqXpxZlfKSFARz3Qmw3xsBOddCjCTke3W6dipvOUJoFCiIc4Wq4r7FGe6PtTfwpFlYVpXHPGm4pl5G5rlRPJsj9h7STUi0FFO1kF3M/iP86yMQ0ZOIJKqg3MElNKbBMj2I/WDh7QmtvNMsm6Ui3I9DNKi/ufDQuADr1ToyNwrk2lzhk1ck47331wTQH5MvAh4hZw/raWuE28MbgaOLznnGcvVEFC04ccojqPJGtH78m/US1aIYBlFQVWs5qEGHV3S25U0CHmdPOrhDA==
 
-On Wed, 29 Apr 2026 17:40:53 +0900
+On Wed, 29 Apr 2026 17:51:44 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> Shijia Hu <hushijia1@uniontech.com> wrote:
+> Hi Steve,
 > 
-> > When a kernel module that registered kprobes is unloaded without calling
-> > unregister_kprobe(), kprobes_module_callback() calls kill_kprobe() to
-> > mark the probe(s) GONE.  If the probe is an aggrprobe, kill_kprobe()
-> > also marks all child probes GONE, but it does not remove them from
-> > the aggrprobe's list.  
-> 
-> That sounds like a bug in the module.
+> BTW, to prevent regressions during future expansions, how about adding the following line?
 
-Agreed.
+Nothing against this, but I think it should be a separate patch.
 
-> 
-> > 
-> > The problem is that child probes whose struct kprobe resides in the
-> > unloading module's memory are freed along with the module, yet they
-> > remain on the aggrprobe's list.  Later, when another caller registers
-> > a kprobe at the same address, __get_valid_kprobe() walks that list
-> > and dereferences the freed child probe, causing a use-after-free.
-> > 
-> > Reproduction steps:
-> > 
-> >     1) Load module A which registers two kprobes on the same kernel
-> >        function address (e.g., do_nanosleep), causing them to be
-> >        aggregated under one aggrprobe.
-> > 
-> >     2) Unload module A without calling unregister_kprobe().
-> >        Module A's memory is freed, but its two child probes remain
-> >        on the aggrprobe's list as dangling pointers.  
-> 
-> Would you mean "load a buggy kernel module and unload it, the kernel cause
-> use-after-free."? for example:
-> 
-> ----
-> struct kprobe my_probe = {...};
-> 
-> init_module() {
-> 	register_kprobe(&my_probe);
-> }
-> exit_module() {
-> 	/* do nothing */
-> }
-> ----
-> 
-> Yes, this cause UAF because that module has a bug. Please call
-> unregister_kprobe().
-
-Yes, this is one of those...
-
-  Patient: Doctor it hurts me when I do this
-  Doctor: Then don't do that
-
-... reports.
-
-No, the kernel isn't responsible for fixing buggy modules.
+Thanks,
 
 -- Steve
+
+
+> 
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index 2cabf8a23ec5..c5ee7920dec6 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -979,6 +979,7 @@ static struct uprobe_cpu_buffer *prepare_uprobe_buffer(struct trace_uprobe *tu,
+>  	ucb = uprobe_buffer_get();
+>  	ucb->dsize = tu->tp.size + dsize;
+>  
+> +	BUILD_BUG_ON(MAX_UCB_BUFFER_SIZE < MAX_PROBE_EVENT_SIZE);
+>  	if (WARN_ON_ONCE(ucb->dsize > MAX_UCB_BUFFER_SIZE)) {
+>  		ucb->dsize = MAX_UCB_BUFFER_SIZE;
+>  		dsize = MAX_UCB_BUFFER_SIZE - tu->tp.size;
+> 
