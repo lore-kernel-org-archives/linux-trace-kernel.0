@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB199376BF1;
-	Wed, 29 Apr 2026 15:16:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788C03783AC;
+	Wed, 29 Apr 2026 15:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777475762; cv=none; b=HLJkqhrrnQwgbMKtqsemA7N2itqyVe5ko/XTXg1IQi0Q+jOwgTx01mTkmrHlAYDepk0DX4TmQfGbeBu6Aa27gPoT+a1GdU5n09dKoHXQu+4eoKnEKRhSba0V6vFk5Jm9k+tDWaKxZIjBrk6UHpxmYP33bRRkfG2aCm/dx87HVqY=
+	t=1777476026; cv=none; b=lzfNfYoj37AVdZql6RX7XyW0KmGoQk+zq3weFd+9Mchc2mSGv9ScKM7aG2hWRLbJCEtox+dv7I6DpdNcwsWKKFM2F/b9xz0CrqjXJgdfZX+/OUTIfeTO0wj/fXRxNQ2mCwxwbcOwnyOtAoXvy8F8jyNPdY1Cz5Q1hxlKVBBnPTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777475762; c=relaxed/simple;
-	bh=qJfcWNJrNFk350uexydFUPT8va/SsAcPQMsRGFeJVhY=;
+	s=arc-20240116; t=1777476026; c=relaxed/simple;
+	bh=iRtJTYnWWpEWI9sc96kjWYUWN9eoqli1GDs2kMFzcbc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DCOFIQvXbdb1RbCE8pF3MOSkZ+J757gJrV7tNOAOF08HRpSv5Vo7IW2LVTOhnj4HVodHxFc5Dj5vrK6cVKtp6ry7sFMa+geFesZlASFTSoN0pVLI5xD4mxxKb2PRUcHnSgHZIITvKS/6Mv1fZHc4m5J6Nk4q8W9f3sAKXi1uD9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tc5DwENP; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=eDB1esrG6Bs+GcRuxmcf6qe/Fv0h8BDG/Q2o/iUhJphjiu788ms+XLsC68oUTKb2RFhjyB6sI7n9xduk7I5yKkMNJiD3j6ivkmcvHWFNiahVraLJnIpA9RenuviGo5+2BjFoDTGhbAvdfqTOrzDkYtlmZIkrLS0epdDg5nyxSoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgAD3s71; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tc5DwENP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18244C19425;
-	Wed, 29 Apr 2026 15:16:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgAD3s71"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E936EC19425;
+	Wed, 29 Apr 2026 15:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777475762;
-	bh=qJfcWNJrNFk350uexydFUPT8va/SsAcPQMsRGFeJVhY=;
+	s=k20201202; t=1777476026;
+	bh=iRtJTYnWWpEWI9sc96kjWYUWN9eoqli1GDs2kMFzcbc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Tc5DwENPc3RtKLrf2qoMNayifVx6jMMiFhVd7RMvq0PtT1oWmw3bwTDzNtuIxn3zp
-	 GEgsINNCMj3idUyhkvg/4jZqZ+H2ZWmbgYuAKs+wH9C4eQkvA3AJC3Ini4gyxOpuiB
-	 OvmO3b4v/zyUKgGriSC4oW5TJ3FFZurkoPfkr5ConHi9fMXyaS/63Z9rSSxzt10HRa
-	 EvGf9fMRIrmRMtLU1oKeZdlJV8IUuiQZmWur3GjOhIeAL7wxq3akA7ihMQnmIuClos
-	 ydjIDKEBJecL5a98adndKQdYdYYVlTuGsCvqMFcwbH9jHpMHuPOhY6FtpfdJ5CXEQg
-	 bndC8Cx3HlhdA==
-Date: Thu, 30 Apr 2026 00:15:59 +0900
+	b=rgAD3s71Iddnt7NVEUWoeX/uhntmqnmf4ij+Qu3t33coW2DmX02hlUzxvH6DyJv10
+	 EzYK42UFDXvu2e7D3zctYWpNYESrwLhCu8taPjw0ME6bZRwWr+shtPqYms2PvOqCQd
+	 HeNbWUyxoSQVbuvUSZl7uK0zRAAC0dNJzcijN75qkBhMVY9SIUOWZOVCe31lbc4oSe
+	 bNBj8eTuWwsyw7JHPxCwzZyRkMeHVmkSjcwtNEHMuL53hhha2Mlgaw1WliJs9C/k1H
+	 iohsJ2NUQFLoKRhMRJu5MEYSa0PWfScpwYNiY6N70DfzdrHEMKQDhUnuZTa4dDJdN1
+	 io0+WuMwNWKIA==
+Date: Thu, 30 Apr 2026 00:20:23 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
  <will@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
  Rogers <irogers@google.com>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v18 3/8] ring-buffer: Skip invalid sub-buffers when
- validating persistent ring buffer
-Message-Id: <20260430001559.a2d0489d956c06059e13e58d@kernel.org>
-In-Reply-To: <20260428155508.4f47279e@gandalf.local.home>
+Subject: Re: [PATCH v18 4/8] ring-buffer: Skip invalid sub-buffers when
+ rewinding persistent ring buffer
+Message-Id: <20260430002023.b19608c27a746284e8f73b80@kernel.org>
+In-Reply-To: <20260428162146.78e52988@gandalf.local.home>
 References: <177701351903.2223789.17087009302463188638.stgit@mhiramat.tok.corp.google.com>
-	<177701354681.2223789.14633430761021638378.stgit@mhiramat.tok.corp.google.com>
-	<20260428155508.4f47279e@gandalf.local.home>
+	<177701355481.2223789.8929563537404268817.stgit@mhiramat.tok.corp.google.com>
+	<20260428162146.78e52988@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,79 +50,49 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 28 Apr 2026 15:55:08 -0400
+On Tue, 28 Apr 2026 16:21:46 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri, 24 Apr 2026 15:52:27 +0900
+> On Fri, 24 Apr 2026 15:52:35 +0900
 > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> > @@ -5648,11 +5668,12 @@ __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-> >   again:
-> >  	/*
-> >  	 * This should normally only loop twice. But because the
-> > -	 * start of the reader inserts an empty page, it causes
-> > -	 * a case where we will loop three times. There should be no
-> > -	 * reason to loop four times (that I know of).
-> > +	 * start of the reader inserts an empty page, it causes a
-> > +	 * case where we will loop three times. There should be no
-> > +	 * reason to loop four times unless the ring buffer is a
-> > +	 * recovered persistent ring buffer.
+> > @@ -1892,9 +1895,19 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu,
+> >  	 * subbuf_size is considered invalid.
+> >  	 */
+> >  	tail = local_read(&dpage->commit) & ~RB_MISSED_MASK;
+> > -	if (tail > meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+> > -		return -1;
+> > -	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+> > +	if (tail <= meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+> > +		ret = rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+> > +
 > 
-> Can you explain more to why this is allowed for persistent ring buffer?
+> This code seriously needs comments.
 
-Ah, that was introduced in v15.
+OK, I'll add it, or let code explain clearer?
 
-  Changes in v15:
-  - Skip reader_page loop check on persistent ring buffer because
-    there can be contiguous empty(invalidated) pages. 
+	if (tail <= meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+		ret = rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+	else
+		ret = -1;
 
-
-So, finding next reader_page, we need to skip empty pages, which is normally
-not contiguous. However, if we see more than 3 invalid pages on recovering
-persistent ring buffer, it will be reset and become empty.
-
-
-> 
-> Note, I do not like any loops that can go into an infinite loop and lock up
-> the machine. If something goes wrong with a persistent ring buffer, then
-> this could possibly go into an infinite loop.
-
-Yeah, so I think we should not use goto here. OK, let me update it to
-an actual loop.
-
-> 
-> I want to understand why this is allowed, and possibly add a check that
-> prevents this from never ending.
-
-It should not be a never ending loop (there are other exit conditions),
-but I agreed. What about limiting with nr_subbufs?
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 5326924615a4..aa89ec96e964 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5630,7 +5630,8 @@ __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	 * a case where we will loop three times. There should be no
- 	 * reason to loop four times (that I know of).
- 	 */
--	if (RB_WARN_ON(cpu_buffer, ++nr_loops > 3)) {
-+	if (RB_WARN_ON(cpu_buffer,
-+		++nr_loops > (cpu_buffer->ring_meta ? cpu_buffer->nr_subbufs : 3))) {
- 		reader = NULL;
- 		goto out;
- 	}
+Thanks,
 
 > 
 > -- Steve
 > 
-> 
-> >  	 */
-> > -	if (RB_WARN_ON(cpu_buffer, ++nr_loops > 3)) {
-> > +	if (RB_WARN_ON(cpu_buffer, ++nr_loops > 3 && !cpu_buffer->ring_meta)) {
-> >  		reader = NULL;
-> >  		goto out;
-> >  	}
-> 
+> > +	if (ret < 0 || (prev_ts && prev_ts > ts) || (next_ts && ts > next_ts)) {
+> > +		local_set(&bpage->entries, 0);
+> > +		local_set(&bpage->page->commit, 0);
+> > +		bpage->page->time_stamp = prev_ts ? prev_ts : next_ts;
+> > +		ret = -1;
+> > +	} else {
+> > +		local_set(&bpage->entries, ret);
+> > +	}
+> > +
+> > +	return ret;
+> >  }
+> >  
 
 
 -- 
