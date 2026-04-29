@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404AE3AE704;
-	Wed, 29 Apr 2026 08:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6509D3B6BEB;
+	Wed, 29 Apr 2026 08:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777452058; cv=none; b=FMtRu6sK4Q/zrWRvz/4RKGp5jTNX8XS3zsQjQW3nAgwWkT//+gIhOo9RDJenH4ly0UyVFQ8mqmrDwVs2n3LeJ51soxlNvumZk2siNooTtY53IMK8af+GTyZNBlTI5j5+/7TQJPNMPdiDp9GT/P05xxN6MPAo9uqDw+wZ/oFz/2w=
+	t=1777452142; cv=none; b=VY02xLtJW1Nq3bskmgxbWhuLrjpeaooChK94Fh8M9rcsk/U1A70OP7xELPWJO8q6Z5ySI0do18RPSAWONwkmSNTu2SHqN0pxJLBzRFGjQiayoyklQo/oICMiLuzJVPDnnxozo2oWKeLCPu1+ON03/jtbiVATDKySLAP2F7LjyBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777452058; c=relaxed/simple;
-	bh=pnnPZcCkAy9nsHmuIEq6UodUMe/4RgyIp3EeaUJLPnw=;
+	s=arc-20240116; t=1777452142; c=relaxed/simple;
+	bh=t7kSSrP3dnf/fxojWIQ7BrwwsPqrfP6Uq/dJpl/ryJM=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=anhjJeDwv+y2Gt1+8AmsdZFgOglnqF1kQOlhNQdfWN90CUMHWKPKNIPA+lOPGry05thjRrZCiJ3k/xBzDoB/n9MHGPGLao/tf5B10ygYwTOp28ccjt1ek9VhrJBmdt1BJ6PeVUfI3GSwk9CP2EhMtsX22l3nLU37j6HgPt8r/ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9qd/sIL; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=fa0GFfgG8wcAMLsKCVi4nw7Lw66+58VdkxheWyuSixvGMMvw87gzZSsd9VEJYAFmpUkJeaQfK74I7ifPqHsBcx9ylin9uEYVnnV/C4SCQtDDTo6bTqKFm0EKWoWvngd571coXiHLk6Ewlo3RcY1Z6sp5pfTA9NEicqL2SMsC5g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME2PcfkF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9qd/sIL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4372C19425;
-	Wed, 29 Apr 2026 08:40:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME2PcfkF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5070EC19425;
+	Wed, 29 Apr 2026 08:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777452057;
-	bh=pnnPZcCkAy9nsHmuIEq6UodUMe/4RgyIp3EeaUJLPnw=;
+	s=k20201202; t=1777452141;
+	bh=t7kSSrP3dnf/fxojWIQ7BrwwsPqrfP6Uq/dJpl/ryJM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=M9qd/sILJwri7mFnJJmRHSWfspRweez1/Xk+YqPTZLQTl3AM0SaBkGKhsYHlaB9ae
-	 cM+HSXZHOFSd4QspAEimztfMrLUgBeZRMOqcsskB3DEGj8lObDEwnNwNNgn1fk2NN2
-	 YkhcAye/rma9M/WOGlO0GWMgWJywTrqvBg4h0NECbbmXdDjUhnt43sk1JF4tpOXurV
-	 fMFWUJRDiQvBd+2a1xKEUkzuMzJJLa/Ep0eQbJwg9pwHmt9Pr+mJnc/4lpiQvdA9yu
-	 pd1y074pXmO+JnOVCdtQL/VOBYWMxPbUBtvC4NhI1uO/Ej+gorHAgjed4b8Pxx8iJj
-	 iy6dTJarOpplA==
-Date: Wed, 29 Apr 2026 17:40:53 +0900
+	b=ME2PcfkFZfU1i4Dx7wd4PioBRya3Oayl2roa5ohq/bwtJcPfTNkbOm2HfVckNqejl
+	 ofkMcP0AcnoBpo4oW2CU86ACtdHkRAELs1SC9mulOnlRwPqH1/0fzgeoTBLK77f8vT
+	 J0eL7zjUpXNXOSpthfWaTsqUpV3AptZWkG8deP8nl53hjs3//bDH85Tk2qm6Yhaw8a
+	 mfnyTEzMmUkziVQp13/Zt1RLd4GB4S5Mcuj4wpKht9/Xr1XpT4YFXuMYvKBaxdjcTh
+	 m9eQBqaWIBHDaZSUcVfg9yKZE3NtFuqtTuMmT7+CANq17/VhNBrJeV+BnEmKEuT2kF
+	 JAV0+Yw2HrvoQ==
+Date: Wed, 29 Apr 2026 17:42:18 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Shijia Hu <hushijia1@uniontech.com>
-Cc: naveen@kernel.org, davem@davemloft.net, ananth@in.ibm.com,
- akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Remove dead child probes from aggrprobe list
- on module unload
-Message-Id: <20260429174053.b66f3a0032408f544128afd4@kernel.org>
-In-Reply-To: <20260429032919.208790-1-hushijia1@uniontech.com>
-References: <20260429032919.208790-1-hushijia1@uniontech.com>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing/probes: Limit size of event probe to 3K
+Message-Id: <20260429174218.97dd03b66db5df6a7eea8d83@kernel.org>
+In-Reply-To: <20260428122302.706610ba@gandalf.local.home>
+References: <20260428122302.706610ba@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,144 +46,76 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 29 Apr 2026 11:29:19 +0800
-Shijia Hu <hushijia1@uniontech.com> wrote:
+On Tue, 28 Apr 2026 12:23:02 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-> When a kernel module that registered kprobes is unloaded without calling
-> unregister_kprobe(), kprobes_module_callback() calls kill_kprobe() to
-> mark the probe(s) GONE.  If the probe is an aggrprobe, kill_kprobe()
-> also marks all child probes GONE, but it does not remove them from
-> the aggrprobe's list.
-
-That sounds like a bug in the module.
-
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> The problem is that child probes whose struct kprobe resides in the
-> unloading module's memory are freed along with the module, yet they
-> remain on the aggrprobe's list.  Later, when another caller registers
-> a kprobe at the same address, __get_valid_kprobe() walks that list
-> and dereferences the freed child probe, causing a use-after-free.
+> There currently isn't a max limit an event probe can be. One could make an
+> event greater than PAGE_SIZE, which makes the event useless because if
+> it's bigger than the max event that can be recorded into the ring buffer,
+> then it will never be recorded.
 > 
-> Reproduction steps:
-> 
->     1) Load module A which registers two kprobes on the same kernel
->        function address (e.g., do_nanosleep), causing them to be
->        aggregated under one aggrprobe.
-> 
->     2) Unload module A without calling unregister_kprobe().
->        Module A's memory is freed, but its two child probes remain
->        on the aggrprobe's list as dangling pointers.
+> A event probe should never need to be greater than 3K, so make that the
+> max size. As long as the max is less than the max that can be recorded
+> onto the ring buffer, it should be fine.
 
-Would you mean "load a buggy kernel module and unload it, the kernel cause
-use-after-free."? for example:
+This looks good to me.
 
-----
-struct kprobe my_probe = {...};
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-init_module() {
-	register_kprobe(&my_probe);
-}
-exit_module() {
-	/* do nothing */
-}
-----
-
-Yes, this cause UAF because that module has a bug. Please call
-unregister_kprobe().
-
-Thanks,
+Thanks!
 
 > 
->     3) Load module B and register a kprobe on the same address
->        (e.g., do_nanosleep). register_kprobe() -> __get_valid_kprobe()
->        traverses the aggrprobe's list and dereferences the freed child
->        probe from module A, triggering a use-after-free and kernel panic.
-> 
-> The resulting crash looks like:
->     [  464.950864] BUG: kernel NULL pointer dereference, address: 0000000000000000
->     [  464.950872] #PF: supervisor read access in kernel mode
->     [  464.950874] #PF: error_code(0x0000) - not-present page
->     ...
->     [  464.950915] Call Trace:
->     [  464.950922]  <TASK>
->     [  464.950923]  register_kprobe+0x65/0x2e0
->     [  464.950928]  ? __pfx_stage2_init+0x10/0x10 [kprobe_leak_stage2]
->     [  464.950933]  stage2_init+0x37/0xff0 [kprobe_leak_stage2]
->     [  464.950938]  ? __pfx_stage2_init+0x10/0x10 [kprobe_leak_stage2]
->     [  464.950942]  do_one_initcall+0x56/0x2e0
->     [  464.950948]  do_init_module+0x60/0x230
->     ...
-> 
->   Fix this by adding selective cleanup in kprobes_module_callback():
->   after calling kill_kprobe() on the aggrprobe, iterate its child list
->   and remove any child probe whose struct kprobe is inside the going
->   module's memory range (within_module_init / within_module_core).
-> 
->   This is done in kprobes_module_callback() rather than kill_kprobe()
->   because kill_kprobe()'s semantic is "the probed code is going away,
->   mark probes GONE".  The lifetime of a probe is bound to the probed
->   code, not to the module containing the struct kprobe.  Child probes
->   owned by other still-loaded modules or by kmalloc (ftrace, perf,
->   kprobe-events) must stay on the list so they can be unregistered
->   later.  Only child probes whose memory is about to be freed need to
->   be removed from the list to prevent dangling pointers.
-> 
-> Fixes: e8386a0cb22f4 ("kprobes: support probing module __exit function")
-> Signed-off-by: Shijia Hu <hushijia1@uniontech.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 93ccae7a22274 ("tracing/kprobes: Support basic types on dynamic events")
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 > ---
->  kernel/kprobes.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
+>  kernel/trace/trace_probe.c | 6 ++++++
+>  kernel/trace/trace_probe.h | 4 +++-
+>  2 files changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index bfc89083daa9..ff277314183c 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -2664,6 +2664,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
->  				   unsigned long val, void *data)
->  {
->  	struct module *mod = data;
-> +	struct hlist_node *tmp;
->  	struct hlist_head *head;
->  	struct kprobe *p;
->  	unsigned int i;
-> @@ -2685,7 +2686,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
->  	 */
->  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
->  		head = &kprobe_table[i];
-> -		hlist_for_each_entry(p, head, hlist)
-> +		hlist_for_each_entry_safe(p, tmp, head, hlist) {
->  			if (within_module_init((unsigned long)p->addr, mod) ||
->  			    (checkcore &&
->  			     within_module_core((unsigned long)p->addr, mod))) {
-> @@ -2702,6 +2703,26 @@ static int kprobes_module_callback(struct notifier_block *nb,
->  				 */
->  				kill_kprobe(p);
->  			}
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index e1c73065dae5..e0d3a0da26af 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1523,6 +1523,12 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  	parg->offset = *size;
+>  	*size += parg->type->size * (parg->count ?: 1);
+>  
+> +	if (*size > MAX_PROBE_EVENT_SIZE) {
+> +		ret = -E2BIG;
+> +		trace_probe_log_err(ctx->offset, EVENT_TOO_BIG);
+> +		goto fail;
+> +	}
 > +
-> +			/*
-> +			 * Child probes are not on the kprobe hash list, so
-> +			 * the above loop can not find them. If a child probe
-> +			 * is allocated in the module's memory, it will become
-> +			 * a dangling pointer after the module is freed.
-> +			 */
-> +			if (kprobe_aggrprobe(p)) {
-> +				struct kprobe *kp, *kptmp;
-> +
-> +				list_for_each_entry_safe(kp, kptmp, &p->list, list) {
-> +					if (within_module_init((unsigned long)kp, mod) ||
-> +					    (checkcore &&
-> +					     within_module_core((unsigned long)kp, mod))) {
-> +						kp->flags |= KPROBE_FLAG_GONE;
-> +						list_del_rcu(&kp->list);
-> +					}
-> +				}
-> +			}
-> +		}
->  	}
->  	if (val == MODULE_STATE_GOING)
->  		remove_module_kprobe_blacklist(mod);
+>  	if (parg->count) {
+>  		len = strlen(parg->type->fmttype) + 6;
+>  		parg->fmt = kmalloc(len, GFP_KERNEL);
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 9fc56c937130..262d8707a3df 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -38,6 +38,7 @@
+>  #define MAX_BTF_ARGS_LEN	128
+>  #define MAX_DENTRY_ARGS_LEN	256
+>  #define MAX_STRING_SIZE		PATH_MAX
+> +#define MAX_PROBE_EVENT_SIZE	3072
+>  
+>  /* Reserved field names */
+>  #define FIELD_STRING_IP		"__probe_ip"
+> @@ -561,7 +562,8 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+>  	C(BAD_TYPE4STR,		"This type does not fit for string."),\
+>  	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
+>  	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
+> -	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),
+> +	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
+> +	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),
+>  
+>  #undef C
+>  #define C(a, b)		TP_ERR_##a
 > -- 
-> 2.20.1
+> 2.53.0
 > 
 
 
