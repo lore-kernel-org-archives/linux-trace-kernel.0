@@ -1,143 +1,161 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FBE2D9ECA
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 15:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777562578; cv=pass; b=dQy7vHyX7fZKB7OYwJ6jppXXCN7tP2h3omrF9AWRCLjkkiQI4JPZWay7YtvIF6m3KDyAkKvtbludCCd2OZYOf3673/d7/LjXhO6sAQQLJEHrlvf7wpBq0qBriYTk9+DZNeusr5IwPHl1yra7xaldi/LO+mcJWEkbMxt9l+UJEtA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777562578; c=relaxed/simple;
-	bh=VttgwoB85cht3PKYb8QZ8qtGm3rDTnCCBtygb68d2o4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i3LtNDPigsdTeDtskEf1iunH97BFiXcGsVRccdR7GXXMweSor/m1Eolu35cl0OgonIgrggd2kKEVjTDTa8DjCuQdHzws7iPTAmfUAqSCYztk6pwPTxqtT9MI661GJuJYA99ntY3puPAdY28px1dqHJ61D700K4i9BgoLuQ66D2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cmXKmukP; arc=pass smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8129427F010;
+	Thu, 30 Apr 2026 16:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777566263; cv=none; b=rfPuMzKLkSvjexUM0iy5yxMXXJEV3vQFMV5z2atnpt/M9f4vYBH0wogT2VXRm5qV13hzqOb0KO9NpPrIED7ZBNGnztKOMQuT5j/samJhhNWV/qbv/5Rzb2LM6/vw4Ss6zV/vSJvGP5ieE54wkeRZrQ6zK4iavkEDe8Qi09l37m4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777566263; c=relaxed/simple;
+	bh=PvX+7Rpy6otqJqZxfCW2MnQ5RTSTD6HfhaTzr0z8+9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Krb6Uk49Ov3oyeduP1keSTZ/Y0ATMASL0ZlDO/V23fEsR8YArJMnTdQ33C4Wfc5ZAZYzEn4EUhoH2IEdPDZN+0NRK7ZtpM3kr9VKoM7KKCWwKe4eA7pFYKbmI/I03r45UKAoiJDFSmu7KgG40H5W+9+JXtzjpTXDU2VgaxG+C1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NzGoUOgd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cmXKmukP"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-66ba6d3dab3so13334a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 08:22:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777562575; cv=none;
-        d=google.com; s=arc-20240605;
-        b=QO8hgZpHCvaPsOpbYiHrmYTNfCtPq71PU0qne5hMCgtMSnQtDbpwFIR1qKiuHyt/d9
-         w5jV1sHPgG3j6LuYeWpRnQx7Lc0wNpF17+iP4WN0hDPK4QfuvxeDYsCtQ8ARf82S80sW
-         vH6iQKEVKZqKo14rvaxNxTpeXDW9Zn8iq1dWJJN+bc64K39GB6CQJpgNktDvWnX6UtcP
-         0gR4oKfIupAETrKV8mJpJFeeJDiuhivqPx9fHk5KEArUoeS7VhnEujvMgwcJv6Wl4SVi
-         XYwljoctFKH6OJZZ8N3h7NhINYSQJ1Voc4LICJW0R2vG5hnP7vvtV7pmPWAJ5YWyq3mk
-         WdVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
-        fh=wokvueOmT7eQAyprzA7KcgeMTbDHaecT9JANuAydhGE=;
-        b=DyGhAvYUpr3vR+eiQoJ0dFbxvVkJkiDXkVJhF1Q8HiFrZy1mswWNYYg5S3x+389j/S
-         fGbgg5vpmqvjqQ4FRr00XwBBzSwEcXoIUQtsSTd9tWa3KUPzM5glWeXVnCfs8LMuM8sR
-         koxkw9g9h/pTwEceq4VPLbAq4oMOBS3YrXeBA0DqWhKJ55eJd9poVlrJK7l+knNPudzV
-         gtih0fsvDt/iYiemeXRJu2dxPYVQZrX1mH2Wl0TvCYzuTzfByqN01HE7qwBxxcP6Y9nK
-         5AmtN39Tpw0sThyfIJstOT51WiprUJduWGrofKzVuXAly2YQGHIOWQIZFs2tBeYZ8cqD
-         Kx3A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777562575; x=1778167375; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
-        b=cmXKmukPDZsqP4ixXpetZ4lqign+9o9o0cdBRlAmOQWZZlx3bhzMzI+APPksDnmMEw
-         /+HcmsTiUEUFLkYhuHNIHDs4ZfJUmbxvtWyUaYdW5PCLppfLVO+HFOVPs6ACDYeLgOl7
-         DxW9UsRXfw4+GzALguJa55pQdLaEwR1rN75/hvyQzHfv/3Q/eQUtGcdB7oOEwKCR6hjX
-         PoOzjfN5sbkBlJ4342XtIyPcun2G3OaV877bWPsqwkWQRN5nsNGy60NG+0Cy4c4w6aeu
-         QrkUk3myPpWfOS4NOeu2ZbzlEpHRQBrRO4q0gUZNCAdWhRr15CbZ2nr550EX/6FQNFuW
-         4iUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777562575; x=1778167375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
-        b=YMWqZ3ehbZxhummwL57ZOEp2MoixC+kNdKcX1RyOPEAIBjWmbiCUZYtuEiMIhCTDjY
-         gOUYl1LZh0douM1OYA6zeJ14Pkly3hAOfKt0TAXB4o2lX8C5yc/A60fxddwhro2Kstnb
-         e35KBMB3uFdYLRlB7PHvnP1v68MDMVl7YyDJJOcD97to2nx6lrbxBOiElZPdeKlqBzH2
-         GgXPZbIbdeYszlFHOROOykswcA2WqPN5KVoDWC53EiU2/JXVc8nCzH6svQtJxlIHgMdp
-         imx/lsV0Tm+Gb+qxcMTuGA5MzWoISrDuGubRBMIOBzOyZ6++PSoz0Uq6rL6Rrsq1o22Z
-         m4ZQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8dM5draZifqtkwZUxRMGOOa4VAlqt5IJs8WlmMbWOwBmzx81KAErbvTVQYSNMkYDEWLVKpY3VRmau77DDrLnhMbBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5KNFvj4cPlAnP76D1JxoL65h1GLLXYbWFWJSKoI2FAIu6IMol
-	cdoW9b3aV+QIQN8+brcFWnd4hwkwaUiHnwPDUvOAdIzOhOo98IzGGBXk0YY+ory6OvTXb2zCd82
-	Ma+QlH6cyrjGXmuuUoTgqQU108a4Yq3zo+h2OKBZ7
-X-Gm-Gg: AeBDiesqeG+FghytNPJTht3przbGm2dnwOm1nHp42IDrLS6dJAvDOycgV+YfEBY/NrU
-	3GEOabMEQ2CA5Sa+vBIa88Es9381N7TY6mEEZdi7WBnRcv3Tccsp7daWCDHVlLIkvKUaPHA3gE9
-	MRGqJuPoxhfuqbvnNMMSthC0XEkC3LQUbTDT72B/U0O9jJSf0m2ZnrERQIPSly7VXGeGswD1WGj
-	eb1ovI2jAOR01cut7IXR0NVoQTx7EWxan9n0BFF6hvI58TDKQRbUfobeMoF5nBapa8No3eXN/JP
-	P6uaWwa38GLLGUE0OT+VRTzx2hNJIxvNxmEHA7SIexH+ev4xVgTJXqvohQ==
-X-Received: by 2002:a05:6402:3241:b0:671:fff6:f82c with SMTP id
- 4fb4d7f45d1cf-67b4e8ea06cmr58179a12.2.1777562574533; Thu, 30 Apr 2026
- 08:22:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NzGoUOgd"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63UGFGVa1456647;
+	Thu, 30 Apr 2026 16:23:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=EAQBzA
+	rHcNMVM71micpeThUsUmNsfQEmWRe4OdEDRws=; b=NzGoUOgdbztHmwZHWgONjA
+	raRm+5c8stIfOAQOOXf2kP/pYWtmuXDVsyo9b1EEw6B/tynOYWjHhVO1IRL/pMXp
+	Xjy+vQRvg9/7elbwiDqMr13O0SFVaSSvAyk0+CHkJ0SskoLWhuc07bB6C9a0vEvR
+	ZmUZVw0X9Z3wUbFp1ePgmnDOj7Gkfiyrj4y5lQHt8mE2DSu6+9czUMUaoZMDqI1H
+	pIBYqsazZ/kHsKtaMs8uDfbU/DnYTvpBHuxzPDCuyNNXWsKC6XkXSQSx7KA6RIlJ
+	CIAg6RaKJOcRtgXOicgqYGVL1m8nYfBBBwiN5HT8dJqmsWv/gZmaBAHt4vLqrn/g
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drn8vpy41-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Apr 2026 16:23:25 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63UG8ohn007501;
+	Thu, 30 Apr 2026 16:23:25 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ds7xqkwge-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Apr 2026 16:23:24 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63UGNLmc49742124
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Apr 2026 16:23:21 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8609520040;
+	Thu, 30 Apr 2026 16:23:21 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DA09C20043;
+	Thu, 30 Apr 2026 16:23:20 +0000 (GMT)
+Received: from [9.52.200.195] (unknown [9.52.200.195])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Apr 2026 16:23:20 +0000 (GMT)
+Message-ID: <46aa63d3-0ebf-4062-aefb-86cf0f05dea1@linux.ibm.com>
+Date: Thu, 30 Apr 2026 18:23:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260429131522.4049054-1-dtominac@cisco.com> <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
- <afIiqR5CqYRId0N0@redhat.com> <afJz3l6435DHLorn@goliath>
-In-Reply-To: <afJz3l6435DHLorn@goliath>
-From: Jann Horn <jannh@google.com>
-Date: Thu, 30 Apr 2026 17:22:18 +0200
-X-Gm-Features: AVHnY4IXFcsVkK3lFxWPc3mkzosN0e9A_ZuO_cu-riyBEoDL1P4-BpVJGbycfsQ
-Message-ID: <CAG48ez0mwkHz=4+PoLv_VmYrQiPqkSQqCSo=3R-ztrQ2zAHUwQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across MADV_DONTNEED
-To: "Daniel Walker (danielwa)" <danielwa@cisco.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, "David Hildenbrand (Arm)" <david@kernel.org>, 
-	"Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)" <dtominac@cisco.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, 
-	"xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH] unwind: Add stacktrace_setup system call
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf
+ <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Michal Hocko
+ <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20260429114355.6c712e6a@gandalf.local.home>
+ <ade15347-6eca-4204-9f64-9b2eed9e9aec@efficios.com>
+ <20260429145512.461e09fe@gandalf.local.home>
+ <20260429145815.69dcb1c0@gandalf.local.home>
+ <20260429160344.7e5510e9@gandalf.local.home>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20260429160344.7e5510e9@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=CIIamxrD c=1 sm=1 tr=0 ts=69f381fe cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
+ a=meVymXHHAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-ORIG-GUID: -hSW_O5p2nSOB1nch67Bj0CeTTFs7ILS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDMwMDE2OSBTYWx0ZWRfX8VRHONAa71JN
+ ctSfz7kejmYYahGVRpvYD3PEvdYFOR67e/o/SmGX4PGf76uGJAn6CP6VyDJ/GTRiGBMaZNqNtgC
+ KeerdWkp7RHI1fGlAMlEdUjaTnmO0kovUOF3L960CFaspc2OyjOcxEwsRZs8B8jXvRlkateebZi
+ RiUJOoSvfCTNXHz/4g//0WQ1qDyyB8ZVeiGQi2JXNW5L7e8FeZrUDwosaD946jUNvQWxtZZjkUQ
+ q/O+v8NRGXq1a3dSYX5DLWObgk4TaXm4HyOQtYvSghIMveOHkcSUt2PFtR+7GAlTRzjtidpG6bo
+ ihdhEwijBzG+Cx3StzbIVG+wGt4/Zv0YpNlT+J9aT8udyLRIpmppvzLOnCjjigL3JWJttsZpbn7
+ ru9sV99vvaRv3NtqfEx20uA+c/Qwh1qwgBu4+SyxQUyLs75Si1OYtORx8rICoSHXEH50D0J6234
+ wTiGxEv2yb68rQw4Q7w==
+X-Proofpoint-GUID: RvbVqX0okIcRgVcA2lin9pgq85mKLEg8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-30_04,2026-04-30_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ impostorscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2604300169
 
-On Wed, Apr 29, 2026 at 11:11=E2=80=AFPM Daniel Walker (danielwa)
-<danielwa@cisco.com> wrote:
-> On Wed, Apr 29, 2026 at 05:24:25PM +0200, Oleg Nesterov wrote:
-> > On 04/29, David Hildenbrand (Arm) wrote:
-> > >
-> > > On 4/29/26 15:15, Darko Tominac wrote:
-> > >
-> > > > uprobe infrastructure does not re-instrument pages on individual pa=
-ge
-> > > > faults (uprobe_mmap() is only called during VMA creation, not on
-> > > > page-in), the breakpoints are silently lost once the discarded page=
-s are
-> > > > re-read from the backing file.  The probes stop firing with no erro=
-r
-> > > > indication, and the only recovery is to unregister and re-register =
-the
-> > > > affected uprobes.
-> > >
-> > > Right. Don't MADV_DONTNEED uprobes, just like you are not supposed to
-> > > MADV_DONTNEED debugger breakpoints/set data etc. :)
-> >
-> > Agreed, thanks.
->
->
-> Shouldn't there be some sort of compensation or notification for this, or=
- is each person that
-> hits this suppose to just scratch their head and send a patch that's reje=
-cted?
+On 4/29/2026 10:03 PM, Steven Rostedt wrote:
+> On Wed, 29 Apr 2026 14:58:15 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+>>> If the main executable doesn't have a sframe section, I don't see why this
+>>> shouldn't be allowed to add one.  
+>>
+>> The address is added via mtree_insert_range() which states it will return
+>> -EEXISTS if the range is occupied.
+> 
+> I confirmed this. I changed the test program to load its own sframe section
+> again, and it errors out with -EEXISTS.
 
-I guess we could add a pr_warn_once() that warns when
-madvise(MADV_DONTNEED) is called on a read+execute file mapping,
-and/or (as David said) add an explicit note in the madvise() manpage
-about how that can interfere with software breakpoints and uprobes?
+Should an executable be allowed to remove its main executable sframe
+section?  Currently the kernel takes care of registering/unregistering
+that.
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
