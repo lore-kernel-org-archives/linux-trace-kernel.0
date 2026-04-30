@@ -1,56 +1,50 @@
 Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BDC36215A;
-	Thu, 30 Apr 2026 17:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A77E331214;
+	Thu, 30 Apr 2026 17:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777570445; cv=none; b=A80gbMRBT4a3jWeCneAqj4fkg9H6CsD/Hx9w0KDIR8+vtAePgPbttK7zH89cWdcx8Hi8frsYY/vqg+sebnUy0jumPhBTjJcPwx2xFZkseM8sDjgTWa8z57NCHqrwY6XJV6H6ENHiRoQhOkdy6CYkleCoYhswUurdsMYAEq6eCUc=
+	t=1777570723; cv=none; b=cAQQHDodbpIgtN+5VEjXsUmSObe1mmzLgQ9dKakyMB1L/fPrSUx8pBvI4VTJWXe9n16HNwbqDCzLA1WsqGBDa27cRQSbIIUHFQ0T5Fp5GrjdzGTTxA+UmCMtJQS6Sui2Xg6G54V/oniuZGs+ozhDk9ekaPcW5cJ3oZIMR+u24ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777570445; c=relaxed/simple;
-	bh=hGC7DsWirVwtdbfB2/+kjMuLszjNmuaE73bMqS622Y0=;
+	s=arc-20240116; t=1777570723; c=relaxed/simple;
+	bh=YYdE6aWb2LlZ93IU/8aqfhgxymCzzIszohTpaOS2jgc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hyqqZ+i2Fj9g/9gmx+FwL+p8cfH2ysuFrpzUNnB64LiJ6UJLkBuNkizsF9tCn1uH9yP0B0Mqd0oEoyFidEqdMHHrwzQyxgf3adzWaIGaDF4QYD6+I7rI18fEQv7DgQPm7gtZzurZbKJ35PJeqPq3cbPsbMXFvluCr2JRUZ03cqM=
+	 MIME-Version:Content-Type; b=L4aqvOIghYebPdffADUASP7meI935jxhAelvWvRpyjJ4XzfjkkEhpjAj8j5gGn8pL6G7lkpliBMtnLgz/5uzV/4d7AgqptsoasYrL0/eClhc0bjhKntqTeeWQ90VHSTE2mB2cUJZZECL6RJB3g7Qg2yLPmIPEXuBYu1J6ciAcfQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id C085B1C0FAB;
-	Thu, 30 Apr 2026 17:33:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id E19932001B;
-	Thu, 30 Apr 2026 17:33:43 +0000 (UTC)
-Date: Thu, 30 Apr 2026 13:33:42 -0400
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id E2C8D401D3;
+	Thu, 30 Apr 2026 17:38:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 6069720015;
+	Thu, 30 Apr 2026 17:38:28 +0000 (UTC)
+Date: Thu, 30 Apr 2026 13:38:27 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML
- <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+To: Indu Bhagat <ibhagatgnu@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, Kees Cook
- <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>, Sam James
- <sam@gentoo.org>, Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, David
- Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka
- <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>, "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, "Carlos
+ O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, Dylan Hatch
+ <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Michal Hocko
+ <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
 Subject: Re: [RFC][PATCH] unwind: Add stacktrace_setup system call
-Message-ID: <20260430133342.65a64f53@gandalf.local.home>
-In-Reply-To: <46aa63d3-0ebf-4062-aefb-86cf0f05dea1@linux.ibm.com>
+Message-ID: <20260430133827.7efb6cd9@gandalf.local.home>
+In-Reply-To: <20260429114355.6c712e6a@gandalf.local.home>
 References: <20260429114355.6c712e6a@gandalf.local.home>
-	<ade15347-6eca-4204-9f64-9b2eed9e9aec@efficios.com>
-	<20260429145512.461e09fe@gandalf.local.home>
-	<20260429145815.69dcb1c0@gandalf.local.home>
-	<20260429160344.7e5510e9@gandalf.local.home>
-	<46aa63d3-0ebf-4062-aefb-86cf0f05dea1@linux.ibm.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,34 +54,404 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 56o4nnou1ugzr8m1xcmdbo3uohwge941
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: E19932001B
+X-Rspamd-Queue-Id: 6069720015
+X-Stat-Signature: 1jtty68fy44amkebrhedi3je4xti99d1
+X-Rspamd-Server: rspamout03
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/W6z6LvLTgFpqa1aFJ4SszwW/pIVPNXxs=
-X-HE-Tag: 1777570423-743727
-X-HE-Meta: U2FsdGVkX1/gdFZWYkOQiQQea8Rb1VLLTz0tuLPSIAUB5pjY8I1u1SYUwyQO/t5AQhDUMyQ4IJu/oNdXMQu1x1PigYZBXEhkURCNfDuTuX1xXIgQ6FJxiprm2xJ0iSDKRH5P97lX3GNWL6f56xLyNs9itKU/LyhKROSptHi2Al3Xs9AqpPwi37I/p4clEi/jWwGUJRTaWWtSyhAXpJtlBpAjVOZHBgSMNBUHrC5G+PSX2n8cIHUubcOPxAgNOEZGKDMlXUrjfVDZxs4PpjZpV7yO/dpBXlWWptC7YfkAyofc6F0BCPzXfY3WJWu+aN19SjpOqjhhWuKORu2dm7j4DBGvl0vkOXtRdd0rBEXPVVfRFmtKhVHuiTW6COrvuvYHBFxwOD+iYIPaDWbqQlIfyfSzSsD5frG+WtRunMGP+DfX071YcES5lw==
+X-Session-ID: U2FsdGVkX19/CYtxJGs6LwaCZ/NiL6vFSDh7V14N7TY=
+X-HE-Tag: 1777570708-800746
+X-HE-Meta: U2FsdGVkX1/IS3NaMBLALXyrMm/2VQBIJnzxF2NJMVV8OwnjXTUelD4Tpq5zKXHoAd22yTAVpaZ9PGUfra8rj1R1OGFqGvSex74SQz6zpfTSi9VwowX8FyF6gS44fadGt7ea2cLsB7uZLfB25H0//d5wRcSYV+j1PFFlHUBYfL52wxxjvqq7M/EMBYCc/aoXLWuJ0DkKYGcU31nYU/R1Vtp0JQ7nen4rYOcZyOmNNnsUgw+DHoXRnVJkuqM0eb3tAhWWGtXqne0E1zeDqF2TDx4YPnKaiKxG1jOVr4iQpZR6ZPtWnXCyDwafV+/43X/Zi6V5yl4GnieQXjE3LHTG1uhYZ+ZGer+Cpd/QUDq+u7qh/fXOCBjyFFYmVXfVa4DTPZOu85VIgIbhtS89wOiTmzO0N5jbq3G93+dsLKXVRlQ=
 
-On Thu, 30 Apr 2026 18:23:19 +0200
-Jens Remus <jremus@linux.ibm.com> wrote:
 
-> On 4/29/2026 10:03 PM, Steven Rostedt wrote:
-> > On Wed, 29 Apr 2026 14:58:15 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> >>> If the main executable doesn't have a sframe section, I don't see why this
-> >>> shouldn't be allowed to add one.    
-> >>
-> >> The address is added via mtree_insert_range() which states it will return
-> >> -EEXISTS if the range is occupied.  
-> > 
-> > I confirmed this. I changed the test program to load its own sframe section
-> > again, and it errors out with -EEXISTS.  
-> 
-> Should an executable be allowed to remove its main executable sframe
-> section?  Currently the kernel takes care of registering/unregistering
-> that.
+I forgot to update Indu's email.
 
-Why not? It has access to the memory. It could simply corrupt it too.
+Indu, here's the patch for adding a system call to allow the dynamic loader
+to add sframes for the dynamic libraries it adds.
+
+The lore link to see the original email and thread:
+
+  https://lore.kernel.org/all/20260429114355.6c712e6a@gandalf.local.home/
 
 -- Steve
+
+
+On Wed, 29 Apr 2026 11:43:55 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
+
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> [
+>    This is an RFC that adds a system call for dynamic linkers to use to
+>    tell the kernel where the sframe sections are when it loads dynamic
+>    libraries.
+> 
+>    It is built on top of Jens's sframe implementation for v3:
+> 
+>       https://lore.kernel.org/linux-trace-kernel/20260127150554.2760964-1-jremus@linux.ibm.com/
+> 
+>    I have a repo with that code that this applies on top of here:
+> 
+>       git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git sframe/core
+>        
+> 
+>    The name of the system call is "stacktrace_setup", but I'm not attached
+>    to this name. If anyone can think of a better name I'm happy to take
+>    suggestions.
+> 
+>    This patch is just to get the conversation going and the final result
+>    may be much different. I tested this with the attached program which is a
+>    major hack. I built glibc with sframe v3 support and I used readelf to
+>    find the sframe size and location of glibc.
+> 
+>    readelf -e /work/usr/lib/libc.so.6 | grep sframe
+>      [19] .sframe           GNU_SFRAME       00000000001d3fc0  001d3fc0
+> 
+>    Then I wrote a program that takes the above location and size of the
+>    .sframe section in libc as parameters, scans /proc/self/maps to find
+>    where it loaded libc and then calls this new system call with a pointer
+>    to the location of the sframe along with its size, as well as where the
+>    libc text is located.
+> 
+>    It then spins for 2 seconds, calls the system call again to remove the
+>    sframe section it loaded, and spins for another 2 seconds.
+> 
+>    I ran perf record --call-graph fp,defer on the program and looked for
+>    the do_spin() function.
+> 
+>    With sframe loaded:
+> 
+> sframe-test    1350  1396.333593:     202366 cpu/cycles/P: 
+>             7fdf0ec38a44 [unknown] ([vdso])
+>             5621a6b97243 get_time+0x19 (/work/c/sframe-test)
+>             5621a6b9727f do_spin+0x1f (/work/c/sframe-test)
+>             5621a6b975cd main+0xd4 (/work/c/sframe-test)
+>             7fdf0ea26bda __libc_start_call_main+0x6a (/work/usr/lib/libc.so.6)
+>             7fdf0ea26d05 __libc_start_main@@GLIBC_2.34+0x85 (/work/usr/lib/libc.so.6)
+>             5621a6b97131 _start+0x21 (/work/c/sframe-test)
+> 
+>    After it unloads the sframe:
+> 
+> sframe-test    1350  1400.332902:     657582 cpu/cycles/P: 
+>             7fdf0ec38a5e [unknown] ([vdso])
+>             5621a6b97243 get_time+0x19 (/work/c/sframe-test)
+>             5621a6b9727f do_spin+0x1f (/work/c/sframe-test)
+>             5621a6b97602 main+0x109 (/work/c/sframe-test)
+>             7fdf0ea26bda __libc_start_call_main+0x6a (/work/usr/lib/libc.so.6)
+> 
+>    As you can see, with the sframe loaded, it was able to walk further up
+>    the libc library.
+> 
+>    Again, this is just an RFC, but I would like to get agreement on the
+>    system call so that we can then update the dynamic linker to do this
+>    instead of using my hack ;-)
+> ]
+> 
+> Add a system call that can be used by dynamic linkers to tell the kernel
+> where the sframe section is in memory for libraries it loads.
+> 
+> The system call stacktrace_setup takes 5 parameters:
+> 
+>   op - the type of operation to perform
+>   addr_start - The virtual address of the sframe section
+>   addr_length - The length of the sframe section
+>   text_start - the text section the sframe represents
+>   test_length - the length of the section
+> 
+> The current op values are:
+> 
+>   STACKTRACE_REGISTER_SFRAME - This registers the sframe
+>   STACKTRACE_UNREGISTER_SFRAME - This removes the sframe
+> 
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/arm/tools/syscall.tbl                  |  1 +
+>  arch/arm64/tools/syscall_32.tbl             |  1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+>  include/linux/syscalls.h                    |  1 +
+>  include/uapi/asm-generic/unistd.h           |  5 ++-
+>  include/uapi/linux/stacktrace.h             | 10 ++++++
+>  kernel/sys_ni.c                             |  2 ++
+>  kernel/unwind/sframe.c                      | 37 +++++++++++++++++++++
+>  scripts/syscall.tbl                         |  1 +
+>  22 files changed, 71 insertions(+), 1 deletion(-)
+>  create mode 100644 include/uapi/linux/stacktrace.h
+> 
+> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+> index f31b7afffc34..8c320029a156 100644
+> --- a/arch/alpha/kernel/syscalls/syscall.tbl
+> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
+> @@ -511,3 +511,4 @@
+>  579	common	file_setattr			sys_file_setattr
+>  580	common	listns				sys_listns
+>  581	common	rseq_slice_yield		sys_rseq_slice_yield
+> +582	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+> index 94351e22bfcf..60f9a33b2dc5 100644
+> --- a/arch/arm/tools/syscall.tbl
+> +++ b/arch/arm/tools/syscall.tbl
+> @@ -486,3 +486,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/arm64/tools/syscall_32.tbl b/arch/arm64/tools/syscall_32.tbl
+> index 62d93d88e0fe..a0bd04a23006 100644
+> --- a/arch/arm64/tools/syscall_32.tbl
+> +++ b/arch/arm64/tools/syscall_32.tbl
+> @@ -483,3 +483,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+> index 248934257101..266ec877300a 100644
+> --- a/arch/m68k/kernel/syscalls/syscall.tbl
+> +++ b/arch/m68k/kernel/syscalls/syscall.tbl
+> @@ -471,3 +471,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+> index 223d26303627..916294849393 100644
+> --- a/arch/microblaze/kernel/syscalls/syscall.tbl
+> +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+> @@ -477,3 +477,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> index 7430714e2b8f..20fec148901e 100644
+> --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> @@ -410,3 +410,4 @@
+>  469	n32	file_setattr			sys_file_setattr
+>  470	n32	listns				sys_listns
+>  471	n32	rseq_slice_yield		sys_rseq_slice_yield
+> +472	n32	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+> index 630aab9e5425..2743bbcab143 100644
+> --- a/arch/mips/kernel/syscalls/syscall_n64.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+> @@ -386,3 +386,4 @@
+>  469	n64	file_setattr			sys_file_setattr
+>  470	n64	listns				sys_listns
+>  471	n64	rseq_slice_yield		sys_rseq_slice_yield
+> +472	n64	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+> index 128653112284..187eadc4a42e 100644
+> --- a/arch/mips/kernel/syscalls/syscall_o32.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+> @@ -459,3 +459,4 @@
+>  469	o32	file_setattr			sys_file_setattr
+>  470	o32	listns				sys_listns
+>  471	o32	rseq_slice_yield		sys_rseq_slice_yield
+> +472	o32	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+> index c6331dad9461..9442a92ef0aa 100644
+> --- a/arch/parisc/kernel/syscalls/syscall.tbl
+> +++ b/arch/parisc/kernel/syscalls/syscall.tbl
+> @@ -470,3 +470,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+> index 4fcc7c58a105..005441233932 100644
+> --- a/arch/powerpc/kernel/syscalls/syscall.tbl
+> +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+> @@ -562,3 +562,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	nospu	rseq_slice_yield		sys_rseq_slice_yield
+> +472	nospu	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+> index 09a7ef04d979..bc9894b25584 100644
+> --- a/arch/s390/kernel/syscalls/syscall.tbl
+> +++ b/arch/s390/kernel/syscalls/syscall.tbl
+> @@ -398,3 +398,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+> index 70b315cbe710..5766251b4d2d 100644
+> --- a/arch/sh/kernel/syscalls/syscall.tbl
+> +++ b/arch/sh/kernel/syscalls/syscall.tbl
+> @@ -475,3 +475,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+> index 7e71bf7fcd14..20e7f3b856e4 100644
+> --- a/arch/sparc/kernel/syscalls/syscall.tbl
+> +++ b/arch/sparc/kernel/syscalls/syscall.tbl
+> @@ -517,3 +517,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+> index f832ebd2d79b..652ede93b724 100644
+> --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> @@ -477,3 +477,4 @@
+>  469	i386	file_setattr		sys_file_setattr
+>  470	i386	listns			sys_listns
+>  471	i386	rseq_slice_yield	sys_rseq_slice_yield
+> +472	i386	stacktrace_setup	sys_stacktrace_setup
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> index 524155d655da..5da918e912a6 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -396,6 +396,7 @@
+>  469	common	file_setattr		sys_file_setattr
+>  470	common	listns			sys_listns
+>  471	common	rseq_slice_yield	sys_rseq_slice_yield
+> +472	common	stacktrace_setup	sys_stacktrace_setup
+>  
+>  #
+>  # Due to a historical design error, certain syscalls are numbered differently
+> diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+> index a9bca4e484de..34f0de06baee 100644
+> --- a/arch/xtensa/kernel/syscalls/syscall.tbl
+> +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+> @@ -442,3 +442,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index f5639d5ac331..fdbea39c1b38 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -999,6 +999,7 @@ asmlinkage long sys_lsm_get_self_attr(unsigned int attr, struct lsm_ctx __user *
+>  asmlinkage long sys_lsm_set_self_attr(unsigned int attr, struct lsm_ctx __user *ctx,
+>  				      u32 size, u32 flags);
+>  asmlinkage long sys_lsm_list_modules(u64 __user *ids, u32 __user *size, u32 flags);
+> +asmlinkage long sys_stacktrace_setup(void);
+>  
+>  /*
+>   * Architecture-specific system calls
+> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> index a627acc8fb5f..d3f57d8454d7 100644
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -863,8 +863,11 @@ __SYSCALL(__NR_listns, sys_listns)
+>  #define __NR_rseq_slice_yield 471
+>  __SYSCALL(__NR_rseq_slice_yield, sys_rseq_slice_yield)
+>  
+> +#define __NR_stacktrace_setup 472
+> +__SYSCALL(__NR_stacktrace_setup, sys_stacktrace_setup)
+> +
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 472
+> +#define __NR_syscalls 473
+>  
+>  /*
+>   * 32 bit systems traditionally used different
+> diff --git a/include/uapi/linux/stacktrace.h b/include/uapi/linux/stacktrace.h
+> new file mode 100644
+> index 000000000000..60b581f55995
+> --- /dev/null
+> +++ b/include/uapi/linux/stacktrace.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +#ifndef _UAPI_LINUX_STACKTRACE_H
+> +#define _UAPI_LINUX_STACKTRACE_H
+> +
+> +enum stacktrace_setup_types {
+> +	STACKTRACE_REGISTER_SFRAME	= 1,
+> +	STACKTRACE_UNREGISTER_SFRAME	= 2,
+> +};
+> +
+> +#endif /* _UAPI_LINUX_STACKTRACE_H */
+> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+> index add3032da16f..76998b0f811a 100644
+> --- a/kernel/sys_ni.c
+> +++ b/kernel/sys_ni.c
+> @@ -394,3 +394,5 @@ COND_SYSCALL(rseq_slice_yield);
+>  
+>  COND_SYSCALL(uretprobe);
+>  COND_SYSCALL(uprobe);
+> +
+> +COND_SYSCALL(stacktrace_setup);
+> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+> index f24997e84e05..a842038fb03b 100644
+> --- a/kernel/unwind/sframe.c
+> +++ b/kernel/unwind/sframe.c
+> @@ -12,8 +12,10 @@
+>  #include <linux/mm.h>
+>  #include <linux/string_helpers.h>
+>  #include <linux/sframe.h>
+> +#include <linux/syscalls.h>
+>  #include <asm/unwind_user_sframe.h>
+>  #include <linux/unwind_user_types.h>
+> +#include <uapi/linux/stacktrace.h>
+>  
+>  #include "sframe.h"
+>  #include "sframe_debug.h"
+> @@ -838,3 +840,38 @@ void sframe_free_mm(struct mm_struct *mm)
+>  
+>  	mtree_destroy(&mm->sframe_mt);
+>  }
+> +
+> +/**
+> + * sys_stacktrace_setup - register an address for user space stacktrace walking.
+> + * @op: Type of operation to perform
+> + * @addr_start: The virtual address of the stacktrace information
+> + * @addr_length: The length of the stacktrace information
+> + * @text_start: The virtual address of the text that @addr_start represents
+> + * @text_length: The length of teh text
+> + *
+> + * This system call is used by dynamic library utilities to inform the kernel
+> + * of meta data that it loaded that can be used by the kernel to know how
+> + * to stack walk the given text locations.
+> + *
+> + * Currently only sframes are supported, but in the future, this may be used
+> + * to tell the kernel about JIT code which will most likely have a different
+> + * format.
+> + *
+> + * The type command may be extended and parameters may be used for other
+> + * purposes.
+> + *
+> + * Return: 0 if successful, otherwise a negative error.
+> + */
+> +SYSCALL_DEFINE5(stacktrace_setup, int, op, unsigned long, addr_start,
+> +		unsigned long, addr_length, unsigned long, text_start,
+> +		unsigned long, text_length)
+> +{
+> +	switch (op) {
+> +	case STACKTRACE_REGISTER_SFRAME:
+> +		return sframe_add_section(addr_start, addr_start + addr_length,
+> +					  text_start, text_start+text_length);
+> +	case STACKTRACE_UNREGISTER_SFRAME:
+> +		return sframe_remove_section(addr_start);
+> +	}
+> +	return -EINVAL;
+> +}
+> diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
+> index 7a42b32b6577..54a99cffeec4 100644
+> --- a/scripts/syscall.tbl
+> +++ b/scripts/syscall.tbl
+> @@ -412,3 +412,4 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+
