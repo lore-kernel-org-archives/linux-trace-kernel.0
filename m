@@ -1,129 +1,102 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4A43CFF56
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 07:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A880334D4E2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 09:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777534418; cv=none; b=fCRjhsIN7MzOyNsPQ8T6eqZCXzwUUpkyxPE1k00d5w6qzc2MrtI1kl1hhsU2vJ7U8nFd69IImSawgpB8jNXBP2s8hs+Qo5NMHRwir0Aw2AW/S0jHb6rROUjyTYoyb/paFlbJatQfNv2c1SbOD8JWIhzAOcvutMOUyhed+AJBmaw=
+	t=1777540630; cv=none; b=XGlMSCn5hLaw9FxkXwbXHx+mJZjtirK4twfJPJfkuWyIBW62ZkD3XMN/ephm0D/RI9ug2GTUoMAY3ibcaVTp4XJrCIQ+nc+bl6zgL+rZNdSW5yajyLXJ2zRi7yVgFSPOQWfIY60woSWKrkPykoS4QQTCR5VxzaLsJe2jcOEp6bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777534418; c=relaxed/simple;
-	bh=OflwiH1nIJfdNUHLelUOys+vm0D17s6KIYEkzzBHKIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T7+VfnqbD5fZb9qdmEeupfd1lFoK8sao+9SK6fNp+QG9hLakoH+myPKTw0wjGpmbV6HauNgJuuX1Nt+AZccw9gfyjI66iLyUDjNMXje3B6eUeiJYfSGWuVtkRhLPsY9yqWbfsj3VgbFtQyw7ukZx8sld30SvsBnAAxG/Klm6O5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4645dde00a7so1198976b6e.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 00:33:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777534405; x=1778139205;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aBgEVUdU4L4wfRMqvP//YZN+cC+kUQHoSVaa4kQ4JnA=;
-        b=TcAnubltIIFSScGYTKxCcR22aTxHqozVt5JgbuPctCdhUfYGrI491izrVs4SeXaGmF
-         +qEDJCmssW4bgAWrnrb4UsNuUG7oFjfrQwB1WnfDwyyrdEubw2HSFm8zXd9d5MWR5bck
-         Q3DWSrItM6aSHa7AOgWqd72U4WcXw8gCTkDpAKhZvwO4j4/yn9B3jC1Ux3B/wQTbMUym
-         M+VNiFCQyZmv6rFdi8cRGsyNp8jii53oZVLoOrrnmD9Xhnws0QWqrNhAZNfnr6CjyIAN
-         upOKtIRPLAMv8lfAZHMniMZTh5trEzT37mbLnz4Gztgm33xRBgcoF+aO/m37SlIL8tt2
-         P2lg==
-X-Forwarded-Encrypted: i=1; AFNElJ+SC4mh9dSmuPMIOOOtIRpsKrNes8++5H+2UR8vpR452u4thWtjPKsGF73GDRmUJPlFmYMNcm2xrGylJX2oKGKeaDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzszCHOLL8v+R95C+Owc9wncmya0KVJvLSkLB+WX6gbUjLz4Uj
-	n4F0q/LTZsHRSyx8C50Eh+tk7yPsxlqXOUYoyo1ZIq57OrG6M5ytStpZJYL4S7GEcvs=
-X-Gm-Gg: AeBDieujDhpxIJODLtG6eipPYLFTm46p/uG/6DO2C0AgaNwJRZiLbhp5Zq/FHSyb8d3
-	otKqcxnynD32Xb2jggYLZCKAnc0PEndh9uegp9gGvAtLdvBs2/j5S8ZBVa5nDufA4O8xOS3ihvf
-	VbTpflpceeL2B9DpH4xr4RABDpBtBK+UMw0QNaP/5u7eMqivK5beJIIjij1M3iBKC6fsMOobq4n
-	OKOrtEXzXaiP+JIAUzzrTLB8Iu4QRa6cGEnZf3A1afaQbRC7rV9Dl1WFjl5kKFP5QiIpvgTNqHI
-	igpL38O5zQBQVnLkTogLujsmUM9vdb7EHAR+9nfDxPyqjRh3Epm15OgelrGl7NHiBpYx5CoVBYr
-	U/XzgUQLbuznwykWooWFHeZS9sZ39xOqAQSD1NT4P54+MTNnQNqb2ILCiG3QiBCuY9ito/hdqsp
-	e9YtUTLPZmpbVweoXfCp8h349r/brcpyOuafSSo5w6L49n1lUjkS08S/GiBh4dx92H/2YoWXFhe
-	i/FDKRH2A==
-X-Received: by 2002:a05:6808:1791:b0:467:2f58:dff3 with SMTP id 5614622812f47-47c620b29ebmr493763b6e.18.1777534404898;
-        Thu, 30 Apr 2026 00:33:24 -0700 (PDT)
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com. [209.85.210.50])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-47c43e6aec9sm2332066b6e.2.2026.04.30.00.33.24
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2026 00:33:24 -0700 (PDT)
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7dcdd1b492eso699714a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 00:33:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/WXsvM75JipvckrD47AmggA1ijF1z24UFnX/FoOKcTVSRYZyPnvA1Uf6gnenysErcYOp9+nKgZRgeQtxG0BC0rZks=@vger.kernel.org
-X-Received: by 2002:a05:6102:14a9:b0:600:ac0:ce33 with SMTP id
- ada2fe7eead31-62afc5062bbmr347701137.5.1777534020660; Thu, 30 Apr 2026
- 00:27:00 -0700 (PDT)
+	s=arc-20240116; t=1777540630; c=relaxed/simple;
+	bh=zASkZpDnp0HKO3Di+BYa06DeuxEaSIIb9mLPGirXHSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=VHN19JbXl6/cLanWj1x2WlZgVVXsXdjC342YLeCGJgnBl3RBOUhV11dQI4N56uomSUN8s2foHuH2UzeNuNc1PJfPtkxeEXg1KbVWuRBrc+ZZGIyAllHqp5AhfpwJ1CKv0Aj2TTj5ECOGzrmyF/sNfVJ44UjfRgtmAKVy1vZYlmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YGh05/7U; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YGh05/7U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777540627;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zASkZpDnp0HKO3Di+BYa06DeuxEaSIIb9mLPGirXHSA=;
+	b=YGh05/7U9KnnR3DdfLPh4i/ZH2WLhUnGAwFlpbAdPujlAz3s30CYD6Tx9C82mBsjuTulW3
+	/TByb4V4gJDpIwDDkzXg+uKUA2IAtnleihwLfhGdbGZed5SXOz/y5ls1a/VXHAjZ3VtGcc
+	eFuGMXrFp9So8tFMOIbJ4feh1C3WHnI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-486-jvU-4sD1M2-nzrBsuwhr_w-1; Thu,
+ 30 Apr 2026 05:17:04 -0400
+X-MC-Unique: jvU-4sD1M2-nzrBsuwhr_w-1
+X-Mimecast-MFC-AGG-ID: jvU-4sD1M2-nzrBsuwhr_w_1777540621
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E4C01800358;
+	Thu, 30 Apr 2026 09:17:00 +0000 (UTC)
+Received: from fedora (unknown [10.44.48.22])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 48D911800480;
+	Thu, 30 Apr 2026 09:16:51 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 30 Apr 2026 11:17:00 +0200 (CEST)
+Date: Thu, 30 Apr 2026 11:16:50 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Daniel Walker (danielwa)" <danielwa@cisco.com>,
+	"David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)" <dtominac@cisco.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
+	"xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
+ MADV_DONTNEED
+Message-ID: <afMeAs6upm8kLCYb@redhat.com>
+References: <20260429131522.4049054-1-dtominac@cisco.com>
+ <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
+ <afIiqR5CqYRId0N0@redhat.com>
+ <afJz3l6435DHLorn@goliath>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260429114355.6c712e6a@gandalf.local.home> <20260429114747.4cf74d04@gandalf.local.home>
- <b743d575-0842-4718-8dc9-23c3c97b4a92@efficios.com>
-In-Reply-To: <b743d575-0842-4718-8dc9-23c3c97b4a92@efficios.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Apr 2026 09:26:49 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUZojwb_oc1O7io5gXDYSXos1FN1wFymp-UzgAtGTjO6g@mail.gmail.com>
-X-Gm-Features: AVHnY4JGT2_BT-KASFaK_HQ4YttKP1fcj-B1OQssyz9iS1fAt2Ncyqnc8Ads_GE
-Message-ID: <CAMuHMdUZojwb_oc1O7io5gXDYSXos1FN1wFymp-UzgAtGTjO6g@mail.gmail.com>
-Subject: Re: [RFC][PATCH] unwind: Add stacktrace_setup system call
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
-	Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, 
-	Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <afJz3l6435DHLorn@goliath>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: A2PlSR3Y97LSyyTUVOMBJFUUOEl8Pk6o7-3At45oo3Q_1777540621
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 29 Apr 2026 at 20:35, Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
-> On 2026-04-29 11:47, Steven Rostedt wrote:
-> > On Wed, 29 Apr 2026 11:43:55 -0400
-> > Steven Rostedt <rostedt@kernel.org> wrote:
-> >
-> >> diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-> >> index 4fcc7c58a105..005441233932 100644
-> >> --- a/arch/powerpc/kernel/syscalls/syscall.tbl
-> >> +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-> >> @@ -562,3 +562,4 @@
-> >>   469        common  file_setattr                    sys_file_setattr
-> >>   470        common  listns                          sys_listns
-> >>   471        nospu   rseq_slice_yield                sys_rseq_slice_yield
-> >> +472 nospu   stacktrace_setup                sys_stacktrace_setup
-> >
-> > BTW, I have no idea what "nospu" is. I did some searches for PowerPC and
-> > spu vs nospu and the only thing I found was a stackoverflow asking about
-> > it, and the response was "don't worry about it".
-> >
-> > I only picked nospu because I noticed that rseq_slice_yield used it, but
-> > that doesn't give me a good feeling that it's correct.
+On 04/29, Daniel Walker (danielwa) wrote:
 >
-> AFAIR PowerPC SPUs are the Cell "Synergistic Processing Units", e.g.
-> for Playstation 3.
+> Shouldn't there be some sort of compensation or notification for this, or is each person that
+> hits this suppose to just scratch their head and send a patch that's rejected?
 
-Exactly. System call numbers are the same for normal (PPU = PowerPC)
-CPUs and SPUs, but SPUs don't need all syscalls.  Hence the option to
-exclude a syscall for the SPUs by marking it "nospu".
+Not sure... uprobes assumes that it owns the modified page and nobody
+can modify/unmap it, including the probed application or debugger.
 
-Gr{oetje,eeting}s,
+But may be MADV_DONTNEED should not set zap_details.even_cows == true
+by default ?
 
-                        Geert
+Oleg.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
