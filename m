@@ -1,182 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04B619E839;
-	Thu, 30 Apr 2026 05:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4096933DEE9
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 05:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777526057; cv=none; b=guoU45KRnen9OsbslidamJbyhh9HnCDHOPYbkGttUMlit6ATbFv4l44xdIzgYHR99xyAY2TQN9IUZij6vqjPepMDzkpbKSGVWmKWfwBwKX4GTiAKIswDpvYdR3g/RtJ/FafxEQz/9S2SbBV5KU1wkZTesqNI+V0rT8uiNK34nqA=
+	t=1777527319; cv=none; b=euWQVqrVJEuQSnRdVaDYPmbJy+sau+cCzAVqvIwmrZui6dpM6L12w9OV6JuBp7xelM6Q2z2mlIulOra1JaoRrsNGVuwL9xTWHt6iMYsSRnmkFa0cd1HWgYckNHQ8y1ucLNzywmsHUCTcN5YQYGOsBLYqtggHqqfjIPyUkLlpApc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777526057; c=relaxed/simple;
-	bh=1uODezsZQR0ItXq8SMUEEkmY9GDgJCtfOGluj9/Id08=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HXMQVBMDfrCIsJkp1/JsAcDlIMr3dSygJnQt7I7VuYJwy3ipm0Cn8fhDDNCdoCFsNRo5mvHx3JjOcu6CAi6QuMF4EcFVLnwCzEzQQVzd7J6EoXVGZwDoi0zZZ/cDXBXsMPBx9pp+nBtfQ7rwD+R5YZNlJEEd4TcGKtwIVxMYtnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3q2z2Tg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777527319; c=relaxed/simple;
+	bh=eL76Q1sa3EHyipfbuet3sPexpAHfav/yaz3fmsAFPO4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UmfWYi44OpaXiTIVCvHOceGj1TmAmOlykKp5UZuIvbImUKYAPdJTTM++DEd2wQOzPZPIVm7LBLXxC3BSORdJUzYRA9IQ2hWO10A+bUWcwIrXJtu8MXF0NCmPCvTlg0B28GRb6AncicwHtHp3eg9+uexV4gm1rSjoEF4ML85ZnMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uc3h9NWW; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3q2z2Tg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987A1C2BCB8;
-	Thu, 30 Apr 2026 05:14:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777526056;
-	bh=1uODezsZQR0ItXq8SMUEEkmY9GDgJCtfOGluj9/Id08=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L3q2z2TgN2t8b7+DaFAdhcdmcuXFu0K8DAMHXBLQ6LTDs3NyOsM5iUHveak+mk5lm
-	 XqJEr4zW0yIjmzRIeCsEhrwjmFIlonpi14+E21VkZLe0/gSzSEm8bYVqJsJ+FoUfEa
-	 7JrJ8FW4+4Udv/+YVFJNlukZanxl8URseZj8I6dTApM6ga3Z5xfVOBmYfXvKcrDnTv
-	 hx3RFdKqx9vuuPog++SzBUj6L1Jcmzv8ZdrqKjeQq7zPpX+KAvpc2VGVcf0L+SwmpI
-	 OGyWcWKwelEUf61yFt/q+38mT8YnadkYirqqEzBd/zB49629SgUf1YVtb7r/Xa/Uda
-	 D8J0krEh3E0lQ==
-Date: Thu, 30 Apr 2026 14:14:14 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Pengpeng Hou <pengpeng@iscas.ac.cn>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tom Zanussi
- <tom.zanussi@linux.intel.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] tracing: Bound synthetic-field strings with seq_buf
-Message-Id: <20260430141414.b6fb7a49f4eae3cac847fb54@kernel.org>
-In-Reply-To: <20260430043350.57928-1-pengpeng@iscas.ac.cn>
-References: <20260430043350.57928-1-pengpeng@iscas.ac.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uc3h9NWW"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso3746955e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Apr 2026 22:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777527316; x=1778132116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8yQTJ0RBFyA28plH/8MX2fzpMDkq7MQmWjCFKhKVPCU=;
+        b=Uc3h9NWWwLtsxcNngMpJyJRdPZTPWyfKm7qF4HmvUsxAA3r4QHnP4oiRXrKbHjMK7W
+         JNdMLYIDxL3/fbIF3X/u9dtNgKRsau7hGd4t+xLss6vhF42OLGsKKyIaAr/PBYu3x4ku
+         so/WyZR5pdZjTP34wOmfXtr7+ajrAb84/vME386kfjBqYdl0t1EQ0ThD9xlPOXRm5T2J
+         fkU3OTATevqUSAlwC1+Fsl8jRxuusDsfFmCINgK7ghBTAYb7W2TcD6zTP6dzm2dQ4cBQ
+         9FUjVo9ShUb7w4kd9XX//nnT8bvEpSfOJWG89uKvH9rNsERud4KPUnQTzT/T8gYctVi9
+         B+fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777527316; x=1778132116;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8yQTJ0RBFyA28plH/8MX2fzpMDkq7MQmWjCFKhKVPCU=;
+        b=ipHjvvXSLiwsuPyA6uln3zcrCUGjNsf02ZcE4m3cK9j6lSnKteT4vqRI0ovbSMv7dw
+         2Gy4xmrKe4+zj2iNcEL9alqvCIfujzHld210tBlPq3bKdF/BG5JcO6ltOx+sTfKQo+NH
+         Id4QtRUcl+SQIDHBHCTWX5q9k871z1eUmkaxTsf0XDG6nfxO1sbZuwBeKaLi7M2PIceM
+         vSmUr6pHg6Ij/kN6+qNeQU+CBSaTkBwNNCk3/CpugayJA9vijw8X4FLZIiR5cLd6OstQ
+         hlNy/vrVqa+kdpBK8WFR/1Vet3cBe0qCzFYG6r9kJ7IJPWLC/74W0SFUH3S+Lj3xWaOj
+         2vPw==
+X-Gm-Message-State: AOJu0YwIqTIIvipJ+wr7leRzwu1cePquXMDwm3MB5TUWEEcmNb/LAa8x
+	w1sSAzw7Nfbne2SF9o5lGf+Gar3qa3hjngGS9jSSiLZv4MfUheUHirFf7yv3Dkzx
+X-Gm-Gg: AeBDietQqbBfOQEF4Xk5JmJyl3gOMVRBzxocDxyMtjDMKN4m9358Ita0cfGs5GH7J/g
+	+wj9ZE4XkX+Nof+FiDCsNN6Sma1CfVum2ZEDhXKA1htJFHa69P4fJj8VklkPoLq3BgStiygR2WP
+	63vr8rxE4OI2XXvFPIcqtWy20UCKhPdB3OWsCBR4hH9BYzx5ebhr/5PnIAoVQG64kpaWsC19OXw
+	C+AAeY0NgUQiv0gpl7AddAAq0Ryao1AwtS0I9MX7hgUXR8ngm8FWn1cUv4LCON03WlgIh9Ys3ZE
+	TpYViNZtcVVaQbIISrUOXaIImsqPiYtAbq6GuPeQIhYYc++OpyZfsNUQPbbO2nxa3jBrcclhV9P
+	id4Fueju8+eeBrktso+ocn4hfepnzwJm+FB+LjUBNpBg0mrTs781YDwB9sr5ZrKKPNHpVme8jje
+	kO9IoviRW5O+2q3z6RoZok44wk6Ovm9btZ0vMHh0gmyzWmOJvTi1MYeTBzOG3gBOHA1KP4g44zV
+	GcJ4Nnda4ZAfs6HuVAGqA==
+X-Received: by 2002:a05:600c:4ed0:b0:48a:54a6:b29f with SMTP id 5b1f17b1804b1-48a84451fc2mr22812805e9.17.1777527316147;
+        Wed, 29 Apr 2026 22:35:16 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a822be9b4sm38410345e9.9.2026.04.29.22.35.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2026 22:35:15 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>,
+	"Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] tracepoint: add lockdep rcu_is_watching() check to trace_call__##name()
+Date: Thu, 30 Apr 2026 06:35:10 +0100
+Message-ID: <20260430053511.8767-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 30 Apr 2026 12:33:50 +0800
-Pengpeng Hou <pengpeng@iscas.ac.cn> wrote:
+trace_call__##name() was added by commit 677a3d82b640 ("tracepoint: Add
+trace_call__##name() API") to let callers that already gate on
+trace_##name##_enabled() skip the redundant static_branch_unlikely()
+re-evaluation. The changelog states that the new helper retains the
+LOCKDEP RCU-watching assertion carried by trace_##name(), but the
+WARN_ONCE() was omitted from both definitions.
 
-> The synthetic field helpers build a prefixed synthetic variable name and
-> a generated hist command in fixed MAX_FILTER_STR_VAL buffers. The
-> current code appends those strings with raw strcat(), so long key lists,
-> field names, or saved filters can run past the end of the staging
-> buffers.
-> 
-> Build both strings with seq_buf and propagate -E2BIG if either the
-> synthetic variable name or the generated command exceeds
-> MAX_FILTER_STR_VAL. This keeps the existing tracing-side limit while
-> using the helper intended for bounded command construction.
-> 
+Without it, sites converted from trace_foo(args) to trace_call__foo(args)
+lose the WARN_ONCE(!rcu_is_watching()) coverage under CONFIG_LOCKDEP when
+the tracepoint is enabled - the case that commit c2679254b9c9 ("tracing:
+Make tracepoint lockdep check actually test something") added the warning
+for.
 
-Good catch! This looks good to me.
+Mirror the same block in both trace_call__##name() bodies, gated by
+(cond) in __DECLARE_TRACE to match its trace_##name() and ungated in
+__DECLARE_TRACE_SYSCALL.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Fixes: 677a3d82b640 ("tracepoint: Add trace_call__##name() API")
+Cc: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: David Carlier <devnexen@gmail.com>
+---
+ include/linux/tracepoint.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Thank you,
-
-(BTW, we need to use __free(kfree) in this file too.)
-
-> Fixes: 02205a6752f2 ("tracing: Add support for 'field variables'")
-> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
-> ---
-> Changes since v5: https://lore.kernel.org/all/20260424070104.1-tracing-synth-v5-pengpeng@iscas.ac.cn/
-> - start a new thread for the new patch revision
-> - use a lore link for the previous version in the changelog
-> - simplify the synthetic-name construction with seq_buf_printf()
-> - keep saved_filter as a normal local variable and avoid an anonymous block
-> 
->  kernel/trace/trace_events_hist.c | 41 ++++++++++++++++++++++----------
->  1 file changed, 29 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 0dbbf6cca9bc..aa8e7f043ac0 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -8,6 +8,7 @@
->  #include <linux/module.h>
->  #include <linux/kallsyms.h>
->  #include <linux/security.h>
-> +#include <linux/seq_buf.h>
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
->  #include <linux/stacktrace.h>
-> @@ -2968,14 +2969,23 @@ find_synthetic_field_var(struct hist_trigger_data *target_hist_data,
->  			 char *system, char *event_name, char *field_name)
->  {
->  	struct hist_field *event_var;
-> +	struct seq_buf s;
->  	char *synthetic_name;
->  
->  	synthetic_name = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
->  	if (!synthetic_name)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	strcpy(synthetic_name, "synthetic_");
-> -	strcat(synthetic_name, field_name);
-> +	seq_buf_init(&s, synthetic_name, MAX_FILTER_STR_VAL);
-> +	seq_buf_printf(&s, "synthetic_%s", field_name);
-> +
-> +	/* Terminate synthetic_name with a NUL. */
-> +	seq_buf_str(&s);
-> +
-> +	if (seq_buf_has_overflowed(&s)) {
-> +		kfree(synthetic_name);
-> +		return ERR_PTR(-E2BIG);
-> +	}
->  
->  	event_var = find_event_var(target_hist_data, system, event_name, synthetic_name);
->  
-> @@ -3020,6 +3030,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
->  	struct trace_event_file *file;
->  	struct hist_field *key_field;
->  	struct hist_field *event_var;
-> +	struct seq_buf s;
->  	char *saved_filter;
->  	char *cmd;
->  	int ret;
-> @@ -3065,28 +3076,34 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
->  		return ERR_PTR(-ENOMEM);
->  	}
->  
-> +	seq_buf_init(&s, cmd, MAX_FILTER_STR_VAL);
-> +
->  	/* Use the same keys as the compatible histogram */
-> -	strcat(cmd, "keys=");
-> +	seq_buf_puts(&s, "keys=");
->  
->  	for_each_hist_key_field(i, hist_data) {
->  		key_field = hist_data->fields[i];
->  		if (!first)
-> -			strcat(cmd, ",");
-> -		strcat(cmd, key_field->field->name);
-> +			seq_buf_putc(&s, ',');
-> +		seq_buf_puts(&s, key_field->field->name);
->  		first = false;
->  	}
->  
->  	/* Create the synthetic field variable specification */
-> -	strcat(cmd, ":synthetic_");
-> -	strcat(cmd, field_name);
-> -	strcat(cmd, "=");
-> -	strcat(cmd, field_name);
-> +	seq_buf_printf(&s, ":synthetic_%s=%s", field_name, field_name);
->  
->  	/* Use the same filter as the compatible histogram */
->  	saved_filter = find_trigger_filter(hist_data, file);
-> -	if (saved_filter) {
-> -		strcat(cmd, " if ");
-> -		strcat(cmd, saved_filter);
-> +	if (saved_filter)
-> +		seq_buf_printf(&s, " if %s", saved_filter);
-> +
-> +	/* Terminate cmd with a NUL. */
-> +	seq_buf_str(&s);
-> +
-> +	if (seq_buf_has_overflowed(&s)) {
-> +		kfree(cmd);
-> +		kfree(var_hist);
-> +		return ERR_PTR(-E2BIG);
->  	}
->  
->  	var_hist->cmd = kstrdup(cmd, GFP_KERNEL);
-> -- 
-> 2.50.1 (Apple Git-155)
-> 
-
-
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 578e520b6ee6..048e0035d4fa 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -318,6 +318,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 	static inline void trace_call__##name(proto)			\
+ 	{								\
+ 		__do_trace_##name(args);				\
++		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
++			WARN_ONCE(!rcu_is_watching(),			\
++				  "RCU not watching for tracepoint");	\
++		}							\
+ 	}
+ 
+ #define __DECLARE_TRACE_SYSCALL(name, proto, args, data_proto)		\
+@@ -342,6 +346,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 	{								\
+ 		might_fault();						\
+ 		__do_trace_##name(args);				\
++		if (IS_ENABLED(CONFIG_LOCKDEP)) {			\
++			WARN_ONCE(!rcu_is_watching(),			\
++				  "RCU not watching for tracepoint");	\
++		}							\
+ 	}
+ 
+ /*
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.53.0
+
