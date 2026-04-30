@@ -1,125 +1,143 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14FF402B82
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 14:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777560126; cv=none; b=TBrWtdqf8V5PRR16Q4xNY69twzXKG+I0317BAdJWI8dutwcztXDSmfnKGKqWEG/xuVKZEZZSSLpTFvORbiNUol0FzhzHdKKU4AwyZkQcCrEf13TkVd3+0ydO6+j6qlJpDLMqT6xr/1ZEtdQ2oRhthnSRz3NjqChOUrFV0qdQmsI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777560126; c=relaxed/simple;
-	bh=VTg9pQ21A/M7oN0Q9FOF6H4e6thUrhmh44K67qTqYjU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NcLrsGueMFOXGLWtb5EB3x+PFhz7J+5tzifwJ151iOJ+ATZDrwU4x55kr7Sos4ZWDf5Dhi4WjdZUM4TmQdxXCb+FW1B0Yv/lPcsU9V3fZVq5AaHaIZTjvbHA7GTHshV5Kkn1Dwnfw7PEBwqIH+L0p3KXb+kdxEQlHxfXX8VD65A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ay6UOrYW; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FBE2D9ECA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 15:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777562578; cv=pass; b=dQy7vHyX7fZKB7OYwJ6jppXXCN7tP2h3omrF9AWRCLjkkiQI4JPZWay7YtvIF6m3KDyAkKvtbludCCd2OZYOf3673/d7/LjXhO6sAQQLJEHrlvf7wpBq0qBriYTk9+DZNeusr5IwPHl1yra7xaldi/LO+mcJWEkbMxt9l+UJEtA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777562578; c=relaxed/simple;
+	bh=VttgwoB85cht3PKYb8QZ8qtGm3rDTnCCBtygb68d2o4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i3LtNDPigsdTeDtskEf1iunH97BFiXcGsVRccdR7GXXMweSor/m1Eolu35cl0OgonIgrggd2kKEVjTDTa8DjCuQdHzws7iPTAmfUAqSCYztk6pwPTxqtT9MI661GJuJYA99ntY3puPAdY28px1dqHJ61D700K4i9BgoLuQ66D2Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cmXKmukP; arc=pass smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ay6UOrYW"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-488b3f8fa2bso21101015e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 07:42:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cmXKmukP"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-66ba6d3dab3so13334a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Apr 2026 08:22:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777562575; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QO8hgZpHCvaPsOpbYiHrmYTNfCtPq71PU0qne5hMCgtMSnQtDbpwFIR1qKiuHyt/d9
+         w5jV1sHPgG3j6LuYeWpRnQx7Lc0wNpF17+iP4WN0hDPK4QfuvxeDYsCtQ8ARf82S80sW
+         vH6iQKEVKZqKo14rvaxNxTpeXDW9Zn8iq1dWJJN+bc64K39GB6CQJpgNktDvWnX6UtcP
+         0gR4oKfIupAETrKV8mJpJFeeJDiuhivqPx9fHk5KEArUoeS7VhnEujvMgwcJv6Wl4SVi
+         XYwljoctFKH6OJZZ8N3h7NhINYSQJ1Voc4LICJW0R2vG5hnP7vvtV7pmPWAJ5YWyq3mk
+         WdVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
+        fh=wokvueOmT7eQAyprzA7KcgeMTbDHaecT9JANuAydhGE=;
+        b=DyGhAvYUpr3vR+eiQoJ0dFbxvVkJkiDXkVJhF1Q8HiFrZy1mswWNYYg5S3x+389j/S
+         fGbgg5vpmqvjqQ4FRr00XwBBzSwEcXoIUQtsSTd9tWa3KUPzM5glWeXVnCfs8LMuM8sR
+         koxkw9g9h/pTwEceq4VPLbAq4oMOBS3YrXeBA0DqWhKJ55eJd9poVlrJK7l+knNPudzV
+         gtih0fsvDt/iYiemeXRJu2dxPYVQZrX1mH2Wl0TvCYzuTzfByqN01HE7qwBxxcP6Y9nK
+         5AmtN39Tpw0sThyfIJstOT51WiprUJduWGrofKzVuXAly2YQGHIOWQIZFs2tBeYZ8cqD
+         Kx3A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777560123; x=1778164923; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20251104; t=1777562575; x=1778167375; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cRgXd8fDwM7hDkydv0/5o7xbaYUy7EeXbwemVcULL+8=;
-        b=ay6UOrYWKkHtlwO3KQ4rOqMCQ2QUvDPKViiAK+Io4TN/qFyxi7ZoyEyYn8Rokgtu22
-         R046Bav7cAfIJW7rQpuvxGcM+OGFo2NMWb3XZjOpz4Eii1BqyjT5IQFnkkRBOGiDee78
-         ghFYlrMWv9G8PJgJT8sqtN+bnAf+BNzF3//WwvfI/6ldmpFXul0dar5L2qSPem5fhaBR
-         jKAoer1jHmUz5dgie0fF3lndAN0RyNhFgqnyJD0YReOOgqL6YyxaM5Z5TsZ37NoEbj8L
-         Ka7Nr0XEiMaFcsEGxtPACIl0IEcgi2n+FqkP4DLUBcui5HJFEuSZYEVzWDk59NxMGkTS
-         c0yw==
+        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
+        b=cmXKmukPDZsqP4ixXpetZ4lqign+9o9o0cdBRlAmOQWZZlx3bhzMzI+APPksDnmMEw
+         /+HcmsTiUEUFLkYhuHNIHDs4ZfJUmbxvtWyUaYdW5PCLppfLVO+HFOVPs6ACDYeLgOl7
+         DxW9UsRXfw4+GzALguJa55pQdLaEwR1rN75/hvyQzHfv/3Q/eQUtGcdB7oOEwKCR6hjX
+         PoOzjfN5sbkBlJ4342XtIyPcun2G3OaV877bWPsqwkWQRN5nsNGy60NG+0Cy4c4w6aeu
+         QrkUk3myPpWfOS4NOeu2ZbzlEpHRQBrRO4q0gUZNCAdWhRr15CbZ2nr550EX/6FQNFuW
+         4iUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777560123; x=1778164923;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1777562575; x=1778167375;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=cRgXd8fDwM7hDkydv0/5o7xbaYUy7EeXbwemVcULL+8=;
-        b=HyS1CTzy/4ilI51Acayw+nfXr+ZheCoZF9CPOiP7HUSI2BcaBEI8q8YEwoFkT2DjhQ
-         tR+qJzGNJHcHY92YS6xqWlUnGPgDVcx8Vhdwwsywg9qIVgMc88CIqdawCfyZXj+d2zj7
-         nytW+viLf8wdMx/lxmRYOnKpK+rCqb8/06vH/8JE9V/HlXbEh7nbtR515QvuwTdTmrk3
-         mS8B35c+OIboew8i/vAX0R3DtlHquuDrIc3S7mE9+fBM5EmCdLiQdB461KSToCALEakE
-         3aZa72aXeymnIYatti/v3PXwjozBbqGxL0zmr1f8Dw40TxfPwvbtZ9IZjJCNCNFzTVv6
-         vIkw==
-X-Gm-Message-State: AOJu0YxtG/0E61KVybChf3Xq1lG70P8tEZj77FpdkkIEPTz4RD+y1f0V
-	B7mRm8ZhsflBBzdtRLjg/bbaxUomcYliiRpmMabjjyP7Uc/ImlJhISdA9CGSbNE9syE=
-X-Gm-Gg: AeBDievu9tQA16OPgGB5FBKnBGMiYkR19US/piyACclEqsKilAl2qUBjepnQslFiYgg
-	aHsiby8SOK3mgKB7DnrZY3L1STf7KrwcvU7HcMmRqU9Z+7tt3NfAVKAufvfd5qh80fRXnjrpIEC
-	4QXasf5eOYr/uvtssVhf+LilTfZXdvEE00PSnGgMPtPZUl/YyBbqiKxl8jr6Y3I9j3iQ7wizUwL
-	UFrGuGOxpcGKRBnTbzuSZZH8X2XZ8R8STBY0xAhSgG0oFkYA8hs64+WN984dLgMwHVi3huB9UFL
-	MSMMQjr+AvBGBS+j5/dn3NPWv1OlvEmCEzHZ02NVvj6iVVTOdH0xx1OIYXYjRLY5agkd5H0HIN9
-	uVDwMiJ/gf8qeAk8zBY+Vc7snESKftoHUpd8SratRx3/vYd3Z4KjY1DzS0m5cu2/dUF7aSncmBT
-	CRxkDrOroBukyZZBaix7UhVuYNuTxgdsyx+5MGbVVaajSzp1lxkApUYtmmU3q80DQLRpQWpIiyd
-	QA1C1dFAwYToFjWlvXPBg==
-X-Received: by 2002:a05:600c:3e8e:b0:48a:5339:a46 with SMTP id 5b1f17b1804b1-48a86069e04mr42051775e9.9.1777560122746;
-        Thu, 30 Apr 2026 07:42:02 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a7c3161a6sm40960015e9.23.2026.04.30.07.42.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 07:42:02 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	peterz@infradead.org,
-	vineeth@bitbyteword.org,
-	David Carlier <devnexen@gmail.com>
-Subject: [PATCH v2] tracepoint: add lockdep rcu_is_watching() check to trace_##name##_enabled()
-Date: Thu, 30 Apr 2026 15:41:59 +0100
-Message-ID: <20260430144159.10985-1-devnexen@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260430053511.8767-1-devnexen@gmail.com>
-References: <20260430053511.8767-1-devnexen@gmail.com>
+        bh=4f2t9Iavwrso0cx79h2X7BZfZ6KB6P9YOcCIqQQB2DA=;
+        b=YMWqZ3ehbZxhummwL57ZOEp2MoixC+kNdKcX1RyOPEAIBjWmbiCUZYtuEiMIhCTDjY
+         gOUYl1LZh0douM1OYA6zeJ14Pkly3hAOfKt0TAXB4o2lX8C5yc/A60fxddwhro2Kstnb
+         e35KBMB3uFdYLRlB7PHvnP1v68MDMVl7YyDJJOcD97to2nx6lrbxBOiElZPdeKlqBzH2
+         GgXPZbIbdeYszlFHOROOykswcA2WqPN5KVoDWC53EiU2/JXVc8nCzH6svQtJxlIHgMdp
+         imx/lsV0Tm+Gb+qxcMTuGA5MzWoISrDuGubRBMIOBzOyZ6++PSoz0Uq6rL6Rrsq1o22Z
+         m4ZQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8dM5draZifqtkwZUxRMGOOa4VAlqt5IJs8WlmMbWOwBmzx81KAErbvTVQYSNMkYDEWLVKpY3VRmau77DDrLnhMbBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5KNFvj4cPlAnP76D1JxoL65h1GLLXYbWFWJSKoI2FAIu6IMol
+	cdoW9b3aV+QIQN8+brcFWnd4hwkwaUiHnwPDUvOAdIzOhOo98IzGGBXk0YY+ory6OvTXb2zCd82
+	Ma+QlH6cyrjGXmuuUoTgqQU108a4Yq3zo+h2OKBZ7
+X-Gm-Gg: AeBDiesqeG+FghytNPJTht3przbGm2dnwOm1nHp42IDrLS6dJAvDOycgV+YfEBY/NrU
+	3GEOabMEQ2CA5Sa+vBIa88Es9381N7TY6mEEZdi7WBnRcv3Tccsp7daWCDHVlLIkvKUaPHA3gE9
+	MRGqJuPoxhfuqbvnNMMSthC0XEkC3LQUbTDT72B/U0O9jJSf0m2ZnrERQIPSly7VXGeGswD1WGj
+	eb1ovI2jAOR01cut7IXR0NVoQTx7EWxan9n0BFF6hvI58TDKQRbUfobeMoF5nBapa8No3eXN/JP
+	P6uaWwa38GLLGUE0OT+VRTzx2hNJIxvNxmEHA7SIexH+ev4xVgTJXqvohQ==
+X-Received: by 2002:a05:6402:3241:b0:671:fff6:f82c with SMTP id
+ 4fb4d7f45d1cf-67b4e8ea06cmr58179a12.2.1777562574533; Thu, 30 Apr 2026
+ 08:22:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260429131522.4049054-1-dtominac@cisco.com> <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
+ <afIiqR5CqYRId0N0@redhat.com> <afJz3l6435DHLorn@goliath>
+In-Reply-To: <afJz3l6435DHLorn@goliath>
+From: Jann Horn <jannh@google.com>
+Date: Thu, 30 Apr 2026 17:22:18 +0200
+X-Gm-Features: AVHnY4IXFcsVkK3lFxWPc3mkzosN0e9A_ZuO_cu-riyBEoDL1P4-BpVJGbycfsQ
+Message-ID: <CAG48ez0mwkHz=4+PoLv_VmYrQiPqkSQqCSo=3R-ztrQ2zAHUwQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across MADV_DONTNEED
+To: "Daniel Walker (danielwa)" <danielwa@cisco.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, "David Hildenbrand (Arm)" <david@kernel.org>, 
+	"Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)" <dtominac@cisco.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, 
+	"xe-linux-external(mailer list)" <xe-linux-external@cisco.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-trace_call__##name() was added by commit 677a3d82b640 ("tracepoint: Add
-trace_call__##name() API") for callers that already gate on
-trace_##name##_enabled(), letting them skip the redundant
-static_branch_unlikely() re-evaluation. The LOCKDEP rcu_is_watching()
-WARN_ONCE() that trace_##name() carries on the disabled path was not
-mirrored, so the cold-path coverage added by commit c2679254b9c9
-("tracing: Make tracepoint lockdep check actually test something") is
-lost for trace_call__##name() callers when the tracepoint is disabled.
+On Wed, Apr 29, 2026 at 11:11=E2=80=AFPM Daniel Walker (danielwa)
+<danielwa@cisco.com> wrote:
+> On Wed, Apr 29, 2026 at 05:24:25PM +0200, Oleg Nesterov wrote:
+> > On 04/29, David Hildenbrand (Arm) wrote:
+> > >
+> > > On 4/29/26 15:15, Darko Tominac wrote:
+> > >
+> > > > uprobe infrastructure does not re-instrument pages on individual pa=
+ge
+> > > > faults (uprobe_mmap() is only called during VMA creation, not on
+> > > > page-in), the breakpoints are silently lost once the discarded page=
+s are
+> > > > re-read from the backing file.  The probes stop firing with no erro=
+r
+> > > > indication, and the only recovery is to unregister and re-register =
+the
+> > > > affected uprobes.
+> > >
+> > > Right. Don't MADV_DONTNEED uprobes, just like you are not supposed to
+> > > MADV_DONTNEED debugger breakpoints/set data etc. :)
+> >
+> > Agreed, thanks.
+>
+>
+> Shouldn't there be some sort of compensation or notification for this, or=
+ is each person that
+> hits this suppose to just scratch their head and send a patch that's reje=
+cted?
 
-When the tracepoint is enabled, the rcu_dereference inside
-__DO_TRACE_CALL() already trips under PROVE_RCU, so the warning is
-only needed on the !enabled path. The natural place is the gate that
-trace_call__##name() callers consult: trace_##name##_enabled().
-
-Fixes: 677a3d82b640 ("tracepoint: Add trace_call__##name() API")
-Cc: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: David Carlier <devnexen@gmail.com>
----
- include/linux/tracepoint.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 578e520b6ee6..3b3ab19c2627 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -293,6 +293,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 	static inline bool						\
- 	trace_##name##_enabled(void)					\
- 	{								\
-+		if (IS_ENABLED(CONFIG_LOCKDEP)) {			\
-+			WARN_ONCE(!rcu_is_watching(),			\
-+				  "RCU not watching for tracepoint");	\
-+		}							\
- 		return static_branch_unlikely(&__tracepoint_##name.key);\
- 	}
- 
--- 
-2.53.0
-
+I guess we could add a pr_warn_once() that warns when
+madvise(MADV_DONTNEED) is called on a read+execute file mapping,
+and/or (as David said) add an explicit note in the madvise() manpage
+about how that can interfere with software breakpoints and uprobes?
