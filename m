@@ -1,98 +1,113 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C63F12CDA5;
-	Thu, 30 Apr 2026 01:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A2126A08F;
+	Thu, 30 Apr 2026 03:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777513220; cv=none; b=ATN0/HxxJIKx9EYzGHKhgZ8FyMRmTjn2LOutEpr3Cfb6H//DyIB22RXLQ2rKNKaE/nLfKELYb/LhjKdd60MeiaXppPEWwaW8bXdzV2ka9FqgV/Y+FeDpiBjZB2Lw+7gBYhI2wv9MoDUvnq7NSvD7mHwkXlG7QSMZYQ/XaQyIkdQ=
+	t=1777519691; cv=none; b=OSg/vz8gsk2sFuHE65VseSrZPncg5sivPtejQ2NktnNtPWtSd4EOEFd6GWfGb+VL59d0clQw2bLbg0bx4FdhTTZax9bSM1GeEM4d62u796p370UdeJCJbZdscKCqi9vQNZh7H1FRlxA4pnwnzg7K+bYFHL7IVEyjNv7s8ufxysg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777513220; c=relaxed/simple;
-	bh=3gbTcurwLUfT8XK0AVhENsSu53bOSlKzUn3QQzz7yGI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uYtJTwZMR3kSah6POqevtmxPD1fdadfa1JE2UbALaX/SqoVDFVEdquLJriIQCmw2K/4ux/kosopKUMD/YKHItxBtrq0yaRGGkzwl8F4kw38Aqbq5Ouay0HcZJDkoFK3JE5YKGTidS2OROmvPuEFKvhp7IxaaRN/qwwKKI4touGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=GENYwGTh; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1777519691; c=relaxed/simple;
+	bh=k2A+kUVVRq4Ta7CpDmynAO3yQaUxHFRQg/EdEUOsSQg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cs/owk6M2VdWScN4F7iCtNJhvVv3E214GAgUwGbbMUflaS1wzuZ1eN81rorODjZU/tSFKbQzXrPdydBiiW0JuLflDxyqkECXvzeMs2ODZ8PD4JagFcXF3Vjbm+ycUItTkOMOBpe1ZSH6R/vYJ8NGnTOqyrKWZqYPNp9ndXYbUAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwnW3ZlB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="GENYwGTh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1777513175;
-	bh=EAoIfsiAYb/EQwr5TF6KP9Q/dQr3+N+/0q2VaZW5lbY=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=GENYwGThOnsWDimK+dhCtephjlm2Fx0VkZfdIklzgj4VWs+rTEpVTeVJD6n2FvDdc
-	 8cNV6ZDbO0QrnMBJsfE8JVvDzI8xE6ObGHbgNK6bH3c1JywAqDc85k2jAO+gcLujj1
-	 25UtSoUoBhwZIlPoW3uUykICaTJidiGpX/TdPkOs=
-X-QQ-mid: zesmtpip4t1777513172tbaf71148
-X-QQ-Originating-IP: cQUZHSMyWg4fHRYF1nnXDjX5ccT34B33GDFW9jY94Nc=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 30 Apr 2026 09:39:23 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6866613220923950043
-From: Shijia Hu <hushijia1@uniontech.com>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	naveen@kernel.org,
-	davem@davemloft.net,
-	akpm@linux-foundation.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwnW3ZlB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E02C2BCB8;
+	Thu, 30 Apr 2026 03:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777519690;
+	bh=k2A+kUVVRq4Ta7CpDmynAO3yQaUxHFRQg/EdEUOsSQg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TwnW3ZlBdw/gKupgDdgPK/QWOkwACyys/Mwkd9jkswiXbo9nlZJTK3Y7QRuIxfT1W
+	 Ud2wYYkTo1p5DTLBTZHmLW2hl8A1q1coyxXkLDJWz6d2ubD+8vly3xoo+JsjIsMHV9
+	 l821ni6Ar2xfK7kYdIYQ+4wT0Rioy8vr+1CIfZaDlKkWMryis/jNmAyYSwPsUNKjFf
+	 FhNvrplxUB4hRz0kGXAAaCkxpXdyUZrDF31rNDpESBEf372BkBNkoBdkCnWxBiv/z/
+	 eY1zMbih658u8w1tn2CEnY0UVesy5E4xRFHZq05GPVhCiAWnfQz/DACVZ0pjb+Q9Vj
+	 AhsQh+9+nwZkQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Remove dead child probes from aggrprobe list on module unload
-Date: Thu, 30 Apr 2026 09:39:22 +0800
-Message-Id: <20260430013922.322385-1-hushijia1@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20260429115645.793f15ea@gandalf.local.home>
-References: <20260429115645.793f15ea@gandalf.local.home>
+	linux-trace-kernel@vger.kernel.org,
+	Ian Rogers <irogers@google.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v19 0/7] ring-buffer: Making persistent ring buffers robust
+Date: Thu, 30 Apr 2026 12:28:05 +0900
+Message-ID:  <177751968499.2136606.17388366710182662849.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
-X-QQ-XMAILINFO: OT1af/FwY+++W88cTSCMPjZpzVdnYtCQ6U+oNk5bZevIjsv6JG+kXV8m
-	rv3yIjFkxSgvGtylNTIyYy7W/Qom8BMdw94yVeLFmA12mQqn4CUqTj0/TkSTzhVDgiGD4Ep
-	UCxt7vAIaPWS7DA3iPJKBfOeIOz64+SCxuo4P2NEHqyya0C8ivYmJxPZ1QB90SKxUHcRk4b
-	PdFKwJZEyuS+w422gziuzYjyrmZBSZBUZ5JutZZwtVGlyneSwkOtTnj59zPweWULuSulfgX
-	Q8C1zQlK0oyr9hEm5LDZRhBs2K/Ym0bUKl1WE3dXabou+cLf2ai3hwrKRfpV3p221TLPacl
-	gc8crjrqsU+C/O+3PwN0Ua2xZ8iZVVYzFn/f5celwSJ4Tg50OvK8TYLB02sRShC6QY+20s6
-	ldqW0pHM5+0RpltvFV3gxTnTIVJgqWp46gnGAT9EVxAqlAQinDwBVYJhxbDdlN+m19gj996
-	XAxTFCadqiCIF6Xj6mI2iKGYHV0wK8QNlfgkAaH7mrfbImVlqkm1Jtt7D30M/ja+1NlNumT
-	o5uLanYeOH4wIfBgKfp6qAbi9HOtl5NKwHR88BrFBP8U0kQ81mTGlGnIfpiyrkKMFBAN94P
-	ceJSzdaJcg7sIZmRYDr0137ZIq1M25MFJI2DINCNwgxMHssPt+ylv1fesgcGBEE/432PMwF
-	1035+fPfu0O11MmamPCxGp8g2Vq2BnqH3hcEBZgyjF7clhzgysq6RuQsFIeXsxHq6sKhn4u
-	GKyrvnLocft0og6mFSnuZHfXT4iGUZzGcRD7BVwNwHc/noyjN8Kr82R16Dr+COP12CLnpH3
-	dcw0/m7/paYK/0GFIc1wjyqHFy63rCEdMZm+YlwQ/4eFJB9ifk7D6gfdy3uEogqyoOWDl+y
-	l7DkY7WJnZvOOEzUHkBzbmw85U8cxXn2fFQ3AZOVBfDrKIofG0QWr+2SxisJICr5//yJ492
-	aA5/EuyXu/4mpKEKBOI7Y2KMeGdOHig8zcPC5u2+qllqDZJ4Dm8FhGHqjnF+QwpjKj5CPlh
-	TO4rBTTxwgk1mFvbHIeai7vjMwPtH8zFMZilCTlQ==
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-X-QQ-RECHKSPAM: 0
 
-On Wed, 29 Apr 2026 17:40:53 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hi,
 
-> Yes, this cause UAF because that module has a bug. Please call
-> unregister_kprobe().
+Here is the 19th version of improvement patches for making persistent
+ring buffers robust to failures.
+The previous version is here:
 
-On Wed, 29 Apr 2026 11:56:45 -0400
-Steve Rostedt <rostedt@goodmis.org> wrote:
+https://lore.kernel.org/all/177701351903.2223789.17087009302463188638.stgit@mhiramat.tok.corp.google.com/
 
-> Yes, this is one of those...
->
->   Patient: Doctor it hurts me when I do this
->   Doctor: Then don't do that
->
-> ... reports.
->
-> No, the kernel isn't responsible for fixing buggy modules.
+This version rebased on v7.1-rc1 and cleanup code.
 
-Agreed. I withdraw this patch.
+[2/7] Limit max number of loops to nr_pages in __rb_get_reader_page()
+      and update comment.
+[3/7] Cleanup rb_validate_buffer() so that it is more readable,
+      and add a comment about the timestamp validation.
+[6/7] Add a kerneldoc about rb_validate_buffer().
 
-Thank you both for the review.
+Thank you,
 
-Shijia
+Masami Hiramatsu (Google) (7):
+      ring-buffer: Flush and stop persistent ring buffer on panic
+      ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
+      ring-buffer: Skip invalid sub-buffers when rewinding persistent ring buffer
+      ring-buffer: Add persistent ring buffer invalid-page inject test
+      ring-buffer: Show commit numbers in buffer_meta file
+      ring-buffer: Cleanup persistent ring buffer validation
+      ring-buffer: Cleanup buffer_data_page related code
+
+
+ arch/alpha/include/asm/Kbuild        |    1 
+ arch/arc/include/asm/Kbuild          |    1 
+ arch/arm/include/asm/Kbuild          |    1 
+ arch/arm64/include/asm/ring_buffer.h |   10 +
+ arch/csky/include/asm/Kbuild         |    1 
+ arch/hexagon/include/asm/Kbuild      |    1 
+ arch/loongarch/include/asm/Kbuild    |    1 
+ arch/m68k/include/asm/Kbuild         |    1 
+ arch/microblaze/include/asm/Kbuild   |    1 
+ arch/mips/include/asm/Kbuild         |    1 
+ arch/nios2/include/asm/Kbuild        |    1 
+ arch/openrisc/include/asm/Kbuild     |    1 
+ arch/parisc/include/asm/Kbuild       |    1 
+ arch/powerpc/include/asm/Kbuild      |    1 
+ arch/riscv/include/asm/Kbuild        |    1 
+ arch/s390/include/asm/Kbuild         |    1 
+ arch/sh/include/asm/Kbuild           |    1 
+ arch/sparc/include/asm/Kbuild        |    1 
+ arch/um/include/asm/Kbuild           |    1 
+ arch/x86/include/asm/Kbuild          |    1 
+ arch/xtensa/include/asm/Kbuild       |    1 
+ include/asm-generic/ring_buffer.h    |   13 +
+ include/linux/ring_buffer.h          |    1 
+ kernel/trace/Kconfig                 |   34 ++
+ kernel/trace/ring_buffer.c           |  490 +++++++++++++++++++++++-----------
+ kernel/trace/trace.c                 |    4 
+ 26 files changed, 415 insertions(+), 157 deletions(-)
+ create mode 100644 arch/arm64/include/asm/ring_buffer.h
+ create mode 100644 include/asm-generic/ring_buffer.h
+
+
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
