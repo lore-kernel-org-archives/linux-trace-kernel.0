@@ -1,166 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CE33CF032;
-	Fri,  1 May 2026 19:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F53421EFD
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 May 2026 21:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777663530; cv=none; b=rYwGq+D9Dyx/4wa+0yqMl/bB/Lbr/2U6DX4r6emD0RrZMDGoEBy0X/IoaNvS6mEK7cw+oeMIXmYSViwyyKKl+HX2xL1VhoZDBTCD//y6pe/JlMjthA3oIfYHWTwaHnz5Fhk264vhUsHsvF9GK9LdeHSAlvTJgPRVz4voQ5yhsqw=
+	t=1777670000; cv=none; b=gtBkqOulsR9v8u5zk655GV/qljnHQGztMxFyssbV+0XQ9cQJeS2/YfAbBbNhr+CZgIUlmo3b3ABeFdlh7bNaqWAmOgzExDnpbHsluAcwDwFoogEqPIucwin6kmmQNRIywDZKbeUGkwYbyv3mo1rSeZrhM4jTQboy2ZXX1W2oo6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777663530; c=relaxed/simple;
-	bh=cynpdO+A6ieLH/h1ooFdUpbXEvoHioh79RIx3hzXzec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lObc6owSLQyAn9ft63AXSfB3i+mqNt4WyfxGn+YC/DnHHfJqVtpA7+pZzXq7XR+tyFbxywgX3OPhnUvSf6ye68GqXS2REaLFEQR/9j6xZ688OzCc9cdou6k+pI+jKmYXRvbm7CM8/pTTKAwsvEmP+7APwi2ZDdw/gIf5cQYwXD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGLAmB26; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777670000; c=relaxed/simple;
+	bh=NvbUB9w6sa+4Wu7Si19/S3bep7cng1nAYKPLebrqTyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OOVBx33olTay3FDXdaXL+abaDcerSLtdQIzs4N8O1Ak5o8d2fxs0jJeBiO+PqZVi75lMQ5TPg1jUE2LE1Ek8jjyYZ/pww0GVBoHSeVvz6PSicq92MF6Tv8BLL/a4D3EVisGEXxJUUzNShXXjxbfYbT74f2GOocSHOK2AMKeeMUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c26QGOFp; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGLAmB26"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1817CC2BCB4;
-	Fri,  1 May 2026 19:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777663530;
-	bh=cynpdO+A6ieLH/h1ooFdUpbXEvoHioh79RIx3hzXzec=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WGLAmB26o3fkD3UOKmk2RR8qmgItfkFPy1kHaO3qqCKRyNhbHBRjPY/M3rxUkmGoF
-	 CSzBPLXr49HvAq46Lw62Lu3z9ZpsnQLKya4MHlujisZlHUwA3VL09uWa7Wad1hJ+fp
-	 +Mcr3f7NxB58K1b0ECc9dxtmMicWQtWCHfgj+Vi21gMCGnQjQUUKcHSgI/tUskKA+p
-	 idRV9QaSo9D/uCTVKcTdnlOPZsgTXI/htqPkqm74UmUSwL9H7slRCbEflKhJu9mprL
-	 /TIPS7TiJ0TC4Qt2j/DtQHMsFYoeokm+b1zIXKxVMTrVzAo9duhyIA3fRhxSNyXINo
-	 XVTMKpufHSYJA==
-Message-ID: <dd6da3c4-96a7-46ff-bcb2-b46d276d9a45@kernel.org>
-Date: Fri, 1 May 2026 21:25:20 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c26QGOFp"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso18343865e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 01 May 2026 14:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777669997; x=1778274797; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yg5m7oNPpPp+73S0JR0V2pwRtY170K+LXcVuROlxjE4=;
+        b=c26QGOFp9StWg4mOBgWstMfOYhSVuqyIXj8gjhXDKTF+IeusP73OJK4Ty15yadNNco
+         cjSf0R74llTAPt135L/1uSQ6p4RSTm4FLCsHtGLC89qYX8MFH/0lI1qotpctPjOMHD6v
+         cbzfoQ8X4yivIjc4RHApNzuLwImsNCVHUhEPz/tu87r1fI3Iikm8AhDOhtA5fYtVN/v8
+         tfQ+AklYERgL3lrw/nIC3qpfNlJWuDgU/EdEUFse/qeaJ1WmLWU8Oeft5jH8vi2H1tQE
+         7dXxnOHrU+2k+qCZ2XttzC1YhYMQOm4htsMb8oQCqs3iGrtnyhpg4Sd390GAgJBxFTar
+         lFLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777669997; x=1778274797;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Yg5m7oNPpPp+73S0JR0V2pwRtY170K+LXcVuROlxjE4=;
+        b=kIUlI913LT4M/tKaFyYZXh5cQENw6XjAN+JhBx88nIEZ8YsAPwhslRhJ50Ml6Y0Rul
+         DygtdJ0YOPNw9lldsil1HvuQhqM9rC+mIVCEPDc8v/pzIevmhPVHDUBOqZBovNZQVSDF
+         6ImOFbwZOFZ4mLI6LVppNPRFQ2K29KcDeMRpg3kq/TUZpf2GEI9HualhjOZiLP6aazdj
+         yAuUmaXwAaP/0FqczDeyFn9A6vQKeISbnxtLVOql4IdWfHA8+jSlpcMXrhcaRTtRJSNe
+         SHN1a9sHK6oioOiVLkeovhykd+6YWXsjZpIobrtv9TBAqSzefXAAhgVvhlM7HlaBLc27
+         RJ/A==
+X-Forwarded-Encrypted: i=1; AFNElJ/sZRul4AYyoyuz2TvEExonOY3EUqt8FasRKJEH4oDtSVEODDh85d7mQdYNtISH+SNoJkye5cgzIq0TbF/xGlOYZfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywcr84u+OwnEWW5tTETB27SDzfAi/xCIfbT9zw64joBbzvtCV2Z
+	30+kjMJAa47SFllE4MXqLMt8eU2IiKBl/lzsgHC0X+Z6Vcjc1lE/6Xa2
+X-Gm-Gg: AeBDievziuXoZqL7zipAaKqEm0mOlKAbfrhF9pxRHuyLHcCKb6ynYB5K9AnaA1QTDI1
+	xojLuY7BPkvR2U1/Fl8BWDOiA7PYQHiO3oxsiW6HwOXavQzv3wp9vhoO2Hs2OPscxoj7Tc3qOYh
+	koeFeVfZQq90To2wX31+QJu2xIm8w0CTHUHjmwUu63RuULJdltNR3VLnppGGuAt2rW5iv55jc5V
+	gdaLkwM1X4xH+a/51xAxJwE/3HquNDqO2BTlZjzd7hSa/GqPRFqJSICpt98vQKaiDIAJ/J7tpT1
+	Ny7j3DzDgJ6N+eTR6xDA1Q3QItQ6eG24PAsIM66P7upWTcyiNnHMz1B2HlcqDUYnf/ecjg47T7o
+	rp9W6cPi/ezS9CFLe3tzdZsJW3ZXwmPxYBFpNi1kUs710zSCjtPaUMC119s3aw6qKXqA6iTZ2j0
+	QE7l9LClj3iwlUfBDmWnC6IYfVex531Zk6yggiyeYnoNeQMEUpf7BvgBz3Y4eExNiX5evsms0Ca
+	rQ=
+X-Received: by 2002:a05:600c:c058:b0:488:ac01:72b6 with SMTP id 5b1f17b1804b1-48a9866a998mr8312805e9.21.1777669997185;
+        Fri, 01 May 2026 14:13:17 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8fea704asm19701415e9.11.2026.05.01.14.13.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2026 14:13:16 -0700 (PDT)
+Date: Fri, 1 May 2026 22:13:15 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Qian-Yu Lin <tiffany019230@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace_printk: replace _______STR with __UNIQUE_ID(STR)
+Message-ID: <20260501221315.1f709d6d@pumpkin>
+In-Reply-To: <afS7UUAfzgiSzEHv@nova>
+References: <20260429165707.7020-1-tiffany019230@gmail.com>
+	<20260429134226.49e95e9d@robin>
+	<afS7UUAfzgiSzEHv@nova>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
- MADV_DONTNEED
-To: "Daniel Walker (danielwa)" <danielwa@cisco.com>,
- Jann Horn <jannh@google.com>
-Cc: Oleg Nesterov <oleg@redhat.com>,
- "Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)"
- <dtominac@cisco.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
- "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20260429131522.4049054-1-dtominac@cisco.com>
- <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
- <afIiqR5CqYRId0N0@redhat.com> <afJz3l6435DHLorn@goliath>
- <CAG48ez0mwkHz=4+PoLv_VmYrQiPqkSQqCSo=3R-ztrQ2zAHUwQ@mail.gmail.com>
- <afOsxsC6MKhkuqKD@goliath>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <afOsxsC6MKhkuqKD@goliath>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 4/30/26 21:25, Daniel Walker (danielwa) wrote:
-> On Thu, Apr 30, 2026 at 05:22:18PM +0200, Jann Horn wrote:
->> On Wed, Apr 29, 2026 at 11:11 PM Daniel Walker (danielwa)
->> <danielwa@cisco.com> wrote:
->>>
->>>
->>> Shouldn't there be some sort of compensation or notification for this, or is each person that
->>> hits this suppose to just scratch their head and send a patch that's rejected?
->>
->> I guess we could add a pr_warn_once() that warns when
->> madvise(MADV_DONTNEED) is called on a read+execute file mapping,
+On Fri, 1 May 2026 22:40:17 +0800
+Qian-Yu Lin <tiffany019230@gmail.com> wrote:
 
-Private mapping, yes. MADV_DONTNEED indeed interacts poorly here.
+...
+> Yes. I measured compile time of kernel/trace/ring_buffer_benchmark.o
+> after make clean on an x86_64 machine running Ubuntu 24.04 LTS:
+> 
+>   - Original _______STR:                 49.8s
+>   - v1 with __UNIQUE_ID (compiler.h):    53.5s
+>   - compound literal (no extra include): 33.2s
 
-uprobe registration indeed fails if VM_WRITE is set (valid_vma), but nothing
-stops the VMA from getting mprotect'ed later I guess, to allow for write access.
-
-We could try marking a VMA that has uprobes, to then pr_warn_once() of
-MADV_DONTNEED is done on such a VMA. It wouldn't sort out ptrace access.
-
->> and/or (as David said) add an explicit note in the madvise() manpage
->> about how that can interfere with software breakpoints and uprobes?
-
-I guess not just software breakpoints, but any modifications done by a debugger.
-
-I guess for read+execute file mapping we would expect these to be software
-breakpoints.
+That difference looks far to big to me.
+And the times are far too large to be measuring the actual compile time.
 
 > 
-> It does feel like it's the debuggers problem. The application doesn't know it's
-> getting debugged. So the application does whatever it does. If GDB is debugging
-> an application it should assume there's a problematic madvise() call which will
-> hurt/stop the debugging from happening. It should endeavor to prevent that
-> from happening. There are options in userspace to prevent it from happening. I'm
-> sure madvise() is not the only thing GDB has to worry about w.r.t. screwing up
-> the debugging.
+> I propose using a compound literal in v2, which eliminates the local
+> variable entirely and requires no extra include:
 > 
-> Noting it in the man page seems reasonable.
+> #define trace_printk(fmt, ...)                          \
+> do {                                                    \
+>     if (sizeof((char[])                             \
+>         {__stringify((__VA_ARGS__))}) > 3)      \
+>         do_trace_printk(fmt, ##__VA_ARGS__);    \
 
-I assume the bigger problem here is that MADV_DONTNEED was used for memory
-reclaim, when in fact, it shouldn't be used for that.
+There has to be a better way to align that code.
+Although you should be able to use:
+	if (sizeof __stringify((__VA_ARGS__)) > 3)
+(I've omitted one set of parenthesis for clarity)
 
-For shared mappings, the man page even documents: "MADV_DONTNEED might not lead
-to immediate freeing of the pages in the range.  The kernel is free to delay
-freeing the pages until an appropriate moment.".
+You could change __stringify() to work with __VA_ARGS__ the you don't need
+the extra (); this works fine:
+#define _x(...) #__VA_ARGS__
+#define x(...) _x(__VA_ARGS__)
+#define z abcd
+int a = sizeof x(z, v); /* 8 */
+See: https://godbolt.org/z/zo4h4nr9b
 
-MADV_PAGEOUT is better for reclaim, but it has its limitations when it comes to
-pages shared with other processes.
+-- David
 
--- 
-Cheers,
+>     else                                            \
+>         trace_puts(fmt);                        \
+> } while (0)
+> 
+> This fully eliminates the shadowing risk without any compile overhead.
+> 
+> Qian-Yu
+> 
+> > 
+> >   
+> > >  #include <linux/compiler_attributes.h>
+> > >  #include <linux/instruction_pointer.h>
+> > >  #include <linux/stddef.h>
+> > > @@ -84,15 +85,18 @@ do {									\
+> > >   * let gcc optimize the rest.
+> > >   */
+> > >  
+> > > -#define trace_printk(fmt, ...)				\
+> > > +#define ___trace_printk(fmt, str, ...)				\
+> > >  do {							\
+> > > -	char _______STR[] = __stringify((__VA_ARGS__));	\
+> > > -	if (sizeof(_______STR) > 3)			\
+> > > +	char str[] = __stringify((__VA_ARGS__));	\
+> > > +	if (sizeof(str) > 3)			\
+> > >  		do_trace_printk(fmt, ##__VA_ARGS__);	\
+> > >  	else						\
+> > >  		trace_puts(fmt);			\
+> > >  } while (0)
+> > >  
+> > > +#define trace_printk(fmt, ...) \
+> > > +	___trace_printk(fmt, __UNIQUE_ID(str), ##__VA_ARGS__)
+> > > +
+> > >  #define do_trace_printk(fmt, args...)					\
+> > >  do {									\
+> > >  	static const char *trace_printk_fmt __used			\  
+> >   
 
-David
