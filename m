@@ -1,119 +1,166 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2228E316905;
-	Fri,  1 May 2026 19:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CE33CF032;
+	Fri,  1 May 2026 19:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777662474; cv=none; b=cLLioInSLeuGYK37BAHnpHsmgML/vFECyPACyrdZxbjENJnj5MdAe9g5G2i0TOvZjUYPNlhFM3FT60XJXXj00/u4v+MwGf8uFzZb3aO+JQcg3jzj9dtEwSaVslsZVir7TOqYgms0wkFCsci2UNRu6p/zRAKKlKRGCbQq9vxYzfc=
+	t=1777663530; cv=none; b=rYwGq+D9Dyx/4wa+0yqMl/bB/Lbr/2U6DX4r6emD0RrZMDGoEBy0X/IoaNvS6mEK7cw+oeMIXmYSViwyyKKl+HX2xL1VhoZDBTCD//y6pe/JlMjthA3oIfYHWTwaHnz5Fhk264vhUsHsvF9GK9LdeHSAlvTJgPRVz4voQ5yhsqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777662474; c=relaxed/simple;
-	bh=nC4Hpifpq/y79S2kr1v96k5enNp3JCMeIJWnqGn9mF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UIUTMU5W3xmOpKpapnVaC3ukV6/rgS6kXEqFjXP39Jk+gqt/Zu/jDGs6dHG1saI7j+8Cc5T3dL2urHMIlL5/uy4UY+obAfWgIMhSBUeuG4xJ29PwqhK7sgdxZqmYE8pnNtzC3rE0n6rjwEfOCUW82nmoY3DL0FvY9ZNukTNNuas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 991E2A020D;
-	Fri,  1 May 2026 19:07:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 769B32002A;
-	Fri,  1 May 2026 19:07:43 +0000 (UTC)
-Date: Fri, 1 May 2026 15:07:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Detlev Casanova <detlev.casanova@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Nicolas Dufresne
- <nicolas.dufresne@collabora.com>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner
- <heiko@sntech.de>, Daniel Almeida <daniel.almeida@collabora.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Hans Verkuil <hverkuil@kernel.org>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Ricardo
- Ribalda <ribalda@chromium.org>, Yunke Cao <yunkec@google.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Pavan Bobba <opensource206@gmail.com>,
- James Cowgill <james.cowgill@blaize.com>, Ma Ke <make24@iscas.ac.cn>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>, Daniel Scally
- <dan.scally@ideasonboard.com>, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH 01/11] media: Move visl traces to v4l2-core
-Message-ID: <20260501150744.065081ac@gandalf.local.home>
-In-Reply-To: <20260212162328.192217-2-detlev.casanova@collabora.com>
-References: <20260212162328.192217-1-detlev.casanova@collabora.com>
-	<20260212162328.192217-2-detlev.casanova@collabora.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1777663530; c=relaxed/simple;
+	bh=cynpdO+A6ieLH/h1ooFdUpbXEvoHioh79RIx3hzXzec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lObc6owSLQyAn9ft63AXSfB3i+mqNt4WyfxGn+YC/DnHHfJqVtpA7+pZzXq7XR+tyFbxywgX3OPhnUvSf6ye68GqXS2REaLFEQR/9j6xZ688OzCc9cdou6k+pI+jKmYXRvbm7CM8/pTTKAwsvEmP+7APwi2ZDdw/gIf5cQYwXD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGLAmB26; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGLAmB26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1817CC2BCB4;
+	Fri,  1 May 2026 19:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777663530;
+	bh=cynpdO+A6ieLH/h1ooFdUpbXEvoHioh79RIx3hzXzec=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WGLAmB26o3fkD3UOKmk2RR8qmgItfkFPy1kHaO3qqCKRyNhbHBRjPY/M3rxUkmGoF
+	 CSzBPLXr49HvAq46Lw62Lu3z9ZpsnQLKya4MHlujisZlHUwA3VL09uWa7Wad1hJ+fp
+	 +Mcr3f7NxB58K1b0ECc9dxtmMicWQtWCHfgj+Vi21gMCGnQjQUUKcHSgI/tUskKA+p
+	 idRV9QaSo9D/uCTVKcTdnlOPZsgTXI/htqPkqm74UmUSwL9H7slRCbEflKhJu9mprL
+	 /TIPS7TiJ0TC4Qt2j/DtQHMsFYoeokm+b1zIXKxVMTrVzAo9duhyIA3fRhxSNyXINo
+	 XVTMKpufHSYJA==
+Message-ID: <dd6da3c4-96a7-46ff-bcb2-b46d276d9a45@kernel.org>
+Date: Fri, 1 May 2026 21:25:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ukwp7o711oh9hqdcagr83o8ipbi84ubz
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 769B32002A
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18DLft44k2YZeX2Udu1SeE+L6rSwk5PnC0=
-X-HE-Tag: 1777662463-242147
-X-HE-Meta: U2FsdGVkX18HZ+JhHq9zIZprVHj8AGRMlv1oqYmjfGya9vaHea71t0EKjSn80nvm9Il4U7tne7/JdmHSroYcDA55tm7YVqGnxZtHrugibYTMD1JUiRqPTwQ5j9dkCF503SnUMmQ3WkDZXk8giuSr8g1YOaufsDbgX4Zn/1l1PRfIYZFetI5mngS6Wj7K76RpbuZJBRevihBBniFKGJxL575k0aJI8SevXXAClsYrRFmSQjHzLWFOCNllh/V4Q/pLW/FbuV0Qoj2JmWxeW2ulqkSJwE0aOcIhwqtqwDqnDO4NtURAcY8QIN20NCLerIUhVriTtPJHRfRzKlDs5JQJMKd3wDWbGC/PbxGfQEEGX3lZfBAUGJdgyqIEJKZyCnp/MFj37lOeNTKJSXwLFxCbz7j6ig0eE/an8d3WIfZQaXfgcgHFeLMFZuMiA8THIp57
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/madvise: preserve uprobe breakpoints across
+ MADV_DONTNEED
+To: "Daniel Walker (danielwa)" <danielwa@cisco.com>,
+ Jann Horn <jannh@google.com>
+Cc: Oleg Nesterov <oleg@redhat.com>,
+ "Darko Tominac -X (dtominac - GLOBALLOGIC INC at Cisco)"
+ <dtominac@cisco.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
+ <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
+ "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20260429131522.4049054-1-dtominac@cisco.com>
+ <889e4186-9f75-45d3-bd9a-1c90b218a635@kernel.org>
+ <afIiqR5CqYRId0N0@redhat.com> <afJz3l6435DHLorn@goliath>
+ <CAG48ez0mwkHz=4+PoLv_VmYrQiPqkSQqCSo=3R-ztrQ2zAHUwQ@mail.gmail.com>
+ <afOsxsC6MKhkuqKD@goliath>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <afOsxsC6MKhkuqKD@goliath>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 4/30/26 21:25, Daniel Walker (danielwa) wrote:
+> On Thu, Apr 30, 2026 at 05:22:18PM +0200, Jann Horn wrote:
+>> On Wed, Apr 29, 2026 at 11:11 PM Daniel Walker (danielwa)
+>> <danielwa@cisco.com> wrote:
+>>>
+>>>
+>>> Shouldn't there be some sort of compensation or notification for this, or is each person that
+>>> hits this suppose to just scratch their head and send a patch that's rejected?
+>>
+>> I guess we could add a pr_warn_once() that warns when
+>> madvise(MADV_DONTNEED) is called on a read+execute file mapping,
 
-Sorry, I didn't look at these patches at the time they were posted, but
-when I saw you reply recently with:
+Private mapping, yes. MADV_DONTNEED indeed interacts poorly here.
 
- "On the userspace side, each trace events can be enabled separately and 
-  even filtered (although I'm not sure filtering is good for performance, 
-  has it has to match each event with a regex)."
+uprobe registration indeed fails if VM_WRITE is set (valid_vma), but nothing
+stops the VMA from getting mprotect'ed later I guess, to allow for write access.
 
-I had to see what you meant by regex, because no tracer should be using
-regex for filtering.
+We could try marking a VMA that has uprobes, to then pr_warn_once() of
+MADV_DONTNEED is done on such a VMA. It wouldn't sort out ptrace access.
 
-On Thu, 12 Feb 2026 11:23:18 -0500
-Detlev Casanova <detlev.casanova@collabora.com> wrote:
+>> and/or (as David said) add an explicit note in the madvise() manpage
+>> about how that can interfere with software breakpoints and uprobes?
 
-> +
-> +DECLARE_EVENT_CLASS(v4l2_ctrl_mpeg2_seq_tmpl,
-> +	TP_PROTO(const struct v4l2_ctrl_mpeg2_sequence *s),
-> +	TP_ARGS(s),
-> +	TP_STRUCT__entry(__field_struct(struct v4l2_ctrl_mpeg2_sequence, s)),
-> +	TP_fast_assign(__entry->s = *s;),
+I guess not just software breakpoints, but any modifications done by a debugger.
 
-What the heck! You are copying an entire structure onto the ring buffer to
-print just a portion of it? This is really a waste of ring buffer, and also
-prevents you from doing any real filtering.
+I guess for read+execute file mapping we would expect these to be software
+breakpoints.
 
-You do realize that you can filter on fields (if they are defined as normal
-fields).
+> 
+> It does feel like it's the debuggers problem. The application doesn't know it's
+> getting debugged. So the application does whatever it does. If GDB is debugging
+> an application it should assume there's a problematic madvise() call which will
+> hurt/stop the debugging from happening. It should endeavor to prevent that
+> from happening. There are options in userspace to prevent it from happening. I'm
+> sure madvise() is not the only thing GDB has to worry about w.r.t. screwing up
+> the debugging.
+> 
+> Noting it in the man page seems reasonable.
 
- For example, 
+I assume the bigger problem here is that MADV_DONTNEED was used for memory
+reclaim, when in fact, it shouldn't be used for that.
 
-  # cd /sys/kernel/tracing
-  # echo 'height > 20 && width > 30' > events/visl_fwht_controls/v4l2_ctrl_fwht_params/filter
-  # echo 1 > events/visl_fwht_controls/v4l2_ctrl_fwht_params/enable
+For shared mappings, the man page even documents: "MADV_DONTNEED might not lead
+to immediate freeing of the pages in the range.  The kernel is free to delay
+freeing the pages until an appropriate moment.".
 
-And that will only trace that event where the height field is greater than
-20 and the width field is greater than 30. It's converted into a fast array
-to do the filtering. No regex involved.
+MADV_PAGEOUT is better for reclaim, but it has its limitations when it comes to
+pages shared with other processes.
 
-Also, there's a library to read the raw events from the ring buffers where
-you can do filtering on the read side too:
+-- 
+Cheers,
 
-  https://trace-cmd.org/Documentation/libtracefs/
-  https://trace-cmd.org/Documentation/libtraceevent/
-
--- Steve
-
-> +	TP_printk("\nhorizontal_size %u\nvertical_size %u\nvbv_buffer_size %u\n"
-> +		  "profile_and_level_indication %u\nchroma_format %u\nflags %s\n",
-> +		  __entry->s.horizontal_size,
-> +		  __entry->s.vertical_size,
-> +		  __entry->s.vbv_buffer_size,
-> +		  __entry->s.profile_and_level_indication,
-> +		  __entry->s.chroma_format,
-> +		  __print_flags(__entry->s.flags, "|",
-> +		  {V4L2_MPEG2_SEQ_FLAG_PROGRESSIVE, "PROGRESSIVE"})
-> +	)
-> +);
-> +
+David
