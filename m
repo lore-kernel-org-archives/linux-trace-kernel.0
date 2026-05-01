@@ -1,78 +1,117 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4316F3F2119;
-	Fri,  1 May 2026 16:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7983E9F71
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 May 2026 16:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777652485; cv=none; b=fDnuevQ5Nf+UqY25ChZGGKZGQCpntQ3L4bi9761neNUnaHeuk742KMtwodkZm+0TP1vbg3SM3VJFfTAGx1gq6IrJhbdSlnGTuw+VOmojAoTDXk9alUQaYcPitkhMhbXBiv8LQ14Gb38k5Mdl4swAmFvDBnc3NFvgE80Bwk986X0=
+	t=1777653018; cv=none; b=AiTPJht1MYALSQLNUk8+sjUNRMwerZYxrgsWZX/hfdDMjyoQU1EQg4jYKRXxeBQNRqKGm0UtOu1jVGguiejw5rST5Es+IRRFTxvOgj7fbLjRj26mctHKEfX0RVik4FFWEw7uPf9Knx1uG0goqG6jvjonrDUBYqtokcH9F4G0Cpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777652485; c=relaxed/simple;
-	bh=j+FgJTljU+MKHYfS7zpPFoQ4ZjUqvtdGRbsZ4NLIkE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kUcaCzRRpdR7fT/SrDiwqT4y2j/dzjDmt1iKaB9dluxHgWwgwssUFYE+s6/vx0z6xC02jxJnrIyl/AlqCObvgjIrRX3dLi1yEU0pO1B0gysPqcwlO4fL8mTeEcasbCDir9b6CSG383vZa2aNrtTZOHSq4xKv74o1JMtcoDE3jV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id C5AB31601A9;
-	Fri,  1 May 2026 16:21:06 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 06C8B2002C;
-	Fri,  1 May 2026 16:21:04 +0000 (UTC)
-Date: Fri, 1 May 2026 12:21:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Qian-Yu Lin <tiffany019230@gmail.com>
-Cc: mhiramat@kernel.org, david.laight.linux@gmail.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace_printk: replace _______STR with __UNIQUE_ID(STR)
-Message-ID: <20260501122106.2c2076e0@gandalf.local.home>
-In-Reply-To: <afTSLgFwpYW1py36@nova>
+	s=arc-20240116; t=1777653018; c=relaxed/simple;
+	bh=mii2xt/r6uMRkyDpEVDnU0K4TAs6DhwjT6m+GI+gkHg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lAWUJXWUru0K1A4eOUTOrxGQYGMsFNhnzdUU5FhC7x0RWzaXCIjQRaOMqBdKHDmtmeRbokRx4uc4dKg6N958HJ0kTs5r0MmVkabyYDoHoJ2u6mxmGWbBZ10FEY6RqGB/6cPrbqpFcwzNSTYFuDacaOiKEiKrt4DBPo4Y7aknNEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kTSVoLQV; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTSVoLQV"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2b45cb89f7eso14045685ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 01 May 2026 09:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777653006; x=1778257806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vgxaTB1e21kEX2UVzrZkXobnRe6UUTQFRRbaftYvuNk=;
+        b=kTSVoLQVkv2mHgi0AWVdiMuaGWULMAHD5W4EpfGBh9rxco9C3eYDKKLqmcUhPHYDEC
+         Du6nfsHaXMZ/UmjN1AjjINt0Pa00OM4xzSPwVVnGM0biFZ4aBBWARYfUOFTwasfA0mrz
+         D6aZSIOpoojrVs6kvy3qTL5ZPDaIfNRSiApLU9yiQpbHtq8m42yA/ohFgDJqduWqeJYh
+         VythLwAuaTGEGNvDKq3aFSt11ssK9FHDCMM44B1X6dLAzIwOQY50fWJSyV0VyA29G30x
+         d5LWMJyctj33tGupt5y/MMrime15o4ceDUuoMraH6vuzYxbLxbEVtAaj6UXDtPhJIkGg
+         yRAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777653006; x=1778257806;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vgxaTB1e21kEX2UVzrZkXobnRe6UUTQFRRbaftYvuNk=;
+        b=KkmquZQ5loZxs9d3vSQEO+1Maf6rrFOkmJ3mfqOTTK1qw+1X0T8rQkufuhQaNy/mKj
+         3fFPIb5E7N1SGRuUxg7oVVG7vjlHNM2R6EGpbdOZn73alhXci+bthPPaQP7O2h0MabZY
+         xsiu4LO4/9SBBKdWvqX8Jk0E//F5pDfpBCeaSnIJFFHuH6AMELb6viahFZSRslrqMgNy
+         bDmmHPfe1/kgHWEKgzowxnDLcFH8djTuwUI4Z83FXZzcaUfrqCJE1KBeYerFOsUlA9Ak
+         IpQMmYAF1Ia6xx1NyH3+WgfvXImQpMBGUm+Jl/pQbaL1q1RJqxxYur4wrIlWqWRmTiWk
+         k1DA==
+X-Forwarded-Encrypted: i=1; AFNElJ9v8odtwgqfORxUxuRRtVvYSqtkYkhtEMXxEhr/DwGRP+NUdhfZ3BSr3D/G+qE9jsCA7tibxUGyv7cmeGIkT1YGkwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNlLw9Udx989A93V4vFzpNOVn8ujHS8uOOp68Kxx4PpjMKK12Q
+	8P4qAFbpb9Upk4ZXAv+6M90mQ/I2u5OONeETYldI6Y9qljES3MCGTjTN
+X-Gm-Gg: AeBDieurkTimthFdxbhOZMthdc3bLjEbB5eU+iSppm91zatgXWzRapTLWZTlKFKKujO
+	0hMe2y/KQTuuzPcyNQP7ej5Ic5ZiN/ZsJkluFvvadGhaQ+A5aI3Pea/DNyt9PJKeontbL9tUgJr
+	0h40fgZ4VwNCRREys2ZZAWKxO5r29dv8ZXcHIIGpz8dzZEpCbNTClWBD3vCe0eYwUA6Vr0z0GWg
+	qR582lDdm3jNynVQ4C0oojpOcjBNrj30h7/7AJI6IF5mRzqMHFsI26QGfJvCkVsFjl6AKovJy6G
+	NkOyx/IAUZn+lEo+jikEnH4S6XaviZjFlp/+oxzFrgkmPBrQyjKD3a2yqLIAqir8YxnPS+Kd4NF
+	7LNk8mFEVS6ZAfFRj/1p/3D5RbucvS5ELST3RNm6J0hFxJWxB0+ZRlCCA7h0BGZ/MKtx10akOff
+	pRLC//+VaXDNXomxIxkdqYbPX47k2Y4sbt
+X-Received: by 2002:a17:903:298b:b0:2b4:678c:5f1f with SMTP id d9443c01a7336-2b9f222bc7bmr272905ad.0.1777653006516;
+        Fri, 01 May 2026 09:30:06 -0700 (PDT)
+Received: from nova.. ([134.208.63.146])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b9caad2833sm26783875ad.35.2026.05.01.09.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2026 09:30:05 -0700 (PDT)
+From: Qian-Yu Lin <tiffany019230@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	david.laight.linux@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Qian-Yu Lin <tiffany019230@gmail.com>
+Subject: [PATCH v2] trace_printk: replace ___STR with compound literal
+Date: Sat,  2 May 2026 00:28:26 +0800
+Message-ID: <20260501162826.20582-1-tiffany019230@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260429165707.7020-1-tiffany019230@gmail.com>
 References: <20260429165707.7020-1-tiffany019230@gmail.com>
-	<20260429134226.49e95e9d@robin>
-	<afS7UUAfzgiSzEHv@nova>
-	<20260501111939.0536140a@gandalf.local.home>
-	<afTSLgFwpYW1py36@nova>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 06C8B2002C
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: dkc716zwyyme8xg8373rxrpzaw99cnfn
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/3kRqBaq/wvoIZ4aA1KooYv8ZhyfAiAi8=
-X-HE-Tag: 1777652464-518502
-X-HE-Meta: U2FsdGVkX1/eP0arGETJ36IwMqa1+b9sQ50E3MnbJRbW2f/Rz9gym3O+4+iSt0LU9+rsqCAHdV5ABN3ZIO7X3HRQi9OGLyGwoq5TfcPLsWunN+fEQbtXsBBpaGyEBrrN2hKL1f8txdspH18r62DZhXcTFa+jko22K1yf2WyO7AArLFZA2+rS1wpqGQBMavK9IFPZUekOoI0TSBIqX1z1M0jhMDtrj6NIgqqPoXe15MPXz12vrci9moo94CBDuiM68lF3INvLfe/msHkoJr/T/CMeZfpbO0lHagTTLfoSzkMiQKcabt//tU/Zwc5J840dedT7q1lQCMeUFSufexcVt+RInf/Ov45C
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2 May 2026 00:17:50 +0800
-Qian-Yu Lin <tiffany019230@gmail.com> wrote:
+The macro trace_printk() uses a hardcoded identifier ___STR
+within a statement expression, which can lead to variable name
+shadowing if a caller happens to use the same name in its scope.
 
-> Yes, I verified it with the preprocessor output. I created a minimal
-> test file:
-> 
-> // kernel/trace/test_trace_printk.c
-> #include <linux/trace_printk.h>
-> 
-> void test(void) {
->     trace_printk("no args\n");
->     trace_printk("with arg %d\n", 42);
-> }
-> 
-> Then ran make kernel/trace/test_trace_printk.i.
-> 
-> The no-args case has sizeof((char[]){"()"}) which is 3, so 3 > 3 is
-> false and it falls through to trace_bputs/trace_puts.
-> 
-> The args case has sizeof((char[]){"(42)"}) which is 5, so 5 > 3 is
-> true and it goes to trace_bprintk/trace_printk with the argument
-> 42 correctly passed through.
+Replace the hardcoded identifier with a compound literal, which
+eliminates the local variable entirely and removes any shadowing
+risk without requiring an extra include or helper macro.
 
-Thanks. When I test, I do the same but just compile down to an object file
-and run objdump and look at which functions were called.
+Since trace_printk() is never nested, __UNIQUE_ID() provides no
+practical benefit here. The compound literal approach is simpler
+and has no compile time overhead, unlike the v1 approach which
+added #include <linux/compiler.h>.
 
--- Steve
+Signed-off-by: Qian-Yu Lin <tiffany019230@gmail.com>
+---
+ include/linux/trace_printk.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/include/linux/trace_printk.h b/include/linux/trace_printk.h
+index 2670ec7f4262..7a4f6711834f 100644
+--- a/include/linux/trace_printk.h
++++ b/include/linux/trace_printk.h
+@@ -86,8 +86,7 @@ do {									\
+ 
+ #define trace_printk(fmt, ...)				\
+ do {							\
+-	char _______STR[] = __stringify((__VA_ARGS__));	\
+-	if (sizeof(_______STR) > 3)			\
++	if (sizeof((char[]){__stringify((__VA_ARGS__))}) > 3)			\
+ 		do_trace_printk(fmt, ##__VA_ARGS__);	\
+ 	else						\
+ 		trace_puts(fmt);			\
+-- 
+2.43.0
+
