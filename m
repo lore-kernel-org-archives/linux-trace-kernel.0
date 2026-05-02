@@ -1,118 +1,92 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9E524887E
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 May 2026 17:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2A81AA1F4;
+	Sat,  2 May 2026 19:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777744070; cv=none; b=pKjKNPg2FelIFzDz5nhzcMEyjjar8Hdl9G6YPYuwPla1WWhgthSXiPn2R0Fn4JttLC161d2PRuc7wy3S9Wm7on7qEZM/n+FTLK/PAoo/Zswhkn9KZk5cvO9aKgQru58uWVAIj7Jrq0+lX0S6rOtgqiTXX+70+4+QzLUGFis04jE=
+	t=1777749797; cv=none; b=HXOmn2jxvkVPyK7fFwS1RVW5SMriT8/fNHe3wZdREbXn1Y3vQZWJz+4kUjyAsEvKe+saCiY0rqceDxstlAULl5wU+6ZFd1zyAdlLpxeN/t2jY+kO+EVi1ineg5/cDn8ZAu7kw28U5qM/QlgdKI00mIyjCY3jQoyGTz5HHc171jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777744070; c=relaxed/simple;
-	bh=unxdEHaAwd7HByHuT8F9clSv+/VfkMhXYoe6NbskxGU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DfLYD5DB+B833W5QbG0hF5PKYbpsTVh7NwSxrb28VuNyQJ3Xs/ReVFeHm1LWiQR8wkHFe7HoF/rmDy6Y+qeoF9iMcFAsrtLXwjmHlnmdLqMuzhjrvpNwXOmpdysc/V9nETUVSInLoSWxEP6lEYUUOQ7lMNOfNTAYk/2MNp5j7Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OIBAt4sk; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIBAt4sk"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-36523acb0c1so125524a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 02 May 2026 10:47:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777744068; x=1778348868; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Sdq3JzLsc9tOiGCfNLlG328lVE4YzzkQ7bmxmR1Wfc=;
-        b=OIBAt4skyeL/a9TzD+W6nE/TtVknuv+ut5m4mzRFXncIzgswS0mPzKaGss2D9sxnVn
-         rDmqAvdip5T1EhOeJQAAMd0sG2AHpCzoS9T2kGwZURFt/vZAT7wPpxWRLQr4EBlggf+c
-         VtaLwc85tmK0XR+CxQCGR1fA+mylKdwBrOseF9hMtk/U8ip69C0fNq0QkKZXsFp/bd2z
-         o0lz3L+AjGHm6McjDHrpZ4dyr35jD8q1i3G4JwPvvjN3Flh4wY0UHuZSfIHRo5WSGRh8
-         y/Zrzemj7HMNAd/oH/jcSXWz6J6qJjHgmyZBpxhyy00Lb7Qn1KZjH8CHDwaGmcK5TOJL
-         x0og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777744068; x=1778348868;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Sdq3JzLsc9tOiGCfNLlG328lVE4YzzkQ7bmxmR1Wfc=;
-        b=FGK23sqseO1qRX6JinrZPblBUkusQoCKk6dY54u/93HEhTMWXetQlh4VmbNI+EHOLZ
-         QlFnxxdJmYImpk4LqnFODb+/8KlJfhRRKEHGoFdzNjLFVvldN86yA8fx/UHRfZLJVaS5
-         cCktRAQXIM6KMVKJYrjxCbilYAJJJQEBx6VTDuWrmp0XVOjvKWNWqS4ZagtRUkb0JiAK
-         yPHEYca0q1A9/eDWD1uELFQqADxTeDbtuI44IKY6WhDY0TjMLDDRE167he8H7cf9n7I6
-         Yha9KCF+Vt3zkMzALclKU5qnlr+cBB5edTjkMoNEywj5cOQMu/5AMW0RUobi5gKtoXsz
-         27jQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9x9ukHAyK4CAS/5uyFm2h/2xxrBywx4h40QfYZfPuKMZsbg/tSvim2w4VrlTUbes+lZufxsydvq1Lj8U9h5wTd2/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFwRLkORYP9RcbxOdPWq+XwNG80dhbJDWkWMnjYGFCGx2S2lFn
-	/nmVd6Mp3BGFTSnIulXhXaod0gMPpkuyGQgC8rL2b2GWdXjty402+G3VxDXzwJ9O
-X-Gm-Gg: AeBDieut7GKkt6bX9McH0LYDdDwsKmrCtGDbws9gqGoyBbGh9M48Er1AVS0zfoE4nkp
-	0Q8PPFco5qDwoITcfHpgaP3HJlsw7cheqXAhd6HmJh8ZP5wFo/nYtJeQIx5xHciONPUe5n8AJti
-	pvuChcjRbhl8IBwLKgciusM/+kfSIqtgjk09PXB3MeBeckHNycF9Lwqg17wD7D3c3CYoM2CDvcN
-	0SRiiDue4/PFxb0vaFclpc7JKBYUNXB7ZIoa8pRvYHdb3XSrG9DXnLaNOWVIPr5HQu/OVR5cESH
-	Ebsa2AIp5/bLPK7cBvnl8uvNiG3oDtdnjTnK8zsmJkxmGCeGmdaz+blfT16YLq1QXF9SHh4HkSY
-	vlPA7xsju0P6z+z0glKfLHOBsTQw1UmqlVv3TR4FCjExkcZ5qZoAnyWh0QaoygUIGh+FG4NN1gj
-	6OewFlLY0uO6Qhhd5JnMQlk3KgehgLBqqdom6W77qtjGv9V+ql8oB79Q==
-X-Received: by 2002:a17:90b:55cf:b0:35e:5051:fb18 with SMTP id 98e67ed59e1d1-3650ceb4dd5mr3788325a91.26.1777744068175;
-        Sat, 02 May 2026 10:47:48 -0700 (PDT)
-Received: from yash-Bravo-15-B5DD.. ([2409:40f2:1006:8b0f:1d09:e45f:6c1f:c75b])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364ebf2affdsm7748851a91.8.2026.05.02.10.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2026 10:47:47 -0700 (PDT)
-From: Yash Suthar <yashsuthar983@gmail.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	me@brighamcampbell.com,
-	Yash Suthar <yashsuthar983@gmail.com>
-Subject: [PATCH] tracing: Switch trace_recursion_record.c code over to use guard()
-Date: Sat,  2 May 2026 23:17:41 +0530
-Message-ID: <20260502174741.39636-1-yashsuthar983@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1777749797; c=relaxed/simple;
+	bh=vDi4xGv0q98PNW1jXr84JP3EVfHUo37AUzpjy5K55K4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b8uLtTxMEObEV3ROD6/ASXlabRRmx7l/zXmKzIn4Lb7efmdN08gen5ZBH/7iIu9V75SYSKpfjba9xZBDBtqgD6hRztIEsqEhZj9h2YkxG/8lHNbROA4pVSq3TNgW7TER+q4z3vt2k5X8jpW3UrH9awEjn9uSoItM4q+Sl60+8JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 410F6160524;
+	Sat,  2 May 2026 19:23:08 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 3A49C20018;
+	Sat,  2 May 2026 19:23:06 +0000 (UTC)
+Date: Sat, 2 May 2026 15:23:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
+ Rogers <irogers@google.com>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v19 0/7] ring-buffer: Making persistent ring buffers
+ robust
+Message-ID: <20260502152304.560a5954@robin>
+In-Reply-To: <177751968499.2136606.17388366710182662849.stgit@mhiramat.tok.corp.google.com>
+References: <177751968499.2136606.17388366710182662849.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="MP_/bduRHcIgi7cE_At8/bu1uhd"
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 3A49C20018
+X-Stat-Signature: 1p61ghnqdpke4wkizqjbgexfjuxxyhqw
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19GhuIyQaIfEX0jv4huB7H5ggusR9h7p+8=
+X-HE-Tag: 1777749786-296731
+X-HE-Meta: U2FsdGVkX19bUoGqhA2+ZC9WRj15X+DlVnMrZ9GL9LDsFXFqNWKrSedMwv9eDtwKQQY5jzSCeRN5ay+A/mpFH1V41iSgOsKuZmcRpJY7Q1nBf/36tTBCukt6pNL65VMzdFrjl5+rymlfb5aO289feVNy9DTZJ67ZHW7cyV5mcnZUkB8CGKYEXgb4hde5Qawtehde5AszOb8wuQLwbGCMLfEVkRz74Wn62mZ12x2rGFS0UvXqyy5Zk0iK1Ez6ahmDW53ok34uWPRJoAEBXdp453CMHj5SCFdAoBolaQjzHI34ctuqC21bOD+f53dLNIWwkhGeeY1KjGU=
 
-Switch mutex_lock()/mutex_unlock() to guard().
-also drop the ret local variable and return directly.
+--MP_/bduRHcIgi7cE_At8/bu1uhd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Signed-off-by: Yash Suthar <yashsuthar983@gmail.com>
----
- kernel/trace/trace_recursion_record.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Hi Masami,
 
-diff --git a/kernel/trace/trace_recursion_record.c b/kernel/trace/trace_recursion_record.c
-index 784fe1fbb866..bac4bc844ccd 100644
---- a/kernel/trace/trace_recursion_record.c
-+++ b/kernel/trace/trace_recursion_record.c
-@@ -180,9 +180,8 @@ static const struct seq_operations recursed_function_seq_ops = {
- 
- static int recursed_function_open(struct inode *inode, struct file *file)
- {
--	int ret = 0;
-+	guard(mutex)(&recursed_function_lock);
- 
--	mutex_lock(&recursed_function_lock);
- 	/* If this file was opened for write, then erase contents */
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		/* disable updating records */
-@@ -194,10 +193,9 @@ static int recursed_function_open(struct inode *inode, struct file *file)
- 		atomic_set(&nr_records, 0);
- 	}
- 	if (file->f_mode & FMODE_READ)
--		ret = seq_open(file, &recursed_function_seq_ops);
--	mutex_unlock(&recursed_function_lock);
-+		return seq_open(file, &recursed_function_seq_ops);
- 
--	return ret;
-+	return 0;
- }
- 
- static ssize_t recursed_function_write(struct file *file,
--- 
-2.43.0
+I applied your patches and enabled your ptracingtest code. I noticed
+that when there's dropped pages, the trace output is not in order:
 
+ # trace-cmd start -B ptracingtest -e all -v -e '*lock*'
+ # taskset -c 5 echo c > /proc/sysrq-trigger
+
+On reboot, I ran:
+
+ # trace-cmd show -B ptracingtest > /tmp/trace.out
+
+Then executed the attached perl program:
+
+  # ./read-ts.pl < /tmp/trace.out
+
+And it errors our:
+
+ 30.212495 < 30.213534
+           <...>-1048    [005] d....    30.212495: irq_enable: caller=irqentry_exit+0xf5/0x710 parent=0x0
+
+That is, I think the zero timestamps may be messing with the order.
+
+-- Steve
+
+--MP_/bduRHcIgi7cE_At8/bu1uhd
+Content-Type: application/x-perl
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=read-ts.pl
+
+IyEvdXNyL2Jpbi9wZXJsIC13CgpteSAkbGFzdCA9IDAuMDsKd2hpbGUgKDw+KSB7CiAgICAgICAg
+aWYgKC9eXHMqXFMrXHMrXFMrXHMrXFMrXHMrKFswLTkuXSspOi8pIHsKICAgICAgICAgICAgICAg
+IGlmICgkMSA8ICRsYXN0KSB7CiAgICAgICAgICAgICAgICAgICAgICAgIHByaW50ICIkMSA8ICRs
+YXN0XG4iOwogICAgICAgICAgICAgICAgICAgICAgICBwcmludDsKICAgICAgICAgICAgICAgICAg
+ICAgICAgZXhpdCAwOwogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgJGxhc3QgPSAk
+MTsKICAgICAgICB9Cn0K
+
+--MP_/bduRHcIgi7cE_At8/bu1uhd--
