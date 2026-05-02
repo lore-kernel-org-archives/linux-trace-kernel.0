@@ -1,177 +1,173 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1A33793DC
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 May 2026 22:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777674116; cv=pass; b=D1L/C/xqDi9Xr8FZjKDQ3qHbD58M0PAiVPULwKMpS6iHn07FQC3TKhGd/tFz6cKRT4Ip/9FIbdTUHYB/3Vu/e2+7PPH/zwQKXVaZRdYKubNSuEmnJUAcGm2KvujbYK3xAAoKhRcHfZZMoX/V3aITYAug+YKB01F4owemEihRx9Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777674116; c=relaxed/simple;
-	bh=jLrfkaOhEb3MmFwOmWCGQPBbw6a6kIN8jleBSy0FvN0=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u/gqGr/zroXhcCuuCLhKqsn0YXwVI8/oBPedlOnKcZGlE83RlTyd5nZbnOI3seOGlhUzVdJ49Y6ddPpye98Ei3cDp+sKGcIdI3S33y92Py9qPzGckhCPwlUkX2I4Z/Y8oaSlPR1hXWMcPzeyBqJ5bATBQ4yOxqLee1gh2P+vOZ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZHd7Xygz; arc=pass smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22726226D18
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 May 2026 07:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777707426; cv=none; b=DbilMwq6UbMNgSVwSs8yWy9wizuPGJ1aYHX0zrVXqaGiFLqqaWSpdGwj1hVrwgG3lSuFZ6axJso/I+xh7+k6LMQ310j0hMCxyFafX6rIK4W6CPBrSxHbBxjbNqeFMBS4ltybJs+I3E8Y3ZyBFxPR/xXeBh4KNEJPRQktEJ06arA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777707426; c=relaxed/simple;
+	bh=OgSupQYuv8M08Z6lDFgcm93HWo22RmGCCbGaM/Spy+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MumCQbR93ayoBnD0JEhE7WkwDxPQnHAa93AI8MT55toiCYs9E3C6Jl1HHqLBNmRbaeNSVElc4Xw5+WcyThmRosk/AYbakqMqmDHRbWVnsQ745ZxYzvTpUVdClMl1Uj4dlOs30A+9We8YxY6nCZM4OtNPCBDywq7PblnEOtiD27s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FOczte+p; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZHd7Xygz"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-56d9ed609d2so793858e0c.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 01 May 2026 15:21:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777674114; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VbpfkMUyWGUC9pbl0ot5bbNeMuFEiGIWjb+SMQE8tca8+BGOaW8IY/mrjiXU5AtC+I
-         kGKNKuCoxK7NnmJLCYwzt1BZLwjj3DNsaCQrPpAHzyYIPxglfB/8gtsYCXdpOw/JpBvw
-         81B59+fNomcbA6XP+80woMngOTh+VJYxVXXQO7V96xJreRT8dULWzwX81eGgeR5kbTxm
-         K2OC/LqC6RKpzH84mVeQnKoexa/Udc3tiSN/T5/vMvYeO+Ed7pm6jn6wd0HDLomDJ/O8
-         dY6TzQzyGrLJPhoN9tuJ4Vgigki/F2hBPLZT7OlZttcnTC6FAQ93uUoKKPV3dIf0BIUL
-         4WpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=dtXXiVGCKhisCk8aLdkBNg++qq/ezEnbK3PGbPzPAeg=;
-        fh=AltAs4aGxYqQxZTCWGxBZTusiU/gqK6d9kFefqk/XeE=;
-        b=fKsb3be/cyVt4D9ooNusR393Ylk8ojPU1Jj/0l31F1WO4RZOxlwdz6HvizqaBL9NHp
-         OuLiAGmlrtEcDeX78dExRiqCrHB6GpgxsFUNWporgU03SLGdwV7KfMSoFnKFPNsfuXCY
-         Ma4OcSt+ATRAwkdER/A4I8sTo7k83SLCLxVvN8M4Y4sPSWlWRz+4vO1uVBaag47J/PIJ
-         Nft9UipRGBRBVQoJgKhIimceWvBwyG5YX0c6/FYHRfzH3mlTpAdSinAyIYNuo6615Kas
-         qzn3hR5ITyK/ihO4T+Y0ppdYFUNhpJVYgpoJElj+dDFQ2yVE+Mgf1PH3O8oHVTW2RoWi
-         4IYQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FOczte+p"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-82fb2d0c5d1so2361192b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 02 May 2026 00:37:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777674114; x=1778278914; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dtXXiVGCKhisCk8aLdkBNg++qq/ezEnbK3PGbPzPAeg=;
-        b=ZHd7XygzDp1+bgpyWWstsNSnzgN6A1YDrvqFBMoy6WgTGyMnmYazVRVPJtbxC8vn9T
-         5rNBfMGbYsd/9p9gqxkzT5iL82Nhaoou/IOl/YSZVZbM4Qy1Ler2R4MyufI/9osHe2By
-         IIj9OcO2N70WgtpGUepjHj55uy67gMHUQY8Qxloi1RGDC1mn9WhCaAbtpcbgYudS+sGI
-         hqC38rJ/ghaVd6FJu4ZPxxi7iIhwbXfvh+virH1w65yL36SdYPKAlViRgChAwMHQCH83
-         mwh5sQq56kIFmFVqTGgYM4KOW4sjrHgjvmx5wn0AlDvo9tji4+Hqz6fYBGO/n7ZSjQY0
-         NxLw==
+        d=gmail.com; s=20251104; t=1777707424; x=1778312224; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BHCOVHKhdHZ6jfgYD/72LtN/jBh0rvDnY8iDxuRsrAA=;
+        b=FOczte+p+X76EKhDjgCbwc3Qsjo3COAILnKWg17ZUiHAy9tOb1b7iCZvH43gL1WEgb
+         u9LZJzGbepyjyDTC7PwFDVG3CQr57RfqsEhz7YP6RtaSXg//cmmfy7n30ITTGPb65F56
+         2Kx3cmMluohkbUBTz7vtXgpsv/Sls/480d4BGZNlGDXdZ1h0e+TVknGp7+G7aQwlOtMT
+         hEuqL3mFp8Jskg2dxxnxIjeY9idsTA2wOgDNoqADoXh2EKK9sIf4V8FaqkS9gyDLUHrS
+         hxmiT8sUByYHNQc71p5mFcHjNZgDipTXTHld91FEw543zzSExMBpJRKZNVFAEWkcWr6S
+         wusQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777674114; x=1778278914;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dtXXiVGCKhisCk8aLdkBNg++qq/ezEnbK3PGbPzPAeg=;
-        b=k7X2Faj/Xuv4it61SQS/Mixt1aO5kzvsSGSbIKuzyvr+IRucRsuHDDJMb6Tmb90tHO
-         m4dlKHNZokgoUR+AyFdxXeYWvXryPc6kCzPDFyQ36RkOHpuspV/2SbF3qPneCv6ziIqz
-         eKnZrLOYCKKvxP3Dx9WMc3Jd0zhNv8FFYYxKdO9s9DZJNnS+9fw4/wwsskFKU5L6fSwY
-         CDxxDpHgkMK9DaJQBJYEICRZY1f6bHMnghB+EVut98Iew/Bm0l4SZO6z5JsZeIuyNJvR
-         ybBA8poA8su6PZQnhKBD4vIlsE0o3RdKsN4CPBIi/V2k25W66XclZESCdZEvOkqN0l0K
-         1VQg==
-X-Forwarded-Encrypted: i=1; AFNElJ9i9UtNGX5p8Jj0ZseDxwV2szmfDhDHnBeUpQMRP1N8UERLY3LazY+5Q9bwE6rLtuSA3jrnBc36OsJRY20wgB6xXnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvg/nwiQvp/y3vwy/8OxJirnR9DAa39r6zgXXTP7e4osnLGxJr
-	hZAL7NrqYJmesFddLMXzZgdOFN1ei9RPqSBxobrkr6f+2s+zAEF9QvHMDXv1S1pFCpBEVQ8AcZl
-	ow+YCg2F5Piqsa/BSPqnOf4xdzmPZID7/EkGtdDcU
-X-Gm-Gg: AeBDiesFwU0sEJWE/2SOB1ICJph+HW2gUyxo4+fUCn2b3jxaj2gfrpbxyH73Q7AhrNM
-	SIattPH3Yj7YSH6sNmHiuV1MymcUxxXMsQztr6qOOHPhfYQ+ZHM0vQt4y34IN46MPDVPj1NsAjj
-	vc/3juotHhAedSiNH15zsUmVzZHd5rD7OQaGc2DiamqKJVt5DqpCcNojOSEoMbz8A/egGQ/Sk4Y
-	mH0wKjDyOQ17WJNRO3ku1qO++KRVeP6l6prwgKPDUTwULRMXj5zr2ZSXcTYwAetnwoPa2xFifWY
-	bfqQCfrFmz3CnLNSYDHle34rphi5HOLKvaKYUS9kHlokhKF1wR5A45LgEpBxSMScDvUSTD4qvqA
-	CLBnX7M0eeKZSm3s=
-X-Received: by 2002:a05:6122:1789:b0:56f:1c32:bd07 with SMTP id
- 71dfb90a1353d-5750c6b46damr742606e0c.2.1777674113098; Fri, 01 May 2026
- 15:21:53 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 1 May 2026 15:21:52 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 1 May 2026 15:21:52 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <CAEvNRgHRpvsEjtr1A_Qz3d4oMEaffTxESavrZ73Jtt6OobCwhA@mail.gmail.com>
-References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
- <x7n77snnvvukofo3slopl74c5tmlb2t2un5qy5fq6eb3d2xt7e@6a6tixg5mdfc> <CAEvNRgHRpvsEjtr1A_Qz3d4oMEaffTxESavrZ73Jtt6OobCwhA@mail.gmail.com>
+        d=1e100.net; s=20251104; t=1777707424; x=1778312224;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BHCOVHKhdHZ6jfgYD/72LtN/jBh0rvDnY8iDxuRsrAA=;
+        b=p3JTkjadnDkPByBEb7FEr4hV86BinU+JptdQRArqP5BTtdUY5mjdCB9Fj6QhS8/489
+         AgcpzloZlDGF5Q2Lhdp7A4WAvImzCNcZTvVQMUdR5Aoo2HQ20bs2VqUAbsiHjhPfP5xs
+         3ihBrIY/+3HOKDJq4YL5SXXPg/8y1Xt5zQwWkBGTy3fPtMscr7qA7gZhVlV+EwbggXnq
+         ymJVcLEM/fPn6MoB+tgRKRMVFFVgs0xFBU8UP2Pw9N3NO6v/MrkgfR1ip3GpUETyzWGJ
+         Zm4LH6U6hH3tnGT+/57NgmIUaIij49sw0Ah7eCvyLjZXFqx1W8GQhTWNELnhJqb5Lwbj
+         272g==
+X-Forwarded-Encrypted: i=1; AFNElJ/Ay7ElgWs7nFfazyuQMhc0aG4E4hp1CsZL51p007Q5U3QomsV4rl2hmT6luMMmp+KOPmxiC4hK47czr3aM8foSq4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBhRwgEcaU6DKS+p0w2AmrH0s/awdy5h6A04wRaBHM/dRh2xwI
+	o1jRQmRL+NeC6hteIPYxhEyhtW29xaajrriUFlq/DKnuzlF+y2ZxoQhJ
+X-Gm-Gg: AeBDieugVyHS2HRxva6V9rEaBsgnQAQ065+Am6SeIq1uKeTHMlUgyyoIwSLy6+BhEZO
+	9Nq0KbZmgdoaYFEFXh53UTMUs/A/2PoBRAhi5ImhZ0boEATb4HjCOTutRqXvD+JqaRP7Bt/lIx8
+	ouLHXleeV72ybsj3oS//muPHrERvKiIAOgI/YMo3VLzcFRVZ69bKD3Ha26cJw2ApKD5rYlfCeMY
+	Lrlw6NcJ0r2Px0mDBH34n2yNOtj0RBCa+fkpP0ojSDpmU9x8YAlj9EpDqRWOYw0sL0HtwllLwfk
+	FOr+Q43dSc3kezyGEK+DC64PGJkWei7L/eyswKTQFqg0fnTg/xOVAnRbWINsbafjKE47xf7RYQK
+	XTcxSZ0UIWe3RqWDEQ3DaIUkbL0ujR6dQrYvqHAWF9ZWN3QrX32Af3q+IPFPmmBLcJyUm5TOwf1
+	0haIdSFQGvyw/OVca9Xle6AOxKttpXiA==
+X-Received: by 2002:a05:6a21:1405:b0:3a2:cf6d:aa04 with SMTP id adf61e73a8af0-3a3d1b443efmr9564744637.8.1777707424386;
+        Sat, 02 May 2026 00:37:04 -0700 (PDT)
+Received: from nova ([134.208.63.146])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7ffbc6f66dsm4055562a12.15.2026.05.02.00.37.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2026 00:37:03 -0700 (PDT)
+Date: Sat, 2 May 2026 15:37:00 +0800
+From: Qian-Yu Lin <tiffany019230@gmail.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace_printk: replace _______STR with __UNIQUE_ID(STR)
+Message-ID: <afWpnEWYZyhxy7-i@nova>
+References: <20260429165707.7020-1-tiffany019230@gmail.com>
+ <20260429134226.49e95e9d@robin>
+ <afS7UUAfzgiSzEHv@nova>
+ <20260501221315.1f709d6d@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 1 May 2026 15:21:52 -0700
-X-Gm-Features: AVHnY4I-FL7ow2VQuDyStuaACgF9aoh7fvjduqjprjOyhgxszANTKzDwmZOdoKM
-Message-ID: <CAEvNRgHZJ3RONKBXqWWLu2f4G7FhAvsYY0iMowmHu7v-O+g=kA@mail.gmail.com>
-Subject: Re: [PATCH RFC v5 00/53] guest_memfd: In-place conversion support
-To: Michael Roth <michael.roth@amd.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev, 
-	Jacob Xu <jacobhxu@google.com>, Darwin Guo <darwinguo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260501221315.1f709d6d@pumpkin>
 
-Ackerley Tng <ackerleytng@google.com> writes:
+On Fri, May 01, 2026 at 10:13:15PM +0100, David Laight wrote:
+> On Fri, 1 May 2026 22:40:17 +0800
+> Qian-Yu Lin <tiffany019230@gmail.com> wrote:
+> 
+> ...
+> > Yes. I measured compile time of kernel/trace/ring_buffer_benchmark.o
+> > after make clean on an x86_64 machine running Ubuntu 24.04 LTS:
+> > 
+> >   - Original _______STR:                 49.8s
+> >   - v1 with __UNIQUE_ID (compiler.h):    53.5s
+> >   - compound literal (no extra include): 33.2s
+> 
+> That difference looks far to big to me.
+> And the times are far too large to be measuring the actual compile time.
+> 
 
->
-> [...snip...]
->
->
-> TLDR:
->
-> + PRESERVE == guarantee that the process of setting memory attributes
->   doesn't change memory contents.
->     + implementation == do nothing in most cases, except -EOPNOTSUPP for
->       to-shared on TDX, since unmapping is a required part of setting
->       memory attributes to private, and a TDX side effect of unmapping
->       is zeroing memory,
+You're right, my earlier measurements included dependency rebuilds
+after make clean. I re-measured using touch to isolate the actual
+compile time of ring_buffer_benchmark.o on x86_64:
 
--EOPNOTSUPP will only be for TDX, not SNP.
+  - Original ___STR:                        1.757s
+  - v1 with __UNIQUE_ID (compiler.h):       1.836s
+  - sizeof __stringify (your suggestion):   1.781s
 
-> + ZERO == guarantee that the process of setting memory attributes zeroes
->   memory contents.
->     + implementation == memset(zero) in most cases. For TDX, a future
->       optimization exists, where memset() can be skipped for pages that
->       were mapped in Secure EPTs before conversion
-> + UNSPECIFIED == no guarantees
->     + implementation == guest_memfd does nothing explicitly about memory
->       contents. The implementation is pretty much the same as PRESERVE
->       except guest_memfd won't take into account vendor-specific side
->       effects of the process of conversion. Except for the test vehicle
->       KVM_X86_SW_PROTECTED_VMS, where memory is scrambled.
->
+> > 
+> > I propose using a compound literal in v2, which eliminates the local
+> > variable entirely and requires no extra include:
+> > 
+> > #define trace_printk(fmt, ...)                          \
+> > do {                                                    \
+> >     if (sizeof((char[])                             \
+> >         {__stringify((__VA_ARGS__))}) > 3)      \
+> >         do_trace_printk(fmt, ##__VA_ARGS__);    \
+> 
+> There has to be a better way to align that code.
+> Although you should be able to use:
+> 	if (sizeof __stringify((__VA_ARGS__)) > 3)
+> (I've omitted one set of parenthesis for clarity)
+> 
+> You could change __stringify() to work with __VA_ARGS__ the you don't need
+> the extra (); this works fine:
+> #define _x(...) #__VA_ARGS__
+> #define x(...) _x(__VA_ARGS__)
+> #define z abcd
+> int a = sizeof x(z, v); /* 8 */
+> See: https://godbolt.org/z/zo4h4nr9b
+> 
+> -- David
+> 
 
-Found another use case internally for pre-finalize, SNP, to-shared,
-PRESERVE, which works with the above smaller scope.
+Yes, this works. I verified with objdump on the
+samples/trace_printk module that all four cases branch correctly:
+__trace_bputs, __trace_puts, __trace_bprintk, and __trace_printk.
 
-During SNP_LAUNCH_UPDATE, when inserting a CPUID page, the firmware will
-check that the CPUID values would not lead to an insecure guest
-state. SNP_LAUNCH_UPDATE will fail with an error and the page remains
-shared in the RMP table.
+I'll use this form in v3 since it's simpler than the compound literal.
 
-Here's the proposed flow in the userspace VMM:
-
-1. Load CPUID in shared guest_memfd memory
-2. SET_MEMORY_ATTRIBUTES(PRIVATE, PRESERVE)
-3. SNP_LAUNCH_UPDATE => get error since CPUID was insecure
-4. SET_MEMORY_ATTRIBUTES(SHARED, PRESERVE)
-5. Read shared guest_memfd memory, error if VMM disagrees
-6. SET_MEMORY_ATTRIBUTES(PRIVATE, PRESERVE)
-7. SNP_LAUNCH_UPDATE => successful, since CPUID is now corrected
-
-Does that seem ok?
-
->>>
->>> [...snip...]
->>>
+> >     else                                            \
+> >         trace_puts(fmt);                        \
+> > } while (0)
+> > 
+> > This fully eliminates the shadowing risk without any compile overhead.
+> > 
+> > Qian-Yu
+> > 
+> > > 
+> > >   
+> > > >  #include <linux/compiler_attributes.h>
+> > > >  #include <linux/instruction_pointer.h>
+> > > >  #include <linux/stddef.h>
+> > > > @@ -84,15 +85,18 @@ do {									\
+> > > >   * let gcc optimize the rest.
+> > > >   */
+> > > >  
+> > > > -#define trace_printk(fmt, ...)				\
+> > > > +#define ___trace_printk(fmt, str, ...)				\
+> > > >  do {							\
+> > > > -	char _______STR[] = __stringify((__VA_ARGS__));	\
+> > > > -	if (sizeof(_______STR) > 3)			\
+> > > > +	char str[] = __stringify((__VA_ARGS__));	\
+> > > > +	if (sizeof(str) > 3)			\
+> > > >  		do_trace_printk(fmt, ##__VA_ARGS__);	\
+> > > >  	else						\
+> > > >  		trace_puts(fmt);			\
+> > > >  } while (0)
+> > > >  
+> > > > +#define trace_printk(fmt, ...) \
+> > > > +	___trace_printk(fmt, __UNIQUE_ID(str), ##__VA_ARGS__)
+> > > > +
+> > > >  #define do_trace_printk(fmt, args...)					\
+> > > >  do {									\
+> > > >  	static const char *trace_printk_fmt __used			\  
+> > >   
+> 
