@@ -1,78 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD15740DFA7;
-	Sun,  3 May 2026 13:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41FA23D7E6
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  3 May 2026 14:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777815148; cv=none; b=PzG4cLTHeI4eIrZ/X7URRBbjYIqWnDuN4qHnR0LSfMRDnoxIzL9n80w3IcdC+YJJ5DaHgHPbqzukAW44I0YT9NS5qiIwuUNdZOKMEy+lQ3V566+YdbFoh3x/dWOmM6LsXu47q5YzkV0d651lJncyuA8Xa5bOFk8Qb1pRtfDF/b0=
+	t=1777819932; cv=none; b=bbaeUJftEXHqgP2v8Ko8ji0EGdJCXmQK7UKMgfNcD87vcm6CaD74LHmjE494nGCxZ2qHgHB+bA4t8QdUFwtzf8OwUt5qBb8XgCLZziocAG1JvukaL4/lQ08QY4SazEICV95qSwX5SCcBJeULrRkeh8asOHyqxvk+OmBEkeMVArA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777815148; c=relaxed/simple;
-	bh=8E4wEVhoxVMJzvt9Yay3GcXb/sDexIP/V9W0XqAZf1o=;
-	h=Date:From:To:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VPdvl7B4lWao0x8wTYYtd+prHzAO5jbyWlubmyq6LU5IILyJTBsqnaE3N6rjXxTK6vQ4G2nnHw+h5XsMOnRVC4QKfpzihIb/LL8Hxz5UWpXJjXpO6cWf+EaeNfIsfFKS1C8RnL5+XbCusU5VYd4Xi6bniIbNYVFr8H45RMlUxsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VMLUKH1y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777819932; c=relaxed/simple;
+	bh=6v8ZFVSMgrqRT7mzzytejuKpXsSRdcBCxqkImebQH8k=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p/HWxhqgJ87MPu5iJeFiBgwKONr1noyB1AnC816bHRZVdc/WpDRLu9a4ryPT4MJJTsCEP7ABE+ygaaoJvDF5DRQSTTcbbhA2wVFH+5wipl4uM8pfLbExgCXNrnkZSVYFFjVwNIQCrhYrAvQ3ObaTnN+Mw57J/mq6S1hcc8pMaVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sgN4xgdH; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VMLUKH1y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E258C2BCB4;
-	Sun,  3 May 2026 13:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1777815148;
-	bh=8E4wEVhoxVMJzvt9Yay3GcXb/sDexIP/V9W0XqAZf1o=;
-	h=Date:From:To:Subject:In-Reply-To:References:From;
-	b=VMLUKH1ycv36KQvHnq5rSyu9FU98Uiqe3ehx+970ckoAypeAM+PXvJdKFdOk518cg
-	 F+rM0924/bGMboA1NclQRj7A1a6x370rN92Jr4wfl4rd2ya2blnUDGH4PdXlm8dfEE
-	 EAy46h3WOH7oQmXVHZYQhk9D06XPN1NVQizvnvmI=
-Date: Sun, 3 May 2026 06:32:13 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org,
- baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com,
- cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com,
- david@kernel.org, dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org,
- hughd@google.com, jack@suse.cz, jackmanb@google.com, jannh@google.com,
- jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org,
- lance.yang@linux.dev, Liam.Howlett@oracle.com, ljs@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-Subject: Re: [PATCH 7.2 v16 00/13] khugepaged: mTHP support
-Message-Id: <20260503063213.b0a84d44de341575f8854f0b@linux-foundation.org>
-In-Reply-To: <20260503062109.0469201428642a4f7fcfd915@linux-foundation.org>
-References: <20260419185750.260784-1-npache@redhat.com>
-	<20260424065828.031775921990de37f83a2468@linux-foundation.org>
-	<CAA1CXcBJFoqDrkQbRE6JnpV-gjfNXe2sUxaCyXPC82h3qk9Jig@mail.gmail.com>
-	<20260503062109.0469201428642a4f7fcfd915@linux-foundation.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgN4xgdH"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-82fbf5d4dc2so2450157b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 03 May 2026 07:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777819930; x=1778424730; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qVkyffb8Q0PGQnTBZ+TvlFrjY0CELMdRqK+yVMGHtn0=;
+        b=sgN4xgdHqkUHakI3dpwsUe7ddsPilYBfan4baKyvBR2HyugedKEO9VgHwFGR9q/E/A
+         8J6ZCTnYZW6OIzrXhIAOTtYPvP6+LzQSL9QHe5YcXbThZ7Fr0S3UNy2awDIiqg8I/Iog
+         yR1/CrVcUnqZ/xuXgKmUQ53bqGeheXB9PbkxX9G/bc1UcRkBNGOUXP6nHAfbLb92Z3SR
+         JcaeiNFRmIOhJ1jbFLNB3d7GAt6XQdauloISXh5LhZa0ZssEqvl8trIPX6/2o1VMjD0z
+         RD/oN4+hCwIGuUbKumdRG8dez8TREn/EVN9pch8so/C5xS8ncd2Ujkjkvbxj6UkhjIP1
+         MytQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777819930; x=1778424730;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qVkyffb8Q0PGQnTBZ+TvlFrjY0CELMdRqK+yVMGHtn0=;
+        b=Hw10c8PbANKoJAMNaKIReeD1kIiokhR8XVFwJR9tBRsmbD5cMdzBbZhuFFbYM8/gL1
+         JjBEkzeRyKyzneY6Z5WabDhIWvEIDo/+XE5rivJIf9GhMKl4SZYtdLYbkLSsgOy7R0NS
+         WpH0bQj8cdc4E4eXliyD0gKyQ5zv3xgJ/85gY1E0fUS9/hRo2t2WF0dKBfkToHPaibqt
+         ICcZoeJn4ohkyJ4CTqKvfl98Mhd9Vp8fVnyHPtszseFH1eP9wNSzVo/2CtvQisIhWb7i
+         Ql9n/L1Hn11hR2jBMkFVflo8DyUPPguUsDoBumqANgTvj0h7u54HK9ozUWZ59CU2+iEM
+         Gg/Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9RfIqDVlaYQz94Hpkz54QFFrerYWDh0IyPjVNpvOVnmf/gAjMyBPEe4yOJ22saZiE3dHBt5Q3L7o7UktrEjUPLuS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj5s+69h3lpvKvM+H2Qm/jwMuqjuA02yBAgAJjYQfCvSwTYkqH
+	dtCYO9TedOVY0/LbSl1F3W2wN4g4yMWpsFAN2mfUVREqGakPRN3sBp65
+X-Gm-Gg: AeBDievzV/3vWZxTWctuqFeoUgaE9BuG2cBrVveIrNdLyjh1hz2T1nbjSQZTOlMHPYX
+	AwCSsKnwvy8Bxa37TkBh3X57Ib3/IEHbq84CRHW+W7IghvysxYLoUIQNGWGVi918juPA0AJIDUx
+	Wvzak2UV0f2c9MQkCpNWPtHUOGoRcf2aO4GZBIASGiMszl24acjFABrUHh5MX72IcohWFvrL8UI
+	oQEMkcRugVQ6Xii3kkLv5pSmU5riCPxmEg1c6XRo8D4Q9MtR0zf5S1E9BEBO1lkWKf6VowcM7Qy
+	VAIHjbkr77Mz/OVakZhMFqi0P4nbcu4ql6Nwdfy2dpfsX1+oUVCSQuXxuOVVVGPEIPeDz3VX0+C
+	xaMmgj4tEffTXExfkjThED9sn5u3ci4howxDs1+QXmivb4+hFRj0DWK8skUK7kpKCwO5vDvoqvv
+	s3/af/oA7koLDZE3ouEFB2LXUDFyOp0G2//eWH8sNZU9OnzffqANmSKg==
+X-Received: by 2002:a05:6a00:2d9d:b0:81f:3fa0:8c38 with SMTP id d2e1a72fcca58-8352d17504fmr6815426b3a.20.1777819930328;
+        Sun, 03 May 2026 07:52:10 -0700 (PDT)
+Received: from localhost ([183.227.123.133])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-837aa3e4f30sm121202b3a.1.2026.05.03.07.52.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2026 07:52:09 -0700 (PDT)
+From: chenqiwu <qiwuchen55@gmail.com>
+X-Google-Original-From: chenqiwu <qiwu.chen@transsion.com>
+Date: Sun, 3 May 2026 22:52:05 +0800
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "qiwu.chen" <qiwuchen55@gmail.com>, akpm@linux-foundation.org,
+	rostedt@goodmis.org, kasong@tencent.com, mhocko@kernel.org,
+	hannes@cmpxchg.org, david@kernel.org, ljs@kernel.org,
+	baohua@kernel.org, mhiramat@kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: vmscan: rework lru_shrink and write_folio tracepoints
+Message-ID: <20260503145205.GA3181@rlk>
+References: <20260503085705.3276-1-qiwu.chen@transsion.com>
+ <afdBCWopkfF2ow-Z@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afdBCWopkfF2ow-Z@casper.infradead.org>
 
-On Sun, 3 May 2026 06:21:09 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
-
-> On Sun, 3 May 2026 06:23:31 -0600 Nico Pache <npache@redhat.com> wrote:
+On Sun, May 03, 2026 at 01:35:21PM +0100, Matthew Wilcox wrote:
 > 
-> >  Can you please pull the changes from the
-> > staging branch so I can resend it soon (probably after LSFMM, so no
-> > rush)?
+> You also removed the printing of the folio's PFN.  Was this deliberate?
+> If so, it merits a mention in the commit description.
 > 
-> np, I've removed v16 from mm.git.
-
-And that messed up Zi Yan's "Remove CONFIG_READ_ONLY_THP_FOR_FS and
-enable file THP for writable files", so I've restored v16.
-
-Please prepare v17 against mm-unstable.
+> Also if you are going to do this (and I suspect we should do this!)
+> we don't need to do the folio -> pfn -> page conversion.  We can just
+> store the folio pointer and print out the folio pointer.
+>
+Yes, I think printing out the PFN is indeed unnecessary, but miss to
+merit a mention in commit messsage. I will remove the unnecessary
+conversion and merit a mention in patch v2.
