@@ -1,70 +1,70 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909C240DFD0
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  3 May 2026 12:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE583CA488;
+	Sun,  3 May 2026 13:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777811736; cv=none; b=sXGyeMRwxcoOhSsuRbMe2SxHNtLAUWALJfAnkpKPosV/D8lvBrjEG8oSKZK6Lffo7C/gYbcT4yMOPHy+tXR8ClCimmU5/jADVZogI4qSJXpFZZfMTlLU9Gt1E/8SrAVpCgkzZDD6vpN83tPJt3jcDwLcb4RG0KiJvqjWX2AJbAA=
+	t=1777814484; cv=none; b=NJ72kLXoJA4K7vcJt8nfmrtVsp0rlyOQZipMt6JMQB96UQz1TzQGU5p5dH5lfpDboIIQuMkaTWdPcqLhaWK2K0gAxa4zaQXPoXQyVEwhdq9ORK01D5tv+m5DlL2x7ULQPAfywiwBPUkqex3Ii8laOvdjNkINzW24BbxG2+SsR7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777811736; c=relaxed/simple;
-	bh=fVpArD0hB5S8xTPoPjdIKgivbXLxnFmTD6v2RToci0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4FJfyDgeX/1KEnZ4a+VcuZ3JiLf+O/dHcG1l7KKv6331sTzotlwrCHKc7uccvfXJq+arXfVWGPdV6k9pxZXLRkSCYFMnDQsklL2Gz99drDx/GdTWXbkd0O38NknqxVygUNiNvpt9UsjrhGKC4h3A3zcmkbTB2s4X2yL2wc2RQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mnKOyOFU; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1777814484; c=relaxed/simple;
+	bh=/T3m2Xew3DaNtCYramal21sgWUOUmUr+OLU81uWBVOQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=E9i7cgjACxGrhS89Qk3r11FQZNa+kU8E/+WL0OOpWwdoMLyIeMDAQ+zk8mRN0wlQoqoZR4wJ1ZpnlHyxmazNaGhOTC1JGYyktpyXnBeOOC6HrgfznTFQ0qVVdRCx9JHfYpq0lT5NKSaqsGQTCUgC//6c1lksG/cXvJoWYQeRz4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=d9jLZgsq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mnKOyOFU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=814WAN/LXF+0RpMK87ve3wk+gkrkIJkpXaVoqtCsqF0=; b=mnKOyOFUCVHyehHoI0Hn5txKbB
-	ei1JzNeaP8NMbSLzW0P7kwqrI2D3vcUfVMlqkH4Pc5+3+tX2ADIVqzy7vXCAkq9Rp1TnvWG3LTeoe
-	sztvTzH4VwPuERcrfVHtUOkPMborFiEOB29SxEUfLjeWmYynRlaAInXZjY/Rmw+oBT+TsTUME1ErO
-	kq05I1SpXYwovWCZdy+IpwE7eOW0GlvlzXNHJOdnMiQBq2YtebDbKdiI+CircgDcxPJhOmAKznP/O
-	rKdrdg54mJnWJXhQKZQ+lI/kxx3wA0TpGXsg6P388tSW8Wp1hDaZBa1rJJgA9LOe5y9FJgUu7+ArF
-	HiSIGzwg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wJW2b-0000000Gzy1-29vQ;
-	Sun, 03 May 2026 12:35:21 +0000
-Date: Sun, 3 May 2026 13:35:21 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: "qiwu.chen" <qiwuchen55@gmail.com>
-Cc: akpm@linux-foundation.org, rostedt@goodmis.org, kasong@tencent.com,
-	mhocko@kernel.org, hannes@cmpxchg.org, david@kernel.org,
-	ljs@kernel.org, baohua@kernel.org, mhiramat@kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	"qiwu.chen" <qiwu.chen@transsion.com>
-Subject: Re: [PATCH] mm: vmscan: rework lru_shrink and write_folio tracepoints
-Message-ID: <afdBCWopkfF2ow-Z@casper.infradead.org>
-References: <20260503085705.3276-1-qiwu.chen@transsion.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="d9jLZgsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CFD0C2BCB4;
+	Sun,  3 May 2026 13:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1777814484;
+	bh=/T3m2Xew3DaNtCYramal21sgWUOUmUr+OLU81uWBVOQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d9jLZgsqz1fKoLEVBryPGvmNQfmTRXTFgOTN2UncH1Nzn2pejMzSoUAMDsRjJwqc2
+	 xA7rh6yY2fzUdpElr4IVzZ0UwALLXvpaGOJLPGb1mY+o+LErCNIat134vtpAZfQkht
+	 vVhO24HbTsJC1Mf0vmI/3EkzS8LEj6keFzy9awOY=
+Date: Sun, 3 May 2026 06:21:09 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
+ gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz,
+ jackmanb@google.com, jannh@google.com, jglisse@google.com,
+ joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
+ Liam.Howlett@oracle.com, ljs@kernel.org, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
+ peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
+ rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH 7.2 v16 00/13] khugepaged: mTHP support
+Message-Id: <20260503062109.0469201428642a4f7fcfd915@linux-foundation.org>
+In-Reply-To: <CAA1CXcBJFoqDrkQbRE6JnpV-gjfNXe2sUxaCyXPC82h3qk9Jig@mail.gmail.com>
+References: <20260419185750.260784-1-npache@redhat.com>
+	<20260424065828.031775921990de37f83a2468@linux-foundation.org>
+	<CAA1CXcBJFoqDrkQbRE6JnpV-gjfNXe2sUxaCyXPC82h3qk9Jig@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260503085705.3276-1-qiwu.chen@transsion.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 03, 2026 at 04:57:05PM +0800, qiwu.chen wrote:
-> Currently, reclaim_flags always contains RECLAIM_WB_ASYNC in lru_shrink
-> tracepoints since commit 41ac1999c3e35 ("mm: vmscan: do not stall on
-> writeback during memory compaction"), which is useless for debugging
-> memory pressure issues. Other RECLAIM_WB_* flags are not used anywhere
-> else, so they can be directly removed.
-> This patch reworks the lru_shrink and write_folio tracepoints for better
-> correlation and analysis:
->  - traces each folio lru type instead of reclaim_flags.
->  - traces each lru_shrink with reason.
+On Sun, 3 May 2026 06:23:31 -0600 Nico Pache <npache@redhat.com> wrote:
 
-You also removed the printing of the folio's PFN.  Was this deliberate?
-If so, it merits a mention in the commit description.
+>  Can you please pull the changes from the
+> staging branch so I can resend it soon (probably after LSFMM, so no
+> rush)?
 
-Also if you are going to do this (and I suspect we should do this!)
-we don't need to do the folio -> pfn -> page conversion.  We can just
-store the folio pointer and print out the folio pointer.
-
+np, I've removed v16 from mm.git.
