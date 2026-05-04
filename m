@@ -1,223 +1,172 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0953DBD62;
-	Mon,  4 May 2026 13:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18F03D3334;
+	Mon,  4 May 2026 13:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777901639; cv=none; b=o63GH8+3xSY8iKo/gD4mfTcrBnVt1tKx3sJQY8mWAbjSuEL1t53KfVUwwJ6ZjOlg0C3keMrg3FvCxtxTDgYZd3e5kCiG0G0UHr9Kra3SZGJW5ku+/LWFGtkKgBRB2kVQS3xi34uIMjOt037S7rfILTDADR5fg1YdE+0psSSsMlM=
+	t=1777901894; cv=none; b=pnOV9SUmLcJFWxgKnyLxFrmfvzOXZnFHxoiyUWjnZx2mBAA7S3owJGRpWGcxOs++l5GpQRaVozWferPH5VMVSL3uxdl13UEaC12Ol3P47GS3glt3C0id7SpMwhbGMBBy+nRdVJsvP9Sct35n94Ot1A2pCzIA1Yi32k0XlzoL59M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777901639; c=relaxed/simple;
-	bh=j4VKZ+mQPT+jHXeOKikxNDC2FuxXNlUk0s6VUOf3Qt8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sSbOjVNekzcOOyGFBpkartJulPFz2b+ltCwyEkbfsce476khizFG9mvnUnz+8gK8GdRvKze5fg+cneCSFl3xeNjkBYpk53Uk3t3QpcekQCPQY1etvoafAfOrfr863lB1pJCAEO2uf7/+iSn5vHPuCu87zHQj2j8Mo1pmVezCXAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZnxcNfVn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oPUMNyPy; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1777901894; c=relaxed/simple;
+	bh=yxSm6/vu3IyP3srDroK/mn0D3idiK2xCmju19Wy9HrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=XbNHjD3S/18u1QCUzqm7OWB/YJZg9iloQiU7Vru56Q1+xq38vmkkp92Kzn+SGsj+LascW79fwp3mP5v68D7NF7vh86pf9QTlk1qtcuxdTO6apEO72KWI53zaHds8FbT7SW8NJ/Z6+0kLWTCi+uVL+OSYqh3TTz6EaymerfZS7rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nmZ8O9mw; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZnxcNfVn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oPUMNyPy"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1777901628;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MpOX3/VKQ3lN48t5AW459vOEXrjBWzZJsYyXv640W+c=;
-	b=ZnxcNfVnablK7Zzse721Kb/S6oCnTWeI9wNL5sTZ5nxdRjc+d24SdntbTtYxZs4eIu7gF/
-	5PCxO2jHBCE/bUba8oUrOc/PJUUE4sb2feQJjOhCqA80Mrqme54yIdD4/JPBzisZdc5sjr
-	Pa09waZDDd+yQGLRsTME2/FsFfwCHDId/f3N07iC2801am7cX+6mpnXkVsplt4eYs7xONt
-	q1KsH2oXYu+x13CG0zymXGQE2gFa42hdhfCfeS3fEJ5mvyQekDDgroMr0ocMV5JuvXT1qv
-	f1/quyrweU2SLP3g8oEDXbNCFGPIKMmbXqkQn5/8gLP+4boUUDMypr68LbXi4A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1777901628;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MpOX3/VKQ3lN48t5AW459vOEXrjBWzZJsYyXv640W+c=;
-	b=oPUMNyPyf07qaaysnqrPmvkQV3MfxlTwLVffLPcUhVY9mHT8OyWQWR4D/pJimE2+KAMKSP
-	QKfNNG1lHuPCkBDg==
-To: Gabriele Monaco <gmonaco@redhat.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Thomas Weissschuh
- <thomas.weissschuh@linutronix.de>, Tomas Glozar <tglozar@redhat.com>, John
- Kacur <jkacur@redhat.com>, Wen Yang <wen.yang@linux.dev>
-Subject: Re: [RFC PATCH 10/12] rv: Add KUnit tests for some DA/HA monitors
-In-Reply-To: <edc43db747832223dc2e7800c7b692327a1f5f82.camel@redhat.com>
-References: <20260427151134.192971-1-gmonaco@redhat.com>
- <20260427151134.192971-11-gmonaco@redhat.com> <875x531scg.fsf@yellow.woof>
- <edc43db747832223dc2e7800c7b692327a1f5f82.camel@redhat.com>
-Date: Mon, 04 May 2026 15:33:48 +0200
-Message-ID: <87v7d38fk3.fsf@yellow.woof>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nmZ8O9mw"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260504133802epoutp02b4fe67eaaad6b60cdae9efe8d85f925e~sYFeNTetM0577405774epoutp02e;
+	Mon,  4 May 2026 13:38:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260504133802epoutp02b4fe67eaaad6b60cdae9efe8d85f925e~sYFeNTetM0577405774epoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1777901882;
+	bh=K5X6546rG8Q7CDMgHYe0dMLLoA8JVhsjJIJ+l/s2c4Y=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=nmZ8O9mwkiw6Qc3oNT26vkjmnNlI2wukd5FwCDzd9H7xY8AuXai7IIgT3MUN5KTvU
+	 zuWhH4yfS4vIWtH7ZZm3cCd5duET+79RK+Yll2CLppi9ZAF+JaB3VR+AtIpQLJzfYp
+	 kuHf8nA1xhwKYRz7MOqFl4cYZJ66wHOLsJP//U40=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20260504133801epcas5p2868c041e3779e42e6e5fde3d36dba3a3~sYFd4KT8O2899328993epcas5p29;
+	Mon,  4 May 2026 13:38:01 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4g8N4n4bV1z2SSKX; Mon,  4 May
+	2026 13:38:01 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260504130907epcas5p29c41fc288662c37cd8ad7241772a53f8~sXsPFsdos2990329903epcas5p2Z;
+	Mon,  4 May 2026 13:09:07 +0000 (GMT)
+Received: from [107.122.10.65] (unknown [107.122.10.65]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260504130855epsmtip2f74fac9944e13b661bd91b5d97d7c8d2~sXsD4QdS72669726697epsmtip2P;
+	Mon,  4 May 2026 13:08:55 +0000 (GMT)
+Message-ID: <1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
+Date: Mon, 4 May 2026 18:38:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, longman@redhat.com, akpm@linux-foundation.org,
+	david@kernel.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+	jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+	riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com, gost.dev@samsung.com,
+	arungeorge05@gmail.com, cpgs@samsung.com
+Content-Language: en-US
+From: Arun George/Arun George <arun.george@samsung.com>
+In-Reply-To: <afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20260504130907epcas5p29c41fc288662c37cd8ad7241772a53f8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
+References: <20260222084842.1824063-1-gourry@gourry.net>
+	<CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
+	<1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
+	<ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
+	<1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
+	<afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> On Mon, 2026-05-04 at 10:39 +0200, Nam Cao wrote:
->> Gabriele Monaco <gmonaco@redhat.com> writes:
->> > +obj-$(CONFIG_RV_MONITORS_KUNIT_TEST) +=3D rv_monitors_test.o
->> > +# Stubbing rv_react triggers the error
->> > +CFLAGS_rv_monitors_test.o +=3D -Wno-suggest-attribute=3Dformat
->>=20
->> I try removing this flag, but my compiler does not produce any
->> warning. Which warning did you see?
->
-> That's quite odd, I don't remember the exact GCC version that was showing=
- the
-> warning, my current one does not enable it by default, you can however en=
-able it
-> with:
->
->   CFLAGS_rv_monitors_test.o +=3D -Wsuggest-attribute=3Dformat
->
-> Then you get:
->
-> In file included from kernel/trace/rv/rv_monitors_test.c:11:
-> kernel/trace/rv/rv_monitors_test.c: In function =E2=80=98rv_trigger_test_=
-init=E2=80=99:
-> kernel/trace/rv/rv_monitors_test.c:68:42: error: argument 2 of =E2=80=98_=
-_kunit_activate_static_stub=E2=80=99 might be a candidate for a format attr=
-ibute [-Werror=3Dsuggest-attribute=3Dformat]
->    68 |         kunit_activate_static_stub(test, rv_react, stub_rv_react);
->       |                                          ^~~~~~~~
-> ./include/kunit/static_stub.h:97:44: note: in definition of macro =E2=80=
-=98kunit_activate_static_stub=E2=80=99
->    97 |         __kunit_activate_static_stub(test, real_fn_addr, replacem=
-ent_addr);     \
->       |                                            ^~~~~~~~~~~~
-> kernel/trace/rv/rv_monitors_test.c:68:52: error: argument 3 of =E2=80=98_=
-_kunit_activate_static_stub=E2=80=99 might be a candidate for a format attr=
-ibute [-Werror=3Dsuggest-attribute=3Dformat]
->    68 |         kunit_activate_static_stub(test, rv_react, stub_rv_react);
->       |                                                    ^~~~~~~~~~~~~
-> ./include/kunit/static_stub.h:97:58: note: in definition of macro =E2=80=
-=98kunit_activate_static_stub=E2=80=99
->    97 |         __kunit_activate_static_stub(test, real_fn_addr, replacem=
-ent_addr);     \
->       |                                                          ^~~~~~~~=
-~~~~~~~~
->
->> If it is not a hassle, I would prefer to address the warning in C code.
->> Grep tells me the rest of the kernel does not use this, how do other
->> subsystems not suffer from this warning?
->
-> When the compiler was caring about it, I tried all I could think of to av=
-oid the
-> warning, but I didn't manage, some other places do disable this warning (=
-just
-> not in the makefile but with pragmas):
->
-> $ git grep "suggest-attribute=3Dformat"
-> drivers/infiniband/hw/hfi1/trace_dbg.h:#pragma GCC diagnostic ignored "-W=
-suggest-attribute=3Dformat"
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/tracepoint.h:#pragma GCC=
- diagnostic ignored "-Wsuggest-attribute=3Dformat"
-> drivers/net/wireless/broadcom/brcm80211/brcmsmac/brcms_trace_brcmsmac_msg=
-.h:#pragma GCC diagnostic ignored "-Wsuggest-attribute=3Dformat"
-> drivers/net/wireless/intel/iwlwifi/iwl-devtrace.c:#pragma GCC diagnostic =
-ignored "-Wsuggest-attribute=3Dformat"
-> include/trace/events/qla.h:#pragma GCC diagnostic ignored "-Wsuggest-attr=
-ibute=3Dformat"
-> kernel/panic.c:#pragma GCC diagnostic ignored "-Wsuggest-attribute=3Dform=
-at"
-> lib/vsprintf.c:__diag_ignore(GCC, all, "-Wsuggest-attribute=3Dformat",
->
->
-> Here, the error comes from macro expansions in KUnit and I'm not sure the=
-re's
-> any practical way to solve it, that's why I resorted to disabling the war=
-ning
-> altogether.
-> I'm not sure whether a pragma would be cleaner though.
+On 29-04-2026 07:12 pm, Gregory Price wrote:
+>>
+>> Great! I believe "writable budget" could be an interesting idea which
+>> can solve the 'bus error' sort of scenarios due to device not capable of
+>> taking any more writes. The write budget could be replenished using the
+>> control path and writes will not go ahead without the budget available,
+>> right?>
+>>
+> 
+> Write budget is simple
+> 
+> budget=1  (up to 1 page can be writable
+>     1) swap 1 page ->  cram alloc 1 page, put VSWAP_CRAM in PTE
+>     2) read-fault  ->  cram upgrades VSWAP_CRAM to R/O PTE
+>     3) write-fault ->
+>        a) if (writable_cnt < budget) { budget++; mkwrite(pte); }
+>        b) else:  normal swap semantic -> promote to normal memory
+> 
+> Meanwhile - use ballooning and a simple shrinker to dynamically size the
+> region to respond to real compression ratio.
+> 
+> 
+> All said an done - you get something close to zswap but with R/O
+> mappings for all entries, and optional R/W-mappings for administrators
+> who know something about their workload and can afford to take the risk
+> of some amount of capacity being written to uncontended in exchange for
+> performance.
+> 
+> The writable-budget is a risk-dial:  How much do you trust your workload
+> to now spew un/poorly-compressible memory?  The write-budget is a direct
+> measure of that. (so take P99.99999 compression ratios, and you can make
+> a good chunk of that writable).
+> 
+> ~Gregory
+> 
+> 
+I believe we are converging. Agree to most points you mentioned.
 
-Thanks for sharing the details. I can see now that disabling the warning
-is the way to go.
+I see this problem statement can be solved by 'write-control + write 
+budget' approach similar to what you have described, whether we take 
+swap path or not.
 
->> > +void rv_test_opid(struct kunit *test)
->> > +{
->> > +	struct rv_kunit_ctx *ctx =3D test->priv;
->> > +
->> > +	da_prepare_test(test, &rv_this);
->> > +
->> > +	/*
->> > +	 * The handlers are called with an additional level of preemption,
->> > +	 * ensure we start from 0 but apply it here to avoid warnings.
->> > +	 */
->> > +	KUNIT_ASSERT_TRUE(test, preemptible());
->> > +	guard(preempt)();
->> > +
->> > +	/* Wakeup with preemption and interrupts enabled */
->> > +	handle_sched_waking(NULL, NULL);
->> > +	RV_KUNIT_EXPECT_REACTION(test, ctx);
->> > +
->> > +	/* Need resched with interrupts enabled */
->> > +	scoped_guard(preempt)
->> > +		handle_sched_need_resched(NULL, NULL, 0, TIF_NEED_RESCHED);
->>=20
->> From my understanding, this last one is testing that need_resched with
->> interrupt enabled does not invoke the reactor? And if the monitor is
->> broken and the reactor is invoked, we would have no test failure here,
->> but instead we have test failure the next time
->> RV_KUNIT_EXPECT_REACTION() is called. And if this is the last test, we
->> would not see a failure?
->
-> Not really, I just forgot an RV_KUNIT_EXPECT_REACTION().
+But I see this 'write budget' (budget in terms of number of write 
+operations that can be handled by the device, not capacity) to be 
+provided by the device in control plane; not by the workloads in the host.
 
-I added that missing RV_KUNIT_EXPECT_REACTION(), but I still see a test
-failure:
+The budget can be communicated by the device in the device control plane 
+periodically (to be handled in the specific cram back-end driver; may be 
+interpreting the device back-pressure indications into a write budget 
+value). Even if the control plane breaks down, the host does not run 
+into issues except that it will not write further.
 
-[    1.070721]     # module: rv_monitors_test
-[    1.073512]     1..7
-[    1.077641] scsi 1:0:0:0: CD-ROM            QEMU     QEMU DVD-ROM     2.=
-5+ PQ: 0 ANSI: 5
-[    1.078494]     ok 1 rv_test_sco
-[    1.083256]     ok 2 rv_test_sssw
-[    1.085783]     ok 3 rv_test_sts # SKIP Monitor not enabled
-[    1.092365]     ok 4 rv_test_opid
-[    1.093462]     # rv_test_nomiss: EXPECTATION FAILED at kernel/trace/rv/=
-monitors/nomiss/nomiss.c:306
-[    1.093462]     Expected ctx->reactions =3D=3D ++ctx->expected, but
-[    1.093462]         ctx->reactions =3D=3D 2 (0x2)
-[    1.093462]         ++ctx->expected =3D=3D 1 (0x1)
-[    1.095699]     not ok 5 rv_test_nomiss
-[    1.109418]     ok 6 rv_test_pagefault # SKIP Monitor not enabled
-[    1.115146]     ok 7 rv_test_sleep # SKIP Monitor not enabled
-[    1.118050] # rv_trigger: pass:3 fail:1 skip:3 total:7
-[    1.118053] # Totals: pass:3 fail:1 skip:3 total:7
-[    1.120622] not ok 1 rv_trigger
+I assume you see this value coming from the workloads. This might be a 
+place where I have a different opinion.
 
-Any idea why?
+There are multiple advantages of this value coming from the device:
 
-> So I'm actually thinking of defining yet another macro that fundamentally=
- does
->
-> RV_KUNIT_EXPECT_NO_REACTION()
-> handle_event()
-> RV_KUNIT_EXPECT_REACTION()
->
-> which would make sure the reaction happens exactly there, plus I'd add an
-> RV_KUNIT_EXPECT_NO_REACTION() in the cleanup sequence to ensure no unexpe=
-cted
-> reaction occurred (or nobody forgot to expect a reaction like I did above=
-).
+  1) We can modulate the write budget depending on the actual 
+compressibility in the device (and so workloads data). We don't have to 
+do estimation based on the workloads.
 
-Sounds nice, go for it.
+  2) We don't have to do the capacity modulation - as in ballooning or 
+shrinker.
 
-> Yeah that should be neater, but weren't you the one not liking macros? ;)
+  3) Even if the control path is broken, host can write only till the 
+available 'write budget'; so it won't get into 'bus error' situations.
 
-It's not black and white, I like whatever makes the code clean and easy
-to read. Sometimes macros are nice, other times not so much. I have
-spent hours reading the tracepoints' macros and they are still black
-magic to me (but to be fair, macros are probably the best we can do for
-that case). I hope we can rewrite those in Rust's generic one day.
+~Arun George
 
-Nam
+
+
+
