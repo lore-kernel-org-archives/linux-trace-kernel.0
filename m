@@ -1,190 +1,113 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020105.outbound.protection.outlook.com [52.101.196.105])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CD326F476;
-	Sun,  3 May 2026 20:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777839265; cv=fail; b=Z5ZEJkx1LU7FACeL3kVKJBEwix9bXiokiVkkjlPl7rPofrzUS15naSga1LT15cfwIrdFDdYjzteFmZM5mVuwtyDRhCCZVLZJ187MQzlIsVV/+jAhXjhaFAJjlFbbBXwp4pF0Y7CQiqy79iiEFcl5Jku9EnOzSufkk6nXCwuscac=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777839265; c=relaxed/simple;
-	bh=chfWLW7469BBLkcDtHWA5ItlAtEtsqWSSKmScKRXDZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=UUk3quot+3fUfJvyqEqEvR4qAoPeta3KSzy7L39A1hfKuJ0LzMTLPilOMMAs3BImM9T67UUg3CusZqEuN2Zym69G30o+vIeVGL+2imXJG1NROemf/OH7Aqv7IW81AUKNP9J5QWCoYIcGVvyNIuJ75xlrEcgZq0tSTXcWYIWRfMA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=j+JcAlUJKuefBp17LhxcKJ3jsK74TBVQcppbZGWqVDhTyi1SPMlQUZBNuSg/Ov7iQ50x1mwEINqfl7jfDAkJi1VpAb2+u3RzTX8FtIi59pigIlXmuFGjFdukSa1N4/TW9OmyIb/Y9MwfRKktoetvuyzo7dBKmQcNRdVSUkQtshib3FrbqljNT5lG/J50nI9ESQBIDpZXy/nnRDetF5qa+Z8n7FdJvanZ8UCzC2x7YiRP/eDRtLVTfs2BHqBxgN+KgqpLPss3gBOiF8bpnwFCiXWT2rgn6LsVvTABqIoaG8W87OGWCt8O9bTepkqLTDY5FsGiO1kBau05r9fX7+6tLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sktZs1orfv2MB4RxqrIXA1EUzquKkhDRBpSMZqTCows=;
- b=jDkwSfY5YOHSUSN78ap3awWU/qz2tQMpbN7qBc/X1vTEHiZ4mfTRp5aATBtCgDbOupg2Ec3p8gaTR4aYuBe3kvMClS1974GheJ0/+oyjc5w18rwXNA+93dqhHQ8mb16nTlY0PcUbhgcpRuTHt4UWw1/eFkLEEuiJhjfTK0LGZ3Xjtuu6TB7w/TXHOtkA8Kr9iksXcy/bfqhCmYCymC1SzKvQcBwOaajfC5A7XCN5YCbr2vk22/WwJ7shNsWnUzgT+BzYWSMQUAXram7t24I3pGag0WOHGBPpdt5XmVAXnX1a8a0jAlSLOjyOE03ALEh33B7IA1+HJnaEP25t5HTT9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by LO8P123MB7889.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:3dc::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Sun, 3 May
- 2026 20:14:20 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf%2]) with mapi id 15.20.9846.025; Sun, 3 May 2026
- 20:14:20 +0000
-Date: Sun, 3 May 2026 16:14:16 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Song Liu <song@kernel.org>, 
-	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Yonghong Song <yonghong.song@linux.dev>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, neelx@suse.com, sean@ashe.io, chjohnst@gmail.com, steve@abita.co, 
-	mproche@gmail.com, nick.lange@gmail.com, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v3] bpf: introduce TAINT_UNSAFE_BPF for mutating
- helpers
-Message-ID: <n77ttuihdrigv7motoo2le3s644ppztey2qq3ia2t5keiblajn@juqmaefinpgr>
-References: <20260503164700.548164-1-atomlin@atomlin.com>
- <CAADnVQJ5fatNF4auH+a8E39zWMfja3rm4BM_xGcTnLX8uuCQ9Q@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lt2bmbgaiuaa3ge5"
-Content-Disposition: inline
-In-Reply-To: <CAADnVQJ5fatNF4auH+a8E39zWMfja3rm4BM_xGcTnLX8uuCQ9Q@mail.gmail.com>
-X-ClientProxiedBy: BN0PR03CA0041.namprd03.prod.outlook.com
- (2603:10b6:408:e7::16) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9E430F52A;
+	Mon,  4 May 2026 07:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777880921; cv=none; b=LnuX8srFMXM6gLF+qr2w3opEwjzyS961o1MT+ngyzm3XtUaM4Y0C4PYhxHSdB6yHMDJmOlzQOqAIlv8GB+ZPVrIUzxCtT4SdvXs18Cl099LKhWlLO7EqzI6Yp2eeuh+XZ7pDLMQw5PQ/5RLpsibM4PJj31bROvnQzytKO0CaJUI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777880921; c=relaxed/simple;
+	bh=onaqy8OxZNXxPjsB9OYQPoOSWxq6VNugfkRBG8B4SDA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PYUMNCNHBbKLx5ZiRjrWEDPIFiQmY9gh5VHvwm7SgNwT1kZRTV3u+pY1sFAukbm4PdMc+YJZGcUvQjnovZ8O9gwhWjzCzY6n9qhtBKoANUmI+IWKxOk6xyFyBYIC35mUZc2DeKKnihVxdok4o20YiuMZ6sQkabkzKAgIlSHa6i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WfuszEsz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ykqd50B7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WfuszEsz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ykqd50B7"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1777880918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W4sK++8oqvdIrLGDdYeVamQmI47JkwNQUlocUJbuiJk=;
+	b=WfuszEszvxV/BXab6Z0dlUh/asERSphNIKldXjhl10qctQ6eQLUKtCDncyd5Qp2SviE9Fw
+	WakWiMTdWUPgPK+NcZHH/5EHiEmiASKuMG2ZcU4uuwade5megqcndLxg9HJC0o7gEjgPwp
+	Sy6U04GGlwh3V/gkFPbkhZR0hPEVE+FN0Dw5lJ0Zgk9/Ncoog6IiABKEnoKuVbL68uylQ2
+	juZ3Tb2miW8N4vNpQWRR5huAveySdPUdPcWpgP2rEaLNoIaFmj0k6eCygMYtzaFIm39rX/
+	sLLKF9pl9NOLk3yM9+4Ymk7006n1Uz93DHxezi9wsw3W00LK0GPgLB2RA4EADA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1777880918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W4sK++8oqvdIrLGDdYeVamQmI47JkwNQUlocUJbuiJk=;
+	b=ykqd50B7EZXcdsUWmGOGNLdGaKU5FlnOhk3r//OZxXmyfECpF0CLi7Ej3q27izeazYRHGb
+	g3P1vU1qkQPP6/DA==
+To: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>
+Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
+ <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
+ <wen.yang@linux.dev>
+Subject: Re: [RFC PATCH 07/12] verification/rvgen: Add golden and spec
+ folders for tests
+In-Reply-To: <20260427151134.192971-8-gmonaco@redhat.com>
+References: <20260427151134.192971-1-gmonaco@redhat.com>
+ <20260427151134.192971-8-gmonaco@redhat.com>
+Date: Mon, 04 May 2026 09:48:36 +0200
+Message-ID: <878q9z1up7.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO8P123MB7889:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab0fc670-e8b0-47b1-18f9-08dea9508f8c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|18002099003|22082099003|56012099003|27256017;
-X-Microsoft-Antispam-Message-Info:
-	Mh9FnxIfBp1wgb8cQ7kT7lpC9Hp+3OjySPKpXdMN/mfa8ck29XIeZKGrOImtJYnJnPHIcfmfPGGlavYmf362b6WqnXJrhXB5XTDM4+79Ef+Wg/0d2gLDfcfFWp73I7OBqQ1G4zYMnAmskv4f4J8ZH8aqmcF6lh/wvCyweCaWPzavoa4jzR2S+wtzk9vlhg1d2CGZk0UsrQbs5KtQxEH7LYpZN4aGs8EGDu4qifhmP4XjNK56lEeRpC/VuWdvbWuwFUzECYFJUNf5XPMGAuYw9Ar2MXlyoJEQiN2S5evIy2LaVkf/CELnKsgB9jV9+UzkROzP3GeOQgm4LBGC61Jj1SwhmzGaH1o3m3tRJb/dDJiepisr+efHs/qcHBB4HSxus24564LuOF9l+XmwUJcK6ElLlglaSITGBCEvv2zTN+7PX4+Nk8BvqoUYq6YPgaTQKzA78cg4TuH/S+opp617y6d2cpyd6leEI7Q1gUs0OjWYdurtMK6OUX9i21roLwKQmER7AiRAYvQbdiiWorTgJpKjqxZP1gz/GpMa2t+plFp1uNaHOFNwAliWJGV9ZKYTbV8Nk1/TVWZ1qa3DuWK1Sn2tfQhWPE95DJ9UE/1ZNABhON6GKRIkCjjFAgdy89f0GR0kK+RalziY9eEiJyyCPj/KS3C5kVXfn7JcAZHAbWVrNrlZNiUR4uHOt6863cSKso6OaVf3xxveHBGybvwux7YAPs2joF0UZBH4YA4YuKKHtoKgL+SFdp3AUlmlwFu9
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(18002099003)(22082099003)(56012099003)(27256017);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WHRFY05aWHRoNHBjNFhMM0dvdnUwTkJIb1FaaTlaSUVqUlhiRkhkYzFoTGEr?=
- =?utf-8?B?bzFZOENsMUdaTm1QY1VEL0o2K0plMnBLQ2JxTmtUOFJCd09SelUwNk15Q2N0?=
- =?utf-8?B?dFNxWmxjaWx6aHRuNGZtWjFQdW96dzR1ZitZKzNiaFJwN3BKZitEaDdUd3hO?=
- =?utf-8?B?MC81N01aYUx4QkpMU0hpbllnNWFzbnMxTEhUVWVQTlhVQWxmTFdEK250c1lo?=
- =?utf-8?B?Q1l1ZkwvSS9HZ1I5SVhtUFZEWEUvenhvZ1pVWUpMdkV0NTR3bXBxemJyWnNI?=
- =?utf-8?B?MlhqSDdDV2hFVXQ1LzJqS0srN0NHSDBTUWdib2Z6dU9HcU4xYWNzSngvMk9X?=
- =?utf-8?B?WkZSTSt6NktDekJ1c1pER2NHbmdOMXB1SkEvc212a0MyVUwwMUZxZUYybG55?=
- =?utf-8?B?MFJJdEJLMjV4YnZiK1J4V3EvUE9KMUREMHBReGE3VEljcXlJZVJWM2liWW93?=
- =?utf-8?B?bFJINWF4bFl2VEdiSEFCOWZtUkxsTFNzdXc2SHBwREdxUC9Ed1ZyZG9jVkhC?=
- =?utf-8?B?N0pnYVRQV1RGNzRncUVCZkRoeTM0Q0ZVQkZ5TFRDdU5SM21YT0Zndy8ybmw4?=
- =?utf-8?B?WEZua2ZHaEhVNnpudnRvbmRUM1RJaXVHT2JyZFQyY2RudjJCV2g3ekRGZG1v?=
- =?utf-8?B?R1k2dUc2T3pyYzVFOTNIMWlmckdjK3E0WTc5cnFiSGgwN0VOR2NCd3YrL21K?=
- =?utf-8?B?d1ByR2MxbFIrVXdMeGlQL3drTGV5TUZGVGg1TCt5TmZvZlo5L2JUYkl5VWUv?=
- =?utf-8?B?YnFDTFI2UnZwbnBSRHdPaW5yaXNOeHJVU1UvYmplTCtvWEVtMkdFaGxDR2Iz?=
- =?utf-8?B?Q212ZjhiaDl1NlhBcWkwVjNrcDBqQ0dJdHF2TkZNOFlhVmpycmpsUU1neXVz?=
- =?utf-8?B?SXY0T0E0bkVXTkVrYU9nZ3NkT0FwVjl2TTg2akk5eFFoS2tJZTJmV3JGQ0pI?=
- =?utf-8?B?SWlrdWU0TkJUTVNBZFNpNU9qZW5UWkF4Qmw2eGRVdkZiR3VZbHZuVGpxUXpa?=
- =?utf-8?B?L2VIa2pXdGdXc1ZnWTJPTXRldktpYVlnc3FiNkZiYnhtY3lHb3NtUUtsSGY5?=
- =?utf-8?B?QlNxS0c1MGxTUGtxOEp3L3QvWi9XQkdXanFYdDlQY1JEUXp0M1JzVVU0enl3?=
- =?utf-8?B?N1lEZld2WEFnVkgrWklzRzNrV0pkZmJSV2Y4T20waG9pS0JFMUxlNUlqK1k2?=
- =?utf-8?B?a0p3Q253V2pzRjNZQnc3a2I1TkozUWFSVTFzSjh1VVhpMHRoL1gxdVhvZzBl?=
- =?utf-8?B?eEoySFhvNW1tbkE0ekh4aFI4RmIxZ0c1RzJTL2lpL0pmaEw4RUJsVi9UUVI5?=
- =?utf-8?B?VWpYT3ozZkZpTzloamwwRmZObnVaaGZaU0hkaDBWQXlGZFZRYzdQQXFJcXdx?=
- =?utf-8?B?cXV2aEpGNWNSMzZ6SllzYjF3cStXVmg3allvbFo5QTc4TDRTTlpXYlNpbWs1?=
- =?utf-8?B?U1VJVGhzeW1yL3ZZaWtVcC9QTEdSdGtqdzlmUk1MbnM1MkIvOVExVThjN1dS?=
- =?utf-8?B?a0ZSZDlKWGVGZTk4NVdwUjl0L0VjVW1icmQwU01aMm94aWYvTzM5OThrNHVR?=
- =?utf-8?B?YWt1bjV5QVlNVnd3OHhzd3U1YlpMZENPMmZyS21lWjFiclB5aGNxRmpOMUdF?=
- =?utf-8?B?VjM2R2lQQjNvOW90SkpQYUE5Nll1RmprYVBaN3lyQ2JmQ2NITmRwbUxUb3Zp?=
- =?utf-8?B?VzJDKzMyM1ZMNzJlNVFaQlhZL05vaVFDZUM1OC9QUDhUbUNYYnJPTFg4S0lv?=
- =?utf-8?B?SkZGUzhUMmdqR0lWV1U3QzRyejhIQjNnOXAvQ0FNQU9CNzB3cmVvdXRjNExI?=
- =?utf-8?B?T1hxZDk4QUFqbFU3WjNORmJrdFBiemVTVGhqR0ptMlYvMHJ1OERZSXdNblEx?=
- =?utf-8?B?TkJMRVoreDdiMzdUcFB0cFJvaWk3RlpUWm1jSS9IWktSc240eVpEMXdPekJV?=
- =?utf-8?B?WUxKWXJLaFZzbllwZjBOZksxTFo4QXppR1RDVTBqSWNSSHovWW5UVWdjUlYy?=
- =?utf-8?B?UVJmZC9CYVdhUnUrNWxuUldmdHVKU3FzcWhSeDh4Nm8wd1luR0FFUXJVaDVy?=
- =?utf-8?B?MW94bm5rQ3JGQ2RvQk9Zbnd0Y1Q1SXMvWHlJOFF1aGVQOXdoOEhaVm9nVUh6?=
- =?utf-8?B?RllkNWdvb3NpaGdiK3VkU1VNcytLdlNLR3doa0ErRENnM2c4Vi93ZGltaTNM?=
- =?utf-8?B?TCt1NEtvVGZaN1pmYSsxREZxWWtXTlA1SjI2WXIrdTlzZEtvMHU4RU1RZTlE?=
- =?utf-8?B?Z1YvbGJ2d1J4cXRVR2o0NjZSSjcvckUzNDByV29mN1hwQldMTlBPYTBuUWZi?=
- =?utf-8?B?UWJEY0pZNTRJZ3o0clQ0TGVBZE5TQ0IrYmw0bWFPQ3hhR3cySWw4Zz09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab0fc670-e8b0-47b1-18f9-08dea9508f8c
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2026 20:14:20.6472
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FWUxj2dGbYYf5iN013SuYW5b0iQxme3itHH/rmZ5kk4fNJBXzKuu9j99RVahW0aOZ2iat36BvAdL+kBOhhj96Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO8P123MB7889
+Content-Type: text/plain
 
---lt2bmbgaiuaa3ge5
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC PATCH v3] bpf: introduce TAINT_UNSAFE_BPF for mutating
- helpers
-MIME-Version: 1.0
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> diff --git a/tools/verification/rvgen/tests/specs/test_da2.dot b/tools/verification/rvgen/tests/specs/test_da2.dot
+> new file mode 100644
+> index 000000000000..bfee6e535cf7
+> --- /dev/null
+> +++ b/tools/verification/rvgen/tests/specs/test_da2.dot
+> @@ -0,0 +1,18 @@
+> +digraph state_automaton {
+> +	{node [shape = circle] "state_b"};
+> +	{node [shape = circle] "state_c"};
+> +	{node [shape = plaintext, style=invis, label=""] "__init_state_a"};
+> +	{node [shape = doublecircle] "state_a"};
+> +	{node [shape = circle] "state_a"};
+> +	"__init_state_a" -> "state_a";
+> +	"state_a" [label = "state_a"];
+> +	"state_a" -> "state_b" [ label = "event_1" ];
+> +	"state_a" -> "state_c" [ label = "event_2" ];
+> +	"state_b" [label = "state_b"];
+> +	"state_b" -> "state_a" [ label = "event_2" ];
+> +	"state_b" -> "state_c" [ label = "event_3" ];
+> +	{ rank = min ;
+> +		"__init_state_a";
+> +		"state_a";
+> +	}
+> +}
 
-On Sun, May 03, 2026 at 09:51:49PM +0200, Alexei Starovoitov wrote:
-[ ... ]
-> > +       /*
-> > +        * Flag the program if it attempts to use mutating helpers.
-> > +        * The actual taint is deferred until successful verification.
-> > +        */
-> > +       if (func_id =3D=3D BPF_FUNC_probe_write_user ||
-> > +           func_id =3D=3D BPF_FUNC_override_return)
-> > +               env->prog->aux->taints_kernel =3D true;
->=20
-> Nack.
->=20
-> Please stop this spam.
-> We're not doing it. These helpers have been around for a long time.
-> There was no need to taint then. There is no need to taint now.
+I am working on converting rvgen to use Lark, a parsing library:
+https://github.com/lark-parser/lark
 
-Hi Alexei,
+This test case breaks the current version of the new script, because
+state_c has no label while the script expects one - the script read the
+state's name from the label.
 
-Fair enough. I will drop the entire series. Please ignore the v4.
+We should define if the label or the node's name is our state's
+name. For example, if we have:
 
-Thank you for your time.
+    "state_c" [label = "state_d"];
 
+Will the state's name be state_c or state_d? Or should that be a parsing error?
 
-Kind regards,
---=20
-Aaron Tomlin
+I propose using the label if one is provided, otherwise using the node's
+name. So
 
---lt2bmbgaiuaa3ge5
-Content-Type: application/pgp-signature; name="signature.asc"
+    "state_c" [label = "state_d"];
 
------BEGIN PGP SIGNATURE-----
+means the state's name is "state_d". But without that statement, the
+state's name is "state_c".
 
-iQIzBAEBCgAdFiEEeQaE6/qKljiNHm6b4t6WWBnMd9YFAmn3rJMACgkQ4t6WWBnM
-d9aeQw/+KlH2/OrE/xs/dB2AMinkjHVJcE3O3PsZeiljn5Bqs5R4pGzuctW86azu
-mnzgKUJogmdV7gIEDH28GwUVY5/krBwlpx4vJawAnkMIGcREohHU+01MWZPiX/U+
-fF6kaAqN7SinbXAfDacW9zp8hb1uXhpcBDSjpugsPSlN356naSTeHK3FrUdNvJd9
-6REMtQa4XTizCNKu2G3/yJ4wYV/y/SVv+7zXpxTIqsDPlcu3lbRc6iOJauvotDpF
-iEPaoyejVaS8cq/9yljySSJkK6gxBD3N2MqcK/mtHMsKm8Y1B1CIR1fauvvPrtZf
-E85IxcJ7OU5KoRfhFQNaHftlYLrZiyfJlSTsz79fX+xXH8GBy6bay2Z3YzN104k3
-viE9l5kl8b8CwzEnoD8gaHt0uPCr8BZu7t4MXQBa0KC4i1z0j7FF0QxW7oem30zC
-HhS1Jsmvzjf0xNjuwUAyg+SUu0Xp8KhUgLw3YHFGA6o8FlWyItvMLsIBw949trAz
-G2XWx0Qf8d266KYC8jO1Kl5fJactYAnekgHgvnfBVumQvKfxLj3Yjk3LSO8AHqMH
-jdrNNkE3M07dGh7li9cb7ybbiF3ITmPbd12M7KLo87/AkxpjgZR5VKEXomWi2TZS
-XzV5Fp2Wdho5kGySO38eLHITcz+yCrQI9VkSxB6wO9DPUDMH1iY=
-=jknt
------END PGP SIGNATURE-----
+What do you think?
 
---lt2bmbgaiuaa3ge5--
+(just FYI, my work-in-progress: https://github.com/covanam/linux/commits/rv-lark/)
+
+Nam
