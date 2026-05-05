@@ -1,144 +1,233 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D8C3E4C73
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 May 2026 07:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76C2392C4F;
+	Tue,  5 May 2026 12:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777967160; cv=none; b=Io61DRI40l5ueLOfrPyi2UqN63kjcuqXqkiOmUTr2K6lGZmD02LJLClggfgyiwG6vHA+7ILXfw8mUUQKC1mRz/okUXKMcNtGH9tCyYYU1Urce3zP+VhW0ZGXLstJITYB+pwD3fRGXhlrKeIAJWszwTVSGmuGAl9x2KWUjXzlBqA=
+	t=1777983498; cv=none; b=RBHKOgp2MeM2NPt1bp1GdPSZub1zcbEQYrMCD3cRpGy9pGUcqFxFMPu6GsaksDNgRg4/d2DX2asCEa7qiyxSOttMgoNdSjyJ/nVIENjvFhliQKbjVlf8O1ePygDVRPVX04uH+bEPj2OLqefYVOHtkeOWuPYHteXdUNhCWfpR38w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777967160; c=relaxed/simple;
-	bh=nHnlIoIYgby//JTQJ23HCL1ahPlq53pZkc5FnZs96GI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Apd9YtvaOI/zPITs7c0YFCRK6WJfL9mLnQOaTY6tjGMLSPx8oNurXdf1ZG3lwgwsurOxzo+LPAm2dBQmIEi4u0mGcK8jKc/VwbU8by7UUJ0qzH6gPgB1AN/PrHXtfq3Rffi+1R5Jr8JZsQ63DCByMlhTTru9lzEHZfxIgnIZYpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RCxXV9LX; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1777983498; c=relaxed/simple;
+	bh=VglWC5QjBmwSCIAAVXJjNHx/C67wfgsvPJQGG5CiALo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sR35KV8r7m2f8ml69D5KLGkOYcbXQNxgeX6dg499m2v/zV71/Za8eGxySHWUuhk6AedN+zuB5YCPXZu9fT2DV4ZBcYvql3H9qV1XwSt63dWs2oNCquCG4ELW+ZrhM7hAc9sIaRWMv3Z5fO52qZ959loCWUFWPrW9D2yi2jhXkyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rfAcTdCf; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RCxXV9LX"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-44c350a5b87so1335178f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 May 2026 00:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1777967152; x=1778571952; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pZn9gNDq1rFBKVWAUdRINblw7hBlw9EDaJdQ6N5Sg9E=;
-        b=RCxXV9LXriGz7JRe2657MNsE9158pU5CsAEXPaH9YbbRZ/cfEQ97T8nzjxqQjQr5Tn
-         cDofYN/4NWz7D6fQ0XyKzFFVvPjtjBQlZHA3QbOgUBs8QtP4K+9gf8/fsKCBnqxH/TK1
-         X4iWCPRpvJFKG+JvKL9st/yXEg+fRWRqnYMnJfGqCpTSaO/ibNLdZvUcr1bkSbuQZ/RT
-         XYonchiGOgElt7+ZCAfg5bUasPzSmjsXzu+ZyL8JwvG44CpBF5GENiDxbTsee6+s0d9g
-         jADSjFrbF2OEvx3nBUEynYfZo0W1FQcf3mu4y0whLlt21Yk+xCcDIIosGizPIqBT7eUF
-         77FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777967152; x=1778571952;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pZn9gNDq1rFBKVWAUdRINblw7hBlw9EDaJdQ6N5Sg9E=;
-        b=FgOCsHYzr1heK9MGbUjAWgivklFyswcgOdTreUC0CMMV3axUpT6xxn3f5GnLGfuXv8
-         gBPB3X0ghswnOfZPIc4dggo1BRcu4YaN9HAg9zbr/8UR7SqLdEqFjh6dddn3z28KyhyE
-         0Q8EVSAuyyh3evavL7SGE5AMH9l2OVQUgDCL89rNkLWH3/U5kgxppitTasy2QlgXkks0
-         T2TyP5vMP/cukvIvXvcPmtEofpjvIMogwQR9Mgnm0uoWGuclFcgcOpa3tI71yliZZvdn
-         oCFKKRCMcKlmdzVes1HJ06n6B8QETZ9z3QypVQKDZC4t62dEPUUKG+DM88gMIbJAtmFU
-         oSPg==
-X-Forwarded-Encrypted: i=1; AFNElJ+oeger2ZjqZzaPZ/gfwnNKcY/P+Ooq+7GB3NA4QgHgEn2gacK3zqG/D9M/x4x93bFPOqLT9qjezMR6RchzEk1oipA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCUilWoLpkR/+bG7W+3Nf0ViMQ/+X2SHyeyDxKqJyL4ylNnVZI
-	qv5SQ18DUSaBb2QI3r5MzhDTEBOg/MjQWf2jG9Zbjeh3NFQNQt9XfOWA+LxelNvOPBQ=
-X-Gm-Gg: AeBDiescYCZP0g9bQvUC91gy0V0sxbD8bltre3kUVX9gWL9+eLqjpcs+xSeoZ8Kw2/b
-	tXYVkakjSnFQGTh17mDBV9ctHAaFgmJoxdqF+R7Czn+q3MrAmdpcME0/56OEMqFnJTqpEeZKFCB
-	7uB9keDeJYp8hcPQwPswD1uXOOTB7SVuijl0x1U65QplDdg8h9H+YubzDkp3sYwyCh1Wmtel9Jn
-	gKG+bfA/kVkqLxuLAUftrv8XQqQOJRJ+ICyERiBrSHFvpz/qjCNsTh77Uvwmvp7SxtICta8fTWM
-	Gu0dS67kfbMlp1XBv/eMSzetbXgThV/yx+ltlySruQ+fOuG1EcLISPDI5dDSob4lJsb24fS8HBp
-	r2BEy2zL2QAPwnjpKqlAZdFBqCibkfLorZuDESB2qkRVJxAykNR78MskUAP8zMIJjXqeEJHspS8
-	fqUN/raGzuXGxCbzvFzRTFTX2hBF61gKGu6C/lCXvNyxXI
-X-Received: by 2002:a5d:5d87:0:b0:44a:2f78:e873 with SMTP id ffacd0b85a97d-450041b08d5mr3594275f8f.17.1777967152279;
-        Tue, 05 May 2026 00:45:52 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([213.147.98.98])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45055d36dacsm2455028f8f.32.2026.05.05.00.45.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 00:45:51 -0700 (PDT)
-Date: Tue, 5 May 2026 08:45:41 +0100
-From: Gregory Price <gourry@gourry.net>
-To: Arun George/Arun George <arun.george@samsung.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
-	gost.dev@samsung.com, arungeorge05@gmail.com, cpgs@samsung.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <afmgJcFUjQLYxkb5@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
- <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
- <ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
- <1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
- <afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
- <1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rfAcTdCf"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64581TKo2735981;
+	Tue, 5 May 2026 12:17:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=FvnhYyrYWxk5OBPJw
+	rKrmJeEttrxtHxGpLoGH3hJxZs=; b=rfAcTdCfZTdCJIhg279MiEJuXikE+HU87
+	VW1NgFhBqmN66S2/ZP/MFVX49Npq4TmI7nXuUz4dunypkCq0+hCWVEZO8a/oubJW
+	aokHCUARaQXlCdfCdiT5SuCvZcrX0QFx7WHIa1YEpOqxkf202VhNkfCxE2PJlsl4
+	kEq4kZgolvFpJHVVcQ+9K6vmH8F2qxlwRjNERx4L4+b1VDKXotZtkVX7pfRUwDEj
+	E6fky+n4f8TIMvhs86IafghGrDB3Wk7aSTuhyzjVE14vlYbT5Z1r/LQnd98meHsP
+	TxO+uVjm5OsRVoSwCc3CRnM1hBn/gWeeXIfK4zrCV9paRbCtwt+cA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9y1bh3b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 May 2026 12:17:29 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 645C9c1v029300;
+	Tue, 5 May 2026 12:17:28 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dwwtg9bma-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 May 2026 12:17:27 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 645CHO2G50921758
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 5 May 2026 12:17:24 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5B30B2004B;
+	Tue,  5 May 2026 12:17:24 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F223D20063;
+	Tue,  5 May 2026 12:17:23 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  5 May 2026 12:17:23 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Indu Bhagat <ibhagatgnu@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dylan Hatch <dylanbhatch@google.com>,
+        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Kees Cook <kees@kernel.org>, Sam James <sam@gentoo.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, bpf@vger.kernel.org, linux-mm@kvack.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Carlos O'Donell" <codonell@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: [PATCH v14 07/19] unwind_user/sframe: Wire up unwind_user to sframe
+Date: Tue,  5 May 2026 14:17:06 +0200
+Message-ID: <20260505121718.3572346-8-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260505121718.3572346-1-jremus@linux.ibm.com>
+References: <20260505121718.3572346-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: LBHznMHNrGwcMIVAjy5FTSmb0VZFbhh9
+X-Proofpoint-GUID: iMK_zE08jUSeI2qYJTeWXZRqSR2k0krj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA1MDExNCBTYWx0ZWRfXywHpJhLi2dEn
+ P9AYd5vJFwFBj0+QRrHYpUfiE+qsWW8lwgPfGnTbYrZ00nCVd4cVw13LfK5s1O+tqWVdchKQslK
+ P4iR3E6GuDFf42quEGZwgu2CjLxSkt2L44ESlTNYSxJQCqp9A4nS4cOAiQ2pkR5IZPE/fFk1VeH
+ Ppl2kp2xH17XuTsAgd6F0apNsu9Pk6Uu06A9SnfxcnXeqLVLAnVq2/GzfZSeZLyRKuOQxY2/3Ey
+ qbuRpwUyaU3cA079v56RztjzEqB6/TbBlDf7BNq6APTgO9RAmbChK+go9kOHT9muzzeRNe5F8/p
+ OwaEq73tBWmeq+z7x0oW0x8GHFuuiUVtas0zTiKF42wcb7pK9+Rs2EO78dvX97hdm7l2EuRmrEN
+ jdsw7wtnZLzh0qhZHZxxIRHNa4XB6tIbdx/zFRoArcVSgpGE4u38Cf+t73M0M+Bbjcw12Z1HUce
+ 6mkwA8D02yA9a3vywMA==
+X-Authority-Analysis: v=2.4 cv=UbFhjqSN c=1 sm=1 tr=0 ts=69f9dfd9 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=pGLkceISAAAA:8
+ a=VnNF1IyMAAAA:8 a=ItKwCHsCKAUqeRWvWoIA:9 a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-05_02,2026-04-30_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605050114
 
-On Mon, May 04, 2026 at 06:38:54PM +0530, Arun George/Arun George wrote:
-> On 29-04-2026 07:12 pm, Gregory Price wrote:
-> 
-> But I see this 'write budget' (budget in terms of number of write 
-> operations that can be handled by the device, not capacity) to be 
-> provided by the device in control plane; not by the workloads in the host.
-> 
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-In the scenario i'm talking about, a "write budget" is defined as a
-number of pages that are allows to be mapped writable in the page
-tables at any given time.
+Now that the sframe infrastructure is fully in place, make it work by
+hooking it up to the unwind_user interface.
 
->   1) We can modulate the write budget depending on the actual 
-> compressibility in the device (and so workloads data). We don't have to 
-> do estimation based on the workloads.
->
+[ Jens Remus: Remove unused pt_regs from unwind_user_next_common() and
+its callers.  Simplify unwind_user_next_sframe(). ]
 
-Barring the device causing backpressure to increase latency and slow
-down writes, modulating a write budget doesn't actually do anything
-useful.   Once a page is mapped writable - the CPU is free to write to
-that page uncontended.
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Indu Bhagat <ibhagatgnu@gmail.com>
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+ arch/Kconfig                      |  1 +
+ include/linux/unwind_user_types.h |  4 +++-
+ kernel/unwind/user.c              | 23 +++++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-I think a write budget is "doable" but maybe a bit optimistic for an
-MVP.  There are many corner cases to handle, and I would prefer to see
-that as an experimental optimization.
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 94b2d5e8e529..37549832bd1f 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -488,6 +488,7 @@ config HAVE_UNWIND_USER_FP
+ 
+ config HAVE_UNWIND_USER_SFRAME
+ 	bool
++	select UNWIND_USER
+ 
+ config HAVE_PERF_REGS
+ 	bool
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+index 412729a269bc..43e4b160883f 100644
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -9,7 +9,8 @@
+  * available.
+  */
+ enum unwind_user_type_bits {
+-	UNWIND_USER_TYPE_FP_BIT =		0,
++	UNWIND_USER_TYPE_SFRAME_BIT =		0,
++	UNWIND_USER_TYPE_FP_BIT =		1,
+ 
+ 	NR_UNWIND_USER_TYPE_BITS,
+ };
+@@ -17,6 +18,7 @@ enum unwind_user_type_bits {
+ enum unwind_user_type {
+ 	/* Type "none" for the start of stack walk iteration. */
+ 	UNWIND_USER_TYPE_NONE =			0,
++	UNWIND_USER_TYPE_SFRAME =		BIT(UNWIND_USER_TYPE_SFRAME_BIT),
+ 	UNWIND_USER_TYPE_FP =			BIT(UNWIND_USER_TYPE_FP_BIT),
+ };
+ 
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index 90ab3c1a205e..1fb272419733 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -7,6 +7,7 @@
+ #include <linux/sched/task_stack.h>
+ #include <linux/unwind_user.h>
+ #include <linux/uaccess.h>
++#include <linux/sframe.h>
+ 
+ #define for_each_user_frame(state) \
+ 	for (unwind_user_start(state); !(state)->done; unwind_user_next(state))
+@@ -82,6 +83,16 @@ static int unwind_user_next_fp(struct unwind_user_state *state)
+ 	return unwind_user_next_common(state, &fp_frame);
+ }
+ 
++static int unwind_user_next_sframe(struct unwind_user_state *state)
++{
++	struct unwind_user_frame frame;
++
++	/* sframe expects the frame to be local storage */
++	if (sframe_find(state->ip, &frame))
++		return -ENOENT;
++	return unwind_user_next_common(state, &frame);
++}
++
+ static int unwind_user_next(struct unwind_user_state *state)
+ {
+ 	unsigned long iter_mask = state->available_types;
+@@ -95,6 +106,16 @@ static int unwind_user_next(struct unwind_user_state *state)
+ 
+ 		state->current_type = type;
+ 		switch (type) {
++		case UNWIND_USER_TYPE_SFRAME:
++			switch (unwind_user_next_sframe(state)) {
++			case 0:
++				return 0;
++			case -ENOENT:
++				continue;	/* Try next method. */
++			default:
++				state->done = true;
++			}
++			break;
+ 		case UNWIND_USER_TYPE_FP:
+ 			if (!unwind_user_next_fp(state))
+ 				return 0;
+@@ -123,6 +144,8 @@ static int unwind_user_start(struct unwind_user_state *state)
+ 		return -EINVAL;
+ 	}
+ 
++	if (current_has_sframe())
++		state->available_types |= UNWIND_USER_TYPE_SFRAME;
+ 	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
+ 		state->available_types |= UNWIND_USER_TYPE_FP;
+ 
+-- 
+2.51.0
 
->   2) We don't have to do the capacity modulation - as in ballooning or 
-> shrinker.
->
-
-You still need capacity modulation in some way to respond to drops in
-compression ratio.
-
-~Gregory
