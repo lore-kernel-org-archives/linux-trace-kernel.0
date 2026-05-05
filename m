@@ -1,200 +1,189 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B9F248F64
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 May 2026 14:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2834548B396;
+	Tue,  5 May 2026 17:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777991881; cv=none; b=UOQQzmiSXnxvqmO+Aln655L36NA2A31Wl4vI9UiLLjKyYrQy/1PaIh+FPk2rpiv3wQUYNd+YrqD7mYy/LDFsThy76hnKeQAxNKqNq8qNluacMpVOkCyLqi2rcaNQxKh9HhgAxG4izQXDPN/cRghPW+AbHkwOJw2ArZbQdV9ohCI=
+	t=1778001001; cv=none; b=K2zNYkoQPux8/cIDvU0q8r20cCbbkw2yKHdUvr2Nhf4yvbvBWoMM+QeeL7LkrJTIlGUdolkKLnlYIrt7eAoYi2TbHwgHpG9lgEryYcEbAOBgypO2uuCGYs9CYbiU7QwHM6oStvE4Sd9fw6xUduZm+LS/iXu3jfgSQapNJ2uosEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777991881; c=relaxed/simple;
-	bh=JvUqTfqiAW9yC35/8X+aOZcYzssa6BCdLInlTa1/lkM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oADHQADUv7RL7QVczy0VXTBXbPhHuHR7SKUOVwyS07ecuxHAg3PMj2M4sgQlQ2HuXPCoAJ2xhZepib8NGEUrdt9QMA8lH3ISSRoIM1QOxuTL6WFsyI6IyKrNPZcLp+5Ifpr5zBvJ6PJsc7Rfb8mbhjNk693kmo5XG6P3yLlaU4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bfOCfQwx; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1778001001; c=relaxed/simple;
+	bh=x0CWLc22TFu5JAq6s3I2itdt4QuzU2QIk2yqIyaZMIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G5C5zFRqtkeyrskXC3964POpHxiHgbpclMgYIBa2X7y6s4caLezQECUL4AvS6D2Y5ZG03l4jFbwGLlu3t+bkKlP9Jm3UNeLKDyRLYimfgk00oavJQALxWKlESGQAJzyXQBEXSFH4wPf70gJpWXqg+RmkpTFTTtqCB2eUR9zbCYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=OxH5iBec; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bfOCfQwx"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-488a88aeec9so60387015e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 May 2026 07:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1777991879; x=1778596679; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rW/yHyxsN9QI7AveMhZMYM5ISMvZ0yqJBxdD/EhC5LQ=;
-        b=bfOCfQwxrawu82lUm1DRP/xOV/wBNJhWMJG6XVRH3eyQ8GucyHVVfJoXgIrrCTxt4l
-         A4WUC3p14+oyf0DBh8Q2uB8ZuK5O6D74Eg/k+BYtaQkG2f/nyMjmkhtup6UcM6LoPnmd
-         PK7ieHiGSTakBdqqZfr5yFNLdwIXU2oupKKg0y1uVGrSajVabDHBv56QJXPKyMMh6sHh
-         kSKTQSh398izPQkFWhRhHnH6D0aYnO+PSCXZbwEi9AhJs8GJkb/W0SH0RO1h7yLj+Ezw
-         Qe1VTjq1CsABEKRrKDQqU1GUuHYVCBYJr8ZrXRn7tNJITOr5OzFRNBev9pYcxc+W9+q3
-         XL/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777991879; x=1778596679;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rW/yHyxsN9QI7AveMhZMYM5ISMvZ0yqJBxdD/EhC5LQ=;
-        b=GsynKiyJWFMmM/NmtPGxpD3H8erkCjsJMMJ6+8wzj+t1QcT5JR95JUh8J8l3C4Yfvc
-         bMD7MNnSZKSY+HqIesk7j6w/eUqsnS9L9rKF8BeRhSeunCL756B1LbvyOSNoL+MgesQJ
-         PfVis/SNRslBjiuaTqMiFNRRu9j2RKIFuR+k89bL7bB0mD1s8blSgRc9gFt3CsvXkRsf
-         X58RXCl3xIeTslHjsxet6jX8/yZm86pjVGJcbpeJV82L3gyX9XMDAWsSvpWasQeu/0t/
-         A0BQsPZQYC8lMIk6k3wZ30O5w5+417OTssk0Rfj2HLgGB5IkqsNjepK4zgP77u9CsU9d
-         PBqA==
-X-Forwarded-Encrypted: i=1; AFNElJ/Rbo2TvM+FK6C6KY9ABLJDBhk+44BSzK/mYRjvpPDHJ4Rm/yB+VuOcK+UHFxS5dYGQpiDpPstwf0lVRVFh+Eo/qsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEi9HvzrDnMPpdRcJdQZ0FzII2Qi0EICdsEPe4uMaqU9FygGIX
-	ThDXgn3M/fP7OYoE07CNJ8wfAfSgi8mbu09URVxJFHUFw7M+pWNBf4x0Tr6Hlhi76eQ=
-X-Gm-Gg: AeBDiettWg9cglGQhSq+ac8+xtpafA8snxpTfH4b/1gkOtQXCJY5waaxp0xvlZ0V3vo
-	NKYH1qiHuwNo6YxdkljIwS7YrZ9cQVrr3JcmqL2FXEYChkyoBKNj/1LJRQs9dALOztIAiER2qWx
-	B3/mENj4x0oOxGi+GE8NgitTvX8jvO9ZQSAJ0X1FXR+opiFUvcs1qF6QfSAy+t9//fjsC8y676C
-	Z6MKCFLSJyK3xDA60sv40cqnyauoARugZvL4nD+fbYlPJzkMTiAtap1xMnYERU/+YB7zHAEf/vd
-	TOFy23P8BcMQ2zGnQtww6cEcWBgrDsW210agE6KbvJV8ajEWz8gYZghxQrLMCURo1V77KMK1C+Y
-	xHnr69n9ToN31mx4blmmnQjm+DDYFjvlr8A/56LLMxF9DTIcC4Cr2cTSWSfdBLeD32Sg7GtRb4S
-	E50eU8Z/Rfxg/G8XMh08mzUvaei0yXCCWQzpegx0L2os/s0JpFCS5VI6M+vqtDEqesfMY6aPxs4
-	5JcXX8m7b9MNKRZ6auarN4OgRfFUt/2jED1E7Rk0OUSxN4VeMWMGAzhMgdxjTpGA+zEtmiQg/GW
-	UK2FD624opKZxto=
-X-Received: by 2002:a05:600c:4e43:b0:480:1d0b:2d32 with SMTP id 5b1f17b1804b1-48a98638227mr256258935e9.12.1777991878651;
-        Tue, 05 May 2026 07:37:58 -0700 (PDT)
-Received: from ?IPV6:2a00:1028:838d:271e:8e3b:4aff:fe4c:a100? (dynamic-2a00-1028-838d-271e-8e3b-4aff-fe4c-a100.ipv6.o2.cz. [2a00:1028:838d:271e:8e3b:4aff:fe4c:a100])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8ebb2fa5sm309081525e9.12.2026.05.05.07.37.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2026 07:37:58 -0700 (PDT)
-Message-ID: <28bb0f74-8721-4e53-ad89-87b2a78623b2@suse.com>
-Date: Tue, 5 May 2026 16:37:56 +0200
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="OxH5iBec"
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id AA6A9CFFEE;
+	Tue, 05 May 2026 17:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1778000993;
+	bh=JME30EqI9Oa5nd9X+jXdCtKM53zsahsE6SloH0sWIsQ=;
+	h=From:To:Cc:Subject:Date;
+	b=OxH5iBecNhNPv/fsyArIHSOs50UmZpgSC+Gr69EUqFDlcBykPD/TR+C3/purZaSyg
+	 DyeTgbtoe5JSD1gip7bC0O+QN9mZdGISQI/mqWYr4OJFxFTjF8TqbDTHeNRbpSi20k
+	 b7Gdk6ac14edfT+wR5kmclfbP2xsqCOdYlSD4dKQ=
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH v6 0/7] locking: contended_release tracepoint instrumentation
+Date: Tue,  5 May 2026 17:09:29 +0000
+Message-ID: <cover.1777999826.git.d@ilvokhin.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] module/kallsyms: sort function symbols and use
- binary search
-To: Petr Mladek <pmladek@suse.com>
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>, linux-modules@vger.kernel.org,
- Sami Tolvanen <samitolvanen@google.com>, Luis Chamberlain
- <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
- Daniel Gomez <da.gomez@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Jordan Rome <linux@jordanrome.com>,
- Viktor Malik <vmalik@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>
-References: <20260327110005.16499-1-stf_xl@wp.pl>
- <20260327110005.16499-2-stf_xl@wp.pl> <afnhidn7K7dZ_cPh@pathway.suse.cz>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <afnhidn7K7dZ_cPh@pathway.suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/5/26 2:24 PM, Petr Mladek wrote:
-> On Fri 2026-03-27 12:00:05, Stanislaw Gruszka wrote:
->> Module symbol lookup via find_kallsyms_symbol() performs a linear scan
->> over the entire symtab when resolving an address. The number of symbols
->> in module symtabs has grown over the years, largely due to additional
->> metadata in non-standard sections, making this lookup very slow.
->>
->> Improve this by separating function symbols during module load, placing
->> them at the beginning of the symtab, sorting them by address, and using
->> binary search when resolving addresses in module text.
->>
->> This also should improve times for linear symbol name lookups, as valid
->> function symbols are now located at the beginning of the symtab.
->>
->> The cost of sorting is small relative to module load time. In repeated
->> module load tests [1], depending on .config options, this change
->> increases load time between 2% and 4%. With cold caches, the difference
->> is not measurable, as memory access latency dominates.
->>
->> The sorting theoretically could be done in compile time, but much more
->> complicated as we would have to simulate kernel addresses resolution
->> for symbols, and then correct relocation entries. That would be risky
->> if get out of sync.
->>
->> The improvement can be observed when listing ftrace filter functions.
->>
->> Before:
->>
->> root@nano:~# time cat /sys/kernel/tracing/available_filter_functions | wc -l
->> 74908
->>
->> real	0m1.315s
->> user	0m0.000s
->> sys	0m1.312s
->>
->> After:
->>
->> root@nano:~# time cat /sys/kernel/tracing/available_filter_functions | wc -l
->> 74911
->>
->> real	0m0.167s
->> user	0m0.004s
->> sys	0m0.175s
->>
->> (there are three more symbols introduced by the patch)
->>
->> For livepatch modules, the symtab layout is preserved and the existing
->> linear search is used. For this case, it should be possible to keep
->> the original ELF symtab instead of copying it 1:1, but that is outside
->> the scope of this patch.
-> 
-> What is the exact motivation for the special handling of livepatch modules,
-> please?
-> 
-> Honestly, I am always a bit lost in the various symbol tables. It is
-> possile that I have got something wrong.
-> 
-> Anyway, my understanding is that there are two aspects which are important
-> for livepatches:
-> 
-> 1. Livepatches need to preserve special symbols which are used to
->    relocate symbols which were local in the original code, see
->    Documentation/livepatch/module-elf-format.rst
-> 
->    IMHO, this is why layout_symtab() computes space for all core
->    symbols in livepatch modules and copies them in add_kallsyms().
-> 
->    The symtab is normally released when the module is loaded.
->    But livepatch modules make its own copy of the important
->    parts, see copy_module_elf().
-> 
->    IMHO, the sorting of function symbols vs other symbols does
->    not matter here. I believe that the special relocation
->    symbols are not affected by this.
+The existing contention_begin/contention_end tracepoints fire on the
+waiter side. The lock holder's identity and stack can be captured at
+contention_begin time (e.g. perf lock contention --lock-owner), but
+this reflects the holder's state when a waiter arrives, not when the
+lock is actually released.
 
-I'm not sure if I fully follow the conclusion in this point. My
-understanding is that .klp.rela sections still refer to their special
-symbols in the symbol table via Elf_Rela::r_info. If the symbol table is
-filtered or reordered, these references will end up pointing to
-incorrect symbols.
+This series adds a contended_release tracepoint that fires on the
+holder side when a lock with waiters is released. This provides:
 
-This is also described in Documentation/livepatch/module-elf-format.rst,
-section "4.1 A livepatch module's symbol table".
+- Hold time estimation: when the holder's own acquisition was
+  contended, its contention_end (acquisition) and contended_release
+  can be correlated to measure how long the lock was held under
+  contention.
 
-> 
-> 
-> 2. Livepatches _rely on the sorting_ of symbols in the module.
->    The special relocation symbols might define a symbol position,
->    see
-> 
-> 	.klp.sym.objname.symbol_name,sympos
-> 
->    in the documentation. It defines the position of the symbol
->    when there are more symbols of the same name, see
->    klp_match_callback() in kernel/livepatch/core.c.
-> 
->    I am afraid that _this patch might break_ this when it moves
->    function symbols before non-funciton ones. I guess that
->    the symbols of the same name will not longer be groupped.
+- The holder's stack at release time, which may differ from what perf lock
+  contention --lock-owner captures if the holder does significant work between
+  the waiter's arrival and the unlock.
 
-I see. So if the module loader sorts the symbol table in a regular
-module and a livepatch module exists for that module, the livepatch may
-no longer function correctly. This means that the loader cannot even
-reorder the symbol table in regular modules.
+Note: for reader/writer locks, the tracepoint fires for every reader
+releasing while a writer is waiting, not only for the last reader.
+
+v5 -> v6:
+
+- Use trace_call__contended_release() instead of trace_contended_release(),
+  where appropriate to avoid a redundant static branch check when the caller
+  already guards with trace_contended_release_enabled().
+- Added acked-by from Paul.
+- Rebase on top of the fresh locking/core.
+
+v4 -> v5:
+
+- Split the combined spinning locks patch into separate qspinlock and
+  qrwlock patches (Paul E. McKenney).
+- Factor out __queued_read_unlock()/__queued_write_unlock() as a
+  separate preparatory commit, mirroring the queued_spin_release()
+  split (Paul E. McKenney).
+- Updated binary size numbers for qspinlock-only change.
+- Added Acked-by and Reviewed-by tags where appropriate.
+
+v3 -> v4:
+
+- Fix spurious events in __percpu_up_read(): guard with
+  rcuwait_active(&sem->writer) to avoid tracing during the RCU grace
+  period after a writer releases (Sashiko).
+- Fix possible use-after-free in semaphore up(): move
+  trace_contended_release() inside the sem->lock critical section
+  (Sashiko).
+- Fix build failure with CONFIG_PARAVIRT_SPINLOCKS=y: introduce
+  queued_spin_release() as the arch-overridable unlock primitive,
+  so queued_spin_unlock() can be a generic tracing wrapper. Convert
+  x86 (paravirt) and MIPS overrides (Sashiko).
+- Add EXPORT_TRACEPOINT_SYMBOL_GPL(contended_release) for module
+  support (Sashiko).
+- Split spinning locks patch: factor out queued_spin_release() as a
+  separate preparatory commit (Sashiko).
+- Make read unlock tracepoint behavior consistent across all
+  reader/writer lock types: fire for every reader releasing while
+  a writer is waiting (rwsem, rwbase_rt were previously last-reader
+  only).
+
+v2 -> v3:
+
+- Added new patch: extend contended_release tracepoint to queued spinlocks
+  and queued rwlocks (marked as RFC, requesting feedback). This is prompted by
+  Matthew Wilcox's suggestion to try to come up with generic instrumentation,
+  instead of instrumenting each "special" lock manually. See [1] for the
+  discussion.
+- Reworked tracepoint placement to fire before the lock is released and
+  before the waiter is woken where possible, for consistency with
+  spinning locks where there is no explicit wake (inspired by Usama Arif's
+  suggestion).
+- Remove unnecessary linux/sched.h include from trace/events/lock.h.
+
+RFC -> v2:
+
+- Add trace_contended_release_enabled() guard before waiter checks that
+  exist only for the tracepoint (Steven Rostedt).
+- Rename __percpu_up_read_slowpath() to __percpu_up_read() (Peter
+  Zijlstra).
+- Add extern for __percpu_up_read() (Peter Zijlstra).
+- Squashed tracepoint introduction and usage commits (Masami Hiramatsu).
+
+v5: https://lore.kernel.org/all/cover.1776350944.git.d@ilvokhin.com/
+v4: https://lore.kernel.org/all/cover.1774536681.git.d@ilvokhin.com/
+v3: https://lore.kernel.org/all/cover.1773858853.git.d@ilvokhin.com/
+v2: https://lore.kernel.org/all/cover.1773164180.git.d@ilvokhin.com/
+RFC: https://lore.kernel.org/all/cover.1772642407.git.d@ilvokhin.com/
+
+[1]: https://lore.kernel.org/all/aa7G1nD7Rd9F4eBH@casper.infradead.org/
+
+Dmitry Ilvokhin (7):
+  tracing/lock: Remove unnecessary linux/sched.h include
+  locking/percpu-rwsem: Extract __percpu_up_read()
+  locking: Add contended_release tracepoint to sleepable locks
+  locking: Factor out queued_spin_release()
+  locking: Add contended_release tracepoint to qspinlock
+  locking: Factor out __queued_read_unlock()/__queued_write_unlock()
+  locking: Add contended_release tracepoint to qrwlock
+
+ arch/mips/include/asm/spinlock.h         |  6 ++--
+ arch/x86/include/asm/paravirt-spinlock.h |  6 ++--
+ include/asm-generic/qrwlock.h            | 38 ++++++++++++++++++++++--
+ include/asm-generic/qspinlock.h          | 33 ++++++++++++++++++--
+ include/linux/percpu-rwsem.h             | 15 ++--------
+ include/trace/events/lock.h              | 18 ++++++++++-
+ kernel/locking/mutex.c                   |  4 +++
+ kernel/locking/percpu-rwsem.c            | 29 ++++++++++++++++++
+ kernel/locking/qrwlock.c                 | 16 ++++++++++
+ kernel/locking/qspinlock.c               |  8 +++++
+ kernel/locking/rtmutex.c                 |  1 +
+ kernel/locking/rwbase_rt.c               |  6 ++++
+ kernel/locking/rwsem.c                   | 10 +++++--
+ kernel/locking/semaphore.c               |  4 +++
+ 14 files changed, 167 insertions(+), 27 deletions(-)
 
 -- 
-Thanks,
-Petr
+2.52.0
+
