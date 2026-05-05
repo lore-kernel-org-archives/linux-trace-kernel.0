@@ -1,60 +1,68 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C042DCF57;
-	Tue,  5 May 2026 14:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B9F248F64
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 May 2026 14:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777991164; cv=none; b=C/DmbEPrrY/5iW3PXaxEJj7GBR8LiBiFmmspCQYHFsaUPgg6Ieu6le/3rLVmmID5R9lSBSggGxvDOJTOeHCUuKTC46trhSjRI/yAo+wh1lh/E19OzTJF0uRREsDkfqx7oriF/QmrxMKAxBi3PNz/g64k6r8aswv7mpJ00YpEY20=
+	t=1777991881; cv=none; b=UOQQzmiSXnxvqmO+Aln655L36NA2A31Wl4vI9UiLLjKyYrQy/1PaIh+FPk2rpiv3wQUYNd+YrqD7mYy/LDFsThy76hnKeQAxNKqNq8qNluacMpVOkCyLqi2rcaNQxKh9HhgAxG4izQXDPN/cRghPW+AbHkwOJw2ArZbQdV9ohCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777991164; c=relaxed/simple;
-	bh=dVMLlvpIsPqrrJ5OGyjATjQGXN8IXebHgRZ82n1YKqE=;
+	s=arc-20240116; t=1777991881; c=relaxed/simple;
+	bh=JvUqTfqiAW9yC35/8X+aOZcYzssa6BCdLInlTa1/lkM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B09iPv0OF2VTk/I4MTQ45UBIiOUXqfPrFA/h5AQhkRDbiN06kY1VrsX1LektYEBEgMoSlMahlJMhBIGM7JegIM7PIqdYQylS9K6CBAHMHcMrLr4o9em4kg+6Jx3+CkhXWPT4RdjF2nGcwcDhb7hpSsyZUWm8+tCzR+ZQ2HM+6Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kCK8AOLU; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=oADHQADUv7RL7QVczy0VXTBXbPhHuHR7SKUOVwyS07ecuxHAg3PMj2M4sgQlQ2HuXPCoAJ2xhZepib8NGEUrdt9QMA8lH3ISSRoIM1QOxuTL6WFsyI6IyKrNPZcLp+5Ifpr5zBvJ6PJsc7Rfb8mbhjNk693kmo5XG6P3yLlaU4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bfOCfQwx; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kCK8AOLU"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6458GFvT3351555;
-	Tue, 5 May 2026 14:25:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=OcbaiP
-	rXeZHYc5M9HkIsXuvWd1b75GWDcR6c1FbMbYw=; b=kCK8AOLUroh6Op3oeyQ3tA
-	kzVZqVy8brV9VXXxeWMe1xe0uegxlWAP7GlX8ovDne5GCGOJ6mN9A3M0+tQFZE20
-	UTAuXEd/hKZHIZs8OG43OgomII2KZKukRUZem/GJs0sfy9YuMQpVUokP8VRGp6vL
-	JYE+nxrBRCmpjDntN+grlI7ctrouR/3JLVJDZB5W5tbJlHV+UI8bCPaHaeHLc8UF
-	TydQHg1610Pfo5WZB90/4C/nUKCa8SmXcog7SJZ71loAJvqR88Kk6S/w+8lgjgWF
-	u2G30tRfEWu8a/MYl7AjhmB16dpF+9ri5gKb0s98DPHx1vLFSdz/DlD+IgM1lFng
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9w6bs5k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 May 2026 14:25:06 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 645EOgrs014230;
-	Tue, 5 May 2026 14:25:05 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dwukqa509-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 May 2026 14:25:05 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 645EP1Rl29229442
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 May 2026 14:25:01 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A2A3F20043;
-	Tue,  5 May 2026 14:25:01 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0C4A020040;
-	Tue,  5 May 2026 14:25:01 +0000 (GMT)
-Received: from [9.52.200.195] (unknown [9.52.200.195])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 May 2026 14:25:00 +0000 (GMT)
-Message-ID: <d272218d-214d-4a13-8f45-dacd3e94f5dd@linux.ibm.com>
-Date: Tue, 5 May 2026 16:25:00 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bfOCfQwx"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-488a88aeec9so60387015e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 May 2026 07:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1777991879; x=1778596679; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rW/yHyxsN9QI7AveMhZMYM5ISMvZ0yqJBxdD/EhC5LQ=;
+        b=bfOCfQwxrawu82lUm1DRP/xOV/wBNJhWMJG6XVRH3eyQ8GucyHVVfJoXgIrrCTxt4l
+         A4WUC3p14+oyf0DBh8Q2uB8ZuK5O6D74Eg/k+BYtaQkG2f/nyMjmkhtup6UcM6LoPnmd
+         PK7ieHiGSTakBdqqZfr5yFNLdwIXU2oupKKg0y1uVGrSajVabDHBv56QJXPKyMMh6sHh
+         kSKTQSh398izPQkFWhRhHnH6D0aYnO+PSCXZbwEi9AhJs8GJkb/W0SH0RO1h7yLj+Ezw
+         Qe1VTjq1CsABEKRrKDQqU1GUuHYVCBYJr8ZrXRn7tNJITOr5OzFRNBev9pYcxc+W9+q3
+         XL/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777991879; x=1778596679;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rW/yHyxsN9QI7AveMhZMYM5ISMvZ0yqJBxdD/EhC5LQ=;
+        b=GsynKiyJWFMmM/NmtPGxpD3H8erkCjsJMMJ6+8wzj+t1QcT5JR95JUh8J8l3C4Yfvc
+         bMD7MNnSZKSY+HqIesk7j6w/eUqsnS9L9rKF8BeRhSeunCL756B1LbvyOSNoL+MgesQJ
+         PfVis/SNRslBjiuaTqMiFNRRu9j2RKIFuR+k89bL7bB0mD1s8blSgRc9gFt3CsvXkRsf
+         X58RXCl3xIeTslHjsxet6jX8/yZm86pjVGJcbpeJV82L3gyX9XMDAWsSvpWasQeu/0t/
+         A0BQsPZQYC8lMIk6k3wZ30O5w5+417OTssk0Rfj2HLgGB5IkqsNjepK4zgP77u9CsU9d
+         PBqA==
+X-Forwarded-Encrypted: i=1; AFNElJ/Rbo2TvM+FK6C6KY9ABLJDBhk+44BSzK/mYRjvpPDHJ4Rm/yB+VuOcK+UHFxS5dYGQpiDpPstwf0lVRVFh+Eo/qsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEi9HvzrDnMPpdRcJdQZ0FzII2Qi0EICdsEPe4uMaqU9FygGIX
+	ThDXgn3M/fP7OYoE07CNJ8wfAfSgi8mbu09URVxJFHUFw7M+pWNBf4x0Tr6Hlhi76eQ=
+X-Gm-Gg: AeBDiettWg9cglGQhSq+ac8+xtpafA8snxpTfH4b/1gkOtQXCJY5waaxp0xvlZ0V3vo
+	NKYH1qiHuwNo6YxdkljIwS7YrZ9cQVrr3JcmqL2FXEYChkyoBKNj/1LJRQs9dALOztIAiER2qWx
+	B3/mENj4x0oOxGi+GE8NgitTvX8jvO9ZQSAJ0X1FXR+opiFUvcs1qF6QfSAy+t9//fjsC8y676C
+	Z6MKCFLSJyK3xDA60sv40cqnyauoARugZvL4nD+fbYlPJzkMTiAtap1xMnYERU/+YB7zHAEf/vd
+	TOFy23P8BcMQ2zGnQtww6cEcWBgrDsW210agE6KbvJV8ajEWz8gYZghxQrLMCURo1V77KMK1C+Y
+	xHnr69n9ToN31mx4blmmnQjm+DDYFjvlr8A/56LLMxF9DTIcC4Cr2cTSWSfdBLeD32Sg7GtRb4S
+	E50eU8Z/Rfxg/G8XMh08mzUvaei0yXCCWQzpegx0L2os/s0JpFCS5VI6M+vqtDEqesfMY6aPxs4
+	5JcXX8m7b9MNKRZ6auarN4OgRfFUt/2jED1E7Rk0OUSxN4VeMWMGAzhMgdxjTpGA+zEtmiQg/GW
+	UK2FD624opKZxto=
+X-Received: by 2002:a05:600c:4e43:b0:480:1d0b:2d32 with SMTP id 5b1f17b1804b1-48a98638227mr256258935e9.12.1777991878651;
+        Tue, 05 May 2026 07:37:58 -0700 (PDT)
+Received: from ?IPV6:2a00:1028:838d:271e:8e3b:4aff:fe4c:a100? (dynamic-2a00-1028-838d-271e-8e3b-4aff-fe4c-a100.ipv6.o2.cz. [2a00:1028:838d:271e:8e3b:4aff:fe4c:a100])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8ebb2fa5sm309081525e9.12.2026.05.05.07.37.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2026 07:37:58 -0700 (PDT)
+Message-ID: <28bb0f74-8721-4e53-ad89-87b2a78623b2@suse.com>
+Date: Tue, 5 May 2026 16:37:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,103 +70,131 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 0/6] x86/vdso: VDSO updates and fixes for sframes
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Indu Bhagat <ibhagatgnu@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dylan Hatch <dylanbhatch@google.com>,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Kees Cook <kees@kernel.org>, Sam James <sam@gentoo.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc: bpf@vger.kernel.org, linux-mm@kvack.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Carlos O'Donell" <codonell@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-        "Liam R. Howlett" <liam@infradead.org>,
-        Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-References: <20260505123340.3770025-1-jremus@linux.ibm.com>
+Subject: Re: [PATCH v2 2/2] module/kallsyms: sort function symbols and use
+ binary search
+To: Petr Mladek <pmladek@suse.com>
+Cc: Stanislaw Gruszka <stf_xl@wp.pl>, linux-modules@vger.kernel.org,
+ Sami Tolvanen <samitolvanen@google.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+ Daniel Gomez <da.gomez@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Jordan Rome <linux@jordanrome.com>,
+ Viktor Malik <vmalik@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>
+References: <20260327110005.16499-1-stf_xl@wp.pl>
+ <20260327110005.16499-2-stf_xl@wp.pl> <afnhidn7K7dZ_cPh@pathway.suse.cz>
 Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260505123340.3770025-1-jremus@linux.ibm.com>
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <afnhidn7K7dZ_cPh@pathway.suse.cz>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=XPQAjwhE c=1 sm=1 tr=0 ts=69f9fdc2 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
- a=meVymXHHAAAA:8 a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-ORIG-GUID: OcluZmLD_x4gMqANWuezmnnGoe4w0tND
-X-Proofpoint-GUID: li-2q0iBa1957f3jFzff7LHFnhy2TzmZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA1MDEzNSBTYWx0ZWRfX6Qsc9D8QpNTK
- eVoHxsAXC1MYjkQwzPmUOAQB7ApXGRsFCVGUrUanv9+LtbWXKa8Xs78P+2QBoI1CTlDqq09Gjiz
- oZqcKyVJKtik+oZty+qxqmlj+kMooiyKvLBq+InO1eejVaKGNq7kmyFxN9lSCSsQFrc4dF6RmJM
- ZLddMM8FdmtlaVClPXWPZuFaMqChGvOV0aqCZrB3eWqdvV5q2SYrpm8lyfm+5j0TDhgpvk3sbNX
- W+Zddmf5VVe4Er1Znp8kaceVNpCH5C7lv68OsKF5h8pavFM3mfEi/7YBtcAQ5KrdgqDI5bKQGI/
- RdeauxQ6L2iNSOEYrMkYy6yNVNn4IJ0vz31CtwDVxm+EgcCNB/XWFsrg/UBVQjH9UYxM5/6ryUe
- 7QymP34wcEkCc59eKn2qNka3xSO9ODNF2Ucp6Oi5iOXR0b5fDcoAFRink0RblFi82cdTiW7a9Ys
- no2tKJkXF/og3584JYA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-05_02,2026-04-30_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605050135
+Content-Transfer-Encoding: 7bit
 
-On 5/5/2026 2:33 PM, Jens Remus wrote:
-> This enables generation of SFrame V3 stack trace information for VDSO on
-> x86-64.  It's a continuation of Josh's and Steve's work:
+On 5/5/26 2:24 PM, Petr Mladek wrote:
+> On Fri 2026-03-27 12:00:05, Stanislaw Gruszka wrote:
+>> Module symbol lookup via find_kallsyms_symbol() performs a linear scan
+>> over the entire symtab when resolving an address. The number of symbols
+>> in module symtabs has grown over the years, largely due to additional
+>> metadata in non-standard sections, making this lookup very slow.
+>>
+>> Improve this by separating function symbols during module load, placing
+>> them at the beginning of the symtab, sorting them by address, and using
+>> binary search when resolving addresses in module text.
+>>
+>> This also should improve times for linear symbol name lookups, as valid
+>> function symbols are now located at the beginning of the symtab.
+>>
+>> The cost of sorting is small relative to module load time. In repeated
+>> module load tests [1], depending on .config options, this change
+>> increases load time between 2% and 4%. With cold caches, the difference
+>> is not measurable, as memory access latency dominates.
+>>
+>> The sorting theoretically could be done in compile time, but much more
+>> complicated as we would have to simulate kernel addresses resolution
+>> for symbols, and then correct relocation entries. That would be risky
+>> if get out of sync.
+>>
+>> The improvement can be observed when listing ftrace filter functions.
+>>
+>> Before:
+>>
+>> root@nano:~# time cat /sys/kernel/tracing/available_filter_functions | wc -l
+>> 74908
+>>
+>> real	0m1.315s
+>> user	0m0.000s
+>> sys	0m1.312s
+>>
+>> After:
+>>
+>> root@nano:~# time cat /sys/kernel/tracing/available_filter_functions | wc -l
+>> 74911
+>>
+>> real	0m0.167s
+>> user	0m0.004s
+>> sys	0m0.175s
+>>
+>> (there are three more symbols introduced by the patch)
+>>
+>> For livepatch modules, the symtab layout is preserved and the existing
+>> linear search is used. For this case, it should be possible to keep
+>> the original ELF symtab instead of copying it 1:1, but that is outside
+>> the scope of this patch.
 > 
->    https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
->    https://lore.kernel.org/all/20250425023750.669174660@goodmis.org/
+> What is the exact motivation for the special handling of livepatch modules,
+> please?
 > 
-> This series focuses only on the VDSO code. They are helpful fixes
-> and updates that doesn't rely on sframes (although the last patch
-> is sframe related).
+> Honestly, I am always a bit lost in the various symbol tables. It is
+> possile that I have got something wrong.
 > 
-> This series applies on top of tip:master (a375022d6383):
+> Anyway, my understanding is that there are two aspects which are important
+> for livepatches:
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+> 1. Livepatches need to preserve special symbols which are used to
+>    relocate symbols which were local in the original code, see
+>    Documentation/livepatch/module-elf-format.rst
 > 
-> Like the unwind user sframe series [1] it depends on the binutils 2.46
-> release to be used to build the VDSO with SFrame V3 stack trace
-> information (using the assembler option --gsframe-3).
+>    IMHO, this is why layout_symtab() computes space for all core
+>    symbols in livepatch modules and copies them in add_kallsyms().
 > 
-> [1]: [PATCH v14 00/19] unwind_deferred: Implement sframe handling,
->     https://lore.kernel.org/all/20260505121718.3572346-1-jremus@linux.ibm.com/
+>    The symtab is normally released when the module is loaded.
+>    But livepatch modules make its own copy of the important
+>    parts, see copy_module_elf().
 > 
-> Changes in v10:
-> - Rebased on tip:master (a375022d6383).
-Apologies for the incorrect series version in the cover letter.
+>    IMHO, the sorting of function symbols vs other symbols does
+>    not matter here. I believe that the special relocation
+>    symbols are not affected by this.
 
-Regards,
-Jens
+I'm not sure if I fully follow the conclusion in this point. My
+understanding is that .klp.rela sections still refer to their special
+symbols in the symbol table via Elf_Rela::r_info. If the symbol table is
+filtered or reordered, these references will end up pointing to
+incorrect symbols.
+
+This is also described in Documentation/livepatch/module-elf-format.rst,
+section "4.1 A livepatch module's symbol table".
+
+> 
+> 
+> 2. Livepatches _rely on the sorting_ of symbols in the module.
+>    The special relocation symbols might define a symbol position,
+>    see
+> 
+> 	.klp.sym.objname.symbol_name,sympos
+> 
+>    in the documentation. It defines the position of the symbol
+>    when there are more symbols of the same name, see
+>    klp_match_callback() in kernel/livepatch/core.c.
+> 
+>    I am afraid that _this patch might break_ this when it moves
+>    function symbols before non-funciton ones. I guess that
+>    the symbols of the same name will not longer be groupped.
+
+I see. So if the module loader sorts the symbol table in a regular
+module and a livepatch module exists for that module, the livepatch may
+no longer function correctly. This means that the loader cannot even
+reorder the symbol table in regular modules.
+
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+Thanks,
+Petr
