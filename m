@@ -1,164 +1,296 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F107C4A340F;
-	Tue,  5 May 2026 17:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A612C3C5DC5
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 May 2026 22:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778001005; cv=none; b=gqsKncyK/jFF279xiUH4i7BQnFM9xp8ST8Hlmd7VFy7NvuSASm3bAsAfXHQ0+pYd9dI6w3v9IWO50YN7kgpljHInvlB/Ue9Yej5Wa3scRCEn3K3PHpPvYecYp1BpHJSnGAnJFApCmweM2uyaBtgOj0te1NWGOLD50lFdPYClubI=
+	t=1778019700; cv=none; b=kjOn9QMPc1XGNDxGgwqYE03JAGzco6YOGCc4AbyVUSbACpcra3mz1FymyOT3OCKc4+QbuElmuZS2ooxWoGMN3ZMR6IjNukDe5yTs0/VYhbygzxU7Ls1juBjopY7Gwar3jJ7jYAQ60bDcXqA6ohkYNGSBXuj3KoQ958s3u7qZQjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778001005; c=relaxed/simple;
-	bh=N8txh3pEvw+ELeHqMi98HdQAesu/7T09Grff+J+0IVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KqaNk+aQmNfvEI6KGDXOaBzqMv62z6nyiTuaF3MADeD9CYa7DbeczZbmlKXrZn3qkqfSC6RthpzrhiZDafSfzIZfnKy8ygfuFxlLMCRRFpBGNKVOobBvE41HumYKvm8T9uVXc28DJlp57qv0Q4yJ5ReAwxx5MDuiXshpNz/sM+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=1OW0Qc3m; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1778019700; c=relaxed/simple;
+	bh=zOuCto/ei+q5X9zizDWicsGgHsnCs3KdS/blOqZ3EtY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=XTf9HI5lpdHewUdnNVE1SD3yBNO3nw4X8F1TqnXnZ2RW48KtEQiI/JMgpYmY2a+mTbgmPOJpAYuvABCnxkq64OskzGjHBkU8M7StIHgzvA/P2uFJ5eG0fUsxKf2wyJshF/yAejC/dTEScFCIjCPs035EWE7pxX0ka4FoxFFNxeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhDzHdpI; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="1OW0Qc3m"
-Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id A1FB9D000F;
-	Tue, 05 May 2026 17:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1778000995;
-	bh=5x6FaQ8RAPWiFTMehIyIvGpXzwgZYwE2l4ogWqmfm5I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=1OW0Qc3mLC4qVMBQ1Uc315DJ5RE3HdXkq8W9njLbvKRJQ08noQiB1vYfPi+KCYhwr
-	 31pqiATb64htMJIHCUdBhkjmLNs49yVSXJkrXzmdhsqj62zVihyRvPPrrMxT3pARkb
-	 4Mpf91HRD+GSXIZ31isxB5rn4U4bOLuKGOKx+XtE=
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [PATCH v6 7/7] locking: Add contended_release tracepoint to qrwlock
-Date: Tue,  5 May 2026 17:09:36 +0000
-Message-ID: <b67fda8e847fff72da05eff7f799019f8d17ce21.1777999826.git.d@ilvokhin.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <cover.1777999826.git.d@ilvokhin.com>
-References: <cover.1777999826.git.d@ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhDzHdpI"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3870778358aso40555961fa.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 May 2026 15:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778019697; x=1778624497; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
+        b=dhDzHdpIngACreNbzmbm8RCTIW8zTkMR7G79zhBScFUHXStxwQkbuMfibjp3A5hkb7
+         VY3gq/jXXPJX0ubyimF6ucvb5UKE0NmZTkVcfeHg7Usbq443o+75yUrmA72uYV1vcKn/
+         6M7/X+8D9m073BIkO9sFGATy1oHktJ7AjRuzhsZW/tvtgO8k4lASmElJVpysbsjfqKs7
+         si/GDUhTLmuikvwccp96TYSor5G70rqgIh0BiAhHF07mIccyEH8ZNL2Aby29hqk4dvzd
+         uLMd33ZifyA0qp8QnR4lNnjg8P6fuLaFXpehFwqydeJB0wVfz4TI/p3pOPOBY/jWzqTo
+         ii1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778019697; x=1778624497;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
+        b=hqEtKjkAeasDnJKGwq4r4vUtEJYVwmPAIfrg/AN7I0BWJkIHmX6dkdtpwFxVer9HEE
+         C4mNw4Yu9tSZQaT/AmJrSdvM/wMnxOejymc3RcVCvvu+WUr3LT3uObrDrYRMBgUk6ZW4
+         /e8YdpKwCFXKJ1J0mjq/nDTWvd54sX0+SJ1RWmtFkvqeSi/OVbyNKta26CYghPfqFNaL
+         /IbCyGJsAXshbzGjrZrQA2/SZ8AC5Pde9+8xIOpAUrKn6oJRYAbrKY1akElZPDMhk4lF
+         AHOq59iuomPMeuGHQ4pYL1S9ARxgvehMTqVdb7GLCdJoszmwv+Sa7ikX+vfetr0tnLXw
+         ykLw==
+X-Forwarded-Encrypted: i=1; AFNElJ+asZ6agYKpYmeIJL+TensleqgNYCDN5qM7XJg21CscibremhIdqN1tJnZpyvtZBcJYmd9WEYe6GLTikYuQmfJPQS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb7meGJ12y2OUXCKjLF7SrvlLcT5BM4iv1HEAQsiDN7x0GAjuC
+	oudv0aPIwVdlaCxeyseZmtH7a2WhVXCZoJwKe2Fh+LvlwYoWk6ZQsA9u
+X-Gm-Gg: AeBDievlwjdJ/1CWWgFyh2egPs2IcVKt8yQud59vyaBpI7no04+UmQJOKHqcdk/J2B7
+	5Y4jaJxHoJuDYlGwEhYP2YcM3iCYc3Czl7afQoaZdwlVLKqH+P+GrICJlNS1/8WLYaOvIyuKUH6
+	WG8h1GxyzCSL50t4oKYRwRiQ9Z6l10xF6XKnFmsd+mPDJy43VlywXDgUgwOLKLjOs1akd9BMrDh
+	D0u80sL3pO5lym2g1W39Jbmgs0C7UxVjmBhNJTKuyvpl5kjzi9Zdi4vGPgls7Dl+d0Jt7tW3NSB
+	a8bSqIDWluHnVePQdcFLUDDknK7oYBTap0i2gPBwLtX6tNxocpLterZbpPu3Du+rQHN7Kredhji
+	Z3YCqJk9A2riotzkHnhnAORAeU8h7kVHc4rPrYowFeWGGlag7iLLSMwv4DSiI29buE8YbeszOuj
+	aFsL3r58k9ONZooI7n3N8QiFQbAoJbfUe2cXzroIUSHQZnOOuxZm2QnVOVt6E+HHPMvjGk9toW7
+	KWlbljN63MbqC3xrvmXmZRfEQPyroZQFSglV4lO
+X-Received: by 2002:a05:651c:4210:b0:393:8b23:a194 with SMTP id 38308e7fff4ca-393c41cedeemr3503181fa.19.1778019696437;
+        Tue, 05 May 2026 15:21:36 -0700 (PDT)
+Received: from smtpclient.apple (h-155-4-132-115.NA.cust.bahnhof.se. [155.4.132.115])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3936108fb80sm46308161fa.6.2026.05.05.15.21.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 May 2026 15:21:35 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.400.21\))
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
+Date: Wed, 6 May 2026 00:21:23 +0200
+Cc: lsf-pc@lists.linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org,
+ cgroups@vger.kernel.org,
+ linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org,
+ damon@lists.linux.dev,
+ kernel-team@meta.com,
+ gregkh@linuxfoundation.org,
+ rafael@kernel.org,
+ dakr@kernel.org,
+ dave@stgolabs.net,
+ jonathan.cameron@huawei.com,
+ dave.jiang@intel.com,
+ alison.schofield@intel.com,
+ vishal.l.verma@intel.com,
+ Ira Weiny <ira.weiny@intel.com>,
+ dan.j.williams@intel.com,
+ longman@redhat.com,
+ akpm@linux-foundation.org,
+ david@kernel.org,
+ lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com,
+ vbabka@suse.cz,
+ rppt@kernel.org,
+ Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>,
+ osalvador@suse.de,
+ ziy@nvidia.com,
+ matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com,
+ rakie.kim@sk.com,
+ byungchul@sk.com,
+ ying.huang@linux.alibaba.com,
+ apopple@nvidia.com,
+ axelrasmussen@google.com,
+ yuanchu@google.com,
+ weixugc@google.com,
+ yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk,
+ mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com,
+ tj@kernel.org,
+ hannes@cmpxchg.org,
+ mkoutny@suse.com,
+ jackmanb@google.com,
+ sj@kernel.org,
+ baolin.wang@linux.alibaba.com,
+ npache@redhat.com,
+ ryan.roberts@arm.com,
+ dev.jain@arm.com,
+ baohua@kernel.org,
+ lance.yang@linux.dev,
+ muchun.song@linux.dev,
+ xu.xin16@zte.com.cn,
+ chengming.zhou@linux.dev,
+ jannh@google.com,
+ linmiaohe@huawei.com,
+ nao.horiguchi@gmail.com,
+ pfalcato@suse.de,
+ David Rientjes <rientjes@google.com>,
+ shakeel.butt@linux.dev,
+ riel@surriel.com,
+ harry.yoo@oracle.com,
+ cl@gentwo.org,
+ roman.gushchin@linux.dev,
+ chrisl@kernel.org,
+ kasong@tencent.com,
+ shikemeng@huaweicloud.com,
+ nphamcs@gmail.com,
+ bhe@redhat.com,
+ zhengqi.arch@bytedance.com,
+ terry.bowman@amd.com,
+ Yiannis Nikolakopoulos <Yiannis@zptcorp.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <21B8D62E-38AB-4FA5-8942-DA4417A7E7E9@gmail.com>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+To: Gregory Price <gourry@gourry.net>
+X-Mailer: Apple Mail (2.3864.400.21)
 
-Extend the contended_release tracepoint to queued rwlocks, using the
-same out-of-line traced unlock approach as queued spinlocks.
 
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- include/asm-generic/qrwlock.h | 22 ++++++++++++++++++++++
- kernel/locking/qrwlock.c      | 16 ++++++++++++++++
- 2 files changed, 38 insertions(+)
+> On 22 Feb 2026, at 09:48, Gregory Price <gourry@gourry.net> wrote:
+>=20
+> Topic type: MM
+>=20
+> Presenter: Gregory Price <gourry@gourry.net>
+>=20
+> This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
+> managed by the buddy allocator but excluded from normal allocations.
+>=20
+> I present it with an end-to-end Compressed RAM service (mm/cram.c)
+> that would otherwise not be possible (or would be considerably more
+> difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
+>=20
+>=20
+> TL;DR
+> =3D=3D=3D
+>=20
+> N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
+> explicit holes in that isolation to do useful things we couldn't do
+> before without re-implementing entire portions of mm/ in a driver.
+>=20
+>=20
+> /* This is my memory. There are many like it, but this one is mine. */
+> rc =3D add_private_memory_driver_managed(nid, start, size, name, =
+flags,
+>                                       online_type, private_context);
+>=20
+> page =3D alloc_pages_node(nid, __GFP_PRIVATE, 0);
+>=20
+> /* Ok but I want to do something useful with it */
+> static const struct node_private_ops ops =3D {
+>        .migrate_to     =3D my_migrate_to,
+>        .folio_migrate  =3D my_folio_migrate,
+>        .flags =3D NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
+> };
+> node_private_set_ops(nid, &ops);
+>=20
+> /* And now I can use mempolicy with my memory */
+> buf =3D mmap(...);
+> mbind(buf, len, mode, private_node, ...);
+> buf[0] =3D 0xdeadbeef;  /* Faults onto private node */
+>=20
+> /* And to be clear, no one else gets my memory */
+> buf2 =3D malloc(4096);  /* Standard allocation */
+> buf2[0] =3D 0xdeadbeef; /* Can never land on private node */
+>=20
+> /* But i can choose to migrate it to the private node */
+> move_pages(0, 1, &buf, &private_node, NULL, ...);
+>=20
+> /* And more fun things like this */
+>=20
+>=20
+> Patchwork
+> =3D=3D=3D
+> A fully working branch based on cxl/next can be found here:
+> https://github.com/gourryinverse/linux/tree/private_compression
+>=20
+> A QEMU device which can inject high/low interrupts can be found here:
+> https://github.com/gourryinverse/qemu/tree/compressed_cxl_clean
+>=20
+> The additional patches on these branches are CXL and DAX driver
+> housecleaning only tangentially relevant to this RFC, so i've
+> omitted them for the sake of trying to keep it somewhat clean
+> here.  Those patches should (hopefully) be going upstream anyway.
+>=20
+> Patches 1-22: Core Private Node Infrastructure
+>=20
+>  Patch  1:      Introduce N_MEMORY_PRIVATE scaffolding
+>  Patch  2:      Introduce __GFP_PRIVATE
+>  Patch  3:      Apply allocation isolation mechanisms
+>  Patch  4:      Add N_MEMORY nodes to private fallback lists
+>  Patches 5-9:   Filter operations not yet supported
+>  Patch 10:      free_folio callback
+>  Patch 11:      split_folio callback
+>  Patches 12-20: mm/ service opt-ins:
+>                   Migration, Mempolicy, Demotion, Write Protect,
+>                   Reclaim, OOM, NUMA Balancing, Compaction,
+>                   LongTerm Pinning
+>  Patch 21:      memory_failure callback
+>  Patch 22:      Memory hotplug plumbing for private nodes
+>=20
+> Patch 23: mm/cram -- Compressed RAM Management
+>=20
+> Patches 24-27: CXL Driver examples
+>  Sysram Regions with Private node support
+>  Basic Driver Example: (MIGRATION | MEMPOLICY)
+>  Compression Driver Example (Generic)
+>=20
+Hi,
 
-diff --git a/include/asm-generic/qrwlock.h b/include/asm-generic/qrwlock.h
-index 4b627bafba8b..274c19006125 100644
---- a/include/asm-generic/qrwlock.h
-+++ b/include/asm-generic/qrwlock.h
-@@ -14,6 +14,7 @@
- #define __ASM_GENERIC_QRWLOCK_H
- 
- #include <linux/atomic.h>
-+#include <linux/tracepoint-defs.h>
- #include <asm/barrier.h>
- #include <asm/processor.h>
- 
-@@ -35,6 +36,10 @@
-  */
- extern void queued_read_lock_slowpath(struct qrwlock *lock);
- extern void queued_write_lock_slowpath(struct qrwlock *lock);
-+extern void queued_read_unlock_traced(struct qrwlock *lock);
-+extern void queued_write_unlock_traced(struct qrwlock *lock);
-+
-+DECLARE_TRACEPOINT(contended_release);
- 
- /**
-  * queued_read_trylock - try to acquire read lock of a queued rwlock
-@@ -115,6 +120,17 @@ static __always_inline void __queued_read_unlock(struct qrwlock *lock)
-  */
- static inline void queued_read_unlock(struct qrwlock *lock)
- {
-+	/*
-+	 * Trace and unlock are combined in the traced unlock variant so
-+	 * the compiler does not need to preserve the lock pointer across
-+	 * the function call, avoiding callee-saved register save/restore
-+	 * on the hot path.
-+	 */
-+	if (tracepoint_enabled(contended_release)) {
-+		queued_read_unlock_traced(lock);
-+		return;
-+	}
-+
- 	__queued_read_unlock(lock);
- }
- 
-@@ -129,6 +145,12 @@ static __always_inline void __queued_write_unlock(struct qrwlock *lock)
-  */
- static inline void queued_write_unlock(struct qrwlock *lock)
- {
-+	/* See comment in queued_read_unlock(). */
-+	if (tracepoint_enabled(contended_release)) {
-+		queued_write_unlock_traced(lock);
-+		return;
-+	}
-+
- 	__queued_write_unlock(lock);
- }
- 
-diff --git a/kernel/locking/qrwlock.c b/kernel/locking/qrwlock.c
-index d2ef312a8611..5ae4b0372719 100644
---- a/kernel/locking/qrwlock.c
-+++ b/kernel/locking/qrwlock.c
-@@ -90,3 +90,19 @@ void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock)
- 	trace_contention_end(lock, 0);
- }
- EXPORT_SYMBOL(queued_write_lock_slowpath);
-+
-+void __lockfunc queued_read_unlock_traced(struct qrwlock *lock)
-+{
-+	if (queued_rwlock_is_contended(lock))
-+		trace_call__contended_release(lock);
-+	__queued_read_unlock(lock);
-+}
-+EXPORT_SYMBOL(queued_read_unlock_traced);
-+
-+void __lockfunc queued_write_unlock_traced(struct qrwlock *lock)
-+{
-+	if (queued_rwlock_is_contended(lock))
-+		trace_call__contended_release(lock);
-+	__queued_write_unlock(lock);
-+}
-+EXPORT_SYMBOL(queued_write_unlock_traced);
--- 
-2.52.0
+As I think this is about to be discussed in the conference, I thought
+to share some high level comments.
+
+I have tested this for some time on a device with compression (after =
+some
+necessary fixes for CXL RCD to work, that Greg helped me with).
+
+Overall, the isolation property that this provides is something I deem =
+necessary
+for this technology. Others are better placed to judge the MM plumbing
+itself, but I wanted to say that this functionality is an important =
+piece of the puzzle
+from the device/use-case side.
+
+For cram itself, as it is in this RFC, I think there is still =
+performance and
+value left on the table (as noted in the description), but I fully =
+understand Gregory=E2=80=99s=20
+premise in approaching it this way.
+
+<snip>
+>=20
+> Future CRAM : Loosening the read-only constraint
+> =3D=3D=3D
+>=20
+> The read-only model is safe but conservative.  For workloads where
+> compressed pages are occasionally written, the promotion fault adds
+> latency.  A future optimization could allow a tunable fraction of
+> compressed pages to be mapped writable, accepting some risk of
+> write-driven decompression in exchange for lower overhead.
+>=20
+> The private node ops make this straightforward:
+>=20
+>  - Adjust fixup_migration_pte to selectively skip
+>    write-protection.
+>  - Use the backpressure system to either revoke writable mappings,
+>    deny additional demotions, or evict when device pressure rises.
+I have some quick hacks playing with these ideas but I haven=E2=80=99t =
+had the time
+to test it thoroughly and get to something robust yet. I saw in another =
+thread
+that there is a follow up cooking which looks interesting.
+
+Thanks Greg for pushing this, and I=E2=80=99m happy to test more on HW =
+in our lab.
+
+Best,
+/Yiannis
+
+
 
