@@ -1,68 +1,58 @@
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2706266B46;
-	Tue,  5 May 2026 12:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683B8429814;
+	Tue,  5 May 2026 12:34:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777983974; cv=none; b=dVrJ/4Ab6PCQd5fNgg3P/JKyw2x8dtAjy/Wb+jiN6Ce66a3M+/XfHOVA+UI8lcmWvAVdgH7CGSm35ear4oKaJSpm5zbNxre8kvSSzDmEuBzsPYIRmfrEMdm9nZPsabaIuF8bnm1jXwTtWVK3Fs+v6s81gSS5KWi4b/aYx2Kw+0E=
+	t=1777984458; cv=none; b=Dh7H1VO3ySR/xMiPWUOBW5ctEBapMNDkG7UX074Nl+Kwb4ZygiZg3j5SOJM74ALbtVej+Jsm3MU1OQ/29x/97D3IjI1Ho/NCPrdo9AwP4taanbqK8vP6uxDrML6myEQc1BShqCZ8Ltp0Hwvaq+vsmkFn8tsvdz6r18Z8/5HrUnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777983974; c=relaxed/simple;
-	bh=SSzGheLxfH63C+BPoHDfVIFzYV3ZF/EWijsBQAasu28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qPrQb/19svLf7yNAjurC8/FrgNPVT3AQ2WPmq8x/1rTQfmnevhZ2Fem3Hcr/q7tNqmZCG3gmuVmOboHuA2ohHaqDhEkNdCH3ezhsJ1nou/O3sREria8j7MAErbSkz/Hz63+mKyloa9lOYWoK6fELIs8TgoJLrlXmSEr43F4nXbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GIM2vmV+; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1777984458; c=relaxed/simple;
+	bh=oq0FWBveUGSeMhAcXcysR6Ct95jkvRt2c4zuz73D7JY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dcn8NJIG2NGoBizUlcAYkquw7KPiAFGiCuoRFmai9gNML+slvIeQMslqrd2Wa8IWPqRb1kFtXqnWG5JYZMi7ac4LzndjSIphPUBnY7XPM7A06MRYFEIdJpYrK1xKecg3/n9fm77u4z/cXbFIFStIZkbpLU2++GwRhaWGnKXnabk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cHqo6+wg; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GIM2vmV+"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6458GFjI3351555;
-	Tue, 5 May 2026 12:25:46 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cHqo6+wg"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 645AdpE01590574;
+	Tue, 5 May 2026 12:33:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=iCOWk4
-	XOOb4vtcraw1379WOq3zAGck0wfj3WDT9TNJQ=; b=GIM2vmV+9wx6cP+IduZG3B
-	TI0bMI/1ja4/d9+QjEs9nzDQtIqhrhiRMix7vC5oJEucMH1Z6RHEQi36+sgtLfiY
-	iTTHnFwL8PrBQk9WWK/Rj6DELX36l2id3xcsK3XbmubmyCRKZQfztt/FhY6Ochhv
-	jbRnckLaHYXJu3kv9JrMHWIkcm5wi4DRx3UnShZ643ThGZguxNZfFZEDFemb1/Ag
-	/PoN9kgG5biOexWa5iQari9tI7faj58NCwCl9+KcvTXHC+WWJ1QmobcsrJ+y2Uol
-	CgrDUyisrCeHvUZBHImiQRW4peWLd2zv1JX9/8xsNU2pB/LVvHLZd6WYJqhleMNA
-	==
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=Zcp5Naq2FPjOG1kV+
+	prJJdfvki9PYjEAiotKE3UfUD8=; b=cHqo6+wg65TLT8wlMUXLNWeY9kET2Rq92
+	ExrSfHMUPlNSQ9r0ATQvmuS9pr1QfM6Fjyn3twJ0UnCpCzFHuRPwdMJcJsJ0MNGS
+	zH+5HA6WZUlbF8JWvpPYbLf4ywM6FLjFuM5m7i7wqAfaqeNMfDXYFTgJvFS8rplx
+	6w3rDdmqEVdCOhGQrcdz9Tm4JUy63lLWIdezTC/Yj4Z48+BwxFZpUJ3uWCOHyUAC
+	EzQXbN6m/U1749mWwZG2kZwG6LDwWVn8j3W4i55zVT+eUSak289PWma7KpAHKL/S
+	7m2ocxH0Aw1iL0Y3lDy2mowmxGqmzw4kyvF3It1+2EydLcp5UTpvA==
 Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9w6b8cg-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9xxk80h-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 May 2026 12:25:45 +0000 (GMT)
+	Tue, 05 May 2026 12:33:48 +0000 (GMT)
 Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 645COPCC016264;
-	Tue, 5 May 2026 12:25:44 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dwvkjsgwd-1
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 645COUn2016297;
+	Tue, 5 May 2026 12:33:48 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dwvkjsj53-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 May 2026 12:25:44 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 645CPeWe49545694
+	Tue, 05 May 2026 12:33:47 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 645CXiwK50200996
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 May 2026 12:25:40 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A12B42004D;
-	Tue,  5 May 2026 12:25:40 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 020592004E;
-	Tue,  5 May 2026 12:25:40 +0000 (GMT)
-Received: from [9.52.200.195] (unknown [9.52.200.195])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 May 2026 12:25:39 +0000 (GMT)
-Message-ID: <6eb9cbb6-c997-49ee-97a6-66a721073846@linux.ibm.com>
-Date: Tue, 5 May 2026 14:25:39 +0200
-Precedence: bulk
-X-Mailing-List: linux-trace-kernel@vger.kernel.org
-List-Id: <linux-trace-kernel.vger.kernel.org>
-List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/19] unwind_deferred: Implement sframe handling
+	Tue, 5 May 2026 12:33:44 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2ECE220040;
+	Tue,  5 May 2026 12:33:44 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B6C122005A;
+	Tue,  5 May 2026 12:33:43 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  5 May 2026 12:33:43 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
 To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -74,8 +64,9 @@ To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Kees Cook <kees@kernel.org>, Sam James <sam@gentoo.org>
-Cc: bpf@vger.kernel.org, linux-mm@kvack.org,
+        Kees Cook <kees@kernel.org>, Sam James <sam@gentoo.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, bpf@vger.kernel.org, linux-mm@kvack.org,
         Namhyung Kim <namhyung@kernel.org>,
         Andrii Nakryiko <andrii@kernel.org>,
         "Jose E. Marchesi" <jemarch@gnu.org>,
@@ -90,63 +81,88 @@ Cc: bpf@vger.kernel.org, linux-mm@kvack.org,
         Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
         Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
         Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-References: <20260505121718.3572346-1-jremus@linux.ibm.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260505121718.3572346-1-jremus@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: [PATCH v10 4/6] x86/vdso: Use SYM_FUNC_{START,END} in __kernel_vsyscall()
+Date: Tue,  5 May 2026 14:33:38 +0200
+Message-ID: <20260505123340.3770025-5-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260505123340.3770025-1-jremus@linux.ibm.com>
+References: <20260505123340.3770025-1-jremus@linux.ibm.com>
+Precedence: bulk
+X-Mailing-List: linux-trace-kernel@vger.kernel.org
+List-Id: <linux-trace-kernel.vger.kernel.org>
+List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=XPQAjwhE c=1 sm=1 tr=0 ts=69f9e1c9 cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA1MDExNCBTYWx0ZWRfXxDMSoAGXgzYO
+ vq72ttSVTmAfPDlZMmtjrN6qYw3na/XNuTmVHxJsp0hKzh/haxPgublgpq/0mnDlVcGuGx3RPRD
+ jah99+doIS/RAbrVfLhfRIw5TQLK68uN5iec/6jezTEpxAwxFs9kVuKWCPa9bQb7kWStY37S+8w
+ 89lEaV2/Muw3LucNZisk9nfxVmnezb/ocN9bXsDQa0gOzOxdbu6U17c30WqbR8NRrpjNbmc5mE+
+ FRVHxcjwGKq2DlQOSm8+D6H7OLvw0OVTlbkyQCwwMNnY2dTbeSA7i2tYFJAfW2UZ5LBug5omCvf
+ Qp9vRB5jMv+5gzOVB16jfsLhnvpslPaTtWhISX1k8dQghA+C40krPofrR6+CWYD4fH94nz84JjX
+ wTAEw8G0KaHGd+VgVM6uED6f2ZGuxNVd7AbY4y3KIOMiB308vWo/mkRZqw38P51XrtHYPiJwn/F
+ x7EEu1eYhaJhp8hFeEg==
+X-Proofpoint-ORIG-GUID: ASK8dr_FrGhfcBMP30XGKMQLlDwMWLNt
+X-Proofpoint-GUID: NtM52iwUiEW0KM0daYxvmN24QhXJCd1v
+X-Authority-Analysis: v=2.4 cv=ctWrVV4i c=1 sm=1 tr=0 ts=69f9e3ad cx=c_pps
  a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=lNt1pmmDVPWPLV_8P3QA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: PLhVfBiZn-aSt5WckmzZBbYhLO1gOr68
-X-Proofpoint-GUID: ybGT5PYqAhNLFmbquT73cbhc8mA2NIVX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA1MDExNCBTYWx0ZWRfX4WxFhGafDnwu
- h4Uo06QecP4Z+vTG+IBqEHK5gaPO6wxJxl9Xj3y/JBtxdsWpyGnyFFBxbKKoXMRx0aBFnzT0fJ+
- qkv+m8GgjVrSCFRe1VR26p5tq3ifVWviMJmFQ70DVSLUr4OILE9VSOybjGa2u76pBb6+4wnLBHN
- 9LMzeJ13JPvZmu6Bqieop9zrVlm7hAV4jNqEUTdM6Zbx1UkfjLo3m2ZR87T+L+kM7oHML4EnfCS
- DRH6KcksTuS8yfL3/sXkVP8UnNXurhrYUK1pVWKyahQQQrJPL5lnBIHMNq8cyum5XYYVFxpP3Vb
- hKX8V8cpgTm/cqtriKD4P/FZp/uWa9+7d1ZE7AO8b1JIkaqqXg/Cpm6Stnmyzr/YugH0hAk6l0f
- Vk8cUNNr24eRLvwuAHY+vf+Y/JeEUjYBxDvzXGcRmc7oQ8YdpP4hFApjPJEEv0tZP0kiKBfk1Pa
- R0bLN4WHhLyjB+DpeDA==
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=oGMlB6cnAAAA:8
+ a=VnNF1IyMAAAA:8 a=lbqDleH5ITP0AWbVeFgA:9 a=2JgSa4NbpEOStq-L5dxp:22
+ a=NdAtdrkLVvyUPsUoGJp4:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-05-05_02,2026-04-30_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605050114
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 clxscore=1015
+ suspectscore=0 impostorscore=0 spamscore=0 malwarescore=0 phishscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2605050114
 
-On 5/5/2026 2:16 PM, Jens Remus wrote:
-> This is the implementation of parsing the SFrame V3 stack trace information
-> from an .sframe section in an ELF file.  It's a continuation of Josh's and
-> Steve's work that can be found here:
-> 
->    https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
->    https://lore.kernel.org/all/20250827201548.448472904@kernel.org/
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-I forgot to mention that Steven is working on a system call for dynamic
-linkers to register .sframe for .text in dynamic libraries (DSOs), that
-is supposed to replace the last test-patch of this series.  Feedback
-on that is much appreciated as well:
+Use SYM_FUNC_{START,END} instead of all the boilerplate.  No functional
+change.
 
-[RFC][PATCH] unwind: Add stacktrace_setup system call
-https://lore.kernel.org/all/20260429114355.6c712e6a@gandalf.local.home/
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+ arch/x86/entry/vdso/vdso32/system_call.S | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-Regards,
-Jens
+diff --git a/arch/x86/entry/vdso/vdso32/system_call.S b/arch/x86/entry/vdso/vdso32/system_call.S
+index 9157cf9c5749..a90f4f7de396 100644
+--- a/arch/x86/entry/vdso/vdso32/system_call.S
++++ b/arch/x86/entry/vdso/vdso32/system_call.S
+@@ -9,11 +9,7 @@
+ #include <asm/alternative.h>
+ 
+ 	.text
+-	.globl __kernel_vsyscall
+-	.type __kernel_vsyscall,@function
+-	ALIGN
+-__kernel_vsyscall:
+-	CFI_STARTPROC
++SYM_FUNC_START(__kernel_vsyscall)
+ 
+ 	/*
+ 	 * If using int $0x80, there is no reason to muck about with the
+@@ -85,7 +81,5 @@ SYM_INNER_LABEL(int80_landing_pad, SYM_L_GLOBAL)
+ 	CFI_RESTORE		ecx
+ 	CFI_ADJUST_CFA_OFFSET	-4
+ 	RET
+-	CFI_ENDPROC
+-
+-	.size __kernel_vsyscall,.-__kernel_vsyscall
++SYM_FUNC_END(__kernel_vsyscall)
+ 	.previous
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+2.51.0
 
