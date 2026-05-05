@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481D23D3CF9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B641A3D47B5;
 	Tue,  5 May 2026 06:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777964392; cv=none; b=QIi2s5GbNj/e8SmgvS13RTKU+9tEJJAZUVpOIyHtm75fVbnQ5Wy79iuJxNF3IoQ/zGI1PYbzOWMNh+uilx6iqjzsAZd47k5mIsFeZJW9XA+2WNtDZwRVVfxfNoYkSOb2O0HqJrNBEtGM6p7FWq1ZQPGv1WUrdvf+lqHayUupDVs=
+	t=1777964392; cv=none; b=AbKJUeodJqZmltwdSOa7K/cU8fLKXn1wVXXPEb5EPDFEhtZQQVrTq7FQJrxbV00mUfwF/vIWTgXfNKce0YLQev8wBy10dS47mSs+6Qk4F9/VZGYRxbKGcSCeG11V+dlR4Bz+zlk58lChgg406tPA15+MN9qjCHXo8q4smZQvZR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777964392; c=relaxed/simple;
-	bh=cf0RU3WuKYTIBA84jc5vxeb+yrm7cB8R+1pGLH+QHVI=;
+	bh=0tAq7CQBHPx0us+lD3DuEThVKIKBhdFVtDWsSs/FwlA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HwDb4YyrQxKu9b0GUEy/x8IbJIV/XzTpEv8HI8K8ghKkdqDgkQ+CGg2N32+YkCxY9AsiCJq9Ia+q2eoW7tSFgBjm5HBNB4LPpIdkD1gyvhcrwMbzV1Z1dSIGRBI2Nn0Hxt9n5YLmMhP9Av9iJ/jc6/rELGu54gXTiS/Hqg3Vsm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L/jxJdlM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FQMYuHTj; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=s3fPwXmHsWtwYwSfNYaMlK3cArdEkoqh9FUbdKAVzxLwL0mbc7BW9gH0qQPwekXo/hiLk/jO49TWhGn+j1VsN0sMfnJ/6qCBy20n6vwjUCr+2MhF7BezCTpDr9O/67pzHPeuWL/dqtwYnAQXWKx8D1nfC93AUQ6Z8UERXn0Xi44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MjopkYT0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HsCbmMBm; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L/jxJdlM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FQMYuHTj"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MjopkYT0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HsCbmMBm"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1777964389;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oZvAARUCbhbQc1m8VF8+lZ5KeiOG6Z8eMzvbhAMX89U=;
-	b=L/jxJdlM2XKxIG76SD7voADiiW77ZpC1V/w8mf/gX5wNxdyt0bmHct7Ery6JX6R9bcbFJY
-	Rv2DPrXyJgdUKxsH29eSZm5q2WpPTkxqrHpFC4jJeqPj5uXKey6h8Nf37y9Gudb5vkSpPc
-	uIW9it7ezrIRvLV4trshJIeyHYKCzHyu3aFDp6pC42PbVkP2UGw46KINFgFTOMpAc9ZSDY
-	aFuJFjYZLSdI3AZRuRaK0mNG+Phg1XpjpqWj87zP2TD/RHySTPXE5pjISOiZ69mMCF8HlK
-	1yuL0Jyo3uBk4X5yCLGLocMJEDDiv4y4Z6cpyjkGH3b4+ln42HBmS0ULM3vN+Q==
+	bh=OvZccNxe7w2f8/qKwBVtd3LVm2MX2fiXB0AbdqeWY5k=;
+	b=MjopkYT0g8NKNaoEnR2uRMa1G0n6hfE9lnMf+9ADNFFhx+m8JxrvAyIVSE0f36jFxct5ck
+	599a4GfVfuxbsy9jzUVNBEL7R7A862SOgzE8w/BLyBwAs1S8D6k9pY3WEeBjDU+soDQVik
+	Ytea0CkATkNqYTQxA084U1uUWL42FN3j3RUA0xtEN26cM0Lzz/m7Vtw6HCOYj7IhdipQJk
+	pczMwkSQ83JizRFMf1mQNnZnO7gUobrl3mR5SiBrsuABSAERyfh2h0X8DZDnr+tdlRIwJG
+	QxhrGBironRaKZOpTPA18hFA6aCq+TkBfA2rXvy6kp0TIYeHJA9zljTkt2mz9A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1777964389;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oZvAARUCbhbQc1m8VF8+lZ5KeiOG6Z8eMzvbhAMX89U=;
-	b=FQMYuHTj3u+B+Ju0A2ca11HMsrPS8fnuP8ksaclIQbgGqD52begNLesrDqC+qdkvm1HcSX
-	Z0dY2LGb0QOsDdDA==
+	bh=OvZccNxe7w2f8/qKwBVtd3LVm2MX2fiXB0AbdqeWY5k=;
+	b=HsCbmMBmFQmx8KPTuDE6JlzO014cEPOXZw4lPPFbkXcQA6HQ/XITUEnaVW+oPDbXol42pf
+	88ls7y8tEDQx1dDA==
 To: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 11/13] verification/rvgen: Switch __create_matrix() to Lark
-Date: Tue,  5 May 2026 08:59:32 +0200
-Message-ID: <ecce293fd512ace18020a4e5412b958f843ba421.1777962130.git.namcao@linutronix.de>
+Subject: [PATCH 12/13] verification/rvgen: Remove the old state variables
+Date: Tue,  5 May 2026 08:59:33 +0200
+Message-ID: <2cab668a726e20bde5b3e310aaa0036f3fe4c1ee.1777962130.git.namcao@linutronix.de>
 In-Reply-To: <cover.1777962130.git.namcao@linutronix.de>
 References: <cover.1777962130.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,119 +58,153 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Switch __create_matrix() to use the transitions parsed by Lark to avoid all
-the raw text parsing.
+The state variables (states, initial_state, final_states) only capture the
+states' names and have less information than their Lark-based counterparts.
 
-Also stop parsing constraints in __create_matrix(), that is not used
-anymore.
+Switch to use the new state variables and delete these old ones.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/rvgen/rvgen/automata.py | 47 ++++++----------------
- tools/verification/rvgen/rvgen/dot2k.py    |  2 +-
- 2 files changed, 13 insertions(+), 36 deletions(-)
+ tools/verification/rvgen/rvgen/automata.py |  9 ++++-----
+ tools/verification/rvgen/rvgen/dot2c.py    | 10 +++++-----
+ tools/verification/rvgen/rvgen/dot2k.py    |  8 ++++----
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
 diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verificatio=
 n/rvgen/rvgen/automata.py
-index a29dcde1348c..d40d037f4cfd 100644
+index d40d037f4cfd..e0d3f83cbd3c 100644
 --- a/tools/verification/rvgen/rvgen/automata.py
 +++ b/tools/verification/rvgen/rvgen/automata.py
-@@ -405,7 +405,7 @@ class Automata:
+@@ -398,8 +398,7 @@ class Automata:
+         self.__dot_lines =3D self.__open_dot()
+         self.__parse_tree =3D ParseTree(file_path)
+         self.transitions =3D self.__parse_transitions()
+-        self._states, self._initial_state, self._final_states =3D self.__p=
+arse_states()
+-        self.states, self.initial_state, self.final_states =3D self.__get_=
+state_variables()
++        self.states, self.initial_state, self.final_states =3D self.__pars=
+e_states()
+         self.env_types =3D {}
+         self.env_stored =3D set()
          self.constraint_vars =3D set()
-         self.self_loop_reset_events =3D set()
-         self.events, self.envs =3D self.__get_event_variables()
--        self.function, self.constraints =3D self.__create_matrix()
-+        self.function =3D self.__create_matrix()
-         self.events_start, self.events_start_run =3D self.__store_init_eve=
-nts()
-         self.env_stored =3D sorted(self.env_stored)
-         self.constraint_vars =3D sorted(self.constraint_vars)
-@@ -623,10 +623,10 @@ class Automata:
-         if constraint.val[0].isalpha():
-             self.constraint_vars.add(constraint.val)
+@@ -590,7 +589,7 @@ class Automata:
+                     envs.append(c.env)
+                     self.__extract_env_var(c)
 =20
--    def __create_matrix(self) -> tuple[list[list[str]], dict[_ConstraintKe=
-y, list[str]]]:
-+    def __create_matrix(self) -> list[list[str]]:
+-        for state in self._states:
++        for state in self.states:
+             if state.inv:
+                 envs.append(state.inv.env)
+                 self.__extract_env_var(state.inv)
+@@ -626,7 +625,7 @@ class Automata:
+     def __create_matrix(self) -> list[list[str]]:
          # transform the array into a dictionary
          events =3D self.events
--        states =3D self.states
-+        states =3D [s.name for s in self._states]
+-        states =3D [s.name for s in self._states]
++        states =3D [s.name for s in self.states]
          events_dict =3D {}
          states_dict =3D {}
          nr_event =3D 0
-@@ -641,39 +641,16 @@ class Automata:
+@@ -662,7 +661,7 @@ class Automata:
+             for j in range(len(self.states)):
+                 if self.function[j][i] !=3D self.invalid_state_str:
+                     curr_event_used +=3D 1
+-                if self.function[j][i] =3D=3D self.initial_state:
++                if self.function[j][i] =3D=3D self.initial_state.name:
+                     curr_event_will_init +=3D 1
+             if self.function[0][i] !=3D self.invalid_state_str:
+                 curr_event_from_init =3D True
+diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/r=
+vgen/rvgen/dot2c.py
+index fc85ba1f649e..22938ce1bf6c 100644
+--- a/tools/verification/rvgen/rvgen/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -29,10 +29,10 @@ class Dot2c(Automata):
 =20
-         # declare the matrix....
-         matrix =3D [[self.invalid_state_str for _ in range(nr_event)] for =
-_ in range(nr_state)]
--        constraints: dict[_ConstraintKey, list[str]] =3D {}
+     def __get_enum_states_content(self) -> list[str]:
+         buff =3D []
+-        buff.append(f"\t{self.initial_state}{self.enum_suffix},")
++        buff.append(f"\t{self.initial_state.name}{self.enum_suffix},")
+         for state in self.states:
+             if state !=3D self.initial_state:
+-                buff.append(f"\t{state}{self.enum_suffix},")
++                buff.append(f"\t{state.name}{self.enum_suffix},")
+         buff.append(f"\tstate_max{self.enum_suffix},")
 =20
--        # and we are back! Let's fill the matrix
--        cursor =3D self.__get_cursor_begin_events()
--
--        for line in map(str.lstrip,
--                        islice(self.__dot_lines, cursor, None)):
--
--            if not line or line[0] !=3D '"':
--                break
--
--            split_line =3D line.split()
--
--            if len(split_line) > 2 and split_line[1] =3D=3D "->":
--                origin_state =3D split_line[0].replace('"', '').replace(',=
-', '_')
--                dest_state =3D split_line[2].replace('"', '').replace(',',=
- '_')
--                possible_events =3D "".join(split_line[split_line.index("l=
-abel") + 2:-1]).replace('"', '')
--                for event in possible_events.split("\\n"):
--                    event, *constr =3D event.split(";")
--                    if constr:
--                        key =3D _EventConstraintKey(states_dict[origin_sta=
-te], events_dict[event])
--                        constraints[key] =3D constr
--                        # those events reset also on self loops
--                        if origin_state =3D=3D dest_state and "reset" in "=
-".join(constr):
--                            self.self_loop_reset_events.add(event)
--                    matrix[states_dict[origin_state]][events_dict[event]] =
-=3D dest_state
--            else:
--                state =3D line.split("label")[1].split('"')[1]
--                state, *constr =3D state.replace(" ", "").split("\\n")
--                if constr:
--                    constraints[_StateConstraintKey(states_dict[state])] =
-=3D constr
--
--        return matrix, constraints
-+        for transition in self.transitions:
-+            src, dst =3D transition.src, transition.dst
-+            event =3D transition.event
-+            if src =3D=3D dst and transition.reset:
-+                # those events reset also on self loops
-+                self.self_loop_reset_events.add(event)
-+            matrix[states_dict[src]][events_dict[event]] =3D dst
-+
-+        return matrix
+         return buff
+@@ -142,7 +142,7 @@ class Dot2c(Automata):
+     def format_aut_init_states_string(self) -> list[str]:
+         buff =3D []
+         buff.append("\t.state_names =3D {")
+-        buff.append(self.__get_string_vector_per_line_content(self.states))
++        buff.append(self.__get_string_vector_per_line_content([s.name for =
+s in self.states]))
+         buff.append("\t},")
 =20
-     def __store_init_events(self) -> tuple[list[bool], list[bool]]:
-         events_start =3D [False] * len(self.events)
+         return buff
+@@ -159,7 +159,7 @@ class Dot2c(Automata):
+         return buff
+=20
+     def __get_max_strlen_of_states(self) -> int:
+-        max_state_name =3D len(max(self.states, key=3Dlen))
++        max_state_name =3D max((len(s.name) for s in self.states))
+         return max(max_state_name, len(self.invalid_state_str))
+=20
+     def get_aut_init_function(self) -> str:
+@@ -199,7 +199,7 @@ class Dot2c(Automata):
+         return buff
+=20
+     def get_aut_init_initial_state(self) -> str:
+-        return self.initial_state
++        return self.initial_state.name
+=20
+     def format_aut_init_initial_state(self) -> list[str]:
+         buff =3D []
 diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
 vgen/rvgen/dot2k.py
-index 5ea5d16df29b..708e1f223728 100644
+index 708e1f223728..12d944bcd6f3 100644
 --- a/tools/verification/rvgen/rvgen/dot2k.py
 +++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -394,7 +394,7 @@ f"""static inline void ha_setup_invariants(struct ha_mo=
+@@ -179,7 +179,7 @@ class ha2k(dot2k):
+         self.trace_h =3D self._read_template_file("trace_hybrid.h")
+         self.has_invariant =3D False
+         self.has_guard =3D False
+-        for state in self._states:
++        for state in self.states:
+             if state.inv:
+                 self.has_invariant =3D True
+         for transition in self.transitions:
+@@ -305,7 +305,7 @@ f"""static inline bool ha_verify_invariants(struct ha_m=
+onitor *ha_mon,
+ {{"""]
+=20
+         _else =3D ""
+-        for state in self._states:
++        for state in self.states:
+             if not state.inv:
+                 continue
+=20
+@@ -373,7 +373,7 @@ f"""static inline void ha_setup_invariants(struct ha_mo=
 nitor *ha_mon,
+         buff.append(f"\tif ({condition_str})\n\t\treturn;")
 =20
-     def __fill_constr_func(self) -> list[str]:
-         buff =3D []
--        if not self.constraints:
-+        if not self.has_invariant and not self.has_guard:
-             return []
+         _else =3D ""
+-        for state in self._states:
++        for state in self.states:
+             inv =3D state.inv
+             if not inv:
+                 continue
+@@ -382,7 +382,7 @@ f"""static inline void ha_setup_invariants(struct ha_mo=
+nitor *ha_mon,
+             buff.append(f"\t\t{inv};")
+             _else =3D "else "
 =20
-         buff.append(
+-        for state in self._states:
++        for state in self.states:
+             inv =3D state.inv
+             if not inv:
+                 continue
 --=20
 2.47.3
 
