@@ -1,296 +1,177 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A612C3C5DC5
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 May 2026 22:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB3D40DFB3;
+	Wed,  6 May 2026 01:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778019700; cv=none; b=kjOn9QMPc1XGNDxGgwqYE03JAGzco6YOGCc4AbyVUSbACpcra3mz1FymyOT3OCKc4+QbuElmuZS2ooxWoGMN3ZMR6IjNukDe5yTs0/VYhbygzxU7Ls1juBjopY7Gwar3jJ7jYAQ60bDcXqA6ohkYNGSBXuj3KoQ958s3u7qZQjo=
+	t=1778032145; cv=none; b=FT6wLQK1pFFMKtwvL4NOPYzrZKFWvzJvzLBX2eh7hYDHbkns58ol4PELkPRrMuKjGm2rP7j8RNDgUBzzkc/SfL3fEIA0V38lVsCjacaMa4MvkiqRJmZLh2suqIopQjOWZ8wzfN5wJ5m0szx/P7P3Dyxv1XcXRWBFtcsRh2HcfAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778019700; c=relaxed/simple;
-	bh=zOuCto/ei+q5X9zizDWicsGgHsnCs3KdS/blOqZ3EtY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=XTf9HI5lpdHewUdnNVE1SD3yBNO3nw4X8F1TqnXnZ2RW48KtEQiI/JMgpYmY2a+mTbgmPOJpAYuvABCnxkq64OskzGjHBkU8M7StIHgzvA/P2uFJ5eG0fUsxKf2wyJshF/yAejC/dTEScFCIjCPs035EWE7pxX0ka4FoxFFNxeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhDzHdpI; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778032145; c=relaxed/simple;
+	bh=myi/D7XE6u0EBzzV9ClzoSdPhbtkU2YHSjtvN6OomBg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B1da6PogkCG+DVMjsYTn1zKkRal9n1jRKzJPlNUyWMt/MOvQIgLm2mWcNtOJZLPGjekW7urRruwFSdZXcXSckmrP8AaSwBRfXIrTJR9o/MtWBTMnrOsZGCqGs1TlVPzTzpa001i0h9pUv2B9Vbz4acgVKjNopvMvt+aJNWSf82U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=rOQZIhp+; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhDzHdpI"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3870778358aso40555961fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 May 2026 15:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778019697; x=1778624497; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
-        b=dhDzHdpIngACreNbzmbm8RCTIW8zTkMR7G79zhBScFUHXStxwQkbuMfibjp3A5hkb7
-         VY3gq/jXXPJX0ubyimF6ucvb5UKE0NmZTkVcfeHg7Usbq443o+75yUrmA72uYV1vcKn/
-         6M7/X+8D9m073BIkO9sFGATy1oHktJ7AjRuzhsZW/tvtgO8k4lASmElJVpysbsjfqKs7
-         si/GDUhTLmuikvwccp96TYSor5G70rqgIh0BiAhHF07mIccyEH8ZNL2Aby29hqk4dvzd
-         uLMd33ZifyA0qp8QnR4lNnjg8P6fuLaFXpehFwqydeJB0wVfz4TI/p3pOPOBY/jWzqTo
-         ii1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778019697; x=1778624497;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
-        b=hqEtKjkAeasDnJKGwq4r4vUtEJYVwmPAIfrg/AN7I0BWJkIHmX6dkdtpwFxVer9HEE
-         C4mNw4Yu9tSZQaT/AmJrSdvM/wMnxOejymc3RcVCvvu+WUr3LT3uObrDrYRMBgUk6ZW4
-         /e8YdpKwCFXKJ1J0mjq/nDTWvd54sX0+SJ1RWmtFkvqeSi/OVbyNKta26CYghPfqFNaL
-         /IbCyGJsAXshbzGjrZrQA2/SZ8AC5Pde9+8xIOpAUrKn6oJRYAbrKY1akElZPDMhk4lF
-         AHOq59iuomPMeuGHQ4pYL1S9ARxgvehMTqVdb7GLCdJoszmwv+Sa7ikX+vfetr0tnLXw
-         ykLw==
-X-Forwarded-Encrypted: i=1; AFNElJ+asZ6agYKpYmeIJL+TensleqgNYCDN5qM7XJg21CscibremhIdqN1tJnZpyvtZBcJYmd9WEYe6GLTikYuQmfJPQS8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb7meGJ12y2OUXCKjLF7SrvlLcT5BM4iv1HEAQsiDN7x0GAjuC
-	oudv0aPIwVdlaCxeyseZmtH7a2WhVXCZoJwKe2Fh+LvlwYoWk6ZQsA9u
-X-Gm-Gg: AeBDievlwjdJ/1CWWgFyh2egPs2IcVKt8yQud59vyaBpI7no04+UmQJOKHqcdk/J2B7
-	5Y4jaJxHoJuDYlGwEhYP2YcM3iCYc3Czl7afQoaZdwlVLKqH+P+GrICJlNS1/8WLYaOvIyuKUH6
-	WG8h1GxyzCSL50t4oKYRwRiQ9Z6l10xF6XKnFmsd+mPDJy43VlywXDgUgwOLKLjOs1akd9BMrDh
-	D0u80sL3pO5lym2g1W39Jbmgs0C7UxVjmBhNJTKuyvpl5kjzi9Zdi4vGPgls7Dl+d0Jt7tW3NSB
-	a8bSqIDWluHnVePQdcFLUDDknK7oYBTap0i2gPBwLtX6tNxocpLterZbpPu3Du+rQHN7Kredhji
-	Z3YCqJk9A2riotzkHnhnAORAeU8h7kVHc4rPrYowFeWGGlag7iLLSMwv4DSiI29buE8YbeszOuj
-	aFsL3r58k9ONZooI7n3N8QiFQbAoJbfUe2cXzroIUSHQZnOOuxZm2QnVOVt6E+HHPMvjGk9toW7
-	KWlbljN63MbqC3xrvmXmZRfEQPyroZQFSglV4lO
-X-Received: by 2002:a05:651c:4210:b0:393:8b23:a194 with SMTP id 38308e7fff4ca-393c41cedeemr3503181fa.19.1778019696437;
-        Tue, 05 May 2026 15:21:36 -0700 (PDT)
-Received: from smtpclient.apple (h-155-4-132-115.NA.cust.bahnhof.se. [155.4.132.115])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3936108fb80sm46308161fa.6.2026.05.05.15.21.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 May 2026 15:21:35 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="rOQZIhp+"
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6461H4cV2256404;
+	Wed, 6 May 2026 01:27:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=PPS06212021; bh=hw9gz9AJD
+	tPg6ZAr5apAzDSOH5Jlg4JAoCipMg4iMGQ=; b=rOQZIhp+Xw7CYmjH0lf80sGds
+	8K/DTp1g0Vu40BxeiE9+JQWf9nl3Bt87CDzQWgk9NVKMxAoymt8VDrC7BVq0O3e4
+	kpB40unfIfGO4zYFoJ4bLI0eTuf07M0dbQUba5HiIepwlm+3KtuLgL73WpYMRUy6
+	gyB1ZgUjFIM+OPZuTuXQHuemJjHxCA3dNqiwk2djBH5arcc0d4/RmuWnp3vhb8ua
+	6fY2wyhAve92u/6D7OTOYSpJyG1Uuz71a1wreVO7Vb6+paMx+OVjkvz0hLpwnkSX
+	lmfVX4QTkud/OAn1Ay7Yp3YEJ6Lrt6ChH6twKm58hgfg0ab/PDb8E8K50rlZA==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [128.224.246.36])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4dw8t5va9q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 06 May 2026 01:27:11 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.61; Tue, 5 May 2026 18:27:10 -0700
+Received: from pek-lpggp9.wrs.com (10.11.232.110) by
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
+ 15.1.2507.61 via Frontend Transport; Tue, 5 May 2026 18:27:07 -0700
+From: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+To: <naveen@kernel.org>, <davem@davemloft.net>, <mhiramat@kernel.org>,
+        <arnd@arndb.de>, <mark.rutland@arm.com>, <catalin.marinas@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <linux-arch@vger.kernel.org>, <stable@vger.kernel.org>,
+        Jianpeng Chang
+	<jianpeng.chang.cn@windriver.com>
+Subject: [v2 PATCH] kprobes: skip non-symbol addresses in kprobe_add_ksym_blacklist()
+Date: Wed, 6 May 2026 09:27:06 +0800
+Message-ID: <20260506012706.2785785-1-jianpeng.chang.cn@windriver.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.400.21\))
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
-In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
-Date: Wed, 6 May 2026 00:21:23 +0200
-Cc: lsf-pc@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org,
- cgroups@vger.kernel.org,
- linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org,
- damon@lists.linux.dev,
- kernel-team@meta.com,
- gregkh@linuxfoundation.org,
- rafael@kernel.org,
- dakr@kernel.org,
- dave@stgolabs.net,
- jonathan.cameron@huawei.com,
- dave.jiang@intel.com,
- alison.schofield@intel.com,
- vishal.l.verma@intel.com,
- Ira Weiny <ira.weiny@intel.com>,
- dan.j.williams@intel.com,
- longman@redhat.com,
- akpm@linux-foundation.org,
- david@kernel.org,
- lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com,
- vbabka@suse.cz,
- rppt@kernel.org,
- Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>,
- osalvador@suse.de,
- ziy@nvidia.com,
- matthew.brost@intel.com,
- joshua.hahnjy@gmail.com,
- rakie.kim@sk.com,
- byungchul@sk.com,
- ying.huang@linux.alibaba.com,
- apopple@nvidia.com,
- axelrasmussen@google.com,
- yuanchu@google.com,
- weixugc@google.com,
- yury.norov@gmail.com,
- linux@rasmusvillemoes.dk,
- mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com,
- tj@kernel.org,
- hannes@cmpxchg.org,
- mkoutny@suse.com,
- jackmanb@google.com,
- sj@kernel.org,
- baolin.wang@linux.alibaba.com,
- npache@redhat.com,
- ryan.roberts@arm.com,
- dev.jain@arm.com,
- baohua@kernel.org,
- lance.yang@linux.dev,
- muchun.song@linux.dev,
- xu.xin16@zte.com.cn,
- chengming.zhou@linux.dev,
- jannh@google.com,
- linmiaohe@huawei.com,
- nao.horiguchi@gmail.com,
- pfalcato@suse.de,
- David Rientjes <rientjes@google.com>,
- shakeel.butt@linux.dev,
- riel@surriel.com,
- harry.yoo@oracle.com,
- cl@gentwo.org,
- roman.gushchin@linux.dev,
- chrisl@kernel.org,
- kasong@tencent.com,
- shikemeng@huaweicloud.com,
- nphamcs@gmail.com,
- bhe@redhat.com,
- zhengqi.arch@bytedance.com,
- terry.bowman@amd.com,
- Yiannis Nikolakopoulos <Yiannis@zptcorp.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <21B8D62E-38AB-4FA5-8942-DA4417A7E7E9@gmail.com>
-References: <20260222084842.1824063-1-gourry@gourry.net>
-To: Gregory Price <gourry@gourry.net>
-X-Mailer: Apple Mail (2.3864.400.21)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA2MDAxMiBTYWx0ZWRfXwHR0mauZfcWY
+ BBmZ90MIum8UC4wVNPFbCb3kLgBE86ZJ4cak6VqIVF7HrE9rQ7XlkfIO44ECR0ijllGKwgR4ZTd
+ 81qSvjlqGJkYbd2SZz5PFY5HTA8aGUaWmiiWVrK+voqlcwqfXeI/EIJ0Jr1ajJH4PW5pnF4BrO9
+ F3Vq3bti52HxSc9eIV+Lw4ynfVBEnO/ZXqaKDSrRZVMrEiafX1gL6pmh6xvzTyYkRN8JlbgK6mg
+ WVdf0R+rYVnSk8FMCtYh4jlPPpUVYMOg8L/e/yhI5RgMOa1OtoiVjRtP02cNZrJO5imNU7QK2hN
+ Jwt0LJ92bQy/dPTs2yD2XrznErLWhtX7BY6VSSVGEM3AJe43ed13Tkm4V9ll417r/mOFuZr1Aoz
+ SSrBqwT6aSI0W5zQKowxPVSQ/BN7BpqJAtpXw7rXRdVUf9Se4xutLBb5tDtN/+gzNKqBiK8Zdzp
+ 8oDTU44ZefElkJz2p0w==
+X-Proofpoint-ORIG-GUID: JHVEniI2kF2He3E7a179foNcS5mb1Y_7
+X-Proofpoint-GUID: JHVEniI2kF2He3E7a179foNcS5mb1Y_7
+X-Authority-Analysis: v=2.4 cv=BcLoFLt2 c=1 sm=1 tr=0 ts=69fa98ef cx=c_pps
+ a=AbJuCvi4Y3V6hpbCNWx0WA==:117 a=AbJuCvi4Y3V6hpbCNWx0WA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
+ a=fTW__CHxibyLmBMfj2wP:22 a=VwQbUJbxAAAA:8 a=t7CeM3EgAAAA:8
+ a=5DZcFgTl-RdOG2hZ3NwA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-05_02,2026-04-30_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 malwarescore=0 suspectscore=0 impostorscore=0 adultscore=0
+ phishscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605060012
 
+When kprobe_add_area_blacklist() iterates through a section like
+.kprobes.text, the start address may not correspond to a named symbol.
+On ARM64 with CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=y (introduced by
+commit baaf553d3bc3 ("arm64: Implement
+HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")), the compiler flag
+-fpatchable-function-entry=4,2 inserts 2 NOPs before each function entry
+point for ftrace call_ops. These pre-function NOPs sit at the section base
+address, before the first named function symbol. The compiler emits a $x
+mapping symbol at offset 0x00 to mark the start of code, but
+find_kallsyms_symbol() ignores mapping symbols.
 
-> On 22 Feb 2026, at 09:48, Gregory Price <gourry@gourry.net> wrote:
->=20
-> Topic type: MM
->=20
-> Presenter: Gregory Price <gourry@gourry.net>
->=20
-> This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
-> managed by the buddy allocator but excluded from normal allocations.
->=20
-> I present it with an end-to-end Compressed RAM service (mm/cram.c)
-> that would otherwise not be possible (or would be considerably more
-> difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
->=20
->=20
-> TL;DR
-> =3D=3D=3D
->=20
-> N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
-> explicit holes in that isolation to do useful things we couldn't do
-> before without re-implementing entire portions of mm/ in a driver.
->=20
->=20
-> /* This is my memory. There are many like it, but this one is mine. */
-> rc =3D add_private_memory_driver_managed(nid, start, size, name, =
-flags,
->                                       online_type, private_context);
->=20
-> page =3D alloc_pages_node(nid, __GFP_PRIVATE, 0);
->=20
-> /* Ok but I want to do something useful with it */
-> static const struct node_private_ops ops =3D {
->        .migrate_to     =3D my_migrate_to,
->        .folio_migrate  =3D my_folio_migrate,
->        .flags =3D NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
-> };
-> node_private_set_ops(nid, &ops);
->=20
-> /* And now I can use mempolicy with my memory */
-> buf =3D mmap(...);
-> mbind(buf, len, mode, private_node, ...);
-> buf[0] =3D 0xdeadbeef;  /* Faults onto private node */
->=20
-> /* And to be clear, no one else gets my memory */
-> buf2 =3D malloc(4096);  /* Standard allocation */
-> buf2[0] =3D 0xdeadbeef; /* Can never land on private node */
->=20
-> /* But i can choose to migrate it to the private node */
-> move_pages(0, 1, &buf, &private_node, NULL, ...);
->=20
-> /* And more fun things like this */
->=20
->=20
-> Patchwork
-> =3D=3D=3D
-> A fully working branch based on cxl/next can be found here:
-> https://github.com/gourryinverse/linux/tree/private_compression
->=20
-> A QEMU device which can inject high/low interrupts can be found here:
-> https://github.com/gourryinverse/qemu/tree/compressed_cxl_clean
->=20
-> The additional patches on these branches are CXL and DAX driver
-> housecleaning only tangentially relevant to this RFC, so i've
-> omitted them for the sake of trying to keep it somewhat clean
-> here.  Those patches should (hopefully) be going upstream anyway.
->=20
-> Patches 1-22: Core Private Node Infrastructure
->=20
->  Patch  1:      Introduce N_MEMORY_PRIVATE scaffolding
->  Patch  2:      Introduce __GFP_PRIVATE
->  Patch  3:      Apply allocation isolation mechanisms
->  Patch  4:      Add N_MEMORY nodes to private fallback lists
->  Patches 5-9:   Filter operations not yet supported
->  Patch 10:      free_folio callback
->  Patch 11:      split_folio callback
->  Patches 12-20: mm/ service opt-ins:
->                   Migration, Mempolicy, Demotion, Write Protect,
->                   Reclaim, OOM, NUMA Balancing, Compaction,
->                   LongTerm Pinning
->  Patch 21:      memory_failure callback
->  Patch 22:      Memory hotplug plumbing for private nodes
->=20
-> Patch 23: mm/cram -- Compressed RAM Management
->=20
-> Patches 24-27: CXL Driver examples
->  Sysram Regions with Private node support
->  Basic Driver Example: (MIGRATION | MEMPOLICY)
->  Compression Driver Example (Generic)
->=20
-Hi,
+Without CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS (e.g. defconfig), no
+pre-function NOPs are inserted, the first function starts at offset
+0x00, and the bug does not trigger.
 
-As I think this is about to be discussed in the conference, I thought
-to share some high level comments.
+This only affects modules that have a .kprobes.text section (i.e. those
+using the __kprobes annotation). Modules using NOKPROBE_SYMBOL() instead
+(like kretprobe_example.ko) blacklist exact function addresses via the
+_kprobe_blacklist section and are not affected.
 
-I have tested this for some time on a device with compression (after =
-some
-necessary fixes for CXL RCD to work, that Greg helped me with).
+For kprobe_example.ko on ARM64 with -fpatchable-function-entry=4,2,
+the .kprobes.text section layout is:
 
-Overall, the isolation property that this provides is something I deem =
-necessary
-for this technology. Others are better placed to judge the MM plumbing
-itself, but I wanted to say that this functionality is an important =
-piece of the puzzle
-from the device/use-case side.
+  offset 0x00: $x + 2 NOPs    (mapping symbol + ftrace preamble)
+  offset 0x08: handler_post   (64 bytes)
+  offset 0x50: handler_pre    (68 bytes)
 
-For cram itself, as it is in this RFC, I think there is still =
-performance and
-value left on the table (as noted in the description), but I fully =
-understand Gregory=E2=80=99s=20
-premise in approaching it this way.
+kprobe_add_area_blacklist() starts iterating from the section base
+address (offset 0x00), which only has the $x mapping symbol.
+kprobe_add_ksym_blacklist() then calls kallsyms_lookup_size_offset()
+for this address, which goes through:
 
-<snip>
->=20
-> Future CRAM : Loosening the read-only constraint
-> =3D=3D=3D
->=20
-> The read-only model is safe but conservative.  For workloads where
-> compressed pages are occasionally written, the promotion fault adds
-> latency.  A future optimization could allow a tunable fraction of
-> compressed pages to be mapped writable, accepting some risk of
-> write-driven decompression in exchange for lower overhead.
->=20
-> The private node ops make this straightforward:
->=20
->  - Adjust fixup_migration_pte to selectively skip
->    write-protection.
->  - Use the backpressure system to either revoke writable mappings,
->    deny additional demotions, or evict when device pressure rises.
-I have some quick hacks playing with these ideas but I haven=E2=80=99t =
-had the time
-to test it thoroughly and get to something robust yet. I saw in another =
-thread
-that there is a follow up cooking which looks interesting.
+  kallsyms_lookup_size_offset()
+    -> module_address_lookup()
+      -> find_kallsyms_symbol()
 
-Thanks Greg for pushing this, and I=E2=80=99m happy to test more on HW =
-in our lab.
+find_kallsyms_symbol() scans all module symbols to find the closest
+preceding symbol.
 
-Best,
-/Yiannis
+Since no named text symbol exists at offset 0x00,
+find_kallsyms_symbol() picks __UNIQUE_ID_vermagic (a .modinfo symbol
+whose address is in the temporary image) as the "best" match. The
+computed "size" = next_text_symbol - modinfo_symbol spans across
+these two unrelated memory regions, creating a blacklist entry with
+a bogus range of tens of terabytes.
 
+Whether this causes a visible failure depends on address randomization,
+here is what happens on Raspberry Pi 4/5:
 
+  - On RPi5, the bogus size was ~35 TB. start + size stayed within
+    64-bit range, so the blacklist entry covered the entire kernel
+    text. register_kprobe() in the module's own init function failed
+    with -EINVAL.
+
+  - On RPi4, the bogus size was ~75 TB. start + size overflowed
+    64 bits and wrapped to a small address near zero. The range
+    check (addr >= start && addr < end) then failed because end
+    wrapped around, so the bogus entry was accidentally harmless
+    and kprobes worked by luck.
+
+The same bug exists on both machines, but randomization determines whether
+the integer overflow masks it or not.
+
+Fix this by adding notrace to the __kprobes macro. Functions in
+.kprobes.text are kprobe infrastructure handlers that should never be
+traced by ftrace. With notrace, the compiler stops inserting them and the
+non-symbol gap at the section start disappears entirely.
+
+Fixes: baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")
+Signed-off-by: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+---
+v2: 
+  - use notrace instead of skipping the nops
+v1: https://lore.kernel.org/all/20260427073545.3656835-1-jianpeng.chang.cn@windriver.com/
+
+ include/asm-generic/kprobes.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/asm-generic/kprobes.h b/include/asm-generic/kprobes.h
+index 060eab094e5a..5290a2b2e15a 100644
+--- a/include/asm-generic/kprobes.h
++++ b/include/asm-generic/kprobes.h
+@@ -14,7 +14,7 @@ static unsigned long __used					\
+ 	_kbl_addr_##fname = (unsigned long)fname;
+ # define NOKPROBE_SYMBOL(fname)	__NOKPROBE_SYMBOL(fname)
+ /* Use this to forbid a kprobes attach on very low level functions */
+-# define __kprobes	__section(".kprobes.text")
++# define __kprobes	notrace __section(".kprobes.text")
+ # define nokprobe_inline	__always_inline
+ #else
+ # define NOKPROBE_SYMBOL(fname)
+-- 
+2.54.0
 
