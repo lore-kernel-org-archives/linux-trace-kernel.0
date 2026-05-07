@@ -1,54 +1,54 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598483218BA
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 May 2026 20:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F946326923
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 May 2026 20:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778186080; cv=none; b=iC1lzPZ0LklRIQ+9ZfU1S+URbj/LLEBeCHyvemWFyB6cYjxjwgshRsW9SJ5iFzcGZVBBLqEiedZpoWS+h/YQLs37bi1w8dBdWvRJnx+2OA/Jh07U9dw63xqcfGb4U+59wtRcwP1GE2JbWugi5iVIxwtt6BG2e+zfvFn3qsxBWZ4=
+	t=1778186082; cv=none; b=iZPrEwhKF3nO0CWChV8+9KQohirsxIZheonI4a3WLAp+H6bgTmItLJJ+A19PKDLJ8uGT2D5XubZvYMsk498ca7U0gueeJECxnRH36ybuufOHMmdTtYtDRFTloAkd+0qSj1qCLPKE9cNUgjGyusRtEXZ/Nd9/c/4t/UYkABMgu+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778186080; c=relaxed/simple;
-	bh=GOjFoV94awk7GYninYEq+I3DCtzIDlhYvlgo8SkP+9g=;
+	s=arc-20240116; t=1778186082; c=relaxed/simple;
+	bh=+qaEdBH+gYOBdsyFKxFWIyCyUru/7xriN85itsOx9b8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N787zwr/yEhGSKMtxxHXsl8q+xk4aFKXTYVjQoKhPccfDOl/MKUav6wmVSfX2FRAEMGBDCGJHn1N5x187ycRhQwbCUQeszVEtjPpjy/GSpN2fK/qwsV6cYK99/aJBuYGvNUgvCGxR1XN1ro9WSUZBBpZgbC9TItlyaHUX6oTFbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=axqqEJNO; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=PB4Zjg9bQXC70cCHv6mcKmIH2byQlCNPYC7EDANzwpfgPqh+ztLZ5OvPd8kUSKdt0Zg7ROb/6OHnNSORvEnahAI9tsmo4R8ejxgFQNNbZSIb2jJHD0vcoBJoiJ3G+bfeehYVgE6yIhlwlwVeIg9Ak/3AfUojVVGnAnJOeB5Eytw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dj0ZnzDw; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="axqqEJNO"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c82353e8c63so684439a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 May 2026 13:34:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dj0ZnzDw"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c797efdaa9cso646337a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 May 2026 13:34:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778186077; x=1778790877; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778186078; x=1778790878; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FwdqijLGyLJ4WnaXvFgo9eGiQSeu4QsrqPYNc8/yMrg=;
-        b=axqqEJNOhE9jSDrsvB/sNgxY5KKC7KwPN6q783aLHD0TZNub06H4qJSO03mHEcbnxM
-         MYHI25A/3eg+g4vl4SRV/wy/Qiyp1XNnpif/fH5OKjoxr6gT0Le7BCovUQCaq0j7w3yS
-         0oT1TLZ8orfGWrQlJ3o5QEo2spJN5y4AmjZ2oxHPh31ypSiDoIyr0/KkLRnPDMp61pJd
-         +zIQfnn+YHutgtgDCv/PPeecKQkaetXfIhYw/xqXq5P0A+n/FLr/x/7xNtOR7Wa0I4i3
-         MIaw4MAN50Yu2x17+dV2+oU6NsSBd4xK/SpLy0NSBBw72GEDUIxTM3wsE0hvJLmLTWcp
-         ezEw==
+        bh=TDRRc0jg/jx53tsGeC8eacCCEXJljCHGPEHlQkr/vH8=;
+        b=Dj0ZnzDw/bbTL2VHDZAXOtB9eurfTlRGHacCDeiAWpps1yLja8efV4NLuNAv1i8TPu
+         UmC3LHQvY0ScfrViX7BevVOpzzjmYs8xLxj/VxsH8R9LbEKrTX1ebhShl/ejmPwNHrJt
+         uA57WzslZZux8Jv6vaVusLkhgvyIytUR0P/jly9qeOEslbexlZQuzp9yz/XhnOEpXCUY
+         OPMx4FvC6GO+gQO9pFt4Rov7fg64FA1in1bnUe2Ozrhf6WEy4CMRvx6An4osQSOMgCN8
+         NYgL5tAUN3NYwzcEc/mKFRzmyMN7LjsMnnvSxbBk+//hkBwgWqob7oXoDivxfOxAXUtL
+         t13Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778186077; x=1778790877;
+        d=1e100.net; s=20251104; t=1778186078; x=1778790878;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FwdqijLGyLJ4WnaXvFgo9eGiQSeu4QsrqPYNc8/yMrg=;
-        b=JIajxUvv5I+6ExJhLPWgwcF1CMSlhFpF88EoXNTFmrWD9R62BUsYdyVsfLt3PWS9/b
-         LYpku0b073AYkbptiWb2nxe0thErCoJG500I67jqkJiCFu6a2fovt1VMgjJw/HRqIe6Z
-         U/xn/ymJIuOPMDNfJs1iJdd7ncQL1Smpa4OwtP9vMt7dEf4VRtheIkOSq1Cpjypcbr4J
-         EwS5Sz2ncsRXndzSJ59qKV7YzJ6FhFkRbHeXyRmFPA9UyZ1H+nlD0oIpSPtDX1MhXnkq
-         SXG4RR2pXvrStgL3gWC369JoqBfF2X/P8zzC3vXSbpWpUZof2E35jO+R8Vh6qXLRuzEB
-         hZEw==
-X-Forwarded-Encrypted: i=1; AFNElJ9aDvfkHGbVkKrCMxjlyTokgIvBrPv7r8G9zNs2WfpoXEPCJb0mT+qrRnlw6NJkh3rdvlbwrGHmfoNskvFZrV99+Hk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeeBwCGlfJP7dCP7ZezbBrEIsL/eul5FS8+WXkgKwKRwQKxKw6
-	AMLWmBoIkbT7niu47ydLAaZLqZv0g9arW1cyDaknjhmi6BV4dO/2JfnxiLaLl3maEpOfOjU47t8
-	VeSJYYaG7v9i84JYKsEstBWd4JQ==
-X-Received: from pgac15.prod.google.com ([2002:a05:6a02:294f:b0:c79:5ec2:4a68])
+        bh=TDRRc0jg/jx53tsGeC8eacCCEXJljCHGPEHlQkr/vH8=;
+        b=RMLCmn+Dle3x0fyip0Lgji3oUqpEnsQNYba6IoqAz3o7JaY/wOTXnb8/w9nXKbUxn1
+         tSl9KCzXHdCcHANmEZtCjUkrlDmGESikwuVejwP1xy7sn0dbwwMOSiMxz6g2R+U9Xzwg
+         A1dReQRXLmiJoc2koIuIXyCXpor/AP69sYvzRtlxQ1DrUSqfc7LXTJljRMelt58rEGly
+         szyDNIFLiHsz4YjXYOVXpQGj1qcQUMiJxZTTTHiYEX+JboGQtkMR54JrULgT2PKFPn38
+         XYgDoqsifGuRFUVFUTEd/9+I34sDdKcdC5DkOrJWUgztPtw1BAjNwkXuBRgDEgYkldwv
+         cLyg==
+X-Forwarded-Encrypted: i=1; AFNElJ/weB6YBHWlqHKTHj8TYZ99VA5ywQc3mTN4e9m60L+BFfn51evOTD4Y2UPNVGcUuSF+ZJjPCRPiWYakNNzU3CWmGHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCQDTGCB2BM0UMai78P7k6JiKxqQWyyUgHmgMY0wGFPwOV5D7u
+	u5JI40QnYYxyPESSPmWhgmQ+3JaaLWIm78jD0vC667w6C24ysGguVLcB13u3AuCA2H48WRxhIZT
+	jgDbU43+RMXHXJ0mx6gZQF49Rvw==
+X-Received: from pfje17.prod.google.com ([2002:a05:6a00:d1:b0:83a:d498:99fb])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:431e:b0:39f:54fb:e465 with SMTP id adf61e73a8af0-3aa5acd7603mr9313570637.50.1778186077180;
- Thu, 07 May 2026 13:34:37 -0700 (PDT)
-Date: Thu,  7 May 2026 13:34:24 -0700
+ 2002:a05:6a20:3944:b0:398:962e:83d7 with SMTP id adf61e73a8af0-3aa5a9df237mr10814249637.43.1778186078034;
+ Thu, 07 May 2026 13:34:38 -0700 (PDT)
+Date: Thu,  7 May 2026 13:34:25 -0700
 In-Reply-To: <cover.1778185936.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com> <cover.1778185936.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <b9de3cc382f0cda398ee928467147979adf9b06c.1778185936.git.ackerleytng@google.com>
-Subject: [POC PATCH 3/5] KVM: selftests: Make guest_code_xsave more friendly
+Message-ID: <252ec123d00e4b60e1adb9ac5c84e0e4349fc488.1778185936.git.ackerleytng@google.com>
+Subject: [POC PATCH 4/5] KVM: selftests: Allow specifying CoCo-privateness
+ while mapping a page
 From: Ackerley Tng <ackerleytng@google.com>
 To: devnull+ackerleytng.google.com@kernel.org
 Cc: ackerleytng@google.com, aik@amd.com, akpm@linux-foundation.org, 
@@ -85,58 +86,61 @@ Cc: ackerleytng@google.com, aik@amd.com, akpm@linux-foundation.org,
 	yan.y.zhao@intel.com, youngjun.park@lge.com, yuanchu@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-The original implementation of guest_code_xsave makes a jmp to
-guest_sev_es_code in inline assembly. When code that uses guest_sev_es_code
-is removed, guest_sev_es_code will be optimized out, leading to a linking
-error since guest_code_xsave still tries to jmp to guest_sev_es_code.
-
-Rewrite guest_code_xsave() to instead make a call, in C, to
-guest_sev_es_code(), so that usage of guest_sev_es_code() is made known to
-the compiler.
-
-This rewriting also gives a name to the xsave inline assembly, improving
-readability.
-
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../selftests/kvm/x86/sev_smoke_test.c        | 24 +++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ tools/testing/selftests/kvm/include/x86/processor.h |  2 ++
+ tools/testing/selftests/kvm/lib/x86/processor.c     | 13 ++++++++++---
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/sev_smoke_test.c b/tools/testing/selftests/kvm/x86/sev_smoke_test.c
-index 1a49ee3915864..8b859adf4cf6f 100644
---- a/tools/testing/selftests/kvm/x86/sev_smoke_test.c
-+++ b/tools/testing/selftests/kvm/x86/sev_smoke_test.c
-@@ -80,13 +80,23 @@ static void guest_sev_code(void)
- 	GUEST_DONE();
+diff --git a/tools/testing/selftests/kvm/include/x86/processor.h b/tools/testing/selftests/kvm/include/x86/processor.h
+index 77f576ee7789d..683f21452db58 100644
+--- a/tools/testing/selftests/kvm/include/x86/processor.h
++++ b/tools/testing/selftests/kvm/include/x86/processor.h
+@@ -1507,6 +1507,8 @@ enum pg_level {
+ void tdp_mmu_init(struct kvm_vm *vm, int pgtable_levels,
+ 		  struct pte_masks *pte_masks);
+ 
++void ___virt_pg_map(struct kvm_vm *vm, struct kvm_mmu *mmu, gva_t gva,
++		    gpa_t gpa,  int level, bool private);
+ void __virt_pg_map(struct kvm_vm *vm, struct kvm_mmu *mmu, gva_t gva,
+ 		   gpa_t gpa,  int level);
+ void virt_map_level(struct kvm_vm *vm, gva_t gva, gpa_t gpa,
+diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
+index b51467d70f6e7..02781194f51a2 100644
+--- a/tools/testing/selftests/kvm/lib/x86/processor.c
++++ b/tools/testing/selftests/kvm/lib/x86/processor.c
+@@ -256,8 +256,8 @@ static u64 *virt_create_upper_pte(struct kvm_vm *vm,
+ 	return pte;
  }
  
--/* Stash state passed via VMSA before any compiled code runs.  */
--extern void guest_code_xsave(void);
--asm("guest_code_xsave:\n"
--    "mov $" __stringify(XFEATURE_MASK_X87_AVX) ", %eax\n"
--    "xor %edx, %edx\n"
--    "xsave (%rdi)\n"
--    "jmp guest_sev_es_code");
-+static void xsave_all_registers(void *addr)
+-void __virt_pg_map(struct kvm_vm *vm, struct kvm_mmu *mmu, gva_t gva,
+-		   gpa_t gpa, int level)
++void ___virt_pg_map(struct kvm_vm *vm, struct kvm_mmu *mmu, gva_t gva,
++		    gpa_t gpa, int level, bool private)
+ {
+ 	const u64 pg_size = PG_LEVEL_SIZE(level);
+ 	u64 *pte = &mmu->pgd;
+@@ -309,12 +309,19 @@ void __virt_pg_map(struct kvm_vm *vm, struct kvm_mmu *mmu, gva_t gva,
+ 	 * Neither SEV nor TDX supports shared page tables, so only the final
+ 	 * leaf PTE needs manually set the C/S-bit.
+ 	 */
+-	if (vm_is_gpa_protected(vm, gpa))
++	if (private)
+ 		*pte |= PTE_C_BIT_MASK(mmu);
+ 	else
+ 		*pte |= PTE_S_BIT_MASK(mmu);
+ }
+ 
++void __virt_pg_map(struct kvm_vm *vm, struct kvm_mmu *mmu, gva_t gva,
++		   gpa_t gpa, int level)
 +{
-+	__asm__ __volatile__(
-+		"mov $" __stringify(XFEATURE_MASK_X87_AVX) ", %eax\n"
-+		"xor %edx, %edx\n"
-+		"xsave (%0)"
-+		:
-+		: "r"(addr)
-+		: "eax", "edx", "memory"
-+	 );
++	___virt_pg_map(vm, mmu, gva, gpa, level,
++		       vm_is_gpa_protected(vm, gpa));
 +}
 +
-+static void guest_code_xsave(void *vmsa_gva)
-+{
-+	xsave_all_registers(vmsa_gva);
-+	guest_sev_es_code();
-+}
- 
- static void compare_xsave(u8 *from_host, u8 *from_guest)
+ void virt_arch_pg_map(struct kvm_vm *vm, gva_t gva, gpa_t gpa)
  {
+ 	__virt_pg_map(vm, &vm->mmu, gva, gpa, PG_LEVEL_4K);
 -- 
 2.54.0.563.g4f69b47b94-goog
 
