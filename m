@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FE34921A0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9F948C8C5;
 	Thu,  7 May 2026 20:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778185370; cv=none; b=aZKyifYphtDG/SyQAFFMVt5NQ96EksRFcYhaz72PKqzSq1iVEk9l/x8qPaRBOPj/clje0K647TxogMzhVKSAauosDnSjmr+aQYf7ivXVQGkm4farG2rVZ9mMX/w6SWxDWpZ1BmYHkqg4M0AyVift6M/C9JEmxY/TOeteOkceIxo=
+	t=1778185370; cv=none; b=Ibit52LNaI9GLHEvLkhF4NCI7/yDGyKqrpOeTE/YNqW1pnMq7FJAvuDfBnUcqL2O7ofVDoVk9q/90dpcwalT6mzPLsYspme4NvKJDF/AT4XZIaOW4yGl8nM3tFTq3xp46NPmFmI0Y+tQ0wXG4+62ljdLVDHTy+tEbyiR91RCNxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778185370; c=relaxed/simple;
-	bh=r8wKNJEdooOeCA3S5K/H9KWL42If7lBpqyb7Ilu8Mcg=;
+	bh=fFtmWEB2rVwOQInVf+/O+AAAmMZe98X9Uk/1RyXVqxs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b1xSuCkxWcrJl0hs9CsKkopg0/KiyeP8qs+/e3xYQVP8nseNxK0bUI+of/9MyOvmuDUEBMAbkr6o+h+jWqfqqRqdUNAZoHkwIZfH2M/axPtvFDn8rlovwAhN4FzoGK7mxbrUbenxzAzBNDYENYCPbVQYZZH9fBnNz0zLa3aei5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STjZxzXW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XBfAMX6Vzy6OxKpXIUaHjEIThoJvldHYYVHCR9WsNwHB6G/xXHMln4bZSiQX83dKs7FMq5eyxtIlAa6RcOKwUIokKToZXdPDcTHZLkZdFchDh2G0EDCQ/TsDfgIduCep/D8SlhHU/EEaUTSSqXqG9WxhfIOwyXcraAC38krK+sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvaP+oVt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STjZxzXW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6442AC2BCF5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvaP+oVt"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81C1BC2BCB8;
 	Thu,  7 May 2026 20:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778185370;
-	bh=r8wKNJEdooOeCA3S5K/H9KWL42If7lBpqyb7Ilu8Mcg=;
+	bh=fFtmWEB2rVwOQInVf+/O+AAAmMZe98X9Uk/1RyXVqxs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=STjZxzXWMiXs316akMQPJ73coNbhqKrykRU9J4guekVuvcr0dP54cMNTiK0OtkEE3
-	 /iaFVnQtBhuHrg/5KwNFb3TVYpexS6SDA+6gnbFTrPtLHGfEpaiVZNSEGhgPS0Erh+
-	 pyH1O1nGqaxdbdbvoJOPeAwWwyH8/YZ0ekAXnIsOKuqSs89rhlfMM3sWeBQeO9rUR4
-	 /a6nD08ydeQrIjhDVHV5ZkDJERYIUvrQTT0FEQWaPlVdDT+rIYzkiGL6prqyosalq+
-	 Ak5PxfUWuKEyZHObLXitS7hsi4aZUYknhWi1dwuGLyoxyBiTseEXrDhBSoBJV+rPQ0
-	 WVLkwOsuy1SQg==
+	b=mvaP+oVtXNE1T3F7BFnHbkR0Do5+V2YtbUZCI/B0LSJ2RoHZfunSBYn/JQRQSA276
+	 u7KLzCm9oYvABACug7hPzVufNH+iIOPLpjsYxO7ytwcfU/u4L3H1KXwGZ6JTPA5UiE
+	 v/NkmacUD+HyBiyP+/neQWt5EO5fm91bxwPYWFm404KVJwyolzAIgsv07DJS3J5Pkm
+	 DAndgl+NjPQ6GclpKe9HAvyP9pnRJ+AAaDm3j5YC+FNyUj/yvDQDtv3zknIVkWefn+
+	 pLqC8Iu1mqXAsOizt5TA2nHfpLr51doOQrkf2tiKqZuPo7yAZOkWYSj3X8slp/QdiA
+	 BV7v8RDD8Z1gg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DC1CD3446;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7347FCD343F;
 	Thu,  7 May 2026 20:22:50 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Thu, 07 May 2026 13:22:34 -0700
-Subject: [PATCH v6 15/43] KVM: guest_memfd: Handle lru_add fbatch refcounts
- during conversion safety check
+Date: Thu, 07 May 2026 13:22:35 -0700
+Subject: [PATCH v6 16/43] KVM: guest_memfd: Use actual size for
+ invalidation in kvm_gmem_release()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260507-gmem-inplace-conversion-v6-15-91ab5a8b19a4@google.com>
+Message-Id: <20260507-gmem-inplace-conversion-v6-16-91ab5a8b19a4@google.com>
 References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
 In-Reply-To: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -75,11 +75,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778185365; l=2931;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778185365; l=1535;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=kyHfZ+B3SRw/wksZt++HyZ6ATcKspWiE/+jD/fdYN2M=;
- b=cQ9Jgy+WZlxi0pRUIUec609+6mHT+aRyKPHoQbOxCO1yz56Ikcjdc0yNsJ4xO9R6QnALQUkk+
- eptbvTh0LNvAFA7T0CkcjDIvvoCNSq159Pt02Gve8eBSIJficONyVwU
+ bh=LSFEUZnHaOopcxqUEi0sDjR1Doime7tSJ4O6yqxwRt0=;
+ b=/vOP4AdpdOPvG0vm/pWq6fbnDjc3tTn7sEYOQboWhIq67Ao5ApttT2OLD+kQoR9LNtnsKf+tf
+ 6p0lDRmkhG6BqVgy195ik79HDXsZwZRhvx0PXefOX24yR8AcenlQKt0
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -89,93 +89,44 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-When checking if a guest_memfd folio is safe for conversion, its refcount
-is examined. A folio may be present in a per-CPU lru_add fbatch, which
-temporarily increases its refcount. This can lead to a false positive,
-incorrectly indicating that the folio is in use and preventing the
-conversion, even if it is otherwise safe. The conversion process might not
-be on the same CPU that holds the folio in its fbatch, making a simple
-per-CPU check insufficient.
+__kvm_gmem_invalidate_begin() and __kvm_gmem_invalidate_end() actually do
+not specially handle -1ul. -1ul is used as a huge number, which legal
+indices do not exceed, and hence the invalidation works as expected.
 
-To address this, drain all CPUs' lru_add fbatches if an unexpectedly high
-refcount is encountered during the safety check. This is performed at most
-once per conversion request. Draining only if the folio in question may be
-lru cached.
-
-guest_memfd folios are unevictable, so they can only reside in the lru_add
-fbatch. If the folio's refcount is still unsafe after draining, then the
-conversion is truly deemed unsafe.
+Since a later patch is going to make use of the exact range, calculate the
+size of the guest_memfd inode and use it as the end range for invalidating
+SPTEs.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- mm/swap.c              |  2 ++
- virt/kvm/guest_memfd.c | 18 ++++++++++++++----
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ virt/kvm/guest_memfd.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 5cc44f0de9877..3134d9d3d7c30 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -37,6 +37,7 @@
- #include <linux/page_idle.h>
- #include <linux/local_lock.h>
- #include <linux/buffer_head.h>
-+#include <linux/kvm_types.h>
- 
- #include "internal.h"
- 
-@@ -904,6 +905,7 @@ void lru_add_drain_all(void)
- 	lru_add_drain();
- }
- #endif /* CONFIG_SMP */
-+EXPORT_SYMBOL_FOR_KVM(lru_add_drain_all);
- 
- atomic_t lru_disable_count = ATOMIC_INIT(0);
- 
 diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 034b72b4947fb..050a8c092b1a3 100644
+index 050a8c092b1a3..9f6eebfb68f6b 100644
 --- a/virt/kvm/guest_memfd.c
 +++ b/virt/kvm/guest_memfd.c
-@@ -8,6 +8,7 @@
- #include <linux/mempolicy.h>
- #include <linux/pseudo_fs.h>
- #include <linux/pagemap.h>
-+#include <linux/swap.h>
+@@ -370,6 +370,7 @@ static int kvm_gmem_release(struct inode *inode, struct file *file)
+ 	struct kvm_memory_slot *slot;
+ 	struct kvm *kvm = f->kvm;
+ 	unsigned long index;
++	pgoff_t end;
  
- #include "kvm_mm.h"
+ 	/*
+ 	 * Prevent concurrent attempts to *unbind* a memslot.  This is the last
+@@ -396,9 +397,10 @@ static int kvm_gmem_release(struct inode *inode, struct file *file)
+ 	 * Zap all SPTEs pointed at by this file.  Do not free the backing
+ 	 * memory, as its lifetime is associated with the inode, not the file.
+ 	 */
+-	__kvm_gmem_invalidate_begin(f, 0, -1ul,
++	end = i_size_read(inode) >> PAGE_SHIFT;
++	__kvm_gmem_invalidate_begin(f, 0, end,
+ 				    kvm_gmem_get_invalidate_filter(inode));
+-	__kvm_gmem_invalidate_end(f, 0, -1ul);
++	__kvm_gmem_invalidate_end(f, 0, end);
  
-@@ -596,18 +597,27 @@ static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
- 	const int filemap_get_folios_refcount = 1;
- 	pgoff_t last = start + nr_pages - 1;
- 	struct folio_batch fbatch;
-+	bool lru_drained = false;
- 	bool safe = true;
- 	int i;
+ 	list_del(&f->entry);
  
- 	folio_batch_init(&fbatch);
- 	while (safe && filemap_get_folios(mapping, &start, last, &fbatch)) {
- 
--		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
-+		for (i = 0; i < folio_batch_count(&fbatch);) {
- 			struct folio *folio = fbatch.folios[i];
- 
--			if (folio_ref_count(folio) !=
--			    folio_nr_pages(folio) + filemap_get_folios_refcount) {
--				safe = false;
-+			safe = (folio_ref_count(folio) ==
-+				folio_nr_pages(folio) +
-+				filemap_get_folios_refcount);
-+
-+			if (safe) {
-+				++i;
-+			} else if (folio_may_be_lru_cached(folio) &&
-+				   !lru_drained) {
-+				lru_add_drain_all();
-+				lru_drained = true;
-+			} else {
- 				*err_index = folio->index;
- 				break;
- 			}
 
 -- 
 2.54.0.563.g4f69b47b94-goog
