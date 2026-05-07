@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6715123D283;
-	Thu,  7 May 2026 01:41:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DA12C859;
+	Thu,  7 May 2026 01:46:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778118108; cv=none; b=C017uQKxDtmDDw8+jwVn6pw8/ERCP00tOMxhUyjs+54e1rkdZeY6/t/7cYDoUigae61X+Lm4n1h1EjPXzgvv1V/kJ8lGgxZBvRu0uKd/7WNoaZVlL5zp0XOUEdQBTBFZrhbdiYiMCOBIhI5TlL07NPO0jAAud4lU85kvcYQh33s=
+	t=1778118365; cv=none; b=ISc3W9Zn8T1yDZGcec9Es1AHo6Qb/tXhPPvnHZnGOLxx2unbYm/6nHpUsuhAGK3AjZH8pwBJ4inkclnhdblljv9n/YtU/W2iwmvslyX3N8ZvK4+KTo4j3Mu8BxYQLxNnVEqaatl4dBkuK9eX9UttW2fONzQcE1Mk8NSRVWaOOwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778118108; c=relaxed/simple;
-	bh=I3A5cWscMoEuGYe7noxywM4Tzupe8cCfmFvIgdz/SGA=;
+	s=arc-20240116; t=1778118365; c=relaxed/simple;
+	bh=SqzLSvkIU3gi/PO8FHJqLB6TXM33GjmfxL89pw1w7cU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=gwTEoSUYVTzythzZ7z44IZKiV53Tbruq9/DLGCjmFYg6D8NloGm+QwlqkMxEBK++ffthdo+WZdYHUuLc7Kdv2KfzjlJvSu9jBdf4lqjwjNDZGJw+BORJdt/j8qfqdKzfoX1MVRmMdhyqM6WZvNyKpc9DWIWF3AaUFfRVHxrabzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bj4XLLe/; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=EV8xEs4I4Sm7hVw6TXJFnEPSBk7JUd47/xf4TfNMnlxXpxKaZnJ92FXU6jLeXAzIlduMhFKMeyBZSkb3piietCXQy1Vq5nAQT2DWa4h8Atg7mTN8jNyV/ZedL/6awE5Rqa6Wqgjpp06Kr+BJV1f6b7AJdPe029wscB6md7bRHfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPpq/30u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bj4XLLe/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A00BAC2BCB0;
-	Thu,  7 May 2026 01:41:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPpq/30u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC16CC2BCB0;
+	Thu,  7 May 2026 01:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778118107;
-	bh=I3A5cWscMoEuGYe7noxywM4Tzupe8cCfmFvIgdz/SGA=;
+	s=k20201202; t=1778118365;
+	bh=SqzLSvkIU3gi/PO8FHJqLB6TXM33GjmfxL89pw1w7cU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Bj4XLLe/8mgAZLCzPzFAi3j05BHK9TkFjj4TWH4ZAuS+4GKxkfB/X07hPJ4uLILCC
-	 mRhvEiJneZfZn8SIBmoqph96qZhIQi364+FbzEcGuz99TKvVwD/q8PbPvOBtEn98p7
-	 NFMYRNm6i45+B88ECI0s74jxeXv9Xt2LEXYoKU8cnyn2J8Sd6Cu7g64bSfMuCEitro
-	 +DuK3289GvAMhN7OKJmR6dWQ4PJ/RUn2B6BfJsHGqek6j7Y7PynyMhHuaDMHvipSQ/
-	 pOPNbz6ZT3iOaXsAwTXiZkreVxbm4DD9OjJ10G+fuPLwm4EFiXsn9bgf3wERc+YlVy
-	 QEgfRTYRrBYHA==
-Date: Thu, 7 May 2026 10:41:45 +0900
+	b=qPpq/30ub8OnpZ6t9nU1XKd5OEgcXka8AoNbsyd7CIF/wCoIpl+E6IAlERzvza0yy
+	 2JI+BeKQ07iGHjGrTw21ggAsi4OoXn9XZRYeQUdJ3Ri1pVUoPmEDVlslamyXXSa1ys
+	 /HcrZxbiyVVljOc7zbG0A2B1K6N/lr9pxQbEMP/lBKgoIoVMCoJ1zMkAcqdNzBMVsM
+	 Gx6TY8cNvR1E6WZ4mqDdprtAIyHMWrgAqL8Pt1KW0tQtKhBTJLCBWXhNcHAIC0Kqck
+	 9V6ITPp0sSA6QBLZfsy7Y6P0DKVa6eBsMePrpApvETjxfQtNa6fqg1IE2m7/jfnEiU
+	 VYetI6gI9TMQw==
+Date: Thu, 7 May 2026 10:46:02 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- "David S. Miller" <davem@davemloft.net>, Andreas Larsson
- <andreas@gaisler.com>, linux-trace-kernel@vger.kernel.org (open
- list:UPROBES), sparclinux@vger.kernel.org (open list:SPARC + UltraSPARC
- (sparc/sparc64))
-Subject: Re: [PATCH] sparc64: uprobes: add missing break
-Message-Id: <20260507104145.ca21edc6e4597b85e8c8b0cb@kernel.org>
-In-Reply-To: <20260506031815.779909-1-rosenp@gmail.com>
-References: <20260506031815.779909-1-rosenp@gmail.com>
+To: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
+Cc: <naveen@kernel.org>, <davem@davemloft.net>, <arnd@arndb.de>,
+ <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-arch@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [v2 PATCH] kprobes: skip non-symbol addresses in
+ kprobe_add_ksym_blacklist()
+Message-Id: <20260507104602.b5dc0e1d6369b22e65b61d1c@kernel.org>
+In-Reply-To: <20260506012706.2785785-1-jianpeng.chang.cn@windriver.com>
+References: <20260506012706.2785785-1-jianpeng.chang.cn@windriver.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,41 +48,103 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue,  5 May 2026 20:18:15 -0700
-Rosen Penev <rosenp@gmail.com> wrote:
+On Wed, 6 May 2026 09:27:06 +0800
+Jianpeng Chang <jianpeng.chang.cn@windriver.com> wrote:
 
-> Missing fallthrough causes failure with newer compilers:
+> When kprobe_add_area_blacklist() iterates through a section like
+> .kprobes.text, the start address may not correspond to a named symbol.
+> On ARM64 with CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=y (introduced by
+> commit baaf553d3bc3 ("arm64: Implement
+> HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")), the compiler flag
+> -fpatchable-function-entry=4,2 inserts 2 NOPs before each function entry
+> point for ftrace call_ops. These pre-function NOPs sit at the section base
+> address, before the first named function symbol. The compiler emits a $x
+> mapping symbol at offset 0x00 to mark the start of code, but
+> find_kallsyms_symbol() ignores mapping symbols.
 > 
-> arch/sparc/kernel/uprobes.c:284:2: error: unannotated fall-through between switch labels [-Werror,-Wimplicit-fallthrough]
->   284 |         default:
->       |         ^
-> arch/sparc/kernel/uprobes.c:284:2: note: insert 'break;' to avoid fall-through
->   284 |         default:
->       |         ^
->       |         break;
+> Without CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS (e.g. defconfig), no
+> pre-function NOPs are inserted, the first function starts at offset
+> 0x00, and the bug does not trigger.
 > 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> This only affects modules that have a .kprobes.text section (i.e. those
+> using the __kprobes annotation). Modules using NOKPROBE_SYMBOL() instead
+> (like kretprobe_example.ko) blacklist exact function addresses via the
+> _kprobe_blacklist section and are not affected.
+> 
+> For kprobe_example.ko on ARM64 with -fpatchable-function-entry=4,2,
+> the .kprobes.text section layout is:
+> 
+>   offset 0x00: $x + 2 NOPs    (mapping symbol + ftrace preamble)
+>   offset 0x08: handler_post   (64 bytes)
+>   offset 0x50: handler_pre    (68 bytes)
+> 
+> kprobe_add_area_blacklist() starts iterating from the section base
+> address (offset 0x00), which only has the $x mapping symbol.
+> kprobe_add_ksym_blacklist() then calls kallsyms_lookup_size_offset()
+> for this address, which goes through:
+> 
+>   kallsyms_lookup_size_offset()
+>     -> module_address_lookup()
+>       -> find_kallsyms_symbol()
+> 
+> find_kallsyms_symbol() scans all module symbols to find the closest
+> preceding symbol.
+> 
+> Since no named text symbol exists at offset 0x00,
+> find_kallsyms_symbol() picks __UNIQUE_ID_vermagic (a .modinfo symbol
+> whose address is in the temporary image) as the "best" match. The
+> computed "size" = next_text_symbol - modinfo_symbol spans across
+> these two unrelated memory regions, creating a blacklist entry with
+> a bogus range of tens of terabytes.
+> 
+> Whether this causes a visible failure depends on address randomization,
+> here is what happens on Raspberry Pi 4/5:
+> 
+>   - On RPi5, the bogus size was ~35 TB. start + size stayed within
+>     64-bit range, so the blacklist entry covered the entire kernel
+>     text. register_kprobe() in the module's own init function failed
+>     with -EINVAL.
+> 
+>   - On RPi4, the bogus size was ~75 TB. start + size overflowed
+>     64 bits and wrapped to a small address near zero. The range
+>     check (addr >= start && addr < end) then failed because end
+>     wrapped around, so the bogus entry was accidentally harmless
+>     and kprobes worked by luck.
+> 
+> The same bug exists on both machines, but randomization determines whether
+> the integer overflow masks it or not.
+> 
+> Fix this by adding notrace to the __kprobes macro. Functions in
+> .kprobes.text are kprobe infrastructure handlers that should never be
+> traced by ftrace. With notrace, the compiler stops inserting them and the
+> non-symbol gap at the section start disappears entirely.
+> 
 
-Looks good to me.
+Thanks, this looks good to me!
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
+> Fixes: baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")
+> Signed-off-by: Jianpeng Chang <jianpeng.chang.cn@windriver.com>
 > ---
->  arch/sparc/kernel/uprobes.c | 1 +
->  1 file changed, 1 insertion(+)
+> v2: 
+>   - use notrace instead of skipping the nops
+> v1: https://lore.kernel.org/all/20260427073545.3656835-1-jianpeng.chang.cn@windriver.com/
 > 
-> diff --git a/arch/sparc/kernel/uprobes.c b/arch/sparc/kernel/uprobes.c
-> index 305017bec164..c8cac64e9988 100644
-> --- a/arch/sparc/kernel/uprobes.c
-> +++ b/arch/sparc/kernel/uprobes.c
-> @@ -280,6 +280,7 @@ int arch_uprobe_exception_notify(struct notifier_block *self,
->  	case DIE_SSTEP:
->  		if (uprobe_post_sstep_notifier(args->regs))
->  			ret = NOTIFY_STOP;
-> +		break;
->  
->  	default:
->  		break;
+>  include/asm-generic/kprobes.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/asm-generic/kprobes.h b/include/asm-generic/kprobes.h
+> index 060eab094e5a..5290a2b2e15a 100644
+> --- a/include/asm-generic/kprobes.h
+> +++ b/include/asm-generic/kprobes.h
+> @@ -14,7 +14,7 @@ static unsigned long __used					\
+>  	_kbl_addr_##fname = (unsigned long)fname;
+>  # define NOKPROBE_SYMBOL(fname)	__NOKPROBE_SYMBOL(fname)
+>  /* Use this to forbid a kprobes attach on very low level functions */
+> -# define __kprobes	__section(".kprobes.text")
+> +# define __kprobes	notrace __section(".kprobes.text")
+>  # define nokprobe_inline	__always_inline
+>  #else
+>  # define NOKPROBE_SYMBOL(fname)
 > -- 
 > 2.54.0
 > 
