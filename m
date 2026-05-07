@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425A44534B9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1E444B687;
 	Thu,  7 May 2026 20:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778185369; cv=none; b=a1aeXN38Pdztl0xU3Vg+dXFCIs6Lx8uwz6IuayLhMliqkpelVFhbK1vxeHXt2O2JazUKCyK/iRHQAG8l7iA+ZEfCXGh3BfwYpdDovT0TXpgOueAE+yDHeo6LMWZv0FQ7ecc+6QBiEtSbyzFoTen3puDS4JSaR/ymP0lHZJuPLDA=
+	t=1778185369; cv=none; b=WFxpc7I1u34HRu0vRpbEQbBBJmBD+KSFjEtHmSzU52S0GWf0ufpIESdNQUs15OlIS0VMR2XTRPjqIDiFWNHofLlDk12zBkWydxssOOHuHaU0yOR/N7kIz12SfVSU5uT1oSEZtDIjDdSwif7uQR2ptbQH9hAWmxb4LZjM1sBE030=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778185369; c=relaxed/simple;
-	bh=3Tv8SP7AnWASbuC11+vKkTBpZCOcHskSD+AA8VifsNE=;
+	bh=YE4+ijc8B8unJZoU03cWf+XDgeMGIXIfYTYsYzkgKKI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ULEDPI5mR4ssPAThpE+S1PNiUA3KGu1mP19GSLGzVyO26Hk0fwLG29AvgAcdUvrS7EU5AjAIwOi5ZwGZ5O1+qpl7QH7yI5kpYgjl0AlyLCCM352MC6qrmyGSOPX92A1mBizF8a5uO4yypm0JTh4CpLNQUKJcMHQKyN5GBEuQ8k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mesFkbnZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DhSSuQ8vsew7fO2Vzp5l0G3f2olemd/mWKD7DiFClWHhahY9k0u6vNbp5xcTN7pWa364sxPH64zhMu3oBnv1W7qW1VrI7vvmWa0DYzsoiD//GMivY11ct/hBVFyehYfhFVVprcg5/HARGkvGhdyFgwjcJmhOOZFqxE7OOcJYfAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5qcSEN2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mesFkbnZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 21227C2BCFF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5qcSEN2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0FEA6C2BD00;
 	Thu,  7 May 2026 20:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778185369;
-	bh=3Tv8SP7AnWASbuC11+vKkTBpZCOcHskSD+AA8VifsNE=;
+	bh=YE4+ijc8B8unJZoU03cWf+XDgeMGIXIfYTYsYzkgKKI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mesFkbnZAQuzWOKn0YAKeg+kNk95QR6MHiqkqL2v8xwB01b/5s+iATr00O328L9T5
-	 oHiMnQD+gBEKwrrSlnnFsCS/dfCJNRNd3TaPwwXlMZmfK3nc1hEDDw4/47gnpVuaaT
-	 RbAetGbtYXfj/gkoC7Sz1wmc2EDFKWD+h6O/EwOlq59rp52/Imn1xsPR5JVPPjA8cl
-	 67dZTb+Rv5t6Hc8MeBYDPuCx25IufB1+1oMH29TuP25bejpehzuXgaOfKJerUVOtux
-	 uKv3OUo/eoeilV87magdwm1MiJ9cNRtJEmR+4kiJJpwCuKvjyn0tFxf1+3E03CXMGT
-	 gYrUy1zKdSjNw==
+	b=U5qcSEN25hu0itcMhQEUyIibpLTh1cu5LmIQedC3YmljYonhff2+WqHhH5FxqVoIJ
+	 aga0UtwUNkDKhVui23WTxNyg4CceiLV+sB7HtxN5Cc50OBr7t/P2A0EkmCMIzcRUl+
+	 bySYlwclD/AcfpjVz2Fum9Z5ozjwABgAw9jj8yE4WUMg+GLXzrkGEjWdPka1E8dwEj
+	 ZqzccdKJ0I9AttSjjMbEqDyGneMU2dS+lDyXyRqFGZWC6DSeownSQ1vPo+9XB+n2pf
+	 sUcwmC3wTINVnI/402cBn0kF/PYLxOZ/E71mQh4Zc9/cFWgFP519FYLEC32flm6DcW
+	 WBUmvxaaNWMJA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5F0CD379F;
-	Thu,  7 May 2026 20:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA472CD3447;
+	Thu,  7 May 2026 20:22:48 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Thu, 07 May 2026 13:22:25 -0700
-Subject: [PATCH v6 06/43] KVM: x86/mmu: Bug the VM if gmem attributes are
- queried to determine max mapping level
+Date: Thu, 07 May 2026 13:22:24 -0700
+Subject: [PATCH v6 05/43] KVM: guest_memfd: Wire up
+ kvm_get_memory_attributes() to per-gmem attributes
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260507-gmem-inplace-conversion-v6-6-91ab5a8b19a4@google.com>
+Message-Id: <20260507-gmem-inplace-conversion-v6-5-91ab5a8b19a4@google.com>
 References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
 In-Reply-To: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -75,11 +75,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778185365; l=1802;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778185365; l=3662;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=zSMKUjOxxa82tr34hHB/lIyi0dgSFlYMksc47el8QGc=;
- b=hJ896vjTW0uUAF9uO3rBIOiH5NHAk0DL09eR9y0euiFWur9ijMeWBDnfJ2NtS5VCQ0U7KoL+q
- r6BoruioCdBDfuBf5VaYFPrfITfiOTnp6SwjOLdc8yMs137ID9Bj4ms
+ bh=RaMQqb1Z3D/y4hZGPqiuTqpIzc23thZTbu/49XtlXbw=;
+ b=1zykl/Xo6MJwvW7UdzwGuXat4SRBXAcuvjLNENFmIVlxHo6bIlePihDwmkqGB8eeWuaq+1N86
+ yxx0tAIpyWvA3KJHxf0UsKu9BcawQ4ofUU0sJNyjb8XLcAhExPvxCVW
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -87,52 +87,102 @@ X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
 X-Original-From: Ackerley Tng <ackerleytng@google.com>
 Reply-To: ackerleytng@google.com
 
-From: Ackerley Tng <ackerleytng@google.com>
+From: Sean Christopherson <seanjc@google.com>
 
-When the maximum mapping level is queried, KVM's MMU lock is held, and
-while the MMU lock is held, guest_memfd cannot take the
-filemap_invalidate_lock() to look up the current shared/private state of
-the gfn, for these reasons:
+Implement kvm_gmem_get_memory_attributes() for guest_memfd to allow the KVM
+core and architecture code to query per-GFN memory attributes.
 
-+ The MMU lock is a spinlock or rwlock and cannot be held while taking a
-  lock that can sleep.
-+ In guest_memfd's code paths (such as truncate), the
-  filemap_invalidate_lock() is held while taking the MMU lock, and taking
-  the locks in reverse order would introduce a AB-BA deadlock.
+kvm_gmem_get_memory_attributes() finds the memory slot for a given GFN and
+queries the guest_memfd file's to determine if the page is marked as
+private.
 
-Currently, the maximum mapping level is only queried from guest_memfd in
-the process of recovering huge pages, if dirty logging is disabled on a
-memslot. Dirty logging is not currently supported for guest_memfd, and
-guest_memfd memslots also cannot be updated.
+If vm_memory_attributes is not enabled, there is no shared/private tracking
+at the VM level. Install the guest_memfd implementation as long as
+guest_memfd is enabled to give guest_memfd a chance to respond on
+attributes.
 
-For now, bug the VM if guest_memfd needs to be queried to determine the
-maximum mapping level. This guard can be removed if/when support is added.
+guest_memfd should look up attributes regardless of whether this memslot is
+gmem-only since attributes are now tracked by gmem regardless of whether
+mmap() is enabled.
 
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Co-developed-by: Ackerley Tng <ackerleytng@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/linux/kvm_host.h |  2 ++
+ virt/kvm/guest_memfd.c   | 31 +++++++++++++++++++++++++++++++
+ virt/kvm/kvm_main.c      |  3 +++
+ 3 files changed, 36 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index a80a876ab4ad6..153bcc5369985 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3357,6 +3357,15 @@ int kvm_mmu_max_mapping_level(struct kvm *kvm, struct kvm_page_fault *fault,
- 		max_level = fault->max_level;
- 		is_private = fault->is_private;
- 	} else {
-+		/*
-+		 * Memory attributes cannot be obtained from guest_memfd while
-+		 * the MMU lock is held.
-+		 */
-+		if (KVM_BUG_ON(static_call_query(__kvm_get_memory_attributes) ==
-+			       kvm_gmem_get_memory_attributes, kvm)) {
-+			return 0;
-+		}
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index c5ba2cb34e45c..28a54298d27db 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2557,6 +2557,8 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+ 					 struct kvm_gfn_range *range);
+ #endif /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
+ 
++unsigned long kvm_gmem_get_memory_attributes(struct kvm *kvm, gfn_t gfn);
 +
- 		max_level = PG_LEVEL_NUM;
- 		is_private = kvm_mem_is_private(kvm, gfn);
- 	}
+ #ifdef CONFIG_KVM_GUEST_MEMFD
+ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 		     gfn_t gfn, kvm_pfn_t *pfn, struct page **page,
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 5011d38820d0d..f055e058a3f28 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -509,6 +509,37 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
+ 	return 0;
+ }
+ 
++unsigned long kvm_gmem_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
++{
++	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
++	struct inode *inode;
++
++	/*
++	 * If this gfn has no associated memslot, there's no chance of the gfn
++	 * being backed by private memory, since guest_memfd must be used for
++	 * private memory, and guest_memfd must be associated with some memslot.
++	 */
++	if (!slot)
++		return 0;
++
++	CLASS(gmem_get_file, file)(slot);
++	if (!file)
++		return 0;
++
++	inode = file_inode(file);
++
++	/*
++	 * Rely on the maple tree's internal RCU lock to ensure a
++	 * stable result. This result can become stale as soon as the
++	 * lock is dropped, so the caller _must_ still protect
++	 * consumption of private vs. shared by checking
++	 * mmu_invalidate_retry_gfn() under mmu_lock to serialize
++	 * against ongoing attribute updates.
++	 */
++	return kvm_gmem_get_attributes(inode, kvm_gmem_get_index(slot, gfn));
++}
++EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_memory_attributes);
++
+ static struct file_operations kvm_gmem_fops = {
+ 	.mmap		= kvm_gmem_mmap,
+ 	.open		= generic_file_open,
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index ee26f1d9b5fda..4139e903f756a 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2653,6 +2653,9 @@ static void kvm_init_memory_attributes(void)
+ 	if (vm_memory_attributes)
+ 		static_call_update(__kvm_get_memory_attributes,
+ 				   kvm_get_vm_memory_attributes);
++	else if (IS_ENABLED(CONFIG_KVM_GUEST_MEMFD))
++		static_call_update(__kvm_get_memory_attributes,
++				   kvm_gmem_get_memory_attributes);
+ 	else
+ 		static_call_update(__kvm_get_memory_attributes,
+ 				   (void *)__static_call_return0);
 
 -- 
 2.54.0.563.g4f69b47b94-goog
