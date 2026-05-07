@@ -1,95 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ECC30CD89;
-	Thu,  7 May 2026 08:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB9A3FCB31;
+	Thu,  7 May 2026 13:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778141596; cv=none; b=PqOZBCCJz9axiZjH4yR4/oZMzfRdY15L997KLNZeriBVr9oyPFFuce2nmTyOl8py/ATwuZEWObLQvEO4AbVOSXpcCuIWVJk+k2Op/QH3G/EDNuN3cHijtvGxjekRx1Dnq9YEOKo2vlxz/5IMYeoXn3fEjK4QOHpD3rhxR49JbJs=
+	t=1778161598; cv=none; b=b9XjadFM5F+jQXMgR7bBe226cKSE/hUP7dJZwNFtSyY9E6FKgFTaFdBEZoR6e0ZCMpY3fz7BcLE3cfX9tVnZ2aleXktZg6NzWxXkn0u4JgtYXxtYkJarTV+ogPcQFTLVBigxMwCcSq+95joMpSuC8pxHr3D3VGOlkTnfr209E5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778141596; c=relaxed/simple;
-	bh=94EURvBpaB/qpYv6arM6rRi/1tApSfXs4S6MvcECnhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggwf0yfUtko99icPLy379AlbmrU/sUHVep0l2AiFmP90XCbFKXkmUIwJuN/hJOaUSJx7f+KI3p+gQRKnOtNhAzaGRSPpm6qeqtta1kJx/TllmQxbMde8fG9YJxq65z/WJclQzNS09e0tEPD03F3AOUBbAf51MSqRyZBzAxKBf9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMVEIOcn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMVEIOcn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A84C2BCB8;
-	Thu,  7 May 2026 08:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778141596;
-	bh=94EURvBpaB/qpYv6arM6rRi/1tApSfXs4S6MvcECnhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jMVEIOcnAq5xHdT9rmQAFkmVgwQEJYmsfBjuY4/9QetcrIBztdU8besi1tRZWOD1J
-	 LYBg2SdFguiU+qIAfWw0N6ss8p3MAiveP+ByjvHjgWbvbnWBlDdcdG0ogCSM89K7G2
-	 xFnaBzeBwTiMP46eQyzpEKo6VzIz/5Bl516UeYsRythG0b3Htu4OWxocWAEKu5QIih
-	 YXDiKYwjPil2tKvrvnVaulbLaGBfSvGhj5VNfzgS2sTbPjbsh4Zh5ELS7gYe8Xrvn+
-	 fddeswvFHTiDH4RKb0fQfIPFJ3uJvMts9Txp6vPIoXf2+udbIo4PQ6qa/0Gwfj6Son
-	 2stLEYb2jGBcA==
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-	id 60B971AC5891; Thu, 07 May 2026 09:13:13 +0100 (BST)
-Date: Thu, 7 May 2026 17:13:13 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+	s=arc-20240116; t=1778161598; c=relaxed/simple;
+	bh=mI6M/OEib7vV2K5kAkNiO/eUM83xzR+mIzT6SbHH0wc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e1LLOFmwpPhBjOi1E4IW/irkMCb0vlykblRQ8AJgp6MoWRMEnV+MXCU7dHve0YIWAgLl9EDrCpHCopxx1Ibnqz+DJu8cLtBMlwvLesLhkxJ6sgiku5pJ2uL7ZNrii17U8piL6Cn0MPvgKdZtDg01g+ajb8VQKp8Yga7cPaAlVZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from ipservice-092-208-105-007.092.208.pools.vodafone-ip.de ([92.208.105.7] helo=nb282.user.codasip.com)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <martin@kaiser.cx>)
+	id 1wKz3f-00000000dxS-45zL;
+	Thu, 07 May 2026 15:46:32 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Naveen N Rao <naveen@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-	MukeshKumarSavaliyamukesh.savaliya@oss.qualcomm.com,
-	AniketRandiveaniket.randive@oss.qualcomm.com,
-	chandana.chiluveru@oss.qualcomm.com,
-	jyothi.seerapu@oss.qualcomm.com
-Subject: Re: [PATCH v1 1/2] spi: qcom-geni: trace: Add trace events for
- Qualcomm GENI SPI
-Message-ID: <afxJmZ9MkP5eJkQC@sirena.co.uk>
-References: <20260506-add-tracepoints-for-qcom-geni-spi-v1-0-c957cfe712d1@oss.qualcomm.com>
- <20260506-add-tracepoints-for-qcom-geni-spi-v1-1-c957cfe712d1@oss.qualcomm.com>
- <afvkiT50ZUEXZ-YO@sirena.co.uk>
- <e4651363-7c1c-4ae0-a97b-b64841424c83@oss.qualcomm.com>
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH] test_kprobes: clear kprobes between test runs
+Date: Thu,  7 May 2026 15:44:33 +0200
+Message-ID: <20260507134615.1010905-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CXGHJEGZJRzdqvcU"
-Content-Disposition: inline
-In-Reply-To: <e4651363-7c1c-4ae0-a97b-b64841424c83@oss.qualcomm.com>
-X-Cookie: Truckers welcome.
+Content-Transfer-Encoding: 8bit
 
+Running the kprobes sanity tests twice makes all tests fail and
+eventually crashes the kernel.
 
---CXGHJEGZJRzdqvcU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[root@martin-riscv-1 ~]# echo 1 > /sys/kernel/debug/kunit/kprobes_test/run
+...
+   # Totals: pass:5 fail:0 skip:0 total:5
+   ok 1 kprobes_test
+[root@martin-riscv-1 ~]# echo 1 > /sys/kernel/debug/kunit/kprobes_test/run
+...
+  # test_kprobe: EXPECTATION FAILED at lib/tests/test_kprobes.c:64
+  Expected 0 == register_kprobe(&kp), but
+      register_kprobe(&kp) == -22 (0xffffffffffffffea)
+...
+  Unable to handle kernel paging request ...
 
-On Thu, May 07, 2026 at 08:58:02AM +0530, Praveen Talari wrote:
-> On 07-05-2026 06:32, Mark Brown wrote:
+The testsuite defines several kprobes and kretprobes as static variables
+that are preserved across test runs.
 
-> > At least these feel like they really should be generic events, there
-> > hopefully isn't anything driver specific about them.
+After register_kprobe and unregister_kprobe, a kprobe contains some
+leftover data that must be cleared before the kprobe can be registered
+again. The tests are setting symbol_name to define the probe location.
+Address and flags must be cleared.
 
-> Initially implemented as a generic event; however, splitting into separate
-> TX and RX events may be more appropriate.
+The existing code clears some of the probes between subsequent tests, but
+not between two test runs. The leftover data from a previous test run
+makes the registrations fail in the next run.
 
-> Which approach would you prefer?
+Move the cleanups for all kprobes into kprobes_test_init, this function
+is called before each single test (including the first test of a test
+run).
 
-By generic I mean this should not be driver specific at all.
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+ lib/tests/test_kprobes.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
---CXGHJEGZJRzdqvcU
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/lib/tests/test_kprobes.c b/lib/tests/test_kprobes.c
+index b7582010125c..06e729e4de05 100644
+--- a/lib/tests/test_kprobes.c
++++ b/lib/tests/test_kprobes.c
+@@ -12,6 +12,12 @@
+ 
+ #define div_factor 3
+ 
++#define KP_CLEAR(_kp) \
++do { \
++	(_kp).addr = NULL; \
++	(_kp).flags = 0; \
++} while (0)
++
+ static u32 rand1, preh_val, posth_val;
+ static u32 (*target)(u32 value);
+ static u32 (*recursed_target)(u32 value);
+@@ -125,10 +131,6 @@ static void test_kprobes(struct kunit *test)
+ 
+ 	current_test = test;
+ 
+-	/* addr and flags should be cleard for reusing kprobe. */
+-	kp.addr = NULL;
+-	kp.flags = 0;
+-
+ 	KUNIT_EXPECT_EQ(test, 0, register_kprobes(kps, 2));
+ 	preh_val = 0;
+ 	posth_val = 0;
+@@ -226,9 +228,6 @@ static void test_kretprobes(struct kunit *test)
+ 	struct kretprobe *rps[2] = {&rp, &rp2};
+ 
+ 	current_test = test;
+-	/* addr and flags should be cleard for reusing kprobe. */
+-	rp.kp.addr = NULL;
+-	rp.kp.flags = 0;
+ 	KUNIT_EXPECT_EQ(test, 0, register_kretprobes(rps, 2));
+ 
+ 	krph_val = 0;
+@@ -290,8 +289,6 @@ static void test_stacktrace_on_kretprobe(struct kunit *test)
+ 	unsigned long myretaddr = (unsigned long)__builtin_return_address(0);
+ 
+ 	current_test = test;
+-	rp3.kp.addr = NULL;
+-	rp3.kp.flags = 0;
+ 
+ 	/*
+ 	 * Run the stacktrace_driver() to record correct return address in
+@@ -352,8 +349,6 @@ static void test_stacktrace_on_nested_kretprobe(struct kunit *test)
+ 	struct kretprobe *rps[2] = {&rp3, &rp4};
+ 
+ 	current_test = test;
+-	rp3.kp.addr = NULL;
+-	rp3.kp.flags = 0;
+ 
+ 	//KUNIT_ASSERT_NE(test, myretaddr, stacktrace_driver());
+ 
+@@ -367,6 +362,18 @@ static void test_stacktrace_on_nested_kretprobe(struct kunit *test)
+ 
+ static int kprobes_test_init(struct kunit *test)
+ {
++	KP_CLEAR(kp);
++	KP_CLEAR(kp2);
++	KP_CLEAR(kp_missed);
++#ifdef CONFIG_KRETPROBES
++	KP_CLEAR(rp.kp);
++	KP_CLEAR(rp2.kp);
++#ifdef CONFIG_ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
++	KP_CLEAR(rp3.kp);
++	KP_CLEAR(rp4.kp);
++#endif
++#endif
++
+ 	target = kprobe_target;
+ 	target2 = kprobe_target2;
+ 	recursed_target = kprobe_recursed_target;
+-- 
+2.43.7
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmn8SZUACgkQJNaLcl1U
-h9CJOwf9GQwE4WHnloSJ6SGx5h8PlOn3Me2DgSuTUn+tkIXBMhWopzwxzrdLcs0j
-y/geHWa9Wuw+Zr2KXhS2t8mkpODHldshlbPjusaZ0y4cvy5va0gP0cUhYKoizJH/
-7E30AQ7HqBonTW8Mpt9UCiDcw0JPDmqBySmf/tg0s/hnJJbJq6gF3R2xSrGQvo1c
-v5yx/lV+kAJQlvcPhpOrAB+Xv2qUT/SrP8uQ69/Nyw7GGBDZixV1Y0hUcvHaT9xM
-WDw4vnDSizjiqGrfjJ4LcdazIZ9WgEz0MV6aNcSAMbuzGTxuKyj7MDSbPE49iNCF
-OGmQSKWAk+bSk5ZmS4Cg62RyvxGfRw==
-=rJdk
------END PGP SIGNATURE-----
-
---CXGHJEGZJRzdqvcU--
