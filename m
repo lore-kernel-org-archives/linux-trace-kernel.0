@@ -1,198 +1,269 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1CB3F1659
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 May 2026 16:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778172975; cv=pass; b=aCudilfpxu88ACdB9x6P2ScmGutDuHnBrs30vz3LBfN1oMhFMqAKvb31g8cUN17/x9KEmL9zjHMT5Y2iYgGEwSGNu8CtjQ2kExXiSImEWDDD0ITBgiQnjWYcx5n292/i0HKycqFA1K1HxLLS8+zxxawvO893Oo1SOy0Slksx1Js=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778172975; c=relaxed/simple;
-	bh=yU58Xq2jlsKwRvWVzMF/35DqD9SuerVG6YnTfgrQsdg=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ool9P567BMO76ck2XwJJ384V0dE5f0cR0PdtyB0gaahem0LQuGBp4dvorJ9xHcAsGNxYZ+BsJZ1O0KOTWq4tw5yPH+lzVSczbN9YHqdgz+EwBB75UKE/bQmEtdrqyTbzKrITUtRUPGe7xvivDPYVNQwn/j3RcHLXhMUk9GmmmWA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X+qM3eJX; arc=pass smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9423128C6
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 May 2026 17:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778175229; cv=none; b=pcGqzE5IdufzaelUMXK5XI2zdF9PZ9B9NF7cB+D+nHFCZF92ap5YsG4RfAKz0jVx/J8aMoliLvX0ryZ5/tr0C3vBCIIxjiBf9NxRPQ6qUatsJor26af7ilrvwLqVYahy4yuJqHVbc7rgcfxedR8+JKVHOz5QlsZZ9pPW2JtBcHk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778175229; c=relaxed/simple;
+	bh=cLQZJH2kGtnDZyrn1tg3E2cgngZlOy76lIc1/a36KWo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZNYs3HLnnHKBzPy37vMGZHy9cok9BhPwkTGt4OjKMzvYm4vuVuWYxFaB+01Slq0W1/2X/shvOVtlVKdml6+MrkJIwsxY3PmHzmdwy/GIS0BVaT5TfYmChIK/SDjc7Nw2MK6h0VmAcUBmAHtj0j66+KwgaOymgQrCXn5zBr95s9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NiiHzniW; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=j8+Z/Dpm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X+qM3eJX"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-94ac8cbf3feso654625241.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 May 2026 09:56:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778172973; cv=none;
-        d=google.com; s=arc-20240605;
-        b=aGhaIsj9AJC5cao60v4Rr7MPBE+/Vk6+RPH/2Wn16d38Yr2ZwN6tPOi26vyR1FFX8W
-         abDZH2cOcbpeeXcp6SfxzaAnrvEcihB59V6mR+FORNwS7w/fJnpMJWUzLRZrICWNIX6E
-         ZwY7EwM4WJIJhC3SXYu6zJ5QflQOg9ndGA2Ss2H3nIA8SX4QPGbaAfd+EGpgbD+y4c9X
-         KBPzA7M9Mp0J1f1C0WdYkqRTx2RZ3yk7oud9ge154fSHp76xlK2K2Fzaj5zz6ovaCZPS
-         J/Fru2Xp/bb/qFGA/wdDpEh7vc7ezDIaHlYqhDHeDz89XS7sNO4pyW+K1LZ99E0rSv9o
-         lA2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=fxKJNK3JYOXtq/6RpdHSxauIPnnYNnrQjQPiGKEVycA=;
-        fh=SEvtRhJ2YkJZbE/j099gh7fCta+P1UWMsIJXvYUb59U=;
-        b=TzThNj3yT+0/2skI6dLvEeuj4KhHOZqmtaXISOHIcFPxf7UQ00jfzGpIi1ZTw7hXLV
-         zn1H6SvQJ7Ao5cvwOmOQsXyncm+HcuzXiqZFQOKopjQ9B5ST9b2ImUhS3c1KThqTZsCh
-         eAM0VwkxbCLzoP3rbojOFPzfdQc7pBDhFxYUbx+tcA1WFWMyOC/euahdbGHqXIonKjmo
-         183RW9rQ8eGBnU4xPe13U3pCYlA111PP1e409kcMfInx/lIqs2tSeqcwZz3qelmNUdUd
-         z46BAzjEKF0U78zqQvLKc238fMBRVnbU2I2Gk6Fj3R8wC2qvg8gY1EoyJCVdIvHchWcL
-         P/8g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NiiHzniW";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="j8+Z/Dpm"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 647FiC9o258795
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 7 May 2026 17:33:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fsf86z252hMHtoLYavCefPTQKf7GBUSrOYzr87mZoo0=; b=NiiHzniWe8XPtoO+
+	k2zosy55anP+pxjUMCfpPcPKPlkMuirP6ETTll6iRH+mMryJneYpZVd3MO/OKwsS
+	Ze9Xfhvnin3VULp3DJmXwu2WWksdCCF6OrNX4VmExftuNO2mpypXr8CnsqDXOarh
+	JVDIdegiIo4HoXGnfy/Lol1PW6BAN+bBIuvGvHStxfZYsA9tpZPQF13pGe5Ni4Af
+	0kSJr3RBilAYHC0SDRX/+JfebjooCvFMBY/3jzg5TA7YOqRzOwKuomDtxFwylLF8
+	ye1bD8ZytO0kaFhSe9Lnsfe/aU2omjl6Codk3ft0z36wmhX+CfXWza/IQpj37Jqa
+	zF8qNg==
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e0hr8ue5t-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 07 May 2026 17:33:47 +0000 (GMT)
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-2c0f6593ef5so2003349eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 May 2026 10:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778172973; x=1778777773; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fxKJNK3JYOXtq/6RpdHSxauIPnnYNnrQjQPiGKEVycA=;
-        b=X+qM3eJXNBkXxwX1JTjGOqY+SYIjD7OSQTTVvvH/d7Nt/MhXpv/9WeJL03HkywvFpu
-         lDNyX+dclfgyAnhD+8YhHeNs5NOIBeliQTxtb8XsPAmy168xewtjrqpiDUODMgKv8j4G
-         S4MFtygN/7tarwoktBPjP2v4hmJwm/cQhkSRO6F3xWWFtwvysExswW6eESe7LkSwF6ZA
-         zTDl6THueBMTmPSkjEHcp50WYWxQefW/LSpbIvVkvqecKpIvnbleFhnWRg4wFwJnVCem
-         rwB+sfNX0dtugfmtyQV7/a7IBs7+GPxCDbM5fVrClxK3C8X2tJ9hpm4tNg5S8jMzzLdC
-         lIRA==
+        d=oss.qualcomm.com; s=google; t=1778175226; x=1778780026; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fsf86z252hMHtoLYavCefPTQKf7GBUSrOYzr87mZoo0=;
+        b=j8+Z/Dpmz+mgxNfSMolwuFMqjWrfbWijLqfKT4YHB0Cdq/Bydcz4xDt2NUU5aHYM6h
+         3l1RtSMwTTd5xD0hXsFyH0WVnuV0x4r0R0ObBH4gLH8FXiY4Dy2htLtaE48P5rka27au
+         jzk212RRZpwBG8/x+veeyNlkN27g6ij0fCf5wy+R2spZIeVhll5dPy+dgG7dVWxJdKZ5
+         zCFcfD4W2fkCX7TiUCOV1h5Gk2yIhP6S9CwRZiUMILJodqVhVueNDd8y5XvbKnRBHIu7
+         MAfR0bp+8x7yyt85Q0anksyrh66zb5KDVLELrfNJYigl7qiTwMOUO82O+9WDemg5VL29
+         al5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778172973; x=1778777773;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20251104; t=1778175226; x=1778780026;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fxKJNK3JYOXtq/6RpdHSxauIPnnYNnrQjQPiGKEVycA=;
-        b=cNnqFGaPjeKvXhiQaT34B8K0SpLKqld001MDyDl3ZaNyd9EErXS+NkPLxTwYBv/FQu
-         jZVsdsRLP/rmfOu6bzOuwBEe3zJp4xi0ScNq7HJsgB6i5qo4Isgoa9rTmmwyB365V4/V
-         kuMNi89iegwHoV41R2T/iO4upX7quG64P2PASUAyHvRUPG5G4t5bLl9M5EUItD+EMrLI
-         AwsAUZ6AeoRIv4/9077ZoQryaoD88dLgnAPpFtLSmn7TZ0Hzl3pS0NPZf1taDPJF8x47
-         W7FflY38bPVm9EoaIwV6IZkZz0dkRRCLjj/3PcBzvpP5zHNm+TyynXfKZDjcRw+SsrZr
-         U56Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9ooYQSa7P7I4mb4Fe5ASgMR4Pm0WecYlkT4yX0D3z4g9cp00kq15N/KKoRiAgn5ipthY9GrQAKTpCEgLuCpOuI3xI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnaMpK8PWab4NNnsicoJnbhp34gKltBadJBd0Lx5GLrsPddqhQ
-	fBaSpN5XG95pv26YXx74TwzN+vtzHVZ7l52lfgun4Zl78AonXLWayONNDc+rGyajgI5Cfped6kE
-	FQBTyhSKDLdpheh2LxUP0wYusDX1o49TzwkQCXOzs
-X-Gm-Gg: AeBDieseBRAVAB7Jg47stLI2nFukBeEIaYa5bMNT04Ns/JHRGkLDhRYohfyb14S06nn
-	KmA9SovDuyPjyUhSaU3mhylDmraHpO6ZqYpJyp8qcUs9Y+tToMrKLa/mbpdMwDn1hF/aKk5PvSk
-	948BRScG0XzVyt8LfLcmEuhkzV8bHLBpMLoe4TGM6LLv4Kh3bIehepFciAullnLxzpLxYPaKZAg
-	/NRMzGq6gY7Jw8Ul/WQC8shiLTJYpu51tHtSY6BwWCwKUdGqilvSRAQX00ktAiAvVg3ckVv5rsx
-	G/NMhDoiJujov4g88RDsbAkp6pEI46AVDkwZSvc82Rg+suLgnkbGMHwg5FplU4wj6pzE3y4HjH/
-	LVPF6
-X-Received: by 2002:a05:6102:3f52:b0:604:f29d:84be with SMTP id
- ada2fe7eead31-630f8e78530mr5085650137.3.1778172972306; Thu, 07 May 2026
- 09:56:12 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 7 May 2026 09:56:11 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 7 May 2026 09:56:11 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <n5ce32wumzeiqqyqutom4apy2kqfetbvusc6j4k2xarsska5mw@klp5bmy7qhfm>
-References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
- <20260428-gmem-inplace-conversion-v5-10-d8608ccfca22@google.com> <n5ce32wumzeiqqyqutom4apy2kqfetbvusc6j4k2xarsska5mw@klp5bmy7qhfm>
+        bh=fsf86z252hMHtoLYavCefPTQKf7GBUSrOYzr87mZoo0=;
+        b=CUwaA9V9MF1PgWK82G3eiGaj2ZIMdbYVhEaWZsNbzm8rqJWhTaSoSd+o41PxChjTVH
+         bKUta+sdg+/aTIgRJcCeLX/zQc6pgZRUXxP6LlNLjlPkd4nmZov+jalBGLpKYgy9ln+L
+         KoQ+zq4Mt68Zla31KTH+B3mmpxQv1uzSdO1qApscb5a7rjWNFKjdzy2pgQH2dRp1xdwM
+         iWaUFcXUZswgOkOfLuhddo2TDYpw1mj6/DPpvRSKgfr3FP+WbnCEukcOMnAT/JnB6ACk
+         75WMk96Hlr2LTBd12KhcUSgtMXNJ//8QS0gFxKdkVaqnpyvGU3pxHfwhqwUFrPMm8nMj
+         irSg==
+X-Forwarded-Encrypted: i=1; AFNElJ97eCDi3a3mFloKTd2PWK7K6IPRHp9Cf1sFsqIfoEY/h0UmkzVI4CIQ71UkaVmNvb5hqqt57q+TINQrg/D6gscEkLg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBwlxWES5447mzR/4qCJXYrgRz0HkzMsimHn4ETaWFp/aj6PGo
+	g3CbOSIMbwEKucmHBr31Zh2H/WWRmhg635aUZ9z3pSPp8Ffrbbkh/tPJDo3iPx6oRP3OoSOU42t
+	c3s8ZsJR7O9Xr0a4w5wPhBT3cjn8/WsQg8D7dcTis+QzSAOg4nEqZFGD1/BJdxZwQE4gSWXMZUL
+	4=
+X-Gm-Gg: AeBDieuedQ8MeZBNl0rPFV+m0Mwb2nkavam0FIbpYqmLpMeO+/vsXzl/nApP8e7PKO5
+	ilTPVXTjROepGUUNACgV5qTYh8K1D3NY/R1N48cEEialUszIIRlwy8RLjxIENZtiiTUfwXYmZuM
+	nUV6008msqVolP/C/1TTYYpkg+HNA+F2TgAMT4GAz3kOEME4S/JoxD7+ntkabBtxNpoH9Ds+DkE
+	bbtu+A1SaeC7wwBNz5W6bayJXgCbdBW3jNTYIu+qz+b2SUBnuRx0LCBM0VIc0+kQu8tt0TKWERP
+	UsF4MFCoSK8ykeVPibieWZeDxG73kN/9FuewuUv4eJzyyH5zGbDroX5wcmxWNr2Ycj8Qf7Q4OJg
+	MU9ZrirsZ/rxbIFAcJeh7s0i81k3XbeXfAlQp4d/3QJQpsVkJPP8zog==
+X-Received: by 2002:a05:7301:3f16:b0:2ea:e93a:ff9b with SMTP id 5a478bee46e88-2f54919160dmr3866052eec.13.1778175226292;
+        Thu, 07 May 2026 10:33:46 -0700 (PDT)
+X-Received: by 2002:a05:7301:3f16:b0:2ea:e93a:ff9b with SMTP id 5a478bee46e88-2f54919160dmr3866033eec.13.1778175225596;
+        Thu, 07 May 2026 10:33:45 -0700 (PDT)
+Received: from [192.168.1.6] ([49.204.109.195])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f56f7967cfsm9440324eec.19.2026.05.07.10.33.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2026 10:33:45 -0700 (PDT)
+Message-ID: <59e36f20-891d-4a58-8cc4-6822d03daa23@oss.qualcomm.com>
+Date: Thu, 7 May 2026 23:03:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 7 May 2026 09:56:11 -0700
-X-Gm-Features: AVHnY4IiEmQejwyUzKbSGtsBzFH7WMpl699YC0dogi8imsP9-pFhPzVdvXeVDZc
-Message-ID: <CAEvNRgF9+Gr7UVEq-E2SQEb_XOQQMOXy9F_A2tA=DbNV_fJ0EQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v5 10/53] KVM: guest_memfd: Add basic support for KVM_SET_MEMORY_ATTRIBUTES2
-To: "Liam R. Howlett" <liam@infradead.org>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] spi: qcom-geni: trace: Add trace events for
+ Qualcomm GENI SPI
+To: Mark Brown <broonie@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+        MukeshKumarSavaliyamukesh.savaliya@oss.qualcomm.com,
+        AniketRandiveaniket.randive@oss.qualcomm.com,
+        chandana.chiluveru@oss.qualcomm.com, jyothi.seerapu@oss.qualcomm.com
+References: <20260506-add-tracepoints-for-qcom-geni-spi-v1-0-c957cfe712d1@oss.qualcomm.com>
+ <20260506-add-tracepoints-for-qcom-geni-spi-v1-1-c957cfe712d1@oss.qualcomm.com>
+ <afvkiT50ZUEXZ-YO@sirena.co.uk>
+ <e4651363-7c1c-4ae0-a97b-b64841424c83@oss.qualcomm.com>
+ <afxJmZ9MkP5eJkQC@sirena.co.uk>
+Content-Language: en-US
+From: Praveen Talari <praveen.talari@oss.qualcomm.com>
+In-Reply-To: <afxJmZ9MkP5eJkQC@sirena.co.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: nQsqp_l_6X7l0bl1hwB50zeg6AIWGUo9
+X-Authority-Analysis: v=2.4 cv=caHiaHDM c=1 sm=1 tr=0 ts=69fcccfb cx=c_pps
+ a=Uww141gWH0fZj/3QKPojxA==:117 a=TOgzk8GLwxQW6KRttr6vHg==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=1cC0H0qRpQ7oy3NfP0gA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=PxkB5W3o20Ba91AHUih5:22
+X-Proofpoint-GUID: nQsqp_l_6X7l0bl1hwB50zeg6AIWGUo9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA3MDE3NyBTYWx0ZWRfX6KMK8GI2NWt5
+ NgRatWNd1By7T5p/QrpXzqNqLsMfZIe2pgoR11wcw6B3V/VnOp9S8vreUveZsM5xs2Ua65JItM0
+ a9fnY6ZGFDmhPWhcCWYfdKa3JVo4uLypUe0eYjJ5c4jl9iZl9QhhoSZfFYemQSUvYtV4uvBehwm
+ iw5oHht5f93N/knVODzy/YXWIybXOeqnJz7OCixLUgx1JB6OLFNCVExfBCHXdjXO/ScBj5W+rgq
+ 5nnddRrAVeQASzEjtdr+EPgxw4oklzluk1FqQk+ItwNgQ73gRoA6xJcIMQuXsFfUPxjSIzVO27p
+ nFNSc0OvlcMBp7nEPLF+8IWCdQ+uoMgHaOwLN2lSGkIxQIs7ZEDAAWudCfVgDE+bjliFY/t5Yyo
+ BzAl8I/GjBZrsYhMGbP28axFGvD2i0DBbJQMJ7kke25X7+AUcP6ICjM8zbLs2/6sdZBzucahace
+ IJjVJIFcXeBQi8uDWaQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-07_02,2026-05-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 clxscore=1015 suspectscore=0 bulkscore=0 priorityscore=1501
+ adultscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605070177
 
-"Liam R. Howlett" <liam@infradead.org> writes:
+Hi Mark,
 
-> On 26/04/28 04:25PM, Ackerley Tng via B4 Relay wrote:
->>
->> [...snip...]
->>
->> +/*
->> + * Preallocate memory for attributes to be stored on a maple tree, pointed to
->> + * by mas.  Adjacent ranges with attributes identical to the new attributes
->> + * will be merged.  Also sets mas's bounds up for storing attributes.
->> + *
->> + * This maintains the invariant that ranges with the same attributes will
->> + * always be merged.
->> + */
->> +static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
->> +				    pgoff_t start, size_t nr_pages)
->> +{
->> +	pgoff_t end = start + nr_pages;
->> +	pgoff_t last = end - 1;
->> +	void *entry;
->> +
->> +	/* Try extending range. entry is NULL on overflow/wrap-around. */
->> +	mas_set_range(mas, end, end);
->> +	entry = mas_find(mas, end);
+On 07-05-2026 13:43, Mark Brown wrote:
+> On Thu, May 07, 2026 at 08:58:02AM +0530, Praveen Talari wrote:
+>> On 07-05-2026 06:32, Mark Brown wrote:
+>>> At least these feel like they really should be generic events, there
+>>> hopefully isn't anything driver specific about them.
+>> Initially implemented as a generic event; however, splitting into separate
+>> TX and RX events may be more appropriate.
+>> Which approach would you prefer?
+> By generic I mean this should not be driver specific at all.
+I hope these changes are fine. Please let me know if you have any 
+concerns or feedback.
 
-Thank you for your reviews!
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index 4da888359cfc..9abb5f4f719b 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -1,6 +1,8 @@
+  // SPDX-License-Identifier: GPL-2.0
+  // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
 
->
-> Please read the documentation as I believe you have a bug here.  What
-> happens if there is another range stored higher than end + 1?
->
++#include <trace/events/spi.h>
++
+  #define CREATE_TRACE_POINTS
+  #include <trace/events/qcom_geni_spi.h>
 
-The invariant in this maple tree is that contiguous ranges with the same
-attribute are stored as a single range.
+@@ -709,6 +711,7 @@ static unsigned int geni_byte_per_fifo_word(struct 
+spi_geni_master *mas)
 
-The goal of this first part is to get the entry at the index just after
-the requested range, and see what the attribute there is. If that
-attribute is what we're about to set, extend the requested range for
-storing to the end of that range.
+  static bool geni_spi_handle_tx(struct spi_geni_master *mas)
+  {
++       struct spi_controller *spi = dev_get_drvdata(mas->dev);
+         struct geni_se *se = &mas->se;
+         unsigned int max_bytes;
+         const u8 *tx_buf;
+@@ -739,7 +742,7 @@ static bool geni_spi_handle_tx(struct 
+spi_geni_master *mas)
+                 iowrite32_rep(se->base + SE_GENI_TX_FIFOn, &fifo_word, 1);
+         }
+         mas->tx_rem_bytes -= max_bytes;
+-       trace_geni_spi_tx_data(mas->dev, tx_buf, max_bytes, 
+mas->tx_rem_bytes);
++       trace_spi_tx_data(spi->cur_msg->spi, tx_buf, max_bytes, 
+mas->tx_rem_bytes);
+         if (!mas->tx_rem_bytes) {
+                 writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
+                 return false;
+@@ -749,6 +752,7 @@ static bool geni_spi_handle_tx(struct 
+spi_geni_master *mas)
 
-If there is another range higher than end + 1, with the invariant
-maintained, that attribute has to be different than the attribute stored
-at end. Hence, we only want to extend this requested range up till end.
+  static void geni_spi_handle_rx(struct spi_geni_master *mas)
+  {
++       struct spi_controller *spi = dev_get_drvdata(mas->dev);
+         struct geni_se *se = &mas->se;
+         u32 rx_fifo_status;
+         unsigned int rx_bytes;
+@@ -790,7 +794,7 @@ static void geni_spi_handle_rx(struct 
+spi_geni_master *mas)
+         }
+         mas->rx_rem_bytes -= rx_bytes;
 
-> Do you have testing of these functions somewhere?
->
+-       trace_geni_spi_rx_data(mas->dev, rx_buf, rx_bytes, 
+mas->rx_rem_bytes);
++       trace_spi_rx_data(spi->cur_msg->spi, rx_buf, rx_bytes, 
+mas->rx_rem_bytes);
+  }
 
-GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(indexing, 4) tests setting
-attributes in ranges. If test_page is 2,
+  static int setup_se_xfer(struct spi_transfer *xfer,
+diff --git a/include/trace/events/spi.h b/include/trace/events/spi.h
+index e63d4a24d879..4907625e019d 100644
+--- a/include/trace/events/spi.h
++++ b/include/trace/events/spi.h
+@@ -233,6 +233,53 @@ DEFINE_EVENT(spi_transfer, spi_transfer_stop,
 
-1. [0, 4) starts off shared (4 is the number of pages in the guest_memfd)
-2. [2, 3) is converted to private
-    => so the ranges should now be [0, 2), [2, 3), [3, 4)
-3. [2, 3) is converted back to shared
-    => so the ranges should now be [0, 4)
+  );
 
-I verified this by inserting some trace_printk()s and inspecting manually.
++DECLARE_EVENT_CLASS(spi_data,
++
++       TP_PROTO(struct spi_device *spi, const u8 *buf, unsigned int len,
++                unsigned int rem),
++
++       TP_ARGS(spi, buf, len, rem),
++
++       TP_STRUCT__entry(
++               __field(        int,            bus_num         )
++               __field(        int,            chip_select     )
++               __field(        unsigned int,   len             )
++               __field(        unsigned int,   rem             )
++               __dynamic_array(u8,     data,           len     )
++       ),
++
++       TP_fast_assign(
++               __entry->bus_num = spi->controller->bus_num;
++               __entry->chip_select = spi_get_chipselect(spi, 0);
++               __entry->len = len;
++               __entry->rem = rem;
++               memcpy(__get_dynamic_array(data), buf, len);
++       ),
++
++       TP_printk("spi%d.%d len=%u rem=%u data=%s",
++                 __entry->bus_num, __entry->chip_select,
++                 __entry->len, __entry->rem,
++                 __print_hex(__get_dynamic_array(data), __entry->len))
++);
++
++DEFINE_EVENT(spi_data, spi_tx_data,
++
++       TP_PROTO(struct spi_device *spi, const u8 *buf, unsigned int len,
++                unsigned int rem),
++
++       TP_ARGS(spi, buf, len, rem)
++
++);
++
++DEFINE_EVENT(spi_data, spi_rx_data,
++
++       TP_PROTO(struct spi_device *spi, const u8 *buf, unsigned int len,
++                unsigned int rem),
++
++       TP_ARGS(spi, buf, len, rem)
++
++);
++
+  #endif /* _TRACE_POWER_H */
 
->> +	if (entry && xa_to_value(entry) == attributes)
->> +		last = mas->last;
->> +
->> +	if (start > 0) {
->> +		mas_set_range(mas, start - 1, start - 1);
->> +		entry = mas_find(mas, start - 1);
->> +		if (entry && xa_to_value(entry) == attributes)
->> +			start = mas->index;
->> +	}
->> +
->> +	mas_set_range(mas, start, last);
->> +	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
->> +}
->> +
->>
->> [...snip...]
->>
+
+
+Thanks,
+
+Praveen Talari
+
