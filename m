@@ -1,127 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9357F2FE056;
-	Fri,  8 May 2026 17:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369A2375AC3;
+	Fri,  8 May 2026 18:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778262776; cv=none; b=n8Uc4bEMefzvAcq8QWzGPxTBEhiaXgCsmRhscvDf8GAJW/WwaEANBslEBiOOKJN/wAAGsGQeDjqnpTbyid12ESdRWqXuLsCc+AGWVsBgsSWiyjwPvvi/a1w+qOeMndb+KWVQ9TlP8vy8kOyL9+SivG8gFDEiG23fGLizRS2YxFQ=
+	t=1778263668; cv=none; b=O8XgAM8JJNpfUDhP/724H6OOibHwvKekqQd4h3vwgTQwC6VVMvcGRjs3ZKR3KfOu+Q9OAffJPUs9CiryTc3RllekVeEVUp7Hwq/R50nP7s5GCVdnH5KIqccdlUjrsDaAPaVMCFskITxlap1eIrFgptF3TtqjPBVkuv7ynJPCMvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778262776; c=relaxed/simple;
-	bh=7FO/OvjB81khbVySOVw1mhcX4mL/VhbRPd35cA9Jelc=;
+	s=arc-20240116; t=1778263668; c=relaxed/simple;
+	bh=qhhTlGMvQMRL9Bmq9vcsE+UjnlVlYkTgwTJtLejSoFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u8raS1IdjyzdMKlJzkNKkcQpCUuVQlhxY0crvAP9mT/IowDujSWTxbBOkfoPtD/8bzP4Pej45gNnv4tMV8LhZ89Y0r6ttuqC1XQ3RUSMop/wjXRM1GRyD34nRc7tWtrg1uym0WCL/AtY0HM9RMu2KsHj7kkVFvjgT5WWv3fWWsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bhp/xG+x; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=be/EERL610c3fi30wjcSXQyby+wN4y4TzauErHkxabid2JQiEP/Wr6DmbkokIgjg6gtpAOZU6ZP6KfXnzlucEA96JlrcuIwU5PxcCZ96OoySRtcm7e1e4sxuw8u84B9PEuEToEmpuBMt5XKYwrDD5lRoyNUycYwqGk9Yu691dxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=VQuOdwNp; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bhp/xG+x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35495C2BCB0;
-	Fri,  8 May 2026 17:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778262776;
-	bh=7FO/OvjB81khbVySOVw1mhcX4mL/VhbRPd35cA9Jelc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Bhp/xG+xadRrlmz/bfTShSKS7y2H/NrORoSuGsy2gx2sEAXSdSN2O6nEdoCn2+/oE
-	 ai/3ujkjYhPSv6Q2VQ3yBLiXOYoMcD66gIbByk29qLaqxz5BGkPnxaV9weOix5FwAW
-	 VJfBK8byNFeo5ZGNFdXKPeTL4u9GT+GV6lPj+IILe2o7Yc8mUatY6Ck1vCnM7Emhhh
-	 oOuaH3u/OiIV2NtyEe0gNDu+RGmxZf2NTgueCVd12rb9wR2OibZY4Jp7YyQthlDfLy
-	 Xf5ZFsbvYUIjRjeahDmaHky1CFECNsfxhm9hbYzmE0Yyq2qU60oIwJ29TFZ5x6+Z73
-	 dY74NSOlqN5Dg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D2C3CCE06FB; Fri,  8 May 2026 10:52:55 -0700 (PDT)
-Date: Fri, 8 May 2026 10:52:55 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>,
-	Adrien Reynard <reynard.adrien.08@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="VQuOdwNp"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 361AFD019C;
+	Fri, 08 May 2026 18:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1778263661;
+	bh=U84xTPtSzHCYwlBfJ8QYFEF9cYH13YL55X92oolwzd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VQuOdwNpwD3wDXPZ50x0gvil9D7oQWIOkhUp+Dj0AEAOqKDxamokQgGBiTFsYPIG+
+	 rzKKYCAZl/0yf5qyb96UUZtOWCM8Hnmsmm09tX1YRSzjKi9jQok2BrYaLyWZ279g/o
+	 lHMGGVNXMSINmfC8NCrpkzmIis8akxSsC9KyMyDY=
+Date: Fri, 8 May 2026 18:07:40 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, hawk@kernel.org,
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"open list:READ-COPY UPDATE (RCU)" <rcu@vger.kernel.org>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:DRIVER CORE, KOBJECTS, DEBUGFS AND SYSFS" <driver-core@lists.linux.dev>,
-	"open list:FILESYSTEMS [NETFS LIBRARY]" <netfs@lists.linux.dev>,
-	"open list:FILESYSTEMS [NETFS LIBRARY]" <linux-fsdevel@vger.kernel.org>,
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] docs: fix repeated word 'that' across documentation
-Message-ID: <6acba84c-c92c-4f64-ac26-3308620b2398@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20260508163759.16231-1-reynard.adrien.08@gmail.com>
- <1501caea-8cff-4968-aca6-e8d4b20e0e80@linuxfoundation.org>
- <5f68ac30-21ac-494b-a140-2307e236f0a2@infradead.org>
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@cloudflare.com
+Subject: Re: [PATCH 1/2] mm/page_alloc: add tracepoints for zone->lock
+ acquisitions
+Message-ID: <af4mbDB3-ohO5DCp@shell.ilvokhin.com>
+References: <20260508162207.3315781-1-hawk@kernel.org>
+ <20260508102948.b1c687e623fabec65580f258@linux-foundation.org>
+ <832e4333-4079-4865-8ad8-3dd8868fb964@kernel.org>
+ <4f61457e-deff-430f-8a1e-d3c33c925db3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f68ac30-21ac-494b-a140-2307e236f0a2@infradead.org>
+In-Reply-To: <4f61457e-deff-430f-8a1e-d3c33c925db3@kernel.org>
 
-On Fri, May 08, 2026 at 10:40:49AM -0700, Randy Dunlap wrote:
-> 
-> 
-> On 5/8/26 10:15 AM, Shuah Khan wrote:
-> > On 5/8/26 10:37, Adrien Reynard wrote:
-> > 
-> > Missing commit log in all your patches - I don't patch 1/5 in
-> > my Inbox.
-> > 
-> >> Signed-off-by: Adrien Reynard <reynard.adrien.08@gmail.com>
-> >> ---
-> >>   Documentation/RCU/rcu.rst                          | 2 +-
-> >>   Documentation/driver-api/driver-model/overview.rst | 2 +-
-> >>   Documentation/filesystems/netfs_library.rst        | 2 +-
-> >>   Documentation/trace/histogram-design.rst           | 2 +-
-> >>   Documentation/trace/histogram.rst                  | 2 +-
-> >>   5 files changed, 5 insertions(+), 5 deletions(-)
+On Fri, May 08, 2026 at 07:40:51PM +0200, Vlastimil Babka (SUSE) wrote:
+> On 5/8/26 7:38 PM, Vlastimil Babka (SUSE) wrote:
+> > On 5/8/26 7:29 PM, Andrew Morton wrote:
+> >> e .configOn Fri,  8 May 2026 18:22:06 +0200 hawk@kernel.org wrote:
 > >>
-> >> diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
-> >> index bf6617b330a7..320ad3292b75 100644
-> >> --- a/Documentation/RCU/rcu.rst
-> >> +++ b/Documentation/RCU/rcu.rst
-> >> @@ -32,7 +32,7 @@ Frequently Asked Questions
-> >>     Just as with spinlocks, RCU readers are not permitted to
-> >>     block, switch to user-mode execution, or enter the idle loop.
-> >>     Therefore, as soon as a CPU is seen passing through any of these
-> >> -  three states, we know that that CPU has exited any previous RCU
-> >> +  three states, we know that CPU has exited any previous RCU
+> >>> Add tracepoints to the page allocator fast paths that acquire
+> >>> zone->lock, allowing diagnosis of lock contention in production.
+> >>
+> >> Thanks, I'm surprised we haven't done this yet.
 > > 
-> > The original intent might have been to say, "that cpu", so adding
-> > the missing comma after the first "that" or change "that" to "the"
-> > would make sense.
+> > There was a recent attempt [1]. Not being a generic solution wasn't welcome.
+> > 
+> > [1] https://lore.kernel.org/all/cover.1772206930.git.d@ilvokhin.com/
 > 
-> Not a comma, please.
-> I don't see a problem with "that that," but "that the" could also be OK.
-
-This CPU was already mentioned.  So if for whatever reason we cannnot
-stomach "that that", then "that this" would be better than "that the".
-
-I suppose that false positives from simple grammar checkers might be
-sufficient reason, but in this brave new world of LLMs, shouldn't we
-be hoping for better?  ;-)
-
-						Thanx, Paul
-
-> >>     read-side critical sections.  So, if we remove an item from a
-> >>     linked list, and then wait until all CPUs have switched context,
-> >>     executed in user mode, or executed in the idle loop, we can
+> And this is the generic solution I think?
 > 
-> 
-> -- 
-> ~Randy
-> 
+> https://lore.kernel.org/all/cover.1777999826.git.d@ilvokhin.com/
+
+Thanks for cc'ing me, Vlastimil.
+
+Yes, this is an attempt at a generic solution for tracing contended
+locks, including spinlocks, so it should also cover the use case
+proposed in this patchset.
+
+In fact, zone->lock contention was one of the primary motivations for
+this work.
