@@ -1,105 +1,96 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EA6311946;
-	Fri,  8 May 2026 13:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4594A3D6473;
+	Fri,  8 May 2026 14:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778248784; cv=none; b=CUOK1RTkUnqaNMaoxV+nEM5DvcrDpS8i5RBetloiZ4UZAz35boWXagaY8/CIGw4jsubGvNhYkkecFnRBk8PQx+BZ8gmeK4c5ZTgOCDxH0Qp5sGsRz119UrEhgh1z7qJVtFm3dmwgZF/PVHUnFjFCPJeOMg+caA2gZBmdAWW8IE0=
+	t=1778248874; cv=none; b=u0wwsqitn8181PVavn9uTrU/U5H/oinSCNmvqXQxcnvZlCZlTnkzeqgnKV1aWrs8QShV7ixeaoJMPcDOQIb2l4oSqgblZPLeux1fG1FLofhMaMrmpd4O4frXYq3BYOXNUh1dWLlkX/rlUA+8ZHOHvde66bf2ikR/5kHfQDvmjGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778248784; c=relaxed/simple;
-	bh=KdW9yULYzrFb4FGIPjUdyi9HuMrHaJZ34J4/f5NElC4=;
+	s=arc-20240116; t=1778248874; c=relaxed/simple;
+	bh=NlWpkJl28fCMdI7yre7mRiciRoVvpyRad/yUQyxDQHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=exhnZ7PaWP1DKQl9FRRVCvozNf504CYTy9A1vnSfnnkVJR+IUYTQWfp31lrdoXFw+xy9v7Nj+2Qa24UzqAeSE6lwCryCQ6xab9O5WS2s2n1PJnHcRcT4nYa73VgvHt3bRpfXmqkRCOzQHQXKmMjOjn/sWEiBMJ9AwxnazHtt5eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=GiArDfxY; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHP+dvFw08XdGybp7zkKeT4he195COgFiQh2LqwBVZsL/jK1yebWIbDAB1FN7wcs+kbeMvBeS0mIs7mxc/rij46aRRD8O9vGLzKUsdf9LUFAm108s8LFIqgA/uTU/jM5mP/S9ihPEBzTNZFJ+PM1Z2cuX5XyW+ifuB5utVyA26U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hnEdtCIM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="GiArDfxY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Iez1Su5tuk5ceRFo8KI+ALmnBqBbH9V15uTQFnREABY=; b=GiArDfxYMolIX0D1pr1MuWxdyt
-	c8wZFN2YH27nfvQl1T2XSmXtiYAMefsc8pqq//zIqEqCZfVn6LeWKjHlGHjU7mcjT7cOoO2TlPLsc
-	H2RHal+gw2dx3yJfwXefiJZSMqlZtrsS/DKdvHmRwy6hTprZkYSzSPfj33SWOh/T0AO9avp9ooylP
-	sAXDpRNtxShcBC2Zc9Pi4x+m/n705ju1iuFuztPCnZv5KiETQxbQKbMSeRLseCjH19G38GXfSr+6w
-	mFwOHmosb6hQICPreUKdj7dUsm2sO32P8GB4FAwCd/w0aCJJTuhASU+tRgbpMrxVjCuGCFHzGQek6
-	7V5rAXxA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wLLjs-005C6Y-2M;
-	Fri, 08 May 2026 13:59:37 +0000
-Date: Fri, 8 May 2026 06:59:32 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, oss@malat.biz, 
-	paulmck@kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH 2/3] init: use static buffers for bootconfig extra
- command line
-Message-ID: <af3roPwbLHDDcak8@gmail.com>
-References: <20260415-bootconfig_earlier-v1-0-cf160175de5e@debian.org>
- <20260415-bootconfig_earlier-v1-2-cf160175de5e@debian.org>
- <20260417104436.ece29fd5e2cb7a59c8cf8ac1@kernel.org>
- <aeJH8mhxqrwdsjxc@gmail.com>
- <20260429172721.c89072381aa98d1090ad383f@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hnEdtCIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE194C2BCB8;
+	Fri,  8 May 2026 14:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778248873;
+	bh=NlWpkJl28fCMdI7yre7mRiciRoVvpyRad/yUQyxDQHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hnEdtCIM/Wytg98NgoA1sM5eNln7Q+t6BMqaAdG0/RjgAD312/4ligBGkS14B6aze
+	 TKS71bi3GUSqSMir4TypCxp2Q9tjOyRqF0fXbd0068xGrhC3xZ3SjlmGrArlKhY/fr
+	 DijWlQ3PQ+b1D1i2d+pmD3erTefVKs3YWLKdLSAnHumCe5i8i7Lr4YaBgsgYsWV80w
+	 xVTDim3ZYbuk/TYiDCORqqZgP5bv5z/OAPknMC/bUbOcjjwyP+iBdSbGZO87ZRrOa3
+	 hPyzmlQXZc1ND/3cngfqAvguog4ptHoe7MEKgas1ed2DcWtyGHyFzuBPj7exz2WEQ6
+	 uAWAB/hBCsU6w==
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+	id 092D51AC5896; Fri, 08 May 2026 15:01:11 +0100 (BST)
+Date: Fri, 8 May 2026 23:01:10 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+	MukeshKumarSavaliyamukesh.savaliya@oss.qualcomm.com,
+	AniketRandiveaniket.randive@oss.qualcomm.com,
+	chandana.chiluveru@oss.qualcomm.com,
+	jyothi.seerapu@oss.qualcomm.com
+Subject: Re: [PATCH v1 1/2] spi: qcom-geni: trace: Add trace events for
+ Qualcomm GENI SPI
+Message-ID: <af3spostNgoRU0Vv@sirena.co.uk>
+References: <20260506-add-tracepoints-for-qcom-geni-spi-v1-0-c957cfe712d1@oss.qualcomm.com>
+ <20260506-add-tracepoints-for-qcom-geni-spi-v1-1-c957cfe712d1@oss.qualcomm.com>
+ <afvkiT50ZUEXZ-YO@sirena.co.uk>
+ <e4651363-7c1c-4ae0-a97b-b64841424c83@oss.qualcomm.com>
+ <afxJmZ9MkP5eJkQC@sirena.co.uk>
+ <59e36f20-891d-4a58-8cc4-6822d03daa23@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Xo3uM2EQ4qGE2K/q"
+Content-Disposition: inline
+In-Reply-To: <59e36f20-891d-4a58-8cc4-6822d03daa23@oss.qualcomm.com>
+X-Cookie: Truckers welcome.
+
+
+--Xo3uM2EQ4qGE2K/q
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260429172721.c89072381aa98d1090ad383f@kernel.org>
-X-Debian-User: leitao
 
-Hello Masami,
+On Thu, May 07, 2026 at 11:03:39PM +0530, Praveen Talari wrote:
+> On 07-05-2026 13:43, Mark Brown wrote:
 
-On Wed, Apr 29, 2026 at 05:27:21PM +0900, Masami Hiramatsu wrote:
-> On Fri, 17 Apr 2026 08:38:16 -0700
-> Breno Leitao <leitao@debian.org> wrote:
-> > On Fri, Apr 17, 2026 at 10:44:36AM +0900, Masami Hiramatsu wrote:
-> > > On Wed, 15 Apr 2026 03:51:11 -0700
-> > > Breno Leitao <leitao@debian.org> wrote:
-> > >
-> > > But if we can do it, should we continue using bootconfig? I mean
-> > > it is easy to make a tool (or add a feature in tools/bootconfig)
-> > > which converts bootconfig file to command line string and embeds
-> > > it in the kernel. Hmm.
-> >
-> > Sure, you are talking about a a tool that embeddeds it in the kernel binary,
-> > something like:
-> >
-> >
-> > 0) Get a kernel and define CONFIG_BOOT_CONFIG_EMBED_FILE=".bootconfig"
-> >
-> > 1) Add an option in tools/bootconfig to convert bootconfig (.bootconfig)
-> >    to a cmdline string ($ bootconfig -C kernel .bootconfig).
-> >    Something like:
-> >    # tools/bootconfig/bootconfig -C kernel .bootconfig
-> >      mem=2G loglevel=7 debug nokaslr %
-> >
-> > 2) At kernel build time, run that tool on .bootconfig and embed the
-> >    resulting string into the kernel image as a .init.rodata symbol
-> >    (embedded_kernel_cmdline[]).
-> >
-> >    # gdb -batch -ex 'x/s &embedded_kernel_cmdline' vmlinux
-> >    0xffffffff87e108f8:    "mem=2G loglevel=7 debug nokaslr "
+> > By generic I mean this should not be driver specific at all.
 
-> Yeah, I think this looks good to me.
+> I hope these changes are fine. Please let me know if you have any concerns
+> or feedback.
 
-Thank you for the feedback. I've begun working on the bootconfig patches
-following the approach outlined in Step 1 above. Note that I've
-simplified the -C option by removing the "kernel" argument mentioned in
-the earlier example.
+The data tracepoints look plausible but I would expect them to be
+generated by the core, they'll be there for everything so I'd expect
+them to work for everything.
 
-The patch series is available here:
+--Xo3uM2EQ4qGE2K/q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-https://lore.kernel.org/all/20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org/
+-----BEGIN PGP SIGNATURE-----
 
-I appreciate your continued support.
---breno
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmn97KYACgkQJNaLcl1U
+h9Drrwf/W6faToQE+TVwkiIzx7VRppTKLmiTz7jQ+oeqkwOe9pMmiO5H+GmaD/63
+fJ7pxuw3Aeq8VfYivHDFRoBWM2LJ78wKHTfQaGCkz7Q8DXjZ66ciDpt1L22fc4DJ
+a5broXuZjWQT7zIkFWN4jnQ+aNGqk6rPAfMMgJtcnCLVI/oqiqAECeyUVE+rHj+F
+PZYKk34P1VoEIgh1ThYh8aedlNdVlIn5d8wep3B6agqxgxCVeYhp2ceIUgmfVlqi
+BAy8RJqIhSWr+BIjnMBfLSghprXgyqRLcJXjiMamZuVL+/068ARJ4jpWOXsmJA5R
+XVxoQCkHOLccStjGbJzHeACxptnYyw==
+=98Fc
+-----END PGP SIGNATURE-----
+
+--Xo3uM2EQ4qGE2K/q--
