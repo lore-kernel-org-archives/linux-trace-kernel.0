@@ -1,41 +1,41 @@
 Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157CC329C6B;
-	Fri,  8 May 2026 13:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265C23DEADE;
+	Fri,  8 May 2026 13:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778248516; cv=none; b=hF8WPhsPirKyFuB12cHb5J7dY6Jl2SnjBD6dJ4FM2AOvERHRE9P5OgI6oibfBiOzycO3YLmRfU65aB08fC3S5wkMQNLOilt09I9edwaijCR71Lir9w/dxC0Tmg1jvJInnr8PIm5GqRFF5tKtpTZYa8TWGK5/G90Tw51WlzHHpX8=
+	t=1778248517; cv=none; b=lQdL+IxZxT9wrrEATGUwN0LjLuHbFnjs7gdubo4hxRAh9kxUe6drB/TnU5ZzYfziGwfVYkEqjlbHK3G56vD7KBllgMEILDYS/rlYtsGqLdd99dcb4iRny1UTD+8DMgfNlRtGO/zSBM6Z2FuwPghbqn78yn3PKz3fuj9eb2thoE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778248516; c=relaxed/simple;
-	bh=9a+I85bQwies79X8PAu940AVw7wrJrvOUZhYk7nkGLo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D9CzFZ7RVxVKBO0AMez7iY1mhEunkTWovBmN/n9hDPDeM17Iipi0YqzuceeffwA0ecSrs6N37AcO9YVosys/T+r/hu3QnbMwjAL+QrLiDxW/Ze9s8qtCj7BD7Moewj2djlveRF9uBj/jtSc5Xj6/rfGO+kH+HbkHpZbXxQP9xoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=k9XboejP; arc=none smtp.client-ip=82.195.75.108
+	s=arc-20240116; t=1778248517; c=relaxed/simple;
+	bh=f222Em/3i+qAi7/0qYSge4czNDjNG6mwwW2LVFH8Ox8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=r0GPpZHdI2ff6FE1ubFjOsONIs5CeaWkItEYJQuxLsFq5T1oLeAEnqeyjL4tb+YQXszysCmlGmKhOPdUyWA6zjzpc3mKMrW24lD4qmwDwA5ke0BjwqhtDWxsXRaPVEhq0dfhcRjaJUXUmWLQS/i3WkhaLLjKpma3RgGaFjv1Wzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=K6sAgfbW; arc=none smtp.client-ip=82.195.75.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="k9XboejP"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="K6sAgfbW"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-Id:Date:Subject:From:Reply-To:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=svi5dy1bN8Y21l/5zPkOPhEITWrtVBy7MJjMiXiK/d4=; b=k9XboejPyzNSDkRTD/FZ91hIUq
-	iC1ncynW7G9zXARWsBaN45qKiDzXDk+Ht82vr8s25nuOjg63NKkv6rhA1/MSgSDanyFD6cb41eKxI
-	DXVE/OHw9NVmJGw7oE56etXIHWlvx8JxlJt7ZZyFa+UTxPUejhHnH30DyNQdCAq9dnU3FLhOVuLo2
-	ImHqRe+o6gmHH155/A9sCtcelRmzQvn/ZwF19FM4frNiTF6bFGVvs0MJfId5hmjpGgq4qfe8FRIk4
-	ybpg4LkMq5J/r8XFeqNWJrwJXgm4OkVTW/439xhYIBPGniO5XD2gWVNb619b82SrTsqf9LcHjIFUy
-	b0NDcO+g==;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=UPM3zmXLW3EKgqA4eiYR7WduPpfETtjolSsLgElu958=; b=K6sAgfbWXewh5tqPQ3xX8Ffgjx
+	FJPqbAL8u4XD5YAOVPUCGBsudzSrjm9oxO45/Uoo+3RRRH4Gry0qc3D1PCaB0VNzZtkINooalWwON
+	KBH08WCR/SAfzMEOGj2o4jsz96Ireu4uaPGxsFf9nnetQCw9uUk521EVocbZXAnAx8MMwOjir5d5M
+	LKDyZx5IMYfnrHEJIZJLKYcpuK0pZ686Vs3QlNd39gLqpAIHfcR5sZWOJAlnqi4opV3h/Y6512P2a
+	Og0Jz/zNLjnGzbv9sC7S9y+g9YSO/1yB5aJHdPAO0L5G9sa9yWdKVndzC0TtBelgLrOEv1xL6RfN9
+	kETDAQLw==;
 Received: from authenticated user
 	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <leitao@debian.org>)
-	id 1wLLfa-005BwB-0g;
-	Fri, 08 May 2026 13:55:10 +0000
+	id 1wLLfe-005Bwp-14;
+	Fri, 08 May 2026 13:55:14 +0000
 From: Breno Leitao <leitao@debian.org>
-Subject: [PATCH 0/2] tools/bootconfig: render kernel.* subtree as a cmdline
- string
-Date: Fri, 08 May 2026 06:55:02 -0700
-Message-Id: <20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org>
+Date: Fri, 08 May 2026 06:55:03 -0700
+Subject: [PATCH 1/2] bootconfig: move xbc_snprint_cmdline() to
+ lib/bootconfig.c
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -43,123 +43,188 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIADfr/WkC/yXMUQrCMAwA0KuEfK9QB5vaq4iMrEtrRBppOhHG7
- i7q5/t5GxpXYcMAG1Z+iYkWDHDoAOONSmYnCwbA3vejH/zJzaotakmSp9Wk5KmpPszFREei8zL
- SQNgBPisnef/iy/VvW+c7x/bdcN8/cFUgYHoAAAA=
-X-Change-ID: 20260508-bootconfig_using_tools-cfa7aa9d6a5a
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260508-bootconfig_using_tools-v1-1-1132219aa773@debian.org>
+References: <20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org>
+In-Reply-To: <20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>, 
  Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  paulmck@kernel.org, oss@malat.biz, Breno Leitao <leitao@debian.org>, 
  kernel-team@meta.com
 X-Mailer: b4 0.16-dev-453a6
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4150; i=leitao@debian.org;
- h=from:subject:message-id; bh=9a+I85bQwies79X8PAu940AVw7wrJrvOUZhYk7nkGLo=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBp/es6PpyeImJ3ELueExedNY92qIydtEPnW6NAe
- Si/qbFnN3GJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaf3rOgAKCRA1o5Of/Hh3
- bQ2WD/4jiWEhe0TdcgfkufnVisOmW8A2ERj7Sac/xhLeyTX9zDmB0j554x6ATVV2Ev2zPRYD5w0
- B6nFPOs3ZcuQBsyDvxYCWXCviXGC7b8QEvUOe3ftaez6Sd0/gg+VnZZNGurrP4f//LBESb5fH2j
- SZ20YVjE29B1IEnxLzEgbGjKQmhLWdcZAX/c2Mx0TE6yzmObq2v4wvKJvs3KKRkadTjHTE4D5lu
- EcNLWyGzPy6MY7W6F89ZV0ykMUxxR0x+zjGPVIUrZZcF1hPMEwbhsLsfdJ3U1f6D2Mzuvu5jpuM
- O0OR6qWmS/65uMw9cNZ///KyFVMrYHWWhT2g95EQuLma/LRV8C1lt6fl6il0wOqKVt4tlTEGPcG
- 7jhRQsAioMZZzM3aabdGznJB241umeKmz/vBkZVBQk7oTZUZWPDcnMDWsyicrXOT0JRaI2NYo2U
- v6R9kCsayvOHxDffD1/gw7gRvOA2aiaJ1bzYXgeZAfrLqCI88GR+oihcuraTFt+R5d+cVd1nj8m
- iaUWx4KyV9Yx1gIA4VfZ0c7ym9W9SDY3YRlAJi409tF4wBiODAoea+mSpCxnRWEch723QQ+1v4V
- wnbH9Mg9neSNExpQahyv1t2kawcD1TuqCN0sNm4ZdpDrHe4GvHjajHxSPcqu3Ei3nU4y1xO7jzt
- 2/b+ErTWuUquA9Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5015; i=leitao@debian.org;
+ h=from:subject:message-id; bh=f222Em/3i+qAi7/0qYSge4czNDjNG6mwwW2LVFH8Ox8=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBp/es6Gnz9YMTq9Bg1o8NypksKSgdD+aRWJTsbQ
+ w+hYs4CcYqJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaf3rOgAKCRA1o5Of/Hh3
+ bYAAD/9dyK1eSFVLlqUfYEOhJtH7vEyRUIbBcJRkXh4h7dy0LrRabFQmptQV4wJrMmSMrRfDAMS
+ Ub/K1xCvQIi/HpDTBGggKL0q6JFGVP8WZoa000kXKg0r4V9yHRF7IEkJe7IwMe73YBAkVLco4OO
+ y/xKlb9IFN2k3kZAJkUfYdN7kFQjOZaWHUaUL+A4mHfFdndF4I7BJhs+q/bpgYjt/cjXGqx/h+w
+ CFghr6FYoQsKtEXku+aBKoOr48bUBWWsCqBvGeIXNr7MtUxB0qtezBb8A3/u+Elr1kygRK1qPMh
+ USBRWYfQBQ9/+8SrVd1I9D7ZIRANj3YBfcD+mlYsjAbFS29ICbvjGD3NMoYp2ZxoL5VSmMsh5Ty
+ 9sFnsxIfgOyOH3RLbNZvjtFXfVV8PlEetOoNGBJOl8BG6YveaXHf8N7sRNLIYgzp7IQkOmIoiqA
+ r+WO0tP5UAQEEJjrZHq/iut1HHKJxjdsFen4+Q60oUrHsfdwiXRbZb4QwQEOq2ZHbZXyDqDToKk
+ HdVFiMKNr1eDd8w8i4EBPqLXPQOU+isWYLel9pRku3VBe9m8kb6idI03O/V8LJ4cCStplf1RYG+
+ tve0G/kJLdN1rNlvFGWtfgyrzRU700fCT5YPMdlymzFUIile8y05DaRnLAWCtEMBPydqW5EHbKp
+ WI1cLZI/O80Jc6A==
 X-Developer-Key: i=leitao@debian.org; a=openpgp;
  fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 X-Debian-User: leitao
 
-Add a bootconfig -> kernel cmdline rendering capability shared between
-the kernel parser library and the userspace tools/bootconfig binary.
+Move xbc_snprint_cmdline() from init/main.c to lib/bootconfig.c so the
+function (and its xbc_namebuf scratch buffer) becomes part of the shared
+parser library. tools/bootconfig already compiles lib/bootconfig.c
+directly, which lets a follow-up patch reuse the same renderer in the
+userspace tool to convert a bootconfig file into a flat cmdline string
+at build time.
 
-The new userspace mode "tools/bootconfig -C <file>" walks a bootconfig
-file's "kernel" subtree and prints it as a flat, space-separated
-cmdline string suitable for direct use as (or appending to) a kernel
-command line.
-
-This series prepares tools/bootconfig and lib/bootconfig.c for an
-upcoming feature that lets the kernel build render an embedded
-bootconfig file's "kernel" subtree to a flat cmdline string and embed
-it in the kernel image.
-
-The follow-up series (sent separately) wires this into setup_arch() so
-early_param() handlers see values supplied via CONFIG_BOOT_CONFIG_EMBED_FILE,
-following Masami suggestion in [1]
-
-These two patches are pure groundwork. They add no kernel feature,
-change no runtime behavior, and are useful on their own (the new
-"tools/bootconfig -C" mode lets anyone render a .bootconfig file to
-a cmdline string from the shell).
-
-Landing them independently lets the follow-up series focus on the
-kernel-side plumbing without dragging the refactor and tool addition
-through the same review cycle.
-
-Patch 1 lifts xbc_snprint_cmdline() from init/main.c into
-lib/bootconfig.c so both the kernel runtime path
-(xbc_make_cmdline -> extra_command_line) and the userspace tool can
-share a single renderer. 
- - tools/bootconfig already compiles lib/bootconfig.c directly, so no
-   new shared-code mechanism is introduced.
-
-Patch 2 adds a -C option to tools/bootconfig that walks the "kernel"
-subtree of a bootconfig file and prints it as a flat, space-separated
-cmdline string. Missing or empty kernel.* produces empty output and
-exits 0.
- - This is the renderer the kernel build will invoke.
-
-Once this lands, the follow up patches will use it in the following way:
-
-1) Render at build time.
-The kernel build invokes the userspace bootconfig tool — using the -C mode
-prep added — to convert the embedded bootconfig file into a flat kernel cmdline
-string.
-
-2) Bake the string into the kernel image.
-A small assembly stub embeds the rendered file into the kernel's discardable
-read-only init data, bracketed by two markers so the runtime can locate it.
-
-3) Add a runtime helper to consume it.
-A new helper in the shared bootconfig source — sitting next to the renderer
-prep moved there — prepends the embedded blob to a cmdline buffer, panicking
-rather than truncating if it overflows. The public header declares it with a
-no-op stub when the feature is off.
-
-4) Plumb it at architecture early setup.
-The arch's early setup calls the helper after the existing builtin-cmdline
-merge but before early-param parsing, so values from the embedded bootconfig
-influence early-param handlers (console, log level, memory overrides) right
-when architecture setup runs — not later in
-
-Background: the v1 attempt at this feature moved bootconfig parsing
-before setup_arch() with ~96KB of static __initdata buffers [1].
-Masami suggested doing the conversion at build time instead [2], which
-avoids the early-boot allocator dance and the start_kernel() reordering.
-
-This series, plus the follow-up, aims to implement that approach.
-
-[1] https://lore.kernel.org/all/20260415-bootconfig_earlier-v1-0-cf160175de5e@debian.org/
-[2] https://lore.kernel.org/all/20260417104436.ece29fd5e2cb7a59c8cf8ac1@kernel.org/
+No functional change.
 
 Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-Breno Leitao (2):
-      bootconfig: move xbc_snprint_cmdline() to lib/bootconfig.c
-      tools/bootconfig: render kernel.* subtree as cmdline string with -C
-
  include/linux/bootconfig.h |  3 +++
- init/main.c                | 45 ----------------------------------
- lib/bootconfig.c           | 56 +++++++++++++++++++++++++++++++++++++++++++
- tools/bootconfig/main.c    | 60 +++++++++++++++++++++++++++++++++++++++-------
- 4 files changed, 111 insertions(+), 53 deletions(-)
----
-base-commit: 17c7841d09ee7d33557fd075562d9289b6018c90
-change-id: 20260508-bootconfig_using_tools-cfa7aa9d6a5a
+ init/main.c                | 45 -------------------------------------
+ lib/bootconfig.c           | 56 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 59 insertions(+), 45 deletions(-)
 
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
+diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+index 692a5acc2ffc4..1c7f3b74ffcf3 100644
+--- a/include/linux/bootconfig.h
++++ b/include/linux/bootconfig.h
+@@ -265,6 +265,9 @@ static inline struct xbc_node * __init xbc_node_get_subkey(struct xbc_node *node
+ int __init xbc_node_compose_key_after(struct xbc_node *root,
+ 			struct xbc_node *node, char *buf, size_t size);
+ 
++/* Render key/value pairs under @root as a flat cmdline string */
++int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root);
++
+ /**
+  * xbc_node_compose_key() - Compose full key string of the XBC node
+  * @node: An XBC node.
+diff --git a/init/main.c b/init/main.c
+index 96f93bb06c490..e363232b428b4 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -324,51 +324,6 @@ static void * __init get_boot_config_from_initrd(size_t *_size)
+ 
+ #ifdef CONFIG_BOOT_CONFIG
+ 
+-static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+-
+-#define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
+-
+-static int __init xbc_snprint_cmdline(char *buf, size_t size,
+-				      struct xbc_node *root)
+-{
+-	struct xbc_node *knode, *vnode;
+-	char *end = buf + size;
+-	const char *val, *q;
+-	int ret;
+-
+-	xbc_node_for_each_key_value(root, knode, val) {
+-		ret = xbc_node_compose_key_after(root, knode,
+-					xbc_namebuf, XBC_KEYLEN_MAX);
+-		if (ret < 0)
+-			return ret;
+-
+-		vnode = xbc_node_get_child(knode);
+-		if (!vnode) {
+-			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
+-			if (ret < 0)
+-				return ret;
+-			buf += ret;
+-			continue;
+-		}
+-		xbc_array_for_each_value(vnode, val) {
+-			/*
+-			 * For prettier and more readable /proc/cmdline, only
+-			 * quote the value when necessary, i.e. when it contains
+-			 * whitespace.
+-			 */
+-			q = strpbrk(val, " \t\r\n") ? "\"" : "";
+-			ret = snprintf(buf, rest(buf, end), "%s=%s%s%s ",
+-				       xbc_namebuf, q, val, q);
+-			if (ret < 0)
+-				return ret;
+-			buf += ret;
+-		}
+-	}
+-
+-	return buf - (end - size);
+-}
+-#undef rest
+-
+ /* Make an extra command line under given key word */
+ static char * __init xbc_make_cmdline(const char *key)
+ {
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index c470b93d5dbc2..f445b7703fdd9 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -408,6 +408,62 @@ const char * __init xbc_node_find_next_key_value(struct xbc_node *root,
+ 		return "";	/* No value key */
+ }
+ 
++static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
++
++#define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
++
++/**
++ * xbc_snprint_cmdline() - Render bootconfig keys under @root as a cmdline string
++ * @buf: Destination buffer (may be NULL when @size is 0 to query the length)
++ * @size: Size of @buf in bytes
++ * @root: Subtree root whose key=value pairs should be rendered
++ *
++ * Walk all key/value pairs under @root and emit them as a space-separated
++ * cmdline string into @buf. Values containing whitespace are quoted with
++ * double quotes. Returns the number of bytes that would be written if @buf
++ * were large enough (matching snprintf semantics), or a negative errno on
++ * failure.
++ */
++int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
++{
++	struct xbc_node *knode, *vnode;
++	char *end = buf + size;
++	const char *val, *q;
++	int ret;
++
++	xbc_node_for_each_key_value(root, knode, val) {
++		ret = xbc_node_compose_key_after(root, knode,
++					xbc_namebuf, XBC_KEYLEN_MAX);
++		if (ret < 0)
++			return ret;
++
++		vnode = xbc_node_get_child(knode);
++		if (!vnode) {
++			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
++			if (ret < 0)
++				return ret;
++			buf += ret;
++			continue;
++		}
++		xbc_array_for_each_value(vnode, val) {
++			/*
++			 * For prettier and more readable /proc/cmdline, only
++			 * quote the value when necessary, i.e. when it contains
++			 * whitespace.
++			 */
++			q = strpbrk(val, " \t\r\n") ? "\"" : "";
++			ret = snprintf(buf, rest(buf, end), "%s=%s%s%s ",
++				       xbc_namebuf, q, val, q);
++			if (ret < 0)
++				return ret;
++			buf += ret;
++		}
++	}
++
++	return buf - (end - size);
++}
++#undef rest
++
+ /* XBC parse and tree build */
+ 
+ static int __init xbc_init_node(struct xbc_node *node, char *data, uint16_t flag)
+
+-- 
+2.53.0-Meta
 
