@@ -1,155 +1,118 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D60341B342
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 May 2026 17:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D328421EE4;
+	Fri,  8 May 2026 17:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778262059; cv=none; b=YsJSK0wqt4KISlbhklsrptJsUEqKJFNkiUXLhER6Jo/MdLBreiIy/P3hiVOGWSgdTR++SlyZdp83Rnrz+tAGEg+XCFTuvTwLpJbY4SCGdq6rG7MZsyRbPurrqh/XfoESd7sIaHAODn1uIqAF6bfcKEJ9/cdub1Q4QZ5kHP8h2JQ=
+	t=1778262065; cv=none; b=g5MaVOmbdS96/Uw9bf23iHm8M2FWK20wF39JotoYfcIW7hERCasRvCuCiW744JR0UP7a8Pgajh0rO944GChw2ZrUW7a22viQkb8CZ+Vmm3p49ctosEDrRI0DWeuGtZJ9UF9occeRsn532QTmZLRNNvb7Jt1rmybFAZpesc0VQjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778262059; c=relaxed/simple;
-	bh=zYlTeDh9G9IT4nS+zWqxNxxmSss2n8WYffkvXEx9Akw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CDDhpzVqDy/Csol29cWTEH3NKWbb+CLqor3Fas8i5WhtXuIMF3lCb904OvSFryq/jircYgExzM+f92mEf6k/sXDNJdiPmpGpcjJmuTFdo746sPhUn1TEMVV1/fgtlQrZJZwu6KC0o1stoJdiFwE+TOw9XxMu8rY4KW2HE7wexBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XdMv1nBY; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1778262065; c=relaxed/simple;
+	bh=m6d49qXRXl06RFwK6IQO1C2DpYFBSBX8sil9W1AqFoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=EIQugZKlrrDmJGWIdaB1NBC+nYb6zGwcxnBE0XFAEgkXmQeC4mHowHrjfEQgjGBknKuu4RUZL8jWhBeVskA5v8ZngSOenTY4ey0p/owWorPKTFBo/jJK8ggfvb23FcidTeSM+ZFmaKRvIoVKGtyDu8Jexe/6IY+c7XjTRutehGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FtLX8Ee2; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XdMv1nBY"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-835417ba8c8so1285774b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 May 2026 10:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778262057; x=1778866857; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uhr4BNU/ilo4uYM728zx4k0/Id92bF2OOCtFb+maHuk=;
-        b=XdMv1nBYootU71I8CC7idKoT/q4s58ElcQcNrrSb8qo3Lm1TbCwJMn1iT0rT6UhqTi
-         00TqgaGCcfGiiuy5Iq14bMrIc7PAd8gDBc83/luLvScZobTZQlQ7GYukU0Z4Egi3z5Pm
-         hsd5OTUodnJI/xDf+5O9A0yA322l+MmCQnnbdgEVb/0lurgQ1I4dYlZrf7TnjizCi8rC
-         5ffGcnqRAuV1I38RGHEU6GegmWCuql/dqgZA8ypovvpIC26qd2iaxhgKtZaPGlgJVHSy
-         2JJfk9ynavCkyodLfDGapmewkFVtD9eszEkVbKXy3jwo+HzgkWQzTTYB6B9ghlAXatwS
-         S48A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778262057; x=1778866857;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uhr4BNU/ilo4uYM728zx4k0/Id92bF2OOCtFb+maHuk=;
-        b=hqT3ZlNqwIZ4NQxM31Ae4eka4K7uavcJ2Y8mVT/ajVe2QUNmPLxJhVeLX0T1GP4xxy
-         2ERHnG7Kp0igtnrEHRKITepQD4T979561HYAN2ue2x6UA/Se8M7Oyd03Mi8C8nsa1g8a
-         TUBOBYsBRj03Bjoio6ekHptU8qqrTGcDdfVD8/+7muLI2utrVHR+jAAfKJaatTy41opH
-         bLCUeOTsLxbHCD58cO65EgheKowzCVzZvPFuASbyXOX8slt52tWc+5TYhq0Xvf+pMDVa
-         eeNaH+po+z02+iwwAO51EBucKMvNgc+ZzwmGzVnpMA0vqW7Fu5r+2lO8aaZiCgEF6tDV
-         cVDA==
-X-Forwarded-Encrypted: i=1; AFNElJ/MplsDwcZU6qXoarUbh8UDs405SM7GG9J9aAHUdOFaVGVV5wDJfCHzN5n+esPBlaaX/US33E+3LJd0Bi4w9EJHRao=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4j6Ye1fkOybTw1c4mlR0uFIr4Sxk+X7Uo6IIM6WZ9bj4lGaG8
-	v2VaPiHK4Yyn9pS3BJrleatYwb+HnBYUnYM3VF77EzTxJzk2Q4hnFqu1Jhvh2meAmIwUFGaJ/3k
-	0yGXUMA==
-X-Received: from pfjg10.prod.google.com ([2002:a05:6a00:b8a:b0:835:62a8:bbc])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2998:b0:839:46b8:86be
- with SMTP id d2e1a72fcca58-83a5d686f07mr13095922b3a.33.1778262056375; Fri, 08
- May 2026 10:40:56 -0700 (PDT)
-Date: Fri, 8 May 2026 10:40:55 -0700
-In-Reply-To: <foi2zvv5qrfdcspnx4fstrvzl74m6xp6zrsw5omlbprxh4jrhx@vxnwk7fr46gu>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FtLX8Ee2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=c4XzaOg7HOldvBJBPqmFDK1R7qTAK0U4wLJ/ZbVHYp0=; b=FtLX8Ee2NkKGkKFmjwucrwClCT
+	7PHN/9RqycqXI34+VLb2gfLWjzsnVGPL6PRKWVCluK583upFPQojR8KB270++IPwvGcLnc8weqdfF
+	OiM7oADRA7qgJifHJFM1j509Ixv/BdVMZTEqbcQa+mRZEHt4QpK/r+sldD/V86w/nvOpqs0fBTVJj
+	yoerdZKyoZHZDii3uQdydJprd+EDFAhxRO5thYRw625+DMUNCB8z+AQikQEcsGZzIt3rKdufx01s7
+	lRU4qwmGtq+E6wzpoFnL2J2WoXcOHD41/2wuiom2J4kJm8/1Wnl0AweRHjZvvvhn8c8Tko9/rbEVV
+	fsXdWZGQ==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wLPC1-00000007Aci-0wQz;
+	Fri, 08 May 2026 17:40:53 +0000
+Message-ID: <5f68ac30-21ac-494b-a140-2307e236f0a2@infradead.org>
+Date: Fri, 8 May 2026 10:40:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com>
- <20260326-gmem-inplace-conversion-v4-10-e202fe950ffd@google.com>
- <2r4mmfiuisw26qymahnbh2oxqkkrywqev477kc4rlkcyx7tels@c7ple7kdgpo3>
- <CAEvNRgFkusZeKxGctUpTTbYjdi7nZL1ZZar-gT7XRUOCZ2xtpw@mail.gmail.com>
- <eiiecl7jvywvqb4drq7cchmcabcrdka25wxr77uavxqineeedm@rfcnhdz6xoxf>
- <3blpenhpvysb2ig7efegedx4v3flppl5ftnz6vhpqlatfk3ycn@vmmhs7mvjieg>
- <CAEvNRgGbMhkX310CkFY_M5x-zod=BDTiuznrZ0XvFPUK7weL1A@mail.gmail.com> <foi2zvv5qrfdcspnx4fstrvzl74m6xp6zrsw5omlbprxh4jrhx@vxnwk7fr46gu>
-Message-ID: <af4gJ6xZ3e7UXOuO@google.com>
-Subject: Re: [PATCH RFC v4 10/44] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
-From: Sean Christopherson <seanjc@google.com>
-To: Michael Roth <michael.roth@amd.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	david@kernel.org, ira.weiny@intel.com, jmattson@google.com, 
-	jthoughton@google.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] docs: fix repeated word 'that' across documentation
+To: Shuah Khan <skhan@linuxfoundation.org>,
+ Adrien Reynard <reynard.adrien.08@gmail.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
+ <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ "open list:READ-COPY UPDATE (RCU)" <rcu@vger.kernel.org>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:DRIVER CORE, KOBJECTS, DEBUGFS AND SYSFS"
+ <driver-core@lists.linux.dev>,
+ "open list:FILESYSTEMS [NETFS LIBRARY]" <netfs@lists.linux.dev>,
+ "open list:FILESYSTEMS [NETFS LIBRARY]" <linux-fsdevel@vger.kernel.org>,
+ "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+References: <20260508163759.16231-1-reynard.adrien.08@gmail.com>
+ <1501caea-8cff-4968-aca6-e8d4b20e0e80@linuxfoundation.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <1501caea-8cff-4968-aca6-e8d4b20e0e80@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 29, 2026, Michael Roth wrote:
-> On Fri, Apr 24, 2026 at 12:08:45PM -0700, Ackerley Tng wrote:
-> > Michael Roth <michael.roth@amd.com> writes:
-> > 
-> > Thank you for your patches!
-> > 
-> > >
-> > > [...snip...]
-> > >
-> > >>
-> > >> I also did some minor updates (prefixed with a "[squash]" tag) to advertise
-> > >> the KVM_SET_MEMORY_ATTRIBUTES2_PRESERVED flag so it can be used by
-> > >
-> > > Though I'm not sure how we deal with it if SNP/TDX at some point become
-> > > capable of using the PRESERVED flag *after* populate... but maybe that's
-> > > too unlikely to worry about? If we wanted to address it though, we could
-> > > have both PRESERVED and PRESERVED_BEFORE_LAUNCH so they can be
-> > > enumerated separately from the start.
-> > >
-> > 
-> > Not sure how likely it is, but if SNP and TDX can honor PRESERVE
-> > semantics after populate, I think we could implement support under a new
-> > flag like CIPHER.
+
+
+On 5/8/26 10:15 AM, Shuah Khan wrote:
+> On 5/8/26 10:37, Adrien Reynard wrote:
 > 
-> That works, but it still makes things *slightly* awkward due to special-casing
-> the PRESERVE semantics for 1 guest type vs. another.
+> Missing commit log in all your patches - I don't patch 1/5 in
+> my Inbox.
+> 
+>> Signed-off-by: Adrien Reynard <reynard.adrien.08@gmail.com>
+>> ---
+>>   Documentation/RCU/rcu.rst                          | 2 +-
+>>   Documentation/driver-api/driver-model/overview.rst | 2 +-
+>>   Documentation/filesystems/netfs_library.rst        | 2 +-
+>>   Documentation/trace/histogram-design.rst           | 2 +-
+>>   Documentation/trace/histogram.rst                  | 2 +-
+>>   5 files changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
+>> index bf6617b330a7..320ad3292b75 100644
+>> --- a/Documentation/RCU/rcu.rst
+>> +++ b/Documentation/RCU/rcu.rst
+>> @@ -32,7 +32,7 @@ Frequently Asked Questions
+>>     Just as with spinlocks, RCU readers are not permitted to
+>>     block, switch to user-mode execution, or enter the idle loop.
+>>     Therefore, as soon as a CPU is seen passing through any of these
+>> -  three states, we know that that CPU has exited any previous RCU
+>> +  three states, we know that CPU has exited any previous RCU
+> 
+> The original intent might have been to say, "that cpu", so adding
+> the missing comma after the first "that" or change "that" to "the"
+> would make sense.
 
-Summarizing this week's PUCK call[*]:
+Not a comma, please.
+I don't see a problem with "that that," but "that the" could also be OK.
 
-Scrap PRESERVE and ZERO, and simply rely on vendor specific semantics.
+> 
+> 
+>>     read-side critical sections.  So, if we remove an item from a
+>>     linked list, and then wait until all CPUs have switched context,
+>>     executed in user mode, or executed in the idle loop, we can
 
-My desire to enforce PRESERVE and ZERO semantics and avoid relying on vendor specific
-behavior (i.e. on trusted firmware semantics) is a pipe dream.  Unless KVM does
-a truly insane amount of per-gfn tracking, KVM can't know the state of memory for
-a given page, and so can't guarantee PRESERVE or ZERO will be honored.
 
-If userspace requests PRESERVE, just because it's _possible_ to preserve contents
-(e.g. during the pre-boot phase on TDX), doesn't mean the contents are _guaranteed_
-to be preserved.  If userspace doesn't actually ADD the memory to the guest's
-initial image, then the contents won't be preserved.  Ditto for SNP.
+-- 
+~Randy
 
-To guarantee PRESERVE, KVM would need to track per-gfn information to know if the
-memory was actually preserved.  And enforcing PRESERVE would be all kinds of crazy;
-KVM would have to kill the VM or something?  And that would still require userspace
-to be aware of vendor specific details.
-
-The same holds true for ZERO.  On a private=>shared conversion, KVM can't guarantee
-the memory is zeroed by trusted firmware unless KVM tracks, per-gfn, whether or
-not the memory was actually fully assigned to the guest.  E.g. if userspace does
-shared=>private and then private=>shared(ZERO), without the memory being faulted
-into the guest, then the TDX-Module won't have "seen" the page and so wont' have
-zeroed it on the private=>shared conversion.
-
-And trying to special case SNP's "validated CPUID" behavior, where memory can be
-preserved on private=>shared after a failed shared=>private, would also require
-tracking that the page was never actually converted to private.
-
-Note, regarding ZERO, someone (Mike? Ackerley?) pointed out that userspace typically
-doesn't rely on the kernel to zero memory, and so supporting ZERO for private=>shared
-isn't really all that valuable in the first place.
-
-[*] https://drive.google.com/file/d/1w0ifzh5PmNViJ1SKru9jK9x52MybXSNa/view?usp=drive_link
