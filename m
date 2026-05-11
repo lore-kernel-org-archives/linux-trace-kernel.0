@@ -1,43 +1,39 @@
 Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5708147D921
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3837747CC86
 	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 18:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778523929; cv=none; b=ZuENfuO7tnvKHzN/YPwpRFTllnKj00cVWFLR3+PuyY60xgWg21nUDQM3QN9mcG3oDoH9htw1k/7Lh/L9Yxzbz0yzSvfSwmg/fCoksXDIGxmWblsaJsga7qR99mpHj2x8eOwVl9Eyvl8eUjd+AGZ8hZXFh9rPlkfPhfRPv5xDt0c=
+	t=1778523930; cv=none; b=mzrxUqw8AEpAgvNrq2o/bbwdM7NkpSSoiCs+kKlSpsDPw+V3K3xoFnSH7YzCfPZSN9LPX9T4I66B+xdX1qev9KEKIcdF/ccNUojknOP73hK3FoZ6wr0CsiWOiINSHaTTNQuFXZiHGmCaHayn9C6A5973xsAT09lXfMh+1jW8C10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778523929; c=relaxed/simple;
-	bh=v9qQ+smEFVXRv9Ckmq8lKzhougf8HNPeZpMZ9y1mzBA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gCu/srtizbZ/4myW+3oqOJG8dgZiNzOVr2SlQ0/RSJyWXjASPmsuS7wCQMkLG6DPXz5yDkoHQiyjjcb+1GM4SAcy5I1pUDJ/z134RbMU6GjFqz38kCDDU9yZrhWNF6SH74FJaOHVVr/8zsk7cb6ELl1rwByHAOWVRLvJQHObrO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z5lt11u9; arc=none smtp.client-ip=91.218.175.186
+	s=arc-20240116; t=1778523930; c=relaxed/simple;
+	bh=x0LjjCFtBkjGtLHVnkgvSvbdUet/2z2sPZJRqCDTcTg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=K4SiOL5E9G+O+jB/jHHBmDKgJGfX4duw8x8yYgUFp73fhnj0KKubytC/FPlq9V3gCr+aagSUF24FN+gvmOpyPx+KQbOwi/6pns4oFjcj/wEaOrKXwhNBiebUF31sfVMpgOqAbRcF4vfUN/F2YjdqC5xSe+2YZvFNxlI0Mgrb+eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BdFsWs8Y; arc=none smtp.client-ip=91.218.175.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z5lt11u9"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BdFsWs8Y"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778523925;
+	t=1778523915;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IGSMUK6c+xA+ZoX0w0HHk4pXxa4vBX3tXNiW0TECRoE=;
-	b=Z5lt11u9mdTA05Nr9sh5ybGIVkrI51+lGzzQJMYHNLuplG1TRIMM0KqEzkD97KHdOBMxbR
-	hCyrn0VLA78ze2lvGIQf6OmrvDE84w5hImQ6UihrNp8DZJAbC/hruhM46M84MNO3GV4y4u
-	Uzvfw1wK/i/KTPmdlWzoVzIT518DoMw=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=a4gd4PRotLv4l65iNv6cdovupI/mDgolR1fUA8uznZA=;
+	b=BdFsWs8YNMDW23DeaoPLOL/Yio1v8YQQ7CjtCpxcY5S/tiOSh1Oz37H7C4inKkLlbQG/yn
+	FYOVShz8+zW/wCzczO7ngJLBhc/m8bgCw33csadzbXCwJzUQ7kN3DrHheaX5sKCbOlZM/j
+	85+c4rdG6gL/j5VXgG6We/C7pzslWKY=
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [RFC PATCH v2 04/10] rv/da: add pre-allocated storage pool for per-object monitors
-Date: Tue, 12 May 2026 02:24:50 +0800
-Message-Id: <2774332570ee823be60cfe84ba85e9573b4df478.1778522945.git.wen.yang@linux.dev>
-In-Reply-To: <cover.1778522945.git.wen.yang@linux.dev>
-References: <cover.1778522945.git.wen.yang@linux.dev>
+Subject: [RFC PATCH v2 00/10] rv/tlob: Add task latency over budget RV monitor
+Date: Tue, 12 May 2026 02:24:46 +0800
+Message-Id: <cover.1778522945.git.wen.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,287 +46,196 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Wen Yang <wen.yang@linux.dev>
 
-da_create_empty_storage() uses kmalloc_nolock(), which requires
-CONFIG_HAVE_ALIGNED_STRUCT_PAGE; on UML and some PREEMPT_RT
-configurations it always returns NULL.  Calling kmalloc from scheduler
-tracepoint handlers also adds unwanted latency and can fail under
-memory pressure.
+This series introduces tlob (task latency over budget), a per-task
+hybrid automaton RV monitor that measures elapsed wall-clock time across
+a user-delimited code section and fires when the time exceeds a
+configurable budget.
 
-Add da_monitor_init_prealloc(N) as an opt-in alternative to
-da_monitor_init().  It allocates N da_monitor_storage slots with
-GFP_KERNEL up-front and manages them on a LIFO free-stack protected
-by a spinlock, so da_create_or_get() never calls kmalloc on the hot
-path.
+Background
+----------
+The existing wwnr monitor uses a two-state DA to detect tasks that are
+woken but never run.  tlob extends the RV framework to a three-state
+hybrid automaton:
 
-Monitors that do not call da_monitor_init_prealloc() are unaffected.
+  running  (initial) -- on CPU
+  waiting             -- in the scheduler runqueue, not yet on CPU
+  sleeping            -- blocked on a lock, I/O, or similar resource
 
-Signed-off-by: Wen Yang <wen.yang@linux.dev>
----
- include/rv/da_monitor.h | 208 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 186 insertions(+), 22 deletions(-)
+A single HA clock invariant, clk_elapsed < BUDGET_NS(), is active in
+all states.  The framework enforces it via a per-task hrtimer.  On
+expiry, error_env_tlob is emitted, followed by detail_env_tlob which
+carries a per-state time breakdown (running_ns, waiting_ns, sleeping_ns)
+that pinpoints whether the overrun occurred in the running, waiting, or
+sleeping state.
 
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index d04bb3229c75..7d6f62766251 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -433,18 +433,6 @@ static inline da_id_type da_get_id(struct da_monitor *da_mon)
- 	return container_of(da_mon, struct da_monitor_storage, rv.da_mon)->id;
- }
- 
--/*
-- * da_create_or_get - create the per-object storage if not already there
-- *
-- * This needs a lookup so should be guarded by RCU, the condition is checked
-- * directly in da_create_storage()
-- */
--static inline void da_create_or_get(da_id_type id, monitor_target target)
--{
--	guard(rcu)();
--	da_create_storage(id, target, da_get_monitor(id, target));
--}
--
- /*
-  * da_fill_empty_storage - store the target in a pre-allocated storage
-  *
-@@ -475,15 +463,121 @@ static inline monitor_target da_get_target_by_id(da_id_type id)
- 	return mon_storage->target;
- }
- 
-+/*
-+ * Per-object pool state.
-+ *
-+ * Zero-initialised by default (storage == NULL ⟹ kmalloc mode).  A monitor
-+ * opts into pool mode by calling da_monitor_init_prealloc(N) instead of
-+ * da_monitor_init(), which sets storage to a non-NULL kcalloc'd array.
-+ *
-+ * Because every field is wrapped in this struct and the struct itself is a
-+ * per-TU static, each monitor that includes this header gets a completely
-+ * independent pool.  A kmalloc monitor (e.g. nomiss) and a pool monitor
-+ * (e.g. tlob) therefore coexist without any interference.
-+ *
-+ * da_pool_return_cb runs from softirq on non-PREEMPT_RT, so irqsave is
-+ * required to prevent deadlock with task-context callers.  On PREEMPT_RT
-+ * it runs from an rcuc kthread where spinlock_t is a sleeping lock.
-+ */
-+struct da_per_obj_pool {
-+	struct da_monitor_storage  *storage;  /* non-NULL ⟹ pool mode */
-+	struct da_monitor_storage **free;     /* kmalloc'd pointer stack */
-+	unsigned int                free_top;
-+	spinlock_t                  lock;
-+};
-+
-+static struct da_per_obj_pool da_pool = {
-+	.lock = __SPIN_LOCK_UNLOCKED(da_pool.lock),
-+};
-+
-+static void da_pool_return_cb(struct rcu_head *head)
-+{
-+	struct da_monitor_storage *ms =
-+		container_of(head, struct da_monitor_storage, rcu);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&da_pool.lock, flags);
-+	da_pool.free[da_pool.free_top++] = ms;
-+	spin_unlock_irqrestore(&da_pool.lock, flags);
-+}
-+
-+/* Pops a slot from the pre-allocated pool; returns -ENOSPC if exhausted. */
-+static inline int da_create_or_get_pool(da_id_type id, monitor_target target)
-+{
-+	struct da_monitor_storage *mon_storage;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&da_pool.lock, flags);
-+	if (!da_pool.free_top) {
-+		spin_unlock_irqrestore(&da_pool.lock, flags);
-+		return -ENOSPC;
-+	}
-+	mon_storage = da_pool.free[--da_pool.free_top];
-+	spin_unlock_irqrestore(&da_pool.lock, flags);
-+
-+	mon_storage->id = id;
-+	mon_storage->target = target;
-+	guard(rcu)();
-+	hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
-+	return 0;
-+}
-+
-+/*
-+ * Tries da_create_storage() first (lock-free via kmalloc_nolock); falls back
-+ * to kmalloc(GFP_KERNEL).  Must be called from task context.
-+ */
-+static inline int da_create_or_get_kmalloc(da_id_type id, monitor_target target)
-+{
-+	struct da_monitor_storage *mon_storage;
-+
-+	scoped_guard(rcu) {
-+		if (da_create_storage(id, target, da_get_monitor(id, target)))
-+			return 0;
-+	}
-+
-+	/*
-+	 * da_create_storage() failed because kmalloc_nolock() returned NULL.
-+	 * Allocate with GFP_KERNEL outside the RCU read section: GFP_KERNEL
-+	 * may sleep for memory reclaim, which is illegal while the RCU read
-+	 * lock is held (preemption disabled on !PREEMPT_RT).
-+	 */
-+	mon_storage = kmalloc_obj(*mon_storage, GFP_KERNEL | __GFP_ZERO);
-+	if (!mon_storage)
-+		return -ENOMEM;
-+	mon_storage->id = id;
-+	mon_storage->target = target;
-+
-+	/*
-+	 * Re-check for a concurrent insertion before linking: another
-+	 * caller may have succeeded while we slept in kmalloc().
-+	 * Discard our allocation and let the winner's entry stand.
-+	 */
-+	scoped_guard(rcu) {
-+		if (da_get_monitor(id, target)) {
-+			kfree(mon_storage);
-+			return 0;
-+		}
-+		hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
-+	}
-+	return 0;
-+}
-+
-+/* Create the per-object storage if not already there. */
-+static inline int da_create_or_get(da_id_type id, monitor_target target)
-+{
-+	if (da_pool.storage)
-+		return da_create_or_get_pool(id, target);
-+	return da_create_or_get_kmalloc(id, target);
-+}
-+
- /*
-  * da_destroy_storage - destroy the per-object storage
-  *
-- * The caller is responsible to synchronise writers, either with locks or
-- * implicitly. For instance, if da_destroy_storage is called at sched_exit and
-- * da_create_storage can never occur after that, it's safe to call this without
-- * locks.
-- * This function includes an RCU read-side critical section to synchronise
-- * against da_monitor_destroy().
-+ * Pool mode: removes from hash and returns the slot via call_rcu().
-+ * Kmalloc mode: removes from hash and frees via kfree_rcu().
-+ *
-+ * Includes an RCU read-side critical section to synchronise against
-+ * da_monitor_destroy().
-  */
- static inline void da_destroy_storage(da_id_type id)
- {
-@@ -491,15 +585,17 @@ static inline void da_destroy_storage(da_id_type id)
- 
- 	guard(rcu)();
- 	mon_storage = __da_get_mon_storage(id);
--
- 	if (!mon_storage)
- 		return;
- 	da_monitor_reset_hook(&mon_storage->rv.da_mon);
- 	hash_del_rcu(&mon_storage->node);
--	kfree_rcu(mon_storage, rcu);
-+	if (da_pool.storage)
-+		call_rcu(&mon_storage->rcu, da_pool_return_cb);
-+	else
-+		kfree_rcu(mon_storage, rcu);
- }
- 
--static void da_monitor_reset_all(void)
-+static __maybe_unused void da_monitor_reset_all(void)
- {
- 	struct da_monitor_storage *mon_storage;
- 	int bkt;
-@@ -510,13 +606,65 @@ static void da_monitor_reset_all(void)
- 	rcu_read_unlock();
- }
- 
-+/*
-+ * da_monitor_init_prealloc - initialise with a pre-allocated storage pool
-+ *
-+ * Allocates @prealloc_count storage slots up-front so that da_create_or_get()
-+ * and da_destroy_storage() never call kmalloc/kfree.  Must be called instead
-+ * of da_monitor_init() for monitors that require pool mode.
-+ */
-+static inline int da_monitor_init_prealloc(unsigned int prealloc_count)
-+{
-+	hash_init(da_monitor_ht);
-+
-+	da_pool.storage = kcalloc(prealloc_count, sizeof(*da_pool.storage),
-+				  GFP_KERNEL);
-+	if (!da_pool.storage)
-+		return -ENOMEM;
-+
-+	da_pool.free = kmalloc_array(prealloc_count, sizeof(*da_pool.free),
-+				     GFP_KERNEL);
-+	if (!da_pool.free) {
-+		kfree(da_pool.storage);
-+		da_pool.storage = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	da_pool.free_top = 0;
-+	for (unsigned int i = 0; i < prealloc_count; i++)
-+		da_pool.free[da_pool.free_top++] = &da_pool.storage[i];
-+	return 0;
-+}
-+
-+/*
-+ * da_monitor_init - initialise in kmalloc mode (no pre-allocation)
-+ */
- static inline int da_monitor_init(void)
- {
- 	hash_init(da_monitor_ht);
- 	return 0;
- }
- 
--static inline void da_monitor_destroy(void)
-+static inline void da_monitor_destroy_pool(void)
-+{
-+	WARN_ON_ONCE(!hash_empty(da_monitor_ht));
-+	/*
-+	 * Wait for all in-flight da_pool_return_cb() callbacks to
-+	 * complete before freeing da_pool.free.  synchronize_rcu() is
-+	 * not sufficient: it only waits for callbacks registered before
-+	 * it was called, but call_rcu() from concurrent da_destroy_storage()
-+	 * calls may have been enqueued later.  rcu_barrier() drains every
-+	 * pending callback.
-+	 */
-+	rcu_barrier();
-+	kfree(da_pool.storage);
-+	da_pool.storage = NULL;
-+	kfree(da_pool.free);
-+	da_pool.free = NULL;
-+	da_pool.free_top = 0;
-+}
-+
-+static inline void da_monitor_destroy_kmalloc(void)
- {
- 	struct da_monitor_storage *mon_storage;
- 	struct hlist_node *tmp;
-@@ -534,6 +682,22 @@ static inline void da_monitor_destroy(void)
- 	}
- }
- 
-+/*
-+ * da_monitor_destroy - tear down the per-object monitor
-+ *
-+ * Pool mode: the hash must already be empty (caller must have drained all
-+ * tasks first); calls rcu_barrier() to drain all pending da_pool_return_cb()
-+ * callbacks before freeing pool arrays.
-+ * Kmalloc mode: drains any remaining entries after synchronize_rcu().
-+ */
-+static inline void da_monitor_destroy(void)
-+{
-+	if (da_pool.storage)
-+		da_monitor_destroy_pool();
-+	else
-+		da_monitor_destroy_kmalloc();
-+}
-+
- /*
-  * Allow the per-object monitors to run allocation manually, necessary if the
-  * start condition is in a context problematic for allocation (e.g. scheduling).
+Two userspace interfaces are provided:
+
+  ioctl (/dev/rv): TLOB_IOCTL_TRACE_START / TLOB_IOCTL_TRACE_STOP for
+    in-process self-instrumentation; TRACE_STOP returns -EOVERFLOW if
+    the budget was exceeded during the window.
+
+  tracefs (monitors/tlob/monitor): write "p PATH:START STOP threshold=NS"
+    to attach uprobes to an unmodified binary.  The start uprobe calls
+    tlob_start_task() and the stop uprobe calls tlob_stop_task().
+
+Infrastructure additions
+------------------------
+The series also includes several prerequisite additions to the RV
+framework that are useful beyond tlob:
+
+  rv/da: two bug fixes for race conditions in da_monitor_destroy() and
+    the monitoring flag memory ordering that affect existing per-task
+    monitors (patches 1-2).
+
+  rv/da: pre-allocated storage pool (da_monitor_init_prealloc) to avoid
+    kmalloc on the scheduler tracepoint hot path and to support
+    PREEMPT_RT configurations (patch 4).
+
+  rv: generic uprobe infrastructure (rv_uprobe) providing a thin wrapper
+    around uprobe_consumer with a per-binding priv pointer and fully
+    synchronous detach semantics (patch 5).
+
+  rvgen: support for reset() annotations on the __init arrow, enabling
+    monitors where a clock is reset once at object creation and active
+    in all states (patch 6).
+
+Testing
+-------
+KUnit (five suites, 19 test cases):
+
+  tlob_task_api          -- start/stop lifecycle, error paths, -ENOSPC,
+                            deadline firing in each state
+  tlob_sched_integration -- context-switch accounting, monitoring a
+                            kthread other than current
+  tlob_uprobe_format     -- add/remove format acceptance and rejection
+                            via tlob_create_or_delete_uprobe()
+  tlob_trace_output      -- event_tlob and error_env_tlob field values
+  tlob_violation_react   -- error count per budget expiry; per-state
+                            ns breakdown dominance
+
+kselftest (12 tests, run via verificationtest-ktap on x86_64 with vng):
+
+  TAP version 13
+  1..12
+  ok 1 Test monitor enable/disable
+  ok 2 Test monitor reactor setting
+  ok 3 Check available monitors
+  ok 4 Test wwnr monitor with printk reactor
+  ok 5 Test tlob ioctl self-instrumentation (within/over-budget, error paths)
+  ok 6 Test tlob monitor tracefs interface (enable/disable and files)
+  ok 7 uprobe binding: visible in monitor file, removable, duplicate offset rejected
+  ok 8 uprobe detail sleeping: sleeping_ns dominates when task blocks between probes
+  ok 9 uprobe detail waiting: waiting_ns dominates when task is preempted between probes
+  ok 10 Two bindings on same binary with different offsets and budgets fire independently
+  ok 11 Verify no spurious error_env_tlob events without an active uprobe binding
+  ok 12 uprobe violation: error_env_tlob and detail_env_tlob fire with correct fields
+  # Totals: pass:12 fail:0 xfail:0 xpass:0 skip:0 error:0
+
+Changes in v2 (addressing review by Gabriele)
+----------------------------------------------------------------
+- Switch from a custom hash table to RV_MON_PER_OBJ with
+  "typedef struct tlob_task_state *monitor_target"; the per-invocation
+  threshold is carried in the target struct and accessed via
+  ha_get_target(ha_mon)->threshold_us, following the nomiss monitor
+  pattern.
+
+- Replace the explicit unmonitored state and da_monitor_init_hook()
+  timer arming with da_handle_start_event() for initial state setup,
+  then ha_reset_clk_ns() + ha_start_timer_ns() directly.  The HA clock
+  invariant clk_elapsed < BUDGET_NS() is now expressed in the DOT model
+  and enforced by the HA framework.
+
+- Drop the v1 KUnit test suite that validated every DA transition matrix
+  entry; replace with five suites that test meaningful behaviours:
+  start/stop lifecycle, context-switch accounting, uprobe format
+  validation, trace event field values, and violation reaction with
+  per-state ns breakdown.
+
+- Move selftests from tools/testing/selftests/rv/ into the existing
+  tools/testing/selftests/verification/ harness; test logic is expressed
+  as ftracetest .tc scripts under test.d/tlob/, with helper binaries
+  (tlob_ioctl, tlob_target) built by tlob/Makefile and located via PATH.
+
+
+Wen Yang (10):
+  rv/da: fix monitor start ordering and memory ordering for monitoring
+    flag
+  rv/da: fix per-task da_monitor_destroy() ordering and sync
+  selftests/verification: fix verificationtest-ktap for out-of-tree
+    execution
+  rv/da: add pre-allocated storage pool for per-object monitors
+  rv: add generic uprobe infrastructure for RV monitors
+  rvgen: support reset() on the __init arrow for global-window HA clocks
+  rv/tlob: add tlob model DOT file
+  rv/tlob: add tlob hybrid automaton monitor
+  rv/tlob: add KUnit tests for the tlob monitor
+  selftests/verification: add tlob selftests
+
+ Documentation/trace/rv/index.rst              |    1 +
+ Documentation/trace/rv/monitor_tlob.rst       |  213 +++
+ MAINTAINERS                                   |    3 +
+ include/linux/rv.h                            |   45 +
+ include/rv/automata.h                         |   15 +
+ include/rv/da_monitor.h                       |  234 ++-
+ include/rv/ha_monitor.h                       |   33 +-
+ include/rv/rv_uprobe.h                        |  119 ++
+ include/uapi/linux/rv.h                       |   86 ++
+ kernel/trace/rv/Kconfig                       |    6 +
+ kernel/trace/rv/Makefile                      |    5 +-
+ kernel/trace/rv/monitors/tlob/.kunitconfig    |    5 +
+ kernel/trace/rv/monitors/tlob/Kconfig         |   69 +
+ kernel/trace/rv/monitors/tlob/tlob.c          | 1333 +++++++++++++++++
+ kernel/trace/rv/monitors/tlob/tlob.h          |  171 +++
+ kernel/trace/rv/monitors/tlob/tlob_kunit.c    |  881 +++++++++++
+ kernel/trace/rv/monitors/tlob/tlob_trace.h    |   58 +
+ kernel/trace/rv/rv.c                          |   38 +
+ kernel/trace/rv/rv.h                          |    2 +
+ kernel/trace/rv/rv_chardev.c                  |  201 +++
+ kernel/trace/rv/rv_trace.h                    |    1 +
+ kernel/trace/rv/rv_uprobe.c                   |  189 +++
+ tools/include/uapi/linux/rv.h                 |   86 ++
+ tools/testing/selftests/verification/Makefile |   21 +-
+ .../verification/test.d/tlob/ioctl.tc         |   36 +
+ .../verification/test.d/tlob/tracefs.tc       |   17 +
+ .../verification/test.d/tlob/uprobe_bind.tc   |   34 +
+ .../test.d/tlob/uprobe_detail_sleeping.tc     |   47 +
+ .../test.d/tlob/uprobe_detail_waiting.tc      |   60 +
+ .../verification/test.d/tlob/uprobe_multi.tc  |   60 +
+ .../test.d/tlob/uprobe_no_event.tc            |   19 +
+ .../test.d/tlob/uprobe_violation.tc           |   60 +
+ .../selftests/verification/tlob/Makefile      |   21 +
+ .../selftests/verification/tlob/tlob_ioctl.c  |  626 ++++++++
+ .../selftests/verification/tlob/tlob_target.c |  138 ++
+ .../verification/verificationtest-ktap        |    4 +-
+ tools/verification/models/tlob.dot            |   21 +
+ tools/verification/rvgen/rvgen/automata.py    |   26 +
+ tools/verification/rvgen/rvgen/dot2k.py       |  100 +-
+ 39 files changed, 5043 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/trace/rv/monitor_tlob.rst
+ create mode 100644 include/rv/rv_uprobe.h
+ create mode 100644 include/uapi/linux/rv.h
+ create mode 100644 kernel/trace/rv/monitors/tlob/.kunitconfig
+ create mode 100644 kernel/trace/rv/monitors/tlob/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob.c
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob.h
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob_kunit.c
+ create mode 100644 kernel/trace/rv/monitors/tlob/tlob_trace.h
+ create mode 100644 kernel/trace/rv/rv_chardev.c
+ create mode 100644 kernel/trace/rv/rv_uprobe.c
+ create mode 100644 tools/include/uapi/linux/rv.h
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/ioctl.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/tracefs.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_bind.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_sleeping.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_waiting.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_multi.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_no_event.tc
+ create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_violation.tc
+ create mode 100644 tools/testing/selftests/verification/tlob/Makefile
+ create mode 100644 tools/testing/selftests/verification/tlob/tlob_ioctl.c
+ create mode 100644 tools/testing/selftests/verification/tlob/tlob_target.c
+ create mode 100644 tools/verification/models/tlob.dot
+
 -- 
 2.25.1
 
