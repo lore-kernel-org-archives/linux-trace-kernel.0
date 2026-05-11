@@ -1,251 +1,134 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7F1477E48
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 16:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958CCB672
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 16:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778517681; cv=pass; b=qs5E6nElAPmLwgS+92DLdYi5H24fqUgETXuHfh3hE6QlozhtardTd7NFSKUmEIV+70BryBNJzQJ0KUG2kixRevl6exAdzMvJmn7j8ez9AyW1fMcBsPhPv/uzqSDfMn+Tvq5Eu1Ak2uJP27E8IhDeBnibOkmrBED7lREdK4Ol8+U=
+	t=1778518587; cv=pass; b=uTLEb6bIoZaxkJyGdLDR/TuhRVeG0PLQwanRxS8X7brpBf/yCqmKOID2qMUt2HkBc4iA1IGx8aa4BNVumZ51vuMpJe0xMgJuy1ib49TExYm/4Y1boobDqqHhuYpG31+8yAF9Kj2xyBHs2xf2dNJD4f0+o/4R1/Kfwt3980pk0Uc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778517681; c=relaxed/simple;
-	bh=ychIqoH2N9RkBSK1oqMvOJTasQOsN2jS3M8Rh7cNElY=;
+	s=arc-20240116; t=1778518587; c=relaxed/simple;
+	bh=EIRtWQzGXXHZ8qZiB8cXYpRodTfsTbrOzIV44XAbX5Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AGTMlf+aTe6CLGbdCDxZcEVSmNWhILYyJVug7j8yuOLkt8X35dU3XAqXUuFpqsE82Doxr73+jTQLEOO8r6KUxlmWAgNQwiGfM9JyGPmZ5ighSA+fd8FPP+Q1PZ8Ii4uuYtbflmAtTbUddjEkGwwHzma18b3LVMJgPmma7ktJoaQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BFYMd16o; arc=pass smtp.client-ip=209.85.216.46
+	 To:Cc:Content-Type; b=qT1nCb/OfN2cpZ73PMlJ9k/3EmQ+mA1MJnf+CNqHwXAd59aL4tFSa+oITL5UFNLLqeaPezWbutE62GlTuCy7g0xfOXlzQjyOO8MWP0D1m0adCMxniC3abGTnCmu0CSWEpFyABBQ/LwHy+t3FMmjAnRX5nryC7g56bh/qaY7S1ow=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DpjiwuxS; arc=pass smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFYMd16o"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-367cbac9c37so1560584a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 09:41:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778517678; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpjiwuxS"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2bab82d75fdso24712735ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 09:56:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778518586; cv=none;
         d=google.com; s=arc-20240605;
-        b=YKBpQgJ4e6fX4qu2Pe1z1uKzIsm/hrXGeJRzTeKJ8wFNN+9Ysb8oji4KsAIhCq2Qd5
-         jg5nZIo/anLr2d318A+0+85Gda0fsnBJW0E3wRN2QqN0pSEYBC4bYWScny+B86iRww0x
-         0fCIkcBM9VOmrYfLsLEzJ0vl3VB2xsowsHTdWj7ulR2LqwU2yM2J5sxb+EO9Cft+wleY
-         rKEJFVA9pHBmBQTJzk0ckoZjvVZldHjVnVQwd54k7i5r4u8LjN3jyZz8yHjQGlE+JgUx
-         XOFyGy0HBMslzgqDBh7J3rqWiwoyXhgugqfLS4K3ZWVmJUVID73lowtGxidelbPun9lY
-         +skA==
+        b=ZT9FQe3qWB/y5jyu2PkxQ2nL7WgVN12DZZePy3nm1lNU94BzhrOl30pWOwjEjahICq
+         HPFLAhGuBmFUPpZbV1PKNbHCUbPfBRVA31843SoHnZKeLclUmXj1O6Of59k6S0wDd/4/
+         HeH5jyoFr6bjJYgh+xd32LfmbZqQSZevg8UcbBGhR+e8JR0jjOvd5ymFwPRkbgbY92dp
+         kk3mVS2qxbQAfHjZVoN3hERWJzxZf+if8nAuMgc17VA3QwaMK2TwQPfXsxQUAOJLv/4C
+         kMhUyGDMR3V+VuAAq2JwuFiOkY1zIwpGf+Nvl6Jy6Atjh0PbonAUWXx0r8WSCtvZgN5K
+         NoLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=twgMFzrPk4l1LS+jrmzU69hpjXt2Fx2pEmRL5onfYHo=;
-        fh=9IOZs520vsR7bJ900xlDRw4HKUf6N0eQIjwe3n+bYfU=;
-        b=fCkE7/6Aq7BjUxzqLktj5oZCbtNkzq0hoEigcXKxXTYCT+Xy3WJfqGPVedz5VebAjH
-         3eOh+xfD9zEiPCTRKGScHOy7qDW/TucU9Hr1BcNwu/P3GfAZPOsrcyxa0GK8YRJR0TBn
-         cscRpmOjLzoCuI4JRR1FWLpNLsNpgJ/3JxWuIK+nCuNSUj6xZaKQ4xlEBsycRbwq36xn
-         ysusA7iv5nEURwgHo+k1qCVx82vG1L5zgaJfSaheurph5MsQTvsLp2CLbaj74WNMKMYs
-         7n4+Oi8SLWZ8QD3eJvfzsfEuGgKJUod5jbXCeaShjBGQiqqX0nykf7lhbiyzlvgmXdF0
-         r54w==;
+        bh=/0CvEziVo2wtfpfqqcjJyEXvbgqMPtrtrISbGQRY7AY=;
+        fh=0iLz0AgeYYgSzn0bUkuRgaxC2R5SYZzEwSpXaU5vAQE=;
+        b=JHbCYSN/PaTXTMDg0twio1+SRIYGOUSKeoTxQSLHnxqpFAM82lzc6kOZiDkrOjcpVS
+         N98UtahKrO+eyZhdFhDkr8ror6j0/tKIsMJdtfxycGcjo1euHwrFu3YWAmcDx0DnhPnZ
+         asCOA7tayspFigq9loEIlTwtjjoQjqKA0p6xoeAhan/vgEIKVzlXINo4ABxbB0wO/Jq7
+         neEDyeUJu7SuHP8o/V7+k4FXr/AAIUXk9JyGBOT9LxUVPwf1ahOgVap7K7UfyWPvY9Tw
+         Gai0LQTxMfggif4ISdKyOSq4maCkRohVCMMBc4DPSE34hZv76fMRdtH2nyYYtwmOnMWY
+         rDOg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778517678; x=1779122478; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778518586; x=1779123386; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=twgMFzrPk4l1LS+jrmzU69hpjXt2Fx2pEmRL5onfYHo=;
-        b=BFYMd16o3t3UbuUDq1QN2iHooHaROgnFEufAvwoMn/4CB3QFmtvZWhfNGzMxL/qvlp
-         bLIWuyq3qTX9pDCMkF8vXQq83mb4CReEXiBIgjWKrZhS3FqPMJQgh8CiTK4of0zszkPY
-         Zb4UAhOq7cnEGUVjQloRK41A8CK3Z/0Slp91cy2WfNHIdHMwZXUkkJa1N70SbbiZUDyM
-         JY6NG6Ux7B0x3Y0pevLkpK+ErvQBMaYP48KjXMXZbAwqBzoOU0VDFz91qo6sUPjYDW0/
-         WNwR9DF8H99wasMxTu8iGocC03fL9QtPLFHJ9WY8Gs4DvaJsNYVgYysEpt2c8M4zkl4S
-         KyhA==
+        bh=/0CvEziVo2wtfpfqqcjJyEXvbgqMPtrtrISbGQRY7AY=;
+        b=DpjiwuxS+ljDNpIaTdrC8/Qjr4gdOoikid0c6ZlHv9JEkMOd3JIJaNOHIw5B2Shv9R
+         ZTqjUkHJubNAs71KM5sHUJ8mtXF5nLC6Am4vdMLPYEK5i0w0qUl7A+xzXxGhzM77XLG0
+         Y7iMpG5OGIM8dJe30Ym2gKwEQTdWqDypEW6xdf1x6BGUnzHSBnwtWu/CwXASUS6shuwr
+         H5Q/2f/BIdZekcC/Nk0YwWzcXLnKrXy+JfD6N72PzKzuEkESSHdFo/VtIDFGd+lOdsXv
+         /ZtzCFwotn8A41g5vXhbnRDWS05p19J5jaDDF+ri1rWk3fD2J7GSHG+cT4ALndCBvuIa
+         +omA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778517678; x=1779122478;
+        d=1e100.net; s=20251104; t=1778518586; x=1779123386;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=twgMFzrPk4l1LS+jrmzU69hpjXt2Fx2pEmRL5onfYHo=;
-        b=LiCdZOfY/Cvn/LkTuxgMayQTfhQvzXLEMDFUw4c/8JD5giVHHZLQ0EY7OTbwAeB6ZO
-         XY34dIECa7G0YcmvYt8zoqLzcqBmjJfzoolgpI1Afus+umIv4NtyDl5SkWBmQebMWw4E
-         hQpJ7UjPwJzDY/PW3tbBcs/sQ1iyVMPw3ZiX69u5cLTEvwt4kLqXqISayC46cM5hp5j6
-         pf4afig4duq/QobPyjN3fWJSKKU95N8NyTK7WIy44clgIfZ4zznIc88MDxh6/3TpeyLY
-         t5YMITSdT//eE59JDU8iohne+olkVHgo01tgFYrznq0RdWqxeYgMQZ44Lgx64wh1Tq5J
-         NLTQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9aGshceq8ejlz+t/aYoLiUCJEyY26IltjiNQkzTQX5wxUJ5CyOLOKyQV4vamxF3JB6GM9iJjZ6YDxL/QRJwYL/KTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSQYfAZ96OpWVHS/1Y1gvdXNlpFYWBWQz7lTwFnkmKQ57lX7Ra
-	C79l74VOpeO8Hxqs6nk6vFar0nf3ypk6z2fYFwVUgf68Lg55ltBE8wNeBV5vGr2piyBY2gvOHMH
-	i0vXScwxce1Gt/T6voYG8mXAitdUyjdg=
-X-Gm-Gg: Acq92OFDDTvcOhdwxkmTA4FM5xhv9Wbostt9Vgx/rhdGpDFvqo75/iwVn5/JbpPbrhn
-	ajPgVJQUelc3fV4kHx3F2Db7u+AgRecK9nGIf5wU1qj3JqWpCBYql8DY5IgZ2BPsGZGwUoTMpUv
-	h2NdCYVm3didLZqRh+Wu78OOXn/1vZ0Ql0OoxY4mxq6oLdSwKuCcb4sl/hSKHr1AH9nSu+Z0mrz
-	+uqHbMraNO7hnqBQAkAY8mfi3Z70iThGHTG5cwD3KcMHr08mijsEyV1NYyGG6c8kt8VuGeMvfre
-	Q07D783Ok746QDTRTr6xN78U8HmT/CFdmQ==
-X-Received: by 2002:a17:90b:3511:b0:367:f76c:4cbb with SMTP id
- 98e67ed59e1d1-367f76c77cfmr8727967a91.18.1778517678296; Mon, 11 May 2026
- 09:41:18 -0700 (PDT)
+        bh=/0CvEziVo2wtfpfqqcjJyEXvbgqMPtrtrISbGQRY7AY=;
+        b=IRrMMDzP8NdNnhL7QKgWK/2VzTNK+KMl98XKFjEPVEGXxUoDv7w6KoekexFOx/BnKG
+         oS4NP8cB9ECuhA1tOjQ/QRnhnIMat72EvCtzCA6E+rHCyGsdBLAZrk3AY/FEbuv44Nlr
+         xXA6kZzcAxqDvQ3JJXGrNm825GJJ8Cv68KXdW1XkhKiTLf9JZO56cpCHMMDmJ+suO2Sv
+         RO3hM5dt/bYOLukqdVIZRRbRLXlV7c9+QgYFTdTr0B6hkas8CtF4g6EjVoMjur7AcLfj
+         M4n0a4g1yzK1vF+/ocMCh+7Tcbs7ScGz4zWhxNflVzjLF9WgfizMbr9oLFL2ZliX56aQ
+         I6rA==
+X-Forwarded-Encrypted: i=1; AFNElJ+8epQW9Fj8oUYalu7a/Nh3LKvXDAj4QA+4YYXq2DRCOrahr3bZZ2QNxciOPOmFwpGAeBKSyTT+QMV1HXaIzdoEIKw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDoeBwgdPn1ZoaM11Z4ZYDfJcL00LNQGl5BqinCbFs0niVMs0J
+	iOJdApYTEnaxK1g1KCCIigeN9xVgP1TN2O4BnBHeGQfxVxCe+JwieiC5oZ3UA8oU1/uHux7+OU2
+	92cOYJM3pf+45X7GHBRkCFs+DwcT2IC0=
+X-Gm-Gg: Acq92OE3nINhOblETxzsZJIPWaD3OMpwOxQG5AB/QDcy8f+X3gfKAWoiygspden7hHf
+	ZHegEnZFN+jbbex83Neq5QzKyrBjzYbeqrnUj8bWAI9Qa23xuM99ZpVyAT/TV+yndApBduEqZvl
+	fb1IS6sdneM3aaPxavwfX5urwsfMmOjrNUOURYtsVtsgqJkwZ8qkdQz+G/tqhcCCz+qAthUCld1
+	SjS2N1lefY7bwnNHK59pFcifxTVGgX5QYfy79JMf2coq02ffzDjUvX8/JT4Q28RDaVAjaFVXB0n
+	P9gqaczkQwpljkisnaKBHx4fayh8Izv5fg==
+X-Received: by 2002:a17:902:e54d:b0:2b2:5857:583e with SMTP id
+ d9443c01a7336-2bc7ac400d7mr112472675ad.31.1778518585881; Mon, 11 May 2026
+ 09:56:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260509003146.976844-1-andrii@kernel.org> <agD3xq2MUyskd7X-@krava>
-In-Reply-To: <agD3xq2MUyskd7X-@krava>
+References: <20260509003146.976844-1-andrii@kernel.org> <agHreV1m7MRKUtbh@redhat.com>
+In-Reply-To: <agHreV1m7MRKUtbh@redhat.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 11 May 2026 18:41:06 +0200
-X-Gm-Features: AVHnY4JLB8eR8j4Em_tZM-C00L4Mdz2CpH3NR3klNTKSEbCfuAALzZBjHbb5abA
-Message-ID: <CAEf4Bza9PjbaVjFxYDmWPXXGV+Z-_Hn2Kz_KB2TOa5s-_UJ1xA@mail.gmail.com>
+Date: Mon, 11 May 2026 18:56:13 +0200
+X-Gm-Features: AVHnY4IdO7unJN91UoR5H_CqGoMmaWgoA533Lznx8M5T4GehEiGBvA85JRGPrqQ
+Message-ID: <CAEf4BzZSSsUKGje1mOTOxrRxGfw4sVfyVmKrono1rOdDq1iFHQ@mail.gmail.com>
 Subject: Re: [PATCH bpf 1/2] uprobes/x86: Fix red zone clobbering in nop5 optimization
-To: Jiri Olsa <olsajiri@gmail.com>
+To: Oleg Nesterov <oleg@redhat.com>
 Cc: Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, oleg@redhat.com, peterz@infradead.org, 
+	linux-trace-kernel@vger.kernel.org, jolsa@kernel.org, peterz@infradead.org, 
 	mingo@kernel.org, mhiramat@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 10, 2026 at 2:25=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
+On Mon, May 11, 2026 at 7:45=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
-> On Fri, May 08, 2026 at 05:30:56PM -0700, Andrii Nakryiko wrote:
-> > The x86 uprobe nop5 optimization currently replaces a 5-byte NOP at the
-> > probe site with a CALL into a uprobe trampoline. CALL pushes a return
-> > address to [rsp-8]. On x86-64 this is inside the 128-byte red zone, whe=
-re
-> > user code may keep temporary data without adjusting rsp.
+> On 05/08, Andrii Nakryiko wrote:
 > >
-> > Use a 5-byte JMP instead. JMP does not write to the user stack, but it
-> > also does not provide a return address. Replace the single trampoline
-> > entry with a page of 16-byte slots. Each optimized probe jumps to its
-> > assigned slot, the slot moves rsp below the red zone, saves the registe=
-rs
-> > clobbered by syscall, and invokes the uprobe syscall:
-> >
-> >   Probe site:   jmp slot_N              (5B, replaces nop5)
-> >
-> >   Slot N:       lea  -128(%rsp), %rsp   (5B)  skip red zone
-> >                 push %rcx               (1B)  save (syscall clobbers)
-> >                 push %r11               (2B)  save (syscall clobbers)
-> >                 push %rax               (1B)  save (syscall uses for nr=
-)
-> >                 mov  $336, %eax         (5B)  uprobe syscall number
-> >                 syscall                 (2B)
-> >
-> > All slots contain identical code at different offsets, so the trampolin=
-e
-> > page is generated once at boot and mapped read-execute into each proces=
-s.
-> > The syscall handler identifies the slot from regs->ip, which points jus=
-t
-> > after the syscall instruction, and uses a per-mm slot table to recover =
-the
-> > original probe address.
-> >
-> > The uprobe syscall does not return to the trampoline slot. The handler
-> > restores the probe-site register state, runs the uprobe consumers, sets
-> > pt_regs to continue at probe_addr + 5 unless a consumer redirected
-> > execution, and returns directly through the IRET path. This preserves
-> > general purpose registers, including rcx and r11, without requiring any
-> > post-syscall cleanup code in the trampoline and avoids call/ret, RSB, a=
-nd
-> > shadow stack concerns.
-> >
-> > Protect the per-mm trampoline list with RCU and free trampoline metadat=
-a
-> > with kfree_rcu(). This lets the syscall path resolve trampoline slots
-> > without taking mmap_lock. The optimized-instruction detection path also
-> > walks the trampoline list under an RCU read-side lock. Since that path
-> > starts from the JMP target, it translates the slot start to the post-sy=
-scall
-> > IP expected by the shared resolver before checking the trampoline mappi=
-ng.
-> >
-> > Each trampoline page provides 256 slots. Slots stay permanently assigne=
-d
-> > to their first probe address and are reused only when the same address =
-is
-> > probed again. Reassigning detached slots is deliberately avoided becaus=
-e a
-> > thread can remain in a trampoline for an unbounded time due to ptrace,
-> > interrupts, or scheduling delays. If a reachable trampoline page runs o=
-ut
-> > of slots, probes that cannot allocate a slot fall back to the slower IN=
-T3
-> > path.
-> >
-> > Require the entire trampoline page to be reachable by a rel32 JMP befor=
-e
-> > reusing it for a probe. This keeps every slot in the page within the ra=
-nge
-> > that can be encoded at the probe site.
-> >
-> > Change the error code returned when the uprobe syscall is invoked outsi=
-de
-> > a kernel-generated trampoline from -ENXIO to -EPROTO. This lets libbpf =
-and
-> > similar libraries distinguish fixed kernels from kernels with the
-> > red-zone-clobbering implementation and enable nop5 optimization only on
-> > fixed kernels.
-> >
-> > Performance (usdt single-thread, M/s):
-> >
-> >                   usdt-nop  usdt-nop5-base  usdt-nop5-fix  nop5-change =
- iret%
-> >   Skylake          3.149        6.422          4.865         -24.3%    =
- 39.1%
-> >   Milan            2.910        3.443          3.820         +11.0%    =
- 24.3%
-> >   Sapphire Rapids  1.896        4.023          3.693          -8.2%    =
- 24.9%
-> >   Bergamo          3.393        3.895          3.849          -1.2%    =
- 24.5%
-> >
-> > The fixed nop5 path remains faster than the non-optimized INT3 path on =
-all
-> > measured systems. The regression relative to the old CALL-based trampol=
-ine
-> > comes from IRET being more expensive than SYSRET, most noticeably on ol=
-der
-> > Intel Skylake. Newer Intel CPUs and tested AMD CPUs have lower IRET cos=
-t,
-> > and AMD Milan improves because removing mmap_lock from the hot path mor=
-e
-> > than offsets the IRET cost.
-> >
-> > Multi-threaded throughput scales nearly linearly with the number of CPU=
-s, like
-> > it used to, thanks to lockless RCU-protected uprobe trampoline lookup.
+> > +static bool resolve_uprobe_addr(unsigned long ip, unsigned long *probe=
+_addr)
+> >  {
+> > -     struct vm_area_struct *vma =3D vma_lookup(current->mm, ip);
+> > +     struct uprobes_state *state =3D &current->mm->uprobes_state;
 >
-> hi,
-> thanks a lot for the fix
+> it seems that there is a problem, with or without this change...
 >
-> FWIW we discussed also an option to have 10-bytes nop and do:
->   [rsp+0x80, call trampoline]
+> Lets forget about this patch for the moment, I am still trying to underst=
+and it.
 >
-> we would not need the slots re-use logic, but not sure what other
-> surprises there are with 10-bytes nop
+> What if register_for_each_vma() calls install_breakpoint(vma) and
+> vma->mm !=3D current->mm ?
 >
-> I tried that change [1], it seems to work, but it has other
-> difficulties, like I think the unoptimized path needs to do:
->   [rsp+0x80, call trampoline] -> [jmp end of 10-bytes nop]
-> instead of patching back the 10-byte nop, because some thread
-> could be inside the nop area already.
+> In this case install_breakpoint() path will call __is_optimized() and the=
+n
+> __in_uprobe_trampoline() which does vma_lookup(current->mm). This looks
+> obviously wrong ?
+>
+> And unless I am totally confused, this patch "inherits" the problem...
+>
+> No?
 >
 
-Yeah, nop10 and this jump-over-nop10 approach is an alternative. I
-don't have strong feelings apart from the ridiculousness of a 10-byte
-nop :)
+Yes, sashiko called this out as well. I'm going to pass mm explicitly
+into is_optimized and all the way to resolve_uprobe_addr(), easy fix.
 
-did you get a chance to benchmark your nop10 approach, curious how do
-the number look like
+But we should have a stand-alone easily backportable fix for this even
+without my changes, yes. I can add it as pre-patch or send separately.
 
-> jirka
+> Oleg.
 >
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/commit=
-/?h=3Dredzone_fix&id=3D74b09240289dba8368c2783b771e678b2cc31574
->
-> >
-> > Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
-> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > ---
-> >  arch/x86/include/asm/uprobes.h                |  18 ++
-> >  arch/x86/kernel/uprobes.c                     | 262 ++++++++++--------
-> >  tools/lib/bpf/features.c                      |   8 +-
-> >  .../selftests/bpf/prog_tests/uprobe_syscall.c |   5 +-
-> >  tools/testing/selftests/bpf/prog_tests/usdt.c |   2 +-
-> >  5 files changed, 181 insertions(+), 114 deletions(-)
-> >
-
-[...]
