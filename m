@@ -1,41 +1,41 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFBC47CC85
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 18:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7ED247CC82
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 18:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778523924; cv=none; b=HeBZyv5PyJ5JeDBrLkFJRf7cWU2X6xw/Ky5GT0PiDBUVg7jTFjqsVJQM/GgxNzHMi/NmZRBYvHprxYyWIH5ZVr907PeEWPTTfvs1FPmtpt0V7ohYErWvAfi7MTkr7NtLxGj+dPZXoBdJjv4JNBPxHBRyQfUg6Tz3D9xmmaEWJ0s=
+	t=1778523926; cv=none; b=R1P4j17TffWHZwh6dG0VYoshoYfbebSslPVKMNmWrTEcIxRXVlFxw638Vfgf+04j27muIAZxtBuReXv9uXUXHf+YPSjZL+vi+EtXlFUAJx7v+7bMyU3EcjUhnnsxY+w+8wtmBBDl7Un6hmYLPtKapvWXBCl661j5f+jc3eoEHBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778523924; c=relaxed/simple;
-	bh=e/86egzIPIJnJBpM7nA833Sd6LId+B75HRElGKUem60=;
+	s=arc-20240116; t=1778523926; c=relaxed/simple;
+	bh=x0N3Y2QenibRrFuO3zhAz0CXTVqKQaqnYOVYAIRkZ5g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G6qcdEJYdjI3AiQgV+TymyT/MrBsb3RcYDaiJCcGuu7hL9OuKT9vkuunrglpWFfiZn6dLuVANkY1btQ5HZofmn+LIQ2jk6iaOmMqQrZRxNySflgt/wHrqUUB0uTtRG7qHXkAoFG1DsitpTs0b5W+xtNNWKjEA8SccR+k+O88sDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X6cd78er; arc=none smtp.client-ip=91.218.175.189
+	 MIME-Version; b=cL3TQf+bnI6zPm+L2lx86tqlCaDWYEc8yEhj1J3uYe2mDZoZWyj2iPs5pIH6ngG/uVQ+oHmGo3DApTfXpngC5jUIMOB6FHP7VIgY+YLFrn5C1/Kovt25M6vUU++Bh8vLxmOfCfA9ji3QxYPEPaPkgR699YLaPnjLgcJAU8dWfvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a90M5aGG; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X6cd78er"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a90M5aGG"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778523920;
+	t=1778523923;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aOka89wKQYcbIpNURyHjkJzZlwApVr8sbGR1QlKrqvk=;
-	b=X6cd78erysjpIfKHEOgBTvBYm2PkrrOb/EMt7bvOWRuT9NMYy9Cgdd06TdzqNhkJ4WVkl7
-	b2MiUQWDsAVcI0LIYvJmOkrxFk6b5Nwaklr73DCmxtAlUxCGEbeF+xG0tSqQ+gAq8fmYtV
-	ufBBhyZ0nEfkdzLiDdm6LohpdlC2vMc=
+	bh=X15e0nlHXpxQx401W4O6S+WSF172wMdASqEezgkf+IU=;
+	b=a90M5aGGZF8zuIg8yOmnsadCo9ca3ya/GpYjw38DbjyYjcAcFYWTmaPa0TC2bcMpJrbuhm
+	Jl3SyK6A+0c8lr6Qkj4pu/OCKz7Xo/W+n5gxlAtlpFycj3qBnqSe5P1h2csNxXnHUakLT+
+	G/Ea4nB55raT6WCSZUAzjJvQ6u7hRGU=
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [RFC PATCH v2 02/10] rv/da: fix per-task da_monitor_destroy() ordering and sync
-Date: Tue, 12 May 2026 02:24:48 +0800
-Message-Id: <d02c656aada7d071f083460a5c9a454363669b61.1778522945.git.wen.yang@linux.dev>
+Subject: [RFC PATCH v2 03/10] selftests/verification: fix verificationtest-ktap for out-of-tree execution
+Date: Tue, 12 May 2026 02:24:49 +0800
+Message-Id: <7368ee25b1b45c92beb14c05be366b71da585ca4.1778522945.git.wen.yang@linux.dev>
 In-Reply-To: <cover.1778522945.git.wen.yang@linux.dev>
 References: <cover.1778522945.git.wen.yang@linux.dev>
 Precedence: bulk
@@ -49,84 +49,35 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Wen Yang <wen.yang@linux.dev>
 
-The following two paths race:
+verificationtest-ktap used a CWD-relative path (../ftrace/ftracetest)
+and a relative argument (../verification) for --rv.  This works when
+the shell changes into the verification directory first, but breaks
+when the script is invoked directly - e.g. by the kselftest runner or
+vng - because the working directory is the kernel source root, not the
+script's own directory.
 
-  CPU 0 (disable_stall/__rv_disable_monitor)  CPU 1 (wwnr probe handler)
-  ------------------------------------------  -----------------------------
-  disable_stall()
-    da_monitor_destroy()
-      da_monitor_reset_all()          <------ [task T: monitoring=0]
-                                              da_monitor_start(&T->rv[n])
-                                              /* no timer_setup */
-                                               monitoring=1  <----
-  tracepoint_synchronize_unregister()
-  // CPU 1 probe has already returned; sync returns
+Fix this by computing the script's directory from $0 with cd/dirname/pwd
+and using absolute paths for both the ftracetest invocation and the --rv
+argument.  Also export the directory to PATH so that check_requires in
+the ftracetest framework can locate helper binaries.
 
-Later, enable_stall() acquires the same slot and calls da_monitor_init():
-
-  da_monitor_reset_all()
-    da_monitor_reset(&T->rv[slot])    // monitoring=1, timer.function==0
-      ha_monitor_reset_env()
-        ha_cancel_timer()
-          timer_delete(&ha_mon->timer)  // ODEBUG: timer never initialised
-
-  ODEBUG: assert_init not available (active state 0)
-  object type: timer_list
-  Call trace: timer_delete <- da_monitor_reset_all <- enable_stall
-
-Call tracepoint_synchronize_unregister() inside da_monitor_destroy()
-before da_monitor_reset_all().  The unregister_trace_xxx() calls in the
-monitor's disable() have already disconnected the tracepoints; the sync
-here drains any handler still in flight, so no new monitoring=1 can
-appear after da_monitor_reset_all() clears the slot.
-
-Also fix the slot release ordering: release the slot only after
-reset_all() to avoid accessing rv[] with an out-of-bounds index.
-
-Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- include/rv/da_monitor.h | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ tools/testing/selftests/verification/verificationtest-ktap | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index 00ded3d5ab3f..d04bb3229c75 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -304,6 +304,20 @@ static int da_monitor_init(void)
+diff --git a/tools/testing/selftests/verification/verificationtest-ktap b/tools/testing/selftests/verification/verificationtest-ktap
+index 18f7fe324e2f..456b8578a307 100755
+--- a/tools/testing/selftests/verification/verificationtest-ktap
++++ b/tools/testing/selftests/verification/verificationtest-ktap
+@@ -5,4 +5,6 @@
+ #
+ # Copyright (C) Arm Ltd., 2023
  
- /*
-  * da_monitor_destroy - return the allocated slot
-+ *
-+ * Call tracepoint_synchronize_unregister() before reset_all() to close
-+ * the race where an in-flight non-HA probe handler sets monitoring=1
-+ * (without calling timer_setup()) after da_monitor_reset_all() has
-+ * already cleared the slot but before the caller's own sync completes.
-+ * Without this barrier, an HA_TIMER_WHEEL monitor that later acquires
-+ * the same slot would call timer_delete() on a never-initialised
-+ * timer_list, triggering ODEBUG warnings.
-+ *
-+ * Note: tracepoint_synchronize_unregister() is a system-wide barrier
-+ * that waits for all CPUs to finish any in-flight tracepoint handlers.
-+ * The caller's own __rv_disable_monitor() issues a second sync after
-+ * returning from disable(); that redundant call is harmless on the
-+ * infrequent admin (enable/disable) path.
-  */
- static inline void da_monitor_destroy(void)
- {
-@@ -311,10 +325,10 @@ static inline void da_monitor_destroy(void)
- 		WARN_ONCE(1, "Disabling a disabled monitor: " __stringify(MONITOR_NAME));
- 		return;
- 	}
-+	tracepoint_synchronize_unregister();
-+	da_monitor_reset_all();
- 	rv_put_task_monitor_slot(task_mon_slot);
- 	task_mon_slot = RV_PER_TASK_MONITOR_INIT;
--
--	da_monitor_reset_all();
- }
- 
- #elif RV_MON_TYPE == RV_MON_PER_OBJ
+-../ftrace/ftracetest -K -v --rv ../verification
++dir=$(cd "$(dirname "$0")" && pwd)
++export PATH="$dir:$PATH"
++"$dir/../ftrace/ftracetest" -K -v --rv "$dir"
 -- 
 2.25.1
 
