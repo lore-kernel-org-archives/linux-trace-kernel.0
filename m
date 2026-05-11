@@ -1,79 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9743101C8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 22:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751042E0925
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 22:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778538932; cv=none; b=NLaroztmQDrvohfI+IzrrllBxBspSrwCxE2yH5LjifkA5BSrK3D80+Hh18h9/d1PKkwZBepFby5Qfp+PSl6hR/mswvXrkPZ038fdqg09Dg2hp+0qRWdFfqZXhxGh2l8+g6HBkdLp3LtKCHNelEuJYX/7Lbsmy2wNASQD9suYLGg=
+	t=1778540226; cv=none; b=EWm3G+YaKlw8RlgUKdW0KhsuhF2JVMOtR4cRfB2ooro0EgXC1/icTj83PI1dIRqxleVKZ6WPR2wy2dQrJmjYWCD+bm1JRw0MrvlE0AQLI7xPsOL+qZ8dBXs4yNq7lr7B3VWy28ZZBM7m4ggSrBL5Cmbic1/m+uHmJXeXsyXibqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778538932; c=relaxed/simple;
-	bh=HaLY6ML1ne5RcqZx/bRtYmu++P1QgO/zJ5VhJJ73GIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=kUOInE7HBWacXScTl6mCGhLHDGw4xElkYTycFnOGr8Ee181H/zDKomgjasprpfyA3mKMy1C9s3w41obZzQ1Oqu51zRiTXnwKcKCQNDj9/TnZuPbfY8l03YcGdvZdJRnzqE3Q1QpwJshsjC0tvUCCQiQTzGrMrYflzfpaVseSgyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHlsxRK/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1778540226; c=relaxed/simple;
+	bh=s+9oIzVnD/Qb4i+INhtS+QO4GaKbnUimQ56w74A+F4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=smsSMr0fsK8RKtYiS6IoYc3Yx6HjCg5c3GqT5YxovxzBgaqmUZUGN3EagifAqa1FmQtBJgDIafNtwfktpxOl1izKG1425XKd9ozyqyTXHCtsvORvx81HjPe3TbdYn2UusQads0oXImFmNFINQyTTYowY/sCJxXVnxm6mzYEqCPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F61YNflb; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHlsxRK/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778538930;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Be5V36Lh9GJ4FofjfR1J3aN/DKRdbZF51YYTGr+iZKw=;
-	b=DHlsxRK/XVvXfFTbSFkqwnvcmSYf/lFewwME6qrQOk9KP7HNA5NK9gE23imkpcIVbznQ6I
-	aOGsoEm3kjULQsJ2fLp9pbygZpLJLlUIEYdRXzVNltllRXY6nxX3Nk0OgTXnVpOajTM+zF
-	cGe4MNtCdpjoFXRyIl+SLfGtCtm9qzs=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-zt-xlW5RPwqleCYCAne9zQ-1; Mon, 11 May 2026 18:35:28 -0400
-X-MC-Unique: zt-xlW5RPwqleCYCAne9zQ-1
-X-Mimecast-MFC-AGG-ID: zt-xlW5RPwqleCYCAne9zQ_1778538928
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8d5d03ae893so815073285a.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 15:35:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F61YNflb"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3665a90bcd3so3146394a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 May 2026 15:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778540225; x=1779145025; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MGwkBed7UDDk3zAI8J/n/bBtNTRM3sB7+XcI3xlgnOM=;
+        b=F61YNflbll+t1JO8a0H0EbQVDm6gf89AYAIQodErtN7jHwNZFrGfDGDOBV+KtyoTW9
+         28FJmE8dy8cGAIH3AMAl2Gh1jaPhkxU/dBDrJRrR+dLvcf4K8hWFpedYc2BuJ4zEpIuh
+         X3dQTzvOythIQ3Q6x9y4dZ+x8DO7dxlpyaG1/eZJNNadS+K+hS4vv9WfGc8Z+qbQztQg
+         4OmPZ7l0s7P8qdaro3Tw8SYHD1sYB1gEMS4P6Wyfj6wAPVaL3g6MGTCNuJJUQfrxUjZa
+         oeOvS9BzLukLinrgq/l4/joF4e2Mg+lcPbhmzmVjbfcyAdAF1Xqr72s3gf2VHed7Xmq0
+         2aKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778538928; x=1779143728;
+        d=1e100.net; s=20251104; t=1778540225; x=1779145025;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Be5V36Lh9GJ4FofjfR1J3aN/DKRdbZF51YYTGr+iZKw=;
-        b=rtkV2Zfbsz1K71BdfBPp2We1DQxRMvtbNZiyhAfbzYEYrj6qzGt0b9SxEzfMMdb1Cn
-         1l53JSnpaOI7nj24k0qwDM82r90W4KfD/SOvOI+blJ50G0CNo4YF5fmwcVd99o15WaZM
-         6hmtULVXrjCNPXufY/xZjsVudeFPwByejjM+KQAgcO/G5PixRIYSimR49h5VYC+fdaVH
-         vstZcYsiixVWI/cQ8o6nPmZWVdvgOoePyfh3uDMgdaW12cj7LWPZRTyhM/R6NJrNs6yc
-         iqxmOUnNAV5wAE3OhWyDnoELCYMU78QegtPUV6BLtnw8e2mvw8diyBb/56cqUlbwgCfO
-         BXDQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+tjp5iiH3ibRYnqs0jKLHP2Ykh/KfBz7g7ndd5ofqu1AmEi8DtpgGGrJhyuyaEJKaEzN5eNlQ0iWuNqAoNAlIAkZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKIDsVIHZGOe/IWKz6vaaKQ/Ges5p+0km79Wpug7UqY36FgJIw
-	s7mBbgCx70poUS97XLo2T1Cd9F4XxU3FyxZQ9eahNHTNT7QsaBQG0FPYONPhGsssWA3LN1UXg87
-	NoMjvLl+mQHkuKco1ckV72/hYfQrR44MPRL8VK19vj3Qgt8a+PUlwJue7Z/5BdfDxN6BDpn31/Q
-	==
-X-Gm-Gg: Acq92OHCE2zEmU3dvX7UhyUHp9j2FSO1Fa3HDT+6B8a6e/fAcM/GdTODsfRc/yDS8O0
-	C+5xkH+dAEpCIJpQ0aBDDCCP5teqb49Bo74keCXfuwvCaakMMnR8hQOnC9LD5bftHZ0+1//68zb
-	KpI/TDA3NOhD7YuRh/9EdDWoYeBLj/TDDv3AqVP3NKgr7x4AIS8zo/JFaPoz20ZxnuouNCuIC25
-	9khszSttc2oFzoH0KEgGmBXUn19dpvNtNHxezL3hMGj/XPVxmb5Iajfa27OxUGpUqYtYHyDiadn
-	LyFk2JoladMdCaNeZbNKByY+NNsFIPFqWVnrWzYckP5MZ52XvVZBK0Q5WT3u/hv8tnKPDSpC6+t
-	mu/HKnvMYaWMBuaWii26nkiE46XffCEIb6ukHz7MsBqS71+iUG+7OZw==
-X-Received: by 2002:a05:620a:bd3:b0:8fb:1ba7:bdf3 with SMTP id af79cd13be357-904d4679dbemr3870043785a.14.1778538927718;
-        Mon, 11 May 2026 15:35:27 -0700 (PDT)
-X-Received: by 2002:a05:620a:bd3:b0:8fb:1ba7:bdf3 with SMTP id af79cd13be357-904d4679dbemr3870039785a.14.1778538927247;
-        Mon, 11 May 2026 15:35:27 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc81:56d0:ab94:b2cb:29a6:7ac0])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-907b8e98521sm1200855785a.17.2026.05.11.15.35.26
+        bh=MGwkBed7UDDk3zAI8J/n/bBtNTRM3sB7+XcI3xlgnOM=;
+        b=dVis5AepFNmwqkBOsXy9t64pxpuPb0o8iX2MSIz6CueoI4SCSCwRlAWpPZ5D4VZU4h
+         +F80NAPiZUl4yJOgvlFjpE4a6RCI7tj2lrOux0MdRTu+UU5/VnQ4yfljTZKzx3c91Ytr
+         4yeZHyROulysnVMtE4KfX4F9ZnNJ/8rZBxJhWCNKu4GY+6hFHZ/NCXZdhOPjmqJvQl+D
+         t8owvV5uIul0rGgtPVndNGlgMy2PLP3MbOzDfC0n0lyvBCOSoV2JS79NCFNjHcYVyGJr
+         M76qd5ca5tXqnm81weyoKcOew0qlqjiieifp7Fj03aK6uFY1/Hc/gzLAKXSAcDs9hjT0
+         dFhA==
+X-Forwarded-Encrypted: i=1; AFNElJ+Pp5fr8tLTsA/oFOF7axf1ZYYxA8Z1e++c5rWaJaISkU03DAIeUGlCL4Vie/Q4XrIRbfKfl8a9xSknhl8P9i/cO40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRZU0dYTQwHIJQIaeMMZla5yLSqznvhDYHhmNbKHhk8obUFQkT
+	xzIh27pg1kiO6w2dHTDk1vreB1b4H64b9xLAzvwHXILSfbgBkqh+1qou
+X-Gm-Gg: Acq92OFUrQhM2rWSthgkaeyw5Yi5LRcT3GpkoWw/6sgjYSQzepVEY0dgp9QP4GrUlbZ
+	T3v4j1Bjo98N5DvjEXB1NgBaa3M8GeSYEFVBs0laVxlSTZqTriVMGcs4LMlwzMTev6l08omgiS/
+	9whyUBgalbXIAwS4S3OV/+OqpKMx6zV02eSM961kceukricnbodIAY0pW0Ur90zxypwyvJWFv0P
+	kTg5QmvxNdIhK1CvR1rTxETuwHf/Vp3pgkW9R2vwudvIWTCnrHd8qSqXQIv1s4uUgmg10h7SENa
+	6T39ax94nnVdCv6V/H7pWHkqRMdB6+0yKdKPED2Ci/Z753M+YD55OX0X9xq3BNqLoxc+6jl4tln
+	HXJcu35BRKLFTgyFEf+2QruG7mO+1h+myyvjmC34tXcSgygeEBxzhkxZaSVv0xIyhxNhUiogGgp
+	MIWhStgjNw+Gj0XphnSr40M1Lh49e6P8p17XutXYtsWh9vHPIQPu9slkNnYSeoDztExDAxWz46L
+	AdYwCP6x6Ih2mdeRGWlf519A9CFCsxcksw=
+X-Received: by 2002:a17:90a:d883:b0:359:8de8:1229 with SMTP id 98e67ed59e1d1-367d487d1cbmr13164585a91.21.1778540224836;
+        Mon, 11 May 2026 15:57:04 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-367d6262349sm8875947a91.6.2026.05.11.15.57.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 15:35:26 -0700 (PDT)
-From: Crystal Wood <crwood@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH] rtla: Stop the record trace on interrupt
-Date: Mon, 11 May 2026 17:35:09 -0500
-Message-ID: <20260511223509.1483323-1-crwood@redhat.com>
+        Mon, 11 May 2026 15:57:04 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	linux-trace-kernel@vger.kernel.org (open list:UPROBES)
+Subject: [PATCHv2] uprobes: Use flexible array for xol_area bitmap
+Date: Mon, 11 May 2026 15:56:48 -0700
+Message-ID: <20260511225648.27886-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -81,104 +83,83 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: eyCZ-LTN_C9P-ETPNjs1fZOsS-hwxrNkVVTIuufQJDc_1778538928
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Before, when rtla gets a signal, it stopped the main trace but not the
-record trace.  save_trace_to_file() could also fail to keep up on a debug
-kernel -- and in any case, it adds post-stoppage noise to the trace file.
+The XOL slot bitmap has the same lifetime as struct xol_area, but it
+is currently allocated separately.  That adds another allocation
+failure path and a matching cleanup branch without buying any extra
+flexibility.
 
-Signed-off-by: Crystal Wood <crwood@redhat.com>
+Store the bitmap as a flexible array member and allocate it together
+with the xol_area using kzalloc_flex().  The bitmap remains
+zero-initialized, while the allocation and error handling become
+simpler.
+
+Assisted-by: Codex:GPT-5.5
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- tools/tracing/rtla/src/common.c   | 19 +++++++++++--------
- tools/tracing/rtla/src/common.h   |  1 -
- tools/tracing/rtla/src/timerlat.c |  2 +-
- 3 files changed, 12 insertions(+), 10 deletions(-)
+ v2: add missing kfree
+ kernel/events/uprobes.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index 35e3d3aa922e..effad523e8cf 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -10,7 +10,7 @@
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 4084e926e284..eba71700667e 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -108,7 +108,6 @@ static LIST_HEAD(delayed_uprobe_list);
+  */
+ struct xol_area {
+ 	wait_queue_head_t		wq;		/* if all slots are busy */
+-	unsigned long			*bitmap;	/* 0 = free slot */
  
- #include "common.h"
- 
--struct trace_instance *trace_inst;
-+struct osnoise_tool *trace_tool;
- volatile int stop_tracing;
- int nr_cpus;
- 
-@@ -21,12 +21,16 @@ static void stop_trace(int sig)
- 		 * Stop requested twice in a row; abort event processing and
- 		 * exit immediately
- 		 */
--		tracefs_iterate_stop(trace_inst->inst);
-+		if (trace_tool)
-+			tracefs_iterate_stop(trace_tool->trace.inst);
- 		return;
- 	}
- 	stop_tracing = 1;
--	if (trace_inst)
--		trace_instance_stop(trace_inst);
-+	if (trace_tool) {
-+		trace_instance_stop(&trace_tool->trace);
-+		if (trace_tool->record)
-+			trace_instance_stop(&trace_tool->record->trace);
-+	}
- }
- 
- /*
-@@ -273,11 +277,10 @@ int run_tool(struct tool_ops *ops, int argc, char *argv[])
- 	tool->params = params;
- 
+ 	struct page			*page;
  	/*
--	 * Save trace instance into global variable so that SIGINT can stop
--	 * the timerlat tracer.
-+	 * Expose the tool to signal handlers so they can stop the trace.
- 	 * Otherwise, rtla could loop indefinitely when overloaded.
+@@ -117,6 +116,7 @@ struct xol_area {
+ 	 * the vma go away, and we must handle that reasonably gracefully.
  	 */
--	trace_inst = &tool->trace;
-+	trace_tool = tool;
- 
- 	retval = ops->apply_config(tool);
- 	if (retval) {
-@@ -285,7 +288,7 @@ int run_tool(struct tool_ops *ops, int argc, char *argv[])
- 		goto out_free;
- 	}
- 
--	retval = enable_tracer_by_name(trace_inst->inst, ops->tracer);
-+	retval = enable_tracer_by_name(tool->trace.inst, ops->tracer);
- 	if (retval) {
- 		err_msg("Failed to enable %s tracer\n", ops->tracer);
- 		goto out_free;
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 51665db4ffce..eba40b6d9504 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -54,7 +54,6 @@ struct osnoise_context {
- 	int			opt_workload;
+ 	unsigned long			vaddr;		/* Page(s) of instruction slots */
++	unsigned long			bitmap[];	/* 0 = free slot */
  };
  
--extern struct trace_instance *trace_inst;
- extern volatile int stop_tracing;
+ static void uprobe_warn(struct task_struct *t, const char *msg)
+@@ -1755,18 +1755,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 	struct xol_area *area;
+ 	void *insns;
  
- struct hist_params {
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index f8c057518d22..637f68d684f5 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -202,7 +202,7 @@ void timerlat_analyze(struct osnoise_tool *tool, bool stopped)
- 		 * If the trace did not stop with --aa-only, at least print
- 		 * the max known latency.
- 		 */
--		max_lat = tracefs_instance_file_read(trace_inst->inst, "tracing_max_latency", NULL);
-+		max_lat = tracefs_instance_file_read(tool->trace.inst, "tracing_max_latency", NULL);
- 		if (max_lat) {
- 			printf("  Max latency was %s\n", max_lat);
- 			free(max_lat);
+-	area = kzalloc_obj(*area);
++	area = kzalloc_flex(*area, bitmap, BITS_TO_LONGS(UINSNS_PER_PAGE));
+ 	if (unlikely(!area))
+ 		goto out;
+ 
+-	area->bitmap = kcalloc(BITS_TO_LONGS(UINSNS_PER_PAGE), sizeof(long),
+-			       GFP_KERNEL);
+-	if (!area->bitmap)
+-		goto free_area;
+-
+ 	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
+ 	if (!area->page)
+-		goto free_bitmap;
++		goto free_area;
+ 
+ 	area->vaddr = vaddr;
+ 	init_waitqueue_head(&area->wq);
+@@ -1779,8 +1774,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 		return area;
+ 
+ 	__free_page(area->page);
+- free_bitmap:
+-	kfree(area->bitmap);
+  free_area:
+ 	kfree(area);
+  out:
+@@ -1831,7 +1824,6 @@ void uprobe_clear_state(struct mm_struct *mm)
+ 		return;
+ 
+ 	put_page(area->page);
+-	kfree(area->bitmap);
+ 	kfree(area);
+ }
+ 
 -- 
 2.54.0
 
