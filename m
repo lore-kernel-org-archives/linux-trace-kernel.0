@@ -1,69 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E772D7814;
-	Mon, 11 May 2026 16:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE07312832;
+	Mon, 11 May 2026 16:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778516986; cv=none; b=puKxHJ+QViigJFSy8XgbU4oYvNt8WUTvS0cw1Sf98GyKR0RWfy5x/uoMNfMvnBbk5DbWeqYfWPR/wV2HWAYIKbqR2w5lhr2BmPYQEbard2eO7zRpj8teAgSucdSoOrWrb4p2dAgMQsmJrIPfNTCkTGkbJd1hC7MzcTmtBfRu41M=
+	t=1778517516; cv=none; b=a+8Lw1eQKzhRRGR493bVux9ombMtxU4VcjqHqBV40BnZYkZhADakAZczgEBWG4T37sPobDwZ9EUrVEWUYsTCczLoehCJaIbErL1h9DeVoFMOU2KrVQo/39y9EDIEQDcKMQaKmRlcV1bR9f1x6AoJo4Vp47aCtIJddWabvzFWxbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778516986; c=relaxed/simple;
-	bh=c63a4JxePfIgjpgQ4bMho60Nz7+hTPym2Qpet2uaDk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mPedOj1dDqUIlh43U0r5ViudfzEIF/A700xLr4IWEPjmGvVJjhzht4jvB7TtxM6l0n004pSKOAgkfNQww7/QDWfBQ0YAj63F2XdSKWgoIjUE1SvZOGMLRiEPBv7Qwq8qV3McvRyXVbl1VshCyUeCmZpv0Nk7wFBpjKoV4skUbt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYYpvVFO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778517516; c=relaxed/simple;
+	bh=hEIX9EipGUvR1x7oDQrx8x8JOgF91opY4DsEALWqyBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWvA0v1wPUl0Rb7KzJjovAH+xRZJSh5kmIWcb++HRiX1oUSLf/IDu/QHqwsn4OtJJ5YnRHARdiDzDts6HCXZRdS+J/rYX+PKdcoZoGGQwThRYjPIcj5iKC1pYLOrAQEpCIPHUUuN8BmF3iXWlyoTTPWAlvPAZH+YTobbVSeyo6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=E1xuGats; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYYpvVFO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FB3C2BCC9;
-	Mon, 11 May 2026 16:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778516986;
-	bh=c63a4JxePfIgjpgQ4bMho60Nz7+hTPym2Qpet2uaDk8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XYYpvVFOF00vdXabkI5V87vD7BFVLIXY+qFT2ClunVZKi+tPI0A/8qTXulLEY0DeY
-	 qqTTvho0mSwUsjNJmWHHt6a2oIXHQ7gWau/W3GBodDGBrrCrwwzAPgzTyOBbTojYam
-	 3hwFGn6hN8g4UvabpRwzolIBi/k5DjAoTHC7foRroFwNEwScLAA5gcYiPmxbzWkpxt
-	 /1s8jwlVN1Mx7zwpG0PeyVk/MLDHjSg871CdLooSg27sJ0LsUt1lbuWmc6ZBL+lzxT
-	 jSdhQSMc7FFsWMF//ZopDDSrTnhyoosExOzX5FNBFlEwfKrA+3pdTz1xoZPoXHnDhb
-	 NwMTBxpC7XaXQ==
-Date: Mon, 11 May 2026 12:29:43 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Ian
- Rogers <irogers@google.com>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v19 0/7] ring-buffer: Making persistent ring buffers
- robust
-Message-ID: <20260511122943.41e204bc@gandalf.local.home>
-In-Reply-To: <20260507131416.35bc304d89f974ae3b33d20b@kernel.org>
-References: <177751968499.2136606.17388366710182662849.stgit@mhiramat.tok.corp.google.com>
-	<20260502152304.560a5954@robin>
-	<20260502181619.7f5003dc@robin>
-	<20260507131416.35bc304d89f974ae3b33d20b@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="E1xuGats"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RPkJdNPZWjGL3yJJ8QOsn3oNWtCSC1Hk0P4HuVLPSKY=; b=E1xuGatsn1WTmRdnNNKf2g1ot/
+	zj2HO6G2Qec0YYaxl5CeElPlpdd2Xh/ykXFc+X1gj+R1+j2p/e02qOdYjEt94/f4mmomwrOZNc688
+	K5qT9VHezMmlFaUgkExnlD6eIwj+VJI19jg3WXWUFUVB5qdldhYhqA5/+lZ+UbRks+44VDTosadA/
+	0lX8sfL5UG5P1UrxsekXFUX30ZIZHzwTvfQ1YGZnGL+h4lh7MOGrsFZZRDdCgchuvtHac6zMaZhSk
+	QsYAofaYfDLmiEokNq1wLM741n2AW4LmbcZPNYQk/Qe4MydO4NN3rpcZHNOJmipfA681X8AXwvSmt
+	n2tw4htA==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wMTeI-001jcF-0Y;
+	Mon, 11 May 2026 16:38:30 +0000
+Date: Mon, 11 May 2026 09:38:25 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, paulmck@kernel.org, oss@malat.biz, kernel-team@meta.com
+Subject: Re: [PATCH 0/2] tools/bootconfig: render kernel.* subtree as a
+ cmdline string
+Message-ID: <agIFZ0vSfedX7foN@gmail.com>
+References: <20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org>
+ <20260508145641.754e4c7f73eabad0b5f89a1e@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260508145641.754e4c7f73eabad0b5f89a1e@linux-foundation.org>
+X-Debian-User: leitao
 
-On Thu, 7 May 2026 13:14:16 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> > I'll test this some more, and make a proper patch.  
+On Fri, May 08, 2026 at 02:56:41PM -0700, Andrew Morton wrote:
+> On Fri, 08 May 2026 06:55:02 -0700 Breno Leitao <leitao@debian.org> wrote:
 > 
-> Ah, indeed. Thanks for fixing!
+> > Add a bootconfig -> kernel cmdline rendering capability shared between
+> > the kernel parser library and the userspace tools/bootconfig binary.
+> > 
+> > The new userspace mode "tools/bootconfig -C <file>" walks a bootconfig
+> > file's "kernel" subtree and prints it as a flat, space-separated
+> > cmdline string suitable for direct use as (or appending to) a kernel
+> > command line.
+> > 
+> > This series prepares tools/bootconfig and lib/bootconfig.c for an
+> > upcoming feature that lets the kernel build render an embedded
+> > bootconfig file's "kernel" subtree to a flat cmdline string and embed
+> > it in the kernel image.
+> > 
+> > The follow-up series (sent separately) wires this into setup_arch() so
+> > early_param() handlers see values supplied via CONFIG_BOOT_CONFIG_EMBED_FILE,
+> > following Masami suggestion in [1]
+> > 
+> > These two patches are pure groundwork. They add no kernel feature,
+> > change no runtime behavior, and are useful on their own (the new
+> > "tools/bootconfig -C" mode lets anyone render a .bootconfig file to
+> > a cmdline string from the shell).
+> > 
+> > Landing them independently lets the follow-up series focus on the
+> > kernel-side plumbing without dragging the refactor and tool addition
+> > through the same review cycle.
 > 
-> BTW, shouldn't we unify common logic of those functions?
+> I'll assume that Masami will process this, although
+> `scripts/get_maintainer.pl lib/bootconfig.c' doesn't mention a git
+> tree.
+> 
+> https://sashiko.dev/#/patchset/20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org
+> says a bunch of picky things which seem pretty ignorable to me.  Your
+> call ;)
 
-Hmm, there's not much common between the two. One is a consuming read and
-the other is a non-consuming read that needs to test for a bunch of race
-conditions.
+Well, these are some warnings about not checking that the output was
+properly set. From my view, these are not new to this patch, it is just the
+pattern we see, which is fire-and-forget writes to stdout, which seems
+quite reasonable.
 
-If you see something that can be shared, I'm all for it.
-
--- Steve
+If we decide to fix this, it would make more sense to do it file-wide
+instead of just in this patch code.
