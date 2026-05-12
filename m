@@ -1,92 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6734399CE6
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 13:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B3B39AD4A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 13:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778593916; cv=none; b=DcEDntW9K/ftjeMNUXFhOTmcdBIBcMGJZzzgn14DJoVi5GoI5uBGMxdXGFFzE8uvbyaDEm7/7i9MxKvG/5F/djzQf5Jk56G9Hqc4hMyTGn/sa5PLB2bxpvKuovxq/7/OJSlT1tnFU4lNxxgt4J+9jjXCvrJQFNVbcI9ypN1X+HQ=
+	t=1778594067; cv=none; b=RIeny/V+HDFtO9oC4OXy6rwv6I4+Z9I9WD6fq8UerahTltx8kKrv8Kn0b+C+/FXr2V480YNtycWxyV83w5JUWMgVMChHVXpfgHeg0n7CMhLlrhBcLuyILiZq1VEWkRtyxlmgSRsM3PJ8fwWNlinUjCelqSdjV8DRpOTiJ1ODnZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778593916; c=relaxed/simple;
-	bh=WoHckFkc1wZr+e0BiLVwmRHZR75XXaGkse8IDrsqvNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nN4pEWRBykvH7hRsaNGcCljF1CKSK2Gt7kDUdHU814+Ib7w1X2Xv5h2C4/Nj7Tho0m+CJOPCK7t2fJX7TBk5FmIFVOMi4wnOMSHMcM1lRgd+3yExaGA+XetRVV1su7V7cTwxx9gdAwvNoAd3sWx1daitSMhnC/OVfQHDsnD7oSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NTVBVYv9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1778594067; c=relaxed/simple;
+	bh=rXLoa9GBRBH6H+q+SMMAAzcD/K+nBASxRj8ZI+waeF4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ga4l/8+LZVT6BZeYrobCPMf46/+POiuEZ+3aejNfW7ncbn3EfQkNIYy0fBkkEZRIMgtHLIFi8xm/UHthjonUb3A7Ut+dC/c0nJjek4xnbPkCRmBQuH/sMN9VArpYPVNhe9U9Eaezb3WMx26O4yQjDtMO1TH7Xpsh49d3YIoWXR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQrn9UbQ; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NTVBVYv9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778593912;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WoHckFkc1wZr+e0BiLVwmRHZR75XXaGkse8IDrsqvNY=;
-	b=NTVBVYv9CsB2A1cNsa+XQZZ1up2V0X5K0aIpZ+hX+PtMJ6IKP92UYdXixxc/UNIkQKiswh
-	OdKtYowkzsQ05NLc3t2+bfVLEdkqw8eUx+7ijXC1ORdxxlUggdm8Jpc0y9l6JzdeOxiz4i
-	/3BbA3h3z2LCWKZfmBd4jZQ1YWKTUl0=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-335-8o8ea7HFM-GUnjaEe-AJQA-1; Tue, 12 May 2026 09:51:49 -0400
-X-MC-Unique: 8o8ea7HFM-GUnjaEe-AJQA-1
-X-Mimecast-MFC-AGG-ID: 8o8ea7HFM-GUnjaEe-AJQA_1778593908
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b940da8ec09so595473066b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 06:51:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQrn9UbQ"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488b3f8fa2bso62992075e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 06:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778594064; x=1779198864; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MsimPcdUANfcIFgHzpPOd6ABveJwxGYZMeC9Y1ifSik=;
+        b=DQrn9UbQfmqEDaNFxTLznLX55Qp1UW3JRO4dcgoJfNKAdKab3bAS6cuiMRaO/uK11R
+         N8QOKL1EmjSYKyXYpSJdjCLAFJds7h6ZWfq+DxBkOtK932OnrPgeUWUa7knVqvrX3YyM
+         aOy7nERDh1BVVebhw4L7zUHOfCRicUzIw1E3fPQkc8jMxEF4RWVB9lgYwCFrNajYvKst
+         EOggLMCBwdATnS4AVmW94614u9aCSYRyJq57A2Rb5NuHNpsDLa2IOr2egyOxk0urwUDi
+         KIiDXhYrUuDR6VP6SbdRSQOBrl2ZRf5FL2ZyMw0MMQsxe6Wm83gg9IfklpN5aQy4oQUC
+         mPwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778593908; x=1779198708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WoHckFkc1wZr+e0BiLVwmRHZR75XXaGkse8IDrsqvNY=;
-        b=LBMCqwOSDPjliiBx4aGo2p8BK5+UXJ8TyIexbGZk2RL22GWKd92+vZCm006Ho97F0X
-         GjeAdKWeDovZd5deOXwL4HzztPBPh8Gs4b+LGWW5bMY0U41HiFT7O8gnt21MFbpTXeYR
-         jewhPorjCb4E4sUKBbA6/Cfhpx+gwbAFbo0nNFzT3Z6Zw1LYTTdrB91wMoFErR41ynvf
-         Vje8Bq4qE4HpveZkG1KhK43rkTfnH3wHwYwN46gaqcBHssWX18yzlCySsUFHoNFCRdEQ
-         u8g8GNplKfeTKCVMAHBP0mGDrBdfotmwxzJSUCaObllfi1NhW1lm3O8DYdZXwv2pXd9I
-         PuIw==
-X-Forwarded-Encrypted: i=1; AFNElJ8G2v2I356u9PGcK1I8aU8Om770E6p5Y1GyL4ugdZlvakG/9qRlCezyrL1VBnkLG9bHrJuUDKQKZyhKtRKbKzFpuh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+608J9phEJGSW6o6ss3Hyd3agjgMFb19ytDDSkvR4DzQoz4Ce
-	DGy6oDMVZL+qRUdU/PuQeiaSjhXS0yLBoTSDouHn7BLY/FkWaRhZrAil6j6HLXyYrvYrzIAzQFZ
-	taPHGNud13gOxJlYnZcxQhmDC2VBQWPRRuPYtWmcU6PRnB1FWrrfVzBKshkbEtUWiyvNFOn6uAk
-	0EvnbjgW/GiAkU0UnNaKniL2eOi3GQ3IRvrf3b5jOLDrl/MQNr
-X-Gm-Gg: Acq92OFZqkJSpX7y7q7Gnpy0XncVQPg9pWt/8LdbqvfZE4AzNajqpwRZ0AEv7ylKVRv
-	ypASINCfFyfZwMHI/4X7WYfDoFwBEs9ERK+KbUHEaVge2xEMHJ+A9e7x2H5s4wZomN5YBCBCY8k
-	eSgnU95hMFJWMO0iGrAn80zZt5dAOMSlCO7eRE7XNozb1Xvz87xqFejOKD8gSslThChDSfr/Gs1
-	Sr3xg==
-X-Received: by 2002:a17:907:6d16:b0:bd1:4da0:b0d5 with SMTP id a640c23a62f3a-bd14da0c8f7mr475860966b.17.1778593907853;
-        Tue, 12 May 2026 06:51:47 -0700 (PDT)
-X-Received: by 2002:a17:907:6d16:b0:bd1:4da0:b0d5 with SMTP id
- a640c23a62f3a-bd14da0c8f7mr475859166b.17.1778593907400; Tue, 12 May 2026
- 06:51:47 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1778594064; x=1779198864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MsimPcdUANfcIFgHzpPOd6ABveJwxGYZMeC9Y1ifSik=;
+        b=hrfLnLXTnuojawv/Pl4d5+4ViYZFjLBfnR1L3dpUWrzBMy1UqIsfh3g6XKs1Lp8jYZ
+         Dm0Az9nyYEAb66ZjGZ0N0eoLM8qh8O6P6EhLfEJNoyiRb4MdiCnj50fhNZy2XlIugntr
+         BhjtuDRjCG1+zUMMHWqnmuLmNx+7T9JwW41Yz+nZYFR9oxvbTuXVlgA79BsBDEsJuGpt
+         HCbXI4GGRCopF9Ivno+7Hn7dJ5x7Y6eOjmoVAK4JuEP/oCx9l40kRqkgLtPHq+Ld+m+9
+         4NzNAuDQ2WcrbgmMfwUdhrel4Oo+ZI2sEUfhxIvjUzJULQDLDyouWC1bmdJjIaU/YOIc
+         SJIg==
+X-Forwarded-Encrypted: i=1; AFNElJ+o9dR/T85dJ03s1mlkOXVlMA/9omvgM8PIb37heySowRN6MD7Gff09wmRzr7xi7ISCKH3quL4IZJlE3wpuxkjXTts=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzxd7YsrGxKmx+PbX772xEFIblIHW5G8+b9ITljmllr1NL9/iOS
+	s4JpjeNKPdJ5oWeHqTT+sjyiVnWbIpunsXZeZSWAtZHe+NfyJGaVzHWh
+X-Gm-Gg: Acq92OG4BL9DTgHsYe7DP7ggidHm/MBIYNim6GZyDHOSSZZt6fsfwQkapjJsNoEJBER
+	hkNNf38BLQnPVmZKBXlLNu1d7s/lLmPKPjQIFXRclzVvMcJ7JAWB1EYFdvqtuO27BCza73+TvG9
+	ljZbij52g0QI8x6G81oMeyEAfgCFQsk7/T6rOGfsTL5j5GsKQR5/sP+2YVBQQfWPOFYqFj6ziLW
+	Y0TMU7fsKSI+6JTvQhhSHhoGGaLq1uI8oU4sxjnhEpK/c0/Eq92pmFsPZO6QJOBh302H778DeU0
+	MD7hlJkUJsGcsWIN3LR7cO9zh7OhiFp4/JWDteJhh/FAmh0Uv42w9cf4mDdTP9dprwPq0zFO3C7
+	I1TDhWTV5BXnR0jsoiYZWsV6RRe3E/J7DaJLMo3I5gLxPUNAHAmxKxvxfwBG/yiYW09KZK1ppeo
+	YOoI2lupdrtxTXLRO0zWnf06QSoFG84321i8blGpipTkVza3fJZKr/mMhS+vvfeSH5b4W6i77O0
+	voXZL3k7EU=
+X-Received: by 2002:a05:600c:3b99:b0:486:faa8:9e4 with SMTP id 5b1f17b1804b1-48e906c4525mr43131835e9.12.1778594063788;
+        Tue, 12 May 2026 06:54:23 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e908d890fsm43691055e9.15.2026.05.12.06.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2026 06:54:23 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	vdonnefort@google.com,
+	ryan.roberts@arm.com,
+	maz@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH v3] tracing: Fix nr_subbufs initialization in simple_ring_buffer_init_mm()
+Date: Tue, 12 May 2026 14:54:20 +0100
+Message-ID: <20260512135420.99194-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260511223509.1483323-1-crwood@redhat.com> <CAP4=nvQEnCG2vabuA52p3bmGo7f1_-pZJ2b6rr5N=bKmaBuqxg@mail.gmail.com>
-In-Reply-To: <CAP4=nvQEnCG2vabuA52p3bmGo7f1_-pZJ2b6rr5N=bKmaBuqxg@mail.gmail.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 12 May 2026 15:51:36 +0200
-X-Gm-Features: AVHnY4L3bMDQRg4gL6CfDMWaCh4WOg-5Yq9PzyohuyNCztBf5pR7r14LNw8MR8U
-Message-ID: <CAP4=nvTPdJkWRKKv5MhRL9oAEusENDqKGxPxOxvKO_sDoddYeA@mail.gmail.com>
-Subject: Re: [PATCH] rtla: Stop the record trace on interrupt
-To: Crystal Wood <crwood@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
-	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Wander Lairson Costa <wander@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Qz6uRxcH7eeNeH35H5ZZlvWGSz_BiCX2bjlY1oaN68o_1778593908
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-=C3=BAt 12. 5. 2026 v 15:50 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.co=
-m> napsal:
->
-> This affects only the "new" (since 6.19) --on-end trace option, right?
+nr_subbufs in the ring buffer metadata is always initialized to zero
+because it is assigned from cpu_buffer->nr_pages before the page
+initialization loop has run. While nr_subbufs is not currently read
+by the kernel, it should reflect the actual buffer geometry in the
+meta page for correctness.
 
-s/6.19/6.17/
+Move the assignment after the page loop so that cpu_buffer->nr_pages
+holds the final count.
+
+Fixes: 34e5b958bdad ("tracing: Introduce simple_ring_buffer")
+Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
+Assisted-by: Claude:claude-opus-4-7
+Signed-off-by: David Carlier <devnexen@gmail.com>
+---
+ kernel/trace/simple_ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
+index 02af2297ae5a..f731f14d0ff7 100644
+--- a/kernel/trace/simple_ring_buffer.c
++++ b/kernel/trace/simple_ring_buffer.c
+@@ -395,7 +395,6 @@ int simple_ring_buffer_init_mm(struct simple_rb_per_cpu *cpu_buffer,
+ 
+ 	memset(cpu_buffer->meta, 0, sizeof(*cpu_buffer->meta));
+ 	cpu_buffer->meta->meta_page_size = PAGE_SIZE;
+-	cpu_buffer->meta->nr_subbufs = cpu_buffer->nr_pages;
+ 
+ 	/* The reader page is not part of the ring initially */
+ 	page = load_page(desc->page_va[0]);
+@@ -437,6 +436,7 @@ int simple_ring_buffer_init_mm(struct simple_rb_per_cpu *cpu_buffer,
+ 		return ret;
+ 	}
+ 
++	cpu_buffer->meta->nr_subbufs = cpu_buffer->nr_pages;
+ 	/* Close the ring */
+ 	bpage->link.next = &cpu_buffer->tail_page->link;
+ 	cpu_buffer->tail_page->link.prev = &bpage->link;
+-- 
+2.53.0
 
