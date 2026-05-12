@@ -1,82 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442C0393DC8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 09:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CF74BC027
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 09:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778576974; cv=none; b=sKME69VICfFvrk1ZH2Wb3n5Wn+SIqfzfV4M1my0qEUaUz/Unhu+KDCwJjyWNLYzJI7zZgrHGkce75iYHzoekuZPQy4dhBdQPWxaVAXIHr0Mbii8e+QeVnTSLE9aIBsTZTQKi2SUgiqmV3EfNQupUr979A0gBsa4BKZ3WnvPmnpo=
+	t=1778578281; cv=none; b=JnMDseEF0Shv927yUEylcntvZFexCwBC/aDG4REevPF1h0xIVonkVqD+pjql2jzzvHSoQR27uV5HvtmSpNJFO+sazApSqvhcHW09eEsa/JcLJjcrHHxtPU4zAWxXRpwff7IkfkZHKLgxfliW7gYswUmkG08kbfmTr8/eIjpeOz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778576974; c=relaxed/simple;
-	bh=UaHCW1fIVUt4KvsHqRNoQ/j4s2EJthw5kRd4BR/Yi1A=;
+	s=arc-20240116; t=1778578281; c=relaxed/simple;
+	bh=QIGHmcPeoxYq4JWZezZpV0zzd9i9k55HpZ6chclobdY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cByJqqiu83fCDydtm7pzhThIz9GOVs4DnR79n86gxFPmNXdgONiVz+feXqcbb3GXqcVp/oOnCatq1MRckUv+zNew5ywNRlIRB4srF18VHAv7rMf9oqo98ECGk1hCZLNgBg4aC4PUZTYSJzNab5dmQMeauJhL0KVrMzyJE9rJt6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XUhC3lBs; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=ZiEC+/Lwm63xDZMUoKNEhTqed+ogFxlS9cnxMsyr70QT8gfsT7TYsLL/VsrHOd1l16retbzHZThpwQDXXXOsm6KGdY3A98rUHfAaizwfNJ9oKwoJ8oWvHIpFNPZ3JAHl5cfNBzEBXw4EJhZ/W8AR2O1HOcp8AojjZkUrVgoXZs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YyaPvZC1; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XUhC3lBs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YyaPvZC1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778576971;
+	s=mimecast20190719; t=1778578278;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UaHCW1fIVUt4KvsHqRNoQ/j4s2EJthw5kRd4BR/Yi1A=;
-	b=XUhC3lBsVH2WsBwnG7aD0uEFkuHuHzOd3I7OJGLz81ACHFgkw5zwo/MvkXT6a++6xjSOQP
-	tkXPvKdQVnEuFQAZztMNA1qLxXfmLunZ/xfx6mWSTnEIAkpdxjhv7IbQntp8obEZ2oZQTL
-	8KoH9CQyF10rAKeEkrDuKVNpAF/LqX8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=QIGHmcPeoxYq4JWZezZpV0zzd9i9k55HpZ6chclobdY=;
+	b=YyaPvZC10DBstfKj9RcMHL8tmvL1iOsAoKZ+hHhPl7+kOibkmX223nYMm877Cg3vxwH+Kg
+	8fAKqzm7S03C1x0hKjh//kVmH/mLlxhlVAGIYibnCw3Ei4A5Mqcdxyh9b3kQYTvXUr1Bpt
+	7vzN4ORqy2gWDiB1TNP/8zaAYC7wu+Q=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-618-ItpBiI2sPG-YPMLouBLYZQ-1; Tue, 12 May 2026 05:09:29 -0400
-X-MC-Unique: ItpBiI2sPG-YPMLouBLYZQ-1
-X-Mimecast-MFC-AGG-ID: ItpBiI2sPG-YPMLouBLYZQ_1778576968
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-48d035e8593so37209985e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 02:09:29 -0700 (PDT)
+ us-mta-563-J2sQKDYsMeejWSpiSfov0Q-1; Tue, 12 May 2026 05:31:16 -0400
+X-MC-Unique: J2sQKDYsMeejWSpiSfov0Q-1
+X-Mimecast-MFC-AGG-ID: J2sQKDYsMeejWSpiSfov0Q_1778578275
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-48d0889c1ecso32327905e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 02:31:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778576968; x=1779181768;
+        d=1e100.net; s=20251104; t=1778578275; x=1779183075;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ku4PPIzPxXA06bNM7AJ3zKbTlFOq3BIrLLlOUlZKso=;
-        b=DfsN/RQf3QVZSPxcZndfPzjRihndcvs4PRmAx8kWEG11RF1pV+m8dui5xHDWVQYy9Y
-         ooEE0eBMy+sxTqPMr7y7EAgnEfrB+yLgLN9Mwh1x1FSS9b0hlK2At2ox8e3DfCKN9gJj
-         68LpC81ua74kLQ/LiM1/3G9ij95WayPj8vOjpXz1Om62WRkHcootwCNQqFeXy0bFY9aC
-         0tSxJSVf6RMFd93Q/w6awBYKABZoGTtFRZOrqb9OTdMj23yO+t0r6NDm/g90ZlgcslaD
-         +tQBIfxm+eSeb+RzmkP/P669L9/rQEnGo4YgYX6NAC4hH0Y5gaMlA0PiAuG5R+DEurrG
-         XGjQ==
-X-Gm-Message-State: AOJu0Yx0j1uYJxl8rJaOQ8L9nrsct/PlYgoJxxpHWoeK9vsx84eTJaTn
-	0IdWE5Unp1E5szTmYPRm7d4dkufU+RbXVZpxLk/Z72Hk83arGTE0pdF5jB/qHyg1JEYY8HD6csr
-	rwc3iahFt3my0WUS/Ia5Lh1gaUdvNYlk3pQsKoR48yZK7G6Po13nBk6EKHU4w4Q8+Q4v/qh9waQ
-	==
-X-Gm-Gg: Acq92OEL+ZkqKTTp2x/bHAaylAVoFKN4AyFVXFm3jXeA0IjlOemeidvU9PpZfBTtxWZ
-	ceSor/hDAIOq/KQVB8ghMh8QOBuKsGpU3gqTWTU6mhM9oBFHDDFWgLWTPJDEQDBgK7JNqGsDP3e
-	uRVT+NwtExHnQDw7ymXY/wWw5TnC+nFD/kze3VHnnarwUV1BqVEOEXCvgyhL18/+faIRsIGT6w8
-	24rGbHlZLtZkYbhhZE46Y26noUFa163J1qLwMME61CtlF37H65C6r0hhixeaJLXlphNVwa+fyp7
-	MA+XZqBtb+iXFpOzvefsEk/xKeASx8mruscAWzVmuhGxA/5NCDTZyMfYYpNxTzMtSzkwlZ+CwUt
-	bSZVZ8Fh15qBXmwzXolD/0sMCTm4Ur0TUTxYS1mqbo5jLgxXGQGVjWCzfGatMBLnH6SsoHgJBku
-	L4GSQtgodV+zVbG7A=
-X-Received: by 2002:a05:600c:8b62:b0:47e:e2eb:bc22 with SMTP id 5b1f17b1804b1-48e6748afe8mr262618395e9.5.1778576968321;
-        Tue, 12 May 2026 02:09:28 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b62:b0:47e:e2eb:bc22 with SMTP id 5b1f17b1804b1-48e6748afe8mr262617945e9.5.1778576967888;
-        Tue, 12 May 2026 02:09:27 -0700 (PDT)
+        bh=6qrbtc6bbX01KsYYIZN3YhSzoAUf4nKsSCfs8fCsYQI=;
+        b=ELVs+m5ClmzqCU194un1A6AzwCDIW4EyRb5cXhM+W6XaTSeNw3uyj3/71uWygsIcEf
+         A0Qv96LzRFfC5LnbrUfMaPQXk1JbzGLUBskU95TmubVhXslH3YFDA9VefwqNJdfZfwOn
+         70hLPxEHs5ezJXHTACwT9+8pSfbuXglh0VxIq0zG4K9dLPZq7J8ssSqXyuSWYF7SYtbi
+         Ioe8bMjjIKlYOgyctspKekXBcJjrt8ebfQp6aaedGqJc1UzfZNnDMofajJHhdHM9knB7
+         LK07dl6z1uDct7t7Y4Tzr5rVfOfZU9rJ3L50V8Vv2ZzYAy8iEEdvHVoblhSTlxvGOX9D
+         qZEg==
+X-Forwarded-Encrypted: i=1; AFNElJ8gwxBeGG71wgm9uayPpqA+SNTnzLO57cJOLZj4ClRnx6jV4BkB9dHTTZ9RPbsBxyBE6yBe9C8HzYn993BIDjxVXps=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7VWSQrCH8cgc3Ji9Hs1Rao5t9uLtTlvkv/E9ucFFEVqNkMo/o
+	IAt0T++5ga6xdWtrHCQ7UKheD3ppf4pUhx/50WV5GneCEJiD6gATjtjRiOsNLa6yDxcU/4Mq34+
+	1lprXJSUhS+/ga91CQtlljkoE5Migy+tw5BT1e50fehYzQGEubqvDu4o0HyKOnPLbC4o8FOIngQ
+	8ArZtB7g5s
+X-Gm-Gg: Acq92OE8H0fmRfkEb66j0FW3+cr3VoEhcPw8HNGXDnt4Z6ko5Y0egHSZfRx0hqzmoEv
+	kWvOagrilvrgb3BwV3MbAOvVavKTUK1C6OmveO8+2BLtsn6z+pNF14zt7+Izm2NGsCv3+g9MbJ9
+	sByw4PSkcSo03RQ9K9xeFQVCrHWBPX4s3SwXQpYlT1eWLXD54myWYhARUnZXuWFvUKIZOFGgHBS
+	EAF+zVt7rhFHUVrW+36Y5hdBPQ9mPtx0V9VyEOMZvwfFefyLOmRkNWrJ9jdEHbpNhfnm5dSKiaD
+	c9SSwKHnSnWb+926hrshAtVeLlLWtObgZIhThBP5SlNLohNfLq4REJaQehIsa07AHpTVWP6Ri/4
+	gF8T16XNdHdmepiraUh3Zo7Xfn28Q64fCGFknjUGZnsEcSK/fFIw+E2vWdpGqNfgU0HCkI5rYPv
+	fjHWDSy7hrvhgzRlM=
+X-Received: by 2002:a05:600c:46d2:b0:485:364e:9328 with SMTP id 5b1f17b1804b1-48e51f32aebmr401697175e9.16.1778578275331;
+        Tue, 12 May 2026 02:31:15 -0700 (PDT)
+X-Received: by 2002:a05:600c:46d2:b0:485:364e:9328 with SMTP id 5b1f17b1804b1-48e51f32aebmr401696805e9.16.1778578274827;
+        Tue, 12 May 2026 02:31:14 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-454917d57aesm31655504f8f.26.2026.05.12.02.09.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e8e7491edsm15674655e9.13.2026.05.12.02.31.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2026 02:09:27 -0700 (PDT)
-Message-ID: <8e80cbcf739304de95356f1fac677261628977fa.camel@redhat.com>
-Subject: Re: [RFC PATCH v2 02/10] rv/da: fix per-task da_monitor_destroy()
- ordering and sync
+        Tue, 12 May 2026 02:31:14 -0700 (PDT)
+Message-ID: <ad9ca4916604d3f5ffe7a6683f9b82008784fa0e.camel@redhat.com>
+Subject: Re: [PATCH 07/13] rv: Simply hybrid automata monitors's clock
+ variables
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: wen.yang@linux.dev
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>
-Date: Tue, 12 May 2026 11:09:26 +0200
-In-Reply-To: <f654a17c671469fd8fc9ea438daf2266d05068d4.camel@redhat.com>
-References: <cover.1778522945.git.wen.yang@linux.dev>
-		 <d02c656aada7d071f083460a5c9a454363669b61.1778522945.git.wen.yang@linux.dev>
-	 <f654a17c671469fd8fc9ea438daf2266d05068d4.camel@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Wander Lairson Costa
+	 <wander@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 12 May 2026 11:31:12 +0200
+In-Reply-To: <87wlxaupmz.fsf@yellow.woof>
+References: <cover.1777962130.git.namcao@linutronix.de>
+		 <a779af6dc89721179e0dbab08623e42aa0191275.1777962130.git.namcao@linutronix.de>
+		 <967f1cd8cd6e27aaa65d68194487306bc312caa0.camel@redhat.com>
+		 <87wlxaupmz.fsf@yellow.woof>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -94,191 +97,96 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 0GL1rM2TPCaPKEDIaiLkTPqIWEBerIaAMF9UL1eyUcQ_1778576968
+X-Mimecast-MFC-PROC-ID: i-c25p9krArEQ4dPdO67q0E9sz1uvPKwBsRn6CNGtHM_1778578275
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 
-On Tue, 2026-05-12 at 10:27 +0200, Gabriele Monaco wrote:
-> On Tue, 2026-05-12 at 02:24 +0800, wen.yang@linux.dev=C2=A0wrote:
-> > From: Wen Yang <wen.yang@linux.dev>
-> >=20
-> > The following two paths race:
-> >=20
-> > =C2=A0 CPU 0 (disable_stall/__rv_disable_monitor)=C2=A0 CPU 1 (wwnr pro=
-be handler)
-> =09=09=09=09=09=09=09^ did you mean stall?
-
-Ok I got it now, so essentially you'd reproduce it like:
-
-* start a DA per-task monitor (no timer)
-* stop it, a handler is still running after reset, it sets monitoring back =
-to 1
-* start an HA per-task monitor
-
-that would use the same slot that is now looking like:
-
- { monitoring =3D 1, timer.function =3D NULL }
-
-because it was not initialised as HA but monitoring was reset in the race.
-
-Thinking about this again, it isn't just an issue with per-task monitors, a=
-ll
-monitors reusing slots would suffer from it.
-Besides, relying on monitoring can be fragile when using LTL monitors on th=
-e
-same task (those don't even have monitoring).
-
-Perhaps the solution isn't that trivial, I'm going to give one more thought=
- on
-it, but thanks again for bringing this up!
-
-Gabriele
-
-> > =C2=A0 ------------------------------------------=C2=A0 ---------------=
---------------
-> > =C2=A0 disable_stall()
-> > =C2=A0=C2=A0=C2=A0 da_monitor_destroy()
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 da_monitor_reset_all()=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <------ [task T: monitoring=3D0]
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 da_monitor_start(&T->rv=
-[n])
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* no timer_setup */
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 monitoring=3D1=C2=
-=A0 <----
-> > =C2=A0 tracepoint_synchronize_unregister()
-> > =C2=A0 // CPU 1 probe has already returned; sync returns
-> >=20
-> > Later, enable_stall() acquires the same slot and calls da_monitor_init(=
-):
-> >=20
-> > =C2=A0 da_monitor_reset_all()
-> > =C2=A0=C2=A0=C2=A0 da_monitor_reset(&T->rv[slot])=C2=A0=C2=A0=C2=A0 // =
-monitoring=3D1, timer.function=3D=3D0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ha_monitor_reset_env()
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ha_cancel_timer()
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 timer_delete(&ha=
-_mon->timer)=C2=A0 // ODEBUG: timer never initialised
-> >=20
-> > =C2=A0 ODEBUG: assert_init not available (active state 0)
-> > =C2=A0 object type: timer_list
-> > =C2=A0 Call trace: timer_delete <- da_monitor_reset_all <- enable_stall
-> >=20
-> > Call tracepoint_synchronize_unregister() inside da_monitor_destroy()
-> > before da_monitor_reset_all().=C2=A0 The unregister_trace_xxx() calls i=
-n the
-> > monitor's disable() have already disconnected the tracepoints; the sync
-> > here drains any handler still in flight, so no new monitoring=3D1 can
-> > appear after da_monitor_reset_all() clears the slot.
-> >=20
-> > Also fix the slot release ordering: release the slot only after
-> > reset_all() to avoid accessing rv[] with an out-of-bounds index.
-> >=20
-> > Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
-> > Signed-off-by: Wen Yang <wen.yang@linux.dev>
-> > ---
->=20
-> Thanks for the fix, I have a similar one waiting for submission.
->=20
-> These are technically 2 separate fixes though: the ordering with unset
-> task_mon_slot (independent on HA) and the synchronisation with pending
-> tracepoints. They probably deserve separate patches and visibility, the f=
-irst
-> has always been around and we're technically overwriting who knows what.
->=20
->=20
-> The explanation above is a bit hard to follow though, are you talking abo=
-ut a
-> handler for the same (stall) monitor running after the reset, effectively
-> undoing it by setting the monitoring flag?
->=20
-> Then this is indeed an issue with ha_monitor_reset_env() which expects a =
-clean
-> environment.
->=20
-> So that's basically what you'd see now much more often because in fact we
-> don't
-> reset the right slot (though, again, that's a different issue).
->=20
->=20
-> Calling tracepoint_synchronize_unregister() there too would surely fix, b=
-ut it
-> used to be kinda slow. But it's probably gotten faster since now tracepoi=
-nts
-> use
-> SRCU, so we can wait for a dedicated grace period.
->=20
-> I liked the idea to wait cumulatively in the end, but that's just making
-> things
-> harder.. Let's do like this:
->=20
-> Prepare 2 separate patches as fixes, put the task slot one first (would e=
-ase
-> backporting), mention this issue with the race condition only in the seco=
-nd.
-> You can send them independently and I'll add them to the tree as urgent.
->=20
->=20
-> I'm soon going to send my set of fixes that will also include the task sl=
-ot
-> patch (not removing to ease my life with conflicts).
->=20
-> Thanks,
-> Gabriele
->=20
-> > =C2=A0include/rv/da_monitor.h | 18 ++++++++++++++++--
-> > =C2=A01 file changed, 16 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-> > index 00ded3d5ab3f..d04bb3229c75 100644
-> > --- a/include/rv/da_monitor.h
-> > +++ b/include/rv/da_monitor.h
-> > @@ -304,6 +304,20 @@ static int da_monitor_init(void)
-> > =C2=A0
-> > =C2=A0/*
-> > =C2=A0 * da_monitor_destroy - return the allocated slot
-> > + *
-> > + * Call tracepoint_synchronize_unregister() before reset_all() to clos=
-e
-> > + * the race where an in-flight non-HA probe handler sets monitoring=3D=
-1
-> > + * (without calling timer_setup()) after da_monitor_reset_all() has
-> > + * already cleared the slot but before the caller's own sync completes=
-.
-> > + * Without this barrier, an HA_TIMER_WHEEL monitor that later acquires
-> > + * the same slot would call timer_delete() on a never-initialised
-> > + * timer_list, triggering ODEBUG warnings.
-> > + *
-> > + * Note: tracepoint_synchronize_unregister() is a system-wide barrier
-> > + * that waits for all CPUs to finish any in-flight tracepoint handlers=
-.
-> > + * The caller's own __rv_disable_monitor() issues a second sync after
-> > + * returning from disable(); that redundant call is harmless on the
-> > + * infrequent admin (enable/disable) path.
-> > =C2=A0 */
-> > =C2=A0static inline void da_monitor_destroy(void)
-> > =C2=A0{
-> > @@ -311,10 +325,10 @@ static inline void da_monitor_destroy(void)
-> > =C2=A0=09=09WARN_ONCE(1, "Disabling a disabled monitor: "
-> > __stringify(MONITOR_NAME));
-> > =C2=A0=09=09return;
-> > =C2=A0=09}
-> > +=09tracepoint_synchronize_unregister();
-> > +=09da_monitor_reset_all();
-> > =C2=A0=09rv_put_task_monitor_slot(task_mon_slot);
-> > =C2=A0=09task_mon_slot =3D RV_PER_TASK_MONITOR_INIT;
-> > -
-> > -=09da_monitor_reset_all();
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0#elif RV_MON_TYPE =3D=3D RV_MON_PER_OBJ
+CgpPbiBNb24sIDIwMjYtMDUtMTEgYXQgMTM6NTUgKzAyMDAsIE5hbSBDYW8gd3JvdGU6Cj4gR2Fi
+cmllbGUgTW9uYWNvIDxnbW9uYWNvQHJlZGhhdC5jb20+IHdyaXRlczoKPiA+IFdlbGwsIHRoaXMg
+aXMgcm91Z2hseSB3aGF0IHdlIGRpc2N1c3NlZCBpbiBbMV0uCj4gPiBOb3csIEkgZGlkbid0IHN1
+Ym1pdCB0aGUgdGhyb3R0bGUgbW9uaXRvciB5ZXQgYmVjYXVzZSBpdCBkZXBlbmRzIG9uIHVuYWNr
+ZWQKPiA+IHRyYWNlcG9pbnRzLgo+IAo+IFRoYW5rcyBmb3IgYnJpbmdpbmcgdGhhdCB1cC4gSSBo
+YWQgbm8gbWVtb3J5IG9mIHRoYXQgZGlzY3Vzc2lvbi4KPiAKPiA+IEluIHNob3J0LCB0aGlzIHdv
+cmtzIHdpdGggdGhlIGFzc3VtcHRpb24gdGhhdCB0aGUgZXhwaXJlcyB2YWx1ZSB5b3UgcGFzcyB0
+bwo+ID4gaGFfY2hlY2tfaW52YXJpYW50KCkgaXMgdGhlIHNhbWUgeW91IHVzZWQgdG8gYXJtIHRo
+ZSB0aW1lci4KPiA+IAo+ID4gVGhhdCdzIHRydWUgZm9yIGNvbnN0YW50IHZhbHVlcyBvbmx5ICh0
+aGUgZGVhZGxpbmUpIGJ1dCBub3QgZm9yIHNvbWV0aGluZwo+ID4gbGlrZQo+ID4gdGhlIHJ1bnRp
+bWUuIEkgY291bGRuJ3QgdGhpbmsgb2YgYSB3YXkgdG8gcmVhcnJhbmdlIHRoYXQgbW9kZWwgbm90
+IHRvCj4gPiByZXF1aXJlCj4gPiB0aGUgcnVudGltZSBsZWZ0IGZpZWxkLgo+IAo+IEkgYmVsaWV2
+ZSB5b3UgYXJlIHJlZmVycmluZyB0byB0aGlzOgo+IAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8Cj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHwKPiDCoMKgwqDCoMKgIGRsX3JlcGxlbmlzaDtyZXNldChjbGspwqDCoMKg
+wqDCoMKgwqAgdgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNjaGVkX3N3aXRjaF9pbsKg
+wqAgIz09PT09PT09PT09PT09PT09PT09PT09PT0jIHNjaGVkX3N3aXRjaF9pbjsKPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgICstLS0tLS0tLS0tLS0tLS0gSMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBIwqDCoCByZXNldChjbGspCj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEjC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgSCA8LS0tLS0t
+LS0tLS0tLS0tLSsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICstLS0tLS0tLS0tLS0t
+LT4gSMKgwqDCoMKgwqDCoMKgwqAgcnVubmluZ8KgwqDCoMKgwqDCoMKgwqAgSMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfAo+IMKgwqDCoCBkbF90aHJvdHRsZTtyZXNldChjbGsp
+wqDCoMKgwqDCoCBIIGNsayA8IHJ1bnRpbWVfbGVmdF9ucygpIEjCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHwKPiDCoMKgICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gSMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBIIHNjaGVkX3N3
+aXRjaF9vdXQgfAo+IMKgwqAgfMKgwqDCoMKgwqDCoCArLS0tLS0tLS0tLS0tLS0tLS0tPiBIwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEggLS0tLS0tLS0t
+LS0tLSvCoMKgIHwKPiDCoMKgIHwgZGxfcmVwbGVuaXNoO3Jlc2V0KGNsaynCoMKgwqAgIz09PT09
+PT09PT09PT09PT09PT09PT09PT0jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgfAo+
+IMKgwqAgfMKgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgXsKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgfAo+IMKgwqAgdsKgwqDCoMKgwqDCoCB8wqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkbF9kZWZlcl9hcm3CoMKgwqDCoMKgwqDC
+oMKgIHzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIHwKPiAK
+PiBOb3cgdGhhdCBJIHN0YXJlZCBhdCB0aGlzIGFnYWluLCBJIHRoaW5rIHdlIGFscmVhZHkgZGV2
+aWF0ZSBmcm9tIHRoZW9yeQo+IGhlcmUuIE91ciBkb2N1bWVudGF0aW9uIG1lbnRpb25zIHRoYXQg
+dGhlIGludmFyaWFudCBtdXN0IGJlIGluIHRoZSBmb3JtCj4gCj4gwqDCoMKgwqDCoMKgwqAgZyA9
+IHYgPCBjIHwgdHJ1ZQo+IAo+IHdpdGggImMgW2JlaW5nXSBhIG51bWVyaWNhbCB2YWx1ZSIuCj4g
+Cj4gVGhlIGludmFyaWFudCAiY2xrIDwgcnVudGltZV9sZWZ0X25zKCkiIG1lYW5zIGNsayBtdXN0
+IG5vdCBleGNlZWQgdGhlCj4gcmVtYWluaW5nIHJ1bnRpbWUsIHdoaWNoIGlzIHNhbXBsZWQgYnkg
+Y2FsbGluZyBydW50aW1lX2xlZnRfbnMoKSB3aGVuCj4gdGhlIHN0YXRlIGlzIGVudGVyZWQuIFRo
+aXMgaXMgbm90IGluIHRoZSB0aGVvcnkuIEFkZGl0aW9uYWxseSwgSSB0aGluawo+IHRoaXMgaW50
+ZXJwcmV0YXRpb24gaXMgYW1iaWd1b3VzOyBvbmUgY291bGQgYWxzbyBpbnRlcnByZXQgdGhhdCBh
+cyAidGhlCj4gY2xrIHZhbHVlIG11c3QgbmV2ZXIgZXhjZWVkIHRoZSAqY3VycmVudCogdmFsdWUg
+cmV0dXJuZWQgYnkKPiBydW50aW1lX2xlZnRfbnMoKSIuCgpXZWxsLCB0aGF0J3MgYSBmYWlyIHBv
+aW50LiBVc2luZyBmdW5jdGlvbnMgaGVyZSBpcyBraW5kIG9mIHB1c2hpbmcgaXQsIGJ1dCBpZiB3
+ZQphc3N1bWUgdGhlIHJ1bnRpbWUgY29uc3RhbnQgZm9yIHRoZSBkdXJhdGlvbiBvZiB0aGUgaW52
+YXJpYW50ICh3aGljaCBpcyB3aGF0CmhhcHBlbnMgaW4gcHJhY3RpY2UpLCBJIGRvbid0IHNlZSB0
+aGF0IGh1Z2UgZGlmZmVyZW5jZS4gVGhlbiBzdXJlLCBJJ20gc3RpbGwKdHdpc3RpbmcgdGhlIHRo
+ZW9yeSBoZXJlLgoKQnV0IHRoYXQncyByaWdodCwgaXQncyBxdWl0ZSBhbWJpZ3VvdXMuIFRoZSBm
+dW5jdGlvbiBpcyB0ZWNobmljYWxseSBzeW50YWN0aWMKc3VnYXIgaW4gUlYgdG8gYWxsb3cgbW9u
+aXRvci1zcGVjaWZpYyB2YWx1ZXMsIEkgc2hvdWxkIHByb2JhYmx5IG1ha2UgaXQgY2xlYXIgaXQK
+ZG9lc24ndCBtYWtlIGl0IGEgZHluYW1pYyB2YWx1ZSAoYXQgbGVhc3Qgd2l0aGluIHRoZSBzYW1l
+IGNvbnN0cmFpbnQKdmFsaWRhdGlvbikuCgo+IEkgZGlnZ2VkIGludG8gdGhlIGNpdGVkIGFjYWRl
+bWljIHBhcGVycywgYnV0IGNvdWxkbid0IGZpbmQgYW55dGhpbmcgdGhhdAo+IGNhbiBkZXNjcmli
+ZSB0aGlzLiBUaGUgY2xvc2VzdCBJIHNlZSBpcyB0aGUgImluaXQiIGxhYmVsIGZvciBzdGF0ZXMs
+IGJ1dAo+IHRoYXQgaXMgdGhlIGNvbmRpdGlvbiBmb3IgZW50ZXJpbmcgdGhlIHN0YXRlcy4KPiAK
+PiA+IE90aGVyd2lzZS4uIFdlIGNvdWxkIHJlYWQgdGhlIHJlbWFpbmluZyB0aW1lIGluIHRoZSB0
+aW1lciwgYnV0IHdlIHdvdWxkbid0Cj4gPiBiZQo+ID4gYWJsZSB0byBzaW11bGF0ZSBucyBwcmVj
+aXNpb24gd2hlbiB1c2luZyB0aGUgdGltZXIgd2hlZWwuCj4gPiAKPiA+IE5vdyBpZiB3ZSByZWFs
+bHkgd2FudGVkIHRvIGdvIGRvd24gdGhhdCBwYXRoLCB3ZSBhcmUgdXNpbmcgYSB1bmlvbiB0bwo+
+ID4gYWxsb2NhdGUKPiA+IGVpdGhlciB0aW1lciBvciBocnRpbWVyLCB0aGUgbGF0dGVyIGlzIGxh
+cmdlciwgc28gd2UgL2NvdWxkLyBhZGQgYSB1NjQKPiA+IGV4cGlyZV9ucwo+ID4gZmllbGQgdG8g
+dGhlIGhhX21vbml0b3Igc3RydWN0IHdpdGhvdXQgbmVlZGluZyBhZGRpdGlvbmFsIG1lbW9yeS4K
+PiA+IAo+ID4gSWYgdGhhdCBkb2Vzbid0IHNvdW5kIHRvbyB3aWxkIHRvIHlvdSwgSSBtYXkgdHJ5
+IGFuZCBza2V0Y2ggc29tZXRoaW5nIHVwIHRvCj4gPiBzZWUKPiA+IGlmIHRoYXQncyB2aWFibGUu
+IFRoZW4gdGhpcyBwYXRjaCBjb3VsZCBnbyB0aHJvdWdoIGFzIGlzIGFuZCBJIHdvdWxkIGFkZCB0
+aGUKPiA+IGV4dGVuc2lvbiB0b2dldGhlciB3aXRoIHRoZSBzdWJtaXNzaW9uIG9mIHRocm90dGxl
+Lgo+IAo+IFRoYXQgY2FuIHdvcmssIGJ1dCBub3QgaWRlYWwsIGJlY2F1c2UgaHJ0aW1lciB3aWxs
+IG5vdCBiZSB1c2FibGUuCgpXaHkgbm90PyBJZiB3ZSBoYXZlIEhBX1RJTUVSX1dIRUVMICwgd2Un
+ZCB1c2UgdGltZXIgYW5kIGV4cGlyZSwgaWYgd2UgaGF2ZQpIQV9USU1FUl9IUlRJTUVSIHdlJ2Qg
+b25seSBuZWVkIGhydGltZXIgd2l0aCBpdCdzIGhydGltZXJfZ2V0X2V4cGlyZXMoKToKCiB1bmlv
+biB7CiBzdHJ1Y3QgaHJ0aW1lciBocnRpbWVyOwogc3RydWN0IHsKIHN0cnVjdCB0aW1lcl9saXN0
+IHRpbWVyOwogdTY0IGV4cGlyZTsgLyogRXhwbGljaXRseSBzdG9yZSB0aGUgYXJtZWQgYnVkZ2V0
+ICovCiB9OwoKd2UgYWxyZWFkeSBjYW4ndCB1c2UgdGltZXIgYW5kIGhydGltZXIgaW50ZXJjaGFu
+Z2VhYmx5LgpXaGF0IGFtIEkgbWlzc2luZyBoZXJlPwoKPiBMb29raW5nIGF0IHRoZSB0aHJvdHRs
+ZSBtb25pdG9yIGFnYWluLCBpcyBpdCBwb3NzaWJsZSB0byByZXdyaXRlCj4gcnVudGltZV9sZWZ0
+X25zKCkgdG8gcmVhZCAuZGxfcnVudGltZSBpbnN0ZWFkIG9mIC5ydW50aW1lPyBJIGRvbid0IGtu
+b3cKPiB0aGUgZGVhZGxpbmUgc2NoZWR1bGUgdmVyeSB3ZWxsLCBidXQgSSB0aGluayAuZGxfcnVu
+dGltZSBpcyBub3QgY2hhbmdpbmcKPiBsaWtlIC5ydW50aW1lPwoKSW4gdGhlb3J5IHllcywgYnV0
+IHNpbmNlIHRoZSBydW50aW1lIGlzIGNvbnN1bWVkIG9ubHkgd2hlbiBydW5uaW5nLCB3ZSBjYW5u
+b3QKanVzdCBzZXQgdGhlIHRpbWVvdXQgb25jZS4gV2UgZWl0aGVyIHNhdmUgaG93IG11Y2ggd2Fz
+IGNvbnN1bWVkIHNvbWV3aGVyZSBvciBkbwpzb21lIHN0YXJ0L3BhdXNlIG1lY2hhbmlzbS4KTmVp
+dGhlciBsb29rcyBzaW1wbGVyIHRvIG1lLgoKVGhhbmtzLApHYWJyaWVsZQoNCg==
 
