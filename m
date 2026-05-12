@@ -1,77 +1,76 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100583D5C10
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 16:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D283CC7CC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 17:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778604463; cv=none; b=ipYUDtKD42ld9Czb6ul+FGzEhjmxTHUQOAcZ+JDCN9E+71wTNnH6osSE0c24gokpndh7/J9GxzRGOl8uxpQDvzCWkHcKJC0iZOGwPZTa5x0KC7rr3C6+PugDp8vxch+iM3hVQCsMZM0wTBnL+WBDLBuH9cfHmnrCDXeykS9rMcU=
+	t=1778605593; cv=none; b=QHM418X929we3F9SdlLkAmxXZWviSOcbyGj9ElpulZuXrUGbQ8O9mTdxEXn5vSRpSTAJpLJedx3tL2jnpOF83svUja+wq+kevg7dfPXp5Hro2a14CGduOVF7LoWrEZuJFlsRzYDfpsjxlDVQ7vSiZXC4mgujKa6s8Mr8uXL3oLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778604463; c=relaxed/simple;
-	bh=hpPcxmKVbYHtMuW3mYGdPhpIZxaynFkqPC+wUjp709I=;
+	s=arc-20240116; t=1778605593; c=relaxed/simple;
+	bh=5NKnh+9NRaVgN+WMfT2O/l/orB8LNlDax+pD/PsaX6c=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2Y3c5pqyS1siCZ4PMG/nKMGMECR/LEHeB/rqRwIl1U59LhKq0s9mkVX4xh4P8lC3LsA98vRTEwL35U+/eyXhs17WbHiD5Ys9fvxS6kkxIzp7fkuNyMm4i0q9dJPgGBUNzNv9J63fgZejJ62KlUED+ifzVivtZZ2VkH7/tByxCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r+IQnbor; arc=none smtp.client-ip=209.85.128.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=GC1k6ZPdgAyZYiOuVxFOkT6CslOsw5BDhQGAP4ZnwmHhk5NBAo95o5gdDVWn7XLDyXlYgPESHjqNYZ/uCwWhYWwb1bkgdHevyZe7uVQsFd7QPtMSjOwBsW4InV4ElPCGiNsiX5/RMWFy6PWEUuRd5jVo+2HHpkYDGryekdBD664=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zsp7iaVg; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+IQnbor"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so52163325e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 09:47:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zsp7iaVg"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488ab2db91aso63041815e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 10:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778604457; x=1779209257; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778605589; x=1779210389; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=1AZmh+CrIvhk7wbc4SmPDyyGEzwvfm2GvyovSRlyJ6E=;
-        b=r+IQnbor8N8r8XfPigm6dfxrjtWIq3f79EKE5mYUIsAevgTy5F3Hvug1a6fCihCqdE
-         6kOCnMWqznA7EANlyAbrN24DHWb7+8XjkdW+ywymcKSe1S7Imj7D/yKT3di69QcOt1eL
-         XHw5aClM7rkGTHAHhKc++YCdAe8YHjBIZPzHWPF6/siQ2ZHs3IVzTxWTkHqaMocBfgJt
-         3543lEcnkIn7RM+lRYI7hHwiFRbEyUSgBIaRaeBcDwpvDXZ+Ft3VGoO5okMuIu7qV/Uo
-         EUFdwjWPKVtVyWrTyXG/ULh3b93PBDR9Ti+wbWJjpHNIpBgQ9XrpX1+RiPXbxCNAvLdK
-         XY6w==
+        bh=CsBdMULzYpxL3Kn6EioOEUhiC87hHkNyBZCKpZbNhCw=;
+        b=Zsp7iaVgXt9H87CVdyAbZ50Y5BLLIzjGzOI4HDIaLHqr4dfJVVYffLooctgqqb2gHg
+         Zhy6RCwOXDW81JYUHNCVzn4JLJTRK5GXh7cEqDhCyxrafRqCJ9zBDlfGjm4Kp0vXZGfu
+         dLg4Gw9vse9t3m6EK294IQGrB7YzEYFVzWgeJv3xZrGTsxF3FBSY2+6USO3+FcF5gVy8
+         GZZl3buvaQn/DaBi7NJdN26uQc5RF971E2WtNv6ziR6CfV5667X340wWiN/kG4CjZrLY
+         fmrzP8XHKLSofJ7mxLdLsNIkGCfNL5UObA8MkfXqdRFcijWLodOj0lSta+QoLsBe8J13
+         unOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778604457; x=1779209257;
+        d=1e100.net; s=20251104; t=1778605589; x=1779210389;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1AZmh+CrIvhk7wbc4SmPDyyGEzwvfm2GvyovSRlyJ6E=;
-        b=rNXyd4d1SketTaD2NtxBDE4olHezcqUQfOqJgqhLFhewPDkWffpTU1+hy8jf56f1+l
-         d4v/cjXjdAI1x7KkkQ7i4Qa+QN+GTv9uKx1jh1/vKxUePUoTGn+IPCjeLGkN0zxpqEjB
-         1bbBcKTYtIOTcGgUhFwwALuJNgdAvQnKxEVvTIh8LsN3lkk2cx5D/B7PcXfP4tk+Ej9z
-         fGfSgNA3yLiv9ESGPNEyES274aZuGeIhPKaEoyj2DZi7G4aeXN73vnAERwkI8ubN2DMX
-         UEVJNxO/MsfYCCeHvtv1BUXuA2VagZHIWl6e3X71o5kxEd5p4SegNWFBY7pDZdhLZ8A5
-         kT1A==
-X-Forwarded-Encrypted: i=1; AFNElJ+DNlHtGWltZysPcZwWnFdtSwno6PsJMAaIObP+k2q0oCf00sAoxLR6PQxxsaWaxEOMyltjN31JgR+Ri9zcUeSQoKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxkb22CpkcWVDxskqo/fEBzm7ZJh8ZzRuVxgQd9MKHIYd7QB6DS
-	ESUKw+XXC6wHJN4VmQV6RebIbPA1gnewHcnINbdha2tXskkEBVULRhzF
-X-Gm-Gg: Acq92OFx/mJ1Wvu3a4DMmVxosUt8GInEJn1TXDWR9/fE9YHmxiJZbn4W0OH/wk9HrEt
-	0I/u7X4vjysy26myvUCNjTuiQzAfmWNeQYV5NvIUwJij6dWQ1l4q15gjDXNjGKWQqvqZBI7OGat
-	aZUhFYe+I8iGzn8CNNnYpyoC+5fYezv2o+S1Zl+R37Le3AsQuOS521cp9tRVOPtRbqWa3iqhr4h
-	d8WN7+nrhcRD+tDndP2bYmg5OOo+GyVYnWlP68sbDNNErVgjHX29ke8gud2dSyQLZOBFcoc/9Pj
-	k9AHQknZYp5OcCPl0OXat7X17CuGUEN9VSmRF6ixTiNS0LhwiV3+exWgoDnF0IDWQdsZ0NAalDr
-	sT9dc/qEpVPlbZwjCNFHNW3dNs1yNyqSu4r9ZSsQ/ybqlvGKTg8AgkJCo0zSr/W5gkgCTbeOfzS
-	y023KHDtmsJpE=
-X-Received: by 2002:a05:600c:8012:b0:48e:5fb8:f80f with SMTP id 5b1f17b1804b1-48e5fb8fac9mr380715705e9.24.1778604457228;
-        Tue, 12 May 2026 09:47:37 -0700 (PDT)
+        bh=CsBdMULzYpxL3Kn6EioOEUhiC87hHkNyBZCKpZbNhCw=;
+        b=BskQcyw/X7xdctRlYpcEmWqirQ1xo7R6nSXWyDFysWWQJ/wvxkfKNPOAGJEN7QWaJg
+         tA3V8pKNO2Ff2YWiyx/8zpmlJ4R8Y7fwQb+hGFYtSMqpf+KMD1bOGQKgHBkDKVGNCTBH
+         bwURHy8m2mnYd7Xv31P98iBZfpxJoZQczzWC6uOwwn9Q1ZKTIqwBTuCPg5MKWxiB05Y6
+         vq1cexjT3TJQnEszu6GBo9GuPXE8DE2BbaxjuXWvTDUmk+HswY5OOkmi3ldQ/DEROwyL
+         tCI3EwO7b2TvH63RRI9OvmI4/eGZL6FI2jcS/ltwOummJPZwUedxgnYdQwIkc24+VQKh
+         BUmw==
+X-Forwarded-Encrypted: i=1; AFNElJ/bdBgJPBMu/nef2yj2R2B63oXgp+N1nwpg9nuOOXX4JgnwwzfaDw5SRmqvZdeVscZErbZ8Sj3sDtvZdXGia2MZm6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh6wuX5B9xQYTaPJVPUnRVHohXVuIWyyhnN+4WhZMqqDY+EKBk
+	19rLrP2tc9XeqsKf+l63xNUEZ4pm2k0dmQ+9aIRbJZGkhPMq7xtY/nDj9n2RzmKl
+X-Gm-Gg: Acq92OHbFTjSgFvapSC0jfwZevOB0DTAJ8RHVGLZffCkZWCcXdKA2QJnEpzxMO1IDSg
+	/+XAD3DpM4J9UqjXf/emAYy623guQcBZdsRTB+QsCFHwEHnWLMZCwTuFfbIR574sgBOyeGi9y2H
+	vo0na1MeOKkViRqdI68GC6vOzKH+6VHkdfd6+x/c0tb6tspH0znbAFwJ58ElXagJOgfOAsMcKJ+
+	QM/0+6VpBtPBi+dqwir1Fmr8qbsHrexkoH+D6zA7fnwzy3Zd63H26Je+NXmneC/1u/gtlxB6jjH
+	4nPuN5Tdip+KOXxdJVAaTW4QV52WOAHI4AbD8q2jXdpDnFPXnrXERUR7te+jqK65aBuVvX9nmmR
+	ZlPzjZPN8xPhrsDOLuAtU+lkN9IhMdc0iPoWbHiljeQV3hNNW/rWfITFlL5sp2HO9mYNkXVMZY6
+	87WGKXka97goc=
+X-Received: by 2002:a05:600c:a305:b0:48a:5970:2005 with SMTP id 5b1f17b1804b1-48e51e08362mr315443155e9.2.1778605589214;
+        Tue, 12 May 2026 10:06:29 -0700 (PDT)
 Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fc8d19974sm8608625e9.2.2026.05.12.09.47.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4548ec6b071sm33640764f8f.14.2026.05.12.10.06.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2026 09:47:36 -0700 (PDT)
+        Tue, 12 May 2026 10:06:28 -0700 (PDT)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 12 May 2026 18:47:35 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 12 May 2026 19:06:27 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
 	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	oleg@redhat.com, peterz@infradead.org, mingo@kernel.org,
-	mhiramat@kernel.org
+	oleg@redhat.com, peterz@infradead.org, mingo@kernel.org
 Subject: Re: [PATCH bpf 1/2] uprobes/x86: Fix red zone clobbering in nop5
  optimization
-Message-ID: <agNZp62qZLMM9hsa@krava>
+Message-ID: <agNeEzjiThzmJHiP@krava>
 References: <20260509003146.976844-1-andrii@kernel.org>
  <agD3xq2MUyskd7X-@krava>
- <CAEf4Bza9PjbaVjFxYDmWPXXGV+Z-_Hn2Kz_KB2TOa5s-_UJ1xA@mail.gmail.com>
+ <20260512141431.a70375744fdae263bda5b722@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,38 +80,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bza9PjbaVjFxYDmWPXXGV+Z-_Hn2Kz_KB2TOa5s-_UJ1xA@mail.gmail.com>
+In-Reply-To: <20260512141431.a70375744fdae263bda5b722@kernel.org>
 
-On Mon, May 11, 2026 at 06:41:06PM +0200, Andrii Nakryiko wrote:
-> On Sun, May 10, 2026 at 2:25 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
+On Tue, May 12, 2026 at 02:14:31PM +0900, Masami Hiramatsu wrote:
+> On Sun, 10 May 2026 23:25:26 +0200
+> Jiri Olsa <olsajiri@gmail.com> wrote:
+> 
 > > On Fri, May 08, 2026 at 05:30:56PM -0700, Andrii Nakryiko wrote:
 > > > The x86 uprobe nop5 optimization currently replaces a 5-byte NOP at the
 > > > probe site with a CALL into a uprobe trampoline. CALL pushes a return
 > > > address to [rsp-8]. On x86-64 this is inside the 128-byte red zone, where
 > > > user code may keep temporary data without adjusting rsp.
-> > >
+> > > 
 > > > Use a 5-byte JMP instead. JMP does not write to the user stack, but it
 > > > also does not provide a return address. Replace the single trampoline
 > > > entry with a page of 16-byte slots. Each optimized probe jumps to its
 > > > assigned slot, the slot moves rsp below the red zone, saves the registers
 > > > clobbered by syscall, and invokes the uprobe syscall:
-> > >
+> > > 
 > > >   Probe site:   jmp slot_N              (5B, replaces nop5)
-> > >
+> > > 
 > > >   Slot N:       lea  -128(%rsp), %rsp   (5B)  skip red zone
 > > >                 push %rcx               (1B)  save (syscall clobbers)
 > > >                 push %r11               (2B)  save (syscall clobbers)
 > > >                 push %rax               (1B)  save (syscall uses for nr)
 > > >                 mov  $336, %eax         (5B)  uprobe syscall number
 > > >                 syscall                 (2B)
-> > >
+> > > 
 > > > All slots contain identical code at different offsets, so the trampoline
 > > > page is generated once at boot and mapped read-execute into each process.
 > > > The syscall handler identifies the slot from regs->ip, which points just
 > > > after the syscall instruction, and uses a per-mm slot table to recover the
 > > > original probe address.
-> > >
+> > > 
 > > > The uprobe syscall does not return to the trampoline slot. The handler
 > > > restores the probe-site register state, runs the uprobe consumers, sets
 > > > pt_regs to continue at probe_addr + 5 unless a consumer redirected
@@ -120,14 +120,14 @@ On Mon, May 11, 2026 at 06:41:06PM +0200, Andrii Nakryiko wrote:
 > > > general purpose registers, including rcx and r11, without requiring any
 > > > post-syscall cleanup code in the trampoline and avoids call/ret, RSB, and
 > > > shadow stack concerns.
-> > >
+> > > 
 > > > Protect the per-mm trampoline list with RCU and free trampoline metadata
 > > > with kfree_rcu(). This lets the syscall path resolve trampoline slots
 > > > without taking mmap_lock. The optimized-instruction detection path also
 > > > walks the trampoline list under an RCU read-side lock. Since that path
 > > > starts from the JMP target, it translates the slot start to the post-syscall
 > > > IP expected by the shared resolver before checking the trampoline mapping.
-> > >
+> > > 
 > > > Each trampoline page provides 256 slots. Slots stay permanently assigned
 > > > to their first probe address and are reused only when the same address is
 > > > probed again. Reassigning detached slots is deliberately avoided because a
@@ -135,86 +135,301 @@ On Mon, May 11, 2026 at 06:41:06PM +0200, Andrii Nakryiko wrote:
 > > > interrupts, or scheduling delays. If a reachable trampoline page runs out
 > > > of slots, probes that cannot allocate a slot fall back to the slower INT3
 > > > path.
-> > >
+> > > 
 > > > Require the entire trampoline page to be reachable by a rel32 JMP before
 > > > reusing it for a probe. This keeps every slot in the page within the range
 > > > that can be encoded at the probe site.
-> > >
+> > > 
 > > > Change the error code returned when the uprobe syscall is invoked outside
 > > > a kernel-generated trampoline from -ENXIO to -EPROTO. This lets libbpf and
 > > > similar libraries distinguish fixed kernels from kernels with the
 > > > red-zone-clobbering implementation and enable nop5 optimization only on
 > > > fixed kernels.
-> > >
+> > > 
 > > > Performance (usdt single-thread, M/s):
-> > >
+> > > 
 > > >                   usdt-nop  usdt-nop5-base  usdt-nop5-fix  nop5-change  iret%
 > > >   Skylake          3.149        6.422          4.865         -24.3%     39.1%
 > > >   Milan            2.910        3.443          3.820         +11.0%     24.3%
 > > >   Sapphire Rapids  1.896        4.023          3.693          -8.2%     24.9%
 > > >   Bergamo          3.393        3.895          3.849          -1.2%     24.5%
-> > >
+> > > 
 > > > The fixed nop5 path remains faster than the non-optimized INT3 path on all
 > > > measured systems. The regression relative to the old CALL-based trampoline
 > > > comes from IRET being more expensive than SYSRET, most noticeably on older
 > > > Intel Skylake. Newer Intel CPUs and tested AMD CPUs have lower IRET cost,
 > > > and AMD Milan improves because removing mmap_lock from the hot path more
 > > > than offsets the IRET cost.
-> > >
+> > > 
 > > > Multi-threaded throughput scales nearly linearly with the number of CPUs, like
 > > > it used to, thanks to lockless RCU-protected uprobe trampoline lookup.
-> >
+> > 
 > > hi,
 > > thanks a lot for the fix
-> >
+> > 
 > > FWIW we discussed also an option to have 10-bytes nop and do:
 > >   [rsp+0x80, call trampoline]
-> >
+> > 
 > > we would not need the slots re-use logic, but not sure what other
 > > surprises there are with 10-bytes nop
-> >
+> 
+> Does this mean we have to update UDST implementation?
+
+it's the optimized uprobe code, that's used for usdt that emits nop5 instead
+of single nop
+
+> 
+> > 
 > > I tried that change [1], it seems to work, but it has other
 > > difficulties, like I think the unoptimized path needs to do:
 > >   [rsp+0x80, call trampoline] -> [jmp end of 10-bytes nop]
 > > instead of patching back the 10-byte nop, because some thread
 > > could be inside the nop area already.
-> >
 > 
-> Yeah, nop10 and this jump-over-nop10 approach is an alternative. I
-> don't have strong feelings apart from the ridiculousness of a 10-byte
-> nop :)
-> 
-> did you get a chance to benchmark your nop10 approach, curious how do
-> the number look like
+> Yeah, but at that moment, we know where the modified code is.
+> Maybe memory dump shows different code, but that is also true
+> if uprobe is active. So I think it is OK.
 
-yes, it's the same as with the nop5
+hum, I'm not what you mean.. I attached the kernel change from my changes,
+if you want to comment on top of that
 
-  base:
-          usermode-count :  152.509 ± 0.044M/s
-          syscall-count  :   15.177 ± 0.021M/s
-          uprobe-nop     :    3.215 ± 0.002M/s
-          uprobe-push    :    3.054 ± 0.003M/s
-          uprobe-ret     :    1.100 ± 0.002M/s
-          uprobe-nop5    :    7.251 ± 0.034M/s
-          uretprobe-nop  :    2.149 ± 0.012M/s
-          uretprobe-push :    2.088 ± 0.001M/s
-          uretprobe-ret  :    0.960 ± 0.001M/s
-          uretprobe-nop5 :    3.402 ± 0.001M/s
-          usdt-nop       :    3.185 ± 0.024M/s
-          usdt-nop5      :    7.378 ± 0.016M/s
-
-  nop10:
-          usermode-count :  152.503 ± 0.024M/s
-          syscall-count  :   15.977 ± 0.047M/s
-          uprobe-nop     :    3.174 ± 0.011M/s
-          uprobe-push    :    3.030 ± 0.006M/s
-          uprobe-ret     :    1.124 ± 0.004M/s
-          uprobe-nop5    :    7.201 ± 0.012M/s
-          uretprobe-nop  :    2.141 ± 0.005M/s
-          uretprobe-push :    2.078 ± 0.007M/s
-          uretprobe-ret  :    0.947 ± 0.003M/s
-          uretprobe-nop5 :    3.384 ± 0.014M/s
-          usdt-nop       :    3.247 ± 0.002M/s
-          usdt-nop5      :    7.374 ± 0.027M/s
+the whole change including user space changes is in here:
+  https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=redzone_fix
 
 jirka
+
+
+---
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index ebb1baf1eb1d..a6db7b76cb49 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -636,9 +636,20 @@ struct uprobe_trampoline {
+ 	unsigned long		vaddr;
+ };
+ 
++static const u8 lea_rsp[] = { 0x48, 0x8d, 0x64, 0x24, 0x80 };
++
++#define LEA_INSN_SIZE		5
++#define UPROBE_OPT_INSN_SIZE	(LEA_INSN_SIZE + CALL_INSN_SIZE)
++#define REDZONE_SIZE		0x80
++
++static bool is_lea_insn(const uprobe_opcode_t *insn)
++{
++	return !memcmp(insn, lea_rsp, LEA_INSN_SIZE);
++}
++
+ static bool is_reachable_by_call(unsigned long vtramp, unsigned long vaddr)
+ {
+-	long delta = (long)(vaddr + 5 - vtramp);
++	long delta = (long)(vaddr + UPROBE_OPT_INSN_SIZE - vtramp);
+ 
+ 	return delta >= INT_MIN && delta <= INT_MAX;
+ }
+@@ -651,7 +662,7 @@ static unsigned long find_nearest_trampoline(unsigned long vaddr)
+ 	};
+ 	unsigned long low_limit, high_limit;
+ 	unsigned long low_tramp, high_tramp;
+-	unsigned long call_end = vaddr + 5;
++	unsigned long call_end = vaddr + UPROBE_OPT_INSN_SIZE;
+ 
+ 	if (check_add_overflow(call_end, INT_MIN, &low_limit))
+ 		low_limit = PAGE_SIZE;
+@@ -826,8 +837,8 @@ SYSCALL_DEFINE0(uprobe)
+ 	regs->ax  = args.ax;
+ 	regs->r11 = args.r11;
+ 	regs->cx  = args.cx;
+-	regs->ip  = args.retaddr - 5;
+-	regs->sp += sizeof(args);
++	regs->ip  = args.retaddr - UPROBE_OPT_INSN_SIZE;
++	regs->sp += sizeof(args) + REDZONE_SIZE;
+ 	regs->orig_ax = -1;
+ 
+ 	sp = regs->sp;
+@@ -844,12 +855,12 @@ SYSCALL_DEFINE0(uprobe)
+ 	 */
+ 	if (regs->sp != sp) {
+ 		/* skip the trampoline call */
+-		if (args.retaddr - 5 == regs->ip)
+-			regs->ip += 5;
++		if (args.retaddr - UPROBE_OPT_INSN_SIZE == regs->ip)
++			regs->ip += UPROBE_OPT_INSN_SIZE;
+ 		return regs->ax;
+ 	}
+ 
+-	regs->sp -= sizeof(args);
++	regs->sp -= sizeof(args) + REDZONE_SIZE;
+ 
+ 	/* for the case uprobe_consumer has changed ax/r11/cx */
+ 	args.ax  = regs->ax;
+@@ -857,7 +868,7 @@ SYSCALL_DEFINE0(uprobe)
+ 	args.cx  = regs->cx;
+ 
+ 	/* keep return address unless we are instructed otherwise */
+-	if (args.retaddr - 5 != regs->ip)
++	if (args.retaddr - UPROBE_OPT_INSN_SIZE != regs->ip)
+ 		args.retaddr = regs->ip;
+ 
+ 	if (shstk_push(args.retaddr) == -EFAULT)
+@@ -891,7 +902,7 @@ asm (
+ 	"pop %rax\n"
+ 	"pop %r11\n"
+ 	"pop %rcx\n"
+-	"ret\n"
++	"ret $0x80\n"
+ 	"int3\n"
+ 	".balign " __stringify(PAGE_SIZE) "\n"
+ 	".popsection\n"
+@@ -930,9 +941,9 @@ static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *
+ 		       int nbytes, void *data)
+ {
+ 	struct write_opcode_ctx *ctx = data;
+-	uprobe_opcode_t old_opcode[5];
++	uprobe_opcode_t old_opcode[UPROBE_OPT_INSN_SIZE];
+ 
+-	uprobe_copy_from_page(page, ctx->base, (uprobe_opcode_t *) &old_opcode, 5);
++	uprobe_copy_from_page(page, ctx->base, old_opcode, UPROBE_OPT_INSN_SIZE);
+ 
+ 	switch (ctx->expect) {
+ 	case EXPECT_SWBP:
+@@ -940,7 +951,7 @@ static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *
+ 			return 1;
+ 		break;
+ 	case EXPECT_CALL:
+-		if (is_call_insn(&old_opcode[0]))
++		if (is_lea_insn(old_opcode))
+ 			return 1;
+ 		break;
+ 	}
+@@ -963,7 +974,7 @@ static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *
+  *   - SMP sync all CPUs
+  */
+ static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+-		       unsigned long vaddr, char *insn, bool optimize)
++		       unsigned long vaddr, char *insn, int size, bool optimize)
+ {
+ 	uprobe_opcode_t int3 = UPROBE_SWBP_INSN;
+ 	struct write_opcode_ctx ctx = {
+@@ -990,7 +1001,7 @@ static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+ 
+ 	/* Write all but the first byte of the patched range. */
+ 	ctx.expect = EXPECT_SWBP;
+-	err = uprobe_write(auprobe, vma, vaddr + 1, insn + 1, 4, verify_insn,
++	err = uprobe_write(auprobe, vma, vaddr + 1, insn + 1, size - 1, verify_insn,
+ 			   true /* is_register */, false /* do_update_ref_ctr */,
+ 			   &ctx);
+ 	if (err)
+@@ -1017,17 +1028,35 @@ static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+ static int swbp_optimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+ 			 unsigned long vaddr, unsigned long tramp)
+ {
+-	u8 call[5];
++	u8 insn[UPROBE_OPT_INSN_SIZE];
+ 
+-	__text_gen_insn(call, CALL_INSN_OPCODE, (const void *) vaddr,
+-			(const void *) tramp, CALL_INSN_SIZE);
+-	return int3_update(auprobe, vma, vaddr, call, true /* optimize */);
++	/*
++	 * We have nop10 (with first byte overwritten to int3),
++	 * change it to:
++	 *   lea 0x80(%rsp), %rsp
++	 *   call tramp
++	 *
++	 * The first lea instruction skips the stack redzone so the call
++	 * instruction can safely push return address on stack.
++	 */
++	memcpy(insn, lea_rsp, LEA_INSN_SIZE);
++	__text_gen_insn(insn + LEA_INSN_SIZE, CALL_INSN_OPCODE,
++			(const void *)(vaddr + LEA_INSN_SIZE),
++			(const void *)tramp, CALL_INSN_SIZE);
++	return int3_update(auprobe, vma, vaddr, insn, UPROBE_OPT_INSN_SIZE, true /* optimize */);
+ }
+ 
+ static int swbp_unoptimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+ 			   unsigned long vaddr)
+ {
+-	return int3_update(auprobe, vma, vaddr, auprobe->insn, false /* optimize */);
++	/*
++	 * Write JMP rel8 to end of the 10-byte slot instead of restoring the
++	 * original nop10, because we could have thread already inside lea
++	 * instruction.
++	 */
++	u8 jmp[UPROBE_OPT_INSN_SIZE] = { 0xeb, UPROBE_OPT_INSN_SIZE - 2 };
++
++	return int3_update(auprobe, vma, vaddr, jmp, 2, false /* optimize */);
+ }
+ 
+ static int copy_from_vaddr(struct mm_struct *mm, unsigned long vaddr, void *dst, int len)
+@@ -1049,19 +1078,21 @@ static bool __is_optimized(uprobe_opcode_t *insn, unsigned long vaddr)
+ 	struct __packed __arch_relative_insn {
+ 		u8 op;
+ 		s32 raddr;
+-	} *call = (struct __arch_relative_insn *) insn;
++	} *call = (struct __arch_relative_insn *)(insn + LEA_INSN_SIZE);
+ 
+-	if (!is_call_insn(insn))
++	if (!is_lea_insn(insn))
+ 		return false;
+-	return __in_uprobe_trampoline(vaddr + 5 + call->raddr);
++	if (!is_call_insn((uprobe_opcode_t *) call))
++		return false;
++	return __in_uprobe_trampoline(vaddr + UPROBE_OPT_INSN_SIZE + call->raddr);
+ }
+ 
+ static int is_optimized(struct mm_struct *mm, unsigned long vaddr)
+ {
+-	uprobe_opcode_t insn[5];
++	uprobe_opcode_t insn[UPROBE_OPT_INSN_SIZE];
+ 	int err;
+ 
+-	err = copy_from_vaddr(mm, vaddr, &insn, 5);
++	err = copy_from_vaddr(mm, vaddr, &insn, UPROBE_OPT_INSN_SIZE);
+ 	if (err)
+ 		return err;
+ 	return __is_optimized((uprobe_opcode_t *)&insn, vaddr);
+@@ -1131,7 +1162,7 @@ static int __arch_uprobe_optimize(struct arch_uprobe *auprobe, struct mm_struct
+ void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
+ {
+ 	struct mm_struct *mm = current->mm;
+-	uprobe_opcode_t insn[5];
++	uprobe_opcode_t insn[UPROBE_OPT_INSN_SIZE];
+ 
+ 	if (!should_optimize(auprobe))
+ 		return;
+@@ -1142,7 +1173,7 @@ void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
+ 	 * Check if some other thread already optimized the uprobe for us,
+ 	 * if it's the case just go away silently.
+ 	 */
+-	if (copy_from_vaddr(mm, vaddr, &insn, 5))
++	if (copy_from_vaddr(mm, vaddr, &insn, UPROBE_OPT_INSN_SIZE))
+ 		goto unlock;
+ 	if (!is_swbp_insn((uprobe_opcode_t*) &insn))
+ 		goto unlock;
+@@ -1160,14 +1191,23 @@ void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
+ 
+ static bool can_optimize(struct insn *insn, unsigned long vaddr)
+ {
+-	if (!insn->x86_64 || insn->length != 5)
++	if (!insn->x86_64)
+ 		return false;
+ 
+-	if (!insn_is_nop(insn))
++	/* We can't do cross page atomic writes yet. */
++	if (PAGE_SIZE - (vaddr & ~PAGE_MASK) < UPROBE_OPT_INSN_SIZE)
+ 		return false;
+ 
+-	/* We can't do cross page atomic writes yet. */
+-	return PAGE_SIZE - (vaddr & ~PAGE_MASK) >= 5;
++	if (insn->length == UPROBE_OPT_INSN_SIZE && insn_is_nop(insn))
++		return true;
++
++	/* JMP rel8 to end of slot — written by swbp_unoptimize. */
++	if (insn->length == 2 &&
++	    insn->opcode.bytes[0] == 0xEB &&
++	    insn->immediate.value == UPROBE_OPT_INSN_SIZE - 2)
++		return true;
++
++	return false;
+ }
+ #else /* 32-bit: */
+ /*
