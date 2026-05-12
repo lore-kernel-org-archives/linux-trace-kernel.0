@@ -1,158 +1,240 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523ED3812C8;
-	Tue, 12 May 2026 13:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBAE397B03
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 13:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778592855; cv=none; b=TTWugu5SNW9YwtnkxfYPZp4HyWd4FlhrO3lyGgwcyUphEGyuknw8w2T89/aEzBegp5B01MEkKO3MByRaz6kvrKys3uEEZFXIvOXWvPfqU12c/c13tjtvWTxQL6he6FsrEncL7diunBNbV51P+FvxertS9kBP2KaeFj//jHB1MkA=
+	t=1778593844; cv=none; b=OMkWLeWJhG1o4WMB70sPp9LldqfdPFW/oogaVeNXC6Fv+uZEAoRIR4CMjKfbIcVKpqS7WpzRY3sbihS6tUTlibfLw8pjzLhJ7SuB6Y8YoiTHCS4D/oF0OP9jOoECbdtqYvIA5//zARg+LYgRAQ2Ay7QcgUHkCUTy6Y04WNv4IqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778592855; c=relaxed/simple;
-	bh=n1r1R/3grt+L5tmK8Q8JI5N6N+PYMNzn5ZWqv6i29BM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OElY6faQfi4kwK6kZ3kyXLY8Z7mQmj2ynGrc7sxthpahZo1i6Af6C6S7Y5ej2FfeNhyTuil/bmJlm/Hb/QFrc/ly545U7RA0xHBBkKvPXUM2+Q+jJ4HJ6D7FYekinF1V6f0rdl0lDfAYY7QrkaGKgtr6o2Wk26vBAYxptKyMWV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=DOX6gKst; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1778593844; c=relaxed/simple;
+	bh=hPoXuoFl/vaYuh8BDQyavsGzZfawPITD4eNEZJetS6U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SpeSv/cTuVRVUBpZjR3bZ7Bg08IxpEOuyQolzxpaC9YZPXxIiZrEis29cULnCZoNGa3FKAzl2CXtaAqUf1ybp4TADAdykW2IWV4tcqfR6Zh47UDhWQ5Tb1MdezcyAQEMz8BC/+YE7eknJE5vzJxthF+FUlo7rIar36RYhfWbazQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y8pytPJB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="DOX6gKst"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7WkcVadBrY1XKpqeX0xMjVFVAlCVexI4mnyeEkffHUE=; b=DOX6gKstXwYkD/1QVtjEgDYhjg
-	xMQ/0N8TErdX0WA4LFweELRgU+9lEIJbdD5IJkkFgbNULe7AGsD1U+vCIP+QXYJqeh8sZ0KuqZilG
-	0xt82S9d0KoknAVHlrKCDRnHgiWf3I+qy08pIXKogB1L3P64bAtXSoQX33nPD0Y8+PXNcLGsS6s12
-	2vlSK+O5cFSCjPFYUiKYQXaFMW05cG5TldGW3RPlF9DJbXe/UnxiijRdkKOHeR+q9xoJAsJ++awON
-	OEc856Y6OErMCUcydm8uArBRUaxKx4FKJ4TSnSHzZ6STcEzROb12BnNonw4bnjMCpM/syN9MJLQ18
-	E5i00zbQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wMnF6-002PSz-1Y;
-	Tue, 12 May 2026 13:33:48 +0000
-Date: Tue, 12 May 2026 06:33:41 -0700
-From: Breno Leitao <leitao@debian.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Liam R. Howlett" <liam@infradead.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, Lance Yang <lance.yang@linux.dev>
-Subject: Re: [PATCH v6 2/4] mm/memory-failure: classify get_any_page()
- failures by reason
-Message-ID: <agMpqhpgmezqnaA_@gmail.com>
-References: <20260511-ecc_panic-v6-0-183012ba7d4b@debian.org>
- <20260511-ecc_panic-v6-2-183012ba7d4b@debian.org>
- <28b01c14-3d87-4cab-b695-5b9015578785@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y8pytPJB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778593842;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XuNggr069CCi+WGH9I3+DQfxambtv+LBKZiD2flVRqc=;
+	b=Y8pytPJBL3lk92wwH0Y5WTjXyEVhubUZ5KPiYvNhX/diSxTUOpKXNt/Agp0cSKmRysKvdn
+	OqHDvdC/WZdYv6tMta4BTuManRmITDiU50hHJVJLfirnGoxfSs/YtjiMZAtn9C/HRY0Ddb
+	Zd5mLiEGeAQYKXN5oRIVFaD9QPSTdlQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-329-9B_nymbONDy-JyblV28Ndg-1; Tue, 12 May 2026 09:50:40 -0400
+X-MC-Unique: 9B_nymbONDy-JyblV28Ndg-1
+X-Mimecast-MFC-AGG-ID: 9B_nymbONDy-JyblV28Ndg_1778593839
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b8fa5744b82so603008966b.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 06:50:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778593839; x=1779198639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XuNggr069CCi+WGH9I3+DQfxambtv+LBKZiD2flVRqc=;
+        b=AAMouqbuxbPqBdySN+frlYHCwiH+xnqhsOrM99z7rBSkepgIBE2H8x2Ka8HrBDs2Z1
+         +ZKzZXRkllqVvGQuOzL5/B/SXiUb/MCIBjP2/kKAF4vjPENxJlVWmLhD7gweXGpLec3l
+         3ywX3X9hew+vDW3hvCQDgDvOzXMg++tHArR4xz4gO7H8QLlBHwqxiwGtD5bXBfBxUfsZ
+         6rxhF8xDY9VNU7X7n6rdMiTZzw0Tgv7Jcp4yqQQgn5EvaBiBX2euhyfxKKrLBBWzMCRz
+         JaKkO3Zs5dYLExEJFXRl9rkHk8BrItKbqw1WMCO+ZHV9gJtP0Y3tlOc3NcVOoHkxVFaB
+         +/Mg==
+X-Forwarded-Encrypted: i=1; AFNElJ+DwkJysDYPidrbGNaoQUHLrEJ5gZLep1nqQVrdVMfRaP/PLnRrHyQ/qsjFb554t8Q+wGJzsYap/D/lmIBhk1Oeph8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVjOANyK+/KNAJQSK+siQMhgVtnjbfNoZ3iIpHPo81hARjYH2Y
+	nGlFgzfDmVUuweLYiQONcM7f1Cvq1tsdW1GPMqqKpftPSr8kJ2iVoJms5zYFXlckOoLwYXcuVwm
+	92MT8xHkbwzwltVrXiIpUzFniwRI3LnZmzVnRWLnY3FiluIbctEC8jcIDQeCIEIogRzpQ7CrfIC
+	Fdgx3bw82A983htD5Yl7pcyDOZrMAiak/tlq/lYyRH2y/luEvm+khGdHg2uGY=
+X-Gm-Gg: Acq92OFhdc6sXqRbA/xHX8sd5NpvyXa8D+qQW1jWDTeUIUx1AvWZeVlMhvc4vpgmf9l
+	6j6EyvagnmG5AoeQ8t2npkqnx4CaxI5WnHpFwxImatYgbP34bzXL6wHCCwdCgLeW8dWw5InD22S
+	D4gpZuKGylkhIuxldj7HJRIy9lbHXMeSjmqrHbj6b585FzAirqkBXu3O+afmC1quEDfQgRakVZ/
+	Yb/ww==
+X-Received: by 2002:a17:907:9404:b0:bcf:5de8:567f with SMTP id a640c23a62f3a-bd28f29e744mr213036066b.28.1778593839041;
+        Tue, 12 May 2026 06:50:39 -0700 (PDT)
+X-Received: by 2002:a17:907:9404:b0:bcf:5de8:567f with SMTP id
+ a640c23a62f3a-bd28f29e744mr213032166b.28.1778593838429; Tue, 12 May 2026
+ 06:50:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28b01c14-3d87-4cab-b695-5b9015578785@kernel.org>
-X-Debian-User: leitao
+References: <20260511223509.1483323-1-crwood@redhat.com>
+In-Reply-To: <20260511223509.1483323-1-crwood@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 12 May 2026 15:50:27 +0200
+X-Gm-Features: AVHnY4L5dTdHoculUf6x1pNWemMvjRXZhQbx4C0xzZ67cYh5AXvyGKJhygXI6fI
+Message-ID: <CAP4=nvQEnCG2vabuA52p3bmGo7f1_-pZJ2b6rr5N=bKmaBuqxg@mail.gmail.com>
+Subject: Re: [PATCH] rtla: Stop the record trace on interrupt
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Wander Lairson Costa <wander@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: aBf7zwXROOO2nA6RpKQ1yZ7QSkOZPDrJzb_KN0_Tliw_1778593839
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 12, 2026 at 10:21:50AM +0200, David Hildenbrand (Arm) wrote:
-> 
-> >  		}
-> >  		goto unlock_mutex;
-> >  	} else if (res < 0) {
-> > -		if (is_reserved)
-> > +		/*
-> > +		 * Promote a stable unhandlable kernel page diagnosed by
-> > +		 * get_hwpoison_page() to MF_MSG_KERNEL alongside reserved
-> > +		 * pages; transient lifecycle races stay as MF_MSG_GET_HWPOISON.
-> > +		 */
-> > +		if (is_reserved || gp_status == MF_GET_PAGE_UNHANDLABLE)
-> >  			res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
-> 
-> 
-> It's all a bit of a mess. get_hwpoison_page() should just indicate that a page
-> is unhandable if it is PG_reserved?
+=C3=BAt 12. 5. 2026 v 0:35 odes=C3=ADlatel Crystal Wood <crwood@redhat.com>=
+ napsal:
+>
+> Before, when rtla gets a signal, it stopped the main trace but not the
+> record trace.  save_trace_to_file() could also fail to keep up on a debug
+> kernel -- and in any case, it adds post-stoppage noise to the trace file.
+>
 
-Are you saying that we should identify if the page is PG_reserved in
-get_hwpoison_page() instead of in memory_failure(), as done in the
-previous patch ("mm/memory-failure: report MF_MSG_KERNEL for reserved
-pages") ?
+This affects only the "new" (since 6.19) --on-end trace option, right?
+The regular --trace/--on-threshold trace should already disable the
+instance in-kernel, as timerlat disables all instances set to the
+tracer on stop_tracing threshold.
 
-> Why can't we just return a special error code from  get_hwpoison_page()? We ahve
-> plenty of errno values to chose from.
+If so, that should be reflected in the commit message.
 
-Something like:
+> Signed-off-by: Crystal Wood <crwood@redhat.com>
+> ---
+>  tools/tracing/rtla/src/common.c   | 19 +++++++++++--------
+>  tools/tracing/rtla/src/common.h   |  1 -
+>  tools/tracing/rtla/src/timerlat.c |  2 +-
+>  3 files changed, 12 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/com=
+mon.c
+> index 35e3d3aa922e..effad523e8cf 100644
+> --- a/tools/tracing/rtla/src/common.c
+> +++ b/tools/tracing/rtla/src/common.c
+> @@ -10,7 +10,7 @@
+>
+>  #include "common.h"
+>
+> -struct trace_instance *trace_inst;
+> +struct osnoise_tool *trace_tool;
+>  volatile int stop_tracing;
+>  int nr_cpus;
+>
+> @@ -21,12 +21,16 @@ static void stop_trace(int sig)
+>                  * Stop requested twice in a row; abort event processing =
+and
+>                  * exit immediately
+>                  */
+> -               tracefs_iterate_stop(trace_inst->inst);
+> +               if (trace_tool)
+> +                       tracefs_iterate_stop(trace_tool->trace.inst);
 
+Can this condition be ever false? The signal should be attached after
+trace_inst is initialized. Of course, it doesn't hurt to have it there
+for safety, as long as we keep in mind that it does not protect from
+the trace instance being freed (which should be fixed by commit
+be8058f31b4e already).
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 866c4428ac7ef..0a6d83575833e 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -878,7 +878,7 @@ static const char *action_name[] = {
- };
- 
- static const char * const action_page_types[] = {
--	[MF_MSG_KERNEL]			= "reserved kernel page",
-+	[MF_MSG_KERNEL]			= "unrecoverable kernel page",
- 	[MF_MSG_KERNEL_HIGH_ORDER]	= "high-order kernel page",
- 	[MF_MSG_HUGE]			= "huge page",
- 	[MF_MSG_FREE_HUGE]		= "free huge page",
-@@ -1394,6 +1394,21 @@ static int get_any_page(struct page *p, unsigned long flags)
- 	int ret = 0, pass = 0;
- 	bool count_increased = false;
+>                 return;
+>         }
+>         stop_tracing =3D 1;
+> -       if (trace_inst)
+> -               trace_instance_stop(trace_inst);
+> +       if (trace_tool) {
+> +               trace_instance_stop(&trace_tool->trace);
+> +               if (trace_tool->record)
+> +                       trace_instance_stop(&trace_tool->record->trace);
+> +       }
+>  }
+>
 
-+	if (PageReserved(p)) {
-+		ret = -ENOTRECOVERABLE;
-+		goto out;
-+	}
-+
- 	if (flags & MF_COUNT_INCREASED)
- 		count_increased = true;
- 
-@@ -1422,7 +1437,7 @@ static int get_any_page(struct page *p, unsigned long flags)
- 				shake_page(p);
- 				goto try_again;
- 			}
--			ret = -EIO;
-+			ret = -ENOTRECOVERABLE;
- 			goto out;
- 		}
- 	}
-@@ -1441,10 +1456,10 @@ static int get_any_page(struct page *p, unsigned long flags)
- 			goto try_again;
- 		}
- 		put_page(p);
--		ret = -EIO;
-+		ret = -ENOTRECOVERABLE;
- 	}
- out:
--	if (ret == -EIO)
-+	if (ret == -EIO || ret == -ENOTRECOVERABLE)
- 		pr_err("%#lx: unhandlable page.\n", page_to_pfn(p));
- 
- 	return ret;
-@@ -2431,6 +2448,9 @@ int memory_failure(unsigned long pfn, int flags)
- 			res = action_result(pfn, MF_MSG_KERNEL_HIGH_ORDER, MF_IGNORED);
- 		}
- 		goto unlock_mutex;
-+	} else if (res == -ENOTRECOVERABLE) {
-+		res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
-+		goto unlock_mutex;
- 	} else if (res < 0) {
- 		res = action_result(pfn, MF_MSG_GET_HWPOISON, MF_IGNORED);
- 		goto unlock_mutex;
+Otherwise this makes sense. The reason for doing trace_instance_stop()
+in stop_trace() and not waiting for cleanup is that in tracefs mode,
+the loop would get struck in tracefs_iterate_raw_events() if it cannot
+process the events faster than they are created (see commit
+c73cab9dbed and a4dfce7559d respectively). But it can cause a
+discrepancy in the trace output, as you point out.
 
+>  /*
+> @@ -273,11 +277,10 @@ int run_tool(struct tool_ops *ops, int argc, char *=
+argv[])
+>         tool->params =3D params;
+>
+>         /*
+> -        * Save trace instance into global variable so that SIGINT can st=
+op
+> -        * the timerlat tracer.
+> +        * Expose the tool to signal handlers so they can stop the trace.
+>          * Otherwise, rtla could loop indefinitely when overloaded.
+>          */
+> -       trace_inst =3D &tool->trace;
+> +       trace_tool =3D tool;
+>
+>         retval =3D ops->apply_config(tool);
+>         if (retval) {
+> @@ -285,7 +288,7 @@ int run_tool(struct tool_ops *ops, int argc, char *ar=
+gv[])
+>                 goto out_free;
+>         }
+>
+> -       retval =3D enable_tracer_by_name(trace_inst->inst, ops->tracer);
+> +       retval =3D enable_tracer_by_name(tool->trace.inst, ops->tracer);
+>         if (retval) {
+>                 err_msg("Failed to enable %s tracer\n", ops->tracer);
+>                 goto out_free;
+> diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/com=
+mon.h
+> index 51665db4ffce..eba40b6d9504 100644
+> --- a/tools/tracing/rtla/src/common.h
+> +++ b/tools/tracing/rtla/src/common.h
+> @@ -54,7 +54,6 @@ struct osnoise_context {
+>         int                     opt_workload;
+>  };
+>
+> -extern struct trace_instance *trace_inst;
+>  extern volatile int stop_tracing;
+>
 
-If that is what you are suggestion, maybe we can create another
-MF_MSG_RESERVED? and another return value for get_any_page() to track
-the reserve pages ?
+This is removed as it is not needed now after the consolidation I
+assume, since all users are now in common.c? That could also be
+mentioned in the commit message.
 
-Thanks for the review and suggestions,
---breno
+>  struct hist_params {
+> diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/t=
+imerlat.c
+> index f8c057518d22..637f68d684f5 100644
+> --- a/tools/tracing/rtla/src/timerlat.c
+> +++ b/tools/tracing/rtla/src/timerlat.c
+> @@ -202,7 +202,7 @@ void timerlat_analyze(struct osnoise_tool *tool, bool=
+ stopped)
+>                  * If the trace did not stop with --aa-only, at least pri=
+nt
+>                  * the max known latency.
+>                  */
+> -               max_lat =3D tracefs_instance_file_read(trace_inst->inst, =
+"tracing_max_latency", NULL);
+> +               max_lat =3D tracefs_instance_file_read(tool->trace.inst, =
+"tracing_max_latency", NULL);
+
+Not sure why this used trace_inst instead of tool which is right
+there, maybe again refactoring of the code?
+
+>                 if (max_lat) {
+>                         printf("  Max latency was %s\n", max_lat);
+>                         free(max_lat);
+> --
+> 2.54.0
+>
+
+Otherwise, LGTM. You can also add:
+
+Fixes: c73cab9dbed0 ("rtla/timerlat_hist: Stop timerlat tracer on signal")
+Fixes: a4dfce7559d7 ("rtla/timerlat_top: Stop timerlat tracer on signal")
+Fixes: 3aadb65db5d6 ("rtla/timerlat: Add action on end feature")
+
+as this fixes two bugs, one with the post-stoppage noise (that is
+present since the trace_instance_stop() was added), one with the
+save_trace_to_file() not keeping up (which should be since the
+--on-end option was added).
+
+Tomas
+
