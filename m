@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057C9481229;
-	Tue, 12 May 2026 07:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E778F2D73BC;
+	Tue, 12 May 2026 08:17:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778571770; cv=none; b=OKuKBTo/jaF6iJ2obzN/j/bFSOIPZ5KD8MZtZo4SwSEFRSanIDvCx92M7guu/h4tqdeRUPlJCO/umKA89wzA4C4vvwVKR9+dMEXkyfaQn/PJnpwP23c/jq9r5PXv6OYA9KDV7YM7WqX9UsP6N/QqV8seR0bBGTIjxRq4UKXCvNQ=
+	t=1778573826; cv=none; b=LEYDuKOOHZGa/HlJ8gLnnnfxdUfQbvyo/lEiSMwvcgdKO2KYVDz1XVo91o1cAgSD8SCePygjaw/LJfAZYrRMcPe/VMNgPO+wOthRPZdcL091VoGx/jP4rEea/q9XLHVu7Pjsgw9qN4ouOdnG03/tpr6NQq4T8OFX6coRpWbTQRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778571770; c=relaxed/simple;
-	bh=iB8tMCv0MnNsT4JdZSVwpaqxrQgKB7oJIZ1Ch8nbSQE=;
+	s=arc-20240116; t=1778573826; c=relaxed/simple;
+	bh=tLCdh/n3r829zo7nnZ+f729oceajn5PFZJ92fEGwgYg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WejS8785m3dTMV3Ec5LbROsowP/xbcbX2LxOXMwYwDl9rc/uyDy9wJyaq12Vq+zO1dcTIJm/QiuB+UwF0nMfI+PImcHVfD4D1BXF6p6C8btB1yAXptN4shJfsusTB96GBENc2+wxC7UoYaGFvlyDjj43QLeP6FOSr8Kbu8yfqfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXMgw/kW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=eI8tPa5hCfdifpRWaXnPnShEwdPPfl/5QMKYGYKUBjRas8riTpn9pNWlEiLz5L4/1Uz4V6AlMHMkpojtwUt/+x51GpO6uDYM75Kpm/7DN5OpGvRqVplI2SgwliFKmuyAvjqwPk9MbQwuuCodh360XeAPPdC+FIuDiMIuaG73RCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s96bi0US; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXMgw/kW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567D9C2BCB0;
-	Tue, 12 May 2026 07:42:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s96bi0US"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B3FC2BCB0;
+	Tue, 12 May 2026 08:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778571769;
-	bh=iB8tMCv0MnNsT4JdZSVwpaqxrQgKB7oJIZ1Ch8nbSQE=;
+	s=k20201202; t=1778573825;
+	bh=tLCdh/n3r829zo7nnZ+f729oceajn5PFZJ92fEGwgYg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AXMgw/kWeXATu0nbAK7QZZ8AuBWGNIn0QfGbj0HLOhiUj+fUEZM6qPW+6j0WW+Rh3
-	 mJOswvrr21Mk22eRCPWcEmuOtDN9w7/rWEX/cgJ2Z22jGV0Mq3CQNLzjGfzJ5qhqOl
-	 Jd+8UCodmDz5uxv/1M9vXs1W4CTu8q0Y2TvZqEEiTAbm3U6DvYhb4S8mdMI03+GSpx
-	 HxSvUoofnBHiZHIfwcgWvMqCA+LC3fRWXTQkPV4J1MyCai8N2ds+e+glhrAQp/N2L+
-	 2PM5LXPQbTEAPg+cQhNe2zVGPj6lMPMkLuEYE8pf3IewN5wc0p3ruMZHCvXJmDZq/c
-	 tYsmkI+ofRRMg==
-Message-ID: <fad3ed18-3313-44ef-ad00-3e643b004f25@kernel.org>
-Date: Tue, 12 May 2026 09:42:37 +0200
+	b=s96bi0USUPujrkqhfCW0mIF3GtkQT8zV//g9jBbpXw0g1s7ZbvpTI4vdqJ9EDKwLx
+	 h1s0vweRTLdVDZiNA24tDeB0THJxbOti0u6c8bf77fONzt/qJKcYFbXaX5FArU423K
+	 9AnbfFL384pg317tkfvrKVfEvFUzfQkmXRcyHBvtXdRzG2TkzFFyn0s8w/ir4A75Hm
+	 pYjauvJpL/KWlqQLVDVoZ9dgT0iuqyEtvZx9XjOpvmxS+1bBoDzhTscxhFx360z7Za
+	 pJbK1NuXGFTEymLyjgMExHjMFiAElrS3ZBcCvVk6YoRwVRduUzgJjYEGl8Bvlu2OWO
+	 RSoZHgVvNg9/A==
+Message-ID: <9504c193-8c01-4d03-8f62-c50fd7fbdbc0@kernel.org>
+Date: Tue, 12 May 2026 10:17:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,30 +35,24 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v17 05/14] mm/khugepaged: require
- collapse_huge_page to enter/exit with the lock dropped
-To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-Cc: aarcange@redhat.com, akpm@linux-foundation.org,
- anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org,
- baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com,
- cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com,
- dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com,
- jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com,
- joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
- liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com,
- matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
- peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
- rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
- rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
- shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
- thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
- vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
- will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-References: <20260511185817.686831-1-npache@redhat.com>
- <20260511185817.686831-6-npache@redhat.com>
+Subject: Re: [PATCH v6 1/4] mm/memory-failure: report MF_MSG_KERNEL for
+ reserved pages
+To: Breno Leitao <leitao@debian.org>, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <liam@infradead.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
+ Lance Yang <lance.yang@linux.dev>
+References: <20260511-ecc_panic-v6-0-183012ba7d4b@debian.org>
+ <20260511-ecc_panic-v6-1-183012ba7d4b@debian.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -105,102 +99,90 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260511185817.686831-6-npache@redhat.com>
+In-Reply-To: <20260511-ecc_panic-v6-1-183012ba7d4b@debian.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/11/26 20:58, Nico Pache wrote:
-> Currently the collapse_huge_page function requires the mmap_read_lock to
-> enter with it held, and exit with it dropped. This function moves the
-> unlock into its parent caller, and changes this semantic to requiring it
-> to enter/exit with it always unlocked.
+On 5/11/26 17:38, Breno Leitao wrote:
+> When get_hwpoison_page() returns a negative value, distinguish
+> reserved pages from other failure cases by reporting MF_MSG_KERNEL
+> instead of MF_MSG_GET_HWPOISON. Reserved pages belong to the kernel
+> and should be classified accordingly for proper handling.
 > 
-> In future patches, we need this expectation, as for in mTHP collapse, we
-> may have already have dropped the lock, and do not want to conditionally
-> check for this by passing through the lock_dropped variable.
+> Sample PG_reserved before the get_hwpoison_page() call. In the
+> MF_COUNT_INCREASED path get_any_page() can drop the caller's
+> reference before returning -EIO, after which the underlying page may
+> have been freed and reallocated with page->flags reset; reading
+> PageReserved(p) at that point would observe stale or unrelated state.
+> The pre-call snapshot reflects what the page actually was at the
+> time of the failure event.
 > 
-> No functional change is expected as one of the first things the
-> collapse_huge_page function does is drop this lock before allocating the
-> hugepage.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
+> Acked-by: Miaohe Lin <linmiaohe@huawei.com>
+> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  mm/khugepaged.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
+>  mm/memory-failure.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 > 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 27465161fa6d..37a5f6791816 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1199,6 +1199,14 @@ static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_stru
->  	return SCAN_SUCCEED;
->  }
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 866c4428ac7ef..f112fb27a8ff6 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -2348,6 +2348,7 @@ int memory_failure(unsigned long pfn, int flags)
+>  	unsigned long page_flags;
+>  	bool retry = true;
+>  	int hugetlb = 0;
+> +	bool is_reserved;
 >  
-> +/*
-> + * collapse_huge_page expects the mmap_read_lock to be dropped before
-> + * entering this function. 
-
-"before entering." Talking about "this function" after naming it sounds odd.
-
-Also, there is only an "mmap_lock".
-
-> The function will also always return with the lock
-> + * dropped. 
-
-"collapse_huge_page expects the mmap_lock to be unlocked before entering and
-will always return with the lock unlocked."
-
-Or something simple like that?
-
-> The function starts by allocation a folio, which can potentially
-> + * take a long time if it involves sync compaction, and we do not need to hold
-> + * the mmap_lock during that. We must recheck the vma after taking it again in
-> + * write mode.
-> + */
-
-"... to avoid holding the mmap_lock while allocating a THP, as that could
-trigger direct reclaim/compaction. Note that the VMA must be rechecked after
-grabbing the mmap_lock again."
-
-?
-
-Ending up with something like
-
-"collapse_huge_page expects the mmap_lock to be unlocked before entering and
-will always return with the lock unlocked, to avoid holding the mmap_lock while
-allocating a THP, as that could trigger direct reclaim/compaction.  Note that
-the VMA must be rechecked after grabbing the mmap_lock again."
-
->  static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  		int referenced, int unmapped, struct collapse_control *cc)
->  {
-> @@ -1214,14 +1222,6 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
+>  	if (!sysctl_memory_failure_recovery)
+>  		panic("Memory failure on page %lx", pfn);
+> @@ -2411,6 +2412,18 @@ int memory_failure(unsigned long pfn, int flags)
+>  	 * In fact it's dangerous to directly bump up page count from 0,
+>  	 * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
+>  	 */
+> +	/*
+> +	 * Pages with PG_reserved set are not currently managed by the
+> +	 * page allocator (memblock-reserved memory, driver reservations,
+> +	 * etc.), so classify them as kernel-owned for reporting.
+> +	 *
+> +	 * Sample the flag before get_hwpoison_page(): in the
+> +	 * MF_COUNT_INCREASED path, get_any_page() can drop the caller's
+> +	 * reference before returning -EIO, after which page->flags may
+> +	 * have been reset by the allocator.
+> +	 */
+> +	is_reserved = PageReserved(p);
+> +
+>  	res = get_hwpoison_page(p, flags);
+>  	if (!res) {
+>  		if (is_free_buddy_page(p)) {
+> @@ -2432,7 +2445,11 @@ int memory_failure(unsigned long pfn, int flags)
+>  		}
+>  		goto unlock_mutex;
+>  	} else if (res < 0) {
+> -		res = action_result(pfn, MF_MSG_GET_HWPOISON, MF_IGNORED);
+> +		if (is_reserved)
+> +			res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
+> +		else
+> +			res = action_result(pfn, MF_MSG_GET_HWPOISON,
+> +					    MF_IGNORED);
+>  		goto unlock_mutex;
+>  	}
 >  
->  	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
->  
-> -	/*
-> -	 * Before allocating the hugepage, release the mmap_lock read lock.
-> -	 * The allocation can take potentially a long time if it involves
-> -	 * sync compaction, and we do not need to hold the mmap_lock during
-> -	 * that. We will recheck the vma after taking it again in write mode.
-> -	 */
-> -	mmap_read_unlock(mm);
-> -
->  	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
->  	if (result != SCAN_SUCCEED)
->  		goto out_nolock;
-> @@ -1526,6 +1526,8 @@ static enum scan_result collapse_scan_pmd(struct mm_struct *mm,
->  out_unmap:
->  	pte_unmap_unlock(pte, ptl);
->  	if (result == SCAN_SUCCEED) {
-> +		/* collapse_huge_page expects the lock to be dropped before calling */
-> +		mmap_read_unlock(mm);
->  		result = collapse_huge_page(mm, start_addr, referenced,
->  					    unmapped, cc);
->  		/* collapse_huge_page will return with the mmap_lock released */
+> 
 
+It's a bit odd that we need this handling when we already have handling for
+reserved pages in error_states[].
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+HWPoisonHandlable() would always essentially reject PG_reserved pages. So
+__get_hwpoison_page() ... would always fail? Making
+get_hwpoison_page()->get_any_page() always fail?
+
+But then, we never call identify_page_state()? And never call me_kernel()?
+
+This all looks very odd.
+
+Why would you even want to call get_hwpoison_page() in the first place if you
+find PageReserved?
 
 -- 
 Cheers,
