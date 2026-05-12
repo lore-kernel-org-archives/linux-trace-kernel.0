@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EFB356759;
-	Mon, 11 May 2026 23:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126C839FD9;
+	Tue, 12 May 2026 00:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778543274; cv=none; b=u7rHxwQyfTKA3fbSUKVqDZZabxiR8H0BCGtsn1We1vkll5Ar+7fWXU4pJOwD3A0Y63uitD4vVyVRLJNhMhX/7LmeEIlVLeQECjrAQFyWe75qnNerh6pizaKbgA+rt3mKuQhZWUfKpE0QrxDnGs2CLb/VdJSOdtGe1mWwOMNYnzc=
+	t=1778544018; cv=none; b=rLhJQuJZekhdg6vY7RPvg/dPEDBd0F8uLBF3sWDxU4xgzpWvWvb3i18R5CjYD4/NJUY4IFByBBmX39N+AdYZaigTtfAZEzNnl6jKIC2tMno0YlxWJS0vJwbONAI3uN0yAsqALzjyOpmDjN9c+A9RqA+hrXec1mC5j1vPqoxKJTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778543274; c=relaxed/simple;
-	bh=DNnyPo0mC75/41/eb29/iBSVY9YaJWDI/IpOpQGp0qU=;
+	s=arc-20240116; t=1778544018; c=relaxed/simple;
+	bh=y7/1fl/gDBIOv0av7nWWplwKO8Os9Cu9AgnqqyT7uJI=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Gv0TK0R5c0X1/08bDdM+zfQtiTDWB6m0way1sThi9PXtwB1TrgEZgi1Elol72KHZSdb5g3PXD6cRbHvGLUSvk72NBtTi/QuAkBySSS0yStMbB9YZODjiGlgkf9Zm2rseiuF+9eaeU/wsdelG0GYqMLNn+7L3a+rBzZlPk5e6J70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e14LTPrw; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=rc+ZSoqxuG4qL4Ku/wGHC2jyJrPhSZnek4K5J/DN73RAZ/iiTOHb9zEGa4U9bPhSl314wNvs2bpFUH6Jc233rTEmwkzpcIGV47opE4efBGzNDTvxO5QFM6ReK24QdwSQagBh3uzMq05oV46MbKcYf46ceRF3S1+cMqfTVdGBQvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TlEAQ3u4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e14LTPrw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2294FC2BCF5;
-	Mon, 11 May 2026 23:47:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TlEAQ3u4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D4BC2BCB0;
+	Tue, 12 May 2026 00:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778543274;
-	bh=DNnyPo0mC75/41/eb29/iBSVY9YaJWDI/IpOpQGp0qU=;
+	s=k20201202; t=1778544017;
+	bh=y7/1fl/gDBIOv0av7nWWplwKO8Os9Cu9AgnqqyT7uJI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e14LTPrwJHYSiNk0AWdDKEcHXueB8HjJnwb6VTjWfa4zTEfVygN0DhxiQJdCpofgi
-	 sSfYEN2q+ll42EaDpZadPLge2DwrRG8ygptv+LRD2G8HmvWvXyfkVbp/3JEZGZGgom
-	 HvKHOjsyRlIKJkdUN5EuAh/gah5eLXfTjIqA80261ocDOCI1g4NmJL33/nlZweKHwM
-	 DsJOFf0uRZEqm1DelykbRjO27679Jd/mDMrq7TzRFyQRmJqJrVUSbPaUtyUTLKtAHU
-	 MDOJYFqvDwjSX/CXBEDDrZk+49QvrBG8a3IWykUW40xdgignRkZgQrd7qOk1Toq+m/
-	 iyE8kPZsg7u7A==
-Date: Tue, 12 May 2026 08:47:50 +0900
+	b=TlEAQ3u4Nwfk3JOnJWzteEC9V8eEA7B73Oh/DT9KlQkKLShXgN8JsXqB+TLG3APEr
+	 +VwFrdsVwmFzNTybD78cPUUGWjClExzMaSXiEQUPe9I0dqO6nIeBL/SUxwNty+W5tt
+	 MDYeX+RnaZxcg4Q2qTnnogvu33y/CVtHSoJGFnzzLU5UYlPWMLSB/DwCWnYqB37/Sj
+	 hS6ZR7BwhTVSCCc4HQU9cwTQs+clQQxG0c3QmEYiZ/N9XMHaH7Eu92PRRoq1oxXVLs
+	 Y1dWCmdcevOpZkTtj1LCPcgj5t8a95XmXNDtNwgLkUNBLl2i8OPm714XfMhMia/ZcB
+	 /vHv4biwyj7hQ==
+Date: Tue, 12 May 2026 09:00:12 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Chen Jun <chenjun102@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] trace: Introduce a new filter_pred "caller"
-Message-Id: <20260512084750.c17a93d0ccdacddfd52d3d40@kernel.org>
-In-Reply-To: <20260508122623.74290-1-chenjun102@huawei.com>
-References: <20260508122623.74290-1-chenjun102@huawei.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, paulmck@kernel.org, oss@malat.biz,
+ kernel-team@meta.com
+Subject: Re: [PATCH 2/2] tools/bootconfig: render kernel.* subtree as
+ cmdline string with -C
+Message-Id: <20260512090012.53721e4fd518f209e70ff656@kernel.org>
+In-Reply-To: <20260508-bootconfig_using_tools-v1-2-1132219aa773@debian.org>
+References: <20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org>
+	<20260508-bootconfig_using_tools-v1-2-1132219aa773@debian.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,150 +48,165 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 8 May 2026 20:26:23 +0800
-Chen Jun <chenjun102@huawei.com> wrote:
+On Fri, 08 May 2026 06:55:04 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-> Low-level functions have many call paths, and sometimes
-> we only care about the calls on a specific call path.
-> Add a new filter to filter based on the call stack.
+> Add a -C option that finds the "kernel" subtree of a bootconfig file
+> and prints it as a flat, space-separated cmdline string by calling the
+> shared xbc_snprint_cmdline() renderer. An empty or absent kernel.*
+> subtree produces empty output and exits successfully.
 > 
-> Usage:
-> 1. echo 'caller=="$function_name"' > events/../filter
-
-Thanks for interesting idea :)
-
-BTW, we already have "stacktrace". Since this actually checks
-stacktrace, not caller, so I think we should reuse it.
-Also, I think OP_GLOB is more suitable for this case.
-(and more useful)
-
-Thank you,
-
+> This lets the kernel build embed a bootconfig file as a plain cmdline
+> string at build time, so embedded bootconfig values can reach
+> parse_early_param() during architecture setup without parsing the
+> bootconfig at runtime.
 > 
-> Only support OP_EQ and OP_NE
+> The renderer is intentionally limited to the kernel.* subtree: that is
+> the only thing the kernel build needs to embed; init.* and other
+> subtrees keep going through the runtime parser.
 > 
-> Signed-off-by: Chen Jun <chenjun102@huawei.com>
+> Example of this new mode:
+> 	# cat /tmp/test.bconf
+> 	kernel {
+> 		foo = bar
+> 		baz = "hello world"
+> 		arr = 1, 2
+> 	}
+> 	init.foo = nope
+> 
+> 	# ./tools/bootconfig/bootconfig -C /tmp/test.bconf
+> 	foo=bar baz="hello world" arr=1 arr=2 %
+> 
+
+Nice! Looks good to me. Let me pick it.
+
+Thanks,
+
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  include/linux/trace_events.h       |  1 +
->  kernel/trace/trace.h               |  3 ++-
->  kernel/trace/trace_events.c        |  1 +
->  kernel/trace/trace_events_filter.c | 40 ++++++++++++++++++++++++++++--
->  4 files changed, 42 insertions(+), 3 deletions(-)
+>  tools/bootconfig/main.c | 60 ++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 52 insertions(+), 8 deletions(-)
 > 
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 40a43a4c7caf..1f109669a391 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -851,6 +851,7 @@ enum {
->  	FILTER_COMM,
->  	FILTER_CPU,
->  	FILTER_STACKTRACE,
-> +	FILTER_CALLER,
->  };
->  
->  extern int trace_event_raw_init(struct trace_event_call *call);
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 80fe152af1dd..4e4b92ce264f 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -1825,7 +1825,8 @@ static inline bool is_string_field(struct ftrace_event_field *field)
->  	       field->filter_type == FILTER_RDYN_STRING ||
->  	       field->filter_type == FILTER_STATIC_STRING ||
->  	       field->filter_type == FILTER_PTR_STRING ||
-> -	       field->filter_type == FILTER_COMM;
-> +	       field->filter_type == FILTER_COMM ||
-> +	       field->filter_type == FILTER_CALLER;
->  }
->  
->  static inline bool is_function_field(struct ftrace_event_field *field)
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index c46e623e7e0d..6d220d7eec73 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -199,6 +199,7 @@ static int trace_define_generic_fields(void)
->  	__generic_field(char *, comm, FILTER_COMM);
->  	__generic_field(char *, stacktrace, FILTER_STACKTRACE);
->  	__generic_field(char *, STACKTRACE, FILTER_STACKTRACE);
-> +	__generic_field(char *, caller, FILTER_CALLER);
->  
+> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+> index 643f707b8f1da..e1bfab044fbcb 100644
+> --- a/tools/bootconfig/main.c
+> +++ b/tools/bootconfig/main.c
+> @@ -286,7 +286,41 @@ static int init_xbc_with_error(char *buf, int len)
 >  	return ret;
 >  }
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index 609325f57942..1cf040065abe 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -72,6 +72,7 @@ enum filter_pred_fn {
->  	FILTER_PRED_FN_CPUMASK,
->  	FILTER_PRED_FN_CPUMASK_CPU,
->  	FILTER_PRED_FN_FUNCTION,
-> +	FILTER_PRED_FN_CALLER,
->  	FILTER_PRED_FN_,
->  	FILTER_PRED_TEST_VISITED,
->  };
-> @@ -1009,6 +1010,21 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
->  	return pred->op == OP_EQ ? ret : !ret;
->  }
 >  
-> +/* Filter predicate for caller. */
-> +static int filter_pred_caller(struct filter_pred *pred, void *event)
+> -static int show_xbc(const char *path, bool list)
+> +static int show_xbc_kernel_cmdline(void)
 > +{
-> +	unsigned long entries[32];
-> +	unsigned int nr_entries;
-> +	int i;
+> +	struct xbc_node *root;
+> +	char *buf = NULL;
+> +	int len, ret;
 > +
-> +	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
-> +	for (i = 0; i < nr_entries ; i++)
-> +		if (pred->val <= entries[i] && entries[i] < pred->val2)
-> +			return !pred->not;
+> +	root = xbc_find_node("kernel");
+> +	if (!root)
+> +		return 0;	/* no kernel.* keys: emit empty output */
 > +
-> +	return pred->not;
+> +	len = xbc_snprint_cmdline(NULL, 0, root);
+> +	if (len < 0) {
+> +		pr_err("Failed to size cmdline output: %d\n", len);
+> +		return len;
+> +	}
+> +	if (len == 0)
+> +		return 0;
+> +
+> +	buf = malloc(len + 1);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	ret = xbc_snprint_cmdline(buf, len + 1, root);
+> +	if (ret < 0) {
+> +		pr_err("Failed to render cmdline output: %d\n", ret);
+> +		free(buf);
+> +		return ret;
+> +	}
+> +
+> +	fputs(buf, stdout);
+> +	free(buf);
+> +	return 0;
 > +}
 > +
->  /*
->   * regex_match_foo - Basic regex callbacks
->   *
-> @@ -1617,6 +1633,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
->  		return filter_pred_cpumask_cpu(pred, event);
->  	case FILTER_PRED_FN_FUNCTION:
->  		return filter_pred_function(pred, event);
-> +	case FILTER_PRED_FN_CALLER:
-> +		return filter_pred_caller(pred, event);
->  	case FILTER_PRED_TEST_VISITED:
->  		return test_pred_visited_fn(pred, event);
->  	default:
-> @@ -2002,10 +2020,28 @@ static int parse_pred(const char *str, void *data,
+> +static int show_xbc(const char *path, bool list, bool render_cmdline)
+>  {
+>  	int ret, fd;
+>  	char *buf = NULL;
+> @@ -322,11 +356,14 @@ static int show_xbc(const char *path, bool list)
+>  		if (init_xbc_with_error(buf, ret) < 0)
+>  			goto out;
+>  	}
+> -	if (list)
+> +	if (render_cmdline)
+> +		ret = show_xbc_kernel_cmdline();
+> +	else if (list)
+>  		xbc_show_list();
+>  	else
+>  		xbc_show_compact_tree();
+> -	ret = 0;
+> +	if (ret > 0)
+> +		ret = 0;
+>  out:
+>  	free(buf);
 >  
->  		} else if (field->filter_type == FILTER_DYN_STRING) {
->  			pred->fn_num = FILTER_PRED_FN_STRLOC;
-> -		} else if (field->filter_type == FILTER_RDYN_STRING)
-> +		} else if (field->filter_type == FILTER_RDYN_STRING) {
->  			pred->fn_num = FILTER_PRED_FN_STRRELLOC;
-> -		else {
-> +		} else if (field->filter_type == FILTER_CALLER) {
-> +			unsigned long caller;
-> +
-> +			if (op == OP_GLOB)
-> +				goto err_free;
+> @@ -486,7 +523,10 @@ static int usage(void)
+>  		" Options:\n"
+>  		"		-a <config>: Apply boot config to initrd\n"
+>  		"		-d : Delete boot config file from initrd\n"
+> -		"		-l : list boot config in initrd or file\n\n"
+> +		"		-l : list boot config in initrd or file\n"
+> +		"		-C : render the kernel.* subtree as a flat cmdline\n"
+> +		"		     string (suitable for embedding in a kernel image)\n"
+> +		"		     and print it to stdout\n\n"
+>  		" If no option is given, show the bootconfig in the given file.\n");
+>  	return -1;
+>  }
+> @@ -495,10 +535,11 @@ int main(int argc, char **argv)
+>  {
+>  	char *path = NULL;
+>  	char *apply = NULL;
+> +	bool render_cmdline = false;
+>  	bool delete = false, list = false;
+>  	int opt;
 >  
-> +			pred->fn_num = FILTER_PRED_FN_CALLER;
-> +			caller = kallsyms_lookup_name(pred->regex->pattern);
-> +			if (!caller) {
-> +				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
-> +				goto err_free;
-> +			}
-> +			/* Now find the function start and end address */
-> +			if (!kallsyms_lookup_size_offset(caller, &size, &offset)) {
-> +				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
-> +				goto err_free;
-> +			}
-> +			pred->val = caller - offset;
-> +			pred->val2 = pred->val + size;
-> +		} else {
->  			if (!ustring_per_cpu) {
->  				/* Once allocated, keep it around for good */
->  				ustring_per_cpu = alloc_percpu(struct ustring_buffer);
+> -	while ((opt = getopt(argc, argv, "hda:l")) != -1) {
+> +	while ((opt = getopt(argc, argv, "hda:lC")) != -1) {
+>  		switch (opt) {
+>  		case 'd':
+>  			delete = true;
+> @@ -509,14 +550,17 @@ int main(int argc, char **argv)
+>  		case 'l':
+>  			list = true;
+>  			break;
+> +		case 'C':
+> +			render_cmdline = true;
+> +			break;
+>  		case 'h':
+>  		default:
+>  			return usage();
+>  		}
+>  	}
+>  
+> -	if ((apply && delete) || (delete && list) || (apply && list)) {
+> -		pr_err("Error: You can give one of -a, -d or -l at once.\n");
+> +	if ((!!apply + !!delete + !!list + !!render_cmdline) > 1) {
+> +		pr_err("Error: You can give one of -a, -d, -l or -C at once.\n");
+>  		return usage();
+>  	}
+>  
+> @@ -532,5 +576,5 @@ int main(int argc, char **argv)
+>  	else if (delete)
+>  		return delete_xbc(path);
+>  
+> -	return show_xbc(path, list);
+> +	return show_xbc(path, list, render_cmdline);
+>  }
+> 
 > -- 
-> 2.22.0
+> 2.53.0-Meta
+> 
 > 
 
 
