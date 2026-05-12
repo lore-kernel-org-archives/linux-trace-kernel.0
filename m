@@ -1,134 +1,197 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFB825FA29
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 19:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778614731; cv=pass; b=E20muJtsvVLoGaJGiP1ApOwc28H/0zW3EC8oUKIZZddCWH7y3S9ju/u6z5m9DKC3wEsznoxEsd/m3r5peVxy0/FyfXH8MzEtDLDoWkg3+6G6eGDcOQajObdSxPZVUkwOHRcjw9RC0Xs3zS85tRrUh/sGEuklpSeCYP7k0sqdcBg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778614731; c=relaxed/simple;
-	bh=z/n4l+tnD0xY6u8oFv5FhpmWDe1bwms0P4exdidL/5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M7hGfAalo+pSCgdr4CDfeNkearjA63T3r9P0dHi6yHiiT+a4LKxN7+I8OHWeuoe92hqY0YLOKj6oJ6jXhCKHGMEJ5383lrcO+CFgBKy9T5gZr7hpVJblI/N31kFbhZ8EJAJz99vFvV7vdSVmzwcb7v0kaMiCoEh16O0sssZ3eA0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VXxcKabm; arc=pass smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXxcKabm"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3667cf0136fso4137816a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 12:38:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778614729; cv=none;
-        d=google.com; s=arc-20240605;
-        b=CSPS6g6G1wxJmVn+7l4Lk3soO1rllpwdHUCkUpfNk6lvYYFXwXaeDokxpFOIXP9Jfp
-         VdIOxzotUcTkhAhzx934Sh6uzvw+vPidqsPMwNZia/LuONWNJMVxA2FBUKZ1UPuhlYfo
-         CQvyJwfi38Hye2KWvmsp9YWonLeyKmCKfHOZsZoMEEwAIvsuYzi5XXzKW0L+31PZQKBR
-         y9l839p/d2Qh/0N5/SAA4rOy2STf/52YzBiInD55lIiWlKAOwrO684IG5RDEeq2V1mbb
-         YejcVOJgU3s2X/wJQ0nXOIBYIvnZfT41IgtUDXMH7OUP6oAtiiVhHLDIioXNU4d3abbW
-         wTsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=lV5/9Lh09aeZxFXscjoWXpJTticrrygDaBuVo3TZXZU=;
-        fh=y5YtdRBtTVEN5p4u5TUncgqe8FCFbPFNQ2b2PC55FKg=;
-        b=eSpl9AK+Q1RDBADezG3q8LDaeFCspcR8UI6Zg9qvrYUJONswgdM9V8bN8aNihvJDF6
-         QvtYoDgN4MDFaSDK6bfbITBoxWLu5deXOINfuf1S7PFbyC6y1W/9fDvkMvig/u712tla
-         /KJGDoG0OxNSWlltTC1JqAZi+KhCZn8sOyzrVbPav5q7JILI96mTi04OuAos82kE4U3e
-         D9kaipfjHQrbZ/UkGzVJm14xqsfb+ru8DkUU/un0oWaKC14LcmjXyKQEhAQvY0wKhTMe
-         eGMRN+yZxeLC2aJrNLXeYTQ9zSZ98HDHW/ixyupqi53J1O1yZ430A6jpbunS0tQXtI9E
-         MXdQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778614729; x=1779219529; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lV5/9Lh09aeZxFXscjoWXpJTticrrygDaBuVo3TZXZU=;
-        b=VXxcKabmkhYf/D8c646ZYuaq+gg5ofk/6I6DclgC0KbsaFaV+gUajmQega5u3MRTe2
-         TophAmO94DYOaU0e8YVdlZ3znf+KXvuc5SfH2Qc8Q+8KV446Jg9onRo+89D0uW3pKAua
-         jYzn5cKQA1mhR8Lk+2vEtJTFUFXOBYiASP6NCXakSVb9lshNKaqDi3h1oCaKt3GL8yGY
-         OG+o6Gl3DMG/0A3pAsVgfoBkbVDeqj3Tvr9GKqqDXw46lKUOiO9Y2VHGt9s+TF0xjNJk
-         LOKvaHgZiIld/0Q3pA435P2i//kVbprtzw50LLVzGQFYczrPlUZ4vdaJpXqSTercn2J+
-         v6lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778614729; x=1779219529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lV5/9Lh09aeZxFXscjoWXpJTticrrygDaBuVo3TZXZU=;
-        b=Xl7Hi1ZnZdjUKc2GsKP539pKLHEzePDcn2g1EAGEHVvYb9xaF+Nsb9iBdAvc6Z5ima
-         flm+54SY77GWldqU36n7em0bxhz6gIz9Crp92nwLTMvfOEwBpqGQie6oJv9cKBtv3IUg
-         vxbvsg9oyLL63kj5fnqWuPJ8uz4lPxrd2s/SlRuqEME8aRgNYeFRFayVXHdtcf4bFwuC
-         RYf5c0UjK40TZKmrX9RF0uVJDOSpLO8byNaualmoJ3LSvG2HYa0uIMUhhG5k3GzeBKmC
-         AoV3r4T7yVsmRhdEC4MdVyOssQoImpiDyz5iyyU7WDWZxb9+PpsqIFUGj8dT1OinFyM2
-         f/aA==
-X-Forwarded-Encrypted: i=1; AFNElJ8S7IMC4cyFu1w6Im/VxrXIuJVfZ/FwA79bcYOzjyMAtzhNjQALvifauoCkdWhEcJvzo1cpo9QNbB0v6jZKloTFHSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuQyLh1QGqZnGmWJY4xFEMnLKSjDo9FP34lUwQGMeVxNoDcLYy
-	Y07J2uizxWFGZtlqGq/2eEpjI+41p8vbyyc6pX7PMc6SGvQjb+Q87bA+Qr3mDlnVVizwGAmS9AK
-	uWN4Q1dOdtmmQj1cWUkXwI1kI+CjhFtU=
-X-Gm-Gg: Acq92OHnryxKE+YnDcTNNVG9Ug3MDZrcMfbeRsBTg4VhxCh4F05uxqqMNYmgP5SSnvQ
-	yMtHNqPpy7c0UDpHO175yQwdSuxHo0N4oRTmOLcy/koMtOgKlngYSrmQEJOWWq+0sMuMaCRC/5k
-	nnjm4sv9yo6965trrJ2Ud91rlMaJADcfO5bVITGfHDN5LI3ephJYLXjKGTR4VrX/qgwrXDAgXK/
-	0gLEWum2+8kdlwYU9KWo46zNEaY9QDqk3vgHcv3YgUoy+EPj8NTuii/8Lh4nLmmwOSj8DyExGDU
-	/OwVSNOSJxOuacFrolQ4ftg=
-X-Received: by 2002:a17:90b:4983:b0:368:147b:536c with SMTP id
- 98e67ed59e1d1-368f3d183femr373798a91.13.1778614729550; Tue, 12 May 2026
- 12:38:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5B03EDE72;
+	Tue, 12 May 2026 19:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778614920; cv=none; b=XW1qx9XOZV1mkdgm3W24sHPI2hD+VYdpvUYmTcFXAf5wod18CJ8Pud8BxFO3PPdAg3np6TfauMFjnhZer+XABj6VJegchzKnTHaB4RDSvk44E9/Cfs/oBtSHT5sYcmX32ecxIFaaCmNKF0lLgCx5S55YN6O4buSuJyz4ChQVDGk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778614920; c=relaxed/simple;
+	bh=F1DPUJmm//uklJmKu5jPl7hBQKySeKz+lX+QKCZ24Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YiAKS0UI3qnns8cdftfzl7ACDWYvZxFAb575V3iqkZIg7O2FBC2uXXu6+/QUAZ6CB7CfbHE3lkBxm+stbGVhDn6he2r37rE+cPhJLG/rd7IFNfLO99u/l7+vDLbFa6FDZqXTUq+jptKkI3Xo99rwjQ4sjvbmw8DZSI4qpYl3hYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id BF2E6C2140;
+	Tue, 12 May 2026 19:41:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id F27A81B;
+	Tue, 12 May 2026 19:41:55 +0000 (UTC)
+Date: Tue, 12 May 2026 15:41:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Chen Jun <chenjun102@huawei.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] trace: Introduce a new filter_pred "caller"
+Message-ID: <20260512154155.5221d029@gandalf.local.home>
+In-Reply-To: <20260508122623.74290-1-chenjun102@huawei.com>
+References: <20260508122623.74290-1-chenjun102@huawei.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260509003146.976844-1-andrii@kernel.org> <agD3xq2MUyskd7X-@krava>
- <20260512141431.a70375744fdae263bda5b722@kernel.org> <agNeEzjiThzmJHiP@krava> <CAADnVQLfgxEzpSTLhsxN2BYWpSxJ+RYku03UMfrSTi4Abu5SBw@mail.gmail.com>
-In-Reply-To: <CAADnVQLfgxEzpSTLhsxN2BYWpSxJ+RYku03UMfrSTi4Abu5SBw@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 12 May 2026 12:38:34 -0700
-X-Gm-Features: AVHnY4KOZOgesKLsiEao1QlpFEyAIoutj7tuM-2Hyb1lGjbSX6Zp8KuwqBV9yV8
-Message-ID: <CAEf4Bza4sqLw8GHoq+MFBgsnhiJ_s91UUrMcA-paYeBr7=bz0A@mail.gmail.com>
-Subject: Re: [PATCH bpf 1/2] uprobes/x86: Fix red zone clobbering in nop5 optimization
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: F27A81B
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: smsofx4j6eijeeqjdqhat713miuhjpsq
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+0rj7aDsoQXUwD3wDijc6YOFgHLBtFQug=
+X-HE-Tag: 1778614915-419686
+X-HE-Meta: U2FsdGVkX19dW6JPDgvhjsWGHog4Ep5ifcdb14e5mPcvKYBUufZMBQo39TY1JrBk0fqdAQRQsqDJ8XBgtsuXN5EpTi0Iw9bLfHRQCVB95qfcLIsfCz/WbKCRdMo8rRMi11ejCm9pucP7uostSZS7q5Jniraa9n89hvYt3CkF7+JjY0stxlpafCCOHLDcl6qzOLwdwg/3EszkvNt1JbTQpiYUTjRwZpQ8M3VXeEEe6KaVuI4ySdMjzkaZeOmveml+Bhj2fakRjs9M2G0sxpscY0yF5fRCSuNVZm7GPWzlFxIe2kkPhifNAdpfmT271I2HwMlKmNKzblQO+ojw7GYdt45geLKPuphWWvOfwt9RpdSAgWTr5TgemA==
 
-On Tue, May 12, 2026 at 12:27=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Tue, May 12, 2026 at 10:07=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> w=
-rote:
-> >
-> > +       /*
-> > +        * We have nop10 (with first byte overwritten to int3),
-> > +        * change it to:
-> > +        *   lea 0x80(%rsp), %rsp
-> > +        *   call tramp
-> > +        *
-> > +        * The first lea instruction skips the stack redzone so the cal=
-l
-> > +        * instruction can safely push return address on stack.
-> > +        */
->
-> typo: lea -128(%rsp), %rsp
->
-> you can also do:
->
-> add $-128, %rsp + call tramp =3D 4 + 5 =3D 9 bytes instead of 10.
+On Fri, 8 May 2026 20:26:23 +0800
+Chen Jun <chenjun102@huawei.com> wrote:
 
-When I asked AI about this it explained that add instruction modifies
-flags, so it's not a good fit here. lea doesn't touch flags.
+> Low-level functions have many call paths, and sometimes
+> we only care about the calls on a specific call path.
+> Add a new filter to filter based on the call stack.
+> 
+> Usage:
+> 1. echo 'caller=="$function_name"' > events/../filter
+> 
+> Only support OP_EQ and OP_NE
 
->
-> Initially I didn't like this approach, since we just introduced
-> usdt nop5 and now need to recompile everything again,
-> but looking at the fix it's definitely simpler than alternatives
-> and doesn't have annoying limitations.
+Cute.
+
+> 
+> Signed-off-by: Chen Jun <chenjun102@huawei.com>
+> ---
+>  include/linux/trace_events.h       |  1 +
+>  kernel/trace/trace.h               |  3 ++-
+>  kernel/trace/trace_events.c        |  1 +
+>  kernel/trace/trace_events_filter.c | 40 ++++++++++++++++++++++++++++--
+>  4 files changed, 42 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 40a43a4c7caf..1f109669a391 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -851,6 +851,7 @@ enum {
+>  	FILTER_COMM,
+>  	FILTER_CPU,
+>  	FILTER_STACKTRACE,
+> +	FILTER_CALLER,
+>  };
+>  
+>  extern int trace_event_raw_init(struct trace_event_call *call);
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 80fe152af1dd..4e4b92ce264f 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -1825,7 +1825,8 @@ static inline bool is_string_field(struct ftrace_event_field *field)
+>  	       field->filter_type == FILTER_RDYN_STRING ||
+>  	       field->filter_type == FILTER_STATIC_STRING ||
+>  	       field->filter_type == FILTER_PTR_STRING ||
+> -	       field->filter_type == FILTER_COMM;
+> +	       field->filter_type == FILTER_COMM ||
+> +	       field->filter_type == FILTER_CALLER;
+>  }
+>  
+>  static inline bool is_function_field(struct ftrace_event_field *field)
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index c46e623e7e0d..6d220d7eec73 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -199,6 +199,7 @@ static int trace_define_generic_fields(void)
+>  	__generic_field(char *, comm, FILTER_COMM);
+>  	__generic_field(char *, stacktrace, FILTER_STACKTRACE);
+>  	__generic_field(char *, STACKTRACE, FILTER_STACKTRACE);
+> +	__generic_field(char *, caller, FILTER_CALLER);
+>  
+>  	return ret;
+>  }
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 609325f57942..1cf040065abe 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -72,6 +72,7 @@ enum filter_pred_fn {
+>  	FILTER_PRED_FN_CPUMASK,
+>  	FILTER_PRED_FN_CPUMASK_CPU,
+>  	FILTER_PRED_FN_FUNCTION,
+> +	FILTER_PRED_FN_CALLER,
+>  	FILTER_PRED_FN_,
+>  	FILTER_PRED_TEST_VISITED,
+>  };
+> @@ -1009,6 +1010,21 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
+>  	return pred->op == OP_EQ ? ret : !ret;
+>  }
+>  
+> +/* Filter predicate for caller. */
+> +static int filter_pred_caller(struct filter_pred *pred, void *event)
+> +{
+> +	unsigned long entries[32];
+
+Let's make that only 16 in size. Having 256 bytes added to the stack in
+random places may cause an overflow. 128 bytes isn't as bad. Either that,
+or we need to preallocate per-cpu memory and use that. But that makes the
+patch much more complex. I rather just use 16 entries instead for now. If
+we need more, then we can add the extra complexity.
+
+Also, you need to update Documentation/trace/events.rst.
+
+Thanks,
+
+-- Steve
 
 
-yeah, limitations are annoying, especially with those global "DO NOT
-OPTIMIZE" flags... Jiri, let's polish your version and land it?
+> +	unsigned int nr_entries;
+> +	int i;
+> +
+> +	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
+> +	for (i = 0; i < nr_entries ; i++)
+> +		if (pred->val <= entries[i] && entries[i] < pred->val2)
+> +			return !pred->not;
+> +
+> +	return pred->not;
+> +}
+> +
+>  /*
+>   * regex_match_foo - Basic regex callbacks
+>   *
+> @@ -1617,6 +1633,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
+>  		return filter_pred_cpumask_cpu(pred, event);
+>  	case FILTER_PRED_FN_FUNCTION:
+>  		return filter_pred_function(pred, event);
+> +	case FILTER_PRED_FN_CALLER:
+> +		return filter_pred_caller(pred, event);
+>  	case FILTER_PRED_TEST_VISITED:
+>  		return test_pred_visited_fn(pred, event);
+>  	default:
+> @@ -2002,10 +2020,28 @@ static int parse_pred(const char *str, void *data,
+>  
+>  		} else if (field->filter_type == FILTER_DYN_STRING) {
+>  			pred->fn_num = FILTER_PRED_FN_STRLOC;
+> -		} else if (field->filter_type == FILTER_RDYN_STRING)
+> +		} else if (field->filter_type == FILTER_RDYN_STRING) {
+>  			pred->fn_num = FILTER_PRED_FN_STRRELLOC;
+> -		else {
+> +		} else if (field->filter_type == FILTER_CALLER) {
+> +			unsigned long caller;
+> +
+> +			if (op == OP_GLOB)
+> +				goto err_free;
+>  
+> +			pred->fn_num = FILTER_PRED_FN_CALLER;
+> +			caller = kallsyms_lookup_name(pred->regex->pattern);
+> +			if (!caller) {
+> +				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
+> +				goto err_free;
+> +			}
+> +			/* Now find the function start and end address */
+> +			if (!kallsyms_lookup_size_offset(caller, &size, &offset)) {
+> +				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
+> +				goto err_free;
+> +			}
+> +			pred->val = caller - offset;
+> +			pred->val2 = pred->val + size;
+> +		} else {
+>  			if (!ustring_per_cpu) {
+>  				/* Once allocated, keep it around for good */
+>  				ustring_per_cpu = alloc_percpu(struct ustring_buffer);
+
