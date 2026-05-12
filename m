@@ -1,128 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C23F4949F9;
-	Tue, 12 May 2026 08:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EEB3672BA
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 08:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778574164; cv=none; b=qJcxzZHBiYXViHleMxgBLxHYb61Mpp+EZCknO3CJz38oQYwSUr3Wx+ZKPHOib/8K40T7kS2TJT8cC57p68KOOhbX9Dce6KxSYvPDBYgroyti2+piLSkGe+/QkLwZ/ov4Ectl+5lnonxoheDhF6LVl0pl4LouJlEycP2MRGUrC2E=
+	t=1778574476; cv=none; b=UC05ndF20IckyDVJZNcNvJ96Z4RJyyOSPAqcQG8n6PstV2HvBDnXACWzUfwwQO/bpTZMK7axnWt3c1Wx5fe+S1lebmAunLPTde0Z3uW76bfnhSXpwyNGB7PEC8GXOtJnc3v8IaFdtX4WQJQY6iFsX0xF6asbzbKSUMRvvSnU4q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778574164; c=relaxed/simple;
-	bh=ni0UxaK6U6J7nDb32Vm336GAcjOxiGHM4mmYEl06cwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J7m3CMMj9OmvuAzUn6EIEB8Xc/UWtzX0ZUw0SgabOC0EKh6gKLEIjrUJ5Eacy2o6ylNLT7MoF8XDkUNd2QNoqKUUj6rN2b7d+Bi8ACW4j64PnLJjR94FwtnfWlwbq9HicCuqWQ8o0P6Fyos5TaddYdF/n1G5T3O+SsAco4Sa0rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8Fr8KxJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778574476; c=relaxed/simple;
+	bh=joffnHKujoU/Gko7D3WXw1qkn5zCkOcUai5IiE9r8IE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s/TLRflKRD8wW2U/pwGmiTI1O6jdT4ME83u1d+Vx+qbNt7onkS1TJP+GBpiVD58W9iY/EFQDizR6IrkRHKblQ2AswpQk+KuBoIVfF3ZSYRGQn3WeaojvrRVKY0Hq3UJ1waz/oXsxJRvO977BB8Ztny57vDerrRLkXtOby+Q659I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NmJ8V8eY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8Fr8KxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9E8EC2BCB0;
-	Tue, 12 May 2026 08:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778574163;
-	bh=ni0UxaK6U6J7nDb32Vm336GAcjOxiGHM4mmYEl06cwk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a8Fr8KxJOOCGoI0HMLCHdruOThN3aUAAXoiQ0FX7e8xaSxBlda2QfjkE4vUYRFgeE
-	 VIkg5CWLYbbTzAtIxVcT67HMj4s0/mNv7A66FF7fhUtRKCy1pSe7y4nbD4Xl4C7q2b
-	 3hIk/sEB2KBVVrnoYx16qaMP+Ke+LjRaYyJV5N6T+4jz8o40lPloH1JMyVTk5IvVgU
-	 ferDYsrDODOhojxaF9xK5A/WrZTHmYmXTFi2sHBohOWlIgHhXNokikQc2N+p6awpId
-	 1hIK5d5HW6U3z+X/siVn8UpTVYHuxfpGSUchEa72TcyFt0JhZ1eZbxxBuPMocHQMDQ
-	 4lYjaHwDekm2A==
-Message-ID: <8d4940bc-d8c4-4e7f-a35d-979e6a781966@kernel.org>
-Date: Tue, 12 May 2026 10:22:38 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NmJ8V8eY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778574474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=joffnHKujoU/Gko7D3WXw1qkn5zCkOcUai5IiE9r8IE=;
+	b=NmJ8V8eYXfs4D/lgcOLew0sQgoQ3Gndni5J8bHOaHlS20s91SSGsC8TR5ywfH7fiBw0sL9
+	r1Wk2tHAX4qiA1RrE8Xp6LLuRHm1fMplhlNhySQlmati462PLbBJ/PPI4Zi+SbyomF0IVv
+	fSTWIXxn0jVPEz21/LsUY6+g/dUK5y4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-45-lgJzScXWNqCfx0xK7llpWg-1; Tue, 12 May 2026 04:27:53 -0400
+X-MC-Unique: lgJzScXWNqCfx0xK7llpWg-1
+X-Mimecast-MFC-AGG-ID: lgJzScXWNqCfx0xK7llpWg_1778574472
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-44d79da8cf7so4900915f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 01:27:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778574472; x=1779179272;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vGKQtZGC1c4txfn6v0+W7d7uIVSHAwg4MX9gaJVmjPY=;
+        b=VeQzV4K5zn0h2vj3v46nM2s3XLxnWfEI9Oii9vli9noZAf4mrDw0pCbTJkLQv4RB3H
+         IVbsyErtlAf85ngF6Xg7y3J5V37+zzn0myV1ZGdBT+BTJvLNrbXeuIbxofPTUGIg7Cl8
+         THBhpRdjweJJxmCCVRqLNtCf5I18oXUaVvORtjcTZZvox079suUBgaWzlqv83EdoO1P6
+         VYVnWQi8jllyRvrNTB1HVex3Mjl4eVP1GjwPKd7EiEKUAXGsZ0s1OQClSBztjiLY+M6T
+         RQ12SAiWbgWu7LQZhzlKmhxKnFNAlX7GK6nFVrSZr8L24pRMjyKVrl6Kujuoy2fpR9tl
+         aQ+Q==
+X-Gm-Message-State: AOJu0Yz6CPsZFdV3V0BBd//OSEDuIK2dTtF1GtkPFtRKvLgXDI+K9LZD
+	/XD4ZPdn6yzK/fp1K41t/yl4DsCq3tT9fsAPdyngw0ZNdhGGLy5nEimFCeh/o6DLPlTSHL2Hhg7
+	LMITkLr1eK/PV63iZrPQ/O9KbZNZ5R/5PpVP3NL3yELVSCmfFVEZFXACJjqP8KwYIczBPJBvrJ4
+	t69pHLeVaV
+X-Gm-Gg: Acq92OEs/Kf49Gg/qhYTTegjQgj3Uu5BO2SIo7s9eCv8zWuhm7HJePuyrxIN2Q+YTPJ
+	APHRk58F3b76mup6TEvQOKJHnSNRUfiyCJxogYTijPzaW7hHFSTX4BbWkVXfelQPIuf3+9R34vU
+	dZ1gaFXpMZ99PRDLOhatyJiGHlV3lPnrGHEpsWoLGLJezhWcwnYwwL4Ojia/A27uQDKZUBYZizH
+	4udA4M7zkotg79DJenqQiJGhGvQqAxTE0R/94CSeQoXChoTYLZc+VzrKszLLdTFtc1Xtt3k4zwd
+	2venVXjTJigVz5tw1GS2gWXo3GgKBTlgHUL8MbOph8uLYlyMk9s1SZpYHPoqhCGQBrvov9yku6y
+	yGxVx5w9YV2drx2YgrPml97gxzM5E5EwA56bBI7BEn0vLF2KCbFg45FTWmvcgZ4AEjK6kkCEg03
+	l1Wn3dKI6yHEROC9s=
+X-Received: by 2002:a5d:5f82:0:b0:44e:1984:5f3e with SMTP id ffacd0b85a97d-456a46e8db9mr19103459f8f.31.1778574471836;
+        Tue, 12 May 2026 01:27:51 -0700 (PDT)
+X-Received: by 2002:a5d:5f82:0:b0:44e:1984:5f3e with SMTP id ffacd0b85a97d-456a46e8db9mr19103417f8f.31.1778574471429;
+        Tue, 12 May 2026 01:27:51 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4548e4bbebdsm34017062f8f.5.2026.05.12.01.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2026 01:27:51 -0700 (PDT)
+Message-ID: <f654a17c671469fd8fc9ea438daf2266d05068d4.camel@redhat.com>
+Subject: Re: [RFC PATCH v2 02/10] rv/da: fix per-task da_monitor_destroy()
+ ordering and sync
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>
+Date: Tue, 12 May 2026 10:27:49 +0200
+In-Reply-To: <d02c656aada7d071f083460a5c9a454363669b61.1778522945.git.wen.yang@linux.dev>
+References: <cover.1778522945.git.wen.yang@linux.dev>
+	 <d02c656aada7d071f083460a5c9a454363669b61.1778522945.git.wen.yang@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/4] mm/memory-failure: add panic option for
- unrecoverable pages
-To: Breno Leitao <leitao@debian.org>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <liam@infradead.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20260511-ecc_panic-v6-0-183012ba7d4b@debian.org>
- <20260511-ecc_panic-v6-3-183012ba7d4b@debian.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260511-ecc_panic-v6-3-183012ba7d4b@debian.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 5vMlHPu170kfQghgfRwag76Ip6VaJ3bfeABMUYK-tcs_1778574472
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2026-05-12 at 02:24 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> The following two paths race:
+>=20
+> =C2=A0 CPU 0 (disable_stall/__rv_disable_monitor)=C2=A0 CPU 1 (wwnr probe=
+ handler)
+=09=09=09=09=09=09=09^ did you mean stall?
+> =C2=A0 ------------------------------------------=C2=A0 -----------------=
+------------
+> =C2=A0 disable_stall()
+> =C2=A0=C2=A0=C2=A0 da_monitor_destroy()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 da_monitor_reset_all()=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <------ [task T: monitoring=3D0]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 da_monitor_start(&T->rv[n]=
+)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* no timer_setup */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 monitoring=3D1=C2=A0=
+ <----
+> =C2=A0 tracepoint_synchronize_unregister()
+> =C2=A0 // CPU 1 probe has already returned; sync returns
+>=20
+> Later, enable_stall() acquires the same slot and calls da_monitor_init():
+>=20
+> =C2=A0 da_monitor_reset_all()
+> =C2=A0=C2=A0=C2=A0 da_monitor_reset(&T->rv[slot])=C2=A0=C2=A0=C2=A0 // mo=
+nitoring=3D1, timer.function=3D=3D0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ha_monitor_reset_env()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ha_cancel_timer()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 timer_delete(&ha_m=
+on->timer)=C2=A0 // ODEBUG: timer never initialised
+>=20
+> =C2=A0 ODEBUG: assert_init not available (active state 0)
+> =C2=A0 object type: timer_list
+> =C2=A0 Call trace: timer_delete <- da_monitor_reset_all <- enable_stall
+>=20
+> Call tracepoint_synchronize_unregister() inside da_monitor_destroy()
+> before da_monitor_reset_all().=C2=A0 The unregister_trace_xxx() calls in =
+the
+> monitor's disable() have already disconnected the tracepoints; the sync
+> here drains any handler still in flight, so no new monitoring=3D1 can
+> appear after da_monitor_reset_all() clears the slot.
+>=20
+> Also fix the slot release ordering: release the slot only after
+> reset_all() to avoid accessing rv[] with an out-of-bounds index.
+>=20
+> Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> ---
+
+Thanks for the fix, I have a similar one waiting for submission.
+
+These are technically 2 separate fixes though: the ordering with unset
+task_mon_slot (independent on HA) and the synchronisation with pending
+tracepoints. They probably deserve separate patches and visibility, the fir=
+st
+has always been around and we're technically overwriting who knows what.
 
 
-> @@ -1281,6 +1292,18 @@ static void update_per_node_mf_stats(unsigned long pfn,
->  	++mf_stats->total;
->  }
->  
-> +static bool panic_on_unrecoverable_mf(enum mf_action_page_type type,
-> +				      enum mf_result result)
-> +{
-> +	if (!sysctl_panic_on_unrecoverable_mf || result != MF_IGNORED)
-> +		return false;
-> +
-> +	if (type == MF_MSG_KERNEL)
-> +		return true;
-> +
-> +	return false;
+The explanation above is a bit hard to follow though, are you talking about=
+ a
+handler for the same (stall) monitor running after the reset, effectively
+undoing it by setting the monitoring flag?
 
-return type == MF_MSG_KERNEL;
+Then this is indeed an issue with ha_monitor_reset_env() which expects a cl=
+ean
+environment.
 
-might be simpler.
+So that's basically what you'd see now much more often because in fact we d=
+on't
+reset the right slot (though, again, that's a different issue).
 
--- 
-Cheers,
 
-David
+Calling tracepoint_synchronize_unregister() there too would surely fix, but=
+ it
+used to be kinda slow. But it's probably gotten faster since now tracepoint=
+s use
+SRCU, so we can wait for a dedicated grace period.
+
+I liked the idea to wait cumulatively in the end, but that's just making th=
+ings
+harder.. Let's do like this:
+
+Prepare 2 separate patches as fixes, put the task slot one first (would eas=
+e
+backporting), mention this issue with the race condition only in the second=
+.
+You can send them independently and I'll add them to the tree as urgent.
+
+
+I'm soon going to send my set of fixes that will also include the task slot
+patch (not removing to ease my life with conflicts).
+
+Thanks,
+Gabriele
+
+> =C2=A0include/rv/da_monitor.h | 18 ++++++++++++++++--
+> =C2=A01 file changed, 16 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+> index 00ded3d5ab3f..d04bb3229c75 100644
+> --- a/include/rv/da_monitor.h
+> +++ b/include/rv/da_monitor.h
+> @@ -304,6 +304,20 @@ static int da_monitor_init(void)
+> =C2=A0
+> =C2=A0/*
+> =C2=A0 * da_monitor_destroy - return the allocated slot
+> + *
+> + * Call tracepoint_synchronize_unregister() before reset_all() to close
+> + * the race where an in-flight non-HA probe handler sets monitoring=3D1
+> + * (without calling timer_setup()) after da_monitor_reset_all() has
+> + * already cleared the slot but before the caller's own sync completes.
+> + * Without this barrier, an HA_TIMER_WHEEL monitor that later acquires
+> + * the same slot would call timer_delete() on a never-initialised
+> + * timer_list, triggering ODEBUG warnings.
+> + *
+> + * Note: tracepoint_synchronize_unregister() is a system-wide barrier
+> + * that waits for all CPUs to finish any in-flight tracepoint handlers.
+> + * The caller's own __rv_disable_monitor() issues a second sync after
+> + * returning from disable(); that redundant call is harmless on the
+> + * infrequent admin (enable/disable) path.
+> =C2=A0 */
+> =C2=A0static inline void da_monitor_destroy(void)
+> =C2=A0{
+> @@ -311,10 +325,10 @@ static inline void da_monitor_destroy(void)
+> =C2=A0=09=09WARN_ONCE(1, "Disabling a disabled monitor: "
+> __stringify(MONITOR_NAME));
+> =C2=A0=09=09return;
+> =C2=A0=09}
+> +=09tracepoint_synchronize_unregister();
+> +=09da_monitor_reset_all();
+> =C2=A0=09rv_put_task_monitor_slot(task_mon_slot);
+> =C2=A0=09task_mon_slot =3D RV_PER_TASK_MONITOR_INIT;
+> -
+> -=09da_monitor_reset_all();
+> =C2=A0}
+> =C2=A0
+> =C2=A0#elif RV_MON_TYPE =3D=3D RV_MON_PER_OBJ
+
