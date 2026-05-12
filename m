@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A1739FD9;
-	Tue, 12 May 2026 00:16:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879011448D5;
+	Tue, 12 May 2026 00:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778545002; cv=none; b=qa8auuR/NFpY9XJWy4oPTygWEsIAUafz+lomtiA/C/7wFiWjKYruYWydGwT2IoQAbTpTMG/Xs+owXTlFZUwUAy8l1ExJlsuhdOX86RjVjPDWKFGYGyHGGqOrsACTsLnznfYOlPv2fb/Kqr8TBezQLnXfcsbAW9PPbCvAKFeEBb0=
+	t=1778546621; cv=none; b=ZCp5wlDJ0RHz/JKqAjO7dEFEZKGCj8hOwptu3ykQjgzFKQjcnY+FIsYrnFylweM7ks/jLwoDx7QPqzDvNw1uHEuzWHQnnsyrowmYOT3LyGKFF3kGF9E5j6fECglO8gX5Q9u+0pAYr78U4QKWwavtILvNlqtILfCwWPhTjR7tH7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778545002; c=relaxed/simple;
-	bh=oOz5EXdk6rMc/V0s+CRCekTvAdYe44DJ42tAZEbuREU=;
+	s=arc-20240116; t=1778546621; c=relaxed/simple;
+	bh=NkUW6edDKAepH73rXX0Zr6HQcAMINqiVFnDeCFxC1lk=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=JoZanueLLWPWPcinNRB25hLGpF0tyVrni4XkxqSVvqPob63UTvz4DrG3q7e9K9LrxxJVcnM6ZG3PJSOT4PGEkJkKxnPfYQlksXTe6D9zjx5gvKwfCG+/PvSRW6Y/OyROVS/V+n+xQcVW80obH8rHR2J3wO/9WjDRsgX4G5g7hvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIN9TG6/; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=DdFJvzIw+L/cgZwfnQcz5F/IO45JZvfFQInsOlgTIMLVW7EAH/AgaQajrV51nqcYje727x53dgYnP1TtuPbtm1fjhZIUTV8+8uYHop7KSLlNYk+L4Xf4CgQtQ1O+fNVIG4GpaKsJnCQItjws4eyG9RGVVlmMuTorS0OWHKhp+1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuxsCwGR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIN9TG6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B915EC2BCFB;
-	Tue, 12 May 2026 00:16:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuxsCwGR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31244C2BCB0;
+	Tue, 12 May 2026 00:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778545002;
-	bh=oOz5EXdk6rMc/V0s+CRCekTvAdYe44DJ42tAZEbuREU=;
+	s=k20201202; t=1778546621;
+	bh=NkUW6edDKAepH73rXX0Zr6HQcAMINqiVFnDeCFxC1lk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IIN9TG6/KAa+QS6omXwg9xQJWFIqUI6sYtPx8jOYe7YgsAEk40n8aMCpNusK8IXdc
-	 R77sIGKRoQbmpyLgd2E/oYI1f2c0qLvUfw+rYBzwCuIJoshfIHlbiDZV8veyCNMY5Q
-	 ZoTlXiWf2YV+U891k8WAkbhQ7Xn4wYfIbOKBT/G+RonXyHMVGEYeAKrhscNAjlYY+S
-	 rp7HOaLVR8Oxv6xeJDnKP1ONeT1EBa5OZXlJj45+7+2KTgy2LMbIwzOIdp5iA3HskV
-	 DyexfTpYEzHVb1YgD01/9pfofarMrO78j6NSE7EB0+QKXBpvW8Or46BlMzkOhYeZwQ
-	 EyzkO7wgIB10w==
-Date: Tue, 12 May 2026 09:16:38 +0900
+	b=tuxsCwGR8baMcOyJ/sWuD/t/odZFcskuk4ZRkIqXbeGS3B1JWfUdLwHfGWRMJx9G7
+	 2NIuQolZBEILEcgfHvlD9lT7nM7S6+rnP0dpDTDoBAMABcGNnrAeBgWD/3PtLUICol
+	 Sy6+9KkfuY8aQ5B4+J/dmI7JVT1+GpBCjW97wUGJ4h4m/DS+NTeg6wtJshCwVxzcUh
+	 bh9P/lHqipL+lRCd/JX+BUIJ8wZbCyDUaRdV0i8Wk9rAuXgJfHmO6e7TDN+/tSCNuQ
+	 7zYRoPKjq8x4fR1UzB2XSdETzQIqpYVtLb6+s0hWcrxFswjl6aBs1773h7XF/TTn68
+	 l9a9QagIV6F1g==
+Date: Tue, 12 May 2026 09:43:36 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Dan Carpenter <error27@gmail.com>
-Cc: kernel-janitors@vger.kernel.org, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-kernel@vger.kernel.org, Breno
- Leitao <leitao@debian.org>
-Subject: Re: [bug report] bootconfig: init: Allow admin to use bootconfig
- for kernel command line
-Message-Id: <20260512091638.8b95253ab022d7dabf473465@kernel.org>
-In-Reply-To: <af4YTUrDM-ciyoa-@stanley.mountain>
-References: <af4YTUrDM-ciyoa-@stanley.mountain>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, paulmck@kernel.org, oss@malat.biz,
+ kernel-team@meta.com
+Subject: Re: [PATCH 0/2] tools/bootconfig: render kernel.* subtree as a
+ cmdline string
+Message-Id: <20260512094336.fc548d199a08771471c0f37c@kernel.org>
+In-Reply-To: <agIFZ0vSfedX7foN@gmail.com>
+References: <20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org>
+	<20260508145641.754e4c7f73eabad0b5f89a1e@linux-foundation.org>
+	<agIFZ0vSfedX7foN@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,101 +50,61 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Dan,
+On Mon, 11 May 2026 09:38:25 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-Thanks for reporting. A similar problem is pointed by Sashiko [1].
-
-[1] https://sashiko.dev/#/patchset/20260508-bootconfig_using_tools-v1-0-1132219aa773%40debian.org
-
-On Fri, 8 May 2026 20:07:25 +0300
-Dan Carpenter <error27@gmail.com> wrote:
-
-> Hello Masami Hiramatsu,
+> On Fri, May 08, 2026 at 02:56:41PM -0700, Andrew Morton wrote:
+> > On Fri, 08 May 2026 06:55:02 -0700 Breno Leitao <leitao@debian.org> wrote:
+> > 
+> > > Add a bootconfig -> kernel cmdline rendering capability shared between
+> > > the kernel parser library and the userspace tools/bootconfig binary.
+> > > 
+> > > The new userspace mode "tools/bootconfig -C <file>" walks a bootconfig
+> > > file's "kernel" subtree and prints it as a flat, space-separated
+> > > cmdline string suitable for direct use as (or appending to) a kernel
+> > > command line.
+> > > 
+> > > This series prepares tools/bootconfig and lib/bootconfig.c for an
+> > > upcoming feature that lets the kernel build render an embedded
+> > > bootconfig file's "kernel" subtree to a flat cmdline string and embed
+> > > it in the kernel image.
+> > > 
+> > > The follow-up series (sent separately) wires this into setup_arch() so
+> > > early_param() handlers see values supplied via CONFIG_BOOT_CONFIG_EMBED_FILE,
+> > > following Masami suggestion in [1]
+> > > 
+> > > These two patches are pure groundwork. They add no kernel feature,
+> > > change no runtime behavior, and are useful on their own (the new
+> > > "tools/bootconfig -C" mode lets anyone render a .bootconfig file to
+> > > a cmdline string from the shell).
+> > > 
+> > > Landing them independently lets the follow-up series focus on the
+> > > kernel-side plumbing without dragging the refactor and tool addition
+> > > through the same review cycle.
+> > 
+> > I'll assume that Masami will process this, although
+> > `scripts/get_maintainer.pl lib/bootconfig.c' doesn't mention a git
+> > tree.
+> > 
+> > https://sashiko.dev/#/patchset/20260508-bootconfig_using_tools-v1-0-1132219aa773@debian.org
+> > says a bunch of picky things which seem pretty ignorable to me.  Your
+> > call ;)
 > 
-> Commit 51887d03aca1 ("bootconfig: init: Allow admin to use bootconfig
-> for kernel command line") from Jan 11, 2020 (linux-next), leads to
-> the following Smatch static checker warning:
-> 
-> 	init/main.c:368 xbc_snprint_cmdline()
-> 	use scnprintf() instead of snprintf()
-> 
-> init/main.c
->     331 static int __init xbc_snprint_cmdline(char *buf, size_t size,
->     332                                       struct xbc_node *root)
->     333 {
->     334         struct xbc_node *knode, *vnode;
->     335         char *end = buf + size;
->     336         const char *val, *q;
->     337         int ret;
->     338 
->     339         xbc_node_for_each_key_value(root, knode, val) {
->     340                 ret = xbc_node_compose_key_after(root, knode,
->     341                                         xbc_namebuf, XBC_KEYLEN_MAX);
->     342                 if (ret < 0)
->     343                         return ret;
->     344 
->     345                 vnode = xbc_node_get_child(knode);
->     346                 if (!vnode) {
->     347                         ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
->     348                         if (ret < 0)
->     349                                 return ret;
->     350                         buf += ret;
-> 
-> In user space snprintf() can return negative, but in the kernel, no.
-> It returns the number of bytes (not counting the NUL terminator) which
-> would have been copied if there were enough space.  So maybe you want
-> to do something like:
-> 
-> 	remain = rest(buf, end);
-> 	ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
-> 	if (ret >= remain)
-> 		return -ENOSPC;
+> Well, these are some warnings about not checking that the output was
+> properly set. From my view, these are not new to this patch, it is just the
+> pattern we see, which is fire-and-forget writes to stdout, which seems
+> quite reasonable.
 
-Actually, we need to query the length of required buffer size if buf == NULL
-or the buffer size is not enough.
-
-But as Sashiko pointed, I need to check it with UBSAN. (but I think,
-even if @buf is NULL, the @buf is char *, thus it is safe to add some
-value...)
+I confirmed there was no problem with UBSAN.
+"NULL + 1" is undefined, yes, but "(char *)NULL + 1" is sane.
 
 > 
-> Or maybe you might want to use scnprintf() which returns the number of
-> bytes actually copied.  Otherwise bug ends up pointing to beyond the end
-> of the buffer.
+> If we decide to fix this, it would make more sense to do it file-wide
+> instead of just in this patch code.
 
-No, I need to calculate the required length of buffer.
+So no need to fix it. Let me pick this series.
 
-Thank you,
-
-> 
->     351                         continue;
->     352                 }
->     353                 xbc_array_for_each_value(vnode, val) {
->     354                         /*
->     355                          * For prettier and more readable /proc/cmdline, only
->     356                          * quote the value when necessary, i.e. when it contains
->     357                          * whitespace.
->     358                          */
->     359                         q = strpbrk(val, " \t\r\n") ? "\"" : "";
->     360                         ret = snprintf(buf, rest(buf, end), "%s=%s%s%s ",
->                                 ^^^^^^^^^^^^^^^
-> Same.
-> 
->     361                                        xbc_namebuf, q, val, q);
->     362                         if (ret < 0)
->     363                                 return ret;
->     364                         buf += ret;
->     365                 }
->     366         }
->     367 
-> --> 368         return buf - (end - size);
->     369 }
-> 
-> This email is a free service from the Smatch-CI project [smatch.sf.net].
-> 
-> regards,
-> dan carpenter
-
+Thanks!
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
