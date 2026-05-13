@@ -1,221 +1,195 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9FE399017
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 22:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778625029; cv=pass; b=Aox+mAfHwZnFevAPSxQb5t+lTquHikyRB6I50LizLdAARxk7fzEF0P5Kb9KTRaadzH0bt4RTVS/p/uAmeTNNeK2tpZenQhKjS2CX7+z6Wgon7rWcWTkkWpgOYqboubiuCgqH+P0G3jv9+utMhMHnenS8/baxS2674kcrL9QvRe0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778625029; c=relaxed/simple;
-	bh=ctAmtD5i9O0zXAJdPtZK0rAgm3gUJsIsE1gDEZWd5XA=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hBwS2Q3LMGW3hZuFWt+K4X2ms5b+3Wx52oXWc6Oi8bNnsfUf8FGXSu2v5tjfsQRkB/dY7B2JVRwB4vqQxgQHwRO2lng3A/tyoIXln8EhjLpbJWnCIsk6ehCRmzy8E5cYQJhE8VDz9ePrG7rAr3/gnci+WMw5D1uRZS5LSS7zHpk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z3P+1mkz; arc=pass smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229E522A1D4
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 00:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778633187; cv=none; b=hGEjwrUM2DkRbzvue/eH/Z2PBGHfWAunFyjkkN7YsO6VU06nDMauKKhcPn8rJVMOY9smY5lvEwOEsq1SkNRr+T6n2Hp/ank6nPa80HzKt/1mooiBd5RVXVumLqaeHq//XCEdVLqN0CUZUGnABo4aecHISXqVZtj1WlgDZY7rUOE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778633187; c=relaxed/simple;
+	bh=oq50o2jZ/FE6vpJ/bSMHOFkTcMQ+X7MiMgufB/YUPsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lgTZa0UTXmVCRt6iqjtBIH5o4BImcW/QFEwsQXcOuV8riKO4I3Gq1hRnPxwcj3G3X9x9JVLOsiaMKNoNo8u6gtowQYh/S2pLgJUrNdmUcwYkPVdrUaxt07NNzh0gRZqhMNh5h3CSGcCoiIH0yl4IwlrWGThRvXIcOB4JVxAzLzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MKfO+d2N; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z3P+1mkz"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-95f2b0bd920so2434992241.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 May 2026 15:30:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778625026; cv=none;
-        d=google.com; s=arc-20240605;
-        b=lKr73qtRLZ0ahVaTjJ8ymwJkkmnNsRNgnXK95kOCs0o/VCX5jssxgOkQ5gNNZRboSd
-         rsH/sAlWjpR3ALaK2I+6G7HqKBkdcrWnyUU+Im+fRLOwt2sqk9rzFmg9EWCV75kPmcej
-         UgXDTaJ4awmCHrx649pEbf3cige8ESuaeYwn7e2wHmQWuyc35dS1A9n/4myzIaom5aRL
-         BfOp5N23nbN7+K/fZawQizG1C4Yk2SaBHc0R4oA69Xv9C48rdKpj70fqJtDq2pSubSuS
-         SChwIYHAhGUbIMiyE1DvLL5fYy2G9xqBfLTh07Vugef3u/5eInETqT5m+t7olkJapZWA
-         TZNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:dkim-signature;
-        bh=7TPT8725vjJaWzYD56fEvXZ06oMkvP85Hz1/t121+lc=;
-        fh=yEsycWlgPuIS/L4uoplwhNL18Pe6yB6+yTPoa05Y3x0=;
-        b=S7lSfJeLAlJfu/zx9lrjlrmhUM12MjKUPjWnQR2PlPWI9NWVldQ/iSnCeshuSuhgHs
-         eOFDRENCWhMv0YACA1xpwEs/PY53/0Zpr9vtjlnso38s+VhYOGAWseEMzQbq9JGyVaDu
-         vm0n17s8bSnR38stBFmz6/wt5K8umdeo9DaH6I+rTahP41bGUoKsVyFJPuRWXWjg0l9z
-         s/hip/3AJfTonpOwFoEtpRy14l4/cNNxBXWeOklo7r8cpWyEkKXdN0t55VgXnHVVRdT+
-         tPUDeesdrvudEOxuDCOzdYEDEizYD9tTRlPvhE/OKA2BIsZQcf3u7eyPNirM4b0UTFQY
-         dxrQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778625026; x=1779229826; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7TPT8725vjJaWzYD56fEvXZ06oMkvP85Hz1/t121+lc=;
-        b=Z3P+1mkzpj8h4Ny2fRAwAu8+rBE8RmY/hqTESjapBAiEuZat4VHSRDf/jOos2uaYkS
-         VieRx0q/g0gGq2sQW4x4U/jX3graJAZbntlqD1wSsROXwdHc70mRKKtYEOrOfGw4zssZ
-         zfatOl88ZcEA+Bw+ZJR1JaW4a3CQR8E1uCy1Gv5nd+MD4fJLj54BN9xxXLD67vhRIOlV
-         r7T+Lf0eC/M3qQrsBJQsJR1KeTBc5TsP5AzTGh/QLkC+KIo4rn8BYvrUlGprsuaf+54N
-         +5rdI9/+eSyZCXoP7wCwcOvjjjR8b+C6rbemjMgDYsFjoTrTStrU0XaTwOv63HW47jJc
-         pSpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778625026; x=1779229826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7TPT8725vjJaWzYD56fEvXZ06oMkvP85Hz1/t121+lc=;
-        b=OXO9gbQRw0xNJ8L2Ji0rPeIrKnvtJlsFOQD1nttFKFfAvCK5VT1sZQ/jPNryG4LQt5
-         gn/TBnmFamFZ59LPn+GKpz3sFx3Ru4C2+QgAHHOsuToU5bq81ffaJ1bZXYjmvpOMBn85
-         h0mgCtvQyPozczcRbjyBm+uGNZlExjhjMybtv2j7ZxlNvNn7lwlGU3NHwCI66fshcPiV
-         JvqWAo1vlAmmfOc+uZ31nZn1VjCspt1WlxjTyi3ak92AmKkrIK5jAhQFlSZXtZoa+EDO
-         0F3z5hNIdhlIoRUO4a9Es/NqcWfaPUijWJhYr6oX8nyscwOpver2msEieOhzwhMqjd+E
-         mGag==
-X-Forwarded-Encrypted: i=1; AFNElJ8G5VkGANKhHAdkKoM8NFBjpHrJkfRlG0QmyJIAgT01qvkOAg7Ozn0IC1NOCtWAdwARKPnC4D2T++ti/WQ6rITC2ZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykZi17A00sr1vnoVdCmCON8xdDU419HBQYmF3rNrlLcv8ahg1Z
-	5KG9P7IQS+2w+bsAoXVGpLwXEYKAK/tbkBfc2Q/mUoO54972sNgrWknrNqnDlz5aBrHwEapkDhY
-	tDyA7hj2dr/0X18uQJdaom4CSWhXBd3VEmEWRYMYp
-X-Gm-Gg: Acq92OHZrXG9+sS/U3PRFKQmweoWksI2ZEE5yC95V2IoFoLhkzQJBv//tila3ic4RNr
-	Ami7lr35Y/FGTnFrQzYm7vPe0TRJBex/M/RSC7bymyFTg6xAXBTIoGLpKaEej2PjDYsDjq9xKGu
-	ihmEXSshv3NaM9mHsmACJjLJMkaRQNasG+foXpFXUId9DDDMNo5UPKP288ue4N9MlM7Hpt5e7XR
-	5IzK1eHWdj0swJV2RwAkaaO7xEympqceB0LJobNMcdN8nZkweA5oUOyRcnSHl4FWt/jiM4Vz3lm
-	3bEgkEOhzVw5Nx+Y9oVPkNyfAvmY/OLqZJzHaDoTPxXJ9p6Q94SRBMmYUUPt663ViqixFrce0oq
-	2wZhr
-X-Received: by 2002:a05:6102:442a:b0:632:3bd5:d57c with SMTP id
- ada2fe7eead31-635ced54981mr2555380137.3.1778625025472; Tue, 12 May 2026
- 15:30:25 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 12 May 2026 15:30:24 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 12 May 2026 15:30:24 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <1DAB05E2-7F30-45D7-B155-B66C59D31AFF@infradead.org>
-References: <20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com>
- <20260428-gmem-inplace-conversion-v5-10-d8608ccfca22@google.com>
- <n5ce32wumzeiqqyqutom4apy2kqfetbvusc6j4k2xarsska5mw@klp5bmy7qhfm>
- <CAEvNRgF9+Gr7UVEq-E2SQEb_XOQQMOXy9F_A2tA=DbNV_fJ0EQ@mail.gmail.com> <1DAB05E2-7F30-45D7-B155-B66C59D31AFF@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MKfO+d2N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778633185; x=1810169185;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oq50o2jZ/FE6vpJ/bSMHOFkTcMQ+X7MiMgufB/YUPsU=;
+  b=MKfO+d2NGh0ybhD2zo3wOYKeHn4bI/SZibKwgKcBXxb+V3Nvvn2A87d8
+   yY4nNDfmDXG9wD+ECzN4cpRhX6uns/z7vuYPrRNuO6ItKftluR7e970Wf
+   8H+C8htpD7f2iLfGRS/UWHTV9gvn3oSDcHNuUMqwmxmmKsMxGPhkV4foz
+   G00Dm0hK1qILM3hDYN2txrdJMa8hxmgaIf/oaN1J4B3ZeKmD1r4uev6e9
+   efA/gQ0EeOWYBEn9Evrl9Vt9Y2Kq/lr196tAXCXoqs1Rc87dIq0WspY9w
+   FtwmJgjyO8Zw3g3z8C/iM5uiWa8oq7OZsKspD0qAX94bzaOlTAk+A6DDm
+   Q==;
+X-CSE-ConnectionGUID: AvIRZD0uQCiM+RitcaZcOQ==
+X-CSE-MsgGUID: LNgjIYGbR4yd93KoLjpCnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="79575380"
+X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
+   d="scan'208";a="79575380"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 17:46:25 -0700
+X-CSE-ConnectionGUID: DJ77aG+sRde05p92hl8NOA==
+X-CSE-MsgGUID: kxT61vezSeWwPOhyY8Dntg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
+   d="scan'208";a="235256383"
+Received: from lkp-server01.sh.intel.com (HELO dca79079c3eb) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 12 May 2026 17:46:22 -0700
+Received: from kbuild by dca79079c3eb with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wMxjv-0000000034F-1Qur;
+	Wed, 13 May 2026 00:46:19 +0000
+Date: Wed, 13 May 2026 08:45:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: "qiwu.chen" <qiwuchen55@gmail.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+	david@kernel.org, mhocko@kernel.org, willy@infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, "qiwu.chen" <qiwu.chen@transsion.com>
+Subject: Re: [PATCH v2] mm: vmscan: rework lru_shrink and write_folio
+ tracepoints
+Message-ID: <202605130842.zWTTtyaL-lkp@intel.com>
+References: <20260506083652.100160-1-qiwu.chen@transsion.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 12 May 2026 15:30:24 -0700
-X-Gm-Features: AVHnY4Lh8UobS4TfgaX3AzC6MvTUmkcUL18qAWSQRch3a7T6C4hmHCpmi3zo20A
-Message-ID: <CAEvNRgGgggCPKRzd0=r5jV7stxFJVGzj3as_awGytonx9qdfLw@mail.gmail.com>
-Subject: Re: [PATCH RFC v5 10/53] KVM: guest_memfd: Add basic support for KVM_SET_MEMORY_ATTRIBUTES2
-To: "Liam R. Howlett" <liam@infradead.org>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260506083652.100160-1-qiwu.chen@transsion.com>
 
-"Liam R. Howlett" <liam@infradead.org> writes:
+Hi qiwu.chen,
 
->
-> [...snip...]
->
->>
->>The invariant in this maple tree is that contiguous ranges with the same
->>attribute are stored as a single range.
->>
->>The goal of this first part is to get the entry at the index just after
->>the requested range, and see what the attribute there is. If that
->>attribute is what we're about to set, extend the requested range for
->>storing to the end of that range.
->>
->>If there is another range higher than end + 1, with the invariant
->>maintained, that attribute has to be different than the attribute stored
->>at end. Hence, we only want to extend this requested range up till end.
->>
->
-> mas_find() will look for an entry at the given address for the first sear=
-ch, and if it is not found it will continue to search upwards.  Since you l=
-imit the search to end, it will work as you want and there isn't a bug as I=
- was thinking in my sleep deprived state.
->
-> Since you are searching for exactly one address (end), it might serve you=
- better to walk there.  Maybe walking is a better API for what you are doin=
-g here?
->
+kernel test robot noticed the following build warnings:
 
-Thanks again for this tip! I'll try the walk API in the next revision
-after v6 [1]
+[auto build test WARNING on linus/master]
+[also build test WARNING on v7.1-rc3]
+[cannot apply to akpm-mm/mm-everything trace/for-next next-20260508]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[1] https://lore.kernel.org/all/20260507-gmem-inplace-conversion-v6-0-91ab5=
-a8b19a4@google.com/T/
+url:    https://github.com/intel-lab-lkp/linux/commits/qiwu-chen/mm-vmscan-rework-lru_shrink-and-write_folio-tracepoints/20260513-040720
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20260506083652.100160-1-qiwu.chen%40transsion.com
+patch subject: [PATCH v2] mm: vmscan: rework lru_shrink and write_folio tracepoints
+config: sh-defconfig (https://download.01.org/0day-ci/archive/20260513/202605130842.zWTTtyaL-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260513/202605130842.zWTTtyaL-lkp@intel.com/reproduce)
 
->
->>> Do you have testing of these functions somewhere?
->>>
->>
->>GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(indexing, 4) tests setting
->>attributes in ranges. If test_page is 2,
->>
->>1. [0, 4) starts off shared (4 is the number of pages in the guest_memfd)
->>2. [2, 3) is converted to private
->>    =3D> so the ranges should now be [0, 2), [2, 3), [3, 4)
->>3. [2, 3) is converted back to shared
->>    =3D> so the ranges should now be [0, 4)
->>
->>I verified this by inserting some trace_printk()s and inspecting manually=
-.
->>
->
-> Thanks.  I find the exclusive ranges a bit odd to think about in the mapl=
-e tree context, but this test case makes sense.  This is especially odd to =
-look at a single index entry, at least for me.
->
-> I generally have a set of test cases and append any bug reproduces to tha=
-t list so they are unlikely to reoccur.  My testing is certainly different =
-from what you'll be doing, but this method has done well with the quality o=
-f code improving over time, and limited (if any) regressions.
->
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605130842.zWTTtyaL-lkp@intel.com/
 
-I've not worked directly with the maple tree tests but the xarray tests
-(similarly set up, I believe) are a joy to work with.
+All warnings (new ones prefixed by >>):
 
-> I actually insist that any fix has a test before I accept them.  There ar=
-e two reasons for this: 1. Avoiding the regression. 2. People really unders=
-tand the bug if they can create a reproducer.
->
-> I hope this helps.
->
->
+   In file included from include/trace/define_trace.h:132,
+                    from include/trace/events/vmscan.h:602,
+                    from mm/vmscan.c:72:
+   include/trace/events/vmscan.h: In function 'trace_raw_output_mm_vmscan_write_folio':
+>> include/trace/events/vmscan.h:358:19: warning: format '%p' expects argument of type 'void *', but argument 3 has type 'long unsigned int' [-Wformat=]
+     358 |         TP_printk("folio=%p lru=%s",
+         |                   ^~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:219:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     219 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   include/trace/events/vmscan.h:342:1: note: in expansion of macro 'TRACE_EVENT'
+     342 | TRACE_EVENT(mm_vmscan_write_folio,
+         | ^~~~~~~~~~~
+   include/trace/events/vmscan.h:358:9: note: in expansion of macro 'TP_printk'
+     358 |         TP_printk("folio=%p lru=%s",
+         |         ^~~~~~~~~
+   In file included from include/trace/trace_events.h:256:
+   include/trace/events/vmscan.h:358:27: note: format string is defined here
+     358 |         TP_printk("folio=%p lru=%s",
+         |                          ~^
+         |                           |
+         |                           void *
+         |                          %ld
+   include/trace/events/vmscan.h: In function 'do_trace_event_raw_event_mm_vmscan_write_folio':
+   include/trace/events/vmscan.h:354:32: error: assignment to 'long unsigned int' from 'struct folio *' makes integer from pointer without a cast [-Wint-conversion]
+     354 |                 __entry->folio = folio;
+         |                                ^
+   include/trace/trace_events.h:427:11: note: in definition of macro '__DECLARE_EVENT_CLASS'
+     427 |         { assign; }                                                     \
+         |           ^~~~~~
+   include/trace/trace_events.h:435:23: note: in expansion of macro 'PARAMS'
+     435 |                       PARAMS(assign), PARAMS(print))                    \
+         |                       ^~~~~~
+   include/trace/trace_events.h:40:9: note: in expansion of macro 'DECLARE_EVENT_CLASS'
+      40 |         DECLARE_EVENT_CLASS(name,                              \
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:44:30: note: in expansion of macro 'PARAMS'
+      44 |                              PARAMS(assign),                   \
+         |                              ^~~~~~
+   include/trace/events/vmscan.h:342:1: note: in expansion of macro 'TRACE_EVENT'
+     342 | TRACE_EVENT(mm_vmscan_write_folio,
+         | ^~~~~~~~~~~
+   include/trace/events/vmscan.h:353:9: note: in expansion of macro 'TP_fast_assign'
+     353 |         TP_fast_assign(
+         |         ^~~~~~~~~~~~~~
+   In file included from include/trace/define_trace.h:133:
+   include/trace/events/vmscan.h: In function 'do_perf_trace_mm_vmscan_write_folio':
+   include/trace/events/vmscan.h:354:32: error: assignment to 'long unsigned int' from 'struct folio *' makes integer from pointer without a cast [-Wint-conversion]
+     354 |                 __entry->folio = folio;
+         |                                ^
+   include/trace/perf.h:51:11: note: in definition of macro '__DECLARE_EVENT_CLASS'
+      51 |         { assign; }                                                     \
+         |           ^~~~~~
+   include/trace/perf.h:67:23: note: in expansion of macro 'PARAMS'
+      67 |                       PARAMS(assign), PARAMS(print))                    \
+         |                       ^~~~~~
+   include/trace/trace_events.h:40:9: note: in expansion of macro 'DECLARE_EVENT_CLASS'
+      40 |         DECLARE_EVENT_CLASS(name,                              \
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:44:30: note: in expansion of macro 'PARAMS'
+      44 |                              PARAMS(assign),                   \
+         |                              ^~~~~~
+   include/trace/events/vmscan.h:342:1: note: in expansion of macro 'TRACE_EVENT'
+     342 | TRACE_EVENT(mm_vmscan_write_folio,
+         | ^~~~~~~~~~~
+   include/trace/events/vmscan.h:353:9: note: in expansion of macro 'TP_fast_assign'
+     353 |         TP_fast_assign(
+         |         ^~~~~~~~~~~~~~
 
-The maple tree tests are set up to directly test maple tree code, but
-KVM selftests test from the userspace interface, and it's hard to test
-this invariant from userspace.
 
->>>> +	if (entry && xa_to_value(entry) =3D=3D attributes)
->>>> +		last =3D mas->last;
->>>> +
->>>> +	if (start > 0) {
->>>> +		mas_set_range(mas, start - 1, start - 1);
->>>> +		entry =3D mas_find(mas, start - 1);
->>>> +		if (entry && xa_to_value(entry) =3D=3D attributes)
->>>> +			start =3D mas->index;
->>>> +	}
->>>> +
->>>> +	mas_set_range(mas, start, last);
->>>> +	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
->>>> +}
->>>> +
->>>>
->>>> [...snip...]
->>>>
+vim +358 include/trace/events/vmscan.h
+
+   343	
+   344		TP_PROTO(struct folio *folio),
+   345	
+   346		TP_ARGS(folio),
+   347	
+   348		TP_STRUCT__entry(
+   349			__field(unsigned long, folio)
+   350			__field(int, lru)
+   351		),
+   352	
+   353		TP_fast_assign(
+   354			__entry->folio = folio;
+   355			__entry->lru = folio_lru_list(folio);
+   356		),
+   357	
+ > 358		TP_printk("folio=%p lru=%s",
+   359			__entry->folio,
+   360			__print_symbolic(__entry->lru, LRU_NAMES))
+   361	);
+   362	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
