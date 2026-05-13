@@ -1,87 +1,129 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAC841C310;
-	Wed, 13 May 2026 16:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A684A13A1;
+	Wed, 13 May 2026 17:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778690476; cv=none; b=ghNyaUNu19vp9KPV0KgMfZllUmX3Bco7a1lF4QES53FSW0h/QwlJsgfw2zurJBdTa+RA8i9jcDUOIzdrmcaN+NgjzIur5ob3upc7J79O7l1N2ygRIFfAi/oVyt+J4nu7+CtIjetP/ihY5UUNDiwhRzzZXo/xKY4TqTH7HQtUtOg=
+	t=1778693110; cv=none; b=B1N2jYPnZkpQSgLJCuBtO8yBXUB7GcOXbby1o8yVk66H56w6R8KQ0H028CCUTj8YsLMOeO8LhYAxZ8Toy5d4cYfwFXsrCq514p6rtvofVJAnnbes2jtqrUe6v2C8jPhK6NHPEyINZtJ4GrQiCy0qZR0zl41b0sIF3huDOcy+NQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778690476; c=relaxed/simple;
-	bh=s9fYP+qY0LZpCTN4Q7vKTRfdKJMfrvho8omGyB3eS5g=;
+	s=arc-20240116; t=1778693110; c=relaxed/simple;
+	bh=XoPwTd4LYKyXmB588AhIasYO2rJRGvyQ0Kwn6wDBy6Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YKFXigbp4EBzF0bmOcmfREhVAoVMpUqRk1uFRYlZQLuHftkS6BgHb55V2LZe5vq/Tj+MuiTb+OV6RxpJbMuSSatyrpEpUbCEJfiTS0Yic0r5tB3lLPI5n5ZC+zD7ScnhTEL8tma5ZTIC8Q7lDNWyrSCkS4iFpZ8DlmNrdP28OXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id B7CDC1C02D2;
-	Wed, 13 May 2026 16:41:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id E522920026;
-	Wed, 13 May 2026 16:41:04 +0000 (UTC)
-Date: Wed, 13 May 2026 12:41:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Aaron Tomlin <atomlin@atomlin.com>, Jonathan Corbet <corbet@lwn.net>,
- Song Liu <song@kernel.org>, KP Singh <kpsingh@kernel.org>, Matt Bobrowski
- <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Shuah Khan
- <skhan@linuxfoundation.org>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Yonghong Song <yonghong.song@linux.dev>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Randy Dunlap
- <rdunlap@infradead.org>, neelx@suse.com, sean@ashe.io, chjohnst@gmail.com,
- steve@abita.co, mproche@gmail.com, nick.lange@gmail.com, "open
- list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v3] bpf: introduce TAINT_UNSAFE_BPF for mutating
- helpers
-Message-ID: <20260513124107.437431f0@gandalf.local.home>
-In-Reply-To: <CAADnVQLw+_NaOVeaKabuf085wNo_-6MAv8w0EDO3fBz3KCQT5g@mail.gmail.com>
-References: <20260503164700.548164-1-atomlin@atomlin.com>
-	<CAADnVQJ5fatNF4auH+a8E39zWMfja3rm4BM_xGcTnLX8uuCQ9Q@mail.gmail.com>
-	<20260513111331.7bede512@gandalf.local.home>
-	<CAADnVQL_sWznA+JJLdzP_ZdUgQeO7p-AGnOtx9=fXjH+PnRJBA@mail.gmail.com>
-	<20260513112307.53e77312@gandalf.local.home>
-	<CAADnVQLw+_NaOVeaKabuf085wNo_-6MAv8w0EDO3fBz3KCQT5g@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=UgL2W8sy0qUb/I4qv2w+l+aH+vXcFy3eosCRRutAcSkXCuO+Q8ivr71KvTr5ZTGhqmv7wrCK6gorDKolbrYlBZruIqe+CX5wqZjph4eGbH0FbIIT/YvKt+w04VOADDCUbsY/bLSYaFN3UecOtsYgXB2jAV3OBK/69NaDmiGlFhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=Pg30inMF; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="Pg30inMF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=smfBSAMRXNSqgAf1NrxQkOvOSzSW0Bzdr9HPl7C+Tmw=; b=Pg30inMFcIBFGWC+cIQNKPPFfp
+	j9cPeEacKaRoHjijyKso//FYRF3/Sv1RcdWyAeNpKYw5hmop6o903shlfT5HRBX8mWjaoKw8VOk7c
+	zKeSjApV5qyKFJl2D1GbzpSsoAe1TZveVvjiwOC3r4QGk2ddOVoLIDXqFjq1lsPoM938lcUSaRBUO
+	cYmAt1HlXvVSQOVaoKSmuxfxlWYT2tJQasgFYWplX9d24lQr09itp2clLvI6iQtPoMNLil1vomckt
+	kFj0XkDQP8sly8ZGoEGpDjHmmFjAwxh4PasbJRrjRtmx2aU0ywcBgXK4+5DdH49X6mTGo1dN2HGv6
+	pEImPvFA==;
+Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1wNDKA-000000007GQ-4ANy;
+	Wed, 13 May 2026 13:24:47 -0400
+Date: Wed, 13 May 2026 13:24:45 -0400
+From: Rik van Riel <riel@surriel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v2] perf/ftrace: Fix WARNING in
+ __unregister_ftrace_function
+Message-ID: <20260513132445.24d8d9f6@fangorn>
+In-Reply-To: <20260513123344.05b6bcfe@gandalf.local.home>
+References: <20260513121607.14eab1f6@fangorn>
+	<20260513123344.05b6bcfe@gandalf.local.home>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: E522920026
-X-Stat-Signature: fg3i9cunj58jazg91jw7fxhf6rjuzr1t
-X-Rspamd-Server: rspamout01
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/vlIIxtheuPq6Yf9zUCAmaImOQIxA+vjQ=
-X-HE-Tag: 1778690464-121100
-X-HE-Meta: U2FsdGVkX1/y8lI1aHXZZgaOrrPr0GIPYKwzSJkHfS8iNP88ZMeiSieyt1fIozfVTcDewb8vfRsjt9C0BHfEkz1RXXx1/hCApMKwnvvGF/SrwZtEqlwMo0MmjZ43bbJ3u6LNnrkekV4TA7NuPbsXoVZmD6WtJFgTrAVVzycfc/50B8hlzcXmT9XLyqATqm6RPzzsgEGpEOa9M2I5b5wtCmOw105zBeuFmt8YqzPZTBwSG+PT8msrsRMihJM0fDSJUZWHONK2MQQPpb4d/crfisCRB7fnZXjlCJ0NtY8HtXUUpji0JJkdBj36vGrAxobrBpv8L55TkepC/bIUfz2J6zl2SeCKa9jGi30T0xLtsAHs8MEVYkosTecwWGqERxXQZWylqJ19jTxA9y9/hjfIsg==
 
-On Wed, 13 May 2026 09:35:29 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Wed, 13 May 2026 12:33:44 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, May 13, 2026 at 8:23=E2=80=AFAM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Wed, 13 May 2026 08:16:07 -0700
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> > =20
-> > > It's impossible to track all modifications.
-> > > See what sched-ext is doing.
-> > > What does it modify? Everything. =20
-> >
-> > What about just having a list of what BPF programs are loaded, what they
-> > may be attached to, and what kfuncs they are calling? =20
 >=20
-> Ohh. These have been available forever.
-> Just bpftool prog, bpftool link, bpftool prog dump xlated
+> Instead of duplicating code, what about doing:
 
-Ah thanks. That is useful.
+That is much nicer. Thank you!
 
--- Steve
+---8<---
+
+=46rom 9de86227b917c49315b7b67aac3a83afae8d792d Mon Sep 17 00:00:00 2001
+From: Rik van Riel <riel@meta.com>
+Date: Sat, 25 Apr 2026 03:33:54 -0700
+Subject: [PATCH] perf/ftrace: Fix WARNING in __unregister_ftrace_function
+
+perf_ftrace_function_unregister() unconditionally calls
+unregister_ftrace_function() without checking whether the ftrace_ops
+was ever successfully registered. This triggers a WARN_ON in
+__unregister_ftrace_function() when the ops doesn't have
+FTRACE_OPS_FL_ENABLED set.
+
+This can happen during perf_event_alloc() error cleanup when
+perf_trace_destroy() is called via __free_event() on an event whose
+ftrace_ops registration failed or was already torn down by
+perf_try_init_event()'s err_destroy path.
+
+The call path is:
+  perf_event_alloc() error cleanup
+    -> __free_event()
+      -> event->destroy() [tp_perf_event_destroy]
+        -> perf_trace_destroy()
+          -> perf_trace_event_close()
+            -> TRACE_REG_PERF_CLOSE
+              -> perf_ftrace_function_unregister()
+                -> unregister_ftrace_function()
+                  -> __unregister_ftrace_function()
+                    -> WARN_ON(!(ops->flags & FTRACE_OPS_FL_ENABLED))
+
+Fix this by checking FTRACE_OPS_FL_ENABLED before attempting to
+unregister. If the ops is not enabled, just free the filter and
+return success.
+
+Assisted-by: Claude:claude-opus-4.7 syzkaller
+Signed-off-by: Rik van Riel <riel@surriel.com>
+---
+ kernel/trace/trace_event_perf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_per=
+f.c
+index a6bb7577e8c5..58e1b427b576 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -497,7 +497,11 @@ static int perf_ftrace_function_register(struct perf_e=
+vent *event)
+ static int perf_ftrace_function_unregister(struct perf_event *event)
+ {
+ 	struct ftrace_ops *ops =3D &event->ftrace_ops;
+-	int ret =3D unregister_ftrace_function(ops);
++	int ret =3D 0;
++
++	if (ops->flags & FTRACE_OPS_FL_ENABLED)
++		ret =3D unregister_ftrace_function(ops);
++
+ 	ftrace_free_filter(ops);
+ 	return ret;
+ }
+--=20
+2.52.0
+
+
