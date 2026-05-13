@@ -1,187 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143A93839B6;
-	Wed, 13 May 2026 07:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FADB3DBD7C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 08:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778658868; cv=none; b=fRA9XsKj9lTCTXDcGH1NP5ztqWYeXRjVuTfchfElMCt1HZlcINFO5wH0hWwkBCbtKCc3mGdmK6Gfw6fFgNqTU7gXk9yeetfmZHXq463ZimQpkrN+so/xJB7SiUBjwdz7DSPqSefqzwmPG/g8nLhIGb8JweAaU3IUxdVcDwPdPBU=
+	t=1778661163; cv=none; b=FFZBzvqTkBZ3NMRLwWtUIenBc4RkSfPzqlUfSi/Ll+8+jYG2dHxs4yiq4UaH2S1I0KMOYdH0fHrrYhmf2dgU3hzyhbocWa21HBD6mOCh1PDeboawo5iLkOO2pt5dFj7J/uzbSw1wA3qQvO+Ar260Q5bQyaIh1IPslyAsDwGvRB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778658868; c=relaxed/simple;
-	bh=5fkTxaVzV67Mp0x6THoCadQuwmPOJZaYcb+VcvMagmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yu4ZxLAU4wUMjvyvMAarjXSVeMxLDYrvJER0pngXMKXAAOfr1cSDUoIdoRLTRNkC21eelgni42f+lIs7nNUI+o9ql3Pl4ATGFBs/YHAxXI49nPOkiU/rmZSFGCCthK3fXaB9gOBT8Q8TXqn6j2Hwf5oOx1rtUZC56iydhjsbi0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMSb57Ve; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778661163; c=relaxed/simple;
+	bh=J/Dv0UWc5fFWPIOe7gZzQ5uITifiJBtRxJc1gZyIhEM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cqbu+6UbYXW2V/4XrhRZyyyamzsSu+cQPlam0oQRW42wJ9gxqjF7l9IurArTjQ+WMO1lQHyrGSEUK3iZQ3v6JSONHRO3lXeHDQGUonvH6lDK9toOthH/yhWY7uM8bYcqThpLItW6yGNlHNMql9xsd3zU2yLZePCM73PyaMvVIPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AIBSMCpX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMSb57Ve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 399DCC2BCB7;
-	Wed, 13 May 2026 07:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778658867;
-	bh=5fkTxaVzV67Mp0x6THoCadQuwmPOJZaYcb+VcvMagmI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MMSb57VeWOdXEwlbRHF4H1wJyw7LzX8e2zt39PI2tcH5khVQ/JKO0bzfWh+hgHTy/
-	 /f2AnrsyQvgXBfNReRpAvGpe7P6Iba3WDMzdxgabnfwgwWqOfYq+QeuCIKIfw82yOZ
-	 SbpoH+qAjPOALH5Pu5Begy9Whtf2B9RzbCSoXxxHUdwiAt1hZ8nNx8SZvbZDGghdqJ
-	 9uEGk97TUCdjSh/lbRaAMjoMNm36B01uDz7I8kCrAdiclBC0uoNDwJM9+YvC76Z/p/
-	 6Zt4xHhoLHShLkd9bbEK0Un+0sxAF9MWduSGYLr2P7a9Eqen3WyM5qcjEXaL0L/eu+
-	 OyDj4h0l+avrg==
-Message-ID: <bb0e5af8-3b24-471a-856f-2284a90a380c@kernel.org>
-Date: Wed, 13 May 2026 09:54:19 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AIBSMCpX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778661149;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=I/V6QNGxjpN2tsT3RkBCdiMepHJdTDp41wVfYJmBFyU=;
+	b=AIBSMCpXRRTzVBzHdP1QI4V3wn7wQM25E1/o/bNbRGTWLANVdZZRR7HaUprQ1nTZ2dTF/R
+	N3z4lipPmO/3kTOkMB1izG1EsiBUqnSypVZNnwsbBKNBiBTUv0Xx77zqRE6UefpXn2qkEZ
+	I/b4FHEtfNB251Uxny4vVrUVBowdXGc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-62-BMUvHlwcPwmIWwgoArvVaw-1; Wed, 13 May 2026 04:32:26 -0400
+X-MC-Unique: BMUvHlwcPwmIWwgoArvVaw-1
+X-Mimecast-MFC-AGG-ID: BMUvHlwcPwmIWwgoArvVaw_1778661145
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-458e7004f63so2999011f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 01:32:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778661145; x=1779265945;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I/V6QNGxjpN2tsT3RkBCdiMepHJdTDp41wVfYJmBFyU=;
+        b=dNXL+YIlCTKDVmWq+WQlkQG40j/FKxYJ+R5wOLlYTEjOzYNA1WBWN/d0XsjFBFex/R
+         dH/po++Sx+69VGAoMikNkn1Tds/qGBG8Wp0Kbn1bE1f3Z6/zCtET/4jUmSPU3uFba898
+         uf8Ud7B7Nwz4vQFHxMaQEZMzCx4ojHi50WlUmd8lAR9kTVB0KkwZ95+vKhxd+8c3n/kz
+         4ITIbxWCX3V6N/jUbRzQRIG4pfy+Y35bwZuDyoePwT5lK06Zrmez8RjYHvpYctfI00uk
+         xos+kxpcKcmldjWLXbLPRFmVb46PLTyG3ZxLAf41bZAwTD9nh0sTZcN47IaV+X/UA3Za
+         5aWQ==
+X-Gm-Message-State: AOJu0Yxk8KHvdsPF8qSpBIbJyFkY9yFuobHQkiA/MAfUnscFaDnKWcpH
+	KEofOgLltYWvfA+kieahILcZvMVIRrxHJOeixZ1VR9HlSwTPzEgZYuL/JzlIdsu3LYljG74hrns
+	ZtjYQjECiS4oX/YVgTlGUlWAmENLTKdxpB5k7Ve1gM1dTNEuJN9OutPkvSnpnqBI94Qp/sGP+Mg
+	==
+X-Gm-Gg: Acq92OFl+xqqNNuiUF9G7atOmG8HwLaSTiMnjLNgT7rm20ofewcx7m4MsdwbU/jepuU
+	VQlYfcHoXMPMCm0k0PfCcveBSuCuctlEQQ9F+Y2nahoPrG1ySO42uZRnERQtTD58XeKTJW5O5bV
+	1VfXNN/sTy9r7I6PPXGHh8Cp2T+3vnlqcDEhCjwP+h6r9RZbCNP128YGA0ANI2YiI8GLCYRiOB/
+	IK7O9qGLGNdq4Glm0WdIPB3o+TeaDruhyXQWkzfV4DJ00EIlAK7GJ5nVMQdOhORQjb46OR1YIf2
+	K2e8tfM5b3vt4v2kLvxx3ZHR0da53hwSptQMr7p25ElZy2E1rfXnPu32id0HlHoQbW9VQ+AjVcZ
+	mWpgYQEnVXrQ9/OXJ0m1RiYIG/dBZ5M/5e5z3qAG2y8ym/sqtO7AWRfFr5PXJdgBAos00zeOuU3
+	4qrCvvoMvxy47rwP4=
+X-Received: by 2002:a05:600c:4e02:b0:48a:5363:8cac with SMTP id 5b1f17b1804b1-48fcea064e2mr22693975e9.22.1778661145400;
+        Wed, 13 May 2026 01:32:25 -0700 (PDT)
+X-Received: by 2002:a05:600c:4e02:b0:48a:5363:8cac with SMTP id 5b1f17b1804b1-48fcea064e2mr22693375e9.22.1778661144870;
+        Wed, 13 May 2026 01:32:24 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45491bae13csm37531142f8f.29.2026.05.13.01.32.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 01:32:24 -0700 (PDT)
+Message-ID: <232713a9967e6ad20352f47e7220f6f6c334a97b.camel@redhat.com>
+Subject: Re: [RFC PATCH v2 03/10] selftests/verification: fix
+ verificationtest-ktap for out-of-tree execution
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>
+Date: Wed, 13 May 2026 10:32:22 +0200
+In-Reply-To: <7368ee25b1b45c92beb14c05be366b71da585ca4.1778522945.git.wen.yang@linux.dev>
+References: <cover.1778522945.git.wen.yang@linux.dev>
+	 <7368ee25b1b45c92beb14c05be366b71da585ca4.1778522945.git.wen.yang@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/4] mm/memory-failure: report MF_MSG_KERNEL for
- reserved pages
-To: Lance Yang <lance.yang@linux.dev>
-Cc: leitao@debian.org, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
- akpm@linux-foundation.org, corbet@lwn.net, skhan@linuxfoundation.org,
- ljs@kernel.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, shuah@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, liam@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-References: <9504c193-8c01-4d03-8f62-c50fd7fbdbc0@kernel.org>
- <20260512124837.38883-1-lance.yang@linux.dev>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260512124837.38883-1-lance.yang@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Jwl6hfoh6mODMpdcrPzm4jum_lAiccF7-Z4pU067uhQ_1778661145
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/12/26 14:48, Lance Yang wrote:
-> 
-> On Tue, May 12, 2026 at 10:17:00AM +0200, David Hildenbrand (Arm) wrote:
->> On 5/11/26 17:38, Breno Leitao wrote:
->>> When get_hwpoison_page() returns a negative value, distinguish
->>> reserved pages from other failure cases by reporting MF_MSG_KERNEL
->>> instead of MF_MSG_GET_HWPOISON. Reserved pages belong to the kernel
->>> and should be classified accordingly for proper handling.
->>>
->>> Sample PG_reserved before the get_hwpoison_page() call. In the
->>> MF_COUNT_INCREASED path get_any_page() can drop the caller's
->>> reference before returning -EIO, after which the underlying page may
->>> have been freed and reallocated with page->flags reset; reading
->>> PageReserved(p) at that point would observe stale or unrelated state.
->>> The pre-call snapshot reflects what the page actually was at the
->>> time of the failure event.
->>>
->>> Acked-by: Miaohe Lin <linmiaohe@huawei.com>
->>> Reviewed-by: Lance Yang <lance.yang@linux.dev>
->>> Signed-off-by: Breno Leitao <leitao@debian.org>
->>> ---
->>>  mm/memory-failure.c | 19 ++++++++++++++++++-
->>>  1 file changed, 18 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->>> index 866c4428ac7ef..f112fb27a8ff6 100644
->>> --- a/mm/memory-failure.c
->>> +++ b/mm/memory-failure.c
->>> @@ -2348,6 +2348,7 @@ int memory_failure(unsigned long pfn, int flags)
->>>  	unsigned long page_flags;
->>>  	bool retry = true;
->>>  	int hugetlb = 0;
->>> +	bool is_reserved;
->>>  
->>>  	if (!sysctl_memory_failure_recovery)
->>>  		panic("Memory failure on page %lx", pfn);
->>> @@ -2411,6 +2412,18 @@ int memory_failure(unsigned long pfn, int flags)
->>>  	 * In fact it's dangerous to directly bump up page count from 0,
->>>  	 * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
->>>  	 */
->>> +	/*
->>> +	 * Pages with PG_reserved set are not currently managed by the
->>> +	 * page allocator (memblock-reserved memory, driver reservations,
->>> +	 * etc.), so classify them as kernel-owned for reporting.
->>> +	 *
->>> +	 * Sample the flag before get_hwpoison_page(): in the
->>> +	 * MF_COUNT_INCREASED path, get_any_page() can drop the caller's
->>> +	 * reference before returning -EIO, after which page->flags may
->>> +	 * have been reset by the allocator.
->>> +	 */
->>> +	is_reserved = PageReserved(p);
->>> +
->>>  	res = get_hwpoison_page(p, flags);
->>>  	if (!res) {
->>>  		if (is_free_buddy_page(p)) {
->>> @@ -2432,7 +2445,11 @@ int memory_failure(unsigned long pfn, int flags)
->>>  		}
->>>  		goto unlock_mutex;
->>>  	} else if (res < 0) {
->>> -		res = action_result(pfn, MF_MSG_GET_HWPOISON, MF_IGNORED);
->>> +		if (is_reserved)
->>> +			res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
->>> +		else
->>> +			res = action_result(pfn, MF_MSG_GET_HWPOISON,
->>> +					    MF_IGNORED);
->>>  		goto unlock_mutex;
->>>  	}
->>>  
->>>
->>
->> It's a bit odd that we need this handling when we already have handling for
->> reserved pages in error_states[].
->>
->> HWPoisonHandlable() would always essentially reject PG_reserved pages. So
->> __get_hwpoison_page() ... would always fail? Making
->> get_hwpoison_page()->get_any_page() always fail?
->>
->> But then, we never call identify_page_state()? And never call me_kernel()?
-> 
-> Looks like we never get that far ...
+On Tue, 2026-05-12 at 02:24 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> verificationtest-ktap used a CWD-relative path (../ftrace/ftracetest)
+> and a relative argument (../verification) for --rv.=C2=A0 This works when
+> the shell changes into the verification directory first, but breaks
+> when the script is invoked directly - e.g. by the kselftest runner or
+> vng - because the working directory is the kernel source root, not the
+> script's own directory.
+>=20
+> Fix this by computing the script's directory from $0 with cd/dirname/pwd
+> and using absolute paths for both the ftracetest invocation and the --rv
+> argument.=C2=A0 Also export the directory to PATH so that check_requires =
+in
+> the ftracetest framework can locate helper binaries.
+>=20
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
 
-Right, likely that should be removed+cleaned up then.
+Just out of curiosity, how do you run the selftests?
+Are you calling the script directly just to run /some/ of them?
 
--- 
-Cheers,
+The officially supported way is through make [1]:
 
-David
+  make -C tools/testing/selftests TARGETS=3Dverification run_tests
+
+(though I find it faster to omit TARGETS and just do make -C
+tools/testing/selftests/verification).
+
+Calling with make should set up all paths as needed.
+
+> ---
+> =C2=A0tools/testing/selftests/verification/verificationtest-ktap | 4 +++-
+> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/tools/testing/selftests/verification/verificationtest-ktap
+> b/tools/testing/selftests/verification/verificationtest-ktap
+> index 18f7fe324e2f..456b8578a307 100755
+> --- a/tools/testing/selftests/verification/verificationtest-ktap
+> +++ b/tools/testing/selftests/verification/verificationtest-ktap
+> @@ -5,4 +5,6 @@
+> =C2=A0#
+> =C2=A0# Copyright (C) Arm Ltd., 2023
+> =C2=A0
+> -../ftrace/ftracetest -K -v --rv ../verification
+> +dir=3D$(cd "$(dirname "$0")" && pwd)
+> +export PATH=3D"$dir:$PATH"
+
+Then if you really really need to call it directly, do you need to override
+PATH?
+
+And isn't it clearer to do:
+
+  dir=3D$(realpath "$(dirname "$0")")
+
+Thanks,
+Gabriele
+
+[1] - https://www.kernel.org/doc/html/latest/dev-tools/kselftest.html
+
+> +"$dir/../ftrace/ftracetest" -K -v --rv "$dir"
+
