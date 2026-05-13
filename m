@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4E03D6CAF;
-	Wed, 13 May 2026 07:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143A93839B6;
+	Wed, 13 May 2026 07:54:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778658847; cv=none; b=gIDSiJFSV7+JxH9teeEnZKRlcGTseZ2hNnT0IGlRkEOhj4VcANN0w80oM4/3s7q1hftAASSB8qTeOc38sGr37bKK29fMv7+6mhkyPdz7Uxl9cjgUoMK0njhdVbJ3AZRg31l4N02qsG0soaKhsqp5G9Et15Sginv4XRDUZQOXgPg=
+	t=1778658868; cv=none; b=fRA9XsKj9lTCTXDcGH1NP5ztqWYeXRjVuTfchfElMCt1HZlcINFO5wH0hWwkBCbtKCc3mGdmK6Gfw6fFgNqTU7gXk9yeetfmZHXq463ZimQpkrN+so/xJB7SiUBjwdz7DSPqSefqzwmPG/g8nLhIGb8JweAaU3IUxdVcDwPdPBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778658847; c=relaxed/simple;
-	bh=jEoZFc6hihS2474unqKVMfhx3OcP9JIIwFxYzBVkiBo=;
+	s=arc-20240116; t=1778658868; c=relaxed/simple;
+	bh=5fkTxaVzV67Mp0x6THoCadQuwmPOJZaYcb+VcvMagmI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MEdreieqbpatj/yXqG/4kmsiDTYcFb5gbFc+KBIwFad2FqwqJFzWwm6l3LEfBieZwOmVDoqzzmjc+smjoQhzb54rBzIT0iOuXBHDgHd+YAeqTSS66UcRQJ42GVGAhOcggGhzqPtqM4zDKetkudzOwR+WsIX+6qjhzzYRv0bdHGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYL6rpKY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Yu4ZxLAU4wUMjvyvMAarjXSVeMxLDYrvJER0pngXMKXAAOfr1cSDUoIdoRLTRNkC21eelgni42f+lIs7nNUI+o9ql3Pl4ATGFBs/YHAxXI49nPOkiU/rmZSFGCCthK3fXaB9gOBT8Q8TXqn6j2Hwf5oOx1rtUZC56iydhjsbi0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMSb57Ve; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYL6rpKY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBEE9C2BCB7;
-	Wed, 13 May 2026 07:53:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMSb57Ve"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 399DCC2BCB7;
+	Wed, 13 May 2026 07:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778658847;
-	bh=jEoZFc6hihS2474unqKVMfhx3OcP9JIIwFxYzBVkiBo=;
+	s=k20201202; t=1778658867;
+	bh=5fkTxaVzV67Mp0x6THoCadQuwmPOJZaYcb+VcvMagmI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PYL6rpKYUiXu1R0TCAHtdQPhjDqrJb1rIK3Zcv8WsDoi4TN4S1aGc6a1lMRhXA7QR
-	 D8ZnVBGn1z5pboDVa50v5qRRzoxdxjc8gcIhVQI0fwk9OPCf+pjqeSGGdAlWKCCU5V
-	 eGj8XHtFbc0mN2LozqfaSGLj9DJV8dqdq66m5eIO7S+eD6McfYYBcoyr3fAItnYUlU
-	 7uQjfZuetNc2/6CgE3XSJj0xLC+rmdYM1F8d2u+LUGC1sqw0ofk3cBKuIXyNsIr+YT
-	 2AxtFw2eHlhnOWKl6uu2jfXqaxcEohqFOkH1+S2NWFjXGKgsFkOR538o+51YZlg76n
-	 ecRNSvw0Gh5wQ==
-Message-ID: <b45a4af8-6c6a-4b20-a62e-0e8756aa1202@kernel.org>
-Date: Wed, 13 May 2026 09:53:58 +0200
+	b=MMSb57VeWOdXEwlbRHF4H1wJyw7LzX8e2zt39PI2tcH5khVQ/JKO0bzfWh+hgHTy/
+	 /f2AnrsyQvgXBfNReRpAvGpe7P6Iba3WDMzdxgabnfwgwWqOfYq+QeuCIKIfw82yOZ
+	 SbpoH+qAjPOALH5Pu5Begy9Whtf2B9RzbCSoXxxHUdwiAt1hZ8nNx8SZvbZDGghdqJ
+	 9uEGk97TUCdjSh/lbRaAMjoMNm36B01uDz7I8kCrAdiclBC0uoNDwJM9+YvC76Z/p/
+	 6Zt4xHhoLHShLkd9bbEK0Un+0sxAF9MWduSGYLr2P7a9Eqen3WyM5qcjEXaL0L/eu+
+	 OyDj4h0l+avrg==
+Message-ID: <bb0e5af8-3b24-471a-856f-2284a90a380c@kernel.org>
+Date: Wed, 13 May 2026 09:54:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,24 +37,17 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v6 1/4] mm/memory-failure: report MF_MSG_KERNEL for
  reserved pages
-To: jane.chu@oracle.com, Breno Leitao <leitao@debian.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <liam@infradead.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
- Lance Yang <lance.yang@linux.dev>
-References: <20260511-ecc_panic-v6-0-183012ba7d4b@debian.org>
- <20260511-ecc_panic-v6-1-183012ba7d4b@debian.org>
- <9504c193-8c01-4d03-8f62-c50fd7fbdbc0@kernel.org>
- <816e3d8e-22d2-49a4-92ae-981568f38792@oracle.com>
+To: Lance Yang <lance.yang@linux.dev>
+Cc: leitao@debian.org, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ akpm@linux-foundation.org, corbet@lwn.net, skhan@linuxfoundation.org,
+ ljs@kernel.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, shuah@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, liam@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+References: <9504c193-8c01-4d03-8f62-c50fd7fbdbc0@kernel.org>
+ <20260512124837.38883-1-lance.yang@linux.dev>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -101,14 +94,13 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <816e3d8e-22d2-49a4-92ae-981568f38792@oracle.com>
+In-Reply-To: <20260512124837.38883-1-lance.yang@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 5/12/26 19:58, jane.chu@oracle.com wrote:
+On 5/12/26 14:48, Lance Yang wrote:
 > 
-> 
-> On 5/12/2026 1:17 AM, David Hildenbrand (Arm) wrote:
+> On Tue, May 12, 2026 at 10:17:00AM +0200, David Hildenbrand (Arm) wrote:
 >> On 5/11/26 17:38, Breno Leitao wrote:
 >>> When get_hwpoison_page() returns a negative value, distinguish
 >>> reserved pages from other failure cases by reporting MF_MSG_KERNEL
@@ -127,52 +119,54 @@ On 5/12/26 19:58, jane.chu@oracle.com wrote:
 >>> Reviewed-by: Lance Yang <lance.yang@linux.dev>
 >>> Signed-off-by: Breno Leitao <leitao@debian.org>
 >>> ---
->>>   mm/memory-failure.c | 19 ++++++++++++++++++-
->>>   1 file changed, 18 insertions(+), 1 deletion(-)
+>>>  mm/memory-failure.c | 19 ++++++++++++++++++-
+>>>  1 file changed, 18 insertions(+), 1 deletion(-)
 >>>
 >>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
 >>> index 866c4428ac7ef..f112fb27a8ff6 100644
 >>> --- a/mm/memory-failure.c
 >>> +++ b/mm/memory-failure.c
 >>> @@ -2348,6 +2348,7 @@ int memory_failure(unsigned long pfn, int flags)
->>>       unsigned long page_flags;
->>>       bool retry = true;
->>>       int hugetlb = 0;
->>> +    bool is_reserved;
->>>         if (!sysctl_memory_failure_recovery)
->>>           panic("Memory failure on page %lx", pfn);
+>>>  	unsigned long page_flags;
+>>>  	bool retry = true;
+>>>  	int hugetlb = 0;
+>>> +	bool is_reserved;
+>>>  
+>>>  	if (!sysctl_memory_failure_recovery)
+>>>  		panic("Memory failure on page %lx", pfn);
 >>> @@ -2411,6 +2412,18 @@ int memory_failure(unsigned long pfn, int flags)
->>>        * In fact it's dangerous to directly bump up page count from 0,
->>>        * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
->>>        */
->>> +    /*
->>> +     * Pages with PG_reserved set are not currently managed by the
->>> +     * page allocator (memblock-reserved memory, driver reservations,
->>> +     * etc.), so classify them as kernel-owned for reporting.
->>> +     *
->>> +     * Sample the flag before get_hwpoison_page(): in the
->>> +     * MF_COUNT_INCREASED path, get_any_page() can drop the caller's
->>> +     * reference before returning -EIO, after which page->flags may
->>> +     * have been reset by the allocator.
->>> +     */
->>> +    is_reserved = PageReserved(p);
+>>>  	 * In fact it's dangerous to directly bump up page count from 0,
+>>>  	 * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
+>>>  	 */
+>>> +	/*
+>>> +	 * Pages with PG_reserved set are not currently managed by the
+>>> +	 * page allocator (memblock-reserved memory, driver reservations,
+>>> +	 * etc.), so classify them as kernel-owned for reporting.
+>>> +	 *
+>>> +	 * Sample the flag before get_hwpoison_page(): in the
+>>> +	 * MF_COUNT_INCREASED path, get_any_page() can drop the caller's
+>>> +	 * reference before returning -EIO, after which page->flags may
+>>> +	 * have been reset by the allocator.
+>>> +	 */
+>>> +	is_reserved = PageReserved(p);
 >>> +
->>>       res = get_hwpoison_page(p, flags);
->>>       if (!res) {
->>>           if (is_free_buddy_page(p)) {
+>>>  	res = get_hwpoison_page(p, flags);
+>>>  	if (!res) {
+>>>  		if (is_free_buddy_page(p)) {
 >>> @@ -2432,7 +2445,11 @@ int memory_failure(unsigned long pfn, int flags)
->>>           }
->>>           goto unlock_mutex;
->>>       } else if (res < 0) {
->>> -        res = action_result(pfn, MF_MSG_GET_HWPOISON, MF_IGNORED);
->>> +        if (is_reserved)
->>> +            res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
->>> +        else
->>> +            res = action_result(pfn, MF_MSG_GET_HWPOISON,
->>> +                        MF_IGNORED);
->>>           goto unlock_mutex;
->>>       }
->>>  
+>>>  		}
+>>>  		goto unlock_mutex;
+>>>  	} else if (res < 0) {
+>>> -		res = action_result(pfn, MF_MSG_GET_HWPOISON, MF_IGNORED);
+>>> +		if (is_reserved)
+>>> +			res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
+>>> +		else
+>>> +			res = action_result(pfn, MF_MSG_GET_HWPOISON,
+>>> +					    MF_IGNORED);
+>>>  		goto unlock_mutex;
+>>>  	}
+>>>  
+>>>
 >>
 >> It's a bit odd that we need this handling when we already have handling for
 >> reserved pages in error_states[].
@@ -182,33 +176,10 @@ On 5/12/26 19:58, jane.chu@oracle.com wrote:
 >> get_hwpoison_page()->get_any_page() always fail?
 >>
 >> But then, we never call identify_page_state()? And never call me_kernel()?
->>
->> This all looks very odd.
->>
->> Why would you even want to call get_hwpoison_page() in the first place if you
->> find PageReserved?
->>
 > 
-> Ah, good point!
-> It seems to me that all unhandable pages should head out to identify_page_state:
-> 
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -2411,6 +2411,10 @@ int memory_failure(unsigned long pfn, int flags)
->          * In fact it's dangerous to directly bump up page count from 0,
->          * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
->          */
-> +
-> +       if (!HWPoisonHandlable(page, flags)
-> +               goto identify_page_state;
-> +
->         res = get_hwpoison_page(p, flags);
->         if (!res) {
->                 if (is_free_buddy_page(p)) {
+> Looks like we never get that far ...
 
-That's one option, or we just let get_hwpoison_page() return clearer error
-codes, let it take care of checking PageReserved, and process the error codes
-return by get_hwpoison_page() in a better way.
+Right, likely that should be removed+cleaned up then.
 
 -- 
 Cheers,
