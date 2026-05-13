@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874A03B0AF8;
-	Wed, 13 May 2026 19:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80CF2D7DEA;
+	Wed, 13 May 2026 20:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778701777; cv=none; b=kIqpWWGTmo3FFqUomr+my+FfY5YfgAmDZUIA0X4Wdgvr4zhIf6yU46bEsIWfUBTEkQBEugAFuXAi8NjLLkPpDGlmNUyYkXgPV3pauNKOdA/hDqo6ZcYnAIW+DBMaOVLOQNRptynpLfXmAkLbcZ6RJXQ7GD1hPde+u28x0/Zp1vQ=
+	t=1778703037; cv=none; b=Vt+al0QMMtKJSJ6bePb0wiiazhzFYFMX5p3pgLZRsnyOoTpHSuEIREeZwKY/RHwcrk6MUJtwcjPXVG2BOUQ0c8Bz0eYFcoyQ7BgU+Ff7Br2AHDGOLdZVUkLyQ/n3AfqiWvZIVrK2UHmB4pO3P1tt2sQGuf+K4evnKUwJX1IMzFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778701777; c=relaxed/simple;
-	bh=Nbr7/0wD6P5XD/aduwfYUGK0SEyGUqLLZfyPs6ZrEo0=;
+	s=arc-20240116; t=1778703037; c=relaxed/simple;
+	bh=Ev9k3KiPdRHS9B+BjW0upluVxxYhTSv2oMebgkf2ShA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=buNmoB1odGY2+8yBb7fCyYEtcoL7f0GKgxe9f7xfgwZaklidVPfQqc2PKyIdWg7VDqp1BR/K+Z8QMUkaAWl9S3aewqVRUNtdyqQIJH0x+IbPggPpDciCaGxJqfjIfycizZA/iJblXvmff2qsaoMTc/IsxuvN4GpFlVaYNyl/MXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8k1vM7M; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZNrDDHzBNCQr/C+BhLE+l6+eLec7JjxB0lBqCzcTWwZARGhJIYy3IhWgf8mqurYFGILPxN6pczinFO27O8nLoAxkrClC0YR6tXBZ6AMxTYjfBoljHaH6JOCaIKhOqU7Gqpqpa59HwNrVqA01vsM+YmQx8f6y8HoidxquDs5Igdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGkHuXDR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8k1vM7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E82DC19425;
-	Wed, 13 May 2026 19:49:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGkHuXDR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D228FC2BCB7;
+	Wed, 13 May 2026 20:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778701777;
-	bh=Nbr7/0wD6P5XD/aduwfYUGK0SEyGUqLLZfyPs6ZrEo0=;
+	s=k20201202; t=1778703037;
+	bh=Ev9k3KiPdRHS9B+BjW0upluVxxYhTSv2oMebgkf2ShA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t8k1vM7ME77oocj1nILAnh0izA6wDHaxEYd+q/v5DmiGfCAURO2LcY+zma36h8s1X
-	 /lxnbvRLY8dKbJcksi5RBkwblXDu+4VqqaOL29D5PD3luy1CuFHUwUtbDcaPrOSV+R
-	 kzKSf1U590LY5AWN3dJox0r+SbeMMyExFa9zOA1enZyrW2j54YdrcyJ0ZkpSw93Rt/
-	 WvK4QM0ANAhVf3shn0uTkZgRRoJb4i/0uGtokuiy24L8YlYAaExAM9Dae2ZcLmBnxX
-	 ze1EusDSsfnjrQKan3CE1553LEYlfJiLUECRRz+8zKg1h3WGG3SabI5eNLVxoaQo0W
-	 skiwOXTG1/jmA==
-Message-ID: <511dc52e-f2af-43c8-a9cf-19321b091dbe@kernel.org>
-Date: Wed, 13 May 2026 21:49:28 +0200
+	b=sGkHuXDRaCCU0nxxAGDBnblzSQhRReUx8USwaVA4cvDWXfAWRJpj0D8zQ7E51S0FJ
+	 e6g8K2kvYVF5vIGWc+rZN2qdyA/Rd+zRQwumJWggxdG7DyPFiF5hArQdO+2mn8/jEV
+	 sto0NYy8btd7x9JTg1K3aon0WvP431UqSg4CG8zlzefdF25D6wx0rYcyLvqBohNReD
+	 vwzEaWe2IITv4KV/YxDWpkPDlj9SLQLYFnNsw8Db3Evl7pmEWPVvwFlspehx4+84hJ
+	 olL/EQFbF3OPJdclgiGsF2k4/KRiFdBeNYL6cZ+Zz/fAgY+Q5d1eW6bgqP3ODAN0rY
+	 7LULys9D6hHng==
+Message-ID: <5712adbc-b2fd-49fd-9827-cace47eff9ad@kernel.org>
+Date: Wed, 13 May 2026 22:10:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/6] mm/memory-failure: short-circuit PG_reserved
- before get_hwpoison_page()
+Subject: Re: [PATCH v7 1/6] mm/memory-failure: drop dead error_states[] entry
+ for reserved pages
 To: Breno Leitao <leitao@debian.org>, Miaohe Lin <linmiaohe@huawei.com>,
  Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
  Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
@@ -48,10 +48,9 @@ To: Breno Leitao <leitao@debian.org>, Miaohe Lin <linmiaohe@huawei.com>,
  "Liam R. Howlett" <liam@infradead.org>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
- Lance Yang <lance.yang@linux.dev>
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
 References: <20260513-ecc_panic-v7-0-be2e578e61da@debian.org>
- <20260513-ecc_panic-v7-4-be2e578e61da@debian.org>
+ <20260513-ecc_panic-v7-1-be2e578e61da@debian.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -98,20 +97,104 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260513-ecc_panic-v7-4-be2e578e61da@debian.org>
+In-Reply-To: <20260513-ecc_panic-v7-1-be2e578e61da@debian.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/13/26 17:39, Breno Leitao wrote:
-> The previous patch already classifies PG_reserved pages as
-> MF_MSG_KERNEL through the long path: get_hwpoison_page() calls
-> __get_hwpoison_page() which fails HWPoisonHandlable(), get_any_page()
-> exhausts its shake_page() retry budget, and the resulting
-> -ENOTRECOVERABLE is mapped to MF_MSG_KERNEL by the switch.  The
-> outcome is correct but the work in between is wasted: shake_page()
-> cannot turn a reserved page into a handlable one.
+> The first entry of error_states[],
+> 
+> 	{ reserved,	reserved,	MF_MSG_KERNEL,	me_kernel },
+> 
+> is unreachable.  identify_page_state() has two callers, and neither
+> one can dispatch a PG_reserved page to me_kernel():
+> 
+>   * memory_failure() reaches identify_page_state() only after
+>     get_hwpoison_page() returned 1.  get_any_page() reaches that
+>     return only via __get_hwpoison_page(), which gates the refcount
+>     on HWPoisonHandlable().  HWPoisonHandlable() rejects PG_reserved
+>     pages, so they fail with -EBUSY/-EIO long before
+>     identify_page_state() runs.
 
-If really required, can we just move the check right there, into get_any_page() etc?
+You should clarify why they are rejected. There is no explicit check for
+PG_reserved in there!
+
+> 
+>   * try_memory_failure_hugetlb() reaches identify_page_state() on
+>     the MF_HUGETLB_IN_USED branch, but the page is necessarily a
+>     hugetlb folio there.  The first table entry that matches a
+>     hugetlb folio is { head, head, MF_MSG_HUGE, me_huge_page }, so
+>     they dispatch to me_huge_page() before the (now-removed)
+>     reserved entry would have matched, regardless of whether
+>     PG_reserved happens to be set on the head page.
+
+See hugetlb_folio_init_vmemmap(): we always clear PG_reserved for hugetlb folios
+allocated from memblock.
+
+> 
+> me_kernel() never executes and the entry exists only to be matched
+> against by code that cannot see it.
+> 
+> Drop the entry, the me_kernel() helper, and the now-unused
+> "reserved" macro.  Leave the MF_MSG_KERNEL enum value in place: it
+> remains part of the tracepoint and pr_err() string tables, and
+> follow-on work to classify unrecoverable kernel pages can reuse it
+> without churning the user-visible enum.
+> 
+> No functional change.
+> 
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  mm/memory-failure.c | 14 --------------
+>  1 file changed, 14 deletions(-)
+> 
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 866c4428ac7ef..49bcfbd04d213 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -992,17 +992,6 @@ static bool has_extra_refcount(struct page_state *ps, struct page *p,
+>  	return false;
+>  }
+>  
+> -/*
+> - * Error hit kernel page.
+> - * Do nothing, try to be lucky and not touch this instead. For a few cases we
+> - * could be more sophisticated.
+> - */
+> -static int me_kernel(struct page_state *ps, struct page *p)
+> -{
+> -	unlock_page(p);
+> -	return MF_IGNORED;
+> -}
+> -
+>  /*
+>   * Page in unknown state. Do nothing.
+>   * This is a catch-all in case we fail to make sense of the page state.
+> @@ -1211,10 +1200,8 @@ static int me_huge_page(struct page_state *ps, struct page *p)
+>  #define mlock		(1UL << PG_mlocked)
+>  #define lru		(1UL << PG_lru)
+>  #define head		(1UL << PG_head)
+> -#define reserved	(1UL << PG_reserved)
+>  
+>  static struct page_state error_states[] = {
+> -	{ reserved,	reserved,	MF_MSG_KERNEL,	me_kernel },
+>  	/*
+>  	 * free pages are specially detected outside this table:
+>  	 * PG_buddy pages only make a small fraction of all free pages.
+> @@ -1246,7 +1233,6 @@ static struct page_state error_states[] = {
+>  #undef mlock
+>  #undef lru
+>  #undef head
+> -#undef reserved
+>  
+>  static void update_per_node_mf_stats(unsigned long pfn,
+>  				     enum mf_result result)
+> 
+
+Yes, I think this should work.
+
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
