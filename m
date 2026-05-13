@@ -1,41 +1,41 @@
 Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5585A4963C0;
-	Wed, 13 May 2026 15:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D004963C8;
+	Wed, 13 May 2026 15:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778686811; cv=none; b=SQ7YmmvcnFCi0IBlMqRiZ8hCRLLANRY//B4cgb0xzIe9O1EQ899e0/IhZ2yRxa9QlnmDpJTnJTLlVjqSdL9hnFF3NLW5xmK1B1QvreTjpWlyve96fPRuW9+P+7zVv2EGAafMZ3VwEF5FeYQFvfycbAchk8OJeisZbc8DthEQw/Q=
+	t=1778686817; cv=none; b=L4GCNTb8sG4yvst+aMrxigloGUrME9ge/S/m5s22QyoI3/OSyDHoInCMAp7PQELnRC6KtW6uTNHaoT5sJtjAhVv7Zae0r7G+qGW4pg0abxLJldcwhrYPeVzQ7y7LDmQximLIgfK+YMURd/noDu64K2v0OCzMm1YVHSfnazMZMN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778686811; c=relaxed/simple;
-	bh=0MzegEQa6mNO2V3I1Z6SLe0wht+O4Co94Tkz7tlZ2NE=;
+	s=arc-20240116; t=1778686817; c=relaxed/simple;
+	bh=EISKEKQL/arGKTsQc3TDmWSm6ryILYJXr+CWei0yzkc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S1y76ZhMipeJtW1uzurPzls9W9yJfzPgSdUANrDe5b94L42uteLlhAFjN0gjZN4o8jcuUVXjoXuGes6dAN1u6JwT5iVkDsRu1dkGRnj50X55l4fNl57WZGejm8Uk3QuvEbRAOwSnVKE55Y/LEhGtbgYnNruECdC50yYPoI8Y1yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=aQ4Cvp/Y; arc=none smtp.client-ip=82.195.75.108
+	 In-Reply-To:To:Cc; b=RuBu91R+hnRSvCK+NHw5VWnCZsRo1b+BTL1206ZpG1yR0p7EDiUpNc813Xpv6wqu6Gyhe2TmYjq31aXHmnKr2WO7shcRamUEwhuWyymGvsubUhBAVSSpH66UgIt6en4CYQJctqcI8XXhXsgytGvP49Hn/xmXX3ZFwUZMNCm3WQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=O9sZlQ9a; arc=none smtp.client-ip=82.195.75.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="aQ4Cvp/Y"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="O9sZlQ9a"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
 	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
 	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description;
-	bh=/Vsk6nSS0BOaYjUJQEKvY7BmM0q9+NfGVkftVEcz+BE=; b=aQ4Cvp/YxlgHKNRQHETVoEJvhL
-	BMOkYClOlNIXJJRjlJ/F694viN0dxD3UgGvcP/rUjQjRRAGEFx7f6WEJFClSwHGZQWr3tB64zZSIi
-	+3wpLPwhupyY+By42bkZlqEmH21ZW6Q6G0kbyhMIFWEVCcBmHMpPw5VEVQfC9IAx6CcyGz2iNDcBz
-	pWW63czKtD8eGFLVdo+q3o7QTEMfxBvt8K/awG7Ng+fNmLcFVHFfWAprYZLSe44nmIMShQFgUAbXD
-	0RoOaTSddktyYl+t6txa+T3AMLC2fKhJGWLK5ZSD5EKdiL804qR3JnM0EDBOWKu41PQO66J9dvmUt
-	mAjMaP4Q==;
+	bh=yo5moT3K4RpqkylqFLjVVxqWs465kOdC70qipcIzXnI=; b=O9sZlQ9azTvfUm7b8bKLLMNJWT
+	xk1F/+Lmxx2BqwHsozEVS96HqrduyL17Uaai1UOk4H2V9MmxwAkFJTC0Mz/FI+tGBM3MIDVI0WmGb
+	/HW7YvBGL9aJS88lQkGtIsQr8hX8EXeZBFXn9C7KwBs8UW41ze5xW0i0paVYjWJ85QbpY0T+57qal
+	vTbp88TEqw1n7rlRAs35e2evM+AXjKgK/7vAfVFO1Q0+EHQi5vUKgLqkub5GSB0KMn8Ih45g6aFh6
+	feGxEfD2Gx8wPFDza7tn1xHKfzhSomL+nKnRpSZnsrzxbWErnUXxkEIlUZqMQI7KsRXN5zUfYkLsP
+	fCu3P4aw==;
 Received: from authenticated user
 	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <leitao@debian.org>)
-	id 1wNBgu-003GUf-0L;
-	Wed, 13 May 2026 15:40:08 +0000
+	id 1wNBgz-003GV1-1x;
+	Wed, 13 May 2026 15:40:13 +0000
 From: Breno Leitao <leitao@debian.org>
-Date: Wed, 13 May 2026 08:39:35 -0700
-Subject: [PATCH v7 4/6] mm/memory-failure: short-circuit PG_reserved before
- get_hwpoison_page()
+Date: Wed, 13 May 2026 08:39:36 -0700
+Subject: [PATCH v7 5/6] mm/memory-failure: add panic option for
+ unrecoverable pages
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,7 +44,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260513-ecc_panic-v7-4-be2e578e61da@debian.org>
+Message-Id: <20260513-ecc_panic-v7-5-be2e578e61da@debian.org>
 References: <20260513-ecc_panic-v7-0-be2e578e61da@debian.org>
 In-Reply-To: <20260513-ecc_panic-v7-0-be2e578e61da@debian.org>
 To: Miaohe Lin <linmiaohe@huawei.com>, 
@@ -62,70 +62,109 @@ To: Miaohe Lin <linmiaohe@huawei.com>,
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  Breno Leitao <leitao@debian.org>, linux-trace-kernel@vger.kernel.org, 
- kernel-team@meta.com, Lance Yang <lance.yang@linux.dev>
+ kernel-team@meta.com
 X-Mailer: b4 0.16-dev-d5d98
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1758; i=leitao@debian.org;
- h=from:subject:message-id; bh=0MzegEQa6mNO2V3I1Z6SLe0wht+O4Co94Tkz7tlZ2NE=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqBJs7KSP0K2Cs2gg9fb0ISbMpl7DyiUxMygPBA
- KXOdR++hVmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCagSbOwAKCRA1o5Of/Hh3
- bc9DD/4nNbluygUYNKOBrciOIa+JY5x3LkUt0UJqRQmgFYINakvCeFSRKWudJYoU8Zj2LDinbwL
- CIDqZeXUALFdVp7mQ9RJyXFKw02qJK2xZM2ZHLvUkoapQwDs2tcY39eXOUgkYSlo5a5S7t5MrQI
- pbSmGUTZLICxbUc0tMXa4Jp+XPL6shtQ8cNJTZLtH57HZ7p/mrJHXCiFem3GB6KcvYxCGDESgxM
- Socfz7gkdIavesqzPQGxaYcPSllviC1KznNMf/yTK6BsKqFES1SN9riGEtwEvLrjnfi3kHcZvvp
- l/5p+ZahKyv6Hp2KoQsmEggQTcHSzDLQlOHvk2W+RkST7IUND1kgaCsbOjAZcblJsT9aoc5VYaK
- HXMwfaQrDTXYc8uxKpU94CteM5W3jD1dWG8fUIb4NNSX3m+q35IpAcy6V2KDef+aoJgk9nXCQjU
- rkWvD9Ls9D9soYjUJKDI08lhzIJQxegyZpysuHli9Whygy5mOfUFGMNMiPNF+Kejry7c68XtvQz
- 31fpDl2XC65FlyUA/lWBc8hhyX8T3SzlbgImHhRd3n5yTj+XsiX4uvb6yQaLbEiEr/BX4tttEDx
- I3rHgjFk6P7FskMuBEaNMof/si/JbrmpAG9Jt6BaxgMvEui3KCUpsVAc2N2IIqAECL7Ixo6wOMl
- hsX4XCagr7RsqNg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3146; i=leitao@debian.org;
+ h=from:subject:message-id; bh=EISKEKQL/arGKTsQc3TDmWSm6ryILYJXr+CWei0yzkc=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqBJs7DfvuLYry1wILZQ0ew8fmFkKspjfR7M6EI
+ jqtdKJQIZ+JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCagSbOwAKCRA1o5Of/Hh3
+ beuHEACt6DukNUmgQVKYBNq+OfLW5GsCTVzJZnCXllda8MwjZRrSLfiM2ceU7E5Mon0UvWO9Qmr
+ txFKpjc5EZmbrVDHNJ6OATvGhLuL7RnQc2EhYkVoaTKiOINEe7E/6WZJqBOc+S2BWYwa4CCaR1V
+ sR47IhcuaHdxi0T2HUmcEmHCEjBzqzWpy0YdaRhlwYAcl2iRVMe+SDhYY9TABAVSmYKwyL002M3
+ ZQUYyXo95+N7OYPBX1mlUPaHKX0yQMZSjvKREORFQDHcUaCHu0g+845EQhyerWrvUq3fEBTSd7c
+ pfrPHIfI0npXFap+hDPen+onIrFuOAm6KXLCl4Bxn1KB5vQu5FSZdpDl1DW+ZorDfnzH7612FwM
+ Ur33PyyT555mrCufgXPts1qLwMCRzkFouy2aDzvgA+TvfOxjQF12a7A59aifLA8nsGVXXWeJKMo
+ wjh8l6CF23SvzXSGN99elGaKYNbmF9JfdaeTJaLI9lZGoGs2NTogZ6mSblYNlVv1P8YBOLaGrsq
+ 7JG8jt3Tcds4DxFtyy4Ns7pWoIdz7oWH2bEtudH5hzC+qBVq4nDqeARq5kZKvhFuSZ7NDTgSLqC
+ jUcxkOWE9n/UM6cxToWU+bHm1gDKUTnZ0OXb/YkYo/GaZDhuI8aApkpMMSd5F4gJJCBR0gtUtJS
+ X7MNRlTPzEbVhmw==
 X-Developer-Key: i=leitao@debian.org; a=openpgp;
  fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 X-Debian-User: leitao
 
-The previous patch already classifies PG_reserved pages as
-MF_MSG_KERNEL through the long path: get_hwpoison_page() calls
-__get_hwpoison_page() which fails HWPoisonHandlable(), get_any_page()
-exhausts its shake_page() retry budget, and the resulting
--ENOTRECOVERABLE is mapped to MF_MSG_KERNEL by the switch.  The
-outcome is correct but the work in between is wasted: shake_page()
-cannot turn a reserved page into a handlable one.
+Add a sysctl panic_on_unrecoverable_memory_failure that triggers a
+kernel panic when memory_failure() encounters pages that cannot be
+recovered.  This provides a clean crash with useful debug information
+rather than allowing silent data corruption or a delayed crash at an
+unrelated code path.
 
-Detect PG_reserved up front in memory_failure() and report
-MF_MSG_KERNEL directly.  put_ref_page() releases the caller's
-reference when MF_COUNT_INCREASED is set, which is important on the
-MADV_HWPOISON path where get_user_pages_fast() holds a reference
-across the call.
+Panic eligibility is intentionally narrow: only MF_MSG_KERNEL with
+result == MF_IGNORED panics.  After the previous patch, MF_MSG_KERNEL
+covers PG_reserved pages and the kernel-owned pages promoted from
+get_hwpoison_page() via -ENOTRECOVERABLE (slab, vmalloc, page tables,
+kernel stacks, ...).
 
-Suggested-by: Lance Yang <lance.yang@linux.dev>
+All other action types are excluded:
+
+- MF_MSG_GET_HWPOISON and MF_MSG_KERNEL_HIGH_ORDER can be reached by
+  transient refcount races with the page allocator (an in-flight buddy
+  allocation has refcount 0 and is no longer on the buddy free list,
+  briefly), and panicking on them would risk killing the box for what
+  is actually a recoverable userspace page.
+
+- MF_MSG_UNKNOWN means identify_page_state() could not classify the
+  page; that is precisely the wrong basis for a panic decision.
+
 Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- mm/memory-failure.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ mm/memory-failure.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 4b3a5d4190a07..8ba3df21d1270 100644
+index 8ba3df21d1270..cb2965c0ec0b4 100644
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -2398,6 +2398,19 @@ int memory_failure(unsigned long pfn, int flags)
- 		goto unlock_mutex;
- 	}
+@@ -74,6 +74,8 @@ static int sysctl_memory_failure_recovery __read_mostly = 1;
  
-+	/*
-+	 * PG_reserved pages are kernel-owned (memblock reservations,
-+	 * driver reservations, ...) and cannot be recovered.  Skip the
-+	 * get_hwpoison_page() lifecycle dance and report MF_MSG_KERNEL
-+	 * straight away; HWPoisonHandlable() would just keep rejecting
-+	 * the page through the retry budget anyway.
-+	 */
-+	if (PageReserved(p)) {
-+		put_ref_page(pfn, flags);
-+		res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
-+		goto unlock_mutex;
-+	}
+ static int sysctl_enable_soft_offline __read_mostly = 1;
+ 
++static int sysctl_panic_on_unrecoverable_mf __read_mostly;
 +
- 	/*
- 	 * We need/can do nothing about count=0 pages.
- 	 * 1) it's a free page, and therefore in safe hand:
+ atomic_long_t num_poisoned_pages __read_mostly = ATOMIC_LONG_INIT(0);
+ 
+ static bool hw_memory_failure __read_mostly = false;
+@@ -155,6 +157,15 @@ static const struct ctl_table memory_failure_table[] = {
+ 		.proc_handler	= proc_dointvec_minmax,
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
++	},
++	{
++		.procname	= "panic_on_unrecoverable_memory_failure",
++		.data		= &sysctl_panic_on_unrecoverable_mf,
++		.maxlen		= sizeof(sysctl_panic_on_unrecoverable_mf),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
+ 	}
+ };
+ 
+@@ -1267,6 +1278,15 @@ static void update_per_node_mf_stats(unsigned long pfn,
+ 	++mf_stats->total;
+ }
+ 
++static bool panic_on_unrecoverable_mf(enum mf_action_page_type type,
++				      enum mf_result result)
++{
++	if (!sysctl_panic_on_unrecoverable_mf || result != MF_IGNORED)
++		return false;
++
++	return type == MF_MSG_KERNEL;
++}
++
+ /*
+  * "Dirty/Clean" indication is not 100% accurate due to the possibility of
+  * setting PG_dirty outside page lock. See also comment above set_page_dirty().
+@@ -1284,6 +1304,9 @@ static int action_result(unsigned long pfn, enum mf_action_page_type type,
+ 	pr_err("%#lx: recovery action for %s: %s\n",
+ 		pfn, action_page_types[type], action_name[result]);
+ 
++	if (panic_on_unrecoverable_mf(type, result))
++		panic("Memory failure: %#lx: unrecoverable page", pfn);
++
+ 	return (result == MF_RECOVERED || result == MF_DELAYED) ? 0 : -EBUSY;
+ }
+ 
 
 -- 
 2.53.0-Meta
