@@ -1,37 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBF53A2E36;
-	Wed, 13 May 2026 18:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094A03A544F;
+	Wed, 13 May 2026 18:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778695871; cv=none; b=E0B/qoLFv+6IfpsIpmijUwtae/S+4OE7J87MMt+Pu/gdzo9w7by/fi+fcjU6++pL7wfiPUkw/Oe3c1atxQ5EezNiBtzwTap4B9uz8OxD6USzEUFWbG8VAAD0VMNiJb3GFnjqoirWRdjMFpYHpfYt1YWIxaceWeB4e7f9CftwSww=
+	t=1778696221; cv=none; b=ob0kuEe+JOXlDddxNh+J3eDDpuWDgllBAO8Hkp+3sws09TiRJwXDtITdICrbL6aWXA0PFMpx4HuCmQKJe+AK0LD+c2qyz9EB1o6vfgKM3vnVuGMRN3dbyU6C9W3L3s6CRihPcv0XGqQiBGun4nTNbeVSg9kVfxBaEbPaoiQs9r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778695871; c=relaxed/simple;
-	bh=vosxcqrM4whM5jmyDbQN3cBpptIJU8yCYGE6BNheFcw=;
+	s=arc-20240116; t=1778696221; c=relaxed/simple;
+	bh=3eu9Hg1j+FAo9YvctV0nbejroN4dG4a8dt3M+wCUcng=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ohSZYZcmfROV07fFglvfs9r35S6iM3OiXo0oe1zwG2A7JTeKFeVr/nEttzbsVgtGPBKTDG0jiLx8pLrZCrNmqp7aSuUDGGIWDT7svmyU+ays5iVsLuNJK1BduueqNYs9MNzXjFd7Gt6Cvv+vM/6HMf9tOkTeWnrNaKZ0tYkrlQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=i+ThEPXkPC5FKwdEqiM6F3J3SCQE9WlaU5cQomAIbMnRuQlJHw0Q9ILSir6yHXBtCvbP6Yh2gVPuyjwiUldvNp1Wj4hIM0/29QDp39Gy7u4WshTD4bKJCiNqYtuEkX3jjJUWNBJxe4apYHiGl8GV5gryBXLdmXxgaVGkdxu7SgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 4EA941C0336;
-	Wed, 13 May 2026 18:11:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 93BE020025;
-	Wed, 13 May 2026 18:11:06 +0000 (UTC)
-Date: Wed, 13 May 2026 14:11:09 -0400
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 8304B4041D;
+	Wed, 13 May 2026 18:07:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 9F6C220029;
+	Wed, 13 May 2026 18:07:28 +0000 (UTC)
+Date: Wed, 13 May 2026 14:07:32 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v2] perf/ftrace: Fix WARNING in
- __unregister_ftrace_function
-Message-ID: <20260513141109.0a0140b8@gandalf.local.home>
-In-Reply-To: <20260513132445.24d8d9f6@fangorn>
-References: <20260513121607.14eab1f6@fangorn>
-	<20260513123344.05b6bcfe@gandalf.local.home>
-	<20260513132445.24d8d9f6@fangorn>
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ damon@lists.linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 18/28] mm/damon: trace probe_hits
+Message-ID: <20260513140732.2320c563@gandalf.local.home>
+In-Reply-To: <20260512143645.113201-19-sj@kernel.org>
+References: <20260512143645.113201-1-sj@kernel.org>
+	<20260512143645.113201-19-sj@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,27 +40,122 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 93BE020025
-X-Stat-Signature: 71k8bdjeoup1pp5qp7y18mh7k3ar6sro
-X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 9F6C220029
+X-Stat-Signature: 19k3hjixp4ddabd59xf647tdn9ssb7x4
+X-Rspamd-Server: rspamout03
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/kmjP3gCJNNubGXtdqlf4nWtOZ4bLv9BU=
-X-HE-Tag: 1778695866-184117
-X-HE-Meta: U2FsdGVkX1/Qk27Rzg3JY5iv0cE0jLyKRql5UXi7GkyyAzsvXge8e85u7Bm3zLvvIZ4EeZ/iBOKdF5+qgRc+fjUrbKYoPytYqO8rmWUtVDS74lzxsEGSfMUr24+HioJh6FFbUnAowjs4Z8K0hVEZbQa3LUiXNBSOb022AXHUxYv/wKK2zBSGfRr14EmoZSsujJscCjCyGwboHQFJYQm8FiuvMdf2q1G6ph04CaxeqZ+1enPCmXDCJCEaBkFxwKmrD8eRmZAX4kyJe7hVcBGdX96DjYp39i5FWH6FdeZOhoJrJ2ckxqFNaGDg+y+1OkJvkVICXiHbFKniIwaXWC1D7wsjay/lS4o3UovTNfFgM6cQQgLS6TPJgdeR7Drc6/PRgz0TM0sA7rzs/UfO8zIkEfI2IoWN3AzevBsKUWKfsQ7ndhCfT+S3h3N88dd8bc4u
+X-Session-ID: U2FsdGVkX1+XR4QBARvilo/iw685qO7EjLUbgY33/3Y=
+X-HE-Tag: 1778695648-519701
+X-HE-Meta: U2FsdGVkX1+ztHJmbfencz8xskODMPGeCvM+5KKPEYCOFkZBK3DuVA72UQFXfLA2XiaCC1Lrd1TX827gLdPa0yRorEbvVLdnpgaP2F6PcYA57+G4DIsUo7ibScB41ACkwFPSMhmAucYTH00cudknJWH82uLgSDwtPpeXU/Pj4tC+S2F9GUC+0Mv+7Ta3YfAIhlYEMpS0vOK/oevVn/aRifCol3JS+mYZCoMZETyhMcyLWwaV5oT8PfG6LVCWLAHVKsG2gBZvSvI+/RzaE3AkdWg1hUsxpeVQfdTpEWUS0oQwAc84hFbgw8SZW3sCglk3BduJb90ng6hopBuHSDsK1pjZFYjAOl8d
 
-On Wed, 13 May 2026 13:24:45 -0400
-Rik van Riel <riel@surriel.com> wrote:
+On Tue, 12 May 2026 07:36:33 -0700
+SeongJae Park <sj@kernel.org> wrote:
 
-> From 9de86227b917c49315b7b67aac3a83afae8d792d Mon Sep 17 00:00:00 2001
-> From: Rik van Riel <riel@meta.com>
-> Date: Sat, 25 Apr 2026 03:33:54 -0700
-> Subject: [PATCH] perf/ftrace: Fix WARNING in __unregister_ftrace_function
+> Introduce a new tracepoint for exposing the per-region per-probe
+> positive sample count via tracefs.
 > 
+> Signed-off-by: SeongJae Park <sj@kernel.org>
+> ---
+>  include/trace/events/damon.h | 36 ++++++++++++++++++++++++++++++++++++
+>  mm/damon/core.c              |  7 +++++++
+>  2 files changed, 43 insertions(+)
+> 
+> diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+> index 7e25f4469b81b..d7b94c7640217 100644
+> --- a/include/trace/events/damon.h
+> +++ b/include/trace/events/damon.h
+> @@ -130,6 +130,42 @@ TRACE_EVENT(damon_monitor_intervals_tune,
+>  	TP_printk("sample_us=%lu", __entry->sample_us)
+>  );
+>  
+> +TRACE_EVENT(damon_aggregated_v2,
+> +
+> +	TP_PROTO(unsigned int target_id, struct damon_region *r,
+> +		unsigned int nr_regions, unsigned int nr_probes),
+> +
+> +	TP_ARGS(target_id, r, nr_regions, nr_probes),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, target_id)
+> +		__field(unsigned long, start)
+> +		__field(unsigned long, end)
+> +		__field(unsigned int, nr_regions)
+> +		__field(unsigned int, nr_accesses)
+> +		__field(unsigned int, age)
+> +		__dynamic_array(unsigned char, probe_hits, nr_probes)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->target_id = target_id;
+> +		__entry->start = r->ar.start;
+> +		__entry->end = r->ar.end;
+> +		__entry->nr_regions = nr_regions;
+> +		__entry->nr_accesses = r->nr_accesses;
+> +		__entry->age = r->age;
+> +		memcpy(__get_dynamic_array(probe_hits), r->probe_hits,
+> +			sizeof(*r->probe_hits) * nr_probes);
+> +	),
+> +
+> +	TP_printk("target_id=%lu nr_regions=%u %lu-%lu: %u %u probe_hits=%s",
+> +			__entry->target_id, __entry->nr_regions,
+> +			__entry->start, __entry->end,
+> +			__entry->nr_accesses, __entry->age,
+> +			__print_hex(__get_dynamic_array(probe_hits),
+> +				__get_dynamic_array_len(probe_hits)))
+> +);
+> +
+>  TRACE_EVENT(damon_aggregated,
+>  
+>  	TP_PROTO(unsigned int target_id, struct damon_region *r,
+> diff --git a/mm/damon/core.c b/mm/damon/core.c
+> index fe6c789f2cecb..14b15c9876516 100644
+> --- a/mm/damon/core.c
+> +++ b/mm/damon/core.c
+> @@ -1905,6 +1905,11 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
+>  {
+>  	struct damon_target *t;
+>  	unsigned int ti = 0;	/* target's index */
+> +	unsigned int nr_probes = 0;
+> +	struct damon_probe *probe;
+> +
+> +	damon_for_each_probe(probe, c)
+> +		nr_probes++;
 
-Can you resend this as a normal patch so that it can be picked up by patchwork.
+Is the above logic needed when the tracepoint isn't enabled? If not, then you could add:
 
-Otherwise it will be ignored.
+	if (trace_damon_aggregated_v2_enabled()) {
+		damon_for_each_probe(probe, c)
+			nr_probes++;
+	}
 
-Thanks,
+And change the tracepoint to be a conditional tracepoint:
+
+TRACE_EVENT_CONDITION(damon_aggregated_v2,
+
+	TP_PROTO(..),
+
+	TP_ARGS(..),
+
+	TP_CONDITION(nr_probes > 0),
+
+	[..]
+
+And then the tracepoint is only triggered if nr_probes is greater than zero
+(to handle races between the tracepoint being enabled in between the above
+check and where it triggers).
 
 -- Steve
+
+>  
+>  	damon_for_each_target(t, c) {
+>  		struct damon_region *r;
+> @@ -1913,6 +1918,8 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
+>  			int i;
+>  
+>  			trace_damon_aggregated(ti, r, damon_nr_regions(t));
+> +			trace_damon_aggregated_v2(ti, r, damon_nr_regions(t),
+> +					nr_probes);
+>  			damon_warn_fix_nr_accesses_corruption(r);
+>  			r->last_nr_accesses = r->nr_accesses;
+>  			r->nr_accesses = 0;
+
