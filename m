@@ -1,47 +1,36 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C84282F34;
-	Wed, 13 May 2026 16:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DE04C9010;
+	Wed, 13 May 2026 16:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778688984; cv=none; b=DJl/peKXd0x7SLx3eom+CjbtPnb3jite6cflYUKzml+ocBjXlxU/uUpATU2F1vL+y9MB+HnPrBwT4CD+dUzUs9Fq1rQGSqDk0iExkWoFivTFJuFKJkswlGuC4ncrcmqdV0T/mTRnjvLfF9QGveCzj6FV6QEIWOSAYSwYgIRmupA=
+	t=1778690027; cv=none; b=p1VAnFiQCg1LoNNDZY19z0pO+ET/tSDXdqbDpniz3ZZtLdTes5U9bvECwUObUOK0lYJ9Y2TTQkoGc+ejyEFqZkAcxjs0mRxqWInHE0rpF8Zvt0/UCnoo9f+qsOmcoKf7aWHipUw1jB2GubxM7Wmkg9owb0rgA8WZlqrKO7tx+V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778688984; c=relaxed/simple;
-	bh=d1S0tc+pboulCw1sblcTRgb8enWG+V9dKWRqmJ2/KRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ub81PuvAWXJcmjKFGTtnKKMMvU05UFJhmT8KkI1gPtZ0/T3MsHSlQZxOzFs8yrBoXgsQ1U7cbZp/NNpYM4kXWvFvyK4sH2x90IMgcn5Ev1FGrvuJhVwRgEdtc64cmNmCasXWr5XMvHuJJJBtoBYh43Z0/vUPIasTXsLCh9ZjasU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=m/XtLcex; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="m/XtLcex"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=dRa2nvez8IJQnvtB9YGQJFrPNTJQb7WD1xgO5uUHxNU=; b=m/XtLcexVMrXc5eqOAaIyDHY7z
-	E+2rSZ8CNiFpaNSlZNbCAPRPzgMyj2xo6s/V8t18ekfsRghMfsfmzSRI97cXUnvN1m7hnh4uyCc4U
-	DPH5n5p/detHyZuHzCpzdjWAQsHMeaMcWMpyNmPVftRkkuGxXe4eeBxHWVgTimvyALmxTI05RPdAr
-	zYKrcJIwSOPsYsL4tsVQv1z7+f9RkRD1utKiVhdVYsGzbGOqEzSssT7qkli6HVM1LAzFhiZUChEw+
-	EoUPgurW6lcFJUUjtuAJLJJVHdXXlEmXXO5ETwzGesV+PQ4ecFdEW1Rjuu1H8vEiprJNGoqZSElWq
-	rc9kDcVw==;
-Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@surriel.com>)
-	id 1wNCFk-000000006EO-0noB;
-	Wed, 13 May 2026 12:16:08 -0400
-Date: Wed, 13 May 2026 12:16:07 -0400
-From: Rik van Riel <riel@surriel.com>
-To: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1778690027; c=relaxed/simple;
+	bh=cTKxd5349hwmNXevB0MD8pp+RnEGsmYmx0OQf06OOrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FIqPLHIrAl0pPDfu//k50WcxMS9VzhizvsWFSR6KQV8zmsGHrQqV/bl7pQlDVkSPlb3rR3Rw/l/txFLsGEYkXsFsRjgNKjP6Xmwzk9r/QU1UMpgiddv4SskjZuLbUxDGAQ7vpazuGOwV+VDRpIClkQEesOHImjvUxtboowaIMxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 0309B1C0E19;
+	Wed, 13 May 2026 16:33:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 0107B20025;
+	Wed, 13 May 2026 16:33:41 +0000 (UTC)
+Date: Wed, 13 May 2026 12:33:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Rik van Riel <riel@surriel.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: [PATCH] perf/ftrace: Fix WARNING in __unregister_ftrace_function
-Message-ID: <20260513121607.14eab1f6@fangorn>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+Subject: Re: [PATCH] perf/ftrace: Fix WARNING in
+ __unregister_ftrace_function
+Message-ID: <20260513123344.05b6bcfe@gandalf.local.home>
+In-Reply-To: <20260513121607.14eab1f6@fangorn>
+References: <20260513121607.14eab1f6@fangorn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,60 +39,54 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 0107B20025
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: bjej6xff9gjptjwfusjn464tuu6eoqky
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18oxvKOnzneY0W1jBt9V2HR695X2q7WMXc=
+X-HE-Tag: 1778690021-544956
+X-HE-Meta: U2FsdGVkX19k56GGkglFqBzPLiFeVLA0JjUMUEGXyZ2X9Mp3mn9EhKGrTcO71a76/22bfHl231jN/IvUFIbkl70fw/naV1qjDwQJRGq/mAbKL0uvT0A496qFHk/QeHkRKEwlZ9R5WGJxXRXwH3uXi3xpSp4vnOpi2kTk8ZVmihjFe2lI4DtLPLfk0+M3za+u9BasefT77HaeN7wXVZcmLPcyG5BV+QkEP14mvKoIQc3/vyMLjIt/CyDAV51j0DnNAkEhIRI+qiE3wn4pwhINRImaK/hdR4s4lrTWz+dwTMhnodHD8QEqTrd/BrphKV2FjbvExeTAf+z2EyPJ9TreVpNJRkjxDyNSJAn1cwhmj6L8WCNfBu4ufUeteuzAw18dgi4TntFUIHDEgM+1SYBxJQ==
 
-perf_ftrace_function_unregister() unconditionally calls
-unregister_ftrace_function() without checking whether the ftrace_ops
-was ever successfully registered. This triggers a WARN_ON in
-__unregister_ftrace_function() when the ops doesn't have
-FTRACE_OPS_FL_ENABLED set.
+On Wed, 13 May 2026 12:16:07 -0400
+Rik van Riel <riel@surriel.com> wrote:
 
-This can happen during perf_event_alloc() error cleanup when
-perf_trace_destroy() is called via __free_event() on an event whose
-ftrace_ops registration failed or was already torn down by
-perf_try_init_event()'s err_destroy path.
+> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+> index a6bb7577e8c5..b9e33ae24867 100644
+> --- a/kernel/trace/trace_event_perf.c
+> +++ b/kernel/trace/trace_event_perf.c
+> @@ -497,7 +497,14 @@ static int perf_ftrace_function_register(struct perf_event *event)
+>  static int perf_ftrace_function_unregister(struct perf_event *event)
+>  {
+>  	struct ftrace_ops *ops = &event->ftrace_ops;
+> -	int ret = unregister_ftrace_function(ops);
+> +	int ret;
+> +
+> +	if (!(ops->flags & FTRACE_OPS_FL_ENABLED)) {
+> +		ftrace_free_filter(ops);
+> +		return 0;
+> +	}
+> +
+> +	ret = unregister_ftrace_function(ops);
+>  	ftrace_free_filter(ops);
+>  	return ret;
+>  }
+> -- 
 
-The call path is:
-  perf_event_alloc() error cleanup
-    -> __free_event()
-      -> event->destroy() [tp_perf_event_destroy]
-        -> perf_trace_destroy()
-          -> perf_trace_event_close()
-            -> TRACE_REG_PERF_CLOSE
-              -> perf_ftrace_function_unregister()
-                -> unregister_ftrace_function()
-                  -> __unregister_ftrace_function()
-                    -> WARN_ON(!(ops->flags & FTRACE_OPS_FL_ENABLED))
+Instead of duplicating code, what about doing:
 
-Fix this by checking FTRACE_OPS_FL_ENABLED before attempting to
-unregister. If the ops is not enabled, just free the filter and
-return success.
+static int perf_ftrace_function_unregister(struct perf_event *event)
+{
+	struct ftrace_ops *ops = &event->ftrace_ops;
+	int ret = 0;
 
-Assisted-by: Claude:claude-opus-4.7 syzkaller
-Signed-off-by: Rik van Riel <riel@surriel.com>
----
- kernel/trace/trace_event_perf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+	if (ops->flags & FTRACE_OPS_FL_ENABLED)
+		ret = unregister_ftrace_function(ops);
 
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index a6bb7577e8c5..b9e33ae24867 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -497,7 +497,14 @@ static int perf_ftrace_function_register(struct perf_event *event)
- static int perf_ftrace_function_unregister(struct perf_event *event)
- {
- 	struct ftrace_ops *ops = &event->ftrace_ops;
--	int ret = unregister_ftrace_function(ops);
-+	int ret;
-+
-+	if (!(ops->flags & FTRACE_OPS_FL_ENABLED)) {
-+		ftrace_free_filter(ops);
-+		return 0;
-+	}
-+
-+	ret = unregister_ftrace_function(ops);
- 	ftrace_free_filter(ops);
- 	return ret;
- }
--- 
-2.53.0-Meta
+	ftrace_free_filter(ops);
+	return ret;
+}
 
+
+?
+
+-- Steve
