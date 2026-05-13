@@ -1,78 +1,78 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38901F5821
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 13:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB55246766
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 13:50:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778680076; cv=none; b=m2cBl/VPIg9hNDLJ+6v3TOO4fXljpg6q6hUyEo/30yj+AOQ+QjM9UHGjaJjVaoN8lo/cy2S7zPGvr8IHqDfM3IWIviWU6GUl2+x/IgatY7taKaU292zvuCwqlx2aq7Hln4Ohk4x+E4faSITGnmRxxkQKaxK7Lxd5T3y+mo7P4Gw=
+	t=1778680250; cv=none; b=IK0Ig8UY32ofjsF468NoTD4hIbz2rOHjqUMC+lrnLrynLw+MlEm/UXdA/oqkNDt4eT4j6Y0wdS6ogASya2rhc4oTPWKYn8rEBRh6D8VnGoSv+I1DZREjpEAhRhaivWDhcADSrFZ9QeMNjGS8p4A3S03DKR/B/BjnbHMvf4BEl9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778680076; c=relaxed/simple;
-	bh=CvxQhJeYojSdUj7wOl0f2AvJB+LkBOY8QINgA8BCnhU=;
+	s=arc-20240116; t=1778680250; c=relaxed/simple;
+	bh=qxYDjg20Dpv+T12VaLFXfMicooCde1h2OZiYqiL2710=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T4/zfTmXQnsNIriUrGUgCFapksX0RMJBmNvlUS2UcKfBNMcHPN1JgtM8sM3mpiQQVMPYVJb/jhtwJwzBETfsswZt16Uo1zlwHsEKYJ2oO7bXUrb1svH4Ty8Dx50Na2af6leIlDDwpwmHCHCZeq4yrqhxH7dwb9AiD8WO3+dHv6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QKsSm2gn; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=rsLk9AmU+bkIRNsscuZsqimL/ijopy/mGEGg7b1aWHvKOkwp57JmhGYN/zU+KE/5vuHqw4oqhYCcmo9H9muXmd6MlXAHRx+rxR+Zm0qE1A7fSV/+V2uZpayk2DTJu+Tus8K3/PejQTZ6LFpDLR7oHgjv4XZp6tQRSqo45R4ckAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NUuf8WMY; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QKsSm2gn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NUuf8WMY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778680073;
+	s=mimecast20190719; t=1778680247;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=CvxQhJeYojSdUj7wOl0f2AvJB+LkBOY8QINgA8BCnhU=;
-	b=QKsSm2gnc1a3fq0/eWTiPKX9xXoOgDriWapFrbaee+xRkblJyA+IW/ZvnfXZBvEVrVOgZW
-	8dMSjQgVqLuPjZrs4a7xML79ipo72w4ECIYYEZVJbY6U2LrfCuER3txeyWO8LJsugcGKLN
-	iDCiCah+cnPl2ykvLaEeqj776JpqStA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=qxYDjg20Dpv+T12VaLFXfMicooCde1h2OZiYqiL2710=;
+	b=NUuf8WMYPfs84fQ7vuAAp5m/AoXM7ctpJ2i9oYbe7Hu7UNhNwmo44Ror6zNJsNW+eP4xI3
+	w+WUH0IMhuFppZ63X6TlxR3EW1MojhdVEBdzu/XfBW/vhCPbSAOmrZDvLWjKsIgqBg50d2
+	gK0fDV7rGsa0N4Eaks1UqIQy9ezIOTk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556--_DJ2OgUNVKVJDbyTKTqZQ-1; Wed, 13 May 2026 09:47:50 -0400
-X-MC-Unique: -_DJ2OgUNVKVJDbyTKTqZQ-1
-X-Mimecast-MFC-AGG-ID: -_DJ2OgUNVKVJDbyTKTqZQ_1778680069
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-48e79219704so25004795e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 06:47:49 -0700 (PDT)
+ us-mta-504-9uOUwSNoNNGmHOSC--Yy1g-1; Wed, 13 May 2026 09:50:46 -0400
+X-MC-Unique: 9uOUwSNoNNGmHOSC--Yy1g-1
+X-Mimecast-MFC-AGG-ID: 9uOUwSNoNNGmHOSC--Yy1g_1778680245
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-48fd3449e6dso2226165e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 06:50:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778680069; x=1779284869;
+        d=1e100.net; s=20251104; t=1778680245; x=1779285045;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CvxQhJeYojSdUj7wOl0f2AvJB+LkBOY8QINgA8BCnhU=;
-        b=M1FgGl0ixemvV8jDRFSOHep7DQjNWcQiLdUdjuIoH1jMzTwaQteeI16SPbncu0DE8B
-         4fQjNx09WLIW7dByZdWloiRH/0fyeeSAGfndwuc/p8ZRvQAFpWh2UgwzebkJ5sKUpCZ1
-         KBwjIpxf7IDzuiQkdJ0oWs62CQwshtH0QTWjnWCTRUF1w1pEz6KRjHfPl51dgDp0XMNf
-         tctsrh4aH5F/xpcuGuh4RVjFVdEK+MMdBDi/Ikvaub6o2HwtuwvP1wbnQ3Erm1DVUSkn
-         a93Eij3XYYfLymih5nRyxupNTEFzs54BdFA1nD7iqMkA2XCma6+CBbVwoLtiLjkFtd5L
-         +cBw==
-X-Gm-Message-State: AOJu0YzbhAw3DVWIRVQ7+f6DWDRW08fj6EF4rlLsG+8POQmSB01su0LU
-	GKPZKhdiJuNdNIJ84V/Dew58WZcvSiQGEukpbP32do55mFHUHx5bD4UBVOS+FcJpCa5xXpWLXHB
-	xr+zI6w31n23La2exY8XYOi9Of9L4eEwV20sycsg6EKflorvBW6eb41Si5QU/MlMqNXs2OG4Exg
+        bh=qxYDjg20Dpv+T12VaLFXfMicooCde1h2OZiYqiL2710=;
+        b=LDy4NNpYKL1Vp/ndJnvaf2pIyyFuH7Osyxx7KcVpNen80eVkNX/JDOj/p9vTCrDTcZ
+         NzWcn1L9Lu5rxobDoCCoEzqmVIYYtbyadnLxWB0Eg8aZNX48q6pVIhHFl7geC/rrfyuf
+         Szg1GMYFGh8LBj2N5tL1UV8WmA1t7OaiJ8NzgElkjBGmrJ/cBA/rBy+qbkciy1tLZwSn
+         rTrorrFrGQdha4aaZQ94ZUX29IT3CBGvCFevv3Cq1ccMgm0z5actQCWv9gVdRLY637wm
+         4iKSmm110fA0qZkkkfyb7ABoq4h5jfqYpcePCCNVQlvB0RIEqhv1P5moQDHT/aE9cE/5
+         2Okw==
+X-Gm-Message-State: AOJu0YzojclWVqj4gowe97bbgyAPqQV0RZ1+1exiooSKcCo7ZeNawTtP
+	bmRUzQ7mcV7NEQ/5FSazFdLld5PebqckdyxBQY2LlCf05aKKpYG679cVl7pa+UzFLpxahxN3dvL
+	ISTasAc3tvKhnRPGTGFKCmYXwnTfRQzrXrBItrZuovpVKvynagKVxT3kE3i686BEmyNdw1CRPMQ
 	==
-X-Gm-Gg: Acq92OF8rQW/zWIQ4Tv8ZMREjJ4PzUH8NeGKttMiSZcPPkDZqozEkd3HzwY4ilTeYKM
-	zUdz2qXx0Ib21efLrxRmH7G9B8y77lVE9laPl8qnx5YUhxpG3Db+G9Hqaa0OVnpMW057nAs966b
-	FPxcMCbJbS6WU7rys1nF+VxNL1t6Bg1gskBIkx8XPfIMt5g6N+WLxJbvTyBfIp95uAcBZs5zf59
-	Y0WI+NtuJn0OtDQbCP7Gtqf6O185xdvcbu2ZfrwHYIZrApRhSMo9pOSApjFNEA4+CSQeP/CCMXz
-	DQKIxyV06zfdxqz3Y1jeXdRHc4SXTcsz8+LsueEaLfwbr4uYJruAIqmO8J7JqhJZQdt1JzTDMj0
-	xmNtucJSBuAKvkuP1oUkc4kBxbuNqa+7CzXKM2kGNrAHPoQrilLnzO0ztLH2ZEFM7FrsK/Fpxm6
-	cUz/v6hCjfR3map+M=
-X-Received: by 2002:a05:600c:1d11:b0:488:9fb7:376d with SMTP id 5b1f17b1804b1-48fc9a50d42mr47252375e9.28.1778680068752;
-        Wed, 13 May 2026 06:47:48 -0700 (PDT)
-X-Received: by 2002:a05:600c:1d11:b0:488:9fb7:376d with SMTP id 5b1f17b1804b1-48fc9a50d42mr47251705e9.28.1778680068164;
-        Wed, 13 May 2026 06:47:48 -0700 (PDT)
+X-Gm-Gg: Acq92OG5fMPiiTBm9YM+UOP0WS6strmrDQU6dasU+PHC/24jfUgT340NvQvolThqyd6
+	Tg1WtkaUeDc/8O/zVZiQpQu/NNLbAiN88BI6truo2EAmwim6THZsJxG0SkPAIVumgIG4RIeJB68
+	wul94KWHHQIL523YGuEll0dcerrUe8VXPoWRKSt7ygAcDvQE4CpITiAYYUU0RzR3wRnR1cID1Gm
+	9zZdAdZOcEA59lvaAearABwP5jebQwclxOD9nvQFsvEBk528b+YAZXWTkW2pKyk3i/knYoY3K1s
+	CXiDxB5D4oGbktN2fHqYloypis5aFYHTjB9Hp0vGWDRcgmV2/RWl9yBAP0ullr5TPTYnehn4voG
+	RtzRcWB1nMea13LtIGtC+XVMJNeeR6fIvj+ILcYPWx3GEAJN+7AnlHHHfHTQ3lVefjBjcT80FRU
+	J/k+eveGcxwvllhKw=
+X-Received: by 2002:a05:600c:3e87:b0:48e:8499:4be0 with SMTP id 5b1f17b1804b1-48fce9eec6dmr40731015e9.15.1778680244691;
+        Wed, 13 May 2026 06:50:44 -0700 (PDT)
+X-Received: by 2002:a05:600c:3e87:b0:48e:8499:4be0 with SMTP id 5b1f17b1804b1-48fce9eec6dmr40730515e9.15.1778680244267;
+        Wed, 13 May 2026 06:50:44 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e8e566bc8sm67364945e9.0.2026.05.13.06.47.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4548ec6aea4sm47122913f8f.10.2026.05.13.06.50.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2026 06:47:47 -0700 (PDT)
-Message-ID: <3e3f9ff9aebde6346d69e5d1a253f8b4b42ad25c.camel@redhat.com>
+        Wed, 13 May 2026 06:50:43 -0700 (PDT)
+Message-ID: <a6534a228702cd5e8eb6721a2afb1f0ba2b93aac.camel@redhat.com>
 Subject: Re: [RFC PATCH v2 04/10] rv/da: add pre-allocated storage pool for
  per-object monitors
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: wen.yang@linux.dev
 Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
  Rostedt <rostedt@goodmis.org>
-Date: Wed, 13 May 2026 15:47:45 +0200
+Date: Wed, 13 May 2026 15:50:42 +0200
 In-Reply-To: <2774332570ee823be60cfe84ba85e9573b4df478.1778522945.git.wen.yang@linux.dev>
 References: <cover.1778522945.git.wen.yang@linux.dev>
 		 <2774332570ee823be60cfe84ba85e9573b4df478.1778522945.git.wen.yang@linux.dev>
@@ -93,7 +93,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: xLfmxl84o-tPmxxqzApIG3Vq1tGVYxLBpe52GIxcmvA_1778680069
+X-Mimecast-MFC-PROC-ID: bYSes7-QeCjaFAOAhKNtzh76PQSRv_Oy3C0TvTuAS4E_1778680245
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -137,17 +137,22 @@ The selftests with tlob seem to work just the same with this kmem_cache (up=
  to
 the unrelated RCU stall). To be fair since you only allocate from the uprob=
 e
-handler, you'd probably be just fine with kmalloc_nolock, but let's ignore =
-this
-for now.
+handler, you'd probably be just fine with kmalloc_nolock, but let's continu=
+e
+with the preallocation logic.
 
 
-That said, the API is starting to get complex (well, not that it wasn't
-already).
+The API is starting to get complex (well, not that it wasn't already).
 We have essentially 3 ways to allocate:
  * fully automatic with kmalloc_nolock
  * semi-automatic with pool preallocation
  * manual with direct storage preallocation
+
+We can have a macro DA_MON_ALLOCATION_STRATEGY =3D {DA_MON_AUTO, DA_MON_POO=
+L,
+DA_MON_MANUAL} where DA_MON_POOL also requires DA_MON_POOL_SIZE to be defin=
+e
+(force that with an #error).
 
 >=20
 > Signed-off-by: Wen Yang <wen.yang@linux.dev>
