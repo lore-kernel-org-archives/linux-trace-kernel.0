@@ -1,49 +1,47 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AA7481FCE;
-	Wed, 13 May 2026 15:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C84282F34;
+	Wed, 13 May 2026 16:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778686993; cv=none; b=Nk1MW4Q18O+bWJeL81VGzBMKmZR79AwzZIfh+A953P4LCvIx1vr+85wzNy1pk/1nIdNlqSc1CEc31B2gT/MUeu8uToLADg7zMeKdfQyfED/wZevYmZQpLG2Ge6IRFZPzXG22Wek+7O0FRCUCsJckWnIgDEHHQ+gQSg/RZaxlNwQ=
+	t=1778688984; cv=none; b=DJl/peKXd0x7SLx3eom+CjbtPnb3jite6cflYUKzml+ocBjXlxU/uUpATU2F1vL+y9MB+HnPrBwT4CD+dUzUs9Fq1rQGSqDk0iExkWoFivTFJuFKJkswlGuC4ncrcmqdV0T/mTRnjvLfF9QGveCzj6FV6QEIWOSAYSwYgIRmupA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778686993; c=relaxed/simple;
-	bh=gkRQjgXAOUtsQDsoJPrjl1J5lhzGoe8KMasfHcOGNSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nCRUhdkyURqNFGwY1/4W2Y9jeM9G9B9dv5bnNftlOD84VMTEY5IIVYeLlzsaY55hLOXnY8qIWaUDnyTxF7jbUdOLMxej3QgMYSnk7uahNTWxs4NOFqaWxh0oSBX68qSVGYN9BVobVSEDEgvuMEba3ttVWLYWIJHRniNgkGRd4nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 49B49C0439;
-	Wed, 13 May 2026 15:43:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id AF64F8000F;
-	Wed, 13 May 2026 15:43:02 +0000 (UTC)
-Date: Wed, 13 May 2026 11:43:05 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>, Waiman Long
- <longman@redhat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>, Broadcom internal kernel
- review list <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
- <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>, Dennis Zhou
- <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter
- <cl@gentwo.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	s=arc-20240116; t=1778688984; c=relaxed/simple;
+	bh=d1S0tc+pboulCw1sblcTRgb8enWG+V9dKWRqmJ2/KRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ub81PuvAWXJcmjKFGTtnKKMMvU05UFJhmT8KkI1gPtZ0/T3MsHSlQZxOzFs8yrBoXgsQ1U7cbZp/NNpYM4kXWvFvyK4sH2x90IMgcn5Ev1FGrvuJhVwRgEdtc64cmNmCasXWr5XMvHuJJJBtoBYh43Z0/vUPIasTXsLCh9ZjasU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=m/XtLcex; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="m/XtLcex"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=dRa2nvez8IJQnvtB9YGQJFrPNTJQb7WD1xgO5uUHxNU=; b=m/XtLcexVMrXc5eqOAaIyDHY7z
+	E+2rSZ8CNiFpaNSlZNbCAPRPzgMyj2xo6s/V8t18ekfsRghMfsfmzSRI97cXUnvN1m7hnh4uyCc4U
+	DPH5n5p/detHyZuHzCpzdjWAQsHMeaMcWMpyNmPVftRkkuGxXe4eeBxHWVgTimvyALmxTI05RPdAr
+	zYKrcJIwSOPsYsL4tsVQv1z7+f9RkRD1utKiVhdVYsGzbGOqEzSssT7qkli6HVM1LAzFhiZUChEw+
+	EoUPgurW6lcFJUUjtuAJLJJVHdXXlEmXXO5ETwzGesV+PQ4ecFdEW1Rjuu1H8vEiprJNGoqZSElWq
+	rc9kDcVw==;
+Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1wNCFk-000000006EO-0noB;
+	Wed, 13 May 2026 12:16:08 -0400
+Date: Wed, 13 May 2026 12:16:07 -0400
+From: Rik van Riel <riel@surriel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, virtualization@lists.linux.dev,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v6 7/7] locking: Add contended_release tracepoint to
- qrwlock
-Message-ID: <20260513114305.21ffc98f@gandalf.local.home>
-In-Reply-To: <b67fda8e847fff72da05eff7f799019f8d17ce21.1777999826.git.d@ilvokhin.com>
-References: <cover.1777999826.git.d@ilvokhin.com>
-	<b67fda8e847fff72da05eff7f799019f8d17ce21.1777999826.git.d@ilvokhin.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Subject: [PATCH] perf/ftrace: Fix WARNING in __unregister_ftrace_function
+Message-ID: <20260513121607.14eab1f6@fangorn>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,116 +50,60 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: AF64F8000F
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: w86rrez7eqwjzfhgqoxgq67qhkb7x9up
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Ry8RzWesZfFcKD7J3lfQK7el56ZbsoNM=
-X-HE-Tag: 1778686982-257566
-X-HE-Meta: U2FsdGVkX191OTt5Ksd6rUOT63By4bRHO3knmbxlImxeNwSRm6MiHtOjFX4vJPI7crm7BSyrSIbvYT2WqOIcyORlXBEY2Q745H1gRnZgzxFxnZc2Bi+ODYvQqGyzbt0gxBvY2ORVu7Y4GQ21a4wpv6/a90k23BYL7etn+PwAjOo5gxJiydIgCFloW6Mpqm0UrvbWwABEN81N7oFp14CVTY728nkwzhqSyPCqbUhdm6Gp7kGkEzhfOsmKyTBnoEo7WZmXFfbv5M1ZAKLN8diVSXcT2j7/QCb3HvSSmT0BmXISJ4AvPIW0Eh8Dhn0nmq6iowz0POq6263XgbEXZQ9JarrVBkMeNNzrxBaehT1mK01cf9rA6EvFjUu8THAnEVExi+n7p8EX5+Ja1SfaAhM8P576YgkfJW2f
 
-On Tue,  5 May 2026 17:09:36 +0000
-Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+perf_ftrace_function_unregister() unconditionally calls
+unregister_ftrace_function() without checking whether the ftrace_ops
+was ever successfully registered. This triggers a WARN_ON in
+__unregister_ftrace_function() when the ops doesn't have
+FTRACE_OPS_FL_ENABLED set.
 
-> Extend the contended_release tracepoint to queued rwlocks, using the
-> same out-of-line traced unlock approach as queued spinlocks.
-> 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> ---
->  include/asm-generic/qrwlock.h | 22 ++++++++++++++++++++++
->  kernel/locking/qrwlock.c      | 16 ++++++++++++++++
->  2 files changed, 38 insertions(+)
-> 
-> diff --git a/include/asm-generic/qrwlock.h b/include/asm-generic/qrwlock.h
-> index 4b627bafba8b..274c19006125 100644
-> --- a/include/asm-generic/qrwlock.h
-> +++ b/include/asm-generic/qrwlock.h
-> @@ -14,6 +14,7 @@
->  #define __ASM_GENERIC_QRWLOCK_H
->  
->  #include <linux/atomic.h>
-> +#include <linux/tracepoint-defs.h>
->  #include <asm/barrier.h>
->  #include <asm/processor.h>
->  
-> @@ -35,6 +36,10 @@
->   */
->  extern void queued_read_lock_slowpath(struct qrwlock *lock);
->  extern void queued_write_lock_slowpath(struct qrwlock *lock);
-> +extern void queued_read_unlock_traced(struct qrwlock *lock);
-> +extern void queued_write_unlock_traced(struct qrwlock *lock);
-> +
-> +DECLARE_TRACEPOINT(contended_release);
->  
->  /**
->   * queued_read_trylock - try to acquire read lock of a queued rwlock
-> @@ -115,6 +120,17 @@ static __always_inline void __queued_read_unlock(struct qrwlock *lock)
->   */
->  static inline void queued_read_unlock(struct qrwlock *lock)
->  {
-> +	/*
-> +	 * Trace and unlock are combined in the traced unlock variant so
-> +	 * the compiler does not need to preserve the lock pointer across
-> +	 * the function call, avoiding callee-saved register save/restore
-> +	 * on the hot path.
-> +	 */
-> +	if (tracepoint_enabled(contended_release)) {
-> +		queued_read_unlock_traced(lock);
+This can happen during perf_event_alloc() error cleanup when
+perf_trace_destroy() is called via __free_event() on an event whose
+ftrace_ops registration failed or was already torn down by
+perf_try_init_event()'s err_destroy path.
 
-Same issue here about duplicating the code.
-> +		return;
-> +	}
-> +
->  	__queued_read_unlock(lock);
->  }
->  
-> @@ -129,6 +145,12 @@ static __always_inline void __queued_write_unlock(struct qrwlock *lock)
->   */
->  static inline void queued_write_unlock(struct qrwlock *lock)
->  {
-> +	/* See comment in queued_read_unlock(). */
-> +	if (tracepoint_enabled(contended_release)) {
-> +		queued_write_unlock_traced(lock);
+The call path is:
+  perf_event_alloc() error cleanup
+    -> __free_event()
+      -> event->destroy() [tp_perf_event_destroy]
+        -> perf_trace_destroy()
+          -> perf_trace_event_close()
+            -> TRACE_REG_PERF_CLOSE
+              -> perf_ftrace_function_unregister()
+                -> unregister_ftrace_function()
+                  -> __unregister_ftrace_function()
+                    -> WARN_ON(!(ops->flags & FTRACE_OPS_FL_ENABLED))
 
-And here.
+Fix this by checking FTRACE_OPS_FL_ENABLED before attempting to
+unregister. If the ops is not enabled, just free the filter and
+return success.
 
-> +		return;
-> +	}
-> +
->  	__queued_write_unlock(lock);
->  }
->  
-> diff --git a/kernel/locking/qrwlock.c b/kernel/locking/qrwlock.c
-> index d2ef312a8611..5ae4b0372719 100644
-> --- a/kernel/locking/qrwlock.c
-> +++ b/kernel/locking/qrwlock.c
-> @@ -90,3 +90,19 @@ void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock)
->  	trace_contention_end(lock, 0);
->  }
->  EXPORT_SYMBOL(queued_write_lock_slowpath);
-> +
-> +void __lockfunc queued_read_unlock_traced(struct qrwlock *lock)
-> +{
-> +	if (queued_rwlock_is_contended(lock))
-> +		trace_call__contended_release(lock);
+Assisted-by: Claude:claude-opus-4.7 syzkaller
+Signed-off-by: Rik van Riel <riel@surriel.com>
+---
+ kernel/trace/trace_event_perf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Just have this trace and not actually do any locking.
-
-
-> +	__queued_read_unlock(lock);
-> +}
-> +EXPORT_SYMBOL(queued_read_unlock_traced);
-> +
-> +void __lockfunc queued_write_unlock_traced(struct qrwlock *lock)
-> +{
-> +	if (queued_rwlock_is_contended(lock))
-> +		trace_call__contended_release(lock);
-
-Ditto.
-
--- Steve
-
-> +	__queued_write_unlock(lock);
-> +}
-> +EXPORT_SYMBOL(queued_write_unlock_traced);
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index a6bb7577e8c5..b9e33ae24867 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -497,7 +497,14 @@ static int perf_ftrace_function_register(struct perf_event *event)
+ static int perf_ftrace_function_unregister(struct perf_event *event)
+ {
+ 	struct ftrace_ops *ops = &event->ftrace_ops;
+-	int ret = unregister_ftrace_function(ops);
++	int ret;
++
++	if (!(ops->flags & FTRACE_OPS_FL_ENABLED)) {
++		ftrace_free_filter(ops);
++		return 0;
++	}
++
++	ret = unregister_ftrace_function(ops);
+ 	ftrace_free_filter(ops);
+ 	return ret;
+ }
+-- 
+2.53.0-Meta
 
