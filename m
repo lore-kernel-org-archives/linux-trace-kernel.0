@@ -1,232 +1,90 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE623A783D;
-	Wed, 13 May 2026 19:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9EA3B19A8;
+	Wed, 13 May 2026 19:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778698822; cv=none; b=QfV79o/3DoOUFoVW9bvR96GK2Un3g9nLgDIJP6Fz1aZp8ILxcqO0rMPoWgpk/eHvaXBXAZnQcGWeOKzq79lYp/0Ku05T3Rcn2f+aSviPcndOqWmX78AdbLLSv7P9S4Qqe3Myo6J9MPtwizJf7SGJ7RNkdpUq5oJPJGtAo8ax/IM=
+	t=1778700385; cv=none; b=ZzWBIARd3IGxxS9NfeXVEcrIMXhlZsI9P0YUoL1EE7acZ801UXkjqyimxZ0sf/tvAbXKoO0VQHtlOWPYlvOApV35l+xXmYtvAESosp4UHgInnhfhx/LjjPHwwaO0BKKCSqHppjjj2MsUw2AWWHeWbywDw/lRRRMPrghi6QP79BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778698822; c=relaxed/simple;
-	bh=p9iJVpwidqE5mzaDvwm+CJT1EDavdcYjs9AHGsNwfh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=L1q+cxjWgQ9vgqRpy5AX/8BcPNR93cxdFAsx8D4FNa60uOTsl03ExmyUGALReGU2kkUSOP+U07VUrfMh5004wibCi1V8lh1MWU20eQZ/xXWzbntzRzSlAbXtgB01OD32v29Rh12RQrj4tFmY1AGRGRF1plc2h3u3iN9QTTdXXPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id C5A311C030D;
-	Wed, 13 May 2026 19:00:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id C5D392E;
-	Wed, 13 May 2026 19:00:03 +0000 (UTC)
-Date: Wed, 13 May 2026 15:00:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
- <irogers@google.com>
-Subject: [PATCH v2] tracing: Allow perf to read synthetic events
-Message-ID: <20260513150007.3b280e87@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1778700385; c=relaxed/simple;
+	bh=45c9OV2GPaYfwize4vc5GxTCEBADyTVSFmlnujT5NMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lM7o1BRFTUox0FAGVdMHaKQIpHReTn+cGWw76cSQHQMq80LBy0cCrVUfn3gnBJ5YCfz8HFY+42dTK0R6sGANtxx7wrf13n3zuY1RU0XY2bJNsyp6mCrW1gW/W66Lxy/i1slnNk/Y8hcc4bMF2rdgErV6GqCz2Uoln+b8sAiCnG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HJfkqXV+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HJfkqXV+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5jXgOm2W/v1Vl1bT+RF7zk/Xq/msqAlwEyLXpPVPOgA=; b=HJfkqXV+o9pZuHWl156uv9ZV1+
+	pAU2fPeisDFyWOFbut8ow8ktjj2bC4mXW5tWR+lScGE4ycAW6WnbitCChoduuN8LwzsBfUbDl5BmP
+	xNdaqsf20yeJuhpMBbzq2iMviJaFhZVTbHMaR1plTPwOBP1MwX60viyi+7jsK35C5KXa6K4hktEVX
+	iMOqPFzM+nEy/L+epKsE8B9XQ/5fOffw66BfqUQEvXN4YvlywwsuficHa+2WKTXnd5TqL3mT5mKtV
+	+tdwDCAUbR8KJ1Gd7i/flhb1qvyv1NeielP4naekfJ1Inewrcigqg8s4qjK7BJ25kK6KNmpCg319C
+	D6FKTjZw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wNFDa-000000018qi-2vA8;
+	Wed, 13 May 2026 19:26:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 026183007A4; Wed, 13 May 2026 21:26:05 +0200 (CEST)
+Date: Wed, 13 May 2026 21:26:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v6 0/7] locking: contended_release tracepoint
+ instrumentation
+Message-ID: <20260513192605.GA2545104@noisy.programming.kicks-ass.net>
+References: <cover.1777999826.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: C5D392E
-X-Stat-Signature: in9hqoyh6jabk3jfhtq9nopqueq3e1as
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18MCZlV3wFruJOpPUgUVntUzb69tTKUm5k=
-X-HE-Tag: 1778698803-813443
-X-HE-Meta: U2FsdGVkX1+Bd2NGkSUpBjFdiYZKvDZLuFitjXwDzLjRxXgzHuczzo8nWA3CVFEzN6jvRCyS2AfOcNoTMjNWvw+T8TjVT8SYaqlxG5e5MfGqkjClvTA4iDbdgWFpRFaR9G4JdwnefSG0Hf+ozpT5oYYG26gYHC11llgt4Ld5l4+aQ9eMAg8o8LqMOuneSTV6D34QU7oD+ptO94G+XWKVscHF/kUaQEOqhLrWaPpxH8J98SW0U364X6NhyjnGlQqMvTSUTgoN9x0squvnnA10vdjR/dkMqeDxAgFvKIHhbnDRojnbBjlMl1N6lMavho9L0/wG7A6Qn9TWxENoJvbexJajOstJesp0eWzrY+46tY/fasCmum1BkDyC8FOrN2Ghh2OB2Uijsv5HOwk97tn2FQc6aosIthgLM5Y/OYGRpXVc7ekEz+P4ySlcnsA7s1ZwZ+3ebtih7PBV0lIdbJRaawJZUJNOiheZ8eirIQFyArE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1777999826.git.d@ilvokhin.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, May 05, 2026 at 05:09:29PM +0000, Dmitry Ilvokhin wrote:
 
-Currently, perf can not enable synthetic events. When it does, it either
-causes a warning in the kernel or errors with "no such device".
+> This series adds a contended_release tracepoint that fires on the
+> holder side when a lock with waiters is released. This provides:
+> 
+> - Hold time estimation: when the holder's own acquisition was
+>   contended, its contention_end (acquisition) and contended_release
+>   can be correlated to measure how long the lock was held under
+>   contention.
+> 
+> - The holder's stack at release time, which may differ from what perf lock
+>   contention --lock-owner captures if the holder does significant work between
+>   the waiter's arrival and the unlock.
+> 
+> Note: for reader/writer locks, the tracepoint fires for every reader
+> releasing while a writer is waiting, not only for the last reader.
 
-Add the necessary code to allow perf to also attach to synthetic events.
+And for qspinlock.
 
-Reported-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://patch.msgid.link/20251217113920.50b56246@gandalf.local.home
-
-- Forward ported to v7.1-rc2
-
- kernel/trace/trace_events_synth.c | 121 +++++++++++++++++++++++-------
- 1 file changed, 94 insertions(+), 27 deletions(-)
-
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 39ac4eba0702..e6871230bde9 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -499,28 +499,19 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
- 	return len;
- }
- 
--static void trace_event_raw_event_synth(void *__data,
--					u64 *var_ref_vals,
--					unsigned int *var_ref_idx)
-+static __always_inline int get_field_size(struct synth_event *event,
-+					  u64 *var_ref_vals,
-+					  unsigned int *var_ref_idx)
- {
--	unsigned int i, n_u64, val_idx, len, data_size = 0;
--	struct trace_event_file *trace_file = __data;
--	struct synth_trace_event *entry;
--	struct trace_event_buffer fbuffer;
--	struct trace_buffer *buffer;
--	struct synth_event *event;
--	int fields_size = 0;
--
--	event = trace_file->event_call->data;
--
--	if (trace_trigger_soft_disabled(trace_file))
--		return;
-+	int fields_size;
- 
- 	fields_size = event->n_u64 * sizeof(u64);
- 
--	for (i = 0; i < event->n_dynamic_fields; i++) {
-+	for (int i = 0; i < event->n_dynamic_fields; i++) {
- 		unsigned int field_pos = event->dynamic_fields[i]->field_pos;
- 		char *str_val;
-+		int val_idx;
-+		int len;
- 
- 		val_idx = var_ref_idx[field_pos];
- 		str_val = (char *)(long)var_ref_vals[val_idx];
-@@ -535,18 +526,18 @@ static void trace_event_raw_event_synth(void *__data,
- 
- 		fields_size += len;
- 	}
-+	return fields_size;
-+}
- 
--	/*
--	 * Avoid ring buffer recursion detection, as this event
--	 * is being performed within another event.
--	 */
--	buffer = trace_file->tr->array_buffer.buffer;
--	guard(ring_buffer_nest)(buffer);
--
--	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
--					   sizeof(*entry) + fields_size);
--	if (!entry)
--		return;
-+static __always_inline void write_synth_entry(struct synth_event *event,
-+					      struct synth_trace_event *entry,
-+					      u64 *var_ref_vals,
-+					      unsigned int *var_ref_idx)
-+{
-+	int data_size = 0;
-+	int i, n_u64;
-+	int val_idx;
-+	int len;
- 
- 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
- 		val_idx = var_ref_idx[i];
-@@ -587,10 +578,83 @@ static void trace_event_raw_event_synth(void *__data,
- 			n_u64++;
- 		}
- 	}
-+}
-+
-+static void trace_event_raw_event_synth(void *__data,
-+					u64 *var_ref_vals,
-+					unsigned int *var_ref_idx)
-+{
-+	struct trace_event_file *trace_file = __data;
-+	struct synth_trace_event *entry;
-+	struct trace_event_buffer fbuffer;
-+	struct trace_buffer *buffer;
-+	struct synth_event *event;
-+	int fields_size;
-+
-+	event = trace_file->event_call->data;
-+
-+	if (trace_trigger_soft_disabled(trace_file))
-+		return;
-+
-+	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	buffer = trace_file->tr->array_buffer.buffer;
-+	guard(ring_buffer_nest)(buffer);
-+
-+	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
-+					   sizeof(*entry) + fields_size);
-+	if (!entry)
-+		return;
-+
-+	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
- 
- 	trace_event_buffer_commit(&fbuffer);
- }
- 
-+#ifdef CONFIG_PERF_EVENTS
-+static void perf_event_raw_event_synth(void *__data,
-+				       u64 *var_ref_vals,
-+				       unsigned int *var_ref_idx)
-+{
-+	struct trace_event_call *call = __data;
-+	struct synth_trace_event *entry;
-+	struct hlist_head *perf_head;
-+	struct synth_event *event;
-+	struct pt_regs *regs;
-+	int fields_size;
-+	size_t size;
-+	int context;
-+
-+	event = call->data;
-+
-+	perf_head = this_cpu_ptr(call->perf_events);
-+
-+	if (!perf_head || hlist_empty(perf_head))
-+		return;
-+
-+	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
-+
-+	size = ALIGN(sizeof(*entry) + fields_size, 8);
-+
-+	entry = perf_trace_buf_alloc(size, &regs, &context);
-+
-+	if (unlikely(!entry))
-+		return;
-+
-+	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
-+
-+	perf_fetch_caller_regs(regs);
-+
-+	perf_trace_buf_submit(entry, size, context,
-+			      call->event.type, 1, regs,
-+			      perf_head, NULL);
-+}
-+#endif
-+
- static void free_synth_event_print_fmt(struct trace_event_call *call)
- {
- 	if (call) {
-@@ -917,6 +981,9 @@ static int register_synth_event(struct synth_event *event)
- 	call->flags = TRACE_EVENT_FL_TRACEPOINT;
- 	call->class->reg = synth_event_reg;
- 	call->class->probe = trace_event_raw_event_synth;
-+#ifdef CONFIG_PERF_EVENTS
-+	call->class->perf_probe = perf_event_raw_event_synth;
-+#endif
- 	call->data = event;
- 	call->tp = event->tp;
- 
--- 
-2.53.0
-
+I am really not sure this is worth the overhead for qspinlock / rwlock.
