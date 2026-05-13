@@ -1,117 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D4347DD52;
-	Wed, 13 May 2026 15:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE96C481FCE;
+	Wed, 13 May 2026 15:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778686366; cv=none; b=WS5hkc15X/s9STP3/HSnAt1CWYccx4qLU74+oqmuMRh1At+s/bXjcGFx7dn0BNw+w06bYRq6hh0B7BJv3oBO0QAYEgj4U1LvtVdNNiYu6exNxmnrSKfzwgxiUxo2/g+1b9PkWwMPX+4M/1auXYcBoPyEN5KGjZNoN95c1I8lfFI=
+	t=1778686682; cv=none; b=fPKmfx97OQGnLMF3jprWshV92VxnSFvmjraWk05CnE02P+v0+QT2kQcnPOpI5WzQsgx55pRhbpnjScS4ZilY783u235JBhquK7S2HEDYT2SriVAtlE5/RAzSbzfNnHN6brci3AwcaTRZV9kbpr/dCEFncPrGvO+YrFVDsRSqyrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778686366; c=relaxed/simple;
-	bh=0ci+iek60SmkhVTT/zsTtlI1fmuGknW5HfienBWjnFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fxsDXwqDzplup4nM6vXv/3i4IcVwmnRCsuRgYc1Sb+5+gHY/jhP09RaKyI9k7ayhG0YPG6hwupix3hj+zag3xyx1R1ytFfeXoD+E9K247+jNDLZoMQ1wbi6D9D082EWe8HSvyhjTGbPZWwk5Fo+CMF5p8u/w4muXZidEjH7ekRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRTu9XDX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRTu9XDX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A925C19425;
-	Wed, 13 May 2026 15:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778686366;
-	bh=0ci+iek60SmkhVTT/zsTtlI1fmuGknW5HfienBWjnFM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JRTu9XDXhzehWq8qRyftamEAEiC2Q020LlHtCb8ip9vhqdfOOIyj4jK7UPjULtzhI
-	 zZuZM5tkxjuJs4A3fyl2dsEpZeU52xFGEfrhndTWEGcg7JrRto/QW/+YloP8U/4Y00
-	 8mGcx1WfnBEux7LgwoEw/Pyyum2fyzPcmHddAruShjQzhEOQOePuv/pQNOizNGhXhc
-	 vhCaeRPmjpXIwyFkd8lEJzBfYA2LTFPMb2uWzkr90owubbZxB/KJlM8P7PhiFDpUtp
-	 zZvtrZNVeiUNOYiRitoQCLBsE3i3C3DsmRRfUlEOHBPicHRbc3ceG6xJgVKLVuweLD
-	 OXBiwUtPeWVqA==
-Message-ID: <fab7d27a-6c2b-47aa-abe8-a327f05fb5cd@kernel.org>
-Date: Wed, 13 May 2026 17:32:41 +0200
+	s=arc-20240116; t=1778686682; c=relaxed/simple;
+	bh=y8NfF3OMajZVMwfCULKb6I7Sxnei84iMNXs5shGDIEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gGE9XHB7G23h9xoFAIIoxIGuM0Z/crlPWlL7dKl5V7i7AEMF4cLsVJkzg37Q7OL+Q+SjRk5dlGjEkfFn5o5dV1XOxuGwMPtl0h34PZbyMomfsGyaqMDeqjHqU+sHh7wKuMy54J8WBGkIEMgUDZ6IunfsGnKECrQnGFG9WgMYX8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id B530B1C0437;
+	Wed, 13 May 2026 15:37:56 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id E2CAB30;
+	Wed, 13 May 2026 15:37:50 +0000 (UTC)
+Date: Wed, 13 May 2026 11:37:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>, Waiman Long
+ <longman@redhat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>, Broadcom internal kernel
+ review list <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
+ <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>, Dennis Zhou
+ <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter
+ <cl@gentwo.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, "Paul E.
+ McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v6 4/7] locking: Factor out queued_spin_release()
+Message-ID: <20260513113754.051c50e9@gandalf.local.home>
+In-Reply-To: <64c202b8a76a7d98515cf10cc1f99ecb0a9a7ccf.1777999826.git.d@ilvokhin.com>
+References: <cover.1777999826.git.d@ilvokhin.com>
+	<64c202b8a76a7d98515cf10cc1f99ecb0a9a7ccf.1777999826.git.d@ilvokhin.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm/page_alloc: add tracepoints for zone->lock
- acquisitions
-To: Dmitry Ilvokhin <d@ilvokhin.com>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
- Steven Rostedt <rostedt@goodmis.org>, Suren Baghdasaryan
- <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan
- <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@cloudflare.com
-References: <20260508162207.3315781-1-hawk@kernel.org>
- <20260508102948.b1c687e623fabec65580f258@linux-foundation.org>
- <832e4333-4079-4865-8ad8-3dd8868fb964@kernel.org>
- <4f61457e-deff-430f-8a1e-d3c33c925db3@kernel.org>
- <af4mbDB3-ohO5DCp@shell.ilvokhin.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <af4mbDB3-ohO5DCp@shell.ilvokhin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: E2CAB30
+X-Stat-Signature: uew54cpg7odf4hwzm1e8ogr5uztk4ec5
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX191fRG9JHtupJy9pd45jNQyIWUqbihg3Yg=
+X-HE-Tag: 1778686670-783690
+X-HE-Meta: U2FsdGVkX1/Xz0KsUrlgbQ6P0jqSsi0BuOOQ57BSdsiBmiHSiqcnhQ8GGF/57kY5vcJ/Kp/3f3hVXhFX4GKJd6dUHccPq7zIEHyQxn5yDoVxMijnzCiN8wJ8SDaVYwf66HqkJmTiFdJ7pJh3X3xBeD26+lUuy34LqT1aZOLssrwR5BQSZZo9PBde81EORMGBaUxWkhXB2CrVDuixHOOyqducHcecosvvnTb/fZrh00Esfpaocrvm/lYF5zhG0N+LkOPDBCjYZcjvOuGc0vZBxMjXiv4M4p/fDszLwC/Cm9LBow3UCP5Zi/qp3HetYEBByXLUrv4ZuTRn2iP6b3iT/wWWHo+jNXq7lo9cNMgRiATjmxEOnW30JzPGPSXoL4wAt8retxoe8y0BmTSkSH3xzQ==
 
+On Tue,  5 May 2026 17:09:33 +0000
+Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 
-
-On 08/05/2026 20.07, Dmitry Ilvokhin wrote:
-> On Fri, May 08, 2026 at 07:40:51PM +0200, Vlastimil Babka (SUSE) wrote:
->> On 5/8/26 7:38 PM, Vlastimil Babka (SUSE) wrote:
->>> On 5/8/26 7:29 PM, Andrew Morton wrote:
->>>> e .configOn Fri,  8 May 2026 18:22:06 +0200 hawk@kernel.org wrote:
->>>>
->>>>> Add tracepoints to the page allocator fast paths that acquire
->>>>> zone->lock, allowing diagnosis of lock contention in production.
->>>>
->>>> Thanks, I'm surprised we haven't done this yet.
->>>
->>> There was a recent attempt [1]. Not being a generic solution wasn't welcome.
->>>
->>> [1] https://lore.kernel.org/all/cover.1772206930.git.d@ilvokhin.com/
->>
->> And this is the generic solution I think?
->>
->> https://lore.kernel.org/all/cover.1777999826.git.d@ilvokhin.com/
+> Introduce queued_spin_release() as an arch-overridable unlock primitive,
+> and make queued_spin_unlock() a generic wrapper around it.
 > 
-> Thanks for cc'ing me, Vlastimil.
+> This is a preparatory refactoring for the next commit, which adds
+> contended_release tracepoint instrumentation to queued_spin_unlock().
+
+In change logs, do not use "next commit". Instead say something like:
+
+  In preparation for adding contended_release tracepoint instrumentation to
+  queued_spin_unlock(), refactor the code to allow out of line calls when
+  the tracepoint is enabled.
+
+Or something like that.
+
+-- Steve
+
+
+
 > 
-> Yes, this is an attempt at a generic solution for tracing contended
-> locks, including spinlocks, so it should also cover the use case
-> proposed in this patchset.
->
-
-I'm aware of the generic solution and often use `perf lock contention`.
-And the tool libbpf-tools/klockstat. My experience is unfortunately that
-enabling these tracepoint is prohibitive expensive on production server,
-and production suffers when I run these tools.
-
-I'm very happy to see a patchset adding a contended case. But I worry
-that tracing all contented locks in the system is also too much to have
-enabled continuously for production.
-
-This patch is carefully constructed to minimize overhead, such that I
-can enable this continuously on production to catch issues.  If I
-identify issue I will use the generic tracpoints for further debugging.
-
-
-> In fact, zone->lock contention was one of the primary motivations for
-> this work.
-
-In the generic solution I'm loosing the "zone" and pages "count".  I
-need this information to get the answers I'm looking for.  Specifically
-I'm looking at reducing CONFIG_PCP_BATCH_SCALE_MAX, but I want to this
-to be a data-driven decision (my first principle is: if you cannot
-measure it you cannot improve it).
-
-I'm likely going to apply this patch to our production system, such that
-I can get my data-driven decision.  I need to deploy it widely enough to
-get enough server experiencing direct-reclaim.  I'll report back if
-people are interested in these learning?
-
---Jesper
+> Rename the existing arch-specific queued_spin_unlock() overrides on
+> x86 (paravirt) and MIPS to queued_spin_release().
+> 
+> No functional change.
+> 
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
