@@ -1,195 +1,245 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DB6391E77
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 03:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11463A5E77
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 May 2026 05:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778641543; cv=none; b=JqRsWUId4oXpbf5/v4uR+562YOnF2FwjFznREP1oaIkr418fWfdH/0phCXK8u6anbA2lWD24fO4oUHehQwuTxJoHPeuNvBVbm9Ik+4Gn67cBTrP23q2Pee5ooLEsOtHhKO48EKYjupxC3hiGbH1RS/wyu7F1A+uptVRCD5p/uYw=
+	t=1778650372; cv=none; b=avEeedXG8aDPU+yYgI0D946KiJVUX+k8EKgyfDZrtLy1hlOQD+A0JGvNnep39X2qBwb/KId0Aqsl5D7PzSO3euWYb02Q6KEcDwP2WzkAUHYnMo7V1lC26Ihb9jnxdP4vMJB05c+jSwgQKVQzDKa143coOUdu0Z4PD5+ZT5FvF3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778641543; c=relaxed/simple;
-	bh=pj6DprnSLzLdRwxG/z4tUqiwG0zZLLNzGp7blWdCEo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OZlPFDdLv4zQ/x/tSFcIRu4E+hNC2z7K9koRyYxLQMYYx/UrYqG4rK0cOLisCnstrE9mfqOtfRXLbEW0LDIa9LlrOJK2AYOtJ+DmkMo5ZFcnvxXHQ6lX6MlrmQbLDSpbVX5Rag74weoNXAIIel3VVKL/yRnljp3jHy+7iAIuymI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QOrjenCo; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1778650372; c=relaxed/simple;
+	bh=kSbEm7k58Eo6lWtNEuFinBdUBfjgQ7eoeLviWwnfWkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oOXzaqEEpEMagUA40Xrra7qheKC4UMAis64CSpr/dnkU5fbipm5jLv82BFM/YTFOaQWg7G1UqnYCbSaO1tZif0aTFhIjgp/yNbvAbeVfmgt8WdU5VG4XROLrEYQGO4yf0pJCyx0FHxQBQpl0jSL61T2csHjz7/Py/Wsk0REQtFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tCmKNPgd; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QOrjenCo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778641540; x=1810177540;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pj6DprnSLzLdRwxG/z4tUqiwG0zZLLNzGp7blWdCEo4=;
-  b=QOrjenCosm5RNVMWuJVd0DEgtvKUmU3ikAewxsbqoiGE9A/Tu/sBCKpa
-   UOZeq/cFeKGFLX8ruRYGlqsTulmd7wHPw0ZTXZWXu7vADeqOhMxzP3bsU
-   tACZZua3Mg+IUFyFWCRoIqHuurHlMR+ml8aTkuXeBA8KLOKHtQoAfUmJz
-   5wjGnDA/RfZLA7f+MWJcxIuJC1/kwXNLW4ATRBrtbPR0Cx8EqhCn4L+xG
-   b1nZ7GcVxFW6bkPzsRsX006hSpCye0xVqd4Hoa+Wepe2lcQ02eR3h0pln
-   N77oAOs1uRWCBE1ggzs7Lw1OvNV7uF1PI6CbMfHS5F6MAub7fK2y6ElEG
-   Q==;
-X-CSE-ConnectionGUID: bbZyU0yGRaGiHPwzuqgZ3g==
-X-CSE-MsgGUID: aEGYK/u6TRiTAnkZEWJpQg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="97128453"
-X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
-   d="scan'208";a="97128453"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 20:05:39 -0700
-X-CSE-ConnectionGUID: VID22wTxTu6w5XRAEflmvA==
-X-CSE-MsgGUID: 4Dk1B6vrSoOzvncDQIDeIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
-   d="scan'208";a="233676690"
-Received: from lkp-server01.sh.intel.com (HELO dca79079c3eb) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 12 May 2026 20:05:36 -0700
-Received: from kbuild by dca79079c3eb with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wMzuf-000000003HH-2ZcK;
-	Wed, 13 May 2026 03:05:33 +0000
-Date: Wed, 13 May 2026 11:04:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: "qiwu.chen" <qiwuchen55@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
-	david@kernel.org, mhocko@kernel.org, willy@infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, "qiwu.chen" <qiwu.chen@transsion.com>
-Subject: Re: [PATCH v2] mm: vmscan: rework lru_shrink and write_folio
- tracepoints
-Message-ID: <202605131057.E7FZbuAc-lkp@intel.com>
-References: <20260506083652.100160-1-qiwu.chen@transsion.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tCmKNPgd"
+Message-ID: <cb929b8b-5bfb-4afe-ba50-45620c38ea96@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778650367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BHAIdS14F1xCMUzmy/sos/gkrsZKrIkMdmnfzXNcQAw=;
+	b=tCmKNPgdqOvnIfkFzHi7b9nRGz1cCaPjWwgT4b3a6uoFDJ0Xs5HNoSfPEd79RsoMjmjmEV
+	1ZhhPZ43l0qf4bhLHVq130uGSg+hUSc4ojnYiQvEF1YbRk9KjzB1iL2DJU9wmePRjJnHeX
+	m0KQJLIx01hodVBKWmdMy2s29OpmtwI=
+Date: Wed, 13 May 2026 13:32:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260506083652.100160-1-qiwu.chen@transsion.com>
-
-Hi qiwu.chen,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v7.1-rc3]
-[cannot apply to akpm-mm/mm-everything trace/for-next next-20260508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/qiwu-chen/mm-vmscan-rework-lru_shrink-and-write_folio-tracepoints/20260513-040720
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20260506083652.100160-1-qiwu.chen%40transsion.com
-patch subject: [PATCH v2] mm: vmscan: rework lru_shrink and write_folio tracepoints
-config: sh-defconfig (https://download.01.org/0day-ci/archive/20260513/202605131057.E7FZbuAc-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260513/202605131057.E7FZbuAc-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605131057.E7FZbuAc-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/trace/define_trace.h:132,
-                    from include/trace/events/vmscan.h:602,
-                    from mm/vmscan.c:72:
-   include/trace/events/vmscan.h: In function 'trace_raw_output_mm_vmscan_write_folio':
-   include/trace/events/vmscan.h:358:19: warning: format '%p' expects argument of type 'void *', but argument 3 has type 'long unsigned int' [-Wformat=]
-     358 |         TP_printk("folio=%p lru=%s",
-         |                   ^~~~~~~~~~~~~~~~~
-   include/trace/trace_events.h:219:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     219 |         trace_event_printf(iter, print);                                \
-         |                                  ^~~~~
-   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
-      45 |                              PARAMS(print));                   \
-         |                              ^~~~~~
-   include/trace/events/vmscan.h:342:1: note: in expansion of macro 'TRACE_EVENT'
-     342 | TRACE_EVENT(mm_vmscan_write_folio,
-         | ^~~~~~~~~~~
-   include/trace/events/vmscan.h:358:9: note: in expansion of macro 'TP_printk'
-     358 |         TP_printk("folio=%p lru=%s",
-         |         ^~~~~~~~~
-   In file included from include/trace/trace_events.h:256:
-   include/trace/events/vmscan.h:358:27: note: format string is defined here
-     358 |         TP_printk("folio=%p lru=%s",
-         |                          ~^
-         |                           |
-         |                           void *
-         |                          %ld
-   include/trace/events/vmscan.h: In function 'do_trace_event_raw_event_mm_vmscan_write_folio':
->> include/trace/events/vmscan.h:354:32: error: assignment to 'long unsigned int' from 'struct folio *' makes integer from pointer without a cast [-Wint-conversion]
-     354 |                 __entry->folio = folio;
-         |                                ^
-   include/trace/trace_events.h:427:11: note: in definition of macro '__DECLARE_EVENT_CLASS'
-     427 |         { assign; }                                                     \
-         |           ^~~~~~
-   include/trace/trace_events.h:435:23: note: in expansion of macro 'PARAMS'
-     435 |                       PARAMS(assign), PARAMS(print))                    \
-         |                       ^~~~~~
-   include/trace/trace_events.h:40:9: note: in expansion of macro 'DECLARE_EVENT_CLASS'
-      40 |         DECLARE_EVENT_CLASS(name,                              \
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/trace/trace_events.h:44:30: note: in expansion of macro 'PARAMS'
-      44 |                              PARAMS(assign),                   \
-         |                              ^~~~~~
-   include/trace/events/vmscan.h:342:1: note: in expansion of macro 'TRACE_EVENT'
-     342 | TRACE_EVENT(mm_vmscan_write_folio,
-         | ^~~~~~~~~~~
-   include/trace/events/vmscan.h:353:9: note: in expansion of macro 'TP_fast_assign'
-     353 |         TP_fast_assign(
-         |         ^~~~~~~~~~~~~~
-   In file included from include/trace/define_trace.h:133:
-   include/trace/events/vmscan.h: In function 'do_perf_trace_mm_vmscan_write_folio':
->> include/trace/events/vmscan.h:354:32: error: assignment to 'long unsigned int' from 'struct folio *' makes integer from pointer without a cast [-Wint-conversion]
-     354 |                 __entry->folio = folio;
-         |                                ^
-   include/trace/perf.h:51:11: note: in definition of macro '__DECLARE_EVENT_CLASS'
-      51 |         { assign; }                                                     \
-         |           ^~~~~~
-   include/trace/perf.h:67:23: note: in expansion of macro 'PARAMS'
-      67 |                       PARAMS(assign), PARAMS(print))                    \
-         |                       ^~~~~~
-   include/trace/trace_events.h:40:9: note: in expansion of macro 'DECLARE_EVENT_CLASS'
-      40 |         DECLARE_EVENT_CLASS(name,                              \
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/trace/trace_events.h:44:30: note: in expansion of macro 'PARAMS'
-      44 |                              PARAMS(assign),                   \
-         |                              ^~~~~~
-   include/trace/events/vmscan.h:342:1: note: in expansion of macro 'TRACE_EVENT'
-     342 | TRACE_EVENT(mm_vmscan_write_folio,
-         | ^~~~~~~~~~~
-   include/trace/events/vmscan.h:353:9: note: in expansion of macro 'TP_fast_assign'
-     353 |         TP_fast_assign(
-         |         ^~~~~~~~~~~~~~
+Subject: Re: [RFC PATCH v2 02/10] rv/da: fix per-task da_monitor_destroy()
+ ordering and sync
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1778522945.git.wen.yang@linux.dev>
+ <d02c656aada7d071f083460a5c9a454363669b61.1778522945.git.wen.yang@linux.dev>
+ <f654a17c671469fd8fc9ea438daf2266d05068d4.camel@redhat.com>
+ <8e80cbcf739304de95356f1fac677261628977fa.camel@redhat.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Wen Yang <wen.yang@linux.dev>
+In-Reply-To: <8e80cbcf739304de95356f1fac677261628977fa.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
-vim +354 include/trace/events/vmscan.h
 
-   343	
-   344		TP_PROTO(struct folio *folio),
-   345	
-   346		TP_ARGS(folio),
-   347	
-   348		TP_STRUCT__entry(
-   349			__field(unsigned long, folio)
-   350			__field(int, lru)
-   351		),
-   352	
-   353		TP_fast_assign(
- > 354			__entry->folio = folio;
-   355			__entry->lru = folio_lru_list(folio);
-   356		),
-   357	
-   358		TP_printk("folio=%p lru=%s",
-   359			__entry->folio,
-   360			__print_symbolic(__entry->lru, LRU_NAMES))
-   361	);
-   362	
+On 5/12/26 17:09, Gabriele Monaco wrote:
+> On Tue, 2026-05-12 at 10:27 +0200, Gabriele Monaco wrote:
+>> On Tue, 2026-05-12 at 02:24 +0800, wen.yang@linux.dev wrote:
+>>> From: Wen Yang <wen.yang@linux.dev>
+>>>
+>>> The following two paths race:
+>>>
+>>>    CPU 0 (disable_stall/__rv_disable_monitor)  CPU 1 (wwnr probe handler)
+>> 							^ did you mean stall?
+> 
+> Ok I got it now, so essentially you'd reproduce it like:
+> 
+> * start a DA per-task monitor (no timer)
+> * stop it, a handler is still running after reset, it sets monitoring back to 1
+> * start an HA per-task monitor
+> 
+> that would use the same slot that is now looking like:
+> 
+>   { monitoring = 1, timer.function = NULL }
+> 
+> because it was not initialised as HA but monitoring was reset in the race.
+> 
+> Thinking about this again, it isn't just an issue with per-task monitors, all
+> monitors reusing slots would suffer from it.
+> Besides, relying on monitoring can be fragile when using LTL monitors on the
+> same task (those don't even have monitoring).
+> 
+> Perhaps the solution isn't that trivial, I'm going to give one more thought on
+> it, but thanks again for bringing this up!
+> 
+> Gabriele
+> 
+>>>    ------------------------------------------  -----------------------------
+>>>    disable_stall()
+>>>      da_monitor_destroy()
+>>>        da_monitor_reset_all()          <------ [task T: monitoring=0]
+>>>                                                da_monitor_start(&T->rv[n])
+>>>                                                /* no timer_setup */
+>>>                                                 monitoring=1  <----
+>>>    tracepoint_synchronize_unregister()
+>>>    // CPU 1 probe has already returned; sync returns
+>>>
+>>> Later, enable_stall() acquires the same slot and calls da_monitor_init():
+>>>
+>>>    da_monitor_reset_all()
+>>>      da_monitor_reset(&T->rv[slot])    // monitoring=1, timer.function==0
+>>>        ha_monitor_reset_env()
+>>>          ha_cancel_timer()
+>>>            timer_delete(&ha_mon->timer)  // ODEBUG: timer never initialised
+>>>
+>>>    ODEBUG: assert_init not available (active state 0)
+>>>    object type: timer_list
+>>>    Call trace: timer_delete <- da_monitor_reset_all <- enable_stall
+>>>
+>>> Call tracepoint_synchronize_unregister() inside da_monitor_destroy()
+>>> before da_monitor_reset_all().  The unregister_trace_xxx() calls in the
+>>> monitor's disable() have already disconnected the tracepoints; the sync
+>>> here drains any handler still in flight, so no new monitoring=1 can
+>>> appear after da_monitor_reset_all() clears the slot.
+>>>
+>>> Also fix the slot release ordering: release the slot only after
+>>> reset_all() to avoid accessing rv[] with an out-of-bounds index.
+>>>
+>>> Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
+>>> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+>>> ---
+>>
+>> Thanks for the fix, I have a similar one waiting for submission.
+>>
+>> These are technically 2 separate fixes though: the ordering with unset
+>> task_mon_slot (independent on HA) and the synchronisation with pending
+>> tracepoints. They probably deserve separate patches and visibility, the first
+>> has always been around and we're technically overwriting who knows what.
+>>
+>>
+>> The explanation above is a bit hard to follow though, are you talking about a
+>> handler for the same (stall) monitor running after the reset, effectively
+>> undoing it by setting the monitoring flag?
+>>
+>> Then this is indeed an issue with ha_monitor_reset_env() which expects a clean
+>> environment.
+>>
+>> So that's basically what you'd see now much more often because in fact we
+>> don't
+>> reset the right slot (though, again, that's a different issue).
+>>
+>>
+>> Calling tracepoint_synchronize_unregister() there too would surely fix, but it
+>> used to be kinda slow. But it's probably gotten faster since now tracepoints
+>> use
+>> SRCU, so we can wait for a dedicated grace period.
+>>
+>> I liked the idea to wait cumulatively in the end, but that's just making
+>> things
+>> harder.. Let's do like this:
+>>
+>> Prepare 2 separate patches as fixes, put the task slot one first (would ease
+>> backporting), mention this issue with the race condition only in the second.
+>> You can send them independently and I'll add them to the tree as urgent.
+>>
+>>
+>> I'm soon going to send my set of fixes that will also include the task slot
+>> patch (not removing to ease my life with conflicts).
+>>
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Hi Gabriele,
+
+Thanks for both messages.  Two patches are ready; let me address
+your follow-up concerns before sending.
+
+   1. "all monitors reusing slots would suffer from it"
+
+      Only RV_MON_PER_TASK uses the rv_get/put_task_monitor_slot()
+      pool.  RV_MON_GLOBAL and RV_MON_PER_CPU each have dedicated
+      storage (a single static variable and a per-cpu variable) and
+      never share slots across monitor types.  The race is exclusive
+      to PER_TASK, so fixing that variant's da_monitor_destroy() is
+      the correct scope.
+
+   2. "LTL monitors don't even have monitoring"
+
+      tracepoint_synchronize_unregister() does not rely on the
+      monitoring flag at all.  It is a system-wide barrier — it
+      calls synchronize_rcu_tasks_trace() followed by
+      synchronize_srcu(&tracepoint_srcu) — draining every in-flight
+      tracepoint handler on every CPU regardless of which monitor
+      dispatched it.  LTL handlers are covered without any special
+      treatment.
+
+The slot-ordering issue (patch 1) affects all per-task DA monitors,
+not only HA ones — "independent on HA" — because
+RV_PER_TASK_MONITOR_INIT equals CONFIG_RV_PER_TASK_MONITORS (one
+past the end of rv[]), so da_monitor_reset_all() overwrites whatever
+follows rv[] in task_struct whenever any per-task monitor is
+disabled.
+
+Also corrected "wwnr probe handler" to "stall probe handler" in
+patch 2 per your annotation.
+
+Please let me know if the above reasoning addresses your concerns.
+
+
+--
+Best wishes,
+Wen
+
+>>
+>>>   include/rv/da_monitor.h | 18 ++++++++++++++++--
+>>>   1 file changed, 16 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+>>> index 00ded3d5ab3f..d04bb3229c75 100644
+>>> --- a/include/rv/da_monitor.h
+>>> +++ b/include/rv/da_monitor.h
+>>> @@ -304,6 +304,20 @@ static int da_monitor_init(void)
+>>>   
+>>>   /*
+>>>    * da_monitor_destroy - return the allocated slot
+>>> + *
+>>> + * Call tracepoint_synchronize_unregister() before reset_all() to close
+>>> + * the race where an in-flight non-HA probe handler sets monitoring=1
+>>> + * (without calling timer_setup()) after da_monitor_reset_all() has
+>>> + * already cleared the slot but before the caller's own sync completes.
+>>> + * Without this barrier, an HA_TIMER_WHEEL monitor that later acquires
+>>> + * the same slot would call timer_delete() on a never-initialised
+>>> + * timer_list, triggering ODEBUG warnings.
+>>> + *
+>>> + * Note: tracepoint_synchronize_unregister() is a system-wide barrier
+>>> + * that waits for all CPUs to finish any in-flight tracepoint handlers.
+>>> + * The caller's own __rv_disable_monitor() issues a second sync after
+>>> + * returning from disable(); that redundant call is harmless on the
+>>> + * infrequent admin (enable/disable) path.
+>>>    */
+>>>   static inline void da_monitor_destroy(void)
+>>>   {
+>>> @@ -311,10 +325,10 @@ static inline void da_monitor_destroy(void)
+>>>   		WARN_ONCE(1, "Disabling a disabled monitor: "
+>>> __stringify(MONITOR_NAME));
+>>>   		return;
+>>>   	}
+>>> +	tracepoint_synchronize_unregister();
+>>> +	da_monitor_reset_all();
+>>>   	rv_put_task_monitor_slot(task_mon_slot);
+>>>   	task_mon_slot = RV_PER_TASK_MONITOR_INIT;
+>>> -
+>>> -	da_monitor_reset_all();
+>>>   }
+>>>   
+>>>   #elif RV_MON_TYPE == RV_MON_PER_OBJ
+> 
