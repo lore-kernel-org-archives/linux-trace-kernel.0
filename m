@@ -1,69 +1,83 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72F11A7264;
-	Thu, 14 May 2026 00:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131EA3290B8;
+	Thu, 14 May 2026 02:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778718758; cv=none; b=dINk7OuXrDXpymRf19kCQcdC95FruYCJ9J1ROzWkakkfEdtz7PSG8vo3lObTVQ0tzf8PvOtEioM8Ypw19vDpClI0v8J73yAjtPa/wU0ZTxgcbUqMzZT8ZzsufYHZaZ0ya1Jme8pAzk4dkDi7PSKVv5g8vflDsn/5oE9HFp31yP4=
+	t=1778724502; cv=none; b=VTTgGkAtIPac7mcErG/MT6v16m/DRgnXSplo7oIvUEu2PBQ1l18LgG1J8C2XT/T9KgoE9zGCPQIETsoH0PID+PPls+stV+uSI3zny9+zLyDh41Eu0Br4hen+/hsZUwCSEgcFlNyDxjZWlxwwBE114co0UBQPaWuHMUQggdy9Zy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778718758; c=relaxed/simple;
-	bh=MlheWmyjXEB6BHVgMjFxsi+UzAGS8IB1SAGTwLQSJg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WTy/mE6qQLBYU9siwBOFw0HSK2/Z3K8Fd497yIMwkC9SEFveTmS8sbLgMhAyFG9pHDwhBvMmAi+ZcFrLiWu/NIb0aH73DaZtdVA8JwYmSfVI4hC2m8TO+bKBfTrqAbLhD0B91o+v7DNYBiqee55JAdQNY2/CFsXiIux8HSWjxE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 94A191C11E9;
-	Thu, 14 May 2026 00:32:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 796CC80012;
-	Thu, 14 May 2026 00:32:33 +0000 (UTC)
-Date: Wed, 13 May 2026 20:32:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- damon@lists.linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
+	s=arc-20240116; t=1778724502; c=relaxed/simple;
+	bh=xmsxTv55KQCamp+BbcWIA7dTWkfwnz+fL+Tk5BOdaf8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AiAi0gxzS4k24ZBFuDvevstaHRde5nXDQ6t01j1Zv7YorRtp0CViRdSUqVwEK30JqqgRNVJJbSC9wjkeqn1ig2Ry/80X4ZVJlc7g2sWWh974sMvay8VCKS2ZblG3KJVD4cjU8qbGdXlHke79QHp71xAoLW592Yqlu93LWLvQJzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcDHKgws; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcDHKgws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6756CC2BCF5;
+	Thu, 14 May 2026 02:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778724501;
+	bh=xmsxTv55KQCamp+BbcWIA7dTWkfwnz+fL+Tk5BOdaf8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dcDHKgwsR1xJpgn6fXlYuN1JaRr1dqzEPzp15c05Qa+I67e8SEcomezzpwOTaEdeK
+	 R2fftdQcfxVkwmRpsWyitS9WSl+yUtyD9lnf8JEzxy5yutIfz5c2ANYGiK4P07/rhW
+	 /owETnOBEu3Zyi1bt9koLxaoMFzlWegzl1mCNV/Fv4hXV6zZzkCGXwewmnw5FxqBGy
+	 kpsctY9kMQQi1CznF0KT5vlqXn00U8AZs8airKAYCHUUO5u0ebtFZtjhxvJTgtia8d
+	 5kibv9JKQZB+wnkuhdoeeeFBcgLDqest5Tl3/5cjpGg2m9sa9g/t6SrY8FHl/sxY9D
+	 Pc15ec/H4mbrA==
+From: SeongJae Park <sj@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	damon@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH v2 18/28] mm/damon: trace probe_hits
-Message-ID: <20260513203237.3b1b3286@gandalf.local.home>
-In-Reply-To: <20260514000611.147809-1-sj@kernel.org>
-References: <20260513140732.2320c563@gandalf.local.home>
-	<20260514000611.147809-1-sj@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Date: Wed, 13 May 2026 19:08:12 -0700
+Message-ID: <20260514020812.149894-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260513203237.3b1b3286@gandalf.local.home>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 796CC80012
-X-Stat-Signature: a8bs8djjyouc63otxh8x4mur35woi7mp
-X-Rspamd-Server: rspamout01
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Drorz1uVBPoiFEF9d3VmNbUHBoYhgttA=
-X-HE-Tag: 1778718753-409660
-X-HE-Meta: U2FsdGVkX19Fgcfxj6eEgZI8dKFbLpf3CMGSFuh5fZTv07YYNZP9ski4yfmKIMbsARMuVUCfLSrPQXuwW9Jt7Au1AA0c1h/ZIBB4uQTIbG98QG3Ee73ZN1eDgDn/Z1EyKwocs/O1qW/KmP75roahgjgWdjydR/Nq+Z1z04eg6gqXBFLrEYRjZUvG3Pm6HN3j2gVo5MUsmJwsTtmtymnYa9FKJdnMwdS/D28AEhzR7aMDtUFszLxgd6LgUHk6Uhxrh39GzCorwekrxYt9Os2wku+Kg+jKYmeB40a0G1XyurZOZcs5k4W+8mXsNNtsIxm74kVhvQl97Cf7dIbVv4GRIdHXpgJ+TTSr
+Content-Transfer-Encoding: 8bit
 
-On Wed, 13 May 2026 17:06:10 -0700
-SeongJae Park <sj@kernel.org> wrote:
+On Wed, 13 May 2026 20:32:37 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Btw, if you don't mind, may I ask your opinion about the name having '_v2'
-> suffix?  I chose that as an RFC phase temporal name that doesn't break the
-> compatibility, planning to give it a better name later.  But I start feeling
-> just extending the original one might be another option because tracepoints are
-> not strict stable ABI to my understanding, and the change of the TP_prink
-> format should be simple enough (append the probe_hits= part) that the user
-> space could reasonably deal with.
+> On Wed, 13 May 2026 17:06:10 -0700
+> SeongJae Park <sj@kernel.org> wrote:
+> 
+> > Btw, if you don't mind, may I ask your opinion about the name having '_v2'
+> > suffix?  I chose that as an RFC phase temporal name that doesn't break the
+> > compatibility, planning to give it a better name later.  But I start feeling
+> > just extending the original one might be another option because tracepoints are
+> > not strict stable ABI to my understanding, and the change of the TP_prink
+> > format should be simple enough (append the probe_hits= part) that the user
+> > space could reasonably deal with.
+> 
+> It's only a stable ABI if some useful userspace tooling depends on it.
+> Otherwise, feel free to change.
 
-It's only a stable ABI if some useful userspace tooling depends on it.
-Otherwise, feel free to change.
+Makes perfect sense, thank you Steven!
 
-Nothing really should be parsing the TP_printk() format part as it is
-really inefficient to do so. That's why I created libtraceevent and
-libtracefs to do the parsing of the raw data for you.
+> 
+> Nothing really should be parsing the TP_printk() format part as it is
+> really inefficient to do so. That's why I created libtraceevent and
+> libtracefs to do the parsing of the raw data for you.
 
--- Steve
+I will try to make DAMON user-space tool directly uses those.  At the moment,
+it is lazily parsing trace-cmd or perf outputs.
+
+
+Thanks,
+SJ
+
+[...]
