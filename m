@@ -1,119 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4750027442;
-	Thu, 14 May 2026 04:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADB22EB84E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 May 2026 07:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778733834; cv=none; b=CGzME+VqAa7YTde61LgVaIymgq522Ni8iA+QDAK1sPit659VvUjHW1PGWSWKKXVUAbrA080ddqqzmCiDTUsVLqXMJzQ/o0MRA09BfMJ9Ci3E+0hM1KLojmkNrHVTiU2HWPl32WVL0XuigdFxsv5SVXQIOvzN8G+PaGdRMJ8qOlA=
+	t=1778743850; cv=none; b=DhEdjGFnnjlrr2kbW2SMWHu23+n3kYUWamXn5ub+zjeIpZft5JL+oMDoZ2HPz6rfE+ki1qoj1qR7Uni8smDuaFNvN1ftIiEru4IgspCwRfLaHl7qYLV0qXxbehR9SMc3bicLE0ZkKPXzbO1c7cfVBQfaYEjzUxY1cS9my1Uruy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778733834; c=relaxed/simple;
-	bh=nBC50JKu83hNUVEpT8Mr6OZ/OEdZnxqRf8nRk8h/SRk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qxfRlKW60DBuoAtQ5/xS5kGOWbjB+PhL53kmnEHwqLOtVISGrZgV3sYbpxdZFpnR8WsiUjmbF1ET2/Gb/2yB2QPZsJrFktiWO+mNXOKArIY6YKAIkuC5948ZjbWS8xOHNhct9L46dymsiVlYAHVQCRubs6qZcRqNKjsefd6gnk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iw3t6jru; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778743850; c=relaxed/simple;
+	bh=t0IMRjmO7nGl7Bz29HKR9UK68N+h1h/x1yRlahwTJfc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=mz7gscuoSUOeemV6JGQX51J4iA/AiBT64DNi8A8miRAX+pzmfxJWlzbtbmNmpYR4CUQCX+BkpKc4OTugBF3CxjmYMDXbyfUuK9xbCSJAddXbH20vsBFiTqTRuqz5i65aQrvd6IUW1B2t1vownFayjf2aNJfMAPhsP35hbwLPOPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCDZxmGI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iw3t6jru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7611C2BCB7;
-	Thu, 14 May 2026 04:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778733833;
-	bh=nBC50JKu83hNUVEpT8Mr6OZ/OEdZnxqRf8nRk8h/SRk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iw3t6jruYnJWlZHrC0i6P/2Tr7JuzseBuk08uJXCgiVZ3CCDyXplHGyPiBuZ4b+bL
-	 FnKoRyUApgQl2KyYL57hH+Df3eST1GihyQfyhGjeKMTvNciU0Ip7JB0uZE+cap3+JR
-	 e8lV66Ti7H2NCFEN127Tb6g36fzXOiC0WKQfBs1hFieTNTHwk1K429vOtnNDViuM2X
-	 pgFWqKvrHzBaI82NjbEBp1hDSaXhqt5gAo3TxrFkjE5iuHI8zJYPi3PNrRCaXzncSg
-	 AKThDboWPRHGzQb+2rNIoS0/KcBALgaSv1CYuyUMzjaYHcQR9EvyeY2vu2PkRFz7Nk
-	 5ibLyryHfT8Yw==
-Date: Thu, 14 May 2026 13:43:51 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-Subject: Re: [PATCH v2] perf/ftrace: Fix WARNING in
- __unregister_ftrace_function
-Message-Id: <20260514134351.ec3e22055d50816200e872ab@kernel.org>
-In-Reply-To: <20260513161916.04151502@fangorn>
-References: <20260513161916.04151502@fangorn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCDZxmGI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778743847;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mcvO6/sBe93rNf2rGMMO+vsFgltL388Pn96pJ1wvhKA=;
+	b=gCDZxmGIIaPY+ZEgC9HlhyM5kv+wPwKPYQvnkX1Wpxu+Ns/k9riOk195U/3kIeT1gtOHPx
+	LZTgKnAb65MjQ4Vo5TYqAAg6UxnfAHs11xdkwTl/r/VaHA211mMTxRmD8PDaIcMSK4soUt
+	I/QJIk0iog/iFbKpfiw9kmK9xdUwALk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-350-ixvTufrLN4aKXxGUp3gqhA-1; Thu,
+ 14 May 2026 03:30:45 -0400
+X-MC-Unique: ixvTufrLN4aKXxGUp3gqhA-1
+X-Mimecast-MFC-AGG-ID: ixvTufrLN4aKXxGUp3gqhA_1778743844
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8DA4918005B6;
+	Thu, 14 May 2026 07:30:44 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.33.23])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4CC4030002DD;
+	Thu, 14 May 2026 07:30:40 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH v2] rtla: Document tests in README
+Date: Thu, 14 May 2026 09:30:38 +0200
+Message-ID: <20260514073038.204428-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: -qlGRjC6_0fm3Vssb1dR4gsBeeB5M-ngMqZjSqh34dI_1778743844
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Wed, 13 May 2026 16:19:16 -0400
-Rik van Riel <riel@surriel.com> wrote:
+RTLA tests are not documented anywhere. Mention both runtime and unit
+tests in the README, with instructions on how to run them and a list of
+dependencies and required system configuration.
 
-> perf_ftrace_function_unregister() unconditionally calls
-> unregister_ftrace_function() without checking whether the ftrace_ops
-> was ever successfully registered. This triggers a WARN_ON in
-> __unregister_ftrace_function() when the ops doesn't have
-> FTRACE_OPS_FL_ENABLED set.
-> 
-> This can happen during perf_event_alloc() error cleanup when
-> perf_trace_destroy() is called via __free_event() on an event whose
-> ftrace_ops registration failed or was already torn down by
-> perf_try_init_event()'s err_destroy path.
-> 
-> The call path is:
->   perf_event_alloc() error cleanup
->     -> __free_event()
->       -> event->destroy() [tp_perf_event_destroy]
->         -> perf_trace_destroy()
->           -> perf_trace_event_close()
->             -> TRACE_REG_PERF_CLOSE
->               -> perf_ftrace_function_unregister()
->                 -> unregister_ftrace_function()
->                   -> __unregister_ftrace_function()
->                     -> WARN_ON(!(ops->flags & FTRACE_OPS_FL_ENABLED))
-> 
-> Fix this by checking FTRACE_OPS_FL_ENABLED before attempting to
-> unregister. If the ops is not enabled, just free the filter and
-> return success.
-> 
-> Assisted-by: Claude:claude-opus-4.7 syzkaller
-> Signed-off-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+v2: Add package hints for common distros for Test::Harness (suggested by
+Crystal Wood).
 
-Looks good to me.
+v1: https://lore.kernel.org/linux-trace-kernel/20260423130759.882247-1-tglozar@redhat.com
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Fixes: ced39002f5ea ("ftrace, perf: Add support to use function tracepoint in perf")
+ tools/tracing/rtla/README.txt | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Thanks,
-
-> ---
->  kernel/trace/trace_event_perf.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-> index a6bb7577e8c5..58e1b427b576 100644
-> --- a/kernel/trace/trace_event_perf.c
-> +++ b/kernel/trace/trace_event_perf.c
-> @@ -497,7 +497,11 @@ static int perf_ftrace_function_register(struct perf_event *event)
->  static int perf_ftrace_function_unregister(struct perf_event *event)
->  {
->  	struct ftrace_ops *ops = &event->ftrace_ops;
-> -	int ret = unregister_ftrace_function(ops);
-> +	int ret = 0;
-> +
-> +	if (ops->flags & FTRACE_OPS_FL_ENABLED)
-> +		ret = unregister_ftrace_function(ops);
-> +
->  	ftrace_free_filter(ops);
->  	return ret;
->  }
-> -- 
-> 2.52.0
-> 
-> 
-
-
+diff --git a/tools/tracing/rtla/README.txt b/tools/tracing/rtla/README.txt
+index a9faee4dbb3a..13b4a798b487 100644
+--- a/tools/tracing/rtla/README.txt
++++ b/tools/tracing/rtla/README.txt
+@@ -42,4 +42,34 @@ For development, we suggest the following steps for compiling rtla:
+   $ make
+   $ sudo make install
+ 
++Running tests
++
++RTLA has two test suites: a runtime test suite and a unit test suite.
++
++The runtime test suite is available as "make check" (root required) and has
++the following dependencies, in addition to RTLA build dependencies:
++
++- Perl
++- Test::Harness (libtest-harness-perl on Debian/Ubuntu, perl-Test-Harness on Fedora/RHEL)
++- bash
++- coreutils
++- ldd
++- util-linux
++- procps(-ng)
++- bpftool (if rtla is built against libbpf)
++
++as well as the following required system configuration:
++
++- CONFIG_OSNOISE_TRACER=y
++- CONFIG_TIMERLAT_TRACER=y
++- tracefs mounted and readable at /sys/kernel/tracing
++
++The unit test suite is available as "make unit-tests" and has the following
++dependencies:
++
++- libcheck
++
++Unlike the runtime test suite, root is not required to run unit tests, nor is
++a tracefs/osnoise/timerlat-capable kernel required.
++
+ For further information, please refer to the rtla man page.
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.53.0
+
