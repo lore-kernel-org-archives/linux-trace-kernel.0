@@ -1,81 +1,242 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71604314B96;
-	Thu, 14 May 2026 17:13:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313972D836D;
+	Thu, 14 May 2026 18:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778778824; cv=none; b=C9M6QcpkpF1fWTk16E2qOmP/44ajL+4pVSOmefboivsybpYg0vhLYWAn6SnaqDZ/lKOVPdnY+Y3WmYnRZjA9e0zmRyYQZQ7sRwfoUf/0Cmth0sLw7kGde73IbLPcBpBdnT5D4ZVxPgW0ZgtuEWtYTsSyAij9C1p0fBoEnuQAPGU=
+	t=1778783331; cv=none; b=sV2NYN12r3pGrEcSjCJ3XiNtfH0FSoCtQOMGH6mDo+l3E65vqDBfzq+qMqWbraoeWdmEs5msH2Drp4b/G97/cMG91Wwqp7nXKc15sq1qapc2AISEpGIm2SiB4uIBX/hj/uZg7d1aujgHGeexTMZK6TfiSOc/z9gEPJ+66+pdTbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778778824; c=relaxed/simple;
-	bh=KbZQRfnQm5mkUUB29RJHYmzgawQVwNxuILs/j++eqyo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=I6nb6ZSvQR7vabLJKcPzr8mu0dnRgfjXYwyWhWFwxS347fXkCH2ErH6/euk9RFzhcLgdaxtB0kR03AHM+1Y3jIW6Nj7oRhBzvlxeXg2JtFFjZHVqkfl/ExCtM8ulq244w9onRrj5CDqWTBW9vRLwIf7qKWtEuK2OYMvLlIt48fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8P1KZoI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778783331; c=relaxed/simple;
+	bh=A0xbDquRvnyW2D8cpPeGpARcAjX2yjAc8rCfXyXZ+m0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbVdjR8UKinhf1fZXhQYA6oY+hKNiwY+BkFnHs/k/g9ZiJkUWvp9W6cvZGH5ewhOg2QAtv4GxeojpCO89FuQ2cvganm6+r+3nX/wvx9K8uH8MbR/9/5rXvbyDsm2nAPj1uEz19meq11F0w1CW8QY8PrQrj1WhtNw79jIWR6zaXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdpXsltz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8P1KZoI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D87C2BCB3;
-	Thu, 14 May 2026 17:13:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdpXsltz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E22C2BCB3;
+	Thu, 14 May 2026 18:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778778824;
-	bh=KbZQRfnQm5mkUUB29RJHYmzgawQVwNxuILs/j++eqyo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=B8P1KZoIstA5uS1GvXFst6q4cw/mBFQdXwOlDp3n6PXg+bwpS5bAsxFxlQcLmtWII
-	 zSfcRo6965xx8hJ3WTkR5S9NL1e9NOf9ezAVDNUPkL7pe6GA8oFLAPVdN1Rn+qmdST
-	 rNlDjTqXNc25qFTV5B2bLIzz9BtIdx1VNLNvQ2GoSGXQYWxqFzqOIR/gRvjH31Rnws
-	 liquPneM0DTxIC6X2eEN9LTGIVwwnVM64BZUgBv4RALtzcI05tPQvEsyg6oGET445I
-	 Co0He3L5tsUr4XWwvWYyj+RLyuDZVwJb995uYkfVmRWkLO58vOoCgVmeyIYrsFsI6E
-	 77hQrfEo3Yybg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 02E7239D6579;
-	Thu, 14 May 2026 17:12:50 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1778783331;
+	bh=A0xbDquRvnyW2D8cpPeGpARcAjX2yjAc8rCfXyXZ+m0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cdpXsltzlfr6ukk9YEDrM7fqZ7N58jmotCJRI9ZG/OYZmpJM9ZoG/RdUKOQOcvZ7w
+	 rCdQ+M8C0BP1nGiZPEci0Ln0IMzCdSm2YXqnxezLpER4UueG4c0No2UYx3itVpkw0P
+	 8vkUzdnX4u+KW833UBQmpIe5p2xDRl8B/4+RfCkFx76qGT3nldjx+t8L4u0RgsISsg
+	 nH/3JqrhQR5jQxO+NcQRZVTj4FQBAc18qTQwNpdunTed2e3dFhOV4MNI/VQok0x3gi
+	 MXe2ju0FYxiwZp0AnPSA06y4aJoc+WoJLGFCTdpq6IPcghVove8XLw7swRcYnOZKC/
+	 xFkK1bXSAdaqQ==
+Date: Thu, 14 May 2026 11:28:46 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v2] tracing: Allow perf to read synthetic events
+Message-ID: <agYUXoDOjXGvOMSi@google.com>
+References: <20260513150007.3b280e87@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] fprobe: Fix unregister_fprobe() to wait for RCU grace
- period
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177877876880.17572.18229192907232501978.git-patchwork-notify@kernel.org>
-Date: Thu, 14 May 2026 17:12:48 +0000
-References: 
- <177813998919.256460.2809243930741138224.stgit@mhiramat.tok.corp.google.com>
-In-Reply-To: 
- <177813998919.256460.2809243930741138224.stgit@mhiramat.tok.corp.google.com>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, jolsa@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260513150007.3b280e87@gandalf.local.home>
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Masami Hiramatsu (Google) <mhiramat@kernel.org>:
-
-On Thu,  7 May 2026 16:46:29 +0900 you wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, May 13, 2026 at 03:00:07PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Commit 4346ba1604093 ("fprobe: Rewrite fprobe on function-graph tracer")
-> changed fprobe to register struct fprobe to an rcu-hlist, but it forgot
-> to wait for RCU GP. Thus there can be use-after-free if the fprobe is
-> released right after unregistering. This can be happened on fprobe
-> event and sample module code.
+> Currently, perf can not enable synthetic events. When it does, it either
+> causes a warning in the kernel or errors with "no such device".
 > 
-> [...]
+> Add the necessary code to allow perf to also attach to synthetic events.
+> 
+> Reported-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Here is the summary with links:
-  - [v2] fprobe: Fix unregister_fprobe() to wait for RCU grace period
-    https://git.kernel.org/netdev/net/c/657b594b2084
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Thanks,
+Namhyung
 
-
+> ---
+> Changes since v1: https://patch.msgid.link/20251217113920.50b56246@gandalf.local.home
+> 
+> - Forward ported to v7.1-rc2
+> 
+>  kernel/trace/trace_events_synth.c | 121 +++++++++++++++++++++++-------
+>  1 file changed, 94 insertions(+), 27 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index 39ac4eba0702..e6871230bde9 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -499,28 +499,19 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
+>  	return len;
+>  }
+>  
+> -static void trace_event_raw_event_synth(void *__data,
+> -					u64 *var_ref_vals,
+> -					unsigned int *var_ref_idx)
+> +static __always_inline int get_field_size(struct synth_event *event,
+> +					  u64 *var_ref_vals,
+> +					  unsigned int *var_ref_idx)
+>  {
+> -	unsigned int i, n_u64, val_idx, len, data_size = 0;
+> -	struct trace_event_file *trace_file = __data;
+> -	struct synth_trace_event *entry;
+> -	struct trace_event_buffer fbuffer;
+> -	struct trace_buffer *buffer;
+> -	struct synth_event *event;
+> -	int fields_size = 0;
+> -
+> -	event = trace_file->event_call->data;
+> -
+> -	if (trace_trigger_soft_disabled(trace_file))
+> -		return;
+> +	int fields_size;
+>  
+>  	fields_size = event->n_u64 * sizeof(u64);
+>  
+> -	for (i = 0; i < event->n_dynamic_fields; i++) {
+> +	for (int i = 0; i < event->n_dynamic_fields; i++) {
+>  		unsigned int field_pos = event->dynamic_fields[i]->field_pos;
+>  		char *str_val;
+> +		int val_idx;
+> +		int len;
+>  
+>  		val_idx = var_ref_idx[field_pos];
+>  		str_val = (char *)(long)var_ref_vals[val_idx];
+> @@ -535,18 +526,18 @@ static void trace_event_raw_event_synth(void *__data,
+>  
+>  		fields_size += len;
+>  	}
+> +	return fields_size;
+> +}
+>  
+> -	/*
+> -	 * Avoid ring buffer recursion detection, as this event
+> -	 * is being performed within another event.
+> -	 */
+> -	buffer = trace_file->tr->array_buffer.buffer;
+> -	guard(ring_buffer_nest)(buffer);
+> -
+> -	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
+> -					   sizeof(*entry) + fields_size);
+> -	if (!entry)
+> -		return;
+> +static __always_inline void write_synth_entry(struct synth_event *event,
+> +					      struct synth_trace_event *entry,
+> +					      u64 *var_ref_vals,
+> +					      unsigned int *var_ref_idx)
+> +{
+> +	int data_size = 0;
+> +	int i, n_u64;
+> +	int val_idx;
+> +	int len;
+>  
+>  	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
+>  		val_idx = var_ref_idx[i];
+> @@ -587,10 +578,83 @@ static void trace_event_raw_event_synth(void *__data,
+>  			n_u64++;
+>  		}
+>  	}
+> +}
+> +
+> +static void trace_event_raw_event_synth(void *__data,
+> +					u64 *var_ref_vals,
+> +					unsigned int *var_ref_idx)
+> +{
+> +	struct trace_event_file *trace_file = __data;
+> +	struct synth_trace_event *entry;
+> +	struct trace_event_buffer fbuffer;
+> +	struct trace_buffer *buffer;
+> +	struct synth_event *event;
+> +	int fields_size;
+> +
+> +	event = trace_file->event_call->data;
+> +
+> +	if (trace_trigger_soft_disabled(trace_file))
+> +		return;
+> +
+> +	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
+> +
+> +	/*
+> +	 * Avoid ring buffer recursion detection, as this event
+> +	 * is being performed within another event.
+> +	 */
+> +	buffer = trace_file->tr->array_buffer.buffer;
+> +	guard(ring_buffer_nest)(buffer);
+> +
+> +	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
+> +					   sizeof(*entry) + fields_size);
+> +	if (!entry)
+> +		return;
+> +
+> +	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
+>  
+>  	trace_event_buffer_commit(&fbuffer);
+>  }
+>  
+> +#ifdef CONFIG_PERF_EVENTS
+> +static void perf_event_raw_event_synth(void *__data,
+> +				       u64 *var_ref_vals,
+> +				       unsigned int *var_ref_idx)
+> +{
+> +	struct trace_event_call *call = __data;
+> +	struct synth_trace_event *entry;
+> +	struct hlist_head *perf_head;
+> +	struct synth_event *event;
+> +	struct pt_regs *regs;
+> +	int fields_size;
+> +	size_t size;
+> +	int context;
+> +
+> +	event = call->data;
+> +
+> +	perf_head = this_cpu_ptr(call->perf_events);
+> +
+> +	if (!perf_head || hlist_empty(perf_head))
+> +		return;
+> +
+> +	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
+> +
+> +	size = ALIGN(sizeof(*entry) + fields_size, 8);
+> +
+> +	entry = perf_trace_buf_alloc(size, &regs, &context);
+> +
+> +	if (unlikely(!entry))
+> +		return;
+> +
+> +	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
+> +
+> +	perf_fetch_caller_regs(regs);
+> +
+> +	perf_trace_buf_submit(entry, size, context,
+> +			      call->event.type, 1, regs,
+> +			      perf_head, NULL);
+> +}
+> +#endif
+> +
+>  static void free_synth_event_print_fmt(struct trace_event_call *call)
+>  {
+>  	if (call) {
+> @@ -917,6 +981,9 @@ static int register_synth_event(struct synth_event *event)
+>  	call->flags = TRACE_EVENT_FL_TRACEPOINT;
+>  	call->class->reg = synth_event_reg;
+>  	call->class->probe = trace_event_raw_event_synth;
+> +#ifdef CONFIG_PERF_EVENTS
+> +	call->class->perf_probe = perf_event_raw_event_synth;
+> +#endif
+>  	call->data = event;
+>  	call->tp = event->tp;
+>  
+> -- 
+> 2.53.0
+> 
