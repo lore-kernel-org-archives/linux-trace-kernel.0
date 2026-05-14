@@ -1,123 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADB22EB84E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 May 2026 07:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1BE2459FE
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 May 2026 09:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778743850; cv=none; b=DhEdjGFnnjlrr2kbW2SMWHu23+n3kYUWamXn5ub+zjeIpZft5JL+oMDoZ2HPz6rfE+ki1qoj1qR7Uni8smDuaFNvN1ftIiEru4IgspCwRfLaHl7qYLV0qXxbehR9SMc3bicLE0ZkKPXzbO1c7cfVBQfaYEjzUxY1cS9my1Uruy8=
+	t=1778750029; cv=none; b=rFnXlMycH6/GVYqEcZQStopbOGyp3D+9aq6ijp1g+b2YlXJNXJGgF6C7rLWsCWGuG1kwb9iNCI9ctYb7aeawoc7zrgceGZWabqXoG2+2cxWswk/flwz4fSFr3gql+7ScHE6g1E+6N1T8KZiyUmsnDTKLx88GqhsLk/74ZE1EDZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778743850; c=relaxed/simple;
-	bh=t0IMRjmO7nGl7Bz29HKR9UK68N+h1h/x1yRlahwTJfc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=mz7gscuoSUOeemV6JGQX51J4iA/AiBT64DNi8A8miRAX+pzmfxJWlzbtbmNmpYR4CUQCX+BkpKc4OTugBF3CxjmYMDXbyfUuK9xbCSJAddXbH20vsBFiTqTRuqz5i65aQrvd6IUW1B2t1vownFayjf2aNJfMAPhsP35hbwLPOPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCDZxmGI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1778750029; c=relaxed/simple;
+	bh=Lmwh26GBQBL74u3IyR1CEbT938mNGH+LRyVDqBOFcIY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZQARw3kJ8PHsSw/rcdsFGszf1zJnDMVkg6Ja7DYLnOTiA9vEa3npppBx1rvlyHmT4XubnpIcidpGswXMSBjSouSz7ppOQog/08hOUctDEd9wH4lmEcbAE4G8wH4c5liDPQhR/NDjYgkt1XRFf2iwV8jmnb84j+VdIYArHqkNNS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WLNFRT+s; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCDZxmGI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778743847;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WLNFRT+s"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778750016;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mcvO6/sBe93rNf2rGMMO+vsFgltL388Pn96pJ1wvhKA=;
-	b=gCDZxmGIIaPY+ZEgC9HlhyM5kv+wPwKPYQvnkX1Wpxu+Ns/k9riOk195U/3kIeT1gtOHPx
-	LZTgKnAb65MjQ4Vo5TYqAAg6UxnfAHs11xdkwTl/r/VaHA211mMTxRmD8PDaIcMSK4soUt
-	I/QJIk0iog/iFbKpfiw9kmK9xdUwALk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-350-ixvTufrLN4aKXxGUp3gqhA-1; Thu,
- 14 May 2026 03:30:45 -0400
-X-MC-Unique: ixvTufrLN4aKXxGUp3gqhA-1
-X-Mimecast-MFC-AGG-ID: ixvTufrLN4aKXxGUp3gqhA_1778743844
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8DA4918005B6;
-	Thu, 14 May 2026 07:30:44 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.33.23])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4CC4030002DD;
-	Thu, 14 May 2026 07:30:40 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH v2] rtla: Document tests in README
-Date: Thu, 14 May 2026 09:30:38 +0200
-Message-ID: <20260514073038.204428-1-tglozar@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XbuPzwpDrGD5qRtFoBY7gLw9d4RHmDm8yrKE2duWsOs=;
+	b=WLNFRT+sSjl7HYycGm0Zu9mjheejdUvJL3CBrAbnQL0yawyMdCtbjxl0YOE84PJw4v7Tq1
+	Z7K2Zc52ghFu4skhYoyqdP6c7rAJJleSpt/OfaZNk7CxYeBta7GFglsjedV52ZsBXP+afh
+	ke8bOWKQjz1N1g93KJMo/VdNfG3fKwA=
+From: Lance Yang <lance.yang@linux.dev>
+To: leitao@debian.org
+Cc: linmiaohe@huawei.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	ljs@kernel.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	shuah@kernel.org,
+	nao.horiguchi@gmail.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	liam@infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Lance Yang <lance.yang@linux.dev>
+Subject: Re: [PATCH v7 1/6] mm/memory-failure: drop dead error_states[] entry for reserved pages
+Date: Thu, 14 May 2026 17:12:33 +0800
+Message-Id: <20260514091233.58243-1-lance.yang@linux.dev>
+In-Reply-To: <20260513-ecc_panic-v7-1-be2e578e61da@debian.org>
+References: <20260513-ecc_panic-v7-1-be2e578e61da@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: -qlGRjC6_0fm3Vssb1dR4gsBeeB5M-ngMqZjSqh34dI_1778743844
-X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+X-Migadu-Flow: FLOW_OUT
 
-RTLA tests are not documented anywhere. Mention both runtime and unit
-tests in the README, with instructions on how to run them and a list of
-dependencies and required system configuration.
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
-v2: Add package hints for common distros for Test::Harness (suggested by
-Crystal Wood).
+On Wed, May 13, 2026 at 08:39:32AM -0700, Breno Leitao wrote:
+>The first entry of error_states[],
+>
+>	{ reserved,	reserved,	MF_MSG_KERNEL,	me_kernel },
+>
+>is unreachable.  identify_page_state() has two callers, and neither
+>one can dispatch a PG_reserved page to me_kernel():
+>
+>  * memory_failure() reaches identify_page_state() only after
+>    get_hwpoison_page() returned 1.  get_any_page() reaches that
+>    return only via __get_hwpoison_page(), which gates the refcount
+>    on HWPoisonHandlable().  HWPoisonHandlable() rejects PG_reserved
+>    pages, so they fail with -EBUSY/-EIO long before
+>    identify_page_state() runs.
 
-v1: https://lore.kernel.org/linux-trace-kernel/20260423130759.882247-1-tglozar@redhat.com
+HWPoisonHandlable() does not test PG_reserved directly; it only lets
+LRU or free buddy pages through:
 
- tools/tracing/rtla/README.txt | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+return PageLRU(page) || is_free_buddy_page(page);
 
-diff --git a/tools/tracing/rtla/README.txt b/tools/tracing/rtla/README.txt
-index a9faee4dbb3a..13b4a798b487 100644
---- a/tools/tracing/rtla/README.txt
-+++ b/tools/tracing/rtla/README.txt
-@@ -42,4 +42,34 @@ For development, we suggest the following steps for compiling rtla:
-   $ make
-   $ sudo make install
- 
-+Running tests
-+
-+RTLA has two test suites: a runtime test suite and a unit test suite.
-+
-+The runtime test suite is available as "make check" (root required) and has
-+the following dependencies, in addition to RTLA build dependencies:
-+
-+- Perl
-+- Test::Harness (libtest-harness-perl on Debian/Ubuntu, perl-Test-Harness on Fedora/RHEL)
-+- bash
-+- coreutils
-+- ldd
-+- util-linux
-+- procps(-ng)
-+- bpftool (if rtla is built against libbpf)
-+
-+as well as the following required system configuration:
-+
-+- CONFIG_OSNOISE_TRACER=y
-+- CONFIG_TIMERLAT_TRACER=y
-+- tracefs mounted and readable at /sys/kernel/tracing
-+
-+The unit test suite is available as "make unit-tests" and has the following
-+dependencies:
-+
-+- libcheck
-+
-+Unlike the runtime test suite, root is not required to run unit tests, nor is
-+a tracefs/osnoise/timerlat-capable kernel required.
-+
- For further information, please refer to the rtla man page.
--- 
-2.53.0
+So this really relies on PG_reserved not being combined with either of
+those states. I would not expect that to happen, though.
 
+>
+>  * try_memory_failure_hugetlb() reaches identify_page_state() on
+>    the MF_HUGETLB_IN_USED branch, but the page is necessarily a
+>    hugetlb folio there.  The first table entry that matches a
+>    hugetlb folio is { head, head, MF_MSG_HUGE, me_huge_page }, so
+>    they dispatch to me_huge_page() before the (now-removed)
+>    reserved entry would have matched, regardless of whether
+>    PG_reserved happens to be set on the head page.
+
+As David pointed out, hugetlb setup clears PG_reserved before setting
+PG_head. See hugetlb_folio_init_vmemmap():
+
+	__folio_clear_reserved(folio);
+	__folio_set_head(folio);
+
+>
+>me_kernel() never executes and the entry exists only to be matched
+>against by code that cannot see it.
+
+identify_page_state() is reached only when get_hwpoison_page()
+returns 1, but a PG_reserved page would not get that far, IIUC :)
+
+>
+>Drop the entry, the me_kernel() helper, and the now-unused
+>"reserved" macro.  Leave the MF_MSG_KERNEL enum value in place: it
+>remains part of the tracepoint and pr_err() string tables, and
+>follow-on work to classify unrecoverable kernel pages can reuse it
+>without churning the user-visible enum.
+>
+>No functional change.
+>
+>Suggested-by: David Hildenbrand <david@kernel.org>
+>Signed-off-by: Breno Leitao <leitao@debian.org>
+>---
+
+With David's comments addressed, feel free to add:
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
