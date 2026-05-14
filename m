@@ -1,45 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C04423A9C;
-	Thu, 14 May 2026 13:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFAD3E5ED6;
+	Thu, 14 May 2026 14:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778766895; cv=none; b=Exd0XWRLc/dz8tjkXgyOUN0gOZBRpQ9ThJbXgk04GZR7eph5c5bGSgBWvhRi7ww8nJQix6ElDrJIEq7wP5z5GcLYdOWl30M701Uvvs88cZen08LvzlKznVwTZMWTVEpirew6kvZJObmXgPsReE2uuXjVimDL9fwfUgZ4y1LECZo=
+	t=1778767759; cv=none; b=sF1ZoD7pS0vyNJojBAwsEk7pjsNZdjxyq/EZuwQ37mvgBmRi73cXG//2h9xEJbKgQK3xmUvKPDlm9Z0xM3s59wwPjwczlarxZW9eXKR5hPlSOlrWIIyHRg3vmrxof4lny5Qty1PN9gPey+N3RmvwnMRYqpKyuYhoiX1+ibeTHOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778766895; c=relaxed/simple;
-	bh=E2JKmwToQRARXHen0tX9gpzXxcWOXv4/gAI5cPtC/ko=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bz0mhg4jTuxWBMiEJApiRceEzdpjikG+zghh0bMuh+kk3jIQGNcboBr56AB8ecrSrP4wbJQsIwU2NxlvT0bKpHiTN8HlZ8JbRVCaruiThZlZC2OXSl18qixvqv49CynfNeDAccaiLcu2dDlmS4kOGJfxwZ/LJ1UBpM/mg6nOU08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4Volse0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778767759; c=relaxed/simple;
+	bh=crS/vJ0l9jNtTLZIgHpYMSSvA7GQ12UlRLojwsyXt1c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z13h4GVtxkCZkZ9fSiMUXJrsTWfFVDJ5gwY6voroywukDmmHZYgyTXLdqMqsBYR+umDfWB/ZnCqOgUwrwcr7DAsdY9Inj5/ypN2uJ1hi0ODfr2fbhY1MmExbnZ+AKDW3gvKN+JicsYWFsW7jnPDACmLMKZ6ImtMCjEhr3bgpQkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwxnnCwK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4Volse0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7275C32786;
-	Thu, 14 May 2026 13:54:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwxnnCwK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A7BC2BCB3;
+	Thu, 14 May 2026 14:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778766895;
-	bh=E2JKmwToQRARXHen0tX9gpzXxcWOXv4/gAI5cPtC/ko=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n4Volse0J7efobQaaTn/5GlkNwtxuyttts4HBfPCN0xULhNxU4/oFJKuI60bKzR2g
-	 U6rQtUGkQ2quiEo4rbtKblmjODZRz+vancVXWMkfv57RArI68A/m2t38VyeTZF3v2v
-	 WrBiCj7o7rYlxPRlSArLx332UzU5macNIqwyznTQ9oftX/Eggq7iZN/AYg5OrxR0O7
-	 b8RihWHtxGy/1DWI9YNiqYkd7ul6eR9Co7c+TkuIMqi6F7/FFqoYzvXv45GvWJS3za
-	 sVDWtkfJpG5c0AMclqDIZN9jtQg8jo96sHngMm31hMXWzNlvT1IFO5bDhrLzV+YV3G
-	 KJQZYbHFLVD7w==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
+	s=k20201202; t=1778767758;
+	bh=crS/vJ0l9jNtTLZIgHpYMSSvA7GQ12UlRLojwsyXt1c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uwxnnCwKtnnkKSHPkK/qVx5GWZzQjfDEc54rcYlcpQplJE7Xn/GVYWgFlHRH/4ZVG
+	 mQ4CNyY7RPd615tbEbCfceeFsvFYyZyl5qCh8RhY43qHplhXaiocJyt+BFzKncO8hw
+	 nmX1Ctqp6fZM7Q18umcdZ+f3cVUtU0vrV/u1pYJD7H/1mXyWIwyAzFMsKOvuMs4q06
+	 f1n/bljpxJb4cnTtVYAP2ujZjoAnnpoLUbmPLPEZSUYC8X0z/kIZBgzITeWIGMk39W
+	 yuQz24c3mxmGGMBQRY38NNw+gFiQVo04Wg2h0dOX961yyRqK5PWYvXad08Rwa5IWSj
+	 AlVGjsImb186g==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lorenzo Stoakes <ljs@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	damon@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 7/7] selftests/bpf: Add tests for uprobe nop10 red zone clobbering
-Date: Thu, 14 May 2026 15:53:42 +0200
-Message-ID: <20260514135342.22130-8-jolsa@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260514135342.22130-1-jolsa@kernel.org>
-References: <20260514135342.22130-1-jolsa@kernel.org>
+Subject: [RFC PATCH v2.1 00/28] mm/damon: introduce data attributes monitoring
+Date: Thu, 14 May 2026 07:08:33 -0700
+Message-ID: <20260514140904.119781-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -48,270 +60,258 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andrii Nakryiko <andrii@kernel.org>
+TL; DR
+======
 
-The uprobe nop5 optimization used to replace a 5-byte NOP with a 5-byte
-CALL to a trampoline. The CALL pushes a return address onto the stack at
-[rsp-8], clobbering whatever was stored there.
+Extend DAMON for monitoring general data attributes other than accesses.
+The short term motivation is lightweight page type (e.g., belonging
+cgroup) aware monitoring.  In long term, this will help extending DAMON
+for multiple access events capture primitives (e.g., page faults and
+PMU) and eventually pivotting DAMON to a "Data Attributes Monitoring and
+Operations eNgine" in long term.
 
-On x86-64, the red zone is the 128 bytes below rsp that user code may use
-for temporary storage without adjusting rsp. Compilers can place USDT
-argument operands there, generating specs like "8@-8(%rbp)" when rbp ==
-rsp. With the CALL-based optimization, the return address overwrites that
-argument before the BPF-side USDT argument fetch runs.
+Background: High Cost of Page Level Properties Monitoring
+=========================================================
 
-Add two tests for this case. The uprobe_syscall subtest stores known values
-at -8(%rsp), -16(%rsp), and -24(%rsp), executes an optimized nop10 uprobe,
-and verifies the red-zone data is still intact. The USDT subtest triggers a
-probe in a function where the compiler places three USDT operands in the
-red zone and verifies that all 10 optimized invocations deliver the expected
-argument values to BPF.
+DAMON is initially introduced as a Data Access MONitor.  It has been
+extended for not only access monitoring but also data access-aware
+system operations (DAMOS).  But still the monitoring part is only for
+data accesses.
 
-On an unfixed kernel, the first hit goes through the INT3 path and later
-hits use the optimized CALL path, so the red-zone checks fail after
-optimization.
+Data access patterns is good information, but some users need more
+holistic views.  Particularly, users want to show the access pattern
+information together with the types of the memory.  For example, users
+who work for making huge pages efficiently want to know how much of
+DAMON-found hot/cold regions are backed by huge pages.  Users who run
+multiple workloads with different cgroups want to know how much of
+DAMON-found hot/cold regions belong to specific cgroups.
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-[ updates to use nop10 ]
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/prog_tests/uprobe_syscall.c | 75 +++++++++++++++++++
- tools/testing/selftests/bpf/prog_tests/usdt.c | 49 ++++++++++++
- tools/testing/selftests/bpf/progs/test_usdt.c | 25 +++++++
- tools/testing/selftests/bpf/usdt_2.c          | 13 ++++
- 4 files changed, 162 insertions(+)
+For the user demand, we developed a DAMOS extension for page level
+properties based monitoring [1], which has landed on 6.14.  Using the
+feature, users can inform the page level data properties that they are
+interested in, in a flexible format that uses DAMOS filters.  Then,
+DAMON applies the filters to each folio of the entire DAMON region and
+lets users know how many bytes of memory in each DAMON region passed the
+given filters.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index 82b3c0ce9253..d553485e7db5 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -357,6 +357,48 @@ __nocf_check __weak void usdt_test(void)
- 	USDT(optimized_uprobe, usdt);
- }
- 
-+/*
-+ * Assembly-level red zone clobbering test. Stores known values in the
-+ * red zone (below RSP), executes a nop10 (uprobe site), and checks that
-+ * the values survived. Returns 0 if intact, 1 if clobbered.
-+ *
-+ * The nop5 optimization used CALL (which pushes a return address to
-+ * [rsp-8]), the value at -8(%rsp) was overwritten. The nop10 optimization
-+ * should escape that by moving stackpointer below the redzone before
-+ * doing the CALL.
-+ */
-+__attribute__((aligned(16)))
-+__nocf_check __weak __naked unsigned long uprobe_red_zone_test(void)
-+{
-+	asm volatile (
-+		"movabs $0x1111111111111111, %%rax\n"
-+		"movq   %%rax, -8(%%rsp)\n"
-+		"movabs $0x2222222222222222, %%rax\n"
-+		"movq   %%rax, -16(%%rsp)\n"
-+		"movabs $0x3333333333333333, %%rax\n"
-+		"movq   %%rax, -24(%%rsp)\n"
-+
-+		".byte 0x66, 0x66, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00\n" /* nop10: uprobe site */
-+
-+		"movabs $0x1111111111111111, %%rax\n"
-+		"cmpq   %%rax, -8(%%rsp)\n"
-+		"jne    1f\n"
-+		"movabs $0x2222222222222222, %%rax\n"
-+		"cmpq   %%rax, -16(%%rsp)\n"
-+		"jne    1f\n"
-+		"movabs $0x3333333333333333, %%rax\n"
-+		"cmpq   %%rax, -24(%%rsp)\n"
-+		"jne    1f\n"
-+
-+		"xorl   %%eax, %%eax\n"
-+		"retq\n"
-+		"1:\n"
-+		"movl   $1, %%eax\n"
-+		"retq\n"
-+		::: "rax", "memory"
-+	);
-+}
-+
- static int find_uprobes_trampoline(void *tramp_addr)
- {
- 	void *start, *end;
-@@ -855,6 +897,37 @@ static void test_uprobe_race(void)
- #define __NR_uprobe 336
- #endif
- 
-+static void test_uprobe_red_zone(void)
-+{
-+	struct uprobe_syscall_executed *skel;
-+	struct bpf_link *link;
-+	void *nop10_addr;
-+	size_t offset;
-+	int i;
-+
-+	nop10_addr = find_nop10(uprobe_red_zone_test);
-+	if (!ASSERT_NEQ(nop10_addr, NULL, "find_nop10"))
-+		return;
-+
-+	skel = uprobe_syscall_executed__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "open_and_load"))
-+		return;
-+
-+	offset = get_uprobe_offset(nop10_addr);
-+	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
-+			0, "/proc/self/exe", offset, NULL);
-+	if (!ASSERT_OK_PTR(link, "attach_uprobe"))
-+		goto cleanup;
-+
-+	for (i = 0; i < 10; i++)
-+		ASSERT_EQ(uprobe_red_zone_test(), 0, "red_zone_intact");
-+
-+	bpf_link__destroy(link);
-+
-+cleanup:
-+	uprobe_syscall_executed__destroy(skel);
-+}
-+
- static void test_uprobe_error(void)
- {
- 	long err = syscall(__NR_uprobe);
-@@ -881,6 +954,8 @@ static void __test_uprobe_syscall(void)
- 		test_uprobe_usdt();
- 	if (test__start_subtest("uprobe_race"))
- 		test_uprobe_race();
-+	if (test__start_subtest("uprobe_red_zone"))
-+		test_uprobe_red_zone();
- 	if (test__start_subtest("uprobe_error"))
- 		test_uprobe_error();
- 	if (test__start_subtest("uprobe_regs_equal"))
-diff --git a/tools/testing/selftests/bpf/prog_tests/usdt.c b/tools/testing/selftests/bpf/prog_tests/usdt.c
-index be34c4087ff5..606601ccdc42 100644
---- a/tools/testing/selftests/bpf/prog_tests/usdt.c
-+++ b/tools/testing/selftests/bpf/prog_tests/usdt.c
-@@ -250,6 +250,7 @@ static void subtest_basic_usdt(bool optimized)
- #ifdef __x86_64__
- extern void usdt_1(void);
- extern void usdt_2(void);
-+extern void usdt_red_zone_trigger(void);
- 
- static unsigned char nop1[1] = { 0x90 };
- static unsigned char nop1_nop10_combo[11] = { 0x90, 0x66, 0x66, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 };
-@@ -340,6 +341,52 @@ static void subtest_optimized_attach(void)
- cleanup:
- 	test_usdt__destroy(skel);
- }
-+
-+/*
-+ * Test that USDT arguments survive nop10 optimization in a function where
-+ * the compiler places operands in the red zone.
-+ *
-+ * Signal handlers are prone to having the compiler place USDT argument
-+ * operands in the red zone (below rsp).
-+ *
-+ * The nop5 optimization used CALL (which pushes a return address to
-+ * [rsp-8]), the value at -8(%rsp) was overwritten. The nop10 optimization
-+ * should escape that by moving stackpointer below the redzone before
-+ * doing the CALL.
-+ */
-+static void subtest_optimized_red_zone(void)
-+{
-+	struct test_usdt *skel;
-+	int i;
-+
-+	skel = test_usdt__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "open_and_load"))
-+		return;
-+
-+	skel->bss->expected_arg[0] = 0xDEADBEEF;
-+	skel->bss->expected_arg[1] = 0xCAFEBABE;
-+	skel->bss->expected_arg[2] = 0xFEEDFACE;
-+	skel->bss->expected_pid = getpid();
-+
-+	skel->links.usdt_check_arg = bpf_program__attach_usdt(
-+		skel->progs.usdt_check_arg, 0, "/proc/self/exe",
-+		"optimized_attach", "usdt_red_zone", NULL);
-+	if (!ASSERT_OK_PTR(skel->links.usdt_check_arg, "attach_usdt_red_zone"))
-+		goto cleanup;
-+
-+	for (i = 0; i < 10; i++)
-+		usdt_red_zone_trigger();
-+
-+	ASSERT_EQ(skel->bss->arg_total, 10, "arg_total");
-+	ASSERT_EQ(skel->bss->arg_bad, 0, "arg_bad");
-+	ASSERT_EQ(skel->bss->arg_last[0], 0xDEADBEEF, "arg_last_1");
-+	ASSERT_EQ(skel->bss->arg_last[1], 0xCAFEBABE, "arg_last_2");
-+	ASSERT_EQ(skel->bss->arg_last[2], 0xFEEDFACE, "arg_last_3");
-+
-+cleanup:
-+	test_usdt__destroy(skel);
-+}
-+
- #endif
- 
- unsigned short test_usdt_100_semaphore SEC(".probes");
-@@ -613,6 +660,8 @@ void test_usdt(void)
- 		subtest_basic_usdt(true);
- 	if (test__start_subtest("optimized_attach"))
- 		subtest_optimized_attach();
-+	if (test__start_subtest("optimized_red_zone"))
-+		subtest_optimized_red_zone();
- #endif
- 	if (test__start_subtest("multispec"))
- 		subtest_multispec_usdt();
-diff --git a/tools/testing/selftests/bpf/progs/test_usdt.c b/tools/testing/selftests/bpf/progs/test_usdt.c
-index f00cb52874e0..0ee78fb050a1 100644
---- a/tools/testing/selftests/bpf/progs/test_usdt.c
-+++ b/tools/testing/selftests/bpf/progs/test_usdt.c
-@@ -149,5 +149,30 @@ int usdt_executed(struct pt_regs *ctx)
- 		executed++;
- 	return 0;
- }
-+
-+int arg_total;
-+int arg_bad;
-+long arg_last[3];
-+long expected_arg[3];
-+int expected_pid;
-+
-+SEC("usdt")
-+int BPF_USDT(usdt_check_arg, long arg1, long arg2, long arg3)
-+{
-+	if (expected_pid != (bpf_get_current_pid_tgid() >> 32))
-+		return 0;
-+
-+	__sync_fetch_and_add(&arg_total, 1);
-+	arg_last[0] = arg1;
-+	arg_last[1] = arg2;
-+	arg_last[2] = arg3;
-+
-+	if (arg1 != expected_arg[0] ||
-+	    arg2 != expected_arg[1] ||
-+	    arg3 != expected_arg[2])
-+		__sync_fetch_and_add(&arg_bad, 1);
-+
-+	return 0;
-+}
- #endif
- char _license[] SEC("license") = "GPL";
-diff --git a/tools/testing/selftests/bpf/usdt_2.c b/tools/testing/selftests/bpf/usdt_2.c
-index b359b389f6c0..5e38f8605b02 100644
---- a/tools/testing/selftests/bpf/usdt_2.c
-+++ b/tools/testing/selftests/bpf/usdt_2.c
-@@ -13,4 +13,17 @@ void usdt_2(void)
- 	USDT(optimized_attach, usdt_2);
- }
- 
-+static volatile unsigned long usdt_red_zone_arg1 = 0xDEADBEEF;
-+static volatile unsigned long usdt_red_zone_arg2 = 0xCAFEBABE;
-+static volatile unsigned long usdt_red_zone_arg3 = 0xFEEDFACE;
-+
-+void __attribute__((noinline)) usdt_red_zone_trigger(void)
-+{
-+	unsigned long a1 = usdt_red_zone_arg1;
-+	unsigned long a2 = usdt_red_zone_arg2;
-+	unsigned long a3 = usdt_red_zone_arg3;
-+
-+	USDT(optimized_attach, usdt_red_zone, a1, a2, a3);
-+}
-+
- #endif
+This gives page level detailed and deterministic information to users.
+But, because the operation is done at page level, the overhead is
+proportional to the memory size.  It was useful for test or debugging
+purposes on a small number of machines.  But it was obviously too heavy
+to be enabled always on all machines running the real user workloads.
+For real world workloads, it was recommended to use the feature with
+user-space controlled sampling approaches.  For example, users could do
+the page level monitoring only once per hour, on randomly selected one
+percent of machines of their fleet.  If the runtime and the  size of the
+fleet is long and big enough, it should provide statistically meaningful
+data.
+
+But users are too busy to implement such controls on their own.
+
+Data Attributes Monitoring
+==========================
+
+Extend DAMON to monitor not only data accesses, but also general data
+attributes.  Do the extension while keeping the main promise of DAMON,
+the bounded and best-effort minimum overhead.
+
+Allow users to specify what data attributes in addition to the data
+access they want to monitor.  Users can install one 'data probe' per
+data attribute of their interest for this purpose.  The 'data probe'
+should be able to be applied to any memory, and determine if the given
+memory has the appropriate data attribute.  E.g., if memory of physical
+address 42 belongs to cgroup A.  Each 'data probe' is configured with
+filters that are very similar to the DAMOS filters.
+
+When DAMON checks if each sampling address memory of each region is
+accessed since the last check, it applies data probes if registered.
+Same to the number of access check-positive samples accounting
+(nr_accesses), it accounts the number of each data probe-positive
+samples in another per-region counters array, namely 'probe_hits'. When
+DAMON resets nr_accesses every aggregation interval, it resets
+'probe_hits' together.
+
+Users can read 'probe_hits' just before the values are reset.  In this
+way, users can know how many hot/cold memory regions have data
+attributes of their interest.  E.g., 30 percent of this system's hot
+memory is belonging to cgroup A, and 80 percent of the cgroup
+A-belonging hot memory is backed by huge pages.
+
+Patches Sequence
+================
+
+First eight patches implement the core feature, interface and the
+working support.  Patch 1 introduces data probe data structure, namely
+damon_probe.  Patch 2 extends damon_ctx for installing data probes.
+Patch 3 introduces another data structure for filters of each data
+probe, namely damon_filter.  Patch 4 updates damon_ctx commit function
+to handle the probes.  Patch 5 extends damon_region for the per-region
+per-probe positive samples counter, namely probe_hits.  Patch 6 extends
+damon_operations for applying probes on the underlying DAMON operations
+implementation.  Patch 7 updates kdamond_fn() to invoke the probes
+applying callback.  Patch 8 finally implements the probes support on
+paddr ops.
+
+Ten changes for user interface (patches 9-18) come next.  Patches 9-13
+implements sysfs directories and files for setting data probes, namely
+probes directory, probe directory, filters directory, filter directory
+and filter directory internal files, respectively.  Patch 14 connects
+the user inputs that are made via the sysfs files to DAMON core.
+Following three patches (patches 15-17) implement sysfs directories and
+files for showing the probe_hits to users, namely probes directory,
+probe directory and hits files, respectively.  Patch 18 introduces a new
+tracepoint for showing the probe_hits via tracefs.
+
+Patch 19 adds a selftest for the sysfs files.
+
+Patches 20 and 21 documents the design and usage of the new feature,
+respectively.
+
+Seven additional patches (patches 22-28) for monitoring belonging memory
+cgroup follow.  Depending on the feedback, this part might be separated
+to another series in future.  Patch 22 defines the DAMON filter type for
+the new attribute, namely DAMON_FILTER_TYPE_MEMCG.  Patch 23 add the
+support on paddr ops.  Patch 24 updates the sysfs interface for setup of
+the target memcg.  Patch 25 move code for easy reuse of the filter
+target memcg setup.  Patch 26 connects the user input to the core layer.
+Finally, patches 27 and 28 update the design and usage documents for the
+memcg attribute monitoring support.
+
+Discussions
+===========
+
+This allows the page properties monitoring with overhead that is low
+enough to be enabled always on real world workloads.  Because the
+sampling time for access check is reused for data attributes check,  the
+upper-bounded and best-effort minimum overhead of DAMON is kept.
+Because the sampling memory for access check is reused for data
+attributes check, additional overhead is minimum.
+
+Still DAMOS-based page level properties monitoring should be useful,
+because it provides a deterministic page level information.  When in
+doubt of the sampling based information, running DAMOS-based one
+together and comparing the results would be useful, for debugging and
+tuning.
+
+Plan for Dropping RFC tag
+=========================
+
+I'm considering renaming the tracepoint for exposing probe_hits
+(damon_aggregated_v2).
+
+Making changes for feedback from myself, humans and Sashiko should be
+the major remaining work.
+
+I'm currently hoping to drop the RFC tag by 7.2-rc1.
+
+Future Works: Mid Term
+========================
+
+This version of implementation is limiting the maximum number of data
+probes to four.  I will try to find a way to remove the limit in future.
+I personally think it should be enough for common use cases, though, and
+therefore not giving high priority at the moment.
+
+Future Works: Long Term
+=======================
+
+There are user requests for extending DAMON with detailed access
+information, for example, per-CPUs/threads/read/writes monitoring.  For
+that, I was working [2] on extending DAMON to use page fault events as
+another access check primitives, and making the infrastructure flexible
+for future use of yet another access check primitive.  Actually there is
+another ongoing work [3] for extending DAMON with PMU events.  The
+motivation of the work is reducing the overhead, though.
+
+In my work [2], I was introducing a new interface for access sampling
+primitives control.  Now I think this data probe interface can be used
+for that, too.  That is, data access becomes just one type of data
+attribute.  Also, pg_idle-confirmed access, page fault-confirmed access,
+and PMU event-confirmed access will be different types of data
+attributes.
+
+The regions adjustment mechanism is currently working based on the
+access information.  That's because DAMON is designed for data access
+monitoring.  That is, data access information is the primary interest,
+and therefore DAMON adjusts regions in a way that can best-present the
+information.
+
+Once data access becomes just one of data attributes, there is no reason
+to think data access that special.  There might be some users not
+interested in access at all but want to know the location of memory of
+specific type.  Data probes interface will allow doing that.  Further,
+we could extend the interface to let users set any data attribute as the
+'primary' attribute.  Then, DAMON will split and merge regions in a way
+that can best-present the 'primary' attributes.
+
+DAMOS will also be extended, to specify targets based on not only the
+data access pattern, but all user-registered data attributes.  From this
+stage, we may be able to call DAMON as a "Data Attributes Monitoring and
+Operations eNgine".
+
+[1] https://lore.kernel.org/20250106193401.109161-1-sj@kernel.org
+[2] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org/
+[3] https://lore.kernel.org/20260423004211.7037-1-akinobu.mita@gmail.com
+
+Changes from RFC v2
+- rfc v2: https://lore.kernel.org/20260512143645.113201-1-sj@kernel.org
+- Optimize nr_probes calculation for probe_hits tracepoint.
+- Use TRACE_EVENT_CONDITION() for probe_hits tracepoint.
+- Rebase to latest mm-new.
+Changes from RFC
+- rfc: https://lore.kernel.org/all/20260426205222.93895-1-sj@kernel.org/
+- Support memcg DAMON filter.
+- Use per-probe probe_hits sysfs file.
+- Use dynamic_array for probe_hits tracing.
+- Fix filter matching field.
+- Fix folio leaking in damon_pa_filter_pass().
+- Move nr_regions of damon_aggregated_v2 tracepoint after end.
+- Rename DAMON_TEST_TYPE_ANON to DAMON_FILTER_TYPE_ANON.
+
+SeongJae Park (28):
+  mm/damon/core: introduce struct damon_probe
+  mm/damon/core: embed damon_probe objects in damon_ctx
+  mm/damon/core: introduce damon_filter
+  mm/damon/core: commit probes
+  mm/damon/core: introduce damon_region->probe_hits
+  mm/damon/core: introduce damon_ops->apply_probes
+  mm/damon/core: do data attributes monitoring
+  mm/damon/paddr: support data attributes monitoring
+  mm/damon/sysfs: implement probes dir
+  mm/damon/sysfs: implement probe dir
+  mm/damon/sysfs: implement filters directory
+  mm/damon/sysfs: implement filter dir
+  mm/damon/sysfs: implement filter dir files
+  mm/damon/sysfs: setup probes on DAMON core API parameters
+  mm/damon/sysfs-schemes: implement tried_regions/<r>/probes/
+  mm/damon/sysfs-schemes: implement probe dir
+  mm/damon/sysfs-schemes: implement probe/hits file
+  mm/damon: trace probe_hits
+  selftests/damon/sysfs.sh: test probes dir
+  Docs/mm/damon/design: document data attributes monitoring
+  Docs/admin-guide/mm/damon/usage: document data attributes monitoring
+  mm/damon/core: introduce DAMON_FILTER_TYPE_MEMCG
+  mm/damon/paddr: support DAMON_FILTER_TYPE_MEMCG
+  mm/damon/sysfs: add filters/<F>/path file
+  mm/damon/sysfs-schemes: move memcg_path_to_id() to sysfs-common
+  mm/damon/sysfs: setup damon_filter->memcg_id from path
+  Docs/mm/damon/design: update for memcg damon filter
+  Docs/admin-guide/mm/damon/usage: update for memcg damon filter
+
+ Documentation/admin-guide/mm/damon/usage.rst |  48 +-
+ Documentation/mm/damon/design.rst            |  39 ++
+ include/linux/damon.h                        |  67 +++
+ include/trace/events/damon.h                 |  38 ++
+ mm/damon/core.c                              | 197 +++++++
+ mm/damon/paddr.c                             |  76 +++
+ mm/damon/sysfs-common.c                      |  41 ++
+ mm/damon/sysfs-common.h                      |   2 +
+ mm/damon/sysfs-schemes.c                     | 222 ++++++--
+ mm/damon/sysfs.c                             | 557 +++++++++++++++++++
+ tools/testing/selftests/damon/sysfs.sh       |  48 ++
+ 11 files changed, 1284 insertions(+), 51 deletions(-)
+
+
+base-commit: 678b6bc7ce120b8c51d4e05fcb8eb0a92f9be3f6
 -- 
-2.53.0
-
+2.47.3
