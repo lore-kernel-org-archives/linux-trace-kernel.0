@@ -1,37 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF0A355814;
-	Thu, 14 May 2026 18:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528013F4119;
+	Thu, 14 May 2026 19:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778784433; cv=none; b=aU8uncaiL9rVmXclMPythC9uIQ2HfLO6hUNPh/1Gp5h+41BDUzAvIaGBtjjO2B76M2ILRvj11xavTH39dzjR3uqotCGfMT4fn/wvEYbM5RHX8vD5Dyx1uDB2sAIhbub6byP4wUIVwIU67R189D8ewCYqRoHbtaB0kEcisAq0mck=
+	t=1778787397; cv=none; b=PAP5cIGAUL0Qr0trTgFaA3OSARzW6G+OZmr3X6MaRRhRmy5RsNGM9lssfNRVKvy94zFhV4D1VRzftqbJOZHpmJrUvqfiJ/uceK3SDz8/iXRwa/YJOCNNy2u0/aQAiwqXO15nh1XcygKMseLhy54vRjF8gTCk1rFp/jOycal8wmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778784433; c=relaxed/simple;
-	bh=ANCJ2nkmUb7VdeagkAs+34kc9JMaDZALdmfQ4/SYn6g=;
+	s=arc-20240116; t=1778787397; c=relaxed/simple;
+	bh=Mx4wtsH5+NjyGsP/HE01zzfsENrVvwY5wlHkuUFnPrw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bQQwXjSv+9Qh/JvZMMP4NQHVY6YOxE622+wKXpQ1b01dpJ9Yswb+Y8Uk6wQ6KIvNFXklyiUfGV/r7aORbrRKSskIPHHknhopmZsDcbn+0cGPIvcx7goNWbVNdM6hDxYhuccMCiE+l6coRUY/ktGFDtIy57WK5yaVN80VYZW/RTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=CujVR74+e9JpciEXvmHurZXBkVq/su9w4u7Gk4DQvIcUqLAeq4GCB2dlGIN271JGWlqcaNQB7CGXxMy6sWdw7AVRCFnKYbFP9IZuUxk47UPX09tKbUELm6FpdKmrGxv/DDRjC+ovCT+MHLweqRMt2rtiLwkOfHYWnOfENidNzto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 2EF04160D0E;
-	Thu, 14 May 2026 18:47:07 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 198E730;
-	Thu, 14 May 2026 18:47:05 +0000 (UTC)
-Date: Thu, 14 May 2026 14:47:10 -0400
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id C5B2B405BD;
+	Thu, 14 May 2026 19:36:33 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id B8B212002E;
+	Thu, 14 May 2026 19:36:31 +0000 (UTC)
+Date: Thu, 14 May 2026 15:36:37 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
- <irogers@google.com>, sashiko@lists.linux.dev
-Subject: Re: [PATCH v2] tracing: Allow perf to read synthetic events
-Message-ID: <20260514144710.79513174@gandalf.local.home>
-In-Reply-To: <20260513150007.3b280e87@gandalf.local.home>
-References: <20260513150007.3b280e87@gandalf.local.home>
+To: Yiyang Chen <cyyzero16@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/clock: Provide !HAVE_UNSTABLE_SCHED_CLOCK stub
+ for sched_clock_stable()
+Message-ID: <20260514153637.553ad41c@gandalf.local.home>
+In-Reply-To: <56e45338858946cd9581b75c8bd45dd37dba52c5.1778773587.git.cyyzero16@gmail.com>
+References: <56e45338858946cd9581b75c8bd45dd37dba52c5.1778773587.git.cyyzero16@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,101 +39,69 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 198E730
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: mi7rfsms9p39wffwgzyd3fhryr4jizhe
+X-Stat-Signature: gxr33t5ff35t4azr9w4tmcwge7tb73ek
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: B8B212002E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19F119g861sKdV1WP8H82FD1sBuqPwvQJ0=
-X-HE-Tag: 1778784425-640236
-X-HE-Meta: U2FsdGVkX1806ol+eoXflWnfatgXky29o7yaWJZz7W7IfM7qzzU8QfSzfMSCCMrQsAuqF7C7pETfeB23EJT+ZfF2UWrfmSjJx5R4q+0G32hOajJP/tU1U4/nDJkAyC+urL6e+gQm+Q2f/UBqSYrqyHTSiET0ouSM1pL49KbvD59GTDNBN8mF4tX/PdkcS6CAba57Eqkr1rBlH4+7aVwpeYwg187QRX/cbbnHXzMBvcqf1oz3kAEFrsJJTxrzMkJSwtX7IToFhSQxfdQYJVG/T5WuuvD1MQA6SNhzly75yWKphscVfr3Z6fCMu7PTXW0ocRPBzf8wYEESI26NwI39a7UJNHXEkZbWvOrB98ECNysjkWiqOw+dHV/gWz9q8DdAjNtIyG0rwZEeDIfuZZKnzup8xev9znT3OP2EL1hTONneBuFmEwugItpisxwE9I00
+X-Session-ID: U2FsdGVkX1+xv7vj7iHDSN5VcmAmfB14CdK6qaC/ngg=
+X-HE-Tag: 1778787391-588625
+X-HE-Meta: U2FsdGVkX1+cy0D4gWks1x+FrLK8C4ogBqctE6FEgtBIyvebx6yUr0mhmcxNX/+vf9+S6KeaZB98ZHfK3bk8jXIsNJVC5WikbCFOrEdVXj7c1NYOW+USlCOSY3Tpy0DjzcNvVUtGkKtVYILfqrQQjCaWDI0VRL5ppmWfRF2kVdz0dnNUbPxHHUZG9c2FJYuIwAD/l1ehjt6Ey+eeHGKeGbBf3dxNuNDZ4bbsTZLFHO74wRkhe8iC/0+VEYj7HH5xTq+Zz3XV4Hb+Dvv6wP+xDdGL7JKTcq6pE7YZ4+J/zyWr/myGE64gSZts10Ts7HeFDt1sQf8rnYe7FMbPTUKjMHsosC6bVJyI/NgiOMZpbBYxpwppjtzza6n0+hbBAxkq1mWwxXEXQc8QG2Yuv01qZA==
+
+On Fri, 15 May 2026 00:05:05 +0800
+Yiyang Chen <cyyzero16@gmail.com> wrote:
+
+> When CONFIG_HAVE_UNSTABLE_SCHED_CLOCK is disabled, sched_clock() is
+> already assumed to provide stable semantics, but the public header
+> doesn't provide a sched_clock_stable() stub for that case.
+> 
+> Add a header stub that always returns true and clean up the duplicate
+> local stub in ring_buffer.c, so callers can use sched_clock_stable()
+> unconditionally.
+> 
+> Signed-off-by: Yiyang Chen <cyyzero16@gmail.com>
+> ---
+>  include/linux/sched/clock.h | 5 +++++
+>  kernel/trace/ring_buffer.c  | 7 -------
+>  2 files changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/sched/clock.h b/include/linux/sched/clock.h
+> index 196f0ca351a2..39f0a7f94bfc 100644
+> --- a/include/linux/sched/clock.h
+> +++ b/include/linux/sched/clock.h
+> @@ -33,6 +33,11 @@ extern u64 sched_clock_cpu(int cpu);
+>  extern void sched_clock_init(void);
+>  
+>  #ifndef CONFIG_HAVE_UNSTABLE_SCHED_CLOCK
+> +static inline int sched_clock_stable(void)
+> +{
+> +	return 1;
+> +}
+> +
+>  static inline void sched_clock_tick(void)
+>  {
+>  }
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 5326924615a4..02691c3c6dd6 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -3769,13 +3769,6 @@ rb_add_time_stamp(struct ring_buffer_per_cpu *cpu_buffer,
+>  	return skip_time_extend(event);
+>  }
+>  
+> -#ifndef CONFIG_HAVE_UNSTABLE_SCHED_CLOCK
+> -static inline bool sched_clock_stable(void)
+> -{
+> -	return true;
+> -}
+> -#endif
+> -
+>  static void
+>  rb_check_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
+>  		   struct rb_event_info *info)
 
 
-Replying to Sashiko's comments:
+Thanks for moving this out of the ring buffer code.
 
-  https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/20260513150007.3b280e87%40gandalf.local.home
-
-> commit b3956023bf5f1ccf5838187c1c14f3dcf5e37c3d
-> Author: Steven Rostedt <rostedt@goodmis.org>
-> tracing: Allow perf to read synthetic events
-> This commit adds support for perf to read synthetic events. It extracts the
-> field sizing and entry writing logic into separate helper functions, and
-> implements a new probe function to attach perf events.
-> > diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> > index 39ac4eba07024..e6871230bde96 100644
-> > --- a/kernel/trace/trace_events_synth.c
-> > +++ b/kernel/trace/trace_events_synth.c
-> > @@ -499,28 +499,19 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
-> [ ... ]
-> > +static __always_inline void write_synth_entry(struct synth_event *event,
-> > +					      struct synth_trace_event *entry,
-> > +					      u64 *var_ref_vals,
-> > +					      unsigned int *var_ref_idx)
-> > +{
-> > +	int data_size = 0;
-> Since get_field_size() and write_synth_entry() are being refactored here, is
-> there a risk of a time-of-check to time-of-use buffer overflow with
-> dynamic string fields?
-> get_field_size() computes the string length for allocation by calling
-> fetch_store_strlen(). The ring buffer event slot is then allocated based on
-> this length.
-> write_synth_entry() populates the buffer by calling trace_string(), which
-> calls fetch_store_strlen() a second time to recalculate the string's length,
-> assigning it to data->as_dynamic.len.
-> If a string from user space grows between the two fetch_store_strlen() calls,
-> fetch_store_string() will blindly copy more bytes than the allocated buffer
-> space. Can this cause out-of-bounds writes and corrupt kernel memory?
-> This regression wasn't introduced by this patch, but pre-existed in the
-> ftrace implementation.
-
-The string cannot grow between the two calls. When a dynamic event is
-enabled (as it is required to be here) deleting or modifying it will be
-denied via an -EBUSY return. That's the only way I'm aware of that can have
-user space change the size of the string.
-
-> [ ... ]
-> > +#ifdef CONFIG_PERF_EVENTS
-> > +static void perf_event_raw_event_synth(void *__data,
-> > +				       u64 *var_ref_vals,
-> > +				       unsigned int *var_ref_idx)
-> > +{
-> [ ... ]
-> > +	size = ALIGN(sizeof(*entry) + fields_size, 8);
-> > +
-> > +	entry = perf_trace_buf_alloc(size, &regs, &context);
-> > +
-> > +	if (unlikely(!entry))
-> > +		return;
-> > +
-> > +	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
-> > +
-> > +	perf_fetch_caller_regs(regs);
-> > +
-> > +	perf_trace_buf_submit(entry, size, context,
-> > +			      call->event.type, 1, regs,
-> > +			      perf_head, NULL);
-> > +}
-> > +#endif
-> Could this leak uninitialized per-CPU kernel memory to userspace?
-> perf_trace_buf_alloc() and trace_event_buffer_reserve() allocate memory from
-> per-CPU buffers without zero-initializing it (except for trailing alignment
-> padding).
-
-Both of theses per-CPU memory locations are zeroed when created. It is only
-populated with trace data. Yeah, it may leak previous trace data, but that
-data should also be visible for whoever created it in the first place.
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
 
 -- Steve
-
-
-> write_synth_entry() populates an array of 8-byte union trace_synth_field.
-> When a field is smaller than 8 bytes (e.g., as_u8), only those specific bytes
-> are written, leaving the remaining padding bytes uninitialized. Similarly, for
-> empty stacktraces, get_field_size() reserves 8 bytes, but trace_stack()
-> terminates immediately and writes 0 bytes, leaving the 8-byte gap completely
-> uninitialized.
-> perf_trace_buf_submit() copies the entire requested buffer size to the perf
-> ring buffer. Can userspace read this buffer, leaking uninitialized kernel
-> memory from previous events or kernel operations?
-> This regression also wasn't introduced by this patch, but pre-existed in the
-> ftrace implementation.
-
