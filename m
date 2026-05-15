@@ -1,132 +1,149 @@
-Received: from 013.lax.mailroute.net (013.lax.mailroute.net [199.89.1.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2023638AC79;
-	Fri, 15 May 2026 19:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3F7239562
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 19:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778872923; cv=none; b=uPuVrBopEYtaKecoudwYAemQKxmvLzGc1t/VGOMOhbdn8KqlBcDaPQMboXkP6d4iiCCsy7076pHUdQQQFqdblT6Hp492NNU/dG9BE8BP2HLEJqypg+EmVgbU2wFE7uNjXsCOKLvFSmGWQbPtjjzFt4lxPJWQ5nYJjfEvHUAU+2M=
+	t=1778873758; cv=none; b=ToJorj3/z4a58YbWMe5OEjxG3SlVX3SRFER74+mXWsx9dyAkj1zPSAUTr83G6YPhnn2TXC0u2awyR1fY9tX9CdAV25Qhr6VvXkodpF5vlsB838giaxtJC8x4NVdTnAHJaFcXHikC1lQUJlXC9OV1F590WC1/BEFxDmDdGywPRS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778872923; c=relaxed/simple;
-	bh=etq7coVtQM47GMB6/iYdcAHANfQZ4Fdv0veJgHeW0RU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iVW0dWBikWFHOI1v5hgv1rwbUNW7uu103/Qq9PaiztrjJt9JWMQqN9Uu/KYZg17GslOcVSUf3q1/PCbhY80wbX4gcDl/tcjJ59zeHEQUk0zNCh/RdZY0mPbamLBV4eg+89u2Zla9JPqhcYOZug4wfNkgQoltVEm7vobn13FSfnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=isujH0tD; arc=none smtp.client-ip=199.89.1.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1778873758; c=relaxed/simple;
+	bh=uHP8ve0rIWQPxaSa6tPdnvdoupveIXTwMedyhVQ8dXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=F3vs2u2IllAa4YYjWcVrFfbuJck9TNf+NbzJ6oEhhYd717gmmZij4eEY1IyFRPn09VZ6TDK6l8eHhdv0W4N5ZggYdOKhfFKnIAePIIxrci0TITcOtLvwSfjfnB7T/AiybJ9edsVZhMpQWv3oY3LIXIK4V8rhQFzmnkt740yiyhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P66eAMrU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="isujH0tD"
-Received: from localhost (localhost [127.0.0.1])
-	by 013.lax.mailroute.net (Postfix) with ESMTP id 4gHHBd4JTxzlh2ff;
-	Fri, 15 May 2026 19:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1778872917; x=1781464918; bh=U0jH4D19p47Ke7XI7nOgdEzt
-	aSYBOtp7vlQaiq3oa54=; b=isujH0tDYwDwVq8Lk52K6qCd0J2zJsHGriOcXnYo
-	YZvT6cFpZA0+eRZ1qHvZe13VbdLGKLgS61qu01jrd1uU/x6YSFzdB+1aA2Crmg+s
-	i4ZQFwp7e11g/iB+MrO0uzLX4dKzgpcMV3WinYteUrL8sJAKpGB6xujXUaSMH79z
-	FSdFSwx81vNmgC+1kQh4Q/s33V9eq82NYCCIaCARrqj7kI26Sg03xhVFnhmYxxTL
-	Aj7e8YqlH++Z4PJ0MYWqY0a6WpUPwT9pxX/zshBMPt1ay1Kddmk+RyivleCnf60z
-	pqJt3w1V5UlMQ+v4jxhI2vokL7e+FU8cs7MqTsYGlERtIA==
-X-Virus-Scanned: by MailRoute
-Received: from 013.lax.mailroute.net ([127.0.0.1])
- by localhost (013.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 6NfCh0c8gDXP; Fri, 15 May 2026 19:21:57 +0000 (UTC)
-Received: from [100.119.48.131] (unknown [104.135.180.219])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P66eAMrU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778873755;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aVO05bCRbFfwqlo/VthLnrU/EdoA/AzPKuZkE7xwyRQ=;
+	b=P66eAMrU7LBh9+gGI58J2hUrSzOX0Oc+70LWjcRoxatz9trGNgAso9+d6ibg0VG/2LD/CZ
+	R+XRUrGeNSrMrg6I52cysXK26NyaEH66Tb+nvW+cDe34XtTOsraYqluH+dM1Bo0kL6k5E9
+	D+PlK6vR9dgidYZSHksNkzfM7pWdgpM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-189-jk1R3mVlNsiZJCTKSWnsBQ-1; Fri,
+ 15 May 2026 15:35:52 -0400
+X-MC-Unique: jk1R3mVlNsiZJCTKSWnsBQ-1
+X-Mimecast-MFC-AGG-ID: jk1R3mVlNsiZJCTKSWnsBQ_1778873751
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 013.lax.mailroute.net (Postfix) with ESMTPSA id 4gHHBW4y2RzlfvpG;
-	Fri, 15 May 2026 19:21:55 +0000 (UTC)
-Message-ID: <ebdc020e-419d-458a-9211-36f22af0c1d9@acm.org>
-Date: Fri, 15 May 2026 12:21:46 -0700
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 948DB1956053;
+	Fri, 15 May 2026 19:35:51 +0000 (UTC)
+Received: from wcosta-defaultstring.rmtbr.csb (unknown [10.22.80.107])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6B6E718001D2;
+	Fri, 15 May 2026 19:35:49 +0000 (UTC)
+Date: Fri, 15 May 2026 16:35:47 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/13] verification/rvgen: Convert
+ __fill_verify_guards_func() to Lark
+Message-ID: <agd1Tb8RDUqfjaGn@wcosta-defaultstring.rmtbr.csb>
+References: <cover.1777962130.git.namcao@linutronix.de>
+ <e8a636c8ea6da554fd51b1241b9181f65af420c8.1777962130.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/11] scsi: ufs: Use trace_call__##name() at guarded
- tracepoint call sites
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>
-References: <20260515135946.2238888-1-vineeth@bitbyteword.org>
- <9fde73e7-0108-48d7-a1a0-ccc9776beb5c@acm.org>
- <20260515145048.1c021bc9@gandalf.local.home>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20260515145048.1c021bc9@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <e8a636c8ea6da554fd51b1241b9181f65af420c8.1777962130.git.namcao@linutronix.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: lBcqBf1dCD_ByhYAzM3tNqfstb9gg9l80IW4KNdVzxc_1778873751
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 5/15/26 11:50 AM, Steven Rostedt wrote:
-> On Fri, 15 May 2026 08:27:27 -0700
-> Bart Van Assche <bvanassche@acm.org> wrote:
+On Tue, May 05, 2026 at 08:59:27AM +0200, Nam Cao wrote:
+> Prepare to remove self.guards and self.__parse_constraints(), convert
+> __fill_verify_guards_func() to use the parsed transitions from Lark.
 > 
->> On 5/15/26 6:59 AM, Vineeth Pillai (Google) wrote:
->>>    static void ufshcd_add_query_upiu_trace(struct ufs_hba *hba,
->>> @@ -432,8 +432,8 @@ static void ufshcd_add_query_upiu_trace(struct ufs_hba *hba,
->>>    	if (!trace_ufshcd_upiu_enabled())
->>>    		return;
->>>    
->>> -	trace_ufshcd_upiu(hba, str_t, &rq_rsp->header,
->>> -			  &rq_rsp->qr, UFS_TSF_OSF);
->>> +	trace_call__ufshcd_upiu(hba, str_t, &rq_rsp->header,
->>> +			       &rq_rsp->qr, UFS_TSF_OSF);
->>>    }
->>
->> Instead of making this change, please remove the
->> trace_ufshcd_upiu_enabled() call because it is redundant.
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+>  tools/verification/rvgen/rvgen/dot2k.py | 39 ++++++++++++++++++++-----
+>  1 file changed, 31 insertions(+), 8 deletions(-)
 > 
-> You mean to remove the ufshcd_add_query_upiu_trace() function and just use
-> a tracepoint where it is called?
+> diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
+> index 3a39ae29e41e..cf7e5ddc649c 100644
+> --- a/tools/verification/rvgen/rvgen/dot2k.py
+> +++ b/tools/verification/rvgen/rvgen/dot2k.py
+> @@ -221,6 +221,20 @@ class ha2k(dot2k):
+>      def __parse_single_constraint(self, rule: dict, value: str) -> str:
+>          return f"ha_get_env(ha_mon, {rule["env"]}{self.enum_suffix}, time_ns) {rule["op"]} {value}"
+>  
+> +    def __parse_guard_rule(self, rule) -> str:
+> +        buff = []
+> +        for c, sep in rule.rules:
+> +            env = c.env + self.enum_suffix
+> +            op = c.op
+> +            val = self.__adjust_value(c.val, c.unit)
+> +
+> +            cond = f"ha_get_env(ha_mon, {env}, time_ns) {op} {val}"
+> +            if sep:
+> +                cond += f" {sep}"
+> +            buff.append(cond)
+> +        buff[-1] += ';'
+> +        return buff
+> +
+>      def __get_constraint_env(self, constr: str) -> str:
+>          """Extract the second argument from an ha_ function"""
+>          env = constr.split("(")[1].split()[1].rstrip(")").rstrip(",")
+> @@ -398,8 +412,9 @@ f"""static inline void ha_convert_inv_guard(struct ha_monitor *ha_mon,
+>  
+>      def __fill_verify_guards_func(self) -> list[str]:
+>          buff = []
+> -        if not self.guards:
+> -            return []
+> +
+> +        if not self.has_guard:
+> +            return
 
-That would be even better.
+The signature of function says this function return a list, instead of
+None.
 
->>>    static void ufshcd_add_tm_upiu_trace(struct ufs_hba *hba, unsigned int tag,
->>> @@ -445,15 +445,15 @@ static void ufshcd_add_tm_upiu_trace(struct ufs_hba *hba, unsigned int tag,
->>>    		return;
->>>    
->>>    	if (str_t == UFS_TM_SEND)
->>> -		trace_ufshcd_upiu(hba, str_t,
->>> -				  &descp->upiu_req.req_header,
->>> -				  &descp->upiu_req.input_param1,
->>> -				  UFS_TSF_TM_INPUT);
->>> +		trace_call__ufshcd_upiu(hba, str_t,
->>> +					&descp->upiu_req.req_header,
->>> +					&descp->upiu_req.input_param1,
->>> +					UFS_TSF_TM_INPUT);
->>>    	else
->>> -		trace_ufshcd_upiu(hba, str_t,
->>> -				  &descp->upiu_rsp.rsp_header,
->>> -				  &descp->upiu_rsp.output_param1,
->>> -				  UFS_TSF_TM_OUTPUT);
->>> +		trace_call__ufshcd_upiu(hba, str_t,
->>> +					&descp->upiu_rsp.rsp_header,
->>> +					&descp->upiu_rsp.output_param1,
->>> +					UFS_TSF_TM_OUTPUT);
->>>    }
->>
->> Same comment here: I think it would be better to remove the
->> trace_ufshcd_upiu_enabled() call rather than
->> changing trace_ufshcd_upiu() into trace_call__ufshcd_upiu().
+>  
+>          buff.append(
+>  f"""static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
+> @@ -410,14 +425,22 @@ f"""static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
+>  """)
+>  
+>          _else = ""
+> -        for edge, constr in sorted(self.guards.items()):
+> +        for transition in self.transitions:
+> +            if not transition.rule and not transition.reset:
+> +                continue
+> +
+>              buff.append(f"\t{_else}if (curr_state == "
+> -                        f"{self.states[edge[0]]}{self.enum_suffix} && "
+> -                        f"event == {self.events[edge[1]]}{self.enum_suffix})")
+> -            if constr.count(";") > 0:
+> +                        f"{transition.src}{self.enum_suffix} && "
+> +                        f"event == {transition.event}{self.enum_suffix})")
+> +            rule = transition.rule
+> +            reset = transition.reset
+> +            if rule and reset:
+>                  buff[-1] += " {"
+> -            buff += [f"\t\t{c};" for c in constr.split(";")]
+> -            if constr.count(";") > 0:
+> +            if rule:
+> +                buff.append("\t\t" + self.__format_guard_rules(self.__parse_guard_rule(rule))[0])
+> +            if reset:
+> +                buff.append(f"\t\tha_reset_env(ha_mon, {reset.env}{self.enum_suffix}, time_ns);")
+> +            if rule and reset:
+>                  _else = "} else "
+>              else:
+>                  _else = "else "
+> -- 
+> 2.47.3
 > 
-> Well, removing it here would mean placing the if (str == UFS_TM_SEND) into
-> the code and processing it even when tracing is disabled. With the
-> trace_*_enabled() helper, it's all a nop.
 
-The ufshcd_add_tm_upiu_trace() function is only called from the UFS
-error handler and hence is not performance sensitive. The execution of
-an additional if-test in this function is not a concern at all.
-
-Thanks,
-
-Bart.
