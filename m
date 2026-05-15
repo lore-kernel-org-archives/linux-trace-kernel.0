@@ -1,110 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D34831717D;
-	Fri, 15 May 2026 15:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778857775; cv=none; b=cTcKtaWl54ic/XoGiMUu3OLt53eWW/2xNukRgbInlUVzqLgdpmSmaYKAQy4d7bLCcq2N9PW0lEbX09paeo6CaZKFrgIB5diwrFMeS+1TqXgI/vwKDOPgXO6J3IGosaCfHwgOtzNu5wU2OR/qbnjrUji4Mm1O8MQyl595W/XKdtc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778857775; c=relaxed/simple;
-	bh=1Ol5z1sBHfv63JQkmTgsfnZLCmBCFp+8yvHEkAHOznE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oOytzh4URd9f8z2vrq6eBymHAMdUcO13z8BDKPwTKsEIKls/MFHJK2pMO4MF2E555Oa6hJScIY456BihpGntwQ/uRa2FJ/6vzzZ1WG6U1PbXOO7LnM6+vvesTKKhs98IJY3mID/fH1x3IXfF39kWr62j8G/AzakgVcnSPDCg0Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BXB1fajG; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B483A49550E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 15:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778858708; cv=pass; b=IE7haBsoMT8oZEyJnqn5UMGr9qh/CiL7zHYeWbUJMeml+x2hyHc65BwiHjInMXQcqvfbkQi6U49Koec5sWYMsNi81IxXQBzOi6dguXA3gRp+Yj28jxYByqATvlTCuQLeNlE2/kN39QEnTHSabm4+Ta4CqHCctlEaxfVMze9e62Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778858708; c=relaxed/simple;
+	bh=bIkL3j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=LBWTKLuTiYZNI/KkLUnJ/qHrBkOnL8mShm7YXDNVJZp1Rujcxwuxaj0b74bph6m0KBP0QrhAFuP/Mqns3F+m8gAL8o0QKWVEHfaGQUBjZ6pK+NYgSdOAxmtPPd2GYtkvO6NUjmCeZFwTgcO4mjuS+K3GajLkYtZb622I/FmUqK8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/QTQHmk; arc=pass smtp.client-ip=209.85.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BXB1fajG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778857773; x=1810393773;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=1Ol5z1sBHfv63JQkmTgsfnZLCmBCFp+8yvHEkAHOznE=;
-  b=BXB1fajG9TPtoB2PmapphF2NSKYqj8yuUxV4fGSaxLydm5Okxs+Zofm7
-   UQmzpU3l9wyr0RZ3QMw2wvzDP/+uHTQPalfq3ra5PBfwdcjandJMKDAcJ
-   Fofg2eexb+lOz8pu7PfeCE1omkuolL8qswgkMuqDMZM4K2OdR4yVhwg4S
-   tnIJ5569wUEkjXHGhLAOxkZq1lghBKmuQAwoAhkzvtn2UJGwh7YzD8Lv8
-   TGu0V5fkXXi6OkCRv0p3QwdpOFPKjsIu+IA+dbPdOcXoLwfKhupS556K/
-   e9RnS37j14rCiHJfxjv8qrPB0AE9rTR7nR+62wnGP8cit7nt+hR6+9z81
-   w==;
-X-CSE-ConnectionGUID: 6uCL/br8QMqkcCVpUQ+O9w==
-X-CSE-MsgGUID: 2Obaew5TTDWUEneam0b5fQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11787"; a="83671002"
-X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
-   d="scan'208";a="83671002"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2026 08:09:33 -0700
-X-CSE-ConnectionGUID: bLk46KX/Qw260Ndf1YMJOg==
-X-CSE-MsgGUID: SUaDPKFYQZabVyqeCWbSlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
-   d="scan'208";a="243692394"
-Received: from spandruv-desk2.jf.intel.com ([10.88.27.176])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2026 08:09:32 -0700
-Message-ID: <fbc8c9659f707f46b5d8a6479fc42d5bb1d0efcd.camel@linux.intel.com>
-Subject: Re: [PATCH v3 07/11] HID: Use trace_call__##name() at guarded
- tracepoint call sites
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, Jiri Kosina
-	 <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-input@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Date: Fri, 15 May 2026 08:09:25 -0700
-In-Reply-To: <20260515135941.2238861-1-vineeth@bitbyteword.org>
-References: <20260515135941.2238861-1-vineeth@bitbyteword.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/QTQHmk"
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-6763cc8775cso2240723a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 08:25:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778858705; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ACyv6aD0P0c2mmw6hxREqJJmcqK5NDyYfE5LzAR41U+gw9YLy5CO4COiouT6ynKeJo
+         ZjIZkl+9Jj3+mVi9tJf30BT35QvriXyqNdwfo+5A3534NyzQivD6U9zK2EA9OZ5Pq02k
+         FfTP0JthorTnkaqd0PsYqinTxNXn56TT0eg9lULVlphJgLRT4vYAhIWqWfGm3e1BmV6V
+         ey5o92Vbj4Rx50p9FQEBXW/wwA8EZ7tXzav5qdrp7jEkPfFkP7d+dt2S2a7oJe4Nyx7I
+         gzxFiEfaUuAxygHoZfdwrUid5GGj4V1VoxGwv5eraabydVeQnE7NyDpDNlQqe98Ds2oR
+         H9lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=bIkL3j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=;
+        fh=ctVcqGxpoBTc6wVR4MrXGKGyP273TLOv1r1Ou813hyY=;
+        b=M3wFfkawnxR/5gBJfTuEhyy1Wwgpz+eRH0PmrkMp05SMlrg4vq7GJ7uLLWt4l31qwF
+         fY9ZYTwu3+86uVdQvqUBIc35VJCGwgwdtN6W3elVShLNkm4OBpbHKaF82bMI8Hs9qw28
+         A7HZ2Lf/cBFV3liB0DjZNON5f9+ssIleg4MpSsDhla03rfHf77vChP/+4mnm6ytL4pxi
+         jEUCPHX06g+Mbv+MYHkdo9OpsyznfpAc20j/h6A2IMzXVM0J9gI9q/+R3co1+1bTqLEJ
+         Kkyut2T4IHB+P3uNUBbGyipECEc7Lv2E1g0AEAifu5baftc2rcohMUdotQptaPufxEcn
+         5tCA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778858705; x=1779463505; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bIkL3j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=;
+        b=Z/QTQHmkk2R6tr0g3oii8CCg8t01+15XJ59uTt74xRKUxtXli6gpMybU+3RjBqN2T3
+         fMl2iXPfO1x6URSoOlxZP5znYcblg2PAJzRhQOq2e24mspVjEGMMO1FzLSLugYc+MwjN
+         ePVgLqBRQbq5KVirjXl8le96pFTSN0+3+DXLjEjzHznM0anqSTQXmReClLsYrdWREbt4
+         p12MqLNi2s4NkgK6JflWbc8KHxKiwDNzNFlQdnmkKALOnPeY8dVfOG6NyM1DOBEpuUK9
+         1T2NOtHSjKmtr2g3bGwnSumGDCTL9HGPAZBQm13xNTvm/RFLpWoRUHJ68uRQ8FpP0CKS
+         YgXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778858705; x=1779463505;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bIkL3j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=;
+        b=hI7rTO0ouJqzTxENhbae1LCrM5/LWXei+feHrvi+ot3pq/utP4fXIXHo09EogC30rv
+         78A3oysJzogmiS4w50PVU5dgiuFoNfmcIQQFxJI1XPOgzVtrZcAjG5ypUaxG5yfQGERb
+         PG/NLxGgO6T6793DPv6T5lbnMef8FNFZEYo28Qj8ieBeZSqRzF2zmybflCMSU4xiovd/
+         fvfXH7vqbvWdaf/8ME6tw+XNvdry2ye0aq/B1zQoszV0c+43dngOX8l8vPbtjXq8BZ0q
+         jv2bfIcts/EqKFoG/PgTVgNTS02ufSF5g5+fnZtDsYhkbZHLQLb7vc1uONxu/kmurn0k
+         RLig==
+X-Gm-Message-State: AOJu0YzKFHfHqorDiO433A4462Ac6sB7mg+jEtA+yWvftkbhgYZCdM2T
+	d5TPxtWP0o3HvBTM1t8QCIaTlaGTaEEX4r78fZ3DD/EvqPZGgIoHmMqF1y/j2bQjG21uFJEHgfN
+	7mNLvhhd6fbBlvvDnwca2H+mu0OIDMHedk9eJSFZnpw==
+X-Gm-Gg: Acq92OH9qdiyQ363YrODeHltcvBWLq5131F2L8cblGqPv/POfvqRK77e1OEgyCwWkIn
+	SPfzt0sA8Zr+g1VZaV0Nx4oP7s24JhDK6HKw2LzfgqDi0ra/tni6UhnM/osHO5DPcoSk3l792ts
+	PKM4TghnYCFVMprJ1xjxhaCDX700cIa9VcGwyGGrSA6CPFcNOTkblYqIcCY2ZrSQ4tf8a3/AdRf
+	nAho6cGyzFhGjWi/tTe3m/XKknicVz5sYKqNjX4ILsFhyr76Tka6A1qwkZh/+Unj5iJ6M8TisR8
+	8S/UM+t3RRCId1oF0YstcwKI1Os=
+X-Received: by 2002:a17:907:7248:b0:bd5:2a44:6f29 with SMTP id
+ a640c23a62f3a-bd52a4472bcmr93685866b.7.1778858704355; Fri, 15 May 2026
+ 08:25:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: IM AgentX <imagent4bd@gmail.com>
+Date: Fri, 15 May 2026 23:24:52 +0800
+X-Gm-Features: AVHnY4LEnlGwSlFHlsaso-N6vWOeWpaFCyjnJtt3hlcwiqbV3qqdGtK_Bv6ePJw
+Message-ID: <CANUqUTWvv4jTY+QE0ExR5h51ga5FuM2EmwdjB6YF7upzNwuHNw@mail.gmail.com>
+Subject: 
+To: linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2026-05-15 at 09:59 -0400, Vineeth Pillai (Google) wrote:
-> From: Vineeth Pillai <vineeth@bitbyteword.org>
->=20
-> Replace trace_foo() with the new trace_call__foo() at sites already
-> guarded by trace_foo_enabled(), avoiding a redundant
-> static_branch_unlikely() re-evaluation inside the tracepoint.
-> trace_call__foo() calls the tracepoint callbacks directly without
-> utilizing the static branch again.
->=20
-> Original v2 series:
-> https://lore.kernel.org/linux-trace-kernel/20260323160052.17528-1-vineeth=
-@bitbyteword.org/
->=20
-> Parts of the original v2 series have already been merged in mainline.
-> This patch is being reposted as a follow-up cleanup for the remaining
-> unmerged pieces.
->=20
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-> Assisted-by: Claude:claude-sonnet-4-6
-
-    Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-
-
-> ---
-> =C2=A0drivers/hid/intel-ish-hid/ipc/pci-ish.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> index ed3405c05e73..8d36ae96a3ee 100644
-> --- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> +++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> @@ -110,7 +110,7 @@ void ish_event_tracer(struct ishtp_device *dev,
-> const char *format, ...)
-> =C2=A0		vsnprintf(tmp_buf, sizeof(tmp_buf), format, args);
-> =C2=A0		va_end(args);
-> =C2=A0
-> -		trace_ishtp_dump(tmp_buf);
-> +		trace_call__ishtp_dump(tmp_buf);
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
+subscribe
