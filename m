@@ -1,235 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031BA384CF3
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 19:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5B524677B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 20:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778874134; cv=none; b=O9HuYT9tGHerHDXdMr4ImF57+oUigKdpNRTowXWz2XLBOZeSkgEDlx7DuHaOrF9DAaRKdopzmEOBAiz/AWdOZzp1K+uHytidZv8zG9tB4ICX7vzOxtvQhIU0k3NwcRCTiyEqhfu9xOfvNFjBh+H6IzDaoY3Q/MOqCK1urAMh7yE=
+	t=1778876187; cv=none; b=i65Ov3HiqmMCDE9XUD9vYdT0FZxjtbOH/FS+6zmBHHh7Za6P6/n5dnYE+eTmu+6ZatPTY8Rvw+1z0Ipny95dL0YFYBiE8Ielc2OHdHQ24cLfTyw64xdtvzUz8PtIimNLD2L0jcPgQ81elY8MKGn+kEIFMxt/Yizz7vSDwobj/jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778874134; c=relaxed/simple;
-	bh=RZzinb8wPxlvXfXvn9/c2jxj5+Q9BtBLM+Amx3gxCBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Al4MXZsxxqYKEhSbOG1wGIoIlqpZIn+qVbktRVC5yrzAOrYnCANHOIazBg/3A/XYJqmWkC0f6KKF62P+P4bAKxzQOnVB7iB2IeOdBNAqYZlP4i8yT+Ms6BtXAZZBpvwDKPsf+IEDKQTlmkxsjZmctA8MgI84g4s6DQQDJFwG3J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N/Ls3gWn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1778876187; c=relaxed/simple;
+	bh=oGqhlVrBHPjTbeYR/l3T4e131ONVfyoEihixqwfrEl8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sYuCz8tb8ArxnK762FO4CGWVWBLSrT/QCAzogKeDhgGOexUTRyFPtZ7V+vx4pgfE2foylaJLlJbCVK2RUeFT0W49qVUcFy521/MpTAMXxh413SsnkVKdBo0IrvCPEILqsSNWsy3aFWBaGeL9XTh1ZrEVa0AE78pCE3QE53zDg5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KhMyfBPA; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/Ls3gWn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778874132;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HmfrO3S2sd5h9l3v0OdWSyyvWkGpnH45ni/babXstNc=;
-	b=N/Ls3gWnc3Vgl6imq/qJtqfV/QnDNAgJD2+HNBfdhtJ0TxIJw59mT3O5gh+HBiSuoHM9ca
-	PpZDZySwvXMh2lKZKr3PEY8mEounfQa+WfKrnmr0tv6xeQEsYVB1kYzEd+8KYkbAX3tmhf
-	Uj2/e4w5rIjavOQGtG/wrO9AnG1GdCo=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-225-68pOIMEBPo21rWCBkHY1Kw-1; Fri,
- 15 May 2026 15:42:04 -0400
-X-MC-Unique: 68pOIMEBPo21rWCBkHY1Kw-1
-X-Mimecast-MFC-AGG-ID: 68pOIMEBPo21rWCBkHY1Kw_1778874122
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D10CF18002D6;
-	Fri, 15 May 2026 19:42:01 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.80.109])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 448661956053;
-	Fri, 15 May 2026 19:41:59 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: mpetlan@redhat.com,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH v4 2/3] perf: enable unprivileged syscall tracing with perf trace
-Date: Fri, 15 May 2026 15:40:06 -0400
-Message-ID: <20260515194010.93725-4-ashelat@redhat.com>
-In-Reply-To: <20260515194010.93725-2-ashelat@redhat.com>
-References: <20260515194010.93725-2-ashelat@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KhMyfBPA"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-48fe6894f3fso1172545e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 13:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1778876184; x=1779480984; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Xn/qawXhkyOeysVqBkhh0JVNgHPt7wlvemfSk7X4jRU=;
+        b=KhMyfBPA7gZcNDyWmw27vXnsGXEyeSOiF6hQXJCs1iJDY9L94VdrZmoEaYQaKU9FQx
+         FW81XzGGqzZ7I/eccMXvLNFOx/z79ugil1Uyh8Vb3XjCHjMqjZldD4UzmIbIdFkAGQ3g
+         2qQTV6eKGH9BPER4BpFP5Pr4SpfODKeUwmd+i2rHOBEIX7awWj+cvk0fQoA2ZssEAXVe
+         IlS3QcFfYFiNRte7F10RbcyrvCHxjLA61mnVfvqageKU2/fwgTa62QUfxiSXTpWxTUOL
+         n0Zg4y/AskWuXHlyF+7P80N9EWGkZkpcyv3rR6jjWsr/Qf90dzuM7bjTtPTq7OYarXOt
+         4jCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778876184; x=1779480984;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xn/qawXhkyOeysVqBkhh0JVNgHPt7wlvemfSk7X4jRU=;
+        b=dS/uD9MUEHYWuT1OLTjN4DWZPiB3DRrQxD2ak+CiT8SStuPYvJcNOQJvNUUQo0Ni9c
+         o3pAMCu9erKabmxIxKWQX2Zg0E4BxFIwgvftgCm3wEX8io+d5uV9cUOgKPadgcVv1nI5
+         GK7jeva0Xfn4omMOKep2YDCv5dZSw2jRP8IQhDXTgkLywZWiI1R/ys0hq9KTZhFFW3zB
+         MIIIdNpbcZ9+PJmyas2GsCL8koBUHQ06XmUEGn6ig5SSONUqD75+991sBSTeCN2nS2KN
+         wx2U/LLdFvqHhXJIlFjywuPqWpzb/supoaEy1ECOXaPaEwPcd1mo4JUqpnI8zKvXNy0B
+         qecQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/K06FcGDlDKG4j9ljvMOabSgVx3jS0X77P+R2h3Tqfh7HmMGVAMs6Hol2pbO4w5wTJvaB6hKn3aZitZPlI2jdMwKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwecMheHGzYeJ6sN4P4kxumTCgax77OlM+eYhkiU46GbgxUW6mc
+	KFi21+JnY5JT+/j+i/ue9B4BWF9ai1kjQ43bouRs7Joe0zoAPvQZv59SMnsOkd3LVnt2v4LCCUx
+	YMBQUWOarrx846Lb3292ytA==
+X-Received: from wmbc23.prod.google.com ([2002:a7b:c017:0:b0:47d:5bef:a379])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:8901:b0:485:ae14:8191 with SMTP id 5b1f17b1804b1-48fe60e3663mr62938555e9.5.1778876184095;
+ Fri, 15 May 2026 13:16:24 -0700 (PDT)
+Date: Fri, 15 May 2026 21:16:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: 0n0-2Ps6fx5HTVIeWKr2hc35AO1oDIEXrmXcQhqLIHM_1778874122
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
+Message-ID: <20260515201616.337469-1-vdonnefort@google.com>
+Subject: [PATCH] tracing: Fix desc in error path for the trace remote test module
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	Vincent Donnefort <vdonnefort@google.com>, Sashiko <sashiko-bot@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Allow unprivileged users to trace their own processes' syscalls using
-perf trace, similar to strace without the intrusive overhead of ptrace().
+During initialisation in remote_test_load(), if one of the
+simple_ring_buffer fails to initialise, the error path attempts to
+rollback initialised buffers. However, the rollback incorrectly uses the
+global pointer to the trace descriptor, which is only set upon
+successful load completion. Fix the error path by using the local
+pointer to the descriptor.
 
-Currently, perf trace requires CAP_PERFMON or paranoid level ≤ 1 even
-though the kernel has existing infrastructure (TRACE_EVENT_FL_CAP_ANY)
-specifically designed to mark syscall tracepoints as safe for
-unprivileged access. To fix this:
+Fixes: ea908a2b79c8 ("tracing: Add a trace remote module for testing")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-1. Loosen the condition in perf_event_open() which requires privileges
-   for all events with exclude_kernel=0. This allows perf_event_open() to
-   bypass the paranoid check for task-attached tracepoint events. Ensure
-   that sample types which can expose kernel addresses to unprivileged
-   users are blocked. Ensure the PERF_SECURITY_KERNEL LSM hook is
-   preserved.
-
-2. Make the format and id tracefs files world-readable only for tracepoints
-   with TRACE_EVENT_FL_CAP_ANY, allowing unprivileged users to see syscall
-   tracepoint ids without exposing sensitive information.
-
-3. Add a check to perf_trace_event_perm() to block PERF_SAMPLE_IP on
-   kernel tracepoints for unprivileged users to prevent KASLR bypass. We do
-   this here rather than in kaddr_leak because perf_trace_event_perm() can
-   distinguish between kernel tracepoints and uprobe tracepoints, where the
-   IP is a safe user space address and is necessary for uprobe
-   functionality.
-
-4. Restrict pure counting events (no PERF_SAMPLE_RAW) to
-   TRACE_EVENT_FL_CAP_ANY tracepoints preventing unprivileged users from
-   counting internal kernel tracepoints while preserving current
-   behavior for exclude_kernel=1 events.
-
-Example usage after this change:
-  $ perf trace ls          # works as unprivileged user
-  $ perf trace             # system-wide, still requires privileges
-  $ perf trace -p 1234     # requires ptrace permission on pid 1234
-
-Assisted-by: Claude:claude-sonnet-4.5
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
----
- kernel/events/core.c            | 28 +++++++++++++++++++++++++---
- kernel/trace/trace_event_perf.c | 21 ++++++++++++++++++++-
- kernel/trace/trace_events.c     | 16 ++++++++++++++--
- 3 files changed, 59 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7935d5663944..ff2d1e9a0b79 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13873,9 +13873,31 @@ SYSCALL_DEFINE5(perf_event_open,
- 		return err;
+diff --git a/kernel/trace/remote_test.c b/kernel/trace/remote_test.c
+index 6c1b7701ddae..a3e2c9b606eb 100644
+--- a/kernel/trace/remote_test.c
++++ b/kernel/trace/remote_test.c
+@@ -110,9 +110,9 @@ static struct trace_buffer_desc *remote_test_load(unsigned long size, void *unus
+ 	return remote_test_buffer_desc;
  
- 	if (!attr.exclude_kernel) {
--		err = perf_allow_kernel();
--		if (err)
--			return err;
-+		bool tp_bypass = false;
-+
-+		/* Check unprivileged tracepoints */
-+		if (attr.type == PERF_TYPE_TRACEPOINT && pid != -1) {
-+			/*
-+			 * Block sample types that expose kernel addresses to
-+			 * prevent KASLR bypass
-+			 */
-+			u64 kaddr_leak = PERF_SAMPLE_CALLCHAIN |
-+					 PERF_SAMPLE_BRANCH_STACK |
-+					 PERF_SAMPLE_ADDR |
-+					 PERF_SAMPLE_REGS_INTR;
-+
-+			tp_bypass = !(attr.sample_type & kaddr_leak);
-+		}
-+
-+		if (!tp_bypass) {
-+			err = perf_allow_kernel();
-+			if (err)
-+				return err;
-+		} else {
-+			err = security_perf_event_open(PERF_SECURITY_KERNEL);
-+			if (err)
-+				return err;
-+		}
- 	}
+ err_unload:
+-	for_each_ring_buffer_desc(rb_desc, cpu, remote_test_buffer_desc)
++	for_each_ring_buffer_desc(rb_desc, cpu, desc)
+ 		remote_test_unload_simple_rb(rb_desc->cpu);
+-	trace_remote_free_buffer(remote_test_buffer_desc);
++	trace_remote_free_buffer(desc);
  
- 	if (attr.namespaces) {
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index a6bb7577e8c5..466007ed2869 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -72,9 +72,28 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
- 			return -EINVAL;
- 	}
- 
-+	/*
-+	 * PERF_SAMPLE_IP on kernel tracepoints exposes a kernel text
-+	 * address, weakening KASLR. Block for unprivileged users unless
-+	 * the tracepoint is a uprobe (userspace IP, safe to expose).
-+	 */
-+	if ((p_event->attr.sample_type & PERF_SAMPLE_IP) &&
-+	    !p_event->attr.exclude_kernel &&
-+	    !(tp_event->flags & TRACE_EVENT_FL_UPROBE) &&
-+	    sysctl_perf_event_paranoid > 1 && !perfmon_capable())
-+		return -EACCES;
-+
- 	/* No tracing, just counting, so no obvious leak */
--	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW))
-+	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW)) {
-+		/* Prevent unprivileged users from counting kernel tracepoints */
-+		if (!p_event->attr.exclude_kernel &&
-+		    sysctl_perf_event_paranoid > 1 && !perfmon_capable()) {
-+			if (!(p_event->attach_state == PERF_ATTACH_TASK &&
-+			      (tp_event->flags & TRACE_EVENT_FL_CAP_ANY)))
-+				return -EACCES;
-+		}
- 		return 0;
-+	}
- 
- 	/* Some events are ok to be traced by non-root users... */
- 	if (p_event->attach_state == PERF_ATTACH_TASK) {
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c46e623e7e0d..cbd07e2ec528 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3050,7 +3050,13 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- 	struct trace_event_call *call = file->event_call;
- 
- 	if (strcmp(name, "format") == 0) {
--		*mode = TRACE_MODE_READ;
-+		/*
-+		 * Make format tracefs file world readable for tracepoints with
-+		 * TRACE_EVENT_FL_CAP_ANY
-+		 */
-+		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
-+			(TRACE_MODE_READ | 0004) :
-+			TRACE_MODE_READ;
- 		*fops = &ftrace_event_format_fops;
- 		return 1;
- 	}
-@@ -3086,7 +3092,13 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- #ifdef CONFIG_PERF_EVENTS
- 	if (call->event.type && call->class->reg &&
- 	    strcmp(name, "id") == 0) {
--		*mode = TRACE_MODE_READ;
-+		/*
-+		 * Make id tracefs file world readable for tracepoints with
-+		 * TRACE_EVENT_FL_CAP_ANY
-+		 */
-+		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
-+			(TRACE_MODE_READ | 0004) :
-+			TRACE_MODE_READ;
- 		*data = (void *)(long)call->event.type;
- 		*fops = &ftrace_event_id_fops;
- 		return 1;
+ err_free_desc:
+ 	kfree(desc);
+
+base-commit: 5d6919055dec134de3c40167a490f33c74c12581
 -- 
-2.54.0
+2.54.0.563.g4f69b47b94-goog
 
