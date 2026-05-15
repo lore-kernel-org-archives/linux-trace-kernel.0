@@ -1,107 +1,87 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528013F4119;
-	Thu, 14 May 2026 19:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5832D780E;
+	Fri, 15 May 2026 00:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778787397; cv=none; b=PAP5cIGAUL0Qr0trTgFaA3OSARzW6G+OZmr3X6MaRRhRmy5RsNGM9lssfNRVKvy94zFhV4D1VRzftqbJOZHpmJrUvqfiJ/uceK3SDz8/iXRwa/YJOCNNy2u0/aQAiwqXO15nh1XcygKMseLhy54vRjF8gTCk1rFp/jOycal8wmM=
+	t=1778805703; cv=none; b=A+ZxsdBCNkr2rrw4xhjkZhaSuouQOBL4TRmgu+DER8YjAsN00DxbXxpYu9yKCiB4eCc/+v3sgxW/huGTEN7izleeZcFbn33RZFfiyKEQL5d1dkw8BjrKE5zoXWF8MZ+W/WDet2mLy8C2HDIqnX6TSUJS/3RgdICySInv+Fku0wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778787397; c=relaxed/simple;
-	bh=Mx4wtsH5+NjyGsP/HE01zzfsENrVvwY5wlHkuUFnPrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CujVR74+e9JpciEXvmHurZXBkVq/su9w4u7Gk4DQvIcUqLAeq4GCB2dlGIN271JGWlqcaNQB7CGXxMy6sWdw7AVRCFnKYbFP9IZuUxk47UPX09tKbUELm6FpdKmrGxv/DDRjC+ovCT+MHLweqRMt2rtiLwkOfHYWnOfENidNzto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id C5B2B405BD;
-	Thu, 14 May 2026 19:36:33 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id B8B212002E;
-	Thu, 14 May 2026 19:36:31 +0000 (UTC)
-Date: Thu, 14 May 2026 15:36:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yiyang Chen <cyyzero16@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/clock: Provide !HAVE_UNSTABLE_SCHED_CLOCK stub
- for sched_clock_stable()
-Message-ID: <20260514153637.553ad41c@gandalf.local.home>
-In-Reply-To: <56e45338858946cd9581b75c8bd45dd37dba52c5.1778773587.git.cyyzero16@gmail.com>
-References: <56e45338858946cd9581b75c8bd45dd37dba52c5.1778773587.git.cyyzero16@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1778805703; c=relaxed/simple;
+	bh=bJO/kE6QL8D7YE9Smgjkz8t6WHx6lrXs3dUs2I0Uj4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PvRN0ubZqxQOZMMnW31U6iJy++0Ucwek+bXhE+mTm4NmkYchdm2wJ7z0fQVJaMVwtJ0txkYScOXgsNpJpkTkE+Ea5Bal5ADM0yMbGoRUIolHvFaIWmOsY2sUKHiVUymTL7zTI28jcsYd+k5psauh/SIKor8DZL3BT3E/lLADrJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuT4r9ID; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuT4r9ID"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C266CC2BCB3;
+	Fri, 15 May 2026 00:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778805701;
+	bh=bJO/kE6QL8D7YE9Smgjkz8t6WHx6lrXs3dUs2I0Uj4s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HuT4r9IDxhWGJMY8i0Orgn14YjsiKpbutBYqr8dGd1vTCRBcCuUCOpewlaakfONzp
+	 QsxEHIe9sDc85rA5RZcp8xojiuICNxgnTmNAHKaFbSqh4/ZzO9uvueP3i/hdhp81YG
+	 jYiyZrgCfo8Qy2QtsNB8v3ogmc1aTR4A1K09bYtQm9Z2Ikz7l14XkOsJXtojO1qcRh
+	 kLFrsPZLLMPp9TVihzV7qtthA/ALQQxy9k8u97Mk8qyfT25CgGPep+biWvpjLHeCzJ
+	 JfkfUlUnrLK5+NWtxyZhavCQcKPmj9hL5Zig4+XRMQB0uhDBDOxozoYvru2IMCNlId
+	 BV4SEzx1hK0jg==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	damon@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2.1 00/28] mm/damon: introduce data attributes monitoring
+Date: Thu, 14 May 2026 17:41:19 -0700
+Message-ID: <20260515004120.128430-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260514140904.119781-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: gxr33t5ff35t4azr9w4tmcwge7tb73ek
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: B8B212002E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+xv7vj7iHDSN5VcmAmfB14CdK6qaC/ngg=
-X-HE-Tag: 1778787391-588625
-X-HE-Meta: U2FsdGVkX1+cy0D4gWks1x+FrLK8C4ogBqctE6FEgtBIyvebx6yUr0mhmcxNX/+vf9+S6KeaZB98ZHfK3bk8jXIsNJVC5WikbCFOrEdVXj7c1NYOW+USlCOSY3Tpy0DjzcNvVUtGkKtVYILfqrQQjCaWDI0VRL5ppmWfRF2kVdz0dnNUbPxHHUZG9c2FJYuIwAD/l1ehjt6Ey+eeHGKeGbBf3dxNuNDZ4bbsTZLFHO74wRkhe8iC/0+VEYj7HH5xTq+Zz3XV4Hb+Dvv6wP+xDdGL7JKTcq6pE7YZ4+J/zyWr/myGE64gSZts10Ts7HeFDt1sQf8rnYe7FMbPTUKjMHsosC6bVJyI/NgiOMZpbBYxpwppjtzza6n0+hbBAxkq1mWwxXEXQc8QG2Yuv01qZA==
+Content-Transfer-Encoding: 8bit
 
-On Fri, 15 May 2026 00:05:05 +0800
-Yiyang Chen <cyyzero16@gmail.com> wrote:
+On Thu, 14 May 2026 07:08:33 -0700 SeongJae Park <sj@kernel.org> wrote:
 
-> When CONFIG_HAVE_UNSTABLE_SCHED_CLOCK is disabled, sched_clock() is
-> already assumed to provide stable semantics, but the public header
-> doesn't provide a sched_clock_stable() stub for that case.
+> TL; DR
+> ======
 > 
-> Add a header stub that always returns true and clean up the duplicate
-> local stub in ring_buffer.c, so callers can use sched_clock_stable()
-> unconditionally.
-> 
-> Signed-off-by: Yiyang Chen <cyyzero16@gmail.com>
-> ---
->  include/linux/sched/clock.h | 5 +++++
->  kernel/trace/ring_buffer.c  | 7 -------
->  2 files changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/sched/clock.h b/include/linux/sched/clock.h
-> index 196f0ca351a2..39f0a7f94bfc 100644
-> --- a/include/linux/sched/clock.h
-> +++ b/include/linux/sched/clock.h
-> @@ -33,6 +33,11 @@ extern u64 sched_clock_cpu(int cpu);
->  extern void sched_clock_init(void);
->  
->  #ifndef CONFIG_HAVE_UNSTABLE_SCHED_CLOCK
-> +static inline int sched_clock_stable(void)
-> +{
-> +	return 1;
-> +}
-> +
->  static inline void sched_clock_tick(void)
->  {
->  }
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 5326924615a4..02691c3c6dd6 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -3769,13 +3769,6 @@ rb_add_time_stamp(struct ring_buffer_per_cpu *cpu_buffer,
->  	return skip_time_extend(event);
->  }
->  
-> -#ifndef CONFIG_HAVE_UNSTABLE_SCHED_CLOCK
-> -static inline bool sched_clock_stable(void)
-> -{
-> -	return true;
-> -}
-> -#endif
-> -
->  static void
->  rb_check_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
->  		   struct rb_event_info *info)
+> Extend DAMON for monitoring general data attributes other than accesses.
+> The short term motivation is lightweight page type (e.g., belonging
+> cgroup) aware monitoring.  In long term, this will help extending DAMON
+> for multiple access events capture primitives (e.g., page faults and
+> PMU) and eventually pivotting DAMON to a "Data Attributes Monitoring and
+> Operations eNgine" in long term.
+
+Sashiko failed [1] reviewing this due to a problem at finding a fresh baseline
+commit.  I will shortly post the next version (RFC v2.2) after rebasing to
+mm-stable (7.1-rc3) for avoiding the issue.
+
+[1] https://lore.kernel.org/20260514205555.51653-1-sj@kernel.org
 
 
-Thanks for moving this out of the ring buffer code.
+Thanks,
+SJ
 
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
-
--- Steve
+[...]
