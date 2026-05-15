@@ -1,75 +1,75 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DFA2DEA64
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 14:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37FD48A2D5
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 14:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778853608; cv=none; b=fTpOqneZ+/3ufFOQSXr2c9FHmLt8bsv7+yGeSiFW+I11Mu3mYLlrcShenpwZwu3nhc1YlVGSX94i0aYVwKG3mI8AixA7/mfti/OpdnAFHP3v0HuCvtIgIhXcGZdGPKRerZUet4W4lag/arUkBaOhNfxcEzU705yyCV0z6+3LZ9E=
+	t=1778853612; cv=none; b=TqX9x3abKkxmMHcjM5+dk+GK3Nbgy2lvHOCkGgka0KEdW87z5KDZAIDM1MNCpN7lioeubywWJsqJSmsjcpEsMyQfj7HIBYcvwAAHsQtjz4zXlWnpNToelJt/RJx5Cbwl1N35sRmAcUnjS7MYdks8QuRpk4BJctIk0W7g/4sZluo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778853608; c=relaxed/simple;
-	bh=Usz/B97VtrR110956ILatJ97eXmS2ovdzWIT8Ytpas4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jSsnZJBgmzTwxDcIhfoaYvIpeSr715aAzH7Zh9OqLM9KiZS7JGG5qGr///P3rzzQx/mSZvCUDCE6NcGHYWm2l4ZRj2bO5KVDW4AVKVBBA7CleZXHXfI2qObM2eNG5r3xdut5U3igzzna7LeJNLigriI0tGnFJ9iahDN0sUuRQ88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=WMaeIiNM; arc=none smtp.client-ip=209.85.222.173
+	s=arc-20240116; t=1778853612; c=relaxed/simple;
+	bh=xn6M3jtoBFAqc18bYcdgC01807DqnYtE2DVmsXTENmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jNp9jfEuB6V8SqZi4gDWQPTNYKm1CUWANCFyGcaN1c0LOuI3IQaW4LVQcSjSEUfiADKF/LSLBxS5R56IpnI6YYaeTkTacsEOa0HbxnVftj9YJf/ewdNMIBSzYOga6wG4sA4Fh5yshWoajbBhIp7BxFrmFzuoO9nUDYStgcxYFrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=qXaP8fIw; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="WMaeIiNM"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-9118b952e2bso201096385a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 07:00:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="qXaP8fIw"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8b7105dfb35so91379026d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 07:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1778853599; x=1779458399; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1778853605; x=1779458405; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hN6SVRJC1Wye8mJdJNrkkfeZqabayMeuzoTHVMW80R4=;
-        b=WMaeIiNM6UOvYj3aifenYcMghXhp9svTYwDyh4r7JIL2K3pqubqElUS0Uczu7YIJld
-         Gh2XZwCE/GqywrP15U5/P8VTrMy/I9mKyv3txnGmWAFhENcLh0stbcp0EKTfc4KEGWYP
-         Kxyls69ifAExbsneSINAPRyQwVfl4ZhT5LmVCmx/faRlHoup2zcuvVdhW1mMDFKqr7zI
-         YD7Dxl5qHpzaVbpX5A6t+ZhzSKx2sZ6UW33fiF8OsVcmzn33L6ykN1y/1fPb/hF9JLAr
-         Aqnwh+rKXU6exfROL11ssYOkWRiDva2JMYIpQNr5FPeZOzMIoVFEy0lWC6sRd5smCPfI
-         mlsg==
+        bh=0G5IkwxgvGNO4kpHPU/vpg8O9jRp6aBHr3Ah1HUHfIc=;
+        b=qXaP8fIwaSzOPP+xsfBcN6219IFOdGeH7uEt95+rnLAjXjI6wpSaZyoMHOy99gDenI
+         jeD86W818y22mV3okJ7d6zRkDIGxCII+FKG+Du6BZREBH6DNacCfdtMRxLJjw7i1ce4U
+         BSeeAVxXjGdc/MXgOGXUtBvU72r90i2eRGvz7ZNiwVghqeRIHorjHNYPyuFKupLRV/y5
+         IT4azLSiCe0wE63WFuR2J2LUh8ysnT+cATZR0KDKow+XbjIAZ6v9mEP1JNKZmmBjJCst
+         C23n3YKMyeka0HsIIl1qW16302B6T+0Wf6wgId2iEwmIsT5elfAeO2zLh5H+trwMk+7o
+         nQ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778853599; x=1779458399;
+        d=1e100.net; s=20251104; t=1778853605; x=1779458405;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hN6SVRJC1Wye8mJdJNrkkfeZqabayMeuzoTHVMW80R4=;
-        b=S7X35oPSJ5DJXHm899X0XlzdkcLpLDpAtBT537ev8vqCqFAP2VzopB/bfcEAH5tKBw
-         3G3ZWGM7zFoU/C+tm/3lR54W2dTGewkbzjpIgA8sIYiJ95XT+xuFLA2i/8NQIaT7LVTc
-         fIVFVuHwSH5dVPZt5ezr/poAlVdq5nAJ8S4oAWgstTS+1HtLjaNi1T4d0YO/VCGt17fV
-         D8COBaA+7KYFsYuvdnRvQZ55zAs8rV28bHtNmuImvWVGpOOeCJFmJ+M4Myd8XPUbRBzF
-         AXS9FSZHLbguEEaaR6v48pMcdHlru2VXKOqSVco49UzppIqa7B+11EitHLbgyqsyIFA3
-         qKgg==
-X-Forwarded-Encrypted: i=1; AFNElJ95e/gbVBuCdrBLEM57FNEtTqQhpyAgZFWKIjB1ZZcClosTVGYGiZ9cVua+smCQEeR5Jzm5QzLv08C5kMcTBFaZNkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8wmxPA31Bpswga9Uv0+WvQA5Vn4DhoDc7AVwngdX4bZI4tbGH
-	/7xxAeTSbsnA3p1dFXhrCk7J7pmwDYCF0iwdZUGTXPMuk85YZfnaa3PsJwXWDJvaylI=
-X-Gm-Gg: Acq92OEl6B+HBu9IoYiGXxx29TbNmJzD5kLLS8CHaVIBI/aTZWMzMXgDTRI28vF2Q/k
-	7FsxBYlxiZxxdcfkhkAQuu7phicuFgmjXRCRS7a3MP45sZowFIKOicJBPqQOx76VQmvaj50ih7m
-	1RaZgVWm0i94DZDqoNyLRO9Iy5tS3+klxE2mpHgG+AXACm3vHFAZJci2T4iLYjyrclWGYrm73UX
-	P0mEDAcVSg2+2NBYoRGnoD0Tvshv7bBsNTmRW2xmHNiJ3PZBBPSLiZO8q/BA0TyBvHxx17HH2Tp
-	l3ZNcwwEE6TZjwCwVZ33SYcsyhvzrDdRrUM+yg3E3EuZSwtfAzyhKrVwG6edS7xh2KB0jUfCx+R
-	Czc8q27QWLCbrM6QXxGKh5mz0p6h9ABXP2ShdtQ6ArnxG1CbIBuOqacPTpREzVWWce7YFMJknUl
-	mHA3snbrV1QcXN3f5Py0TedgoKUeFH
-X-Received: by 2002:a05:620a:4104:b0:90f:57f9:c934 with SMTP id af79cd13be357-911cc6ae514mr661068185a.23.1778853599283;
-        Fri, 15 May 2026 06:59:59 -0700 (PDT)
+        bh=0G5IkwxgvGNO4kpHPU/vpg8O9jRp6aBHr3Ah1HUHfIc=;
+        b=D4GuAD79rNbJJSCSgN7sRsanN2utjl2AYar6Kkw9YbHbOTwS619OlhDQ0Ser39MvaS
+         zvNonoEjtpg4a521gEYZiw5HAM16FgAXk5YoojjmzIxjbbbTdyyPZxKXxnNP7gDgrEy3
+         mjLJCIoO3bSh8RLMl/0dE92tOg7rgw/sLzdi2ods2bSGIRztKkdFJgKna77CsjNmVGWx
+         kEjYK6I0zvs6lVFVerDsQxpAcOxCCcB4F4F0cbhPO541gXOpAdw2U7310oYkIZqvKSgo
+         0PcK1QQCSdRTOAtt2gcQz0rpIR2DVH5bJDSuDzqm997QqWo9CYbSuxGj4fqdN2OR9zg3
+         hyrA==
+X-Forwarded-Encrypted: i=1; AFNElJ8N5EI0wJkGhhJTpGP1Vo2kDzygYY7qpZQY6UvwiMaqAlsW1tGBjS512V41ekRl40tREZrFDyFl96wo8KlBAyaGwxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjnOP8gIxafq2oViWRzt1J2ni16wO9KTzn8AicWAC1+3mZWfKV
+	PMfSOv0Cb7LiiJjdzYQbbFh0FDv7N5KPft0ePzJeu59CIbf3PAC1JxSRAWgMoMitE44=
+X-Gm-Gg: Acq92OE0Y2ghlWFfnH1m0NnN4jSropp8HnnLOXl4C5zSvgvC8hK4oYpH2+U6LXEhMa8
+	XwAmh82msEmdzg/qNmuwGqSsgZPnCP19osfvEdaTrmIaTJg/XtadNsgNaWJ9DKZB4W3VgndrpT4
+	rzPQLCudCV8BI1XDbnT2EpjjfVcrtx4NGq0gElzwOd7eBYjOIqxuhEq9NJ9divuWQUzWUJFjSBN
+	Dy8Im4FP/6iQGmHwJrRrhRdsEFKQCmAoh+yQFFdcNBhIdfH8K2+/4ssWoA7RjDhQn5LkHhuNLV4
+	xXx/21LxfWKbDsQyj15ko2Al70hVrOVBSBVbEyr62G2nU5uYufMmyki3mashbJ2yyLDbrjgaa1U
+	ZkMYiKQl+PR8XwEVZi5FQc13XxEmaHjcZ/FKtTTzihkumMuyACIJ/fnqZctpOvns0IfrXAd/pLt
+	32i6nvd7eU0S6fANxmiZlgPYsN3/lCSXK37Q8J1Rw=
+X-Received: by 2002:a05:6214:484a:b0:8a0:3bd8:5950 with SMTP id 6a1803df08f44-8ca0f6c2e0dmr59828896d6.23.1778853604180;
+        Fri, 15 May 2026 07:00:04 -0700 (PDT)
 Received: from vinp2.lan ([2607:fb92:1900:6734:902:ab48:6190:9c1e])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-910bcf35843sm543167385a.38.2026.05.15.06.59.58
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8c90bb80e7bsm52255326d6.33.2026.05.15.07.00.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 06:59:58 -0700 (PDT)
+        Fri, 15 May 2026 07:00:03 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
-To: Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Vineeth Pillai <vineeth@bitbyteword.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v3 09/11] net: devlink: Use trace_call__##name() at guarded tracepoint call sites
-Date: Fri, 15 May 2026 09:59:53 -0400
-Message-ID: <20260515135953.2238907-1-vineeth@bitbyteword.org>
+Subject: [PATCH v3 10/11] kernel: time, trace: Use trace_call__##name() at guarded tracepoint call sites
+Date: Fri, 15 May 2026 09:59:59 -0400
+Message-ID: <20260515135959.2238922-1-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -99,22 +99,66 @@ Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 Assisted-by: Claude:claude-sonnet-4-6
 ---
- net/devlink/trap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/tick-sched.c       | 12 ++++++------
+ kernel/trace/trace_benchmark.c |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/net/devlink/trap.c b/net/devlink/trap.c
-index 8edb31654a68..d54276dcd62f 100644
---- a/net/devlink/trap.c
-+++ b/net/devlink/trap.c
-@@ -1497,7 +1497,7 @@ void devlink_trap_report(struct devlink *devlink, struct sk_buff *skb,
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index cbbb87a0c6e7..3b42ee75f48c 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -348,32 +348,32 @@ static bool check_tick_dependency(atomic_t *dep)
+ 		return !!val;
  
- 		devlink_trap_report_metadata_set(&metadata, trap_item,
- 						 in_devlink_port, fa_cookie);
--		trace_devlink_trap_report(devlink, skb, &metadata);
-+		trace_call__devlink_trap_report(devlink, skb, &metadata);
+ 	if (val & TICK_DEP_MASK_POSIX_TIMER) {
+-		trace_tick_stop(0, TICK_DEP_MASK_POSIX_TIMER);
++		trace_call__tick_stop(0, TICK_DEP_MASK_POSIX_TIMER);
+ 		return true;
  	}
- }
- EXPORT_SYMBOL_GPL(devlink_trap_report);
+ 
+ 	if (val & TICK_DEP_MASK_PERF_EVENTS) {
+-		trace_tick_stop(0, TICK_DEP_MASK_PERF_EVENTS);
++		trace_call__tick_stop(0, TICK_DEP_MASK_PERF_EVENTS);
+ 		return true;
+ 	}
+ 
+ 	if (val & TICK_DEP_MASK_SCHED) {
+-		trace_tick_stop(0, TICK_DEP_MASK_SCHED);
++		trace_call__tick_stop(0, TICK_DEP_MASK_SCHED);
+ 		return true;
+ 	}
+ 
+ 	if (val & TICK_DEP_MASK_CLOCK_UNSTABLE) {
+-		trace_tick_stop(0, TICK_DEP_MASK_CLOCK_UNSTABLE);
++		trace_call__tick_stop(0, TICK_DEP_MASK_CLOCK_UNSTABLE);
+ 		return true;
+ 	}
+ 
+ 	if (val & TICK_DEP_MASK_RCU) {
+-		trace_tick_stop(0, TICK_DEP_MASK_RCU);
++		trace_call__tick_stop(0, TICK_DEP_MASK_RCU);
+ 		return true;
+ 	}
+ 
+ 	if (val & TICK_DEP_MASK_RCU_EXP) {
+-		trace_tick_stop(0, TICK_DEP_MASK_RCU_EXP);
++		trace_call__tick_stop(0, TICK_DEP_MASK_RCU_EXP);
+ 		return true;
+ 	}
+ 
+diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
+index e19c32f2a938..189d383934fd 100644
+--- a/kernel/trace/trace_benchmark.c
++++ b/kernel/trace/trace_benchmark.c
+@@ -51,7 +51,7 @@ static void trace_do_benchmark(void)
+ 
+ 	local_irq_disable();
+ 	start = trace_clock_local();
+-	trace_benchmark_event(bm_str, bm_last);
++	trace_call__benchmark_event(bm_str, bm_last);
+ 	stop = trace_clock_local();
+ 	local_irq_enable();
+ 
 -- 
 2.54.0
 
