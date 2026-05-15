@@ -1,45 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A65376BEC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 19:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BFA3806BE
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 19:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778874123; cv=none; b=SL+xJ1DqUYvRSlwh3AOp5PiknpNPm6ElavaNoT4cb4yuhe9KtF+CYrYpVmT7FeZ1QGkIdCRejtUAbdCEQt3LwQlCE0JpIkbWqLDSf1lwbWcet7y7q73lVgUwV5LP6yFsQviBSpaC86A29BjCvINmoz4HVZ1x2HNgPahNc5Z5xSY=
+	t=1778874126; cv=none; b=tlTS5lhQPTTzNriMnHW4kcEXBWlv4+22PYOJnIbpYmCZuEkFXqyHo6umsVoeo/Qiou0NVXQ5u7iPbdB5cJKr3HWnYJNXPcbjPVJueyJ7orPIIqSLGg0zsx/2MktA94nRMYoakss/DDMHLh+m1AIF2qXVVnyPUmVjhCKfiCSzENU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778874123; c=relaxed/simple;
-	bh=G4CqAYKsY3Wc2t7gyTbD4Gv39XASTXHXqs798KAVaOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GoAV0e51s4secT4LZaoQwQG3QLCd2g9f2Pq+1sLmafdtuMQms4XQfgGka5Da+e4sdY0+zF00QoupoPLcVKcX0al/4vHOY4YcsJE9EKqVkJoUQhgnBJAl4yPtsxwpt32ZvzsL+p9+5q0PHC+0wIhGsL0Vdz7hTkjIqsA/6+p1jXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KiPnS4dp; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1778874126; c=relaxed/simple;
+	bh=Ulq4Me1sfWuuHA3AMTGfQmfiOXh1ef+JNR2f7IkNv/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=dwPGS7vu4m28oD/YicD/dQYnPMc8OuEeuwzPgqxIFYXAYiApBu9YHbC3ukNwh58ndp0NseGExNSx/yxt9PQz0IiPSYQxqW9zOKmSfr0eOlz3FfF91V/4SMq7RZTvsZTrAtK6+LEAhgVC1VmlTsRPIYBfEri0CLs7iqBM48xZgbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HcZrcRV8; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KiPnS4dp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HcZrcRV8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778874121;
+	s=mimecast20190719; t=1778874124;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vSQPe0r2nBMN4k24aUYGad00zpFOKV9doRFflow+NpE=;
-	b=KiPnS4dprD3M29+iwux3oA2wMJDAzGm5nitTWAsOjiycHR4QGjBXb4fp0uBHJMPtcfdsNy
-	8nCUSRffVHgoPFDmIJfVa6wGmgCFqevblnPPJVhKEXUZ0qv8ImYwVNNtdW3wn+CNzR2Mi3
-	F7uSuHubfCwSDpiru/2NKEz+vw35SVU=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=smZehZ4R4GekK+a7uEBnX02LbnOGqDpqzyo4HnU8/6g=;
+	b=HcZrcRV89Stp3Tc68B0OTUe6EzvWU6cwHhAaDJ8C3l2HUwTJ3c7TZM/vQuenPMnmvLOQ+r
+	OdEeWHwJVPseAFB0prcl1k48NTx7oE8DfYYrIWjhCm276Nq+myyLB4RJ2eu56mv9kMDwqZ
+	lRZu5ua4mTxMJhge9ltiXElMQKIE3GQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-230-ey5hywcXOVqykllHUuFPrw-1; Fri,
- 15 May 2026 15:41:56 -0400
-X-MC-Unique: ey5hywcXOVqykllHUuFPrw-1
-X-Mimecast-MFC-AGG-ID: ey5hywcXOVqykllHUuFPrw_1778874114
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-fCsQ77UPM7C_HAiQEoXW7w-1; Fri,
+ 15 May 2026 15:42:00 -0400
+X-MC-Unique: fCsQ77UPM7C_HAiQEoXW7w-1
+X-Mimecast-MFC-AGG-ID: fCsQ77UPM7C_HAiQEoXW7w_1778874118
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F25E51956094;
-	Fri, 15 May 2026 19:41:53 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2B2DD18005B6;
+	Fri, 15 May 2026 19:41:58 +0000 (UTC)
 Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.80.109])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 63FB11956053;
-	Fri, 15 May 2026 19:41:50 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17B5B1956053;
+	Fri, 15 May 2026 19:41:54 +0000 (UTC)
 From: Anubhav Shelat <ashelat@redhat.com>
 To: mpetlan@redhat.com,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -60,9 +62,11 @@ To: mpetlan@redhat.com,
 	linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
 Cc: Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH v4 0/3] Enable perf tracing for unprivileged users
-Date: Fri, 15 May 2026 15:40:04 -0400
-Message-ID: <20260515194010.93725-2-ashelat@redhat.com>
+Subject: [PATCH v4 1/3] perf evsel: don't set PERF_SAMPLE_IP for unprivileged tracepoints
+Date: Fri, 15 May 2026 15:40:05 -0400
+Message-ID: <20260515194010.93725-3-ashelat@redhat.com>
+In-Reply-To: <20260515194010.93725-2-ashelat@redhat.com>
+References: <20260515194010.93725-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,42 +74,53 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: 4cHhBCqxHaxBXlQ425v3eIuz82vpLQ-EYFabzIqzUBQ_1778874114
+X-Mimecast-MFC-PROC-ID: OykDdE_2OXxV6Hg-C-PmHkM63KQ--wKhJ5Cc_dD4KLM_1778874118
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Enable users to use perf-trace to trace their own processes, like strace
-but without the overhead of ptrace(). Ensure that users cannot access
-other users' or systemwide tracing data.
+For tracepoint events the IP is a static kernel address.
+It doesn't vary by sample and provides no useful information for
+unprivileged users. Skipping setting PERF_SAMPLE_IP for unprivileged
+tracepoints avoids exposing a kernel address that reveals the KASLR base
+offset.
 
-Changes in v4:
-- Preserve security_perf_event_open(PERF_SECURITY_KERNEL) LSM hook in
-  the tp_bypass path.
-- Lift the PERF_SAMPLE_IP check out of the tp_bypass path above the
-  PERF_SAMPLE_RAW branch so it applies to counting and sampling. This
-  also allows us to ensure PERF_SAMPLE_IP is set for uprobes.
-- Block counting path for TRACE_EVENT_FL_CAP_ANY for unprivileged users
-  with sysctl_perf_event_paranoid > 1.
+Make an exception for uprobes, which are registered as
+PERF_TYPE_TRACEPOINT, because the IP is important for their
+functionality and is a safe userspace address. Detect them with
+__probe_ip (entry) and __probe_ret_ip (return) using evsel__field().
 
-Changes in v3:
-- Don't set PERF_SAMPLE_IP for unprivileged tracepoints. This allows us
-  to exclude PERF_SAMPLE_IP from kaddr_leak without weakening KASLR.
-- Mount tracefs as world-traversable so users can access eventfs
-  directories.
+Assisted-by: Claude:claude-sonnet-4.5
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+---
+ tools/perf/util/evsel.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-Anubhav Shelat (3):
-  perf evsel: don't set PERF_SAMPLE_IP for unprivileged tracepoints
-  perf: enable unprivileged syscall tracing with perf trace
-  tracefs: make root directory world-traversable
-
- fs/tracefs/inode.c              |  2 +-
- kernel/events/core.c            | 28 +++++++++++++++++++++++++---
- kernel/trace/trace_event_perf.c | 21 ++++++++++++++++++++-
- kernel/trace/trace_events.c     | 16 ++++++++++++++--
- tools/perf/util/evsel.c         | 14 +++++++++++++-
- 5 files changed, 73 insertions(+), 8 deletions(-)
-
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 2ee87fd84d3e..bf66e0c78451 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1509,7 +1509,19 @@ void evsel__config(struct evsel *evsel, const struct record_opts *opts,
+ 	attr->write_backward = opts->overwrite ? 1 : 0;
+ 	attr->read_format   = PERF_FORMAT_LOST;
+ 
+-	evsel__set_sample_bit(evsel, IP);
++	/*
++	 * Don't set PERF_SAMPLE_IP for unprivileged kernel tracepoints to
++	 * avoid exposing kernel addresses. Uprobes expose only userspace
++	 * addresses so they're safe. Detect entry and return uprobes.
++	 */
++	if (attr->type != PERF_TYPE_TRACEPOINT || perf_event_paranoid_check(1)
++#ifdef HAVE_LIBTRACEEVENT
++	    || evsel__field(evsel, "__probe_ip")
++	    || evsel__field(evsel, "__probe_ret_ip")
++#endif
++	    )
++		evsel__set_sample_bit(evsel, IP);
++
+ 	evsel__set_sample_bit(evsel, TID);
+ 
+ 	if (evsel->sample_read) {
 -- 
 2.54.0
 
