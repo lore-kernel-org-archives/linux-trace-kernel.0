@@ -1,99 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1603046AF00;
-	Fri, 15 May 2026 10:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BAE3CE4BA
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 11:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778842643; cv=none; b=sw6GQVqbqCbdMArP366tHHLaVEO99KIN5R9nhSfCCmFkYE/WRa9JM3Kwm1+vpg2HhLMeMgF+UrHgVWHgwpJna7TScVRy7FOddtE68gk3C84s2rJzDJdSZr+u/O4qnYYuTyGwAehkBFQO7NxmgF4X3y1kcC2bMarmO0wskLHhNc4=
+	t=1778843556; cv=none; b=qboo3rihR+o3I4Hj/6jHJMvFvzEpKiVfQECAFm0NtKVdVKJJU4ah//ixfQr/rC280lPyPV3Xfom8v+A/G25rwQmfhcy9qTMlDfP2Zb9piV6D0WpQso4MR3Fi29C68QmhEhXBuW/bAEDJ+gSsLpNiupTVtvB/Mc8saz6e2FwE7OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778842643; c=relaxed/simple;
-	bh=LqXpU0eLoolNaYSGQGrBUswa+ZL27uaoziW+Ze/dzlc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D7a7Da32ozs/gvReWGkqPqIZfwbQ43P86ewqq952n1PN2yF67/oQqTay+f2RGSIBprJXewYzM/Y34+ltM1bGTdIEvvJi0fhSIYEI+I9RddLbbfEFc3BOMby2f6Buwc+GeZH65GaX3PkYJ6KL59aKdmcFAUvST+Q6n77erSsPWf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A00PZxIs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778843556; c=relaxed/simple;
+	bh=07S8qGhUlGHHZ+Z7kKrI+FqnQKBLMTTGSDN2n79cGXo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Sv3t3JsPJZQ8abNxo0lciP19JXHulHkHzR6mW5VvuA+WkKzxRD5oQFH1zdxhcchSe9rtZic8zOdkAVXFhRBQe3atzzNke0CVzbL6tuX0p/W/MX4JFBM5Qp4VQGCP48fyGWw5d9gHYtqDk9WhSNmwQz6cAsl5BISGPrBwalGvT5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=SO+yqBMj; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A00PZxIs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACF2C2BCB0;
-	Fri, 15 May 2026 10:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778842642;
-	bh=LqXpU0eLoolNaYSGQGrBUswa+ZL27uaoziW+Ze/dzlc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=A00PZxIsj8/TWyEbTAGrK3daBUuy8Ept+yDveA7FOw4pkStY8/YnLTgQutYyCFyFl
-	 oz8k092RwHbqxrxmCoa75nL8NliOs/RY25HQSLd22f5ugLgXCoM2/+oGejFl/tio4g
-	 KIvbNWsldhwkImoeVlUC7ppOd6EQIe/u8AsNyVsrWCRem3J84QMN9JBcAjN8tCqvg8
-	 2lbrkdflGQpBaBDWHLwpreQIv+eN76zA2o++Ax4WQZdEOMGzspxanPRVLQ6G46ErmA
-	 bG5Jk47wBu2u3/V3Hq0lYOAKEOt9d8P9HB+ecDQyp3GI4Cx9NGEsKPHszVINXAnZBr
-	 eonK0X7FfBspA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Vincent Donnefort <vdonnefort@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] [v2] tracing: samples: avoid unexpected symbol warnings (arm, s390)
-Date: Fri, 15 May 2026 12:57:09 +0200
-Message-Id: <20260515105717.1023007-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="SO+yqBMj"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b8f9568e074so1447241666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 04:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1778843553; x=1779448353; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=77xVpw+sT9Jy+PbMBmIBkrl0llFT6NHnPb++9YCl0NE=;
+        b=SO+yqBMjbSgATYtqA+vV6rcCEBW84KWwMc1WzrTsjdLnH8emmQDVu9b6xF8URfsQTB
+         diAv34V2Twlk/vAvmVBkQQGSy3fM/CzuEfu94E1l2BZTf0DeggbZZJfQIQUZWYOhokny
+         v3QPegEel69+M2ijddl1DkcvbXFLJeGrhq0pXB7I26aHBkJdm7TT7RKTbSqjRNHyEqTL
+         y7Qu+cKF3zeiFHpE9VZTQ6rKbg1SlR4E0WcT6vj6NyHtMi2FMjoxTrlOeDoayi0R/nES
+         r9oYa+XCXkc7nym0Bxd9pFJVeBHK+uPjSqPrQfdRSti8Z1AfgLcj7J9V14SEEI5l5xv7
+         DGug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778843553; x=1779448353;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=77xVpw+sT9Jy+PbMBmIBkrl0llFT6NHnPb++9YCl0NE=;
+        b=n0OPPI5VAzt1pBjLOdkgIOZnKd5LYohs7alTWImJVZqq5u+jZQq+xBGkcHKlRL6L7R
+         LlfEf6S7KzAaBYw/szOPigP1zayUBAZ+Ikl6iZvywuA2Tonf/2Gz42RdtX8ECOy3xnPO
+         elfV+XPLeDTZ3+ZEUmZBS4sUP3EvtTPe/PF/Zt7WMFR6wa3ndSNgCgJoim/+bQu/u2I6
+         4neqFADna6ZPISMrLaHcQC9XY4QiZ6ckJY2sgbXH4tytKyVyspiH17d0pupLfq56Fesf
+         f2Z5HO0v2WwOu3Zvddp+znY9jqT9jDEI8hR1rY+5r7exCKsPdlBFClNtFGEoRQqAXQpg
+         codg==
+X-Forwarded-Encrypted: i=1; AFNElJ/KRq5AkQ0W018zg0LXLSSqDVgkyolDC/OU9THpWlat1RJmkpg+vSSJ6SX1QXxu21Ap0Eq/vM8WI8VSjfiMWc880Ww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyifbnuL9uaBP9jjtZSABCHwqCiCIDMjKttoiHH1VyX72JFmlhX
+	DevWkapg6Xke8Lf/6qwGs1Rr8/0n9SrO5lkHeNeSxPALMHguEW451THKRzTL68q7Z+E=
+X-Gm-Gg: Acq92OHSla6F8dn7+wSQtjha4D3Wh24YtHNumAPmp/Hkdv0ppIbet1FGJghYCRyGlF1
+	6Tu1k7AopzpYcQ919qAEf//nrjTjcPZpgwABQ2j3/P3P506dmN3XL0S03ekiKV7mYxM+2JdDcSc
+	uWb5SHlfGsZGtyadWDSRKqkPv+pJdYuF/7TpQCdkB+VD95K3jZPc3qwhw0mWs4V0IZyqV+QEsM9
+	U+pNKUL+NA/p0C1E7w5w39+zJ+ZD3nNOJPrMCAXxJXjv2FV1YdSMz6LJWEVsRf4CfAJGZqPExQ7
+	nx7GmktCmkeHFsfY7MZzk3GPPWWf5HnuGxewUSunB3FVFAERkDvba8mtNlwEcjwntqyMMloqIzg
+	38q9zyWpV0br8U4ybBIraKdnNhEFm7nDBQb4u12nDgnumLntz+bRbD1XnHz+G1aBVj0wxKIUhY4
+	gRnvjKYbvSBwW9LfRxnnzV6qieEQ==
+X-Received: by 2002:a17:907:94d2:b0:bd5:2e64:aeee with SMTP id a640c23a62f3a-bd52e64b4b4mr8208666b.35.1778843552408;
+        Fri, 15 May 2026 04:12:32 -0700 (PDT)
+Received: from cloudflare.com ([104.28.21.182])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68310b3e8e5sm1885489a12.4.2026.05.15.04.12.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2026 04:12:31 -0700 (PDT)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>,  Peter Zijlstra <peterz@infradead.org>,
+  Ingo Molnar <mingo@kernel.org>,  Masami Hiramatsu <mhiramat@kernel.org>,
+  Andrii Nakryiko <andrii@kernel.org>,  bpf@vger.kernel.org,
+  linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] libbpf: Change has_nop_combo to work on top of nop10
+In-Reply-To: <20260514135342.22130-3-jolsa@kernel.org> (Jiri Olsa's message of
+	"Thu, 14 May 2026 15:53:37 +0200")
+References: <20260514135342.22130-1-jolsa@kernel.org>
+	<20260514135342.22130-3-jolsa@kernel.org>
+Date: Fri, 15 May 2026 13:12:29 +0200
+Message-ID: <87fr3t7wpu.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, May 14, 2026 at 03:53 PM +02, Jiri Olsa wrote:
+> We now expect nop combo with 10 bytes nop instead of 5 bytes nop,
+> fixing has_nop_combo to reflect that.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/lib/bpf/usdt.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/lib/bpf/usdt.c b/tools/lib/bpf/usdt.c
+> index e3710933fd52..7e62e4d5bedd 100644
+> --- a/tools/lib/bpf/usdt.c
+> +++ b/tools/lib/bpf/usdt.c
+> @@ -305,7 +305,7 @@ struct usdt_manager *usdt_manager_new(struct bpf_object *obj)
+>  
+>  	/*
+>  	 * Detect kernel support for uprobe() syscall, it's presence means we can
+> -	 * take advantage of faster nop5 uprobe handling.
+> +	 * take advantage of faster nop10 uprobe handling.
+>  	 * Added in: 56101b69c919 ("uprobes/x86: Add uprobe syscall to speed up uprobe")
+>  	 */
+>  	man->has_uprobe_syscall = kernel_supports(obj, FEAT_UPROBE_SYSCALL);
+> @@ -596,14 +596,14 @@ static int parse_usdt_spec(struct usdt_spec *spec, const struct usdt_note *note,
+>  #if defined(__x86_64__)
+>  static bool has_nop_combo(int fd, long off)
+>  {
+> -	unsigned char nop_combo[6] = {
+> -		0x90, 0x0f, 0x1f, 0x44, 0x00, 0x00 /* nop,nop5 */
+> +	unsigned char nop_combo[11] = {
+> +		0x90, 0x66, 0x66, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
+>  	};
+> -	unsigned char buf[6];
+> +	unsigned char buf[11];
+>  
+> -	if (pread(fd, buf, 6, off) != 6)
+> +	if (pread(fd, buf, 11, off) != 11)
+>  		return false;
+> -	return memcmp(buf, nop_combo, 6) == 0;
+> +	return memcmp(buf, nop_combo, 11) == 0;
+>  }
+>  #else
+>  static bool has_nop_combo(int fd, long off)
 
-The now more verbose check found more architecture specific symbol
-missing from the whitelist, during randconfig testing on s390
-and 32-bit arm:
+Nit: Would use ARRAY_SIZE(buf) instead of repeating the scalar value
+in multiple places. Otherwise:
 
-Unexpected symbols in kernel/trace/simple_ring_buffer.o:
-         U __aeabi_unwind_cpp_pr1
-
-Unexpected symbols in kernel/trace/simple_ring_buffer.o:
-                 U __s390_indirect_jump_r1
-                 U __s390_indirect_jump_r10
-                 U __s390_indirect_jump_r14
-                 U __s390_indirect_jump_r2
-                 U __s390_indirect_jump_r5
-                 U __s390_indirect_jump_r7
-                 U __s390_indirect_jump_r8
-                 U __s390_indirect_jump_r9
-make[6]: *** [/home/arnd/arm-soc/kernel/trace/Makefile:160: kernel/trace/simple_ring_buffer.o.checked] Error 1
-
-Add these to the list and keep it roughly sorted into sanitizer
-and architecture symbols.
-
-Fixes: 1211907ac0b5 ("tracing: Generate undef symbols allowlist for simple_ring_buffer")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: add both s390 and arm symbols
----
- kernel/trace/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 1decdce8cbef..9b0834134cae 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -143,8 +143,8 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
- targets += undefsyms_base.o
- KASAN_SANITIZE_undefsyms_base.o := y
- 
--UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __x86_indirect_thunk \
--		      __msan simple_ring_buffer \
-+UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __msan \
-+		      __aeabi_unwind_cpp __s390_indirect_jump __x86_indirect_thunk simple_ring_buffer \
- 		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
- 
- quiet_cmd_check_undefined = NM      $<
--- 
-2.39.5
-
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
