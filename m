@@ -1,110 +1,138 @@
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5073B3C17
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 14:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778855363; cv=pass; b=AvlF6dKy3YcKWE464X+Pzsob2AodM0ZC+/0eXf1loOMk7sHYJnBSODpzjWdgOVPk6n1SFUs9mIh1YbZ3WrYDjApgs00jftqF4/FLIuHo+l2Q3pvGIQPB5b595rofe3TqPGHT/cpxcSEYX0j/PM6BfXTV4yBcwMSCydZiqcyiJWE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778855363; c=relaxed/simple;
-	bh=dP0dHvrHOos0cd7ep4x4t15zx+uD33SpmwZ8H2CSkSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qJSJx3GoNkwJfu5vs6vZEJoXZLSZ2MUZ8rz2wTwLI5FVjLwFwbD073VB6agCSL4MKsSAF3IXFw4CU31xlvDp/s6pB9HZIJs+cQCi4pmQrpbdQ7eG+rvbWhG99F80S2cDI9SBip9BJI5aaV/A2UkGdM26iwOKqktv1+PkOw0qPqI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=g7er/OD6; arc=pass smtp.client-ip=74.125.224.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A723B19DE;
+	Fri, 15 May 2026 14:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778856016; cv=none; b=kOfm7yBs0CDxi76z/AlR7C2Se6rXEIfsHxc/gBdGWVKkxsLj24jfXcXfFamoVXSojn9QF2NavyKHlaxgb5+DIuu0ePZANIv33DS7mLifNg+74LWN4tRb8ZqvDak6gUxswCEDHAfLmocuann7PebEL/QB64uZ0Iz5CeI04jPTRzQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778856016; c=relaxed/simple;
+	bh=oVTQLdQPgm78z3vvyrR2it6wa49pRkZSjf6vJ0zKe60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XN1gLO9YX6zXdYFjtW72ReSakDc8ZqK2WpGs6hWvgBEqeNWSbK+4fDzh/9r2kle3o45ljbvKu/4D3rIEnZTk6G2WPX965+Kr3F6nCZTWl4NGx9j8v8vlel2dzE7z9n0owwZCAWZEzcBp+rwQc5A2SjJrA02dgsSpR+mfIsdlf6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=RRKzNl+V; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="g7er/OD6"
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-651c5d525f6so12930663d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 07:29:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778855361; cv=none;
-        d=google.com; s=arc-20240605;
-        b=RKyIODdgV8AXmxdRMecdXI0q43EaRl1mQRe8kepY6AAAel/9b812qNqp0YM3R9pEU5
-         g/Zw3IOQaPg2Fp6j7/oc1q/JA0xVRkUYpdjNCVk0r3vJtyarWSD1+2/0p8WNTQfsukZm
-         PYs1jLD70lulPWwu1rn17vAVgDwL268bVAQpUliaMCNP15KFUtvsKsgODXSAxeA6Xnbh
-         EaE+WNrUwYPb8xDuxVBgwQ8y0gZ+eSIv2LLcOI44bTUhK4LBoos6pmD5VYXI8gB7rg4Q
-         E706bI7uliPH0XUUvmtLoFu+34J8S3t2q7qyA1tRoA32ESuNfzV0mhOqgJaw0gxjYttU
-         7prQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=dP0dHvrHOos0cd7ep4x4t15zx+uD33SpmwZ8H2CSkSQ=;
-        fh=qj9C1s7zdhNUuZyAXN7u6rVzmGMlAwZDCMab2RhToyU=;
-        b=QIkNhWmefl1pZ3tEmy4M66Z1BU3kPYlu8px0gknHsKGjcxh1bNiyaj7LMLANJXWflj
-         vmjVVaKpZY89cqIX17uA2+1aKYkseEvQ1cSZcU0xcBF+vM66hqv7MAFuo+iM1WtSuKC6
-         SvSQVWFQU6/KB6A2iRpfmpVPa58tkQ9KWVXlELN4iGZuuWRtbSOsCNF5/ahqm212BC7a
-         XPWxU7Mckgvgbhlql/B9G99paPdmowh4HDvF++kvg74yK8PnRUjyAFyomgMp8jy6qD2P
-         tfMjYg//sczgWbAZ4l8szCCGWLDUsVtpGLNknB6q0s678eSDQxLkE0qfG9lA9kkGfdeK
-         J3jg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1778855361; x=1779460161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dP0dHvrHOos0cd7ep4x4t15zx+uD33SpmwZ8H2CSkSQ=;
-        b=g7er/OD6YZ7JaLMdsun00Xh2gzqZSnvOC5wd9LBfuFRQ4cuLrABBZO1FA3SicX3KFm
-         nx2yJjOCThEe7u8xOyr6u9Q+qjQHoV2V62uvTw911FPuiMv40c38JIJm1VzuvwSFGEeB
-         ZuViisxD+31HEGrTCeZvU81BvqooJwtICL3KGilfc7+dNPt9y9Utg8jILIcvGdPRLsI1
-         2/d+2JwjQ0NFWqnaA+cVRSo3kwz1iBXNodEvSVkebUfVCzFjSFJPL4fN8V1PRl/Grztu
-         ki/q9a3qFiIUOcQa7raNM36FSPIS3jP+Lc4JDq8kJTnWbfu9d4aHOaXWrXsihiCLKuyl
-         espg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778855361; x=1779460161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dP0dHvrHOos0cd7ep4x4t15zx+uD33SpmwZ8H2CSkSQ=;
-        b=DybRnfuBGlSQUtGD7zzp2lcwcEEjW8UeLB4RkRUVv7f3adAb5Zm+talvOpvP7kmPxq
-         dao9i50ovdxE/mNRc97f5izJ5dLeaAPCbgTYqyxGcwqe8aTHpcBPCM2/0vrCVLnMp4pH
-         6etN5joTi/2ASHgDjTgexKdgpjS7Sf8Oe+ZXs7KbEgmtOVPTkPxgW1DAJSmyMgFIrYu8
-         MEDBF996TgaJTo9HI89BFzJ9ZL0ChPtI6rgK/d4HF68LZGQ/3w9eB/LYv176hIAAjjBy
-         M3F4ozbSaxMR6gqeutJ72ou9zR+tO7BGj3034BEzLeORqbjByJcU6IEsl63iLZl+uSrM
-         OBRw==
-X-Forwarded-Encrypted: i=1; AFNElJ8Ux6t6/QEsS7FG17H3EJ6PQnp1orteOe8lRZQgqQznpk9/a/9CocdqVcX6mI75rXzRLD1dZR72Q4T11FV8joUaQF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8z3CNl9gSd5JDnnT2/Q2ztuyzNAjhPRqUXkj2D0HV7vruGqAi
-	StAt/MqIig2qlRPuvv8kHTPfP6qxtCln4twJ+GJ/43k1TQT+06LUzwqDnv5FAXI7cjzdR++gBYZ
-	IoRRFDjZ4SVx/jN337TpMIBde9k3RVM8F7zwcK+jOHQ==
-X-Gm-Gg: Acq92OF5JSnfU9Aze+l9Q8cN7MZK6fN1I/f7Dgp0PpBljmNpiF48otXILAp/O0iR+DJ
-	E5IUCB7I2P4T4Td3AAnD6sh7Hxv4zTj4uPTzhdsA+UJdk0SyAk3iYMxpRzUntzaQlIqo9kFjvf6
-	qkziFI8/TDeIQZmLbhIQ0vFQMQhTZS51ti2cWFR1C4+lCS39plVkz3rqAuIH76u8++LxIyqSqil
-	8wauwdUbBZHphVm/gZrkvCev4mehTL/l9v4jBfrc2BX9z3o8HnhIdVJQ8zaDLRv4xNPCAn5Y1xs
-	pJ3NTcvn+1OKRltXRpNRtUec9kMfvJXCelxgJhXN
-X-Received: by 2002:a05:690e:1591:20b0:651:b477:71cf with SMTP id
- 956f58d0204a3-65e2280d9f2mr3577169d50.31.1778855360752; Fri, 15 May 2026
- 07:29:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="RRKzNl+V"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id A6BBDD05D9;
+	Fri, 15 May 2026 14:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1778856006;
+	bh=LjG5aYhzzCdGlhgt68FcixNTeEbd8ZYVpF7B/Blnyp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RRKzNl+VV4JDQiTUTKJ02htUMGGPz54aJtGB88rZY2lugizfNL4xXA0Miw5TsKpcf
+	 D4TSVDE/+biY08/6wdh797My6cEELDA9ZfGm2JSTat+ZT93VbFxGJpNSW1q6kQ8PKV
+	 QKxA7ZfwkUZg+o+FdxV6aIyGaEILsAXINCAZcSpI=
+Date: Fri, 15 May 2026 14:40:04 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com, "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v6 5/7] locking: Add contended_release tracepoint to
+ qspinlock
+Message-ID: <agcwRNNgoYVSpDKq@shell.ilvokhin.com>
+References: <cover.1777999826.git.d@ilvokhin.com>
+ <5d7ea75ffe74a785e6b234ada9f23c6373d4b4c1.1777999826.git.d@ilvokhin.com>
+ <20260513114102.50f4ca68@gandalf.local.home>
+ <agXYjw3GM15WtC-H@shell.ilvokhin.com>
+ <20260514120348.7a64facc@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260515135903.2238731-1-vineeth@bitbyteword.org>
- <20260515100448.715589f6@gandalf.local.home> <49e77605-6227-426e-8103-329474bf88f9@kernel.dk>
- <CAO7JXPg+MJXF8smC9qXs93YziJT_amQwWKVW38L7F5XdS9-SaA@mail.gmail.com> <e6e5d079-25f2-419c-a992-5651ecae26bb@kernel.dk>
-In-Reply-To: <e6e5d079-25f2-419c-a992-5651ecae26bb@kernel.dk>
-From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Fri, 15 May 2026 10:29:10 -0400
-X-Gm-Features: AVHnY4K6QwXkYzOlWsg8Ut69QpegiybtYTjeTkJ0n8psR-YW3kWPDDSPswXxZJs
-Message-ID: <CAO7JXPi9Ph_e-MMxtcbhfU5Wm1i8VA3gkHtsAd5-Gd2uK8GZVQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/11] io_uring: Use trace_call__##name() at guarded
- tracepoint call sites
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Steven Rostedt <rostedt@goodmis.org>, io-uring@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260514120348.7a64facc@gandalf.local.home>
 
-On Fri, May 15, 2026 at 10:25=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote=
-:
->
-> On 5/15/26 8:14 AM, Vineeth Remanan Pillai wrote:
-> > Thanks Jen :-). I can probably send a follow-up email directly to the
-> > maintainers to prune this part, similar to what Jen did. I guess one
-> > more version might feel like spam.
->
-> Jens...
->
-Oops my bad, truly sorry about the misspelling.
+On Thu, May 14, 2026 at 12:03:48PM -0400, Steven Rostedt wrote:
+> On Thu, 14 May 2026 14:13:35 +0000
+> Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+> 
+> > > > +void __lockfunc queued_spin_release_traced(struct qspinlock *lock)
+> > > > +{
+> > > > +	if (queued_spin_is_contended(lock))
+> > > > +		trace_call__contended_release(lock);
+> > > > +	queued_spin_release(lock);  
+> > > 
+> > > And then remove the duplicate call of "queued_spin_release()" here.  
+> > 
+> > This is the scenario the comment above the static branch describes.
+> > Here's what it looks like in practice on x86_64 (defconfig, compiled
+> > with GCC 11).
+> > 
+> > Current design (trace + unlock combined, with return):
+> >   
+> >     endbr64
+> >     xchg %ax,%ax                     ; NOP (static branch)
+> >     movb $0x0,(%rdi)                 ; unlock
+> >     decl %gs:__preempt_count
+> >     je   preempt
+> >     jmp  __x86_return_thunk
+> >     call queued_spin_release_traced  ; cold
+> >     jmp  preempt_handling            ; cold
+> >     call __SCT__preempt_schedule
+> >     jmp  __x86_return_thunk
+> > 
+> > With the trace-only function (no return, unlock after the call):
+> >   
+> >     endbr64
+> >     push %rbx                        ; saves callee-saved rbx (!)
+> >     mov  %rdi,%rbx                   ; preserve lock across call (!)
+> >     xchg %ax,%ax                     ; NOP (static branch)
+> >     movb $0x0,(%rbx)                 ; unlock
+> >     decl %gs:__preempt_count
+> >     je   preempt
+> >     pop  %rbx                        ; callee-saved restore (!)
+> >     jmp  __x86_return_thunk
+> >     call queued_spin_release_traced  ; cold
+> >     jmp  unlock                      ; cold
+> >     call __SCT__preempt_schedule
+> >     pop  %rbx
+> >     jmp  __x86_return_thunk
+> > 
+> > Three extra instructions marked by "!" on the hot path (push, mov, pop),
+> > all wasted when the tracepoint is off. That's the main reason for
+> > combining trace and unlock in the same out-of-line function.
+> 
+> Ah, because the return makes it into two tail calls.
+> 
+> I still don't like the duplication, perhaps add some more comments about
+> needing to update the other location if anything changes here? And perhaps
+> comment that this duplicate code helps the assembly.
+
+My idea was that queued_spin_release() serves the same role that the old
+queued_spin_unlock() had: a pure lock-release primitive without tracing.
+That was the primary motivation for extracting queued_spin_release() in
+the first place (it is just one line of code), so the common release
+logic between the traced and non-traced paths is shared explicitly
+rather than duplicated semantically.
+
+I agree that this could be explained better. I'll add more comments
+there to clarify the rationale. Thanks for the suggestion, Steve.
+
+> 
+> -- Steve
+> 
