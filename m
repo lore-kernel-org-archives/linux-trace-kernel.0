@@ -1,88 +1,73 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D92481AB2
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 13:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2BC481FB4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 13:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778853557; cv=none; b=efeyNQsXiLtvkS96hj/KOaC632WoW5E6ADSAEoXy1Alf8QTqt6j/Q0ruYlPSaJ8uHvBysG+6+OEGYTb3EX+99wj6GZVuYmDPcLYNgNWs+DiRaPUvvUVTzJRqneTDJnMjoddsOlVyMoZ1YxyMgbcI3khnjaS5W2PvpNGnwFmc3Ss=
+	t=1778853562; cv=none; b=DRVPPCvPu5b5PB937faSSugzb1FAgMkOk79pQjiKmSkPEEPB+7FjJkWx1jZWzHjnwRA6f3A32aKeXE6W9qraQzDxZcf5otaRXcQkxWymbElQ0X69ZeJLsTlicHDj5IVzFn946KjZ68FgZAkq31kjk9lgHGaSkPmw2X8sxN6X/tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778853557; c=relaxed/simple;
-	bh=c2A8vEE2A3EOtpSYwg0f125Ondvt0pIyQEAXqLz0mvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aSHfBvw7fgnEVy1y4ik590HbgaIzBW5cbMsXeIA2oyFNdgXj4C3lkkVBWAxG9l+OJmA+c3THeoGiuAoUfy4VZ691PTtf9YGQDYD997Es7T3O2zzu6pW8FzvONDzHunj3OnBEOwSOqifg+ueVprcocK0EISy9rCw2aHkyw73vLaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=fmNcj47c; arc=none smtp.client-ip=209.85.219.45
+	s=arc-20240116; t=1778853562; c=relaxed/simple;
+	bh=xWK/jT4i7tilK1HiNm6jxhQoONQW7EuWv1hcUjc+weM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R6EL8VQQZaqg/79KKWmbspVH98TYR/AYLPfELobG3AxgB7ARn4PxLFiU9VhecZYtPNUSbNZ8sVC5EMX9PEaR+YTA4+Cm6FjDSZXiMl6a6SxKmpgn4fqcm3qRq+yQ0MUjZ4XJVi2Nd0YzSUN+Wr6EMAaqAwbduKE2HeGp1pGapck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=rurFb2uj; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="fmNcj47c"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8b62ca1d28eso84404736d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 06:59:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="rurFb2uj"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-911dfc86903so115024685a.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 May 2026 06:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1778853554; x=1779458354; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1778853560; x=1779458360; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PSh+GRhXVkv5mk3aFGVuPSlHgL1BMdkj34hW/QwWJ8g=;
-        b=fmNcj47c5EueFa+UmKZs/YWQSZ82fffK5kruWWXcjecYBoiQfjUy6u4484nzTqEjcY
-         UQ7QCe1oWs8LGt85+Y7j+imQZB8O+t5y/b2zATpSeTlZ74F0p9cJDGeehMCFN3im1djI
-         mg6f4UIg1aLMw3t+Fp0nLOOqu/hi6X2P7AiHYnvn5Mfn/5F3O4C+0aobIMeky1HYi3Vl
-         0BYeMn6G7vcFM4QsbK5I6Dac51H9NmYg6U6PSp0IoRZWLP3lk30wjN1+laMFY2kF5F4b
-         ynpQ8OGXV40UmPGWaQMITicRCDp50d5yVDvYSieRJluq33Buddf0gZOkud/VZTDdGhTm
-         6uwA==
+        bh=Dp4Zt+WRyNVWYkPTWbK1zyHgPgu0+OlgZHWnBbbboaY=;
+        b=rurFb2ujeq/y+HDXOo6BrvzpWXfFD95aj3XGxd71tcin9F99wp7PtuCXr/CNMmegtb
+         lnQwPj3lpkfQaJAxpRt5OAUEhkhCoP5dHP4dGVwKd7wwnCgZtoCh/WRaDV/E803ENcmJ
+         CFACUPxpeKIY5KKViBrQ9pM4Iz/vO4E+j4XnTzbfJrEwgINtNj57CXQJVMwRMgcl4TwR
+         R5akcrhgNFGeG94+eutvu0/M/4kS6fCGkzSocu116DCtCb2Ymy37V4hdOb1vh1GlRWad
+         pOVSeE069NiXUFFEDqqdaVG2sE/pJx7Xv3WP1s69ZDFNJ0jS3URi4Oelgf2nE4mUBkAQ
+         hsdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778853554; x=1779458354;
+        d=1e100.net; s=20251104; t=1778853560; x=1779458360;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PSh+GRhXVkv5mk3aFGVuPSlHgL1BMdkj34hW/QwWJ8g=;
-        b=UYd4C0xHipHMzdoa2dPVXYPcnjJPW+KHSiwu1RF8QS5f/7boT5IyvAcMOy1s0S7Hbz
-         xA4RAEgyJMILVMfX9p3gmZY9NjD+4vkr1PlXVOz8QyB/kb9p3pqEZThSOfNZ7wW8YDmb
-         lRaCWITYtHfIsuuGjXeYUlp5O/K//fkM9r9D868WNTfqbQMM6z7yXvieVyE5n0+tfAvN
-         pqEHghKWf2WTm089zSoY1tS12icoOY5aCk0EmVjvCT8c3T9fXmkJkhocFaCo4xoQOXMP
-         iAMJyUHs2Wk42lNPiwFCLDHAH78IGGOZjTiQ2zy4hEBfH/klB2/MIA9lsNJ85grUHhkp
-         lDwQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+AjqhYRZ+bk4zaNsn/2T1V/LDmXNyDO39wVejvYxF8RwetO58GQYpP6vd/M2tpDoDAdPBdMOUZf2N5HljTYW4OkOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnpe9WMKRN6/V03HXnKGk+cLsznuGVPR+CxtQyMHpa++JWY52l
-	2/HS0RRJn4BXAk7PBpXoBn21WGfWZdFN7pgt2VaWl/wdtB1t9m0ZVSKB3xjJJg+kOrg=
-X-Gm-Gg: Acq92OESQ/chGlrKIFQuCWaue6AT0mEErfSHQX3+mMtqBeFfjMzRAbrbuilN7hG+6ck
-	AfDkBSqHLSAJ0FU+7oJQUZRN2GA6VGtFuiA4AJLsVnqg3tfO0T1bEa8DCGZBgMSEfIy+T7VvMaA
-	9gRgMuq4nsZHYWAza//ryqI085qfYZxSQCRZO380IpaZjwo8Q7I9nOR3R7GIodGSDfyGU3rG1Pq
-	OZdTLgYSW1myNGrEyfGjoIeu8+RZAWH0bUeNrDlFkQaX1hxJExwq0rjrg1cFQXF4U6/cdaOBPo1
-	6zOnGhlxVhp/+c98h8ERkUUmqmelLl49dKXzCfZlH5Aw8eoLW+5pR/79djAljGOAKI7tm8wA0zI
-	VUqL0dGwwA48Hm6PNMKshywC7zRd1MGQvn6lXQNVeSiobjcO7/Dv6GLxCuf4Mz5Jl/7bjRNkNMz
-	x34cN5q6Ul9kaXVWlcXAJWY9hmSevJ
-X-Received: by 2002:a05:6214:600f:b0:899:fd8c:55c3 with SMTP id 6a1803df08f44-8ca0f690ff5mr65423206d6.22.1778853554129;
-        Fri, 15 May 2026 06:59:14 -0700 (PDT)
+        bh=Dp4Zt+WRyNVWYkPTWbK1zyHgPgu0+OlgZHWnBbbboaY=;
+        b=YV+ILyOd7jYBEtHPxqey2qQC5/mphc7O0BQVxSwsCHG5sy203mdl6OUacIxJcCt3N/
+         CHgramxBZkkZm+6jR4DcQN8Hqpzxxlf7df6Ru7ZPlN6A8wM6BRotADpUSRGSyZRy179X
+         V1V76EPXrcfjb2IAL8lcu3OFZ85trj9y/AT3S7Cr8n13QQLzPJs1Mz0hfzS3xWgKEGXt
+         bvjwniynfncPcd/CBT/sPzB8a5n2oNhrfv/rsWlmnQJxl9oXrD0dDxnrq6FvxQvrjdYf
+         lMs4QW1r4suxJ6wL79jnHfZFvG+XOrXTZkEI063qIlTFu2MA9ZPI+a+W6kEmMBy3FJAz
+         CDOw==
+X-Forwarded-Encrypted: i=1; AFNElJ8a5mjL3VI1m82ub/KnOfRzueX4lXYdHzDFT7QoUeTFChLXBFP1jlG64HIdbTklo839oqshvFLUdmJ+qdEhl4xCWoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxea6tDM8OrrlvxAWxny6+27IZRF34gKUfr8ZAJGbDKMDVoahhB
+	dNP1XjvpgiXzIkxKUwWlWdpWB1hboLqMK5B8yvPLenLO5GUeQY+aQQeKONzRg0/K9BE=
+X-Gm-Gg: Acq92OFJqOAsF30UMmp/abIAlYXJBv8Lz86lbLsktv6trbyebESG4u+UL1jXmb9EbBw
+	bP50rBLfW+dUz9BgIqNV7BbKH8lLeHyRga2LUlfJiCfdhxaj1uxXm2CYYeUW+U0fYGvDtAz9qgG
+	cBYBYnw5W+I7iqgZrTPwxZS9vF993hIngqRTZoDZbbHK+SNCLbo10dZrrL1+diyQ9OQ1MbQWKED
+	LpAiWYt+aE3FHFz9I3oVipkhYrh82DTyHCF07hY9LJcSQB0enYC6KiJe+s2fk6G+ZeAZ6wAS3f2
+	mARHBJk7gmnSMWbYi5sbG3IAFOLn68DuzRmXBxWONTPf37/QMpKo5YU2n+qZsPB5hrXcE/SLHOZ
+	yB0VQBHaLj47g8GOukzGmbRlyi8TODK35Klpv731uExDdHrKSWBDwqiUGa10iIpY8idetTeCyC6
+	eC6ljEGL5b7y1djDwQpJyQ3+Yo5CWY
+X-Received: by 2002:a05:620a:4105:b0:90a:708c:e6e1 with SMTP id af79cd13be357-911cfdd1709mr639152785a.44.1778853560255;
+        Fri, 15 May 2026 06:59:20 -0700 (PDT)
 Received: from vinp2.lan ([2607:fb92:1900:6734:902:ab48:6190:9c1e])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8c908d1d19csm52839666d6.13.2026.05.15.06.59.12
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-910ba9454basm555644885a.12.2026.05.15.06.59.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 06:59:13 -0700 (PDT)
+        Fri, 15 May 2026 06:59:19 -0700 (PDT)
 From: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Aaron Conole <aconole@redhat.com>,
-	Eelco Chaudron <echaudro@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Jon Maloy <jmaloy@redhat.com>
-Cc: netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	dev@openvswitch.org,
-	linux-sctp@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net,
+To: Koby Elbaz <koby.elbaz@intel.com>,
+	Konstantin Sinyuk <konstantin.sinyuk@intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>
+Cc: dri-devel@lists.freedesktop.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	Vineeth Pillai <vineeth@bitbyteword.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v3 02/11] net: Use trace_call__##name() at guarded tracepoint call sites
-Date: Fri, 15 May 2026 09:59:09 -0400
-Message-ID: <20260515135909.2238774-1-vineeth@bitbyteword.org>
+Subject: [PATCH v3 03/11] accel/habanalabs: Use trace_call__##name() at guarded tracepoint call sites
+Date: Fri, 15 May 2026 09:59:14 -0400
+Message-ID: <20260515135914.2238789-1-vineeth@bitbyteword.org>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -112,92 +97,83 @@ Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
 Assisted-by: Claude:claude-sonnet-4-6
 ---
- net/core/dev.c             | 2 +-
- net/core/xdp.c             | 2 +-
- net/openvswitch/actions.c  | 2 +-
- net/openvswitch/datapath.c | 2 +-
- net/sctp/outqueue.c        | 2 +-
- net/tipc/node.c            | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/accel/habanalabs/common/device.c  | 9 +++++----
+ drivers/accel/habanalabs/common/mmu/mmu.c | 3 ++-
+ drivers/accel/habanalabs/common/pci/pci.c | 6 ++++--
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 8bfa8313ef62..12a583ce4d95 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6482,7 +6482,7 @@ void netif_receive_skb_list(struct list_head *head)
- 		return;
- 	if (trace_netif_receive_skb_list_entry_enabled()) {
- 		list_for_each_entry(skb, head, list)
--			trace_netif_receive_skb_list_entry(skb);
-+			trace_call__netif_receive_skb_list_entry(skb);
+diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
+index 09b27bac3a31..68c6f973d53f 100644
+--- a/drivers/accel/habanalabs/common/device.c
++++ b/drivers/accel/habanalabs/common/device.c
+@@ -132,8 +132,9 @@ static void *hl_dma_alloc_common(struct hl_device *hdev, size_t size, dma_addr_t
  	}
- 	netif_receive_skb_list_internal(head);
- 	trace_netif_receive_skb_list_exit(0);
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index 9890a30584ba..3003e5c57419 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -362,7 +362,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
- 		xsk_pool_set_rxq_info(allocator, xdp_rxq);
  
- 	if (trace_mem_connect_enabled() && xdp_alloc)
--		trace_mem_connect(xdp_alloc, xdp_rxq);
-+		trace_call__mem_connect(xdp_alloc, xdp_rxq);
- 	return 0;
+ 	if (trace_habanalabs_dma_alloc_enabled() && !ZERO_OR_NULL_PTR(ptr))
+-		trace_habanalabs_dma_alloc(&(hdev)->pdev->dev, (u64) (uintptr_t) ptr, *dma_handle,
+-						size, caller);
++		trace_call__habanalabs_dma_alloc(&(hdev)->pdev->dev,
++						 (u64) (uintptr_t) ptr,
++						 *dma_handle, size, caller);
+ 
+ 	return ptr;
  }
+@@ -2656,7 +2657,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
+ 	u32 val = readl(hdev->rmmio + reg);
  
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index 140388a18ae0..7b7c93c3bde4 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -1260,7 +1260,7 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
- 		int err = 0;
+ 	if (unlikely(trace_habanalabs_rreg32_enabled()))
+-		trace_habanalabs_rreg32(&(hdev)->pdev->dev, reg, val);
++		trace_call__habanalabs_rreg32(&(hdev)->pdev->dev, reg, val);
  
- 		if (trace_ovs_do_execute_action_enabled())
--			trace_ovs_do_execute_action(dp, skb, key, a, rem);
-+			trace_call__ovs_do_execute_action(dp, skb, key, a, rem);
+ 	return val;
+ }
+@@ -2674,7 +2675,7 @@ inline u32 hl_rreg(struct hl_device *hdev, u32 reg)
+ inline void hl_wreg(struct hl_device *hdev, u32 reg, u32 val)
+ {
+ 	if (unlikely(trace_habanalabs_wreg32_enabled()))
+-		trace_habanalabs_wreg32(&(hdev)->pdev->dev, reg, val);
++		trace_call__habanalabs_wreg32(&(hdev)->pdev->dev, reg, val);
  
- 		/* Actions that rightfully have to consume the skb should do it
- 		 * and return directly.
-diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-index bbbde50fc649..f2b6688f18d6 100644
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -335,7 +335,7 @@ int ovs_dp_upcall(struct datapath *dp, struct sk_buff *skb,
- 	int err;
+ 	writel(val, hdev->rmmio + reg);
+ }
+diff --git a/drivers/accel/habanalabs/common/mmu/mmu.c b/drivers/accel/habanalabs/common/mmu/mmu.c
+index 6c7c4ff8a8a9..dd8b6fb3aa1f 100644
+--- a/drivers/accel/habanalabs/common/mmu/mmu.c
++++ b/drivers/accel/habanalabs/common/mmu/mmu.c
+@@ -263,7 +263,8 @@ int hl_mmu_unmap_page(struct hl_ctx *ctx, u64 virt_addr, u32 page_size, bool flu
+ 		mmu_funcs->flush(ctx);
  
- 	if (trace_ovs_dp_upcall_enabled())
--		trace_ovs_dp_upcall(dp, skb, key, upcall_info);
-+		trace_call__ovs_dp_upcall(dp, skb, key, upcall_info);
+ 	if (trace_habanalabs_mmu_unmap_enabled() && !rc)
+-		trace_habanalabs_mmu_unmap(&hdev->pdev->dev, virt_addr, 0, page_size, flush_pte);
++		trace_call__habanalabs_mmu_unmap(&hdev->pdev->dev, virt_addr, 0,
++						 page_size, flush_pte);
  
- 	if (upcall_info->portid == 0) {
- 		err = -ENOTCONN;
-diff --git a/net/sctp/outqueue.c b/net/sctp/outqueue.c
-index f6b8c13dafa4..4025d863ffc8 100644
---- a/net/sctp/outqueue.c
-+++ b/net/sctp/outqueue.c
-@@ -1267,7 +1267,7 @@ int sctp_outq_sack(struct sctp_outq *q, struct sctp_chunk *chunk)
- 	/* SCTP path tracepoint for congestion control debugging. */
- 	if (trace_sctp_probe_path_enabled()) {
- 		list_for_each_entry(transport, transport_list, transports)
--			trace_sctp_probe_path(transport, asoc);
-+			trace_call__sctp_probe_path(transport, asoc);
+ 	return rc;
+ }
+diff --git a/drivers/accel/habanalabs/common/pci/pci.c b/drivers/accel/habanalabs/common/pci/pci.c
+index 81cbd8697d4c..12663e8e12e0 100644
+--- a/drivers/accel/habanalabs/common/pci/pci.c
++++ b/drivers/accel/habanalabs/common/pci/pci.c
+@@ -123,7 +123,8 @@ int hl_pci_elbi_read(struct hl_device *hdev, u64 addr, u32 *data)
+ 		pci_read_config_dword(pdev, mmPCI_CONFIG_ELBI_DATA, data);
+ 
+ 		if (unlikely(trace_habanalabs_elbi_read_enabled()))
+-			trace_habanalabs_elbi_read(&hdev->pdev->dev, (u32) addr, val);
++			trace_call__habanalabs_elbi_read(&hdev->pdev->dev,
++							 (u32) addr, val);
+ 
+ 		return 0;
+ 	}
+@@ -186,7 +187,8 @@ static int hl_pci_elbi_write(struct hl_device *hdev, u64 addr, u32 data)
+ 
+ 	if ((val & PCI_CONFIG_ELBI_STS_MASK) == PCI_CONFIG_ELBI_STS_DONE) {
+ 		if (unlikely(trace_habanalabs_elbi_write_enabled()))
+-			trace_habanalabs_elbi_write(&hdev->pdev->dev, (u32) addr, val);
++			trace_call__habanalabs_elbi_write(&hdev->pdev->dev,
++							  (u32) addr, val);
+ 		return 0;
  	}
  
- 	sack_ctsn = ntohl(sack->cum_tsn_ack);
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index 97aa970a0d83..6cfe4c40c82b 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -1943,7 +1943,7 @@ static bool tipc_node_check_state(struct tipc_node *n, struct sk_buff *skb,
- 
- 	if (trace_tipc_node_check_state_enabled()) {
- 		trace_tipc_skb_dump(skb, false, "skb for node state check");
--		trace_tipc_node_check_state(n, true, " ");
-+		trace_call__tipc_node_check_state(n, true, " ");
- 	}
- 	l = n->links[bearer_id].link;
- 	if (!l)
 -- 
 2.54.0
 
