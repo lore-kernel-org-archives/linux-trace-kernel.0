@@ -1,48 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F58D357D0E;
-	Sat, 16 May 2026 18:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45BD405C2C;
+	Sat, 16 May 2026 18:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778956651; cv=none; b=QSw/NO3AXpB9uWb+2YfuEoDJEEFA3OnBACpqdYiLL9VQQHeZTHThcfQCWqo6kfN1Ic9fS65ZWYukm82uslU7Orpfvg1ddYdRjntJHnjm3/f1QUIl3UjBLGktFjxBfFiw4JYoPj96qknt18DF4JYRCPPYl4oF7Uda3UkzK2EVT0s=
+	t=1778957436; cv=none; b=WOL85rEUrK06SsGzvkxuUy0dCwGtcKvvmkUrS+9NYvuAHvCEJrwZ3SXlKQ6NE11qRGwWnlUdBXx7iaOohugXgFn+UpvzYB9efawNy7UAhBYj4LBScKrBsAJ5qgQ4yoBRr7fhZdgwc/rOiY2Iy40VWNUHfqIsei6eI/FWqnF6kFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778956651; c=relaxed/simple;
-	bh=GaKE0tVTWmsw7G9ti4FDBUbar9GRDUtf1uS+1stN7jw=;
+	s=arc-20240116; t=1778957436; c=relaxed/simple;
+	bh=/mc+Cv8/SoyCbsJ+SUSfV3aQIXou0Zvtdu64a7r8qYM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HeMoEH3gLHNL9ePhBDEOWrG0pO2/IcA1k1GL7DPltXvjnVVGbp88T2QDxo11TGq1IjVy4tc2FE4UpAJcVTGEyXae3O5Kuzsbx/VVz2qVej0VjN39OYe9yZbAu4Oe2ni0xKtn+X01WWfu58srhLF84t6oB+oOqGGpYlweNnhgt4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PX88rBl4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dXxYy60Fm61VAr41Y1pC/zRlfz5heRdS0M6em+tdN08aQlKH1gON3s6BFrGH4zYHIdOnURgLfjV5K75HYFb/ZjP4IjjpcnuSsmMOVisC4fklB1MlfQQ6UDw0v1fAQMT+v5UccdzYqp5RS0dzyIVkaoYFESwX0WRqJJBt0pOVQ80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VN3fGvEE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PX88rBl4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A347CC4AF14;
-	Sat, 16 May 2026 18:37:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VN3fGvEE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D941C19425;
+	Sat, 16 May 2026 18:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778956651;
-	bh=GaKE0tVTWmsw7G9ti4FDBUbar9GRDUtf1uS+1stN7jw=;
+	s=k20201202; t=1778957436;
+	bh=/mc+Cv8/SoyCbsJ+SUSfV3aQIXou0Zvtdu64a7r8qYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PX88rBl4TO3L9oH6KxHVLSga1aGTyNIAhmRiRaTDvkPNCytugn5vj63WBjhnm685Q
-	 uXjdfu/tgLeiXUSXqORKIes1dXrUa2v/y79hmgDuHPBIGr0Yp7aJ0nYr3YAv5YYQOE
-	 5xh6hba4amXl5O5DNiofca+stGsRCoy2/bQ5HkunlLOeEU4gpiDi8gEPYV49TANzcu
-	 H1I+UoDYvMDwLiwEg8rJRcKRwHU3MhULZXe411UKBZc/mmMEtdz/7WTjMGhy7Oz/oL
-	 VaXFdw3ZA4QfZ20JJskjwwaLhDVXkHCc+HqNobcuaVM0wq81e0trJHPrVdxnFLO9LF
-	 nF+epkeDhLDDw==
+	b=VN3fGvEEmvdhLyWQADuEhdcDPWtnDsteqJlC8SSPj08SiA2BC7rARwfG7WMURFPKL
+	 f8yvxnb4/aE8Gt4eDMYAMxY9o3xfIU2L1g65OZoy9QyfOH/VwwWprRkgWmFU9FrC8C
+	 t++NdPULqY8GumqhbwZ/npQZ+2soy480LiAvhD7e5/mS7syRAckwtveY3ZETiiNVpi
+	 XUh6HIio2/H6vUKqL4DFe0uGf9TNHJRcMu4EyADux72g6DnaJGeTqfw0kRh9/b3Tet
+	 Y/dZ1iHkp8Z/1b26B0xcD6Csi8gbq6y+UFYUBRfwD7+YgFwrVu/g+r+Aa5cy7G2t0e
+	 /aFo9vFPiNAJw==
 From: SeongJae Park <sj@kernel.org>
-To: 
-Cc: SeongJae Park <sj@kernel.org>,
+To: SeongJae Park <sj@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lorenzo Stoakes <ljs@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
 	damon@lists.linux.dev,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 18/28] mm/damon: trace probe_hits
-Date: Sat, 16 May 2026 11:36:59 -0700
-Message-ID: <20260516183712.81393-19-sj@kernel.org>
+Subject: Re: [RFC PATCH v3 00/28] mm/damon: introduce data attributes monitoring
+Date: Sat, 16 May 2026 11:50:31 -0700
+Message-ID: <20260516185032.82261-1-sj@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260516183712.81393-1-sj@kernel.org>
-References: <20260516183712.81393-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,90 +62,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce a new tracepoint for exposing the per-region per-probe
-positive sample count via tracefs.
+On Sat, 16 May 2026 11:36:41 -0700 SeongJae Park <sj@kernel.org> wrote:
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/trace/events/damon.h | 38 ++++++++++++++++++++++++++++++++++++
- mm/damon/core.c              |  9 +++++++++
- 2 files changed, 47 insertions(+)
+> TL; DR
+> ======
+> 
+> Extend DAMON for monitoring general data attributes other than accesses.
+> The short term motivation is lightweight page type (e.g., belonging
+> cgroup) aware monitoring.  In long term, this will help extending DAMON
+> for multiple access events capture primitives (e.g., page faults and
+> PMU) and eventually pivotting DAMON to a "Data Attributes Monitoring and
+> Operations eNgine" in long term.
+[...]
+> Changes from RFC v2.1
+> - rfc v2.1: https://lore.kernel.org/20260514140904.119781-1-sj@kernel.org
+> - Rebase to mm-stable (7.1-rc3) to avoid Sashiko patch apply failure.
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-index 24fc402ab3c85..2fd914895c405 100644
---- a/include/trace/events/damon.h
-+++ b/include/trace/events/damon.h
-@@ -130,6 +130,44 @@ TRACE_EVENT(damon_monitor_intervals_tune,
- 	TP_printk("sample_us=%lu", __entry->sample_us)
- );
- 
-+TRACE_EVENT_CONDITION(damon_region_aggregated,
-+
-+	TP_PROTO(unsigned int target_id, struct damon_region *r,
-+		unsigned int nr_regions, unsigned int nr_probes),
-+
-+	TP_ARGS(target_id, r, nr_regions, nr_probes),
-+
-+	TP_CONDITION(nr_probes > 0),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, target_id)
-+		__field(unsigned long, start)
-+		__field(unsigned long, end)
-+		__field(unsigned int, nr_regions)
-+		__field(unsigned int, nr_accesses)
-+		__field(unsigned int, age)
-+		__dynamic_array(unsigned char, probe_hits, nr_probes)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->target_id = target_id;
-+		__entry->start = r->ar.start;
-+		__entry->end = r->ar.end;
-+		__entry->nr_regions = nr_regions;
-+		__entry->nr_accesses = r->nr_accesses;
-+		__entry->age = r->age;
-+		memcpy(__get_dynamic_array(probe_hits), r->probe_hits,
-+			sizeof(*r->probe_hits) * nr_probes);
-+	),
-+
-+	TP_printk("target_id=%lu nr_regions=%u %lu-%lu: %u %u probe_hits=%s",
-+			__entry->target_id, __entry->nr_regions,
-+			__entry->start, __entry->end,
-+			__entry->nr_accesses, __entry->age,
-+			__print_hex(__get_dynamic_array(probe_hits),
-+				__get_dynamic_array_len(probe_hits)))
-+);
-+
- TRACE_EVENT(damon_aggregated,
- 
- 	TP_PROTO(unsigned int target_id, struct damon_region *r,
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index dde3c8d8fef89..11b513eb077fe 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -1881,6 +1881,13 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- {
- 	struct damon_target *t;
- 	unsigned int ti = 0;	/* target's index */
-+	unsigned int nr_probes = 0;
-+	struct damon_probe *probe;
-+
-+	if (trace_damon_region_aggregated_enabled()) {
-+		damon_for_each_probe(probe, c)
-+			nr_probes++;
-+	}
- 
- 	damon_for_each_target(t, c) {
- 		struct damon_region *r;
-@@ -1889,6 +1896,8 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 			int i;
- 
- 			trace_damon_aggregated(ti, r, damon_nr_regions(t));
-+			trace_damon_region_aggregated(ti, r,
-+					damon_nr_regions(t), nr_probes);
- 			damon_warn_fix_nr_accesses_corruption(r);
- 			r->last_nr_accesses = r->nr_accesses;
- 			r->nr_accesses = 0;
--- 
-2.47.3
+Still this seires is based on mm-stable (7.1-rc3) for the same reason.  The
+patches that based on mm-new is available at damon/next tree [1].
+
+[1] https://origin.kernel.org/doc/html/latest/mm/damon/maintainer-profile.html#scm-trees
+
+
+Thanks,
+SJ
+
+[...]
