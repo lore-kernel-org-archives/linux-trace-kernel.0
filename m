@@ -1,83 +1,81 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E005931E82E;
-	Fri, 15 May 2026 23:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B0722D7A1
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 16 May 2026 04:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778887001; cv=none; b=rUB7GKQPDib94vQy9kDTulgKCAWNdfBHmZr2FjXRg71pUWmXI9R8ClbjD5whT4HLWTEVROmO9rV4LQ9qDpkIaJg3bofiS1H2ygUa2h+gF0VkBPYx509mi2jKHCdJ+pAkxM8TrzaA8YM9hq7V5TeHDewp6cUboiCkBI9NDTUWPfU=
+	t=1778904411; cv=none; b=IC+ZzLevQMZQyTA7ibVEQ2TXN7u89vYDoOxEGB9mdHbay+CZkLcrCCR0tgdMrVWgcNeeN9DzkP83aH5rRsYOoO/18ahB3fcq70EARhAUeXCNwIecNLF+17hc25gxwYYY5C7d2Ok7uc7b8BwqHQpuUSv+do68xt1t9poLpyExghg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778887001; c=relaxed/simple;
-	bh=+irwJ3Om1qyAb+qmmQ5h/jnyTUHKJo9wu4T6k6KN060=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WztSNFTiY2EaOqwrwEsIaDJ/e3WkX9rw1mb8KJHM5So6wyB7zm9OoobJZT2XZhRqlvVM3zv6haLEC/Q8fG7Vr8aHGaho6cIf5K8JqGT+3MFw64DkaeTMWHgz27rpXvAgiDqtTsds31PiwKT94ICMtkQt0729edPSQoyz/oXDJgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id CDB7C140275;
-	Fri, 15 May 2026 23:16:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 0D0C46000E;
-	Fri, 15 May 2026 23:16:31 +0000 (UTC)
-Date: Fri, 15 May 2026 19:16:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Anubhav Shelat <ashelat@redhat.com>
-Cc: mpetlan@redhat.com, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] tracefs: make root directory world-traversable
-Message-ID: <20260515191630.2276b241@fedora>
-In-Reply-To: <20260515194010.93725-5-ashelat@redhat.com>
-References: <20260515194010.93725-2-ashelat@redhat.com>
-	<20260515194010.93725-5-ashelat@redhat.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1778904411; c=relaxed/simple;
+	bh=GBwaUEyCsHc0bhV3MvwOkn2yoHIHILajZ2KK2Sj624E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LPHK0XFbybHTX55ecW4+jhShlNiBbWH2ikm7AEftlH4CLPJBWlsduQEIotX3Gd9FbOd4F5gQ9z8cyXMBdIAIF/Uw81ixBTORSGNhvAKp0M8CspNkW+4FnkqdDpto6mPmAjUgYxmgGIKrKu8oXx5ya9dycDBFnM3xW1c4mJfXQJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m/T4jWUy; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m/T4jWUy"
+Message-ID: <f76b79d3-080a-4931-873e-99d4b3e1020f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778904398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=csEBmhV4pBMWZ2fB04greY5anYTJC5J151pnKD1dZ50=;
+	b=m/T4jWUyKVPBrEtgI+LssBYE8Jr1JtMKr0LC+7/kLTiQQ5hs1U9JvcXG/ff5kGZB9kDH8j
+	yfg3OKQY/qc5xL9N70vxIHxOISGzjIXPdS29DbHnveiqosMrQEKPuglL6ufFzM10cY/+yN
+	CEhCLgcRYDzRn7tVG2TNL9cq+EyTS8I=
+Date: Sat, 16 May 2026 12:06:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH v7 2/6] mm/memory-failure: surface unhandlable kernel
+ pages as -ENOTRECOVERABLE
+Content-Language: en-US
+To: Breno Leitao <leitao@debian.org>
+Cc: linmiaohe@huawei.com, akpm@linux-foundation.org, david@kernel.org,
+ ljs@kernel.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, shuah@kernel.org, nao.horiguchi@gmail.com,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ corbet@lwn.net, skhan@linuxfoundation.org, liam@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+References: <agXcPleVC9LGVCmj@gmail.com>
+ <20260515070353.87244-1-lance.yang@linux.dev> <agcbfLHT5ZWnNeN0@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <agcbfLHT5ZWnNeN0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 6fwwxo3fr6raqbmugu3agsj555bc9jkk
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 0D0C46000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/F4EzRsn/B3uDMumpeD+MZTewUy5t4Rlk=
-X-HE-Tag: 1778886991-828779
-X-HE-Meta: U2FsdGVkX1/oL62XGgudii9qqRDXSw8IoJpH5ncJxAqIDuGscZG6EYrT4JslXZJaLPcVjNkcN9ztKiFqMP4d3sucjQDY7vfpOcHPGxnOC7xAT3YlmM93mqpqpz/dqpjTF+5t7Uk3/84UO4BFrtJtQzWx54/QD8gk2We51MMUSoT+BO87ghpKFp12XdCslXKSgsISX0QvCXrY0yyAbZxG3k+XH2GGhtBi1FUGCPvax6WaslDEnXE/QEHNFiQlY9kkYP4kTmwxIE/guBYesbxuTvLSCQf3limSU2usgtULFzNjl8aTPGqbMBdAGEokrdGI1woY6NjrZHk8PK3MYRfmaQzhW3cUa7kjlRxO9Gyu8GYt66WVy09E5A==
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 15 May 2026 15:40:07 -0400
-Anubhav Shelat <ashelat@redhat.com> wrote:
 
-> Change the default tracefs mount mode from 0700 to 0755. This allows
-> unprivileged users to access the eventfs directories underneath which
-> already use 0755.
+
+On 2026/5/15 21:13, Breno Leitao wrote:
+[...]
+>>
+>> Wonder if it would be simpler to just do a positive check near the top
+>> of get_any_page() instead. Something like:
+>>
+>> static bool hwpoison_unrecoverable_kernel_page(struct page *page,
+>> 						unsigned long flags)
 > 
-> Tracing data files use mode 0440 and 0640 so they are not exposed by
-> this change. Only the format and id files, which have been marked as
-> work-readable, become accessible.
+> Ack. We probably want to call it something like HWPoisonKernelOwned() to
+> follow the same naming sematics of these helpers, such as HWPoisonHandlable()
 > 
-> Directory listings of kprobes and uprobes, which contain functions or
-> binaries, become visible to unprivileged users but do not contain kernel
-> addresses. Admins using probes can restore the previous behavior with
-> chmod or mount -o mode=700.
+> By the way, I will re-include the self test back to this patch series,
+> In case they are not useful, we do not merge it.
 > 
 
-I've been thinking about this and I believe a better approach is to
-make a eventfs that is mounted at:
+Sounds good :)
 
- /sys/kernel/events
+Can you also test the relevant page types if possible, especially
+the ones the new helper is supposed to classify?
 
-and be the same directory structure as /sys/kernel/tracing/events but
-only contain read only files like "id" and "format". This directory
-would be mounted as 555 and readable by all.
-
--- Steve
+Cheers, Lance
