@@ -1,254 +1,175 @@
-Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFEC30568D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 23:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C85031E846
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 23:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779146460; cv=pass; b=TbfltqqeFcDQVcseiOXL6P2PZOkOWkC6x/p6wfekAWy85LtNz0q+4Uj6uPgmeUi+X+5e8FPYLX4slV+V6oDi9RKu70Az0YebkrA4wmep+3sH/HIe/qNQfH4XdgQzdz3ndt1fpHaBky5usyiagcFHEDUyFa/dCxr2tou1M7nwVPg=
+	t=1779146586; cv=pass; b=Be3S1Z0nucf4U4OC/xpkSTQg2wgZhlJqzfWdvk6KDKX8ilSFmRfJ7y367IF75+kkKLWvfJYjdWLp7eCxv42/sbb9uIeEk74BugLnLhSqwftz9vTEtXJz5SriudDRK/JDZ9pubjDOX1OJ//E5lmKZDgzSQT5ruJYZzSfZsazh0+Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779146460; c=relaxed/simple;
-	bh=wEyF0FF+0amOJx0bechc/sCZKlR8Fmp0P7fBfvS3dCY=;
+	s=arc-20240116; t=1779146586; c=relaxed/simple;
+	bh=fHv9nb6iULfu1kpZZZ3/tja1IfLrDwnxvWfhWvPh78Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ApmoXk5u6YBiu2kNfnWK3TppNmuDBLWXzZaQ0B0xUoe7frQusE1qEEc48A5KbE7/OLEtdPCIYVoc8+dGZWUBsfQnr1oRCQ+vN+V9MUqADLNR14bg0ltlce+kUqdrmYBPZw2Rk0BMPb6Httkm1c1EWxNhJC8eVvACuGU2R9/iWPA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=fOq4rzMi; arc=pass smtp.client-ip=74.125.224.52
+	 To:Cc:Content-Type; b=Fs5LKiUUm4jDSLfstyemNivImjH2XCa8dNUJ2BxwiU0PNWYmG+3ZvXYzmPHn0XuMZCdIhlpQQfZaFUOaUej3M5rGmbEdvAGQH/711MalXS0bSrwCiPXpYNXroSx227aw7Oa+etXcHAJwTdT/rOxoeYCsXAh+nxOaIbdCMG0vZ/g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=def7eKdt; arc=pass smtp.client-ip=74.125.224.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="fOq4rzMi"
-Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-654672a6d68so2932068d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 16:20:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779146458; cv=none;
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="def7eKdt"
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-65318dafbcbso2813118d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 16:23:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779146584; cv=none;
         d=google.com; s=arc-20240605;
-        b=LdcwJwZGXTqyqHcWDe06xLcYNzvL2g89AaSszKHOD413jAmmaTs9gBgEEPJBZS4MSs
-         eCMvhn69mRzWi5X/EK+sfC6zr+JN98HyFH+pOg9VyJYYDAMrpv9phEWNhdw/oCVRayKo
-         LuePkC6rdSfvLILkRSGcj+ZoAgqtBLFYnzpPNbnYga8Uqcq9E7dRdJ8G6AwG6r0zbgxP
-         NAVLDQi3tcJiAmWGJXLeP4IRtMZ7ldB1XFW3A1XGR23+rn1XoVcyI04kIxtbt8KuerJ/
-         cxwWWzmZKpHSJvdygTk7nzPojvPBkEL4i1XRvdpBMCAIOYHho3aGD8bNCOT6AfphW2LE
-         Vz+g==
+        b=H/JS/gOXn9R2/Zm54I1BA3KK0ORRaHgZ1FT3yqbfeHrGhmBF0vNMGYLvXECKkG4k3V
+         kCp3Wv/npddzw7b6PcnvWg9FzFXdxom6AY0FH8bHrIvVo8kXDjNI9cIK3jOwiRGJMwie
+         A64t2pEDhW6Tqdb7FzywKvTtwB18V63byoI1EB6LuPtQFPYOR7+/pXEQGkAVhyFFRFFb
+         5iHJU2Fk0xctvhSTrTrmuhJPlzCsUKzWmkpzm4eY+ogNHyOZanFX3zwgro7RdvL8+fm9
+         uNNdiBUQFwgfbC8heO9Wt/bB4gl6QMbBgNtBD14BpiSzfw87urdi4CIsUQJ6A91m51hs
+         Kexg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=qyiC/6ER7XJQAQS9fYV1hi++02Ay+WfrOqQ6ixqtbHQ=;
-        fh=jFw1kQI5H1wiDQ27T1qeTUmkNlJOVyC6uL2bR1YSh4E=;
-        b=gO1zoVEx7NoKkKDDJcGMbe5/P8xklrKSRuDmmviMkBWIvXyr3UWUdEVi5WZLM4bNDD
-         UkHlkojE6LcUd61R1TWaW2o6MxefvlMCY+vEcDITf0pA1uG86OyITQJ13rSJ0YaZwXGQ
-         w+lXNOSlWkOZwEckHu6QYD4M0eEg+aONv8rZl/liX6Rvh/bTVlBHKSbsnj2JBuT4PR9f
-         XSqwR+2Wmuo8TXemcIhjlTaSPyvhKPi76Gmt1vATQTO7WcsgMDhan51mP7EuV+Yg+2fk
-         Hv014T/QLwu06XByARbtY4fsU+eqb5XP37lCwkPPofWOu3OeHG26CxNjgKUFLm/vMK7R
-         zhWw==;
+        bh=whXJS7vOoJNpViQnsykoSQi+3tpMsWSRBjO6ajJAbGg=;
+        fh=2yT22A4WVJxlLXn+NgUUyl2Dn5O1b1qldtFoZ1GEhdE=;
+        b=Ypfsws+dsSVgXPNeMSpJw4GMc2LkaIoQaeQwFPi3smu8kn58E0x9PH2XJ4vpSPyfpP
+         HXVADMa0YT7LKH8iApebr2rpwRnxi0LnXJ6erHh20Krb3K24i3I4tgHFeURq+mxyHe2i
+         RxZKGuFwGKnGqIsK53t+tX81zXzseufwRzVbiEyYgUa7zBS9pad922AS7SWDk2NLvhEY
+         DsbnBh4BNT5tpiBsEM8dbbvMII45Fvo+R9RnCe44Yyt7OpZ123ErdMn8slsCqd+HYl+X
+         EvTwCUCNZcHSb0ppZs+Ik9dvMmnoNC0Of7EOMTWk0D10Cz/dVEVh6M9zpSbGlEallG8H
+         o36A==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1779146458; x=1779751258; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1779146584; x=1779751384; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qyiC/6ER7XJQAQS9fYV1hi++02Ay+WfrOqQ6ixqtbHQ=;
-        b=fOq4rzMiAuBleN1uDzFodTmzu864lGlN4m9MohCgwRb9cJ5J5TUMbd0wkFwtSKtfb5
-         fib1ZqwEeaiLNp9cqVOw7i3UR1NP/AITYe+9cT2tN0oQiGEj8kzgyieZSfJTAykkBfjj
-         mvn6AV2wOhT4AiRyBFSplZzuRQ5NHCWSbwo4qcI0ImbzQf3oKnoZAmbs2XnDKYxk0OQ8
-         HBulHI8LICmo3DKNWL57IHUQixmsAxkEOcfnnubnuvR86lA4OPi9YvLAxQ+4yZueQh7J
-         yuFCx5hCGV5t+Qt2cnMtG7UmVcuxkVJtKi6tKFhCpeFHOolvZBjQcZfAG5oNaEWqQ94U
-         flwg==
+        bh=whXJS7vOoJNpViQnsykoSQi+3tpMsWSRBjO6ajJAbGg=;
+        b=def7eKdt7Gh7glxtnfZ5Cc1HaYw8eiAWU8bfVnk5d6ZAsUrqUQSPqITUziDA/mY+vS
+         SmbYiPdc4t5+XZS+bN9qi/CV+hmCsbLTmBeiTQhzZTrZnh4vpd1254IJNtHaPyeYitj5
+         G9vJGq411pvSeSu1mDYYKr6ur3Cnm+zSnMDZ9IVjTyl7i+gi9ewY3/z0HxnCcoBq/HSg
+         uDEIqOed4Z4por91il98FIJmP5mVAe4UdIMNBlf5k61azk7buH9Gmj+g6XYnmPg3nPcT
+         Kz9dFqhR9sXmr0R7y1AAd6/Hj0qc55PZIKvDkiVNDZ4SA0sZBVdtNceImG03ZyU9m7AE
+         Cl2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779146458; x=1779751258;
+        d=1e100.net; s=20251104; t=1779146584; x=1779751384;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=qyiC/6ER7XJQAQS9fYV1hi++02Ay+WfrOqQ6ixqtbHQ=;
-        b=g0yiPTk6tJj2cr1QHZz7+7nbshMF8rdCpOcIUzZOrFBIzU2e4TQUdBPgkhezluGP21
-         tIlFYe3j1EPYAYMIfZRfJBcefdgz0FbmVk2CWK+r7YqBhRTwCX7qxDa82bQobedZ6y6Y
-         c5Jwz52s5rsZm56yCOUAiz/NUKjIr7KiAy/jG7rhPaAEv89JM7dfqDgPWitc4bYJ4gdB
-         ks4vP0YUIs0ClRiCR8mWHP5wPp2y62+4gZkSV+4q0iFFX+2U8wONrBvkn53wNXlW38ky
-         PiyljLFn0RA2A1ABtKRDeXcakNk9kX3xQC1Phwnbk12kG+bxk5klV8rS9wBvkAFKczOz
-         CrHw==
-X-Forwarded-Encrypted: i=1; AFNElJ8PtN+Mt/HURRZEiuOspGS6fRSpKfxLw+X7CjnaPT1oG5O1L31SNMA4NzwCdLv+M7iejs7aM/n33acCNVPGnEmq9iE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylEpkJHfYJlNWs3G40aIDGdKpV07Q5thyFwU9MkB843zQm9ZCd
-	JBkOlekDJ6DxUoP+SnNwoIjcSjI9i3oyKaa4pC8xegqrAaDaiIdeI74RHiHgHRs58RMdUWmrTd0
-	z3/iZbeknBQBYg9sYUdZ42Un1R3HrcV7eWDccdLxtpiDfR2aE3VCEW7RNXfKi
-X-Gm-Gg: Acq92OFDqMwWeNGYhwTcKRWzz6dHLxwU3ZlQ+1v2Nqgsneym0+Qk3dygx4xcUeaJOot
-	AEQ1X4XCw91q8EfHtL0OFUB55nWQPktPQ+P2wtc23dcuMZUcS49PgJLGgq7fEq/ZS2zD0kHl2X6
-	V/NhY6cbzCegK4/jyZhArotSHQIOSHdpp8TlLyrQDQzCwZnCxj0r44q3B8e32vbD1AZHh6dkY8X
-	6LFPv4npw5PnSj1+AFlg7AqdEQF6gC/tZWp78ygsMJ5IbyPBcl9Tn3pr7/CtXhvZh8kKVE8o5Vb
-	X7c59nW7Kw==
-X-Received: by 2002:a05:690e:148b:b0:65c:6164:f29a with SMTP id
- 956f58d0204a3-65e22839e7fmr18959504d50.46.1779146457665; Mon, 18 May 2026
- 16:20:57 -0700 (PDT)
+        bh=whXJS7vOoJNpViQnsykoSQi+3tpMsWSRBjO6ajJAbGg=;
+        b=PrXXxrh8GXX/W2TlMWe2zML59F/HWtUujJ+3slWKkeeNcQbxzD/PPQQGp88c3VHOZW
+         3RYwmo00KGrtIBC7J1EviGgXYWWn1M+l6o8nHW9zdzJ8j0Z3GnIceKZFogyADoFk+nzj
+         7Soyo5OF6u5j7Px/+LScEDYfpBx/m/pCFq9XCsZxZ/9cht3Cpf21PI1ymR/Ijfqd2p3K
+         wKBhGw1ADQveOMiIq1YURCxWKDEbe7W13C37qItxLrl1p9NU21HJws8dT6PGhAK0Qa6s
+         L9Zrqqq9JQ9FZcTY0Z1K1VsTWZO9ININU5bYCSSvOUz0c9mlQ++wrXhCR9QDnbJWJjJR
+         Ting==
+X-Forwarded-Encrypted: i=1; AFNElJ/c9E4OcX8oEoLZMl26rEB/Yo72OPzaJzrvyPj9X2PRctM19aVLspjZoJ0W2z0bVLbZu8Mf+MJ/HsH3HB3pWuMV+TI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW6bb7rAnRsqksrLRwiQd/8kxdDvfJzNMNvec8NIB4RA0TXV99
+	Bkaz9PynPCDYjjwNxhNQBclsArut0E7a2MTO5bclIHK8KCctbLrZmi3VT4azSoWe/+3jnkCyoF3
+	BrbVxV64uqfWVC4aWd1G/RjCjnlAf91CHSQcRC5OkWg==
+X-Gm-Gg: Acq92OHtii5RpdpHuD6reUN+9mDo3F6svjZqeP6frTByjZ5NwXzjRL3ML7wwje2rz7f
+	40YB4oWCIczL8o+GMsnTrBD7UGy/6IbqK7EU7NjKb/LPgyzyRNJM1NdTibGH/X7siqIaTzGswWf
+	cvbiGkLIitanQs0xhZ1Mx8MIV/lLtnu0yG0Tlhx2e1WqnE74vavZrVvsOf9qwi+BcC4A5qv19sm
+	s9tMOMRekAEdK6YVkGTIPYUq+eKCRf3ySVnXx2eVJFhM+qhjo5Xc4v+jOYqGRRXvdZ+wxLNzo5P
+	tiNiwhi1/ECODhApup1r
+X-Received: by 2002:a05:690e:d4c:b0:651:bacc:77c with SMTP id
+ 956f58d0204a3-65e227046a4mr14553366d50.26.1779146584210; Mon, 18 May 2026
+ 16:23:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260515135932.2238842-1-vineeth@bitbyteword.org> <81783d0807a5ffac93f61eddba0d2f595d7f239f.camel@mailbox.org>
-In-Reply-To: <81783d0807a5ffac93f61eddba0d2f595d7f239f.camel@mailbox.org>
+References: <20260515135946.2238888-1-vineeth@bitbyteword.org>
+ <9fde73e7-0108-48d7-a1a0-ccc9776beb5c@acm.org> <20260515145048.1c021bc9@gandalf.local.home>
+ <ebdc020e-419d-458a-9211-36f22af0c1d9@acm.org>
+In-Reply-To: <ebdc020e-419d-458a-9211-36f22af0c1d9@acm.org>
 From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Mon, 18 May 2026 19:20:46 -0400
-X-Gm-Features: AVHnY4KAw0ZavPbDVfhEtyHlzriwrbmjQeDlQua14-BfS3GXG-7uIcLEub9UvWg
-Message-ID: <CAO7JXPhMBd0xgDRO-gZ2HpSTnrj1OD67c39jrXWEKaowNc9GEA@mail.gmail.com>
-Subject: Re: [PATCH v3 06/11] drm: Use trace_call__##name() at guarded
+Date: Mon, 18 May 2026 19:22:53 -0400
+X-Gm-Features: AVHnY4J2BTXARqZMS-S-7ea43B88qOe7-XZuDC_7_fnPjVKwEJzab2MdP2OY_Cg
+Message-ID: <CAO7JXPhMTKpC_8e-C8M13wdqrC3Re6Ad_DqkzGjKrVuH8YNh8g@mail.gmail.com>
+Subject: Re: [PATCH v3 08/11] scsi: ufs: Use trace_call__##name() at guarded
  tracepoint call sites
-To: phasta@kernel.org
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, Steven Rostedt <rostedt@goodmis.org>, 
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 18, 2026 at 11:01=E2=80=AFAM Philipp Stanner <phasta@mailbox.or=
-g> wrote:
+On Fri, May 15, 2026 at 3:22=E2=80=AFPM Bart Van Assche <bvanassche@acm.org=
+> wrote:
 >
-> On Fri, 2026-05-15 at 09:59 -0400, Vineeth Pillai (Google) wrote:
-> > From: Vineeth Pillai <vineeth@bitbyteword.org>
+> On 5/15/26 11:50 AM, Steven Rostedt wrote:
+> > On Fri, 15 May 2026 08:27:27 -0700
+> > Bart Van Assche <bvanassche@acm.org> wrote:
 > >
-> > Replace trace_foo() with the new trace_call__foo() at sites already
-> > guarded by trace_foo_enabled(), avoiding a redundant
-> > static_branch_unlikely() re-evaluation inside the tracepoint.
-> > trace_call__foo() calls the tracepoint callbacks directly without
-> > utilizing the static branch again.
+> >> On 5/15/26 6:59 AM, Vineeth Pillai (Google) wrote:
+> >>>    static void ufshcd_add_query_upiu_trace(struct ufs_hba *hba,
+> >>> @@ -432,8 +432,8 @@ static void ufshcd_add_query_upiu_trace(struct uf=
+s_hba *hba,
+> >>>     if (!trace_ufshcd_upiu_enabled())
+> >>>             return;
+> >>>
+> >>> -   trace_ufshcd_upiu(hba, str_t, &rq_rsp->header,
+> >>> -                     &rq_rsp->qr, UFS_TSF_OSF);
+> >>> +   trace_call__ufshcd_upiu(hba, str_t, &rq_rsp->header,
+> >>> +                          &rq_rsp->qr, UFS_TSF_OSF);
+> >>>    }
+> >>
+> >> Instead of making this change, please remove the
+> >> trace_ufshcd_upiu_enabled() call because it is redundant.
+> >
+> > You mean to remove the ufshcd_add_query_upiu_trace() function and just =
+use
+> > a tracepoint where it is called?
 >
-> The "foo" terminology is unusual I think? I always wrote it with regex,
-> like "trace_*()".
+> That would be even better.
 >
-Sorry about the terminology. Part of the patches got merged this way,
-so is it okay to continue the terminology to have consistency?
+Will do.
 
+> >>>    static void ufshcd_add_tm_upiu_trace(struct ufs_hba *hba, unsigned=
+ int tag,
+> >>> @@ -445,15 +445,15 @@ static void ufshcd_add_tm_upiu_trace(struct ufs=
+_hba *hba, unsigned int tag,
+> >>>             return;
+> >>>
+> >>>     if (str_t =3D=3D UFS_TM_SEND)
+> >>> -           trace_ufshcd_upiu(hba, str_t,
+> >>> -                             &descp->upiu_req.req_header,
+> >>> -                             &descp->upiu_req.input_param1,
+> >>> -                             UFS_TSF_TM_INPUT);
+> >>> +           trace_call__ufshcd_upiu(hba, str_t,
+> >>> +                                   &descp->upiu_req.req_header,
+> >>> +                                   &descp->upiu_req.input_param1,
+> >>> +                                   UFS_TSF_TM_INPUT);
+> >>>     else
+> >>> -           trace_ufshcd_upiu(hba, str_t,
+> >>> -                             &descp->upiu_rsp.rsp_header,
+> >>> -                             &descp->upiu_rsp.output_param1,
+> >>> -                             UFS_TSF_TM_OUTPUT);
+> >>> +           trace_call__ufshcd_upiu(hba, str_t,
+> >>> +                                   &descp->upiu_rsp.rsp_header,
+> >>> +                                   &descp->upiu_rsp.output_param1,
+> >>> +                                   UFS_TSF_TM_OUTPUT);
+> >>>    }
+> >>
+> >> Same comment here: I think it would be better to remove the
+> >> trace_ufshcd_upiu_enabled() call rather than
+> >> changing trace_ufshcd_upiu() into trace_call__ufshcd_upiu().
+> >
+> > Well, removing it here would mean placing the if (str =3D=3D UFS_TM_SEN=
+D) into
+> > the code and processing it even when tracing is disabled. With the
+> > trace_*_enabled() helper, it's all a nop.
 >
+> The ufshcd_add_tm_upiu_trace() function is only called from the UFS
+> error handler and hence is not performance sensitive. The execution of
+> an additional if-test in this function is not a concern at all.
 >
-> >
-> > Original v2 series:
-> > https://lore.kernel.org/linux-trace-kernel/20260323160052.17528-1-vinee=
-th@bitbyteword.org/
->
-> I'd put this in a Link: tag section below.
->
-Makes sense, will do. Steve also suggested to put this whole section
-after "---" because it isn't relevant to the changes. Will fix this in
-next iteration.
-
-> >
-> > Parts of the original v2 series have already been merged in mainline.
-> > This patch is being reposted as a follow-up cleanup for the remaining
-> > unmerged pieces.
->
-> So this v3 series as a whole is a followup to that v2?
->
-v3 is a follow up to remaining patches that were not merged with the
-previous cycle. The core api and couple of patches went in the
-previous cycle, so this is for rest of it.
-
-The intention was to send this v3 as a direct patch to individual
-subsystem maintainers but forgot to remove the numbering and hence
-there might be a confusion. Will remove the numbering and send it  as
-stand alone patch in the next iteration.
-
-> >
-> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-> > Assisted-by: Claude:claude-sonnet-4-6
-> > ---
-> >  drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c            |  2 +-
-> >  drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c            |  4 ++--
-> >  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 +++++-----
-> >  drivers/gpu/drm/scheduler/sched_entity.c          |  5 +++--
-> >  4 files changed, 11 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/a=
-md/amdgpu/amdgpu_cs.c
-> > index b24d5d21be5f..cb0b5cb07d57 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> > @@ -1004,7 +1004,7 @@ static void trace_amdgpu_cs_ibs(struct amdgpu_cs_=
-parser *p)
-> >               struct amdgpu_job *job =3D p->jobs[i];
-> >
-> >               for (j =3D 0; j < job->num_ibs; ++j)
-> > -                     trace_amdgpu_cs(p, job, &job->ibs[j]);
-> > +                     trace_call__amdgpu_cs(p, job, &job->ibs[j]);
-> >       }
-> >  }
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/a=
-md/amdgpu/amdgpu_vm.c
-> > index 9ba9de16a27a..a36ae94c425f 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-> > @@ -1415,7 +1415,7 @@ int amdgpu_vm_bo_update(struct amdgpu_device *ade=
-v, struct amdgpu_bo_va *bo_va,
-> >
-> >       if (trace_amdgpu_vm_bo_mapping_enabled()) {
-> >               list_for_each_entry(mapping, &bo_va->valids, list)
-> > -                     trace_amdgpu_vm_bo_mapping(mapping);
-> > +                     trace_call__amdgpu_vm_bo_mapping(mapping);
-> >       }
-> >
-> >  error_free:
-> > @@ -2183,7 +2183,7 @@ void amdgpu_vm_bo_trace_cs(struct amdgpu_vm *vm, =
-struct ww_acquire_ctx *ticket)
-> >                               continue;
-> >               }
-> >
-> > -             trace_amdgpu_vm_bo_cs(mapping);
-> > +             trace_call__amdgpu_vm_bo_cs(mapping);
-> >       }
-> >  }
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/driver=
-s/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > index 5fc5d5608506..fbdc12cdd6bb 100644
-> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > @@ -5263,11 +5263,11 @@ static void amdgpu_dm_backlight_set_level(struc=
-t amdgpu_display_manager *dm,
-> >       }
-> >
-> >       if (trace_amdgpu_dm_brightness_enabled()) {
-> > -             trace_amdgpu_dm_brightness(__builtin_return_address(0),
-> > -                                        user_brightness,
-> > -                                        brightness,
-> > -                                        caps->aux_support,
-> > -                                        power_supply_is_system_supplie=
-d() > 0);
-> > +             trace_call__amdgpu_dm_brightness(__builtin_return_address=
-(0),
-> > +                                              user_brightness,
-> > +                                              brightness,
-> > +                                              caps->aux_support,
-> > +                                              power_supply_is_system_s=
-upplied() > 0);
-> >       }
-> >
-> >       if (caps->aux_support) {
-> > diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm=
-/scheduler/sched_entity.c
-> > index fe174a4857be..185a2636b599 100644
-> > --- a/drivers/gpu/drm/scheduler/sched_entity.c
-> > +++ b/drivers/gpu/drm/scheduler/sched_entity.c
-> > @@ -429,7 +429,8 @@ static bool drm_sched_entity_add_dependency_cb(stru=
-ct drm_sched_entity *entity,
-> >
-> >       if (trace_drm_sched_job_unschedulable_enabled() &&
-> >           !test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &entity->dependency->f=
-lags))
-> > -             trace_drm_sched_job_unschedulable(sched_job, entity->depe=
-ndency);
-> > +             trace_call__drm_sched_job_unschedulable(sched_job,
-> > +                                                     entity->dependenc=
-y);
->
-> I would be more happy if you sacrifice a bit of space here and keep it
-> a single line since the if condition is already quite convoluted and
-> challenging to read.
->
-I understand, will fix it in next iteration.
+Sure, I shall change this.
 
 Thanks,
 Vineeth
