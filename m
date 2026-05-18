@@ -1,87 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3F63FDBEE;
-	Mon, 18 May 2026 15:56:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C5D481FB9;
+	Mon, 18 May 2026 16:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779119798; cv=none; b=LGHAPLrR490oAfh2/oSaMv66VRlYohBCNRTS51NIRSXo8ObxnmtwK4D82ZfBECawuSz+mmvBcHG8owYLM98pP8UZrM+y2gw9BRkE02HZW3sFO5GQBojj+gX5vqIdOgfiteXttpLrHKlED4MN5SuXOeXyCb+eYqGZDmFda4ND1i0=
+	t=1779120325; cv=none; b=NwgTX6OhqcA+Od4kLsIBL0EDXSBwb1WrDrdJqVySbgsHzpIs8hEZGv1+pHzJ9nU/t5lyiAZHLVYPiLik2fM2LUXPZpK6im/4zfjwgDvdaoutL9uaHzOWjPniOun/gfftPZZeGZzL/t+og4qIY/YjjCguIwBfSy7ZXIUPbPy6fXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779119798; c=relaxed/simple;
-	bh=rygqpfErM9Yu9DpspQZR4y892rPLukqOrUCqEaUIgS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HN0dGz12PfPalJFDizrukoAmhxKRMTIM7ok1miXh3rejWryJwMQ/tHF2t2jr9C4fwJHr71yuCeKxricwMtYwP9jBTYaBLlkogc+uvgcMnCen6w18RUZ2fjXkgWFDhBhpKGQFKwmMZhABgny6pibL5wUlAsPJVaK9zBN9lOpfF3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIYCwA3O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779120325; c=relaxed/simple;
+	bh=v45vH87nw4D1mVKzarWJJcSPeeedXoh8U70fwZ5uNIM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AnbJ7TtWLJW62cg1cQO42m5PeaWbfMwcEmod7OAotzryfRxQ9c0ReBExLA1UrRlDnO9Q0bRwKZhxb4x2OSBHnXCV1fdKCElcpicirncvFZYC4tdcARrJBCYiCa5mSxQ6tGQgyqcDn/fDFasQ94hLSDE3tT3zVyCG/xZXat0mzUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKuadpqx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIYCwA3O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF709C2BCFA;
-	Mon, 18 May 2026 15:56:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKuadpqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3933C2BCB7;
+	Mon, 18 May 2026 16:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779119798;
-	bh=rygqpfErM9Yu9DpspQZR4y892rPLukqOrUCqEaUIgS8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vIYCwA3O66Uj0si6ss9vHkg2MaYGd8rjSOH6JJY2nqEh9n/yO0M/7WuYAcJD1UKUL
-	 COu5cNh12TZfL3/Q7PRy3Z3TBlokgdPmvGBPuNnRuCrx09FKF2wB7keEJhqS95znXB
-	 x+GavYV3A4Gn0XdFHhQi4RZSaKy1tgbldu76aZUrIN8fYBQ3+bHskr12bOtLcvDYbw
-	 uFIqzlvAr0Rwiq7Rtp+KAI+ioAqSrZO3o7lvCP9nHFOfNj7TsOWvdVgicr77rRS+Rj
-	 nsWMUeCgSxcsYvlRq9MUDfEm7OPVxR1MqpRauaRCvlkb6Zl1LHkTpVZTr8v3CJpTDs
-	 zBrVjHXOzPWHw==
-Date: Mon, 18 May 2026 16:56:32 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-	mukesh.savaliya@oss.qualcomm.com, aniket.randive@oss.qualcomm.com,
-	chandana.chiluveru@oss.qualcomm.com,
-	jyothi.seerapu@oss.qualcomm.com
-Subject: Re: [PATCH v2 1/2] spi: qcom-geni: trace: Add trace events for
- Qualcomm GENI SPI
-Message-ID: <4b7c08ef-bee1-4bf8-8cfb-c134184b026d@sirena.org.uk>
-References: <20260512-add-tracepoints-for-qcom-geni-spi-v2-0-3b184068ecf9@oss.qualcomm.com>
- <20260512-add-tracepoints-for-qcom-geni-spi-v2-1-3b184068ecf9@oss.qualcomm.com>
- <a713082f-e84e-403a-af1d-c6fa0c5d8613@sirena.org.uk>
- <3b415d4c-7d09-4ddf-847b-b5a3d94aa5e3@oss.qualcomm.com>
+	s=k20201202; t=1779120323;
+	bh=v45vH87nw4D1mVKzarWJJcSPeeedXoh8U70fwZ5uNIM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=AKuadpqxx/B89jip0fD0/F6hJrYk16O+jiHGZYShm9K9VtN5pBKFsGgqBo20I5ail
+	 ISiyJTDFYH2i1DfvuVx2CD3sKJVsF5k89TIqWB2BU+Fp1EeBWTSh2T0DxqPgADEHac
+	 z5ubkK8DgtfwAAQtWuKVhzbZh3U5z3SnuK3JOu9aObyNybgxON7+MAXObx3cvuym+3
+	 oEzrRtnMgedctWwnbhFQqVIUYKiIMVrZWbWMyE1xwzT0oN2yqNrh/ELrB4E0QfnTop
+	 zTIw+ReT5bJLsu1VEBGgJQwD9ZHAeTGWAQT/8ysfG7QYBRXjNm9yHKtO9cqgycBDmR
+	 /SJ2RGtxp42+w==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D5300F40071;
+	Mon, 18 May 2026 12:05:21 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Mon, 18 May 2026 12:05:21 -0400
+X-ME-Sender: <xms:wTgLagWI-LRzCyFvj5-SW88nR94iXyrzBoVO7amYDEiM5dYIfV556w>
+    <xme:wTgLavY7Me7FUFtq197eKP8PcoFR3HRWI_Ev1CaCeu-HoahZPI3ZEmHa4UHO9vmFI
+    ZYJaQee4KuIDmOvWZgEqd_ChXRUaaTf3wDnVTzOyhbKKm4PJmDIx7VU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeelfedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpeejvefhudehleetvdejhfejvefghfelgeejvedvgfduuefffeegtdejuefhiedukeen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
+    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
+    pedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhgvihhlsegsrhhofihnrd
+    hnrghmvgdprhgtphhtthhopehmrghthhhivghurdguvghsnhhohigvrhhssegvfhhfihgt
+    ihhoshdrtghomhdprhgtphhtthhopegrlhgvgidrrghrihhnghesghhmrghilhdrtghomh
+    dprhgtphhtthhopegrmhhirhejfehilhesghhmrghilhdrtghomhdprhgtphhtthhopehr
+    ohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtoheprghnnhgrsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmhhhirh
+    grmhgrtheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:wTgLarH8t9U69HcggmaGlvvyhKqM09rbiNxOL98IFMm8CGNMzeI2uA>
+    <xmx:wTgLaqA45lDUbffJuwFEU3t8c7rGrIHAnSheFb4MBzWhDCag0wJMLg>
+    <xmx:wTgLagmNZDl4RFX2b8B6_OE97_XqPw1I0j0ncwVANEeyX5gI2DgDWw>
+    <xmx:wTgLao4YQfJeVgkS1nyGaY7VLPXxuIMbbsjWQzJEedW3Y4GeRV7h8A>
+    <xmx:wTgLantlG21DGkEHuT-ZUKqAYFMZUaUfPNSiI6pkVA64J3XgB2WINcyr>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A907E780070; Mon, 18 May 2026 12:05:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2ma7NOSo5854yI//"
-Content-Disposition: inline
-In-Reply-To: <3b415d4c-7d09-4ddf-847b-b5a3d94aa5e3@oss.qualcomm.com>
-X-Cookie: She sells cshs by the cshore.
+X-ThreadId: AAilal1C8uxw
+Date: Mon, 18 May 2026 12:05:01 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Christian Brauner" <brauner@kernel.org>,
+ "Jeff Layton" <jlayton@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Alexander Aring" <alex.aring@gmail.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>,
+ "Calum Mackay" <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Message-Id: <b727a784-1c7c-41dd-83a8-a43084e4c4f9@app.fastmail.com>
+In-Reply-To: <20260515-weltschmerz-folgen-68ca0db1ef84@brauner>
+References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
+ <20260515-weltschmerz-folgen-68ca0db1ef84@brauner>
+Subject: Re: (subset) [PATCH v3 00/28] vfs/nfsd: add support for CB_NOTIFY callbacks in
+ directory delegations
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
 
---2ma7NOSo5854yI//
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, May 18, 2026 at 09:22:46PM +0530, Praveen Talari wrote:
+On Fri, May 15, 2026, at 1:26 PM, Christian Brauner wrote:
+> On Tue, 28 Apr 2026 08:09:44 +0100, Jeff Layton wrote:
+>> Re-posting the set per Christian's request. The only difference in this
+>> version is a small error handling fix in alloc_init_dir_deleg(). The old
+>> version could crash since release_pages() can't handle an array with
+>> NULL pointers in it.
+>> 
+>> ---------------------------------8<------------------------------------
+>> 
+>> [...]
+>
+> @Chuck, @Jeff, I've only merged the vfs specific changes into a stable branch.
+> You can pull it I won't touch it again. You can pull the nfsd work in in
+> whatever form you like. Same procedure I use with io_uring et al.
+>
+> Let me know if that work for you.
+>
+> ---
+>
+> Applied to the vfs-7.2.directory.delegations branch of the vfs/vfs.git 
+> tree.
+> Patches in the vfs-7.2.directory.delegations branch should appear in 
+> linux-next soon.
+>
+> Please report any outstanding bugs that were missed during review in a
+> new review to the original patch series allowing us to drop it.
+>
+> It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> patch has now been applied. If possible patch trailers will be updated.
+>
+> Note that commit hashes shown below are subject to change due to rebase,
+> trailer updates or similar. If in doubt, please check the listed branch.
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> branch: vfs-7.2.directory.delegations
+>
+> [01/28] filelock: pass current blocking lease to 
+> trace_break_lease_block() rather than "new_fl"
+>         https://git.kernel.org/vfs/vfs/c/89330d3a60f7
+> [02/28] filelock: add support for ignoring deleg breaks for dir change 
+> events
+>         https://git.kernel.org/vfs/vfs/c/24cbf43337f4
+> [03/28] filelock: add a tracepoint to start of break_lease()
+>         https://git.kernel.org/vfs/vfs/c/e39026a86b48
+> [04/28] filelock: add an inode_lease_ignore_mask helper
+>         https://git.kernel.org/vfs/vfs/c/95825fdcc0b0
+> [05/28] fsnotify: new tracepoint in fsnotify()
+>         https://git.kernel.org/vfs/vfs/c/ad4489dcd08d
+> [06/28] fsnotify: add fsnotify_modify_mark_mask()
+>         https://git.kernel.org/vfs/vfs/c/12ffbb117b64
+> [07/28] fsnotify: add FSNOTIFY_EVENT_RENAME data type
+>         https://git.kernel.org/vfs/vfs/c/010043003c0c
 
-> Can i use below name or any suggestions?
+Looks good.
 
-> +TRACE_EVENT(geni_spi_setup_params
+To make the NFSD pieces apply, I need v7.1-rc4 and
+vfs-7.2.directory.delegations merged into vfs.all. Given your
+regular merge cadence over the past few weeks, I expect that
+will happen end of this week? Early next?
 
-Fine by me.
 
---2ma7NOSo5854yI//
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmoLNrAACgkQJNaLcl1U
-h9AjKgf/Sw0N5I9At2YEgtUVAnl1ErcUiSfSS13Pp5coYuJxvCGCBPUDt4Udn2Gn
-17a4pUFGx8B/EPzmVfBaoKCR3kcLofbp26gLYxNa7wAs3pjJmsJLnTFQ5NCjjm4u
-6ZnT7i5QWxXmypdEpVnxpcTxBLlVEUKD0vpEeUCEpAiSEfAJExXE7Um90vj72uN7
-q/wBfEnzpPo+3CmEZIP92TdYwSZLFSzxpkIYXSbcTSRXTw5k5a+lTd6FnIwvOLym
-3mW6b/cfMNDsuXq6fDjVpfJL43R3q3V2Qev1cmr0bkIzOh095WnfaCJoOdXE0IQN
-25/x2PcYTWJs6N+i6XUd7DEWHEVuiw==
-=jMRC
------END PGP SIGNATURE-----
-
---2ma7NOSo5854yI//--
+-- 
+Chuck Lever
