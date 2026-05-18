@@ -1,186 +1,372 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB833F787D;
-	Mon, 18 May 2026 11:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62033F23B1
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 11:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779105039; cv=none; b=PiWMeFQlM9jbegjX1uFSIvgpFWAaoGwYOigcP4dq/ZsdNCY6hQMPWdahSEkhdi3j5soAXTIb4kRBRFrewdItMU26FY8AODya80nnaYnFH9ndqeKPny3zlyKxTs0cplQNmyV3ZBjLtaWQjhIrvuRtxJGX6anAX6M3Aa6hgPo4a70=
+	t=1779105303; cv=none; b=KTAit8mDe98moy8+cQ2qs+Nqb08oMP00iIwzH6Up2po9/kA3DqoDK2QgBEPEYpepzSO9bP2R5wrTrEv2Dgnv88c/BcJHZTG3PccpNITc1unZlnQgiebRCJXKIW88SHCx/oFB9nHnQC8SxhciIWrJ4gHw9ZhGZQwBWGl/uW5wlQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779105039; c=relaxed/simple;
-	bh=Wb8kqHIrykSD2a4vVB2ZQJ8KeHcaMCz3wwM4f/OqqEY=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=a/otudISGbe6vUvuzKIRNPH97RW505dxQ2BACyeEpdYZ5NGMFPWXRqE7PR4N6mq59B0ZJrWoFjOUgr1yzfLRzrokXBnj/ioOb+l1Vl28LLZDSiIfhNe1uM82h+cvTxC3ExL/8P8xaj8EPoSY6BjXK9jQ3Bgy5JD+EPFNTsTIpgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYJZAno8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779105303; c=relaxed/simple;
+	bh=SuSuAwn5cjR6a6nAmQnGSBDzhrc50gJ32i9/CwU2ZqU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pKCQ+sNaqrycFs9u2kp71eEe8nEKkglegR0EFxxqFHuIPL0i9zD8G7fj3Eo+GUwP7Rjdc0sPkPekQBpDEdZaCbvbHq9ESsbm9x465PFvGZ2+epymjqBLjGacLZpxLo/XPv2XC5tpi/2JHceY2NO1cvU2ECedMsfzxTdYzW08ARQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XYRkqmfY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYJZAno8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADA0C2BCB7;
-	Mon, 18 May 2026 11:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779105039;
-	bh=Wb8kqHIrykSD2a4vVB2ZQJ8KeHcaMCz3wwM4f/OqqEY=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=RYJZAno8trhdari6J7Hoa4C7b7GC/kGlizS0nQQnO0Q419PeaSC+xTgGn5evIl0Ac
-	 /ieEG0O0fptonlTfNyNUg+i5DgkIEXaRZzOD1AAwoIjsT0yM44jv/cKZLbaPfqHkk4
-	 g+kBYaIFPCUJzGVIoGfSJH+WRxJsm+tZalwSoUKBSMVCIsQuwcmaN7VgkJvMcwBLdz
-	 2DAg37ETdkBT63RjSvx/7ZD0wcAI3brWctbWHM8xhFgMl5dVi/4K7U6FQhjz3qygaw
-	 wgiC14k5VRx/kgFAKTQau+EG8tFTNpRCY4F3hIR9bl6u16ZZ3pL4MqmRtBnr8m/8vd
-	 k8Uat4fnMZ32Q==
-Content-Type: multipart/mixed; boundary="===============4674189153323790873=="
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYRkqmfY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779105300;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SuSuAwn5cjR6a6nAmQnGSBDzhrc50gJ32i9/CwU2ZqU=;
+	b=XYRkqmfYhV5A6IRx+P9nWU+XeGrK+uA5iUoHuOjCIViGg1tsSzc3NtZ9wsrihySpI7vgUG
+	zmvC9e9nyAM4st6WVBF7XUp5KJ4//nNFpKILPb5nindLLBYo73QuNe4WSXrR6gjk3VHsBB
+	ZDR8rzyitcq0kDDPuvrGJ2Q7p9MSPJA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-158-TqcXON9qMa-nOu7i8Ap6Gg-1; Mon, 18 May 2026 07:54:59 -0400
+X-MC-Unique: TqcXON9qMa-nOu7i8Ap6Gg-1
+X-Mimecast-MFC-AGG-ID: TqcXON9qMa-nOu7i8Ap6Gg_1779105298
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-48fe6894f3fso12820805e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 04:54:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779105298; x=1779710098;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3UgbDRpmQmH2/TOIM1YiFxCO5Zorb55RAkELVVLIqwE=;
+        b=ZprMWVGXcUO88Svyu9s6WHxwDfKaF53HkT+tFf3U/yOC1mA+TTbo3UYjcay15i9IkB
+         fylm0q2HCJioFcwuFhV+aaEq9NPEtlXXXCmcUzZSdxR+ZUuWi7OmDh1S0Tk2Nz23oPJj
+         uWEqVduP6+7SQs480U62GxuW7Ov7VM/0Os5ayQlXeoGMrvFcAyzvU6t+5sVUM1gXQMW6
+         PdPAFaRNzC2hzYiVPz1OsXm3aYNL6O/m8iI1URvpz5OelM6Fw4vjNHAXTXeAyz2KrS34
+         X1f5zvHMqaPK/MbwxnNycYQCl7/vq+zVaBSy0cXU09b5HejGeRm/POZQpPGoV43ZfCuY
+         t5Ag==
+X-Forwarded-Encrypted: i=1; AFNElJ+AFJy8FoxKsia6tMs4iKvAF7SyBQV0eScQY/sTY+JoHvkXgz5UAcR/3ll+ISK2rBeLLmM2/1Qy79n07e9UA1yMobs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx64X0BzI4w0boyC2OCTMw4OmZG5nJ9rEBpvSQcOEpYyVZEzUiI
+	2eGxY0zkf6rzvYGw0dLNbchGPmh8js2Ydjw+ECI1sm8uLRsJtJx8BmTUdAo0RQibL4jyvlWmFR3
+	qrHmBZNeu6Tjua6Fk4kyU4ZoN05aD9yvGZnZa9oQfCIN6BeLA4yxXsF9qZ06mElRSYZa2111spu
+	J3ixEilL6L
+X-Gm-Gg: Acq92OFcKp/UZBPhQsjtj9h5pWrzxFO4pKBz1ZLbyunNdRxiRRQFcqng3MS+DM228ni
+	VkrPllUIxXFNrt4ExQ50D8n1OFOBSP3RiWf0UBDL7ixA3kNF1GDxvKAIT4uoAaI+wlIaM0lulWX
+	4dDS2SsLQVOvSVxQQF8hVZifN+VWuhv60h9RuTM0D8HtB7H8Hm//JZKc+m1f+DhzxCb1nA/RjMv
+	eFtlGzuEq18S+qj0Wq60QqyLFdFcfxwSgrr1BOeYFyCjjbSSl0Xqi76IxKGWj5BlAtx8K/cbcUs
+	rudX4ydYqfumrckAOB07pYR/n7/xe4APDKQJ9K9yHi4R0H6GQVQJ4D4O/ExX1ixY/fvTEG4KJMc
+	Bae+qfRILIdOGMC3ISlOpxTTNsdJ1iaMwFWS97c+RJEmuP2GZmSwR4JzCS5TNXlnzZg1x8c9xYv
+	/Lp+8OJXQK0jPB927CjIjwXvJ7Tw==
+X-Received: by 2002:a05:600c:4fc9:b0:48d:366:b962 with SMTP id 5b1f17b1804b1-48fe60e368amr195597925e9.6.1779105298113;
+        Mon, 18 May 2026 04:54:58 -0700 (PDT)
+X-Received: by 2002:a05:600c:4fc9:b0:48d:366:b962 with SMTP id 5b1f17b1804b1-48fe60e368amr195597355e9.6.1779105297597;
+        Mon, 18 May 2026 04:54:57 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fffb9aac4sm242820785e9.9.2026.05.18.04.54.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 04:54:57 -0700 (PDT)
+Message-ID: <88a6fc5c08d18e3c1f6d29dc106db80fa688bf87.camel@redhat.com>
+Subject: Re: [PATCH 6/9] rv: Ensure synchronous cleanup for HA monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Wen Yang <wen.yang@linux.dev>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Nam
+ Cao	 <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org
+Date: Mon, 18 May 2026 13:54:55 +0200
+In-Reply-To: <b7d760dc-162a-48e8-af75-e566bfa46493@linux.dev>
+References: <20260512140250.262190-1-gmonaco@redhat.com>
+	 <20260512140250.262190-7-gmonaco@redhat.com>
+	 <b7d760dc-162a-48e8-af75-e566bfa46493@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <6e6637310053d539ab60c103045167e1c069694747583959d9927f2c7f73c138@mail.kernel.org>
-In-Reply-To: <20260518105957.123445-4-jolsa@kernel.org>
-References: <20260518105957.123445-4-jolsa@kernel.org>
-Subject: Re: [PATCHv2 03/11] uprobes/x86: Move optimized uprobe from nop5 to nop10
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,oleg@redhat.com,peterz@infradead.org,mingo@kernel.org,mhiramat@kernel.org,andrii@kernel.org
-Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon, 18 May 2026 11:50:39 +0000 (UTC)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ncUyCStQJK_w6o8GeOE4lAIUp_04zhMpDibYjtU5FMQ_1779105298
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---===============4674189153323790873==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+On Sun, 2026-05-17 at 17:12 +0800, Wen Yang wrote:
+> The guard(rcu)() + synchronize_rcu() mechanism for HA timer callbacks
+> is correct.
+>=20
+> One concern: TOCTOU between the pre-check and guard(rcu)().
 
-PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3Vwcm9iZXMuYyBiL2FyY2gveDg2L2tlcm5l
-bC91cHJvYmVzLmMKPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvdXByb2Jlcy5jCj4gKysrIGIvYXJj
-aC94ODYva2VybmVsL3Vwcm9iZXMuYwoKWyAuLi4gXQoKPiBAQCAtOTYzLDcgKzk3NSw3IEBAIHN0
-YXRpYyBpbnQgdmVyaWZ5X2luc24oc3RydWN0IHBhZ2UgKnBhZ2UsIHVuc2lnbmVkIGxvbmcgdmFk
-ZHIsIHVwcm9iZV9vcGNvZGVfdCAqbmV3X29wY29kZSwKPiAgICogICAtIFNNUCBzeW5jIGFsbCBD
-UFVzCj4gICAqLwo+ICBzdGF0aWMgaW50IGludDNfdXBkYXRlKHN0cnVjdCBhcmNoX3Vwcm9iZSAq
-YXVwcm9iZSwgc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEsCj4gLQkJICAgICAgIHVuc2lnbmVk
-IGxvbmcgdmFkZHIsIGNoYXIgKmluc24sIGJvb2wgb3B0aW1pemUpCj4gKwkJICAgICAgIHVuc2ln
-bmVkIGxvbmcgdmFkZHIsIGNoYXIgKmluc24sIGludCBzaXplLCBib29sIG9wdGltaXplKQo+ICB7
-Cj4gIAl1cHJvYmVfb3Bjb2RlX3QgaW50MyA9IFVQUk9CRV9TV0JQX0lOU047Cj4gIAlzdHJ1Y3Qg
-d3JpdGVfb3Bjb2RlX2N0eCBjdHggPSB7Cj4gQEAgLTk3OCw3ICs5OTAsNyBAQCBzdHJ1Y3Qgd3Jp
-dGVfb3Bjb2RlX2N0eCBjdHggPSB7Cj4gIAkgKiBzbyB3ZSBjYW4gc2tpcCB0aGlzIHN0ZXAgZm9y
-IG9wdGltaXplID09IHRydWUuCj4gIAkgKi8KPiAgCWlmICghb3B0aW1pemUpIHsKPiAtCQljdHgu
-ZXhwZWN0ID0gRVhQRUNUX0NBTEw7Cj4gKwkJY3R4LmV4cGVjdCA9IEVYUEVDVF9PUFRJTUlaRUQ7
-Cj4gIAkJZXJyID0gdXByb2JlX3dyaXRlKGF1cHJvYmUsIHZtYSwgdmFkZHIsICZpbnQzLCAxLCB2
-ZXJpZnlfaW5zbiwKPiAgCQkJCSAgIHRydWUgLyogaXNfcmVnaXN0ZXIgKi8sIGZhbHNlIC8qIGRv
-X3VwZGF0ZV9yZWZfY3RyICovLAo+ICAJCQkJICAgJmN0eCk7Cj4gQEAgLTk5MCw3ICsxMDAyLDcg
-QEAgc3RydWN0IHdyaXRlX29wY29kZV9jdHggY3R4ID0gewo+Cj4gIAkvKiBXcml0ZSBhbGwgYnV0
-IHRoZSBmaXJzdCBieXRlIG9mIHRoZSBwYXRjaGVkIHJhbmdlLiAqLwo+ICAJY3R4LmV4cGVjdCA9
-IEVYUEVDVF9TV0JQOwo+IC0JZXJyID0gdXByb2JlX3dyaXRlKGF1cHJvYmUsIHZtYSwgdmFkZHIg
-KyAxLCBpbnNuICsgMSwgNCwgdmVyaWZ5X2luc24sCj4gKwllcnIgPSB1cHJvYmVfd3JpdGUoYXVw
-cm9iZSwgdm1hLCB2YWRkciArIDEsIGluc24gKyAxLCBzaXplIC0gMSwgdmVyaWZ5X2luc24sCgpX
-aGVuIHJlLW9wdGltaXppbmcgZnJvbSBKTVA4IGJhY2sgdG8gTEVBK0NBTEwsIGRvZXMgdGhlIENB
-TEwgaW5zdHJ1Y3Rpb24gYXQKb2Zmc2V0IDUgZ2V0IHJld3JpdHRlbiB3aXRob3V0IElOVDMgcHJv
-dGVjdGlvbj8KClRoZSBpbnQzX3VwZGF0ZSgpIHNlcXVlbmNlIHdyaXRlcyBJTlQzIGF0IG9mZnNl
-dCAwIGR1cmluZyB1bm9wdGltaXplCighb3B0aW1pemUgcGF0aCksIHRoZW4gbGF0ZXIgd3JpdGVz
-IGJ5dGVzIDEuLjkgd2hpbGUgdmVyaWZ5aW5nIG9mZnNldCAwCnN0YXlzIElOVDMuIER1cmluZyBy
-ZS1vcHRpbWl6YXRpb24gKG9wdGltaXplID09IHRydWUpLCB0aGUgY29kZSBza2lwcyB0aGUKaW5p
-dGlhbCBJTlQzIHdyaXRlIGFuZCBkaXJlY3RseSB3cml0ZXMgYnl0ZXMgMS4uOS4KCkNvbnNpZGVy
-IHRoaXMgc2VxdWVuY2Ugd2hlbiByZS1vcHRpbWl6aW5nIGEgcHJldmlvdXNseSB1bm9wdGltaXpl
-ZCB1cHJvYmUKdGhhdCBpcyBjdXJyZW50bHkgJ2ptcCByZWw4JyBiYWNrIHRvICdsZWE7IGNhbGwn
-OgoKICBTdGVwIDc6IEN1cnJlbnQgc3RhdGUgaXMgMHhDQyAweDA4IC4uLiAoSU5UMyBmb2xsb3dl
-ZCBieSBKTVA4IG9mZnNldCkKICBTdGVwIDg6IFdyaXRlIGJ5dGVzIDEuLjksIHRyYW5zZm9ybWlu
-ZyB0byAweENDIDB4OGQgMHg2NCAweDI0IDB4ODAgMHhFOCAuLi4KICAgICAgICAgIFRoZSBDQUxM
-IG9wY29kZSAoMHhFOCkgYXQgb2Zmc2V0IDUgYW5kIGl0cyA0LWJ5dGUgZGlzcGxhY2VtZW50CiAg
-ICAgICAgICBnZXQgd3JpdHRlbiB3aXRob3V0IGFuIElOVDMgcHJvdGVjdGluZyB0aGF0IGxvY2F0
-aW9uLgoKQSBjb25jdXJyZW50IHRocmVhZCBleGVjdXRpbmcgYXQgdmFkZHIgY291bGQgb2JzZXJ2
-ZSBhIHBhcnRpYWxseS13cml0dGVuIENBTEwKaW5zdHJ1Y3Rpb24gZHVyaW5nIHRoZSB0cmFuc2l0
-aW9uLiBQZXRlciBaaWpsc3RyYSBzdWdnZXN0ZWQgcGxhY2luZyBJTlQzIGF0CmJvdGggb2Zmc2V0
-IDAgYW5kIG9mZnNldCA1IHRvIHByb3RlY3QgYm90aCB0aGUgTEVBIGFuZCBDQUxMIGluc3RydWN0
-aW9ucwpkdXJpbmcgbW9kaWZpY2F0aW9uOgoKICBSZWZlcmVuY2U6IGh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL2JwZi8yMDI2MDUxODEwNDMwNi5HVTMxMDI2MjRAbm9pc3kucHJvZ3JhbW1pbmcua2lj
-a3MtYXNzLm5ldC8KCiAgIk5vdGUgdGhhdCBmcm9tIHN0ZXAgNyB0byBzdGVwIDgsIHlvdSByZS13
-cml0ZSB0aGUgQ0FMTCBpbnN0cnVjdGlvbgogICB3aXRob3V0IGdvaW5nIHRocm91Z2ggSU5UMy4g
-VGhpcyBtZWFucyBpdCBpcyBlbnRpcmVseSBwb3NzaWJsZSBmb3IgYQogICBjb25jdXJyZW50IGV4
-ZWN1dGlvbiB0byBvYnNlcnZlIGEgY29tcG9zaXRlIGluc3RydWN0aW9uLiBUaGlzIGlzIE5PVAog
-ICBzb3VuZCEgSG93ZXZlciwgSSB0aGluayBpdCBjYW4gYmUgc2FsdmFnZWQsIGlmIGluc3RlYWQg
-b2Ygb25seSB3cml0aW5nCiAgIElOVDMgYXQgKzAsIHlvdSBhbHNvIHdyaXRlIElOVDMgYXQgKzUu
-IgoKWyAuLi4gXQoKPiBAQCAtMTA5NSwxNCArMTEyMiwyNSBAQCBpbnQgc2V0X29yaWdfaW5zbihz
-dHJ1Y3QgYXJjaF91cHJvYmUgKmF1cHJvYmUsIHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hLAo+
-ICAJCSAgdW5zaWduZWQgbG9uZyB2YWRkcikKPiAgewo+ICAJaWYgKHRlc3RfYml0KEFSQ0hfVVBS
-T0JFX0ZMQUdfQ0FOX09QVElNSVpFLCAmYXVwcm9iZS0+ZmxhZ3MpKSB7Cj4gLQkJaW50IHJldCA9
-IGlzX29wdGltaXplZCh2bWEtPnZtX21tLCB2YWRkcik7Cj4gLQkJaWYgKHJldCA8IDApCj4gKwkJ
-dXByb2JlX29wY29kZV90IGluc25bT1BUX0lOU05fU0laRV07Cj4gKwkJaW50IHJldDsKPiArCj4g
-KwkJcmV0ID0gY29weV9mcm9tX3ZhZGRyKHZtYS0+dm1fbW0sIHZhZGRyLCAmaW5zbiwgT1BUX0lO
-U05fU0laRSk7Cj4gKwkJaWYgKHJldCkKPiAgCQkJcmV0dXJuIHJldDsKPiAtCQlpZiAocmV0KSB7
-Cj4gKwkJaWYgKF9faXNfb3B0aW1pemVkKHZtYS0+dm1fbW0sICh1cHJvYmVfb3Bjb2RlX3QgKikm
-aW5zbiwgdmFkZHIpKSB7Cj4gIAkJCXJldCA9IHN3YnBfdW5vcHRpbWl6ZShhdXByb2JlLCB2bWEs
-IHZhZGRyKTsKPiAgCQkJV0FSTl9PTl9PTkNFKHJldCk7Cj4gIAkJCXJldHVybiByZXQ7Cj4gIAkJ
-fQo+ICsJCS8qCj4gKwkJICogV2UgY2FuIGhhdmUgcmUtYXR0YWNoZWQgcHJvYmUgb24gdG9wIG9m
-IGptcDggaW5zdHJ1Y3Rpb24sCj4gKwkJICogd2hpY2ggZGlkIG5vdCBnZXQgb3B0aW1pemVkLiBX
-ZSBuZWVkIHRvIHJlc3RvcmUgdGhlIGptcDgKPiArCQkgKiBpbnN0cnVjdGlvbiwgaW5zdGVhZCBv
-ZiB0aGUgb3JpZ2luYWwgaW5zdHJ1Y3Rpb24gKG5vcDEwKS4KPiArCQkgKi8KPiArCQlpZiAoaXNf
-c3dicF9pbnNuKCZpbnNuWzBdKSAmJiBpbnNuWzFdID09IE9QVF9KTVA4X09GRlNFVCkKPiArCQkJ
-cmV0dXJuIHVwcm9iZV93cml0ZV9vcGNvZGUoYXVwcm9iZSwgdm1hLCB2YWRkciwgSk1QOF9JTlNO
-X09QQ09ERSwKClRoaXMgaXNuJ3QgYSBidWcsIGJ1dCB0aGUgbXVsdGktbGluZSBpZiBzdGF0ZW1l
-bnQgaXMgbWlzc2luZyBicmFjZXM6CgoJCWlmIChpc19zd2JwX2luc24oJmluc25bMF0pICYmIGlu
-c25bMV0gPT0gT1BUX0pNUDhfT0ZGU0VUKQoJCQlyZXR1cm4gdXByb2JlX3dyaXRlX29wY29kZShh
-dXByb2JlLCB2bWEsIHZhZGRyLCBKTVA4X0lOU05fT1BDT0RFLAoJCQkJCQkgICBmYWxzZSAvKiBp
-c19yZWdpc3RlciAqLyk7CgpLZXJuZWwgY29kaW5nIHN0eWxlIHJlcXVpcmVzIGJyYWNlcyBvbiBh
-bnkgbXVsdGktbGluZSBzdGF0ZW1lbnQuCgogIFJlZmVyZW5jZTogaHR0cHM6Ly9sb3JlLmtlcm5l
-bC5vcmcvYnBmLzIwMjYwNTE4MTA0MzA2LkdVMzEwMjYyNEBub2lzeS5wcm9ncmFtbWluZy5raWNr
-cy1hc3MubmV0LwoKWyAuLi4gXQoKPiBAQCAtMTE2MCwxNCArMTE5OCwyNCBAQCB2b2lkIGFyY2hf
-dXByb2JlX29wdGltaXplKHN0cnVjdCBhcmNoX3Vwcm9iZSAqYXVwcm9iZSwgdW5zaWduZWQgbG9u
-ZyB2YWRkcikKPgo+ICBzdGF0aWMgYm9vbCBjYW5fb3B0aW1pemUoc3RydWN0IGluc24gKmluc24s
-IHVuc2lnbmVkIGxvbmcgdmFkZHIpCj4gIHsKPiAtCWlmICghaW5zbi0+eDg2XzY0IHx8IGluc24t
-Pmxlbmd0aCAhPSA1KQo+ICsJaWYgKCFpbnNuLT54ODZfNjQpCj4gIAkJcmV0dXJuIGZhbHNlOwo+
-Cj4gLQlpZiAoIWluc25faXNfbm9wKGluc24pKQo+ICsJLyogV2UgY2FuJ3QgZG8gY3Jvc3MgcGFn
-ZSBhdG9taWMgd3JpdGVzIHlldC4gKi8KPiArCWlmIChQQUdFX1NJWkUgLSAodmFkZHIgJiB+UEFH
-RV9NQVNLKSA8IE9QVF9JTlNOX1NJWkUpCj4gIAkJcmV0dXJuIGZhbHNlOwo+Cj4gLQkvKiBXZSBj
-YW4ndCBkbyBjcm9zcyBwYWdlIGF0b21pYyB3cml0ZXMgeWV0LiAqLwo+IC0JcmV0dXJuIFBBR0Vf
-U0laRSAtICh2YWRkciAmIH5QQUdFX01BU0spID49IDU7Cj4gKwkvKiBXZSBjYW4gb3B0aW1pemUg
-b24gdG9wIG9mIG5vcDEwLi4gKi8KPiArCWlmIChpbnNuLT5sZW5ndGggPT0gT1BUX0lOU05fU0la
-RSAmJiBpbnNuX2lzX25vcChpbnNuKSkKPiArCQlyZXR1cm4gdHJ1ZTsKPiArCj4gKwkvKiAuLiBh
-bmQgSk1QIHJlbDggdG8gZW5kIG9mIHNsb3Qg4oCUIGNoZWNrIHN3YnBfdW5vcHRpbWl6ZS4gKi8K
-PiArCWlmIChpbnNuLT5sZW5ndGggPT0gMiAmJgo+ICsJICAgIGluc24tPm9wY29kZS5ieXRlc1sw
-XSA9PSBKTVA4X0lOU05fT1BDT0RFICYmCj4gKwkgICAgaW5zbi0+aW1tZWRpYXRlLnZhbHVlID09
-IE9QVF9KTVA4X09GRlNFVCkKPiArCQlyZXR1cm4gdHJ1ZTsKPiArCj4gKwlyZXR1cm4gZmFsc2U7
-Cj4gIH0KCkNhbiBjYW5fb3B0aW1pemUoKSBzYWZlbHkgYWNjZXB0IG5hdHVyYWxseSBvY2N1cnJp
-bmcgJ2ptcCArOCcgaW5zdHJ1Y3Rpb25zCmZyb20gdXNlciBiaW5hcmllcz8KClRoZSBKTVA4IGJy
-YW5jaCByZXR1cm5zIHRydWUgZm9yIGFueSAyLWJ5dGUgJ2ptcCByZWw4JyB3aXRoIGRpc3BsYWNl
-bWVudCA4CihieXRlcyAweEVCIDB4MDgpLiBUaGUgY29tbWVudCBzYXlzIHRoaXMgaXMgZm9yIHN3
-YnBfdW5vcHRpbWl6ZSgpJ3MKa2VybmVsLXBsYWNlZCBqbXAsIGJ1dCBjYW5fb3B0aW1pemUoKSBp
-cyBjYWxsZWQgZHVyaW5nIGluaXRpYWwgYW5hbHlzaXMgdmlhCnByZXBhcmVfdXByb2JlKCkgLT4g
-YXJjaF91cHJvYmVfYW5hbHl6ZV9pbnNuKCkgLT4gdXByb2JlX2luaXRfaW5zbigpLCBiZWZvcmUK
-YW55IGtlcm5lbCBtb2RpZmljYXRpb25zIG9jY3VyLiBUaGUgaW5zdHJ1Y3Rpb24gYnl0ZXMgY29t
-ZSBkaXJlY3RseSBmcm9tIHRoZQp1c2VyIGJpbmFyeSB0aHJvdWdoIGNvcHlfaW5zbigpLgoKSWYg
-YSB1c2VyIGJpbmFyeSBuYXR1cmFsbHkgY29udGFpbnMgJ0VCIDA4JyBhdCB0aGUgdXByb2JlIGxv
-Y2F0aW9uIChlLmcuLCBhCmZvcndhcmQgYnJhbmNoIG92ZXIgYW4gOC1ieXRlIGxpdGVyYWwgcG9v
-bCBvciBhbGlnbm1lbnQgcGFkZGluZyksIHRoaXMgcGF0aAp3b3VsZCB0cmlnZ2VyOgoKICAxLiB1
-cHJvYmVfaW5pdF9pbnNuKCkgZGVjb2RlcyB0aGUgdXNlcidzICdqbXAgMHgwOCcgKGxlbmd0aD0y
-LCBvcGNvZGU9MHhFQiwKICAgICBpbW1lZGlhdGU9OCkuCiAgMi4gY2FuX29wdGltaXplKCkgbWF0
-Y2hlcyB0aGUgbmV3IEpNUDggYnJhbmNoIGFuZCByZXR1cm5zIHRydWUuCiAgMy4gQVJDSF9VUFJP
-QkVfRkxBR19DQU5fT1BUSU1JWkUgaXMgc2V0LgogIDQuIHNldF9zd2JwKCkgd3JpdGVzIElOVDMg
-YXQgdmFkZHIsIHJlcGxhY2luZyB0aGUgMHhFQi4KICA1LiBXaGVuIHRoZSBicmVha3BvaW50IGZp
-cmVzLCBzd2JwX29wdGltaXplKCkgLT4gaW50M191cGRhdGUoKSB3cml0ZXMgMTAKICAgICBieXRl
-cyAobGVhIC0weDgwKCVyc3ApLCVyc3A7IGNhbGwgdHJhbXApIG92ZXIgdmFkZHIuLnZhZGRyKzku
-CiAgNi4gdmVyaWZ5X2luc24oKSBvbmx5IGNoZWNrcyB0aGF0IGJ5dGUgMCBpcyBJTlQzIChFWFBF
-Q1RfU1dCUCkgYmVmb3JlCiAgICAgd3JpdGluZyBieXRlcyAxLi45LiBJdCBkb2VzIG5vdCB2ZXJp
-ZnkgdGhvc2UgOCBieXRlcyBhcmUgZnJvbSBhIHByaW9yCiAgICAgb3B0aW1pemF0aW9uLgogIDcu
-IFRoZSA4IGJ5dGVzIGF0IHZhZGRyKzIuLnZhZGRyKzkgKG9yaWdpbmFsIHVzZXIgY29kZS9kYXRh
-IGZvbGxvd2luZyB0aGUKICAgICBqbXApIGdldCBvdmVyd3JpdHRlbiB3aXRoIHRoZSB0YWlsIG9m
-IHRoZSBMRUEgYW5kIHRoZSBDQUxMIGVuY29kaW5nLgogIDguIE9uIHVucmVnaXN0ZXIsIHN3YnBf
-dW5vcHRpbWl6ZSgpIG9ubHkgd3JpdGVzIDIgYnl0ZXMgYmFjay4gQnl0ZXMKICAgICB2YWRkcisy
-Li52YWRkcis5IHN0YXkgY29ycnVwdGVkIHdpdGggY2FsbCBpbnN0cnVjdGlvbiByZW1uYW50cyBp
-biB0aGUKICAgICBDT1cnZCBwYWdlLgoKVGhlIGNvcnJ1cHRpb24gcGVyc2lzdHMgZXZlbiB0aG91
-Z2ggdGhlIG9yaWdpbmFsIGptcCB3b3VsZCBza2lwIHRob3NlIGJ5dGVzLApiZWNhdXNlIG90aGVy
-IGNvbnRyb2wgZmxvdyAoaW5kaXJlY3QgYnJhbmNoZXMsIGZ1bmN0aW9uIHBvaW50ZXJzLCBhbHRl
-cm5hdGl2ZQplbnRyeSBwb2ludHMpIG1pZ2h0IHJlYWNoIHRoYXQgcmFuZ2UuCgpDb250cmFzdCB3
-aXRoIG5vcDEwOiB3aGVuIGNhbl9vcHRpbWl6ZSByZXR1cm5zIHRydWUgZm9yIGEgMTAtYnl0ZSBu
-b3AKKGxlbmd0aD09T1BUX0lOU05fU0laRSAmJiBpbnNuX2lzX25vcCksIHdyaXRpbmcgMTAgYnl0
-ZXMgb25seSBvdmVyd3JpdGVzIHRoZQpub3AgaXRzZWxmLiBUaGUgZWFybGllciBub3A1IGNvZGUg
-d2FzIHNhZmUgYmVjYXVzZSBpdCByZXF1aXJlZCBpbnNuLT5sZW5ndGgKPT0gNSBhbmQgd3JvdGUg
-ZXhhY3RseSA1IGJ5dGVzICh3cml0ZSBzaXplIG1hdGNoZWQgaW5zdHJ1Y3Rpb24gc2l6ZSkuCgpU
-aGUgSk1QOCBjYXNlIGJyZWFrcyB0aGF0IGludmFyaWFudDogd3JpdGUgc2l6ZSAoMTAgYnl0ZXMp
-IGV4Y2VlZHMKaW5zdHJ1Y3Rpb24gc2l6ZSAoMiBieXRlcyksIHNvIHRoZSA4IHRyYWlsaW5nIGJ5
-dGVzIGFyZSBhcmJpdHJhcnkgdXNlcgpjb250ZW50LiBXb3VsZCBhIGxlbmd0aCBjaGVjayAocmVx
-dWlyaW5nIGluc24tPmxlbmd0aCA9PSBPUFRfSU5TTl9TSVpFIGZvcgp0aGUgSk1QOCBjYXNlKSBv
-ciB0cmFja2luZyBvcHRpbWl6YXRpb24gc3RhdGUgdmlhIGEgZmxhZyBwcmV2ZW50IG9wdGltaXpp
-bmcKdXNlciBpbnN0cnVjdGlvbnMgdGhhdCBoYXBwZW4gdG8gbWF0Y2ggdGhlIEpNUDggcGF0dGVy
-bj8KCgotLS0KQUkgcmV2aWV3ZWQgeW91ciBwYXRjaC4gUGxlYXNlIGZpeCB0aGUgYnVnIG9yIGVt
-YWlsIHJlcGx5IHdoeSBpdCdzIG5vdCBhIGJ1Zy4KU2VlOiBodHRwczovL2dpdGh1Yi5jb20va2Vy
-bmVsLXBhdGNoZXMvdm10ZXN0L2Jsb2IvbWFzdGVyL2NpL2NsYXVkZS9SRUFETUUubWQKCkNJIHJ1
-biBzdW1tYXJ5OiBodHRwczovL2dpdGh1Yi5jb20va2VybmVsLXBhdGNoZXMvYnBmL2FjdGlvbnMv
-cnVucy8yNjAzMDA4MDEwOQ==
+Yes, this could happen, but I'm not sure it's really a big issue:
 
---===============4674189153323790873==--
+>=20
+> da_monitor_reset() calls reset_hook BEFORE clearing monitoring:
+>=20
+> =C2=A0=C2=A0 da_monitor_reset_hook(da_mon);=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 /* ha_cancel_timer [async]=C2=A0=C2=A0 */
+> =C2=A0=C2=A0 WRITE_ONCE(da_mon->monitoring, 0);=C2=A0=C2=A0=C2=A0 /* clea=
+red AFTER reset_hook=C2=A0 */
+> =C2=A0=C2=A0 da_mon->curr_state =3D model_get_initial_state();
+>=20
+> This may creates a window where the callback pre-check passes but the
+> monitor is reset before guard(rcu)() is acquired:
+
+If a callback is running, there was a violation because the timer expired, =
+so it
+isn't wrong to report, although we are unloading the monitor.
+
+>=20
+> =C2=A0=C2=A0 /* __ha_monitor_timer_callback() */
+> =C2=A0=C2=A0 if (unlikely(!da_monitor_handling_event(&ha_mon->da_mon)))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>=20
+> =C2=A0=C2=A0 /* passes: monitoring=3D1
+> =C2=A0=C2=A0=C2=A0 *
+> =C2=A0=C2=A0=C2=A0 * WINDOW =E2=94=80 CPU A runs da_monitor_reset_all() h=
+ere:
+> =C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0 ha_cancel_timer()=C2=A0 [returns: callba=
+ck is running, cannot cancel]
+> =C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0 WRITE_ONCE(monitoring, 0)
+> =C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0 curr_state =3D model_get_initial_state()
+> =C2=A0=C2=A0=C2=A0 */
+> =C2=A0=C2=A0 guard(rcu)();
+> =C2=A0=C2=A0 curr_state =3D READ_ONCE(ha_mon->da_mon.curr_state);=C2=A0 /=
+* initial_state */
+> =C2=A0=C2=A0 /* no second da_monitoring() check */
+> =C2=A0=C2=A0 ha_react(curr_state, EVENT_NONE, env_string.buffer); /* spur=
+ious call */
+> =C2=A0=C2=A0 ha_trace_error_env(ha_mon, ...);=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 /* fires=20
+> unconditionally */
+>=20
+> Result: spurious ha_trace_error_env() for initial_state.=C2=A0 For existi=
+ng
+> monitors (stall/nomiss/opid), model_should_send_event_env(initial, NONE)
+> returns false, so no false-positive reaction, but the trace event fires.
+> Monitors where initial_state carries a constraint would produce a false
+> positive.
+
+I'm not sure what you mean here, if I understand the situation correctly: t=
+he
+callback is running (so we should react), da_monitor_reset() is too late to=
+ stop
+it but somehow manages to reset curr_state on time for the callback to see =
+it
+change: react reports the wrong state in an otherwise valid reaction.
+
+>=20
+> Proposed fix : re-check inside the RCU critical section:
+>=20
+> =C2=A0=C2=A0 guard(rcu)();
+> =C2=A0=C2=A0 if (unlikely(!da_monitoring(&ha_mon->da_mon)))=C2=A0 /* re-c=
+heck here */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+> =C2=A0=C2=A0 curr_state =3D READ_ONCE(ha_mon->da_mon.curr_state);
+
+I'm not sure that's going to fix it anyway, RCU cannot synchronise readers,
+checking again would at most (mildly) reduce the race window, not remove it=
+.
+
+What we could do is to play with barriersin for the callback to either:
+* see monitoring =3D 1 AND the old curr_state
+* see monitoring =3D 0 AND the new curr_state
+
+Something like:
+
+void __ha_monitor_timer_callback() {
+=09guard(rcu)(); //this is only for waiters, let them wait more
+
+=09if (unlikely(!da_monitor_handling_event(&ha_mon->da_mon)))
+=09=09return;
+=09smp_rmb();
+=09curr_state =3D READ_ONCE(ha_mon->da_mon.curr_state);
+=09...
+}
+
+void da_monitor_reset() {
+=09da_monitor_reset_hook(da_mon);
+=09WRITE_ONCE(da_mon->monitoring, 0);
+=09smp_wmb();
+=09WRITE_ONCE(da_mon->curr_state, model_get_initial_state());
+}
+
+Coupled with your patch [1] adding more atomic accesses to da_mon->monitori=
+ng
+should probably do the trick.
+
+Am I missing anything?
+
+Thanks,
+Gabriele
+
+[1] -
+https://lore.kernel.org/lkml/8af5ba4bd93d2acb8a546e8e47ced974a87c1eb8.17785=
+22945.git.wen.yang@linux.dev
+
+>=20
+>=20
+> --
+> Best wishes,
+> Wen
+>=20
+>=20
+> On 5/12/26 22:02, Gabriele Monaco wrote:
+> > HA monitors may start timers, all cleanup functions currently stop the
+> > timers asynchronously to avoid sleeping in the wrong context.
+> > Nothing makes sure running callbacks terminate on cleanup.
+> >=20
+> > Run the entire HA timer callback in an RCU read-side critical section,
+> > this way we can simply synchronize_rcu() with any pending timer and are
+> > sure any cleanup using kfree_rcu() runs after callbacks terminated.
+> > Additionally make sure any unlikely callback running late won't run any
+> > code if the monitor is marked as disabled.
+> >=20
+> > Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
+> > Fixes: 4a24127bd6cb ("rv: Add support for per-object monitors in DA/HA"=
+)
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> > ---
+> > =C2=A0 include/rv/da_monitor.h | 23 +++++++++++++++++++----
+> > =C2=A0 include/rv/ha_monitor.h | 18 ++++++++++++++++--
+> > =C2=A0 2 files changed, 35 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+> > index a4a13b62d1a4..402d3b935c08 100644
+> > --- a/include/rv/da_monitor.h
+> > +++ b/include/rv/da_monitor.h
+> > @@ -57,6 +57,15 @@ static struct rv_monitor rv_this;
+> > =C2=A0 #define da_monitor_reset_hook(da_mon)
+> > =C2=A0 #endif
+> > =C2=A0=20
+> > +/*
+> > + * Hook to allow the implementation of hybrid automata: define it with=
+ a
+> > + * function that waits for the termination of all monitors background
+> > + * activities (e.g. all timers). This hook can sleep.
+> > + */
+> > +#ifndef da_monitor_sync_hook
+> > +#define da_monitor_sync_hook()
+> > +#endif
+> > +
+> > =C2=A0 /*
+> > =C2=A0=C2=A0 * Type for the target id, default to int but can be overri=
+dden.
+> > =C2=A0=C2=A0 * A long type can work as hash table key (PER_OBJ) but wil=
+l be downgraded
+> > to
+> > @@ -179,6 +188,7 @@ static inline int da_monitor_init(void)
+> > =C2=A0 static inline void da_monitor_destroy(void)
+> > =C2=A0 {
+> > =C2=A0=C2=A0=09da_monitor_reset_all();
+> > +=09da_monitor_sync_hook();
+> > =C2=A0 }
+> > =C2=A0=20
+> > =C2=A0 #ifndef da_implicit_guard
+> > @@ -232,6 +242,7 @@ static inline int da_monitor_init(void)
+> > =C2=A0 static inline void da_monitor_destroy(void)
+> > =C2=A0 {
+> > =C2=A0=C2=A0=09da_monitor_reset_all();
+> > +=09da_monitor_sync_hook();
+> > =C2=A0 }
+> > =C2=A0=20
+> > =C2=A0 #ifndef da_implicit_guard
+> > @@ -319,6 +330,7 @@ static inline void da_monitor_destroy(void)
+> > =C2=A0=C2=A0=09}
+> > =C2=A0=20
+> > =C2=A0=C2=A0=09da_monitor_reset_all();
+> > +=09da_monitor_sync_hook();
+> > =C2=A0=20
+> > =C2=A0=C2=A0=09rv_put_task_monitor_slot(task_mon_slot);
+> > =C2=A0=C2=A0=09task_mon_slot =3D RV_PER_TASK_MONITOR_INIT;
+> > @@ -497,10 +509,9 @@ static void da_monitor_reset_all(void)
+> > =C2=A0=C2=A0=09struct da_monitor_storage *mon_storage;
+> > =C2=A0=C2=A0=09int bkt;
+> > =C2=A0=20
+> > -=09rcu_read_lock();
+> > +=09guard(rcu)();
+> > =C2=A0=C2=A0=09hash_for_each_rcu(da_monitor_ht, bkt, mon_storage, node)
+> > =C2=A0=C2=A0=09=09da_monitor_reset(&mon_storage->rv.da_mon);
+> > -=09rcu_read_unlock();
+> > =C2=A0 }
+> > =C2=A0=20
+> > =C2=A0 static inline int da_monitor_init(void)
+> > @@ -516,13 +527,17 @@ static inline void da_monitor_destroy(void)
+> > =C2=A0=C2=A0=09int bkt;
+> > =C2=A0=20
+> > =C2=A0=C2=A0=09tracepoint_synchronize_unregister();
+> > +=09scoped_guard(rcu) {
+> > +=09=09hash_for_each_rcu(da_monitor_ht, bkt, mon_storage, node) {
+> > +=09=09=09da_monitor_reset_hook(&mon_storage->rv.da_mon);
+> > +=09=09}
+> > +=09}
+> > +=09da_monitor_sync_hook();
+> > =C2=A0=C2=A0=09/*
+> > =C2=A0=C2=A0=09 * This function is called after all probes are disabled=
+ and no
+> > longer
+> > =C2=A0=C2=A0=09 * pending, we can safely assume no concurrent user.
+> > =C2=A0=C2=A0=09 */
+> > -=09synchronize_rcu();
+> > =C2=A0=C2=A0=09hash_for_each_safe(da_monitor_ht, bkt, tmp, mon_storage,=
+ node) {
+> > -=09=09da_monitor_reset_hook(&mon_storage->rv.da_mon);
+> > =C2=A0=C2=A0=09=09hash_del_rcu(&mon_storage->node);
+> > =C2=A0=C2=A0=09=09kfree(mon_storage);
+> > =C2=A0=C2=A0=09}
+> > diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+> > index d59507e8cb30..47ff1a41febe 100644
+> > --- a/include/rv/ha_monitor.h
+> > +++ b/include/rv/ha_monitor.h
+> > @@ -36,6 +36,7 @@ static bool ha_monitor_handle_constraint(struct da_mo=
+nitor
+> > *da_mon,
+> > =C2=A0 #define da_monitor_event_hook ha_monitor_handle_constraint
+> > =C2=A0 #define da_monitor_init_hook ha_monitor_init_env
+> > =C2=A0 #define da_monitor_reset_hook ha_monitor_reset_env
+> > +#define da_monitor_sync_hook() synchronize_rcu()
+> > =C2=A0=20
+> > =C2=A0 #include <rv/da_monitor.h>
+> > =C2=A0 #include <linux/seq_buf.h>
+> > @@ -237,12 +238,25 @@ static bool ha_monitor_handle_constraint(struct
+> > da_monitor *da_mon,
+> > =C2=A0=C2=A0=09return false;
+> > =C2=A0 }
+> > =C2=A0=20
+> > +/*
+> > + * __ha_monitor_timer_callback - generic callback representation
+> > + *
+> > + * This callback runs in an RCU read-side critical section to allow th=
+e
+> > + * destruction sequence to easily synchronize_rcu() with all pending t=
+imer
+> > + * after asynchronously disabling them.
+> > + */
+> > =C2=A0 static inline void __ha_monitor_timer_callback(struct ha_monitor=
+ *ha_mon)
+> > =C2=A0 {
+> > -=09enum states curr_state =3D READ_ONCE(ha_mon->da_mon.curr_state);
+> > =C2=A0=C2=A0=09DECLARE_SEQ_BUF(env_string, ENV_BUFFER_SIZE);
+> > -=09u64 time_ns =3D ha_get_ns();
+> > +=09enum states curr_state;
+> > +=09u64 time_ns;
+> > +
+> > +=09if (unlikely(!da_monitor_handling_event(&ha_mon->da_mon)))
+> > +=09=09return;
+> > =C2=A0=20
+> > +=09guard(rcu)();
+> > +=09curr_state =3D READ_ONCE(ha_mon->da_mon.curr_state);
+> > +=09time_ns =3D ha_get_ns();
+> > =C2=A0=C2=A0=09ha_get_env_string(&env_string, ha_mon, time_ns);
+> > =C2=A0=C2=A0=09ha_react(curr_state, EVENT_NONE, env_string.buffer);
+> > =C2=A0=C2=A0=09ha_trace_error_env(ha_mon, model_get_state_name(curr_sta=
+te),
+
