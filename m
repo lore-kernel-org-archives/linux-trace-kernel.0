@@ -1,208 +1,195 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9424A2EF652
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 15:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B13372696
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 15:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779116524; cv=none; b=PZ9ZLvFJpZgXKKhYD0q4eK5012sq4PlJp0ko5RONZtnAXRu+AhF9+4GCNOPd5MDldWLCrxEEiuzb0fEQuIQ5hkXqQvGU6HKJ7OE+q19a/ePdc0We2xbEc1zwsPy3imMh5IJMlIPBHeG8x2zF4PcNR/JDyvFqjR86SLpMuAjvx1I=
+	t=1779117827; cv=none; b=BYcjX7FvC46IyoIz6rjCDERA9vW3cziPWoxCaCYPvDNoE+YVMI0qF4ZoaaVIRmzXIyhQNOCQp8noc4I5Mjk1up1mLbclcG6zAyfxmiBGd/ml+zx9V4YfA2mrd79Tbd5Bve0ZCwZPzqfg0HhMxIZ+RQaxjjeZ1IwoK03z6ICDKto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779116524; c=relaxed/simple;
-	bh=t6cJoX5Ng17UYkXLOnzBoY9whuwvEK7UYIwb/VdmPWg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NJB2aaRIXlvIsljbx48FyJ5gD71xKmPmQrm3+//c80D5sEeLf7Fy4McOBIoDZd2/chtfBGo3jqRVZ2Heip/6HILSC09cvI0uCrS3yr+y4+jdZA5z1pPfbGjJ3RcZHDCuoxL04l+aa4ws9g6ZeuUhBQxqVW+ulsSTjWWBjuaZQjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=kCvTcmWi; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1779117827; c=relaxed/simple;
+	bh=tmS0yY9aJiTmj7PrQn+1aW5FlWIoZKFBBJCgg9x80n4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QZvEWYJmlGM18KmF7f9PzgJ4sTHMskUbVCLYr5YFO6TKaNX+kv0e7Rwpn8HVghCNZuyAzGu29LvqwfMZ/LWePGxT3D/DirXeFCLWKGu+MtxDdplnhFbvkxeFC4NDBzx8EVR0hGpwFSH28W708J3yPlwoLBi2dT66BvSpWIEW2yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WooTIuQL; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="kCvTcmWi"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4gK1H50xWcz9v50;
-	Mon, 18 May 2026 17:01:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1779116513; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mDUFG3QH/zn6Pfjyji/Qqlp3OYsc/LM+HLI24lCrrXk=;
-	b=kCvTcmWitl6r0wU+738S/qKBalalles5Mi9GzjMrsXjFkg8DvZXF0Af0391ujRu3ciuhV4
-	6a+4JpyMUE1A2GNSC80Hzfu6K38OgWH51vjshjCehnSXDB8XqPusFyi9a4azpx1au6Wuw8
-	H+ssFYU/GA9cU0ggK6RpFQGq9vKhvD7iXjq0WnyTRkAolSpt6SqvwAt/2rPTNkOrqIneWL
-	ps599r2wMW8FpwzKnlhw4fJUQVbKjLX8uIw1dNFfdVUSxBfKdd7vdbsStlPC5gag+SH6SZ
-	sL4isC6las8iOF5BOx7Hib17nw5KI/sp1EA9v2YH5O0rNvimj4D/kb/8RqNlTg==
-Message-ID: <81783d0807a5ffac93f61eddba0d2f595d7f239f.camel@mailbox.org>
-Subject: Re: [PATCH v3 06/11] drm: Use trace_call__##name() at guarded
- tracepoint call sites
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, Alex Deucher
- <alexander.deucher@amd.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Harry Wentland <harry.wentland@amd.com>, Leo Li
- <sunpeng.li@amd.com>, Matthew Brost <matthew.brost@intel.com>, Danilo
- Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, Steven
- Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, Peter
- Zijlstra <peterz@infradead.org>
-Date: Mon, 18 May 2026 17:01:42 +0200
-In-Reply-To: <20260515135932.2238842-1-vineeth@bitbyteword.org>
-References: <20260515135932.2238842-1-vineeth@bitbyteword.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WooTIuQL"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-bd8f9889a8cso22317066b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 08:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779117824; x=1779722624; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ay5gk0yjiV4+KahLRcNBOcR7+/tW2rOXFNeAxAhmkYg=;
+        b=WooTIuQLwNE+fsitjWCFlBdA2YTdNtDeocarADaToNm+lhON1gZvzlFq7a/ANQYFyj
+         voClv1IU5wpMFgnEbsfXr8pyLjfhXsQbTwDZHAlOh/I57T0lteVK2oplXv/UvmLcEgm5
+         TeUeAjGpiQga4sOWUIJBpN+iNKQa4V0IfsJAnuC+1FK69H60rndBHUmb2ZtYPhjd1GUd
+         TUyZXIPHSE2azc/bikZvTf0iBgNK8lUSWtzcanW6k48/WKLISp3k+/o3GJ/ACMWtdWkB
+         L7kvuBBHp2LAeT+mVEbu/tUtMFI9l3RYMB80y9/8fyIMRtEmz/9l1HA6WrPmJST6wS6o
+         yOcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779117824; x=1779722624;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ay5gk0yjiV4+KahLRcNBOcR7+/tW2rOXFNeAxAhmkYg=;
+        b=EutdVhUshMLfjVS+jafGOm9DoDSEEB9qVjYv/yhC0JCVMMlZJGfnJqxDtUq4TRTFb7
+         FUz6++DrQtX5OvOGnBwC89Sw4Tz9CIRFUqARK0VAJQBDUvQwkmE828GRUm0wA6iyGZcu
+         NbB0QjAXarmu8vaib0+7ENEu13//dKic/qLxWG4587O4QwEszpCTt0m6qM9tvxlc/lsh
+         RjyRxAdb6CYegiSwujSUHRyXkebUjAQ0ZaJ6KiTTBuflAq/rSzKA6a+UfSKVpKjR1n3n
+         94kSD03Skr1VFkDTYEMDIEMgI4dH+5d3ntixtybpS71kMmZ6tdqhojOjk3O8Wl1RNq6e
+         lo8Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8+ZBhESQsWqwx5Bvmai7vHIaggD8qdaooFTg0qUhdMHHm/cTroHzhpsjzHvMbVneF8LBclSVdu6ygvxjUo8U7MLX4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYRG0kq9sml1183oLLMX4ao3OU5zoP8r+4EqJZTKFRd01v1Z7D
+	sC5za4l/eNxu1/o7cJC1iqY/XZMhCN//M4ItSLRZ65bmMfHc9Gs+1w0y
+X-Gm-Gg: Acq92OEI9eBo7DpvlLMIYDV6CRo5GDbf+VWziG6cxp06jdeu6Nw6hj+veq8jdjyRP2J
+	tTzehzO1F50l7hq6oSYaTFF6+DVkBCsaLRbY2PKn/hMazF38fs33fSNvH3kgn1z59g4NSg0TC4O
+	3rymoP1QgW7+LnjpaxBPf2/sq/5eWvJMI/JGCOwmXUjF7rXmkcKRSdGh6H0YAyh4/NADv4wq5eT
+	5pZwvN5tNR+pXl0gdaDa8BEfBT+Fnk8b25wxPSonS17MV+YkdivzDxsqDb2HUCzzwxpAxTkqqrd
+	6tKq3c+w/qV6985ZtNf0QWnnSsDAFty6ek7cHAm3C5ho8s/0l83G/WrXnkVEhhukvsQgpGoPY9z
+	MlR2otFT5jsGsZ/Clm3ugnTCAjIOFmE5khrZXwJoXWIUcN1Foi6jVy3YFop3cyquv/W5imCOD26
+	4swYdJjtrxjrIzWg==
+X-Received: by 2002:a17:907:9451:b0:bd8:ba46:db25 with SMTP id a640c23a62f3a-bd8ba46e86cmr135248666b.39.1779117823990;
+        Mon, 18 May 2026 08:23:43 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:48::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bd4f4bd2f67sm575138966b.7.2026.05.18.08.23.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 08:23:43 -0700 (PDT)
+From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Subject: [PATCH bpf-next v2 0/3] tracing: Expose tracepoint BTF ids via
+ tracefs
+Date: Mon, 18 May 2026 08:23:14 -0700
+Message-Id: <20260518-generic_tracepoint-v2-0-b755a5cf67bb@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 1678094390674a1865d
-X-MBO-RS-META: pqim3bixj3ebt8cs9fmnjx4xowyx5n3y
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAOIuC2oC/23NQQqDMBBA0auEWZuSpGqjq96jSBnjqLMwkSSIR
+ bx7wW67/vD+AYkiU4JWHBBp48TBQytMIcDN6CeSPEArwChTq0pZOZGnyO6dIzpaA/ssh9JarPC
+ BvbZQCFgjjbxf6Av6dZSe9gxdIWDmlEP8XLdNX/0H6+ofvGmpJGKtmxGbUt/Nc6GMNxcW6M7z/
+ AJ9VIBDvQAAAA==
+X-Change-ID: 20260508-generic_tracepoint-d488a5a7ab18
+To: bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org, 
+ daniel@iogearbox.net, kafai@meta.com, kernel-team@meta.com, 
+ eddyz87@gmail.com, memxor@gmail.com, rostedt@goodmis.org
+Cc: Mykyta Yatsenko <yatsenko@meta.com>, linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779117822; l=4524;
+ i=yatsenko@meta.com; s=20260324; h=from:subject:message-id;
+ bh=tmS0yY9aJiTmj7PrQn+1aW5FlWIoZKFBBJCgg9x80n4=;
+ b=axlmYjl9j8LHTyrPJZPSkDaYM2mCV1eNkopuhCRv/0L22fSuBPqG5hQsb4iS2zGZfhki71Zio
+ odZYXsLG56BB1DR22Z+Q890xKm9UjLYcTBnGwMV9qm53mfS6p0LPcaa
+X-Developer-Key: i=yatsenko@meta.com; a=ed25519;
+ pk=1zCUBXUa66KmzfjNsG8YNlMj2ckPdqBPvFq2ww3/YaA=
 
-On Fri, 2026-05-15 at 09:59 -0400, Vineeth Pillai (Google) wrote:
-> From: Vineeth Pillai <vineeth@bitbyteword.org>
->=20
-> Replace trace_foo() with the new trace_call__foo() at sites already
-> guarded by trace_foo_enabled(), avoiding a redundant
-> static_branch_unlikely() re-evaluation inside the tracepoint.
-> trace_call__foo() calls the tracepoint callbacks directly without
-> utilizing the static branch again.
+BPF and other consumers that want to attach to or decode a generic
+tracepoint need three pieces of BTF information for it:
 
-The "foo" terminology is unusual I think? I always wrote it with regex,
-like "trace_*()".
+  - the BTF of the object that owns the tracepoint's types
+  - the FUNC_PROTO describing the tracepoint arguments (with names),
+    consumed by raw_tp / tp_btf BPF programs
+  - the STRUCT id of trace_event_raw_<call>, the ring-buffer record
+    consumed by classic BPF_PROG_TYPE_TRACEPOINT programs
 
+Today none of this is easily discoverable from userspace. The kernel
+knows the ids - resolve_btfids fills them in at link time - but
+consumers have to search them by the naming convention
+("__bpf_trace_<name>", "trace_event_raw_<name>"), walking BTF for
+every tracepoint.
 
+This series stores those ids in trace_event_class and exposes them
+via events/<sys>/<event>/btf_ids, e.g.
 
->=20
-> Original v2 series:
-> https://lore.kernel.org/linux-trace-kernel/20260323160052.17528-1-vineeth=
-@bitbyteword.org/
+  # cat /sys/kernel/tracing/events/sched/sched_switch/btf_ids
+    btf_obj_id: 1
+    raw_btf_id: 28882
+    tp_btf_id: 106335
 
-I'd put this in a Link: tag section below.
+  # bpftool btf dump id 1 root_id 28882 format raw
+  [28882] FUNC_PROTO '(anon)' ret_type_id=0 vlen=5
+        '__data' type_id=9
+        'preempt' type_id=60674
+        'prev' type_id=219
+        'next' type_id=219
+        'prev_state' type_id=108689
 
->=20
-> Parts of the original v2 series have already been merged in mainline.
-> This patch is being reposted as a follow-up cleanup for the remaining
-> unmerged pieces.
+  # bpftool btf dump id 1 root_id 106335 format raw
+  [106335] STRUCT 'trace_event_raw_sched_switch' size=64 vlen=9
+        'ent' type_id=104654 bits_offset=0
+        'prev_comm' type_id=580 bits_offset=64
+        'prev_pid' type_id=92875 bits_offset=192
+        'prev_prio' type_id=79365 bits_offset=224
+        'prev_state' type_id=83958 bits_offset=256
+        'next_comm' type_id=580 bits_offset=320
+        'next_pid' type_id=92875 bits_offset=448
+        'next_prio' type_id=79365 bits_offset=480
+        '__data' type_id=407 bits_offset=512
 
-So this v3 series as a whole is a followup to that v2?
+For per-syscall events (all sharing the same dispatcher), raw_btf_id
+is 0 — raw_tp / tp_btf programs attach to raw_syscalls/sys_{enter,exit},
+not per-syscall events:
 
->=20
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-> Assisted-by: Claude:claude-sonnet-4-6
-> ---
-> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 ++--
-> =C2=A0drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 +++++-----
-> =C2=A0drivers/gpu/drm/scheduler/sched_entity.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +++--
-> =C2=A04 files changed, 11 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd=
-/amdgpu/amdgpu_cs.c
-> index b24d5d21be5f..cb0b5cb07d57 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> @@ -1004,7 +1004,7 @@ static void trace_amdgpu_cs_ibs(struct amdgpu_cs_pa=
-rser *p)
-> =C2=A0		struct amdgpu_job *job =3D p->jobs[i];
-> =C2=A0
-> =C2=A0		for (j =3D 0; j < job->num_ibs; ++j)
-> -			trace_amdgpu_cs(p, job, &job->ibs[j]);
-> +			trace_call__amdgpu_cs(p, job, &job->ibs[j]);
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd=
-/amdgpu/amdgpu_vm.c
-> index 9ba9de16a27a..a36ae94c425f 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-> @@ -1415,7 +1415,7 @@ int amdgpu_vm_bo_update(struct amdgpu_device *adev,=
- struct amdgpu_bo_va *bo_va,
-> =C2=A0
-> =C2=A0	if (trace_amdgpu_vm_bo_mapping_enabled()) {
-> =C2=A0		list_for_each_entry(mapping, &bo_va->valids, list)
-> -			trace_amdgpu_vm_bo_mapping(mapping);
-> +			trace_call__amdgpu_vm_bo_mapping(mapping);
-> =C2=A0	}
-> =C2=A0
-> =C2=A0error_free:
-> @@ -2183,7 +2183,7 @@ void amdgpu_vm_bo_trace_cs(struct amdgpu_vm *vm, st=
-ruct ww_acquire_ctx *ticket)
-> =C2=A0				continue;
-> =C2=A0		}
-> =C2=A0
-> -		trace_amdgpu_vm_bo_cs(mapping);
-> +		trace_call__amdgpu_vm_bo_cs(mapping);
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/=
-gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 5fc5d5608506..fbdc12cdd6bb 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -5263,11 +5263,11 @@ static void amdgpu_dm_backlight_set_level(struct =
-amdgpu_display_manager *dm,
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	if (trace_amdgpu_dm_brightness_enabled()) {
-> -		trace_amdgpu_dm_brightness(__builtin_return_address(0),
-> -					=C2=A0=C2=A0 user_brightness,
-> -					=C2=A0=C2=A0 brightness,
-> -					=C2=A0=C2=A0 caps->aux_support,
-> -					=C2=A0=C2=A0 power_supply_is_system_supplied() > 0);
-> +		trace_call__amdgpu_dm_brightness(__builtin_return_address(0),
-> +						 user_brightness,
-> +						 brightness,
-> +						 caps->aux_support,
-> +						 power_supply_is_system_supplied() > 0);
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	if (caps->aux_support) {
-> diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/s=
-cheduler/sched_entity.c
-> index fe174a4857be..185a2636b599 100644
-> --- a/drivers/gpu/drm/scheduler/sched_entity.c
-> +++ b/drivers/gpu/drm/scheduler/sched_entity.c
-> @@ -429,7 +429,8 @@ static bool drm_sched_entity_add_dependency_cb(struct=
- drm_sched_entity *entity,
-> =C2=A0
-> =C2=A0	if (trace_drm_sched_job_unschedulable_enabled() &&
-> =C2=A0	=C2=A0=C2=A0=C2=A0 !test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &entity-=
->dependency->flags))
-> -		trace_drm_sched_job_unschedulable(sched_job, entity->dependency);
-> +		trace_call__drm_sched_job_unschedulable(sched_job,
-> +							entity->dependency);
+  # cat /sys/kernel/tracing/events/syscalls/sys_enter_write/btf_ids
+    btf_obj_id: 1
+    raw_btf_id: 0
+    tp_btf_id: 106540
 
-I would be more happy if you sacrifice a bit of space here and keep it
-a single line since the if condition is already quite convoluted and
-challenging to read.
+This unlocks few usecases for consumers:
 
+  - Resolving tp_btf attach targets and argument types directly,
+    instead of constructing "__bpf_trace_*" names and
+    re-discovering them in vmlinux BTF.
+  - Get a stable, machine-readable contract for tracepoint payloads,
+    with field names preserved.
 
-P.
+Patch 1 exports the two BTF helpers the tracing core needs.
+Patch 2 wires DECLARE_EVENT_CLASS to publish the ids, adds the tracefs
+        reader, and wires the syscall classes so per-syscall events
+        carry tp_btf_id (raw_btf_id is 0 there — see above).
+Patch 3 adds a selftest covering the sched_switch tracepoint.
 
-> =C2=A0
-> =C2=A0	if (!dma_fence_add_callback(entity->dependency, &entity->cb,
-> =C2=A0				=C2=A0=C2=A0=C2=A0 drm_sched_entity_wakeup))
-> @@ -586,7 +587,7 @@ void drm_sched_entity_push_job(struct drm_sched_job *=
-sched_job)
-> =C2=A0		unsigned long index;
-> =C2=A0
-> =C2=A0		xa_for_each(&sched_job->dependencies, index, entry)
-> -			trace_drm_sched_job_add_dep(sched_job, entry);
-> +			trace_call__drm_sched_job_add_dep(sched_job, entry);
-> =C2=A0	}
-> =C2=A0	atomic_inc(entity->rq->sched->score);
-> =C2=A0	WRITE_ONCE(entity->last_user, current->group_leader);
+Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
+---
+Changes in v2:
+- kernel/bpf/btf.c: dropped both EXPORT_SYMBOL_GPL()
+- kernel/trace/trace_events.c (event_btf_ids_read):
+  replaced guard(mutex)(&event_mutex) with explicit
+  mutex_lock/mutex_unlock. scnprintf() and simple_read_from_buffer()
+  (which calls copy_to_user()) now run outside the lock work.
+- tools/testing/selftests/bpf/prog_tests/tp_btf_ids.c:
+  - Added if (!env.has_testmod) { test__skip(); return; } at the top of
+    test_tp_btf_ids() so the test skips gracefully when bpf_testmod.ko
+    is absent.
+  - Wrapped ASSERT_EQ(btf_vlen(proto_t), 3, ...) with if (!...) goto out;
+    to prevent OOB read of params[2].
+  - Added if (!ASSERT_GE(btf_vlen(rec_t), 5, ...)) goto out; before reading
+    members[0..4].
+- Link to v1: https://patch.msgid.link/20260515-generic_tracepoint-v1-0-aa619fa94132@meta.com
+
+---
+Mykyta Yatsenko (3):
+      bpf: Make btf_get_module_btf() and btf_relocate_id() non-static
+      tracing: Expose tracepoint BTF ids via tracefs
+      selftests/bpf: Add test for tracepoint btf_ids tracefs file
+
+ include/linux/btf.h                                |   2 +
+ include/linux/trace_events.h                       |   9 ++
+ include/trace/trace_events.h                       |  24 ++++
+ kernel/bpf/btf.c                                   |   4 +-
+ kernel/trace/trace_events.c                        |  80 ++++++++++++-
+ kernel/trace/trace_syscalls.c                      |  17 +++
+ .../testing/selftests/bpf/prog_tests/tp_btf_ids.c  | 132 +++++++++++++++++++++
+ 7 files changed, 265 insertions(+), 3 deletions(-)
+---
+base-commit: 8668cd470c38011c44a42f6c7b188f4149f23a7a
+change-id: 20260508-generic_tracepoint-d488a5a7ab18
+
+Best regards,
+--  
+Mykyta Yatsenko <yatsenko@meta.com>
 
