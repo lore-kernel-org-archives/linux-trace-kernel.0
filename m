@@ -1,175 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C793C324B33;
-	Mon, 18 May 2026 11:01:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A303637701E;
+	Mon, 18 May 2026 11:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779102109; cv=none; b=oFwAxd8xLNUSU2X38BnBNfeKMO2yntWmIZ7ROpynmhQYksUp/QANgBGWd4uj/hLEwswm5tJKmacbg3Wru/uqoxDTfWqdQ2LcUPX9XJHssKoF0YdkhRma6qF3dvtgMUyHwly8AzZb71zGpLN9ScjT0VKblyUU35Muo/AIEiDErTU=
+	t=1779104275; cv=none; b=Il//xUawDMKarbJEeo8ixMJ/ApYkVuDnbXYfjwMre2m1PClFEz1u98EBZPFnrqCfWsRToYt8+BgJqYZMyfyTECDH647SHNegV7XGNKrS+0Py4WT04ibGU+dnmeUOPMBQJJQPMMv1QxsPdikhA5Ez04gSLmsxN0zYMjCwFKVslxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779102109; c=relaxed/simple;
-	bh=AjRk3DZzX756T1GnD1iYaA/mnxVr7LP7HzFj7r7VFYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SaUnBbrrUJTM7RhSdRYN75jpyrjMtY4snev2lOSulNaCJt1xgjPKy8uYsk/uceYGfXkDsVj9GW+QeNBJcQc+3uu2Bv5zGhwhK0FWw7SfzF7YLc6j4RMm+hFKuEtcu20PVkZDW9tDROx8YBVeFWwFCDLOjYo3Da4PJ6L/1Zxvkqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDJyE6PN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779104275; c=relaxed/simple;
+	bh=mFLKcdF4mD5W12oxSsunvkQ48zPBB3c4dIipCb/DAMk=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=nr7hSXXN3iXsv2SmjMS0Iynyu49Pmf/viQr4BeEcPLbBjbQM9ZBrJfVf3OUlFoFdMu0SWdaGbbmwhzJBrvief2ddESqjwA+cQjRf89bkJN7+0JVUSdGzfXEmSd6N2jOy8MMCWjRD7W6v4etvzt18tUJYZwICOT0oHeUm0eVCo+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+vocIlb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDJyE6PN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 712A4C2BD00;
-	Mon, 18 May 2026 11:01:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+vocIlb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAAB6C2BCB7;
+	Mon, 18 May 2026 11:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779102107;
-	bh=AjRk3DZzX756T1GnD1iYaA/mnxVr7LP7HzFj7r7VFYk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MDJyE6PN4JRhf0cQrmHmyaWspbFKcffF8u9ZznR8BlvnSEDSf5ygH57t48PQuEwvR
-	 rsrlqaLtz+fAaN70JIJ38wWNzhzzcg4UeLjVVG/284UOJAKMFmDgoDEkWo0erjqyuo
-	 xVPIXPjl3poxeYc32EsJG3/pCXT0A61meQ72K34jE3SdqLDEMoWB8+LeQ+AFgerSXC
-	 HvX3ct6SCIubEkDUPc82ePjhCeBoq4uIFchoHN2p5Cf4N6ZixLedcygY00YfkxD4h9
-	 MD4KXRdK4GsISn/tGyhwIpT4Go/6rIUeLwnkSR+e7WOMMRivGY2ESl9Hb3OAyZJWXs
-	 FMWV8qiMTAJlw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv2 11/11] selftests/bpf: Add tests for forked/cloned optimized uprobes
-Date: Mon, 18 May 2026 12:59:57 +0200
-Message-ID: <20260518105957.123445-12-jolsa@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260518105957.123445-1-jolsa@kernel.org>
-References: <20260518105957.123445-1-jolsa@kernel.org>
+	s=k20201202; t=1779104274;
+	bh=mFLKcdF4mD5W12oxSsunvkQ48zPBB3c4dIipCb/DAMk=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=W+vocIlb2xWrQVB/sX9E/vh+b6zGWMW6vY1BM6XYwqrO7yt7MjoQiuV9ANjw9C7hP
+	 c5akx+fFU2eNVcmvSQ2343nNc7XXuC90PA876LgfQ7bZg8ZGVk87Fmju889eGX3bvL
+	 7YspebOkUv79tyovHWfUIept7DUSec2F6uXWxen33cRRHQN6ss4piE9qWMJeemsBLo
+	 mBTGI1G/kxGtjo7qELqsJ/s4ZEiFk+o+DBujVQcHgUlK74qfcMyUfi1R2H2pU41zEG
+	 rdMLALN8N2YOQ/AqAOP6Y4GoqHjGb96rQJVW1ZINBfYbj18nBo80oPx8qXdL9pOFMa
+	 L/GvhM9IhzoKw==
+Content-Type: multipart/mixed; boundary="===============1181080246465089822=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <545ca16cc113f00a390baf1ffcafba33233af771fc7c879e3c850bb33949da29@mail.kernel.org>
+In-Reply-To: <20260518105957.123445-6-jolsa@kernel.org>
+References: <20260518105957.123445-6-jolsa@kernel.org>
+Subject: Re: [PATCHv2 05/11] libbpf: Detect uprobe syscall with new error
+From: bot+bpf-ci@kernel.org
+To: jolsa@kernel.org,oleg@redhat.com,peterz@infradead.org,mingo@kernel.org,mhiramat@kernel.org,andrii@kernel.org
+Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon, 18 May 2026 11:37:54 +0000 (UTC)
 
-Adding tests for forked/cloned optimized uprobes and make
-sure the child can properly execute optimized probe for
-both fork (dups mm) and clone with CLONE_VM.
+--===============1181080246465089822==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>     libbpf: Detect uprobe syscall with new error
+>
+>     In the previous optimized uprobe fix we changed the syscall
+>     error used for its detection from ENXIO to EPROTO.
+>
+>     Changing related probe_uprobe_syscall detection check.
+>
+>     Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+>     Fixes: 05738da0efa1 ("libbpf: Add uprobe syscall feature detection")
+>     Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+
+The Fixes: tag points to commit 05738da0efa1 ("libbpf: Add uprobe
+syscall feature detection"), but wasn't the bug actually introduced by
+commit 5c3c59c7952a ("uprobes/x86: Move optimized uprobe from nop5 to
+nop10")? Commit 05738da0efa1 originally added the ENXIO check
+correctly, but commit 5c3c59c7952a changed the kernel to return EPROTO
+instead of ENXIO, breaking the libbpf detection. The commit message
+even says "In the previous optimized uprobe fix we changed the syscall
+error," which refers to 5c3c59c7952a.
+
+Should this use:
+
+  Fixes: 5c3c59c7952a ("uprobes/x86: Move optimized uprobe from nop5 to nop10")
+
+> diff --git a/tools/lib/bpf/features.c b/tools/lib/bpf/features.c
+> index b7e388f99d0b..e5641fa60163 100644
+> --- a/tools/lib/bpf/features.c
+> +++ b/tools/lib/bpf/features.c
+> @@ -577,10 +577,10 @@ static int probe_ldimm64_full_range_off(int token_fd)
+>  static int probe_uprobe_syscall(int token_fd)
+>  {
+>  	/*
+> -	 * If kernel supports uprobe() syscall, it will return -ENXIO when called
+> +	 * If kernel supports uprobe() syscall, it will return -EPROTO when called
+>  	 * from the outside of a kernel-generated uprobe trampoline.
+>  	 */
+> -	return syscall(__NR_uprobe) < 0 && errno == ENXIO;
+> +	return syscall(__NR_uprobe) < 0 && errno == EPROTO;
+>  }
+>  #else
+>  static int probe_uprobe_syscall(int token_fd)
+> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> index 955a37751b52..c944136252c6 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> @@ -762,7 +762,7 @@ static void test_uprobe_error(void)
+>  	long err = syscall(__NR_uprobe);
+>
+>  	ASSERT_EQ(err, -1, "error");
+> -	ASSERT_EQ(errno, ENXIO, "errno");
+> +	ASSERT_EQ(errno, EPROTO, "errno");
+>  }
+>
+>  static void __test_uprobe_syscall(void)
+
 ---
- .../selftests/bpf/prog_tests/uprobe_syscall.c | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index 739b0be13aa3..713b42d4f190 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -4,6 +4,8 @@
- 
- #ifdef __x86_64__
- 
-+#define _GNU_SOURCE
-+#include <sched.h>
- #include <unistd.h>
- #include <asm/ptrace.h>
- #include <linux/compiler.h>
-@@ -936,6 +938,88 @@ static void test_uprobe_error(void)
- 	ASSERT_EQ(errno, EPROTO, "errno");
- }
- 
-+__attribute__((aligned(16)))
-+__nocf_check __weak __naked void uprobe_fork_test(void)
-+{
-+	asm volatile (
-+		".byte 0x66, 0x66, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00\n" /* nop10 */
-+		"ret\n"
-+	);
-+}
-+
-+static int child_func(void *arg)
-+{
-+	struct uprobe_syscall_executed *skel = arg;
-+
-+	/* Make sure the child's probe is still there and optimized.. */
-+	if (memcmp(uprobe_fork_test, lea_rsp, sizeof(lea_rsp)))
-+		_exit(1);
-+
-+	skel->bss->pid = getpid();
-+
-+	/* .. and it executes properly. */
-+	uprobe_fork_test();
-+
-+	if (skel->bss->executed != 3)
-+		_exit(2);
-+
-+	_exit(0);
-+}
-+
-+static void test_uprobe_fork_optimized(bool clone_vm)
-+{
-+	struct uprobe_syscall_executed *skel = NULL;
-+	struct bpf_link *link = NULL;
-+	unsigned long offset;
-+	int pid, status, err;
-+	char stack[65535];
-+
-+	offset = get_uprobe_offset(&uprobe_fork_test);
-+	if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-+		return;
-+
-+	skel = uprobe_syscall_executed__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "open_and_load"))
-+		goto cleanup;
-+
-+	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
-+				-1, "/proc/self/exe", offset, NULL);
-+	if (!ASSERT_OK_PTR(link, "attach_uprobe"))
-+		goto cleanup;
-+
-+	skel->bss->pid = getpid();
-+
-+	/* Trigger optimization of uprobe in uprobe_fork_test.  */
-+	uprobe_fork_test();
-+	uprobe_fork_test();
-+
-+	/* Make sure it got optimied. */
-+	if (!ASSERT_OK(memcmp(uprobe_fork_test, lea_rsp, sizeof(lea_rsp)), "optimized"))
-+		goto cleanup;
-+
-+	if (clone_vm) {
-+		pid = clone(child_func, stack + sizeof(stack), CLONE_VM|SIGCHLD, skel);
-+		if (!ASSERT_GT(pid, 0, "clone"))
-+			goto cleanup;
-+	} else {
-+		pid = fork();
-+		if (!ASSERT_GE(pid, 0, "fork"))
-+			goto cleanup;
-+		if (pid == 0)
-+			child_func(skel);
-+	}
-+
-+	/* Wait for the child and verify it exited properly with 0. */
-+	err = waitpid(pid, &status, 0);
-+	if (ASSERT_EQ(err, pid, "waitpid")) {
-+		ASSERT_EQ(WIFEXITED(status), 1, "child_exited");
-+		ASSERT_EQ(WEXITSTATUS(status), 0, "child_exit_code");
-+	}
-+
-+cleanup:
-+	uprobe_syscall_executed__destroy(skel);
-+}
-+
- static void __test_uprobe_syscall(void)
- {
- 	if (test__start_subtest("uretprobe_regs_equal"))
-@@ -956,6 +1040,10 @@ static void __test_uprobe_syscall(void)
- 		test_uprobe_race();
- 	if (test__start_subtest("uprobe_red_zone"))
- 		test_uprobe_red_zone();
-+	if (test__start_subtest("uprobe_optimized_fork"))
-+		test_uprobe_fork_optimized(false);
-+	if (test__start_subtest("uprobe_optimized_clone_vm"))
-+		test_uprobe_fork_optimized(true);
- 	if (test__start_subtest("uprobe_error"))
- 		test_uprobe_error();
- 	if (test__start_subtest("uprobe_regs_equal"))
--- 
-2.53.0
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/26030080109
+--===============1181080246465089822==--
