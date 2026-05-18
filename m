@@ -1,106 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2CB238D27
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 14:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36CA273D76
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 14:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779115563; cv=none; b=UYpoA0XjGWlaOs9drMpUOZ8YToNhFVc0KbDLIvFB8G4NYPyPvkLNI+Q4/DwOWQiIX1hzfZRQKWgds49f7/CDKzvppe+P7UKCugkHON1IA3uIjK3otTRsKWynaSQ1dXwUVj5Asq06qGYF1dWncVB23AQ2i7Ohsztg0SYAbOkgI18=
+	t=1779115818; cv=none; b=jdZOmf3onQYEXmL1spiZ8AyKoMQciMQkykqKgDpX/mFtMm22u5NzotEQ3dt+TPyqMA71Z0Q9TdJMlwlSCS8gjRNNyH8isrdVZXSgkTyZTR7f2eTLekktDT7gTQhXR9CivUl+4svT17ShTtehf6wbMC3hQosPzzxifOgDgWJx3BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779115563; c=relaxed/simple;
-	bh=nR5UDrrm/Nrph88djxiatQ1UAc4/x3C+WYyR/ep/2Gk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ig1BL/T9orM6k4vaGi//Gq/BMLHMkqA+Bf4f8ZP/yh9u5NFhJnzGgZ8CuNB2WSFrPBi/rFrlnZZTTWrfeRjIItBEKIKP3BTF9PJ7bLQrUoeZ5PBOr0zhGzq3dQlJloptx2SxiiR/vNOg2ykPh6yBjYV4JQrYsSvnQPZb7e/LKzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aJw38Fki; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779115818; c=relaxed/simple;
+	bh=oURhpEBlAycUWGbt4NLTrrptb/5bAJzXmY4fgpuMNSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0/kxR8aES2J1y136Z8oFXYEs6XedTXXol7jtsqk1hpgQnUg2yo956TGphBCU1wmSomlhFQDC6c1XVb+hNMTW/EcJoeeBkIgMnXUnSleb7169SxZO2gr+HpA9V6sWvVLkv+SXeCbGn+G/s11YgHdfY6QL1so9/RbjbNnwID2oVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GGDI55Jj; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJw38Fki"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779115560;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GGDI55Jj"
+Message-ID: <51db205d-77cf-416f-bfe5-fd9d0b12c433@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1779115804;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mqrDxNmVMqx3LSQYT4MO2L61kYecL3Ss6HCoXQptOcU=;
-	b=aJw38FkifO4pVBYQ3B29eLXOeDWwB8XSPYcKq4H/oBJfySWrX77ZvJyBYEVuViSxNm1ZKy
-	q477O2T7Xo8d4BQZeglgHO2wyC0y1kE32lrUbia3XN+wfYSFK/i82+RP4e7HE7DlecTANW
-	wbOX3iqNNPY4i5r0vjCgLQn1rclBQMQ=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-682-xRVgXlyRPpq10cziKgxVrA-1; Mon, 18 May 2026 10:45:59 -0400
-X-MC-Unique: xRVgXlyRPpq10cziKgxVrA-1
-X-Mimecast-MFC-AGG-ID: xRVgXlyRPpq10cziKgxVrA_1779115558
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5a526442aedso1324000e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 07:45:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779115558; x=1779720358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mqrDxNmVMqx3LSQYT4MO2L61kYecL3Ss6HCoXQptOcU=;
-        b=qcFn30LS8Qjv+TVblPgFRqn3zmK1RQLYzv1AabjB5qlHNwjm4ak1l3b4RjH9fhmkoY
-         4KPLeD3/ptsDP7GvQIO3nmJ2abKUCUK2e4oxq6/gM5Cmkvq1g9VGldJPGVoXrBZwytcj
-         yUBrjbyM61ItsaVb1yIlLBxF3C4pocZ/oeP4e+y3ZPEKGhMjpfl3SG22PObiD334MiwK
-         8ZpfaQBzR+pzOWpqwsZ4SVE2WJhqwugoT0yG488S+IYzZipaIau10PXzi5cjwqVh//V1
-         4WpMb86jeppv/Phzu25J76KEtOPoPCvlcQHDjxtMrF2ygOveNwGQZK9feYylfphABQu6
-         jeSw==
-X-Forwarded-Encrypted: i=1; AFNElJ/Ef+XLRATPzFHVdYPQq13RNjbgeAfk6YKjL7od1yePK94YoM1zxatji2XI5yHHl9qTHNsEVxRj73/G0NncLg4c5mc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9ia3GiYOpifdkmxknq7kM9KrkGLWRKNCNbAwmmKGCdqL0wWpc
-	Gmem5MFEjSg5qEY2Yx3c8dLRv6d+YULzF7iulX6VsO0gFV9Wq4G+v5HxyIRh0i8+YawuykbBjNj
-	BM+v5ZWoQcb6ba+z6W9H8Qq6Yst+6NLw4IEXJ6Ah2/l8iXJuZTZS1zAgY9NKHTDi+WZ8jZLZWJf
-	T5r/1JRJXTr4WWHFRA5z4cCpVZixlIJCJOqnVOjIxFPyyWI1kr
-X-Gm-Gg: Acq92OEiOP8KhBtcs3JrXoM9B/r3AYBkuZFiFRLykxWM+xehgpUz7HwvSRX51RPgnW4
-	W0hmG5+9hPBx9Eu7f4uCWnHpOrLqgmchxVc2hfiEk/lN4TdlOt8Axk4iE3cIxHY1eAyprw2d8er
-	4kRu/55ZT4i1CCty/vy+zDr9Q0WFC34suc94FZDcls5B+UccnoAsJ6qV8r8vfiZP5LNGUrhHrZn
-	3iFvkjCd8gx6aglCPnKyQd2iy8LDvG3H9YACE8U6YP4GrkD0uwZj8XtW/5vnzdLKwBavNsxQZo9
-	/kyWv6s7OpmM59PJlL1PPw==
-X-Received: by 2002:a05:6512:1590:b0:5a8:7425:565b with SMTP id 2adb3069b0e04-5aa0e601220mr4677960e87.7.1779115557994;
-        Mon, 18 May 2026 07:45:57 -0700 (PDT)
-X-Received: by 2002:a05:6512:1590:b0:5a8:7425:565b with SMTP id
- 2adb3069b0e04-5aa0e601220mr4677948e87.7.1779115557450; Mon, 18 May 2026
- 07:45:57 -0700 (PDT)
+	bh=G4JAT+Wv/wwNQKfA8xAYYX6sfEdDyGrZpZJWJ9wvC6o=;
+	b=GGDI55JjKEWW58pLJGuEuk13mpMWz2AZW3HUCXipMsnflKZs31jdktebMCfBgPW9nmuzTY
+	ZYmzrf6bs0k7XjgXrnImxn9WjNZNHKzB4lrc7ZZwSVGza9GdmjDhHFTot3DH8zZ5yqjGl4
+	DiJ3oqFstsnOR3UmclsnOEO4xKuhJCQ=
+Date: Mon, 18 May 2026 22:49:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1777962130.git.namcao@linutronix.de> <050ac3d7aeb1ece12a4deb91fc173de24ad147de.1777962130.git.namcao@linutronix.de>
- <agdnvQPLLiLBIxw7@wcosta-defaultstring.rmtbr.csb> <87pl2t89ue.fsf@yellow.woof>
-In-Reply-To: <87pl2t89ue.fsf@yellow.woof>
-From: Wander Lairson Costa <wander@redhat.com>
-Date: Mon, 18 May 2026 11:45:46 -0300
-X-Gm-Features: AVHnY4Ke5EVLsIji1A2GnbwhrlXj9m0UlLcNXtV6zHJ0XQwUiQbVuEJsf0_3wlo
-Message-ID: <CAAq0SU=7a-aWoFxFkrgk0RbmYodK_DXrybzFkOMCtmp99=oUnA@mail.gmail.com>
-Subject: Re: [PATCH 02/13] verification/rvgen: Introduce a parse tree for
- automata using Lark
-To: Nam Cao <namcao@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: GgVolrgLb5boBVudpTjIfN-U360Jj8X7lHYoFkLP_fo_1779115558
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH mm-unstable v17 02/14] mm/khugepaged: generalize
+ alloc_charge_folio()
+Content-Language: en-US
+To: Usama Arif <usama.arif@linux.dev>, Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
+ gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz,
+ jackmanb@google.com, jannh@google.com, jglisse@google.com,
+ joshua.hahnjy@gmail.com, kas@kernel.org, liam@infradead.org, ljs@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
+ rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
+ richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
+ rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
+ sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
+ tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
+ vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
+ willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+References: <20260518115553.3513034-1-usama.arif@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <20260518115553.3513034-1-usama.arif@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 18, 2026 at 4:18=E2=80=AFAM Nam Cao <namcao@linutronix.de> wrot=
-e:
->
-> Wander Lairson Costa <wander@redhat.com> writes:
-> > On Tue, May 05, 2026 at 08:59:23AM +0200, Nam Cao wrote:
-> >> +    ID: /[_a-zA-Z][_a-zA-Z0-9]+/
-> >
-> > This regex rejects symbol character symbol. Is that intentional?
->
-> It wasn't intentional. This is blindly copied from the existing regex.
->
-> Let me switch to Lark's CNAME.
->
 
-Note: there is a type. s/symbol/single/.
 
-> Nam
->
+On 2026/5/18 19:55, Usama Arif wrote:
+[...]
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index 979885694351..f0e29d5c7b1f 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -1068,21 +1068,26 @@ static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
+>>   }
+>>   
+>>   static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
+>> -		struct collapse_control *cc)
+>> +		struct collapse_control *cc, unsigned int order)
+>>   {
+>>   	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
+>>   		     GFP_TRANSHUGE);
+>>   	int node = collapse_find_target_node(cc);
+>>   	struct folio *folio;
+>>   
+>> -	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
+>> +	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
+>>   	if (!folio) {
+>>   		*foliop = NULL;
+>> -		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
+>> +		if (is_pmd_order(order))
+>> +			count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
+>> +		count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
+>>   		return SCAN_ALLOC_HUGE_PAGE_FAIL;
+>>   	}
+>>   
+>> -	count_vm_event(THP_COLLAPSE_ALLOC);
+>> +	if (is_pmd_order(order))
+>> +		count_vm_event(THP_COLLAPSE_ALLOC);
+>> +	count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC);
+>> +
+> 
+> The vmstat THP_COLLAPSE_ALLOC counter is pmd order only.
+> But after this we have
+> 
+> 	count_memcg_folio_events(folio, THP_COLLAPSE_ALLOC, 1);
+> 
+> which is not being guarded with is_pmd_order().
 
+Good catch!
+
+> 
+> I think we want this to be pmd order only as well so that
+> the meaning of the vmstat and cgroup counter remains the same?
+
+Agreed. THP_COLLAPSE_ALLOC should remain PMD order only for
+vmstat and memcg events.
+
+So this should be guarded with is_pmd_order() as well :)
+
+Cheers, Lance
