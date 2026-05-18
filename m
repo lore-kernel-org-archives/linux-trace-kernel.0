@@ -1,193 +1,232 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E683E63BA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 10:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CBC33A717;
+	Mon, 18 May 2026 10:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779100016; cv=none; b=MZfEvL4KnfK9vx9R9P9/obrfaMgIfsw03RK/QcYo9agrfsFSfndXiedOyH8diH2z5c3KM5Tg4XVQHv9T8sC3TKLwlvM419SVA1nhvIrzSwBJf/5RZROWsvJQuAUcsDevsqoTaNGw9qKcMXB7cNkqwGnYJIeg4/oHALy870OgZyY=
+	t=1779101004; cv=none; b=sMNln+AUg/0XAtisiVapoNns8m6WCEvT/6oc1DjpRvggieoVV+WjPu7slLrbjxrx+0pYiRymatVkUkaMrvRo1hN3bjXDTuE/xAlI4KWd6ZC8rL0q9A9rs4TI9TBr+OzQ0dVTpNsC0mcQbjCCA4hqO7UWlC8c+RBkx937c5QyZik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779100016; c=relaxed/simple;
-	bh=X9AZk6ouA560VchecOEmVZBrcgzrfZoBE0QGMf0Aezc=;
+	s=arc-20240116; t=1779101004; c=relaxed/simple;
+	bh=2NhjxYRBxcXUSncpFcRjF45CLK7nNKc9Zu1f7G+ZwBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ox7F6I4AxVVlhEonQJoYvuG8Rj+krLtKzkyVIykRQt0mcJRyGwrA0ZqM8Wf7/vsu+M+7DnUxr5h9VqDiIQELZg1xdufETAmpCQtWXM+XPJ7VLXfWEP2YjVilcfT6cuHvQt/do9e2XxWvQcQcSbvXb9ejJ7lwsfZVGXYLP7x8Tog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=rFN0Zqxk; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=ABArk7qZWSsr7s9IS2CxPq4VywK+8l7LK3GFQfQlyzKssLVDWmw6HE6Gj6cNz9rFAA4NSe0FZtNI2PP+oCEiuyOh2U0nkE4YCrGP1PpW86JlMfPq7vIjXwFD25eY+hiAdF2UgNr+xy1PvwvmmkhTPjYCabFl5aTo0MfsVSxz95Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vXxyJs8+; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="rFN0Zqxk"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gJv9Z6t4GzGRt;
-	Mon, 18 May 2026 12:26:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1779100002;
-	bh=DqZGfXeHDKO3ofh3dXhJEMakdrjyJnKc8lUuhZhQRpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rFN0ZqxkORmS6NBKTiy6Bep834N1w5tA1lY7HuC5xXh8t1BsuHpYLHnbl37ooS22d
-	 b3AzbkPdBWYZSUwNHitCTHusZQoQcoD7HlrLQxDRdtIZHdM2DbZbzIjdklpSy7FQDK
-	 pJSoBKc5f9lkJn3yOsTKWOjhP0pk+bGfBF/Oqo64=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gJv9Y34wgzMmR;
-	Mon, 18 May 2026 12:26:38 +0200 (CEST)
-Date: Mon, 18 May 2026 12:26:34 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
-	Justin Suess <utilityemal77@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Matthieu Buffet <matthieu@buffet.re>, 
-	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, 
-	linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH v2 05/17] tracing: Add __print_untrusted_str()
-Message-ID: <20260518.eZ8gaiyoh3re@digikod.net>
-References: <20260406143717.1815792-1-mic@digikod.net>
- <20260406143717.1815792-6-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vXxyJs8+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dJ5XIKQl59J8DrbBzzXCcVwZkYeS3cJ80gBNWoPVePY=; b=vXxyJs8+DFrwpc7bNWz52hMBvN
+	A3v1MEdSyllEv1ta1eFYrx7xA8ApRzKGSgXx2qc6PnThwofWu7N996hCUXYl1xWo3IEHwD8H/bnWe
+	i/pkdqgFIyIfbb7VKreo4lq8jcNqMelXKq2ih50AIDwIH2fyBH00HAjWMo4QjYx9ILUOmjK41bXxL
+	2a4vuYr+MrBr3xCrIjMjrEfDjHU4jwlbWBvGf+l2JrErDYfnhM03VegmHbC49+r7+7e6CAIoMGwob
+	W2Ey/MfdsHXqXqzyb2rvcrKdD1fsnt1KULnHqiARsdsne6ap0NUyaErrwTLRaMF/JoiWd2boZBxPl
+	47cvTgIQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wOvRE-00000004g5e-29kT;
+	Mon, 18 May 2026 10:43:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CEB973007A4; Mon, 18 May 2026 12:43:06 +0200 (CEST)
+Date: Mon, 18 May 2026 12:43:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] uprobes/x86: Move optimized uprobe from nop5 to nop10
+Message-ID: <20260518104306.GU3102624@noisy.programming.kicks-ass.net>
+References: <20260514135342.22130-1-jolsa@kernel.org>
+ <20260514135342.22130-2-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260406143717.1815792-6-mic@digikod.net>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20260514135342.22130-2-jolsa@kernel.org>
 
-Steve, Masami, Mathieu, are you ok with this new helper?
 
-On Mon, Apr 06, 2026 at 04:37:03PM +0200, Mickaël Salaün wrote:
-> Landlock tracepoints expose filesystem paths and process names
-> that may contain spaces, equal signs, or other characters that
-> break ftrace field parsing.
-> 
-> Add a new __print_untrusted_str() helper to safely print strings after
-> escaping all special characters, including common separators (space,
-> equal sign), quotes, and backslashes.  This transforms a string from an
-> untrusted source (e.g. user space) to make it:
-> - safe to parse,
-> - easy to read (for simple strings),
-> - easy to get back the original.
-> 
-> Cc: Günther Noack <gnoack@google.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Tingmao Wang <m@maowtm.org>
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> ---
-> 
-> Changes since v1:
-> https://lore.kernel.org/r/20250523165741.693976-4-mic@digikod.net
-> - Remove WARN_ON() (pointed out by Steven Rostedt).
-> ---
->  include/linux/trace_events.h               |  2 ++
->  include/trace/stages/stage3_trace_output.h |  4 +++
->  include/trace/stages/stage7_class_define.h |  1 +
->  kernel/trace/trace_output.c                | 41 ++++++++++++++++++++++
->  4 files changed, 48 insertions(+)
-> 
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 37eb2f0f3dd8..7f4325d327ee 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -57,6 +57,8 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
->  			 int prefix_type, int rowsize, int groupsize,
->  			 const void *buf, size_t len, bool ascii);
->  
-> +const char *trace_print_untrusted_str_seq(struct trace_seq *s, const char *str);
-> +
->  int trace_raw_output_prep(struct trace_iterator *iter,
->  			  struct trace_event *event);
->  extern __printf(2, 3)
-> diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
-> index fce85ea2df1c..62e98babb969 100644
-> --- a/include/trace/stages/stage3_trace_output.h
-> +++ b/include/trace/stages/stage3_trace_output.h
-> @@ -133,6 +133,10 @@
->  	trace_print_hex_dump_seq(p, prefix_str, prefix_type,		\
->  				 rowsize, groupsize, buf, len, ascii)
->  
-> +#undef __print_untrusted_str
-> +#define __print_untrusted_str(str)							\
-> +		trace_print_untrusted_str_seq(p, __get_str(str))
-> +
->  #undef __print_ns_to_secs
->  #define __print_ns_to_secs(value)			\
->  	({						\
-> diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
-> index fcd564a590f4..1164aacd550f 100644
-> --- a/include/trace/stages/stage7_class_define.h
-> +++ b/include/trace/stages/stage7_class_define.h
-> @@ -24,6 +24,7 @@
->  #undef __print_array
->  #undef __print_dynamic_array
->  #undef __print_hex_dump
-> +#undef __print_untrusted_str
->  #undef __get_buf
->  
->  /*
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index 1996d7aba038..9d14c7cc654d 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -16,6 +16,7 @@
->  #include <linux/btf.h>
->  #include <linux/bpf.h>
->  #include <linux/hashtable.h>
-> +#include <linux/string_helpers.h>
->  
->  #include "trace_output.h"
->  #include "trace_btf.h"
-> @@ -321,6 +322,46 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
->  }
->  EXPORT_SYMBOL(trace_print_hex_dump_seq);
->  
-> +/**
-> + * trace_print_untrusted_str_seq - print a string after escaping characters
-> + * @s: trace seq struct to write to
-> + * @src: The string to print
-> + *
-> + * Prints a string to a trace seq after escaping all special characters,
-> + * including common separators (space, equal sign), quotes, and backslashes.
-> + * This transforms a string from an untrusted source (e.g. user space) to make
-> + * it:
-> + * - safe to parse,
-> + * - easy to read (for simple strings),
-> + * - easy to get back the original.
-> + */
-> +const char *trace_print_untrusted_str_seq(struct trace_seq *s,
-> +					   const char *src)
-> +{
-> +	int escaped_size;
-> +	char *buf;
-> +	size_t buf_size = seq_buf_get_buf(&s->seq, &buf);
-> +	const char *ret = trace_seq_buffer_ptr(s);
-> +
-> +	/* Buffer exhaustion is normal when the trace buffer is full. */
-> +	if (!src || buf_size == 0)
-> +		return NULL;
-> +
-> +	escaped_size = string_escape_mem(src, strlen(src), buf, buf_size,
-> +		ESCAPE_SPACE | ESCAPE_SPECIAL | ESCAPE_NAP | ESCAPE_APPEND |
-> +		ESCAPE_OCTAL, " ='\"\\");
-> +	if (unlikely(escaped_size >= buf_size)) {
-> +		/* We need some room for the final '\0'. */
-> +		seq_buf_set_overflow(&s->seq);
-> +		s->full = 1;
-> +		return NULL;
-> +	}
-> +	seq_buf_commit(&s->seq, escaped_size);
-> +	trace_seq_putc(s, 0);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(trace_print_untrusted_str_seq);
-> +
->  int trace_raw_output_prep(struct trace_iterator *iter,
->  			  struct trace_event *trace_event)
+You seem to have forgotten to Cc LKML and x86 :-(
+
+On Thu, May 14, 2026 at 03:53:36PM +0200, Jiri Olsa wrote:
+
+> @@ -1017,17 +1030,32 @@ static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  static int swbp_optimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  			 unsigned long vaddr, unsigned long tramp)
 >  {
-> -- 
-> 2.53.0
-> 
-> 
+> -	u8 call[5];
+> +	u8 insn[OPT_INSN_SIZE], *call = &insn[LEA_INSN_SIZE];
+>  
+> -	__text_gen_insn(call, CALL_INSN_OPCODE, (const void *) vaddr,
+> +	/*
+> +	 * We have nop10 instruction (with first byte overwritten to int3),
+> +	 * changing it to:
+> +	 *   lea -0x80(%rsp), %rsp
+> +	 *   call tramp
+> +	 */
+> +	memcpy(insn, lea_rsp, LEA_INSN_SIZE);
+> +	__text_gen_insn(call, CALL_INSN_OPCODE,
+> +			(const void *) (vaddr + LEA_INSN_SIZE),
+>  			(const void *) tramp, CALL_INSN_SIZE);
+> -	return int3_update(auprobe, vma, vaddr, call, true /* optimize */);
+> +	return int3_update(auprobe, vma, vaddr, insn, OPT_INSN_SIZE, true /* optimize */);
+>  }
+>  
+>  static int swbp_unoptimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  			   unsigned long vaddr)
+>  {
+> -	return int3_update(auprobe, vma, vaddr, auprobe->insn, false /* optimize */);
+> +	/*
+> +	 * We have optimized nop10 (lea, call), changing it to 'jmp rel8' to
+> +	 * end of the 10-byte slot instead of restoring the original nop10,
+> +	 * because we could have thread already inside lea instruction.
+
+Inaccurate, RIP could be on CALL, not inside LEA. Writing NOP10 would
+make it inside NOP10 though, and that would cause havoc IF you use the
+normal NOP10.
+
+Thing is, the encoding of NOP{8,9,10} would actually allow you to
+preserve the CALL instruction :-)
+
+That is, observe:
+
+       PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
+
+NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
+NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0xe8, 0x78, 0x56, 0x34, 0x12 -- cs nopw 0x12345678(%rax,%rbp,8)
+
+Specifically the CALL opcode sits in the SIB byte and decodes like:
+
+  e8 := 11 101 000
+
+  scale = 11  (2^3 = 8)
+  index = 101 BP
+  base  = 000 AX
+
+And the displacement is just that, a displacement.
+
+So you *could* in fact, write back _A_ NOP10, just not the standard
+NOP10.
+
+> +	 */
+> +	u8 jmp[OPT_INSN_SIZE] = { JMP8_INSN_OPCODE, OPT_JMP8_OFFSET };
+> +
+> +	return int3_update(auprobe, vma, vaddr, jmp, JMP8_INSN_SIZE, false /* optimize */);
+>  }
+
+Changelog wants significant update to explain this scheme.
+
+So we have:
+
+  NOP10 -+-> LEA -0x80(%rsp), %rsp, CALL foo -> JMP.d8 +8
+         |                                          |
+         `------------------------------------------'
+
+And you want to belabour the point of how you ensure re-writing the CALL
+instruction isn't a problem (because I'm not convinced).
+
+Note that the above results in:
+
+initial:
+0: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
+
+optimize-int3:
+1: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- int3
+optimize-tail:
+2: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+optimize-finish:
+3: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- lea -0x80(%rsp),%rsp; call 0x78563412
+
+unoptimize-int3:
+4: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+unoptimize-tail:
+5: 0xcc, 0x08, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+unoptimize-finish:
+6: 0xeb, 0x08, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- jmp.d8 +8; call 0x78563412
+
+optimize-int3:
+7: 0xcc, 0x08, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+optimize-tail:
+8: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- int3; call 0x12345678
+optimize-finish:
+9: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- int3; call 0x12345678
+
+Note that from step 7 to step 8, you re-write the CALL instruction
+without going through INT3. This means it is entirely possible for a
+concurrent execution to observe a composite instruction.
+
+This is NOT sound!
+
+However, I think it can be salvaged, if instead of only writing INT3 at
++0, you also write INT3 at +5. The sequence then becomes:
+
+initial:
+0: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
+
+optimize-int3:
+1: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0xcc, 0x00, 0x00, 0x00, 0x00 -- int3; int3
+optimize-tail(s):
+2: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xcc, 0x12, 0x34, 0x56, 0x78 -- int3; int3
+optimize-finish-1:
+3: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+optimize-finish-2:
+3: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- lea -0x80(%rsp),%rsp; call 0x78563412
+
+unoptimize-int3:
+4: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+unoptimize-tail:
+5: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+unoptimize-finish:
+6: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0xe8, 0x12, 0x34, 0x56, 0x78 -- cs nopw 0x78563412(%rax,%rbp,8); call 0x78563412
+
+optimize-int3:
+7: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0xcc, 0x12, 0x34, 0x56, 0x78 -- int3; int3
+optimize-tail(s):
+8: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xcc, 0x78, 0x56, 0x34, 0x12 -- int3; int3
+optimize-finish-1:
+9: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- int3; call 0x12345678
+optimize-finish-2:
+9: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- lea -0x80(%rsp),%rsp; call 0x12345678
+
+> @@ -1095,14 +1125,25 @@ int set_orig_insn(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		  unsigned long vaddr)
+>  {
+>  	if (test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags)) {
+> -		int ret = is_optimized(vma->vm_mm, vaddr);
+> -		if (ret < 0)
+> +		uprobe_opcode_t insn[OPT_INSN_SIZE];
+> +		int ret;
+> +
+> +		ret = copy_from_vaddr(vma->vm_mm, vaddr, &insn, OPT_INSN_SIZE);
+> +		if (ret)
+>  			return ret;
+> -		if (ret) {
+> +		if (__is_optimized((uprobe_opcode_t *)&insn, vaddr)) {
+>  			ret = swbp_unoptimize(auprobe, vma, vaddr);
+>  			WARN_ON_ONCE(ret);
+>  			return ret;
+>  		}
+> +		/*
+> +		 * We can have re-attached probe on top of jmp8 instruction,
+> +		 * which did not get optimized. We need to restore the jmp8
+> +		 * instruction, instead of the original instruction (nop10).
+> +		 */
+> +		if (is_swbp_insn(&insn[0]) && insn[1] == OPT_JMP8_OFFSET)
+> +			return uprobe_write_opcode(auprobe, vma, vaddr, JMP8_INSN_OPCODE,
+> +						   false /* is_register */);
+
+Coding style wants { } on any multi-line statement, even if its only one
+statement.
+
+>  	}
+>  	return uprobe_write_opcode(auprobe, vma, vaddr, *(uprobe_opcode_t *)&auprobe->insn,
+>  				   false /* is_register */);
