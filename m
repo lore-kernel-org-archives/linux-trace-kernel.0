@@ -1,123 +1,208 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36CA273D76
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 14:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9424A2EF652
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 15:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779115818; cv=none; b=jdZOmf3onQYEXmL1spiZ8AyKoMQciMQkykqKgDpX/mFtMm22u5NzotEQ3dt+TPyqMA71Z0Q9TdJMlwlSCS8gjRNNyH8isrdVZXSgkTyZTR7f2eTLekktDT7gTQhXR9CivUl+4svT17ShTtehf6wbMC3hQosPzzxifOgDgWJx3BA=
+	t=1779116524; cv=none; b=PZ9ZLvFJpZgXKKhYD0q4eK5012sq4PlJp0ko5RONZtnAXRu+AhF9+4GCNOPd5MDldWLCrxEEiuzb0fEQuIQ5hkXqQvGU6HKJ7OE+q19a/ePdc0We2xbEc1zwsPy3imMh5IJMlIPBHeG8x2zF4PcNR/JDyvFqjR86SLpMuAjvx1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779115818; c=relaxed/simple;
-	bh=oURhpEBlAycUWGbt4NLTrrptb/5bAJzXmY4fgpuMNSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0/kxR8aES2J1y136Z8oFXYEs6XedTXXol7jtsqk1hpgQnUg2yo956TGphBCU1wmSomlhFQDC6c1XVb+hNMTW/EcJoeeBkIgMnXUnSleb7169SxZO2gr+HpA9V6sWvVLkv+SXeCbGn+G/s11YgHdfY6QL1so9/RbjbNnwID2oVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GGDI55Jj; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1779116524; c=relaxed/simple;
+	bh=t6cJoX5Ng17UYkXLOnzBoY9whuwvEK7UYIwb/VdmPWg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NJB2aaRIXlvIsljbx48FyJ5gD71xKmPmQrm3+//c80D5sEeLf7Fy4McOBIoDZd2/chtfBGo3jqRVZ2Heip/6HILSC09cvI0uCrS3yr+y4+jdZA5z1pPfbGjJ3RcZHDCuoxL04l+aa4ws9g6ZeuUhBQxqVW+ulsSTjWWBjuaZQjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=kCvTcmWi; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GGDI55Jj"
-Message-ID: <51db205d-77cf-416f-bfe5-fd9d0b12c433@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779115804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="kCvTcmWi"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4gK1H50xWcz9v50;
+	Mon, 18 May 2026 17:01:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1779116513; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G4JAT+Wv/wwNQKfA8xAYYX6sfEdDyGrZpZJWJ9wvC6o=;
-	b=GGDI55JjKEWW58pLJGuEuk13mpMWz2AZW3HUCXipMsnflKZs31jdktebMCfBgPW9nmuzTY
-	ZYmzrf6bs0k7XjgXrnImxn9WjNZNHKzB4lrc7ZZwSVGza9GdmjDhHFTot3DH8zZ5yqjGl4
-	DiJ3oqFstsnOR3UmclsnOEO4xKuhJCQ=
-Date: Mon, 18 May 2026 22:49:29 +0800
+	bh=mDUFG3QH/zn6Pfjyji/Qqlp3OYsc/LM+HLI24lCrrXk=;
+	b=kCvTcmWitl6r0wU+738S/qKBalalles5Mi9GzjMrsXjFkg8DvZXF0Af0391ujRu3ciuhV4
+	6a+4JpyMUE1A2GNSC80Hzfu6K38OgWH51vjshjCehnSXDB8XqPusFyi9a4azpx1au6Wuw8
+	H+ssFYU/GA9cU0ggK6RpFQGq9vKhvD7iXjq0WnyTRkAolSpt6SqvwAt/2rPTNkOrqIneWL
+	ps599r2wMW8FpwzKnlhw4fJUQVbKjLX8uIw1dNFfdVUSxBfKdd7vdbsStlPC5gag+SH6SZ
+	sL4isC6las8iOF5BOx7Hib17nw5KI/sp1EA9v2YH5O0rNvimj4D/kb/8RqNlTg==
+Message-ID: <81783d0807a5ffac93f61eddba0d2f595d7f239f.camel@mailbox.org>
+Subject: Re: [PATCH v3 06/11] drm: Use trace_call__##name() at guarded
+ tracepoint call sites
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, Alex Deucher
+ <alexander.deucher@amd.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Harry Wentland <harry.wentland@amd.com>, Leo Li
+ <sunpeng.li@amd.com>, Matthew Brost <matthew.brost@intel.com>, Danilo
+ Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, Steven
+ Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, Peter
+ Zijlstra <peterz@infradead.org>
+Date: Mon, 18 May 2026 17:01:42 +0200
+In-Reply-To: <20260515135932.2238842-1-vineeth@bitbyteword.org>
+References: <20260515135932.2238842-1-vineeth@bitbyteword.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH mm-unstable v17 02/14] mm/khugepaged: generalize
- alloc_charge_folio()
-Content-Language: en-US
-To: Usama Arif <usama.arif@linux.dev>, Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
- gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz,
- jackmanb@google.com, jannh@google.com, jglisse@google.com,
- joshua.hahnjy@gmail.com, kas@kernel.org, liam@infradead.org, ljs@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-References: <20260518115553.3513034-1-usama.arif@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <20260518115553.3513034-1-usama.arif@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-MBO-RS-ID: 1678094390674a1865d
+X-MBO-RS-META: pqim3bixj3ebt8cs9fmnjx4xowyx5n3y
+
+On Fri, 2026-05-15 at 09:59 -0400, Vineeth Pillai (Google) wrote:
+> From: Vineeth Pillai <vineeth@bitbyteword.org>
+>=20
+> Replace trace_foo() with the new trace_call__foo() at sites already
+> guarded by trace_foo_enabled(), avoiding a redundant
+> static_branch_unlikely() re-evaluation inside the tracepoint.
+> trace_call__foo() calls the tracepoint callbacks directly without
+> utilizing the static branch again.
+
+The "foo" terminology is unusual I think? I always wrote it with regex,
+like "trace_*()".
 
 
 
-On 2026/5/18 19:55, Usama Arif wrote:
-[...]
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index 979885694351..f0e29d5c7b1f 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -1068,21 +1068,26 @@ static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
->>   }
->>   
->>   static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
->> -		struct collapse_control *cc)
->> +		struct collapse_control *cc, unsigned int order)
->>   {
->>   	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
->>   		     GFP_TRANSHUGE);
->>   	int node = collapse_find_target_node(cc);
->>   	struct folio *folio;
->>   
->> -	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
->> +	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
->>   	if (!folio) {
->>   		*foliop = NULL;
->> -		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
->> +		if (is_pmd_order(order))
->> +			count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
->> +		count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
->>   		return SCAN_ALLOC_HUGE_PAGE_FAIL;
->>   	}
->>   
->> -	count_vm_event(THP_COLLAPSE_ALLOC);
->> +	if (is_pmd_order(order))
->> +		count_vm_event(THP_COLLAPSE_ALLOC);
->> +	count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC);
->> +
-> 
-> The vmstat THP_COLLAPSE_ALLOC counter is pmd order only.
-> But after this we have
-> 
-> 	count_memcg_folio_events(folio, THP_COLLAPSE_ALLOC, 1);
-> 
-> which is not being guarded with is_pmd_order().
+>=20
+> Original v2 series:
+> https://lore.kernel.org/linux-trace-kernel/20260323160052.17528-1-vineeth=
+@bitbyteword.org/
 
-Good catch!
+I'd put this in a Link: tag section below.
 
-> 
-> I think we want this to be pmd order only as well so that
-> the meaning of the vmstat and cgroup counter remains the same?
+>=20
+> Parts of the original v2 series have already been merged in mainline.
+> This patch is being reposted as a follow-up cleanup for the remaining
+> unmerged pieces.
 
-Agreed. THP_COLLAPSE_ALLOC should remain PMD order only for
-vmstat and memcg events.
+So this v3 series as a whole is a followup to that v2?
 
-So this should be guarded with is_pmd_order() as well :)
+>=20
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> Assisted-by: Claude:claude-sonnet-4-6
+> ---
+> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 ++--
+> =C2=A0drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 +++++-----
+> =C2=A0drivers/gpu/drm/scheduler/sched_entity.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +++--
+> =C2=A04 files changed, 11 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd=
+/amdgpu/amdgpu_cs.c
+> index b24d5d21be5f..cb0b5cb07d57 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+> @@ -1004,7 +1004,7 @@ static void trace_amdgpu_cs_ibs(struct amdgpu_cs_pa=
+rser *p)
+> =C2=A0		struct amdgpu_job *job =3D p->jobs[i];
+> =C2=A0
+> =C2=A0		for (j =3D 0; j < job->num_ibs; ++j)
+> -			trace_amdgpu_cs(p, job, &job->ibs[j]);
+> +			trace_call__amdgpu_cs(p, job, &job->ibs[j]);
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd=
+/amdgpu/amdgpu_vm.c
+> index 9ba9de16a27a..a36ae94c425f 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+> @@ -1415,7 +1415,7 @@ int amdgpu_vm_bo_update(struct amdgpu_device *adev,=
+ struct amdgpu_bo_va *bo_va,
+> =C2=A0
+> =C2=A0	if (trace_amdgpu_vm_bo_mapping_enabled()) {
+> =C2=A0		list_for_each_entry(mapping, &bo_va->valids, list)
+> -			trace_amdgpu_vm_bo_mapping(mapping);
+> +			trace_call__amdgpu_vm_bo_mapping(mapping);
+> =C2=A0	}
+> =C2=A0
+> =C2=A0error_free:
+> @@ -2183,7 +2183,7 @@ void amdgpu_vm_bo_trace_cs(struct amdgpu_vm *vm, st=
+ruct ww_acquire_ctx *ticket)
+> =C2=A0				continue;
+> =C2=A0		}
+> =C2=A0
+> -		trace_amdgpu_vm_bo_cs(mapping);
+> +		trace_call__amdgpu_vm_bo_cs(mapping);
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/=
+gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index 5fc5d5608506..fbdc12cdd6bb 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -5263,11 +5263,11 @@ static void amdgpu_dm_backlight_set_level(struct =
+amdgpu_display_manager *dm,
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	if (trace_amdgpu_dm_brightness_enabled()) {
+> -		trace_amdgpu_dm_brightness(__builtin_return_address(0),
+> -					=C2=A0=C2=A0 user_brightness,
+> -					=C2=A0=C2=A0 brightness,
+> -					=C2=A0=C2=A0 caps->aux_support,
+> -					=C2=A0=C2=A0 power_supply_is_system_supplied() > 0);
+> +		trace_call__amdgpu_dm_brightness(__builtin_return_address(0),
+> +						 user_brightness,
+> +						 brightness,
+> +						 caps->aux_support,
+> +						 power_supply_is_system_supplied() > 0);
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	if (caps->aux_support) {
+> diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/s=
+cheduler/sched_entity.c
+> index fe174a4857be..185a2636b599 100644
+> --- a/drivers/gpu/drm/scheduler/sched_entity.c
+> +++ b/drivers/gpu/drm/scheduler/sched_entity.c
+> @@ -429,7 +429,8 @@ static bool drm_sched_entity_add_dependency_cb(struct=
+ drm_sched_entity *entity,
+> =C2=A0
+> =C2=A0	if (trace_drm_sched_job_unschedulable_enabled() &&
+> =C2=A0	=C2=A0=C2=A0=C2=A0 !test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &entity-=
+>dependency->flags))
+> -		trace_drm_sched_job_unschedulable(sched_job, entity->dependency);
+> +		trace_call__drm_sched_job_unschedulable(sched_job,
+> +							entity->dependency);
 
-Cheers, Lance
+I would be more happy if you sacrifice a bit of space here and keep it
+a single line since the if condition is already quite convoluted and
+challenging to read.
+
+
+P.
+
+> =C2=A0
+> =C2=A0	if (!dma_fence_add_callback(entity->dependency, &entity->cb,
+> =C2=A0				=C2=A0=C2=A0=C2=A0 drm_sched_entity_wakeup))
+> @@ -586,7 +587,7 @@ void drm_sched_entity_push_job(struct drm_sched_job *=
+sched_job)
+> =C2=A0		unsigned long index;
+> =C2=A0
+> =C2=A0		xa_for_each(&sched_job->dependencies, index, entry)
+> -			trace_drm_sched_job_add_dep(sched_job, entry);
+> +			trace_call__drm_sched_job_add_dep(sched_job, entry);
+> =C2=A0	}
+> =C2=A0	atomic_inc(entity->rq->sched->score);
+> =C2=A0	WRITE_ONCE(entity->last_user, current->group_leader);
+
