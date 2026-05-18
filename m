@@ -1,475 +1,370 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FFD481259
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 13:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB773793DE;
+	Mon, 18 May 2026 13:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779112185; cv=none; b=AHLawxRxxkNfUUUgGfuBOXdpt4vHNn0ZHr7MJCqRyKY/tT3aGjiktcWFYKz9Pk3JJ3gnteLIaenUvaxqKE/ccCcD7AcgFsgaQDZVz6d+4SU6X+yPuplxgbhyBM9kN65Q7XHMB65fnUaMapSNY7HbVdazU6mxSGC4Iwqe4CCHkTw=
+	t=1779112710; cv=none; b=nKF6E0fVl76suRrCKlJlZmGD/bJEsYGWExuGXVKLq1G7tYrRhIad0M3gNSfcsve/EYMtuToGkzQ8ePsS+/+pmk6cdZVk3mFiwi9XFSk5qHbs0LJUnHukKFanO919s9X/MAFPgXRabGU99Rx0SO8Lje164UXAOIEeLYEZIl0L7/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779112185; c=relaxed/simple;
-	bh=p7WZEwXNbhK0lVkEY+DpExH28HyCean8dgponTITKsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bGpdg42DKtO/31YHy1KkGckb/RHjJmWa2+iLKQ07OA65baJGF3Lhx7IRJKpTjwbg06X58VLhYH6AHmLzBUcHdkWOsxpjBvzVOk2zmecaffBRh2Agl+SzU1pN5t2kv0ETe6obIrDwVwh3hSWywbsbWyt3wR2oZgxYRwf34pK96UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h1wCBo5y; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h1wCBo5y"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779112180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l2FwIXaCr6z2c7J1Q50vcnQJYVZk8ntrsSo1FZstdpk=;
-	b=h1wCBo5yGFM1Zjrq18y6818uZ1o7a3Pd/5u+uWsrbc82Zwrl5NhvbkF2NZCGYwtNbkZI5Y
-	Hm32Fd5O0Pip+8LR2k4yQZWSoAFjcYG0ctQaIUb0EZaNiDt6pIg/EUXwLrueP+QTKNhjVi
-	Zp4VJN00ca+xQaffqoOD8oOTvNJMcfU=
-From: Usama Arif <usama.arif@linux.dev>
-To: Nico Pache <npache@redhat.com>
-Cc: Usama Arif <usama.arif@linux.dev>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	anshuman.khandual@arm.com,
-	apopple@nvidia.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	byungchul@sk.com,
-	catalin.marinas@arm.com,
-	cl@gentwo.org,
-	corbet@lwn.net,
-	dave.hansen@linux.intel.com,
-	david@kernel.org,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jackmanb@google.com,
-	jannh@google.com,
-	jglisse@google.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	lance.yang@linux.dev,
-	liam@infradead.org,
-	ljs@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	matthew.brost@intel.com,
-	mhiramat@kernel.org,
-	mhocko@suse.com,
-	peterx@redhat.com,
-	pfalcato@suse.de,
-	rakie.kim@sk.com,
-	raquini@redhat.com,
-	rdunlap@infradead.org,
-	richard.weiyang@gmail.com,
-	rientjes@google.com,
-	rostedt@goodmis.org,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shivankg@amd.com,
-	sunnanyong@huawei.com,
-	surenb@google.com,
-	thomas.hellstrom@linux.intel.com,
-	tiwai@suse.de,
-	usamaarif642@gmail.com,
-	vbabka@suse.cz,
-	vishal.moola@gmail.com,
-	wangkefeng.wang@huawei.com,
-	will@kernel.org,
-	willy@infradead.org,
-	yang@os.amperecomputing.com,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	zokeefe@google.com
-Subject: Re: [PATCH mm-unstable v17 04/14] mm/khugepaged: generalize __collapse_huge_page_* for mTHP support
-Date: Mon, 18 May 2026 06:49:28 -0700
-Message-ID: <20260518134929.1947933-1-usama.arif@linux.dev>
-In-Reply-To: <20260511185817.686831-5-npache@redhat.com>
-References: 
+	s=arc-20240116; t=1779112710; c=relaxed/simple;
+	bh=0iWugykATQYVTMbyksk048izgnrKy6+uHcttXBIIgJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rgu507nPG8AO06+oIJ/JbEnJSv/IqI66eYCna87CUOA5plV874znEiuIiDJH7nqKt/hJfCdq8BWTC9CIU16WFosQj5i3jMawcvX2jtiRP+pTAH+Cydn4fJb6qgDtZ05RBXP+MRctnJMJg954PmtD8TxXU0lLxEAOgE0W5V3VcrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 4C4191A06BC;
+	Mon, 18 May 2026 13:58:26 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 13F1C20016;
+	Mon, 18 May 2026 13:58:22 +0000 (UTC)
+Date: Mon, 18 May 2026 09:58:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
+ Takaya Saeki <takayas@google.com>, Douglas Raillard 
+ <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
+  <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian 
+ Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com> Subject: [PATCH
+ v2] tracing/pr
+Subject: [PATCH v3] tracing/probes: Allow use of BTF names to dereference
+ pointers
+Message-ID: <20260518095832.52659a3a@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: c9ojry6zrc8m3mqptnqxeufrb746i1i6
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 13F1C20016
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19PdUr/EgYucY7qiSu+lglV3jDhUBkhnqg=
+X-HE-Tag: 1779112702-985039
+X-HE-Meta: U2FsdGVkX1/Hv4NCC7BM9Sxbz/U0V3HVWGHNE4YYTvZK6NK7daExKO9TYkLCOffUnGkNlHvgN4N3aIHj9QLKUadOp9ysAEP4ZY+TdDGX6MBJKwhaCAKh1hw9YU1FWfMT0nl/9kerWBP4Bcptb4/c7VEbAfr6+MHV79ElxezHFqItpWhsSt1d9l8xdk4kHEwTzMTzFZqPJW/zeO9ElS9dL6mVlya0PhY+2g6lvVY9Oe3V4nTg6X5ZXCY3x2jUeayhvgqzk+YsaxfoHHC4IsLc2/wLndsxbtlcd1Sm5SbrHFvTyeqcQv+6q4UZybdK13Mrnr58jBzXDm0W6snTIm88ID1knL8kNuEZhUjDUUJFw8f2EeLhBS9iWUmxUYE+kt8OYvut2vAmXZpv8m5x17A8VCk5BOptGQ/H6oj86yjNkAbwaG77BbKrNjHFdU0iPwqERYSTuOODPVsL3u0oKGKFZA==
 
-On Mon, 11 May 2026 12:58:04 -0600 Nico Pache <npache@redhat.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> generalize the order of the __collapse_huge_page_* and collapse_max_*
-> functions to support future mTHP collapse.
-> 
-> The current mechanism for determining collapse with the
-> khugepaged_max_ptes_none value is not designed with mTHP in mind. This
-> raises a key design issue: if we support user defined max_pte_none values
-> (even those scaled by order), a collapse of a lower order can introduces
-> an feedback loop, or "creep", when max_ptes_none is set to a value greater
-> than HPAGE_PMD_NR / 2. [1]
-> 
-> With this configuration, a successful collapse to order N will populate
-> enough pages to satisfy the collapse condition on order N+1 on the next
-> scan. This leads to unnecessary work and memory churn.
-> 
-> To fix this issue introduce a helper function that will limit mTHP
-> collapse support to two max_ptes_none values, 0 and HPAGE_PMD_NR - 1.
-> This effectively supports two modes: [2]
-> 
-> - max_ptes_none=0: never collapses if it encounters an empty PTE or a PTE
->   that maps the shared zeropage. Consequently, no memory bloat.
-> - max_ptes_none=511 (on 4k pagesz): Always collapse to the highest
->   available mTHP order.
-> 
-> This removes the possiblilty of "creep", while not modifying any uAPI
-> expectations. A warning will be emitted if any non-supported
-> max_ptes_none value is configured with mTHP enabled.
-> 
-> mTHP collapse will not honor the khugepaged_max_ptes_shared or
-> khugepaged_max_ptes_swap parameters, and will fail if it encounters a
-> shared or swapped entry.
-> 
-> No functional changes in this patch; however it defines future behavior
-> for mTHP collapse.
-> 
-> [1] - https://lore.kernel.org/all/e46ab3ab-a3d7-4fb7-9970-d0704bd5d05a@arm.com
-> [2] - https://lore.kernel.org/all/37375ace-5601-4d6c-9dac-d1c8268698e9@redhat.com
-> 
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  include/trace/events/huge_memory.h |   3 +-
->  mm/khugepaged.c                    | 117 ++++++++++++++++++++---------
->  2 files changed, 85 insertions(+), 35 deletions(-)
-> 
-> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
-> index bcdc57eea270..443e0bd13fdb 100644
-> --- a/include/trace/events/huge_memory.h
-> +++ b/include/trace/events/huge_memory.h
-> @@ -39,7 +39,8 @@
->  	EM( SCAN_STORE_FAILED,		"store_failed")			\
->  	EM( SCAN_COPY_MC,		"copy_poisoned_page")		\
->  	EM( SCAN_PAGE_FILLED,		"page_filled")			\
-> -	EMe(SCAN_PAGE_DIRTY_OR_WRITEBACK, "page_dirty_or_writeback")
-> +	EM(SCAN_PAGE_DIRTY_OR_WRITEBACK, "page_dirty_or_writeback")	\
-> +	EMe(SCAN_INVALID_PTES_NONE,	"invalid_ptes_none")
->  
->  #undef EM
->  #undef EMe
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index f68853b3caa7..27465161fa6d 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -61,6 +61,7 @@ enum scan_result {
->  	SCAN_COPY_MC,
->  	SCAN_PAGE_FILLED,
->  	SCAN_PAGE_DIRTY_OR_WRITEBACK,
-> +	SCAN_INVALID_PTES_NONE,
->  };
->  
->  #define CREATE_TRACE_POINTS
-> @@ -353,37 +354,60 @@ static bool pte_none_or_zero(pte_t pte)
->   * PTEs for the given collapse operation.
->   * @cc: The collapse control struct
->   * @vma: The vma to check for userfaultfd
-> + * @order: The folio order being collapsed to
->   *
->   * Return: Maximum number of none-page or zero-page PTEs allowed for the
->   * collapse operation.
->   */
-> -static unsigned int collapse_max_ptes_none(struct collapse_control *cc,
-> -		struct vm_area_struct *vma)
-> +static int collapse_max_ptes_none(struct collapse_control *cc,
-> +		struct vm_area_struct *vma, unsigned int order)
->  {
-> +	unsigned int max_ptes_none = khugepaged_max_ptes_none;
->  	// If the vma is userfaultfd-armed, allow no none-page or zero-page PTEs.
->  	if (vma && userfaultfd_armed(vma))
->  		return 0;
->  	// for MADV_COLLAPSE, allow any none-page or zero-page PTEs.
->  	if (!cc->is_khugepaged)
->  		return HPAGE_PMD_NR;
-> -	// For all other cases repect the user defined maximum.
-> -	return khugepaged_max_ptes_none;
-> +	// for PMD collapse, respect the user defined maximum.
-> +	if (is_pmd_order(order))
-> +		return max_ptes_none;
-> +	/* Zero/non-present collapse disabled. */
-> +	if (!max_ptes_none)
-> +		return 0;
-> +	// for mTHP collapse with the sysctl value set to KHUGEPAGED_MAX_PTES_LIMIT,
-> +	// scale the maximum number of PTEs to the order of the collapse.
-> +	if (max_ptes_none == KHUGEPAGED_MAX_PTES_LIMIT)
-> +		return (1 << order) - 1;
-> +
-> +	// We currently only support max_ptes_none values of 0 or KHUGEPAGED_MAX_PTES_LIMIT.
-> +	// Emit a warning and return -EINVAL.
-> +	pr_warn_once("mTHP collapse only supports max_ptes_none values of 0 or %u\n",
-> +		      KHUGEPAGED_MAX_PTES_LIMIT);
-> +	return -EINVAL;
->  }
->  
->  /**
->   * collapse_max_ptes_shared - Calculate maximum allowed PTEs that map shared
->   * anonymous pages for the given collapse operation.
->   * @cc: The collapse control struct
-> + * @order: The folio order being collapsed to
->   *
->   * Return: Maximum number of PTEs that map shared anonymous pages for the
->   * collapse operation
->   */
-> -static unsigned int collapse_max_ptes_shared(struct collapse_control *cc)
-> +static unsigned int collapse_max_ptes_shared(struct collapse_control *cc,
-> +		unsigned int order)
->  {
->  	// for MADV_COLLAPSE, do not restrict the number of PTEs that map shared
->  	// anonymous pages.
->  	if (!cc->is_khugepaged)
->  		return HPAGE_PMD_NR;
-> +	// for mTHP collapse do not allow collapsing anonymous memory pages that
-> +	// are shared between processes.
-> +	if (!is_pmd_order(order))
-> +		return 0;
-> +	// for PMD collapse, respect the user defined maximum.
->  	return khugepaged_max_ptes_shared;
->  }
->  
-> @@ -391,16 +415,22 @@ static unsigned int collapse_max_ptes_shared(struct collapse_control *cc)
->   * collapse_max_ptes_swap - Calculate the maximum allowed non-present PTEs or the
->   * maximum allowed non-present pagecache entries for the given collapse operation.
->   * @cc: The collapse control struct
-> + * @order: The folio order being collapsed to
->   *
->   * Return: Maximum number of non-present PTEs or the maximum allowed non-present
->   * pagecache entries for the collapse operation.
->   */
-> -static unsigned int collapse_max_ptes_swap(struct collapse_control *cc)
-> +static unsigned int collapse_max_ptes_swap(struct collapse_control *cc,
-> +		unsigned int order)
->  {
->  	// for MADV_COLLAPSE, do not restrict the number PTEs entries or
->  	// pagecache entries that are non-present.
->  	if (!cc->is_khugepaged)
->  		return HPAGE_PMD_NR;
-> +	// for mTHP collapse do not allow any non-present PTEs or pagecache entries.
-> +	if (!is_pmd_order(order))
-> +		return 0;
-> +	// for PMD collapse, respect the user defined maximum.
->  	return khugepaged_max_ptes_swap;
->  }
->  
-> @@ -594,18 +624,22 @@ static void release_pte_pages(pte_t *pte, pte_t *_pte,
->  
->  static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  		unsigned long start_addr, pte_t *pte, struct collapse_control *cc,
-> -		struct list_head *compound_pagelist)
-> +		unsigned int order, struct list_head *compound_pagelist)
->  {
-> +	const unsigned long nr_pages = 1UL << order;
->  	struct page *page = NULL;
->  	struct folio *folio = NULL;
->  	unsigned long addr = start_addr;
->  	pte_t *_pte;
->  	int none_or_zero = 0, shared = 0, referenced = 0;
->  	enum scan_result result = SCAN_FAIL;
-> -	unsigned int max_ptes_none = collapse_max_ptes_none(cc, vma);
-> -	unsigned int max_ptes_shared = collapse_max_ptes_shared(cc);
-> +	int max_ptes_none = collapse_max_ptes_none(cc, vma, order);
-> +	unsigned int max_ptes_shared = collapse_max_ptes_shared(cc, order);
-> +
-> +	if (max_ptes_none < 0)
-> +		return SCAN_INVALID_PTES_NONE;
->  
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> +	for (_pte = pte; _pte < pte + nr_pages;
->  	     _pte++, addr += PAGE_SIZE) {
->  		pte_t pteval = ptep_get(_pte);
->  		if (pte_none_or_zero(pteval)) {
-> @@ -738,18 +772,18 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  }
->  
->  static void __collapse_huge_page_copy_succeeded(pte_t *pte,
-> -						struct vm_area_struct *vma,
-> -						unsigned long address,
-> -						spinlock_t *ptl,
-> -						struct list_head *compound_pagelist)
-> +		struct vm_area_struct *vma, unsigned long address,
-> +		spinlock_t *ptl, unsigned int order,
-> +		struct list_head *compound_pagelist)
->  {
-> -	unsigned long end = address + HPAGE_PMD_SIZE;
-> +	const unsigned long nr_pages = 1UL << order;
-> +	unsigned long end = address + (PAGE_SIZE << order);
->  	struct folio *src, *tmp;
->  	pte_t pteval;
->  	pte_t *_pte;
->  	unsigned int nr_ptes;
->  
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR; _pte += nr_ptes,
-> +	for (_pte = pte; _pte < pte + nr_pages; _pte += nr_ptes,
->  	     address += nr_ptes * PAGE_SIZE) {
->  		nr_ptes = 1;
->  		pteval = ptep_get(_pte);
-> @@ -802,11 +836,10 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
->  }
->  
->  static void __collapse_huge_page_copy_failed(pte_t *pte,
-> -					     pmd_t *pmd,
-> -					     pmd_t orig_pmd,
-> -					     struct vm_area_struct *vma,
-> -					     struct list_head *compound_pagelist)
-> +		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
-> +		unsigned int order, struct list_head *compound_pagelist)
->  {
-> +	const unsigned long nr_pages = 1UL << order;
->  	spinlock_t *pmd_ptl;
->  
->  	/*
-> @@ -822,7 +855,7 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->  	 * Release both raw and compound pages isolated
->  	 * in __collapse_huge_page_isolate.
->  	 */
-> -	release_pte_pages(pte, pte + HPAGE_PMD_NR, compound_pagelist);
-> +	release_pte_pages(pte, pte + nr_pages, compound_pagelist);
->  }
->  
->  /*
-> @@ -842,16 +875,17 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->   */
->  static enum scan_result __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->  		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
-> -		unsigned long address, spinlock_t *ptl,
-> +		unsigned long address, spinlock_t *ptl, unsigned int order,
->  		struct list_head *compound_pagelist)
->  {
-> +	const unsigned long nr_pages = 1UL << order;
->  	unsigned int i;
->  	enum scan_result result = SCAN_SUCCEED;
->  
->  	/*
->  	 * Copying pages' contents is subject to memory poison at any iteration.
->  	 */
-> -	for (i = 0; i < HPAGE_PMD_NR; i++) {
-> +	for (i = 0; i < nr_pages; i++) {
->  		pte_t pteval = ptep_get(pte + i);
->  		struct page *page = folio_page(folio, i);
->  		unsigned long src_addr = address + i * PAGE_SIZE;
-> @@ -870,10 +904,10 @@ static enum scan_result __collapse_huge_page_copy(pte_t *pte, struct folio *foli
->  
->  	if (likely(result == SCAN_SUCCEED))
->  		__collapse_huge_page_copy_succeeded(pte, vma, address, ptl,
-> -						    compound_pagelist);
-> +						    order, compound_pagelist);
->  	else
->  		__collapse_huge_page_copy_failed(pte, pmd, orig_pmd, vma,
-> -						 compound_pagelist);
-> +						 order, compound_pagelist);
->  
->  	return result;
->  }
-> @@ -1044,12 +1078,12 @@ static enum scan_result check_pmd_still_valid(struct mm_struct *mm,
->   * Returns result: if not SCAN_SUCCEED, mmap_lock has been released.
->   */
+Add syntax to the FETCHARGS parsing of probes to allow the use of
+structure and member names to get the offsets to dereference pointers.
 
+Currently, a dereference must be a number, where the user has to figure
+out manually the offset of a member of a structure that they want to
+reference. For example, to get the size of a kmem_cache that was passed to
+the function kmem_cache_alloc_noprof, one would need to do:
 
-Can you add a comment above __collapse_huge_page_swapin function that says its only
-done for PMD size only? Something like:
+ # cd /sys/kernel/tracing
+ # echo 'f:cache kmem_cache_alloc_noprof size=+0x18($arg1):u32' >> dynamic_events
 
-For PMD-order collapse this faults in any swap entries it finds. For mTHP
-orders the function bails on the first swap entry with SCAN_EXCEED_SWAP_PTE,
-because faulting pages back in during a lower-order collapse could re-populate
-PTEs that push a later scan over the threshold for a higher-order collapse.
+This requires knowing that the offset of size is 0x18, which can be found
+with gdb:
 
+  (gdb) p &((struct kmem_cache *)0)->size
+  $1 = (unsigned int *) 0x18
 
->  static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
-> -		struct vm_area_struct *vma, unsigned long start_addr, pmd_t *pmd,
-> -		int referenced)
-> +		struct vm_area_struct *vma, unsigned long start_addr,
-> +		pmd_t *pmd, int referenced, unsigned int order)
->  {
->  	int swapped_in = 0;
->  	vm_fault_t ret = 0;
-> -	unsigned long addr, end = start_addr + (HPAGE_PMD_NR * PAGE_SIZE);
-> +	unsigned long addr, end = start_addr + (PAGE_SIZE << order);
->  	enum scan_result result;
->  	pte_t *pte = NULL;
->  	spinlock_t *ptl;
-> @@ -1081,6 +1115,19 @@ static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
->  		    pte_present(vmf.orig_pte))
->  			continue;
->  
-> +		/*
-> +		 * TODO: Support swapin without leading to further mTHP
-> +		 * collapses. Currently bringing in new pages via swapin may
-> +		 * cause a future higher order collapse on a rescan of the same
-> +		 * range.
-> +		 */
-> +		if (!is_pmd_order(order)) {
-> +			pte_unmap(pte);
-> +			mmap_read_unlock(mm);
-> +			result = SCAN_EXCEED_SWAP_PTE;
-> +			goto out;
-> +		}
-> +
->  		vmf.pte = pte;
->  		vmf.ptl = ptl;
->  		ret = do_swap_page(&vmf);
-> @@ -1200,7 +1247,7 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
->  		 * that case.  Continuing to collapse causes inconsistency.
->  		 */
->  		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
-> -						     referenced);
-> +						     referenced, HPAGE_PMD_ORDER);
->  		if (result != SCAN_SUCCEED)
->  			goto out_nolock;
->  	}
-> @@ -1248,6 +1295,7 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
->  	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
->  	if (pte) {
->  		result = __collapse_huge_page_isolate(vma, address, pte, cc,
-> +						      HPAGE_PMD_ORDER,
->  						      &compound_pagelist);
->  		spin_unlock(pte_ptl);
->  	} else {
-> @@ -1278,6 +1326,7 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
->  
->  	result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
->  					   vma, address, pte_ptl,
-> +					   HPAGE_PMD_ORDER,
->  					   &compound_pagelist);
->  	pte_unmap(pte);
->  	if (unlikely(result != SCAN_SUCCEED))
-> @@ -1313,9 +1362,9 @@ static enum scan_result collapse_scan_pmd(struct mm_struct *mm,
->  		struct vm_area_struct *vma, unsigned long start_addr,
->  		bool *lock_dropped, struct collapse_control *cc)
->  {
-> -	const unsigned int max_ptes_none = collapse_max_ptes_none(cc, vma);
-> -	const unsigned int max_ptes_shared = collapse_max_ptes_shared(cc);
-> -	const unsigned int max_ptes_swap = collapse_max_ptes_swap(cc);
-> +	const int max_ptes_none = collapse_max_ptes_none(cc, vma, HPAGE_PMD_ORDER);
-> +	const unsigned int max_ptes_shared = collapse_max_ptes_shared(cc, HPAGE_PMD_ORDER);
-> +	const unsigned int max_ptes_swap = collapse_max_ptes_swap(cc, HPAGE_PMD_ORDER);
->  	pmd_t *pmd;
->  	pte_t *pte, *_pte;
->  	int none_or_zero = 0, shared = 0, referenced = 0;
-> @@ -2369,8 +2418,8 @@ static enum scan_result collapse_scan_file(struct mm_struct *mm,
->  		unsigned long addr, struct file *file, pgoff_t start,
->  		struct collapse_control *cc)
->  {
-> -	const unsigned int max_ptes_none = collapse_max_ptes_none(cc, NULL);
-> -	const unsigned int max_ptes_swap = collapse_max_ptes_swap(cc);
-> +	const int max_ptes_none = collapse_max_ptes_none(cc, NULL, HPAGE_PMD_ORDER);
-> +	const unsigned int max_ptes_swap = collapse_max_ptes_swap(cc, HPAGE_PMD_ORDER);
->  	struct folio *folio = NULL;
->  	struct address_space *mapping = file->f_mapping;
->  	XA_STATE(xas, &mapping->i_pages, start);
-> -- 
-> 2.54.0
-> 
-> 
+If BTF is in the kernel, it can be used to find this with names, where the
+user doesn't need to find the actual offset:
+
+ # echo 'f:cache kmem_cache_alloc_noprof size=+kmem_cache.size($arg1):u32' >> dynamic_events
+
+Instead of the "+0x18", it would have "+kmem_cache.size" where the format is:
+
+  +STRUCT.MEMBER[.MEMBER[..]]
+
+The delimiter is '.' and the first item is the structure name. Then the
+member of the structure to get the offset of. If that member is an
+embedded structure, another '.MEMBER' may be added to get the offset of
+its members with respect to the original value.
+
+  "+kmem_cache.size($arg1)" is equivalent to:
+
+  (*(struct kmem_cache *)$arg1).size
+
+Anonymous structures are also handled:
+
+  # echo 'e:xmit net.net_dev_xmit +net_device.name(+sk_buff.dev($skbaddr)):string' >> dynamic_events
+
+Where "+net_device.name(+sk_buff.dev($skbaddr))" is equivalent to:
+
+  (*(struct net_device *)((*(struct sk_buff *)($skbaddr)).dev)->name)
+
+Note that "dev" of struct sk_buff is inside an anonymous structure:
+
+struct sk_buff {
+	union {
+		struct {
+			/* These two members must be first to match sk_buff_head. */
+			struct sk_buff		*next;
+			struct sk_buff		*prev;
+
+			union {
+				struct net_device	*dev;
+				[..]
+			};
+		};
+		[..]
+	};
+
+This will allow up to three deep of anonymous structures before it will
+fail to find a member.
+
+The above produces:
+
+    sshd-session-1080    [000] b..5.  1526.337161: xmit: (net.net_dev_xmit) arg1="enp7s0"
+
+And nested structures can be found by adding more members to the arg:
+
+  # echo 'f:read filemap_readahead.isra.0 file=+0(+dentry.d_name.name(+file.f_path.dentry($arg2))):string' >> dynamic_events
+
+The above is equivalent to:
+
+  *((*(struct dentry *)(*(struct file *)$arg2).f_path.dentry)->d_name.name)
+
+And produces:
+
+       trace-cmd-1381    [002] ...1.  2082.676268: read: (filemap_readahead.isra.0+0x0/0x150) file="trace.dat"
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://patch.msgid.link/20260516173310.1dbad146@fedora
+
+- Added skip_modifies when looking up field (Sashiko)
+
+- Pass -E2BIG error to caller if that was the issue (Sashiko)
+
+- Fix btf_put() error path (Sashiko)
+
+- Update error log on -ENOENT (Sashiko)
+
+ Documentation/trace/kprobetrace.rst |   3 +
+ kernel/trace/trace_btf.c            | 115 ++++++++++++++++++++++++++++
+ kernel/trace/trace_btf.h            |  10 +++
+ kernel/trace/trace_probe.c          |  20 ++++-
+ kernel/trace/trace_probe.h          |   4 +-
+ 5 files changed, 149 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+index 3b6791c17e9b..00273157100c 100644
+--- a/Documentation/trace/kprobetrace.rst
++++ b/Documentation/trace/kprobetrace.rst
+@@ -54,6 +54,8 @@ Synopsis of kprobe_events
+   $retval	: Fetch return value.(\*2)
+   $comm		: Fetch current task comm.
+   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
++  +STRUCT.MEMBER[.MEMBER[..]](FETCHARG) : If BTF is supported, Fetch memory
++		  at FETCHARG + the offset of MEMBER inside of STRUCT.(\*5)
+   \IMM		: Store an immediate value to the argument.
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+@@ -70,6 +72,7 @@ Synopsis of kprobe_events
+         accesses one register.
+   (\*3) this is useful for fetching a field of data structures.
+   (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
++  (\*5) +STRUCT.MEMBER(FETCHARG) is equivalent to (*(struct STRUCT *)(FETCHARG)).MEMBER
+ 
+ Function arguments at kretprobe
+ -------------------------------
+diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+index 00172f301f25..ca09982d8dbe 100644
+--- a/kernel/trace/trace_btf.c
++++ b/kernel/trace/trace_btf.c
+@@ -120,3 +120,118 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 	return member;
+ }
+ 
++#define BITS_ROUNDDOWN_BYTES(bits) ((bits) >> 3)
++
++static int find_member(const char *ptr, struct btf *btf,
++		       const struct btf_type **type, int level)
++{
++	const struct btf_member *member;
++	const struct btf_type *t = *type;
++	int i;
++
++	/* Max of 3 depth of anonymous structures */
++	if (level > 3)
++		return -E2BIG;
++
++	for_each_member(i, t, member) {
++		const char *tname = btf_name_by_offset(btf, member->name_off);
++
++		if (strcmp(ptr, tname) == 0) {
++			int offset = __btf_member_bit_offset(t, member);
++			*type = btf_type_skip_modifiers(btf, member->type, NULL);
++			return BITS_ROUNDDOWN_BYTES(offset);
++		}
++
++		/* Handle anonymous structures */
++		if (strlen(tname))
++			continue;
++
++		*type = btf_type_by_id(btf, member->type);
++		if (btf_type_is_struct(*type)) {
++			int offset = find_member(ptr, btf, type, level + 1);
++
++			if (offset < 0) {
++				if (offset == -ENOENT)
++					continue;
++				return offset;
++			}
++
++			return offset + BITS_ROUNDDOWN_BYTES(member->offset);
++		}
++	}
++
++	return -ENOENT;
++}
++
++/**
++ * btf_find_offset - Find an offset of a member for a structure
++ * @arg: A structure name followed by one or more members
++ * @offset_p: A pointer to where to store the offset
++ *
++ * Will parse @arg with the expected format of: struct.member[[.member]..]
++ * It is delimited by '.'. The first item must be a structure type.
++ * The next are its members. If the member is also of a structure type it
++ * another member may follow ".member".
++ *
++ * Note, @arg is modified but will be put back to what it was on return.
++ *
++ * Returns: 0 on success and -EINVAL if no '.' is present
++ *    or -ENXIO if the structure or member is not found.
++ *    Returns -EINVAL if BTF is not defined.
++ *  On success, @offset_p will contain the offset of the member specified
++ *    by @arg.
++ */
++int btf_find_offset(char *arg, long *offset_p)
++{
++	const struct btf_type *t;
++	struct btf *btf;
++	long offset = 0;
++	char *ptr;
++	int ret;
++	s32 id;
++
++	ptr = strchr(arg, '.');
++	if (!ptr)
++		return -EINVAL;
++
++	*ptr = '\0';
++
++	ret = -ENXIO;
++	id = bpf_find_btf_id(arg, BTF_KIND_STRUCT, &btf);
++	if (id < 0)
++		goto error;
++
++	/* Get BTF_KIND_FUNC type */
++	t = btf_type_by_id(btf, id);
++
++	/* May allow more than one member, as long as they are structures */
++	do {
++		ret = -ENXIO;
++		if (!t || !btf_type_is_struct(t))
++			goto error_put;
++
++		*ptr++ = '.';
++		arg = ptr;
++		ptr = strchr(ptr, '.');
++		if (ptr)
++			*ptr = '\0';
++
++		ret = find_member(arg, btf, &t, 0);
++		if (ret < 0)
++			goto error_put;
++
++		offset += ret;
++
++	} while (ptr);
++
++	btf_put(btf);
++	*offset_p = offset;
++	return 0;
++
++error_put:
++	btf_put(btf);
++error:
++	if (ptr)
++		*ptr = '.';
++	return ret;
++}
+diff --git a/kernel/trace/trace_btf.h b/kernel/trace/trace_btf.h
+index 4bc44bc261e6..7b0797a6050b 100644
+--- a/kernel/trace/trace_btf.h
++++ b/kernel/trace/trace_btf.h
+@@ -9,3 +9,13 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 						const struct btf_type *type,
+ 						const char *member_name,
+ 						u32 *anon_offset);
++
++#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
++/* Will modify arg, but will put it back before returning. */
++int btf_find_offset(char *arg, long *offset);
++#else
++static inline int btf_find_offset(char *arg, long *offset)
++{
++	return -EINVAL;
++}
++#endif
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index e0d3a0da26af..74c4255da307 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1165,7 +1165,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 
+ 	case '+':	/* deref memory */
+ 	case '-':
+-		if (arg[1] == 'u') {
++		if (arg[1] == 'u' && isdigit(arg[2])) {
+ 			deref = FETCH_OP_UDEREF;
+ 			arg[1] = arg[0];
+ 			arg++;
+@@ -1178,7 +1178,23 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 			return -EINVAL;
+ 		}
+ 		*tmp = '\0';
+-		ret = kstrtol(arg, 0, &offset);
++		if (arg[0] != '-' && !isdigit(*arg)) {
++			int err = 0;
++			ret = btf_find_offset(arg, &offset);
++			switch (ret) {
++			case -ENODEV: err = TP_ERR_NOSUP_BTFARG; break;
++			case -E2BIG: err = TP_ERR_MEMBER_TOO_DEEP; break;
++			case -EINVAL: err = TP_ERR_BAD_STRUCT_FMT; break;
++			case -ENXIO: err = TP_ERR_BAD_BTF_TID; break;
++			case -ENOENT: err = TP_ERR_NO_BTF_FIELD; break;
++			}
++			if (err)
++				__trace_probe_log_err(ctx->offset, err);
++			if (ret < 0)
++				return ret;
++		} else {
++			ret = kstrtol(arg, 0, &offset);
++		}
+ 		if (ret) {
+ 			trace_probe_log_err(ctx->offset, BAD_DEREF_OFFS);
+ 			break;
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 262d8707a3df..d649bb9f5b7c 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -563,7 +563,9 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
+ 	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
+ 	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
+-	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),
++	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"), \
++	C(MEMBER_TOO_DEEP,	"Too many indirections of anonymous structure"), \
++	C(BAD_STRUCT_FMT,	"Unknown BTF structure"),
+ 
+ #undef C
+ #define C(a, b)		TP_ERR_##a
+-- 
+2.53.0
+
