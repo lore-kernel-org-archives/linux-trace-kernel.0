@@ -1,115 +1,254 @@
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC36619E819
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 23:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFEC30568D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 23:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779146025; cv=pass; b=IZfx6CjtWFBdEQBsls7DUMJJdL+6qDQ/C47nnZ+NC0WmSuA65I+KjkfjggISkOXz/WhWbGgGXTT6oRiweiRxebyrUoGz0rnzixzG9+qYCiN6aH9aGiM2kOOeItbUOEdPJZoAsboCkYOpL2ayZzfsKXPcpuy3CLoUdfeQ17QX2O4=
+	t=1779146460; cv=pass; b=TbfltqqeFcDQVcseiOXL6P2PZOkOWkC6x/p6wfekAWy85LtNz0q+4Uj6uPgmeUi+X+5e8FPYLX4slV+V6oDi9RKu70Az0YebkrA4wmep+3sH/HIe/qNQfH4XdgQzdz3ndt1fpHaBky5usyiagcFHEDUyFa/dCxr2tou1M7nwVPg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779146025; c=relaxed/simple;
-	bh=T7x3IVUUIgtSllWSYneDq36vtBDXHESPdHNN2hLyyGE=;
+	s=arc-20240116; t=1779146460; c=relaxed/simple;
+	bh=wEyF0FF+0amOJx0bechc/sCZKlR8Fmp0P7fBfvS3dCY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mZATTN8gkbNnUo+ll7vRxG+pBhQWPwzHtI3kbPmooJnPVsijytm4/1asW9cXLn+7yrNFXWwbWoPtvfRwHCKjJi3AERnjyG4UgJ4XTd05OGAlNFZzCFdCLj8oq79E5KEP1pFXNb0PqAew2NpnXD3iUExzaGI++yRGYq6vrotAPH4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=t4F5rmnX; arc=pass smtp.client-ip=74.125.224.47
+	 To:Cc:Content-Type; b=ApmoXk5u6YBiu2kNfnWK3TppNmuDBLWXzZaQ0B0xUoe7frQusE1qEEc48A5KbE7/OLEtdPCIYVoc8+dGZWUBsfQnr1oRCQ+vN+V9MUqADLNR14bg0ltlce+kUqdrmYBPZw2Rk0BMPb6Httkm1c1EWxNhJC8eVvACuGU2R9/iWPA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=fOq4rzMi; arc=pass smtp.client-ip=74.125.224.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="t4F5rmnX"
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-65c1ba7eeb6so2957223d50.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 16:13:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779146022; cv=none;
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="fOq4rzMi"
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-654672a6d68so2932068d50.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 16:20:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779146458; cv=none;
         d=google.com; s=arc-20240605;
-        b=YkFensj54/W1Dm0+qQ+Hf+EvlPMtgKlkEq7/8Pl3vEwlVbP2bjGw4ad7TTw76VsNhI
-         q2Md6gwgAqklASQ/xoJfq2Z0JSTekAGLvLP4j5lAWZ3IR3R4pgqxSucEIzp4+qAHbevY
-         quxNve/TiEJQR8FqCyl58SVNPcEdN0KoaA+/Xn8m65g83zfDe/Ofj6IMyNYdVWpLli1Z
-         NZhKKJI9/ZD6xhl45GfaMkcgmlhktbCf6YflcnbKJV59u0ubeQWPNFiPIS/DejsNX3/k
-         4dnCaWwM3n+6AetyhtviEx0FcwFobXpXGu5O4SMwTLDr6Pe0kQBVLmNDleS0DCQ88KiJ
-         kCXA==
+        b=LdcwJwZGXTqyqHcWDe06xLcYNzvL2g89AaSszKHOD413jAmmaTs9gBgEEPJBZS4MSs
+         eCMvhn69mRzWi5X/EK+sfC6zr+JN98HyFH+pOg9VyJYYDAMrpv9phEWNhdw/oCVRayKo
+         LuePkC6rdSfvLILkRSGcj+ZoAgqtBLFYnzpPNbnYga8Uqcq9E7dRdJ8G6AwG6r0zbgxP
+         NAVLDQi3tcJiAmWGJXLeP4IRtMZ7ldB1XFW3A1XGR23+rn1XoVcyI04kIxtbt8KuerJ/
+         cxwWWzmZKpHSJvdygTk7nzPojvPBkEL4i1XRvdpBMCAIOYHho3aGD8bNCOT6AfphW2LE
+         Vz+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=BwHZlfiYmXrlLurjFFYCMzxFPefIBkUCbNKJ0BH1hiA=;
-        fh=uQ0FY4VXvrTHyhRZNcwtmI8Rf90Ss3AHLTFckhqmXXM=;
-        b=hGoqeO9deb7h7fidyFeZeYDh+hkRCFOAab+deYjZHPV4x6BmwVNmzrAYER6Rgg46tZ
-         QcDiLy9xN8U9XSPYdN+RDfTOmMGoDRbE8/5Z1piQgzgRAAyURY7cygJR56uU0/u7vjTM
-         xHJTMTJq606rZ0OwNKeKbCS1Z+SYi1fUTtArsnvwiyIWi8qmIHQqLN4qQ1b5mDpy40PY
-         /wV38mmhGT+KxehN92S0QA2peQbeS583SoXCYEgDiG7qpU9IY4KtbuaLLfz018VRV3ec
-         qedBTbZ/FVD8Hp3eoXeNmlh2Cic2GVqHXz0NnlcbdHyrnIdTMmr0Va6MemQJ83RP7vvy
-         Yrnw==;
+        bh=qyiC/6ER7XJQAQS9fYV1hi++02Ay+WfrOqQ6ixqtbHQ=;
+        fh=jFw1kQI5H1wiDQ27T1qeTUmkNlJOVyC6uL2bR1YSh4E=;
+        b=gO1zoVEx7NoKkKDDJcGMbe5/P8xklrKSRuDmmviMkBWIvXyr3UWUdEVi5WZLM4bNDD
+         UkHlkojE6LcUd61R1TWaW2o6MxefvlMCY+vEcDITf0pA1uG86OyITQJ13rSJ0YaZwXGQ
+         w+lXNOSlWkOZwEckHu6QYD4M0eEg+aONv8rZl/liX6Rvh/bTVlBHKSbsnj2JBuT4PR9f
+         XSqwR+2Wmuo8TXemcIhjlTaSPyvhKPi76Gmt1vATQTO7WcsgMDhan51mP7EuV+Yg+2fk
+         Hv014T/QLwu06XByARbtY4fsU+eqb5XP37lCwkPPofWOu3OeHG26CxNjgKUFLm/vMK7R
+         zhWw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1779146022; x=1779750822; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1779146458; x=1779751258; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BwHZlfiYmXrlLurjFFYCMzxFPefIBkUCbNKJ0BH1hiA=;
-        b=t4F5rmnXtQD2wOgbHUnXkl9Yv6UwxceG8Z9eZihfp4FhzZ2FWTIyzK8z5QDEzzustl
-         qdJKKNsaP2AAZeyanhvqYkn6RNjRFIj3xPejhToLo+aq8E/TDPbxkE7Q1g6mHZFa+Tq8
-         evTShdCNFSCTHgr1GFGUfaaaADkE0rMNI5coLMswvjRBPRCEaZ6y4+MU4quQbNT6lbta
-         8F/k/LuanBK+IrLBCKDVjbpfKeQY7v1PxPsN6YNDOdQkZKQlSlx1mbTKSCyTBLchya/2
-         0kLCaj7jSMKS+H3yyoBUbpUstLCmUKtGWGOTFoEM4efIP1lg506kqCmuqPN41JF5I2OB
-         MQ+g==
+        bh=qyiC/6ER7XJQAQS9fYV1hi++02Ay+WfrOqQ6ixqtbHQ=;
+        b=fOq4rzMiAuBleN1uDzFodTmzu864lGlN4m9MohCgwRb9cJ5J5TUMbd0wkFwtSKtfb5
+         fib1ZqwEeaiLNp9cqVOw7i3UR1NP/AITYe+9cT2tN0oQiGEj8kzgyieZSfJTAykkBfjj
+         mvn6AV2wOhT4AiRyBFSplZzuRQ5NHCWSbwo4qcI0ImbzQf3oKnoZAmbs2XnDKYxk0OQ8
+         HBulHI8LICmo3DKNWL57IHUQixmsAxkEOcfnnubnuvR86lA4OPi9YvLAxQ+4yZueQh7J
+         yuFCx5hCGV5t+Qt2cnMtG7UmVcuxkVJtKi6tKFhCpeFHOolvZBjQcZfAG5oNaEWqQ94U
+         flwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779146022; x=1779750822;
+        d=1e100.net; s=20251104; t=1779146458; x=1779751258;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=BwHZlfiYmXrlLurjFFYCMzxFPefIBkUCbNKJ0BH1hiA=;
-        b=Y7vx/FdR4T25MIJ3UJfQzM8Jwwd5E059yBJOPML1PWkLScFc2v2f8Y7DZavlsbH1jd
-         IC000WcQ1IJ35Htx6XJ+b4h4S8uWr7Mcd200rIOcMeOgUeItx9lqBa6e55TL854AD2vD
-         MEMntEIOh1iQAy+e0sTOcDl7l9To8Iy2C0foNrKoFwYSlA/+fQSuup+2dzbkFCalJc/j
-         wuG1261HzAdJLxzWl7taaDHCIxuucl0j03cTp7iFA4aPR2Zx5lL68zNGkIwhzr73aL9V
-         LKThHm5Ni62VK4Ougsnthln7JH6EM/2OVrXk0AH3uP+MwR1U8LzLm1wrdIc/NAQBxP6S
-         FF2w==
-X-Forwarded-Encrypted: i=1; AFNElJ9RJM80KwCCE7X0OWmkcS3D6K7/HdzIdNwctdP4xUr1qizLjYyIFd0vBlRgaPMbOa79/1zdekKoG+Gj76HcaWgDOjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYXvwLCH/aPmhZOm/3G6cWSNX8N4kKBJblyYgChtvlNHFXMXz8
-	k4uZNbPpsWgSH8gKjfiqSpHJmD+HYk2oGgGuHx1WRJ3/xYl5m4lvNxTMJUHYI1W/l663QDbG61y
-	ez6GnOSUf8j1rLL9ohHIe5TCRNfU2EY7N+/poZ6RFtA==
-X-Gm-Gg: Acq92OFlZlDQq0LBYMknWbHnLm5XNWWVy7bh/XtO80371i1+CqbY6WvGNi8QnX+wY/y
-	V2J5gXWhojt3ZTt/dh6yKqV8fzhvzdKuv6HAog0CcKPgl25fsgeMw/2phjZeIzw1PZrShR3MYQK
-	dAHdzI9QqZAZ1g6MacmYpw86eY7TiYxw/pKFa0Pq/b24hJjvvrHKArK5hoFvCZoMgx4fA3lC1DY
-	VTN3MLFUFwzoCkTBNrLSIpVS713yn5Hwt6Pq6ygx4DBi8KrPSUAPAHldsZExVIJ06JpKDJpEmII
-	vs+o0ewgjL+5HbmNZ25c
-X-Received: by 2002:a05:690e:b44:b0:65e:5d9c:286c with SMTP id
- 956f58d0204a3-65e5d9c3286mr5438297d50.31.1779146022578; Mon, 18 May 2026
- 16:13:42 -0700 (PDT)
+        bh=qyiC/6ER7XJQAQS9fYV1hi++02Ay+WfrOqQ6ixqtbHQ=;
+        b=g0yiPTk6tJj2cr1QHZz7+7nbshMF8rdCpOcIUzZOrFBIzU2e4TQUdBPgkhezluGP21
+         tIlFYe3j1EPYAYMIfZRfJBcefdgz0FbmVk2CWK+r7YqBhRTwCX7qxDa82bQobedZ6y6Y
+         c5Jwz52s5rsZm56yCOUAiz/NUKjIr7KiAy/jG7rhPaAEv89JM7dfqDgPWitc4bYJ4gdB
+         ks4vP0YUIs0ClRiCR8mWHP5wPp2y62+4gZkSV+4q0iFFX+2U8wONrBvkn53wNXlW38ky
+         PiyljLFn0RA2A1ABtKRDeXcakNk9kX3xQC1Phwnbk12kG+bxk5klV8rS9wBvkAFKczOz
+         CrHw==
+X-Forwarded-Encrypted: i=1; AFNElJ8PtN+Mt/HURRZEiuOspGS6fRSpKfxLw+X7CjnaPT1oG5O1L31SNMA4NzwCdLv+M7iejs7aM/n33acCNVPGnEmq9iE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylEpkJHfYJlNWs3G40aIDGdKpV07Q5thyFwU9MkB843zQm9ZCd
+	JBkOlekDJ6DxUoP+SnNwoIjcSjI9i3oyKaa4pC8xegqrAaDaiIdeI74RHiHgHRs58RMdUWmrTd0
+	z3/iZbeknBQBYg9sYUdZ42Un1R3HrcV7eWDccdLxtpiDfR2aE3VCEW7RNXfKi
+X-Gm-Gg: Acq92OFDqMwWeNGYhwTcKRWzz6dHLxwU3ZlQ+1v2Nqgsneym0+Qk3dygx4xcUeaJOot
+	AEQ1X4XCw91q8EfHtL0OFUB55nWQPktPQ+P2wtc23dcuMZUcS49PgJLGgq7fEq/ZS2zD0kHl2X6
+	V/NhY6cbzCegK4/jyZhArotSHQIOSHdpp8TlLyrQDQzCwZnCxj0r44q3B8e32vbD1AZHh6dkY8X
+	6LFPv4npw5PnSj1+AFlg7AqdEQF6gC/tZWp78ygsMJ5IbyPBcl9Tn3pr7/CtXhvZh8kKVE8o5Vb
+	X7c59nW7Kw==
+X-Received: by 2002:a05:690e:148b:b0:65c:6164:f29a with SMTP id
+ 956f58d0204a3-65e22839e7fmr18959504d50.46.1779146457665; Mon, 18 May 2026
+ 16:20:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260515135959.2238922-1-vineeth@bitbyteword.org> <87jyt2xzj6.ffs@tglx>
-In-Reply-To: <87jyt2xzj6.ffs@tglx>
+References: <20260515135932.2238842-1-vineeth@bitbyteword.org> <81783d0807a5ffac93f61eddba0d2f595d7f239f.camel@mailbox.org>
+In-Reply-To: <81783d0807a5ffac93f61eddba0d2f595d7f239f.camel@mailbox.org>
 From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Mon, 18 May 2026 19:13:31 -0400
-X-Gm-Features: AVHnY4IXsQQMLTdS4POtHqRxTRzqXEVnWlXlOMBhTtqR6-HYQSgMty8ZLsPk1AI
-Message-ID: <CAO7JXPhToByj4Gh42G2k4Ow-Qoasr4rmSKgDgMBmSjBnjuqY7g@mail.gmail.com>
-Subject: Re: [PATCH v3 10/11] kernel: time, trace: Use trace_call__##name() at
- guarded tracepoint call sites
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Ingo Molnar <mingo@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+Date: Mon, 18 May 2026 19:20:46 -0400
+X-Gm-Features: AVHnY4KAw0ZavPbDVfhEtyHlzriwrbmjQeDlQua14-BfS3GXG-7uIcLEub9UvWg
+Message-ID: <CAO7JXPhMBd0xgDRO-gZ2HpSTnrj1OD67c39jrXWEKaowNc9GEA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/11] drm: Use trace_call__##name() at guarded
+ tracepoint call sites
+To: phasta@kernel.org
+Cc: Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, Steven Rostedt <rostedt@goodmis.org>, 
 	linux-trace-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 17, 2026 at 3:31=E2=80=AFAM Thomas Gleixner <tglx@kernel.org> w=
-rote:
+On Mon, May 18, 2026 at 11:01=E2=80=AFAM Philipp Stanner <phasta@mailbox.or=
+g> wrote:
 >
-> On Fri, May 15 2026 at 09:59, Vineeth Pillai wrote:
+> On Fri, 2026-05-15 at 09:59 -0400, Vineeth Pillai (Google) wrote:
+> > From: Vineeth Pillai <vineeth@bitbyteword.org>
+> >
+> > Replace trace_foo() with the new trace_call__foo() at sites already
+> > guarded by trace_foo_enabled(), avoiding a redundant
+> > static_branch_unlikely() re-evaluation inside the tracepoint.
+> > trace_call__foo() calls the tracepoint callbacks directly without
+> > utilizing the static branch again.
+>
+> The "foo" terminology is unusual I think? I always wrote it with regex,
+> like "trace_*()".
+>
+Sorry about the terminology. Part of the patches got merged this way,
+so is it okay to continue the terminology to have consistency?
+
+>
+>
+> >
+> > Original v2 series:
+> > https://lore.kernel.org/linux-trace-kernel/20260323160052.17528-1-vinee=
+th@bitbyteword.org/
+>
+> I'd put this in a Link: tag section below.
+>
+Makes sense, will do. Steve also suggested to put this whole section
+after "---" because it isn't relevant to the changes. Will fix this in
+next iteration.
+
+> >
+> > Parts of the original v2 series have already been merged in mainline.
+> > This patch is being reposted as a follow-up cleanup for the remaining
+> > unmerged pieces.
+>
+> So this v3 series as a whole is a followup to that v2?
+>
+v3 is a follow up to remaining patches that were not merged with the
+previous cycle. The core api and couple of patches went in the
+previous cycle, so this is for rest of it.
+
+The intention was to send this v3 as a direct patch to individual
+subsystem maintainers but forgot to remove the numbering and hence
+there might be a confusion. Will remove the numbering and send it  as
+stand alone patch in the next iteration.
+
+> >
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> > Assisted-by: Claude:claude-sonnet-4-6
 > > ---
-> >  kernel/time/tick-sched.c       | 12 ++++++------
-> >  kernel/trace/trace_benchmark.c |  2 +-
-> >  2 files changed, 7 insertions(+), 7 deletions(-)
+> >  drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c            |  2 +-
+> >  drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c            |  4 ++--
+> >  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 +++++-----
+> >  drivers/gpu/drm/scheduler/sched_entity.c          |  5 +++--
+> >  4 files changed, 11 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/a=
+md/amdgpu/amdgpu_cs.c
+> > index b24d5d21be5f..cb0b5cb07d57 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+> > @@ -1004,7 +1004,7 @@ static void trace_amdgpu_cs_ibs(struct amdgpu_cs_=
+parser *p)
+> >               struct amdgpu_job *job =3D p->jobs[i];
+> >
+> >               for (j =3D 0; j < job->num_ibs; ++j)
+> > -                     trace_amdgpu_cs(p, job, &job->ibs[j]);
+> > +                     trace_call__amdgpu_cs(p, job, &job->ibs[j]);
+> >       }
+> >  }
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/a=
+md/amdgpu/amdgpu_vm.c
+> > index 9ba9de16a27a..a36ae94c425f 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+> > @@ -1415,7 +1415,7 @@ int amdgpu_vm_bo_update(struct amdgpu_device *ade=
+v, struct amdgpu_bo_va *bo_va,
+> >
+> >       if (trace_amdgpu_vm_bo_mapping_enabled()) {
+> >               list_for_each_entry(mapping, &bo_va->valids, list)
+> > -                     trace_amdgpu_vm_bo_mapping(mapping);
+> > +                     trace_call__amdgpu_vm_bo_mapping(mapping);
+> >       }
+> >
+> >  error_free:
+> > @@ -2183,7 +2183,7 @@ void amdgpu_vm_bo_trace_cs(struct amdgpu_vm *vm, =
+struct ww_acquire_ctx *ticket)
+> >                               continue;
+> >               }
+> >
+> > -             trace_amdgpu_vm_bo_cs(mapping);
+> > +             trace_call__amdgpu_vm_bo_cs(mapping);
+> >       }
+> >  }
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/driver=
+s/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > index 5fc5d5608506..fbdc12cdd6bb 100644
+> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > @@ -5263,11 +5263,11 @@ static void amdgpu_dm_backlight_set_level(struc=
+t amdgpu_display_manager *dm,
+> >       }
+> >
+> >       if (trace_amdgpu_dm_brightness_enabled()) {
+> > -             trace_amdgpu_dm_brightness(__builtin_return_address(0),
+> > -                                        user_brightness,
+> > -                                        brightness,
+> > -                                        caps->aux_support,
+> > -                                        power_supply_is_system_supplie=
+d() > 0);
+> > +             trace_call__amdgpu_dm_brightness(__builtin_return_address=
+(0),
+> > +                                              user_brightness,
+> > +                                              brightness,
+> > +                                              caps->aux_support,
+> > +                                              power_supply_is_system_s=
+upplied() > 0);
+> >       }
+> >
+> >       if (caps->aux_support) {
+> > diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm=
+/scheduler/sched_entity.c
+> > index fe174a4857be..185a2636b599 100644
+> > --- a/drivers/gpu/drm/scheduler/sched_entity.c
+> > +++ b/drivers/gpu/drm/scheduler/sched_entity.c
+> > @@ -429,7 +429,8 @@ static bool drm_sched_entity_add_dependency_cb(stru=
+ct drm_sched_entity *entity,
+> >
+> >       if (trace_drm_sched_job_unschedulable_enabled() &&
+> >           !test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &entity->dependency->f=
+lags))
+> > -             trace_drm_sched_job_unschedulable(sched_job, entity->depe=
+ndency);
+> > +             trace_call__drm_sched_job_unschedulable(sched_job,
+> > +                                                     entity->dependenc=
+y);
 >
-> Please split that into a tick/sched and trace patch so each can be picked
-> up in the relevant subsystems.
+> I would be more happy if you sacrifice a bit of space here and keep it
+> a single line since the if condition is already quite convoluted and
+> challenging to read.
 >
-Sorry about this, will split and send it in next iteration.
+I understand, will fix it in next iteration.
 
 Thanks,
 Vineeth
