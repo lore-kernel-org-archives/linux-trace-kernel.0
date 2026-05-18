@@ -1,235 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28732391846;
-	Mon, 18 May 2026 19:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B25396572;
+	Mon, 18 May 2026 21:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779132786; cv=none; b=EF+aVlUiEddfkMXJ2ho88t2mWd6UQ6rkeXDYJqTFbNHM/Ny5BtQ8wV9OFaeMopaK8/Yv9FbHv9Bg7PvyUeNUNKUmRpFXtntcs8DLXpCxFdsBq5Puz+4EfLX9N/pgRYWcUh5GsctPx6qXF9vCZbijFIGKxfsiOLabVSzxTa+VG+0=
+	t=1779140507; cv=none; b=q6B2UQn7gquNOp6eq9i/p9zXHcOMiFFQn/+iUg7hA7Kz3OXxKwbrb6XrVyYGnB2gXC+2yR911yDU2ewajBXnbxQZ9tTr22SMl3hd78Z/0PlrgLX8imILmih1AvgWcY0HmIoYhpB2VnzaIZaaB6dXIH1zx2K8aTs+xLKjgWpqBDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779132786; c=relaxed/simple;
-	bh=YkGCI2ydQOiH18bfYuav9c9v7raj6NjUh/q2u2zqGQ0=;
+	s=arc-20240116; t=1779140507; c=relaxed/simple;
+	bh=oZBeInOYDOPK0NTsNQGsA7zf1MCFDyCmLbggLwSo5lA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+guBRHnkVhy7W089AsW1Idu3YKA25J/4r+efwUBegaBIHeOq8JEJDHyQ19zJWBGf2VBX3IJ7xpv0a+OmgpVo3S3Mp22Onoo9cLVvrR9bclGPkQCSyIM/Gcmr/BqWo4wwRZ1ZmWmRgN/Or9Is3SvwtsLg/tpwup17Rx7eBJfy64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDmvFmZ+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h10EXx3aensvnsZLdUa4AUp7+KTKZu6gLjn9WA1ZE38FmEZB9cU40Fu14V1HwRe1RudLmDGG+Rie2EAjgVC79rGtotkiYaJWJEdldp5Uf4RC45bVCDvC4Y1Fzab+OYXPwwIDZd3gPZapVaduZE1bWyObKKKUtPdoQiFXvxt4yMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LHos9Rtp; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDmvFmZ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D75C2BCC6;
-	Mon, 18 May 2026 19:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779132785;
-	bh=YkGCI2ydQOiH18bfYuav9c9v7raj6NjUh/q2u2zqGQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vDmvFmZ+iTrW6rG0Gcm9nWDPvvRK1Rsj48dFtKprQeQ1e6lYyM5VMFRhBpg8rwS61
-	 0TNXTtczIM+BVYe4dk6R82ZVaWwaFbuN+I3al6alVhDH1MljGD3eYqKFw/QXi7Qvm0
-	 JKoE6kG5Db51dOjr9Juw7dqsEFy3nED8MYgsGtG2paTjp5kcRM6tNacnnxJWHErq5S
-	 M8Qrai0JHOMsBE7ZTTpOx6tIkJOYjnAKZFKHD4doWsSaZi9ZYNp4SbjR5D1f4rsOHj
-	 H3beDvWRIUdalnXZNIQ+HM/9w5MnR/fIEerEMaPESJ8Zc3zgsQGlP1eDVwfo09KpCR
-	 ofuvouMs7WwgQ==
-Date: Mon, 18 May 2026 20:32:50 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, 
-	Lance Yang <lance.yang@linux.dev>, npache@redhat.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	aarcange@redhat.com, akpm@linux-foundation.org, anshuman.khandual@arm.com, 
-	apopple@nvidia.com, baohua@kernel.org, baolin.wang@linux.alibaba.com, 
-	byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
-	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, 
-	hughd@google.com, jack@suse.cz, jackmanb@google.com, jannh@google.com, 
-	jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, liam@infradead.org, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
-	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com, 
-	thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, 
-	vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-Subject: Re: [PATCH mm-unstable v17 04/14] mm/khugepaged: generalize
- __collapse_huge_page_* for mTHP support
-Message-ID: <agtpK1x27B-E7mMo@lucifer>
-References: <20260511185817.686831-5-npache@redhat.com>
- <20260512074202.10253-1-lance.yang@linux.dev>
- <20260514031009.f66cgop3ctgiqxz3@master>
- <9b33339e-157a-45b7-942e-3be3418a5142@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LHos9Rtp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=sxs5zNbGs5J/jp4BoRyNAGaFyHvLDwSDdje5doHAm0s=; b=LHos9RtpNRaIK8IKRns5dStvhw
+	UDItcXJ0ZfMjOchtwO4olnfe1IK+0pMIAB+WIziSBmims0SavDajbCuxc3E104H75SIUEO9M1cu8R
+	DskM9EVrhTDFYXA+ucnYH0jeCtdgqVmXcjncTCM6GZI0gGBZz09x2f3ZD9hj+5//3DemFKhbdrmQ0
+	8TjmmNCfO/zOwIxzFsOLcdDD/qOFVQ1Vy5NQj3c3K2LVtZ33qVXdiT+E2txDspfs/gP3doTme4+mP
+	5rjmqL/bDG9ysUakaBxuphK2o+VokYcBMcNyHn+XHKXar75i7AZ4EQcl2/r+9RNlvHlTtyvtXqyr/
+	yheGwa9g==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wP5i9-0000000COlz-0lq7;
+	Mon, 18 May 2026 21:41:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 44749300182; Mon, 18 May 2026 23:41:16 +0200 (CEST)
+Date: Mon, 18 May 2026 23:41:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] perf: enable unprivileged syscall tracing with
+ perf trace
+Message-ID: <20260518214116.GZ3102624@noisy.programming.kicks-ass.net>
+References: <20260515194010.93725-2-ashelat@redhat.com>
+ <20260515194010.93725-4-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9b33339e-157a-45b7-942e-3be3418a5142@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260515194010.93725-4-ashelat@redhat.com>
 
-On Mon, May 18, 2026 at 03:16:11PM +0200, David Hildenbrand (Arm) wrote:
-> On 5/14/26 05:10, Wei Yang wrote:
-> > On Tue, May 12, 2026 at 03:42:02PM +0800, Lance Yang wrote:
-> >>
-> >> On Mon, May 11, 2026 at 12:58:04PM -0600, Nico Pache wrote:
-> >>> generalize the order of the __collapse_huge_page_* and collapse_max_*
-> >>> functions to support future mTHP collapse.
-> >>>
-> >>> The current mechanism for determining collapse with the
-> >>> khugepaged_max_ptes_none value is not designed with mTHP in mind. This
-> >>> raises a key design issue: if we support user defined max_pte_none values
-> >>> (even those scaled by order), a collapse of a lower order can introduces
-> >>> an feedback loop, or "creep", when max_ptes_none is set to a value greater
-> >>> than HPAGE_PMD_NR / 2. [1]
-> >>>
-> >>> With this configuration, a successful collapse to order N will populate
-> >>> enough pages to satisfy the collapse condition on order N+1 on the next
-> >>> scan. This leads to unnecessary work and memory churn.
-> >>>
-> >>> To fix this issue introduce a helper function that will limit mTHP
-> >>> collapse support to two max_ptes_none values, 0 and HPAGE_PMD_NR - 1.
-> >>> This effectively supports two modes: [2]
-> >>>
-> >>> - max_ptes_none=0: never collapses if it encounters an empty PTE or a PTE
-> >>>  that maps the shared zeropage. Consequently, no memory bloat.
-> >>> - max_ptes_none=511 (on 4k pagesz): Always collapse to the highest
-> >>>  available mTHP order.
-> >>>
-> >>> This removes the possiblilty of "creep", while not modifying any uAPI
-> >>> expectations. A warning will be emitted if any non-supported
-> >>> max_ptes_none value is configured with mTHP enabled.
-> >>>
-> >>> mTHP collapse will not honor the khugepaged_max_ptes_shared or
-> >>> khugepaged_max_ptes_swap parameters, and will fail if it encounters a
-> >>> shared or swapped entry.
-> >>>
-> >>> No functional changes in this patch; however it defines future behavior
-> >>> for mTHP collapse.
-> >>>
-> >>> [1] - https://lore.kernel.org/all/e46ab3ab-a3d7-4fb7-9970-d0704bd5d05a@arm.com
-> >>> [2] - https://lore.kernel.org/all/37375ace-5601-4d6c-9dac-d1c8268698e9@redhat.com
-> >>>
-> >>> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> >>> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> >>> Signed-off-by: Nico Pache <npache@redhat.com>
-> >>> ---
-> >>> include/trace/events/huge_memory.h |   3 +-
-> >>> mm/khugepaged.c                    | 117 ++++++++++++++++++++---------
-> >>> 2 files changed, 85 insertions(+), 35 deletions(-)
-> >>>
-> >>> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
-> >>> index bcdc57eea270..443e0bd13fdb 100644
-> >>> --- a/include/trace/events/huge_memory.h
-> >>> +++ b/include/trace/events/huge_memory.h
-> >>> @@ -39,7 +39,8 @@
-> >>> 	EM( SCAN_STORE_FAILED,		"store_failed")			\
-> >>> 	EM( SCAN_COPY_MC,		"copy_poisoned_page")		\
-> >>> 	EM( SCAN_PAGE_FILLED,		"page_filled")			\
-> >>> -	EMe(SCAN_PAGE_DIRTY_OR_WRITEBACK, "page_dirty_or_writeback")
-> >>> +	EM(SCAN_PAGE_DIRTY_OR_WRITEBACK, "page_dirty_or_writeback")	\
-> >>> +	EMe(SCAN_INVALID_PTES_NONE,	"invalid_ptes_none")
-> >>>
-> >>> #undef EM
-> >>> #undef EMe
-> >>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> >>> index f68853b3caa7..27465161fa6d 100644
-> >>> --- a/mm/khugepaged.c
-> >>> +++ b/mm/khugepaged.c
-> >>> @@ -61,6 +61,7 @@ enum scan_result {
-> >>> 	SCAN_COPY_MC,
-> >>> 	SCAN_PAGE_FILLED,
-> >>> 	SCAN_PAGE_DIRTY_OR_WRITEBACK,
-> >>> +	SCAN_INVALID_PTES_NONE,
-> >>> };
-> >>>
-> >>> #define CREATE_TRACE_POINTS
-> >>> @@ -353,37 +354,60 @@ static bool pte_none_or_zero(pte_t pte)
-> >>>  * PTEs for the given collapse operation.
-> >>>  * @cc: The collapse control struct
-> >>>  * @vma: The vma to check for userfaultfd
-> >>> + * @order: The folio order being collapsed to
-> >>>  *
-> >>>  * Return: Maximum number of none-page or zero-page PTEs allowed for the
-> >>>  * collapse operation.
-> >>>  */
-> >>> -static unsigned int collapse_max_ptes_none(struct collapse_control *cc,
-> >>> -		struct vm_area_struct *vma)
-> >>> +static int collapse_max_ptes_none(struct collapse_control *cc,
-> >>> +		struct vm_area_struct *vma, unsigned int order)
-> >>> {
-> >>> +	unsigned int max_ptes_none = khugepaged_max_ptes_none;
-> >>> 	// If the vma is userfaultfd-armed, allow no none-page or zero-page PTEs.
-> >>
-> >> One thing I still want to call out: kernel code usually uses C-style
-> >> comments :)
-> >>
-> >>> 	if (vma && userfaultfd_armed(vma))
-> >>> 		return 0;
-> >>> 	// for MADV_COLLAPSE, allow any none-page or zero-page PTEs.
-> >>> 	if (!cc->is_khugepaged)
-> >>> 		return HPAGE_PMD_NR;
-> >>> -	// For all other cases repect the user defined maximum.
-> >>> -	return khugepaged_max_ptes_none;
-> >>> +	// for PMD collapse, respect the user defined maximum.
-> >>> +	if (is_pmd_order(order))
-> >>> +		return max_ptes_none;
-> >>> +	/* Zero/non-present collapse disabled. */
-> >>> +	if (!max_ptes_none)
-> >>> +		return 0;
-> >>> +	// for mTHP collapse with the sysctl value set to KHUGEPAGED_MAX_PTES_LIMIT,
-> >>> +	// scale the maximum number of PTEs to the order of the collapse.
-> >>> +	if (max_ptes_none == KHUGEPAGED_MAX_PTES_LIMIT)
-> >>> +		return (1 << order) - 1;
-> >>> +
-> >>> +	// We currently only support max_ptes_none values of 0 or KHUGEPAGED_MAX_PTES_LIMIT.
-> >>> +	// Emit a warning and return -EINVAL.
-> >>> +	pr_warn_once("mTHP collapse only supports max_ptes_none values of 0 or %u\n",
-> >>> +		      KHUGEPAGED_MAX_PTES_LIMIT);
-> >>
-> >> Maybe fallback to 0 instead, as David suggested earlier?
-> >>
-> >
-> > It looks reasonable to fallback to 0.
-> >
-> > But as the updated Document says in patch 14:
-> >
-> >   For mTHP collapse, only 0 or (HPAGE_PMD_NR - 1) are supported. Any other
-> >   value will emit a warning and no mTHP collapse will be attempted.
-> >
-> > This is why it does like this now.
-> >
-> >     mthp_collapse()
-> >         max_ptes_none = collapse_max_ptes_none();
-> >         if (max_ptes_none < 0)
-> >             return collapsed;
-> >
-> >> max_ptes_none is mostly legacy PMD THP behavior. mTHP is new, and any
-> >> intermediate value in (0, KHUGEPAGED_MAX_PTES_LIMIT) would implicitly
-> >> disable it :(
-> >>
-> >
-> > So it depends on what we want to do here :-)
-> >
-> > For me, I would vote for fallback to 0.
->
-> At this point I'll prefer to not return errors from collapse_max_ptes_none().
-> It's just rather awkward to return an error deep down in collapse code for a
-> configuration problem.
->
-> For mthp collapse, we only support max_ptes_none==0 and
-> max_ptes_none=="HPAGE_PMD_NR - 1" (default).
->
-> If another value is specified while collapsing mTHP, print a warning and treat
-> it as 0 (save value, no creep, no memory waste).
->
-> In a sense, this is similar to how we handle max_ptes_shared + max_ptes_swap:
-> for mTHP: we always treat them as being 0 for mTHP collapse (and don't issue a
-> warning, because we would issue a warning with the default settings).
->
-> @Lorenzo, fine with you?
+On Fri, May 15, 2026 at 03:40:06PM -0400, Anubhav Shelat wrote:
+> Allow unprivileged users to trace their own processes' syscalls using
+> perf trace, similar to strace without the intrusive overhead of ptrace().
+> 
+> Currently, perf trace requires CAP_PERFMON or paranoid level ≤ 1 even
+> though the kernel has existing infrastructure (TRACE_EVENT_FL_CAP_ANY)
+> specifically designed to mark syscall tracepoints as safe for
+> unprivileged access. To fix this:
+> 
+> 1. Loosen the condition in perf_event_open() which requires privileges
+>    for all events with exclude_kernel=0. This allows perf_event_open() to
+>    bypass the paranoid check for task-attached tracepoint events. Ensure
+>    that sample types which can expose kernel addresses to unprivileged
+>    users are blocked. Ensure the PERF_SECURITY_KERNEL LSM hook is
+>    preserved.
+> 
+> 2. Make the format and id tracefs files world-readable only for tracepoints
+>    with TRACE_EVENT_FL_CAP_ANY, allowing unprivileged users to see syscall
+>    tracepoint ids without exposing sensitive information.
+> 
+> 3. Add a check to perf_trace_event_perm() to block PERF_SAMPLE_IP on
+>    kernel tracepoints for unprivileged users to prevent KASLR bypass. We do
+>    this here rather than in kaddr_leak because perf_trace_event_perm() can
+>    distinguish between kernel tracepoints and uprobe tracepoints, where the
+>    IP is a safe user space address and is necessary for uprobe
+>    functionality.
+> 
+> 4. Restrict pure counting events (no PERF_SAMPLE_RAW) to
+>    TRACE_EVENT_FL_CAP_ANY tracepoints preventing unprivileged users from
+>    counting internal kernel tracepoints while preserving current
+>    behavior for exclude_kernel=1 events.
 
-Yes 100%, this sounds sensible both in terms of the error and the default. Let's
-keep our lives simple(-ish) please :)
+Typically patches are supposed to a single thing, you're listing 4
+things. What gives?
 
->
-> --
-> Cheers,
->
-> David
+> Example usage after this change:
+>   $ perf trace ls          # works as unprivileged user
+>   $ perf trace             # system-wide, still requires privileges
+>   $ perf trace -p 1234     # requires ptrace permission on pid 1234
+> 
+> Assisted-by: Claude:claude-sonnet-4.5
+> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> ---
+>  kernel/events/core.c            | 28 +++++++++++++++++++++++++---
+>  kernel/trace/trace_event_perf.c | 21 ++++++++++++++++++++-
+>  kernel/trace/trace_events.c     | 16 ++++++++++++++--
+>  3 files changed, 59 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7935d5663944..ff2d1e9a0b79 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -13873,9 +13873,31 @@ SYSCALL_DEFINE5(perf_event_open,
+>  		return err;
+>  
+>  	if (!attr.exclude_kernel) {
+> -		err = perf_allow_kernel();
+> -		if (err)
+> -			return err;
+> +		bool tp_bypass = false;
+> +
+> +		/* Check unprivileged tracepoints */
+> +		if (attr.type == PERF_TYPE_TRACEPOINT && pid != -1) {
+> +			/*
+> +			 * Block sample types that expose kernel addresses to
+> +			 * prevent KASLR bypass
+> +			 */
+> +			u64 kaddr_leak = PERF_SAMPLE_CALLCHAIN |
+> +					 PERF_SAMPLE_BRANCH_STACK |
+> +					 PERF_SAMPLE_ADDR |
+> +					 PERF_SAMPLE_REGS_INTR;
 
-Cheers, Lorenzo
+PERF_SAMPLE_IP should be here too, no?
+
+And I'm not sure if tracepoints can trigger it, but PHYS_ADDR also seems
+something we shouldn't allow.
+
+And we're sure RAW doesn't include pointers?
+
+> +
+> +			tp_bypass = !(attr.sample_type & kaddr_leak);
+> +		}
+> +
+> +		if (!tp_bypass) {
+> +			err = perf_allow_kernel();
+> +			if (err)
+> +				return err;
+> +		} else {
+> +			err = security_perf_event_open(PERF_SECURITY_KERNEL);
+> +			if (err)
+> +				return err;
+> +		}
+>  	}
+>  
+>  	if (attr.namespaces) {
+> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+> index a6bb7577e8c5..466007ed2869 100644
+> --- a/kernel/trace/trace_event_perf.c
+> +++ b/kernel/trace/trace_event_perf.c
+> @@ -72,9 +72,28 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
+>  			return -EINVAL;
+>  	}
+>  
+> +	/*
+> +	 * PERF_SAMPLE_IP on kernel tracepoints exposes a kernel text
+> +	 * address, weakening KASLR. Block for unprivileged users unless
+> +	 * the tracepoint is a uprobe (userspace IP, safe to expose).
+> +	 */
+> +	if ((p_event->attr.sample_type & PERF_SAMPLE_IP) &&
+> +	    !p_event->attr.exclude_kernel &&
+> +	    !(tp_event->flags & TRACE_EVENT_FL_UPROBE) &&
+> +	    sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+> +		return -EACCES;
+> +
+>  	/* No tracing, just counting, so no obvious leak */
+> -	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW))
+> +	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW)) {
+> +		/* Prevent unprivileged users from counting kernel tracepoints */
+> +		if (!p_event->attr.exclude_kernel &&
+> +		    sysctl_perf_event_paranoid > 1 && !perfmon_capable()) {
+> +			if (!(p_event->attach_state == PERF_ATTACH_TASK &&
+> +			      (tp_event->flags & TRACE_EVENT_FL_CAP_ANY)))
+> +				return -EACCES;
+> +		}
+>  		return 0;
+> +	}
+
+Maybe use less AI and try and type this yourself. I think you'll find
+that repeating the same clauses over and over gets tiresome. IIRC they
+invented something for that in the 60s or so :/
+
+>  	/* Some events are ok to be traced by non-root users... */
+>  	if (p_event->attach_state == PERF_ATTACH_TASK) {
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index c46e623e7e0d..cbd07e2ec528 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -3050,7 +3050,13 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+>  	struct trace_event_call *call = file->event_call;
+>  
+>  	if (strcmp(name, "format") == 0) {
+> -		*mode = TRACE_MODE_READ;
+> +		/*
+> +		 * Make format tracefs file world readable for tracepoints with
+> +		 * TRACE_EVENT_FL_CAP_ANY
+> +		 */
+> +		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
+> +			(TRACE_MODE_READ | 0004) :
+> +			TRACE_MODE_READ;
+>  		*fops = &ftrace_event_format_fops;
+>  		return 1;
+>  	}
+> @@ -3086,7 +3092,13 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+>  #ifdef CONFIG_PERF_EVENTS
+>  	if (call->event.type && call->class->reg &&
+>  	    strcmp(name, "id") == 0) {
+> -		*mode = TRACE_MODE_READ;
+> +		/*
+> +		 * Make id tracefs file world readable for tracepoints with
+> +		 * TRACE_EVENT_FL_CAP_ANY
+> +		 */
+> +		*mode = (call->flags & TRACE_EVENT_FL_CAP_ANY) ?
+> +			(TRACE_MODE_READ | 0004) :
+> +			TRACE_MODE_READ;
+>  		*data = (void *)(long)call->event.type;
+>  		*fops = &ftrace_event_id_fops;
+>  		return 1;
+
+Again, you're doing the same thing in multiple places. If only there was
+something to re-use a previous expression.
+
+None of this gives me warm and fuzzy feelings.
