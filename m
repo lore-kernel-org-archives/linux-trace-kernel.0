@@ -1,184 +1,105 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF203C342B
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 10:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094853093DF;
+	Mon, 18 May 2026 11:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779101147; cv=none; b=M8QU5Efb2J/a3MA58LmarVugJnlZKQzWW10VR9CyZXfQI8N4zUmdRMN/axBd7BjkV8RUPCkOEtHvJf50gRS5BOEDYLdSp4k2/OLcnm774hXoDzp0Fwj51eicaqP1iKfdyfA2R4XHT6ANSZbvhTZZUq2+BFQ1bMF22Z/dXmZa/uI=
+	t=1779102003; cv=none; b=C/A8EnSwBDs3a3SU/TJob3WnozC7E99ktyP3ouR1PwNmyu9EgxYUPydzRAojOh+r0tyAHWNPkjbjlAXrcC4d/fvRVQwD2OVYcgG3jBcl5tjRmxrGtksRAmnDmRhMUd0e/howzZ1LM0FSUnjyYOOM7osMEzaPY72k6eVk6OFcvQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779101147; c=relaxed/simple;
-	bh=UNbnn1OwVjs/XTOsrNsgcUPw0FY868fvZw4sFHoiKAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gzeSruxAbCt9O/NvVYR5+RY2uwAcDtwFlY1vxgHxLoHWVFJQ7n18l3Kc9W/Pe3ZCPU6giH3TLsaZGo8Bk1csADoJmjs482kbnwAi0bwziKLiTvsFJKeCR1cK3okUBQelU8VrGYSVdyVvxDRNxW3iE1AZQHm+60KsIKX6C/1Q594=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fuCzRZ8i; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1779102003; c=relaxed/simple;
+	bh=iUVRpDiX8CWHGTaEx8YIjLuaAEQxF+cSnkrjLYCFXk8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BIx3pf98TqxBjiJaIFhBRog3/snLa5cMd3F1gX9iaxXGSzUaMS0DJoQr9SHgsMtQ9xaTKzW+FvJV6y2UCul6pltrWlAbCtc/8eyK7vxgI22uAeyfiV1gW2hdU1m0OVTdZk7w1EkBXQOKEShwV52dc0rUwa8WwP04mVVt3ouLN5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNi1gjcy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fuCzRZ8i"
-Message-ID: <80621876-f151-4373-aab9-336a2c483d95@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779101128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YQviGAWxwFAf4WkF01qNgkMltd5nkvNvc0xoQtBJuqg=;
-	b=fuCzRZ8i2Zon4wIhfwPBC0YBqMv8mNKHPUR+u9mIqKp98FCI50rT1Z/UTH3TFKJ4vb8iqO
-	GmSZ3TmBv3Tj1aA98am5ffqDlvq6SMEmLnswreQBb5Vf8OiWlHeJFpBWbXTXd5iPcQwEyp
-	Jc6xBH1nueXJGJiTur4JM5kWwgBvanY=
-Date: Mon, 18 May 2026 18:45:11 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNi1gjcy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951EBC2BCB7;
+	Mon, 18 May 2026 10:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779102002;
+	bh=iUVRpDiX8CWHGTaEx8YIjLuaAEQxF+cSnkrjLYCFXk8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GNi1gjcyRRuWO2xqo72HoPq14ziVzaLaTY4AeKS2ffTr5ISFQ53oYcdHYO+P2XKc8
+	 N+FC1m9RgsQtpakvs/Ek1lOiboQxyusfTVEhCBDkTcibGt1Xav27rJu/ZF0aa4dxxk
+	 0SspKeEoNGrtuagvqBmfOZUThPd0h9NZ2NP1ZDrb+acOVpwniJp1tLD6qmx3I46gjw
+	 aZSwuNqGTNg/0BNlN23j0BdyY7y9he/UHWVX3KtGYhoEFcrm4/TjKyRgIDWne63zK/
+	 vTP+hrsTfjMSpwwF22ukrecuBs1lo/I0YOTxF6IPpvCFkftwQJ+RsiII/DEppztUXH
+	 0qEY0J3Wd3/vQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv2 00/11] uprobes/x86: Fix red zone issue for optimized uprobes
+Date: Mon, 18 May 2026 12:59:46 +0200
+Message-ID: <20260518105957.123445-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] tracing/probes: Allow use of BTF names to dereference
- pointers
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
- Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
- <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>,
- Jiri Olsa <olsajiri@gmail.com>
-References: <20260516173310.1dbad146@fedora>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <20260516173310.1dbad146@fedora>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 17/5/26 05:33, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Add syntax to the FETCHARGS parsing of probes to allow the use of
-> structure and member names to get the offsets to dereference pointers.
-> 
-> Currently, a dereference must be a number, where the user has to figure
-> out manually the offset of a member of a structure that they want to
-> reference. For example, to get the size of a kmem_cache that was passed to
-> the function kmem_cache_alloc_noprof, one would need to do:
-> 
->  # cd /sys/kernel/tracing
->  # echo 'f:cache kmem_cache_alloc_noprof size=+0x18($arg1):u32' >> dynamic_events
-> 
-> This requires knowing that the offset of size is 0x18, which can be found
-> with gdb:
-> 
->   (gdb) p &((struct kmem_cache *)0)->size
->   $1 = (unsigned int *) 0x18
-> 
-> If BTF is in the kernel, it can be used to find this with names, where the
-> user doesn't need to find the actual offset:
-> 
->  # echo 'f:cache kmem_cache_alloc_noprof size=+kmem_cache.size($arg1):u32' >> dynamic_events
-> 
-> Instead of the "+0x18", it would have "+kmem_cache.size" where the format is:
-> 
->   +STRUCT.MEMBER[.MEMBER[..]]
-> 
-> The delimiter is '.' and the first item is the structure name. Then the
-> member of the structure to get the offset of. If that member is an
-> embedded structure, another '.MEMBER' may be added to get the offset of
-> its members with respect to the original value.
-> 
->   "+kmem_cache.size($arg1)" is equivalent to:
-> 
->   (*(struct kmem_cache *)$arg1).size
-> 
-> Anonymous structures are also handled:
-> 
->   # echo 'e:xmit net.net_dev_xmit +net_device.name(+sk_buff.dev($skbaddr)):string' >> dynamic_events
-> 
-> Where "+net_device.name(+sk_buff.dev($skbaddr))" is equivalent to:
-> 
->   (*(struct net_device *)((*(struct sk_buff *)($skbaddr)).dev)->name)
-> 
-> Note that "dev" of struct sk_buff is inside an anonymous structure:
-> 
-> struct sk_buff {
-> 	union {
-> 		struct {
-> 			/* These two members must be first to match sk_buff_head. */
-> 			struct sk_buff		*next;
-> 			struct sk_buff		*prev;
-> 
-> 			union {
-> 				struct net_device	*dev;
-> 				[..]
-> 			};
-> 		};
-> 		[..]
-> 	};
-> 
-> This will allow up to three deep of anonymous structures before it will
-> fail to find a member.
-> 
-> The above produces:
-> 
->     sshd-session-1080    [000] b..5.  1526.337161: xmit: (net.net_dev_xmit) arg1="enp7s0"
-> 
-> And nested structures can be found by adding more members to the arg:
-> 
->   # echo 'f:read filemap_readahead.isra.0 file=+0(+dentry.d_name.name(+file.f_path.dentry($arg2))):string' >> dynamic_events
-> 
-> The above is equivalent to:
-> 
->   *((*(struct dentry *)(*(struct file *)$arg2).f_path.dentry)->d_name.name)
-> 
-> And produces:
-> 
->        trace-cmd-1381    [002] ...1.  2082.676268: read: (filemap_readahead.isra.0+0x0/0x150) file="trace.dat"
-> 
-Hi Steve,
+hi,
+Andrii reported an issue with optimized uprobes [1] that can clobber
+redzone area with call instruction storing return address on stack
+where user code may keep temporary data without adjusting rsp.
 
-Great to see that BTF is going to be nested into trace.
+Fixing this by moving the optimized uprobes on top of 10-bytes nop
+instruction, so we can squeeze another instruction to escape the
+redzone area before doing the call.
 
-I'm glad to share my BPF tool, bpfsnoop [1], that utilizes the similar
-way to inspect argument's data.
+Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
+if we decide to take this change.
 
-Read device name:
-bpfsnoop -t net_dev_xmit --output-arg 'str(skb->dev->name)'
---limit-events 20
-- net_dev_xmit[tp] args=((struct sk_buff *)skb=0xffff88818821d4e8,
-(int)rc=0, (struct net_device *)dev=0xffff88984ba64000, (unsigned
-int)skb_len=0x1f2/498) cpu=2 process=(0:swapper/2)
-timestamp=18:06:17.309492697
-Arg attrs: (array(char[16]))'str(skb->dev->name)'="eth0"
+thanks,
+jirka
 
-Read dentry name:
-bpfsnoop -k 'vfs_read' --output-arg
-'str((file->f_path.dentry)->d_name.name)' --limit-events 20
-← vfs_read args=((struct file *)file=0xffff888175e08400, (char
-*)buf=0x55c7a1168400(0x0/0), (size_t)count=0x10000/65536, (loff_t
-*)pos=0xffffc9000f707bb0(0)) retval=(long int)510 cpu=3
-process=(339834:sudo) timestamp=18:24:16.22021166
-Arg attrs: (unsigned char *)'str((file->f_path.dentry)->d_name.name)'="ptmx"
+v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
 
-In bpfsnoop, it provides a friendly way to inspect argument's data using
-C expressions. Under the hood, it compiles the C expressions, specified
-by --filter-arg/--output-arg, into BPF byte code by parsing the
-struct/union member access with BTF. (I'm too lazy to write documents to
-explain its internal details. But you can study it with AI assistance.)
+v2 changes:
+- several selftest fixes [sashiko]
+- consolidate is_lea_insn and is_call_insn insto single check [Jakub Sitnicki]
+- use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
+- allow to copy uprobe trampolines vma objects on fork [sashiko]
+- change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
+- added fork/clone tests
+- I kept the selftest changes and nop5->nop10 changes in separate
+  commits for easier review, we can squash them later if we want to keep
+  bisect working properly
 
-Insanely, after developing such feature for bpfsnoop, I wondered whether
-to embed a light-weight C compiler into trace tool in order to compile C
-expression into BPF byte code, and then load the BPF program to
-filter/output argument. Finally, users are able to filter/output
-arguments using C expressions. It seemed too crazy for me to post such
-idea to trace mailing list at that time, as I wasn't familiar with trace
-infrastructure.
 
-[1] https://github.com/bpfsnoop/bpfsnoop/
+[1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
+---
+Andrii Nakryiko (1):
+      selftests/bpf: Add tests for uprobe nop10 red zone clobbering
 
-Thanks,
-Leon
+Jiri Olsa (10):
+      uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+      uprobes/x86: Allow to copy uprobe trampolines on fork
+      uprobes/x86: Move optimized uprobe from nop5 to nop10
+      libbpf: Change has_nop_combo to work on top of nop10
+      libbpf: Detect uprobe syscall with new error
+      selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
+      selftests/bpf: Change uprobe syscall tests to use nop10
+      selftests/bpf: Change uprobe/usdt trigger bench code to use nop10
+      selftests/bpf: Add reattach tests for uprobe syscall
+      selftests/bpf: Add tests for forked/cloned optimized uprobes
 
+ arch/x86/kernel/uprobes.c                               | 144 ++++++++++++++++++++++------------
+ tools/lib/bpf/features.c                                |   4 +-
+ tools/lib/bpf/usdt.c                                    |  16 ++--
+ tools/testing/selftests/bpf/bench.c                     |  20 ++---
+ tools/testing/selftests/bpf/benchs/bench_trigger.c      |  38 ++++-----
+ tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh |   2 +-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 307 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ tools/testing/selftests/bpf/prog_tests/usdt.c           |  74 +++++++++++++++---
+ tools/testing/selftests/bpf/progs/test_usdt.c           |  25 ++++++
+ tools/testing/selftests/bpf/usdt.h                      |   2 +-
+ tools/testing/selftests/bpf/usdt_2.c                    |  15 +++-
+ 11 files changed, 524 insertions(+), 123 deletions(-)
