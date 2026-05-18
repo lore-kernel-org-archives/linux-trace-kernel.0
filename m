@@ -1,101 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285F63F65F3;
-	Mon, 18 May 2026 11:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C33D31F9A1;
+	Mon, 18 May 2026 11:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779104279; cv=none; b=KaexmSLWpiYlkcCpwFx9XkxDXIERce2AuuYBx87S9WlfplpAuPm2lMlyhcHeqvFMh16toVsaiwCgHEusderCvv5a5YNZcjeeSHQUvVeenGRqbBG5Hq4ZRAYQqdDpw4aOGy2tXWrs/Pkmxn8EWvOCtAtSts6nSzAFwgBx+ydRcbE=
+	t=1779105038; cv=none; b=lbB/6nZko3JCSA9n2o/ZW5/asjv9PabQaCkmDHegQNBYU3m++zAI6eXaA0/cG7sQKi9z4PpREOnsko3bonrINGp9trHo33ah1s/3hesMBZf1U+nWHrXE1CUbXfp8DhyhndV/TwogGngSR4s9M0a26HIbkVDdrTGrInu2c58uR4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779104279; c=relaxed/simple;
-	bh=/MBx4iAaT+bKS7godRXNFZ5WOKFAolb0dAA9ZYeT3eI=;
+	s=arc-20240116; t=1779105038; c=relaxed/simple;
+	bh=1JIo07qQczhfwuIsFODJJuB1qHJMGUp6WD5QFagu/fg=;
 	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=HUvf3UMb1LI2LYhIfRybaEI8FQpedHv0xiARIonX0CXfwuyIuupJOSz+DOD45WKjTeslY5Vdh46suRDYKwwJ1E3MzQkxqedl1ESWIs5seoqlCThDPn8QzPPzVt/7IoHdAT9S99xutpuk5SDXC6NaHUk3FaQ5K49VOUWwp9x3hZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDFkaPJ9; arc=none smtp.client-ip=10.30.226.201
+	 Subject:From:To:Cc:Date; b=A/JKMuTPrlB2VR8xISmKR0hFjVsTwdApd7+u7PCd8PU9hj3wnH03SeHhVYI9y7JDqMqOtM8roC3TzPGw9aKL+xm9jNQ2MeWtLfiYMPKNTpShgpoikvQjbbwHq6NW9wZj4Yu/RpboTGiXYrt5+o3OgIOTAvHPofOnb+lgzAszgAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h33ObMx2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDFkaPJ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F6DC2BCB7;
-	Mon, 18 May 2026 11:37:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h33ObMx2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71F1C2BCB7;
+	Mon, 18 May 2026 11:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779104278;
-	bh=/MBx4iAaT+bKS7godRXNFZ5WOKFAolb0dAA9ZYeT3eI=;
+	s=k20201202; t=1779105038;
+	bh=1JIo07qQczhfwuIsFODJJuB1qHJMGUp6WD5QFagu/fg=;
 	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=VDFkaPJ975V04saTEzgxwLsRkqgCN/xezIEqrw/9dnpeghkOfBIf0hb1tOhhq2Hs1
-	 4JmTsS1tWfONiEFqqdKDbvBLvzIQUKK3N7ZKeKVjcvk9Qq+dVqeNKnsrlFZ5hqLD7A
-	 Y+ZBVqetFEFi5BVE4AMdzJfb1dGVRSiLw0vmCRCgPl17Bjg4EY1tr4baATDed7Yylo
-	 GKW257yOWGlI/hYMUu4/hYknTiz3r9C9o1pBL47MHPlME3xCXYh1A6zxCsk/A35UCk
-	 jHPWRO+qznhIl0rGBpYI9Ncd7clozO2Ajueq627uNrqENxCDEgnpm2OLmumS28SNl6
-	 mQB/FGlnQaPIw==
-Content-Type: multipart/mixed; boundary="===============5408726358768098547=="
+	b=h33ObMx2pTJo/0sDEf+8/XYpYonhsHu7K61An7jgnzAgKRovb9jEEbXw6XACbmLg9
+	 ASIcPYorH/gbL/zieQzn7rwB9xmbxyLc6oopIEuKZa5Ah9qtzYV21OqCpw8gCLYY1w
+	 zhAjETx0Y4naqAxiYp8Dk90oJCcw1MCIfvXF1kNmWkFP4OMPsBNIWKz2BAnAqFSiAP
+	 YVryQAs+aVJGolUgsGRjoTYMauEcpTWktws6FOhaIOinpk+MUg94Vce4OoHgf8Wkbw
+	 l5fiu7YreZmTmx9TwMD0i/WDd4cqe5yypZz2XGI75vrsbYKEJDNDCzVtA0NCCz4AkE
+	 TcmXSdqOna7zQ==
+Content-Type: multipart/mixed; boundary="===============0995334349500366706=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a5a57eb9690a537c2d8d7ec619fb1d200c9fc804436ae085b9344b691c2470df@mail.kernel.org>
-In-Reply-To: <20260518105957.123445-5-jolsa@kernel.org>
-References: <20260518105957.123445-5-jolsa@kernel.org>
-Subject: Re: [PATCHv2 04/11] libbpf: Change has_nop_combo to work on top of nop10
+Message-Id: <8f529063bd4e4e1874fcc7a938ba5fb9a620d8c208b96f09aab524a7ffb379dd@mail.kernel.org>
+In-Reply-To: <20260518105957.123445-8-jolsa@kernel.org>
+References: <20260518105957.123445-8-jolsa@kernel.org>
+Subject: Re: [PATCHv2 07/11] selftests/bpf: Change uprobe syscall tests to use nop10
 From: bot+bpf-ci@kernel.org
 To: jolsa@kernel.org,oleg@redhat.com,peterz@infradead.org,mingo@kernel.org,mhiramat@kernel.org,andrii@kernel.org
-Cc: jakub@cloudflare.com,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon, 18 May 2026 11:37:58 +0000 (UTC)
+Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon, 18 May 2026 11:50:37 +0000 (UTC)
 
---===============5408726358768098547==
+--===============0995334349500366706==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
-> libbpf: Change has_nop_combo to work on top of nop10
+> diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> index 2f22ec61667b..bcc4820c802e 100644
+> --- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> +++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> @@ -398,7 +398,7 @@ static void *uprobe_producer_ret(void *input)
+>  #ifdef __x86_64__
+>  __nocf_check __weak void uprobe_target_nop5(void)
+>  {
+> -	asm volatile (".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
+> +	asm volatile (".byte 0x66, 0x66, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00");
+>  }
 >
-> We now expect nop combo with 10 bytes nop instead of 5 bytes nop,
-> fixing has_nop_combo to reflect that.
->
-> Fixes: 41a5c7df4466 ("libbpf: Add support to detect nop,nop5 instructions combo for usdt probe")
+>  static void *uprobe_producer_nop5(void *input)
 
-Should the Fixes tag reference commit 5c3c59c7952a ("uprobes/x86: Move
-optimized uprobe from nop5 to nop10") instead? Commit 41a5c7df4466 originally
-introduced has_nop_combo() with the correct nop5 check. Commit 5c3c59c7952a
-later changed the kernel to use nop10 instead of nop5 for uprobe optimization
-but failed to update the libbpf has_nop_combo() function accordingly, creating
-a mismatch between kernel and userspace.
-
-> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
->
-> diff --git a/tools/lib/bpf/usdt.c b/tools/lib/bpf/usdt.c
-> index e3710933fd52..7e62e4d5bedd 100644
-> --- a/tools/lib/bpf/usdt.c
-> +++ b/tools/lib/bpf/usdt.c
+This isn't a bug, but should the function and benchmark names also be
+updated? The function is still called uprobe_target_nop5() and the
+benchmark exposes names like uprobe-nop5, uretprobe-nop5,
+uprobe-multi-nop5, uretprobe-multi-nop5, and usdt-nop5, but they are
+now all testing a 10-byte nop instruction.
 
 [ ... ]
 
-> @@ -596,14 +596,14 @@ static int parse_usdt_spec(struct usdt_spec *spec, const struct usdt_note *note,
->  #if defined(__x86_64__)
->  static bool has_nop_combo(int fd, long off)
->  {
-> -	unsigned char nop_combo[6] = {
-> -		0x90, 0x0f, 0x1f, 0x44, 0x00, 0x00 /* nop,nop5 */
-> +	unsigned char nop_combo[11] = {
-> +		0x90, 0x66, 0x66, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
->  	};
-> -	unsigned char buf[6];
-> +	unsigned char buf[11];
+> diff --git a/tools/testing/selftests/bpf/prog_tests/usdt.c b/tools/testing/selftests/bpf/prog_tests/usdt.c
+> index 69759b27794d..a160d7c4fa0d 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/usdt.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/usdt.c
+> @@ -252,7 +252,7 @@ extern void usdt_1(void);
+>  extern void usdt_2(void);
 >
-> -	if (pread(fd, buf, 6, off) != 6)
-> +	if (pread(fd, buf, 11, off) != 11)
->  		return false;
-> -	return memcmp(buf, nop_combo, 6) == 0;
-> +	return memcmp(buf, nop_combo, 11) == 0;
+>  static unsigned char nop1[1] = { 0x90 };
+> -static unsigned char nop1_nop5_combo[6] = { 0x90, 0x0f, 0x1f, 0x44, 0x00, 0x00 };
+> +static unsigned char nop1_nop10_combo[11] = { 0x90, 0x66, 0x66, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 };
+>
+>  static void *find_instr(void *fn, unsigned char *instr, size_t cnt)
+>  {
+>  	int i;
+>
+>  	for (i = 0; i < 10; i++) {
+>  		if (!memcmp(instr, fn + i, cnt))
+>  			return fn + i;
+>  	}
+>  	return NULL;
 >  }
 
-This isn't a bug, but Jakub Sitnicki suggested in v1 review to use
-ARRAY_SIZE(buf) instead of repeating the scalar value 11 in multiple places.
-The suggestion was included alongside the Reviewed-by tag but was not
-addressed.
-
-Reference: https://lore.kernel.org/bpf/87fr3t7wpu.fsf@cloudflare.com/
+Is the loop in find_instr() adequate to find this instruction sequence?
+In uprobe_syscall.c, find_nop10() was updated to search up to 128 bytes
+to account for compiler-generated prologues. If a modern compiler
+generates a prologue longer than 9 bytes for usdt_2(), this will
+prematurely terminate and cause the subtest_optimized_attach() test to
+fail.
 
 [ ... ]
 
@@ -105,4 +106,4 @@ AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
 See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
 CI run summary: https://github.com/kernel-patches/bpf/actions/runs/26030080109
---===============5408726358768098547==--
+--===============0995334349500366706==--
