@@ -1,257 +1,235 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24C1389119
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 17:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28732391846;
+	Mon, 18 May 2026 19:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779127041; cv=none; b=cG5/FS0IjXnA5rGC7hTel6f2R316te47FI5q3ZE37l7b4L2nwVEJlLvv6pTqiFAVsW1X2Ittp9Iv0VrgwrTijAlPKkQE7E/QueiTm3kj97SOLvLuzNdzVbm/nB8hrFe0W/3/7KHoTkoMiZBot/Kwdd/UC3aIlQyh1K1dN6BEoZQ=
+	t=1779132786; cv=none; b=EF+aVlUiEddfkMXJ2ho88t2mWd6UQ6rkeXDYJqTFbNHM/Ny5BtQ8wV9OFaeMopaK8/Yv9FbHv9Bg7PvyUeNUNKUmRpFXtntcs8DLXpCxFdsBq5Puz+4EfLX9N/pgRYWcUh5GsctPx6qXF9vCZbijFIGKxfsiOLabVSzxTa+VG+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779127041; c=relaxed/simple;
-	bh=0nyRs1xCvidMCfw1zr2HoR8+SkkJFdchyMA/7+/8bnc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VRVLkCQdw5aZOoIKBJDgynVgxCjx9kddlv2FDNe7QQOm+n6s/sHz9rv87tYDnjzBNeNHaZPQ+Hnxy31S0BvgUhGOjBaMoE9LhUPQIB1T86zJnQuwInxbJT8Y3bkQfGtrv4TiGik4EvcuLamOHrlJYK6ycRh8+9+6eg4SJxtpZ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UJuvFVUr; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ilKotGe3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1779132786; c=relaxed/simple;
+	bh=YkGCI2ydQOiH18bfYuav9c9v7raj6NjUh/q2u2zqGQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A+guBRHnkVhy7W089AsW1Idu3YKA25J/4r+efwUBegaBIHeOq8JEJDHyQ19zJWBGf2VBX3IJ7xpv0a+OmgpVo3S3Mp22Onoo9cLVvrR9bclGPkQCSyIM/Gcmr/BqWo4wwRZ1ZmWmRgN/Or9Is3SvwtsLg/tpwup17Rx7eBJfy64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDmvFmZ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UJuvFVUr";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ilKotGe3"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64IE0liW2892861
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 17:57:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9EX8T0Dx6cCRltReKRh3IbYrL3q0hQ7wW+nwXIPZhAw=; b=UJuvFVUr29PJ3GTl
-	Lf15QnsEIAhfNBgifkS1tX481o/faE4+XqeJk/12/yO3DeiaWQF/BM6bkOBfoxIX
-	+cevGyXiWIrnuKZRIXLpW8PlWYqpEW78adHJ1IU4mldNtoHVbV268v1fjFdJmGi7
-	xw/cf43NfMrvbYt7bn17kxRF2IPkxEyA+/PDLIJFPuE/XHXoIhBGcESukZOt1qXU
-	4v1yoBhhE+N7VXpkO9hvK5p8EOtc2zLYieQt39AW5VfTOezoZPhXNL5styh6uef/
-	MyerjE/CNhluBZUF4a0RfDYTMAAdacZAxh5r/+W/sndnRtISeP+hlEcNUykG8nmA
-	2zAShA==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e7xk1afwv-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 17:57:19 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2b9a3c3c4eeso27974255ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 10:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779127038; x=1779731838; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9EX8T0Dx6cCRltReKRh3IbYrL3q0hQ7wW+nwXIPZhAw=;
-        b=ilKotGe3o3lFFpZ+Qt4XsUOUGcufvLgbC/pczb00qOFfmTMRLVCL0yWs0XSQ7z/o+B
-         nq9iTk8EEfHnD2/kOD+xxD8nKD/h28Zr6e76+i2XY8PsmEZnigK9k9j52+TPaPTmRiP6
-         hJPcYDG2ggqYhRq8HN5AlFW6vU5rspnJ70j6zf/4Axf1Uzx3u985lMdg1QPdj+BIM4Wk
-         HVkB+vIQ/YJFbahHyyIwvwt54r0jOQNClABhcz873UVPLCE/ZvVWAIStJnGNEGDxb96O
-         AIvJfLcDrfitmu44j6T22xOWppqNr9Y32NHSJsZ6QppdjBT6w1bjSPzb7G5G53499QdL
-         +c6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779127038; x=1779731838;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9EX8T0Dx6cCRltReKRh3IbYrL3q0hQ7wW+nwXIPZhAw=;
-        b=aYxnuqvQ0nQlvwWUteqLZLz80El43vybSsvztMwjGIculh5a9ygRjRBrwTJa8TbFGv
-         tlDU17zfY5Ug46mRUwOxn7itA8juc4AXXdm/02WcRr1FuU3176i1c5ZqvRMrArD8JHMf
-         vqvgtCJMOvzCW3jhbJhL/oJEsQF+xz7UPyNyCtMbDCEaKBkb79eGM6BKptfvKnnW/rhw
-         6+yr92hAQNLLw1MckibjV28QDgHdsnEholHd3gou1HoPyHMpOturrjQsoURStUne8HF+
-         ObfW9CzWZ6VRMe9v8Q45CYrK7WE1dglU4EIyGT97xo+OAJCBMODr8HcraCLA0KKXRnP4
-         vxuQ==
-X-Forwarded-Encrypted: i=1; AFNElJ93EgJiWd9UyMdBhH8MVcmHKxhx4kItw1Mov/9LngbmWsijR7UZj+W4/rIqW2O/VY8KvCmX/W88NGFScnUvi0hN4Dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjUBXy3MBqHi0GJa6w1E9hzyfbtZJqzJzch1tTLbQWFhI8+L+t
-	74POkjDqa4eGtDOPUUgSD3KgxZgbeNszG+SfT8nGGP0G8FNqVs0A3mMtQOlJpAiqXDAcrUI1byT
-	RBhoNieXT5+Oad7tRCJEFkkJh7EcSfqxJXng3ON/EyPcJDcfG8db0QoR6fQ2rQJ3afWFhLij6de
-	9hwqlOFzs=
-X-Gm-Gg: Acq92OEEI0bcs5nS/2WhNWIDyO/o7grQCesdrB6OhFx40quni+suqauJiz5PKTW8OcF
-	dK1WY0b/Lk6ET9eHLiCxNbMDK7bLGLLAaMy+1Ma3PrY0baojThsGz/3iLirOWLGlNQkUpbUBYb3
-	o8WcwWr9ecV5EWrsK0D6AovHJXmB87UbxVae3MfLasXN8QglOR6CAx8wKliNgZZvCItpCxDki63
-	WdxLQYmaHR4UhvTUzFNQP+jLoFRGE+4eaUpJwZXh827sExGqipq6A43djEYdQWWvjnSmMbhI8L7
-	BsA1sYQ5WaDiuPSX1j0ry+bPcG1IeDIBOpS8BkMXqcrYy4tp7bqFID3k5nuoglRUwnJLPtbUaXI
-	oodpfQLiWfGlz9OmksdI3bLROJVzTc8T4cj1GxobW7xLYg0vCZLUd41s=
-X-Received: by 2002:a17:902:da84:b0:2ba:3e2f:6874 with SMTP id d9443c01a7336-2bd7e94d060mr170797895ad.26.1779127038398;
-        Mon, 18 May 2026 10:57:18 -0700 (PDT)
-X-Received: by 2002:a17:902:da84:b0:2ba:3e2f:6874 with SMTP id d9443c01a7336-2bd7e94d060mr170797725ad.26.1779127037825;
-        Mon, 18 May 2026 10:57:17 -0700 (PDT)
-Received: from hu-ptalari-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5cfe4973sm158348015ad.41.2026.05.18.10.57.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 10:57:17 -0700 (PDT)
-From: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Date: Mon, 18 May 2026 23:26:56 +0530
-Subject: [PATCH v3 2/2] serial: qcom-geni: Add tracepoints for Qualcomm
- GENI serial driver
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDmvFmZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D75C2BCC6;
+	Mon, 18 May 2026 19:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779132785;
+	bh=YkGCI2ydQOiH18bfYuav9c9v7raj6NjUh/q2u2zqGQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vDmvFmZ+iTrW6rG0Gcm9nWDPvvRK1Rsj48dFtKprQeQ1e6lYyM5VMFRhBpg8rwS61
+	 0TNXTtczIM+BVYe4dk6R82ZVaWwaFbuN+I3al6alVhDH1MljGD3eYqKFw/QXi7Qvm0
+	 JKoE6kG5Db51dOjr9Juw7dqsEFy3nED8MYgsGtG2paTjp5kcRM6tNacnnxJWHErq5S
+	 M8Qrai0JHOMsBE7ZTTpOx6tIkJOYjnAKZFKHD4doWsSaZi9ZYNp4SbjR5D1f4rsOHj
+	 H3beDvWRIUdalnXZNIQ+HM/9w5MnR/fIEerEMaPESJ8Zc3zgsQGlP1eDVwfo09KpCR
+	 ofuvouMs7WwgQ==
+Date: Mon, 18 May 2026 20:32:50 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>, 
+	Lance Yang <lance.yang@linux.dev>, npache@redhat.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	aarcange@redhat.com, akpm@linux-foundation.org, anshuman.khandual@arm.com, 
+	apopple@nvidia.com, baohua@kernel.org, baolin.wang@linux.alibaba.com, 
+	byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, 
+	hughd@google.com, jack@suse.cz, jackmanb@google.com, jannh@google.com, 
+	jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, liam@infradead.org, 
+	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
+	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
+	rdunlap@infradead.org, rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
+	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com, 
+	thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, 
+	vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-unstable v17 04/14] mm/khugepaged: generalize
+ __collapse_huge_page_* for mTHP support
+Message-ID: <agtpK1x27B-E7mMo@lucifer>
+References: <20260511185817.686831-5-npache@redhat.com>
+ <20260512074202.10253-1-lance.yang@linux.dev>
+ <20260514031009.f66cgop3ctgiqxz3@master>
+ <9b33339e-157a-45b7-942e-3be3418a5142@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260518-add-tracepoints-for-qcom-geni-serial-v3-2-b4addb151376@oss.qualcomm.com>
-References: <20260518-add-tracepoints-for-qcom-geni-serial-v3-0-b4addb151376@oss.qualcomm.com>
-In-Reply-To: <20260518-add-tracepoints-for-qcom-geni-serial-v3-0-b4addb151376@oss.qualcomm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
-        Aniket Randive <aniket.randive@oss.qualcomm.com>,
-        chandana.chiluveru@oss.qualcomm.com, jyothi.seerapu@oss.qualcomm.com,
-        Praveen Talari <praveen.talari@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779127023; l=4237;
- i=praveen.talari@oss.qualcomm.com; s=20251114; h=from:subject:message-id;
- bh=0nyRs1xCvidMCfw1zr2HoR8+SkkJFdchyMA/7+/8bnc=;
- b=9qCjOxVvFpM/Poxi6zQQtp/qyXLfxex0492AN6mDg/xyAIGAMML2WuY2nhkBgrD4BuG+bvdcL
- 6v3sw9dC+LUDOGJw+92TSVetI2egmGCtUUmqSyajPwL+bCRozdjkhfN
-X-Developer-Key: i=praveen.talari@oss.qualcomm.com; a=ed25519;
- pk=NGK/88fjyHXgfhIKwag7+uIytOmyOypvZ/hDFaYPEss=
-X-Proofpoint-GUID: w7u0DfgB9xiDcSYZJDhObn5WQd-rI04Q
-X-Proofpoint-ORIG-GUID: w7u0DfgB9xiDcSYZJDhObn5WQd-rI04Q
-X-Authority-Analysis: v=2.4 cv=BICDalQG c=1 sm=1 tr=0 ts=6a0b52ff cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
- a=EUspDBNiAAAA:8 a=KXSloCXmEunfo-Xy6rIA:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE4MDE3NyBTYWx0ZWRfXx6q6QJRSTeQV
- Fh8qViZU7VLWyxDtW1SrbFXGQomdAHKU+rKMAvOuaZJ8IRskCCcqZJK82foq8ls3v/6WMVR7/oE
- XDbn8tYbMHbMIQ1JqPKwpZtpUVHzn0MGmwIA3SmHcnw2LFkWldLXm5ErXcKfAdORO+RX1e8yeXM
- owy7vovAjJD8Jt5/PnppbVQ8oazVpllPyXZSno5o6nNVHucH2Uj0oNmWEAM0KY33h89lfb9ICSz
- aReNmsP+e2icBmnPWa7S3YuRLSERDii3aPamF37OjbQTWsvGJ8ydmZVfF4e9Nb69eHzQkogeQHv
- VgEsAMETuw5rzYlhsBE6K1ZMneiYfgGWVUS3DqZ25AQsDdsd+oGPdFSrwT2iaI6Rv+Y8IlAglJi
- XuSE8qorRF6w3FRneyHtgkuqt+irrzs7n1deJcwYgBlrJJrexemNhtd+2i+pzV+b7zFAmVixCB8
- dKQP+XGZDQFXLmgV4Sg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-18_03,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605180177
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b33339e-157a-45b7-942e-3be3418a5142@kernel.org>
 
-Add tracing to the Qualcomm GENI serial driver to improve runtime
-observability.
+On Mon, May 18, 2026 at 03:16:11PM +0200, David Hildenbrand (Arm) wrote:
+> On 5/14/26 05:10, Wei Yang wrote:
+> > On Tue, May 12, 2026 at 03:42:02PM +0800, Lance Yang wrote:
+> >>
+> >> On Mon, May 11, 2026 at 12:58:04PM -0600, Nico Pache wrote:
+> >>> generalize the order of the __collapse_huge_page_* and collapse_max_*
+> >>> functions to support future mTHP collapse.
+> >>>
+> >>> The current mechanism for determining collapse with the
+> >>> khugepaged_max_ptes_none value is not designed with mTHP in mind. This
+> >>> raises a key design issue: if we support user defined max_pte_none values
+> >>> (even those scaled by order), a collapse of a lower order can introduces
+> >>> an feedback loop, or "creep", when max_ptes_none is set to a value greater
+> >>> than HPAGE_PMD_NR / 2. [1]
+> >>>
+> >>> With this configuration, a successful collapse to order N will populate
+> >>> enough pages to satisfy the collapse condition on order N+1 on the next
+> >>> scan. This leads to unnecessary work and memory churn.
+> >>>
+> >>> To fix this issue introduce a helper function that will limit mTHP
+> >>> collapse support to two max_ptes_none values, 0 and HPAGE_PMD_NR - 1.
+> >>> This effectively supports two modes: [2]
+> >>>
+> >>> - max_ptes_none=0: never collapses if it encounters an empty PTE or a PTE
+> >>>  that maps the shared zeropage. Consequently, no memory bloat.
+> >>> - max_ptes_none=511 (on 4k pagesz): Always collapse to the highest
+> >>>  available mTHP order.
+> >>>
+> >>> This removes the possiblilty of "creep", while not modifying any uAPI
+> >>> expectations. A warning will be emitted if any non-supported
+> >>> max_ptes_none value is configured with mTHP enabled.
+> >>>
+> >>> mTHP collapse will not honor the khugepaged_max_ptes_shared or
+> >>> khugepaged_max_ptes_swap parameters, and will fail if it encounters a
+> >>> shared or swapped entry.
+> >>>
+> >>> No functional changes in this patch; however it defines future behavior
+> >>> for mTHP collapse.
+> >>>
+> >>> [1] - https://lore.kernel.org/all/e46ab3ab-a3d7-4fb7-9970-d0704bd5d05a@arm.com
+> >>> [2] - https://lore.kernel.org/all/37375ace-5601-4d6c-9dac-d1c8268698e9@redhat.com
+> >>>
+> >>> Co-developed-by: Dev Jain <dev.jain@arm.com>
+> >>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> >>> Signed-off-by: Nico Pache <npache@redhat.com>
+> >>> ---
+> >>> include/trace/events/huge_memory.h |   3 +-
+> >>> mm/khugepaged.c                    | 117 ++++++++++++++++++++---------
+> >>> 2 files changed, 85 insertions(+), 35 deletions(-)
+> >>>
+> >>> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+> >>> index bcdc57eea270..443e0bd13fdb 100644
+> >>> --- a/include/trace/events/huge_memory.h
+> >>> +++ b/include/trace/events/huge_memory.h
+> >>> @@ -39,7 +39,8 @@
+> >>> 	EM( SCAN_STORE_FAILED,		"store_failed")			\
+> >>> 	EM( SCAN_COPY_MC,		"copy_poisoned_page")		\
+> >>> 	EM( SCAN_PAGE_FILLED,		"page_filled")			\
+> >>> -	EMe(SCAN_PAGE_DIRTY_OR_WRITEBACK, "page_dirty_or_writeback")
+> >>> +	EM(SCAN_PAGE_DIRTY_OR_WRITEBACK, "page_dirty_or_writeback")	\
+> >>> +	EMe(SCAN_INVALID_PTES_NONE,	"invalid_ptes_none")
+> >>>
+> >>> #undef EM
+> >>> #undef EMe
+> >>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> >>> index f68853b3caa7..27465161fa6d 100644
+> >>> --- a/mm/khugepaged.c
+> >>> +++ b/mm/khugepaged.c
+> >>> @@ -61,6 +61,7 @@ enum scan_result {
+> >>> 	SCAN_COPY_MC,
+> >>> 	SCAN_PAGE_FILLED,
+> >>> 	SCAN_PAGE_DIRTY_OR_WRITEBACK,
+> >>> +	SCAN_INVALID_PTES_NONE,
+> >>> };
+> >>>
+> >>> #define CREATE_TRACE_POINTS
+> >>> @@ -353,37 +354,60 @@ static bool pte_none_or_zero(pte_t pte)
+> >>>  * PTEs for the given collapse operation.
+> >>>  * @cc: The collapse control struct
+> >>>  * @vma: The vma to check for userfaultfd
+> >>> + * @order: The folio order being collapsed to
+> >>>  *
+> >>>  * Return: Maximum number of none-page or zero-page PTEs allowed for the
+> >>>  * collapse operation.
+> >>>  */
+> >>> -static unsigned int collapse_max_ptes_none(struct collapse_control *cc,
+> >>> -		struct vm_area_struct *vma)
+> >>> +static int collapse_max_ptes_none(struct collapse_control *cc,
+> >>> +		struct vm_area_struct *vma, unsigned int order)
+> >>> {
+> >>> +	unsigned int max_ptes_none = khugepaged_max_ptes_none;
+> >>> 	// If the vma is userfaultfd-armed, allow no none-page or zero-page PTEs.
+> >>
+> >> One thing I still want to call out: kernel code usually uses C-style
+> >> comments :)
+> >>
+> >>> 	if (vma && userfaultfd_armed(vma))
+> >>> 		return 0;
+> >>> 	// for MADV_COLLAPSE, allow any none-page or zero-page PTEs.
+> >>> 	if (!cc->is_khugepaged)
+> >>> 		return HPAGE_PMD_NR;
+> >>> -	// For all other cases repect the user defined maximum.
+> >>> -	return khugepaged_max_ptes_none;
+> >>> +	// for PMD collapse, respect the user defined maximum.
+> >>> +	if (is_pmd_order(order))
+> >>> +		return max_ptes_none;
+> >>> +	/* Zero/non-present collapse disabled. */
+> >>> +	if (!max_ptes_none)
+> >>> +		return 0;
+> >>> +	// for mTHP collapse with the sysctl value set to KHUGEPAGED_MAX_PTES_LIMIT,
+> >>> +	// scale the maximum number of PTEs to the order of the collapse.
+> >>> +	if (max_ptes_none == KHUGEPAGED_MAX_PTES_LIMIT)
+> >>> +		return (1 << order) - 1;
+> >>> +
+> >>> +	// We currently only support max_ptes_none values of 0 or KHUGEPAGED_MAX_PTES_LIMIT.
+> >>> +	// Emit a warning and return -EINVAL.
+> >>> +	pr_warn_once("mTHP collapse only supports max_ptes_none values of 0 or %u\n",
+> >>> +		      KHUGEPAGED_MAX_PTES_LIMIT);
+> >>
+> >> Maybe fallback to 0 instead, as David suggested earlier?
+> >>
+> >
+> > It looks reasonable to fallback to 0.
+> >
+> > But as the updated Document says in patch 14:
+> >
+> >   For mTHP collapse, only 0 or (HPAGE_PMD_NR - 1) are supported. Any other
+> >   value will emit a warning and no mTHP collapse will be attempted.
+> >
+> > This is why it does like this now.
+> >
+> >     mthp_collapse()
+> >         max_ptes_none = collapse_max_ptes_none();
+> >         if (max_ptes_none < 0)
+> >             return collapsed;
+> >
+> >> max_ptes_none is mostly legacy PMD THP behavior. mTHP is new, and any
+> >> intermediate value in (0, KHUGEPAGED_MAX_PTES_LIMIT) would implicitly
+> >> disable it :(
+> >>
+> >
+> > So it depends on what we want to do here :-)
+> >
+> > For me, I would vote for fallback to 0.
+>
+> At this point I'll prefer to not return errors from collapse_max_ptes_none().
+> It's just rather awkward to return an error deep down in collapse code for a
+> configuration problem.
+>
+> For mthp collapse, we only support max_ptes_none==0 and
+> max_ptes_none=="HPAGE_PMD_NR - 1" (default).
+>
+> If another value is specified while collapsing mTHP, print a warning and treat
+> it as 0 (save value, no creep, no memory waste).
+>
+> In a sense, this is similar to how we handle max_ptes_shared + max_ptes_swap:
+> for mTHP: we always treat them as being 0 for mTHP collapse (and don't issue a
+> warning, because we would issue a warning with the default settings).
+>
+> @Lorenzo, fine with you?
 
-Trace hooks are added at key points including termios and clock
-configuration, manual control get/set, interrupt handling, and data
-TX/RX paths.
+Yes 100%, this sounds sensible both in terms of the error and the default. Let's
+keep our lives simple(-ish) please :)
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
----
-v2->v3:
-- Updated commit text(removed example as it was available on cover
-  letter).
----
- drivers/tty/serial/qcom_geni_serial.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+>
+> --
+> Cheers,
+>
+> David
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index e6b0a55f0cfb..9e2de074d799 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -7,6 +7,9 @@
- /* Disable MMIO tracing to prevent excessive logging of unwanted MMIO traces */
- #define __DISABLE_TRACE_MMIO__
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/qcom_geni_serial.h>
-+
- #include <linux/clk.h>
- #include <linux/console.h>
- #include <linux/io.h>
-@@ -225,7 +228,7 @@ static void qcom_geni_serial_config_port(struct uart_port *uport, int cfg_flags)
- static unsigned int qcom_geni_serial_get_mctrl(struct uart_port *uport)
- {
- 	unsigned int mctrl = TIOCM_DSR | TIOCM_CAR;
--	u32 geni_ios;
-+	u32 geni_ios = 0;
- 
- 	if (uart_console(uport)) {
- 		mctrl |= TIOCM_CTS;
-@@ -235,6 +238,8 @@ static unsigned int qcom_geni_serial_get_mctrl(struct uart_port *uport)
- 			mctrl |= TIOCM_CTS;
- 	}
- 
-+	trace_geni_serial_get_mctrl(uport->dev, mctrl, geni_ios);
-+
- 	return mctrl;
- }
- 
-@@ -253,6 +258,8 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
- 	if (!(mctrl & TIOCM_RTS) && !uport->suspended)
- 		uart_manual_rfr = UART_MANUAL_RFR_EN | UART_RFR_NOT_READY;
- 	writel(uart_manual_rfr, uport->membase + SE_UART_MANUAL_RFR);
-+
-+	trace_geni_serial_set_mctrl(uport->dev, mctrl, uart_manual_rfr);
- }
- 
- static const char *qcom_geni_serial_get_type(struct uart_port *uport)
-@@ -683,6 +690,8 @@ static void qcom_geni_serial_start_tx_dma(struct uart_port *uport)
- 	xmit_size = kfifo_out_linear_ptr(&tport->xmit_fifo, &tail,
- 			UART_XMIT_SIZE);
- 
-+	trace_geni_serial_tx_data(uport->dev, tail, xmit_size);
-+
- 	qcom_geni_set_rs485_mode(uport, SER_RS485_RTS_ON_SEND);
- 
- 	qcom_geni_serial_setup_tx(uport, xmit_size);
-@@ -909,8 +918,10 @@ static void qcom_geni_serial_handle_rx_dma(struct uart_port *uport, bool drop)
- 		return;
- 	}
- 
--	if (!drop)
-+	if (!drop) {
-+		trace_geni_serial_rx_data(uport->dev, port->rx_buf, rx_in);
- 		handle_rx_uart(uport, rx_in);
-+	}
- 
- 	ret = geni_se_rx_dma_prep(&port->se, port->rx_buf,
- 				  DMA_RX_BUF_SIZE,
-@@ -1069,6 +1080,10 @@ static irqreturn_t qcom_geni_serial_isr(int isr, void *dev)
- 	geni_status = readl(uport->membase + SE_GENI_STATUS);
- 	dma = readl(uport->membase + SE_GENI_DMA_MODE_EN);
- 	m_irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
-+
-+	trace_geni_serial_irq(uport->dev, m_irq_status, s_irq_status,
-+			      dma_tx_status, dma_rx_status);
-+
- 	writel(m_irq_status, uport->membase + SE_GENI_M_IRQ_CLEAR);
- 	writel(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR);
- 	writel(dma_tx_status, uport->membase + SE_DMA_TX_IRQ_CLR);
-@@ -1281,8 +1296,8 @@ static int geni_serial_set_rate(struct uart_port *uport, unsigned int baud)
- 		return -EINVAL;
- 	}
- 
--	dev_dbg(port->se.dev, "desired_rate = %u, clk_rate = %lu, clk_div = %u\n, clk_idx = %u\n",
--		baud * sampling_rate, clk_rate, clk_div, clk_idx);
-+	trace_geni_serial_clk_cfg(uport->dev, baud * sampling_rate, clk_rate,
-+				  clk_div, clk_idx);
- 
- 	uport->uartclk = clk_rate;
- 	port->clk_rate = clk_rate;
-@@ -1432,6 +1447,10 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
- 	writel(bits_per_char, uport->membase + SE_UART_TX_WORD_LEN);
- 	writel(bits_per_char, uport->membase + SE_UART_RX_WORD_LEN);
- 	writel(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
-+
-+	trace_geni_serial_set_termios(uport->dev, baud, bits_per_char,
-+				      tx_trans_cfg, tx_parity_cfg, rx_trans_cfg,
-+				      rx_parity_cfg, stop_bit_len);
- }
- 
- #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
-
--- 
-2.34.1
-
+Cheers, Lorenzo
