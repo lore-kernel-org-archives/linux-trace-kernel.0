@@ -1,175 +1,334 @@
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C85031E846
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 23:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779146586; cv=pass; b=Be3S1Z0nucf4U4OC/xpkSTQg2wgZhlJqzfWdvk6KDKX8ilSFmRfJ7y367IF75+kkKLWvfJYjdWLp7eCxv42/sbb9uIeEk74BugLnLhSqwftz9vTEtXJz5SriudDRK/JDZ9pubjDOX1OJ//E5lmKZDgzSQT5ruJYZzSfZsazh0+Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779146586; c=relaxed/simple;
-	bh=fHv9nb6iULfu1kpZZZ3/tja1IfLrDwnxvWfhWvPh78Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fs5LKiUUm4jDSLfstyemNivImjH2XCa8dNUJ2BxwiU0PNWYmG+3ZvXYzmPHn0XuMZCdIhlpQQfZaFUOaUej3M5rGmbEdvAGQH/711MalXS0bSrwCiPXpYNXroSx227aw7Oa+etXcHAJwTdT/rOxoeYCsXAh+nxOaIbdCMG0vZ/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=def7eKdt; arc=pass smtp.client-ip=74.125.224.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B6B2882CD;
+	Mon, 18 May 2026 23:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779147684; cv=none; b=g0+8PG9uAo2n+GkHAstsuGAgMilvUwCbDA/LbXjmn7DTBeVXmQWznxlOZwXQrVLuaUv2NdI5wn2+y4XQ7lFsbHCBlPBKZecbRk4Xgd2Lq3SGfD/t2/CKBXjQhXkShotQG9SOu1F8rwdIl0wexa3SMdanR+AtY8W0jfGyS27x2n4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779147684; c=relaxed/simple;
+	bh=+UVNLwm/E3CMO6tDmNKQr9wGx/8Ji4oKVLhQWJQz8T8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CskUs+UwQiwe6NZhE0RWZdJJH9lwJzVwHqScTXj8HbW9WNVAeyKuWPXR8VtZhGtmuNZJOt6R8u4NS+IWXkV+O3lgmwqWfwD2+tOIH2be5eNqoMVmoMyrQpcY0LMT2Iwl+pJxn5UgVHc7jR6I/m0cCgR7e7P524WgOdjn9HrsBTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+gfMcym; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="def7eKdt"
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-65318dafbcbso2813118d50.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 16:23:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779146584; cv=none;
-        d=google.com; s=arc-20240605;
-        b=H/JS/gOXn9R2/Zm54I1BA3KK0ORRaHgZ1FT3yqbfeHrGhmBF0vNMGYLvXECKkG4k3V
-         kCp3Wv/npddzw7b6PcnvWg9FzFXdxom6AY0FH8bHrIvVo8kXDjNI9cIK3jOwiRGJMwie
-         A64t2pEDhW6Tqdb7FzywKvTtwB18V63byoI1EB6LuPtQFPYOR7+/pXEQGkAVhyFFRFFb
-         5iHJU2Fk0xctvhSTrTrmuhJPlzCsUKzWmkpzm4eY+ogNHyOZanFX3zwgro7RdvL8+fm9
-         uNNdiBUQFwgfbC8heO9Wt/bB4gl6QMbBgNtBD14BpiSzfw87urdi4CIsUQJ6A91m51hs
-         Kexg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=whXJS7vOoJNpViQnsykoSQi+3tpMsWSRBjO6ajJAbGg=;
-        fh=2yT22A4WVJxlLXn+NgUUyl2Dn5O1b1qldtFoZ1GEhdE=;
-        b=Ypfsws+dsSVgXPNeMSpJw4GMc2LkaIoQaeQwFPi3smu8kn58E0x9PH2XJ4vpSPyfpP
-         HXVADMa0YT7LKH8iApebr2rpwRnxi0LnXJ6erHh20Krb3K24i3I4tgHFeURq+mxyHe2i
-         RxZKGuFwGKnGqIsK53t+tX81zXzseufwRzVbiEyYgUa7zBS9pad922AS7SWDk2NLvhEY
-         DsbnBh4BNT5tpiBsEM8dbbvMII45Fvo+R9RnCe44Yyt7OpZ123ErdMn8slsCqd+HYl+X
-         EvTwCUCNZcHSb0ppZs+Ik9dvMmnoNC0Of7EOMTWk0D10Cz/dVEVh6M9zpSbGlEallG8H
-         o36A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1779146584; x=1779751384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=whXJS7vOoJNpViQnsykoSQi+3tpMsWSRBjO6ajJAbGg=;
-        b=def7eKdt7Gh7glxtnfZ5Cc1HaYw8eiAWU8bfVnk5d6ZAsUrqUQSPqITUziDA/mY+vS
-         SmbYiPdc4t5+XZS+bN9qi/CV+hmCsbLTmBeiTQhzZTrZnh4vpd1254IJNtHaPyeYitj5
-         G9vJGq411pvSeSu1mDYYKr6ur3Cnm+zSnMDZ9IVjTyl7i+gi9ewY3/z0HxnCcoBq/HSg
-         uDEIqOed4Z4por91il98FIJmP5mVAe4UdIMNBlf5k61azk7buH9Gmj+g6XYnmPg3nPcT
-         Kz9dFqhR9sXmr0R7y1AAd6/Hj0qc55PZIKvDkiVNDZ4SA0sZBVdtNceImG03ZyU9m7AE
-         Cl2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779146584; x=1779751384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=whXJS7vOoJNpViQnsykoSQi+3tpMsWSRBjO6ajJAbGg=;
-        b=PrXXxrh8GXX/W2TlMWe2zML59F/HWtUujJ+3slWKkeeNcQbxzD/PPQQGp88c3VHOZW
-         3RYwmo00KGrtIBC7J1EviGgXYWWn1M+l6o8nHW9zdzJ8j0Z3GnIceKZFogyADoFk+nzj
-         7Soyo5OF6u5j7Px/+LScEDYfpBx/m/pCFq9XCsZxZ/9cht3Cpf21PI1ymR/Ijfqd2p3K
-         wKBhGw1ADQveOMiIq1YURCxWKDEbe7W13C37qItxLrl1p9NU21HJws8dT6PGhAK0Qa6s
-         L9Zrqqq9JQ9FZcTY0Z1K1VsTWZO9ININU5bYCSSvOUz0c9mlQ++wrXhCR9QDnbJWJjJR
-         Ting==
-X-Forwarded-Encrypted: i=1; AFNElJ/c9E4OcX8oEoLZMl26rEB/Yo72OPzaJzrvyPj9X2PRctM19aVLspjZoJ0W2z0bVLbZu8Mf+MJ/HsH3HB3pWuMV+TI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW6bb7rAnRsqksrLRwiQd/8kxdDvfJzNMNvec8NIB4RA0TXV99
-	Bkaz9PynPCDYjjwNxhNQBclsArut0E7a2MTO5bclIHK8KCctbLrZmi3VT4azSoWe/+3jnkCyoF3
-	BrbVxV64uqfWVC4aWd1G/RjCjnlAf91CHSQcRC5OkWg==
-X-Gm-Gg: Acq92OHtii5RpdpHuD6reUN+9mDo3F6svjZqeP6frTByjZ5NwXzjRL3ML7wwje2rz7f
-	40YB4oWCIczL8o+GMsnTrBD7UGy/6IbqK7EU7NjKb/LPgyzyRNJM1NdTibGH/X7siqIaTzGswWf
-	cvbiGkLIitanQs0xhZ1Mx8MIV/lLtnu0yG0Tlhx2e1WqnE74vavZrVvsOf9qwi+BcC4A5qv19sm
-	s9tMOMRekAEdK6YVkGTIPYUq+eKCRf3ySVnXx2eVJFhM+qhjo5Xc4v+jOYqGRRXvdZ+wxLNzo5P
-	tiNiwhi1/ECODhApup1r
-X-Received: by 2002:a05:690e:d4c:b0:651:bacc:77c with SMTP id
- 956f58d0204a3-65e227046a4mr14553366d50.26.1779146584210; Mon, 18 May 2026
- 16:23:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+gfMcym"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23052C2BCB7;
+	Mon, 18 May 2026 23:41:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779147684;
+	bh=+UVNLwm/E3CMO6tDmNKQr9wGx/8Ji4oKVLhQWJQz8T8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=p+gfMcym9MmCahY6flskwcuLHsBvE014rcKXEUZbfmRvKzOedbuqddrOCtSszOLZe
+	 zcmviOAIxwVkT8KB1eEf+V/sNxP+Jb5ebx3CK1MHXWZLpZs5/Io7fhUnRnVITI/1xq
+	 csqlPy/x6PhX0RVx4P38vSbEsFqCScjjvAYftiKw7ogYxdzw2ztTgmR/9MYdh+ZYs1
+	 IuJ4R1CFZck53hukueH74pnYpYUNHwxeLaLOXJKUKL/bMqXydkoOjIUEf2Oi6skuzm
+	 xkvi33ItKDdWoHU8SWkQv5BhmliS3+KunEO1M7HxX1CEhEjlu/wzVgmJ4hyvlZY82A
+	 FtRgrVeoEpKhg==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	David Hildenbrand <david@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	damon@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 00/28] mm/damon: introduce data attributes monitoring
+Date: Mon, 18 May 2026 16:40:48 -0700
+Message-ID: <20260518234119.97569-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260515135946.2238888-1-vineeth@bitbyteword.org>
- <9fde73e7-0108-48d7-a1a0-ccc9776beb5c@acm.org> <20260515145048.1c021bc9@gandalf.local.home>
- <ebdc020e-419d-458a-9211-36f22af0c1d9@acm.org>
-In-Reply-To: <ebdc020e-419d-458a-9211-36f22af0c1d9@acm.org>
-From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Mon, 18 May 2026 19:22:53 -0400
-X-Gm-Features: AVHnY4J2BTXARqZMS-S-7ea43B88qOe7-XZuDC_7_fnPjVKwEJzab2MdP2OY_Cg
-Message-ID: <CAO7JXPhMTKpC_8e-C8M13wdqrC3Re6Ad_DqkzGjKrVuH8YNh8g@mail.gmail.com>
-Subject: Re: [PATCH v3 08/11] scsi: ufs: Use trace_call__##name() at guarded
- tracepoint call sites
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 15, 2026 at 3:22=E2=80=AFPM Bart Van Assche <bvanassche@acm.org=
-> wrote:
->
-> On 5/15/26 11:50 AM, Steven Rostedt wrote:
-> > On Fri, 15 May 2026 08:27:27 -0700
-> > Bart Van Assche <bvanassche@acm.org> wrote:
-> >
-> >> On 5/15/26 6:59 AM, Vineeth Pillai (Google) wrote:
-> >>>    static void ufshcd_add_query_upiu_trace(struct ufs_hba *hba,
-> >>> @@ -432,8 +432,8 @@ static void ufshcd_add_query_upiu_trace(struct uf=
-s_hba *hba,
-> >>>     if (!trace_ufshcd_upiu_enabled())
-> >>>             return;
-> >>>
-> >>> -   trace_ufshcd_upiu(hba, str_t, &rq_rsp->header,
-> >>> -                     &rq_rsp->qr, UFS_TSF_OSF);
-> >>> +   trace_call__ufshcd_upiu(hba, str_t, &rq_rsp->header,
-> >>> +                          &rq_rsp->qr, UFS_TSF_OSF);
-> >>>    }
-> >>
-> >> Instead of making this change, please remove the
-> >> trace_ufshcd_upiu_enabled() call because it is redundant.
-> >
-> > You mean to remove the ufshcd_add_query_upiu_trace() function and just =
-use
-> > a tracepoint where it is called?
->
-> That would be even better.
->
-Will do.
+TL; DR
+======
 
-> >>>    static void ufshcd_add_tm_upiu_trace(struct ufs_hba *hba, unsigned=
- int tag,
-> >>> @@ -445,15 +445,15 @@ static void ufshcd_add_tm_upiu_trace(struct ufs=
-_hba *hba, unsigned int tag,
-> >>>             return;
-> >>>
-> >>>     if (str_t =3D=3D UFS_TM_SEND)
-> >>> -           trace_ufshcd_upiu(hba, str_t,
-> >>> -                             &descp->upiu_req.req_header,
-> >>> -                             &descp->upiu_req.input_param1,
-> >>> -                             UFS_TSF_TM_INPUT);
-> >>> +           trace_call__ufshcd_upiu(hba, str_t,
-> >>> +                                   &descp->upiu_req.req_header,
-> >>> +                                   &descp->upiu_req.input_param1,
-> >>> +                                   UFS_TSF_TM_INPUT);
-> >>>     else
-> >>> -           trace_ufshcd_upiu(hba, str_t,
-> >>> -                             &descp->upiu_rsp.rsp_header,
-> >>> -                             &descp->upiu_rsp.output_param1,
-> >>> -                             UFS_TSF_TM_OUTPUT);
-> >>> +           trace_call__ufshcd_upiu(hba, str_t,
-> >>> +                                   &descp->upiu_rsp.rsp_header,
-> >>> +                                   &descp->upiu_rsp.output_param1,
-> >>> +                                   UFS_TSF_TM_OUTPUT);
-> >>>    }
-> >>
-> >> Same comment here: I think it would be better to remove the
-> >> trace_ufshcd_upiu_enabled() call rather than
-> >> changing trace_ufshcd_upiu() into trace_call__ufshcd_upiu().
-> >
-> > Well, removing it here would mean placing the if (str =3D=3D UFS_TM_SEN=
-D) into
-> > the code and processing it even when tracing is disabled. With the
-> > trace_*_enabled() helper, it's all a nop.
->
-> The ufshcd_add_tm_upiu_trace() function is only called from the UFS
-> error handler and hence is not performance sensitive. The execution of
-> an additional if-test in this function is not a concern at all.
->
-Sure, I shall change this.
+Extend DAMON for monitoring general data attributes other than accesses.
+The short term motivation is lightweight page type (e.g., belonging
+cgroup) aware monitoring.  In long term, this will help extending DAMON
+for multiple access events capture primitives (e.g., page faults and
+PMU) and eventually pivotting DAMON to a "Data Attributes Monitoring and
+Operations eNgine" in long term.
 
-Thanks,
-Vineeth
+Background: High Cost of Page Level Properties Monitoring
+=========================================================
+
+DAMON is initially introduced as a Data Access MONitor.  It has been
+extended for not only access monitoring but also data access-aware
+system operations (DAMOS).  But still the monitoring part is only for
+data accesses.
+
+Data access patterns is good information, but some users need more
+holistic views.  Particularly, users want to show the access pattern
+information together with the types of the memory.  For example, users
+who work for making huge pages efficiently want to know how much of
+DAMON-found hot/cold regions are backed by huge pages.  Users who run
+multiple workloads with different cgroups want to know how much of
+DAMON-found hot/cold regions belong to specific cgroups.
+
+For the user demand, we developed a DAMOS extension for page level
+properties based monitoring [1], which has landed on 6.14.  Using the
+feature, users can inform the page level data properties that they are
+interested in, in a flexible format that uses DAMOS filters.  Then,
+DAMON applies the filters to each folio of the entire DAMON region and
+lets users know how many bytes of memory in each DAMON region passed the
+given filters.
+
+This gives page level detailed and deterministic information to users.
+But, because the operation is done at page level, the overhead is
+proportional to the memory size.  It was useful for test or debugging
+purposes on a small number of machines.  But it was obviously too heavy
+to be enabled always on all machines running the real user workloads.
+For real world workloads, it was recommended to use the feature with
+user-space controlled sampling approaches.  For example, users could do
+the page level monitoring only once per hour, on randomly selected one
+percent of machines of their fleet.  If the runtime and the  size of the
+fleet is long and big enough, it should provide statistically meaningful
+data.
+
+But users are too busy to implement such controls on their own.
+
+Data Attributes Monitoring
+==========================
+
+Extend DAMON to monitor not only data accesses, but also general data
+attributes.  Do the extension while keeping the main promise of DAMON,
+the bounded and best-effort minimum overhead.
+
+Allow users to specify what data attributes in addition to the data
+access they want to monitor.  Users can install one 'data probe' per
+data attribute of their interest for this purpose.  The 'data probe'
+should be able to be applied to any memory, and determine if the given
+memory has the appropriate data attribute.  E.g., if memory of physical
+address 42 belongs to cgroup A.  Each 'data probe' is configured with
+filters that are very similar to the DAMOS filters.
+
+When DAMON checks if each sampling address memory of each region is
+accessed since the last check, it applies data probes if registered.
+Same to the number of access check-positive samples accounting
+(nr_accesses), it accounts the number of each data probe-positive
+samples in another per-region counters array, namely 'probe_hits'. When
+DAMON resets nr_accesses every aggregation interval, it resets
+'probe_hits' together.
+
+Users can read 'probe_hits' just before the values are reset.  In this
+way, users can know how many hot/cold memory regions have data
+attributes of their interest.  E.g., 30 percent of this system's hot
+memory is belonging to cgroup A, and 80 percent of the cgroup
+A-belonging hot memory is backed by huge pages.
+
+Patches Sequence
+================
+
+First eight patches implement the core feature, interface and the
+working support.  Patch 1 introduces data probe data structure, namely
+damon_probe.  Patch 2 extends damon_ctx for installing data probes.
+Patch 3 introduces another data structure for filters of each data
+probe, namely damon_filter.  Patch 4 updates damon_ctx commit function
+to handle the probes.  Patch 5 extends damon_region for the per-region
+per-probe positive samples counter, namely probe_hits.  Patch 6 extends
+damon_operations for applying probes on the underlying DAMON operations
+implementation.  Patch 7 updates kdamond_fn() to invoke the probes
+applying callback.  Patch 8 finally implements the probes support on
+paddr ops.
+
+Ten changes for user interface (patches 9-18) come next.  Patches 9-13
+implements sysfs directories and files for setting data probes, namely
+probes directory, probe directory, filters directory, filter directory
+and filter directory internal files, respectively.  Patch 14 connects
+the user inputs that are made via the sysfs files to DAMON core.
+Following three patches (patches 15-17) implement sysfs directories and
+files for showing the probe_hits to users, namely probes directory,
+probe directory and hits files, respectively.  Patch 18 introduces a new
+tracepoint for showing the probe_hits via tracefs.
+
+Patch 19 adds a selftest for the sysfs files.
+
+Patches 20 and 21 documents the design and usage of the new feature,
+respectively.
+
+Seven additional patches (patches 22-28) for monitoring belonging memory
+cgroup follow.  Depending on the feedback, this part might be separated
+to another series in future.  Patch 22 defines the DAMON filter type for
+the new attribute, namely DAMON_FILTER_TYPE_MEMCG.  Patch 23 add the
+support on paddr ops.  Patch 24 updates the sysfs interface for setup of
+the target memcg.  Patch 25 move code for easy reuse of the filter
+target memcg setup.  Patch 26 connects the user input to the core layer.
+Finally, patches 27 and 28 update the design and usage documents for the
+memcg attribute monitoring support.
+
+Discussions
+===========
+
+This allows the page properties monitoring with overhead that is low
+enough to be enabled always on real world workloads.  Because the
+sampling time for access check is reused for data attributes check,  the
+upper-bounded and best-effort minimum overhead of DAMON is kept.
+Because the sampling memory for access check is reused for data
+attributes check, additional overhead is minimum.
+
+Still DAMOS-based page level properties monitoring should be useful,
+because it provides a deterministic page level information.  When in
+doubt of the sampling based information, running DAMOS-based one
+together and comparing the results would be useful, for debugging and
+tuning.
+
+Plan for Dropping RFC tag
+=========================
+
+Making changes for feedback from myself, humans and Sashiko should be
+the major remaining work.
+
+I'm currently hoping to drop the RFC tag by 7.2-rc1.
+
+Future Works: Mid Term
+========================
+
+This version of implementation is limiting the maximum number of data
+probes to four.  I will try to find a way to remove the limit in future.
+I personally think it should be enough for common use cases, though, and
+therefore not giving high priority at the moment.
+
+Future Works: Long Term
+=======================
+
+There are user requests for extending DAMON with detailed access
+information, for example, per-CPUs/threads/read/writes monitoring.  For
+that, I was working [2] on extending DAMON to use page fault events as
+another access check primitives, and making the infrastructure flexible
+for future use of yet another access check primitive.  Actually there is
+another ongoing work [3] for extending DAMON with PMU events.  The
+motivation of the work is reducing the overhead, though.
+
+In my work [2], I was introducing a new interface for access sampling
+primitives control.  Now I think this data probe interface can be used
+for that, too.  That is, data access becomes just one type of data
+attribute.  Also, pg_idle-confirmed access, page fault-confirmed access,
+and PMU event-confirmed access will be different types of data
+attributes.
+
+The regions adjustment mechanism is currently working based on the
+access information.  That's because DAMON is designed for data access
+monitoring.  That is, data access information is the primary interest,
+and therefore DAMON adjusts regions in a way that can best-present the
+information.
+
+Once data access becomes just one of data attributes, there is no reason
+to think data access that special.  There might be some users not
+interested in access at all but want to know the location of memory of
+specific type.  Data probes interface will allow doing that.  Further,
+we could extend the interface to let users set any data attribute as the
+'primary' attribute.  Then, DAMON will split and merge regions in a way
+that can best-present the 'primary' attributes.
+
+DAMOS will also be extended, to specify targets based on not only the
+data access pattern, but all user-registered data attributes.  From this
+stage, we may be able to call DAMON as a "Data Attributes Monitoring and
+Operations eNgine".
+
+[1] https://lore.kernel.org/20250106193401.109161-1-sj@kernel.org
+[2] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org/
+[3] https://lore.kernel.org/20260423004211.7037-1-akinobu.mita@gmail.com
+
+Changes from RFC v3
+- rfc v3: https://lore.kernel.org/20260516183712.81393-1-sj@kernel.org
+- Wordsmithing documentation.
+- Drop RFC tag.
+- Rebase to mm-new.
+Changes from RFC v2.2
+- rfc v2.2: https://lore.kernel.org/20260515004433.128933-1-sj@kernel.org
+- Rename damon_aggregated_v2 trace event to damon_region_aggregated.
+- Address Sashiko issues.
+  - Enclose arguments on damon_for_each_{probe,filter}[_safe]() macros.
+  - Fix typos in comments and documents.
+  - Update probe_hits for region split and merge.
+  - Add more documentation for damon_operation->apply_probes() callback.
+  - Reduce unnecessary folio_{get,put}() in damon_pa_apply_probes().
+  - Define damon_sysfs_probe_attrs as static.
+  - Link scheme tried region sysfs dir and increase the count only after
+    all internal dir population success.
+  - Commit damon_filter->memcg_id for newly added filters.
+Changes from RFC v2.1
+- rfc v2.1: https://lore.kernel.org/20260514140904.119781-1-sj@kernel.org
+- Rebase to mm-stable (7.1-rc3) to avoid Sashiko patch apply failure.
+Changes from RFC v2
+- rfc v2: https://lore.kernel.org/20260512143645.113201-1-sj@kernel.org
+- Optimize nr_probes calculation for probe_hits tracepoint.
+- Use TRACE_EVENT_CONDITION() for probe_hits tracepoint.
+- Rebase to latest mm-new.
+Changes from RFC
+- rfc: https://lore.kernel.org/all/20260426205222.93895-1-sj@kernel.org/
+- Support memcg DAMON filter.
+- Use per-probe probe_hits sysfs file.
+- Use dynamic_array for probe_hits tracing.
+- Fix filter matching field.
+- Fix folio leaking in damon_pa_filter_pass().
+- Move nr_regions of damon_aggregated_v2 tracepoint after end.
+- Rename DAMON_TEST_TYPE_ANON to DAMON_FILTER_TYPE_ANON.
+
+SeongJae Park (28):
+  mm/damon/core: introduce struct damon_probe
+  mm/damon/core: embed damon_probe objects in damon_ctx
+  mm/damon/core: introduce damon_filter
+  mm/damon/core: commit probes
+  mm/damon/core: introduce damon_region->probe_hits
+  mm/damon/core: introduce damon_ops->apply_probes
+  mm/damon/core: do data attributes monitoring
+  mm/damon/paddr: support data attributes monitoring
+  mm/damon/sysfs: implement probes dir
+  mm/damon/sysfs: implement probe dir
+  mm/damon/sysfs: implement filters directory
+  mm/damon/sysfs: implement filter dir
+  mm/damon/sysfs: implement filter dir files
+  mm/damon/sysfs: setup probes on DAMON core API parameters
+  mm/damon/sysfs-schemes: implement tried_regions/<r>/probes/
+  mm/damon/sysfs-schemes: implement probe dir
+  mm/damon/sysfs-schemes: implement probe/hits file
+  mm/damon: trace probe_hits
+  selftests/damon/sysfs.sh: test probes dir
+  Docs/mm/damon/design: document data attributes monitoring
+  Docs/admin-guide/mm/damon/usage: document data attributes monitoring
+  mm/damon/core: introduce DAMON_FILTER_TYPE_MEMCG
+  mm/damon/paddr: support DAMON_FILTER_TYPE_MEMCG
+  mm/damon/sysfs: add filters/<F>/path file
+  mm/damon/sysfs-schemes: move memcg_path_to_id() to sysfs-common
+  mm/damon/sysfs: setup damon_filter->memcg_id from path
+  Docs/mm/damon/design: update for memcg damon filter
+  Docs/admin-guide/mm/damon/usage: update for memcg damon filter
+
+ Documentation/admin-guide/mm/damon/usage.rst |  46 +-
+ Documentation/mm/damon/design.rst            |  39 ++
+ include/linux/damon.h                        |  69 +++
+ include/trace/events/damon.h                 |  38 ++
+ mm/damon/core.c                              | 211 +++++++
+ mm/damon/paddr.c                             |  76 +++
+ mm/damon/sysfs-common.c                      |  41 ++
+ mm/damon/sysfs-common.h                      |   2 +
+ mm/damon/sysfs-schemes.c                     | 224 ++++++--
+ mm/damon/sysfs.c                             | 557 +++++++++++++++++++
+ tools/testing/selftests/damon/sysfs.sh       |  48 ++
+ 11 files changed, 1303 insertions(+), 48 deletions(-)
+
+
+base-commit: b491d3b062a367a23fdc98def7fe3a8cf21bb3b0
+-- 
+2.47.3
