@@ -1,198 +1,264 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8100940DFA3;
-	Mon, 18 May 2026 16:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6F348B385
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 16:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779121150; cv=none; b=aJtC3J+XRrBoT0kMqlxYuSiKpnRZuIphEdo5bHff9wb36YgbqPwXe2x6aQvPcrFk56MfYen7SWIPxksmb6BYtjPMhkYPom0wXCjhjoubNwOIAMvSwrGL5lLuT9X3tedUfoLn0rTBKdGPGZ+cRZ4jrZ4ppKkLQJHx8jlVuWTLr0M=
+	t=1779122358; cv=none; b=bOa19N00AOQ5vur+mNKMgQVrmwK2PurOIHZn14lAvWGnRSp2U+t3n/hevu1xvodZNo/lxAegakly8KDiQhFbhTplju+6ppmABnU8ZZ7xKyIY1+PKszNubFwUX/Ed0j0TIqw3CI+mGIrpghG2Q9Vqp8me9J2i8W0arPb21e09QIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779121150; c=relaxed/simple;
-	bh=QXOe6snGHgdgnGJp3ZkSbp3AHOt4fgXfzTzWLnXiLA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kqcODoa+UatN6mzpvJVNLJwry4u6zeMuFHCbswSlkSS1Q0lBvktNz1Bzyi4I/sa6aGs0Nt7g8m2hpggPn69HvOgNVo+Iw9CbUBNe7dPUoLbeRxpJSaDRc+Dw0XlxRGcSna9Cmx/xEwZ31dftoxFHtlLAI2+9d3smx936M51lLa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 441EB1C1FBC;
-	Mon, 18 May 2026 16:18:55 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 6DDB920028;
-	Mon, 18 May 2026 16:18:53 +0000 (UTC)
-Date: Mon, 18 May 2026 12:19:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Kuchmenko <capyenglishlite@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, Jiri Olsa
- <jolsa@kernel.org>
-Subject: Re: [PATCH] ftrace: fix race in __modify_ftrace_direct() between
- tmp_ops registration and direct_functions update
-Message-ID: <20260518121906.4eebad77@gandalf.local.home>
-In-Reply-To: <20260517110155.21706-1-capyenglishlite@gmail.com>
-References: <20260517110155.21706-1-capyenglishlite@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779122358; c=relaxed/simple;
+	bh=wtfm5s0cYEM0IzmHheJlIyC/xbWNf/mBPw/DEtmUof4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oDMs55qRyTpC4ru02B31cbDjPTzaL5SmBsv4eF062BP87Ff7+1NxOurIKWLWTqqeSne7Q+/+z2YK3XDPvBnHcKOpPhyrJXMt/4Qp5vJKoQCFWd5m4lOPjbyJiEbUU53ZOdEnKHhfnSGSFC7BSgwcSD1jUB2SyrogtCwacSBnEJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nzEDG8dW; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzEDG8dW"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-448528f4e69so1650829f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 May 2026 09:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779122354; x=1779727154; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hDAuz36Ay6h7YMO6HB48q6LTLUi8+4QkMA1nwKPRRj8=;
+        b=nzEDG8dWo5EnoyGy02jekBuEQUFH/RkPb+7ygZ1KRVmL2uJ2VrKZo5xuXrL/j0sIrW
+         R1YDvEWZ9NV5k++Ab8ooHGbna4CYKU918lVp/ELhCFZIdfEqbM8yuJluiDsq4nDgnCl7
+         5EC/9HlU5O1Xsj+f4aim95PrJv5V355DSJ0LaeKjscjl29F2Mc7wN0xaKcLM8cpHwv22
+         qDFFLDlEjHIf3XOGLEboE/tda4lrx2vrQOVWkRbsxFFP23muTKnTx0MOdbI10mpjH+Md
+         w4hAsEohSeCH1w64u9+gRTImADGYJrrsw1qizN5t/+OTKamxtrWOgLSe/F8zk2gfrVkb
+         Y2eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779122354; x=1779727154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hDAuz36Ay6h7YMO6HB48q6LTLUi8+4QkMA1nwKPRRj8=;
+        b=har7U/X3MQ/M7OVW3JOv1GSpEbNu3LASAdlVtbxb1Admq5mnLKJ6dvOMLtwsd+ay8N
+         DUpnXx8qV2yvQdNKwTpuc+RMRXgEff0VXmX20NcfxEw1wpLknMOUoiu6CgDOx0gpTAml
+         is9KJOyFBEqDX9iUo8I8M0hv9vgRJNxy7SiVpIij59Tv8bH5fhMh5GBgapFI4Fx6smqY
+         nYpTUjFAikqqQ+zoGSxdOXCCvM3v2rJFuuSg6sH+etoG+DSvOJ57SbjbzKR7CvDFQZK+
+         pM6HmVRdM/rZWHfLXa64d+lj/wsiNUjddNy6slRjwJfKC+oyZYsQc798qPkIDYUNdLba
+         ihtw==
+X-Forwarded-Encrypted: i=1; AFNElJ/9sogilQepaMhOS2RZmzJ/KZOiwBfVcb5TIrldk/9QWfryoPiGYxv24ObIIOcWYzb2SiQ6m+6XjdzYNol/RsDWqT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw1y8WCZJLzt4dy3fCNN23mT8PtZrMno72g1e4nbHuysWZlspL
+	fO1xo7WOB4en/x7DmDvaeYkf8oDt7uE3KzzgKSpCzr5p2itHroocI5CO
+X-Gm-Gg: Acq92OFVGj0t6/i7ryMBWK1ATN5GrrjkCHepg4XYmQvPyTq9qb/lt/98n888QXjVroF
+	q0yeGvCHbkq3u64yez+favUtOySYbcgFv1jTiQBLoSx6GtLc+BYOZbiVK5Yc6Ks71RlKvTp/X17
+	XaxKcX7pLwjkSVArVKaMVPxhxt+Odj9XjMozDxfrtTo8G942EtXB0G5RQpGsh/DoW7Y8vFpyl2z
+	Gs2LrO2gSDCAo76MT4z1jf8o5yUv2qsTiITCAJgr5wW3UZcnTzPUpIEirMAffGnVuEuvCfKTxEu
+	UHWzArm7EdIg+126zDhf/6GxeZdcB9dcTJqJVAycS950hqMFCLZj0/ZEFcn8lb+f3sZ3WJdTAnq
+	Sr2iMwayFUugv5YGpGXHTPBzgQFRZgtdIMBFmb17BsXyCK/7bUUlgcf66vGzs1qtcCI/y6U6lvT
+	10C4F+o5MM7iGjAhcGVgLXSw==
+X-Received: by 2002:a5d:5885:0:b0:44e:902f:e341 with SMTP id ffacd0b85a97d-45e5c5bfbfcmr27408841f8f.20.1779122354393;
+        Mon, 18 May 2026 09:39:14 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ed30110sm42240417f8f.13.2026.05.18.09.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 09:39:13 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 18 May 2026 18:39:12 +0200
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] uprobes/x86: Move optimized uprobe from nop5 to nop10
+Message-ID: <agtAsCSJbrgJdSAM@krava>
+References: <20260514135342.22130-1-jolsa@kernel.org>
+ <20260514135342.22130-2-jolsa@kernel.org>
+ <20260518104306.GU3102624@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 6DDB920028
-X-Stat-Signature: 7475nq6abdfq3z4jdpinuxnnqu4obzha
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18qzFd+SMwPAxg7uknzCaPo64VnjDt9WEg=
-X-HE-Tag: 1779121133-302350
-X-HE-Meta: U2FsdGVkX19s4pTNGOLCOqaFHty2QAGT3IrNkCzug/0/ivf5UnXxhuBD5QT7emIDTTXySdQj4tiH0l1LPX3mRMLiRvm6yvUz1dMqcgVqR1N0n8x55WlLOqjujswIrZKZmWYc4dFoizO5uBloIOhoJcxTuX64lcJaVdr7NbMlGuleQ7YJHU2eBA9aeoMZeyCsuP+cZmr0P9CZOCsBLc5ZZYZkuf8fmuQyLZtkxfYaOo+fkZngGS66FlNSn4gWrL2E3RkIaT8H96v0LHmYpoWJskMX2LRO00f+Dl6qZwaSIm90eSpWgnz4VU5Kb6UciV/yNnYwh3Q/lXA+9tsJ3hIjnQ8Bdtt24DKqgJcYjftlhMsoi02Om0K83arljoMSWPKk8QstqASH3LyoO20uXMOR7SV5GI+RieJUGaQ0YYQmheU9C1FgxtDfrSfE7M/Czzns0U+BRU1ysLo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260518104306.GU3102624@noisy.programming.kicks-ass.net>
 
-On Sun, 17 May 2026 14:01:53 +0300
-Andrii Kuchmenko <capyenglishlite@gmail.com> wrote:
+On Mon, May 18, 2026 at 12:43:06PM +0200, Peter Zijlstra wrote:
+> 
+> You seem to have forgotten to Cc LKML and x86 :-(
+> 
+> On Thu, May 14, 2026 at 03:53:36PM +0200, Jiri Olsa wrote:
+> 
+> > @@ -1017,17 +1030,32 @@ static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  static int swbp_optimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  			 unsigned long vaddr, unsigned long tramp)
+> >  {
+> > -	u8 call[5];
+> > +	u8 insn[OPT_INSN_SIZE], *call = &insn[LEA_INSN_SIZE];
+> >  
+> > -	__text_gen_insn(call, CALL_INSN_OPCODE, (const void *) vaddr,
+> > +	/*
+> > +	 * We have nop10 instruction (with first byte overwritten to int3),
+> > +	 * changing it to:
+> > +	 *   lea -0x80(%rsp), %rsp
+> > +	 *   call tramp
+> > +	 */
+> > +	memcpy(insn, lea_rsp, LEA_INSN_SIZE);
+> > +	__text_gen_insn(call, CALL_INSN_OPCODE,
+> > +			(const void *) (vaddr + LEA_INSN_SIZE),
+> >  			(const void *) tramp, CALL_INSN_SIZE);
+> > -	return int3_update(auprobe, vma, vaddr, call, true /* optimize */);
+> > +	return int3_update(auprobe, vma, vaddr, insn, OPT_INSN_SIZE, true /* optimize */);
+> >  }
+> >  
+> >  static int swbp_unoptimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  			   unsigned long vaddr)
+> >  {
+> > -	return int3_update(auprobe, vma, vaddr, auprobe->insn, false /* optimize */);
+> > +	/*
+> > +	 * We have optimized nop10 (lea, call), changing it to 'jmp rel8' to
+> > +	 * end of the 10-byte slot instead of restoring the original nop10,
+> > +	 * because we could have thread already inside lea instruction.
+> 
+> Inaccurate, RIP could be on CALL, not inside LEA. Writing NOP10 would
+> make it inside NOP10 though, and that would cause havoc IF you use the
+> normal NOP10.
+> 
+> Thing is, the encoding of NOP{8,9,10} would actually allow you to
+> preserve the CALL instruction :-)
+> 
+> That is, observe:
+> 
+>        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
+> 
+> NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
+> NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0xe8, 0x78, 0x56, 0x34, 0x12 -- cs nopw 0x12345678(%rax,%rbp,8)
+> 
+> Specifically the CALL opcode sits in the SIB byte and decodes like:
+> 
+>   e8 := 11 101 000
+> 
+>   scale = 11  (2^3 = 8)
+>   index = 101 BP
+>   base  = 000 AX
+> 
+> And the displacement is just that, a displacement.
+> 
+> So you *could* in fact, write back _A_ NOP10, just not the standard
+> NOP10.
+> 
+> > +	 */
+> > +	u8 jmp[OPT_INSN_SIZE] = { JMP8_INSN_OPCODE, OPT_JMP8_OFFSET };
+> > +
+> > +	return int3_update(auprobe, vma, vaddr, jmp, JMP8_INSN_SIZE, false /* optimize */);
+> >  }
+> 
+> Changelog wants significant update to explain this scheme.
+> 
+> So we have:
+> 
+>   NOP10 -+-> LEA -0x80(%rsp), %rsp, CALL foo -> JMP.d8 +8
+>          |                                          |
+>          `------------------------------------------'
+> 
+> And you want to belabour the point of how you ensure re-writing the CALL
+> instruction isn't a problem (because I'm not convinced).
+> 
+> Note that the above results in:
+> 
+> initial:
+> 0: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
+> 
+> optimize-int3:
+> 1: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- int3
+> optimize-tail:
+> 2: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+> optimize-finish:
+> 3: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- lea -0x80(%rsp),%rsp; call 0x78563412
+> 
+> unoptimize-int3:
+> 4: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+> unoptimize-tail:
+> 5: 0xcc, 0x08, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+> unoptimize-finish:
+> 6: 0xeb, 0x08, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- jmp.d8 +8; call 0x78563412
+> 
+> optimize-int3:
+> 7: 0xcc, 0x08, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+> optimize-tail:
+> 8: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- int3; call 0x12345678
+> optimize-finish:
+> 9: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- int3; call 0x12345678
+> 
+> Note that from step 7 to step 8, you re-write the CALL instruction
+> without going through INT3. This means it is entirely possible for a
+> concurrent execution to observe a composite instruction.
+> 
+> This is NOT sound!
+> 
+> However, I think it can be salvaged, if instead of only writing INT3 at
+> +0, you also write INT3 at +5. The sequence then becomes:
+> 
+> initial:
+> 0: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
+> 
+> optimize-int3:
+> 1: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0xcc, 0x00, 0x00, 0x00, 0x00 -- int3; int3
+> optimize-tail(s):
+> 2: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xcc, 0x12, 0x34, 0x56, 0x78 -- int3; int3
+> optimize-finish-1:
+> 3: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+> optimize-finish-2:
+> 3: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- lea -0x80(%rsp),%rsp; call 0x78563412
+> 
+> unoptimize-int3:
+> 4: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+> unoptimize-tail:
+> 5: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0xe8, 0x12, 0x34, 0x56, 0x78 -- int3; call 0x78563412
+> unoptimize-finish:
+> 6: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0xe8, 0x12, 0x34, 0x56, 0x78 -- cs nopw 0x78563412(%rax,%rbp,8); call 0x78563412
+> 
+> optimize-int3:
+> 7: 0xcc, 0x2e, 0x0f, 0x1f, 0x84, 0xcc, 0x12, 0x34, 0x56, 0x78 -- int3; int3
+> optimize-tail(s):
+> 8: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xcc, 0x78, 0x56, 0x34, 0x12 -- int3; int3
+> optimize-finish-1:
+> 9: 0xcc, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- int3; call 0x12345678
+> optimize-finish-2:
+> 9: 0x48, 0x8d, 0x64, 0x24, 0x80, 0xe8, 0x78, 0x56, 0x34, 0x12 -- lea -0x80(%rsp),%rsp; call 0x12345678
 
-> In __modify_ftrace_direct(), register_ftrace_function_nolock() makes
-> tmp_ops visible in ftrace_ops_list before entry->direct is updated
-> under ftrace_lock. During this window any CPU entering the traced
-> function calls call_direct_funcs(), reads the old address from
-> direct_functions via RCU, and jumps to it via
-> arch_ftrace_set_direct_caller(). If the caller freed or invalidated
-> the old trampoline before calling modify_ftrace_direct(), this is a
-> use-after-free in executable code context.
->=20
-> The race window:
->=20
->   CPU 0 (__modify_ftrace_direct)       CPU 1 (executing traced func)
->   =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80       =E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80
->   register_ftrace_function_nolock()
->     -> tmp_ops visible in ops_list =20
->                                         call_direct_funcs()
->                                           ftrace_find_rec_direct() -> old=
-_addr
->                                           arch_ftrace_set_direct_caller(o=
-ld_addr)
->                                           jump to old_addr  <- UAF if fre=
-ed
+sorry I missed this reply.. awesome, I'll check how to do this
 
-You do not state where old_addr is freed.
+> 
+> > @@ -1095,14 +1125,25 @@ int set_orig_insn(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  		  unsigned long vaddr)
+> >  {
+> >  	if (test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags)) {
+> > -		int ret = is_optimized(vma->vm_mm, vaddr);
+> > -		if (ret < 0)
+> > +		uprobe_opcode_t insn[OPT_INSN_SIZE];
+> > +		int ret;
+> > +
+> > +		ret = copy_from_vaddr(vma->vm_mm, vaddr, &insn, OPT_INSN_SIZE);
+> > +		if (ret)
+> >  			return ret;
+> > -		if (ret) {
+> > +		if (__is_optimized((uprobe_opcode_t *)&insn, vaddr)) {
+> >  			ret = swbp_unoptimize(auprobe, vma, vaddr);
+> >  			WARN_ON_ONCE(ret);
+> >  			return ret;
+> >  		}
+> > +		/*
+> > +		 * We can have re-attached probe on top of jmp8 instruction,
+> > +		 * which did not get optimized. We need to restore the jmp8
+> > +		 * instruction, instead of the original instruction (nop10).
+> > +		 */
+> > +		if (is_swbp_insn(&insn[0]) && insn[1] == OPT_JMP8_OFFSET)
+> > +			return uprobe_write_opcode(auprobe, vma, vaddr, JMP8_INSN_OPCODE,
+> > +						   false /* is_register */);
+> 
+> Coding style wants { } on any multi-line statement, even if its only one
+> statement.
 
->   mutex_lock(&ftrace_lock)
->   entry->direct =3D addr   <- too late
->   mutex_unlock(&ftrace_lock)
->=20
-> Fix: update entry->direct under ftrace_lock BEFORE registering tmp_ops.
-> Any CPU that observes tmp_ops in ftrace_ops_list after this point will
-> already see the new address when it calls ftrace_find_rec_direct().
-> Add smp_wmb() between the store and the registration to ensure the
-> write is visible on weakly-ordered architectures before tmp_ops
-> becomes observable via ftrace_ops_list.
->=20
-> On error from register_ftrace_function_nolock(), restore entry->direct
-> to old_addr since tmp_ops never became visible to other CPUs.
+will fix
 
-The above statement is incorrect. The tmp_ops hash entries are also
-*shared* with the ops that is being updated. That is, by changing the entry=
-->direct, you=20
-
->=20
-> This affects all callers of __modify_ftrace_direct(), including:
->   - modify_ftrace_direct() used by kernel modules and live patching
->   - modify_ftrace_direct_nolock() used by BPF trampolines
->     (kernel/bpf/trampoline.c) reachable with CAP_BPF + CAP_PERFMON
->=20
-> Fixes: 0567d6809440 ("ftrace: Add modify_ftrace_direct()")
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Andrii Kuchmenko <capyenglishlite@gmail.com>
-> ---
->  kernel/trace/ftrace.c | 35 +++++++++++++++++++++++++----------
->  1 file changed, 25 insertions(+), 10 deletions(-)
->=20
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index a1b2c3d4e5f6..b7c8d9e0f1a2 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5950,6 +5950,7 @@ static int __modify_ftrace_direct(struct ftrace_ops=
- *ops, unsigned long addr)
->  	struct ftrace_func_entry *entry;
->  	struct ftrace_ops tmp_ops;
-> +	unsigned long old_addr;
->  	int err;
-> =20
->  	lockdep_assert_held(&direct_mutex);
-> @@ -5960,22 +5961,36 @@ static int __modify_ftrace_direct(struct ftrace_o=
-ps *ops, unsigned long addr)
->  	if (!entry)
->  		return -ENODEV;
-> =20
-> -	/*
-> -	 * tmp_ops is registered into ftrace_ops_list here, making it
-> -	 * visible to all CPUs executing the traced function. However,
-> -	 * entry->direct is not updated until after this call returns,
-> -	 * leaving a window where CPUs read the stale (possibly freed)
-> -	 * direct call address via ftrace_find_rec_direct().
-> -	 */
-
-Are you posting patches on top of your own patches that are not public?
-
-> -	err =3D register_ftrace_function_nolock(&tmp_ops);
-> -	if (err)
-> -		return err;
-> -
-> +	/* Save old address in case we need to roll back on error. */
-> +	old_addr =3D entry->direct;
-> +
-> +	/*
-> +	 * Update entry->direct BEFORE registering tmp_ops into
-> +	 * ftrace_ops_list. This closes the race window where a CPU
-> +	 * executing the traced function could read the old (potentially
-> +	 * freed) direct call address between tmp_ops becoming visible
-> +	 * and entry->direct being updated.
-> +	 *
-> +	 * Any CPU that observes tmp_ops in ftrace_ops_list after the
-> +	 * smp_wmb() below is guaranteed to see the new address when
-> +	 * it calls ftrace_find_rec_direct().
-> +	 */
->  	mutex_lock(&ftrace_lock);
->  	entry->direct =3D addr;
->  	mutex_unlock(&ftrace_lock);
-> =20
-> +	/*
-> +	 * Ensure entry->direct store is ordered before tmp_ops
-> +	 * becomes visible via ftrace_ops_list on weakly-ordered archs.
-> +	 */
-> +	smp_wmb();
-
-You do realize that register_ftrace_function_nolock() is itself a full
-memory barrier? It's doing code modification which requires lots of
-barriers to work.
-
-Still, the only bug I see that is possible is that the caller may need to
-do some synchronize RCU calls before freeing an old trampoline.
-
-Can you show a path that doesn't do that?
-
--- Steve
-
-
-> +
-> +	err =3D register_ftrace_function_nolock(&tmp_ops);
-> +	if (err) {
-> +		/* tmp_ops never became visible; safe to restore old_addr. */
-> +		mutex_lock(&ftrace_lock);
-> +		entry->direct =3D old_addr;
-> +		mutex_unlock(&ftrace_lock);
-> +		return err;
-> +	}
-> +
->  	/*
->  	 * Now that tmp_ops is registered and entry->direct is updated,
->  	 * unregister the original ops and clean up.
-
+thanks,
+jirka
