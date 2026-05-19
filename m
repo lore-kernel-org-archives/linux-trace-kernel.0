@@ -1,354 +1,199 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548461A317D;
-	Tue, 19 May 2026 03:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810093D3314
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 07:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779160986; cv=none; b=d46g25/z6fiZszK+ggvboMBrJqXqldM+Z0vC0WII+6JUpVnaWp20D5XgiXnxzN1wc/sX/Ggqk60cStdOsvmNI1rDUkefbAWuJdoY+KT4kKIBBcEIMcuPxOHIlVvotKGhcvYLnnVrxv+bK8MN5UkAj+ccA0EGUqumX3Iiyz63mUA=
+	t=1779175414; cv=none; b=SfIVbbDwNqYRa0nfUyaWLhYpeWaWnSu/kx3KhJdO6W0guT8o+jGAE2DE0zllmnLc7KoSfUdezQAv6+swkM5+O7rmLrXlLrnOoBjQkhPj2bGgKyF7eiVIQGIjn7HF4IrW7lENAfQQEpe1ihjmb2Cc56n9TrUuYLyNohMgFxT3zZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779160986; c=relaxed/simple;
-	bh=7ksgAIhdmfwQmcfxOFgYVpxcH8aIUZbdHNZ5yqY94hE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Iqn1atcOBjD5jC2ODRYvCi+r9O41Akk4Sc4EYsd3GtCIVhC1WY0+2wIwTK+55HCL7fEgRBo85EgvryHcm1Eqox65HWx+WBVgWJPGzbGAQh0PELMhsQdgsRXDEValcVNzdINZ2NnkRNt+Qf4xFrl/LXfeZKndFLeo3bfbmAuO6eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id CEFE91C0085;
-	Tue, 19 May 2026 03:23:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id A38B120026;
-	Tue, 19 May 2026 03:22:58 +0000 (UTC)
-Date: Mon, 18 May 2026 23:23:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
- Takaya Saeki <takayas@google.com>, Douglas Raillard
- <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
- Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>,
- "Subject:[PATCH  v2]"@web.codeaurora.org, tracing/pr@web.codeaurora.org
-Subject: [PATCH v4] tracing/probes: Allow use of BTF names to dereference
- pointers
-Message-ID: <20260518232312.0c78f055@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779175414; c=relaxed/simple;
+	bh=ZTXq7LiZJfMd2wabMnhuTRNtjvoimIZTXmBjOEoIfXI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uy4St1Wue+lJubcj7S8DEswTXOR+QAWyi3hu5pvY++eSRBiKZIeeU4sWM/n7BkGVDlx7SvwO0QuJZg2Mw5bPdKuSBAweUM9FVNKH6kyk1/wKJYs4nIJsJ4r1NZ8NIsxq61JGarD+68WNB2rB4zPKT6SAyLUlUif+QSzDj/dKQwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ZvKEFmYC; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ZvKEFmYC"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4gKR3f2xGNz9tMM;
+	Tue, 19 May 2026 09:23:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1779175406; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZTXq7LiZJfMd2wabMnhuTRNtjvoimIZTXmBjOEoIfXI=;
+	b=ZvKEFmYCInIw8UBd6wJJ323eemnHkIp/c6VCNs3i07jWAOprkZL0lNAkNaYQPT3hFKEnPR
+	tGUj3SUxn1RWRPreDEjE98aFP9nV7mPFUM5DVABzWmkJ+Zx8L9kEG4ZiN7N95J1uhOlcbT
+	d+pNxROz3EbHfHoKBFZ33dbqckq7x/oIA/D+wLZF5aewMwtTt8SE/IXtO+2M+WKOopIV2f
+	vLCQ+MxIMcc+hIn9v9T6V17O51j5QnGr9KT32SBv5M3XRpkJz/4ay1bW7Ijx4Prg9Ki327
+	tTkEoyEV3QXaAboYrKRkjsfWdYP27JVf6LUcpuf8+C5x2NFK5WaG1c+b11tzeg==
+Message-ID: <e698e8e18373eb920815c28188e066e97f1234d1.camel@mailbox.org>
+Subject: Re: [PATCH v3 06/11] drm: Use trace_call__##name() at guarded
+ tracepoint call sites
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Vineeth Remanan Pillai <vineeth@bitbyteword.org>, phasta@kernel.org
+Cc: Alex Deucher <alexander.deucher@amd.com>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Harry Wentland
+ <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, Matthew Brost
+ <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ amd-gfx@lists.freedesktop.org,  dri-devel@lists.freedesktop.org, Steven
+ Rostedt <rostedt@goodmis.org>,  linux-trace-kernel@vger.kernel.org, Peter
+ Zijlstra <peterz@infradead.org>
+Date: Tue, 19 May 2026 09:23:18 +0200
+In-Reply-To: <CAO7JXPhMBd0xgDRO-gZ2HpSTnrj1OD67c39jrXWEKaowNc9GEA@mail.gmail.com>
+References: <20260515135932.2238842-1-vineeth@bitbyteword.org>
+	 <81783d0807a5ffac93f61eddba0d2f595d7f239f.camel@mailbox.org>
+	 <CAO7JXPhMBd0xgDRO-gZ2HpSTnrj1OD67c39jrXWEKaowNc9GEA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: A38B120026
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: pz6mm1srrt9qxipi9kkt5b81disfde4t
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/nkEElyuwDZO8nXNDD9xaoXhJBHoNrHm4=
-X-HE-Tag: 1779160978-619539
-X-HE-Meta: U2FsdGVkX1+ykUv/9GuKr1vnu3I8gWdjRq7V2+P8yOCTmyWVgp7QslT1gy83K1Zk2HsA7FbReXXiQPmytlj2mGTda47g6qk7qfXq1vnwK7604wJilCollofBFAOhOYbGaOh/6MBvUtM20bvyJX1Rt9lJ9DKJdvQemsy7OIgHxTgMmqS0gXBFD98K5M4oboupP2RE7jO3ZWfn3Z+GI+QeN8tbTkQdt2yRd/O+L2CCIjBRSKMSX84CtI/IYuLuo4XrpEV2m/xqmosUUe40437V6HwqbmGEgGut94azPNWP1m/a9SS8WOxGntFV28pil4vJC7+uBNwltF7ukXk0kbuCQLKZplncccj9V7JGIkCJ6fXrYkzNI6Q0XIXnAI+J8kcoCbOdbFNdh0RbjuEm9T3keNIcGQiWQcfdtO/7YOesyLefifRB+loh1RniAaIAoMTPjqsM4RmQhVhz4l2KMmPj6Q==
+X-MBO-RS-ID: 9e6daf7acfd77b67866
+X-MBO-RS-META: 5zx9krshapjkc9g5xgz7roi4j4rdyw3k
 
-From: Steven Rostedt <rostedt@goodmis.org>
-
-Add syntax to the FETCHARGS parsing of probes to be able to typecast a
-value to a pointer to a structure.
-
-Currently, a dereference must be a number, where the user has to figure
-out manually the offset of a member of a structure that they want to
-dereference, unless the member is a function parameter that BTF already has
-information about what structure the argument is pointing to.
-
-But for event probes, or generic kprobes that records a register that
-happens to be a pointer to a structure, they cannot dereference these
-values with BTF naming, but must use numerical offsets.
-
-For example, to find out what device a sk_buff is pointing to in the
-net_dev_xmit trace event, one must first use gdb to find the offsets of the
-members of the structures:
-
- (gdb) p &((struct sk_buff *)0)->dev
- $1 = (struct net_device **) 0x10
- (gdb) p &((struct net_device *)0)->name
- $2 = (char (*)[16]) 0x118
-
-And then use the raw numbers to dereference:
-
-  # echo 'e:xmit net.net_dev_xmit +0x118(+0x10($skbaddr)):string' >> dynamic_events
-
-If BTF is in the kernel, then instead, the $skbaddr can be typecast to
-sk_buff and use the normal dereference logic.
-
-  # echo 'e:xmit net.net_dev_xmit (sk_buff*)$skbaddr->dev->name:string' >> dynamic_events
-  # echo 1 > events/eprobes/xmit/enable
-  # cat trace
-[..]
-    sshd-session-1022    [000] b..2.   860.249343: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.250061: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.250142: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.263553: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.283820: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.302716: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.322905: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.342828: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.362268: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.382335: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.400856: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.419893: xmit: (net.net_dev_xmit) arg1="enp7s0"
-
-The syntax is simply: ([STRUCT]*)(VAR)->FIELD[->FIELD..]
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v3: https://patch.msgid.link/20260518095832.52659a3a@gandalf.local.home
-
- *** COMPLETE REWRITE FROM V3 ***
-
-- Rewrote it to use typecasting instead of simply replacing BTF names with
-  offsets.
-
- Documentation/trace/kprobetrace.rst |   3 +
- kernel/trace/trace_probe.c          | 110 ++++++++++++++++++++++++----
- kernel/trace/trace_probe.h          |   3 +
- 3 files changed, 100 insertions(+), 16 deletions(-)
-
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index 3b6791c17e9b..450ac646fe4c 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -54,6 +54,9 @@ Synopsis of kprobe_events
-   $retval	: Fetch return value.(\*2)
-   $comm		: Fetch current task comm.
-   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
-+  (STRUCT*)FETCHARG->FIELD[->FIELD] : If BTF is supported, typecast FETCHARG to
-+                  a pointer to STRUCT and then derference the pointer defined by
-+                  ->FIELD.
-   \IMM		: Store an immediate value to the argument.
-   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
-   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index e0d3a0da26af..b0829eb1cb52 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -464,6 +464,26 @@ static const char *fetch_type_from_btf_type(struct btf *btf,
- 	return NULL;
- }
- 
-+static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
-+{
-+	int id;
-+
-+	if (!ctx->btf) {
-+		struct btf *btf;
-+		id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
-+		if (id < 0)
-+			return -EINVAL;
-+		ctx->btf = btf;
-+	} else {
-+		id = btf_find_by_name_kind(ctx->btf, sname, BTF_KIND_STRUCT);
-+		if (id < 0)
-+			return -EINVAL;
-+	}
-+
-+	ctx->last_struct = btf_type_by_id(ctx->btf, id);
-+	return 0;
-+}
-+
- static int query_btf_context(struct traceprobe_parse_context *ctx)
- {
- 	const struct btf_param *param;
-@@ -471,12 +491,12 @@ static int query_btf_context(struct traceprobe_parse_context *ctx)
- 	struct btf *btf;
- 	s32 nr;
- 
--	if (ctx->btf)
--		return 0;
--
- 	if (!ctx->funcname)
- 		return -EINVAL;
- 
-+	if (ctx->btf)
-+		return 0;
-+
- 	type = btf_find_func_proto(ctx->funcname, &btf);
- 	if (!type)
- 		return -ENOENT;
-@@ -514,6 +534,7 @@ static void clear_btf_context(struct traceprobe_parse_context *ctx)
- 		ctx->proto = NULL;
- 		ctx->params = NULL;
- 		ctx->nr_params = 0;
-+		ctx->last_struct = NULL;
- 	}
- }
- 
-@@ -554,22 +575,28 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 	struct fetch_insn *code = *pcode;
- 	const struct btf_member *field;
- 	u32 bitoffs, anon_offs;
-+	bool is_struct = ctx->flags & TPARG_FL_STRUCT;
- 	char *next;
- 	int is_ptr;
- 	s32 tid;
- 
- 	do {
--		/* Outer loop for solving arrow operator ('->') */
--		if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
--			trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
--			return -EINVAL;
--		}
--		/* Convert a struct pointer type to a struct type */
--		type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
--		if (!type) {
--			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
--			return -EINVAL;
-+		if (!is_struct) {
-+			/* Outer loop for solving arrow operator ('->') */
-+			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
-+				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-+				return -EINVAL;
-+			}
-+
-+			/* Convert a struct pointer type to a struct type */
-+			type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
-+			if (!type) {
-+				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-+				return -EINVAL;
-+			}
- 		}
-+		/* Only the first type can skip being a pointer */
-+		is_struct = false;
- 
- 		bitoffs = 0;
- 		do {
-@@ -635,12 +662,12 @@ static int parse_btf_arg(char *varname,
- {
- 	struct fetch_insn *code = *pcode;
- 	const struct btf_param *params;
--	const struct btf_type *type;
-+	const struct btf_type *type = NULL;
- 	char *field = NULL;
- 	int i, is_ptr, ret;
- 	u32 tid;
- 
--	if (WARN_ON_ONCE(!ctx->funcname))
-+	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_STRUCT)))
- 		return -EINVAL;
- 
- 	is_ptr = split_next_field(varname, &field, ctx);
-@@ -704,11 +731,18 @@ static int parse_btf_arg(char *varname,
- 			goto found;
- 		}
- 	}
-+
-+	if (ctx->flags & TPARG_FL_STRUCT) {
-+		type = ctx->last_struct;
-+		goto found;
-+	}
-+
- 	trace_probe_log_err(ctx->offset, NO_BTFARG);
- 	return -ENOENT;
- 
- found:
--	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
-+	if (!type)
-+		type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
- 	if (!type) {
- 		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
- 		return -EINVAL;
-@@ -952,6 +986,12 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
- 	int ret = 0;
- 	int len;
- 
-+	if (ctx->flags & TPARG_FL_STRUCT) {
-+		ret = parse_btf_arg(orig_arg, pcode, end, ctx);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	if (ctx->flags & TPARG_FL_TEVENT) {
- 		if (code->data)
- 			return -EFAULT;
-@@ -1231,6 +1271,43 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 				code->op = FETCH_OP_IMM;
- 		}
- 		break;
-+	case '(':
-+		tmp = strrchr(arg, ')');
-+		if (!tmp) {
-+			trace_probe_log_err(ctx->offset + strlen(arg),
-+					    DEREF_OPEN_BRACE);
-+			return -EINVAL;
-+		}
-+
-+		tmp--;
-+		if (*tmp != '*') {
-+			trace_probe_log_err(ctx->offset + (tmp - arg),
-+					    NO_PTR_STRCT);
-+			return -EINVAL;
-+		}
-+		*tmp = '\0';
-+		ret = query_btf_struct(arg + 1, ctx);
-+		*tmp = '*';
-+
-+		if (ret < 0) {
-+			trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
-+			return -EINVAL;
-+		}
-+
-+		ctx->flags |= TPARG_FL_STRUCT;
-+		tmp += 2;
-+
-+		if (*tmp != '$') {
-+			trace_probe_log_err(ctx->offset + (tmp - arg),
-+					    BAD_VAR);
-+			return -EINVAL;
-+		}
-+
-+		ctx->offset += tmp - arg;
-+		ret = parse_probe_vars(tmp, type, pcode, end, ctx);
-+		ctx->flags &= ~TPARG_FL_STRUCT;
-+		ctx->last_struct = NULL;
-+		break;
- 	default:
- 		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
- 			if (!tparg_is_function_entry(ctx->flags) &&
-@@ -1504,6 +1581,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 	code[FETCH_INSN_MAX - 1].op = FETCH_OP_END;
- 
- 	ctx->last_type = NULL;
-+	ctx->last_struct = NULL;
- 	ret = parse_probe_arg(arg, parg->type, &code, &code[FETCH_INSN_MAX - 1],
- 			      ctx);
- 	if (ret < 0)
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 262d8707a3df..88ab9f6da591 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -394,6 +394,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
-  * TPARG_FL_KERNEL and TPARG_FL_USER are also mutually exclusive.
-  * TPARG_FL_FPROBE and TPARG_FL_TPOINT are optional but it should be with
-  * TPARG_FL_KERNEL.
-+ * TPARG_FL_STRUCT is set if an argument was typecast to a structure.
-  */
- #define TPARG_FL_RETURN BIT(0)
- #define TPARG_FL_KERNEL BIT(1)
-@@ -402,6 +403,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
- #define TPARG_FL_USER   BIT(4)
- #define TPARG_FL_FPROBE BIT(5)
- #define TPARG_FL_TPOINT BIT(6)
-+#define TPARG_FL_STRUCT BIT(7)
- #define TPARG_FL_LOC_MASK	GENMASK(4, 0)
- 
- static inline bool tparg_is_function_entry(unsigned int flags)
-@@ -423,6 +425,7 @@ struct traceprobe_parse_context {
- 	s32 nr_params;			/* The number of the parameters */
- 	struct btf *btf;		/* The BTF to be used */
- 	const struct btf_type *last_type;	/* Saved type */
-+	const struct btf_type *last_struct;	/* Saved structure */
- 	u32 last_bitoffs;		/* Saved bitoffs */
- 	u32 last_bitsize;		/* Saved bitsize */
- 	struct trace_probe *tp;
--- 
-2.53.0
+T24gTW9uLCAyMDI2LTA1LTE4IGF0IDE5OjIwIC0wNDAwLCBWaW5lZXRoIFJlbWFuYW4gUGlsbGFp
+IHdyb3RlOgo+IE9uIE1vbiwgTWF5IDE4LCAyMDI2IGF0IDExOjAx4oCvQU0gUGhpbGlwcCBTdGFu
+bmVyIDxwaGFzdGFAbWFpbGJveC5vcmc+IHdyb3RlOgo+ID4gCj4gPiBPbiBGcmksIDIwMjYtMDUt
+MTUgYXQgMDk6NTkgLTA0MDAsIFZpbmVldGggUGlsbGFpIChHb29nbGUpIHdyb3RlOgo+ID4gPiBG
+cm9tOiBWaW5lZXRoIFBpbGxhaSA8dmluZWV0aEBiaXRieXRld29yZC5vcmc+Cj4gPiA+IAo+ID4g
+PiBSZXBsYWNlIHRyYWNlX2ZvbygpIHdpdGggdGhlIG5ldyB0cmFjZV9jYWxsX19mb28oKSBhdCBz
+aXRlcyBhbHJlYWR5Cj4gPiA+IGd1YXJkZWQgYnkgdHJhY2VfZm9vX2VuYWJsZWQoKSwgYXZvaWRp
+bmcgYSByZWR1bmRhbnQKPiA+ID4gc3RhdGljX2JyYW5jaF91bmxpa2VseSgpIHJlLWV2YWx1YXRp
+b24gaW5zaWRlIHRoZSB0cmFjZXBvaW50Lgo+ID4gPiB0cmFjZV9jYWxsX19mb28oKSBjYWxscyB0
+aGUgdHJhY2Vwb2ludCBjYWxsYmFja3MgZGlyZWN0bHkgd2l0aG91dAo+ID4gPiB1dGlsaXppbmcg
+dGhlIHN0YXRpYyBicmFuY2ggYWdhaW4uCj4gPiAKPiA+IFRoZSAiZm9vIiB0ZXJtaW5vbG9neSBp
+cyB1bnVzdWFsIEkgdGhpbms/IEkgYWx3YXlzIHdyb3RlIGl0IHdpdGggcmVnZXgsCj4gPiBsaWtl
+ICJ0cmFjZV8qKCkiLgo+ID4gCj4gU29ycnkgYWJvdXQgdGhlIHRlcm1pbm9sb2d5LiBQYXJ0IG9m
+IHRoZSBwYXRjaGVzIGdvdCBtZXJnZWQgdGhpcyB3YXksCj4gc28gaXMgaXQgb2theSB0byBjb250
+aW51ZSB0aGUgdGVybWlub2xvZ3kgdG8gaGF2ZSBjb25zaXN0ZW5jeT8KClN1cmUsIG5vIGJpZyBk
+ZWFsLgoKPiAKPiA+IAo+ID4gCj4gPiA+IAo+ID4gPiBPcmlnaW5hbCB2MiBzZXJpZXM6Cj4gPiA+
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXRyYWNlLWtlcm5lbC8yMDI2MDMyMzE2MDA1
+Mi4xNzUyOC0xLXZpbmVldGhAYml0Ynl0ZXdvcmQub3JnLwo+ID4gCj4gPiBJJ2QgcHV0IHRoaXMg
+aW4gYSBMaW5rOiB0YWcgc2VjdGlvbiBiZWxvdy4KPiA+IAo+IE1ha2VzIHNlbnNlLCB3aWxsIGRv
+LiBTdGV2ZSBhbHNvIHN1Z2dlc3RlZCB0byBwdXQgdGhpcyB3aG9sZSBzZWN0aW9uCj4gYWZ0ZXIg
+Ii0tLSIgYmVjYXVzZSBpdCBpc24ndCByZWxldmFudCB0byB0aGUgY2hhbmdlcy4gV2lsbCBmaXgg
+dGhpcyBpbgo+IG5leHQgaXRlcmF0aW9uLgoKSSBhZ3JlZSB3aXRoIFN0ZXZlLiBXZSBoYXZlIGhh
+ZCBzb21lIHRlbmRlbmN5IGluIHRoZSBwYXN0IHRvIGhhdmUgYWxsCnNvcnRzIG9mIHZlcnNpb25p
+bmcgaW5mb3JtYXRpb24gaW4gdGhlIGdpdCBsb2csIHdoaWNoIElNTyBpcyBub3QgdXNlZnVsCnRv
+IGFueW9uZSBhIGZldyBtb250aHMgYWZ0ZXIgbWVyZ2luZy4gVGhlIGNvbW1pdCBtZXNzYWdlIHNo
+b3VsZCBkZXRhaWwKdGhlIHdoeSwgaG93IGFuZCB3aGF0LCBub3QgdGhlIGhpc3RvcnkuCgo+IAo+
+ID4gPiAKPiA+ID4gUGFydHMgb2YgdGhlIG9yaWdpbmFsIHYyIHNlcmllcyBoYXZlIGFscmVhZHkg
+YmVlbiBtZXJnZWQgaW4gbWFpbmxpbmUuCj4gPiA+IFRoaXMgcGF0Y2ggaXMgYmVpbmcgcmVwb3N0
+ZWQgYXMgYSBmb2xsb3ctdXAgY2xlYW51cCBmb3IgdGhlIHJlbWFpbmluZwo+ID4gPiB1bm1lcmdl
+ZCBwaWVjZXMuCj4gPiAKPiA+IFNvIHRoaXMgdjMgc2VyaWVzIGFzIGEgd2hvbGUgaXMgYSBmb2xs
+b3d1cCB0byB0aGF0IHYyPwo+ID4gCj4gdjMgaXMgYSBmb2xsb3cgdXAgdG8gcmVtYWluaW5nIHBh
+dGNoZXMgdGhhdCB3ZXJlIG5vdCBtZXJnZWQgd2l0aCB0aGUKPiBwcmV2aW91cyBjeWNsZS4gVGhl
+IGNvcmUgYXBpIGFuZCBjb3VwbGUgb2YgcGF0Y2hlcyB3ZW50IGluIHRoZQo+IHByZXZpb3VzIGN5
+Y2xlLCBzbyB0aGlzIGlzIGZvciByZXN0IG9mIGl0Lgo+IAo+IFRoZSBpbnRlbnRpb24gd2FzIHRv
+IHNlbmQgdGhpcyB2MyBhcyBhIGRpcmVjdCBwYXRjaCB0byBpbmRpdmlkdWFsCj4gc3Vic3lzdGVt
+IG1haW50YWluZXJzIGJ1dCBmb3Jnb3QgdG8gcmVtb3ZlIHRoZSBudW1iZXJpbmcgYW5kIGhlbmNl
+Cj4gdGhlcmUgbWlnaHQgYmUgYSBjb25mdXNpb24uIFdpbGwgcmVtb3ZlIHRoZSBudW1iZXJpbmcg
+YW5kIHNlbmQgaXTCoCBhcwo+IHN0YW5kIGFsb25lIHBhdGNoIGluIHRoZSBuZXh0IGl0ZXJhdGlv
+bi4KCk9LLCBjb29sLgoKVGhhbmtzLApQaGlsaXBwCgoKPiAKPiA+ID4gCj4gPiA+IFN1Z2dlc3Rl
+ZC1ieTogU3RldmVuIFJvc3RlZHQgPHJvc3RlZHRAZ29vZG1pcy5vcmc+Cj4gPiA+IFN1Z2dlc3Rl
+ZC1ieTogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPgo+ID4gPiBTaWduZWQt
+b2ZmLWJ5OiBWaW5lZXRoIFBpbGxhaSAoR29vZ2xlKSA8dmluZWV0aEBiaXRieXRld29yZC5vcmc+
+Cj4gPiA+IEFzc2lzdGVkLWJ5OiBDbGF1ZGU6Y2xhdWRlLXNvbm5ldC00LTYKPiA+ID4gLS0tCj4g
+PiA+IMKgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2NzLmPCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHzCoCAyICstCj4gPiA+IMKgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1k
+Z3B1X3ZtLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA0ICsrLS0KPiA+ID4gwqBkcml2ZXJz
+L2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9kbS5jIHwgMTAgKysrKystLS0t
+LQo+ID4gPiDCoGRyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfZW50aXR5LmPCoMKgwqDC
+oMKgwqDCoMKgwqAgfMKgIDUgKysrLS0KPiA+ID4gwqA0IGZpbGVzIGNoYW5nZWQsIDExIGluc2Vy
+dGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9jcy5jIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9h
+bWRncHUvYW1kZ3B1X2NzLmMKPiA+ID4gaW5kZXggYjI0ZDVkMjFiZTVmLi5jYjBiNWNiMDdkNTcg
+MTAwNjQ0Cj4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9jcy5j
+Cj4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9jcy5jCj4gPiA+
+IEBAIC0xMDA0LDcgKzEwMDQsNyBAQCBzdGF0aWMgdm9pZCB0cmFjZV9hbWRncHVfY3NfaWJzKHN0
+cnVjdCBhbWRncHVfY3NfcGFyc2VyICpwKQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBzdHJ1Y3QgYW1kZ3B1X2pvYiAqam9iID0gcC0+am9ic1tpXTsKPiA+ID4gCj4gPiA+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZvciAoaiA9IDA7IGogPCBqb2ItPm51bV9pYnM7ICsraikK
+PiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHJhY2VfYW1k
+Z3B1X2NzKHAsIGpvYiwgJmpvYi0+aWJzW2pdKTsKPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgdHJhY2VfY2FsbF9fYW1kZ3B1X2NzKHAsIGpvYiwgJmpvYi0+
+aWJzW2pdKTsKPiA+ID4gwqDCoMKgwqDCoCB9Cj4gPiA+IMKgfQo+ID4gPiAKPiA+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV92bS5jIGIvZHJpdmVycy9n
+cHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZtLmMKPiA+ID4gaW5kZXggOWJhOWRlMTZhMjdhLi5h
+MzZhZTk0YzQyNWYgMTAwNjQ0Cj4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1
+L2FtZGdwdV92bS5jCj4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdw
+dV92bS5jCj4gPiA+IEBAIC0xNDE1LDcgKzE0MTUsNyBAQCBpbnQgYW1kZ3B1X3ZtX2JvX3VwZGF0
+ZShzdHJ1Y3QgYW1kZ3B1X2RldmljZSAqYWRldiwgc3RydWN0IGFtZGdwdV9ib192YSAqYm9fdmEs
+Cj4gPiA+IAo+ID4gPiDCoMKgwqDCoMKgIGlmICh0cmFjZV9hbWRncHVfdm1fYm9fbWFwcGluZ19l
+bmFibGVkKCkpIHsKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGlzdF9mb3JfZWFj
+aF9lbnRyeShtYXBwaW5nLCAmYm9fdmEtPnZhbGlkcywgbGlzdCkKPiA+ID4gLcKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHJhY2VfYW1kZ3B1X3ZtX2JvX21hcHBpbmco
+bWFwcGluZyk7Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHRyYWNlX2NhbGxfX2FtZGdwdV92bV9ib19tYXBwaW5nKG1hcHBpbmcpOwo+ID4gPiDCoMKgwqDC
+oMKgIH0KPiA+ID4gCj4gPiA+IMKgZXJyb3JfZnJlZToKPiA+ID4gQEAgLTIxODMsNyArMjE4Myw3
+IEBAIHZvaWQgYW1kZ3B1X3ZtX2JvX3RyYWNlX2NzKHN0cnVjdCBhbWRncHVfdm0gKnZtLCBzdHJ1
+Y3Qgd3dfYWNxdWlyZV9jdHggKnRpY2tldCkKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb250aW51ZTsKPiA+ID4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+ID4gPiAKPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCB0cmFjZV9hbWRncHVfdm1fYm9fY3MobWFwcGluZyk7Cj4gPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgdHJhY2VfY2FsbF9fYW1kZ3B1X3ZtX2JvX2NzKG1hcHBpbmcpOwo+ID4gPiDC
+oMKgwqDCoMKgIH0KPiA+ID4gwqB9Cj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG0uYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtLmMKPiA+ID4gaW5kZXggNWZjNWQ1NjA4
+NTA2Li5mYmRjMTJjZGQ2YmIgMTAwNjQ0Cj4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQv
+ZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtLmMKPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG0uYwo+ID4gPiBAQCAtNTI2MywxMSArNTI2
+MywxMSBAQCBzdGF0aWMgdm9pZCBhbWRncHVfZG1fYmFja2xpZ2h0X3NldF9sZXZlbChzdHJ1Y3Qg
+YW1kZ3B1X2Rpc3BsYXlfbWFuYWdlciAqZG0sCj4gPiA+IMKgwqDCoMKgwqAgfQo+ID4gPiAKPiA+
+ID4gwqDCoMKgwqDCoCBpZiAodHJhY2VfYW1kZ3B1X2RtX2JyaWdodG5lc3NfZW5hYmxlZCgpKSB7
+Cj4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHJhY2VfYW1kZ3B1X2RtX2JyaWdodG5l
+c3MoX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApLAo+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHVzZXJfYnJpZ2h0bmVzcywKPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmlnaHRu
+ZXNzLAo+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNhcHMtPmF1eF9zdXBwb3J0LAo+ID4g
+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBvd2VyX3N1cHBseV9pc19zeXN0ZW1fc3VwcGxpZWQo
+KSA+IDApOwo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRyYWNlX2NhbGxfX2FtZGdw
+dV9kbV9icmlnaHRuZXNzKF9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwKPiA+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1c2VyX2JyaWdodG5lc3MsCj4gPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJpZ2h0bmVzcywKPiA+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjYXBzLT5hdXhfc3VwcG9ydCwKPiA+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwb3dlcl9zdXBwbHlfaXNfc3lzdGVtX3N1cHBs
+aWVkKCkgPiAwKTsKPiA+ID4gwqDCoMKgwqDCoCB9Cj4gPiA+IAo+ID4gPiDCoMKgwqDCoMKgIGlm
+IChjYXBzLT5hdXhfc3VwcG9ydCkgewo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L3NjaGVkdWxlci9zY2hlZF9lbnRpdHkuYyBiL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2No
+ZWRfZW50aXR5LmMKPiA+ID4gaW5kZXggZmUxNzRhNDg1N2JlLi4xODVhMjYzNmI1OTkgMTAwNjQ0
+Cj4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfZW50aXR5LmMKPiA+
+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9lbnRpdHkuYwo+ID4gPiBA
+QCAtNDI5LDcgKzQyOSw4IEBAIHN0YXRpYyBib29sIGRybV9zY2hlZF9lbnRpdHlfYWRkX2RlcGVu
+ZGVuY3lfY2Ioc3RydWN0IGRybV9zY2hlZF9lbnRpdHkgKmVudGl0eSwKPiA+ID4gCj4gPiA+IMKg
+wqDCoMKgwqAgaWYgKHRyYWNlX2RybV9zY2hlZF9qb2JfdW5zY2hlZHVsYWJsZV9lbmFibGVkKCkg
+JiYKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgICF0ZXN0X2JpdChETUFfRkVOQ0VfRkxBR19TSUdO
+QUxFRF9CSVQsICZlbnRpdHktPmRlcGVuZGVuY3ktPmZsYWdzKSkKPiA+ID4gLcKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB0cmFjZV9kcm1fc2NoZWRfam9iX3Vuc2NoZWR1bGFibGUoc2NoZWRfam9i
+LCBlbnRpdHktPmRlcGVuZGVuY3kpOwo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRy
+YWNlX2NhbGxfX2RybV9zY2hlZF9qb2JfdW5zY2hlZHVsYWJsZShzY2hlZF9qb2IsCj4gPiA+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbnRpdHktPmRl
+cGVuZGVuY3kpOwo+ID4gCj4gPiBJIHdvdWxkIGJlIG1vcmUgaGFwcHkgaWYgeW91IHNhY3JpZmlj
+ZSBhIGJpdCBvZiBzcGFjZSBoZXJlIGFuZCBrZWVwIGl0Cj4gPiBhIHNpbmdsZSBsaW5lIHNpbmNl
+IHRoZSBpZiBjb25kaXRpb24gaXMgYWxyZWFkeSBxdWl0ZSBjb252b2x1dGVkIGFuZAo+ID4gY2hh
+bGxlbmdpbmcgdG8gcmVhZC4KPiA+IAo+IEkgdW5kZXJzdGFuZCwgd2lsbCBmaXggaXQgaW4gbmV4
+dCBpdGVyYXRpb24uCj4gCj4gVGhhbmtzLAo+IFZpbmVldGgKCg==
 
