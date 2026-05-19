@@ -1,42 +1,42 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B45409621;
-	Tue, 19 May 2026 13:18:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D47409607;
+	Tue, 19 May 2026 13:22:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779196740; cv=none; b=D9DESkXgGOgtpOnlBv8zoTsrYe9zeiHhirmMqQyw9dJFPyYIGZKwiJlKdx2UdX7fV+hxG5youxUgeFZvUCQTmFwsvj1o+Dih6DHSZ0kXVS2mYzNNFiscitVWnfuYy4r9Ae08gWn0A8M+wx4SPzf1FJDQdeB5QEdtgL/f5dm4lc4=
+	t=1779196936; cv=none; b=Nf3BFGTb4HoygdD9jMgQOP/q7SYtYdUn924tj008VaCny8e18HInnLSwvAj7YFjqDzw9X8bNRfN7eOdA2ICyecdmAm8svv7r7cAfOHVY54MTOwmMb8cB/ZI1436xCr5N+vBH6DXbTqyDDmLEqV7mzSc93/MbKQ+Cm5v7AVt4czU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779196740; c=relaxed/simple;
-	bh=IobUvsl2BhsipYNAile+hhK8S3xWvtYKNJAhnxecp9k=;
+	s=arc-20240116; t=1779196936; c=relaxed/simple;
+	bh=b/Q7lFSUhC4pTHS1y7a8yosFMMNgxY1dZFLDEfBNUuk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=k6D56gkZGFgB9dOWlFQFB9KxGFtgazVmktPcQXItO7hVV6xygZHL4r6Wze5PV6O+8tJGu8SmiyK90Jn5drcdWPDMIUfm7VN5JjzsWCtOqH0XJNofkKNKuMIiOngeGvW9hlz94JkDAft/aCW6uIcK9FeqnXBgoOAyom/KMbcRXR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xBthiqAe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dtpVnwXh; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=F29bHseQfRTI+8xPq+DcznoQQ2DRkZjcEb/pbtVu/7dqOeusJtSXrW9jZDOC76wQ//Psv2g7RkMPs+Il5vP6BS5Agsv2iY2bJ8mAalC9LDPMB5dTv7/UkyktAdq0YDVc8IIraXUkPEDGWeea6sxLuet6w3LeLlRjK4ohIE6hzKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3qrRudZH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=85bDghBJ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xBthiqAe";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dtpVnwXh"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3qrRudZH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="85bDghBJ"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1779196738;
+	s=2020; t=1779196933;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rkigfq6uAw/CJ0nuq7DOj0gDNGYVxrkmq7sjHqiT6uo=;
-	b=xBthiqAe+OPk9KivCv+W6qAGd3dTEXhXZO2YI1QAmt9aAGeR2F5aJzDBSvTOw54eLai4Tr
-	TTPRSuRA8NseXCgUC8NAvJf/IZa+Gi1nM29CWsp145j7OUJ7rGV7aUfFRm+P49SwxVZNLH
-	piJaLzAIfmOZ97GJizy2Btmbz4izvJCu6cSMmbg4xdemMsLILp4fU3o1XqCE4qdhHOknrU
-	M/w7NYlugQswK+Nmc9i0OUHiw4HxNn1EecITK45Jk8bA6Lq2/aaYidZbyAJxrfB80gn5tc
-	I3pMBJwzMCdSFeV1QWqrIos47s4jeaDlFtjcJghdYYJW5HMXSsnvFHDItMgwwA==
+	bh=b/Q7lFSUhC4pTHS1y7a8yosFMMNgxY1dZFLDEfBNUuk=;
+	b=3qrRudZHtDOANKSgXklPZ+LO3nYbCgq8gfcaIBtXhpTuUa5+lZkjWezRIp8B+g0eUp6Wba
+	yfmbY8RZG+Damtxf1UE7A1JrC0+cT9tCCMwqi6S/px2N1DnypeUCvseHrV7mJHx8kx9t9u
+	c2MRJyam3w3XQYQGEgVMjFpVIIrn3g1vXDFXSfXnOqhlhZbu20JBPlhUsyzU6t0pw88Oma
+	rLFY+mo6o+q+qyqwOkCFIuq7lJ+O1Hq2077AM3SzL3ejTpaVOnXRm3I1zGuZ7Qyy79y2k1
+	9Ibydin0rJ+pFLJIb2csZbgeCbQ4EIaZTNUKc5CZS82bS1OL939l0qONPeILdw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1779196738;
+	s=2020e; t=1779196933;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rkigfq6uAw/CJ0nuq7DOj0gDNGYVxrkmq7sjHqiT6uo=;
-	b=dtpVnwXhR0XQrJs/cXVqQSZPBoUIGa0z/015JDeraJTayebzAJex16Y1c32XqqlAYO1XCg
-	groxqHTCn2wBSZBA==
+	bh=b/Q7lFSUhC4pTHS1y7a8yosFMMNgxY1dZFLDEfBNUuk=;
+	b=85bDghBJQRkBKZrUOnCuoqpMp0w7uc6jQ/lOLlWU04b6qKmWscNb23S5anMTqKBbVEimIr
+	H/Wu5BqxzoiHiwCg==
 To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
  Gabriele Monaco <gmonaco@redhat.com>, Masami Hiramatsu
@@ -44,12 +44,13 @@ To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
 Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
  <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
  <wen.yang@linux.dev>
-Subject: Re: [PATCH v2 11/14] rv: Add KUnit tests for some DA/HA monitors
-In-Reply-To: <20260514152055.229162-12-gmonaco@redhat.com>
+Subject: Re: [PATCH v2 13/14] rv: Prevent unintentional tracepoints during
+ KUnit tests
+In-Reply-To: <20260514152055.229162-14-gmonaco@redhat.com>
 References: <20260514152055.229162-1-gmonaco@redhat.com>
- <20260514152055.229162-12-gmonaco@redhat.com>
-Date: Tue, 19 May 2026 15:18:57 +0200
-Message-ID: <87cxyr4jwe.fsf@yellow.woof>
+ <20260514152055.229162-14-gmonaco@redhat.com>
+Date: Tue, 19 May 2026 15:22:12 +0200
+Message-ID: <87a4tv4jqz.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,27 +60,12 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 Gabriele Monaco <gmonaco@redhat.com> writes:
-> +#define RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)                             \
-> +	for (int __done = ({ RV_KUNIT_EXPECT_NO_REACTION(test, ctx); 0; });  \
-> +	     !__done;                                                        \
-> +	     __done = ({ RV_KUNIT_EXPECT_REACTION(test, ctx); 1; }))
-
-Cool trick.
-
-> +static void rv_test_stub(struct kunit *test)
-> +{
-> +	kunit_skip(test, "Monitor not enabled\n");
-> +}
-> +
-> +#define DECLARE_RV_TEST(name) \
-> +	void name(struct kunit *test) __weak __alias(rv_test_stub)
-> +
-> +DECLARE_RV_TEST(rv_test_sco);
-> +DECLARE_RV_TEST(rv_test_sssw);
-> +DECLARE_RV_TEST(rv_test_sts);
-> +DECLARE_RV_TEST(rv_test_opid);
-> +DECLARE_RV_TEST(rv_test_nomiss);
-
-Good to know this one. I think I can make use of this trick for some LTL improvement..
+> Monitor initialisation also called during KUnit tests may register some
+> tracepoints, this can lead to issues since we don't expect real monitor
+> events running during KUnit tests.
+>
+> Prevent tracepoint registration if an RV KUnit test is running.
+>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
 Reviewed-by: Nam Cao <namcao@linutronix.de>
