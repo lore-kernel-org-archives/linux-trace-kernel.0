@@ -1,298 +1,213 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C184C77CA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 10:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643D73F4DC7
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 10:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779185815; cv=none; b=c14JSCSldHrP42jjBfMY63PpvhDneI1ZviDmN92sUZxJBkdcgsFioI+ibE0dJqIsXeE8a6PR8dxvB+5dL5cXwNiRxttZfJ+GKzUJ9JAl4ej9PjoEk34bjpQuubNUjcIN7hqbgR9ee1cVkz6YGbUNnwzTZ0Bid1ZNRqipeCMcZzs=
+	t=1779188143; cv=none; b=P2MQxW1PSXk6GvT3ivHG1J3SrwFgV3Bq2k0Q3epi+R7qhjWMSGEvwFDPwtxb80HOSde+0lXKs4vFzlvnP2TVtNvhcaeYBO4ujaoaOtiVwZx/eg6SGof9uHlLpA3FcXzCGBKGvPqJ3XkAYHpOvYJEUXUUEd2lEulN7scjETIGvC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779185815; c=relaxed/simple;
-	bh=mLpwP7JVosrq5U1uvrR7w/BkeawFbuswelwbPzZNmsM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gvGVgAURTnUinZlTrkZpVFVISCErMczJzzK4fXIpC9E/6IcNeKBlX1MJiOk0Fvulou9kHpgqt62JwgmIYPfEMcw6Ket1nbOw7dqkNLHb3NdGODiUKeVKk5MvzUZDwh63v00R2qGKmV0trUPUpxlt78Ef9Q6FQLjakvkIepxQyVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bCrGJOXQ; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1779188143; c=relaxed/simple;
+	bh=qTIuYtfZpfc/KhP0my2UUsb0x1PEx+M0VM5oHniYnnU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DsIvEhnJQZybJasffVXDFDy+cu8hJ9gPtRpMPREfwchmV/rp2URWAEr1/WEPF+StWKhakgFJcQZhlLRP9kU2FZxT4HG0GUvrEE+WIbofIxLlX1UXseRwyI77VZGV975WSeutZs/q9zSCqki3lAM/Hjs5wgpp5l7YGifwpInqFUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7HnchGq; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCrGJOXQ"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-672645dbfeaso4590397a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 03:16:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7HnchGq"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-48a563e4ef7so27975325e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 03:55:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779185808; x=1779790608; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yvt4MjoGA0L3/prTXoqHWkNBgnaKme2r46Dy9xiUW1k=;
-        b=bCrGJOXQLttU6f0CifUXSjdZ6LogzjUyGjuDGvnGSFPgzaByoPbJqBfb1OIYUV3KOw
-         URZGoX7WTHPTlFCxlQXBN6zsiIxTRvPdMIcPsRKTmNqar6RiwJh36mAYMc0OtwesE6X6
-         6Idq5f+Zni2aOeJYGeCUzJ58L+/AosmGpPyK7IC26kXxIUuq8dauVJU65ECsOVXygGKg
-         hpMpCHlRV3QIzMcpkNev+YTEqdHKeqSC+cHb0Sw/K02PqP4e85eQjU5x7offuXRuaqlX
-         VYEYfLUGaStU2cON7Op8ASeitHfxs1B3eySnk2t+Iaam6ftCBbDYN+mRAoUTbQQAxVn3
-         Qy8Q==
+        d=gmail.com; s=20251104; t=1779188136; x=1779792936; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nXidpbPy4AblXKAWP+/SRSo2g1EEOiSrktNFCukfheQ=;
+        b=C7HnchGqUGLnN3GkhnLYI4kCRbXWdcCq5etW6iz1rzND8DMyKX70wTHMEPVAm0mwH7
+         MW/S/BL6VWGbD8E/+BDmjkt1cGXEVJE6HPTw5XDRKzwH36P6omnMgCFTh9T5cOoNgZmo
+         HSPxlIKOWf0C4swGpYyjCld0zyMH/2Eiz8lyZf4buB96c5sq2fU0RNKE8Z29n/iX9po1
+         j2Fe904BYKakl8IsoE/x0rlOotUX7CJbs1OU2+NaS2bQLEfCqy1NlOM82BYk7I9gaDNw
+         EBXdXR9m6mldBVWjqm+yfAE6ac/GrUbf8gqrehAUlCmn7628WdIWnd9Xhr7W5QvwJvMJ
+         1qjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779185808; x=1779790608;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yvt4MjoGA0L3/prTXoqHWkNBgnaKme2r46Dy9xiUW1k=;
-        b=bYvrbN4WMT6p32ZNBVvFTO2u6vedrez3jGNaUqG1unKU8ICtGKtd7E4YAh838XGf46
-         9JUV04qceR7uiyVxLvcLmq7Aow3sDuaMsyA3RA4fx5NP6w2Tkm4TjCZS2GusHvF5oavR
-         fqC9kGaaaKvRbe0m2NS5bmCc/xk5e6TyomtO9n1Xtkojr/yVi3sl7iuIY0higLBlqb2g
-         9dExM+XGHGW/gh02TLUTObn5BZNHNAn3ewv6eGjNJQD14mF9m6r0+bdyCXUBL2ft1DG+
-         GITsgVbAMnuACcOfClq+qxXvMKISTEoIL2v83uqsd3XYzkHKToo5suauGgV2sRHrb5jq
-         /EpA==
-X-Forwarded-Encrypted: i=1; AFNElJ+UABgzCtAk1Ex64eQUWEk5po6IQi7vn36wlHMH8sNvh5TsNtc2N7t3xIStB/8bolP96QoFzN3oiGHoFUDyUX7PFm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztjHhvkC5ByokOqbNe4YaAwEi+MlbSBhpqPn6+rTgp1PKqyqJe
-	yA43rDC0k1PDgOOKwn2kL0TeHzVTT4Qhbc0ysPHcSLDkB2TpL6Ob1m0h6MpU9u9t
-X-Gm-Gg: Acq92OGsHqRNXA45Ixrex9Zfy6Hx1hOKKYUt49ed4U16ZsDXm9CLmt0dxyGbUt5sIHL
-	dBmIJtQ8OEq7zBRReDQyqHo0QPwMd57UZ4sbzRLXppozpmm6x1/E2qDzW8ephVfqg0Y9qPl0sQW
-	T0IEHFME7WNN79CQelXGJDBkeECocUxJlJY+tuLMt7QFEQPfJeo4cN4Nur9SZeAZuQnhANS6Whs
-	Rhe98Xef3LIocPRW6eVTRXpeMQ/YJgUyX/9Vz+wAje6YyNxHICEohMYInrvu47C3RCqS2TsiVrQ
-	LojIzZRv7iJtKsC1cCWpnxSVaUl352CYp7b4zFEXMnc7ueoI1jtsjBQYZAC7wPGBu1cDvmAuhw2
-	rYPfQuRWdJWLKlxSxOzZXGWb46R6+TTYXFrgOdVRnrbK5jXxuV7blv2czOGpsMgH6/GxMBpiZgU
-	M5Axr0ZFIg6J90lv4NPVB1yN7vmbwpkjO51CFDkMAtJA==
-X-Received: by 2002:a05:6402:556:b0:67e:9e04:31d0 with SMTP id 4fb4d7f45d1cf-683bd779fe2mr6892342a12.23.1779185807853;
-        Tue, 19 May 2026 03:16:47 -0700 (PDT)
-Received: from [127.0.0.2] ([2a02:a312:c59b:a180:5a91:2947:87c1:9e0f])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68310b50a34sm6340111a12.7.2026.05.19.03.16.46
+        d=1e100.net; s=20251104; t=1779188136; x=1779792936;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nXidpbPy4AblXKAWP+/SRSo2g1EEOiSrktNFCukfheQ=;
+        b=NBm+SPALoXiYVnxponE7xbO3i2TXAFdCs5EK5RiR11GoZRE4Lgl5YjGK/KHEKuKT82
+         R1k4MTgAiih1vznz5rf9fV+a+g4nhCXLDD3hrdK0nG0ZisAOX8QttrwwSo/oxt8q2SyW
+         tb4VW9xmTfgYE8Fgfkauy2bIcAWSQiOdJF5tX/3zTih+fcbGBvZQeN/qdXdB8o0xnLUB
+         QMaBBv5G7g3t8ClNtoatx9sOQpLNcITgTnz07JjnL7B/lj6y4l3Mqqv5N89+MTfqlNmx
+         qf3reFH+PxAaaSdkS26ZkYcCFNVAjOsd2yeYIfY1WAiz7tS1dRdwAJOm2+VQuWV23BkP
+         bTPw==
+X-Forwarded-Encrypted: i=1; AFNElJ9fHAp6ocZRkr9XCgDoknpNHdOQ7wmBPUvr+FsSv4xqYmn+cK9XG+jrJah960AK7FLaPXC9xTwmOl5xXkjIC7uLdCU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBw6mMJLu5LKqIDhY+kVk5yk32HBklznYWiYaCClNe+uLPMFGN
+	phDpdl7/mbOQAxGIhjH0HuzFmPok18kqSTfSpfWSjnCIVetr4cPq72iW
+X-Gm-Gg: Acq92OE0nf4/QUglL9gj3Qh0fsnpij1rs2Ghy8D16lMKgPvEhDf+FhFbbWaPTbBMF4B
+	6Q7D1zDfZvRMtB+hyCX35ocLZ9Tt5exD96tKMBxn25yDG1/ttX9y292KB7dUGf3HygmmVnycPkC
+	ZjbQCoyRYgcmbtRlAldJffXhNzB0CR/9jrAzguFXQ08yBb5R+c4Mocnb6MbnY53BsDWd8eBCkVt
+	CsG5ELvCidYgfG/HQFlnd2pqCEdLdsnMHIPdfHv/bSr2WLSjkAAQGcVM2sbzuJyRcZkZya/B5rM
+	KcwO0k1+2kqUlTJSoDRreZLRJ/wQKPQc5xaUBSjd3m3DevmHFd+n2VrP6CU6wmVefPfA+AVBfji
+	CCsH4lo3eVnmwO/KioR2Cmis8Gg6I0CM4W1qUiAoCVLwdgqgh4NzqW5wMomBFarsqU0fsQBIYFB
+	ADo8sTb1APNHRCGbvh
+X-Received: by 2002:a05:600c:5ca:b0:48f:e6de:1cb9 with SMTP id 5b1f17b1804b1-48fe6de1dd2mr182584715e9.19.1779188136017;
+        Tue, 19 May 2026 03:55:36 -0700 (PDT)
+Received: from krava ([2a00:102a:500e:4bd5:e407:4c9c:ff70:3933])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe537c788sm303057615e9.12.2026.05.19.03.55.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 03:16:47 -0700 (PDT)
-From: Artur Kowalski <arturkow2000@gmail.com>
-Date: Tue, 19 May 2026 12:16:43 +0200
-Subject: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
+        Tue, 19 May 2026 03:55:35 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 19 May 2026 12:55:33 +0200
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrii Kuchmenko <capyenglishlite@gmail.com>,
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] ftrace: fix race in __modify_ftrace_direct() between
+ tmp_ops registration and direct_functions update
+Message-ID: <agxBpRc9YIyPVwCO@krava>
+References: <20260517110155.21706-1-capyenglishlite@gmail.com>
+ <20260518121906.4eebad77@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260519-host1x-tracing-v1-1-55afb8cbd186@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAIo4DGoC/yXMQQ6DIBBG4auYWUsCGK32KsaFxb86LrBh0JgQ7
- 15sl9/ivUSCwBB6FokCDhbefIYpC3LL6GconrLJatvo2nRq2SSaU8UwOvazgp0a3cLVqB6Uo0/
- Am8/fsB/+lv21wsX7Qtf1BZJD2TtyAAAA
-X-Change-ID: 20260519-host1x-tracing-e2d608ec5e37
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-tegra@vger.kernel.org, Artur Kowalski <arturkow2000@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5737;
- i=arturkow2000@gmail.com; h=from:subject:message-id;
- bh=mLpwP7JVosrq5U1uvrR7w/BkeawFbuswelwbPzZNmsM=;
- b=owGbwMvMwCVmYeTc/TaVxZzxtFoSQxaPRd/fzY4xUyqerd8QFrf+5NPXP5vtFOp35a5YXu38L
- jrzHadPRykLgxgXg6yYIovZQ6EvPPO83m94ubUTZg4rE8gQBi5OAZjI0UaG/0X/ihNe8/9Y62Lw
- Pu20etwreaPzrkLlJ56kudjsNmsR9GVk2CR09PzF/jdPm5ctyPm5VTDGIi7Zcf0K/xLWms89xz9
- c4AEA
-X-Developer-Key: i=arturkow2000@gmail.com; a=openpgp;
- fpr=F60710C8D69E03A01A2801CD87A47D20C2709637
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260518121906.4eebad77@gandalf.local.home>
 
-Use __assign_str and __get_str as required by tracing subsystem. Fixes
-string fields being rejected by the verifier and unreadable from
-userspace.
+On Mon, May 18, 2026 at 12:19:06PM -0400, Steven Rostedt wrote:
+> On Sun, 17 May 2026 14:01:53 +0300
+> Andrii Kuchmenko <capyenglishlite@gmail.com> wrote:
+> 
+> > In __modify_ftrace_direct(), register_ftrace_function_nolock() makes
+> > tmp_ops visible in ftrace_ops_list before entry->direct is updated
+> > under ftrace_lock. During this window any CPU entering the traced
+> > function calls call_direct_funcs(), reads the old address from
+> > direct_functions via RCU, and jumps to it via
+> > arch_ftrace_set_direct_caller(). If the caller freed or invalidated
+> > the old trampoline before calling modify_ftrace_direct(), this is a
+> > use-after-free in executable code context.
+> > 
+> > The race window:
+> > 
+> >   CPU 0 (__modify_ftrace_direct)       CPU 1 (executing traced func)
+> >   ──────────────────────────────       ──────────────────────────────
+> >   register_ftrace_function_nolock()
+> >     -> tmp_ops visible in ops_list  
+> >                                         call_direct_funcs()
+> >                                           ftrace_find_rec_direct() -> old_addr
+> >                                           arch_ftrace_set_direct_caller(old_addr)
+> >                                           jump to old_addr  <- UAF if freed
+> 
+> You do not state where old_addr is freed.
+> 
+> >   mutex_lock(&ftrace_lock)
+> >   entry->direct = addr   <- too late
+> >   mutex_unlock(&ftrace_lock)
+> > 
+> > Fix: update entry->direct under ftrace_lock BEFORE registering tmp_ops.
+> > Any CPU that observes tmp_ops in ftrace_ops_list after this point will
+> > already see the new address when it calls ftrace_find_rec_direct().
+> > Add smp_wmb() between the store and the registration to ensure the
+> > write is visible on weakly-ordered architectures before tmp_ops
+> > becomes observable via ftrace_ops_list.
+> > 
+> > On error from register_ftrace_function_nolock(), restore entry->direct
+> > to old_addr since tmp_ops never became visible to other CPUs.
+> 
+> The above statement is incorrect. The tmp_ops hash entries are also
+> *shared* with the ops that is being updated. That is, by changing the entry->direct, you 
+> 
+> > 
+> > This affects all callers of __modify_ftrace_direct(), including:
+> >   - modify_ftrace_direct() used by kernel modules and live patching
+> >   - modify_ftrace_direct_nolock() used by BPF trampolines
+> >     (kernel/bpf/trampoline.c) reachable with CAP_BPF + CAP_PERFMON
+> > 
+> > Fixes: 0567d6809440 ("ftrace: Add modify_ftrace_direct()")
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Andrii Kuchmenko <capyenglishlite@gmail.com>
+> > ---
+> >  kernel/trace/ftrace.c | 35 +++++++++++++++++++++++++----------
+> >  1 file changed, 25 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index a1b2c3d4e5f6..b7c8d9e0f1a2 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -5950,6 +5950,7 @@ static int __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+> >  	struct ftrace_func_entry *entry;
+> >  	struct ftrace_ops tmp_ops;
+> > +	unsigned long old_addr;
+> >  	int err;
+> >  
+> >  	lockdep_assert_held(&direct_mutex);
+> > @@ -5960,22 +5961,36 @@ static int __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+> >  	if (!entry)
+> >  		return -ENODEV;
+> >  
+> > -	/*
+> > -	 * tmp_ops is registered into ftrace_ops_list here, making it
+> > -	 * visible to all CPUs executing the traced function. However,
+> > -	 * entry->direct is not updated until after this call returns,
+> > -	 * leaving a window where CPUs read the stale (possibly freed)
+> > -	 * direct call address via ftrace_find_rec_direct().
+> > -	 */
+> 
+> Are you posting patches on top of your own patches that are not public?
 
-Tested on v6.18.21.
+hi,
 
-Signed-off-by: Artur Kowalski <arturkow2000@gmail.com>
----
- include/trace/events/host1x.h | 50 ++++++++++++++++++++++---------------------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+right, the original email states 5.15 is affected, but I dont see
+__modify_ftrace_direct in stable version v5.15.207 .. what kernel
+version is the patch for?
 
-diff --git a/include/trace/events/host1x.h b/include/trace/events/host1x.h
-index 1ba84b738e46..1b6aeb7b177b 100644
---- a/include/trace/events/host1x.h
-+++ b/include/trace/events/host1x.h
-@@ -21,9 +21,11 @@ struct host1x_bo;
- DECLARE_EVENT_CLASS(host1x,
- 	TP_PROTO(const char *name),
- 	TP_ARGS(name),
--	TP_STRUCT__entry(__field(const char *, name)),
--	TP_fast_assign(__entry->name = name;),
--	TP_printk("name=%s", __entry->name)
-+	TP_STRUCT__entry(__string(name, name)),
-+	TP_fast_assign(
-+		__assign_str(name);
-+	),
-+	TP_printk("name=%s", __get_str(name))
- );
- 
- DEFINE_EVENT(host1x, host1x_channel_open,
-@@ -52,19 +54,19 @@ TRACE_EVENT(host1x_cdma_push,
- 	TP_ARGS(name, op1, op2),
- 
- 	TP_STRUCT__entry(
--		__field(const char *, name)
-+		__string(name, name)
- 		__field(u32, op1)
- 		__field(u32, op2)
- 	),
- 
- 	TP_fast_assign(
--		__entry->name = name;
-+		__assign_str(name);
- 		__entry->op1 = op1;
- 		__entry->op2 = op2;
- 	),
- 
- 	TP_printk("name=%s, op1=%08x, op2=%08x",
--		__entry->name, __entry->op1, __entry->op2)
-+		__get_str(name), __entry->op1, __entry->op2)
- );
- 
- TRACE_EVENT(host1x_cdma_push_wide,
-@@ -73,7 +75,7 @@ TRACE_EVENT(host1x_cdma_push_wide,
- 	TP_ARGS(name, op1, op2, op3, op4),
- 
- 	TP_STRUCT__entry(
--		__field(const char *, name)
-+		__string(name, name)
- 		__field(u32, op1)
- 		__field(u32, op2)
- 		__field(u32, op3)
-@@ -81,7 +83,7 @@ TRACE_EVENT(host1x_cdma_push_wide,
- 	),
- 
- 	TP_fast_assign(
--		__entry->name = name;
-+		__assign_str(name);
- 		__entry->op1 = op1;
- 		__entry->op2 = op2;
- 		__entry->op3 = op3;
-@@ -89,7 +91,7 @@ TRACE_EVENT(host1x_cdma_push_wide,
- 	),
- 
- 	TP_printk("name=%s, op1=%08x, op2=%08x, op3=%08x op4=%08x",
--		__entry->name, __entry->op1, __entry->op2, __entry->op3,
-+		__get_str(name), __entry->op1, __entry->op2, __entry->op3,
- 		__entry->op4)
- );
- 
-@@ -100,7 +102,7 @@ TRACE_EVENT(host1x_cdma_push_gather,
- 	TP_ARGS(name, bo, words, offset, cmdbuf),
- 
- 	TP_STRUCT__entry(
--		__field(const char *, name)
-+		__string(name, name)
- 		__field(struct host1x_bo *, bo)
- 		__field(u32, words)
- 		__field(u32, offset)
-@@ -114,14 +116,14 @@ TRACE_EVENT(host1x_cdma_push_gather,
- 					words * sizeof(u32));
- 		}
- 		__entry->cmdbuf = cmdbuf;
--		__entry->name = name;
-+		__assign_str(name);
- 		__entry->bo = bo;
- 		__entry->words = words;
- 		__entry->offset = offset;
- 	),
- 
- 	TP_printk("name=%s, bo=%p, words=%u, offset=%d, contents=[%s]",
--	  __entry->name, __entry->bo,
-+	  __get_str(name), __entry->bo,
- 	  __entry->words, __entry->offset,
- 	  __print_hex(__get_dynamic_array(cmdbuf),
- 		  __entry->cmdbuf ? __entry->words * 4 : 0))
-@@ -134,7 +136,7 @@ TRACE_EVENT(host1x_channel_submit,
- 	TP_ARGS(name, cmdbufs, relocs, syncpt_id, syncpt_incrs),
- 
- 	TP_STRUCT__entry(
--		__field(const char *, name)
-+		__string(name, name)
- 		__field(u32, cmdbufs)
- 		__field(u32, relocs)
- 		__field(u32, syncpt_id)
-@@ -142,7 +144,7 @@ TRACE_EVENT(host1x_channel_submit,
- 	),
- 
- 	TP_fast_assign(
--		__entry->name = name;
-+		__assign_str(name);
- 		__entry->cmdbufs = cmdbufs;
- 		__entry->relocs = relocs;
- 		__entry->syncpt_id = syncpt_id;
-@@ -151,7 +153,7 @@ TRACE_EVENT(host1x_channel_submit,
- 
- 	TP_printk("name=%s, cmdbufs=%u, relocs=%u, syncpt_id=%u, "
- 		  "syncpt_incrs=%u",
--		  __entry->name, __entry->cmdbufs, __entry->relocs,
-+		  __get_str(name), __entry->cmdbufs, __entry->relocs,
- 		  __entry->syncpt_id, __entry->syncpt_incrs)
- );
- 
-@@ -161,19 +163,19 @@ TRACE_EVENT(host1x_channel_submitted,
- 	TP_ARGS(name, syncpt_base, syncpt_max),
- 
- 	TP_STRUCT__entry(
--		__field(const char *, name)
-+		__string(name, name)
- 		__field(u32, syncpt_base)
- 		__field(u32, syncpt_max)
- 	),
- 
- 	TP_fast_assign(
--		__entry->name = name;
-+		__assign_str(name);
- 		__entry->syncpt_base = syncpt_base;
- 		__entry->syncpt_max = syncpt_max;
- 	),
- 
- 	TP_printk("name=%s, syncpt_base=%d, syncpt_max=%d",
--		__entry->name, __entry->syncpt_base, __entry->syncpt_max)
-+		__get_str(name), __entry->syncpt_base, __entry->syncpt_max)
- );
- 
- TRACE_EVENT(host1x_channel_submit_complete,
-@@ -182,19 +184,19 @@ TRACE_EVENT(host1x_channel_submit_complete,
- 	TP_ARGS(name, count, thresh),
- 
- 	TP_STRUCT__entry(
--		__field(const char *, name)
-+		__string(name, name)
- 		__field(int, count)
- 		__field(u32, thresh)
- 	),
- 
- 	TP_fast_assign(
--		__entry->name = name;
-+		__assign_str(name);
- 		__entry->count = count;
- 		__entry->thresh = thresh;
- 	),
- 
- 	TP_printk("name=%s, count=%d, thresh=%d",
--		__entry->name, __entry->count, __entry->thresh)
-+		__get_str(name), __entry->count, __entry->thresh)
- );
- 
- TRACE_EVENT(host1x_wait_cdma,
-@@ -203,16 +205,16 @@ TRACE_EVENT(host1x_wait_cdma,
- 	TP_ARGS(name, eventid),
- 
- 	TP_STRUCT__entry(
--		__field(const char *, name)
-+		__string(name, name)
- 		__field(u32, eventid)
- 	),
- 
- 	TP_fast_assign(
--		__entry->name = name;
-+		__assign_str(name);
- 		__entry->eventid = eventid;
- 	),
- 
--	TP_printk("name=%s, event=%d", __entry->name, __entry->eventid)
-+	TP_printk("name=%s, event=%d", __get_str(name), __entry->eventid)
- );
- 
- TRACE_EVENT(host1x_syncpt_load_min,
+> 
+> > -	err = register_ftrace_function_nolock(&tmp_ops);
+> > -	if (err)
+> > -		return err;
+> > -
+> > +	/* Save old address in case we need to roll back on error. */
+> > +	old_addr = entry->direct;
+> > +
+> > +	/*
+> > +	 * Update entry->direct BEFORE registering tmp_ops into
+> > +	 * ftrace_ops_list. This closes the race window where a CPU
+> > +	 * executing the traced function could read the old (potentially
+> > +	 * freed) direct call address between tmp_ops becoming visible
+> > +	 * and entry->direct being updated.
+> > +	 *
+> > +	 * Any CPU that observes tmp_ops in ftrace_ops_list after the
+> > +	 * smp_wmb() below is guaranteed to see the new address when
+> > +	 * it calls ftrace_find_rec_direct().
+> > +	 */
+> >  	mutex_lock(&ftrace_lock);
+> >  	entry->direct = addr;
+> >  	mutex_unlock(&ftrace_lock);
+> >  
+> > +	/*
+> > +	 * Ensure entry->direct store is ordered before tmp_ops
+> > +	 * becomes visible via ftrace_ops_list on weakly-ordered archs.
+> > +	 */
+> > +	smp_wmb();
+> 
+> You do realize that register_ftrace_function_nolock() is itself a full
+> memory barrier? It's doing code modification which requires lots of
+> barriers to work.
+> 
+> Still, the only bug I see that is possible is that the caller may need to
+> do some synchronize RCU calls before freeing an old trampoline.
+> 
+> Can you show a path that doesn't do that?
 
----
-base-commit: ab5fce87a778cb780a05984a2ca448f2b41aafbf
-change-id: 20260519-host1x-tracing-e2d608ec5e37
++1 
 
-Best regards,
---  
-Artur Kowalski <arturkow2000@gmail.com>
-
+jirka
