@@ -1,40 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A359E325485;
-	Tue, 19 May 2026 17:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB30D31F9BC;
+	Tue, 19 May 2026 18:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779213294; cv=none; b=sNNCiipBLGrrPEJXaE72yydwMN7HBg1xAf1oBIUejgN+khP1RvE22Tr+VUxjw2IFWxBv/P2z8DwpjPBP5w1/kVlM0buU1XvI4dYyh8C/hS4CXjDdQaPOiY9bCo9yJ7Yj06DpOnkMlqkmtc0j2qGKhuwciAVMPleaHsZHZr2d/7k=
+	t=1779214272; cv=none; b=qdtQDtDi2xUVDyEkK+wsSHUnhkj2QU9plxzd5RKjDMXeU56spuNxzipFagg9xdHAuDsIV2dPHzIS3scs8Pl5O9n87FGDr/VmSe6QMtNvALO8EQ94oh29rcEsHjihKsxje5V8WdeahQkBt2PCt+HTxueTw70pi0VRRNwpc+o6LH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779213294; c=relaxed/simple;
-	bh=Bc5UuBILd2SqG/GAJYvlGQFu3tpAy6sYNSj8QIJ/bXE=;
+	s=arc-20240116; t=1779214272; c=relaxed/simple;
+	bh=JzQwf96uMmsVwEgkPAHiiVgbsti/Ucve70FpeHK2mBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EyR+G3V0J6i58MIWkADdXskOY6zbLDRfGSlRYjs7I0VapbwkRZaDVeqRVoFDaVMmzGWrObpQfins1W/9zIQeUm1meKbOpGzUSQa9Kq5SeCXMW+Ac9rwxRJFYHEpBJxz9XgMXYJqsWyINYi8L6cfjB68DswL2d1qtbMp0vssnIbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=R+DGkK2Msi0+h02XrNsI7fKZkN3fleMxnBpCVwwCbeNWzRVt/E4OHvGsXfqFAg7gnsFm4wtMfoloC1JD34RDYWgOKfk7WzKniPJVIG3cMIhx00hkI30omR2Cymh/DEjSjMGCeEcfbon5L55KScWZBzFY9zuZaHB7oXeyK9cPRwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 56E0E407ED;
-	Tue, 19 May 2026 17:54:50 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 8AEE130;
-	Tue, 19 May 2026 17:54:47 +0000 (UTC)
-Date: Tue, 19 May 2026 13:54:46 -0400
+Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 14E01A0817;
+	Tue, 19 May 2026 18:11:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id C50FE80011;
+	Tue, 19 May 2026 18:11:00 +0000 (UTC)
+Date: Tue, 19 May 2026 14:10:59 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+To: Artur Kowalski <arturkow2000@gmail.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Brown <broonie@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
- mukesh.savaliya@oss.qualcomm.com, aniket.randive@oss.qualcomm.com,
- chandana.chiluveru@oss.qualcomm.com, jyothi.seerapu@oss.qualcomm.com,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v3 1/2] spi: qcom-geni: trace: Add trace events for
- Qualcomm GENI SPI
-Message-ID: <20260519135446.4126a79a@fedora>
-In-Reply-To: <20260518-add-tracepoints-for-qcom-geni-spi-v3-1-7928f6810a79@oss.qualcomm.com>
-References: <20260518-add-tracepoints-for-qcom-geni-spi-v3-0-7928f6810a79@oss.qualcomm.com>
-	<20260518-add-tracepoints-for-qcom-geni-spi-v3-1-7928f6810a79@oss.qualcomm.com>
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Thierry
+ Reding <thierry.reding@kernel.org>, Mikko Perttunen
+ <mperttunen@nvidia.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>
+Subject: Re: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
+Message-ID: <20260519141059.77435501@fedora>
+In-Reply-To: <20260519-host1x-tracing-v1-1-55afb8cbd186@gmail.com>
+References: <20260519-host1x-tracing-v1-1-55afb8cbd186@gmail.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,87 +41,234 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 8wxuffs4adx9q156exjm7a3yhca9mh74
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 8AEE130
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: C50FE80011
+X-Stat-Signature: xpqcsbqo78gty1mpegkwoku973y7mr1h
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19iWoyoF27xM5v+HXTjcDVWLl2I61JBYDI=
-X-HE-Tag: 1779213287-261146
-X-HE-Meta: U2FsdGVkX1+/3o9pDDttQfdXjWiapJj+p+/+V0F6h48kk4VeLhrzUI4TDI+ddFd6BVYAZB4pe9V3BnlkWLi3X8Qa1d1Z0eJc6GKqZwwTuNpeCA/7qAxtQUDoIgJSSPCLMo91wln6r63Iw3OCw9RW2BX+W0RyMhxrVHtViQxuW4E0CI5CUnLUrx4BdQu/of0gcdD1Am/aRl2sfKKfKIhhgX6B32EEgi3RHiGwxosezz/Vk++yYFR4QC1/GvHkhgtFef4FJS9tCjNvzAI6CG0MeYYM8tJgfFGJEtW+TSJPaEU45N0zwjQVqRCQIF/VBtukuF3xcOJ3IdqUGbYJjyjT3B888LXGbJ16
+X-Session-ID: U2FsdGVkX1/W3c424qVsGyfVgXyV2tsCvJap8oBrAyI=
+X-HE-Tag: 1779214260-996226
+X-HE-Meta: U2FsdGVkX19Qk5MP3D1yA12AY63lGkW9bVcsE3UjuzhkbvObzIv/XXvjSZiLZYe/r/eoxFZCiWBKSUPiTosSq9qucfNUOQq3P388mMt6wvGFKkpxDV/CmNS9ykP2MNrhPchDAZFoGAyxdurxjrIp25KxqRwYx/UO4Tgvr5ufr07G41oTmat36nK+LT+D5P60cO5EJP9ff6lNv1OPgH4ahtMSzJUMdVE79WCpvnWuk0HsbpiY/WC1qTH0Y+D+LGx/8agi8k5LJI4lutJDpQs5yFTYP69DS82S9ilZU0LsUJMAUElzvxkRaTJRUtNcjDzlRV0FHBww6LJWWZot6RXzKozddZwo/tYjgpXefYMS9XmoMJpbLcUsqfEqZ51VROcgACS2b6BKyZQJo7VU/39Kdw==
 
-On Mon, 18 May 2026 22:30:51 +0530
-Praveen Talari <praveen.talari@oss.qualcomm.com> wrote:
+On Tue, 19 May 2026 12:16:43 +0200
+Artur Kowalski <arturkow2000@gmail.com> wrote:
 
-> @@ -0,0 +1,103 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM qcom_geni_spi
-> +
-> +#if !defined(_TRACE_QCOM_GENI_SPI_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_QCOM_GENI_SPI_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(geni_spi_setup_params,
-> +	    TP_PROTO(struct device *dev, u8 cs, u32 mode,
-> +		     u32 mode_changed, bool cs_changed),
-> +	    TP_ARGS(dev, cs, mode, mode_changed, cs_changed),
-> +
-> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
-> +			     __field(u8, cs)
+> Use __assign_str and __get_str as required by tracing subsystem. Fixes
+> string fields being rejected by the verifier and unreadable from
+> userspace.
 
-A u8 followed by a u32 will create a 3 byte hole in the structure
-layout that gets recorded onto the ring buffer. Best to move that field
-to after the bool cs_changed, for better compaction.
+Does anyone use these tracepoints? The fact that they have been broken
+for 5 years and nobody noticed makes me think they are useless.
 
-> +			     __field(u32, mode)
-> +			     __field(u32, mode_changed)
-> +			     __field(bool, cs_changed)
-> +	    ),
-> +
-> +	    TP_fast_assign(__assign_str(name);
-> +			   __entry->cs = cs;
-> +			   __entry->mode = mode;
-> +			   __entry->mode_changed = mode_changed;
-> +			   __entry->cs_changed = cs_changed;
-> +	    ),
-> +
-> +	    TP_printk("%s: cs=%u mode=0x%08x mode_changed=0x%08x cs_changed=%d",
-> +		      __get_str(name), __entry->cs, __entry->mode,
-> +		      __entry->mode_changed, __entry->cs_changed)
-> +);
-> +
-> +TRACE_EVENT(geni_spi_clk_cfg,
-> +	    TP_PROTO(struct device *dev, unsigned long req_hz,
-> +		     unsigned long sclk_hz, unsigned int clk_idx,
-> +		     unsigned int clk_div, unsigned int bpw),
-> +	    TP_ARGS(dev, req_hz, sclk_hz, clk_idx, clk_div, bpw),
-> +
-> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+I rather remove them than fix them, but if someone thinks that these
+are still useful then by all means apply this patch.
 
-__string items inject a 4 byte meta data so they are basically the same
-as a u32 item on the structure. Move this to the end or after the long
-words so that on 64 bit architectures you don't create a 4 byte hole
-here.
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
 
 -- Steve
 
-> +			     __field(unsigned long, req_hz)
-> +			     __field(unsigned long, sclk_hz)
-> +			     __field(unsigned int, clk_idx)
-> +			     __field(unsigned int, clk_div)
-> +			     __field(unsigned int, bpw)
-> +	    ),
-> +
-> +	    TP_fast_assign(__assign_str(name);
-> +			   __entry->req_hz = req_hz;
-> +			   __entry->sclk_hz = sclk_hz;
-> +			   __entry->clk_idx = clk_idx;
-> +			   __entry->clk_div = clk_div;
-> +			   __entry->bpw = bpw;
-> +	    ),
-> +
-> +	    TP_printk("%s: req_hz=%lu sclk_hz=%lu clk_idx=%u clk_div=%u bpw=%u",
-> +		      __get_str(name), __entry->req_hz, __entry->sclk_hz,
-> +		      __entry->clk_idx, __entry->clk_div, __entry->bpw)
-> +);
+
+> 
+> Tested on v6.18.21.
+> 
+> Signed-off-by: Artur Kowalski <arturkow2000@gmail.com>
+> ---
+>  include/trace/events/host1x.h | 50 ++++++++++++++++++++++---------------------
+>  1 file changed, 26 insertions(+), 24 deletions(-)
+> 
+> diff --git a/include/trace/events/host1x.h b/include/trace/events/host1x.h
+> index 1ba84b738e46..1b6aeb7b177b 100644
+> --- a/include/trace/events/host1x.h
+> +++ b/include/trace/events/host1x.h
+> @@ -21,9 +21,11 @@ struct host1x_bo;
+>  DECLARE_EVENT_CLASS(host1x,
+>  	TP_PROTO(const char *name),
+>  	TP_ARGS(name),
+> -	TP_STRUCT__entry(__field(const char *, name)),
+> -	TP_fast_assign(__entry->name = name;),
+> -	TP_printk("name=%s", __entry->name)
+> +	TP_STRUCT__entry(__string(name, name)),
+> +	TP_fast_assign(
+> +		__assign_str(name);
+> +	),
+> +	TP_printk("name=%s", __get_str(name))
+>  );
+>  
+>  DEFINE_EVENT(host1x, host1x_channel_open,
+> @@ -52,19 +54,19 @@ TRACE_EVENT(host1x_cdma_push,
+>  	TP_ARGS(name, op1, op2),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const char *, name)
+> +		__string(name, name)
+>  		__field(u32, op1)
+>  		__field(u32, op2)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->name = name;
+> +		__assign_str(name);
+>  		__entry->op1 = op1;
+>  		__entry->op2 = op2;
+>  	),
+>  
+>  	TP_printk("name=%s, op1=%08x, op2=%08x",
+> -		__entry->name, __entry->op1, __entry->op2)
+> +		__get_str(name), __entry->op1, __entry->op2)
+>  );
+>  
+>  TRACE_EVENT(host1x_cdma_push_wide,
+> @@ -73,7 +75,7 @@ TRACE_EVENT(host1x_cdma_push_wide,
+>  	TP_ARGS(name, op1, op2, op3, op4),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const char *, name)
+> +		__string(name, name)
+>  		__field(u32, op1)
+>  		__field(u32, op2)
+>  		__field(u32, op3)
+> @@ -81,7 +83,7 @@ TRACE_EVENT(host1x_cdma_push_wide,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->name = name;
+> +		__assign_str(name);
+>  		__entry->op1 = op1;
+>  		__entry->op2 = op2;
+>  		__entry->op3 = op3;
+> @@ -89,7 +91,7 @@ TRACE_EVENT(host1x_cdma_push_wide,
+>  	),
+>  
+>  	TP_printk("name=%s, op1=%08x, op2=%08x, op3=%08x op4=%08x",
+> -		__entry->name, __entry->op1, __entry->op2, __entry->op3,
+> +		__get_str(name), __entry->op1, __entry->op2, __entry->op3,
+>  		__entry->op4)
+>  );
+>  
+> @@ -100,7 +102,7 @@ TRACE_EVENT(host1x_cdma_push_gather,
+>  	TP_ARGS(name, bo, words, offset, cmdbuf),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const char *, name)
+> +		__string(name, name)
+>  		__field(struct host1x_bo *, bo)
+>  		__field(u32, words)
+>  		__field(u32, offset)
+> @@ -114,14 +116,14 @@ TRACE_EVENT(host1x_cdma_push_gather,
+>  					words * sizeof(u32));
+>  		}
+>  		__entry->cmdbuf = cmdbuf;
+> -		__entry->name = name;
+> +		__assign_str(name);
+>  		__entry->bo = bo;
+>  		__entry->words = words;
+>  		__entry->offset = offset;
+>  	),
+>  
+>  	TP_printk("name=%s, bo=%p, words=%u, offset=%d, contents=[%s]",
+> -	  __entry->name, __entry->bo,
+> +	  __get_str(name), __entry->bo,
+>  	  __entry->words, __entry->offset,
+>  	  __print_hex(__get_dynamic_array(cmdbuf),
+>  		  __entry->cmdbuf ? __entry->words * 4 : 0))
+> @@ -134,7 +136,7 @@ TRACE_EVENT(host1x_channel_submit,
+>  	TP_ARGS(name, cmdbufs, relocs, syncpt_id, syncpt_incrs),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const char *, name)
+> +		__string(name, name)
+>  		__field(u32, cmdbufs)
+>  		__field(u32, relocs)
+>  		__field(u32, syncpt_id)
+> @@ -142,7 +144,7 @@ TRACE_EVENT(host1x_channel_submit,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->name = name;
+> +		__assign_str(name);
+>  		__entry->cmdbufs = cmdbufs;
+>  		__entry->relocs = relocs;
+>  		__entry->syncpt_id = syncpt_id;
+> @@ -151,7 +153,7 @@ TRACE_EVENT(host1x_channel_submit,
+>  
+>  	TP_printk("name=%s, cmdbufs=%u, relocs=%u, syncpt_id=%u, "
+>  		  "syncpt_incrs=%u",
+> -		  __entry->name, __entry->cmdbufs, __entry->relocs,
+> +		  __get_str(name), __entry->cmdbufs, __entry->relocs,
+>  		  __entry->syncpt_id, __entry->syncpt_incrs)
+>  );
+>  
+> @@ -161,19 +163,19 @@ TRACE_EVENT(host1x_channel_submitted,
+>  	TP_ARGS(name, syncpt_base, syncpt_max),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const char *, name)
+> +		__string(name, name)
+>  		__field(u32, syncpt_base)
+>  		__field(u32, syncpt_max)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->name = name;
+> +		__assign_str(name);
+>  		__entry->syncpt_base = syncpt_base;
+>  		__entry->syncpt_max = syncpt_max;
+>  	),
+>  
+>  	TP_printk("name=%s, syncpt_base=%d, syncpt_max=%d",
+> -		__entry->name, __entry->syncpt_base, __entry->syncpt_max)
+> +		__get_str(name), __entry->syncpt_base, __entry->syncpt_max)
+>  );
+>  
+>  TRACE_EVENT(host1x_channel_submit_complete,
+> @@ -182,19 +184,19 @@ TRACE_EVENT(host1x_channel_submit_complete,
+>  	TP_ARGS(name, count, thresh),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const char *, name)
+> +		__string(name, name)
+>  		__field(int, count)
+>  		__field(u32, thresh)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->name = name;
+> +		__assign_str(name);
+>  		__entry->count = count;
+>  		__entry->thresh = thresh;
+>  	),
+>  
+>  	TP_printk("name=%s, count=%d, thresh=%d",
+> -		__entry->name, __entry->count, __entry->thresh)
+> +		__get_str(name), __entry->count, __entry->thresh)
+>  );
+>  
+>  TRACE_EVENT(host1x_wait_cdma,
+> @@ -203,16 +205,16 @@ TRACE_EVENT(host1x_wait_cdma,
+>  	TP_ARGS(name, eventid),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(const char *, name)
+> +		__string(name, name)
+>  		__field(u32, eventid)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__entry->name = name;
+> +		__assign_str(name);
+>  		__entry->eventid = eventid;
+>  	),
+>  
+> -	TP_printk("name=%s, event=%d", __entry->name, __entry->eventid)
+> +	TP_printk("name=%s, event=%d", __get_str(name), __entry->eventid)
+>  );
+>  
+>  TRACE_EVENT(host1x_syncpt_load_min,
+> 
+> ---
+> base-commit: ab5fce87a778cb780a05984a2ca448f2b41aafbf
+> change-id: 20260519-host1x-tracing-e2d608ec5e37
+> 
+> Best regards,
+> --  
+> Artur Kowalski <arturkow2000@gmail.com>
+
