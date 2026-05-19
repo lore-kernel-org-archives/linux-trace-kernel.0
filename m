@@ -1,253 +1,206 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5A7367B7C;
-	Tue, 19 May 2026 18:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DEC36404D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 18:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779214659; cv=none; b=AMaa2424OMAC+yK+HxT3TNhTYl4iY9qOWvN9opcKOVA0WT9eE+3lL+sxSUx3U03nGXifwLAbMXFX2n1ZYjKeNtAysaAn2iE9iLsrS4KBrUjrIaQTwifbxMMVgXZZeIlrAbhIT3vG4uegd0N3//vPT1+gSi7EfOZK7baeo9LhkR8=
+	t=1779214877; cv=none; b=ERL1cnHyd5ZEXERjF2cNtFf/ly62pYuvdFtdYEUTlEkgA2lZcbBjMLNhQILBovT6Wg/Ov63dOh16Ovcr2I+W9wyW/XWaik4WUQlqLhe2ksioFwdys+qOmGx8qTsNrZy52kHGAUW0RJAT9iGcmFRZ3JwE442sjoUarg60YcKWquA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779214659; c=relaxed/simple;
-	bh=Xscm9khAV5fwxprpZsOpY7a91iE/PVR1LkvJNAhG1Jo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EP1PWDFsCFs8TZmFJYDLWQIC2dgPtENSxR1iT82+tEcx5tvMIQBVqfznh901YteFaNrNbCKlgSNhwbExo9AFD4qvh9OAmTZCk/Whyxk9OnNhFbpfqHk+irC6qrR8mRCZNiPnFSMLa963VIWuMyXBabRjnbc7SAjRcHlKpZzwHag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id DDB8C1408DF;
-	Tue, 19 May 2026 18:17:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 036C642;
-	Tue, 19 May 2026 18:17:27 +0000 (UTC)
-Date: Tue, 19 May 2026 14:17:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, bpf@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>
-Subject: Re: [PATCH v5] tracing/eprobes: Allow use of BTF names to
- dereference pointers
-Message-ID: <20260519141726.613e2e54@fedora>
-In-Reply-To: <20260519174848.176A6C2BCB3@smtp.kernel.org>
-References: <20260519130144.40e71a00@fedora>
-	<20260519174848.176A6C2BCB3@smtp.kernel.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1779214877; c=relaxed/simple;
+	bh=mBzpJrN9KrqpGSZV7OZTPURa6bHX1KPDENwsV2HGpa8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pUyc7BKxb3fBlS4yQzuAtFa6vZ4zqiukKOjbc9FOopZ8+I8VYJ97xNax/trzijbOVgoQ0WeyKp05xVRZ/mI4xunbUXo+xwm/BCFHxa8Xvg3D8m/dhaD8AiMrrhtnSRNSic9kqhi3E7ZkPr9etgwilB28Db26XmOOPMf3S54m7hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EwJzWSQl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EwJzWSQl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779214874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DidhSSVgs6YbRMyQzDDirQnaWZ/O9mawSXYrnotJW/A=;
+	b=EwJzWSQlCL0UdAZTv9b3/kI5Ms3NgKt7TvUBrHaouaIK8FFTIWa80OWgA8HzlmFovDnNT7
+	wvSbRRZFLIH/M6YTQZDF6fybnh5CR/Di0usvn53dYQ7Mv0KOgeQ5u/biC7AHHGhf2l8/5B
+	/HLDGGgHCUmyQM7vmL4ZKd3CyhfS5nk=
+Received: from mail-yx1-f72.google.com (mail-yx1-f72.google.com
+ [74.125.224.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-652-maCkV1kVNoCr8CFX5XYldw-1; Tue, 19 May 2026 14:21:12 -0400
+X-MC-Unique: maCkV1kVNoCr8CFX5XYldw-1
+X-Mimecast-MFC-AGG-ID: maCkV1kVNoCr8CFX5XYldw_1779214872
+Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-65c5afaff48so8208866d50.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 11:21:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779214872; x=1779819672;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=DidhSSVgs6YbRMyQzDDirQnaWZ/O9mawSXYrnotJW/A=;
+        b=hme7hKDvGhlSd11EXk6mPFFEj6+6sSvDtvOEkEUeA3eWRtzNOPGaEqA53+jdHj6yxD
+         AkLY1CrFMNGnIOCGDalfYRCmo8+x2SlgXI2sjCe4EiJGID2Fk4hHhlfLzoy28q/mpUUj
+         rPQr9U2rIdX+IwpwgTm/C2J6ovmR6EAp8MCG8CgRAIX46UJODOzNfZsZDSkiMaLvYaBm
+         m/lll+11I6q7Pvdmj3k/qQYisf5bYiaCuB8/GptfZ7KXzZMgylZwkjqXHfyuRmZWTsIA
+         HPwuSj38LcmkZVmC2lqcL1aoXsrfsj/TEswdYFKZqoAdPqBORhAJQ112CKOXyS8aazOr
+         mdvw==
+X-Forwarded-Encrypted: i=1; AFNElJ/3WoTfFdJvNEfJIF2CA1ysW9AEHc2IpRX+GOhgdG2Idj0nxNe0t7jlu+YSGjZ11XDKEIb8V57hepsWJscwpBtj39s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnhf91833+zQnw8qHt2VWLb436+NcUVEqrymQEohn6oXbqk5Ei
+	LhLBXGhRPHNaa9o4x/pKDsSH1jCNfwe1e2Id53s2npCLM42wB+RpvosocJo66kHBns+AW2hRMwt
+	aBeMYuka84XLzrYVtPEqAsqCKzjrlC22VU/duTLh9a6C0DtEYbdMzfA+Awk4AamoTxkaXDzgkiY
+	Fib32l/Zh3IhMU/PKrWa21Khuv3q1toIGS3plZHCBBuBvVOCvQ
+X-Gm-Gg: Acq92OGxhqlps0DGF53bylyuWwh2BfMkomvmpt5qZ60/ntFXsDaLbNWy97PDzc9qwaf
+	h08oh1stVgHZ7KmV+Ww529zlXGExYp6NEdmcnITKNrQP1RU0NjeWZcwIdPxwcTCNLweJC8LJPxZ
+	zEAx1dZ9ur+V33NMF20YOagZ6Ii56W+K0nS3uxQ806jq4StEGwrp9L1EN4S2v71Pxa+K+mrnvwR
+	/ACMg==
+X-Received: by 2002:a05:690e:1402:b0:65c:6ffb:3038 with SMTP id 956f58d0204a3-65e215f82abmr16063354d50.17.1779214871900;
+        Tue, 19 May 2026 11:21:11 -0700 (PDT)
+X-Received: by 2002:a05:690e:1402:b0:65c:6ffb:3038 with SMTP id
+ 956f58d0204a3-65e215f82abmr16063273d50.17.1779214871174; Tue, 19 May 2026
+ 11:21:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 036C642
-X-Stat-Signature: ojoqpestf56n3bjp476kj1w543wmgcx1
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/Z1J3+bHKVx9Du++DWn38MbgQCZ0hJoCE=
-X-HE-Tag: 1779214647-249727
-X-HE-Meta: U2FsdGVkX1+ek3CS1dgaY7L9GiwmPFmBYqbuS4cXXdFPdQh2271xIFP6DGPhtFr1XgrM6iWU3509QsSDvweKQiELeRXRqwBthCP63yEoSTx3kJO00PfvgVb6s6b6Zym3BVLdsgnqgjB7TXS2K4tWxDhFmZM+FbtOre7NGffJyXeFiFhUEuB3b79oOohGuqgX7Sbmy7ErcVofPEfcPJSkwpZkhkmvB9CaDOGYQaRQKwBs0brXTteDCARE4Tor1HK39wMVne9jx7spLP/Nth82msBb+eWxM+Flt75lz3CNEfSXL89RIBv35F6KSDACKWieY3pW/p3+4pbjD8WzjFDzb4pXbBZDR2L32deKWAa+WV5AQA4tpPiEneLIADmfEdCLK0/g/rqnqYCckMUBLL0EiQ==
+References: <20260511185817.686831-1-npache@redhat.com> <20260511185817.686831-4-npache@redhat.com>
+ <4566170a-7e3d-49e4-baab-ba2790c198db@kernel.org>
+In-Reply-To: <4566170a-7e3d-49e4-baab-ba2790c198db@kernel.org>
+From: Nico Pache <npache@redhat.com>
+Date: Tue, 19 May 2026 12:21:35 -0600
+X-Gm-Features: AVHnY4L4MNLuHeolsP-TGGRMvsoQWuP6zfUselEJ0zRNjehB522kQizaPVIyv5w
+Message-ID: <CAA1CXcCD5ooRJonAVp2LvnoCrQwcs1-NsAYomXbHTVNSe5X0cw@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable v17 03/14] mm/khugepaged: rework max_ptes_*
+ handling with helper functions
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
+	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, 
+	baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com, 
+	catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, 
+	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
+	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
+	lance.yang@linux.dev, liam@infradead.org, ljs@kernel.org, 
+	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, 
+	mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, 
+	raquini@redhat.com, rdunlap@infradead.org, richard.weiyang@gmail.com, 
+	rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
+	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, 
+	surenb@google.com, thomas.hellstrom@linux.intel.com, tiwai@suse.de, 
+	usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
+	zokeefe@google.com, Usama Arif <usama.arif@linux.dev>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: UpB5TNP65F8YasmDkNdX3-iY3BRqpcL1kHkHr3a3ALo_1779214872
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 19 May 2026 17:48:47 +0000
-sashiko-bot@kernel.org wrote:
-
-> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
-> - [High] Using `(STRUCT)` typecasts for non-eprobes leaves the base fetch instruction uninitialized (`FETCH_OP_NOP`), silently breaking the probe.
-> - [High] Prematurely clearing `TPARG_FL_TYPECAST` causes cross-BTF type confusion and breaks string fetches.
-> - [Medium] Erroneous caching of `struct_btf` restricts a single trace probe to using typecasts from only one BTF object, preventing cross-module lookups.
-> - [Medium] Cross-BTF string table access in `parse_btf_arg()` causes invalid string comparisons.
-> - [Low] `clear_btf_context()` fails to clear `ctx->struct_btf` after dropping its reference.
-> --
-> 
-> commit de4b6287a7069fde24b0e0f679a545a06fb9ae6c
-> Author: Steven Rostedt <rostedt@goodmis.org>
-> 
-> tracing/eprobes: Allow use of BTF names to dereference pointers
-> 
-> Add syntax to the parsing of eprobes to be able to typecast a trace event
-> field that is a pointer to a structure.
-> 
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index e1c73065dae51..2bc9f4ca8aa7e 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -464,6 +470,27 @@ static const char *fetch_type_from_btf_type(struct btf *btf,
-> >  	return NULL;
+On Tue, May 12, 2026 at 1:30=E2=80=AFAM David Hildenbrand (Arm)
+<david@kernel.org> wrote:
+>
+> On 5/11/26 20:58, Nico Pache wrote:
+> > The following cleanup reworks all the max_ptes_* handling into helper
+> > functions. This increases the code readability and will later be used t=
+o
+> > implement the mTHP handling of these variables.
+> >
+> > With these changes we abstract all the madvise_collapse() special casin=
+g
+> > (dont respect the sysctls) away from the functions that utilize them. A=
+nd
+> > will be used later in this series to cleanly restrict the mTHP collapse
+> > behavior.
+> >
+> > No functional change is intended; however, we are now only reading the
+> > sysfs variables once per scan, whereas before these variables were bein=
+g
+> > read on each loop iteration.
+> >
+> > Suggested-by: David Hildenbrand <david@kernel.org>
+> > Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+>
+> Some nits when re-reading:
+>
+> > Acked-by: Usama Arif <usama.arif@linux.dev>
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >  mm/khugepaged.c | 118 +++++++++++++++++++++++++++++++++---------------
+> >  1 file changed, 82 insertions(+), 36 deletions(-)
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index f0e29d5c7b1f..f68853b3caa7 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -348,6 +348,62 @@ static bool pte_none_or_zero(pte_t pte)
+> >       return pte_present(pte) && is_zero_pfn(pte_pfn(pte));
 > >  }
-> >  
-> > +static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
+> >
+> > +/**
+> > + * collapse_max_ptes_none - Calculate maximum allowed none-page or zer=
+o-page
+>
+> I know, it's painful, but ...
+>
+> There is no "none-page".
+
+Yeah I think you mentioned that last review... sorry!
+
+>
+> Calculate maximum allowed empty PTEs or PTEs mapping the shared zeropage =
+... ?
+>
+> > + * PTEs for the given collapse operation.
+>
+> We usually indent here (second line of subject), I think. Same applies to=
+ the
+> other doc below.
+
+Hmm tbh I couldn't find a example of what you meant here. There are
+some that put a space between the first sentence and the @ list.
+
+>
+> > + * @cc: The collapse control struct
+> > + * @vma: The vma to check for userfaultfd
+> > + *
+> > + * Return: Maximum number of none-page or zero-page PTEs allowed for t=
+he
+> > + * collapse operation.
+>
+> Same here.
+>
+> > + */
+> > +static unsigned int collapse_max_ptes_none(struct collapse_control *cc=
+,
+> > +             struct vm_area_struct *vma)
 > > +{
-> > +	int id;
+> > +     // If the vma is userfaultfd-armed, allow no none-page or zero-pa=
+ge PTEs.
+>
+> Lance commented on the comment style.
+>
+> Is this comment really required? It's pretty self-documenting already.
+
+Dropped it, thanks.
+
+>
+> > +     if (vma && userfaultfd_armed(vma))
+> > +             return 0;
+> > +     // for MADV_COLLAPSE, allow any none-page or zero-page PTEs.
+> > +     if (!cc->is_khugepaged)
+> > +             return HPAGE_PMD_NR;
+> > +     // For all other cases repect the user defined maximum.
+> > +     return khugepaged_max_ptes_none;
+> > +}
 > > +
-> > +	if (!ctx->struct_btf) {
-> > +		struct btf *btf;
-> > +
-> > +		id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
-> > +		if (id < 0)
-> > +			return id;
-> > +		ctx->struct_btf = btf;
-> > +	} else {
-> > +		id = btf_find_by_name_kind(ctx->struct_btf, sname, BTF_KIND_STRUCT);  
-> 
-> [Severity: Medium]
-> Does caching struct_btf here restrict a single trace probe event to using
-> typecasts from only one BTF object?
-> 
-> If a probe attempts to typecast structures from two different kernel
-> modules, wouldn't the lookup for the second module's struct fail because
-> it only searches the cached BTF object of the first module (or vmlinux)?
-
-Hmm, good point. I guess I should clear the struct_btf at the end of
-the '(' switch case.
-
-> 
-> > +		if (id < 0)
-> > +			return id;
-> > +	}
-> > +
-> > +	ctx->last_struct = btf_type_by_id(ctx->struct_btf, id);
-> > +	return 0;
-> > +}  
-> 
-> [ ... ]
-> 
-> > @@ -515,6 +542,10 @@ static void clear_btf_context(struct traceprobe_parse_context *ctx)
-> >  		ctx->params = NULL;
-> >  		ctx->nr_params = 0;
-> >  	}
-> > +	if (ctx->struct_btf) {
-> > +		btf_put(ctx->struct_btf);
-> > +		ctx->last_struct = NULL;  
-> 
-> [Severity: Low]
-> Should ctx->struct_btf be explicitly set to NULL after btf_put() drops
-> the reference?
-
-I'm thinking of dropping it in the '(' switch case.
-
-> 
-> While the traceprobe_parse_context might be destroyed shortly after
-> parsing completes, leaving a dangling pointer could potentially lead to a
-> use-after-free and double-free if any future refactoring reuses the
-> parsing context across multiple trace events.
-> 
-> > +	}
-> >  }  
-> 
-> [ ... ]
-> 
-> > @@ -672,7 +739,7 @@ static int parse_btf_arg(char *varname,
-> >  		return 0;
-> >  	}
-> >  
-> > -	if (!ctx->btf) {
-> > +	if (!btf) {
-> >  		ret = query_btf_context(ctx);
-> >  		if (ret < 0 || ctx->nr_params == 0) {
-> >  			trace_probe_log_err(ctx->offset, NO_BTF_ENTRY);
-> > @@ -682,7 +749,7 @@ static int parse_btf_arg(char *varname,
-> >  	params = ctx->params;
-> >  
-> >  	for (i = 0; i < ctx->nr_params; i++) {
-> > -		const char *name = btf_name_by_offset(ctx->btf, params[i].name_off);
-> > +		const char *name = btf_name_by_offset(btf, params[i].name_off);  
-> 
-> [Severity: Medium]
-> When parsing a typecast argument, btf evaluates to ctx->struct_btf. The
-> parameter matching loop then calls btf_name_by_offset() using that btf.
-> 
-> Since params[i].name_off originates from the function's BTF (ctx->btf,
-> populated by previous non-typecast arguments), could this lead to reading
-> from the wrong string table if ctx->struct_btf is a different kernel
-> module?
-
-The new patch will skip this for TYPECAST arguments. Well, at least for
-trace events.
-
-> 
-> This might result in invalid string comparisons or returning
-> (invalid-name-offset) if it reads out of bounds.
-> 
-> >  
-> >  		if (name && !strcmp(name, varname)) {
-> >  			if (tparg_is_function_entry(ctx->flags)) {  
-> 
-> [ ... ]
-> 
-> > @@ -1231,6 +1301,30 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
-> >  				code->op = FETCH_OP_IMM;
-> >  		}
-> >  		break;
-> > +	case '(':
-> > +		tmp = strchr(arg, ')');
-> > +		if (!tmp) {
-> > +			trace_probe_log_err(ctx->offset + strlen(arg),
-> > +					    DEREF_OPEN_BRACE);
-> > +			return -EINVAL;
-> > +		}
-> > +		*tmp = '\0';
-> > +		ret = query_btf_struct(arg + 1, ctx);
-> > +		*tmp = ')';
-> > +
-> > +		if (ret < 0) {
-> > +			trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		ctx->flags |= TPARG_FL_TYPECAST;
-> > +		tmp++;
-> > +
-> > +		ctx->offset += tmp - arg;
-> > +		ret = parse_btf_arg(tmp, pcode, end, ctx);  
-> 
-> [Severity: High]
-> When parse_probe_arg() evaluates the (STRUCT) syntax for kprobes or
-> fprobes, it sets TPARG_FL_TYPECAST and calls parse_btf_arg(). Inside
-> parse_btf_arg(), ctx_btf() evaluates to ctx->struct_btf, so it bypasses
-> query_btf_context() and jumps to found_type.
-> 
-> However, it doesn't seem to initialize code->op with a valid base fetch
-> instruction like FETCH_OP_ARG or FETCH_OP_REG.
-> 
-> Could this leave the base instruction as FETCH_OP_NOP (0)? If so, it
-> seems the base address would be 0, causing subsequent field dereferences
-> to safely fail on 0 + offset due to copy_from_kernel_nofault(). This might
-> allow unsupported syntax like (sk_buff)%di->dev to parse but silently
-> fetch nothing.
-
-Yeah, I may have to force this not to work with function types.
-
-> 
-> > +		ctx->flags &= ~TPARG_FL_TYPECAST;  
-> 
-> [Severity: High]
-> The TPARG_FL_TYPECAST flag is cleared here, but ctx->last_type still
-> points to a type originating from ctx->struct_btf.
-> 
-> Later in traceprobe_parse_probe_arg_body(),
-> check_prepare_btf_string_fetch() is called. Since the flag is cleared,
-> ctx_btf() will incorrectly return ctx->btf (vmlinux for kprobes, or
-> NULL for eprobes).
-> 
-> Does this cause check_prepare_btf_string_fetch() to return 0 for eprobes
-> and skip adding the necessary dummy FETCH_OP_DEREF for string fetches?
-> Without this dummy dereference, string fetches on character pointers
-> in eprobes might fail by reading the raw pointer value itself as a string.
-> 
-> Also, for kprobes, could this cause type confusion if
-> btf_type_skip_modifiers() looks up a module's type ID inside the vmlinux
-> BTF?
-
-As mentioned above, I need to put and clear the last_struct here.
-
-Thanks,
-
--- Steve
-
-
-> 
-> > +		ctx->last_struct = NULL;
-> > +		break;  
-> 
+> --
+> Cheers,
+>
+> David
+>
 
