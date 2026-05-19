@@ -1,122 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580A8233949
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 12:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AAF39B97E;
+	Tue, 19 May 2026 12:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779193982; cv=none; b=hI+lzUPe4vMOLEogVYIhsSZzoP1Gd4ILVjfLuM2Z+eaKeYO9EWchBvPC9/apcrV1a0araRxjPhP+J4QwsrJ6k85uhqNd0hDJKY5qphI8L1eRx/chOmALiBmasK3+cyru1LmfDudH7BlNHE+hgQei+r52pk2f6Piu1YYof9yb3K8=
+	t=1779194198; cv=none; b=BWYrSst/oEYRqUcfQi/dcIP8P2a7AtxgcCM82fRY+Ejg3KXwyLiwU/SrzpydLqbO+Nk9sl13LlvumoA//KOfJTuobwaTLxbIhtLuGIUis0ssJxok/A+ah/mUBCDmM6WL/sGiXPMsDtDDA0F5m6lQciFck4uXK4ILckyl8hA+g+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779193982; c=relaxed/simple;
-	bh=w+ogBnha7eMosYzKqcbm0151r6pKxFOdgbdkGJG7uGE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cG/dcZYGxxwBu5dKluNP/+/eBB3/9EXbMqxivT9esZYInU53JH/VEif9HwkDhEa+/07YDhBJyuoyv8hKh9Leg+CkyoX7/arEqSeuvkljdalAIuYlXV4ovq0tEehRgMCYAsaecSVQo7ukJv3KxtW6+RJfLdmgpiUpc5ovQi0qVR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h4IR2aBc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h4IR2aBc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779193980;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=w+ogBnha7eMosYzKqcbm0151r6pKxFOdgbdkGJG7uGE=;
-	b=h4IR2aBcOkVC+QYK/gCb18Z654tnCD/JMsTaKAS8kLsEr/SOWkPRqcU/7Ij10fO3ZvuOy3
-	p+4QNbFwRonEmga4kSveVc43czPU/q7GSwMiBNanW+PfdGYW43xsRC1Wi6oZqLPkDQ4Vrm
-	02M0WL2b3AEk8Px0ezkiZM/N6NT5Df0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-EjXHA7NXPreGq5MGbbIVAw-1; Tue, 19 May 2026 08:32:59 -0400
-X-MC-Unique: EjXHA7NXPreGq5MGbbIVAw-1
-X-Mimecast-MFC-AGG-ID: EjXHA7NXPreGq5MGbbIVAw_1779193978
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45e736cac42so2892888f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 05:32:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779193978; x=1779798778;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ip19kcrkyHcyYYTfFgVFNzNfqOTho0coaSMWx8bqIaY=;
-        b=T3aEUUpdeSCHKNJ1s9ntlijhwE8dryYNlurYDKABadi64VMQ+TsbNtYtK3tLlSbKzt
-         1CaBgeYsJptW/QoxqlQqLq5cX0XY57ShxHCpqbu2tsLfPjJLPyH7gDioHSS7KYYi/nGT
-         AsvADcFQuhDok+infA/wzHgK6OYQ3tDZHXEWt/48WaOSS3pr7QjlzQde76phF1jH67Mx
-         rvodT7tEBYTHn8CBApX30U2e9HncGBlynV7Ff6B4lJHAx1VcmbfSxFp7jNOFXq4q9gBW
-         HJiyIbUpGgH94CjiMHT/EDJpFILlnzYRRS3THO0Y0mU9wDbRPARTx0Hn+GuxIFFmSdbn
-         D1Og==
-X-Forwarded-Encrypted: i=1; AFNElJ9qJQLoTJX8QZruif23m4Ice7HFae08MyAvRMcoYaBxjS/ljLILE3IqYb1AIdmnpFO3ynzu7HNz6U0S1Z7Z6YRMwFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb1mvaEHHxiomkZwnCF6XvyDPl0gB85zMskX/1Fg7hN2k/lNGI
-	Fy3jbLh801UvYV66JbSuf5uFE18BXJE7Sk0bNlVJKfj1wED9atVNbSZTlF1VR09e5M1yM78rbMZ
-	LmjNmDhRK3qr4x+SCMW17wab8K44TsV22aNMMbgOSpusFPBXpVUTstqqlXTijrpmyEteoThHlgK
-	hpMwyOFOe2
-X-Gm-Gg: Acq92OGk2/ex+5CKqmsnPWIWWafemB0H8Hd+fdpzSOyg1uVR0qzq0gfAnzWeugHvNv3
-	grp76jPAkNinXgQRHeJ5G0yBLko/6jlPTTr29zrC7cq9dTomLYG13ZHNrO+W5lavimqbjXLtWBd
-	iYA2cjsgg2+RBva509DbLNpYfkI0DowFJOMnItCV2ywKbQlcku7HzzET41MNzsgxNMYNyvN9Bn3
-	7gzyCziJoH9F4s4IRNdnQW572HYDv2crmDymzo7WUELSQH3X0Xo6bdumz4zUJoHqbXU2nXhF9pP
-	Nb2scTpYaRtRXjZmjktV6Fzn48J0SAZIiqol0j+oPF6jXhDYWal+kIwQ1AZ0roRZQynWyr+yHZP
-	vaX3gkWSExXFs73uXRoVsbroZmm0Wr43skuD/cu3r0XCIrCs4zfsjOluBTGQTY2PbI76Y/06Im3
-	CWjnlXu52369xjX0E=
-X-Received: by 2002:a05:6000:40db:b0:43f:e938:1e67 with SMTP id ffacd0b85a97d-45e5c612fb0mr32816867f8f.38.1779193978090;
-        Tue, 19 May 2026 05:32:58 -0700 (PDT)
-X-Received: by 2002:a05:6000:40db:b0:43f:e938:1e67 with SMTP id ffacd0b85a97d-45e5c612fb0mr32816797f8f.38.1779193977597;
-        Tue, 19 May 2026 05:32:57 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da0a19c2dsm46462841f8f.21.2026.05.19.05.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 05:32:57 -0700 (PDT)
-Message-ID: <a5f5ac6b545a3beb5d6aee4328653fb8955266e1.camel@redhat.com>
-Subject: Re: [PATCH v2 03/14] tools/rv: Fix exit status when monitor
- execution fails
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
-	 <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
-	 <wen.yang@linux.dev>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Date: Tue, 19 May 2026 14:32:55 +0200
-In-Reply-To: <874ik586ex.fsf@yellow.woof>
-References: <20260514152055.229162-1-gmonaco@redhat.com>
-	 <20260514152055.229162-4-gmonaco@redhat.com> <874ik586ex.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
+	s=arc-20240116; t=1779194198; c=relaxed/simple;
+	bh=DxYTCPktYIssfeHLafIzhbnitgb8itgz2J1/c1lstEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VHopW8YoDTdYSqsTpR2HdWaV+NsiBB5f5A9qz+2z/ozcG2y++TWD4FelFNB/ILgtxHmbvNohYUgDQNrX/vgNeWqkMWfjaeva6AiTAUmjRdFp1fAOx5g/Uko5UyoVxoFEgB2MWRsup8Mglsk3vrWiziDNNaVH4YABiFRLVdKzsi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 23D8FC17C9;
+	Tue, 19 May 2026 12:36:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 24FCC6000C;
+	Tue, 19 May 2026 12:36:32 +0000 (UTC)
+Date: Tue, 19 May 2026 08:36:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, bpf@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>
+Subject: Re: [PATCH v4] tracing/probes: Allow use of BTF names to
+ dereference pointers
+Message-ID: <20260519083648.102b320f@gandalf.local.home>
+In-Reply-To: <20260519040928.458C4C2BCB3@smtp.kernel.org>
+References: <20260518232312.0c78f055@gandalf.local.home>
+	<20260519040928.458C4C2BCB3@smtp.kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: YAtp23fB9k0F5ovPPv54RCrFuLdiiLu_1xZY5ukyiRQ_1779193978
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: fcg7fsex3ihpmciqusuy4x8iyx5pdyr8
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 24FCC6000C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/KiVOAbbHFFSo62NVVqTMZ20YSbt8jR2o=
+X-HE-Tag: 1779194192-410666
+X-HE-Meta: U2FsdGVkX19oHWBuvFm3o5tIkNDklPTUEzBfq/bBbZcmRo3AGbiK/Og8hrgnlD2t+5UXY++HrzvpsD7eA7mPzYZ+3lw+Btm+U7uVmmNn4BV/XVTAzEjZhnHl/+ZtfXdiLsExkrLZxqMO35EzB6hEX56pTgz+Sjz11ay+n053n4tHztVVrcSkAHH02C7KmLgnLafjY2tg/LE0Jfj8o2+iqxUyv1yjVAKu0NVRW5x+Y8rKJeP3CN/kmv74wrWY0pA6dBMyWZFxzLHAWLi5EqElFPBha2bfEk/NJhuRc5TFtCzcNnSq62oaX7dy3Ukmc/MDpoS8JqE9NMu8r1pATaD4pvjuJLCDoY/zzeeOH0w29YwjbZRG0w4TijFGhQrbH+gQege2dMt1QZRKmwX/QiUKeg==
 
-On Mon, 2026-05-18 at 10:32 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > +=09exit(run <=3D 0);
->=20
-> Probably better to stick to the C standard:
->=20
-> =C2=A0=C2=A0=C2=A0 exit(run > 0 ? EXIT_SUCCESS : EXIT_FAILURE)
->=20
-> but whatever.
->=20
-> Reviewed-by: Nam Cao <namcao@linutronix.de>
+On Tue, 19 May 2026 04:09:27 +0000
+sashiko-bot@kernel.org wrote:
 
-Good point, that's far more readable, will apply and perhaps use those macr=
-os
-also for other 0/1 in the file.
+> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
+> - [High] NULL pointer dereference in `parse_btf_arg()` when typecasting `$retval`
+> - [High] Instruction stream corruption when typecasting BTF variables with field dereferences
+> - [High] Parser state corruption breaks multi-argument probes and standard BTF parameter resolution
+> - [Medium] Hardcoded syntax check strictly prohibits typecasting hardware registers and standard BTF arguments
+> - [Medium] Using `strrchr` causes parsing failures for memory dereferences containing parentheses
+> --
+> 
+> commit 8ce6119a14206ed21706a773d9694dc24e53436e
+> Author: Steven Rostedt <rostedt@goodmis.org>
+> 
+> tracing/probes: Allow use of BTF names to dereference pointers
+> 
+> This commit adds syntax to FETCHARG parsing to allow typecasting a value
+> to a pointer to a structure. This allows users to rely on BTF to figure out
+> member offsets instead of manually finding and hardcoding numerical offsets.
+> 
+> > But for event probes, or generic kprobes that records a register that
+> > happens to be a pointer to a structure, they cannot dereference these
+> > values with BTF naming, but must use numerical offsets.  
+> 
+> Does the code actually support dereferencing a register here? Hardware
+> registers (like %rdi) and standard BTF arguments (like skb) do not begin
+> with a $ character, but the parser explicitly enforces that the cast is
+> followed by a $.
+
+Heh, it doesn't support it yet. But I plan on doing so. I'll either add the
+support or fix the change log.
+
+> 
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index e1c73065dae51..29b5a99074d76 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c  
+> [ ... ]
+> > @@ -471,12 +491,12 @@ static int query_btf_context(struct traceprobe_parse_context *ctx)
+> >  	struct btf *btf;
+> >  	s32 nr;
+> >  
+> > -	if (ctx->btf)
+> > -		return 0;
+> > -
+> >  	if (!ctx->funcname)
+> >  		return -EINVAL;
+> >  
+> > +	if (ctx->btf)
+> > +		return 0;
+> > +  
+> 
+> If a user creates a probe with a struct cast for the return value (like
+> (struct task_struct*)$retval), query_btf_struct() resolves the struct and
+> sets ctx->btf but leaves ctx->proto as NULL.
+> 
+> When parse_btf_arg() later handles $retval, it calls query_btf_context(),
+> which will return 0 here because ctx->btf is already set. Does this lead
+> to parse_btf_arg() unconditionally dereferencing a NULL ctx->proto?
+> 
+> Additionally, for multi-argument probes where the first argument is a cast
+> (like arg1=(struct foo*)$arg1 arg2=skb), setting ctx->btf for the first
+> argument causes this check to return early for the second argument. Could
+> this skip populating ctx->params and ctx->nr_params, causing valid BTF
+> arguments to be rejected?
+
+Yeah, this will be fixed by Masami's suggestion of using a different btf
+for the structure.
+
+> 
+> [ ... ]
+> > @@ -952,6 +986,12 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
+> >  	int ret = 0;
+> >  	int len;
+> >  
+> > +	if (ctx->flags & TPARG_FL_STRUCT) {
+> > +		ret = parse_btf_arg(orig_arg, pcode, end, ctx);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +	}
+> > +  
+> 
+> When parse_btf_arg() successfully parses a typecast with field dereferences,
+> it emits a FETCH_OP_DEREF instruction and advances the *pcode pointer.
+> 
+> Since this block doesn't return upon success, execution continues and matches
+> the base variable name later in parse_probe_vars(). The local code pointer
+> is not updated to reflect the advanced *pcode, so it writes a new instruction
+> (like FETCH_OP_ARG) into the same slot.
+> 
+> Will this overwrite the FETCH_OP_DEREF instruction and corrupt the trace probe
+> bytecode?
+
+Good catch. I need to move the code = *pcode; to after that if block.
+
+> 
+> [ ... ]
+> > @@ -1231,6 +1271,43 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+> >  				code->op = FETCH_OP_IMM;
+> >  		}
+> >  		break;
+> > +	case '(':
+> > +		tmp = strrchr(arg, ')');  
+> 
+> If a user attempts to cast a standard memory dereference that itself
+> contains parentheses (such as (struct foo*)+0($arg1)), strrchr() will
+> find the final parenthesis of $arg1).
+
+Ah, I should have used strchr(). Thanks.
+
+> 
+> Will this cause the pointer validation logic below to evaluate the wrong
+> segment of the string and incorrectly fail with NO_PTR_STRCT?
+> 
+> > +		if (!tmp) {
+> > +			trace_probe_log_err(ctx->offset + strlen(arg),
+> > +					    DEREF_OPEN_BRACE);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		tmp--;
+> > +		if (*tmp != '*') {
+> > +			trace_probe_log_err(ctx->offset + (tmp - arg),
+> > +					    NO_PTR_STRCT);
+> > +			return -EINVAL;
+> > +		}
+> > +		*tmp = '\0';
+> > +		ret = query_btf_struct(arg + 1, ctx);
+> > +		*tmp = '*';
+> > +
+> > +		if (ret < 0) {
+> > +			trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		ctx->flags |= TPARG_FL_STRUCT;
+> > +		tmp += 2;
+> > +
+> > +		if (*tmp != '$') {  
+> 
+> Is this strict check for '$' intentional?
+> 
+> As mentioned regarding the commit message, this prevents typecasting hardware
+> registers and standard BTF arguments since they do not start with a '$',
+> effectively restricting the feature to $retval, $stack, and $argN.
+
+It was the only thing I tested. I'll remove it and test other options.
 
 Thanks,
-Gabriele
+
+-- Steve
+
+> 
+> > +			trace_probe_log_err(ctx->offset + (tmp - arg),
+> > +					    BAD_VAR);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		ctx->offset += tmp - arg;
+> > +		ret = parse_probe_vars(tmp, type, pcode, end, ctx);
+> > +		ctx->flags &= ~TPARG_FL_STRUCT;
+> > +		ctx->last_struct = NULL;
+> > +		break;  
+> 
 
