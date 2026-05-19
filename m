@@ -1,91 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFB13AFCE3;
-	Tue, 19 May 2026 15:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE86400DFD;
+	Tue, 19 May 2026 15:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779203582; cv=none; b=VoDXPQaRr57uKLC6X8QGCWKKugAhgJilVe2zz86gXixLJfwAr3nvQ+Spf4ubnNW9pZVTUjraDntEbBLqHNbqbBnazQNA9DPOoXCTpC7K5hQL7HkBT/1HtXj6QrwO8jQBJgDSwO2JlMWMTfYkyvQvuhihXw/V/b3z9aTbKWJfv+c=
+	t=1779204253; cv=none; b=f1DAoVAzzO9mbUwRhm0oKUABs3Co1fWhILFasgWPbQXk9GgIpBd/AAP9F/jwtdKS4r6VGFQFCDdGCMuBBCHd23wCH3LuX86Wz4kRG5rrlODdaNHzLsh42DXSMzqnJwOJJ7qu25TZMnmpNZEjr/7z06jiISWbp9EPgkLak8hcmUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779203582; c=relaxed/simple;
-	bh=3EdPDTW1UVKusuIIZzXgkz7+DCGIHKUsdGgzdNl9Y3w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LDudIds6I42S/KZh2eMBwKFaXccL8+Vf2qR4xIX9uxx1wBcQCI/XrRKtAD/XvnwUZbsvnCXVI0vKwuynjAdPOXPi0O0NfWiljuMdViNS1MlajDb0eMlq1RoMs0JPQPtbjKG+GYpikhtXQilkD9gqNs9VeeEUBkTJuHcBnAU5eTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0xrZ1Qj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779204253; c=relaxed/simple;
+	bh=dGBUs93hSDXZah+oK/H6iBWxZcZqTMWvsGGZcFSNp+s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=T5EXRS4dDwnQag/jzhIy+mkhH3JnRO28Fn77xAhn/t4bGR5avfMiBceOSEdPBoF2Yb6aBZadmhMaSQmXmrVmUGL3E8Ed9krDm1i6G1tFclqTsiRU9FtLuXv4dzYOp+k5/x9UF1ycomoxTymaY1nxbLJKitD44WrE9zxH27D6VDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kKikZ1Hw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+hi/xntF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0xrZ1Qj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA08C2BCB3;
-	Tue, 19 May 2026 15:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779203582;
-	bh=3EdPDTW1UVKusuIIZzXgkz7+DCGIHKUsdGgzdNl9Y3w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=i0xrZ1Qj+n04bESzyOEUAq4nK3kqsDN2J15akW87z/Z4U1T5/f9I9mJcu6K16ORnT
-	 A87HNafth3gEJjKRYzLldvPgU2K3obJ/KbgbLRAvitmdJ1u7oJQ7tv62Qb3G8IwtV/
-	 r+ptpgYZifNXW8kF2wwVxpj+Zzr2LvF7Wcf7DLxn9JWEzVUkytHW97pl5VlGhy+Cqc
-	 QaSkOVQRPTjzw7bBa8oOR9ftcKPCfjmiX30QHTtlKed+EUjwbpsU+j6324bffnEAR4
-	 kLl2hrNRQtKc8afpYt7fnSHUtxORzpJtCWnyb+VB/07DVyKXov76NPdrGY/dacAPKN
-	 gE1wGDefV7dbg==
-Date: Wed, 20 May 2026 00:12:59 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: lihongtao <lihongtao@kylinos.cn>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools/bootconfig: Fix buf leaks in apply_xbc
-Message-Id: <20260520001259.0cde0c415601b269b3fc8838@kernel.org>
-In-Reply-To: <20260519031255.139036-1-lihongtao@kylinos.cn>
-References: <20260519031255.139036-1-lihongtao@kylinos.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kKikZ1Hw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+hi/xntF"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1779204250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dGBUs93hSDXZah+oK/H6iBWxZcZqTMWvsGGZcFSNp+s=;
+	b=kKikZ1HwwDqi40FNhsLYEPqzOx/bgG4ujomUJN+G4dYtDzEe6zNYZW5AND37w4Hmf4Jy6L
+	zFeh6m9bAkuooPvpneDZmPR5K9PV6TPbxDlcg9f4eiQXT6pIb1VRdlXp9MSuVbM+2XY7CC
+	b22m3XLqWlsGWPBhRR5i3UHHlXZ7dGYnGkdy9aOmCB33Dmqy6cE1oTinIdHiBUS8/FfkC0
+	Ksp1FspNFWx3aMWYcQtIJg7V4S3hRAs7pm+gDb74Ln9myoCFIH/nH37O/3pZocSeVNPryN
+	g6jsxLaKD8+9CZuszKFkvwLyR1IcGRv3lPlDl8lJM9gTGZKU6JNtaTzc7anpug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1779204250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dGBUs93hSDXZah+oK/H6iBWxZcZqTMWvsGGZcFSNp+s=;
+	b=+hi/xntFrdkQTpWUVQOiyROtmpeFkcotl/xh9amVWf3TpEKTt0S1mBQYDDum3e+l/O0u0b
+	EwyaUbawkKp314Cw==
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rv/rtapp/sleep: Make the error more informative for
+ user
+In-Reply-To: <19cffa1267c6538e6310b0149b0367807af76ac0.camel@redhat.com>
+References: <cover.1779176466.git.namcao@linutronix.de>
+ <14242f444f7d2396c0c5a345f0099665d09a0ec5.1779176466.git.namcao@linutronix.de>
+ <19cffa1267c6538e6310b0149b0367807af76ac0.camel@redhat.com>
+Date: Tue, 19 May 2026 17:24:10 +0200
+Message-ID: <87y0hf2zj9.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, 19 May 2026 11:12:55 +0800
-lihongtao <lihongtao@kylinos.cn> wrote:
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> On Tue, 2026-05-19 at 09:49 +0200, Nam Cao wrote:
+>> The rtapp/sleep monitor detects real-time tasks which go to sleep in an
+>> real-time-unsafe manner. If this happen, the monitor triggers a trace event
+>> in the sched_wakeup tracepoint's handler.
+>
+> Ok so here WAKE is no longer tied to the wakeup event but to the end of the task
+> switch.
+>
+> So what happens if a task was not sleeping but just got preempted? Wouldn't that
+> trigger WAKE (though that isn't a real wakeup) without RT_FRIENDLY_WAKE ?
 
-> If data calloc failed, free the buf before return.
-> 
+The monitor's rule says that when a task sleeps, it will not wake
+without rt-friendly wake. If it "wakes" without initial sleep, it is
+simply ignored.
 
-OK, this should be a real bug.
+I can change the name to be SCHEDULE_IN or something like that to make
+it clearer.
 
-> Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-> Signed-off-by: lihongtao <lihongtao@kylinos.cn>
-
-BTW, according to the DCO, can you use your real name here(Lihong Tao?)
-
-https://docs.kernel.org/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
-
-Thanks,
-
-> ---
->  tools/bootconfig/main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> index 643f707b8f1d..ddabde20585f 100644
-> --- a/tools/bootconfig/main.c
-> +++ b/tools/bootconfig/main.c
-> @@ -390,8 +390,10 @@ static int apply_xbc(const char *path, const char *xbc_path)
->  
->  	/* Backup the bootconfig data */
->  	data = calloc(size + BOOTCONFIG_ALIGN + BOOTCONFIG_FOOTER_SIZE, 1);
-> -	if (!data)
-> +	if (!data) {
-> +		free(buf);
->  		return -ENOMEM;
-> +	}
->  	memcpy(data, buf, size);
->  
->  	/* Check the data format */
-> -- 
-> 2.25.1
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Nam
