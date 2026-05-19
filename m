@@ -1,468 +1,330 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA8746AF10;
-	Tue, 19 May 2026 09:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC0448B36A;
+	Tue, 19 May 2026 10:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779184387; cv=none; b=fJLylSefltTb1OhSuQPzYRkEkzVKk7bj+y05ydMQBqmTOWC1C+LCzr35c6vtDrPg46mriyy4x/Ode4EdRc03fEM2NDt0U6prBQHMqX+aQlM1Z1yobCaM2Lt8qh+zgHK/TPOaYhw9rBQGUteY9YybAGHiHDADTwdO2RVAEb7nvlk=
+	t=1779185508; cv=none; b=HzIGqP5THXA0YtH64PwiOwnhkeXySAxwkjHphGug9WifeCjtGlSjvAxjiJGolanDCVUuGpVZetPA5IHUD6E+3Tn0upwWU1FH5z3dC33IhfyTR3fhB3V9wKdpRNAQAxs/oTGfti4EvzmNQr8SXrRj2PSDwFXy/eSJvvdEB9w+hcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779184387; c=relaxed/simple;
-	bh=5U/Qt20zUTvnpjhoC72NldXWD3tYJgCadz5zTEeY5u8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tEtCAjK08K+014qv0zDwuAkDoBhTKvPag1KlZO+uXltMk8gwcBN+i52A0CHohg3iSPBA2jUD7WcNc7Ki33ATkcWf9ICeeDP6QLL5RWsyVq1FJXMngKLiPR0Sdl61b1BblzLNauwfYjzaV0tgFPFUrriG8uICsnaVtUkJt8ckYmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmLgdh+a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779185508; c=relaxed/simple;
+	bh=q51WE7wevZ2jWA3uAvc7h7Tfqyk1QPZnTjxADHrEy64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lulRs4W3KnomuvSkMp4jXJzXmE3N2W0RQmyhDP8kVtSyFcFHLbFY9IX34OuZKvff/rOyYJOmoD/U/lBRdk7kOf8Wk9EfCf/1QE6uMtTpNfEunMHDrfbetGQsv4t/zjeB9/4NToEo3XMP8MdWmO7PsrGrU9voIAy+uGPFg9loHFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VMG9uZc/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmLgdh+a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1317EC2BCB3;
-	Tue, 19 May 2026 09:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779184386;
-	bh=5U/Qt20zUTvnpjhoC72NldXWD3tYJgCadz5zTEeY5u8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mmLgdh+aYoy83cHxkuRnRDVlXF3XeqWvqq8Ja9VIIuvLNkIxjHol0b0W+N2hGYeV9
-	 AjuGTy3yGYhCDpJ5+p03cAV+dguAMtQtxJsmhsSxHNK/Dc/HqsrGydTEbnn39B4xgc
-	 Y/L9AkgckEyR+jazjAjDy98YSQc2dSwBgDKNnxkn2JgVr8YFgAQ9Zdamu3EE4gUmXM
-	 rMs8DdNpMYlcDRY+8cBlx0bHCfyFQoJoW6rekJhGqt8UQrhfG8vb4CRqO3W0daDAUa
-	 CULDPs8LDiK9oVaRxwyIWYe20j8hgvH0MiEDdQZ8g1pjXDrOUvKhAfYqg7f4j13rCB
-	 Xum3MFaQj1yVw==
-Date: Tue, 19 May 2026 18:53:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
- Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
- <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>, Jiri Olsa
- <olsajiri@gmail.com>, "Subject:[PATCH  v2]"@web.codeaurora.org,
- tracing/pr@web.codeaurora.org
-Subject: Re: [PATCH v4] tracing/probes: Allow use of BTF names to
- dereference pointers
-Message-Id: <20260519185302.5fb527085a64567a388f24f3@kernel.org>
-In-Reply-To: <20260518232312.0c78f055@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VMG9uZc/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779185507; x=1810721507;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q51WE7wevZ2jWA3uAvc7h7Tfqyk1QPZnTjxADHrEy64=;
+  b=VMG9uZc/2tuUqg+8KvQ7LiE4uHINQlAXFfnp8P9kjeg3nSirYf1mJS4Y
+   n1xd7UcxlgalTOs5JdIcmiHjqOJimQcC+Uou+6zJ7VDGf95qnrweGUUPw
+   CPbO5j7S9PWsBN7coVQNKVg2teszVYnfoNCNiG6uKlpwlr0OMhNMvuat9
+   FV3C3T4ZSJl6B3L/om/xfGXG+RfSDUyse1PQk2aC2MlZPUV3U/BufXsg+
+   ZfSZq3Uaw+8yd/nSDtcG87IXbgIGFwab4r1ZNfZvGUukHxjFUTm2dPWmw
+   L3zdRuimnLcwh6YC+JqBNnmuMV1pI2vryV8tC1zVsR2w+LuCeAnNaGDDq
+   w==;
+X-CSE-ConnectionGUID: q2z1WzY3TQyh7nGZSxCS5g==
+X-CSE-MsgGUID: ifN9y+9KS4Ol0tLktGNKKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="90637675"
+X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
+   d="scan'208";a="90637675"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 03:11:46 -0700
+X-CSE-ConnectionGUID: 1kE+sZBsRj6v0jA3kbW9aw==
+X-CSE-MsgGUID: J5RMBlqPSCSLUopRIysj7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
+   d="scan'208";a="263508820"
+Received: from lkp-server02.sh.intel.com (HELO 30e86e9c1927) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 19 May 2026 03:11:42 -0700
+Received: from kbuild by 30e86e9c1927 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wPHQ1-000000000rZ-40bx;
+	Tue, 19 May 2026 10:11:28 +0000
+Date: Tue, 19 May 2026 18:10:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	bpf@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Takaya Saeki <takayas@google.com>,
+	Douglas Raillard <douglas.raillard@arm.com>,
+	Tom Zanussi <zanussi@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>,
+	"Subject:[PATCH v2]" <tracing/pr@web.codeaurora.org>
+Subject: Re: [PATCH v4] tracing/probes: Allow use of BTF names to dereference
+ pointers
+Message-ID: <202605191828.Y3E73pH1-lkp@intel.com>
 References: <20260518232312.0c78f055@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260518232312.0c78f055@gandalf.local.home>
 
-On Mon, 18 May 2026 23:23:12 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Steven,
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Add syntax to the FETCHARGS parsing of probes to be able to typecast a
-> value to a pointer to a structure.
-> 
-> Currently, a dereference must be a number, where the user has to figure
-> out manually the offset of a member of a structure that they want to
-> dereference, unless the member is a function parameter that BTF already has
-> information about what structure the argument is pointing to.
-> 
-> But for event probes, or generic kprobes that records a register that
-> happens to be a pointer to a structure, they cannot dereference these
-> values with BTF naming, but must use numerical offsets.
+kernel test robot noticed the following build errors:
 
-Thanks for updating!
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on linus/master v7.1-rc4 next-20260518]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> For example, to find out what device a sk_buff is pointing to in the
-> net_dev_xmit trace event, one must first use gdb to find the offsets of the
-> members of the structures:
-> 
->  (gdb) p &((struct sk_buff *)0)->dev
->  $1 = (struct net_device **) 0x10
->  (gdb) p &((struct net_device *)0)->name
->  $2 = (char (*)[16]) 0x118
-> 
-> And then use the raw numbers to dereference:
-> 
->   # echo 'e:xmit net.net_dev_xmit +0x118(+0x10($skbaddr)):string' >> dynamic_events
-> 
-> If BTF is in the kernel, then instead, the $skbaddr can be typecast to
-> sk_buff and use the normal dereference logic.
-> 
->   # echo 'e:xmit net.net_dev_xmit (sk_buff*)$skbaddr->dev->name:string' >> dynamic_events
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-probes-Allow-use-of-BTF-names-to-dereference-pointers/20260519-121930
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20260518232312.0c78f055%40gandalf.local.home
+patch subject: [PATCH v4] tracing/probes: Allow use of BTF names to dereference pointers
+config: sparc64-defconfig (https://download.01.org/0day-ci/archive/20260519/202605191828.Y3E73pH1-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260519/202605191828.Y3E73pH1-lkp@intel.com/reproduce)
 
-Ah, eprobes supports "$PARAM" to access its parameter by name.
-That is a bit complicated. Should we allow user to access
-parameter without '$' prefix for eprobes?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605191828.Y3E73pH1-lkp@intel.com/
 
->   # echo 1 > events/eprobes/xmit/enable
->   # cat trace
-> [..]
->     sshd-session-1022    [000] b..2.   860.249343: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.250061: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.250142: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.263553: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.283820: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.302716: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.322905: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.342828: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.362268: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.382335: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.400856: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.419893: xmit: (net.net_dev_xmit) arg1="enp7s0"
+All errors (new ones prefixed by >>):
 
-Looks very nice!
-
-> 
-> The syntax is simply: ([STRUCT]*)(VAR)->FIELD[->FIELD..]
-
-Is the STRUCT optional?? (because [] means optional.) I guess no.
-
-I think we maybe possible to skip '*' (Or, make it optional)
-because this is not C-like typecasting, we don't support "struct"
-reserved word, and it does not support white-spaces in each
-fetcharg. In this case, (STRUCT)VAR->FIELD should work.
-
-BTW, I'm also considering to support new cast syntax, which allows
-us to derefer a pointer with "container_of". This is typically
-used in the kernel.
-
-We usually see this pattern:
-
-struct {
-	unsigned long		data;
-	struct list_head	list;
-} foo;
-
-void callback(struct list_head *foo_list)
-{
-	unsigned long data = container_of(foo_list, struct foo, list)->data;
-	...
-}
-
-To access @data, simple casting does not work. Thus we need a
-new syntax:
-
-	(STRUCT)(PTR,ASSIGN)->FIELD
-
-So the above case, we can do:
-
-	data=(foo)(foo_list,list)->data
-
-This is naturally extend the type casting to support container_of()
-equivalent casting.
-
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v3: https://patch.msgid.link/20260518095832.52659a3a@gandalf.local.home
-> 
->  *** COMPLETE REWRITE FROM V3 ***
-> 
-> - Rewrote it to use typecasting instead of simply replacing BTF names with
->   offsets.
-> 
->  Documentation/trace/kprobetrace.rst |   3 +
->  kernel/trace/trace_probe.c          | 110 ++++++++++++++++++++++++----
->  kernel/trace/trace_probe.h          |   3 +
->  3 files changed, 100 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-> index 3b6791c17e9b..450ac646fe4c 100644
-> --- a/Documentation/trace/kprobetrace.rst
-> +++ b/Documentation/trace/kprobetrace.rst
-> @@ -54,6 +54,9 @@ Synopsis of kprobe_events
->    $retval	: Fetch return value.(\*2)
->    $comm		: Fetch current task comm.
->    +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
-> +  (STRUCT*)FETCHARG->FIELD[->FIELD] : If BTF is supported, typecast FETCHARG to
-> +                  a pointer to STRUCT and then derference the pointer defined by
-> +                  ->FIELD.
->    \IMM		: Store an immediate value to the argument.
->    NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
->    FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index e0d3a0da26af..b0829eb1cb52 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -464,6 +464,26 @@ static const char *fetch_type_from_btf_type(struct btf *btf,
->  	return NULL;
->  }
->  
-> +static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
-> +{
-> +	int id;
-> +
-> +	if (!ctx->btf) {
-> +		struct btf *btf;
-
-This needs an empty line here.
-
-> +		id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
-> +		if (id < 0)
-> +			return -EINVAL;
-
-Why don't you return id (it has corresponding errno)?
-
-> +		ctx->btf = btf;
-> +	} else {
-> +		id = btf_find_by_name_kind(ctx->btf, sname, BTF_KIND_STRUCT);
-> +		if (id < 0)
-> +			return -EINVAL;
-
-Ditto.
-
-> +	}
-> +
-> +	ctx->last_struct = btf_type_by_id(ctx->btf, id);
-> +	return 0;
-> +}
-> +
->  static int query_btf_context(struct traceprobe_parse_context *ctx)
->  {
->  	const struct btf_param *param;
-> @@ -471,12 +491,12 @@ static int query_btf_context(struct traceprobe_parse_context *ctx)
->  	struct btf *btf;
->  	s32 nr;
->  
-> -	if (ctx->btf)
-> -		return 0;
-> -
->  	if (!ctx->funcname)
->  		return -EINVAL;
->  
-> +	if (ctx->btf)
-> +		return 0;
-> +
-
-Could you tell me why this order is changed?
-I think this type casting will allow us to skip checking funcname
-because btf context is already specified.
-
-Ah, BTW, we may need to use a special struct btf* for type
-casting. If the target function is in a module and the
-casting type is defined in vmlinux, those are stored in
-the different places...
+>> kernel/trace/trace_probe.c:1289:9: error: call to undeclared function 'query_btf_struct'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1289 |                 ret = query_btf_struct(arg + 1, ctx);
+         |                       ^
+   1 error generated.
 
 
-for example,
+vim +/query_btf_struct +1289 kernel/trace/trace_probe.c
 
- p funcA (foo)$arg1->bar buz
+  1120	
+  1121	/* Recursive argument parser */
+  1122	static int
+  1123	parse_probe_arg(char *arg, const struct fetch_type *type,
+  1124			struct fetch_insn **pcode, struct fetch_insn *end,
+  1125			struct traceprobe_parse_context *ctx)
+  1126	{
+  1127		struct fetch_insn *code = *pcode;
+  1128		unsigned long param;
+  1129		int deref = FETCH_OP_DEREF;
+  1130		long offset = 0;
+  1131		char *tmp;
+  1132		int ret = 0;
+  1133	
+  1134		switch (arg[0]) {
+  1135		case '$':
+  1136			ret = parse_probe_vars(arg, type, pcode, end, ctx);
+  1137			break;
+  1138	
+  1139		case '%':	/* named register */
+  1140			if (ctx->flags & (TPARG_FL_TEVENT | TPARG_FL_FPROBE)) {
+  1141				/* eprobe and fprobe do not handle registers */
+  1142				trace_probe_log_err(ctx->offset, BAD_VAR);
+  1143				break;
+  1144			}
+  1145			ret = regs_query_register_offset(arg + 1);
+  1146			if (ret >= 0) {
+  1147				code->op = FETCH_OP_REG;
+  1148				code->param = (unsigned int)ret;
+  1149				ret = 0;
+  1150			} else
+  1151				trace_probe_log_err(ctx->offset, BAD_REG_NAME);
+  1152			break;
+  1153	
+  1154		case '@':	/* memory, file-offset or symbol */
+  1155			if (isdigit(arg[1])) {
+  1156				ret = kstrtoul(arg + 1, 0, &param);
+  1157				if (ret) {
+  1158					trace_probe_log_err(ctx->offset, BAD_MEM_ADDR);
+  1159					break;
+  1160				}
+  1161				/* load address */
+  1162				code->op = FETCH_OP_IMM;
+  1163				code->immediate = param;
+  1164			} else if (arg[1] == '+') {
+  1165				/* kprobes don't support file offsets */
+  1166				if (ctx->flags & TPARG_FL_KERNEL) {
+  1167					trace_probe_log_err(ctx->offset, FILE_ON_KPROBE);
+  1168					return -EINVAL;
+  1169				}
+  1170				ret = kstrtol(arg + 2, 0, &offset);
+  1171				if (ret) {
+  1172					trace_probe_log_err(ctx->offset, BAD_FILE_OFFS);
+  1173					break;
+  1174				}
+  1175	
+  1176				code->op = FETCH_OP_FOFFS;
+  1177				code->immediate = (unsigned long)offset;  // imm64?
+  1178			} else {
+  1179				/* uprobes don't support symbols */
+  1180				if (!(ctx->flags & TPARG_FL_KERNEL)) {
+  1181					trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
+  1182					return -EINVAL;
+  1183				}
+  1184				/* Preserve symbol for updating */
+  1185				code->op = FETCH_NOP_SYMBOL;
+  1186				code->data = kstrdup(arg + 1, GFP_KERNEL);
+  1187				if (!code->data)
+  1188					return -ENOMEM;
+  1189				if (++code == end) {
+  1190					trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
+  1191					return -EINVAL;
+  1192				}
+  1193				code->op = FETCH_OP_IMM;
+  1194				code->immediate = 0;
+  1195			}
+  1196			/* These are fetching from memory */
+  1197			if (++code == end) {
+  1198				trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
+  1199				return -EINVAL;
+  1200			}
+  1201			*pcode = code;
+  1202			code->op = FETCH_OP_DEREF;
+  1203			code->offset = offset;
+  1204			break;
+  1205	
+  1206		case '+':	/* deref memory */
+  1207		case '-':
+  1208			if (arg[1] == 'u') {
+  1209				deref = FETCH_OP_UDEREF;
+  1210				arg[1] = arg[0];
+  1211				arg++;
+  1212			}
+  1213			if (arg[0] == '+')
+  1214				arg++;	/* Skip '+', because kstrtol() rejects it. */
+  1215			tmp = strchr(arg, '(');
+  1216			if (!tmp) {
+  1217				trace_probe_log_err(ctx->offset, DEREF_NEED_BRACE);
+  1218				return -EINVAL;
+  1219			}
+  1220			*tmp = '\0';
+  1221			ret = kstrtol(arg, 0, &offset);
+  1222			if (ret) {
+  1223				trace_probe_log_err(ctx->offset, BAD_DEREF_OFFS);
+  1224				break;
+  1225			}
+  1226			ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
+  1227			arg = tmp + 1;
+  1228			tmp = strrchr(arg, ')');
+  1229			if (!tmp) {
+  1230				trace_probe_log_err(ctx->offset + strlen(arg),
+  1231						    DEREF_OPEN_BRACE);
+  1232				return -EINVAL;
+  1233			} else {
+  1234				const struct fetch_type *t2 = find_fetch_type(NULL, ctx->flags);
+  1235				int cur_offs = ctx->offset;
+  1236	
+  1237				*tmp = '\0';
+  1238				ret = parse_probe_arg(arg, t2, &code, end, ctx);
+  1239				if (ret)
+  1240					break;
+  1241				ctx->offset = cur_offs;
+  1242				if (code->op == FETCH_OP_COMM ||
+  1243				    code->op == FETCH_OP_DATA) {
+  1244					trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
+  1245					return -EINVAL;
+  1246				}
+  1247				if (++code == end) {
+  1248					trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
+  1249					return -EINVAL;
+  1250				}
+  1251				*pcode = code;
+  1252	
+  1253				code->op = deref;
+  1254				code->offset = offset;
+  1255				/* Reset the last type if used */
+  1256				ctx->last_type = NULL;
+  1257			}
+  1258			break;
+  1259		case '\\':	/* Immediate value */
+  1260			if (arg[1] == '"') {	/* Immediate string */
+  1261				ret = __parse_imm_string(arg + 2, &tmp, ctx->offset + 2);
+  1262				if (ret)
+  1263					break;
+  1264				code->op = FETCH_OP_DATA;
+  1265				code->data = tmp;
+  1266			} else {
+  1267				ret = str_to_immediate(arg + 1, &code->immediate);
+  1268				if (ret)
+  1269					trace_probe_log_err(ctx->offset + 1, BAD_IMM);
+  1270				else
+  1271					code->op = FETCH_OP_IMM;
+  1272			}
+  1273			break;
+  1274		case '(':
+  1275			tmp = strrchr(arg, ')');
+  1276			if (!tmp) {
+  1277				trace_probe_log_err(ctx->offset + strlen(arg),
+  1278						    DEREF_OPEN_BRACE);
+  1279				return -EINVAL;
+  1280			}
+  1281	
+  1282			tmp--;
+  1283			if (*tmp != '*') {
+  1284				trace_probe_log_err(ctx->offset + (tmp - arg),
+  1285						    NO_PTR_STRCT);
+  1286				return -EINVAL;
+  1287			}
+  1288			*tmp = '\0';
+> 1289			ret = query_btf_struct(arg + 1, ctx);
+  1290			*tmp = '*';
+  1291	
+  1292			if (ret < 0) {
+  1293				trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
+  1294				return -EINVAL;
+  1295			}
+  1296	
+  1297			ctx->flags |= TPARG_FL_STRUCT;
+  1298			tmp += 2;
+  1299	
+  1300			if (*tmp != '$') {
+  1301				trace_probe_log_err(ctx->offset + (tmp - arg),
+  1302						    BAD_VAR);
+  1303				return -EINVAL;
+  1304			}
+  1305	
+  1306			ctx->offset += tmp - arg;
+  1307			ret = parse_probe_vars(tmp, type, pcode, end, ctx);
+  1308			ctx->flags &= ~TPARG_FL_STRUCT;
+  1309			ctx->last_struct = NULL;
+  1310			break;
+  1311		default:
+  1312			if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
+  1313				if (!tparg_is_function_entry(ctx->flags) &&
+  1314				    !tparg_is_function_return(ctx->flags)) {
+  1315					trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
+  1316					return -EINVAL;
+  1317				}
+  1318				ret = parse_btf_arg(arg, pcode, end, ctx);
+  1319				break;
+  1320			}
+  1321		}
+  1322		if (!ret && code->op == FETCH_OP_NOP) {
+  1323			/* Parsed, but do not find fetch method */
+  1324			trace_probe_log_err(ctx->offset, BAD_FETCH_ARG);
+  1325			ret = -EINVAL;
+  1326		}
+  1327		return ret;
+  1328	}
+  1329	
 
-In this case, buz needs to use BTF including funcA.
-Maybe we need to introduce ctx->func_btf, which resets ctx->btf
-in traceprobe_parse_probe_arg_body() where parse_probe_arg()
-is calling, e.g.
-
-	ctx->last_type = NULL;
-+	if (ctx->btf)
-+		btf_put(ctx->btf);
-+	ctx->btf = ctx->func_btf;
-	ret = parse_probe_arg(arg, parg->type, &code, &code[FETCH_INSN_MAX - 1],
-			      ctx);
-
-
->  	type = btf_find_func_proto(ctx->funcname, &btf);
->  	if (!type)
->  		return -ENOENT;
-> @@ -514,6 +534,7 @@ static void clear_btf_context(struct traceprobe_parse_context *ctx)
->  		ctx->proto = NULL;
->  		ctx->params = NULL;
->  		ctx->nr_params = 0;
-> +		ctx->last_struct = NULL;
->  	}
->  }
->  
-> @@ -554,22 +575,28 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
->  	struct fetch_insn *code = *pcode;
->  	const struct btf_member *field;
->  	u32 bitoffs, anon_offs;
-> +	bool is_struct = ctx->flags & TPARG_FL_STRUCT;
->  	char *next;
->  	int is_ptr;
->  	s32 tid;
->  
->  	do {
-> -		/* Outer loop for solving arrow operator ('->') */
-> -		if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
-> -			trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-> -			return -EINVAL;
-> -		}
-> -		/* Convert a struct pointer type to a struct type */
-> -		type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
-> -		if (!type) {
-> -			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> -			return -EINVAL;
-> +		if (!is_struct) {
-> +			/* Outer loop for solving arrow operator ('->') */
-> +			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
-> +				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-> +				return -EINVAL;
-> +			}
-> +
-> +			/* Convert a struct pointer type to a struct type */
-> +			type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
-> +			if (!type) {
-> +				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> +				return -EINVAL;
-> +			}
->  		}
-> +		/* Only the first type can skip being a pointer */
-> +		is_struct = false;
->  
->  		bitoffs = 0;
->  		do {
-> @@ -635,12 +662,12 @@ static int parse_btf_arg(char *varname,
->  {
->  	struct fetch_insn *code = *pcode;
->  	const struct btf_param *params;
-> -	const struct btf_type *type;
-> +	const struct btf_type *type = NULL;
->  	char *field = NULL;
->  	int i, is_ptr, ret;
->  	u32 tid;
->  
-> -	if (WARN_ON_ONCE(!ctx->funcname))
-> +	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_STRUCT)))
->  		return -EINVAL;
->  
->  	is_ptr = split_next_field(varname, &field, ctx);
-> @@ -704,11 +731,18 @@ static int parse_btf_arg(char *varname,
->  			goto found;
->  		}
->  	}
-> +
-> +	if (ctx->flags & TPARG_FL_STRUCT) {
-> +		type = ctx->last_struct;
-> +		goto found;
-
-I rather like to jump type_found: label instead of
-checking !type. (Or, save tid instead of type)
-
-> +	}
-> +
->  	trace_probe_log_err(ctx->offset, NO_BTFARG);
->  	return -ENOENT;
->  
->  found:
-> -	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
-> +	if (!type)
-> +		type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
-
-type_found:
-
->  	if (!type) {
->  		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
->  		return -EINVAL;
-> @@ -952,6 +986,12 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
->  	int ret = 0;
->  	int len;
->  
-> +	if (ctx->flags & TPARG_FL_STRUCT) {
-> +		ret = parse_btf_arg(orig_arg, pcode, end, ctx);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	if (ctx->flags & TPARG_FL_TEVENT) {
->  		if (code->data)
->  			return -EFAULT;
-> @@ -1231,6 +1271,43 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
->  				code->op = FETCH_OP_IMM;
->  		}
->  		break;
-> +	case '(':
-> +		tmp = strrchr(arg, ')');
-
-OK, in this step, we don't support nested cast etc. so this works.
-
-> +		if (!tmp) {
-> +			trace_probe_log_err(ctx->offset + strlen(arg),
-> +					    DEREF_OPEN_BRACE);
-> +			return -EINVAL;
-> +		}
-> +
-> +		tmp--;
-> +		if (*tmp != '*') {
-> +			trace_probe_log_err(ctx->offset + (tmp - arg),
-> +					    NO_PTR_STRCT);
-> +			return -EINVAL;
-> +		}
-
-So I think this can be optional, not an error.
-
-> +		*tmp = '\0';
-> +		ret = query_btf_struct(arg + 1, ctx);
-> +		*tmp = '*';
-> +
-> +		if (ret < 0) {
-> +			trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
-> +			return -EINVAL;
-> +		}
-> +
-> +		ctx->flags |= TPARG_FL_STRUCT;
-> +		tmp += 2;
-> +
-> +		if (*tmp != '$') {
-> +			trace_probe_log_err(ctx->offset + (tmp - arg),
-> +					    BAD_VAR);
-> +			return -EINVAL;
-> +		}
-
-Ok, this limitation will be removed afterwards.
-
-Thanks,
-
-> +
-> +		ctx->offset += tmp - arg;
-> +		ret = parse_probe_vars(tmp, type, pcode, end, ctx);
-> +		ctx->flags &= ~TPARG_FL_STRUCT;
-> +		ctx->last_struct = NULL;
-> +		break;
->  	default:
->  		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
->  			if (!tparg_is_function_entry(ctx->flags) &&
-> @@ -1504,6 +1581,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  	code[FETCH_INSN_MAX - 1].op = FETCH_OP_END;
->  
->  	ctx->last_type = NULL;
-> +	ctx->last_struct = NULL;
->  	ret = parse_probe_arg(arg, parg->type, &code, &code[FETCH_INSN_MAX - 1],
->  			      ctx);
->  	if (ret < 0)
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 262d8707a3df..88ab9f6da591 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -394,6 +394,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
->   * TPARG_FL_KERNEL and TPARG_FL_USER are also mutually exclusive.
->   * TPARG_FL_FPROBE and TPARG_FL_TPOINT are optional but it should be with
->   * TPARG_FL_KERNEL.
-> + * TPARG_FL_STRUCT is set if an argument was typecast to a structure.
->   */
->  #define TPARG_FL_RETURN BIT(0)
->  #define TPARG_FL_KERNEL BIT(1)
-> @@ -402,6 +403,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
->  #define TPARG_FL_USER   BIT(4)
->  #define TPARG_FL_FPROBE BIT(5)
->  #define TPARG_FL_TPOINT BIT(6)
-> +#define TPARG_FL_STRUCT BIT(7)
->  #define TPARG_FL_LOC_MASK	GENMASK(4, 0)
->  
->  static inline bool tparg_is_function_entry(unsigned int flags)
-> @@ -423,6 +425,7 @@ struct traceprobe_parse_context {
->  	s32 nr_params;			/* The number of the parameters */
->  	struct btf *btf;		/* The BTF to be used */
->  	const struct btf_type *last_type;	/* Saved type */
-> +	const struct btf_type *last_struct;	/* Saved structure */
->  	u32 last_bitoffs;		/* Saved bitoffs */
->  	u32 last_bitsize;		/* Saved bitsize */
->  	struct trace_probe *tp;
-> -- 
-> 2.53.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
