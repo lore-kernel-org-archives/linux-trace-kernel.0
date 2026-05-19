@@ -1,153 +1,447 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCDD32B113
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 11:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47BA233947;
+	Tue, 19 May 2026 12:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779190502; cv=none; b=HygJY/kdXQtV+nlKzNfYUWAaiS09mVuZPte/6BnTG+kiSMUwDiuyeUh+G3CUP3YsifqBDkBJPWes6tkratHZJnxus4f/RDY1Jq48JDgnBy4kiMQj8/lyK/9wZDFU6eWZIuhxYnG9mIzaOxFf7gMKLY9tXlGBsOpUcmcEyT0eii0=
+	t=1779193886; cv=none; b=HGuWKbPtI/wPDed6f/NWFsZdosN6uoryRdYqENiVu2OZd6zDHtCz9aJ5I2p/jcXpjh5tpY3F0BuIcoQzvxFT2diVFIx+Sn+nU0KYOKmkBOxO3dpGgSuD+CYMTgLkdpNMgNdB6noRVVjsFC++0EV/UyYJhTR84vsDY1/be+QERgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779190502; c=relaxed/simple;
-	bh=LQOxPGnXUTSOXlHpb6gPJJIavSLp81lHe+vVOxiyXCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WU/z/0Fspyj1CLR1LZJ/QO52WQ5OjHsV5qKd0Jgxh6XWOOUlJ6E/UL1rtnaJenrCZe4nTlCaEbPA8y+K824M4J7gYxUsJocw0haAgopPjcacEW0FuFFKp1F3HjjPhUFM3C5UItV5XkXyu84Hao7IEaNg4zzxBfU6JyI+Cne0zgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Kyh/qtWK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=dDxeuWdY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Kyh/qtWK";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="dDxeuWdY"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64J9bWD9254059
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 11:35:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZAYCGahJcCtZt/TPl8oyzRpvSJVUQPm2nLTOqjEGls4=; b=Kyh/qtWK9Hfj3JEb
-	JyqmPEbfysDE6W4/Gnik37xPy1t2776iMTbG1vm+O4CzM/a8dV27NfON3V9LFLsQ
-	gxu2D1LLdsTdlxCfWYpjmKN7ws6lGf/zPAG7x/iNBjSs49sSgaUqBcHc4xf+NSTI
-	9ALbT4TmTtHOmb8I3b33HmIySaFjGkKMwgjhtFdUttBQVn5RoGbLT2XrVjFEe+ZI
-	rG59uHRQ3LKRxfEESHz7pB9TLJNm+OeIsegF8BjZLuSkYJQH9d5m9EBgfkbohLgF
-	NSFgd4B+cfC3y6JPwjXvjG5SPoqX0yhcaAbEemXhspPuLNzdod0mm7hAJNmRfXJh
-	5fM6PA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e8h87snc7-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 11:35:00 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50fb0b93e90so10724071cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 May 2026 04:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779190499; x=1779795299; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZAYCGahJcCtZt/TPl8oyzRpvSJVUQPm2nLTOqjEGls4=;
-        b=dDxeuWdYlZL1Wt04tPOZUq0dTDNI1XbtVHGobk2lypY2CPUwl0lIvsda+/CCjWyM+n
-         e4bleqtTjoC+/kdNBaz4h11Tfv8zQkIW1aoaRpiJmIW2LgfpIFYfokycD/w/psy2elC7
-         VLwl11enxVVfNaUhXM/IpQtjY7fFQaQF8nnW7xYEsCA7VtBbN5rHiuyqyBJt739Fa+a2
-         bUgbqBEkus5PNuHgjU8rKBhxohVhSL33tIKs5vEQ/xT8FVtDjQwFuztt4iKO5llwWLtX
-         Bu6Hj0UkPEKGHwqEunDgD7wlQlgBo8liYwgwFtloKZPhFBbx/8oqAk6W6bLVV6jwFG5M
-         Hd1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779190499; x=1779795299;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZAYCGahJcCtZt/TPl8oyzRpvSJVUQPm2nLTOqjEGls4=;
-        b=VR6Rio63hPvh9ZIbE5kfAVov+drEvVtAUFEzg+98mzZs51qHtpIiNGyRMNcdc3k+lK
-         zIU+gTXQrJ5AJo/xCaqoBFNCMgOf85OSZqfyYlzO9hncHqbxf0UrJH5yK7kT1DnUvSud
-         OCyigNDygR7fdRdyy6KzjPdyIU+vtLDjYN1qygA1gWO073keA2/X8UXj3iPY2+vycT92
-         LS9tZm7SqSxl9QiQk3rGnNVuZzuQ/44OWjJ9TB6rc6GGavWWN8bZTVASQCofbQeWWDia
-         tf0GNW1EvYuSa7jRZ8VEMScKie5+U91597wCRIWNLhJZ1cSOXwGcijdTAbSBQqfXblPN
-         Nz3Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+ehJ1rZv9/MAJnhdg0w3aQupJi+xS5lgC7MNLuVB/+cRSL8SE9FwnChlcY+5Fg6F8OG9vrsc15hRy3nbr6NDsYW9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrciHJ9JtUhvSX2vYNuUtNbuEOwGD0reI7oiBzDjRI24CxnsrQ
-	rNlqOrgZGvFNS2MYhajRK2TreU4oykM0GsL93x8u+3bO9XgHDr6YHmQPfmSjNtYFmFBeNETIq4I
-	+284eCwFobNKSNI8X21picuxrnGjjB+42N8by1KQOY+ydNZN5IDdYrJ4Kl8IJiwh941I4yUg8J5
-	8=
-X-Gm-Gg: Acq92OFMmaujlboDz7mA/FDeTU7ueFne6DMCLSBdo8ny/7u8uXXP0GH2nPc9VIXAou4
-	+SADJCBenFTQqJ6SHVtqyS0Ag2YZICwNo1N9G/P05FDHzKqoU14g/Oo7efPaBkvxkjgChB8b+4O
-	saPAcspzhNHF03wQVKFu0WuPXCUBiwys+YE0IjU6E+2eIcLiSnIVRIVwjKI4M/1Zq1xJl3Lu8EJ
-	ZacHWwOxAMHdY86qVouPOvgbUfBSrpmPMiFpq/Ua01v7t92fO+BYy6YMut0GbhkUzgLIygNuHuk
-	1MgcOVgrxzUWzrTGsR9SuNbyvwtY5jyjzH1zkcmu89yO9OpszCin3zGCMaB/vXxkn0N3J1hbSTp
-	eih352XqUdx86GzHNUaMXGsiG8QHPQ8kMJ4CyMcUcVFKxQk1AJmfPi4j69M/TLzLnKDY/txUl0G
-	2YmTtJPu57hc/SvQ==
-X-Received: by 2002:a05:622a:283:b0:50d:a978:6ece with SMTP id d75a77b69052e-5166ebd8710mr137485911cf.1.1779190499578;
-        Tue, 19 May 2026 04:34:59 -0700 (PDT)
-X-Received: by 2002:a05:622a:283:b0:50d:a978:6ece with SMTP id d75a77b69052e-5166ebd8710mr137485451cf.1.1779190499028;
-        Tue, 19 May 2026 04:34:59 -0700 (PDT)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bd4f4dec855sm697523966b.37.2026.05.19.04.34.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2026 04:34:58 -0700 (PDT)
-Message-ID: <5c59952f-72c5-4aee-a1a6-4b11b0a542c3@oss.qualcomm.com>
-Date: Tue, 19 May 2026 13:34:55 +0200
+	s=arc-20240116; t=1779193886; c=relaxed/simple;
+	bh=irdEARsUY/799+d5PIx4NjR6fRgqB0VoX0iyPcgyTfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CF6nWKwX26AOsf8tTnAH3LZdGi6lqCIJKBeRkDnrmoqwQX68t4Yc2bz2qPWMEdZ7xrAcFBe4UfYJwJoujeCURO/zRZgiA1cppQOrPv39Ebyj7eqtJi7bAq5ipQY4KdjaeuV4wDNH90bBQKOQbMTjk9/Zpu2YlD4PO22f03yZPb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 982ACC1791;
+	Tue, 19 May 2026 12:31:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 21D2817;
+	Tue, 19 May 2026 12:31:12 +0000 (UTC)
+Date: Tue, 19 May 2026 08:31:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Namhyung Kim
+ <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>, Douglas Raillard
+ <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
+ Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>
+Subject: Re: [PATCH v4] tracing/probes: Allow use of BTF names to
+ dereference pointers
+Message-ID: <20260519083128.5795c6af@gandalf.local.home>
+In-Reply-To: <20260519185302.5fb527085a64567a388f24f3@kernel.org>
+References: <20260518232312.0c78f055@gandalf.local.home>
+	<20260519185302.5fb527085a64567a388f24f3@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] spi: qcom-geni: Add trace events for Qualcomm GENI
- SPI driver
-To: Mukesh Savaliya <mukesh.savaliya@oss.qualcomm.com>,
-        Praveen Talari <praveen.talari@oss.qualcomm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu
- <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        aniket.randive@oss.qualcomm.com, chandana.chiluveru@oss.qualcomm.com,
-        jyothi.seerapu@oss.qualcomm.com
-References: <20260518-add-tracepoints-for-qcom-geni-spi-v3-0-7928f6810a79@oss.qualcomm.com>
- <20260518-add-tracepoints-for-qcom-geni-spi-v3-2-7928f6810a79@oss.qualcomm.com>
- <12d8da90-f092-449f-af6b-14b9dd851f1e@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <12d8da90-f092-449f-af6b-14b9dd851f1e@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: fbEJ5Gx_vyeNRKMSU7mxtCNHtUuNsU7w
-X-Proofpoint-ORIG-GUID: fbEJ5Gx_vyeNRKMSU7mxtCNHtUuNsU7w
-X-Authority-Analysis: v=2.4 cv=a9sAM0SF c=1 sm=1 tr=0 ts=6a0c4ae4 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=77sk_vpZ_aVc8lPgWwIA:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
- a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE5MDExNCBTYWx0ZWRfXxRQxQvmNPZbQ
- VUQa4kZNPpXVw1mnA5cgXRsaxafh9GDqOkEXkkj5gtKWu+IUipynXQHaYTOfLfK/eb/iyBqGyNd
- b4NuxHBQ+eyhHVNgEZxyCCmFDcHr8NWxql0LE2qnTWuUJ4ISp6HX0sPOBjrJMlYdxWst1EA58Rc
- hf0wrpsVnjlzFCiEqZDIM7H5rw/CqGPb0WT3hSfCIB/frtabF7mGeYAXQEdWksa2HBqiVL/K0l9
- 1c8QvL1S9lFY5pJ979QfBqedfKUXLoZGzV8G7SKMIgRPPkQVXWgQqweHhl9a6A7FpfuwNtbanrN
- 2wxC2Z7KkKNOgTf4esnwoKKoAOdK6rTAkfC01CwgXDe0DxMBgAmJi3zpAydYV4aMZR/6HFzhuPc
- wT5GGtfDn/yZcNU3XmrxyTK+KB9djQ2sQtgSJYUv781qOTGSt5lGaiW31rYX+kxR13KKxjIFQJr
- 0Fb0hjoZU2/xyUfJy9w==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-19_03,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 impostorscore=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 suspectscore=0 spamscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605190114
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 21D2817
+X-Stat-Signature: zwkjfey7d6pb8qo4xjwtrdd13zj5n5k8
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+rDOXmIL87qB7jsKYFU+X9z/3f4Bg6Dds=
+X-HE-Tag: 1779193872-357857
+X-HE-Meta: U2FsdGVkX19rSaAw6l57NoZvFerrq/nFBEAwmGs8zpTJxAGA+SNZ2x4DVTFgZPAO/hypWT2JAnaUDw/P1xssvGeKyqU+daKcmqugjTsETVOWB+uPpvpy5329imGNEdkWVvJeEOwSbiByRvw3KNlPnj0yvD8R48SjoI7XJxpy/Au8w17zYS+DHpGne2rnK/wvkpwUut7m+rUwApuzf7pOeGW2xograSa3ps6O2aPqQFN1UUM7wDDXB2eLuVMvR9gr2rMyklhYwxGsIQLy56AhdF6j2dmjK5Is2OgpkJWjJf3eiIQMvm3w/w9p4D8N3AFy+n4Yv4yLVBmcDGdcHVHinCCqayTce2jorqWxiDy1x1q9NYuhGg/ka7vANiYKVik+nEYwC37Lm3Zc2vJwFW59tssRqnjiymVOODvJH9jQIYMkHgy951Ytg2hsyWodoSI/UHcvcg5eeByqxclPU6TI70QM1m5bEZO1SO4cEJ7gtXA=
 
-On 5/19/26 12:59 PM, Mukesh Savaliya wrote:
-> Hi Praveen, one question below.
+On Tue, 19 May 2026 18:53:02 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> > If BTF is in the kernel, then instead, the $skbaddr can be typecast to
+> > sk_buff and use the normal dereference logic.
+> > 
+> >   # echo 'e:xmit net.net_dev_xmit (sk_buff*)$skbaddr->dev->name:string' >> dynamic_events  
 > 
-> On 5/18/2026 10:30 PM, Praveen Talari wrote:
->> Add tracepoints to the Qualcomm GENI (Generic Interface) SPI driver.
->> These trace events enable runtime debugging and performance analysis
->> of SPI operations.
->>
->> The trace events capture SPI clock configuration, setup parameters,
->> transfer details, interrupt status.
-> Don't you need trace logs around PM operations ? ie. runtime and system PM ?
+> Ah, eprobes supports "$PARAM" to access its parameter by name.
+> That is a bit complicated. Should we allow user to access
+> parameter without '$' prefix for eprobes?
 
-The PM core provides a couple, are those enough?
+I guess.
 
-Konrad
+> 
+> >   # echo 1 > events/eprobes/xmit/enable
+> >   # cat trace
+> > [..]
+> >     sshd-session-1022    [000] b..2.   860.249343: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.250061: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.250142: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.263553: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.283820: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.302716: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.322905: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.342828: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.362268: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.382335: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.400856: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> >     sshd-session-1022    [000] b..2.   860.419893: xmit: (net.net_dev_xmit) arg1="enp7s0"  
+> 
+> Looks very nice!
+> 
+> > 
+> > The syntax is simply: ([STRUCT]*)(VAR)->FIELD[->FIELD..]  
+> 
+> Is the STRUCT optional?? (because [] means optional.) I guess no.
+
+Oops, no, I was tired when I wrote this, and just put '[' and ']' to make
+it a variable. But I wasn't consistent. I'll fix that to be:
+
+  The syntax is simply: (STRUCT*)(VAR)->FIELD[->FIELD..]  
+
+> 
+> I think we maybe possible to skip '*' (Or, make it optional)
+> because this is not C-like typecasting, we don't support "struct"
+> reserved word, and it does not support white-spaces in each
+> fetcharg. In this case, (STRUCT)VAR->FIELD should work.
+
+I could remove the '*' as it doesn't support the "struct" C word.
+
+> 
+> BTW, I'm also considering to support new cast syntax, which allows
+> us to derefer a pointer with "container_of". This is typically
+> used in the kernel.
+> 
+> We usually see this pattern:
+> 
+> struct {
+> 	unsigned long		data;
+> 	struct list_head	list;
+> } foo;
+> 
+> void callback(struct list_head *foo_list)
+> {
+> 	unsigned long data = container_of(foo_list, struct foo, list)->data;
+> 	...
+> }
+> 
+> To access @data, simple casting does not work. Thus we need a
+> new syntax:
+> 
+> 	(STRUCT)(PTR,ASSIGN)->FIELD
+> 
+> So the above case, we can do:
+> 
+> 	data=(foo)(foo_list,list)->data
+
+Hmm, it may be better to make it one parenthesis?
+
+       (STRUCT,PTR,ASSIGN)->FIELD
+
+       data=(foo,foo_list,list)->data
+
+That would make it easier to differentiate between a simple "typecast" and
+a container_of() by checking if the content between the parenthesis has a
+comma.
+
+Maybe even reorder it to:
+
+       (PTR,STRUCT,ASSIGN)->FIELD
+
+       data=(foo_list,foo,list)->data
+
+to match the order of container_of():
+
+      data = container_of(foo_list, struct foo, list)->data;
+
+?
+
+> 
+> This is naturally extend the type casting to support container_of()
+> equivalent casting.
+> 
+> > 
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
+> > Changes since v3: https://patch.msgid.link/20260518095832.52659a3a@gandalf.local.home
+> > 
+> >  *** COMPLETE REWRITE FROM V3 ***
+> > 
+> > - Rewrote it to use typecasting instead of simply replacing BTF names with
+> >   offsets.
+> > 
+> >  Documentation/trace/kprobetrace.rst |   3 +
+> >  kernel/trace/trace_probe.c          | 110 ++++++++++++++++++++++++----
+> >  kernel/trace/trace_probe.h          |   3 +
+> >  3 files changed, 100 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+> > index 3b6791c17e9b..450ac646fe4c 100644
+> > --- a/Documentation/trace/kprobetrace.rst
+> > +++ b/Documentation/trace/kprobetrace.rst
+> > @@ -54,6 +54,9 @@ Synopsis of kprobe_events
+> >    $retval	: Fetch return value.(\*2)
+> >    $comm		: Fetch current task comm.
+> >    +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
+> > +  (STRUCT*)FETCHARG->FIELD[->FIELD] : If BTF is supported, typecast FETCHARG to
+> > +                  a pointer to STRUCT and then derference the pointer defined by
+> > +                  ->FIELD.
+> >    \IMM		: Store an immediate value to the argument.
+> >    NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+> >    FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index e0d3a0da26af..b0829eb1cb52 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -464,6 +464,26 @@ static const char *fetch_type_from_btf_type(struct btf *btf,
+> >  	return NULL;
+> >  }
+> >  
+> > +static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
+> > +{
+> > +	int id;
+> > +
+> > +	if (!ctx->btf) {
+> > +		struct btf *btf;  
+> 
+> This needs an empty line here.
+
+Sure.
+
+For conditional blocks, I don't always add a newline, but this is your code
+and I'll follow your suggestions.
+
+> 
+> > +		id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
+> > +		if (id < 0)
+> > +			return -EINVAL;  
+> 
+> Why don't you return id (it has corresponding errno)?
+
+Because I forgot to ;-)
+
+> 
+> > +		ctx->btf = btf;
+> > +	} else {
+> > +		id = btf_find_by_name_kind(ctx->btf, sname, BTF_KIND_STRUCT);
+> > +		if (id < 0)
+> > +			return -EINVAL;  
+> 
+> Ditto.
+> 
+> > +	}
+> > +
+> > +	ctx->last_struct = btf_type_by_id(ctx->btf, id);
+> > +	return 0;
+> > +}
+> > +
+> >  static int query_btf_context(struct traceprobe_parse_context *ctx)
+> >  {
+> >  	const struct btf_param *param;
+> > @@ -471,12 +491,12 @@ static int query_btf_context(struct traceprobe_parse_context *ctx)
+> >  	struct btf *btf;
+> >  	s32 nr;
+> >  
+> > -	if (ctx->btf)
+> > -		return 0;
+> > -
+> >  	if (!ctx->funcname)
+> >  		return -EINVAL;
+> >  
+> > +	if (ctx->btf)
+> > +		return 0;
+> > +  
+> 
+> Could you tell me why this order is changed?
+> I think this type casting will allow us to skip checking funcname
+> because btf context is already specified.
+
+I wanted this to fail if btf was already set but funcname wasn't, because
+this should only be called for functions.
+
+> 
+> Ah, BTW, we may need to use a special struct btf* for type
+> casting. If the target function is in a module and the
+> casting type is defined in vmlinux, those are stored in
+> the different places...
+
+OK, I'll make a separate btf for it then. I'll have to make sure the btf
+used for parsing knows which one to use. Shouldn't be too hard if we check
+for the STRUCT flag in the ctx->flags.
+
+> 
+> 
+> for example,
+> 
+>  p funcA (foo)$arg1->bar buz
+> 
+> In this case, buz needs to use BTF including funcA.
+> Maybe we need to introduce ctx->func_btf, which resets ctx->btf
+> in traceprobe_parse_probe_arg_body() where parse_probe_arg()
+> is calling, e.g.
+> 
+> 	ctx->last_type = NULL;
+> +	if (ctx->btf)
+> +		btf_put(ctx->btf);
+> +	ctx->btf = ctx->func_btf;
+> 	ret = parse_probe_arg(arg, parg->type, &code, &code[FETCH_INSN_MAX - 1],
+> 			      ctx);
+> 
+> 
+> >  	type = btf_find_func_proto(ctx->funcname, &btf);
+> >  	if (!type)
+> >  		return -ENOENT;
+> > @@ -514,6 +534,7 @@ static void clear_btf_context(struct traceprobe_parse_context *ctx)
+> >  		ctx->proto = NULL;
+> >  		ctx->params = NULL;
+> >  		ctx->nr_params = 0;
+> > +		ctx->last_struct = NULL;
+> >  	}
+> >  }
+> >  
+> > @@ -554,22 +575,28 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+> >  	struct fetch_insn *code = *pcode;
+> >  	const struct btf_member *field;
+> >  	u32 bitoffs, anon_offs;
+> > +	bool is_struct = ctx->flags & TPARG_FL_STRUCT;
+> >  	char *next;
+> >  	int is_ptr;
+> >  	s32 tid;
+> >  
+> >  	do {
+> > -		/* Outer loop for solving arrow operator ('->') */
+> > -		if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
+> > -			trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
+> > -			return -EINVAL;
+> > -		}
+> > -		/* Convert a struct pointer type to a struct type */
+> > -		type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
+> > -		if (!type) {
+> > -			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> > -			return -EINVAL;
+> > +		if (!is_struct) {
+> > +			/* Outer loop for solving arrow operator ('->') */
+> > +			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
+> > +				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
+> > +				return -EINVAL;
+> > +			}
+> > +
+> > +			/* Convert a struct pointer type to a struct type */
+> > +			type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
+> > +			if (!type) {
+> > +				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> > +				return -EINVAL;
+> > +			}
+> >  		}
+> > +		/* Only the first type can skip being a pointer */
+> > +		is_struct = false;
+> >  
+> >  		bitoffs = 0;
+> >  		do {
+> > @@ -635,12 +662,12 @@ static int parse_btf_arg(char *varname,
+> >  {
+> >  	struct fetch_insn *code = *pcode;
+> >  	const struct btf_param *params;
+> > -	const struct btf_type *type;
+> > +	const struct btf_type *type = NULL;
+> >  	char *field = NULL;
+> >  	int i, is_ptr, ret;
+> >  	u32 tid;
+> >  
+> > -	if (WARN_ON_ONCE(!ctx->funcname))
+> > +	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_STRUCT)))
+> >  		return -EINVAL;
+> >  
+> >  	is_ptr = split_next_field(varname, &field, ctx);
+> > @@ -704,11 +731,18 @@ static int parse_btf_arg(char *varname,
+> >  			goto found;
+> >  		}
+> >  	}
+> > +
+> > +	if (ctx->flags & TPARG_FL_STRUCT) {
+> > +		type = ctx->last_struct;
+> > +		goto found;  
+> 
+> I rather like to jump type_found: label instead of
+> checking !type. (Or, save tid instead of type)
+> 
+
+OK.
+
+> > +	}
+> > +
+> >  	trace_probe_log_err(ctx->offset, NO_BTFARG);
+> >  	return -ENOENT;
+> >  
+> >  found:
+> > -	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
+> > +	if (!type)
+> > +		type = btf_type_skip_modifiers(ctx->btf, tid, &tid);  
+> 
+> type_found:
+> 
+> >  	if (!type) {
+> >  		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> >  		return -EINVAL;
+> > @@ -952,6 +986,12 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
+> >  	int ret = 0;
+> >  	int len;
+> >  
+> > +	if (ctx->flags & TPARG_FL_STRUCT) {
+> > +		ret = parse_btf_arg(orig_arg, pcode, end, ctx);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +	}
+> > +
+> >  	if (ctx->flags & TPARG_FL_TEVENT) {
+> >  		if (code->data)
+> >  			return -EFAULT;
+> > @@ -1231,6 +1271,43 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+> >  				code->op = FETCH_OP_IMM;
+> >  		}
+> >  		break;
+> > +	case '(':
+> > +		tmp = strrchr(arg, ')');  
+> 
+> OK, in this step, we don't support nested cast etc. so this works.
+> 
+> > +		if (!tmp) {
+> > +			trace_probe_log_err(ctx->offset + strlen(arg),
+> > +					    DEREF_OPEN_BRACE);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		tmp--;
+> > +		if (*tmp != '*') {
+> > +			trace_probe_log_err(ctx->offset + (tmp - arg),
+> > +					    NO_PTR_STRCT);
+> > +			return -EINVAL;
+> > +		}  
+> 
+> So I think this can be optional, not an error.
+
+I'll just remove it.
+
+> 
+> > +		*tmp = '\0';
+> > +		ret = query_btf_struct(arg + 1, ctx);
+> > +		*tmp = '*';
+> > +
+> > +		if (ret < 0) {
+> > +			trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		ctx->flags |= TPARG_FL_STRUCT;
+> > +		tmp += 2;
+> > +
+> > +		if (*tmp != '$') {
+> > +			trace_probe_log_err(ctx->offset + (tmp - arg),
+> > +					    BAD_VAR);
+> > +			return -EINVAL;
+> > +		}  
+> 
+> Ok, this limitation will be removed afterwards.
+
+Yeah.
+
+Thanks for reviewing.
+
+-- Steve
