@@ -1,134 +1,458 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65063DF00B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 12:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5571C3D8128
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 12:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779278606; cv=none; b=nF2EIN1FacIzF8P/jA/3gqbFoc/Fu+Ca9eDOngWBd61a+/EOUdMl/Eaq09CdSXm3/zDfWHeQg06fQmFMRSPinxSO5a08cMh7/MSFlX3DOimCf3PSjHKLUddj9Hud+AeAlP0/FxqEop620bsoRUAEWGqNwlAnrR77Vqwlgtwm8Lo=
+	t=1779278710; cv=none; b=jc2o4jZqmfhrpMJI+pdLDeBuVhdYJv7LqdHyRERcFeHIs8Ul3+c3hsM1RTVE71sTjF/8MoSBXffs20vkr172nTQjGlyf2bRFtVwqvvuEeH9SmKq/MG2jFpCJfqEdxPdHZu2WzzKERRHy7h2mox4lZDZ4ZHn/waytJ+YI419x4Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779278606; c=relaxed/simple;
-	bh=CtnAB2ZbclNUYrpWW7beXYEowxt1rzkSH4c465Z18Qc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pkiNLKmixNx2roU9/h3zSo40klOhT+xaCtG0QW0AwpbbOblpz5OmH29t0eN8b+tcPHjInocwFNaBCKeD1Aax1sUvfWWpghh+uKM57M4FMPPv40vLmgjfk9VxTIvoMKVH9QKAscTe6g+fo/BWvWb5Fb4eeOzG6I2CMMkIFxoF92Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i5qiWtqp; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779278710; c=relaxed/simple;
+	bh=KqlyTxdegMwZlZGk7oSjJ7XngOUM/Zk/4OzzN77LfHE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PrxC+QwBctnZ1rimBRzcCV+wnJ1Xm7z9TtLfu7T7wOf9C/bgRCkiHtyx92JEQxQ+jGIzXOvkt6SOgmwBqNigZue6QSK2erbVkaGK/FBG0SdU1tyk/YblgURB1dl4Kyp00D+lyCOvcr2+/wivQgUaY0A6pwoz37GNYlyFuKxvDdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=itHQWgVM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5qiWtqp"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-44ccbd3290aso4479555f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 05:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779278602; x=1779883402; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CtnAB2ZbclNUYrpWW7beXYEowxt1rzkSH4c465Z18Qc=;
-        b=i5qiWtqpWVIqvgyi56dBjpao3pSyOKqILxqU4RH8qgRUShA5P0ZwUuV0mWv5sbojiu
-         iaeLU5I1f/4k9wG0h/SApvllXzY6HjcIuutlVjbY/HIzaBKwgSVcRiDCKxYLZv+9SesX
-         wP2ob9zinx1AYD9oKXbTMLK6tb9jCOeR4pe9oUpvB8FhzRDuYNSMVqf3uDnAVpAHR78a
-         dTk1lVAsIXh22sJs4q/7d4Z3tZoMPcVka5WxFQup1rGyV4TmkNL7Bxgd22oAzY0WoU/H
-         pJqN58/LPE+wvRe6n6+oQFl63Vs4ULwPv7Cqnadm8WIBRaJMmOvOu4XvFzXdQFJnfKb5
-         WCEA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="itHQWgVM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779278707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X2ZE/pE5hSr2fTsHeV6QyYnobMcbWzfo9dXFNayhhUc=;
+	b=itHQWgVMnjlsKw1fsDxaiEtIa6LLAhBfyJ0D7cFePzn8RDt2fIgOGMtOtrRgAXBdYCa9tu
+	oU852mhfDxTH1Xtw9xH3VDh6t/C02pMqwMtmY8BOhif3FzTW7Va35h5ZYvNrbs/2dyRZux
+	efipdQZXJagxyXAM9MVb9Snim+rxYBM=
+Received: from mail-yx1-f72.google.com (mail-yx1-f72.google.com
+ [74.125.224.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-GK4VvtfYPCK87j09ssaDiQ-1; Wed, 20 May 2026 08:05:06 -0400
+X-MC-Unique: GK4VvtfYPCK87j09ssaDiQ-1
+X-Mimecast-MFC-AGG-ID: GK4VvtfYPCK87j09ssaDiQ_1779278705
+Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-65c3132b7e5so99175d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 05:05:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779278602; x=1779883402;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CtnAB2ZbclNUYrpWW7beXYEowxt1rzkSH4c465Z18Qc=;
-        b=NbArgex9XT+QMuH2wTc84EGLhzkzADHWR/a83YxFJlLRxcA2hIDX62pAi7e7sts7TU
-         f+FAuywnI5QCS7pTa+Y8WxjlaBR5fEljRV9xw5j3mkRM4jPetsO22uJXDMZLkPZoVcvz
-         VjKdO9IZH4Pf0e3+nnwgbdS0PwIiSLIaOAg7ZPdYcn6/b+HlWpFfLPYMKLnELRe/z7Wa
-         FueI5eFvQTTtQ1XAMerxcay66wJX6nZLQCjoKRzMgy5wksB6WrOH3OKH1e81v9xBXKMz
-         mos5sAnoszft/c7CKTA/oYvI0Q7Pyd0fv/Oa0FncN5TV3gwsSeNMRnOTyWd+Gs1BrpU7
-         cHXw==
-X-Forwarded-Encrypted: i=1; AFNElJ86/UUtXAmUfbBkdjDhDPc+oKKrWy2y81tbMqOivSstJyxL/rAZLRn2d8bhc8YoUz31URSoIytqpPou0ey7uMdfbZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYvHaogc/Q4rOjQ/sVozAUdh73kIhdobLrx6SxboU1EXSuiwwc
-	Z5WSymzPEeMaBZhVQew9CnvJ4r8nmAYKUhaVnOt5buZl3vbMo4aekw/k
-X-Gm-Gg: Acq92OGDp3EJrRDeCEVT3rJxjqwMtreGjutOR1tr7b/qpL7rgWW+9fZpHQHY9P2EPrp
-	s1qItjZ6+E36NYZZm5TTlEU/nuIPjgRM0qGLDla9FE3ZNVHo3Bpg+jenpN415LhFuddFeipem6i
-	DJLvnEjWaq3nfEBN+vG6b6/dgv2KNkt/PyS1g9HlO6FzfhW1S3qQV9dGVtamBRLkr1o0UDVmHvJ
-	fIr1QHW2Sstg7sWDu6I8i4SLi4omXoYRtYmpXpgCfjuXRXDvU+AQI5eHMwQFXXY6Ap5H/q3iTm4
-	cqWYdrVaPDY7F655o3gpRmGhfOc8KODalNThREyy+7PrXYR5G7AX6mQUDvhNUQhxlqgcOsKs/Z/
-	f/MV5HU7QDr+mD8ct1p39sPkkiIjrRLy8qfaa8An18XFxMyPnHKAT9nb+7J0TLA/ITYEcCMMRre
-	S+OUQJO5eZSCIaS9zPn5bq/d6OhbhDHN/CLJ8/1RzSMk//UIUIopqtFN899SpFD8u+Ghffz7QAi
-	fdT5+hCWUsaog==
-X-Received: by 2002:a05:600c:491e:b0:48e:978f:c45a with SMTP id 5b1f17b1804b1-48fed455991mr226125105e9.19.1779278602148;
-        Wed, 20 May 2026 05:03:22 -0700 (PDT)
-Received: from orome (p200300e41f291e00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f29:1e00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48febe6b60csm193175225e9.6.2026.05.20.05.03.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 05:03:20 -0700 (PDT)
-Date: Wed, 20 May 2026 14:03:17 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Artur Kowalski <arturkow2000@gmail.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Subject: Re: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
-Message-ID: <ag2iF9bZJcBQ93lh@orome>
-References: <20260519-host1x-tracing-v1-1-55afb8cbd186@gmail.com>
- <20260519141059.77435501@fedora>
+        d=1e100.net; s=20251104; t=1779278705; x=1779883505;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=X2ZE/pE5hSr2fTsHeV6QyYnobMcbWzfo9dXFNayhhUc=;
+        b=Z6+AJ1h+9FqNuRvPVyqJiNUeWN7pcTguGOaf9TFI3aIlUlP/Y9HKZjA42UpaLqTI13
+         EbAvzc5ar2UQOkIQghBsjCvPMHn841ME2Po3upBtmUMoG9ku9ES/z7AC3wbs3EiUH743
+         IjxBi1GLrtaA/hd3PsVJ3yuR0uGeVRIeTYN5RnfgAT2SY6fEsUc/FIUYPLJ8VPV7Lh6S
+         Th0shNmGslE/SuGS4OtH8nPdQZ5/yz2SdVGmhXjQmdyEBdDxvR+jPPlunOMbz9OW6aBj
+         5UZoi0rUvxgGAcoTzLuyG0Wf5rI2zxyzPTqCgUBU5N4xEQK6EU5+B7GZzLVzN3PkX8EA
+         KU5g==
+X-Forwarded-Encrypted: i=1; AFNElJ8TDOVJb3mlaLzbmXdWNW6YInMf0YpmE/mnIonzvxtNo+Rs6xa6UBL1cQEVlSrVF5yYM+Hn9GAhKB20Y6julkBe5Mk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4xA5NnMYRWePhfV583oUCJCSihlJFnxESGFMfywDN2yGLIpHQ
+	mAnhdvWbPhT3ZPTAtussM30bOQte74olKD/cMnmIADfSS4Ze5/RxShIrgFxRB5Q6FcmSUGNq+Yn
+	zqwf3ht6Jpfv7SUtEZLbyF/xBl35Ns1I3C5N+sbSQWlGEr7mabZprNSoIid3ECYnDCfPusMa8Oh
+	u2fSrVjs3FJkH7FTFeXKnSMK9X8O+mamtfjStl7KAZFrXpBlEP
+X-Gm-Gg: Acq92OH4R4UoHUa3oZcHIv+UWSe2JjEYG19c/BTRxqXynoaO4whKok5UVP4X460ByuH
+	X6djcdhTeeicpUIL82Lb3wSmSviP67VMcXQ1W8TujJaOtlKaKI4NZ6OAYYezpcmFMIdgXaWYF5N
+	eAw7YWPeQMRdiCicifUJIkkxI9g2THpwCe7/PJo7rNqGEgtHpkKAnA1oL7oVAntD3e4O8j9sMlP
+	uAHxQ==
+X-Received: by 2002:a05:690e:d4c:b0:651:c38b:e60e with SMTP id 956f58d0204a3-65e22685cedmr22029134d50.4.1779278704938;
+        Wed, 20 May 2026 05:05:04 -0700 (PDT)
+X-Received: by 2002:a05:690e:d4c:b0:651:c38b:e60e with SMTP id
+ 956f58d0204a3-65e22685cedmr22029058d50.4.1779278704322; Wed, 20 May 2026
+ 05:05:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="d6arr666wdzokuxu"
-Content-Disposition: inline
-In-Reply-To: <20260519141059.77435501@fedora>
-
-
---d6arr666wdzokuxu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20260511185817.686831-1-npache@redhat.com> <20260511185817.686831-12-npache@redhat.com>
+ <20260512154431.jxcs632mqqatqtsw@master>
+In-Reply-To: <20260512154431.jxcs632mqqatqtsw@master>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 20 May 2026 06:05:31 -0600
+X-Gm-Features: AVHnY4IloSXg-o2aX0zma4RbhBcFkj0iqvrRQAFcLN19LiuJy6POHEMF7fysqUQ
+Message-ID: <CAA1CXcD2KPKFrwCZd2PatQhf_e1nrvCguPD77GcNOVPFZLvsew@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable v17 11/14] mm/khugepaged: Introduce mTHP
+ collapse support
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
+	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, 
+	baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com, 
+	catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
+	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
+	jackmanb@google.com, jannh@google.com, jglisse@google.com, 
+	joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev, 
+	liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com, 
+	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
+	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
+	rdunlap@infradead.org, rientjes@google.com, rostedt@goodmis.org, 
+	rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
+	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
+	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
+	zokeefe@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 98qRNkTMO4hg9kSXG46VnSrSRUtjsrUN_7Am234KKsc_1779278705
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
-MIME-Version: 1.0
 
-On Tue, May 19, 2026 at 02:10:59PM -0400, Steven Rostedt wrote:
-> On Tue, 19 May 2026 12:16:43 +0200
-> Artur Kowalski <arturkow2000@gmail.com> wrote:
->=20
-> > Use __assign_str and __get_str as required by tracing subsystem. Fixes
-> > string fields being rejected by the verifier and unreadable from
-> > userspace.
->=20
-> Does anyone use these tracepoints? The fact that they have been broken
-> for 5 years and nobody noticed makes me think they are useless.
->=20
-> I rather remove them than fix them, but if someone thinks that these
-> are still useful then by all means apply this patch.
->=20
-> Acked-by: Steven Rostedt <rostedt@goodmis.org>
+On Tue, May 12, 2026 at 9:44=E2=80=AFAM Wei Yang <richard.weiyang@gmail.com=
+> wrote:
+>
+> On Mon, May 11, 2026 at 12:58:11PM -0600, Nico Pache wrote:
+> >Enable khugepaged to collapse to mTHP orders. This patch implements the
+> >main scanning logic using a bitmap to track occupied pages and a stack
+> >structure that allows us to find optimal collapse sizes.
+> >
+> >Previous to this patch, PMD collapse had 3 main phases, a light weight
+> >scanning phase (mmap_read_lock) that determines a potential PMD
+> >collapse, an alloc phase (mmap unlocked), then finally heavier collapse
+> >phase (mmap_write_lock).
+> >
+> >To enabled mTHP collapse we make the following changes:
+> >
+> >During PMD scan phase, track occupied pages in a bitmap. When mTHP
+> >orders are enabled, we remove the restriction of max_ptes_none during th=
+e
+> >scan phase to avoid missing potential mTHP collapse candidates. Once we
+> >have scanned the full PMD range and updated the bitmap to track occupied
+> >pages, we use the bitmap to find the optimal mTHP size.
+> >
+> >Implement collapse_scan_bitmap() to perform binary recursion on the bitm=
+ap
+> >and determine the best eligible order for the collapse. A stack structur=
+e
+> >is used instead of traditional recursion to manage the search. This also
+> >prevents a traditional recursive approach when the kernel stack struct i=
+s
+> >limited. The algorithm recursively splits the bitmap into smaller chunks=
+ to
+> >find the highest order mTHPs that satisfy the collapse criteria. We star=
+t
+> >by attempting the PMD order, then moved on the consecutively lower order=
+s
+> >(mTHP collapse). The stack maintains a pair of variables (offset, order)=
+,
+> >indicating the number of PTEs from the start of the PMD, and the order o=
+f
+> >the potential collapse candidate.
+> >
+> >The algorithm for consuming the bitmap works as such:
+> >    1) push (0, HPAGE_PMD_ORDER) onto the stack
+> >    2) pop the stack
+> >    3) check if the number of set bits in that (offset,order) pair
+> >       statisfy the max_ptes_none threshold for that order
+> >    4) if yes, attempt collapse
+> >    5) if no (or collapse fails), push two new stack items representing
+> >       the left and right halves of the current bitmap range, at the
+> >       next lower order
+> >    6) repeat at step (2) until stack is empty.
+> >
+> >Below is a diagram representing the algorithm and stack items:
+> >
+> >                            offset   mid_offset
+> >                            |        |
+> >                            |        |
+> >                            v        v
+> >          ____________________________________
+> >         |          PTE Page Table            |
+> >         --------------------------------------
+> >                           <-------><------->
+> >                             order-1  order-1
+> >
+> >mTHP collapses reject regions containing swapped out or shared pages.
+> >This is because adding new entries can lead to new none pages, and these
+> >may lead to constant promotion into a higher order mTHP. A similar
+> >issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
+> >introducing at least 2x the number of pages, and on a future scan will
+> >satisfy the promotion condition once again. This issue is prevented via
+> >the collapse_max_ptes_none() function which imposes the max_ptes_none
+> >restrictions above.
+> >
+> >We currently only support mTHP collapse for max_ptes_none values of 0
+> >and HPAGE_PMD_NR - 1. resulting in the following behavior:
+> >
+> >    - max_ptes_none=3D0: Never introduce new empty pages during collapse
+> >    - max_ptes_none=3DHPAGE_PMD_NR-1: Always try collapse to the highest
+> >      available mTHP order
+> >
+> >Any other max_ptes_none value will emit a warning and skip mTHP collapse
+> >attempts. There should be no behavior change for PMD collapse.
+> >
+> >Once we determine what mTHP sizes fits best in that PMD range a collapse
+> >is attempted. A minimum collapse order of 2 is used as this is the lowes=
+t
+> >order supported by anon memory as defined by THP_ORDERS_ALL_ANON.
+> >
+> >Currently madv_collapse is not supported and will only attempt PMD
+> >collapse.
+> >
+> >We can also remove the check for is_khugepaged inside the PMD scan as
+> >the collapse_max_ptes_none() function handles this logic now.
+> >
+> >Signed-off-by: Nico Pache <npache@redhat.com>
+>
+> [...]
+>
+> >+static int mthp_collapse(struct mm_struct *mm, unsigned long address,
+> >+              int referenced, int unmapped, struct collapse_control *cc=
+,
+> >+              unsigned long enabled_orders)
+> >+{
+> >+      unsigned int nr_occupied_ptes, nr_ptes;
+> >+      int max_ptes_none, collapsed =3D 0, stack_size =3D 0;
+> >+      unsigned long collapse_address;
+> >+      struct mthp_range range;
+> >+      u16 offset;
+> >+      u8 order;
+> >+
+> >+      collapse_mthp_stack_push(cc, &stack_size, 0, HPAGE_PMD_ORDER);
+> >+
+> >+      while (stack_size) {
+> >+              range =3D collapse_mthp_stack_pop(cc, &stack_size);
+> >+              order =3D range.order;
+> >+              offset =3D range.offset;
+> >+              nr_ptes =3D 1UL << order;
+> >+
+> >+              if (!test_bit(order, &enabled_orders))
+> >+                      goto next_order;
+> >+
+> >+              max_ptes_none =3D collapse_max_ptes_none(cc, NULL, order)=
+;
+>
+> I am thinking whether there is a behavioral change for userfaultfd_armed(=
+vma).
+>
+> collapse_single_pmd()
+>     collapse_scan_pmd
+>         max_ptes_none =3D collapse_max_ptes_none(cc, vma)
+>         max_ptes_none =3D KHUGEPAGED_MAX_PTES_LIMIT                --- (1=
+)
+>         mthp_collapse
+>             max_ptes_none =3D collapse_max_ptes_none(cc, NULL)     --- (2=
+)
+>             collapse_huge_page(mm)
+>                 hugepage_vma_revalidate(&vma)
+>                 __collapse_huge_page_isolate(vma)
+>                     max_ptes_none =3D collapse_max_ptes_none(cc, vma)
+>
+> Before mthp_collapse() introduced, userfaultfd_armed(vma) is skipped if t=
+here
+> is any pte_none_or_zero() in collapse_scan_pmd().
+>
+> But now, max_ptes_none could be set to KHUGEPAGED_MAX_PTES_LIMIT at (1), =
+so
+> that we can scan all the pte to get the bitmap. This means
+> userfaultfd_armed(vma) could continue even with pte_none_or_zero().
+>
+> Then in mthp_collapse(), collapse_max_ptes_none() at (2) ignores
+> userfaultfd_armed(vma), which means it will continue to collapse a
+> userfaultfd_armed(vma) when there is pte_none_or_zero().
+>
+> The good news is we will stop at __collapse_huge_page_isolate(), where we
+> get collapse_max_ptes_none() with vma. But we already did a lot of work.
 
-I know that Mikko used them a lot early on, but this driver is pretty
-mature now, so we rarely need this low level of tracing. I'll defer to
-Mikko on whether we still need these.
+Good catch!
 
-Thierry
+As you stated we eventually ensure we respect the uffd checks. So
+there are no correctness issues, just the potential for wasted cycles.
 
---d6arr666wdzokuxu
-Content-Type: application/pgp-signature; name="signature.asc"
+At (1) we only do this if mTHPs are enabled. If that is the case, the
+only waste that can arise is at the PMD order, as that order respects
+the max_ptes_none value.
 
------BEGIN PGP SIGNATURE-----
+I think one approach is to gate (1) with the uffd check as well. That
+way, if mTHPs are enabled and its uffd-armed, max_ptes_none will stay
+at 0, and we bail early on the scan early if any none_ptes are hit.
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmoNowIACgkQ3SOs138+
-s6EmzxAAtBKSWrGlDxj+qSzQteKD0zS9CKlL5opFtbzDlSDXgJvEjK6vr6dhIXsy
-lo65nAdDGzecxHLrchhx90CM1Xnex4QBCQW3XvoXnqi0/O/MqkEvyjYYLV3gleUN
-/Nzd+0P5gQHmizLjew6pb2krhLLHyKxSWgiidTcaSfv9q3rmAxn/8aAM0mfzS1vv
-jMLhFnhLqwJttHjJxAkBGwG3EEr9Un4WHBqgXSaNCkW3Daky3xtNCE6AX3tpDp+6
-kMz+GKl4dvJ68H/wyLe+5KcxaRQBhxQq1Xn4XBxsRqmlONQgCZPNzUrBXq4Dr8tm
-oHfmQnlecryMR2SSrC16HVLbCaPWzNAjosK7ru7jyIsItxNj46UZZ47t/0/DKqHf
-CIVuVq8FPw2I4DIpsTpPACEvyfrXf9OylNjnHYIWdRvDkgOMKBLKtWqNv/eSdfwO
-40x+qNczPl6zz7BLB/5FEemEdfPdVIm5w70kOq0zeG6T4EglNJPWCj8dswr7nOD3
-FrmdOGbdDpxQxI4UiuMbsoSTU8mo5z+DqoE+YWkwH8jm4m4cp4tH2JdIlT20ZUcC
-sInAaMw/u4dPX8OTfWNCTED0S5sNMb7E5Yzy5s2c1yc0MQ0fDPYjPt4MPloupNR6
-lET8uxSahuvpLSevsopbI//mq4F7M0wGsgoXFb4qXk7pxgGxMu8=
-=tzJP
------END PGP SIGNATURE-----
+But then we lose the ability to collapse to mTHPs that are uffd-armed,
+where the PMD has none/zero-ptes and the mTHP fully has 0
+non-none/zero-ptes.
 
---d6arr666wdzokuxu--
+ie) assume a PMD is 16 x's [xxxxxxxx00000000]
+where x is a populated pte and 0 is not
+If we guard this scan (1), then we will never check if its possible to
+collapse to the smaller orders.
+
+Let me know if you see a flaw in my logic, I think it's best to keep it as =
+is?
+
+>
+> Not sure if I missed something.
+>
+> >+
+> >+              if (max_ptes_none < 0)
+> >+                      return collapsed;
+> >+
+> >+              nr_occupied_ptes =3D collapse_mthp_count_present(cc, offs=
+et,
+> >+                                                             nr_ptes);
+> >+
+> >+              if (nr_occupied_ptes >=3D nr_ptes - max_ptes_none) {
+> >+                      int ret;
+> >+
+> >+                      collapse_address =3D address + offset * PAGE_SIZE=
+;
+> >+                      ret =3D collapse_huge_page(mm, collapse_address, =
+referenced,
+> >+                                               unmapped, cc, order);
+> >+                      if (ret =3D=3D SCAN_SUCCEED) {
+> >+                              collapsed +=3D nr_ptes;
+> >+                              continue;
+> >+                      }
+> >+              }
+> >+
+> >+next_order:
+> >+              if (order > KHUGEPAGED_MIN_MTHP_ORDER) {
+> >+                      const u8 next_order =3D order - 1;
+> >+                      const u16 mid_offset =3D offset + (nr_ptes / 2);
+> >+
+> >+                      collapse_mthp_stack_push(cc, &stack_size, mid_off=
+set,
+> >+                                               next_order);
+> >+                      collapse_mthp_stack_push(cc, &stack_size, offset,
+> >+                                               next_order);
+> >+              }
+> >+      }
+> >+      return collapsed;
+> >+}
+> >+
+> > static enum scan_result collapse_scan_pmd(struct mm_struct *mm,
+> >               struct vm_area_struct *vma, unsigned long start_addr,
+> >               bool *lock_dropped, struct collapse_control *cc)
+> > {
+> >-      const int max_ptes_none =3D collapse_max_ptes_none(cc, vma, HPAGE=
+_PMD_ORDER);
+> >+      int max_ptes_none =3D collapse_max_ptes_none(cc, vma, HPAGE_PMD_O=
+RDER);
+> >       const unsigned int max_ptes_shared =3D collapse_max_ptes_shared(c=
+c, HPAGE_PMD_ORDER);
+> >       const unsigned int max_ptes_swap =3D collapse_max_ptes_swap(cc, H=
+PAGE_PMD_ORDER);
+> >+      enum tva_type tva_flags =3D cc->is_khugepaged ? TVA_KHUGEPAGED : =
+TVA_FORCED_COLLAPSE;
+> >       pmd_t *pmd;
+> >-      pte_t *pte, *_pte;
+> >-      int none_or_zero =3D 0, shared =3D 0, referenced =3D 0;
+> >+      pte_t *pte, *_pte, pteval;
+> >+      int i;
+> >+      int none_or_zero =3D 0, shared =3D 0, nr_collapsed =3D 0, referen=
+ced =3D 0;
+> >       enum scan_result result =3D SCAN_FAIL;
+> >       struct page *page =3D NULL;
+> >       struct folio *folio =3D NULL;
+> >       unsigned long addr;
+> >+      unsigned long enabled_orders;
+> >       spinlock_t *ptl;
+> >       int node =3D NUMA_NO_NODE, unmapped =3D 0;
+> >
+> >@@ -1429,8 +1579,19 @@ static enum scan_result collapse_scan_pmd(struct =
+mm_struct *mm,
+> >               goto out;
+> >       }
+> >
+> >+      bitmap_zero(cc->mthp_bitmap, MAX_PTRS_PER_PTE);
+> >       memset(cc->node_load, 0, sizeof(cc->node_load));
+> >       nodes_clear(cc->alloc_nmask);
+> >+
+> >+      enabled_orders =3D collapse_allowable_orders(vma, vma->vm_flags, =
+tva_flags);
+>
+> Would it be 0 at this point?
+
+If your question relates to the issue you brought up above, then yes,
+max_ptes_none would be 0 if it's uffd-armed. We must recheck the
+uffd-armed status before modifying it to 511.
+
+>
+> >+
+> >+      /*
+> >+       * If PMD is the only enabled order, enforce max_ptes_none, other=
+wise
+> >+       * scan all pages to populate the bitmap for mTHP collapse.
+> >+       */
+> >+      if (enabled_orders !=3D BIT(HPAGE_PMD_ORDER))
+> >+              max_ptes_none =3D KHUGEPAGED_MAX_PTES_LIMIT;
+> >+
+> >       pte =3D pte_offset_map_lock(mm, pmd, start_addr, &ptl);
+> >       if (!pte) {
+> >               cc->progress++;
+> >@@ -1438,11 +1599,13 @@ static enum scan_result collapse_scan_pmd(struct=
+ mm_struct *mm,
+> >               goto out;
+> >       }
+> >
+> >-      for (addr =3D start_addr, _pte =3D pte; _pte < pte + HPAGE_PMD_NR=
+;
+> >-           _pte++, addr +=3D PAGE_SIZE) {
+> >+      for (i =3D 0; i < HPAGE_PMD_NR; i++) {
+> >+              _pte =3D pte + i;
+> >+              addr =3D start_addr + i * PAGE_SIZE;
+> >+              pteval =3D ptep_get(_pte);
+> >+
+> >               cc->progress++;
+> >
+> >-              pte_t pteval =3D ptep_get(_pte);
+> >               if (pte_none_or_zero(pteval)) {
+> >                       if (++none_or_zero > max_ptes_none) {
+> >                               result =3D SCAN_EXCEED_NONE_PTE;
+> >@@ -1522,6 +1685,8 @@ static enum scan_result collapse_scan_pmd(struct m=
+m_struct *mm,
+> >                       }
+> >               }
+> >
+> >+              /* Set bit for occupied pages */
+> >+              __set_bit(i, cc->mthp_bitmap);
+> >               /*
+> >                * Record which node the original page is from and save t=
+his
+> >                * information to cc->node_load[].
+> >@@ -1580,10 +1745,11 @@ static enum scan_result collapse_scan_pmd(struct=
+ mm_struct *mm,
+> >       if (result =3D=3D SCAN_SUCCEED) {
+> >               /* collapse_huge_page expects the lock to be dropped befo=
+re calling */
+> >               mmap_read_unlock(mm);
+> >-              result =3D collapse_huge_page(mm, start_addr, referenced,
+> >-                                          unmapped, cc, HPAGE_PMD_ORDER=
+);
+> >+              nr_collapsed =3D mthp_collapse(mm, start_addr, referenced=
+, unmapped,
+> >+                                            cc, enabled_orders);
+> >               /* collapse_huge_page will return with the mmap_lock rele=
+ased */
+>
+> collapse_huge_page will return with mmap_lock released, but mthp_collapse=
+()
+> may not?
+
+We are now releasing the lock before calling mthp_collapse, which
+subsequently calls collapse_huge_page. Even if `collapse_huge_page` is
+never called-- say, because enabled_orders is 0 (which should not
+happen) and all collapse orders are skipped (never calling
+collapse_huge_page)-- we still return here with the lock dropped.
+
+I think this is sound. Let me know if you think differently.
+
+Cheers :)
+-- Nico
+
+>
+> >               *lock_dropped =3D true;
+> >+              result =3D nr_collapsed ? SCAN_SUCCEED : SCAN_FAIL;
+> >       }
+> > out:
+> >       trace_mm_khugepaged_scan_pmd(mm, folio, referenced,
+> >--
+> >2.54.0
+>
+> --
+> Wei Yang
+> Help you, Help me
+>
+
