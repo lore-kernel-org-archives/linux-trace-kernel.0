@@ -1,42 +1,294 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C70425CEE;
-	Wed, 20 May 2026 18:46:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7914D3FCB27;
+	Wed, 20 May 2026 18:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779302818; cv=none; b=pWzBsHsgKShj+yJrXIdl77IzIeB1gCq33+IYpjyRQTSJEbV5XvUJBO24zGekF3XZ3+d+DJduHkGZNtB/NyKZhRgHB8kRp1Gl+/e4lgj/VoxNFK7Ws4gq2SBQ0QEAamYbh5TIVSMWpVEoNrlfjuzzf4E3fviZCOAxSjIJb5QBym0=
+	t=1779303002; cv=none; b=aoFEilB2A3HNNplN9l0l/cy7V9DOVCF3n3VFxrJ2gUToNZF137vkz3D/oLjkEfREXY6vZBMom3YFRCwdtqRvAM2YHtMg/JYLwfy9K8g6BZLdBRvxCclp5DevDDy0nnXyEd7fSNz/n4qJhVPHEA6j2FV99dQlTezzKZZqem4/cOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779302818; c=relaxed/simple;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	h=Message-ID:Date:From:To; b=VT1FEJzayTYfeXl6TVNMo+4M7g+fq4lHm8T5T+h6V2zGBVHvoCNVheh8RHkb1YeDa/Y4TZGj/VOjd8HRTbTAzVr2KRYBSvFsRYbZoW9qus8rXFTzRvGVzO2nTmBbKShi7JHcdgqiVHEHbzB8SGqLMZyAg7NJ+9XKIxve9nPBAVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8GBZDxW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779303002; c=relaxed/simple;
+	bh=j6aav4uC8PRI45cHwcHaJJN76oR3obz5YqJIVWeOP74=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=uV9AlF/9HzOvwdlGn0x+s2fa68fX6nxW4JI2GrRMHh9XKlO9ooc7JQSQaSIETj3rAXQ89l3y9ThnnRItmrmGmDCa7wVjVLffvUeldEd77fq0t60YXMd2kEq8zHzCWL7FwfLsm5cOHdu6YRsSZ8aiemKUp0Ln6Fo7qo9A+8IpAy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9ej5+fF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8GBZDxW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB5781F00893;
-	Wed, 20 May 2026 18:46:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9ej5+fF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080511F0089B;
+	Wed, 20 May 2026 18:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779302816;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=; h=Date:From:To;
-	b=S8GBZDxWCVMLaFoTqI/eRIsOPAVjqg9Rv7/wIq68Da32gyXOCTaymtjZyGjus8vqI
-	 vvixmkyxtoWclg4Jk+lMGXcfG4JHtNNmtWlwjr+GEzXa3evmYde5xO95B3tp5LlWu7
-	 SL3fLNmNUP38idDCbPXIoD/DN1AbyXxypAGJ+IbrzeeImnkTUWCpbHKWsYtlERkxTd
-	 w1XWhs9j3nwu4FM9Dgt203T9p439ehbxj36eBsmIM4T7OWvRILijw8QpIGlx6vyNNo
-	 BGcusSoC/aY6MH5VwGLm/mqVqupeYrPicypGgaFtq4Zq5t2k31Y0S7OjTgQq0estRW
-	 DdrqtuqHCfV6Q==
+	s=k20260515; t=1779302998;
+	bh=fJlundH3mC+rSYNjlNxiCzbQLfr+Nqwx+hUjeanTfKM=;
+	h=Date:From:To:Cc:Subject:References;
+	b=Q9ej5+fFKg0bmc1FbiSdJZ/crEGdN1RRMA8AYrTPG3Huvh4LuoJCMHFL5sp+lt3s0
+	 6GboJqlnWNDCNwTOp5gRcDIJz4uswPOsoihSsx324QBQSLcihqG57g/mVA6RRaW+AT
+	 49HLQSgufvBABLQeMKQByAL/c+QQbFbqraL4+9t4Dt5JbSRGrsgtmDGbPvTxQyfy8G
+	 c/T549OCrJUi1vaWLZ9P77SRDwgsPjCdDancBS5lAHSG2itNSUFsZ3VyFIEOa2A2mI
+	 1GEx9WIPLa3cwoolCazJPs/T6PSTnShs3xWHHfBSwynNQaNJcmJh0S9AprGmxmN+pS
+	 mE9yBHrctoa8Q==
 Received: from rostedt by gandalf with local (Exim 4.99.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1wPlwq-00000004qFr-0iax;
-	Wed, 20 May 2026 14:47:16 -0400
-Message-ID: <20260520184510.766026238@kernel.org>
+	id 1wPlzl-00000004qRp-2Ol6;
+	Wed, 20 May 2026 14:50:17 -0400
+Message-ID: <20260520185017.411525220@kernel.org>
 User-Agent: quilt/0.69
-Date: Wed, 20 May 2026 14:45:10 -0400
+Date: Wed, 20 May 2026 14:49:41 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Ian Rogers <irogers@google.com>
+Subject: [PATCH v20 03/10] ring-buffer: Add persistent ring buffer invalid-page inject test
+References: <20260520184938.749337513@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+
+Add a self-corrupting test for the persistent ring buffer.
+
+This will inject an erroneous value to some sub-buffer pages (where
+the index is even or multiples of 5) in the persistent ring buffer
+when the kernel panics, and checks whether the number of detected
+invalid pages and the total entry_bytes are the same as the recorded
+values after reboot.
+
+This ensures that the kernel can correctly recover a partially
+corrupted persistent ring buffer after a reboot or panic.
+
+The test only runs on the persistent ring buffer whose name is
+"ptracingtest". The user has to fill it with events before a
+kernel panic.
+
+To run the test, enable CONFIG_RING_BUFFER_PERSISTENT_INJECT
+and add the following kernel cmdline:
+
+ reserve_mem=20M:2M:trace trace_instance=ptracingtest^traceoff@trace
+ panic=1
+
+Run the following commands after the 1st boot:
+
+ cd /sys/kernel/tracing/instances/ptracingtest
+ echo 1 > tracing_on
+ echo 1 > events/enable
+ sleep 3
+ echo c > /proc/sysrq-trigger
+
+After panic message, the kernel will reboot and run the verification
+on the persistent ring buffer, e.g.
+
+ Ring buffer meta [2] invalid buffer page detected
+ Ring buffer meta [2] is from previous boot! (318 pages discarded)
+ Ring buffer testing [2] invalid pages: PASSED (318/318)
+ Ring buffer testing [2] entry_bytes: PASSED (1300476/1300476)
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ include/linux/ring_buffer.h |  1 +
+ kernel/trace/Kconfig        | 34 ++++++++++++++++
+ kernel/trace/ring_buffer.c  | 79 +++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace.c        |  4 ++
+ 4 files changed, 118 insertions(+)
+
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 994f52b34344..0670742b2d60 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -238,6 +238,7 @@ int ring_buffer_subbuf_size_get(struct trace_buffer *buffer);
+ 
+ enum ring_buffer_flags {
+ 	RB_FL_OVERWRITE		= 1 << 0,
++	RB_FL_TESTING		= 1 << 1,
+ };
+ 
+ #ifdef CONFIG_RING_BUFFER
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index e130da35808f..084f34dc6c9f 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -1202,6 +1202,40 @@ config RING_BUFFER_VALIDATE_TIME_DELTAS
+ 	  Only say Y if you understand what this does, and you
+ 	  still want it enabled. Otherwise say N
+ 
++config RING_BUFFER_PERSISTENT_INJECT
++	bool "Enable persistent ring buffer error injection test"
++	depends on RING_BUFFER
++	help
++	  This option will have the kernel check if the persistent ring
++	  buffer is named "ptracingtest". and if so, it will corrupt some
++	  of its pages on a kernel panic. This is used to test if the
++	  persistent ring buffer can recover from some of its sub-buffers
++	  being corrupted.
++	  To use this, boot a kernel with a "ptracingtest" persistent
++	  ring buffer, e.g.
++
++	   reserve_mem=20M:2M:trace trace_instance=ptracingtest@trace panic=1
++
++	  And after the 1st boot, run the following commands:
++
++	   cd /sys/kernel/tracing/instances/ptracingtest
++	   echo 1 > events/enable
++	   echo 1 > tracing_on
++	   sleep 3
++	   echo c > /proc/sysrq-trigger
++
++	  After the panic message, the kernel will reboot and will show
++	  the test results in the console output.
++
++	  Note that events for the test ring buffer needs to be enabled
++	  prior to crashing the kernel so that the ring buffer has content
++	  that the test will corrupt.
++	  As the test will corrupt events in the "ptracingtest" persistent
++	  ring buffer, it should not be used for any other purpose other
++	  than this test.
++
++	  If unsure, say N
++
+ config MMIOTRACE_TEST
+ 	tristate "Test module for mmiotrace"
+ 	depends on MMIOTRACE && m
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index dca27ed6a3a1..ce645ca8425d 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -64,6 +64,10 @@ struct ring_buffer_cpu_meta {
+ 	unsigned long	commit_buffer;
+ 	__u32		subbuf_size;
+ 	__u32		nr_subbufs;
++#ifdef CONFIG_RING_BUFFER_PERSISTENT_INJECT
++	__u32		nr_invalid;
++	__u32		entry_bytes;
++#endif
+ 	int		buffers[];
+ };
+ 
+@@ -2094,6 +2098,21 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	if (discarded)
+ 		pr_cont(" (%d pages discarded)", discarded);
+ 	pr_cont("\n");
++
++#ifdef CONFIG_RING_BUFFER_PERSISTENT_INJECT
++	if (meta->nr_invalid)
++		pr_warn("Ring buffer testing [%d] invalid pages: %s (%d/%d)\n",
++			cpu_buffer->cpu,
++			(discarded == meta->nr_invalid) ? "PASSED" : "FAILED",
++			discarded, meta->nr_invalid);
++	if (meta->entry_bytes)
++		pr_warn("Ring buffer testing [%d] entry_bytes: %s (%ld/%ld)\n",
++			cpu_buffer->cpu,
++			(entry_bytes == meta->entry_bytes) ? "PASSED" : "FAILED",
++			(long)entry_bytes, (long)meta->entry_bytes);
++	meta->nr_invalid = 0;
++	meta->entry_bytes = 0;
++#endif
+ 	return;
+ 
+  invalid:
+@@ -2574,12 +2593,72 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ 	kfree(cpu_buffer);
+ }
+ 
++#ifdef CONFIG_RING_BUFFER_PERSISTENT_INJECT
++static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++	struct ring_buffer_cpu_meta *meta;
++	struct buffer_data_page *dpage;
++	unsigned long entry_bytes = 0;
++	unsigned long ptr;
++	int subbuf_size;
++	int invalid = 0;
++	int cpu;
++	int i;
++
++	if (!(buffer->flags & RB_FL_TESTING))
++		return;
++
++	guard(preempt)();
++	cpu = smp_processor_id();
++
++	cpu_buffer = buffer->buffers[cpu];
++	if (!cpu_buffer)
++		return;
++	meta = cpu_buffer->ring_meta;
++	if (!meta)
++		return;
++
++	ptr = (unsigned long)rb_subbufs_from_meta(meta);
++	subbuf_size = meta->subbuf_size;
++
++	for (i = 0; i < meta->nr_subbufs; i++) {
++		unsigned long idx = meta->buffers[i];
++
++		dpage = (void *)(ptr + idx * subbuf_size);
++		/* Skip unused pages */
++		if (!local_read(&dpage->commit))
++			continue;
++
++		/*
++		 * Invalidate even pages or multiples of 5. This will cause 3
++		 * contiguous invalidated(empty) pages.
++		 */
++		if (!(i & 0x1) || !(i % 5)) {
++			local_add(subbuf_size + 1, &dpage->commit);
++			invalid++;
++		} else {
++			/* Count total commit bytes. */
++			entry_bytes += local_read(&dpage->commit) & ~RB_MISSED_MASK;
++		}
++	}
++
++	pr_info("Inject invalidated %d pages on CPU%d, total size: %ld\n",
++		invalid, cpu, (long)entry_bytes);
++	meta->nr_invalid = invalid;
++	meta->entry_bytes = entry_bytes;
++}
++#else /* !CONFIG_RING_BUFFER_PERSISTENT_INJECT */
++#define rb_test_inject_invalid_pages(buffer)	do { } while (0)
++#endif
++
+ /* Stop recording on a persistent buffer and flush cache if needed. */
+ static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
+ {
+ 	struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
+ 
+ 	ring_buffer_record_off(buffer);
++	rb_test_inject_invalid_pages(buffer);
+ 	arch_ring_buffer_flush_range(buffer->range_addr_start, buffer->range_addr_end);
+ 	return NOTIFY_DONE;
+ }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6eb4d3097a4d..4573f65d68ce 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8383,6 +8383,8 @@ static void setup_trace_scratch(struct trace_array *tr,
+ 	memset(tscratch, 0, size);
+ }
+ 
++#define TRACE_TEST_PTRACING_NAME	"ptracingtest"
++
+ int allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
+ {
+ 	enum ring_buffer_flags rb_flags;
+@@ -8394,6 +8396,8 @@ int allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int
+ 	buf->tr = tr;
+ 
+ 	if (tr->range_addr_start && tr->range_addr_size) {
++		if (tr->name && !strcmp(tr->name, TRACE_TEST_PTRACING_NAME))
++			rb_flags |= RB_FL_TESTING;
+ 		/* Add scratch buffer to handle 128 modules */
+ 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
+ 						      tr->range_addr_start,
+-- 
+2.53.0
+
 
