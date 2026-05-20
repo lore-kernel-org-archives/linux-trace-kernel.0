@@ -1,187 +1,177 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FB936AB57
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 20:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779308754; cv=pass; b=BmOtd/KJZrOodL/x4wwYiLZH+E0gmqM8tSPhexCGxRwhTnulyRD0J4mplD6Xon3EGYES1jxDqKxRqPfSPwdDwvuxu+Rpt+ofZ7FnrreKUFeySIGEoA3FIMkrMqIIof6pWYsA9ftd+DQ9aFIfghwOuzP0mKc3UZl2IDM0af7Rpow=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779308754; c=relaxed/simple;
-	bh=0y54nFg7E7TaoQP1DdnZ3Kd8izilERRAcK4RB5V7BZY=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CYQn5/Dz45visUwNv3fVRaQFFtIPfDpo6VczzuJLjrIsm39kRabTOeMt0KS7fRdhXpDMalfVyY0LsifCR/ezL926Xv2eOzQRENNA9KNOXbVp0jsEbmTHgxk/wWF4HTI98G/x8BzxAtqBpfymYV7AGaUvQS4ZT835AS9LJSpboAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XwbOvfxx; arc=pass smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XwbOvfxx"
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-63201e0d6b8so4834825137.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 13:25:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779308752; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Ak8lmzmYYkLD2uwNjnbeS9S+4bw1TQf6TgbrOs3qCVqRxuZA3RA5+Jm68jsgk50ebR
-         ZM+aOPUacsMcyhEvVoSKn+AfPdcqpLFkm8pAtXM4MLzri3fLCB5X6/eeizGr8quKGsod
-         +sGQ5fqLFkpLl1/0K3R6w+svEYygW5LC5FgljKRCy4qsbAdSCEEVm0H5r9mqRAdQcFZb
-         46WIjF0Xethc+PvIKHO9Po+PlaprGGhM6b9YP8gll3UNqffT7S2KPGIc2kh6x+bGB3a0
-         tIpnHuP1hPLLsj1enJq65MLp32wHSZSH068TBlC3fYq60MByaLhyPuKYfFlDIbYqKdNl
-         v0kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=ANitp46w7gSSv/gOMNKZIor35cJdYj41rSqFN5gAzAs=;
-        fh=/+S45RwpYpL74y0NnvtlFmsB5EfLV5xAaUppswun9t4=;
-        b=EzBAiQCP5DQU4tBdT7kP99KzBb/vBpM+5k7q4qfL6ELoO96FcOIRIZ7ZBHuiXGJ7wN
-         82ajziCss8rdEqoZIhbcupZ/hDE4kO0NIqQsPYVOOgp92az299An0HAIs+EXgZSEZg5s
-         W6/kHfpXieAGZzvthuTdjjKy4otqBOmzxBpDftKoT3m9DAVkrgneVPS4msTbzeQ4uJdT
-         zyAAmcYiAXFeXt/YM4yqMcGDKmzZdwnKGX1BVtP59/lGrwacZ22HA3PDOI2c7avODnIm
-         +Oai+GXaaEStc91MEMDG8/eO1Be8UuXdO3/VsnV5rpz73Ts4znXTODURd9Yv1KZMzUr6
-         bxeA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779308752; x=1779913552; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANitp46w7gSSv/gOMNKZIor35cJdYj41rSqFN5gAzAs=;
-        b=XwbOvfxxojNTaZZg5xc85ejdAJLXOGIhj/ihtMbe8SNH7QL1VPADFRhf2ZTOAtHqFV
-         4k7u1P39PnV25R6VstbsKpEE4wyX0JhVZqvNJ8buaI6G2q2H87BuGLzAO2nbgYCxH5Ft
-         GnRlujwb7rxQbKACZqw87Jpo8dHQ7+08omse+HqQur9nmbbQbcYBGsu6Lt95kx29nZ8H
-         oiskX7kcTOn14ZXsouLohobxRDb0u/MaDuHoHkfQpRcCjf3Xaun8eVFfJz7WA98ch44F
-         epcFLiYRTMix2UmAxWj2gy1brAg77X3TksdbyI3HnBAOQPRug4fxELrHdLfrSuRtRNJl
-         7tmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779308752; x=1779913552;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ANitp46w7gSSv/gOMNKZIor35cJdYj41rSqFN5gAzAs=;
-        b=ourzO9NYIXn9OMJ/h5fX3rrvDIuPp1zJddkIv22t/skavKNM3FbikhAIyNT80M9+yI
-         ZWuJhoZeA0CTerhH0ywmZcIiSODYtkICok515Lj0XF8Jnt6pMpz/aWq/zSBLTECdU9Iz
-         /P6TlZQTsCqIDB6vqrY/iVYvlneJlSlNis56UIOoai75D2rgFrE7R3U6Hm9+S+qNU77a
-         G7qtJ4PimKZgVU3kUJFGQsf6SUQdLadDraUFZOsQ+ZBXKLNgNssEN87b9o3M7e5MZXJV
-         zDDRY3mUsqR6N17nf7pt4gAAheZW7GdKzdUymTx/DlfecMAzCZR1BOBv9RcC+hSP9kwh
-         f2WA==
-X-Forwarded-Encrypted: i=1; AFNElJ/gylpwKPaKng/oY8BA/Ixnhd0WrX2uRdkL0qSrLhR1AYpvszPc3+BvNm4gb8VW45ORjl7xBr9WvrE0SO0E9raIz60=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzENoDi1dI0U2W394lS3Q5RczK096XpYAFV27fNQ/lFvyMyJskh
-	TFAZbEzVyy/8Ab51N5SSMQ6cpNff62JN9aQN1JB+5+wVHIt3os4q6/Bwsf/pgrwzWNxe82TDVmS
-	Kqk+Q1ubln/Oh6TuGIElgQXuVZEdI0WFy9bZ0mtoC
-X-Gm-Gg: Acq92OFcxLKBRKHQCst3xB87ekxQ/QpjEit4LL3tTbXy22TGyign+atLpnff9U5Ybij
-	UrJjWKSPghL8X6w26RuKGYwhIrhLOfP5yWmKDbyafLK8g+QU3orM0HB3U1lB9SYWhYqN0i8QFqH
-	gN78mkS0sZyYrzPRHyZh4R74/OntBNarkqJL0AFFV+y1v8zT9TVg908z5oGZw9QtYdyyWkBWKJF
-	gceF9F6ImQVsctGkU3WHHI3ZaRau9haH0bGxh1ZCIzrmyY3nozYvXl+mWCP3v/Izu91jhzh++yA
-	1u9QtjLfg47l+PiOUgK/5EeCo29+AIKTZMRPTHTMDqwL2i4VvUO+5nKh2Aop0wZOaAus3bfiqmj
-	8YfMi
-X-Received: by 2002:a05:6102:2583:10b0:631:a34d:b671 with SMTP id
- ada2fe7eead31-673bf885fcfmr10043137.5.1779308751281; Wed, 20 May 2026
- 13:25:51 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 20 May 2026 13:25:50 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 20 May 2026 13:25:50 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <ag3DawWCcrpCkD0e@google.com>
-References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
- <20260507-gmem-inplace-conversion-v6-6-91ab5a8b19a4@google.com>
- <CA+EHjTxvLU4XDPXDXYXXWJES1OFQgN8VTRLMgCCNMwBE6Hk8tQ@mail.gmail.com> <ag3DawWCcrpCkD0e@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94265371CFF
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 20:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779308883; cv=none; b=a0Zup9EhlaRDMsJicYqiqs9OLzAhXYkV2RANgsCpmX35GH3tNgrFYfkngbqDKUS9yejqOw1d1h3khJOr60y8OZx69aMrIFLkdBFc4RRu+ozZh35zHhu20wwOJWO08sxUOEErQnD2T+zpgMfXl5uLBn23Pk9oU7gyP3GhQ/Wr5JY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779308883; c=relaxed/simple;
+	bh=m83fV44PE5AQzrXp1fABP39gZAo6a+ut5rx0vItetZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qA0aCysgNtwMuy/2bx6z+5x43j2BU0PctQ5NKZO9nGqbcAPf8XMtQ4imzDxx9Cp0tGpgEdmOtW2GXZEJr9VJUVzIKb82qIQz/FthNlQqQN/1GbOl9aWJZ7HAdfnSzbmtoAc4Z1lPYeMbOestAE0O+/lZbdZt0U4UGAPZ+qL8zd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 727AE1C1251;
+	Wed, 20 May 2026 20:27:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 7E08520025;
+	Wed, 20 May 2026 20:27:51 +0000 (UTC)
+Date: Wed, 20 May 2026 16:28:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Crystal Wood <crwood@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>,
+ Wander Lairson Costa <wander@redhat.com>, sashiko-bot@kernel.org,
+ sashiko-reviews@lists.linux.dev
+Subject: Re: [PATCH v2] tracing/osnoise: Array printk init and cleanup
+Message-ID: <20260520162810.3112a9d6@gandalf.local.home>
+In-Reply-To: <20260511223035.1475676-1-crwood@redhat.com>
+References: <20260511223035.1475676-1-crwood@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 20 May 2026 13:25:50 -0700
-X-Gm-Features: AVHnY4IBlIN9DzOr96NZ1ZZdFo1tnLv8pC5ZAKQh-hjUOng4U7q5IXabnxVwwpI
-Message-ID: <CAEvNRgGHHkvfJ-mn9rfDvS+_1ht08YatFWo-Swt+5wFSPnC9Nw@mail.gmail.com>
-Subject: Re: [PATCH v6 06/43] KVM: x86/mmu: Bug the VM if gmem attributes are
- queried to determine max mapping level
-To: Sean Christopherson <seanjc@google.com>, Fuad Tabba <tabba@google.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: pj8fyrwg5tntqjrf78cb5c91u6mmtpy4
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 7E08520025
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/ZEJSX/ozQlAg+w+NVgjJB/34YL8FPzk0=
+X-HE-Tag: 1779308871-93409
+X-HE-Meta: U2FsdGVkX1+KONntJ3OhdvTFfviCO09iljXKPwPtjnINQCWU0Jt/9uChU9JK8hnoNgHiYgpATkEC7/BZGuwZFwnPO1sA7VfpbC73IbNf14CN8LbTWOalYJgWYkoxTKKxwXa/Sivl/4yw1J/lTiOblHXdTTP02zoOsjxOFBKX6dxioAmzjLgZpygplub8fSQRFFle98F0nLqtE/LfR2zq1ycd0R+CJDutGcgn8pXccNjf3OgMi2Aqyh2pnN/hF4Hjql7frxV3HAhSrSfkwbvI+QrvguHYKdjXQU6coSLeDSxFoLj9rEG7fn97jbob0+h5I7NkDbrAVk5MvMt7ch72CG9dMOeU51pjC0nBPVUFZFoAXeeEiRMVAqyyAHh6KcEqgcW91OhcMvkUe/I9tQYG7Q==
 
-Sean Christopherson <seanjc@google.com> writes:
 
->
-> [...snip...]
->
->> > @@ -3357,6 +3357,15 @@ int kvm_mmu_max_mapping_level(struct kvm *kvm, struct kvm_page_fault *fault,
->> >                 max_level = fault->max_level;
->> >                 is_private = fault->is_private;
->> >         } else {
->> > +               /*
->> > +                * Memory attributes cannot be obtained from guest_memfd while
->> > +                * the MMU lock is held.
->> > +                */
->> > +               if (KVM_BUG_ON(static_call_query(__kvm_get_memory_attributes) ==
->> > +                              kvm_gmem_get_memory_attributes, kvm)) {
->> > +                       return 0;
->> > +               }
->> > +
->>
->> This directly takes the address of kvm_gmem_get_memory_attributes,
->> which is only compiled if CONFIG_KVM_GUEST_MEMFD=y. This breaks
->> ARCH=i386.
->
-> And this bleeds guest_memfd implementation details into places they don't belong.
-> The right way to deal with this is to use lockdep_assert_not_held() in whatever
-> code mustn't run with mmu_lock held.  E.g.
->
-> diff --git virt/kvm/guest_memfd.c virt/kvm/guest_memfd.c
-> index c9f155c2dc5c..3bea9c1137ef 100644
-> --- virt/kvm/guest_memfd.c
-> +++ virt/kvm/guest_memfd.c
-> @@ -547,6 +547,9 @@ unsigned long kvm_gmem_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
->         struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
->         struct inode *inode;
->
-> +       /* Comment goes here. */
-> +       lockdep_assert_not_held(&kvm->mmu_lock);
-> +
->         /*
->          * If this gfn has no associated memslot, there's no chance of the gfn
->          * being backed by private memory, since guest_memfd must be used for
->
-> But I'm confused, because kvm_gmem_get_memory_attributes() doesn't actually take
-> filemap_invalidate_lock(), so what exactly is the problem?
->
+[ Replying to Sashiko: https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/20260511223035.1475676-1-crwood%40redhat.com ]
 
-Ahh I can drop this patch now. kvm_gmem_get_memory_attributes() used to
-take the filemap_invalidate_lock(), but after Liam pointed out that
-the attributes maple tree should be using MT_FLAGS_USE_RCU, I stopped
-taking filemap_invalidate_lock() and forgot to undo this.
+> commit 859dc1eded9e36304f27e72643f28f30f327f078
+> Author: Crystal Wood <crwood@redhat.com>
+> tracing/osnoise: Array printk init and cleanup
+> This commit initializes the trace array buffer for osnoise instances on
+> creation. It also introduces the osnoise_print() helper function and switches
+> the tracer to use trace_array_printk() instead of trace_array_printk_buf().
+> > Use trace_array_printk() instead of trace_array_printk_buf(), as we're
+> > only writing to the main buffer (of a non-main instance) anyway -- and
 
-I'll wait a bit for more reviews and then put out another revision
-without this patch.
+> Is this description accurate? Can the osnoise tracer also be enabled on the
+> global trace array, for example by writing to current_tracer?
+> If it is used on the global instance, trace_array_init_printk() explicitly
+> returns -EINVAL and refuses to allocate a buffer, and trace_array_printk()
+> will return 0 without printing.
 
->> >                 max_level = PG_LEVEL_NUM;
->> >                 is_private = kvm_mem_is_private(kvm, gfn);
->> >         }
->> >
->> > --
->> > 2.54.0.563.g4f69b47b94-goog
->> >
->> >
+Hmm, I guess it would drop any of these prints if it's using the top level
+trace array. But I believe this is for use with RTLA which always creates a
+trace instance.
+
+> > diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> > index 75678053b21c5..2be188768ab42 100644
+> > --- a/kernel/trace/trace_osnoise.c
+> > +++ b/kernel/trace/trace_osnoise.c
+> > @@ -83,6 +83,22 @@ struct osnoise_instance {
+> >  
+> >  static struct list_head osnoise_instances;
+> >  
+> > +static void osnoise_print(const char *fmt, ...)
+> > +{
+> > +	struct osnoise_instance *inst;
+> > +	struct trace_array *tr;
+> > +	va_list ap;
+> > +
+> > +	rcu_read_lock();
+> > +	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
+> > +		tr = inst->tr;
+> > +		va_start(ap, fmt);
+> > +		trace_array_vprintk(tr, _RET_IP_, fmt, ap);
+
+> Does this code create a use-after-free on the trace array if an instance is
+> removed concurrently?
+> When a user deletes a trace instance via rmdir, the unregister function
+> removes the instance from the list using list_del_rcu(). However, the removal
+> routine does not appear to wait for an RCU grace period before freeing the
+> trace array itself.
+> Could a concurrent execution of this loop inside the rcu_read_lock() section
+> still access the unlinked instance, read the freed inst->tr, and pass it to
+> trace_array_vprintk()? This appears to be an existing issue, but it still
+> affects the loop here.
+
+Hmm, this is interesting. osnoise keeps track of its own instances via a
+osnoise_instances list. But it only use kfree_rcu() to free the list
+descriptor but doesn't take care of the tr being freed before hand!
+
+Something like this could work [not even compiled]
+
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 75678053b21c..bda1e0e0d2e1 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -476,8 +476,11 @@ static void print_osnoise_headers(struct seq_file *s)
+ 										\
+ 	rcu_read_lock();							\
+ 	list_for_each_entry_rcu(inst, &osnoise_instances, list) {		\
++		if (trace_array_get(inst->tr) < 0)				\
++			continue;						\
+ 		buffer = inst->tr->array_buffer.buffer;				\
+ 		trace_array_printk_buf(buffer, _THIS_IP_, msg);			\
++		trace_array_put(inst->tr);					\
+ 	}									\
+ 	rcu_read_unlock();							\
+ 	osnoise_data.tainted = true;						\
+
+
+> > +		va_end(ap);
+> > +	}
+> > +	rcu_read_unlock();
+> > +}
+> [ ... ]
+> > @@ -123,6 +139,7 @@ static int osnoise_register_instance(struct trace_array *tr)
+> >  	 * trace_types_lock.
+> >  	 */
+> >  	lockdep_assert_held(&trace_types_lock);
+> > +	trace_array_init_printk(tr);
+
+> Could this leave the per-CPU buffer unallocated when running on the global
+> instance?
+> If the tracer is used on the global trace array, trace_array_init_printk()
+> returns -EINVAL. Because this return value is ignored here, the buffer
+> remains unallocated, causing trace_array_vprintk() to fail internally.
+
+Well, it will fail anyway because it is the top level trace buffer.
+
+> [ ... ]
+
+> > @@ -1189,10 +1198,10 @@ static __always_inline void osnoise_stop_exception(char *msg, int cpu)
+> >  	rcu_read_lock();
+> >  	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
+> >  		tr = inst->tr;
+> > -		trace_array_printk_buf(tr->array_buffer.buffer, _THIS_IP_,
+> > -				       "stop tracing hit on cpu %d due to exception: %s\n",
+> > -				       smp_processor_id(),
+> > -				       msg);
+> > +		trace_array_printk(tr, _THIS_IP_,
+> > +				   "stop tracing hit on cpu %d due to exception: %s\n",
+> > +				   smp_processor_id(),
+> > +				   msg);
+
+> Does this switch to trace_array_printk() silently drop messages when tracing
+> on the global instance?
+> Looking at trace_array_printk(), it explicitly returns 0 if the
+> TRACE_ARRAY_FL_GLOBAL flag is set on the trace array:
+> kernel/trace/trace_printk.c:trace_array_printk() {
+>     ...
+> 	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
+> 		return 0;
+>     ...
+> }
+> This means stop and exception logs would be discarded if the tracer is
+> running on the global instance.
+
+Yep. But maybe that's not an issue?
+
+-- Steve
+
