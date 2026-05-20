@@ -1,299 +1,269 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAAD3033C6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 15:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779290613; cv=pass; b=svbY+qr7j8k7g1YX9Eu658D2PZtBkNoS/nK5RQUtHOsoD2szxkpAP3nGZmPqMA16MgUJiYUUmA1SC8RJWUJkJ63zaAuqvb+lPbPaRwNH2J49F1sOlO8D3F6HOq4Jn8yIMB1PF8MUCx0+KoIew+RoLp7x2txigqMx/9+EOzZfXh4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779290613; c=relaxed/simple;
-	bh=LTvt0GO2IIoMdW77kPYbGLjxm/bcueNLJXl7aSycoec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cahm+a9WvpEqPliFQtKU+0PgLoxiiORUYgRMDOuNRH0pW97aeMj01SjRHF/xpKnvToBjEzdJfyvSnkdu+TBcyXoOwrnZhPYNk/ud0J0KkWrSdEDWVwdZkLyPPidbpy+kJwJG49FowIKByFrLv+IQ69UBNLd8a7iIMcjzYUS+Fzg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ETxmuyLB; arc=pass smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A973EFD22;
+	Wed, 20 May 2026 15:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779291631; cv=none; b=JHuhCla6eEjtpmIZCjO3sxjrwnvRdDvz7CHzHD7Qfwx0qDJo5Kfn/o3UZ2ZvWBEuj7MDP7pXyd0TvRu9CGviEjTgz9e5un0iVmLjsjpZthz0/x8fdg+kWzxknznDv/YgVsOTYsZxf8H+zko/dyoliQo5EGn6445MrIhZF28IO8E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779291631; c=relaxed/simple;
+	bh=Wro/b6jYmgm7DDfIhqot8C8Ej0U9e1lJqurx/bCiZps=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=twlRE4bVAhkPSJ+ooyXvTQ4ELQn+RS+KSiym/Yc8KMxce1tEAjC8NL9mIaYbiQcfZnccn3pATgn2squ0830Y96H/jKllf4+naEQPxNvdsaSXd7xfdiDdHChNP7owNU7srYszi3IPKDiopBezKxOX9jgwUqdBD3/JK3bj7p52A9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ivf/zv7p; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ETxmuyLB"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-515548f390fso11381cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 08:23:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779290610; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Hs4rwz/PEa9Pv8EIiN+gkZ0f/7DERU0XUTpLB8FXjMoC6Flg6jhRQF/UGXUNTNvcH5
-         rIMUZBT85QTAYzG43ElFT4dAqbynjlz6hvZgqZP7i877HCznVNhzS4L0AEqovlCEtR/x
-         FjZuoZFnN2j/5CMt3CcqpGyVRW7dXbk5PZSMLGPd5kub19enAwSFyBeTnkmZCoFZYr8q
-         cmLt7Qj2UrWIfK/Gv12345jHqyv1c9QXXEbP/rrR9wEoUsGva+KZOTynwIfLGh6QJrxB
-         WrMAdfpLiB5KxqA1magTK9SSLufhS6wIxjJcl9Il1QJSiCRRYpO+29WBQMG9zeg8SYEO
-         HWlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=6WbZMU4miMiF9vdr/q40hrIlWLS/zCvaA9/R/fFQvCg=;
-        fh=/SJ45Y9bAWxT7kwP9zxOnbGbzHtkhoCSMAmdQzUYZRs=;
-        b=fxwFfFbVXJlFjrNoju3pPn9WsDLutLn2PSWmN+Aodr5SHPmHCcY79e29aAtGa3mpae
-         1mf53108/tkuMCLTn5Kb/qx9t0feVjB97lvqRbT4jLgpU8sg4Sywg+D5LBfBdTs7F1Ub
-         S/epLJNiRZ4FjNrq1ifJzJVZvtzliVhLsGMTjj4pin5W0VW4NpT4XmfVhNQ49fjJmvtl
-         TlWhdN/6LaJfvp5PulyBVqp3ZnbmNVVHlXg7dcqacUX796RiQNgmsfpgkqpRUrc/0JA7
-         +apjc4Q+O6MtxW0JUhg9Pv40d8/wCTEMVH/QnXpdb7z/3lFsTuejyGP1e64kuAI9/KDC
-         Rbig==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779290610; x=1779895410; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6WbZMU4miMiF9vdr/q40hrIlWLS/zCvaA9/R/fFQvCg=;
-        b=ETxmuyLBuDO02JydzKZh5NX6bXO1o4YUPgo1OZaX9gAEP6N3Hq+jWW+iGIxdMvgayt
-         Su8N1mfxolScIscqW3C2r7IzAlE3kVTSZXdV727VQwIo+5s3EueS6YLoI1CeNv9yNhaY
-         S6srSkqY1OP5MkVirDyMX4kIzmGU3JLF0xludQrFTsK/LpS+O5t49uWiFbOWjqc2mDTj
-         qkbVmdF4lvGlwjFpydBCYOsGwvuPekxv9+upDYtM05Wxnx7SQAzneBPjNxo4wCwe2iU7
-         9fUTTUG8C1/yWtkbYkDYFwjiQsBRd0BYHbXbRhRBQPJMeLtOTpnAslbNeUECsJqorWt6
-         i1WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779290610; x=1779895410;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6WbZMU4miMiF9vdr/q40hrIlWLS/zCvaA9/R/fFQvCg=;
-        b=g1kkZmyfVX/t9bkWjDXGdBCa+z3l9BAreIuva0mksMgQZ6CK2wcsKnBSWg+fGWeMIN
-         fRo9i6Dn35ASi2V+jx2yZdLLeOJl9HxL/stP5UW2A00YG1TUt4gOLzl+ycuGfnEnmzAs
-         w9y//V9sgsTVWmf78ww3+ejzMhhDBg2F1Nkiwd1za9Yas4RDw0YY8p8iM2wCyaLbGJSh
-         uUXjJqqO2yiCUfjqBJTObdngYJonH+mQQWywpb+Zg7nWT32+PxZ0UXjPO/dntFD14v5+
-         XXsCYAp9zrgTCtfVlJkNnEuZkjnYnS6QV+hzcMgHpqjiaSPsumK3gA31Q31JPzowZh+k
-         ajhQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9XTYQ3L+YiXOti4fJ9ODdO4+RDOp8anam69FTDMUk1OlwbnVQnAUreBafYtPkGhseKO+zG0OBrfZUIaUPiEYpLA8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtGza+TYTuRdWf6Gcth7NmlV1kuVDQvVXFBamb9/yfS35p+tf1
-	4e0jdEx+3uroO3ckvNvjm7VTmzlqppLMmfyTqFMEKkW9dxTlfn/5h60xbhJcQObZsRo6DNjCuoV
-	HegUIiYb5lqqfv1XjO3+w1of5vff2twB6iIKBcxgu
-X-Gm-Gg: Acq92OE932JCRZCTDI18y6EMzaxVSXGBYuwBVCX/QLA2J8PgWV2kqGGN5PNxPv6Nu1D
-	19c1z3cbeykb3lAPljyJe1W6Nj2s5X0y0ZyH/ehbNYJYbpPMx5O7jGY2rL+9o2nBFYQEs69oUo4
-	CgE8ZBjtMDOyk6HMjBpzR0mcD796r2+w5Vz2+hgMHBgP3u2FxQAtqF/J7l0wlqJrRZwWeAM2z8e
-	3E/4IZkU1QGVP6em4vMoLbZL6M+68SHB8dqo9L2v/USCcj7hzYLHypZC80ElqJC0QJh1MqdysUg
-	91NokwMbrv39SzM+O7E=
-X-Received: by 2002:a05:622a:900e:b0:50b:8d3c:5bd7 with SMTP id
- d75a77b69052e-5167b669c3fmr40334771cf.9.1779290609929; Wed, 20 May 2026
- 08:23:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ivf/zv7p"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64K5E6WX1950620;
+	Wed, 20 May 2026 15:40:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=SmI34slVZs1BNH9m6
+	+m2YOZNt+zp/AB28hIWnnNMMn8=; b=ivf/zv7p9r5+XWye3TPo1ffSXxg1mU2LK
+	uO5P9LJcSb0u7AbNzTbpTZelFvL2/7pU5dRtHbjBtqVyWw7bGcdat24Z6OjgCYFr
+	SiEAYoepulLgUs4zbWs1xN5izpGY5X6zHCkU6uzw0zG8hM9qADrcnJK8d4vGXi1c
+	urV9laWOvtZC9+a7bNA0iZspIOdZOt5CLqaqNwoukKe35gmUvMYFHZ9Lx+9FC5vf
+	rGMo3JclhUZIiZ20ffGWUZggjkKdHyQrz64Svmh15vPZMEBA102eDn4WjIOCtpbS
+	xA6UswKmZhmTGRF1wA+Bngd59m1MSy1Oj769DrawaIb5SNL7OCvuQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6h88htfs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 May 2026 15:40:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64KFd8U4008385;
+	Wed, 20 May 2026 15:40:14 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e739w03b0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 May 2026 15:40:14 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64KFeBsx21103176
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 May 2026 15:40:11 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DCECB20043;
+	Wed, 20 May 2026 15:40:10 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 55B862004E;
+	Wed, 20 May 2026 15:40:10 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 20 May 2026 15:40:10 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Indu Bhagat <ibhagatgnu@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dylan Hatch <dylanbhatch@google.com>,
+        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Kees Cook <kees@kernel.org>, Sam James <sam@gentoo.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, bpf@vger.kernel.org, linux-mm@kvack.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Carlos O'Donell" <codonell@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: [PATCH v15 06/20] unwind_user/sframe: Detect .sframe sections in executables
+Date: Wed, 20 May 2026 17:39:50 +0200
+Message-ID: <20260520154004.3845823-7-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260520154004.3845823-1-jremus@linux.ibm.com>
+References: <20260520154004.3845823-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com> <20260507-gmem-inplace-conversion-v6-14-91ab5a8b19a4@google.com>
-In-Reply-To: <20260507-gmem-inplace-conversion-v6-14-91ab5a8b19a4@google.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Wed, 20 May 2026 16:22:53 +0100
-X-Gm-Features: AVHnY4LJuKw2B0K-Cm-8YOXgihnw0Pgc0Lt4U2X1C7F6RPo0tjkQqSgizt_3rx0
-Message-ID: <CA+EHjTzf6Bc_YgSNv0d+Rm=ALuwYuCaS=EPhrjFKDes8=+0QSw@mail.gmail.com>
-Subject: Re: [PATCH v6 14/43] KVM: guest_memfd: Advertise KVM_SET_MEMORY_ATTRIBUTES2
- ioctl
-To: ackerleytng@google.com
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 2ISu0SHUttbv0n9vfydNFpwKXpKjlH2q
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDE1MSBTYWx0ZWRfX7PV/sJz2ww+P
+ 3/f3BwtqiU3FT5DyPXz/orsUimp1undhsKdq310qkRgje6tdAsY2U4BkqnfSMhIEfWfuov+4rgR
+ mo42nz8tcH/qemdVol+DHMPwvoE2yxYwZQqdVUUiQ0jyF4VmLrX8yIPILiNqjKnFPcnpoi836r1
+ C7KiJHgX0dhkCMbdGiKnUIYS+AdbqK/rnvOgjhvu4fCZflSXa/UZB8VAq27Vc4j8WsH6nkkgPCx
+ VSa6i+/e6LVr/6ZNM2amsTvZDWLUiPJtu7wFw2/a6Hc/qYDrf6QMfLroerbfywNZSIhorssD7W8
+ FguGSisAkobDJ6ilrcRLEJ84WkXWPE9RfcH3HmlSBqmiKH6ATBzfN48AgW7/5E+CKQj1qamK3C6
+ 4O28N/xY7eBGwku9QCDhG3AS6KOFt1puUzFLO3Qy4CPu3BZohjGpl9F0EyjGlq3jRSzj0Goqegi
+ 0LV1b1g8mjUBWXNVPnw==
+X-Proofpoint-GUID: 2ISu0SHUttbv0n9vfydNFpwKXpKjlH2q
+X-Authority-Analysis: v=2.4 cv=apyCzyZV c=1 sm=1 tr=0 ts=6a0dd5df cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=pGLkceISAAAA:8
+ a=VnNF1IyMAAAA:8 a=eNuN5pRUQDBy6NUwPKcA:9 a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-20_03,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 priorityscore=1501 impostorscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
+ clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
+ definitions=main-2605200151
 
-On Thu, 7 May 2026 at 21:22, Ackerley Tng via B4 Relay
-<devnull+ackerleytng.google.com@kernel.org> wrote:
->
-> From: Ackerley Tng <ackerleytng@google.com>
->
-> Introduce KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES to advertise the
-> availability of the KVM_SET_MEMORY_ATTRIBUTES2 ioctl.
->
-> KVM_SET_MEMORY_ATTRIBUTES2 is a guest_memfd-scoped version of the existing
-> KVM_SET_MEMORY_ATTRIBUTES VM ioctl. It allows userspace to manage memory
-> attributes, such as KVM_MEMORY_ATTRIBUTE_PRIVATE, directly on a guest_memfd
-> file descriptor.
->
-> This new version uses struct kvm_memory_attributes2, which adds an
-> error_offset field to the output. This allows KVM to return the specific
-> offset that triggered an error, which is especially useful for handling
-> EAGAIN results caused by transient page reference counts during attribute
-> conversions.
->
-> Update the KVM API documentation to define the new ioctl and its behavior,
-> and add the necessary UAPI definitions and capability checks.
->
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Suggested-by: Michael Roth <michael.roth@amd.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Reviewed-by: Fuad Tabba <tabba@google.com>
+When loading an ELF executable, automatically detect an .sframe section
+and associate it with the mm_struct.
 
-Cheers,
-/fuad
+[ Jens Remus: Fix checkpatch warning "braces {} are not necessary for
+single statement blocks". ]
 
-> ---
->  Documentation/virt/kvm/api.rst | 78 +++++++++++++++++++++++++++++++++++++++++-
->  include/uapi/linux/kvm.h       |  2 ++
->  virt/kvm/kvm_main.c            |  5 +++
->  3 files changed, 84 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 52bbbb553ce10..55c2701d9ed49 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -117,7 +117,7 @@ description:
->        x86 includes both i386 and x86_64.
->
->    Type:
-> -      system, vm, or vcpu.
-> +      system, vm, vcpu or guest_memfd.
->
->    Parameters:
->        what parameters are accepted by the ioctl.
-> @@ -6361,6 +6361,8 @@ S390:
->  Returns -EINVAL if the VM has the KVM_VM_S390_UCONTROL flag set.
->  Returns -EINVAL if called on a protected VM.
->
-> +.. _KVM_SET_MEMORY_ATTRIBUTES:
-> +
->  4.141 KVM_SET_MEMORY_ATTRIBUTES
->  -------------------------------
->
-> @@ -6553,6 +6555,80 @@ KVM_S390_KEYOP_SSKE
->    Sets the storage key for the guest address ``guest_addr`` to the key
->    specified in ``key``, returning the previous value in ``key``.
->
-> +4.145 KVM_SET_MEMORY_ATTRIBUTES2
-> +---------------------------------
-> +
-> +:Capability: KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES
-> +:Architectures: all
-> +:Type: guest_memfd ioctl
-> +:Parameters: struct kvm_memory_attributes2 (in/out)
-> +:Returns: 0 on success, <0 on error
-> +
-> +Errors:
-> +
-> +  ========== ===============================================================
-> +  EINVAL     The specified `offset` or `size` were invalid (e.g. not
-> +             page aligned, causes an overflow, or size is zero).
-> +  EFAULT     The parameter address was invalid.
-> +  EAGAIN     Some page within requested range had unexpected refcounts. The
-> +             offset of the page will be returned in `error_offset`.
-> +  ENOMEM     Ran out of memory trying to track private/shared state
-> +  ========== ===============================================================
-> +
-> +KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
-> +KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
-> +userspace.  The original (pre-extension) fields are shared with
-> +KVM_SET_MEMORY_ATTRIBUTES identically.
-> +
-> +Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
-> +
-> +::
-> +
-> +  struct kvm_memory_attributes2 {
-> +       /* in */
-> +       union {
-> +               __u64 address;
-> +               __u64 offset;
-> +       };
-> +       __u64 size;
-> +       __u64 attributes;
-> +       __u64 flags;
-> +       /* out */
-> +       __u64 error_offset;
-> +       __u64 reserved[11];
-> +  };
-> +
-> +  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
-> +
-> +Set attributes for a range of offsets within a guest_memfd to
-> +KVM_MEMORY_ATTRIBUTE_PRIVATE to limit the specified guest_memfd backed
-> +memory range for guest_use. Even if KVM_CAP_GUEST_MEMFD_MMAP is
-> +supported, after a successful call to set
-> +KVM_MEMORY_ATTRIBUTE_PRIVATE, the requested range will not be mappable
-> +into host userspace and will only be mappable by the guest.
-> +
-> +To allow the range to be mappable into host userspace again, call
-> +KVM_SET_MEMORY_ATTRIBUTES2 on the guest_memfd again with
-> +KVM_MEMORY_ATTRIBUTE_PRIVATE unset.
-> +
-> +KVM does not directly manipulate the memory contents of pages during
-> +attribute updates. However, the process of setting these attributes,
-> +which includes operations such as unmapping pages from the host or
-> +stage-2 page tables, may result in side effects on memory contents
-> +that vary across different trusted firmware implementations.
-> +
-> +If this ioctl returns -EAGAIN, the offset of the page with unexpected
-> +refcounts will be returned in `error_offset`. This can occur if there
-> +are transient refcounts on the pages, taken by other parts of the
-> +kernel.
-> +
-> +Userspace is expected to figure out how to remove all known refcounts
-> +on the shared pages, such as refcounts taken by get_user_pages(), and
-> +try the ioctl again. A possible source of these long term refcounts is
-> +if the guest_memfd memory was pinned in IOMMU page tables.
-> +
-> +See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
-> +
->  .. _kvm_run:
->
->  5. The kvm_run structure
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 0b55258573d3d..f437fd0f1350c 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -996,6 +996,7 @@ struct kvm_enable_cap {
->  #define KVM_CAP_S390_USER_OPEREXEC 246
->  #define KVM_CAP_S390_KEYOP 247
->  #define KVM_CAP_S390_VSIE_ESAMODE 248
-> +#define KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES 249
->
->  struct kvm_irq_routing_irqchip {
->         __u32 irqchip;
-> @@ -1648,6 +1649,7 @@ struct kvm_memory_attributes {
->         __u64 flags;
->  };
->
-> +/* Available with KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES */
->  #define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd2, struct kvm_memory_attributes2)
->
->  struct kvm_memory_attributes2 {
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 4d7bf52b7b717..cec02d68d7039 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -4972,6 +4972,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
->                 return 1;
->         case KVM_CAP_GUEST_MEMFD_FLAGS:
->                 return kvm_gmem_get_supported_flags(kvm);
-> +       case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
-> +               if (vm_memory_attributes)
-> +                       return 0;
-> +
-> +               return kvm_supported_mem_attributes(kvm);
->  #endif
->         default:
->                 break;
->
-> --
-> 2.54.0.563.g4f69b47b94-goog
->
->
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Indu Bhagat <ibhagatgnu@gmail.com>
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+
+Notes (jremus):
+    Changes in v15:
+    - Only add sframe for text that is PT_LOAD in addition to PF_X.
+      (Sashiko AI)
+
+ fs/binfmt_elf.c          | 48 +++++++++++++++++++++++++++++++++++++---
+ include/uapi/linux/elf.h |  1 +
+ 2 files changed, 46 insertions(+), 3 deletions(-)
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 16a56b6b3f6c..980a9f229cd1 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -48,6 +48,7 @@
+ #include <linux/uaccess.h>
+ #include <uapi/linux/rseq.h>
+ #include <linux/rseq.h>
++#include <linux/sframe.h>
+ #include <asm/param.h>
+ #include <asm/page.h>
+ 
+@@ -637,6 +638,21 @@ static inline int make_prot(u32 p_flags, struct arch_elf_state *arch_state,
+ 	return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
+ }
+ 
++static void elf_add_sframe(struct elf_phdr *text, struct elf_phdr *sframe,
++			   unsigned long base_addr)
++{
++	unsigned long sframe_start, sframe_end, text_start, text_end;
++
++	sframe_start = base_addr + sframe->p_vaddr;
++	sframe_end   = sframe_start + sframe->p_memsz;
++
++	text_start   = base_addr + text->p_vaddr;
++	text_end     = text_start + text->p_memsz;
++
++	/* Ignore return value, sframe section isn't critical */
++	sframe_add_section(sframe_start, sframe_end, text_start, text_end);
++}
++
+ /* This is much more generalized than the library routine read function,
+    so we keep this separate.  Technically the library read function
+    is only provided so that we can read a.out libraries that have
+@@ -647,7 +663,7 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 		unsigned long no_base, struct elf_phdr *interp_elf_phdata,
+ 		struct arch_elf_state *arch_state)
+ {
+-	struct elf_phdr *eppnt;
++	struct elf_phdr *eppnt, *sframe_phdr = NULL;
+ 	unsigned long load_addr = 0;
+ 	int load_addr_set = 0;
+ 	unsigned long error = ~0UL;
+@@ -673,7 +689,8 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 
+ 	eppnt = interp_elf_phdata;
+ 	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
+-		if (eppnt->p_type == PT_LOAD) {
++		switch (eppnt->p_type) {
++		case PT_LOAD: {
+ 			int elf_type = MAP_PRIVATE;
+ 			int elf_prot = make_prot(eppnt->p_flags, arch_state,
+ 						 true, true);
+@@ -712,6 +729,19 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 				error = -ENOMEM;
+ 				goto out;
+ 			}
++			break;
++		}
++		case PT_GNU_SFRAME:
++			sframe_phdr = eppnt;
++			break;
++		}
++	}
++
++	if (sframe_phdr) {
++		eppnt = interp_elf_phdata;
++		for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
++			if (eppnt->p_flags & PF_X && eppnt->p_type == PT_LOAD)
++				elf_add_sframe(eppnt, sframe_phdr, load_addr);
+ 		}
+ 	}
+ 
+@@ -836,7 +866,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	int first_pt_load = 1;
+ 	unsigned long error;
+ 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+-	struct elf_phdr *elf_property_phdata = NULL;
++	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
+ 	unsigned long elf_brk;
+ 	bool brk_moved = false;
+ 	int retval, i;
+@@ -945,6 +975,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 				executable_stack = EXSTACK_DISABLE_X;
+ 			break;
+ 
++		case PT_GNU_SFRAME:
++			sframe_phdr = elf_ppnt;
++			break;
++
+ 		case PT_LOPROC ... PT_HIPROC:
+ 			retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
+ 						  bprm->file, false,
+@@ -1242,6 +1276,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			elf_brk = k;
+ 	}
+ 
++	if (sframe_phdr) {
++		for (i = 0, elf_ppnt = elf_phdata;
++		     i < elf_ex->e_phnum; i++, elf_ppnt++) {
++			if (elf_ppnt->p_flags & PF_X && elf_ppnt->p_type == PT_LOAD)
++				elf_add_sframe(elf_ppnt, sframe_phdr, load_bias);
++		}
++	}
++
+ 	e_entry = elf_ex->e_entry + load_bias;
+ 	phdr_addr += load_bias;
+ 	elf_brk += load_bias;
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index ee30dcd80901..e2a7dbed2e80 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -41,6 +41,7 @@ typedef __u16	Elf64_Versym;
+ #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
+ #define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
+ #define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
++#define PT_GNU_SFRAME	(PT_LOOS + 0x474e554)
+ 
+ 
+ /* ARM MTE memory tag segment type */
+-- 
+2.51.0
+
