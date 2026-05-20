@@ -1,113 +1,187 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE95235E1BC;
-	Wed, 20 May 2026 19:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779306948; cv=none; b=AjeM8NwuEkzoKG1zG7/Y+Zhd82e8Cfpj0JtyCT85JGItD6ajJ5yl7SatvYR969nFulBh58SIDiKT6wvjst4uocjAJX0E6RSFJc+K2s8F4h7TH7DuKO/iMoYG0Tu9qm5kmPYRZoiqM4p6y2hYNErbzUlkClD2Nijc6r9238XyTsw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779306948; c=relaxed/simple;
-	bh=1jGlu3swlgsIMp2Uq0RhncQ8qEYI7ZzTgl0X1KmQypE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iMM+zlqdIhzbrxv0XRk52mWqu/KijXvIGJxRXYj+ILu6e5cefr907cLCh20+JT0GcjTsBtZ7ziQya74sH3Bl3lnuuUZOM+hJ18MGAFRiJJ7I7MxA2+NPFAe5oc9PIJCa7pmoAxHN8cixQpdsMRO+zHpWHWM/Il7i5XKUCANYwUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 5192E1C0355;
-	Wed, 20 May 2026 19:55:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 0D0102002A;
-	Wed, 20 May 2026 19:55:31 +0000 (UTC)
-Date: Wed, 20 May 2026 15:55:50 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Carlier <devnexen@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, peterz@infradead.org,
- vineeth@bitbyteword.org, sashiko-bot@kernel.org,
- sashiko-reviews@lists.linux.dev
-Subject: Re: [PATCH v2] tracepoint: add lockdep rcu_is_watching() check to
- trace_##name##_enabled()
-Message-ID: <20260520155550.0ef0b0f5@gandalf.local.home>
-In-Reply-To: <20260430144159.10985-1-devnexen@gmail.com>
-References: <20260430053511.8767-1-devnexen@gmail.com>
-	<20260430144159.10985-1-devnexen@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FB936AB57
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 20:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779308754; cv=pass; b=BmOtd/KJZrOodL/x4wwYiLZH+E0gmqM8tSPhexCGxRwhTnulyRD0J4mplD6Xon3EGYES1jxDqKxRqPfSPwdDwvuxu+Rpt+ofZ7FnrreKUFeySIGEoA3FIMkrMqIIof6pWYsA9ftd+DQ9aFIfghwOuzP0mKc3UZl2IDM0af7Rpow=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779308754; c=relaxed/simple;
+	bh=0y54nFg7E7TaoQP1DdnZ3Kd8izilERRAcK4RB5V7BZY=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CYQn5/Dz45visUwNv3fVRaQFFtIPfDpo6VczzuJLjrIsm39kRabTOeMt0KS7fRdhXpDMalfVyY0LsifCR/ezL926Xv2eOzQRENNA9KNOXbVp0jsEbmTHgxk/wWF4HTI98G/x8BzxAtqBpfymYV7AGaUvQS4ZT835AS9LJSpboAA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XwbOvfxx; arc=pass smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XwbOvfxx"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-63201e0d6b8so4834825137.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 13:25:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779308752; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Ak8lmzmYYkLD2uwNjnbeS9S+4bw1TQf6TgbrOs3qCVqRxuZA3RA5+Jm68jsgk50ebR
+         ZM+aOPUacsMcyhEvVoSKn+AfPdcqpLFkm8pAtXM4MLzri3fLCB5X6/eeizGr8quKGsod
+         +sGQ5fqLFkpLl1/0K3R6w+svEYygW5LC5FgljKRCy4qsbAdSCEEVm0H5r9mqRAdQcFZb
+         46WIjF0Xethc+PvIKHO9Po+PlaprGGhM6b9YP8gll3UNqffT7S2KPGIc2kh6x+bGB3a0
+         tIpnHuP1hPLLsj1enJq65MLp32wHSZSH068TBlC3fYq60MByaLhyPuKYfFlDIbYqKdNl
+         v0kQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=ANitp46w7gSSv/gOMNKZIor35cJdYj41rSqFN5gAzAs=;
+        fh=/+S45RwpYpL74y0NnvtlFmsB5EfLV5xAaUppswun9t4=;
+        b=EzBAiQCP5DQU4tBdT7kP99KzBb/vBpM+5k7q4qfL6ELoO96FcOIRIZ7ZBHuiXGJ7wN
+         82ajziCss8rdEqoZIhbcupZ/hDE4kO0NIqQsPYVOOgp92az299An0HAIs+EXgZSEZg5s
+         W6/kHfpXieAGZzvthuTdjjKy4otqBOmzxBpDftKoT3m9DAVkrgneVPS4msTbzeQ4uJdT
+         zyAAmcYiAXFeXt/YM4yqMcGDKmzZdwnKGX1BVtP59/lGrwacZ22HA3PDOI2c7avODnIm
+         +Oai+GXaaEStc91MEMDG8/eO1Be8UuXdO3/VsnV5rpz73Ts4znXTODURd9Yv1KZMzUr6
+         bxeA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779308752; x=1779913552; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ANitp46w7gSSv/gOMNKZIor35cJdYj41rSqFN5gAzAs=;
+        b=XwbOvfxxojNTaZZg5xc85ejdAJLXOGIhj/ihtMbe8SNH7QL1VPADFRhf2ZTOAtHqFV
+         4k7u1P39PnV25R6VstbsKpEE4wyX0JhVZqvNJ8buaI6G2q2H87BuGLzAO2nbgYCxH5Ft
+         GnRlujwb7rxQbKACZqw87Jpo8dHQ7+08omse+HqQur9nmbbQbcYBGsu6Lt95kx29nZ8H
+         oiskX7kcTOn14ZXsouLohobxRDb0u/MaDuHoHkfQpRcCjf3Xaun8eVFfJz7WA98ch44F
+         epcFLiYRTMix2UmAxWj2gy1brAg77X3TksdbyI3HnBAOQPRug4fxELrHdLfrSuRtRNJl
+         7tmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779308752; x=1779913552;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ANitp46w7gSSv/gOMNKZIor35cJdYj41rSqFN5gAzAs=;
+        b=ourzO9NYIXn9OMJ/h5fX3rrvDIuPp1zJddkIv22t/skavKNM3FbikhAIyNT80M9+yI
+         ZWuJhoZeA0CTerhH0ywmZcIiSODYtkICok515Lj0XF8Jnt6pMpz/aWq/zSBLTECdU9Iz
+         /P6TlZQTsCqIDB6vqrY/iVYvlneJlSlNis56UIOoai75D2rgFrE7R3U6Hm9+S+qNU77a
+         G7qtJ4PimKZgVU3kUJFGQsf6SUQdLadDraUFZOsQ+ZBXKLNgNssEN87b9o3M7e5MZXJV
+         zDDRY3mUsqR6N17nf7pt4gAAheZW7GdKzdUymTx/DlfecMAzCZR1BOBv9RcC+hSP9kwh
+         f2WA==
+X-Forwarded-Encrypted: i=1; AFNElJ/gylpwKPaKng/oY8BA/Ixnhd0WrX2uRdkL0qSrLhR1AYpvszPc3+BvNm4gb8VW45ORjl7xBr9WvrE0SO0E9raIz60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzENoDi1dI0U2W394lS3Q5RczK096XpYAFV27fNQ/lFvyMyJskh
+	TFAZbEzVyy/8Ab51N5SSMQ6cpNff62JN9aQN1JB+5+wVHIt3os4q6/Bwsf/pgrwzWNxe82TDVmS
+	Kqk+Q1ubln/Oh6TuGIElgQXuVZEdI0WFy9bZ0mtoC
+X-Gm-Gg: Acq92OFcxLKBRKHQCst3xB87ekxQ/QpjEit4LL3tTbXy22TGyign+atLpnff9U5Ybij
+	UrJjWKSPghL8X6w26RuKGYwhIrhLOfP5yWmKDbyafLK8g+QU3orM0HB3U1lB9SYWhYqN0i8QFqH
+	gN78mkS0sZyYrzPRHyZh4R74/OntBNarkqJL0AFFV+y1v8zT9TVg908z5oGZw9QtYdyyWkBWKJF
+	gceF9F6ImQVsctGkU3WHHI3ZaRau9haH0bGxh1ZCIzrmyY3nozYvXl+mWCP3v/Izu91jhzh++yA
+	1u9QtjLfg47l+PiOUgK/5EeCo29+AIKTZMRPTHTMDqwL2i4VvUO+5nKh2Aop0wZOaAus3bfiqmj
+	8YfMi
+X-Received: by 2002:a05:6102:2583:10b0:631:a34d:b671 with SMTP id
+ ada2fe7eead31-673bf885fcfmr10043137.5.1779308751281; Wed, 20 May 2026
+ 13:25:51 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 20 May 2026 13:25:50 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 20 May 2026 13:25:50 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <ag3DawWCcrpCkD0e@google.com>
+References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
+ <20260507-gmem-inplace-conversion-v6-6-91ab5a8b19a4@google.com>
+ <CA+EHjTxvLU4XDPXDXYXXWJES1OFQgN8VTRLMgCCNMwBE6Hk8tQ@mail.gmail.com> <ag3DawWCcrpCkD0e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 0D0102002A
-X-Stat-Signature: bhhoteuhkfmwgpmtb65qi57pzziyqnni
-X-Rspamd-Server: rspamout01
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/6vPKcmI83BUi6uAbeZriErnTmbXkDfKo=
-X-HE-Tag: 1779306931-517759
-X-HE-Meta: U2FsdGVkX1+cog7GiBvw4MxhAzjiQt9RB0VYKpPXrS7xXcTQbBv8PoGAJ3qKuz9yizua2iYpmVBPGP5OlVDKFEqjwcLeNVX2gkqoXaMei4kJQ3uCnDwT82zdgVuQUg+A/kDkhDT9FhqYvItwamIUiEYIgO1V4WrCeVEy2wB9zdmC91dYHTO7e2dmSCX1iJh6JaOLXLbiREW4cypGTWOXMa7MQJQB92f3J96v3ibUNQi9PGYs11293DqXxDkRIjNrXQwf/Ihex7YNJ3RLp3BsbyrCWafcCP/pJvs2wabk0634BiTFrqEZOJlBVS2KT/Ly6uuiGmz29Mmh9DhCyipgv3L8P9IVwU8R
+Date: Wed, 20 May 2026 13:25:50 -0700
+X-Gm-Features: AVHnY4IBlIN9DzOr96NZ1ZZdFo1tnLv8pC5ZAKQh-hjUOng4U7q5IXabnxVwwpI
+Message-ID: <CAEvNRgGHHkvfJ-mn9rfDvS+_1ht08YatFWo-Swt+5wFSPnC9Nw@mail.gmail.com>
+Subject: Re: [PATCH v6 06/43] KVM: x86/mmu: Bug the VM if gmem attributes are
+ queried to determine max mapping level
+To: Sean Christopherson <seanjc@google.com>, Fuad Tabba <tabba@google.com>
+Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
+	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+Sean Christopherson <seanjc@google.com> writes:
 
-[ Replying to Sashiko ]
+>
+> [...snip...]
+>
+>> > @@ -3357,6 +3357,15 @@ int kvm_mmu_max_mapping_level(struct kvm *kvm, struct kvm_page_fault *fault,
+>> >                 max_level = fault->max_level;
+>> >                 is_private = fault->is_private;
+>> >         } else {
+>> > +               /*
+>> > +                * Memory attributes cannot be obtained from guest_memfd while
+>> > +                * the MMU lock is held.
+>> > +                */
+>> > +               if (KVM_BUG_ON(static_call_query(__kvm_get_memory_attributes) ==
+>> > +                              kvm_gmem_get_memory_attributes, kvm)) {
+>> > +                       return 0;
+>> > +               }
+>> > +
+>>
+>> This directly takes the address of kvm_gmem_get_memory_attributes,
+>> which is only compiled if CONFIG_KVM_GUEST_MEMFD=y. This breaks
+>> ARCH=i386.
+>
+> And this bleeds guest_memfd implementation details into places they don't belong.
+> The right way to deal with this is to use lockdep_assert_not_held() in whatever
+> code mustn't run with mmu_lock held.  E.g.
+>
+> diff --git virt/kvm/guest_memfd.c virt/kvm/guest_memfd.c
+> index c9f155c2dc5c..3bea9c1137ef 100644
+> --- virt/kvm/guest_memfd.c
+> +++ virt/kvm/guest_memfd.c
+> @@ -547,6 +547,9 @@ unsigned long kvm_gmem_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
+>         struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+>         struct inode *inode;
+>
+> +       /* Comment goes here. */
+> +       lockdep_assert_not_held(&kvm->mmu_lock);
+> +
+>         /*
+>          * If this gfn has no associated memslot, there's no chance of the gfn
+>          * being backed by private memory, since guest_memfd must be used for
+>
+> But I'm confused, because kvm_gmem_get_memory_attributes() doesn't actually take
+> filemap_invalidate_lock(), so what exactly is the problem?
+>
 
-> commit 7596bdcd9abf9a26b3964f10b5d5de3249e731e9
-> Author: David Carlier <devnexen@gmail.com>
-> tracepoint: add lockdep rcu_is_watching() check to trace_##name##_enabled()
-> This commit attempts to restore RCU lockdep coverage for trace_call__##name()
-> callers by adding a warning directly to the trace_##name##_enabled() static
-> branch check.
-> > When the tracepoint is enabled, the rcu_dereference inside
-> > __DO_TRACE_CALL() already trips under PROVE_RCU, so the warning is
-> > only needed on the !enabled path.
-> Is this description accurate regarding __DO_TRACE_CALL()?
-> Looking at the implementation, it uses rcu_dereference_raw() which
-> intentionally bypasses lockdep checking. This means trace_call__##name()
-> lacks lockdep coverage on both the enabled and disabled paths.
-> > diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> > --- a/include/linux/tracepoint.h
-> > +++ b/include/linux/tracepoint.h
-> > @@ -293,6 +293,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-> >  	static inline bool						\
-> >  	trace_##name##_enabled(void)					\
-> >  	{								\
-> > +		if (IS_ENABLED(CONFIG_LOCKDEP)) {			\
-> > +			WARN_ONCE(!rcu_is_watching(),			\
-> > +				  "RCU not watching for tracepoint");	\
-> > +		}							\
-> >  		return static_branch_unlikely(&__tracepoint_##name.key);\
-> >  	}
+Ahh I can drop this patch now. kvm_gmem_get_memory_attributes() used to
+take the filemap_invalidate_lock(), but after Liam pointed out that
+the attributes maple tree should be using MT_FLAGS_USE_RCU, I stopped
+taking filemap_invalidate_lock() and forgot to undo this.
 
-> Does this unconditional check cause spurious lockdep splats?
-> Unlike the original trace_##name() macro, trace_##name##_enabled() takes no
-> arguments and cannot evaluate the tracepoint's condition, such as
-> cpu_online(raw_smp_processor_id()). If a subsystem queries
-> trace_##name##_enabled() on an offline CPU where RCU is not watching, won't
-> this trigger a false positive warning, even if the tracepoint itself would
-> have been safely skipped by its condition?
+I'll wait a bit for more reviews and then put out another revision
+without this patch.
 
-If the CPU is offline, you shouldn't be using trace_##name##_enabled() to
-begin with.
-
-
-> Furthermore, is it already safe to query a static branch outside of an RCU
-> watch window? Subsystems sometimes use this boolean query in RCU-idle
-> contexts simply to skip data gathering without ever intending to execute
-> the tracepoint.
-
-The entire point of this patch is to make sure lockdep *always* checks that
-"RCU is watching" at every trace_##name##_enabled() location regardless if
-the tracepoint is active or not. It's not about the static branch, but the
-tracepoint that is hidden behind it.
-
-
-> Would it be more reliable to add the WARN_ONCE check, guarded by its cond
-> parameter, directly to trace_call__##name() to appropriately mirror how
-> trace_##name() behaves?
-
-Hmm, if this does become an issue, that may be worth doing. But currently,
-I do not believe the enabled() code is used by anything with conditional
-tracepoints.
-
--- Steve
+>> >                 max_level = PG_LEVEL_NUM;
+>> >                 is_private = kvm_mem_is_private(kvm, gfn);
+>> >         }
+>> >
+>> > --
+>> > 2.54.0.563.g4f69b47b94-goog
+>> >
+>> >
