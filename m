@@ -1,82 +1,92 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA23363086;
-	Wed, 20 May 2026 16:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5212F340A57;
+	Wed, 20 May 2026 18:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779295698; cv=none; b=o6ZdzJHAmuij6MWJyRgzvQpEAH2BTWIlTymzca/9Xik578AsXuTG+8fSVflETEqZh4vtKMCvopsSm28DYESY5qhzlOTzJL2w/j/A+Rsw+yEul0FrhKpZH2zcPFdMXTLQgLLvjxGzuyRFXsgMEWEDcr/NnEDNO2mJ6M2oRQbRrzs=
+	t=1779300120; cv=none; b=vBrsL/61/DeMfVmZTzzqF3f/ouhjX098KfgeoIsaFLK3liNwTe0xgK4lFh1vbT6Ry3DawP7b1soFrbYzag2iJjdz68laBXfVbUXJeWN/tqAV6wpgW59UmOI1aT0GTaXPUoUTVwbDUcYguSDkpRbjJ+3U9dbYrmIw73oC8BjraAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779295698; c=relaxed/simple;
-	bh=gpBj82KBmP6C+DoIwvG66wIri8RUqdtqxB19mzF5hPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AC3ne6+HxY2vGOxug66At6IDFv7qHeg1Ksomxlui/jaRmklSA6TEiQicOQbdgdSzwC00TgtU3bs0EeTvLZhfjR89FZGKk1YIo4P2sdXyTw95eyb/7GGhI5Bg+c4ajkoL0oZdOsCcx8vQ8ypOk2aopTZl2wiKmPc+g1UQJY965J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 519F08C1BA;
-	Wed, 20 May 2026 16:48:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 6D24B20028;
-	Wed, 20 May 2026 16:48:13 +0000 (UTC)
-Date: Wed, 20 May 2026 12:48:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
- bpf@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linux trace
- kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5] tracing/eprobes: Allow use of BTF names to
- dereference pointers
-Message-ID: <20260520124832.737a946a@gandalf.local.home>
-In-Reply-To: <20260520152021.350e7017551ef202aace4cd5@kernel.org>
-References: <20260519130144.40e71a00@fedora>
-	<20260519174848.176A6C2BCB3@smtp.kernel.org>
-	<20260519141726.613e2e54@fedora>
-	<20260520152021.350e7017551ef202aace4cd5@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779300120; c=relaxed/simple;
+	bh=jdG2Y2XfjnCichlgQ5afAMVixlCKrMBY/ZVKPbS8jNs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bdEueiVBfwoX9d02gXcl9Cw4dIDkytwWnSVffSjQTUWwWclfxTtfjlp/sMciXviSRHL44fo0xTSiRlMKOWJaey3TwnCm3ESMnbBSLE6Vw+Y7spOR8CHRfUhhP/dvfd0Ixrmix3vpN44XmxcRVdq9vEivfDBCRlFzZcH6I7mDJ8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=EMYPOwC/; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="EMYPOwC/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1779300116;
+	bh=jdG2Y2XfjnCichlgQ5afAMVixlCKrMBY/ZVKPbS8jNs=;
+	h=From:Date:Subject:To:Cc:From;
+	b=EMYPOwC/1+f/ahxT0DeVeyx7Q1FpglrgO5qhRV3PCnmtsr1BeyFX58Jz5Tx767xCs
+	 9PbVX53eoExyzVWs6phEjSEQD6meSaTISBMvcfOSus2L1AW8Z3suDsL7w30K+gtVcn
+	 oAeYhjt/9uiONoFhVuBWH9FmDTy7EkEFToQHqjnU=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Wed, 20 May 2026 20:01:55 +0200
+Subject: [PATCH] tracing: Create output file from cmd_check_undefined
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: zz981ywhoysp6pww378nz1893umc9k6b
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 6D24B20028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/ijJlSeSGUcoiAkF3L30McnQi8x4YzK3w=
-X-HE-Tag: 1779295693-719144
-X-HE-Meta: U2FsdGVkX18npd+AkGtbigyVYrf7qvD1rbKUE3Tw3NOkRqtn6j+yXyNLXwKEwBUwvU6ArRkJrCjnThZr3nX7uDTPcXV2aRyz3SeCQM2HJTEXVtNRGVOVP2fL0Apdghbw1MCbWk6vlUMMtquoDxg/147w1GuEzLlDsf3z/BhH9KeQBD3YWgEnVVRp7XszBRVwdRftIDOXjBKLhtbJZIliSyxhPyCrXQlsjHoGxyz+w/I/j4J28/XMKR/tNrxY8xukuz/OpsF9ZG2Tiie/Wf6eibFrG9+MOKdH2fi4ipQhCnMhgwxeq0ro/mu/f48SbEwAVuxXCocePn/g+YlZe/Lf1RLxwG8z9oHE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260520-tracing-ringbuffer-check-v1-1-d979cfab1338@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQqDMBCF4avIrDuQRmtKr1JcJONEp4W0TFQE8
+ e7GdvPgW7x/g8wqnOFRbaC8SJZPKrheKqDRp4FR+mKwxrbmZg1O6knSgFomzDGyIo1Mb6x9y66
+ 597ULDsr9qxxl/aWf3d95Di+m6ezBvh8CVeEQfAAAAA==
+X-Change-ID: 20260520-tracing-ringbuffer-check-3a6e748d37b7
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Vincent Donnefort <vdonnefort@google.com>, Marc Zyngier <maz@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779300115; l=1236;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=jdG2Y2XfjnCichlgQ5afAMVixlCKrMBY/ZVKPbS8jNs=;
+ b=BOsZ2rI1kkjymJHD1BWmlvDGShNAhxyLR5z2tQ05aSYz1tEXMZYlnAH0+mCZcVFdETAQyl6nm
+ Y9yA6t+1nwGCx5MLfyPO+CANdkF8MV6YmR5fY2atKjIB+XneySeY3Iz
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On Wed, 20 May 2026 15:20:21 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+As the output file is currently never created, the check will run every
+time, even if the inputs have not changed.
 
-> > > > @@ -515,6 +542,10 @@ static void clear_btf_context(struct traceprobe_parse_context *ctx)
-> > > >  		ctx->params = NULL;
-> > > >  		ctx->nr_params = 0;
-> > > >  	}
-> > > > +	if (ctx->struct_btf) {
-> > > > +		btf_put(ctx->struct_btf);
-> > > > +		ctx->last_struct = NULL;    
-> > > 
-> > > [Severity: Low]
-> > > Should ctx->struct_btf be explicitly set to NULL after btf_put() drops
-> > > the reference?  
-> > 
-> > I'm thinking of dropping it in the '(' switch case.  
-> 
-> Can you consider making the '(' switch case part as a helper
-> function because it depends on CONFIG_DEBUG_INFO_BTF?
+Create an empty output file which allows make to skip the execution when
+it is not necessary.
 
-Should we just encapsulate that entire case statement with:
+Fixes: 1211907ac0b5 ("tracing: Generate undef symbols allowlist for simple_ring_buffer")
+Fixes: 58b4bd18390e ("tracing: Adjust cmd_check_undefined to show unexpected undefined symbols")
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ kernel/trace/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-#ifdef CONFIG_DEBUG_INFO_BTF
-[..]
-#endif
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 1decdce8cbef..b5797457f9f4 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -154,7 +154,8 @@ quiet_cmd_check_undefined = NM      $<
+               echo "Unexpected symbols in $<:" >&2; \
+               echo "$$undefsyms" >&2; \
+               false; \
+-          fi
++          fi; \
++          touch $@
+ 
+ $(obj)/%.o.checked: $(obj)/%.o $(obj)/undefsyms_base.o FORCE
+ 	$(call if_changed,check_undefined)
 
- ?
+---
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+change-id: 20260520-tracing-ringbuffer-check-3a6e748d37b7
 
--- Steve
+Best regards,
+--  
+Thomas Weißschuh <linux@weissschuh.net>
 
