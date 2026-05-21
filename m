@@ -1,90 +1,70 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08C986329;
-	Thu, 21 May 2026 15:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5743290AA;
+	Thu, 21 May 2026 15:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779376206; cv=none; b=RD650SuuFuUFzHx5oHGoty5fZdw9HriEDVhRAiL+CvIWVeJIhHUO3fAZKiWA1pakP/DDzBOuUrRuIE/LhXRe7RVwxnvBph3SSjbpluRFeMo1uGaVn5TLMREPEXI5MzXt4x5MxH3eUFj0K/M775cx7SLzN82KYx8qhSfJU0rjr08=
+	t=1779376574; cv=none; b=ia5iT0cXJLM7UMhdxpDWFxtS5hlMlQ8ctgFPTzmJf8F1fACdYxy1x+ULB0gPoGH5q9cmtorJMasVanKHp7l2qGCIKuv8HAEcjKKgsak0pHjcIoUy/7kZRLwcmH0WJ8aeSm4HCOpvAuiuI35l8TSCMrvnU4HU//OyeVD/WQenoIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779376206; c=relaxed/simple;
-	bh=G0G5aOL+eU/pFN2zYhXxj8RIhBwaJebA18iecgHvrDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ul0g9Dihy81cenP3fR99h4NiTpU0AJ3WdLVN6F8DZTDGvwZA5+UqrB7U9DST8TNCpZczqWf3qKRiwi0LqCifUFKzYaHh/fnYZRO0JPsTxNq11bVwV594lOkQX1KORnIssghVM4ZcVhv/v7xM49kvBWliRUKXqoJx2p6HrvM5tEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=upj6C5S9; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="upj6C5S9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HfKgnmkxzmNOJLZxt74jCmZIPMukmqle2YeHK8y00YQ=; b=upj6C5S9PNg5BasGyzMLk2eay5
-	kzmMWjqxrq6r3Z2kso/qvUxTL0mHvuGR+X/jksHgbq8u4wXddtU8ZF+kqcR8tn/rXegF4kKEBQEdt
-	Yltq+1WpV3NUrdqeNHFsmQMSE50B13SspoS8/YXUVLd97D+m/ssmZJvkSTCy5BsDZv5JsxSfMKMvx
-	7pCgygy8UX1dEgY0W62oijkmvV4kCwOXHFgWs02GTWVfgLTeV1bP5NlItNOoFlYN6DV+aSrfZVnDD
-	O9n/PvX9uGbxJi2fzotLNFrW7urs+VFKjXl+O+kMd5Oy7+2mlPvfcZrQ5/RShRmdQKpwFTEJOs/fP
-	so16I8bw==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wQ51Z-003yDF-2C;
-	Thu, 21 May 2026 15:09:25 +0000
-Date: Thu, 21 May 2026 08:09:19 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Lance Yang <lance.yang@linux.dev>
-Cc: linmiaohe@huawei.com, akpm@linux-foundation.org, david@kernel.org, 
-	ljs@kernel.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, 
-	mhocko@suse.com, shuah@kernel.org, nao.horiguchi@gmail.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net, 
-	skhan@linuxfoundation.org, liam@infradead.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v7 2/6] mm/memory-failure: surface unhandlable kernel
- pages as -ENOTRECOVERABLE
-Message-ID: <ag8gDkHNWT-92Jjd@gmail.com>
-References: <agXcPleVC9LGVCmj@gmail.com>
- <20260515070353.87244-1-lance.yang@linux.dev>
- <agcbfLHT5ZWnNeN0@gmail.com>
- <f76b79d3-080a-4931-873e-99d4b3e1020f@linux.dev>
+	s=arc-20240116; t=1779376574; c=relaxed/simple;
+	bh=Ce62N7LmzxdUwOCG3QA8mDOmnZQUiwDIVO2FNoD2mLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PES61bzCNwx39dOg8dNo8/cmsgGJvfQkF3aTpoYr0xltfczdQtgy9B43N+WeV3p5M+Bux1g0BZihuA+j7rpwBgpH8XXPeA2k/upkHYC9u/3OYjsMIcNZxqgpdYPAE/HPz9nRzjlr+JEuL9ED3Zd/4lQEKBPprCS3jiZTS/5kLcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 3B43AA0512;
+	Thu, 21 May 2026 15:16:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 6B72620026;
+	Thu, 21 May 2026 15:16:09 +0000 (UTC)
+Date: Thu, 21 May 2026 11:16:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] tracing: Record and show boot ID in
+ last_boot_info
+Message-ID: <20260521111630.1f558754@gandalf.local.home>
+In-Reply-To: <177937543666.2596845.9748178606108139386.stgit@mhiramat.tok.corp.google.com>
+References: <177937541909.2596845.17729857441826694760.stgit@mhiramat.tok.corp.google.com>
+	<177937543666.2596845.9748178606108139386.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f76b79d3-080a-4931-873e-99d4b3e1020f@linux.dev>
-X-Debian-User: leitao
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: uzmutyj1wx7sbgtdwpenxactko4sx69q
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 6B72620026
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1//Cc/yJL7VVq0chSS4fnrO8b7v6hvavs4=
+X-HE-Tag: 1779376569-173304
+X-HE-Meta: U2FsdGVkX1+oJOGHqGbfqtROoGfy8XgVz2WH98a1hO0xz/v3zJdMQJhgeThpK1+iviXODJ8Thmv/HtVKxZPFV7G/RVNObtHBhq/e16Fl8170v07dbg97FMC8LNyUqX+Ht0eEBm5EhtNkORn1raIQX/GniUMnbVZMz8LGzZLCCE5r3W5qQlh8tW6sT8e35qrQtpi71D6R4fdvqZiaoS5tly/6OskvnJK7fhFKcY0OzcM/ZuEj3B0eUqfWDzh8QkqSc26xUM8HWRqLZVFGGj2tIlXsxvl9bzd5d29twMoq5IxoZWP/uXHBt9HxQNGu2RhihvrupSlWT727qxaNEDGHs71gvj8/arz4
 
-On Sat, May 16, 2026 at 12:06:14PM +0800, Lance Yang wrote:
-> 
-> 
-> On 2026/5/15 21:13, Breno Leitao wrote:
-> [...]
-> > > 
-> > > Wonder if it would be simpler to just do a positive check near the top
-> > > of get_any_page() instead. Something like:
-> > > 
-> > > static bool hwpoison_unrecoverable_kernel_page(struct page *page,
-> > > 						unsigned long flags)
-> > 
-> > Ack. We probably want to call it something like HWPoisonKernelOwned() to
-> > follow the same naming sematics of these helpers, such as HWPoisonHandlable()
-> > 
-> > By the way, I will re-include the self test back to this patch series,
-> > In case they are not useful, we do not merge it.
-> > 
-> 
-> Sounds good :)
-> 
-> Can you also test the relevant page types if possible, especially
-> the ones the new helper is supposed to classify?
+On Thu, 21 May 2026 23:57:16 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Ack. I will expand the test to cover different page types as well!
+> @@ -4804,6 +4806,7 @@ struct trace_mod_entry {
+>  struct trace_scratch {
+>  	unsigned int		clock_id;
+>  	unsigned long		text_addr;
+> +	u8			boot_id[UUID_SIZE];
+>  	unsigned long		nr_entries;
+>  	struct trace_mod_entry	entries[];
+>  };
 
-Thanks,
---breno
+I just don't like wasting scratch space if boot_id isn't defined. But I
+can't figure out a way to optionally have it there without wasting space
+anyway.
+
+If the get_boot_id() is accepted by the random folks, then I'm fine with
+this change.
+
+-- Steve
