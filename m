@@ -1,96 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79653BCD01;
-	Wed, 20 May 2026 22:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFDD245005;
+	Thu, 21 May 2026 01:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779316945; cv=none; b=YFwULeUjSm5X6ihrZM7VKZ3VLqIzxrmxrGZIo4wZdWqwvaUKbB+e7L52+ZbVtGu/1jT/AGa62QvTcdpapqJLji1ou0YJWkwnzeUZteCVffBrYXgbAHofzaf/wyplOO4k6dD4xLu7fJZTa6SE0P60xoDmeVTO6vOPnBrylvnrXCY=
+	t=1779326920; cv=none; b=cJ/Ap942yjk1WODnWSTq0RRiuL/wLQyD34jwFUictuO7JznYD2/vpLhg7sAuM9HbYBOCwofJY3wvt+XWGWNdHLQsOCtoxaYpXupjPlfvGGPaybHrOdnGksB5ju1Sx8oSlvNWbBrv0+IuNCzUBltZ4TCJvN/zD582zy0prm68tFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779316945; c=relaxed/simple;
-	bh=XcrevRWHrMEpSQrTLpGvf1Z5bTsfvxftTAIHSrO/ie4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fCGu3QZYeTKye4saNSwpJw929vcwBhQ3mmRdu5ziUkpMkohKZ+X8opmopw2HGjrzjJxvv6zMGuBvkU18c/a/QzDGMNso57nOuEBI9+2s3a2oYi73EahJYLY23MKTzovZZxiYmuGRHnMiKpXGwuwBgCvlghBSzSmGt9CHYIy34e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnyWUsVB; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnyWUsVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7459D1F00A39;
-	Wed, 20 May 2026 22:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779316944;
-	bh=3fUlzy/+2nrv0Gc7n85Bt/0f4zwepikT9hrknENYJmM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SnyWUsVBGtgd8H4wKL1/myN/eIgage2CTpFdPSLjsuzTsvN6ZVdy4OY/ti5WTqMUa
-	 YC10Z9lF4+LYSRP0SoKgE8zQ3ocSw3b48bqVIPTLU7wUK+opIuRikfFcArSQgckWtc
-	 xSofe6Xb9AXAZuVBwdeeFQxVgekqunh3JO/va0wU4E1zEISxPiVePkxqZZVPAnxGhA
-	 c1+H61iinnair0ZlIK48BAD5u9ZEtNQFIo5GENF++Z3/Gi068w5oVMlfKbmuzT9mx3
-	 uSvtIDF5qNWuSMhrOcexYGnpxZCibettinnz55mT5XL/i91g8+b+L/S+1GfBQ1XeOF
-	 cYJcntaoWcAEg==
-Date: Wed, 20 May 2026 15:42:19 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Create output file from cmd_check_undefined
-Message-ID: <20260520224219.GC1607511@ax162>
-References: <20260520-tracing-ringbuffer-check-v1-1-d979cfab1338@weissschuh.net>
+	s=arc-20240116; t=1779326920; c=relaxed/simple;
+	bh=Ng6YLN7/9EK2Hk78DwtUOjU+p0fkuR/dSyxhOZGnHuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZpXEQHvj0Gy5iPFWjqT8jlafSwzpKI3GCbV2GGh7WTGMHNFEhwgF7Mpag4rKcaVKdEIzS8NLWmkN8rJU8K08Rmk8aO+y3W+vKCdxDjLVaysm/wkPe5ZF7+YzcXbEO1sCBxTYFMkDKB1o3wExFyuXQGH83qYiXo58kbwrX56UuuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 231991A047E;
+	Thu, 21 May 2026 01:28:32 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 200D920029;
+	Thu, 21 May 2026 01:28:30 +0000 (UTC)
+Date: Wed, 20 May 2026 21:28:29 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org
+ (open list:FUNCTION HOOKS (FTRACE)), sashiko-bot@kernel.org,
+ sashiko-reviews@lists.linux.dev
+Subject: Re: [PATCH] ftrace: Use flexible array for hash buckets
+Message-ID: <20260520212829.7734bad4@fedora>
+In-Reply-To: <20260520220030.16887-1-rosenp@gmail.com>
+References: <20260520220030.16887-1-rosenp@gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260520-tracing-ringbuffer-check-v1-1-d979cfab1338@weissschuh.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 66c1dh6ewimhoo74b381d7i3k74xih3b
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 200D920029
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1939DSu3X+F/R6SI5UJOKGH24A7XYOr+Iw=
+X-HE-Tag: 1779326910-127973
+X-HE-Meta: U2FsdGVkX19Ndon8t6NubPJO92siBq5ifZS2S1HF+QhmerJ9VReFiQDNd/MGuzN3dLRnYzi62jJqP19qgFhGqY/PBEFCrpCnvfR++/99eD+/tcZY1O+3c1h4pwyDhGmoInyJzK48Z6TDxY25l9KjGw38d8lexEpXW+0xhFWR+J9Feb0rBCT9z4GgvU/w5peV/SS3jQ7D0CPdTIYt3SLYv1cEUoJSvvxi6sB6kbKrdOTkfNAdDWdE4+JapX9bacOQqDw5rXjRU0WdtaGm1SdtWZEMAvHmH5LUHksdXr7HPOet5jUAm4qYjDzQUXReRfQ9dBfsivWMIezj1cv/SnDPKM0R/Tb1UxzjxdAki+PTXTzx3rlvVCdQXhyxGtycmrg90Fzlrb5k4/706p4dGG9ydQ==
 
-On Wed, May 20, 2026 at 08:01:55PM +0200, Thomas Weiﬂschuh wrote:
-> As the output file is currently never created, the check will run every
-> time, even if the inputs have not changed.
+On Wed, 20 May 2026 15:00:30 -0700
+Rosen Penev <rosenp@gmail.com> wrote:
+
+> Store ftrace hash buckets in the ftrace_hash allocation instead of
+> allocating the bucket array separately.
 > 
-> Create an empty output file which allows make to skip the execution when
-> it is not necessary.
+> This keeps the bucket storage tied to the hash lifetime and simplifies
+> the allocation and cleanup paths.
 > 
-> Fixes: 1211907ac0b5 ("tracing: Generate undef symbols allowlist for simple_ring_buffer")
-> Fixes: 58b4bd18390e ("tracing: Adjust cmd_check_undefined to show unexpected undefined symbols")
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Assisted-by: Codex:GPT-5.5
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+I'll let the AI's duke it out!
 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 > ---
->  kernel/trace/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  kernel/trace/ftrace.c | 17 ++---------------
+>  kernel/trace/trace.h  |  2 +-
+>  2 files changed, 3 insertions(+), 16 deletions(-)
 > 
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 1decdce8cbef..b5797457f9f4 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -154,7 +154,8 @@ quiet_cmd_check_undefined = NM      $<
->                echo "Unexpected symbols in $<:" >&2; \
->                echo "$$undefsyms" >&2; \
->                false; \
-> -          fi
-> +          fi; \
-> +          touch $@
->  
->  $(obj)/%.o.checked: $(obj)/%.o $(obj)/undefsyms_base.o FORCE
->  	$(call if_changed,check_undefined)
-> 
-> ---
-> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-> change-id: 20260520-tracing-ringbuffer-check-3a6e748d37b7
-> 
-> Best regards,
-> --  
-> Thomas Weiﬂschuh <linux@weissschuh.net>
-> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index b2611de3f594..25a9dca290dd 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1082,10 +1082,7 @@ struct ftrace_func_probe {
+>   * it all the time. These are in a read only section such that if
+>   * anyone does try to modify it, it will cause an exception.
+>   */
+> -static const struct hlist_head empty_buckets[1];
+> -static const struct ftrace_hash empty_hash = {
+> -	.buckets = (struct hlist_head *)empty_buckets,
+> -};
+> +static const struct ftrace_hash empty_hash = {};
+>  #define EMPTY_HASH	((struct ftrace_hash *)&empty_hash)
 
--- 
-Cheers,
-Nathan
+
+According to Sashiko: https://sashiko.dev/#/patchset/20260520220030.16887-1-rosenp%40gmail.com
+
+   Could this conversion to a flexible array member cause an
+   out-of-bounds read when iterating over the empty hash? Because
+   empty_hash is now initialized as an empty struct, its flexible array
+   member buckets has a size of 0. However, empty_hash.size_bits is 0,
+   which means loop limits computing '1 << hash->size_bits' will
+   evaluate to 1. If functions like
+   prepare_direct_functions_for_ipmodify() iterate over a default
+   EMPTY_HASH without checking ftrace_hash_empty(), they will attempt
+   to read EMPTY_HASH->buckets[0]. This reads past the end of the
+   struct into adjacent memory in the .rodata section. If that adjacent
+   memory happens to be non-zero, the linked list loop could
+   dereference it and cause a kernel panic. Prior to this patch,
+   empty_buckets provided a safely zeroed array of size 1 to handle
+   this single iteration.
+
+-- Steve
