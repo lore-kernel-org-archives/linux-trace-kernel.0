@@ -1,77 +1,94 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19D73254B0;
-	Thu, 21 May 2026 14:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4502F1FF4;
+	Thu, 21 May 2026 14:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779374920; cv=none; b=ca+8XvyudesFv+BSb+TFUJpsAucU74DdTdIUxUAmcaWal1kFhZD/Vm3iM87Nw67qns5POxDlzB29P14gU8tX1ndE2rQ1zcgbUmZtAdwaBQdSqNLxW0kZ9WULsf/TLQhSpRx1aGEkx+5KZAQDVVawovQn3mYJ+yuB0kTM6g/+cyk=
+	t=1779375425; cv=none; b=VwCXJZ3w+yODxjGJAfWP0n/RkLxio0ldoq8kzVc4k+9dSVJZsKpYiy5LH0TK+Ht2dAubtNsBXFdZHuJBDDrKV+K4EU+gihwjFc+xTgVA9dMdGJM7oJ/JhruK/zor05ob3P4W4ObNPXxRlswRwpzNh9vetuuh3xNyISoj78JN5Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779374920; c=relaxed/simple;
-	bh=7EBH2axdEYbA9/O7XeM4Z8N/2ZXxzKeaMR5uKoZ8UUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pSYdWZ/ZlRIMTXul02C64ThA20R0e//5hjPZCDCvdeYgmJJykKnP5G8e90UzbclfbBaurbDYkn/Fypv+YD61x72p7V+Q9AxmDKs4UfojC8cxriUEZGXOYSB3ULtD+tDBLTsGPiWiFeQkbsksKp4UGJ34OS3wB/bN1PJZBgl20B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 51380161277;
-	Thu, 21 May 2026 14:48:37 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 4EC5B2002B;
-	Thu, 21 May 2026 14:48:35 +0000 (UTC)
-Date: Thu, 21 May 2026 10:48:56 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ben Hutchings <benh@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Tomas Glozar <tglozar@redhat.com>,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rtla: Fix output files in source tree
-Message-ID: <20260521104856.3873230f@gandalf.local.home>
-In-Reply-To: <ag8YLYKZTKOq0t4x@decadent.org.uk>
-References: <ag8X7gcDw6jpJsLq@decadent.org.uk>
-	<ag8YLYKZTKOq0t4x@decadent.org.uk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779375425; c=relaxed/simple;
+	bh=WjUjwLMOalgoEHLwGqBDytr0HoG8olcQw9qa50jOi/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DMJq8qduPEiKVxKsC1GttcUoesfffZqj+EiDNaVKWG4muNiKv+KX+uawbdtWCysimuasjRO4ZHoyx2TFJZF1i24XHTqEx6e7x8zSN18jSFyMqz3HPHMhrFDRDG3o+LnoXOzinO/Z/ZqorQ3XNrk++BZRvUEkvSQ9wbnBCIL7ZdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o06aFPdo; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o06aFPdo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61EC1F000E9;
+	Thu, 21 May 2026 14:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779375423;
+	bh=ubGQwjkSeHJC9kTKcjGioyI9bzXE4kQuRzPyjZeZJ9k=;
+	h=From:To:Cc:Subject:Date;
+	b=o06aFPdoj7kQfcjZO9/q3t35M2v1WDwCJu2q55Mt3Z/XnZNI8ZUtbePOlshK9L2V8
+	 DpsWFpGvmkHWmrpzX+1bovK4OisnJeAuFdV+S0bE4ZCqRXZQ4iSRQx2pcezzxvljYF
+	 P6nRbYZVewdlPP5NsYq34uxeqgQVejjeIrMsne4UD3yEl5iI5PTEDFMG9YdHctORLq
+	 js77IR3q+4hBBhQAUPoY8ytvA6lZr6GLkH2nZ+wFj4Xn9bHchWsoOWjFaYE3Xoau6c
+	 Gl3jkPQQDP6jTmaCqzHDe3Ta2Cwdufc8Osw4MxKPPwes+QRv2lkJ67w/SlLg/ad0To
+	 KC8VKap7rGa3A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Theodore Ts'o <tytso@mit.edu>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] random: tracing: Expose last boot ID on persistent instance
+Date: Thu, 21 May 2026 23:56:59 +0900
+Message-ID:  <177937541909.2596845.17729857441826694760.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.54.0.669.g59709faab0-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4EC5B2002B
-X-Stat-Signature: dxio97bdia8r56ocxozihhxkwe59gfhr
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/ekm7gLLKGWvTNvscC2nVRKnlWFhGQO1g=
-X-HE-Tag: 1779374915-892623
-X-HE-Meta: U2FsdGVkX1/XBJfa/2C385QLzQarStkU43WAletcG54GtUZoca9hcCv6S8SqFpg120QzCrhBzntxfBPrfsz7UXLjI786esqPyeh/FKiphNC8j5zHaRvwblt2rl59/yy0Xb25Pvnd2HK6QOfaxG2JRHq3yXGurm8V4qayDvtrQqJlUbtddUnrSRRos/J4OUdQ913m6lUlobt8WMGz7OCEAZZ/Jcac1M3C7MGyQths2KbwPFroz82KEPWQxzDYnNyxu+EBtOBcSqQohekxubkfYeIMbZG5w6OSLTrGc5O680UtTeag6WWds3hRsIGnLH0w/VUxqzetyjYuWpbq9B0y83Ju2d1Z/omI
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 21 May 2026 16:35:25 +0200
-Ben Hutchings <benh@debian.org> wrote:
+Hi,
 
-> Some output files (src/timerlat.bpf.o, src/timerlat.skel.h,
-> example/timerlat_bpf_action.o, tests/bpf/bpf_action_map.o) are
-> currently generated in the source tree, preventing a fully out-of-tree
-> build.  To fix this:
-> 
-> - Add $(OUTPUT) to their filenames in the relevant Makefile rules, and
->   create subdirectories as needed
-> - Add $(OUTPUT)src to the include path
-> - Add ${OUTPUT} to the BPF object filename in tests/timerlat.t
-> 
-> Fixes: e34293ddcebd ("rtla/timerlat: Add BPF skeleton to collect samples")
-> Fixes: 0304a3b7ec9a ("rtla/timerlat: Add example for BPF action program")
-> Fixes: 5525aebd4e0c ("rtla/tests: Test BPF action program")
-> Signed-off-by: Ben Hutchings <benh@debian.org>
+Here is an RFC series to expose the boot ID (random UUID for each
+boot) in the last_boot_info of the persistent ring buffer instance.
 
-Hi Ben,
+The persistent ring buffer can hold trace data beyond reboot/crashes.
+This means the recorded data does not always come from the last boot.
+Currently we just assume that the data comes from the last boot.
 
-Can you send this as a separate patch. The rtla code is handled via a
-different tree than the perf code. So these patches will not be going
-together.
+On the other hand, the kernel provides a random generated UUID for
+each boot time, called "boot ID". If you record the logs with the
+boot ID, it is easy to do cross-referencing it with other logs.
 
-Thanks,
+Similarly, recording the Boot ID for persistent ring buffer
+instances would make it easier to determine which boot the read
+data came from.
 
--- Steve
+For example:
+
+ # cat /proc/sys/kernel/random/boot_id
+ df152e7a-c0a7-4d32-9f0b-7f5c39fb7b68
+
+(enable tracing on persistent instance and reboot)
+
+ # cat /sys/kernel/tracing/instances/ptracingtest/last_boot_info
+# boot_id: df152e7a-c0a7-4d32-9f0b-7f5c39fb7b68
+ffffffff81000000       [kernel]
+
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (2):
+      random: Expose boot ID to other subsystems
+      tracing: Record and show boot ID in last_boot_info
+
+
+ drivers/char/random.c  |   27 +++++++++++++++++++++------
+ include/linux/random.h |    9 +++++++++
+ kernel/trace/trace.c   |   14 ++++++++++++--
+ 3 files changed, 42 insertions(+), 8 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
