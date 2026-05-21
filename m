@@ -1,149 +1,184 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC09A34EF1F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 08:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779350545; cv=none; b=sh2AHd2geGWkUKwZI+z7Y6Zr8fv3Z95I8Ht2M2fC2jeGYN2MUJVg/OGrhkHH/Sma1r1pTkrI7sQ37OrfOeMly2KSlGtA3hdZhsa4DN8zYBOU2EZmYXrHq9k+9juTAnHt87r08Mh4pg/boa6rySOMFsGAR8Fsspi1bvWZVHT8C5M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779350545; c=relaxed/simple;
-	bh=hbRDLYE2cbMKakevePB5wZhSMX5cMBexsypIIixVjPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ClOxPjJiro6cG62j4gA9Itq8yLg9MTFGiGGQlll9/KzPrWM1ykMbQRiqW0Pf/8/clOkNWCnLCJEmjDyjiCcohaffprPHTVK+w1nEa/1thzkJi1dnG8iV+T84Eq7SpAb1k4XFQ5vyUVUwPeWsLbPXIGThik2f5tqqYu54zkfSli8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qtJT95k+; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C523A05C2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 08:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779350901; cv=pass; b=KnfFIpXiwdMH03gamKSpJV+h2ERkMNRQa7is8HCAvYmZ4uaXrRKlR3HzyCOiWM2FfY8aLcoKqkQD7jaGpTxl7w+GRoT3KkSDdOnEOrAb8e3MNeVtxzjm9IqYEaSYDLLAIoV+1DI3KqbDB+HdK5ngAuHViTLicfbi5NiE7GJBjcA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779350901; c=relaxed/simple;
+	bh=1GakT4SLC90WzEHUaDnF34eVqI2fpwRSLI5kegyTcEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eRoSIkf2wswNibTe9VqsSJ7VzfzJNFvxrcUdy4UmcmN8DTcwCpU5yIMbiEeFz31cNkNBbYrM+5+c4dC32BwpNZIXPQsTkI0uZ/CCSbD1I+2Jgwr6UDWrafgElIQnVI2fRYhgamhfSyvwBdCQv+1Ze2fDKJgY1u9sRLMmQ+EqoNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vNa4ncl4; arc=pass smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtJT95k+"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-48ff4f8ef0dso63526695e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 01:02:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vNa4ncl4"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-50d864c23bdso13231cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 01:08:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779350898; cv=none;
+        d=google.com; s=arc-20240605;
+        b=h75I9SKkdzLHz8Nc3vTzNsym0tN4+vtPGczriaT2hfGBSYJoIKVAwZu68mf4YucAm/
+         /qjBxD7ztlM7nNRjqqbek2IJCixGdnzVEDIyxEE/RFcGPdW5Xa2JAiLN0oDK6gLoS4oI
+         yZ9s0vxwJlHqsCLtTvhuN9sqap2ZpsrQSxDF7ozr39NuSn6L68ayZ1b4xtlXqF/BIQ5h
+         gGedweX74umvOQ/PND0h1NsrP/zmzHd4o7TEOR8wQNdIu42HYQ5bRswkuVq408PVWBxd
+         BF+evWHfT5AfHzXyRQFYrPBL6bc1KIMpgOFiVLSb6tf1LEx5AHKLqTRXM+4ID+bUOxpv
+         HMlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=7RmlTBsfZu7jfSANKVaOagnr+/jgA52gkBUY+7wdM10=;
+        fh=ErpCMGLZsvxdNUTz1s2fOhNhwH+g7lIgs3nclEfNGJ8=;
+        b=T78uNA+OLB0c/3v2jyCIcGOTatcgtDX27gkSd0yI4Z2KG7L+wP2iQnC/C2YN/JhCZ/
+         UYAN2/WpwoCSdXwn8Wlnkj/5pUfY4K26twqqh5KF1y439ZHtpNKcqPou4pwnIoEnUfWS
+         pJ9c9G9p3V0KWy90pTwLbih9kEIsJAuy/5pYjs/rV1jyGht4l6/m3ReABxCOmUSvCTy7
+         2DFBlbocLkKB2JtT/H5ny1craMKP6P2wl/UKdWKgvGMQ4arqvMfY53pt+4abiCp9hf4s
+         tuDVk9KXYOFtG6ojpVQz14VDhCu+7eyhqASJNR4IkquOsT/10hQmqcmDufq5Iy7/SABu
+         uQ+w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779350542; x=1779955342; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hbRDLYE2cbMKakevePB5wZhSMX5cMBexsypIIixVjPk=;
-        b=qtJT95k+ftIu51zVzStSaXJ3Bd+UtzIF5vNS1phG1gp1Q1W/MlIPZueEsz/QXWk1Io
-         D6POK3Zzi3KVuJ+g2UArOkrnyAl0l0vFoiyxACzI1p7gLCRPFAOXLzt/3cLpS/j3KmLk
-         StPmgikxnG6xF1+XUnNDM1IZifqHeOydntIk7D6+khVRZ4s9b0+zM4eS6S5dkj+UmOGg
-         na5ZQnB42XkxTgTuGdyyGyErpkm7kphGvc5Xvgpqk4BEWIVWPtWrNp6gh4FrmLlENPYx
-         1/L0H4o4SbEohAa5tuf2Z5kJwtnh+dz/qbReht1DyfBib03/G4sEuV6sRurz0sXMvlCw
-         34Ww==
+        d=google.com; s=20251104; t=1779350898; x=1779955698; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7RmlTBsfZu7jfSANKVaOagnr+/jgA52gkBUY+7wdM10=;
+        b=vNa4ncl4w88J0jNq6h9uTpV/yc3viKafNMSoFRv6ne3V9rhUNFugVCeiSMRdIx/87D
+         TVFSXh25D2vRuEtzLjkCsEviLgn1jWIyr112ltrat3Ol0r9CgYXKsOz6sjZ8E+LlQxI8
+         0sbsHWLfeiKOjg5/NxkMrywhvNdMzSesGb2xdpJAc8EM4JpMQlZYtFrCu/sDiIO5i1Tb
+         sumwZJ+82jOgNXR0ZZBjdMBODKRWkxYb1xTde73+1INALPFNgnvtbTISnB566JM4Ef+x
+         RyR6IGvNcp8HCvqOy7t8rll5A3cZmb/D44ZjFB0Deqh5Pl6HH/xnGZVfChInXyOa6gWY
+         herg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779350542; x=1779955342;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hbRDLYE2cbMKakevePB5wZhSMX5cMBexsypIIixVjPk=;
-        b=I8PZKRx9YOb8sfXS6QgW9IfES098gCqyfTyK8HLIhhZ3CHO7Xr4F67ugB2DzIG6pIB
-         +97dxS052YTGDSWZnl2z7YdtV6opbvWbsEPUF7t0s8uQqBEgGvQjENhcseNWVVxxJnc7
-         X7GUMj9T7TDu96HC/K6SUZ84/KNIr0ItDzMUYaXBHrv4ChqspNqvyCDziCP44Iy1Qy2Q
-         pf82QVH1OetEpkNxDRV3ZN19WN5vm5XivuoRVqGUAsWOqFlB+LvR56zir85SyFBvqKcH
-         IGsvmPCoOibXqNdJT3zjVfKm1mdqfMJ0xdG+Awg5WPaeEnvNl5YLRmpR0dH9w1y0l+KL
-         DSuw==
-X-Forwarded-Encrypted: i=1; AFNElJ8O3AF1m9hvHRgdWOaoquqbgergMEEuYcjBRLKN3EU2of9UuMHOmQMsaZ1S2NrIkdjpIud36ih9eoFGbQhF8gpM6XY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMlHnHaoolMYIyr+c7CPUAfPzTxFkIg1EaLMEp8jyWh/rtyZVH
-	CVG97kA43f1CtC2vJUjF4UXfBC3FkxpMYieB/Ts3EmWCQtARdseDu3CA
-X-Gm-Gg: Acq92OG24XbYi8JgwEERWwkpT2HkjtgwNptzKlYTkHRereoODAk7h/mT9dU987/H6la
-	53pKoLZJWUbTfYld/gJWrrpsniS2LnI+mzxV7eUDSiGEnpKnkXov/GhLxeyJLVlzhCdJpzpzJQ9
-	iLOwul3QVD5PQXNiwP4tBZpOeY5wFadoN+ga8arMMbLwc1DeBlW5IZX3X3fnn0zTwnVbP5fRhus
-	KgAbRzkxxMIo+tEAlGOkO4oN/Y/YclaWWNjIA3TMfE2nf9hUoTovxMKR7uahGwgHR7D57LHHzT1
-	R+7obu60OjCvrhmsOMHbGag+dYQ35u5QC4fL+GZkmQv2Hle3r7/N0LY9ywMqQNCawxAeafKzHfG
-	E8tm0xCv4Jieb3DrBJ6hyEFBZ8LE7i25joWM5RxxX/y8i5CDTop20GxcpuPXjQ0WA5OMVMWYxYo
-	vyV/CdK/i3FyVaSOjnOPdDB/Vy2hA2O8ImhANu6S/iVGCPJ8xnHPxQnANk0J99TybEbO3qCMtZq
-	370QawvQKIR4w==
-X-Received: by 2002:a05:600c:1f89:b0:48a:52ee:5776 with SMTP id 5b1f17b1804b1-4903606b7f1mr20526055e9.11.1779350541494;
-        Thu, 21 May 2026 01:02:21 -0700 (PDT)
-Received: from orome (p200300e41f291e00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f29:1e00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eaa7d9daasm1044740f8f.11.2026.05.21.01.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 01:02:19 -0700 (PDT)
-Date: Thu, 21 May 2026 10:02:17 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Artur Kowalski <arturkow2000@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, Thierry Reding <thierry.reding@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Subject: Re: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
-Message-ID: <ag67-LzzT6ZQTKlf@orome>
-References: <20260519-host1x-tracing-v1-1-55afb8cbd186@gmail.com>
- <20260519141059.77435501@fedora>
- <ag2iF9bZJcBQ93lh@orome>
- <pQKtL-t0RKO7KsvRTAIQ_w@nvidia.com>
+        d=1e100.net; s=20251104; t=1779350898; x=1779955698;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7RmlTBsfZu7jfSANKVaOagnr+/jgA52gkBUY+7wdM10=;
+        b=R/eQLeT9t+DEoCZhB7JCd4XhtX+WunDFUIQpPYJBLZPONiNWYpOYz6t2AqAvpRzN16
+         3QRYkNcmYt00LkANINxR/mb7ESycWvnHoo3zUwqOOkK/uMOBP6d/sAV0WpEu6y75Hoj1
+         Bx/x2JXpiDZiJg/lAZ8wrOdhYKjmFfVX0zCYE4lBJWjHqnhLL3cK5TbCsigaWYf3gmUX
+         5bAXhLXxBoj6sfBGek7HHKbPPpqafVyHcB5ninpOcTTpUsOITL75o3t45JQUaiLFxU7e
+         mmdo670Oo3KU2WboUqpxI1zJeyi5SyZ++CeuyA5Gh2xR/eKduZuRk32AvTidC0AB4q3K
+         Mh9w==
+X-Forwarded-Encrypted: i=1; AFNElJ+FfTFVVOD/jxwTW93tsReKpoaJ35bS3O9h46FO7FATIY3TYic3PKsrKmMA7IITXsh8VLKWrkalA2Oh4XLvFM7dO7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY3AhSzoQaNI0nhLR9JAbUMAdgz5FBcQfw0IctDor8kbjEIkoT
+	fWj6mM7TNAh7Ajot30IhczCyNnoeIuKBr5R82wpYUw77dTeazDvoN1cW2j3HCVVusw08pB0FO5Q
+	egpgwFGwCEn9bOVlmQ3fKjwvNfFu5YzzmeIYT/Mgm
+X-Gm-Gg: Acq92OFv63zRbGymq5Cunstsh9EUiRGfqDF2/cgfPm82IzLZM2zSXC+PqDyNUTAO1Sf
+	2EhTvu0YHRMPcxOMkNRvFOuW9WJXKga2PXlyp7moAN7fpEyh1OPCX7WLBxFhnbHq9MvS0hgKsOI
+	xUHl9AtqeTuPxuGU2uab2sBTf6hcue88f4/pwYkF7qZ/kfAzufIitP8XLgUcDvjgsktbPVWYVPQ
+	3mI8E9WPwhcwDfHNuanppF5fiTZwF4ZyDTYygYTgj6fAY2c/DWiqFvG7bAsu98uUNE6AoXIg8bN
+	QIoupo8Xl9Gt14HHatg=
+X-Received: by 2002:a05:622a:588c:b0:50f:ce97:3b84 with SMTP id
+ d75a77b69052e-516c534d1f0mr6941501cf.6.1779350897637; Thu, 21 May 2026
+ 01:08:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5k33r6t7pdtm7qgm"
-Content-Disposition: inline
-In-Reply-To: <pQKtL-t0RKO7KsvRTAIQ_w@nvidia.com>
+References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com> <20260507-gmem-inplace-conversion-v6-18-91ab5a8b19a4@google.com>
+In-Reply-To: <20260507-gmem-inplace-conversion-v6-18-91ab5a8b19a4@google.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Thu, 21 May 2026 09:07:00 +0100
+X-Gm-Features: AVHnY4K_Cpc3lp6TF05Y1I39E-kRC-mXXncMC4rrkZH8FAVJjZ2CPai0rhLiTAg
+Message-ID: <CA+EHjTyiAgmBQgmrAHAHx3G1yKsP7tSgd9r-y4oPKQM4Nn_Kjg@mail.gmail.com>
+Subject: Re: [PATCH v6 18/43] KVM: Move KVM_VM_MEMORY_ATTRIBUTES config
+ definition to x86
+To: ackerleytng@google.com
+Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
+	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 7 May 2026 at 21:22, Ackerley Tng via B4 Relay
+<devnull+ackerleytng.google.com@kernel.org> wrote:
+>
+> From: Sean Christopherson <seanjc@google.com>
+>
+> Bury KVM_VM_MEMORY_ATTRIBUTES in x86 to discourage other architectures
+> from adding support for per-VM memory attributes, because tracking private
+> vs. shared memory on a per-VM basis is now deprecated in favor of tracking
+> on a per-guest_memfd basis, and no other memory attributes are on the
+> horizon.
+>
+> This will also allow modifying KVM_VM_MEMORY_ATTRIBUTES to be
+> user-selectable (in x86) without creating weirdness in KVM's Kconfigs.
+> Now that guest_memfd support memory attributes, it's entirely possible to
+> run x86 CoCo VMs without support for KVM_VM_MEMORY_ATTRIBUTES.
+>
+> Leave the code itself in common KVM so that it's trivial to undo this
+> change if new per-VM attributes do come along.
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
---5k33r6t7pdtm7qgm
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
-MIME-Version: 1.0
+Reviewed-by: Fuad Tabba <tabba@google.com>
 
-On Thu, May 21, 2026 at 01:33:24PM +0900, Mikko Perttunen wrote:
-> On Wednesday, May 20, 2026 9:03=E2=80=AFPM Thierry Reding wrote:
-> > On Tue, May 19, 2026 at 02:10:59PM -0400, Steven Rostedt wrote:
-> > > On Tue, 19 May 2026 12:16:43 +0200
-> > > Artur Kowalski <arturkow2000@gmail.com> wrote:
-> > >=20
-> > > > Use __assign_str and __get_str as required by tracing subsystem. Fi=
-xes
-> > > > string fields being rejected by the verifier and unreadable from
-> > > > userspace.
-> > >=20
-> > > Does anyone use these tracepoints? The fact that they have been broken
-> > > for 5 years and nobody noticed makes me think they are useless.
-> > >=20
-> > > I rather remove them than fix them, but if someone thinks that these
-> > > are still useful then by all means apply this patch.
-> > >=20
-> > > Acked-by: Steven Rostedt <rostedt@goodmis.org>
-> >=20
-> > I know that Mikko used them a lot early on, but this driver is pretty
-> > mature now, so we rarely need this low level of tracing. I'll defer to
-> > Mikko on whether we still need these.
-> >=20
-> > Thierry
->=20
-> Yeah, these have been quite useful in the past when debugging why a job
-> is failing. Without the cdma traces it can be cumbersome to find out
-> exactly what is being sent to the hardware in some cases.
->=20
-> My preference is for keeping them for now.
-
-Thanks, I'll pick this up then.
-
-Thierry
-
---5k33r6t7pdtm7qgm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmoOvAkACgkQ3SOs138+
-s6Eaiw//axqMHw2aCBN/4prDAG+8/dWi3NTEhYUsoXdeqpwErHY035ErOee+dQ/J
-UZhhYf6GPAWSiUycfr9sqpgdRLLBwaNZpAcwcWfUMRk5iCOrI11+gs8FtYK/jkcJ
-Hjpu5d7IaywXKHq4j2yX03vT9Dm1XqHtc7JdHDxW/FINaqM23FXZyzE8u1FLjvSF
-UllYcn6pWbPB1iF57OnrHMaNI79aBU9mHLmIHMvWZZKUfkkE0mVd8q7IVWlqCv4w
-GvVf7aZI77rTWWzaCjqAQtzFTQ274x4B2BsNDw3aIc01BdCO+wXCkok+u7olVwNf
-vq/El8n8PCSNJADGxiGeT2nVnF3lMb0zAmbBUFtKe6hCeI5pIZWFH8B6zrGOklNK
-ajNNPg/diQTBFEeEWZbHp9jo1vUbbULEiNhmoHchrmFeSIiVTGJLJjV4wG+fE8nL
-tLiE/Ie38IvQ60q+7CMkxtFfVHI+4BixDq+tw0cIlimaGKUB8muDlOkb6fvGtave
-i3qs1uKqTtyECsm0xYJ9Q+/BDHANvPHvm1PRvoU/5mkK0qP50SkiwSM2SL14giaj
-mPB6loPhE/tAtBSakC957dD2A3YPFAfWeHUjmhrYZ+tJEB1kLRW/u5Jb/L5T0Mq7
-0ZoDYGbIU7mynkc2ZCnwjFuIQbJkTjzuF8lFjiIUwy4wdpMdsiw=
-=VGnz
------END PGP SIGNATURE-----
-
---5k33r6t7pdtm7qgm--
+Cheers,
+/fuad
+> ---
+>  arch/x86/kvm/Kconfig | 4 ++++
+>  virt/kvm/Kconfig     | 4 ----
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> index 26f6afd51bbdc..b6d65ee664d0f 100644
+> --- a/arch/x86/kvm/Kconfig
+> +++ b/arch/x86/kvm/Kconfig
+> @@ -80,6 +80,10 @@ config KVM_WERROR
+>
+>           If in doubt, say "N".
+>
+> +config KVM_VM_MEMORY_ATTRIBUTES
+> +       select KVM_MEMORY_ATTRIBUTES
+> +       bool
+> +
+>  config KVM_SW_PROTECTED_VM
+>         bool "Enable support for KVM software-protected VMs"
+>         depends on EXPERT
+> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+> index e371e079e2c50..663de6421eda2 100644
+> --- a/virt/kvm/Kconfig
+> +++ b/virt/kvm/Kconfig
+> @@ -103,10 +103,6 @@ config KVM_MMU_LOCKLESS_AGING
+>  config KVM_MEMORY_ATTRIBUTES
+>         bool
+>
+> -config KVM_VM_MEMORY_ATTRIBUTES
+> -       select KVM_MEMORY_ATTRIBUTES
+> -       bool
+> -
+>  config KVM_GUEST_MEMFD
+>         select XARRAY_MULTI
+>         select KVM_MEMORY_ATTRIBUTES
+>
+> --
+> 2.54.0.563.g4f69b47b94-goog
+>
+>
