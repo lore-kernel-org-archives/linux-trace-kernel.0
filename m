@@ -1,393 +1,702 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010005.outbound.protection.outlook.com [52.101.201.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33253BB40
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 05:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779340309; cv=none; b=P5xHLeGVwFUH/GsGIAQzRbib4p5a8sL0pG2YlEs63FAVoEnSRcra4uhvG16yeLEhliBZBG7ITUTvDCl7jkGC6qmARFAS5hPqDWX/0pF2Anj9UlrUarAnLsePApwSYCvZI2LgMLsWGdpreyWGarQ3+s/+EEMm+TM6HPdXECOZFrg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779340309; c=relaxed/simple;
-	bh=ZWhDn0k7tTBB+z70Widr/hn+wgDTKpoW6xeVI/dQ0/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIYtOGLewHE1FdH3vet1RmbNXFRi8EiYYeS9mF2r2VxqMqMmS+m8ikYBkbiqoFpkO96gcSTJMFFzwrwzDrNAqU7CDkOI2m4NuZiigRnYNA+Z93MneU3hTqQDJVEGY6eQaEiayG9rz97eilj5pmt4d6mzWbLZfJi9NgMLgAxzeds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xq03vToX; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391FF2D3EC1;
+	Thu, 21 May 2026 06:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779344631; cv=fail; b=FzXPonyRJdM7/ol/oXk3vkqIDXW+75POk50M2OKqOjN1dA66xRuWS6rmPW14y4+YH9X2vZFIEq6ghsMhjsCq/mTW/jF7CU2Ca0yOUpEvTKTsT9Y2fviMML+LH4LGzlqziSz6itDmpEU31h5WBJb5b1paIreCTLiXRmCd8tR55Q8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779344631; c=relaxed/simple;
+	bh=2kIJ09OE5ebrxtqhh07mWN+BDvoZDhcMKK9POhRtD5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OKTvEkfhLPxeLa4tj+32JFyAlx9iBgOGfUY/iOKWy205BWC613M7T+XsP2puJBtQVcqgdtiCMln7vRofOD2oS92W8++zspqlwDI0/hv0PWlDrIgJMfEr6m1hh7kbLFF2NPZ/gv9pC29i3F3uK0ARFJFBxp7Xiv/C248wPDHcSvY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lVKFy9e1; arc=fail smtp.client-ip=52.101.201.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xq03vToX"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3697c35eab7so3218804a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 May 2026 22:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779340306; x=1779945106; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QavOmsmCk8wHSsJYb+7V6gDDdoRFfxnn/DpXYtvAfIs=;
-        b=Xq03vToXPMKd43+8eVqeohDKpe/qT2+sabZQu9QKh416AUqwOmqOxtryqTSEiz78XF
-         OjDp0jLIsSN7Ldh4Obwl3elb0cQD+iJvPDOecojHc6s1BJfQa3ioFDd17gi+0QsxVI8o
-         crYCC9q2eqDKVChtGR2YKMFt3ktWzvDOl3EfD1CKSLobzX7b92/sMl6Hw2pn/3AfB7S4
-         6s+iu3nTR8txScXO8tgI+tcy+zHN5JGJas4FxsfeQPft/AfYpkvOh9pG8LQMDKE8GFTf
-         32Ls36g5fEuVG+416OTHXQ3RtFKiPZBZhzO3J8yjrBB2+p2KeXvQ9zxrUN5TYGAA2xtE
-         AuQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779340306; x=1779945106;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QavOmsmCk8wHSsJYb+7V6gDDdoRFfxnn/DpXYtvAfIs=;
-        b=Gr30dDxU1VVqKw3wpQC6FdGEULFNTDVQj5z5I8VD3Mg8ZQVLcpoXZ8JJ0n48az6mST
-         vz5H+4mryQjIqPafD30PKlKIxO2VeqUEiwU4SkkHMRhF1E87ubyNLS2ESoJdZk+Zkw68
-         smV/Yhp3AodLHDsqm8R0G3xs3m773PJOeWSCH8JEKI+xXoIYo3A6PdQXON2QulwTi6sh
-         ZiydD4Q0FMhlCrJfB8HlAmDTEHj3m9pPb62jt860gzJWYlq171Nl7yUU8Ccw2rx61FiQ
-         DoATBIDUycBzSH1n36PO/CNGgmNdHfN57BqA5Pr9TiAaBXlSHN7HvOSjHzi9fli8xlk4
-         Wgfw==
-X-Forwarded-Encrypted: i=1; AFNElJ+brVF9mEMN411tCNIZMz8oaPLDW0IdA0rOuM62HqAvYIu4EzAejN6SX3T4p66xe2MWmaX3gDkBBJwdw2dV+YJs+uo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybKEAc4edZ7xLQ+gxFPzzvMQI8+alexkFjKV+r9Al5SsLbs3Ma
-	AU4x/HiODQGRbPc3VPP9PvX367zhFKhfN7/6IoS9QefH2QFVYnYlqSP2
-X-Gm-Gg: Acq92OHFr3rKrA/BRUmVaJ/iihGdyZCZ+nP9+WkFGVldCkfHqbPFMk0FCxRP9PBwvny
-	iZFccvokoN0T42CXT+NR6N93wXkfISasfR0SUYBgr7BB17Yf+E1rAZ7MjYvmwrbC2X4/IP6ln/c
-	k+Za795ijKSWTHG796geCCQSFcfJ4pWErHsrTNS3bnMyoptcsToDLTVY5uaiH6iEJ5aUhOV3LF3
-	pX//k4RHDgiJgoC1O0KAD1qCLFZOvrri+GfBukXkfRwyDbpAq/THWDMGlu5I/qnBjHdaw6aUr9g
-	GEpm8CDlNP7bka2KtHpTqDdti7ZpwQRaYNtsnU8EVfvpoMTgpJkwBWD9Q8QVoQ5VTK0Mk1YN/sV
-	34MvIbLOzEEa5A7VynD9ejODOoKBwjSvQ3yO1H+Onb0eZzgRZskjUwvelfel+n6LCrZ5C1hTprv
-	3qx+C8E7LWrw5itgloCPEj2oQPgg5b15XNVHrWDw==
-X-Received: by 2002:a17:90b:5241:b0:366:479e:63a5 with SMTP id 98e67ed59e1d1-36a44f11de4mr1461841a91.2.1779340305728;
-        Wed, 20 May 2026 22:11:45 -0700 (PDT)
-Received: from localhost.localdomain ([155.254.122.134])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36a3d206162sm1296571a91.14.2026.05.20.22.11.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 22:11:45 -0700 (PDT)
-Date: Thu, 21 May 2026 13:11:18 +0800
-From: Vernon Yang <vernon2gm@gmail.com>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	aarcange@redhat.com, akpm@linux-foundation.org, anshuman.khandual@arm.com, 
-	apopple@nvidia.com, baohua@kernel.org, baolin.wang@linux.alibaba.com, 
-	byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
-	dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, gourry@gourry.net, 
-	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
-	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
-	lance.yang@linux.dev, liam@infradead.org, ljs@kernel.org, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
-	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com, 
-	thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, 
-	vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-Subject: Re: [PATCH mm-unstable v17 11/14] mm/khugepaged: Introduce mTHP
- collapse support
-Message-ID: <91015820-f39a-4b06-89de-b49e5ca465fd@gmail.com>
-References: <20260511185817.686831-1-npache@redhat.com>
- <20260511185817.686831-12-npache@redhat.com>
- <8f9834db-8981-4eb1-ae46-94908943da3d@gmail.com>
- <20260521024654.2a7teoe665porz76@master>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lVKFy9e1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CINxPEV8+KWpGUu1cP+vYf+8vC0/sobhOwJS5d8VcLzxvPoWmb54+pVnbRAZ3YGUI9XLeOtoknISusj7CTNv923hsrhMMp1lx4MTb+W3EUCgl+vlaP8UB1rQB2ZPda+lYhApJx6k59a0Gr4bM8SwWkLNO5+lBCyUvKiEeAl4iYM5l74UhHJS6v09kMUkBRe+Lo0zrQtbNKva+i2ctx8rLud6vqky6UhljuCMq/XuSEwoqWk8MtkzCBzj9R7cnqM7h7c7eD94kaGSYv8CCdKe7la9tCHPWxHWBPXXUycLlP7gADIvkbGqvrfjWuWgUTHYCIee1qtXCMhkBnzMdLUK/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UlF3VWZvu9Puokyl4CmvwOEWj8cjg9IjRJmhYcALClg=;
+ b=U56H2+b1vrpuEaIuH33K7LBVYIecjNetO+X1klX1QzkclJg5R23nnomouuV189wt+eDC5hBTQ/EEHs0R3d0mvYXPAj/NDQNVQTK6INVP00udIR25nt/oBFRnesiO4Bfj9GxFXyqgoI5c6XGQpK3Jopxa4H3Gil7soA50jk2Ez4luxFTlcIijMAXdM+XOPUM8dpPae77ZrhjP/kMwEI+8A8eipPwenf/JalMiFBKHfvLKv48szio+k8AXqGRtVBp3ZxFKqSjhFlGR3wqUFZjz2+u0ioK4kD04NzPBH7x7WHYiETUbEwwv3XEpr2pQp78xYVQAiEQcmJOM9i/Kt+HBHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UlF3VWZvu9Puokyl4CmvwOEWj8cjg9IjRJmhYcALClg=;
+ b=lVKFy9e1kxUdaK/DI/21rlqpdN89WVOxqYeCJJ3PBcPl7Uu0JKEiX7PBMUsklXkD+Hl5er4Vq2NvNr+dZbKFlAK0Id244aK3oFe88BUDdUvN4UignkcYyZbfWlu4BrI9etYUx7qo95l4+hEzaOg4MVwSe6fzFIFkGsu2JTqI4LAaKTwpJNE1EC/NEsoE8gkMI3uCQVoabD+0XU2VcmeVZnO76m/6kMoTrbgBOgE/BYtcd4GxFR0ppDius7Xgpc2LR8U84Gx/6TcbyO/7Sd/+8RY9alGN1O89kIZGS/laPiN3iCmxeJG171cGk9ATNBbHeuu2AbyQmTLyyFPfsIBBsQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
+ by DS0PR12MB8414.namprd12.prod.outlook.com (2603:10b6:8:fb::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.48.14; Thu, 21 May 2026 06:23:34 +0000
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4]) by PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4%5]) with mapi id 15.21.0048.016; Thu, 21 May 2026
+ 06:23:33 +0000
+Date: Thu, 21 May 2026 16:23:28 +1000
+From: Balbir Singh <balbirs@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, kernel-team@meta.com, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, 
+	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
+	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
+	longman@redhat.com, akpm@linux-foundation.org, david@kernel.org, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, 
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org, 
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, sj@kernel.org, 
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	baohua@kernel.org, lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn, 
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, 
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev, riel@surriel.com, 
+	harry.yoo@oracle.com, cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ag6XyvxR-NU5rGn-@parvat>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
+X-ClientProxiedBy: MEWP282CA0189.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:220:1d6::14) To PH8PR12MB7277.namprd12.prod.outlook.com
+ (2603:10b6:510:223::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260521024654.2a7teoe665porz76@master>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|DS0PR12MB8414:EE_
+X-MS-Office365-Filtering-Correlation-Id: 62ec8808-837c-48cb-17dd-08deb7017bb8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|56012099003|22082099003|18002099003|5023799004|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	XaKjqcJrGp6BeWs6QxgEGIPL0SFbnxC994crffeuKbdgVNgTUQgmQ7avBNTxc8lpK5GOHcEcVlEC+BB1l5h+wsRUOp7KqvkXdIke4bcQtOFK9zTwka0GgY3OYN9VCGksAVl+ym2Pv/1rd6YNSX4KO7JFOpI+RHYyiPnzr/jBqKfFOgfC4/k/HYVyLAimW6xsO4cpyAVDjxMJS0kCMr5I/ucZhjvEn579WD4lymn0/nQojPwpcf7NtXROdwQ6ZOadU0Zk4FS7FxvGRlFBpHqf1be0uIjWgy6YmXxtM9D1oOlnZePNnjBxDfVY5euZp0QAjuKgW7p/6GqueRmQKy6BE+q3T1Txgok7DbtMe1opJpIaWeQ0SV3FQPMP/OLy8SGzOUpbD71Eoh+qN1AGo4dfhP+uk+/wY28gDx62pea0j6vmGsS/3PNXsD6u0htRwfNPeo0YHwU1NpT38XrHtGmXkAqmtVxbXaP7w74BemXlnLeOjBuRvAeQhvnA27YECHo7alBQs66W4RUaPSo9SJfQ3NCDGr1LSkSAB0V0zm0lH3XOb92FS8aTuApjv6bzifEtCy6iTDbWvxSSrDxVu5aqJQwL8bUNYwwayyPgWjpyAtgKPsQN7mGUst7P8ZU8qJIfCRPwWtQ4dkNW66aekcVmKNteCgjrnUfsgEKb6AcmEryYXmW4+B6d3ikrck6cPkHy
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(56012099003)(22082099003)(18002099003)(5023799004)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?uqzAa/BNiOIpvCWjPBQmafm102FYCeqWfiso4teUhzOwU/z3SYWcTvk0m8BF?=
+ =?us-ascii?Q?NFsLbPhS+sHFagLJDIwjwZsTVZ1Pqig9dAcq7FV4zkUtExqZaJBO1l/IEIRw?=
+ =?us-ascii?Q?aggohfySPUSH6VNtSV7pH8Lt8IH3TAXBC6RxRJXhud/7OvqX9gRkyne76Zzg?=
+ =?us-ascii?Q?GmikqViiZDzGRx34JqemampdQrJPNW7pP83QMHGZFLP1tUATZn3bgCMxTLLE?=
+ =?us-ascii?Q?Iwsya6nMXgbccNLNfN8M+7CSK+QiM9I5pev12mteOphTJ5Fp5ezr0VWTXQNL?=
+ =?us-ascii?Q?j8N1YGEDfuutcDescj/s2k3SwXZBL6AVbffZ/yhFFdqJkKk7pRfj38DOVyub?=
+ =?us-ascii?Q?+QGCIjL471iI9q5Rw9pvQ576Kb5uGcsGzhtad649jHjVCVpgfUFPAfV6FhfS?=
+ =?us-ascii?Q?F/DRC+mPYvZ2C9JBwnY6AxUyMXk4+QWlumM/LWa/QgnM8zlgh1wu32c8tJu+?=
+ =?us-ascii?Q?SqahEV5i3YgKhuqYaTnocQS68SAcUvbHQJTL6UHZDESc7omCM9bAeSBVe/Qx?=
+ =?us-ascii?Q?4qQM4gOrcAJhbFXNWbeXbidWr0abhlqs/s36uvzvXaqO6ydkDOHpFplRGtMh?=
+ =?us-ascii?Q?dmzysFp51DDCXKXleBNWieALLUXxXY6IH9s7AthVFsfea1bIAHzIm8Urdedw?=
+ =?us-ascii?Q?jUpGnkt8gIFVSSgnm3IaUWCwlnjCJfNZ/7sv9Jkd8uJ6IryZ4VXmAk5GJ2Lc?=
+ =?us-ascii?Q?gBMpyja9z6+8iEFH4S4WHRppmyYwI2Z4MGV4tUN8tVgAdPEH9WC9fRTTC/9z?=
+ =?us-ascii?Q?/m/cy+zqZhBTqyVmspBw8RsqwCcuyOafUyGeE88TqSTIJyETYeury2TIE+OH?=
+ =?us-ascii?Q?w+aFCINMjA5cp2bASOvrnRo4xyvgELzMHmQpPM0yKmESwL7Lw4n/wm/JTlJG?=
+ =?us-ascii?Q?rGWPKGO9H/7LQRz4xUX7kZZ4nt5yhuvvdFn47tQXItQla5cnnB2wrBCJEX0g?=
+ =?us-ascii?Q?6mIjAjZtU3V9JqtmC/7DiTjOE6bpmsq+oIZ15XmoBv9bsX1TZouyd89qhiFh?=
+ =?us-ascii?Q?nJrXoQ2sWEXo/P1r2czUzCzKHI5AYKQ2Pa6XEWrKsBiJDuOJFMV3KEZZoj/5?=
+ =?us-ascii?Q?arThaSb0egVAoYvQ6Rb5YpAeCYwkWhSOxxWa+Q2cwyvh2YWMtUOHe9tYs6K1?=
+ =?us-ascii?Q?R2MD8wNmmjN0vxS39NfQ+ZP9gbhH9tnYC6M6y/TYz6JCZQ51JmcTy0LoOWpk?=
+ =?us-ascii?Q?0ITjZM9yEMXhDy2gcwM8aORkQoUS44G+BCVtLx5YHPDSB71Eg9uUNaf1aBXe?=
+ =?us-ascii?Q?OZASchhO58uLILHTVZe9SdlhD4ahH8jjD3ppJlY9pL/YpjQjnOQzjtPOQ03u?=
+ =?us-ascii?Q?kbIblhi+L3CLbu+DwdblHk67Byc7oq8qdS+2DKmt/hqiKX+/k1GSJaLVruVK?=
+ =?us-ascii?Q?Q2tcvtImCtP+2KjpFftiP6NVpR3yfAuNdr5AqzvJyl0KAkq5ktgIeuAwUPuz?=
+ =?us-ascii?Q?cK+4J7QNdMi+sR2di2ih/A3SpC9BtE+rgtbe7yVVKxBNnkeyiI4TBn8LjlV4?=
+ =?us-ascii?Q?+iMqNL8e3ze6PSYWF+fwxRdFiYqSUdj+qdn51zshAsCtqOLg1jfTkjJeVhj8?=
+ =?us-ascii?Q?XPgRWBPaDYCv+WXDgDJi9xSHktFujQhx4HpOJYEDXx7F595LqKxi2ceV9zz4?=
+ =?us-ascii?Q?rOASwrknX6syqfnmqnusCemwKhGOu/4TenJ8l2nxr/a0wG0Fvv+3gkwF2Qcb?=
+ =?us-ascii?Q?SpM1yEAAH71Ti+IbLVEHnzwBk4GPEpns6/h+v68MIp29DDWBSkDFNZlT2v/K?=
+ =?us-ascii?Q?aI1jPYqPnw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62ec8808-837c-48cb-17dd-08deb7017bb8
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 06:23:33.5268
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ObJKk3KvAvxxNAS2YAPS3ZjLaiJHDy2fYAupHgOw64XZdBQQ5RtlT+eVB4zbL49BPN86MwEfR5pQmLPkXrhaPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8414
 
-On Thu, May 21, 2026 at 02:46:54AM +0000, Wei Yang wrote:
-> On Thu, May 21, 2026 at 10:36:15AM +0800, Vernon Yang wrote:
-> >On Mon, May 11, 2026 at 12:58:11PM -0600, Nico Pache wrote:
-> >> Enable khugepaged to collapse to mTHP orders. This patch implements the
-> >> main scanning logic using a bitmap to track occupied pages and a stack
-> >> structure that allows us to find optimal collapse sizes.
-> >>
-> >> Previous to this patch, PMD collapse had 3 main phases, a light weight
-> >> scanning phase (mmap_read_lock) that determines a potential PMD
-> >> collapse, an alloc phase (mmap unlocked), then finally heavier collapse
-> >> phase (mmap_write_lock).
-> >>
-> >> To enabled mTHP collapse we make the following changes:
-> >>
-> >> During PMD scan phase, track occupied pages in a bitmap. When mTHP
-> >> orders are enabled, we remove the restriction of max_ptes_none during the
-> >> scan phase to avoid missing potential mTHP collapse candidates. Once we
-> >> have scanned the full PMD range and updated the bitmap to track occupied
-> >> pages, we use the bitmap to find the optimal mTHP size.
-> >>
-> >> Implement collapse_scan_bitmap() to perform binary recursion on the bitmap
-> >> and determine the best eligible order for the collapse. A stack structure
-> >> is used instead of traditional recursion to manage the search. This also
-> >> prevents a traditional recursive approach when the kernel stack struct is
-> >> limited. The algorithm recursively splits the bitmap into smaller chunks to
-> >> find the highest order mTHPs that satisfy the collapse criteria. We start
-> >> by attempting the PMD order, then moved on the consecutively lower orders
-> >> (mTHP collapse). The stack maintains a pair of variables (offset, order),
-> >> indicating the number of PTEs from the start of the PMD, and the order of
-> >> the potential collapse candidate.
-> >>
-> >> The algorithm for consuming the bitmap works as such:
-> >>     1) push (0, HPAGE_PMD_ORDER) onto the stack
-> >>     2) pop the stack
-> >>     3) check if the number of set bits in that (offset,order) pair
-> >>        statisfy the max_ptes_none threshold for that order
-> >>     4) if yes, attempt collapse
-> >>     5) if no (or collapse fails), push two new stack items representing
-> >>        the left and right halves of the current bitmap range, at the
-> >>        next lower order
-> >>     6) repeat at step (2) until stack is empty.
-> >>
-> >> Below is a diagram representing the algorithm and stack items:
-> >>
-> >>                             offset   mid_offset
-> >>                             |        |
-> >>                             |        |
-> >>                             v        v
-> >>           ____________________________________
-> >>          |          PTE Page Table            |
-> >>          --------------------------------------
-> >> 			    <-------><------->
-> >>                              order-1  order-1
-> >>
-> >> mTHP collapses reject regions containing swapped out or shared pages.
-> >> This is because adding new entries can lead to new none pages, and these
-> >> may lead to constant promotion into a higher order mTHP. A similar
-> >> issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
-> >> introducing at least 2x the number of pages, and on a future scan will
-> >> satisfy the promotion condition once again. This issue is prevented via
-> >> the collapse_max_ptes_none() function which imposes the max_ptes_none
-> >> restrictions above.
-> >>
-> >> We currently only support mTHP collapse for max_ptes_none values of 0
-> >> and HPAGE_PMD_NR - 1. resulting in the following behavior:
-> >>
-> >>     - max_ptes_none=0: Never introduce new empty pages during collapse
-> >>     - max_ptes_none=HPAGE_PMD_NR-1: Always try collapse to the highest
-> >>       available mTHP order
-> >>
-> >> Any other max_ptes_none value will emit a warning and skip mTHP collapse
-> >> attempts. There should be no behavior change for PMD collapse.
-> >>
-> >> Once we determine what mTHP sizes fits best in that PMD range a collapse
-> >> is attempted. A minimum collapse order of 2 is used as this is the lowest
-> >> order supported by anon memory as defined by THP_ORDERS_ALL_ANON.
-> >>
-> >> Currently madv_collapse is not supported and will only attempt PMD
-> >> collapse.
-> >>
-> >> We can also remove the check for is_khugepaged inside the PMD scan as
-> >> the collapse_max_ptes_none() function handles this logic now.
-> >>
-> >> Signed-off-by: Nico Pache <npache@redhat.com>
-> >> ---
-> >>  mm/khugepaged.c | 182 +++++++++++++++++++++++++++++++++++++++++++++---
-> >>  1 file changed, 174 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> >> index 3492b135d667..39bf7ea8a6e8 100644
-> >> --- a/mm/khugepaged.c
-> >> +++ b/mm/khugepaged.c
-> >> @@ -100,6 +100,30 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
-> >>
-> >>  static struct kmem_cache *mm_slot_cache __ro_after_init;
-> >>
-> >> +#define KHUGEPAGED_MIN_MTHP_ORDER	2
-> >> +/*
-> >> + * mthp_collapse() does an iterative DFS over a binary tree, from
-> >> + * HPAGE_PMD_ORDER down to KHUGEPAGED_MIN_MTHP_ORDER. The max stack
-> >> + * size needed for a DFS on a binary tree is height + 1, where
-> >> + * height = HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER.
-> >> + *
-> >> + * ilog2 is used in place of HPAGE_PMD_ORDER because some architectures
-> >> + * (e.g. ppc64le) do not define HPAGE_PMD_ORDER until after build time.
-> >> + */
-> >> +#define MTHP_STACK_SIZE	(ilog2(MAX_PTRS_PER_PTE) - KHUGEPAGED_MIN_MTHP_ORDER + 1)
-> >> +
-> >> +/*
-> >> + * Defines a range of PTE entries in a PTE page table which are being
-> >> + * considered for mTHP collapse.
-> >> + *
-> >> + * @offset: the offset of the first PTE entry in a PMD range.
-> >> + * @order: the order of the PTE entries being considered for collapse.
-> >> + */
-> >> +struct mthp_range {
-> >> +	u16 offset;
-> >> +	u8 order;
-> >> +};
-> >> +
-> >>  struct collapse_control {
-> >>  	bool is_khugepaged;
-> >>
-> >> @@ -111,6 +135,12 @@ struct collapse_control {
-> >>
-> >>  	/* nodemask for allocation fallback */
-> >>  	nodemask_t alloc_nmask;
-> >> +
-> >> +	/* Each bit represents a single occupied (!none/zero) page. */
-> >> +	DECLARE_BITMAP(mthp_bitmap, MAX_PTRS_PER_PTE);
-> >> +	/* A mask of the current range being considered for mTHP collapse. */
-> >> +	DECLARE_BITMAP(mthp_bitmap_mask, MAX_PTRS_PER_PTE);
-> >> +	struct mthp_range mthp_bitmap_stack[MTHP_STACK_SIZE];
-> >>  };
-> >>
-> >>  /**
-> >> @@ -1404,20 +1434,140 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
-> >>  	return result;
-> >>  }
-> >>
-> >> +static void collapse_mthp_stack_push(struct collapse_control *cc, int *stack_size,
-> >> +				     u16 offset, u8 order)
-> >> +{
-> >> +	const int size = *stack_size;
-> >> +	struct mthp_range *stack = &cc->mthp_bitmap_stack[size];
-> >> +
-> >> +	VM_WARN_ON_ONCE(size >= MTHP_STACK_SIZE);
-> >> +	stack->order = order;
-> >> +	stack->offset = offset;
-> >> +	(*stack_size)++;
-> >> +}
-> >> +
-> >> +static struct mthp_range collapse_mthp_stack_pop(struct collapse_control *cc,
-> >> +						 int *stack_size)
-> >> +{
-> >> +	const int size = *stack_size;
-> >> +
-> >> +	VM_WARN_ON_ONCE(size <= 0);
-> >> +	(*stack_size)--;
-> >> +	return cc->mthp_bitmap_stack[size - 1];
-> >> +}
-> >> +
-> >> +static unsigned int collapse_mthp_count_present(struct collapse_control *cc,
-> >> +						u16 offset, unsigned int nr_ptes)
-> >> +{
-> >> +	bitmap_zero(cc->mthp_bitmap_mask, MAX_PTRS_PER_PTE);
-> >> +	bitmap_set(cc->mthp_bitmap_mask, offset, nr_ptes);
-> >> +	return bitmap_weight_and(cc->mthp_bitmap, cc->mthp_bitmap_mask, MAX_PTRS_PER_PTE);
-> >> +}
-> >> +
-> >> +/*
-> >> + * mthp_collapse() consumes the bitmap that is generated during
-> >> + * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
-> >> + *
-> >> + * Each bit in cc->mthp_bitmap represents a single occupied (!none/zero) page.
-> >> + * A stack structure cc->mthp_bitmap_stack is used to check different regions
-> >> + * of the bitmap for collapse eligibility. The stack maintains a pair of
-> >> + * variables (offset, order), indicating the number of PTEs from the start of
-> >> + * the PMD, and the order of the potential collapse candidate respectively. We
-> >> + * start at the PMD order and check if it is eligible for collapse; if not, we
-> >> + * add two entries to the stack at a lower order to represent the left and right
-> >> + * halves of the PTE page table we are examining.
-> >> + *
-> >> + *                         offset       mid_offset
-> >> + *                         |         |
-> >> + *                         |         |
-> >> + *                         v         v
-> >> + *      --------------------------------------
-> >> + *      |          cc->mthp_bitmap            |
-> >> + *      --------------------------------------
-> >> + *                         <-------><------->
-> >> + *                          order-1  order-1
-> >> + *
-> >> + * For each of these, we determine how many PTE entries are occupied in the
-> >> + * range of PTE entries we propose to collapse, then we compare this to a
-> >> + * threshold number of PTE entries which would need to be occupied for a
-> >> + * collapse to be permitted at that order (accounting for max_ptes_none).
-> >> + *
-> >> + * If a collapse is permitted, we attempt to collapse the PTE range into a
-> >> + * mTHP.
-> >> + */
-> >> +static int mthp_collapse(struct mm_struct *mm, unsigned long address,
-> >> +		int referenced, int unmapped, struct collapse_control *cc,
-> >> +		unsigned long enabled_orders)
-> >> +{
-> >> +	unsigned int nr_occupied_ptes, nr_ptes;
-> >> +	int max_ptes_none, collapsed = 0, stack_size = 0;
-> >> +	unsigned long collapse_address;
-> >> +	struct mthp_range range;
-> >> +	u16 offset;
-> >> +	u8 order;
-> >> +
-> >> +	collapse_mthp_stack_push(cc, &stack_size, 0, HPAGE_PMD_ORDER);
-> >> +
-> >> +	while (stack_size) {
-> >> +		range = collapse_mthp_stack_pop(cc, &stack_size);
-> >> +		order = range.order;
-> >> +		offset = range.offset;
-> >> +		nr_ptes = 1UL << order;
-> >> +
-> >> +		if (!test_bit(order, &enabled_orders))
-> >> +			goto next_order;
-> >> +
-> >> +		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
-> >> +
-> >> +		if (max_ptes_none < 0)
-> >> +			return collapsed;
-> >> +
-> >> +		nr_occupied_ptes = collapse_mthp_count_present(cc, offset,
-> >> +							       nr_ptes);
-> >> +
-> >> +		if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
-> >> +			int ret;
-> >> +
-> >> +			collapse_address = address + offset * PAGE_SIZE;
-> >> +			ret = collapse_huge_page(mm, collapse_address, referenced,
-> >> +						 unmapped, cc, order);
-> >> +			if (ret == SCAN_SUCCEED) {
-> >> +				collapsed += nr_ptes;
-> >> +				continue;
-> >> +			}
-> >> +		}
-> >> +
-> >> +next_order:
-> >> +		if (order > KHUGEPAGED_MIN_MTHP_ORDER) {
-> >
-> >Hi Nico, thank you very much for your contributions to this series.
-> >
-> >I found a minor issue, for MADV_COLLAPSE, if collapse_huge_page() fails
-> >for some reason (e.g. allocate folio), it goes to next_order and
-> >continues splitting to the next small order. However, enabled_orders
-> >only supports HPAGE_PMD_ORDER, so it keeps runing the split operations
-> >without any effective work until KHUGEPAGED_MIN_MTHP_ORDER is reached
-> >before exiting. For khugepaged, e.g. setting only 2MB to always, also
-> >same phenomenon.
+On Sun, Feb 22, 2026 at 03:48:15AM -0500, Gregory Price wrote:
+> Topic type: MM
+> 
+> Presenter: Gregory Price <gourry@gourry.net>
+> 
+> This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
+> managed by the buddy allocator but excluded from normal allocations.
+> 
+> I present it with an end-to-end Compressed RAM service (mm/cram.c)
+> that would otherwise not be possible (or would be considerably more
+> difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
+> 
+
+Do we have updates/notes from the meeting?
+
+> 
+> TL;DR
+> ===
+> 
+> N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
+> explicit holes in that isolation to do useful things we couldn't do
+> before without re-implementing entire portions of mm/ in a driver.
+> 
+> 
+> /* This is my memory. There are many like it, but this one is mine. */
+> rc = add_private_memory_driver_managed(nid, start, size, name, flags,
+>                                        online_type, private_context);
+> 
+> page = alloc_pages_node(nid, __GFP_PRIVATE, 0);
+
+Do we want to provide kernel level control over allocation of private
+pages, I assumed that only user space applications? I would assume
+node affinity would be the way to do so, unless we have multiple
+
+> 
+> /* Ok but I want to do something useful with it */
+> static const struct node_private_ops ops = {
+>         .migrate_to     = my_migrate_to,
+>         .folio_migrate  = my_folio_migrate,
+>         .flags = NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
+> };
+> node_private_set_ops(nid, &ops);
 >
-> Yes, but it does no actual work since it is checked after pop up.
->
-> >
-> >This does not affect the overall functionality of mthp collapse, just
-> >redundant.
-> >
-> >The redundant operations can be easily skipped with the following
-> >modification. If I miss some thing, please let me know. Thanks!
-> >
-> >diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> >index 1a25af3d6d0f..fa407cce525c 100644
-> >--- a/mm/khugepaged.c
-> >+++ b/mm/khugepaged.c
-> >@@ -1574,7 +1574,7 @@ static int mthp_collapse(struct mm_struct *mm, unsigned long address,
-> > 		}
-> >
-> > next_order:
-> >-		if (order > KHUGEPAGED_MIN_MTHP_ORDER) {
-> >+		if ((BIT(order) - 1) & enabled_orders) {
-> > 			const u8 next_order = order - 1;
-> > 			const u16 mid_offset = offset + (nr_ptes / 2);
-> >
->
-> This would stop the iteration if there are other lower enabled order, right?
-             ^^^^                                  ^^^^^^^^^^^^^^^^^^^
 
-NO :)
+Could you explain this further? Why does OPS_MIGRATION
+and OPS_MEMPOLICY needs to be set explictly?
 
-For more details, please refer to the following information.
+> /* And now I can use mempolicy with my memory */
+> buf = mmap(...);
+> mbind(buf, len, mode, private_node, ...);
+> buf[0] = 0xdeadbeef;  /* Faults onto private node */
+> 
+> /* And to be clear, no one else gets my memory */
+> buf2 = malloc(4096);  /* Standard allocation */
+> buf2[0] = 0xdeadbeef; /* Can never land on private node */
+> 
+> /* But i can choose to migrate it to the private node */
+> move_pages(0, 1, &buf, &private_node, NULL, ...);
+> 
+> /* And more fun things like this */
+> 
+> 
+> Patchwork
+> ===
+> A fully working branch based on cxl/next can be found here:
+> https://github.com/gourryinverse/linux/tree/private_compression
+> 
+> A QEMU device which can inject high/low interrupts can be found here:
+> https://github.com/gourryinverse/qemu/tree/compressed_cxl_clean
+> 
+> The additional patches on these branches are CXL and DAX driver
+> housecleaning only tangentially relevant to this RFC, so i've
+> omitted them for the sake of trying to keep it somewhat clean
+> here.  Those patches should (hopefully) be going upstream anyway.
+> 
+> Patches 1-22: Core Private Node Infrastructure
+> 
+>   Patch  1:      Introduce N_MEMORY_PRIVATE scaffolding
+>   Patch  2:      Introduce __GFP_PRIVATE
+>   Patch  3:      Apply allocation isolation mechanisms
+>   Patch  4:      Add N_MEMORY nodes to private fallback lists
+>   Patches 5-9:   Filter operations not yet supported
+>   Patch 10:      free_folio callback
+>   Patch 11:      split_folio callback
+>   Patches 12-20: mm/ service opt-ins:
+>                    Migration, Mempolicy, Demotion, Write Protect,
+>                    Reclaim, OOM, NUMA Balancing, Compaction,
+>                    LongTerm Pinning
+>   Patch 21:      memory_failure callback
+>   Patch 22:      Memory hotplug plumbing for private nodes
+> 
+> Patch 23: mm/cram -- Compressed RAM Management
+> 
+> Patches 24-27: CXL Driver examples
+>   Sysram Regions with Private node support
+>   Basic Driver Example: (MIGRATION | MEMPOLICY)
+>   Compression Driver Example (Generic)
+> 
+> 
+> Background
+> ===
+> 
+> Today, drivers that want mm-like services on non-general-purpose
+> memory either use ZONE_DEVICE (self-managed memory) or hotplug into
+> N_MEMORY and accept the risk of uncontrolled allocation.
+> 
+> Neither option provides what we really want - the ability to:
+> 	1) selectively participate in mm/ subsystems, while
+> 	2) isolating that memory from general purpose use.
+> 
+> Some device-attached memory cannot be managed as fully general-purpose
+> system RAM.  CXL devices with inline compression, for example, may
+> corrupt data or crash the machine if the compression ratio drops
+> below a threshold -- we simply run out of physical memory.
+> 
+> This is a hard problem to solve: how does an operating system deal
+> with a device that basically lies about how much capacity it has?
+> 
+> (We'll discuss that in the CRAM section)
+> 
+> 
+> Core Proposal: N_MEMORY_PRIVATE
+> ===
+> 
+> Introduce N_MEMORY_PRIVATE, a NUMA node state for memory managed by
+> the buddy allocator, but excluded from normal allocation paths.
+> 
+> Private nodes:
+> 
+>   - Are filtered from zonelist fallback: all existing callers to
+>     get_page_from_freelist cannot reach these nodes through any
+>     normal fallback mechanism.
+> 
+>   - Filter allocation requests on __GFP_PRIVATE
+>     	numa_zone_allowed() excludes them otherwise. 
+> 
+>     Applies to systems with and without cpusets.
+> 
+>     GFP_PRIVATE is (__GFP_PRIVATE | __GFP_THISNODE).
+> 
+>     Services use it when they need to allocate specifically from
+>     a private node (e.g., CRAM allocating a destination folio).
+> 
+>     No existing allocator path sets __GFP_PRIVATE, so private nodes
+>     are unreachable by default.
+> 
+>   - Use standard struct page / folio.  No ZONE_DEVICE, no pgmap,
+>     no struct page metadata limitations.
+> 
+>   - Use a node-scoped metadata structure to accomplish filtering
+>     and callback support.
+> 
+>   - May participate in the buddy allocator, reclaim, compaction,
+>     and LRU like normal memory, gated by an opt-in set of flags.
+> 
+> The key abstraction is node_private_ops: a per-node callback table
+> registered by a driver or service.  
+> 
+> Each callback is individually gated by an NP_OPS_* capability flag.
+> 
+> A driver opts in only to the mm/ operations it needs.
+> 
+> It is similar to ZONE_DEVICE's pgmap at a node granularity.
+> 
+> In fact...
+> 
+> 
+> Re-use of ZONE_DEVICE Hooks
+> ===
+> 
+> The callback insertion points deliberately mirror existing ZONE_DEVICE
+> hooks to minimize the surface area of the mechanism.
+> 
+> I believe this could subsume most DEVICE_COHERENT users, and greatly
+> simplify the device-managed memory development process (no more
+> per-driver allocator and migration code).
+> 
+> (Also it's just "So Fresh, So Clean").
+> 
+> The base set of callbacks introduced include:
+> 
+>   free_folio           - mirrors ZONE_DEVICE's
+>                          free_zone_device_page() hook in
+>                          __folio_put() / folios_put_refs()
+> 
+>   folio_split          - mirrors ZONE_DEVICE's
+>   			 called when a huge page is split up
+> 
+>   migrate_to           - demote_folio_list() custom demotion (same
+>                          site as ZONE_DEVICE demotion rejection)
+> 
+>   folio_migrate        - called when private node folio is moved to
+>                          another location (e.g. compaction)
+> 
+>   handle_fault         - mirrors the ZONE_DEVICE fault dispatch in
+>                          handle_pte_fault() (do_wp_page path)
+> 
+>   reclaim_policy       - called by reclaim to let a driver own the
+>                          boost lifecycle (driver can driver node reclaim)
+> 
+>   memory_failure       - parallels memory_failure_dev_pagemap(),
+>                          but for online pages that enter the normal
+>                          hwpoison path
+> 
+> At skip sites (mlock, madvise, KSM, user migration), a unified
+> folio_is_private_managed() predicate covers both ZONE_DEVICE and
+> N_MEMORY_PRIVATE folios, consolidating existing zone_device checks
+> with private node checks rather than adding new ones.
+> 
+>   static inline bool folio_is_private_managed(struct folio *folio)
+>   {
+>           return folio_is_zone_device(folio) ||
+>                  folio_is_private_node(folio);
+>   }
+> 
+> Most integration points become a one-line swap:
+> 
+>   -     if (folio_is_zone_device(folio))
+>   +     if (unlikely(folio_is_private_managed(folio)))
+> 
+> 
+> Where a one-line integration is insufficient, the integration is
+> kept as clean as possible with zone_device, rather than simply
+> adding more call-sites on top of it:
+> 
+> static inline bool folio_managed_handle_fault(struct folio *folio,
+>   struct vm_fault *vmf, vm_fault_t *ret)
+> {
+>   /* Zone device pages use swap entries; handled in do_swap_page */
+>   if (folio_is_zone_device(folio))
+>     return false;
+> 
+>   if (folio_is_private_node(folio)) {
+>     const struct node_private_ops *ops = folio_node_private_ops(folio);
+> 
+>     if (ops && ops->handle_fault) {
+>       *ret = ops->handle_fault(vmf);
+>       return true;
+>     }
+>   }
+>   return false;
+> }
+> 
+> 
+> 
+> Flag-gated behavior (NP_OPS_*) controls:
+> ===
+> 
+> We use OPS flags to denote what mm/ services we want to allow on our
+> private node.   I've plumbed these through so far:
+> 
+>   NP_OPS_MIGRATION       - Node supports migration
+>   NP_OPS_MEMPOLICY       - Node supports mempolicy actions
+>   NP_OPS_DEMOTION        - Node appears in demotion target lists
+>   NP_OPS_PROTECT_WRITE   - Node memory is read-only (wrprotect)
+>   NP_OPS_RECLAIM         - Node supports reclaim
+>   NP_OPS_NUMA_BALANCING  - Node supports numa balancing
+>   NP_OPS_COMPACTION      - Node supports compaction
+>   NP_OPS_LONGTERM_PIN    - Node supports longterm pinning
+>   NP_OPS_OOM_ELIGIBLE	 - (MIGRATION | DEMOTION), node is reachable
+>                            as normal system ram storage, so it should
+> 			   be considered in OOM pressure calculations.
+> 
+> I wasn't quite sure how to classify ksm, khugepaged, madvise, and
+> mlock - so i have omitted those for now.
+> 
+> Most hooks are straightforward.
+> 
+> Including a node as a demotion-eligible target was as simple as:
+> 
+> static void establish_demotion_targets(void)
+> {
+>   ..... snip .....
+>   /*
+>    * Include private nodes that have opted in to demotion
+>    * via NP_OPS_DEMOTION.  A node might have custom migrate
+>    */
+>   all_memory = node_states[N_MEMORY];
+>   for_each_node_state(node, N_MEMORY_PRIVATE) {
+>       if (node_private_has_flag(node, NP_OPS_DEMOTION))
+>       node_set(node, all_memory);
+>   }
+>   ..... snip .....
+> }
+> 
+> The Migration and Mempolicy support are the two most complex pieces,
+> and most useful things are built on top of Migration (meaning the
+> remaining implementations are usually simple).
+> 
+> 
+> Private Node Hotplug Lifecycle
+> ===
+> 
+> Registration follows a strict order enforced by
+> add_private_memory_driver_managed():
+> 
+>   1. Driver calls add_private_memory_driver_managed(nid, start,
+>      size, resource_name, mhp_flags, online_type, &np).
+> 
+>   2. node_private_register(nid, &np) stores the driver's
+>      node_private in pgdat and sets pgdat->private.  N_MEMORY and
+>      N_MEMORY_PRIVATE are mutually exclusive -- registration fails
+>      with -EBUSY if the node already has N_MEMORY set.
+> 
+>      Only one driver may register per private node.
+> 
+>   3. Memory is hotplugged via __add_memory_driver_managed().
+> 
+>      When online_pages() runs, it checks pgdat->private and sets
+>      N_MEMORY_PRIVATE instead of N_MEMORY.  
+> 
+>      Zonelist construction gives private nodes a self-only NOFALLBACK
+>      list and an N_MEMORY fallback list (so kernel/slab allocations on
+>      behalf of private node work can fall back to DRAM).
+> 
+>   4. kswapd and kcompactd are NOT started for private nodes.  The
+>      owning service is responsible for driving reclaim if needed
+>      (e.g., CRAM uses watermark_boost to wake kswapd on demand).
+> 
+> Teardown is the reverse:
+> 
+>   1. Driver calls offline_and_remove_private_memory(nid, start,
+>      size).
+> 
+>   2. offline_pages() offlines the memory.  When the last block is
+>      offlined, N_MEMORY_PRIVATE is cleared automatically.
+> 
+>   3. node_private_unregister() clears pgdat->node_private and
+>      drops the refcount.  It refuses to unregister (-EBUSY) if
+>      N_MEMORY_PRIVATE is still set (other memory ranges remain).
+> 
+> The driver is responsible for ensuring memory is hot-unpluggable
+> before teardown.  The service must ensure all memory is cleaned
+> up before hot-unplug - or the service must support migration (so
+> memory_hotplug.c can evacuate the memory itself).
+> 
+> In the CRAM example, the service supports migration, so memory
+> hot-unplug can remove memory without any special infrastructure.
+> 
+> 
+> Application: Compressed RAM (mm/cram)
+> ===
+> 
+> Compressed RAM has a serious design issue:  Its capacity a lie.
+> 
+> A compression device reports more capacity than it physically has.
+> If workloads write faster than the OS can reclaim from the device,
+> we run out of real backing store and corrupt data or crash.
+> 
+> I call this problem: "Trying to Out Run A Bear"
+> 
+> I.e. This is only stable as long as we stay ahead of the pressure.
+> 
+> We don't want to design a system where stability depends on outrunning
+> a bear - I am slow and do not know where to acquire bear spray.
+> 
+>   Fun fact:   Grizzly bears have a top-speed of 56-64 km/h.
+>   Unfun Fact: Humans typically top out at ~24 km/h.
+> 
+> This MVP takes a conservative position:
+> 
+>    all compressed memory is mapped read-only.
+> 
+>   - Folios reach the private node only via reclaim (demotion)
+>   - migrate_to implements custom demotion with backpressure.
+>   - fixup_migration_pte write-protects PTEs on arrival.
+>   - wrprotect hooks prevent silent upgrades
+>   - handle_fault promotes folios back to DRAM on write.
+>   - free_folio scrubs stale data before buddy free.
+> 
+> Because pages are read-only, writes can never cause runaway
+> compression ratio loss behind the allocator's back.  Every write
+> goes through handle_fault, which promotes the folio to DRAM first.
+> 
+> The device only ever sees net compression (demotion in) and explicit
+> decompression (promotion out via fault or reclaim), and has a much
+> wider timeframe to respond to poor compression scenarios.
+> 
+> That means there's no bear to out run. The bears are safely asleep in
+> their bear den, and even if they show up we have a bear-proof cage.
+> 
+> The backpressure system is our bear-proof cage: the driver reports real
+> device utilization (generalized via watermark_boost on the private
+> node's zone), and CRAM throttles demotion when capacity is tight.
+> 
+> If compression ratios are bad, we stop demoting pages and start
+> evicting pages aggressively.
+> 
+> The service as designed is ~350 functional lines of code because it
+> re-uses mm/ services:
+> 
+>   - Existing reclaim/vmscan code handles demotion.
+>   - Existing migration code handles migration to/from.
+>   - Existing page fault handling dispatches faults.
+> 
+> The driver contains all the CXL nastiness core developers don't want
+> anything to do with - No vendor logic touches mm/ internals.
+> 
+> 
+> 
+> Future CRAM : Loosening the read-only constraint
+> ===
+> 
+> The read-only model is safe but conservative.  For workloads where
+> compressed pages are occasionally written, the promotion fault adds
+> latency.  A future optimization could allow a tunable fraction of
+> compressed pages to be mapped writable, accepting some risk of
+> write-driven decompression in exchange for lower overhead.
+> 
+> The private node ops make this straightforward:
+> 
+>   - Adjust fixup_migration_pte to selectively skip
+>     write-protection.
+>   - Use the backpressure system to either revoke writable mappings,
+>     deny additional demotions, or evict when device pressure rises.
+> 
+> This comes at a mild memory overhead: 32MB of DRAM per 1TB of CRAM.
+> (1 bit per 4KB page).
+> 
+> This is not proposed here, but it should be somewhat trivial.
+> 
+> 
+> Discussion Topics
+> ===
+> 0. Obviously I've included the set as an RFC, please rip it apart.
+> 
+> 1. Is N_MEMORY_PRIVATE the right isolation abstraction, or should
+>    this extend ZONE_DEVICE?  Prior feedback pushed away from new
+>    ZONE logic, but this will likely be debated further.
+> 
+>    My comments on this:
+> 
+>    ZONE_DEVICE requires re-implementing every service you want to
+>    provide to your device memory, including basic allocation.
+> 
+>    Private nodes use real struct pages with no metadata
+>    limitations, participate in the buddy allocator, and get NUMA
+>    topology for free.
+> 
+> 2. Can this subsume ZONE_DEVICE COHERENT users?  The architecture
+>    was designed with this in mind, but it is only a thought experiment.
+> 
+> 3. Is a dedicated mm/ service (cram) the right place for compressed
+>    memory management, or should this be purely driver-side until
+>    more devices exist?
+> 
+>    I wrote it this way because I forsee more "innovation" in the
+>    compressed RAM space given current... uh... "Market Conditions".
+> 
+>    I don't see CRAM being CXL-specific, though the only solutions I've
+>    seen have been CXL.  Nothing is stopping someone from soldering such
+>    memory directly to a PCB.
+> 
+> 5. Where is your hardware-backed data that shows this works?
+> 
+>    I should have some by conference time.
+> 
+> Thanks for reading
+> Gregory (Gourry)
+> 
+> 
+> Gregory Price (27):
+>   numa: introduce N_MEMORY_PRIVATE node state
+>   mm,cpuset: gate allocations from N_MEMORY_PRIVATE behind __GFP_PRIVATE
+>   mm/page_alloc: add numa_zone_allowed() and wire it up
+>   mm/page_alloc: Add private node handling to build_zonelists
+>   mm: introduce folio_is_private_managed() unified predicate
+>   mm/mlock: skip mlock for managed-memory folios
+>   mm/madvise: skip madvise for managed-memory folios
+>   mm/ksm: skip KSM for managed-memory folios
+>   mm/khugepaged: skip private node folios when trying to collapse.
+>   mm/swap: add free_folio callback for folio release cleanup
+>   mm/huge_memory.c: add private node folio split notification callback
+>   mm/migrate: NP_OPS_MIGRATION - support private node user migration
+>   mm/mempolicy: NP_OPS_MEMPOLICY - support private node mempolicy
+>   mm/memory-tiers: NP_OPS_DEMOTION - support private node demotion
+>   mm/mprotect: NP_OPS_PROTECT_WRITE - gate PTE/PMD write-upgrades
+>   mm: NP_OPS_RECLAIM - private node reclaim participation
+>   mm/oom: NP_OPS_OOM_ELIGIBLE - private node OOM participation
+>   mm/memory: NP_OPS_NUMA_BALANCING - private node NUMA balancing
+>   mm/compaction: NP_OPS_COMPACTION - private node compaction support
+>   mm/gup: NP_OPS_LONGTERM_PIN - private node longterm pin support
+>   mm/memory-failure: add memory_failure callback to node_private_ops
+>   mm/memory_hotplug: add add_private_memory_driver_managed()
+>   mm/cram: add compressed ram memory management subsystem
+>   cxl/core: Add cxl_sysram region type
+>   cxl/core: Add private node support to cxl_sysram
+>   cxl: add cxl_mempolicy sample PCI driver
+>   cxl: add cxl_compression PCI driver
+> 
+>  drivers/base/node.c                           |  250 +++-
+>  drivers/cxl/Kconfig                           |    2 +
+>  drivers/cxl/Makefile                          |    2 +
+>  drivers/cxl/core/Makefile                     |    1 +
+>  drivers/cxl/core/core.h                       |    4 +
+>  drivers/cxl/core/port.c                       |    2 +
+>  drivers/cxl/core/region_sysram.c              |  381 ++++++
+>  drivers/cxl/cxl.h                             |   53 +
+>  drivers/cxl/type3_drivers/Kconfig             |    3 +
+>  drivers/cxl/type3_drivers/Makefile            |    3 +
+>  .../cxl/type3_drivers/cxl_compression/Kconfig |   20 +
+>  .../type3_drivers/cxl_compression/Makefile    |    4 +
+>  .../cxl_compression/compression.c             | 1025 +++++++++++++++++
+>  .../cxl/type3_drivers/cxl_mempolicy/Kconfig   |   16 +
+>  .../cxl/type3_drivers/cxl_mempolicy/Makefile  |    4 +
+>  .../type3_drivers/cxl_mempolicy/mempolicy.c   |  297 +++++
+>  include/linux/cpuset.h                        |    9 -
+>  include/linux/cram.h                          |   66 ++
+>  include/linux/gfp_types.h                     |   15 +-
+>  include/linux/memory-tiers.h                  |    9 +
+>  include/linux/memory_hotplug.h                |   11 +
+>  include/linux/migrate.h                       |   17 +-
+>  include/linux/mm.h                            |   22 +
+>  include/linux/mmzone.h                        |   16 +
+>  include/linux/node_private.h                  |  532 +++++++++
+>  include/linux/nodemask.h                      |    1 +
+>  include/trace/events/mmflags.h                |    4 +-
+>  include/uapi/linux/mempolicy.h                |    1 +
+>  kernel/cgroup/cpuset.c                        |   49 +-
+>  mm/Kconfig                                    |   10 +
+>  mm/Makefile                                   |    1 +
+>  mm/compaction.c                               |   32 +-
+>  mm/cram.c                                     |  508 ++++++++
+>  mm/damon/paddr.c                              |    3 +
+>  mm/huge_memory.c                              |   23 +-
+>  mm/hugetlb.c                                  |    2 +-
+>  mm/internal.h                                 |  226 +++-
+>  mm/khugepaged.c                               |    7 +-
+>  mm/ksm.c                                      |    9 +-
+>  mm/madvise.c                                  |    5 +-
+>  mm/memory-failure.c                           |   15 +
+>  mm/memory-tiers.c                             |   46 +-
+>  mm/memory.c                                   |   26 +
+>  mm/memory_hotplug.c                           |  122 +-
+>  mm/mempolicy.c                                |   69 +-
+>  mm/migrate.c                                  |   63 +-
+>  mm/mlock.c                                    |    5 +-
+>  mm/mprotect.c                                 |    4 +-
+>  mm/oom_kill.c                                 |   52 +-
+>  mm/page_alloc.c                               |   79 +-
+>  mm/rmap.c                                     |    4 +-
+>  mm/slub.c                                     |    3 +-
+>  mm/swap.c                                     |   21 +-
+>  mm/vmscan.c                                   |   55 +-
+>  54 files changed, 4057 insertions(+), 152 deletions(-)
+>  create mode 100644 drivers/cxl/core/region_sysram.c
+>  create mode 100644 drivers/cxl/type3_drivers/Kconfig
+>  create mode 100644 drivers/cxl/type3_drivers/Makefile
+>  create mode 100644 drivers/cxl/type3_drivers/cxl_compression/Kconfig
+>  create mode 100644 drivers/cxl/type3_drivers/cxl_compression/Makefile
+>  create mode 100644 drivers/cxl/type3_drivers/cxl_compression/compression.c
+>  create mode 100644 drivers/cxl/type3_drivers/cxl_mempolicy/Kconfig
+>  create mode 100644 drivers/cxl/type3_drivers/cxl_mempolicy/Makefile
+>  create mode 100644 drivers/cxl/type3_drivers/cxl_mempolicy/mempolicy.c
+>  create mode 100644 include/linux/cram.h
+>  create mode 100644 include/linux/node_private.h
+>  create mode 100644 mm/cram.c
+> 
+> -- 
+> 2.53.0
+> 
+> 
 
-|              Scenario               | Old Behavior (order > 2) | New Behavior ((BIT(order)-1) & enabled_orders) |
-|-------------------------------------|--------------------------|------------------------------------------------|
-| MADV_COLLAPSE                       | Splits 9,8,7,...,3       | No split                                       |
-| khugepaged, only 2MB enabled        | Splits 9,8,7,...,3       | No split                                       |
-| khugepaged, only 2MB + 64KB enabled | Splits 9,8,7,...,3       | Splits 9,8,7,...,5                             |
-| khugepaged, only 32KB enabled       | Splits 9,8,7,...,3       | Splits 9,8,7,...,4                             |
-| khugepaged, only 16KB enabled       | Splits 9,8,7,...,3       | Splits 9,8,7,...,3                             |
-| khugepaged, all mTHP enabled        | Splits 9,8,7,...,3       | Splits 9,8,7,...,3                             |
-
---
-Cheers,
-Vernon
+Balbir
