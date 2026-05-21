@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4502F1FF4;
-	Thu, 21 May 2026 14:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE471A267;
+	Thu, 21 May 2026 14:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779375425; cv=none; b=VwCXJZ3w+yODxjGJAfWP0n/RkLxio0ldoq8kzVc4k+9dSVJZsKpYiy5LH0TK+Ht2dAubtNsBXFdZHuJBDDrKV+K4EU+gihwjFc+xTgVA9dMdGJM7oJ/JhruK/zor05ob3P4W4ObNPXxRlswRwpzNh9vetuuh3xNyISoj78JN5Kc=
+	t=1779375432; cv=none; b=pTOKy+6HPyuETxf+pAoUacFjnQXD9/ZHusuZZOZZndTBBViF2zRbjBaPwPDdWvUbbNKv6gZBYFRmBCrQkrWR3SD9rgV5hKerx3AZhP1sPyz4CbcuWmeN6AWkuQOf5vkzjauSM29BsvsuCJc0ZqHXFqrBmVR1VqnbvGdnmVe/R/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779375425; c=relaxed/simple;
-	bh=WjUjwLMOalgoEHLwGqBDytr0HoG8olcQw9qa50jOi/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DMJq8qduPEiKVxKsC1GttcUoesfffZqj+EiDNaVKWG4muNiKv+KX+uawbdtWCysimuasjRO4ZHoyx2TFJZF1i24XHTqEx6e7x8zSN18jSFyMqz3HPHMhrFDRDG3o+LnoXOzinO/Z/ZqorQ3XNrk++BZRvUEkvSQ9wbnBCIL7ZdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o06aFPdo; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779375432; c=relaxed/simple;
+	bh=H7rHLuohSUHGiDGUItHF6BvncPvhNiHdSxCMO00/DmU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lzR1nG3fyF+p0AHvCKX2dIRmINQ1iyWmFsyRQLItC1UTUNyPOSXTEHJapB8pFhmWzva90koohPgyRc052DKtdm8MV97x0eOrmJfDiPB0TWMs/QZ5o+qDLVtWpRVA5ZWljARaZvfiizYhnWMiFWnc8QNv0dOL9RgcHoN2qAzAj5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IR+M+7BH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o06aFPdo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61EC1F000E9;
-	Thu, 21 May 2026 14:57:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IR+M+7BH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 788E61F000E9;
+	Thu, 21 May 2026 14:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779375423;
-	bh=ubGQwjkSeHJC9kTKcjGioyI9bzXE4kQuRzPyjZeZJ9k=;
-	h=From:To:Cc:Subject:Date;
-	b=o06aFPdoj7kQfcjZO9/q3t35M2v1WDwCJu2q55Mt3Z/XnZNI8ZUtbePOlshK9L2V8
-	 DpsWFpGvmkHWmrpzX+1bovK4OisnJeAuFdV+S0bE4ZCqRXZQ4iSRQx2pcezzxvljYF
-	 P6nRbYZVewdlPP5NsYq34uxeqgQVejjeIrMsne4UD3yEl5iI5PTEDFMG9YdHctORLq
-	 js77IR3q+4hBBhQAUPoY8ytvA6lZr6GLkH2nZ+wFj4Xn9bHchWsoOWjFaYE3Xoau6c
-	 Gl3jkPQQDP6jTmaCqzHDe3Ta2Cwdufc8Osw4MxKPPwes+QRv2lkJ67w/SlLg/ad0To
-	 KC8VKap7rGa3A==
+	s=k20260515; t=1779375431;
+	bh=ucm3WGheg1fg3Csw4ZgCRDSHUMdsx/Pk4haMkeNM9d8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=IR+M+7BHZ8Q1luz2m90tNml0JDP5fDr87CqUwj31VtgJB4ynIKQqKCNXLzM6FHPKh
+	 aPBTD7ofmf21Lf/II6lfxNbEzNraadSH643VNb5uEuc7JFQjmG2WB6AWIEuS0/2+px
+	 evluGf5Ul8kTNjPVNNeSgQ37GM3n/nlTnfl6Uz25+lP+H0ai1sl95B6gNX0jdYfDiz
+	 4Dqxv6JUF9paa5b5rDqiI+JtkeNoQOqXxxhFVAzdsDEyNJdQEwN/8z3VP4Ksi15lZ4
+	 XQmZOJxTUoESTfMz8auRfvsFYhytt0AQsi00RvAEEC+zETtlDa7NqwQV0MyaqOHu12
+	 WQz1XCgM+WIag==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Theodore Ts'o <tytso@mit.edu>,
 	"Jason A . Donenfeld" <Jason@zx2c4.com>,
@@ -33,10 +34,12 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/2] random: tracing: Expose last boot ID on persistent instance
-Date: Thu, 21 May 2026 23:56:59 +0900
-Message-ID:  <177937541909.2596845.17729857441826694760.stgit@mhiramat.tok.corp.google.com>
+Subject: [RFC PATCH 1/2] random: Expose boot ID to other subsystems
+Date: Thu, 21 May 2026 23:57:09 +0900
+Message-ID:  <177937542892.2596845.4271730537688894501.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.54.0.669.g59709faab0-goog
+In-Reply-To:  <177937541909.2596845.17729857441826694760.stgit@mhiramat.tok.corp.google.com>
+References:  <177937541909.2596845.17729857441826694760.stgit@mhiramat.tok.corp.google.com>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,48 +50,81 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is an RFC series to expose the boot ID (random UUID for each
-boot) in the last_boot_info of the persistent ring buffer instance.
+Add get_boot_id() to expose current boot ID to other kernel subsystems.
+Note that since this is only meaningful if user can access it via sysctl,
+it returns NULL if CONFIG_SYSCTL=n.
 
-The persistent ring buffer can hold trace data beyond reboot/crashes.
-This means the recorded data does not always come from the last boot.
-Currently we just assume that the data comes from the last boot.
-
-On the other hand, the kernel provides a random generated UUID for
-each boot time, called "boot ID". If you record the logs with the
-boot ID, it is easy to do cross-referencing it with other logs.
-
-Similarly, recording the Boot ID for persistent ring buffer
-instances would make it easier to determine which boot the read
-data came from.
-
-For example:
-
- # cat /proc/sys/kernel/random/boot_id
- df152e7a-c0a7-4d32-9f0b-7f5c39fb7b68
-
-(enable tracing on persistent instance and reboot)
-
- # cat /sys/kernel/tracing/instances/ptracingtest/last_boot_info
-# boot_id: df152e7a-c0a7-4d32-9f0b-7f5c39fb7b68
-ffffffff81000000       [kernel]
-
-
-Thank you,
-
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-
-Masami Hiramatsu (Google) (2):
-      random: Expose boot ID to other subsystems
-      tracing: Record and show boot ID in last_boot_info
-
-
  drivers/char/random.c  |   27 +++++++++++++++++++++------
  include/linux/random.h |    9 +++++++++
- kernel/trace/trace.c   |   14 ++++++++++++--
- 3 files changed, 42 insertions(+), 8 deletions(-)
+ 2 files changed, 30 insertions(+), 6 deletions(-)
 
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index b4da1fb976c1..96a5a165627a 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1615,6 +1615,25 @@ static int sysctl_random_write_wakeup_bits = POOL_READY_BITS;
+ static int sysctl_poolsize = POOL_BITS;
+ static u8 sysctl_bootid[UUID_SIZE];
+ 
++/**
++ * get_boot_id - return the boot ID UUID
++ *
++ * This function returns a pointer to the boot ID UUID, which is generated on
++ * demand the first time this function is called. The boot ID is a UUID that
++ * is unique to each boot of the system.
++ */
++const u8 *get_boot_id(void)
++{
++	static DEFINE_SPINLOCK(bootid_spinlock);
++
++	spin_lock(&bootid_spinlock);
++	if (!sysctl_bootid[8])
++		generate_random_uuid(sysctl_bootid);
++	spin_unlock(&bootid_spinlock);
++
++	return sysctl_bootid;
++}
++
+ /*
+  * This function is used to return both the bootid UUID, and random
+  * UUID. The difference is in whether table->data is NULL; if it is,
+@@ -1638,12 +1657,8 @@ static int proc_do_uuid(const struct ctl_table *table, int write, void *buf,
+ 		uuid = tmp_uuid;
+ 		generate_random_uuid(uuid);
+ 	} else {
+-		static DEFINE_SPINLOCK(bootid_spinlock);
+-
+-		spin_lock(&bootid_spinlock);
+-		if (!uuid[8])
+-			generate_random_uuid(uuid);
+-		spin_unlock(&bootid_spinlock);
++		/* Ensure that the boot ID is initialized. */
++		get_boot_id();
+ 	}
+ 
+ 	snprintf(uuid_string, sizeof(uuid_string), "%pU", uuid);
+diff --git a/include/linux/random.h b/include/linux/random.h
+index 8a8064dc3970..aaf630f14931 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -130,6 +130,15 @@ static inline int get_random_bytes_wait(void *buf, size_t nbytes)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_SYSCTL
++const u8 *get_boot_id(void);
++#else
++static inline const u8 *get_boot_id(void)
++{
++	return NULL;
++}
++#endif
++
+ #ifdef CONFIG_SMP
+ int random_prepare_cpu(unsigned int cpu);
+ int random_online_cpu(unsigned int cpu);
+
