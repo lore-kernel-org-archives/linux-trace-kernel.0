@@ -1,175 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1509B3D4120;
-	Thu, 21 May 2026 12:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E6D3EFD1F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 12:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779367573; cv=none; b=PcImgMCOJj0/3RWePXHnlv8WnSyX1XVbU0fRdVTnjf3/WvPFnKdkgme6KfvfdoyNuNyk3V3iWfntceQ79YLGlae5k+dKnLZlxZ5faFePQenCrgWrewCrOMbLX5MoxeEcc0wUCkMGZlUFDmdHBO3H4AH/mynuNSXsKT2/brQdkkY=
+	t=1779367838; cv=none; b=NiQ78M5JnOEDJNc67bAi1yxcw4qiVuTDAi9WonCpYK3RdJB8+G5jZBIPhfWwk+V5huLsnnzd18J8HPIqpyjViY43ixKUWyRVIMt1a2i8g0Pv7p2Nr7LQ3zQLZcwTH/W2lJmh7oImBqRfvDUt8P36yA9mGs1Td+auGlP2bRe+WD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779367573; c=relaxed/simple;
-	bh=pOCNzkNfb9lBEcv6/1q7ko9lR987x7/YdbV39QvD1OU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CVosTd4AiagIXsy5gjBS61Q6n8G/KB1XfYbn/pdCnjMxJ9XttFFR1BoIaHGLThe+j3GcQYLmHl+C5AKIvISMSKrhHKWkjRVMRRNXzvgagZxrkLeLZ4Va6Fp1oXhOh+MlfujfVFvbXa0TI+AxBb0yBfK4d2fKNgeSp8EAhMO/Cck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VX3oRtnK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779367838; c=relaxed/simple;
+	bh=sofyuN+s3Lp4Rn7CBnTQdqYr83yKYuTMO6HGabAjn+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iCnAN5VxbZt2A5UjPISH0sPkUrNF6iuiQyEteWt0Irp+QlVsUeN4IspV/eBtEbPWLJKfH5HIwsmhMNizFbOYkJcqpWkpoVK2k9/zY4jjuSQeB+Zy0SeNq1sZP4H0G3mtcD7JNiFBdONMcaoN6UzHxeXSrD95LtRIhLBv014beKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jk9SV9q7; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VX3oRtnK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E18F1F000E9;
-	Thu, 21 May 2026 12:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779367571;
-	bh=nq3VsRC1ZV7N4OSkkDlTSU8O0ZMbw+He/KvDiFNIvi0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VX3oRtnKWuvWP/EvH2dgL7XrVTZ6MQucFtl2Tt3PppAlmuttlgCmZ3obdk8Xb0Ptn
-	 R/zrhBUbQOFhbVUqhd23ib/1949b4fVdJQZO7cwKEqKOESKOabTXxWxEvi6KKiM8zv
-	 pxOxWzQKOJ0rxPM2LV3XgMMzsxTCIt0jiWUnoaGhqxOTxKxe/Mdl/d+ZUSDzvC+SsR
-	 7K530dHYYo7frR7p0mpJXYevnTXfhGynsPTLgtEbSzzeZ4D3Gg80T3076QDBcgbIIO
-	 nf4APgHGmQMdy/ieasNyE0kkVSXTu+2oqPWXDKM76fxdgmyzqAsDjQGaF6sRqD1Bll
-	 G9qoMJF1iQo6Q==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv3 12/12] selftests/bpf: Add tests for forked/cloned optimized uprobes
-Date: Thu, 21 May 2026 14:44:11 +0200
-Message-ID: <20260521124411.31133-13-jolsa@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260521124411.31133-1-jolsa@kernel.org>
-References: <20260521124411.31133-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jk9SV9q7"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-441209fb77eso3907434f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 05:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779367835; x=1779972635; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PZ5bq+Vtjbb2xTcNTKbtvR9sRhxPYHgaOXmmdNre9Lc=;
+        b=jk9SV9q7XXU8rq3EVDUbBSy6sGlpRz+dx9ak0eH6neHvV3xYjCuKQS5BZ29lkHr2vc
+         zy1YE/LPUr20e12D9zDSS/AclpNw3222l6+v1jQ17HMdr7RARhNLrIBpnYknGkToRsva
+         0NDguJu5oXnn6Bz8rNbt/C+QdTCE/xBNShpmKR0e37WXJxUyPWoMk45LUOxV+eoMe0s2
+         lbow7HYEQYdH2kUyhJ2bHdQ7k0Dan8J1TAdcYvU9ckjBuKgUQSn3Uk/aHw/LETXCUBvn
+         n+P/nSOPha2iaYlV/A2tBvmjtScHCpkq7F/qSVUM+SgUhR3PhiXO7JL9k1aCO1EPL8K5
+         CpBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779367835; x=1779972635;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PZ5bq+Vtjbb2xTcNTKbtvR9sRhxPYHgaOXmmdNre9Lc=;
+        b=AKeaJqH66z9g5NQoFv498ciUBgGnFIwiJy/zdJJm/Rx1KpcaZbEwl57lpcpiZpPeoz
+         DIN8aQoRgQ1E48suTYXKBAI5fdMihyogfQ6Eu3Bj68K1qS6fVFcJhTn7cqRZ+KFnE+cp
+         SoKWuvqBXDLcR6TlRpHbuWyzm3wAxv0kkIA92jwVYcIykfCff2wA9wTBJXWKrTOkz2Ts
+         pdXgSK+IzJMXURUpgG4UHnQ8H6vftIpjft3dCp+84F5zFosCBgbWH6Uj2UpCh0QkaI8H
+         aem4ntNhwDBrKEWGZTv9sbfe2tnKkDf7Ts6mVYUlrv6Pc9QVTPagb/jTrJe4PWxU1WDf
+         zFyA==
+X-Forwarded-Encrypted: i=1; AFNElJ8NEpD/4xngZoA4H6Wj8cHhQpyHTASe+GP4loCxrsW7KcbfbUU6e37oRdMtxAFTzZ+6+r1yO/ZO/j1FW/3JrDl49Zc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ9q63acZmwmMRRTuceQb1MDKhYxC6UWLmPkyC7+3Gn6SSQT77
+	xvpSMb0OFisajGZRv5TaXZXWlVFqHAzM2KtmaAA6DLmDgLSiUfVOL0Ydx5c+evPCSQ==
+X-Gm-Gg: Acq92OFliZm9OmA7rdnj11qzVhrXTpqPWTI1RxGs/a27PLu/08LNuDfHr61Jono7sdF
+	3yiSXS9geMpiaM1AeOTLI7OUgbQ4JGXN3Crg+8LJUotKzD47zwoMbY8e8TuXXAcFdpzDLmveN3G
+	0udwlED8VdWtd8bWhsBXDNc2HznWzzvTwe1cDLjJ9J/zqK/jqBb2dJGuYXRo34qKn4RPKt0R7Im
+	+93+5JefhH8Ij41K+sW/sHi8XPm6l1ii5TeGAYbfd//ZIAgY7nVTkl4PGJsBuHMOdGxLlrvJ0AP
+	MgWlvIOV6i0Xq6rprVXmbxSW6fT1KauKUq9sQCuMKer3VYlDKt1J3DIoqLa5LCRDjg7qkHQulf5
+	M3rMkisbhdoya3IkXaLet2tARb25Mv9JWIJKYRD3ID0C04hv5+dhzFJ7Bs+aFsgHJqI+71FprCa
+	J8e6ZISa//qV+vsN8Gat4uyVqDbyPLB17DylWirmhd2mgjL/+2YpVrGse8OFDC9Be9Wo1WEthdF
+	DanYw==
+X-Received: by 2002:a05:6000:29db:b0:452:bc74:b129 with SMTP id ffacd0b85a97d-45ea34accaamr2671976f8f.16.1779367835053;
+        Thu, 21 May 2026 05:50:35 -0700 (PDT)
+Received: from google.com (197.183.140.34.bc.googleusercontent.com. [34.140.183.197])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eaa92ca4esm2708726f8f.22.2026.05.21.05.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2026 05:50:34 -0700 (PDT)
+Date: Thu, 21 May 2026 13:50:30 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix unload_page for simple_ring_buffer init
+ rollback
+Message-ID: <ag7_llt1VUHDDOSt@google.com>
+References: <20260512141614.1759430-1-vdonnefort@google.com>
+ <20260521083107.286c5f1b@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260521083107.286c5f1b@gandalf.local.home>
 
-Adding tests for forked/cloned optimized uprobes and make
-sure the child can properly execute optimized probe for
-both fork (dups mm) and clone with CLONE_VM.
+On Thu, May 21, 2026 at 08:31:07AM -0400, Steven Rostedt wrote:
+> On Tue, 12 May 2026 15:16:14 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > The unload_page callback expects the return value of load_page() as its
+> > argument: ret = load_page(va); unload(ret). Fix the rollback code in
+> > simple_ring_buffer_init_mm() where the descriptor's VA is used instead
+> > of the loaded page address.
+> > 
+> > Fixes: 635923081c79 ("tracing: load/unload page callbacks for simple_ring_buffer")
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > 
+> > diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
+> > index 02af2297ae5a..38cf9abe0be8 100644
+> > --- a/kernel/trace/simple_ring_buffer.c
+> > +++ b/kernel/trace/simple_ring_buffer.c
+> > @@ -431,7 +431,7 @@ int simple_ring_buffer_init_mm(struct simple_rb_per_cpu *cpu_buffer,
+> >  
+> >  	if (ret) {
+> >  		for (i--; i >= 0; i--)
+> > -			unload_page((void *)desc->page_va[i]);
+> > +			unload_page(bpages[i].page);
+> >  		unload_page(cpu_buffer->meta);
+> >  
+> >  		return ret;
+> > 
+> > base-commit: 5d6919055dec134de3c40167a490f33c74c12581
+> 
+> Vincent,
+> 
+> Did you make this patch because of the Sashiko report?
+> 
+>   https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/20260512135420.99194-1-devnexen%40gmail.com
+> 
+> If so, I think we can add a: Reported-by: Sashiko <sashiko-bot@kernel.org>
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/prog_tests/uprobe_syscall.c | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
+I did not for this one, but I have used this tag few times since yesterday [1] though :) 
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index efff0c515184..033d32b4cc27 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -4,6 +4,8 @@
- 
- #ifdef __x86_64__
- 
-+#define _GNU_SOURCE
-+#include <sched.h>
- #include <unistd.h>
- #include <asm/ptrace.h>
- #include <linux/compiler.h>
-@@ -936,6 +938,88 @@ static void test_uprobe_error(void)
- 	ASSERT_EQ(errno, EPROTO, "errno");
- }
- 
-+__attribute__((aligned(16)))
-+__nocf_check __weak __naked void uprobe_fork_test(void)
-+{
-+	asm volatile (
-+		".byte 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00\n" /* nop10 */
-+		"ret\n"
-+	);
-+}
-+
-+static int child_func(void *arg)
-+{
-+	struct uprobe_syscall_executed *skel = arg;
-+
-+	/* Make sure the child's probe is still there and optimized.. */
-+	if (memcmp(uprobe_fork_test, lea_rsp, sizeof(lea_rsp)))
-+		_exit(1);
-+
-+	skel->bss->pid = getpid();
-+
-+	/* .. and it executes properly. */
-+	uprobe_fork_test();
-+
-+	if (skel->bss->executed != 3)
-+		_exit(2);
-+
-+	_exit(0);
-+}
-+
-+static void test_uprobe_fork_optimized(bool clone_vm)
-+{
-+	struct uprobe_syscall_executed *skel = NULL;
-+	struct bpf_link *link = NULL;
-+	unsigned long offset;
-+	int pid, status, err;
-+	char stack[65535];
-+
-+	offset = get_uprobe_offset(&uprobe_fork_test);
-+	if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-+		return;
-+
-+	skel = uprobe_syscall_executed__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "open_and_load"))
-+		goto cleanup;
-+
-+	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
-+				-1, "/proc/self/exe", offset, NULL);
-+	if (!ASSERT_OK_PTR(link, "attach_uprobe"))
-+		goto cleanup;
-+
-+	skel->bss->pid = getpid();
-+
-+	/* Trigger optimization of uprobe in uprobe_fork_test.  */
-+	uprobe_fork_test();
-+	uprobe_fork_test();
-+
-+	/* Make sure it got optimied. */
-+	if (!ASSERT_OK(memcmp(uprobe_fork_test, lea_rsp, sizeof(lea_rsp)), "optimized"))
-+		goto cleanup;
-+
-+	if (clone_vm) {
-+		pid = clone(child_func, stack + sizeof(stack), CLONE_VM|SIGCHLD, skel);
-+		if (!ASSERT_GT(pid, 0, "clone"))
-+			goto cleanup;
-+	} else {
-+		pid = fork();
-+		if (!ASSERT_GE(pid, 0, "fork"))
-+			goto cleanup;
-+		if (pid == 0)
-+			child_func(skel);
-+	}
-+
-+	/* Wait for the child and verify it exited properly with 0. */
-+	err = waitpid(pid, &status, 0);
-+	if (ASSERT_EQ(err, pid, "waitpid")) {
-+		ASSERT_EQ(WIFEXITED(status), 1, "child_exited");
-+		ASSERT_EQ(WEXITSTATUS(status), 0, "child_exit_code");
-+	}
-+
-+cleanup:
-+	uprobe_syscall_executed__destroy(skel);
-+}
-+
- static void __test_uprobe_syscall(void)
- {
- 	if (test__start_subtest("uretprobe_regs_equal"))
-@@ -956,6 +1040,10 @@ static void __test_uprobe_syscall(void)
- 		test_uprobe_race();
- 	if (test__start_subtest("uprobe_red_zone"))
- 		test_uprobe_red_zone();
-+	if (test__start_subtest("uprobe_optimized_fork"))
-+		test_uprobe_fork_optimized(false);
-+	if (test__start_subtest("uprobe_optimized_clone_vm"))
-+		test_uprobe_fork_optimized(true);
- 	if (test__start_subtest("uprobe_error"))
- 		test_uprobe_error();
- 	if (test__start_subtest("uprobe_regs_equal"))
--- 
-2.53.0
+https://lore.kernel.org/all/20260521102149.804874-2-vdonnefort@google.com/
+https://lore.kernel.org/all/20260521124613.911067-4-vdonnefort@google.com/
 
+> 
+> -- Steve
