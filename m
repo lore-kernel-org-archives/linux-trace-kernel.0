@@ -1,85 +1,118 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2224437EFE8;
-	Thu, 21 May 2026 12:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F05B3D091A;
+	Thu, 21 May 2026 12:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779366652; cv=none; b=eRjV/lqyPEU6qDrP2aHhJI82sYa3F90rvmXRbPiVP/XkQKfZGDeiJOI21yWSuFcsu04NFEX/1ePlnPeaN51ELOsvzScWMSPV8uYS5MTnfgafkdcigp5H+/P8WrUuHw8obarOBz/He7RoeyPBTNR7r3vSFsdnj4m/2doNjyPUxwo=
+	t=1779367457; cv=none; b=NZWXId3U7ZDLOx5YndkGb59BDkWYCUXFU1irss+fDWf778WFyKmkoITEzod8/+oricN6rvD7Y6JzfOzmt1mLfDbi5NOlWjkzCwQk8lpV2XZcIT7Mg+TW4X5vo9JFRGM0/h/YjoOoYz7VkTXk4jTF/3Ab+4LnP/b4Mqq6wOb2H/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779366652; c=relaxed/simple;
-	bh=gr7Ix1ejAluxk+XltZL622Uq3sjSY89KR4EuWxW7nhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rzxyGmVn1vpenxMzm/ldwp/D0S1q9RzBn2X9f/+fshTQdlbbAEMtg86S5zvUdWtsnwIbi4ysEQw+JfHEYIOaoxC/CVAYtZRJF7/9MKWPtXpVGfKAsPdNMrJUQ2oXC/pfPP43pDAf4xYjTMs/0IiFwFcN0MVNQVkObL732ERhTN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 9AE5F8EA92;
-	Thu, 21 May 2026 12:30:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id C18E620025;
-	Thu, 21 May 2026 12:30:46 +0000 (UTC)
-Date: Thu, 21 May 2026 08:31:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix unload_page for simple_ring_buffer init
- rollback
-Message-ID: <20260521083107.286c5f1b@gandalf.local.home>
-In-Reply-To: <20260512141614.1759430-1-vdonnefort@google.com>
-References: <20260512141614.1759430-1-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779367457; c=relaxed/simple;
+	bh=jWbmflbuW6J4goEc79qlSSJZlQfBF+OG8cAoFFWXIWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sI9AExBjFdrbIlzNgiNLs1abWojN1TabNgYjrk1Qdy0sMHZQX/pkdBNCEZyg8rnCVmt45PJf3Sq96WfMRSTC8ptyuPTs8jFvUxDPsUzVhrOLJLwfZLaaCCcgWW3n54Ili9Bkov6K803ig5N8Uch2CJlN8EZlCwQHk9SWDW952os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+VaWYhI; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+VaWYhI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D677F1F000E9;
+	Thu, 21 May 2026 12:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779367456;
+	bh=3sQdkXma8XObugrvw5mvb/DcW/CSIMcfVAbGtyiefsg=;
+	h=From:To:Cc:Subject:Date;
+	b=c+VaWYhIF/XuX9+ex4Gb8gp3J4VgWkl6HIBtrvWGRLQQ/mIEg71PIoi5db4ulX8Vn
+	 7IThxM3Z4iF1s2cHwf07N/RCiiF2Vc8gTlcuqNT36kMYbxbTcYulhEdLUAail0Vgqd
+	 EsoWf4zQb6W5KUphurzTBc3z+r9mGLPLVbpO1O3dp4VBx7eVZHifquELUES/we3Rci
+	 J/3rIhFRZUuOo4F8IAb+RUGQoTtqqT6WFNXIvKtbwBkEUrTui6j4kfbQO5Mf7YnTBp
+	 P3PBonH+LqOAzoMzQ7kNDkQWyc9v3Uy9ErCzWb5ZLhrEJx1v7nE6cBgoA9YgIagsyh
+	 UyHpG6JztOlXQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv3 00/12] uprobes/x86: Fix red zone issue for optimized uprobes
+Date: Thu, 21 May 2026 14:43:59 +0200
+Message-ID: <20260521124411.31133-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C18E620025
-X-Stat-Signature: oyseqnn4y8o4sr8x3sxd9detqpxmecms
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+yUiZr4pRIxUEb80bbjSZMljICyaIrtYY=
-X-HE-Tag: 1779366646-840302
-X-HE-Meta: U2FsdGVkX193wHeTjUhRdwpgzgXUCRDfMQwt1VWj+61/NGKD4gmVJaDFaAwMjq9hkY7njEa9Xa1VzGV/hdTT9DuMoy+RY7ppul53eRpSfSSbQwwIt3cPP6BZFiZfJv/iZe3XNFujoPoauHIxUO7uqP04YJq6PVu3ftNIn061f4SKt8B3ue+saI6c/LDdvtTeYyWBFhQxj/NBqapIRMt2LsXzmEqn6vdrSkUH6HeY2CRySjy6VRdGj/5j/YWMhHvVXnq804ZkNkXEauUZSenDIwKBkgxpCuqfFEgQ9XuUwzmYtRwUEwYTE0hrs3rMKco/oHWC+Tu5NA8gztdESkkAp0CXXHwLfQI4o2ozjjxJTZwSznww6mf/A/VSl4QlpnbiLxSN/k46OZBBsNez+c5sZD84QpUfzc4lJNyTHprpfFv5iRTDNtxvekjAGlp8n4SLnINb/mov7Sw=
+Content-Transfer-Encoding: 8bit
 
-On Tue, 12 May 2026 15:16:14 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+hi,
+Andrii reported an issue with optimized uprobes [1] that can clobber
+redzone area with call instruction storing return address on stack
+where user code may keep temporary data without adjusting rsp.
 
-> The unload_page callback expects the return value of load_page() as its
-> argument: ret = load_page(va); unload(ret). Fix the rollback code in
-> simple_ring_buffer_init_mm() where the descriptor's VA is used instead
-> of the loaded page address.
-> 
-> Fixes: 635923081c79 ("tracing: load/unload page callbacks for simple_ring_buffer")
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
-> index 02af2297ae5a..38cf9abe0be8 100644
-> --- a/kernel/trace/simple_ring_buffer.c
-> +++ b/kernel/trace/simple_ring_buffer.c
-> @@ -431,7 +431,7 @@ int simple_ring_buffer_init_mm(struct simple_rb_per_cpu *cpu_buffer,
->  
->  	if (ret) {
->  		for (i--; i >= 0; i--)
-> -			unload_page((void *)desc->page_va[i]);
-> +			unload_page(bpages[i].page);
->  		unload_page(cpu_buffer->meta);
->  
->  		return ret;
-> 
-> base-commit: 5d6919055dec134de3c40167a490f33c74c12581
+Fixing this by moving the optimized uprobes on top of 10-bytes nop
+instruction, so we can squeeze another instruction to escape the
+redzone area before doing the call.
 
-Vincent,
+Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
+if we decide to take this change.
 
-Did you make this patch because of the Sashiko report?
+thanks,
+jirka
 
-  https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/20260512135420.99194-1-devnexen%40gmail.com
 
-If so, I think we can add a: Reported-by: Sashiko <sashiko-bot@kernel.org>
+v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
+v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.org/
 
--- Steve
+v3 changes:
+- use nop10 update suggested by Peter in [2]
+- remove struct uprobe_trampoline object, use vma objects directly instead
+- selftests fixes [sashiko]
+- ack from Andrii
+
+v2 changes:
+- several selftest fixes [sashiko]
+- consolidate is_lea_insn and is_call_insn insto single check [Jakub Sitnicki]
+- use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
+- allow to copy uprobe trampolines vma objects on fork [sashiko]
+- change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
+- added fork/clone tests
+- I kept the selftest changes and nop5->nop10 changes in separate
+  commits for easier review, we can squash them later if we want to keep
+  bisect working properly
+
+
+[1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
+[2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
+---
+Andrii Nakryiko (1):
+      selftests/bpf: Add tests for uprobe nop10 red zone clobbering
+
+Jiri Olsa (11):
+      uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+      uprobes/x86: Remove struct uprobe_trampoline object
+      uprobes/x86: Allow to copy uprobe trampolines on fork
+      uprobes/x86: Move optimized uprobe from nop5 to nop10
+      libbpf: Change has_nop_combo to work on top of nop10
+      libbpf: Detect uprobe syscall with new error
+      selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
+      selftests/bpf: Change uprobe syscall tests to use nop10
+      selftests/bpf: Change uprobe/usdt trigger bench code to use nop10
+      selftests/bpf: Add reattach tests for uprobe syscall
+      selftests/bpf: Add tests for forked/cloned optimized uprobes
+
+ arch/x86/kernel/uprobes.c                               | 393 ++++++++++++++++++++++++++++++++++++++++++++----------------------------
+ include/linux/uprobes.h                                 |   5 -
+ kernel/events/uprobes.c                                 |  10 --
+ kernel/fork.c                                           |   1 -
+ tools/lib/bpf/features.c                                |   4 +-
+ tools/lib/bpf/usdt.c                                    |  16 +--
+ tools/testing/selftests/bpf/bench.c                     |  20 ++--
+ tools/testing/selftests/bpf/benchs/bench_trigger.c      |  38 +++----
+ tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh |   2 +-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 307 +++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ tools/testing/selftests/bpf/prog_tests/usdt.c           |  74 ++++++++++++--
+ tools/testing/selftests/bpf/progs/test_usdt.c           |  25 +++++
+ tools/testing/selftests/bpf/usdt.h                      |   2 +-
+ tools/testing/selftests/bpf/usdt_2.c                    |  15 ++-
+ 14 files changed, 670 insertions(+), 242 deletions(-)
