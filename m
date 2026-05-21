@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3F833C1B7;
-	Thu, 21 May 2026 03:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE4A30DD30;
+	Thu, 21 May 2026 03:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779332993; cv=none; b=Xy1W7+08ejc3hHMlFg/TgBK0yTRUrGQHChewlSkhrxY5LeHWbE+b6df2fqGPcIVGwLkAIXKUUFfycDmsHc8IFJMXc1SfYEfJG7lU0W9d0giv18N/Mc0WMHt9Rj0NBmHz0outVrvIZWOakYKeSbMVMyEX9Un2Ixwu3xp9rRQjnjo=
+	t=1779335206; cv=none; b=PhEZsSMXj6IIR5g4q5VrLWTp4XQogoKzAtryEgHbzTABQBvRSkGJJh9EHbCvJfGuW2dppjZIM24u/m7vMzmlESECS4g3h5j1Ari/503jRIEtDOr4UkPnFVdMI2i2/ZWeEvq/jucBnXXSK1eaa/L25kBATRMAXPUnzBxSEnBmkew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779332993; c=relaxed/simple;
-	bh=PyCogTZLqe1oYQBon/CXpNsZwPGKbaLmRJUHRCcKoAc=;
+	s=arc-20240116; t=1779335206; c=relaxed/simple;
+	bh=vfYSD69Q3rD4e9jkq8XgIX/wilniO7gBdcEfUt264EI=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DIVIYqBYgmv6CWz8ZqiD6xkM2/kqkrz3KCPR5Hsig6WkY+SAPP2gah85xkHjb3nC+AoFAqxgRXuOwVSH3nR0jxQ95u/8P0MIGxQSdCXkDJTBKq5TGL0ckqxT4UkuJytU32QEHR/WMpRuzBuSVOUt+atkCSmYuOrhT/4KwzGEb0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXpky9JN; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=hAzR6bq7fqc1bdgrjLubazDb8HHVXESKJWM5WRadNfFua+6qGmJbFlr1f1DsCgIypMRrRpdlMITPl+VQma8lK450/4iRtfKkMw7U0IuCWcDJbfpDyGgsmI8/imdvXdvqxOB3KBTMl3KNN9fbYz9NDha04fHDhx7rGK2CZ5y7YxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eScHYmno; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXpky9JN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB2B1F000E9;
-	Thu, 21 May 2026 03:09:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eScHYmno"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A8D1F000E9;
+	Thu, 21 May 2026 03:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779332991;
-	bh=lw7Y3cTnSkm8o3kNd4EremV9Sd2MHFAezFWfaNvBFXs=;
+	s=k20260515; t=1779335203;
+	bh=qkhZOf3D5ilURBV43WvvgE2pB6mKClKLalFB6ckHHss=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ZXpky9JNK9TTmZzhp7qSFzG7Pv1bOBmChhxIBkv5x8LjiSVubNtyTFIR3M3UjRizt
-	 dTQttGJP2LUd9WpMmiaE3DozQmSfexj4FzcOKgVTYL7F68zjy8vKRnfj1giQnKq8EJ
-	 AJNpUQ1kH22XOrEGquCoAhw5Uu+kExjF3mrfOUMUx0ZxzYr+OEuTwzQre22pQ+7mUZ
-	 9RHpv1T0ZYXNT/Uwh0JaskklPWR8Ciq1aDdx08sBwoTp+x1vUipE5IV6Ov5EE790js
-	 a5UpCE14KCMxN6CGEUS5VbkcgcNvOuLfP4ujrU6cn3945cvO+wp+zYeP/HjgmRC2Mo
-	 Mrdj44ERfWPSg==
-Date: Thu, 21 May 2026 12:09:47 +0900
+	b=eScHYmnoGa2wpjOyQfh5394DjpLHb5MH+NIncZZSdConkGSYJir4feiGqjq01agEd
+	 vmA396BBTL2OOio+Ol0qZie9oEuFQLZgRIRyNmhcblE3uRXEOwfONOrME8Lz+mfIDl
+	 PSf29Jn7yz3NicmngjbX/biejlzm4O+j9s9/NJGscZcn6WiZ7kw1SNyu85HsFDNyEO
+	 a4wi8GaVcUEwESP6zViGEpokmIKmnxDDeBpy6MN5HWmYRDDvS78hWG/I892flWq2+c
+	 kh6vebo69h7Yh3AXEXVEohIbioiFmvQOfY738ZO2/ZW97MsH6F3rn8+MfWTuiHVV8g
+	 SF0vWlopwObig==
+Date: Thu, 21 May 2026 12:46:40 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org
- (open list:TRACING), linux-hardening@vger.kernel.org (open list:KERNEL
- HARDENING (not covered by other
- areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: Re: [PATCH] tracing: Use flexible array for entry fetch code
-Message-Id: <20260521120947.08f00bd4d7445bc6abc98ce0@kernel.org>
-In-Reply-To: <20260520215817.16560-1-rosenp@gmail.com>
-References: <20260520215817.16560-1-rosenp@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v2] ring-buffer: Fix reporting of missed events in
+ iterator
+Message-Id: <20260521124640.daadbf2ecbe3c1e6b6560134@kernel.org>
+In-Reply-To: <20260520220801.4fd09d13@fedora>
+References: <20260520220801.4fd09d13@fedora>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,71 +47,86 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 20 May 2026 14:58:17 -0700
-Rosen Penev <rosenp@gmail.com> wrote:
+On Wed, 20 May 2026 22:08:01 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Store probe entry fetch instructions in the probe_entry_arg
-> allocation instead of allocating a separate instruction array.
+> From c3651ad3ac95b331c7aa010d163704a3702855da Mon Sep 17 00:00:00 2001
+> From: Steven Rostedt <rostedt@goodmis.org>
+> Date: Wed, 20 May 2026 14:28:17 -0400
+> Subject: [PATCH] ring-buffer: Fix reporting of missed events in iterator
 > 
-> This keeps the entry fetch code tied to the entry argument lifetime while
-> leaving regular probe_arg instruction arrays separately allocated and
-> freed.
+> When tracing is active while reading the trace file, if the iterator
+> reading the buffer detects that the writer has passed the iterator head,
+> it will reset and set a "missed events" flag. This flag is passed to the
+> output processing to show the user that events were missed:
+> 
+>   CPU:4 [LOST EVENTS]
+> 
+> The problem is that the flag is reset after it is checked in
+> ring_buffer_iter_dropped(). But the "trace" file iterates over all the CPU
+> ring buffers and it will check if they are dropped when figuring out which
+> buffer to print next. This prematurely clears the missed_events flag if
+> the CPU buffer with the missed events is not the one that is printed next.
+> 
+> On the iteration where the CPU buffer with the missed events is printed,
+> the check if it had missed events would return false and the output does
+> not show that events were missed.
+> 
+> Do not reset the missed_events flag when checking if there were missed
+> events, but instead clear it when moving the iterator head to the next
+> event.
 > 
 
-Thanks, this looks good to me.
+Looks good to me.
 
-> Assisted-by: Codex:GPT-5.5
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> Cc: stable@vger.kernel.org
+> Fixes: c9b7a4a72ff64 ("ring-buffer/tracing: Have iterator acknowledge dropped events")
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 > ---
->  kernel/trace/trace_probe.c | 8 +-------
->  kernel/trace/trace_probe.h | 2 +-
->  2 files changed, 2 insertions(+), 8 deletions(-)
+> Changes since v1: https://patch.msgid.link/20260520142817.4050abab@gandalf.local.home
 > 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index e0d3a0da26af..39f040c863e8 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -838,15 +838,10 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
->  	int i, offset, last_offset = 0;
+> - Added clearing iter->missed_events in rb_iter_reset() (Sashiko)
+> 
+>  kernel/trace/ring_buffer.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 7288383b1f27..7b07d2004cc6 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -5429,6 +5429,7 @@ static void rb_iter_reset(struct ring_buffer_iter *iter)
+>  	iter->head_page = cpu_buffer->reader_page;
+>  	iter->head = cpu_buffer->reader_page->read;
+>  	iter->next_event = iter->head;
+> +	iter->missed_events = 0;
 >  
->  	if (!earg) {
-> -		earg = kzalloc_obj(*tp->entry_arg);
-> +		earg = kzalloc_flex(*earg, code, 2 * tp->nr_args + 1);
->  		if (!earg)
->  			return -ENOMEM;
->  		earg->size = 2 * tp->nr_args + 1;
-> -		earg->code = kzalloc_objs(struct fetch_insn, earg->size);
-> -		if (!earg->code) {
-> -			kfree(earg);
-> -			return -ENOMEM;
-> -		}
->  		/* Fill the code buffer with 'end' to simplify it */
->  		for (i = 0; i < earg->size; i++)
->  			earg->code[i].op = FETCH_OP_END;
-> @@ -2051,7 +2046,6 @@ void trace_probe_cleanup(struct trace_probe *tp)
->  		traceprobe_free_probe_arg(&tp->args[i]);
+>  	iter->cache_reader_page = iter->head_page;
+>  	iter->cache_read = cpu_buffer->read;
+> @@ -6108,10 +6109,7 @@ ring_buffer_peek(struct trace_buffer *buffer, int cpu, u64 *ts,
+>   */
+>  bool ring_buffer_iter_dropped(struct ring_buffer_iter *iter)
+>  {
+> -	bool ret = iter->missed_events != 0;
+> -
+> -	iter->missed_events = 0;
+> -	return ret;
+> +	return iter->missed_events != 0;
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_iter_dropped);
 >  
->  	if (tp->entry_arg) {
-> -		kfree(tp->entry_arg->code);
->  		kfree(tp->entry_arg);
->  		tp->entry_arg = NULL;
->  	}
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 262d8707a3df..1076f1df347b 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -238,8 +238,8 @@ struct probe_arg {
->  };
+> @@ -6273,7 +6271,7 @@ void ring_buffer_iter_advance(struct ring_buffer_iter *iter)
+>  	unsigned long flags;
 >  
->  struct probe_entry_arg {
-> -	struct fetch_insn	*code;
->  	unsigned int		size;	/* The entry data size */
-> +	struct fetch_insn	code[] __counted_by(size);
->  };
+>  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> -
+> +	iter->missed_events = 0;
+>  	rb_advance_iter(iter);
 >  
->  struct trace_uprobe_filter {
+>  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
 > -- 
-> 2.54.0
+> 2.53.0
 > 
 
 
