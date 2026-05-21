@@ -1,191 +1,210 @@
-Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021085.outbound.protection.outlook.com [52.101.95.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C08367293;
-	Thu, 21 May 2026 02:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779330168; cv=fail; b=RAiavjHBsY4enAVFrOqeySIk9vU+iww9nExlywpyVgvtbku0SgSa+X3wPUjSKBw2na4L8iFg0b8uMnoP6OW0zc0Ybnbts3G39L938wG9l9wYn1GW13U9g2lJ0nE5m8gANsQTF4/ySAUIrpG1cKuOkSIEtnORiCliPWd0qHvGJnY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779330168; c=relaxed/simple;
-	bh=nmNWzHgZXVZLd32j3xE3giRRFdQnwsqSUInyS8Fth0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QkvfO3uf6v79qzv79TWVH4WQ9MMWdGlfqLxXFz7yjhPSNh9aMMJH5/I3dX0tJhBFcZJWjJS483+vSe79ia3dnfXiudoVx3JRZ1dAdu+8Fcx5MqWXcS5x9naiDSp7hMEIOK4eTHMe7XN67N4M6lESbwrYuWTGO5Gf960+zyI7x4U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tpUpNqapnUG1v3R9/ShV0dq/5437pIA3zIdQWiP3um091r+sXbSoHNlow+njEGfvF3ZVgnEv8GI1tdlVVI7Ev0NsPVh3X2MFcrdHXxIXVFTCZUThdbGSDX+IXk2BeI/IoSK9BKRfn3tM9a4IVqm7KSkUwQIuiQrQvDUdBoX/NhGWkUDQS4Bnx6oPghOMNuizhU45eTxiMUD2A2wAX8xeUd983QQa0RFTdQntZmUF07I25BsahUb4g66P60VxovP9FusVwfZWxCF52xsHUSFrfMDZglK1MzlU3C/bW/V7IsmGhKmLAJDKqq4yIhkVdXx/eNIgPT10bmRnVHTKumlvfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N161XYlZo7nCxcxU0KuwLc+uCTx1bI0lomrcFLmP9r4=;
- b=KNK2aqdqTAe2MAWEBgSRd0qeTMJbuSSL8zpOWpZv/kZLSYEsP0ERMM3CpVAs0Mnhs0wkEMfcddjMvaJ3OXBgDyodri7TqKq6SpHzWuzUzcDqH3F4jU6jbZ5rh6EiqBcWSqvhaviAthAFomNTVR3l4LTWTbnXggtd1JI/nzC217wGtZD1mbMmQX+MDkerPOq5cczy71Q0eiihd0vfipAkU+psWICGhXRFUJEcV1DUR1vNxpg3XnWsrZLedaMRLJj7vkqkpODP/C8eqLaZ4nzC4L2rKfTM95CQsT6nweBykMxBgRhurLZ06CMniSCMoBTIkiwovQYkqwo6e4JIOAoODA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by LOYP123MB3280.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:e1::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Thu, 21 May
- 2026 02:22:39 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf%2]) with mapi id 15.20.9846.025; Thu, 21 May 2026
- 02:22:39 +0000
-Date: Wed, 20 May 2026 22:22:35 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, bvanassche@acm.org, johannes.thumshirn@wdc.com, kch@nvidia.com, 
-	dlemoal@kernel.org, ritesh.list@gmail.com, loberman@redhat.com, neelx@suse.com, 
-	sean@ashe.io, mproche@gmail.com, chjohnst@gmail.com, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] blk-mq: expose tag starvation counts via debugfs
-Message-ID: <zyxk4twb7oezvrevox67omima2s3ykxhbrlzofykfva4bht4jz@cjkyl2mg554s>
-References: <20260517213614.350367-1-atomlin@atomlin.com>
- <20260517213614.350367-3-atomlin@atomlin.com>
- <fc307bd1-2c41-4bb1-8a10-b9ffde685d30@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fc307bd1-2c41-4bb1-8a10-b9ffde685d30@oracle.com>
-X-ClientProxiedBy: BN9PR03CA0661.namprd03.prod.outlook.com
- (2603:10b6:408:10e::6) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E99368D79;
+	Thu, 21 May 2026 02:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779330525; cv=none; b=f7GmnUxUcccB99+WBjgk4RzFdfzfdOaH9g5FAQ+R1uv4jI+JlvJGk8B0afFJmSGoUDEwTAoiMLqyecVANPvcOh4JF6agz1d4v4TMx5ghS69zSDfL88h74fwIA+SJZGJt01ZNnTj9w7W0EEjpIqAoCfQhsxNNb+dUAdKrugfPTg0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779330525; c=relaxed/simple;
+	bh=BRXlhKGwjZpjzuI+awDgwML69Vb8GC53VbYgZ3b7LkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CgTgnUChTNnJryBwRSuwEsqgtzOfyUx4zLzQM3Q7/DD559SVP/hAsvzHHVg7ivv3bHvhm1GMSSuaUxMUri3XY82E0VDX6T1cAs9n/VfCpVW0sS5Aw30Smo4PQif9YHSRFmbA9Yo5gtxNtzw1j3jhltRaT1CmrNI2tlG9O5N1/Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.196.245.140])
+	by APP-03 (Coremail) with SMTP id rQCowAB3meDEbQ5qvrDAEQ--.20225S3;
+	Thu, 21 May 2026 10:28:21 +0800 (CST)
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>
+Subject: [PATCH v4 2/2] tracing: Bound histogram expression strings with seq_buf
+Date: Thu, 21 May 2026 10:28:17 +0800
+Message-ID: <20260521022817.38453-2-pengpeng@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260521022817.38453-1-pengpeng@iscas.ac.cn>
+References: <20260521022817.38453-1-pengpeng@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LOYP123MB3280:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1934be8e-3b50-457d-3394-08deb6dfd47d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|18002099003|22082099003|56012099003|4143699003|5023799004|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	nq611E3ulQVu7PJj2ThpYGgG730DflsytuZ1iVUEhN9g8GMkD8kjun2E1T1DLYDKpetV1B2as5weAp4s994jh1SCmA4qswt3GyBGrzaA2H19/mLMQZ02ecyTZBOS3mSoJEP2qu5VMr0FL+eV9NCvpf79eVD2d8tzSl+Pia2hjoC63Ytz1p1vygAQ5oBJtA4SQQaEn2LMzL7ea3MsToiUAhWEo9IDzSL9u8kcYTdnnhYNSF0u7lwf6NL1izZ4zNzKb4fVEUEXEh+dG/X9nkjI7q9MXeVW0xqZM2PxanCwIaRBAQyUYTvlNh+zNNsWFS1dJiW1SFBoKyIqbNdRhtLql903wTMkSdZbscjVi33IVYtvgyYGwL9wFGqPZUrCatFFmvzCvt/AxtDdgxw3t0HZ7rFtUFswwZaPdqKKj1Hj9mpdFouMH+05qX0Z8TmvJ8KEILGdz+6Bi+t8JBd79TBB2v3GLHPZh8cXGNsPjS9IKU6L1rd+aWbQRTJQ1dswIpVUdF3EcjumjNtFS+HkFMl1v4XfwhiLSl3VJrfcXWh9qv7vS0Vw1lXkNDFb5U88OG+rXqcko6u9VgPaB7ooaY+Yco/5ishsnt8fJ/Sk1mXKRkpw5EddyfpWIDskgZHdOSWyBoweTNKR1Y5cQFCs8BdIpZbJgfRSXFbvxVuZtvmSlM9XWjkVys+cFmsJ1ItSSBvUEY+zBFFqmnGglcrz0VesBg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(18002099003)(22082099003)(56012099003)(4143699003)(5023799004)(6133799003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bUdtYmVZdWtXY1VaWjhELzZxSjJFUnlMNW5rV3RNcnI2aW9pMVRFV051b2dq?=
- =?utf-8?B?dUJ3N0ZhcXRYOEsyZmpybXF5dTJlb1ljZEpGai8vSFhTTWVNNjBsa2lqQk5Q?=
- =?utf-8?B?MFFlRmxuWFJ0aG50cW13SUpGYTkvcVozVWpqUCtTZFRubEx2WXBEbkUzLzBU?=
- =?utf-8?B?N1RoQWtsK0x6MU9OYVZiQmttUUJlUUl6dzdicTdHc3NNdmNGL2llci91MEpM?=
- =?utf-8?B?NDZRcFovTjBTVDFveERXeEFIZDhMNlNzZGpGSjE2R1d2Um5XWXc3NWdaY0dx?=
- =?utf-8?B?bnRoOEhkQ3IrWmNndnpHY3ZER3ovUWdkT2g5RU9XREZJUHpPOU9jaTBXRHJT?=
- =?utf-8?B?S1lnK3htaGN6aElJT1E0bURVSlBOcWhuUndsbEFqYUZCbXk3eTlMdjk2bHVS?=
- =?utf-8?B?TjBzemxaa2dabjMrUElVYjBoYnVKWm1IYVhJcW5vVkMwaFpqeHh2ZlFVeERD?=
- =?utf-8?B?bG8veS81ZzNlQW9DMWlNSFo0bGwzb0VrSEkydlNoejVzTXpQdkErYWRJbjVC?=
- =?utf-8?B?YnZGeVVrcTV3OGswNGJ2eHJ0MlFMTnZXb09PdDNoRmdaeGxwdVhwWm52Wk95?=
- =?utf-8?B?Z29INTFtZW9RV2ZNN1Z0RDFSV3VKVUF6Z3FTb2R6L2NJVFYwV2Q5OGcwdnQv?=
- =?utf-8?B?dkYzQXJjeGkrYThjaERrbjR1VWxyUmFiMWtEVll3YzA2aTdhQ3c2M0tuTk5h?=
- =?utf-8?B?UlJ5TVJ5S0M3algzQ2hhS2xCQ2VMT29WUk1BRnVCYkx3azZMQW9HcWRBMUx0?=
- =?utf-8?B?SmJsaVRTTFFZeDM0Z3ozTkFrME1HbHM3NmdsR0Zyam9IcWpKcGorTXNadHYz?=
- =?utf-8?B?YnNMZnc4RnBtaUk0NitvYURKNHd2ZDRXdDdDNXFoRy9FYU84NFJyTWF1VDFT?=
- =?utf-8?B?TFVuQUZtMDNYaTRNY3RhS21ubFdFNVBSQ3Bic3A0NGpCcjBYNnZCRzZ4dWV0?=
- =?utf-8?B?TDZZM25RMTdiYmw5UDYvWDhNaWJtUjc1Qk9QT2JneFdSaWFXWkxNdzJXUmdt?=
- =?utf-8?B?cXU5d2FHSkFmWG5hZncyNVJBcXdzeElpYVZGMHM1bm1YK3A4dHVlMFU1OXM1?=
- =?utf-8?B?OFpmZnRBcFV5TEdNcDUzQTVQc0d5eVBCQUlWTmxSbkVJcDFkYmRwZWd3VDhr?=
- =?utf-8?B?RGY2ZGZBN3NaODZLNkFOekd3ZzRIQjJnSHhGYVZFMTB2eDU5RitmK3BkamJL?=
- =?utf-8?B?SEJtYTFQV3NUQWVuY2NyYTYyTmIzZEQ0RXNzUk1LVllrM1BRRjNrdWpEeWgw?=
- =?utf-8?B?Zm1zY0UrSDVJV0laUzFHWFQ4S0hJa3BZZzBjQkpTWW11YjlkMTNoZ3dNNzRa?=
- =?utf-8?B?cnVHa3VBallxT2NtODVxS2JZZ1M3c0g4UFAzWWNpQ1BMOHk3VEh0OVBVZC9r?=
- =?utf-8?B?dU9PMHc4dlB6dmtKSXdwOENXTFFMT3JoaHlVZWlvcjl3R0dia1lLeWtnVUYz?=
- =?utf-8?B?bzhMbnZYcFcrdFd6eGNZQzRLR3QvWUVKQ08xTVRuYWZoOWduZVJiNy9oVVZv?=
- =?utf-8?B?QmtDbDlzT3ZidkRpcERvb2pLQml1YUFCcWxyVlRIaWVjeGpzb2RFbWpYMzhm?=
- =?utf-8?B?WjBuNHlHVEFIV1JheUl5RG5jVTAwMk9JQXV6SnZ3bXhHb2l2UHg1MlA2MmxG?=
- =?utf-8?B?ZWNWRjJqaHVZajRwOXJ0a1ZwUzIxZmQxUEw5ZHlnQ3RGOCtaUHRWSXhLMWZw?=
- =?utf-8?B?OTUxTHNuTURTOTRwNVI0RjhsaEJLbGxCeUNxcWNtUnJWRkdSdEZMYVRUZ3No?=
- =?utf-8?B?Zm9sV09xTE5xWVFOeEFXWUcrbTJsdUQyb0Nva1hFUmNSUDIrRTdoN3RKOU92?=
- =?utf-8?B?UUVQUzlNKzc1WVBPYVJ5ZzVmcUlHS2R4MmJsZE5ySUJwZFpmZmFxcWdBK3kv?=
- =?utf-8?B?WkRPUy9TbEMzWkplM2FkYlpzNmwxcElXeDhwZ2FrSmRhNTFuWjBtSzJncGJT?=
- =?utf-8?B?bG1ta0dkWDNqdUJJT1B4bDlGTVlER3BYajJSeWhLOFVvVm92ZVAycENKMzZ3?=
- =?utf-8?B?c1hYeThleEdmVEYvUnBWQmJwbDRoODdweWxWcTVjclhHZVdUelJlT044ZjRw?=
- =?utf-8?B?QW1QTzh0M1BqYWFtN2paYkRNQlhnK1c2NEJHRnFRUUJOZU4rRGhQb1RibmRk?=
- =?utf-8?B?S09MajR5d2lxcXJhV2tPZ3NrY2EvV3BLVnRKUW1tSFQ2SFFNaElKVEFJZEN0?=
- =?utf-8?B?VGs3ekx0UUNXajhUcGZCeHBOK2NxVG1NTU81Mk92eTRwcUYzY3lyNU5ZQnlT?=
- =?utf-8?B?SUwxeEZ1aDRtVVY3K2ZrOXhsdE9XQjdIcjExWmFtd3MwUHFyWUQ2MFEzbTN6?=
- =?utf-8?B?Uk9odngvMmZNS2lDRmVzQWR0OU83NDE3Mk1Dams1L3hkTXQ1MGxFdz09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1934be8e-3b50-457d-3394-08deb6dfd47d
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 02:22:39.3162
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gsqqvy5e7lgo+C4qza0ET1bjQdNJ250VZ/cJsPdZYvyVe8591lYszPE2ys7arr3djcHODXASnl3CWgrVSzulPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB3280
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAB3meDEbQ5qvrDAEQ--.20225S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAry7Zw43CFW5KFyrWrWrGrg_yoWrAFWrpF
+	s5AFnxCr4Utrs7Kwn3AFsruFy5Gw1kCr18tr4Du3yvy343Jr4DWa1kuF1furn7trW093Zr
+	GF45urZxCF4rWFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAVWUtw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
+	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhvttUUUUU=
+X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 
-On Mon, May 18, 2026 at 09:14:49AM +0100, John Garry wrote:
-> On 17/05/2026 22:36, Aaron Tomlin wrote:
-> > In high-performance storage environments, particularly when utilising
-> > RAID controllers with shared tag sets (BLK_MQ_F_TAG_HCTX_SHARED), severe
-> > latency spikes can occur when fast devices are starved of available
-> > tags.
-> > 
-> > This patch introduces two new debugfs attributes for each block
-> > hardware queue:
-> >    - /sys/kernel/debug/block/[device]/hctxN/wait_on_hw_tag
-> >    - /sys/kernel/debug/block/[device]/hctxN/wait_on_sched_tag
-> 
-> How would these counters be used? You are just saying that we may have
-> performance latency spikes and so here are two new counters.
+expr_str() allocates a fixed MAX_FILTER_STR_VAL buffer and then builds
+expression names with a series of raw strcat() appends. Nested operands,
+constants and field flags can push the rendered string past that fixed
+limit before the name is attached to the hist field.
 
-[ ... ]
+Build the expression strings with seq_buf and return -E2BIG when the
+rendered name would exceed MAX_FILTER_STR_VAL.
 
-> > These files expose atomic counters that increment each time a submitting
-> > context is forced into an uninterruptible sleep via io_schedule() due to
-> > the complete exhaustion of physical driver tags or software scheduler
-> > tags, respectively.
-> > 
-> > To ensure negligible performance overhead even in production
-> > environments where CONFIG_BLK_DEBUG_FS is actively enabled, this
-> > tracking logic utilises dynamically allocated per-CPU counters. When
-> > this configuration is disabled, the tracking logic compiles down to a
-> > safe no-op.
-> 
-> How does one normalise the values which are measured? I mean, during a
-> period of high contention, we may get a bunch of threads waiting for a
-> driver tag and the value in wait_on_hw_tag may jump considerably - how do
-> you normalize this value in wait_on_hw_tag for meaningful analysis?
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+---
+Changes since v3: https://lore.kernel.org/all/20260417223002.2-tracing-expr-v3-pengpeng@iscas.ac.cn/
+- rebase on top of v7.1-rc3
+- keep the ERR_PTR() conversion in patch 1
+- use seq_buf for expression construction and return -E2BIG on overflow
 
-Hi John,
+ kernel/trace/trace_events_hist.c | 62 +++++++++++++++++++-------------
+ 1 file changed, 38 insertions(+), 24 deletions(-)
 
-Thanks for the review.
-
-Based on feedback from Jens regarding this series [1], I am actually going to
-drop Patch 2 entirely in v7. 
-
-To answer your questions in the context of the new tracepoint approach:
-
-Storage engineers can use bpftrace(8) to hook the newly proposed
-"block_rq_tag_wait" tracepoint. This allows us to track tag starvation
-dynamically, filter it by specific devices, or even group it by the
-specific process (comm) experiencing the latency spike.
-
-Moving this to userspace completely solves the normalization problem you
-highlighted. For example, using bpftrace, userspace can hook both the tag
-starvation event (i.e., block_rq_tag_wait) and the standard block issue
-event (i.e., block_rq_issue) over a defined time window (e.g., 5 seconds).
-
-Userspace can then divide the waits by the total issues to get a
-meaningful, normalized starvation ratio (e.g., "4% of I/Os were starved of
-hardware tags in the last 5 seconds"). This is far more useful for analysis
-than a contextless debugfs integer jumping by an arbitrary amount.
-
-Thanks again for taking a look. I'll make sure to Cc you on v7.
-
-[1]: https://lore.kernel.org/lkml/t47wegcgfc43nimo4vqfdedqih43ydfietb7tsaobeitxgdhxs@6lnzvbj5rhab/
-
-
-Kind regards,
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 0b33bb8ef6f7..c878dc8f0cb9 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -8,6 +8,7 @@
+ #include <linux/module.h>
+ #include <linux/kallsyms.h>
+ #include <linux/security.h>
++#include <linux/seq_buf.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/stacktrace.h>
+@@ -1743,33 +1744,37 @@ static const char *get_hist_field_flags(struct hist_field *hist_field)
+ 	return flags_str;
+ }
+ 
+-static void expr_field_str(struct hist_field *field, char *expr)
++static bool expr_field_str(struct hist_field *field, struct seq_buf *s)
+ {
++	const char *field_name;
++
+ 	if (field->flags & HIST_FIELD_FL_VAR_REF) {
+ 		if (!field->system)
+-			strcat(expr, "$");
+-	} else if (field->flags & HIST_FIELD_FL_CONST) {
+-		char str[HIST_CONST_DIGITS_MAX];
++			seq_buf_putc(s, '$');
++	} else if (field->flags & HIST_FIELD_FL_CONST)
++		seq_buf_printf(s, "%llu", field->constant);
+ 
+-		snprintf(str, HIST_CONST_DIGITS_MAX, "%llu", field->constant);
+-		strcat(expr, str);
+-	}
++	field_name = hist_field_name(field, 0);
++	if (!field_name)
++		return false;
+ 
+-	strcat(expr, hist_field_name(field, 0));
++	seq_buf_puts(s, field_name);
+ 
+ 	if (field->flags && !(field->flags & HIST_FIELD_FL_VAR_REF)) {
+ 		const char *flags_str = get_hist_field_flags(field);
+ 
+-		if (flags_str) {
+-			strcat(expr, ".");
+-			strcat(expr, flags_str);
+-		}
++		if (flags_str)
++			seq_buf_printf(s, ".%s", flags_str);
+ 	}
++
++	seq_buf_str(s);
++	return !seq_buf_has_overflowed(s);
+ }
+ 
+ static char *expr_str(struct hist_field *field, unsigned int level)
+ {
+ 	char *expr __free(kfree) = NULL;
++	struct seq_buf s;
+ 
+ 	if (level > 1)
+ 		return ERR_PTR(-EINVAL);
+@@ -1778,47 +1783,56 @@ static char *expr_str(struct hist_field *field, unsigned int level)
+ 	if (!expr)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	seq_buf_init(&s, expr, MAX_FILTER_STR_VAL);
++
+ 	if (!field->operands[0]) {
+-		expr_field_str(field, expr);
++		if (!expr_field_str(field, &s))
++			return ERR_PTR(-E2BIG);
++
+ 		return_ptr(expr);
+ 	}
+ 
+ 	if (field->operator == FIELD_OP_UNARY_MINUS) {
+-		char *subexpr;
++		char *subexpr __free(kfree) = NULL;
+ 
+-		strcat(expr, "-(");
++		seq_buf_puts(&s, "-(");
+ 		subexpr = expr_str(field->operands[0], ++level);
+ 		if (IS_ERR(subexpr))
+ 			return subexpr;
+ 
+-		strcat(expr, subexpr);
+-		strcat(expr, ")");
++		seq_buf_puts(&s, subexpr);
++		seq_buf_putc(&s, ')');
++		seq_buf_str(&s);
+ 
+-		kfree(subexpr);
++		if (seq_buf_has_overflowed(&s))
++			return ERR_PTR(-E2BIG);
+ 
+ 		return_ptr(expr);
+ 	}
+ 
+-	expr_field_str(field->operands[0], expr);
++	if (!expr_field_str(field->operands[0], &s))
++		return ERR_PTR(-E2BIG);
+ 
+ 	switch (field->operator) {
+ 	case FIELD_OP_MINUS:
+-		strcat(expr, "-");
++		seq_buf_putc(&s, '-');
+ 		break;
+ 	case FIELD_OP_PLUS:
+-		strcat(expr, "+");
++		seq_buf_putc(&s, '+');
+ 		break;
+ 	case FIELD_OP_DIV:
+-		strcat(expr, "/");
++		seq_buf_putc(&s, '/');
+ 		break;
+ 	case FIELD_OP_MULT:
+-		strcat(expr, "*");
++		seq_buf_putc(&s, '*');
+ 		break;
+ 	default:
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	expr_field_str(field->operands[1], expr);
++	if (seq_buf_has_overflowed(&s) ||
++	    !expr_field_str(field->operands[1], &s))
++		return ERR_PTR(-E2BIG);
+ 
+ 	return_ptr(expr);
+ }
 -- 
-Aaron Tomlin
+2.50.1 (Apple Git-155)
+
