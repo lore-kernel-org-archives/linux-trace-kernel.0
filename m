@@ -1,94 +1,96 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0E7360EDE
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 07:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E47396561
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 07:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779347650; cv=pass; b=isUOnPpm5kfCB4R+uT5tVjb4/ApRR5vxnLk1i5rMRj6Z7V+SOoLKuVLrqqcEt07kIFbdjrxkaHzCwCGGs+Y4A23ZbXdWIdZw2FNb/Bo1gEQrjD4JrTYZsXEQxFkjf/83/kh/RlptW7DEN5CKRMzKiDdTan362tRXqD7t12Kj2qg=
+	t=1779348019; cv=pass; b=SMRmQMkMSgH/Dufwru02brkxLULHBs3n6j8tTx08HvMSSDdj7nEXyiL8XC70vQrrk2B0x3egRr27qKHHvydfDbrwC/W6J3hEDHcmJtdcWA1EKA45r2ZkawVd8Mqf9LpKIwzqDJIARW9BU+xQiTvrHEcrI/rvvGaIWFgMYAwzETg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779347650; c=relaxed/simple;
-	bh=FwszKxRTkU5t0/z62X07EaM8UOUdI3Szs5D9p5DC8sA=;
+	s=arc-20240116; t=1779348019; c=relaxed/simple;
+	bh=H/h4INyZwih10l9AYdvongdVpuQiBkGMfR0jm2vWFLA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UMwry4S/rVilK+uZ4Nl/E7dGuCcshj3ojRl1MgP+our4q0MnvaVD9Rb9fR7Ve2W3HSDsAoK72/uqsiZBtsHG9SOwaLwLDEDHouYgNcsxXVlY3iINpWXyYt0WdH6V7Qv0ylcSSEAqk3IqDnvPHM/7h/4vfIkUB5bCX+SK8i8dzRI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CkNZIYT/; arc=pass smtp.client-ip=209.85.160.175
+	 To:Cc:Content-Type; b=scL1thkM13EPKxGTvXKvHjJjeDmItUzqpqXCEqfsj/AYnjaI8j//Cnu2fmcVLSOaMUSnn3d35QBvTgLA0C0I43ZGvAu1xzeV5l9TKd5DkrX4rTrEJZvFCv8lcyPPaU9sr/Y1oK/LcRvsd6r2DzuLxgYpuO+bX4Pfb36YqLThGI0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fyly2srd; arc=pass smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CkNZIYT/"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-50e61648f10so15411cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 00:14:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779347648; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fyly2srd"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-50d6b393d60so8491cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 00:20:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779348014; cv=none;
         d=google.com; s=arc-20240605;
-        b=g1E4MiRAg9wWDy8LgFo8rvVE5D8Ij5MGEVKBlcGPW4XeyslLfEg8RrVhrSuGxvOLJO
-         PRWh3IXh2h9FG91yUtz4/yvVfu6uVbZEvTHShwOLxWt6+GAkWDwkwLtuKSCC2jd48jpp
-         slBCiemoue1KUA64fU9lYOExeu7HkKT+1nAYUVbBr69a6V0LJohRM5a95HxU6bk3EdAT
-         mVuVueaVGndTDRzg11cvVa+CJIa3YBKCafMob2y4oqgY48xWCOni8xbMEOxXqOwk7K0T
-         iycf5+3NVt5+LPZFu9e1EXP0EdN89dote39wgCzc8+HMyx469LMjtPNbGv3MnFKUfibv
-         wesg==
+        b=hK1XUrPIUK76ifP40lobxM41XDSEr2fOeq+9qJlAhC0VV/0UB/0QDEdlfgkWvPIaLJ
+         X8Npf5TTgrCesgSFVaP/STF3Zur3UMUaSnLbOvd+WFlKFkX1FFbi2CeiVRioRc1uB28M
+         QuUaWMR8bUOw+pdFmHQO2vji9wztHQbolUfiUlFJzqq4isHkgiH+N3HYoeHxQMWP4fvo
+         56ZfTt/AcwgoEJeXQvX0GV7fgI2hFqc+lyayRN0c4pXg9iDziqWKzYu8W2YZVFxcJ7AS
+         JeoyhnXesbi8uAZ/y6kAe4x+dQNlZ4v1/YKPfN9e1TNkBGf/8J916QFJlAtzGje4kJMe
+         naSQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=uNOn4o9NVeTi7pLeKizYhzgihd3OKpoLohhH00DuQC4=;
-        fh=t0xBQyiCevpLPdDtQ5Ah06jILpTyh7KSsqb6pjd2vNk=;
-        b=C1w1pq94/ZssMhBi+FzPIpjiAE0Lp3dU1iqP5qh+LOLaFzhcxv5yePYT2eXHarVkV0
-         nEonrkqSKpzcJn8teyRnk9ykGbdMpYgkD8hWdSLF1mCrWVqZEDlRspqZs9zqreh2a+9B
-         5Ej47aFoaJBMdhsfCfNTrfnNQhDUOgnAAnZnvp/bFuKSIyrPYQ4FCUmgXrEXuaWUsj9u
-         Q8h9bYldN1vSikx0x0ZDPDl3rkNF8MG03yXE1LqwU4ah9LhD+OpdML+ADPZXxoe7WFf6
-         YLsv3mlc6M1rBSja9IGm05twXX3rmg9Rf8dMbW7GDorYXb0ZOkv7eOLcstkyDzCCksGk
-         10SQ==;
+        bh=4lV/LRyXdVcEtETS6N6JX0KnOiUE4cogpgAqkVQgk4U=;
+        fh=8XhJIZa9MYT8gXFqCa1t9lHsjbgRgR6dMjnVHNyLRsc=;
+        b=I0G165kC54IwePT7eHxkghnkosgotOgjTt67sd24kPYSbRK2+D5ihM+Qfq358Kn0Uk
+         wwyYx46pAKD4d54yikKYYZAIohcV7FOlnxf/IuEz4YkMySKTOW6nTA4+rPmFS9bLspsF
+         MCdAUYrNnNPE/gzwGS4e0Bpdv3LdVHEV0FCY+2MU/+cur3BHH8TyHJ92wY8at/UKadmO
+         qVCszm4ZPJvgwXKeD9WclTy6JRN2kUg/2lEWrWQmC2PWY/biF4XZ76wDmyNrsxn0f5cU
+         xt10UpJi2lVg1+/WNwCNuV7AU2ENVz5WBt0mQEEbmvEmIDybRNcOv5DuRlbOChA4NdVM
+         1iKA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779347648; x=1779952448; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779348014; x=1779952814; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uNOn4o9NVeTi7pLeKizYhzgihd3OKpoLohhH00DuQC4=;
-        b=CkNZIYT/mfQbtyB9kjgvAN8ysRT7XeJ8RfwxAf0k8YBYFRm1kUI5LtllPusWOw5oPH
-         40MJQndnz5V4/HvdveowpqLg4iPIg4p4hDvp3jbscIw6JKq1WDQZ7noD84MDcMVXKkco
-         cr6AZaLQoeZ4UGHwuYV9Hj5r2she3ZkJ3HvgwIv3+5Ne0J4FU174YOCA2ul8e+dWGUfl
-         tapM4OZNOJOFjQF/kC8DrY5Flc1MwQGnr7rvUF+qWEgq39VMt9f0/7EkkolhzN7llH46
-         XkkzWMvb/Bg4XJH0Fls1w6mqAmbN+s0pKZCDclGa0gC5b3DHfFbqdL/ZRRJbQdTuodpm
-         cJAg==
+        bh=4lV/LRyXdVcEtETS6N6JX0KnOiUE4cogpgAqkVQgk4U=;
+        b=fyly2srdJ7tcPl2lAK8guLcb3fiIWl6RTdKuTX8jkxwxW2ZAZyEyJcwv2Xw4TtmXD5
+         hxq4KFty2izzMPCByiD59tCE6dHyVxzhA/c7kG2bdzqczha9jDEzsJ3yX8NrSZVzq1Ms
+         zkem2q9fVbYVIkSVbuJN8Baqr/W2kxIIUYw4kMQFsUMXuzrQkuLVJiqvgNHcWXv5Zm05
+         L/vUwJnQG4wEOHdz76nl9kUPZEEzFytezUI3XMbtQDJKTJBg+O5m7/Cx5N/i94CDvS3F
+         /9+1m338rLSNNw30qDf74hit3cLbq8LLg6ptmsmQ+sYXBUi0CetlKmXTxYOoq40SW3ea
+         XS6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779347648; x=1779952448;
+        d=1e100.net; s=20251104; t=1779348014; x=1779952814;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uNOn4o9NVeTi7pLeKizYhzgihd3OKpoLohhH00DuQC4=;
-        b=dNJ7uIFd4TGTnmnqd5RWu51q7RQQD+o4P19706qjlTdnoJ6fejRLGDLxaTYbmAVrt1
-         LctagJRc4MHO62+pAHFXV6gRM4aAiyFIIYQkPr15A4J3av3zAthnt0pS9H02uxat/saQ
-         3iQBM9o+i9zzt++5+cjeC30NhREDZazYCZL0YRmC7IN56DN42UbmLBUmTM9fedyi3ks0
-         d2iEdqDjm96ME4g/evQpNJlWLUGes9HL+e2veUAAdLbMbY47NRsFLh6FsLOJ3X1OiP+R
-         TOJkuBut+mP8sRhiXaU7KACUr+qupE5oawCSBw8p0B4lQ0IC/+A1D8jXkDIbi8l+QG9s
-         oIZQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/OmZe6/mFtGKglUDDB4wR+moQzZwu4h5cEp8ZqocsmC6F5g0urV7p22NQdMOhAkbz8VVPyy7QX323sBH26e65CGyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMl/12W7MUBvhC2CFKyMVjp1fnrKgxXVmFGr84r2SE32R1mmzt
-	NZqlmko7qtcGL1YV72fDLMdVKzENxHe7tlz9hoqGkK6UJE1XLS6TH9GZvsn4Y0a11OOMPK39aZs
-	LxukF5A0/8gmPA99up+V5CB3w1qi3JGMPMdSQ/cI4
-X-Gm-Gg: Acq92OFeOtf+AHvLU5KOMiHgPZ/U0fbJQUjEmvuBkALoSsQx+NBhDHHAT498r4Ihm2d
-	wH1yRoYdECOrBl5dgYuh3NrVQG9sw/7qvLse6NR4/zKICCBeFCCpyzvFYrT9NCx5kYZNLtg0soa
-	zdF9thV1Mbjna4GX/nR7yLm/j2eNrV7mB+qOhNb9nl7QhzhVmwPeBpp1jQG9KOyK8YZ7wsquZJf
-	sl/JswaEPsV4vaRgnwdR3az+1TsEAq6Doa/SzQ0gJd4dPOOyeQBi6nJ2O0Nly/GHefUK2sabusi
-	2gB36V8T74bV27b+45MKSCwAv1C9/Q==
-X-Received: by 2002:a05:622a:9d8:20b0:516:4f62:85ea with SMTP id
- d75a77b69052e-516c553b726mr5238111cf.21.1779347645271; Thu, 21 May 2026
- 00:14:05 -0700 (PDT)
+        bh=4lV/LRyXdVcEtETS6N6JX0KnOiUE4cogpgAqkVQgk4U=;
+        b=Yl9TeL6B/FEMl+mUf6bzAgHJEudLsd/ixVU/67uXGhdZL5piesgkjuC550zWsiIWbu
+         7yMQTa4A3Ox6HFExQu4nUYD88iR2dHZ/Jy0oKmQz0DTT6vWbm/rS8dTyAryM6N2xPOAt
+         0MeuZxB6CuMf6e6jdOx49D6LDNru5kiPjmiM8voanwa2Ki5gVoDIknwdkZBriAf+UlB+
+         JdkOwgPYieIfZvC235BHdQOHO1SRWO1zKmyktcoOawfV+qztetb6F8V8bh3wrL6L2F1o
+         7vmk4DKSKQb0IXZsI+BmXX8+7zexx8zNQ4KDIAWPycrYdJyV2ZrEI7tXiGS91B1727te
+         YxRA==
+X-Forwarded-Encrypted: i=1; AFNElJ85gyVcwkPBfOZnA98N3Qv8+N9e0uj9mIxvnNeklfBQ76FgAkzMqIwlB5GtJXDx319t2iWo0PjXKYWLLPwVRVJXkZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA1j/mOEZ4elW/5IVYnqjxFv+0CwhEBrGDuIhhXVFhof89tOOc
+	K2kerw3h0j6Ph2RDA8JxtA/+/quVKAYR6Ty7eVXDENGm+s3uL4A/BPLwtAU821TsLVjYH1chjSS
+	Dd6DpELlEbNKTga8pmCirqOWr0Y0Q5NjabDJGTcA/
+X-Gm-Gg: Acq92OEhTZ02pb46P/LU6ayVmUo6SM2kCR5zkvAd373z8qFDgU8ZVjbs0zib2R0sHkd
+	fUjOpnuZbmjn/HrwVckD5F2y/MVY6E3AS/UkN9op9/cSKFqIrpX5xpTzU9WoaERzxYjsmk3ehwV
+	TkXGjgw5ljI0wzBm1O+4g06lvUEblOYG8SpqdnZrOGnno+gV+OE78a/AU9U5A0+cz1kx/mmd+Tg
+	RJE8OvVBnWkPqVnBZGZL/UuuZhu+RX2UH2pR4U2XhUKdcR29LaR4FX+9M5qdsEMuIMzuumSvI7Q
+	qMjxIASPyo3OkqIIcwE=
+X-Received: by 2002:a05:622a:8c09:b0:50e:41f3:6467 with SMTP id
+ d75a77b69052e-516c545d431mr5347341cf.12.1779348013286; Thu, 21 May 2026
+ 00:20:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com> <20260507-gmem-inplace-conversion-v6-15-91ab5a8b19a4@google.com>
-In-Reply-To: <20260507-gmem-inplace-conversion-v6-15-91ab5a8b19a4@google.com>
+References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
+ <20260507-gmem-inplace-conversion-v6-5-91ab5a8b19a4@google.com>
+ <CA+EHjTw-cUM=FrJevtSDtR7K6MwUfGfOx21LMFDn7DAy5bFzYw@mail.gmail.com> <CAEvNRgGQvMdDmVfbk42EY_PGN0ybTp-x21Zj+pg_X1mk9iCRtA@mail.gmail.com>
+In-Reply-To: <CAEvNRgGQvMdDmVfbk42EY_PGN0ybTp-x21Zj+pg_X1mk9iCRtA@mail.gmail.com>
 From: Fuad Tabba <tabba@google.com>
-Date: Thu, 21 May 2026 08:13:28 +0100
-X-Gm-Features: AVHnY4I5mlImmNgj6VU9Np6tF4MeIY8QXPe0q5_43DkzSppchE88oaKE6aKRKpA
-Message-ID: <CA+EHjTyZx88qAjKc=W1GOTMLdDFpTjuJkAPJ3W6Snnyn3ta8tg@mail.gmail.com>
-Subject: Re: [PATCH v6 15/43] KVM: guest_memfd: Handle lru_add fbatch
- refcounts during conversion safety check
-To: ackerleytng@google.com
+Date: Thu, 21 May 2026 08:19:36 +0100
+X-Gm-Features: AVHnY4IfKawE844Bbti7f163iVDDGQdLfAc0aSSibjPNKnZdr2ZvCDCMhO5buRs
+Message-ID: <CA+EHjTzLCD-dU-euZKgzwyEr2ecPqFDNutcaHm2fCDGA+MHVXA@mail.gmail.com>
+Subject: Re: [PATCH v6 05/43] KVM: guest_memfd: Wire up kvm_get_memory_attributes()
+ to per-gmem attributes
+To: Ackerley Tng <ackerleytng@google.com>
 Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
 	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
@@ -116,109 +118,116 @@ Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
 	linux-mm@kvack.org, linux-coco@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 7 May 2026 at 21:22, Ackerley Tng via B4 Relay
-<devnull+ackerleytng.google.com@kernel.org> wrote:
+On Wed, 20 May 2026 at 22:44, Ackerley Tng <ackerleytng@google.com> wrote:
 >
-> From: Ackerley Tng <ackerleytng@google.com>
+> Fuad Tabba <tabba@google.com> writes:
 >
-> When checking if a guest_memfd folio is safe for conversion, its refcount
-> is examined. A folio may be present in a per-CPU lru_add fbatch, which
-> temporarily increases its refcount. This can lead to a false positive,
-> incorrectly indicating that the folio is in use and preventing the
-> conversion, even if it is otherwise safe. The conversion process might not
-> be on the same CPU that holds the folio in its fbatch, making a simple
-> per-CPU check insufficient.
+> >
+> > [...snip...]
+> >
+> >> +unsigned long kvm_gmem_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
+> >> +{
+> >> +       struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+> >> +       struct inode *inode;
+> >> +
+> >> +       /*
+> >> +        * If this gfn has no associated memslot, there's no chance of the gfn
+> >> +        * being backed by private memory, since guest_memfd must be used for
+> >> +        * private memory, and guest_memfd must be associated with some memslot.
+> >> +        */
+> >> +       if (!slot)
+> >> +               return 0;
+> >> +
+> >> +       CLASS(gmem_get_file, file)(slot);
+> >> +       if (!file)
+> >> +               return 0;
+> >> +
+> >> +       inode = file_inode(file);
+> >> +
+> >> +       /*
+> >> +        * Rely on the maple tree's internal RCU lock to ensure a
+> >> +        * stable result. This result can become stale as soon as the
+> >> +        * lock is dropped, so the caller _must_ still protect
+> >> +        * consumption of private vs. shared by checking
+> >> +        * mmu_invalidate_retry_gfn() under mmu_lock to serialize
+> >> +        * against ongoing attribute updates.
+> >> +        */
+> >> +       return kvm_gmem_get_attributes(inode, kvm_gmem_get_index(slot, gfn));
+> >> +}
+> >
+> > Doesn't this imply that all consumers of kvm_mem_is_private() should
+> > validate the result using mmu_lock and the invalidation sequence?
 >
-> To address this, drain all CPUs' lru_add fbatches if an unexpectedly high
-> refcount is encountered during the safety check. This is performed at most
-> once per conversion request. Draining only if the folio in question may be
-> lru cached.
->
-> guest_memfd folios are unevictable, so they can only reside in the lru_add
-> fbatch. If the folio's refcount is still unsafe after draining, then the
-> conversion is truly deemed unsafe.
->
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> Let me know how I can improve the comment.
 
-Not an area I've worked with that much, but it seems right to me:
+Given Sean's context, the comment is good I think. I would quibble
+with the the "_must_ still protect" phrasing being a bit too strict.
 
-Reviewed-by: Fuad Tabba <tabba@google.com>
+Maybe just soften it slightly to acknowledge the exception? Something like:
 
-Cheers,
-/fuad
+  * lock is dropped, so callers that require a strict result _must_ protect
+  * consumption of private vs. shared by checking mmu_invalidate_retry_gfn()
+  * under mmu_lock to serialize against ongoing attribute updates. Callers
+  * doing lockless reads must be able to tolerate a stale result.
 
+That aligns the comment with how KVM is actually using it today. That
+said, this is nitpicking. Feel free to use or ignore.
 
-> ---
->  mm/swap.c              |  2 ++
->  virt/kvm/guest_memfd.c | 18 ++++++++++++++----
->  2 files changed, 16 insertions(+), 4 deletions(-)
 >
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 5cc44f0de9877..3134d9d3d7c30 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -37,6 +37,7 @@
->  #include <linux/page_idle.h>
->  #include <linux/local_lock.h>
->  #include <linux/buffer_head.h>
-> +#include <linux/kvm_types.h>
+> I think the "consumption" of private vs shared here actually means
+> something like "don't commit a page being faulted into page tables based
+> on the result of kvm_gmem_get_memory_attributes() without checking
+> kvm->mmu_invalidate_in_progress.", since a racing conversion may
+> complete before you commit.
 >
->  #include "internal.h"
+> kvm_mem_is_private() is used from these places:
 >
-> @@ -904,6 +905,7 @@ void lru_add_drain_all(void)
->         lru_add_drain();
->  }
->  #endif /* CONFIG_SMP */
-> +EXPORT_SYMBOL_FOR_KVM(lru_add_drain_all);
+> 1. Fault handling in KVM, like page_fault_can_be_fast(),
+>    kvm_mmu_faultin_pfn(), kvm_mmu_page_fault(): this already handles the
+>    entire mmu_lock and invalidation dance. No fault will be committed if
+>    a racing conversion happened after kvm_mem_is_private() but before
+>    the commit.
 >
->  atomic_t lru_disable_count = ATOMIC_INIT(0);
+> 2. kvm_mmu_max_mapping_level() from recovering huge pages after
+>    disabling dirty logging: Other than that it can't be used with
+>    guest_memfd now since dirty logging can't be used with guest_memfd
+>    and guest_memfd memslots are not updatable, this holds mmu_lock
+>    throughout until the huge page recovery is done. invalidate_begin
+>    also involves zapping the pages in the range, so if the order of
+>    events is
 >
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 034b72b4947fb..050a8c092b1a3 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -8,6 +8,7 @@
->  #include <linux/mempolicy.h>
->  #include <linux/pseudo_fs.h>
->  #include <linux/pagemap.h>
-> +#include <linux/swap.h>
+>    | Thread A                     | Thread B          |
+>    |------------------------------|-------------------|
+>    | invalidate_begin + zap       |                   |
+>    | update attributes maple_tree | recover huge page |
+>    | invalidate_end               |                   |
 >
->  #include "kvm_mm.h"
+>    Then recovering will never see the zapped pages, nothing to
+>    recover, no kvm_mem_is_private() lookup.
 >
-> @@ -596,18 +597,27 @@ static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
->         const int filemap_get_folios_refcount = 1;
->         pgoff_t last = start + nr_pages - 1;
->         struct folio_batch fbatch;
-> +       bool lru_drained = false;
->         bool safe = true;
->         int i;
+> 3. kvm_arch_vcpu_pre_fault_memory()
 >
->         folio_batch_init(&fbatch);
->         while (safe && filemap_get_folios(mapping, &start, last, &fbatch)) {
+>    This eventually calls kvm_tdp_mmu_page_fault(), which checks
+>    is_page_fault_stale(), so it does check before committing.
 >
-> -               for (i = 0; i < folio_batch_count(&fbatch); ++i) {
-> +               for (i = 0; i < folio_batch_count(&fbatch);) {
->                         struct folio *folio = fbatch.folios[i];
+> Were there any other calls I missed?
+
+The one I was looking at was `sev_handle_rmp_fault()`, which does a lockless
+read without the retry loop. But as Sean just pointed out, that path can
+tolerate false positives/negatives and relies on the guest faulting again,
+so the lack of synchronization there is existing behavior and considered "fine".
+
 >
-> -                       if (folio_ref_count(folio) !=
-> -                           folio_nr_pages(folio) + filemap_get_folios_refcount) {
-> -                               safe = false;
-> +                       safe = (folio_ref_count(folio) ==
-> +                               folio_nr_pages(folio) +
-> +                               filemap_get_folios_refcount);
-> +
-> +                       if (safe) {
-> +                               ++i;
-> +                       } else if (folio_may_be_lru_cached(folio) &&
-> +                                  !lru_drained) {
-> +                               lru_add_drain_all();
-> +                               lru_drained = true;
-> +                       } else {
->                                 *err_index = folio->index;
->                                 break;
->                         }
+> > sev_handle_rmp_fault() calls kvm_mem_is_private() without holding
+> > mmu_lock and without any retry mechanism. Is that a problem?
+> >
 >
-> --
-> 2.54.0.563.g4f69b47b94-goog
+> Sean already replied on your actual question separately :)
 >
->
+> > Cheers,
+> > /fuad
+> >
+> >
+> >>
+> >> [...snip...]
+> >>
