@@ -1,197 +1,226 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41063E2AAE;
-	Thu, 21 May 2026 13:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779370553; cv=none; b=aVnq05is9zd+Vjjpysgjq4O+zEeN+t6EaHSKOldzuT4cr74OItbl9fv2Sd3xgvi+kcZ59lePNydDNs+CJ1d8gcL8k2kLAOzK8UmjQL4Hd5a2zr44Jhr+YGxk+LtiIBJkGfwfhS2OiFhZNpByngzFCuwsG1bJ4bRHcqQ41Mkvw5M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779370553; c=relaxed/simple;
-	bh=e0YRWVd85jn/wGqmXtmozJELgTfvjFAJf5MAZPK+NBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TeYNt4aYHiwl2d9xx9s+dpYcbpJtKD0v7VLg5Kil0dUxjE6vIPGX/IP05cWMda4g9SK/L2K/ekDV3uMQey20bP3wsdFCNQsw+QPOlI+sVpvlBzLfqEyqC/DE7mfWs0SqT4F1JuNayHNfeMr4fkKhHBovUAE4VWVl9uOYvknxnw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e2LidEJI; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167C13E2770
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 13:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779371288; cv=pass; b=nEXjeR6HpE5l6inAXVpg6+5xgW6p+73TjkDLw4JPDK3UdysDgkJ7qGd5CG4cHb+P9O2X8uQrvug41G7JijvLh1RgWg0JTk+Mepc9OITaPNganneompXMtH7cLG1rswsKtpZXlLeVql9suQ4c5EG9yffzo8ePpRN7VAO7tdA9JKY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779371288; c=relaxed/simple;
+	bh=SchiGOmf2MVWPKiRNrNhUxoPmvVzWaDRWZ8BJ0appKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HlLnI4dfF2FQQZKTA/sfP5A3INmmJz94PVP02aR/R+YbQDCNZ5Qv95sbjUznKxuLdIb5qmE0Mx+Sl/FH+ILATza9wb2CTyF5xAfSILBk98Kn7Bxsr8djA6xuc9ylLqTxWOWAT6OJYKberaEXF2tXfUjwBmEx0/KQwymDvVOKD5I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UTsJMzuu; arc=pass smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e2LidEJI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=WOsVhtwarq6BCeEd0Mb9AOJmRgZk4rPXE+CxRq/DV3s=; b=e2LidEJIzsOdy6vsJdrfY26voJ
-	Oik4vlQbbYv5Enwxw6d/w4r7SBwQnPloe8wSVEUQ+sVV8YQMcOwdYrJaTEfUkRea8FpJCOQ2geamE
-	tdy52iPyUR4Ul540qpmkApzdJmzt+rbfD4en8mxaby3tOxppBM38VOPSDLOeVLgK6d3FtGRlsOh4D
-	lszQyVoDPFy9ch+CLosxBDEC2X4eVao7h6ER6gTiM+ntbo34AvzwFbgHxtq2ezeR2cRrEjdI3rk54
-	L7Jmb+mwc2G4k6TNrMRu1rEJ2QBfkpD9zHX5ALQWHrHBnppcc1Faz/nash2OGnSD6kCbf6WhZatYG
-	PliPRQjA==;
-Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQ3Yz-00000008XQl-0NGJ;
-	Thu, 21 May 2026 13:35:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 887EC3005E5; Thu, 21 May 2026 15:35:48 +0200 (CEST)
-Date: Thu, 21 May 2026 15:35:48 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 04/12] uprobes/x86: Move optimized uprobe from nop5 to
- nop10
-Message-ID: <20260521133548.GK3126523@noisy.programming.kicks-ass.net>
-References: <20260521124411.31133-1-jolsa@kernel.org>
- <20260521124411.31133-5-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UTsJMzuu"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-515548f390fso691cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 06:48:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779371286; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JiTOJRa1lZsJUw1rUOsAwy4azgvjxPgOWjIOLL1546iTRQc4Fqp6z657IG54T9vItL
+         yd9eelXDIWOgrctAe/gLZh4TH6XPD0rY0TYQHqU29sHunWl3HdZ1FCeHJ4W7yO+h3VJF
+         iCKaMr9ICIQ9auM4pz1v6GTeh0SVLC0WCiMawk15ScwkNxjMfLw8fIGBoB933tQARxVM
+         +RZJbxeenHsjA+cvIgZ53nAcFzkwjEFZMk9uwd/MhTlPcKhdX6SZNoc4ZNGeHny209zo
+         O4fEov5KNjyUzkOSf80LZYykkS38vCLCa5mkzCVP/5a99aem0HWusa7SwukeNQjrAM7q
+         QQOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=x8ZLZpFna8QE3sntZWYFYWQfy/d2E0NvjrGgGfpza44=;
+        fh=DZb59wbNLpb6kAI0BhEX6Xc6sALZVkaBinPJqSCtq0k=;
+        b=XKujwrvGia46q+wFc3S7oNiHYhn+j9QT188gmqIL0+3ZzAZzLNHwvIzeWPH4ccdSBg
+         0d3foZFpRxUfSJmRheuLE0IZQrSv8ao+IRA3aOdisDfJqYklLohKddwt9WGtBT2kTkJH
+         7TDQ1IdR5PBHFbUd6LCeiCxodJAvftRrv4+Np34Zmggp2LXJqkPMsh6QdkcsutpTWG2P
+         4u0M39WLeAa9kzFcGVC5UZ1YCQ1O0aCnrgn6GoObnrjuQ0DsGOQPgvN2F8hVTS52WIpY
+         HXz71077+2Beto+57hzqP366qGbk6Eru/lEjmfTjy6FRUccs0hYF4xUECzPPydADaaJF
+         fiXA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779371286; x=1779976086; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=x8ZLZpFna8QE3sntZWYFYWQfy/d2E0NvjrGgGfpza44=;
+        b=UTsJMzuuHQAqtOdq93EIUbXnw+JhRe8m1vhFuoOsBToOUX6nVXAS+E4mUdvspMZmvZ
+         v2IUecR8Ff72x7kIEd3f1N9oRZc1OU6wiUnSc2M/r0UlLVWIyCs6SlJPVvacNa/DPYlp
+         zur6ES0u5kPlCA/+V3eeGpxaV9ufHXL9x+2rqpfX+PTd6ZC6qGYI2Ah+7MztTQtkP+9r
+         MhDnssl/F0HHZrAwFFu28ie/T5HNAaNupoUw9neYgsxmyvfQyCaxzcPhx4KkyJBoID1s
+         U3zIoTAmCu6hO4BkzrsnUYKmExrgd+apa9X+hXWVXehX3Nzb3gKFl5AAmWZjfhIlleGk
+         sDgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779371286; x=1779976086;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x8ZLZpFna8QE3sntZWYFYWQfy/d2E0NvjrGgGfpza44=;
+        b=h3vUYN22BQPnQpW5e3V/orIS2Da5QR5cKsEIrfobNIHM6LQX2VDbwIEdVa7GfTCShY
+         /BwgnK+mwd7bp+LtU7p2d2MtiTfM83M4Bj9V+0LjRhE+LgaBakvjDd0Facc7QzWde7Xr
+         AS25MKwxY8CMujjxL23Scuf9lBOTt+cVQTuJquvGT6CQVN52P+kSqwOsef4MGjsWzdt1
+         H8IDk8cw63oeEn4IaN0+DmeUGOvLm/wGA9wpsvXjfpgE93R5Sfx98lS7IyTZ710flF3N
+         dTzX+5p/lKNAPyKQo0VHXN1amEfrDSJSGdtVUQbNa2ZxEIrSHPudqN+ne4hg0q7O1TJY
+         KLhA==
+X-Forwarded-Encrypted: i=1; AFNElJ9mUvuAm+i3Az6rOSsuN/jpeQwthDPsFyUoAWLIzYCeCNdP44ZhsRmmM+WYZEg1xdrlfAcaM3tExNdb4ALrrf6JZjo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYF3d0q4/zgw3giZIU8KO7SFhuFWJ3R+K1t2Uw2YUTYPD19VkV
+	lFT4uw2yI6mVBx/64/cjjkR4u6rJm0OaN1BpYKXPbhwBnz4RAjxjbklMkZ0GfDMB+XOrwZKme1+
+	xXqN4Fjh6BSdtVgRfHzPD8aNtByD0FAjlBp5Y1RfN
+X-Gm-Gg: Acq92OG2elZD8q0Bc3l6rYXdysPlRj+tgD40YBroAnP9YdQ30wThqLgXLCX9Iiz4hM3
+	icSlSs2yQRV8qYWF6WIr6ffhAEIDurQOl7e0c9P4/eAb1wmlxMYhM+5nQpgmFY6sT29GAMOMl7r
+	2RY2G9CJuUVN0JLKIaOeWaJMZdIer1Brfc6LPGVwmxu68jT5piwx84YzosW4IVeD9yOo25yWuI9
+	HPq5GT5TjikdQM99KKRG7qHEWxp3Su3qNkhc+i9/1uKQgYCDUxRudL1plh+dJiT2DtjvcYRroRP
+	9f9X0agu5p39oKQj0Ac=
+X-Received: by 2002:a05:622a:9005:b0:50f:af60:3496 with SMTP id
+ d75a77b69052e-516c53118ecmr8206941cf.1.1779371285395; Thu, 21 May 2026
+ 06:48:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260521124411.31133-5-jolsa@kernel.org>
+References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
+ <20260507-gmem-inplace-conversion-v6-5-91ab5a8b19a4@google.com>
+ <CA+EHjTw-cUM=FrJevtSDtR7K6MwUfGfOx21LMFDn7DAy5bFzYw@mail.gmail.com>
+ <CAEvNRgGQvMdDmVfbk42EY_PGN0ybTp-x21Zj+pg_X1mk9iCRtA@mail.gmail.com>
+ <CA+EHjTzLCD-dU-euZKgzwyEr2ecPqFDNutcaHm2fCDGA+MHVXA@mail.gmail.com> <ag8JIlHjohAOC3-g@google.com>
+In-Reply-To: <ag8JIlHjohAOC3-g@google.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Thu, 21 May 2026 14:48:00 +0100
+X-Gm-Features: AVHnY4IjTx7kpi4F7EdVLun66lc7vUTNuuJ9Vgrkm1t1onCQ9N7OW44CxOISbbA
+Message-ID: <CA+EHjTyF19FPod10EEm3pMaPvsAR6HUXOhtC83qSSqxQ2g1s2Q@mail.gmail.com>
+Subject: Re: [PATCH v6 05/43] KVM: guest_memfd: Wire up kvm_get_memory_attributes()
+ to per-gmem attributes
+To: Sean Christopherson <seanjc@google.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, ira.weiny@intel.com, jmattson@google.com, 
+	jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org, 
+	pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com, 
+	rientjes@google.com, shivankg@amd.com, steven.price@arm.com, 
+	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com, 
+	forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com, 
+	aneesh.kumar@kernel.org, liam@infradead.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 21, 2026 at 02:44:03PM +0200, Jiri Olsa wrote:
-> Andrii reported an issue with optimized uprobes [1] that can clobber
-> redzone area with call instruction storing return address on stack
-> where user code may keep temporary data without adjusting rsp.
-> 
-> Fixing this by moving the optimized uprobes on top of 10-bytes nop
-> instruction, so we can squeeze another instruction to escape the
-> redzone area before doing the call, like:
-> 
->   lea -0x80(%rsp), %rsp
->   call tramp
-> 
-> Note the lea instruction is used to adjust the rsp register without
-> changing the flags.
-> 
-> We use nop10 and following transofrmation to optimized instructions
-> above and back as suggested by Peterz [2].
-> 
-> Optimize path (int3_update_optimize):
-> 
->   1) Initial state after set_swbp() installed the uprobe:
->       cc 2e 0f 1f 84 00 00 00 00 00
-> 
->      From offset 0 this is INT3 followed by the tail of the original
->      10-byte NOP.
-> 
->   2) Trap the call slot before rewriting the NOP tail:
->       cc 2e 0f 1f 84 [cc] 00 00 00 00
-> 
->      From offset 0 this traps on the uprobe INT3.  A thread reaching
->      offset 5 traps on the temporary INT3 instead of seeing a partially
->      patched call.
-> 
->   3) Rewrite the LEA tail and call displacement, keeping both INT3 bytes:
->       cc [8d 64 24 80] cc [d0 d1 d2 d3]
-> 
->      From offset 0 and offset 5 this still traps.  The bytes between
->      them are not executable entry points while both traps are in place.
-> 
->   4) Restore the call opcode at offset 5:
->       cc 8d 64 24 80 [e8] d0 d1 d2 d3
-> 
->      From offset 0 this still traps.  From offset 5 the instruction is
->      the final CALL to the uprobe trampoline.
-> 
->   5) Publish the first LEA byte:
->       [48] 8d 64 24 80 e8 d0 d1 d2 d3
-> 
->      From offset 0 this is:
->         lea -0x80(%rsp), %rsp
->         call <uprobe-trampoline>
-> 
-> Unoptimize path (int3_update_unoptimize):
-> 
->   1) Initial optimized state:
->       48 8d 64 24 80 e8 d0 d1 d2 d3
->      Same as 5) above.
-> 
->   2) Trap new entries before restoring the NOP bytes:
->       [cc] 8d 64 24 80 e8 d0 d1 d2 d3
-> 
->      From offset 0 this traps. A thread that had already executed the
->      LEA can still reach the intact CALL at offset 5.
-> 
->   3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
->      and byte 5 as CALL.
->       cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> 
->      From offset 0 this still traps. Offset 5 is still the CALL for any
->      thread that was already past the first LEA byte.
-> 
->   4) Publish the first byte of the original NOP:
->       [66] 2e 0f 1f 84 e8 d0 d1 d2 d3
-> 
->      From offset 0 this is the restored 10-byte NOP; the CALL opcode and
->      displacement are now only NOP operands.  Offset 5 still decodes as
->      CALL for a thread that was already there.
-> 
-> Note as explained in [2] we need to use following nop10:
->        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
-> NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
-> 
-> which means we need to allow 0x2e prefix which maps to INAT_PFX_CS
-> attribute in is_prefix_bad function.
-> 
-> The optimized uprobe performance stays the same:
-> 
->         uprobe-nop     :    3.129 ± 0.013M/s
->         uprobe-push    :    3.045 ± 0.006M/s
->         uprobe-ret     :    1.095 ± 0.004M/s
->   -->   uprobe-nop10   :    7.170 ± 0.020M/s
->         uretprobe-nop  :    2.143 ± 0.021M/s
->         uretprobe-push :    2.090 ± 0.000M/s
->         uretprobe-ret  :    0.942 ± 0.000M/s
->   -->   uretprobe-nop10:    3.381 ± 0.003M/s
->         usdt-nop       :    3.245 ± 0.004M/s
->   -->   usdt-nop10     :    7.256 ± 0.023M/s
-> 
+On Thu, 21 May 2026 at 14:31, Sean Christopherson <seanjc@google.com> wrote:
+>
+> On Thu, May 21, 2026, Fuad Tabba wrote:
+> > On Wed, 20 May 2026 at 22:44, Ackerley Tng <ackerleytng@google.com> wrote:
+> > >
+> > > Fuad Tabba <tabba@google.com> writes:
+> > >
+> > > >
+> > > > [...snip...]
+> > > >
+> > > >> +unsigned long kvm_gmem_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
+> > > >> +{
+> > > >> +       struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+> > > >> +       struct inode *inode;
+> > > >> +
+> > > >> +       /*
+> > > >> +        * If this gfn has no associated memslot, there's no chance of the gfn
+> > > >> +        * being backed by private memory, since guest_memfd must be used for
+> > > >> +        * private memory, and guest_memfd must be associated with some memslot.
+> > > >> +        */
+> > > >> +       if (!slot)
+> > > >> +               return 0;
+> > > >> +
+> > > >> +       CLASS(gmem_get_file, file)(slot);
+> > > >> +       if (!file)
+> > > >> +               return 0;
+> > > >> +
+> > > >> +       inode = file_inode(file);
+> > > >> +
+> > > >> +       /*
+> > > >> +        * Rely on the maple tree's internal RCU lock to ensure a
+> > > >> +        * stable result. This result can become stale as soon as the
+> > > >> +        * lock is dropped, so the caller _must_ still protect
+> > > >> +        * consumption of private vs. shared by checking
+> > > >> +        * mmu_invalidate_retry_gfn() under mmu_lock to serialize
+> > > >> +        * against ongoing attribute updates.
+> > > >> +        */
+> > > >> +       return kvm_gmem_get_attributes(inode, kvm_gmem_get_index(slot, gfn));
+> > > >> +}
+> > > >
+> > > > Doesn't this imply that all consumers of kvm_mem_is_private() should
+> > > > validate the result using mmu_lock and the invalidation sequence?
+> > >
+> > > Let me know how I can improve the comment.
+> >
+> > Given Sean's context, the comment is good I think. I would quibble
+> > with the the "_must_ still protect" phrasing being a bit too strict.
+> >
+> > Maybe just soften it slightly to acknowledge the exception? Something like:
+> >
+> >   * lock is dropped, so callers that require a strict result _must_ protect
+> >   * consumption of private vs. shared by checking mmu_invalidate_retry_gfn()
+> >   * under mmu_lock to serialize against ongoing attribute updates. Callers
+> >   * doing lockless reads must be able to tolerate a stale result.
+> >
+> > That aligns the comment with how KVM is actually using it today. That
+> > said, this is nitpicking. Feel free to use or ignore.
+>
+> Hmm, I wonder if we can figure out a way to consolidate some documentation,
+> because this is _exactly_ the same pattern that x86's host_pfn_mapping_level()
+> deals with (see its big comment below).
+>
+> There's also the stale comment in kvm_invalidate_memslot(), which, stating the
+> obvious, speaks to the memslot+SRCU side of things.
+>
+> Maybe it makes sense to to find a central location for one giant comment about
+> how how MMU notifier events and memslot+SRCU protections work?  And then refer
+> to that in paths where some asset needs to be tied into MMU notifiers and/or
+> memslots+SRCU?
+>
+> [*] https://lore.kernel.org/all/agcbWe8s9lmPuJwG@google.com
 
-> @@ -893,48 +918,134 @@ static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *
->  }
->  
->  /*
-> + * Modify the optimized instruction by using INT3 breakpoints on SMP.
->   * We completely avoid using stop_machine() here, and achieve the
->   * synchronization using INT3 breakpoints and SMP cross-calls.
->   * (borrowed comment from smp_text_poke_batch_finish)
->   *
-> + * The way it is done for optimization (int3_update_optimize):
-> + *   1) Start with the uprobe INT3 trap already installed
-> + *   2) Add an INT3 trap to the call slot
-> + *   3) Update everything but the first byte and the call opcode
-> + *   4) Replace the call slot INT3 by the call opcode
-> + *   5) Replace the first INT3 by the first byte of the LEA instruction
-> + *
-> + * The way it is done for unoptimization (int3_update_unoptimize):
-> + *   1) Start with the optimized uprobe lea/call instructions
-> + *   2) Add an INT3 trap to the address that will be patched
-> + *   3) Restore the NOP bytes before the call opcode
-> + *   4) Replace the first INT3 by the first byte of the NOP instruction
-> + *
-> + * Note that unoptimization deliberately keeps the call opcode and displacement
-> + * in bytes 5..9. Those bytes become operands of the restored 10-byte NOP.
->   */
-
-One important thing to note is that (as earlier noted by Andrii) the
-CALL address is never changed. A new optimization pass will not change
-the CALL instruction again.
-
-If you noted this anywhere, I failed to find it. This is crucially
-important for the correctness of the scheme and should not be emitted.
-
-That is, please add something like:
-
-  "Since there is only a single uprobe-trampoline, the CALL instruction
-  will not be changed across unoptimization/optimization cycles.
-  Therefore, any task that is preempted at the CALL instruction is
-  guaranteed to observe that CALL and not anything else."
+This would fix a few related issues at once. sgtm
+/fuad
 
 
+/fuad
+
+>
+> /*
+>  * Lookup the mapping level for @gfn in the current mm.
+>  *
+>  * WARNING!  Use of host_pfn_mapping_level() requires the caller and the end
+>  * consumer to be tied into KVM's handlers for MMU notifier events!
+>  *
+>  * There are several ways to safely use this helper:
+>  *
+>  * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, before
+>  *   consuming it.  In this case, mmu_lock doesn't need to be held during the
+>  *   lookup, but it does need to be held while checking the MMU notifier.
+>  *
+>  * - Hold mmu_lock AND ensure there is no in-progress MMU notifier invalidation
+>  *   event for the hva.  This can be done by explicit checking the MMU notifier
+>  *   or by ensuring that KVM already has a valid mapping that covers the hva.
+>  *
+>  * - Do not use the result to install new mappings, e.g. use the host mapping
+>  *   level only to decide whether or not to zap an entry.  In this case, it's
+>  *   not required to hold mmu_lock (though it's highly likely the caller will
+>  *   want to hold mmu_lock anyways, e.g. to modify SPTEs).
+>  *
+>  * Note!  The lookup can still race with modifications to host page tables, but
+>  * the above "rules" ensure KVM will not _consume_ the result of the walk if a
+>  * race with the primary MMU occurs.
+>  */
