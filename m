@@ -1,32 +1,38 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19F93D7D91;
-	Thu, 21 May 2026 13:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EAB2EF653;
+	Thu, 21 May 2026 14:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779371410; cv=none; b=Th37M950kp6JisKx/DvJx7SBFNJcdmMaUJV+vRFEZMHd9gxpt45OZK9z1gu8RB/bRDvnfJPSJgW/9ChSx8utFYYdejAbKTrfGWwS+JDXlImUSp6i1PLQLZAm6/4zyt4HpwCbrxC4jqwiOY1FlKIhZTtkFCb2SVVoLC1ZPmYLkFw=
+	t=1779373047; cv=none; b=qhLJETWs3M1e/x4TWpNAY6f6MAimSudEXUZbV349/z8NhbQ9voX9qGLVHmZaYF8HU8LutSAFZjgUIRnQnoNtK6yHKbJZhuwkqmVhIGTp8vM7TlNtYCQLZBeOZJDuf94Tu5quvpI2N+WVS3AqpfUTBWw56cFRahJyaPVqR7Ql//I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779371410; c=relaxed/simple;
-	bh=qdmh9actQViSDg7m0X6nMq09bxwwqdgAdbVTqk75ChY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=stVz5BThHgi+ABEnAVkxv2TfIPNm6l2mWNY4u6JsacxmuGGDUSvV5cfEn1qyzatyLDrI10IvbDqXmASS+dkRjTUhQi0PresS+bAINSnuIXxd0N89n6Lmn8tN2PaKuftzqDyRF+SuzRnXdifJLjiPxdTOuokcybVZClET++zYn6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	s=arc-20240116; t=1779373047; c=relaxed/simple;
+	bh=7HdOynnfZ41Glz7tPCn9q1ES2n5mZ4rCGHb6hX2+lzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZQ5VcGamBaZDm65uXDn5SbNwh3slilqAyv00KqyISbPLN6XzutlOlPl4VxZnoCIMbrOpkEV1TLxVcnY9swLHdoUbk2OzWPWFlY/RZsGNEGlDyUkinaZ/IdYvi0oOqkHS1O+/PFnwRuHeS5Q8Xv3pW3888K+CAWJf+NUvqigruBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id CEC4D403B2;
-	Thu, 21 May 2026 13:50:07 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 4AE7534;
-	Thu, 21 May 2026 13:50:06 +0000 (UTC)
-Date: Thu, 21 May 2026 09:50:26 -0400
+Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 6518F1A05C4;
+	Thu, 21 May 2026 14:17:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 5C15B2001E;
+	Thu, 21 May 2026 14:17:21 +0000 (UTC)
+Date: Thu, 21 May 2026 10:17:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Move trace_iterator_increment() into
- trace_find_next_entry_inc()
-Message-ID: <20260521095026.20c9799d@gandalf.local.home>
+ <mathieu.desnoyers@efficios.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ian Rogers
+ <irogers@google.com>, "sashiko-bot@kernel.org" <sashiko-bot@kernel.org>,
+ "sashiko-reviews@lists.linux.dev" <sashiko-reviews@lists.linux.dev>
+Subject: Re: [PATCH v20 02/10] ring-buffer: Skip invalid sub-buffers when
+ rewinding persistent ring buffer
+Message-ID: <20260521101742.2dd92bad@gandalf.local.home>
+In-Reply-To: <20260520185017.219342323@kernel.org>
+References: <20260520184938.749337513@kernel.org>
+	<20260520185017.219342323@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,67 +42,104 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4AE7534
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: a78kzj5b7y49omfmrmbaojhtq4d6egdw
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 5C15B2001E
+X-Stat-Signature: 7o9tunghr1knfbedsgoqsjqs8qwujopk
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18s9xSgnWvpme1h8BME2XP4W3JSOpJzPr0=
-X-HE-Tag: 1779371406-730136
-X-HE-Meta: U2FsdGVkX1+3cCDTg77FlrGCO2ygnt/lE4kpWBgyNygdys3aXRfg2RoRaBwPpCGhYaFoEp30dSPtS6MiPQhvPj4S5Tr8yMjZeqWYTxA2ImBj1vLK/LC5WHAUxH8MJlNacnvk/Ua4HyZwbSNovHi1rCd3IQHX/WFIdlxUNmkfpHAbJH3Oq4iVLPJYf324n3ddY8WsuHWQHDQRhVxazBuWXKaOWacE3DU2VkBlyaW2VtuJvtQROnsUB37Ff/YvaxpPIukZOHjEad8qWWa49q3puKtGagKFaeWacfh2p447SBP3FfLg8w5owZwQkYa+PZNKlQudAjdb4B4aGXiMqoFp3MfACgHK8gBLQ9fFb572S0DvuPXjcatjz2fWVIYVXBaa
+X-Session-ID: U2FsdGVkX1/jB70Aj1+aKXxZf7o3qaRT1vzTsQfM0jI=
+X-HE-Tag: 1779373041-833705
+X-HE-Meta: U2FsdGVkX18T/5bsBGe5xy7whlSHfiILJqOGCo84zOl5rJOCyTV2qSuspBNGiwwO9JkdKw4L12Ky13QNekLkBrQJ+hEX+5IHql7u3J9yVaAV9vVRRJ8due+rgj0bozKctYU0tZB2VeN9RrQYjT8LwIYZVzFtGK1TxtH/5/GsmpCACx+BeiraqJyJCFk7sWIqCFc16OJlaoBhTmk1luxTSAF0pN2fdKwQiQ+scCQvgzza4VX3/XSgZOMu0GZHcR/VxYWCwthbRF80SKN4mQW0W8NNDZgj7PQfqfm3zXGf0Q5Q0aADZPb3761RqYWOLuaKYzuwj3HxE4sd/bw8uDNUy7qm0XrtvDCRZdW18kcwqs/UjwsxjE0EYmjOoB6Y5ncSZY4Q1eAXF9RSV77HJ0+Zyw==
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-trace_iterator_increment() is only called from trace_find_next_entry_inc().
-It's a small enough function that really doesn't need to be separated.
+[
+  Replying to Sashiko from v19: https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/177751968499.2136606.17388366710182662849.stgit%40mhiramat.tok.corp.google.com
+]
 
-Move the code from trace_iterator_increment() into
-trace_find_next_entry_inc() and remove trace_iterator_increment().
+> > @@ -1892,9 +1895,27 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu,
+> >  	 * subbuf_size is considered invalid.
+> >  	 */
+> >  	tail = local_read(&dpage->commit) & ~RB_MISSED_MASK;
+> > -	if (tail > meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+> > -		return -1;
+> > -	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+> > +	if (tail <= meta->subbuf_size - BUF_PAGE_HDR_SIZE)
+> > +		ret = rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
 
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+> Since tail is read from untrusted persistent memory, does this call evaluating
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4573f65d68ce..0b43e88ac378 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2338,15 +2338,6 @@ void trace_last_func_repeats(struct trace_array *tr,
- 	__buffer_unlock_commit(buffer, event);
- }
- 
--static void trace_iterator_increment(struct trace_iterator *iter)
--{
--	struct ring_buffer_iter *buf_iter = trace_buffer_iter(iter, iter->cpu);
--
--	iter->idx++;
--	if (buf_iter)
--		ring_buffer_iter_advance(buf_iter);
--}
--
- static struct trace_entry *
- peek_next_entry(struct trace_iterator *iter, int cpu, u64 *ts,
- 		unsigned long *lost_events)
-@@ -2676,11 +2667,17 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
- /* Find the next real entry, and increment the iterator to the next entry */
- void *trace_find_next_entry_inc(struct trace_iterator *iter)
- {
-+	struct ring_buffer_iter *buf_iter;
-+
- 	iter->ent = __find_next_entry(iter, &iter->cpu,
- 				      &iter->lost_events, &iter->ts);
- 
--	if (iter->ent)
--		trace_iterator_increment(iter);
-+	if (iter->ent) {
-+		iter->idx++;
-+		buf_iter = trace_buffer_iter(iter, iter->cpu);
-+		if (buf_iter)
-+			ring_buffer_iter_advance(buf_iter);
-+	}
- 
- 	return iter->ent ? iter : NULL;
- }
--- 
-2.53.0
+The persistent memory is not untrusted.
 
+> event headers verify enough bytes remain in the sub-buffer?
+> If tail is set to the maximum allowed value, and preceding events are crafted
+> so that the last event starts at tail - 1, the event pointer inside
+> rb_read_data_buffer() will point to the very last byte.
+> Calling rb_event_length(event) will evaluate event->type_len via a 32-bit
+> read which could read past the page boundary and cause a regression if the
+> adjacent page is unmapped.
+> Should the parsing loop verify tail - e >= sizeof(struct ring_buffer_event)
+> before evaluating the event?
+
+> > +	else
+> > +		ret = -1;
+> > +
+> > +	/*
+> > +	 * The timestamp must be greater than @prev_ts and smaller than @next_ts.
+> > +	 * Since this function works in both forward (verify) and reverse (unwind)
+> > +	 * loop, we don't know both @prev_ts and @next_ts at the same time.
+> > +	 * So use the known boundary as the boundary.
+> > +	 */
+> > +	if (ret < 0 || (prev_ts && prev_ts > ts) || (next_ts && ts > next_ts)) {
+
+> Does this timestamp validation properly enforce strictly monotonic page ordering?
+> Inside rb_validate_buffer(), ts is updated by rb_read_data_buffer() to
+> the timestamp of the last event in the current page. The condition
+> (prev_ts && prev_ts > ts) only checks that the previous page's start time
+> is not greater than the current page's end time.
+> Could a corrupted page with a start timestamp earlier than the previous
+> page incorrectly pass validation if its final event timestamp is large enough?
+> Would it prevent this regression to enforce that the current page starts after
+> the previous page by checking prev_ts > dpage->time_stamp?
+
+This may be an enhancement but shouldn't be critical for what is happening now.
+
+> > +		local_set(&bpage->entries, 0);
+> [ ... ]
+> > @@ -1915,25 +1936,29 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> >  	orig_head = head_page = cpu_buffer->head_page;
+> >  	orig_reader = cpu_buffer->reader_page;
+> >  
+> > -	/* Do the reader page first */
+> > -	ret = rb_validate_buffer(orig_reader->page, cpu_buffer->cpu, meta);
+> > +	/* Do the head page first */
+> > +	ret = rb_validate_buffer(head_page, cpu_buffer->cpu, meta, 0, 0);
+> > +	if (ret < 0) {
+> > +		pr_info("Ring buffer meta [%d] invalid head page detected\n",
+> > +			cpu_buffer->cpu);
+> > +		goto skip_rewind;
+> > +	}
+> > +	ts = head_page->page->time_stamp;
+> > +
+> > +	/* Do the reader page - reader must be previous to head. */
+> > +	ret = rb_validate_buffer(orig_reader, cpu_buffer->cpu, meta, 0, ts);
+
+> If rb_validate_buffer() for the head page fails, we take the goto skip_rewind
+> path. Since skip_rewind jumps past this orig_reader validation, and the
+> iteration loop explicitly skips orig_reader:
+>     /* Iterate until finding the commit page */
+>     for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
+>         /* The original reader page has already been checked/counted. */
+>         if (head_page == orig_reader)
+>             continue;
+> does this mean the reader page escapes validation entirely, introducing a
+> regression?
+
+This is a bug and needs to be fixed. If the head page is invalid it
+shouldn't skip the rewind but instead jump to the "invalid:" label.
+
+> If an attacker provides a corrupted persistent ring buffer with an invalid
+> head page, would the kernel blindly trust the unvalidated commit length
+> and event data of the reader page?
+
+Not worried about attackers but I am worried about corrupted memory.
+
+-- Steve
