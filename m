@@ -1,562 +1,207 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD8F3CD8CD
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 10:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EADE3839AF;
+	Fri, 22 May 2026 11:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779446494; cv=none; b=A40o+e/uYSe3k6UP5RmelUUVU+FK3zOblDXRcCrJydcVpjFEBqTR1kAAGZZxl44FiBe/v4D4bl7S9LafgvVjOtLj/qUXlwBZX1D6ZvvNn1oRIUnTkSbTCQ2GFS+7KBLxQtb0HqhyhdXgQ1RlPcQRUDeI1ZpbHPR8rnGh4bIRwVw=
+	t=1779447903; cv=none; b=uK9FqnC+q3z2wpClqbGKbn8LWYU92jHHYtU/of3BTpstNoFrddvpUAozt88/fs2jkCxsPjVN1vNPO26nP0hATaTFeh0qpRPDOg2CkXJwApioAl7vbuJmd87mGvkw4AcMQEeZ+2opkvTtGQaAzVPo0LaHkG5MxUEqwbCvTcXP6Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779446494; c=relaxed/simple;
-	bh=YnhARjoR2achW0qVPc//wJnFnjplveFY3wti7KhnGJQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cQz7l95YATd2jkBASinUFHF3kWxQj5LS6r+3+1NQf5lirrHBNbnC2HANqmm6/xA6UlSvcKOgxxCc1jQXYkYSrRBKapotU2ijC3zhAdgOkeMtf+AMKQafBCKahKXpiA0skD8O+TvqtiH4m7JtkVRF8fgvZhWmiz9SUN6zRcMDHwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOjmmWOD; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779447903; c=relaxed/simple;
+	bh=pbEcWFdrYE1pvPPY1UVIfO6RazPLCFOoif6AGoGMuoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YS52sQp0E3WhMhukwJ0d4wAYGEt5hlu7l06lbO+j1DXkJ8LKr/h89Gmw1FwVCTZmcN/qLegLnmPjJAqucx6/ex+0c1hfWlcCI4HPJBq5wxsxQfe26rItqGLGKtLaoKdkLAgLw+W8pc1laUpfgVhyYUUfyZirFHHslkm0iUXMEjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sWlGo0Xg; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOjmmWOD"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b6ce6d1d3dcso2616693a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 03:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779446490; x=1780051290; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WB8E6xUBrMkQP8ebx8+gCpC7rvCJlL/tAjTiX9u35Zc=;
-        b=LOjmmWOD6nc/LS6C9M6fsmlndL/i++9JMbE4kUAD+lTaydkTvbwe6VHjgrpI3UJtaT
-         ph/Zbz+q6OzrkUoMR2CgpOwEWXECu/+Bxq+6UBVROQ3Lm/a8kgYsTxUHVw70sB8njAh0
-         YEqQ3ixP/Fk3S/hb/FpU8nTd8imB20ob/SmIrDSU2d7xWPJuy533qhvRPO2c8H5/C9qj
-         gv0rMrmrzEpW5i+vBnuTHn+nTuntxIHraJ9TVfdlfoQBGhDznLrtQnqh9ajIqfZG2dcD
-         ZJnhPrDLCBAfDuEPhJBzqjIG9cG3OjUTeY4YSJscNAT+nZ0g5+IUhi0C72o44fts6rFu
-         MMFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779446490; x=1780051290;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WB8E6xUBrMkQP8ebx8+gCpC7rvCJlL/tAjTiX9u35Zc=;
-        b=KG/BM4APB2skYOvm28Ts3JqdUPt7QSnq2TRX2KWS75uW3WJkIdNERLZPV8P2AJhVey
-         u0GifExLVKI68zhYKlQcCcXLCsj58heaxy1tDb3gM2rFhfcz5GFoRDUZ9WDs/DxkNhOS
-         pmn0xaEP8/beU3pButZYLG0qxbaAlP8AAVL8/QbvOLGun0mybqCdEpezNZ3QKSngG+lW
-         ZHhptyCOSOuRUfMwwtJyaMYRGcK+eM1Sgpol5ErsTC3ysUKEIbKKr7rSQQLRHyq9A1GG
-         6yhfr7LepYX7YqYp7qax+/gXeM7yShpK3lMo8WAvF37FnytlrKnmi14JbqINlQWfnD/X
-         NadQ==
-X-Gm-Message-State: AOJu0YwFf4mDT+odh9CXRp4L+bsg7ffSf2Oy5Hl70uIssiQSABLHMLfp
-	bqDwgkFYKU0aHo4kps5aNzvP6AodfWYLj2G2GzdXwozvlNDSIFiA3Oqwj+xQjg==
-X-Gm-Gg: Acq92OFK/+fyctCZfup414QKbnesBDaR5Oo5gIT0mDn8HI3ej48YtLD8vXBmUXOwF4/
-	+UH+C0u1cA3s8UnyFdZH1GkANe5jOT+g3lTnbvKw8spRysWx4Csd9EUBcGarilXoIgHUbtiIr5h
-	RYLPxL2DR1WZ3y355vRs+Vlv/iHWf8RWaosVSttD/+cnFY5ca/tpykSXQqcYAG/uAzZVOd44jwJ
-	nERhyaxvGt31zk00StaRuVNVekPcpGFnlSd2ISpS0B3VzRQ242wKbl+5atXc2ymVkH+tTtA10h3
-	kXRXlJHyg9cbCaQZDHr17G3Z+dnNHpTPnKAQMQ/cmcNtZnGDfXLP91bCD7VhmEcF57ByVHtOM16
-	YVGYZJZ+l/5XBeEht/pwjVWU+4zbC54qokNf9d0OedvZWBgKyct2dQ5xKmAKZ1qR4/4zAKZJN+N
-	J8iybhZTSTYmrATjwTcIiSMMaH4pexlxexOIA3+Q==
-X-Received: by 2002:a05:6a20:7350:b0:398:6bb5:54c4 with SMTP id adf61e73a8af0-3b328c7077amr3337167637.5.1779446489981;
-        Fri, 22 May 2026 03:41:29 -0700 (PDT)
-Received: from localhost.localdomain ([2408:8607:1b00:8:9a21:4fdc:c1a5:7a8e])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c85200c3feesm1282942a12.0.2026.05.22.03.41.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 03:41:29 -0700 (PDT)
-From: Li Pengfei <ljdlns1987@gmail.com>
-X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	cmllamas@google.com,
-	zhangbo56@xiaomi.com,
-	lipengfei28@xiaomi.com,
-	lkp@intel.com
-Subject: [PATCH v2 3/3] trace: add documentation, selftest and tooling for stackmap
-Date: Fri, 22 May 2026 18:40:17 +0800
-Message-Id: <20260522104017.1668638-4-lipengfei28@xiaomi.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260522104017.1668638-1-lipengfei28@xiaomi.com>
-References: <20260514034916.2162517-1-lipengfei28@xiaomi.com>
- <20260522104017.1668638-1-lipengfei28@xiaomi.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sWlGo0Xg"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64M0EbfD2799624;
+	Fri, 22 May 2026 11:04:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=7o7C8hNkmHga6ni6+8HWP2rNkOEx2Ddd24EktKysi
+	tQ=; b=sWlGo0XgWoW2zJU7QumXzGizw1BT+mZTeVpBFvBSJalW95wtoY2yojWlt
+	JIOIRl+jJGmBjMrYiXcZpxpu8PmrJhk3Y3ukzFkc5W6wqX7y/vxu/Uv3EgA+CwmD
+	32XKmygVwRvzv8+rTsTc4/NgL5RBxHpMaZfRAQQnxw+gOtWpo6V2JjHbxVuJQrZQ
+	q2aIJIe0ivbPmoZexqF7pqIbhTl/2bk4y7haf+m9BxoYoqEbPRWYHCWJMC2F8qrP
+	i32LIkUX5KP1scZY/lRFPKJbwQdRL/4sZTBjnwgu3FHMpM9w9/2HVa0xqyHZQWA/
+	Z5zFpmt6iMgVz/DODURr5qA6lz9hQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6hawj6mb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 May 2026 11:04:34 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64MAs5tN024410;
+	Fri, 22 May 2026 11:04:33 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4e75kyga2d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 May 2026 11:04:33 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64MB4Tb648103864
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 22 May 2026 11:04:29 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 93A0A20043;
+	Fri, 22 May 2026 11:04:29 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1CC6420040;
+	Fri, 22 May 2026 11:04:29 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 22 May 2026 11:04:29 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Indu Bhagat <ibhagatgnu@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dylan Hatch <dylanbhatch@google.com>,
+        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Kees Cook <kees@kernel.org>, Sam James <sam@gentoo.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, bpf@vger.kernel.org, linux-mm@kvack.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Carlos O'Donell" <codonell@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v11 0/6] x86/vdso: VDSO updates and fixes for sframes
+Date: Fri, 22 May 2026 13:04:21 +0200
+Message-ID: <20260522110427.2816637-1-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIyMDEwNiBTYWx0ZWRfX+TDXweVFZHqj
+ GS1NitCuCg/j1MjKXOFZJlDydgsWi5MKMNIw4uD3YIxMnYlRPLQfUO1wRe+eVZlKlQTBtUzbfAJ
+ 9ZSOA5+xXgMWbLimo8txT58q0K4nj5uK4hn2lzCSSFpAZPIyIljEDcmg/S7biwrxqA/dzJm975O
+ fmsMx05o8M8cVAd186z04ZULHwh5nveYVJRVJMCfbfYOMBAV2HXWsC1fEIKpqPB7ZRc1xGkouUB
+ F/aPC7BpN8biFLpusrxNKQelSc9xbr+HtqeLLkbcmXzjighYUvYdZcC4+Jm1cLx8AK7YJFemOBI
+ 6rbS4QMokOuJShmBcg2XDeD9u7hUm4fgTqy3HqBdYAQm807YsGYU9Dv3LnmM5a/UtXQtBvKoZn9
+ F4Xk6NLkYHSmUg6N105YDVbtDcHyZYIpovINL76imdL1+Hx2QAQ8VYdUV0c19WyQ2OxZoOCYYIM
+ 2k0A37IE8nKqXHAXVIA==
+X-Authority-Analysis: v=2.4 cv=Np/htcdJ c=1 sm=1 tr=0 ts=6a103843 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=VnNF1IyMAAAA:8
+ a=yyHzTi5TPZ6eMx7n6w4A:9 a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-ORIG-GUID: ozfd_wF-1anxlquG0TPfkjxCdxnnqWUf
+X-Proofpoint-GUID: LTcWUY6ILTYE_T_CPU-TcOshhvcaNiyD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-22_02,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605220106
 
-From: Pengfei Li <lipengfei28@xiaomi.com>
+This enables generation of SFrame V3 stack trace information for VDSO on
+x86-64.  It's a continuation of Josh's and Steve's work:
 
-Add supporting files for the ftrace stackmap feature:
+   https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
+   https://lore.kernel.org/all/20250425023750.669174660@goodmis.org/
 
-Documentation/trace/ftrace-stackmap.rst:
-  Documentation covering design, usage, tracefs interface, binary
-  format, and performance characteristics. Added to the 'Core Tracing
-  Frameworks' toctree in Documentation/trace/index.rst. Documents:
-  - Reset requires tracing to be stopped first
-  - Boot-time activation via trace_options=stackmap
-  - bits parameter range [10, 18] and worst-case memory usage
-  - tracefs file modes (0640 / 0440)
-  - Best-effort snapshot semantics for stack_map_bin
-  - Counter naming: successes (events served), drops, success_rate
+This series focuses only on the VDSO code. They are helpful fixes
+and updates that doesn't rely on sframes (although the last patch
+is sframe related).
 
-tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc:
-  Functional selftest verifying:
-  - stackmap tracefs nodes exist
-  - enabling stackmap + stacktrace produces stack_id events
-  - stack_map_stat shows non-zero successes and zero drops
-  - reset clears entries when tracing is stopped
-  - reset is rejected (-EBUSY) while tracing is active
-  Uses an EXIT trap to restore options/stackmap and options/stacktrace
-  on any exit path.
+This series applies on top of tip:master (b07a332d9cbb):
 
-tools/tracing/stackmap_dump.py:
-  Python script to parse the binary stack_map_bin export.
-  Features:
-  - Automatic endianness detection via magic number
-  - Batched addr2line via stdin (avoids ARG_MAX with large stacks)
-  - JSON output mode
-  - Top-N filtering by ref_count
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
 
-Binary format: all fields are native-endian. The parser detects
-byte order by reading the magic value (0x464D5342 = 'FSMB').
+Like the unwind user sframe series [1] it depends on the binutils 2.46
+release to be used to build the VDSO with SFrame V3 stack trace
+information (using the assembler option --gsframe-3).
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202605160010.fakzGVVq-lkp@intel.com/
-Signed-off-by: Pengfei Li <lipengfei28@xiaomi.com>
----
- Documentation/trace/ftrace-stackmap.rst       | 145 +++++++++++++++++
- Documentation/trace/index.rst                 |   1 +
- .../ftrace/test.d/ftrace/stackmap-basic.tc    | 100 ++++++++++++
- tools/tracing/stackmap_dump.py                | 150 ++++++++++++++++++
- 4 files changed, 396 insertions(+)
- create mode 100644 Documentation/trace/ftrace-stackmap.rst
- create mode 100755 tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc
- create mode 100755 tools/tracing/stackmap_dump.py
+[1]: [PATCH v14 00/19] unwind_deferred: Implement sframe handling,
+    https://lore.kernel.org/all/20260505121718.3572346-1-jremus@linux.ibm.com/
 
-diff --git a/Documentation/trace/ftrace-stackmap.rst b/Documentation/trace/ftrace-stackmap.rst
-new file mode 100644
-index 000000000000..1230d44d1d23
---- /dev/null
-+++ b/Documentation/trace/ftrace-stackmap.rst
-@@ -0,0 +1,145 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================
-+Ftrace Stack Map
-+======================
-+
-+:Author: Pengfei Li <lipengfei28@xiaomi.com>
-+
-+Overview
-+========
-+
-+The ftrace stack map provides stack trace deduplication for the ftrace
-+ring buffer. When enabled, instead of storing full kernel stack traces
-+(typically 80-160 bytes each) in the ring buffer for every event, ftrace
-+stores only a 4-byte ``stack_id``. The full stacks are maintained in a
-+separate hash table and exported via tracefs for userspace to resolve.
-+
-+This is inspired by eBPF's ``BPF_MAP_TYPE_STACK_TRACE`` but integrated
-+into ftrace's infrastructure, requiring no userspace daemon.
-+
-+Configuration
-+=============
-+
-+Enable ``CONFIG_FTRACE_STACKMAP=y`` in the kernel config.
-+
-+Kernel command line parameters:
-+
-+- ``ftrace_stackmap.bits=N`` - Set map capacity to 2^N unique stacks
-+  (default: 14 → 16384 stacks; valid range: 10-18).
-+
-+  At ``bits=18`` the kernel reserves roughly 130 MB of vmalloc memory
-+  for the element pool. Each ``open()`` of ``stack_map_bin`` may
-+  briefly allocate a similar amount for a snapshot. The cap is set
-+  intentionally to bound memory usage.
-+
-+Usage
-+=====
-+
-+Enable stack deduplication::
-+
-+    echo 1 > /sys/kernel/debug/tracing/options/stackmap
-+    echo 1 > /sys/kernel/debug/tracing/options/stacktrace
-+    echo function > /sys/kernel/debug/tracing/current_tracer
-+
-+The trace output will show ``<stack_id N>`` instead of full stack traces::
-+
-+    sh-1234 [006] d.h.. 123.456789: <stack_id 42>
-+
-+To view the actual stacks::
-+
-+    cat /sys/kernel/debug/tracing/stack_map
-+
-+Output format::
-+
-+    stack_id 42 [ref 1337, depth 8]
-+      [0] schedule+0x48/0xc0
-+      [1] schedule_timeout+0x1c/0x30
-+      ...
-+
-+To view statistics::
-+
-+    cat /sys/kernel/debug/tracing/stack_map_stat
-+
-+Output::
-+
-+    entries:      2500 / 16384
-+    table_size:   32768
-+    successes:    148923
-+    drops:        0
-+    success_rate: 100%
-+
-+To reset the stack map (tracing must be stopped first)::
-+
-+    echo 0 > /sys/kernel/debug/tracing/tracing_on
-+    echo 0 > /sys/kernel/debug/tracing/stack_map
-+
-+Reset returns ``-EBUSY`` if tracing is currently active, or if another
-+reset is already in progress.
-+
-+Boot-time activation
-+====================
-+
-+The stackmap option can be enabled from the kernel command line::
-+
-+    trace_options=stackmap,stacktrace
-+
-+Trace events that fire before the tracefs filesystem is initialized
-+(``fs_initcall`` time) fall back to recording full stack traces; once
-+``ftrace_stackmap_create()`` runs, subsequent events are deduplicated.
-+The crossover is automatic and lossless — no events are dropped, but
-+early-boot stacks recorded before the crossover are not deduplicated.
-+
-+Tracefs Nodes
-+=============
-+
-+The stack_map files are owned by root and not world-readable
-+(``stack_map``: 0640; ``stack_map_stat`` and ``stack_map_bin``: 0440).
-+
-+``stack_map``
-+    Text export of all deduplicated stacks with symbol resolution.
-+    Writing ``0`` or ``reset`` clears all entries (only when tracing
-+    is stopped).
-+
-+``stack_map_stat``
-+    Statistics: entry count, hits, drops, and hit rate.
-+
-+``stack_map_bin``
-+    Binary export for efficient userspace consumption. Format:
-+
-+    - Header (16 bytes): magic(u32) + version(u32) + nr_stacks(u32) + reserved(u32)
-+    - Per stack: stack_id(u32) + nr(u32) + ref_count(u32) + reserved(u32) + ips(u64 × nr)
-+
-+    All fields are written in the kernel's native byte order.
-+    Userspace tools detect endianness by reading the magic value.
-+    Magic: ``0x464D5342`` ('FSMB'), Version: 2.
-+
-+    The export is a best-effort snapshot allocated at ``open()``;
-+    concurrent inserts during the snapshot may be truncated. A
-+    bounds check ensures no overflow.
-+
-+Design
-+======
-+
-+The stack map is modeled after ``tracing_map.c`` (used by hist triggers),
-+using a lock-free design based on Dr. Cliff Click's non-blocking hash table
-+algorithm:
-+
-+- **Lookup/Insert**: Lock-free via ``cmpxchg``, safe in NMI/IRQ/any context
-+- **Memory**: Pre-allocated element pool, zero allocation on the hot path
-+  (no GFP_ATOMIC failures under memory pressure)
-+- **Collision**: Linear probing with a 2x over-provisioned table; probe
-+  length is bounded so worst-case insert/lookup is O(1)
-+- **Scope**: Currently supports the global trace instance
-+- **Hash**: 32-bit jhash with a per-instance random seed; full ``memcmp``
-+  confirms matches
-+
-+Performance
-+===========
-+
-+Typical results on ARM64 Android device (function tracer, 2 seconds):
-+
-+- Unique stacks: ~3000
-+- Hit rate: 84-98% (depends on workload diversity)
-+- Ring buffer savings: ~80% for stack data
-+- Overhead per event: ~50ns (one jhash + hash table lookup)
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index 5d9bf4694d5d..ac8b1141c23a 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -33,6 +33,7 @@ the Linux kernel.
-    ftrace
-    ftrace-design
-    ftrace-uses
-+   ftrace-stackmap
-    kprobes
-    kprobetrace
-    fprobetrace
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc b/tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc
-new file mode 100755
-index 000000000000..34e4e31ff7a1
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc
-@@ -0,0 +1,100 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: ftrace - stackmap basic functionality
-+# requires: stack_map options/stackmap
-+
-+# Test that ftrace stackmap deduplication works:
-+# 1. Enable stackmap + stacktrace options
-+# 2. Run function tracer briefly
-+# 3. Verify stack_map has entries
-+# 4. Verify stack_map_stat shows successes and zero drops
-+# 5. Verify trace contains <stack_id> events
-+# 6. Verify reset works when tracing is stopped
-+# 7. Verify reset is rejected (-EBUSY) while tracing is active
-+
-+fail() {
-+    echo "FAIL: $1"
-+    exit_fail
-+}
-+
-+# Restore state on any exit (success, fail, or interrupt) so a
-+# half-finished test does not leave stacktrace/stackmap enabled.
-+cleanup() {
-+    disable_tracing 2>/dev/null
-+    echo nop > current_tracer 2>/dev/null
-+    echo 0 > options/stackmap 2>/dev/null
-+    echo 0 > options/stacktrace 2>/dev/null
-+}
-+trap cleanup EXIT
-+
-+disable_tracing
-+clear_trace
-+
-+# Verify stackmap files exist
-+test -f stack_map      || fail "stack_map file missing"
-+test -f stack_map_stat || fail "stack_map_stat file missing"
-+test -f stack_map_bin  || fail "stack_map_bin file missing"
-+
-+# Enable stackmap dedup
-+echo 1 > options/stackmap
-+echo 1 > options/stacktrace
-+
-+# Run function tracer briefly
-+echo function > current_tracer
-+enable_tracing
-+sleep 1
-+disable_tracing
-+echo nop > current_tracer
-+echo 0 > options/stackmap
-+
-+# Check stack_map_stat has entries (default empty to avoid [: too many args)
-+entries=$(cat stack_map_stat | grep "^entries:" | awk '{print $2}')
-+: "${entries:=0}"
-+if [ "$entries" -eq 0 ]; then
-+    fail "stackmap has zero entries after tracing"
-+fi
-+
-+# Check successes > 0
-+successes=$(cat stack_map_stat | grep "^successes:" | awk '{print $2}')
-+: "${successes:=0}"
-+if [ "$successes" -eq 0 ]; then
-+    fail "stackmap has zero successes"
-+fi
-+
-+# Check drops == 0 (pool should be large enough for 1s trace)
-+drops=$(cat stack_map_stat | grep "^drops:" | awk '{print $2}')
-+: "${drops:=0}"
-+if [ "$drops" -ne 0 ]; then
-+    fail "stackmap had $drops drops (pool exhausted?)"
-+fi
-+
-+# Check stack_map text output is parseable
-+first_id=$(cat stack_map | grep "^stack_id" | head -1 | awk '{print $2}')
-+if [ -z "$first_id" ]; then
-+    fail "stack_map output has no stack_id entries"
-+fi
-+
-+# Check trace has stack_id events
-+count=$(grep -c "stack_id" trace || true)
-+if [ "$count" -eq 0 ]; then
-+    fail "trace has no <stack_id> events"
-+fi
-+
-+# Test reset (tracing must be stopped — disable_tracing was called above)
-+echo 0 > stack_map
-+entries_after=$(cat stack_map_stat | grep "^entries:" | awk '{print $2}')
-+: "${entries_after:=-1}"
-+if [ "$entries_after" -ne 0 ]; then
-+    fail "stackmap reset did not clear entries (got $entries_after)"
-+fi
-+
-+# Test that reset is rejected while tracing is active
-+enable_tracing
-+if echo 0 > stack_map 2>/dev/null; then
-+    disable_tracing
-+    fail "stackmap reset should fail while tracing is active"
-+fi
-+disable_tracing
-+
-+echo "stackmap basic test passed: $entries unique stacks, $successes successes, $drops drops"
-+exit 0
-diff --git a/tools/tracing/stackmap_dump.py b/tools/tracing/stackmap_dump.py
-new file mode 100755
-index 000000000000..fc5d0c9cf0af
---- /dev/null
-+++ b/tools/tracing/stackmap_dump.py
-@@ -0,0 +1,150 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+"""
-+stackmap_dump.py - Parse and display ftrace stack_map_bin binary export.
-+
-+Usage:
-+    # Pull from device and parse
-+    adb pull /sys/kernel/debug/tracing/stack_map_bin /tmp/stack_map.bin
-+    python3 stackmap_dump.py /tmp/stack_map.bin
-+
-+    # With vmlinux for offline symbol resolution
-+    python3 stackmap_dump.py /tmp/stack_map.bin --vmlinux vmlinux
-+
-+    # JSON output for tooling
-+    python3 stackmap_dump.py /tmp/stack_map.bin --json
-+"""
-+
-+import struct
-+import sys
-+import argparse
-+import json
-+import subprocess
-+
-+MAGIC = 0x464D5342  # 'FSMB'
-+HEADER_SIZE = 16  # 4 x u32
-+ENTRY_SIZE = 16   # 4 x u32
-+
-+
-+def detect_endianness(data):
-+    """Detect byte order from magic number in header."""
-+    if len(data) < 4:
-+        raise ValueError("File too small")
-+    magic_le = struct.unpack_from('<I', data, 0)[0]
-+    if magic_le == MAGIC:
-+        return '<'
-+    magic_be = struct.unpack_from('>I', data, 0)[0]
-+    if magic_be == MAGIC:
-+        return '>'
-+    raise ValueError(f"Bad magic: 0x{magic_le:08x} (neither LE nor BE)")
-+
-+
-+def batch_addr2line(vmlinux, addrs):
-+    """Resolve multiple addresses in one addr2line invocation."""
-+    if not addrs:
-+        return {}
-+    try:
-+        # Feed addresses on stdin to avoid ARG_MAX limits with large
-+        # numbers of addresses (one stack can have 30+ frames; a
-+        # snapshot can have thousands of unique stacks).
-+        stdin = '\n'.join(hex(a) for a in addrs) + '\n'
-+        result = subprocess.run(
-+            ['addr2line', '-f', '-e', vmlinux],
-+            input=stdin, capture_output=True, text=True, timeout=60
-+        )
-+        lines = result.stdout.split('\n')
-+        # addr2line outputs 2 lines per address: function name + source location
-+        symbols = {}
-+        for i, addr in enumerate(addrs):
-+            idx = i * 2
-+            if idx < len(lines) and lines[idx] and lines[idx] != '??':
-+                symbols[addr] = lines[idx]
-+        return symbols
-+    except (subprocess.TimeoutExpired, FileNotFoundError) as e:
-+        print(f"warning: addr2line failed: {e}", file=sys.stderr)
-+        return {}
-+
-+
-+def parse_stackmap_bin(data):
-+    """Parse binary stackmap data, yield (stack_id, ref_count, [ips])."""
-+    if len(data) < HEADER_SIZE:
-+        raise ValueError("File too small for header")
-+
-+    endian = detect_endianness(data)
-+    header_fmt = f'{endian}IIII'
-+    entry_fmt = f'{endian}IIII'
-+
-+    magic, version, nr_stacks, _ = struct.unpack_from(header_fmt, data, 0)
-+    if version not in (1, 2):
-+        raise ValueError(f"Unsupported version: {version}")
-+
-+    offset = HEADER_SIZE
-+    for _ in range(nr_stacks):
-+        if offset + ENTRY_SIZE > len(data):
-+            break
-+        stack_id, nr, ref_count, _ = struct.unpack_from(entry_fmt, data, offset)
-+        offset += ENTRY_SIZE
-+
-+        ips_size = nr * 8
-+        if offset + ips_size > len(data):
-+            break
-+        ips = struct.unpack_from(f'{endian}{nr}Q', data, offset)
-+        offset += ips_size
-+
-+        yield stack_id, ref_count, list(ips)
-+
-+
-+def main():
-+    parser = argparse.ArgumentParser(description='Parse ftrace stack_map_bin')
-+    parser.add_argument('file', help='Path to stack_map_bin file')
-+    parser.add_argument('--vmlinux', help='Path to vmlinux for symbol resolution')
-+    parser.add_argument('--json', action='store_true', help='JSON output')
-+    parser.add_argument('--top', type=int, default=0,
-+                        help='Show only top N stacks by ref_count')
-+    args = parser.parse_args()
-+
-+    with open(args.file, 'rb') as f:
-+        data = f.read()
-+
-+    stacks = list(parse_stackmap_bin(data))
-+
-+    if args.top > 0:
-+        stacks.sort(key=lambda x: x[1], reverse=True)
-+        stacks = stacks[:args.top]
-+
-+    # Batch symbol resolution
-+    symbols = {}
-+    if args.vmlinux:
-+        all_addrs = set()
-+        for _, _, ips in stacks:
-+            all_addrs.update(ips)
-+        symbols = batch_addr2line(args.vmlinux, list(all_addrs))
-+
-+    if args.json:
-+        output = []
-+        for stack_id, ref_count, ips in stacks:
-+            entry = {
-+                'stack_id': stack_id,
-+                'ref_count': ref_count,
-+                'ips': [f'0x{ip:x}' for ip in ips]
-+            }
-+            if args.vmlinux:
-+                entry['symbols'] = [symbols.get(ip, f'0x{ip:x}')
-+                                    for ip in ips]
-+            output.append(entry)
-+        print(json.dumps(output, indent=2))
-+    else:
-+        for stack_id, ref_count, ips in stacks:
-+            print(f"stack_id {stack_id} [ref {ref_count}, depth {len(ips)}]")
-+            for i, ip in enumerate(ips):
-+                sym = symbols.get(ip, '')
-+                if sym:
-+                    sym = f' {sym}'
-+                print(f"  [{i}] 0x{ip:x}{sym}")
-+            print()
-+
-+    print(f"Total: {len(stacks)} unique stacks", file=sys.stderr)
-+
-+
-+if __name__ == '__main__':
-+    main()
+Changes in v11:
+- Rebased on tip:master (b07a332d9cbb).
+- This time with correct version in cover letter.
+
+Changes in v10:
+- Rebased on tip:master (a375022d6383).
+
+Changes in v9 (see indivicual patch notes):
+- Always define KEEP_SFRAME to either true/false in specific VDSO linker
+  scripts and use #if instead of #ifdef in common one. (Peter)
+- Reword patch 6 commit message to provide more details.
+- Note: Binutils 2.46 with SFrame V3 support has been released.
+
+Changes in v8:
+- Discard .sframe for x32 and x86-32 VDSOs. (Josh/Indu)
+- Define CFI_SIGNAL_FRAME for !BUILD_VDSO.
+- Drop .cfi_sections .sframe in dwarf2.h in favor of the explicitly
+  specified more specific assembler option --gsframe-3.
+- Incorporate missing changes and review feedback from Steven's v6
+  (I erroneously based my v6 on Steven's v5):
+  - Reword patch 3 commit subject to Steven's v6 one.
+  - Remove SYM_F_ALIGN in __vdso_sgx_enter_enclave(). (Josh)
+
+Changes in v7:
+- Rebase on H. Peter Anvin's vDSO changes on tip:x86/entry. (Peter)
+- Simplify adding assembler option -Wa,--gsframe-3.  Add for vdso64
+  only.
+- Align to .eh_frame and mark .sframe as KEEP in vDSO linker script.
+  Note that GNU linker 2.46 will mark .sframe as KEEP in its default
+  linker script as well.
+
+Changes in v6:
+- SFrame V3 support (SFrame V2 is not supported).
+- Prevent GNU_SFRAME program table entry to empty .sframe section.
+- Integrate v5 review feedback. (Josh)
+
+Regards,
+Jens
+
+
+Josh Poimboeuf (6):
+  x86/vdso: Fix DWARF generation for getrandom()
+  x86/asm: Avoid emitting DWARF CFI for non-VDSO
+  x86/asm: Use CFI_* macros in SYM_FUNC_* macros so they can be added to
+    VDSO
+  x86/vdso: Use SYM_FUNC_{START,END} in __kernel_vsyscall()
+  x86/vdso: Use CFI macros in __vdso_sgx_enter_enclave()
+  x86/vdso: Enable sframe generation in VDSO
+
+ arch/Kconfig                                  |  7 +++
+ arch/x86/entry/vdso/common/vdso-layout.lds.S  | 17 +++++-
+ arch/x86/entry/vdso/vdso32/system_call.S      | 10 +---
+ arch/x86/entry/vdso/vdso32/vdso32.lds.S       |  3 ++
+ arch/x86/entry/vdso/vdso64/Makefile           |  1 +
+ arch/x86/entry/vdso/vdso64/vdso64.lds.S       |  2 +
+ arch/x86/entry/vdso/vdso64/vdsox32.lds.S      |  6 +++
+ .../x86/entry/vdso/vdso64/vgetrandom-chacha.S |  3 +-
+ arch/x86/entry/vdso/vdso64/vsgx.S             | 18 +++----
+ arch/x86/include/asm/dwarf2.h                 | 52 +++++++++++++------
+ arch/x86/include/asm/linkage.h                | 33 +++++++++---
+ arch/x86/include/asm/vdso.h                   |  1 -
+ 12 files changed, 107 insertions(+), 46 deletions(-)
+
 -- 
-2.34.1
+2.51.0
 
