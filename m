@@ -1,149 +1,136 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E453394E80
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 13:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDE23630AD;
+	Fri, 22 May 2026 14:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779455341; cv=none; b=qAHdrzQ2aWYJrBCtv+pXk2/WgS8mRnm1BF6jKKx7qb7IN+aA2Yz/x1R8hoUFdyse8epS2Ohlarsgl2pVWqIkgn5pxL4m+LDV38Pqrscm1Cyyj42+ENAMsnM5i6H4MwyLd5nCoQbuD6Ind9E3XVecBql9NG2dtM4qX08KMv/3K5s=
+	t=1779460622; cv=none; b=OG5GmD/63BI4WzpISXFWN9R+/F/diX6G/J1N3+iCdH71foo5ijWu42I4NcLLcrb/LUSuuK2e2t4U1EzQXmyDJzhscCqCtipefxP6Dlrgzs+Y6wgE+WEIPLg5ZI7GMID84TsZmzNJUVIYYXHyAsdPf7QvcaR8sz1s9ynzqo8kLk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779455341; c=relaxed/simple;
-	bh=Nnkh6cEEv9vtxmnrirlQm5frPTNIjN27Iy7obA4FAzA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j8J8U9C5k74kwVk6bcHVmcJqB04F5WFvRqdzD933SXrLFe+2suBnqdbITzuQTlz7Izaw4mHvNq/MkMCZ+N/Qwy5jgnLOV8POQqavCw2UC7ioFo9TkXj3VXLU6kJ+uLppGvPaAQZj4dbiQ/kqY2gGNw8OxpPoX7wTeFPM8ENdEHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CkNMB2u7; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1779460622; c=relaxed/simple;
+	bh=FXCPyGLE1CeqNu190mNEcpSSRAcm9KEMFVeAYQWV9hU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sDgdbxYmXeA6RThsRZ0aY/hs5uwueSdSCNQZFufPMoKmjF98ygAwXZU1VZoBm67avDxnyO/dSFzTIJ/H6nUWfs3lsRACRu+e7jdkhBd06SZnoqNdbfimWb9CLzY8l+aDRkC8q0yzDcKKKe1/EQr2H32w7mWF3/gSwhHNiPVsa74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=DC/A+e67; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CkNMB2u7"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2babc42244aso172495305ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 06:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779455339; x=1780060139; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LWpFds4KLS7xuznWHwB8ePqzzdmaeh02IGD1amL7VKc=;
-        b=CkNMB2u77fbFNZvUlG9oIRu7fzdzwvrzm2ioJUFXb+v3VwVG9Q7Gcu3wBa040lGszd
-         OnHyxx5Dl5+zv4Hr4sbLpuzu0S9ddO9O520XbbHz/vWz9Ik2VZXmowi7Mm8Nby0QBVfm
-         w61MOZy6YwHWYdpXyu8vBWHtJrSt6HtXmk9e0xdOEJwIv5XlTQCOzDcU9RNKg941iV/0
-         CwSjpoYW+T7lvY5/0zAealgdYEM3DC3U+HCaIZydESOpNgqe1W6QLJQ3/F7gmc3/6gDS
-         cCd14Eid5hvpwrQXe7NHPKIPrVac9dp4HOxo2FtO5e0V1A0DutWwXDqg/mWoT3GruToz
-         2Vpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779455339; x=1780060139;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LWpFds4KLS7xuznWHwB8ePqzzdmaeh02IGD1amL7VKc=;
-        b=QSSkoXZwea/RFZH3eWnaifPsmFlEwDLnmAn7eY7TCWgMiFSc27XzIps77l9A3CYp6j
-         /Yw11k8W5kMjwcWO21MeHIbXYbZ7Lpx6cRepBp1XBpRzbXPQp0rbEbl1lcwaQgD9NODw
-         GYnMwb+gJuo5jIh+iy6xW+/HefKxlzFgE8C4/D7GFRRsRoR1XYNt2Ycf0yEiICwiZ4oO
-         MJSEauAN0SdolLWMRxCKYZz4L4Wad9E+Xp1KBZ/zHaZJLEEIaZjLVmWHHWQgJEyvkLHj
-         KlRvHSG22qAzbIA95epp8Y9MZJ7OEnpWz1FZ+WJgbAHr/Yl61KG7o1OOQamgymieExTs
-         RBFw==
-X-Forwarded-Encrypted: i=1; AFNElJ+7XMnJFIgEbQ2/M6rsWjcI6HG22dx5C3tHHHCXGe9hc0Y/jd1UIzLROzzTxUVelOFBtjuMyT5alhZJjFKp70lGG4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcPA0/TDxUmFop8JsjRQz/nJDHr1X6AmAkW8Y80I2EfYTIgwt7
-	pL0/5LtdtQ6CwFk3A+Imemd3XnVYscATkNAsrZNMLBqdKWUekV1rzhYDk9bt3xAnnnCNyUInOda
-	9mAJrvQ==
-X-Received: from pllk9.prod.google.com ([2002:a17:902:7609:b0:2b4:5bcc:fc4a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1246:b0:2bc:90b6:3e6f
- with SMTP id d9443c01a7336-2beb0347191mr37692105ad.4.1779455338970; Fri, 22
- May 2026 06:08:58 -0700 (PDT)
-Date: Fri, 22 May 2026 06:08:58 -0700
-In-Reply-To: <CAEvNRgFB8ydih9JTmsH06H32j38tH-iViZqN_eZ_gQAmXpw+Dw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="DC/A+e67"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1779460616; bh=FXCPyGLE1CeqNu190mNEcpSSRAcm9KEMFVeAYQWV9hU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DC/A+e67LHSQkJkagoTuL5Xa/HLBYp4Qm0GxjJMsE6LV1B539/rSSnrCbpMR7QJD0
+	 Dw2R8XToKMPWRRvNdrVJj/EZGPZZu9gC9zINu198J9hb7uRv9G+fkp7uQKOYmkYNvR
+	 VXtqd+vK68wKbA1wt+rTlGXy+b2hDlMGD0Dw60/k=
+Date: Fri, 22 May 2026 16:36:56 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Carlos O'Donell <codonell@redhat.com>, Sam James <sam@gentoo.org>, Dylan Hatch <dylanbhatch@google.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH] unwind: Add sframe_(un)register() system calls
+Message-ID: <7923f815-a8ce-4b64-8cbf-2b90e57cbd24@t-8ch.de>
+References: <20260521183532.7a145c8a@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com>
- <20260507-gmem-inplace-conversion-v6-21-91ab5a8b19a4@google.com>
- <CA+EHjTwrygfMrZZSw4y7-ry8fidW2x0C7iuF2Q=dnPNHUmNtUg@mail.gmail.com>
- <ag8G7Wq5PbEdKloG@google.com> <CAEvNRgFB8ydih9JTmsH06H32j38tH-iViZqN_eZ_gQAmXpw+Dw@mail.gmail.com>
-Message-ID: <ahBVajalNaHkNYdV@google.com>
-Subject: Re: [PATCH v6 21/43] KVM: SEV: Make 'uaddr' parameter optional for KVM_SEV_SNP_LAUNCH_UPDATE
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: Fuad Tabba <tabba@google.com>, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	david@kernel.org, ira.weiny@intel.com, jmattson@google.com, 
-	jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org, 
-	pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com, 
-	rientjes@google.com, shivankg@amd.com, steven.price@arm.com, 
-	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com, 
-	forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com, 
-	aneesh.kumar@kernel.org, liam@infradead.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260521183532.7a145c8a@gandalf.local.home>
 
-On Thu, May 21, 2026, Ackerley Tng wrote:
-> Sean Christopherson <seanjc@google.com> writes:
+On 2026-05-21 18:35:32-0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> > On Thu, May 21, 2026, Fuad Tabba wrote:
-> >> Hi,
-> >>
-> >> On Thu, 7 May 2026 at 21:22, Ackerley Tng via B4 Relay
-> > diff --git include/linux/kvm_host.h include/linux/kvm_host.h
-> > index 61a3430957f2..b83cda2870ba 100644
-> > --- include/linux/kvm_host.h
-> > +++ include/linux/kvm_host.h
-> > @@ -2596,7 +2596,8 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
-> >  typedef int (*kvm_gmem_populate_cb)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
-> >                                     struct page *page, void *opaque);
-> >
-> > -long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
-> > +long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src,
-> > +                      long npages, bool writable,
-> 
-> What do you think of need_writable_src instead of just writable for the
-> variable name?
+> Add system calls to register and unregister sframes that can be used by
+> dynamic linkers to tell the kernel where the sframe section is in memory
+> for libraries it loads.
 
-How about "may_write_src" or "may_writeback_src"?
+How is this system call related to the prctl() with the same
+functionality from Jens' series? I guess it will replace it,
+but some explanation would be nice.
 
-> >                        kvm_gmem_populate_cb post_populate, void *opaque);
-> >  #endif
-> >
-> > diff --git virt/kvm/guest_memfd.c virt/kvm/guest_memfd.c
-> > index a35a55571a2d..6553d4e032ce 100644
-> > --- virt/kvm/guest_memfd.c
-> > +++ virt/kvm/guest_memfd.c
-> > @@ -858,7 +858,8 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
-> >         return ret;
-> >  }
-> >
-> > -long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long npages,
-> > +long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src,
-> > +                      long npages, bool writable,
-> >                        kvm_gmem_populate_cb post_populate, void *opaque)
-> >  {
-> >         struct kvm_memory_slot *slot;
-> > @@ -892,8 +893,9 @@ long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long
-> >
-> >                 if (src) {
-> >                         unsigned long uaddr = (unsigned long)src + i * PAGE_SIZE;
-> > +                       unsigned int flags = writable ? FOLL_WRITE : 0;
-> 
-> How about using FOLL_WRITE | FOLL_NOFAULT so if it weren't writable to
-> start with, don't CoW, just error out?
+(...)
 
-Eh, I don't see any value in value in erroring out if userspace is doing something
-unusual.  If breaking CoW was actually problematic somehow, then sure.  But AFAICT
-it's overall harmless.
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index f5639d5ac331..992ccc401c5e 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -999,6 +999,8 @@ asmlinkage long sys_lsm_get_self_attr(unsigned int attr, struct lsm_ctx __user *
+>  asmlinkage long sys_lsm_set_self_attr(unsigned int attr, struct lsm_ctx __user *ctx,
+>  				      u32 size, u32 flags);
+>  asmlinkage long sys_lsm_list_modules(u64 __user *ids, u32 __user *size, u32 flags);
+> +asmlinkage long sys_sframe_register(void *data, unsigned int size);
+> +asmlinkage long sys_sframe_unregister(void *data, unsigned int size);
 
-> Like you said above the CPUID page provided as src_page would have been
-> written to before, so it should have been mapped as writable.
+Why not use the actual structure here?
+
+>  /*
+>   * Architecture-specific system calls
+
+(...)
+
+> diff --git a/include/uapi/linux/sframe.h b/include/uapi/linux/sframe.h
+> new file mode 100644
+> index 000000000000..137a2ebf91f4
+> --- /dev/null
+> +++ b/include/uapi/linux/sframe.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +#ifndef _UAPI_LINUX_SFRAME_H
+> +#define _UAPI_LINUX_SFRAME_H
+> +
+> +struct sframe_setup {
+> +	unsigned long		sframe_start;
+> +	unsigned long		sframe_size;
+> +	unsigned long		text_start;
+> +	unsigned long		text_size;
+> +};
+
+This will break for compat processes, as they use a different 'unsigned
+long' than the host kernel. Maybe just use __u64.
+
+> +
+> +#endif /* _UAPI_LINUX_SFRAME_H */
+
+(...)
+
+> +/**
+> + * sys_sframe_register - register an address for user space stacktrace walking.
+> + * @data: Structure of sframe data used to register the sframe section
+> + * @size: The size of the given structure.
+> + *
+> + * This system call is used by dynamic library utilities to inform the kernel
+> + * of meta data that it loaded that can be used by the kernel to know how
+> + * to stack walk the given text locations.
+> + *
+> + * Return: 0 if successful, otherwise a negative error.
+> + */
+> +SYSCALL_DEFINE2(sframe_register, __user struct sframe_setup *, data, unsigned int, size)
+
+AFAIK the normal place for the '__user' is right before '*':
+
+	struct sframe_setup __user *, data,
+
+Use __kernel_size_t for 'size'?
+
+> +{
+> +	struct sframe_setup sframe;
+
+(...)
