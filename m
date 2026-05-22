@@ -1,182 +1,159 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE223043C9
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 15:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8A0400DEC
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 16:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779463295; cv=none; b=vEccCWIwS0EL4IC6AITeHfwtoBvaQOajmlf6GI9rDvE9gts00c/L5ualDEHTEBre8jFSPDL8jXReAxDfXtKfyFee1Vzm0CN94cQOu35m4PZutOarXOpwUlIihfp3mPiiIAaaSO9cVGIEHROoGWM176GjNJdVaNajbSthSmEUUPE=
+	t=1779466074; cv=none; b=M0rsBHjPcz4zv/bwle7RXX8BqABrLdCPepEkbs5bCJ0BBOfssP49AEszy3W3s+kC/XY0jTxKc94jLHB5h5wdlXjgyWFBJqulKNr8tlx3g246Cj75mfMxKibY3jwCbIKnEfgR1HaPIXPExUIirbhKywbiRxiYHKNj4kYM80i5DF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779463295; c=relaxed/simple;
-	bh=kL9HLy2U0FxzTvsrjk37010gdPtNgyG1J9qDxhceLUg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oub5TaU97bhcSb/UV3f2J9gah3jKjzSwLMllIAahM6bfDrxtQi3acvwR2fCisFzxuzg4wsEa3mhwdQm8TxuYrAF7qt3VXClho0Nd2CSxngGYjbCeNyWR2gdepoLRyJYomEz0QsQch8uwSoM4Ln0DnVChZPei50l2BFBUDNdr+Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 22DE567CFC;
-	Fri, 22 May 2026 15:21:29 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EDE02593A8;
-	Fri, 22 May 2026 15:21:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Zp3+OHh0EGqeHwAAD6G6ig
-	(envelope-from <jgross@suse.com>); Fri, 22 May 2026 15:21:28 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH 2/3] x86/xen: Cleanup Xen related trace points
-Date: Fri, 22 May 2026 17:21:13 +0200
-Message-ID: <20260522152114.77319-3-jgross@suse.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260522152114.77319-1-jgross@suse.com>
-References: <20260522152114.77319-1-jgross@suse.com>
+	s=arc-20240116; t=1779466074; c=relaxed/simple;
+	bh=Z7CZniyudQvtGykBjwFqflJux61iIz/Fi25N4Y0qOJI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ueNlbszRyI1iqBUwxTH6VDDSG9USyk50NHl0skCEIO0Etl+AxUn7fuH8rL+iUFqnwP00X4JwmslAIuZqNSbk5OFEbNAJSWhT84l5T83KM5vhMkMumC7f4ONehfhpPu2WOED6V9ZYdHBigewk0yCTnYvSbkd2aC/+Xvr0L1xnTu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PNl7Q6/b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNl7Q6/b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779466072;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z7CZniyudQvtGykBjwFqflJux61iIz/Fi25N4Y0qOJI=;
+	b=PNl7Q6/bpFzjlNljoTdLqlnYTmyofZ5nREKlsDKT9jic1gkPoAQ6vx5aRIeulfzIScIUNX
+	A5WXOwfWT243UwsTXJgx24rip3fBryDqCQ8lQHgx9HdStqTwupnJj3OwVOyghiMWcZ0Z4C
+	RxNfkDjbJswHqBOSSc91RYNo47Epgto=
+Received: from mail-yx1-f72.google.com (mail-yx1-f72.google.com
+ [74.125.224.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-495-QPEug8sZMeGc3MqN37aSPg-1; Fri, 22 May 2026 12:07:50 -0400
+X-MC-Unique: QPEug8sZMeGc3MqN37aSPg-1
+X-Mimecast-MFC-AGG-ID: QPEug8sZMeGc3MqN37aSPg_1779466070
+Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-65e1b9f1ebeso14670354d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 09:07:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779466070; x=1780070870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Z7CZniyudQvtGykBjwFqflJux61iIz/Fi25N4Y0qOJI=;
+        b=sn7yuOhc2EadBpnRM3NNDQVPKHYK6gMidKTRUetES29ZIPmxHs/72gVRxmL8UbpdBp
+         31fgU4niWLxWVP6oXQhl3pqUDBIr3/y8m0F8ycO0zjolPglfX0gNh/x6v3RZG9So97DX
+         S9mhhVjV5yC7G/5tNw2hdNDuCA8BLagqK7r0GFFrj/u7B85ckdzc9AfRsuyaN7lb4j+z
+         kI4Qk2qHE8JMarS8DQNjJh7gnGae/thoViJUgL9wFMzgWKFrtehhIvyN/uNAmoIeHSTx
+         NOyLYfri5/tvLc9W943ViofGqJB7EtqJGeCcmP4iZkxLs1MQTnlBIJkmOLHw6pgR/7Dc
+         5rtw==
+X-Forwarded-Encrypted: i=1; AFNElJ9WHqbcJe76SUbH3JfWtPglgicBRsEaGVY//6IJk1/lYRJeJDBZHIXptwD6/I243n9CwrlSHCysq8NcQZfAx4m7G+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysW7Ewt+5ouPu34EQxAs+zLvwDHzStP7fz1nA9KLqsJf3FjKbR
+	2JLqpKaU2XCizFcZe1Vni7sWL3lYiXXcyGogCracOtStQC7l9fVXXC0uGFV3gX4fvDc1vqChEIe
+	PwkwEnnwFC4C4N8sPXTvX1EFh7kJj7XwzAKs/oYM39fhCHCVGM27Pm2vKYysps2npwqBjaXoGsA
+	pZ2TSed14pmI5fGSBj/gkWpHXUn9aRxOc5xfMwRRFJyjWH1E82
+X-Gm-Gg: Acq92OFpCC7b5GdresOw+i1rdvQ8eIFhdFQLC4JsvbkToxwPa/9OLwK+ZeiitdgPyWl
+	o947Ymfw1CrsWfoHgR65BBUzYsI5d6j4TAzaMklqZHWBXv5srOTisLTeQ0dFRvFrl0FY89GPygj
+	5+07PnwvJxxjxf6JEIFe8Lq+yGFCl1jDk89lymDt4A362eNQAqoogN3L1tq4j/uxTs+7vOUCz2u
+	+oFIQ==
+X-Received: by 2002:a05:690e:1284:b0:65c:74c2:31c6 with SMTP id 956f58d0204a3-65eca654410mr2973369d50.5.1779466070081;
+        Fri, 22 May 2026 09:07:50 -0700 (PDT)
+X-Received: by 2002:a05:690e:1284:b0:65c:74c2:31c6 with SMTP id
+ 956f58d0204a3-65eca654410mr2973309d50.5.1779466069568; Fri, 22 May 2026
+ 09:07:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: 22DE567CFC
-X-Spam-Score: -4.00
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20260522150009.121603-1-npache@redhat.com> <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
+ <ahByO_HWn6MB8z-u@lucifer>
+In-Reply-To: <ahByO_HWn6MB8z-u@lucifer>
+From: Nico Pache <npache@redhat.com>
+Date: Fri, 22 May 2026 10:08:19 -0600
+X-Gm-Features: AVHnY4K-NMEYaoOF8CwzqrbGVrRxOSsC61YCW8vw8BzLOXMR_M4k6Y4gQwbZHRs
+Message-ID: <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
+Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
+ collapse support
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
+	anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, 
+	cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, 
+	dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, 
+	jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com, 
+	joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev, 
+	liam@infradead.org, mathieu.desnoyers@efficios.com, matthew.brost@intel.com, 
+	mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de, 
+	rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org, 
+	richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org, 
+	rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
+	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
+	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
+	zokeefe@google.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: OR6WZVI5ZtBbnM9b1stoqUxxTxXuZ5szq_ddttjutac_1779466070
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since dropping Xen-PV support for 32-bit, include/trace/events/xen.h
-contains several stale trace point definitions. Remove them.
+On Fri, May 22, 2026 at 9:17=E2=80=AFAM Lorenzo Stoakes <ljs@kernel.org> wr=
+ote:
+>
+> On Fri, May 22, 2026 at 09:07:29AM -0600, Nico Pache wrote:
+> > Whoops I manually changed the coverletter subject to reflect that this
+> > in on mm-hotfixes-unstable but never updated the others...
+> >
+> > Hopefully that is ok. Just a small mistake. Base commit is referenced h=
+ere.
+>
+> It's not ok, this isn't suitable for a hotfix in any way shape or form?
+>
+> As you know, because we told you :) May has been difficult because of
+> conferences, holidays (and in my case burnout recovery).
+>
+> And unfortunately the series seems to have needed quite a bit of review a=
+gain
+> (my suggestion to you would be to ensure you don't make major changes, on=
+ly
+> small incremental ones on the basis of review feedback).
+>
+> So this isn't viable for 7.2, and we'll have to target 7.3. Therefore the=
+re
+> was no rush.
+>
+> Also please don't spring a respin on this series on us without discussion
+> first, with people away and (frankly) the amount of work involved here,
+> you're going to have to accept the pace that workload/availability permit=
+s.
+>
+> Adding spurious hotfixes tags doesn't help anything :) please don't do th=
+at
+> again.
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- include/trace/events/xen.h | 62 ++------------------------------------
- 1 file changed, 3 insertions(+), 59 deletions(-)
+Hi,
 
-diff --git a/include/trace/events/xen.h b/include/trace/events/xen.h
-index 0577f0cdd231..e3f139f0bc78 100644
---- a/include/trace/events/xen.h
-+++ b/include/trace/events/xen.h
-@@ -129,9 +129,10 @@ TRACE_EVENT(xen_mc_extend_args,
- 		      __entry->res == XEN_MC_XE_NO_SPACE ? "NO_SPACE" : "???")
- 	);
- 
--TRACE_DEFINE_SIZEOF(pteval_t);
- /* mmu */
--DECLARE_EVENT_CLASS(xen_mmu__set_pte,
-+TRACE_DEFINE_SIZEOF(pteval_t);
-+
-+TRACE_EVENT(xen_mmu_set_pte,
- 	    TP_PROTO(pte_t *ptep, pte_t pteval),
- 	    TP_ARGS(ptep, pteval),
- 	    TP_STRUCT__entry(
-@@ -146,13 +147,6 @@ DECLARE_EVENT_CLASS(xen_mmu__set_pte,
- 		      (int)sizeof(pteval_t) * 2, (unsigned long long)__entry->pteval)
- 	);
- 
--#define DEFINE_XEN_MMU_SET_PTE(name)				\
--	DEFINE_EVENT(xen_mmu__set_pte, name,			\
--		     TP_PROTO(pte_t *ptep, pte_t pteval),	\
--		     TP_ARGS(ptep, pteval))
--
--DEFINE_XEN_MMU_SET_PTE(xen_mmu_set_pte);
--
- TRACE_DEFINE_SIZEOF(pmdval_t);
- 
- TRACE_EVENT(xen_mmu_set_pmd,
-@@ -170,37 +164,6 @@ TRACE_EVENT(xen_mmu_set_pmd,
- 		      (int)sizeof(pmdval_t) * 2, (unsigned long long)__entry->pmdval)
- 	);
- 
--#ifdef CONFIG_X86_PAE
--DEFINE_XEN_MMU_SET_PTE(xen_mmu_set_pte_atomic);
--
--TRACE_EVENT(xen_mmu_pte_clear,
--	    TP_PROTO(struct mm_struct *mm, unsigned long addr, pte_t *ptep),
--	    TP_ARGS(mm, addr, ptep),
--	    TP_STRUCT__entry(
--		    __field(struct mm_struct *, mm)
--		    __field(unsigned long, addr)
--		    __field(pte_t *, ptep)
--		    ),
--	    TP_fast_assign(__entry->mm = mm;
--			   __entry->addr = addr;
--			   __entry->ptep = ptep),
--	    TP_printk("mm %p addr %lx ptep %p",
--		      __entry->mm, __entry->addr, __entry->ptep)
--	);
--
--TRACE_EVENT(xen_mmu_pmd_clear,
--	    TP_PROTO(pmd_t *pmdp),
--	    TP_ARGS(pmdp),
--	    TP_STRUCT__entry(
--		    __field(pmd_t *, pmdp)
--		    ),
--	    TP_fast_assign(__entry->pmdp = pmdp),
--	    TP_printk("pmdp %p", __entry->pmdp)
--	);
--#endif
--
--#if CONFIG_PGTABLE_LEVELS >= 4
--
- TRACE_DEFINE_SIZEOF(pudval_t);
- 
- TRACE_EVENT(xen_mmu_set_pud,
-@@ -236,24 +199,6 @@ TRACE_EVENT(xen_mmu_set_p4d,
- 		      (int)sizeof(p4dval_t) * 2, (unsigned long long)pgd_val(native_make_pgd(__entry->p4dval)),
- 		      (int)sizeof(p4dval_t) * 2, (unsigned long long)__entry->p4dval)
- 	);
--#else
--
--TRACE_EVENT(xen_mmu_set_pud,
--	    TP_PROTO(pud_t *pudp, pud_t pudval),
--	    TP_ARGS(pudp, pudval),
--	    TP_STRUCT__entry(
--		    __field(pud_t *, pudp)
--		    __field(pudval_t, pudval)
--		    ),
--	    TP_fast_assign(__entry->pudp = pudp;
--			   __entry->pudval = native_pud_val(pudval)),
--	    TP_printk("pudp %p pudval %0*llx (raw %0*llx)",
--		      __entry->pudp,
--		      (int)sizeof(pudval_t) * 2, (unsigned long long)pgd_val(native_make_pgd(__entry->pudval)),
--		      (int)sizeof(pudval_t) * 2, (unsigned long long)__entry->pudval)
--	);
--
--#endif
- 
- DECLARE_EVENT_CLASS(xen_mmu_ptep_modify_prot,
- 	    TP_PROTO(struct mm_struct *mm, unsigned long addr,
-@@ -452,7 +397,6 @@ TRACE_EVENT(xen_cpu_set_ldt,
- 		      __entry->addr, __entry->entries)
- 	);
- 
--
- #endif /*  _TRACE_XEN_H */
- 
- /* This part must be outside protection */
--- 
-2.54.0
+Sorry for the confusion but Andrew and I spoke about this before I
+sent it, and he confirmed that I should send it against this tree to
+prevent merge conflicts.
+
+Because Zi's series depends on this, and this is already in the mm
+tree, choosing a candidate before my commits was best to prevent merge
+conflicts.
+
+The intent wasn't that this is a hotfix, just that this was the
+closest base before the v17 that is already in the tree.
+
+Sorry for the confusion, hopefully Andrew can still apply it to the
+correct tree.
+
+-- Nico
+
+>
+> Thanks, Lorenzo
+>
 
