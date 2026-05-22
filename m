@@ -1,247 +1,226 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D4E47D936;
-	Fri, 22 May 2026 17:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDCB372675;
+	Fri, 22 May 2026 17:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779469832; cv=none; b=ohWM1++SCS1WhNKvM7DNj0xm3VYdZoQa5I111zWy++xruhGjvMFSY2us4CYqOvPmVyKLOtyH2NuwujQe77+tNiFPHQ9aOyhQCBkqny2WmD2VJu/7MWbyWr70Y6VtjE2ocNHVAGQ5ximYsJMEXSp+0g3+6GM9wCyOcOkNLD6VHo8=
+	t=1779469981; cv=none; b=YHPApOH2P8vnqvNKSHhRQKmxzS+SX/H/rnhsiUEcw/TSgxDf5m5Vo8BpUD884naFeuxkGH3NbVWN7ufPHkxS9CnedhAsZj7U3YcDvfq2NVhf2SbjcPIJ8F2H1JaYi9PPniffhhhGQ1VTIW+mny6K7JGxGTHZ0ouoyrYnWJ/cL/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779469832; c=relaxed/simple;
-	bh=1SaGWb6a85ghO7iNg11ZJ4mvZFi15K6dnkGSvo98Ems=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=fbihw2cU0q68Vz4XfuTB3Z6C9BkiH///EGOVCarnE+Z1gbsoiRAIZRRrOAaxT3FpCn6c/UGr8YKDYGeatuYZPiwOySqZ6BjIl5k22AzJj/AzCC8TCCog/ZfQc+efBAOdLhaFLtLtpEGDsLSB5jhVDNHdzfKlshL1c7a7tOJVFmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITbWXv/8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779469981; c=relaxed/simple;
+	bh=27h0jJZ7w7I8jAScI48gEhMwRLBkmhtjZjLyPmjs3Hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HZGjZZqilBlKVOiohoGc90313feT0tJUO+iOif5lUmVcxeVkxzx77Ow7tOsJgqpfakCtO8cQCZ+LfKQVcGJj2S/tyyy8yy3l1mFkuoJgOecriCEp4huqfA6gdBnOEOjw/9p9wDpfJMvUS+nyaUBLMDtAaCgmhHhyuK5kzdX0iVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rwju4gJq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITbWXv/8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62CDD1F01560;
-	Fri, 22 May 2026 17:10:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rwju4gJq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0BE1F000E9;
+	Fri, 22 May 2026 17:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779469828;
-	bh=/0Ie7Gn6wjLKfdrHeDIoRVVLzIjB+0dSQgebo77fgEI=;
-	h=Date:From:To:Cc:Subject:References;
-	b=ITbWXv/8GpsHI3lcNIpnISjZWC/XGY1xKuvAmTCk1+5KFYocN4P/s554BcQg7DJuO
-	 N2TDPOEE2cG/f1UTKwXMrg1yZY0V/9tN1S4n8D6RTXV3g2sByrQJV8hzSk8D9VwEaG
-	 4b+bPI386S+2cySPAUXflGav5r9l4NX89gPC9IBnvjEFCwprxHl5NATvU8DlrXIoW1
-	 +vhmTAY6YqFOGsOqA14jWacnYevR4Aw6PHtEOik94Dtzid5ZUN3UGU6cP6XevLk12H
-	 SEHDPhMgH/gusctrUc97+L57n7ByUGxmPdr3F+DEupNGhZloYZy22V2JZ3DqOESxcA
-	 /KmghOsHfg2Yg==
-Received: from rostedt by gandalf with local (Exim 4.99.2)
-	(envelope-from <rostedt@kernel.org>)
-	id 1wQTOe-00000006BYN-1C5X;
-	Fri, 22 May 2026 13:10:52 -0400
-Message-ID: <20260522171052.156419479@kernel.org>
-User-Agent: quilt/0.69
-Date: Fri, 22 May 2026 13:09:06 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Ian Rogers <irogers@google.com>
-Subject: [PATCH v21 9/9] ring-buffer: Show persistent buffer dropped events in trace_pipe file
-References: <20260522170857.263969486@kernel.org>
+	s=k20260515; t=1779469980;
+	bh=xiyUFzZqN9pslbNTfSLwhf195Bg0GoCgngfEHT8mMw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Rwju4gJqo6X1kuG/alZGdb8qj4XKrN6BeadFhi6a0JPO+wNw1dtRc2RLZg5P6ha2d
+	 XqclErO1kvpWmoLCalNTwEUA9/C0qUpSHHOQFnGNMmqfdsap2UB5iBMMOBZRIcTQbl
+	 OqqpJ270JMx3f3360gBWgYv0gFL+Q2R506NoBgZWcUzoQwyXvOuwIXk53kY+DcK9mg
+	 ZaleTCjdvABCBuqe6tAC5FtnGGM/7UQqzM5z3gha9yX4WQrWhvQ80Fnox7mFoqSI/o
+	 FYJddHUP8I5dbmiFUqHx3lASyRJ/zyQ+AqcXMj0lhFtgUXOalRWryX6DuxwmlU1RBt
+	 ZVtnlemjeZ6ww==
+Date: Fri, 22 May 2026 18:12:45 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
+	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
+	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
+	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
+	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
+	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
+	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
+	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
+	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
+	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
+	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
+ collapse support
+Message-ID: <ahCFIDuyrvEfB9jv@lucifer>
+References: <20260522150009.121603-1-npache@redhat.com>
+ <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
+ <ahByO_HWn6MB8z-u@lucifer>
+ <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
+ <ahB_hae8coGvf12Z@lucifer>
+ <CAA1CXcCoyGzEyeFPW+zKiA2AOj=0Lm7R=odLtVru+dQa0P_2cQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA1CXcCoyGzEyeFPW+zKiA2AOj=0Lm7R=odLtVru+dQa0P_2cQ@mail.gmail.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, May 22, 2026 at 10:31:41AM -0600, Nico Pache wrote:
+> On Fri, May 22, 2026 at 10:20 AM Lorenzo Stoakes <ljs@kernel.org> wrote:
+> > There's some kind of confusion here.
+> >
+> > This series isn't suited for 7.2.
+> >
+> > Sorry but Zi's series, unless it depends on functionality here, will have
+> > to be rebased.
+> >
+> > People have been at conferences, people have been on leave, I've had to
+> > pace myself for health reasons and it seems there's been more than simply
+> > review comment-based changes happening here.
+> >
+> > (Again I strongly encourage, at this stage, to ONLY be making changes based
+> > on review, not adding ANYTHING else or changing ANYTHING else to avoid
+> > delays :)
+>
+> All the changes are based on review points. Very small changes in this
+> version; the largest being the one that you specifically argeed too.
 
-When the persistent ring buffer is validated on boot up, if a subbuffer is
-deemed invalid, it resets the buffer and continues. Have the code preserve
-the RB_MISSED_EVENTS flag in the commit portion of the subbuffer header
-and pass that back so that the trace_pipe file can show the missed events
-like the trace file does.
+16->17
 
-For example:
+ Documentation/admin-guide/mm/transhuge.rst |  24 +++++-------------
+ include/linux/khugepaged.h                 |   7 ++---
+ include/trace/events/huge_memory.h         |   3 ++-
+ mm/huge_memory.c                           |   2 +-
+ mm/khugepaged.c                            | 168 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------
+ mm/vma.c                                   |   6 ++---
+ tools/testing/vma/include/stubs.h          |   3 ++-
+ 7 files changed, 103 insertions(+), 110 deletions(-)
 
-   <...>-1242    [005] d....  4429.120116: page_fault_user: address=0x7ffaebb6e728 ip=0x7ffaeb9d4960 error_code=0x7
-   <...>-1242    [005] .....  4429.120124: mm_page_alloc: page=00000000055254f3 pfn=0x1373bd order=0 migratetype=1 gfp_flags=GFP_HIGHUSER_MOVABLE|__GFP_COMP
-   <...>-1242    [005] d..2.  4429.120132: tlb_flush: pages:1 reason:local MM shootdown (3)
-CPU:5 [LOST EVENTS]
-   <...>-1242    [005] d....  4429.120661: page_fault_user: address=0x55ba7c2d0944 ip=0x55ba7c20cd02 error_code=0x7
-   <...>-1242    [005] .....  4429.120669: mm_page_alloc: page=0000000005a02500 pfn=0x12b6e4 order=0 migratetype=1 gfp_flags=GFP_HIGHUSER_MOVABLE|__GFP_COMP
-   <...>-1242    [005] d..2.  4429.120680: tlb_flush: pages:1 reason:local MM shootdown (3)
+17->18
 
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-Changes since v20: https://patch.msgid.link/20260520185018.470465795@kernel.org
+ Documentation/admin-guide/mm/transhuge.rst |   5 +++--
+ include/trace/events/huge_memory.h         |   3 +--
+ mm/khugepaged.c                            | 121 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------
+ 3 files changed, 66 insertions(+), 63 deletions(-)
 
-- Removed left over printk() (Masami Hiramatsu)
+These are not small 'very small changes'.
 
- kernel/trace/ring_buffer.c | 56 +++++++++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 22 deletions(-)
+We're nearly at rc-5, and this is a major, invasive, dangerous change that
+we have to get right.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 988915f035c7..910f6b3adf74 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5801,6 +5801,7 @@ __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	struct buffer_page *reader = NULL;
- 	unsigned long overwrite;
- 	unsigned long flags;
-+	int missed_events = 0;
- 	int nr_loops = 0;
- 	bool ret;
- 
-@@ -5901,6 +5902,9 @@ __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	if (!ret)
- 		goto spin;
- 
-+	if (rb_page_commit(reader) & RB_MISSED_EVENTS)
-+		missed_events = -1;
-+
- 	if (cpu_buffer->ring_meta)
- 		rb_update_meta_reader(cpu_buffer, reader);
- 
-@@ -5965,6 +5969,8 @@ __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	 */
- 	smp_rmb();
- 
-+	if (!cpu_buffer->lost_events)
-+		cpu_buffer->lost_events = missed_events;
- 
- 	return reader;
- }
-@@ -7066,6 +7072,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	struct buffer_page *reader;
- 	long missed_events;
- 	unsigned int commit;
-+	unsigned int size;
- 	unsigned int read;
- 	u64 save_timestamp;
- 	bool force_memcpy;
-@@ -7101,7 +7108,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	event = rb_reader_event(cpu_buffer);
- 
- 	read = reader->read;
--	commit = rb_page_size(reader);
-+	commit = rb_page_commit(reader);
-+	size = rb_page_size(reader);
- 
- 	/* Check if any events were dropped */
- 	missed_events = cpu_buffer->lost_events;
-@@ -7115,13 +7123,14 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	 * we must copy the data from the page to the buffer.
- 	 * Otherwise, we can simply swap the page with the one passed in.
- 	 */
--	if (read || (len < (commit - read)) ||
-+	if (read || (len < (size - read)) ||
- 	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
- 	    force_memcpy) {
- 		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
- 		unsigned int rpos = read;
- 		unsigned int pos = 0;
--		unsigned int size;
-+		unsigned int event_size;
-+		unsigned int flags = 0;
- 
- 		/*
- 		 * If a full page is expected, this can still be returned
-@@ -7130,19 +7139,22 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		 * the reader page.
- 		 */
- 		if (full &&
--		    (!read || (len < (commit - read)) ||
-+		    (!read || (len < (size - read)) ||
- 		     cpu_buffer->reader_page == cpu_buffer->commit_page))
- 			return -1;
- 
--		if (len > (commit - read))
--			len = (commit - read);
-+		if (len > (size - read))
-+			len = (size - read);
- 
- 		/* Always keep the time extend and data together */
--		size = rb_event_ts_length(event);
-+		event_size = rb_event_ts_length(event);
- 
--		if (len < size)
-+		if (len < event_size)
- 			return -1;
- 
-+		if (commit & RB_MISSED_EVENTS)
-+			flags = RB_MISSED_EVENTS;
-+
- 		/* save the current timestamp, since the user will need it */
- 		save_timestamp = cpu_buffer->read_stamp;
- 
-@@ -7154,25 +7166,25 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 			 * one or two events.
- 			 * We have already ensured there's enough space if this
- 			 * is a time extend. */
--			size = rb_event_length(event);
--			memcpy(dpage->data + pos, rpage->data + rpos, size);
-+			event_size = rb_event_length(event);
-+			memcpy(dpage->data + pos, rpage->data + rpos, event_size);
- 
--			len -= size;
-+			len -= event_size;
- 
- 			rb_advance_reader(cpu_buffer);
- 			rpos = reader->read;
--			pos += size;
-+			pos += event_size;
- 
--			if (rpos >= commit)
-+			if (rpos >= event_size)
- 				break;
- 
- 			event = rb_reader_event(cpu_buffer);
- 			/* Always keep the time extend and data together */
--			size = rb_event_ts_length(event);
--		} while (len >= size);
-+			event_size = rb_event_ts_length(event);
-+		} while (len >= event_size);
- 
- 		/* update dpage */
--		local_set(&dpage->commit, pos);
-+		local_set(&dpage->commit, pos | flags);
- 		dpage->time_stamp = save_timestamp;
- 
- 		/* we copied everything to the beginning */
-@@ -7204,7 +7216,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 
- 	cpu_buffer->lost_events = 0;
- 
--	commit = rb_data_page_commit(dpage);
-+	size = rb_data_page_size(dpage);
- 	/*
- 	 * Set a flag in the commit field if we lost events
- 	 */
-@@ -7214,11 +7226,11 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		 * missed events, then record it there.
- 		 */
- 		if (missed_events > 0 &&
--		    buffer->subbuf_size - commit >= sizeof(missed_events)) {
--			memcpy(&dpage->data[commit], &missed_events,
-+		    buffer->subbuf_size - size >= sizeof(missed_events)) {
-+			memcpy(&dpage->data[size], &missed_events,
- 			       sizeof(missed_events));
- 			local_add(RB_MISSED_STORED, &dpage->commit);
--			commit += sizeof(missed_events);
-+			size += sizeof(missed_events);
- 		}
- 		local_add(RB_MISSED_EVENTS, &dpage->commit);
- 	}
-@@ -7226,8 +7238,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	/*
- 	 * This page may be off to user land. Zero it out here.
- 	 */
--	if (commit < buffer->subbuf_size)
--		memset(&dpage->data[commit], 0, buffer->subbuf_size - commit);
-+	if (size < buffer->subbuf_size)
-+		memset(&dpage->data[size], 0, buffer->subbuf_size - size);
- 
- 	return read;
- }
--- 
-2.53.0
+You've also made changes unrelated to review, repeatedly, throughout this
+process, which as I've told you, is causing delays.
 
+You've also throughout the review of this series done stuff like make MAJOR
+changes to things and _kept review tags_.
 
+You're forcing us to use git range-diff etc. to forensically check that the
+series is what is claimed.
+
+Dude I mean you switched to using // comment style which is not used in mm
+anywhere for instance? Don't do things like that and complain about
+delays. Honestly.
+
+Also, again, LSF happened. Other confeerences happened. Bandwidth is
+reduced.
+
+So again, I'm sorry, but you've been hit with some bad luck here.
+
+I really wanted this in for 7.2, and I feel bad that we couldn't make it,
+but you're also doing thing that's making it difficult for us.
+
+I've spent double-digits hours on your series, and I've also had work
+pushed out becasue of that leading me to work evenings and weekends as a
+result.
+
+And I'm not even going to get any credit for it :))
+
+So while I sypmathise, really, please have empathy and realise it goes both
+ways, please.
+
+I'm not being mean for the sake of it, I'm pushing back because I feel this
+is not at a stage where I'd feel confident in this being merged at this
+time.
+
+And it's very much a regret, as I _really_ wanted us to have it in this
+time. But life and circumstances and the issues mentioned above have
+intervened, sadly.
+
+>
+> >
+> > Also - shouldn't mm-unstable already have mm-hotfixes-unstable in it?
+> >
+> > I think in mm-next we will have an stable branch, that everything is
+> > based on, where things go once review is complete and things are mergeable.
+> >
+> > And a separate hotfixes branch based on Linus's tree.
+> >
+> > That would avoid issues like this :)
+>
+> Im sorry im new to this, but I really dont think this tiny error, and
+> something that I'd confirmed with Andrew beforehand deserves NAKing
+> and defering it. Ive worked through my PTO to clean up some of these
+> review nits just to get it in 7.2. I even through this through my
+> rounds of testing today before resending.
+
+The issue wasn't the error (though it wasn't tiny...!), it's the state of
+review. There was fresh review comments from a few days ago, and there's
+big diffs between revisions.
+
+You've also made unrelated changes as you have done throughout the series.
+
+As I said above, I'm sorry that you spent time in your PTO on this, but we
+cannot rush this in when things are not clearly ready yet, and I am not
+confident in this being ready at this stage.
+
+>
+> >
+> > >
+> > > The intent wasn't that this is a hotfix, just that this was the
+> > > closest base before the v17 that is already in the tree.
+> >
+> > The convention is that [PATCH ... <branch>] indicates the target of the
+> > changes. Putting the hotfixes branch there implies it's a hotfix.
+>
+> Sorry I thought the <branch> was what base you used.
+
+I mean, sure there's clearly confusion here as you sent [PATCH 7.2 v16 ...]
+(against an unreleased kernel version) then a branch specifier then the
+hotfixes one...
+
+Anyway sure, it's fine, I've made vastly more dumb mistakes than that
+myself, nobody minds, but it's concerning as by convention [PATCH
+... <mm->hotfixes<whatever>] generally is taken to mean 'please rush this
+to hotfixes!' :)
+
+So be careful with that please!
+
+>
+> >
+> > So please be careful with that in future :)
+>
+> Yes will do for sure.
+
+Thanks!
+
+>
+> >
+> > >
+> > > Sorry for the confusion, hopefully Andrew can still apply it to the
+> > > correct tree.
+> >
+> > I'm not even sure what's best for that at this stage given we have
+> > conflicts and this has to be delayed until 7.3.
+> >
+> > I wonder if given that we should not have this in mm-unstable at all and
+> > just wait it out until the next cycle begins? Review can happen
+> > concurrently.
+>
+> I still dont see why this has to be deferred, I was working with
+> Andrew to prevent merge headaches.
+
+I've explained the why above, and David and I co-maintain THP so I feel
+that ultimately given the blood, sweat and tears we've put into THP review
+we ought to have some input on this :)
+
+Thanks, Lorenzo
