@@ -1,474 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF002D7393;
-	Fri, 22 May 2026 02:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB6B1F419A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 06:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779418238; cv=none; b=MlEQbrB+TbhsONzn/yLqzZNTFhEw5ZQCmI6CpoYkAkGLI9xE2qj3Dcuo/GKbPlHd5v8b+QcJu2JQf9AnJy6p0etEz3pndzsu6tNzYgyjsNGPGQ77B7IM8jgIPfmSW9K/6WXztcQOFMl1dL+4XMNCvSG0PE88A1m2SHU/sqXb9Z8=
+	t=1779432366; cv=none; b=IsVEX5r1SKjsPrA+Bynpv0WeDECoTE77N8hsOEzC2bulJ5MniPk1IqN1HDRiJdIc+EexNM9wDDMVQMUdIb77/i2uW2IBmMCXnRnwsHGUYLogHjOcXpqOySi2lt7aI7qHvgx9Kr8e2tVXu7ayD74SDm9k8nDIy1AdX7i+RxMoMFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779418238; c=relaxed/simple;
-	bh=nM0IIAlJVLbB7dR0/Nhfq3TWmuDPmWC1UXMJGm7ZMlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MsTi5Ep6mDkg2tUzjCBkRpc8MOxQgT2eDXP7tBdB1tGaAAHBwziVFBYlYtwBz7M1UEv32iQHLy4h1L/qAOO2Un7zizgEHjErKw2pHOcZbVIPu26Patk0BKWOvoM9EnnyiOH79H6k0FTZx2rVPLDzfGIDK7/TEOHinuZSjAN3WKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YeU/Rd59; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779432366; c=relaxed/simple;
+	bh=OuypiTPvo6MlH6Aw9Q/Fs2RcYOmyy1Gt284dvTUNXFg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tql4w3nVCQ1fP1OB4LGm4edboYAizeLA9MdgKRJJJD6BiFYca5zElQfmMrI+SxxhJFxusOZY0WhUzfTWDIISBWuOO8g+1/zKodr8OmBiJd5i8hUGu21v/sOWKd7sJ9Hb+8pAEW5bK2mdpbld1kQh0DkAgOl+gb7RZBnLHxV+JUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VaUWO50X; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YeU/Rd59"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 323F31F000E9;
-	Fri, 22 May 2026 02:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779418236;
-	bh=itSwf/eAqISYozrxe81cyN55OoMLkkb9ZZo9do/0/KY=;
-	h=Date:From:To:Cc:Subject;
-	b=YeU/Rd59jJJE4qIhxmjJgysU257MNQdrlWmFURNpxmAPiE6vAVaITgzusgqTIcE54
-	 NOjvLbgoP5L3A6d/ySCDO3/gHJXcHwPbUWjBontYCy20e5liGPLM6J1DOC4CnwWwT6
-	 Lp32zXGmcnRcxD2uJkOecbgWypXS86CoOE9rCpt5JxkgWRBC/Y3vczMvh9HIe3Bbgi
-	 CNDqK8tVbCofH9VuQNh+1QsVnwMqg6hIb9AkXLGM7msjZTFTmK97p4p2iTIorgNzNA
-	 7ZnmPh0wUALOxjFMYV4CW1FOhxp3IDQXBlyB9l4k/RQcNNkDBAC0Sja2XuHeJVWR1i
-	 7ZOaNymCaLgvQ==
-Date: Thu, 21 May 2026 22:50:33 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
- Takaya Saeki <takayas@google.com>, Douglas Raillard
- <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
- Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>
-Subject: [PATCH v6] tracing/eprobes: Allow use of BTF names to dereference
- pointers
-Message-ID: <20260521225033.56458336@fedora>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VaUWO50X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779432364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=OuypiTPvo6MlH6Aw9Q/Fs2RcYOmyy1Gt284dvTUNXFg=;
+	b=VaUWO50X1RF4/NZ/f7rIhGuMYi/ylHJgPxNYy7ao4ZvMwZM0D4YFYgiYq6KknccCXg6weY
+	AckH0SCWhtZXtOut74Mico97cnrcmai7Ow4QSXggsHofnj5j3P5ktsS+vFpKz4QMj9xxPz
+	sSjvVpvTU1482c+DwMWFtYBmsHKwF2w=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-dLaUuVxhNWSYdmzBPds9jg-1; Fri, 22 May 2026 02:46:03 -0400
+X-MC-Unique: dLaUuVxhNWSYdmzBPds9jg-1
+X-Mimecast-MFC-AGG-ID: dLaUuVxhNWSYdmzBPds9jg_1779432360
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49045243094so4869695e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 May 2026 23:46:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779432360; x=1780037160;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OuypiTPvo6MlH6Aw9Q/Fs2RcYOmyy1Gt284dvTUNXFg=;
+        b=HMD9cmu4Tg4s7yPPU34/fRrIgv8HWuxp+TarY8dqyI43f4l8mNszohDV0bsi9/9ks5
+         n1TP8e0/qxpk3f1v/+hLimAjnoVAWG3J0ErjWBU1PoQNqisLh6SmpzFSITtqHNIQj0R7
+         WpbldP9AVGAqsQm64mvFZnPmW9ziFMm8LroeDSLW6bFm18X2qlNEvuGtFwTgEDNOeKHB
+         k3OXDsDrQ03jDZ3sE/sCJkoQHCV6XQ9nc104r7M0dhsoaCxmdDFtuE8e/yMVOLbz/7ux
+         uRve5vU4Su1y3wd1fvpb6yyOmtBN18i2nri0GPcTd9q0bCxEKkqXUYPb83Sj/KgQ8yf4
+         +W+g==
+X-Forwarded-Encrypted: i=1; AFNElJ8VM70U7r+EiXHw4twHPXT7FwvElvYVPl7FXPArGiMBr8pE5f4RVNLI/ExVdN32yKxAG7jXtCFpA62Tp4F6tWtF3i4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ2EAJxRAv+jjzvTPAw6uxIUxokLslufKDaxMzIOHHGZe/zr0N
+	lJjA24Y2lfUMFA73sqe8v4xkB8VEIckfEYVi3Xtu75zVrb4UuUsK1tnS0pywj1SXHRBFP4OwIz7
+	U7bChdJ/3zK9QTmxF+nJnf5D0LrNS3SvqPF4iGqvOHrZFvI31IYXKSPPZMcvSFPYqPK6di6IPJQ
+	==
+X-Gm-Gg: Acq92OEPdQeovU4dKjgPM2cCjPoJJIY3GgmcXFOADxsV2mFz1Xh4F/bX4VdV1poEHx8
+	Ib9MQx1BVJbDY51Zwa5CzZs9dwcByDeFKDh4Vxb4Yx8TggHGDyVyDl1X4tXL+bChE0IubT/VMlz
+	HQpiyOYwKXj78D2RPdvOzYppkIXY1F/ZUwa0RafldWxly7JiKtXbCb4cRAUCF3bQvHIWOL+kPW9
+	W2fhkuf+bj7Dw+s2gj1KG0uaiHr6ZHyVQ/u9DZVSYw3Jwsydf91/4LF4c6d4zlpAl4wH2R3htzQ
+	h4TNEhYXCk6KU2O/H76TJx2fWehRaP8YvYSQ2Nn1DLAPoTGKOgescorS1yMTUTV6zgKp0ndWKma
+	EQ3tdPbIpznjFam8Bt7dWy6FtDEJtgg11ULUqB8ZEma2BQ2DJ5VPc57ephF4wqFBPSb17uPUGon
+	o1/TGLR1o+EZYH18A=
+X-Received: by 2002:a05:600c:1c0b:b0:488:b187:3c with SMTP id 5b1f17b1804b1-490426aa7acmr29440585e9.14.1779432359908;
+        Thu, 21 May 2026 23:45:59 -0700 (PDT)
+X-Received: by 2002:a05:600c:1c0b:b0:488:b187:3c with SMTP id 5b1f17b1804b1-490426aa7acmr29440265e9.14.1779432359533;
+        Thu, 21 May 2026 23:45:59 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490454ea134sm25438455e9.8.2026.05.21.23.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2026 23:45:59 -0700 (PDT)
+Message-ID: <e084200e670c3d7150ecb3085504d0e737ca4d0f.camel@redhat.com>
+Subject: Re: [PATCH] Re: Re: [RFC PATCH v2 04/10] rv/da: add pre-allocated
+ storage pool for per-object monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Wen Yang <wen.yang@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org
+Date: Fri, 22 May 2026 08:45:57 +0200
+In-Reply-To: <7917085b-fef1-4017-b289-eefe84332ff5@linux.dev>
+References: <668f83581c58644a84cab5e6736864a439bb8e28.camel@redhat.com>
+	 <20260515083002.106512-1-gmonaco@redhat.com>
+	 <6d2f3490-5e30-4966-a3cd-372a34e10ba2@linux.dev>
+	 <5183dc18d63b617ab0f19290e8a790fa6898f372.camel@redhat.com>
+	 <7917085b-fef1-4017-b289-eefe84332ff5@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: HR8KQzIr-qZbdtP9HqPdOpTFZBlvDRWJXRk1ERW8ILc_1779432360
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hi Wen,
 
-Add syntax to the parsing of eprobes to be able to typecast a trace event
-field that is a pointer to a structure.
+On Fri, 2026-05-22 at 01:40 +0800, Wen Yang wrote:
+> Hi Gabriele,=20
+>=20
+> No specific reason for REL_SOFT =E2=80=94 not intentional, reverting to=
+=20
+> REL_HARD.
+> =C2=A0
+> Reproduced the stall on the same config (PREEMPT_RT +=20
+> PROVE_LOCKING/PROVE_RCU).=20
+>=20
+> Root cause is a cleanup ordering bug in uprobe_detail_waiting.tc,=20
+> unrelated to REL_SOFT/REL_HARD:
+> =C2=A0
+>=20
+> =C2=A0=C2=A0 # original cleanup =E2=80=94 wrong order=20
+>=20
+> =C2=A0=C2=A0 echo "-${UPROBE_TARGET}:${start_offset}" > "$TLOB_MONITOR"=
+=C2=A0 # (A)=20
+>=20
+> =C2=A0=C2=A0 kill "$hog_pid"=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ # (B)=20
+>=20
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (A)=
+=20
+> triggers synchronize_srcu() in the kernel. But tlob_target is stuck=20
+> mid-uprobe_notify_resume holding an SRCU read lock, preempted by the=20
+> FIFO-99 hog -> so the reader never finishes and (B) is never reached.=20
+> rcuc/0 (a kthread on PREEMPT_RT) is also starved by the hog -> RCU stall.
 
-Currently, a dereference must be a number, where the user has to figure
-out manually the offset of a member of a structure that they want to
-dereference.
+great you found the issue and solution. Wonder why lockdep wasn't more
+informative, but probably the issue was so frequent to hog that too.
 
-But for event probes that records a field that happens to be a pointer to
-a structure, it cannot dereference these values with BTF naming, but
-must use numerical offsets.
 
-For example, to find out what device a sk_buff is pointing to in the
-net_dev_xmit trace event, one must first use gdb to find the offsets of the
-members of the structures:
+> =C2=A0=C2=A0 Fix: kill the hog first:=20
+> =C2=A0
+>=20
+> =C2=A0=C2=A0 kill "$hog_pid"; wait "$hog_pid"=20
+>=20
+> =C2=A0=C2=A0 echo "-${UPROBE_TARGET}:${start_offset}" > "$TLOB_MONITOR"=
+=20
+>=20
+>=20
+> On the PREEMPT_RT it is more reliably triggered there because rcuc/0
+> runs as a preemptible kthread rather than in softirq, making it easier
+> for the hog to monopolise the CPU long enough to hit the stall.
+>=20
+> Thank you for the thorough review and valuable suggestions. We are=20
+> working through all of them and running the full test suite.
+> We expect to post v3 within the next two days.
 
- (gdb) p &((struct sk_buff *)0)->dev
- $1 = (struct net_device **) 0x10
- (gdb) p &((struct net_device *)0)->name
- $2 = (char (*)[16]) 0x118
+Alright, sounds good.
 
-And then use the raw numbers to dereference:
-
-  # echo 'e:xmit net.net_dev_xmit +0x118(+0x10($skbaddr)):string' >> dynamic_events
-
-If BTF is in the kernel, then instead, the skbaddr can be typecast to
-sk_buff and use the normal dereference logic.
-
-  # echo 'e:xmit net.net_dev_xmit (sk_buff)skbaddr->dev->name:string' >> dynamic_events
-  # echo 1 > events/eprobes/xmit/enable
-  # cat trace
-[..]
-    sshd-session-1022    [000] b..2.   860.249343: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.250061: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.250142: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.263553: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.283820: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.302716: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.322905: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.342828: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.362268: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.382335: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.400856: xmit: (net.net_dev_xmit) arg1="enp7s0"
-    sshd-session-1022    [000] b..2.   860.419893: xmit: (net.net_dev_xmit) arg1="enp7s0"
-
-The syntax is simply: (STRUCT)(FIELD)->MEMBER[->MEMBER..]
-
-Also add comments around the #else and #endif of #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
-to know what they are for.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-
-Changes since v5: https://patch.msgid.link/20260519130144.40e71a00@fedora
-
-- Restructure parse_btf_arg() to only use typecast when TEVENT flag is set
-  (eprobes).
-
-- Move found_type label to still test for (!type) in case ctx->last_struct
-  is NULL for some reason.
-
-- Restructure the code to be more specific to when to use ctx->struct_btf
-  and use ctx->btf for places that the typecast will not be used.
-
-- Move parse_trace_event() function outside of BTF #ifdef as it is used
-  outside of it as well.
-
-- Move the code in the '(' switch statement into a helper function called
-  handle_typecast(). This will be a stub when BTF is not configured in.
-
-- Have the ctx->last_struct and ctx->struct_btf only set within the
-  handle_typecast() function, and have that function reset it too.
-
-- Add comments to the #else and #endif of the #ifdef
-  CONFIG_PROBE_EVENTS_BTF_ARGS to know what they are for.
-
- Documentation/trace/eprobetrace.rst |   4 +
- kernel/trace/trace_probe.c          | 171 +++++++++++++++++++++++-----
- kernel/trace/trace_probe.h          |   7 +-
- 3 files changed, 152 insertions(+), 30 deletions(-)
-
-diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
-index 89b5157cfab8..fe3602540569 100644
---- a/Documentation/trace/eprobetrace.rst
-+++ b/Documentation/trace/eprobetrace.rst
-@@ -46,6 +46,10 @@ Synopsis of eprobe_events
- 		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
-                   "string", "ustring", "symbol", "symstr" and "bitfield" are
-                   supported.
-+  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-+                  a pointer to STRUCT and then derference the pointer defined by
-+                  ->MEMBER. Note that when this is used, the FIELD name does not
-+                  need to be prefixed with a '$'.
- 
- Types
- -----
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index e0d3a0da26af..4a205cebda60 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -332,6 +332,25 @@ static int parse_trace_event_arg(char *arg, struct fetch_insn *code,
- 	return -ENOENT;
- }
- 
-+static int parse_trace_event(char *arg, struct fetch_insn *code,
-+			     struct traceprobe_parse_context *ctx)
-+{
-+	int ret;
-+
-+	if (code->data)
-+		return -EFAULT;
-+	ret = parse_trace_event_arg(arg, code, ctx);
-+	if (!ret)
-+		return 0;
-+	if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
-+		code->op = FETCH_OP_COMM;
-+		return 0;
-+	}
-+	/* backward compatibility */
-+	ctx->offset = 0;
-+	return -EINVAL;
-+}
-+
- #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
- 
- static u32 btf_type_int(const struct btf_type *t)
-@@ -376,11 +395,17 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
- 		&& BTF_INT_BITS(intdata) == 8;
- }
- 
-+static struct btf *ctx_btf(struct traceprobe_parse_context *ctx)
-+{
-+	return ctx->flags & TPARG_FL_TYPECAST ?
-+		ctx->struct_btf : ctx->btf;
-+}
-+
- static int check_prepare_btf_string_fetch(char *typename,
- 				struct fetch_insn **pcode,
- 				struct traceprobe_parse_context *ctx)
- {
--	struct btf *btf = ctx->btf;
-+	struct btf *btf = ctx_btf(ctx);
- 
- 	if (!btf || !ctx->last_type)
- 		return 0;
-@@ -554,22 +579,29 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 	struct fetch_insn *code = *pcode;
- 	const struct btf_member *field;
- 	u32 bitoffs, anon_offs;
-+	bool is_struct = ctx->flags & TPARG_FL_TYPECAST;
-+	struct btf *btf = ctx_btf(ctx);
- 	char *next;
- 	int is_ptr;
- 	s32 tid;
- 
- 	do {
--		/* Outer loop for solving arrow operator ('->') */
--		if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
--			trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
--			return -EINVAL;
--		}
--		/* Convert a struct pointer type to a struct type */
--		type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
--		if (!type) {
--			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
--			return -EINVAL;
-+		if (!is_struct) {
-+			/* Outer loop for solving arrow operator ('->') */
-+			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
-+				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-+				return -EINVAL;
-+			}
-+
-+			/* Convert a struct pointer type to a struct type */
-+			type = btf_type_skip_modifiers(btf, type->type, &tid);
-+			if (!type) {
-+				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-+				return -EINVAL;
-+			}
- 		}
-+		/* Only the first type can skip being a pointer */
-+		is_struct = false;
- 
- 		bitoffs = 0;
- 		do {
-@@ -580,7 +612,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 				return is_ptr;
- 
- 			anon_offs = 0;
--			field = btf_find_struct_member(ctx->btf, type, fieldname,
-+			field = btf_find_struct_member(btf, type, fieldname,
- 						       &anon_offs);
- 			if (IS_ERR(field)) {
- 				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-@@ -602,7 +634,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 				ctx->last_bitsize = 0;
- 			}
- 
--			type = btf_type_skip_modifiers(ctx->btf, field->type, &tid);
-+			type = btf_type_skip_modifiers(btf, field->type, &tid);
- 			if (!type) {
- 				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
- 				return -EINVAL;
-@@ -627,6 +659,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 	return 0;
- }
- 
-+
- static int __store_entry_arg(struct trace_probe *tp, int argnum);
- 
- static int parse_btf_arg(char *varname,
-@@ -640,7 +673,7 @@ static int parse_btf_arg(char *varname,
- 	int i, is_ptr, ret;
- 	u32 tid;
- 
--	if (WARN_ON_ONCE(!ctx->funcname))
-+	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT)))
- 		return -EINVAL;
- 
- 	is_ptr = split_next_field(varname, &field, ctx);
-@@ -653,6 +686,20 @@ static int parse_btf_arg(char *varname,
- 		return -EOPNOTSUPP;
- 	}
- 
-+	if (ctx->flags & TPARG_FL_TEVENT) {
-+		int ret;
-+
-+		ret = parse_trace_event(varname, code, ctx);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ctx->flags & TPARG_FL_TYPECAST) {
-+			type = ctx->last_struct;
-+			goto found_type;
-+		}
-+		return 0;
-+	}
-+
- 	if (ctx->flags & TPARG_FL_RETURN && !strcmp(varname, "$retval")) {
- 		code->op = FETCH_OP_RETVAL;
- 		/* Check whether the function return type is not void */
-@@ -709,6 +756,7 @@ static int parse_btf_arg(char *varname,
- 
- found:
- 	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
-+found_type:
- 	if (!type) {
- 		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
- 		return -EINVAL;
-@@ -727,7 +775,7 @@ static int parse_btf_arg(char *varname,
- static const struct fetch_type *find_fetch_type_from_btf_type(
- 					struct traceprobe_parse_context *ctx)
- {
--	struct btf *btf = ctx->btf;
-+	struct btf *btf = ctx_btf(ctx);
- 	const char *typestr = NULL;
- 
- 	if (btf && ctx->last_type)
-@@ -758,7 +806,70 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
- 	return 0;
- }
- 
--#else
-+static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
-+{
-+	int id;
-+
-+	if (!ctx->struct_btf) {
-+		struct btf *btf;
-+
-+		id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
-+		if (id < 0)
-+			return id;
-+		ctx->struct_btf = btf;
-+	} else {
-+		id = btf_find_by_name_kind(ctx->struct_btf, sname, BTF_KIND_STRUCT);
-+		if (id < 0)
-+			return id;
-+	}
-+
-+	ctx->last_struct = btf_type_by_id(ctx->struct_btf, id);
-+	return 0;
-+}
-+
-+static int handle_typecast(char *arg, struct fetch_insn **pcode,
-+			   struct fetch_insn *end,
-+			   struct traceprobe_parse_context *ctx)
-+{
-+	char *tmp;
-+	int ret;
-+
-+	/* Currently this only works for eprobes */
-+	if (!(ctx->flags & TPARG_FL_TEVENT)) {
-+		trace_probe_log_err(ctx->offset, TYPECAST_NOT_EVENT);
-+		return -EINVAL;
-+	}
-+
-+	tmp = strchr(arg, ')');
-+	if (!tmp) {
-+		trace_probe_log_err(ctx->offset + strlen(arg),
-+				    DEREF_OPEN_BRACE);
-+		return -EINVAL;
-+	}
-+	*tmp = '\0';
-+	ret = query_btf_struct(arg + 1, ctx);
-+	*tmp = ')';
-+
-+	if (ret < 0) {
-+		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
-+		ret = -EINVAL;
-+		goto out_put;
-+	}
-+
-+	ctx->flags |= TPARG_FL_TYPECAST;
-+	tmp++;
-+
-+	ctx->offset += tmp - arg;
-+	ret = parse_btf_arg(tmp, pcode, end, ctx);
-+	ctx->flags &= ~TPARG_FL_TYPECAST;
-+	ctx->last_struct = NULL;
-+out_put:
-+	btf_put(ctx->struct_btf);
-+	return ret;
-+}
-+
-+#else /* !CONFIG_PROBE_EVENTS_BTF_ARGS */
-+
- static void clear_btf_context(struct traceprobe_parse_context *ctx)
- {
- 	ctx->btf = NULL;
-@@ -794,7 +905,15 @@ static int check_prepare_btf_string_fetch(char *typename,
- 	return 0;
- }
- 
--#endif
-+static int handle_typecast(char *arg, struct fetch_insn **pcode,
-+			   struct fetch_insn *end,
-+			   struct traceprobe_parse_context *ctx)
-+{
-+	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
-+	return -EOPNOTSUPP;
-+}
-+
-+#endif /* CONFIG_PROBE_EVENTS_BTF_ARGS */
- 
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 
-@@ -953,18 +1072,9 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
- 	int len;
- 
- 	if (ctx->flags & TPARG_FL_TEVENT) {
--		if (code->data)
--			return -EFAULT;
--		ret = parse_trace_event_arg(arg, code, ctx);
--		if (!ret)
--			return 0;
--		if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
--			code->op = FETCH_OP_COMM;
--			return 0;
--		}
--		/* backward compatibility */
--		ctx->offset = 0;
--		goto inval;
-+		if (parse_trace_event(arg, code, ctx) < 0)
-+			goto inval;
-+		return 0;
- 	}
- 
- 	if (str_has_prefix(arg, "retval")) {
-@@ -1231,6 +1341,9 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 				code->op = FETCH_OP_IMM;
- 		}
- 		break;
-+	case '(':
-+		ret = handle_typecast(arg, pcode, end, ctx);
-+		break;
- 	default:
- 		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
- 			if (!tparg_is_function_entry(ctx->flags) &&
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 262d8707a3df..952e3d7582b8 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -394,6 +394,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
-  * TPARG_FL_KERNEL and TPARG_FL_USER are also mutually exclusive.
-  * TPARG_FL_FPROBE and TPARG_FL_TPOINT are optional but it should be with
-  * TPARG_FL_KERNEL.
-+ * TPARG_FL_TYPECAST is set if an argument was typecast to a structure.
-  */
- #define TPARG_FL_RETURN BIT(0)
- #define TPARG_FL_KERNEL BIT(1)
-@@ -402,6 +403,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
- #define TPARG_FL_USER   BIT(4)
- #define TPARG_FL_FPROBE BIT(5)
- #define TPARG_FL_TPOINT BIT(6)
-+#define TPARG_FL_TYPECAST BIT(7)
- #define TPARG_FL_LOC_MASK	GENMASK(4, 0)
- 
- static inline bool tparg_is_function_entry(unsigned int flags)
-@@ -422,7 +424,9 @@ struct traceprobe_parse_context {
- 	const struct btf_param *params;	/* Parameter of the function */
- 	s32 nr_params;			/* The number of the parameters */
- 	struct btf *btf;		/* The BTF to be used */
-+	struct btf *struct_btf;		/* The BTF to be used for structs */
- 	const struct btf_type *last_type;	/* Saved type */
-+	const struct btf_type *last_struct;	/* Saved structure */
- 	u32 last_bitoffs;		/* Saved bitoffs */
- 	u32 last_bitsize;		/* Saved bitsize */
- 	struct trace_probe *tp;
-@@ -563,7 +567,8 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
- 	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
- 	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
--	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),
-+	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),  \
-+	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),
- 
- #undef C
- #define C(a, b)		TP_ERR_##a
--- 
-2.53.0
+Thanks,
+Gabriele
 
