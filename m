@@ -1,136 +1,109 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDE23630AD;
-	Fri, 22 May 2026 14:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31AD37F8AC;
+	Fri, 22 May 2026 14:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779460622; cv=none; b=OG5GmD/63BI4WzpISXFWN9R+/F/diX6G/J1N3+iCdH71foo5ijWu42I4NcLLcrb/LUSuuK2e2t4U1EzQXmyDJzhscCqCtipefxP6Dlrgzs+Y6wgE+WEIPLg5ZI7GMID84TsZmzNJUVIYYXHyAsdPf7QvcaR8sz1s9ynzqo8kLk8=
+	t=1779461103; cv=none; b=on4EIWCi1fv0Xu6Ml2GLcX8dlYyZQyTb2a1f44sp5/j/f++yOZigqYSYNVPn2PVzDYRGkz1ZO2Co3YT/ogKOmTJDdaF3ne+MlUT7OEWvpyVEOBmWhYa5lFcGgXrrgHnf77DFnCVkWIMyha5Xdw2cCESf0ZniwZ6I9clKn6sk4Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779460622; c=relaxed/simple;
-	bh=FXCPyGLE1CeqNu190mNEcpSSRAcm9KEMFVeAYQWV9hU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sDgdbxYmXeA6RThsRZ0aY/hs5uwueSdSCNQZFufPMoKmjF98ygAwXZU1VZoBm67avDxnyO/dSFzTIJ/H6nUWfs3lsRACRu+e7jdkhBd06SZnoqNdbfimWb9CLzY8l+aDRkC8q0yzDcKKKe1/EQr2H32w7mWF3/gSwhHNiPVsa74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=DC/A+e67; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	s=arc-20240116; t=1779461103; c=relaxed/simple;
+	bh=CdLEo+ax1C9GSpVzhZDopuh9TX3AWdjXHO9wbDfoM6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XhiU99M6suYUiOTUEDDnbRPugTCJL6JnQdZOQPewtUSoNytubhjHcWD3OwjJ0svP/BNyi64hqGyJ7xz7ozTl/0L7dJkASbZMZnyJaSiJ9OjzflL9iofbYnvgCf21o/ZMiMi0yNuUL9VqWD4oseZA6WEY92SRDSqwFpzPhfO4eYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6KiomUF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="DC/A+e67"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1779460616; bh=FXCPyGLE1CeqNu190mNEcpSSRAcm9KEMFVeAYQWV9hU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DC/A+e67LHSQkJkagoTuL5Xa/HLBYp4Qm0GxjJMsE6LV1B539/rSSnrCbpMR7QJD0
-	 Dw2R8XToKMPWRRvNdrVJj/EZGPZZu9gC9zINu198J9hb7uRv9G+fkp7uQKOYmkYNvR
-	 VXtqd+vK68wKbA1wt+rTlGXy+b2hDlMGD0Dw60/k=
-Date: Fri, 22 May 2026 16:36:56 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Carlos O'Donell <codonell@redhat.com>, Sam James <sam@gentoo.org>, Dylan Hatch <dylanbhatch@google.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH] unwind: Add sframe_(un)register() system calls
-Message-ID: <7923f815-a8ce-4b64-8cbf-2b90e57cbd24@t-8ch.de>
-References: <20260521183532.7a145c8a@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6KiomUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0391F000E9;
+	Fri, 22 May 2026 14:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779461100;
+	bh=MH216XXgrREg/PBBIQe92jArAeQbIbepqZdPmraWA5g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=A6KiomUFdxRMqA5XHWbscp/Kx2YUwVdETQWDXYl/GrIA8Dznwo/6TG9TBLhR7mBeO
+	 8GWhuERm7oOkVMPMI45Z3OH6GvNvZujbtGes1/kqfY/IWiiBmjxoQa9clNGRrDedUQ
+	 MxJmhC0YKXwxyy0VjTDbs18S4nLMPr0ZAJ9xQ5jMKidww79a+xmiKx4kOEMWCO1Knl
+	 0Mw1qvUg23vZ7cS6MzAlQaWXgsSDFGIKGcTg3D/JGmOTq/BHfd5WYaS3xYLYaiPgvT
+	 0WaPS6+q2O1nXGN2tTwBGS7JZjnVCieNb7jNOF1Mfk9Z5IEM31RF9he957IB+qfUuG
+	 bk5XtanY9OOHA==
+Date: Fri, 22 May 2026 10:45:21 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
+ Takaya Saeki <takayas@google.com>, Douglas Raillard
+ <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
+ Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>,
+ "sashiko-bot@kernel.org" <sashiko-bot@kernel.org>,
+ "sashiko-reviews@lists.linux.dev" <sashiko-reviews@lists.linux.dev>
+Subject: Re: [PATCH v6] tracing/eprobes: Allow use of BTF names to
+ dereference pointers
+Message-ID: <20260522104521.74981686@gandalf.local.home>
+In-Reply-To: <20260522072322.18aa72dd@gandalf.local.home>
+References: <20260521225033.56458336@fedora>
+	<20260522072322.18aa72dd@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260521183532.7a145c8a@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2026-05-21 18:35:32-0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, 22 May 2026 07:23:22 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> > > @@ -653,6 +686,20 @@ static int parse_btf_arg(char *varname,
+> > >  		return -EOPNOTSUPP;
+> > >  	}
+> > >  
+> > > +	if (ctx->flags & TPARG_FL_TEVENT) {
+> > > +		int ret;
+> > > +
+> > > +		ret = parse_trace_event(varname, code, ctx);
+> > > +		if (ret < 0)
+> > > +			return ret;  
 > 
-> Add system calls to register and unregister sframes that can be used by
-> dynamic linkers to tell the kernel where the sframe section is in memory
-> for libraries it loads.
+> > When parse_trace_event() returns a negative error code (such as -EINVAL or
+> > -ENOENT) because a field name is invalid, the error is propagated back up
+> > the stack. Does this path miss calling trace_probe_log_err()? 
+> > If so, users might receive a generic failure without context or a caret
+> > pointing to the specific syntax error.  
+> 
+> Hmm, there's a comment in the parse_trace_event() that sets ctx->offset for
+> backward compatibility. I'll investigate to see if we can fix that now.
 
-How is this system call related to the prctl() with the same
-functionality from Jens' series? I guess it will replace it,
-but some explanation would be nice.
+Masami,
 
-(...)
+I looked at the code for parse_trace_event() that has:
 
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index f5639d5ac331..992ccc401c5e 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -999,6 +999,8 @@ asmlinkage long sys_lsm_get_self_attr(unsigned int attr, struct lsm_ctx __user *
->  asmlinkage long sys_lsm_set_self_attr(unsigned int attr, struct lsm_ctx __user *ctx,
->  				      u32 size, u32 flags);
->  asmlinkage long sys_lsm_list_modules(u64 __user *ids, u32 __user *size, u32 flags);
-> +asmlinkage long sys_sframe_register(void *data, unsigned int size);
-> +asmlinkage long sys_sframe_unregister(void *data, unsigned int size);
+	/* backward compatibility */
+	ctx->offset = 0;
+	return -EINVAL;
 
-Why not use the actual structure here?
+And it was originally introduced by commit 1b8b0cd754cd ("tracing/probes:
+Move event parameter fetching code to common parser"), with:
 
->  /*
->   * Architecture-specific system calls
++               ret = parse_trace_event_arg(arg, code, ctx);
++               if (!ret)
++                       return 0;
++               if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
++                       code->op = FETCH_OP_COMM;
++                       return 0;
++               }
++               /* backward compatibility */
++               ctx->offset = 0;
++               goto inval;
++       }
++
 
-(...)
 
-> diff --git a/include/uapi/linux/sframe.h b/include/uapi/linux/sframe.h
-> new file mode 100644
-> index 000000000000..137a2ebf91f4
-> --- /dev/null
-> +++ b/include/uapi/linux/sframe.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-> +#ifndef _UAPI_LINUX_SFRAME_H
-> +#define _UAPI_LINUX_SFRAME_H
-> +
-> +struct sframe_setup {
-> +	unsigned long		sframe_start;
-> +	unsigned long		sframe_size;
-> +	unsigned long		text_start;
-> +	unsigned long		text_size;
-> +};
+What was the reason for the "backward compatibility"? Can we make it a real
+error now?
 
-This will break for compat processes, as they use a different 'unsigned
-long' than the host kernel. Maybe just use __u64.
-
-> +
-> +#endif /* _UAPI_LINUX_SFRAME_H */
-
-(...)
-
-> +/**
-> + * sys_sframe_register - register an address for user space stacktrace walking.
-> + * @data: Structure of sframe data used to register the sframe section
-> + * @size: The size of the given structure.
-> + *
-> + * This system call is used by dynamic library utilities to inform the kernel
-> + * of meta data that it loaded that can be used by the kernel to know how
-> + * to stack walk the given text locations.
-> + *
-> + * Return: 0 if successful, otherwise a negative error.
-> + */
-> +SYSCALL_DEFINE2(sframe_register, __user struct sframe_setup *, data, unsigned int, size)
-
-AFAIK the normal place for the '__user' is right before '*':
-
-	struct sframe_setup __user *, data,
-
-Use __kernel_size_t for 'size'?
-
-> +{
-> +	struct sframe_setup sframe;
-
-(...)
+-- Steve
