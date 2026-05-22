@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE1F33A6F2;
-	Fri, 22 May 2026 21:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C856C306742;
+	Fri, 22 May 2026 21:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779486730; cv=none; b=rUXevWxjkI6REoLyki19ED2OWMqX0nkiojnz7MWFiXCiZb4c4gh+MqWDgWydrz01PtSxB7cVIP1fX+6lfEGGP+GI469K+TgZy2xARYsN8uNnX/E90kRNWtZlJkXlG1QZBKKemIr8C2RpP+Dg2VWaofbyUkeYE5tSL6T2Sqlmx/c=
+	t=1779487156; cv=none; b=H9UyKLY/U8/x7s+45t80V/KL/F4BqUNgJpa12nNBsG5rn4CGfzbHh06GNUxTtXRoWF+OzBtVtffzHr2abdihac8ezDty0EeBNOhS14Z/2G/IWji6EusOZWYo4Ag9ItDEbj008Og2HdkWLDArXMpWW6WAXnWbFU0tydv1+BGuHw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779486730; c=relaxed/simple;
-	bh=X0hD17+JbLsaNSa9yY/2I/Yjtt5uiV14riR3BO6HEo0=;
+	s=arc-20240116; t=1779487156; c=relaxed/simple;
+	bh=NkNOcxD6DLIrr69bs8UBm9hSwKsinFHmc2qoQm33GkI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=if4LJDsBTtwJPRQt9mfX/IpGCPrj0XX3deeFi30UJHlQZJ/SkAPLKu6O3KIa4l7IBzqhZYHMt8iUJPX/NqqOrvl7+6lUiegIbYo/JNnVW8GUIhe0Ovqdm+wK1bAi+12yf9O8R/N9Ac7oOc+JMOSIu9CfGIaItNRc+JqTx/ZFI1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBit5RGA; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=iB6VChlrGEgKPhhdroSDRbd4UeKunmzW2ECgCFKUg2DRSrdunWFC0iLtqiKFMnnzqUlN/Wzx7xOLPIPB/2B0KXdR2g1HUsvQaOmsF6ZTqPX/fzEa6gFsvvB7x+IchUMx1rdxDzzc3c9/ptvtArwdIR4ifU3IXIIComt+TMF+f1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYAaq802; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBit5RGA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47E11F000E9;
-	Fri, 22 May 2026 21:51:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYAaq802"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830F51F000E9;
+	Fri, 22 May 2026 21:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779486728;
-	bh=eApYXU+swQ/aSMT4+a9qbCpi/b8FjdNDOxy/EU7ZU2c=;
+	s=k20260515; t=1779487155;
+	bh=Jr/Z2AKz/S6GO5hNUPCMB+wOkCX8/5qQhPyUJDn/qd0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GBit5RGATOfbr5x1B8Iah9ZKcHyEC4nw1LQkzGQ1ljV+PUlp0sDeFbRMge8ndkD2N
-	 5hbxQmyDKoxzBT2A2WOm3msxhnQSIeFA1rxJEhBh1tS5fsrRP34troIl8gB8dwVSSy
-	 n7incecVx0eMXZzVx1M2WyuUX2wzl1KEGQyLqwcbXO5cLbzciDNnFyGrRMSJQ6Iv3u
-	 in+lJV5CbLbY5Vjz8OaHzoxOFZhQr3IBXF8Ojv4ugrXTIjR/CA64ZAImWeduGj97uq
-	 OswYEX7Pt1D2sTAFTHfmYgA4cGgJINi19f3moklhfuUcALrBsmn1Fmc4GXGXoVGWPL
-	 o6612VYwIJr7A==
-Message-ID: <f8b8e2c5-34fc-4dee-bd18-41101e859cb7@kernel.org>
-Date: Fri, 22 May 2026 23:51:52 +0200
+	b=EYAaq802O2za9BCFbi4Cl+SfNKnQlkvaAfjcYaiPPCp/SLXcgTk2WxuFGNK4P7Vtm
+	 58kRCm6uAsnRbVMHG24BLYCP8pT1OQWsjYwelrK5wU2OE9cVMEIxP994QK0VEj7OWP
+	 ZrxeicvQHidzeg1aJp5NkML6Man4qqdbQEdvbLQGx/mc7to2/AEmHe7SildFkaC0ZS
+	 wd76BFBYJeDXmYJDMCcekBFIf94k8AbcgfeXG/GV539bRLikd2C3RzglpxWPVtXMUJ
+	 xekiBJoZHOUHKIkirn961KEs58FLMF2NVuDTM+Hw3zX00254bIEv4I12WmsihPKjsv
+	 I2YIuvCjeb3Cw==
+Message-ID: <94f759f8-e2ed-4f22-b9e7-4693ad005509@kernel.org>
+Date: Fri, 22 May 2026 23:58:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v18 07/14] mm/khugepaged: skip collapsing mTHP
- to smaller orders
+Subject: Re: [PATCH mm-unstable v18 14/14] Documentation: mm: update the admin
+ guide for mTHP collapse
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -57,9 +57,9 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
  will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
- Usama Arif <usama.arif@linux.dev>
+ Bagas Sanjaya <bagasdotme@gmail.com>
 References: <20260522150009.121603-1-npache@redhat.com>
- <20260522150009.121603-8-npache@redhat.com>
+ <20260522150009.121603-15-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -106,25 +106,24 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260522150009.121603-8-npache@redhat.com>
+In-Reply-To: <20260522150009.121603-15-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/22/26 17:00, Nico Pache wrote:
-> khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
-> some pages being unmapped. 
 
-The "some pages being unmapped" part is unclear.
+>  
+>  process THP controls
+> @@ -264,11 +265,6 @@ support the following arguments::
+>  Khugepaged controls
+>  -------------------
+>  
+> -.. note::
+> -   khugepaged currently only searches for opportunities to collapse to
+> -   PMD-sized THP and no attempt is made to collapse to other THP
+> -   sizes.
 
-I assume what you mean is "possibly resulting in a partially mapped source
-folio, which is undesired."
-
-But there is also the problem that we could try collapsing a folio to a
-same-sized folio, which doesn't make sense (assuming the folio is fully mapped).
-
-Clarify all that, please.
-
-Acked-by: David Hildenbrand (arm) <david@kernel.org>
+Should we maybe leave this here and clarify that for file/shmem, it will still
+only collapse to PMD-sized THPs?
 
 -- 
 Cheers,
