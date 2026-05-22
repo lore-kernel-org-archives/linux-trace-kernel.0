@@ -1,88 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689B644D681;
-	Fri, 22 May 2026 15:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AA63438B8
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 15:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779463038; cv=none; b=ZxWx5Crrv03anxPPW1NGDgRejA38JXbsPzI5v2mgRfCPido1sA7BRbi5QtyLR84IIwxBZwWsQkxfgjyDDFdAveyoOgTaODMDVlWUikPM2U7WMu8DjYQv36TTC0WruAKYu9xi8qObHnhcZI22hA6+r+wXC/BtR58MwPW/51D3WMM=
+	t=1779463289; cv=none; b=BJDxzWq6kUfrRLZs1SuA4MH+I/knrcSBqkYHgqG9X19YAMdSZhNs+wfwaSDE/joXfMRg/37KAPzxVKdoClXaP+KDfu+UY0UkoMN8D5v4EX1eG1+TArybVH1xYjE1u2tnI8WW6kXhHCqlzN5qPPP+NusF4k3nmK4/Sp/ykN1So/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779463038; c=relaxed/simple;
-	bh=IBsvFhUx7DS38QNIm3xpHJAHnKglEvOlaw57vqv6PFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qj+7zk8dLVPqQQvt5LnayIJed0zv50aN1TYUxPCvl+eWRFnLlQW8aUntgbpn0YE7x9bC5Yecp47XIGXePLyvsgMvU6XppY3AGnOPtAglZ8daOKS4sSXfkQ1GB4vXHeqb5nEZM5lM4rZGAnipHkGbZsP8gYZr2qAnUJU5xtl0FDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPFVnJV2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779463289; c=relaxed/simple;
+	bh=z+KN1hokHi6Q/XNg3KAJNred3OrTqoLZzjD8EF+9/Hw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dgCtVnmVVpjvBSlyk4KOHCLO1jPP+O7Er1RoabgTXgT+IUAxNfJxFrjKwJMkgSuG0iytYtHZOK7V0+r7yqdxx7i6EyyWjMkAlM9uHHOc8SFAUGMvzfBYiwzMNakAlzjWZHiwKJoALtE+eiGaMMuE192v0ncdU16k7rRvW2XVWxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=L0U28bH6; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=L0U28bH6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPFVnJV2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F5F1F000E9;
-	Fri, 22 May 2026 15:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779463030;
-	bh=IBsvFhUx7DS38QNIm3xpHJAHnKglEvOlaw57vqv6PFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=NPFVnJV2aGaaQ7+gUElo5SjZoXRihKPy13sFa36i3fOouejoHK0Jj3X/OoG+3IKQB
-	 w6PBonP+kRBXydLxpJX6HHG15vaVqRY5iES7/+nv42Dn4qnqgiuoGDULeX2ZOtEII7
-	 HwTDUw3Ir73SHqdpMIZDCMU6/ngtdFjB3UEIWN5CJV4UdSZckRyaKuI/wEAkgUGcaA
-	 PPqwJOKQ6N+k3PuIAjBeqwjUyNzYgyTPzFo4sZaHTiQFXeCWpqqAahpKXPiF1i47Wr
-	 wRgxjS4N1mttbsjv6e0BTtBb25f4AxpKcxOtHjJISYWseXSvTGff3gYuTIMlIHllek
-	 26357kKMZzdkA==
-Date: Fri, 22 May 2026 16:16:55 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
-	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
-	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
-	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
-	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
-	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
-	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
-	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
- collapse support
-Message-ID: <ahByO_HWn6MB8z-u@lucifer>
-References: <20260522150009.121603-1-npache@redhat.com>
- <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="L0U28bH6";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="L0U28bH6"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1E4E66BA54;
+	Fri, 22 May 2026 15:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1779463278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=DcTkyafxokIFyx7B8h9+YsS080oy1Spc+V4mEk4KkX8=;
+	b=L0U28bH6eorjODrOXfO400tSigfB7RM6UK/gMxi7NDlPJF+I01yseTFkVqzgPp0k/JxLpI
+	vSS4JEbMX5MfWkkWQazlEgoik7Pd0dmC3q1mAbLSx8k1viSY+wwjyyVdlKc+zKEib48ZJG
+	Fpd3J8/HhlPRUQUfDxcVZ2HueVl1UPs=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1779463278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=DcTkyafxokIFyx7B8h9+YsS080oy1Spc+V4mEk4KkX8=;
+	b=L0U28bH6eorjODrOXfO400tSigfB7RM6UK/gMxi7NDlPJF+I01yseTFkVqzgPp0k/JxLpI
+	vSS4JEbMX5MfWkkWQazlEgoik7Pd0dmC3q1mAbLSx8k1viSY+wwjyyVdlKc+zKEib48ZJG
+	Fpd3J8/HhlPRUQUfDxcVZ2HueVl1UPs=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B9B40593A8;
+	Fri, 22 May 2026 15:21:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ficyLG10EGp9HwAAD6G6ig
+	(envelope-from <jgross@suse.com>); Fri, 22 May 2026 15:21:17 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	xen-devel@lists.xenproject.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH 0/3] x86/xen: Do some Xen-PV related cleanups
+Date: Fri, 22 May 2026 17:21:11 +0200
+Message-ID: <20260522152114.77319-1-jgross@suse.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On Fri, May 22, 2026 at 09:07:29AM -0600, Nico Pache wrote:
-> Whoops I manually changed the coverletter subject to reflect that this
-> in on mm-hotfixes-unstable but never updated the others...
->
-> Hopefully that is ok. Just a small mistake. Base commit is referenced here.
+Cleanups related to Xen PV mode.
 
-It's not ok, this isn't suitable for a hotfix in any way shape or form?
+Note that patch 3 might be debatable.
 
-As you know, because we told you :) May has been difficult because of
-conferences, holidays (and in my case burnout recovery).
+Juergen Gross (3):
+  x86/xen: Guard PV-only stuff in xen-ops.h with CONFIG_XEN_PV
+  x86/xen: Cleanup Xen related trace points
+  x86/xen: Remove Xen debugfs support
 
-And unfortunately the series seems to have needed quite a bit of review again
-(my suggestion to you would be to ensure you don't make major changes, only
-small incremental ones on the basis of review feedback).
+ arch/x86/xen/Kconfig       |   7 --
+ arch/x86/xen/Makefile      |   2 -
+ arch/x86/xen/debugfs.c     |  16 ---
+ arch/x86/xen/mmu_pv.c      |   8 ++
+ arch/x86/xen/p2m.c         |  45 -------
+ arch/x86/xen/xen-ops.h     | 242 ++++++++++++++++++-------------------
+ include/trace/events/xen.h |  62 +---------
+ 7 files changed, 126 insertions(+), 256 deletions(-)
+ delete mode 100644 arch/x86/xen/debugfs.c
 
-So this isn't viable for 7.2, and we'll have to target 7.3. Therefore there
-was no rush.
+-- 
+2.54.0
 
-Also please don't spring a respin on this series on us without discussion
-first, with people away and (frankly) the amount of work involved here,
-you're going to have to accept the pace that workload/availability permits.
-
-Adding spurious hotfixes tags doesn't help anything :) please don't do that
-again.
-
-Thanks, Lorenzo
