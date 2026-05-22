@@ -1,226 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDCB372675;
-	Fri, 22 May 2026 17:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779469981; cv=none; b=YHPApOH2P8vnqvNKSHhRQKmxzS+SX/H/rnhsiUEcw/TSgxDf5m5Vo8BpUD884naFeuxkGH3NbVWN7ufPHkxS9CnedhAsZj7U3YcDvfq2NVhf2SbjcPIJ8F2H1JaYi9PPniffhhhGQ1VTIW+mny6K7JGxGTHZ0ouoyrYnWJ/cL/o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779469981; c=relaxed/simple;
-	bh=27h0jJZ7w7I8jAScI48gEhMwRLBkmhtjZjLyPmjs3Hg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZGjZZqilBlKVOiohoGc90313feT0tJUO+iOif5lUmVcxeVkxzx77Ow7tOsJgqpfakCtO8cQCZ+LfKQVcGJj2S/tyyy8yy3l1mFkuoJgOecriCEp4huqfA6gdBnOEOjw/9p9wDpfJMvUS+nyaUBLMDtAaCgmhHhyuK5kzdX0iVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rwju4gJq; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8357D2BF3F4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 18:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779475867; cv=pass; b=LL10JmC7hT04PA6YVuwLspaIW8yrYufLTPEbPvmmEfgRCnWrHA3rnfHj2nLwNQLD3D7fruPY4pHxp0wP755Ko0Zep5Xp+AHDIck0ab0JTgBOpjGnGqMmZWKLK1DmmxoTl8npN7I7BNa26ZoXdsuGSw73xIsONBQcWr91UZLVwSI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779475867; c=relaxed/simple;
+	bh=OaALwqh6GrwITp0qLR++BQAq/ci4DJlYX8wBhLOC/Wk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cR4qnJP0F473e/GF57JER8KMoqzFtNI256Xi+nDjL1B5Ip0ZsauIuABIUYmfgBUhHNZDizH6K2qFDQebkp4IROHndrgEf89jNIwlinnDk6vE5B6W0QV0tJISJn9wYyh4hb7FtHADQb+djIoYd4tUJT9r5xyLsaDk9AXneWDosI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lb97WR2E; arc=pass smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rwju4gJq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0BE1F000E9;
-	Fri, 22 May 2026 17:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779469980;
-	bh=xiyUFzZqN9pslbNTfSLwhf195Bg0GoCgngfEHT8mMw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Rwju4gJqo6X1kuG/alZGdb8qj4XKrN6BeadFhi6a0JPO+wNw1dtRc2RLZg5P6ha2d
-	 XqclErO1kvpWmoLCalNTwEUA9/C0qUpSHHOQFnGNMmqfdsap2UB5iBMMOBZRIcTQbl
-	 OqqpJ270JMx3f3360gBWgYv0gFL+Q2R506NoBgZWcUzoQwyXvOuwIXk53kY+DcK9mg
-	 ZaleTCjdvABCBuqe6tAC5FtnGGM/7UQqzM5z3gha9yX4WQrWhvQ80Fnox7mFoqSI/o
-	 FYJddHUP8I5dbmiFUqHx3lASyRJ/zyQ+AqcXMj0lhFtgUXOalRWryX6DuxwmlU1RBt
-	 ZVtnlemjeZ6ww==
-Date: Fri, 22 May 2026 18:12:45 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
-	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
-	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
-	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
-	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
-	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
-	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
-	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
- collapse support
-Message-ID: <ahCFIDuyrvEfB9jv@lucifer>
-References: <20260522150009.121603-1-npache@redhat.com>
- <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
- <ahByO_HWn6MB8z-u@lucifer>
- <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
- <ahB_hae8coGvf12Z@lucifer>
- <CAA1CXcCoyGzEyeFPW+zKiA2AOj=0Lm7R=odLtVru+dQa0P_2cQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lb97WR2E"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2bc7b311e77so35126055ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 11:51:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779475864; cv=none;
+        d=google.com; s=arc-20240605;
+        b=azxoneUoHVO66ZuTwY2ll8i46OHcbXfdBhf5y8+p4f/l6tngsXwdWUCk9RLms/nFfY
+         yVO9SXyT4uDot7X1MFs1K2KRU5aeqi4i5+SiHiFeej6fc4hZR+sDsP5L+MmGAitXJZJh
+         6g7jRNH6cURGJGEyQOWMOsbhA0LQ+B4mNJwCEEhwTyNjstjR3X+mg/FSoRyD+OIP2d0Y
+         jByOYHuuimE3NESE8V/YfVe3d0rh0+lg9uuWiUzlek7+m3VD3xdpFZQ8Ttsrk9ZSuRHH
+         YvR8MURFYRz5AF9TK3jilDFHuxuW8krgrvd1Uetk45YivW5fUVYFQRNIu4WT7cMsWV1H
+         liJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=VPzzgffWs9qzaB/mfNK8xnWAoRUsUOJgdkkCUkU1frU=;
+        fh=ZeD580Xca2M7iDR+7NQDrJ1c78Sv6BbjQIAwn/OUYYE=;
+        b=bsi5NmjSIjlE/Xcx2a1+O77MdG7dk9gvGMxHAW3zOxhf0bkCuq4Cmy8//k5PANkTg5
+         30NbFgrKQXGa0MtMRQCv4JzZikw/TJrvza4Vapse5IAXN/2/nRf3sUSuOYhPbHlUcd97
+         Yrgs/WvyXSoo2HYJtxei7mLFoehXJIsJW39+S1nn+ZznsKohXCd2m1xRkWrgn7F8F05y
+         SPWsXBZdoeh6P13jTf3KYmT9cD1AjlVRNlw2hkPkQoutaJN4ekyTvJUdYLGuYkUnUJfQ
+         xQgeapIXGdoj2QMtv0sBw2UI6Jogad/8pauPXLlkIlFLAz1tQKymuHu6gBHRGnLPgyXF
+         Hcmg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779475864; x=1780080664; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VPzzgffWs9qzaB/mfNK8xnWAoRUsUOJgdkkCUkU1frU=;
+        b=lb97WR2EcPPSjSWOmKPL3Ujgp9rasNFfyjV+lO95azj2wsQDYle5duHJ44qR6Ykxjk
+         DRep0zvpuXbYq9lsv4x2CG2uaUbtOAp0ZyaB7ODwxpx/Tl4ObD5ZyhC5pM1I1XPnQyM5
+         Ywrqf3tK6QQ58jZVOVZ5tYbilQJFNwmVJ/tGL9fBGl9ntK3wrmAZPIfpm70SYabN4XsD
+         eMZHYHlyRP1dMyBbmnMWYKTKRKp9ubImQjFTTOlYfV0eXMf6RhU/JiymGVR0raO/ntnv
+         M4zVxfvlQU1XXXRctCzixVTVVrv8hc4Mp3cDqM58qFuHCBRK4h0nbSZ+qQ6LPNzmrHu1
+         99mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779475864; x=1780080664;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VPzzgffWs9qzaB/mfNK8xnWAoRUsUOJgdkkCUkU1frU=;
+        b=r2yIKknl+vOR6fMgiKM0RTlpVT1pIS29P625H+FlRPUsv0cIGELm4RMQOm8CxjS1Gm
+         iKeOKIdFinzzbmu57VgxiI+LNDcuKDVlFNbHtGdMDI1r/tHnAyukO41USq59P3uWbZRR
+         Dv8IXPqGSAy1aNR79m/tI9169f5GvHW3Vu3svnYZ6h5Neo0QfJgAIqldxD9C7bZnag0Q
+         F/sq87E4L5XWop/aRb9R/Jh3W1CUTauCFGtWaKGmufy2NVjnIJ94a/Im9wZ+exapjdPv
+         b5oX5yTg12VCqHw8+3FV4QVrmdy/xygxKGxq32grBx8FpwNCUQ2LR6VHxfF6zYB28tu2
+         zVOw==
+X-Forwarded-Encrypted: i=1; AFNElJ/mH5urrJDn8PdrSWjEJG3pBkyx6h/Hvio9MCUVzuaP9S/8xNFtqhFdXk3qDt65Mj5JvXGOTxFkJcHRRdib+0nkG90=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRAKfv9wXkKSx2Ln1jIKvxXCHR1oN1hBiUzPyXyLBAnnpT0Msg
+	97QMtqKjaiKKJjJwRI3c+mZqlw0zHbq0arIebXVqa8c3MacSnb/etScztDD0NPveaTJGeBvcvRa
+	t/EUDz0FrdeVkAlflUyhsQFor1e6Po3o=
+X-Gm-Gg: Acq92OHO49aPpgfgvL3ZsIj8WaFhkSicF4BqjVE6qs5Dpm6BcAq6pbXKKKUNRSN6WYg
+	4zNEXQz5D2g69PJT7PTx7gEI9j3eKd+HEgE6fl43kttSM0NSqE9fTQSmIwfevsXSHJ3e5opkk0o
+	bTqjBwh3epWxcmHQvJnGQc7lBxbrHfcgAPu7D9Z2418VAfrM6zWR1q6FC5v8cTldAJmRV6ISDek
+	GfAEwV2IVuzJOTwVPE423MEiwgtm/IaDp0gKkwOTycFjI0EbOedpCehxaLhe0Rf/C+INGocUgt+
+	Jy2yeg2DQFzpt1md4n71AFqC+6oVIEDMPBna82YRjaUu
+X-Received: by 2002:a17:903:350c:b0:2b0:6068:4c5f with SMTP id
+ d9443c01a7336-2bea21d2cafmr84051825ad.8.1779475863565; Fri, 22 May 2026
+ 11:51:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA1CXcCoyGzEyeFPW+zKiA2AOj=0Lm7R=odLtVru+dQa0P_2cQ@mail.gmail.com>
+References: <20260521124411.31133-1-jolsa@kernel.org> <20260521124411.31133-5-jolsa@kernel.org>
+In-Reply-To: <20260521124411.31133-5-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 22 May 2026 11:50:44 -0700
+X-Gm-Features: AVHnY4Lbju_bUJqvfmufLKSuAon8uixVrUWfmqySa5rIUP5B6I4r3oU-FehqBLc
+Message-ID: <CAEf4BzZ+MToBKJS9Vdu=YZrX+2kRpUcmWejVhuoqhtu-ijqDAQ@mail.gmail.com>
+Subject: Re: [PATCHv3 04/12] uprobes/x86: Move optimized uprobe from nop5 to nop10
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 22, 2026 at 10:31:41AM -0600, Nico Pache wrote:
-> On Fri, May 22, 2026 at 10:20 AM Lorenzo Stoakes <ljs@kernel.org> wrote:
-> > There's some kind of confusion here.
-> >
-> > This series isn't suited for 7.2.
-> >
-> > Sorry but Zi's series, unless it depends on functionality here, will have
-> > to be rebased.
-> >
-> > People have been at conferences, people have been on leave, I've had to
-> > pace myself for health reasons and it seems there's been more than simply
-> > review comment-based changes happening here.
-> >
-> > (Again I strongly encourage, at this stage, to ONLY be making changes based
-> > on review, not adding ANYTHING else or changing ANYTHING else to avoid
-> > delays :)
+On Thu, May 21, 2026 at 5:44=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> All the changes are based on review points. Very small changes in this
-> version; the largest being the one that you specifically argeed too.
-
-16->17
-
- Documentation/admin-guide/mm/transhuge.rst |  24 +++++-------------
- include/linux/khugepaged.h                 |   7 ++---
- include/trace/events/huge_memory.h         |   3 ++-
- mm/huge_memory.c                           |   2 +-
- mm/khugepaged.c                            | 168 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------
- mm/vma.c                                   |   6 ++---
- tools/testing/vma/include/stubs.h          |   3 ++-
- 7 files changed, 103 insertions(+), 110 deletions(-)
-
-17->18
-
- Documentation/admin-guide/mm/transhuge.rst |   5 +++--
- include/trace/events/huge_memory.h         |   3 +--
- mm/khugepaged.c                            | 121 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------
- 3 files changed, 66 insertions(+), 63 deletions(-)
-
-These are not small 'very small changes'.
-
-We're nearly at rc-5, and this is a major, invasive, dangerous change that
-we have to get right.
-
-You've also made changes unrelated to review, repeatedly, throughout this
-process, which as I've told you, is causing delays.
-
-You've also throughout the review of this series done stuff like make MAJOR
-changes to things and _kept review tags_.
-
-You're forcing us to use git range-diff etc. to forensically check that the
-series is what is claimed.
-
-Dude I mean you switched to using // comment style which is not used in mm
-anywhere for instance? Don't do things like that and complain about
-delays. Honestly.
-
-Also, again, LSF happened. Other confeerences happened. Bandwidth is
-reduced.
-
-So again, I'm sorry, but you've been hit with some bad luck here.
-
-I really wanted this in for 7.2, and I feel bad that we couldn't make it,
-but you're also doing thing that's making it difficult for us.
-
-I've spent double-digits hours on your series, and I've also had work
-pushed out becasue of that leading me to work evenings and weekends as a
-result.
-
-And I'm not even going to get any credit for it :))
-
-So while I sypmathise, really, please have empathy and realise it goes both
-ways, please.
-
-I'm not being mean for the sake of it, I'm pushing back because I feel this
-is not at a stage where I'd feel confident in this being merged at this
-time.
-
-And it's very much a regret, as I _really_ wanted us to have it in this
-time. But life and circumstances and the issues mentioned above have
-intervened, sadly.
-
+> Andrii reported an issue with optimized uprobes [1] that can clobber
+> redzone area with call instruction storing return address on stack
+> where user code may keep temporary data without adjusting rsp.
 >
-> >
-> > Also - shouldn't mm-unstable already have mm-hotfixes-unstable in it?
-> >
-> > I think in mm-next we will have an stable branch, that everything is
-> > based on, where things go once review is complete and things are mergeable.
-> >
-> > And a separate hotfixes branch based on Linus's tree.
-> >
-> > That would avoid issues like this :)
+> Fixing this by moving the optimized uprobes on top of 10-bytes nop
+> instruction, so we can squeeze another instruction to escape the
+> redzone area before doing the call, like:
 >
-> Im sorry im new to this, but I really dont think this tiny error, and
-> something that I'd confirmed with Andrew beforehand deserves NAKing
-> and defering it. Ive worked through my PTO to clean up some of these
-> review nits just to get it in 7.2. I even through this through my
-> rounds of testing today before resending.
+>   lea -0x80(%rsp), %rsp
+>   call tramp
+>
+> Note the lea instruction is used to adjust the rsp register without
+> changing the flags.
+>
+> We use nop10 and following transofrmation to optimized instructions
+> above and back as suggested by Peterz [2].
+>
+> Optimize path (int3_update_optimize):
+>
+>   1) Initial state after set_swbp() installed the uprobe:
+>       cc 2e 0f 1f 84 00 00 00 00 00
+>
+>      From offset 0 this is INT3 followed by the tail of the original
+>      10-byte NOP.
+>
+>   2) Trap the call slot before rewriting the NOP tail:
+>       cc 2e 0f 1f 84 [cc] 00 00 00 00
+>
+>      From offset 0 this traps on the uprobe INT3.  A thread reaching
+>      offset 5 traps on the temporary INT3 instead of seeing a partially
+>      patched call.
+>
+>   3) Rewrite the LEA tail and call displacement, keeping both INT3 bytes:
+>       cc [8d 64 24 80] cc [d0 d1 d2 d3]
+>
+>      From offset 0 and offset 5 this still traps.  The bytes between
+>      them are not executable entry points while both traps are in place.
+>
+>   4) Restore the call opcode at offset 5:
+>       cc 8d 64 24 80 [e8] d0 d1 d2 d3
+>
+>      From offset 0 this still traps.  From offset 5 the instruction is
+>      the final CALL to the uprobe trampoline.
+>
 
-The issue wasn't the error (though it wasn't tiny...!), it's the state of
-review. There was fresh review comments from a few days ago, and there's
-big diffs between revisions.
+I'm sorry if I'm slow, but I don't understand why we need that second
+cc at offset 5? Isn't original nop10 processed by CPU as single
+instruction? So it will either be at ip of nop10, or at ip+10, no? If
+we trap at ip and in int3 handler +10 from there while we are
+installing lea+call, why do we need cc on byte 5?
 
-You've also made unrelated changes as you have done throughout the series.
+I.e., I don't understand how CPU can end up being at ip+5 until we
+finalize lea+call sequence? Can it?
 
-As I said above, I'm sorry that you spent time in your PTO on this, but we
-cannot rush this in when things are not clearly ready yet, and I am not
-confident in this being ready at this stage.
+
+>   5) Publish the first LEA byte:
+>       [48] 8d 64 24 80 e8 d0 d1 d2 d3
+>
+>      From offset 0 this is:
+>         lea -0x80(%rsp), %rsp
+>         call <uprobe-trampoline>
+>
+> Unoptimize path (int3_update_unoptimize):
+>
+>   1) Initial optimized state:
+>       48 8d 64 24 80 e8 d0 d1 d2 d3
+>      Same as 5) above.
+>
+>   2) Trap new entries before restoring the NOP bytes:
+>       [cc] 8d 64 24 80 e8 d0 d1 d2 d3
+>
+>      From offset 0 this traps. A thread that had already executed the
+>      LEA can still reach the intact CALL at offset 5.
+>
+>   3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
+>      and byte 5 as CALL.
+>       cc [2e 0f 1f 84] e8 d0 d1 d2 d3
+>
+>      From offset 0 this still traps. Offset 5 is still the CALL for any
+>      thread that was already past the first LEA byte.
+>
+>   4) Publish the first byte of the original NOP:
+>       [66] 2e 0f 1f 84 e8 d0 d1 d2 d3
+>
+>      From offset 0 this is the restored 10-byte NOP; the CALL opcode and
+>      displacement are now only NOP operands.  Offset 5 still decodes as
+>      CALL for a thread that was already there.
+
+it's cool that we don't have to do jmp for the first byte, fancy :)
 
 >
-> >
-> > >
-> > > The intent wasn't that this is a hotfix, just that this was the
-> > > closest base before the v17 that is already in the tree.
-> >
-> > The convention is that [PATCH ... <branch>] indicates the target of the
-> > changes. Putting the hotfixes branch there implies it's a hotfix.
+> Note as explained in [2] we need to use following nop10:
+>        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
+> NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs n=
+opw 0x00000000(%rax,%rax,1)
 >
-> Sorry I thought the <branch> was what base you used.
-
-I mean, sure there's clearly confusion here as you sent [PATCH 7.2 v16 ...]
-(against an unreleased kernel version) then a branch specifier then the
-hotfixes one...
-
-Anyway sure, it's fine, I've made vastly more dumb mistakes than that
-myself, nobody minds, but it's concerning as by convention [PATCH
-... <mm->hotfixes<whatever>] generally is taken to mean 'please rush this
-to hotfixes!' :)
-
-So be careful with that please!
-
+> which means we need to allow 0x2e prefix which maps to INAT_PFX_CS
+> attribute in is_prefix_bad function.
 >
-> >
-> > So please be careful with that in future :)
+> The optimized uprobe performance stays the same:
 >
-> Yes will do for sure.
-
-Thanks!
-
+>         uprobe-nop     :    3.129 =C2=B1 0.013M/s
+>         uprobe-push    :    3.045 =C2=B1 0.006M/s
+>         uprobe-ret     :    1.095 =C2=B1 0.004M/s
+>   -->   uprobe-nop10   :    7.170 =C2=B1 0.020M/s
+>         uretprobe-nop  :    2.143 =C2=B1 0.021M/s
+>         uretprobe-push :    2.090 =C2=B1 0.000M/s
+>         uretprobe-ret  :    0.942 =C2=B1 0.000M/s
+>   -->   uretprobe-nop10:    3.381 =C2=B1 0.003M/s
+>         usdt-nop       :    3.245 =C2=B1 0.004M/s
+>   -->   usdt-nop10     :    7.256 =C2=B1 0.023M/s
 >
-> >
-> > >
-> > > Sorry for the confusion, hopefully Andrew can still apply it to the
-> > > correct tree.
-> >
-> > I'm not even sure what's best for that at this stage given we have
-> > conflicts and this has to be delayed until 7.3.
-> >
-> > I wonder if given that we should not have this in mm-unstable at all and
-> > just wait it out until the next cycle begins? Review can happen
-> > concurrently.
+> [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org=
+/
+> [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programmin=
+g.kicks-ass.net/#t
+> Reported-by: Andrii Nakryiko <andrii@kernel.org>
+> Closes: https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel=
+.org/
+> Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
+> Assisted-by: Codex:GPT-5.5
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/x86/kernel/uprobes.c | 281 +++++++++++++++++++++++++++++---------
+>  1 file changed, 217 insertions(+), 64 deletions(-)
 >
-> I still dont see why this has to be deferred, I was working with
-> Andrew to prevent merge headaches.
 
-I've explained the why above, and David and I co-maintain THP so I feel
-that ultimately given the blood, sweat and tears we've put into THP review
-we ought to have some input on this :)
-
-Thanks, Lorenzo
+[...]
