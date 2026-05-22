@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A4738D3E1;
-	Fri, 22 May 2026 21:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE1F33A6F2;
+	Fri, 22 May 2026 21:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779486463; cv=none; b=NG5mYy0Of1QyI82x7ud5v7X2MNwhL8kIM/3VoNrDasrWy+fpqmis045gvz3isKbpwn+f0rfHT1/wnfyPCI5f8jPvUMeiMf2/wNsN9lFwaAN8FIDh1xpzzXvdxAmz9lDPaIO02wWntvzkoBl37B1SaZBNh9FFMCJCKMzL1VZJKns=
+	t=1779486730; cv=none; b=rUXevWxjkI6REoLyki19ED2OWMqX0nkiojnz7MWFiXCiZb4c4gh+MqWDgWydrz01PtSxB7cVIP1fX+6lfEGGP+GI469K+TgZy2xARYsN8uNnX/E90kRNWtZlJkXlG1QZBKKemIr8C2RpP+Dg2VWaofbyUkeYE5tSL6T2Sqlmx/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779486463; c=relaxed/simple;
-	bh=J5I2v1pkkrtnLqIA0bctNNUJE7BR8yuMo+VxJwgNymE=;
+	s=arc-20240116; t=1779486730; c=relaxed/simple;
+	bh=X0hD17+JbLsaNSa9yY/2I/Yjtt5uiV14riR3BO6HEo0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GR48Hz9ZOnl00KRwT9CLs/JznHFngq0xgMpgElquDwruaeY/Yt5tHLb9AleML1VW1RfUY2FutdfiS9q8HB+xirfb4CMC8RQqm0JOppmzuvOyBgT3vsj1ig+P/saefpCOseNwnF05CstAxEGO0bxVJsQfxvBUUKg9OOwy7+XmZOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQFXKOfk; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=if4LJDsBTtwJPRQt9mfX/IpGCPrj0XX3deeFi30UJHlQZJ/SkAPLKu6O3KIa4l7IBzqhZYHMt8iUJPX/NqqOrvl7+6lUiegIbYo/JNnVW8GUIhe0Ovqdm+wK1bAi+12yf9O8R/N9Ac7oOc+JMOSIu9CfGIaItNRc+JqTx/ZFI1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBit5RGA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQFXKOfk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9531F000E9;
-	Fri, 22 May 2026 21:47:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBit5RGA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47E11F000E9;
+	Fri, 22 May 2026 21:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779486461;
-	bh=dljCxK1YsQZK68Gu9mqCcSDyHCzwiebiXLJPqO1ehDg=;
+	s=k20260515; t=1779486728;
+	bh=eApYXU+swQ/aSMT4+a9qbCpi/b8FjdNDOxy/EU7ZU2c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=NQFXKOfkWjqTi+NS7Vynjpq9Z7Lngi3QzlylGeaZ114+OMZfavNUzkIR0G8inmBDj
-	 H346fIolGEZCV1B55hPO1XYWFoMPyr+ruDlBgXWbbLzjfQ2IcJ37hfsrobCXH9PFb0
-	 9waRpIVjasjyzEWSomq2KOW9ChUnvNXE9f4AVq5tatndZPBYQOe9GUxYegSrfH8qo/
-	 VBJOsNgnAcN2Cfg1GeZifTa6EUHLC+2C7MUKh5RQQ7/VwrYbYbRwvfE+IpkdCtWu0m
-	 C/nM7SpktkbhFg8Wvj9wBKi4O+YBlFkT1sMu7IW8ohEVECKUVP2yBn2HAmTJrarZ2B
-	 3Iicltj3psmcQ==
-Message-ID: <eabb0c67-e595-4215-b88b-9c821b4de01d@kernel.org>
-Date: Fri, 22 May 2026 23:47:25 +0200
+	b=GBit5RGATOfbr5x1B8Iah9ZKcHyEC4nw1LQkzGQ1ljV+PUlp0sDeFbRMge8ndkD2N
+	 5hbxQmyDKoxzBT2A2WOm3msxhnQSIeFA1rxJEhBh1tS5fsrRP34troIl8gB8dwVSSy
+	 n7incecVx0eMXZzVx1M2WyuUX2wzl1KEGQyLqwcbXO5cLbzciDNnFyGrRMSJQ6Iv3u
+	 in+lJV5CbLbY5Vjz8OaHzoxOFZhQr3IBXF8Ojv4ugrXTIjR/CA64ZAImWeduGj97uq
+	 OswYEX7Pt1D2sTAFTHfmYgA4cGgJINi19f3moklhfuUcALrBsmn1Fmc4GXGXoVGWPL
+	 o6612VYwIJr7A==
+Message-ID: <f8b8e2c5-34fc-4dee-bd18-41101e859cb7@kernel.org>
+Date: Fri, 22 May 2026 23:51:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize
- collapse_huge_page for mTHP collapse
+Subject: Re: [PATCH mm-unstable v18 07/14] mm/khugepaged: skip collapsing mTHP
+ to smaller orders
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -59,7 +59,7 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
  Usama Arif <usama.arif@linux.dev>
 References: <20260522150009.121603-1-npache@redhat.com>
- <20260522150009.121603-7-npache@redhat.com>
+ <20260522150009.121603-8-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -106,104 +106,23 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260522150009.121603-7-npache@redhat.com>
+In-Reply-To: <20260522150009.121603-8-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/22/26 17:00, Nico Pache wrote:
-> Pass an order and offset to collapse_huge_page to support collapsing anon
-> memory to arbitrary orders within a PMD. order indicates what mTHP size we
-> are attempting to collapse to, and offset indicates were in the PMD to
-> start the collapse attempt.
-> 
-> For non-PMD collapse we must leave the anon VMA write locked until after
-> we collapse the mTHP-- in the PMD case all the pages are isolated, but in
-> the mTHP case this is not true, and we must keep the lock to prevent
-> access/changes to the page tables. This can happen if the rmap walkers hit
-> a pmd_none while the PMD entry is currently unavailable due to being
-> temporarily removed during the collapse phase.
-> 
-> Acked-by: Usama Arif <usama.arif@linux.dev>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
+> khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
+> some pages being unmapped. 
 
-I guess we should add a comment here like:
+The "some pages being unmapped" part is unclear.
 
-/*
- * Only notify about the PTE range we will actually modify. While we
- * temporary unmap the whole PTE table for mTHP collapse, we'll remap
- * it later, leaving other PTEs effectively unmodified. The locks we hold
- * prevent anybody from stumbling over such temporarily unmapped PTE tables.
- */
+I assume what you mean is "possibly resulting in a partially mapped source
+folio, which is undesired."
 
->  
-> -	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
-> -				address + HPAGE_PMD_SIZE);
-> +	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, start_addr,
-> +				end_addr);
->  	mmu_notifier_invalidate_range_start(&range);
->  
->  	pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
-> @@ -1294,26 +1297,23 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
->  	 * Parallel GUP-fast is fine since GUP-fast will back off when
->  	 * it detects PMD is changed.
->  	 */
-> -	_pmd = pmdp_collapse_flush(vma, address, pmd);
-> +	_pmd = pmdp_collapse_flush(vma, pmd_addr, pmd);
->  	spin_unlock(pmd_ptl);
->  	mmu_notifier_invalidate_range_end(&range);
->  	tlb_remove_table_sync_one();
->  
-> -	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
-> +	pte = pte_offset_map_lock(mm, &_pmd, start_addr, &pte_ptl);
->  	if (pte) {
-> -		result = __collapse_huge_page_isolate(vma, address, pte, cc,
-> -						      HPAGE_PMD_ORDER,
-> -						      &compound_pagelist);
-> +		result = __collapse_huge_page_isolate(vma, start_addr, pte, cc,
-> +						      order, &compound_pagelist);
->  		spin_unlock(pte_ptl);
->  	} else {
->  		result = SCAN_NO_PTE_TABLE;
->  	}
->  
->  	if (unlikely(result != SCAN_SUCCEED)) {
-> -		if (pte)
-> -			pte_unmap(pte);
->  		spin_lock(pmd_ptl);
-> -		BUG_ON(!pmd_none(*pmd));
-> +		WARN_ON_ONCE(!pmd_none(*pmd));
+But there is also the problem that we could try collapsing a folio to a
+same-sized folio, which doesn't make sense (assuming the folio is fully mapped).
 
-Likely VM_WARN_ON_ONCE is sufficient.
-
->  		/*
->  		 * We can only use set_pmd_at when establishing
->  		 * hugepmds and never for establishing regular pmds that
-> @@ -1321,21 +1321,24 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
->  		 */
->  		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
->  		spin_unlock(pmd_ptl);
-> -		anon_vma_unlock_write(vma->anon_vma);
->  		goto out_up_write;
->  	}
->  
->  	/*
-> -	 * All pages are isolated and locked so anon_vma rmap
-> -	 * can't run anymore.
-> +	 * For PMD collapse all pages are isolated and locked so anon_vma
-> +	 * rmap can't run anymore. For mTHP collapse the PMD entry has been
-> +	 * removed and not all pages are isolated and locked, so we must hold
-> +	 * the lock to prevent neighboring folios from attempting to access
-> +	 * this PMD until its reinstalled.
->  	 */
-
-That makes sense. I was wondering whether there was another reason for dropping
-the anon_vma lock ... I guess it was just for latency purposes given that there
-was no actual need for the lock anymore once all folios in the range were
-isolate+locked.
-
-
-With the two its above addressed
+Clarify all that, please.
 
 Acked-by: David Hildenbrand (arm) <david@kernel.org>
 
