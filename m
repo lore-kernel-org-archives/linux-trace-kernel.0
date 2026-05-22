@@ -1,146 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D529437A485
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 16:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDEE28373;
+	Fri, 22 May 2026 16:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779466273; cv=none; b=GDAYLqKES+NuEL46vOT1zSARd99fBYtBhNMzAFt7Eh8JAFhT1J5jKu40lrMY+ksWbnLVDEihoSevDFbtajCc6nu5Msxc1e91EVNWCwPZCX3a4YZX+z3lt3FGvidkBhO9gaCJyqVxVcGu0fot3q6n+m7X2+nUV8oznSu9FN5ZmGQ=
+	t=1779466811; cv=none; b=JnRmJy/GBffkzcJOtUj6/jc+Ykcrk8DDTf7Anbgclr3j3LjYompXS2JTq9igCh7H6PI5iUQxkQp4ONslST9D5/0c4kGHroVg46a+BqIqejVBwQ2crUYIjHXDKoz+pDDV5b8Sr5dsKivXNWpXgDkX6poDClvNuwKE8LshCeYgHbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779466273; c=relaxed/simple;
-	bh=La2W+yN0vzwPkY2oECj6NHOhikNkncK+jT4y0b881Cg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JmNkyKj86hElSZqOpG6FVJ/eabqqrLdjuxJQTSw8DnqV2kCD8l9WnI5Hrp+JqYGDHg0zPcN9cMSDT3XiS/C4OG4Y7ft3pNJpAW5ztR84QJrHVcADZ9dGuoMGOVRcfQ7v4Wg9qivZ6JjU0AMNQg4asAWPMDx9gCRiIese6+UcrcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JlT3hKo5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779466811; c=relaxed/simple;
+	bh=FnSicpjvcBNVy0CRSGn1QhxVVZS//kfYT8GlbArGmV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xv7QNDLYi/3cb4l19ysL8SN5IJS0x2UzijNy3hBA0TU572s3lWn+NoDFhKtJYuakWHenu3dmBxWrsszN1iy2iy5ygmbFzhciCOrJj4H5NI78ZCg90oV4Zf7j5wSz8FURWgwYRzJERtLd1q4bZGIPDKyfEaPrLvb58JQqwiFgk6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j85b84o7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JlT3hKo5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779466271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IzxgIsKBLy9Uo/RJ5aMTM+y5Ci98qZZTufyvn4tb+6I=;
-	b=JlT3hKo51763Chr+28crtcDS7xH9BtWFNUwqozOalRZHjhMcrvF2ShARYATaI5XOzzMIzR
-	WadL15AHn+PgaGL47D6tbsqVx0BcCXsalMymWVt1oYZ2bU5yVrqkmuvAKOfyAZERFS548a
-	C2It6a+VYr0yPdEqWvQUFaoG5C9g8f4=
-Received: from mail-yx1-f71.google.com (mail-yx1-f71.google.com
- [74.125.224.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-24KP1jz3P1yUdeviCuJx1w-1; Fri, 22 May 2026 12:11:09 -0400
-X-MC-Unique: 24KP1jz3P1yUdeviCuJx1w-1
-X-Mimecast-MFC-AGG-ID: 24KP1jz3P1yUdeviCuJx1w_1779466269
-Received: by mail-yx1-f71.google.com with SMTP id 956f58d0204a3-651bd2131f0so1412449d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 09:11:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779466269; x=1780071069;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IzxgIsKBLy9Uo/RJ5aMTM+y5Ci98qZZTufyvn4tb+6I=;
-        b=ja2jYhDlN22zVJhuOKAL4LFijUsA01QfNJacIi1E6INX3OgmngT89Z+iS4ksy66F0/
-         oIxAhizcU7dJKwe66VxGS01+eQ2W61amFOlly8EclYyZwiGZDq+p0wkpPVZ5REtWSo5Q
-         TXPDuannH3n0bGKDxXe6gvPYSitA3t8uPK93TxcM2XSUKx9bh5xT4jfRpZDFx7Q3kfsV
-         5a+m9XzVJrJywGL/dRrfbwe7IAI8y6CM22LeGBSy396NeeNaRznk6D7aXhK7JflvymYB
-         GXPH7Fr9s79rzyqEwpbfjhcjrDobEo80LKFnvH5kfxPerW7ZIlmJXcXKw81e9hXthSH+
-         S+DQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9j+y8KOMytxoqDWQ0/Vgy8KqlNEvQOLxC/6GSFwxJbaM23s+/ZAbLWfEdSJxwicykVuMsNIRNFHeGcpOlHSu0mwMc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywqkw0WWBn/l+S9f1r8JrsO1XhFBveb67+ogMO+rElS3o4c/0fX
-	ueL3HnJuLYKqKQXy48W8z1PuZFs2vvY430wtiLpQCljgR3KEvJOlFs0q/uNRo8feiiwriC/scki
-	W7ahMuOdJHqSJiz+gXE5qg0fPXQaFVcu71bPRJYFFpSbk14aduV+QtItao76UbXL6N95V1hNnvV
-	mjOpV+fJYhYtOugrzdw5FcBYpiUTqBCjktnTiIE+tNGzKz1Cmk
-X-Gm-Gg: Acq92OE1uVb2E1MNyBLHXpCxv4GzytPS4SoQYHmsbrF0PqrUCpKxFDuc2l2b3qBy14M
-	vck63uPREg7kOrPHVQFmAfLZzpF1n9kL0WRBbxtpKG/yMLpqE26sTkIY22dSdFoJsTrq7odMS64
-	kMvkmTiJCMNAd7bYIR9GLz2/v8Ih9f8zmIjy+WPSEhufhHombDlx1tCEmdyERPIiG4S07KvrKF3
-	cu/qQ==
-X-Received: by 2002:a53:c049:0:20b0:65e:b05:7679 with SMTP id 956f58d0204a3-65ec9631f73mr3544878d50.3.1779466268951;
-        Fri, 22 May 2026 09:11:08 -0700 (PDT)
-X-Received: by 2002:a53:c049:0:20b0:65e:b05:7679 with SMTP id
- 956f58d0204a3-65ec9631f73mr3544806d50.3.1779466268532; Fri, 22 May 2026
- 09:11:08 -0700 (PDT)
-Precedence: bulk
-X-Mailing-List: linux-trace-kernel@vger.kernel.org
-List-Id: <linux-trace-kernel.vger.kernel.org>
-List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260522150009.121603-1-npache@redhat.com> <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
- <bd622950-62cf-4b57-b3ac-89635f28fa4f@kernel.org>
-In-Reply-To: <bd622950-62cf-4b57-b3ac-89635f28fa4f@kernel.org>
-From: Nico Pache <npache@redhat.com>
-Date: Fri, 22 May 2026 10:11:38 -0600
-X-Gm-Features: AVHnY4Kw4pwY2uJsQhaEmVi-b5AxtiG-JxHuFGdnogUOlR8F2xU-TlkRWivxYiQ
-Message-ID: <CAA1CXcD373fFfo9YPWRj8mJ_rsnzyCrpn1uk3=k7kU=QuaLOgg@mail.gmail.com>
-Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
- collapse support
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j85b84o7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F821F000E9;
+	Fri, 22 May 2026 16:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779466810;
+	bh=FnSicpjvcBNVy0CRSGn1QhxVVZS//kfYT8GlbArGmV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=j85b84o74dlM2RlikWLtxJ8InZVwop88/rTxiPexhk+8nBlTalaWkjejulMgi6MOg
+	 Otfw6BCjq5y5HGx6wlPg+DesU+9LvQ6X9h4vJsJW3JWyTuk0PqiGTMMCUXmO8uH9JZ
+	 uSBnA2R6/ORbxzKWFOOhviNaYIyIAv9GaSBrTSp4GQRNF6ocMKKrHn/PNEjEF1VtSB
+	 kB03USBOnE8B1vWYbl+ZJHc6A5c5hDGKeyr9ruTS0p69+lgtuDNbca5ROQWi6u7Ch8
+	 K2cb9KUB+u00h4qaTL8jEGhsg/lzQC4FM5nZ02MHuluix6um4gyMrG53jy05UiNu/f
+	 Yj6rzl4Fhc5Hg==
+Date: Fri, 22 May 2026 17:19:55 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Nico Pache <npache@redhat.com>
 Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
-	anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, 
-	cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, 
-	dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, 
-	jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com, 
-	joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev, 
-	liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com, 
-	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
+	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
+	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
+	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
+	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
+	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
 	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
 	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
 	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
 	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
 	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
 	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
-	zokeefe@google.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 04WqaQOKo6BggQ2mTZHWo75gXvnCICi51-6Ol2DkpUg_1779466269
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
+ collapse support
+Message-ID: <ahB_hae8coGvf12Z@lucifer>
+References: <20260522150009.121603-1-npache@redhat.com>
+ <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
+ <ahByO_HWn6MB8z-u@lucifer>
+ <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
+Precedence: bulk
+X-Mailing-List: linux-trace-kernel@vger.kernel.org
+List-Id: <linux-trace-kernel.vger.kernel.org>
+List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
 
-On Fri, May 22, 2026 at 9:13=E2=80=AFAM Vlastimil Babka (SUSE)
-<vbabka@kernel.org> wrote:
+On Fri, May 22, 2026 at 10:08:19AM -0600, Nico Pache wrote:
+> On Fri, May 22, 2026 at 9:17 AM Lorenzo Stoakes <ljs@kernel.org> wrote:
+> >
+> > On Fri, May 22, 2026 at 09:07:29AM -0600, Nico Pache wrote:
+> > > Whoops I manually changed the coverletter subject to reflect that this
+> > > in on mm-hotfixes-unstable but never updated the others...
+> > >
+> > > Hopefully that is ok. Just a small mistake. Base commit is referenced here.
+> >
+> > It's not ok, this isn't suitable for a hotfix in any way shape or form?
+> >
+> > As you know, because we told you :) May has been difficult because of
+> > conferences, holidays (and in my case burnout recovery).
+> >
+> > And unfortunately the series seems to have needed quite a bit of review again
+> > (my suggestion to you would be to ensure you don't make major changes, only
+> > small incremental ones on the basis of review feedback).
+> >
+> > So this isn't viable for 7.2, and we'll have to target 7.3. Therefore there
+> > was no rush.
+> >
+> > Also please don't spring a respin on this series on us without discussion
+> > first, with people away and (frankly) the amount of work involved here,
+> > you're going to have to accept the pace that workload/availability permits.
+> >
+> > Adding spurious hotfixes tags doesn't help anything :) please don't do that
+> > again.
 >
-> On 5/22/26 17:07, Nico Pache wrote:
-> > On Fri, May 22, 2026 at 8:59=E2=80=AFAM Nico Pache <npache@redhat.com> =
-wrote:
-> >>  include/trace/events/huge_memory.h         |  34 +-
-> >>  mm/huge_memory.c                           |  11 +
-> >>  mm/khugepaged.c                            | 634 ++++++++++++++++----=
--
-> >>  5 files changed, 584 insertions(+), 172 deletions(-)
-> >>
-> >>
-> >> base-commit: 6c8cb505a5634594b3ea159fd1c71bce2acf3346
-> >
-> > Whoops I manually changed the coverletter subject to reflect that this
-> > in on mm-hotfixes-unstable but never updated the others...
+> Hi,
 >
-> But why? That branch is for hotfixes that would go to the current 7.1-rcX
-> series. mm-unstable would be the correct one for this, AFAICT.
+> Sorry for the confusion but Andrew and I spoke about this before I
+> sent it, and he confirmed that I should send it against this tree to
+> prevent merge conflicts.
+>
+> Because Zi's series depends on this, and this is already in the mm
+> tree, choosing a candidate before my commits was best to prevent merge
+> conflicts.
 
-Sorry this was a misunderstanding. The goal here was to base this off
-the closest base commit behind where my v17 already lies in the tree.
+There's some kind of confusion here.
 
-That just happened to be the hotfixes tree (previously it was
-mm-unstable, but that seems the have moved).
+This series isn't suited for 7.2.
 
-Sorry...
--- Nico
+Sorry but Zi's series, unless it depends on functionality here, will have
+to be rebased.
+
+People have been at conferences, people have been on leave, I've had to
+pace myself for health reasons and it seems there's been more than simply
+review comment-based changes happening here.
+
+(Again I strongly encourage, at this stage, to ONLY be making changes based
+on review, not adding ANYTHING else or changing ANYTHING else to avoid
+delays :)
+
+Also - shouldn't mm-unstable already have mm-hotfixes-unstable in it?
+
+I think in mm-next we will have an stable branch, that everything is
+based on, where things go once review is complete and things are mergeable.
+
+And a separate hotfixes branch based on Linus's tree.
+
+That would avoid issues like this :)
 
 >
-> > Hopefully that is ok. Just a small mistake. Base commit is referenced h=
-ere.
+> The intent wasn't that this is a hotfix, just that this was the
+> closest base before the v17 that is already in the tree.
+
+The convention is that [PATCH ... <branch>] indicates the target of the
+changes. Putting the hotfixes branch there implies it's a hotfix.
+
+So please be careful with that in future :)
+
+>
+> Sorry for the confusion, hopefully Andrew can still apply it to the
+> correct tree.
+
+I'm not even sure what's best for that at this stage given we have
+conflicts and this has to be delayed until 7.3.
+
+I wonder if given that we should not have this in mm-unstable at all and
+just wait it out until the next cycle begins? Review can happen
+concurrently.
+
+>
+> -- Nico
+>
 > >
-> > -- Nico
-> >
-> >
-> >> --
-> >> 2.54.0
-> >>
+> > Thanks, Lorenzo
 > >
 >
 
+Thanks, Lorenzo
