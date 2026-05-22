@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8A0400DEC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 16:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D529437A485
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 16:11:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779466074; cv=none; b=M0rsBHjPcz4zv/bwle7RXX8BqABrLdCPepEkbs5bCJ0BBOfssP49AEszy3W3s+kC/XY0jTxKc94jLHB5h5wdlXjgyWFBJqulKNr8tlx3g246Cj75mfMxKibY3jwCbIKnEfgR1HaPIXPExUIirbhKywbiRxiYHKNj4kYM80i5DF4=
+	t=1779466273; cv=none; b=GDAYLqKES+NuEL46vOT1zSARd99fBYtBhNMzAFt7Eh8JAFhT1J5jKu40lrMY+ksWbnLVDEihoSevDFbtajCc6nu5Msxc1e91EVNWCwPZCX3a4YZX+z3lt3FGvidkBhO9gaCJyqVxVcGu0fot3q6n+m7X2+nUV8oznSu9FN5ZmGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779466074; c=relaxed/simple;
-	bh=Z7CZniyudQvtGykBjwFqflJux61iIz/Fi25N4Y0qOJI=;
+	s=arc-20240116; t=1779466273; c=relaxed/simple;
+	bh=La2W+yN0vzwPkY2oECj6NHOhikNkncK+jT4y0b881Cg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ueNlbszRyI1iqBUwxTH6VDDSG9USyk50NHl0skCEIO0Etl+AxUn7fuH8rL+iUFqnwP00X4JwmslAIuZqNSbk5OFEbNAJSWhT84l5T83KM5vhMkMumC7f4ONehfhpPu2WOED6V9ZYdHBigewk0yCTnYvSbkd2aC/+Xvr0L1xnTu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PNl7Q6/b; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=JmNkyKj86hElSZqOpG6FVJ/eabqqrLdjuxJQTSw8DnqV2kCD8l9WnI5Hrp+JqYGDHg0zPcN9cMSDT3XiS/C4OG4Y7ft3pNJpAW5ztR84QJrHVcADZ9dGuoMGOVRcfQ7v4Wg9qivZ6JjU0AMNQg4asAWPMDx9gCRiIese6+UcrcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JlT3hKo5; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNl7Q6/b"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JlT3hKo5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779466072;
+	s=mimecast20190719; t=1779466271;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z7CZniyudQvtGykBjwFqflJux61iIz/Fi25N4Y0qOJI=;
-	b=PNl7Q6/bpFzjlNljoTdLqlnYTmyofZ5nREKlsDKT9jic1gkPoAQ6vx5aRIeulfzIScIUNX
-	A5WXOwfWT243UwsTXJgx24rip3fBryDqCQ8lQHgx9HdStqTwupnJj3OwVOyghiMWcZ0Z4C
-	RxNfkDjbJswHqBOSSc91RYNo47Epgto=
-Received: from mail-yx1-f72.google.com (mail-yx1-f72.google.com
- [74.125.224.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=IzxgIsKBLy9Uo/RJ5aMTM+y5Ci98qZZTufyvn4tb+6I=;
+	b=JlT3hKo51763Chr+28crtcDS7xH9BtWFNUwqozOalRZHjhMcrvF2ShARYATaI5XOzzMIzR
+	WadL15AHn+PgaGL47D6tbsqVx0BcCXsalMymWVt1oYZ2bU5yVrqkmuvAKOfyAZERFS548a
+	C2It6a+VYr0yPdEqWvQUFaoG5C9g8f4=
+Received: from mail-yx1-f71.google.com (mail-yx1-f71.google.com
+ [74.125.224.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495-QPEug8sZMeGc3MqN37aSPg-1; Fri, 22 May 2026 12:07:50 -0400
-X-MC-Unique: QPEug8sZMeGc3MqN37aSPg-1
-X-Mimecast-MFC-AGG-ID: QPEug8sZMeGc3MqN37aSPg_1779466070
-Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-65e1b9f1ebeso14670354d50.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 09:07:50 -0700 (PDT)
+ us-mta-447-24KP1jz3P1yUdeviCuJx1w-1; Fri, 22 May 2026 12:11:09 -0400
+X-MC-Unique: 24KP1jz3P1yUdeviCuJx1w-1
+X-Mimecast-MFC-AGG-ID: 24KP1jz3P1yUdeviCuJx1w_1779466269
+Received: by mail-yx1-f71.google.com with SMTP id 956f58d0204a3-651bd2131f0so1412449d50.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 09:11:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779466070; x=1780070870;
+        d=1e100.net; s=20251104; t=1779466269; x=1780071069;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Z7CZniyudQvtGykBjwFqflJux61iIz/Fi25N4Y0qOJI=;
-        b=sn7yuOhc2EadBpnRM3NNDQVPKHYK6gMidKTRUetES29ZIPmxHs/72gVRxmL8UbpdBp
-         31fgU4niWLxWVP6oXQhl3pqUDBIr3/y8m0F8ycO0zjolPglfX0gNh/x6v3RZG9So97DX
-         S9mhhVjV5yC7G/5tNw2hdNDuCA8BLagqK7r0GFFrj/u7B85ckdzc9AfRsuyaN7lb4j+z
-         kI4Qk2qHE8JMarS8DQNjJh7gnGae/thoViJUgL9wFMzgWKFrtehhIvyN/uNAmoIeHSTx
-         NOyLYfri5/tvLc9W943ViofGqJB7EtqJGeCcmP4iZkxLs1MQTnlBIJkmOLHw6pgR/7Dc
-         5rtw==
-X-Forwarded-Encrypted: i=1; AFNElJ9WHqbcJe76SUbH3JfWtPglgicBRsEaGVY//6IJk1/lYRJeJDBZHIXptwD6/I243n9CwrlSHCysq8NcQZfAx4m7G+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysW7Ewt+5ouPu34EQxAs+zLvwDHzStP7fz1nA9KLqsJf3FjKbR
-	2JLqpKaU2XCizFcZe1Vni7sWL3lYiXXcyGogCracOtStQC7l9fVXXC0uGFV3gX4fvDc1vqChEIe
-	PwkwEnnwFC4C4N8sPXTvX1EFh7kJj7XwzAKs/oYM39fhCHCVGM27Pm2vKYysps2npwqBjaXoGsA
-	pZ2TSed14pmI5fGSBj/gkWpHXUn9aRxOc5xfMwRRFJyjWH1E82
-X-Gm-Gg: Acq92OFpCC7b5GdresOw+i1rdvQ8eIFhdFQLC4JsvbkToxwPa/9OLwK+ZeiitdgPyWl
-	o947Ymfw1CrsWfoHgR65BBUzYsI5d6j4TAzaMklqZHWBXv5srOTisLTeQ0dFRvFrl0FY89GPygj
-	5+07PnwvJxxjxf6JEIFe8Lq+yGFCl1jDk89lymDt4A362eNQAqoogN3L1tq4j/uxTs+7vOUCz2u
-	+oFIQ==
-X-Received: by 2002:a05:690e:1284:b0:65c:74c2:31c6 with SMTP id 956f58d0204a3-65eca654410mr2973369d50.5.1779466070081;
-        Fri, 22 May 2026 09:07:50 -0700 (PDT)
-X-Received: by 2002:a05:690e:1284:b0:65c:74c2:31c6 with SMTP id
- 956f58d0204a3-65eca654410mr2973309d50.5.1779466069568; Fri, 22 May 2026
- 09:07:49 -0700 (PDT)
+        bh=IzxgIsKBLy9Uo/RJ5aMTM+y5Ci98qZZTufyvn4tb+6I=;
+        b=ja2jYhDlN22zVJhuOKAL4LFijUsA01QfNJacIi1E6INX3OgmngT89Z+iS4ksy66F0/
+         oIxAhizcU7dJKwe66VxGS01+eQ2W61amFOlly8EclYyZwiGZDq+p0wkpPVZ5REtWSo5Q
+         TXPDuannH3n0bGKDxXe6gvPYSitA3t8uPK93TxcM2XSUKx9bh5xT4jfRpZDFx7Q3kfsV
+         5a+m9XzVJrJywGL/dRrfbwe7IAI8y6CM22LeGBSy396NeeNaRznk6D7aXhK7JflvymYB
+         GXPH7Fr9s79rzyqEwpbfjhcjrDobEo80LKFnvH5kfxPerW7ZIlmJXcXKw81e9hXthSH+
+         S+DQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9j+y8KOMytxoqDWQ0/Vgy8KqlNEvQOLxC/6GSFwxJbaM23s+/ZAbLWfEdSJxwicykVuMsNIRNFHeGcpOlHSu0mwMc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqkw0WWBn/l+S9f1r8JrsO1XhFBveb67+ogMO+rElS3o4c/0fX
+	ueL3HnJuLYKqKQXy48W8z1PuZFs2vvY430wtiLpQCljgR3KEvJOlFs0q/uNRo8feiiwriC/scki
+	W7ahMuOdJHqSJiz+gXE5qg0fPXQaFVcu71bPRJYFFpSbk14aduV+QtItao76UbXL6N95V1hNnvV
+	mjOpV+fJYhYtOugrzdw5FcBYpiUTqBCjktnTiIE+tNGzKz1Cmk
+X-Gm-Gg: Acq92OE1uVb2E1MNyBLHXpCxv4GzytPS4SoQYHmsbrF0PqrUCpKxFDuc2l2b3qBy14M
+	vck63uPREg7kOrPHVQFmAfLZzpF1n9kL0WRBbxtpKG/yMLpqE26sTkIY22dSdFoJsTrq7odMS64
+	kMvkmTiJCMNAd7bYIR9GLz2/v8Ih9f8zmIjy+WPSEhufhHombDlx1tCEmdyERPIiG4S07KvrKF3
+	cu/qQ==
+X-Received: by 2002:a53:c049:0:20b0:65e:b05:7679 with SMTP id 956f58d0204a3-65ec9631f73mr3544878d50.3.1779466268951;
+        Fri, 22 May 2026 09:11:08 -0700 (PDT)
+X-Received: by 2002:a53:c049:0:20b0:65e:b05:7679 with SMTP id
+ 956f58d0204a3-65ec9631f73mr3544806d50.3.1779466268532; Fri, 22 May 2026
+ 09:11:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,15 +67,15 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260522150009.121603-1-npache@redhat.com> <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
- <ahByO_HWn6MB8z-u@lucifer>
-In-Reply-To: <ahByO_HWn6MB8z-u@lucifer>
+ <bd622950-62cf-4b57-b3ac-89635f28fa4f@kernel.org>
+In-Reply-To: <bd622950-62cf-4b57-b3ac-89635f28fa4f@kernel.org>
 From: Nico Pache <npache@redhat.com>
-Date: Fri, 22 May 2026 10:08:19 -0600
-X-Gm-Features: AVHnY4K-NMEYaoOF8CwzqrbGVrRxOSsC61YCW8vw8BzLOXMR_M4k6Y4gQwbZHRs
-Message-ID: <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
+Date: Fri, 22 May 2026 10:11:38 -0600
+X-Gm-Features: AVHnY4Kw4pwY2uJsQhaEmVi-b5AxtiG-JxHuFGdnogUOlR8F2xU-TlkRWivxYiQ
+Message-ID: <CAA1CXcD373fFfo9YPWRj8mJ_rsnzyCrpn1uk3=k7kU=QuaLOgg@mail.gmail.com>
 Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
  collapse support
-To: Lorenzo Stoakes <ljs@kernel.org>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
 	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
@@ -85,75 +85,62 @@ Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org,
 	dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, 
 	jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com, 
 	joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev, 
-	liam@infradead.org, mathieu.desnoyers@efficios.com, matthew.brost@intel.com, 
-	mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de, 
-	rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org, 
-	richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org, 
-	rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
+	liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com, 
+	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
+	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
+	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
+	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
 	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
 	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
 	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
 	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
 	zokeefe@google.com
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: OR6WZVI5ZtBbnM9b1stoqUxxTxXuZ5szq_ddttjutac_1779466070
+X-Mimecast-MFC-PROC-ID: 04WqaQOKo6BggQ2mTZHWo75gXvnCICi51-6Ol2DkpUg_1779466269
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 22, 2026 at 9:17=E2=80=AFAM Lorenzo Stoakes <ljs@kernel.org> wr=
-ote:
+On Fri, May 22, 2026 at 9:13=E2=80=AFAM Vlastimil Babka (SUSE)
+<vbabka@kernel.org> wrote:
 >
-> On Fri, May 22, 2026 at 09:07:29AM -0600, Nico Pache wrote:
+> On 5/22/26 17:07, Nico Pache wrote:
+> > On Fri, May 22, 2026 at 8:59=E2=80=AFAM Nico Pache <npache@redhat.com> =
+wrote:
+> >>  include/trace/events/huge_memory.h         |  34 +-
+> >>  mm/huge_memory.c                           |  11 +
+> >>  mm/khugepaged.c                            | 634 ++++++++++++++++----=
+-
+> >>  5 files changed, 584 insertions(+), 172 deletions(-)
+> >>
+> >>
+> >> base-commit: 6c8cb505a5634594b3ea159fd1c71bce2acf3346
+> >
 > > Whoops I manually changed the coverletter subject to reflect that this
 > > in on mm-hotfixes-unstable but never updated the others...
-> >
-> > Hopefully that is ok. Just a small mistake. Base commit is referenced h=
-ere.
 >
-> It's not ok, this isn't suitable for a hotfix in any way shape or form?
->
-> As you know, because we told you :) May has been difficult because of
-> conferences, holidays (and in my case burnout recovery).
->
-> And unfortunately the series seems to have needed quite a bit of review a=
-gain
-> (my suggestion to you would be to ensure you don't make major changes, on=
-ly
-> small incremental ones on the basis of review feedback).
->
-> So this isn't viable for 7.2, and we'll have to target 7.3. Therefore the=
-re
-> was no rush.
->
-> Also please don't spring a respin on this series on us without discussion
-> first, with people away and (frankly) the amount of work involved here,
-> you're going to have to accept the pace that workload/availability permit=
-s.
->
-> Adding spurious hotfixes tags doesn't help anything :) please don't do th=
-at
-> again.
+> But why? That branch is for hotfixes that would go to the current 7.1-rcX
+> series. mm-unstable would be the correct one for this, AFAICT.
 
-Hi,
+Sorry this was a misunderstanding. The goal here was to base this off
+the closest base commit behind where my v17 already lies in the tree.
 
-Sorry for the confusion but Andrew and I spoke about this before I
-sent it, and he confirmed that I should send it against this tree to
-prevent merge conflicts.
+That just happened to be the hotfixes tree (previously it was
+mm-unstable, but that seems the have moved).
 
-Because Zi's series depends on this, and this is already in the mm
-tree, choosing a candidate before my commits was best to prevent merge
-conflicts.
-
-The intent wasn't that this is a hotfix, just that this was the
-closest base before the v17 that is already in the tree.
-
-Sorry for the confusion, hopefully Andrew can still apply it to the
-correct tree.
-
+Sorry...
 -- Nico
 
 >
-> Thanks, Lorenzo
+> > Hopefully that is ok. Just a small mistake. Base commit is referenced h=
+ere.
+> >
+> > -- Nico
+> >
+> >
+> >> --
+> >> 2.54.0
+> >>
+> >
 >
 
