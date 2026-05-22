@@ -1,180 +1,157 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039CC377000
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 18:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612EB36728D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 18:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779475992; cv=pass; b=AsapQBWKKxdermTjZCmxLT/sJ8CeT7xoedJlP962pClVRP/8qFSnCfbruPiIDcWEjqvU4hDmKn1E06gZWJKV5Yow6usc+EeAD9E1kxcmEieERU04He/yh9x4g5LseueCiSTOisS+/cQiYDUd1a3EpdJYK4mHlwLLxlAojQimvrA=
+	t=1779476241; cv=pass; b=A7m/BC6ihGMCfU/FKzBuAYVzrfJe+788Bp+dETXOmhpl4ICW5KCz1crYDeGugGXTEegI1xLAHvcsRTFINkJOvmBqTSjjuuWfrYaNNd3h4idTuHFrSIKG5WogeUNV7jSgDW86xUivSOmfs+uKTNx+a4hLyq2AWkIOmcXkXSl6ZPM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779475992; c=relaxed/simple;
-	bh=P0n1fZ8hC3OD4nF71hAInfcl9hkB3ZTgTE4eNK/w7AM=;
+	s=arc-20240116; t=1779476241; c=relaxed/simple;
+	bh=KvnXkyyBCcToMR6RAkZ81a4j99YJk0Qbk/aUVQOKq6U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NGdH7z6GY04/ToI+0POn3dLzqUP1tNe8iAEH8HDAO0Vuf3pST+P+lftPp5tzNxfW1jlEvgETSS2hwfjaxWfxoDKD+prPwUCJSO9mIb6AanhfSOe5rcAkp0ACkuRIuPxDTMsP7ZJtL7i92fxoaPrLze7hV/Pkv8ls4qQlcmCWotg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2HSiunP; arc=pass smtp.client-ip=209.85.210.177
+	 To:Cc:Content-Type; b=tXK0aWMhBgu2KYpkmZb737rxW83xKx2cgoAzpcu6j0n1/hS5rB6oShDnK7VshXghMVnuujMfqWqZya8WIAQpA1ScNwBtmtK76/GXGHEW09vuVy4aoUVQLtwcsxECe+Y0VZAjjYKERIhEofTFn8Fgccm/6f5FSTbaGE2kmZbi4Bs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8Kls30j; arc=pass smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2HSiunP"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-8353fd1cb5fso3842161b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 11:53:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779475990; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8Kls30j"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-369002b26f4so4379880a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 May 2026 11:57:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779476239; cv=none;
         d=google.com; s=arc-20240605;
-        b=IlbaRzdM1rqdQtlTAdSqRRBiOoK2992wJXP3jNgRsD1DIM2W02OVhYiZYfxFKUi+P4
-         mT+JMDc4WzQ7U2FZEyWACFUAiOrjclij5jDOtgxTlx+h602HOOEJLxn1JWjZ8e7/6GZ3
-         DuDxkkSggchjAc7UfvAhPGm1E9oyyhn2k1ZQrDFE6rcGhTGpvhqaoKJVtr60KcU6O3pG
-         nhAMvKCrcZq/aFYsRNaorD//Lr1ScRKPl2y/osPWiShJvXfzFeNUST1+ZnlAR3WlPqU7
-         s/kCurw2lsPnUVq65/9Fz7M+vqAIlI6MaTn2F3/hIz/0XHeO4uzay9KFV1iTvVFVgYCD
-         pBTA==
+        b=gBJqjAa0SKFxMjEALMgulfBC4NZpxvGrU7V5BNUGaBLYZe6pqKwkvzTXkLwcKFq6f+
+         i2TryqRM1JISYPVWeheFUOZx5SJFe/3uten5EwdHlPNPhwmIxnfVB7xyelur4YJEqemI
+         zly86zi+FBXVGfAJl9f+hvclx2Gfl/2qvVXAqBn4NwH87a5NPgMpS/TwV2e5pqNFb+dq
+         EzmOzpz2pQY+I80uSDqy0gOcz0EOxMq/C5VeRszbEATdvdaUZ0p2gk7iMrL8t35HEbZu
+         PyiPoi33kHd5o+FWtx0468rgKP4dKoo5CcssWHPTQBy8Z5ATeIP/usTsZslWT4jXH7Uh
+         D3oA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Y6yY3VmUMa0/EtKof3nJtANt3LRN7d5wyy83qIoZX34=;
-        fh=TcsWRZ0dwPfdlwnuTr/tuqHyl1G0idFnjQMMndk8zNw=;
-        b=abQNjWPlrKnhOFdDpwozDQ+GijzDnWyrU4wEk9ejgG+4sJDGasS5YjVH8dleoJnpOv
-         +IXQuXbiuiKKX93z2aowiVMadJ0Tz39iv3s6+rPT+CFj+E1m+xb8DyIXCRDsEmawAWYb
-         54E6HlCJJcZxK3QL0hslBPnwxVAfgJM5prIf59IdmHK0zBj2XM45Imnm0/At8SwpZzno
-         AW/YwTxHCL8TRtjCptyMBPn/XBALZUZvFf5LBl7PDB8Gyy7IH2BLQ1godEOvZtB/NgSw
-         qPhRr6EuzxjKZr5x3ApCzC4W4xMhhvKS3x8niViPi9emeycHQiwtsvc2+A0Bci+rOwYl
-         JEDQ==;
+        bh=XO+dDzVXtvu6vrmWqh59X/IvoZfOr95EfYx7Z0jp+Uo=;
+        fh=Og+eYktWk4GqFuvh1IFSdsiGeWTC29ioqR/UxOlvYUw=;
+        b=iGfNQi56PizU6eGiUJHU2hsnHXlPGCi4C44WMjQybx0Ap8FqjBG3tXimt04Ha3DtrW
+         gFK4nGhkh/FltPKrrDX4GE9x9nDcWm1anvX3D8s1iVsdY1e1ifUuL//SX2u0Z75BJ/ro
+         1CFrDFctxXEXDitgiGpSdJtmveWHixbY/RX7a5XOeQYPOww0EnWhNzK+9ulXgPukINtW
+         pp3ligPVXx58BogPOU+Du8FKjlTw5raVMbc5s4li5eYB6GB9XVwVkYi4sNasENL4pZKD
+         EWCCCdCKdgUMakuYqjVNWzb+NAHSNHqdZSTo6ECxGjqgToz2orgdktInn1LAQfO7pbNx
+         QGWg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779475990; x=1780080790; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779476239; x=1780081039; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y6yY3VmUMa0/EtKof3nJtANt3LRN7d5wyy83qIoZX34=;
-        b=N2HSiunP1UgigdVHDUo1uMgkErcVyMNwSXBwMXluKojx4hpKKQ2C3u3tmgkL3vMvfM
-         KoePQtmw0Z6XWdRAayGoz0YehS13YM4+lPdDMUV5fkbRCXFWcpIgOp73hx2O8pQjeIW1
-         8yzDTC+HhQ/rx6kSosAwYphvVVb5tbLvGimA2iiGoQIK5itIzuCbvFN0d9A6SVQF9hJG
-         7vlHmvKiGR2dcLtKTe+7DW+WXupliUQX+RAGcjBx4MKY6oM1Q6Yu8bG/PMe4M8fOlReP
-         WpUKQ+QrdScbyujVxwCue/nYtzfK7LyoDTQtiJ9s5F50KT8UNgFhZqViZ9bcqFgMjNkt
-         D5Mw==
+        bh=XO+dDzVXtvu6vrmWqh59X/IvoZfOr95EfYx7Z0jp+Uo=;
+        b=H8Kls30jVAr2evcdTOhs6zs5/C5qW87tlzKfqfb5AZSH77YVHynGm1igHGlXjomiEX
+         7UOXTEDsG1GS79L5k4w96RMP74wG7Uh5HSfi4nid5XNuM81I73qcvKNsmANtBZ5NKMHt
+         mNR9+BCrlTtA3ZM42ht4Yk/zwJWPzHAoDj0CbZp7lndgpgcGFM5I7z+c6Qe6OwcLVzlY
+         G05GGPD9hKRNxTGpC4sP1b3zX6Oo9HrAJgOF5WhIuZBhb0oM90TUTjD2g/7+ZuSWNb5L
+         QjAMNaqieYC7oI5i6vlXkv6F7BFAbwrDp83RahqBLNSWQWsobX9YeEy+WMkWcsV3rUVh
+         dLsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779475990; x=1780080790;
+        d=1e100.net; s=20251104; t=1779476239; x=1780081039;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Y6yY3VmUMa0/EtKof3nJtANt3LRN7d5wyy83qIoZX34=;
-        b=mL9fjq4/O99vpZUitMRrgjtHNdwU3QqTcLBJYIJzvEN3qXlvWwnXwkKvgZYAZXBLRF
-         eYKxrrER6sam+yYINvq5CwisZT99bJX4rZpQ+dnvqUy2HVcEQGTTwImGiFymOwkbYxBh
-         XCIUwt3y5jgDQwKHaGQv83CV55n2eDDWI4SZOuMMD4Cj2lSXZXo5wgG3D1/JH/8F48qf
-         ChnrQCogwD8WPpfQW0dHCn9k3es6zdBOW6lncyKvzDgla2gFIs/fxQv1lTMJYOPK+ErT
-         NUWQIRRJVyLLgCv6ETFKo65V9QGRdSa6/lFUM5OA2pT0DkQFt2bagxrdpTeASYTW0lAj
-         yTZA==
-X-Forwarded-Encrypted: i=1; AFNElJ9mdxVWQ8Y2+F0a4Gbw7U/k86yc2XIuxsBpv4t88yXFhMyHE/a8gJeQMJgtafCXxa+56iDS0dCo8qXGQqPBygK2SEU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKOetryxEu4JIyfZdAw8GBQzpUDMmM0E3JpMaAg5lqNOfFiC2d
-	kW8aFbAQkf1o5gqNr7CrNNpaSKgXznV8Vgl+ZkGWZfJG94NAIBeOntRKcfCOa1yM4Sk+RllTk6U
-	ulYMoZGVVwOHkdK8pC7E3dw2xpvuV4So=
-X-Gm-Gg: Acq92OEXrMl4a8mzPpg4L+AkS0g1Ydnd7YCmL6RllCi2Ej7qv9NhUkw/f5eCOKJHFLw
-	Y+iNeyiIDotJAiqflakU1gXMO/ddIQ9qStg7iJKpnmUlNcIvHKGOQj4tBGYTbSOapAemwl+6OeZ
-	WpJVP3u5984nCIPJfJi0IIHVh9aKo+V5zt708soWVzRga+2DDCizerMfJlpr7mV0jScJMUw9WrY
-	I5dYD+erehMpCtme84yR36JuE2FAbvFTtMO2VZGMVGFWFJ3FMX7/3+rHXCQF4hC8Abt/T3l50yI
-	yiUYfL7oOKwC0/+8eK2hR5Sf1cnrq4RIhg==
-X-Received: by 2002:a05:6a00:a96:b0:82f:6cb3:645a with SMTP id
- d2e1a72fcca58-8414b5956bemr7133353b3a.31.1779475990150; Fri, 22 May 2026
- 11:53:10 -0700 (PDT)
+        bh=XO+dDzVXtvu6vrmWqh59X/IvoZfOr95EfYx7Z0jp+Uo=;
+        b=GUF8NXEtNNFohFdcbDLYLFJmwFYQzw6LmUQib1gbRmXHD62jQiSeaZeckvPVjysfuT
+         OeJKjzz3Qy1s7cs41kywcM71m4uW3FEOQuZTsNWczWmCkTwmsSSuxPCXwYZ8yq0pcwfi
+         NDSP1eJbuqnJmP74U2mORSfF+BjCAE3dL/TvMGsKJELAuFcqHApbLGKh+JrKVzDVGYnQ
+         0u/zVolrr9re7+rSiUToV/MWgbrfj3up5+cl/FDilP+tjcUcfbCgUTSZleoy6lHlXJki
+         994Ye8wZxNUFkY4QKjHZba1p5cyLFg4w1Ig9Qvq28MGI7Rk0r1/I7H8RXiIDd9eG1gGQ
+         vvRA==
+X-Forwarded-Encrypted: i=1; AFNElJ9FEkkVZdmTN5lq3UW5eN3kdZv2wR0uscPiXloS2HZhLzBHN33FlrbtzsZ8LWqeX+153GehY2UEBTpW/PXrNvDgPbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy67CLrc4OTJj5x1vgs4gICK0DdorL6xUhv4PoiAumpJvrAOkfC
+	ss7zJgonFmRJhdHFp+NSRiT5CyZIBmXSCI/MnX1gQUpUq12ntKl69kdJ5/YzqID3f5v7pkhcJQ+
+	SaucV3zQTvrrxvIA2lRZzOY6T08PzkfA=
+X-Gm-Gg: Acq92OHLIdQ3SHuQe7pKw7LzyR1G17XRZ2dV2awb9pWuulx9Xr48a7U/Xzlz1pqP1NV
+	FxNEki0YuQqimQaSLf5A/O5SA9wuKGvo+JWHuXnPBKp5zAH1LBRoYbb1XrUpw0Sm2GGE/agllaB
+	DoBBh+VNtOEqr7Te/2e3iLfyx5I3Nt8Z4tXelhZFYXZWv2aEkLNnGgD6lz1KMXE3Fq+SZ96W95y
+	NNmuTKFwLbM94bRsW5KOMW4qAaxUjAaRDq5StH+FhDjt78DJgiBx0Tc1FIAM6xyXVilGjsR5+lH
+	PzWjnffXf8/2fqBOhjeGyGc=
+X-Received: by 2002:a17:90b:33c1:b0:366:decb:d119 with SMTP id
+ 98e67ed59e1d1-36a677303ccmr4500182a91.11.1779476239508; Fri, 22 May 2026
+ 11:57:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260521124411.31133-1-jolsa@kernel.org> <20260521124411.31133-6-jolsa@kernel.org>
-In-Reply-To: <20260521124411.31133-6-jolsa@kernel.org>
+References: <20260521124411.31133-1-jolsa@kernel.org> <20260521124411.31133-9-jolsa@kernel.org>
+In-Reply-To: <20260521124411.31133-9-jolsa@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 22 May 2026 11:52:56 -0700
-X-Gm-Features: AVHnY4J0I1T3BExdZJu4Z_1SbsaTPMCUJYXQuJWJAXmxIXaY5DnKc11XjERAYdY
-Message-ID: <CAEf4BzY3bV+gkA4fRm=jzaTowG1QtXogLDOKkG3CrR5EWzDPcg@mail.gmail.com>
-Subject: Re: [PATCHv3 05/12] libbpf: Change has_nop_combo to work on top of nop10
+Date: Fri, 22 May 2026 11:57:04 -0700
+X-Gm-Features: AVHnY4K6VCnW74mH-qu0lu-YDdA-o94r4C-kRqw70HIPj74Zva_JJdNwjmZtqSY
+Message-ID: <CAEf4BzZn0NvNwuPdh10z+MAdw-9K6CgZ0XnAL0J4XRpQHhFv2w@mail.gmail.com>
+Subject: Re: [PATCHv3 08/12] selftests/bpf: Change uprobe syscall tests to use nop10
 To: Jiri Olsa <jolsa@kernel.org>
 Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Jakub Sitnicki <jakub@cloudflare.com>, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, May 21, 2026 at 5:45=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> We now expect nop combo with 10 bytes nop instead of 5 bytes nop,
-> fixing has_nop_combo to reflect that.
+> Optimized uprobes are now on top of 10-bytes nop instructions,
+> reflect that in existing tests.
 >
-> Fixes: 41a5c7df4466 ("libbpf: Add support to detect nop,nop5 instructions=
- combo for usdt probe")
-> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/lib/bpf/usdt.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+>  .../selftests/bpf/benchs/bench_trigger.c      |  2 +-
+>  .../selftests/bpf/prog_tests/uprobe_syscall.c | 28 ++++++++++---------
+>  tools/testing/selftests/bpf/prog_tests/usdt.c | 25 ++++++++++-------
+>  tools/testing/selftests/bpf/usdt_2.c          |  2 +-
+>  4 files changed, 32 insertions(+), 25 deletions(-)
 >
-> diff --git a/tools/lib/bpf/usdt.c b/tools/lib/bpf/usdt.c
-> index e3710933fd52..484a4354e82b 100644
-> --- a/tools/lib/bpf/usdt.c
-> +++ b/tools/lib/bpf/usdt.c
-> @@ -305,7 +305,7 @@ struct usdt_manager *usdt_manager_new(struct bpf_obje=
-ct *obj)
->
->         /*
->          * Detect kernel support for uprobe() syscall, it's presence mean=
-s we can
-> -        * take advantage of faster nop5 uprobe handling.
-> +        * take advantage of faster nop10 uprobe handling.
->          * Added in: 56101b69c919 ("uprobes/x86: Add uprobe syscall to sp=
-eed up uprobe")
+> diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/t=
+esting/selftests/bpf/benchs/bench_trigger.c
+> index 2f22ec61667b..a60b8173cdc4 100644
+> --- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> +++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> @@ -398,7 +398,7 @@ static void *uprobe_producer_ret(void *input)
+>  #ifdef __x86_64__
+>  __nocf_check __weak void uprobe_target_nop5(void)
 
-Would be nice to add commit that switches nop5 to nop10 (but until it
-lands hash is not stable, so, hmmm, maybe we'll land this patch
-separately? send it a bit later to bpf-next?)
+heh, nop5 -> nop_a_lot ;)
 
 
-but otherwise lgtm
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
->          */
->         man->has_uprobe_syscall =3D kernel_supports(obj, FEAT_UPROBE_SYSC=
-ALL);
-> @@ -596,14 +596,14 @@ static int parse_usdt_spec(struct usdt_spec *spec, =
-const struct usdt_note *note,
->  #if defined(__x86_64__)
->  static bool has_nop_combo(int fd, long off)
 >  {
-> -       unsigned char nop_combo[6] =3D {
-> -               0x90, 0x0f, 0x1f, 0x44, 0x00, 0x00 /* nop,nop5 */
-> +       unsigned char nop_combo[11] =3D {
-> +               0x90, 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x0=
-0, 0x00,
->         };
-> -       unsigned char buf[6];
-> +       unsigned char buf[11];
->
-> -       if (pread(fd, buf, 6, off) !=3D 6)
-> +       if (pread(fd, buf, 11, off) !=3D 11)
->                 return false;
-> -       return memcmp(buf, nop_combo, 6) =3D=3D 0;
-> +       return memcmp(buf, nop_combo, 11) =3D=3D 0;
+> -       asm volatile (".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
+> +       asm volatile (".byte 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x=
+00, 0x00, 0x00");
 >  }
->  #else
->  static bool has_nop_combo(int fd, long off)
-> @@ -814,8 +814,8 @@ static int collect_usdt_targets(struct usdt_manager *=
-man, struct elf_fd *elf_fd,
->                 memset(target, 0, sizeof(*target));
 >
->                 /*
-> -                * We have uprobe syscall and usdt with nop,nop5 instruct=
-ions combo,
-> -                * so we can place the uprobe directly on nop5 (+1) and g=
-et this probe
-> +                * We have uprobe syscall and usdt with nop,nop10 instruc=
-tions combo,
-> +                * so we can place the uprobe directly on nop10 (+1) and =
-get this probe
->                  * optimized.
->                  */
->                 if (man->has_uprobe_syscall && has_nop_combo(elf_fd->fd, =
-usdt_rel_ip)) {
-> --
-> 2.53.0
+
+[...]
+
+> @@ -420,7 +421,8 @@ static void *check_attach(struct uprobe_syscall_execu=
+ted *skel, trigger_t trigge
+>         ASSERT_EQ(skel->bss->executed, executed, "executed");
 >
+>         /* .. and check the trampoline is as expected. */
+> -       call =3D (struct __arch_relative_insn *) addr;
+> +       ASSERT_OK(memcmp(addr, lea_rsp, 5), "lea_rsp");
+> +       call =3D (struct __arch_relative_insn *)(addr + 5);
+>         tramp =3D (void *) (call + 1) + call->raddr;
+>         ASSERT_EQ(call->op, 0xe8, "call");
+>         ASSERT_OK(find_uprobes_trampoline(tramp), "uprobes_trampoline");
+> @@ -432,7 +434,7 @@ static void check_detach(void *addr, void *tramp)
+>  {
+>         /* [uprobes_trampoline] stays after detach */
+>         ASSERT_OK(find_uprobes_trampoline(tramp), "uprobes_trampoline");
+> -       ASSERT_OK(memcmp(addr, nop5, 5), "nop5");
+> +       ASSERT_OK(memcmp(addr, jmp2B, 2), "jmp2B");
+
+yeah, not jump anymore?
+
+>  }
+>
+>  static void check(struct uprobe_syscall_executed *skel, struct bpf_link =
+*link,
+
+[...]
