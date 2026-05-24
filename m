@@ -1,199 +1,144 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB953A9DBA
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 16:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EAB36A35A
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 21:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779639875; cv=none; b=E/2I2Txsinh1T8Wby/2pBtYXMkNeTrS24Ockd3j543qoMz2eb9PipMgFo1m6iNsp/ASJ5VgCSS6nJar+0W4P5rOdTfUTTBsKwQY1CIz+YHu5bTPi9sIOaLnq5IEzZkeqChGZSvCGcpiRUoujtNfJsOP2vwLTTZ742GXH76jzMa8=
+	t=1779659673; cv=none; b=VbV82eNjJWq0W/gBEeWf5QjXj++f7AwmE5fcmUMKu6+EmQH1spmgtEIBzKR/+muLAskl96EqLQs/MawHFBRzsckN4hbcKtDHoSNSDSJSDQQf0YNRwPOlaEIm7wRm83ZVJBZYBLEz1QNm0LZEJoWBNwLz5KOkTufDr9JxIpp8sWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779639875; c=relaxed/simple;
-	bh=YMLUdYJpSAv9W6a0MPnW8IT63V8WblIkM/oK3UeUH/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ZFRhemb/8i3NNQrlifU7R2rD2FByV54eXqmqbweWxxy3XrJzDVZXwzSJvItGxYO0BvCI3m4M9ElUw7JVW63Q9+d4E9RmENGeKF/RJzxLe+dGnQoaL4ZGpRd4CPLX8ABDct1RCp0KzVLuY24bpTt3qsqu5HJFKGK10UxwRyyBOE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=OjVEeiik; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1779659673; c=relaxed/simple;
+	bh=3VERMq+xiLZ9WUMPX8js5tvfdxGKD0cIlLNFz0YzHbA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUZh4VZ5tkq4fPUnH22dLS136bXknSm8ZrP21hgAfXcrG2+UuXzgz77/fewiPgutrHxaCLwzytMjGAPs60vsYfpHmHtLED5HrubvlVbL8aGRjiEdoOKcTDPOj4TqZuojHQ10sKgU9To9MH2NYrSamNHTE11au3pmS+EaH8M8K9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YzjAsLfW; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="OjVEeiik"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=FPNgwzfKTdfYDJo5fIWKjQ4i2QnMSuYT/TxQN7r+oGQ=; b=OjVEeiikPeruOMExN7kU+XTnPc
-	wFJRxvh5ASNcmBCQjLNigQuDiAOuDYnH4Vfg1rhWqG7PkQf1nPJWgjWOKASwYn7bmfHqjYL7IxN1B
-	CiR9HxZPkn9Z0rRGMfMrSPh1+0Pl2/5yqBhcwBriXzTjQ9zZlbw6vLdztavi8etvGPWbi1E2ov66y
-	M+9xBxd2QCFuK+pWG0UsdWYTSM808+XngbHUGK4MeGQo2bsZhDygMOPncPJ8CrF2PkLMej0UKNPrl
-	B+N+e59DmeMKow8X1t0fRqbKtiqJbBOfBWdbW8AJjiQvlPDCFQvlqA43DlgKkUABcEdtUmNENfRJn
-	HYMf32SQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <benh@debian.org>)
-	id 1wRBcn-000vXj-0W;
-	Sun, 24 May 2026 16:24:25 +0000
-Date: Sun, 24 May 2026 18:24:23 +0200
-From: Ben Hutchings <benh@debian.org>
-To: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-Subject: [PATCH RESEND] rtla: Fix output files in source tree
-Message-ID: <ahMmN4PdsJzr_Va-@decadent.org.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YzjAsLfW"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49042aeeb75so35535835e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 14:54:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779659671; x=1780264471; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=I10QhtVmzV81xL+5R9qfUHIcQyyiwHM6k2SsnmlTNcg=;
+        b=YzjAsLfWg0M9XiBiF5By4f147gf8F8+WJsiU26iQwXuusQD4Ulz5z0hz1wq/Xxa8ir
+         tfJHxOYS2+t/nJ8apfGnD3Y3hPdaZ9zAYMJ2QY5dH4mM5h5hVcfAr8sgil5nXHuN6hte
+         Wreu/1cCaTkVEJrBcbey0IE4g78KdWJ3wC5Vy2lNAsiqZvEZYgqnGE9mNwHtWpGCTwKK
+         8OHE/iyWN1M5zJroxbVVG8eeE9HHIRU0PaMpEtmsniDGI0a27Bf1ag6FYzl/1JZ22uzi
+         kla0ngDclrbR+TdLHw2kfDy5DVjYvOX6WdcmjRkNhJcRFtDI4N6CQZZZpfQWuNtDhv0d
+         47rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779659671; x=1780264471;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I10QhtVmzV81xL+5R9qfUHIcQyyiwHM6k2SsnmlTNcg=;
+        b=Mk46lcQUJnCyB8dvIE0z9EFIxW1ciN7L5h1YYfdIEnWsu1AncMXE3KaRX94Ksnk6sL
+         WvVtagEnZV40yzhCILxwaZMD1y3mjKlopBgGkyNCwIU1Y1Jahp3KWSJyVaZkBjaZKo2t
+         j1yLPciLHUuTX4ZneIMpXgvbLbrEQJYQCYqTjlOLd1UZrZCjETonHH6RiV6htCowfwq6
+         qw+tJGhk3pI5sVaBYimQp6i1FM10X4MGNBkwPTdIH+6BZ5ylFZ/xRIacAC97AOJOho+P
+         xPXDSmR94wFBW0uE/CG19AVCW3fs1UwkYOPVol52gDRNt1GljdyKnE044PHBaRNPCFwl
+         hQfg==
+X-Forwarded-Encrypted: i=1; AFNElJ8oc9afL/u8fYPffTofz8CmdzP62qvRBT/43ZiA1ronEt8DUTe8lrsuO4J2DO1sTuGKcN3PdDqpwqYmZS2ocktPe+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMKqbGqRqVqygl7pTqh89fRCaDLIPLL3i/JMEqti+vHiW5BnPf
+	e7HsBmCLK8Buc6Ufj6iq0vltE+7HbDaOsyinS9TCUcThFmAbCtdRX73FB8dUA034
+X-Gm-Gg: Acq92OGw37jG9dWyHPPhpXMqLcqvVVbTVVghS/ZYVhY16iWrINHlnfw0eO7HzPx9+bn
+	dkWV723fYGthkbfZ1WUuC5X1H42tgR+dBOwQYz3+y7U8MkI5xqgkYUljgXAgSq7UaOe6XZT6jrp
+	82cuYCe7q4qbNQIeJYOWXl0lceETOsnGBx4OS7zJop2mZbi9Z8ZeyNuMjK3Dd2CIHqbyEuOBy2A
+	/+nM6COeb8sh/JFLkEclJeuJQZCYN2oCTK8Mb7fuENvULhSqRnQ1A1Eqyeq5ZYr3mm5QrTDA2PU
+	liNuXId4bjqhlyHb5u3ksAqySNZmo7rCNgA40kVldXuv6dD3v1A8tXECOpBBWHGv/VJJmsUJEES
+	GZ9YifIMFyIcKJ05XY3IX60B/+xVMgTxE5Y4NbUoNO9XCiRGvNJjLZlep63rGgqG43cZ3YLw3bZ
+	7IW3VED/97Hd4=
+X-Received: by 2002:a05:600c:4fd0:b0:490:3dc7:9778 with SMTP id 5b1f17b1804b1-490426d3f0dmr191593075e9.23.1779659670466;
+        Sun, 24 May 2026 14:54:30 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4904526c926sm345299875e9.1.2026.05.24.14.54.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 May 2026 14:54:29 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Sun, 24 May 2026 23:54:28 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 03/12] uprobes/x86: Allow to copy uprobe trampolines on
+ fork
+Message-ID: <ahNzlAfUnymDDGOR@krava>
+References: <20260521124411.31133-1-jolsa@kernel.org>
+ <20260521124411.31133-4-jolsa@kernel.org>
+ <CAEf4BzYo-8PAXFJt9MHoUn9ux1O2YVxJADC0tGSsacVu_R8Stw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qflP0Qj7SIBB68vm"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Debian-User: benh
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYo-8PAXFJt9MHoUn9ux1O2YVxJADC0tGSsacVu_R8Stw@mail.gmail.com>
+
+On Fri, May 22, 2026 at 11:50:54AM -0700, Andrii Nakryiko wrote:
+> On Thu, May 21, 2026 at 5:44 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > When we do fork or clone without CLONE_VM the new process won't
+> > have uprobe trampoline vma objects and at the same time it will
+> > have optimized code calling that trampoline and crash.
+> >
+> > Fixing this by allowing vma uprobe trampoline objects to be copied
+> > on fork to the new process.
+> >
+> > Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  arch/x86/kernel/uprobes.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> > index 6824376e253d..11ec6b89b135 100644
+> > --- a/arch/x86/kernel/uprobes.c
+> > +++ b/arch/x86/kernel/uprobes.c
+> > @@ -701,7 +701,7 @@ static struct vm_area_struct *get_uprobe_trampoline(unsigned long vaddr)
+> >                 return ERR_PTR(vaddr);
+> >
+> >         return _install_special_mapping(current->mm, vaddr, PAGE_SIZE,
+> > -                               VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_DONTCOPY|VM_IO,
+> > +                               VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_IO,
+> 
+> so on fork we'll get sys_uprobe invocations which will go into uprobe
+> trampoline and syscall will just keep returning -EPROTO, is that
+> right?
+
+so the child gets the inherited optimized call path.and now also the
+trampoline, which executes the uprobe syscall and so if there's related
+uprobe it will be processed
+
+-EPROTO is returned for uprobe syscall executed out of uprobe trampoline
 
 
---qflP0Qj7SIBB68vm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> what would happen in the similar situation for process with int3
+> uprobe being forked/cloned? Will it inherit int3 as well, and then
+> will keep hitting interrupts that would just do nothing?
+> 
+> is there a way to restore original memory page for clones? this
+> behavior (unless I'm misunderstanding) seems suboptimal
+> performance-wise
 
-Some output files (src/timerlat.bpf.o, src/timerlat.skel.h,
-example/timerlat_bpf_action.o, tests/bpf/bpf_action_map.o) are
-currently generated in the source tree, preventing a fully out-of-tree
-build.  To fix this:
+the standard uprobes seem to handle this situation by removing the brekpoint
+from current->mm, if the uprobe->handler returns UPROBE_HANDLER_REMOVE (for all
+uprobe consumers) .. and the uprobe->handler does current->mm filter first in
+uprobe_perf_func and returns UPROBE_HANDLER_REMOVE in case it does not match
 
-- Add $(OUTPUT) to their filenames in the relevant Makefile rules, and
-  create subdirectories as needed
-- Add $(OUTPUT)src to the include path
-- Add ${OUTPUT} to the BPF object filename in tests/timerlat.t
+this works also for optimized uprobes on top of standard uprobes
 
-Fixes: e34293ddcebd ("rtla/timerlat: Add BPF skeleton to collect samples")
-Fixes: 0304a3b7ec9a ("rtla/timerlat: Add example for BPF action program")
-Fixes: 5525aebd4e0c ("rtla/tests: Test BPF action program")
-Signed-off-by: Ben Hutchings <benh@debian.org>
-Reviewed-by: Ian Rogers <irogers@google.com>
----
- tools/tracing/rtla/Makefile         | 31 ++++++++++++++++++-----------
- tools/tracing/rtla/tests/timerlat.t |  4 ++--
- 2 files changed, 21 insertions(+), 14 deletions(-)
+but we don't do that for uprobe_multi and I think we could do something similar,
+the code is there, perhaps we just need to add the filter
 
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index 45690ee14544..f54da7be735d 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -66,30 +66,37 @@ ifeq ($(config),1)
-   include Makefile.config
- endif
-=20
-+INCLUDES	=3D -I$(OUTPUT)src
-+
- CFLAGS		+=3D $(INCLUDES) $(LIB_INCLUDES)
-=20
- export CFLAGS OUTPUT srctree
-=20
- ifeq ($(BUILD_BPF_SKEL),1)
--src/timerlat.bpf.o: src/timerlat.bpf.c
-+$(OUTPUT)src/timerlat.bpf.o: src/timerlat.bpf.c
-+	mkdir -p $(@D)
- 	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -c $(filter %.c,$^) -o $@
-=20
--src/timerlat.skel.h: src/timerlat.bpf.o
-+$(OUTPUT)src/timerlat.skel.h: $(OUTPUT)src/timerlat.bpf.o
-+	mkdir -p $(@D)
- 	$(QUIET_GENSKEL)$(SYSTEM_BPFTOOL) gen skeleton $< > $@
-=20
--example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
-+$(OUTPUT)example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
-+	mkdir -p $(@D)
- 	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -c $(filter %.c,$^) -o $@
-=20
--tests/bpf/bpf_action_map.o: tests/bpf/bpf_action_map.c
-+$(OUTPUT)tests/bpf/bpf_action_map.o: tests/bpf/bpf_action_map.c
-+	mkdir -p $(@D)
- 	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -c $(filter %.c,$^) -o $@
- else
--src/timerlat.skel.h:
--	$(Q)echo '/* BPF skeleton is disabled */' > src/timerlat.skel.h
-+$(OUTPUT)src/timerlat.skel.h:
-+	mkdir -p $(@D)
-+	$(Q)echo '/* BPF skeleton is disabled */' > $@
-=20
--example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
-+$(OUTPUT)example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
- 	$(Q)echo "BPF skeleton support is disabled, skipping example/timerlat_bpf=
-_action.o"
-=20
--tests/bpf/bpf_action_map.o: tests/bpf/bpf_action_map.c
-+$(OUTPUT)tests/bpf/bpf_action_map.o: tests/bpf/bpf_action_map.c
- 	$(Q)echo "BPF skeleton support is disabled, skipping tests/bpf/bpf_action=
-_map.o"
- endif
-=20
-@@ -103,7 +110,7 @@ static: $(RTLA_IN)
- rtla.%: fixdep FORCE
- 	make -f $(srctree)/tools/build/Makefile.build dir=3D. $@
-=20
--$(RTLA_IN): fixdep FORCE src/timerlat.skel.h
-+$(RTLA_IN): fixdep FORCE $(OUTPUT)src/timerlat.skel.h
- 	make $(build)=3Drtla
-=20
- clean: doc_clean fixdep-clean
-@@ -111,10 +118,10 @@ clean: doc_clean fixdep-clean
- 	$(Q)find . -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d=
-' -delete
- 	$(Q)rm -f rtla rtla-static fixdep FEATURE-DUMP rtla-*
- 	$(Q)rm -rf feature
--	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h example/timerlat_bpf_act=
-ion.o
-+	$(Q)rm -f $(OUTPUT)src/timerlat.bpf.o $(OUTPUT)src/timerlat.skel.h $(OUTP=
-UT)example/timerlat_bpf_action.o
- 	$(Q)rm -f $(UNIT_TESTS)
-=20
--check: $(RTLA) tests/bpf/bpf_action_map.o
-+check: $(RTLA) $(OUTPUT)tests/bpf/bpf_action_map.o
- 	RTLA=3D$(RTLA) BPFTOOL=3D$(SYSTEM_BPFTOOL) prove -o -f -v tests/
--examples: example/timerlat_bpf_action.o
-+examples: $(OUTPUT)example/timerlat_bpf_action.o
- .PHONY: FORCE clean check
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests=
-/timerlat.t
-index fd4935fd7b49..e0f3fc4df655 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -74,12 +74,12 @@ then
- 	# Test BPF action program properly in BPF mode
- 	[ -z "$BPFTOOL" ] && BPFTOOL=3Dbpftool
- 	check "hist with BPF action program (BPF mode)" \
--		"timerlat hist -T 2 --bpf-action tests/bpf/bpf_action_map.o --on-thresho=
-ld shell,command=3D'$BPFTOOL map dump name rtla_test_map'" \
-+		"timerlat hist -T 2 --bpf-action ${OUTPUT}tests/bpf/bpf_action_map.o --o=
-n-threshold shell,command=3D'$BPFTOOL map dump name rtla_test_map'" \
- 		2 '"value": 42'
- else
- 	# Test BPF action program failure in non-BPF mode
- 	check "hist with BPF action program (non-BPF mode)" \
--		"timerlat hist -T 2 --bpf-action tests/bpf/bpf_action_map.o" \
-+		"timerlat hist -T 2 --bpf-action ${OUTPUT}tests/bpf/bpf_action_map.o" \
- 		1 "BPF actions are not supported in tracefs-only mode"
- fi
- done
-
---qflP0Qj7SIBB68vm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmoTJjIACgkQ57/I7JWG
-EQm9lhAAi85FmzUEQ1PZM5ib1Eb9Gd+gTTQh3HIGH7b/lm4j9shvL8fgYybDDKZ2
-dlHE0z+DtHjfcTPTPOkMLHQsllyMQIGRNSJSFWHPbdf26rKOV0oig/1P/sgnJDoD
-6Oj8zlcTeQa8BnfE9vJltCv3f4qmbQAOTyLFDilZF07YgmD6/VAP46NuEKJ9OPPG
-cpFZ7xLGiq2KP7EQNZubvzrB06F+tnNW+cZuRpbSmxWz4dBEFAjbD1GwegjYwyV/
-k/d0GMFeGvervFKnKsmuA+319F4m7Ygv6e/JlDZRYFfh/8YbHM1s4Rz6HL+OZpw6
-Tm37LWp51LoQbFehqNTI9xPgujMGm74ReoNulLlfguUhKuNuLTg6AasdQaBoIf6V
-C6/gjntd/RfOfgKxCU0QRZGhkooasl7MGFKcfXiRf/5I8wPXHbHIUNUPEngsKRDI
-vVOrTyEZzI5DloutTYtLImDd9WEtuIb+8F0qXBKa17yNNrZKRsP89R9rqICg1CwB
-wPC8rpHfYAerQFbbS7kNj1uJFU0Qneu360XCxnvr7j53WzOG59e0HsKnpu+fvN1k
-REfCDbWHv/zApnxWvjX6EA90m8LbbRXugTg6cNUjXbmY42BuYkfZnXiHKuVOJv33
-S2dgmyGrtnd+jaP9h9FilN1VO4fgsXRLVSyP7JoQfxYfnwwF14I=
-=lYq6
------END PGP SIGNATURE-----
-
---qflP0Qj7SIBB68vm--
+jirka
