@@ -1,144 +1,114 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EAB36A35A
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 21:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1423101CE
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 22:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779659673; cv=none; b=VbV82eNjJWq0W/gBEeWf5QjXj++f7AwmE5fcmUMKu6+EmQH1spmgtEIBzKR/+muLAskl96EqLQs/MawHFBRzsckN4hbcKtDHoSNSDSJSDQQf0YNRwPOlaEIm7wRm83ZVJBZYBLEz1QNm0LZEJoWBNwLz5KOkTufDr9JxIpp8sWg=
+	t=1779660794; cv=none; b=OlfijEo+NDvcuaoJ/nBx9XS2jLS5MQejHWrmO1heWhTBhcQfzdfppPHxHecD+LAXUX5LUXEwMXkI46TLdnhxdeKdxSLsXgUC4zYQPJi88hqm9P7Ef0cboy8aGtT3plcR9PU6+soxBKQlWA6KrDiP/VpQhrz/XtszwmJODonGeLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779659673; c=relaxed/simple;
-	bh=3VERMq+xiLZ9WUMPX8js5tvfdxGKD0cIlLNFz0YzHbA=;
+	s=arc-20240116; t=1779660794; c=relaxed/simple;
+	bh=4EV+3AHSmGaq+veCoOVFN0cd8qdhyH8Mjrda8p8jJ3U=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUZh4VZ5tkq4fPUnH22dLS136bXknSm8ZrP21hgAfXcrG2+UuXzgz77/fewiPgutrHxaCLwzytMjGAPs60vsYfpHmHtLED5HrubvlVbL8aGRjiEdoOKcTDPOj4TqZuojHQ10sKgU9To9MH2NYrSamNHTE11au3pmS+EaH8M8K9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YzjAsLfW; arc=none smtp.client-ip=209.85.128.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=eywlsykbQFRHDaZbq04sci75LrElS49spyN1/+wS9xvl2pLVhpQSNmvWurDTBMY7hNPmm5KtrZDrwXkPI8rjPNZ5Hs4qLCy7et93ZGFidcLZRBcqdcgtW1E3g19k/qpbKbUHrvvuUaCX+dGYZk4byNpOglmO4vjrSKGn9eCvQtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVlH0gsr; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YzjAsLfW"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49042aeeb75so35535835e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 14:54:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVlH0gsr"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-49041fb8c23so20497665e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 15:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779659671; x=1780264471; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=I10QhtVmzV81xL+5R9qfUHIcQyyiwHM6k2SsnmlTNcg=;
-        b=YzjAsLfWg0M9XiBiF5By4f147gf8F8+WJsiU26iQwXuusQD4Ulz5z0hz1wq/Xxa8ir
-         tfJHxOYS2+t/nJ8apfGnD3Y3hPdaZ9zAYMJ2QY5dH4mM5h5hVcfAr8sgil5nXHuN6hte
-         Wreu/1cCaTkVEJrBcbey0IE4g78KdWJ3wC5Vy2lNAsiqZvEZYgqnGE9mNwHtWpGCTwKK
-         8OHE/iyWN1M5zJroxbVVG8eeE9HHIRU0PaMpEtmsniDGI0a27Bf1ag6FYzl/1JZ22uzi
-         kla0ngDclrbR+TdLHw2kfDy5DVjYvOX6WdcmjRkNhJcRFtDI4N6CQZZZpfQWuNtDhv0d
-         47rw==
+        d=gmail.com; s=20251104; t=1779660791; x=1780265591; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h3y4KA1F5mdiEOcyagHDiVSqxB5Bc5d9TXmTdUct4Pg=;
+        b=TVlH0gsrJjCR06WagR0WyZe9g1/956GsRJL0Hz9KVaXuDA5VWaTaQq2AwLYBGwOJFi
+         LXKhl6xkKI5jkDQJvIjzzHtAC4IDerOkPiynA28WYdB7QP2OAWNbWB5n7ZhJgHIcXlox
+         hQNGuJgb3URxEzIk5obk10hrFwQWtUV73SW/xQvSqB09Ni1XYhnqBwqQUQFLspk0i5XO
+         oS17c1NSQZ7hePlnCneqdSX5SkaXo0N7i36GWKbpGZqz0Zo0pOxBheklIfIiqB+ZOjq7
+         AsOZ2blwqsatg70iKaMPReFw4Gl9je/gNNi3PHcheJ2eu3N4aHcfIsUsheGmXsVprhVH
+         6H4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779659671; x=1780264471;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I10QhtVmzV81xL+5R9qfUHIcQyyiwHM6k2SsnmlTNcg=;
-        b=Mk46lcQUJnCyB8dvIE0z9EFIxW1ciN7L5h1YYfdIEnWsu1AncMXE3KaRX94Ksnk6sL
-         WvVtagEnZV40yzhCILxwaZMD1y3mjKlopBgGkyNCwIU1Y1Jahp3KWSJyVaZkBjaZKo2t
-         j1yLPciLHUuTX4ZneIMpXgvbLbrEQJYQCYqTjlOLd1UZrZCjETonHH6RiV6htCowfwq6
-         qw+tJGhk3pI5sVaBYimQp6i1FM10X4MGNBkwPTdIH+6BZ5ylFZ/xRIacAC97AOJOho+P
-         xPXDSmR94wFBW0uE/CG19AVCW3fs1UwkYOPVol52gDRNt1GljdyKnE044PHBaRNPCFwl
-         hQfg==
-X-Forwarded-Encrypted: i=1; AFNElJ8oc9afL/u8fYPffTofz8CmdzP62qvRBT/43ZiA1ronEt8DUTe8lrsuO4J2DO1sTuGKcN3PdDqpwqYmZS2ocktPe+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMKqbGqRqVqygl7pTqh89fRCaDLIPLL3i/JMEqti+vHiW5BnPf
-	e7HsBmCLK8Buc6Ufj6iq0vltE+7HbDaOsyinS9TCUcThFmAbCtdRX73FB8dUA034
-X-Gm-Gg: Acq92OGw37jG9dWyHPPhpXMqLcqvVVbTVVghS/ZYVhY16iWrINHlnfw0eO7HzPx9+bn
-	dkWV723fYGthkbfZ1WUuC5X1H42tgR+dBOwQYz3+y7U8MkI5xqgkYUljgXAgSq7UaOe6XZT6jrp
-	82cuYCe7q4qbNQIeJYOWXl0lceETOsnGBx4OS7zJop2mZbi9Z8ZeyNuMjK3Dd2CIHqbyEuOBy2A
-	/+nM6COeb8sh/JFLkEclJeuJQZCYN2oCTK8Mb7fuENvULhSqRnQ1A1Eqyeq5ZYr3mm5QrTDA2PU
-	liNuXId4bjqhlyHb5u3ksAqySNZmo7rCNgA40kVldXuv6dD3v1A8tXECOpBBWHGv/VJJmsUJEES
-	GZ9YifIMFyIcKJ05XY3IX60B/+xVMgTxE5Y4NbUoNO9XCiRGvNJjLZlep63rGgqG43cZ3YLw3bZ
-	7IW3VED/97Hd4=
-X-Received: by 2002:a05:600c:4fd0:b0:490:3dc7:9778 with SMTP id 5b1f17b1804b1-490426d3f0dmr191593075e9.23.1779659670466;
-        Sun, 24 May 2026 14:54:30 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1779660791; x=1780265591;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h3y4KA1F5mdiEOcyagHDiVSqxB5Bc5d9TXmTdUct4Pg=;
+        b=Ze363R7DtrPD9nCn8j0k/1FzBRLD01ZbCREToFE8YlCufPKar8WH3MlARFsc5sCgvC
+         BVv2zI0OdvuqFpz2S4YjQIV/o6pAW09olkucE0d5mMNszKXVrYfd6PZbrtom7W7I1Wg7
+         nwVMttDqHp82/L/PLQbyAvNYCQvPs9FHJIy21J6U6E10NwzowPsv35d7006rsWnu23b2
+         mv2aVdfIUiA1tRAE7b3rrZ9+Cst5uqiZLhfKHB7lcjkxO2+8G3TKhizjxyz+ddSIDSgr
+         jTy5o5++TM8oV1mCo2Pz69B+J4scHaExCi+Lv3Tb4GFeELFyTepyv/+zQZoMabfSsKSh
+         wU7Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+9L1Vls7MQNaMxZoh3XAM/GbLax5Z4VsFNXA+49S6yqo6JJe/qzG6omKQx5piS9uSquBjwsITLOnQ4Rt/9ZCVJ6+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8UUNU/s4O0xNAAPu8m78VUQjAqqnDYn2SYgoUbHxJEDWOLjyR
+	qNRajCoHEunDj0vENKO+ZuOPBa9gPx1R/PfdSvKNbC08v+rkwDUgVaa7
+X-Gm-Gg: Acq92OESfl0jCKdB7DyJ5zhyJWdBlOBHZQqfMJ0YYriCsbnA4rFJzO0pCLc20b4s1Ic
+	lOdY41cKAivDpjrkhKOIvgNLYyz6XBv+C2ZGb2KjiN1hxkEuDhRG4+XqskcN6NoErDUqa9jM9sl
+	cyetXxz+t06VN6UII5/QX2y72Eq+NONgN+8PNYVrKxBQyMK4OKbLfzUYj5d7q9eGQDEWWkLhQvn
+	ayiG838lXJd99yIGmlzw73y53olXOI3690eLW19fHzexjBQUzt184BjK0Uj6FNKkTDTTXM/1ZDp
+	PEMLQePRSuO+nuJ/EgIYatO74jxcpgF693QMRohrLnL4CFxtQyNTowc8QJPf/lgKVFX9J0qQdga
+	WgdffLL64xePBWa7qBdqEHQ2C/itTBZCg1DGS7JVj5XJun/85Ic4HMRUQ8O+e/yGl25xLmA0CTC
+	eOkFy2c0bP6bv6318w8wsiaQ==
+X-Received: by 2002:a05:600c:3e88:b0:490:48b7:c1ff with SMTP id 5b1f17b1804b1-49048b7c21bmr179598815e9.17.1779660791279;
+        Sun, 24 May 2026 15:13:11 -0700 (PDT)
 Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4904526c926sm345299875e9.1.2026.05.24.14.54.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eb6d5e363sm22901453f8f.28.2026.05.24.15.13.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2026 14:54:29 -0700 (PDT)
+        Sun, 24 May 2026 15:13:10 -0700 (PDT)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 24 May 2026 23:54:28 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 03/12] uprobes/x86: Allow to copy uprobe trampolines on
- fork
-Message-ID: <ahNzlAfUnymDDGOR@krava>
-References: <20260521124411.31133-1-jolsa@kernel.org>
- <20260521124411.31133-4-jolsa@kernel.org>
- <CAEf4BzYo-8PAXFJt9MHoUn9ux1O2YVxJADC0tGSsacVu_R8Stw@mail.gmail.com>
+Date: Mon, 25 May 2026 00:13:08 +0200
+To: bot+bpf-ci@kernel.org
+Cc: oleg@redhat.com, peterz@infradead.org, mingo@kernel.org,
+	mhiramat@kernel.org, andrii@kernel.org, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
+	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCHv3 02/12] uprobes/x86: Remove struct uprobe_trampoline
+ object
+Message-ID: <ahN39D9_-M6AkgUC@krava>
+References: <20260521124411.31133-3-jolsa@kernel.org>
+ <8861cc7af8e0dfff2674ca4ae6381ea2d82c242dec115774e8e11048bde358c4@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYo-8PAXFJt9MHoUn9ux1O2YVxJADC0tGSsacVu_R8Stw@mail.gmail.com>
+In-Reply-To: <8861cc7af8e0dfff2674ca4ae6381ea2d82c242dec115774e8e11048bde358c4@mail.kernel.org>
 
-On Fri, May 22, 2026 at 11:50:54AM -0700, Andrii Nakryiko wrote:
-> On Thu, May 21, 2026 at 5:44 AM Jiri Olsa <jolsa@kernel.org> wrote:
+On Thu, May 21, 2026 at 01:26:09PM +0000, bot+bpf-ci@kernel.org wrote:
+> > commit 35d93b034b144060a547b507cfb4268692c328c2
+> > Author: Jiri Olsa <jolsa@kernel.org>
+> > Date:   Thu May 21 14:44:01 2026 +0200
 > >
-> > When we do fork or clone without CLONE_VM the new process won't
-> > have uprobe trampoline vma objects and at the same time it will
-> > have optimized code calling that trampoline and crash.
+> >     uprobes/x86: Remove struct uprobe_trampoline object
 > >
-> > Fixing this by allowing vma uprobe trampoline objects to be copied
-> > on fork to the new process.
+> >     Removing struct uprobe_trampoline object and it's tracking code,
+> >     because it's not needed. We can do same thing directly on top of
+> >     struct vm_area_struct objects.
 > >
-> > Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  arch/x86/kernel/uprobes.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >     This makes the code simpler and allows easy propagation of the
+> >     trampoline vma object into child process in following change.
 > >
-> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > index 6824376e253d..11ec6b89b135 100644
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -701,7 +701,7 @@ static struct vm_area_struct *get_uprobe_trampoline(unsigned long vaddr)
-> >                 return ERR_PTR(vaddr);
+> >     Note the original code called destroy_uprobe_trampoline if the
+> >     optimiation failed, but it only freed the struct uprobe_trampoline
+> >     object, not the vma.
 > >
-> >         return _install_special_mapping(current->mm, vaddr, PAGE_SIZE,
-> > -                               VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_DONTCOPY|VM_IO,
-> > +                               VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_IO,
+> >     Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> so on fork we'll get sys_uprobe invocations which will go into uprobe
-> trampoline and syscall will just keep returning -EPROTO, is that
-> right?
-
-so the child gets the inherited optimized call path.and now also the
-trampoline, which executes the uprobe syscall and so if there's related
-uprobe it will be processed
-
--EPROTO is returned for uprobe syscall executed out of uprobe trampoline
-
-
+> This looks like a bug fix for a VMA resource leak. The commit message
+> notes that when uprobe optimization failed, the original code only freed
+> the struct uprobe_trampoline object but leaked the VMA created by
+> _install_special_mapping. Should this include:
 > 
-> what would happen in the similar situation for process with int3
-> uprobe being forked/cloned? Will it inherit int3 as well, and then
-> will keep hitting interrupts that would just do nothing?
-> 
-> is there a way to restore original memory page for clones? this
-> behavior (unless I'm misunderstanding) seems suboptimal
-> performance-wise
+>   Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
 
-the standard uprobes seem to handle this situation by removing the brekpoint
-from current->mm, if the uprobe->handler returns UPROBE_HANDLER_REMOVE (for all
-uprobe consumers) .. and the uprobe->handler does current->mm filter first in
-uprobe_perf_func and returns UPROBE_HANDLER_REMOVE in case it does not match
-
-this works also for optimized uprobes on top of standard uprobes
-
-but we don't do that for uprobe_multi and I think we could do something similar,
-the code is there, perhaps we just need to add the filter
+no, the logic stays, we just removed one layer.. but we need separate
+fix for the possible vma leak, will include it in the next version
 
 jirka
