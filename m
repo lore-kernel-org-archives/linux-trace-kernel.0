@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B451DB95E;
-	Mon, 25 May 2026 05:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F113A7F68;
+	Mon, 25 May 2026 06:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779687594; cv=none; b=AMCaTXMJzaY5w7IZNNvSuNoq25ReByQ3soKSx6YXWNR7n7JVrsrfmkJ3VLyURj/dD4gydsdpAOEQYyoV2wVhp9T1cYA5bmnypBeoMFhwMaSoidFz92rX279qwFGIooN6e5LbWWdBMA76dEGTKftEn27DDWkVR57QT8NxUBqstbA=
+	t=1779692329; cv=none; b=jDaCdHSGmEUvimgTjFJxP2OnKpfhYXtsQvzV7s7dep9ohZzCIIzRLhVqEBWh6HX1FtTsSCoUeUp/wgBKJLkQ/iENFlFgzfqQeTwQhZ06CKwBaZDLn5k92sn3nXCY2le4cOTeoE953d5CqCu6q8XH+HYznIGxcMDFTwjkr/9gI8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779687594; c=relaxed/simple;
-	bh=BoqwVIwbfKG6qRBUp1zat90ce/lbL2YJQuhRJf89MYI=;
+	s=arc-20240116; t=1779692329; c=relaxed/simple;
+	bh=uCtAxEldoRH22CpG4fkZRj0mePT37G2v8r21dOq1gSw=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RDQPK18gAefg6twMSkj5wshQClAUcfWX3v9UocKjjwUpjtVTfPJCcuWg/mopv7yL6p27caFw8FcjOnjWds1oblSBH1bWU8AwOwqdA/xdJ62n/zkpHfSdT/7Puq03Cn++UDuL0nVIFKHRT8FiIZHtVNdheflw6O/4LDEZoNjqUKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVTskoiu; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=m9ckw0Qlec8oRR2aRNXxwDkKXJ9FBk7ab2d7YliuL9CvMa7rrTtwbPzyuk/ZEZFS4wjjRyT8xgVlrpw+hAAPXCbTCQC3q9gLA38S24nWhngAudxgyTkzZoznaDsenZivfcHk4Ikxq4wOL9Gjqz/GQn38dpB9hBYuKpcO8l001VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flBwgnmt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVTskoiu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29B0A1F000E9;
-	Mon, 25 May 2026 05:39:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flBwgnmt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DDC1F000E9;
+	Mon, 25 May 2026 06:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779687592;
-	bh=MZaQM1CIJb5tYUUWFqF9iRavZPbaMyVkrb1OWsctPgg=;
+	s=k20260515; t=1779692325;
+	bh=OKHcCSh/5UARppAcfMiYEQyBQ3tGtdQ1BhYUBy/jnPs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=gVTskoiudeMEtTDZow+oGtOHkkXNFHc3FTd1Y38WmGR+97pExD9MpScPG1mRlr1jP
-	 Padw9L0KJKZMC89hBqBRVexRzCSuu3i8KSvenHJflbaNprqVQqCjuZcdkYP69ysl4P
-	 AN70DWTVPKWC4bzW9kbrevY1GfFU9nI0WCC2rwWaWZp89zcJCTd8lkSO/GD4tkaPVC
-	 nVsBEuZtiB9l+5dP5YyUTJJtkMhXe3xnQISF15pjW0RLYxK2NehB2mNpIZtvz7AOJK
-	 6AB9owBfqIhSkpojc8eyweAk3jdhej9H4cfWKGeskCEYrLEm2IdfPpXDw2Gutrc/59
-	 slHM1jvRCZrkQ==
-Date: Mon, 25 May 2026 14:39:47 +0900
+	b=flBwgnmtE57H9zF3clGAshvA4+Rj4r4ALj+FvTjwn6RoyyWuO0am5BXa3Sj08tk9C
+	 yAU+WaJPGwZ8AT/lGGvqZWYAhL4kAPjDAe35WPt1oMFb+bWJPjII07jrH5lpQLTKKh
+	 jXdmuFkTEnFvpfE/6auq978iBSq3fR8KfD8uq+qtx+S/yl6LXCiVrdIysQD49sQ07t
+	 jywWWJpy/Q5FdZyQ3wLq9m7/uvSHIC3LwTPxUy+8ddXo6vCBo9+Zmt71Kb6I1XVjmo
+	 ZL9fQoLmTkzWr/gGktSLWggu+qPyFfVv3zgMUDhOL5UzxlfPKY4svcYxi03mcFhh6T
+	 fdKU8LuzANmrw==
+Date: Mon, 25 May 2026 15:58:41 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com, sashiko-bot@kernel.org,
- sashiko-reviews@lists.linux.dev
-Subject: Re: [PATCH v2] perf/ftrace: Fix WARNING in
- __unregister_ftrace_function
-Message-Id: <20260525143947.ea1c0a7b29146d22faa5feda@kernel.org>
-In-Reply-To: <8f8d0cd380f40b84557304d110f38ecefc994a35.camel@surriel.com>
-References: <20260513161916.04151502@fangorn>
-	<20260520164117.528d02fd@gandalf.local.home>
-	<8f8d0cd380f40b84557304d110f38ecefc994a35.camel@surriel.com>
+To: Li Pengfei <ljdlns1987@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, linux-kernel@vger.kernel.org, cmllamas@google.com,
+ zhangbo56@xiaomi.com, lipengfei28@xiaomi.com, lkp@intel.com
+Subject: Re: [RFC PATCH v2 0/3] trace: stack trace deduplication for ftrace
+ ring buffer
+Message-Id: <20260525155841.b15adcd50d25485aab287043@kernel.org>
+In-Reply-To: <20260522104017.1668638-1-lipengfei28@xiaomi.com>
+References: <20260514034916.2162517-1-lipengfei28@xiaomi.com>
+	<20260522104017.1668638-1-lipengfei28@xiaomi.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,141 +45,36 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 22 May 2026 16:39:41 -0400
-Rik van Riel <riel@surriel.com> wrote:
+Hi Pengfei,
 
-> On Wed, 2026-05-20 at 16:41 -0400, Steven Rostedt wrote:
-> > 
-> > Rik,
-> > 
-> > Can you reply to Sashiko here?
-> > 
-> > The below comes from Sashiko:
-> > https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/20260513161916.04151502%40fangorn
-> > 
-> > Thanks,
-> > 
-> > -- Steve
-> > 
-> > 
-> > > commit f90ac36f39b79a19c015522bb1caf7ef903caf02
-> > > Author: Rik van Riel <riel@surriel.com>
-> > > perf/ftrace: Fix WARNING in __unregister_ftrace_function
-> > > This commit attempts to fix a WARN_ON triggered during
-> > > perf_event_alloc() error
-> > > cleanup by checking FTRACE_OPS_FL_ENABLED before unregistering the
-> > > ftrace
-> > > function. The warning occurs because the ftrace_ops registration
-> > > failed or was
-> > > torn down by perf_try_init_event() earlier, but the event->destroy
-> > > callback is
-> > > executed again during the error path.
-> > > > diff --git a/kernel/trace/trace_event_perf.c
-> > > > b/kernel/trace/trace_event_perf.c
-> > > > index 61e3a2620fa3c..8d64f17135e8f 100644
-> > > > --- a/kernel/trace/trace_event_perf.c
-> > > > +++ b/kernel/trace/trace_event_perf.c
-> > > > @@ -495,7 +495,11 @@ static int
-> > > > perf_ftrace_function_register(struct perf_event *event)
-> > > >  static int perf_ftrace_function_unregister(struct perf_event
-> > > > *event)
-> > > >  {
-> > > >  	struct ftrace_ops *ops = &event->ftrace_ops;
-> > > > -	int ret = unregister_ftrace_function(ops);
-> > > > +	int ret = 0;
-> > > > +
-> > > > +	if (ops->flags & FTRACE_OPS_FL_ENABLED)
-> > > > +		ret = unregister_ftrace_function(ops);
-> > > > +
-> > > >  	ftrace_free_filter(ops);
-> > 
-> > > Does calling ftrace_free_filter() unconditionally here mask a
-> > > double-teardown
-> > > regression while leaving the underlying double-free active?
+On Fri, 22 May 2026 18:40:14 +0800
+Li Pengfei <ljdlns1987@gmail.com> wrote:
+
+> From: Pengfei Li <lipengfei28@xiaomi.com>
 > 
-> I don't see how calling ftrace_free_filter() twice would
-> call issues, given that it sets the ->*_hash values to
-> EMPTY_HASH:
+> Hi Steven, all,
 > 
-> void ftrace_free_filter(struct ftrace_ops *ops)
-> {
->         ftrace_ops_init(ops);
->         if (WARN_ON(ops->flags & FTRACE_OPS_FL_ENABLED))
->                 return;
->         free_ftrace_hash(ops->func_hash->filter_hash);
->         free_ftrace_hash(ops->func_hash->notrace_hash);
->         ops->func_hash->filter_hash = EMPTY_HASH;
->         ops->func_hash->notrace_hash = EMPTY_HASH;
-> }
+> This is v2 of the ftrace stackmap series. It addresses the Sashiko
+> review at [1] and incorporates the kernel test robot's toctree fix.
 > 
-> void free_ftrace_hash(struct ftrace_hash *hash)
-> {
->         if (!hash || hash == EMPTY_HASH)
->                 return;
-> ..
-> 
+> The series adds stack trace deduplication to ftrace. When the
+> stacktrace option is enabled, the ring buffer stores a 4-byte
+> stack_id instead of a full kernel stack trace, while the full
+> stacks are exported via tracefs.
 
-Yeah, confirmed.
+Sashiko still made some comments on the series. Please review it.
 
-> 
-> > > In perf_try_init_event(), if a PMU event_init() succeeds but a
-> > > subsequent
-> > > capability check fails, it explicitly calls event->destroy(event)
-> > > to roll back:
-> > > kernel/events/core.c:perf_try_init_event() {
-> > >     ...
-> > > 		if (ret && event->destroy)
-> > > 			event->destroy(event);
-> > >     ...
-> > > }
-> 
-> The error handling there all seems to "goto err_destroy"
-> 
-> err_destroy:
->         if (event->destroy) {
->                 event->destroy(event);
->                 event->destroy = NULL;
->         }
-> 
-> 
-> > > However, it does not set event->destroy to NULL.
-> 
-> ... but it does?
-> 
-> I am not sure what code Sashiko is looking at,
-> but it does not look like the code I just pulled.
+https://sashiko.dev/#/patchset/20260522104017.1668638-1-lipengfei28%40xiaomi.com
 
-Indeed.
+And reply to the comment on this thread, so that we can discuss it
+here.
 
-> 
-> Is there a different tree I should be looking at
-> than upstream Linus?
-
-You can see the baseline info if you expand the collapsed triangle.
-Anyway, it said:
-
-linux-trace/HEAD (70575e77839f4c5337ce2653b39b86bb365a870e)
-
-So that is linux-trace/master.
-
-commit 70575e77839f4c5337ce2653b39b86bb365a870e (linux-trace/master)
-Merge: 7bc6e90d7aa4 a43ae8057cc1
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri Sep 30 09:41:34 2022 -0700
-
-    Merge tag 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
+Thanks,
 
 
-Hmm, this is too old. And linux-trace/master is not used anymore.
-
-Reported to Sashiko.
-
-https://github.com/sashiko-dev/sashiko/issues/218
-
-Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
