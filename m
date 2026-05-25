@@ -1,146 +1,135 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884E7277C81
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 17:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5626C3254BD;
+	Mon, 25 May 2026 19:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779728676; cv=none; b=KHxksZpU14W+dIsp98WaruPOcddUQF0sLoiabQImaH1AT6IzjksWdm3LzwCsiJT4ThTBIWiGQByZw/aPPDchqevpWhrdJmexapwt2Cf41SihYI3DrSvPIRB0hvA7FgKOWjUc12YQCzUyz+yu9CFtBNV+Q8I6ICxnFnPtt/8sPbk=
+	t=1779736245; cv=none; b=UNdsXaZfsZ63Giblc16NZ/JH0T7iunzeOatud3ItTv8VaRfS4Tbs06x+noXq/ktXPYb3S16kru5L+Y2pG+I7T/UggeSa6qOi6S5zNUBlNUGh/rUDycioUzOUQJf4PpOIAnpVk4iF6Z2hgdMsnKc8RRi+DbdITZc1XJEmq1Dvb4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779728676; c=relaxed/simple;
-	bh=PcXPCW/yoIMVKX3ScIB1BHyYd8omgOqK7kVsG8gOFJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kTyJ1Ypxod7MZbhsXWurT4P/+ZuqIvShj5YVb/qSUZ3LXfl+cdi8+LUKGpJ0eQGV01ZwzZSyMgybcjys56s4+RJqtkizvfdNMgp4NeSUtHd53/Fq01DqhD1gRDEeN8+Us0LWoYlD0vWCmabyLpU/e+x5r7acapviGtltoYdaJGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pQZHmhkz; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779736245; c=relaxed/simple;
+	bh=3zvRuyEGtB5onyH9z+1KBefEZNzGcmzbH91/tGZPqF8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RDpzCYWZy765JPFY8x/nRVm58fXUiyKNe3akeih1R/E4doEDVcB+wCq445tSRrb9RwPLHZi1UlsiUPhPvdSlZJ9t5LCeoEavi+pF/PHG8qP20+Qdol3Y0yQ2On/TIS+4QgSLl8O0dI1M/9+i9lP2m4+C08zvJGpP+6DkH53nc78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bJyrtF7/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQZHmhkz"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-49068493267so7582965e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 10:04:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bJyrtF7/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C011F000E9;
+	Mon, 25 May 2026 19:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779728673; x=1780333473; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XmeW5o8MdJknDGHVfNB5TfOkmVnLEd+83DVfIpbufx4=;
-        b=pQZHmhkzqk/V5HjdmRFkHep0tRcHxPsPNjnhT3MY79VRKMMCaSmY8g2NFw4p/wWP+h
-         sUqTAkh9ufDfpS3GqwBHEdeD6OO0/9QMDW+5CVUDu6y7qzuORrXoOebn3/JMAXV53qDO
-         h18jjUfd7cL1a0FsTdzp1qpYJcz3i083jnHTrkSCtaw0ewW+r/tu2Aq0pGXjhTzF4CCI
-         Y+H8rO+Df47AQ7tBV8ty8QVTzBlB6VVEdPnvh+cluQVAcfftYTmFgxNC4ybiVCdyPnxs
-         mIu1TA7nNwQOAWMv990wnZWqqBCMOVgMjSYPNHm0WOlIJjFC2bl44nLhlS+3JuNPCe3H
-         1nBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779728673; x=1780333473;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XmeW5o8MdJknDGHVfNB5TfOkmVnLEd+83DVfIpbufx4=;
-        b=dGCe1g1kQiNqynCJDbZepWJGHR4bz8IDNHvF9PsV9PQEdJICi+mc1Y8+ka63IWm1gI
-         42lswHjBs4w1NU+dWj+n9q+8j7tsjkVWIwsdabNzpAYU3XNmHZ3ObbQLf8KzPx/t/FTf
-         vIqVKqbxvVkWbe3Al90/DAAZUdTspOTFqxe3Lw9HXKGAakhcM8/EsI6ggnwDNsG7+CcO
-         rwNaxpDuCrAv9qhacT17PlDe040Nmbs1jVXMVNGvN54wUKT49AvXeDNTaIGfHbQybCq1
-         l5YJG11Cs6HWbXLEuDANsPGD0bOTlWpijZNaOxZJ1c7cCxjwEBoFOLUYNuG3itz/DKmb
-         Oarw==
-X-Forwarded-Encrypted: i=1; AFNElJ/82lUXwTLav78xzeJTtWkF3gog7Vla12qHM3DRpm/wDhyx8R/sSVCgriw4qUiNtPqDtliPxFmNKqR5UAmeTL6uHGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEoUw47USGPl3gXvwVfLTgg/4el1BnJPJHlwCfE1nBz8DpuVV8
-	fQ7wQ7K71wFx2tXiEG/qUGi+XSOP/qmT2AMHPecA9MCfVXEySrdlurtr
-X-Gm-Gg: Acq92OHi9Wxzjt75l+X9oETOUN6jqD12zWVmbwqxEf/flPTaI2ufrYMN9Qisi0luPa4
-	RbzkfWprnc4VZyjxD6CWfzB6ry0wS3ctq/oFSuQdOuSPGNNf8YlA6xLnufgCzNMQcrXqyknb1BN
-	vIY/pMp+5Hhj3YfDKDcFlYRHU2th5KBIB40G4o2gbAzBQOgtQuWRp1CalExmco3IGorlkChxudJ
-	ktAz8vlyA62468boC2KDDvCa562xpQ3MdIWGyQ9maW66c54EiEBAAR08BNdlRcJO2kyPlvVP826
-	TGerF7MaoBVKCA9XvnH66NCxOVp3/cN12e8oLE2L68v4Tdf9B4/fJ92WqzNEC7Z1G6BFFGMrjZf
-	edZ779sbhlUdVJ+yYbq2qXUvkw2vLYIU3pym9yVUX6Q4r7PXEJKpMUDnBk+CfkvQXaulZ86qQ8D
-	Qn/eBKzgyGG4xXttKRCt/Dngi3UKjiDvzHswgd2ZMtiHePEglFDzjkvx15gSPVA/GBDBrext1kv
-	Y7i4xAvRUtG4Y1a7AMWD3Nlk3YFzmaKCFw4j5Ul3K7OSPst1mEdD8yILEwUq+hhoAXwuSPMTEzf
-	pqTFQmjSgl8LMbo8MDxo61HoESD47xrasQtBO+bD
-X-Received: by 2002:a05:600c:3106:b0:490:6889:1ff with SMTP id 5b1f17b1804b1-4906889025dmr54325725e9.28.1779728672490;
-        Mon, 25 May 2026 10:04:32 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-2a02-3100-a9eb-0401-e55f-5ad5-546a-1b1a.310.pool.telefonica.de. [2a02:3100:a9eb:401:e55f:5ad5:546a:1b1a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490452580dfsm136970515e9.1.2026.05.25.10.04.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 25 May 2026 10:04:32 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Marco Elver <elver@google.com>,
-	kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Karl Mehltretter <kmehltretter@gmail.com>
-Subject: [PATCH] tracing: Disable KCOV instrumentation for trace_irqsoff.o
-Date: Mon, 25 May 2026 19:04:28 +0200
-Message-Id: <20260525170428.67211-1-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	d=linux-foundation.org; s=korg; t=1779736243;
+	bh=AVOvhANuc/qDLfDQ+IdQxPRPdA0dhJZiZGIRxYHlRHs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=bJyrtF7/OFk+pS/31wbvaD/xB7Rv/k9KDyiU6nymD22iIq9ByUeQhJMkhcoxZxBvF
+	 T8XbpglCc0oyk5HIVB0rFQEQi4FYz25Tjhg9LazpnjtwnljsZVdPxfdkkBEpY4phyg
+	 +1pQAolnanUVT5H5FyT1s9kkMj6evH1jJP7gJpiQ=
+Date: Mon, 25 May 2026 12:10:41 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
+ gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz,
+ jackmanb@google.com, jannh@google.com, jglisse@google.com,
+ joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
+ liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
+ peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
+ rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-unstable v18 11/14] mm/khugepaged: Introduce mTHP
+ collapse support
+Message-Id: <20260525121041.2f2508a4f627c338cddd837a@linux-foundation.org>
+In-Reply-To: <2b2cda8c-358a-4a5c-989c-ae42593ef2ea@redhat.com>
+References: <20260522150009.121603-1-npache@redhat.com>
+	<20260522150009.121603-12-npache@redhat.com>
+	<2b2cda8c-358a-4a5c-989c-ae42593ef2ea@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-When KCOV runs its boot selftest with whole-kernel instrumentation
-enabled, it sets current->kcov_mode to KCOV_MODE_TRACE_PC without
-installing a coverage area. Any instrumented code accepted as task-context
-coverage in that window dereferences current->kcov_area and crashes.
+On Mon, 25 May 2026 08:15:53 -0600 Nico Pache <npache@redhat.com> wrote:
 
-On ARMv5 Versatile PB with CONFIG_KCOV_SELFTEST=y,
-CONFIG_KCOV_INSTRUMENT_ALL=y and CONFIG_IRQSOFF_TRACER=y, boot hits a
-NULL pointer fault during the selftest:
+> Can you please append the following fixup that reverts one of the
+> changes requested in V17. The issue with the change is described
+> below.
 
-  kcov: running self test
-  Internal error: Oops: 5 [#1] ARM
-  PC is at __sanitizer_cov_trace_pc+0x4c/0x90
-  Kernel panic - not syncing: Fatal exception
+OK.  fyi, what I received was badly mangled: wordwrapping, tabs messed
+up, etc.
 
-A diagnostic run showed the unwanted coverage comes from the IRQs-off
-tracer callbacks reached from ARM IRQ entry before hardirq context is
-visible to KCOV:
+Here's my reconstruction:
 
-  __sanitizer_cov_trace_pc from tracer_hardirqs_off+0x18/0x1cc
-  tracer_hardirqs_off from trace_hardirqs_off+0x34/0x54
-  trace_hardirqs_off from __irq_svc+0x58/0xb0
-  __irq_svc from kcov_init+0x7c/0xdc
 
-and similarly through tracer_hardirqs_on().
+Author: Nico Pache <npache@redhat.com>
+Subject: fix potential use-after-free of vma in mthp_collapse()
+Date:=A0Mon May 25 07:38:59 2026 -0600
 
-trace_preemptirq.o is already excluded because this tracing path can run
-from early interrupt code and produce coverage unrelated to syscall
-inputs. Exclude trace_irqsoff.o as well, instead of requiring users to
-turn off CONFIG_KCOV_INSTRUMENT_ALL=y, which is the default whole-kernel
-KCOV mode.
+Between V17 and v18, one reviewer (Wei) brought up that we are not doing
+the uffd-armed check until deep in the collapse operation.  While not
+functionally incorrect, it can lead to unnecessary work.
 
-With the exclusion in place, the same ARMv5 Versatile PB QEMU test boots
-through the KCOV selftest and reaches userspace.
+We optimized this by passing the vma variable to mthp_collapse() and using
+the collapse_max_ptes_none() function to check the state of uffd-armed
+preventing the wasted work later in the collapse.
 
-Tested on ARMv5 Versatile PB QEMU with CONFIG_KCOV_SELFTEST=y,
-CONFIG_KCOV_INSTRUMENT_ALL=y and CONFIG_IRQSOFF_TRACER=y.
+mthp_collapse() is called after mmap_read_unlock(), so the vma pointer can
+become stale.  Remove the vma parameter and pass NULL to
+collapse_max_ptes_none() instead.
 
-Assisted-by: Codex:gpt-5
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
----
- kernel/trace/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Link: https://lore.kernel.org/2b2cda8c-358a-4a5c-989c-ae42593ef2ea@redhat.c=
+om
+Signed-off-by: Nico Pache <npache@redhat.com>
+...
 
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 8d3d96e847d8..f934ff586bd4 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -48,9 +48,10 @@ ifdef CONFIG_GCOV_PROFILE_FTRACE
- GCOV_PROFILE := y
- endif
- 
--# Functions in this file could be invoked from early interrupt
--# code and produce random code coverage.
-+# Functions in these files can run from IRQ entry before hardirq context
-+# is visible to KCOV, and produce coverage unrelated to syscall inputs.
- KCOV_INSTRUMENT_trace_preemptirq.o := n
-+KCOV_INSTRUMENT_trace_irqsoff.o := n
- 
- CFLAGS_bpf_trace.o := -I$(src)
- 
--- 
-2.39.5 (Apple Git-154)
+ mm/khugepaged.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--- a/mm/khugepaged.c~mm-khugepaged-introduce-mthp-collapse-support-fix
++++ a/mm/khugepaged.c
+@@ -1502,9 +1502,9 @@ static unsigned int collapse_mthp_count_
+  * If a collapse is permitted, we attempt to collapse the PTE range into a
+  * mTHP.
+  */
+-static int mthp_collapse(struct mm_struct *mm, struct vm_area_struct *vma,
+-		unsigned long address, int referenced, int unmapped,
+-		struct collapse_control *cc, unsigned long enabled_orders)
++static int mthp_collapse(struct mm_struct *mm, unsigned long address,
++		int referenced, int unmapped, struct collapse_control *cc,
++		unsigned long enabled_orders)
+ {
+ 	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
+ 	int collapsed =3D 0, stack_size =3D 0;
+@@ -1524,7 +1524,7 @@ static int mthp_collapse(struct mm_struc
+ 		if (!test_bit(order, &enabled_orders))
+ 			goto next_order;
+=20
+-		max_ptes_none =3D collapse_max_ptes_none(cc, vma, order);
++		max_ptes_none =3D collapse_max_ptes_none(cc, NULL, order);
+=20
+ 		nr_occupied_ptes =3D collapse_mthp_count_present(cc, offset,
+ 							       nr_ptes);
+@@ -1749,7 +1749,7 @@ out_unmap:
+ 	if (result =3D=3D SCAN_SUCCEED) {
+ 		/* collapse_huge_page expects the lock to be dropped before calling */
+ 		mmap_read_unlock(mm);
+-		nr_collapsed =3D mthp_collapse(mm, vma, start_addr, referenced,
++		nr_collapsed =3D mthp_collapse(mm, start_addr, referenced,
+ 					     unmapped, cc, enabled_orders);
+ 		/* mmap_lock was released above, set lock_dropped */
+ 		*lock_dropped =3D true;
+_
 
