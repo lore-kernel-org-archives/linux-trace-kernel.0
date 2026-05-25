@@ -1,75 +1,73 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B9821A447
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 01:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644BB1DED40
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 02:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779673813; cv=none; b=IIBH+UWkQuHEYi3cxRJm8hL5vM/aczywwsHPXh2YgJKakufJOr8mDJi2GjovSSbtCbehd5DC3Q6fkiNkifc7yWZ8rmjfD1pWtdqTyq3Y/Ql/YORUzNWMgFzfyC1OZh2MzpNgyxaSMmtUa/FYuquHgX//0xQHyljcPvlxzP5pGQM=
+	t=1779674600; cv=none; b=hnLdM8j3234iT0nFEPhfMqh1AcYfJLPt8DV+2wwNrxlHWM9obdrkaMzimxo5HXymzhiwBuLNPEdx99gNDTdBw22l7erfxhmAcLzUlXxwOnc/HpSEfoRehdmfgmRngunQplSsB8B26BH4RjwBk1Zx5y9S5gwdKOpTAF55s9DlSa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779673813; c=relaxed/simple;
-	bh=WItw+Ef2NecqHrR2z8eKezrYOTV9vVAproVcjHSpa8s=;
+	s=arc-20240116; t=1779674600; c=relaxed/simple;
+	bh=tvbe4seE81VJXCS/sV64iAFa1bGbqBGMfj6eA3O0mQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HVBeKoF7GslG+VkndsYRJWKF13ZUWHdW8Ijw2Mifrb1ewy52Fs8RDijboqKUA2OJRTX+30btryKTaIrw4oMax/kmn1oqJ9r+vtUTrBh28Bfp2jrx1hKS/C63eAvtK0XTkLfAQQL8P4P19YRnR8zAEJ9fzwncu7kmjU+Xli+vL74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=S8rhOAxu; arc=none smtp.client-ip=209.85.160.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bgu53ohwlxlzfJgPNgzPxMn9oj1lsyeVEjdEQhVPkVdMXbB0MxdeWUwGkKh33ejnI8xiBQjK0QR/rAyH5bgybS5pGyUxxG3RUAh9kt6NaVBXxoi9xWnhfYXicc661t6EZgMykKnOGeujjpd8Qu1TshKHhqGmFdNVBVCgNLBIDAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=L4VqK2BM; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="S8rhOAxu"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-5165195c8b0so101828211cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 18:50:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="L4VqK2BM"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-914bf8abeaeso196539885a.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 19:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1779673810; x=1780278610; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1779674597; x=1780279397; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HaMGwylp+AdTKGZZEDuVzWMLLa2CVFaFeY7VVe9bsb0=;
-        b=S8rhOAxuUxvInQfgUiQ2mvxTf0rogF94vTf/QgcmXGhoA24Ha5G/S4dCF3bHuL7NV4
-         ee8v7mwuRY6OD9yULJejS3qA3b5l4fsk+zLXBqLX00Y2mj97CyWZ6aAny/UfcpBAXi8W
-         yAZI+dLYcP1cj2Tk+ngTgcEIy6neYCfIuki/MDttJsUTZ7szC0yJxi5lobNjvKq6ToPU
-         XiiFKwQ+OhpcYufR+H26LzTP9W1+hGT2ym2ujh9qG5fUcS0so/h6KolHx4acaW5aUGsT
-         HRqdBQm6HksZCzFY8aFkXofaHMnu+NOCzRys/xWdNmc3qkf8Ze1BBmq8OOwwxi/Cs/nR
-         Iwng==
+        bh=a1dR+qUQ11esis+j6Iq3N8urMnTyCI4LYg4f+Ph15u8=;
+        b=L4VqK2BMZjPaHALdciJSto99TlqA406nZSA0HxJiam/tbt6XUHJtszc+dEn/FdEMl5
+         f7rXTkY30+7rMsqwcEVCifanjHU/QhyDqzAbFaukFAqAMPdP78OTBUX6DQ9holIYAmpK
+         pSOxRATA/uSOpooB3BE2Nk9izHjxZ+LZcwP6EjkxF4oQ5BwnvKkFaLMjPOIGXxq+bCWa
+         spUSybEE+rsMIrccbB66CgxfkLHC4ZmLni5uwft6Dt7cqi6AobOyJ3cOX5OLqcbo9A6N
+         4ebRgzFMnf8cyNUa3HSMJ9A5yIIlnsZjwie19Yk/FU2ZxP0PQCTyayxyd2y7unfUDAOX
+         13qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779673810; x=1780278610;
+        d=1e100.net; s=20251104; t=1779674597; x=1780279397;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HaMGwylp+AdTKGZZEDuVzWMLLa2CVFaFeY7VVe9bsb0=;
-        b=NwHcI7Oak3zTMk50Oi+Um5erFun/l6XTZ1F7OanWVjW923KKsEf4N00C5gxg+gpnm9
-         fFxQlCz5B9/O8ehYxZq6HPGl55kCyTw1FhpeLX4qfn2rMApr8saOJ/vEBHQPWC3My/LZ
-         WScIy+EENIS2QpVInunRo2zCumZkR2krk1Trx9Ip1qhV7yYwkyQvC7+rOyBz+8w+CkHz
-         mb+aHng3TTb2w/kwXNl0e5teakd+59fSJA22rk3SDCdVAIGMxUNUw3BlTFKJM5oHLj47
-         2tGv3RI2gPHvBVWSibRXgxl+WFN6gwiGm8vf6Bc2PIz01KRTGrR5vEcxsYufcnw7jPas
-         WFWQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8vTpJkM5gF1NMX87F2fcTRSoYOPg0ZYfGG75WRco01/ZoIfYei7g/lgAhqxDXX4HyasB55F0IGZmm7AN3yOFO/Oyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZrUKGdBbZmRYDaBP7jpi1DOq1zS+J82NVNqEDflvmP1mo1JBB
-	HqQ7eg6Q65MfJsJpCJiw9LwT8JfD1bkDtPTnqdEygcUVYPE3lNfsH6NSTjGguKLLp6E=
-X-Gm-Gg: Acq92OHRR3Rg8eN5GiuVbWa3ySSkigFYw6xd5PlcxliFKyvt6ApEUEDL8PTK293JDil
-	IqwJLpGFEReH1vjtuyVgJc0k/GqLdCvyN5869enkWEYLd3He1jC1GsDxpprHbn9V2MSAdmJ6sz7
-	taDWk7KxG8BraxOk3JOXdK/ZspJ4nbCAsxrxndxR0qicF7Gkja0UHaykD2/geYZ1N9PexDh+we0
-	eloQLsjEaD8pZX+XqbGUaGa2PjJXeTkJm/Gwk4Li6QWHdXLVl4DE/XilZZKLiiDjgAAha1Mvx61
-	VaLPrBR1bLfDabHGFKSKpIICY0MSdBnjZibmQ76SbV0xUkyl+3+Brwot61y5OkdJCC+woXca1Wd
-	xLRCBHd9Zp678unTlQUawMcfgafNlxkIkGL7LcCchcQZgj00tCu4NH75N0KA/vb4N4NuMCPzY2k
-	pvWUxGBF6ZaVDg05zzUTQjO47tmoFY1E31aVQEZSJD0ae69yFtjuya3RCH+rnm80ogoP3ynlYcV
-	LM2Sa8gJQoQ
-X-Received: by 2002:a05:622a:480a:b0:516:e7d0:73ab with SMTP id d75a77b69052e-516e7d079c5mr94541371cf.40.1779673810351;
-        Sun, 24 May 2026 18:50:10 -0700 (PDT)
+        bh=a1dR+qUQ11esis+j6Iq3N8urMnTyCI4LYg4f+Ph15u8=;
+        b=lM73MZmAUGqUungOhBBzmPemm09g/GXAYkMpfnVT0nmsqLRhr9Xc0F1YbjwpDXcbtD
+         JDrBeT8hzXCNygyb/taPnG02VcA+GzFi5Eueqn9FwzxvJyE06GOk6GeOGpiJUyDx3KxI
+         PmH2vqwidIhkp5pb3sen68wCG78BF/VlOf1CiCFqQ1i4paEw/8KoDE1IfV6N5QoBhNXt
+         h3lMpmA2nMl56huH2OE8bqCsYUnV7fT7pv22vwgGzRmz7wgMuCJWshzj5bSzu9fYNI9C
+         ciFLKjo1g1o5Pbbk34pCBIkMU6V9wOAtMXhpk/79wPcuEG4tkCKbqOf06oGmI9O3TJlo
+         IaYg==
+X-Forwarded-Encrypted: i=1; AFNElJ8E2EL8J9VOLE0AolY9PqF4mcV9QNwrW9dqWp/FcUOO169cfnsD19tTD0LenHXRkAZJe4TnyA1fSXyKzjP8CXnJei0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2X7pUTfQDUNyxQG0IjivvmUEQ9fJMcmVCZ42W68k9vIotdqGM
+	CG5YXF7FJNobDQvF5R+4UTie/jBMQBKThYaqxW2uPSOZbLEBcaVLu/6P7hfyH3Jp65c=
+X-Gm-Gg: Acq92OEr5BuHl3vN7LmtRhrWQkl94qEaGOa7gV+pciiZh8PoHMFqDYWpnxN6Dx4C6tj
+	l6FR+ySCfnxYXfvYAFg09iRck/rXMPsFsMN22dd/EdkD4IH7ccEVnnQE3UXy1t86ZurpHvdkg4B
+	01LcTsi8H+ZbNNiGfvMB7ItBlnqLO7swLwYvWOqC4q70buuYQGFFI9SR0jjP1MtrsVfZBwJmtdH
+	fOh52yWNV811q1sFvHE4M9ggYep6szkK/i3k8+PiLZHVhRk2Mo9iOpWcqXJkfLhI956OmCued89
+	JVNPH4iEit4fI5S+2QZreNI5be02BR3H6od3VtHy7LHJLO3tYJtuDWwoB2m1k4P+92Pjj9KLajb
+	y0KHjK5rj48GBpPN2wTEA0pBoJWS60DZYxOTm0LZHS3fKfbU2Jqz/e8mB91Z0jG5bnHK8Bva+au
+	TD6cCBU+K1/ITruPE7onmJ2jlkpXhkGk8iE3nTtlgnFEppCVhYY4O6ic8HklIPdq4HpmsRrkvyl
+	TPrIbfLJh84
+X-Received: by 2002:a05:620a:372a:b0:914:c100:6a0f with SMTP id af79cd13be357-914c10072a4mr1391916385a.23.1779674597141;
+        Sun, 24 May 2026 19:03:17 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-100-36-248-188.washdc.fios.verizon.net. [100.36.248.188])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516d8cb9f11sm88159681cf.23.2026.05.24.18.50.07
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-914bb8c8034sm892777285a.7.2026.05.24.19.03.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2026 18:50:09 -0700 (PDT)
-Date: Sun, 24 May 2026 21:50:06 -0400
+        Sun, 24 May 2026 19:03:16 -0700 (PDT)
+Date: Sun, 24 May 2026 22:03:13 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Balbir Singh <balbirs@nvidia.com>
+To: Arun George/Arun George <arun.george@samsung.com>
 Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
 	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
 	damon@lists.linux.dev, kernel-team@meta.com,
 	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
+	dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, longman@redhat.com,
 	akpm@linux-foundation.org, david@kernel.org,
 	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
 	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
@@ -88,12 +86,20 @@ Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
 	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
 	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
 	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
+	gost.dev@samsung.com, arungeorge05@gmail.com, cpgs@samsung.com
 Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
  Compressed RAM)
-Message-ID: <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+Message-ID: <ahOt4Zw66ukww2On@gourry-fedora-PF4VCD3F>
 References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
+ <CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
+ <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
+ <ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
+ <1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
+ <afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
+ <1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
+ <afmgJcFUjQLYxkb5@gourry-fedora-PF4VCD3F>
+ <1891546521.01779449881859.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -102,70 +108,111 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ag6XyvxR-NU5rGn-@parvat>
+In-Reply-To: <1891546521.01779449881859.JavaMail.epsvc@epcpadp2new>
 
-On Thu, May 21, 2026 at 04:23:28PM +1000, Balbir Singh wrote:
-> On Sun, Feb 22, 2026 at 03:48:15AM -0500, Gregory Price wrote:
-> > Topic type: MM
-> > 
-> > Presenter: Gregory Price <gourry@gourry.net>
-> > 
-> > This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
-> > managed by the buddy allocator but excluded from normal allocations.
-> > 
-> > I present it with an end-to-end Compressed RAM service (mm/cram.c)
-> > that would otherwise not be possible (or would be considerably more
-> > difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
-> > 
+On Fri, May 22, 2026 at 02:10:34PM +0530, Arun George/Arun George wrote:
+> Thanks.
 > 
-> Do we have updates/notes from the meeting?
+> On 05-05-2026 01:15 pm, Gregory Price wrote:
+> > In the scenario i'm talking about, a "write budget" is defined as a
+> > number of pages that are allows to be mapped writable in the page
+> > tables at any given time.
+> > Agree. I was also in the same context.
+> 
+> I am trying to bring the device perspective here, and would like to 
+> discuss a few corner cases and possible solutions.
+> 
+> As I see, solving the compressed memory problem statement has these 
+> aspects mainly:
+> 
+> 1) Allocation control: private/managed memory concept.
+> 2) Write control: write-protected PTEs, write-controlled use cases like 
+> ZSWAP
+> 3) Proactive reclaims: optional methods to ease back-pressure using 
+> memory shrinkers, ballooning, kswapd, promotion etc. These methods will 
+> be triggered based on notifications/interrupts from the device.
+> 
+> May be they are not enough to cover some corner cases for cram!
+> 
+>   I believe that this thin-provisioned memory infra is susceptible to 
+
+I'm not understanding the "thin provisioned" terminology you're using
+here.  Can you help define what you mean by thin-provision in this case?
+
+> 'writes-above-media-capacity corner cases' (because of not handling 
+> device back-pressure notifications in time) whichever methods we use in 
+> the kernel. Even if we use write-controlled methods like ZSWAP and 
+> pro-active reclaims, there could be corner cases where the communication 
+> with the device could be broken and the write path is not aware of it 
+> immediately. Note that OCP spec [1] says the device should mark the 
+> memory location as 'poisoned' in 'over-capacity' writes.
 > 
 
-I have been on leave since LSF, but I do have some notes posted:
+The intent is to use the low-watermark to prevent new allocations from
+occurring, and the write-controls prevent writing to the device without
+interposition.
 
-https://lore.kernel.org/linux-mm/af9i7dkNvGGxPHzu@gourry-fedora-PF4VCD3F/
-https://lore.kernel.org/linux-mm/agYJcRgOHho8upVv@gourry-fedora-PF4VCD3F/
+With a sufficient watermark such that the interrupt is delivered within
+some number of microseconds, that should be perfectly fine to prevent
+poison from ever occurring at all.
 
-I will be trying to post an updated set stripped down without the GFP
-flag as a first pass w/o RFC tags and no UAPI implications so that
-device folks can play with this upstream.
+Since poison is only delivered *on read*, the system can go a long,
+long time before poison is discovered. From the end-user perspective,
+this poison is basically unacceptable.
 
-I'm debating on whether to include OPS_MEMPOLICY in the initial version
-if only because it's not intuitive how it interacts with pagecache. That
-needs more time to bake.
+So either we can prevent poison from always occurring, or the hardware
+is not viable to support in a scaled production.  
 
-> > 
-> > page = alloc_pages_node(nid, __GFP_PRIVATE, 0);
+If you think a sufficiently conservative watermark + write-protection is
+insufficient to defend against poison, then please let me know why.
+
+> So I have the following proposals / options for this scenario.
 > 
-> Do we want to provide kernel level control over allocation of private
-> pages, I assumed that only user space applications? I would assume
-> node affinity would be the way to do so, unless we have multiple
+>     Option 1: Poisoned data management - This is about accepting that 
+> poisoning of memory locations can happen in much more regular frequency 
+> here than regular memories and we need to figure out potential recovery 
+> mechanisms in host (not recovery of data; but recovery from the poison 
+> situation). But I guess folks will not be okay with it in general, and I 
+> am not aware of any workloads where data poisoning is tolerated (may be 
+> caching workloads?).
 > 
 
-alloc_pages_node() is the kernel interface
+Given option 1, I would never put such a device into my production
+environment.  The only reasonable action for handling poison is killing
+the software, as the data is functionally corrupted.
 
-> > 
-> > /* Ok but I want to do something useful with it */
-> > static const struct node_private_ops ops = {
-> >         .migrate_to     = my_migrate_to,
-> >         .folio_migrate  = my_folio_migrate,
-> >         .flags = NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
-> > };
-> > node_private_set_ops(nid, &ops);
-> >
+>     Option 2 (preferred): Device assisted write budgeting - This is 
+> about a device aware / assisted mechanism for the write-controlled 
+> use-cases (Ex: ZSWAP) to know the 'safe number of  writes' that can be 
+> performed to the device (Or allows to be mapped writable in the page 
+> tables). This could be like a 'token bucket' algorithm, where the device 
+> provides a 'budget / set of tokens' to the host. And it need to be 
+> replenished periodically in the device communication code path; and if 
+> the host does not find the token, writes cannot go ahead.
 > 
-> Could you explain this further? Why does OPS_MIGRATION
-> and OPS_MEMPOLICY needs to be set explictly?
->
 
-Both of these have been removed from the upcoming version, but in this
-RFC version i was testing OPS_MIGRATION as an explicit flag that meant
-"migrate.c can touch the folios" while OPS_MEMPOLICY meant "mempolicy.c
-can touch the folios".
+When I say budgeting, I mean literally a budget of writable pages,
+entirely controlled by software (mm/cram.c or zswap.c or whatever).
 
-As it turns out, OPS_MIGRATION is not a useful filter, as it doesn't
-actually filter anything (anything using OPS_MIGRATION would also need
-its own filter flag, so better to just drop it and do per-server
-opt-ins).
+This has nothing to do with device operation / throttling / bandwidth
+budgets etc.  It is simply a proposal of an optimization that allows the
+user to say:  X out of Y possible pages may be mapped writable.
+
+I don't think this would be part of an initial MVP for a compressed ram
+service (regardless of it's cram.c or zswap.c)
+
+> In short, the communication with the device has to be maintained to make 
+> pages mapped writable. For MVP, this could be a simple constraint of 
+> checking actual device capacity periodically to replenish write-budget 
+> for CRAM. For other users of private nodes (GPU memory?), this 
+> constraint may not be needed at all.
+> 
+> We are planning to send an RFC code which will fit into your CRAM infra 
+> to discuss this poison management approach further.
+> 
+
+I'll try to get a new version out this or next week, apologies for the
+lag on this series, I've had a number of disruptions and major movements
+on the patch set since I last updated it in February.
 
 ~Gregory
