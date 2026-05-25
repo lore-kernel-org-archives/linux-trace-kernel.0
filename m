@@ -1,159 +1,188 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB86E30C177
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 05:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B451DB95E;
+	Mon, 25 May 2026 05:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779686237; cv=none; b=SYwz63he0Wv8bbQnl06gXNZ+0c4kn8+Rzi2DyZasZzxZkerWA8HkyHF4VrgNpdqusOqh4x2r7wbJXEdwiJqW6YeUh4L6I+s934KLiyuleGkzjucKvPnAOOmVctxh3PaatZblU6lB32Dah7t2xSR05ifKo/22LIZXFLwj+nQD+yM=
+	t=1779687594; cv=none; b=AMCaTXMJzaY5w7IZNNvSuNoq25ReByQ3soKSx6YXWNR7n7JVrsrfmkJ3VLyURj/dD4gydsdpAOEQYyoV2wVhp9T1cYA5bmnypBeoMFhwMaSoidFz92rX279qwFGIooN6e5LbWWdBMA76dEGTKftEn27DDWkVR57QT8NxUBqstbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779686237; c=relaxed/simple;
-	bh=TT6fb9wRcDaVAgi9x7/XP+aN+zqiMMogNcrum5LKYb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EkhT6YKnmovYq4BeFV/2w1GLvWq885D4GUNjUMx/6xjyLg+LFbZUM+6wX+vZjnL/4RMEmkIROeQqOdAfvwRv2dm7X8ENuaNdb7tHufsKcCuJ5t3BCuFOAsw8pyAbZQD8E5n3Z06aZ6JGpxwBF2Wl45qhB4jif9DNOozRYmwKuJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hsB0i+7n; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=dKhdZiZJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1779687594; c=relaxed/simple;
+	bh=BoqwVIwbfKG6qRBUp1zat90ce/lbL2YJQuhRJf89MYI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RDQPK18gAefg6twMSkj5wshQClAUcfWX3v9UocKjjwUpjtVTfPJCcuWg/mopv7yL6p27caFw8FcjOnjWds1oblSBH1bWU8AwOwqdA/xdJ62n/zkpHfSdT/7Puq03Cn++UDuL0nVIFKHRT8FiIZHtVNdheflw6O/4LDEZoNjqUKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVTskoiu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hsB0i+7n";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="dKhdZiZJ"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64OIuLma4115476
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 05:17:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GTcW/jqS+R1fyGppCmwLUjOiRqL28+oajKP5jUq4DXs=; b=hsB0i+7ncjNC8A9z
-	LEh2SHbdGGWAJAdPz3eLH0iKrQVFvqfnwU4EG0phGfFvZQnjLV1CeylJ1k1L0wyk
-	HlR2ZWonSkI9ROc5fweo/RcX7qNMG5lKZY5hszBcstTklbFQMWE5dQCS4uQ2Up+k
-	lZkKt98Qy20iUQyLVFL6gzFYdmSWy4ornVUd91Bz/hWyDpFYUBfnO3eYyTUO/6Ys
-	6cvw7rKTPK2t66D+6QdL5CoxTkKC/blrvLY1p0JY6ru4HRgVL5Ur4bbpYZ2stmhB
-	Yc8DGG3Z2MHqMIqC8RBxVSCZ+H36F8KBR14eEShzOGhcfnsz733FOiefuryd9b09
-	kf7pBA==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eb386n6uv-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 05:17:14 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-366ded5ab5fso18243393a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 22:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779686234; x=1780291034; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GTcW/jqS+R1fyGppCmwLUjOiRqL28+oajKP5jUq4DXs=;
-        b=dKhdZiZJB7v6y1Mv+jXSa0RCILUx6iNylOWB1JBC50c55WSBt1kHI/sxBPA4n7+h+V
-         az0n1xQX33g7f3PoA1mUq3RJuGTgJDX3mqdEsk6D3K+fbRPBx69/cLfbAT52d7oMxtW4
-         5iIp4GpX03IQvRxH0oxBZsHyVw1NJZCLHXFXq4aMGXEbq0U/ulQcMEy0qZESi+mdHjQD
-         +1ny9sW5d9VUS2q4PsPieztUCD9wdNbDhwVO5CrY0dTP9KJk0irnu+ybdF7efIDWneUx
-         WFk+Pi5Q7EzYV8c9CHD0XOZcWQ5zpMDcjqSXsKUq3V956niCwcmvlWlqo12BqN80N9WB
-         XTpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779686234; x=1780291034;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GTcW/jqS+R1fyGppCmwLUjOiRqL28+oajKP5jUq4DXs=;
-        b=MXTTCp8v5m63FyAFbLivHxg+PNoUvdyi1ULiQKyK0f22S0pBE5MJ0LfgzJ293pdaLH
-         lNhnSWSwky6xXs6Jp1EX6rwm+Bwc+UjQ8c5o/YdNilM7PIdRKarLzaAm1XB032cPg/AD
-         xittuAFcbd2W0FiaMKifKRZiKYjI5Nr0ffTQ2dFU6xS/nENWzS406Xqdsbn7Ct1lDarg
-         JD1vQsW/u9d19NPftai2e7U/ZbY0NJhDyShfzAvF0yMv6spb2voMWTBFD9FJ/3IfkSyH
-         Ohyqo4UhsWS2RZSuOu0jY4WIxo8HJTIDKnDCiZlV+6LrF5iGGj5ACHTc7nQOFTjPjPnZ
-         JNRg==
-X-Forwarded-Encrypted: i=1; AFNElJ+GV65pUl6HRJqgpfHhQf9BGxS46ZzeF9SSeGIvrq3UyAWcnJ26FDzjzT1RkOCSU4AUhznLWeRxOz/I+A0BJh7au5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY5st5JcDWA02u/7XFx2pZD9yd/2TujSI1edrnJNWhPGkEXh65
-	vj09FVFhcOfQNOzN0mOAychIXyfMX6cugiI3oU0vARX9s4J0BOD8Ei/SDmlUhX0jguQ6Qyo21HJ
-	Y0DPWAgmR6MJot1phe1dU3igAeJE7QLXRx7x4nawfs46ewPunyKhI4JFl0XIrgEjltKx3rBvIEc
-	8=
-X-Gm-Gg: Acq92OFAk/ZpBf0LQvyY1/W/gX7XPNAnSMs/lSdMviXXbm6gEHD8aAp4dGiXAafCtDF
-	0YP19FbvzfwPvATB3CMll4LECRi1NNbGVv/j2yu2sJspuRR5HKpb/VgkDM47ol7G26M6LEYgHAq
-	SJRANnICkzAQkNP+fs0+d6LU6d3FoEPMs06xpcdvaCx4s3YIUykwJeOBew/wcy+dSNJbdZgS/4V
-	cZUyHmYigtYXpplRP/OT20adrZASVJE/R1wLsxXL7Pu57euAG3BTXNxNdkcLmb3sTqD1VwF6nJa
-	npWyvV6JJLRmqUb/3vODvDGb79xSHatibVXl+YcFSPCRoKb5xK1U7nOMHqH8eTZue3imlsKcNqx
-	z9lEzP6DXLIDepdnlms0lFzfPQL+H3Cb9h4vKjJ+WExLMukOsBfJHTg==
-X-Received: by 2002:a17:90b:1d8c:b0:366:33a6:9921 with SMTP id 98e67ed59e1d1-36a67422decmr12178435a91.4.1779686233693;
-        Sun, 24 May 2026 22:17:13 -0700 (PDT)
-X-Received: by 2002:a17:90b:1d8c:b0:366:33a6:9921 with SMTP id 98e67ed59e1d1-36a67422decmr12178413a91.4.1779686233253;
-        Sun, 24 May 2026 22:17:13 -0700 (PDT)
-Received: from [10.92.183.29] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c852057f9cdsm6963798a12.32.2026.05.24.22.17.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 May 2026 22:17:12 -0700 (PDT)
-Message-ID: <22a52e0b-849e-485b-ac6c-ae55c2b75be7@oss.qualcomm.com>
-Date: Mon, 25 May 2026 10:47:07 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVTskoiu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29B0A1F000E9;
+	Mon, 25 May 2026 05:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779687592;
+	bh=MZaQM1CIJb5tYUUWFqF9iRavZPbaMyVkrb1OWsctPgg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=gVTskoiudeMEtTDZow+oGtOHkkXNFHc3FTd1Y38WmGR+97pExD9MpScPG1mRlr1jP
+	 Padw9L0KJKZMC89hBqBRVexRzCSuu3i8KSvenHJflbaNprqVQqCjuZcdkYP69ysl4P
+	 AN70DWTVPKWC4bzW9kbrevY1GfFU9nI0WCC2rwWaWZp89zcJCTd8lkSO/GD4tkaPVC
+	 nVsBEuZtiB9l+5dP5YyUTJJtkMhXe3xnQISF15pjW0RLYxK2NehB2mNpIZtvz7AOJK
+	 6AB9owBfqIhSkpojc8eyweAk3jdhej9H4cfWKGeskCEYrLEm2IdfPpXDw2Gutrc/59
+	 slHM1jvRCZrkQ==
+Date: Mon, 25 May 2026 14:39:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Rik van Riel <riel@surriel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com, sashiko-bot@kernel.org,
+ sashiko-reviews@lists.linux.dev
+Subject: Re: [PATCH v2] perf/ftrace: Fix WARNING in
+ __unregister_ftrace_function
+Message-Id: <20260525143947.ea1c0a7b29146d22faa5feda@kernel.org>
+In-Reply-To: <8f8d0cd380f40b84557304d110f38ecefc994a35.camel@surriel.com>
+References: <20260513161916.04151502@fangorn>
+	<20260520164117.528d02fd@gandalf.local.home>
+	<8f8d0cd380f40b84557304d110f38ecefc994a35.camel@surriel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] spi: qcom-geni: Add trace events for Qualcomm GENI
- SPI driver
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Praveen Talari <praveen.talari@oss.qualcomm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu
- <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        aniket.randive@oss.qualcomm.com, chandana.chiluveru@oss.qualcomm.com,
-        jyothi.seerapu@oss.qualcomm.com
-References: <20260518-add-tracepoints-for-qcom-geni-spi-v3-0-7928f6810a79@oss.qualcomm.com>
- <20260518-add-tracepoints-for-qcom-geni-spi-v3-2-7928f6810a79@oss.qualcomm.com>
- <12d8da90-f092-449f-af6b-14b9dd851f1e@oss.qualcomm.com>
- <5c59952f-72c5-4aee-a1a6-4b11b0a542c3@oss.qualcomm.com>
-Content-Language: en-US
-From: Mukesh Savaliya <mukesh.savaliya@oss.qualcomm.com>
-In-Reply-To: <5c59952f-72c5-4aee-a1a6-4b11b0a542c3@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: aK3JjjWpAE2octidQaEPz4D9jpCXBA0h
-X-Proofpoint-GUID: aK3JjjWpAE2octidQaEPz4D9jpCXBA0h
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI1MDA1MCBTYWx0ZWRfX9yac5RUv3PzU
- tBZr6Kp6mPK6kN/9dG3LU9Cf8KjPwIGAvwJvAyNnssagC4AcJj1wv5LRluaecYEdRDMHPCfPqea
- sRP62U4Ixw7FF/zqfHOp8245AqgQtWsMwr8rrPhS+dt5HSROYK7D/HAHtbIfrEu8bm/mEk4GNFK
- t+lMAcbFI03iZy4dxqN6ziEMGcfUcxe7GAE1cKZxZeRHvyzO1fJMj/ZHlJLS+jrpWwGmOSeQi6G
- seXcWMJEqOMXR3hAbF9b4wcrg10+8ETkr83eP6PB+gE9DEyJzcjmp53TZLn3mxdJ8xWRDNXhRrO
- mDyMVGqsdKk4quCJqG9DV8TkInZ/WnUad5+aqWE+sKiCrONuwJjn8P9YXk4sKtTimnufbQw9HOP
- XKcfT8RcV8K0l3Lruk4cTZ8SdvoxVIuGBXRMh/8tvvNwhP0EUEq0URvu4V0in31Sx2Kl1W0UI/1
- DtLJUJYNrV4wvc1cLXw==
-X-Authority-Analysis: v=2.4 cv=PJY/P/qC c=1 sm=1 tr=0 ts=6a13db5a cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
- a=v0BZMRiMjL-9nwr9ESwA:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
- a=uKXjsCUrEbL0IQVhDsJ9:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-25_01,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 adultscore=0 suspectscore=0 malwarescore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
- definitions=main-2605250050
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On Fri, 22 May 2026 16:39:41 -0400
+Rik van Riel <riel@surriel.com> wrote:
 
-
-On 5/19/2026 5:04 PM, Konrad Dybcio wrote:
-> On 5/19/26 12:59 PM, Mukesh Savaliya wrote:
->> Hi Praveen, one question below.
->>
->> On 5/18/2026 10:30 PM, Praveen Talari wrote:
->>> Add tracepoints to the Qualcomm GENI (Generic Interface) SPI driver.
->>> These trace events enable runtime debugging and performance analysis
->>> of SPI operations.
->>>
->>> The trace events capture SPI clock configuration, setup parameters,
->>> transfer details, interrupt status.
->> Don't you need trace logs around PM operations ? ie. runtime and system PM ?
+> On Wed, 2026-05-20 at 16:41 -0400, Steven Rostedt wrote:
+> > 
+> > Rik,
+> > 
+> > Can you reply to Sashiko here?
+> > 
+> > The below comes from Sashiko:
+> > https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/20260513161916.04151502%40fangorn
+> > 
+> > Thanks,
+> > 
+> > -- Steve
+> > 
+> > 
+> > > commit f90ac36f39b79a19c015522bb1caf7ef903caf02
+> > > Author: Rik van Riel <riel@surriel.com>
+> > > perf/ftrace: Fix WARNING in __unregister_ftrace_function
+> > > This commit attempts to fix a WARN_ON triggered during
+> > > perf_event_alloc() error
+> > > cleanup by checking FTRACE_OPS_FL_ENABLED before unregistering the
+> > > ftrace
+> > > function. The warning occurs because the ftrace_ops registration
+> > > failed or was
+> > > torn down by perf_try_init_event() earlier, but the event->destroy
+> > > callback is
+> > > executed again during the error path.
+> > > > diff --git a/kernel/trace/trace_event_perf.c
+> > > > b/kernel/trace/trace_event_perf.c
+> > > > index 61e3a2620fa3c..8d64f17135e8f 100644
+> > > > --- a/kernel/trace/trace_event_perf.c
+> > > > +++ b/kernel/trace/trace_event_perf.c
+> > > > @@ -495,7 +495,11 @@ static int
+> > > > perf_ftrace_function_register(struct perf_event *event)
+> > > >  static int perf_ftrace_function_unregister(struct perf_event
+> > > > *event)
+> > > >  {
+> > > >  	struct ftrace_ops *ops = &event->ftrace_ops;
+> > > > -	int ret = unregister_ftrace_function(ops);
+> > > > +	int ret = 0;
+> > > > +
+> > > > +	if (ops->flags & FTRACE_OPS_FL_ENABLED)
+> > > > +		ret = unregister_ftrace_function(ops);
+> > > > +
+> > > >  	ftrace_free_filter(ops);
+> > 
+> > > Does calling ftrace_free_filter() unconditionally here mask a
+> > > double-teardown
+> > > regression while leaving the underlying double-free active?
 > 
-> The PM core provides a couple, are those enough?
+> I don't see how calling ftrace_free_filter() twice would
+> call issues, given that it sets the ->*_hash values to
+> EMPTY_HASH:
 > 
-Understood, should be enough. Thanks !
-> Konrad
+> void ftrace_free_filter(struct ftrace_ops *ops)
+> {
+>         ftrace_ops_init(ops);
+>         if (WARN_ON(ops->flags & FTRACE_OPS_FL_ENABLED))
+>                 return;
+>         free_ftrace_hash(ops->func_hash->filter_hash);
+>         free_ftrace_hash(ops->func_hash->notrace_hash);
+>         ops->func_hash->filter_hash = EMPTY_HASH;
+>         ops->func_hash->notrace_hash = EMPTY_HASH;
+> }
+> 
+> void free_ftrace_hash(struct ftrace_hash *hash)
+> {
+>         if (!hash || hash == EMPTY_HASH)
+>                 return;
+> ..
+> 
 
+Yeah, confirmed.
+
+> 
+> > > In perf_try_init_event(), if a PMU event_init() succeeds but a
+> > > subsequent
+> > > capability check fails, it explicitly calls event->destroy(event)
+> > > to roll back:
+> > > kernel/events/core.c:perf_try_init_event() {
+> > >     ...
+> > > 		if (ret && event->destroy)
+> > > 			event->destroy(event);
+> > >     ...
+> > > }
+> 
+> The error handling there all seems to "goto err_destroy"
+> 
+> err_destroy:
+>         if (event->destroy) {
+>                 event->destroy(event);
+>                 event->destroy = NULL;
+>         }
+> 
+> 
+> > > However, it does not set event->destroy to NULL.
+> 
+> ... but it does?
+> 
+> I am not sure what code Sashiko is looking at,
+> but it does not look like the code I just pulled.
+
+Indeed.
+
+> 
+> Is there a different tree I should be looking at
+> than upstream Linus?
+
+You can see the baseline info if you expand the collapsed triangle.
+Anyway, it said:
+
+linux-trace/HEAD (70575e77839f4c5337ce2653b39b86bb365a870e)
+
+So that is linux-trace/master.
+
+commit 70575e77839f4c5337ce2653b39b86bb365a870e (linux-trace/master)
+Merge: 7bc6e90d7aa4 a43ae8057cc1
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Sep 30 09:41:34 2022 -0700
+
+    Merge tag 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
+
+
+Hmm, this is too old. And linux-trace/master is not used anymore.
+
+Reported to Sashiko.
+
+https://github.com/sashiko-dev/sashiko/issues/218
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
