@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFFB1F3BA2;
-	Mon, 25 May 2026 00:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1DE1F3BA2;
+	Mon, 25 May 2026 00:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779670584; cv=none; b=HmgrqXGdd1vXO1h6wuZCxFFxbt3UChcy0wRz3DUDa/+xnUOdWCrmMwpBOVsuqPp3DDKCve0SEj56SJvvdqnkStbdJtQLmdGmreeIHn9MCTw9QiT4XkU145kcWtp3dic/5FckcYllW48/cLoraIF9UcugR12LLNbCZCVgkKcb/oE=
+	t=1779670698; cv=none; b=qsUD5qZXgfNUEz1KqMoOZm+/m4JCNGCsT5pLJUiBgWj0sQszfXqkxUVx9Hu3REx0sqq0lzneDLG+DG7ZIlMhvu+BOb8mk0r71D7YhyKs1wFQdjNQ0YBIyjc+qQQrGZUYUf06z4M0Fz19L7dCgISSO2hhSngys76gkgeWmEbba3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779670584; c=relaxed/simple;
-	bh=kWSEsz5/zusy6zyR1e84AJnCRbPa6pNpUvgMGE/NYE4=;
+	s=arc-20240116; t=1779670698; c=relaxed/simple;
+	bh=VXjNEbhXEAbacbs/W/C/pP4t4zdAdjb9xU+9zwa7KCY=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qrWmL3JCzc14uHsBSGE3I9U/RrzTyqPw1X98tMnzLSFiPo02axtZXJEV+qvkQSZdkuJPjdvUAkw0t3bC8TsrgxROd7m78MHbVpmyE3NEe7ZoCtzc+txCu1LN9omc3mZnwjwlsrRP8Za9tZPNKbGxyfG7ZNy5MkLO0E/1Xy+cKeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjWwepuy; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=oGADjk41Yv2X5RzrCMV8Fmhh+/2cByAJd6ql8plwnNlj0O3SLAoHO8pJ0J6tylZBVzTXMrY/62ETq2Om6FL7sNyTntzhe6poyBHn0KZZPK1P5hcy9HvLQ7JTmYUOfAaRYnO5nS/z/KUiwZR6BdZZ/6KwRMrHAJF3EnXlMIS8gJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRXBBhGJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjWwepuy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E15F1F000E9;
-	Mon, 25 May 2026 00:56:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRXBBhGJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8951F000E9;
+	Mon, 25 May 2026 00:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779670582;
-	bh=eqWU+SdHL9ZGMrXSyouftQPSh288qp7vXeyLbZSDHPk=;
+	s=k20260515; t=1779670697;
+	bh=kItyJfk/NDXzfvCw5H+FZemy71G0tyI1fLonqwJ0+DM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=TjWwepuy1rgf/b2TFtmb+VGytT3Sl6C4mt2N0AdMf6W7dJffR31m4yrYn+GCfdESI
-	 gZkKDCNOg5yOmW7QPf0DLNTiPYdwTmNzza9ApTp2r0ysn+9ujQspcUhuRpvSo6H3tF
-	 PQ0C7adF3PKQbQ81xgUDKJVbQjt5zddwiRRGmv3+95Njgrr6FdFbndz0TA8xV6EdmO
-	 ZLZXstMQ3ZBdvMzpx/nY1YgOXE+pM65fBEjv3ustHhpWk3uYLQvxoxRS7O/wshSqn1
-	 GQjKdcHhWAs16n391bptC/PumGg77vgcZNe+3qB13tBCv5BwU+lRKyPLqBkI50dDnV
-	 BEM2pTRoVLkIA==
-Date: Mon, 25 May 2026 09:56:19 +0900
+	b=gRXBBhGJZn36xgPTJT6CeayHJkWlwGrSN47by2MytBFPQpCtt7F1kdZ5YQDtMuuZU
+	 6+4/GqdJiMgBnSVpVNTGCAu5btnLwa1H5oSeQ8lWNagJWzAUDVWn9D+7oTIZthOg+c
+	 Rjpq9tXwpbx47wPnAdFvcPBMtbSXGd4i9GSnDhkD1Zegi2G7GeUnKwv1uVuh89h/po
+	 UXBFGihgJQIr7CC+Vy0nVV+9eDflEQdIsD08HB9TGWuDMz9PEY6epwprQJmkTq7OjF
+	 HnBq0mciX2r40VAr7RvZjkD8j43gYIcz8nX/QqZHJsR9Sf0aeV92UgSR2Qly9v5hrO
+	 3kk+MuMR6Ilkw==
+Date: Mon, 25 May 2026 09:58:14 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Yifei Chu <yifeichu24@gmail.com>
 Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
  <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
  Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] tracing/uprobe: oversized dynamic ustring triggers
- WARN_ON_ONCE panic
-Message-Id: <20260525095619.b3b90a09044914743721935e@kernel.org>
-In-Reply-To: <CAPJnbgJ3ayTqZvau6x4c5Y0=xsL_hUeDm1mVTKCYAhfGZCL6bg@mail.gmail.com>
-References: <CAPJnbgJ3ayTqZvau6x4c5Y0=xsL_hUeDm1mVTKCYAhfGZCL6bg@mail.gmail.com>
+Subject: Re: [BUG] tracing/kprobe: perf dynamic ustring sample can exceed
+ PERF_MAX_TRACE_SIZE and WARN
+Message-Id: <20260525095814.fe02302d1610005e64138e2f@kernel.org>
+In-Reply-To: <CAPJnbgKc7swb2MdOuRHcLUWNX5iApK=-RVN5r6kE74XF=nPgPg@mail.gmail.com>
+References: <CAPJnbgKc7swb2MdOuRHcLUWNX5iApK=-RVN5r6kE74XF=nPgPg@mail.gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,28 +47,32 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Sun, 24 May 2026 10:44:09 -0400
+Hi
+
+On Sun, 24 May 2026 10:44:20 -0400
 Yifei Chu <yifeichu24@gmail.com> wrote:
 
 > Hello,
 > 
-> Short version: I can make trace_uprobe hit WARN_ON_ONCE() by creating an
-> uprobe/uretprobe event with several dynamic ustring fetch args. With
-> panic_on_warn=1, this becomes a reproducible panic.
+> Short version: I can make a kprobe/kretprobe trace event with dynamic
+> ustring fetch args ask perf_trace_buf_alloc() for more than
+> PERF_MAX_TRACE_SIZE. That hits WARN_ONCE(), and with panic_on_warn=1 it
+> becomes a reproducible kernel panic.
 > 
-> The setup is pretty direct. The reproducers mount tracefs, create a trace
-> event with several ustring arguments pointing at a 4095-byte userspace
-> string, and then trigger the event. At probe hit time, the dynamic string
-> sizes are accumulated and prepare_uprobe_buffer() sees a payload larger
-> than MAX_UCB_BUFFER_SIZE/PAGE_SIZE:
+> The reproducers create a kprobe or kretprobe trace event with several
+> ustring args pointing at a 4095-byte userspace string, open the event
+> through perf_event_open(PERF_TYPE_TRACEPOINT), and trigger it. The dynamic
+> payload size is then passed to perf_trace_buf_alloc():
 > 
-> WARN_ON_ONCE(ucb->dsize > MAX_UCB_BUFFER_SIZE)
+> WARN_ONCE(size > PERF_MAX_TRACE_SIZE, …)
 > 
-> I reproduced the same class through both uprobe and uretprobe events.
+> I reproduced this through both kprobe and kretprobe events.
 
-This should be fixed by [1]
+This also should be fixed by [1]
 
 [1] https://lore.kernel.org/all/20260428122302.706610ba@gandalf.local.home/
+
+But thank you for reporting.
 
 Thanks,
 
@@ -79,28 +83,29 @@ Thanks,
 > gcc 12.3.0, GNU ld 2.38
 > Boot args included: panic_on_warn=1 nokaslr console=ttyS0
 > 
-> Uprobe result:
+> Kprobe result:
 > 
-> WARNING: kernel/trace/trace_uprobe.c:982 at
-> prepare_uprobe_buffer.part.0+0x458/0x5b0
+> perf buffer not large enough, wanted 16420, have 8192
+> WARNING: kernel/trace/trace_event_perf.c:405 at
+> perf_trace_buf_alloc+0x111/0x160
 > Kernel panic - not syncing: kernel: panic_on_warn set …
 > 
-> Uretprobe result:
+> Kretprobe result:
 > 
-> triggering uretprobe oversized ustring buffer at offset 0x1db0
-> WARNING: kernel/trace/trace_uprobe.c:982 at
-> prepare_uprobe_buffer.part.0+0x458/0x5b0
-> uretprobe_dispatcher+0x328/0x3e0
+> perf buffer not large enough, wanted 16428, have 8192
+> WARNING: kernel/trace/trace_event_perf.c:405 at
+> perf_trace_buf_alloc+0x111/0x160
+> kretprobe_perf_func+0x24b/0x750
 > Kernel panic - not syncing: kernel: panic_on_warn set …
 > 
-> I checked current mainline source and still see the runtime WARN path in
-> kernel/trace/trace_uprobe.c. I have reproduced the panic on the 7.0.9 QEMU
-> build above; I have not yet runtime-tested current mainline.
+> I checked current mainline source and still see PERF_MAX_TRACE_SIZE as 8192
+> and the WARN_ONCE path in perf_trace_buf_alloc(). I have reproduced the
+> panic on the 7.0.9 QEMU build above; I have not yet runtime-tested current
+> mainline.
 > 
-> My expectation is that oversized user-controlled dynamic trace data should
-> be rejected, capped, or dropped before it reaches a WARN invariant. A
-> tracefs user should not be able to turn a long string fetch into a kernel
-> warning/panic.
+> My expectation is that a user-defined dynamic trace payload that is too
+> large for the perf trace buffer should be rejected, capped, or dropped
+> without reaching WARN_ONCE().
 > 
 > The attached tarball has README files, both C reproducers, and the full
 > QEMU logs.
