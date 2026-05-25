@@ -1,218 +1,94 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644BB1DED40
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 02:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8492853FD;
+	Mon, 25 May 2026 02:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779674600; cv=none; b=hnLdM8j3234iT0nFEPhfMqh1AcYfJLPt8DV+2wwNrxlHWM9obdrkaMzimxo5HXymzhiwBuLNPEdx99gNDTdBw22l7erfxhmAcLzUlXxwOnc/HpSEfoRehdmfgmRngunQplSsB8B26BH4RjwBk1Zx5y9S5gwdKOpTAF55s9DlSa0=
+	t=1779675679; cv=none; b=XPG3fIqhTpDi2isBs36zQT3r5U57omwXpQsghRmouYPiXES7Yuqp194AYEA+vKjICbR2r7SI9xGzVUb5vYJFpxtSo4UrabhVILs8wfeq5/6bkhLLTHXNG728sddc6Vgwc4NRNCZZW8RoKGC47xZgLTv2RcNfPwj8+fkvCzq/rfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779674600; c=relaxed/simple;
-	bh=tvbe4seE81VJXCS/sV64iAFa1bGbqBGMfj6eA3O0mQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bgu53ohwlxlzfJgPNgzPxMn9oj1lsyeVEjdEQhVPkVdMXbB0MxdeWUwGkKh33ejnI8xiBQjK0QR/rAyH5bgybS5pGyUxxG3RUAh9kt6NaVBXxoi9xWnhfYXicc661t6EZgMykKnOGeujjpd8Qu1TshKHhqGmFdNVBVCgNLBIDAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=L4VqK2BM; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1779675679; c=relaxed/simple;
+	bh=AwPzc6WQaEuKk15MZfiOHNLaEW8Iw4/2Iv59YwWJATg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SGEG6CIoerR/ZZSyv2wHj7rI4cPK7t0rdQ1cDbRMRiaVb+S2qNfeMW7M7qNbxZADX5BsC7girPzwVgTqEQC2EKYRh4CwpalgtQhX/vIN263U0RtxtN8/NVt/+tYEoEpVA87vilsYVr02IdfMi5u+i7bmFhqBWhXy9dOG92qbohE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0UbNc5H; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="L4VqK2BM"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-914bf8abeaeso196539885a.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 24 May 2026 19:03:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1779674597; x=1780279397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1dR+qUQ11esis+j6Iq3N8urMnTyCI4LYg4f+Ph15u8=;
-        b=L4VqK2BMZjPaHALdciJSto99TlqA406nZSA0HxJiam/tbt6XUHJtszc+dEn/FdEMl5
-         f7rXTkY30+7rMsqwcEVCifanjHU/QhyDqzAbFaukFAqAMPdP78OTBUX6DQ9holIYAmpK
-         pSOxRATA/uSOpooB3BE2Nk9izHjxZ+LZcwP6EjkxF4oQ5BwnvKkFaLMjPOIGXxq+bCWa
-         spUSybEE+rsMIrccbB66CgxfkLHC4ZmLni5uwft6Dt7cqi6AobOyJ3cOX5OLqcbo9A6N
-         4ebRgzFMnf8cyNUa3HSMJ9A5yIIlnsZjwie19Yk/FU2ZxP0PQCTyayxyd2y7unfUDAOX
-         13qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779674597; x=1780279397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a1dR+qUQ11esis+j6Iq3N8urMnTyCI4LYg4f+Ph15u8=;
-        b=lM73MZmAUGqUungOhBBzmPemm09g/GXAYkMpfnVT0nmsqLRhr9Xc0F1YbjwpDXcbtD
-         JDrBeT8hzXCNygyb/taPnG02VcA+GzFi5Eueqn9FwzxvJyE06GOk6GeOGpiJUyDx3KxI
-         PmH2vqwidIhkp5pb3sen68wCG78BF/VlOf1CiCFqQ1i4paEw/8KoDE1IfV6N5QoBhNXt
-         h3lMpmA2nMl56huH2OE8bqCsYUnV7fT7pv22vwgGzRmz7wgMuCJWshzj5bSzu9fYNI9C
-         ciFLKjo1g1o5Pbbk34pCBIkMU6V9wOAtMXhpk/79wPcuEG4tkCKbqOf06oGmI9O3TJlo
-         IaYg==
-X-Forwarded-Encrypted: i=1; AFNElJ8E2EL8J9VOLE0AolY9PqF4mcV9QNwrW9dqWp/FcUOO169cfnsD19tTD0LenHXRkAZJe4TnyA1fSXyKzjP8CXnJei0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2X7pUTfQDUNyxQG0IjivvmUEQ9fJMcmVCZ42W68k9vIotdqGM
-	CG5YXF7FJNobDQvF5R+4UTie/jBMQBKThYaqxW2uPSOZbLEBcaVLu/6P7hfyH3Jp65c=
-X-Gm-Gg: Acq92OEr5BuHl3vN7LmtRhrWQkl94qEaGOa7gV+pciiZh8PoHMFqDYWpnxN6Dx4C6tj
-	l6FR+ySCfnxYXfvYAFg09iRck/rXMPsFsMN22dd/EdkD4IH7ccEVnnQE3UXy1t86ZurpHvdkg4B
-	01LcTsi8H+ZbNNiGfvMB7ItBlnqLO7swLwYvWOqC4q70buuYQGFFI9SR0jjP1MtrsVfZBwJmtdH
-	fOh52yWNV811q1sFvHE4M9ggYep6szkK/i3k8+PiLZHVhRk2Mo9iOpWcqXJkfLhI956OmCued89
-	JVNPH4iEit4fI5S+2QZreNI5be02BR3H6od3VtHy7LHJLO3tYJtuDWwoB2m1k4P+92Pjj9KLajb
-	y0KHjK5rj48GBpPN2wTEA0pBoJWS60DZYxOTm0LZHS3fKfbU2Jqz/e8mB91Z0jG5bnHK8Bva+au
-	TD6cCBU+K1/ITruPE7onmJ2jlkpXhkGk8iE3nTtlgnFEppCVhYY4O6ic8HklIPdq4HpmsRrkvyl
-	TPrIbfLJh84
-X-Received: by 2002:a05:620a:372a:b0:914:c100:6a0f with SMTP id af79cd13be357-914c10072a4mr1391916385a.23.1779674597141;
-        Sun, 24 May 2026 19:03:17 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-100-36-248-188.washdc.fios.verizon.net. [100.36.248.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-914bb8c8034sm892777285a.7.2026.05.24.19.03.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2026 19:03:16 -0700 (PDT)
-Date: Sun, 24 May 2026 22:03:13 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Arun George/Arun George <arun.george@samsung.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
-	gost.dev@samsung.com, arungeorge05@gmail.com, cpgs@samsung.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <ahOt4Zw66ukww2On@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
- <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
- <ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
- <1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
- <afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
- <1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
- <afmgJcFUjQLYxkb5@gourry-fedora-PF4VCD3F>
- <1891546521.01779449881859.JavaMail.epsvc@epcpadp2new>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0UbNc5H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFDE1F000E9;
+	Mon, 25 May 2026 02:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779675678;
+	bh=8H+/mwgTDWRz94P3YnfwQbYHhECkqRVHbHWby5SNq0g=;
+	h=From:To:Cc:Subject:Date;
+	b=k0UbNc5HoRaHuTfkHbZcmDwihZgedR8IAeDPzVi5X0bGmVtinUDEnlu6jaASW31PN
+	 na2zGTH8kTvX7pGgOlAcEpU2/gUE1IIbBaovVxBnB6nX4gyI0hWWFjm8VBbGc+Qvne
+	 BtKbAv/pXzrI2vOhnw4mxD6pUe4bSFjVHnfv7ldGzkDDvLxiwvE1VK31zJk9Zk9A7v
+	 f7lxbKlD+H4mIojp8whijalnn7sPeiE7q3vINCjD0oTf25iVkcaRdpvNQM6+TmuO0I
+	 qZ2tNhn+ST+kMls8PR8kEkXEF0aFZ2j6ZkJxA7YQRmCbzdLpQT+67qJEJYK2L5lK+a
+	 IrKXsQBqLyMew==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] tracing/probes: Point the error offset correctly for eprobe argument error
+Date: Mon, 25 May 2026 11:21:14 +0900
+Message-ID: <177967567399.209006.1451571244515632097.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1891546521.01779449881859.JavaMail.epsvc@epcpadp2new>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 22, 2026 at 02:10:34PM +0530, Arun George/Arun George wrote:
-> Thanks.
-> 
-> On 05-05-2026 01:15 pm, Gregory Price wrote:
-> > In the scenario i'm talking about, a "write budget" is defined as a
-> > number of pages that are allows to be mapped writable in the page
-> > tables at any given time.
-> > Agree. I was also in the same context.
-> 
-> I am trying to bring the device perspective here, and would like to 
-> discuss a few corner cases and possible solutions.
-> 
-> As I see, solving the compressed memory problem statement has these 
-> aspects mainly:
-> 
-> 1) Allocation control: private/managed memory concept.
-> 2) Write control: write-protected PTEs, write-controlled use cases like 
-> ZSWAP
-> 3) Proactive reclaims: optional methods to ease back-pressure using 
-> memory shrinkers, ballooning, kswapd, promotion etc. These methods will 
-> be triggered based on notifications/interrupts from the device.
-> 
-> May be they are not enough to cover some corner cases for cram!
-> 
->   I believe that this thin-provisioned memory infra is susceptible to 
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I'm not understanding the "thin provisioned" terminology you're using
-here.  Can you help define what you mean by thin-provision in this case?
+Fix to point the error offset correctly for eprobe argument error.
+In the cleanup commit 1b8b0cd754cd ("tracing/probes: Move event parameter
+fetching code to common parser"), due to incorrect backward compatibility
+aimed at conforming to the test specifications, the error location was set
+to 0 when a non-existent formal parameter was specified for Eprobe.
+However, this should be corrected in both the test and the implementation
+to point correct error position.
 
-> 'writes-above-media-capacity corner cases' (because of not handling 
-> device back-pressure notifications in time) whichever methods we use in 
-> the kernel. Even if we use write-controlled methods like ZSWAP and 
-> pro-active reclaims, there could be corner cases where the communication 
-> with the device could be broken and the write path is not aware of it 
-> immediately. Note that OCP spec [1] says the device should mark the 
-> memory location as 'poisoned' in 'over-capacity' writes.
-> 
+Fixes: 1b8b0cd754cd ("tracing/probes: Move event parameter fetching code to common parser")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/trace/trace_probe.c                         |    2 --
+ .../test.d/dynevent/eprobes_syntax_errors.tc       |    2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-The intent is to use the low-watermark to prevent new allocations from
-occurring, and the write-controls prevent writing to the device without
-interposition.
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 39f040c863e8..695310571b08 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -957,8 +957,6 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
+ 			code->op = FETCH_OP_COMM;
+ 			return 0;
+ 		}
+-		/* backward compatibility */
+-		ctx->offset = 0;
+ 		goto inval;
+ 	}
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
+index 4f5e8c665156..2a680c086047 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
+@@ -20,7 +20,7 @@ check_error 'e:foo/^123456789012345678901234567890123456789012345678901234567890
+ check_error 'e:foo/^bar.1 syscalls/sys_enter_openat'	# BAD_EVENT_NAME
+ 
+ check_error 'e:foo/bar syscalls/sys_enter_openat arg=^dfd'	# BAD_FETCH_ARG
+-check_error 'e:foo/bar syscalls/sys_enter_openat ^arg=$foo'	# BAD_ATTACH_ARG
++check_error 'e:foo/bar syscalls/sys_enter_openat arg=^$foo'	# BAD_ATTACH_ARG
+ 
+ if grep -q '<attached-group>\.<attached-event>.*\[if <filter>\]' README; then
+   check_error 'e:foo/bar syscalls/sys_enter_openat if ^'	# NO_EP_FILTER
 
-With a sufficient watermark such that the interrupt is delivered within
-some number of microseconds, that should be perfectly fine to prevent
-poison from ever occurring at all.
-
-Since poison is only delivered *on read*, the system can go a long,
-long time before poison is discovered. From the end-user perspective,
-this poison is basically unacceptable.
-
-So either we can prevent poison from always occurring, or the hardware
-is not viable to support in a scaled production.  
-
-If you think a sufficiently conservative watermark + write-protection is
-insufficient to defend against poison, then please let me know why.
-
-> So I have the following proposals / options for this scenario.
-> 
->     Option 1: Poisoned data management - This is about accepting that 
-> poisoning of memory locations can happen in much more regular frequency 
-> here than regular memories and we need to figure out potential recovery 
-> mechanisms in host (not recovery of data; but recovery from the poison 
-> situation). But I guess folks will not be okay with it in general, and I 
-> am not aware of any workloads where data poisoning is tolerated (may be 
-> caching workloads?).
-> 
-
-Given option 1, I would never put such a device into my production
-environment.  The only reasonable action for handling poison is killing
-the software, as the data is functionally corrupted.
-
->     Option 2 (preferred): Device assisted write budgeting - This is 
-> about a device aware / assisted mechanism for the write-controlled 
-> use-cases (Ex: ZSWAP) to know the 'safe number of  writes' that can be 
-> performed to the device (Or allows to be mapped writable in the page 
-> tables). This could be like a 'token bucket' algorithm, where the device 
-> provides a 'budget / set of tokens' to the host. And it need to be 
-> replenished periodically in the device communication code path; and if 
-> the host does not find the token, writes cannot go ahead.
-> 
-
-When I say budgeting, I mean literally a budget of writable pages,
-entirely controlled by software (mm/cram.c or zswap.c or whatever).
-
-This has nothing to do with device operation / throttling / bandwidth
-budgets etc.  It is simply a proposal of an optimization that allows the
-user to say:  X out of Y possible pages may be mapped writable.
-
-I don't think this would be part of an initial MVP for a compressed ram
-service (regardless of it's cram.c or zswap.c)
-
-> In short, the communication with the device has to be maintained to make 
-> pages mapped writable. For MVP, this could be a simple constraint of 
-> checking actual device capacity periodically to replenish write-budget 
-> for CRAM. For other users of private nodes (GPU memory?), this 
-> constraint may not be needed at all.
-> 
-> We are planning to send an RFC code which will fit into your CRAM infra 
-> to discuss this poison management approach further.
-> 
-
-I'll try to get a new version out this or next week, apologies for the
-lag on this series, I've had a number of disruptions and major movements
-on the patch set since I last updated it in February.
-
-~Gregory
