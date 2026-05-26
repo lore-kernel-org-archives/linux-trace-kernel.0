@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601A93655FF;
-	Tue, 26 May 2026 15:32:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98255368D76;
+	Tue, 26 May 2026 15:33:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779809562; cv=none; b=ovJPyXDWLp+p6JZyBKRxIPjQimG7g5VISIJENT3sySqWuNks140bp1TO16A7o0iZZpV+qCexgdmPE5f2FeEwTK6ewzRN8TOd/sowy5u8JsE4nwi77cMGLP4dTShwkNfBanqhjGE6SYrVgS8RdGNIfkTvjZewpHYYGgGPNGmjv1o=
+	t=1779809583; cv=none; b=Juq/da3kSaS8EAAIbUNuWl/yqpw7YLyg8H5b8E/QCVhO7rqotU4zkRth34eTYRlnBzrlJH9aEkX/KJY4COBvXshs4cjtOKRTy5aLhKIhvUHCa82K/flU10IE+jJHs/mtkjj5rkfGxFmaDPpRHqcLG1LS2SaePEo7VcqtDL8iDY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779809562; c=relaxed/simple;
-	bh=/MWcv121K7rZpgbnvEe/lHpKc3LVynobiGS5r2efja0=;
+	s=arc-20240116; t=1779809583; c=relaxed/simple;
+	bh=28dI9Mpdlp2cJAFfh8cNULH9GtSVf7CkHM+HxNi8MDs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ht5ag5Y+IHCxkxHmqVu6prO6LHLQD/1O0TAZ/dWRBf1NWJnv54USFmksP77GT4x+D1TmJHA4EcPJCSTyZyBITwg0kvwV6p7iO5pJtSurUIiLs6AeTHftKL6/dWSkm7cR0q3Kv/2Tnh5XRYAt1Zy5IcIwcRF0CoB8f4zqTH1wKvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2Trf2yo; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=hjVOIqXpONU3fBmiqxA6nsiPeL137D1KQmy5bP28lj8ETUgun11CRLji7acfaO4m0Nq7NpRr+vqeDb1Tj1zjoyZ2p93q0rSLViFEubvt5CBqWpd7C6a4p1MrbLulHPUftdnb03m/uWixApnZJm8vtTtc6QgpfZVY/F8on1aIFhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQBDrSLt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2Trf2yo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 895931F000E9;
-	Tue, 26 May 2026 15:32:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQBDrSLt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2ABF1F00ACF;
+	Tue, 26 May 2026 15:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779809561;
-	bh=+Pui1BK3nQ15oA6B6kPC2URJ9IM3q+ur3vvq/E1vcpw=;
+	s=k20260515; t=1779809582;
+	bh=kRBDHmc5BfTBjzjut4J6dPGhMph9nuv1qNcdKe7YuE8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=K2Trf2yo383PSy8IJ7jmNXJlmPgMgKtjY8kMNf9xKgGaNEhkVi4ivrnoCtFfHV9Ee
-	 f1AXcpwNUjvcMnyL7G9lx0Kdxnm4yxfORLm+wS0+OVGtsizswUtdr6fSgNP3OG+ElM
-	 R5D4kNAvjhsWuUBIMS9AHuuyvpMUC86oPvkrAvLFNhaqU2IIu/MrAdthdbyRL5DEbe
-	 zbetevXXR5WFiqfRdE06Q1Kjk9cSMtye7MpW53fhouUc83BgzUBQj6jXfExI57Vchq
-	 t2hoj3BsY4g1KyGdMXSUDnXHfDNINlVstMNGXhNeDs0TBSpuQo/e2NDoHKNykp319P
-	 AzbIRSgCoWjiw==
-Date: Tue, 26 May 2026 11:33:11 -0400
+	b=oQBDrSLtBrTOGAqyOWi6yaverYpWbF0Ghw2W6t0x/UYDcH5nNgz5AAZM0ShSiInNq
+	 HZIQJJ4dGqeNiUlA0QvMoMJFNZ9V5cHdF7rcrkyieKNgq1PpWP/fSll+3Ry1kBBdns
+	 SHHl04UNKvoHpO2ds5UD3/Q3muI7mIbxuZl3LUHEisWpqcpQq5AKLVOlY6oOhcvZGr
+	 ugmfNnSLaW+d1MatjHQtBJeDUjeiA2ARVSZcOsxkIp3TdWyWMs29xswGhKcsUhhOeR
+	 2d64cqoN5tP+kCEv1f6neD1ESX5qMRl000vvQHD88CTIIH/ku4mGLWvu1lTC6XdhXO
+	 wAWIzCNm7+JuA==
+Date: Tue, 26 May 2026 11:33:32 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
@@ -39,10 +39,10 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
  Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>
 Subject: Re: [PATCH v6] tracing/eprobes: Allow use of BTF names to
  dereference pointers
-Message-ID: <20260526113311.18d1858e@gandalf.local.home>
-In-Reply-To: <20260525235507.a81c565023258c63fc9201f4@kernel.org>
+Message-ID: <20260526113332.1880146e@gandalf.local.home>
+In-Reply-To: <20260526090910.8aae5c9357e119bd0043b18b@kernel.org>
 References: <20260521225033.56458336@fedora>
-	<20260525235507.a81c565023258c63fc9201f4@kernel.org>
+	<20260526090910.8aae5c9357e119bd0043b18b@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,41 +53,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 25 May 2026 23:55:07 +0900
+On Tue, 26 May 2026 09:09:10 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
 > On Thu, 21 May 2026 22:50:33 -0400
 > Steven Rostedt <rostedt@kernel.org> wrote:
 > 
-> > +static int handle_typecast(char *arg, struct fetch_insn **pcode,
-> > +			   struct fetch_insn *end,
-> > +			   struct traceprobe_parse_context *ctx)
-> > +{
-> > +	char *tmp;
-> > +	int ret;
-> > +
-> > +	/* Currently this only works for eprobes */
-> > +	if (!(ctx->flags & TPARG_FL_TEVENT)) {
-> > +		trace_probe_log_err(ctx->offset, TYPECAST_NOT_EVENT);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	tmp = strchr(arg, ')');
-> > +	if (!tmp) {
-> > +		trace_probe_log_err(ctx->offset + strlen(arg),
-> > +				    DEREF_OPEN_BRACE);
-> > +		return -EINVAL;
-> > +	}
-> > +	*tmp = '\0';
-> > +	ret = query_btf_struct(arg + 1, ctx);
-> > +	*tmp = ')';  
+> > @@ -640,7 +673,7 @@ static int parse_btf_arg(char *varname,
+> >  	int i, is_ptr, ret;
+> >  	u32 tid;
+> >  
+> > -	if (WARN_ON_ONCE(!ctx->funcname))
+> > +	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT)))
+> >  		return -EINVAL;
+> >  
+> >  	is_ptr = split_next_field(varname, &field, ctx);
+> > @@ -653,6 +686,20 @@ static int parse_btf_arg(char *varname,
+> >  		return -EOPNOTSUPP;
+> >  	}
+> >  
+> > +	if (ctx->flags & TPARG_FL_TEVENT) {
+> > +		int ret;  
 > 
-> BTW, is there any reason to recover this? The @arg is copied
-> string, see traceprobe_parse_probe_arg_body().
+> nit: parse_btf_arg already declared @ret. So we don't need this.
 
-Yeah I know. But it's just something I prefer to do to keep code more
-robust. That is, don't leave side effects if you can help it. It likely
-doesn't matter here, but I've always errored on the side of caution. ;-)
+Ah, will fix.
+
+Thanks,
 
 -- Steve
 
