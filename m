@@ -1,189 +1,242 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28D93C3BFA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 May 2026 06:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894603BAD9F;
+	Tue, 26 May 2026 08:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779778633; cv=none; b=J8m7ukTgRBZ3W9YGAONhhTq8w/R5VrqBsriiH41LR1TJWqCXTuZMcW1kd9bG+Q7bt4OOBUrmrzpgr0GuCzUevghI9NlB2jSiWiuGW7P2rGuk0UkW21b0N4KezdHLyGcIheqkNdRrXFeKxcf5rKzVAMTHGmdw0NO0d4kG0jb0ouc=
+	t=1779783305; cv=none; b=Q8McIBs/2gNbqjT2EUxe6LdVZuCIDVb5Xmao+LjiwQTFvKbCbK5EQw4GTmiTFGEFjC4NrFICi7Sx5xs2Tvh7mkvG+NAln66LKi9S5KvqrgdZBdjFK6W45JRzR7cJTWHg9CsyDtSmvqMTNSU6GPoeL/nefhLGQzdmz+ua4IVJqc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779778633; c=relaxed/simple;
-	bh=LCWX/FWzch2f69uBq/OyOfIjJFTVyqrMC/8AOUgEdBw=;
+	s=arc-20240116; t=1779783305; c=relaxed/simple;
+	bh=iXCcuxwJB6+zffI0Laf8P92Gks99ZAB5jc8ItvHVZ1U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tq4pcmCtV8xk/9197wRSccLiV+LMKLB85tPQk096v9iEgruTT3pBdiHl09pQ9rn1YZ/D+uill32r/H2t35C+vdU1bLXA2Ra2NWuOeYkfb7dkFXlZ4A9jLVgxwp4k2Tom9PeoHrf6YHQZ039+s2gODCwYNyH/4+lVh8iSuc5SeJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LcI3uw7a; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oOycqGvQPtQBrOU69cRd4i2hwKmmHX2t5RcWLOC1XC7xdEnC+y/7NQoFbhU3cm8QOym1K6pl2IdtZLEFeDNZQP4D+jwe1q+udJrv4FPwFfqmZGVP1Sk0Z80zyq8Jnmql2r3kIzkerd2+yKNMG/AiH2/OtVjJqn/mDgHl33sJfa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mGSVDjJf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcI3uw7a"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-68852a4fc68so5237314a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 May 2026 23:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779778630; x=1780383430; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:reply-to:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mBNJcSkWDMS2F/o+KqKiAkJP47naY8jIDQxVCXbkfTU=;
-        b=LcI3uw7a7Jls9J4c5B0I9OCMJCHKetwP2oq2qmvT5EBxq9U9pnwvVbyynAexh99XMd
-         zj7w+Vu8oWUk3XUiKv9QtPIxW3xBXyr1KsFpfJpJ/RiMWgGTle8ZOueECdbFxXPH//lH
-         zFgdYawcD48kgbFCykq4wDoucPjx5K0zIhpmmU0fQ3q5bf5KTRn9hiSdeOCKvQHi/lr3
-         NplxjEnerXjEpygqcJS3JPR85Xcd7gWIJ8DOpDqumN9L6pQif82bfDuHCrZ3ZAE5qsYk
-         NYDRzE3BdqYikS/zOd2ak/kRerU7fH+2yOVdxDc52O9asPXEt1xZHYCMijOqeDmWMhpZ
-         cySw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779778630; x=1780383430;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:reply-to:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mBNJcSkWDMS2F/o+KqKiAkJP47naY8jIDQxVCXbkfTU=;
-        b=X4CtIhXx8feVnat9gr3/Qxm4cV5Mv1kuSVJfhfskvBI2UX6KhhkhoqulalDpe11WP5
-         6JSSJOSPIjjVwkvrhyaroOJgfCrJK3Z6xtamTHYRzIqMhnGGlU/fNWnv6EYneXD856BB
-         VOPR4DGmS5uoEQNSpNQZ5b1Z7Rdc/zIhWnv/+SJy1QjrLBOJrhCsLIX9ZgWuGBinLLrK
-         NByrONPnYmx8H3lPh1u8jJLkWbLws5mbV+9s/qmtta86aYvK4JvDfSK4bdKuIc1zhn8N
-         3kmbkMnY5Fs86e4GBaVUawioKH+F4psXrSgI97yL1C1DApNjsjgd+kxqX3oE4y2R6nDN
-         +Ptg==
-X-Forwarded-Encrypted: i=1; AFNElJ9loIQPFGe9ZXcH+ALr3LzIGoV0hD4P/ipfaJWtAaU3cvcCkJKM9iQo+d6KMywxQmGZZiv9UoiEo1HZ1jIWKmJ8cnw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAumqO0aMXfsvLxFV8XC3NFBfuInWnLYdOfdllTmp7ks0BNVi8
-	tzmDmT+iDMuW7LNIkYNtoC7D/0NOoPfamTzABVRY5hebyHCSQFe/Xh8L
-X-Gm-Gg: Acq92OF0MGXx1hwip2oDJFuhc6KgRyUUOuV9sJCWOzBE3pRPyKXOVzZM2qOfCTWqE3+
-	0bkuKdn6H2Gefs8oCCpZ3g8GQ9/JDmRDEFAxOPhip/FyCD34nZXZJHH3NDsv8OsWHfxYhQGkFfw
-	umtxxZRnMoxi1t560S3ZdpL1jVhqlBGocRYeKL3YzWUdzwxYpU6dmRTTrB1zh9TfAZ6D4P1m83G
-	twhCsRk5B9lU/mSbc3ElU68grWzOleKLfauu79fVlv3OkCb/enZt8nz3DeacqQW+nWE1bUJRaeS
-	fEONLHLBwwIHys+8NNFU2pyIqVR/Y2xbikmmrra9JJrlAtXCQSO5wo2pnpDpWzrJkSukXt5AcLl
-	ItcAbGNmmH9yK3kpqUR1L3lvRgFtUFyu9hO9fYLnsKjAcZNymoaWUH2vUa9AlI3OSAtoUJf67YG
-	SsmxMvBAUJsN1/U4Qu76gVCg==
-X-Received: by 2002:a05:6402:354d:b0:687:3580:fc26 with SMTP id 4fb4d7f45d1cf-6889cb3d24amr9081852a12.13.1779778629909;
-        Mon, 25 May 2026 23:57:09 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-688baf1e984sm4668480a12.14.2026.05.25.23.57.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2026 23:57:08 -0700 (PDT)
-Date: Tue, 26 May 2026 06:57:08 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Nico Pache <npache@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com,
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
-	catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
-	dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
-	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com,
-	jack@suse.cz, jackmanb@google.com, jannh@google.com,
-	jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org,
-	lance.yang@linux.dev, liam@infradead.org, ljs@kernel.org,
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
-	mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com,
-	pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
-	rdunlap@infradead.org, richard.weiyang@gmail.com,
-	rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org,
-	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com,
-	surenb@google.com, thomas.hellstrom@linux.intel.com, tiwai@suse.de,
-	usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com,
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org,
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com,
-	ziy@nvidia.com, zokeefe@google.com
-Subject: Re: [PATCH mm-unstable v18 11/14] mm/khugepaged: Introduce mTHP
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mGSVDjJf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332811F000E9;
+	Tue, 26 May 2026 08:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779783304;
+	bh=LaExe0o8sgOuAffurTxA31aVwWKAGfat/zImo5zQ05k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=mGSVDjJfaqHxThhrHHY8/jlIJxBTbDBY8eXvuoId/eqeQNh1XyQbgLFJzrNsjYz0k
+	 fMkM89kirTVpe1jYVZ1OeFUjsPs+e6TSiyLDr0y5fqzTtQ8PANppUQgUNnSiB6CXI9
+	 dntgodUx4ZbIKxUpC90dMc4ku+2d20O+t1F5zxkWsuon9xc1v639tAX9saPLJT8zUb
+	 2NKb0NiFp6cGqBilQtwPtN4I/oZFLOhz5LErZEpuubsDR4mm2W8/j8eL63Y+0f3YGu
+	 wE1u+Hdd3KNki6jyL7IyhfJ6D1CBdkURnwcFwI89nmVzwNPJLI0M3HYySI6VcBF7xx
+	 8QZ3CQGl+qbgw==
+Date: Tue, 26 May 2026 09:14:49 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
+	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
+	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
+	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
+	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
+	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
+	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
+	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
+	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
+	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
+	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
  collapse support
-Message-ID: <20260526065708.oyyddmt2zgfwu2q7@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
+Message-ID: <ahVVP_lDpTlRCPXD@lucifer>
 References: <20260522150009.121603-1-npache@redhat.com>
- <20260522150009.121603-12-npache@redhat.com>
- <2b2cda8c-358a-4a5c-989c-ae42593ef2ea@redhat.com>
- <20260525121041.2f2508a4f627c338cddd837a@linux-foundation.org>
+ <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
+ <ahByO_HWn6MB8z-u@lucifer>
+ <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
+ <ahB_hae8coGvf12Z@lucifer>
+ <CAA1CXcCoyGzEyeFPW+zKiA2AOj=0Lm7R=odLtVru+dQa0P_2cQ@mail.gmail.com>
+ <ahCFIDuyrvEfB9jv@lucifer>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260525121041.2f2508a4f627c338cddd837a@linux-foundation.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <ahCFIDuyrvEfB9jv@lucifer>
 
-On Mon, May 25, 2026 at 12:10:41PM -0700, Andrew Morton wrote:
->On Mon, 25 May 2026 08:15:53 -0600 Nico Pache <npache@redhat.com> wrote:
->
->> Can you please append the following fixup that reverts one of the
->> changes requested in V17. The issue with the change is described
->> below.
->
->OK.  fyi, what I received was badly mangled: wordwrapping, tabs messed
->up, etc.
->
->Here's my reconstruction:
->
+Nico,
 
-Hi, Nico
+While I stand by the below, and we very well might wish to delay this until
+the next cycle, I will try to take some time to go through this myself as
+soon as I am able.
 
-I tried to reply your mail, but found it has some encoding problem, so reply
-here.
+If David's happy with it for this cycle, and I don't find anything too
+crazy, then it's not impossible we could still move forward with it now.
 
->
->Author: Nico Pache <npache@redhat.com>
->Subject: fix potential use-after-free of vma in mthp_collapse()
->Date: Mon May 25 07:38:59 2026 -0600
->
->Between V17 and v18, one reviewer (Wei) brought up that we are not doing
->the uffd-armed check until deep in the collapse operation.  While not
->functionally incorrect, it can lead to unnecessary work.
+My only aim here is to avoid rushing something in that might have
+unexpected changes or issues in it, given how late in the cycle we are :)
 
-So we decide to tolerate the behavioral change?
+Cheers, Lorenzo
 
+On Fri, May 22, 2026 at 06:12:59PM +0100, Lorenzo Stoakes wrote:
+> On Fri, May 22, 2026 at 10:31:41AM -0600, Nico Pache wrote:
+> > On Fri, May 22, 2026 at 10:20â€¯AM Lorenzo Stoakes <ljs@kernel.org> wrote:
+> > > There's some kind of confusion here.
+> > >
+> > > This series isn't suited for 7.2.
+> > >
+> > > Sorry but Zi's series, unless it depends on functionality here, will have
+> > > to be rebased.
+> > >
+> > > People have been at conferences, people have been on leave, I've had to
+> > > pace myself for health reasons and it seems there's been more than simply
+> > > review comment-based changes happening here.
+> > >
+> > > (Again I strongly encourage, at this stage, to ONLY be making changes based
+> > > on review, not adding ANYTHING else or changing ANYTHING else to avoid
+> > > delays :)
+> >
+> > All the changes are based on review points. Very small changes in this
+> > version; the largest being the one that you specifically argeed too.
 >
->We optimized this by passing the vma variable to mthp_collapse() and using
->the collapse_max_ptes_none() function to check the state of uffd-armed
->preventing the wasted work later in the collapse.
+> 16->17
 >
->mthp_collapse() is called after mmap_read_unlock(), so the vma pointer can
->become stale.  Remove the vma parameter and pass NULL to
->collapse_max_ptes_none() instead.
+>  Documentation/admin-guide/mm/transhuge.rst |  24 +++++-------------
+>  include/linux/khugepaged.h                 |   7 ++---
+>  include/trace/events/huge_memory.h         |   3 ++-
+>  mm/huge_memory.c                           |   2 +-
+>  mm/khugepaged.c                            | 168 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------
+>  mm/vma.c                                   |   6 ++---
+>  tools/testing/vma/include/stubs.h          |   3 ++-
+>  7 files changed, 103 insertions(+), 110 deletions(-)
 >
->Link: https://lore.kernel.org/2b2cda8c-358a-4a5c-989c-ae42593ef2ea@redhat.com
->Signed-off-by: Nico Pache <npache@redhat.com>
->...
+> 17->18
 >
-> mm/khugepaged.c |   10 +++++-----
-> 1 file changed, 5 insertions(+), 5 deletions(-)
+>  Documentation/admin-guide/mm/transhuge.rst |   5 +++--
+>  include/trace/events/huge_memory.h         |   3 +--
+>  mm/khugepaged.c                            | 121 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------
+>  3 files changed, 66 insertions(+), 63 deletions(-)
 >
->--- a/mm/khugepaged.c~mm-khugepaged-introduce-mthp-collapse-support-fix
->+++ a/mm/khugepaged.c
->@@ -1502,9 +1502,9 @@ static unsigned int collapse_mthp_count_
->  * If a collapse is permitted, we attempt to collapse the PTE range into a
->  * mTHP.
->  */
->-static int mthp_collapse(struct mm_struct *mm, struct vm_area_struct *vma,
->-		unsigned long address, int referenced, int unmapped,
->-		struct collapse_control *cc, unsigned long enabled_orders)
->+static int mthp_collapse(struct mm_struct *mm, unsigned long address,
->+		int referenced, int unmapped, struct collapse_control *cc,
->+		unsigned long enabled_orders)
-> {
-> 	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
-> 	int collapsed = 0, stack_size = 0;
->@@ -1524,7 +1524,7 @@ static int mthp_collapse(struct mm_struc
-> 		if (!test_bit(order, &enabled_orders))
-> 			goto next_order;
-> 
->-		max_ptes_none = collapse_max_ptes_none(cc, vma, order);
->+		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
-> 
-> 		nr_occupied_ptes = collapse_mthp_count_present(cc, offset,
-> 							       nr_ptes);
->@@ -1749,7 +1749,7 @@ out_unmap:
-> 	if (result == SCAN_SUCCEED) {
-> 		/* collapse_huge_page expects the lock to be dropped before calling */
-> 		mmap_read_unlock(mm);
->-		nr_collapsed = mthp_collapse(mm, vma, start_addr, referenced,
->+		nr_collapsed = mthp_collapse(mm, start_addr, referenced,
-> 					     unmapped, cc, enabled_orders);
-> 		/* mmap_lock was released above, set lock_dropped */
-> 		*lock_dropped = true;
->_
-
--- 
-Wei Yang
-Help you, Help me
+> These are not small 'very small changes'.
+>
+> We're nearly at rc-5, and this is a major, invasive, dangerous change that
+> we have to get right.
+>
+> You've also made changes unrelated to review, repeatedly, throughout this
+> process, which as I've told you, is causing delays.
+>
+> You've also throughout the review of this series done stuff like make MAJOR
+> changes to things and _kept review tags_.
+>
+> You're forcing us to use git range-diff etc. to forensically check that the
+> series is what is claimed.
+>
+> Dude I mean you switched to using // comment style which is not used in mm
+> anywhere for instance? Don't do things like that and complain about
+> delays. Honestly.
+>
+> Also, again, LSF happened. Other confeerences happened. Bandwidth is
+> reduced.
+>
+> So again, I'm sorry, but you've been hit with some bad luck here.
+>
+> I really wanted this in for 7.2, and I feel bad that we couldn't make it,
+> but you're also doing thing that's making it difficult for us.
+>
+> I've spent double-digits hours on your series, and I've also had work
+> pushed out becasue of that leading me to work evenings and weekends as a
+> result.
+>
+> And I'm not even going to get any credit for it :))
+>
+> So while I sypmathise, really, please have empathy and realise it goes both
+> ways, please.
+>
+> I'm not being mean for the sake of it, I'm pushing back because I feel this
+> is not at a stage where I'd feel confident in this being merged at this
+> time.
+>
+> And it's very much a regret, as I _really_ wanted us to have it in this
+> time. But life and circumstances and the issues mentioned above have
+> intervened, sadly.
+>
+> >
+> > >
+> > > Also - shouldn't mm-unstable already have mm-hotfixes-unstable in it?
+> > >
+> > > I think in mm-next we will have an stable branch, that everything is
+> > > based on, where things go once review is complete and things are mergeable.
+> > >
+> > > And a separate hotfixes branch based on Linus's tree.
+> > >
+> > > That would avoid issues like this :)
+> >
+> > Im sorry im new to this, but I really dont think this tiny error, and
+> > something that I'd confirmed with Andrew beforehand deserves NAKing
+> > and defering it. Ive worked through my PTO to clean up some of these
+> > review nits just to get it in 7.2. I even through this through my
+> > rounds of testing today before resending.
+>
+> The issue wasn't the error (though it wasn't tiny...!), it's the state of
+> review. There was fresh review comments from a few days ago, and there's
+> big diffs between revisions.
+>
+> You've also made unrelated changes as you have done throughout the series.
+>
+> As I said above, I'm sorry that you spent time in your PTO on this, but we
+> cannot rush this in when things are not clearly ready yet, and I am not
+> confident in this being ready at this stage.
+>
+> >
+> > >
+> > > >
+> > > > The intent wasn't that this is a hotfix, just that this was the
+> > > > closest base before the v17 that is already in the tree.
+> > >
+> > > The convention is that [PATCH ... <branch>] indicates the target of the
+> > > changes. Putting the hotfixes branch there implies it's a hotfix.
+> >
+> > Sorry I thought the <branch> was what base you used.
+>
+> I mean, sure there's clearly confusion here as you sent [PATCH 7.2 v16 ...]
+> (against an unreleased kernel version) then a branch specifier then the
+> hotfixes one...
+>
+> Anyway sure, it's fine, I've made vastly more dumb mistakes than that
+> myself, nobody minds, but it's concerning as by convention [PATCH
+> ... <mm->hotfixes<whatever>] generally is taken to mean 'please rush this
+> to hotfixes!' :)
+>
+> So be careful with that please!
+>
+> >
+> > >
+> > > So please be careful with that in future :)
+> >
+> > Yes will do for sure.
+>
+> Thanks!
+>
+> >
+> > >
+> > > >
+> > > > Sorry for the confusion, hopefully Andrew can still apply it to the
+> > > > correct tree.
+> > >
+> > > I'm not even sure what's best for that at this stage given we have
+> > > conflicts and this has to be delayed until 7.3.
+> > >
+> > > I wonder if given that we should not have this in mm-unstable at all and
+> > > just wait it out until the next cycle begins? Review can happen
+> > > concurrently.
+> >
+> > I still dont see why this has to be deferred, I was working with
+> > Andrew to prevent merge headaches.
+>
+> I've explained the why above, and David and I co-maintain THP so I feel
+> that ultimately given the blood, sweat and tears we've put into THP review
+> we ought to have some input on this :)
+>
+> Thanks, Lorenzo
