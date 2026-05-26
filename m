@@ -1,60 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894603BAD9F;
-	Tue, 26 May 2026 08:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0503537ED;
+	Tue, 26 May 2026 09:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779783305; cv=none; b=Q8McIBs/2gNbqjT2EUxe6LdVZuCIDVb5Xmao+LjiwQTFvKbCbK5EQw4GTmiTFGEFjC4NrFICi7Sx5xs2Tvh7mkvG+NAln66LKi9S5KvqrgdZBdjFK6W45JRzR7cJTWHg9CsyDtSmvqMTNSU6GPoeL/nefhLGQzdmz+ua4IVJqc0=
+	t=1779787189; cv=none; b=PtchPMYc/3zKS6tWV4VJTO1dZHotRh8sqw0vmC9pzNoLD3RuOPm/5BbY1rQIEuYUf9XkW+461Unxn+yF+GxXZ8qy7KnO9REbLe7JJ9AtJ2DY7QbeeLkH4tgPr/Lpl+YqhY/i4Gyxx53QJLgQKArb1N+Ys5u/ZXpFiKm+lW6xPt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779783305; c=relaxed/simple;
-	bh=iXCcuxwJB6+zffI0Laf8P92Gks99ZAB5jc8ItvHVZ1U=;
+	s=arc-20240116; t=1779787189; c=relaxed/simple;
+	bh=Ow8gwZ4Lkp4cctgvyU9+aUk0/1z2UR5fi5awZDsKQgE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOycqGvQPtQBrOU69cRd4i2hwKmmHX2t5RcWLOC1XC7xdEnC+y/7NQoFbhU3cm8QOym1K6pl2IdtZLEFeDNZQP4D+jwe1q+udJrv4FPwFfqmZGVP1Sk0Z80zyq8Jnmql2r3kIzkerd2+yKNMG/AiH2/OtVjJqn/mDgHl33sJfa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mGSVDjJf; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=tYaXLD0ZYVQq3x0EyzDFfYjUlj0L02VmAtx8hiLO7lIO2YRoEUntmk/w/q20dgyp1BSg4yrY5RJLklJoFaaa/LD2sS4hb45WSslpWuKyx9hnfIBb68JCRlMeeZvLNo2C/Ry7YKwlt7X00rnbvoj5Vgp2LvwOfr9FMzDpOI4AIfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P+iwEl1z; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mGSVDjJf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332811F000E9;
-	Tue, 26 May 2026 08:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779783304;
-	bh=LaExe0o8sgOuAffurTxA31aVwWKAGfat/zImo5zQ05k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mGSVDjJfaqHxThhrHHY8/jlIJxBTbDBY8eXvuoId/eqeQNh1XyQbgLFJzrNsjYz0k
-	 fMkM89kirTVpe1jYVZ1OeFUjsPs+e6TSiyLDr0y5fqzTtQ8PANppUQgUNnSiB6CXI9
-	 dntgodUx4ZbIKxUpC90dMc4ku+2d20O+t1F5zxkWsuon9xc1v639tAX9saPLJT8zUb
-	 2NKb0NiFp6cGqBilQtwPtN4I/oZFLOhz5LErZEpuubsDR4mm2W8/j8eL63Y+0f3YGu
-	 wE1u+Hdd3KNki6jyL7IyhfJ6D1CBdkURnwcFwI89nmVzwNPJLI0M3HYySI6VcBF7xx
-	 8QZ3CQGl+qbgw==
-Date: Tue, 26 May 2026 09:14:49 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
-	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
-	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
-	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
-	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
-	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
-	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
-	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
- collapse support
-Message-ID: <ahVVP_lDpTlRCPXD@lucifer>
-References: <20260522150009.121603-1-npache@redhat.com>
- <CAA1CXcCoDU_pnp0SmMzRi8wPGB1OBjbbokevq2X_03X1vpWtOw@mail.gmail.com>
- <ahByO_HWn6MB8z-u@lucifer>
- <CAA1CXcDoFdZZ4aBx0BPA7QXYKYBYDoqUiLTLYe3L5opJ0LsJGg@mail.gmail.com>
- <ahB_hae8coGvf12Z@lucifer>
- <CAA1CXcCoyGzEyeFPW+zKiA2AOj=0Lm7R=odLtVru+dQa0P_2cQ@mail.gmail.com>
- <ahCFIDuyrvEfB9jv@lucifer>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P+iwEl1z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=ZsA+GRwAoN+DQ7RbB5DBHupTBdRhZ9vasf36fYJp86c=; b=P+iwEl1zKEy5v0U1vQMuz30JMn
+	LUa3PKrUEhHYlCyefE5A6nagVuGWV3A9Kt90gy7pBiV4lbnPt103EFUgHU2JRAT2w2kc7Bp1EmhZX
+	TfYbcGMHC3EUDG5cgWsVr0T+oosjrgXPo+bKyg11qxqvfhw1lHaFqkkIT2yx+BXgzha8F0huU0bPs
+	lCgyv6IDBHfos8kaJsaGVz4kNkn7/JLpIw6cDQsH6eFQCPRcrJpl6gjcTuLF0imdRzIm41MdBv8hK
+	1Wr/fKsoCYcemFIVvIlRla/Tzit2b/KD5wZZ7X6A4Zj2GDwYJZ71+MF2chmFmg+UahQ2kCer7gQVH
+	rsO01Itw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wRnwu-0000000ApeO-2uzK;
+	Tue, 26 May 2026 09:19:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7F26B3007C4; Tue, 26 May 2026 11:19:44 +0200 (CEST)
+Date: Tue, 26 May 2026 11:19:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 04/12] uprobes/x86: Move optimized uprobe from nop5 to
+ nop10
+Message-ID: <20260526091944.GB4149641@noisy.programming.kicks-ass.net>
+References: <20260521124411.31133-1-jolsa@kernel.org>
+ <20260521124411.31133-5-jolsa@kernel.org>
+ <CAEf4BzZ+MToBKJS9Vdu=YZrX+2kRpUcmWejVhuoqhtu-ijqDAQ@mail.gmail.com>
+ <ahDIVTM5WfVqiYE6@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,179 +56,77 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ahCFIDuyrvEfB9jv@lucifer>
+In-Reply-To: <ahDIVTM5WfVqiYE6@krava>
 
-Nico,
+On Fri, May 22, 2026 at 11:19:17PM +0200, Jiri Olsa wrote:
+> On Fri, May 22, 2026 at 11:50:44AM -0700, Andrii Nakryiko wrote:
+> > On Thu, May 21, 2026 at 5:44 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > >
+> > > Andrii reported an issue with optimized uprobes [1] that can clobber
+> > > redzone area with call instruction storing return address on stack
+> > > where user code may keep temporary data without adjusting rsp.
+> > >
+> > > Fixing this by moving the optimized uprobes on top of 10-bytes nop
+> > > instruction, so we can squeeze another instruction to escape the
+> > > redzone area before doing the call, like:
+> > >
+> > >   lea -0x80(%rsp), %rsp
+> > >   call tramp
+> > >
+> > > Note the lea instruction is used to adjust the rsp register without
+> > > changing the flags.
+> > >
+> > > We use nop10 and following transofrmation to optimized instructions
+> > > above and back as suggested by Peterz [2].
+> > >
+> > > Optimize path (int3_update_optimize):
+> > >
+> > >   1) Initial state after set_swbp() installed the uprobe:
+> > >       cc 2e 0f 1f 84 00 00 00 00 00
+> > >
+> > >      From offset 0 this is INT3 followed by the tail of the original
+> > >      10-byte NOP.
+> > >
+> > >   2) Trap the call slot before rewriting the NOP tail:
+> > >       cc 2e 0f 1f 84 [cc] 00 00 00 00
+> > >
+> > >      From offset 0 this traps on the uprobe INT3.  A thread reaching
+> > >      offset 5 traps on the temporary INT3 instead of seeing a partially
+> > >      patched call.
+> > >
+> > >   3) Rewrite the LEA tail and call displacement, keeping both INT3 bytes:
+> > >       cc [8d 64 24 80] cc [d0 d1 d2 d3]
+> > >
+> > >      From offset 0 and offset 5 this still traps.  The bytes between
+> > >      them are not executable entry points while both traps are in place.
+> > >
+> > >   4) Restore the call opcode at offset 5:
+> > >       cc 8d 64 24 80 [e8] d0 d1 d2 d3
+> > >
+> > >      From offset 0 this still traps.  From offset 5 the instruction is
+> > >      the final CALL to the uprobe trampoline.
+> > >
+> > 
+> > I'm sorry if I'm slow, but I don't understand why we need that second
+> > cc at offset 5? Isn't original nop10 processed by CPU as single
+> > instruction? So it will either be at ip of nop10, or at ip+10, no? If
+> > we trap at ip and in int3 handler +10 from there while we are
+> > installing lea+call, why do we need cc on byte 5?
+> > 
+> > I.e., I don't understand how CPU can end up being at ip+5 until we
+> > finalize lea+call sequence? Can it?
+> 
+> hum, so I though it's for the case when you do unoptimize+optimize,
+> then you can have cpu executing the previous lea and hitting the int3
+> on +5 offset.. but as pointed by Peter (and you) the call instruction
+> never changes, so now I'm not sure why we need it
 
-While I stand by the below, and we very well might wish to delay this until
-the next cycle, I will try to take some time to go through this myself as
-soon as I am able.
+So I missed you did the second INT3 in my initial reading.
 
-If David's happy with it for this cycle, and I don't find anything too
-crazy, then it's not impossible we could still move forward with it now.
+That second INT3 is absolutely required *IF* the CALL can ever change.
+However Andrii pointed out that once the CALL is written, it will always
+be the same CALL -- there is but the one trampoline, it doesn't move.
 
-My only aim here is to avoid rushing something in that might have
-unexpected changes or issues in it, given how late in the cycle we are :)
+Therefore, the second INT3 is not strictly required.
 
-Cheers, Lorenzo
-
-On Fri, May 22, 2026 at 06:12:59PM +0100, Lorenzo Stoakes wrote:
-> On Fri, May 22, 2026 at 10:31:41AM -0600, Nico Pache wrote:
-> > On Fri, May 22, 2026 at 10:20 AM Lorenzo Stoakes <ljs@kernel.org> wrote:
-> > > There's some kind of confusion here.
-> > >
-> > > This series isn't suited for 7.2.
-> > >
-> > > Sorry but Zi's series, unless it depends on functionality here, will have
-> > > to be rebased.
-> > >
-> > > People have been at conferences, people have been on leave, I've had to
-> > > pace myself for health reasons and it seems there's been more than simply
-> > > review comment-based changes happening here.
-> > >
-> > > (Again I strongly encourage, at this stage, to ONLY be making changes based
-> > > on review, not adding ANYTHING else or changing ANYTHING else to avoid
-> > > delays :)
-> >
-> > All the changes are based on review points. Very small changes in this
-> > version; the largest being the one that you specifically argeed too.
->
-> 16->17
->
->  Documentation/admin-guide/mm/transhuge.rst |  24 +++++-------------
->  include/linux/khugepaged.h                 |   7 ++---
->  include/trace/events/huge_memory.h         |   3 ++-
->  mm/huge_memory.c                           |   2 +-
->  mm/khugepaged.c                            | 168 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------
->  mm/vma.c                                   |   6 ++---
->  tools/testing/vma/include/stubs.h          |   3 ++-
->  7 files changed, 103 insertions(+), 110 deletions(-)
->
-> 17->18
->
->  Documentation/admin-guide/mm/transhuge.rst |   5 +++--
->  include/trace/events/huge_memory.h         |   3 +--
->  mm/khugepaged.c                            | 121 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------
->  3 files changed, 66 insertions(+), 63 deletions(-)
->
-> These are not small 'very small changes'.
->
-> We're nearly at rc-5, and this is a major, invasive, dangerous change that
-> we have to get right.
->
-> You've also made changes unrelated to review, repeatedly, throughout this
-> process, which as I've told you, is causing delays.
->
-> You've also throughout the review of this series done stuff like make MAJOR
-> changes to things and _kept review tags_.
->
-> You're forcing us to use git range-diff etc. to forensically check that the
-> series is what is claimed.
->
-> Dude I mean you switched to using // comment style which is not used in mm
-> anywhere for instance? Don't do things like that and complain about
-> delays. Honestly.
->
-> Also, again, LSF happened. Other confeerences happened. Bandwidth is
-> reduced.
->
-> So again, I'm sorry, but you've been hit with some bad luck here.
->
-> I really wanted this in for 7.2, and I feel bad that we couldn't make it,
-> but you're also doing thing that's making it difficult for us.
->
-> I've spent double-digits hours on your series, and I've also had work
-> pushed out becasue of that leading me to work evenings and weekends as a
-> result.
->
-> And I'm not even going to get any credit for it :))
->
-> So while I sypmathise, really, please have empathy and realise it goes both
-> ways, please.
->
-> I'm not being mean for the sake of it, I'm pushing back because I feel this
-> is not at a stage where I'd feel confident in this being merged at this
-> time.
->
-> And it's very much a regret, as I _really_ wanted us to have it in this
-> time. But life and circumstances and the issues mentioned above have
-> intervened, sadly.
->
-> >
-> > >
-> > > Also - shouldn't mm-unstable already have mm-hotfixes-unstable in it?
-> > >
-> > > I think in mm-next we will have an stable branch, that everything is
-> > > based on, where things go once review is complete and things are mergeable.
-> > >
-> > > And a separate hotfixes branch based on Linus's tree.
-> > >
-> > > That would avoid issues like this :)
-> >
-> > Im sorry im new to this, but I really dont think this tiny error, and
-> > something that I'd confirmed with Andrew beforehand deserves NAKing
-> > and defering it. Ive worked through my PTO to clean up some of these
-> > review nits just to get it in 7.2. I even through this through my
-> > rounds of testing today before resending.
->
-> The issue wasn't the error (though it wasn't tiny...!), it's the state of
-> review. There was fresh review comments from a few days ago, and there's
-> big diffs between revisions.
->
-> You've also made unrelated changes as you have done throughout the series.
->
-> As I said above, I'm sorry that you spent time in your PTO on this, but we
-> cannot rush this in when things are not clearly ready yet, and I am not
-> confident in this being ready at this stage.
->
-> >
-> > >
-> > > >
-> > > > The intent wasn't that this is a hotfix, just that this was the
-> > > > closest base before the v17 that is already in the tree.
-> > >
-> > > The convention is that [PATCH ... <branch>] indicates the target of the
-> > > changes. Putting the hotfixes branch there implies it's a hotfix.
-> >
-> > Sorry I thought the <branch> was what base you used.
->
-> I mean, sure there's clearly confusion here as you sent [PATCH 7.2 v16 ...]
-> (against an unreleased kernel version) then a branch specifier then the
-> hotfixes one...
->
-> Anyway sure, it's fine, I've made vastly more dumb mistakes than that
-> myself, nobody minds, but it's concerning as by convention [PATCH
-> ... <mm->hotfixes<whatever>] generally is taken to mean 'please rush this
-> to hotfixes!' :)
->
-> So be careful with that please!
->
-> >
-> > >
-> > > So please be careful with that in future :)
-> >
-> > Yes will do for sure.
->
-> Thanks!
->
-> >
-> > >
-> > > >
-> > > > Sorry for the confusion, hopefully Andrew can still apply it to the
-> > > > correct tree.
-> > >
-> > > I'm not even sure what's best for that at this stage given we have
-> > > conflicts and this has to be delayed until 7.3.
-> > >
-> > > I wonder if given that we should not have this in mm-unstable at all and
-> > > just wait it out until the next cycle begins? Review can happen
-> > > concurrently.
-> >
-> > I still dont see why this has to be deferred, I was working with
-> > Andrew to prevent merge headaches.
->
-> I've explained the why above, and David and I co-maintain THP so I feel
-> that ultimately given the blood, sweat and tears we've put into THP review
-> we ought to have some input on this :)
->
-> Thanks, Lorenzo
+Does this clarify?
