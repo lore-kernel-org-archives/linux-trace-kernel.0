@@ -1,67 +1,66 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7413E3C64
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 May 2026 11:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5881F3E5A14
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 May 2026 11:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779795466; cv=none; b=jiJJfF3aMw6RwXsMmFNptddgTVS7ePEBXFTTCbfk7VvztC9Tda0/p+Rjt6RpYJV6wrsLhXgYvbMUF6sWNWNN3pFPtvy/xUZpX6wRQONTdBo3x0rXSyAm77f9fLkg1UuffvENBtqSfjXTQoE7rRgb9C4P7jYLL4Y3vzwU15GifJ8=
+	t=1779795477; cv=none; b=o2tbvA9B277HVwmQL80hQLwKkzuiqkVJ6mwt2uIGUXvCHDPnONPcU6vwnnh8zQYpN5nVsmjYXLp8HJ5Q4D8nuA2RjXGktg8HHg2/nzKvj/7XgNPXl+mS3qTFI3klI1P2YL9nwmuDsLcWmg8WL9BUVeRtw977KvfluDJxu3xa53M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779795466; c=relaxed/simple;
-	bh=5MIHgChRNy12kVUm5iWs8ChIekHBsvSP0fhUEXrwf9U=;
+	s=arc-20240116; t=1779795477; c=relaxed/simple;
+	bh=SwXzV8tK9BQ8QjgrG6CC7I98NvDSuaRSrOJYRNh4rFA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eZHmE6K/E8takIyenZZQxUaaUFtoyYFaeRDj73YjafuRAx2ue0F+rGNnYCtjeu35sBBSqpDEt1RvbJ5zou+Ftj0vU1aRTWJhwbK4n0J+d0oMAAsBXpYbRMi329B6pp70Y62679jLIAV+84fr/JTAOQeCmawcSHcJMDEdqP+KPms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rJQhF0c/; arc=none smtp.client-ip=209.85.167.41
+	 In-Reply-To:To:Cc; b=Zj3Ur0/PmRtoT6su9umIvJD5OFYZYNiGWDVQETP9HPmsczRSIdZv/2jN7VBOv0E+VmIAyJKaOIQ1N3j/LcBjdAPxSPn3V0Yd4fStknb2UJWNhEV2Hd3D7GUQYUpC1dpW+Ez/qL/pRo/LFUWDIG6eC5FRVOaPdvvdQ/w+tH/zLQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cPrQWuk7; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJQhF0c/"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5aa0cf8bca3so9527526e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 May 2026 04:37:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPrQWuk7"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5a8891f0c88so6351582e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 May 2026 04:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779795457; x=1780400257; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779795462; x=1780400262; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RepOlA7uegAkHRX0rdEAbivBLVoGLgApQvWSVyuj8bk=;
-        b=rJQhF0c/wNUvYl4FdibYFxZABQ4a1PwizuxWRg+q9h8Cbkt+dYbsnTNMO3bjlKf5cH
-         diSP9ZV0qO3t9eIcVsfjURWbiA30lCDwbWkCHj37E/fCGyJhXBzETl/Ss8WJjc2TvSYS
-         I8YF5WHHp8qZR3Py5hgp5i014cMmeBUFZkP4/r0AKWPLlHn/PKidrqEQ3Cf3NhmdinZ6
-         ZTaWKDNvTgYMBu4SOQop2oHobW/1+F7uGsMAC/ggxv86svSy0FDgDQDqNNECObEBowaa
-         n7ptagAbTPkvPfZWPd6MgD2SwbpwuhZRKEhKTnG59DQI0CqpUFCtGJAjO1vGD+/5zoRt
-         va7Q==
+        bh=FLeHkQsXAybNTL4Q4w5mxgSBDAtaR04/XoGzkQTY4uA=;
+        b=cPrQWuk7sFJUVnkI4J/4xCExY/hk6221tlhx/fRQOGzXvYnbD8jjnmtRYkFbnZ/roK
+         waeGXT5OZRhbCqSw5xnlFc0eASPxHOX7h50ogsv+uFqNtnKvGUUExbfF1La+W7rLN8ww
+         Ldf1hFmkvdbphZQXxbd+1PFRGn37BZFi7x0doEwCnb+cJTP3EYWo/XgCk0/516EVhi36
+         al3XS5e55xVWGBm4EdvarjPTK7n49WFmqJpg6ExdgNoeeQlySQkrNgXcQ/7MiCLZRjvb
+         2TuEtQLcFmq6Tu9cGnsBBS55uskggQ3xq6pnvuIofrvHhlQTTN0BXOt++oBwCvRTzEQ5
+         xxGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779795457; x=1780400257;
+        d=1e100.net; s=20251104; t=1779795462; x=1780400262;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=RepOlA7uegAkHRX0rdEAbivBLVoGLgApQvWSVyuj8bk=;
-        b=tBbT+FM4EK2jFR2/kCqxyBsO+0AmT00GrQxIWnl7Y8F9lPUKTH/BpDYQkhgl+3PRSS
-         bc0mRhkbzTe6x7FLc592+mPpkbA+Aas8Vi6tKW7U6O1Z7dX8HC9m9ca/+TgVFD36R1Qp
-         MTKQrAFufD6b6ggtoM7fld4qKvG32IrSBfl1o0CcEbrTup554mxt8UeUM5Nz3ce0YMXo
-         bSe75CaVObYcH7OtltqHR9r+tt72tE9tIcEgbukVqYdAD3iP1sqNiuxNGiFsyLi2gGsm
-         Ja16npqwdwVJwcYelrCdU8hcUhd03bi3akZiRP65pAZk4VGAtuZEaFrh/Vm82FfYCHiH
-         ITPg==
-X-Forwarded-Encrypted: i=1; AFNElJ/268XdrxkIIu4GGlJCHnMmzdROUKoHru2seqRSLPJF+q0BtXxhR8gOnMqGbhBHgnr4nWMUJeIYKG/uKYTX5gI0kKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRxPF9CzigNO+nQaf630q1Am6UZ9fa7q901cXs7zgdUnZvPD3w
-	4b7sfE04Ap8X4Y7PFcVW7aBZD/p58xW/OJiA0KH40Ct8IpzXfE2RzEmf
-X-Gm-Gg: Acq92OE1bAQIFb4XPQ0pPb9COGZypJyFcIUYn3E29FOZqpJV2T6gAvQtQPwz9S0K0ai
-	/Q107wEaq42Yz2nk/Ull5rjJjXu5gAMMrN7MvTBgHERCGJc+1EgWwdXwfduhEG+siOqmKdQQZMb
-	45uuQzEo8yQCK4Cill/W2St5UVijHcs8pAQaBQiJm8Rcw4avs5w81iZRl3UX93pvEGicJY7+L2N
-	LJSMM69kU1o3QQ38bUTMPjTJPmjJTVHDKZdlm2N4QGG5uPZi7Op/2q4tk/Xb5ES8cUafUW7VaKF
-	9deD7kI8jY6qqagVoaQy1MT0ZjKGY047uEXaLWTyubtODOqR2v0xRGf1IOoMzk6fDhJOHi8olWC
-	j53UjbaTYCBIoU6jHO8zdAyYgQS0A/9H2kWnWOiz36H+jn9Iuduwf7xniM7zdIneyw/ljFYHK/v
-	uRvj479/enKUSBhG//ElHblrpOohgKRgTfmNQAGJzBW3FfFTq+2jE1Fop6bii5xRkqq0Z+
-X-Received: by 2002:a05:6512:48cc:b0:5a8:87fc:2b34 with SMTP id 2adb3069b0e04-5aa323c3ee8mr3865629e87.32.1779795457167;
-        Tue, 26 May 2026 04:37:37 -0700 (PDT)
+        bh=FLeHkQsXAybNTL4Q4w5mxgSBDAtaR04/XoGzkQTY4uA=;
+        b=OnPpOc9uIJ0UhcgtsbZQ9qKAKMZm54/B903leh/Yhz1th8BWH1NBClXIwISjIegh7A
+         oBYvpebHsBiFGHf17pD/uC5tbqTMeUhb3KZF+M3tzQVYcgUYoOswZuZIVPSiuuXS5kfW
+         dy+JwRcoBfFn0o02tS4c7b1kPFAALQKVTrH8ADVNBZ9ynpJo3aubbZhQj7MpbDSO07Ja
+         OY+NVOKTnRUB+4kove+9yCDlUSWX71ODeiojcHY+hDH8FX3wWFSD65HqWGxWwml3KbQg
+         qnJdUkxCk34g+LifZzhNQU9BIJSI6sUIivYqk5Zkm91XVgcc0APlfAnrZjTUGCh6y7xn
+         EJsg==
+X-Forwarded-Encrypted: i=1; AFNElJ8qNmaiQ3C8rGYTfiQBvg1eXToieNw3HgSzLS3rU1NUCLdu7cYYp3Sfx7ZBM/jXDKgReY++Pht/rUrRXNT08JUWIZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH+hiwuvb0MYZyICiYwjj7fsV4bP33e/GaILFjbiI+xqXpWSRY
+	adImx5fDrVI+jgjf7c1MHrXXIzVavZ0Yy4yx1gJtilBEIGdTVrIOBwO4
+X-Gm-Gg: Acq92OG8lWgO5SmRXyxw3fBorul6ZayKHq/PCKc90sjhhIn02LvUAsJ3RoaMoBTh+NA
+	PKO69xvjnj2nhTCA+vcyG/7DKuUf69txSRjihMxkDON1XmjeE2JoqKhEkZqrSiQDeyRc7jIuuSv
+	1ehoTonq7v9NbMKJwa6rbihxAnZxcYPktmQ8KNPr5P3ccioo5NU3i0gQpuyT07TuVn6aEito9wL
+	/8X0IhWQXAkyH8xcG+yT/Nm6dmZ6vN7YJTZ4bH5xFRVCJob/Dc7gC0Xs/EVhrSQoDkDF7qna/AV
+	/6SSd8Ib46BVIrxSymkX83QJ0fEhqXud84uECvN3mlXg4qREhTDRD1CPTtaKs/YFkGvt/r2zoSx
+	36W042AJbEGzCDEjYhbC8lRlWqRrwG67s/eWsAk3sjZPYoI2dl3z/09p83Q2Rlj+6I8QS1zC8k0
+	1LLTo49SkVtV+4NVe41cY48c7yoiQBAVqKdkaLP8F/qY76lS2NceZxLexGTjYPkfOq+HRn
+X-Received: by 2002:a05:6512:3b21:b0:5a4:1a2:1d39 with SMTP id 2adb3069b0e04-5aa323143camr4952108e87.6.1779795461414;
+        Tue, 26 May 2026 04:37:41 -0700 (PDT)
 Received: from [127.0.1.1] (h-62-63-197-109.NA.cust.bahnhof.se. [62.63.197.109])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aa46330d9asm376332e87.59.2026.05.26.04.37.35
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aa46330d9asm376332e87.59.2026.05.26.04.37.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 04:37:36 -0700 (PDT)
+        Tue, 26 May 2026 04:37:41 -0700 (PDT)
 From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
-Date: Tue, 26 May 2026 13:37:02 +0200
-Subject: [PATCH RFC 1/3] mm, x86: support copying a folio using
- non-temporal stores
+Date: Tue, 26 May 2026 13:37:04 +0200
+Subject: [PATCH RFC 3/3] mm: use non-temporal stores for demotion
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260526-rfc-nt-demote-v1-1-eb9c9422daef@zptcorp.com>
+Message-Id: <20260526-rfc-nt-demote-v1-3-eb9c9422daef@zptcorp.com>
 References: <20260526-rfc-nt-demote-v1-0-eb9c9422daef@zptcorp.com>
 In-Reply-To: <20260526-rfc-nt-demote-v1-0-eb9c9422daef@zptcorp.com>
 To: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -107,164 +106,68 @@ X-Mailer: b4 0.15.2
 
 From: Alirad Malek <alirad.malek@zptcorp.com>
 
-In x86, use memcpy_flushcache (that uses non-temporal store
-instructions) to copy a folio. To achieve that, starting from folio_mc_copy
-down to copy_mc_to_kernel, create a series of helpers (named with an _nt
-suffix) that have similar behavior to the original counterparts.
+Memory demoted to a lower tier is assumed to be cold and most likely out of
+the CPU's last level cache. Additionally, in certain demotion targets (e.g.
+CXL devices with compressed memory) the bandwidth can be negatively
+impacted by the eviction patterns of the last level cache when standard
+memcpy is used. When the feature is enabled, use the
+MIGRATE_ASYNC_NON_TEMPORAL_STORES flag in demotions to trigger the folio
+copy path using non-temporal stores.
 
 Signed-off-by: Alirad Malek <alirad.malek@zptcorp.com>
 Co-developed-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
 Signed-off-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
 ---
- arch/x86/include/asm/uaccess.h |  4 ++++
- arch/x86/lib/copy_mc.c         | 26 ++++++++++++++++++++++++++
- include/linux/highmem.h        | 32 ++++++++++++++++++++++++++++++++
- include/linux/mm.h             |  1 +
- mm/util.c                      | 17 +++++++++++++++++
- 5 files changed, 80 insertions(+)
+ mm/Kconfig   | 8 ++++++++
+ mm/migrate.c | 9 ++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 367297b188c3..2d0938d3e372 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -494,6 +494,10 @@ unsigned long __must_check
- copy_mc_to_kernel(void *to, const void *from, unsigned len);
- #define copy_mc_to_kernel copy_mc_to_kernel
+diff --git a/mm/Kconfig b/mm/Kconfig
+index ebd8ea353687..4b7a75b57f6e 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -645,6 +645,14 @@ config MIGRATION
+ 	  pages as migration can relocate pages to satisfy a huge page
+ 	  allocation instead of reclaiming.
  
-+unsigned long __must_check
-+copy_mc_to_kernel_nt(void *to, const void *from, unsigned len);
-+#define copy_mc_to_kernel_nt copy_mc_to_kernel_nt
++config DEMOTION_WITH_NON_TEMPORAL_STORES
++	bool "Use non-temporal stores for demotion"
++	default n
++	depends on MIGRATION
++	help
++	  Enable non-temporal stores when migrating pages due to demotion.
++	  If disabled, demotion uses regular migration copy paths.
 +
- unsigned long __must_check
- copy_mc_to_user(void __user *to, const void *from, unsigned len);
- #endif
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index 97e88e58567b..5a2ee5c2211e 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -81,6 +81,32 @@ unsigned long __must_check copy_mc_to_kernel(void *dst, const void *src, unsigne
- }
- EXPORT_SYMBOL_GPL(copy_mc_to_kernel);
+ config DEVICE_MIGRATION
+ 	def_bool MIGRATION && ZONE_DEVICE
  
-+/**
-+ * copy_mc_to_kernel_nt - memory copy that handles source exceptions
-+ * if enabled, otherwise uses non-temporal stores
-+ * @dst: destination address
-+ * @src: source address
-+ * @len: number of bytes to copy
-+ *
-+ * Return 0 for success, or number of bytes not copied if there was an
-+ * exception.
-+ */
-+unsigned long __must_check copy_mc_to_kernel_nt(void *dst, const void *src, unsigned len)
-+{
-+	unsigned long ret;
-+
-+	if (copy_mc_fragile_enabled) {
-+		instrument_memcpy_before(dst, src, len);
-+		ret = copy_mc_fragile(dst, src, len);
-+		instrument_memcpy_after(dst, src, len, ret);
-+		return ret;
-+	}
-+
-+	memcpy_flushcache(dst, src, len);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(copy_mc_to_kernel_nt);
-+
- unsigned long __must_check copy_mc_to_user(void __user *dst, const void *src, unsigned len)
- {
- 	unsigned long ret;
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index af03db851a1d..a5cb435b9ffe 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -468,6 +468,32 @@ static inline int copy_mc_highpage(struct page *to, struct page *from)
+diff --git a/mm/migrate.c b/mm/migrate.c
+index ff6cf50e7b0b..368d40dc8772 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -862,7 +862,10 @@ static int __migrate_folio(struct address_space *mapping, struct folio *dst,
+ 	if (folio_ref_count(src) != expected_count)
+ 		return -EAGAIN;
  
- 	return ret;
- }
-+
-+#ifdef copy_mc_to_kernel_nt
-+static inline int copy_mc_highpage_nt(struct page *to, struct page *from)
-+{
-+	unsigned long ret;
-+	char *vfrom, *vto;
-+
-+	vfrom = kmap_local_page(from);
-+	vto = kmap_local_page(to);
-+	ret = copy_mc_to_kernel_nt(vto, vfrom, PAGE_SIZE);
-+	if (!ret)
-+		kmsan_copy_page_meta(to, from);
-+	kunmap_local(vto);
-+	kunmap_local(vfrom);
-+
-+	if (ret)
-+		memory_failure_queue(page_to_pfn(from), 0);
-+
-+	return ret;
-+}
-+#else
-+static inline int copy_mc_highpage_nt(struct page *to, struct page *from)
-+{
-+	return copy_mc_highpage(to, from);
-+}
-+#endif
- #else
- static inline int copy_mc_user_highpage(struct page *to, struct page *from,
- 					unsigned long vaddr, struct vm_area_struct *vma)
-@@ -481,6 +507,12 @@ static inline int copy_mc_highpage(struct page *to, struct page *from)
- 	copy_highpage(to, from);
- 	return 0;
- }
-+
-+static inline int copy_mc_highpage_nt(struct page *to, struct page *from)
-+{
-+	copy_highpage(to, from);
-+	return 0;
-+}
- #endif
+-	rc = folio_mc_copy(dst, src);
++	if (mode == MIGRATE_ASYNC_NON_TEMPORAL_STORES)
++		rc = folio_mc_copy_nt(dst, src);
++	else
++		rc = folio_mc_copy(dst, src);
+ 	if (unlikely(rc))
+ 		return rc;
  
- static inline void memcpy_page(struct page *dst_page, size_t dst_off,
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 5be3d8a8f806..d07ce478582d 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1644,6 +1644,7 @@ void __folio_put(struct folio *folio);
- void split_page(struct page *page, unsigned int order);
- void folio_copy(struct folio *dst, struct folio *src);
- int folio_mc_copy(struct folio *dst, struct folio *src);
-+int folio_mc_copy_nt(struct folio *dst, struct folio *src);
+@@ -2081,6 +2084,10 @@ int migrate_pages(struct list_head *from, new_folio_t get_new_folio,
+ 	LIST_HEAD(split_folios);
+ 	struct migrate_pages_stats stats;
  
- unsigned long nr_free_buffer_pages(void);
++	if (IS_ENABLED(CONFIG_DEMOTION_WITH_NON_TEMPORAL_STORES) &&
++		reason == MR_DEMOTION && mode == MIGRATE_ASYNC)
++		mode = MIGRATE_ASYNC_NON_TEMPORAL_STORES;
++
+ 	trace_mm_migrate_pages_start(mode, reason);
  
-diff --git a/mm/util.c b/mm/util.c
-index b05ab6f97e11..e09e9b5f8eee 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -749,6 +749,23 @@ int folio_mc_copy(struct folio *dst, struct folio *src)
- }
- EXPORT_SYMBOL(folio_mc_copy);
- 
-+int folio_mc_copy_nt(struct folio *dst, struct folio *src)
-+{
-+	long nr = folio_nr_pages(src);
-+	long i = 0;
-+
-+	for (;;) {
-+		if (copy_mc_highpage_nt(folio_page(dst, i), folio_page(src, i)))
-+			return -EHWPOISON;
-+		if (++i == nr)
-+			break;
-+		cond_resched();
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(folio_mc_copy_nt);
-+
- int sysctl_overcommit_memory __read_mostly = OVERCOMMIT_GUESS;
- static int sysctl_overcommit_ratio __read_mostly = 50;
- static unsigned long sysctl_overcommit_kbytes __read_mostly;
+ 	memset(&stats, 0, sizeof(stats));
 
 -- 
 2.43.0
