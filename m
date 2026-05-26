@@ -1,85 +1,129 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52F63502A9;
-	Tue, 26 May 2026 19:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF1B2264D6;
+	Tue, 26 May 2026 20:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779824318; cv=none; b=RQCF/6qqxtNe15OQczmF/SrMxutU7VbU8IfVA9nNw8t++KD1gQjW5HZnY6BCAiC9nASDix+509Jpc5ceMyw+150rrYgDWKa88NxW0Vw21j8MqfR1cOoVY6oBJzrQ7iUANkufs+g6iyvNLqaC8nFVdmGNMvXg1O8FDHv9hAOQU40=
+	t=1779829126; cv=none; b=WG1dP/rAQV25b2DmgD6IRvPYZ3g0QKmRMtv8oUNcINsZed5SgTCsYcoT+Ptf6yesvLxdWdOcVj4CnvJYxWh9gr2f5L7ngKl2sGFhgkqOnPPAsS0zgEMG0VhXTER1GuYWNO2zmIV4mvlRvyDhBLjXUaI373FeMrMfMGnGzNDUfNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779824318; c=relaxed/simple;
-	bh=CdYJ6KR1CDql6op/8GOtX7NEid5/rNSsu5HinRhlJz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FMJPKLLpaYreUH4tefqSPu+Eue8HW0Lgjr7xQJLZUtFvpHSKJOiLSTwMRxRbxhab0qk3z2/2Y+awkHGhWEvOQ/Nz+exowFCY2QIZMoJyJUTGEtwX1eeaewlizrXSCWpbcgKkEj0AHGRpo2qOnbQljgitkaNoHOtv7ycY6GWbD1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 1A2461C0252;
-	Tue, 26 May 2026 19:38:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 421D420018;
-	Tue, 26 May 2026 19:38:33 +0000 (UTC)
-Date: Tue, 26 May 2026 15:39:05 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Li Pengfei <ljdlns1987@gmail.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, cmllamas@google.com, zhangbo56@xiaomi.com,
- Pengfei Li <lipengfei28@xiaomi.com>
-Subject: Re: [RFC PATCH v3 0/3] trace: stack trace deduplication for ftrace
- ring buffer
-Message-ID: <20260526153905.093aff7c@gandalf.local.home>
-In-Reply-To: <cover.1779769138.git.lipengfei28@xiaomi.com>
-References: <20260514034916.2162517-1-lipengfei28@xiaomi.com>
-	<cover.1779769138.git.lipengfei28@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779829126; c=relaxed/simple;
+	bh=2/0AgAfIcE3K7jqkkNWZwz7Bm6ixy/m4uuTQoYZ8d8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XA2PYtOJpXi5TEgNX0944fCqGSgmwAABoMY9veh8DOmeRTc7Ca7i61JBvfnQ4nx1fv4Ee2vOaNjl8lW5vd06QbL93biRnB2jYo+iIzirTs90VDtAXLUXv6u5vDByXqw+LFywu/El6/hMJDReVgE25mj9sK1jDxIXwO9W7p0b+iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JcInqzRJ; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JcInqzRJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8C21F000E9;
+	Tue, 26 May 2026 20:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779829125;
+	bh=C9Ums9y0roCN9p7E4pmxIDMn0pbs8TMPD+4e21NSewI=;
+	h=From:To:Cc:Subject:Date;
+	b=JcInqzRJ/plUQLUdvHqWHbMFQl7WLQTFHV2jdQaLg0MhlMLWQiGOHTiyTRxaMK59U
+	 kMs/OZubdQjhsPdSjIAw+GskbyVuxdPpJcpvpoBblRuk4YgVFB+OCTdyk1Cxmsab+3
+	 fpHleL38tYcDAPsGw1eOiD4H3bl9avYSCErcNEFt/4qcRzBTGylZdgvpm7oTXzALtw
+	 4rYA8Em1jbi74TRrpP5bBO4qzMVpyTgX9IyhqpNPymW4vIdJpx2KiU32fyjYjG9y4E
+	 o4BkMwGD1QElnp8FMQdPOsbtlqDIgKJuFyZIx5aMH6EEHFyggLMGxn6Mg1rJFXZtJO
+	 VjB7jZi5/RaWg==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv4 00/13] uprobes/x86: Fix red zone issue for optimized uprobes
+Date: Tue, 26 May 2026 22:58:27 +0200
+Message-ID: <20260526205840.173790-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: i67ccpnwu5hi8ghnrj15wjm3tjc6n6fo
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 421D420018
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18eqGLafxeHNCocGVTpJ7gz91e6br6vH7w=
-X-HE-Tag: 1779824313-272225
-X-HE-Meta: U2FsdGVkX1+7DyxMBWuTXOs+Jjrs5LgDO55IofuHUZRLlUm+ry4zo26DKsKoK4U8FcY9J0prjwv/lmjlQf+9ON4qjh/gnLZkUGkTJp8xVUIeuaIeoJfdb3ZqlUdVpA8HgFbmYGEOu75AJi9s42HPyu2da082NwwMaXBnPRSJvPx9VI0LM1YOqd8rG/7c/6BHEW7o3LAUFd3yolVwKsexuGn3hvxaPf0/cMfj7d9WwwpCqG94rtlxY4jX0JAC2IlAwpVpuO/YWCgjP4akpukM0/s4z6uNVDNwWtOoZvlYSiD/ZKyCKwj5NgOXc0R1kBzVRYEoJGviQRKqlAEH9YekD+1kznC8m1W+ckXHUHgwza92ak48kUDojCN+s6Gb813Sn5urT+GBJJ1rAI0v4BdcXldk+Iu2dv3IjgwwHkOYucZO/wlXKWnx7GTp1HF8KwmHDoktfPrONqg=
+Content-Transfer-Encoding: 8bit
+
+hi,
+Andrii reported an issue with optimized uprobes [1] that can clobber
+redzone area with call instruction storing return address on stack
+where user code may keep temporary data without adjusting rsp.
+
+Fixing this by moving the optimized uprobes on top of 10-bytes nop
+instruction, so we can squeeze another instruction to escape the
+redzone area before doing the call.
+
+Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
+if we decide to take this change.
+
+thanks,
+jirka
 
 
-Please DO NOT SEND new versions of a patch or patch series as a reply to
-the old one. It makes it extremely difficult for maintainers to manage the
-replies and patches.
+v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
+v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.org/
+v3: https://lore.kernel.org/bpf/20260521124411.31133-1-jolsa@kernel.org/
 
-A new version should ALWAYS start a new email thread!
+v4 changes:
+- do not use 2nd int3 (ont +5 offset) because the call instruction
+  is allways the same for the given nop10 address [Andrii/Peter]
+- unmap unused trampoline vma after unsuccesfull optimization [sashiko]
+- small change to patch#2 moved user_64bit_mode earlier in the path
+  and pass/use mm_struct pointer directly from arch_uprobe_optimize
+  instead of gettting current->mm
+  Andrii, keeping your ack, please shout otherwise
 
-On Tue, 26 May 2026 19:52:42 +0800
-Li Pengfei <ljdlns1987@gmail.com> wrote:
+v3 changes:
+- use nop10 update suggested by Peter in [2]
+- remove struct uprobe_trampoline object, use vma objects directly instead
+- selftests fixes [sashiko]
+- ack from Andrii
 
-> From: Pengfei Li <lipengfei28@xiaomi.com>
-> 
-> Hi Masami, Steven, all,
-> 
-> This is v3 of the ftrace stackmap series. It addresses the Sashiko
-> review on v2 [1] that Masami pointed out.
-> 
-> [1] https://sashiko.dev/#/patchset/20260522104017.1668638-1-lipengfei28%40xiaomi.com
-> 
-> The series adds stack trace deduplication to ftrace. When the
-> stacktrace option is enabled, the ring buffer stores a 4-byte
-> stack_id instead of a full kernel stack trace, while the full
-> stacks are exported via tracefs.
-> 
-> Rebased onto v7.1-rc5 (e8c2f9fdadee) before sending.
-> 
-> Changes since v2
-> ================
+v2 changes:
+- several selftest fixes [sashiko]
+- consolidate is_lea_insn and is_call_insn insto single check [Jakub Sitnicki]
+- use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
+- allow to copy uprobe trampolines vma objects on fork [sashiko]
+- change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
+- added fork/clone tests
+- I kept the selftest changes and nop5->nop10 changes in separate
+  commits for easier review, we can squash them later if we want to keep
+  bisect working properly
 
-Then you can use lore to add a link to the old version via the Message-ID
-of the old version. You can have the above as:
 
- Changes since v2: https://lore.kernel.org/all/20260522104017.1668638-1-lipengfei28@xiaomi.com/
+[1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
+[2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
+---
+Andrii Nakryiko (1):
+      selftests/bpf: Add tests for uprobe nop10 red zone clobbering
 
--- Steve
+Jiri Olsa (12):
+      uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+      uprobes/x86: Remove struct uprobe_trampoline object
+      uprobes/x86: Allow to copy uprobe trampolines on fork
+      uprobes/x86: Unmap trampoline vma object in case it's unused
+      uprobes/x86: Move optimized uprobe from nop5 to nop10
+      libbpf: Change has_nop_combo to work on top of nop10
+      libbpf: Detect uprobe syscall with new error
+      selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
+      selftests/bpf: Change uprobe syscall tests to use nop10
+      selftests/bpf: Change uprobe/usdt trigger bench code to use nop10
+      selftests/bpf: Add reattach tests for uprobe syscall
+      selftests/bpf: Add tests for forked/cloned optimized uprobes
+
+ arch/x86/kernel/uprobes.c                               | 379 +++++++++++++++++++++++++++++++++++++++++++-----------------------------
+ include/linux/uprobes.h                                 |   5 -
+ kernel/events/uprobes.c                                 |  10 --
+ kernel/fork.c                                           |   1 -
+ tools/lib/bpf/features.c                                |   4 +-
+ tools/lib/bpf/usdt.c                                    |  16 +--
+ tools/testing/selftests/bpf/bench.c                     |  20 ++--
+ tools/testing/selftests/bpf/benchs/bench_trigger.c      |  38 ++++----
+ tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh |   2 +-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 307 +++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ tools/testing/selftests/bpf/prog_tests/usdt.c           |  74 ++++++++++++--
+ tools/testing/selftests/bpf/progs/test_usdt.c           |  25 +++++
+ tools/testing/selftests/bpf/usdt.h                      |   2 +-
+ tools/testing/selftests/bpf/usdt_2.c                    |  15 ++-
+ 14 files changed, 653 insertions(+), 245 deletions(-)
