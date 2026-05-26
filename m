@@ -1,75 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from pdx-out-015.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-015.esa.us-west-2.outbound.mail-perimeter.amazon.com [50.112.246.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A0840B6E6;
-	Tue, 26 May 2026 17:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563A42F8BC3;
+	Tue, 26 May 2026 19:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=50.112.246.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779817321; cv=none; b=ElPp+77jp1lJXvRv623SUBiigqs4y6An0zCUjB5VuJ2BeT3WpT+k6lrNgtuI4FonNYZyH28zuDnaohpL3/9sjE6hK9G4jtwtr18gXnb9zFtOoCxgZwyb6fNhgnIQ+Q3K8pFIeEs+SZEKeRJqAeWkspYt2YyngtuJIiEMoCQJvxY=
+	t=1779823249; cv=none; b=cAOSXPiJfKEwhcDsQ9oTAD0iCjl9tGiVFR3BuFQkupf3n7QIN2CBvOaZj7dhRSbXHcrYbYXouS3bSV1vMABQ0QBdOtwnZc8i/SKL9AX3CTNhnB2NuTXz5tocL59/VQjUj1k9TzTqgEyioAFzMpWf2Z3qUCRbGLafYJrIlxFjAvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779817321; c=relaxed/simple;
-	bh=oA9SYI3Vg6WjJ4my1cbreo9H4SpR6X837lBLcyW3YhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QuZVhaNUB+uY75TXJTjtNU2tuYUu6PI0fxlojDrae0u33adtQ2z/Ye6e29NT6iaCm5+mPs4O82YEBxzmjFOa5H7DoD70ZrZNxErkimyyBNpNK/NSUZo28fcmyFmm3yMiSOyr7+fDfXgU1qaoUJLpXwqV45JYHA+Gxfuq9HLSlKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=an5wcbJQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779823249; c=relaxed/simple;
+	bh=ccS2IEN1yROm6MKV24kzUPb1oT0BwtewhqDOAduNA3U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DKYHjizBUayld2nzOpEGSCBIhV76ZAD84ed500Et+nMV2h41yeb8NCrAhxG5MvbNhKyEgeRKriZb17YdJq+Xhv++fQ+itkgiplLpqgJdfyGFNqzkTz/gantgBHusJFGKXah6YP/GYKvFl1bHqHwS0nxg8fAx/Pr/onusmQpBhhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=pmMBiHaU; arc=none smtp.client-ip=50.112.246.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="an5wcbJQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BAB1F000E9;
-	Tue, 26 May 2026 17:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779817320;
-	bh=Cv7RpCZ0KM+t4lyA/0h2jSx7KpF5KVLWtYodP6cq/2A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=an5wcbJQm1oN36GxareExRezPK4urPhPMC179lNuWGdcqh/Nx+aQCkJQc7IHivPOx
-	 oYJYlAloklib5Ojlg/h0hsgjBmFmnPDhpdRjMWVx9F03MBTwh0mEajN8uEi4EkotAM
-	 gDHzDOH+iwRLkn4HVb2KHEDidiAFMSOZpkb1RUT6awDlEzAVitq4lUGDXjq7h7SVmN
-	 WI8OEsMQeNrXTALvxmFcqFKNELf3I8+bPfvXRkwi0zW4ipNgtn/1x7wqOuEnZi/eE+
-	 TkiixAULbjfVMp43m/U/dNVMtozLMvYy8A6cF9N06s8t7cH6e4MRKslvMHvb56ZH3B
-	 Ajo/3fNXeh8uA==
-Date: Tue, 26 May 2026 13:42:31 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v21 0/9] ring-buffer: Making persistent ring buffers
- robust
-Message-ID: <20260526134231.1a65aef5@gandalf.local.home>
-In-Reply-To: <20260526141746.cf0b3c0bed5db3baf8914095@kernel.org>
-References: <20260522170857.263969486@kernel.org>
-	<20260526141746.cf0b3c0bed5db3baf8914095@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="pmMBiHaU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1779823248; x=1811359248;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dUbwGAbnnjrnTYIhityYHAbrTn/q4cPyenaTuTjrLdg=;
+  b=pmMBiHaUPEk/toeveBtCfapbby1Ip+baZQfcOQEDwNIyM7XPkc6qoTXB
+   n0sQzmr/fqxStDlPnI7SK9KfsgIduM3jLF9DEPn6u+tlHtxcV5M7vTfTy
+   vOBGfJlXT+6/ZjZkFbqgHbxsiG0yZP0xkvZizGxLdLVzuGAgYpuhkekTX
+   xVG3YNhDjkn/LSalbLoVMG5xawdlVZQGaLZnCU75cRKK6bRbQgcdbhJIU
+   nU9Mry+rcHLszteyLWWLdk0Qo1n1JsBqJ9sjxtHtVeiwPeTV9XEsp1ViM
+   J6Tqal83ot1V/TfnLpRc4mTAz7l5zvx+VbW7F93sbG90CPnQ+atsFmDvK
+   w==;
+X-CSE-ConnectionGUID: khoeNVcrREOEDhcejjvuYg==
+X-CSE-MsgGUID: mKqm77QvQw22qtdHiSLDgg==
+X-IronPort-AV: E=Sophos;i="6.24,170,1774310400"; 
+   d="scan'208";a="20316884"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-015.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 19:20:45 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:7544]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.27.115:2525] with esmtp (Farcaster)
+ id 53c53370-9a31-4bfa-8c5b-54a1678f5106; Tue, 26 May 2026 19:20:45 +0000 (UTC)
+X-Farcaster-Flow-ID: 53c53370-9a31-4bfa-8c5b-54a1678f5106
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
+ Tue, 26 May 2026 19:20:44 +0000
+Received: from dev-dsk-gyokhan-1b-83b48b3c.eu-west-1.amazon.com (10.13.234.1)
+ by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
+ Tue, 26 May 2026 19:20:42 +0000
+From: Gyokhan Kochmarla <gyokhan@amazon.de>
+To: <stable@vger.kernel.org>, <gregkh@linuxfoundation.org>
+CC: <yangfeng@kylinos.cn>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mark.rutland@arm.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<jolsa@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <bpf@vger.kernel.org>, "Gyokhan
+ Kochmarla" <gyokhan@amazon.de>
+Subject: [PATCH 6.12] tracing: Fix the bug where bpf_get_stackid returns -EFAULT on the ARM64
+Date: Tue, 26 May 2026 19:20:12 +0000
+Message-ID: <20260526192012.76223-1-gyokhan@amazon.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-ClientProxiedBy: EX19D033UWA001.ant.amazon.com (10.13.139.103) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 26 May 2026 14:17:46 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Feng Yang <yangfeng@kylinos.cn>
 
-> On Fri, 22 May 2026 13:08:57 -0400
-> Steven Rostedt <rostedt@kernel.org> wrote:
-> 
-> > This is to make the persistent ring buffer more robust when sub-buffers
-> > are detected to be corrupted. Instead of invalidating the entire buffer,
-> > just invalidate the individual sub-buffers.
-> > 
-> > I started with Masami's patches and modified some from Sashiko reviews.
-> > I added a few patches to display the dropped events when the persistent
-> > ring buffers validation checks found sub-buffers were dropped due to being
-> > corrupted data.  
-> 
-> It seems that Sashiko still marks it "Incompleted".
-> Maybe we need base-commit: tag in this cover mail?
-> I also guess that this series does not use "In-Reply-To:" but
-> only uses "References:" tag in the mail header. I guess
-> Sashiko's mail header parser missed it.
+commit fd2f74f8f3d3c1a524637caf5bead9757fae4332 upstream.
 
-But this applies to mainline. I'm not sure why it's having problems.
+When using bpf_program__attach_kprobe_multi_opts on ARM64 to hook a BPF program
+that contains the bpf_get_stackid function, the BPF program fails
+to obtain the stack trace and returns -EFAULT.
 
--- Steve
+This is because ftrace_partial_regs omits the configuration of the pstate register,
+leaving pstate at the default value of 0. When get_perf_callchain executes,
+it uses user_mode(regs) to determine whether it is in kernel mode.
+This leads to a misjudgment that the code is in user mode,
+so perf_callchain_kernel is not executed and the function returns directly.
+As a result, trace->nr becomes 0, and finally -EFAULT is returned.
+
+Therefore, the assignment of the pstate register is added here.
+
+Fixes: b9b55c8912ce ("tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs")
+Closes: https://lore.kernel.org/bpf/20250919071902.554223-1-yangfeng59949@163.com/
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+Tested-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Gyokhan Kochmarla <gyokhan@amazon.de>
+---
+ arch/arm64/include/asm/ftrace.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+index 10e56522122a..46d4300dd48d 100644
+--- a/arch/arm64/include/asm/ftrace.h
++++ b/arch/arm64/include/asm/ftrace.h
+@@ -145,6 +145,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+ 	regs->pc = afregs->pc;
+ 	regs->regs[29] = afregs->fp;
+ 	regs->regs[30] = afregs->lr;
++	regs->pstate = PSR_MODE_EL1h;
+ 	return regs;
+ }
+ 
+-- 
+2.47.3
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
+
