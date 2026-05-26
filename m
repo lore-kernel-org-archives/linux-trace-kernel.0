@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ACBAD24;
-	Tue, 26 May 2026 04:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F8E17745;
+	Tue, 26 May 2026 05:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779770601; cv=none; b=s/sTM8+KXFZGrXfD36QyMOctKxrNbm8jP4eA9hkYiQBUI1Yc8ZT8kaXZlwfhYMI6goXcuuaRvlXV2Gm4hQmUYqz3upppyDA9/ogMDXSmG+1HPiqnB4p3XStFIopQVJwgL5CU08Ym811Eakk/pn5E9NvhdbXkHkV1p3fvUbd/Mbg=
+	t=1779771973; cv=none; b=rLjmnHH9p/h1axf8i/N4dD1KDUK/dNdPoFAaZFnF06vXup8KfA4lo0zZ0YSzJjRVSoehxNAC5GcC1H3J8LzLOva5KQcXeb+o0YnhLs7MyX0ADVtWRpgncKiAA2DxnWEGD005Zh4q6/yXnL4OS3gy8UUIJISrFsn2bfIayh7Uj8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779770601; c=relaxed/simple;
-	bh=vBFuHgff7uSONnCwJz1deL+mxSyDfPzKEpR0ztYXsks=;
+	s=arc-20240116; t=1779771973; c=relaxed/simple;
+	bh=9+dvesZqHCez6C4ImG/1xrjdB0ok+iwKeIEfOLvMUVc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=S7H5h9hOO016+3og139B66HsUMHDnHGGT682gk8kYtrx/L+IRphki7qDGJEzSG1J6yAKBHUTRMSGM2YP/kgmsJck2o1uGvFdlRgu1CCitGY1qnX6LWaXPIrtZD5tbv1UPxfkVh/wFiiq+NV0QsfEHTddeeEld4Dt5985DbC+Ptk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbqoSvAv; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=J+KVCY/YiEQ7T/eKi9xLwjgGEL4tdSSRQux3PENHbRcZoziFvi5h+FqAdQLBYzHfxwoWBGnWOzFgfBrUy4AfItgIoF45xC5RjqjUbgm+2zSYVUUidw35AtxOQdemRB7v780akKsf2clHmgsB+wWS0FX3Dm7FWdKCGxgkUK3qIhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad4avntu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbqoSvAv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D63B31F000E9;
-	Tue, 26 May 2026 04:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad4avntu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5AF1F00A3A;
+	Tue, 26 May 2026 05:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779770599;
-	bh=k72u9KSYp0ChI4YLjIs7OOnXsHAX/wDTag3J+nv7FVg=;
+	s=k20260515; t=1779771972;
+	bh=vEPpbuA9hCnZ8dvT8zTkda0SXclRyd3TxRFVCR7xy8g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=gbqoSvAvP3+CD7LO4GGv5C4LSg0pFkq5MahDkkIGqQ7ZO8KTUbs40R/zfcQIkn7n0
-	 p/lE61fSAc+OYeuptOSjv54HtZAs2xiDc9NRRDWXHSjpBradgaLMJmZhFMATdA3XnF
-	 Sxuqiwz8dFxHyx77mkTaw17Le5m0186Su843/SkNxDOzpX5+H7bVhPPHd9TEfjHOHK
-	 Qp12SLLeL1HWctM4t8aovdki4ZDuUq/RfBuqJBDaS3Iletsi4ppfgeOSDWG0bY2zOa
-	 AsCjGscSA5z+zjkSKwqaXDiESFO+or5AFO6UZZHUYewdzfNfmyogM1k6q20tjaUtY0
-	 PtkYZHfxoYUJQ==
-Date: Tue, 26 May 2026 13:43:17 +0900
+	b=ad4avntuP2ZomCQdCoxLLnnUdiNASJfRvJWe9lTkb/tqCYeDA+mlnJC3uZUXOGG5F
+	 CVpidv2qdQSXApd3bxWKHCWp2Z57bLFV4vKMYlXh5tleGSG+m+SPHqZ3dFIOA5YfCD
+	 ZDEvGlVRkWVpsJDErZvPiHMMPyp6HzVDTTy17g7mJ0UmXaNJbrBls4KMku7ggsr83+
+	 SXKauVdmu1wAfijwBpMSH2zHV7+aEb90Vy8GLLt/E4ALHpaC3bdnYRS3pXLTdmKFO/
+	 q7IkyC1Ob6Q2HvokJcu5gLRxsUldjEls5ciza9Gh++l+q/9p7TIzNuTR133u3i5BP6
+	 qwU7Fxr8NDi/Q==
+Date: Tue, 26 May 2026 14:06:09 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org
- (open list:TRACING)
-Subject: Re: [PATCHv2] trace: allocate fields with elt struct
-Message-Id: <20260526134317.394c1cf3060e89df36662ecc@kernel.org>
-In-Reply-To: <20260522212627.12406-1-rosenp@gmail.com>
-References: <20260522212627.12406-1-rosenp@gmail.com>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v21 8/9] ring-buffer: Show persistent buffer dropped
+ events in trace file
+Message-Id: <20260526140609.28faf45d9d347e5d748e7cf1@kernel.org>
+In-Reply-To: <20260522171052.006276604@kernel.org>
+References: <20260522170857.263969486@kernel.org>
+	<20260522171052.006276604@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,86 +49,46 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Fri, 22 May 2026 13:09:05 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-Sashiko made 2 comments.
+> @@ -7187,6 +7190,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  		local_set(&reader->entries, 0);
+>  		reader->read = 0;
+>  		data_page->data = dpage;
+> +		if (!missed_events && rb_data_page_commit(dpage) & RB_MISSED_EVENTS)
+> +			missed_events = -1;
+>  
+>  		/*
+>  		 * Use the real_end for the data size,
+> @@ -7204,10 +7209,12 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  	 * Set a flag in the commit field if we lost events
+>  	 */
+>  	if (missed_events) {
+> -		/* If there is room at the end of the page to save the
+> +		/*
+> +		 * If there is room at the end of the page to save the
+>  		 * missed events, then record it there.
+>  		 */
+> -		if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
+> +		if (missed_events > 0 &&
+> +		    buffer->subbuf_size - commit >= sizeof(missed_events)) {
+>  			memcpy(&dpage->data[commit], &missed_events,
+>  			       sizeof(missed_events));
+>  			local_add(RB_MISSED_STORED, &dpage->commit);
 
-https://sashiko.dev/#/patchset/20260522212627.12406-1-rosenp%40gmail.com
+After this line, we "add" RB_MISSED_EVENTS instead of set.
+In this case, does it clear the RB_MISSED_EVENTS bit because
+it already sets RB_MISSED_EVENTS.
 
-On Fri, 22 May 2026 14:26:27 -0700
-Rosen Penev <rosenp@gmail.com> wrote:
-
-> > diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-> > index 0dd7927df22ac..196a7b0be99df 100644
-> > --- a/kernel/trace/tracing_map.c
-> > +++ b/kernel/trace/tracing_map.c
-> [ ... ]
-> > @@ -125,32 +125,32 @@ u64 tracing_map_read_var_once(struct tracing_map_elt *elt, unsigned int i)
-> [ ... ]
-> >  #define DEFINE_TRACING_MAP_CMP_FN(type)					\
-> > -static int tracing_map_cmp_##type(void *val_a, void *val_b)		\
-> > +static int tracing_map_cmp_##type(const void *val_a, const void *val_b)	\
-> >  {									\
-> > -	type a = (type)(*(u64 *)val_a);					\
-> > -	type b = (type)(*(u64 *)val_b);					\
-> > +	type a = (type)(*(const u64 *)val_a);				\
-> > +	type b = (type)(*(const u64 *)val_b);				\
-> >  									\
-> >  	return (a > b) ? 1 : ((a < b) ? -1 : 0);			\
-> >  }
-> This is a pre-existing issue, but does unconditionally reading 8 bytes
-> via the u64 cast cause unaligned access exceptions on architectures that
-> do not support them?
-> Additionally, for fields near the end of the dynamically allocated elt->key
-> buffer, can this trigger KASAN slab-out-of-bounds reads?
-> Also, on big-endian architectures, reading a smaller integer as a 64-bit
-> value and casting it down extracts the least-significant bytes rather than
-> the correct field value. Could this result in completely incorrect sorting
-> for small types?
-
-Steve, it seems this comes from your commit 106f41f5a302 ("tracing: Have
-the histogram compare functions convert to u64 first").
-
-I think neither of them is a problem, but could you check it?
+			commit += sizeof(missed_events);
+		}
+		local_add(RB_MISSED_EVENTS, &bpage->commit);
+                      ^^^ here.
 
 
-> > diff --git a/kernel/trace/tracing_map.h b/kernel/trace/tracing_map.h
-> > index 99c37eeebc161..ed64136782d80 100644
-> > --- a/kernel/trace/tracing_map.h
-> > +++ b/kernel/trace/tracing_map.h
-> [ ... ]
-> > @@ -137,11 +137,11 @@ struct tracing_map_field {
-> >  
-> >  struct tracing_map_elt {
-> >  	struct tracing_map		*map;
-> > -	struct tracing_map_field	*fields;
-> >  	atomic64_t			*vars;
-> >  	bool				*var_set;
-> >  	void				*key;
-> >  	void				*private_data;
-> > +	struct tracing_map_field	fields[];
-> >  };
->
-> Is it safe to add a flexible array member to struct tracing_map_elt when it
-> is embedded by value in the middle of struct track_data?
-> kernel/trace/trace_events_hist.c:struct track_data {
->     ...
->     struct tracing_map_elt      elt;
->     ...
->     struct action_data          *action_data;
->     struct hist_trigger_data    *hist_data;
-> };
-> Embedding a struct with a flexible array member in the middle of another
-> struct violates C standard constraints. Does this trigger compiler
-> warnings (such as -Wflex-array-member-not-at-end on modern compilers) or
-> break bounds computations for FORTIFY_SOURCE?
+Thanks,
 
-Yeah, from this reason, this is is not acceptable.
-To fix this issue, we need to refactor the trace_events_hist.c,
-because track_data only uses tracing_map_elt as a placeholder
-of private_data.
-
-Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
