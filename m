@@ -1,141 +1,85 @@
-Received: from pdx-out-012.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-012.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.162.73.231])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB49219301;
-	Tue, 26 May 2026 19:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.162.73.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52F63502A9;
+	Tue, 26 May 2026 19:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779823416; cv=none; b=H+n7Ll34hALOuCDhOSJBa/GEQNtEo78H+yRaIuphPVg3LD+j5KTK5w8RjdP1PCWzU/N3+jDdD42+KvYqCfA3YGMHw5ErjAWs7Bp1RT77+4AX/lu/5Z4aepQfAOLbxF7Rc+8LIMs+fXtwmaSJki7LYbRPQKqsbshu+AsuSVUWpRI=
+	t=1779824318; cv=none; b=RQCF/6qqxtNe15OQczmF/SrMxutU7VbU8IfVA9nNw8t++KD1gQjW5HZnY6BCAiC9nASDix+509Jpc5ceMyw+150rrYgDWKa88NxW0Vw21j8MqfR1cOoVY6oBJzrQ7iUANkufs+g6iyvNLqaC8nFVdmGNMvXg1O8FDHv9hAOQU40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779823416; c=relaxed/simple;
-	bh=xSAHuzhnv6e8U1m3dmcLOx7TglmUIAozHqyQTb713eM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=puFKFDySgqaOoMY3v1RZmk6KD3Tj7HOo8rrTTz5WLz4fHQlgxMtiEoW4jenLVzQN3+w2rKcyOfTAf0XpczFGo0FxBSCv4gwEp9kL4d+zypEGqV+lC45GZIxfJoDvwYkXQ2nQefcnzEJRajOh/5xi9N0Xx/3MLYRmVomQiECXOQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=sdvhjHg8; arc=none smtp.client-ip=35.162.73.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="sdvhjHg8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1779823415; x=1811359415;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Sgajywb0c9W4z+XMC1HocV4U0cjHkMGlj+AS3vvfOb4=;
-  b=sdvhjHg8VTJVAg6ZcZG9oCa4ScMMplX/xtx436g8yfAWmN+KHzVZqpjI
-   8ZUHTvROk8sI9MBBafpjHzAcBQCGiVUur20mSmwj1Og/mSZl1qVxvILeV
-   qswAF5wbPd4wL6ux1PhcmnpR+342RlezmcxNiESppDOfOZKvsHoe8VwvI
-   +z5VFFhWxk6qm3jk9vV7xyOyfrmUEsf8gkfiEmdeG9zqbzMvlUJRDsJ+7
-   WVPkO/dirytJkul8GVx2qniAM/s+ep/TCJ+nmeP/3EFwGmfananPQ1Enn
-   IBIm6Xv0F9C6zTb+MmM7GpJ3zNZFCG/AAWKek+UnyLhdx9ydJeWhjfBG9
-   A==;
-X-CSE-ConnectionGUID: krsg8C1SQ8G4tS0prj+bsQ==
-X-CSE-MsgGUID: utt+6dtbQzCWytuJUknqQg==
-X-IronPort-AV: E=Sophos;i="6.24,170,1774310400"; 
-   d="scan'208";a="20301064"
-Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-012.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 19:23:35 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [205.251.233.182:4829]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.28.237:2525] with esmtp (Farcaster)
- id 7977181f-585a-4c4d-8b8e-f1d45d1e5235; Tue, 26 May 2026 19:23:34 +0000 (UTC)
-X-Farcaster-Flow-ID: 7977181f-585a-4c4d-8b8e-f1d45d1e5235
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Tue, 26 May 2026 19:23:34 +0000
-Received: from dev-dsk-gyokhan-1b-83b48b3c.eu-west-1.amazon.com (10.13.234.1)
- by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Tue, 26 May 2026 19:23:32 +0000
-From: Gyokhan Kochmarla <gyokhan@amazon.de>
-To: <stable@vger.kernel.org>, <gregkh@linuxfoundation.org>
-CC: <jolsa@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, Andrii Nakryiko
-	<andrii@kernel.org>, Gyokhan Kochmarla <gyokhan@amazon.de>
-Subject: [PATCH 6.12] x86/fgraph: Fix return_to_handler regs.rsp value
-Date: Tue, 26 May 2026 19:23:24 +0000
-Message-ID: <20260526192324.79459-1-gyokhan@amazon.de>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1779824318; c=relaxed/simple;
+	bh=CdYJ6KR1CDql6op/8GOtX7NEid5/rNSsu5HinRhlJz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FMJPKLLpaYreUH4tefqSPu+Eue8HW0Lgjr7xQJLZUtFvpHSKJOiLSTwMRxRbxhab0qk3z2/2Y+awkHGhWEvOQ/Nz+exowFCY2QIZMoJyJUTGEtwX1eeaewlizrXSCWpbcgKkEj0AHGRpo2qOnbQljgitkaNoHOtv7ycY6GWbD1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 1A2461C0252;
+	Tue, 26 May 2026 19:38:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 421D420018;
+	Tue, 26 May 2026 19:38:33 +0000 (UTC)
+Date: Tue, 26 May 2026 15:39:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Li Pengfei <ljdlns1987@gmail.com>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cmllamas@google.com, zhangbo56@xiaomi.com,
+ Pengfei Li <lipengfei28@xiaomi.com>
+Subject: Re: [RFC PATCH v3 0/3] trace: stack trace deduplication for ftrace
+ ring buffer
+Message-ID: <20260526153905.093aff7c@gandalf.local.home>
+In-Reply-To: <cover.1779769138.git.lipengfei28@xiaomi.com>
+References: <20260514034916.2162517-1-lipengfei28@xiaomi.com>
+	<cover.1779769138.git.lipengfei28@xiaomi.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D037UWB001.ant.amazon.com (10.13.138.123) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-
-From: Jiri Olsa <jolsa@kernel.org>
-
-commit 8bc11700e0d23d4fdb7d8d5a73b2e95de427cabc upstream.
-
-The previous change (Fixes commit) messed up the rsp register value,
-which is wrong because it's already adjusted with FRAME_SIZE, we need
-the original rsp value.
-
-This change does not affect fprobe current kernel unwind, the !perf_hw_regs
-path perf_callchain_kernel:
-
-        if (perf_hw_regs(regs)) {
-                if (perf_callchain_store(entry, regs->ip))
-                        return;
-                unwind_start(&state, current, regs, NULL);
-        } else {
-                unwind_start(&state, current, NULL, (void *)regs->sp);
-        }
-
-which uses pt_regs.sp as first_frame boundary (FRAME_SIZE shift makes
-no difference, unwind stil stops at the right frame).
-
-This change fixes the other path when we want to unwind directly from
-pt_regs sp/fp/ip state, which is coming in following change.
-
-Fixes: 20a0bc10272f ("x86/fgraph,bpf: Fix stack ORC unwind from kprobe_multi return probe")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/bpf/20260126211837.472802-2-jolsa@kernel.org
-Signed-off-by: Gyokhan Kochmarla <gyokhan@amazon.de>
----
- arch/x86/kernel/ftrace_64.S | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 8a3cff618692..143fc62bf6f8 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -349,6 +349,9 @@ SYM_CODE_START(return_to_handler)
- 	UNWIND_HINT_UNDEFINED
- 	ANNOTATE_NOENDBR
- 
-+	/* Store original rsp for pt_regs.sp value. */
-+	movq %rsp, %rdi
-+
- 	/* Restore return_to_handler value that got eaten by previous ret instruction. */
- 	subq $8, %rsp
- 	UNWIND_HINT_FUNC
-@@ -359,7 +362,7 @@ SYM_CODE_START(return_to_handler)
- 	movq %rax, RAX(%rsp)
- 	movq %rdx, RDX(%rsp)
- 	movq %rbp, RBP(%rsp)
--	movq %rsp, RSP(%rsp)
-+	movq %rdi, RSP(%rsp)
- 	movq %rsp, %rdi
- 
- 	call ftrace_return_to_handler
--- 
-2.47.3
+X-Stat-Signature: i67ccpnwu5hi8ghnrj15wjm3tjc6n6fo
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 421D420018
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18eqGLafxeHNCocGVTpJ7gz91e6br6vH7w=
+X-HE-Tag: 1779824313-272225
+X-HE-Meta: U2FsdGVkX1+7DyxMBWuTXOs+Jjrs5LgDO55IofuHUZRLlUm+ry4zo26DKsKoK4U8FcY9J0prjwv/lmjlQf+9ON4qjh/gnLZkUGkTJp8xVUIeuaIeoJfdb3ZqlUdVpA8HgFbmYGEOu75AJi9s42HPyu2da082NwwMaXBnPRSJvPx9VI0LM1YOqd8rG/7c/6BHEW7o3LAUFd3yolVwKsexuGn3hvxaPf0/cMfj7d9WwwpCqG94rtlxY4jX0JAC2IlAwpVpuO/YWCgjP4akpukM0/s4z6uNVDNwWtOoZvlYSiD/ZKyCKwj5NgOXc0R1kBzVRYEoJGviQRKqlAEH9YekD+1kznC8m1W+ckXHUHgwza92ak48kUDojCN+s6Gb813Sn5urT+GBJJ1rAI0v4BdcXldk+Iu2dv3IjgwwHkOYucZO/wlXKWnx7GTp1HF8KwmHDoktfPrONqg=
 
 
+Please DO NOT SEND new versions of a patch or patch series as a reply to
+the old one. It makes it extremely difficult for maintainers to manage the
+replies and patches.
 
+A new version should ALWAYS start a new email thread!
 
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+On Tue, 26 May 2026 19:52:42 +0800
+Li Pengfei <ljdlns1987@gmail.com> wrote:
 
+> From: Pengfei Li <lipengfei28@xiaomi.com>
+> 
+> Hi Masami, Steven, all,
+> 
+> This is v3 of the ftrace stackmap series. It addresses the Sashiko
+> review on v2 [1] that Masami pointed out.
+> 
+> [1] https://sashiko.dev/#/patchset/20260522104017.1668638-1-lipengfei28%40xiaomi.com
+> 
+> The series adds stack trace deduplication to ftrace. When the
+> stacktrace option is enabled, the ring buffer stores a 4-byte
+> stack_id instead of a full kernel stack trace, while the full
+> stacks are exported via tracefs.
+> 
+> Rebased onto v7.1-rc5 (e8c2f9fdadee) before sending.
+> 
+> Changes since v2
+> ================
+
+Then you can use lore to add a link to the old version via the Message-ID
+of the old version. You can have the above as:
+
+ Changes since v2: https://lore.kernel.org/all/20260522104017.1668638-1-lipengfei28@xiaomi.com/
+
+-- Steve
