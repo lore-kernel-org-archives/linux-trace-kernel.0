@@ -1,48 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262DAC8CE;
-	Tue, 26 May 2026 00:09:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8123B47CD;
+	Tue, 26 May 2026 03:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779754158; cv=none; b=Uv+N9clJCRnoWmg9B1y+FktpCIxju1NUzBTbWEOJ0RIzv8GOuEDjNXN2x4b+S6Dr2vh04IdW/VFVOPhAMhDbPz/CSVVaRbPBLr7aOT2h4KlyT4fxR2wGuhNqKTD4w/v3r+q6Sw3stUl5dgM/lHhx9VS/XnmPAjPNA/xjupTFWfU=
+	t=1779766643; cv=none; b=S+4a1AP7/LFtoUeHRKgPfk6PT/jf3aNJuKk5DaPPKFEGooiw0n5i6KI+C8tlhf2kopHIf7xHCWcsyHstW+X8Aq0fmRVWXRUsZvKZkIHdXkajteICKjAVvJihr2ftzDU4j4g2Uj0cVDSb2RTA/nThKQ/9e6S9Dm5BC46MtbiQCHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779754158; c=relaxed/simple;
-	bh=LxBIxdDESFLHMSqu9MmuHHe4Vd4ap1yMM1Rs7m0/Nm8=;
+	s=arc-20240116; t=1779766643; c=relaxed/simple;
+	bh=EpL+9Qejiv2ZMqb0i8xsEkdBDYkez4MvBgLbanNUvpU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VN9kSxMzSZjNmO0ceYcqib9kTrxW5+qMpXp8qcy5cVOae1Ffd9ItX1dDR9H4q+bINDorIhg+qIvB2RjBFZCpxxBXkAq4kFPHWmia3SkZZ9pslE04DQTVeZbELrCFWMz6Cr1ZKENBqqWUW1hxIAKvjKNNTQgeJHDNPs8Xb5cb4MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSkTzsY+; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=PsD1cRrIDhlpmBzYRJUa9hS6Ze1ucazRBAlg/E/z7ZHnNzqtWfCcYG7JtuC8syaxm1BwZYCRQG1jANlaQBzl7KiTELRccqALzNvq5fYvj71sXEJMy97IQwRNKehszW2gIodhi1hQPRUe88gtMCB8sSES3EGiZntZF1+kMzE9qNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aavppjgV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSkTzsY+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E0B1F000E9;
-	Tue, 26 May 2026 00:09:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aavppjgV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CF81F000E9;
+	Tue, 26 May 2026 03:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779754156;
-	bh=XLzFIJZhRP1VZ9L4+8fw3LvwZz0RoT/Dy8EF0lJSmkE=;
+	s=k20260515; t=1779766641;
+	bh=zHomq5l5G1JwcHxq1NOOdtQEfJ19e2qQx0JlHzuabQc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=FSkTzsY+QgsDOIwlgW/2cEGKkQ4Wmf/SlaHJRhGnl3LNHrBOvRtbKqE5u2OA5xdJA
-	 m5TPuBX18CiVIacKiOZAH7Vt2xJN8QqU4wcTnh2JDu4tMBmgBAdsvRSSJLZLxZa06t
-	 1wbud2fymZMQtOkriroIeX2debNKfNPInJFLyhVYIeiPsUBf+xEQOZkQeWttSLDFh4
-	 cZOARUaca+E9YGQlqKlcoobrwEXdxGgzNJCPhOw55Xp2lFIwdifwGJCaovpHQi9gbg
-	 cJ6m5Af0tbb88TCsQNe/2A3KE9yPZYUhq/epvwybjJEwmR2clzbc5JCuN+446Mbk0Y
-	 uy/GiRWP1UOOg==
-Date: Tue, 26 May 2026 09:09:10 +0900
+	b=aavppjgVfYjgU2IhX1hljRh/73iAOZ/CJp+5O6HtkkF5Jt8DNomQwLdNKGv7OBFK6
+	 fflmXGrKzv0zORXSlvErXLuzHM90hj4XB4+dJt2g0FeXKMbFGdUYznW/SREjn6Vzoa
+	 /zEueEWFs5Ixupte3DKDsNgi5jS6wq3ajtvywwUwL0KqzfteDTXomnw1ejy6VvOo+2
+	 9u40E/5DW6cND39U4PFTx990jQskGu9sM/KRO52swU+5M7jLIboUDva/XyqrX2mKeI
+	 nQ1eYj75NtDXThk0G8pv1p4yFwPeFf0ylCCS6RWJEqND7ujASrDGlZQ+4rJzmPkVfI
+	 ijBoYtUzxUTeA==
+Date: Tue, 26 May 2026 12:37:19 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
- Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
- <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>, Jiri Olsa
- <olsajiri@gmail.com>
-Subject: Re: [PATCH v6] tracing/eprobes: Allow use of BTF names to
- dereference pointers
-Message-Id: <20260526090910.8aae5c9357e119bd0043b18b@kernel.org>
-In-Reply-To: <20260521225033.56458336@fedora>
-References: <20260521225033.56458336@fedora>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rethook: Use tsk->on_cpu to check task execution state
+Message-Id: <20260526123719.482f07a3843e207e22d95378@kernel.org>
+In-Reply-To: <20260525132253.1889726-1-wutengda@huaweicloud.com>
+References: <20260525132253.1889726-1-wutengda@huaweicloud.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,28 +46,54 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 21 May 2026 22:50:33 -0400
-Steven Rostedt <rostedt@kernel.org> wrote:
+On Mon, 25 May 2026 21:22:53 +0800
+Tengda Wu <wutengda@huaweicloud.com> wrote:
 
-> @@ -640,7 +673,7 @@ static int parse_btf_arg(char *varname,
->  	int i, is_ptr, ret;
->  	u32 tid;
->  
-> -	if (WARN_ON_ONCE(!ctx->funcname))
-> +	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT)))
->  		return -EINVAL;
->  
->  	is_ptr = split_next_field(varname, &field, ctx);
-> @@ -653,6 +686,20 @@ static int parse_btf_arg(char *varname,
->  		return -EOPNOTSUPP;
->  	}
->  
-> +	if (ctx->flags & TPARG_FL_TEVENT) {
-> +		int ret;
+> When a task calls schedule() to yield the CPU, its state remains
+> TASK_RUNNING, but its stack is frozen and safe to walk.
+> 
+> Replace task_is_running(tsk) with tsk->on_cpu to avoid overly
+> conservative rejections.
 
-nit: parse_btf_arg already declared @ret. So we don't need this.
+Please see the Sashiko's comment.
+
+https://sashiko.dev/#/patchset/20260525132253.1889726-1-wutengda%40huaweicloud.com
+
+When calling Unwind on a task other than the current, IMHO, it is
+the responsibility of the caller of this function to ensure that the
+stack trace of that task is safe.
+We also should not use tsk->on_cpu, but should use task_on_cpu(tsk).
+
+BTW, should task_on_cpu() use READ_ONCE() etc?
+wait_task_inactive() seems a bit fragile.
 
 Thanks,
+
+> 
+> Fixes: 54ecbe6f1ed5 ("rethook: Add a generic return hook")
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  kernel/trace/rethook.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+> index 5a8bdf88999a..bd5e5f455e85 100644
+> --- a/kernel/trace/rethook.c
+> +++ b/kernel/trace/rethook.c
+> @@ -250,7 +250,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
+>  	if (WARN_ON_ONCE(!cur))
+>  		return 0;
+>  
+> -	if (tsk != current && task_is_running(tsk))
+> +	if (tsk != current && tsk->on_cpu)
+>  		return 0;
+>  
+>  	do {
+> -- 
+> 2.34.1
+> 
+> 
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
