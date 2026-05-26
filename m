@@ -1,117 +1,324 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F303DD84B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 May 2026 10:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D923D890D;
+	Tue, 26 May 2026 10:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779791156; cv=none; b=mGbkIjqg2gi34QOQde0PJFT6UETKTpbGOqlva3xvTugHC3HbqQkPzILgQqbVk3tiUhjG33gw3vFriOtfF7DQZFNMD+WSWAM4bK0xvDLNMKhb+0/ZbR+VV5XAxCkXIqD8TENlLhkAKCn4gJkHcNkpWF2H3MhYnAj7MNUOUQo53zc=
+	t=1779792167; cv=none; b=cR0g3bw4/9zuIe+b3NBHYcxn+l3NnF3XjKDDhDgxehscCsyXsafmM3jRJDX5IhNs6dPvVuPnLkILCIr2iJ22VzHsXsOBA7yyGryTv4sFwmUAIZ8HaBVzdRnQlBxn6Z4NN63eCspJjj60aLXCpwIvEyEJpEd/zEyKIeYgeZ+s340=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779791156; c=relaxed/simple;
-	bh=xyWil9E/hfSTf4YL19B3p4uMvIYW8HK03xdRDohahEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=nowE68RBWXE62kmDMk7Bs8dkuztTTpgpbwUD37NVzwNjX+nExyL59aC4I45Pg+LyWOiJiOAqwgkL8zj9gEfo+MHxyTeymQVBI1Z6icEjD4Str/me5KnobjTpIdjzFNyd36Go0JI92cGIHs6CpHuhSJfLwL0qQap9Um+1tCrLTm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WaIhCnXh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779792167; c=relaxed/simple;
+	bh=FVBhahXg7F8BMDQ8zNPThbQpo6Ye9nutrNvRIHDaOTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cBAkJOr6CJ2t1E8EfFze1aQSfQt6jLYTxBocFiKCotdvJXj6HNDme36GkkUXhVRDlU1Fu8f66U4v9c9ORfYtWWaewTWmGSbSoTi4Sdp7Hhdr7pMH3VGhZbeYRYAR/VEzDMU6Wwu2+1WASlZYjN+FS8K/fXQUScc+nGAjRCKTV78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=AZscnxFV; arc=none smtp.client-ip=45.157.188.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WaIhCnXh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779791154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xWyDT3+amO0hhbiASLQR0GkSPDynWEZVnuJh4CmBXZ8=;
-	b=WaIhCnXhlhjcObpXU+FopRZe0RaDtL6CsploG40LxMeaUfNCSSt2DffNh23VOUK6sG8jYZ
-	yiigsx1kQzKRq/BuLzphJT1vV9Pmtxk5ibfB7WatkT6jIXVnRgFTUBf19skGYrABmv+/Mk
-	vRHoTVIecFG8ccz0ewr48GAP3LAf4Hc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-681-oNcjpHB6NMSp5TubGu0bxA-1; Tue,
- 26 May 2026 06:25:53 -0400
-X-MC-Unique: oNcjpHB6NMSp5TubGu0bxA-1
-X-Mimecast-MFC-AGG-ID: oNcjpHB6NMSp5TubGu0bxA_1779791152
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6C8701800371;
-	Tue, 26 May 2026 10:25:52 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3AB911956056;
-	Tue, 26 May 2026 10:25:49 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH 4/4] rtla/tests: Add runtime tests for restoring continue flag
-Date: Tue, 26 May 2026 12:25:23 +0200
-Message-ID: <20260526102523.2662391-4-tglozar@redhat.com>
-In-Reply-To: <20260526102523.2662391-1-tglozar@redhat.com>
-References: <20260526102523.2662391-1-tglozar@redhat.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="AZscnxFV"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gPq8D1Q4hz13YM;
+	Tue, 26 May 2026 12:42:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1779792155;
+	bh=Yq1TyUm9d3TSuY78R8bGgCKwCsZykTxCuKHGIG2lLzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZscnxFV+hlSEXuNQWCSX+VFgP8y6Rc6/LgoKZZeHu6An0C4T0kEJ0pTmTPtsKVuk
+	 9tdiErZjixMbanHsRRgfLKMvNdu1kV9JN5cU7+shPL55oJNuaZYwPXU+uThVU6PMb1
+	 K2xXzTNTxDO6MBldfNF/qMYB/QogzvAAJnO5+wUU=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gPq8B5DYtzDvW;
+	Tue, 26 May 2026 12:42:34 +0200 (CEST)
+Date: Tue, 26 May 2026 12:42:32 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
+	Justin Suess <utilityemal77@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 10/17] landlock: Set audit_net.sk for socket access
+ checks
+Message-ID: <20260526.ThoNeit5ioqu@digikod.net>
+References: <20260406143717.1815792-1-mic@digikod.net>
+ <20260406143717.1815792-11-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: 1LqI3ZlLJlPHlghRsD83RqzA4i3QZ4NjO40u0sgnaPw_1779791152
-X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+In-Reply-To: <20260406143717.1815792-11-mic@digikod.net>
+X-Infomaniak-Routing: alpha
 
-In case an action preceding the continue action fails, not only
-the continue flag should not be set, it should be unset if it was set
-from a previous run of actions_perform().
+I merged this fix in the -next branch.
 
-Add a runtime test to both osnoise and timerlat tools that checks that
-this works properly by creating a temporary file.
-
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
-
-Depends on "rtla/tests: Extend runtime test coverage" patchset
-- https://lore.kernel.org/linux-trace-kernel/20260423130558.882022-1-tglozar@redhat.com/
-
- tools/tracing/rtla/tests/osnoise.t  | 2 ++
- tools/tracing/rtla/tests/timerlat.t | 2 ++
- 2 files changed, 4 insertions(+)
-
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index 9c2f84a4187d..a7956ab605cd 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -65,6 +65,8 @@ check "top stop at failed action" \
- 	"osnoise top -S 2 --on-threshold shell,command='echo -n abc; false' --on-threshold shell,command='echo -n defgh'" 2 "^abc" "defgh"
- check_top_q_hist "with continue" \
- 	"osnoise TOOL -S 2 -d 5s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
-+check_top_q_hist "with conditional continue" \
-+	"osnoise TOOL -S 2 --on-threshold shell,command='if [ -f a ]; then echo 2; exit 1; else echo -n 1; touch a; fi' --on-threshold continue" 2 "^12$" "^2$"
- check_top_hist "with trace output at end" \
- 	"osnoise TOOL -d 1s --on-end trace" 0 "^  Saving trace to osnoise_trace.txt$"
- 
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index f3e5f99e862b..19fd5af26ebb 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -94,6 +94,8 @@ check "top stop at failed action" \
- 	"timerlat top -T 2 --on-threshold shell,command='echo -n abc; false' --on-threshold shell,command='echo -n defgh'" 2 "^abc" "defgh"
- check_top_q_hist "with continue" \
- 	"timerlat TOOL -T 2 -d 5s --on-threshold shell,command='echo TestOutput' --on-threshold continue" 0 "^TestOutput$"
-+check_top_q_hist "with conditional continue" \
-+	"timerlat TOOL -T 2 --on-threshold shell,command='if [ -f a ]; then echo 2; exit 1; else echo -n 1; touch a; fi' --on-threshold continue" 2 "^12$" "^2$"
- check_top_hist "with trace output at end" \
- 	"timerlat TOOL -d 1s --on-end trace" 0 "^  Saving trace to timerlat_trace.txt$"
- 
--- 
-2.54.0
-
+On Mon, Apr 06, 2026 at 04:37:08PM +0200, Mickaël Salaün wrote:
+> Set audit_net.sk in current_check_access_socket() to provide the socket
+> object to audit_log_lsm_data().  This makes Landlock consistent with
+> AppArmor, which always sets .sk for socket operations, and with
+> SELinux's generic socket permission checks.
+> 
+> The socket's local and foreign address information (laddr, lport, faddr,
+> fport) is logged by the shared lsm_audit.c infrastructure when the
+> socket has bound or connected state.  Fields with zero values are
+> suppressed by print_ipv4_addr()/print_ipv6_addr(), so the audit output
+> is unchanged for the common case of bind denials on unbound sockets.
+> For connect denials after a prior bind, the bound local address (laddr,
+> lport) appears before the existing sockaddr fields (daddr, dest).
+> 
+> No existing fields are removed or reordered, and the new field names
+> (laddr, lport, faddr, fport) are standard audit fields already emitted
+> by other LSMs through the same lsm_audit.c code path.
+> 
+> Add net_bind and net_connect audit tests.  The net_bind test verifies
+> basic net denial auditing.  The net_connect test binds to an allowed
+> port, then connects to a denied port, and verifies that the audit record
+> includes laddr/lport from the socket state.
+> 
+> Fixes: 9f74411a40ce ("landlock: Log TCP bind and connect denials")
+> Cc: stable@vger.kernel.org
+> Cc: Günther Noack <gnoack@google.com>
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> ---
+> 
+> Changes since v1:
+> - New patch.
+> ---
+>  security/landlock/net.c                       |   1 +
+>  tools/testing/selftests/landlock/audit_test.c | 187 ++++++++++++++++++
+>  2 files changed, 188 insertions(+)
+> 
+> diff --git a/security/landlock/net.c b/security/landlock/net.c
+> index a2aefc7967a1..d8bc9e0d012a 100644
+> --- a/security/landlock/net.c
+> +++ b/security/landlock/net.c
+> @@ -225,6 +225,7 @@ static int current_check_access_socket(struct socket *const sock,
+>  		return 0;
+>  
+>  	audit_net.family = address->sa_family;
+> +	audit_net.sk = sock->sk;
+>  	landlock_log_denial(subject,
+>  			    &(struct landlock_request){
+>  				    .type = LANDLOCK_REQUEST_NET_ACCESS,
+> diff --git a/tools/testing/selftests/landlock/audit_test.c b/tools/testing/selftests/landlock/audit_test.c
+> index da0bfd06391e..65dfb272c825 100644
+> --- a/tools/testing/selftests/landlock/audit_test.c
+> +++ b/tools/testing/selftests/landlock/audit_test.c
+> @@ -6,14 +6,17 @@
+>   */
+>  
+>  #define _GNU_SOURCE
+> +#include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <limits.h>
+>  #include <linux/landlock.h>
+> +#include <netinet/in.h>
+>  #include <pthread.h>
+>  #include <stdlib.h>
+>  #include <sys/mount.h>
+>  #include <sys/prctl.h>
+> +#include <sys/socket.h>
+>  #include <sys/types.h>
+>  #include <sys/wait.h>
+>  #include <unistd.h>
+> @@ -160,6 +163,190 @@ TEST_F(audit, layers)
+>  	EXPECT_EQ(0, close(ruleset_fd));
+>  }
+>  
+> +static int matches_log_net_bind(struct __test_metadata *const _metadata,
+> +				int audit_fd, __u16 port, __u64 *domain_id)
+> +{
+> +	/*
+> +	 * The socket is unbound at bind() time, so laddr/lport/faddr/fport from
+> +	 * the socket object are zero and not printed.  Only the sockaddr fields
+> +	 * (src) appear.
+> +	 */
+> +	static const char log_template[] = REGEX_LANDLOCK_PREFIX
+> +		" blockers=net\\.bind_tcp src=%u$";
+> +	char log_match[sizeof(log_template) + 10];
+> +
+> +	snprintf(log_match, sizeof(log_match), log_template, port);
+> +	return audit_match_record(audit_fd, AUDIT_LANDLOCK_ACCESS, log_match,
+> +				  domain_id);
+> +}
+> +
+> +/*
+> + * Verifies that network denial audit records include enriched socket
+> + * information (laddr/lport/faddr/fport) from the socket object.
+> + */
+> +TEST_F(audit, net_bind)
+> +{
+> +	const struct landlock_ruleset_attr ruleset_attr = {
+> +		.handled_access_net = LANDLOCK_ACCESS_NET_BIND_TCP,
+> +	};
+> +	struct landlock_net_port_attr net_port = {
+> +		.allowed_access = LANDLOCK_ACCESS_NET_BIND_TCP,
+> +		.port = 1024,
+> +	};
+> +	int status, ruleset_fd;
+> +	pid_t child;
+> +	__u64 denial_dom = 1;
+> +
+> +	ruleset_fd =
+> +		landlock_create_ruleset(&ruleset_attr, sizeof(ruleset_attr), 0);
+> +	ASSERT_LE(0, ruleset_fd);
+> +
+> +	/* Allow port 1024 only. */
+> +	ASSERT_EQ(0, landlock_add_rule(ruleset_fd, LANDLOCK_RULE_NET_PORT,
+> +				       &net_port, 0));
+> +
+> +	EXPECT_EQ(0, prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0));
+> +
+> +	child = fork();
+> +	ASSERT_LE(0, child);
+> +	if (child == 0) {
+> +		struct sockaddr_in addr = {
+> +			.sin_family = AF_INET,
+> +			.sin_port = htons(1025),
+> +			.sin_addr.s_addr = htonl(INADDR_ANY),
+> +		};
+> +		int sock_fd;
+> +
+> +		EXPECT_EQ(0, landlock_restrict_self(ruleset_fd, 0));
+> +		close(ruleset_fd);
+> +
+> +		/* Bind to port 1025 (not allowed). */
+> +		sock_fd = socket(AF_INET, SOCK_STREAM | SOCK_CLOEXEC, 0);
+> +		ASSERT_LE(0, sock_fd);
+> +		EXPECT_EQ(-1, bind(sock_fd, (struct sockaddr *)&addr,
+> +				   sizeof(addr)));
+> +		EXPECT_EQ(EACCES, errno);
+> +		close(sock_fd);
+> +
+> +		/* Verify audit record with enriched socket info. */
+> +		EXPECT_EQ(0, matches_log_net_bind(_metadata, self->audit_fd,
+> +						  1025, &denial_dom));
+> +		EXPECT_NE(denial_dom, 1);
+> +		EXPECT_NE(denial_dom, 0);
+> +
+> +		_exit(_metadata->exit_code);
+> +		return;
+> +	}
+> +
+> +	ASSERT_EQ(child, waitpid(child, &status, 0));
+> +	if (WIFSIGNALED(status) || !WIFEXITED(status) ||
+> +	    WEXITSTATUS(status) != EXIT_SUCCESS)
+> +		_metadata->exit_code = KSFT_FAIL;
+> +
+> +	EXPECT_EQ(0, close(ruleset_fd));
+> +}
+> +
+> +static int matches_log_net_connect(struct __test_metadata *const _metadata,
+> +				   int audit_fd, __u16 denied_port,
+> +				   __u16 bound_port, __u64 *domain_id)
+> +{
+> +	/*
+> +	 * After bind(), the socket has local address state.  The audit record
+> +	 * should include laddr/lport from the socket (via audit_net.sk) and
+> +	 * daddr/dest from the connect sockaddr.
+> +	 */
+> +	static const char log_template[] = REGEX_LANDLOCK_PREFIX
+> +		" blockers=net\\.connect_tcp"
+> +		" laddr=127\\.0\\.0\\.1 lport=%u"
+> +		" daddr=127\\.0\\.0\\.1 dest=%u$";
+> +	char log_match[sizeof(log_template) + 20];
+> +
+> +	snprintf(log_match, sizeof(log_match), log_template, bound_port,
+> +		 denied_port);
+> +	return audit_match_record(audit_fd, AUDIT_LANDLOCK_ACCESS, log_match,
+> +				  domain_id);
+> +}
+> +
+> +/*
+> + * Verifies that network denial audit records for connect include enriched
+> + * socket information (laddr/lport) from the socket object after a prior bind.
+> + * This complements net_bind which tests the unbound case.
+> + */
+> +TEST_F(audit, net_connect)
+> +{
+> +	const struct landlock_ruleset_attr ruleset_attr = {
+> +		.handled_access_net = LANDLOCK_ACCESS_NET_BIND_TCP |
+> +				      LANDLOCK_ACCESS_NET_CONNECT_TCP,
+> +	};
+> +	struct landlock_net_port_attr net_port;
+> +	int status, ruleset_fd;
+> +	pid_t child;
+> +	__u64 denial_dom = 1;
+> +
+> +	ruleset_fd =
+> +		landlock_create_ruleset(&ruleset_attr, sizeof(ruleset_attr), 0);
+> +	ASSERT_LE(0, ruleset_fd);
+> +
+> +	/* Allow bind to port 1024 and connect to port 1024. */
+> +	net_port.allowed_access = LANDLOCK_ACCESS_NET_BIND_TCP |
+> +				  LANDLOCK_ACCESS_NET_CONNECT_TCP;
+> +	net_port.port = 1024;
+> +	ASSERT_EQ(0, landlock_add_rule(ruleset_fd, LANDLOCK_RULE_NET_PORT,
+> +				       &net_port, 0));
+> +
+> +	EXPECT_EQ(0, prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0));
+> +
+> +	child = fork();
+> +	ASSERT_LE(0, child);
+> +	if (child == 0) {
+> +		struct sockaddr_in bind_addr = {
+> +			.sin_family = AF_INET,
+> +			.sin_port = htons(1024),
+> +			.sin_addr.s_addr = htonl(INADDR_LOOPBACK),
+> +		};
+> +		struct sockaddr_in conn_addr = {
+> +			.sin_family = AF_INET,
+> +			.sin_port = htons(1025),
+> +			.sin_addr.s_addr = htonl(INADDR_LOOPBACK),
+> +		};
+> +		int sock_fd, optval = 1;
+> +
+> +		EXPECT_EQ(0, landlock_restrict_self(ruleset_fd, 0));
+> +		close(ruleset_fd);
+> +
+> +		sock_fd = socket(AF_INET, SOCK_STREAM | SOCK_CLOEXEC, 0);
+> +		ASSERT_LE(0, sock_fd);
+> +		ASSERT_EQ(0, setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR,
+> +					&optval, sizeof(optval)));
+> +
+> +		/* Bind to allowed port 1024 (succeeds). */
+> +		ASSERT_EQ(0, bind(sock_fd, (struct sockaddr *)&bind_addr,
+> +				  sizeof(bind_addr)));
+> +
+> +		/* Connect to denied port 1025 (fails). */
+> +		EXPECT_EQ(-1, connect(sock_fd, (struct sockaddr *)&conn_addr,
+> +				      sizeof(conn_addr)));
+> +		EXPECT_EQ(EACCES, errno);
+> +		close(sock_fd);
+> +
+> +		/* Verify audit record with laddr/lport from bound socket. */
+> +		EXPECT_EQ(0, matches_log_net_connect(_metadata, self->audit_fd,
+> +						     1025, 1024, &denial_dom));
+> +		EXPECT_NE(denial_dom, 1);
+> +		EXPECT_NE(denial_dom, 0);
+> +
+> +		_exit(_metadata->exit_code);
+> +		return;
+> +	}
+> +
+> +	ASSERT_EQ(child, waitpid(child, &status, 0));
+> +	if (WIFSIGNALED(status) || !WIFEXITED(status) ||
+> +	    WEXITSTATUS(status) != EXIT_SUCCESS)
+> +		_metadata->exit_code = KSFT_FAIL;
+> +
+> +	EXPECT_EQ(0, close(ruleset_fd));
+> +}
+> +
+>  struct thread_data {
+>  	pid_t parent_pid;
+>  	int ruleset_fd, pipe_child, pipe_parent;
+> -- 
+> 2.53.0
+> 
+> 
