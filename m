@@ -1,95 +1,122 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45C040FDB6;
-	Wed, 27 May 2026 13:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C1440C5C5;
+	Wed, 27 May 2026 13:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779888662; cv=none; b=TKA3QiGDJQx8qx775pfkDYqm41koAIijRw8FO47lXX1lBVrgfuMJKLdEUtzq8P1kkMi+d3rSL+9LG71bR8DvazjPDun71NUvdddVpk8nAjChbuEyKoD0i5iqWDL6m2ooujRAmhPuVceJqvIcukqB5cjfp9Avg+it3vpjlNjaEEw=
+	t=1779888876; cv=none; b=GaXbMTHgKBbjywP0Ji0c0mxBeSCkUpktFcz7pVTjEUkRWsN6cmalJ3iK1SC08HL73klfixLcx2FruPzjhAEMHKg7u6c6Ttqa+F83PE5S5rDXP19ihBh2mqqK3Z81WZdsgZV6YcD6ZTDaGmjUP40GK4jayvPEvj+/V1/tfK6jtg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779888662; c=relaxed/simple;
-	bh=1wytUo+2Aeq9VGu4j/kp+Z/iRR4RMhRU4MM8FIkyicA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBrqX78bzEEVc/Y4nyC/0YHTP2IpiwKyQL0wX374TtmYdwcos0C56I/kqsKzn1zv4s9iLm0CG8vOoWsMH5sC5nrbgj4CtCkrI8iaLMYdI+uW4L1YEDrB1hCNKdRH/ImNokTBc+LkIcc+NRlSc/S2fYLCygnjziYgH3TzDFfdd/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=tD9Y95jH; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1779888876; c=relaxed/simple;
+	bh=A8H6mcWqMRxZXb7y4hgXEo3gESCDWXbn7NtindldSy8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rAAzYU2wk5FiNhZzgVUkz4110juJ+4FxOFNziaxZNYC13vlKaduOIKov57+ucx0MigBVLvD4nYpLEu8R8j1fZxLJY3CJ3Ck1qZzuLMo76NljnXG6ehVih8YNK/V7mLatayqY1j1HEzQl6DrAo2ClLYnRMyOs3yD0cBhZv6YBBy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWIKGpNS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="tD9Y95jH"
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id A4CA2D0D06;
-	Wed, 27 May 2026 13:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1779888658;
-	bh=kUtPQMqnGRZK4WtBtal4fkwqBGL1onBAC0FZaenXB+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=tD9Y95jHJ7FHOR/3K3r+mZ2uCwLkbP7wrlCEb9kG3J6t+6n9iKA3+dtPEa4P98bh/
-	 o5ovibdCKYI+Qo2jmZQ0eu+Zv4aRy24lOcvlMPgLYo/rPTGo6fKNw9U9ZrOf+VboDg
-	 XtEX60Utm7kiii60sP4mieyLYPGASkfm5fIew4eo=
-Date: Wed, 27 May 2026 13:30:57 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH v6 5/7] locking: Add contended_release tracepoint to
- qspinlock
-Message-ID: <ahbyERN5PICY6qxm@shell.ilvokhin.com>
-References: <cover.1777999826.git.d@ilvokhin.com>
- <5d7ea75ffe74a785e6b234ada9f23c6373d4b4c1.1777999826.git.d@ilvokhin.com>
- <20260513193342.GB2545104@noisy.programming.kicks-ass.net>
- <agXBb0ga_6HJrrnm@shell.ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWIKGpNS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD27A1F000E9;
+	Wed, 27 May 2026 13:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779888874;
+	bh=ICIvDYiSDxF7sUI8l3kp9jD9Pcv09PF8mTbl0XQZ77s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=iWIKGpNS94zUOhQDQ4cLQhpNtzQXJ/w842/XNdUP4KmvVMwio4osuaw+OsfwnTLVZ
+	 x1Y6FjNs3OX2dm5cd8QwsHUYDTQSDCMlatDnNVXyd87qgjbI+PYhcqxh4wxcOFsdaE
+	 F81EvIDyhJsdowRajGw6Qd7XfGwTIwgmfdnlOT92NXbWtbx4Voeh36GcbKPlaw+3FL
+	 51PMembRfLOi3V3Jk2s7k3IIY1I7xdPeBwV9RoydJNH76OuCJfupMQ0pd6RFZsguZX
+	 2aPtnBktkd5+xr6hKRL/Z5dx5a6JHmYBZ5E5b/eY06PzPEr++Hul2JJdrfQEKjHELx
+	 jAYhFJyoUT1RQ==
+Date: Wed, 27 May 2026 09:35:07 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v21 8/9] ring-buffer: Show persistent buffer dropped
+ events in trace file
+Message-ID: <20260527093507.00ac35d8@gandalf.local.home>
+In-Reply-To: <20260527124721.d05102c2f45e6c5bb5fbe476@kernel.org>
+References: <20260522170857.263969486@kernel.org>
+	<20260522171052.006276604@kernel.org>
+	<20260526140609.28faf45d9d347e5d748e7cf1@kernel.org>
+	<20260526134116.11e1db99@gandalf.local.home>
+	<20260527124721.d05102c2f45e6c5bb5fbe476@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <agXBb0ga_6HJrrnm@shell.ilvokhin.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Peter,
+On Wed, 27 May 2026 12:47:21 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Gentle ping on this. I wanted to check if the assembly analysis in my
-previous reply changed the picture at all.
+> Yeah, for the persistent ring buffer, it does not happen.
+> But there seems RB_MISSED_EVENTS bit can be cleared in
+> "else" path (after applying 1-8 patches)?
 
-You were right that the commit message was misleading about the total
-size increase: it's 9 bytes per call site, not just the NOP.
+Note, *only* the persistent ring buffer adds RB_MISSED_EVENTS to the pages
+in the write buffer. In the normal buffer, these bits are only set by this
+function. That is, they would not be set from the swap of pages.
 
-That said, when I looked at the executed path with the tracepoint
-disabled, the only addition is the 2-byte NOP (xchg %ax,%ax).
+> 
+> ----------
+> 	if (read || (len < (commit - read)) ||
+> 	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
+> 	    force_memcpy) { // <-- persistent ring buffer sets force_memcpy = true.
+> [...]
+> 	} else {
+> 		/* update the entry counter */
+> [...]
+> 		if (!missed_events && rb_data_page_commit(dpage) & RB_MISSED_EVENTS)
+> 			missed_events = -1;	
+> 			//^-- we check RB_MISSED_EVENTS bit on @dpage->commit and set missed_events = -1.
+> 
+> 		/*
+> 		 * Use the real_end for the data size,
+> 		 * This gives us a chance to store the lost events
+> 		 * on the page.
+> 		 */
+> 		if (reader->real_end)
+> 			local_set(&dpage->commit, reader->real_end);
+>                         // ^- only if @reader->real_end, RB_MISSED_EVENTS bit is dropped.
 
-Both the baseline and instrumented _raw_spin_unlock() fit within a
-single 64-byte cache line, and I wasn't able to measure any difference
-with locktorture: lock() cost completely dominates, unlock() accounts
-for less than 1% of the total, so any overhead is indistinguishable from
-noise.
+Because this isn't a persistent ring buffer (if it was, as you noted,
+force_memcpy would be true and we wouldn't enter the else path), the
+RB_MISSED_EVENTS bit in the commit would never be set here. It is *only* set
+by the verifier of the persistent ring buffer logic.
 
-If the cost is still a concern, I see two possible paths forward:
+> 	}
+> 
+> 	cpu_buffer->lost_events = 0;
+> 
+> 	commit = rb_data_page_commit(dpage);
+> 	/*
+> 	 * Set a flag in the commit field if we lost events
+> 	 */
+> 	if (missed_events) {
+> 		/*
+> 		 * If there is room at the end of the page to save the
+> 		 * missed events, then record it there.
+> 		 */
+> 		if (missed_events > 0 &&
+> 		    buffer->subbuf_size - commit >= sizeof(missed_events)) {
+> 			memcpy(&dpage->data[commit], &missed_events,
+> 			       sizeof(missed_events));
+> 			local_add(RB_MISSED_STORED, &dpage->commit);
+> 			commit += sizeof(missed_events);
+> 		}
+> 		local_add(RB_MISSED_EVENTS, &dpage->commit); // <-- @dpage->commit is updated.
+> 	}
 
-1. Guard the spinlock/qrwlock instrumentation behind a Kconfig option
-   (disabled by default), so only kernels that explicitly opt in pay
-   the cost.
+And this is the first place it would get set.
 
-2. Drop the spinlock/qrwlock instrumentation entirely and keep
-   contended_release for sleepable locks only.
-  
-Happy to go whichever direction you prefer.
+But yeah, it is very confusing and needs better comments.
+
+Thanks,
+
+-- Steve
