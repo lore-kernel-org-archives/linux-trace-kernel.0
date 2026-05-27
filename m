@@ -1,47 +1,50 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27813DD861;
-	Wed, 27 May 2026 15:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC672380FF3;
+	Wed, 27 May 2026 15:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779894795; cv=none; b=mDL1c2OFwgm3px/m1aQtSZR7RcxPgzKxUB/ceZWR3b96Xh8Oudiy+xQpojo2uWVP1Xsh6i0FrjUE6HjyVtfzw+4/N3tafmeuw6TmTHy//JLwyQ4v1zcKqZ9qNeyfJRQ6bnxqmRLikNe0X9zeBLHpigTZbnIcA5dFQqQHOmPtQXc=
+	t=1779895848; cv=none; b=m7WQc2yXgQaBOmT3AKhA6dT+ORyvFPBevI4gimCBapsdbOTwRjYxclrhdb3LdAFmDyTHDnMxXnRZz6k/b0VGRIomAQLDtcGnjoQSlxcgeJ75hBaElosuuV0NE3VBLeVMWdST3eIiNnT3R7bIWuPm3SNDGBzA/kRdVKNosogVvPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779894795; c=relaxed/simple;
-	bh=fpW5uU9zp6vtjqXkvzHz1jD1EM3dS4GFKCOOiBldhJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=u7+r27dyLVaumW6iBVGRo8BbHeLMpDWqKRkYrwOSE67yBIJ011rHlpkadTsrMMxTsa8GLWE+rk2Bam0/GNjCsS26BhetHLlr2XNSrrWRxFrfH1OGvi7m7/vkbRi56SLAbC7Am6tBBk4K14DwWlkWriS4LmSPCjKeszW3/ncCtgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=mLW+JH0F; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="mLW+JH0F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=04hC3vAubNmZqIfS1cbI1r2wH+/xZ8qPSyCJdizFzDo=; b=mLW+JH0FTXihWGFwUPQddNG0Hk
-	31p1I51mYjoRh2hRFPioSk1VZUGDmkmy1S7SFek5OhpPITVcJzbBWFWo2fAY97UsYUfvKnP4m817V
-	mwhIcj/QDSrcXqL0FPXq59qhRwo8rxdOm4Wv1p0awEZFKa8jUaiJXQUDx0FygZiS/K1MbCSIfBRP8
-	NKuEQ9hYrAagZ+vTwvIiE3wFgOJr9y2KRDRlyVBWARURODdfax4jlqWq4bKQmGVEADsgIJcNg/Tba
-	vijOOHycMhKnMeEpPZ9Djh6hWpleOUZU1Qe89jkTiPy0e44eiLiEHsG9LOVGnzFJgn3/LLGRsL+ZJ
-	4+0cQjFw==;
-Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@surriel.com>)
-	id 1wSFwM-000000005FG-0IVa;
-	Wed, 27 May 2026 11:13:02 -0400
-Date: Wed, 27 May 2026 11:13:01 -0400
-From: Rik van Riel <riel@surriel.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3] perf/ftrace: Fix WARNING in __unregister_ftrace_function
-Message-ID: <20260527111301.2d0d8256@fangorn>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1779895848; c=relaxed/simple;
+	bh=pJJ/HoF2eidmfdtOIs5JrkNnpQrJrLqOkwxCfd42Coc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nf9sTaqWr4CzEKZ+nrwAf3SW3D3kBT3vaBw69fsEKPwJpvrsdXqdEwmm7JatSz4CQwHR2LZLeFFq1w4pHV/Z2adP32Wj3UJ4BVNQWG1lVLFv61CvT4Q9/kLe+PVsqqrsjkm9NPej2R78Sk0/WmdMoa2s9CejJlMDfHd6pJdaR3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 3C476A0651;
+	Wed, 27 May 2026 15:30:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id B12158000E;
+	Wed, 27 May 2026 15:30:29 +0000 (UTC)
+Date: Wed, 27 May 2026 11:30:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wang Han <wanghan@linux.alibaba.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Chen Pei
+ <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, Deepak Gupta
+ <debug@rivosinc.com>, Puranjay Mohan <puranjay@kernel.org>, Conor Dooley
+ <conor.dooley@microchip.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri
+ Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr Mladek
+ <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/8] scripts/sorttable: Handle RISC-V patchable ftrace
+ entries
+Message-ID: <20260527113028.4b21a5de@fedora>
+In-Reply-To: <20260527123530.2593918-2-wanghan@linux.alibaba.com>
+References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
+	<20260527123530.2593918-2-wanghan@linux.alibaba.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,62 +53,82 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: B12158000E
+X-Stat-Signature: nnbmrnfbfe1wryzsbgekpraefim6x8ui
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+K9+QhA9jGvAkANPOLEFyENvfDDvbRRfc=
+X-HE-Tag: 1779895829-775147
+X-HE-Meta: U2FsdGVkX19wPgPqZNdREAfoBR1Mb1SYjw1Qr1fZaDsU2ZIANjz8nzdue+HVeK2Zhwus4Rq5inE4ARZBKtoCeWe0ubFDOoBMTV3DKQduvwyTdxCeh07J7RG5bppBc+QRHCVi7uGFASdNJj+Oti7v6B7UoYG7kOcUTzoJfTcYLn6i1oNAkLtatX5dFGJ42OfJuyqGbtFf4isoqhy6vAe2t5vof90x/DNH1LA33QEhaSjdAyLuvTQJJ5fUBWe1UcfAmfqIoC+fFFXc4qnBunytWGTMyWgTrUEAGXAkcg4nDSzBsQsE2ojHfd921ji7ceBLhwTIJqKgDUiQes6K8DANThowqvNnaXHa
 
-perf_ftrace_function_unregister() unconditionally calls
-unregister_ftrace_function() without checking whether the ftrace_ops
-was ever successfully registered. This triggers a WARN_ON in
-__unregister_ftrace_function() when the ops doesn't have
-FTRACE_OPS_FL_ENABLED set.
+On Wed, 27 May 2026 20:35:23 +0800
+Wang Han <wanghan@linux.alibaba.com> wrote:
 
-This can happen during perf_event_alloc() error cleanup when
-perf_trace_destroy() is called via __free_event() on an event whose
-ftrace_ops registration failed or was already torn down by
-perf_try_init_event()'s err_destroy path.
+> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+> ---
+>  scripts/sorttable.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+> index e8ed11c680c6..b4061c2c03e1 100644
+> --- a/scripts/sorttable.c
+> +++ b/scripts/sorttable.c
+> @@ -901,11 +901,17 @@ static int do_file(char const *const fname, void *addr)
+>  		/* fallthrough */
+>  	case EM_386:
+>  	case EM_LOONGARCH:
+> -	case EM_RISCV:
+>  	case EM_S390:
+>  	case EM_X86_64:
+>  		custom_sort = sort_relative_table_with_data;
+>  		break;
+> +	case EM_RISCV:
+> +#ifdef MCOUNT_SORT_ENABLED
+> +		/* RISC-V uses patchable function entries before function entry. */
+> +		before_func = 8;
+> +#endif
+> +		custom_sort = sort_relative_table_with_data;
+> +		break;
+>  	case EM_PARISC:
+>  	case EM_PPC:
+>  	case EM_PPC64:
 
-The call path is:
-  perf_event_alloc() error cleanup
-    -> __free_event()
-      -> event->destroy() [tp_perf_event_destroy]
-        -> perf_trace_destroy()
-          -> perf_trace_event_close()
-            -> TRACE_REG_PERF_CLOSE
-              -> perf_ftrace_function_unregister()
-                -> unregister_ftrace_function()
-                  -> __unregister_ftrace_function()
-                    -> WARN_ON(!(ops->flags & FTRACE_OPS_FL_ENABLED))
+So basically RISCV has the same problem as ARM64 with patchable
+entries. As this may happen for other archs in the future, I would like
+to group them together like this:
 
-Fix this by checking FTRACE_OPS_FL_ENABLED before attempting to
-unregister. If the ops is not enabled, just free the filter and
-return success.
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index e8ed11c680c6..b3d9073d9fbc 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -891,17 +891,23 @@ static int do_file(char const *const fname, void *addr)
+ 	table_sort_t custom_sort = NULL;
+ 
+ 	switch (elf_map_machine(ehdr)) {
+-	case EM_AARCH64:
+ #ifdef MCOUNT_SORT_ENABLED
++	case EM_AARCH64:
+ 		sort_reloc = true;
+ 		rela_type = 0x403;
+-		/* arm64 uses patchable function entry placing before function */
++		/*
++		 * arm64 and RISCV use patchable function entry placing
++		 * before function
++		 */
++	case RISCV:
+ 		before_func = 8;
++#else
++	case EM_AARCH64:
++	case RISCV:
+ #endif
+ 		/* fallthrough */
+ 	case EM_386:
+ 	case EM_LOONGARCH:
+-	case EM_RISCV:
+ 	case EM_S390:
+ 	case EM_X86_64:
+ 		custom_sort = sort_relative_table_with_data;
 
-Signed-off-by: Rik van Riel <riel@surriel.com>
----
- kernel/trace/trace_event_perf.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+does the above work for you? (Although I didn't even compile test it).
 
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index a6bb7577e8c5..5b272856e5ab 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -497,7 +497,17 @@ static int perf_ftrace_function_register(struct perf_event *event)
- static int perf_ftrace_function_unregister(struct perf_event *event)
- {
- 	struct ftrace_ops *ops = &event->ftrace_ops;
--	int ret = unregister_ftrace_function(ops);
-+	int ret = 0;
-+
-+	/*
-+	 * Perf will call this unconditionally even if the ops is not
-+	 * enabled. The unregister_ftrace_function() will warn if called
-+	 * when not enabled. Just bypass the unregistering if ops isn't
-+	 * enabled here.
-+	 */
-+	if (ops->flags & FTRACE_OPS_FL_ENABLED)
-+		ret = unregister_ftrace_function(ops);
-+
- 	ftrace_free_filter(ops);
- 	return ret;
- }
--- 
-2.54.0
-
+-- Steve
