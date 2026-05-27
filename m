@@ -1,48 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE869337BAC;
-	Wed, 27 May 2026 14:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28CA32AABD;
+	Wed, 27 May 2026 14:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779890863; cv=none; b=Dz3Av4kEhEsOPkbiFr5CTmV88jT1f+7H9yFpK+Sd/fzI8CQ2Q++d3tb2W8cgF2QvvTWvj6a9QN06XkL/Ky02rndw4Yofc2nrhbli7IU6v6MhSUe3w0q8JsBR/wXoLwrDGEFcnmwVcJHOXnKJmnFfkvwQbKB9ofn/MmKxIsWnn2o=
+	t=1779890954; cv=none; b=Z/GFQAXsdlJSmWa9LZ6B4Yty1QmaOadMSjguHUM8rLyU6LQ00l2g1HL7OmOnLB7T75yn7f9gVKlrAmUSzVF1UW1vZsPM9qCXq2UjjO1h5K4OOHeDUFUqOMs1hsaTryM7oruiUB9VMK0T6yCZOAxY39hoZMXM0yUbqtlgkEC5Sug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779890863; c=relaxed/simple;
-	bh=fFXOWjVPmv+sJhSlLSChsP1mqAyoqeY1jyL5hA2mNe4=;
+	s=arc-20240116; t=1779890954; c=relaxed/simple;
+	bh=egE/FR7FtF3e6TePrTXmKyquQDlPQ42QENNvH1KRxHk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lsUDYxk73VCl0zmWlGDjs834eY62cpP+8uZ4O1zEx+CkYytllXEh3gBdMJbqpvYBiaNdF/5VTJQo+FMYXrEyaPMQ5/WN9tUPDHKVLXZ3ROZ5vxYKYYExzZjHr6erQqyrZA3W+6vWPNq7SKQh81d3JVCMk/n1gP0rkyQgp146mzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c28usKx6; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c28usKx6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F901F000E9;
-	Wed, 27 May 2026 14:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779890862;
-	bh=0XXN4NQLvhc8Xiwg43alAvbusZG4r8X4j+8NhON7Ihc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=c28usKx6Cbuf9zc+aJNDHTsIjuQXslaSkEhQs1evV02p9ZpsBvmtjJgZdXjv06WUa
-	 KdmdtQwRQwuyxXD+f4Ca4lvkC0UL3iVnjkavP1MtoAN/79U2CtBgGyc7qjM0zmx1FM
-	 yiSrib1glaqseBmXia/JUJChAVWiCUjm5V/UU6ak8PDH/FkuKU6M1sfvorkGb53scK
-	 gON2xclOOZM+UlGe0AIDSMAjnGFNBFlYNit/X/OJdXeqRrWsgznKrhX4J4u3FV1a2m
-	 oNX1rYtsZXEBgjE3B2Mv+MgS+RrLRe7rxWC/AuDvP5Jv8fiqBDox1q7AiUb+QZwqoV
-	 GUM+cD+HNxL2g==
-Date: Wed, 27 May 2026 10:08:15 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
- Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
- <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v6] tracing/eprobes: Allow use of BTF names to
- dereference pointers
-Message-ID: <20260527100815.53e55c57@gandalf.local.home>
-In-Reply-To: <ahayVg7TvNrf1ama@krava>
-References: <20260521225033.56458336@fedora>
-	<ahayVg7TvNrf1ama@krava>
+	 MIME-Version:Content-Type; b=ludLjeebhNB3wkJnRKe6RrqjzrwY/gs5XdmUgiGS/+ErZkDfnkpV/NnQZaF9OW4zmIh5TZiHpa5pjeY5feknkvn7+E7GtX4H1HIZIPEiv1eO7L7SeY5R5vZVhOH9GXQBj0T/+syEE2lKa7A5KvrEpoiEpMLpjVQkEKSwPjhDM/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 50A601A05FF;
+	Wed, 27 May 2026 14:09:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 552DE1A;
+	Wed, 27 May 2026 14:09:09 +0000 (UTC)
+Date: Wed, 27 May 2026 10:09:43 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tianchen Ding <dtcccc@linux.alibaba.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Fix trace_marker_raw test on 64K page
+ kernels
+Message-ID: <20260527100943.3dc655e7@gandalf.local.home>
+In-Reply-To: <20260527095438.1794905-1-dtcccc@linux.alibaba.com>
+References: <20260527095438.1794905-1-dtcccc@linux.alibaba.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,79 +40,54 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 552DE1A
+X-Stat-Signature: niiposcd159apm94mo5kon7r1bd37pna
+X-Rspamd-Server: rspamout01
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18SNwaJvgtgS4C1EQsi1h4WlrF/aldSKIw=
+X-HE-Tag: 1779890949-52684
+X-HE-Meta: U2FsdGVkX1/n2VcyE+G/FPk0VpyqjwlXOyn+jcZuBJORpt0xsus61i8F0uBNg7KB2rxYJ1lyg4noBDZ8X18DdPAXCq32G9Meyp6VGh1TyQXiuU0+HYnYNKpUE5gjQgckQuGT14L+X5piLckBV6pheQXPVxampRxoLSNOSgKDfCD3y3MYzdJUiuvxZSTy0V7NDRsW+FcgDomXEW7v9AgEwfDRaYbwMuocfPfCBWLI+hnjKDCzWWpXjR+00Cqh+GT4C/cO/QJivSQLpj8vlaBE48zRyctHT3R9lJFVEew3PFtHxYtH19exyKuU7xZEpmIj3OwIBnqt60IQHlvbNKg59uvUL+iVRFqI
 
-On Wed, 27 May 2026 10:59:02 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, 27 May 2026 17:54:37 +0800
+Tianchen Ding <dtcccc@linux.alibaba.com> wrote:
 
+> On ARM64 kernels with 64K pages, the trace_marker_raw test fails because
+> bash's printf builtin uses stdio buffering which splits output into
+> multiple small write() calls to the tracefs file. Since each individual
+> write is within TRACE_MARKER_MAX_SIZE (4096), they all succeed, causing
+> the "too big" write test to incorrectly pass.
 > 
-> hi,
-> this seems to be supported only for argument (pointer) stored in the trace record,
-> not the actual arguments to the tracepoint, is that right?
+> Fix by piping make_str output through dd with iflag=fullblock to
+> guarantee a single atomic write() syscall to trace_marker_raw.
 > 
-> so I can deref worker from sched.sched_kthread_work_queue_work, like:
+> Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
+> Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+> ---
+>  .../selftests/ftrace/test.d/00basic/trace_marker_raw.tc     | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
->   echo 'e:myprobe sched.sched_kthread_work_queue_work (kthread_worker)worker->flags (kthread_work)work->canceling' > dynamic_events
+> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> index 8e905d4fe6dd..efd8263e6087 100644
+> --- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> @@ -43,8 +43,10 @@ write_buffer() {
+>  	id=$1
+>  	size=$2
+>  
+> -	# write the string into the raw marker
+> -	make_str $id $size > trace_marker_raw
+> +	# Pipe through dd to ensure a single atomic write() syscall.
+> +	# Shell's printf builtin uses stdio buffering which may split the
+> +	# output into multiple writes.
 
-Correct, that is because eprobes "e:" works on the output of a trace event.
+Could you comment that this is for architectures with 64K pages too.
 
-
-> 
-> but I can't deref sched.sched_process_exec p->pid, like:
-> 
->   # echo 'e:myprobe sched.sched_process_exec (task_struct)p->pid' > dynamic_events
->   bash: echo: write error: Invalid argument
-
-For function prototypes of a tracepoint, you would use a tprobe "t:"
-
- # echo 't:exec sched_process_exec pid=p->pid' > dynamic_events
- # echo 1 > events/tracepoints/exec/enable
- # cat trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 7/7   #P:8
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-    rtkit-daemon-1935    [005] .....   105.350235: exec: (__probestub_sched_process_exec+0x4/0x10) pid=1935
-    rtkit-daemon-1935    [005] .....   105.376609: exec: (__probestub_sched_process_exec+0x4/0x10) pid=1935
- pkla-check-auth-1939    [000] .....   105.404491: exec: (__probestub_sched_process_exec+0x4/0x10) pid=1939
- at-spi-bus-laun-1953    [000] .....   105.914139: exec: (__probestub_sched_process_exec+0x4/0x10) pid=1953
-     dbus-daemon-1959    [002] .....   105.919123: exec: (__probestub_sched_process_exec+0x4/0x10) pid=1959
-        Xwayland-1961    [006] .....   106.175491: exec: (__probestub_sched_process_exec+0x4/0x10) pid=1961
-           <...>-1962    [005] .....   107.406472: exec: (__probestub_sched_process_exec+0x4/0x10) pid=1962
-
-No need for typecasting either ;-)
-
-
-> > +	ctx->offset += tmp - arg;
-> > +	ret = parse_btf_arg(tmp, pcode, end, ctx);
-> > +	ctx->flags &= ~TPARG_FL_TYPECAST;
-> > +	ctx->last_struct = NULL;
-> > +out_put:
-> > +	btf_put(ctx->struct_btf);  
-> 
-> 
-> should we zero ctx->struct_btf in case there's more type casts,
-> so query_btf_struct would re-init it?
-
-Yeah, I already mentioned that mistake:
-
-  https://lore.kernel.org/all/20260522072322.18aa72dd@gandalf.local.home/
-
->> Oops, I forgot to do:
->> 
->> 	ctx->struct_buf = NULL;
->> 
->> here.
->> 
->> Will fix.
-
-Thanks for the review!
+Thanks for fixing this,
 
 -- Steve
+
+> +	make_str $id $size | dd of=trace_marker_raw bs=`expr $size + 4` iflag=fullblock
+>  }
+>  
+>  
+
