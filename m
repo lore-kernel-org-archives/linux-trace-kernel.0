@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8BF327BFA;
-	Wed, 27 May 2026 02:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486B03A1DB;
+	Wed, 27 May 2026 03:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779849676; cv=none; b=Nvxq2R+uixk+yZq96+peab9/Ugg5qJ/1L/K/iL3/A+v8i03OrqvGbydGtCXrnnmIYw6diLSc4TWHhQrbtjXNnELrypL0UwdCldRWFNbiyZTOa8aUUtvTSg5dZYj+edKsWcvsyqbxgbd6MsoFndeX/dNEUBcGCjXvvJzsgwRf5dY=
+	t=1779853645; cv=none; b=hrPAhn0qzNZeL1DEwMP5iQcQW9g0NMHRDWpHQLOaEm/jr5C7hPB4am5GpzkylEwTf6E+0yL21L9yhl7lueWMTYBHASy/x4yAmk5TkDlXNSbeXWC0IHp6luwgY+GvlAYGgkLjoGJwnh0fG+0+yl1jqly0EU2BYPsN6fRqlwuunAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779849676; c=relaxed/simple;
-	bh=XujwC3PYIxYomenjqTAXiO6L1WIKnXfT40LHEEYD+2Y=;
+	s=arc-20240116; t=1779853645; c=relaxed/simple;
+	bh=cUjfBZ8OY7V7QFtCDQHCRr7BLTfl9uCgHwb1jlK7Bxg=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=UjvGtCg5TZzp4DuLKOv6Xw8m8VeRLw42d4hqk93qeK0dGkbNWU36VJ7XSUwPZau91l0K63zzlYI1vXHj88gKxhIszTKmZeArQhPpswuD/35audsGWxxh8tZT/5t/Zt3alRbZdoPQWy8yjoz8NLx4XbYLbaL+9ufJE++X6XPPoQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5caHmMW; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=JXhI0k6MS+IBBcWLQen+zxSjZ1rZJ1nq+OBp9KFCS6kGZjMNMNgab6h4sMRoaHy2O6wDezI1+c+P7UkMy7Rnwbvum+CQ3qg2XHhid336A1wcj+knVtisoBW+a0mNpD+k8rgWMRtaxaplVSgn6wOCR/XdBlwE05O6vd11pwbTt7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OndTcJUl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5caHmMW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33BC1F000E9;
-	Wed, 27 May 2026 02:41:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OndTcJUl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9AA81F000E9;
+	Wed, 27 May 2026 03:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779849674;
-	bh=qOoRqpG9lcpnkF8H2ezO2g/hmDABcA5auCdOP78TrKM=;
+	s=k20260515; t=1779853643;
+	bh=Q31curzpZJR+IaS4+4tPojYKK41Azpfb57PViovHLYs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=g5caHmMWVohcrVoF8Zn9RApO8xwoLdXq1XYHrjy0GER45ctxN/EQKf887zKEwmJb3
-	 wgz9UmAth4XHHKjvqXXA7bNxfhUeeCofYf65E4XK4agHfnjoN9PDTxUH2tKNLS8vpx
-	 hwZjJZfm0sOwIHXtwDKN7hcSZh8wwILbgwiEtWCRSwjj1WG3qSAqwpL0BYBV1PM5q7
-	 lwgoCes4abxCbCFJVvno2un4vO0tBlhQid3m5o9NlbcilXwcMgvnjckd2biEcYOyf8
-	 BF1EtI9pOoYGrsnDIDVhPepL7HjwxyAIXGYA7lN38R39czr62smJLZGf9FND9LC0HN
-	 mEnFqEfLIr6Og==
-Date: Wed, 27 May 2026 11:41:11 +0900
+	b=OndTcJUl7lQixLTFESrmDZ+hT4jOIId+1d2AXX7ULuGzYGn6rMewUExcq7hT0Nkis
+	 ff+GKLpDrfJ4TOtjVWEvo2mjwLSCmp0N+NxGUx4+of1WWQYrbGjDzspqwotSVPtSs5
+	 SEaJfuILt/6XYvcfj3i++TGsBUEspfVcDO/PTzys7LhtaLXiL1SU6OJPzfPSfHrEB+
+	 ExZol12EmZrM6yBi7xcyxCmM7ll5efg21s+MrtZSyyJfA0JDYYMdMtK53exGTVJeEj
+	 yLv2cTJhP8mU4W5eTWKyTUgY3l8ngTcAPArn6q69N3mRft+Vh/jl6VY6XDks99k/qh
+	 RvCMU/74ciUHw==
+Date: Wed, 27 May 2026 12:47:21 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yu Peng <pengyu@kylinos.cn>
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org
-Subject: Re: [PATCH v2] tracing: Point constant hist field type to string
- literal
-Message-Id: <20260527114111.e104c4b27a6d0ba5022bdad0@kernel.org>
-In-Reply-To: <20260527023450.2137639-1-pengyu@kylinos.cn>
-References: <20260527023450.2137639-1-pengyu@kylinos.cn>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v21 8/9] ring-buffer: Show persistent buffer dropped
+ events in trace file
+Message-Id: <20260527124721.d05102c2f45e6c5bb5fbe476@kernel.org>
+In-Reply-To: <20260526134116.11e1db99@gandalf.local.home>
+References: <20260522170857.263969486@kernel.org>
+	<20260522171052.006276604@kernel.org>
+	<20260526140609.28faf45d9d347e5d748e7cf1@kernel.org>
+	<20260526134116.11e1db99@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,47 +51,105 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 27 May 2026 10:34:50 +0800
-Yu Peng <pengyu@kylinos.cn> wrote:
+On Tue, 26 May 2026 13:41:16 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-> The HIST_FIELD_FL_CONST path uses the fixed "u64" type string.
+> On Tue, 26 May 2026 14:06:09 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> Point hist_field->type directly to the string literal, matching the
-> HIST_FIELD_FL_HITCOUNT path. The release path already uses kfree_const(),
-> so no duplication is needed.
+> > > @@ -7204,10 +7209,12 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> > >  	 * Set a flag in the commit field if we lost events
+> > >  	 */
+> > >  	if (missed_events) {
+> > > -		/* If there is room at the end of the page to save the
+> > > +		/*
+> > > +		 * If there is room at the end of the page to save the
+> > >  		 * missed events, then record it there.
+> > >  		 */
+> > > -		if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
+> > > +		if (missed_events > 0 &&
+> > > +		    buffer->subbuf_size - commit >= sizeof(missed_events)) {
+> > >  			memcpy(&dpage->data[commit], &missed_events,
+> > >  			       sizeof(missed_events));
+> > >  			local_add(RB_MISSED_STORED, &dpage->commit);  
+> > 
+> > After this line, we "add" RB_MISSED_EVENTS instead of set.
+> > In this case, does it clear the RB_MISSED_EVENTS bit because
+> > it already sets RB_MISSED_EVENTS.
+> > 
+> > 			commit += sizeof(missed_events);
+> > 		}
+> > 		local_add(RB_MISSED_EVENTS, &bpage->commit);
+> >                       ^^^ here.
 > 
-> Signed-off-by: Yu Peng <pengyu@kylinos.cn>
+> Perhaps this needs to be commented better.
+> 
+> The answer to your question is "No". The reason is that this is a *copy* of
+> the page we are reading. As persistent pages are always assigned to
+> specific memory, it can never leave the buffer even for the splice system
+> call. It is always copied to a new page.
+> 
+> The new page doesn't have these bits set and needs to set them depending on
+> what was found when reading the page from the buffer.
+> 
+> Now if this was a normal ring buffer where it did a zero copy from the
+> buffer itself by swapping pages with the passed in page, if the bit was set
+> before, then adding would cause a problem. But normal ring buffer pages
+> never set these bits while in the buffer. They are only set by this function.
 
-This looks good to me.
+Yeah, for the persistent ring buffer, it does not happen.
+But there seems RB_MISSED_EVENTS bit can be cleared in
+"else" path (after applying 1-8 patches)?
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+----------
+	if (read || (len < (commit - read)) ||
+	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
+	    force_memcpy) { // <-- persistent ring buffer sets force_memcpy = true.
+[...]
+	} else {
+		/* update the entry counter */
+[...]
+		if (!missed_events && rb_data_page_commit(dpage) & RB_MISSED_EVENTS)
+			missed_events = -1;	
+			//^-- we check RB_MISSED_EVENTS bit on @dpage->commit and set missed_events = -1.
+
+		/*
+		 * Use the real_end for the data size,
+		 * This gives us a chance to store the lost events
+		 * on the page.
+		 */
+		if (reader->real_end)
+			local_set(&dpage->commit, reader->real_end);
+                        // ^- only if @reader->real_end, RB_MISSED_EVENTS bit is dropped.
+	}
+
+	cpu_buffer->lost_events = 0;
+
+	commit = rb_data_page_commit(dpage);
+	/*
+	 * Set a flag in the commit field if we lost events
+	 */
+	if (missed_events) {
+		/*
+		 * If there is room at the end of the page to save the
+		 * missed events, then record it there.
+		 */
+		if (missed_events > 0 &&
+		    buffer->subbuf_size - commit >= sizeof(missed_events)) {
+			memcpy(&dpage->data[commit], &missed_events,
+			       sizeof(missed_events));
+			local_add(RB_MISSED_STORED, &dpage->commit);
+			commit += sizeof(missed_events);
+		}
+		local_add(RB_MISSED_EVENTS, &dpage->commit); // <-- @dpage->commit is updated.
+	}
+----------
 
 Thanks,
 
-> ---
-> Changes in v2:
-> - Point hist_field->type directly to "u64" as suggested.
+
 > 
->  kernel/trace/trace_events_hist.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index eb2c2bc8bc3d5..b50f2bd5ff771 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -1992,9 +1992,7 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
->  	if (flags & HIST_FIELD_FL_CONST) {
->  		hist_field->fn_num = HIST_FIELD_FN_CONST;
->  		hist_field->size = sizeof(u64);
-> -		hist_field->type = kstrdup("u64", GFP_KERNEL);
-> -		if (!hist_field->type)
-> -			goto free;
-> +		hist_field->type = "u64";
->  		goto out;
->  	}
->  
-> -- 
-> 2.43.0
+> -- Steve
 
 
 -- 
