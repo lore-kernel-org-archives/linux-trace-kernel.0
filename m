@@ -1,106 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB541F03DE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 May 2026 14:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27813DD861;
+	Wed, 27 May 2026 15:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779893393; cv=none; b=hf+l7YTtdn3/6sxoDpbMSE/AM6Jcxg2XlVMIoEGRQzlXVmhQSohZkvSHRydFd+Z71gMme0xMRYtsxoA2rYm/WL5e0XfGpQf/p8YlmXPMty5/eMdmHN6umh8sfjcUpO0akjDojkiuBQF0vTyX1klGbRl2VvcqDi+UwhtdOL2qUCU=
+	t=1779894795; cv=none; b=mDL1c2OFwgm3px/m1aQtSZR7RcxPgzKxUB/ceZWR3b96Xh8Oudiy+xQpojo2uWVP1Xsh6i0FrjUE6HjyVtfzw+4/N3tafmeuw6TmTHy//JLwyQ4v1zcKqZ9qNeyfJRQ6bnxqmRLikNe0X9zeBLHpigTZbnIcA5dFQqQHOmPtQXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779893393; c=relaxed/simple;
-	bh=kpFwhlcTG0rF/I/s8HoWH53BhL4HGJLLXP7MD837SsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=srJwrjE+tugctxt7rL8Df1UPc3KiXiRmmKYjyEVDuizwLg1cN6wr7Eu5cKjDKR9V25ZLAjnNvvgpGzKSQhdw2CoUSzngD8MKZ37+uLbmaS8iFkiS15IwyDdkvYNg1YUN2eMHkZTDgLh7abAvrrEr7LR4dhRI0NOIruoOY9p40v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mrnx7wsg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779894795; c=relaxed/simple;
+	bh=fpW5uU9zp6vtjqXkvzHz1jD1EM3dS4GFKCOOiBldhJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=u7+r27dyLVaumW6iBVGRo8BbHeLMpDWqKRkYrwOSE67yBIJ011rHlpkadTsrMMxTsa8GLWE+rk2Bam0/GNjCsS26BhetHLlr2XNSrrWRxFrfH1OGvi7m7/vkbRi56SLAbC7Am6tBBk4K14DwWlkWriS4LmSPCjKeszW3/ncCtgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=mLW+JH0F; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mrnx7wsg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779893390;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kdPVJ+VpB1x1IM+fdJS5CcHJ7rdqir9ZZNYdpCb0MGg=;
-	b=Mrnx7wsg5yHyftirnDM4WxTHLhkYPSpA7R1XSqvJvu2xA+Z4zYWSIlMdiLzVgsq0/oCIyl
-	zXZFtbnzENUlnUUht/3LbdyWlwj8sJXoOZt1OV1R1kLWTECvODQNhXI7c6XzyTFW1QXw5C
-	uWizTek5evV5/PIorlXAehdf+ceIQfs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-10-aKYWDmkCOG6kNx3sVFkoKw-1; Wed,
- 27 May 2026 10:49:47 -0400
-X-MC-Unique: aKYWDmkCOG6kNx3sVFkoKw-1
-X-Mimecast-MFC-AGG-ID: aKYWDmkCOG6kNx3sVFkoKw_1779893386
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7372918002F3;
-	Wed, 27 May 2026 14:49:46 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.34.21])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 71DB6180034E;
-	Wed, 27 May 2026 14:49:43 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] Documentation/rtla: Add -A/--aligned option
-Date: Wed, 27 May 2026 16:49:28 +0200
-Message-ID: <20260527144928.2944472-3-tglozar@redhat.com>
-In-Reply-To: <20260527144928.2944472-1-tglozar@redhat.com>
-References: <20260527144928.2944472-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="mLW+JH0F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=04hC3vAubNmZqIfS1cbI1r2wH+/xZ8qPSyCJdizFzDo=; b=mLW+JH0FTXihWGFwUPQddNG0Hk
+	31p1I51mYjoRh2hRFPioSk1VZUGDmkmy1S7SFek5OhpPITVcJzbBWFWo2fAY97UsYUfvKnP4m817V
+	mwhIcj/QDSrcXqL0FPXq59qhRwo8rxdOm4Wv1p0awEZFKa8jUaiJXQUDx0FygZiS/K1MbCSIfBRP8
+	NKuEQ9hYrAagZ+vTwvIiE3wFgOJr9y2KRDRlyVBWARURODdfax4jlqWq4bKQmGVEADsgIJcNg/Tba
+	vijOOHycMhKnMeEpPZ9Djh6hWpleOUZU1Qe89jkTiPy0e44eiLiEHsG9LOVGnzFJgn3/LLGRsL+ZJ
+	4+0cQjFw==;
+Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1wSFwM-000000005FG-0IVa;
+	Wed, 27 May 2026 11:13:02 -0400
+Date: Wed, 27 May 2026 11:13:01 -0400
+From: Rik van Riel <riel@surriel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v3] perf/ftrace: Fix WARNING in __unregister_ftrace_function
+Message-ID: <20260527111301.2d0d8256@fangorn>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: tjoTrcptIuIloxPVbNc6hKHesEImGCZ0T_CeX5tg91w_1779893386
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Cover the newly added -A/--aligned option that aligns timerlat threads
-using the corresponding feature of the timerlat tracer.
+perf_ftrace_function_unregister() unconditionally calls
+unregister_ftrace_function() without checking whether the ftrace_ops
+was ever successfully registered. This triggers a WARN_ON in
+__unregister_ftrace_function() when the ops doesn't have
+FTRACE_OPS_FL_ENABLED set.
 
-A note is added to clarify what alignment means, similar to the note in
-the tracer implementation in commit 4245bf4dc58f ("tracing/osnoise: Add
-option to align tlat threads").
+This can happen during perf_event_alloc() error cleanup when
+perf_trace_destroy() is called via __free_event() on an event whose
+ftrace_ops registration failed or was already torn down by
+perf_try_init_event()'s err_destroy path.
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+The call path is:
+  perf_event_alloc() error cleanup
+    -> __free_event()
+      -> event->destroy() [tp_perf_event_destroy]
+        -> perf_trace_destroy()
+          -> perf_trace_event_close()
+            -> TRACE_REG_PERF_CLOSE
+              -> perf_ftrace_function_unregister()
+                -> unregister_ftrace_function()
+                  -> __unregister_ftrace_function()
+                    -> WARN_ON(!(ops->flags & FTRACE_OPS_FL_ENABLED))
+
+Fix this by checking FTRACE_OPS_FL_ENABLED before attempting to
+unregister. If the ops is not enabled, just free the filter and
+return success.
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- Documentation/tools/rtla/common_timerlat_options.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/trace/trace_event_perf.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/tools/rtla/common_timerlat_options.txt b/Documentation/tools/rtla/common_timerlat_options.txt
-index ab159b2cbfe7..0a01fbc93ee1 100644
---- a/Documentation/tools/rtla/common_timerlat_options.txt
-+++ b/Documentation/tools/rtla/common_timerlat_options.txt
-@@ -95,3 +95,15 @@
-         * **full**        Print the entire stack trace, including unknown addresses.
- 
-         For unknown addresses, the raw pointer is printed.
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index a6bb7577e8c5..5b272856e5ab 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -497,7 +497,17 @@ static int perf_ftrace_function_register(struct perf_event *event)
+ static int perf_ftrace_function_unregister(struct perf_event *event)
+ {
+ 	struct ftrace_ops *ops = &event->ftrace_ops;
+-	int ret = unregister_ftrace_function(ops);
++	int ret = 0;
 +
-+**-A**, **--aligned** *us*
++	/*
++	 * Perf will call this unconditionally even if the ops is not
++	 * enabled. The unregister_ftrace_function() will warn if called
++	 * when not enabled. Just bypass the unregistering if ops isn't
++	 * enabled here.
++	 */
++	if (ops->flags & FTRACE_OPS_FL_ENABLED)
++		ret = unregister_ftrace_function(ops);
 +
-+        Align wake-up of timerlat threads to a set offset in microseconds.
-+
-+        The alignment will be applied when the threads wake up at the start of tracing while
-+        the timer for the first cycle is armed. Each thread sets its timer to the wake-up time
-+        of the previous thread plus the alignment.
-+
-+        This option may be used with any non-negative argument, including zero, which will
-+        align threads so that they wake up all at the same time.
-+
+ 	ftrace_free_filter(ops);
+ 	return ret;
+ }
 -- 
 2.54.0
 
