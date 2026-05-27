@@ -1,76 +1,76 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBB93EBF06
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 May 2026 10:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E744D3F23B9
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 May 2026 10:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779877854; cv=none; b=leMJewzMrY718kBztUqt279zQSvsCc7U3ePcrn2+LXzqXSu0bS8qIdJ2JtN6XcFIWrx+xSVkgOm2t7Np7m47Hc68PyV/ur98QVsgtz7CMWzduBYTJ9cPl3t+qDqVrbOLEvmvoY2QIU1nVPdh1zSOLZG1tcJan8toFNdbiJ7kJCs=
+	t=1779878808; cv=none; b=m8sdeJ3FJQFOWJsla2yl61IhUCmHxmlBZWmnXDKHMkTQYtk5B4qJ1C/TARgClDunA0Kk5h+KfYmj1QQYPCHpZ2y52KUWlj9QBSn9J+xpF4DsHDNExdZeXcxW37DbzXcWcP0XJlC9Edp7qj/rbO5PZzbG3S42jNhwPOOJPv28KGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779877854; c=relaxed/simple;
-	bh=B16uzisEYVTt1mKPen1Eb644qOsbfxkQqNJIXJMGZho=;
+	s=arc-20240116; t=1779878808; c=relaxed/simple;
+	bh=osV54YqDKMAqYLeNjLluRy43g+a4qFnra9hiufgmy34=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UlQ3nXIA8tk6yhZziYRbjddpoS5PBLOPk7zIPZtv9uxozAAfdUBct6xRG12eJ7GTXVUZskZ+u5wak52MRvuXRlrrFGOjMNJGFbdEsX+t4cc7EI5VYiMAjc9fCz14hSHEkhxwCJDyuMvG3LUGngJQf0nf5nySqcff00QWRyZbSog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=Wnoyjt1m; arc=none smtp.client-ip=209.85.208.43
+	 MIME-Version:Content-Type; b=HhXpzzcrjnurXfE7Sc6QmHeM5jX1H2MLwVLthd1283s/TdcmOOOL0T4qdyzqaFpr0UkwN8nOkgPQfUBnPowoJkLiZtC+HkppZijRgO1UjXYFnvIXnVddvS3k122eY4ALt0OnceJJhUo2nZhKmeon8kjZKoZ4XZAyhSXOfJaGp2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=RS13JRPe; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Wnoyjt1m"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6886be3d39bso8644532a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 May 2026 03:30:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="RS13JRPe"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-bda62f13d90so1158903266b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 May 2026 03:46:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1779877851; x=1780482651; darn=vger.kernel.org;
+        d=cloudflare.com; s=google09082023; t=1779878805; x=1780483605; darn=vger.kernel.org;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=I79utP1h0CNYWtTS0jF9Ax99eFp9KB4mFuHXUtB08CM=;
-        b=Wnoyjt1mC6HZ2f6ZRI2TIAuHRkjxS3xek4hR6Ggs+s6aOGvvEuSr6ZYjqeKjadcmze
-         j/Ls5hw6wWu6oOKqHn0MGGq0Jh1a63FKczjBAi1iYth/qETSrT53f1zPyLncBs58CFsB
-         7OI5727/uf6pYd4trnzOIEMaBdDYJaEviZs2WNC9l4Y1l6vM2AmNDBfJ629jX8fCNtej
-         TDH4jo2gwU6lqMVtFjcFpPYLCEc5HsNpZfDqtmceYK73C0t4p1EFUg5nM27Lu7RVgrx9
-         TtFLXX9K8TfvnMBQIiHy2SMLrvcZxMFRowwIS9Fqvk4l7dqogElmnlsOaxUc80Zbnj2c
-         1aVA==
+        bh=osV54YqDKMAqYLeNjLluRy43g+a4qFnra9hiufgmy34=;
+        b=RS13JRPeaIxXK35VOd+U6mR84YFK7cckyHdZwjn5SsXcLMmPXpUr8YTH/7GA0H5aok
+         H00tJKVfhKXsXo3y/EFLVN1KXhT+t5aye8C8DMW+S/HuJgwoYLSQ75bWCPeSxusnIYJ5
+         UvDvps4yEYI3U1F51FCg5xqsOXj9mT6oA1on7eKus4dPeDtz935CVTM+1kxkHNaa8zyQ
+         nYGswarxw2jT0pnGWcN+3+HC70F8In2wdhsTZg0ZCbY248vcnySu7G+jUzWZun/yp9jS
+         5YMr1Mz0MtGszQ8gaKl3yPQpA0aKKTAAcAySXQQ7lGuIiIX/Z4sE0dD9b3rkpt2e8DW+
+         pOOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779877851; x=1780482651;
+        d=1e100.net; s=20251104; t=1779878805; x=1780483605;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=I79utP1h0CNYWtTS0jF9Ax99eFp9KB4mFuHXUtB08CM=;
-        b=BgmQvOvCakjKT50xIxS60SP28Fh8KOyLF02AxpSFAi2VLKwiKmPwjfmIAIPi+jW0I1
-         5XAhjGbUax8DNHTPRJjLy7KcYEI0/U93QsCGsTldh0fkpQcOt3hOfwRlnzuMcO+M4QAB
-         uBon/cBjpW2hHcaIZPoF8S2kIjomLNgJRcBPhAlE/F3jgpCKrThNTr+UutIytjTRBRAV
-         HpKa2wYw99JpIXT9m2BUGH1quvmxJMrPLVKTYPQNWveBMc2pEgwR3mGH+H2RBlXQx8Qk
-         8HUBNhKHlQO/Izn+OrcZ32cvr9Qfrz0sctVoTY6wPbQ8lIZjuD8BX2oN/JgBGkRLv0cu
-         6L/g==
-X-Forwarded-Encrypted: i=1; AFNElJ9ib8dGYesEUs3LKSn7BXVFgTcLmIoRWmwmyORHfcR3nbs6SxBbRkA1HQTVdeMkEofiXkj0rvYfYAr6Rn9H7HJzp+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4WfK0DPC/rcH4PCi1T5bRjI20gbyGaFsc+f+6xdgGoY8h0kzO
-	Ow9jqgvscOGo57A43BHWQ15oQHhuWh434b9dXW4qwaPlijC0TaNv0cJWeRFtUkMtZJA=
-X-Gm-Gg: Acq92OGBRgVd2KtpkgIg2UI3B07YQWIxcZDE+f8xOM4mDNYLIft8ZgTC8+y26W7ApN9
-	MUX7aJ2oCkL8WdraWohUdCaXMC9Tuvz7+7wuodF1IOMrHxeVYKAkfkr6wtks+FbheLaBSnLEy2v
-	abXymZi4vhkihUmc9RjYOH5PjqyL32EX2MK36Vhm9JnEuCBBuhBqm9/FbWZ+gYnComZ99bTifxS
-	6qH4stRoOa8KiC2O/VuJ2uzoKCx/bRjqGUmCg3zelcqWggb53psdT/2HSZZReS5h98da0ZBN5EY
-	One2ULjIHUNl0wcBWplf+KuozicKGtsdxs5YjZN3q/Mioy/RKqdyQ3mH4dSbGpw2LJh6TMIWAq+
-	2PRM1zkmYBy0JGYyJXZPX56AfNc3WlUFH4GM1kUbZeGImqmY0RBMEK83PCsuye5ZK/VgyaTCF6s
-	pQe4/yvx3Ei+I9derJvpfudpqFBo9A2fVB66Cy
-X-Received: by 2002:a05:6402:4029:b0:687:50d3:d9d7 with SMTP id 4fb4d7f45d1cf-6889c432e3dmr11086372a12.4.1779877850730;
-        Wed, 27 May 2026 03:30:50 -0700 (PDT)
+        bh=osV54YqDKMAqYLeNjLluRy43g+a4qFnra9hiufgmy34=;
+        b=F2yEdnbKKz4QWCmfgqDVDimriJdvoHytd6Spmc5nVe4dIpcleNZ0wmiuqfC6dnbwm7
+         QoCrh6jQ2zua1wYzyBiSLQKf4lEdhipEKAFkI8Vhgp49EDCfm4+JGGNBFqOMiuNfTeh0
+         ym2VfF7tJT3+tVS0CyQ5iuV5fs/0AyIztsM/Y9jIMXmc8ZGykssjee816mJhavDZP7n2
+         mQ69h+SBmfqH05K9X5xEUyvcyLOIiR+L93C7Jyaec5jIaisrrqB5OC4R0dpw6ayKuR00
+         YX5aicXovmNt+6DGtAUvY9NnYE1GldU0pKKEKoabelKKs7M+XDNjVF5wYAM4uJMbD9ND
+         w5Zg==
+X-Forwarded-Encrypted: i=1; AFNElJ/Ojp0aTuEHRPQ39BOB1JN5vRK850H4KuCmNyYuTBhaMiDkSJEJVrSkBpb8PBvj3A/06rqV0Lh1JasBkNhGOv0WVnU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHKFPwGx3WSSKDkJJgE3bE5YDlPQ9oaw7NWIPl7dWhbNxGmrdR
+	xLnpuZRlpyzA4OGs2tWITo997JYMQPYYOvcbtkcYetifZjdzjh+eumahG1TuNZ3P5xs=
+X-Gm-Gg: Acq92OFLOAVYgWsJDHu8s7hHCogE1RUZxMrHHBcuLv3mWloTdBXmzF0Ew1/MsBcyNne
+	lwf/yHaDGPO49Xs0QevjuBURgI50EOM6SyKqMnyvKW1orBtP2nPxGCWbBdqQjA+BqxzjsXTYU1O
+	U3JrnzSLnxxakwrz6/oAooKjVbBAcHGi+Ys0XbRdM8woimhNqlwovbvyVpuxvVrTroYJbQtX8cY
+	MoTXXWXrnq7dE8CFSgjQ5pxELy26qTHCc0/wCJ7k8pI+kI3jf2+jCGC1YCN7RwsRVz7NkKCSV7O
+	uuLsUEhDK6npmMa7f53ci+blDPFhlC76LZ1EEkwQ1Kuz69SGkLSbf+YhqVBpAhYLYHX62ZAlh92
+	N1Lek+rgUSVvMSrU3ijYuUgobd3aUnoEZWrU4XipLkcfc4lqbMq6eyqgZpWy1Yn3W2AL24VVCfa
+	k+X+MInhqwQGGaUD4A32MOrBOtFA==
+X-Received: by 2002:a17:906:9c9:b0:bcb:d9c7:c6f with SMTP id a640c23a62f3a-bdd22a454a7mr962061766b.7.1779878805241;
+        Wed, 27 May 2026 03:46:45 -0700 (PDT)
 Received: from cloudflare.com ([104.28.21.182])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68a6fa2a017sm623876a12.0.2026.05.27.03.30.48
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bddc6acc42csm589091966b.63.2026.05.27.03.46.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2026 03:30:49 -0700 (PDT)
+        Wed, 27 May 2026 03:46:44 -0700 (PDT)
 From: Jakub Sitnicki <jakub@cloudflare.com>
 To: Jiri Olsa <jolsa@kernel.org>
 Cc: Oleg Nesterov <oleg@redhat.com>,  Peter Zijlstra <peterz@infradead.org>,
   Ingo Molnar <mingo@kernel.org>,  Masami Hiramatsu <mhiramat@kernel.org>,
   Andrii Nakryiko <andrii@kernel.org>,  bpf@vger.kernel.org,
   linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 09/13] selftests/bpf: Change uprobe syscall tests to
- use nop10
-In-Reply-To: <20260526205840.173790-10-jolsa@kernel.org> (Jiri Olsa's message
-	of "Tue, 26 May 2026 22:58:36 +0200")
+Subject: Re: [PATCHv4 10/13] selftests/bpf: Change uprobe/usdt trigger bench
+ code to use nop10
+In-Reply-To: <20260526205840.173790-11-jolsa@kernel.org> (Jiri Olsa's message
+	of "Tue, 26 May 2026 22:58:37 +0200")
 References: <20260526205840.173790-1-jolsa@kernel.org>
-	<20260526205840.173790-10-jolsa@kernel.org>
-Date: Wed, 27 May 2026 12:30:47 +0200
-Message-ID: <8733zd6t60.fsf@cloudflare.com>
+	<20260526205840.173790-11-jolsa@kernel.org>
+Date: Wed, 27 May 2026 12:46:43 +0200
+Message-ID: <87y0h55dv0.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,28 +80,10 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 On Tue, May 26, 2026 at 10:58 PM +02, Jiri Olsa wrote:
-> Optimized uprobes are now on top of 10-bytes nop instructions,
-> reflect that in existing tests.
+> Changing uprobe/usdt trigger bench code to use nop10 instead
+> of nop5. Also changing run_bench_uprobes.sh to use nop10 triggers.
 >
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
-
-[...]
-
-> @@ -430,9 +432,11 @@ static void *check_attach(struct uprobe_syscall_executed *skel, trigger_t trigge
->  
->  static void check_detach(void *addr, void *tramp)
->  {
-> +	static const char nop10_prefix[] = { 0x66, 0x2e, 0x0f, 0x1f, 0x84 };
-> +
->  	/* [uprobes_trampoline] stays after detach */
->  	ASSERT_OK(find_uprobes_trampoline(tramp), "uprobes_trampoline");
-> -	ASSERT_OK(memcmp(addr, nop5, 5), "nop5");
-> +	ASSERT_OK(memcmp(addr, nop10_prefix, 5), "nop10_prefix");
->  }
->  
->  static void check(struct uprobe_syscall_executed *skel, struct bpf_link *link,
-
-Nit: You could just do `memcmp(addr, nop10, 5)` to match the prefix.
 
 Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
