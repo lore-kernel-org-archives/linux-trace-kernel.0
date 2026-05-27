@@ -1,49 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736943ED5CD;
-	Wed, 27 May 2026 11:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EBD396573;
+	Wed, 27 May 2026 12:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779882301; cv=none; b=AElyP3BljVIPYBNJMKNfxOwp46f01vXrfv8QNgIKwpabvjfUwGApm8ov1/cXjPa+fxBNHJ00PKQkTkEa0UNKjdYiJWyPiGmNNbivF0e4j7WlFHOo3YLRlKbyZCVsWNJRt9ALh1yQIx/9CPcPgNjHL67B/+5U4NSqRg/S9LzfV1U=
+	t=1779885340; cv=none; b=p3FqqlyqRjcWOYF1+vq9vQ38TKR2o018w1amo39k8/4lgCnHTjl//kq44yM7/1TNrzVW//esOkZtQABPerYStACEYmmjqUz3btsDy/md4LmXfKfEnuwmwCWy2DR5BREe4WF9lBjaaJv0pxFlpeuFAx8Hj/s9/LownWOfscU6hHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779882301; c=relaxed/simple;
-	bh=Rv3lgzUnrCbZFdhUu6eG0al/eaK8mqgOKMB5Jxdaocw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FhoXh/hyGbh1OvzUPm84I4ZWCMFpa/Oc8XD5OHqoCJ56kcrvpIltB6cRr+JuJVVjWpt2Xh34pDuSqRmmJQBDSPvV+UD3Ox5itJPzQRqu5o3KQcuSWngnTeKgi/c9xMVvj5ihV3sLhlr/rfe0TNxVNZzOQsrqRuaFiRG0GMsR/lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpVb7Lga; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779885340; c=relaxed/simple;
+	bh=QNwiOuhyTWr+Ox33PE8kwKfbhzpl6N48E9qhoZXjXsc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SnwOYXzbpPXxw/CS5PhaBaM5WO1LlQZHyqBPdktOQCWHNZX1ujbuGD3m2hqf2ocN09YJY++KbAwgeQo1pSo1cdT+NF6ewXsJmEpp4/bf+frXigwxnQQ86vsFyV1Gt+lih2/RMar9Jh6aXAgFoBTcMRhkIOqLg9Hjz2UEPm4Buvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FDyCNlVh; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpVb7Lga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD221F000E9;
-	Wed, 27 May 2026 11:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779882299;
-	bh=PHIETlFa17FyfTbFRJMDHPAaPoOLQuFPPZr4LWE0QKQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cpVb7LgaWKlBxzdIybniROJ9gKQYko2hfkoV/cysDbLvyQp4qSTbxHW4VrU5IxcF/
-	 C2pPgduibosliFKVLuNNBCv0ldC7mK3MNQur5yiB+IQ8+SLcPHD/Vy1RVYrQ7a8vPg
-	 uCwOaRiTPgdVq0ifqWM3dayU4xkdT5ubN/6Q6l0dYexb262x9gmXADeeUOjqe0MU1i
-	 uyLoi7T8W0vXe6tM9vRBfzLEJd+wpeaDQHwdADJYSz6m1zsPDnwTj0fn044VoJ4Dlm
-	 Mga11oZepzrgKsLPtTi5JhXJlE+jGazUW01WygFpvaHVgyeiYaTNC1jFPE5oqc+zao
-	 lbHvJKjkG9pOg==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FDyCNlVh"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1779885334; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=jbjuGf+IXHrtw5IpG3dTHqRw4vxGFjsQYv+ha2pTkws=;
+	b=FDyCNlVhYNDOmUofVP1lk3dxnxYEKIlXjS6oslHfa4EVTJ94UB0ra8xn+q2qnFxU/i8aJhwPpxnXPzbiYBux9OhUy47MmcM4k7pv9j0zLXKSbNb5FZBWI/mIErWXmJlvfYk/UtMO4F98uqVwy68g5OxYShBF1db0HZoo1GKjpH0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0X3jh19m_1779885331;
+Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X3jh19m_1779885331 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 27 May 2026 20:35:32 +0800
+From: Wang Han <wanghan@linux.alibaba.com>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chen Pei <cp0613@linux.alibaba.com>,
+	Andy Chiu <andybnac@gmail.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Petr Mladek <pmladek@suse.com>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Steven Rostedt <rostedt@kernel.org>
-Subject: [PATCHv6 bpf-next 29/29] selftests/bpf: Add tracing multi attach rollback tests
-Date: Wed, 27 May 2026 13:39:51 +0200
-Message-ID: <20260527113951.46265-30-jolsa@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260527113951.46265-1-jolsa@kernel.org>
-References: <20260527113951.46265-1-jolsa@kernel.org>
+	live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/8] riscv: Add reliable stack unwinding for livepatch
+Date: Wed, 27 May 2026 20:35:22 +0800
+Message-ID: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,305 +67,187 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adding tests for the rollback code when the tracing_multi
-link won't get attached, covering 2 reasons:
+Problem
+=======
 
-  - wrong btf id passed by user, where all previously allocated
-    trampolines will be released
-  - trampoline for requested function is fully attached (has already
-    maximum programs attached) and the link fails, the rollback code
-    needs to release all previously link-ed trampolines and release
-    them
+Livepatch relies on HAVE_RELIABLE_STACKTRACE to decide whether a task
+can safely switch to a patched implementation. RISC-V has a
+frame-pointer stack walker, but it is not yet reliable enough for
+livepatch. Three pieces are missing:
 
-We need the bpf_fentry_test* unattached for the tests to pass,
-so the rollback tests are serial.
+  * arch_stack_walk_reliable() itself, plus the strict stack-bound
+    checks and forward-progress invariants a reliable unwinder needs.
+  * Explicit unwind metadata at exception, task-entry and IRQ-stack
+    boundaries, so the unwinder can distinguish a final user-to-kernel
+    transition from a nested kernel pt_regs frame instead of guessing
+    from return addresses.
+  * Agreement between the ftrace function-graph, perf callchain and
+    mcount paths and the same frame-record assumptions used by the
+    reliable unwinder.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/prog_tests/tracing_multi.c  | 212 ++++++++++++++++++
- .../bpf/progs/tracing_multi_rollback.c        |  43 ++++
- 2 files changed, 255 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_rollback.c
+There is also a prerequisite ftrace issue on the current riscv/for-next
+base. Commit 0ca1724b56af ("riscv: ftrace: select
+HAVE_BUILDTIME_MCOUNT_SORT") enabled build-time sorting of the mcount
+table. RISC-V uses patchable function entries, and the recorded patch
+site is placed before the function symbol. scripts/sorttable currently
+does not take that RISC-V layout into account, so valid ftrace sites
+can be filtered out before the kernel boots.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-index e437e6cec222..036f18bb3d90 100644
---- a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-+++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-@@ -11,6 +11,7 @@
- #include "tracing_multi_fail.skel.h"
- #include "tracing_multi_verifier.skel.h"
- #include "tracing_multi_bench.skel.h"
-+#include "tracing_multi_rollback.skel.h"
- #include "trace_helpers.h"
- 
- static __u64 bpf_fentry_test_cookies[] = {
-@@ -687,6 +688,217 @@ void serial_test_tracing_multi_bench_attach(void)
- 	btf__free(btf);
- }
- 
-+static void tracing_multi_rollback_run(struct tracing_multi_rollback *skel)
-+{
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+	int err, prog_fd;
-+
-+	prog_fd = bpf_program__fd(skel->progs.test_fentry);
-+	err = bpf_prog_test_run_opts(prog_fd, &topts);
-+	ASSERT_OK(err, "test_run");
-+
-+	/* make sure the rollback code did not leave any program attached */
-+	ASSERT_EQ(skel->bss->test_result_fentry, 0, "test_result_fentry");
-+	ASSERT_EQ(skel->bss->test_result_fexit, 0, "test_result_fexit");
-+}
-+
-+static void test_rollback_put(void)
-+{
-+	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
-+	struct tracing_multi_rollback *skel = NULL;
-+	size_t cnt = FUNCS_CNT;
-+	__u32 *ids = NULL;
-+	int err;
-+
-+	skel = tracing_multi_rollback__open();
-+	if (!ASSERT_OK_PTR(skel, "tracing_multi_rollback__open"))
-+		return;
-+
-+	bpf_program__set_autoload(skel->progs.test_fentry, true);
-+	bpf_program__set_autoload(skel->progs.test_fexit, true);
-+
-+	err = tracing_multi_rollback__load(skel);
-+	if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-+		goto cleanup;
-+
-+	ids = get_ids(bpf_fentry_test, cnt, NULL);
-+	if (!ASSERT_OK_PTR(ids, "get_ids"))
-+		goto cleanup;
-+
-+	/*
-+	 * Mangle last id to trigger rollback, which needs to do put
-+	 * on get-ed trampolines.
-+	 */
-+	ids[9] = 0;
-+
-+	opts.ids = ids;
-+	opts.cnt = cnt;
-+
-+	skel->bss->pid = getpid();
-+
-+	skel->links.test_fentry = bpf_program__attach_tracing_multi(skel->progs.test_fentry,
-+						NULL, &opts);
-+	if (!ASSERT_ERR_PTR(skel->links.test_fentry, "bpf_program__attach_tracing_multi"))
-+		goto cleanup;
-+
-+	skel->links.test_fexit = bpf_program__attach_tracing_multi(skel->progs.test_fexit,
-+						NULL, &opts);
-+	if (!ASSERT_ERR_PTR(skel->links.test_fexit, "bpf_program__attach_tracing_multi"))
-+		goto cleanup;
-+
-+	/* We don't really attach any program, but let's make sure. */
-+	tracing_multi_rollback_run(skel);
-+
-+cleanup:
-+	tracing_multi_rollback__destroy(skel);
-+	free(ids);
-+}
-+
-+static void fillers_cleanup(struct tracing_multi_rollback **skels, int cnt)
-+{
-+	int i;
-+
-+	for (i = 0; i < cnt; i++)
-+		tracing_multi_rollback__destroy(skels[i]);
-+
-+	free(skels);
-+}
-+
-+static struct tracing_multi_rollback *extra_load_and_link(void)
-+{
-+	struct tracing_multi_rollback *skel;
-+	int err;
-+
-+	skel = tracing_multi_rollback__open();
-+	if (!ASSERT_OK_PTR(skel, "tracing_multi_rollback__open"))
-+		goto cleanup;
-+
-+	bpf_program__set_autoload(skel->progs.extra, true);
-+
-+	err = tracing_multi_rollback__load(skel);
-+	if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-+		goto cleanup;
-+
-+	skel->links.extra = bpf_program__attach_trace(skel->progs.extra);
-+	if (!ASSERT_OK_PTR(skel->links.extra, "bpf_program__attach_trace"))
-+		goto cleanup;
-+
-+	return skel;
-+
-+cleanup:
-+	tracing_multi_rollback__destroy(skel);
-+	return NULL;
-+}
-+
-+static struct tracing_multi_rollback **fillers_load_and_link(int max)
-+{
-+	struct tracing_multi_rollback **skels, *skel;
-+	int i, err;
-+
-+	skels = calloc(max + 1, sizeof(*skels));
-+	if (!ASSERT_OK_PTR(skels, "calloc"))
-+		return NULL;
-+
-+	for (i = 0; i < max; i++) {
-+		skel = skels[i] = tracing_multi_rollback__open();
-+		if (!ASSERT_OK_PTR(skels[i], "tracing_multi_rollback__open"))
-+			goto cleanup;
-+
-+		bpf_program__set_autoload(skel->progs.filler, true);
-+
-+		err = tracing_multi_rollback__load(skel);
-+		if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-+			goto cleanup;
-+
-+		skel->links.filler = bpf_program__attach_trace(skel->progs.filler);
-+		if (!ASSERT_OK_PTR(skels[i]->links.filler, "bpf_program__attach_trace"))
-+			goto cleanup;
-+	}
-+
-+	return skels;
-+
-+cleanup:
-+	fillers_cleanup(skels, i + 1);
-+	return NULL;
-+}
-+
-+static void test_rollback_unlink(void)
-+{
-+	struct tracing_multi_rollback *skel = NULL, *extra;
-+	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
-+	struct tracing_multi_rollback **fillers;
-+	size_t cnt = FUNCS_CNT;
-+	__u32 *ids = NULL;
-+	int err, max;
-+
-+	max = get_bpf_max_tramp_links();
-+	if (!ASSERT_GE(max, 1, "bpf_max_tramp_links"))
-+		return;
-+
-+	/* Attach maximum allowed programs to bpf_fentry_test10 */
-+	fillers = fillers_load_and_link(max);
-+	if (!ASSERT_OK_PTR(fillers, "fillers_load_and_link"))
-+		return;
-+
-+	extra = extra_load_and_link();
-+	if (!ASSERT_OK_PTR(extra, "extra_load_and_link"))
-+		goto cleanup;
-+
-+	skel = tracing_multi_rollback__open();
-+	if (!ASSERT_OK_PTR(skel, "tracing_multi_rollback__open"))
-+		goto cleanup;
-+
-+	bpf_program__set_autoload(skel->progs.test_fentry, true);
-+	bpf_program__set_autoload(skel->progs.test_fexit, true);
-+
-+	/*
-+	 * Attach tracing_multi link on bpf_fentry_test1-10, which will
-+	 * fail on bpf_fentry_test10 function, because it already has
-+	 * maximum allowed programs attached.
-+	 *
-+	 * The rollback needs to unlink already link-ed trampolines and
-+	 * put all of them.
-+	 */
-+	err = tracing_multi_rollback__load(skel);
-+	if (!ASSERT_OK(err, "tracing_multi_rollback__load"))
-+		goto cleanup;
-+
-+	ids = get_ids(bpf_fentry_test, cnt, NULL);
-+	if (!ASSERT_OK_PTR(ids, "get_ids"))
-+		goto cleanup;
-+
-+	opts.ids = ids;
-+	opts.cnt = cnt;
-+
-+	skel->bss->pid = getpid();
-+
-+	skel->links.test_fentry = bpf_program__attach_tracing_multi(skel->progs.test_fentry,
-+						NULL, &opts);
-+	if (!ASSERT_ERR_PTR(skel->links.test_fentry, "bpf_program__attach_tracing_multi"))
-+		goto cleanup;
-+
-+	skel->links.test_fexit = bpf_program__attach_tracing_multi(skel->progs.test_fexit,
-+						NULL, &opts);
-+	if (!ASSERT_ERR_PTR(skel->links.test_fexit, "bpf_program__attach_tracing_multi"))
-+		goto cleanup;
-+
-+	tracing_multi_rollback_run(skel);
-+
-+cleanup:
-+	fillers_cleanup(fillers, max);
-+	tracing_multi_rollback__destroy(extra);
-+	tracing_multi_rollback__destroy(skel);
-+	free(ids);
-+}
-+
-+void serial_test_tracing_multi_attach_rollback(void)
-+{
-+	if (test__start_subtest("put"))
-+		test_rollback_put();
-+	if (test__start_subtest("unlink"))
-+		test_rollback_unlink();
-+}
-+
- void test_tracing_multi_test(void)
- {
- #ifndef __x86_64__
-diff --git a/tools/testing/selftests/bpf/progs/tracing_multi_rollback.c b/tools/testing/selftests/bpf/progs/tracing_multi_rollback.c
-new file mode 100644
-index 000000000000..a49d1d841f3a
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/tracing_multi_rollback.c
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <vmlinux.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+int pid = 0;
-+
-+__u64 test_result_fentry = 0;
-+__u64 test_result_fexit = 0;
-+
-+SEC("?fentry.multi")
-+int BPF_PROG(test_fentry)
-+{
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 0;
-+
-+	test_result_fentry++;
-+	return 0;
-+}
-+
-+SEC("?fexit.multi")
-+int BPF_PROG(test_fexit)
-+{
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 0;
-+
-+	test_result_fexit++;
-+	return 0;
-+}
-+
-+SEC("?fentry/bpf_fentry_test1")
-+int BPF_PROG(extra)
-+{
-+	return 0;
-+}
-+
-+SEC("?fentry/bpf_fentry_test10")
-+int BPF_PROG(filler)
-+{
-+	return 0;
-+}
+Solution
+========
+
+Patch 1 fixes scripts/sorttable so the RISC-V build-time mcount sort
+path accepts patchable function entries which precede the function
+symbol. The fix carries a Fixes: tag for commit 0ca1724b56af ("riscv:
+ftrace: select HAVE_BUILDTIME_MCOUNT_SORT") and is otherwise
+independent; it can be picked into the RISC-V tree on its own if
+preferred.
+
+Patches 2-7 add the reliable unwinder in small, individually
+reviewable steps. The design follows the same FP + metadata model
+arm64 already uses for livepatch in production: the metadata frame
+record in pt_regs, the unwind-state stack-bound bookkeeping, the
+exception boundary handling, and the fgraph / kretprobe return-address
+recovery are direct adaptations of arch/arm64/kernel/stacktrace.c,
+retargeted to the RISC-V {fp, ra} frame record convention.
+
+  * Patch 2 adds frame-record metadata for the RISC-V stack walker.
+    Low-level entry and task setup code records whether a frame is a
+    normal frame, an exception frame, or a task-entry boundary, so the
+    reliable unwinder can validate what it is walking instead of
+    guessing from the return address.
+  * Patch 3 stops KASAN from instrumenting stacktrace.o, matching the
+    arm, arm64 and x86 treatment of their stack unwinding code.
+  * Patch 4 always preserves s0 in the dynamic ftrace register frame so
+    the unwinder can use the architectural frame pointer as the
+    function-graph return-address cookie regardless of FP_TEST.
+  * Patch 5 introduces stack_info / unwind_state and the
+    forward-progress-only stack-bound helpers that the reliable
+    unwinder is built on. No caller is wired up yet.
+  * Patch 6 switches arch_stack_walk() to the new frame-pointer based
+    unwinder, adds arch_stack_walk_reliable() (still without an
+    in-tree caller), routes perf callchains through arch_stack_walk(),
+    and updates the function-graph cookie to match.
+  * Patch 7 selects HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH under
+    FRAME_POINTER && 64BIT and exposes the livepatch menu, finally
+    enabling livepatch on RISC-V.
+
+Two alternative directions were considered and deferred:
+
+  * ORC, as used on x86, gives reliable unwinding without runtime FP
+    cost, but requires RISC-V objtool stack validation, ORC metadata
+    generation, and the runtime ORC unwinder. That is a much larger
+    dependency chain than what this series adds.
+
+  * SFrame is the more likely long-term replacement for FP-based
+    unwinding on architectures without ORC. Kernel SFrame support is
+    still under development and the currently documented SFrame ABI
+    set does not cover RISC-V, so making RISC-V livepatch depend on
+    SFrame would block it on toolchain and kernel infrastructure that
+    is not available yet. SFrame is a replacement rather than an
+    extension of the metadata frame record introduced here, so when it
+    lands the metadata can be retired together with the FP unwinder.
+    The interim cost (~24 bytes added to pt_regs and a handful of
+    instructions on exception entry, fork and early init) is bounded
+    and limited to FRAME_POINTER=y configurations, which is what the
+    RISC-V kernel already builds with for stack tracing today.
+    Selecting HAVE_RELIABLE_STACKTRACE under FRAME_POINTER && 64BIT
+    therefore does not introduce a new build-time dependency relative
+    to the status quo.
+
+This is useful now because livepatch is increasingly important for
+long-running server deployments where rebooting for critical fixes is
+expensive, and recent RISC-V work (dynamic ftrace and patchable
+function entries) has put the rest of the livepatch infrastructure in
+place.
+
+Module-side klp relocations rely on the existing RISC-V
+apply_relocate_add(); the syscall livepatch selftest exercises the
+full klp_apply_section_relocs() -> apply_relocate_add() path on RISC-V.
+
+Patch 8 adds the RISC-V syscall wrapper prefix used by the livepatch
+syscall selftest module. Without this, the syscall livepatch selftest
+cannot resolve the expected target symbol on RISC-V.
+
+Testing
+=======
+
+The series is based on riscv/for-next commit 0ca1724b56af ("riscv:
+ftrace: select HAVE_BUILDTIME_MCOUNT_SORT").
+
+Build and static checks:
+
+  * git diff --check riscv/for-next..HEAD
+  * scripts/checkpatch.pl --strict for each patch
+  * RISC-V Image and modules build clean with:
+      - gcc 15.2 (riscv64-unknown-linux-gnu-)
+      - LLVM=1 clang 18.1.3
+      - LLVM=1 clang 21.1.1
+  * Each intermediate commit (patches 1-7) was built individually on
+    riscv/for-next to confirm bisectability; all 7 intermediate trees
+    plus the final HEAD compile clean.
+  * livepatch selftest module build
+
+The unfixed build-time sort path was reproduced under QEMU:
+
+  ftrace: allocating 0 entries in 128 pages
+  Testing tracer function: .. no entries found ..FAILED!
+  Failed to init function_graph tracer, init returned -19
+
+With the sorttable fix applied, the same QEMU boot finds the expected
+ftrace entries and the ftrace startup tests pass:
+
+  ftrace: allocating 46749 entries in 184 pages
+  Testing tracer function: PASSED
+  Testing dynamic ftrace: PASSED
+  Testing tracer function_graph: PASSED
+
+With all eight patches applied, RISC-V QEMU virt boots with SMP=2,
+SMP=4, and SMP=8 completed the livepatch and tracing smoke tests. The
+livepatch selftest result was the same in all runs:
+
+  livepatch selftests: PASS: 7, SKIP: 1, FAIL: 0
+
+Across these boots, the kernel brought up the requested CPU count and
+the startup ftrace tests passed, including dynamic ftrace and
+function_graph. The function graph selftests reported passed: 3,
+failed: 0, unsupported: 3, and LKDTM WARNING_MESSAGE produced the
+expected Call Trace and powered off normally.
+
+The livepatch selftest skip is test-kprobe.sh. The test requires
+CONFIG_KPROBES_ON_FTRACE, which is not provided by the current RISC-V
+configuration.
+
+Wang Han (8):
+  scripts/sorttable: Handle RISC-V patchable ftrace entries
+  riscv: stacktrace: Add frame record metadata
+  riscv: stacktrace: disable KASAN instrumentation for stacktrace.o
+  riscv: ftrace: always preserve s0 in dynamic ftrace register frame
+  riscv: stacktrace: introduce stack-bound tracking helpers
+  riscv: stacktrace: switch to frame-pointer based unwinder
+  riscv: Kconfig: enable HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH
+  selftests/livepatch: Add RISC-V syscall wrapper prefix
+
+ arch/riscv/Kconfig                            |   4 +
+ arch/riscv/include/asm/ptrace.h               |   9 +
+ arch/riscv/include/asm/stacktrace.h           |  65 +-
+ arch/riscv/include/asm/stacktrace/common.h    | 159 +++++
+ arch/riscv/include/asm/stacktrace/frame.h     |  53 ++
+ arch/riscv/kernel/Makefile                    |   5 +
+ arch/riscv/kernel/asm-offsets.c               |   4 +
+ arch/riscv/kernel/entry.S                     |  30 +-
+ arch/riscv/kernel/ftrace.c                    |   6 +-
+ arch/riscv/kernel/head.S                      |  23 +
+ arch/riscv/kernel/mcount-dyn.S                |   4 -
+ arch/riscv/kernel/perf_callchain.c            |   2 +-
+ arch/riscv/kernel/process.c                   |  31 +-
+ arch/riscv/kernel/stacktrace.c                | 560 +++++++++++++++---
+ scripts/sorttable.c                           |   8 +-
+ .../livepatch/test_modules/test_klp_syscall.c |   2 +
+ 16 files changed, 856 insertions(+), 109 deletions(-)
+ create mode 100644 arch/riscv/include/asm/stacktrace/common.h
+ create mode 100644 arch/riscv/include/asm/stacktrace/frame.h
+
 -- 
-2.54.0
+2.43.0
 
