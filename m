@@ -1,82 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794DA37BE9E;
-	Wed, 27 May 2026 19:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C5A3B19DB;
+	Wed, 27 May 2026 19:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779910779; cv=none; b=LjsTjDDHOikV+tXO1IbvvFBY6QNYy2+ahnaWCPWnwsevgtHEk29CqVuS02NLf65yRM9qa0uz/uVNanML9Spa7kJs3IHXcV1jhD3Y8YYwHUGvVg8ScdR5lAITiYW4roRSOjg+o47tSNg7gqMzdXsKOV7FEq3bm8zeesZRx1RYGqU=
+	t=1779911365; cv=none; b=Ow1xmaZkgD8oS1Hnqe8k0aF9Xah43jMSyXkhb//LK08jqZxCyIoqBFfHwJp4urv2XqVwEI94Il96ATj/hubFFEJcp4IKDgqesedPca/YDL6V9HYNnRlQVDscKKenal0T1i/SIcCXH5C4fMDwC2HEaVfRJcqlx4nqetzv2kIilbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779910779; c=relaxed/simple;
-	bh=p8AxX9pryeSSlwsGfbi7RLl+AU19dVQGc8b5AFEemtw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ODpZueLhBESHCS9HEHmYuqhJAeE16p4n+weL/Tvlbt+Qgc08sXuvbOnqjxHXQ6F2/mOKzTBOCxrqoQip/qHkCfKGasBpFja+rNnnGjFPHikG3jrfVdb6dLIDSw+uTnI/YQLO8oF4r1P/xaLtllKj4E2JJ0Win8jtT2tSn9hu9y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=k0WaPiIE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779911365; c=relaxed/simple;
+	bh=Jb5QGemEzr2Ow1OIBgpTeZj0Wu1VSG29ghYR1AhhT1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KRdpxby32kj0G1sU1mPNhR2smJjH6HkXjFhbtviZc1dNCw4tsEav6JaKX+TMWjQ+puvTGGvCqRmuPkqgS/Q3hPYIBorg1KN7soEyIs5OefuSdhsuiO4ICCyCFZmDay2SXqzNfPSiE0sfaoxVy6l2w9i4tsGaKLHPSs8O7EohPic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mzeo38co; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="k0WaPiIE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24A7D1F000E9;
-	Wed, 27 May 2026 19:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1779910775;
-	bh=Qje0s9+5g7mwBQLx6gyz3RzpOX1+aY/PlmzgLifJRzw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=k0WaPiIEBwU1aZfVY3U7+RBAE7VXMsxFrl481Ofs/0gzrkClEzhhWW/Af7E23YCli
-	 0ipemC3dY0d2opQX7XXgRRYAotjFovhhh4r5uKR3k5z7L+JCzDDk0TT0+UfU079iBy
-	 oTL2Y855DeQzOc+E+D7mBaQJDL3axvoPT9QZ0l5w=
-Date: Wed, 27 May 2026 12:39:34 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
- Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
- Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, Lance Yang
- <lance.yang@linux.dev>
-Subject: Re: [PATCH v8 0/6] mm/memory-failure: add panic option for
- unrecoverable pages
-Message-Id: <20260527123934.77f789b4ecaf403f0ec6cd31@linux-foundation.org>
-In-Reply-To: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
-References: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mzeo38co"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B4661F00ACF;
+	Wed, 27 May 2026 19:49:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779911363;
+	bh=Jb5QGemEzr2Ow1OIBgpTeZj0Wu1VSG29ghYR1AhhT1E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Mzeo38cohRcK7fyckwGGR2eKTLeVuZOhfsYenQX832D3pQhjRz2Pai4Af2GAPGRYS
+	 8KmSnp57fZ1Ohqr3r+I+A7SkbdlCubw9Ja/dwXR0m4m3m8tKA8pvxbe4Pg9TA/fLcG
+	 LL+pQxFIneGiRNuu2piqmX5yxr+8AKt0nsuWhfVtq7mPoM0uSb+bLKcxRdzYXbvhrV
+	 zGWnCJn9gUxYc6d6PrmlLoeZ9n9YhVKkgEnSB38NtDjmAZCZltQV0KGllbKEV/s7H0
+	 dCV8Rg3ezHMaYyutbbegHc9WG+j4ZGVg2lN20WfuKnriFqmfH7oTap+awPz+rHYftZ
+	 dOK/6eMt1YhHA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	yangfeng@kylinos.cn,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	jolsa@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	bpf@vger.kernel.org,
+	Gyokhan Kochmarla <gyokhan@amazon.de>
+Subject: Re: [PATCH 6.12] tracing: Fix the bug where bpf_get_stackid returns -EFAULT on the ARM64
+Date: Wed, 27 May 2026 15:49:01 -0400
+Message-ID: <20260527-agent5-item009-tracing@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260526192012.76223-1-gyokhan@amazon.de>
+References: <20260526192012.76223-1-gyokhan@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 27 May 2026 07:06:13 -0700 Breno Leitao <leitao@debian.org> wrote:
+> commit fd2f74f8f3d3c1a524637caf5bead9757fae4332 upstream.
+>
+> When using bpf_program__attach_kprobe_multi_opts on ARM64 to hook a BPF program
+> that contains the bpf_get_stackid function, the BPF program fails
+> to obtain the stack trace and returns -EFAULT.
 
-> A multi-bit ECC error on a kernel-owned page that the memory failure
-> handler cannot recover is currently swallowed: PG_hwpoison is set, the
-> event is logged, and the kernel keeps running.  The corrupted memory
-> remains accessible to the kernel and either drives silent data
-> corruption or surfaces seconds-to-minutes later as an apparently
-> unrelated crash.  In a large fleet that delayed, unattributable crash
-> turns into significant engineering effort to root-cause; in a kdump
-> configuration, by the time the crash happens the original error
-> context (faulting PFN, MCE/GHES record, page state) is long gone.
-> 
-> This series adds an opt-in sysctl,
-> vm.panic_on_unrecoverable_memory_failure, that converts an
-> unrecoverable kernel-page hwpoison event into an immediate panic with
-> a clean dmesg/vmcore that still contains the original failure
-> context.  The default is disabled so existing workloads see no
-> change.
+Queued for 6.12.y, thanks.
 
-Thanks.  That does seem useful.
-
-I'll pass at this time, due to -rc5 and not-very-reviewed.
-
-AI review said a few things.  It claims to have found one pre-existing
-issue.
-
-	https://sashiko.dev/#/patchset/20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org
+--
+Thanks,
+Sasha
