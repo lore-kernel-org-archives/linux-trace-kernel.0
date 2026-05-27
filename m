@@ -1,86 +1,70 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B563033DF;
-	Wed, 27 May 2026 15:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57B1361DC3;
+	Wed, 27 May 2026 15:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896258; cv=none; b=YgDOczumMAC63S7tuP0Y0edAmmw49zoD76aX6ZICfqM7clQdVIG3TbR2yimbv1naxDEuyySW2wS2vXs5WxX/OQE9eCiz3PHxBEjs+/ciQibA7NHl1k6VfYUn22/1YfMiLnavGYMTiO0iZZBYDZpnunPti6Hq5C2XZfOHt5paxSw=
+	t=1779896505; cv=none; b=aqiQTg0101rGj36RnXYyIoumDEQwCVXYYIppBuo9YbSnMAGpgyDgoigXUGygh+++3oIrRewWTxNv0knJwjbfQLmg7nEC9ASasJIv8eg9wz7L7g9YZvrPeyDWnzLuBjYp7Oz/JfiomnENbPD3iqpeOG4TH83MdXg7Xb0G8TD6DXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779896258; c=relaxed/simple;
-	bh=CKnoBuLNzkLlnL+dEXS6wGXpa7gCnNKq6Qyzz321pD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NVTxangq9EyQuNHokotEMRchJVXtxiSd8WCRINDa4ayas/cgz+s1SrcILDDV2RrtKfP6TRFxBmhJGsWoXfJxcsCmBuOlFUXF/TceugNNe7K3v2CCb2SD/nxbsCXEUXXiQY2LqXeQI+bz57br0ehEsjSswYe3g2nN4H1ncKdT+Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 8BD85120602;
-	Wed, 27 May 2026 15:37:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id A9C2031;
-	Wed, 27 May 2026 15:37:33 +0000 (UTC)
-Date: Wed, 27 May 2026 11:37:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf/ftrace: Fix WARNING in
- __unregister_ftrace_function
-Message-ID: <20260527113732.664d26db@fedora>
-In-Reply-To: <20260527111301.2d0d8256@fangorn>
-References: <20260527111301.2d0d8256@fangorn>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1779896505; c=relaxed/simple;
+	bh=WEm76enc6H+K5mPbHLMuCBCArMseBDCTswzdymF2e+A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pVlnVt+yzWbiEh2N9CIxyTB8UqyZratWhCTnCy8webRKcxdc0VXjPeFtpZSycRed9erFMU7yEHAXuRmNGylIPgx7KhvxXKLejjTfMu6WOMMZgIiE+yTcu/fXhB3ZrCJbmqCjjR1OsA5tEG3k/SifQF+rzKHPVjMswCnTNe8xMJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EDl5SRl1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TBYQNt3E; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EDl5SRl1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TBYQNt3E"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1779896502;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WEm76enc6H+K5mPbHLMuCBCArMseBDCTswzdymF2e+A=;
+	b=EDl5SRl1PwnqaEHPJajzMhK5PV8eXjo4phcTzyWxO0CDqU5xnLJRhnIvY7Fj5/BHsiN387
+	qMRMGO34F//io/CXQci3mi+2liGM2WfqzJcd/HUlqGDOWZj9RI2axYRJUCC2FimiRJYIiZ
+	lsrr17rMPhnhu5+oFQtyYxXUaONRY/S/980wY5wAveKL+3aN0l98P5Z//rxRHZ8CPHCMHm
+	b65NDce71lWzQ6gZ4JeiHWhxekncigADvQVB9za76mY8wvNUma3RaBlJyv0/sjVvxklyoh
+	xn/R0w/UKKkwEJb9Ej377uftIlkf0r+/DR04QpYq21xRiBey4TDEpvYsVnbwPQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1779896502;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WEm76enc6H+K5mPbHLMuCBCArMseBDCTswzdymF2e+A=;
+	b=TBYQNt3EIt4crZoNt8ZjnEHnBx0YQwDQMik1/K8ghSlmavsm5fNL9V6IgNSHtPb/yOIzL0
+	VxNIcy56kvI3e5AA==
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Wander Lairson Costa
+ <wander@redhat.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/13] rv: Simply hybrid automata monitors's clock
+ variables
+In-Reply-To: <054cfff25288a98a7d7922de149be91fcbc79bc0.camel@redhat.com>
+References: <cover.1777962130.git.namcao@linutronix.de>
+ <a779af6dc89721179e0dbab08623e42aa0191275.1777962130.git.namcao@linutronix.de>
+ <054cfff25288a98a7d7922de149be91fcbc79bc0.camel@redhat.com>
+Date: Wed, 27 May 2026 17:41:41 +0200
+Message-ID: <87bje0vozu.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: A9C2031
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: 8zpi8s5iy8hmmm9gghmh4ajrr9wxfhgg
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18sN3Z+qiHjOGzOwHSQZg5mZgdVyH6kwsg=
-X-HE-Tag: 1779896253-145336
-X-HE-Meta: U2FsdGVkX1+6HoMNP5Sj11GbkSOgK5jinNdtyvBit0fq1SDhWqIG8A2yUF1TyfxryKIctWpvC4xTV7YmVoPf/qd4jSHMk206KeKPJim5liVtND/l230w1mKQwQ91HHqCR6P+zkS4d2nagQdDPJpccYYUAKyK9oaLMKEP/xrjAMQSksgosftCO5Qj9utaBBYuuAYmQI8Dce1Z2SjyjRo4gXGgWPAAgNL1FJ8s0Dt7W9ldGtVppuCYi1ObtdVJJSgWJGLRQYIXWVoLm4qtSfXCipfQDNQKdX7izLhNrGySX/+J+YdUACIF5Y69vkFtukuHahK7crQ/g0cT4me6EVJrleF3c49Me6EncNJ5H9xhxpxQSUU5QTOEuVjPXs67YpN5UHsB2gkAOn7a/exQPwuB4A==
+Content-Type: text/plain
 
-On Wed, 27 May 2026 11:13:01 -0400
-Rik van Riel <riel@surriel.com> wrote:
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> I'd prefer if this was consistent with the above as in (now - env <=
+> expire) or (env >= now - env), whichever you prefer but let's keep it
+> equivalent.
+> Or do you have a reason to rearrange it here?
 
-> perf_ftrace_function_unregister() unconditionally calls
-> unregister_ftrace_function() without checking whether the ftrace_ops
-> was ever successfully registered. This triggers a WARN_ON in
-> __unregister_ftrace_function() when the ops doesn't have
-> FTRACE_OPS_FL_ENABLED set.
-> 
-> This can happen during perf_event_alloc() error cleanup when
-> perf_trace_destroy() is called via __free_event() on an event whose
-> ftrace_ops registration failed or was already torn down by
-> perf_try_init_event()'s err_destroy path.
-> 
-> The call path is:
->   perf_event_alloc() error cleanup
->     -> __free_event()
->       -> event->destroy() [tp_perf_event_destroy]
->         -> perf_trace_destroy()
->           -> perf_trace_event_close()
->             -> TRACE_REG_PERF_CLOSE
->               -> perf_ftrace_function_unregister()
->                 -> unregister_ftrace_function()
->                   -> __unregister_ftrace_function()
->                     -> WARN_ON(!(ops->flags & FTRACE_OPS_FL_ENABLED))  
-> 
-> Fix this by checking FTRACE_OPS_FL_ENABLED before attempting to
-> unregister. If the ops is not enabled, just free the filter and
-> return success.
-> 
-> Signed-off-by: Rik van Riel <riel@surriel.com>
+No reason. Let's keep it consistent.
 
-Thanks Rik. Is this urgent where it should have a Fixes tag and Cc
-stable as well as be sent to Linus during the -rc release, or can it
-wait for the next merge window?
+Thanks for the comments.
 
--- Steve
+Nam
