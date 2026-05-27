@@ -1,100 +1,120 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B58439004;
-	Wed, 27 May 2026 16:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDB630FC33;
+	Wed, 27 May 2026 16:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779899501; cv=none; b=GMRicHfjqLRI8K61tTb9uZ6/sLhDR8L8FG/lpR+375INdtPmqt/60GtwbVNjLCVIxtK5bdxCImczQXjZYkVJrB340cbm6FYdFKbLUy6+B9stJDqnSIWu3BD3CKTU+2rufMBaps4wMu9UzaqFRxzOQeM4QFGf/v4TPZMKFKeQRj0=
+	t=1779900143; cv=none; b=jMv/k3ZPkSXCu9/ri/lcHCF1WIFDA4f3hEFonOMsE4gPkwSB35aMsN7cwcDxAwTLPjChuXDDBcoqOQepfa4PRkd1xm1Ax33hgNg3twC1hMkoZWk9AVnhvbdT1r2Q4nx5fgTBv6TCZkZwub8yjgoKpphojdIkQiFqklMGUXJ8uL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779899501; c=relaxed/simple;
-	bh=g2Q0qjTWa/IUkx/trVJeZ5AAVyT84s1dGhuGUFl3UKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtIZs08R4+wgtKgT7r9rlO86xn65vcb2tpD6L3Cc0ROiEHyMqXDJhJK8XjHWu1WSe08g994Pvd2BgGcANCrb02wfI8FjGG39iW6NJP6Bs8wcv+2dPG0QRQl8OPUh8kkmt0C5Bcow53Uqlt61ocfqvV+qMO7pYl2NI8Sukux7ev8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hPuRrxpB; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1779900143; c=relaxed/simple;
+	bh=zkxhXyottikXIASB/hUTc93O26xnKdgKpEbXjh2K15Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QGE4E06Ra1WgC35PQeT1X5zAMz2ZLFrweENPtKLaGvTFwF9xoDPmym5NOt6QztwOHDmwHF7wMtw2cvb12HfQkBFMjztdynTWO0c1rnAHfnQMNyQPUpzP7MroHphxx+j22mKezB4TVk0dsluuFfA5oTcQ3HWqOix1G43711bOHaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=M+uY+Lnt; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hPuRrxpB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=j4oBVA28zlAzk7AvPjEe8QcqlFO9bcQTX2Hr2QxJeIs=; b=hPuRrxpB675hZ8S95wzZncDv3S
-	8Yzi+NbBRQTH+V+bijJEq7o4mtVneXWq2okk4BOSo0Xy0GPEul98wA/LA1X3YGJDA71Yu/lbTn3Uh
-	WqPusaPBsv8zqL6Vcg93aJ6M8pYSQT0eFebBXiwp3771X5KTBTqXkKEnBitF0AQNxLkwmnfZ6eBTW
-	FiWGJbfGnYsq67fno1Kix4+Amb5e0vGH3YjxE49zlT4AZ48Cu6JkIdjIlYopWbVMz2UL/l3/M7ZWr
-	6unRcCOxOJ9y1yqMR+LJ8b1bT+jJPPkMJkDBcOHX1hVbk/BokaLwxfgr1+IM0o1eU1mczPVAdSTPV
-	8T8Wzmbw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSHAM-0000000EUi9-32l6;
-	Wed, 27 May 2026 16:31:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8C0E7300673; Wed, 27 May 2026 18:31:34 +0200 (CEST)
-Date: Wed, 27 May 2026 18:31:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	linux-kbuild <linux-kbuild@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Masatake YAMATO <yamato@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Marek <mmarek@suse.cz>, Yang Bai <hamo.by@gmail.com>,
-	Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] scripts: Have make TAGS not include structure members'
-Message-ID: <20260527163134.GW3102924@noisy.programming.kicks-ass.net>
-References: <20260527121144.08a1f676@fedora>
- <20260527162914.GH3102624@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="M+uY+Lnt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-Id:Date:Subject:From:Reply-To:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=r9X3i/MQsjWdphpDbkCPYHpgfOslyLkMzTbWCKDOiYM=; b=M+uY+LntFAqwzvPML/mrzPidGW
+	bNK0BEzeHac54ePgYbD8KIZUrq7gNJP4JXZXV7yhd7JrS8syBes1haL0/mR9hczHRuIho7YqNvSTf
+	MGopu+X1PvMzkdpyEVnue/Qiees6lICO0kgXhV+FaqbNaR3BtraTT4M5lB7UtxhVB0F8glrt/I/ZK
+	+w07xSOM3CuS+6FI+1xKNf1a2RbQmMJZcvwdgaonP1kym9pgwLmYYTXUIKUZ8GjRTjnEWHhP+9fQJ
+	U29PR403P8CIZtUiwkFUAr0R+93wcGHE/ZyotpMF6mE7Jhs8ppR3y2na5kMOKktcTRuPrk1LMtgHi
+	iqSDs8+w==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wSHKM-003JPU-1F;
+	Wed, 27 May 2026 16:41:54 +0000
+From: Breno Leitao <leitao@debian.org>
+Subject: [PATCH 0/4] bootconfig: embed kernel.* cmdline at build time
+Date: Wed, 27 May 2026 09:41:33 -0700
+Message-Id: <20260527-bootconfig_using_tools-v1-0-b6906a86e7d5@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260527162914.GH3102624@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL0eF2oC/yXMUQrCMAwA0KuEfK9QB5vaq4iMrEtrRBppOhHG7
+ i7q5/t5GxpXYcMAG1Z+iYkWDHDoAOONSmYnCwbA3vejH/zJzaotakmSp9Wk5KmpPszFREei8zL
+ SQNgBPisnef/iy/VvW+c7x/bdcN8/cFUgYHoAAAA=
+X-Change-ID: 20260508-bootconfig_using_tools-cfa7aa9d6a5a
+To: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, 
+ Nicolas Schier <nsc@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, 
+ Breno Leitao <leitao@debian.org>, kernel-team@meta.com
+X-Mailer: b4 0.16-dev-d5d98
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1917; i=leitao@debian.org;
+ h=from:subject:message-id; bh=zkxhXyottikXIASB/hUTc93O26xnKdgKpEbXjh2K15Q=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqFx7NjbsgZiqKcKT4KdzKhZSDbQEQ56G6UGRly
+ 4vo4tuPGgqJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCahcezQAKCRA1o5Of/Hh3
+ bWgqEACO/ivyxBbyf61F1jL9lKEiHowLiDZQo1iwq5bK3VrJihYSQwRxGWWuaDQd48JDASObAa7
+ z5Daf7EugjNwER3rGQlR9WSO/9dkJ8JTz0iy3cAGvRYRqFgGJUdBJ1ToP4vwOCKZMwip/prYcUW
+ 5q+HPfspFQ1EOGquhfo0oSmJ7+Z2zycORf5Y2mVng18UG7IMTH9/LTyrMYBXHF0DnQM2c9il4XM
+ sUMugaF0ZA9DSw6rRXOxlo3sE07Ca1PLfBtwGgoJvTxf47CDZUrYzbtz/oPiiCz5HBz5HVUi51k
+ ZHwM0uZYAWSvVfcdNXGNTu/DWKVTeDGTfeHZqsDHwxR/I6/ToD7mgJ+6+33f1GZEs+z2kgt4CBK
+ 7PNiZJOJpz5yC7fmvOmVwfAdfi8PKhHGHoB3nVPqO6TSinRKj8coC10Nzpu6aKunrZTZVawZ3E/
+ 6WtCfXj0wRkD/gClHlfisDXvjN87x/dWdHDmbX976mOWpE6xmuz6LP0mqftwNg3dBRJzpkZ1/Re
+ DVJNVEcqBudH0OHDUHWk9jhwqgwghfTiiGS1grN4KPwznj8tvJfpxBEpNHeD36vNR1tIQlxlbxz
+ T5BGoXw99Wbx1pCgh9c0nxhHM49qPl0BDeUbthJFPMlijN9+ibqGGeFG4zlN1luzdRaGqHeIYPg
+ vpw6/vAkbM2IeJA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On Wed, May 27, 2026 at 06:29:14PM +0200, Peter Zijlstra wrote:
-> On Wed, May 27, 2026 at 12:11:44PM -0400, Steven Rostedt wrote:
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> > 
-> > It is really annoying when I use emacs TAGS to search for something
-> > like "dev_name" and have to go through 12 iterations before I find the
-> > function "dev_name". I really do not care about structures that include
-> > "dev_name" as one of its fields, and I'm sure pretty much all other
-> > developers do not care either.
-> > 
-> > There's a "remove_structs" variable used by the scripts/tags.sh, which
-> > I'm guessing is suppose to remove these structures from the TAGS file,
-> > but it must do a poor job at it, as I'm always hitting structures when
-> > I want the actual declaration.
-> > 
-> > Luckily, the etags program comes with an option "--no-members", which does
-> > exactly what I want, and I'm sure all other kernel developers want too.
-> > 
-> > Create a new "no_members" variable and assign it to "--no-members" for the
-> > "TAGS" case and pass that to the etags program to remove structures.
-> > 
-> > Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-> > ---
-> > Changes since v1: https://lore.kernel.org/all/20131115093645.6dc03918@gandalf.local.home/
-> > 
-> > - Use a no_members variable instead of hard coding the --no-members into
-> >   the etags call, as that can break some "tags" cases. (Michal Marek)
-> 
-> Yeah, I often use member tags.
-> 
-> The tags file have a 'kind' field, what you want is for emacs to order
-> on kind and prefer 'f' over 'm'.
-> 
-> The alternative is switching to use emacs-lsp, that way the editor knows
-> the kind of symbol you want. If you're on a function call, it should
-> only consider 'f' tags. Whereas if the cursor is on a member deref, it
-> should only consider 'm'.
+The userspace pieces (xbc_snprint_cmdline() in lib/, tools/bootconfig -C)
+already landed; this series wires the rendered cmdline into the kernel.
 
-That said, setting up clangd on the kernel tree is rather more painful
-that I'd like it to be :-(
+Motivation: today the embedded bootconfig is parsed at runtime, after
+parse_early_param() has already run, so early_param() handlers can't
+see embedded values. Folding the kernel.* subtree into the cmdline at
+build time gives a CONFIG_CMDLINE-equivalent for embedded-bootconfig
+users without forcing them to maintain two cmdline sources.
+
+Behaviorally, the "kernel" subtree is rendered to a flat string at
+build time and stashed in .init.rodata. setup_arch() prepends it to
+boot_command_line before parse_early_param() runs. Overflow is a soft
+error: the helper logs and leaves boot_command_line untouched rather
+than panicking, so an oversized embedded bconf cannot brick a boot.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Breno Leitao (4):
+      bootconfig: return 0 from xbc_snprint_cmdline() for a leaf root
+      bootconfig: render embedded bootconfig as a kernel cmdline at build time
+      bootconfig: add xbc_prepend_embedded_cmdline() helper
+      x86/setup: prepend embedded bootconfig cmdline before parse_early_param
+
+ Makefile                   |  5 ++++
+ arch/x86/Kconfig           |  1 +
+ arch/x86/kernel/setup.c    |  3 +++
+ include/linux/bootconfig.h |  7 ++++++
+ init/Kconfig               | 33 ++++++++++++++++++++++++++
+ init/main.c                | 19 ++++++++++++---
+ lib/Makefile               | 16 +++++++++++++
+ lib/bootconfig.c           | 58 ++++++++++++++++++++++++++++++++++++++++++++++
+ lib/embedded-cmdline.S     | 16 +++++++++++++
+ tools/bootconfig/Makefile  |  2 +-
+ 10 files changed, 156 insertions(+), 4 deletions(-)
+---
+base-commit: e7e28506af98ce4e1059e5ec59334b335c00a246
+change-id: 20260508-bootconfig_using_tools-cfa7aa9d6a5a
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
