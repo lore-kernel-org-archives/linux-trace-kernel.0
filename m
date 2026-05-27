@@ -1,86 +1,101 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97CC271464;
-	Wed, 27 May 2026 02:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB2832E6BC
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 May 2026 02:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779848336; cv=none; b=nJH1ML8viIhi3YcliWY+OS39rOGbhd6yg5hOhSIXTOJ+YLwFNh3QmAcExfg5sA1Xx4SJt2G5cZaX5J+HO2wqFbB2UhCNewP0nQLKwVosjMi+cbQ9YvrWWIjOYVRcEbxNVSyOJZibe4j6ULXteL3eHw9iY8v7vfAoguqbdgT7mo4=
+	t=1779848668; cv=none; b=qG8qJOrydL+GP5rirvXstc2NQM17Ntayz6V34cOUXMqjgy5grfS15wVstHbgiM86dFta67dVg6IuU8fNLbpdQGmhfZ2iN72DlcfM1V2W1w823ilL8UCi1IKnTChdZg834GT2wcMsrjphKFjGQ6p+87UBkrrsbDQoZqHbhCvnXPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779848336; c=relaxed/simple;
-	bh=gioviaF52i43l342azWELMOxbLONB8hxIkrimx+QBdc=;
+	s=arc-20240116; t=1779848668; c=relaxed/simple;
+	bh=UFaMlKtu2nqcJi6ZuKOFuvyw/nLc20yhGlw30NxqlF0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bziihKwp1Dg4ny84n/aw6EqDeGmhNoKHfevp3g0O/z6hfN9voxNqkGUNM3gnfJbv5qfcEH4eNDccAYsdEYKoyGRD6FWGuI86pRceHCGfWrYl8aDMp3RxfHEIHHkxCc5ZJ1Ebfb5uZB3iK45iLJsMC0mP2dZUe38uppR1G6SDAio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 644e8b30597211f1aa26b74ffac11d73-20260527
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:8c3ea90c-39e0-44fd-b4a4-09d15fb33b79,IP:0,U
-	RL:0,TC:0,Content:59,EDM:-20,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:39
-X-CID-META: VersionHash:e7bac3a,CLOUDID:93a97902f4f0d81729d01d9320d7a210,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|865|898,TC:nil,Content:4|1
-	5|50,EDM:1,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:
-	0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 644e8b30597211f1aa26b74ffac11d73-20260527
-Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <pengyu@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 220625801; Wed, 27 May 2026 10:18:46 +0800
-From: Yu Peng <pengyu@kylinos.cn>
+	 MIME-Version:Content-Type; b=CtzXPkBbpVNvVzrVIRwVsxBCDaHgd0TKnwt0byAI1IJtu4xhCGJ8CO2pxnDx5X+pkyVBMm52r+ImqBEH+hhYtsWqBi2Wmj0QuQAe7mXpCRb2JmUJa7MDgw9LnaFBY6Pb4+xu/QXIC+42qJFUjY/C4oiIgUJzC+YXAXnYQtKXcBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSEoqBJj; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSEoqBJj"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-c801d732058so4959871a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 May 2026 19:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779848667; x=1780453467; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3UlhJB/zo1GUfvlC/gFMCB3J1W9IgleTW7pEjex3oK4=;
+        b=HSEoqBJjpqdoieWp62S1WtG/QWU6Cyn5i2taNKOJxwQpJvbF6RGkZ74GibJB3x8Nml
+         FB0luvjOfE4yiCi330xNrHzDSpk5cB3Jk8JoJmrl84ZbOJPUd385FPl7FTot5m+josrI
+         pCClqvYZAF9xT65Gb/LEiHiBlkS5Q99KCWKverjCvz6VZI9uuPMIxX0FaSYEx5ZN6SPo
+         TwTPjraTGSP3BYmwY3fjpq/A/xTY6AEEx47Pfc38QXSysgReSg2gQGtZvmcEambIZCjH
+         orjwx5BICj5COcnXvXhp98oEIJYrtn+K4qtjzyoyL0Raq9PBp18fqK6nZ2vAj5Ejw3n5
+         NSbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779848667; x=1780453467;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3UlhJB/zo1GUfvlC/gFMCB3J1W9IgleTW7pEjex3oK4=;
+        b=RJjdzovBEVdBXCXpYSI8is2o3sAEsWVNU/5fHxCD2Jg4GoPK1QCFohY8BtaoedQjSd
+         vG+bjn57FY/qlgHGxUcL1Cl/+3RXo/vCaMV2KCDinn8zhVZ/0RcZ39EvOOvZ6xsvtfD3
+         oqSv7+pN54OVZlqPhlAD2nC+H7lho7S/zd93+8yvZD4OXVX/TyneR5k+ObbhApJh0GqN
+         mOYciQCZ4DPmC17lvQczbg/paFUWRuAZLU3KJtyVpHAeOC2RnGKiRKLKs8nJ+QcHn3i2
+         LArq7cNc9zH8j6UybM5PQth+SSUYTIf34XLqs5hqyurA+XR5pc9KnGdbJq+VEj1Lq99a
+         iUTw==
+X-Forwarded-Encrypted: i=1; AFNElJ+MXOeqKaSnMSCuwegKSzCy63z1Gwcp/VRHzYFMZ5RnDw0ZGsJWOpsuYdUbswYCRi1oVRMg83ZXtvR6Wr5jcFB3bYU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUduh0KxfOB2EHumdAos9kpO+44KkE3UZ4JKSlX7i3uF2rSaUe
+	zT70lSJav9aoqp71DDKYaRgEoqQwKJm2jTVSj8+kKfO6b9Q6KOSCP39p
+X-Gm-Gg: Acq92OGjGfLpl8lKLq5D+8VX+PVyL1jC7bYcD1Dzk3qUux7F/vX1I+1Ytxa9iMPCeep
+	D2L/xWn1YRwedCGz23BJEx5KoMbzq46oDG/sHOfTuUMmBt1vX/1+9giKMgdHZ/YgyqBDzXD/UUv
+	ij47KXOCuiyPQ1XOb910ktk6QxQVm2dr8UN8Qg36wxCOr2ck/lkcIXgPeqHd85egMEuia6iPHsf
+	usIIlnNvcjTaIIgM5trRokdv3zCZqJ5bxzQ8HR7CAq3hhi+Y+NUcIs0AcS5JzdIVZiyisCbrUwC
+	TdxLu1mKuMFqnN2eglaHEZEO3xQC41mf7dEMfJXPrpVF/PhTsVcps24wA0CdVsa+kQXd5xl9cJy
+	MMZ54o3EhOAXOgYUUXdQ9UlwSbZOgTNJIhUcnROKo1KXM+TgXXqdXA1xe52gfgMOge30XzkzCGW
+	JjPvLWCi5ablKskGF5U+qUJbd3d1v0btVXX32RveFvmsSlHA55
+X-Received: by 2002:a05:6300:68d4:10b0:3b3:115d:dff8 with SMTP id adf61e73a8af0-3b3115f2275mr12637085637.4.1779848666674;
+        Tue, 26 May 2026 19:24:26 -0700 (PDT)
+Received: from localhost.localdomain ([2408:8607:1b00:8:d6ff:7a7e:f223:7f2e])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c852028ff19sm11646329a12.5.2026.05.26.19.24.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2026 19:24:25 -0700 (PDT)
+From: Li Pengfei <ljdlns1987@gmail.com>
+X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
 To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org,
+Cc: mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	pengyu@kylinos.cn
-Subject: [PATCH v2] tracing: Point constant hist field type to string literal
-Date: Wed, 27 May 2026 10:18:27 +0800
-Message-Id: <20260527021827.2123529-1-pengyu@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260526215033.78fdac7f@fedora>
-References: <20260526215033.78fdac7f@fedora>
+	linux-kernel@vger.kernel.org,
+	cmllamas@google.com,
+	zhangbo56@xiaomi.com,
+	Pengfei Li <lipengfei28@xiaomi.com>
+Subject: Re: [RFC PATCH v3 0/3] trace: stack trace deduplication for ftrace ring buffer
+Date: Wed, 27 May 2026 10:23:50 +0800
+Message-Id: <20260527022350.915843-1-lipengfei28@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260526153905.093aff7c@gandalf.local.home>
+References: <20260526153905.093aff7c@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The HIST_FIELD_FL_CONST path uses the fixed "u64" type string.
+From: Pengfei Li <lipengfei28@xiaomi.com>
 
-Point hist_field->type directly to the string literal, matching the
-HIST_FIELD_FL_HITCOUNT path. The release path already uses kfree_const(),
-so no duplication is needed.
+On Mon, 26 May 2026 15:39:05 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Yu Peng <pengyu@kylinos.cn>
----
-Changes in v2:
-- Point hist_field->type directly to "u64" as suggested.
+> Please DO NOT SEND new versions of a patch or patch series as a reply to
+> the old one. It makes it extremely difficult for maintainers to manage the
+> replies and patches.
+> 
+> A new version should ALWAYS start a new email thread!
 
- kernel/trace/trace_events_hist.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Understood. Will start a fresh thread from v4 onwards and use a
+lore link to reference the previous version in the cover letter.
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index eb2c2bc8bc3d5..b50f2bd5ff771 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1992,9 +1992,7 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
- 	if (flags & HIST_FIELD_FL_CONST) {
- 		hist_field->fn_num = HIST_FIELD_FN_CONST;
- 		hist_field->size = sizeof(u64);
--		hist_field->type = kstrdup("u64", GFP_KERNEL);
--		if (!hist_field->type)
--			goto free;
-+		hist_field->type = "u64";
- 		goto out;
- 	}
- 
--- 
-2.43.0
+Sorry for the noise.
+
+Pengfei
