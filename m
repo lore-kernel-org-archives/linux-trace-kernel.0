@@ -1,869 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D092635202B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 10:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E773B0AF8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 11:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779964428; cv=none; b=SWxgWKUhHmV0FLSaRxVyDAYjXXRAQoKemoliHkKN7RpvokY5fLEhlsk/yd5S3la4ztuMSlXq9GTy+2xnrD4Lvw+ud+6bmeddP6VQ/7xzwz40QkcI9TuVCDIrnthjqCqglnuyUwi2YxhpQ2BbIKgWMFU3hH/FRf47sAzkdm02tmE=
+	t=1779966652; cv=none; b=LGWpQ1FIxXTJl/T7XjTj1Qg6RHaGgtSThUGi58bmpOwCdK3dUyQgvbgeju8xvd8MaSvmj/0O35XmjdrqKyqADsqbj9yE8qf/RcoBzOqhQ9R4izPaNIEGzctJA8mcweFOvdd9MgCNHY8yWp/UY67+N0eZv1kkHw2q5IWVxj7FvVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779964428; c=relaxed/simple;
-	bh=A7eEBdnZdPJwm3+eW6mcDxil11etOD4xCI25wUGwWno=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=gCR5srws9lN4qw1WNRvGa641xolCJwkEo+Z6UqDb+nmK29udm5t7xI1QiIFJz8J9QfrqBBUJTWmCe7AIuysusHR+8XNAm/Gp4j5LJYyfjgI/KF7bD/r6Dg4xOLs/G4wnJvQrJClTVa9W79soaT6kfW5aw+Nd8PLmpPmjNVi986M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bhF8PU3I; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779966652; c=relaxed/simple;
+	bh=/KwnVJ2dbFKGYx9yHvg5KoYWWC4aW2SQGlKiGmzLvYU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qlze/JitPZ4jNTJxcrxllBKMORvkwehtAVvqR7OAdSvn/b8GGhOu7lada3MEeq7LnJEpW2dh9WLs2qIueWxTTQWnQJpW5IK+YecVia9ZElQ6fu6pOcu3ELl/L9hDrGPpanLQ9xybD95DBeW4CR8bIWldGnnRAFT5TOOseV5VCM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R5htYmZ6; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bhF8PU3I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779964424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gwePtgyHfCYA8SF/W9HMlOSyujDMUDE9mFcE6kUigBE=;
-	b=bhF8PU3I0fAgVpHrt44ewR6/GiH4Cz9mnwOS4xcTw87CL4oJ5kxIDcfDZhTaL/TXii/Ym0
-	65cO51p6VRFT1P4Av3vDEGI3UdrFcWkaf9RxIrLlL8m6M7JHaF7/ynOU9hNyu+R4Aou/5A
-	JjqLpbQe17fqSFN52QWh/PUVZ+l7GtQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-261-UntUAq3SMCqof-gviW5zqQ-1; Thu,
- 28 May 2026 06:33:41 -0400
-X-MC-Unique: UntUAq3SMCqof-gviW5zqQ-1
-X-Mimecast-MFC-AGG-ID: UntUAq3SMCqof-gviW5zqQ_1779964420
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E5CFB18002C8;
-	Thu, 28 May 2026 10:33:39 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BEA9D1688;
-	Thu, 28 May 2026 10:33:36 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v3 6/6] rtla/tests: Add unit tests for CLI option callbacks
-Date: Thu, 28 May 2026 12:32:54 +0200
-Message-ID: <20260528103254.2990068-7-tglozar@redhat.com>
-In-Reply-To: <20260528103254.2990068-1-tglozar@redhat.com>
-References: <20260528103254.2990068-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5htYmZ6"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-49041fb8c23so50269915e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 04:10:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779966649; x=1780571449; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dsYRPtt8V39CegAnVfUYJmqEAedS3Hwf+vTU6He99LA=;
+        b=R5htYmZ6/ZWqlbYEDIgtBbk92Q5VKySdQYzMZjXZcgpMpzuPTpUvFpV6Gkg8krrtKI
+         7Rl2QLEo3T9P8g1gS88FowyZuW6HN+HO0Qrks+GQEcTkFkGrcdf/1YCStk0+PYHg1QFx
+         doC42Ubpaa0zs4wMNO9YEDeOK5SZsfdbtv8cPmz6AcJwB+gjjv3IQ2YoYXAZbQjGb4J2
+         1CwJm6NS0dUv2pXIkFUvX6U8L+pFHEgnrRGslQqBvFwz5W/pqp/ZdLnOxzGpBvuEjDrG
+         A0+IyPYdW8ODEobQc1pRiNaKI0aisGyt2Atk1GArWFvyE86VDEaI83d6IkvIYGwPw+W4
+         c6kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779966649; x=1780571449;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dsYRPtt8V39CegAnVfUYJmqEAedS3Hwf+vTU6He99LA=;
+        b=GCCoH7ReI0igDV9H6hJt2VAnqs11olf704lMFATwW+XUTxzBarqnOHSJlW9dfsyZbC
+         gUYEPk5xwyVEgjA3VLSIwbY1P/6EWtUgQzLNhfED0zzI6c2CJpfhaWYnu6s6QZsqi5b7
+         qGncY5k8RIU5uhjiBJCWBKHJxOqaD5UsRrNi0T+Fs6C3GdknZxXaEIupjD8E2eQstPxZ
+         LuXVc/3SXQkh5pclnTF8mC99pY9W23PlccOFZjDRgaDScw4bjvQiSsbkcT9fnQXZusp9
+         28cqYWz9+Bu7X2H4UmdaK0yTjBizsD05sKrq3q3ISOpTmUw8ojzLKglfxfKIopYEY4ec
+         5qrg==
+X-Forwarded-Encrypted: i=1; AFNElJ8FVMnpHVqXuCD3RWiaq5e8Y2o7vvcwHpsYSy6jSFBVJUD0J7vLRspQ3uS0yVtNlMlAOWWzRmnvpn6AYbc+8miMynY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK19g1sLRg2eaAd6JaAyDXzwGA8lv38ePFqlFENE9MM+QvKtVJ
+	tzJFSJJ40vNlFDHuE85du3agTmPXKir1KbZEaDoOMvQcCKzWI6VuWEur
+X-Gm-Gg: Acq92OGk/pneIt034L3nlMziHCpVY67rygM+epUz2vW+yw/+CkNeGRa5+aXiHVuMMEl
+	Zkm7crpRRoRuo8MYaveUC4D8H8FJ0L2f4pOGSRFj+JM3jSYerYiM/Nz+yvvE/Leszue3qfhEGn3
+	6aj3ZNaDxGcCcvtT5HXrwjWV5ZwI+rxr9oYus55w649nibz+Ir4qu1icMRAj539g071w9b/7jjw
+	F+Luf8qrDPyzBULY8A4u7ku5FvXPbmEZRiFNs488mLOCLoDPWlk12HvfeqyWln69tx28KAYmWmt
+	U5LiANfYHRfCjOMoGuwPU1i2gxy5XBQ8GSePXY7W/s3ha2BJSzVXHfgSS87e34I40qVmIYpAwxN
+	GcUziR77SCE2PWpMs6yfbSvAHlTsB9SDKmF8+Nfy9W/OVjL7nqE6p9t2NPpNxu4m0KQHV2GY9jT
+	5Q+QZkTXWu6358Aa1XYiE9SZaLzA==
+X-Received: by 2002:a05:600c:4688:b0:48f:e230:80a3 with SMTP id 5b1f17b1804b1-49042ae99afmr436971075e9.33.1779966649100;
+        Thu, 28 May 2026 04:10:49 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45edb5b314dsm11971146f8f.30.2026.05.28.04.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2026 04:10:48 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 28 May 2026 13:10:46 +0200
+To: Jakub Sitnicki <jakub@cloudflare.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 11/13] selftests/bpf: Add reattach tests for uprobe
+ syscall
+Message-ID: <ahgitmxJekXn_4Cs@krava>
+References: <20260526205840.173790-1-jolsa@kernel.org>
+ <20260526205840.173790-12-jolsa@kernel.org>
+ <87tsrt5bq7.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: jzZF1bKNN8usva6CepFy_yW1PZj1aJZqsmaBWOENs5E_1779964420
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tsrt5bq7.fsf@cloudflare.com>
 
-In addition to testing all tool_parse_args() functions, test also all
-callbacks used for parsing custom option formats.
+On Wed, May 27, 2026 at 01:32:48PM +0200, Jakub Sitnicki wrote:
+> On Tue, May 26, 2026 at 10:58 PM +02, Jiri Olsa wrote:
+> > Adding reattach tests for uprobe syscall tests to make sure
+> > we can re-attach and optimize same uprobe multiple times.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  .../selftests/bpf/prog_tests/uprobe_syscall.c | 114 ++++++++++++++++--
+> >  1 file changed, 104 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > index 0868fb9793e0..969f4deba9fd 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > @@ -430,23 +430,28 @@ static void *check_attach(struct uprobe_syscall_executed *skel, trigger_t trigge
+> >  	return tramp;
+> >  }
+> >  
+> > -static void check_detach(void *addr, void *tramp)
+> > +static bool check_detach(void *addr, void *tramp)
+> >  {
+> >  	static const char nop10_prefix[] = { 0x66, 0x2e, 0x0f, 0x1f, 0x84 };
+> > +	bool ok = true;
+> >  
+> >  	/* [uprobes_trampoline] stays after detach */
+> > -	ASSERT_OK(find_uprobes_trampoline(tramp), "uprobes_trampoline");
+> > -	ASSERT_OK(memcmp(addr, nop10_prefix, 5), "nop10_prefix");
+> > +	if (!ASSERT_OK(find_uprobes_trampoline(tramp), "uprobes_trampoline"))
+> > +		ok = false;
+> > +	if (!ASSERT_OK(memcmp(addr, nop10_prefix, 5), "nop10_prefix"))
+> > +		ok = false;
+> > +	return ok;
+> >  }
+> 
+> Nit: Maybe apply the same pattern you used in
+> progs/get_func_args_test.c?
+> 
+> ok &= ASSERT_OK(...)
+> ok &= ASSERT_OK(...)
 
-The callbacks represent a middle layer between the parsing functions
-and utility functions dedicated to checking specific argument formats,
-for example, scheduling class and duration. Callback tests are run
-before parsing functions to make sure any issue in the former is
-reported before it is encountered through the latter.
+ok, safes space ;-)
 
-Tests verify both successful parsing and proper rejection of invalid
-inputs (via exit tests). To enable testing static callbacks, a pragma
-once guard is added to timerlat.h for safe inclusion by cli_p.h.
+> 
+> >  
+> > -static void check(struct uprobe_syscall_executed *skel, struct bpf_link *link,
+> > -		  trigger_t trigger, void *addr, int executed)
+> > +static void *check(struct uprobe_syscall_executed *skel, struct bpf_link *link,
+> > +		   trigger_t trigger, void *addr, int executed)
+> 
+> Nit: Kinda wish that was called check_attach_detach().
 
-Add dependency of UNIT_TESTS_IN on LIBSUBCMD_INCLUDES, as the new test
-file tests/unit/cli_opt_callback.c includes cli_p.h which includes
-subcmd/parse-options.h.
+would need to check the existing code.. let's keep it
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/src/timerlat.h             |   2 +
- tools/tracing/rtla/tests/unit/Build           |   1 +
- tools/tracing/rtla/tests/unit/Makefile.unit   |   2 +-
- .../rtla/tests/unit/cli_opt_callback.c        | 704 ++++++++++++++++++
- tools/tracing/rtla/tests/unit/unit_tests.c    |   2 +
- 5 files changed, 710 insertions(+), 1 deletion(-)
- create mode 100644 tools/tracing/rtla/tests/unit/cli_opt_callback.c
+> 
+> >  {
+> >  	void *tramp;
+> >  
+> >  	tramp = check_attach(skel, trigger, addr, executed);
+> >  	bpf_link__destroy(link);
+> >  	check_detach(addr, tramp);
+> > +	return tramp;
+> >  }
+> >  
+> >  static void test_uprobe_legacy(void)
+> > @@ -457,6 +462,7 @@ static void test_uprobe_legacy(void)
+> >  	);
+> >  	struct bpf_link *link;
+> >  	unsigned long offset;
+> > +	void *tramp;
+> >  
+> >  	offset = get_uprobe_offset(&uprobe_test);
+> >  	if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
+> > @@ -474,7 +480,28 @@ static void test_uprobe_legacy(void)
+> >  	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_opts"))
+> >  		goto cleanup;
+> >  
+> > -	check(skel, link, uprobe_test, uprobe_test, 2);
+> > +	tramp = check(skel, link, uprobe_test, uprobe_test, 2);
+> > +
+> > +	/* reattach and detach without triggering optimization */
+> > +	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
+> > +					       0, "/proc/self/exe", offset, NULL);
+> > +	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_opts"))
+> > +		goto cleanup;
+> > +
+> 
+> In theory we're missing a check here that an unoptimized uprobe was
+> installed. If nothing happened at all between the last check() and
+> check_destroy() below, the test would still pass.
+> 
+> Applies to the three similar changes after that one as well.
 
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index 37a808f1611e..38ab6b41a15e 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -1,4 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
-+#pragma once
-+
- #include "osnoise.h"
- 
- /*
-diff --git a/tools/tracing/rtla/tests/unit/Build b/tools/tracing/rtla/tests/unit/Build
-index 16139f17ea1f..d5a0f13922be 100644
---- a/tools/tracing/rtla/tests/unit/Build
-+++ b/tools/tracing/rtla/tests/unit/Build
-@@ -5,3 +5,4 @@ unit_tests-y += osnoise_top_cli.o
- unit_tests-y += osnoise_hist_cli.o
- unit_tests-y += timerlat_top_cli.o
- unit_tests-y += timerlat_hist_cli.o
-+unit_tests-y += cli_opt_callback.o
-diff --git a/tools/tracing/rtla/tests/unit/Makefile.unit b/tools/tracing/rtla/tests/unit/Makefile.unit
-index 8c33a9583c30..839abda64b76 100644
---- a/tools/tracing/rtla/tests/unit/Makefile.unit
-+++ b/tools/tracing/rtla/tests/unit/Makefile.unit
-@@ -6,7 +6,7 @@ UNIT_TESTS_IN := $(UNIT_TESTS)-in.o
- $(UNIT_TESTS): $(UNIT_TESTS_IN) $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R)
- 	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $@ $^ $(EXTLIBS) -lcheck
- 
--$(UNIT_TESTS_IN): fixdep
-+$(UNIT_TESTS_IN): fixdep $(LIBSUBCMD_INCLUDES)
- 	make $(build)=unit_tests
- 
- unit-tests: FORCE
-diff --git a/tools/tracing/rtla/tests/unit/cli_opt_callback.c b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
-new file mode 100644
-index 000000000000..01647f4227d1
---- /dev/null
-+++ b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
-@@ -0,0 +1,704 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <check.h>
-+
-+#define RTLA_ALLOW_CLI_P_H
-+#include "../../src/cli_p.h"
-+#include "cli_params_assert.h"
-+
-+#define TEST_CALLBACK(value, cb) OPT_CALLBACK('t', "test", value, "test value", "test help", cb)
-+
-+START_TEST(test_opt_llong_callback_simple)
-+{
-+	long long test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
-+
-+	ck_assert_int_eq(opt_llong_callback(&opt, "1234567890", 0), 0);
-+	ck_assert_int_eq(test_value, 1234567890);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_llong_callback_max)
-+{
-+	long long test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
-+
-+	ck_assert_int_eq(opt_llong_callback(&opt, "9223372036854775807", 0), 0);
-+	ck_assert_int_eq(test_value, 9223372036854775807LL);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_llong_callback_min)
-+{
-+	long long test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
-+
-+	ck_assert_int_eq(opt_llong_callback(&opt, "-9223372036854775808", 0), 0);
-+	ck_assert_int_eq(test_value, ~9223372036854775807LL);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_int_callback_simple)
-+{
-+	int test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
-+
-+	ck_assert_int_eq(opt_int_callback(&opt, "1234567890", 0), 0);
-+	ck_assert_int_eq(test_value, 1234567890);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_int_callback_max)
-+{
-+	int test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
-+
-+	ck_assert_int_eq(opt_int_callback(&opt, "2147483647", 0), 0);
-+	ck_assert_int_eq(test_value, 2147483647);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_int_callback_min)
-+{
-+	int test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
-+
-+	ck_assert_int_eq(opt_int_callback(&opt, "-2147483648", 0), 0);
-+	ck_assert_int_eq(test_value, -2147483648);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_int_callback_non_numeric)
-+{
-+	int test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
-+
-+	ck_assert_int_eq(opt_int_callback(&opt, "abc", 0), -1);
-+	ck_assert_int_eq(test_value, 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_int_callback_non_numeric_suffix)
-+{
-+	int test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
-+
-+	ck_assert_int_eq(opt_int_callback(&opt, "1234567890abc", 0), -1);
-+	ck_assert_int_eq(test_value, 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_cpus_cb)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_cpus_cb);
-+
-+	nr_cpus = 4;
-+	ck_assert_int_eq(opt_cpus_cb(&opt, "0-3", 0), 0);
-+	ck_assert_str_eq(params.cpus, "0-3");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_cpus_cb_invalid)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_cpus_cb);
-+
-+	nr_cpus = 4;
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_cpus_cb(&opt, "0-3,5", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_cgroup_cb)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_cgroup_cb);
-+
-+	ck_assert_int_eq(opt_cgroup_cb(&opt, "cgroup", 0), 0);
-+	ck_assert_int_eq(params.cgroup, 1);
-+	ck_assert_str_eq(params.cgroup_name, "cgroup");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_cgroup_cb_equals)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_cgroup_cb);
-+
-+	ck_assert_int_eq(opt_cgroup_cb(&opt, "=cgroup", 0), 0);
-+	ck_assert_int_eq(params.cgroup, 1);
-+	ck_assert_str_eq(params.cgroup_name, "cgroup");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_duration_cb)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_duration_cb);
-+
-+	ck_assert_int_eq(opt_duration_cb(&opt, "1m", 0), 0);
-+	ck_assert_int_eq(params.duration, 60);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_duration_cb_invalid)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_duration_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_duration_cb(&opt, "abc", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_event_cb)
-+{
-+	struct trace_events *events = NULL;
-+	const struct option opt = TEST_CALLBACK(&events, opt_event_cb);
-+
-+	ck_assert_int_eq(opt_event_cb(&opt, "sched:sched_switch", 0), 0);
-+	ck_assert_str_eq(events->system, "sched");
-+	ck_assert_str_eq(events->event, "sched_switch");
-+	ck_assert_ptr_eq(events->next, NULL);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_event_cb_multiple)
-+{
-+	struct trace_events *events = NULL;
-+	const struct option opt = TEST_CALLBACK(&events, opt_event_cb);
-+
-+	ck_assert_int_eq(opt_event_cb(&opt, "sched:sched_switch", 0), 0);
-+	ck_assert_int_eq(opt_event_cb(&opt, "sched:sched_wakeup", 0), 0);
-+	ck_assert_str_eq(events->system, "sched");
-+	ck_assert_str_eq(events->event, "sched_wakeup");
-+	ck_assert_str_eq(events->next->system, "sched");
-+	ck_assert_str_eq(events->next->event, "sched_switch");
-+	ck_assert_ptr_eq(events->next->next, NULL);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_housekeeping_cb)
-+{
-+	struct common_params __params = {0};
-+	struct common_params *params = &__params;
-+	const struct option opt = TEST_CALLBACK(params, opt_housekeeping_cb);
-+
-+	nr_cpus = 4;
-+	ck_assert_int_eq(opt_housekeeping_cb(&opt, "0-3", 0), 0);
-+	ck_assert_int_eq(params->hk_cpus, 1);
-+	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 2, 3);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_housekeeping_cb_invalid)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_housekeeping_cb);
-+
-+	nr_cpus = 4;
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_housekeeping_cb(&opt, "0-3,5", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_priority_cb)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_priority_cb);
-+
-+	ck_assert_int_eq(opt_priority_cb(&opt, "f:95", 0), 0);
-+	ck_assert_int_eq(params.sched_param.sched_policy, SCHED_FIFO);
-+	ck_assert_int_eq(params.sched_param.sched_priority, 95);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_priority_cb_invalid)
-+{
-+	struct common_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_priority_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_priority_cb(&opt, "abc", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_trigger_cb)
-+{
-+	struct trace_events *events = trace_event_alloc("sched:sched_switch");
-+	const struct option opt = TEST_CALLBACK(&events, opt_trigger_cb);
-+
-+	ck_assert_int_eq(opt_trigger_cb(&opt, "stacktrace", 0), 0);
-+	ck_assert_str_eq(events->trigger, "stacktrace");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_trigger_cb_no_event)
-+{
-+	struct trace_events *events = NULL;
-+	const struct option opt = TEST_CALLBACK(&events, opt_trigger_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_trigger_cb(&opt, "stacktrace", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_filter_cb)
-+{
-+	struct trace_events *events = trace_event_alloc("sched:sched_switch");
-+	const struct option opt = TEST_CALLBACK(&events, opt_filter_cb);
-+
-+	ck_assert_int_eq(opt_filter_cb(&opt, "comm ~ \"rtla\"", 0), 0);
-+	ck_assert_str_eq(events->filter, "comm ~ \"rtla\"");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_filter_cb_no_event)
-+{
-+	struct trace_events *events = NULL;
-+	const struct option opt = TEST_CALLBACK(&events, opt_filter_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_filter_cb(&opt, "comm ~ \"rtla\"", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_auto_cb)
-+{
-+	struct osnoise_params params = {0};
-+	struct osnoise_cb_data cb_data = {&params};
-+	const struct option opt = TEST_CALLBACK(&cb_data, opt_osnoise_auto_cb);
-+
-+	ck_assert_int_eq(opt_osnoise_auto_cb(&opt, "10", 0), 0);
-+	ck_assert_int_eq(params.common.stop_us, 10);
-+	ck_assert_int_eq(params.threshold, 1);
-+	ck_assert_str_eq(cb_data.trace_output, "osnoise_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_period_cb)
-+{
-+	unsigned long long period = 0;
-+	const struct option opt = TEST_CALLBACK(&period, opt_osnoise_period_cb);
-+
-+	ck_assert_int_eq(opt_osnoise_period_cb(&opt, "1000000", 0), 0);
-+	ck_assert_int_eq(period, 1000000);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_period_cb_invalid)
-+{
-+	unsigned long long period = 0;
-+	const struct option opt = TEST_CALLBACK(&period, opt_osnoise_period_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_osnoise_period_cb(&opt, "10000001", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_runtime_cb)
-+{
-+	unsigned long long runtime = 0;
-+	const struct option opt = TEST_CALLBACK(&runtime, opt_osnoise_runtime_cb);
-+
-+	ck_assert_int_eq(opt_osnoise_runtime_cb(&opt, "900000", 0), 0);
-+	ck_assert_int_eq(runtime, 900000);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_runtime_cb_invalid)
-+{
-+	unsigned long long runtime = 0;
-+	const struct option opt = TEST_CALLBACK(&runtime, opt_osnoise_runtime_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_osnoise_runtime_cb(&opt, "99", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_trace_output_cb)
-+{
-+	const char *trace_output = NULL;
-+	const struct option opt = TEST_CALLBACK(&trace_output, opt_osnoise_trace_output_cb);
-+
-+	ck_assert_int_eq(opt_osnoise_trace_output_cb(&opt, "trace.txt", 0), 0);
-+	ck_assert_str_eq(trace_output, "trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_trace_output_cb_noarg)
-+{
-+	const char *trace_output = NULL;
-+	const struct option opt = TEST_CALLBACK(&trace_output, opt_osnoise_trace_output_cb);
-+
-+	ck_assert_int_eq(opt_osnoise_trace_output_cb(&opt, NULL, 0), 0);
-+	ck_assert_str_eq(trace_output, "osnoise_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_on_threshold_cb)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_threshold_cb);
-+
-+	ck_assert_int_eq(opt_osnoise_on_threshold_cb(&opt, "trace", 0), 0);
-+	ck_assert_int_eq(actions.len, 1);
-+	ck_assert_int_eq(actions.list[0].type, ACTION_TRACE_OUTPUT);
-+	ck_assert_str_eq(actions.list[0].trace_output, "osnoise_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_on_threshold_cb_invalid)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_threshold_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_osnoise_on_threshold_cb(&opt, "abc", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_on_end_cb)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_end_cb);
-+
-+	ck_assert_int_eq(opt_osnoise_on_end_cb(&opt, "trace", 0), 0);
-+	ck_assert_int_eq(actions.len, 1);
-+	ck_assert_int_eq(actions.list[0].type, ACTION_TRACE_OUTPUT);
-+	ck_assert_str_eq(actions.list[0].trace_output, "osnoise_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_osnoise_on_end_cb_invalid)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_end_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_osnoise_on_end_cb(&opt, "abc", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_period_cb)
-+{
-+	long long period = 0;
-+	const struct option opt = TEST_CALLBACK(&period, opt_timerlat_period_cb);
-+
-+	ck_assert_int_eq(opt_timerlat_period_cb(&opt, "1000", 0), 0);
-+	ck_assert_int_eq(period, 1000);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_period_cb_invalid)
-+{
-+	long long period = 0;
-+	const struct option opt = TEST_CALLBACK(&period, opt_timerlat_period_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_timerlat_period_cb(&opt, "1000001", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_auto_cb)
-+{
-+	struct timerlat_params params = {0};
-+	struct timerlat_cb_data cb_data = {&params};
-+	const struct option opt = TEST_CALLBACK(&cb_data, opt_timerlat_auto_cb);
-+
-+	ck_assert_int_eq(opt_timerlat_auto_cb(&opt, "10", 0), 0);
-+	ck_assert_int_eq(params.common.stop_us, 10);
-+	ck_assert_int_eq(params.common.stop_total_us, 10);
-+	ck_assert_int_eq(params.print_stack, 10);
-+	ck_assert_str_eq(cb_data.trace_output, "timerlat_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_dma_latency_cb)
-+{
-+	int dma_latency = 0;
-+	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
-+
-+	ck_assert_int_eq(opt_dma_latency_cb(&opt, "1000", 0), 0);
-+	ck_assert_int_eq(dma_latency, 1000);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_dma_latency_cb_min)
-+{
-+	int dma_latency = 0;
-+	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_dma_latency_cb(&opt, "-1", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_dma_latency_cb_max)
-+{
-+	int dma_latency = 0;
-+	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_dma_latency_cb(&opt, "10001", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_aa_only_cb)
-+{
-+	struct timerlat_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_aa_only_cb);
-+
-+	ck_assert_int_eq(opt_aa_only_cb(&opt, "10", 0), 0);
-+	ck_assert_int_eq(params.common.stop_us, 10);
-+	ck_assert_int_eq(params.common.stop_total_us, 10);
-+	ck_assert_int_eq(params.print_stack, 10);
-+	ck_assert_int_eq(params.common.aa_only, 1);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_trace_output_cb)
-+{
-+	const char *trace_output = NULL;
-+	const struct option opt = TEST_CALLBACK(&trace_output, opt_timerlat_trace_output_cb);
-+
-+	ck_assert_int_eq(opt_timerlat_trace_output_cb(&opt, "trace.txt", 0), 0);
-+	ck_assert_str_eq(trace_output, "trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_trace_output_cb_noarg)
-+{
-+	const char *trace_output = NULL;
-+	const struct option opt = TEST_CALLBACK(&trace_output, opt_timerlat_trace_output_cb);
-+
-+	ck_assert_int_eq(opt_timerlat_trace_output_cb(&opt, NULL, 0), 0);
-+	ck_assert_str_eq(trace_output, "timerlat_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_on_threshold_cb)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_threshold_cb);
-+
-+	ck_assert_int_eq(opt_timerlat_on_threshold_cb(&opt, "trace", 0), 0);
-+	ck_assert_int_eq(actions.len, 1);
-+	ck_assert_int_eq(actions.list[0].type, ACTION_TRACE_OUTPUT);
-+	ck_assert_str_eq(actions.list[0].trace_output, "timerlat_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_on_threshold_cb_invalid)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_threshold_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_timerlat_on_threshold_cb(&opt, "abc", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_on_end_cb)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_end_cb);
-+
-+	ck_assert_int_eq(opt_timerlat_on_end_cb(&opt, "trace", 0), 0);
-+	ck_assert_int_eq(actions.len, 1);
-+	ck_assert_int_eq(actions.list[0].type, ACTION_TRACE_OUTPUT);
-+	ck_assert_str_eq(actions.list[0].trace_output, "timerlat_trace.txt");
-+}
-+END_TEST
-+
-+START_TEST(test_opt_timerlat_on_end_cb_invalid)
-+{
-+	struct actions actions = {0};
-+	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_end_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_timerlat_on_end_cb(&opt, "abc", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_user_threads_cb)
-+{
-+	struct timerlat_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_user_threads_cb);
-+
-+	ck_assert_int_eq(opt_user_threads_cb(&opt, NULL, 0), 0);
-+	ck_assert_int_eq(params.common.user_workload, 1);
-+	ck_assert_int_eq(params.common.user_data, 1);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_nano_cb)
-+{
-+	struct timerlat_params params = {0};
-+	const struct option opt = TEST_CALLBACK(&params, opt_nano_cb);
-+
-+	ck_assert_int_eq(opt_nano_cb(&opt, NULL, 0), 0);
-+	ck_assert_int_eq(params.common.output_divisor, 1);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_stack_format_cb)
-+{
-+	int stack_format = 0;
-+	const struct option opt = TEST_CALLBACK(&stack_format, opt_stack_format_cb);
-+
-+	ck_assert_int_eq(opt_stack_format_cb(&opt, "full", 0), 0);
-+	ck_assert_int_eq(stack_format, STACK_FORMAT_FULL);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_stack_format_cb_invalid)
-+{
-+	int stack_format = 0;
-+	const struct option opt = TEST_CALLBACK(&stack_format, opt_stack_format_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_stack_format_cb(&opt, "abc", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_bucket_size_cb)
-+{
-+	int bucket_size = 0;
-+	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
-+
-+	ck_assert_int_eq(opt_bucket_size_cb(&opt, "100", 0), 0);
-+	ck_assert_int_eq(bucket_size, 100);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_bucket_size_min)
-+{
-+	int bucket_size = 0;
-+	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_bucket_size_cb(&opt, "0", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_bucket_size_max)
-+{
-+	int bucket_size = 0;
-+	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_bucket_size_cb(&opt, "1000001", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_entries_cb)
-+{
-+	int entries = 0;
-+	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
-+
-+	ck_assert_int_eq(opt_entries_cb(&opt, "100", 0), 0);
-+	ck_assert_int_eq(entries, 100);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_entries_min)
-+{
-+	int entries = 0;
-+	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_entries_cb(&opt, "9", 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_entries_max)
-+{
-+	int entries = 0;
-+	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	opt_entries_cb(&opt, "10000000", 0);
-+}
-+END_TEST
-+
-+Suite *cli_opt_callback_suite(void)
-+{
-+	Suite *s = suite_create("cli_opt_callback");
-+	TCase *tc;
-+
-+	tc = tcase_create("common");
-+	tcase_add_test(tc, test_opt_llong_callback_simple);
-+	tcase_add_test(tc, test_opt_llong_callback_max);
-+	tcase_add_test(tc, test_opt_llong_callback_min);
-+	tcase_add_test(tc, test_opt_int_callback_simple);
-+	tcase_add_test(tc, test_opt_int_callback_max);
-+	tcase_add_test(tc, test_opt_int_callback_min);
-+	tcase_add_test(tc, test_opt_int_callback_non_numeric);
-+	tcase_add_test(tc, test_opt_int_callback_non_numeric_suffix);
-+	tcase_add_test(tc, test_opt_cpus_cb);
-+	tcase_add_exit_test(tc, test_opt_cpus_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_cgroup_cb);
-+	tcase_add_test(tc, test_opt_cgroup_cb_equals);
-+	tcase_add_test(tc, test_opt_duration_cb);
-+	tcase_add_exit_test(tc, test_opt_duration_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_event_cb);
-+	tcase_add_test(tc, test_opt_event_cb_multiple);
-+	tcase_add_test(tc, test_opt_housekeeping_cb);
-+	tcase_add_exit_test(tc, test_opt_housekeeping_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_priority_cb);
-+	tcase_add_exit_test(tc, test_opt_priority_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_trigger_cb);
-+	tcase_add_exit_test(tc, test_opt_trigger_cb_no_event, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_filter_cb);
-+	tcase_add_exit_test(tc, test_opt_filter_cb_no_event, EXIT_FAILURE);
-+	suite_add_tcase(s, tc);
-+
-+	tc = tcase_create("osnoise");
-+	tcase_add_test(tc, test_opt_osnoise_auto_cb);
-+	tcase_add_test(tc, test_opt_osnoise_period_cb);
-+	tcase_add_exit_test(tc, test_opt_osnoise_period_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_osnoise_runtime_cb);
-+	tcase_add_exit_test(tc, test_opt_osnoise_runtime_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_osnoise_trace_output_cb);
-+	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_noarg);
-+	tcase_add_test(tc, test_opt_osnoise_on_threshold_cb);
-+	tcase_add_exit_test(tc, test_opt_osnoise_on_threshold_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_osnoise_on_end_cb);
-+	tcase_add_exit_test(tc, test_opt_osnoise_on_end_cb_invalid, EXIT_FAILURE);
-+	suite_add_tcase(s, tc);
-+
-+	tc = tcase_create("timerlat");
-+	tcase_add_test(tc, test_opt_timerlat_period_cb);
-+	tcase_add_exit_test(tc, test_opt_timerlat_period_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_timerlat_auto_cb);
-+	tcase_add_test(tc, test_opt_dma_latency_cb);
-+	tcase_add_exit_test(tc, test_opt_dma_latency_cb_min, EXIT_FAILURE);
-+	tcase_add_exit_test(tc, test_opt_dma_latency_cb_max, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_aa_only_cb);
-+	tcase_add_test(tc, test_opt_timerlat_trace_output_cb);
-+	tcase_add_test(tc, test_opt_timerlat_trace_output_cb_noarg);
-+	tcase_add_test(tc, test_opt_timerlat_on_threshold_cb);
-+	tcase_add_exit_test(tc, test_opt_timerlat_on_threshold_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_timerlat_on_end_cb);
-+	tcase_add_exit_test(tc, test_opt_timerlat_on_end_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_user_threads_cb);
-+	tcase_add_test(tc, test_opt_nano_cb);
-+	tcase_add_test(tc, test_opt_stack_format_cb);
-+	tcase_add_exit_test(tc, test_opt_stack_format_cb_invalid, EXIT_FAILURE);
-+	suite_add_tcase(s, tc);
-+
-+	tc = tcase_create("histogram");
-+	tcase_add_test(tc, test_opt_bucket_size_cb);
-+	tcase_add_exit_test(tc, test_opt_bucket_size_min, EXIT_FAILURE);
-+	tcase_add_exit_test(tc, test_opt_bucket_size_max, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_entries_cb);
-+	tcase_add_exit_test(tc, test_opt_entries_min, EXIT_FAILURE);
-+	tcase_add_exit_test(tc, test_opt_entries_max, EXIT_FAILURE);
-+	suite_add_tcase(s, tc);
-+
-+	return s;
-+}
-diff --git a/tools/tracing/rtla/tests/unit/unit_tests.c b/tools/tracing/rtla/tests/unit/unit_tests.c
-index 64884f6cbdeb..75ca813f81ca 100644
---- a/tools/tracing/rtla/tests/unit/unit_tests.c
-+++ b/tools/tracing/rtla/tests/unit/unit_tests.c
-@@ -13,6 +13,7 @@ Suite *osnoise_top_cli_suite(void);
- Suite *osnoise_hist_cli_suite(void);
- Suite *timerlat_top_cli_suite(void);
- Suite *timerlat_hist_cli_suite(void);
-+Suite *cli_opt_callback_suite(void);
- 
- int main(int argc, char *argv[])
- {
-@@ -22,6 +23,7 @@ int main(int argc, char *argv[])
- 	in_unit_test = true;
- 
- 	sr = srunner_create(utils_suite());
-+	srunner_add_suite(sr, cli_opt_callback_suite());
- 	srunner_add_suite(sr, actions_suite());
- 	srunner_add_suite(sr, osnoise_top_cli_suite());
- 	srunner_add_suite(sr, osnoise_hist_cli_suite());
--- 
-2.54.0
+right, we can add extra check that there's int3 in here (and below)
 
+thanks,
+jirka
