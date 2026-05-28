@@ -1,210 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31DD1F5847;
-	Thu, 28 May 2026 13:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1BC3ADB92;
+	Thu, 28 May 2026 13:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779974132; cv=none; b=EaJi5fphttSGwYVpnSehCVEiEQ1QcgPQQtj0CIxUyxWMZ1iOnLr+W9bMKfRAScQqCvZSMpY+x6QxdHc0Gr/1cSmP9YOnVuitQCQdGOzAeA5xwY3HCqu3Zoq7v8TpEIpYFw9AWRu1psbERqcNPVMqWUk0bId1ql3W7QFwAIaGyow=
+	t=1779974530; cv=none; b=tOnVgoUUr6W1mOMVjFoNpAImolqmM6U0fYVgBnDyhPvgI+jRgVGC5M1e4ljwbG2UgL3MMXK1ZDF2JrLKkBk29f7+IvR+aN6H59oCoZVsGVbFjloQd98H3eM6rjYp+DQPKTbKuIQs9/B/dMPUln4u/PJv9qmfJE/RzrO+KkMAZwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779974132; c=relaxed/simple;
-	bh=hpXDyGw8ZfyiJF6ePzatPmkbxaSUHYgrYAEkoUyBUU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cdnjv1dKqA1ZlK9CnziHORV5qdPtXCYdRkebccwBq8eoDiAWe1FTisfpC9NSsg7kNCTJG1Fl5oMTeHNawbPNCdCKoYROwZOezuuCgP0T/cdldF3yzunB1zXJ2vkIqbxlHgnGAd09Zw7H8cWbhqs12TOG66MEHq2ThXITGz8R5Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DfO3rcAI; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DfO3rcAI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B591F000E9;
-	Thu, 28 May 2026 13:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779974130;
-	bh=+jPdvSYpk/9HjEVPjXiZDWUUpNzNGZDnylzW2hmcYUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DfO3rcAI/jRtaEMgrN9pzQuPvPSRAaf5Xeq5drMIe1hXJf+PHSFlRVIPCXleKjPve
-	 cARJb0FPlSS9qGPgsfhKy8oxq6gddImbvv9MabuW2rG+QVOTjgn8qZRrQnNHMxkmIN
-	 oeYylUnUk3c0PIsnlC9PCy/BFOMr3vw6qg9MrJJJxRcc6FIHdW0IYYU5fdZ/A3ghYS
-	 Eed2lRLFbLyHXhfjS4YS6KM6Jp/WpX7aj+MtiqBM2/aSiKNlHUBAVmhWsxThWZPbrD
-	 7SKFH0omACL5dMyznaBg2wjAEQuZa0zlWYmbao8so+8JbeXvDnvbgrzTG6C65iPlF4
-	 9RdVlcjcnaTaA==
-Date: Thu, 28 May 2026 15:15:27 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [RFC PATCH 03/10] rcu/segcblist: Change gp_seq to struct
- rcu_gp_oldstate gp_seq_full
-Message-ID: <ahg_7wEDrgMd_5fs@localhost.localdomain>
-References: <20260417231203.785172-1-puranjay@kernel.org>
- <20260417231203.785172-4-puranjay@kernel.org>
+	s=arc-20240116; t=1779974530; c=relaxed/simple;
+	bh=2ekTIatk62sZzZ8tZUZ0otPWrQdfbtlkaUx67BltbuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EoQXgUUSU6UZhOqeNgGWto8rldqbrMJ5kj2dXcuLwbP/bniVZZ/hEeUH7Whz2TYzG1Ba3lGt8YeaT9r6Jg0WfCig1NYKu5nc6pSCEYAg9IODFh7pxPlwO1gGQ5uGmVTjnu+k6WKfTbh8su0N9Jl3NkIaP3KjuB8d6OwEUZgtwNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id A6EB691291;
+	Thu, 28 May 2026 13:22:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 1DAA66000B;
+	Thu, 28 May 2026 13:21:55 +0000 (UTC)
+Date: Thu, 28 May 2026 09:21:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wang Han <wanghan@linux.alibaba.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Chen Pei
+ <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, Deepak Gupta
+ <debug@rivosinc.com>, Puranjay Mohan <puranjay@kernel.org>, Conor Dooley
+ <conor.dooley@microchip.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri
+ Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr Mladek
+ <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
+ xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com,
+ jkchen@linux.alibaba.com, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/8] scripts/sorttable: Handle RISC-V patchable
+ ftrace entries
+Message-ID: <20260528092153.3dde1f75@fedora>
+In-Reply-To: <20260528082310.1994388-2-wanghan@linux.alibaba.com>
+References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
+	<20260528082310.1994388-2-wanghan@linux.alibaba.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260417231203.785172-4-puranjay@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: y5camjc9dq17akqc8a4ytz8k7nu8tn9j
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 1DAA66000B
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19+XNKwFj7vcD6hXiG6uERbHZyLuR0djpo=
+X-HE-Tag: 1779974515-628892
+X-HE-Meta: U2FsdGVkX18VcIqhm50kLxPOB3gcckHG8D9zxu9RUuDTpvurJwnwC9DCuK0bHlovUrLkBgtChRPAeWd3bSgQnEtThR0D/Y+waAep/t8lPMRwyO+WXzPPq17Wh6YJaGjsLM6y0veINnetKl4fkjCkPAtIP5NAtjGDlno1aGlBsZ1XocfwxMFxbNnxwLvBj/TYs3J9u+dRjYOR/Mg+3qQkdfqWqcV/JA0Q3B8kVrIgy6rpI0QjJD6j1H7nGkUO1dXkuBFGgWoLIBBWCcL+JQMRl9FjjT/mXMiBrd5KCj3i9qpzhY3eVbIlLsvxCueYZZJhSJMLb8LvBE6a/i1bpBnEyOnltGpzbhQaYrGEfJd+9Lb9WmYrUz2Jsf/lsWcxNF/A8q7o0A0p3mVSj017EaZnJ6TATI715U/1NyOfE6vaT0I=
 
-Le Fri, Apr 17, 2026 at 04:11:51PM -0700, Puranjay Mohan a écrit :
-> This commit renames the ->gp_seq[] field in struct rcu_segcblist to
-> ->gp_seq_full[] and changes its type from unsigned long to struct
-> rcu_gp_oldstate. This prepares the callback tracking infrastructure to
-> support both normal and expedited grace periods.
+On Thu, 28 May 2026 16:23:03 +0800
+Wang Han <wanghan@linux.alibaba.com> wrote:
+
+> RISC-V uses -fpatchable-function-entry=8,4 when the compressed ISA is
+> enabled and -fpatchable-function-entry=4,2 otherwise. In both cases, the
+> patchable NOP area starts 8 bytes before the function symbol address.
+> The __mcount_loc entries therefore point at the patchable NOP area
+> associated with a function, while nm reports the function symbol at the
+> entry address used for the function range check.
 > 
-> All function signatures are updated to pass struct rcu_gp_oldstate
-> pointers: rcu_segcblist_nextgp(), rcu_segcblist_advance(), and
-> rcu_segcblist_accelerate() now take struct rcu_gp_oldstate * instead of
-> unsigned long. All callers are updated to use the .rgos_norm field for
-> comparisons and assignments.
+> After RISC-V selected HAVE_BUILDTIME_MCOUNT_SORT, sorttable started
+> applying that range check at build time. Without allowing entries just
+> before the reported function address, the mcount sorter treats valid
+> RISC-V ftrace callsites as invalid weak-function entries and writes
+> them back as zero. The resulting kernel boots with no ftrace entries,
+> breaking dynamic ftrace and users such as livepatch.
 > 
-> The SRCU and Tasks RCU wrappers now construct an rcu_gp_oldstate with
-> just .rgos_norm set and forward to the core functions.
+> The failure is silent during the final link because zeroing weak-function
+> entries is an expected sorttable operation. At boot, those zero entries
+> are skipped by ftrace_process_locs(), so the only obvious symptom is that
+> the vmlinux ftrace table has lost valid callsites and ftrace users cannot
+> attach to them.
 > 
-> No functional change: only the .rgos_norm field is used in place of
-> gp_seq.
+> CONFIG_FTRACE_SORT_STARTUP_TEST also reports the table as sorted in this
+> state: it only checks that the __mcount_loc entries are in ascending
+> order, which a fully zeroed table trivially satisfies. The original
+> commit relied on this check and did not see the regression.
 > 
-> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
-> ---
->  include/linux/rcu_segcblist.h |  2 +-
->  include/trace/events/rcu.h    |  5 +++--
->  kernel/rcu/rcu_segcblist.c    | 30 +++++++++++++++++-------------
->  kernel/rcu/rcu_segcblist.h    |  6 +++---
->  kernel/rcu/tree.c             | 25 ++++++++++++++-----------
->  kernel/rcu/tree_nocb.h        | 29 +++++++++++++++--------------
->  6 files changed, 53 insertions(+), 44 deletions(-)
+> On an affected RISC-V QEMU boot with both CONFIG_FTRACE_SORT_STARTUP_TEST
+> and CONFIG_FTRACE_STARTUP_TEST enabled, the sort check still passes
+> while ftrace reports zero usable entries and the early selftests fail:
 > 
-> diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-> index 2fdc2208f1ca..59c68f2ba113 100644
-> --- a/include/linux/rcu_segcblist.h
-> +++ b/include/linux/rcu_segcblist.h
-> @@ -190,7 +190,7 @@ struct rcu_cblist {
->  struct rcu_segcblist {
->  	struct rcu_head *head;
->  	struct rcu_head **tails[RCU_CBLIST_NSEGS];
-> -	unsigned long gp_seq[RCU_CBLIST_NSEGS];
-> +	struct rcu_gp_oldstate gp_seq_full[RCU_CBLIST_NSEGS];
+>   [    0.000000] ftrace section at ffffffff8101da98 sorted properly
+>   [    0.000000] ftrace: allocating 0 entries in 128 pages
+>   [    0.054999] Testing tracer function: .. no entries found ..FAILED!
+>   [    0.172407] tracer: function failed selftest, disabling
+>   [    0.178186] Failed to init function_graph tracer, init returned -19
+> 
+> Handle RISC-V like arm64 for the function-range check and allow
+> patchable entries up to 8 bytes before the function address.
+> 
+> With this fix, a RISC-V QEMU smoke boot with ftrace startup tests shows
+> the vmlinux ftrace table is populated and dynamic ftrace still works:
+> 
+>   [    0.000000] ftrace: allocating 46749 entries in 184 pages
+>   [    0.051115] Testing tracer function: PASSED
+>   [    1.283782] Testing dynamic ftrace: PASSED
+>   [    6.275456] Testing tracer function_graph: PASSED
+> 
+> Fixes: 0ca1724b56af ("riscv: ftrace: select HAVE_BUILDTIME_MCOUNT_SORT")
+> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Link: https://lore.kernel.org/all/20260527113028.4b21a5de@fedora/
+> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
 
-That could stay as gp_seq.
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 
->  #ifdef CONFIG_RCU_NOCB_CPU
->  	atomic_long_t len;
->  #else
-> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> index 421f1dadb5e5..00e164db8b74 100644
-> --- a/kernel/rcu/rcu_segcblist.c
-> +++ b/kernel/rcu/rcu_segcblist.c
-> @@ -496,7 +496,7 @@ static void rcu_segcblist_advance_compact(struct rcu_segcblist *rsclp, int i)
->   * Advance the callbacks in the specified rcu_segcblist structure based
->   * on the current value passed in for the grace-period counter.
->   */
-> -void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
-> +void rcu_segcblist_advance(struct rcu_segcblist *rsclp, struct
-> rcu_gp_oldstate *rgosp)
-
-I don't think we need to rename everything to rgos*, especially as it's not as
-intuitive as gp_seq.
-
->  {
->  	int i;
->  
-> @@ -1229,7 +1231,8 @@ static bool rcu_advance_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
->  	 * Find all callbacks whose ->gp_seq numbers indicate that they
->  	 * are ready to invoke, and put them into the RCU_DONE_TAIL sublist.
->  	 */
-> -	rcu_segcblist_advance(&rdp->cblist, rnp->gp_seq);
-> +	rgos.rgos_norm = rnp->gp_seq;
-
-Can we shorten that rgos_norm field to just norm?
-So the above would parse better as:
-
-   gp_seq->norm = rnp->gp_seq
-
-> +	rcu_segcblist_advance(&rdp->cblist, &rgos);
->  
->  	/* Classify any remaining callbacks. */
->  	return rcu_accelerate_cbs(rnp, rdp);
-> diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-> index 1047b30cd46b..1837eedfb8c2 100644
-> --- a/kernel/rcu/tree_nocb.h
-> +++ b/kernel/rcu/tree_nocb.h
-> @@ -433,7 +433,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
->  				bool lazy)
->  {
->  	unsigned long c;
-> -	unsigned long cur_gp_seq;
-> +	struct rcu_gp_oldstate cur_gp_seq_full;
-
-This could stay as cur_gp_seq.
-
->  	unsigned long j = jiffies;
->  	long ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
->  	long lazy_len = READ_ONCE(rdp->lazy_len);
-> @@ -501,8 +501,8 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
->  			return false; // Caller must enqueue the callback.
->  		}
->  		if (j != rdp->nocb_gp_adv_time &&
-> -		    rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
-> -		    rcu_seq_done(&rdp->mynode->gp_seq, cur_gp_seq)) {
-> +		    rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq_full) &&
-> +		    rcu_seq_done(&rdp->mynode->gp_seq, cur_gp_seq_full.rgos_norm)) {
-
-Because cur_gp_seq.norm would parse much better.
-
->  			rcu_advance_cbs_nowake(rdp->mynode, rdp);
->  			rdp->nocb_gp_adv_time = j;
->  		}
-> @@ -659,7 +659,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
->  {
->  	bool bypass = false;
->  	int __maybe_unused cpu = my_rdp->cpu;
-> -	unsigned long cur_gp_seq;
-> +	struct rcu_gp_oldstate cur_gp_seq_full;
-
-Ditto
-
->  	unsigned long flags;
->  	bool gotcbs = false;
->  	unsigned long j = jiffies;
-> @@ -730,8 +730,8 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
->  		needwake_gp = false;
->  		if (!rcu_segcblist_restempty(&rdp->cblist,
->  					     RCU_NEXT_READY_TAIL) ||
-> -		    (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
-> -		     rcu_seq_done(&rnp->gp_seq, cur_gp_seq))) {
-> +		    (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq_full) &&
-> +		     rcu_seq_done(&rnp->gp_seq, cur_gp_seq_full.rgos_norm))) {
->  			raw_spin_lock_rcu_node(rnp); /* irqs disabled. */
->  			needwake_gp = rcu_advance_cbs(rnp, rdp);
->  			wasempty = rcu_segcblist_restempty(&rdp->cblist,
-> @@ -877,7 +877,7 @@ static inline bool nocb_cb_wait_cond(struct rcu_data *rdp)
->  static void nocb_cb_wait(struct rcu_data *rdp)
->  {
->  	struct rcu_segcblist *cblist = &rdp->cblist;
-> -	unsigned long cur_gp_seq;
-> +	struct rcu_gp_oldstate cur_gp_seq_full;
-
-Ditto.
-
->  	unsigned long flags;
->  	bool needwake_gp = false;
->  	struct rcu_node *rnp = rdp->mynode;
-
-Thanks.
-
--- 
-Frederic Weisbecker
-SUSE Labs
+-- Steve
