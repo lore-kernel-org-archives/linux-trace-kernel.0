@@ -1,82 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE1E3CE0B8;
-	Thu, 28 May 2026 12:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E5B3F0AB9
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 13:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779972660; cv=none; b=S70lBnsPxaujrGPyeXSgV5PcY4BwnLQSLw4DOcbNOP8+Ddq2GSFgxK+nqv63eSnY6CCZMFXSIsayfvkhL3bACkYn6K2y1dfpl0XFDHmzphjiqY0JwbsFiCDMY2jg6YfLatPwGWMFWAlh53RFaQG6L3Aiggbj72Y3uauSmqB4Wgw=
+	t=1779973210; cv=none; b=n6uIndJqvhuqFs759NIHYgwotYI2emheI4T7x6B1ZQVCxhsc5t66IKOtUsarj4UTQWZmXDD9TQMElCeJWuSo5ZvOOYTG7pK3TV9qFLtMfqhZLmMtSIJV/DmpMaE2P4Z7mcH/YYy+5tDqsk4mR+8oKb3t7GYN8uLThqQtEzVc+70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779972660; c=relaxed/simple;
-	bh=WT0jxcFdGIgZMVI3EEMOeqPhkBCPtltW2WC0TkA8MmU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QaKEzgV/nJDpmja1fhYXQCnNt+PA6uCc1G1ybgsH9l8Id4O4rrdnHHGKZyLpO7qoD9TnCC3aCt8P/1ujlcxlywwBLvNZmGnNkQAH90RxNNP/L5g8X4Ecy768ElUwSf4Pk+kwJDL2xE/EIZOU2UgkoxKAsmksgs5EiAsOfIaYZ8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hqv3OBV1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779973210; c=relaxed/simple;
+	bh=o8YVIxQfIVe8G77mNJVV47Yf+bL1xmbDE2RYHEgv5YY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EfqufZ++vlyaxhWa6I7XtmAvPCG4H7BNL41K0ZdorbRpyfare9WnETNJCLhCyT8c9cIUkyhW7jsX+sVXwSFfb1Ncn13rOkm5i9gipIvJnmdcOyysCcPzsDEKWsujiN4Nt+o5nYoJYmdMlclB3m9WRkdbneQiRueSM3qBpaUSHOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=Q0QUEUDs; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hqv3OBV1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E821F000E9;
-	Thu, 28 May 2026 12:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779972659;
-	bh=j0XSIYtQGKJfhTGxFII5g0zR2rNC1cfOZ9BaWiVyoqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Hqv3OBV1sL0D1TxfHr6zlzBzAQ3ApH1h5+6O0RybhgThOU2MhxjXOAR/LDtagChZO
-	 zK0ooII0lmk1Wl8OWLvxVETB2xE1rgKAJzQfPzB19KjaFt1UqJhOKNlAhOA/R9ehZs
-	 SVZdVMtzOBx6tpFkOR/YX3e843Sy3GY+qzCkDnfrntEVuqPPcmNtccqm9FBuL+o6Sk
-	 gZRvFplqzL3TZA3qXoI7yVat+jN/dfeq+bFqrw4am45ssNampxWQjFEDCPjW8cdYY7
-	 k+Uha24aDZLMd8l9UToBIVeuw4D/XKSw1uT6VQ/d9kVB60U1SScpD6NEwvk6dd3qqx
-	 gJy6CGOasvt2g==
-Date: Thu, 28 May 2026 14:50:56 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [RFC PATCH 03/10] rcu/segcblist: Change gp_seq to struct
- rcu_gp_oldstate gp_seq_full
-Message-ID: <ahg6ML5r7BGLXalh@localhost.localdomain>
-References: <20260417231203.785172-1-puranjay@kernel.org>
- <20260417231203.785172-4-puranjay@kernel.org>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Q0QUEUDs"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-68b2229b48eso890425a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 06:00:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1779973207; x=1780578007; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AWX58gHfqJsslfdS6Ak/5KD2sNpGKduMo9iQFj+NBgY=;
+        b=Q0QUEUDsXtflsoaiPs5AQJXrjbfC5BxOGm4rackEDchxxD94+hdKtTQW0nrgGvrG9i
+         ywrJXtF4CcxupJa5EvNmxCRBgAkajAwlktFUCQzhIBLlq5xs7URRrvOugbycwACqsuLv
+         ApNljseXo3g7y6+uVmJnvilWOP5kj0Qajovzy/ByC2NpxBrdqvBZGU7RvpCTrpXZW14x
+         jgHptNZmgDbwKzVZEm/9Acx/cGnkggP7SCxj4ZFXdNJB1BvjqKWm2QgmYcz9Esgj/9JN
+         HeKu00581kVuv6oVZkizg0HD//3GmcaZBobOOq+Izru1J1TMZg3fazpTQxDSir+oCgvL
+         JOpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779973207; x=1780578007;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AWX58gHfqJsslfdS6Ak/5KD2sNpGKduMo9iQFj+NBgY=;
+        b=IAv5VqNOlKzkMbSFuHePCUKRqifTGLqFD1B7NE2TBmIJuGezIB5FztUUrmSTt6f8Ru
+         o2d00NiOQdraJz2YZ//x6tFAfLU0WfSw92KK2fXLWCLd7t+ZhN5LjbXz8nI4wpSaJwmM
+         j0JooGWXbW53UwtBu2Yqkerda6GCCi0T2je3zXslt3/kK0VPGxUhFXcj0tcWMHnBvPIh
+         lJLkLTpEHTgCWRYi8OlguvpUQE7APBFjU1V6iLRRZG676/qwg5DkgR5sBvV9liEsAimR
+         IN42l6qhkrNpSIK6ZPYEDPKzrQCQdfzuVMYxlrUXrRN3T+Q6qCmVDZW8xkgZ9edkQkXO
+         Cs9Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+Y9xnLDgWXxngvilYQQOSchbc3cjN6rPsIcAhwB/8tTqN5lsjfkPuHTRSjXNyAZHxnFYDDChJUJLsLhFf+BsOczHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKeMlHs40GV18uVh8gCZKzNoAUbzO2BzScA6bVIgotM25Q/a1N
+	rfVVLErTZkiNkc5klhsFTX9paTEX70cmi1hWAjk4Ncvb0VYIMWl3RYuDmtg3iEmP+8o=
+X-Gm-Gg: Acq92OH6XOtP1HuttKIouYHD9l0Vx9UvoH099beDjOAZSDTkLliQ0d2E65TKiwAyQxn
+	obBL0M+SrRpXKjLkPFVujm0KJmmTN2WiNl4RQH023eDYFs50KosoGX+jqoadST90hQxDZqN73SO
+	IBcGj0qaS0OBWvOln9WoEeQzpkbyVu7ivnpLUkwzfN5zjVXcZFHs3ROZ+Dp5reuM1Ihafqmu08F
+	JL9PaGanGYFkwstZMIqlx67Sp49CMeVraPZB4tvlTQk9JE6ItOf/Dxyxd/wTexw+h/3EAwvntC1
+	O1ULOoTfq70U1Co/G3OUbPT0OQxi0VnzcLRbGMoecycSBxnQ0XNZz/dvaGbQKPnSykDjOHESk0f
+	5pOMnnrE4hFv2asvk5kFPH1pI8+CG+csIaJidFU50vLy04VnGrz/r1ZJrgyzbhbGD5wgxRgNvwZ
+	oMFyhD06Q/Nttt+KRO1VndjKbq6EcEnrzEhCJa
+X-Received: by 2002:a17:907:75d2:b0:bd3:7b11:7870 with SMTP id a640c23a62f3a-bdd22a3d645mr1299661266b.5.1779973207057;
+        Thu, 28 May 2026 06:00:07 -0700 (PDT)
+Received: from cloudflare.com ([104.28.21.182])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-be8a8637bb1sm38485166b.39.2026.05.28.06.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2026 06:00:06 -0700 (PDT)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>,  Peter Zijlstra <peterz@infradead.org>,
+  Ingo Molnar <mingo@kernel.org>,  Masami Hiramatsu <mhiramat@kernel.org>,
+  Andrii Nakryiko <andrii@kernel.org>,  bpf@vger.kernel.org,
+  linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 13/13] selftests/bpf: Add tests for forked/cloned
+ optimized uprobes
+In-Reply-To: <20260526205840.173790-14-jolsa@kernel.org> (Jiri Olsa's message
+	of "Tue, 26 May 2026 22:58:40 +0200")
+References: <20260526205840.173790-1-jolsa@kernel.org>
+	<20260526205840.173790-14-jolsa@kernel.org>
+Date: Thu, 28 May 2026 15:00:05 +0200
+Message-ID: <87ldd3665m.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260417231203.785172-4-puranjay@kernel.org>
+Content-Type: text/plain
 
-Hi,
+On Tue, May 26, 2026 at 10:58 PM +02, Jiri Olsa wrote:
+> Adding tests for forked/cloned optimized uprobes and make
+> sure the child can properly execute optimized probe for
+> both fork (dups mm) and clone with CLONE_VM.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  .../selftests/bpf/prog_tests/uprobe_syscall.c | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> index efff0c515184..033d32b4cc27 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> @@ -4,6 +4,8 @@
+>  
+>  #ifdef __x86_64__
+>  
+> +#define _GNU_SOURCE
+> +#include <sched.h>
+>  #include <unistd.h>
+>  #include <asm/ptrace.h>
+>  #include <linux/compiler.h>
+> @@ -936,6 +938,88 @@ static void test_uprobe_error(void)
+>  	ASSERT_EQ(errno, EPROTO, "errno");
+>  }
+>  
+> +__attribute__((aligned(16)))
+> +__nocf_check __weak __naked void uprobe_fork_test(void)
+> +{
+> +	asm volatile (
+> +		".byte 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00\n" /* nop10 */
+> +		"ret\n"
+> +	);
+> +}
+> +
+> +static int child_func(void *arg)
 
-Le Fri, Apr 17, 2026 at 04:11:51PM -0700, Puranjay Mohan a écrit :
-> @@ -496,7 +496,7 @@ static void rcu_segcblist_advance_compact(struct rcu_segcblist *rsclp, int i)
->   * Advance the callbacks in the specified rcu_segcblist structure based
->   * on the current value passed in for the grace-period counter.
->   */
-> -void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
-> +void rcu_segcblist_advance(struct rcu_segcblist *rsclp, struct rcu_gp_oldstate *rgosp)
+Nit: Could annotate with noreturn:
 
-If the name struct rcu_gp_oldstate makes sense when it refers to grace period
-sequence numbers waited upon by a given segment, it becomes confusing when
-passed here as the current grace period number to compare against waited upon
-snapshots.
+#include <stdnoreturn.h>
 
-So how about struct rcu_gp_seq for everyone instead?
+/* ... */
 
-Thanks.
+static noreturn int child_func(void *arg)
 
--- 
-Frederic Weisbecker
-SUSE Labs
+> +{
+> +	struct uprobe_syscall_executed *skel = arg;
+> +
+> +	/* Make sure the child's probe is still there and optimized.. */
+> +	if (memcmp(uprobe_fork_test, lea_rsp, sizeof(lea_rsp)))
+> +		_exit(1);
+> +
+> +	skel->bss->pid = getpid();
+> +
+> +	/* .. and it executes properly. */
+> +	uprobe_fork_test();
+> +
+> +	if (skel->bss->executed != 3)
+> +		_exit(2);
+> +
+> +	_exit(0);
+> +}
+
+[...]
+
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
