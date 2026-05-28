@@ -1,207 +1,420 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27BE3FB7DC
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 17:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779988279; cv=none; b=hJEBWKPsnlakuuCUCz9m72w4nVDn3A4tSJyE+YLyfG+2oeyVydwydPq0Ta97BTCyurrX0tl4rUmVuuStsg150nSzaK4DUVJOm5OlUyxPlpXfaJKBY03/H8Jx+PbmI/dQeXKXAxp0S/LbZ1w01UO4sudIoGs1YMvSgPBrXZc3FZg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779988279; c=relaxed/simple;
-	bh=sz6XapUVmOA6zIuBmrCqm3oCvEoF6NkKyQu2hK/OPNs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XawDgmu7i01H0heQpQL8tAQoDTwEdmV23lNa5DzKKk6UCmgR6X2qBomAo4Ei4VDPP5iLmbdrIfN40oiqy7wHA4pKbgvyZok59SrFySVIphUpw/KqVWn5yS+kcPN1yIY2WRIffqy00+3453n0X9wgUY8oj84C25ys3zPqnHg9QMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WTVPB714; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90DB3F9284
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 17:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.193
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779988974; cv=pass; b=WqlUwrtjdX7rXZdQ+00hMZ6dCmmWUyd94PH45oCg2htvq0LOu+m5asX/mVaHBCFY9aVpiZscXXchoRPMOABbnAt+HDRmG3YwC+ol1jFTniyNrET3wYymC6oSMKKwhbTsz2l+jy0KH4w0Jc7jgVsHZfHD16FEOgzK6s9CdCRQVGA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779988974; c=relaxed/simple;
+	bh=G7QzlLAhVeGIJ91SQtk43LFFwiieDciB+nrnQl68h6E=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=N/3G8FoRqtns5zV278U4KVOBBGRnn9Y7bL6LF/qsg3KAL63arydZfj0B44TKFRwGf/F1qDjrgyd/pq5txd9H305uOBrIhaeP3CbBqDY676vYZi7HOwoSg/KW5zg/xnmftaazTODazInJ/GF09CyQcSn8l7runfvsWTqabSnNqQk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=berkeley.edu; spf=pass smtp.mailfrom=berkeley.edu; dkim=pass (2048-bit key) header.d=berkeley.edu header.i=@berkeley.edu header.b=EOcWSxkn; arc=pass smtp.client-ip=209.85.128.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=berkeley.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=berkeley.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WTVPB714"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779988276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ihUpxCim2Hwyu43MMJlIX4H1ID4hW1kFB98h6S7dK8=;
-	b=WTVPB714KWJDlupz1TscTgcLwiLDD7q5dHDxLbMyQBBkjfJYhcwBBqcxuQ8ZRMbwE1yajD
-	ev6gbZpUyAkatsHsXNNxzIrX7QuRBLHMLcfrEqsnlAc5iZrLiDDmwR6+nScjTEQre10wNP
-	C81kNeC2GgW1nA8o+NXkP/iqu/FKlgg=
-Received: from mail-yx1-f71.google.com (mail-yx1-f71.google.com
- [74.125.224.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-398-4SlJiORzMd21v7D5usgOvA-1; Thu, 28 May 2026 13:11:13 -0400
-X-MC-Unique: 4SlJiORzMd21v7D5usgOvA-1
-X-Mimecast-MFC-AGG-ID: 4SlJiORzMd21v7D5usgOvA_1779988273
-Received: by mail-yx1-f71.google.com with SMTP id 956f58d0204a3-65c7306e432so9008949d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 10:11:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=berkeley.edu header.i=@berkeley.edu header.b="EOcWSxkn"
+Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-7ca947f9b00so127304027b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 10:22:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779988972; cv=none;
+        d=google.com; s=arc-20240605;
+        b=POkJZ0LHwSb5aZ+1Oi5I1vz5LGdbNU4Pe4UklxkEDUgnv0+WBq4czYM3Mo0l/FlnEI
+         f+X2SMHxX8yvzTy7igyIsAFtifwgxASA6MVArWu80ChL87SJw8wg0XOkrPcifAz/Yh3C
+         UGyEFfB+Le4NoUcg8XNy7dUWvAGja+NZD3GjqhCT9uN4+UyF91AKYnq/72x2ZPqX9182
+         gWW1i3LW9MzkEJGvo3jbHuUyhfzYRn92k8f8IyztXMLb+K45LU7o5YIzmtEKPxa7T3eW
+         sBSwoMPR8mOJwPGBqZy1cxfZr7Elalt+NqhIPEzRWv+/uzqRro7jdZMVmEJQTdItT0W7
+         8hLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=l0sPWI4ppUFHJl4laiOvN2MKbrmB+/15vblubFYdz3A=;
+        fh=UodOdSDuvfHR4drs2aX45P+GO5nQRV7F2brlsae/TuI=;
+        b=lYQxYAlZNpBkh6FrwciPRRokTIF72ZGqUL+pfov9nRc5ByYcWPt1T8VDJqVXU8pPtF
+         WFJo8js5StqUwtkTNTLPrTW6JmHcVje8CdwoWilJmOE2INBpzIDFgsyme4gw2/AsEzyX
+         rM0v0UEBvWjoFDH6TlbjbTqG+Qrhf9dgZEDbqR4WNBGt+5xA9TwiU9176ghj0LYQIh04
+         4vq5W3tYUnAbdVTc3gaxQFNxZDrg+jrnZ/dMsSx2p24T1+nGQL9F37E1556mDiLL9VZo
+         bxS/ASgw6PYmNWKvRM1o6V+JeSEzes6RFscEoBqN4h8N1FK+oF8eVlqP8Z4X+L6BZohf
+         BPzw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=berkeley.edu; s=google; t=1779988972; x=1780593772; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=l0sPWI4ppUFHJl4laiOvN2MKbrmB+/15vblubFYdz3A=;
+        b=EOcWSxknqmQzaOCuqAha+tqd2w66sXEuQRlZ4tv6BzYxUfKraNg1U1PQCpP4wr+XoH
+         H5DPUipZuQp/L7vwrBr+R4M7Ji1aGzG9g0jPmQABffC6s2DHvgwW32xh9Hgb9SGQwdBC
+         oZFWRtHhD8s1HS9cJQX2GkI4Bg8Jbch6gwb6RoMmzCraFKsh13otGPdmqZiIxQWNJI4Z
+         fVJvSL7gNW+qhtWVAOiE+Y+zLmTqE3ZhYvnGawcOVtoNN1hwAn/v27atY17t2AbpcTG7
+         /R7KCz+kl8MgUM7lliekT4tN7qywQylDKMsFSQKPFFSj/1B196xLaMTNKuiIt1rfud0y
+         hcwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779988272; x=1780593072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0ihUpxCim2Hwyu43MMJlIX4H1ID4hW1kFB98h6S7dK8=;
-        b=JL2BXKv40dTnfzsIJDmmmQjw5UFAO71xgbGAFMREfPa2j4UCsqw8M3S0kCIVWF2YFC
-         IoMvPgULm8Y8tSohDQl47hKh13cKu6rs/9R4Z9UuijQJYq6hEb67Zfz2k1qaiYgRvq3I
-         /4V5TWrFpAahWgXsSP2AXvEdMFnsfa8toYuCzRdwSxvw8BvkPXZc6TKVSoTdl43COxBC
-         XbpNAQhzo4UccAizoYiRjx1unwE998ICQLTzmuWR9ine4eFPRwexc8Zz7D21oTFs7Iv9
-         w3dQ4XODuckY4KVOm0imUssPlUd5JhrzKkMcPBiW+ODKpnD8DGTbssaO+6stKzXKGq1S
-         p3rw==
-X-Forwarded-Encrypted: i=1; AFNElJ8q4GzW+wyDqyThjyaj6E5vJunuk9NPrlf7YoQZfCFlKr64gtHlbL0+Xuz2f0lD6UTmRtHkqlC9bcAqK6dEqnGzRSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD4yxnD+3EKmqhx4W59dXWeY2cPpdXBhKLy35MbbhtGP+AAMcC
-	mMLEUgAnQcF2vOXJ56N/u5rJjSFjFJmGaAGjml8rVAnSSeGE5JuJCVDUzjZxb1SV0f6QRT18cMk
-	HPA15pvJUiRHgNiA50ot5oAhYlMIpq0eCo/HSkM9FZZtD5zKoQYTsq4nJtYvf9Dmp96cuscoHV3
-	5WVYQX19Y/NSLfFs70ZV7du8IIKEsfaISb9LfAlUCOq9Mvpu3R
-X-Gm-Gg: Acq92OHu6zQ3FW1OaPln0/bFxUBCR+rKcT0rg2C4kfBG2oO9E8Jf99mdKnbXDfsykEX
-	YI5NMrRmFPtUvxqCLkCQ7SO/agu+GXlIi+QDfbGaLrVKXKTUOAfkcpXbRuziF7Ge4BSCVT9uEos
-	W1OXfw2eqpaCxzJzO0p/Wqwte4ONrNdonmlODIg8w35jhEApoeCzYEoy/yfsmD7rMjJv4+swTCd
-	hRNsZZQVcdbBwCS
-X-Received: by 2002:a05:690e:1544:10b0:65d:bf4b:f16b with SMTP id 956f58d0204a3-65ec96129d6mr21884166d50.3.1779988272445;
-        Thu, 28 May 2026 10:11:12 -0700 (PDT)
-X-Received: by 2002:a05:690e:1544:10b0:65d:bf4b:f16b with SMTP id
- 956f58d0204a3-65ec96129d6mr21884113d50.3.1779988271977; Thu, 28 May 2026
- 10:11:11 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1779988972; x=1780593772;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l0sPWI4ppUFHJl4laiOvN2MKbrmB+/15vblubFYdz3A=;
+        b=c1CohFbbqRPiZg6ooYdy1DgnobfuEliEGLMX60rJA7D49wZSN7GS+otQwIJyxFLcs7
+         F3LxyA7GdDOvS9srLDutSRXT5Uk9Nyeqz0hXH88RbHFwS0mZsf15jiiXK+Uw5UbYxGlF
+         7QrCACXMPZ53mCcqcBrbLZWFRnGq/0f/FlfdxICwHqfna48KckWGy64wXTz6jMbNYnrN
+         QPucJojQOUP07u0ru7OG6D+2du1XHSMVbwp6pEh93huvwvmahVwRm7qO7ac4DlQjjfjH
+         V+/Nzi1FKMh5q4F3trEsbXY0ljMJwJypBC1g1JrYjCh0lkpHe/lSM9PnOTKM3UeEJVxN
+         Ew6g==
+X-Forwarded-Encrypted: i=1; AFNElJ8arzI2OxowTI10Og83ewDNyDlV3vzOR5RUP9PDmMYgymOmg9JnmfM6K4LrT3m9UDL8RNOMsqq8sH7D7oY+VFL4WaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEUsK4NbDpBhFo8S8/L9dqMIMvmAKBKrGIsC9rEdEUWJYK1/H3
+	Y63G/pplL1dVFaR9j8Ql14JWA+1rEQwll6ts3a9+fpa2y6n1zfpJsSDi3f9Y2SZbKHLOGkoSZe9
+	9Xg8lBbafUCXTaJNwjKtoHcA7SZzUW+Ta1MVmcJdu
+X-Gm-Gg: Acq92OGnQ1R2iQFaM4sQtX3F3tct388dDyxDVGltkRJaaqs4yxGYbL5b6A7lM3hZXcS
+	Mj+B3A14XI9C/EqftSQWOrrhOiLSDG9cxzMfwwDUQsiYS8UoCgdWshEN/W7GDFF1pCsH4XdvcJ0
+	Q2RWYA2m4IO1p9lWjxBan8CsCEVRp7KEOrU2XhCtV9T2ts9ppO6Nk1Rwsxhw+8h77pYFimkKXC6
+	8Ip4Swd8XH2yvI+tEG8/G9RAN6RWZIkuB3DVr4bxu/UzaectuEpNJrUjNLc7UWInZSLLS7/un7D
+	se+r8gecjxpSmDdv9w==
+X-Received: by 2002:a05:690c:6c8d:b0:7a1:3088:e528 with SMTP id
+ 00721157ae682-7ddc101e82emr1707427b3.18.1779988970293; Thu, 28 May 2026
+ 10:22:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260522150009.121603-1-npache@redhat.com> <20260522150009.121603-12-npache@redhat.com>
- <2b2cda8c-358a-4a5c-989c-ae42593ef2ea@redhat.com> <20260525121041.2f2508a4f627c338cddd837a@linux-foundation.org>
- <20260526065708.oyyddmt2zgfwu2q7@master> <CAA1CXcDXyDhMyiVAb8XbusqMU10JXA8nOUw6b4_2i9H-kV2vwQ@mail.gmail.com>
- <20260528084211.wsdrvbvxvkddokb5@master>
-In-Reply-To: <20260528084211.wsdrvbvxvkddokb5@master>
-From: Nico Pache <npache@redhat.com>
-Date: Thu, 28 May 2026 11:11:47 -0600
-X-Gm-Features: AVHnY4Ix-JM5FCWg2fh8KtuGbuZClmx1qOAN3nLQNHVscERKje9jLsvBNl47yHQ
-Message-ID: <CAA1CXcDSuD8D8S98=-zqh12CwrD8dATpzaV+usNvgF-RC-anvg@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v18 11/14] mm/khugepaged: Introduce mTHP
- collapse support
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
-	anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, 
-	cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, 
-	dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, 
-	jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com, 
-	joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev, 
-	liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com, 
-	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, rientjes@google.com, rostedt@goodmis.org, 
-	rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
-	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
-	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
-	zokeefe@google.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fO-jCutauMcZPcn4q6QJR5pdKTm2h0gbJnvV9SY-aWY_1779988273
-X-Mimecast-Originator: redhat.com
+From: Farhad Alemi <farhad.alemi@berkeley.edu>
+Date: Thu, 28 May 2026 10:22:38 -0700
+X-Gm-Features: AVHnY4KMD6_SilNsCJ8RKtU5SNYv-wjjBIL51tuZOZ7EUzmulRlcS9jQUE7uxNA
+Message-ID: <CA+0ovCjPsBrb_dTS4O9N_bV-=yC-2B43fjazi+WmD7g08QX4hw@mail.gmail.com>
+Subject: [BUG] tracing/uprobe: GPF in path_put() via __free() on alloc failure
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="0000000000004855300652e3fa58"
+
+--0000000000004855300652e3fa58
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 28, 2026 at 2:42=E2=80=AFAM Wei Yang <richard.weiyang@gmail.com=
-> wrote:
->
-> On Tue, May 26, 2026 at 06:07:38AM -0600, Nico Pache wrote:
-> >On Tue, May 26, 2026 at 12:57=E2=80=AFAM Wei Yang <richard.weiyang@gmail=
-.com> wrote:
-> >>
-> >> On Mon, May 25, 2026 at 12:10:41PM -0700, Andrew Morton wrote:
-> >> >On Mon, 25 May 2026 08:15:53 -0600 Nico Pache <npache@redhat.com> wro=
-te:
-> >> >
-> >> >> Can you please append the following fixup that reverts one of the
-> >> >> changes requested in V17. The issue with the change is described
-> >> >> below.
-> >> >
-> >> >OK.  fyi, what I received was badly mangled: wordwrapping, tabs messe=
-d
-> >> >up, etc.
-> >> >
-> >> >Here's my reconstruction:
-> >> >
-> >>
-> >> Hi, Nico
-> >>
-> >> I tried to reply your mail, but found it has some encoding problem, so=
- reply
-> >> here.
-> >
-> >Yeah sorry I didnt properly configure my email client after getting a
-> >new laptop.
-> >
-> >>
-> >> >
-> >> >Author: Nico Pache <npache@redhat.com>
-> >> >Subject: fix potential use-after-free of vma in mthp_collapse()
-> >> >Date: Mon May 25 07:38:59 2026 -0600
-> >> >
-> >> >Between V17 and v18, one reviewer (Wei) brought up that we are not do=
-ing
-> >> >the uffd-armed check until deep in the collapse operation.  While not
-> >> >functionally incorrect, it can lead to unnecessary work.
-> >>
-> >> So we decide to tolerate the behavioral change?
-> >
-> >Yes, I believe it is ok for now. Either way we needed to remove the
-> >potential UAF. It only affects the behavior if mTHP is enabled, so the
-> >legacy behavior is kept. And the uffd case is limited.
-> >
-> >My future work involves further optimizing and cleaning up khugepaged.
-> >I'll make this part of the goal too. My first thought is to do the
-> >revalidation at every order (between the locks dropping); but that
-> >essentially pays the same penalty... I can't think of a clean solution
-> >at the moment.
->
-> One way come into my mind is add a @was_uffd_armed field in collapse_cont=
-rol
-> and updates it in hugepage_vma_revalidate() when latest vma is retrieved.
->
-> Still not elegant enough.
+Hello Masami and the linux-trace-kernel team,
 
-So our issue is that userfaultfd_armed is at the VMA granularity.
-Ideally we want PMD/PTE granularity, but we only have that for wp. I'm
-just still investigating all the nuances of uffd and its interactions
-with khugepaged (something I've been meaning to understand more of
-anyway). But from what i understand so far we actually can use the
-bitmap and the was_uffd_armed to optimize this further. It solves the
-issue and has a rather small race window, which can just be handled by
-the revalidation later on, probably eliminating most of the potential
-cases.
+I am reporting a tracing/uprobe error-path crash found by syzkaller
+with fault injection.
 
-IIUC, filling a region with previously empty/zero pages is only an
-issue for MODE_MISSING and MODE_WP with WP_UNPOPULATED set as well. I
-have a work in progress commit to improve all this uffd handling.
+Summary:
+A write(2) to /sys/kernel/tracing/uprobe_events that fails inside
+alloc_trace_uprobe() leaves the caller's `tu` variable holding
+ERR_PTR(-ENOMEM). The cleanup macro at kernel/trace/trace_uprobe.c:536:
 
-I think what i have is a good middle ground. It improves the current
-functionality and closes this gap we have with the new mthp_collapse--
-best of both worlds. If the race window is hit, we will pay the
-penalty, but that should be greatly reduced. I will send out an RFC
-for this targeting mm-new once I have everything verified and cleaned
-up :)
+  DEFINE_FREE(free_trace_uprobe, struct trace_uprobe *,
+              if (_T) free_trace_uprobe(_T))
 
-Cheers,
--- Nico
+guards only against NULL, not IS_ERR. free_trace_uprobe() (invoked by
+the __free() helper at __trace_uprobe_create's return) has the same
+guard shape -- `if (!tu) return;` -- and then calls path_put(&tu->path)
+on the ERR_PTR-valued tu. KASAN catches the resulting dereference as a
+null-ptr-deref-in-range at path_put+0x29.
+
+Observed on:
+- Linux v7.1-rc3-200-g70eda68668d1-dirty (where the bug was originally
+  found), x86_64, QEMU Q35
+- KASAN enabled; panic_on_warn set; CONFIG_FAULT_INJECTION enabled
+- The only local dirty file in my tree is drivers/tty/serial/serial_core.c,
+  containing a local ttyS0 console guard for the fuzzing harness. It is
+  unrelated to kernel/trace/.
+- Trigger requires CAP_SYS_ADMIN to open /sys/kernel/tracing/uprobe_events
+  for write (mode 0640, TRACE_MODE_WRITE) plus CONFIG_FAULT_INJECTION
+  with a forced kmalloc failure inside alloc_trace_uprobe().
+- Source inspection of linus/master at commit e8c2f9fdadee
+  (v7.1-rc4-754-ge8c2f9fdadee) shows the buggy structure is unchanged:
+  DEFINE_FREE(free_trace_uprobe, ..., if (_T) free_trace_uprobe(_T)) at
+  trace_uprobe.c:536 has only a NULL guard, free_trace_uprobe() at
+  trace_uprobe.c:369 still has only `if (!tu) return;`, and
+  __trace_uprobe_create() declares `struct trace_uprobe *tu
+  __free(free_trace_uprobe) = NULL` and assigns the alloc_trace_uprobe()
+  return value into tu before any IS_ERR check.
+
+Impact:
+With CONFIG_FAULT_INJECTION enabled, a fail_nth-injected allocation
+failure inside alloc_trace_uprobe() (kzalloc_flex at line 341 returns
+NULL, the function returns ERR_PTR(-ENOMEM)) causes the
+__free(free_trace_uprobe) cleanup in __trace_uprobe_create() to
+dereference the ERR_PTR via path_put():
+
+  Oops: general protection fault, probably for non-canonical address
+0xdffffc0000000008: 0000 [#1] SMP KASAN NOPTI
+  KASAN: null-ptr-deref in range [0x0000000000000040-0x0000000000000047]
+  RIP: 0010:path_put+0x29/0x60 fs/namei.c:717
+
+The R12 register in the crash dump shows the smoking gun:
+R12 = 0xfffffffffffffff4 = -ENOMEM = ERR_PTR(-12) -- i.e. the `tu`
+pointer being freed is an ERR_PTR, not a real object.
+
+Relevant stack:
+
+  path_put+0x29/0x60 fs/namei.c:717
+  free_trace_uprobe kernel/trace/trace_uprobe.c:374 [inline]
+  __free_free_trace_uprobe kernel/trace/trace_uprobe.c:536 [inline]
+  __trace_uprobe_create+0x53c/0xe40 kernel/trace/trace_uprobe.c:725
+  trace_probe_create+0xce/0x130 kernel/trace/trace_probe.c:2252
+  dyn_event_create+0x4f/0x70 kernel/trace/trace_dynevent.c:128
+  create_or_delete_trace_uprobe+0x65/0xa0 kernel/trace/trace_uprobe.c:739
+  trace_parse_run_command+0x1f3/0x380 kernel/trace/trace.c:9565
+  vfs_write+0x29f/0xb90 fs/read_write.c:686
+  ksys_write+0x155/0x270 fs/read_write.c:740
+
+Expected behavior:
+Any one of these closes the hole:
+
+  1. Tighten free_trace_uprobe()'s entry guard:
+       if (IS_ERR_OR_NULL(tu))
+               return;
+
+  2. Or change the DEFINE_FREE macro to skip ERR_PTR values:
+       DEFINE_FREE(free_trace_uprobe, struct trace_uprobe *,
+                   if (!IS_ERR_OR_NULL(_T)) free_trace_uprobe(_T))
+
+  3. Or, after the IS_ERR(tu) check in __trace_uprobe_create(), assign
+     `tu = NULL;` before returning so the __free helper sees NULL and
+     skips the path_put.
+
+Reproducer:
+I attached the generated C reproducer as reproducer.c. I also attached the
+syzkaller program as reproducer.syz and the console
+report as crash-report.txt.
+
+Novelty check:
+I searched syzbot dashboard data across upstream, fixed, invalid, stable,
+and Android namespaces, and searched lore.kernel.org for "path_put" +
+"trace_uprobe", "free_trace_uprobe", and "__trace_uprobe_create" + "GPF" /
+"KASAN". I did not find an exact match. Adjacent uprobe_unregister /
+bpf_uprobe_multi_link UAF reports have different free paths.
 
 
+I appreciate your time and consideration, and I'm grateful for your
+work on this subsystem.
 
->
-> >
-> >Does that sound ok?
-> >
->
-> Not sure. I can't imagine the impact it would have.
->
-> >Cheers,
-> >-- Nico
->
->
-> --
-> Wei Yang
-> Help you, Help me
->
+Regards,
+Farhad
 
+--0000000000004855300652e3fa58
+Content-Type: text/plain; charset="US-ASCII"; name="crash-report.txt"
+Content-Disposition: attachment; filename="crash-report.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mpprgbbf0>
+X-Attachment-Id: f_mpprgbbf0
+
+UkJQOiAwMDAwN2ZmY2NjNTZkOTEwIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6IDAwMDAwMDAw
+MDAwMDAwMDAKUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6
+IDAwMDAwMDAwMDAwMDAwMDIKUjEzOiAwMDAwN2Y1MjhjNjA1ZmEwIFIxNDogMDAwMDdmNTI4YzYw
+NWZhMCBSMTU6IDAwMDAwMDAwMDAwMDFlOTEKIDwvVEFTSz4KT29wczogZ2VuZXJhbCBwcm90ZWN0
+aW9uIGZhdWx0LCBwcm9iYWJseSBmb3Igbm9uLWNhbm9uaWNhbCBhZGRyZXNzIDB4ZGZmZmZjMDAw
+MDAwMDAwODogMDAwMCBbIzFdIFNNUCBLQVNBTiBOT1BUSQpLQVNBTjogbnVsbC1wdHItZGVyZWYg
+aW4gcmFuZ2UgWzB4MDAwMDAwMDAwMDAwMDA0MC0weDAwMDAwMDAwMDAwMDAwNDddCkNQVTogMCBV
+SUQ6IDAgUElEOiAzNTYzIENvbW06IHN5ei4yLjE3IE5vdCB0YWludGVkIDcuMS4wLXJjMy0wMDIw
+MC1nNzBlZGE2ODY2OGQxLWRpcnR5ICMxIFBSRUVNUFQoZnVsbCkgCkhhcmR3YXJlIG5hbWU6IFFF
+TVUgU3RhbmRhcmQgUEMgKFEzNSArIElDSDksIDIwMDkpLCBCSU9TIDEuMTYuMy1kZWJpYW4tMS4x
+Ni4zLTIgMDQvMDEvMjAxNApSSVA6IDAwMTA6cGF0aF9wdXQrMHgyOS8weDYwIGZzL25hbWVpLmM6
+NzE3CkNvZGU6IDkwIGYzIDBmIDFlIGZhIDBmIDFmIDQ0IDAwIDAwIDQxIDU2IDUzIDQ4IDg5IGZi
+IDQ5IGJlIDAwIDAwIDAwIDAwIDAwIGZjIGZmIGRmIGU4IDIyIDkxIDhhIGZmIDQ4IDhkIDdiIDA4
+IDQ4IDg5IGY4IDQ4IGMxIGU4IDAzIDw0Mj4gODAgM2MgMzAgMDAgNzQgMDUgZTggZGIgNTAgZjQg
+ZmYgNDggOGIgN2IgMDggZTggYzIgODkgMDMgMDAgNDgKUlNQOiAwMDE4OmZmZmZjOTAwMDM1YmY5
+ZTggRUZMQUdTOiAwMDAxMDIwMwpSQVg6IDAwMDAwMDAwMDAwMDAwMDggUkJYOiAwMDAwMDAwMDAw
+MDAwMDNjIFJDWDogZmZmZjg4ODEwYzM2YTUwMApSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAw
+MDAwMDAwMDAwMDAwMDAwIFJESTogMDAwMDAwMDAwMDAwMDA0NApSQlA6IGZmZmZjOTAwMDM1YmZi
+NzAgUjA4OiBmZmZmZmZmZjkxNjViNzc3IFIwOTogMDAwMDAwMDAwMDAwMDAwMApSMTA6IGZmZmZm
+ZmZmOTE2NWI3NjAgUjExOiBmZmZmZmJmZmYyMmNiNmVmIFIxMjogZmZmZmZmZmZmZmZmZmZmNApS
+MTM6IGRmZmZmYzAwMDAwMDAwMDAgUjE0OiBkZmZmZmMwMDAwMDAwMDAwIFIxNTogMDAwMDAwMDAw
+MDAwMDAwMApGUzogIDAwMDA1NTU1NjBhODY1MDAoMDAwMCkgR1M6ZmZmZjg4ODJhYjZiNjAwMCgw
+MDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwCkNTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBD
+UjA6IDAwMDAwMDAwODAwNTAwMzMKQ1IyOiAwMDAwN2Y1MjhjMjQwNzYwIENSMzogMDAwMDAwMDEy
+MTRjYjAwMCBDUjQ6IDAwMDAwMDAwMDA3NTBlZjAKUEtSVTogMDAwMDAwMDAKQ2FsbCBUcmFjZToK
+IDxUQVNLPgogZnJlZV90cmFjZV91cHJvYmUga2VybmVsL3RyYWNlL3RyYWNlX3Vwcm9iZS5jOjM3
+NCBbaW5saW5lXQogX19mcmVlX2ZyZWVfdHJhY2VfdXByb2JlIGtlcm5lbC90cmFjZS90cmFjZV91
+cHJvYmUuYzo1MzYgW2lubGluZV0KIF9fdHJhY2VfdXByb2JlX2NyZWF0ZSsweDUzYy8weGU0MCBr
+ZXJuZWwvdHJhY2UvdHJhY2VfdXByb2JlLmM6NzI1CiB0cmFjZV9wcm9iZV9jcmVhdGUrMHhjZS8w
+eDEzMCBrZXJuZWwvdHJhY2UvdHJhY2VfcHJvYmUuYzoyMjUyCiBkeW5fZXZlbnRfY3JlYXRlKzB4
+NGYvMHg3MCBrZXJuZWwvdHJhY2UvdHJhY2VfZHluZXZlbnQuYzoxMjgKIGNyZWF0ZV9vcl9kZWxl
+dGVfdHJhY2VfdXByb2JlKzB4NjUvMHhhMCBrZXJuZWwvdHJhY2UvdHJhY2VfdXByb2JlLmM6NzM5
+CiB0cmFjZV9wYXJzZV9ydW5fY29tbWFuZCsweDFmMy8weDM4MCBrZXJuZWwvdHJhY2UvdHJhY2Uu
+Yzo5NTY1CiB2ZnNfd3JpdGUrMHgyOWYvMHhiOTAgZnMvcmVhZF93cml0ZS5jOjY4Ngoga3N5c193
+cml0ZSsweDE1NS8weDI3MCBmcy9yZWFkX3dyaXRlLmM6NzQwCiBkb19zeXNjYWxsX3g2NCBhcmNo
+L3g4Ni9lbnRyeS9zeXNjYWxsXzY0LmM6NjMgW2lubGluZV0KIGRvX3N5c2NhbGxfNjQrMHgxNWYv
+MHg1NjAgYXJjaC94ODYvZW50cnkvc3lzY2FsbF82NC5jOjk0CiBlbnRyeV9TWVNDQUxMXzY0X2Fm
+dGVyX2h3ZnJhbWUrMHg3Ny8weDdmClJJUDogMDAzMzoweDdmNTI4YzM3Nzc4ZApDb2RlOiBmZiBj
+MyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMCAwMCA5MCBmMyAwZiAxZSBmYSA0OCA4OSBmOCA0
+OCA4OSBmNyA0OCA4OSBkNiA0OCA4OSBjYSA0ZCA4OSBjMiA0ZCA4OSBjOCA0YyA4YiA0YyAyNCAw
+OCAwZiAwNSA8NDg+IDNkIDAxIGYwIGZmIGZmIDczIDAxIGMzIDQ4IGM3IGMxIGIwIGZmIGZmIGZm
+IGY3IGQ4IDY0IDg5IDAxIDQ4ClJTUDogMDAyYjowMDAwN2ZmY2NjNTZkOGE4IEVGTEFHUzogMDAw
+MDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwMDEKUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJC
+WDogMDAwMDdmNTI4YzYwNWZhMCBSQ1g6IDAwMDA3ZjUyOGMzNzc3OGQKUkRYOiAwMDAwMDAwMDAw
+MDAwMDIyIFJTSTogMDAwMDIwMDAwMDAwMTEwMCBSREk6IDAwMDAwMDAwMDAwMDAwMDMKUkJQOiAw
+MDAwN2ZmY2NjNTZkOTEwIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6IDAwMDAwMDAwMDAwMDAw
+MDAKUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAw
+MDAwMDAwMDAwMDIKUjEzOiAwMDAwN2Y1MjhjNjA1ZmEwIFIxNDogMDAwMDdmNTI4YzYwNWZhMCBS
+MTU6IDAwMDAwMDAwMDAwMDFlOTEKIDwvVEFTSz4KTW9kdWxlcyBsaW5rZWQgaW46Ci0tLVsgZW5k
+IHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgXS0tLQpSSVA6IDAwMTA6cGF0aF9wdXQrMHgyOS8weDYw
+IGZzL25hbWVpLmM6NzE3CkNvZGU6IDkwIGYzIDBmIDFlIGZhIDBmIDFmIDQ0IDAwIDAwIDQxIDU2
+IDUzIDQ4IDg5IGZiIDQ5IGJlIDAwIDAwIDAwIDAwIDAwIGZjIGZmIGRmIGU4IDIyIDkxIDhhIGZm
+IDQ4IDhkIDdiIDA4IDQ4IDg5IGY4IDQ4IGMxIGU4IDAzIDw0Mj4gODAgM2MgMzAgMDAgNzQgMDUg
+ZTggZGIgNTAgZjQgZmYgNDggOGIgN2IgMDggZTggYzIgODkgMDMgMDAgNDgKUlNQOiAwMDE4OmZm
+ZmZjOTAwMDM1YmY5ZTggRUZMQUdTOiAwMDAxMDIwMwpSQVg6IDAwMDAwMDAwMDAwMDAwMDggUkJY
+OiAwMDAwMDAwMDAwMDAwMDNjIFJDWDogZmZmZjg4ODEwYzM2YTUwMApSRFg6IDAwMDAwMDAwMDAw
+MDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDAwIFJESTogMDAwMDAwMDAwMDAwMDA0NApSQlA6IGZm
+ZmZjOTAwMDM1YmZiNzAgUjA4OiBmZmZmZmZmZjkxNjViNzc3IFIwOTogMDAwMDAwMDAwMDAwMDAw
+MApSMTA6IGZmZmZmZmZmOTE2NWI3NjAgUjExOiBmZmZmZmJmZmYyMmNiNmVmIFIxMjogZmZmZmZm
+ZmZmZmZmZmZmNApSMTM6IGRmZmZmYzAwMDAwMDAwMDAgUjE0OiBkZmZmZmMwMDAwMDAwMDAwIFIx
+NTogMDAwMDAwMDAwMDAwMDAwMApGUzogIDAwMDA1NTU1NjBhODY1MDAoMDAwMCkgR1M6ZmZmZjg4
+ODJhYjZiNjAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwCkNTOiAgMDAxMCBEUzogMDAw
+MCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMKQ1IyOiAwMDAwN2Y1MjhjMjQwNzYwIENS
+MzogMDAwMDAwMDEyMTRjYjAwMCBDUjQ6IDAwMDAwMDAwMDA3NTBlZjAKUEtSVTogMDAwMDAwMDAK
+LS0tLS0tLS0tLS0tLS0tLQpDb2RlIGRpc2Fzc2VtYmx5IChiZXN0IGd1ZXNzKToKICAgMDoJOTAg
+ICAgICAgICAgICAgICAgICAgCW5vcAogICAxOglmMyAwZiAxZSBmYSAgICAgICAgICAJZW5kYnI2
+NAogICA1OgkwZiAxZiA0NCAwMCAwMCAgICAgICAJbm9wbCAgIDB4MCglcmF4LCVyYXgsMSkKICAg
+YToJNDEgNTYgICAgICAgICAgICAgICAgCXB1c2ggICAlcjE0CiAgIGM6CTUzICAgICAgICAgICAg
+ICAgICAgIAlwdXNoICAgJXJieAogICBkOgk0OCA4OSBmYiAgICAgICAgICAgICAJbW92ICAgICVy
+ZGksJXJieAogIDEwOgk0OSBiZSAwMCAwMCAwMCAwMCAwMCAJbW92YWJzICQweGRmZmZmYzAwMDAw
+MDAwMDAsJXIxNAogIDE3OglmYyBmZiBkZgogIDFhOgllOCAyMiA5MSA4YSBmZiAgICAgICAJY2Fs
+bCAgIDB4ZmY4YTkxNDEKICAxZjoJNDggOGQgN2IgMDggICAgICAgICAgCWxlYSAgICAweDgoJXJi
+eCksJXJkaQogIDIzOgk0OCA4OSBmOCAgICAgICAgICAgICAJbW92ICAgICVyZGksJXJheAogIDI2
+Ogk0OCBjMSBlOCAwMyAgICAgICAgICAJc2hyICAgICQweDMsJXJheAoqIDJhOgk0MiA4MCAzYyAz
+MCAwMCAgICAgICAJY21wYiAgICQweDAsKCVyYXgsJXIxNCwxKSA8LS0gdHJhcHBpbmcgaW5zdHJ1
+Y3Rpb24KICAyZjoJNzQgMDUgICAgICAgICAgICAgICAgCWplICAgICAweDM2CiAgMzE6CWU4IGRi
+IDUwIGY0IGZmICAgICAgIAljYWxsICAgMHhmZmY0NTExMQogIDM2Ogk0OCA4YiA3YiAwOCAgICAg
+ICAgICAJbW92ICAgIDB4OCglcmJ4KSwlcmRpCiAgM2E6CWU4IGMyIDg5IDAzIDAwICAgICAgIAlj
+YWxsICAgMHgzOGEwMQogIDNmOgk0OCAgICAgICAgICAgICAgICAgICAJcmV4LlcK
+--0000000000004855300652e3fa58
+Content-Type: application/octet-stream; name="reproducer.c"
+Content-Disposition: attachment; filename="reproducer.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mpprgbbo1>
+X-Attachment-Id: f_mpprgbbo1
+
+Ly8gYXV0b2dlbmVyYXRlZCBieSBzeXprYWxsZXIgKGh0dHBzOi8vZ2l0aHViLmNvbS9nb29nbGUv
+c3l6a2FsbGVyKQoKI2RlZmluZSBfR05VX1NPVVJDRQoKI2luY2x1ZGUgPGVuZGlhbi5oPgojaW5j
+bHVkZSA8ZXJybm8uaD4KI2luY2x1ZGUgPGZjbnRsLmg+CiNpbmNsdWRlIDxzaWduYWwuaD4KI2lu
+Y2x1ZGUgPHN0ZGFyZy5oPgojaW5jbHVkZSA8c3RkYm9vbC5oPgojaW5jbHVkZSA8c3RkaW50Lmg+
+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDxzdHJpbmcu
+aD4KI2luY2x1ZGUgPHN5cy9tb3VudC5oPgojaW5jbHVkZSA8c3lzL3N0YXQuaD4KI2luY2x1ZGUg
+PHN5cy9zeXNjYWxsLmg+CiNpbmNsdWRlIDxzeXMvdHlwZXMuaD4KI2luY2x1ZGUgPHN5cy93YWl0
+Lmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KCnN0YXRpYyBib29sIHdyaXRlX2ZpbGUoY29uc3QgY2hh
+ciogZmlsZSwgY29uc3QgY2hhciogd2hhdCwgLi4uKQp7CiAgY2hhciBidWZbMTAyNF07CiAgdmFf
+bGlzdCBhcmdzOwogIHZhX3N0YXJ0KGFyZ3MsIHdoYXQpOwogIHZzbnByaW50ZihidWYsIHNpemVv
+ZihidWYpLCB3aGF0LCBhcmdzKTsKICB2YV9lbmQoYXJncyk7CiAgYnVmW3NpemVvZihidWYpIC0g
+MV0gPSAwOwogIGludCBsZW4gPSBzdHJsZW4oYnVmKTsKICBpbnQgZmQgPSBvcGVuKGZpbGUsIE9f
+V1JPTkxZIHwgT19DTE9FWEVDKTsKICBpZiAoZmQgPT0gLTEpCiAgICByZXR1cm4gZmFsc2U7CiAg
+aWYgKHdyaXRlKGZkLCBidWYsIGxlbikgIT0gbGVuKSB7CiAgICBpbnQgZXJyID0gZXJybm87CiAg
+ICBjbG9zZShmZCk7CiAgICBlcnJubyA9IGVycjsKICAgIHJldHVybiBmYWxzZTsKICB9CiAgY2xv
+c2UoZmQpOwogIHJldHVybiB0cnVlOwp9CgpzdGF0aWMgaW50IGluamVjdF9mYXVsdChpbnQgbnRo
+KQp7CiAgaW50IGZkOwogIGZkID0gb3BlbigiL3Byb2MvdGhyZWFkLXNlbGYvZmFpbC1udGgiLCBP
+X1JEV1IpOwogIGlmIChmZCA9PSAtMSkKICAgIGV4aXQoMSk7CiAgY2hhciBidWZbMTZdOwogIHNw
+cmludGYoYnVmLCAiJWQiLCBudGgpOwogIGlmICh3cml0ZShmZCwgYnVmLCBzdHJsZW4oYnVmKSkg
+IT0gKHNzaXplX3Qpc3RybGVuKGJ1ZikpCiAgICBleGl0KDEpOwogIHJldHVybiBmZDsKfQoKc3Rh
+dGljIGNvbnN0IGNoYXIqIHNldHVwX2ZhdWx0KCkKewogIGludCBmZCA9IG9wZW4oIi9wcm9jL3Nl
+bGYvbWFrZS1pdC1mYWlsIiwgT19XUk9OTFkpOwogIGlmIChmZCA9PSAtMSkKICAgIHJldHVybiAi
+Q09ORklHX0ZBVUxUX0lOSkVDVElPTiBpcyBub3QgZW5hYmxlZCI7CiAgY2xvc2UoZmQpOwogIGZk
+ID0gb3BlbigiL3Byb2MvdGhyZWFkLXNlbGYvZmFpbC1udGgiLCBPX1dST05MWSk7CiAgaWYgKGZk
+ID09IC0xKQogICAgcmV0dXJuICJrZXJuZWwgZG9lcyBub3QgaGF2ZSBzeXN0ZW1hdGljIGZhdWx0
+IGluamVjdGlvbiBzdXBwb3J0IjsKICBjbG9zZShmZCk7CiAgc3RhdGljIHN0cnVjdCB7CiAgICBj
+b25zdCBjaGFyKiBmaWxlOwogICAgY29uc3QgY2hhciogdmFsOwogICAgYm9vbCBmYXRhbDsKICB9
+IGZpbGVzW10gPSB7CiAgICAgIHsiL3N5cy9rZXJuZWwvZGVidWcvZmFpbHNsYWIvaWdub3JlLWdm
+cC13YWl0IiwgIk4iLCB0cnVlfSwKICAgICAgeyIvc3lzL2tlcm5lbC9kZWJ1Zy9mYWlsX2Z1dGV4
+L2lnbm9yZS1wcml2YXRlIiwgIk4iLCBmYWxzZX0sCiAgICAgIHsiL3N5cy9rZXJuZWwvZGVidWcv
+ZmFpbF9wYWdlX2FsbG9jL2lnbm9yZS1nZnAtaGlnaG1lbSIsICJOIiwgZmFsc2V9LAogICAgICB7
+Ii9zeXMva2VybmVsL2RlYnVnL2ZhaWxfcGFnZV9hbGxvYy9pZ25vcmUtZ2ZwLXdhaXQiLCAiTiIs
+IGZhbHNlfSwKICAgICAgeyIvc3lzL2tlcm5lbC9kZWJ1Zy9mYWlsX3BhZ2VfYWxsb2MvbWluLW9y
+ZGVyIiwgIjAiLCBmYWxzZX0sCiAgfTsKICB1bnNpZ25lZCBpOwogIGZvciAoaSA9IDA7IGkgPCBz
+aXplb2YoZmlsZXMpIC8gc2l6ZW9mKGZpbGVzWzBdKTsgaSsrKSB7CiAgICBpZiAoIXdyaXRlX2Zp
+bGUoZmlsZXNbaV0uZmlsZSwgZmlsZXNbaV0udmFsKSkgewogICAgICBpZiAoZmlsZXNbaV0uZmF0
+YWwpCiAgICAgICAgcmV0dXJuICJmYWlsZWQgdG8gd3JpdGUgZmF1bHQgaW5qZWN0aW9uIGZpbGUi
+OwogICAgfQogIH0KICByZXR1cm4gTlVMTDsKfQoKc3RhdGljIHZvaWQgc2V0dXBfc3lzY3RsKCkK
+ewogIGludCBjYWRfcGlkID0gZm9yaygpOwogIGlmIChjYWRfcGlkIDwgMCkKICAgIGV4aXQoMSk7
+CiAgaWYgKGNhZF9waWQgPT0gMCkgewogICAgZm9yICg7OykKICAgICAgc2xlZXAoMTAwKTsKICB9
+CiAgY2hhciB0bXBwaWRbMzJdOwogIHNucHJpbnRmKHRtcHBpZCwgc2l6ZW9mKHRtcHBpZCksICIl
+ZCIsIGNhZF9waWQpOwogIHN0cnVjdCB7CiAgICBjb25zdCBjaGFyKiBuYW1lOwogICAgY29uc3Qg
+Y2hhciogZGF0YTsKICB9IGZpbGVzW10gPSB7CiAgICAgIHsiL3N5cy9rZXJuZWwvZGVidWcveDg2
+L25taV9sb25nZXN0X25zIiwgIjEwMDAwMDAwMDAwIn0sCiAgICAgIHsiL3Byb2Mvc3lzL2tlcm5l
+bC9odW5nX3Rhc2tfY2hlY2tfaW50ZXJ2YWxfc2VjcyIsICIyMCJ9LAogICAgICB7Ii9wcm9jL3N5
+cy9uZXQvY29yZS9icGZfaml0X2thbGxzeW1zIiwgIjEifSwKICAgICAgeyIvcHJvYy9zeXMvbmV0
+L2NvcmUvYnBmX2ppdF9oYXJkZW4iLCAiMCJ9LAogICAgICB7Ii9wcm9jL3N5cy9rZXJuZWwva3B0
+cl9yZXN0cmljdCIsICIwIn0sCiAgICAgIHsiL3Byb2Mvc3lzL2tlcm5lbC9zb2Z0bG9ja3VwX2Fs
+bF9jcHVfYmFja3RyYWNlIiwgIjEifSwKICAgICAgeyIvcHJvYy9zeXMvZnMvbW91bnQtbWF4Iiwg
+IjEwMCJ9LAogICAgICB7Ii9wcm9jL3N5cy92bS9vb21fZHVtcF90YXNrcyIsICIwIn0sCiAgICAg
+IHsiL3Byb2Mvc3lzL2RlYnVnL2V4Y2VwdGlvbi10cmFjZSIsICIwIn0sCiAgICAgIHsiL3Byb2Mv
+c3lzL2tlcm5lbC9wcmludGsiLCAiNyA0IDEgMyJ9LAogICAgICB7Ii9wcm9jL3N5cy9rZXJuZWwv
+a2V5cy9nY19kZWxheSIsICIxIn0sCiAgICAgIHsiL3Byb2Mvc3lzL3ZtL29vbV9raWxsX2FsbG9j
+YXRpbmdfdGFzayIsICIxIn0sCiAgICAgIHsiL3Byb2Mvc3lzL2tlcm5lbC9jdHJsLWFsdC1kZWwi
+LCAiMCJ9LAogICAgICB7Ii9wcm9jL3N5cy9rZXJuZWwvY2FkX3BpZCIsIHRtcHBpZH0sCiAgfTsK
+ICBmb3IgKHNpemVfdCBpID0gMDsgaSA8IHNpemVvZihmaWxlcykgLyBzaXplb2YoZmlsZXNbMF0p
+OyBpKyspIHsKICAgIGlmICghd3JpdGVfZmlsZShmaWxlc1tpXS5uYW1lLCBmaWxlc1tpXS5kYXRh
+KSkgewogICAgfQogIH0KICBraWxsKGNhZF9waWQsIFNJR0tJTEwpOwogIHdoaWxlICh3YWl0cGlk
+KGNhZF9waWQsIE5VTEwsIDApICE9IGNhZF9waWQpCiAgICA7Cn0KCnVpbnQ2NF90IHJbMV0gPSB7
+MHhmZmZmZmZmZmZmZmZmZmZmfTsKCmludCBtYWluKHZvaWQpCnsKICBzeXNjYWxsKF9fTlJfbW1h
+cCwgLyphZGRyPSovMHgxZmZmZmZmZmYwMDB1bCwgLypsZW49Ki8weDEwMDB1bCwgLypwcm90PSov
+MHVsLAogICAgICAgICAgLypmbGFncz1NQVBfRklYRUR8TUFQX0FOT05ZTU9VU3xNQVBfUFJJVkFU
+RSovIDB4MzJ1bCwKICAgICAgICAgIC8qZmQ9Ki8oaW50cHRyX3QpLTEsIC8qb2Zmc2V0PSovMHVs
+KTsKICBzeXNjYWxsKF9fTlJfbW1hcCwgLyphZGRyPSovMHgyMDAwMDAwMDAwMDB1bCwgLypsZW49
+Ki8weDEwMDAwMDB1bCwKICAgICAgICAgIC8qcHJvdD1QUk9UX1dSSVRFfFBST1RfUkVBRHxQUk9U
+X0VYRUMqLyA3dWwsCiAgICAgICAgICAvKmZsYWdzPU1BUF9GSVhFRHxNQVBfQU5PTllNT1VTfE1B
+UF9QUklWQVRFKi8gMHgzMnVsLAogICAgICAgICAgLypmZD0qLyhpbnRwdHJfdCktMSwgLypvZmZz
+ZXQ9Ki8wdWwpOwogIHN5c2NhbGwoX19OUl9tbWFwLCAvKmFkZHI9Ki8weDIwMDAwMTAwMDAwMHVs
+LCAvKmxlbj0qLzB4MTAwMHVsLCAvKnByb3Q9Ki8wdWwsCiAgICAgICAgICAvKmZsYWdzPU1BUF9G
+SVhFRHxNQVBfQU5PTllNT1VTfE1BUF9QUklWQVRFKi8gMHgzMnVsLAogICAgICAgICAgLypmZD0q
+LyhpbnRwdHJfdCktMSwgLypvZmZzZXQ9Ki8wdWwpOwogIHNldHVwX3N5c2N0bCgpOwogIGNvbnN0
+IGNoYXIqIHJlYXNvbjsKICAodm9pZClyZWFzb247CiAgaWYgKChyZWFzb24gPSBzZXR1cF9mYXVs
+dCgpKSkKICAgIHByaW50ZigidGhlIHJlcHJvZHVjZXIgbWF5IG5vdCB3b3JrIGFzIGV4cGVjdGVk
+OiBmYXVsdCBpbmplY3Rpb24gc2V0dXAgIgogICAgICAgICAgICJmYWlsZWQ6ICVzXG4iLAogICAg
+ICAgICAgIHJlYXNvbik7CiAgaW50cHRyX3QgcmVzID0gMDsKICBpZiAod3JpdGUoMSwgImV4ZWN1
+dGluZyBwcm9ncmFtXG4iLCBzaXplb2YoImV4ZWN1dGluZyBwcm9ncmFtXG4iKSAtIDEpKSB7CiAg
+fQogIC8vICBta2RpciBhcmd1bWVudHM6IFsKICAvLyAgICBwYXRoOiBwdHJbaW4sIGJ1ZmZlcl0g
+ewogIC8vICAgICAgYnVmZmVyOiB7MmUgMmYgNzAgNmQgMzIgMzkgMzAgMzggNjUgMDB9IChsZW5n
+dGggMHhhKQogIC8vICAgIH0KICAvLyAgICBtb2RlOiBvcGVuX21vZGUgPSAweDFmZiAoOCBieXRl
+cykKICAvLyAgXQogIG1lbWNweSgodm9pZCopMHgyMDAwMDAwMDEwMDAsICIuL3BtMjkwOGVcMDAw
+IiwgMTApOwogIHN5c2NhbGwoCiAgICAgIF9fTlJfbWtkaXIsIC8qcGF0aD0qLzB4MjAwMDAwMDAx
+MDAwdWwsCiAgICAgIC8qbW9kZT1TX0lYT1RIfFNfSVdPVEh8U19JUk9USHxTX0lYR1JQfFNfSVdH
+UlB8U19JUkdSUHxTX0lYVVNSfFNfSVdVU1J8MHgxMDAqLwogICAgICAweDFmZnVsKTsKICAvLyAg
+bW91bnQgYXJndW1lbnRzOiBbCiAgLy8gICAgc3JjOiBuaWwKICAvLyAgICBkc3Q6IHB0cltpbiwg
+YnVmZmVyXSB7CiAgLy8gICAgICBidWZmZXI6IHsyZSAyZiA3MCA2ZCAzMiAzOSAzMCAzOCA2NSAw
+MH0gKGxlbmd0aCAweGEpCiAgLy8gICAgfQogIC8vICAgIHR5cGU6IHB0cltpbiwgYnVmZmVyXSB7
+CiAgLy8gICAgICBidWZmZXI6IHs3NCA3MiA2MSA2MyA2NSA2NiA3MyAwMH0gKGxlbmd0aCAweDgp
+CiAgLy8gICAgfQogIC8vICAgIGZsYWdzOiBtb3VudF9mbGFncyA9IDB4MCAoOCBieXRlcykKICAv
+LyAgICBkYXRhOiBuaWwKICAvLyAgXQogIG1lbWNweSgodm9pZCopMHgyMDAwMDAwMDEwNDAsICIu
+L3BtMjkwOGVcMDAwIiwgMTApOwogIG1lbWNweSgodm9pZCopMHgyMDAwMDAwMDEwODAsICJ0cmFj
+ZWZzXDAwMCIsIDgpOwogIHN5c2NhbGwoX19OUl9tb3VudCwgLypzcmM9Ki8wdWwsIC8qZHN0PSov
+MHgyMDAwMDAwMDEwNDB1bCwKICAgICAgICAgIC8qdHlwZT0qLzB4MjAwMDAwMDAxMDgwdWwsIC8q
+ZmxhZ3M9Ki8wdWwsIC8qZGF0YT0qLzB1bCk7CiAgLy8gIG9wZW5hdCBhcmd1bWVudHM6IFsKICAv
+LyAgICBmZDogZmRfZGlyIChyZXNvdXJjZSkKICAvLyAgICBmaWxlOiBwdHJbaW4sIGJ1ZmZlcl0g
+ewogIC8vICAgICAgYnVmZmVyOiB7MmUgMmYgNzAgNmQgMzIgMzkgMzAgMzggNjUgMmYgNzUgNzAg
+NzIgNmYgNjIgNjUgNWYgNjUgNzYgNjUKICAvLyAgICAgIDZlIDc0IDczIDAwfSAobGVuZ3RoIDB4
+MTgpCiAgLy8gICAgfQogIC8vICAgIGZsYWdzOiBvcGVuX2ZsYWdzID0gMHgxICg0IGJ5dGVzKQog
+IC8vICAgIG1vZGU6IG9wZW5fbW9kZSA9IDB4MCAoMiBieXRlcykKICAvLyAgXQogIC8vICByZXR1
+cm5zIGZkCiAgbWVtY3B5KCh2b2lkKikweDIwMDAwMDAwMTBjMCwgIi4vcG0yOTA4ZS91cHJvYmVf
+ZXZlbnRzXDAwMCIsIDI0KTsKICByZXMgPSBzeXNjYWxsKF9fTlJfb3BlbmF0LCAvKmZkPSovMHhm
+ZmZmZmY5YywgLypmaWxlPSovMHgyMDAwMDAwMDEwYzB1bCwKICAgICAgICAgICAgICAgIC8qZmxh
+Z3M9T19XUk9OTFkqLyAxLCAvKm1vZGU9Ki8wKTsKICBpZiAocmVzICE9IC0xKQogICAgclswXSA9
+IHJlczsKICAvLyAgd3JpdGUgYXJndW1lbnRzOiBbCiAgLy8gICAgZmQ6IGZkIChyZXNvdXJjZSkK
+ICAvLyAgICBidWY6IHB0cltpbiwgYnVmZmVyXSB7CiAgLy8gICAgICBidWZmZXI6IHs3MCAzYSA3
+NSA3MCA3MiA2ZiA2MiA2NSA3MyAyZiA3MCA2ZCAzMiAzOSAzMCAzOCA2NSAyMCAyZiA3MAogIC8v
+ICAgICAgNzIgNmYgNjMgMmYgNzMgNjUgNmMgNjYgMmYgNjUgNzggNjUgM2EgMzB9IChsZW5ndGgg
+MHgyMikKICAvLyAgICB9CiAgLy8gICAgY291bnQ6IGxlbiA9IDB4MjIgKDggYnl0ZXMpCiAgLy8g
+IF0KICBtZW1jcHkoKHZvaWQqKTB4MjAwMDAwMDAxMTAwLCAicDp1cHJvYmVzL3BtMjkwOGUgL3By
+b2Mvc2VsZi9leGU6MCIsIDM0KTsKICBpbmplY3RfZmF1bHQoMTIpOwogIHN5c2NhbGwoX19OUl93
+cml0ZSwgLypmZD0qL3JbMF0sIC8qYnVmPSovMHgyMDAwMDAwMDExMDB1bCwgLypjb3VudD0qLzB4
+MjJ1bCk7CiAgcmV0dXJuIDA7Cn0K
+--0000000000004855300652e3fa58
+Content-Type: application/octet-stream; name="reproducer.syz"
+Content-Disposition: attachment; filename="reproducer.syz"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mpprgbbv2>
+X-Attachment-Id: f_mpprgbbv2
+
+IyB7VGhyZWFkZWQ6ZmFsc2UgUmVwZWF0OmZhbHNlIFJlcGVhdFRpbWVzOjAgUHJvY3M6MSBTbG93
+ZG93bjoxIFNhbmRib3g6IFNhbmRib3hBcmc6MCBMZWFrOmZhbHNlIE5ldEluamVjdGlvbjpmYWxz
+ZSBOZXREZXZpY2VzOmZhbHNlIE5ldFJlc2V0OmZhbHNlIENncm91cHM6ZmFsc2UgQmluZm10TWlz
+YzpmYWxzZSBDbG9zZUZEczpmYWxzZSBLQ1NBTjpmYWxzZSBEZXZsaW5rUENJOmZhbHNlIE5pY1ZG
+OmZhbHNlIFVTQjpmYWxzZSBWaGNpSW5qZWN0aW9uOmZhbHNlIFdpZmk6ZmFsc2UgSUVFRTgwMjE1
+NDpmYWxzZSBTeXNjdGw6dHJ1ZSBTd2FwOmZhbHNlIFVzZVRtcERpcjpmYWxzZSBIYW5kbGVTZWd2
+OmZhbHNlIFRyYWNlOmZhbHNlIENhbGxDb21tZW50czp0cnVlIExlZ2FjeU9wdGlvbnM6e0NvbGxp
+ZGU6ZmFsc2UgRmF1bHQ6ZmFsc2UgRmF1bHRDYWxsOjAgRmF1bHROdGg6MH19Cm1rZGlyKCYoMHg3
+ZjAwMDAwMDEwMDApPScuL3BtMjkwOGVceDAwJywgMHgxZmYpCm1vdW50KDB4MCwgJigweDdmMDAw
+MDAwMTA0MCk9Jy4vcG0yOTA4ZVx4MDAnLCAmKDB4N2YwMDAwMDAxMDgwKT0ndHJhY2Vmc1x4MDAn
+LCAweDAsIDB4MCkKcjAgPSBvcGVuYXQoMHhmZmZmZmZmZmZmZmZmZjljLCAmKDB4N2YwMDAwMDAx
+MGMwKT0nLi9wbTI5MDhlL3Vwcm9iZV9ldmVudHNceDAwJywgMHgxLCAweDApCndyaXRlKHIwLCAm
+KDB4N2YwMDAwMDAxMTAwKT0ncDp1cHJvYmVzL3BtMjkwOGUgL3Byb2Mvc2VsZi9leGU6MCcsIDB4
+MjIpIChmYWlsX250aDogMTIpCg==
+--0000000000004855300652e3fa58--
