@@ -1,180 +1,94 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E773B0AF8
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 11:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4B83E5576;
+	Thu, 28 May 2026 12:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779966652; cv=none; b=LGWpQ1FIxXTJl/T7XjTj1Qg6RHaGgtSThUGi58bmpOwCdK3dUyQgvbgeju8xvd8MaSvmj/0O35XmjdrqKyqADsqbj9yE8qf/RcoBzOqhQ9R4izPaNIEGzctJA8mcweFOvdd9MgCNHY8yWp/UY67+N0eZv1kkHw2q5IWVxj7FvVc=
+	t=1779970276; cv=none; b=ZVeewjjB7KpO2mU3WjxyejVD7wO+XsqwRcf/R/uZI1SfVCyXx2+Unz6bGxyerLdC80a3l4hUWATRiHU/E2LFFWhmfCdxsfY4bXZ/hcO/XpYPHjiaZrFBcot40shvyPn9A5hPuYqOYVDzZHdEZC+m91JRhECwAzL+thCUoJ6Ibis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779966652; c=relaxed/simple;
-	bh=/KwnVJ2dbFKGYx9yHvg5KoYWWC4aW2SQGlKiGmzLvYU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qlze/JitPZ4jNTJxcrxllBKMORvkwehtAVvqR7OAdSvn/b8GGhOu7lada3MEeq7LnJEpW2dh9WLs2qIueWxTTQWnQJpW5IK+YecVia9ZElQ6fu6pOcu3ELl/L9hDrGPpanLQ9xybD95DBeW4CR8bIWldGnnRAFT5TOOseV5VCM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R5htYmZ6; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779970276; c=relaxed/simple;
+	bh=tGIC/AyQACA+lR256/z7ZDVfaq5pMMadhUh5Wwxw6SE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cZ00aQGuXWaaecmHWh77aDhRq9G5OWQ1hnrw6ZHdei+iqzVW/H+wF3Y7+n9igjvt1jNpevb33NSGn3yyHhqbuCyiVQDzFuft+BcBWqXZnfMGTxNnpHq1SYNj/DEeMAVbhjSG1G2HI1i8GtuCeKZsfCxdWLBtIa6WwycUVlZxxcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEiQQ4K4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5htYmZ6"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-49041fb8c23so50269915e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 04:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779966649; x=1780571449; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dsYRPtt8V39CegAnVfUYJmqEAedS3Hwf+vTU6He99LA=;
-        b=R5htYmZ6/ZWqlbYEDIgtBbk92Q5VKySdQYzMZjXZcgpMpzuPTpUvFpV6Gkg8krrtKI
-         7Rl2QLEo3T9P8g1gS88FowyZuW6HN+HO0Qrks+GQEcTkFkGrcdf/1YCStk0+PYHg1QFx
-         doC42Ubpaa0zs4wMNO9YEDeOK5SZsfdbtv8cPmz6AcJwB+gjjv3IQ2YoYXAZbQjGb4J2
-         1CwJm6NS0dUv2pXIkFUvX6U8L+pFHEgnrRGslQqBvFwz5W/pqp/ZdLnOxzGpBvuEjDrG
-         A0+IyPYdW8ODEobQc1pRiNaKI0aisGyt2Atk1GArWFvyE86VDEaI83d6IkvIYGwPw+W4
-         c6kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779966649; x=1780571449;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dsYRPtt8V39CegAnVfUYJmqEAedS3Hwf+vTU6He99LA=;
-        b=GCCoH7ReI0igDV9H6hJt2VAnqs11olf704lMFATwW+XUTxzBarqnOHSJlW9dfsyZbC
-         gUYEPk5xwyVEgjA3VLSIwbY1P/6EWtUgQzLNhfED0zzI6c2CJpfhaWYnu6s6QZsqi5b7
-         qGncY5k8RIU5uhjiBJCWBKHJxOqaD5UsRrNi0T+Fs6C3GdknZxXaEIupjD8E2eQstPxZ
-         LuXVc/3SXQkh5pclnTF8mC99pY9W23PlccOFZjDRgaDScw4bjvQiSsbkcT9fnQXZusp9
-         28cqYWz9+Bu7X2H4UmdaK0yTjBizsD05sKrq3q3ISOpTmUw8ojzLKglfxfKIopYEY4ec
-         5qrg==
-X-Forwarded-Encrypted: i=1; AFNElJ8FVMnpHVqXuCD3RWiaq5e8Y2o7vvcwHpsYSy6jSFBVJUD0J7vLRspQ3uS0yVtNlMlAOWWzRmnvpn6AYbc+8miMynY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK19g1sLRg2eaAd6JaAyDXzwGA8lv38ePFqlFENE9MM+QvKtVJ
-	tzJFSJJ40vNlFDHuE85du3agTmPXKir1KbZEaDoOMvQcCKzWI6VuWEur
-X-Gm-Gg: Acq92OGk/pneIt034L3nlMziHCpVY67rygM+epUz2vW+yw/+CkNeGRa5+aXiHVuMMEl
-	Zkm7crpRRoRuo8MYaveUC4D8H8FJ0L2f4pOGSRFj+JM3jSYerYiM/Nz+yvvE/Leszue3qfhEGn3
-	6aj3ZNaDxGcCcvtT5HXrwjWV5ZwI+rxr9oYus55w649nibz+Ir4qu1icMRAj539g071w9b/7jjw
-	F+Luf8qrDPyzBULY8A4u7ku5FvXPbmEZRiFNs488mLOCLoDPWlk12HvfeqyWln69tx28KAYmWmt
-	U5LiANfYHRfCjOMoGuwPU1i2gxy5XBQ8GSePXY7W/s3ha2BJSzVXHfgSS87e34I40qVmIYpAwxN
-	GcUziR77SCE2PWpMs6yfbSvAHlTsB9SDKmF8+Nfy9W/OVjL7nqE6p9t2NPpNxu4m0KQHV2GY9jT
-	5Q+QZkTXWu6358Aa1XYiE9SZaLzA==
-X-Received: by 2002:a05:600c:4688:b0:48f:e230:80a3 with SMTP id 5b1f17b1804b1-49042ae99afmr436971075e9.33.1779966649100;
-        Thu, 28 May 2026 04:10:49 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45edb5b314dsm11971146f8f.30.2026.05.28.04.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 04:10:48 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 28 May 2026 13:10:46 +0200
-To: Jakub Sitnicki <jakub@cloudflare.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 11/13] selftests/bpf: Add reattach tests for uprobe
- syscall
-Message-ID: <ahgitmxJekXn_4Cs@krava>
-References: <20260526205840.173790-1-jolsa@kernel.org>
- <20260526205840.173790-12-jolsa@kernel.org>
- <87tsrt5bq7.fsf@cloudflare.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEiQQ4K4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A795E1F000E9;
+	Thu, 28 May 2026 12:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779970273;
+	bh=bXnftk/OKOffma6hnrgGhxCRMA65PWP8cZj4tNQWqKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YEiQQ4K4iXk//kQRPbUqsgU2KxNTN9prTrOyc8q/D5jw0UA5yBuhwzY5hRo9PUCZi
+	 X8roXwThGjczMuwGC/Ndiw2h2PD2W0h7Kkpc6GPHF7Luc6eygin1AIvfRRWLKg9X8v
+	 +xoWr6Q35ZnrkgYrErLudsOp2YxI9syEnQFWEDYzwpr1/iiowuYGX+8BykRKHjsij6
+	 Jv9wj0v0SqqHdUC44QfBqFbychXTHU1y+/cFkmIuuT2USmL/02rQjOdBrt5GYI6tJd
+	 OrVP8/cc9jUua6mnE9kdqm9J+3X2REi6mf21GKgCUxj5O5gAnp63ILy47mP6GIOS6x
+	 t4Dp6TQ+zNRAg==
+Date: Thu, 28 May 2026 14:11:10 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: Artur Kowalski <arturkow2000@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
+Message-ID: <ahgw0zZhY_-RMwUA@orome>
+References: <20260519-host1x-tracing-v1-1-55afb8cbd186@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4opbyer3wpfx6z6r"
 Content-Disposition: inline
-In-Reply-To: <87tsrt5bq7.fsf@cloudflare.com>
+In-Reply-To: <20260519-host1x-tracing-v1-1-55afb8cbd186@gmail.com>
 
-On Wed, May 27, 2026 at 01:32:48PM +0200, Jakub Sitnicki wrote:
-> On Tue, May 26, 2026 at 10:58 PM +02, Jiri Olsa wrote:
-> > Adding reattach tests for uprobe syscall tests to make sure
-> > we can re-attach and optimize same uprobe multiple times.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  .../selftests/bpf/prog_tests/uprobe_syscall.c | 114 ++++++++++++++++--
-> >  1 file changed, 104 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > index 0868fb9793e0..969f4deba9fd 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > @@ -430,23 +430,28 @@ static void *check_attach(struct uprobe_syscall_executed *skel, trigger_t trigge
-> >  	return tramp;
-> >  }
-> >  
-> > -static void check_detach(void *addr, void *tramp)
-> > +static bool check_detach(void *addr, void *tramp)
-> >  {
-> >  	static const char nop10_prefix[] = { 0x66, 0x2e, 0x0f, 0x1f, 0x84 };
-> > +	bool ok = true;
-> >  
-> >  	/* [uprobes_trampoline] stays after detach */
-> > -	ASSERT_OK(find_uprobes_trampoline(tramp), "uprobes_trampoline");
-> > -	ASSERT_OK(memcmp(addr, nop10_prefix, 5), "nop10_prefix");
-> > +	if (!ASSERT_OK(find_uprobes_trampoline(tramp), "uprobes_trampoline"))
-> > +		ok = false;
-> > +	if (!ASSERT_OK(memcmp(addr, nop10_prefix, 5), "nop10_prefix"))
-> > +		ok = false;
-> > +	return ok;
-> >  }
-> 
-> Nit: Maybe apply the same pattern you used in
-> progs/get_func_args_test.c?
-> 
-> ok &= ASSERT_OK(...)
-> ok &= ASSERT_OK(...)
 
-ok, safes space ;-)
+--4opbyer3wpfx6z6r
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] gpu: host1x: trace: fix string fields in host1x traces
+MIME-Version: 1.0
 
-> 
-> >  
-> > -static void check(struct uprobe_syscall_executed *skel, struct bpf_link *link,
-> > -		  trigger_t trigger, void *addr, int executed)
-> > +static void *check(struct uprobe_syscall_executed *skel, struct bpf_link *link,
-> > +		   trigger_t trigger, void *addr, int executed)
-> 
-> Nit: Kinda wish that was called check_attach_detach().
+On Tue, May 19, 2026 at 12:16:43PM +0200, Artur Kowalski wrote:
+> Use __assign_str and __get_str as required by tracing subsystem. Fixes
+> string fields being rejected by the verifier and unreadable from
+> userspace.
+>=20
+> Tested on v6.18.21.
+>=20
+> Signed-off-by: Artur Kowalski <arturkow2000@gmail.com>
+> ---
+>  include/trace/events/host1x.h | 50 ++++++++++++++++++++++---------------=
+------
+>  1 file changed, 26 insertions(+), 24 deletions(-)
 
-would need to check the existing code.. let's keep it
+Applied, thanks.
 
-> 
-> >  {
-> >  	void *tramp;
-> >  
-> >  	tramp = check_attach(skel, trigger, addr, executed);
-> >  	bpf_link__destroy(link);
-> >  	check_detach(addr, tramp);
-> > +	return tramp;
-> >  }
-> >  
-> >  static void test_uprobe_legacy(void)
-> > @@ -457,6 +462,7 @@ static void test_uprobe_legacy(void)
-> >  	);
-> >  	struct bpf_link *link;
-> >  	unsigned long offset;
-> > +	void *tramp;
-> >  
-> >  	offset = get_uprobe_offset(&uprobe_test);
-> >  	if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-> > @@ -474,7 +480,28 @@ static void test_uprobe_legacy(void)
-> >  	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_opts"))
-> >  		goto cleanup;
-> >  
-> > -	check(skel, link, uprobe_test, uprobe_test, 2);
-> > +	tramp = check(skel, link, uprobe_test, uprobe_test, 2);
-> > +
-> > +	/* reattach and detach without triggering optimization */
-> > +	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
-> > +					       0, "/proc/self/exe", offset, NULL);
-> > +	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_opts"))
-> > +		goto cleanup;
-> > +
-> 
-> In theory we're missing a check here that an unoptimized uprobe was
-> installed. If nothing happened at all between the last check() and
-> check_destroy() below, the test would still pass.
-> 
-> Applies to the three similar changes after that one as well.
+Thierry
 
-right, we can add extra check that there's int3 in here (and below)
+--4opbyer3wpfx6z6r
+Content-Type: application/pgp-signature; name="signature.asc"
 
-thanks,
-jirka
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmoYMN4ACgkQ3SOs138+
+s6GH1Q//QR5ThdWyD+g/p4MSrhw98bH62IOxAtpe0ifT/+xa/SVQYwSyyzxS7j+B
+hZRwdPu7HBwZoiJAVFChO+13MSehk8XAyi/S2Z4detl7Vpqbsdls9KRHXFQF4hBk
+t96Oljv5U9IYHKGBNYQ04WcYGdOHgZ7wAv+OPAZc9VaUJs+xdT9k1RqjCZmDwdlR
+u4MBPgtcq6a7xUMHZjFkHKxyuFkDjmmEw0DB1m2xH8jpuAp+U29jq//3cMoHEi3H
+VnFnLX6SOj3GEpjg4OqhqTDzDkC89tcGtTSkVRINiVsAPmKIoqCP7S9+YLpIaAEe
+TOyNz8EZAXIz3+TofsBtVbNAM3ZmknWyxli8xmi4Mu/hK4DIlHubcWMJMwAyt9M6
+GwQqVlM82wDjuqDGMJcQbVpLRSf6GeTLrMJXjVApPnEu0skEyq/9REEVxkZ5k5xj
+acNr7mxo2H/2FIkUeFXvtGg2iV6NpA5djiP4oFlYikjJDY1pEn3ClwfGI5j8hNVb
+A1dwbzS2C32uB9eDZVe+KkZo8ZHn1gq65FwOuFHHMC66ACXFS/j43FF83NO4aWeD
+erkFNmMVDuBd2UcgazconHV4jENOI+guevPphNTmowi7X5qziuRlkyEKvse+Lod1
+M7G7R4WsT4wY3ZBUfKoqax3u1qziTPD3cY+Q30J36gd538ZbXM4=
+=+Jze
+-----END PGP SIGNATURE-----
+
+--4opbyer3wpfx6z6r--
