@@ -1,420 +1,534 @@
-Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90DB3F9284
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 17:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.193
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779988974; cv=pass; b=WqlUwrtjdX7rXZdQ+00hMZ6dCmmWUyd94PH45oCg2htvq0LOu+m5asX/mVaHBCFY9aVpiZscXXchoRPMOABbnAt+HDRmG3YwC+ol1jFTniyNrET3wYymC6oSMKKwhbTsz2l+jy0KH4w0Jc7jgVsHZfHD16FEOgzK6s9CdCRQVGA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779988974; c=relaxed/simple;
-	bh=G7QzlLAhVeGIJ91SQtk43LFFwiieDciB+nrnQl68h6E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=N/3G8FoRqtns5zV278U4KVOBBGRnn9Y7bL6LF/qsg3KAL63arydZfj0B44TKFRwGf/F1qDjrgyd/pq5txd9H305uOBrIhaeP3CbBqDY676vYZi7HOwoSg/KW5zg/xnmftaazTODazInJ/GF09CyQcSn8l7runfvsWTqabSnNqQk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=berkeley.edu; spf=pass smtp.mailfrom=berkeley.edu; dkim=pass (2048-bit key) header.d=berkeley.edu header.i=@berkeley.edu header.b=EOcWSxkn; arc=pass smtp.client-ip=209.85.128.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=berkeley.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=berkeley.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31DA341ADF;
+	Thu, 28 May 2026 19:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779995392; cv=none; b=o9CW1PdemicEWogwy05aszt0cBMDMDeUb3OZNVDHThFNTQnnuFcPow9MgFET9zkuwHCA6WrZtEFcDqDTf34sGTMMBmnmxgDDCWAdzt0Zk5Uv/ZFvJ4NcUFuqkfgmk7kgVqV1OFK3zm0HNcXn0uTOueSqzg086tuji8WrLmUtKLw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779995392; c=relaxed/simple;
+	bh=Jh7Exf/C0iOc8dbbv6N2HwHbXlwOeaGDkjdSEWhM2oI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=POoQnSdsnhyfv9qvnEo/3OoPwthLgku9fevOKiJWqvwLpOAGc35MHQstM9kg33key0syfbH5j3Asncufyt/bSgbseNTlKefVAGJWYWR/P0CqvB3+aD4JLyjePllpyKXRohehus5NNR9ustu9Xub5G1b/NV+c3GtDol/Z10Vk5h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFi3fDDB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=berkeley.edu header.i=@berkeley.edu header.b="EOcWSxkn"
-Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-7ca947f9b00so127304027b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 10:22:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779988972; cv=none;
-        d=google.com; s=arc-20240605;
-        b=POkJZ0LHwSb5aZ+1Oi5I1vz5LGdbNU4Pe4UklxkEDUgnv0+WBq4czYM3Mo0l/FlnEI
-         f+X2SMHxX8yvzTy7igyIsAFtifwgxASA6MVArWu80ChL87SJw8wg0XOkrPcifAz/Yh3C
-         UGyEFfB+Le4NoUcg8XNy7dUWvAGja+NZD3GjqhCT9uN4+UyF91AKYnq/72x2ZPqX9182
-         gWW1i3LW9MzkEJGvo3jbHuUyhfzYRn92k8f8IyztXMLb+K45LU7o5YIzmtEKPxa7T3eW
-         sBSwoMPR8mOJwPGBqZy1cxfZr7Elalt+NqhIPEzRWv+/uzqRro7jdZMVmEJQTdItT0W7
-         8hLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=l0sPWI4ppUFHJl4laiOvN2MKbrmB+/15vblubFYdz3A=;
-        fh=UodOdSDuvfHR4drs2aX45P+GO5nQRV7F2brlsae/TuI=;
-        b=lYQxYAlZNpBkh6FrwciPRRokTIF72ZGqUL+pfov9nRc5ByYcWPt1T8VDJqVXU8pPtF
-         WFJo8js5StqUwtkTNTLPrTW6JmHcVje8CdwoWilJmOE2INBpzIDFgsyme4gw2/AsEzyX
-         rM0v0UEBvWjoFDH6TlbjbTqG+Qrhf9dgZEDbqR4WNBGt+5xA9TwiU9176ghj0LYQIh04
-         4vq5W3tYUnAbdVTc3gaxQFNxZDrg+jrnZ/dMsSx2p24T1+nGQL9F37E1556mDiLL9VZo
-         bxS/ASgw6PYmNWKvRM1o6V+JeSEzes6RFscEoBqN4h8N1FK+oF8eVlqP8Z4X+L6BZohf
-         BPzw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=berkeley.edu; s=google; t=1779988972; x=1780593772; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=l0sPWI4ppUFHJl4laiOvN2MKbrmB+/15vblubFYdz3A=;
-        b=EOcWSxknqmQzaOCuqAha+tqd2w66sXEuQRlZ4tv6BzYxUfKraNg1U1PQCpP4wr+XoH
-         H5DPUipZuQp/L7vwrBr+R4M7Ji1aGzG9g0jPmQABffC6s2DHvgwW32xh9Hgb9SGQwdBC
-         oZFWRtHhD8s1HS9cJQX2GkI4Bg8Jbch6gwb6RoMmzCraFKsh13otGPdmqZiIxQWNJI4Z
-         fVJvSL7gNW+qhtWVAOiE+Y+zLmTqE3ZhYvnGawcOVtoNN1hwAn/v27atY17t2AbpcTG7
-         /R7KCz+kl8MgUM7lliekT4tN7qywQylDKMsFSQKPFFSj/1B196xLaMTNKuiIt1rfud0y
-         hcwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779988972; x=1780593772;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l0sPWI4ppUFHJl4laiOvN2MKbrmB+/15vblubFYdz3A=;
-        b=c1CohFbbqRPiZg6ooYdy1DgnobfuEliEGLMX60rJA7D49wZSN7GS+otQwIJyxFLcs7
-         F3LxyA7GdDOvS9srLDutSRXT5Uk9Nyeqz0hXH88RbHFwS0mZsf15jiiXK+Uw5UbYxGlF
-         7QrCACXMPZ53mCcqcBrbLZWFRnGq/0f/FlfdxICwHqfna48KckWGy64wXTz6jMbNYnrN
-         QPucJojQOUP07u0ru7OG6D+2du1XHSMVbwp6pEh93huvwvmahVwRm7qO7ac4DlQjjfjH
-         V+/Nzi1FKMh5q4F3trEsbXY0ljMJwJypBC1g1JrYjCh0lkpHe/lSM9PnOTKM3UeEJVxN
-         Ew6g==
-X-Forwarded-Encrypted: i=1; AFNElJ8arzI2OxowTI10Og83ewDNyDlV3vzOR5RUP9PDmMYgymOmg9JnmfM6K4LrT3m9UDL8RNOMsqq8sH7D7oY+VFL4WaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEUsK4NbDpBhFo8S8/L9dqMIMvmAKBKrGIsC9rEdEUWJYK1/H3
-	Y63G/pplL1dVFaR9j8Ql14JWA+1rEQwll6ts3a9+fpa2y6n1zfpJsSDi3f9Y2SZbKHLOGkoSZe9
-	9Xg8lBbafUCXTaJNwjKtoHcA7SZzUW+Ta1MVmcJdu
-X-Gm-Gg: Acq92OGnQ1R2iQFaM4sQtX3F3tct388dDyxDVGltkRJaaqs4yxGYbL5b6A7lM3hZXcS
-	Mj+B3A14XI9C/EqftSQWOrrhOiLSDG9cxzMfwwDUQsiYS8UoCgdWshEN/W7GDFF1pCsH4XdvcJ0
-	Q2RWYA2m4IO1p9lWjxBan8CsCEVRp7KEOrU2XhCtV9T2ts9ppO6Nk1Rwsxhw+8h77pYFimkKXC6
-	8Ip4Swd8XH2yvI+tEG8/G9RAN6RWZIkuB3DVr4bxu/UzaectuEpNJrUjNLc7UWInZSLLS7/un7D
-	se+r8gecjxpSmDdv9w==
-X-Received: by 2002:a05:690c:6c8d:b0:7a1:3088:e528 with SMTP id
- 00721157ae682-7ddc101e82emr1707427b3.18.1779988970293; Thu, 28 May 2026
- 10:22:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFi3fDDB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA931F000E9;
+	Thu, 28 May 2026 19:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779995390;
+	bh=nAyyUVPs5gwE9zyHnhyLwM6SKdXZHNk8fW1+lvhH1fA=;
+	h=Date:From:To:Cc:Subject;
+	b=TFi3fDDB6+VbZpbAo5zY1uIC0RlaHoORrRda504Z5j0om9IR9omTzMkBp1nT9i+f2
+	 0GyievNoYrlMJQTpau2v/58g0BTypLMZQYtNco0a2l4dMW+E2PezMd62R3hHzm0oRb
+	 y4gbPlJaHS+z0A8iKVJ9QXJl+uP7g4uDJKAyfnJXcTdXVYNmJAteHKfIKufJ8q8qyT
+	 e7SdhJLBkZAp+xuUjKz8SIOvcp5trEWeIB0D4U1pGlq8S4dawku39MECY+QnkeHa8X
+	 J3d8P6+Xuum7IHAbS6xPTU+xZdXD4dkREuAQ4QQUGGvB6XFuVH7E+AbSWJRUW1mxYt
+	 vIB5eVG8D3M3A==
+Date: Thu, 28 May 2026 15:10:23 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel 
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers 
+ <mathieu.desnoyers@efficios.com>, Jens Remus <jremus@linux.ibm.com>, Josh 
+ Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo 
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds 
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, "Carlos 
+ O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, Dylan Hatch 
+ <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen 
+ <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, "H. 
+ Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Michal Hocko 
+ <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan 
+ <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens 
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>
+Subject: [PATCH v2] unwind: Add sframe_(un)register() system calls
+Message-ID: <20260528151023.00f5ec4e@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Farhad Alemi <farhad.alemi@berkeley.edu>
-Date: Thu, 28 May 2026 10:22:38 -0700
-X-Gm-Features: AVHnY4KMD6_SilNsCJ8RKtU5SNYv-wjjBIL51tuZOZ7EUzmulRlcS9jQUE7uxNA
-Message-ID: <CA+0ovCjPsBrb_dTS4O9N_bV-=yC-2B43fjazi+WmD7g08QX4hw@mail.gmail.com>
-Subject: [BUG] tracing/uprobe: GPF in path_put() via __free() on alloc failure
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="0000000000004855300652e3fa58"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
---0000000000004855300652e3fa58
-Content-Type: text/plain; charset="UTF-8"
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Hello Masami and the linux-trace-kernel team,
+Add system calls to register and unregister sframes that can be used by
+dynamic linkers to tell the kernel where the sframe section is in memory
+for libraries it loads.
 
-I am reporting a tracing/uprobe error-path crash found by syzkaller
-with fault injection.
+Both system calls take a pointer to a new structure:
 
-Summary:
-A write(2) to /sys/kernel/tracing/uprobe_events that fails inside
-alloc_trace_uprobe() leaves the caller's `tu` variable holding
-ERR_PTR(-ENOMEM). The cleanup macro at kernel/trace/trace_uprobe.c:536:
+  struct sframe_setup {
+	__u64			sframe_start;
+	__u64			sframe_size;
+	__u64			text_start;
+	__u64			text_size;
+  };
 
-  DEFINE_FREE(free_trace_uprobe, struct trace_uprobe *,
-              if (_T) free_trace_uprobe(_T))
+and a size of the passed in structure. If the system call needs to be
+extended, then the structure could be changed and the size of that
+structure will tell the kernel that it is the new version. If the kernel
+does not recognize the structure size, it will return -EINVAL.
 
-guards only against NULL, not IS_ERR. free_trace_uprobe() (invoked by
-the __free() helper at __trace_uprobe_create's return) has the same
-guard shape -- `if (!tu) return;` -- and then calls path_put(&tu->path)
-on the ERR_PTR-valued tu. KASAN catches the resulting dereference as a
-null-ptr-deref-in-range at path_put+0x29.
+  sframe_start - The virtual address of the sframe section
+  sframe_size  - The length of the sframe section
+  text_start   - the text section the sframe represents
+  test_size    - the length of the section
 
-Observed on:
-- Linux v7.1-rc3-200-g70eda68668d1-dirty (where the bug was originally
-  found), x86_64, QEMU Q35
-- KASAN enabled; panic_on_warn set; CONFIG_FAULT_INJECTION enabled
-- The only local dirty file in my tree is drivers/tty/serial/serial_core.c,
-  containing a local ttyS0 console guard for the fuzzing harness. It is
-  unrelated to kernel/trace/.
-- Trigger requires CAP_SYS_ADMIN to open /sys/kernel/tracing/uprobe_events
-  for write (mode 0640, TRACE_MODE_WRITE) plus CONFIG_FAULT_INJECTION
-  with a forced kmalloc failure inside alloc_trace_uprobe().
-- Source inspection of linus/master at commit e8c2f9fdadee
-  (v7.1-rc4-754-ge8c2f9fdadee) shows the buggy structure is unchanged:
-  DEFINE_FREE(free_trace_uprobe, ..., if (_T) free_trace_uprobe(_T)) at
-  trace_uprobe.c:536 has only a NULL guard, free_trace_uprobe() at
-  trace_uprobe.c:369 still has only `if (!tu) return;`, and
-  __trace_uprobe_create() declares `struct trace_uprobe *tu
-  __free(free_trace_uprobe) = NULL` and assigns the alloc_trace_uprobe()
-  return value into tu before any IS_ERR check.
+If other stack tracing functionality is added, it will require a new
+system call.
 
-Impact:
-With CONFIG_FAULT_INJECTION enabled, a fail_nth-injected allocation
-failure inside alloc_trace_uprobe() (kzalloc_flex at line 341 returns
-NULL, the function returns ERR_PTR(-ENOMEM)) causes the
-__free(free_trace_uprobe) cleanup in __trace_uprobe_create() to
-dereference the ERR_PTR via path_put():
+The unregister only needs the sframe_start and requires all the rest of
+the fields to be 0. In the future, if more can be done, then user space
+can update the other values and check the return code to see if the kernel
+supports it.
 
-  Oops: general protection fault, probably for non-canonical address
-0xdffffc0000000008: 0000 [#1] SMP KASAN NOPTI
-  KASAN: null-ptr-deref in range [0x0000000000000040-0x0000000000000047]
-  RIP: 0010:path_put+0x29/0x60 fs/namei.c:717
+Also added a DEFINE_GUARD() for mmap_write_lock. There was one for
+mmap_read_lock but not for mmap_write_lock.
 
-The R12 register in the crash dump shows the smoking gun:
-R12 = 0xfffffffffffffff4 = -ENOMEM = ERR_PTR(-12) -- i.e. the `tu`
-pointer being freed is an ERR_PTR, not a real object.
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
 
-Relevant stack:
+Changes since v1: https://patch.msgid.link/20260521183532.7a145c8a@gandalf.=
+local.home
 
-  path_put+0x29/0x60 fs/namei.c:717
-  free_trace_uprobe kernel/trace/trace_uprobe.c:374 [inline]
-  __free_free_trace_uprobe kernel/trace/trace_uprobe.c:536 [inline]
-  __trace_uprobe_create+0x53c/0xe40 kernel/trace/trace_uprobe.c:725
-  trace_probe_create+0xce/0x130 kernel/trace/trace_probe.c:2252
-  dyn_event_create+0x4f/0x70 kernel/trace/trace_dynevent.c:128
-  create_or_delete_trace_uprobe+0x65/0xa0 kernel/trace/trace_uprobe.c:739
-  trace_parse_run_command+0x1f3/0x380 kernel/trace/trace.c:9565
-  vfs_write+0x29f/0xb90 fs/read_write.c:686
-  ksys_write+0x155/0x270 fs/read_write.c:740
+- Use mmap_write_lock() instead of mmap_read_lock() for mutual
+  exclusiveness. (Jens Remus)
 
-Expected behavior:
-Any one of these closes the hole:
+- Guard mtree_insert_range() with mmap_write_lock. (Jens Remus)
 
-  1. Tighten free_trace_uprobe()'s entry guard:
-       if (IS_ERR_OR_NULL(tu))
-               return;
+- Added a guard for mmap_write_lock() similar to the one for mmap_read_lock.
 
-  2. Or change the DEFINE_FREE macro to skip ERR_PTR values:
-       DEFINE_FREE(free_trace_uprobe, struct trace_uprobe *,
-                   if (!IS_ERR_OR_NULL(_T)) free_trace_uprobe(_T))
+- Have syscall prototype use structure pointer instead of void (Thomas Wei=
+=C3=9Fschuh)
 
-  3. Or, after the IS_ERR(tu) check in __trace_uprobe_create(), assign
-     `tu = NULL;` before returning so the __free helper sees NULL and
-     skips the path_put.
+- Use __u64 instead of unsigned long for struct members (Thomas Wei=C3=9Fsc=
+huh)
 
-Reproducer:
-I attached the generated C reproducer as reproducer.c. I also attached the
-syzkaller program as reproducer.syz and the console
-report as crash-report.txt.
+- Use size_t instead of int for structure size in syscall argument.
+ (Thomas Wei=C3=9Fschuh)
 
-Novelty check:
-I searched syzbot dashboard data across upstream, fixed, invalid, stable,
-and Android namespaces, and searched lore.kernel.org for "path_put" +
-"trace_uprobe", "free_trace_uprobe", and "__trace_uprobe_create" + "GPF" /
-"KASAN". I did not find an exact match. Adjacent uprobe_unregister /
-bpf_uprobe_multi_link UAF reports have different free paths.
+ arch/alpha/kernel/syscalls/syscall.tbl      |  2 +
+ arch/arm/tools/syscall.tbl                  |  2 +
+ arch/arm64/tools/syscall_32.tbl             |  2 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |  2 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |  2 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |  2 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |  2 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |  2 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |  2 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |  2 +
+ arch/s390/kernel/syscalls/syscall.tbl       |  3 +
+ arch/sh/kernel/syscalls/syscall.tbl         |  2 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |  2 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |  2 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |  2 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |  2 +
+ include/linux/mmap_lock.h                   |  3 +
+ include/linux/syscalls.h                    |  3 +
+ include/uapi/asm-generic/unistd.h           |  7 ++-
+ include/uapi/linux/sframe.h                 | 12 ++++
+ kernel/sys_ni.c                             |  3 +
+ kernel/unwind/sframe.c                      | 69 +++++++++++++++++++--
+ scripts/syscall.tbl                         |  2 +
+ 23 files changed, 126 insertions(+), 6 deletions(-)
+ create mode 100644 include/uapi/linux/sframe.h
 
+diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/sys=
+calls/syscall.tbl
+index f31b7afffc34..f0639b831f2a 100644
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@ -511,3 +511,5 @@
+ 579	common	file_setattr			sys_file_setattr
+ 580	common	listns				sys_listns
+ 581	common	rseq_slice_yield		sys_rseq_slice_yield
++582	common	sframe_register			sys_sframe_register
++583	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index 94351e22bfcf..887b242ffb25 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -486,3 +486,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/arm64/tools/syscall_32.tbl b/arch/arm64/tools/syscall_32.=
+tbl
+index 62d93d88e0fe..c820f1ff718c 100644
+--- a/arch/arm64/tools/syscall_32.tbl
++++ b/arch/arm64/tools/syscall_32.tbl
+@@ -483,3 +483,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/sysca=
+lls/syscall.tbl
+index 248934257101..4c7f17f0364b 100644
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@ -471,3 +471,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/=
+kernel/syscalls/syscall.tbl
+index 223d26303627..e8dc2cc149f4 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -477,3 +477,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/s=
+yscalls/syscall_n32.tbl
+index 7430714e2b8f..d0bae05d16af 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -410,3 +410,5 @@
+ 469	n32	file_setattr			sys_file_setattr
+ 470	n32	listns				sys_listns
+ 471	n32	rseq_slice_yield		sys_rseq_slice_yield
++472	n32	sframe_register			sys_sframe_register
++473	n32	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/s=
+yscalls/syscall_n64.tbl
+index 630aab9e5425..2e200de6a58c 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -386,3 +386,5 @@
+ 469	n64	file_setattr			sys_file_setattr
+ 470	n64	listns				sys_listns
+ 471	n64	rseq_slice_yield		sys_rseq_slice_yield
++472	n64	sframe_register			sys_sframe_register
++473	n64	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/s=
+yscalls/syscall_o32.tbl
+index 128653112284..0e3b82011ae2 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -459,3 +459,5 @@
+ 469	o32	file_setattr			sys_file_setattr
+ 470	o32	listns				sys_listns
+ 471	o32	rseq_slice_yield		sys_rseq_slice_yield
++472	o32	sframe_register			sys_sframe_register
++473	o32	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/s=
+yscalls/syscall.tbl
+index c6331dad9461..e0758ef8667d 100644
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@ -470,3 +470,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel=
+/syscalls/syscall.tbl
+index 4fcc7c58a105..eda40c4f4f2f 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -562,3 +562,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	nospu	rseq_slice_yield		sys_rseq_slice_yield
++472	nospu	sframe_register			sys_sframe_register
++473	nospu	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/sysca=
+lls/syscall.tbl
+index 09a7ef04d979..52519e2acdc8 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -398,3 +398,6 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	stacktrace_setup		sys_stacktrace_setup
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/=
+syscall.tbl
+index 70b315cbe710..62ac7b1b4dd4 100644
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@ -475,3 +475,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/sys=
+calls/syscall.tbl
+index 7e71bf7fcd14..f92273ae608a 100644
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@ -517,3 +517,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscal=
+ls/syscall_32.tbl
+index f832ebd2d79b..409a50df3b21 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -477,3 +477,5 @@
+ 469	i386	file_setattr		sys_file_setattr
+ 470	i386	listns			sys_listns
+ 471	i386	rseq_slice_yield	sys_rseq_slice_yield
++472	i386	sframe_register		sys_sframe_register
++473	i386	sframe_unregister	sys_sframe_unregister
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscal=
+ls/syscall_64.tbl
+index 524155d655da..9b7c5a449751 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -396,6 +396,8 @@
+ 469	common	file_setattr		sys_file_setattr
+ 470	common	listns			sys_listns
+ 471	common	rseq_slice_yield	sys_rseq_slice_yield
++472	common	sframe_register		sys_sframe_register
++473	common	sframe_unregister	sys_sframe_unregister
+=20
+ #
+ # Due to a historical design error, certain syscalls are numbered differen=
+tly
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/s=
+yscalls/syscall.tbl
+index a9bca4e484de..037b8040f69d 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -442,3 +442,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register'		sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+index 04b8f61ece5d..6650c89a13ab 100644
+--- a/include/linux/mmap_lock.h
++++ b/include/linux/mmap_lock.h
+@@ -579,6 +579,9 @@ static inline void mmap_write_unlock(struct mm_struct *=
+mm)
+ 	up_write(&mm->mmap_lock);
+ }
+=20
++DEFINE_GUARD(mmap_write_lock, struct mm_struct *,
++	     mmap_write_lock(_T), mmap_write_unlock(_T))
++
+ static inline void mmap_write_downgrade(struct mm_struct *mm)
+ {
+ 	__mmap_lock_trace_acquire_returned(mm, false, true);
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index f5639d5ac331..ad3c8d6b6471 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -79,6 +79,7 @@ struct mnt_id_req;
+ struct ns_id_req;
+ struct xattr_args;
+ struct file_attr;
++struct sframe_setup;
+=20
+ #include <linux/types.h>
+ #include <linux/aio_abi.h>
+@@ -999,6 +1000,8 @@ asmlinkage long sys_lsm_get_self_attr(unsigned int att=
+r, struct lsm_ctx __user *
+ asmlinkage long sys_lsm_set_self_attr(unsigned int attr, struct lsm_ctx __=
+user *ctx,
+ 				      u32 size, u32 flags);
+ asmlinkage long sys_lsm_list_modules(u64 __user *ids, u32 __user *size, u3=
+2 flags);
++asmlinkage long sys_sframe_register(struct sframe_setup *data,  size_t siz=
+e);
++asmlinkage long sys_sframe_unregister(struct sframe_setup *data, size_t si=
+ze);
+=20
+ /*
+  * Architecture-specific system calls
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/u=
+nistd.h
+index a627acc8fb5f..17042d7e5e87 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -863,8 +863,13 @@ __SYSCALL(__NR_listns, sys_listns)
+ #define __NR_rseq_slice_yield 471
+ __SYSCALL(__NR_rseq_slice_yield, sys_rseq_slice_yield)
+=20
++#define __NR_sframe_register 472
++__SYSCALL(__NR_sframe_register, sys_sframe_register)
++#define __NR_sframe_unregister 473
++__SYSCALL(__NR_sframe_unregister, sys_sframe_unregister)
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 472
++#define __NR_syscalls 474
+=20
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/include/uapi/linux/sframe.h b/include/uapi/linux/sframe.h
+new file mode 100644
+index 000000000000..d3c9f88b024b
+--- /dev/null
++++ b/include/uapi/linux/sframe.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
++#ifndef _UAPI_LINUX_SFRAME_H
++#define _UAPI_LINUX_SFRAME_H
++
++struct sframe_setup {
++	__u64			sframe_start;
++	__u64			sframe_size;
++	__u64			text_start;
++	__u64			text_size;
++};
++
++#endif /* _UAPI_LINUX_SFRAME_H */
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index add3032da16f..eca5293f5d40 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -394,3 +394,6 @@ COND_SYSCALL(rseq_slice_yield);
+=20
+ COND_SYSCALL(uretprobe);
+ COND_SYSCALL(uprobe);
++
++COND_SYSCALL(sframe_register);
++COND_SYSCALL(sframe_unregister);
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+index db88d993dff1..84bd762a1080 100644
+--- a/kernel/unwind/sframe.c
++++ b/kernel/unwind/sframe.c
+@@ -12,8 +12,10 @@
+ #include <linux/mm.h>
+ #include <linux/string_helpers.h>
+ #include <linux/sframe.h>
++#include <linux/syscalls.h>
+ #include <asm/unwind_user_sframe.h>
+ #include <linux/unwind_user_types.h>
++#include <uapi/linux/sframe.h>
+=20
+ #include "sframe.h"
+ #include "sframe_debug.h"
+@@ -817,8 +819,10 @@ int sframe_add_section(unsigned long sframe_start, uns=
+igned long sframe_end,
+ 	if (ret)
+ 		goto err_free;
+=20
+-	ret =3D mtree_insert_range(sframe_mt, sec->text_start, sec->text_end - 1,
+-				 sec, GFP_KERNEL_ACCOUNT);
++	scoped_guard(mmap_write_lock, mm) {
++		ret =3D mtree_insert_range(sframe_mt, sec->text_start, sec->text_end - 1,
++					 sec, GFP_KERNEL_ACCOUNT);
++	}
+ 	if (ret) {
+ 		dbg_sec("mtree_insert_range failed: text=3D%lx-%lx\n",
+ 			sec->text_start, sec->text_end);
+@@ -842,9 +846,11 @@ static void sframe_free_srcu(struct rcu_head *rcu)
+ static int __sframe_remove_section(struct mm_struct *mm,
+ 				   struct sframe_section *sec)
+ {
+-	if (!mtree_erase(&mm->sframe_mt, sec->text_start)) {
+-		dbg_sec("mtree_erase failed: text=3D%lx\n", sec->text_start);
+-		return -EINVAL;
++	scoped_guard(mmap_write_lock, mm) {
++		if (!mtree_erase(&mm->sframe_mt, sec->text_start)) {
++			dbg_sec("mtree_erase failed: text=3D%lx\n", sec->text_start);
++			return -EINVAL;
++		}
+ 	}
+=20
+ 	call_srcu(&sframe_srcu, &sec->rcu, sframe_free_srcu);
+@@ -936,3 +942,56 @@ void sframe_free_mm(struct mm_struct *mm)
+=20
+ 	mtree_destroy(&mm->sframe_mt);
+ }
++
++/**
++ * sys_sframe_register - register an address for user space stacktrace wal=
+king.
++ * @data: Structure of sframe data used to register the sframe section
++ * @size: The size of the given structure.
++ *
++ * This system call is used by dynamic library utilities to inform the ker=
+nel
++ * of meta data that it loaded that can be used by the kernel to know how
++ * to stack walk the given text locations.
++ *
++ * Return: 0 if successful, otherwise a negative error.
++ */
++SYSCALL_DEFINE2(sframe_register, struct sframe_setup __user *, data, size_=
+t, size)
++{
++	struct sframe_setup sframe;
++
++	if (sizeof(sframe) !=3D size)
++		return -EINVAL;
++
++	if (copy_from_user(&sframe, data, size))
++		return -EFAULT;
++
++	return sframe_add_section(sframe.sframe_start,
++				  sframe.sframe_start + sframe.sframe_size,
++				  sframe.text_start,
++				  sframe.text_start + sframe.text_size);
++}
++
++/**
++ * sys_sframe_unregister - unregister an sframe address
++ * @data: Structure of sframe data used to register the sframe section
++ * @size: The size of the given structure.
++ *
++ * The data->sframe_start is the only value that is used. The rest must
++ * be zero.
++ *
++ * Return: 0 if successful, otherwise a negative error.
++ */
++SYSCALL_DEFINE2(sframe_unregister, struct sframe_setup __user *, data, siz=
+e_t, size)
++{
++	struct sframe_setup sframe;
++
++	if (sizeof(sframe) !=3D size)
++		return -EINVAL;
++
++	if (copy_from_user(&sframe, data, size))
++		return -EFAULT;
++
++	if (sframe.sframe_size || sframe.text_start || sframe.text_size)
++		return -EINVAL;
++
++	return sframe_remove_section(sframe.sframe_start);
++}
+diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
+index 7a42b32b6577..46ec22b50042 100644
+--- a/scripts/syscall.tbl
++++ b/scripts/syscall.tbl
+@@ -412,3 +412,5 @@
+ 469	common	file_setattr			sys_file_setattr
+ 470	common	listns				sys_listns
+ 471	common	rseq_slice_yield		sys_rseq_slice_yield
++472	common	sframe_register			sys_sframe_register
++473	common	sframe_unregister		sys_sframe_unregister
+--=20
+2.53.0
 
-I appreciate your time and consideration, and I'm grateful for your
-work on this subsystem.
-
-Regards,
-Farhad
-
---0000000000004855300652e3fa58
-Content-Type: text/plain; charset="US-ASCII"; name="crash-report.txt"
-Content-Disposition: attachment; filename="crash-report.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mpprgbbf0>
-X-Attachment-Id: f_mpprgbbf0
-
-UkJQOiAwMDAwN2ZmY2NjNTZkOTEwIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6IDAwMDAwMDAw
-MDAwMDAwMDAKUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6
-IDAwMDAwMDAwMDAwMDAwMDIKUjEzOiAwMDAwN2Y1MjhjNjA1ZmEwIFIxNDogMDAwMDdmNTI4YzYw
-NWZhMCBSMTU6IDAwMDAwMDAwMDAwMDFlOTEKIDwvVEFTSz4KT29wczogZ2VuZXJhbCBwcm90ZWN0
-aW9uIGZhdWx0LCBwcm9iYWJseSBmb3Igbm9uLWNhbm9uaWNhbCBhZGRyZXNzIDB4ZGZmZmZjMDAw
-MDAwMDAwODogMDAwMCBbIzFdIFNNUCBLQVNBTiBOT1BUSQpLQVNBTjogbnVsbC1wdHItZGVyZWYg
-aW4gcmFuZ2UgWzB4MDAwMDAwMDAwMDAwMDA0MC0weDAwMDAwMDAwMDAwMDAwNDddCkNQVTogMCBV
-SUQ6IDAgUElEOiAzNTYzIENvbW06IHN5ei4yLjE3IE5vdCB0YWludGVkIDcuMS4wLXJjMy0wMDIw
-MC1nNzBlZGE2ODY2OGQxLWRpcnR5ICMxIFBSRUVNUFQoZnVsbCkgCkhhcmR3YXJlIG5hbWU6IFFF
-TVUgU3RhbmRhcmQgUEMgKFEzNSArIElDSDksIDIwMDkpLCBCSU9TIDEuMTYuMy1kZWJpYW4tMS4x
-Ni4zLTIgMDQvMDEvMjAxNApSSVA6IDAwMTA6cGF0aF9wdXQrMHgyOS8weDYwIGZzL25hbWVpLmM6
-NzE3CkNvZGU6IDkwIGYzIDBmIDFlIGZhIDBmIDFmIDQ0IDAwIDAwIDQxIDU2IDUzIDQ4IDg5IGZi
-IDQ5IGJlIDAwIDAwIDAwIDAwIDAwIGZjIGZmIGRmIGU4IDIyIDkxIDhhIGZmIDQ4IDhkIDdiIDA4
-IDQ4IDg5IGY4IDQ4IGMxIGU4IDAzIDw0Mj4gODAgM2MgMzAgMDAgNzQgMDUgZTggZGIgNTAgZjQg
-ZmYgNDggOGIgN2IgMDggZTggYzIgODkgMDMgMDAgNDgKUlNQOiAwMDE4OmZmZmZjOTAwMDM1YmY5
-ZTggRUZMQUdTOiAwMDAxMDIwMwpSQVg6IDAwMDAwMDAwMDAwMDAwMDggUkJYOiAwMDAwMDAwMDAw
-MDAwMDNjIFJDWDogZmZmZjg4ODEwYzM2YTUwMApSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAw
-MDAwMDAwMDAwMDAwMDAwIFJESTogMDAwMDAwMDAwMDAwMDA0NApSQlA6IGZmZmZjOTAwMDM1YmZi
-NzAgUjA4OiBmZmZmZmZmZjkxNjViNzc3IFIwOTogMDAwMDAwMDAwMDAwMDAwMApSMTA6IGZmZmZm
-ZmZmOTE2NWI3NjAgUjExOiBmZmZmZmJmZmYyMmNiNmVmIFIxMjogZmZmZmZmZmZmZmZmZmZmNApS
-MTM6IGRmZmZmYzAwMDAwMDAwMDAgUjE0OiBkZmZmZmMwMDAwMDAwMDAwIFIxNTogMDAwMDAwMDAw
-MDAwMDAwMApGUzogIDAwMDA1NTU1NjBhODY1MDAoMDAwMCkgR1M6ZmZmZjg4ODJhYjZiNjAwMCgw
-MDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwCkNTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBD
-UjA6IDAwMDAwMDAwODAwNTAwMzMKQ1IyOiAwMDAwN2Y1MjhjMjQwNzYwIENSMzogMDAwMDAwMDEy
-MTRjYjAwMCBDUjQ6IDAwMDAwMDAwMDA3NTBlZjAKUEtSVTogMDAwMDAwMDAKQ2FsbCBUcmFjZToK
-IDxUQVNLPgogZnJlZV90cmFjZV91cHJvYmUga2VybmVsL3RyYWNlL3RyYWNlX3Vwcm9iZS5jOjM3
-NCBbaW5saW5lXQogX19mcmVlX2ZyZWVfdHJhY2VfdXByb2JlIGtlcm5lbC90cmFjZS90cmFjZV91
-cHJvYmUuYzo1MzYgW2lubGluZV0KIF9fdHJhY2VfdXByb2JlX2NyZWF0ZSsweDUzYy8weGU0MCBr
-ZXJuZWwvdHJhY2UvdHJhY2VfdXByb2JlLmM6NzI1CiB0cmFjZV9wcm9iZV9jcmVhdGUrMHhjZS8w
-eDEzMCBrZXJuZWwvdHJhY2UvdHJhY2VfcHJvYmUuYzoyMjUyCiBkeW5fZXZlbnRfY3JlYXRlKzB4
-NGYvMHg3MCBrZXJuZWwvdHJhY2UvdHJhY2VfZHluZXZlbnQuYzoxMjgKIGNyZWF0ZV9vcl9kZWxl
-dGVfdHJhY2VfdXByb2JlKzB4NjUvMHhhMCBrZXJuZWwvdHJhY2UvdHJhY2VfdXByb2JlLmM6NzM5
-CiB0cmFjZV9wYXJzZV9ydW5fY29tbWFuZCsweDFmMy8weDM4MCBrZXJuZWwvdHJhY2UvdHJhY2Uu
-Yzo5NTY1CiB2ZnNfd3JpdGUrMHgyOWYvMHhiOTAgZnMvcmVhZF93cml0ZS5jOjY4Ngoga3N5c193
-cml0ZSsweDE1NS8weDI3MCBmcy9yZWFkX3dyaXRlLmM6NzQwCiBkb19zeXNjYWxsX3g2NCBhcmNo
-L3g4Ni9lbnRyeS9zeXNjYWxsXzY0LmM6NjMgW2lubGluZV0KIGRvX3N5c2NhbGxfNjQrMHgxNWYv
-MHg1NjAgYXJjaC94ODYvZW50cnkvc3lzY2FsbF82NC5jOjk0CiBlbnRyeV9TWVNDQUxMXzY0X2Fm
-dGVyX2h3ZnJhbWUrMHg3Ny8weDdmClJJUDogMDAzMzoweDdmNTI4YzM3Nzc4ZApDb2RlOiBmZiBj
-MyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMCAwMCA5MCBmMyAwZiAxZSBmYSA0OCA4OSBmOCA0
-OCA4OSBmNyA0OCA4OSBkNiA0OCA4OSBjYSA0ZCA4OSBjMiA0ZCA4OSBjOCA0YyA4YiA0YyAyNCAw
-OCAwZiAwNSA8NDg+IDNkIDAxIGYwIGZmIGZmIDczIDAxIGMzIDQ4IGM3IGMxIGIwIGZmIGZmIGZm
-IGY3IGQ4IDY0IDg5IDAxIDQ4ClJTUDogMDAyYjowMDAwN2ZmY2NjNTZkOGE4IEVGTEFHUzogMDAw
-MDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwMDEKUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJC
-WDogMDAwMDdmNTI4YzYwNWZhMCBSQ1g6IDAwMDA3ZjUyOGMzNzc3OGQKUkRYOiAwMDAwMDAwMDAw
-MDAwMDIyIFJTSTogMDAwMDIwMDAwMDAwMTEwMCBSREk6IDAwMDAwMDAwMDAwMDAwMDMKUkJQOiAw
-MDAwN2ZmY2NjNTZkOTEwIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6IDAwMDAwMDAwMDAwMDAw
-MDAKUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAw
-MDAwMDAwMDAwMDIKUjEzOiAwMDAwN2Y1MjhjNjA1ZmEwIFIxNDogMDAwMDdmNTI4YzYwNWZhMCBS
-MTU6IDAwMDAwMDAwMDAwMDFlOTEKIDwvVEFTSz4KTW9kdWxlcyBsaW5rZWQgaW46Ci0tLVsgZW5k
-IHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgXS0tLQpSSVA6IDAwMTA6cGF0aF9wdXQrMHgyOS8weDYw
-IGZzL25hbWVpLmM6NzE3CkNvZGU6IDkwIGYzIDBmIDFlIGZhIDBmIDFmIDQ0IDAwIDAwIDQxIDU2
-IDUzIDQ4IDg5IGZiIDQ5IGJlIDAwIDAwIDAwIDAwIDAwIGZjIGZmIGRmIGU4IDIyIDkxIDhhIGZm
-IDQ4IDhkIDdiIDA4IDQ4IDg5IGY4IDQ4IGMxIGU4IDAzIDw0Mj4gODAgM2MgMzAgMDAgNzQgMDUg
-ZTggZGIgNTAgZjQgZmYgNDggOGIgN2IgMDggZTggYzIgODkgMDMgMDAgNDgKUlNQOiAwMDE4OmZm
-ZmZjOTAwMDM1YmY5ZTggRUZMQUdTOiAwMDAxMDIwMwpSQVg6IDAwMDAwMDAwMDAwMDAwMDggUkJY
-OiAwMDAwMDAwMDAwMDAwMDNjIFJDWDogZmZmZjg4ODEwYzM2YTUwMApSRFg6IDAwMDAwMDAwMDAw
-MDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDAwIFJESTogMDAwMDAwMDAwMDAwMDA0NApSQlA6IGZm
-ZmZjOTAwMDM1YmZiNzAgUjA4OiBmZmZmZmZmZjkxNjViNzc3IFIwOTogMDAwMDAwMDAwMDAwMDAw
-MApSMTA6IGZmZmZmZmZmOTE2NWI3NjAgUjExOiBmZmZmZmJmZmYyMmNiNmVmIFIxMjogZmZmZmZm
-ZmZmZmZmZmZmNApSMTM6IGRmZmZmYzAwMDAwMDAwMDAgUjE0OiBkZmZmZmMwMDAwMDAwMDAwIFIx
-NTogMDAwMDAwMDAwMDAwMDAwMApGUzogIDAwMDA1NTU1NjBhODY1MDAoMDAwMCkgR1M6ZmZmZjg4
-ODJhYjZiNjAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwCkNTOiAgMDAxMCBEUzogMDAw
-MCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMKQ1IyOiAwMDAwN2Y1MjhjMjQwNzYwIENS
-MzogMDAwMDAwMDEyMTRjYjAwMCBDUjQ6IDAwMDAwMDAwMDA3NTBlZjAKUEtSVTogMDAwMDAwMDAK
-LS0tLS0tLS0tLS0tLS0tLQpDb2RlIGRpc2Fzc2VtYmx5IChiZXN0IGd1ZXNzKToKICAgMDoJOTAg
-ICAgICAgICAgICAgICAgICAgCW5vcAogICAxOglmMyAwZiAxZSBmYSAgICAgICAgICAJZW5kYnI2
-NAogICA1OgkwZiAxZiA0NCAwMCAwMCAgICAgICAJbm9wbCAgIDB4MCglcmF4LCVyYXgsMSkKICAg
-YToJNDEgNTYgICAgICAgICAgICAgICAgCXB1c2ggICAlcjE0CiAgIGM6CTUzICAgICAgICAgICAg
-ICAgICAgIAlwdXNoICAgJXJieAogICBkOgk0OCA4OSBmYiAgICAgICAgICAgICAJbW92ICAgICVy
-ZGksJXJieAogIDEwOgk0OSBiZSAwMCAwMCAwMCAwMCAwMCAJbW92YWJzICQweGRmZmZmYzAwMDAw
-MDAwMDAsJXIxNAogIDE3OglmYyBmZiBkZgogIDFhOgllOCAyMiA5MSA4YSBmZiAgICAgICAJY2Fs
-bCAgIDB4ZmY4YTkxNDEKICAxZjoJNDggOGQgN2IgMDggICAgICAgICAgCWxlYSAgICAweDgoJXJi
-eCksJXJkaQogIDIzOgk0OCA4OSBmOCAgICAgICAgICAgICAJbW92ICAgICVyZGksJXJheAogIDI2
-Ogk0OCBjMSBlOCAwMyAgICAgICAgICAJc2hyICAgICQweDMsJXJheAoqIDJhOgk0MiA4MCAzYyAz
-MCAwMCAgICAgICAJY21wYiAgICQweDAsKCVyYXgsJXIxNCwxKSA8LS0gdHJhcHBpbmcgaW5zdHJ1
-Y3Rpb24KICAyZjoJNzQgMDUgICAgICAgICAgICAgICAgCWplICAgICAweDM2CiAgMzE6CWU4IGRi
-IDUwIGY0IGZmICAgICAgIAljYWxsICAgMHhmZmY0NTExMQogIDM2Ogk0OCA4YiA3YiAwOCAgICAg
-ICAgICAJbW92ICAgIDB4OCglcmJ4KSwlcmRpCiAgM2E6CWU4IGMyIDg5IDAzIDAwICAgICAgIAlj
-YWxsICAgMHgzOGEwMQogIDNmOgk0OCAgICAgICAgICAgICAgICAgICAJcmV4LlcK
---0000000000004855300652e3fa58
-Content-Type: application/octet-stream; name="reproducer.c"
-Content-Disposition: attachment; filename="reproducer.c"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mpprgbbo1>
-X-Attachment-Id: f_mpprgbbo1
-
-Ly8gYXV0b2dlbmVyYXRlZCBieSBzeXprYWxsZXIgKGh0dHBzOi8vZ2l0aHViLmNvbS9nb29nbGUv
-c3l6a2FsbGVyKQoKI2RlZmluZSBfR05VX1NPVVJDRQoKI2luY2x1ZGUgPGVuZGlhbi5oPgojaW5j
-bHVkZSA8ZXJybm8uaD4KI2luY2x1ZGUgPGZjbnRsLmg+CiNpbmNsdWRlIDxzaWduYWwuaD4KI2lu
-Y2x1ZGUgPHN0ZGFyZy5oPgojaW5jbHVkZSA8c3RkYm9vbC5oPgojaW5jbHVkZSA8c3RkaW50Lmg+
-CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDxzdHJpbmcu
-aD4KI2luY2x1ZGUgPHN5cy9tb3VudC5oPgojaW5jbHVkZSA8c3lzL3N0YXQuaD4KI2luY2x1ZGUg
-PHN5cy9zeXNjYWxsLmg+CiNpbmNsdWRlIDxzeXMvdHlwZXMuaD4KI2luY2x1ZGUgPHN5cy93YWl0
-Lmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KCnN0YXRpYyBib29sIHdyaXRlX2ZpbGUoY29uc3QgY2hh
-ciogZmlsZSwgY29uc3QgY2hhciogd2hhdCwgLi4uKQp7CiAgY2hhciBidWZbMTAyNF07CiAgdmFf
-bGlzdCBhcmdzOwogIHZhX3N0YXJ0KGFyZ3MsIHdoYXQpOwogIHZzbnByaW50ZihidWYsIHNpemVv
-ZihidWYpLCB3aGF0LCBhcmdzKTsKICB2YV9lbmQoYXJncyk7CiAgYnVmW3NpemVvZihidWYpIC0g
-MV0gPSAwOwogIGludCBsZW4gPSBzdHJsZW4oYnVmKTsKICBpbnQgZmQgPSBvcGVuKGZpbGUsIE9f
-V1JPTkxZIHwgT19DTE9FWEVDKTsKICBpZiAoZmQgPT0gLTEpCiAgICByZXR1cm4gZmFsc2U7CiAg
-aWYgKHdyaXRlKGZkLCBidWYsIGxlbikgIT0gbGVuKSB7CiAgICBpbnQgZXJyID0gZXJybm87CiAg
-ICBjbG9zZShmZCk7CiAgICBlcnJubyA9IGVycjsKICAgIHJldHVybiBmYWxzZTsKICB9CiAgY2xv
-c2UoZmQpOwogIHJldHVybiB0cnVlOwp9CgpzdGF0aWMgaW50IGluamVjdF9mYXVsdChpbnQgbnRo
-KQp7CiAgaW50IGZkOwogIGZkID0gb3BlbigiL3Byb2MvdGhyZWFkLXNlbGYvZmFpbC1udGgiLCBP
-X1JEV1IpOwogIGlmIChmZCA9PSAtMSkKICAgIGV4aXQoMSk7CiAgY2hhciBidWZbMTZdOwogIHNw
-cmludGYoYnVmLCAiJWQiLCBudGgpOwogIGlmICh3cml0ZShmZCwgYnVmLCBzdHJsZW4oYnVmKSkg
-IT0gKHNzaXplX3Qpc3RybGVuKGJ1ZikpCiAgICBleGl0KDEpOwogIHJldHVybiBmZDsKfQoKc3Rh
-dGljIGNvbnN0IGNoYXIqIHNldHVwX2ZhdWx0KCkKewogIGludCBmZCA9IG9wZW4oIi9wcm9jL3Nl
-bGYvbWFrZS1pdC1mYWlsIiwgT19XUk9OTFkpOwogIGlmIChmZCA9PSAtMSkKICAgIHJldHVybiAi
-Q09ORklHX0ZBVUxUX0lOSkVDVElPTiBpcyBub3QgZW5hYmxlZCI7CiAgY2xvc2UoZmQpOwogIGZk
-ID0gb3BlbigiL3Byb2MvdGhyZWFkLXNlbGYvZmFpbC1udGgiLCBPX1dST05MWSk7CiAgaWYgKGZk
-ID09IC0xKQogICAgcmV0dXJuICJrZXJuZWwgZG9lcyBub3QgaGF2ZSBzeXN0ZW1hdGljIGZhdWx0
-IGluamVjdGlvbiBzdXBwb3J0IjsKICBjbG9zZShmZCk7CiAgc3RhdGljIHN0cnVjdCB7CiAgICBj
-b25zdCBjaGFyKiBmaWxlOwogICAgY29uc3QgY2hhciogdmFsOwogICAgYm9vbCBmYXRhbDsKICB9
-IGZpbGVzW10gPSB7CiAgICAgIHsiL3N5cy9rZXJuZWwvZGVidWcvZmFpbHNsYWIvaWdub3JlLWdm
-cC13YWl0IiwgIk4iLCB0cnVlfSwKICAgICAgeyIvc3lzL2tlcm5lbC9kZWJ1Zy9mYWlsX2Z1dGV4
-L2lnbm9yZS1wcml2YXRlIiwgIk4iLCBmYWxzZX0sCiAgICAgIHsiL3N5cy9rZXJuZWwvZGVidWcv
-ZmFpbF9wYWdlX2FsbG9jL2lnbm9yZS1nZnAtaGlnaG1lbSIsICJOIiwgZmFsc2V9LAogICAgICB7
-Ii9zeXMva2VybmVsL2RlYnVnL2ZhaWxfcGFnZV9hbGxvYy9pZ25vcmUtZ2ZwLXdhaXQiLCAiTiIs
-IGZhbHNlfSwKICAgICAgeyIvc3lzL2tlcm5lbC9kZWJ1Zy9mYWlsX3BhZ2VfYWxsb2MvbWluLW9y
-ZGVyIiwgIjAiLCBmYWxzZX0sCiAgfTsKICB1bnNpZ25lZCBpOwogIGZvciAoaSA9IDA7IGkgPCBz
-aXplb2YoZmlsZXMpIC8gc2l6ZW9mKGZpbGVzWzBdKTsgaSsrKSB7CiAgICBpZiAoIXdyaXRlX2Zp
-bGUoZmlsZXNbaV0uZmlsZSwgZmlsZXNbaV0udmFsKSkgewogICAgICBpZiAoZmlsZXNbaV0uZmF0
-YWwpCiAgICAgICAgcmV0dXJuICJmYWlsZWQgdG8gd3JpdGUgZmF1bHQgaW5qZWN0aW9uIGZpbGUi
-OwogICAgfQogIH0KICByZXR1cm4gTlVMTDsKfQoKc3RhdGljIHZvaWQgc2V0dXBfc3lzY3RsKCkK
-ewogIGludCBjYWRfcGlkID0gZm9yaygpOwogIGlmIChjYWRfcGlkIDwgMCkKICAgIGV4aXQoMSk7
-CiAgaWYgKGNhZF9waWQgPT0gMCkgewogICAgZm9yICg7OykKICAgICAgc2xlZXAoMTAwKTsKICB9
-CiAgY2hhciB0bXBwaWRbMzJdOwogIHNucHJpbnRmKHRtcHBpZCwgc2l6ZW9mKHRtcHBpZCksICIl
-ZCIsIGNhZF9waWQpOwogIHN0cnVjdCB7CiAgICBjb25zdCBjaGFyKiBuYW1lOwogICAgY29uc3Qg
-Y2hhciogZGF0YTsKICB9IGZpbGVzW10gPSB7CiAgICAgIHsiL3N5cy9rZXJuZWwvZGVidWcveDg2
-L25taV9sb25nZXN0X25zIiwgIjEwMDAwMDAwMDAwIn0sCiAgICAgIHsiL3Byb2Mvc3lzL2tlcm5l
-bC9odW5nX3Rhc2tfY2hlY2tfaW50ZXJ2YWxfc2VjcyIsICIyMCJ9LAogICAgICB7Ii9wcm9jL3N5
-cy9uZXQvY29yZS9icGZfaml0X2thbGxzeW1zIiwgIjEifSwKICAgICAgeyIvcHJvYy9zeXMvbmV0
-L2NvcmUvYnBmX2ppdF9oYXJkZW4iLCAiMCJ9LAogICAgICB7Ii9wcm9jL3N5cy9rZXJuZWwva3B0
-cl9yZXN0cmljdCIsICIwIn0sCiAgICAgIHsiL3Byb2Mvc3lzL2tlcm5lbC9zb2Z0bG9ja3VwX2Fs
-bF9jcHVfYmFja3RyYWNlIiwgIjEifSwKICAgICAgeyIvcHJvYy9zeXMvZnMvbW91bnQtbWF4Iiwg
-IjEwMCJ9LAogICAgICB7Ii9wcm9jL3N5cy92bS9vb21fZHVtcF90YXNrcyIsICIwIn0sCiAgICAg
-IHsiL3Byb2Mvc3lzL2RlYnVnL2V4Y2VwdGlvbi10cmFjZSIsICIwIn0sCiAgICAgIHsiL3Byb2Mv
-c3lzL2tlcm5lbC9wcmludGsiLCAiNyA0IDEgMyJ9LAogICAgICB7Ii9wcm9jL3N5cy9rZXJuZWwv
-a2V5cy9nY19kZWxheSIsICIxIn0sCiAgICAgIHsiL3Byb2Mvc3lzL3ZtL29vbV9raWxsX2FsbG9j
-YXRpbmdfdGFzayIsICIxIn0sCiAgICAgIHsiL3Byb2Mvc3lzL2tlcm5lbC9jdHJsLWFsdC1kZWwi
-LCAiMCJ9LAogICAgICB7Ii9wcm9jL3N5cy9rZXJuZWwvY2FkX3BpZCIsIHRtcHBpZH0sCiAgfTsK
-ICBmb3IgKHNpemVfdCBpID0gMDsgaSA8IHNpemVvZihmaWxlcykgLyBzaXplb2YoZmlsZXNbMF0p
-OyBpKyspIHsKICAgIGlmICghd3JpdGVfZmlsZShmaWxlc1tpXS5uYW1lLCBmaWxlc1tpXS5kYXRh
-KSkgewogICAgfQogIH0KICBraWxsKGNhZF9waWQsIFNJR0tJTEwpOwogIHdoaWxlICh3YWl0cGlk
-KGNhZF9waWQsIE5VTEwsIDApICE9IGNhZF9waWQpCiAgICA7Cn0KCnVpbnQ2NF90IHJbMV0gPSB7
-MHhmZmZmZmZmZmZmZmZmZmZmfTsKCmludCBtYWluKHZvaWQpCnsKICBzeXNjYWxsKF9fTlJfbW1h
-cCwgLyphZGRyPSovMHgxZmZmZmZmZmYwMDB1bCwgLypsZW49Ki8weDEwMDB1bCwgLypwcm90PSov
-MHVsLAogICAgICAgICAgLypmbGFncz1NQVBfRklYRUR8TUFQX0FOT05ZTU9VU3xNQVBfUFJJVkFU
-RSovIDB4MzJ1bCwKICAgICAgICAgIC8qZmQ9Ki8oaW50cHRyX3QpLTEsIC8qb2Zmc2V0PSovMHVs
-KTsKICBzeXNjYWxsKF9fTlJfbW1hcCwgLyphZGRyPSovMHgyMDAwMDAwMDAwMDB1bCwgLypsZW49
-Ki8weDEwMDAwMDB1bCwKICAgICAgICAgIC8qcHJvdD1QUk9UX1dSSVRFfFBST1RfUkVBRHxQUk9U
-X0VYRUMqLyA3dWwsCiAgICAgICAgICAvKmZsYWdzPU1BUF9GSVhFRHxNQVBfQU5PTllNT1VTfE1B
-UF9QUklWQVRFKi8gMHgzMnVsLAogICAgICAgICAgLypmZD0qLyhpbnRwdHJfdCktMSwgLypvZmZz
-ZXQ9Ki8wdWwpOwogIHN5c2NhbGwoX19OUl9tbWFwLCAvKmFkZHI9Ki8weDIwMDAwMTAwMDAwMHVs
-LCAvKmxlbj0qLzB4MTAwMHVsLCAvKnByb3Q9Ki8wdWwsCiAgICAgICAgICAvKmZsYWdzPU1BUF9G
-SVhFRHxNQVBfQU5PTllNT1VTfE1BUF9QUklWQVRFKi8gMHgzMnVsLAogICAgICAgICAgLypmZD0q
-LyhpbnRwdHJfdCktMSwgLypvZmZzZXQ9Ki8wdWwpOwogIHNldHVwX3N5c2N0bCgpOwogIGNvbnN0
-IGNoYXIqIHJlYXNvbjsKICAodm9pZClyZWFzb247CiAgaWYgKChyZWFzb24gPSBzZXR1cF9mYXVs
-dCgpKSkKICAgIHByaW50ZigidGhlIHJlcHJvZHVjZXIgbWF5IG5vdCB3b3JrIGFzIGV4cGVjdGVk
-OiBmYXVsdCBpbmplY3Rpb24gc2V0dXAgIgogICAgICAgICAgICJmYWlsZWQ6ICVzXG4iLAogICAg
-ICAgICAgIHJlYXNvbik7CiAgaW50cHRyX3QgcmVzID0gMDsKICBpZiAod3JpdGUoMSwgImV4ZWN1
-dGluZyBwcm9ncmFtXG4iLCBzaXplb2YoImV4ZWN1dGluZyBwcm9ncmFtXG4iKSAtIDEpKSB7CiAg
-fQogIC8vICBta2RpciBhcmd1bWVudHM6IFsKICAvLyAgICBwYXRoOiBwdHJbaW4sIGJ1ZmZlcl0g
-ewogIC8vICAgICAgYnVmZmVyOiB7MmUgMmYgNzAgNmQgMzIgMzkgMzAgMzggNjUgMDB9IChsZW5n
-dGggMHhhKQogIC8vICAgIH0KICAvLyAgICBtb2RlOiBvcGVuX21vZGUgPSAweDFmZiAoOCBieXRl
-cykKICAvLyAgXQogIG1lbWNweSgodm9pZCopMHgyMDAwMDAwMDEwMDAsICIuL3BtMjkwOGVcMDAw
-IiwgMTApOwogIHN5c2NhbGwoCiAgICAgIF9fTlJfbWtkaXIsIC8qcGF0aD0qLzB4MjAwMDAwMDAx
-MDAwdWwsCiAgICAgIC8qbW9kZT1TX0lYT1RIfFNfSVdPVEh8U19JUk9USHxTX0lYR1JQfFNfSVdH
-UlB8U19JUkdSUHxTX0lYVVNSfFNfSVdVU1J8MHgxMDAqLwogICAgICAweDFmZnVsKTsKICAvLyAg
-bW91bnQgYXJndW1lbnRzOiBbCiAgLy8gICAgc3JjOiBuaWwKICAvLyAgICBkc3Q6IHB0cltpbiwg
-YnVmZmVyXSB7CiAgLy8gICAgICBidWZmZXI6IHsyZSAyZiA3MCA2ZCAzMiAzOSAzMCAzOCA2NSAw
-MH0gKGxlbmd0aCAweGEpCiAgLy8gICAgfQogIC8vICAgIHR5cGU6IHB0cltpbiwgYnVmZmVyXSB7
-CiAgLy8gICAgICBidWZmZXI6IHs3NCA3MiA2MSA2MyA2NSA2NiA3MyAwMH0gKGxlbmd0aCAweDgp
-CiAgLy8gICAgfQogIC8vICAgIGZsYWdzOiBtb3VudF9mbGFncyA9IDB4MCAoOCBieXRlcykKICAv
-LyAgICBkYXRhOiBuaWwKICAvLyAgXQogIG1lbWNweSgodm9pZCopMHgyMDAwMDAwMDEwNDAsICIu
-L3BtMjkwOGVcMDAwIiwgMTApOwogIG1lbWNweSgodm9pZCopMHgyMDAwMDAwMDEwODAsICJ0cmFj
-ZWZzXDAwMCIsIDgpOwogIHN5c2NhbGwoX19OUl9tb3VudCwgLypzcmM9Ki8wdWwsIC8qZHN0PSov
-MHgyMDAwMDAwMDEwNDB1bCwKICAgICAgICAgIC8qdHlwZT0qLzB4MjAwMDAwMDAxMDgwdWwsIC8q
-ZmxhZ3M9Ki8wdWwsIC8qZGF0YT0qLzB1bCk7CiAgLy8gIG9wZW5hdCBhcmd1bWVudHM6IFsKICAv
-LyAgICBmZDogZmRfZGlyIChyZXNvdXJjZSkKICAvLyAgICBmaWxlOiBwdHJbaW4sIGJ1ZmZlcl0g
-ewogIC8vICAgICAgYnVmZmVyOiB7MmUgMmYgNzAgNmQgMzIgMzkgMzAgMzggNjUgMmYgNzUgNzAg
-NzIgNmYgNjIgNjUgNWYgNjUgNzYgNjUKICAvLyAgICAgIDZlIDc0IDczIDAwfSAobGVuZ3RoIDB4
-MTgpCiAgLy8gICAgfQogIC8vICAgIGZsYWdzOiBvcGVuX2ZsYWdzID0gMHgxICg0IGJ5dGVzKQog
-IC8vICAgIG1vZGU6IG9wZW5fbW9kZSA9IDB4MCAoMiBieXRlcykKICAvLyAgXQogIC8vICByZXR1
-cm5zIGZkCiAgbWVtY3B5KCh2b2lkKikweDIwMDAwMDAwMTBjMCwgIi4vcG0yOTA4ZS91cHJvYmVf
-ZXZlbnRzXDAwMCIsIDI0KTsKICByZXMgPSBzeXNjYWxsKF9fTlJfb3BlbmF0LCAvKmZkPSovMHhm
-ZmZmZmY5YywgLypmaWxlPSovMHgyMDAwMDAwMDEwYzB1bCwKICAgICAgICAgICAgICAgIC8qZmxh
-Z3M9T19XUk9OTFkqLyAxLCAvKm1vZGU9Ki8wKTsKICBpZiAocmVzICE9IC0xKQogICAgclswXSA9
-IHJlczsKICAvLyAgd3JpdGUgYXJndW1lbnRzOiBbCiAgLy8gICAgZmQ6IGZkIChyZXNvdXJjZSkK
-ICAvLyAgICBidWY6IHB0cltpbiwgYnVmZmVyXSB7CiAgLy8gICAgICBidWZmZXI6IHs3MCAzYSA3
-NSA3MCA3MiA2ZiA2MiA2NSA3MyAyZiA3MCA2ZCAzMiAzOSAzMCAzOCA2NSAyMCAyZiA3MAogIC8v
-ICAgICAgNzIgNmYgNjMgMmYgNzMgNjUgNmMgNjYgMmYgNjUgNzggNjUgM2EgMzB9IChsZW5ndGgg
-MHgyMikKICAvLyAgICB9CiAgLy8gICAgY291bnQ6IGxlbiA9IDB4MjIgKDggYnl0ZXMpCiAgLy8g
-IF0KICBtZW1jcHkoKHZvaWQqKTB4MjAwMDAwMDAxMTAwLCAicDp1cHJvYmVzL3BtMjkwOGUgL3By
-b2Mvc2VsZi9leGU6MCIsIDM0KTsKICBpbmplY3RfZmF1bHQoMTIpOwogIHN5c2NhbGwoX19OUl93
-cml0ZSwgLypmZD0qL3JbMF0sIC8qYnVmPSovMHgyMDAwMDAwMDExMDB1bCwgLypjb3VudD0qLzB4
-MjJ1bCk7CiAgcmV0dXJuIDA7Cn0K
---0000000000004855300652e3fa58
-Content-Type: application/octet-stream; name="reproducer.syz"
-Content-Disposition: attachment; filename="reproducer.syz"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mpprgbbv2>
-X-Attachment-Id: f_mpprgbbv2
-
-IyB7VGhyZWFkZWQ6ZmFsc2UgUmVwZWF0OmZhbHNlIFJlcGVhdFRpbWVzOjAgUHJvY3M6MSBTbG93
-ZG93bjoxIFNhbmRib3g6IFNhbmRib3hBcmc6MCBMZWFrOmZhbHNlIE5ldEluamVjdGlvbjpmYWxz
-ZSBOZXREZXZpY2VzOmZhbHNlIE5ldFJlc2V0OmZhbHNlIENncm91cHM6ZmFsc2UgQmluZm10TWlz
-YzpmYWxzZSBDbG9zZUZEczpmYWxzZSBLQ1NBTjpmYWxzZSBEZXZsaW5rUENJOmZhbHNlIE5pY1ZG
-OmZhbHNlIFVTQjpmYWxzZSBWaGNpSW5qZWN0aW9uOmZhbHNlIFdpZmk6ZmFsc2UgSUVFRTgwMjE1
-NDpmYWxzZSBTeXNjdGw6dHJ1ZSBTd2FwOmZhbHNlIFVzZVRtcERpcjpmYWxzZSBIYW5kbGVTZWd2
-OmZhbHNlIFRyYWNlOmZhbHNlIENhbGxDb21tZW50czp0cnVlIExlZ2FjeU9wdGlvbnM6e0NvbGxp
-ZGU6ZmFsc2UgRmF1bHQ6ZmFsc2UgRmF1bHRDYWxsOjAgRmF1bHROdGg6MH19Cm1rZGlyKCYoMHg3
-ZjAwMDAwMDEwMDApPScuL3BtMjkwOGVceDAwJywgMHgxZmYpCm1vdW50KDB4MCwgJigweDdmMDAw
-MDAwMTA0MCk9Jy4vcG0yOTA4ZVx4MDAnLCAmKDB4N2YwMDAwMDAxMDgwKT0ndHJhY2Vmc1x4MDAn
-LCAweDAsIDB4MCkKcjAgPSBvcGVuYXQoMHhmZmZmZmZmZmZmZmZmZjljLCAmKDB4N2YwMDAwMDAx
-MGMwKT0nLi9wbTI5MDhlL3Vwcm9iZV9ldmVudHNceDAwJywgMHgxLCAweDApCndyaXRlKHIwLCAm
-KDB4N2YwMDAwMDAxMTAwKT0ncDp1cHJvYmVzL3BtMjkwOGUgL3Byb2Mvc2VsZi9leGU6MCcsIDB4
-MjIpIChmYWlsX250aDogMTIpCg==
---0000000000004855300652e3fa58--
