@@ -1,102 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E166176238;
-	Thu, 28 May 2026 15:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFE81BC2A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 16:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779981980; cv=none; b=AXRLQHMHyTe7yHB9R0e/KVB/HKhEpnes06g2HSO73r6KYLyKWGs8CdcjV18KByGvBTD1DLPkXnBh3tnSh5HCxz0LfmLWk3eQQ4YuO6D3KZP90i9W/01qQkezraZpZcbntx74uWWQ/0FOaNTpMsW9h24G7MawcvJJESVlBvyirKQ=
+	t=1779984886; cv=none; b=psj21nuVWxe/WIbGEKl/voCJV48SNlbnQtDdrc2i8fz6V1Kj6wEYEAc+JLw2/kg+J+85HpNpNKLmlLMd+KKvhE72XWUbzIYCa8g/TNsRDQJs0C9EKVSV9OVFfXs/Cpvvr9DPYmYiXTtkOCdxTsb08EKtvor8507zhVDt240ZPgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779981980; c=relaxed/simple;
-	bh=+o2Hc8YeeZk2OBqSunVLK3ZlXkUhRWzRlHpCULCXVdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LWAL9rKSQuYcN5QxyIQ3+xubI88NGmZps7BrDLwprrXznh9g1NWFNwrq8eTHA8SD/PY/3cQQ5FCL2V8eQy7nBw5dmnC0HS/IZ0Xn+u70pTQ5p0ItYi4d1j9Z4JcJK5dvneGnHr2vLNSLZOU29wsPK+0UADCzuu6hJuZ4g6l6Rn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVNHS9UY; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVNHS9UY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23DA51F000E9;
-	Thu, 28 May 2026 15:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779981980;
-	bh=y13gZBrauZClI/LnpHzESdSsqoIHcU/xV/nHk5Mpz5E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=cVNHS9UYkjGJJzzdl4OOBaUP6bf5Zkw2asBjB/Uxa39MU0sgC7cKyonji21HjS+kV
-	 0yeZdiIK0Nh8ddG3nIbGsGk+WjUC2oc1tCScvIs07Hiik6gYVIFqcfcQknkNP0u+4d
-	 KPheS7O3g0rV2sudgQkwytpAuEHtYAHy7pf18oDz5CnZlGPeefnwXAPFQTnB+DR8Rr
-	 /TbKUO5d58MiVD/c90ClFugRWcsnYPz3Z/pjG+XOgmc/IOMq8Hn+FUqldMZUwU5QE1
-	 oIiKNM6lxq6TpIyTEvytzy8vCQ5sMgxon3U8Vchl4YYs1nc23xCI85MyyQP1mcTrp1
-	 xANMevd0QaLzA==
-Date: Thu, 28 May 2026 11:26:55 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v21 8/9] ring-buffer: Show persistent buffer dropped
- events in trace file
-Message-ID: <20260528112655.0b71b71f@gandalf.local.home>
-In-Reply-To: <20260529001500.14178455a046a5cbc6180861@kernel.org>
-References: <20260522170857.263969486@kernel.org>
-	<20260522171052.006276604@kernel.org>
-	<20260526140609.28faf45d9d347e5d748e7cf1@kernel.org>
-	<20260526134116.11e1db99@gandalf.local.home>
-	<20260527124721.d05102c2f45e6c5bb5fbe476@kernel.org>
-	<20260527093507.00ac35d8@gandalf.local.home>
-	<20260529001500.14178455a046a5cbc6180861@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779984886; c=relaxed/simple;
+	bh=PHDLCXHLb6geoV+liXss4T/l8l490ju4aZ4ydPGildk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxB+Al78Bzjpc+ympW2799qW146cdtFOxvuGdmWmUcVR9IoBvZjMJp9Dniy+LvWOQHd4fjo+hnNtMMSCVJrb/RDX9p3fiReYJ+6wh+3R3OOhoZj7VFykwd25FPNwQKuunoBYwwDw0DYDMjxAcrmz7kjyo61yP5b1mjxlOk3Q+7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4908b92904fso12703255e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 09:14:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779984884; x=1780589684;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wfCiAYxwM6fSi2FMKc9LgQjerGAgaqnqOAwHUcR+LT8=;
+        b=qbH3MWe6NzDOjH5S5HtvCaaYUdhNqAB/lvq4yBPCCd0hSzwI51HqrWgaLtSXA4FW1C
+         PhewAvaQHnunJrBJmidWcWguyO8zflj6ikUb5NcygWcxf+dgKiRO37K8iwOKHzQjZW5U
+         uuvmlEZfLi3JQ6t6KAOx5VP5fUVEO59E1VcTGBLvtk82BgLXCMgnVFhXRP7COotlWw3B
+         mvBSN0jOXYCjDE76yQoKYobkcz4uJTqoVMGjWFAh2+11YeCgyUjC8Uibr8xyTLK5Txsl
+         qZzO2QsNuEJrx4f9+TT0yvxQbOhw9lYpGOTEN8NxOD4QXRLMZHipv5dJKtSoOul29EiU
+         Mizw==
+X-Forwarded-Encrypted: i=1; AFNElJ/3Obx31CrA+ZdT5mUuZfWWk7ZNI7Y0asx/QXvYosiHGb+JGJFXo6xdQcuZk0o9OpIFv9DQi5e+5CgoyxTIQk34Jnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcvS13MqxfBqAMlrWO92ofBR+mMsX9Mw2FM4C7/19EOsmIAxrH
+	SsTem+ZrV/LGNuNwmaphnfLf+Sa64FwZRaJJL5vPRiWwvAkArIS7OhGR
+X-Gm-Gg: Acq92OG3YMQzL3cFwKgXWRC8Yw3PDLobWFxXlaPj/8whT+IvB/MKVICC4EgerIL5qCa
+	O5HFJpSYhwbsecn4XjY+du8B/QewohqhPwsuZDVqi5Kl73Cyq2YG+m94oXRFEER4id+aUZ/j0mE
+	xoNnDOZCRDb70ulbq+X7r1YLiDx+507qoDaHXu8kEyEKR/cmwMGUa4mOtD/ep9Hl47s/nS8so3W
+	JkFmusrhCpZO4O25rhp5n+ouPRXA+f9JWISg3pXGNhk6WPbNwgxbOtGw5NuGByaaDHszIIoHWTQ
+	kT9akqKvmIvVFPfijR8R+bd6/D2xw3cG6/G5MtnOo0lisPAE0qGrLnYEf2jjoHdVKuUILDhTYY6
+	juj+guN5spvnfx4ZmE6AQueIOCZmsPKzwrz+NgXRNisMC/zX+kZMYKpXfqSOr6Wd6VkOp0Q3jBn
+	s2F9gt5hpqrzxNDsZ3oXxuzMUSilJ8zO8aStEh
+X-Received: by 2002:a05:600c:c0d2:10b0:490:33b3:4be0 with SMTP id 5b1f17b1804b1-490426c1759mr350308945e9.20.1779984883857;
+        Thu, 28 May 2026 09:14:43 -0700 (PDT)
+Received: from gmail.com ([62.197.47.167])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4909235d4c7sm45535105e9.3.2026.05.28.09.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2026 09:14:43 -0700 (PDT)
+Date: Thu, 28 May 2026 17:14:42 +0100
+From: Breno Leitao <leitao@debian.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	bpf@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH 0/4] bootconfig: embed kernel.* cmdline at build time
+Message-ID: <ahhpvNV91F6HUMeb@gmail.com>
+References: <20260527-bootconfig_using_tools-v1-0-b6906a86e7d5@debian.org>
+ <20260529001519.14ca9dbe92fb2622249137c6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260529001519.14ca9dbe92fb2622249137c6@kernel.org>
 
-On Fri, 29 May 2026 00:15:00 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Fri, May 29, 2026 at 12:15:19AM +0000, Masami Hiramatsu wrote:
+> On Wed, 27 May 2026 09:41:33 -0700
+> Breno Leitao <leitao@debian.org> wrote:
+> 
+> > The userspace pieces (xbc_snprint_cmdline() in lib/, tools/bootconfig -C)
+> > already landed; this series wires the rendered cmdline into the kernel.
+> > 
+> > Motivation: today the embedded bootconfig is parsed at runtime, after
+> > parse_early_param() has already run, so early_param() handlers can't
+> > see embedded values. Folding the kernel.* subtree into the cmdline at
+> > build time gives a CONFIG_CMDLINE-equivalent for embedded-bootconfig
+> > users without forcing them to maintain two cmdline sources.
+> > 
+> > Behaviorally, the "kernel" subtree is rendered to a flat string at
+> > build time and stashed in .init.rodata. setup_arch() prepends it to
+> > boot_command_line before parse_early_param() runs. Overflow is a soft
+> > error: the helper logs and leaves boot_command_line untouched rather
+> > than panicking, so an oversized embedded bconf cannot brick a boot.
+> > 
+> 
+> Thanks Breno, yes, that is what I think about.
+> Let me check it. And could you also check Sashiko's comments?
+> 
+> https://sashiko.dev/#/patchset/20260527-bootconfig_using_tools-v1-0-b6906a86e7d5%40debian.org
 
-> Yeah, the relationship between the persistent ring buffer (which is mapped)
-> and the RB_MISSED_EVENTS is a bit unclear.
+Ack, I will have a look at them, thanks for confirming the direction is
+correct.
 
-I'm going to pull these patches into the ring-buffer for-next branch and
-start testing it. If they pass, I'll push them up to the linux-trace repo.
-
-I'll send out this patch on top of it.
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 910f6b3adf74..5de6f352249a 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1929,6 +1929,12 @@ static int __rb_validate_buffer(struct buffer_page *bpage, int cpu,
- 	 */
- 	if (ret < 0 || (prev_ts && prev_ts > ts) || (next_ts && ts > next_ts)) {
- 		local_set(&bpage->entries, 0);
-+		/*
-+		 * Note, the RB_MISSED_EVENTS is only set inside the main write
-+		 * buffer by this verification logic. The normal ring buffer
-+		 * has this bit set when the page is read and passed to the
-+		 * consumers.
-+		 */
- 		local_set(&dpage->commit, RB_MISSED_EVENTS);
- 		dpage->time_stamp = prev_ts ? prev_ts : next_ts;
- 		ret = -1;
-@@ -7232,6 +7238,14 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 			local_add(RB_MISSED_STORED, &dpage->commit);
- 			size += sizeof(missed_events);
- 		}
-+		/*
-+		 * Note, for the persistent ring buffer, the RB_MISSED_EVENTS
-+		 * may have been set in the main buffer via the verification code.
-+		 * But here, dpage is a copy of that page and has not yet had
-+		 * the RB_MISSED_EVENTS set. As for the normal buffers,
-+		 * the main write buffer does not set these bits and it needs
-+		 * to be set here.
-+		 */
- 		local_add(RB_MISSED_EVENTS, &dpage->commit);
- 	}
- 
-
-
--- Steve
+--breno
