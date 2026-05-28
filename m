@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03A4378D71;
-	Thu, 28 May 2026 08:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4478D36BCCA;
+	Thu, 28 May 2026 08:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779956896; cv=none; b=Yk8+RJFTgvqQH+d3rK4hScnhQjDbVvD4yYVJkB4QijGagN1AqnKHt/PM56Otc2rFmjnnPQ3yxykf8jBpc5PLuNjm3zneIYWs3HcyeeCAy9nSlsK+8DKR6RuD6IoJPktdzDKfaXUSnHKwIDcZOSC5GToSoQMiUjOK+VtczQH6dCU=
+	t=1779956896; cv=none; b=B1Mb2eDeeC9C4yihzSXlZmiI5z7MeWv/ZNOB/TySX85MdzRAJVdhbFHEu1YFa9XRio3O5Uj+HcaDkcSK16UJZrqB4EYkzf9nVqyT+AHtyvY57ooJMoXyUtjCABDtfChg6/guloS7rdUoGaCbQGSM9czGViWVew6NpkUoqk40Mrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779956896; c=relaxed/simple;
-	bh=vTFq3foTdNB6zeqaaZE7I9ZzLyhSfOY5UPD91dH1uH4=;
+	bh=fQt5DCBSpd6+pDUb/X+6/aQEMs3Cq36JM4B5pYgq2qY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hlTreLD/QDVb+5YB7giRawuzerCrv+CT2Rzq/tYrJ4QkSAheD+Fkup3ihvRnPsd9Xe4KesMqWXr2UXZMIiNXeRYlO+AcKh69a7P+DyETG/QP0s4c1+ugvfYtm7dgEuvrJE1DK3qKcqwZwKr8gsCtIdQjDTVs1gJVj9R3hdNznGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tlT465i0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SALIK9SN; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=rtj8d5lS/zhJ8Uo8jFzmRPU4O5yT4Az5iZ4f1EXeZMZV8NvNdg2/i8H3FpMnIDGTO/5e0dFtcZwuIWVMMkiS/kbcoGz2G43katbB8vdr4dEuCuE0b8dr2T90MEnuthy7AV6j1aKYdJanPg8JVkPIgLrw+nmVMB0Thmml+280jcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CQ1Zk2yX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6JOQElxh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tlT465i0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SALIK9SN"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CQ1Zk2yX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6JOQElxh"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1779956893;
+	s=2020; t=1779956890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q3Mjdyvr7ihVKGai3Yxy6L8TVjmUfr9blfcOpHVW6Fo=;
-	b=tlT465i0rSq7duiydyd6nlcxM+lx+dNx5//wIMsTxAe8Mru632rvTeKCoEVQMqwWRUkcwa
-	+0owNMWtOK3kwITgjcj8A0mkHrlQz928q3i1CLHagn2X6LfaMHGnH5w9toKzSJt4Gfquys
-	0BGuaF/xL5g9I+jkIGb5PDyKSSiM/bzwZnvt7ijO7sQW4Hg1iwtK1rUtbhHyDO7IRCW8fr
-	N88W9AkPgA4/brQU3vk/QtRrlWoGJdFtrFyqIPXjj3QGcHI1uIoRt06vcqJsj5h5XheLkq
-	FKBdW11sPxN+8WDDjXjECpx/QG6pBpTpBjjHTRbCbHT5EcLHXrsuENsgzeV07w==
+	bh=0oNFRHrZHt1izQ2CFWnJ1COKgvowMlvpEoBv1jafdII=;
+	b=CQ1Zk2yXiQQIAwFeREQsvne5tNW0uVPm+6N3UtMvHpZ7Wws8TM2g10O06uLr3FE6XqyMNF
+	muzmWjB0K75t+3uRYEdzRqa5WoNYosObEpPASmbYczyVa7WtkBt+XJgNs4YkP5noBJHPEx
+	MI5w5ZN+Fm5eQ0Vb1hcjpw5PbnypdXUw72B+qCq1jx0GZ0s+4PSU2RZRuv6Cxkz8J/sQ0U
+	6kmDKkzPYDmn2fiKe0mtuSmN0N8/7/7lJVSiqJ/cO0ZMf9J681dp/4KWCaqHoocNUOJNqJ
+	j6zfjbIqBAiaJUfxMcbdtFy5yLucaff63swCYFoBfCMhixN0OpX7WXjOqJ6WGQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1779956893;
+	s=2020e; t=1779956890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q3Mjdyvr7ihVKGai3Yxy6L8TVjmUfr9blfcOpHVW6Fo=;
-	b=SALIK9SNigRdB54CyXKKtQOYYRDm8K2YRt+OZzsZ3Q2j6PdJqTTOGG65U4UWdn3/dpuhBM
-	6rg7Odf86+9zoGDw==
+	bh=0oNFRHrZHt1izQ2CFWnJ1COKgvowMlvpEoBv1jafdII=;
+	b=6JOQElxhV7BpKz9ERJYM0zwnPDj/r7EMbbhF4Gr1rUdkj1zrG8hyyhT3kt8eZ74TwwRc2H
+	F2IdrIIJ+ZO+3XDA==
 To: Gabriele Monaco <gmonaco@redhat.com>,
 	Wander Lairson Costa <wander@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v2 06/13] verification/rvgen: Convert __fill_verify_guards_func() to Lark
-Date: Thu, 28 May 2026 10:27:54 +0200
-Message-ID: <2157c2e5fe34251c403604f0d58a3a686a6f6a8b.1779956342.git.namcao@linutronix.de>
+Subject: [PATCH v2 01/13] verification/rvgen: Switch LTL parser to Lark
+Date: Thu, 28 May 2026 10:27:49 +0200
+Message-ID: <e1736ef618e32712eeb65d1714a2fea76298057b.1779956342.git.namcao@linutronix.de>
 In-Reply-To: <cover.1779956342.git.namcao@linutronix.de>
 References: <cover.1779956342.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,101 +58,300 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Prepare to remove self.guards and self.__parse_constraints(), convert
-__fill_verify_guards_func() to use the parsed transitions from Lark.
+The LTL parser is built using Ply. However, Ply is no longer
+maintained [1].
 
+Switch to use Lark instead. In addition to being actively maintained, Lark
+also offers additional features (namely, automatically creating the
+abstract syntax tree) which make the parser simpler.
+
+Link: https://github.com/dabeaz/ply/commit/9d7c40099e23ff78f9d86ef69a26c1e8=
+a83e706a [1]
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
 v2:
-  - fix up the ';' separator [Gabriele]
-  - make return type consistent with the function's signature [Wander]
-  - fix up __parse_guard_rule()'s signature
+  - fix identifier starting with a digit is allowed [Wander]
+  - fixup ast node uid [Gabriele]
+  - Fix up Literal AST node construction [Wander, Sashiko]
+  - FIx up unary op error message [Sashiko]
+  - Add nice exception handling [Gabriele]
 ---
- tools/verification/rvgen/rvgen/dot2k.py | 38 +++++++++++++++++++------
- 1 file changed, 30 insertions(+), 8 deletions(-)
+ tools/verification/rvgen/__main__.py     |   5 +-
+ tools/verification/rvgen/rvgen/ltl2ba.py | 202 +++++++++--------------
+ 2 files changed, 82 insertions(+), 125 deletions(-)
 
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
-vgen/rvgen/dot2k.py
-index d9f8e1c7737a..ebaa6c9135c2 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -221,6 +221,19 @@ class ha2k(dot2k):
-     def __parse_single_constraint(self, rule: dict, value: str) -> str:
-         return f"ha_get_env(ha_mon, {rule["env"]}{self.enum_suffix}, time_=
-ns) {rule["op"]} {value}"
+diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvge=
+n/__main__.py
+index 5c923dc10d0f..0915cf86e43b 100644
+--- a/tools/verification/rvgen/__main__.py
++++ b/tools/verification/rvgen/__main__.py
+@@ -14,6 +14,7 @@ if __name__ =3D=3D '__main__':
+     from rvgen.container import Container
+     from rvgen.ltl2k import ltl2k
+     from rvgen.automata import AutomataError
++    from rvgen.ltl2ba import LTLError
+     import argparse
+     import sys
 =20
-+    def __parse_guard_rule(self, rule) -> list[str]:
-+        buff =3D []
-+        for c, sep in rule.rules:
-+            env =3D c.env + self.enum_suffix
-+            op =3D c.op
-+            val =3D self.__adjust_value(c.val, c.unit)
+@@ -57,8 +58,8 @@ if __name__ =3D=3D '__main__':
+                 sys.exit(1)
+         else:
+             monitor =3D Container(vars(params))
+-    except AutomataError as e:
+-        print(f"There was an error processing {params.spec}: {e}", file=3D=
+sys.stderr)
++    except (AutomataError, LTLError) as e:
++        print(f"There was an error processing {params.spec}:\n{e}", file=
+=3Dsys.stderr)
+         sys.exit(1)
+=20
+     print(f"Writing the monitor into the directory {monitor.name}")
+diff --git a/tools/verification/rvgen/rvgen/ltl2ba.py b/tools/verification/=
+rvgen/rvgen/ltl2ba.py
+index 016e7cf93bbb..7cebda61bce8 100644
+--- a/tools/verification/rvgen/rvgen/ltl2ba.py
++++ b/tools/verification/rvgen/rvgen/ltl2ba.py
+@@ -7,9 +7,7 @@
+ # https://doi.org/10.1007/978-0-387-34892-6_1
+ # With extra optimizations
+=20
+-from ply.lex import lex
+-from ply.yacc import yacc
+-from .automata import AutomataError
++import lark
+=20
+ # Grammar:
+ # 	ltl ::=3D opd | ( ltl ) | ltl binop ltl | unop ltl
+@@ -30,42 +28,41 @@ from .automata import AutomataError
+ #       imply
+ #       equivalent
+=20
+-tokens =3D (
+-   'AND',
+-   'OR',
+-   'IMPLY',
+-   'UNTIL',
+-   'ALWAYS',
+-   'EVENTUALLY',
+-   'NEXT',
+-   'VARIABLE',
+-   'LITERAL',
+-   'NOT',
+-   'LPAREN',
+-   'RPAREN',
+-   'ASSIGN',
+-)
+-
+-t_AND =3D r'and'
+-t_OR =3D r'or'
+-t_IMPLY =3D r'imply'
+-t_UNTIL =3D r'until'
+-t_ALWAYS =3D r'always'
+-t_NEXT =3D r'next'
+-t_EVENTUALLY =3D r'eventually'
+-t_VARIABLE =3D r'[A-Z_0-9]+'
+-t_LITERAL =3D r'true|false'
+-t_NOT =3D r'not'
+-t_LPAREN =3D r'\('
+-t_RPAREN =3D r'\)'
+-t_ASSIGN =3D r'=3D'
+-t_ignore_COMMENT =3D r'\#.*'
+-t_ignore =3D ' \t\n'
+-
+-def t_error(t):
+-    raise AutomataError(f"Illegal character '{t.value[0]}'")
+-
+-lexer =3D lex()
++GRAMMAR =3D r'''
++start: assign+
 +
-+            cond =3D f"ha_get_env(ha_mon, {env}, time_ns) {op} {val}"
-+            if sep:
-+                cond +=3D f" {sep}"
-+            buff.append(cond)
-+        return buff
++assign: VARIABLE "=3D" _ltl
 +
-     def __get_constraint_env(self, constr: str) -> str:
-         """Extract the second argument from an ha_ function"""
-         env =3D constr.split("(")[1].split()[1].rstrip(")").rstrip(",")
-@@ -287,7 +300,7 @@ class ha2k(dot2k):
-         rules =3D invalid_checks + rules
-=20
-         separator =3D "\n\t\t      " if sum(len(r) for r in rules) > 80 el=
-se " "
--        return ["res =3D " + separator.join(rules)]
-+        return ["res =3D " + separator.join(rules) + ";"]
-=20
-     def __validate_constraint(self, key: tuple[int, int] | int, constr: st=
-r,
-                               rule, reset) -> None:
-@@ -406,7 +419,8 @@ f"""static inline void ha_convert_inv_guard(struct ha_m=
-onitor *ha_mon,
-=20
-     def __fill_verify_guards_func(self) -> list[str]:
-         buff =3D []
--        if not self.guards:
++_ltl: _opd | binop | unop
 +
-+        if not self.has_guard:
-             return []
-=20
-         buff.append(
-@@ -418,14 +432,22 @@ f"""static inline bool ha_verify_guards(struct ha_mon=
-itor *ha_mon,
- """)
-=20
-         _else =3D ""
--        for edge, constr in sorted(self.guards.items()):
-+        for transition in self.transitions:
-+            if not transition.rule and not transition.reset:
-+                continue
++_opd : VARIABLE
++     | LITERAL
++     | "(" _ltl ")"
 +
-             buff.append(f"\t{_else}if (curr_state =3D=3D "
--                        f"{self.states[edge[0]]}{self.enum_suffix} && "
--                        f"event =3D=3D {self.events[edge[1]]}{self.enum_su=
-ffix})")
--            if constr.count(";") > 0:
-+                        f"{transition.src}{self.enum_suffix} && "
-+                        f"event =3D=3D {transition.event}{self.enum_suffix=
-})")
-+            rule =3D transition.rule
-+            reset =3D transition.reset
-+            if rule and reset:
-                 buff[-1] +=3D " {"
--            buff +=3D [f"\t\t{c};" for c in constr.split(";")]
--            if constr.count(";") > 0:
-+            if rule:
-+                buff.append("\t\t" + self.__format_guard_rules(self.__pars=
-e_guard_rule(rule))[0])
-+            if reset:
-+                buff.append(f"\t\tha_reset_env(ha_mon, {reset.env}{self.en=
-um_suffix}, time_ns);")
-+            if rule and reset:
-                 _else =3D "} else "
-             else:
-                 _else =3D "else "
++unop: UNOP _ltl
++UNOP: "always"
++     | "eventually"
++     | "next"
++     | "not"
++
++binop: _opd BINOP _ltl
++BINOP: "until"
++      | "and"
++      | "or"
++      | "imply"
++
++VARIABLE: /[A-Z_][A-Z0-9_]*/
++LITERAL: "true" | "false"
++
++COMMENT: "#" /.*/ "\n"
++%ignore COMMENT
++
++%import common.WS
++%ignore WS
++'''
++
++class LTLError(Exception):
++    "Exception raised for malformed linear temporal logic"
+=20
+ class GraphNode:
+     uid =3D 0
+@@ -97,7 +94,7 @@ class GraphNode:
+         return self.id < other.id
+=20
+ class ASTNode:
+-    uid =3D 1
++    uid =3D 0
+=20
+     def __init__(self, op):
+         self.op =3D op
+@@ -433,90 +430,49 @@ class Literal:
+         node.old |=3D {n}
+         return node.expand(node_set)
+=20
+-def p_spec(p):
+-    '''
+-    spec : assign
+-         | assign spec
+-    '''
+-    if len(p) =3D=3D 3:
+-        p[2].append(p[1])
+-        p[0] =3D p[2]
+-    else:
+-        p[0] =3D [p[1]]
+-
+-def p_assign(p):
+-    '''
+-    assign : VARIABLE ASSIGN ltl
+-    '''
+-    p[0] =3D (p[1], p[3])
+-
+-def p_ltl(p):
+-    '''
+-    ltl : opd
+-        | binop
+-        | unop
+-    '''
+-    p[0] =3D p[1]
+-
+-def p_opd(p):
+-    '''
+-    opd : VARIABLE
+-        | LITERAL
+-        | LPAREN ltl RPAREN
+-    '''
+-    if p[1] =3D=3D "true":
+-        p[0] =3D ASTNode(Literal(True))
+-    elif p[1] =3D=3D "false":
+-        p[0] =3D ASTNode(Literal(False))
+-    elif p[1] =3D=3D '(':
+-        p[0] =3D p[2]
+-    else:
+-        p[0] =3D ASTNode(Variable(p[1]))
+-
+-def p_unop(p):
+-    '''
+-    unop : ALWAYS ltl
+-         | EVENTUALLY ltl
+-         | NEXT ltl
+-         | NOT ltl
+-    '''
+-    if p[1] =3D=3D "always":
+-        op =3D AlwaysOp(p[2])
+-    elif p[1] =3D=3D "eventually":
+-        op =3D EventuallyOp(p[2])
+-    elif p[1] =3D=3D "next":
+-        op =3D NextOp(p[2])
+-    elif p[1] =3D=3D "not":
+-        op =3D NotOp(p[2])
+-    else:
+-        raise AutomataError(f"Invalid unary operator {p[1]}")
+-
+-    p[0] =3D ASTNode(op)
+-
+-def p_binop(p):
+-    '''
+-    binop : opd UNTIL ltl
+-          | opd AND ltl
+-          | opd OR ltl
+-          | opd IMPLY ltl
+-    '''
+-    if p[2] =3D=3D "and":
+-        op =3D AndOp(p[1], p[3])
+-    elif p[2] =3D=3D "until":
+-        op =3D UntilOp(p[1], p[3])
+-    elif p[2] =3D=3D "or":
+-        op =3D OrOp(p[1], p[3])
+-    elif p[2] =3D=3D "imply":
+-        op =3D ImplyOp(p[1], p[3])
+-    else:
+-        raise AutomataError(f"Invalid binary operator {p[2]}")
+-
+-    p[0] =3D ASTNode(op)
+-
+-parser =3D yacc()
++class Transform(lark.visitors.Transformer):
++    def unop(self, node):
++        if node[0] =3D=3D "always":
++            return ASTNode(AlwaysOp(node[1]))
++        if node[0] =3D=3D "eventually":
++            return ASTNode(EventuallyOp(node[1]))
++        if node[0] =3D=3D "next":
++            return ASTNode(NextOp(node[1]))
++        if node[0] =3D=3D "not":
++            return ASTNode(NotOp(node[1]))
++        raise ValueError("Unknown operator %s" % node[0])
++
++    def binop(self, node):
++        if node[1] =3D=3D "until":
++            return ASTNode(UntilOp(node[0], node[2]))
++        if node[1] =3D=3D "and":
++            return ASTNode(AndOp(node[0], node[2]))
++        if node[1] =3D=3D "or":
++            return ASTNode(OrOp(node[0], node[2]))
++        if node[1] =3D=3D "imply":
++            return ASTNode(ImplyOp(node[0], node[2]))
++        raise ValueError("Unknown operator %s" % node[1])
++
++    def VARIABLE(self, args):
++        return ASTNode(Variable(args))
++
++    def LITERAL(self, args):
++        return ASTNode(Literal(args =3D=3D "true"))
++
++    def start(self, node):
++        return node
++
++    def assign(self, node):
++        return node[0].op.name, node[1]
++
++parser =3D lark.Lark(GRAMMAR)
+=20
+ def parse_ltl(s: str) -> ASTNode:
+-    spec =3D parser.parse(s)
++    try:
++        spec =3D parser.parse(s)
++    except lark.exceptions.UnexpectedInput as e:
++        raise LTLError(str(e))
++    spec =3D Transform().transform(spec)
+=20
+     rule =3D None
+     subexpr =3D {}
+@@ -528,7 +484,7 @@ def parse_ltl(s: str) -> ASTNode:
+             subexpr[assign[0]] =3D assign[1]
+=20
+     if rule is None:
+-        raise AutomataError("Please define your specification in the \"RUL=
+E =3D <LTL spec>\" format")
++        raise LTLError("Please define your specification in the \"RULE =3D=
+ <LTL spec>\" format")
+=20
+     for node in rule:
+         if not isinstance(node.op, Variable):
 --=20
 2.47.3
 
