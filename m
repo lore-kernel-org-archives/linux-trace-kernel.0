@@ -1,130 +1,88 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E5F17745;
-	Wed, 27 May 2026 21:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189212E612E;
+	Thu, 28 May 2026 02:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779916317; cv=none; b=o0XsUlIPpSUZiKfSKsn42ENb1dJATDQklUPVliw+E0C+kcRpGun6gD4VG4e7GmiqKh1IzsBw9A1G8AIcENqv8QRtV0KseTVhSz0FHNAdB4xQpMGxmZkdAPxR/W2urityE/1DQskubhFlUYMtxBu/R/vjivMjzaEW+STMZIAccu0=
+	t=1779935090; cv=none; b=AlNByHOAPOSRZmgZOt4WvrAKvdAd0eBINq5xHvTt/EBZg6gMMZsLVG1cCW1Ws/f6Uqf0f8qT15KLFLt2jXQ4GsPUGbJEUEJ95IC3E27GbZnp5OD6Wm8W5YEVYwA/fbacAnbXpFnHf8xnVcGj0dHcymsyq/UBWA+FAk2+oTCxUCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779916317; c=relaxed/simple;
-	bh=+tdvtZybaTGdkUt2cSFxQLxVTezSuX3ZQ3CkK5l8g94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vw0++dD6VFAhx0CdMa7YOBlK9jqnaTbC80j/vRn+kOIdqzbNkerRwvjLgE0GvuzNNeFF0yNB6jEjXcTaMOQ6vwtkUr/UMzlFy2UBTtAYNtp64TsluR/omcLeMA4YcdpCgjiSx1+NC+jPjmSpjSNr9sfi4vp8p3ChWuXSWxLQG7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dydfSLim; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1779935090; c=relaxed/simple;
+	bh=tyxGu8CHfgD8OUfKmd8OdRNkrpbl1UQV1MEgVj7xqFk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nGPDPZmivxkRrYS+YIm/QiSJVdTNSaCzOuUPLR9grhLM4zsQgRbkriVWEP6vvaQxIKjavWenJ8WfzTv1HSOD3NAs9VQ3z5kWYFselVmPfMGyepSSbq/XQBJuuu8LkLbwrqo6oYwD6y/2xPoyNe3d24oXPUq5Xe0/awXc0ch0Nyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FXLDw1Qf; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dydfSLim"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=wiNTn2pYeyuyayfVhMFJ/aFf1jF3wRjZNYIMEvLzZ0s=; b=dydfSLimwyfPmigTBMCujAZICg
-	qiZ0DnjS6QG5mT3Xk7JmeCbY9l3lK8w4Hg6IBjWOagNnNb/tjdIjhrED3/HIZNpa27AiZsxClWJUu
-	7+ZkJIqL/DPa2/qxPdbQWY2meXtnJTSis/iW1v1TIYSkgABqdAeywEB7FDhc0Oh1pMFPPqFO1diWC
-	bOsS46TNcQd1HZLkWMwlOm9FGpviLHCzdLbrGVxa5HLQstifo2FK0uWYvG/z9eHiGi+F91D12dOIf
-	CT00pVaw3wKVttGJjReynVf/k0ksQTZeqoNQ879jtzuEeHLm0remU3BnRkoKuw0RttTlQQDOmdYaI
-	gHHwJtTw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSLXM-00000003MQT-2jnq;
-	Wed, 27 May 2026 21:11:36 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 28A03300673; Wed, 27 May 2026 23:11:35 +0200 (CEST)
-Date: Wed, 27 May 2026 23:11:35 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alexis =?iso-8859-1?Q?Lothor=E9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FXLDw1Qf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1779935084; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=9rVMlDYzcI35lZwQKZ05tc29Po6MNzJ6x2rJ0HSbwhs=;
+	b=FXLDw1QfFCU5j3Y/1qkbRNioy+ATnye5ovD0xfEm+zr8vzOQhtVlzP10CgZ6wEDQn1UZIWKzKOf9OeWK3HDiLRTJx4ZgT0VnDaTgoD4Lr1wPCOBbdy+LMcfiPVRNoA9L8sPtJMeQGvFWXhcogfgQXUkWG+sUgBcvtYALVBNDrAQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=dtcccc@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0X3kwRqf_1779935058;
+Received: from localhost.localdomain(mailfrom:dtcccc@linux.alibaba.com fp:SMTPD_---0X3kwRqf_1779935058 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 28 May 2026 10:24:44 +0800
+From: Tianchen Ding <dtcccc@linux.alibaba.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	ebpf@linuxfoundation.org,
-	Bastien Curutchet <bastien.curutchet@bootlin.com>
-Subject: Re: [PATCH bpf-next] x86/ftrace: relocate %rip-relative percpu refs
- in dynamic trampolines
-Message-ID: <20260527211135.GA343181@noisy.programming.kicks-ass.net>
-References: <20260527-fix_call_depth_in_trampoline-v1-1-1c1abc8ae310@bootlin.com>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v2] selftests/ftrace: Fix trace_marker_raw test on 64K page kernels
+Date: Thu, 28 May 2026 10:24:17 +0800
+Message-Id: <20260528022417.1813745-1-dtcccc@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260527095438.1794905-1-dtcccc@linux.alibaba.com>
+References: <20260527095438.1794905-1-dtcccc@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260527-fix_call_depth_in_trampoline-v1-1-1c1abc8ae310@bootlin.com>
 
-On Wed, May 27, 2026 at 09:12:31PM +0200, Alexis Lothoré (eBPF Foundation) wrote:
-> With CONFIG_CALL_DEPTH_TRACKING enabled on an x86 retbleed-affected
-> platform (eg: Skylake), with retbleed=stuff, registering a dynamic
-> ftrace trampoline crashes on the first call into the traced function:
-> 
+On ARM64 kernels with 64K pages, the trace_marker_raw test fails because
+bash's printf builtin uses stdio buffering which splits output into
+multiple small write() calls to the tracefs file. Since each individual
+write is within TRACE_MARKER_MAX_SIZE (4096), they all succeed, causing
+the "too big" write test to incorrectly pass.
 
-> 
-> This small reproducer allows to easily trigger the crash:
-> 
->   # echo 'p __x64_sys_clock_nanosleep' > /sys/kernel/tracing/kprobe_events
->   # echo 1 > /sys/kernel/tracing/events/kprobes/p___x64_sys_clock_nanosleep_0/enable
->   # usleep 1
-> 
-> Monitoring the crash under GDB points to the exact instruction in charge
-> of incrementing the call depth:
-> 
->   sarq $5, %gs:__x86_call_depth(%rip)
-> 
-> This instruction matches the one inserted by the ftrace_regs_caller from
-> ftrace_64.S. This emitted code was likely working fine until the
-> introduction of commit 59bec00ace28 ("x86/percpu: Introduce
-> %rip-relative addressing to PER_CPU_VAR()"): it has made the call depth
-> accounting addressing relative to $rip, instead of being based on an
-> absolute address. As this code exact location depends on where the
-> trampoline lives in memory, the corresponding displacement needs to be
-> adjusted at runtime to actually correctly find the per-cpu
-> __x86_call_depth value, otherwise the targeted address is wrong, leading
-> to the page fault seen above.
-> 
-> Fix the %rip-relative displacement of the copied CALL_DEPTH_ACCOUNT
-> instruction (from ftrace_regs_caller) by calling
-> text_poke_apply_relocation(), as it is done for example by the x86 BPF
-> JIT compiler through x86_call_depth_emit_accounting(). This corrects
-> both CALL_DEPTH_ACCOUNT slots, in ftrace_caller and ftrace_regs_caller.
-> 
-> Fixes: 59bec00ace28 ("x86/percpu: Introduce %rip-relative addressing to PER_CPU_VAR()")
-> Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
-> ---
->  arch/x86/kernel/ftrace.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 0543b57f54ee..357df1b2922c 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -375,6 +375,13 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
->  			goto fail;
->  	}
->  
-> +	/*
-> +	 * Generated trampoline may contain rip-relative addressing which
-> +	 * displacement needs to be fixed
-> +	 */
-> +	text_poke_apply_relocation(trampoline, trampoline, size,
-> +				   (void *)start_offset, size);
-> +
->  	/*
->  	 * The address of the ftrace_ops that is used for this trampoline
->  	 * is stored at the end of the trampoline. This will be used to
+Fix by piping make_str output through dd with iflag=fullblock to
+guarantee a single atomic write() syscall to trace_marker_raw.
 
-I went and had a quick grep through the tree to see if there are more
-sites that were missed in the conversion (commit 17bce3b2ae2d), but I
-couldn't find another one.
+Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
+Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+---
+v2:
+Update comment about 64K pages.
+---
+ .../selftests/ftrace/test.d/00basic/trace_marker_raw.tc    | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+index 8e905d4fe6dd..f68f1901f65f 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+@@ -43,8 +43,11 @@ write_buffer() {
+ 	id=$1
+ 	size=$2
+ 
+-	# write the string into the raw marker
+-	make_str $id $size > trace_marker_raw
++	# Pipe through dd to ensure a single atomic write() syscall
++	# on architectures with 64K pages, where shell's printf builtin
++	# uses stdio buffering which may split the output into multiple
++	# writes.
++	make_str $id $size | dd of=trace_marker_raw bs=`expr $size + 4` iflag=fullblock
+ }
+ 
+ 
+-- 
+2.39.3
 
