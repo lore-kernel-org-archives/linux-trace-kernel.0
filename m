@@ -1,77 +1,153 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A679A3D47B5;
-	Thu, 28 May 2026 13:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8833EE1C5
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 13:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779973405; cv=none; b=hLx4Wkjh2vNK/d6odHg1NnXTxyROrATsq+JM9MiySf6jla2YKl1aXqSxEOfHq0odL2cAwv+4AtE+02XdmAW4Wp0I849uG7t7gm05enqssHzSjkwRPJQi9MUK3xhVjbybvJ+sVgngo8pFHLPGMFtMoHcOu1Eav1p612MVnEA/WGg=
+	t=1779973829; cv=none; b=a/QElLjxKSelKSNQfnh3gh6HYODwwH2Expf/pKLC6/BQW3Yj19v/myHqaTmuWT34I7nZAMVWUbpS60Ez61B/sXS7I9eJH83USd2E2Z8zE/gxNV22Y7Ef0MxAkxG9ijBQXOPQd5n231fJDPj9NXEGxmTEzW3uWGPMrbD1WcqzphU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779973405; c=relaxed/simple;
-	bh=9WJNhH0EVFmLxpkfUQEdXAv6Qr1Xe/cF0N8uHZSWQJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lI7e9cWKxUIsvL5+zA2C6ETq2HDRv48v/UhivP5KwLl8fkt5WjwLANodwfyVtrbEvSpq8VStmx2wiuO157bddmvJlhIZXB7OrFYtRI0B3qRiRyClWZo5wzivHx/HdzJO7DP/iTgeZgmnYb7wEqHPUpo/WCMDkEOM+d/xJAluGPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 79B921617BA;
-	Thu, 28 May 2026 13:03:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id C7B576000F;
-	Thu, 28 May 2026 13:03:11 +0000 (UTC)
-Date: Thu, 28 May 2026 09:03:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Alexis =?UTF-8?B?TG90aG9yw6k=?= (eBPF Foundation)"
- <alexis.lothore@bootlin.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Uros Bizjak <ubizjak@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Ingo Molnar <mingo@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, ebpf@linuxfoundation.org, Bastien Curutchet
- <bastien.curutchet@bootlin.com>
-Subject: Re: [PATCH bpf-next] x86/ftrace: relocate %rip-relative percpu refs
- in dynamic trampolines
-Message-ID: <20260528090310.6318e082@fedora>
-In-Reply-To: <20260528090231.45d9b28f@fedora>
-References: <20260527-fix_call_depth_in_trampoline-v1-1-1c1abc8ae310@bootlin.com>
-	<20260527211135.GA343181@noisy.programming.kicks-ass.net>
-	<20260528090231.45d9b28f@fedora>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1779973829; c=relaxed/simple;
+	bh=qtFHO/BM+YE6Gkk6IEwx00UhCp28YpfdUTDilTYYljU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBXJq1gNY3VWwDXeFfssDYLTgBVlNZZ2G2DsIcFsa1XK0XOzhN6IOrnv2puwa+UMzqE/ZkMym2wobkreaC9UN8jHtcrnlq4uRhG46OTOyOqs8y6xq84PDqP82N/kwqFBY2ghoaFTPNiYO/gYeIjqCoPS3UHiKds9Wzl/Wt3BJKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H2fGXr8W; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2fGXr8W"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-48984d29fe3so134087985e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 06:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779973826; x=1780578626; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u+SdT2L7hU9gJ+Dd0PzWymlFBpyy3grhRiyJOo4BI54=;
+        b=H2fGXr8W+abfjaD8Njb90MdsiIum4hrjCtQvp0E+AthHbp0RfZN+C448G/KEr+pW/7
+         O7e3fz3KqXNQj65wt9D0AW/6ufNBo7anj2ZXxJ4YXBVNtWoUqG/3ltOwXh4MZYqiDC1w
+         gsipn79oQeWUvWO5sFv/8h8J/zaBXk7k10jrPA4MQcBij2h4Le1g8wSV7CXi6Lu6TEUK
+         2h8znoufsmH9B4DriwXFDIkFwrPhPkv4zQNk5LKsEkGlC9i2CZiKG7mWyKzT6hjoNJCf
+         FkOXmEw8ULXYHZ5CawyKUFoHJNLb88dvRs/FMI/WaIRD7xDhTPZICkYQo9wxKXMbisbJ
+         IQ+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779973826; x=1780578626;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u+SdT2L7hU9gJ+Dd0PzWymlFBpyy3grhRiyJOo4BI54=;
+        b=jy27PS3Jc1wxZbd19zfGNiDQImVA+rPHKY4eqZx6p8SkotpE5XHVxW5oefAcPjf/TA
+         680N9NsLfPlTznRdZChukZX+he/KJV6CbnzGwHvaBcHQQS5iKIIYcLHrLjHosiMajcZE
+         R6fsePw9MkxHZ9/uHk6GETYAhGyg8C83Es2mlDMu8E3bZLvNSuoVBGLNhYzfbClNBn1i
+         Z9mPSFm3258ZixVrOeUxVKRvFEJg7aiU3LxYwEy92hfSLJftR6/3H1p5Fit03tcEbPuu
+         HL1KTSFbebETUxZc+8oFTemBXMRpuHZStv1iQbL+lvbuI39DjfLX0eSUfbnPgkbLC0fb
+         RIvQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8htXm9LjsSp72GtMyyRfsge/0FnEygdIlBNReuzQ9QmByntQWtHuVoDsGTPjulrmvvB3dqnXv1U6/yfxZjJ25oUaw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybLSXE6MR9An668R01qYTzctTZOjpP9Y/6wfBLHuKp2Z77BxuM
+	oOmqFwhUy9gNASOxyd2MsZRFerr+gPd7zualmBgyHa/cHPSCWardQTkP
+X-Gm-Gg: Acq92OFZuB8FYK+6PDLYFZ1lc1vQW84EYdi8KnMM68h14XA1tUOFaXtaTpcMmpyFRUW
+	U2y5dBt4PkJBVKlNL4S9l7sg21kaWBKw+vFMUR/+zU11R+QOc2kqe6Atz4hBCd5MCjBRdDMD3JL
+	6arq3xZ0k8nozt6/WslxWAn1di+e+8cBP1Opi60NL1swBwd6D6aTI15KiToaR2SP75vof3sSeeS
+	xVvRZVluwtNKiA5NuElnTHs1Koc1tNW+XCkqDpGqUmo0Ht6PnRVgwvRgYKI4tMNOHmV4KTqyp2T
+	j1ZqLcq3C4qaYf709E40HN7tbvPq7hYyr5mNcjflk9spm8PDV7iIyEq0HT96QG7hEpDL/eyJ/BN
+	WtmlKxIvNUqDTgLVoNUagnlJowO5AdAMGORNfNDMeabp7AeRHAj/o2jEz6dXS+Q0hN/+xmBaFcy
+	Lj4ZsFvsEjBya/NxxOukfn+ClnoA==
+X-Received: by 2002:a05:600c:4f91:b0:490:6e12:5418 with SMTP id 5b1f17b1804b1-4906e12552emr233211255e9.23.1779973825507;
+        Thu, 28 May 2026 06:10:25 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49092657a1esm36833465e9.7.2026.05.28.06.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2026 06:10:25 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 28 May 2026 15:10:22 +0200
+To: bot+bpf-ci@kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
+	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
+	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCHv6 bpf-next 22/29] selftests/bpf: Add tracing multi
+ skel/pattern/ids module attach tests
+Message-ID: <ahg-vl6Bhh2hxFm3@krava>
+References: <20260527113951.46265-23-jolsa@kernel.org>
+ <20af6dea23834f831d06cf601a91bf8848d78091b46a913ed1b24302576983e1@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: muuaah5p4xkif5bwgm8ja96fykbtxbpj
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: C7B576000F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX186uQcE4RFDNUT/4Zg1wqr1e36BBeSEZDg=
-X-HE-Tag: 1779973391-145890
-X-HE-Meta: U2FsdGVkX18YlWmKGApzqd6lXNiCelfPTSMs7hn0672vvgUE9eJuipFfnZwmhH0dqr95TGK2Nhigvdj27c+5Kyqm6eS1OJ0u115tn015pnmB84oZc4bR4KCDDg87bCE3wg6eAAU2z3ofgxIr9SMwHp5I9dgbKe7+IR7zf9oq4QxXvVIiRNIu2yXlWa370fwwMUlL0VJSmhJ6WQcWVuZklavgW8hWxB+scEiMp+rMUtjqZZ7wUqw7ZrwkzTS4oQtem1Xns3soTc7hDE7JUMChAfq79sPi1WOKfqB6d8+YcI1F2Sudj3CL9snUOXALWsiQLPVLN6mfGEv3qbeYiAb9hG3UDMTO+HNSwTZQrpfv0adwzovpFFW2yFzt91Cl53crc4/LJf5BLy5mJtaSZ+Ra2pzWNG8OaAcy4f1tDYMe413vGpW9WZPjAYupov8eeOr/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20af6dea23834f831d06cf601a91bf8848d78091b46a913ed1b24302576983e1@mail.kernel.org>
 
-On Thu, 28 May 2026 09:02:31 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed, 27 May 2026 23:11:35 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, May 27, 2026 at 12:59:39PM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> > index e290513358d9..746a8398211a 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
 > 
-> > I went and had a quick grep through the tree to see if there are more
-> > sites that were missed in the conversion (commit 17bce3b2ae2d), but I
-> > couldn't find another one.
-> > 
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>  
+> [ ... ]
 > 
-> Peter, do you want me to take this through my tree, or do you prefer it
-> goes through the x86 tree?
+> > @@ -241,6 +250,96 @@ static void test_link_api_ids(void)
 > 
+> [ ... ]
+> 
+> > +static void test_module_link_api_ids(void)
+> > +{
+> > +	size_t cnt = ARRAY_SIZE(bpf_testmod_fentry_test);
+> > +	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
+> > +	struct tracing_multi_module *skel = NULL;
+> > +	__u32 *ids;
+> > +
+> > +	skel = tracing_multi_module__open_and_load();
+> > +	if (!ASSERT_OK_PTR(skel, "tracing_multi_module__open_and_load"))
+> > +		return;
+> > +
+> > +	skel->bss->pid = getpid();
+> > +
+> > +	ids = get_ids(bpf_testmod_fentry_test, cnt, "bpf_testmod");
+> > +	if (!ASSERT_OK_PTR(ids, "get_ids"))
+> > +		goto cleanup;
+> 
+> This new test calls get_ids() but there's an unaddressed review comment
+> from sashiko-bot about a memory leak in that function. Looking at get_ids()
+> in the same file:
+> 
+>     for (i = 0; i < funcs_cnt; i++) {
+>         if (!tsearch(&funcs[i], &root, compare)) {
+>             ASSERT_FAIL("tsearch failed");
+>             err = -1;
+>             goto out;
+>         }
+>     }
+> 
+>     ...
+> 
+>     if (err) {
+>         free(ids);
+>         ids = NULL;
+>     }
+> 
+> out:
+>     tdestroy(root, tdestroy_free_nop);
+>     btf__free(vmlinux_btf);
+>     btf__free(btf);
+>     return ids;
+> 
+> If tsearch() fails, the code sets err = -1 and jumps to the out label.
+> However, the out label is positioned after the cleanup block that frees ids
+> (the "if (err)" block), not before it. This means the cleanup code is
+> bypassed when we goto out, causing two issues:
+> 
+> 1. The ids array is leaked
+> 
+> 2. The function returns a non-NULL pointer to allocated but potentially
+>    invalid memory, which will incorrectly pass the ASSERT_OK_PTR check above
+> 
+> Should the out label be moved before the cleanup block so that the error
+> path properly frees the ids array and sets it to NULL?
 
-Never mind. I now see it is in tip.
+yes, will fix
 
--- Steve
+jirka
