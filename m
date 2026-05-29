@@ -1,38 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B131405F7;
-	Fri, 29 May 2026 14:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36E83EFD0E;
+	Fri, 29 May 2026 14:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780064674; cv=none; b=H03xVrikM3p1U97IqqswUad98hJd8uPrkAz6cnOdn+w+ermzhgSEqgS96wEQuFkql8rHhQG8HLHuJnasRHDnSb9mjOoqG6AdbmlxKm0LoqZI1+1Sc1HD++s+pFfPmTAdogeJG6EYA9t96wGzzSKTmK/zTCTluA5tPNWvmNATWJA=
+	t=1780065503; cv=none; b=I67n86bPo7nyHMs18DuUiFWNg2fFU/0t3k73s089bw8hCTfdVJ7dyrFq7RM+izz3PY3bEJxcDCkgFnbTIN+3YcC3VDHoRslv+VKCG5gYxbx73/2v+xofDniGmBUUoRcbCKAkLnAkJ6PGj9HmsbJjpjJ9Z58xgW5qRmxzkLFpnp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780064674; c=relaxed/simple;
-	bh=hqQ5NSJon3qGEmy6u57pOpDKo2UkXlyMcl+d6yZ4QEg=;
+	s=arc-20240116; t=1780065503; c=relaxed/simple;
+	bh=+NJqJNdqUaB25DmecAr48uBGbdsKlflV2fgmII/kV2w=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r3ammHjjQ2Xh6nZzbWwBV/Ru4U6Kveq0rBD83c/hGKU4WPEcy9Vc/4Hk21ZVez0aTdgUdoddkw57D3U42+cFOOM0zlf2tH4XYrJyLk+pA4Tjrcu8MWR4V4KAnL+xX+t2r3L/+1OOevViREjDvY0pTDhatXh54Naob3bq0KqTj3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=hO4HNzKGDF2ro5W5jfSZEH7wtw0seszlN4RMrLhyrg8IDAOe6C5xTD7/07+E88t90mhOhQ4KhxbAzEeT8AU4zOs6LhNaj+3fMrkDzEea1FDJn40AUOVOQXpLeFVkZzOcOBtcCy1rTWyM5MhEsrNRpFSqcr6nSSqt5Y+Ilc9UEFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id C3B6DA0170;
-	Fri, 29 May 2026 14:24:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id AB06E8000E;
-	Fri, 29 May 2026 14:24:23 +0000 (UTC)
-Date: Fri, 29 May 2026 10:24:22 -0400
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 84C1416084C;
+	Fri, 29 May 2026 14:38:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 9547E8000E;
+	Fri, 29 May 2026 14:38:12 +0000 (UTC)
+Date: Fri, 29 May 2026 10:38:11 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: CaoRuichuang <create0818@163.com>, Shuah Khan
- <skhan@linuxfoundation.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Drop invalid top-level local in
- test_ownership
-Message-ID: <20260529102422.6ae29ab6@fedora>
-In-Reply-To: <20260513110208.3c14878b@gandalf.local.home>
-References: <20260407102613.81419-1-create0818@163.com>
-	<20260407203727.442b583c@gandalf.local.home>
-	<20260513110208.3c14878b@gandalf.local.home>
+To: Chen Jun <chenjun102@huawei.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] trace: Introduce a new filter_pred "caller"
+Message-ID: <20260529103811.37b0e357@fedora>
+In-Reply-To: <20260514131901.8c94136f6fede18c608c8a55@kernel.org>
+References: <20260508122623.74290-1-chenjun102@huawei.com>
+	<20260512084750.c17a93d0ccdacddfd52d3d40@kernel.org>
+	<20260513124017.770e3098@gandalf.local.home>
+	<20260514131901.8c94136f6fede18c608c8a55@kernel.org>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,84 +41,75 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: AB06E8000E
-X-Stat-Signature: h5edgcquxw648jzpfk84tm1b367w9a7e
+X-Rspamd-Queue-Id: 9547E8000E
+X-Stat-Signature: e199x57jbgmmnnkyyqdqoa9nzo9ujzj9
 X-Rspamd-Server: rspamout03
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/2DKC1J7X5I69+HQZYBowIeeF1Tln6Wlk=
-X-HE-Tag: 1780064663-384254
-X-HE-Meta: U2FsdGVkX1+ExW2iCgtS8Scm8fAW7przZLqt31hNTneQ1HN3M0k5CfzRHFUhT/3+Wa3Jzs8Pnhc+nilo7GEbaRuIVrf0JQDGJeu9PQ9dm6eN28D3Rqc4MC8BMIrBFpcZeUcliMp21PHpv+4Z9J32GLfmVL8hD2xMv5Kcrza5vfxxKtHCts041IJk4ha1WziH0sdaWXuQLB03amVMRJD6UezEgeg/CfLgPo05odsD+dHT2X0ix9AavfjmXfJIOCYMcErpW0Na2r8UgSh/+KZhubOP2womWngKbajq+fLzczz2JcRPODNVNRpeVd1cX21QG3JSLlizjY6tRj4N49GMYH6lEo6frda3rP/x7wcbxe9YPJbmncoQ2OYRP0gYerPrz1HaMsRSaWICr4XqX3pJWitSwZGsY4dO8Ak7vXfs7Xo=
+X-Session-ID: U2FsdGVkX19SKvHt3PwHMk0eVFiTU2M0EJLxEzO0gZk=
+X-HE-Tag: 1780065492-638300
+X-HE-Meta: U2FsdGVkX19BmTm4pyfa48STlmGXO02ASdwLdOXPuQJtevFnxhyX64bDurZIQfvgnNEcKoHZsgT5bU+kT947Kj+8zOiZ6YFePb+u9tVLbgRoFe3UsCHj6E2vUHX3PjlbhkAL12IH/f4oa0FqXT21ZwDZwxaVK1KDOcJg61k8pERxUz9WTL5LeH3v7Ss+rk9K54Ikzz0fOcWSW/TJjQnJzWMvp9ezDY5QpA5i+H2AJts0FnmGa6doqYlIduP0ndOFl2VLzvPVV1ermsCazDxufXjjYL6y7vHkItH3+Cvk7GQqkxZH9n22Muj6VA2zIQgJ5wsSitHv1mZJLTrwdkLdLRwmthfADmKFm3dsljijMsbR46u1hO9LxEtZeL9YlJ6AMaw3oHaVduhzLK5YLbZZcAsnnAlqabL8xzU+60pU8dPlk6jLDEUFviQLem1EWSDJJRrF/x0wg58=
 
 
-Shuah,
+Hi Chen,
 
-Ping?
+Do you plan on sending updates to address the comments that Masami and
+I have made?
 
 -- Steve
 
 
-On Wed, 13 May 2026 11:02:08 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 14 May 2026 13:19:01 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> Shuah,
+> On Wed, 13 May 2026 12:40:17 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Can you pull this into your urgent branch?
+> > On Tue, 12 May 2026 08:47:50 +0900
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> >   
+> > > On Fri, 8 May 2026 20:26:23 +0800
+> > > Chen Jun <chenjun102@huawei.com> wrote:
+> > >   
+> > > > Low-level functions have many call paths, and sometimes
+> > > > we only care about the calls on a specific call path.
+> > > > Add a new filter to filter based on the call stack.
+> > > > 
+> > > > Usage:
+> > > > 1. echo 'caller=="$function_name"' > events/../filter    
+> > > 
+> > > Thanks for interesting idea :)
+> > > 
+> > > BTW, we already have "stacktrace". Since this actually checks
+> > > stacktrace, not caller, so I think we should reuse it.
+> > > Also, I think OP_GLOB is more suitable for this case.
+> > > (and more useful)  
+> > 
+> > Actually, it's not a stack trace, it's a function that is called from other
+> > functions. But since "caller" sounds like a direct called function (stack
+> > trace of the first instance), I think perhaps it should be "called_within" or
+> > something similar. :-/  
+> 
+> Yeah, what about "callers"?
+> 
+> > 
+> > Also, OP_GLOB can't work because it only works for a single function. At
+> > the time of parsing, it finds the function (and should probably error out
+> > if there's more than one function with a given name). It then records the
+> > start and end address of the function so it only needs to find if one of
+> > the entries in the stack trace is between the start and end of the function.  
+> 
+> Ah, OK. It is just comparing address, not name.
+> 
+> > 
+> > I don't think this is possible with GLOB. We don't want to do a search of
+> > the functions when the event is triggered.  
+> 
+> Agreed.
 > 
 > Thanks,
 > 
-> -- Steve
+> > 
+> > -- Steve  
 > 
-> 
-> On Tue, 7 Apr 2026 20:37:27 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > Shuah,
-> > 
-> > Care to take this through your tree. Probably could even add:
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 8b55572e51805 ("tracing/selftests: Add tracefs mount options test")
-> > 
-> > As well as:
-> > 
-> > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > 
-> > -- Steve
-> > 
-> > 
-> > On Tue,  7 Apr 2026 18:26:13 +0800
-> > CaoRuichuang <create0818@163.com> wrote:
-> >   
-> > > From: Cao Ruichuang <create0818@163.com>
-> > > 
-> > > test_ownership.tc is sourced by ftracetest under /bin/sh.
-> > > 
-> > > The script currently declares mount_point with local at file scope,
-> > > which makes /bin/sh abort with "local: not in a function" before the
-> > > test can reach the eventfs ownership checks.
-> > > 
-> > > Replace the top-level local declaration with a normal shell variable so
-> > > kernels that support the gid= tracefs mount option can run the test at
-> > > all.
-> > > 
-> > > Signed-off-by: Cao Ruichuang <create0818@163.com>
-> > > ---
-> > >  tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > > index e71cc3ad0..6d00d3c0f 100644
-> > > --- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > > +++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > > @@ -6,7 +6,7 @@
-> > >  original_group=`stat -c "%g" .`
-> > >  original_owner=`stat -c "%u" .`
-> > >  
-> > > -local mount_point=$(get_mount_point)
-> > > +mount_point=$(get_mount_point)
-> > >  
-> > >  mount_options=$(get_mnt_options "$mount_point")
-> > >      
-> >   
 > 
 
