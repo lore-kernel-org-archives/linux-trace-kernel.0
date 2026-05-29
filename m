@@ -1,122 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A083A0E85
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 May 2026 06:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633033AB5DA;
+	Fri, 29 May 2026 08:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780034899; cv=none; b=bOQor5VZ76Y9xt1Hf4kYW9NbFkQIrFClf6HMUxgaKLelsaA5zMIlTewsQWzPdxyHi9NyqX8yikpZq8+a4zRsiJ+CDcCOsPvYyaZ0rBZ+zS/MHEz+MsG2D3tqvmehwl2fdXGiJc3K4ajNsIxV2QcoTvNXkQeOnf/XV1z8mWRTc1k=
+	t=1780043387; cv=none; b=ZYL09GOzqelcw6URcD7rNndaKHHwLDS3P5detrdoi9i6bZDtF13bYgO+pgYFPbT8bBasWwpto6NIqj9OUo3HlmCZBSHM3Q56dFudvQwZ/WUub+w5pHyem81/1Fuz9n6cyyJebxG9AUbsCb6UTHpUDz4FSCJJJ859pgQyLJ/5GYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780034899; c=relaxed/simple;
-	bh=QE90Vm1v241VW5L7o0c7RK2smtkqVjG7hxXcnZPfIS0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P0YKlbNREt1t8WAj2oXRBGRwb0eWCphUw3OmLDXzCMjfw3ZWxVp+QEAGfCePky9WrMP82I87Z7ZhoaLl15atvNJbi2RPc9rI5LNBjWXSqH2D75EGpU07yXRGKq/DRF+0ba972OyR/u3YGYJl7gLuwLHUOqa/1Yo4w+y3ybnGJfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PKbegBn6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780043387; c=relaxed/simple;
+	bh=lQ0zbcLil0/HCJ3909LMaKt2HLfj1P9vlCrDawJ0TiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WzGjodxTesL5SE/p/P/7Xpv1hzVebONCruyWh039D+4IDfoupqqgf74071p2A52xg58szzpwGnfEwun8Zec2UCywTLP7msLypQi1Wbuz8Rwcqs0kUtH9Xd1oebP7028jZZBDhCQrNqqQ5rqp2FvsbUaTLeOVtBw3h8qihmIZbvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RPxHOxrD; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PKbegBn6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780034896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QE90Vm1v241VW5L7o0c7RK2smtkqVjG7hxXcnZPfIS0=;
-	b=PKbegBn6rBNU8VqsQSacFg7dUt9HpFsOYdnL1lXd/zDvkyHX6RdA3QBTZDTBavERkyyZ6b
-	/8T5XBzjggyEIFL1r8ECFD/yLqQrwh5w41uTRQH64DaV1PSnP3dF/8A6XXeitr91IN+1mp
-	NhQ5yUiFRgusshXD5rdggwRrZfpUC3w=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-641-zDSt6BTkO62nHy5HQxrfAw-1; Fri, 29 May 2026 02:08:15 -0400
-X-MC-Unique: zDSt6BTkO62nHy5HQxrfAw-1
-X-Mimecast-MFC-AGG-ID: zDSt6BTkO62nHy5HQxrfAw_1780034894
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4909c0f0ba2so2474165e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 May 2026 23:08:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780034894; x=1780639694;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QE90Vm1v241VW5L7o0c7RK2smtkqVjG7hxXcnZPfIS0=;
-        b=b++aALe0alsaMe5d+7/jvJglY+C9/q4Sb0reEU73msq5EQS9X1mo5iPJF4daQQfWKc
-         4kebCBpUvuoNAkigGWd7XGnGKFR632M41vLP3oA5OcJgoC55BUyvWKpLqkGvmu35iAZf
-         kLVvA0Z1SBvaj0jAbq+4Ynfx9DF0V7oeHP/LHFWz26tPFEQ5xTz2hUHa+spou1KlBCHe
-         UdslIV5sF3D8s1eGXp47ePnNC9w38nCnYzsZbbix2zftBZWUAxl0kWZncmDgqtXzN4TS
-         +9M6YJULkISGFxnx4as2dEgW5XNwDjSc8ql0NuzKOjhf3nDZCjU3lccq4Mzu38eQZkVc
-         6+7A==
-X-Forwarded-Encrypted: i=1; AFNElJ+6yaGHLC080wnfim+TFKdsl7OH2XxqqX+rZb0SnmRmspDUL6NjyIIxW0RAJ+JdzxFWaL0/4/K48n9RUKiRlpx0JyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkDZIsTJ2hTJQzmQqRgq2OFX0D+03nS1UTXz8E4tWbjwhzvL5m
-	PMG9054ELqeTjaoee0RMH0+hak4HCh+GaL5JJhs2M0MEO30RhJECfJIbZlBXl/GkL36kweX9yKI
-	WwP/xxLhec5vub9JqWWWjgNLqk43m5a0N96RahVx+vg5etxmyCYexZF3mE+jRq1/Y/ovLdwxweA
-	==
-X-Gm-Gg: Acq92OH8Jv4ySGtp6JDppwAaYMSyG+HWvXsretJ/seorY99peg/AH4SL9MJ3Xpql7L3
-	PtpjZcfjRKuxXcK5irQxebx3MJE24BlxIUq/0LjVoE+Ruc2ROqjtLn9YaL8jnNQ2T/Im+K5BHXv
-	2qAZJ4cewqoysSO2HZXtpZ/7oRUBnC6T+wuGR4AGeoZ5SXG0KUdQntuMga9nFbgCXOkDE3LVgyx
-	f4pY4+HEqUtUjoa9mHmXn5f8gXiFWG2iznTKhOHPiydnnYUQCae7XIrySAd9chCHVXelZOg81ZE
-	+l3yg68V0NKQkkiYV2qfcDb9EXbR+MuW1fhtKiFQkmNFPzl/xs146MipwVGFC50Nkj17QjQkNkM
-	q6A3BIWhCBdc/1WpS5N2IxDwrw4/AoA6MiaUo
-X-Received: by 2002:a05:600c:3104:b0:490:9d1b:f068 with SMTP id 5b1f17b1804b1-4909d1bf102mr17916445e9.29.1780034894088;
-        Thu, 28 May 2026 23:08:14 -0700 (PDT)
-X-Received: by 2002:a05:600c:3104:b0:490:9d1b:f068 with SMTP id 5b1f17b1804b1-4909d1bf102mr17915865e9.29.1780034893617;
-        Thu, 28 May 2026 23:08:13 -0700 (PDT)
-Received: from [192.168.1.167] ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4909d68980csm21833625e9.1.2026.05.28.23.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 23:08:13 -0700 (PDT)
-Message-ID: <90bedf1a51a12b2f2fab4a34b3f2402c33fa4f34.camel@redhat.com>
-Subject: Re: [PATCH v2 02/12] rv: Fix read_lock scope in per-task DA cleanup
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Wen Yang <wen.yang@linux.dev>, linux-kernel@vger.kernel.org, Steven
- Rostedt	 <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
-Date: Fri, 29 May 2026 08:08:12 +0200
-In-Reply-To: <87ldd3orft.fsf@yellow.woof>
-References: <20260527062313.39908-1-gmonaco@redhat.com>
-	 <20260527062313.39908-3-gmonaco@redhat.com> <87ldd3orft.fsf@yellow.woof>
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RPxHOxrD"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64SLllLd2418247;
+	Fri, 29 May 2026 08:28:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=ZmCU8JjyW1xv8XSh7pfJC++iM36fsD
+	Sne5TVGz99TSo=; b=RPxHOxrDDOKdhImhAgptuWp5UafW7nh6T8LpvzP+xLcWce
+	BISoGufG+1TFMzmrmNwRn5HgrlMBtRPPZqGI+vax1IlO5Z2e03VR9J4QLUUvZGqB
+	5MT0QoHqzsM2ftNCe2/brGOUMw44UNHvxhFNUq0QWTGRP3Mot/aAWBfvbaBvvCZ1
+	T6xbfDQpwRdIe+21CVX8eG5xFlBDSgZR1vmAZcZI4GkxY60q6swdQKNI82HvMrmr
+	1K58URXwMVCxZ2f99hzKRviNU3zJNiaPz9KzZzXovOBRrnwcce7DAz4onYJw9Yzg
+	c8Ytk0PjZQocAn+ztZQHiJGVY4s1EJcKgKSn7GVw==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee884qjcm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 May 2026 08:28:48 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64T8OBnO032654;
+	Fri, 29 May 2026 08:28:47 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4edjrbcjw9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 May 2026 08:28:47 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64T8ShFO37683514
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 29 May 2026 08:28:43 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 783E12004B;
+	Fri, 29 May 2026 08:28:43 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 47C0920049;
+	Fri, 29 May 2026 08:28:42 +0000 (GMT)
+Received: from osiris (unknown [9.111.13.205])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 29 May 2026 08:28:42 +0000 (GMT)
+Date: Fri, 29 May 2026 10:28:40 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Vasily Gorbik <gor@linux.ibm.com>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
+Subject: Re: [PATCH v2] unwind: Add sframe_(un)register() system calls
+Message-ID: <20260529082840.26496A2c-hca@linux.ibm.com>
+References: <20260528151023.00f5ec4e@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: YFOEGfjx9lE37k3cgLuaM4KfqVi2EchUCMdp3REozio_1780034894
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260528151023.00f5ec4e@gandalf.local.home>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=L4MtheT8 c=1 sm=1 tr=0 ts=6a194e41 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=kj9zAlcOel0A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=meVymXHHAAAA:8
+ a=JHi4FkbiIRko9ia7NpwA:9 a=CjuIK1q_8ugA:10 a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-ORIG-GUID: bKpieZLL6prBYOtPU8OUCX4n4xg7100e
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI5MDA3OCBTYWx0ZWRfX8FSLPHD4t+RR
+ mMX3xIpIFspAD6pvmEH64fxuxOFaZebMHBKxC1/NEba/SK4W2tMIvVkUwEMByTwaF5oaO+4Na8t
+ LMJzp4vAiADBiov4C4DNfYp5/Y0BBDYPflih8CQzU1xpBDrbeU9ZD4XCJWRYSkvkSan1fL4sN1e
+ dfVlMp9Il/c3tulCeQ4ZKoxMKGzshh2GFxFIuxKAG+LBrZPG3Ck4ClldIL9H86+3vSx3Am47KUO
+ 7xuukOZ6AEvZ9RnFnOdZrFUj4CZkp1hkegxH2XfzDKdem3rrPvdOWoT8Q8Slp0VZGLPAT3dImmt
+ /ncvgrRZRWC5l4YOvJRwd+dDp/fw71q8wF967DeC7XsqiyDn9EcPKMAZIl+aJ77SdOIoWDzbJyy
+ fkhcM7MEdjpaazm3PokQmLxWwTzI6fNDDrTGJENn/LC7NLP0c4QjwRY4rIf2UuA8xHmpRHyDFPv
+ +hxwHP/CLAPMFMvnbtw==
+X-Proofpoint-GUID: X9uleG4BCnUStnmV7cUzFy92hiRdtqkl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-05-29_02,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 suspectscore=0 clxscore=1011 malwarescore=0
+ bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605290078
 
-On Thu, 2026-05-28 at 10:43 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > The da_monitor_reset_all() function for per-task monitors takes
-> > tasklist_lock while iterating over tasks, then keeps it also while
-> > iterating over idle tasks (one per CPU). The latter is not
-> > necessary
-> > since the lock needs to guard only for_each_process_thread().
-> >=20
-> > Use a scoped_guard for more compact syntax and adjust the scope
-> > only
-> > where the lock is necessary.
-> >=20
-> > Fixes: 30984ccf31b7f ("rv: Refactor da_monitor to minimise macros")
-> > Fixes: 8259cb14a7068 ("rv: Reset per-task monitors also for idle
-> > tasks")
->=20
-> Fixes: tag "indicates that the patch fixes a bug in a previous
-> commit". There is no bug here, so I don't think Fixes tags are
-> applicable.
+On Thu, May 28, 2026 at 03:10:23PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Add system calls to register and unregister sframes that can be used by
+> dynamic linkers to tell the kernel where the sframe section is in memory
+> for libraries it loads.
 
-Yeah good point, that isn't a real bug.. We're just holding a lock for
-a bit too long but there's no harm in that. Will remove the tags.
+...
 
-Thanks,
-Gabriele
+> diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+> index 09a7ef04d979..52519e2acdc8 100644
+> --- a/arch/s390/kernel/syscalls/syscall.tbl
+> +++ b/arch/s390/kernel/syscalls/syscall.tbl
+> @@ -398,3 +398,6 @@
+>  469	common	file_setattr			sys_file_setattr
+>  470	common	listns				sys_listns
+>  471	common	rseq_slice_yield		sys_rseq_slice_yield
+> +472	common	stacktrace_setup		sys_stacktrace_setup
+> +472	common	sframe_register			sys_sframe_register
+> +473	common	sframe_unregister		sys_sframe_unregister
 
->=20
-> > Reviewed-by: Wen Yang <wen.yang@linux.dev>
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
->=20
-> Reviewed-by: Nam Cao <namcao@linutronix.de>
-
+What is stacktrace_setup? And why only for s390? Looks like a leftover.
