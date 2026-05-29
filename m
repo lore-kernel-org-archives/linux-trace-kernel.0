@@ -1,145 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3790B3ACA60
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 May 2026 20:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C151A6828;
+	Fri, 29 May 2026 23:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780087847; cv=none; b=G5lfz6Vyb7lw+1X4jKPWWacf0P986utotGP2neyZtwQmvSKerCjASZEvG3LmfCi39zwzMbK/5A6DnLvIn3o/gPboilVA2kH69dZlo0J0m99GXQo3hWpVbDgtMp+Dy4YF9gtkMLxH/uqk7tSaq0uyR/Rej/bjko6hR2paUWkfKUc=
+	t=1780098701; cv=none; b=imUGYfiIzJR7j9aLl7tu3phgI+1xOqd66jXCfkG1ACssSczSZoIvZ1Oy/SBHQK4wtNArxD44q55UIlmdHTYUZL+NF4C1ZDKEeds+uRDz4qHn9t9+kv4zUP99BN+S+F3pYWaQ3BVFl1Xk+oHInuK44tu2rOMXFt/w9bbqqSXBDyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780087847; c=relaxed/simple;
-	bh=UoD68z0Bd1yc4sfrNZqLDPk4O1bJEAcKIWD4oka/VgM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kgIL/m61F46WxWWPoTEd4UKyHMCVIfpLZcxSM71rwQr03PXiGrG1+KPK+x+XzvZgELvyvptWWmQ9qq9gPn0SMPJ9w4PKHkpFbjfl5RDf6UXZ4bSv6/Z7qcmLL2WrffKHN5d0ffwIbI7FbG/6gXbu/9B/ltR16w/nUZNdOIdOt4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g5EwU3oy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g5EwU3oy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780087845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iFJyJWJYZjKkbr4u/Iw7dqAvQNwkZiT8Y43qNWAKD28=;
-	b=g5EwU3oyrU0OWaZMrShq2FT2wCYgIZ4+OUvfyivHJMYHChw/g0G+xtBnX5YgInis+Wxaxk
-	xnWjW9bHC8zQN3lVd6vkhrYcLboNITtN3celfS6efT+WUzhUStL3QD7qfXsJ/oQ9BVGe61
-	BSvzoYc/6tVWn9O9mWQD15JE2stn0zM=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-271-SINE3-DVNRy6tmhGaGQTQw-1; Fri, 29 May 2026 16:50:43 -0400
-X-MC-Unique: SINE3-DVNRy6tmhGaGQTQw-1
-X-Mimecast-MFC-AGG-ID: SINE3-DVNRy6tmhGaGQTQw_1780087843
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-bcbb3e56f10so285141766b.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 May 2026 13:50:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780087843; x=1780692643;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iFJyJWJYZjKkbr4u/Iw7dqAvQNwkZiT8Y43qNWAKD28=;
-        b=MvakO6W+XScsfaAq/nJ0v9Y5TCkD9bwzVN5FFcCbtTTEM55NZcC77QM1YB5XYK3GT8
-         K9rgw/oU/JNLRTRZNdKRETdRzm4LytYmHEzptHthIIlv5MxbiGgxJzgM2mVK2nYBIA5A
-         ukUBrBxdQmm5WVkI+0cTRlVzi7vpEbJc6fjIv6dxqhIgdYaDV/O2VsGrTFa5mA0gczcP
-         G0wQyPb5NcEN5onilBDk9gCjyCyyU/ZzNcSN06F365KuOe9PZopekitJwuDRk5Qux0db
-         cUTjYUTXfjHXH4K3wjJeLzciA8SBkd7iG3lFE6vLeVV4J1cFY8SGaXRxCuYhE1lmsDQa
-         CZKw==
-X-Forwarded-Encrypted: i=1; AFNElJ8kdO429YR/DP7xTL7GizX51cr+i/Qon7/sO4XIn0VgSLRA8O5PbQy8/1enXSIr81b5ZBXXkeatTPyKhqOeypw9YM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6XOAuh7UOmEqNTv9N4H79rA5yNoLXpGrFmQ58JTUbC9DiwMdS
-	Jcn7UpW2FfuU/K8/SgjBoXjnF3HdZN0aSNZ1/uWOx4T0NqjWmo6aF2mkp2cXZduDbgDbDFDAp/X
-	5G8cp0fdMcoL6d6R930aUNmhfQeU967YMB5yzxgwOP31Ds9txqY0Bx28u/Y+TkqSlhAFS2czGqL
-	G0hxNOi9Ct1D3T3ZbN7xZCXgWzFBOuu37DQWk2LbwXRXN2I0UYaRA5dNJVOyI=
-X-Gm-Gg: Acq92OGaoJ0QcCLhCGWPrPpnhwI5s5wH5/AJoTwPtqxpA2BT/OTnnShlQ7j5t9Dy9lu
-	OQCQHYAmRsKAKzYvv9BJeqhlFR94pJI81MtPq9TUq1Cgmg7nCWPYgY4IZmY1xyMRGVN5HUv5i56
-	T097svEvx+9Kevdqz04hVUGtNCE/Oke9Na+vhxtikxwq0rDX0T5PcOsdUPYbUN++1OGOe0KZBaW
-	owJxnhgPg5gt0FWf2wEP9bS/JoE7+3+gBOk7R6OAZnLuxk=
-X-Received: by 2002:a17:907:7f8d:b0:bdc:e6a6:a1a6 with SMTP id a640c23a62f3a-beab7cb64a8mr68184866b.48.1780087842630;
-        Fri, 29 May 2026 13:50:42 -0700 (PDT)
-X-Received: by 2002:a17:907:7f8d:b0:bdc:e6a6:a1a6 with SMTP id
- a640c23a62f3a-beab7cb64a8mr68183966b.48.1780087842231; Fri, 29 May 2026
- 13:50:42 -0700 (PDT)
+	s=arc-20240116; t=1780098701; c=relaxed/simple;
+	bh=nN5UjqGVeXR76zsZ0UAFX1NArFJF90EKwyyX3qaA/Uw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Aw4QsEy2nnxJjxx6jqnxYLBbabWzvG8gKFIb0ZHhkrGiQ2rCVTxmSrtx9tRC2iDRyzhkiTZvGHYlYLUJhZdqLs0DjveUE6JMkTGNrHfVBOAmi+mNKcnROgMeGM/P5oHQdWp/H5PfKOp2fyscqQ1zH4URcH5Qkl2/DqgfStsoOS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 2C65740314;
+	Fri, 29 May 2026 23:51:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 22DE11C;
+	Fri, 29 May 2026 23:51:36 +0000 (UTC)
+Date: Fri, 29 May 2026 19:51:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Eva Kurchatova <eva.kurchatova@virtuozzo.com>, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, jpoimboe@kernel.org,
+ samitolvanen@google.com
+Subject: Re: [PATCH] tracing: fix CFI violation in probestub helper
+Message-ID: <20260529195134.37d4f5cc@fedora>
+In-Reply-To: <20260529200826.GO3493090@noisy.programming.kicks-ass.net>
+References: <20260524154301.21119-1-eva.kurchatova@virtuozzo.com>
+	<20260528164902.1bb985f3@gandalf.local.home>
+	<20260529200826.GO3493090@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260529130643.3080315-1-tglozar@redhat.com> <20260529095646.73c95f60@fedora>
-In-Reply-To: <20260529095646.73c95f60@fedora>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 29 May 2026 22:50:31 +0200
-X-Gm-Features: AVHnY4J3tSJCqXoMh8_o8DQxzSn2KvJQMa0AE2Bx9oivhPRWRzwkutm_V47ikGg
-Message-ID: <CAP4=nvSi2q=h308Osmrph4YgOkMJE_QmsfSAQcyvi8sxKY2kug@mail.gmail.com>
-Subject: Re: [GIT PULL] RTLA changes for 7.2
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: _rbRKSSM5DH99-kxjSm0jM2u1TG2EajpFyNTEw6S1II_1780087843
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: f56hfxcn7ipn3smed64gt1tuxd4jp78a
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 22DE11C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+jUsw3A9dnyTbe3HhHKhjXaxFDu8SxqXQ=
+X-HE-Tag: 1780098696-497061
+X-HE-Meta: U2FsdGVkX1+in6OnRFltKWXV/4Onbzv5e1RppnUiwiEu8J67C25TL9/Y0FcM9YyTcWgnYfYVXP8T2YvT9iMRjwjep1tg1W3JClxYuK+v8+2hNm6f82WQwbSSIqsZ4njWaFsnoybi8uVvrKhXZO3BYECZbrXDoMHO/vle9wylAnEmkSWuikxuhjEG8KB7Lcjibwg47R0AjGTTtc4pj2vkSK22JV8HnLyPCMXFvJ5gDyRyBBCRHDjfx3k6NbD2yH5IdBopNp7/kSE6ceF6RUr6eIpH0CsBVGoo8aYngdNHQQEyCw8H7eumUzi1i669intWcoGigV+/DFniZZXIILllfmuzIiNxjlenTldOOxFmJ5Whgub1AOpcg5J2xw/87yrTWIMoAvBn4/YLyqq4l4GVPIhHEPvwoSR/A/6skBONYakzi0XaYoWR24B0WytF2tZG
 
-p=C3=A1 29. 5. 2026 v 15:57 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
-.org> napsal:
->
-> On Fri, 29 May 2026 15:06:43 +0200
-> Tomas Glozar <tglozar@redhat.com> wrote:
->
-> > - Fix discrepancy in --dump-tasks option
-> >
-> > Due to a mistake, rtla-timerlat-hist used the CLI syntax "--dump-task"
-> > instead of the documented "--dump-tasks". Change the option to match
-> > both documentation and the other timerlat tool, rtla-timerlat-top.
->
-> Is there any concern that scripts might be using the old option?
+On Fri, 29 May 2026 22:08:26 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Good point, I'm not aware of any, but it is possible.
+> On Thu, May 28, 2026 at 04:49:02PM -0400, Steven Rostedt wrote:
+> > On Sun, 24 May 2026 18:43:01 +0300
+> > Eva Kurchatova <eva.kurchatova@virtuozzo.com> wrote:
+> >   
+> > > When multiple callbacks are registered on the same tracepoint, probestub
+> > > will be indirectly called via traceiter helper.
+> > > 
+> > > Pointer to probestub callback resides in __tracepoints section, which is
+> > > excluded from ENDBR checks in objtool. Pointers to regfunc/unregfunc
+> > > callbacks reside in extended structure however, which is not affected.
+> > > 
+> > > Registering multiple callbacks will result in a #CP exception due to
+> > > missed ENDBR in __probestub helper on a CFI-enabled machine.
+> > > 
+> > > Fix this by adding CFI_NOSEAL annotation to probestub declaration.
+> > > 
+> > > Fixes: d5173f753750 ("objtool: Exclude __tracepoints data from ENDBR checks")
+> > > Signed-off-by: Eva Kurchatova <eva.kurchatova@virtuozzo.com>  
 
->
-> I wonder if you should keep the old option for backward compatibility,
-> but do not document that it exists.
->
+> 
+> The only place the function address lives is in that __tracepoint
+> section. Since that is explicitly excluded by objtool, it figures there
+> are no actual references to __probestub and the function goes on the
+> seal list and the kernel explicitly scribbles the ENDBR on boot.
+> 
+> Then, if it ever gets used on an IBT enabled host, *boom*.
 
-I did not originally plan on keeping the old option - and the commit
-does not keep it - but since libsubcmd allows match on prefixes in
-general, it actually works in the tag:
+That makes much more sense.
 
-$ ./rtla timerlat hist --help --dump-tasks
+> 
+> I agree it would've perhaps been clearer if there was part of a splat in
+> the changelog, but the issue is real afaict.
+> 
+> Also, I do think this:
+> 
+> > > @@ -356,6 +357,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> > >  	void __probestub_##_name(void *__data, proto)			\
+> > >  	{								\
+> > >  	}								\
+> > > +	CFI_NOSEAL(__probestub_##_name);				\
+> > >  	DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
+> > >  
+> > >  #define DEFINE_TRACE_FN(_name, _reg, _unreg, _proto, _args)		\  
+> 
+> could do with a comment, explaining why it wants the NOSEAL.
 
-Usage: rtla timerlat hist [<options>] [-h|--help]
-       --dump-tasks      prints the task running on all CPUs if stop
-conditions are met (depends on !--no-aa)
+Yes.
 
-$ sudo ./rtla timerlat hist -c 0 -T 1 --dump-task
-# RTLA timerlat histogram
-# Time unit is microseconds (us)
-# Duration:   0 00:00:01
-...
-Printing CPU tasks:
-   [000]              timerlatu/0:66862
-   [001]                         :0
-   [002]                         :0
-   [003]                         :0
-   [004]                         :0
-   [005]                         :0
-   [006]                   auditd:1000
-   [007]                         :0
-   [008]                         :0
-   [009]                         :0
-   [010]                         :0
-   [011]                         :0
-   [012]                         :0
-   [013]                         :0
+Thus, the above change log is totally incorrect and should be updated to:
 
-The only build where it does not work would be in the middle of the
-pull request, with the --dump-tasks fix but without the libsubcmd
-migration patchset.
+   tprobes uses a stub function of the tracepoint to allow fprobes to
+   attach to the tracepoint call site and have access to its arguments.
+   The stub function is called __probestub_##_name() and is only
+   referenced as a pointer in the tracepoint structure so that the
+   tprobe can have access to it.
 
-Anyway, thanks for the feedback.
+   The issue is that the probstub function is only referenced in the
+   __tracepoint section and objtool thinks nothing calls it. Since it
+   explicitly excludes the __tracepoint section, objtool thinks there
+   are no callers so it puts the probstub function into the seal list
+   and then the kernel scrubs its ENDBR on boot.
 
-Tomas
+   This becomes an issue if someone were to use a tprobe which will
+   register the probestub as a callback to the tracepoint so that a
+   fprobe may attach to it and get access to the arguments. Without the
+   ENDBR it will make the kernel go BOOM!
 
+
+Then have a comment in the patch with:
+
+ void __probestub_##_name(void *__data, proto)			\
+ {								\
+ }								\
++/*								\
++ * The probestub is only used for tprobes and not referenced	\
++ * anywhere else. This causes objtool to think it's not called	\
++ * at all and will add it to the seal list which will remove	\
++ * the ENDBR causing issues if a tprobe is ever used.		\
++ */								\
++CFI_NOSEAL(__probestub_##_name);				\
+ DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
+
+
+-- Steve
