@@ -1,34 +1,40 @@
 Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEA33FF1;
-	Fri, 29 May 2026 13:56:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C6835E1C5;
+	Fri, 29 May 2026 14:14:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780063014; cv=none; b=eo4DdlD60mghNyV/ChTOv7A/SPja4CxAkpHEBu/LIQBclX4T6mVvLmUmz/FAI66Cav33DegqUq3FFutOPi/we4osBIAkIlXFx7HHwUJhld16zdCQYfNSutRUF3Ir4+eQ30CV/NiJQvpo+lOzWRkXXzDjR8LzYYEm/VeOPpylG0M=
+	t=1780064072; cv=none; b=BUYMNayqx6GVzqJ03AEhHUHOWi/s+oHQQI2u/iTlGk+B76Stp5iJfNYvTrpZxtDv8pwuKfh1RaUGya+y/xTKvEhx2OUGWcFtaFO7wCZjCSBr1dq0s00Re5zlrY17fG2aANKU74T7LO20/haMqLNEhJcFkgw/0Q5GtSB+7xKZWv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780063014; c=relaxed/simple;
-	bh=8qbF1apLhDnKZvvTELGdtOM9C/PjT+Bsr0FI/FVLbUA=;
+	s=arc-20240116; t=1780064072; c=relaxed/simple;
+	bh=GrTSQWjc1sYSEz63RTYdrlsQS+sKWphZpM0iM9qZw20=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K+v2coXZoovbCR4BzY7dlzBz9kWSuwaIV0mkoTnXzRjxSPM56PJZhzNsY9GkJ9sHeeH6+cL3PeqE60/ftkF7lhh5qwAdswJm0U6gsw04cIzFxpVMvOlbjwWsYresIV1fMe01ttf21Rj632Q8NCIUfTi35BefcmiMHmH1D4k8i3Q=
+	 MIME-Version:Content-Type; b=hks9VlDS5AubntG2drTqut63ey+luLTn7wOWGkHz/sMcbVlcnpulUDUzw5g2Sr6pYrHiPHIwGIBCjjH7Rkyg4FoqMMpYniJTxIXFxfkmRdBWxOp29FVvUiETMly1+kU2876Vyk+RIazsWteQKKFQwilAOhQhOKqkyGkUUXGbTrE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 5097C8B5E8;
-	Fri, 29 May 2026 13:56:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 7E9C86000C;
-	Fri, 29 May 2026 13:56:49 +0000 (UTC)
-Date: Fri, 29 May 2026 09:56:46 -0400
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 85C751A01A2;
+	Fri, 29 May 2026 14:14:26 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id A9F982002F;
+	Fri, 29 May 2026 14:14:23 +0000 (UTC)
+Date: Fri, 29 May 2026 10:14:22 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood
- <crwood@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] RTLA changes for 7.2
-Message-ID: <20260529095646.73c95f60@fedora>
-In-Reply-To: <20260529130643.3080315-1-tglozar@redhat.com>
-References: <20260529130643.3080315-1-tglozar@redhat.com>
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
+ konrad.dybcio@oss.qualcomm.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-serial@vger.kernel.org, mukesh.savaliya@oss.qualcomm.com,
+ aniket.randive@oss.qualcomm.com, chandana.chiluveru@oss.qualcomm.com
+Subject: Re: [PATCH v4 1/2] serial: qcom-geni: trace: Add tracepoint support
+ for Qualcomm GENI serial
+Message-ID: <20260529101422.18dda2ae@fedora>
+In-Reply-To: <20260526-add-tracepoints-for-qcom-geni-serial-v4-1-e94fbaec0232@oss.qualcomm.com>
+References: <20260526-add-tracepoints-for-qcom-geni-serial-v4-0-e94fbaec0232@oss.qualcomm.com>
+	<20260526-add-tracepoints-for-qcom-geni-serial-v4-1-e94fbaec0232@oss.qualcomm.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,26 +44,59 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7E9C86000C
-X-Stat-Signature: j9fyft7ixifnkhdb7wb8h41widwp7qdc
-X-Rspamd-Server: rspamout03
+X-Stat-Signature: yfgnoe7jw9zye7366momfqct7ppk38yh
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: A9F982002F
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18U1123CA37GC8345VkXpRrYF9zd2q7Y1k=
-X-HE-Tag: 1780063009-190567
-X-HE-Meta: U2FsdGVkX18LNxtVAU6sFx2vqi0L0h5GcwriIfwiW1AX5IUuM0ojSmMvV2MEDKiqRofIQP+9fPkkgaQAJhMtPfQVjK6lcVXHK227JNj8Sf5I/bBgvYdWfAwZFyI9oSGvBnRK03D5+YsulqBTNSzpgC18+GxialZE+EAbmkTy6irs3H4t1tlVBwR66uATnSI8C7ZMzUgwECj+FGGf9DTVjEslfceiVQOGUUtvLerlcBGr2nBfjsPnBR8tFzRJKnO5MQ5p8nym6jf1rpKVGqKzQrNzpk//iFvmoqAJq8jZ21J0072KBCzdf4mr9sQ2tpI+fTchclARtBdGu4HJFe5agV+zwygI7xUw
+X-Session-ID: U2FsdGVkX19fjZ7XFQxwrn4oDXu5JyJWuPJ107L2vLw=
+X-HE-Tag: 1780064063-462947
+X-HE-Meta: U2FsdGVkX1+eEZ3KTVI3Xc+qc8WXgyMca6DhnKvtG9vLtduJksWXDfvweGPagdAmyWFJ82ALJiTU98LrHde2ODnQ8YQdtyOpv9jB+c9Ep1Ls/vQRyyt0tWmxngSQs7ag1bbUjYTnWEL85ZR7iyaNWg+an7OVLTL8xCczcuM22tIYval4ixRLxD5Ml2UGtTEtJgprymVumSmp6huNzzTp66op8p0nOdEjezmcbguN/gFbGiKGSlq0Nwm99cgfJiBsjmHJnUDAwsWxb1z5qo3HzuFEtFMLqHxwI6bz++Pk+W3bKVQ9xoEBEY6if4//EqV+OGFQAgEyWuxbwChBlLNRI20PvTjZ1KPM
 
-On Fri, 29 May 2026 15:06:43 +0200
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Tue, 26 May 2026 23:07:39 +0530
+Praveen Talari <praveen.talari@oss.qualcomm.com> wrote:
 
-> - Fix discrepancy in --dump-tasks option
-> 
-> Due to a mistake, rtla-timerlat-hist used the CLI syntax "--dump-task"
-> instead of the documented "--dump-tasks". Change the option to match
-> both documentation and the other timerlat tool, rtla-timerlat-top.
+> +DECLARE_EVENT_CLASS(geni_serial_data,
+> +		    TP_PROTO(struct device *dev, const u8 *buf, unsigned int len),
+> +		    TP_ARGS(dev, buf, len),
+> +
+> +		    TP_STRUCT__entry(__string(name, dev_name(dev))
+> +				     __field(unsigned int, len)
+> +				     __dynamic_array(u8, data, len)
+> +		    ),
+> +
+> +		    TP_fast_assign(__assign_str(name);
+> +				   __entry->len = len;
+> +				   memcpy(__get_dynamic_array(data), buf, len);
+> +		    ),
+> +
+> +		    TP_printk("%s: len=%u data=%s",
+> +			      __get_str(name), __entry->len,
+> +			      __print_hex(__get_dynamic_array(data), __entry->len))
+> +);
 
-Is there any concern that scripts might be using the old option? 
+No need to save the length of the dynamic array in __entry->len because
+it's already saved in the metadata of the dynamic array that is stored
+on the buffer. Instead you can have:
 
-I wonder if you should keep the old option for backward compatibility,
-but do not document that it exists.
+DECLARE_EVENT_CLASS(geni_serial_data,
+		    TP_PROTO(struct device *dev, const u8 *buf, unsigned int len),
+		    TP_ARGS(dev, buf, len),
+
+		    TP_STRUCT__entry(__string(name, dev_name(dev))
+				     __dynamic_array(u8, data, len)
+		    ),
+
+		    TP_fast_assign(__assign_str(name);
+				   memcpy(__get_dynamic_array(data), buf, len);
+		    ),
+
+		    TP_printk("%s: len=%u data=%s",
+			      __get_str(name), __entry->len,
+			      __print_hex(__get_dynamic_array(data),
+					__get_dynamic_array_len(data)))
+);
+
+That will save you 4 bytes per event on the ring buffer. And a few
+cycles not having to store the redundant information.
 
 -- Steve
