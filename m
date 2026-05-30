@@ -1,57 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E7430DD30
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 May 2026 14:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E6A3093C6
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 May 2026 14:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780150639; cv=none; b=mrcYpnnUj21aGBT38kX2sMSDato7RcQggE5mlhs+UbNnwPrDXtyL5MpDKf+FLurV4sKtOMXs7q5aBa6rvUDWZFGkZ/3Kw8/IqCVNKkA6IKoRvS2a+iNUyRBxZvk5EffdNURALYZ6AiWpG3HD0UQyJyPAqhYcsjA294ydu1KcdXs=
+	t=1780150646; cv=none; b=ZiiJHqBrKdn86prSiEiQr0oj4lHEDdVwJ7JnzARp3UiogtNvr3OIz+4rgcfwKNCWFVWYxMoKL7vhWCgbKa8IZBvIumc/PwmdNNnyPX4y/SkDzpPe1U2jzEmP/s9z8EBwcAOfKK2+v8ugDsYwoPK4Q5yzF5GKAoCdMAscUSIuc18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780150639; c=relaxed/simple;
-	bh=aMI6ETwxmmNMEq4Pf/ssYWo3dsOyX8bUrocvUz48vCM=;
+	s=arc-20240116; t=1780150646; c=relaxed/simple;
+	bh=Eaq8qvBAwg7VHIzxB0rCY5AtycOS0waCgj7kaoTbYaM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=pxi4VMZ+ecgZohrHi3vZ5Gns2gh4956eaenDdORf5rkvoW9yYLYqaEYjb7vDpYR4uJC8gDYzUiCAD8iJb6x5OTCqKDeEIsoc8iin+Pc9YaSOwy1iNsIpSQ5T4DtXqSo+3gg8lrcm8U9Ux9DHctGqC4OngZZh9Q/If0n2VCfJhXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IE0Qzs96; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=CpsO/mBCCRjNbsh6ul43LP/WUS+YfX1oK8ZZAkAlSadviOtfagJtOtvSrieJ35pjDaqtTpXdQ2rK8+G5jrWMZN5XfLl/VLdS2AiY1qG0oKdsrXbQ5VJdhsOhfVQvKXUK2tGwegZbzLuibxZR8tOQ7uxwwCcBRv0jrr2my2pfwD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OyYSBLM3; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IE0Qzs96"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OyYSBLM3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780150637;
+	s=mimecast20190719; t=1780150644;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3TbSgf7lkZ2g4yFD6sbp+32F0/NjiAQOgCDqaL4CgCU=;
-	b=IE0Qzs96nBDS8bUdRQ+jVq+Vu6btnG/GbXI6I8o8ayEtCZFwoT7s+CP2LUFJpcrHKp0FUz
-	P1Q5EEUIpp2lF59uLAK7WoPsYqvAus/KWNPmqAsxxVfFHnAtCDA+WTfJ2DRUAcK87Cc99/
-	k8UkXyYTbyiiN6x94N8A2gbuhCg7iFE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=1ArcgV16oTYvnYACXoWOEb9nPutGeKmH808+7QPaO4Y=;
+	b=OyYSBLM3lQjyDQNGLVIOSQJZoH4nNjejCDYdU4089UQv0vSLe6hL/7EUr24A1MKsY5Mh7c
+	6EU9Z62zCNRnf+XrAywiD0KrvWSlHVIdUOQQZHPBrEO/sNERUrdqF2v2BSewndUhICTeFv
+	KRdW2B/nDawDzdSQaIttdl5IJgEBoi8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-Ztj-yjVKNFiifEV6NvOlhQ-1; Sat,
- 30 May 2026 10:17:13 -0400
-X-MC-Unique: Ztj-yjVKNFiifEV6NvOlhQ-1
-X-Mimecast-MFC-AGG-ID: Ztj-yjVKNFiifEV6NvOlhQ_1780150632
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-I2mZxVpGNNCucsEuR3mcjQ-1; Sat,
+ 30 May 2026 10:17:18 -0400
+X-MC-Unique: I2mZxVpGNNCucsEuR3mcjQ-1
+X-Mimecast-MFC-AGG-ID: I2mZxVpGNNCucsEuR3mcjQ_1780150636
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BC9361800343;
-	Sat, 30 May 2026 14:17:12 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4EFA18005BA;
+	Sat, 30 May 2026 14:17:16 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C60E730001BB;
-	Sat, 30 May 2026 14:17:10 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8BC3D30001BB;
+	Sat, 30 May 2026 14:17:14 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Wen Yang <wen.yang@linux.dev>,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 05/13] rv: Fix monitor start ordering and memory ordering for monitoring flag
-Date: Sat, 30 May 2026 16:16:44 +0200
-Message-ID: <20260530141652.58084-6-gmonaco@redhat.com>
+Subject: [PATCH v3 06/13] rv: Do not rely on clean monitor when initialising HA
+Date: Sat, 30 May 2026 16:16:45 +0200
+Message-ID: <20260530141652.58084-7-gmonaco@redhat.com>
 In-Reply-To: <20260530141652.58084-1-gmonaco@redhat.com>
 References: <20260530141652.58084-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -61,78 +62,171 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: iZkwj9FNxlqMDeXcIp4jz_596azMJngriDEDKpEnQ2M_1780150632
+X-Mimecast-MFC-PROC-ID: ROoUE-CiwJaMQPvR4DdYombUbW7HRSoKH-vQljgHcZw_1780150636
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Wen Yang <wen.yang@linux.dev>
+Hybrid Automata monitors hook into the DA implementation when doing
+da_monitor_reset(). This function is called both on initialisation and
+teardown, HA monitors try to cancel a timer only when it's initialised
+relying on the da_mon->monitoring flag. This flag could however be
+corrupted during initialisation. This happens for instance on per-task
+monitors that share the same storage with different type of monitors
+like LTL or in case of races during a previous teardown.
 
-da_monitor_start() set monitoring=1 before calling da_monitor_init_hook(),
-may racing with the sched_switch handler:
+Stop relying on the monitoring flag during initialisation, assume that
+can have any value, so skip timer cancellation in any case when a local
+flag is set. New monitors (e.g. new tasks) are always zero-initialised
+so they are safe.
 
-  da_monitor_start()               sched_switch handler
-  -------------------------        ---------------------------------
-  da_mon->monitoring = 1;
-                                   if (da_monitoring(da_mon))  /* true  */
-                                       ha_start_timer_ns(...);
-                                       /* hrtimer->base == NULL, crash */
-  da_monitor_init_hook(da_mon);
-  /* hrtimer_setup() sets base */
-
-Fix the ordering and pair with release/acquire semantics:
-
-  da_monitor_init_hook(da_mon);
-  smp_store_release(&da_mon->monitoring, 1);    /* da_monitor_start()  */
-  return smp_load_acquire(&da_mon->monitoring); /* da_monitoring()     */
-
-On ARM64 a plain STR + LDR does not form a release-acquire pair, so
-the load can observe monitoring=1 while hrtimer->base is still NULL.
-The plain accesses are also data races under KCSAN.
-
-Use WRITE_ONCE for the monitoring=0 store in da_monitor_reset() to
-cover the reset path.
-
-Fixes: 792575348ff7 ("rv/include: Add deterministic automata monitor definition via C macros")
-Signed-off-by: Wen Yang <wen.yang@linux.dev>
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+Reported-by: Wen Yang <wen.yang@linux.dev>
+Closes: https://lore.kernel.org/lkml/d02c656aada7d071f083460a5c9a454363669b61.1778522945.git.wen.yang@linux.dev
+Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
+Reviewed-by: Wen Yang <wen.yang@linux.dev>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/rv/da_monitor.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ include/rv/ha_monitor.h                       | 31 ++++++++++++++++++-
+ kernel/trace/rv/monitors/nomiss/nomiss.c      |  4 +--
+ kernel/trace/rv/monitors/opid/opid.c          |  4 +--
+ kernel/trace/rv/monitors/stall/stall.c        |  4 +--
+ .../rvgen/rvgen/templates/dot2k/main.c        |  4 +--
+ 5 files changed, 38 insertions(+), 9 deletions(-)
 
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index a7e103654..60dc39f26 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -82,7 +82,7 @@ static void react(enum states curr_state, enum events event)
- static inline void da_monitor_reset(struct da_monitor *da_mon)
- {
- 	da_monitor_reset_hook(da_mon);
--	da_mon->monitoring = 0;
-+	WRITE_ONCE(da_mon->monitoring, 0);
- 	da_mon->curr_state = model_get_initial_state();
+diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+index d59507e8c..ad3347af1 100644
+--- a/include/rv/ha_monitor.h
++++ b/include/rv/ha_monitor.h
+@@ -115,6 +115,35 @@ static enum hrtimer_restart ha_monitor_timer_callback(struct hrtimer *hrtimer);
+ #define ha_get_ns() 0
+ #endif /* HA_CLK_NS */
+ 
++static bool ha_mon_initializing;
++
++static int ha_monitor_init(void)
++{
++	int ret;
++
++	ha_mon_initializing = true;
++	ret = da_monitor_init();
++	ha_mon_initializing = false;
++	return ret;
++}
++
++static void ha_monitor_destroy(void)
++{
++	da_monitor_destroy();
++}
++
++/*
++ * ha_monitor_uninitialized - are fields like the timer initialized?
++ *
++ * On a clean monitor, we can assume an active monitor (monitoring) is
++ * initialized, however the monitoring field cannot be trusted during
++ * initialization.
++ */
++static inline bool ha_monitor_uninitialized(struct da_monitor *da_mon)
++{
++	return ha_mon_initializing || !da_monitoring(da_mon);
++}
++
+ /* Should be supplied by the monitor */
+ static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
+ static bool ha_verify_constraint(struct ha_monitor *ha_mon,
+@@ -159,7 +188,7 @@ static inline void ha_monitor_reset_env(struct da_monitor *da_mon)
+ 	struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+ 
+ 	/* Initialisation resets the monitor before initialising the timer */
+-	if (likely(da_monitoring(da_mon)))
++	if (likely(!ha_monitor_uninitialized(da_mon)))
+ 		ha_cancel_timer(ha_mon);
  }
  
-@@ -95,8 +95,9 @@ static inline void da_monitor_reset(struct da_monitor *da_mon)
- static inline void da_monitor_start(struct da_monitor *da_mon)
+diff --git a/kernel/trace/rv/monitors/nomiss/nomiss.c b/kernel/trace/rv/monitors/nomiss/nomiss.c
+index 31f90f363..8ead8783c 100644
+--- a/kernel/trace/rv/monitors/nomiss/nomiss.c
++++ b/kernel/trace/rv/monitors/nomiss/nomiss.c
+@@ -227,7 +227,7 @@ static int enable_nomiss(void)
  {
- 	da_mon->curr_state = model_get_initial_state();
--	da_mon->monitoring = 1;
- 	da_monitor_init_hook(da_mon);
-+	/* Pairs with smp_load_acquire in da_monitoring(). */
-+	smp_store_release(&da_mon->monitoring, 1);
+ 	int retval;
+ 
+-	retval = da_monitor_init();
++	retval = ha_monitor_init();
+ 	if (retval)
+ 		return retval;
+ 
+@@ -263,7 +263,7 @@ static void disable_nomiss(void)
+ 	rv_detach_trace_probe("nomiss", sched_switch, handle_sched_switch);
+ 	rv_detach_trace_probe("nomiss", sched_wakeup, handle_sched_wakeup);
+ 
+-	da_monitor_destroy();
++	ha_monitor_destroy();
+ }
+ 
+ static struct rv_monitor rv_this = {
+diff --git a/kernel/trace/rv/monitors/opid/opid.c b/kernel/trace/rv/monitors/opid/opid.c
+index 4594c7c46..2922318c6 100644
+--- a/kernel/trace/rv/monitors/opid/opid.c
++++ b/kernel/trace/rv/monitors/opid/opid.c
+@@ -73,7 +73,7 @@ static int enable_opid(void)
+ {
+ 	int retval;
+ 
+-	retval = da_monitor_init();
++	retval = ha_monitor_init();
+ 	if (retval)
+ 		return retval;
+ 
+@@ -90,7 +90,7 @@ static void disable_opid(void)
+ 	rv_detach_trace_probe("opid", sched_set_need_resched_tp, handle_sched_need_resched);
+ 	rv_detach_trace_probe("opid", sched_waking, handle_sched_waking);
+ 
+-	da_monitor_destroy();
++	ha_monitor_destroy();
  }
  
  /*
-@@ -104,7 +105,8 @@ static inline void da_monitor_start(struct da_monitor *da_mon)
-  */
- static inline bool da_monitoring(struct da_monitor *da_mon)
+diff --git a/kernel/trace/rv/monitors/stall/stall.c b/kernel/trace/rv/monitors/stall/stall.c
+index 9ccfda6b0..3c38fb1a0 100644
+--- a/kernel/trace/rv/monitors/stall/stall.c
++++ b/kernel/trace/rv/monitors/stall/stall.c
+@@ -103,7 +103,7 @@ static int enable_stall(void)
  {
--	return da_mon->monitoring;
-+	/* Pairs with smp_store_release in da_monitor_start(). */
-+	return smp_load_acquire(&da_mon->monitoring);
+ 	int retval;
+ 
+-	retval = da_monitor_init();
++	retval = ha_monitor_init();
+ 	if (retval)
+ 		return retval;
+ 
+@@ -120,7 +120,7 @@ static void disable_stall(void)
+ 	rv_detach_trace_probe("stall", sched_switch, handle_sched_switch);
+ 	rv_detach_trace_probe("stall", sched_wakeup, handle_sched_wakeup);
+ 
+-	da_monitor_destroy();
++	ha_monitor_destroy();
+ }
+ 
+ static struct rv_monitor rv_this = {
+diff --git a/tools/verification/rvgen/rvgen/templates/dot2k/main.c b/tools/verification/rvgen/rvgen/templates/dot2k/main.c
+index bf0999f66..889446760 100644
+--- a/tools/verification/rvgen/rvgen/templates/dot2k/main.c
++++ b/tools/verification/rvgen/rvgen/templates/dot2k/main.c
+@@ -35,7 +35,7 @@ static int enable_%%MODEL_NAME%%(void)
+ {
+ 	int retval;
+ 
+-	retval = da_monitor_init();
++	retval = %%MONITOR_CLASS%%_monitor_init();
+ 	if (retval)
+ 		return retval;
+ 
+@@ -50,7 +50,7 @@ static void disable_%%MODEL_NAME%%(void)
+ 
+ %%TRACEPOINT_DETACH%%
+ 
+-	da_monitor_destroy();
++	%%MONITOR_CLASS%%_monitor_destroy();
  }
  
  /*
