@@ -1,197 +1,155 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E41B22259F;
-	Sat, 30 May 2026 15:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C125130674D;
+	Sat, 30 May 2026 15:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780153646; cv=none; b=f65xxjLwtVhprarrs0ec23v8mOV3VRjzG0UcRgyhPiG7OMNN8/ukybzHTqLhSjcgr+MDJsV+a97LLZFGW7vb2hUQcHxdm16g8tZEBhgWSlZM9qv7DIsd+wLK5w2NUxV/XgvKdix3d6N8taYQ6ikUUbY/ajuLopY8bqxlwsuJowU=
+	t=1780156376; cv=none; b=YrV26wmePkkFVMsU/DS0ceFD6oyid8nwkAZBA8ytpIZvCWI1zK7MiH0tvXkOfGnGsQ05Q71Mi79Cow9+z7PgKz7oXJtPmwV4yHEuy1XxWzjyPb+Pit49mufGYVCiKJfrxxS46xXYnICEPAPEemMvz0UxlZSDXQ1OAws9Ym1uEMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780153646; c=relaxed/simple;
-	bh=St7TKUzfjXRMKVnYgQxWVktcU8qlm6KY3IIU/Q0Zd60=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eQqE72+pl9/Rp87Ab3ThX6mgHBkm2oP6QjUx88gYCxNd0hSHw4jZE6n5/2P1DKsfqsKGyIcNGF3i4Movep9yPSYBnZPGADPbVzUHHEcgE57SFX+oJ5RaAH/Zk4Frl+Vk8JJXqeO9R2ECBCoJBAnbNlE2rOEwzikJ88Y7DzFGriI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id E4ED7161AC9;
-	Sat, 30 May 2026 15:07:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id E829C8000F;
-	Sat, 30 May 2026 15:07:13 +0000 (UTC)
-Date: Sat, 30 May 2026 11:07:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
- Takaya Saeki <takayas@google.com>, Douglas Raillard
- <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
- Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>
-Subject: Re: PATCH v7] tracing/eprobes: Allow use of BTF names to
- dereference pointers
-Message-ID: <20260530110754.14870622@gandalf.local.home>
-In-Reply-To: <20260530231427.b079fefffc724a40082cd64b@kernel.org>
-References: <20260529110442.0967a64c@fedora>
-	<20260530231427.b079fefffc724a40082cd64b@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1780156376; c=relaxed/simple;
+	bh=vukJ+4Zjzr0X4oLrbkVaZfKQuCllw0Hq3ZeAkTNHsQs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ayRj2ntmtjAD8kOkrBJM5NoJRKLCV/RsPfmhe2DiLgaDTT6iGnDOUTQUarYac6GuUPhLlwKV8C1U5gBZKC7juJGVOfWNYAYO1w9j1b1Hyvlv8bzp6CracLeHAuJBqYkuUd9Jrkfb8V6nsM/dNAv9RiNoBenF3VUjpr4w61YwqRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MUNRjWuL; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MUNRjWuL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC46D1F00893;
+	Sat, 30 May 2026 15:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780156375;
+	bh=YkITv/EY/RxlE8PTxJYcYDbmRPsAo+git9p7nSVkQyg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=MUNRjWuLEHI07nlO6+eGyZIbU/XfvT4rhI4w+mkOcLPjw39hRCulIeoIb6Q2cHP4V
+	 tmAWEYOjBZaT7FJhgPI6+QipbQ482+ubt/jPScB5nlZS9FGgWn7A0SBwHBEiBMNuiP
+	 Tubs1TtWMVO/W1caxur03AfURrwNkqfgOQD7RMk8lS2uqJFi482mcV5h9rF11zq1ik
+	 j6Gh0gz+tkqJ+RxCBouOuMX4JJ0d/s/gZgHOxs/jqAzkPCiOqeJb+X0VzYaGjmEz/M
+	 V77XV70Be6y6I7Dq45CJ4l0qFkuSVOHsUYUJ8NfE97xrTPNIcC5FKBSVwsIkjsxHEE
+	 Qxhyf3Ep4n2lQ==
+Date: Sun, 31 May 2026 00:52:50 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Eva Kurchatova
+ <eva.kurchatova@virtuozzo.com>, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, jpoimboe@kernel.org,
+ samitolvanen@google.com
+Subject: Re: [PATCH] tracing: fix CFI violation in probestub helper
+Message-Id: <20260531005250.5523508eaac2110e0708791e@kernel.org>
+In-Reply-To: <20260529195134.37d4f5cc@fedora>
+References: <20260524154301.21119-1-eva.kurchatova@virtuozzo.com>
+	<20260528164902.1bb985f3@gandalf.local.home>
+	<20260529200826.GO3493090@noisy.programming.kicks-ass.net>
+	<20260529195134.37d4f5cc@fedora>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: m4eup5qr3ik58wizp8cf1p37siorgg5i
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: E829C8000F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+4AgsPK7oqH03v63S2oMicU5T2A+P7xoM=
-X-HE-Tag: 1780153633-697350
-X-HE-Meta: U2FsdGVkX18stzG5i/UpZsDs0zCakLQvD27gDk1fe5FmpjGv4Idup5ZUk1fkAp4fDdnxY8BKnPKFQcFrH7pbMydTYSFMXIjkFz3XjBtORaOP57+RZLriEOkN/Muf/c0R5+FPh7QZ6ND0VjW+Kxl+p9mhrNbu9+EAvhCggSUyS/m3CuKbpXpF7U8ORAbJ00nuNW+mLr6oLGokZ9RCUpojWW9vaLo+dvmzzPHfRrU7IJosqHWUpnzZR3xDXnyUiyMdtMB2LoFlWFSfRhcZAkP7a8/AFjldgxVUGBkEoLUQlECUK6upNyEu6aXR6ScqjdhOLBdczSJ1THW+Z4Xxk4EI9/lftszeZPXPV1tYo1pXz39omvewTGn7m3Hs3FfHO0svVhJtxJGEiOcZGWQyrMax5cduNsuCB/nuCO5nXe//s6/2duCr7OOv93/iy9cUY/NrqpLI7PpiVkfxlS34eDFEPw==
 
-On Sat, 30 May 2026 23:14:27 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Fri, 29 May 2026 19:51:34 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Thanks, and Sashiko reviewed this. 
+> On Fri, 29 May 2026 22:08:26 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> https://sashiko.dev/#/patchset/20260529110442.0967a64c%40fedora
+> > On Thu, May 28, 2026 at 04:49:02PM -0400, Steven Rostedt wrote:
+> > > On Sun, 24 May 2026 18:43:01 +0300
+> > > Eva Kurchatova <eva.kurchatova@virtuozzo.com> wrote:
+> > >   
+> > > > When multiple callbacks are registered on the same tracepoint, probestub
+> > > > will be indirectly called via traceiter helper.
+> > > > 
+> > > > Pointer to probestub callback resides in __tracepoints section, which is
+> > > > excluded from ENDBR checks in objtool. Pointers to regfunc/unregfunc
+> > > > callbacks reside in extended structure however, which is not affected.
+> > > > 
+> > > > Registering multiple callbacks will result in a #CP exception due to
+> > > > missed ENDBR in __probestub helper on a CFI-enabled machine.
+> > > > 
+> > > > Fix this by adding CFI_NOSEAL annotation to probestub declaration.
+> > > > 
+> > > > Fixes: d5173f753750 ("objtool: Exclude __tracepoints data from ENDBR checks")
+> > > > Signed-off-by: Eva Kurchatova <eva.kurchatova@virtuozzo.com>  
 > 
-> I think both comments are valid, especially, second one is important.
+> > 
+> > The only place the function address lives is in that __tracepoint
+> > section. Since that is explicitly excluded by objtool, it figures there
+> > are no actual references to __probestub and the function goes on the
+> > seal list and the kernel explicitly scribbles the ENDBR on boot.
+> > 
+> > Then, if it ever gets used on an IBT enabled host, *boom*.
+> 
+> That makes much more sense.
 
-Hmm, comment below.
+Ah, I got it.
 
 > 
-> BTW, I updated probes/fixes. Could you also update this and rebase
-> on probes/fixes branch?
+> > 
+> > I agree it would've perhaps been clearer if there was part of a splat in
+> > the changelog, but the issue is real afaict.
+> > 
+> > Also, I do think this:
+> > 
+> > > > @@ -356,6 +357,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> > > >  	void __probestub_##_name(void *__data, proto)			\
+> > > >  	{								\
+> > > >  	}								\
+> > > > +	CFI_NOSEAL(__probestub_##_name);				\
+> > > >  	DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
+> > > >  
+> > > >  #define DEFINE_TRACE_FN(_name, _reg, _unreg, _proto, _args)		\  
+> > 
+> > could do with a comment, explaining why it wants the NOSEAL.
 > 
-> I'm working on the nesting and container_of support patches which
-> are on top of this.
+> Yes.
+> 
+> Thus, the above change log is totally incorrect and should be updated to:
+> 
+>    tprobes uses a stub function of the tracepoint to allow fprobes to
+>    attach to the tracepoint call site and have access to its arguments.
+>    The stub function is called __probestub_##_name() and is only
+>    referenced as a pointer in the tracepoint structure so that the
+>    tprobe can have access to it.
+> 
+>    The issue is that the probstub function is only referenced in the
+>    __tracepoint section and objtool thinks nothing calls it. Since it
+>    explicitly excludes the __tracepoint section, objtool thinks there
+>    are no callers so it puts the probstub function into the seal list
+>    and then the kernel scrubs its ENDBR on boot.
+> 
+>    This becomes an issue if someone were to use a tprobe which will
+>    register the probestub as a callback to the tracepoint so that a
+>    fprobe may attach to it and get access to the arguments. Without the
+>    ENDBR it will make the kernel go BOOM!
+> 
+> 
+> Then have a comment in the patch with:
+> 
+>  void __probestub_##_name(void *__data, proto)			\
+>  {								\
+>  }								\
+> +/*								\
+> + * The probestub is only used for tprobes and not referenced	\
+> + * anywhere else. This causes objtool to think it's not called	\
+> + * at all and will add it to the seal list which will remove	\
+> + * the ENDBR causing issues if a tprobe is ever used.		\
+> + */								\
+> +CFI_NOSEAL(__probestub_##_name);				\
+>  DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
 
-OK, I'll make sure to use your probes branch. Which one should I use? your
-probes/for-next or probes/urgent?
+This looks good to me. Eva, can you update the patch?
 
-As for sashiko's comments:
+Thanks for fix.
 
-> commit c8393ea9936934c16ba2881d9e7b3cce86c678ff
-> Author: Steven Rostedt <rostedt@goodmis.org>
-> [PATCH v7] tracing/eprobes: Allow use of BTF names to dereference pointers
-> This commit introduces syntax to allow event probes to typecast pointer
-> fields to a structure using BTF. This enables dereferencing structures
-> using BTF names rather than having to manually calculate offsets.
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index 39f040c863e85..0e87409a44033 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> [ ... ]
-> > @@ -640,7 +673,7 @@ static int parse_btf_arg(char *varname,
-> >  	int i, is_ptr, ret;
-> >  	u32 tid;
-> >  
-> > -	if (WARN_ON_ONCE(!ctx->funcname))
-> > +	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT)))
-> >  		return -EINVAL;
-> >  
-> >  	is_ptr = split_next_field(varname, &field, ctx);
-> > @@ -653,6 +686,16 @@ static int parse_btf_arg(char *varname,
-> >  		return -EOPNOTSUPP;
-> >  	}
-> >  
-> > +	if (ctx->flags & TPARG_FL_TEVENT) {
-> > +		ret = parse_trace_event(varname, code, ctx);
-> > +		if (ret < 0)
-> > +			return ret;
-
-> Does this silently drop the error on parsing failure?
-> If parse_trace_event() fails and returns -EINVAL, it appears this path
-> returns the error without logging it.
-> Unlike parse_probe_vars(), which explicitly logs the failure when
-> parse_trace_event() fails, this path bypasses the log. Could this make
-> it difficult to debug invalid typecast expressions since nothing is written
-> to tracing/error_log?
-
-Hmm, I guess I can put an error log here, as this is a unique path.
-
-> > +		if (WARN_ON_ONCE(!(ctx->flags & TPARG_FL_TYPECAST)))
-> > +			return -EINVAL;
-> > +		type = ctx->last_struct;
-> > +		goto found_type;
-> > +	}
-> > +
-> >  	if (ctx->flags & TPARG_FL_RETURN && !strcmp(varname, "$retval")) {
-> >  		code->op = FETCH_OP_RETVAL;
-> [ ... ]
-> > @@ -758,7 +802,71 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
-> >  	return 0;
-> >  }
-> >  
-> > -#else
-> > +static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
-> [ ... ]
-> > +static int handle_typecast(char *arg, struct fetch_insn **pcode,
-> > +			   struct fetch_insn *end,
-> > +			   struct traceprobe_parse_context *ctx)
-> > +{
-> > +	char *tmp;
-> > +	int ret;
-> > +
-> > +	/* Currently this only works for eprobes */
-> > +	if (!(ctx->flags & TPARG_FL_TEVENT)) {
-> > +		trace_probe_log_err(ctx->offset, TYPECAST_NOT_EVENT);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	tmp = strchr(arg, ')');
-> > +	if (!tmp) {
-> > +		trace_probe_log_err(ctx->offset + strlen(arg),
-> > +				    DEREF_OPEN_BRACE);
-> > +		return -EINVAL;
-> > +	}
-> > +	*tmp = '\0';
-> > +	ret = query_btf_struct(arg + 1, ctx);
-> > +	*tmp = ')';
-> > +
-> > +	if (ret < 0) {
-> > +		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
-> > +		ret = -EINVAL;
-> > +		goto out_put;
-> > +	}
-> > +
-> > +	ctx->flags |= TPARG_FL_TYPECAST;
-> > +	tmp++;
-> > +
-> > +	ctx->offset += tmp - arg;
-> > +	ret = parse_btf_arg(tmp, pcode, end, ctx);
-> > +	ctx->flags &= ~TPARG_FL_TYPECAST;
-> > +	ctx->last_struct = NULL;
-> > +out_put:
-> > +	btf_put(ctx->struct_btf);
-
-> Does this prematurely release the BTF struct reference?
-> If TPARG_FL_TYPECAST is unset here and ctx->struct_btf is put, won't
-> later steps in traceprobe_parse_probe_arg_body() (like
-> find_fetch_type_from_btf_type()) fail to properly infer struct field sizes?
-> When ctx_btf(ctx) is called later without TPARG_FL_TYPECAST set, it
-> will evaluate to ctx->btf (which is NULL for eprobes).
-> Could this potentially lead to silent defaults, such as 64-bit reads for
-> smaller fields, or fail to inject pointer dereferences for string fields,
-> while also leaving ctx->last_type pointing to a prematurely released BTF
-> object?
-
-Does this mean we need to set ctx->last_type to NULL here too?
-
-Because everything above is pretty much the expected behavior. The put is
-*not* premature. The last_struct and struct_btf are both set to NULL. I
-guess the only thing missing is to reset last_type as well.
-
--- Steve
+> 
+> 
+> -- Steve
 
 
-> > +	ctx->struct_btf = NULL;
-> > +	return ret;
-> > +}
-> > +
-> > +#else /* !CONFIG_PROBE_EVENTS_BTF_ARGS */
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
