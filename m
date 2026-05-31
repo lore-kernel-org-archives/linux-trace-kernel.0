@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4492537E300;
-	Sun, 31 May 2026 23:40:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9B72D3A7C;
+	Sun, 31 May 2026 23:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780270807; cv=none; b=fct7yJSjkeX7UT0jml218M8LSxUK3FdkD/cYZu1t0jrZ9xB8OThVk7ouzUGFdRflAarXwx4JB7gWg71UXlieFr+E2Iklv5OZz4Bw0bxxgJnKD8iCYIz7EgiibukcTOpxZMmiJaRvPjYhaYaVA7H4sJm2wv2OY+sNSYIV298DcvQ=
+	t=1780271913; cv=none; b=a7EWXB9Upipz7NrfWcBXreW22dSDVIgrQpW5b9IfDr8PlcmvU8RejaatjtTCXtHR6z+OnNGkYebdjybc6WtgiFqRWkBGs61wC9si8iov4UIKG/MrwMKVfhbJwzmM4WzqYTtrRpyJ/rGQ1tMT4wZcKG5MX0SM/OT1LH3Jse3jLQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780270807; c=relaxed/simple;
-	bh=rsl8EB/9i5DDqqR5myHTe944xl2yDbGGQg3MMqZYzeo=;
+	s=arc-20240116; t=1780271913; c=relaxed/simple;
+	bh=uGWi4ENn5JtfTDzezeYOeQY2xipP3RfADyZ9hX7CcRE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=L5leHVNLU3p9xhq1xjPjbuzWF/GaHOc544MnYdlxXP6up7/3CpFeRzJRPD9q9/xDNW4kBa+zocbNGS46Fy3eLIKxsSpGWjzWA5MwzG22DumK5CsGOYNYEJVK/aHs5TCz6dLP+L+wjfY1RhDOUsjvJbmrJCRHJei6Y7fHkkB+o+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhxlOQNu; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=WtRb65dgdmMRyqDPuBvpjLZS1140nc5U4PjRyyJ+SiLnXMyCh5qBgY4qpMn+s9tig8uagKAbhImzZhk8voDNc8cz667691qQ6rBLEBzT4IqqTrcIGMsGjTzFh20l21bu81ByE2K5iQ4Q1Kb1n+FhfYTbsBRTG7x27IJNahQYfQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IG0fnxea; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhxlOQNu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8D91F00893;
-	Sun, 31 May 2026 23:40:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IG0fnxea"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60FF1F00893;
+	Sun, 31 May 2026 23:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780270805;
-	bh=EJtVgyNJg/4b6Ce7odUiVtGO8Owgd7hNSEuaH9GDClg=;
+	s=k20260515; t=1780271912;
+	bh=IF2vvANDYkVzBcUU/jJr89DSknrbPGIm+SIoTYlUjQQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ZhxlOQNuVGwHiU9U/LH01TmoLHRRi4wnH1YbnYDu+Zd7owJ6+neuXf55LK9IIHp8y
-	 32eG7Rhur3GXkYKi06MYv5lGRq/TZT3TuNp9KHuNTRLXGmbiLtgkoyVrX/iYGsXDOe
-	 jFAOrQF/AQZ7C/6rNNbFd+CHN1vqkuwoYF33Jj/eX+P815hRUIBHfgwI4M6vhtzYNq
-	 UF6gZPRshpqLzp1YBbgQGpdE0iEdhOXguBBWQzO+ri9jRA6Ojro8uxruA+gZ00Rwer
-	 qR8fvIGqSJ/N6d+YQraCALRA3fmnlYxesJJC7N/qAUC31WhO5ZY8bBDOR/rG1NYizr
-	 IaxZtnyj6Butw==
-Date: Mon, 1 Jun 2026 08:40:01 +0900
+	b=IG0fnxeaNRpFoMegSmON7ySA2AdTvP3H3eqG1Gg2SWPqNBbmkmNCGsfTsO6cqWSwv
+	 d7g9uMGcxch7EAagf61jLAj7RUiUtKkzD3S7zkFGCsupglasfG1JT8aK0U0Caz8xMs
+	 ZR0PGoX/uLfiir1X/zdcnegk7Tb3RH6tjvRt+9ocS73urLsHaQzvI5c/zyRx+n0OsU
+	 hi81DHUvd8grMUyPusScUQzadhWhcsL60+gPUUbOz5bsar9axpLOkcErYuo2T5FeB3
+	 90GqqrpoARabDJFrZjl0gLKIGazJLn7+W4cKZdCEN/oEx9LQAIFcWbG1QsYLibQhe1
+	 w28tmhBdh4m0w==
+Date: Mon, 1 Jun 2026 08:58:28 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Tengda Wu <wutengda@huaweicloud.com>, Peter Zijlstra
- <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rethook: Use tsk->on_cpu to check task execution state
-Message-Id: <20260601084001.9566b443746447ec2bb1a9fb@kernel.org>
-In-Reply-To: <94179dab-ffb7-4fab-af45-b20bfb686ab3@huaweicloud.com>
-References: <20260525132253.1889726-1-wutengda@huaweicloud.com>
-	<20260526123719.482f07a3843e207e22d95378@kernel.org>
-	<94179dab-ffb7-4fab-af45-b20bfb686ab3@huaweicloud.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ring-buffer: Better comment the use of RB_MISSED_EVENTS
+Message-Id: <20260601085828.23f9c5cb42fb6319be1b8753@kernel.org>
+In-Reply-To: <20260528223738.41276c0e@fedora>
+References: <20260528223738.41276c0e@fedora>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,87 +46,74 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 29 May 2026 11:39:49 +0800
-Tengda Wu <wutengda@huaweicloud.com> wrote:
+On Thu, 28 May 2026 22:37:38 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > We also should not use tsk->on_cpu, but should use task_on_cpu(tsk).
-> > 
-> > BTW, should task_on_cpu() use READ_ONCE() etc?
-> > wait_task_inactive() seems a bit fragile.
-> > 
-> > Thanks,
-> > 
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> It seems that using task_on_cpu() is not necessary here because:
+> If the persistent ring buffer is detected on boot up to have a corrupted
+> sub-buffer, that sub-buffer is cleared to zero and its commit value has
+> the RB_MISSED_EVENTS bit set. That bit is to allow the "trace",
+> "trace_pipe" and "trace_pipe_raw" files know that events were dropped by
+> outputting "[LOST EVENTS]".
 > 
-> 1. It requires an additional 'rq' parameter not available in the rethook context.
-> 2. It just returns p->on_cpu, which is identical to our current use of tsk->on_cpu.
-
-OK. We may need to cleanup task_on_cpu() to remove unused rq, which
-was historically introduced by commit 029632fbb7b7 ("sched: Make
-separate sched*.c translation units") as a parameter for "task_running()"
-because it called task_current(), but was cleaned by commit 0b9d46fc5ef7
-("sched: Rename task_running() to task_on_cpu()") and now it is not
-used.
-
+> Only in this case does that bit get set in the writeable portion of the
+> ring buffer. When events are dropped in the normal ring buffer, that
+> information is stored in the cpu_buffer descriptor and the
+> RB_MISSED_EVENTS is set in the buffer page at the time the page is
+> consumed. It is never set in the writeable portion of the buffer.
 > 
-> /* file: kernel/sched/sched.h */
-> static inline int task_on_cpu(struct rq *rq, struct task_struct *p)
-> {
-> 	return p->on_cpu;
-> }
+> Add comments to describe this better as it can be confusing to know when
+> the RB_MISSED_EVENTS are set in the commit portion of the buffer page.
 > 
-> Given these constraints, staying with tsk->on_cpu seems more straightforward
-> for the rethook context.
-
-The reason I asked you to use a wrapper function instead of directly
-accessing that on_cpu is to ensure that this part isn't overlooked when
-changing the scheduler's behavior in the future.
-
-They may be equivalent at this point in time, but that doesn't necessarily
-mean they will remain so in the future.
-
-IMHO, an API interface should represent the behavior and resources
-required for that operation, and when accessing it from outside the
-subsystem, we should use that API whenever possible. Otherwise, even
-if we want to update the internal implementation of one subsystem,
-we will have to make changes to other subsystems as well.
-
-Peter, is it OK to drop @rq from task_on_cpu()? Then we can use
-it from rethook.
-
-Thank you,
-
+> Link: https://lore.kernel.org/all/20260529001500.14178455a046a5cbc6180861@kernel.org/
 > 
-> Thanks,
-> Tengda
+
+This looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks, 
+
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> >>
-> >> Fixes: 54ecbe6f1ed5 ("rethook: Add a generic return hook")
-> >> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> >> ---
-> >>  kernel/trace/rethook.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-> >> index 5a8bdf88999a..bd5e5f455e85 100644
-> >> --- a/kernel/trace/rethook.c
-> >> +++ b/kernel/trace/rethook.c
-> >> @@ -250,7 +250,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
-> >>  	if (WARN_ON_ONCE(!cur))
-> >>  		return 0;
-> >>  
-> >> -	if (tsk != current && task_is_running(tsk))
-> >> +	if (tsk != current && tsk->on_cpu)
-> >>  		return 0;
-> >>  
-> >>  	do {
-> >> -- 
-> >> 2.34.1
-> >>
-> >>
-> > 
-> > 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 910f6b3adf74..06fb365bb86e 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -1929,6 +1929,12 @@ static int __rb_validate_buffer(struct buffer_page *bpage, int cpu,
+>  	 */
+>  	if (ret < 0 || (prev_ts && prev_ts > ts) || (next_ts && ts > next_ts)) {
+>  		local_set(&bpage->entries, 0);
+> +		/*
+> +		 * Note, the RB_MISSED_EVENTS is only set inside the main write
+> +		 * buffer by this verification logic. The normal ring buffer
+> +		 * has this bit set when the page is read and passed to the
+> +		 * consumers.
+> +		 */
+>  		local_set(&dpage->commit, RB_MISSED_EVENTS);
+>  		dpage->time_stamp = prev_ts ? prev_ts : next_ts;
+>  		ret = -1;
+> @@ -7232,6 +7238,14 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  			local_add(RB_MISSED_STORED, &dpage->commit);
+>  			size += sizeof(missed_events);
+>  		}
+> +		/*
+> +		 * Note, for the persistent ring buffer, the RB_MISSED_EVENTS
+> +		 * may have been set in the main buffer via the verification code.
+> +		 * But here, dpage is a copy of that page and has not yet had
+> +		 * the RB_MISSED_EVENTS set. As for the normal buffers,
+> +		 * the main write buffer does not set these bits and it needs
+> +		 * to be set here.
+> +		 */
+>  		local_add(RB_MISSED_EVENTS, &dpage->commit);
+>  	}
+>  
+> -- 
+> 2.53.0
 > 
 
 
