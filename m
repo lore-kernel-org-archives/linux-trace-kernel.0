@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFA53DB62D
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 15:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBCD3DD53E
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 15:39:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780328366; cv=none; b=aPGV2pog/7U7m638Q7mkSME7P59+waMGxcHebRmzZ6QHKzAjSFCcCew4c4deT24Ge8ecF6SVNmIptDz49b+Z9TpcGVUjkvpx+DONd+uu21VGk9O80zKIDyFlrCRYi3zXyFP7oK4a4hQipfm9gsw0p2iLpSEIQ6ORr3SiBTvhLlo=
+	t=1780328368; cv=none; b=qtlTtPWW61B4Zgm+E4+Omcptiahh8c1+l4QS3MT5KYxypp6RjC+bDRElfsrOby6AYzioNPhzw9sHVWeXMX5SGDjaUGX+ibYKSj+GI40ntTgPhPHA9dTiBGGyvr8XdsFR2kl2/lou+rSZiTuVWi4f9dllm70NeVlNdU31CjTtDV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780328366; c=relaxed/simple;
-	bh=g4g8Zam+hSZvn896CrlnvlPR1ryS4eqSi440uwjDUlw=;
+	s=arc-20240116; t=1780328368; c=relaxed/simple;
+	bh=rt7PVioEGyjExEkO42rRcqYR0XN7bI9hxdnBpOgsBk8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=ps1NRt+e/3COxX8kTccPUiLFixUjHD0q0IrAkL0JVW/HesHl9aoECMOZLr8jtGa4oaFFP45zSjbZ2seWaY1jubBDKXSb3O1crTNFOOM4aIJVozMR9dJ3cFGD9Mf0eRPXA1No27vJ/AXnfFtDn16CvzIolKkmefpma5gB337IDMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BToevUku; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=I8jjnEfV/BYzKwoVTn4LxjfTRdfmUJteAToaofgbOrh5PPoQkJ69XTz9t2ogdt4M1rs1mZtiQdFijO7K72vCxUQsyTVy9hdVwo9wl7uU4uWt2MWqj0aVDOXUS+JyUYCmnonS0DuRtr+rnygNlYIbjXjPozE3e/lz4VIWT2vCrpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TKdpyJw3; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BToevUku"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TKdpyJw3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780328362;
+	s=mimecast20190719; t=1780328364;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6qTDErs0Gx8rY0bmsBZBLWSpPtEJsBrp152kqGKFlZY=;
-	b=BToevUkuHRFCm7h/MlMARgIM84JO6lfFNXOTcixm5J628SSY55jWCXhmtNxoKhyDw3SJqn
-	BdfdEKxWQUcojAp9yDnlG0rEcuwKBD1afWqh/IcZCSfBUpuYKYut60brPRSGoC9jZPYGQZ
-	BF3o5Npt1j1Brm930XuB6790OGVgJdY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=RjnH9+WCgsTWGHXLYxnxil3w674m5wdbB8GjhbcCqcY=;
+	b=TKdpyJw3UEGZxWBPQgQiaj1c4f4A/b18gGdQ8d7/hi70ghBxBEKY+t331A9EkDlS2vr552
+	wkCSMvG8Yl9uqOEnIE1MNo6CUlUjFtgmSgaOcmDyvIrjF56KbS618Xho2FRQhlE+9zzmoC
+	KEIDzHgt4UP26aLK8s8oRp648v+HBHM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-540-gGF7-PLMOPOyQKNxxr07Sw-1; Mon,
- 01 Jun 2026 11:39:18 -0400
-X-MC-Unique: gGF7-PLMOPOyQKNxxr07Sw-1
-X-Mimecast-MFC-AGG-ID: gGF7-PLMOPOyQKNxxr07Sw_1780328357
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-4vM2OKLVOFmCdlVj2XVhrw-1; Mon,
+ 01 Jun 2026 11:39:00 -0400
+X-MC-Unique: 4vM2OKLVOFmCdlVj2XVhrw-1
+X-Mimecast-MFC-AGG-ID: 4vM2OKLVOFmCdlVj2XVhrw_1780328338
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E5048195608B;
-	Mon,  1 Jun 2026 15:39:16 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B0B419560B5;
+	Mon,  1 Jun 2026 15:38:58 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C29B180075C;
-	Mon,  1 Jun 2026 15:39:14 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 42D8E18004A3;
+	Mon,  1 Jun 2026 15:38:56 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -49,9 +49,9 @@ To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
 Cc: Wen Yang <wen.yang@linux.dev>,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v4 09/13] rv: Prevent task migration while handling per-CPU events
-Date: Mon,  1 Jun 2026 17:38:36 +0200
-Message-ID: <20260601153840.124372-10-gmonaco@redhat.com>
+Subject: [PATCH v4 03/13] rv: Prevent in-flight per-task handlers from using invalid slots
+Date: Mon,  1 Jun 2026 17:38:30 +0200
+Message-ID: <20260601153840.124372-4-gmonaco@redhat.com>
 In-Reply-To: <20260601153840.124372-1-gmonaco@redhat.com>
 References: <20260601153840.124372-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -61,79 +61,63 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: WChI4A3WCrkzxXPJLuNCbvMlxdG6NwgYZ5Zpm4twkrM_1780328357
+X-Mimecast-MFC-PROC-ID: BtV4cWHRkOgAT9ILZhi0pigzKZGRSALgj4sL91quYk8_1780328338
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Tracepoint handlers are fully preemptible after a46023d5616 ("tracing:
-Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast"). When
-a per-CPU monitor handles an event, it retrieves the monitor state using
-a per-CPU pointer. If the event itself doesn't disable preemption, the
-task can migrate to a different CPU and we risk updating the wrong
-monitor.
+Per-task monitors use a slot in the task_struct->rv[] array and store
+that locally (e.g. task_mon_slot), this slot is returned during the
+destruction process but currently hanlers can be running while that slot
+is returning and this race may lead to accessing an invalid slot.
 
-Mitigate this by explicitly disabling task migration before acquiring
-the monitor pointer. This cannot guarantee the monitor runs on the
-correct CPU but reduces the race condition window and prevents warnings.
+Synchronise with all in-flight tracepoint handlers using
+tracepoint_synchronize_unregister() before returning the slot.
 
-Reviewed-by: Wen Yang <wen.yang@linux.dev>
+Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
+Fixes: a9769a5b9878 ("rv: Add support for LTL monitors")
+Suggested-by: Wen Yang <wen.yang@linux.dev>
 Reviewed-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/rv/da_monitor.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/rv/da_monitor.h  | 4 ++++
+ include/rv/ltl_monitor.h | 1 +
+ 2 files changed, 5 insertions(+)
 
 diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index 1f440c781..34b8fba9e 100644
+index 1459fb3df..cc97cc5df 100644
 --- a/include/rv/da_monitor.h
 +++ b/include/rv/da_monitor.h
-@@ -218,6 +218,10 @@ static inline void da_monitor_destroy(void)
- 	da_monitor_sync_hook();
- }
+@@ -302,6 +302,9 @@ static int da_monitor_init(void)
  
-+#ifndef da_implicit_guard
-+#define da_implicit_guard()
-+#endif
-+
- #elif RV_MON_TYPE == RV_MON_PER_CPU
  /*
-  * Functions to define, init and get a per-cpu monitor.
-@@ -284,6 +288,10 @@ static inline void da_monitor_destroy(void)
- 	da_monitor_sync_hook();
- }
- 
-+#ifndef da_implicit_guard
-+#define da_implicit_guard() guard(migrate)()
-+#endif
-+
- #elif RV_MON_TYPE == RV_MON_PER_TASK
- /*
-  * Functions to define, init and get a per-task monitor.
-@@ -756,6 +764,7 @@ static inline bool __da_handle_start_run_event(struct da_monitor *da_mon,
+  * da_monitor_destroy - return the allocated slot
++ *
++ * Wait for all in-flight handlers before returning the slot to avoid
++ * out-of-bound accesses.
   */
- static inline void da_handle_event(enum events event)
+ static inline void da_monitor_destroy(void)
  {
-+	da_implicit_guard();
- 	__da_handle_event(da_get_monitor(), event, 0);
- }
+@@ -310,6 +313,7 @@ static inline void da_monitor_destroy(void)
+ 		return;
+ 	}
  
-@@ -771,6 +780,7 @@ static inline void da_handle_event(enum events event)
-  */
- static inline bool da_handle_start_event(enum events event)
++	tracepoint_synchronize_unregister();
+ 	da_monitor_reset_all();
+ 
+ 	rv_put_task_monitor_slot(task_mon_slot);
+diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
+index eff60cd61..38e792401 100644
+--- a/include/rv/ltl_monitor.h
++++ b/include/rv/ltl_monitor.h
+@@ -77,6 +77,7 @@ static void ltl_monitor_destroy(void)
  {
-+	da_implicit_guard();
- 	return __da_handle_start_event(da_get_monitor(), event, 0);
- }
+ 	rv_detach_trace_probe(name, task_newtask, handle_task_newtask);
  
-@@ -782,6 +792,7 @@ static inline bool da_handle_start_event(enum events event)
-  */
- static inline bool da_handle_start_run_event(enum events event)
- {
-+	da_implicit_guard();
- 	return __da_handle_start_run_event(da_get_monitor(), event, 0);
++	tracepoint_synchronize_unregister();
+ 	rv_put_task_monitor_slot(ltl_monitor_slot);
+ 	ltl_monitor_slot = RV_PER_TASK_MONITOR_INIT;
  }
- 
 -- 
 2.54.0
 
