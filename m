@@ -1,157 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410F03BF676
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 14:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934B73D7A07;
+	Mon,  1 Jun 2026 15:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780325987; cv=none; b=M6CeNPJCFlRFSjUcblDU6qEa9VahLtDIxj0YCEtg1HSH7oL72/Lpfc0CXSZEj08mExCR19xRdXTZf2b6Od8fbQxaWLs5pFP/oWZM51MwpvhKA9dtROTcTGvhr/rG2T7YkI6alBOchEYQMFe9kYcPw4xOaQVyp71ywVkAgnRfuOs=
+	t=1780326354; cv=none; b=Ca2dQ64NktPK/YG6Tu/RfoktdakJbUhmW3hMQXvXDkxu4F4nzfim8KTYb+H29MQxzt7odkCicwRTF5JrRm+eXCjuyFaFqzzLTqRCCajsv99jF5YTl/4gtLE7D28ON+n7XDvKUmwHMOk3g4FALQZoMfMQLvQX+lmQ/S/Fv27jS3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780325987; c=relaxed/simple;
-	bh=WzrBFZqfu8DnkLEv7f5e1V0F1EgR/vAbRBb+8qRzHsI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bOM6lAnZW3xKRsQQE+LqplUM6zDKwb+/DYNQApGoCMy4dqy21cgA0hJw5Lub1REDFHIK9S8SY4gQBVEhIBnkI7k2ePwTHv0PaXAjTaNeFgxe+rXrQzsujGw2B9Exj9/G3PoUuW32uZSTf9cvp4jB9pndaIUfxfveyNYb53Aib2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cosvmb8g; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780326354; c=relaxed/simple;
+	bh=sJa7B8NGvaIKXf0VYIuUYQaaxd7cIKgiaR0eDjclZ+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s6NL1yE5+Lli9dOqZVGLKUbkmp0GnUmLi6ZDmS251ytHQSntgwKPAReCeOOJBaifGnSYPfgj681q3VmEhdTSWMwZ3v8S3VoqQ8Yr4OO/QTrhyT9d4dqlEXB6hQAAt+ovZ4KZE0MZpsLLxGpXUOp3Eke/ln0NLVBBs5lb3Dgz0N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9zgfUpQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cosvmb8g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780325985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kzh5a0tVq5+/8roSGK1F3W4YTaJGCvorVh1SK1J8QJA=;
-	b=cosvmb8gNFWJk4+HEo2W9HkjhhyD2zY3JbmR+gTgPQRL5qfDIKSBdRSRBKC7Is2ypVxJoj
-	jJ1oisarcUQUO2xEPXw1WnR5Fg8Lpjf0To7VfZp0jr9tC2mo1TZw24KivF8jxc41DRWWIj
-	9TwZDTLm1Wgij+DkJBqI7AeKYb2NbK4=
-Received: from mail-yx1-f71.google.com (mail-yx1-f71.google.com
- [74.125.224.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-yaynjos5M5SCa-Sh8EnX-A-1; Mon, 01 Jun 2026 10:59:44 -0400
-X-MC-Unique: yaynjos5M5SCa-Sh8EnX-A-1
-X-Mimecast-MFC-AGG-ID: yaynjos5M5SCa-Sh8EnX-A_1780325983
-Received: by mail-yx1-f71.google.com with SMTP id 956f58d0204a3-6607988ca90so1836667d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jun 2026 07:59:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780325983; x=1780930783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Kzh5a0tVq5+/8roSGK1F3W4YTaJGCvorVh1SK1J8QJA=;
-        b=jkup2+rtUMEy/j6MLF1i9X29a0I6NcNRIY6x4gzxS5ji9/w2nRIQKIiU+PbvXkZqV9
-         SFtCZIVh7dFsEW9d5SjvsSj6/ma9Crx6WBVhIH/eu9V9RZIl7Zc1E1ViZ04WhfgBNP9Q
-         ojfQsWaC2qocSHxeJVRRAFS8a1YA9L8z06bBsiR7UwDRzvgE7VKzDCsok37Ohoc6Gl3k
-         IaEXwzpdSs8agSVIyAo2u+gNaQZNOtBLA1OKwpHXUuHlQ/sI2ZBaGmOzgJfv5hO6i4vo
-         OMe8BCNj/I/cOZfplu3CmzOlRd+otVX3O7WoKvoI55SJasP1nMOJBDJqYW0QAIZQVaBd
-         +P1w==
-X-Forwarded-Encrypted: i=1; AFNElJ/fJtIdNJSSICOWbzGhoYJfwfH8Dug6QWqUsAi4FsXcyslQ+NwoyUFS2zNeMNoz1rs4xryFq/uErx20OEOZ+4P57EY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9v7zMrrrhfP1DWeIVT7dBDWlyb/2z08a8QniynsSMzHdPa9Lx
-	AJq26APHoUiZOB5F7+6oADUxsnMsx9Uz7jkZSTQHJ2VasyG7YqGHALv1s6g4oqX21PQ0LH4+5VZ
-	GJU8gaYs+y59tKZdcBuCO2aPDqcYfXOCe4IbtWPuMJn0hgpL36mwi9IMxz15CtrI7m3oLHYCVM6
-	C/fSKBibpugEOOuRYVO0AuvH+p653SFqiSEI+X0n9nsKnrpqx1
-X-Gm-Gg: Acq92OF+OUqjcfZxsNjPFvdlTZD/wPZDs2WRhrzrRHgAqc/uQR3L2VWPaCaMFTYicT9
-	95HU6XcCJ9NDuQ5gw25KtdXtOXE6hFjJqXXnhYEaXFzx064YmLajter0i43TVfAW3sjVBceLk0n
-	DU9iINwiEJ9WNp1j7quKoNr7bTU/BZnZS5Ec4wtRdlhBtGdeIREkGY7coeS/TNCpEumgGI5QcDn
-	2lhIQmypFYJXrIszg==
-X-Received: by 2002:a05:690e:1593:10b0:65e:43a2:82a5 with SMTP id 956f58d0204a3-6605f9416camr7354324d50.55.1780325983504;
-        Mon, 01 Jun 2026 07:59:43 -0700 (PDT)
-X-Received: by 2002:a05:690e:1593:10b0:65e:43a2:82a5 with SMTP id
- 956f58d0204a3-6605f9416camr7354269d50.55.1780325983033; Mon, 01 Jun 2026
- 07:59:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9zgfUpQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21EFA1F00893;
+	Mon,  1 Jun 2026 15:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780326349;
+	bh=l79QFJh+1tc8WOfin3+3RXKBIcle3fpVG/8qDloYB3E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=n9zgfUpQtpGFrY1KUN7yIVATJn4jFQRI7ZnP+d29X9eBrBBakEvRRxKg7Cve2XVHS
+	 vohWdWBIxOKeSXuYufrzZh1zX8FIayu+Q598rlVvm5QSnKlPWDUeB+C+8ZC16wBoW6
+	 UrgKxsXBAxkeKYR3RQ8rduOhWQf2ro2/w13Eu6dHjyWwtPmN3AeZKWhfWxTiYqp6Rb
+	 xToKV0+X6Jt4CAeQNlp4Y8u2n8CgMt4lZ4iMqVokB8pYM32r7AaZyZ6zxMtFEiRU2B
+	 wEiyOxYHfrCCUMNdKSRVR38lWPKkmsCkBu0SAkKb7x4fqKX/U8MSgyK9wdDykITbI3
+	 /BfAeoGbT+Y5w==
+Message-ID: <0bb49c47-8c41-478c-847e-b9154c75e59c@kernel.org>
+Date: Mon, 1 Jun 2026 17:05:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
- <20260601032804.96122-1-lance.yang@linux.dev> <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
- <616de1a8-1cfd-40b8-b04f-7b324be40bfd@linux.dev> <6b11bf0a-769c-4ef2-ac6f-2af38200a6bc@kernel.org>
- <baa0a462-46e0-44ab-b583-c722ad253afe@linux.dev> <06d9b665-945f-4967-9ed9-b06514478996@kernel.org>
-In-Reply-To: <06d9b665-945f-4967-9ed9-b06514478996@kernel.org>
-From: Nico Pache <npache@redhat.com>
-Date: Mon, 1 Jun 2026 09:00:22 -0600
-X-Gm-Features: AVHnY4L3QcDds9Bx9nzJC4wMJL4H0KRuHxJDPSKQUpwkRBzl7EaLMR0JWfpdnXo
-Message-ID: <CAA1CXcAeEGOsqp-ywAQ7GMYQzXEeco-rUxUkk2hEF69HybC4=w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize
  collapse_huge_page for mTHP collapse
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Lance Yang <lance.yang@linux.dev>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
-	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, 
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com, 
-	catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
-	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, 
-	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
-	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
-	liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com, 
-	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
-	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
-	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
-	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
-	zokeefe@google.com, usama.arif@linux.dev
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 6-tmy22Bz7f3ceaAIfhxDc1xgxK5Amn5Dn9hfv6Ooes_1780325983
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Nico Pache <npache@redhat.com>
+Cc: Lance Yang <lance.yang@linux.dev>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, liam@infradead.org, ljs@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
+ rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
+ richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
+ rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
+ sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
+ tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
+ vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
+ willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
+ usama.arif@linux.dev
+References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
+ <20260601032804.96122-1-lance.yang@linux.dev>
+ <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
+ <616de1a8-1cfd-40b8-b04f-7b324be40bfd@linux.dev>
+ <6b11bf0a-769c-4ef2-ac6f-2af38200a6bc@kernel.org>
+ <baa0a462-46e0-44ab-b583-c722ad253afe@linux.dev>
+ <06d9b665-945f-4967-9ed9-b06514478996@kernel.org>
+ <CAA1CXcAeEGOsqp-ywAQ7GMYQzXEeco-rUxUkk2hEF69HybC4=w@mail.gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <CAA1CXcAeEGOsqp-ywAQ7GMYQzXEeco-rUxUkk2hEF69HybC4=w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 1, 2026 at 5:14=E2=80=AFAM David Hildenbrand (Arm) <david@kerne=
-l.org> wrote:
->
-> On 6/1/26 12:47, Lance Yang wrote:
-> >
-> >
-> > On 2026/6/1 18:23, David Hildenbrand (Arm) wrote:
-> >> On 6/1/26 11:08, Lance Yang wrote:
-> >>>
-> >>>
-> >>>
-> >>> One small thing, I think we should probably keep the smp_wmb(), and j=
-ust
-> >>> move it before the earlier pmd_populate().
-> >>>
-> >>> IIUC, the ordering we want is still:
-> >>>
-> >>>    clear old PTEs
-> >>>    smp_wmb()
-> >>>    pmd_populate()
-> >>>
-> >>> so another CPU cannot walk through the re-installed PMD and still obs=
-erve
-> >>> the old PTEs, right?
-> >>
-> >> There is a smp_wmb() in __folio_mark_uptodate(), that should be suffic=
-ient?
-> >
-> > Ah, cool! __folio_mark_uptodate() already does the job :P
-> >
-> > So yeah, no extra smp_wmb() needed here!
->
-> Yeah. BTW, I think we'd need a spin_lock_nested(), so @Nico, treat my cod=
-e as a
-> draft.
+On 6/1/26 17:00, Nico Pache wrote:
+> On Mon, Jun 1, 2026 at 5:14 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
+>>
+>> On 6/1/26 12:47, Lance Yang wrote:
+>>>
+>>>
+>>>
+>>> Ah, cool! __folio_mark_uptodate() already does the job :P
+>>>
+>>> So yeah, no extra smp_wmb() needed here!
+>>
+>> Yeah. BTW, I think we'd need a spin_lock_nested(), so @Nico, treat my code as a
+>> draft.
+> 
+> Okay, I read the above and did some investigating.
+> 
+> I will try to implement and verify the changes you suggested :)
+> 
+> Or an even crazier idea... what if we ensure MIPS checks for PMD_none
+> before walking a PTE table?
 
-Okay, I read the above and did some investigating.
+But how would they update the cache then correctly?
 
-I will try to implement and verify the changes you suggested :)
+I'm too non-MIPS to know the answer :)
 
-Or an even crazier idea... what if we ensure MIPS checks for PMD_none
-before walking a PTE table?
+-- 
+Cheers,
 
--- Nico
-
->
-> --
-> Cheers,
->
-> David
->
-
+David
