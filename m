@@ -1,137 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AE537BE71
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 07:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBA938836C;
+	Mon,  1 Jun 2026 07:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780300312; cv=none; b=TjUQpwp3cX0UBJlTYQQLXSbcYxWmMNQw/wR2AhcmLcQzK/0cyUnDsO0G805ofABH6wyc4K6jF+gyYjjLGCIY9LhN91KIHp88M/dSIuv6RBPskxhcXvgoGc+C6oT/NIt+2koob5P8/6QNu1n7GierkpohTGsOzQxol/uUprR5mM8=
+	t=1780300346; cv=none; b=qp7LR2cHopILDtJy3VZx5WFNumpc/9/icagKadDyrEX0pnRyZDnl9SYj/3KUZWMI5U4QGBXknZ3Tq1DW5qEsjh7XS+uLmCInItnCobQFnNd0zaXkkW/mmOXKrSEGB9amdS0o5Zzsj7DuOFG6X2PXLKqy9Sj2qcLPYQhHTuinIWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780300312; c=relaxed/simple;
-	bh=1ZezTERSeITTMVNn8Qnu08ChmRSoFgA1UvJZWKe5qNI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DNrpmPMabjguGNQfGHKS7A2dBLcIFCMQNZzMLsGWkrMyOsuFuGgGDIOmptN/Nu/D0Jcv1VMPJrPJK/9f/opwP9C6mYjQuNTOagdUcaRFgECzymM5n7PG3GJMcQjksE7xwVaxVxmDR2OOw9v4NlRyIKd2RH4BSb4PyzgS18yeZ9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DdIdHsSY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780300346; c=relaxed/simple;
+	bh=42myBATTs69D0UXk5hfmLuUSmJ47ktaJ+tfWCLtERTM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=osm0IgGiUvLywLZyrPn4SRaOBDoME5OttI+vbUDcmrEAwe9Q31A6rXKFcL+heEWvYqh1J03EQtx5uhVu04rlsaNxOBTXYQLYvgAgS0gwW9Hnte5s18oGcMWQz6iBozCo/HzahzHsbNMgei0RjMRa4HlWI4CPr+pvtOepJzZGuSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jzMCQk7R; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gLzxmz3T; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DdIdHsSY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780300309;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jzMCQk7R";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gLzxmz3T"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1780300344;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1ZezTERSeITTMVNn8Qnu08ChmRSoFgA1UvJZWKe5qNI=;
-	b=DdIdHsSYdrWy0Cni8aR4Sm8ri+ami3HCvFxvcmUWzsQoPyzeHvHGep7UUWYpBSL8WnI2jc
-	kApcr6MarIF+8CxI6Wj7Dzg7MrlH5PQ3tWgkxWskQFdE2o+GRo0hsfC4fOjIBYHZsrQOnd
-	mz28GKUX//32UrpLvv7fW/Sn2aY1L8c=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-32-6tbX5VVWOtKfD6EfrHvE5Q-1; Mon, 01 Jun 2026 03:51:48 -0400
-X-MC-Unique: 6tbX5VVWOtKfD6EfrHvE5Q-1
-X-Mimecast-MFC-AGG-ID: 6tbX5VVWOtKfD6EfrHvE5Q_1780300307
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-490ae0167ceso1080495e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jun 2026 00:51:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780300307; x=1780905107;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tE5GTkPw868kwEOFbb8DCyrZt7dMlF83XvmEKjd+iyw=;
-        b=T2bxoY9cKIrtV7wpIDq173rbGlSZKCvm2dRXqnHtVHVFbjwq1MJ+5VUarademL4Pi0
-         0VpJpUfGFhFXYDYyDaVcTWwUJwZhJ0chu2vPDhEb7WaWvYmVQAJ7KbfVb4lFL8l2p85Y
-         9nhYneXJ6WYti0BFiGh/5Q7BMJI9nY7Sne7aBUXo2KRiNFc16iMOQqfVg1OYEkGUrQsv
-         i33FJjfKK5EPwQlt3QqJro5BTV0NmhVk7CxFRCktV3GjywBjhF9ea2VcasPyQtvjQE1R
-         q7JX/wvrfNAxydvCTeu1xKyS6EjFkUOUfFh4sBsrSWjFrlPcTr5UZxKZP+7QVzZI4mWD
-         3Vzg==
-X-Forwarded-Encrypted: i=1; AFNElJ8hP1M1k6/RbUV8CLU2BgdGDyMneOX4zwTr1bKnWLGaTHh/nkH2Up8oEXyL6Y/KTa2wWCEkiZiPSxw5oSMVwSO64Pk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFve5Qyv4lRswco0plkl7vyxp6oSVB1O1dacUJiH/ngWhhdMA1
-	zJp6X5HP5bRk7QqHkaGrmrOkZHbDnKKDc06TNEazEBQ2EYAnw7iFgdgdy6pth6oPtF3n1oieJxp
-	PKFNEp8H9qUraBkgLzph6K/VbiPpUVnPVBfcFKCCdH3ArjfE1HknI4gZVPTMh23Wd0zin0xxvRL
-	9sHNKrpQ==
-X-Gm-Gg: Acq92OE264gQPbNsBqLQOjIiWD55mkVqyBqhfYyM9pPqxhwRXcSiRj6sZVEIvfHxZFv
-	T+CzntI4x/pJY+e53YwSP9ZUOkJgDykOqQnXSLyosaS0sVyvjMcLdeknMx5NjwCcuAb2+w2NMi8
-	5jJuSnNmd5NcF2WmIdPV3TCrWXB9zIta3J0jp3t1IgT7dVn+1mW1PY+f/yZpS7CtiRfrORQQtfN
-	Kw5olhFePLOFpS7poHl2EiKvWQnqfE9OFdn/BmqcFrz7wkXUxpDAoa9g6GetGmu5YYQjkYEVCDb
-	fv+a5PStuPCUrDFj+vkn9WOv5Cfrr1r+d5gvXUQsh6SDNcM/FtdBpuAma29h+XlydW51JS1pGGI
-	v3/6B5bp2Qzmsn3CRR0SSnwKd5IqFHMBqlEpY
-X-Received: by 2002:a05:600d:6402:20b0:48a:58ae:9938 with SMTP id 5b1f17b1804b1-490a2933aeamr124314685e9.19.1780300307189;
-        Mon, 01 Jun 2026 00:51:47 -0700 (PDT)
-X-Received: by 2002:a05:600d:6402:20b0:48a:58ae:9938 with SMTP id 5b1f17b1804b1-490a2933aeamr124314335e9.19.1780300306766;
-        Mon, 01 Jun 2026 00:51:46 -0700 (PDT)
-Received: from [192.168.1.167] ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490aab4f87esm10940815e9.22.2026.06.01.00.51.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 00:51:46 -0700 (PDT)
-Message-ID: <d4366f9f457ad54e20f763ce0a9072e9e630896e.camel@redhat.com>
-Subject: Re: [PATCH v3 07/13] rv: Add automatic cleanup handlers for
- per-task HA monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Wen Yang <wen.yang@linux.dev>, linux-kernel@vger.kernel.org, Steven
- Rostedt	 <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
-Date: Mon, 01 Jun 2026 09:51:45 +0200
-In-Reply-To: <877boiyaig.fsf@yellow.woof>
+	bh=20gkQJyg6mfNHQMTqAzuyHynZ2IeDQksyf9+QQ9FA5M=;
+	b=jzMCQk7R7xzanH3/gPvuiH14JOEsASryewa3G7CE9PRSPdCtK/9k2rsowA4IZk53lO8tOK
+	Gq2XkSx9ZOf8i4ufp6feu+76H5tjMMHRwmhZanKzcSyCZtorwJRgU+BwfjslC1nq66AkkR
+	NAqCnQUGONsLZIWbn0mCe7nvJ7Ytr8N0HpP1P26QxjKS4Xspw3xiBxSmfjUfjzsT14FEqY
+	DwhYakDpouXMuPNnL2M5I3mGaHbNqxtNn4OV088J6mQXfElvJYw/7kLlp+Fiq8GDXqg7sq
+	cHA1t3OMoswsJATxGO611Rz227Ki0FYd894zZkgnyrH8AW2FhFci6UHI9iUmMg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1780300344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=20gkQJyg6mfNHQMTqAzuyHynZ2IeDQksyf9+QQ9FA5M=;
+	b=gLzxmz3Tf+A3Eq8FI33Y1lifWVVSZDfJHmU6Sat0UlcBJAz5Wl5EgM32IMD15oGqsln7cn
+	/IKiZT20reeWsUCw==
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco
+ <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org
+Cc: Wen Yang <wen.yang@linux.dev>
+Subject: Re: [PATCH v3 08/13] rv: Ensure synchronous cleanup for HA monitors
+In-Reply-To: <20260530141652.58084-9-gmonaco@redhat.com>
 References: <20260530141652.58084-1-gmonaco@redhat.com>
-	 <20260530141652.58084-8-gmonaco@redhat.com> <877boiyaig.fsf@yellow.woof>
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
+ <20260530141652.58084-9-gmonaco@redhat.com>
+Date: Mon, 01 Jun 2026 09:52:24 +0200
+Message-ID: <874ijmy9xj.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: v7oV8Mq8Pmp3DVTTuXv4DO93Sj-f4u14-UWc04N_-nQ_1780300307
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, 2026-06-01 at 09:39 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > @@ -123,12 +144,15 @@ static int ha_monitor_init(void)
-> > =C2=A0
-> > =C2=A0=09ha_mon_initializing =3D true;
-> > =C2=A0=09ret =3D da_monitor_init();
-> > +=09if (ret =3D=3D 0)
-> > +=09=09ha_monitor_enable_hook();
-> > =C2=A0=09ha_mon_initializing =3D false;
-> > =C2=A0=09return ret;
-> > =C2=A0}
->=20
-> What if between da_monitor_init() and ha_monitor_enable_hook(), a
-> task exits while a timer is still active, and then the timer callback
-> is invoked?
+>  static bool ha_mon_initializing;
+> +static bool ha_mon_destroying;
+>  
+>  static int ha_monitor_init(void)
+>  {
+>  	int ret;
+>  
+> +	WRITE_ONCE(ha_mon_destroying, false);
+>  	ha_mon_initializing = true;
+>  	ret = da_monitor_init();
+>  	if (ret == 0)
+> @@ -152,6 +155,7 @@ static int ha_monitor_init(void)
+>  
+>  static void ha_monitor_destroy(void)
+>  {
+> +	WRITE_ONCE(ha_mon_destroying, true);
+>  	ha_monitor_disable_hook();
+>  	da_monitor_destroy();
+>  }
+> @@ -302,12 +306,30 @@ static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
+>  	return false;
+>  }
+>  
+> +/*
+> + * __ha_monitor_timer_callback - generic callback representation
+> + *
+> + * This callback runs in an RCU read-side critical section to allow the
+> + * destruction sequence to easily synchronize_rcu() with all pending timers
+> + * after asynchronously disabling them. The ha_mon_destroying check ensures
+> + * any callback entering the RCU section after synchronize_rcu() completes
+> + * will see the flag and bail out immediately.
+> + */
+>  static inline void __ha_monitor_timer_callback(struct ha_monitor *ha_mon)
+>  {
+> -	enum states curr_state = READ_ONCE(ha_mon->da_mon.curr_state);
+>  	DECLARE_SEQ_BUF(env_string, ENV_BUFFER_SIZE);
+> -	u64 time_ns = ha_get_ns();
+> -
+> +	enum states curr_state;
+> +	u64 time_ns;
+> +
+> +	guard(rcu)();
+> +	if (unlikely(READ_ONCE(ha_mon_destroying)))
 
-We are initialising, timers shouldn't be active, that sits right before
-setting up other hooks, and the exit hooks this way is just the first
-of them.
+Instead of this global variable, can we instead use da_mon->monitoring?
 
-By the way, in this case, we likely have a valid reset scenario on an
-invalid (uninitialised) timer. This is also what checking the
-monitoring flag guards against.
-In short, in that handler we really should reset, but need to know
-whether we ever initialised in the first place.
-
-> Extremely rare, but I think it can be fixed easily by reordering the
-> two functions.
->=20
-> > =C2=A0static void ha_monitor_destroy(void)
-> > =C2=A0{
-> > +=09ha_monitor_disable_hook();
-> > =C2=A0=09da_monitor_destroy();
-> > =C2=A0}
->=20
-> Same here, there is small window between the two function calls.
-
-Likewise here, we removed all hooks, then da_monitor_destroy() is going
-to sync with them and clean everything up. Swapping them will expose
-more races because we dropped the slot by then.
-
-Am I missing something?
-
-Thanks,
-Gabriele
-
+> +		return;
+> +	/* Ensure consistent curr_state if we race with da_monitor_reset */
+> +	curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+> +	if (unlikely(!da_monitor_handling_event(&ha_mon->da_mon)))
+> +		return;
+> +
+> +	time_ns = ha_get_ns();
+>  	ha_get_env_string(&env_string, ha_mon, time_ns);
+>  	ha_react(curr_state, EVENT_NONE, env_string.buffer);
+>  	ha_trace_error_env(ha_mon, model_get_state_name(curr_state),
+> -- 
+> 2.54.0
