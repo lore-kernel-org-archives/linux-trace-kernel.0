@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF837372057;
-	Mon,  1 Jun 2026 13:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2384F3A48ED;
+	Mon,  1 Jun 2026 13:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780320144; cv=none; b=fm79VS2X+LquguZj4/UWV4bxvJizsTQre+Dp1EpQDv57T9MxP2WXb61KDP9MkJTT9TdZ963c9IGxmPlfyc6c+vknUMsI2idWJ4AZJLqL+W91qrH74fERMwAwws+24WI7k+YRnyxBa524d60ldIY/CPE3YZHf1vBUNuL9DuQyXA4=
+	t=1780320260; cv=none; b=jpBis33oGMxNOaM9098Ug6OWDBc6lNWOVAYuBaV6ISAYlS3KTAkhuMV0ZpY9mouQ6Ui2HDL0UVkR838tUb6LG3TAcZIohKtt+t2HN5zA38kyD7TjLLz2wDGSbztAFBWCPiE3PS49B9fekonKA+R2m2YzUd7wrqUXceCfZxYqup4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780320144; c=relaxed/simple;
-	bh=5IO3E8xNHF91kis6t4ZlSQgt9FsTb8dYFvmANv7NBsw=;
+	s=arc-20240116; t=1780320260; c=relaxed/simple;
+	bh=IbiceRXvZkXi/7BRAAuln6FFbYCO1o0615V8tzKEuqQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I5/n9dHIXUUHKyxCpXvYhKJxUXVEtl/pvVKedFA6oC6QlRT393Lq/auro9dx1dHP2C1nG7PmjKex41ZVisZu/TT85rvVIAnkwxH05MEOZzcDI3aYXF83VhaAnC+ubvBILiRlTXa/w2RnHdJR6vKxU7/kOnXBGQDVMMVPjwxBwHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LU6AW3wK; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=LnAhnWivKlHbyd+x8nTUglLyJCQXC5baJ5Llpj54xM8eBeVtn6z8BUvnmcNiQ3Om1tKRAg1FH4PYfP/8/lBILVU7vWMwBZcq328/aeeNX228CHbX2hC4wdP9MMkHaO5mI+aPPfs4lVj0cgP0z48KtKxueStRlUm2YJKeCX5kak8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHTWbVtK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LU6AW3wK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBE31F00893;
-	Mon,  1 Jun 2026 13:22:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHTWbVtK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B419F1F00893;
+	Mon,  1 Jun 2026 13:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780320142;
-	bh=WDT+8+ETf4Oj92XwVc++A5fr+CCglKoLUu0D8KimQ84=;
+	s=k20260515; t=1780320259;
+	bh=4xj0Qmb3PGvR9vYXLCTRMNng9IbwfFzut9XpsoiGbGg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LU6AW3wKuu8SCk7DkUOYOGjAikqXBQEAcRgbGOhMTZuzzL/jEjz6W1NAmcd6J71nD
-	 f1J9yPoVcNbopDcXDC/tRcytt3DWozJFC9hp37ufoeat0oPOYbTnmMQuustGcQE3Jl
-	 PQ4S5jvRVPvXPa5T686eyp57lLX/9XOLhfmd+hvxtNThxOlIsz+ycJGq9VmnAeVdCa
-	 p53tUKhy7GipyNvMCP3/OESrPe2OjXaHKvEbJoFGg0onrA/I81UnFMddcqeSHXxXdK
-	 IWJiln4pvPHWl61ksfS3UuHn5NoD/Fb5Hyo1PX5J8sBDZjYxsOycLs822PbzqdfcIb
-	 8USWAXGFgogGg==
-Message-ID: <e3d023f1-ab6e-4424-b304-55f1294480c3@kernel.org>
-Date: Mon, 1 Jun 2026 15:22:15 +0200
+	b=aHTWbVtKn7f+LNNNpRHoDFO9RRSGdRMNh+r/lcwYlL4Kpb96gJTSUYUalNPuCsI83
+	 Xnddj/uOXCZ7MmgKTAa5furNrlqlZIsJBIaqJp64H1FKDFpBGnc86eNbGnHk/kMtUb
+	 aLxbEunIY1/JuAIvCeJ4iYSUnYlJ2d3GcUYBNh7lfvgUHc5JyunfmPzbpru9L1Tg7D
+	 DCtaTk3iZ7N51uQrnxKjPJuEWtcWV8BKb2JzGRGRT29OMVksUbgemQidyKWGcmlXDG
+	 L9j4zrUaeYrIrIr8eS2RkkZtpF0OUUxDZyQIfz3ar4tAM0QRy/3jh+C+g69I4GqTc3
+	 JybqLRPxBDJhg==
+Message-ID: <f6816b64-14b9-44d0-ad27-323629a0117e@kernel.org>
+Date: Mon, 1 Jun 2026 15:24:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,14 +35,10 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/6] mm/memory-failure: surface unhandlable kernel
- pages as -ENOTRECOVERABLE
-To: Miaohe Lin <linmiaohe@huawei.com>, Breno Leitao <leitao@debian.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
- Lance Yang <lance.yang@linux.dev>, Andrew Morton
- <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
+Subject: Re: [PATCH v8 3/6] mm/memory-failure: report MF_MSG_KERNEL for
+ unrecoverable kernel pages
+To: Breno Leitao <leitao@debian.org>, Miaohe Lin <linmiaohe@huawei.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
  Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
  Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
  Shuah Khan <shuah@kernel.org>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
@@ -50,9 +46,11 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
  "Liam R. Howlett" <liam@infradead.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
 References: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
- <20260527-ecc_panic-v8-2-9ea0cfa16bb0@debian.org>
- <19f968f5-1289-f573-4406-e5c91dcd8923@huawei.com>
+ <20260527-ecc_panic-v8-3-9ea0cfa16bb0@debian.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,116 +97,74 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <19f968f5-1289-f573-4406-e5c91dcd8923@huawei.com>
+In-Reply-To: <20260527-ecc_panic-v8-3-9ea0cfa16bb0@debian.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/1/26 14:28, Miaohe Lin wrote:
-> On 2026/5/27 22:06, Breno Leitao wrote:
->> get_any_page() collapses every HWPoisonHandlable() rejection into a
->> single -EIO via the __get_hwpoison_page() -> -EBUSY -> shake_page()
->> -> retry path.  That is correct for the transient case (a userspace
->> folio briefly off LRU during migration or compaction, which a later
->> shake can drag back), but wrong for stable kernel-owned pages: slab,
->> page-table, large-kmalloc and PG_reserved pages will never become
->> HWPoisonHandlable(), so the retry loop is wasted work and the final
->> -EIO loses the "this is structurally unrecoverable" information.
->> memory_failure() then maps -EIO into MF_MSG_GET_HWPOISON, which the
->> panic-on-unrecoverable sysctl deliberately does not act on.
->>
->> Introduce HWPoisonKernelOwned(), a small predicate that positively
->> identifies pages the hwpoison handler cannot recover from:
->>
->>   HWPoisonKernelOwned(p, flags) :=
->>       !(MF_SOFT_OFFLINE && page_has_movable_ops(p)) &&
->>       (PageReserved(p) || PageSlab(p) ||
->>        PageTable(p)    || PageLargeKmalloc(p))
->>
->> The MF_SOFT_OFFLINE / page_has_movable_ops() opt-out mirrors the
->> same exception in HWPoisonHandlable(): soft-offline is allowed to
->> migrate movable_ops pages even though they are not on the LRU, and
->> we must not pre-empt that with an unrecoverable verdict.
->>
->> The list is intentionally not exhaustive.  vmalloc and kernel-stack
->> pages, for example, do not carry a page_type bit and would need a
->> different oracle; they keep going through the existing retry path
->> unchanged.  This is the smallest set we can identify with certainty
->> by page type.
->>
->> Wire the helper into the top of get_any_page() to short-circuit
->> those pages before the retry loop runs.  On a hit, drop the caller's
->> MF_COUNT_INCREASED reference (if any) and return -ENOTRECOVERABLE
->> straight away.  Pages outside the helper's positive list still take
->> the existing retry path and return -EIO, leaving operator-visible
->> behaviour for those cases unchanged.
->>
->> Extend the unhandlable-page pr_err() to fire for either errno and
->> update the get_hwpoison_page() kerneldoc to document the new return.
->>
->> memory_failure() still folds every negative return into
->> MF_MSG_GET_HWPOISON via its existing "else if (res < 0)" branch, so
->> this patch on its own only changes the errno that soft_offline_page()
->> can propagate to its callers.  A follow-up wires -ENOTRECOVERABLE
->> through memory_failure() and reports MF_MSG_KERNEL for the
->> unrecoverable cases, which is what the
->> panic_on_unrecoverable_memory_failure sysctl observes.
+On 5/27/26 16:06, Breno Leitao wrote:
+> The previous patch teaches get_any_page() to return -ENOTRECOVERABLE
+> for stable unhandlable kernel pages (PG_reserved, slab, page tables,
+> large-kmalloc).  memory_failure() still folds every negative return
+> into MF_MSG_GET_HWPOISON, so callers that want to react to the
+> unrecoverable cases (a panic option, smarter logging) cannot tell
+> them apart from transient page-allocator races.
 > 
-> Thanks for your patch.
+> Turn the post-call branch into a switch over the get_hwpoison_page()
+> return code: map -ENOTRECOVERABLE to MF_MSG_KERNEL and any other
+> negative return to MF_MSG_GET_HWPOISON.  case 0 keeps the existing
+> free-buddy / kernel-high-order handling and case 1 falls through to
+> the rest of memory_failure() unchanged.
 > 
->>
->> Suggested-by: David Hildenbrand <david@kernel.org>
->> Suggested-by: Lance Yang <lance.yang@linux.dev>
->> Signed-off-by: Breno Leitao <leitao@debian.org>
->> ---
->>  mm/memory-failure.c | 42 ++++++++++++++++++++++++++++++++++++++++--
->>  1 file changed, 40 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->> index f4d3e6e20e13..8f63bdfeff8f 100644
->> --- a/mm/memory-failure.c
->> +++ b/mm/memory-failure.c
->> @@ -1325,6 +1325,28 @@ static inline bool HWPoisonHandlable(struct page *page, unsigned long flags)
->>  	return PageLRU(page) || is_free_buddy_page(page);
->>  }
->>  
->> +/*
->> + * Positive identification of pages the hwpoison handler cannot recover.
->> + * These page types are owned by kernel internals (no userspace mapping
->> + * to unmap, no file mapping to invalidate, no migration target), so the
->> + * shake_page() / retry loop in get_any_page() can never turn them into
->> + * something HWPoisonHandlable() will accept.  Short-circuit them to
->> + * -ENOTRECOVERABLE so callers can panic on operator request instead of
->> + * spinning through retries that exit as a transient-looking -EIO.
->> + *
->> + * The MF_SOFT_OFFLINE / page_has_movable_ops() opt-out mirrors
->> + * HWPoisonHandlable(): soft-offline is allowed to migrate movable_ops
->> + * pages even though they are not on the LRU.
->> + */
->> +static inline bool HWPoisonKernelOwned(struct page *page, unsigned long flags)
->> +{
->> +	if ((flags & MF_SOFT_OFFLINE) && page_has_movable_ops(page))
->> +		return false;
->> +
->> +	return PageReserved(page) || PageSlab(page) ||
+> The MF_MSG_KERNEL label and tracepoint string are kept as
+> "reserved kernel page" to avoid breaking userspace tools that match
+> on those literals; the enum value still adequately tags the failure
+> even though it now also covers slab, page tables and large-kmalloc
+> pages.
 > 
-> Once shake_page finds a lightweight range-based way to shrink slab, slab pages could be freed
-> into buddy and above PageSlab test should be removed then. Maybe add a TODO or XXX here?
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  mm/memory-failure.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 > 
->> +	       PageTable(page) || PageLargeKmalloc(page);
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 8f63bdfeff8f..14c0a958638c 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -2426,7 +2426,8 @@ int memory_failure(unsigned long pfn, int flags)
+>  	 * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
+>  	 */
+>  	res = get_hwpoison_page(p, flags);
+> -	if (!res) {
+> +	switch (res) {
+> +	case 0:
+>  		if (is_free_buddy_page(p)) {
+>  			if (take_page_off_buddy(p)) {
+>  				page_ref_inc(p);
+> @@ -2445,7 +2446,19 @@ int memory_failure(unsigned long pfn, int flags)
+>  			res = action_result(pfn, MF_MSG_KERNEL_HIGH_ORDER, MF_IGNORED);
+>  		}
+>  		goto unlock_mutex;
+> -	} else if (res < 0) {
+> +	case 1:
+> +		/* Got a refcount on a handlable page. */
+> +		break;
+> +	case -ENOTRECOVERABLE:
+> +		/*
+> +		 * Stable unhandlable kernel-owned page (PG_reserved,
+> +		 * slab, page tables, large-kmalloc).
+> +		 * No recovery possible.
+> +		 */
+> +		res = action_result(pfn, MF_MSG_KERNEL, MF_IGNORED);
+> +		goto unlock_mutex;
+> +	default:
+> +		/* Transient lifecycle race with the page allocator. */
+>  		res = action_result(pfn, MF_MSG_GET_HWPOISON, MF_IGNORED);
+>  		goto unlock_mutex;
+>  	}
 > 
-> I'm not sure but is it safe or a common way to test PageReserved, PageSlab,
-> PageTable and PageLargeKmalloc without extra page refcnt?
 
-Checking typed pages in a racy fashion is fine (PageSlab, PageTable,
-PageLargeKmalloc).
-Checking PageReserved in a racy fashion is fine as well. TESTPAGEFLAG() will
-allow checking it on compound pages.
-
-For PageLargeKmalloc, we would want to check the head page, though. The page
-type is only stored for the head page.
-
-So maybe we want to lookup the compound head (if any) and perform the type
-checks against that?
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
