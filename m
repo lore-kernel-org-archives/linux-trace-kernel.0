@@ -1,297 +1,255 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF723DDDD9
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 17:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780336683; cv=pass; b=OLGps9kDdL4B2WCLinU8jSPT5p/hTZWDOiGc3aIHOyzqKctNYRO/pIwYNgGGDBW9EfElXMka4nCpZ9oK270Is/FX8GVclCJds/q9u8HqoEbXI2dw4krAVtrXLIaKxB6EZmIbu3D5PWktO2yTYHCJaEF4AbML8IAyiAXshw9RlPE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780336683; c=relaxed/simple;
-	bh=V0AyIuBAvJoYwSEB1n+sM0KY82YDtCldie3vhEDiiIw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U/NUc7N/pRtPmVAXRRHlCQzx7mXgIyFJQ6ugkbDrhN9bazQiyWWK3m5uORM5KzjsWg4aWLpNNcbaH/I8QLnEZbN7YhsqUvXUcdk2Q8DclZExhz2lGjDHc17EkG1LcmIBJJ+9/keewJstETT85043lQE6fUe6JeU8L3SPy7+hfxE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SWqHT1s1; arc=pass smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633603630B3
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 21:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780348556; cv=none; b=GLYXPQM1vigV9itoQ4B/pSUSsc6GQ4lGlmoQSWAIOcpe7bdqB1hsqubUl8r2Cxi/SrG2vJng+ATsybwhja+DzLiVwgTILPM+bmevp4YxMoKRrwMVpsPEFbjwtWrwAcGok6G8Sy29i3OTUm/qzAvDHqP9LrM1MhimscN/ecFKFGw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780348556; c=relaxed/simple;
+	bh=7EB6bOzzY3N4v7wADQ6k7HpVhyojDxG0mhAtqoCnbSo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=slKjHMz/E0cLiHrcZswiO/MN5weZXSgu8dZbGOGbr+n9qo8x3IJvIFzWQrx/wKPuarcL7rfirN24hBa5DxKbMim2tWCXioHW/TjEhLXxpIbVXnHo6sfnpNKnlPZY3XDe/Wk8cxznJEPwZE/d3A1IMnZmE5JbxgPHQd2OoBWPDFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOMohT37; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWqHT1s1"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-36ad15213fbso5002124a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jun 2026 10:58:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780336680; cv=none;
-        d=google.com; s=arc-20240605;
-        b=QimzVfbC0+cVyT4nOqfahlp9uQC0dIMPMtLoWL6wgWv58phPxOHNSVCsdHj2rOdDvi
-         fZv4DQEK+/JhqGoRN2rZ3uMiM/IM6CANXd+mcyVGPUfc1e6apLCJOEnC5XT7eWXgdPlQ
-         DIzh1jeqgcvLSX6nP23ovRHCaOIjWJicCi+ivVUeoIBLYbbyVK1eBcMU8erKNka6NaLM
-         FzDJiF8mIMWUahF6C7cD+8RlwjdK4+WFY5j9QSLU3l3a9M5uREKHCz75UXZbhvYpO2d5
-         74JA3gqT7CQ6Z6Bpy3tSi03bovgF1MFCWlXBeGdxqLoWBp7h3U9s0EpAb0vnef/Ffyux
-         aQtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=p9cunrKbhPBEEg6xrZRc0ad56PnSPNo22kcqhPhkQOY=;
-        fh=2zMxQlZgQpyQPRkA+MdwiI/mY+lTxWTnHXnICOYokjc=;
-        b=OK15AywBt2TZ8GSR74QKSpr/wMaqPH2se2i5RRLBbNHcoyKQ2clwiL2miaVLkMWSt0
-         wIfi4NFBsgCLfJemwnyvT1D4uEBBY1PUij/8JsVTew23YFcsWTyl5mltoRy53qL1WLET
-         qvbIGxl3dVkoD18Kvsj8AB7DYZE1iYzGiVc2qhOwv1tTwNeCFS9kRXS5MveVk7AoGaZW
-         z06g6/9DlLBG/snqUp/Z7F0yJeutVXcq88BVJtC/2M2PtAvCPAvFJlRz9wKZxzVT/73i
-         hUzO/3RpC/PkdPa9Apw43fEmU5PToyHM0xUcLVFhhJc1iArdHDawDfnKZ7cRn/W5dbKG
-         1qoQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOMohT37"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-9155183b42cso217018985a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jun 2026 14:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780336680; x=1780941480; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p9cunrKbhPBEEg6xrZRc0ad56PnSPNo22kcqhPhkQOY=;
-        b=SWqHT1s1xG1I8rnYMZ9jGassWeVYA2354+MVVoellgAu4vXEopaXS1zU3nmb5P4Bns
-         4PhfXFmCWqb4mrd4yewHJxaZxwqO++fLi30hOeBgXJpjpf/XlC1dbE+bDVzF2tt3/qGb
-         qZFTnKcRcvJY3ddsS96an+8dZRJdPvrsJoLhmIL6EbFL0Nfh2cjuWEHK4a810b3q9PNj
-         NM60OTAnWGlau+aNd6ftxroI0oVbYz/BiYH2AzHCFMLkKKia9tM1VNDh6VwmYnLDEBAJ
-         CoDhyJ60pS4qCGs6WJ1nem9HjGPCfbXes6NKtW//8+qxj+p4e+Mandkm+ams/91Y/w8V
-         Bn5g==
+        d=gmail.com; s=20251104; t=1780348554; x=1780953354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=etvv1aoxY7mAHojyNHCJWZxBLbP6ZnRhPDJQ2A0dhAU=;
+        b=LOMohT37S2/PKhpqPdHfgHqW+ZQL+zzYYtO509kaioJHnbzJ1wU50U1CLCBbyNzCXu
+         XQxm55l7QpL2glZOT7/Uwe+RKIoyQ/ORhLTrxVd1jDnZIKzVN1ZZ4SEJoJEtckclmQW/
+         7mGjkS8tvVINzAcu+0x3GLdbLMjoEBQb6ZhTuxZfQv913M+ak8yz9FlNLHrARpLCEP9Q
+         TjIIlBtlo0zrNE4hceLKRj63UXyaHamMKKwKWReatrc8p56sgXZnLd4G70MlnjukpfKH
+         25C0ifgMsyWJBx45hS4O0Aqfgt879r2HDa1xcofe+/35hphQFCqmUWnfP+8hiM21nKEQ
+         fuZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780336680; x=1780941480;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=p9cunrKbhPBEEg6xrZRc0ad56PnSPNo22kcqhPhkQOY=;
-        b=IVAtKMcVcipEmjYWPwc8L3LPPs9FiTs0jlAQYsHWVZK1Fo9BTyTo/xqNrFTDYks5Y+
-         JgmzmqwH7nPIbQrkK9Hc5gN2xL9wBZhCH+LCbaFG72di1YL9TqWlm7MA7v882W984ty6
-         Et714YQume+VXHH8TxZbIZQvzMPyP9d4IWZ+2xUn53BYKfp4TrB4AWgXduaPxiKoEW/z
-         edqEX4OJtg7/8SX8Yw3Bi7twmOp8a9m6ZfrCmu+dfygxnZYcpfOCjv7ro3lH74A2ahQS
-         x1al6nBaw73yPLv+yLdTRM7e3ycc8C0+esGPzlKZ7Aas1oL0qCS8VRi20Bc8L8QavXRI
-         8ffg==
-X-Forwarded-Encrypted: i=1; AFNElJ/qSJbCggwGfWeZgNfOJZzb6P2p82w2Fh/uffXUvNi3tR/K7NxZOjvxAw4ox7wg7AZb0hFlQCPWeQn4YQZQKBl5iLc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwDJ90XTmv0mKK12J8AFTJ6Oc2LZmqAZyHzZ8zYy1iOGVo8YhV
-	zlkA0csPjdjEQ5q/sJ4XZL18d1sPVDJ+4AjZrgip5euy+D8kKU2INOxdg8DDSxOOPc4o/2oQgfB
-	azqULQUTQsx8plR0r2ubpQkope4ikSnQ=
-X-Gm-Gg: Acq92OG/xafnmPeUGWzJCyo//EiLTrB8eqCXjvE/RfiClLjt4HbJg4tM5W3mSdY3uzF
-	0fsG1mQ6ubEc0KAx9dnjoIuAXfqN5Bmvqd85DgHYZT4+FJHbkmWLgzZ6F2Ii0YdeqGX4XOz5NAc
-	Xs1ItbhOsCjRs4reRkStXshrcW/66O6IjmRdEoekAQgot+dMnDeChkz30QEl94WRPssSrCpS1oQ
-	faLseABDFsD3xJayYK7m0GixYok20+CbhNHs8YoAXOnmYOzPl6QjSV4XDRrOm3OYwTQeSih46u/
-	wJARPXa1pMYLpest2VcBFS+R3DER5BAR2A==
-X-Received: by 2002:a17:90b:57e7:b0:36d:70c8:3a1 with SMTP id
- 98e67ed59e1d1-36d70c8067cmr10789372a91.13.1780336680330; Mon, 01 Jun 2026
- 10:58:00 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1780348554; x=1780953354;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=etvv1aoxY7mAHojyNHCJWZxBLbP6ZnRhPDJQ2A0dhAU=;
+        b=GWpusjINidPTIW7mtk2eBGUyp4r/buP0r+Nc4/OwL5WfIEv8YtLBE4RL5AH0HslNpa
+         2Y8CnhInGCmBZgPsQ6SrItZk1vLiGbA4D0TfzsI0fZrZ3mfJMu1OsyzqLZaYV0m6to0z
+         JUY2ko7WIvABcdeR8gdzLcbPPbbiKq5Y3k545mVR4QmgLjzOuJ3dyZWU0FIkeIcxmFCq
+         2aA+4pU2/0taQVMhZgsl455Axu5D9q4DoBGowIXqp0oHIJ4srNeRSBAga3JKD6ZB+Yf5
+         uGmCdLQdElGhV8AyH6EZzS7b9IvxrmBtHWJvw5YhLedVtVEMnSk2TI/AWV+QPUmCnnf8
+         dH/A==
+X-Forwarded-Encrypted: i=1; AFNElJ+vCuGK/E8Nn7jgB8VUIaJ15HHk6LC2jHerz6wZcriM+4V+y055HbubcXX5yI7TAQCl2AH3GrcZqJQxcnMxEDOA9W0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1pJM2qCJGuzGXcSkRRDPnnJza4Q074F9t6FBC0Pi0O5epqq2K
+	Np/fNVaNVpwfr26kMGGBKSG3EmpFhAZgzRXOYL4bQ89Sp7i6u7bWZ6/R
+X-Gm-Gg: Acq92OHO/aQmlm/0nT7qvEcwEjMZrLRzwTsHpNxad1ONZdmyt5gSmUSxGo79LkYwgHa
+	cONs7u4y77m/OHkkx418Bi5HokdMw9YKZXe9ILlVpWykWtjw82VuDzvagiup0K6E5+R/obWVdd0
+	lv8crdMHxLovoyW2mbS24NjHZAhSuLbVzpzddJhBnX+4NDyI8FMUF12qZ4dXMc3tWJltyUB1WPp
+	UW4Y4DdkxD+/ON3SZuaYSNl6m3QlUdjwpEp65eoUItxsm/OP2nYYCY4aO3s+BKAju1Rc8+VnkMY
+	/2C+MmP4i9gp1lUt1t0YguhsmCzn6ZThQDQIioPZ5XWrBYyFZnpKsj0QOkoeQKJbXIwupcVxlO+
+	8WJ7H15nDmdHq1SzFdz70rHIQ49sjY0TfdKF1j3uhOcg/APRnqUr+vh3qim2iWEYfmGbLMTo3KM
+	iwpm0RSkyfs1oPqxEAuqqiX3dMnBC1C2q07QNNpWXDTg24vv2QSWrFDiuZFLsthXzrMSPoCoWAh
+	gwL8m4ttq0BWry1Ebrm9Od+fOPYOg==
+X-Received: by 2002:a05:620a:2592:b0:912:5d2a:4bd1 with SMTP id af79cd13be357-91578039e1emr195359285a.40.1780348554324;
+        Mon, 01 Jun 2026 14:15:54 -0700 (PDT)
+Received: from Cumhall.redhat.com ([216.209.112.32])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9153265d794sm1099641185a.47.2026.06.01.14.15.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 14:15:53 -0700 (PDT)
+Sender: John Kacur <jkacur@gmail.com>
+From: John Kacur <jkacur@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	"Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] rtla/timerlat: Fix parsing of short options with attached arguments
+Date: Mon,  1 Jun 2026 17:15:36 -0400
+Message-ID: <20260601211538.381649-1-jkacur@redhat.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260528151023.00f5ec4e@gandalf.local.home> <CAEf4BzZh4qyPiMbpZPeVGx+HFNjBjAHTsNOx5wE7RWidM-iphA@mail.gmail.com>
- <20260528222051.60b38433@fedora>
-In-Reply-To: <20260528222051.60b38433@fedora>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 1 Jun 2026 10:57:46 -0700
-X-Gm-Features: AVHnY4IgzIUtaFJjFD6GEDfSr9bqs8NyIuJyZe8rVOr1umdD7w4Drge0QkU3Wlk
-Message-ID: <CAEf4BzYu+eRC9Q3msOOVPeqtoi++P_gCsPqVS6=aC+dvAW40Qw@mail.gmail.com>
-Subject: Re: [PATCH v2] unwind: Add sframe_(un)register() system calls
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
-	Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, 
-	Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 28, 2026 at 7:20=E2=80=AFPM Steven Rostedt <rostedt@kernel.org>=
- wrote:
->
-> On Thu, 28 May 2026 16:01:06 -0700
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
->
-> >
-> > [...]
-> >
-> > >   * Architecture-specific system calls
-> > > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-gen=
-eric/unistd.h
-> > > index a627acc8fb5f..17042d7e5e87 100644
-> > > --- a/include/uapi/asm-generic/unistd.h
-> > > +++ b/include/uapi/asm-generic/unistd.h
-> > > @@ -863,8 +863,13 @@ __SYSCALL(__NR_listns, sys_listns)
-> > >  #define __NR_rseq_slice_yield 471
-> > >  __SYSCALL(__NR_rseq_slice_yield, sys_rseq_slice_yield)
-> > >
-> > > +#define __NR_sframe_register 472
-> > > +__SYSCALL(__NR_sframe_register, sys_sframe_register)
-> > > +#define __NR_sframe_unregister 473
-> > > +__SYSCALL(__NR_sframe_unregister, sys_sframe_unregister)
-> > > +
-> > >  #undef __NR_syscalls
-> > > -#define __NR_syscalls 472
-> > > +#define __NR_syscalls 474
-> > >
-> > >  /*
-> > >   * 32 bit systems traditionally used different
-> > > diff --git a/include/uapi/linux/sframe.h b/include/uapi/linux/sframe.=
-h
-> > > new file mode 100644
-> > > index 000000000000..d3c9f88b024b
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/sframe.h
-> > > @@ -0,0 +1,12 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-> > > +#ifndef _UAPI_LINUX_SFRAME_H
-> > > +#define _UAPI_LINUX_SFRAME_H
-> > > +
-> > > +struct sframe_setup {
-> >
-> > I'd add `u64 flags;` field for easier and nicer extensibility. Check
-> > in the kernel that it is set to zero, future kernels will allow some
-> > of the bits to be set.
->
-> That sounds reasonable.
->
-> >
-> > And I still think that prctl() instead of a separate sframe-specific
-> > syscall is the way to go. I see no reason for sframe-specific set of
-> > syscalls just to set a bit of extra metadata for the entire process.
-> > That seems to be the job of prctl().
->
-> I personally do not have a preference. I've just heard a lot from
-> others where they want to avoid extending an ioctl() like system call
-> or even create a new multiplexer syscall.
->
-> If we can get a consensus of using prctl() or adding a separate system
-> call, I'll go with whatever that is.
+The timerlat hist command fails to parse short options with attached
+numeric arguments (e.g., -p100) due to conflicts between digit characters
+used as option values and numeric arguments to other options.
 
-prctl() is an already existing multiplexing syscall used to provide
-some per-process (of per-thread sometimes, it seems) hints and
-options. Please consider sending prctl() extension, please CC me, and
-let's see what arguments do people have against extending an already
-existing syscall.
+This issue was discovered when testing rtla 7.1.0-rc6 with rteval,
+which passes arguments in the compact -p100 format. The rteval tests
+failed with the confusing error "no-irq and no-thread set, there is
+nothing to do here" even though neither option was specified.
 
->
-> >
-> > > +       __u64                   sframe_start;
-> > > +       __u64                   sframe_size;
-> > > +       __u64                   text_start;
-> > > +       __u64                   text_size;
-> > > +};
-> > > +
-> >
-> > [...]
-> >
-> > > +
-> > > +/**
-> > > + * sys_sframe_register - register an address for user space stacktra=
-ce walking.
-> > > + * @data: Structure of sframe data used to register the sframe secti=
-on
-> > > + * @size: The size of the given structure.
-> > > + *
-> > > + * This system call is used by dynamic library utilities to inform t=
-he kernel
-> > > + * of meta data that it loaded that can be used by the kernel to kno=
-w how
-> > > + * to stack walk the given text locations.
-> > > + *
-> > > + * Return: 0 if successful, otherwise a negative error.
-> > > + */
-> > > +SYSCALL_DEFINE2(sframe_register, struct sframe_setup __user *, data,=
- size_t, size)
-> > > +{
-> > > +       struct sframe_setup sframe;
-> > > +
-> > > +       if (sizeof(sframe) !=3D size)
-> > > +               return -EINVAL;
-> >
-> > This seems overly aggressive. It seems like the pattern is to allow
-> > sizes both smaller and bigger:
-> >   - if user-provided size is smaller than what kernel knows about,
-> > treat missing fields as zeroes
->
-> Well, that could work with unregister, but for register that isn't
-> quite useful, as all fields should be filled (well, if we add flags,
-> that may not be 100% true).
->
+The root cause is two-fold:
 
-This is a question of API design. If newly added fields are optional
-by default, this works great. And even if you are adding some fields
-that in the future will be mandatory (or it could be mandatory based
-on flags), then it's super easy to error out if they are not set.
-We've been doing this for years now in bpf() syscall and it works
-pretty well overall, while also keeping user-space (libbpf, for
-instance) side *much* simpler. I don't want to imagine bpf() syscall
-which in each kernel version enforces a different size of bpf_attr
-union...
+1. Digit characters ('0'-'9') were used as short option values for
+   long-only options like --no-irq, --no-thread, etc. This caused
+   getopt_auto() to generate an option string like 'a:b:...:u0123456:7:8:9'
+   which made getopt treat digits as valid option characters.
 
-> >   - if user-provided size is bigger, then check that space after
-> > fields that kernel recognizes are all zeroes.
->
-> That is dangerous. A zero with greater size could mean something. If
-> the size is greater than expected it should simply fail and let user
-> space call it again with the older version.
->
+2. The two-phase option parsing approach (alternating calls between
+   common_parse_options() and local option parsing) confused getopt's
+   internal state when encountering arguments like -p100.
 
-Could, but it shouldn't if we extend API reasonably. And if it so
-happens that zero will be meaningful, then you add a new flag that has
-to be set if that field is present. This is a solved problem.
-Requiring user space to use differently-sized structs for different
-kernel versions is much-much worse.
+When a user passed -p100, getopt would incorrectly parse it as three
+separate options: -p, -1, -0, and -0, silently setting no_irq and
+no_thread flags instead of recognizing "100" as the period argument.
 
-> >
-> > This allows extensibility without having to change user space code all
-> > the time. Old code will provide smaller struct without new (presumably
-> > optional) fields, while newer code can use newer and larger struct
-> > size, but as long as it clears extra fields old kernel will be fine
-> > with that.
->
-> The old size will always work, thus old code will always continue to
-> work. If we extend the system call, then it must handle both the older
-> size as well as the newer size. User space would not need to change. It
-> would only change if it wanted to use a new feature, and if it wants to
-> work with older kernels it would need to try the bigger size first and
-> if that fails, it knows the kernel doesn't support that new feature and
-> then user space can figure out what to do. Either use the old system
-> call or abort.
+The two-phase parsing was introduced in commit 850cd24cb6d6 ("tools/rtla:
+Add common_parse_options()") which first appeared in v7.0-rc1. Prior to
+that commit, -p100 worked correctly. The digit characters as option
+values existed since the original timerlat implementation, but only
+became problematic when combined with the two-phase parsing approach.
 
-See above, many added features are typically optional (e.g., imagine
-some extra bits of information that goes along with currently existing
-mandatory sframe data). And it's easy to code user space code that can
-automatically and gracefully "downgrade" by detecting that kernel
-doesn't support some feature and thus just not setting the field,
-leaving it zero. But you won't have to track what should be the right
-size of the struct which in your API headers is already larger because
-you compiled something on newer kernel headers.
+Fix this by:
 
-Believe me, this is the right way to go with this kind of extendable binary=
- API.
+1. Eliminating digit characters from the option string by filtering them
+   out in getopt_auto(). This prevents conflicts with numeric arguments.
 
->
-> -- Steve
->
-> >
-> > > +
-> > > +       if (copy_from_user(&sframe, data, size))
-> > > +               return -EFAULT;
-> > > +
-> > > +       return sframe_add_section(sframe.sframe_start,
-> > > +                                 sframe.sframe_start + sframe.sframe=
-_size,
-> > > +                                 sframe.text_start,
-> > > +                                 sframe.text_start + sframe.text_siz=
-e);
-> > > +}
-> > > +
-> >
-> > [...]
->
+2. Refactoring timerlat_hist_parse_args() to use single-pass option
+   parsing. Instead of alternating between common_parse_options() and
+   local parsing, merge all options (common and local) into a single
+   option table and parse them in one pass. This matches the approach
+   used by cyclictest and other tools.
+
+With these changes, all argument formats work correctly:
+  -p 100        (short with space)
+  -p100         (short without space)
+  --period=100  (long with =)
+  --period 100  (long with space)
+
+This maintains compatibility with existing usage while enabling the
+compact -p100 format that users expect from similar tools.
+
+Assisted-by: Claude:claude-sonnet-4-5
+Signed-off-by: John Kacur <jkacur@redhat.com>
+---
+ tools/tracing/rtla/src/common.c        |  4 ++
+ tools/tracing/rtla/src/timerlat_hist.c | 55 ++++++++++++++++++++++++--
+ 2 files changed, 56 insertions(+), 3 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index 35e3d3aa922e..c2fd051c562c 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -65,6 +65,10 @@ int getopt_auto(int argc, char **argv, const struct option *long_opts)
+ 		if (long_opts[i].val < 32 || long_opts[i].val > 127)
+ 			continue;
+ 
++		/* Skip digit characters to avoid conflicts with numeric arguments */
++		if (long_opts[i].val >= '0' && long_opts[i].val <= '9')
++			continue;
++
+ 		if (n + 4 >= sizeof(opts))
+ 			fatal("optstring buffer overflow");
+ 
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 79142af4f566..c0b6d7c30114 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -787,11 +787,24 @@ static struct common_params
+ 		static struct option long_options[] = {
+ 			{"auto",		required_argument,	0, 'a'},
+ 			{"bucket-size",		required_argument,	0, 'b'},
++			/* Common options */
++			{"cpus",		required_argument,	0, 'c'},
++			{"cgroup",		optional_argument,	0, 'C'},
++			{"debug",		no_argument,		0, 'D'},
++			{"duration",		required_argument,	0, 'd'},
++			{"event",		required_argument,	0, 'e'},
++			/* End common options */
+ 			{"entries",		required_argument,	0, 'E'},
+ 			{"help",		no_argument,		0, 'h'},
++			/* Common option */
++			{"house-keeping",	required_argument,	0, 'H'},
++			/* End common option */
+ 			{"irq",			required_argument,	0, 'i'},
+ 			{"nano",		no_argument,		0, 'n'},
+ 			{"period",		required_argument,	0, 'p'},
++			/* Common option */
++			{"priority",		required_argument,	0, 'P'},
++			/* End common option */
+ 			{"stack",		required_argument,	0, 's'},
+ 			{"thread",		required_argument,	0, 'T'},
+ 			{"trace",		optional_argument,	0, 't'},
+@@ -819,9 +832,6 @@ static struct common_params
+ 			{0, 0, 0, 0}
+ 		};
+ 
+-		if (common_parse_options(argc, argv, &params->common))
+-			continue;
+-
+ 		c = getopt_auto(argc, argv, long_options);
+ 
+ 		/* detect the end of the options. */
+@@ -850,6 +860,35 @@ static struct common_params
+ 			    params->common.hist.bucket_size >= 1000000)
+ 				fatal("Bucket size needs to be > 0 and <= 1000000");
+ 			break;
++		case 'c':
++			if (parse_cpu_set(optarg, &params->common.monitored_cpus))
++				fatal("Invalid -c cpu list");
++			params->common.cpus = optarg;
++			break;
++		case 'C':
++			params->common.cgroup = 1;
++			params->common.cgroup_name = parse_optional_arg(argc, argv);
++			break;
++		case 'D':
++			config_debug = 1;
++			break;
++		case 'd':
++			params->common.duration = parse_seconds_duration(optarg);
++			if (!params->common.duration)
++				fatal("Invalid -d duration");
++			break;
++		case 'e':
++			{
++				struct trace_events *tevent;
++				tevent = trace_event_alloc(optarg);
++				if (!tevent)
++					fatal("Error alloc trace event");
++
++				if (params->common.events)
++					tevent->next = params->common.events;
++				params->common.events = tevent;
++			}
++			break;
+ 		case 'E':
+ 			params->common.hist.entries = get_llong_from_str(optarg);
+ 			if (params->common.hist.entries < 10 ||
+@@ -860,6 +899,11 @@ static struct common_params
+ 		case '?':
+ 			timerlat_hist_usage();
+ 			break;
++		case 'H':
++			params->common.hk_cpus = 1;
++			if (parse_cpu_set(optarg, &params->common.hk_cpu_set))
++				fatal("Error parsing house keeping CPUs");
++			break;
+ 		case 'i':
+ 			params->common.stop_us = get_llong_from_str(optarg);
+ 			break;
+@@ -874,6 +918,11 @@ static struct common_params
+ 			if (params->timerlat_period_us > 1000000)
+ 				fatal("Period longer than 1 s");
+ 			break;
++		case 'P':
++			if (parse_prio(optarg, &params->common.sched_param) == -1)
++				fatal("Invalid -P priority");
++			params->common.set_sched = 1;
++			break;
+ 		case 's':
+ 			params->print_stack = get_llong_from_str(optarg);
+ 			break;
+-- 
+2.54.0
+
