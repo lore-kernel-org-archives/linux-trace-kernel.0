@@ -1,32 +1,33 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59E933F385;
-	Mon,  1 Jun 2026 06:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E2C3876B2;
+	Mon,  1 Jun 2026 06:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780294641; cv=none; b=a/Bll3KdURWxWVSdUeZFtiaLT0DTmSeVLF3xTXq05piSkbnwx6iLfThJ4ODcdz5dWbDy63Yyjdqe4dpxy5VzUn9ZeQ3XejK3BT1PDmJUgW691P76rWyTBU+hIAlSlQlsP5na7W09p+UyWWDOyFa6malseeV8iJQWTyHP4KL7GdI=
+	t=1780296883; cv=none; b=M76rS25unlEezWk+L4OI12ECEKzS3cVECdrInK0gw1EGO0oCy4DBb4IrUNrojfz77opeioPA38mmVQ5Edsxd3HhXEXi83MBbvTYzYXamaFRNNjNBNSEIA73i6FHqQ7Ttj0+piqplxcEooDcZl84lhjuia0CEoysT+9frF/Z81h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780294641; c=relaxed/simple;
-	bh=UihMiOTfDJRfJjmqfhqu9gvy6Q895RAgpxzCYDzc5Xg=;
+	s=arc-20240116; t=1780296883; c=relaxed/simple;
+	bh=bUkJABQKtpEU0FDVNadJo2+Lkfggr74icTFzIVGsXYw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jjt4f2a57ChlDetDpuke60XZRwcA6Ffb8+MfDg//4ibIDXa7PpBHFMKDuKZ3iS3dR5GOtq6AH2o6KTsmfNEGR7RQSGHPCLoJMxKLHKGIhSSVXJm6AiXl101fH1tgKuFWViGt2tvDLKtwUwa5/Z3XmWzef9Kxidufh5M5r0JS9cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=uUPDJhqc; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=ciT1+4Kc67hGGT0K9hxnwgRvPDgqlNLUsMlJR5Vh1esvq3uXoaDOTAr2KIBI6ixyzfKt6+gQPpNcIxpjQx7bpJ3846i119o0w1ebW+jtHt4eYlBBxPmkbWKTc3K9e6qFpq/GY0jqUPKWPrrZ6sRbKTNrWsKNazrtQvwZIcFZ4mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AB1NEZaN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="uUPDJhqc"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1780294633; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=trvE0xJ84EkBQvsLZo8DiAzrmg+egpDX0iqFxhFhu0A=;
-	b=uUPDJhqc1Wbtrv6PwpsHm7cdO50RUSy9BVePrEJz+e+bCbbEGV2SAv+uL0sCVS86xcnNNlA+9Y0s9oLt1AxYMNO0lj7LlD4FRWvhdMiULGq1kFuDkTMHkyZ3YAx3abCLLpbMmZQsTKkQ2CrhpfjSeAVhd1GUlzintqNbR25MkP4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X3x9b9C_1780294629;
-Received: from 30.246.178.94(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X3x9b9C_1780294629 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 01 Jun 2026 14:17:11 +0800
-Message-ID: <0a913398-3d0c-472e-89c4-062052eae04d@linux.alibaba.com>
-Date: Mon, 1 Jun 2026 14:17:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AB1NEZaN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FCF41F00893;
+	Mon,  1 Jun 2026 06:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780296881;
+	bh=ucY6l599DjCysA2ISBeExpvkiGVYAbGonke46fcIr0U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=AB1NEZaNl3h+2vFIIjBgpeoCNyxtvnMbksagHKvmYm2QJrUND00xTaCMT/F5jSqlI
+	 qQg7Kc1/Y2LSegUqfOzUJm70nPvej+AEDd/vCY+waTnC8TecoCe88siupNFr5zskCf
+	 rG04LkJJe04XY7A11NLDrvi5I9eKLEqIOmTb5qo/mFoEJCBdP8Da8YC74ooXQIu/3O
+	 9Nuo1ha21hOYhlqnxbVyQV1DWDjSB7wcehvBytigshcafItPxsSiEjt+NxHidy2j+h
+	 TjmK6uaKFUaZ2cPmuDj/OQTDWnl90wv4EJbmkOXn3waL1AlrU2uZrgnpeT8ueLU1m2
+	 aOckX+9Pa8B/A==
+Message-ID: <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
+Date: Mon, 1 Jun 2026 08:54:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -34,140 +35,198 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] scripts/sorttable: Handle RISC-V patchable ftrace
- entries
-To: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Alexandre Ghiti <alex@ghiti.fr>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Chen Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- Deepak Gupta <debug@rivosinc.com>, Puranjay Mohan <puranjay@kernel.org>,
- Conor Dooley <conor.dooley@microchip.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
- Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
- zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
- <20260528082310.1994388-2-wanghan@linux.alibaba.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20260528082310.1994388-2-wanghan@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize
+ collapse_huge_page for mTHP collapse
+To: Lance Yang <lance.yang@linux.dev>
+Cc: npache@redhat.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, liam@infradead.org, ljs@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
+ rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
+ richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
+ rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
+ sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
+ tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
+ vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
+ willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
+ usama.arif@linux.dev
+References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
+ <20260601032804.96122-1-lance.yang@linux.dev>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260601032804.96122-1-lance.yang@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 6/1/26 05:28, Lance Yang wrote:
+> 
+> On Sun, May 31, 2026 at 10:00:17PM +0200, David Hildenbrand (Arm) wrote:
+>> On 5/31/26 11:39, Lance Yang wrote:
+>>>
+>>>
+>>> Emm ... is it safe to use map_anon_folio_pte_nopf() here?
+>>>
+>>> At this point pmdp_collapse_flush() has cleared the PMD from the page
+>>> tables. The PTE table we are updating is only reachable through the saved
+>>> old PMD value, _pmd, until pmd_populate() below.
+>>>
+>>> map_anon_folio_pte_nopf() does set_ptes() and then calls
+>>> update_mmu_cache_range(). Documentation/core-api/cachetlb.rst describes
+>>> that hook as:
+>>>
+>>> "
+>>> 	At the end of every page fault, this routine is invoked to tell
+>>> 	the architecture specific code that translations now exists
+>>> 	in the software page tables for address space "vma->vm_mm"
+>>> 	at virtual address "address" for "nr" consecutive pages.
+>>> "
+>>>
+>>> But that does not seem true here yet, since the PTE table is not
+>>> reachable from vma->vm_mm when update_mmu_cache_range() is called.
+>>>
+>>> Should we avoid calling update_mmu_cache_range() until after the PTE
+>>> table is reinstalled with pmd_populate()?
+>>
+>> I recall that update_mmu_cache* users mostly care about updating folios flags,
+>> for the folio derived from the PTE ... or flushing caches for the user address.
+>>
+>> So intuitively I would say "the architecture code doesn't care that the PMD
+>> table will only be visible to HW shortly after". The important thing should be
+>> that it will definetly happen, and that nothing else is curently there or can be
+>> there?
+> 
+> Ah, fair point.
+> 
+> I was mostly worried about arch hooks that walk vma->vm_mm again, rather
+> than only using the pte pointer passed in. For example, mips does:
+
+Right, a re-walk would be the real problem.
+
+> 
+>   update_mmu_cache_range()
+>     -> __update_tlb()
+>       -> pgd_offset(vma->vm_mm, address)
+>       -> pte_offset_map(...)
+> 
+> and __update_tlb() has this assumption:
+> 
+> 		/*
+> 		 * update_mmu_cache() is called between pte_offset_map_lock()
+> 		 * and pte_unmap_unlock(), so we can assume that ptep is not
+> 		 * NULL here: and what should be done below if it were NULL?
+> 		 */
+> 
+> So if khugepaged happens to run with current->active_mm == vma->vm_mm
+> here, could __update_tlb() hit the none PMD, get NULL from
+> pte_offset_map(), and then dereference it?
+
+Likely yes -- that MIPS code is horrible. And the comment in MIPS code
+even spells that out. :(
+
+Do you know about other code like that, or is MIPS the only one doing a
+re-walk and crossing fingers?
+
+> 
+> Just wanted to raise it since some arch code may still have assumptions
+> like this, and the always-enable-mTHP work is getting closer ...
+
+Right. I assume set_pte_at() couldn't trigger something similar (re-walk) in arch code,
+because we simply provide the ptep. update_mmu_cache_range() only consumes the pte.
+
+> 
+> Probably very very very hard to hit, though :)
+
+Delaying update_mmu_cache_range() is nasty, as we'd have to make sure that
+nobody can interfere in the meantime ... and the PMD lock will not be sufficient.
+
+Maybe we could reinstall the page table with the cleared (none) entries while
+still holding the PTL?
+
+Thinking out loud:
+
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 5ba298d420b7..e39b750b1e6f 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1413,13 +1413,17 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
+                map_anon_folio_pmd_nopf(folio, pmd, vma, pmd_addr);
+        } else {
+                /*
+-                * set_ptes is called in map_anon_folio_pte_nopf with the
+-                * pmd_ptl lock still held; this is safe as the PMD is expected
+-                * to be none. The pmd entry is then repopulated below.
++                * Re-insert the page table with the cleared entries, but
++                * hold the PTL, such that no one can mess with the re-installed
++                * page table until we updated the temporarily-cleared entries
++                * through map_anon_folio_pte_nopf().
+                 */
+-               map_anon_folio_pte_nopf(folio, pte, vma, start_addr, /*uffd_wp=*/ false);
+-               smp_wmb(); /* make PTEs visible before PMD. See pmd_install() */
++               if (pte_ptl != pmd_ptl)
++                       spin_lock(pte_ptl);
+                pmd_populate(mm, pmd, pmd_pgtable(_pmd));
++               map_anon_folio_pte_nopf(folio, pte, vma, start_addr, /*uffd_wp=*/ false);
++               if (pte_ptl != pmd_ptl)
++                       spin_unlock(pte_ptl);
+        }
+        spin_unlock(pmd_ptl);
+ 
 
 
+-- 
+Cheers,
 
-On 5/28/26 4:23 PM, Wang Han wrote:
-> RISC-V uses -fpatchable-function-entry=8,4 when the compressed ISA is
-> enabled and -fpatchable-function-entry=4,2 otherwise. In both cases, the
-> patchable NOP area starts 8 bytes before the function symbol address.
-> The __mcount_loc entries therefore point at the patchable NOP area
-> associated with a function, while nm reports the function symbol at the
-> entry address used for the function range check.
-> 
-> After RISC-V selected HAVE_BUILDTIME_MCOUNT_SORT, sorttable started
-> applying that range check at build time. Without allowing entries just
-> before the reported function address, the mcount sorter treats valid
-> RISC-V ftrace callsites as invalid weak-function entries and writes
-> them back as zero. The resulting kernel boots with no ftrace entries,
-> breaking dynamic ftrace and users such as livepatch.
-> 
-> The failure is silent during the final link because zeroing weak-function
-> entries is an expected sorttable operation. At boot, those zero entries
-> are skipped by ftrace_process_locs(), so the only obvious symptom is that
-> the vmlinux ftrace table has lost valid callsites and ftrace users cannot
-> attach to them.
-> 
-> CONFIG_FTRACE_SORT_STARTUP_TEST also reports the table as sorted in this
-> state: it only checks that the __mcount_loc entries are in ascending
-> order, which a fully zeroed table trivially satisfies. The original
-> commit relied on this check and did not see the regression.
-> 
-> On an affected RISC-V QEMU boot with both CONFIG_FTRACE_SORT_STARTUP_TEST
-> and CONFIG_FTRACE_STARTUP_TEST enabled, the sort check still passes
-> while ftrace reports zero usable entries and the early selftests fail:
-> 
->    [    0.000000] ftrace section at ffffffff8101da98 sorted properly
->    [    0.000000] ftrace: allocating 0 entries in 128 pages
->    [    0.054999] Testing tracer function: .. no entries found ..FAILED!
->    [    0.172407] tracer: function failed selftest, disabling
->    [    0.178186] Failed to init function_graph tracer, init returned -19
-> 
-> Handle RISC-V like arm64 for the function-range check and allow
-> patchable entries up to 8 bytes before the function address.
-> 
-> With this fix, a RISC-V QEMU smoke boot with ftrace startup tests shows
-> the vmlinux ftrace table is populated and dynamic ftrace still works:
-> 
->    [    0.000000] ftrace: allocating 46749 entries in 184 pages
->    [    0.051115] Testing tracer function: PASSED
->    [    1.283782] Testing dynamic ftrace: PASSED
->    [    6.275456] Testing tracer function_graph: PASSED
-> 
-> Fixes: 0ca1724b56af ("riscv: ftrace: select HAVE_BUILDTIME_MCOUNT_SORT")
-> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Link: https://lore.kernel.org/all/20260527113028.4b21a5de@fedora/
-> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
-> ---
->   scripts/sorttable.c | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-> index e8ed11c680c6..4c10e85bb5af 100644
-> --- a/scripts/sorttable.c
-> +++ b/scripts/sorttable.c
-> @@ -891,17 +891,21 @@ static int do_file(char const *const fname, void *addr)
->   	table_sort_t custom_sort = NULL;
->   
->   	switch (elf_map_machine(ehdr)) {
-> -	case EM_AARCH64:
->   #ifdef MCOUNT_SORT_ENABLED
-> +	case EM_AARCH64:
->   		sort_reloc = true;
->   		rela_type = 0x403;
-> -		/* arm64 uses patchable function entry placing before function */
-> +		/* fallthrough */
-> +	case EM_RISCV:
-> +		/* arm64 and RISC-V place patchable entries before the function */
->   		before_func = 8;
-
-Nit: The shared comment now sits under `case EM_RISCV:` but the two
-lines above it (sort_reloc / rela_type = 0x403) are strictly
-arm64-only — they configure the RELA-based weak-function fixup that
-RISC-V does not need. On a quick read it is easy to wonder if RISC-V
-is implicitly inheriting that path. Splitting the comments would
-help, e.g.:
-
-        case EM_AARCH64:
-            /* arm64 needs RELA-based weak-function fixup */
-            sort_reloc = true;
-            rela_type = 0x403;
-            /* fallthrough */
-        case EM_RISCV:
-            /* arm64 and RISC-V place patchable entries before the function */
-            before_func = 8;
-
-
-> +#else
-> +	case EM_AARCH64:
-> +	case EM_RISCV:
->   #endif
->   		/* fallthrough */
->   	case EM_386:
->   	case EM_LOONGARCH:
-> -	case EM_RISCV:
->   	case EM_S390:
->   	case EM_X86_64:
->   		custom_sort = sort_relative_table_with_data;
-
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-
-Thanks.
-Shuai
+David
