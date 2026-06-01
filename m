@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934B73D7A07;
-	Mon,  1 Jun 2026 15:05:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944EB3D7D7F;
+	Mon,  1 Jun 2026 15:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780326354; cv=none; b=Ca2dQ64NktPK/YG6Tu/RfoktdakJbUhmW3hMQXvXDkxu4F4nzfim8KTYb+H29MQxzt7odkCicwRTF5JrRm+eXCjuyFaFqzzLTqRCCajsv99jF5YTl/4gtLE7D28ON+n7XDvKUmwHMOk3g4FALQZoMfMQLvQX+lmQ/S/Fv27jS3o=
+	t=1780326534; cv=none; b=cgT8mymMK7JpjSg0IB3b4+y35rYEa4YkDdSatr8PGmHZjGbsomwKcdtYhhVQkIIMV8uNl3nJCrOL9qOF9BkRRt8ipFQF5knw8sKY7V2IdRhHfSiORAtjnMSzNOIlzIDiNNy3H+zyDxa/A0Eler6tPiqEsNTCV8LmAJYw+r/xF00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780326354; c=relaxed/simple;
-	bh=sJa7B8NGvaIKXf0VYIuUYQaaxd7cIKgiaR0eDjclZ+s=;
+	s=arc-20240116; t=1780326534; c=relaxed/simple;
+	bh=/IstjgzjGylSJCIakrBYGw3LOdVQGf6V4l5F1QRcUa4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s6NL1yE5+Lli9dOqZVGLKUbkmp0GnUmLi6ZDmS251ytHQSntgwKPAReCeOOJBaifGnSYPfgj681q3VmEhdTSWMwZ3v8S3VoqQ8Yr4OO/QTrhyT9d4dqlEXB6hQAAt+ovZ4KZE0MZpsLLxGpXUOp3Eke/ln0NLVBBs5lb3Dgz0N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9zgfUpQ; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=c7rqJKyX3ndBAyWMPwxHMWnHAnb9OnySPfF8j8kRzGcxri4w7756TaWUON5sA1n4xZMQNB41kbOCHgTUNKqUpxo8EvV0i0Z6bdOrdk1kAcDswcMOEPoGtZPxp19AAtVw6sdbECf34ngzmveRXaeB+Hp+G4m6rrTAwIc2yfuyzQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aeuZZPxx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9zgfUpQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21EFA1F00893;
-	Mon,  1 Jun 2026 15:05:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aeuZZPxx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DDDD1F00893;
+	Mon,  1 Jun 2026 15:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780326349;
-	bh=l79QFJh+1tc8WOfin3+3RXKBIcle3fpVG/8qDloYB3E=;
+	s=k20260515; t=1780326533;
+	bh=v5Qn5lpRNTlWfCeo9CMrm9V3sYGYVnchDqXtweZThaQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=n9zgfUpQtpGFrY1KUN7yIVATJn4jFQRI7ZnP+d29X9eBrBBakEvRRxKg7Cve2XVHS
-	 vohWdWBIxOKeSXuYufrzZh1zX8FIayu+Q598rlVvm5QSnKlPWDUeB+C+8ZC16wBoW6
-	 UrgKxsXBAxkeKYR3RQ8rduOhWQf2ro2/w13Eu6dHjyWwtPmN3AeZKWhfWxTiYqp6Rb
-	 xToKV0+X6Jt4CAeQNlp4Y8u2n8CgMt4lZ4iMqVokB8pYM32r7AaZyZ6zxMtFEiRU2B
-	 wEiyOxYHfrCCUMNdKSRVR38lWPKkmsCkBu0SAkKb7x4fqKX/U8MSgyK9wdDykITbI3
-	 /BfAeoGbT+Y5w==
-Message-ID: <0bb49c47-8c41-478c-847e-b9154c75e59c@kernel.org>
-Date: Mon, 1 Jun 2026 17:05:36 +0200
+	b=aeuZZPxxFURTYiKzhL/I4zvy4RbPa78mKb81D82gqDtTLqUoqXZNkOJyrFkDKpfwg
+	 AMi3fdav/TAlTdFMzd7i0+J6Q7tgA9JjaWBVOjCSK0kpiFkvsbYv4qOv/+uPTKlwcK
+	 3+xlyZz8netMGLxF6OMKeJ1szM/cyW2rsgCA0uRxOzIIM/Jka2AjLDWHrWFL3byHBM
+	 w50tHeJqGSx951jvjZDv73SoajIw4pEVyqmHvhrUyrqycZSY57FoZ26thYw20UP2WR
+	 /1SqxTKrcaZGDKFn6ERHO+TsIBdzHVU5OMsq0rzYSPu5oe3h36uJtyEOH+R1WByf0S
+	 3eGsvj+jm0+RA==
+Message-ID: <99add59e-2f4a-437d-b2bf-301c446c3892@kernel.org>
+Date: Mon, 1 Jun 2026 17:08:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,38 +35,25 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize
- collapse_huge_page for mTHP collapse
-To: Nico Pache <npache@redhat.com>
-Cc: Lance Yang <lance.yang@linux.dev>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
- hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
- jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
- kas@kernel.org, liam@infradead.org, ljs@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
- usama.arif@linux.dev
-References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
- <20260601032804.96122-1-lance.yang@linux.dev>
- <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
- <616de1a8-1cfd-40b8-b04f-7b324be40bfd@linux.dev>
- <6b11bf0a-769c-4ef2-ac6f-2af38200a6bc@kernel.org>
- <baa0a462-46e0-44ab-b583-c722ad253afe@linux.dev>
- <06d9b665-945f-4967-9ed9-b06514478996@kernel.org>
- <CAA1CXcAeEGOsqp-ywAQ7GMYQzXEeco-rUxUkk2hEF69HybC4=w@mail.gmail.com>
+Subject: Re: [PATCH 0/5] x86/xen: Get rid of Xen private lazy MMU mode
+ tracking
+To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ virtualization@lists.linux.dev
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ xen-devel@lists.xenproject.org, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+References: <20260526150514.129330-1-jgross@suse.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -113,34 +100,17 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <CAA1CXcAeEGOsqp-ywAQ7GMYQzXEeco-rUxUkk2hEF69HybC4=w@mail.gmail.com>
+In-Reply-To: <20260526150514.129330-1-jgross@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 6/1/26 17:00, Nico Pache wrote:
-> On Mon, Jun 1, 2026 at 5:14 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
->>
->> On 6/1/26 12:47, Lance Yang wrote:
->>>
->>>
->>>
->>> Ah, cool! __folio_mark_uptodate() already does the job :P
->>>
->>> So yeah, no extra smp_wmb() needed here!
->>
->> Yeah. BTW, I think we'd need a spin_lock_nested(), so @Nico, treat my code as a
->> draft.
+On 5/26/26 17:05, Juergen Gross wrote:
+> With generic lazy MMU mode tracking being available, there is no real
+> need for having Xen PV specific code to track lazy MMU mode, too.
 > 
-> Okay, I read the above and did some investigating.
-> 
-> I will try to implement and verify the changes you suggested :)
-> 
-> Or an even crazier idea... what if we ensure MIPS checks for PMD_none
-> before walking a PTE table?
+> This makes it possible to drop two paravirt hooks.
 
-But how would they update the cache then correctly?
-
-I'm too non-MIPS to know the answer :)
+Nice!
 
 -- 
 Cheers,
