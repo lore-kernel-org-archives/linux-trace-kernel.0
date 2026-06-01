@@ -1,168 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529C93563FA;
-	Mon,  1 Jun 2026 08:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2438E2DA75C
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 08:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780301757; cv=none; b=D2oQmbxMCdr0kZwk/vWSi0LNAaSopgDRyPYd7ELYArmSE85klZc5Zo3GIqSQbY2Tba+yeSs0DIRtrcSDGyZzXo20uIe5y/++FPvNqC68H0xIpOzd7sMQ/0yWxzBz9G4OPNL5T8xSB5i3whdAkxNxbf7SCFqpEsH4ZJf5C3/Kn8Q=
+	t=1780302697; cv=none; b=CmFMMCe1Ck0VZJk9ceY8x9GBRYSmCf7BzN2LQ66TMLsHQ7id4hgb9BLuOXPh6H1jyi5fcdFKBumqdxjMvJfSGn3SDO3uLy0GD38e4W95lHJ5yntPGB0ac8W3nECPvReKhrWlxmTcFuKVsVWU96m+CwuQCAzz5Yl/JzFoySXY1Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780301757; c=relaxed/simple;
-	bh=mWi7WwsgTW6pSJiwpj1EaR5L0KHT6josjO6ni5jUtYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QtpbnHwP/XjMHwtHPoIU44fRcQsTvurIqOAYY/kp2W9nqo6S9xRzPhVv1ujNAuLgFzcU6cgWcl98nFueBxh8YjNmf2vFkScxj9t/rpAGMHwGJ+3S5i6Ys7gNIytDOPM2R/bg4MoAP2/ToGUN6mlov9f1QGg3saPDmthlmgxtkQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXqYnVYy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780302697; c=relaxed/simple;
+	bh=iNvpJG7E1ziR3C7zfQSDCsofJj39lDOjSN2/S5E5GPE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wf3DaPKmWatiBdoky87UjH1G+WDInPFTKGj8DTk7q8t99OeEF3BIGtNuSOOLO6pId4h9qwOSuS/h8ELn3gjQ/bQEdJhZnQxxBr3n74bLF1qU3ZoTMq6tLx6xCoOBJXEBV/9UCFzy6n4V3CBleMdJ5jr1dcXZPKiAvRMfIxE5CCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KK920SHO; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXqYnVYy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78A701F00893;
-	Mon,  1 Jun 2026 08:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780301756;
-	bh=7Fe6JYGyHSbXJX3O8KSfKT2Vqw40RbPEy7q1vSIqR20=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=UXqYnVYyrTNj3AbXP5FO8iA3F+UJFpvf8kNk4cUVukmp3d14TGCjR24dISkoXzY00
-	 Nk13Ahn5ewSSi2UDtW7sIE/fczQu5QcGTaBCfZ09UmsaY7oKSRO4o8tGVZyftEt35h
-	 JXOGf+iSgGPslC2095u/u9ChwJsEaPCP2cfP/sTkreHxILwL2IXJ33cPrzhHquvvv/
-	 yRrGLIWJXN+3Mu6es5RWGfKWLFRGsoBOa70nea1qIMPCf12OzqsDDL6A0TZ77lwbNA
-	 /dvgFUyAop3rVmVWwWohUBBudV4qdXIboac50dBV4llgHHSimEgh5CRgO+uEEHK31b
-	 wS2KS6+JZZHwQ==
-Message-ID: <1c99294c-9ebe-4856-bfde-09801701d75c@kernel.org>
-Date: Mon, 1 Jun 2026 10:15:38 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KK920SHO"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490686877a1so55805985e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jun 2026 01:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780302694; x=1780907494; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i5zmSSlKo4hZN0RfddmedFqEkVnWBhlYoh9eeXOlFwE=;
+        b=KK920SHOxOIKLPnvaoz/gS5OMtbmr0B6wF9I3krENh+5CXvxyMvBOpyvUcASJOuzu1
+         Jtw6bziz4EQ3Bc4b/C8MZdULtT5IBzgTml5Ycj1WDDFlx47jsETA9tmciKOYIgtUoP8H
+         khuyUr1ksWQmwSac8PDn/6TkG1sdKZ04x+bR5gBfOp2ozPQ8F4LR+X21sPpVarGn9jFW
+         YBCSrXmcoXTuhUeoTS5vMyHrKuTrW7MS0MVTZoHhxSwckZjdXcyyQc4FewzlFMFeYk3F
+         qi0y0p4BEYl3fhDLz2Jwh1hOraxW9h+alA7Ltjuixp8JciIz2J+atdacc8fc17j+1ok4
+         v0lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780302694; x=1780907494;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i5zmSSlKo4hZN0RfddmedFqEkVnWBhlYoh9eeXOlFwE=;
+        b=IUeAaUURHHET4Id9CmbdARp7pY8tO9cgb2eVGpxiGQnWTKIuFdX+zVONC7PETVJDu9
+         wCsCrrohTEeTGC+XG5ERAigAnKO7KHV5+nrYwzR10k9Zg2Yw2gVqPNnR2p3vW9O8iZCL
+         7Z0Vo4N13BZiH0Q0Qtx8o5RufFT6AFZcZKTzycrVRLJfI8ujFymeuqnOtMSYUfjMRO6j
+         FUiCz6fkKvI7OU/rR+o6pQQKiCmt7b2CK1PISeoEhrBQ3SwYN2PCn6sq6Z0/rKFOUjEZ
+         7hYtoHteZGIWD91+eHZbPllbAxHc9OiJ2QTCzLQtN7p+Mo8XcnBII1C4LRQZaWluKjN9
+         XQFQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8TUEVBnAX7PVg8nc2o6gQ251/E5ug4I/h5uVC0R90dZ8p7FQa2R8aspekCepfy05WZKG1Mj1ben62fyJE4zX2fB5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8By+VIuUq+k1Tv3jVPH8znG+vlEU6OAb2mUR3LWyyuIb8Ffq8
+	ELAwNCnfB7rN6WKwK8+IE2FrBBnlr78xjeCeUYNGQdCHTELCDKZRJjDq
+X-Gm-Gg: Acq92OGVZQyet0/g693QBy5JWk0Lzpb2duosPI97eqejVoKVcggmNTOVpRSon4DPzee
+	OiJErt3UdZGTbHgCHpv6p1+8LrwJCCMPIdMRXctXXLAZKwBiiJQSmAC9dfVLxHuFevwDJropq6K
+	4bg6rI1ZuijydBkMh35CgkjVyjo2gmVYBds/iyG92AHY4+3E7454wixsRzBWCfXvokFmr2+qsPG
+	1cN2WR1NEKoiujwZzSqYnrXhVJGEitErprMCXGwTvofcIpRFI6M5NQGBaziOOvTm3hOz5yZogAL
+	EWYlqbEqf0y4D7OH9fBGt/QBscYj6VTUhofBHFx86aXtuK7sPNMVfYL1lWviEq/3+NMRKieVCsu
+	y9hOi9lyO7KGNuFm73w19LDTj9a4BnG1KDDdi4B98tOrv/lzFTjQoxVVWZtB0Oon1L3EoAUNZ5c
+	L4KGbeeTqby+0ta7QOJMRHZT3QMw==
+X-Received: by 2002:a05:600c:45c9:b0:490:8b0b:d3b1 with SMTP id 5b1f17b1804b1-490a2a4bac0mr139388825e9.12.1780302694364;
+        Mon, 01 Jun 2026 01:31:34 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490ae24427asm6345985e9.6.2026.06.01.01.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 01:31:33 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 1 Jun 2026 10:31:31 +0200
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: bot+bpf-ci@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	mingo@kernel.org, mhiramat@kernel.org, andrii@kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org,
+	eddyz87@gmail.com, yonghong.song@linux.dev, clm@meta.com,
+	ihor.solodrai@linux.dev
+Subject: Re: [PATCHv4 02/13] uprobes/x86: Remove struct uprobe_trampoline
+ object
+Message-ID: <ah1DY06p3QN2nHlm@krava>
+References: <20260526205840.173790-3-jolsa@kernel.org>
+ <22e6111c3aa950ec8eaa29c776670e6f834f82249190a652b2afa9a9cb551d76@mail.kernel.org>
+ <ahbAXMH-R9Sk5N_3@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize
- collapse_huge_page for mTHP collapse
-To: Lance Yang <lance.yang@linux.dev>
-Cc: npache@redhat.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
- hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
- jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
- kas@kernel.org, liam@infradead.org, ljs@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
- usama.arif@linux.dev
-References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
- <20260601032804.96122-1-lance.yang@linux.dev>
- <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
- <fb8f24b1-ce8e-4f06-bbd8-f148a9bcaeee@linux.dev>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <fb8f24b1-ce8e-4f06-bbd8-f148a9bcaeee@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ahbAXMH-R9Sk5N_3@krava>
 
-On 6/1/26 09:49, Lance Yang wrote:
+On Wed, May 27, 2026 at 11:58:52AM +0200, Jiri Olsa wrote:
+
+SNIP
+
+> > Although the old destroy_uprobe_trampoline only freed the struct (not the
+> > underlying VMA), the new code appears to introduce a VMA leak: the freshly
+> > mapped PAGE_SIZE special mapping in the user's address space stays mapped
+> > even though optimization failed. arch_uprobe_optimize() then sets
+> > ARCH_UPROBE_FLAG_OPTIMIZE_FAIL so subsequent calls won't retry, leaving the
+> > orphan trampoline mapping in the address space until exit_mmap() reaps it at
+> > process teardown.
+> > 
+> > The commit message mentions: "Note the original code called
+> > destroy_uprobe_trampoline if the optimiation failed, but it only freed the
+> > struct uprobe_trampoline object, not the vma. The new vma leak is fixed in
+> > following change."
+> > 
+> > Is the VMA leak addressed in the subsequent commit in this series?
 > 
+> yes, in:
 > 
-> On 2026/6/1 14:54, David Hildenbrand (Arm) wrote:
->> On 6/1/26 05:28, Lance Yang wrote:
->>>
->>>
->>> Ah, fair point.
->>>
->>> I was mostly worried about arch hooks that walk vma->vm_mm again, rather
->>> than only using the pte pointer passed in. For example, mips does:
->>
->> Right, a re-walk would be the real problem.
->>
->>>
->>>    update_mmu_cache_range()
->>>      -> __update_tlb()
->>>        -> pgd_offset(vma->vm_mm, address)
->>>        -> pte_offset_map(...)
->>>
->>> and __update_tlb() has this assumption:
->>>
->>>         /*
->>>          * update_mmu_cache() is called between pte_offset_map_lock()
->>>          * and pte_unmap_unlock(), so we can assume that ptep is not
->>>          * NULL here: and what should be done below if it were NULL?
->>>          */
->>>
->>> So if khugepaged happens to run with current->active_mm == vma->vm_mm
->>> here, could __update_tlb() hit the none PMD, get NULL from
->>> pte_offset_map(), and then dereference it?
->>
->> Likely yes -- that MIPS code is horrible. And the comment in MIPS code
->> even spells that out. :(
->>
->> Do you know about other code like that, or is MIPS the only one doing a
->> re-walk and crossing fingers?
+>       [1] uprobes/x86: Unmap trampoline vma object in case it's unused
 > 
-> I had Codex do the boring grep-work through the arch update_mmu_cache*
-> code :D
+> > 
+> > A secondary behaviour change is that 'return WARN_ON_ONCE(swbp_optimize(...))'
+> > now returns the boolean truth value of the error (0 or 1) instead of the
+> > original errno. While the current caller (arch_uprobe_optimize) only treats
+> > the value as boolean, could this surprise a future caller that propagates the
+> > return code?
 > 
-> MIPS doesn't seem to be the only code doing a re-walk, but it is the
-> only one I found that appears to assume the PMD/PTE walk cannot fail,
-> without checking whether the PMD is none ...
+> ah ok, this is actualy 'fixed' in [1] above, but yea we should
+> fix that directly in this change, will do
 
-Okay, but likely the other code that tries to handle it is also problematic.
+nah, it's ok, the caller does not care about the exact error
+value, just 0 or 1 is fine
 
-Best to make sure the page table is already installed when updating the entries.
-
--- 
-Cheers,
-
-David
+jirka
