@@ -1,169 +1,164 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011036.outbound.protection.outlook.com [52.101.57.36])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226003672B1;
-	Mon,  1 Jun 2026 23:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780355679; cv=fail; b=id2t/cISsIxi/74VvEwMf7d+SL6nM6bsiOqRQA8f6PiMEwLqPcHs7Qw4HlG6ReLjxql6SeMjIjkaV9DAkjLI/qp3TwKM5OFPLindlPh03bhn3oLxWymyzgK+e1IOWd8QDbhMdMBsGO4c4/sxNqQ3268EuCpY6N9iASO1yekbU/E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780355679; c=relaxed/simple;
-	bh=XxevPaap/qVmpBvGBZ7tEqGBws6ciKg+fYWvHk8jEFo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eHXChr7ar0xftzIT5weNNY0oSrepWczZrRa8pfWvSspTluuSOzFWcAvg9Dl5ucrG9WImN+oAk2x/VznyPzK+tmsYus1EMMC/Dg24Mq+Igjo427ADypP5p/5eGdvEZYGR2ljedJKkH+VIKNrze+RdXAs72vRUo46xtkOfjdDs4NQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kczWyw0O; arc=fail smtp.client-ip=52.101.57.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51162202997;
+	Mon,  1 Jun 2026 23:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780357052; cv=none; b=pFUObUlKfJEfchtn0MzW2KlbFs5hj5L8rWdRUeddvu92C1yLXgaQhviv+EY3mvy0hAkZUOAK5C+7+GNA6FxFly66mObkTJE2MoVuqGz24if/54ezADBQconWXYpwsFV5pATP4xnKlBPu7ztVWLBEWMdfvjRd4ne3LVA6BOHbG14=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780357052; c=relaxed/simple;
+	bh=gNwDZR0BOrpxnyTpz7sFAD3CEJUerX3hG1oJjsQngd8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EeFgyCx50iqa0WV2C6KUyjl42XDlAotrxvqZ1A+HPyivIjese9gM3qqY5qbfeVGGht9eSGHrKcXfvEY+GmlOROrQSWijVnBt3juatGI4dskG33OAv7C/QBFrvjI7qwlFey121RQ0+nVcLu9kM9VKWiTjtjzTitV59PYjdqGu4ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=N2iuMkZX; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kczWyw0O"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=N1ws3C4d8FtjeSqHou/rs2ywL6PiLHcf8CbVODwMwUCVhvA2EAOQKvVBbRh4DOjrHEsDCERlxazEEpP9zDSzaAMnYIJpBsGMrTkqw3QPIHxD3Fye+DUmyymgwDgfOAv9azTakKz6tOXNvRFsOu5pDFulhbSy+zaO0y89n/ETFniJI+W0BuxbZkM9OxB1B2OFYKPUpqq+hNAGbh5JK41eMrQwj2tepmQFGxHnKT1vVLRlU3BaSwcjJ1sb9zkcAen6cbQ54p1vbZ+85Cn/P1QHRXfKbJyS9lXzmqm6STBC743s0O27vj+WMICkYK6DHi1Wrf4N4tV07GsxD1FvyTpgVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AnJeCLflkAoPvPkWfy5OufvEuMhfaeU8rj4zr8bm4Nc=;
- b=NNiAdUcCm0lP29dKq2l4vbL5FKuam+9T4RWyO1C0S4HFB7GTGfp+n+h6J+KgdPgzLQ8+L6J7ZCw0smoUJCzlv0MufkOAgpH46vcsas5dvbY1Aioj1Hb8kD6nNaLkFU7QnrWD7HZQqOlot1pBIQv7L7um4uHlP7wuc09XrCH7vPEvnikF9oHyPF3FV52BoXf6OQ11o/XgzxGL69z7V42EflZPJCyUbPB/vR+J8dxa2d/sB9KQETOsDsmQMVszqmiUvF+OIqBFc0Um7cQYUH/w86ZEYMJFxrG13P+iTbKZ9weWOR5yhluqxJlOlTgsWF8gketFLidNhdnTDJxkJ2qi0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AnJeCLflkAoPvPkWfy5OufvEuMhfaeU8rj4zr8bm4Nc=;
- b=kczWyw0OQivz43PsgWrXZjvove99pIfDWZ+38bFIzLfZIXISld/po8KzcRazIjDR2E47vRrF/ZChrgZK7+SnNH+zf62NN73ZqUdeKaR683CSeZslTdt0nZFK8p4RAx87zdn/0H2bqUzEvxWqBMWoOwEy3tCV3VZd8Hs+P7WuaMU=
-Received: from SA0PR11CA0146.namprd11.prod.outlook.com (2603:10b6:806:131::31)
- by PH7PR12MB7892.namprd12.prod.outlook.com (2603:10b6:510:27e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.17; Mon, 1 Jun 2026
- 23:14:29 +0000
-Received: from SA2PEPF00001509.namprd04.prod.outlook.com
- (2603:10b6:806:131:cafe::2e) by SA0PR11CA0146.outlook.office365.com
- (2603:10b6:806:131::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.16 via Frontend Transport; Mon, 1
- Jun 2026 23:14:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SA2PEPF00001509.mail.protection.outlook.com (10.167.242.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.92.5 via Frontend Transport; Mon, 1 Jun 2026 23:14:29 +0000
-Received: from localhost (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 1 Jun
- 2026 18:14:28 -0500
-Date: Mon, 1 Jun 2026 18:14:10 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <ackerleytng@google.com>
-CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
-	<brauner@kernel.org>, <chao.p.peng@linux.intel.com>, <david@kernel.org>,
-	<ira.weiny@intel.com>, <jmattson@google.com>, <jthoughton@google.com>,
-	<oupton@kernel.org>, <pankaj.gupta@amd.com>, <qperret@google.com>,
-	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <shivankg@amd.com>,
-	<steven.price@arm.com>, <tabba@google.com>, <willy@infradead.org>,
-	<wyihan@google.com>, <yan.y.zhao@intel.com>, <forkloop@google.com>,
-	<pratyush@kernel.org>, <suzuki.poulose@arm.com>, <aneesh.kumar@kernel.org>,
-	<liam@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, "Sean
- Christopherson" <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, "Ingo
- Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song
-	<baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
-	<yuanchu@google.com>, Wei Xu <weixugc@google.com>, Youngjun Park
-	<youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
-	<shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-coco@lists.linux.dev>
-Subject: Re: [PATCH v7 09/42] KVM: guest_memfd: Add base support for
- KVM_SET_MEMORY_ATTRIBUTES2
-Message-ID: <vvk2ehd6perpmq6dotkj7tqpev77jtn7asiaclskj6ub3tfb7k@pdg2p4v2z2pr>
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
- <20260522-gmem-inplace-conversion-v7-9-2f0fae496530@google.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N2iuMkZX"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 651Gu0ur665483;
+	Mon, 1 Jun 2026 23:37:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=8q06hpStnage6OU2+UFU0iKyf6hxu
+	aWmy7wWHYyDPj8=; b=N2iuMkZXSpygOZNA/2Ga6N6bhV9iMZFi26wF45m5bxXEW
+	kmFVdCNtZx7kb2zJ1YTKFDEO3iPvw+PfJSbsWGMDxBs/a3QxZ+lNLvyiO92wcIKn
+	aG9Uw/MF5cZBB3Gs1XVwnNM5XVovCawixYobLhQ5SWfXbs2gk3Qu/7tLSVKxXppS
+	sVNeeY8eg0Sh8z++KARDmbgfHQGvxTBv8y/PomBP83ALLQq2gH1E/wkaVEzP0hV/
+	3Ol/VpmbvZ0H5cniZeaRbmtRj7Cdy1CQZbTyF3IYDL902ZZWE9aTHk/DowoSu0xs
+	9cA/5SPKYfpmGR8Jv0dv9LE1Sf9U2888R0IZ/WJBQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4efpaau4m6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 01 Jun 2026 23:37:25 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 651NZGGq008349;
+	Mon, 1 Jun 2026 23:37:24 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4efpbqg394-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 01 Jun 2026 23:37:24 +0000 (GMT)
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 651NbOer014257;
+	Mon, 1 Jun 2026 23:37:24 GMT
+Received: from mbpatil-ws.osdevelopmeniad.oraclevcn.com (mbpatil-ol10-ws.webad1iad.osdevelopmeniad.oraclevcn.com [100.100.228.95])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 4efpbqg38w-1;
+	Mon, 01 Jun 2026 23:37:24 +0000 (GMT)
+From: Manjunath Patil <manjunath.b.patil@oracle.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Manjunath Patil <manjunath.b.patil@oracle.com>
+Subject: [PATCH] tracing/events: Expand ring buffer for in-kernel event enables
+Date: Mon,  1 Jun 2026 16:24:43 -0700
+Message-ID: <20260601233716.2517987-1-manjunath.b.patil@oracle.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260522-gmem-inplace-conversion-v7-9-2f0fae496530@google.com>
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001509:EE_|PH7PR12MB7892:EE_
-X-MS-Office365-Filtering-Correlation-Id: 893ae207-3246-4aa0-1c46-08dec0338813
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700016|82310400026|6133799003|22082099003|18002099003|11063799006|4143699003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	FJOpFPKapBBU0ZDj3axAyxEz+mdSIyclSiSzmuZ8RigKcbDk5Jv6A/Us8D9vUh5VzQhPSOcHFjjzLerZp4185D+Wf6O88cUdmt4hxSDERqgwA8EMuR32vqmun8imNYloteU7MYvUwvcmRPTylFJFg5vWUyT+BgNruV8XjDNIK/XGB/eOJwzDMUJpQNcLJNX134OwhRLP3/82Qj1Vry8UgIlZVHs9XGYZ1NkEeUohOPrcui+bTaC0lY1ZviQ/W60wCkwpwtDe3a93x0jzcov2oaC18QlDQHos47q7IXaLLGG/VttcGF0zQnIer3WPYzhC33kBAOCT5jxCL/+3luX5uHvCvvd0GFLr0Ebe4R1tv7RWPqS7ozx/b62cCH2lYXZXRWgv/c0I+SP/NcIfVbnXvAmBCVQ2kd3O/aBM1wk29Cz/W/xmd+ydjEdX/b1Gv93Tz0l9oW8yXJNK6Vvx4d9Ggf8p5cSapFc2uD+SoXLJ1LGbfkfJl+XJUVunS4MZAB4x0EoarWE9zyceZEocLal6S7vqX1jN478nk5BqYd7rjXrIjlxiFipGaeoE4Y5FOuYiBkISx9S5m/YMoHCdzogZFhHtuq7HXVFuNHQBQGYKOvlqe/xQBHasD9NtG7DTkuVbwO5g4Cru9NVrVrgSrFgWp/z4pkYmTLyeh3JArJJ287M/WJw5Q3xsZahe7FR9apR4H2PQ06iDnADbNdE2ILb1eMuZtBqT4uJp9er4aqcbBTg=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700016)(82310400026)(6133799003)(22082099003)(18002099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	vRidApn08tACHk08VabFLrUapZ+QIjdciCJmhzozVEEtvO5gw5AYEA0Jzwjg7iv1rLf2/U/na4x8QompFY3KarSkyf3Z+9p+FTRPvrl9WUFWLzZZ0MkiLOxo4i9FUl4vgoeC9ECHSSvJAjGbRQhkKw1KFbCcOssRbr+nqDx3ywd169oYnjmJoAv33HhAnaiK7S3NKsazH4iNtxCK6ySZff4f4sJxcwXZ/R3OFPKGuHTIjxfJe0vBau4WXuqiBgAQO7likw6XaSCDVq8zZQ211J/vcnHYH5SCGX7tPHt29pWAhj+msJfsL+z0Bs5sz4CnK6BAkgwRD9eNTBx44fODNMACXJpdTEna+NoM6C4uzearzrO4+vqR5ojg5Npi+w42zSY4yb+WXZystKQjaoI4AYO4KtxONp12Uj7hC3NR6KQCMsXs2c0883gf9SFrGDWo
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2026 23:14:29.1318
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 893ae207-3246-4aa0-1c46-08dec0338813
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001509.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7892
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-01_06,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 phishscore=0 spamscore=0
+ adultscore=0 malwarescore=0 lowpriorityscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2605130000 definitions=main-2606010231
+X-Authority-Analysis: v=2.4 cv=T/S8ifKQ c=1 sm=1 tr=0 ts=6a1e17b5 b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
+ a=x4eqshVgHu-cdnggieHk:22 a=yPCof4ZbAAAA:8 a=nvmwOJWoX3ZJLQ4Zfe8A:9
+ a=5yU3S35YU4bGjq-dph-N:22 a=Bho9c0fBagfJEIQBS7DQ:22 cc=ntf awl=host:13714
+X-Proofpoint-ORIG-GUID: X85s225FTYFJBa6uLv3b5oE-5X4V3XY-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAxMDIzMCBTYWx0ZWRfX8QLZ+UbH6Hqp
+ CMht2HSGOO8GwTsCMYcZ9L5ZHCCJaA5MNW7UgQnji6OhUxo2whz2nhvOet5ugPe9j8ShzP9uPJ0
+ /xyx5dRO11jMLuC9w854Fg/kOfa3BcgglHCLIfmAg3n701HUiS6hUjgKuhycpLF4abc9LoceXZr
+ hR/c09EqjomcgPoKksX6yrJ4dhtcGfbXTqCSVUP1HGzbx7Mv0PZZ4MvBt2z56ogEcAMf0e3t5eK
+ zx4ucC9N6p8llkliNN3CaArC5ElsMJFBdmo6RB439kCrDCVa5clC5sQxo6h3/Pwm373TuypwF0L
+ WDQHx0cI7s6YkoffCHP4Qo8eOSKTgi01oPtGyzBG9iPuTzBKw+esOXXh/GvT0Al/vVyPc5m3+MT
+ e4MjoJwX4WjXbMs60jFyKLnQrTeLMhXYZsFS6A7t1uFi7DUN9f5Tg76RlXS23qWRmiK+47T5GF6
+ Pe3s7mbHuLBQACMJXSD9yjfSLce9BOBF8m++apY4=
+X-Proofpoint-GUID: X85s225FTYFJBa6uLv3b5oE-5X4V3XY-
 
-On Fri, May 22, 2026 at 05:17:51PM -0700, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
-> 
-> Introduce base support for KVM_SET_MEMORY_ATTRIBUTES2 in guest_memfd, which
-> just updates attributes tracked by guest_memfd.
-> 
-> Validate input fields in general. Guard usage of KVM_SET_MEMORY_ATTRIBUTES2
-> by making sure requested attributes are supported for this instance of kvm.
-> 
-> A new KVM_SET_MEMORY_ATTRIBUTES2 is defined to support writes (unlike
-> KVM_SET_MEMORY_ATTRIBUTES) in addition to reads so it can provide error
-> details to userspace. This will be used in a later patch.
-> 
-> The two ioctls use their corresponding structs with no overlap, but
-> backward compatibility is baked in for future support of
-> KVM_SET_MEMORY_ATTRIBUTES2 and struct kvm_memory_attributes2 in the VM
-> ioctl.
-> 
-> The process of setting memory attributes is set up such that the later half
-> will not fail due to allocation. Any necessary checks are performed before
-> the point of no return.
-> 
-> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
-> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
-> Co-developed-by: Sean Christoperson <seanjc@google.com>
-> Signed-off-by: Sean Christoperson <seanjc@google.com>
+Ftrace keeps trace arrays at a boot-minimum ring-buffer size until
+tracing is used. Tracefs event-enable paths already call
+tracing_update_buffers() before enabling events, but the exported
+in-kernel helpers trace_set_clr_event() and trace_array_set_clr_event()
+directly enable events through __ftrace_set_clr_event().
 
-Typo on the "person".
+This can leave events enabled by in-kernel users recording into the tiny
+boot-minimum buffer instead of the configured default-sized buffer. Any
+caller that enables events through these exported helpers observes
+different buffer-expansion behavior than a userspace tracefs event enable.
 
-(Sent this earlier but looks like some of my emails never hit the
-list so re-sending. Apologies if this is a dupe).
+Expand the relevant trace array before enabling events through the
+exported in-kernel helpers, matching the tracefs event-enable behavior.
+Disabling events remains unchanged.
 
-Thanks,
+Assisted-by: Codex:gpt-5
+Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
+---
+ kernel/trace/trace_events.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Mike
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..3ce5b0121c5c 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1479,10 +1479,22 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
+ int trace_set_clr_event(const char *system, const char *event, int set)
+ {
+ 	struct trace_array *tr = top_trace_array();
++	int ret;
+ 
+ 	if (!tr)
+ 		return -ENODEV;
+ 
++	/*
++	 * Keep in-kernel event enabling consistent with tracefs event
++	 * enabling: once an event is being enabled, expand the boot-minimum
++	 * ring buffer to the configured default size before records arrive.
++	 */
++	if (set) {
++		ret = tracing_update_buffers(tr);
++		if (ret < 0)
++			return ret;
++	}
++
+ 	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL);
+ }
+ EXPORT_SYMBOL_GPL(trace_set_clr_event);
+@@ -1504,11 +1516,24 @@ int trace_array_set_clr_event(struct trace_array *tr, const char *system,
+ 		const char *event, bool enable)
+ {
+ 	int set;
++	int ret;
+ 
+ 	if (!tr)
+ 		return -ENOENT;
+ 
+ 	set = (enable == true) ? 1 : 0;
++
++	/*
++	 * Keep in-kernel event enabling consistent with tracefs event
++	 * enabling: once an event is being enabled, expand the boot-minimum
++	 * ring buffer to the configured default size before records arrive.
++	 */
++	if (set) {
++		ret = tracing_update_buffers(tr);
++		if (ret < 0)
++			return ret;
++	}
++
+ 	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL);
+ }
+ EXPORT_SYMBOL_GPL(trace_array_set_clr_event);
 
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
+base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
+-- 
+2.47.3
+
