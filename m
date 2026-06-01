@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF08395AE1;
-	Mon,  1 Jun 2026 10:09:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D30366042;
+	Mon,  1 Jun 2026 10:23:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780308574; cv=none; b=jkWQknyAM+s13NAeeCvkOyK7TCO1+rDHBzIezB9Gxin146dEDN0i4M76j1cmMBasLcZ02DaQ0cVZ/Pc8exEK++E/wEaop2lNsbiKYO8AJee0F+1YIFHfuFpS+eC4v/JhFcvcTRmKOINOjeL07OMm0yvUQ1XgmwPoTo/lkzACoQg=
+	t=1780309433; cv=none; b=LS3kccMHUUXORfZsEZz0zUX8gNntjHDeHE9ICqGc0+VOrUZQ9XqFY2kIiPs/6IW+GUhxIcUaqSQRfODFEsCl2BaePLm5958V6sEdmENU533kafALyU4UbiDuMrlVnR1N4RbHao9GsCJbqducTQs/wyQZ+3e6QRd9IKikyzpow+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780308574; c=relaxed/simple;
-	bh=+2MB96/BVouH0+TPLKMKehOeyNIGPTacG9p6OCNjZIE=;
+	s=arc-20240116; t=1780309433; c=relaxed/simple;
+	bh=2E883kgTXUL29AKJNWLQ3zzb7tdvdjFLXCJfHhXA4hw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lXm5sM5cnrgmQ12DQUnUWTVvfFKL8JfuAVkXG38yaxdnqcHNwZfZbzZfYOUGfikI5cvcBLkaQpJ0dafMyEQAczOmGljm/q0hfQvAoeRvHOcgNW9vd0uLitGoxpWv+OhzNAqmY+vW2Mf6tFxrsmgzTvWM2LZoYALZKcQq+9HZLF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/RSr7+q; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=k7Nrr4TBQ+/ejM2azhm+bH3MFwsWlATO1PUdT7EZO9D5JN49PmYEuBgtSEmmf9Whwmg11g8+bs+ZYx96lG87CIixP1LrcyHKiO6Fevqgd7PETTiADjMwh62FEwYMQEotEBPvQqP14BLU+onDKtfqbTGJeeC9zsoKu+V94sq3VDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c833BeYw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/RSr7+q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C9011F00893;
-	Mon,  1 Jun 2026 10:09:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c833BeYw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F371F00893;
+	Mon,  1 Jun 2026 10:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780308567;
-	bh=telDdSC7/EI4bm0my2SYNWvjV6/+1WMfaGUydwsM0JE=;
+	s=k20260515; t=1780309430;
+	bh=i98ewwvptaynRm7UjfKX4kD/Leq2g7oiiApUuPFAV2U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=E/RSr7+q/6nIFb+9C6c9jmKbP1es072hXYz1IQTGwUjqaPxnQ3p0yc/KbCu5ZwWW7
-	 O4de5CsFCu+YBhZn0/qvFCVmXnhQZ+9bcoLMBeKqREXxlFIr5oU6mXmOrcX6VruVjp
-	 j5WG8L1x8M48jYN/AQiG6LpMUDMP96kfuQ5pbitNPPhKrhMEkpVqoLAjig4X1ATvh5
-	 l1DeuNTi+4uytvO3r+WRDidfs8pVNImknpTmQZ48FHAhfLQgEP5r/X2x3TH3Ibx3rF
-	 WW0u5PA4rvSr7OS8rrXPbpZCp0JRJt7WiTn0MRU8VhZ3ldi28u+HEvu6N0aoZFitOS
-	 ihVHv9tWG1ZZw==
-Message-ID: <c73fb0fa-f109-4a52-a28f-d558b9445e9e@kernel.org>
-Date: Mon, 1 Jun 2026 12:09:13 +0200
+	b=c833BeYwgWz0ppp2x5phqCnJSunVgereyjGFUP4VqomH4E1+QpFfXKobIPxqHWZjf
+	 mHsIUimognUz54K96CBjCRux7u5M+O3Fns9wbdjp0/SfXsM5HOfeyQIKeIBQ2+IxQK
+	 VdGUz2DB8VatOJWgXIaufLTsE/5ra+O+5teh72LQe+jWlTOSUmxZtZsSojv2M9Jifd
+	 kicJVxsrzwL2zbz0aLVT4FgrsgN2rKBfx/N+CsNTRqdmNCn6X9BBnbueQgumucs+I+
+	 eHf+Qiz0MgWpWxRaJbOr7V12LUXNhYpe4ePGGEX9K2h7Mg7rr/KZ+q6an5DZThkQhv
+	 gqc+JIOA7PrpA==
+Message-ID: <6b11bf0a-769c-4ef2-ac6f-2af38200a6bc@kernel.org>
+Date: Mon, 1 Jun 2026 12:23:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,9 +62,7 @@ Cc: npache@redhat.com, linux-doc@vger.kernel.org,
 References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
  <20260601032804.96122-1-lance.yang@linux.dev>
  <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
- <fb8f24b1-ce8e-4f06-bbd8-f148a9bcaeee@linux.dev>
- <1c99294c-9ebe-4856-bfde-09801701d75c@kernel.org>
- <32751424-8ad3-4fd2-9f07-8a4f5a98d632@linux.dev>
+ <616de1a8-1cfd-40b8-b04f-7b324be40bfd@linux.dev>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -111,39 +109,102 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <32751424-8ad3-4fd2-9f07-8a4f5a98d632@linux.dev>
+In-Reply-To: <616de1a8-1cfd-40b8-b04f-7b324be40bfd@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/1/26 10:44, Lance Yang wrote:
+On 6/1/26 11:08, Lance Yang wrote:
 > 
 > 
-> On 2026/6/1 16:15, David Hildenbrand (Arm) wrote:
->> On 6/1/26 09:49, Lance Yang wrote:
+> On 2026/6/1 14:54, David Hildenbrand (Arm) wrote:
+>> On 6/1/26 05:28, Lance Yang wrote:
 >>>
 >>>
+>>> Ah, fair point.
 >>>
->>> I had Codex do the boring grep-work through the arch update_mmu_cache*
->>> code :D
->>>
->>> MIPS doesn't seem to be the only code doing a re-walk, but it is the
->>> only one I found that appears to assume the PMD/PTE walk cannot fail,
->>> without checking whether the PMD is none ...
+>>> I was mostly worried about arch hooks that walk vma->vm_mm again, rather
+>>> than only using the pte pointer passed in. For example, mips does:
 >>
->> Okay, but likely the other code that tries to handle it is also problematic.
+>> Right, a re-walk would be the real problem.
 >>
->> Best to make sure the page table is already installed when updating the entries.
+>>>
+>>>    update_mmu_cache_range()
+>>>      -> __update_tlb()
+>>>        -> pgd_offset(vma->vm_mm, address)
+>>>        -> pte_offset_map(...)
+>>>
+>>> and __update_tlb() has this assumption:
+>>>
+>>>         /*
+>>>          * update_mmu_cache() is called between pte_offset_map_lock()
+>>>          * and pte_unmap_unlock(), so we can assume that ptep is not
+>>>          * NULL here: and what should be done below if it were NULL?
+>>>          */
+>>>
+>>> So if khugepaged happens to run with current->active_mm == vma->vm_mm
+>>> here, could __update_tlb() hit the none PMD, get NULL from
+>>> pte_offset_map(), and then dereference it?
+>>
+>> Likely yes -- that MIPS code is horrible. And the comment in MIPS code
+>> even spells that out. :(
+>>
+>> Do you know about other code like that, or is MIPS the only one doing a
+>> re-walk and crossing fingers?
+>>
+>>>
+>>> Just wanted to raise it since some arch code may still have assumptions
+>>> like this, and the always-enable-mTHP work is getting closer ...
+>>
+>> Right. I assume set_pte_at() couldn't trigger something similar (re-walk) in
+>> arch code,
+>> because we simply provide the ptep. update_mmu_cache_range() only consumes the
+>> pte.
+>>
+>>>
+>>> Probably very very very hard to hit, though :)
+>>
+>> Delaying update_mmu_cache_range() is nasty, as we'd have to make sure that
+>> nobody can interfere in the meantime ... and the PMD lock will not be sufficient.
+>>
+>> Maybe we could reinstall the page table with the cleared (none) entries while
+>> still holding the PTL?
+>>
+>> Thinking out loud:
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index 5ba298d420b7..e39b750b1e6f 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -1413,13 +1413,17 @@ static enum scan_result collapse_huge_page(struct
+>> mm_struct *mm, unsigned long s
+>>                  map_anon_folio_pmd_nopf(folio, pmd, vma, pmd_addr);
+>>          } else {
+>>                  /*
+>> -                * set_ptes is called in map_anon_folio_pte_nopf with the
+>> -                * pmd_ptl lock still held; this is safe as the PMD is expected
+>> -                * to be none. The pmd entry is then repopulated below.
+>> +                * Re-insert the page table with the cleared entries, but
+>> +                * hold the PTL, such that no one can mess with the re-installed
+>> +                * page table until we updated the temporarily-cleared entries
+>> +                * through map_anon_folio_pte_nopf().
+>>                   */
+>> -               map_anon_folio_pte_nopf(folio, pte, vma, start_addr, /
+>> *uffd_wp=*/ false);
+>> -               smp_wmb(); /* make PTEs visible before PMD. See pmd_install() */
 > 
-> Neat, makes sense to me :D
+> One small thing, I think we should probably keep the smp_wmb(), and just
+> move it before the earlier pmd_populate().
 > 
-> That way the page talbe is back in place before any arch hook gets to look at it :)
+> IIUC, the ordering we want is still:
+> 
+>   clear old PTEs
+>   smp_wmb()
+>   pmd_populate()
+> 
+> so another CPU cannot walk through the re-installed PMD and still observe
+> the old PTEs, right?
 
-Right. I don't think we could run into a deadlock here (nobody should
-concurrently take a look at the page tables in the first place).
-
-Not sure about the memory barrier I dropped: the page tables are already
-properly set up (just some entries cleared), so I'd assume that barrier might
-not be required.
+There is a smp_wmb() in __folio_mark_uptodate(), that should be sufficient?
 
 -- 
 Cheers,
