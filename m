@@ -1,163 +1,127 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E539E126C03;
-	Mon,  1 Jun 2026 00:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEFE1B142D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 01:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780275514; cv=none; b=mwQvQ7pKsYEee2bvCj1rWaTjLkwnibRDrMwMFpCiFKkuUhzE/N74YXE4YoegJuHmzzs7nudvsu6nWl+NTSJf7WnPkdaeBt0joj22WrpTKdaFRtp7LGPgIECfkeXjNQ4SG5ypkdXhQgKQV5AUUwg9GrDNV6TzeeuYuWHJWzOSIQY=
+	t=1780278923; cv=none; b=X50mA7f35YPceEyu2P+eaptYVasP7nmJhv5ZuI6U63/Kq+kn3cARPPQ6mrpkMmzalLeWFkEf7E1j/Kvo6mExShHQwOb2aKwIapcDkifOSKWViFDyw5v+DhY8humS+6SonIEr7ZPtBK63EFgUKL4w3fSA/ckvb+nNm7W03TZR9jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780275514; c=relaxed/simple;
-	bh=v2xp4CwnDQJcU/9toSv/zsHcoIGbXl2GBg7qgphGSB8=;
+	s=arc-20240116; t=1780278923; c=relaxed/simple;
+	bh=j4uRY4vfme7Hj8zI1X26nZmyC//UW5FolYkUWvVXqhk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DWBVB7fTNWJdtNFnjojsHETOQKA7M4JaVZAGsclTTooSe/befaUB4HEqA96y/9bIgVMn/1hx4BuVDmliD14oY2v4iHpcz3vY5PF3+f5GqcyPwzqQeZqz52z3WnpQVSf1oTvOLcIuJhobYO86dam1akCi2wNfWJSrzfj1w8aA2bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gTFvH5L2QzYQtM9;
-	Mon,  1 Jun 2026 08:58:19 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 1C4A24056F;
-	Mon,  1 Jun 2026 08:58:22 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with SMTP id Syh0CgAnnIEs2RxqWaK9AA--.30924S2;
-	Mon, 01 Jun 2026 08:58:22 +0800 (CST)
-Message-ID: <041c7307-adc0-4ddc-a418-fc79b717ae02@huaweicloud.com>
-Date: Mon, 1 Jun 2026 08:58:20 +0800
+	 In-Reply-To:Content-Type; b=a3ZGYKH5bj0i6Rsu5uv53AEjxkx0YSYCSyYvkjRRP99SjcihSJu1qDVz8keTE3cF3UB3+7/f9XMmA005oB4WAdRqJPF/VQin9XtS+IGk58jjFDQmsUQFB0Y9NbZGWaCNAMgYbbrHG+edralFOt595k2xfvLrkoN3Lq/bZpbKSMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GnCTJd3B; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GnCTJd3B"
+Message-ID: <bb855309-422b-418d-ae34-54969e01375f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780278918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQCbMRkdqdDT9GLUSMLXaeh0gg478vZBNxmXwoTOz6U=;
+	b=GnCTJd3BSfUClP+EsrGgz2anJizI1lNps8XDR/4ezY3+8U5Tb14abeAfZv2bzXchAihLYN
+	fo8bwJf0yz6X2MYCySFso5RSnCLFQzVrw/qGsL4jzIsdFzY9+5xj6RAlNCwd23SGSJ8xRa
+	aMauQxDjTgID35xkiQSfsyXbn9R29L4=
+Date: Mon, 1 Jun 2026 09:53:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rethook: Use tsk->on_cpu to check task execution state
-To: Masami Hiramatsu <mhiramat@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Alexei Starovoitov <ast@kernel.org>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260525132253.1889726-1-wutengda@huaweicloud.com>
- <20260526123719.482f07a3843e207e22d95378@kernel.org>
- <94179dab-ffb7-4fab-af45-b20bfb686ab3@huaweicloud.com>
- <20260601084001.9566b443746447ec2bb1a9fb@kernel.org>
+Subject: Re: [PATCH mm-unstable v18 12/14] mm/khugepaged: avoid unnecessary
+ mTHP collapse attempts
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260601084001.9566b443746447ec2bb1a9fb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+To: "David Hildenbrand (Arm)" <david@kernel.org>, npache@redhat.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, liam@infradead.org, ljs@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
+ rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
+ richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
+ rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
+ sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
+ tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
+ vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
+ willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
+ usama.arif@linux.dev
+References: <20260522150009.121603-13-npache@redhat.com>
+ <20260531073102.20318-1-lance.yang@linux.dev>
+ <65e201dd-10d6-43f6-8758-0fc313158fe7@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <65e201dd-10d6-43f6-8758-0fc313158fe7@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAnnIEs2RxqWaK9AA--.30924S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrykArWrCFyfJw13JrWkJFb_yoW5Aw1DpF
-	WxGa1jkF47JF42yasFqrs5CF47K34fKay2gFnYyryFvFn8trn2gr1ftry29F18Cr1DCF4U
-	trW7trZrur9rZ37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2NtUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+X-Migadu-Flow: FLOW_OUT
 
 
 
-On 2026/6/1 7:40, Masami Hiramatsu wrote:
-> On Fri, 29 May 2026 11:39:49 +0800
-> Tengda Wu <wutengda@huaweicloud.com> wrote:
-> 
->>> We also should not use tsk->on_cpu, but should use task_on_cpu(tsk).
->>>
->>> BTW, should task_on_cpu() use READ_ONCE() etc?
->>> wait_task_inactive() seems a bit fragile.
->>>
->>> Thanks,
->>>
+On 2026/6/1 04:02, David Hildenbrand (Arm) wrote:
+> On 5/31/26 09:31, Lance Yang wrote:
 >>
->> It seems that using task_on_cpu() is not necessary here because:
->>
->> 1. It requires an additional 'rq' parameter not available in the rethook context.
->> 2. It just returns p->on_cpu, which is identical to our current use of tsk->on_cpu.
-> 
-> OK. We may need to cleanup task_on_cpu() to remove unused rq, which
-> was historically introduced by commit 029632fbb7b7 ("sched: Make
-> separate sched*.c translation units") as a parameter for "task_running()"
-> because it called task_current(), but was cleaned by commit 0b9d46fc5ef7
-> ("sched: Rename task_running() to task_on_cpu()") and now it is not
-> used.
-> 
->>
->> /* file: kernel/sched/sched.h */
->> static inline int task_on_cpu(struct rq *rq, struct task_struct *p)
->> {
->> 	return p->on_cpu;
->> }
->>
->> Given these constraints, staying with tsk->on_cpu seems more straightforward
->> for the rethook context.
-> 
-> The reason I asked you to use a wrapper function instead of directly
-> accessing that on_cpu is to ensure that this part isn't overlooked when
-> changing the scheduler's behavior in the future.
-> 
-> They may be equivalent at this point in time, but that doesn't necessarily
-> mean they will remain so in the future.
-> 
-> IMHO, an API interface should represent the behavior and resources
-> required for that operation, and when accessing it from outside the
-> subsystem, we should use that API whenever possible. Otherwise, even
-> if we want to update the internal implementation of one subsystem,
-> we will have to make changes to other subsystems as well.
-> 
-> Peter, is it OK to drop @rq from task_on_cpu()? Then we can use
-> it from rethook.
-> 
-> Thank you,
-> 
-
-Thank you for the detailed explanation -- that makes perfect sense.
-
-I looked into task_on_cpu() and saw it has many callers.
-Once it's confirmed that the parameter can be safely dropped, I'll
-follow up with my patch to use the wrapper instead of directly
-accessing on_cpu.
-
-Best,
-Tengda
-
->>>>
->>>> Fixes: 54ecbe6f1ed5 ("rethook: Add a generic return hook")
->>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->>>> ---
->>>>  kernel/trace/rethook.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
->>>> index 5a8bdf88999a..bd5e5f455e85 100644
->>>> --- a/kernel/trace/rethook.c
->>>> +++ b/kernel/trace/rethook.c
->>>> @@ -250,7 +250,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
->>>>  	if (WARN_ON_ONCE(!cur))
->>>>  		return 0;
->>>>  
->>>> -	if (tsk != current && task_is_running(tsk))
->>>> +	if (tsk != current && tsk->on_cpu)
->>>>  		return 0;
->>>>  
->>>>  	do {
->>>> -- 
->>>> 2.34.1
->>>>
->>>>
+>> On Fri, May 22, 2026 at 09:00:07AM -0600, Nico Pache wrote:
+>>> There are cases where, if an attempted collapse fails, all subsequent
+>>> orders are guaranteed to also fail. Avoid these collapse attempts by
+>>> bailing out early.
 >>>
+>>> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
+>>> Acked-by: Usama Arif <usama.arif@linux.dev>
+>>> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>> mm/khugepaged.c | 24 +++++++++++++++++++++++-
+>>> 1 file changed, 23 insertions(+), 1 deletion(-)
 >>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index d3d7db8be26c..15b7298bc225 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -1535,9 +1535,31 @@ static int mthp_collapse(struct mm_struct *mm, struct vm_area_struct *vma,
+>>> 			collapse_address = address + offset * PAGE_SIZE;
+>>> 			ret = collapse_huge_page(mm, collapse_address, referenced,
+>>> 						 unmapped, cc, order);
+>>> -			if (ret == SCAN_SUCCEED) {
+>>> +
+>>> +			switch (ret) {
+>>> +			/* Cases where we continue to next collapse candidate */
+>>> +			case SCAN_SUCCEED:
+>>> 				collapsed += nr_ptes;
+>>> +				fallthrough;
+>>> +			case SCAN_PTE_MAPPED_HUGEPAGE:
+>>> 				continue;
+>>> +			/* Cases where lower orders might still succeed */
+>>> +			case SCAN_LACK_REFERENCED_PAGE:
+>>> +			case SCAN_EXCEED_NONE_PTE:
+>>> +			case SCAN_EXCEED_SWAP_PTE:
+>>> +			case SCAN_EXCEED_SHARED_PTE:
+>>> +			case SCAN_PAGE_LOCK:
+>>> +			case SCAN_PAGE_COUNT:
+>>> +			case SCAN_PAGE_NULL:
+>>> +			case SCAN_DEL_PAGE_LRU:
+>>> +			case SCAN_PTE_NON_PRESENT:
+>>> +			case SCAN_PTE_UFFD_WP:
+>>> +			case SCAN_ALLOC_HUGE_PAGE_FAIL:
 >>
+>> Nit: shouldn't SCAN_CGROUP_CHARGE_FAIL go with SCAN_ALLOC_HUGE_PAGE_FAIL
+>> here?
+>>
+>> If charging the current order fails, a smaller order might still fit :)
 > 
-> 
+> I think the reasoning was here, that if we are already that close to our mem
+> limit, we should just give up instead of trying to squeeze it in .. :)
 
+Fair point. Just a nit, nevermind :)
