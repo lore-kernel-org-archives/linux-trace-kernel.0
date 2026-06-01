@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45144314B63;
-	Mon,  1 Jun 2026 04:31:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1744925B090;
+	Mon,  1 Jun 2026 04:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780288310; cv=none; b=pHoMWjhfyartAu5/VxT3+Ete+4ugqXYcOazRBMbO3zLX9OcMD+HJnFGx0KNVY/nVDbYJzSj3p5wvn8+8RXkbl46b4DU6VyAD2bwfFE3d1ccT761VKV2KPCOQm7YG97BCNaTg+vo34WbXEOXqDwG+dP2jZYB+Qn88nFAkegEXYtc=
+	t=1780288713; cv=none; b=ifaFm/67AsaUjdW2reTd0lvHyh/YZArceQ9EeNVkReRUDlGuKP6RIQ05it8cE4ufSBgorbhiUnDomaOEZgvaVAC2QNLdHA76fLrZfARW3HS1o8oslA8BOnxDmODtKxjdo9CMkID1zu5M9Qn7dGKGPgmbx+DpnBS4gYv/G2O4j8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780288310; c=relaxed/simple;
-	bh=s0BX45L0sWVIGDOh1RTHQxm2WUKeqKfvcWhCuik3r8k=;
+	s=arc-20240116; t=1780288713; c=relaxed/simple;
+	bh=2WEUGLTDVlzZJ5Rn/VKE96JfwVVx2njMJl5eCci2mAU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=H5Swym48vb4eN6ocFH9XwDiQH+fs6rS/7kPAtfGBUdQQFkKekuRK+FhHrXXgZeIzjSsg4houc2CAKzjbgfd2o/Fp0xtbZrNvUDas4unxWzrC+QcvZa/aAU60sBc+X1C219xvqO8jxmmd1KpEPpVtj8sybF1PgkT2avCAbAjZAcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFDlc9XN; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=UMTswR/11hwkIHVG9fPwgK2eE2omLm49x/U8eU/HGWHlNQupvThWg/kkN8JiEzevxXIWSN0JQss3ue011A3jg42HOqfL/mQbwgSruogmlODknKdAX9xPeW/GDvINlaSpgW+jNjT8KCnHYIqv5ho01NZBICK1TK/rWb5kt2pDl9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsXMcBmE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFDlc9XN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B436F1F00893;
-	Mon,  1 Jun 2026 04:31:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsXMcBmE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE0C1F00893;
+	Mon,  1 Jun 2026 04:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780288309;
-	bh=37qGQZaPw/dWTrWCnULlgc4kI4ji2bvU7/GpzFmiqGM=;
+	s=k20260515; t=1780288711;
+	bh=ZfecxY3R7P/dN2XQVItXlRO8ySRUPuvI1yB4NnFaoqY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=nFDlc9XNgbBE6MxvyJy7sWjwPuT9XtQOr0hw2JL4Vg7uayD+8GQOjGIKULjamXWqP
-	 f8GWgLdp7Wj8ZvI1DSYqqlxLpFzn3jPtjMCPwDex89xlUzWBGa/E73NDS3CP0bujCb
-	 YO5/Zl1IUddJ3Pp7t9B5cYs3lvtCZH+mAGZ2kdyr4eIdqhPhLHj12GgLl4sGGV2X8q
-	 o0ldlhjIFVytayeN0YwG6OuSM94p/P+XGWKx326tgxK4N/kCu/xeiKBY7etMzRtZul
-	 Ed1R8SMs+Gj25jqCQNtdS9gles7OEfcD7ZU7HDqm23BX2mskjy/m8DqMsZ2eX7LUT2
-	 nfpQeur5pffaw==
-Date: Mon, 1 Jun 2026 13:31:46 +0900
+	b=HsXMcBmEcRgEtPyUXmqYVqgF0t73jDMiOCGToB0DB1QkYh5+DqRewreAqkTwKNtsn
+	 roEJgbXrD3SZvaiAfBvgHIs1pxP2hXKTU2v9SPrpyH9n6MzlNhXncRq1hkYA+2K0jq
+	 ebxZ6FwIMN9s6qIV0l+ALkANDk1wVnjovEqqeix981rRLYFGNjZydXARhBszyZLxEO
+	 cxgE0QPo6lyb5tDLlRpcnriufSLNFO++GUGNhEV1bWQj0JT11cfuYnJ86it/8Y/EsV
+	 RKygZ8RaXfpPmsZ8VjAAnNFZc8kmyAAT5Pd8dLMp49gWXK7iwRnTzSdZJX/+FveTKz
+	 58ZaylVBxCXBA==
+Date: Mon, 1 Jun 2026 13:38:28 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: CaoRuichuang <create0818@163.com>, Shuah Khan
- <skhan@linuxfoundation.org>, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Drop invalid top-level local in
- test_ownership
-Message-Id: <20260601133146.b16b0ad7c2204adcc168c945@kernel.org>
-In-Reply-To: <20260407203727.442b583c@gandalf.local.home>
-References: <20260407102613.81419-1-create0818@163.com>
-	<20260407203727.442b583c@gandalf.local.home>
+Cc: Theodore Ts'o <tytso@mit.edu>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] tracing: Record and show boot ID in
+ last_boot_info
+Message-Id: <20260601133828.42fd83ad8ae42b69abc1f299@kernel.org>
+In-Reply-To: <20260528163633.5650f3d6@gandalf.local.home>
+References: <177937541909.2596845.17729857441826694760.stgit@mhiramat.tok.corp.google.com>
+	<177937543666.2596845.9748178606108139386.stgit@mhiramat.tok.corp.google.com>
+	<20260521111630.1f558754@gandalf.local.home>
+	<20260524104439.ec01284998cae6d4a5053e61@kernel.org>
+	<20260528163633.5650f3d6@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,68 +51,28 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 7 Apr 2026 20:37:27 -0400
+On Thu, 28 May 2026 16:36:33 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
+> On Sun, 24 May 2026 10:44:39 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> Shuah,
-> 
-> Care to take this through your tree. Probably could even add:
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 8b55572e51805 ("tracing/selftests: Add tracefs mount options test")
-> 
-> As well as:
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-
-Shuah, here is my ack too.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-BTW, to avoid similar issue, 
-
-Thanks, 
-
-> -- Steve
-> 
-> 
-> On Tue,  7 Apr 2026 18:26:13 +0800
-> CaoRuichuang <create0818@163.com> wrote:
-> 
-> > From: Cao Ruichuang <create0818@163.com>
+> > > If the get_boot_id() is accepted by the random folks, then I'm fine with
+> > > this change.  
 > > 
-> > test_ownership.tc is sourced by ftracetest under /bin/sh.
-> > 
-> > The script currently declares mount_point with local at file scope,
-> > which makes /bin/sh abort with "local: not in a function" before the
-> > test can reach the eventfs ownership checks.
-> > 
-> > Replace the top-level local declaration with a normal shell variable so
-> > kernels that support the gid= tracefs mount option can run the test at
-> > all.
-> > 
-> > Signed-off-by: Cao Ruichuang <create0818@163.com>
-> > ---
-> >  tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > index e71cc3ad0..6d00d3c0f 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > @@ -6,7 +6,7 @@
-> >  original_group=`stat -c "%g" .`
-> >  original_owner=`stat -c "%u" .`
-> >  
-> > -local mount_point=$(get_mount_point)
-> > +mount_point=$(get_mount_point)
-> >  
-> >  mount_options=$(get_mnt_options "$mount_point")
-> >  
+> > Yeah, BTW, Sashiko found this can be initialized before we get enough
+> > entropy for random seed. Maybe we need one more delay.
 > 
-> 
+> Well, maybe for adding the boot_id later, but the code that initializes the
+> buffers needs to stay early. With the backup instance, the persistent ring
+> buffer can restart tracing immediately.
+
+Agreed, so the buffer will be made in early stage without initializing
+the boot_id field, and it will be updated when user reads the boot_id
+from kernel. Anyway, without reading boot_id from user space, it is
+meaningless.
+
+Thank you,
 
 
 -- 
