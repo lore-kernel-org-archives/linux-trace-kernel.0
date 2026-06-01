@@ -1,127 +1,104 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEFE1B142D
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 01:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAC6221277;
+	Mon,  1 Jun 2026 02:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780278923; cv=none; b=X50mA7f35YPceEyu2P+eaptYVasP7nmJhv5ZuI6U63/Kq+kn3cARPPQ6mrpkMmzalLeWFkEf7E1j/Kvo6mExShHQwOb2aKwIapcDkifOSKWViFDyw5v+DhY8humS+6SonIEr7ZPtBK63EFgUKL4w3fSA/ckvb+nNm7W03TZR9jY=
+	t=1780281185; cv=none; b=X2kWzKCjj++3VO7GpcmnhiYsKw0T1oEAPF06y7uv8sbQJAg5exAznc19mzJunistzeTRBygclul5TKJL4oqP4rPfRtpLmsSUQmJ/bDcgHvxD0TOd7ZSWxyMW5EPUTGOISsdHOKTk0e1owxR20W3kCOEoyQghvQI5KgMIzbiRNTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780278923; c=relaxed/simple;
-	bh=j4uRY4vfme7Hj8zI1X26nZmyC//UW5FolYkUWvVXqhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a3ZGYKH5bj0i6Rsu5uv53AEjxkx0YSYCSyYvkjRRP99SjcihSJu1qDVz8keTE3cF3UB3+7/f9XMmA005oB4WAdRqJPF/VQin9XtS+IGk58jjFDQmsUQFB0Y9NbZGWaCNAMgYbbrHG+edralFOt595k2xfvLrkoN3Lq/bZpbKSMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GnCTJd3B; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780281185; c=relaxed/simple;
+	bh=9ChulMQ4HtwDaNNSM6XekXLk7VY4BhagcCO1SkNrBkI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iTbHutJmG+Ulo/HMzvO/vqugPnOZ9FfUteQUmYY/nq63a7FRUiu/VBpF3QIb6RhNZfAcxUY14uU2MhlTkOw67XVy6tXP21msrWj0H/Y5Mu4kk8w0spoPEd7s4gJgYzgzLjxVNSQ7kyqcAUykjMkF/LRvFDdBYK//Cr/4UiCFFx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qXxiuJeb; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GnCTJd3B"
-Message-ID: <bb855309-422b-418d-ae34-54969e01375f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780278918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uQCbMRkdqdDT9GLUSMLXaeh0gg478vZBNxmXwoTOz6U=;
-	b=GnCTJd3BSfUClP+EsrGgz2anJizI1lNps8XDR/4ezY3+8U5Tb14abeAfZv2bzXchAihLYN
-	fo8bwJf0yz6X2MYCySFso5RSnCLFQzVrw/qGsL4jzIsdFzY9+5xj6RAlNCwd23SGSJ8xRa
-	aMauQxDjTgID35xkiQSfsyXbn9R29L4=
-Date: Mon, 1 Jun 2026 09:53:28 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qXxiuJeb"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1780281179; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=nzR0aLCA9B2xvAkabMir/P0TKLQ1O0jOUYJXMmo9WcQ=;
+	b=qXxiuJebWbP96FMXs1UsluMRU5pzNWU0/GT/em9eZjroRCCijuU7VSAz5kVRMO/jXf9mdVIHaGcO5z6mhlwh2TBw6ypOmekOEdAEODDYlHtJRqPQ1RgVZpiDH3Gk97qM8oD+QcPg6ecdL/xZ/xO0KuSaKqGZTSLpZxKAsx+/RuM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=dtcccc@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0X3vJxdj_1780281171;
+Received: from localhost.localdomain(mailfrom:dtcccc@linux.alibaba.com fp:SMTPD_---0X3vJxdj_1780281171 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 01 Jun 2026 10:32:59 +0800
+From: Tianchen Ding <dtcccc@linux.alibaba.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v3] selftests/ftrace: Fix trace_marker_raw test on 64K page kernels
+Date: Mon,  1 Jun 2026 10:32:51 +0800
+Message-Id: <20260601023251.1916483-1-dtcccc@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260527095438.1794905-1-dtcccc@linux.alibaba.com>
+References: <20260527095438.1794905-1-dtcccc@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH mm-unstable v18 12/14] mm/khugepaged: avoid unnecessary
- mTHP collapse attempts
-Content-Language: en-US
-To: "David Hildenbrand (Arm)" <david@kernel.org>, npache@redhat.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
- hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
- jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
- kas@kernel.org, liam@infradead.org, ljs@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
- usama.arif@linux.dev
-References: <20260522150009.121603-13-npache@redhat.com>
- <20260531073102.20318-1-lance.yang@linux.dev>
- <65e201dd-10d6-43f6-8758-0fc313158fe7@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <65e201dd-10d6-43f6-8758-0fc313158fe7@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
+On ARM64 kernels with 64K pages, the trace_marker_raw test fails because
+bash's printf builtin uses stdio buffering which splits output into
+multiple small write() calls to the tracefs file. Since each individual
+write is within TRACE_MARKER_MAX_SIZE (4096), they all succeed, causing
+the "too big" write test to incorrectly pass.
 
+Fix by writing through dd with iflag=fullblock to guarantee a single
+atomic write() syscall to trace_marker_raw.
 
-On 2026/6/1 04:02, David Hildenbrand (Arm) wrote:
-> On 5/31/26 09:31, Lance Yang wrote:
->>
->> On Fri, May 22, 2026 at 09:00:07AM -0600, Nico Pache wrote:
->>> There are cases where, if an attempted collapse fails, all subsequent
->>> orders are guaranteed to also fail. Avoid these collapse attempts by
->>> bailing out early.
->>>
->>> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
->>> Acked-by: Usama Arif <usama.arif@linux.dev>
->>> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
->>> Signed-off-by: Nico Pache <npache@redhat.com>
->>> ---
->>> mm/khugepaged.c | 24 +++++++++++++++++++++++-
->>> 1 file changed, 23 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>> index d3d7db8be26c..15b7298bc225 100644
->>> --- a/mm/khugepaged.c
->>> +++ b/mm/khugepaged.c
->>> @@ -1535,9 +1535,31 @@ static int mthp_collapse(struct mm_struct *mm, struct vm_area_struct *vma,
->>> 			collapse_address = address + offset * PAGE_SIZE;
->>> 			ret = collapse_huge_page(mm, collapse_address, referenced,
->>> 						 unmapped, cc, order);
->>> -			if (ret == SCAN_SUCCEED) {
->>> +
->>> +			switch (ret) {
->>> +			/* Cases where we continue to next collapse candidate */
->>> +			case SCAN_SUCCEED:
->>> 				collapsed += nr_ptes;
->>> +				fallthrough;
->>> +			case SCAN_PTE_MAPPED_HUGEPAGE:
->>> 				continue;
->>> +			/* Cases where lower orders might still succeed */
->>> +			case SCAN_LACK_REFERENCED_PAGE:
->>> +			case SCAN_EXCEED_NONE_PTE:
->>> +			case SCAN_EXCEED_SWAP_PTE:
->>> +			case SCAN_EXCEED_SHARED_PTE:
->>> +			case SCAN_PAGE_LOCK:
->>> +			case SCAN_PAGE_COUNT:
->>> +			case SCAN_PAGE_NULL:
->>> +			case SCAN_DEL_PAGE_LRU:
->>> +			case SCAN_PTE_NON_PRESENT:
->>> +			case SCAN_PTE_UFFD_WP:
->>> +			case SCAN_ALLOC_HUGE_PAGE_FAIL:
->>
->> Nit: shouldn't SCAN_CGROUP_CHARGE_FAIL go with SCAN_ALLOC_HUGE_PAGE_FAIL
->> here?
->>
->> If charging the current order fails, a smaller order might still fit :)
-> 
-> I think the reasoning was here, that if we are already that close to our mem
-> limit, we should just give up instead of trying to squeeze it in .. :)
+Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
+Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+---
+v3:
+Measure the binary length via wc -c instead of hard-coding "size + 4".
 
-Fair point. Just a nit, nevermind :)
+v2:
+Update comment about 64K pages.
+---
+ .../ftrace/test.d/00basic/trace_marker_raw.tc      | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+index 8e905d4fe6dd..f985ff391463 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+@@ -36,15 +36,23 @@ make_str() {
+ 
+ 	data=`printf -- 'X%.0s' $(seq $cnt)`
+ 
+-	printf "${val}${data}"
++	# Return escape-sequence text (e.g. "\003\000..."); the caller
++	# converts to binary. Shell command substitution strips NUL bytes,
++	# so the binary form cannot survive being captured into a variable.
++	printf '%s' "${val}${data}"
+ }
+ 
+ write_buffer() {
+ 	id=$1
+ 	size=$2
+ 
+-	# write the string into the raw marker
+-	make_str $id $size > trace_marker_raw
++	str=`make_str $id $size`
++	len=`printf "$str" | wc -c`
++	# Pipe through dd to ensure a single atomic write() syscall
++	# on architectures with 64K pages, where shell's printf builtin
++	# uses stdio buffering which may split the output into multiple
++	# writes.
++	printf "$str" | dd of=trace_marker_raw bs=$len iflag=fullblock
+ }
+ 
+ 
+-- 
+2.39.3
+
