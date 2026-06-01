@@ -1,58 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D527D3DB31F
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 15:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9E43DC84C
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jun 2026 15:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780328358; cv=none; b=Vz6wT8F8HEXWN2OVpL/z23yuFkWODMgkTAC71zB0BNfkCjhBIhFpXq6Lc+kwBNGU6fqAyaId7r+IElfvjVzDGrWgPYOzVc7CEAwaRI8voVA9k0wYTvfS3FSp64y6GUpgGfLSA/3HCWB2QGKAuXxCPMh9vQ3WjS3mvXSjC8RheJ8=
+	t=1780328363; cv=none; b=KtRcgPexaV7tiLRx27vWXY31lkT3oNQlljKW7w3Movf/4Mr5Rle+LwARwarPTlKol7x4nEOzVg4GNedQgkmS/7YXNXyfpvxrTf2UgMknoe3bRwh3Q+1qXa/CO21j+YKmwam/GnAPohQzv49myUs5nTZ8O97jQxNbt5rTj8GQOSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780328358; c=relaxed/simple;
-	bh=XFVpsirXpCVBHRwNRxyYJEu2HnWVHve4mygjh5Big6c=;
+	s=arc-20240116; t=1780328363; c=relaxed/simple;
+	bh=PMlgRCYhyNtdh+bETPsY60G3qbAEez425Ow7MttAeCY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=sfCj44Xrko9PS4vaLmoitAyRRO0KWozfH8N776HIED41CMMxCb/HGVnWOjrhfyqidBtOI/lzQEGg/JHbxpyqUw3htTWqXLdKN7deMrpZMcLNtnIdWRe/Xu45YVcbrI2ljEVUiR2wAEbImbk3wjddGLkv35nj7dmd2pkW3RnsDTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g73VafnK; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=NyidXk31FAlE/6zBveQ/3hU1gGGZUDtMIdH31mA9TNwbNSscVcPNTPrZAq8xnDrSKo8P8K1GbaaydXEz4ViBpYAdTVJjR5Yq2Gdaa+lZ1l7VOpgA7b2QE2r7+N4XrZWSeNEInOT/BjYCTqZgnYM4fLN5Uit2/z82afRuEP+eBeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VLDUhj6C; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g73VafnK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLDUhj6C"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780328355;
+	s=mimecast20190719; t=1780328360;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VyplG6HhVT1kgDw8Zq49+VYiEBBmCwKrGqUoIr49MPc=;
-	b=g73VafnK3CPhRlZHIDHJazu6tHjaE8OGt9wgzKdhuElrtPQh5T1CQU6yH6iPrHx80ebXkz
-	uBQq9j1nmSB8KEOFmr6Ns0/ge1deC3TeTydsO9UsUn+5JsA4a7LU90M5oT/0tICnbc9unk
-	9QTcXVOMvrVBfhsMy8SKaEYz8Ivbrp0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ksjWZwFOwjAtg9cSIKj8AwnZ/7m3CqPw5YL+YlR1pw4=;
+	b=VLDUhj6CeSFILfJaWx1+/RFpQl8mH58l55vVI+/PzY6mvIE6WNYxILli2BMyMS96eJACdB
+	u8uzS4nSmlHeR+BSf5WLA8ZGLF5Vliiq5PkatbsgtQnriMMgeNkHSuOPKEV5/q+2+EUZCr
+	3mWEY23JFlSCumUdTJ7KfBgAjcapisg=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-524-GT4jrPNANVOaX6iWxUzzGg-1; Mon,
- 01 Jun 2026 11:39:12 -0400
-X-MC-Unique: GT4jrPNANVOaX6iWxUzzGg-1
-X-Mimecast-MFC-AGG-ID: GT4jrPNANVOaX6iWxUzzGg_1780328351
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-199-e4Hxa7AAMuiMiHitquvvcQ-1; Mon,
+ 01 Jun 2026 11:39:15 -0400
+X-MC-Unique: e4Hxa7AAMuiMiHitquvvcQ-1
+X-Mimecast-MFC-AGG-ID: e4Hxa7AAMuiMiHitquvvcQ_1780328354
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3273319560BB;
-	Mon,  1 Jun 2026 15:39:11 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27ED419560BA;
+	Mon,  1 Jun 2026 15:39:14 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 02623180075B;
-	Mon,  1 Jun 2026 15:39:08 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6B1501800577;
+	Mon,  1 Jun 2026 15:39:12 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v4 07/13] rv: Add automatic cleanup handlers for per-task HA monitors
-Date: Mon,  1 Jun 2026 17:38:34 +0200
-Message-ID: <20260601153840.124372-8-gmonaco@redhat.com>
+Subject: [PATCH v4 08/13] rv: Ensure synchronous cleanup for HA monitors
+Date: Mon,  1 Jun 2026 17:38:35 +0200
+Message-ID: <20260601153840.124372-9-gmonaco@redhat.com>
 In-Reply-To: <20260601153840.124372-1-gmonaco@redhat.com>
 References: <20260601153840.124372-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -62,234 +61,168 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: sJ9Zjr52k1VI5P1U2K-UKtZaGuGRkWvWhEMyc_lv36s_1780328351
+X-Mimecast-MFC-PROC-ID: 0lHqkZaTun2jI1F5QLIrc0WjTCo3-XwMm0WiUhXvxTY_1780328354
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hybrid automata monitors may start timers, depending on the model, these
-may remain active on an exiting task and cause false positives or even
-access freed memory.
+HA monitors may start timers, all cleanup functions currently stop the
+timers asynchronously to avoid sleeping in the wrong context.
+Nothing makes sure running callbacks terminate on cleanup.
 
-Add an enable/disable hook in the HA code, currently only populated by
-the per-task handler for registration and deregistration.
-This hooks to the sched_process_exit event and ensures the timer is
-stopped for every exiting task. The handler is enabled automatically but
-may be disabled, for instance if the monitor uses the event for another
-purpose (but should still manually ensure timers are stopped).
+Run the entire HA timer callback in an RCU read-side critical section,
+this way we can simply synchronize_rcu() with any pending timer and are
+sure any cleanup using kfree_rcu() runs after callbacks terminated.
+Additionally make sure any unlikely callback running late won't run any
+code if the monitor is marked as disabled or if destruction started.
+Use memory barriers to serialise with racing resets.
 
 Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+Fixes: 4a24127bd6cb ("rv: Add support for per-object monitors in DA/HA")
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/rv/ha_monitor.h                       | 60 +++++++++++++++++++
- kernel/trace/rv/monitors/nomiss/nomiss.c      |  4 +-
- kernel/trace/rv/monitors/opid/opid.c          |  4 +-
- kernel/trace/rv/monitors/stall/stall.c        |  4 +-
- .../rvgen/rvgen/templates/dot2k/main.c        |  4 +-
- 5 files changed, 68 insertions(+), 8 deletions(-)
+ include/rv/da_monitor.h | 19 ++++++++++++++++---
+ include/rv/ha_monitor.h | 29 ++++++++++++++++++++++++++---
+ 2 files changed, 42 insertions(+), 6 deletions(-)
 
-diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-index bd8705556..4002b5247 100644
---- a/include/rv/ha_monitor.h
-+++ b/include/rv/ha_monitor.h
-@@ -28,6 +28,7 @@ static inline void ha_monitor_init_env(struct da_monitor *da_mon);
- static inline void ha_monitor_reset_env(struct da_monitor *da_mon);
- static inline void ha_setup_timer(struct ha_monitor *ha_mon);
- static inline bool ha_cancel_timer(struct ha_monitor *ha_mon);
-+static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon);
- static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
- 					 enum states curr_state,
- 					 enum events event,
-@@ -37,6 +38,26 @@ static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
- #define da_monitor_init_hook ha_monitor_init_env
- #define da_monitor_reset_hook ha_monitor_reset_env
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index ec9bc88bd..1f440c781 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -57,6 +57,15 @@ static struct rv_monitor rv_this;
+ #define da_monitor_reset_hook(da_mon)
+ #endif
  
-+#if !defined(HA_SKIP_AUTO_CLEANUP) && RV_MON_TYPE == RV_MON_PER_TASK
 +/*
-+ * Automatic cleanup handlers for per-task HA monitors, only skip if you know
-+ * what you are doing (e.g. you want to implement cleanup manually in another
-+ * handler doing more things).
++ * Hook to allow the implementation of hybrid automata: define it with a
++ * function that waits for the termination of all monitors background
++ * activities (e.g. all timers). This hook can sleep.
 + */
-+static void ha_handle_sched_process_exit(void *data, struct task_struct *p,
-+					 bool group_dead);
-+
-+#define ha_monitor_enable_hook()                                             \
-+	rv_attach_trace_probe(__stringify(MONITOR_NAME), sched_process_exit, \
-+			      ha_handle_sched_process_exit)
-+#define ha_monitor_disable_hook()                                            \
-+	rv_detach_trace_probe(__stringify(MONITOR_NAME), sched_process_exit, \
-+			      ha_handle_sched_process_exit)
-+#else
-+#define ha_monitor_enable_hook() ((void)0)
-+#define ha_monitor_disable_hook() ((void)0)
++#ifndef da_monitor_sync_hook
++#define da_monitor_sync_hook()
 +#endif
 +
- #include <rv/da_monitor.h>
- #include <linux/seq_buf.h>
+ /*
+  * Type for the target id, default to int but can be overridden.
+  * A long type can work as hash table key (PER_OBJ) but will be downgraded to
+@@ -82,7 +91,8 @@ static void react(enum states curr_state, enum events event)
+ static inline void da_monitor_reset_state(struct da_monitor *da_mon)
+ {
+ 	WRITE_ONCE(da_mon->monitoring, 0);
+-	da_mon->curr_state = model_get_initial_state();
++	/* Pair with load in __ha_monitor_timer_callback */
++	smp_store_release(&da_mon->curr_state, model_get_initial_state());
+ }
  
-@@ -115,6 +136,22 @@ static enum hrtimer_restart ha_monitor_timer_callback(struct hrtimer *hrtimer);
+ /*
+@@ -205,6 +215,7 @@ static inline int da_monitor_init(void)
+ static inline void da_monitor_destroy(void)
+ {
+ 	da_monitor_reset_all();
++	da_monitor_sync_hook();
+ }
+ 
+ #elif RV_MON_TYPE == RV_MON_PER_CPU
+@@ -270,6 +281,7 @@ static inline int da_monitor_init(void)
+ static inline void da_monitor_destroy(void)
+ {
+ 	da_monitor_reset_all();
++	da_monitor_sync_hook();
+ }
+ 
+ #elif RV_MON_TYPE == RV_MON_PER_TASK
+@@ -367,6 +379,7 @@ static inline void da_monitor_destroy(void)
+ 
+ 	tracepoint_synchronize_unregister();
+ 	da_monitor_reset_all();
++	da_monitor_sync_hook();
+ 
+ 	rv_put_task_monitor_slot(task_mon_slot);
+ 	task_mon_slot = RV_PER_TASK_MONITOR_INIT;
+@@ -573,13 +586,13 @@ static inline void da_monitor_destroy(void)
+ 	int bkt;
+ 
+ 	tracepoint_synchronize_unregister();
++	da_monitor_reset_all();
++	da_monitor_sync_hook();
+ 	/*
+ 	 * This function is called after all probes are disabled and no longer
+ 	 * pending, we can safely assume no concurrent user.
+ 	 */
+-	synchronize_rcu();
+ 	hash_for_each_safe(da_monitor_ht, bkt, tmp, mon_storage, node) {
+-		da_monitor_reset_hook(&mon_storage->rv.da_mon);
+ 		hash_del_rcu(&mon_storage->node);
+ 		kfree(mon_storage);
+ 	}
+diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+index 4002b5247..28d3c74ca 100644
+--- a/include/rv/ha_monitor.h
++++ b/include/rv/ha_monitor.h
+@@ -37,6 +37,7 @@ static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
+ #define da_monitor_event_hook ha_monitor_handle_constraint
+ #define da_monitor_init_hook ha_monitor_init_env
+ #define da_monitor_reset_hook ha_monitor_reset_env
++#define da_monitor_sync_hook() synchronize_rcu()
+ 
+ #if !defined(HA_SKIP_AUTO_CLEANUP) && RV_MON_TYPE == RV_MON_PER_TASK
+ /*
+@@ -136,10 +137,13 @@ static enum hrtimer_restart ha_monitor_timer_callback(struct hrtimer *hrtimer);
  #define ha_get_ns() 0
  #endif /* HA_CLK_NS */
  
-+static int ha_monitor_init(void)
-+{
-+	int ret;
++static bool ha_mon_destroying;
 +
-+	ret = da_monitor_init();
-+	if (ret == 0)
-+		ha_monitor_enable_hook();
-+	return ret;
-+}
-+
-+static void ha_monitor_destroy(void)
-+{
-+	ha_monitor_disable_hook();
-+	da_monitor_destroy();
-+}
-+
- /* Should be supplied by the monitor */
- static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
- static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-@@ -200,6 +237,20 @@ static inline void ha_trace_error_env(struct ha_monitor *ha_mon,
+ static int ha_monitor_init(void)
  {
- 	CONCATENATE(trace_error_env_, MONITOR_NAME)(id, curr_state, event, env);
- }
-+
-+#if !defined(HA_SKIP_AUTO_CLEANUP) && RV_MON_TYPE == RV_MON_PER_TASK
-+static void ha_handle_sched_process_exit(void *data, struct task_struct *p,
-+					 bool group_dead)
-+{
-+	struct da_monitor *da_mon = da_get_monitor(p);
-+
-+	if (likely(da_monitoring(da_mon))) {
-+		da_monitor_reset(da_mon);
-+		ha_cancel_timer_sync(to_ha_monitor(da_mon));
-+	}
-+}
-+#endif
-+
- #endif /* RV_MON_TYPE */
+ 	int ret;
  
- /*
-@@ -412,6 +463,10 @@ static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
++	WRITE_ONCE(ha_mon_destroying, false);
+ 	ret = da_monitor_init();
+ 	if (ret == 0)
+ 		ha_monitor_enable_hook();
+@@ -148,6 +152,7 @@ static int ha_monitor_init(void)
+ 
+ static void ha_monitor_destroy(void)
  {
- 	return timer_delete(&ha_mon->timer);
++	WRITE_ONCE(ha_mon_destroying, true);
+ 	ha_monitor_disable_hook();
+ 	da_monitor_destroy();
  }
-+static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon)
-+{
-+	timer_delete_sync(&ha_mon->timer);
-+}
- #elif HA_TIMER_TYPE == HA_TIMER_HRTIMER
- /*
-  * Helper functions to handle the monitor timer.
-@@ -463,6 +518,10 @@ static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
- {
- 	return hrtimer_try_to_cancel(&ha_mon->hrtimer) == 1;
- }
-+static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon)
-+{
-+	hrtimer_cancel(&ha_mon->hrtimer);
-+}
- #else /* HA_TIMER_NONE */
- /*
-  * Start function is intentionally not defined, monitors using timers must
-@@ -473,6 +532,7 @@ static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
- {
+@@ -288,12 +293,30 @@ static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
  	return false;
  }
-+static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon) { }
- #endif
  
- #endif
-diff --git a/kernel/trace/rv/monitors/nomiss/nomiss.c b/kernel/trace/rv/monitors/nomiss/nomiss.c
-index 31f90f363..8ead8783c 100644
---- a/kernel/trace/rv/monitors/nomiss/nomiss.c
-+++ b/kernel/trace/rv/monitors/nomiss/nomiss.c
-@@ -227,7 +227,7 @@ static int enable_nomiss(void)
++/*
++ * __ha_monitor_timer_callback - generic callback representation
++ *
++ * This callback runs in an RCU read-side critical section to allow the
++ * destruction sequence to easily synchronize_rcu() with all pending timers
++ * after asynchronously disabling them. The ha_mon_destroying check ensures
++ * any callback entering the RCU section after synchronize_rcu() completes
++ * will see the flag and bail out immediately.
++ */
+ static inline void __ha_monitor_timer_callback(struct ha_monitor *ha_mon)
  {
- 	int retval;
- 
--	retval = da_monitor_init();
-+	retval = ha_monitor_init();
- 	if (retval)
- 		return retval;
- 
-@@ -263,7 +263,7 @@ static void disable_nomiss(void)
- 	rv_detach_trace_probe("nomiss", sched_switch, handle_sched_switch);
- 	rv_detach_trace_probe("nomiss", sched_wakeup, handle_sched_wakeup);
- 
--	da_monitor_destroy();
-+	ha_monitor_destroy();
- }
- 
- static struct rv_monitor rv_this = {
-diff --git a/kernel/trace/rv/monitors/opid/opid.c b/kernel/trace/rv/monitors/opid/opid.c
-index 4594c7c46..2922318c6 100644
---- a/kernel/trace/rv/monitors/opid/opid.c
-+++ b/kernel/trace/rv/monitors/opid/opid.c
-@@ -73,7 +73,7 @@ static int enable_opid(void)
- {
- 	int retval;
- 
--	retval = da_monitor_init();
-+	retval = ha_monitor_init();
- 	if (retval)
- 		return retval;
- 
-@@ -90,7 +90,7 @@ static void disable_opid(void)
- 	rv_detach_trace_probe("opid", sched_set_need_resched_tp, handle_sched_need_resched);
- 	rv_detach_trace_probe("opid", sched_waking, handle_sched_waking);
- 
--	da_monitor_destroy();
-+	ha_monitor_destroy();
- }
- 
- /*
-diff --git a/kernel/trace/rv/monitors/stall/stall.c b/kernel/trace/rv/monitors/stall/stall.c
-index 9ccfda6b0..3c38fb1a0 100644
---- a/kernel/trace/rv/monitors/stall/stall.c
-+++ b/kernel/trace/rv/monitors/stall/stall.c
-@@ -103,7 +103,7 @@ static int enable_stall(void)
- {
- 	int retval;
- 
--	retval = da_monitor_init();
-+	retval = ha_monitor_init();
- 	if (retval)
- 		return retval;
- 
-@@ -120,7 +120,7 @@ static void disable_stall(void)
- 	rv_detach_trace_probe("stall", sched_switch, handle_sched_switch);
- 	rv_detach_trace_probe("stall", sched_wakeup, handle_sched_wakeup);
- 
--	da_monitor_destroy();
-+	ha_monitor_destroy();
- }
- 
- static struct rv_monitor rv_this = {
-diff --git a/tools/verification/rvgen/rvgen/templates/dot2k/main.c b/tools/verification/rvgen/rvgen/templates/dot2k/main.c
-index bf0999f66..889446760 100644
---- a/tools/verification/rvgen/rvgen/templates/dot2k/main.c
-+++ b/tools/verification/rvgen/rvgen/templates/dot2k/main.c
-@@ -35,7 +35,7 @@ static int enable_%%MODEL_NAME%%(void)
- {
- 	int retval;
- 
--	retval = da_monitor_init();
-+	retval = %%MONITOR_CLASS%%_monitor_init();
- 	if (retval)
- 		return retval;
- 
-@@ -50,7 +50,7 @@ static void disable_%%MODEL_NAME%%(void)
- 
- %%TRACEPOINT_DETACH%%
- 
--	da_monitor_destroy();
-+	%%MONITOR_CLASS%%_monitor_destroy();
- }
- 
- /*
+-	enum states curr_state = READ_ONCE(ha_mon->da_mon.curr_state);
+ 	DECLARE_SEQ_BUF(env_string, ENV_BUFFER_SIZE);
+-	u64 time_ns = ha_get_ns();
+-
++	enum states curr_state;
++	u64 time_ns;
++
++	guard(rcu)();
++	if (unlikely(READ_ONCE(ha_mon_destroying)))
++		return;
++	/* Ensure consistent curr_state if we race with da_monitor_reset */
++	curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
++	if (unlikely(!da_monitor_handling_event(&ha_mon->da_mon)))
++		return;
++
++	time_ns = ha_get_ns();
+ 	ha_get_env_string(&env_string, ha_mon, time_ns);
+ 	ha_react(curr_state, EVENT_NONE, env_string.buffer);
+ 	ha_trace_error_env(ha_mon, model_get_state_name(curr_state),
 -- 
 2.54.0
 
