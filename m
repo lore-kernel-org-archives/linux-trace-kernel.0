@@ -1,54 +1,54 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101723F58C3
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 17:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3043F8ED8
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 17:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780420327; cv=none; b=H3ei0axreOP2Vv4tsrlz4HMwmT3XlL1GWTFtYuSQ0FqTpUjObVzWc3lYCeCDajHs1id3h8g94+M2Dk56Gbc67Oq4O6CUkGaaVqLkJqVppwoaNx7VKmoVlk9OB7U+3SemJTff7bda+8HTiKFfO+dZDH2gSlTOptKDhKNs44iaoIA=
+	t=1780420329; cv=none; b=YNELyia2oe6Gcn8ghb8cJ4MiU+PBjTj8oaLHb/Z3x2QduB0D6I7vWpt98zNuJzHEoVtVn7BeT9zm7gJqOVV7+zXXD0yRsdDleRMYOP/C42MjZ1/sJW/hFfhy7lQaDh8xCMFOj+E8XykgS9TyYi8ToShFjP7Uu/gxiR//Q3VXcKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780420327; c=relaxed/simple;
-	bh=mxxcAiiakCX96SmMn13HFjhoQDp1zvQICSo1lP0JxQg=;
+	s=arc-20240116; t=1780420329; c=relaxed/simple;
+	bh=vTprPBJOvANENpg/OMmSfVGiFw64Xlum2zkLJQM9vFg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Bngmf1LJoUEULcyFlt5NQp2codQPj/UI6H+UE9dtmYJ5SFQsygOQsuTbV+Sqe2nBhRmnvaZoA/nmOUuvpsAVJFYF6R0Pta+FBjjUoC+CHlDHoaakrihy8aviwh6f5w06kO+RkFho1i3L8OreWrauvuXSdFKXeRrX6Ielq0cSvNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WNc9ygsh; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=aS4Ad88KGc40gGUyhPcLi+ayS5qwrZIcryeAp9NpLroZqIby+VY5q4S5u1F4HLRg8wUeJqqNgHdLLQPZ16GPgLucasxXTP0wEdAm5j9G3LwCTIdG2SzRZRJJikUxtMUJ9nt7A6eVHOrthqA7eS73eT7kD88A25bWPKI2cJwDJNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c3L9B+Up; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WNc9ygsh"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-490a060eb84so28642575e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 10:12:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c3L9B+Up"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-45eec2ba533so3973957f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 10:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780420324; x=1781025124; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780420326; x=1781025126; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QiD8IXQeXxy+XxXoOS7MbARKdoSa/8YQRGqVyGhTR0M=;
-        b=WNc9ygshd3PJPRXM93/SoBW9QJWhvupxyqDUyDFW6ZGGvBGhmghNnXvXN4z/9NKomz
-         9E5mMJhJmaRLOBXcFesuME/pTmXsd3SqfADIHMLKi5pptejgnPPepAyb9Jodq9RsGVV2
-         cCIH56IP+xl/m01N4oWFhVYiBkRBcCIG1xGdnb49SENCDj3zOabZ/EAJ42heSA5sr6Zp
-         nF3W4zRH2VkdHGV8eyF0J3UXxqLBsuIXn4P+m5g/c/RgYJk5O5dU3cPZk1t4c8Bru8z3
-         3K1ehiZFIiuGpq/jCdrRfACgqfrEWdQfnQOSwkijsRD19ppHUhWCRjrlWz0AYVIyKjjY
-         +E4Q==
+        bh=fijxRpUtwWebZSoIxVCctPN4xNPYzLYlfDMdHnsAC60=;
+        b=c3L9B+UpAs1KNEYG2qrX4wOtyR1SJd1pI5ivwaMBffP2472jxkqXP6CFwfRA8Cs2TJ
+         GvSlBNCVdXQNU8CGr6JB79eVNlU4p6InRL+qDnDszyJNyvK8vsUb+axkfJV0ExWN8MX4
+         ARRteLH6Kl0Feak5oL2DOZg839LFY4ryllpkqyOZJPxrjuU/j+UINDXF3NfM+itbh8XS
+         Y6chsCly6LfT46PgutJBzLXE+/9hYnAKCklKz5UcaTd9Q5EFHy70FrR6/sp73L6d6C8w
+         2NCdZK2VrH/eeb7YllM4THRIgS7TjdtUWM214dENabok7+CePli0Nsf9b5KWDxpKyc2d
+         lHMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780420324; x=1781025124;
+        d=1e100.net; s=20251104; t=1780420326; x=1781025126;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QiD8IXQeXxy+XxXoOS7MbARKdoSa/8YQRGqVyGhTR0M=;
-        b=LyK1hSNye2K0XhWNghMEUxV0lEzNSIKDarxFnOoUwV9WTXiddumOFz5bF087xh1kND
-         pZkTOmVyXlRRwm32qrk/VJKGi6cnZyZ+ddE06wzT6jW/gMQYvuLrlw2PAjSdY+ciH8PF
-         vcJVlj4Xc948G1IHVD+2yxLbg4pShT8C7asIYsLEAop/q4wpV62wJ3qrheDHZGalDSn7
-         lx/sAidq9kVGFqBf25eEx5qwx2ajqzFN8uBhkNZSj2ktgwE4dtFnI1smxDSMWCHeB0VW
-         MxY1A4qlcKdbABDfizLxSK7v7c3VTEUFE7o4MOCdJ7NrpHMSYtDrOo6HXaY6BRvOwmik
-         a+vw==
-X-Forwarded-Encrypted: i=1; AFNElJ9bCgW94vHgfB8SW6CuxpWFRXjPV6Dtnx+Po96TuBYICoLOy77m58o05i1yXWMtJkRB7WW2fPti9n1bGKopPPA84vA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3qjTXqrvZ8BS2n2+oyPSNY2Be1RSJqDxuCEt8DaQOpM60o1Ue
-	M9ScJwLcdQWrSP4sdx5ge6FmcfjTb68UOE8XsNracElitH7zTi/GW4ULlx3KC1Bo7bu7AHv2oVu
-	L7wUxXlqUCwyX40HAMeb5oA==
-X-Received: from wmbjp5.prod.google.com ([2002:a05:600c:5585:b0:490:ae3b:b7c9])
+        bh=fijxRpUtwWebZSoIxVCctPN4xNPYzLYlfDMdHnsAC60=;
+        b=s+cNEG8kwYYDW0Y5wT7HuV2YxbnTQAR+bpV8HOtOxBXaJiwCEX1Q1wLRdpD00GadZv
+         9M27GexcVM1ihIxYSebHc1H8pMRFP/jQPHeCxoxxv9j4CfrJt5JjHj4c2r7TJyV4FdRA
+         xojKgCM+vhEV1EJX9RwdCeZZBSH/igeKLNHT6rc9LZceMHupgzHdoOtAb3JTLQ929Cjq
+         XLiUF/OtPjX6QaT982N3Q0mkLCjoBNmCa4SNH7lXDuwYGOUS7nzzAp7EktnnEMKoJX6h
+         MWFiSX7p5Zvabl+RqR4+EXpBYNM80LjZ3vUREZAY7c24srK/R9dFDH9ojVAphol7MVy6
+         cq/w==
+X-Forwarded-Encrypted: i=1; AFNElJ/V0mJCzRRPAoBp3/5AdDO+n2wk/BQM995YxYaZMX5edSMEX1gNPo6O4yXidccAliiAwmgqM9EyD+9Rcczi8k8hyBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIXSsMEohSlVe/WMVQSRZJbhzI1buBzWadi+fRqoG5/RyLZ9d2
+	LaUA0t0VlnfuwKyPS502A9tSgmDQ2tsWmmir3enjwEvKXaiT+1XKg+Yq52MqgDzARNtYNtxxQI5
+	XaBrxqoGM1rZsSnx916p42Q==
+X-Received: from wrtr3.prod.google.com ([2002:a5d:4e43:0:b0:43d:7611:5aa5])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:6304:b0:490:abd7:fd9 with SMTP id 5b1f17b1804b1-490b50499c0mr9431555e9.10.1780420324430;
- Tue, 02 Jun 2026 10:12:04 -0700 (PDT)
-Date: Tue,  2 Jun 2026 18:11:37 +0100
+ 2002:a5d:6211:0:b0:45e:f228:830d with SMTP id ffacd0b85a97d-4601f6334e8mr221325f8f.23.1780420325431;
+ Tue, 02 Jun 2026 10:12:05 -0700 (PDT)
+Date: Tue,  2 Jun 2026 18:11:38 +0100
 In-Reply-To: <20260602171146.2238998-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260602171146.2238998-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260602171146.2238998-6-vdonnefort@google.com>
-Subject: [PATCH 05/13] tracing/remotes: Add printk tracefs file
+Message-ID: <20260602171146.2238998-7-vdonnefort@google.com>
+Subject: [PATCH 06/13] tracing/remotes: selftests: Add a test for the printk
+ tracefs file
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org
@@ -67,192 +68,118 @@ Cc: kernel-team@android.com, linux-kernel@vger.kernel.org,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When enabled, the printk tracefs file enables the redirection of all
-events to dmesg. This is similar to tp_printk.
+Exercise the newly introduced printk tracefs file that turns on and off
+the dmesg redirection.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index 21583fae1bd9..1bf0ba159c92 100644
---- a/kernel/trace/trace_remote.c
-+++ b/kernel/trace/trace_remote.c
-@@ -21,6 +21,7 @@
- enum tri_type {
- 	TRI_CONSUMING,
- 	TRI_NONCONSUMING,
-+	TRI_PRINTK,
- };
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
+index 05224fac3653..8dd9c961977b 100644
+--- a/tools/testing/selftests/ftrace/test.d/remotes/functions
++++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
+@@ -8,6 +8,7 @@ setup_remote()
  
- struct trace_remote_iterator {
-@@ -42,6 +43,7 @@ struct trace_remote {
- 	void				*priv;
- 	struct trace_buffer		*trace_buffer;
- 	struct trace_buffer_desc	*trace_buffer_desc;
-+	struct trace_remote_iterator	*printk;
- 	struct dentry			*dentry;
- 	struct eventfs_inode		*eventfs_root;
- 	struct eventfs_inode		*eventfs_subdir;
-@@ -335,6 +337,8 @@ static int __alloc_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
- 	return 0;
- }
- 
-+static void trace_remote_do_printk(struct trace_remote *remote);
+ 	cd remotes/$name/
+ 	echo 0 > tracing_on
++	echo 0 > printk
+ 	clear_trace
+ 	echo 7 > buffer_size_kb
+ 	echo 0 > events/enable
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/printk.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/printk.tc
+new file mode 100644
+index 000000000000..aca7a2bfe293
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/printk.tc
+@@ -0,0 +1,11 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test trace remote printk, the dmesg redirection
++# requires: remotes/hypervisor/write_event
 +
- static void __poll_remote(struct work_struct *work)
- {
- 	struct delayed_work *dwork = to_delayed_work(work);
-@@ -342,6 +346,7 @@ static void __poll_remote(struct work_struct *work)
- 
- 	remote = container_of(dwork, struct trace_remote, poll_work);
- 	ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
-+	trace_remote_do_printk(remote);
- 
- 	schedule_delayed_work(dwork, msecs_to_jiffies(remote->poll_ms));
- }
-@@ -351,6 +356,8 @@ static void trace_remote_inc_poll(struct trace_remote *remote)
- 	/* poll_cnt <= nr_readers, inherits its overflow protection */
- 	if (!remote->poll_cnt++) {
- 		ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
-+		trace_remote_do_printk(remote);
++SOURCE_REMOTE_TEST=1
++. $TEST_DIR/remotes/printk.tc
 +
- 		schedule_delayed_work(&remote->poll_work, msecs_to_jiffies(remote->poll_ms));
- 	}
- }
-@@ -393,6 +400,14 @@ static struct trace_remote_iterator
- 		trace_seq_init(&iter->seq);
- 
- 		switch (type) {
-+		case TRI_PRINTK:
-+			/* only one printk iter allowed */
-+			if (WARN_ON_ONCE(remote->printk)) {
-+				ret = -EBUSY;
-+				break;
-+			}
-+			smp_store_release(&remote->printk, iter);
-+			fallthrough;
- 		case TRI_CONSUMING:
- 			trace_remote_inc_poll(remote);
- 			break;
-@@ -427,6 +442,11 @@ static void trace_remote_iter_free(struct trace_remote_iterator *iter)
- 	lockdep_assert_held(&remote->lock);
- 
- 	switch (iter->type) {
-+	case TRI_PRINTK:
-+		WARN_ON_ONCE(remote->printk != iter);
-+		smp_store_release(&remote->printk, NULL);
-+		flush_delayed_work(&remote->poll_work);
-+		fallthrough;
- 	case TRI_CONSUMING:
- 		trace_remote_dec_poll(remote);
- 		break;
-@@ -504,6 +524,7 @@ __peek_event(struct trace_remote_iterator *iter, int cpu, u64 *ts, unsigned long
- 	struct ring_buffer_iter *rb_iter;
- 
- 	switch (iter->type) {
-+	case TRI_PRINTK:
- 	case TRI_CONSUMING:
- 		return ring_buffer_peek(iter->remote->trace_buffer, cpu, ts, lost_events);
- 	case TRI_NONCONSUMING:
-@@ -571,6 +592,7 @@ static void trace_remote_iter_move(struct trace_remote_iterator *iter)
- 	struct trace_buffer *trace_buffer = iter->remote->trace_buffer;
- 
- 	switch (iter->type) {
-+	case TRI_PRINTK:
- 	case TRI_CONSUMING:
- 		ring_buffer_consume(trace_buffer, iter->evt_cpu, NULL, NULL);
- 		break;
-@@ -814,6 +836,80 @@ static const struct file_operations trace_fops = {
- 	.release	= trace_release,
- };
- 
-+static void trace_remote_do_printk(struct trace_remote *remote)
++set -e
++setup_remote "hypervisor"
++test_printk
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/printk.tc b/tools/testing/selftests/ftrace/test.d/remotes/printk.tc
+new file mode 100644
+index 000000000000..80eaf13e240d
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/printk.tc
+@@ -0,0 +1,72 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test trace remote printk, the dmesg redirection
++# requires: remotes/test
++
++. $TEST_DIR/remotes/functions
++
++test_printk()
 +{
-+	struct trace_remote_iterator *iter = smp_load_acquire(&remote->printk);
++    echo 0 > tracing_on
++    assert_unloaded
 +
-+	if (!iter)
-+		return;
++    #
++    # Test printk on/off when tracing is disabled
++    #
++    echo 1 > printk
++    test $(cat printk) -eq 1
++    assert_loaded
 +
-+	trace_remote_iter_read_start(iter);
++    echo 0 > printk
++    test $(cat printk) -eq 0
++    assert_unloaded
 +
-+	while (trace_remote_iter_read_event(iter)) {
-+		trace_seq_init(&iter->seq);
++    #
++    # Test events are logged to dmesg
++    #
++    dmesg -c > /dev/null
 +
-+		trace_remote_iter_print_event(iter);
-+		if (!pr_emerg("%s", iter->seq.buffer))
-+			break;
++    echo 1 > tracing_on
++    assert_loaded
++    echo 1 > printk
++    test $(cat printk) -eq 1
 +
-+		trace_remote_iter_move(iter);
-+	}
++    nr_events=128
++    for i in $(seq 1 $nr_events); do
++        echo $i > write_event
++    done
 +
-+	trace_remote_iter_read_finished(iter);
++    sleep 1
++    output=$(mktemp $TMPDIR/remote_test.XXXXXX)
++    dmesg | grep "selftest id=" | sed 's/^[^]]*] //'> $output
++
++    check_trace 1 $nr_events $output
++
++    rm $output
++
++    #
++    # Disable printk and Test events were not consumed by dmesg
++    #
++    echo 0 > printk
++    test $(cat printk) -eq 0
++
++    start_id=$(($nr_events + 1))
++    end_id=$(($start_id + $nr_events))
++
++    for i in $(seq $start_id $end_id); do
++        echo $i > write_event
++    done
++
++    sleep 1
++
++    output=$(dump_trace_pipe)
++    check_trace $start_id $end_id $output
++    rm $output
 +}
 +
-+static int trace_remote_enable_printk(struct trace_remote *remote, bool enable)
-+{
-+	struct trace_remote_iterator *iter = remote->printk;
++if [ -z "$SOURCE_REMOTE_TEST" ]; then
++    set -e
 +
-+	lockdep_assert_held(&remote->lock);
-+
-+	if (enable == !!iter)
-+		return 0;
-+
-+	if (enable) {
-+		iter = trace_remote_iter(remote, RING_BUFFER_ALL_CPUS, TRI_PRINTK);
-+		if (IS_ERR(iter))
-+			return PTR_ERR(iter);
-+	} else {
-+		trace_remote_iter_free(remote->printk);
-+		/* trace_remote_iter_free has reset remote->printk */
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t
-+printk_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
-+{
-+	struct seq_file *seq = filp->private_data;
-+	struct trace_remote *remote = seq->private;
-+	bool val;
-+	int ret;
-+
-+	ret = kstrtobool_from_user(ubuf, cnt, &val);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&remote->lock);
-+
-+	ret = trace_remote_enable_printk(remote, val);
-+	if (ret)
-+		return ret;
-+
-+	return cnt;
-+}
-+
-+static int printk_show(struct seq_file *s, void *unused)
-+{
-+	struct trace_remote *remote = s->private;
-+
-+	seq_printf(s, "%d\n", !!remote->printk);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_STORE_ATTRIBUTE(printk);
-+
- static struct dentry *tracefs_root;
- static DEFINE_MUTEX(tracefs_lock);
- static u64 tracefs_root_count;
-@@ -858,6 +954,10 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
- 	if (!d)
- 		goto err;
- 
-+	d = trace_create_file("printk", TRACEFS_MODE_WRITE, remote_d, remote, &printk_fops);
-+	if (!d)
-+		goto err;
-+
- 	percpu_d = tracefs_create_dir("per_cpu", remote_d);
- 	if (!percpu_d) {
- 		pr_err("Failed to create tracefs dir "TRACEFS_DIR"%s/per_cpu/\n", name);
++    setup_remote_test
++    test_printk
++fi
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
