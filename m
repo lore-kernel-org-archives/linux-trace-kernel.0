@@ -1,485 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3805E314B76;
-	Tue,  2 Jun 2026 02:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C37C23EAAF;
+	Tue,  2 Jun 2026 03:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780367335; cv=none; b=N78tDpKB0Smo1mNJH3KwVVmKJ5FyAmlZ89+O7FpUuy3/jWcNaArvQoXkiN9sHtxPewF+XLfbTCjElySfgI6mjYvA6IlDiAJ9RFNgkdZy38pv6a6G8+4Mv3yaXn667BOomoCDHekaCjhBm3Qjh7sG7sR7T8Y0g0KShTtKb7NG2P4=
+	t=1780369744; cv=none; b=WHgTeJ9Z8U8KCJSMOELEJmykkHl+oIhdFRRkB8pe2dwbky8dXHIhGxOvZ95a0hfjA0hIjmZQ9jH7pAi0XThio1G+ExQl/xcGBNJCl/VA8s4UEk4mGreOJPVmC1+VOkvLyVW81xhIDFDecd91bhWxjLbvSOyR+zXregruVkNL43E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780367335; c=relaxed/simple;
-	bh=gOlSvx2bjG33gi+MyDNzZuw07gvf6uPfSU/KDYKmmfI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AYPZK1uxD4XRjBBtnEaUIXm4HznVNwX5mmm7A9sxQohz05VbNLsfJADoNNguy0rIKAkHvDFPIaROt9b9ExXmRkNIBS57VbrH/DQ+7+0fCLdDQtCSGh7bk+m0LI0A3HZ0sSV1Vdidqxkrf2thxFkb6SRNXoPN1rFN5OiSJgxpSIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKjBzFKM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780369744; c=relaxed/simple;
+	bh=JdtkIHo86r93mLpvlA9hHSrLiBIeaKQl1noIOfoI+HQ=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=KgXfMNseG42T3c0plh4jexlidqwzmdHbBPWKbW86AZAwnNk+2Rckuz2RTB/sZ8p8O9nf4bYGnXx8T+4dprxOzge7o7gB5CTWjezdOT9nzQNzzrGsi16SZ2hrSPCuqS4sN53SeN4G0OfXHrRzPqWaBfiwyrd6LmxIn9rE3d6ik5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Te/fsP91; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKjBzFKM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324921F00893;
-	Tue,  2 Jun 2026 02:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780367333;
-	bh=ezEo9cc7JkXhvm7MxxgrpmuedxkDa6q29rwJw20PSto=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=RKjBzFKMg/P76hm1jPtQ4ZKdX6/L9B0Qtk+ScXRwRcZvF3IgOs0lOOdGaak42o2ak
-	 nY3PtpAUTeU1+OcF0NWfpzQ1+csczVWJXm3C74l9GfZ67SmoCLvt2tImHJIhEOkJFP
-	 hr8yhdgVI89l+lJNqdp2JNw2kjilcw7NAJTv0AF5zro+YEDHFsZRQ819/sX31Lf5d4
-	 UkHis2ZgjDDUMdu+G/7hCJ4QiKbURMgGdmPeD87+r7i7h+WOookHE31hHn1IFmvXRT
-	 6IrrygaUsXQbHcBV4Fcy02fz1ZlNkZqFAfJs/+VrC/d2L6x4+8X+7d0xQQcvhizhdE
-	 Q3HZobEs8Lh1g==
-Date: Tue, 2 Jun 2026 11:28:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
- Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
- <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ian  Rogers <irogers@google.com>, Jiri Olsa
- <olsajiri@gmail.com>
-Subject: Re: [RESEND][PATCH v8] tracing/eprobes: Allow use of BTF names to
- dereference pointers
-Message-Id: <20260602112847.f7529a3d376744f7111e3951@kernel.org>
-In-Reply-To: <20260601202546.564e867b@gandalf.local.home>
-References: <20260601202546.564e867b@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Te/fsP91"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=YbsuXNQSSzUTtgq4oSp1vzBur9x6afidpwasn1swHTs=;
+	b=Te/fsP91KX55l1Gbb+C9+u0k3lsQtDmYEzt1UfTZmzElSuKtGIKMJz5MC4kV2vuTKn97krApj
+	J66MNqF9SwWz/noaN6xm4l+pGq4tJSV1syNQETRFigZbQF53yFLWCqq6qJOg3GjxofiQLcH7wlJ
+	zkKwe43mzvaluygA+VwNMXY=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gTwZf55jlzpStZ;
+	Tue,  2 Jun 2026 11:01:14 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id E8F224056F;
+	Tue,  2 Jun 2026 11:08:50 +0800 (CST)
+Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 2 Jun 2026 11:08:50 +0800
+Received: from [10.173.124.160] (10.173.124.160) by
+ kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 2 Jun 2026 11:08:49 +0800
+Subject: Re: [PATCH v8 2/6] mm/memory-failure: surface unhandlable kernel
+ pages as -ENOTRECOVERABLE
+To: "David Hildenbrand (Arm)" <david@kernel.org>, Breno Leitao
+	<leitao@debian.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <kernel-team@meta.com>, Lance Yang
+	<lance.yang@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+	<nao.horiguchi@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>
+References: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
+ <20260527-ecc_panic-v8-2-9ea0cfa16bb0@debian.org>
+ <19f968f5-1289-f573-4406-e5c91dcd8923@huawei.com>
+ <e3d023f1-ab6e-4424-b304-55f1294480c3@kernel.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <33ef8821-c809-b7d1-ea77-6e8a07a6e784@huawei.com>
+Date: Tue, 2 Jun 2026 11:08:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+In-Reply-To: <e3d023f1-ab6e-4424-b304-55f1294480c3@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemq500010.china.huawei.com (7.202.194.235)
 
-On Mon, 1 Jun 2026 20:25:46 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 2026/6/1 21:22, David Hildenbrand (Arm) wrote:
+> On 6/1/26 14:28, Miaohe Lin wrote:
+>> On 2026/5/27 22:06, Breno Leitao wrote:
+>>> get_any_page() collapses every HWPoisonHandlable() rejection into a
+>>> single -EIO via the __get_hwpoison_page() -> -EBUSY -> shake_page()
+>>> -> retry path.  That is correct for the transient case (a userspace
+>>> folio briefly off LRU during migration or compaction, which a later
+>>> shake can drag back), but wrong for stable kernel-owned pages: slab,
+>>> page-table, large-kmalloc and PG_reserved pages will never become
+>>> HWPoisonHandlable(), so the retry loop is wasted work and the final
+>>> -EIO loses the "this is structurally unrecoverable" information.
+>>> memory_failure() then maps -EIO into MF_MSG_GET_HWPOISON, which the
+>>> panic-on-unrecoverable sysctl deliberately does not act on.
+>>>
+>>> Introduce HWPoisonKernelOwned(), a small predicate that positively
+>>> identifies pages the hwpoison handler cannot recover from:
+>>>
+>>>   HWPoisonKernelOwned(p, flags) :=
+>>>       !(MF_SOFT_OFFLINE && page_has_movable_ops(p)) &&
+>>>       (PageReserved(p) || PageSlab(p) ||
+>>>        PageTable(p)    || PageLargeKmalloc(p))
+>>>
+>>> The MF_SOFT_OFFLINE / page_has_movable_ops() opt-out mirrors the
+>>> same exception in HWPoisonHandlable(): soft-offline is allowed to
+>>> migrate movable_ops pages even though they are not on the LRU, and
+>>> we must not pre-empt that with an unrecoverable verdict.
+>>>
+>>> The list is intentionally not exhaustive.  vmalloc and kernel-stack
+>>> pages, for example, do not carry a page_type bit and would need a
+>>> different oracle; they keep going through the existing retry path
+>>> unchanged.  This is the smallest set we can identify with certainty
+>>> by page type.
+>>>
+>>> Wire the helper into the top of get_any_page() to short-circuit
+>>> those pages before the retry loop runs.  On a hit, drop the caller's
+>>> MF_COUNT_INCREASED reference (if any) and return -ENOTRECOVERABLE
+>>> straight away.  Pages outside the helper's positive list still take
+>>> the existing retry path and return -EIO, leaving operator-visible
+>>> behaviour for those cases unchanged.
+>>>
+>>> Extend the unhandlable-page pr_err() to fire for either errno and
+>>> update the get_hwpoison_page() kerneldoc to document the new return.
+>>>
+>>> memory_failure() still folds every negative return into
+>>> MF_MSG_GET_HWPOISON via its existing "else if (res < 0)" branch, so
+>>> this patch on its own only changes the errno that soft_offline_page()
+>>> can propagate to its callers.  A follow-up wires -ENOTRECOVERABLE
+>>> through memory_failure() and reports MF_MSG_KERNEL for the
+>>> unrecoverable cases, which is what the
+>>> panic_on_unrecoverable_memory_failure sysctl observes.
+>>
+>> Thanks for your patch.
+>>
+>>>
+>>> Suggested-by: David Hildenbrand <david@kernel.org>
+>>> Suggested-by: Lance Yang <lance.yang@linux.dev>
+>>> Signed-off-by: Breno Leitao <leitao@debian.org>
+>>> ---
+>>>  mm/memory-failure.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+>>>  1 file changed, 40 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+>>> index f4d3e6e20e13..8f63bdfeff8f 100644
+>>> --- a/mm/memory-failure.c
+>>> +++ b/mm/memory-failure.c
+>>> @@ -1325,6 +1325,28 @@ static inline bool HWPoisonHandlable(struct page *page, unsigned long flags)
+>>>  	return PageLRU(page) || is_free_buddy_page(page);
+>>>  }
+>>>  
+>>> +/*
+>>> + * Positive identification of pages the hwpoison handler cannot recover.
+>>> + * These page types are owned by kernel internals (no userspace mapping
+>>> + * to unmap, no file mapping to invalidate, no migration target), so the
+>>> + * shake_page() / retry loop in get_any_page() can never turn them into
+>>> + * something HWPoisonHandlable() will accept.  Short-circuit them to
+>>> + * -ENOTRECOVERABLE so callers can panic on operator request instead of
+>>> + * spinning through retries that exit as a transient-looking -EIO.
+>>> + *
+>>> + * The MF_SOFT_OFFLINE / page_has_movable_ops() opt-out mirrors
+>>> + * HWPoisonHandlable(): soft-offline is allowed to migrate movable_ops
+>>> + * pages even though they are not on the LRU.
+>>> + */
+>>> +static inline bool HWPoisonKernelOwned(struct page *page, unsigned long flags)
+>>> +{
+>>> +	if ((flags & MF_SOFT_OFFLINE) && page_has_movable_ops(page))
+>>> +		return false;
+>>> +
+>>> +	return PageReserved(page) || PageSlab(page) ||
+>>
+>> Once shake_page finds a lightweight range-based way to shrink slab, slab pages could be freed
+>> into buddy and above PageSlab test should be removed then. Maybe add a TODO or XXX here?
+>>
+>>> +	       PageTable(page) || PageLargeKmalloc(page);
+>>
+>> I'm not sure but is it safe or a common way to test PageReserved, PageSlab,
+>> PageTable and PageLargeKmalloc without extra page refcnt?
+> 
+> Checking typed pages in a racy fashion is fine (PageSlab, PageTable,
+> PageLargeKmalloc).
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Add syntax to the parsing of eprobes to be able to typecast a trace event
-> field that is a pointer to a structure.
-> 
-> Currently, a dereference must be a number, where the user has to figure
-> out manually the offset of a member of a structure that they want to
-> dereference.
-> 
-> But for event probes that records a field that happens to be a pointer to
-> a structure, it cannot dereference these values with BTF naming, but
-> must use numerical offsets.
-> 
-> For example, to find out what device a sk_buff is pointing to in the
-> net_dev_xmit trace event, one must first use gdb to find the offsets of the
-> members of the structures:
-> 
->  (gdb) p &((struct sk_buff *)0)->dev
->  $1 = (struct net_device **) 0x10
->  (gdb) p &((struct net_device *)0)->name
->  $2 = (char (*)[16]) 0x118
-> 
-> And then use the raw numbers to dereference:
-> 
->   # echo 'e:xmit net.net_dev_xmit +0x118(+0x10($skbaddr)):string' >> dynamic_events
-> 
-> If BTF is in the kernel, then instead, the skbaddr can be typecast to
-> sk_buff and use the normal dereference logic.
-> 
->   # echo 'e:xmit net.net_dev_xmit (sk_buff)skbaddr->dev->name:string' >> dynamic_events
->   # echo 1 > events/eprobes/xmit/enable
->   # cat trace
-> [..]
->     sshd-session-1022    [000] b..2.   860.249343: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.250061: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.250142: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.263553: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.283820: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.302716: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.322905: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.342828: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.362268: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.382335: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.400856: xmit: (net.net_dev_xmit) arg1="enp7s0"
->     sshd-session-1022    [000] b..2.   860.419893: xmit: (net.net_dev_xmit) arg1="enp7s0"
-> 
-> The syntax is simply: (STRUCT)(FIELD)->MEMBER[->MEMBER..]
-> 
-> Also add comments around the #else and #endif of #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
-> to know what they are for.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> 
-> [ Resend with base-id below, maybe Sashiko will apply it to the correct tree! ]
+Got it. Thanks.
 
-Sashiko still faailed to apply this... Not sure why.
+> Checking PageReserved in a racy fashion is fine as well. TESTPAGEFLAG() will
+> allow checking it on compound pages.
 
-https://sashiko.dev/#/message/20260601202546.564e867b%40gandalf.local.home
-
-Maybe better to configure Sashiko via github or sashiko-ml?
-https://github.com/sashiko-dev/sashiko/blob/main/MAINTAINERS_GUIDE.md
-
-Anyway, at least for me, this looks good.
-
-Thanks,
+It seems PageReserved is not intended to be set on compound pages. I see there are PF_NO_COMPOUND
+in its definition: PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND).
 
 > 
-> base-id: 585abc02be3d3ab82fbcc4dbcbbf0ceb61a02129
+> For PageLargeKmalloc, we would want to check the head page, though. The page
+> type is only stored for the head page.
+
+Maybe we should check the head page for PageSlab and PageTable too? alloc_slab_page only
+set PageSlab on the head page and __pagetable_ctor uses __folio_set_pgtable to set PageTable
+on folio.
+
 > 
-> Changes since v7: https://patch.msgid.link/20260529110442.0967a64c@fedora
-> 
-> - Add error message in parse_btf_args() for failed parsing of TEVENT.
->   (Sashiko)
-> 
-> - Remove TPARG_FL_TYPECAST and just use ctx->struct_btf instead.
->   The flag was redundant and added unnecessary complexity.
-> 
-> - Restructure to keep the lifetime of the TYPECAST to the end of
->   traceprobe_parse_probe_arg_body(). This allows the last_type to stay
->   around in case there's not a type parameter and then btf can still be
->   used.
->   (Sashiko and Masami Hiramatsu)
-> 
->  Documentation/trace/eprobetrace.rst |   4 +
->  kernel/trace/trace_probe.c          | 173 +++++++++++++++++++++++-----
->  kernel/trace/trace_probe.h          |   5 +-
->  3 files changed, 154 insertions(+), 28 deletions(-)
-> 
-> diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
-> index 89b5157cfab8..fe3602540569 100644
-> --- a/Documentation/trace/eprobetrace.rst
-> +++ b/Documentation/trace/eprobetrace.rst
-> @@ -46,6 +46,10 @@ Synopsis of eprobe_events
->  		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
->                    "string", "ustring", "symbol", "symstr" and "bitfield" are
->                    supported.
-> +  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-> +                  a pointer to STRUCT and then derference the pointer defined by
-> +                  ->MEMBER. Note that when this is used, the FIELD name does not
-> +                  need to be prefixed with a '$'.
->  
->  Types
->  -----
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 695310571b08..fd1caa1f9723 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -332,6 +332,23 @@ static int parse_trace_event_arg(char *arg, struct fetch_insn *code,
->  	return -ENOENT;
->  }
->  
-> +static int parse_trace_event(char *arg, struct fetch_insn *code,
-> +			     struct traceprobe_parse_context *ctx)
-> +{
-> +	int ret;
-> +
-> +	if (code->data)
-> +		return -EFAULT;
-> +	ret = parse_trace_event_arg(arg, code, ctx);
-> +	if (!ret)
-> +		return 0;
-> +	if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
-> +		code->op = FETCH_OP_COMM;
-> +		return 0;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
->  #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
->  
->  static u32 btf_type_int(const struct btf_type *t)
-> @@ -376,11 +393,16 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
->  		&& BTF_INT_BITS(intdata) == 8;
->  }
->  
-> +static struct btf *ctx_btf(struct traceprobe_parse_context *ctx)
-> +{
-> +	return ctx->struct_btf ? : ctx->btf;
-> +}
-> +
->  static int check_prepare_btf_string_fetch(char *typename,
->  				struct fetch_insn **pcode,
->  				struct traceprobe_parse_context *ctx)
->  {
-> -	struct btf *btf = ctx->btf;
-> +	struct btf *btf = ctx_btf(ctx);
->  
->  	if (!btf || !ctx->last_type)
->  		return 0;
-> @@ -506,6 +528,15 @@ static int query_btf_context(struct traceprobe_parse_context *ctx)
->  	return 0;
->  }
->  
-> +static void clear_struct_btf(struct traceprobe_parse_context *ctx)
-> +{
-> +	if (ctx->struct_btf) {
-> +		btf_put(ctx->struct_btf);
-> +		ctx->struct_btf = NULL;
-> +		ctx->last_struct = NULL;
-> +	}
-> +}
-> +
->  static void clear_btf_context(struct traceprobe_parse_context *ctx)
->  {
->  	if (ctx->btf) {
-> @@ -554,22 +585,29 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
->  	struct fetch_insn *code = *pcode;
->  	const struct btf_member *field;
->  	u32 bitoffs, anon_offs;
-> +	bool is_struct = ctx->struct_btf != NULL;
-> +	struct btf *btf = ctx_btf(ctx);
->  	char *next;
->  	int is_ptr;
->  	s32 tid;
->  
->  	do {
-> -		/* Outer loop for solving arrow operator ('->') */
-> -		if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
-> -			trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-> -			return -EINVAL;
-> -		}
-> -		/* Convert a struct pointer type to a struct type */
-> -		type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
-> -		if (!type) {
-> -			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> -			return -EINVAL;
-> +		if (!is_struct) {
-> +			/* Outer loop for solving arrow operator ('->') */
-> +			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
-> +				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-> +				return -EINVAL;
-> +			}
-> +
-> +			/* Convert a struct pointer type to a struct type */
-> +			type = btf_type_skip_modifiers(btf, type->type, &tid);
-> +			if (!type) {
-> +				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> +				return -EINVAL;
-> +			}
->  		}
-> +		/* Only the first type can skip being a pointer */
-> +		is_struct = false;
->  
->  		bitoffs = 0;
->  		do {
-> @@ -580,7 +618,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
->  				return is_ptr;
->  
->  			anon_offs = 0;
-> -			field = btf_find_struct_member(ctx->btf, type, fieldname,
-> +			field = btf_find_struct_member(btf, type, fieldname,
->  						       &anon_offs);
->  			if (IS_ERR(field)) {
->  				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> @@ -602,7 +640,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
->  				ctx->last_bitsize = 0;
->  			}
->  
-> -			type = btf_type_skip_modifiers(ctx->btf, field->type, &tid);
-> +			type = btf_type_skip_modifiers(btf, field->type, &tid);
->  			if (!type) {
->  				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
->  				return -EINVAL;
-> @@ -640,7 +678,7 @@ static int parse_btf_arg(char *varname,
->  	int i, is_ptr, ret;
->  	u32 tid;
->  
-> -	if (WARN_ON_ONCE(!ctx->funcname))
-> +	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT)))
->  		return -EINVAL;
->  
->  	is_ptr = split_next_field(varname, &field, ctx);
-> @@ -653,6 +691,19 @@ static int parse_btf_arg(char *varname,
->  		return -EOPNOTSUPP;
->  	}
->  
-> +	if (ctx->flags & TPARG_FL_TEVENT) {
-> +		ret = parse_trace_event(varname, code, ctx);
-> +		if (ret < 0) {
-> +			trace_probe_log_err(ctx->offset, BAD_ATTACH_ARG);
-> +			return ret;
-> +		}
-> +		/* TEVENT is only here via a typecast */
-> +		if (WARN_ON_ONCE(ctx->struct_btf == NULL))
-> +			return -EINVAL;
-> +		type = ctx->last_struct;
-> +		goto found_type;
-> +	}
-> +
->  	if (ctx->flags & TPARG_FL_RETURN && !strcmp(varname, "$retval")) {
->  		code->op = FETCH_OP_RETVAL;
->  		/* Check whether the function return type is not void */
-> @@ -709,6 +760,7 @@ static int parse_btf_arg(char *varname,
->  
->  found:
->  	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
-> +found_type:
->  	if (!type) {
->  		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
->  		return -EINVAL;
-> @@ -727,7 +779,7 @@ static int parse_btf_arg(char *varname,
->  static const struct fetch_type *find_fetch_type_from_btf_type(
->  					struct traceprobe_parse_context *ctx)
->  {
-> -	struct btf *btf = ctx->btf;
-> +	struct btf *btf = ctx_btf(ctx);
->  	const char *typestr = NULL;
->  
->  	if (btf && ctx->last_type)
-> @@ -758,7 +810,67 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
->  	return 0;
->  }
->  
-> -#else
-> +static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
-> +{
-> +	struct btf *btf = NULL;
-> +	int id;
-> +
-> +	/* A struct_btf should only be used by a single argument */
-> +	if (WARN_ON_ONCE(ctx->struct_btf)) {
-> +		btf_put(ctx->struct_btf);
-> +		ctx->struct_btf = NULL;
-> +	}
-> +
-> +	id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
-> +	if (id < 0)
-> +		return id;
-> +	ctx->struct_btf = btf;
-> +	ctx->last_struct = btf_type_by_id(ctx->struct_btf, id);
-> +	return 0;
-> +}
-> +
-> +static int handle_typecast(char *arg, struct fetch_insn **pcode,
-> +			   struct fetch_insn *end,
-> +			   struct traceprobe_parse_context *ctx)
-> +{
-> +	char *tmp;
-> +	int ret;
-> +
-> +	/* Currently this only works for eprobes */
-> +	if (!(ctx->flags & TPARG_FL_TEVENT)) {
-> +		trace_probe_log_err(ctx->offset, TYPECAST_NOT_EVENT);
-> +		return -EINVAL;
-> +	}
-> +
-> +	tmp = strchr(arg, ')');
-> +	if (!tmp) {
-> +		trace_probe_log_err(ctx->offset + strlen(arg),
-> +				    DEREF_OPEN_BRACE);
-> +		return -EINVAL;
-> +	}
-> +	*tmp = '\0';
-> +	ret = query_btf_struct(arg + 1, ctx);
-> +	*tmp = ')';
-> +
-> +	if (ret < 0) {
-> +		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
-> +		return -EINVAL;
-> +	}
-> +
-> +	tmp++;
-> +
-> +	ctx->offset += tmp - arg;
-> +	ret = parse_btf_arg(tmp, pcode, end, ctx);
-> +	return ret;
-> +}
-> +
-> +#else /* !CONFIG_PROBE_EVENTS_BTF_ARGS */
-> +
-> +static void clear_struct_btf(struct traceprobe_parse_context *ctx)
-> +{
-> +	ctx->struct_btf = NULL;
-> +}
-> +
->  static void clear_btf_context(struct traceprobe_parse_context *ctx)
->  {
->  	ctx->btf = NULL;
-> @@ -794,7 +906,15 @@ static int check_prepare_btf_string_fetch(char *typename,
->  	return 0;
->  }
->  
-> -#endif
-> +static int handle_typecast(char *arg, struct fetch_insn **pcode,
-> +			   struct fetch_insn *end,
-> +			   struct traceprobe_parse_context *ctx)
-> +{
-> +	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +#endif /* CONFIG_PROBE_EVENTS_BTF_ARGS */
->  
->  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
->  
-> @@ -948,16 +1068,9 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
->  	int len;
->  
->  	if (ctx->flags & TPARG_FL_TEVENT) {
-> -		if (code->data)
-> -			return -EFAULT;
-> -		ret = parse_trace_event_arg(arg, code, ctx);
-> -		if (!ret)
-> -			return 0;
-> -		if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
-> -			code->op = FETCH_OP_COMM;
-> -			return 0;
-> -		}
-> -		goto inval;
-> +		if (parse_trace_event(arg, code, ctx) < 0)
-> +			goto inval;
-> +		return 0;
->  	}
->  
->  	if (str_has_prefix(arg, "retval")) {
-> @@ -1224,6 +1337,9 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
->  				code->op = FETCH_OP_IMM;
->  		}
->  		break;
-> +	case '(':
-> +		ret = handle_typecast(arg, pcode, end, ctx);
-> +		break;
->  	default:
->  		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
->  			if (!tparg_is_function_entry(ctx->flags) &&
-> @@ -1556,6 +1672,9 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  	}
->  	kfree(tmp);
->  
-> +	/* struct_btf should not be passed to other arguments */
-> +	clear_struct_btf(ctx);
-> +
->  	return ret;
->  }
->  
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 1076f1df347b..15758cc11fc6 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -422,7 +422,9 @@ struct traceprobe_parse_context {
->  	const struct btf_param *params;	/* Parameter of the function */
->  	s32 nr_params;			/* The number of the parameters */
->  	struct btf *btf;		/* The BTF to be used */
-> +	struct btf *struct_btf;		/* The BTF to be used for structs */
->  	const struct btf_type *last_type;	/* Saved type */
-> +	const struct btf_type *last_struct;	/* Saved structure */
->  	u32 last_bitoffs;		/* Saved bitoffs */
->  	u32 last_bitsize;		/* Saved bitsize */
->  	struct trace_probe *tp;
-> @@ -563,7 +565,8 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
->  	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
->  	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
->  	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
-> -	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),
-> +	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),  \
-> +	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),
->  
->  #undef C
->  #define C(a, b)		TP_ERR_##a
-> -- 
-> 2.53.0
-> 
+> So maybe we want to lookup the compound head (if any) and perform the type
+> checks against that?
+
+Maybe we should or we might miss some pages that could have been handled. And
+if compound head is required, should we hold an extra page refcnt to guard against
+possible folio split race?
+
+Thanks.
+.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
