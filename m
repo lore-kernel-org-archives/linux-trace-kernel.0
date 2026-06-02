@@ -1,164 +1,251 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51162202997;
-	Mon,  1 Jun 2026 23:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD62CA5A;
+	Tue,  2 Jun 2026 00:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780357052; cv=none; b=pFUObUlKfJEfchtn0MzW2KlbFs5hj5L8rWdRUeddvu92C1yLXgaQhviv+EY3mvy0hAkZUOAK5C+7+GNA6FxFly66mObkTJE2MoVuqGz24if/54ezADBQconWXYpwsFV5pATP4xnKlBPu7ztVWLBEWMdfvjRd4ne3LVA6BOHbG14=
+	t=1780358643; cv=none; b=p9aMN/dxJzpTpLlfaN78wqT/JHmaIuKaQvyV3cpbLCp51uhgjPtK40jP9k9DzvNuVAr8zV0MdaXWNyKud2bEBnAnDOWBdmurqbPJXJMAKIlMvvBCZ+B+lGpuDD4UQnUVvVSlcCB543kU7ldr6KStdt22WDzHlchsC2l1ivuz5nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780357052; c=relaxed/simple;
-	bh=gNwDZR0BOrpxnyTpz7sFAD3CEJUerX3hG1oJjsQngd8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EeFgyCx50iqa0WV2C6KUyjl42XDlAotrxvqZ1A+HPyivIjese9gM3qqY5qbfeVGGht9eSGHrKcXfvEY+GmlOROrQSWijVnBt3juatGI4dskG33OAv7C/QBFrvjI7qwlFey121RQ0+nVcLu9kM9VKWiTjtjzTitV59PYjdqGu4ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=N2iuMkZX; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1780358643; c=relaxed/simple;
+	bh=Ame9ghegh/xfZ8Set5Ty8AShTX6Pqtodz56+x4jHdrA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=a4O+bowqPQcUVr5Gn41zOSoy++sCFgDYblMksNz3iRdWyQRaMYF6YNFWndwAC7R6tyaQ18Ye54Hs8rppqHo0POyveRKqd89CiylZ/WptklRmSZPlPsQXr51rWN6ZRpVCR6Q4NcL3j9ft3PP78benyzA4CsqJ6KpK9yDumWxdsRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMLK9OtD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N2iuMkZX"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 651Gu0ur665483;
-	Mon, 1 Jun 2026 23:37:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=8q06hpStnage6OU2+UFU0iKyf6hxu
-	aWmy7wWHYyDPj8=; b=N2iuMkZXSpygOZNA/2Ga6N6bhV9iMZFi26wF45m5bxXEW
-	kmFVdCNtZx7kb2zJ1YTKFDEO3iPvw+PfJSbsWGMDxBs/a3QxZ+lNLvyiO92wcIKn
-	aG9Uw/MF5cZBB3Gs1XVwnNM5XVovCawixYobLhQ5SWfXbs2gk3Qu/7tLSVKxXppS
-	sVNeeY8eg0Sh8z++KARDmbgfHQGvxTBv8y/PomBP83ALLQq2gH1E/wkaVEzP0hV/
-	3Ol/VpmbvZ0H5cniZeaRbmtRj7Cdy1CQZbTyF3IYDL902ZZWE9aTHk/DowoSu0xs
-	9cA/5SPKYfpmGR8Jv0dv9LE1Sf9U2888R0IZ/WJBQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4efpaau4m6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 01 Jun 2026 23:37:25 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 651NZGGq008349;
-	Mon, 1 Jun 2026 23:37:24 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4efpbqg394-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 01 Jun 2026 23:37:24 +0000 (GMT)
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 651NbOer014257;
-	Mon, 1 Jun 2026 23:37:24 GMT
-Received: from mbpatil-ws.osdevelopmeniad.oraclevcn.com (mbpatil-ol10-ws.webad1iad.osdevelopmeniad.oraclevcn.com [100.100.228.95])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 4efpbqg38w-1;
-	Mon, 01 Jun 2026 23:37:24 +0000 (GMT)
-From: Manjunath Patil <manjunath.b.patil@oracle.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Manjunath Patil <manjunath.b.patil@oracle.com>
-Subject: [PATCH] tracing/events: Expand ring buffer for in-kernel event enables
-Date: Mon,  1 Jun 2026 16:24:43 -0700
-Message-ID: <20260601233716.2517987-1-manjunath.b.patil@oracle.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMLK9OtD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239F01F00893;
+	Tue,  2 Jun 2026 00:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780358642;
+	bh=PMBzDEdJ+t1tRtuRHPcoS6ZiORXuO+/ViiMCOPdGyWo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=IMLK9OtDR2CDN3bS7oCZtwl2GmcVgnqLIjMIdXVDXejudo6oQC1v0QxVjYWHfK4vX
+	 W/GyDg5TlLNsDrU3NIuc8UFwqUdusKjD9bKwymyHg2ohNEPh5zEioJCFCZcRcSJZL6
+	 mnnr4nAq8XJoTvL4jtH+0ohZCOlozE8agbxJrTKbI6fjnDyN0OXTSGErpmkdhIbr5r
+	 VRR7BlInjQbJ2XolqmxZUW4dUeoKfadxWr1hxQk7rniXU/pBR//4p3F5ysHJME6TTr
+	 00hvfZlfe5+LwmpwRo9GB5qCf6Ar+XEFyZG7Zkyym1mZTdE0Ru1OSfFc+qTtTsMqQY
+	 1Nqb54VaowAtw==
+Date: Tue, 2 Jun 2026 09:03:56 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
+ Takaya Saeki <takayas@google.com>, Douglas Raillard
+ <douglas.raillard@arm.com>, Tom Zanussi <zanussi@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ian
+ Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>
+Subject: Re: PATCH v7] tracing/eprobes: Allow use of BTF names to
+ dereference pointers
+Message-Id: <20260602090356.aff2a25fed1ed9677eb84b7d@kernel.org>
+In-Reply-To: <20260601122126.5ebbd7e7@fedora>
+References: <20260529110442.0967a64c@fedora>
+	<20260530231427.b079fefffc724a40082cd64b@kernel.org>
+	<20260530110754.14870622@gandalf.local.home>
+	<20260531101458.c8ee22f6222a3fc224cc5328@kernel.org>
+	<20260601122126.5ebbd7e7@fedora>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-01_06,2026-05-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 phishscore=0 spamscore=0
- adultscore=0 malwarescore=0 lowpriorityscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.19.0-2605130000 definitions=main-2606010231
-X-Authority-Analysis: v=2.4 cv=T/S8ifKQ c=1 sm=1 tr=0 ts=6a1e17b5 b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
- a=x4eqshVgHu-cdnggieHk:22 a=yPCof4ZbAAAA:8 a=nvmwOJWoX3ZJLQ4Zfe8A:9
- a=5yU3S35YU4bGjq-dph-N:22 a=Bho9c0fBagfJEIQBS7DQ:22 cc=ntf awl=host:13714
-X-Proofpoint-ORIG-GUID: X85s225FTYFJBa6uLv3b5oE-5X4V3XY-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAxMDIzMCBTYWx0ZWRfX8QLZ+UbH6Hqp
- CMht2HSGOO8GwTsCMYcZ9L5ZHCCJaA5MNW7UgQnji6OhUxo2whz2nhvOet5ugPe9j8ShzP9uPJ0
- /xyx5dRO11jMLuC9w854Fg/kOfa3BcgglHCLIfmAg3n701HUiS6hUjgKuhycpLF4abc9LoceXZr
- hR/c09EqjomcgPoKksX6yrJ4dhtcGfbXTqCSVUP1HGzbx7Mv0PZZ4MvBt2z56ogEcAMf0e3t5eK
- zx4ucC9N6p8llkliNN3CaArC5ElsMJFBdmo6RB439kCrDCVa5clC5sQxo6h3/Pwm373TuypwF0L
- WDQHx0cI7s6YkoffCHP4Qo8eOSKTgi01oPtGyzBG9iPuTzBKw+esOXXh/GvT0Al/vVyPc5m3+MT
- e4MjoJwX4WjXbMs60jFyKLnQrTeLMhXYZsFS6A7t1uFi7DUN9f5Tg76RlXS23qWRmiK+47T5GF6
- Pe3s7mbHuLBQACMJXSD9yjfSLce9BOBF8m++apY4=
-X-Proofpoint-GUID: X85s225FTYFJBa6uLv3b5oE-5X4V3XY-
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Ftrace keeps trace arrays at a boot-minimum ring-buffer size until
-tracing is used. Tracefs event-enable paths already call
-tracing_update_buffers() before enabling events, but the exported
-in-kernel helpers trace_set_clr_event() and trace_array_set_clr_event()
-directly enable events through __ftrace_set_clr_event().
+On Mon, 1 Jun 2026 12:21:26 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This can leave events enabled by in-kernel users recording into the tiny
-boot-minimum buffer instead of the configured default-sized buffer. Any
-caller that enables events through these exported helpers observes
-different buffer-expansion behavior than a userspace tracefs event enable.
+> On Sun, 31 May 2026 10:14:58 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > > > Does this prematurely release the BTF struct reference?
+> > > > If TPARG_FL_TYPECAST is unset here and ctx->struct_btf is put, won't
+> > > > later steps in traceprobe_parse_probe_arg_body() (like
+> > > > find_fetch_type_from_btf_type()) fail to properly infer struct field sizes?
+> > > > When ctx_btf(ctx) is called later without TPARG_FL_TYPECAST set, it
+> > > > will evaluate to ctx->btf (which is NULL for eprobes).
+> > > > Could this potentially lead to silent defaults, such as 64-bit reads for
+> > > > smaller fields, or fail to inject pointer dereferences for string fields,
+> > > > while also leaving ctx->last_type pointing to a prematurely released BTF
+> > > > object?  
+> > > 
+> > > Does this mean we need to set ctx->last_type to NULL here too?  
+> > 
+> > No, since the member we refer can be different from unsigned long.
+> > When we don't have ":type" suffix, we use BTF type information to
+> > decide appropriate type.
+> > 
+> > > 
+> > > Because everything above is pretty much the expected behavior. The put is
+> > > *not* premature. The last_struct and struct_btf are both set to NULL. I
+> > > guess the only thing missing is to reset last_type as well.  
+> > 
+> > No, as I explained, the last_type is used to determine the member type
+> > when user does not specify the ":type" suffix.
+> > 
+> > So, what we need to do is deferring the btf_put(struct_btf) as below:
+> > (no build test yet.)
+> 
+> OK, but I don't think we want the struct_btf to exist beyond a single
+> arg like the btf descriptor does. How about this (on top of this change),
+> where it clears the struct_btf at the end of traceprobe_parse_probe_arg_body()?
+> 
+> Also, I see the flag as being redundant and use the existence of
+> struct_btf to denote that it's parsing a typedef struct.
 
-Expand the relevant trace array before enabling events through the
-exported in-kernel helpers, matching the tracefs event-enable behavior.
-Disabling events remains unchanged.
+Ah, indeed. OK, let me check v8 patch.
 
-Assisted-by: Codex:gpt-5
-Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
----
- kernel/trace/trace_events.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Thanks!
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c46e623e7e0d..3ce5b0121c5c 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1479,10 +1479,22 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
- int trace_set_clr_event(const char *system, const char *event, int set)
- {
- 	struct trace_array *tr = top_trace_array();
-+	int ret;
- 
- 	if (!tr)
- 		return -ENODEV;
- 
-+	/*
-+	 * Keep in-kernel event enabling consistent with tracefs event
-+	 * enabling: once an event is being enabled, expand the boot-minimum
-+	 * ring buffer to the configured default size before records arrive.
-+	 */
-+	if (set) {
-+		ret = tracing_update_buffers(tr);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL);
- }
- EXPORT_SYMBOL_GPL(trace_set_clr_event);
-@@ -1504,11 +1516,24 @@ int trace_array_set_clr_event(struct trace_array *tr, const char *system,
- 		const char *event, bool enable)
- {
- 	int set;
-+	int ret;
- 
- 	if (!tr)
- 		return -ENOENT;
- 
- 	set = (enable == true) ? 1 : 0;
-+
-+	/*
-+	 * Keep in-kernel event enabling consistent with tracefs event
-+	 * enabling: once an event is being enabled, expand the boot-minimum
-+	 * ring buffer to the configured default size before records arrive.
-+	 */
-+	if (set) {
-+		ret = tracing_update_buffers(tr);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL);
- }
- EXPORT_SYMBOL_GPL(trace_array_set_clr_event);
+> 
+> -- Steve
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 9246e9c3d066..56b7dc406ca1 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -397,8 +397,7 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
+>  
+>  static struct btf *ctx_btf(struct traceprobe_parse_context *ctx)
+>  {
+> -	return ctx->flags & TPARG_FL_TYPECAST ?
+> -		ctx->struct_btf : ctx->btf;
+> +	return ctx->struct_btf ? : ctx->btf;
+>  }
+>  
+>  static int check_prepare_btf_string_fetch(char *typename,
+> @@ -531,6 +530,15 @@ static int query_btf_context(struct traceprobe_parse_context *ctx)
+>  	return 0;
+>  }
+>  
+> +static void clear_struct_btf(struct traceprobe_parse_context *ctx)
+> +{
+> +	if (ctx->struct_btf) {
+> +		btf_put(ctx->struct_btf);
+> +		ctx->struct_btf = NULL;
+> +		ctx->last_struct = NULL;
+> +	}
+> +}
+> +
+>  static void clear_btf_context(struct traceprobe_parse_context *ctx)
+>  {
+>  	if (ctx->btf) {
+> @@ -579,7 +587,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  	struct fetch_insn *code = *pcode;
+>  	const struct btf_member *field;
+>  	u32 bitoffs, anon_offs;
+> -	bool is_struct = ctx->flags & TPARG_FL_TYPECAST;
+> +	bool is_struct = ctx->struct_btf != NULL;
+>  	struct btf *btf = ctx_btf(ctx);
+>  	char *next;
+>  	int is_ptr;
+> @@ -690,7 +698,7 @@ static int parse_btf_arg(char *varname,
+>  		ret = parse_trace_event(varname, code, ctx);
+>  		if (ret < 0)
+>  			return ret;
+> -		if (WARN_ON_ONCE(!(ctx->flags & TPARG_FL_TYPECAST)))
+> +		if (WARN_ON_ONCE(ctx->struct_btf == NULL))
+>  			return -EINVAL;
+>  		type = ctx->last_struct;
+>  		goto found_type;
+> @@ -804,21 +812,19 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
+>  
+>  static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
+>  {
+> +	struct btf *btf = NULL;
+>  	int id;
+>  
+> -	if (!ctx->struct_btf) {
+> -		struct btf *btf;
+> -
+> -		id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
+> -		if (id < 0)
+> -			return id;
+> -		ctx->struct_btf = btf;
+> -	} else {
+> -		id = btf_find_by_name_kind(ctx->struct_btf, sname, BTF_KIND_STRUCT);
+> -		if (id < 0)
+> -			return id;
+> +	/* Could be a for a structure in a different module */
+> +	if (ctx->struct_btf) {
+> +		btf_put(ctx->struct_btf);
+> +		ctx->struct_btf = NULL;
+>  	}
+>  
+> +	id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
+> +	if (id < 0)
+> +		return id;
+> +	ctx->struct_btf = btf;
+>  	ctx->last_struct = btf_type_by_id(ctx->struct_btf, id);
+>  	return 0;
+>  }
+> @@ -848,25 +854,23 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
+>  
+>  	if (ret < 0) {
+>  		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
+> -		ret = -EINVAL;
+> -		goto out_put;
+> +		return -EINVAL;
+>  	}
+>  
+> -	ctx->flags |= TPARG_FL_TYPECAST;
+>  	tmp++;
+>  
+>  	ctx->offset += tmp - arg;
+>  	ret = parse_btf_arg(tmp, pcode, end, ctx);
+> -	ctx->flags &= ~TPARG_FL_TYPECAST;
+> -	ctx->last_struct = NULL;
+> -out_put:
+> -	btf_put(ctx->struct_btf);
+> -	ctx->struct_btf = NULL;
+>  	return ret;
+>  }
+>  
+>  #else /* !CONFIG_PROBE_EVENTS_BTF_ARGS */
+>  
+> +static void clear_struct_btf(struct traceprobe_parse_context *ctx)
+> +{
+> +	ctx->struct_btf = NULL;
+> +}
+> +
+>  static void clear_btf_context(struct traceprobe_parse_context *ctx)
+>  {
+>  	ctx->btf = NULL;
+> @@ -1673,6 +1677,9 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  	}
+>  	kfree(tmp);
+>  
+> +	/* struct_btf should not be passed to other arguments */
+> +	clear_struct_btf(ctx);
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 952e3d7582b8..83565f1634db 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -394,7 +394,6 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
+>   * TPARG_FL_KERNEL and TPARG_FL_USER are also mutually exclusive.
+>   * TPARG_FL_FPROBE and TPARG_FL_TPOINT are optional but it should be with
+>   * TPARG_FL_KERNEL.
+> - * TPARG_FL_TYPECAST is set if an argument was typecast to a structure.
+>   */
+>  #define TPARG_FL_RETURN BIT(0)
+>  #define TPARG_FL_KERNEL BIT(1)
+> @@ -403,7 +402,6 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
+>  #define TPARG_FL_USER   BIT(4)
+>  #define TPARG_FL_FPROBE BIT(5)
+>  #define TPARG_FL_TPOINT BIT(6)
+> -#define TPARG_FL_TYPECAST BIT(7)
+>  #define TPARG_FL_LOC_MASK	GENMASK(4, 0)
+>  
+>  static inline bool tparg_is_function_entry(unsigned int flags)
 
-base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
+
 -- 
-2.47.3
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
