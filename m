@@ -1,54 +1,54 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E913FBEBD
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 17:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A8B3FC5B4
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 17:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780420333; cv=none; b=bx5dpTzJoglIzEO0uc/os6/kcq7QK25+3dRf7sT4rWlDDcw6gnQ+a4f3ZoljKPHdaWVQ5t9qc7JSQ3plRr0Szypqac1TEBQRsEfff54agvHsWeiD15uNTdmktzd0RoYS2uGlCSmE8Lq3IaGZ8hDqQ4Yy/7BxzQ9FXG8JcX3hwQ8=
+	t=1780420334; cv=none; b=RlVynioqpMlJZ7GCg8sNt/TJX93yVd3RzNfUWuh99dkSYgDp/XdS7nG/cRKsOtRD3+5uvFuvvoVO24hYxSRxuNHSdn9qng5oau4zo7SlpdhChlEc3zMx0vydicHqkGju9qOshgxNBLpTm6l7bgQN4LcmJq5FFI2fgXBySdWJCyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780420333; c=relaxed/simple;
-	bh=hQ6K7pg5mKo+tnf1qeETDb8NdPKxPK7fHARxGpTGbFc=;
+	s=arc-20240116; t=1780420334; c=relaxed/simple;
+	bh=0x2W9QurVm001HlHwInuRteVdbHxjEzLOMZW04FELmY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=D3G0ZFVSpzQRSIOquSXmrEnicvAqRCAsD608t5ii2ZJHUBXn+ozRkWtfaS+3qCUqvJUaalwYPphMl55l2GNjjqn/l1mryA3lNrLRQtvDb9sd2fr36wmP4MVus6ZFda+8bkjNxkx1L+tJHXrAcpmo2ndemqalxc67GDmFRAXyedw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pnj33wHU; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=fBV/u8kudjk521meM+Y5d9lQKM43VOFSVJTgkURK8L+kMUhjPnQAvoJiL5r8sHhHwgFj5KYNNyvDmkbmNMqnOzS8EL7n2jjZ1Sf+wGdLPd6zuNiWFVJNxeQzKZ0rKTAuzaIH9p1iiLNaTErNimHm/VQtGrBLHAIzKugWn20Jk9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RD7JZAg5; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pnj33wHU"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-45eef10d5ebso2572837f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 10:12:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RD7JZAg5"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-490b56bf7bcso560255e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 10:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780420330; x=1781025130; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780420331; x=1781025131; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+WBHOAgBidLIxvIeyt1H7WAaxAGtw1YOgsJYRmOcw8=;
-        b=pnj33wHUFffMsUaZIh0UukuXU5/1MW2A9y3IXXuVylIcQ5q9wRbaWN7T75t4UL1aal
-         gE5fwn46sQJaLzz1x74MOa57kPtXs/+RrTpUPI86iCpDkML2HubWCWVywwQazMHhHzYn
-         lhkBlP5ro/2AV58WaTGnHLIeLRYUd2pEeOAgtAJFhm/ZJBDGDOQCWndobaMxm9xxcmIW
-         q0EHKsVwv77sgMTVlxpytOD3ADr/F7Nq8XdBFEyedOGtGcp4M4FXBwsjwjp621rQZMh6
-         Agy4xZE1zlUQCcsT3W3vSSuB9uhgKW93vybf+uP5+OontYNQI4i8ROKPrGXNi6ijKxnK
-         GOdg==
+        bh=lRV/frTjb344YvONz96iAUcQwRDZJAvrz/JZf9R7wg4=;
+        b=RD7JZAg5neIZg5IkAPUC4crGp/B7XL4iHkYSk7CWaEpKPak9ilogUaYeF8VHZ25v6z
+         MkXAjrgEHXD1qz7MpKtMbFvGwigVAx/amjvAKYgKpzFxUadU29ThGNexYqYezpygAQ/0
+         KfqvgFLfw0Rybj8wnPZtfPolHTpB3hK1saw7xvPXuAntsES5+YXcERK1PLHiuyphmMT+
+         XjpVM48FC+zSf09Y9lK5ONpoj0YyWDrKM91rV2pNYz8qiliheOxbMlOqRBthFP+82Jaj
+         APl0JoqmmXUVoRIwHykJ0WyYs0GRRIqf3EZznnRiMNWLxPRZJ9eKqxKUDzT9YhXVn1Tj
+         BB1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780420330; x=1781025130;
+        d=1e100.net; s=20251104; t=1780420331; x=1781025131;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+WBHOAgBidLIxvIeyt1H7WAaxAGtw1YOgsJYRmOcw8=;
-        b=FFM2WnqD1oo5/zUQX6biquIpFjhcgxoYdzAAlP+2PryxLMps3iDNIIPSbjjHt0cEf7
-         3frKWabr/zTITuHSe+HVEZhDYUaXgR0Tl93XiFICIb4tgnFlNrj+n8Tk4nRZklUfxAr5
-         k86BfeHkmEhowDYrv1ZvwQXqVLR/dEqfg/XmZxxFb9o1KtWZpuyNvRXSNRQomssLCnLc
-         es5rl021IskxaUw5H2RuwMZ0a83QUAsyKj3b2roDUFwmtAVTFMhhCUXDz9Y59xH0Lq7L
-         aAun3/Nmu5oGPSJ3gGhoxLgMJJtP4N235SO/QMqj6LB7YNzY8m3W7M6lMc4BcjONmmwM
-         +JPA==
-X-Forwarded-Encrypted: i=1; AFNElJ9VfdKPXm9D2zZZdi05z7wBG6jsV2HEP2FnQQ2CztY7ud9ASfLHpA2GbclJuB7cJXoK/HBjLDdJwBWxzP3LUG4gIaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYwpG8iLVP4tXllFBT+zVDuJSpD35NQ46B+gTt2/zzf7lmZOQN
-	G7Nb7ZnYqJaWnmCQ0cW6A6NiXwHHQUqEzDzTZuNuhkcRgVtqZ9KvMWRZHxR7Uswowuk9dz/T0fW
-	yCX51D+yMAbkoaKVTpb9tXQ==
-X-Received: from wrou11.prod.google.com ([2002:adf:ed4b:0:b0:43c:fe6b:f318])
+        bh=lRV/frTjb344YvONz96iAUcQwRDZJAvrz/JZf9R7wg4=;
+        b=PrM/o/8BKF0ubkGYbulJ1GWlxYaWe/p6k57XgVGRAyncfQ6fxPl6R5Zy5tO6vGh0kB
+         I1OH+tuOVbWWzMqBxWGknLTdIRgYEiupvtm1zTsZA0Jbk+SsJ5C58U4fSDQyaRU8RUcP
+         uBnYD6JLthXn3YVrtJSE8bIgXNSop00vDUA5ng/GuGpmN+hA6vR+Itho3LWgEP2WzExY
+         qbC0EUmxH1ClaKJDugAYG1g6DeaIFZ/mh20hwD+ZIScp9OtNEJ0oxorWF1hQkgdZyIXt
+         sTgBfgzmhj1EXLUPCpbR9metgSyFn+NN65gwhHA6MdC32fgeBX782/ZYxD62efRunIy9
+         Wlwg==
+X-Forwarded-Encrypted: i=1; AFNElJ/otK5CiWH84YtF0xndRWVujQxB9w5Z6ilGGsLn3T/82nqNYEi4Y0m+QdqxfYFFuffqNGqYDL+0mY+9qJQoPkpbbkY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLX/Jj3KRc75x9lbBrq8xdmRecbOc2LRh3t6KcN6vzR0lBNSTp
+	SC1SxM3NFyY0nMZCWpHrsp7Urc710b+JGAjDEcNPWatPpDtXeEIflDZQkj3OwuDa2RJJ2hN2ZC0
+	WmTQNBsaQOwH6CFhNA10N5g==
+X-Received: from wmpe36.prod.google.com ([2002:a05:600c:4ba4:b0:490:ac12:119d])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:4352:0:b0:460:e00:1213 with SMTP id ffacd0b85a97d-4601f62fb8bmr241409f8f.23.1780420330169;
- Tue, 02 Jun 2026 10:12:10 -0700 (PDT)
-Date: Tue,  2 Jun 2026 18:11:42 +0100
+ 2002:a05:600c:3b19:b0:490:469c:556b with SMTP id 5b1f17b1804b1-490b506cd39mr10449685e9.12.1780420331222;
+ Tue, 02 Jun 2026 10:12:11 -0700 (PDT)
+Date: Tue,  2 Jun 2026 18:11:43 +0100
 In-Reply-To: <20260602171146.2238998-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260602171146.2238998-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260602171146.2238998-11-vdonnefort@google.com>
-Subject: [PATCH 10/13] tracing/remotes: selftests: Add a test for the
- dump_on_oops tracefs file
+Message-ID: <20260602171146.2238998-12-vdonnefort@google.com>
+Subject: [PATCH 11/13] Documentation: tracing/remotes: Add detailed tracefs layout
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org
@@ -68,97 +67,92 @@ Cc: kernel-team@android.com, linux-kernel@vger.kernel.org,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Exercise the newly introduced dump_on_oops tracefs file that turns on
-or off the trace remote buffer dump on system panic.
+Add a description for each tracefs file available in a trace remote
+instance.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_oops.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_oops.tc
-new file mode 100644
-index 000000000000..6c3f93ab922d
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_oops.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace dump_on_oops
-+# requires: remotes/hypervisor/write_event
+diff --git a/Documentation/trace/remotes.rst b/Documentation/trace/remotes.rst
+index 1f9d764f69aa..bf63b929271e 100644
+--- a/Documentation/trace/remotes.rst
++++ b/Documentation/trace/remotes.rst
+@@ -19,8 +19,8 @@ for which the host kernel can see and expose to user space.
+ 
+ Register a remote
+ =================
+-A remote must provide a set of callbacks `struct trace_remote_callbacks` whom
+-description can be found below. Those callbacks allows Tracefs to enable and
++A remote must provide a set of callbacks `struct trace_remote_callbacks` whose
++description can be found below. Those callbacks allow Tracefs to enable and
+ disable tracing and events, to load and unload a tracing buffer (a set of
+ ring-buffers) and to swap a reader page with the head page, which enables
+ consuming reading.
+@@ -28,8 +28,63 @@ consuming reading.
+ .. kernel-doc:: include/linux/trace_remote.h
+ 
+ Once registered, an instance will appear for this remote in the Tracefs
+-directory **remotes/**. Buffers can then be read using the usual Tracefs files
+-**trace_pipe** and **trace**.
++directory **remotes/**. The files within this directory allow configuring
++and reading the remote buffer (see `The File System` below).
 +
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/dump_on_oops.tc
++The File System
++===============
++A remote tracing instance is represented by a directory in Tracefs under
++**remotes/**. The layout and files within it are very similar to standard ftrace
++instances. Inside the remote directory, the following files and directories are
++available:
 +
-+set -e
-+setup_remote "hypervisor"
-+test_dump_on_oops
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dump_on_oops.tc b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_oops.tc
-new file mode 100644
-index 000000000000..4f5f26cb3291
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_oops.tc
-@@ -0,0 +1,51 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test trace remote dump_on_oops
-+# requires: remotes/test
++  tracing_on
++	This file allows enabling or disabling the remote tracing.
 +
-+. $TEST_DIR/remotes/functions
++  buffer_size_kb
++	This file displays and allows changing the size of the per-CPU ring
++	buffers used by the remote. It also shows if the buffer is **loaded** or
++	**unloaded**. To change the size, the remote buffers must be unloaded
++	first. Remote buffers are automatically unloaded when **tracing_on** is
++	off, no one is reading the buffer (either by accessing **trace_pipe** or
++	when **printk** is on) and no events remain in the buffer.
 +
-+test_dump_on_oops()
-+{
-+    #
-+    # Toggle when the buffer is unloaded
-+    #
-+    echo 1 > dump_on_oops
-+    echo 0 > dump_on_oops
++  trace
++	Display the human-readable content of the remote buffers. Reading this
++	file is non-consuming. Writing to this file clears the ring buffers.
 +
-+    #
-+    # Toggle when the buffer is loaded
-+    #
-+    echo 1 > tracing_on
-+    assert_loaded
++  trace_pipe
++	Similar to **trace** but reading it consumes the events from the ring
++	buffers (consuming read). It blocks if there are no new events.
 +
-+    echo 1 > dump_on_oops
-+    echo 0 > dump_on_oops
++  printk
++	When enabled, all events from the remote are redirected to the kernel
++	dmesg. This is similar to the **tp_printk** option for in-kernel events.
++	It counts as a reader of the remote buffers and prevents unloading.
 +
-+    #
-+    # Load and unload buffer while dump_on_oops is enabled
-+    #
-+    echo 0 > tracing_on
-+    assert_unloaded
++  dump_on_oops
++	When enabled, the remote tracing buffer is dumped to the console when a
++	kernel panic occurs.
 +
-+    echo 1 > dump_on_oops
-+    echo 1 > tracing_on
-+    echo 0 > tracing_on
++  per_cpu/
++	This directory contains subdirectories for each possible CPU (e.g.,
++	**cpu0/**, **cpu1/** ...)
 +
-+    # REMOVE ME FOR A PROPER OOPS TEST
-+    return
++  per_cpu/cpuX/trace
++	This is similar to the **trace** file, but it will only display the data
++	specific for the CPU. If written to, it only clears the specific CPU
++	buffer.
 +
-+    echo 1 > tracing_on
++  per_cpu/cpuX/trace_pipe
++	This is similar to the **trace_pipe** file, and is a consuming read, but
++	it will only display (and consume) the data specific to the CPU.
 +
-+    for i in $(seq 1 32); do
-+        echo $i > write_event
-+    done
++  events/
++	This directory contains remote events that can be enabled or disabled.
 +
-+    echo c > /proc/sysrq-trigger
-+}
++  events/enable
++	Allows enabling or disabling all the remote events.
 +
-+if [ -z "$SOURCE_REMOTE_TEST" ]; then
-+    set -e
-+    setup_remote_test
-+    test_dump_on_oops
-+fi
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
-index 8dd9c961977b..887b9296d0a7 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/functions
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
-@@ -9,6 +9,7 @@ setup_remote()
- 	cd remotes/$name/
- 	echo 0 > tracing_on
- 	echo 0 > printk
-+	echo 0 > dump_on_oops
- 	clear_trace
- 	echo 7 > buffer_size_kb
- 	echo 0 > events/enable
+ 
+ Declare a remote event
+ ======================
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
