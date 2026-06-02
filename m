@@ -1,183 +1,171 @@
-Received: from mail-oo1-f79.google.com (mail-oo1-f79.google.com [209.85.161.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11022131.outbound.protection.outlook.com [52.101.66.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BAF21CC59
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 13:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780407934; cv=none; b=EUBIbXsfQ3jnNaAz30rxTyxryPb+lvnDtoHgLZa3wCLRL6Ll2OvOpIzKyHuCEZc8TwipY8nx5S0bvQxA6NNoH+SOg6mWLz4c0esOZNtRa+LM2zE6P+tfn/sXC0zDszQKfa6cdK4KFgF+DG1ZTEFSEQN+LkH9AkmNjOLKa3l3Kos=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780407934; c=relaxed/simple;
-	bh=vZaXN8H1N2/sw2ug3GbJvs1tNtHoFJZkoM0UEGZrXgI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pNZTaULLuaCXlgQV0U6a6fq4wL7LEjrU25Xvjg1/jVg7i0rqx3qjTqPDbZ3ih3oTaPwlJqnuVfygT3DzdNbfIcfoZP8j3Ocg0McAEo9SNUVpu0h2CjSAbJq+AyWidy/Qj27V66fnLhe8/ejzBuKSXfBR8UhmR2Z/w12ny9JZpow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f79.google.com with SMTP id 006d021491bc7-69d733e7995so10296815eaf.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 06:45:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780407932; x=1781012732;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ARZIzQVUE0jpo8acx2akMryfj/SiIhuVDPZ0tiTjjOE=;
-        b=oDZqtACwFYufML5cm1JoBbOVGAohyNGvRmvopf4fDR6xtBv37Cx0XUB/wq75m1ij80
-         AT4sljez/KaYOhep2Msr9RlQoD8YCLa2cvoRpZH2IvCIfAGbhELKC9f3K7UjBuIAFpCn
-         bUCMHwXTLlffNF7IvYmy+PQnNzEHYukdOk/2YrPkrYMqswOv03bovtu7bi49k3XMe3xw
-         A9yQ3vAIIW0l2wQwmadAwEXi7G4Pjp2K8XDkhzuXpvMIh9fQvB1OswYkIkojsRYlxGec
-         kRsRfeEAQvFgbwhDyjq6zBreVoaSZpUoBDVdBsQUEET7Ps84L7hJjTzaLWUB9QK8Nz72
-         lN6w==
-X-Forwarded-Encrypted: i=1; AFNElJ8nbaOK29JwmDrHy3pEtQrsSNBQUM6mZI/Xg8gUQ79z/iJdqpYbIxH0cSlkTiOu3ZWqc7AIfp7rjs2HQS5aeJt/irw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD3iMHSDa2i7+uUYioo1VrBWYoJvjIIQLo54AaTd8MOxDm3w2s
-	dJUchEARp+WVGM1XelqmKJ/lznBu+Y/OQ8AvXG7ze7oZjsAXbChbKptbeieaPGO2smayamp1h9v
-	2OrRJce7OLKkdIW+pR1Gs+RkUbqIUUrr3Zx6GQ1aUDql6M6dU9kfFZHL9+wU=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B80921CC59;
+	Tue,  2 Jun 2026 13:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780408495; cv=fail; b=Gg5qQKVLR0QGPUjP0oamlJsEIm0WRMOXm2T72jjgNpNDmMtsBdE0b76B+SP7olZoEJ2x9Y+pXoWs11OZTkyGmoHCzeGZs+ISwbfHt+IBiOliGCm4uVLGi4MJWbw3+2HwO1MYE++uNDKCXn6WDbryXVhraP8XQo9UC2h7hU25Mdg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780408495; c=relaxed/simple;
+	bh=wtubTvsSSAuq9Fg8xeEn7yNG2H1W7JKzbQL09zL+CO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DFc6sPrOqFssyT70YQN+MpSDrYRU6VahZbFJ8+PGNSeU2MMu59higZRdXe1uHq00tP47tezLMDLZA3crRhgR+Lt3C84o5URULgQzPlJvr5wg2h0vKRKN2FUZqT+E9fuFW11Knu5+e4JKFVKOYLvh3pqUnfJprceiOss2B50s67k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=virtuozzo.com; spf=pass smtp.mailfrom=virtuozzo.com; dkim=pass (2048-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b=S+nMQnKT; arc=fail smtp.client-ip=52.101.66.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=virtuozzo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=virtuozzo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="S+nMQnKT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xDoqc6vpipByHbjZoruBhnPpFcdonwt41k97A3Ee8qZ8Vnn0zsDt3CEeG78XBV8UPtQwIAyXORpvtw/LFV8ImRgcG9jjLpdlP64P2r7hQexKQPq8C+0hd5jdA7mDrriGA/JZfEulQUAhKK5UiMMooXt5shpWpocIfpoR7nXTn3MWQ0xSsczV2BTiL526ZWgFja5+XKXc3wdhl08vAtUkvOgvJtqVJuZh0Oc+Do91+0zgl6xK0skz0TlUrmVDmHN3eWxdXbEFY6Qb5VqPzReW+TLFj0yXmihVxo2V1WGuOZ5GlkwXiMhGlNPwQ0aIc1kKPKUlB8rn+dVP18Sn30Hd5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1xGyWu1As5uVAJKt2UY0V5vKlsiQZZBY51oy1oYnJRM=;
+ b=Mvyzueb2jnu2c1Drvr/5WO5gdzmH6uFgGVXXpeXUDimy6jXFoAUXLrcN47flCxKYapRWtCinf3dh4t+q5vTUQXU6ynLb+s2k0tEs98Iq0RMfQTlVATcm2CVK8WIU5Qwj0cSuucrH/fDWNtIAovPD3KneAYmA8sTfsrB8efQz5G4vB2Nz14a4aqIJPoK3Nvj2M2GxHeBwofZ2ilWVjg8R/If/AMbJU407rN6MPJYUcLFYhWl3me/bO7m5l/ptH/Xi1Lh0Z5ZMQhOCmkdoW5sMyeVN+ekv9y2rPJPdCdUyMJB2vr7okfOC8UhBsRc2MIgMigWk+9aTlXsQyw5IlXhBEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1xGyWu1As5uVAJKt2UY0V5vKlsiQZZBY51oy1oYnJRM=;
+ b=S+nMQnKTEC4zu/oHWn8E4bWG4Ubl5wLNoNlWn7UlmKZAYqCbBjbtiLvHD1/bYg/249+f0hBJyrTfH1wJkwGINjFva5C3bArn4N5429BqqjDG8TzVDgJjVpfg6fqEundOeIKLRH025Bes2/Uii1GPyxJziopCHql+/8MYFff1YAms2RNgG2tAt3u3EUhEHhgfHDAqt5Hb3byyDGMtKs9n8DJkGwfwPogKrby7CxmkTzyRoYJ78Z6SpUZt1SHuFTfeHvn/ZG4cAIOulnbHG+F3ruO2Gc8Xpvj51Gc4SkBBnHkUERyxBJNE6UVahcxX05o4pwugHdKyth0+RzC4OBrsZA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=virtuozzo.com;
+Received: from AS4PR08MB7555.eurprd08.prod.outlook.com (2603:10a6:20b:4fd::12)
+ by AM9PR08MB6722.eurprd08.prod.outlook.com (2603:10a6:20b:302::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.11; Tue, 2 Jun 2026
+ 13:54:48 +0000
+Received: from AS4PR08MB7555.eurprd08.prod.outlook.com
+ ([fe80::7d00:380e:b72:55e6]) by AS4PR08MB7555.eurprd08.prod.outlook.com
+ ([fe80::7d00:380e:b72:55e6%4]) with mapi id 15.21.0092.006; Tue, 2 Jun 2026
+ 13:54:48 +0000
+From: Eva Kurchatova <eva.kurchatova@virtuozzo.com>
+To: mhiramat@kernel.org,
+	rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	peterz@infradead.org,
+	jpoimboe@kernel.org,
+	samitolvanen@google.com,
+	eva.kurchatova@virtuozzo.com
+Subject: [PATCH v2] tracing: fix CFI violation in probestub test
+Date: Tue,  2 Jun 2026 16:54:08 +0300
+Message-ID: <20260602135425.542073-1-eva.kurchatova@virtuozzo.com>
+X-Mailer: git-send-email 2.54.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: WA2P291CA0020.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1e::9) To AS4PR08MB7555.eurprd08.prod.outlook.com
+ (2603:10a6:20b:4fd::12)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:4ccb:b0:69d:8f47:f66e with SMTP id
- 006d021491bc7-69e10382514mr8168659eaf.35.1780407931682; Tue, 02 Jun 2026
- 06:45:31 -0700 (PDT)
-Date: Tue, 02 Jun 2026 06:45:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a1ede7b.b4221f80.1326c5.0003.GAE@google.com>
-Subject: [syzbot] [trace?] KASAN: use-after-free Write in ring_buffer_read_page
-From: syzbot <syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR08MB7555:EE_|AM9PR08MB6722:EE_
+X-MS-Office365-Filtering-Correlation-Id: 82503f75-31e5-42f8-74da-08dec0ae824c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|56012099006|6133799003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	zgngjiI3V+MBiDsgnNT5wI1+AvQHnjC3bIG9Pfk+3blaLqwnwLmnH7g26aDaQkQYhuhnNDv+XywZiy3PW8lLYbPM07S2itzIMKNal4Q/KdmBc2RcruNDd0fj9CBn2g2+5jyUmVGKfhc9vg1b7RP9iIL7YYBQtNfAqdKerOvKArJVMGL/9aFE9EdL9RPowrNzir8OrsHBQgqDwwiI+LcnV8rQ1o4uWFZxEXfm3EExzGldq6salO6Ikbum3JbMJNFtD6dOlFhmYHPm/6QrWAXenP7jEHdZFZVqE9EDyUIIoaCewHPSmD8W5jXUEocph2vJKzcWJ6xMAnPqYoPkS5w6oXNln9zuM0Er06DHmm7YefX+pTZgJGX3meeePNcaJsVHNvbRqCZKaJ9v7S+UeeZl+cQ5usTLc+sqYwOoGJPovm4zNyo5pP5st/TQQ0QjtRh0txDCXLkGSlHLjcPR4/r3/ilNnXqlc95avGMjEPa4RYR0ufah7wkIPUSvRV42cQ/FDPMutK6Aoym5My9KAFOTdB7C0Qib7DTO4zPwDofZTMfXrg7+kzNoXhT1fywIKOzK6Li/EqaIkZBWBKk3Kkw8ySzC8J2gQKYE9sRtxDz1vZZZMArsw4gCx30AB2h0AuqQ7exs5Lp3NtnQTdA4M747Uk7IW8XFoXUARTa64SuOcUNEwpAUx3IDQ1etlfb0Ejbq
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR08MB7555.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(56012099006)(6133799003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?EiR0GAtXdHfbcGhOgtiNDGjosHw+55Qe9sm4E5eqotxULFohdyyNlEppA9BO?=
+ =?us-ascii?Q?SBbAAfGEsY0CUTktcJ02ehxYwVGihHwPqmVmiZR9OHxRUf1k8TeJFiZKiVq4?=
+ =?us-ascii?Q?HZE75k2HaNVSPLtufevi2La5s7Af/T+/bsGFOuY7pD+SPVpu5vpG14ux0V7d?=
+ =?us-ascii?Q?ZoDIp4wBMh2e25vn7F9n2QCCfseH5zwjp10GF+EkIuTZTUDLhmXab1nhhp2q?=
+ =?us-ascii?Q?OLuwKv/cFQXBqtyxy0ogI5eUemraF3ipx7BBSARmQjLwIFDU84C+fwLv+Ldo?=
+ =?us-ascii?Q?pgkRuAHq42RhA3ngHw177vWnsFkAFsHuhLNUipMkHaN1lSsOfHxD55kIwbi3?=
+ =?us-ascii?Q?4PxkZqdYttd91kODw8vngt6R5HB7fDkDra3ulYt2GUkXfyYuZ9fqXdAhT2el?=
+ =?us-ascii?Q?dX9lA/h9nKxPVG8lyxHE3GvUW8cQRVeit9q5ApwJEEauJjNIZbq9PuGiO0Hj?=
+ =?us-ascii?Q?GDRktg8lifwsXnNiXMBXgdFHRr2PiSQ1UUXNnG73T37i/DlQTtVtOc6Wfjx1?=
+ =?us-ascii?Q?10EA26CoJZrd5QQSsQaWC1WQehphhGbsa7NS11IeAfrARe9J7P0As6lbUz/S?=
+ =?us-ascii?Q?r01VlKAif5j/VUoQkBcvePfZOBwIiKijLC/LjtH15nB7mlCfrfCPmlDtXTIP?=
+ =?us-ascii?Q?OwXQBa2ls0jQmUfymtW9nNVDVh8p5R4BE5I3dpy9Xm7gTJNs29bQsYBmb3ms?=
+ =?us-ascii?Q?3E8p4gZK+3sXnFgBerwu8XO55V9jCUw+2hS4sJXElXig71atzLtti+3BcsE5?=
+ =?us-ascii?Q?K+GhsE66eI4fX9T6LVeq4Or9ohY75Ywzq0tL8DNV5jYzMww5YWv0ZnzChysg?=
+ =?us-ascii?Q?qxakeu2iIIFYQJmDi2qP4vNPO/7/IIRFdW4dosIEUnFhYzTo0MJoyMRwLnAY?=
+ =?us-ascii?Q?2Ky5/dzqU+IpWec1uEeu9f0XwL8u9d2iOnl89ma+hi8EwPbMSNoErpFmgfUp?=
+ =?us-ascii?Q?9+gGdh8i7v9qy8aAYvHikNdn8pjOLi0XtW7IlrXLKsYB3NRAIpSZYvXR8s7M?=
+ =?us-ascii?Q?DLHCfiPNf3rjqY2OYSDexzCy9OMEZls18soobeYxAQX0sR8/W2/gEv0P7i9h?=
+ =?us-ascii?Q?04B0SzarjkEDP9hXbsuWWcS02lwF97Qp4xptu/7eso3E/F+uLUxVC5ur+Ud7?=
+ =?us-ascii?Q?HTCG0GGjiQROwii16mdCf8zV+hNiB3Tr7dsCMdxwqu0xtsJkjGrdkFJvGncp?=
+ =?us-ascii?Q?YZyup9ijT7Q/GK4pWyTCUeDuP1LoRszdE702uQsEjWDFuB+RCQzyLTcvLTIM?=
+ =?us-ascii?Q?XNfANVcTFrRXIMw0hTwbgWDcU87CWOpZWrd+lxpxlFEgcZ/VWjEMQcbWWaaP?=
+ =?us-ascii?Q?anOmAzKXKkPAFxuLobmuu4zrufOBHnpzcANuSnaQ3+XsuUaZoOOS1Gtbv6wA?=
+ =?us-ascii?Q?nXC2D68W9Kp4L8zt8V/Ln/mktaxJoY3UO/sVodxuqlJHtf3sH10vF2lMYbIx?=
+ =?us-ascii?Q?mp17+rN4C80pZ1U95DxFOcRZhKqWAvJ+glgSRHnugka2pk2ANQkU5VBRJLJE?=
+ =?us-ascii?Q?tR1a7WgMcyFX6uzgBCqsHNSPFFAHMH1G12EYwnIZp/dqYvdfmcAAsbkYcvGg?=
+ =?us-ascii?Q?3sno713ej6+zIeSmIyNYqH9PPEPGyafphikK0MZHskdqQ4Zx7GgqYJrzKLrU?=
+ =?us-ascii?Q?r96a3/+LAqFugHfvxuP+h5hjcwh8r6aj4bPLybym4TIEWw+s0ppDqqBMaDpI?=
+ =?us-ascii?Q?yo6yNCK3qZja7KePu6PQi8IahwibQry4JXclPZUIVkMNYHtWz+37OueEqbVz?=
+ =?us-ascii?Q?rq1zG5o4XhY6R2SN+CfHxR3Z29tW9JU=3D?=
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82503f75-31e5-42f8-74da-08dec0ae824c
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR08MB7555.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 13:54:47.8836
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aVzfWP/mxWE4j2GOObHKudY8LWGkc8z05OuZuawQ0PgOM2VrOCz1gvhO07mp1BI6mdVgdOyd8oztknWqwSiY7kh57qpK3tAkq67LtTTkQQQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6722
 
-Hello,
+When multiple callbacks are registered on the same tracepoint,
+callbacks will be indirectly called via traceiter helper.
 
-syzbot found the following issue on:
+Pointers to __probestub_* callbacks reside in __tracepoints section,
+which is excluded from ENDBR checks in objtool, causing objtool to
+assume those functions are never indirectly called.
 
-HEAD commit:    e7ae89a0c97c Linux 7.1-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16f06e2e580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=58acee1ac5406016
-dashboard link: https://syzkaller.appspot.com/bug?extid=2dd9d02f60775ce5c1fb
-compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
+Registering multiple callbacks using sched_wakeup test will result
+in #CP exception due to missing ENDBR in __probestub_sched_wakeup
+on a CFI-enabled machine.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Fix this by adding CFI_NOSEAL annotation to probestub declaration.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9b0c5b4e3645/disk-e7ae89a0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ed163d3ad68b/vmlinux-e7ae89a0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f2408b333334/bzImage-e7ae89a0.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in ring_buffer_read_page+0xd51/0x15a0 kernel/trace/ring_buffer.c:7059
-Write of size 16308 at addr ffff88805ceb404c by task syz.3.1872/14532
-
-CPU: 0 UID: 0 PID: 14532 Comm: syz.3.1872 Tainted: G             L      syzkaller #0 PREEMPT(full) 
-Tainted: [L]=SOFTLOCKUP
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x100/0x190 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0x13d/0x4b0 mm/kasan/report.c:482
- kasan_report+0xdf/0x1d0 mm/kasan/report.c:595
- check_region_inline mm/kasan/generic.c:186 [inline]
- kasan_check_range+0x10f/0x1e0 mm/kasan/generic.c:200
- __asan_memset+0x23/0x50 mm/kasan/shadow.c:84
- ring_buffer_read_page+0xd51/0x15a0 kernel/trace/ring_buffer.c:7059
- tracing_buffers_read+0x2bf/0xaf0 kernel/trace/trace.c:7129
- vfs_read+0x1e4/0xb30 fs/read_write.c:572
- ksys_read+0x12a/0x250 fs/read_write.c:717
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x10b/0x830 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb1aad9ce59
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb1abca5028 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00007fb1ab015fa0 RCX: 00007fb1aad9ce59
-RDX: 0000000000001000 RSI: 00002000000002c0 RDI: 0000000000000008
-RBP: 00007fb1aae32d6f R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fb1ab016038 R14: 00007fb1ab015fa0 R15: 00007ffec139a1b8
- </TASK>
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5ceb4
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x44dc0(GFP_KERNEL|__GFP_ZERO|__GFP_RETRY_MAYFAIL|__GFP_COMP), pid 5959, tgid 5958 (syz.1.37), ts 95924498456, free_ts 95918916027
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0xfd/0x120 mm/page_alloc.c:1858
- prep_new_page mm/page_alloc.c:1866 [inline]
- get_page_from_freelist+0x11a6/0x33b0 mm/page_alloc.c:3946
- __alloc_frozen_pages_noprof+0x27c/0x2bc0 mm/page_alloc.c:5226
- __alloc_pages_noprof+0xb/0x110 mm/page_alloc.c:5260
- __alloc_pages_node_noprof include/linux/gfp.h:289 [inline]
- alloc_pages_node_noprof include/linux/gfp.h:316 [inline]
- alloc_cpu_data+0x60/0x130 kernel/trace/ring_buffer.c:406
- ring_buffer_alloc_read_page+0x430/0x560 kernel/trace/ring_buffer.c:6801
- tracing_buffers_read+0x603/0xaf0 kernel/trace/trace.c:7110
- vfs_read+0x1e4/0xb30 fs/read_write.c:572
- ksys_read+0x12a/0x250 fs/read_write.c:717
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x10b/0x830 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5946 tgid 5945 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- __free_pages_prepare mm/page_alloc.c:1402 [inline]
- __free_frozen_pages+0x747/0x1040 mm/page_alloc.c:2943
- tlb_batch_list_free mm/mmu_gather.c:161 [inline]
- tlb_finish_mmu+0x27d/0x810 mm/mmu_gather.c:552
- exit_mmap+0x454/0xa10 mm/mmap.c:1313
- __mmput+0x12a/0x410 kernel/fork.c:1178
- mmput+0x67/0x80 kernel/fork.c:1201
- exit_mm kernel/exit.c:582 [inline]
- do_exit+0x8b2/0x2af0 kernel/exit.c:964
- do_group_exit+0xd5/0x2a0 kernel/exit.c:1119
- get_signal+0x20ff/0x2210 kernel/signal.c:3037
- arch_do_signal_or_restart+0x91/0x7a0 arch/x86/kernel/signal.c:337
- __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
- exit_to_user_mode_loop+0x8b/0x4f0 kernel/entry/common.c:98
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
- do_syscall_64+0x6f2/0x830 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff88805ceb4f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88805ceb4f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff88805ceb5000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                   ^
- ffff88805ceb5080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff88805ceb5100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
-
-
+Fixes: d5173f753750 ("objtool: Exclude __tracepoints data from ENDBR checks")
+Signed-off-by: Eva Kurchatova <eva.kurchatova@virtuozzo.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ include/linux/tracepoint.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 763eea4d80d8..38e9f49a71b7 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -20,6 +20,7 @@
+ #include <linux/rcupdate_trace.h>
+ #include <linux/tracepoint-defs.h>
+ #include <linux/static_call.h>
++#include <asm/cfi.h>
+ 
+ struct module;
+ struct tracepoint;
+@@ -389,6 +390,13 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 	void __probestub_##_name(void *__data, proto)			\
+ 	{								\
+ 	}								\
++	/*								\
++	 * Annotate the probestub 'CFI_NOSEAL' to stop objtool from	\
++	 * requesting the kernel remove the ENDBR, because the only	\
++	 * references to the function are in the __tracepoint section,	\
++	 * that objtool doesn't scan.					\
++	 */								\
++	CFI_NOSEAL(__probestub_##_name);				\
+ 	DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);	\
+ 	DEFINE_RUST_DO_TRACE(_name, TP_PROTO(proto), TP_ARGS(args))
+ 
+-- 
+2.54.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
