@@ -1,182 +1,266 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013035.outbound.protection.outlook.com [52.101.83.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FA431B80E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 08:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780390677; cv=none; b=OuR57EJRIxmyFBOpEvCgAfs1Y+LwolsxDc5O6fQULQcfl5IYcvHjlI77cBFH0xuGVlX+iJ+s+Je0DSUUNDNZYqvUihIZrVBAqbmvmJsXgpHQBe2Sqnw5Y6/s3gNH8vTjFW2v6mNsFVlNXTlNzCUnWA4zdTNo7Vu1Mbq8pB2qQfo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780390677; c=relaxed/simple;
-	bh=02DEH1RNeabzh34kxStDmLoX6DGXErAolWL5BXl6jBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qwoSRr615TZV38kw393DzQUyCr50r06y9Gw5x4A5C3DXgudUH/j3iEALgNvMSJ2WygkYSFDRlB7nbqJeEw6Hm+Y7WgHceWVoE+YDVVmr4yJLvjjeLj21wCryvvvyut0ancCavcB/YM53HOMpqOkII2FoKTLT5LV0nLiSORpjH9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gU1ml9NI; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E388C3D47B2;
+	Tue,  2 Jun 2026 09:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.35
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780391516; cv=fail; b=nlSgmOLQ7UTWlsF5DixDAJkjrtmjeGaicQjM8Bk9K+GZvqI4n1nahMlfkl/XjDNPjY9qMppVz4ChJ51tI90FXY0k3q7WKLuRQOR2IkB+gDDHf8iZJ+KlrqFvbYGcQJI5Fy2xujJC0q32ITHYq+cfaqqgco6W19Gg6KrG7QpLPw8=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780391516; c=relaxed/simple;
+	bh=wg7L5HwqsT1yV+1ojvpa9oa2xP1lCkVoNpuDpKrDG3s=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PlWZ114XOvoOpYVWW9fMINT+nJZtBfpePxfzvF1gwosLxDX7ThgfPMcHZT91J0pfd8VpgtiL1v/tJDMvIYLyQzKmed194eVSqeEx+ntdN1TJfklFGB9GFl2e8OL04TQR5SuHX+xrMbUJ7VhMCsmDkOil9Kko6Kcn5LMwF99mT7M=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lL6BezCO; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lL6BezCO; arc=fail smtp.client-ip=52.101.83.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gU1ml9NI"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490ac10e337so10982385e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 01:57:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1780390672; x=1780995472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/m/AOq0MzWCa7qNuImbU6Sf3NfKogr80Anbl3dKp5VQ=;
-        b=gU1ml9NISOhcy+km3kg+NwiZgFqta5GJX8mUC/fZ7NINj6JHkjnsIas4HTPzOQI+J+
-         t5ALTwEQfB1xKxLnG4QvfzY8jQX7A3JGGcLex91Ha1VpAe48Fmt0w7mTcDxZzHxY2sXr
-         VAITYpjTuotJx7ZxDDGKc9mS7mCLj/rDUnS8IWvjcpZ+yxuLhUUdJ2zUgQ8NkFG8C57Y
-         B+Ih4bQBn1G7Rkvcv0Mko3TYQV41em9n2TK4cKaaFlORSnx138FKX3RaSlSh2ciLnFk9
-         TmvPGqGaiXa4RSgzOMLFsZ7KqSKp/xi16XRTXNfl26OHk4rV8G9EiGk5PTAU6+1vxsx2
-         imzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780390672; x=1780995472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/m/AOq0MzWCa7qNuImbU6Sf3NfKogr80Anbl3dKp5VQ=;
-        b=EH3RxEVhduQOu7Qvgu6d6LYx2Cr2vVam/BFHmLitG63XzMqM+JZT6fAnQSOS5GzCHY
-         JF3H2+IYDYh+HyLOCaI4vC8yWuhE+sn2FHXFR0PcEBMFGm+BSgT4VsGE78lC0kjjD8fj
-         BZJX9uQWKik5BTy1MiGfTTl9kO5OZdiLU0TUWLuQxPnJ6+m4vsd4i5BU+gUG40TkXh2L
-         rGUOmPgvOLm6ee2b7Kfol4hmnjSssuk7OW9YnAwcuPciluIEgAy9+bY1JPoWPoPFT1kX
-         pn9rx9ve3BXXFXuO/kO1DioSWfEPpxM675YnoXQjk6Lvbqnr9si/F0vx0VOJ4+Ft//5R
-         5DLw==
-X-Forwarded-Encrypted: i=1; AFNElJ8UtKObMYSc2n9S++ZbT6rTiPGLE94/MkhBitR3IKWVwxo1ANs0GnM0OqRqacIZ+7PG1qkbzU1NiakL6/L5kcHJ8E0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAq+bUN8joyQNE7HnRNkGaUfIvuD+VYMCtJA+peHOD/TYMVz1x
-	b4PmQq1Mhpp/Bh+NlJII89G9mqDGwkBqqD6+Duwj1MYLOjeWJIVjJQIj+9iTsjK+qkM=
-X-Gm-Gg: Acq92OEj+Jjyw0WcnI5hTRWZCEwzm4WqBU8YEJ67KQwreSwPA3mdmVdrdPX6Sn01APe
-	zHerhsaScc9BrARUhfItx1DKFJOkhIA+Pju8Bzt8kN36tUe02Ca6Wdzqvh1CgeCxoIEbxFgeMCc
-	v0lP7SKx2hq+RoRxen9rCAvi3aIwdMSbLDX1afvtp/XHaE/g4ajkP7Zv5Fb5i/wcWzqswHD3qZz
-	KeBz2nIzwEzF55tkyjk3YegVyMxBNHUqu25HQUrD+SAIXZ15AewpF3FUnYcp7D4Hj8Jn89eRoyM
-	JPOwSzjN7+VdUIks9lzQpgd1xDZWK9Cpn2SNV69YYFHSRXqfCTMaK8Hp2PiRjiTAfjLQ4iIbB/l
-	il6W9CmtSEGtCP2GWrW0GwxPn7srjX7KKIGPxaUw0KxOKf+C/QmJv7zQjMy5gS5RZ/iOArxdOjY
-	nMk4jvSE/x7Fgzlx0w7cW9NxQDs5U4+kEIpd/aVodxVQ==
-X-Received: by 2002:a05:600c:a009:b0:490:ad8e:11bc with SMTP id 5b1f17b1804b1-490ad8e1279mr109459155e9.31.1780390672385;
-        Tue, 02 Jun 2026 01:57:52 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c092:500::6:6dc9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef354c682sm30647541f8f.23.2026.06.02.01.57.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 01:57:51 -0700 (PDT)
-Date: Tue, 2 Jun 2026 09:57:48 +0100
-From: Gregory Price <gourry@gourry.net>
-To: Balbir Singh <balbirs@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lL6BezCO";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lL6BezCO"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=xwnCFLa5itRRG837Vg91jx85NE0oSotKQ2ypf9VZ0rTRPawJto0jGHssxSN/obimwOU/Z5d7+M2aSceAIAzDmOWYQJCGssQfA4ud+hXuq3CBzntrKFFcortLI+rhC9UZuVquaVHPppEQTLyKgaKZ3vVyR+6RgG+51AJWUU0BUqiAkw1uY+z7QpBUNZ08K6oOCpdmASY2c476mcznYFtrCELunRucvEoJvwzXPaIYiUxC9R59CRY+EvspwPL64OtjDGdfeadwYk33PRq3aRDdvRkgqByl++pZFFCVIMlJ5iTuWIadia0VZyZvlK6Lef1DqyCLdxYSvy2WsjN9rkJIqA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fb0D0KrKGhNBxmEk5l3OPWmNyHDGDePPvR9YDZC7L8c=;
+ b=ZpQvr4bGcMNO/OC6kQOJ8ztZJLcaij1ZIrGrNaN9M0sw3oXEnTc9d+DS1vIh8wW8JVuWi3GCVZV0YaCwR7LB31AguIY9bm69H3dDMmIfpBEWhkU0fJhmcuSM6OyFJjIc61WPi5G69wwD4KC/3d4AGl9sRAEm767Wu7d5zwbpZ0msm/riXHPY4b2PdqSoLxwM4H0ytiRWm8w95PI7ggrrxssUYUfq2nAgb2w3D3Pe+pTK3id0qmCfIqPrW9hmTwud64rG4rBMlMFx9h9lzjxka/HrE1ZcMNtE3G9nxG82tGHicWo11tllgD2qOwUJSG3zXFZOL+iCVpz7tBZJrBJjsQ==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=google.com smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fb0D0KrKGhNBxmEk5l3OPWmNyHDGDePPvR9YDZC7L8c=;
+ b=lL6BezCO3ZCXeTda9MbnIx/V8HgFKIXdYcUt95QGD5Qiv7jQ0tJt/DsCyHJjQ0NgyiOXChRL1daS4Cu1HA2r2FAucxpXkOg22n0fI6EP5QCVSqq5BVcyqkkGVL6qMp5g8xjtAkUja5KO7DyLAOWWauJvm+cSbIqZ8bdvzIdYeXk=
+Received: from DUZP191CA0067.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:4fa::26)
+ by DU0PR08MB8711.eurprd08.prod.outlook.com (2603:10a6:10:401::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.17; Tue, 2 Jun 2026
+ 09:11:39 +0000
+Received: from DU2PEPF0001E9C2.eurprd03.prod.outlook.com
+ (2603:10a6:10:4fa:cafe::c) by DUZP191CA0067.outlook.office365.com
+ (2603:10a6:10:4fa::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.17 via Frontend Transport; Tue, 2
+ Jun 2026 09:11:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU2PEPF0001E9C2.mail.protection.outlook.com (10.167.8.71) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.7 via
+ Frontend Transport; Tue, 2 Jun 2026 09:11:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=k5t+QX80fOMhs+kEuHljheCPP6yx/5loeKM45JjTCLF12RaywnyL32/RGht7q4stpSpTQ7t+VmSvXXHLHSDEsJuwAcCnArrhnLIjbbB5QlJuBUfZDQodyXMYRh+eGNmR/gcFrGVOQvY7O/NlMYEsOPn7BXZ/PIWYpbB5GDfi2kQCvtRBDobZr9sa253uh33H2S4VKNt1ZXRRX4/tTcHG+cP2cLCNQupJ/svifCvjx+ENqxx5unNplHIxqskjzoX0HpPmJmJLf8o085SDxNsFamBhqFNMIQ8ktLchuTc0ylp09aror3MWOUV+NzX4N3H/let0AnkJYZ645xytEzbkYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fb0D0KrKGhNBxmEk5l3OPWmNyHDGDePPvR9YDZC7L8c=;
+ b=nUnhF2grMFybCVEPodSo74gUzDlU0xmA2E3TUhYYeKGd1jPUxJjI+c/DbLXW+G3VgcOsIiGQICAw+oYgBGi3kpnCNja4xsYrlYpDq3DRmfz6QhqRmKa5b/PerAPWu+vHagiveAYtTBghKbtw8qCMWXe3Bgfghe0UR4qmb7pm5roLwutaFN1Ow7P7nHVe1gKy1MAvocEJukUjLUOuEk0sXfTx3fPBhqUbVxFtBucZs7B1pJm2JLseUFchjfP5OUgaDJ18JSVYfn7EFajBD9A1kppXTuruQjCBSbX38pB8DtkvrI9NYtkdKYzlFtN7wi3aDQaHmW9cfMIm9nOMaUqS0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fb0D0KrKGhNBxmEk5l3OPWmNyHDGDePPvR9YDZC7L8c=;
+ b=lL6BezCO3ZCXeTda9MbnIx/V8HgFKIXdYcUt95QGD5Qiv7jQ0tJt/DsCyHJjQ0NgyiOXChRL1daS4Cu1HA2r2FAucxpXkOg22n0fI6EP5QCVSqq5BVcyqkkGVL6qMp5g8xjtAkUja5KO7DyLAOWWauJvm+cSbIqZ8bdvzIdYeXk=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from PAWPR08MB10975.eurprd08.prod.outlook.com (2603:10a6:102:46e::7)
+ by FRZPR08MB10999.eurprd08.prod.outlook.com (2603:10a6:d10:13a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.16; Tue, 2 Jun 2026
+ 09:10:33 +0000
+Received: from PAWPR08MB10975.eurprd08.prod.outlook.com
+ ([fe80::3c7a:9a64:14bc:ce15]) by PAWPR08MB10975.eurprd08.prod.outlook.com
+ ([fe80::3c7a:9a64:14bc:ce15%7]) with mapi id 15.21.0071.015; Tue, 2 Jun 2026
+ 09:10:32 +0000
+Message-ID: <144bbb9f-39a2-4c90-8903-51521e022da0@arm.com>
+Date: Tue, 2 Jun 2026 10:10:31 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 07/42] KVM: guest_memfd: Only prepare folios for
+ private pages
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, ira.weiny@intel.com, jmattson@google.com,
+ jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
+ tabba@google.com, willy@infradead.org, wyihan@google.com,
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Youngjun Park <youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
+ <20260522-gmem-inplace-conversion-v7-7-2f0fae496530@google.com>
+ <d01cf1ec-b85d-4af6-9810-8107c0e2a4ec@arm.com>
+Content-Language: en-US
+In-Reply-To: <d01cf1ec-b85d-4af6-9810-8107c0e2a4ec@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0273.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:195::8) To PAWPR08MB10975.eurprd08.prod.outlook.com
+ (2603:10a6:102:46e::7)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ah47NNhuiClgGCdn@parvat>
+X-MS-TrafficTypeDiagnostic:
+	PAWPR08MB10975:EE_|FRZPR08MB10999:EE_|DU2PEPF0001E9C2:EE_|DU0PR08MB8711:EE_
+X-MS-Office365-Filtering-Correlation-Id: a80b0a3a-2b8e-44e7-c9ef-08dec086f46a
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|4143699003|22082099003|18002099003|6133799003|11063799006|56012099006|921020;
+X-Microsoft-Antispam-Message-Info-Original:
+ l8Rfs5PkFu4rGFjSRWn1dpEfnmPrtAtMnLcnbAdPrwF5XIU7zT91LRiQGSC6C9L8FL/bMrVNnU5ciSFdnNhzLGKCL0gJ8HymNmeiGBuu/0NUQ7T4asfCpLw0ZCYM6zMLM3WyEQyGVYlDrkRhqxs3AA3gSlJ2YBBBBzjp+3+sqARlKtW3zD+OnjhZOH4IY7gheh42vasD+K07vAJTb126uDXDmJLe9/8klQ7yLDSyxQQapeHkrVZCGHruKyMHslJly64Zb7lZWY8pLj3jpjLVEmZAOSiQjWu/1CFARfdCxbqj3WoZ7t2b3j/ImV35jPAeZPYpxf+IBCKrmYTAfMf3DQBgPnH5GrLOnZpKObjQVKEcsWzUftU93g8qTPMsbk93AVe8vc3cAQeI0JXJTG2mvRVPT6LMpNeHl0PbJa8VXg5cYE0GKhjN/Fv0XK5OWV4C+tT8KZZMG9dNAgOKBlMulOop5AcVXAktPAY/G5RZ7LvxBLhm0c5zt/otmbFF8SRa/yHc0qIr8Pf/kr7cai3Xc9LfSTrny1QSg/OBeIaxjDTebsHIABdegNkjU9OGx+te1Qc8kKQZ7wfbgoA/BambJpNrNCmBucAGr54oOCZtF4uQbdZOoinhUkY/Z6umBgVmmkpHx0MvJRxObfbivAMB8zOVTDCFPxXTA5mqPuf/rvIjh4bOG1OhV510pYQEkC5rNVFDE04GCyB8uipDRH2KVxpRBdlP+L4Pt8OPslhXexE=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR08MB10975.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(4143699003)(22082099003)(18002099003)(6133799003)(11063799006)(56012099006)(921020);DIR:OUT;SFP:1101;
+X-Exchange-RoutingPolicyChecked:
+ Smh2c1FLMAKkYlCcWGkBMm50hsFfjZPUNbdMvb8pyK4Ze8fzd6T8I2cIV7hKyfXEeU8ZLBIkHRmU6XRbzy2y4CZgwPw3t/Y0nyqVetQ6dL9xlhPYJx1xZlJYudpwXPw0VmZ9M0r8TGx23dyxx6bCCB8WbVd+/kEXu0III9Zkemu3onmm+Yytksku2wPEXg20dRL7HfJK2PvG2D1fmO0MpIukVsAE1f6FuQaEZ+5CnjKmmq+t0KkymU6pffhZHjgAP45i5RHAtwHL/mtsw+rfuBGqLREfTz2oKt6cPo3Fk4yM+egwKVt/C/IiMY3KfyFUCdoQFcG7fLYT5eQfwFbK0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: FRZPR08MB10999
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU2PEPF0001E9C2.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	4745e14f-aa23-4307-fc7b-08dec086cccd
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|14060799003|36860700016|7416014|82310400026|35042699022|376014|1800799024|56012099006|4143699003|11063799006|18002099003|6133799003|22082099003|921020;
+X-Microsoft-Antispam-Message-Info:
+	43ERN6MLba2lA1+Q1MLFWQIEFZT/oUTn5JJ4m/gzoI1NxKiKHNXwtbDeFblyFpm/fhicaAaR8gVRV0ebYY/Os9L08p1+kszKqxDdpz6MkOXWFJymzUHHUgHS2vOBoUfC4WTOgAB17VuM8xYDTF8OvRZw191smMM4aMXvuzihwi6PMFbtIMlFMXevuSmIPS23jqgBKot+yPJ9mTRn2vE+E1gt4MCfBwaYbSP4iJ/CV4a0MbEXYuCUk8ztyrTiMTHzQeRZsfEdTvLkUScxAAvJorpDbDVCfrV7c5wt33CinKSXgKNt7r17seS7zEUO/5aMNzi9lLy0tPMwhvamHZnrTh52FHb/tXGXsqtlt4ms13x1BJoXYctXClFV7jjju9HUngzaQwNo366FQ8Kr+2jwvla3Fu70DJ+lIToxhUZ/hR0QezG3D+7M3U9EmUQwlXa/gLzCJUEUuQxpb5Oq/Vzq9TU3/0tGM2SHKP3SmDoMfaJuw89ZOJHIawB/GGl9clGNczfXUflsnubpPnNVyivga491R538T5gRPM9rWomFo5QYgzbgv2HQq2xBSd6w5gd9Rz145mX5ULd4tHKrl7QzYN5f2dB1icO4MIA0CeeqwyI7DB2qqv/nE0oFY3ACHKSP1qP7W+8vCIivzMwji6XhWjGe+350dLK/XL1tx1HAWT5x7r3CvXS/MoKw+i8PyNq+XFY4D+dlr9Nq3ddSf4HVhzUv3M8t86JQCU7mpXLYIiYMC2TgihILukauGjt7QXsCQl6dk7h/67o9xY1ngEInlA==
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(36860700016)(7416014)(82310400026)(35042699022)(376014)(1800799024)(56012099006)(4143699003)(11063799006)(18002099003)(6133799003)(22082099003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	X8s/AOyZfskLKV0Q4Aac0URIIuwejhACyqZoucAxyjFMdPmNpm90gtN70KjkbMGv8cQ+YsPfk53nxI6XaisRatzthm5lvMiqo+5SwYTbTa5zAPtZx0/BYRmQO0TCAWnz513xjLHYVgEzRz3QCkPxvUwFJ7PhziL5tTvoQTHBeYc5sDIBGcno9zkbIZild25kiiTWlxoARUm++LdVUWf+jRR3ht/EPppzKZZnWcT0m+NTgLb24WY6eWGza8SPyNc61GFupqTq4q1ctCv325Uf5W/aEAL5CrwBRMPLrF7SuYt4kWCdmrXncuj2dLBAU3LwCsxrT4lbPXqUU0z02X6tbCuwyyAV8lY7nxKSdKORvQVh2zlMo9Y2Cj/efC8g/bk+mrWPfBSFuAmB2HNIuQ0uOLUJwy/c1fEhB3orKBalfOAduH2HooyPpYXZkTb+AFW8
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 09:11:39.1186
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a80b0a3a-2b8e-44e7-c9ef-08dec086f46a
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF0001E9C2.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8711
 
-On Tue, Jun 02, 2026 at 12:16:50PM +1000, Balbir Singh wrote:
-> On Sun, May 24, 2026 at 09:50:06PM -0400, Gregory Price wrote:
-> > 
-> > I'm debating on whether to include OPS_MEMPOLICY in the initial version
-> > if only because it's not intuitive how it interacts with pagecache. That
-> > needs more time to bake.
-> >
+
+
+On 02/06/2026 09:55, Suzuki K Poulose wrote:
+> On 23/05/2026 01:17, Ackerley Tng via B4 Relay wrote:
+>> From: Ackerley Tng <ackerleytng@google.com>
+>>
+>> All-shared guest_memfd used to be only supported for non-CoCo VMs where
+>> preparation doesn't apply. INIT_SHARED is about to be supported for
+>> non-CoCo VMs in a later patch in this series.
 > 
-> It makes sense to look at it and then decide if it makes sense.
->
-
-I am thinking i will ship without any OPS flags at all for now and the
-have the introduction of ops as a separate series.
-
-> > alloc_pages_node() is the kernel interface
+> nit: s/non-CoCo/CoCo ?
 > 
-> I was think we wouldn't need explicit flags and that allocations would
-> happen from user space using __GFP_THISNODE to the node or via a nodemask
-> based on nodes of interest. Is there a reason to add this flag, a system
-> might have more than one source of N_MEMORY_PRIVATE?
+>>
+>> In addition, KVM_SET_MEMORY_ATTRIBUTES2 is about to be supported in
+>> guest_memfd in a later patch in this series.
+>>
+>> This means that the kvm fault handler may now call kvm_gmem_get_pfn() 
+>> on a
+>> shared folio for a CoCo VM where preparation applies.
+>>
+>> Add a check to make sure that preparation is only performed for private
+>> folios.
+>>
+>> Preparation will be undone on freeing (see kvm_gmem_free_folio()) and on
+>> conversion to shared.
+>>
+>> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> 
+> nit: Missing Co-Developed-by: ?
+> 
+>> Reviewed-by: Fuad Tabba <tabba@google.com>
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> ---
+>>   virt/kvm/guest_memfd.c | 9 ++++++---
+>>   1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+>> index 78e5435967341..adf57a3a1f5dd 100644
+>> --- a/virt/kvm/guest_memfd.c
+>> +++ b/virt/kvm/guest_memfd.c
+>> @@ -894,6 +894,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct 
+>> kvm_memory_slot *slot,
+>>                int *max_order)
+>>   {
+>>       pgoff_t index = kvm_gmem_get_index(slot, gfn);
+>> +    struct inode *inode;
+>>       struct folio *folio;
+>>       int r = 0;
+>> @@ -901,7 +902,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct 
+>> kvm_memory_slot *slot,
+>>       if (!file)
+>>           return -EFAULT;
+>> -    filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
+>> +    inode = file_inode(file);
+>> +    filemap_invalidate_lock_shared(inode->i_mapping);
+>>       folio = __kvm_gmem_get_pfn(file, slot, index, pfn, max_order);
+>>       if (IS_ERR(folio)) {
+>> @@ -914,7 +916,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct 
+>> kvm_memory_slot *slot,
+>>           folio_mark_uptodate(folio);
+>>       }
+>> -    r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio);
+>> +    if (kvm_gmem_is_private_mem(inode, index))
+> 
+> Don't we need to make sure the entire folio is private ? Not just the 
+> page at the index ?
+>      if (kvm_gmem_range_is_private(, index, folio_nr_pages(folio)) ?
+
+Or rather, we should go through the individual pages and apply the
+prepare for ones that are private ?
+
+Suzuki
+
+> 
+> Suzuki
+> 
+>> +        r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio);
+>>       folio_unlock(folio);
+>> @@ -924,7 +927,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct 
+>> kvm_memory_slot *slot,
+>>           folio_put(folio);
+>>   out:
+>> -    filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
+>> +    filemap_invalidate_unlock_shared(inode->i_mapping);
+>>       return r;
+>>   }
+>>   EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_pfn);
+>>
 > 
 
-There's a few things to unpack here.  I discussed this many times on
-list and at LSF, but to reiterate.
-
-1) __GFP_THISNODE is insufficient to enforce isolation and otherwise
-   not particularly useful.  Additionally, from userland, it's not
-   something you can actually set.
-
-   for node in possible_nodes:
-       alloc_pages_node(private_node, __GFP_THISNODE)
-
-   In fact it's the opposite semantic of what we want.
-   THISNODE says: "Do not fallback back to OTHER nodes".
-
-   The semantic we want is "Do not allow allocations from private
-   nodes UNLESS we specifically request" (__GFP_PRIVATE).
-
-   __GFP_THISNODE does not actually buy you anything here, AND it's
-   worse, in the scenario where a private node makes its way into the
-   preferred slot (via possible_nodes or some other nodemask), the
-   allocator cannot fall back to a node it can access.
-
-   __GFP_THISNODE cannot be overloaded to do anything useful here.
-
-2) We're trying not to expose *ANY* userland APIs for this, at all.
-
-   The ultimate goal here should be one of two things:
-
-   1) fd = open(/dev/xxx, ...);
-      mem = mmap(fd, ...);
-      mem[0] = 0xDEADBEEF; /* Fault device page into page table */
-
-      In this case, the driver is responsible for doing the
-      alloc_pages_node() call.
-
-   or
-
-   2) mem = mmap(NULL, ..., ANON);
-      mbind(mem, ..., private_node);
-      mem[0] = 0xDEADBEEF; /* Fault device page into page table */
-
-      in this case mempolicy.c is responsible for doing the
-      alloc_pages_node() call via the _mpol() alloc variants.
-
-Addition OPT flags (reclaim, compaction, whatever), would
-(optionally) allow mm/ to operate on the device memory with, for
-example, mmu_notifier callbacks to tell the device to invalidate
-whatever it's caching about that page.
-
-This would all be relatively transparent the userland, all userland
-"knows" is that it's getting memory from a device (/dev/xxx) or a
-node it's otherwise aware of hosting device memory somehow.
-
-~Gregory
