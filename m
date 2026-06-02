@@ -1,61 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABADC3E5ED8;
-	Tue,  2 Jun 2026 15:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCC23E8324;
+	Tue,  2 Jun 2026 15:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780412962; cv=none; b=fAnrCDb8amFAQ1LKGFIQnSWXlyBwARadxE9vU8Ddj73Ma+hFTDaoaq9ehnxRxfG0zKCYyybHB14cRxHHANwVRxhW5Cbkzg8Tx0qqUAYvtz3j/xiV2BRNbf0BZD3rJEIX7oSTaYi9gM2dmRmHquMiFuoDq+RUKWXMxsvIHAUGGF4=
+	t=1780412977; cv=none; b=gruiJ16NoPp+0u412Uo7O/dQGm+JHyivhprJtMbelZ2KfMInepn3dJ8lYJCJOj/1wxmQWJVIjnjqn/HdA7C4X9dEZIa93qw93i2Apn4IvZCmR/DYZ5mSpaBtnWFMBP8K+nqRBTt38p5UdaW6Tuc353JZogjBWpBHev+PBlS4qFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780412962; c=relaxed/simple;
-	bh=YIlUUETkVH8UUy8ze1s+f9+Gh3RwlJ+rmwgeOqySVoI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NePclvEhw+imxrkonxSasUg7rftht5nqjGPLLIWm+GxwCm+UAQjj3euU+soKCffiH8f0epbzW/ux5pAb9m3lvA2l39sEnLn9t48QiWaii2RRpo7pxK2qlcdRCaT6Lk77P9haCVvI78qtLHY7qs22F5flHN3HIvaBWwtWysx6qWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpKHtcHq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780412977; c=relaxed/simple;
+	bh=ioOPceM7UKjOwl2Pt8ZqxLBsrY8AJhg/6I6pX/zRfaw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qkvyFvjylCSLYmT6e2ayOHnkwneJ/5sDZs/7Luh29ug63wI1I2otxgo0z/Peepxk72cioiGM8qNhM/fIv56wVafo4JHt2PyEpJ6c4wNDK9KqBjsBHSZX4XsL+wXD6RFW4PsBTY2RPGB2wpd3Gg/UUNs5R3hHmLzU6cp5+Z2nn+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fz44U0rD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpKHtcHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F9E1F00893;
-	Tue,  2 Jun 2026 15:09:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fz44U0rD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 748F51F00898;
+	Tue,  2 Jun 2026 15:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780412961;
-	bh=8T6KiMQPfhmF9wCBshWFSoHQT/tPdPFdSJ7O7GH+wSY=;
-	h=From:To:Cc:Subject:Date;
-	b=lpKHtcHqH9r/PmNgUgVacJ83f7c/6/ITxcP9dd71/VNhiPXfAXC5oNtZiZiaGe2UR
-	 CLZSzAHZIQJzm0A1Bym3tkt2+mjbch0FeT1MD81rBE6GVKtXV5Or7hAkFGverXzYqc
-	 pDnpppHboNt5DJaZmE1S+PaFyxhFVASkvZ7ddKbRndtARP5NXyb0VJx0aWluhumKwP
-	 sNjIQM+5t8XgSsoNAmL1Qke3CMhJcGyxX0EfhZ+tbdNklhUudjJQSoaXqhlHhn2Gxq
-	 N6iuY2Z1FqnyyLofGTnMrbDBXGbNrrqrEiYDex0npmavhnRBFW6udDdHrrRNgjS8WS
-	 DQ2Gnh3jm2FQA==
+	s=k20260515; t=1780412976;
+	bh=wxC5GQazXkSfb4E/OyxULD1lrIQbuxRHv/6QFM17duk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Fz44U0rDiRqSgWPZbreC2SbhJMeyXA3A/CK0XpbHhwbaslwwcktqSapEdrkr8N0rY
+	 6ouDC223bJ+DJPbOSvz0FrWcfFdq+uNIITZYox8cpT/smrU7Z/pNUhUndTquMiu7Z4
+	 Py9s14z/y5BXQcBBuR71IqI2tP6rr+ZNWD7RukzYXTXP5cfc0Jd7Qh6SdTsQDQ/CBb
+	 x8ExnSsCggYoCp9ALSgHL2wp2BBLNIyji/izPOKBr0psUGrIsEDXPBnLk+grCg5WCK
+	 GC25ZcNE5xRfwoFTU67+MYiI698wHs+ppwu+AhZZxyQstWoYYhw9m0xxiPYNkgc39U
+	 oj3J4vNuhWfaw==
 From: Arnd Bergmann <arnd@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Nathan Chancellor <nathan@kernel.org>
+	Crystal Wood <crwood@redhat.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	linux-rdma@vger.kernel.org,
+	Tomas Glozar <tglozar@redhat.com>,
+	Wang Liang <wangliang74@huawei.com>,
 	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-trace-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH 1/2] tracing: work around -Wmissing-format-attribute warning
-Date: Tue,  2 Jun 2026 17:07:05 +0200
-Message-Id: <20260602150904.2258624-1-arnd@kernel.org>
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 2/2] tracing/osnoise: add printf attribute to osnoise_print
+Date: Tue,  2 Jun 2026 17:07:06 +0200
+Message-Id: <20260602150904.2258624-2-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260602150904.2258624-1-arnd@kernel.org>
+References: <20260602150904.2258624-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,249 +52,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-A number of tracing headers turn off -Wsuggest-attribute=format for
-gcc, but they don't turn it off for clang, so the same warning still
-happens on new versions of clang that support the format attribute.
+gcc points out that tne newly added function uses printf style arguments
+and should get an attribute to allow verifying the format strings for
+its callers:
 
-To avoid duplicating the same thing in each tracing header, as well
-as changing all of them to also turn it off for clang, add a new
-__vsnprintf() helper that is not annotated this way in linux/sprintf.h
-but is defined to work the same way as the regular vsprintf.
+kernel/trace/trace_osnoise.c: In function 'osnoise_print':
+kernel/trace/trace_osnoise.c:96:17: error: function 'osnoise_print' might be a candidate for 'gnu_printf' format attribute [-Werror=suggest-attribute=format]
+   96 |                 trace_array_vprintk(tr, _RET_IP_, fmt, ap);
+      |                 ^~~~~~~~~~~~~~~~~~~
 
-Aside from tracing, the same thing can be used in va_format(),
-which is part of lib/vsprintf.c itself.
+Add the attribute as suggested
 
+Fixes: 9cb99c598643 ("tracing/osnoise: Array printk init and cleanup")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-This version is a fairly simplistic way to work around the warning
-reliably. I have resent two more patches to address actually
-missing annotations in device drivers, but with all of these
-out of the way, we can move the warning from the 'make W=1'
-into the default set.
+ kernel/trace/trace_osnoise.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have also prototyped a variant of this patch that passes down
-a 'struct va_format' throughout the tracing code. That patch is
-a little more invasive and I have no idea if that actually works,
-but the result looks simpler.
----
- drivers/infiniband/hw/hfi1/trace_dbg.h               |  7 -------
- .../broadcom/brcm80211/brcmfmac/tracepoint.h         |  7 -------
- .../brcm80211/brcmsmac/brcms_trace_brcmsmac_msg.h    |  7 -------
- drivers/net/wireless/intel/iwlwifi/iwl-devtrace.c    |  3 ---
- include/linux/sprintf.h                              |  1 +
- include/linux/trace_events.h                         |  2 +-
- include/trace/events/qla.h                           |  7 -------
- include/trace/stages/stage6_event_callback.h         |  2 +-
- lib/vsprintf.c                                       | 12 +++++++-----
- samples/trace_events/trace-events-sample.c           |  2 --
- 10 files changed, 10 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/infiniband/hw/hfi1/trace_dbg.h b/drivers/infiniband/hw/hfi1/trace_dbg.h
-index 58304b91380f..05c4f1354269 100644
---- a/drivers/infiniband/hw/hfi1/trace_dbg.h
-+++ b/drivers/infiniband/hw/hfi1/trace_dbg.h
-@@ -22,11 +22,6 @@
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 1fbd8525ab54..6fa015e57899 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -83,7 +83,7 @@ struct osnoise_instance {
  
- #define MAX_MSG_LEN 512
+ static struct list_head osnoise_instances;
  
--#pragma GCC diagnostic push
--#ifndef __clang__
--#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
--#endif
--
- DECLARE_EVENT_CLASS(hfi1_trace_template,
- 		    TP_PROTO(const char *function, struct va_format *vaf),
- 		    TP_ARGS(function, vaf),
-@@ -41,8 +36,6 @@ DECLARE_EVENT_CLASS(hfi1_trace_template,
- 			      __get_str(msg))
- );
- 
--#pragma GCC diagnostic pop
--
- /*
-  * It may be nice to macroize the __hfi1_trace but the va_* stuff requires an
-  * actual function to work and can not be in a macro.
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/tracepoint.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/tracepoint.h
-index 96032322b165..6c4e00e9ccd1 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/tracepoint.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/tracepoint.h
-@@ -28,11 +28,6 @@ static inline void trace_ ## name(proto) {}
- 
- #define MAX_MSG_LEN		100
- 
--#pragma GCC diagnostic push
--#ifndef __clang__
--#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
--#endif
--
- TRACE_EVENT(brcmf_err,
- 	TP_PROTO(const char *func, struct va_format *vaf),
- 	TP_ARGS(func, vaf),
-@@ -128,8 +123,6 @@ TRACE_EVENT(brcmf_sdpcm_hdr,
- 		  __entry->len, ((u8 *)__get_dynamic_array(hdr))[4])
- );
- 
--#pragma GCC diagnostic pop
--
- #ifdef CONFIG_BRCM_TRACING
- 
- #undef TRACE_INCLUDE_PATH
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/brcms_trace_brcmsmac_msg.h b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/brcms_trace_brcmsmac_msg.h
-index 908ce3c864fe..dc296d8bf775 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/brcms_trace_brcmsmac_msg.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/brcms_trace_brcmsmac_msg.h
-@@ -24,11 +24,6 @@
- 
- #define MAX_MSG_LEN	100
- 
--#pragma GCC diagnostic push
--#ifndef __clang__
--#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
--#endif
--
- DECLARE_EVENT_CLASS(brcms_msg_event,
- 	TP_PROTO(struct va_format *vaf),
- 	TP_ARGS(vaf),
-@@ -77,8 +72,6 @@ TRACE_EVENT(brcms_dbg,
- 	TP_printk("%s: %s", __get_str(func), __get_str(msg))
- );
- 
--#pragma GCC diagnostic pop
--
- #endif /* __TRACE_BRCMSMAC_MSG_H */
- 
- #ifdef CONFIG_BRCM_TRACING
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.c b/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.c
-index 7e686297963d..49a8196430a7 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-devtrace.c
-@@ -12,9 +12,6 @@
- #include "iwl-trans.h"
- 
- #define CREATE_TRACE_POINTS
--#ifdef CONFIG_CC_IS_GCC
--#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
--#endif
- #include "iwl-devtrace.h"
- 
- EXPORT_TRACEPOINT_SYMBOL(iwlwifi_dev_ucode_event);
-diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
-index f06f7b785091..036a247b7c1e 100644
---- a/include/linux/sprintf.h
-+++ b/include/linux/sprintf.h
-@@ -12,6 +12,7 @@ __printf(2, 3) int sprintf(char *buf, const char * fmt, ...);
- __printf(2, 0) int vsprintf(char *buf, const char *, va_list);
- __printf(3, 4) int snprintf(char *buf, size_t size, const char *fmt, ...);
- __printf(3, 0) int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
-+int __vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
- __printf(3, 4) int scnprintf(char *buf, size_t size, const char *fmt, ...);
- __printf(3, 0) int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
- __printf(2, 3) __malloc char *kasprintf(gfp_t gfp, const char *fmt, ...);
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index d49338c44014..4715330c7b6b 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -962,7 +962,7 @@ perf_trace_buf_submit(void *raw_data, int size, int rctx, u16 type,
- 	int __ret;					\
- 							\
- 	va_copy(__ap, *(va));				\
--	__ret = vsnprintf(NULL, 0, fmt, __ap) + 1;	\
-+	__ret = __vsnprintf(NULL, 0, fmt, __ap) + 1;	\
- 	va_end(__ap);					\
- 							\
- 	min(__ret, TRACE_EVENT_STR_MAX);		\
-diff --git a/include/trace/events/qla.h b/include/trace/events/qla.h
-index 8800c35525a1..74a7534b99b6 100644
---- a/include/trace/events/qla.h
-+++ b/include/trace/events/qla.h
-@@ -9,11 +9,6 @@
- 
- #define QLA_MSG_MAX 256
- 
--#pragma GCC diagnostic push
--#ifndef __clang__
--#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
--#endif
--
- DECLARE_EVENT_CLASS(qla_log_event,
- 	TP_PROTO(const char *buf,
- 		struct va_format *vaf),
-@@ -32,8 +27,6 @@ DECLARE_EVENT_CLASS(qla_log_event,
- 	TP_printk("%s %s", __get_str(buf), __get_str(msg))
- );
- 
--#pragma GCC diagnostic pop
--
- DEFINE_EVENT(qla_log_event, ql_dbg_log,
- 	TP_PROTO(const char *buf, struct va_format *vaf),
- 	TP_ARGS(buf, vaf)
-diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index 1691676fd858..7d6a6ca6e779 100644
---- a/include/trace/stages/stage6_event_callback.h
-+++ b/include/trace/stages/stage6_event_callback.h
-@@ -45,7 +45,7 @@
- 	do {								\
- 		va_list __cp_va;					\
- 		va_copy(__cp_va, *(va));				\
--		vsnprintf(__get_str(dst), TRACE_EVENT_STR_MAX, fmt, __cp_va); \
-+		__vsnprintf(__get_str(dst), TRACE_EVENT_STR_MAX, fmt, __cp_va); \
- 		va_end(__cp_va);					\
- 	} while (0)
- 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index a3017bc58986..3caf0796f54d 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -1702,9 +1702,6 @@ char *escaped_string(char *buf, char *end, u8 *addr, struct printf_spec spec,
- 	return buf;
- }
- 
--__diag_push();
--__diag_ignore(GCC, all, "-Wsuggest-attribute=format",
--	      "Not a valid __printf() conversion candidate.");
- static char *va_format(char *buf, char *end, struct va_format *va_fmt,
- 		       struct printf_spec spec)
+-static void osnoise_print(const char *fmt, ...)
++static __printf(1, 2) void osnoise_print(const char *fmt, ...)
  {
-@@ -1714,12 +1711,11 @@ static char *va_format(char *buf, char *end, struct va_format *va_fmt,
- 		return buf;
- 
- 	va_copy(va, *va_fmt->va);
--	buf += vsnprintf(buf, end > buf ? end - buf : 0, va_fmt->fmt, va);
-+	buf += __vsnprintf(buf, end > buf ? end - buf : 0, va_fmt->fmt, va);
- 	va_end(va);
- 
- 	return buf;
- }
--__diag_pop();
- 
- static noinline_for_stack
- char *uuid_string(char *buf, char *end, const u8 *addr,
-@@ -2979,6 +2975,12 @@ int vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
- }
- EXPORT_SYMBOL(vsnprintf);
- 
-+int __printf(3, 0) __vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
-+{
-+	return vsnprintf(buf, size, fmt_str, args);
-+}
-+EXPORT_SYMBOL(__vsnprintf);
-+
- /**
-  * vscnprintf - Format a string and place it in a buffer
-  * @buf: The buffer to place the result into
-diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
-index 9993fb5d5f98..ecc7db237f2e 100644
---- a/samples/trace_events/trace-events-sample.c
-+++ b/samples/trace_events/trace-events-sample.c
-@@ -9,8 +9,6 @@
-  * creates the handles for the trace points.
-  */
- #define CREATE_TRACE_POINTS
--__diag_ignore(GCC, all, "-Wsuggest-attribute=format",
--             "trace_event_get_offsets_foo_bar can't easily be annotated as __printf");
- #include "trace-events-sample.h"
- 
- static const char *random_strings[] = {
+ 	struct osnoise_instance *inst;
+ 	struct trace_array *tr;
 -- 
 2.39.5
 
