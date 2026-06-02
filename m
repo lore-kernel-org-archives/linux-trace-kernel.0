@@ -1,124 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19282F39B9;
-	Tue,  2 Jun 2026 18:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E63F334C3D;
+	Tue,  2 Jun 2026 20:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780426755; cv=none; b=ReAvA/Lb2NUtzfKTVD0QQJYAsDY2OAAydWNDJruFhbiw4CLofid0O7v4/HRfOcKM2XlSseQNYyv7b/EYzOCOZ+8Ek8d/mU/ekThs0oUMwS13YdqijMAFzJnkEA30HwIuvEulM8VtWJNcXtwX6xMu4eaLjcCKLWBCMXR1h46yQt0=
+	t=1780430596; cv=none; b=ZuD/ZRK8lBVG65eRisfRs68pi97KVVmUDD7GlVgJMuDzMgmlk8/duHNQQOhZOtQK6+y1ytpBAn8JTPuT+pPQyUdF7FlZQHENWFmdTCLaJP3TA5K2SSpefNi6IAgUTG7ox27ihQ2o/FDkWf1xeeoYZgeCnWhuKFIEFku86PFLdow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780426755; c=relaxed/simple;
-	bh=GvyU1VHG9G0bx3iqtGiPUhz+SeLDv9qe2ZeDnh9OQ+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ubTyGfYNVV6TO4A6gd/Qan1h6jGQhOAWn6RkerhOUlNh3Gw99zdQno8XLjj3hG5iWC7+kJjfTML93q6S28APOhcieMKZOyOZDWjw7J4aY9J948IYok8gE6gYq17+eL/9fr+Rz/8Rc9ZlebUegsCvL+aA6pKZ3Vjur9Br3RN5q0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yo582DSO; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yo582DSO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780426753; x=1811962753;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GvyU1VHG9G0bx3iqtGiPUhz+SeLDv9qe2ZeDnh9OQ+E=;
-  b=Yo582DSOXev/Cy49uul4q2uaLqOBtHFQOJOy7ptHQwkR11paBf8Hk4hg
-   aBn6/9iZH0SKBgTta7LDHTMb4rnCYLSPaQyNxLIYsqCQ4CQEDZvSKgIz+
-   6FOPrFiAJNUEIPDdSpik59y5OK1Ieu8f4n8mj4WVkMsLwfmncHPksJXx3
-   vqfFGgB4MRG/KD1HakJlQj3qv29CBVuOfHLfcsWu39VyAESZnOPyZhiJY
-   44h4HzLm5RZZQ6sLCbYEjG/2VWs9C58LrupWJVo+NgyRAN80O7abnltah
-   RhbWJniKCm1VCBV1kmwJU8v7BtHumVLnb+0etEGAM1ulHADnu/2/z9+/s
-   w==;
-X-CSE-ConnectionGUID: 7pyuHn8LSE+T4+g/vrALeA==
-X-CSE-MsgGUID: TT1U3Vx6TWaKxMnXDvnPCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="91533739"
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="91533739"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 11:59:13 -0700
-X-CSE-ConnectionGUID: RQzM3udfSO6EFJ+AdhTWXg==
-X-CSE-MsgGUID: NLFQCh7FSO6e1Hvs+jok5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="239543956"
-Received: from mkosciow-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 11:59:07 -0700
-Date: Tue, 2 Jun 2026 21:59:04 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Vlastimil Babka <vbabka@kernel.org>, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 1/2] tracing: work around -Wmissing-format-attribute
- warning
-Message-ID: <ah8n-Nk305S5hRwN@ashevche-desk.local>
-References: <20260602150904.2258624-1-arnd@kernel.org>
+	s=arc-20240116; t=1780430596; c=relaxed/simple;
+	bh=TFAiqmbHyliLM70LrVPZuqFMdE3EdUnuxHG1Am3kwvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O8YVI6+bhsFyx+2qk7ggISLXRZLF7zyLMD9QeLkDIyOVKXGsVPoQJRwXZB2htkm1CXyLDK3GK161kpD3o4GsszRNL62SXqfELLiSq9W5HQdjIebHXVFIWRqAtU6/XYeqjrUieHq9ardGrwh8HojNrMxy/7UVVj11lFsNhnEMl40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 607251C0114;
+	Tue,  2 Jun 2026 20:03:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 990C620011;
+	Tue,  2 Jun 2026 20:03:05 +0000 (UTC)
+Date: Tue, 2 Jun 2026 16:03:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sam Moelius <sam.moelius@trailofbits.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Reject tracefs buffer size values that
+ overflow bytes
+Message-ID: <20260602160304.0b1f2b81@fedora>
+In-Reply-To: <20260602184335.1554470-1-sam.moelius@trailofbits.com>
+References: <20260602184335.1554470-1-sam.moelius@trailofbits.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260602150904.2258624-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 990C620011
+X-Rspamd-Server: rspamout01
+X-Stat-Signature: 1joiikxsjxsiqg3icz3r5kzi6e8q3ozx
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+oQ7PDkjBUGvAMUjfphLMKOx8fC8So9nE=
+X-HE-Tag: 1780430585-374936
+X-HE-Meta: U2FsdGVkX1+3FzYToPDTmDx9dyevbaqkaS3K6jHjo8E956Lg7PuIRIyQ05S6GtQMHzPjtYrCh18Oopmv/9wPMepEtPVjlfHRA8nOJVh1tuTGDmqTRRCySvICwLihMKcIBB+yv5PROfSkt1xJTlBJrbRSxd0Ps7ewAezsIBOUyqXUYbC2RmBxoiGGyXx740jEgX2B2JOUPcnxJeBrD6PX2PHupmAVtMk+eAP8Ctj78SzuhBHlbScB0CL9y9pspmvA4xRBww1UZxq5mVmBXHeZ2tqYKask+VsjEt81CcKWXWDU+ejlWd05p/yJSd4pEmEZXIEOCtadrAq6T1083dMP304YfztHNSyewkmn7JYcuHUp3BWY6eWMeKFEFqTO1qqv
 
-On Tue, Jun 02, 2026 at 05:07:05PM +0200, Arnd Bergmann wrote:
+On Tue,  2 Jun 2026 18:43:34 +0000
+Sam Moelius <sam.moelius@trailofbits.com> wrote:
+
+> From: Samuel Moelius <sam.moelius@trailofbits.com>
 > 
-> A number of tracing headers turn off -Wsuggest-attribute=format for
-> gcc, but they don't turn it off for clang, so the same warning still
-> happens on new versions of clang that support the format attribute.
+> `tracing_entries_write()` accepts a `buffer_size_kb` value as
+> `unsigned long`, checks only for zero, then shifts left by 10. On
+> 64-bit, writing `18014398509481984` KB wraps the byte count to zero
+> and the ring buffer resize path accepts it as a tiny buffer instead
+> of rejecting an impossible huge size.
 > 
-> To avoid duplicating the same thing in each tracing header, as well
-> as changing all of them to also turn it off for clang, add a new
-> __vsnprintf() helper that is not annotated this way in linux/sprintf.h
-> but is defined to work the same way as the regular vsprintf.
+> The fix also adds the same pre-scale overflow check to
+> `buffer_subbuf_size_write()`.
 
-vsprintf()
+Honestly, enter stupid values, get stupid results.
 
-> Aside from tracing, the same thing can be used in va_format(),
-> which is part of lib/vsprintf.c itself.
+I don't think this is necessary. Nothing breaks but the person may get
+confused by being confused by the confusing entries they make.
 
-...
-
-> --- a/include/linux/sprintf.h
-> +++ b/include/linux/sprintf.h
-> @@ -12,6 +12,7 @@ __printf(2, 3) int sprintf(char *buf, const char * fmt, ...);
->  __printf(2, 0) int vsprintf(char *buf, const char *, va_list);
->  __printf(3, 4) int snprintf(char *buf, size_t size, const char *fmt, ...);
->  __printf(3, 0) int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
-> +int __vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
-
-Why the __printf() annotation is in the C file and not here?
-Is this all about headers as the second paragraph in the commit message explains?
-I would add a comment to explain it here, otherwise we might see false patches to
-"make things consistent" in a wrong way.
-
->  __printf(3, 4) int scnprintf(char *buf, size_t size, const char *fmt, ...);
->  __printf(3, 0) int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
->  __printf(2, 3) __malloc char *kasprintf(gfp_t gfp, const char *fmt, ...);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+-- Steve
