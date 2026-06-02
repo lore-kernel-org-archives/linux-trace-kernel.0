@@ -1,54 +1,54 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3043F8ED8
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 17:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19FC3FB044
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 17:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780420329; cv=none; b=YNELyia2oe6Gcn8ghb8cJ4MiU+PBjTj8oaLHb/Z3x2QduB0D6I7vWpt98zNuJzHEoVtVn7BeT9zm7gJqOVV7+zXXD0yRsdDleRMYOP/C42MjZ1/sJW/hFfhy7lQaDh8xCMFOj+E8XykgS9TyYi8ToShFjP7Uu/gxiR//Q3VXcKI=
+	t=1780420331; cv=none; b=eP2joNpzWcNt8ievXiqLjqfAP/GWMMJ00XmjWfHGUbgejS8wS11avbM4dtuHI7i99NWfIeBw5Z7KMj2TkUoF+fxf2V/eaRVgTOImhbNRAMOIil56QJdQiFP0mfqTrOTs47iu1pla+IwAkGelD3NJeTCBJJYLqzwO/h2a4MT+HZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780420329; c=relaxed/simple;
-	bh=vTprPBJOvANENpg/OMmSfVGiFw64Xlum2zkLJQM9vFg=;
+	s=arc-20240116; t=1780420331; c=relaxed/simple;
+	bh=IK5Sq6bKvY7mH+tM9X/iaLcyl0umf5WYKuSqtUMtOLc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aS4Ad88KGc40gGUyhPcLi+ayS5qwrZIcryeAp9NpLroZqIby+VY5q4S5u1F4HLRg8wUeJqqNgHdLLQPZ16GPgLucasxXTP0wEdAm5j9G3LwCTIdG2SzRZRJJikUxtMUJ9nt7A6eVHOrthqA7eS73eT7kD88A25bWPKI2cJwDJNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c3L9B+Up; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=ef+EYsupJHQaYCEXRzi5m8lSzBqWg5ylYEJC0I9xrcsItRpmi5nCSzxEwngGzleEtpNCCzDOtcyTGmyYkoHNaxGlfhEF8zg+yBQzqbslu2WT5fkX9da4/H/NF2RZIy9A1sA9fILQ/UDRcihkhYQyYYIkV6FZPUmmcw4Jipdgno8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OiDI1pcT; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c3L9B+Up"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-45eec2ba533so3973957f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 10:12:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OiDI1pcT"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-49058295985so67730395e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 10:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780420326; x=1781025126; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780420328; x=1781025128; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fijxRpUtwWebZSoIxVCctPN4xNPYzLYlfDMdHnsAC60=;
-        b=c3L9B+UpAs1KNEYG2qrX4wOtyR1SJd1pI5ivwaMBffP2472jxkqXP6CFwfRA8Cs2TJ
-         GvSlBNCVdXQNU8CGr6JB79eVNlU4p6InRL+qDnDszyJNyvK8vsUb+axkfJV0ExWN8MX4
-         ARRteLH6Kl0Feak5oL2DOZg839LFY4ryllpkqyOZJPxrjuU/j+UINDXF3NfM+itbh8XS
-         Y6chsCly6LfT46PgutJBzLXE+/9hYnAKCklKz5UcaTd9Q5EFHy70FrR6/sp73L6d6C8w
-         2NCdZK2VrH/eeb7YllM4THRIgS7TjdtUWM214dENabok7+CePli0Nsf9b5KWDxpKyc2d
-         lHMg==
+        bh=9u+RU1QEM5sYPoj5hIk8HPDCUYEMr+8BoHWEJxsfabs=;
+        b=OiDI1pcThAYeDogp0OHHiCi7n2xl64j5RAQabcY9xH9gCQRXOEsIpeQlzCuC6n34R5
+         ZXCw+NQZZaABjOb+hmqGO6y59/z/y4FVlKJmCKEZT5h4IZVCHKX3rJd+vUngQk3RKP6P
+         pnZiSDlOHiTJSeh3r8/RuNTg3ORo77m4ySQ9nFL91y2FPTiHoK2f1Uhyo0fgdsC8XhDD
+         ln/WFKs7+/X7npSpoTmw+/kXg+HndseinuEbD0P+Cnbshtbmy3/HnfRiqgi6++e8JhoM
+         WcFnnb6A+J+1BSc8SU4AdIMAHcmyDoCF4f27B3A8AETHh3gmk4sLQNDGAsirgFqqDPU4
+         zB2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780420326; x=1781025126;
+        d=1e100.net; s=20251104; t=1780420328; x=1781025128;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fijxRpUtwWebZSoIxVCctPN4xNPYzLYlfDMdHnsAC60=;
-        b=s+cNEG8kwYYDW0Y5wT7HuV2YxbnTQAR+bpV8HOtOxBXaJiwCEX1Q1wLRdpD00GadZv
-         9M27GexcVM1ihIxYSebHc1H8pMRFP/jQPHeCxoxxv9j4CfrJt5JjHj4c2r7TJyV4FdRA
-         xojKgCM+vhEV1EJX9RwdCeZZBSH/igeKLNHT6rc9LZceMHupgzHdoOtAb3JTLQ929Cjq
-         XLiUF/OtPjX6QaT982N3Q0mkLCjoBNmCa4SNH7lXDuwYGOUS7nzzAp7EktnnEMKoJX6h
-         MWFiSX7p5Zvabl+RqR4+EXpBYNM80LjZ3vUREZAY7c24srK/R9dFDH9ojVAphol7MVy6
-         cq/w==
-X-Forwarded-Encrypted: i=1; AFNElJ/V0mJCzRRPAoBp3/5AdDO+n2wk/BQM995YxYaZMX5edSMEX1gNPo6O4yXidccAliiAwmgqM9EyD+9Rcczi8k8hyBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIXSsMEohSlVe/WMVQSRZJbhzI1buBzWadi+fRqoG5/RyLZ9d2
-	LaUA0t0VlnfuwKyPS502A9tSgmDQ2tsWmmir3enjwEvKXaiT+1XKg+Yq52MqgDzARNtYNtxxQI5
-	XaBrxqoGM1rZsSnx916p42Q==
-X-Received: from wrtr3.prod.google.com ([2002:a5d:4e43:0:b0:43d:7611:5aa5])
+        bh=9u+RU1QEM5sYPoj5hIk8HPDCUYEMr+8BoHWEJxsfabs=;
+        b=aBfGC6GyDLVIrwnbNnskqXoDi2oatTJbhk6W6MzfAqexMwuITR4jVmTtGFx+hnDytc
+         Yu1X4o1GJaC1HrIUT5Vwt/LWBwrVJDjQW83V2c3raq6SPbo7pRqEc5G0cYnJJxTIxyG8
+         PBrBbiN86gOnidmhqF2ROK6ze9rpuTXpWxn3Nnyih08mtGXEm8F8kqNR+86YhcQUkUwj
+         NKRbQUCNEo8XECLvQQfmE6aWE/HNbjDnaZ1+gBCXpu/uhmFBPNIJpmLXa03jZN1QlypT
+         vM/rRcJEgtahkAz8AI8mspPp5BGgE7lgobi1M8P2iNigbKtvK4fmg2LRTbv161q9Bzf9
+         PnEQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9No35Uo6eExmAk0S8H96/8UmrJPKxR65hnjlU5a1JFJ8VImPnrDO8/2BXQs3+kduzKCNHoGF8qNrw5FtmeG5PqE6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAhlaAZmZye/KYIZxjVNW2Ej3rkYs+6Cvzsrp/coc/AJeX6jRt
+	A3MC+L+wLwrgzITx52HQC+BYbMbf9Xc2dJB5Xp3Nk81xC0vnTN4Pej6ftmLcojfvyrLqxnpmQQz
+	bqN5hugfUhXz9GR5IQYE18w==
+X-Received: from wmbgx19.prod.google.com ([2002:a05:600c:8593:b0:490:7e30:ecfc])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:6211:0:b0:45e:f228:830d with SMTP id ffacd0b85a97d-4601f6334e8mr221325f8f.23.1780420325431;
- Tue, 02 Jun 2026 10:12:05 -0700 (PDT)
-Date: Tue,  2 Jun 2026 18:11:38 +0100
+ 2002:a05:600c:3e87:b0:490:44eb:c1e7 with SMTP id 5b1f17b1804b1-490b50a5531mr9717925e9.30.1780420327973;
+ Tue, 02 Jun 2026 10:12:07 -0700 (PDT)
+Date: Tue,  2 Jun 2026 18:11:40 +0100
 In-Reply-To: <20260602171146.2238998-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260602171146.2238998-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260602171146.2238998-7-vdonnefort@google.com>
-Subject: [PATCH 06/13] tracing/remotes: selftests: Add a test for the printk
- tracefs file
+Message-ID: <20260602171146.2238998-9-vdonnefort@google.com>
+Subject: [PATCH 08/13] ring-buffer: Add ring_buffer_read_remote_meta_page()
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org
@@ -68,118 +67,111 @@ Cc: kernel-team@android.com, linux-kernel@vger.kernel.org,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Exercise the newly introduced printk tracefs file that turns on and off
-the dmesg redirection.
+In preparation for the introduction of a panic handler for trace
+remotes, add a ring_buffer_read_remote_meta_page(). This is basically
+similar to ring_buffer_poll_remote, but it doesn't try to wake-up
+readers and, in the !RING_BUFFER_ALL_CPUS case, uses panic-friendly
+locks.
+
+While at it, update trace_remote_has_cpu() to use this new function
+instead of ring_buffer_poll_remote(), avoiding unnecessary wakeups when
+verifying if a CPU buffer is active.
+
+Finally, the distracted engineer who wrote that
+ring_buffer_poll_remote() forgot to document it. Add a kerneldoc for
+that function too.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
-index 05224fac3653..8dd9c961977b 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/functions
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
-@@ -8,6 +8,7 @@ setup_remote()
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 994f52b34344..6e008a548063 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -298,6 +298,7 @@ struct ring_buffer_remote {
+ 	void				*priv;
+ };
  
- 	cd remotes/$name/
- 	echo 0 > tracing_on
-+	echo 0 > printk
- 	clear_trace
- 	echo 7 > buffer_size_kb
- 	echo 0 > events/enable
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/printk.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/printk.tc
-new file mode 100644
-index 000000000000..aca7a2bfe293
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/printk.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test trace remote printk, the dmesg redirection
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/printk.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_printk
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/printk.tc b/tools/testing/selftests/ftrace/test.d/remotes/printk.tc
-new file mode 100644
-index 000000000000..80eaf13e240d
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/printk.tc
-@@ -0,0 +1,72 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test trace remote printk, the dmesg redirection
-+# requires: remotes/test
-+
-+. $TEST_DIR/remotes/functions
-+
-+test_printk()
++int ring_buffer_read_remote_meta_page(struct trace_buffer *buffer, int cpu);
+ int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu);
+ 
+ struct trace_buffer *
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 7b07d2004cc6..88ac346c65ec 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6623,6 +6623,59 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffer, int cpu)
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_empty_cpu);
+ 
++/**
++ * ring_buffer_read_remote_meta_page - read the meta page of a remote ring buffer
++ * @buffer: The ring buffer
++ * @cpu: The CPU buffer to read (or RING_BUFFER_ALL_CPUS)
++ *
++ * Returns:
++ *  0 on success, or -EINVAL if the CPU is not in the buffer's cpumask.
++ */
++int ring_buffer_read_remote_meta_page(struct trace_buffer *buffer, int cpu)
 +{
-+    echo 0 > tracing_on
-+    assert_unloaded
++	struct ring_buffer_per_cpu *cpu_buffer;
 +
-+    #
-+    # Test printk on/off when tracing is disabled
-+    #
-+    echo 1 > printk
-+    test $(cat printk) -eq 1
-+    assert_loaded
++	if (cpu != RING_BUFFER_ALL_CPUS) {
++		unsigned long flags;
++		bool dolock;
 +
-+    echo 0 > printk
-+    test $(cat printk) -eq 0
-+    assert_unloaded
++		if (!cpumask_test_cpu(cpu, buffer->cpumask))
++			return -EINVAL;
 +
-+    #
-+    # Test events are logged to dmesg
-+    #
-+    dmesg -c > /dev/null
++		cpu_buffer = buffer->buffers[cpu];
 +
-+    echo 1 > tracing_on
-+    assert_loaded
-+    echo 1 > printk
-+    test $(cat printk) -eq 1
++		local_irq_save(flags);
++		dolock = rb_reader_lock(cpu_buffer);
++		rb_read_remote_meta_page(cpu_buffer);
++		rb_reader_unlock(cpu_buffer, dolock);
++		local_irq_restore(flags);
++		return 0;
++	}
 +
-+    nr_events=128
-+    for i in $(seq 1 $nr_events); do
-+        echo $i > write_event
-+    done
++	guard(cpus_read_lock)();
 +
-+    sleep 1
-+    output=$(mktemp $TMPDIR/remote_test.XXXXXX)
-+    dmesg | grep "selftest id=" | sed 's/^[^]]*] //'> $output
++	for_each_buffer_cpu(buffer, cpu) {
++		cpu_buffer = buffer->buffers[cpu];
 +
-+    check_trace 1 $nr_events $output
++		guard(raw_spinlock)(&cpu_buffer->reader_lock);
++		rb_read_remote_meta_page(cpu_buffer);
++	}
 +
-+    rm $output
-+
-+    #
-+    # Disable printk and Test events were not consumed by dmesg
-+    #
-+    echo 0 > printk
-+    test $(cat printk) -eq 0
-+
-+    start_id=$(($nr_events + 1))
-+    end_id=$(($start_id + $nr_events))
-+
-+    for i in $(seq $start_id $end_id); do
-+        echo $i > write_event
-+    done
-+
-+    sleep 1
-+
-+    output=$(dump_trace_pipe)
-+    check_trace $start_id $end_id $output
-+    rm $output
++	return 0;
 +}
 +
-+if [ -z "$SOURCE_REMOTE_TEST" ]; then
-+    set -e
-+
-+    setup_remote_test
-+    test_printk
-+fi
++/**
++ * ring_buffer_poll_remote - poll a remote ring buffer for new data
++ * @buffer: The ring buffer
++ * @cpu: The CPU buffer to poll (or RING_BUFFER_ALL_CPUS)
++ *
++ * This function polls the specified remote CPU buffer (or all of them)
++ * by reading its meta page to update the local reader's view. If new
++ * entries are detected, it triggers wakeups for any waiting readers.
++ *
++ * Returns:
++ *  0 on success, or -EINVAL if the CPU is not in the buffer's cpumask.
++ */
+ int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index 1bf0ba159c92..e708dcd7d258 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -291,7 +291,7 @@ static bool trace_remote_has_cpu(struct trace_remote *remote, int cpu)
+ 	if (cpu == RING_BUFFER_ALL_CPUS)
+ 		return true;
+ 
+-	return ring_buffer_poll_remote(remote->trace_buffer, cpu) == 0;
++	return ring_buffer_read_remote_meta_page(remote->trace_buffer, cpu) == 0;
+ }
+ 
+ static void __free_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
