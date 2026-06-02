@@ -1,131 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DF93EFD15
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 16:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB025357D07
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jun 2026 16:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780416760; cv=none; b=g7U1wWeCkxbxtwn1/FD9un5vYI8Z64OIZaFnnIbQ6/0lus7nD5ZKZYzvQPrAa7iwrupTCn7GJHKqsoUL4nnLrVorgZ08ih+qDigKAyxHBm/bU899LkAW29MHOCgLjYuqsdHSbm+WGlfQC7k6bz09AWFpodmGOrokDd7cOQnEiao=
+	t=1780417327; cv=none; b=AVQpslxLCw9sBgrNV4vh7Zf7N/cfh2/IjR3aCUVBu10IIATLCWSqOpKlSqXxNLBE5CF0tvQ+5F6Ll+JRIGD0VvaR3M3EFH1JggZ9MPEkTN5FynKcDVNMFL6NxPRVYOmcQLSD9/kGoHEseK+OZswREKl5qNvAVe0r2yD1/6FWb3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780416760; c=relaxed/simple;
-	bh=jsVIcmcV6g+wiQNa9nON043q6Oo5ERD1DmYjyVTfa/8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MHPY2FQDu+okYlVyd3y6YnBufswhyxPAcVJWP/hDNyWyUMfPgQCYHJTnKfzBJwqlnoIYK3edBKVGoK9el/GmPw6U9r/8A7Nd9Iz9LWkZlFv7xyP3LVm/w53n4iG3iofpGqfi3FHQ4rWYGa0Qc5OLkoV0qojTDIy98MQKxZ7cRlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aNBe8FGF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780417327; c=relaxed/simple;
+	bh=XTU/NCL8gqA2JXcsEn0PwDOsIZDKXDOnqfuwiUGWgJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O3usOrRysdEye2Wss8+lumldqrPwJf0v059sg/4/J8FSD7GLfxi8i95fAVM/tgJ5MzbLQj8xLedCapwDUmlVBfVatQAyjUXdf07q5KH5YaMIX9mfE1DiOm06Z2XJLY2LA3pQ357UIcPb3XCCQpaOV7OaAhR1aAVTGo6DsbtVqrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UsRNTG1N; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aNBe8FGF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780416757;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hv6b8Lim/VWL7tffrNbpEUXxSrhwW/FcqHSo50GrOUo=;
-	b=aNBe8FGFyz4ISSzXgVFtXqn3LhvN3fYYk/wLYNpSC8Ko3okIJdftxPWxwomaBDme+/zp53
-	J+pFFSzaMvYNmSuHwvlAZQxZZxdlWCDX9tOo4tdhsM88oWIxaz8jvipIAv0yg3CgJJZ25p
-	hBFU9ykZU9GjvSajB6XM0frXkJqlTXA=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-673-Xf1QAVFuPGCm7d6REQP5ww-1; Tue, 02 Jun 2026 12:12:36 -0400
-X-MC-Unique: Xf1QAVFuPGCm7d6REQP5ww-1
-X-Mimecast-MFC-AGG-ID: Xf1QAVFuPGCm7d6REQP5ww_1780416754
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-396aafb07c6so1329871fa.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 09:12:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsRNTG1N"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-51761d27612so17502861cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 09:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780417326; x=1781022126; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ca9i8/RrkmCPUjRqV/or9cvyFWAF+0lWZ265m6G8+Xw=;
+        b=UsRNTG1NQPvNdxPmJ+vV1b5S4OYK6UlFOv9POuGHJDPYARPad2tuFeHrvqjy2qfioV
+         VXqic7K6/nHLScpbF/ne/OgV9+3RKqfzGDhcv3K1cTFYtV4cGVhLyEZh7R4EPqQh8zyh
+         04ZE0pzQuwIc9Qhp1QLvGe0GL+aBOZD8JX7j9q7eflSxpddCU+s4S9PKvMG3jIePvQNJ
+         SuSGOK58hpvPvR7bKsJ0pcH8xTuUhzz9FbeqJnc43EysIGKPd4Xmh0SPijwLd/TW0VIj
+         bnJyi43DYZVwYLPnZKeBZ4kzoaqJPmvjGgXmagHOcxaoWOh32lyOLl4CYqWEut08PxsB
+         OtPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780416754; x=1781021554;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Hv6b8Lim/VWL7tffrNbpEUXxSrhwW/FcqHSo50GrOUo=;
-        b=NMDa89hGs5rL0AIehnxEziTe4JYfPTqD9ZZr6ALLx2/6t8LdHmyPsoBl/mE5kocgr9
-         SSx98OxFHHhAfoZapTtD7rDjoQnNToeOf+3X0YuePi5UImMIcUIlVGXkuIzo92KhIlng
-         VhR6rsgq3QbP/YPKSjUaqdIRtSmmDh7T7YY1S6Az48jynBXu4XG3hVLZNdG9JIkjOFfS
-         +Sgo0CQo7aoQZNkoJn8ZIdJ3UP1S1XxLI21F5A4GS+2/u8v3Erq/E8hEXMomU0oIndOF
-         Ktv9vrv8+NbrFEe1LfkEj+q2ZrhyLYQ8W+zfIa/VRXn5xxfQfXF2D5FKJbJd/LFQv83u
-         m/LA==
-X-Forwarded-Encrypted: i=1; AFNElJ+uWduFYhN2yxlsFlC0dBeor7pDJj9lWLJiA1NdqjZ35X47lr5sA+yj+4ihh0zakh5ikwe9t8XwM4so9hqWQA6yPbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDUBly3ZVZFtkAXq3pUaNxM5qyJh12FoipIQ35VZsUPyDZ+GBq
-	hnm2P9k5V1mL/UUlKtBIQA+uvHn3mlL2ZJS9ltVEPhnaDOfd3dmXKgwd2vPyF/Q0V7oVZobPDw1
-	b7CWldEcugG4KWJKV03o3MNocdrVcypWBLmo93/l7FI0IK4vJtPlhg48lRa5F5kIVGNJFpUGGD4
-	nnRF+jcUV2HTCgCy9M0NZkGKkd47Ygb5P9qiaw6msx98/bsOcO
-X-Gm-Gg: Acq92OHaSItd36slDglEW0U72stX7ZybZfhR+jBPYCoCcWi7hM+ckqlgOjEw4YzSDMi
-	813TOzjDOiY6Dvy/Np9IiXAm7D83WM5bR3kRw323hbsipEck2Jg/rOLUKOzXlX6HFUKr4Nm0dJM
-	Av+EPl0HsMSptAso6dGFyGuDvSif9oUFKBu3or8F4wrRI2lnQzqAb13dGMPinmj9RyfyXvw7xmS
-	a7BFq8h98ZAHKhht9B85on/G+o9Hq2gfA2su49ZBAcY7NHzFnU=
-X-Received: by 2002:a2e:9a13:0:b0:393:82e9:fb63 with SMTP id 38308e7fff4ca-396ac26058emr1399971fa.1.1780416753993;
-        Tue, 02 Jun 2026 09:12:33 -0700 (PDT)
-X-Received: by 2002:a2e:9a13:0:b0:393:82e9:fb63 with SMTP id
- 38308e7fff4ca-396ac26058emr1399811fa.1.1780416753576; Tue, 02 Jun 2026
- 09:12:33 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1780417326; x=1781022126;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ca9i8/RrkmCPUjRqV/or9cvyFWAF+0lWZ265m6G8+Xw=;
+        b=LJBEacRqF1DGLYXICiwkw8ce/Z7maX2A8GDK3GDRTm5nmYLPkEQxQEK7ywgOE6cc3A
+         5jb+4tD9cHKRvzOb9fSVw64qUGFvE2Ebpihk/BtR8DnhdgQ4togFQlBQ1a5lKfJpqOXu
+         RT+2/NIwaplM3DpfBHEKTn8fBarekdDPLpcdrPd4m5BJX4bFtapaDKJ0HhKtRQ5uRVM9
+         uHuZRhlfi8HfD4jblR7lQXQbpkFlSbRHVYQ/MKPMpLN2PUB1Cgc0Gm8A32A23pM/6mMB
+         8DH8tAjlIOrHeuCyq4d53SWeVjTtEq3ygQqDwhIGCy3Q+oase9w0LuS2wHQvHsFXDNxC
+         FRzw==
+X-Gm-Message-State: AOJu0Yy/X9M8GS5anYxUOeqrsMEwe5ievKg7nFKUCckfS3yfHUF4C/dO
+	IUqvM4VIdC5IoGEw3fjxaZA/zNXQYU5rIX1dcaFIAt/ULYtu/YN1Wl45
+X-Gm-Gg: Acq92OHJphd621BUVzH4ObxHRE9AKvCvgchoFXm26W+ZMcBHSmdivAO0dfOIfp9FihF
+	9klYovhfJd8/gmTTl0C2svzBESdiRrOZnX4MTdM+ScJeJXDzL91J/U9wD6lJFJovvIZaaG4RZN0
+	hTt3tj/Lvphwe0896IHWLmk71BB/NGz7boi72R+LOClYTgprYxAXkLo5Zb8t/pBR1xU+4Er+Eo5
+	6GhlKlVR9z39owTOXpih0LIf/S/asiddl+jWHitE1PPEkxUCm4bxWfKJmgFmuy4uDl5xLTEs+cf
+	z++keq+J1fy1Pl+LW6Kq1N5IWEvP5oc0OXzN31ucvuX+z9Kn7kbS30dL5OaQX8PrOwShDmaKSS8
+	n2MiPYr3/B+j+cflzIYONJW3JQyL2hprPo9NTlMtuEx39wF+PzLXuSpnAnsKL448IX24Jc6C7Ls
+	m8OVhOv28p1K7101ZDybShEOytFOb84KrUthRISxCtFK7siwwCYR5bxPC3yScf5d2N0j3xp0Q66
+	EfaBK2fAF84veA0ODa0bkmxraLy+g==
+X-Received: by 2002:ac8:5909:0:b0:516:e047:2f30 with SMTP id d75a77b69052e-5173a81eca9mr232407601cf.38.1780417325396;
+        Tue, 02 Jun 2026 09:22:05 -0700 (PDT)
+Received: from Cumhall.redhat.com ([216.209.112.32])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51775dd2e53sm2195131cf.24.2026.06.02.09.22.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2026 09:22:04 -0700 (PDT)
+Sender: John Kacur <jkacur@gmail.com>
+From: John Kacur <jkacur@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtla: Fix parsing of multi-character short options
+Date: Tue,  2 Jun 2026 12:21:49 -0400
+Message-ID: <20260602162150.75782-1-jkacur@redhat.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260602125506.3325345-1-tglozar@redhat.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260515194010.93725-2-ashelat@redhat.com> <20260515194010.93725-4-ashelat@redhat.com>
- <20260518214116.GZ3102624@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260518214116.GZ3102624@noisy.programming.kicks-ass.net>
-From: Anubhav Shelat <ashelat@redhat.com>
-Date: Tue, 2 Jun 2026 12:12:21 -0400
-X-Gm-Features: AVHnY4ImP7GIhTl8MEnOUlfsCdz6wMiKYij0lm6-i55yCrS9sEILvfi1RchCDE4
-Message-ID: <CA+G8DhL78GE-1OigkF++aw-CmFzHkbeU5b8JbZ-ymswRfaEt+g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] perf: enable unprivileged syscall tracing with
- perf trace
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mpetlan@redhat.com, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: aho4l7oh1wNG4Vs2vcaA12noEpX9UJCLCKEjg-TBXu4_1780416754
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 18, 2026 at 5:41=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
-> Typically patches are supposed to a single thing, you're listing 4
-> things. What gives?
-All four changes need to be made together to work properly. The second
-point could be pulled out as a separate patch, but will be replaced
-with the eventfs that Steve suggested. The other three points
-represent a single logical change: selectively loosening the
-perf_event_open() restrictions without exposing kernel data or
-breaking uprobe functionality.
+On Tue, 2 Jun 2026 14:55:06 +0200, Tomas Glozar wrote:
+> rtla: Fix parsing of multi-character short options
 
-> PERF_SAMPLE_IP should be here too, no?
-If PERF_SAMPLE_IP is added to the kaddr_leak mask it blocks uprobes,
-so the PERF_SAMPLE_IP check is in the trace_event_perf.c changes where
-I can exempt uprobes:
-+       if ((p_event->attr.sample_type & PERF_SAMPLE_IP) &&
-+           !p_event->attr.exclude_kernel &&
-+           !(tp_event->flags & TRACE_EVENT_FL_UPROBE) &&
-+           sysctl_perf_event_paranoid > 1 && !perfmon_capable())
-+               return -EACCES;
+Thanks for the fix! I've tested this patch with a comprehensive test suite
+covering all rtla commands (timerlat hist/top, osnoise hist/top, hwnoise)
+with the four option formats:
+  -p 100        (short with space)
+  -p100         (short attached - previously broken)
+  --period=100  (long with equals)
+  --period 100  (long with space)
 
-> And I'm not sure if tracepoints can trigger it, but PHYS_ADDR also seems
-> something we shouldn't allow.
-There's a check for unprivileged access to PHYS_ADDR at core.c:13917
-so I didn't add it to kaddr_leak.
+All 20 tests pass. The fix correctly resolves the issue where -p100 was
+being parsed as multiple separate options.
 
-> And we're sure RAW doesn't include pointers
-PERF_SAMPLE_RAW for TRACE_EVENT_FL_CAP_ANY tracepoints doesn't include
-kernel pointers.
-
-> Again, you're doing the same thing in multiple places. If only there was
-> something to re-use a previous expression.
->
-> None of this gives me warm and fuzzy feelings.
-You're right. I'll factor the checks out for the next version.
-
-Anubhav
-
+Tested-by: John Kacur <jkacur@redhat.com>
