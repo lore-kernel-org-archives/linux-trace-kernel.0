@@ -1,219 +1,485 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012034.outbound.protection.outlook.com [40.107.209.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CB21FBC8C;
-	Tue,  2 Jun 2026 02:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780366621; cv=fail; b=rArED2lDAzgU/p/HHxsZRkjQC7Y2aIn/vJ6jSbck5F/KZVpWob61edFZYbl6BlfGFRaOJv00zqUvDeuArBsfOTmfHYqXMAhFpxaN74Ta9wYktTNzW8gxpHF1jjsiat+xC8uGVEEdJ9FxaXO3Twq3bi0digJzKkijhv1u/zetw+A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780366621; c=relaxed/simple;
-	bh=aCMEC1k2ObJ07K1IRjf2c4Mkb8QAt3hPy+JqA5vpI5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OUdAAbJ0RJ4eBw/8z+j1gTuOtAszF2Ehu3v7EuaiUpC6LyCXXP8obwRCZc1jXPeEY9KwD2mBiUyxVhtwWKErC5M0AiLleaEgVOVszp3xt1DzRChbU4mIIC/37IcqswrXev2yXZRJdwCo3m7wayLgq6fx7r03rzZpOe2o/mODS9g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AECA+ZU5; arc=fail smtp.client-ip=40.107.209.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3805E314B76;
+	Tue,  2 Jun 2026 02:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780367335; cv=none; b=N78tDpKB0Smo1mNJH3KwVVmKJ5FyAmlZ89+O7FpUuy3/jWcNaArvQoXkiN9sHtxPewF+XLfbTCjElySfgI6mjYvA6IlDiAJ9RFNgkdZy38pv6a6G8+4Mv3yaXn667BOomoCDHekaCjhBm3Qjh7sG7sR7T8Y0g0KShTtKb7NG2P4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780367335; c=relaxed/simple;
+	bh=gOlSvx2bjG33gi+MyDNzZuw07gvf6uPfSU/KDYKmmfI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AYPZK1uxD4XRjBBtnEaUIXm4HznVNwX5mmm7A9sxQohz05VbNLsfJADoNNguy0rIKAkHvDFPIaROt9b9ExXmRkNIBS57VbrH/DQ+7+0fCLdDQtCSGh7bk+m0LI0A3HZ0sSV1Vdidqxkrf2thxFkb6SRNXoPN1rFN5OiSJgxpSIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKjBzFKM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AECA+ZU5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kN9IMTYICZ9lRjLv2Oc3TljFRklsT2Ro0MmoqBTgCNXKTYe8hR+WXeoW4Pus3PjjDbRNJQixYYjUm7npbJWk9Eem6j+j72aw/ZZPYJpMKsxYboB3HOp8GzafYProXj/jKHpV7HT6kIfUDNI1KrXYq9IP2SzJ7YbF5UF0lsOKzbNVSZogSVMnwCYtiTXxELO6qMEnBTHdxr4CxcNpA2wj0Q6fhi/Vq9jfw3oK0j54XZU9Az4Bt4ZM9egMiHbJ53TMmLUG/nlt575cc3Ko6vUOsGwkPUDx23M81cLIZbyQytWTRakkqSRT1sp/ZykKaLgYjTUowJ4kVXlqJcXMrh3gbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/oWJQp9FI0zEZ8Felz92KhXzdo4p07tkn6/OuOGNaxI=;
- b=lzh+vWUqVE60lSpeMg4n7A6xAsKCtpRqMXp+cEDEWfh0mrpegyvvQjvq3l2Xv3vZpMiUPyiLOq9GhYfV6uRvZFY1h0V2ERpcTtwAEYjNOROHzEwahYRUh955psP+AxJ0nOyOkiIVPkp9Win0qEdGW8aXFTtv4woBXh92IFjDD7m/VzN4C5QipRVTiPEUYQqfsgRVnISYlRhlMieP+2+iX+hXU+tPbvTsKavGarW2B1Vsn1i37P0KJKM+F2jjQQfOBElBM5qETjoEEf3+tg9/4bs9wpFaXFcsAQXjx6rYht35BMdGtRtRozoqzBTqDkktrCBX1d66fFgKQyA3bN3ZHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/oWJQp9FI0zEZ8Felz92KhXzdo4p07tkn6/OuOGNaxI=;
- b=AECA+ZU5L9+fPbBS8LC/qGcjbWrOeLQBmUcNyFf86NJhjVotEI7xuCaGYRdtUxvi8Vqho8XtO68GjFcaQL1Wzb3shBeH2cSzYWXGOlr/Wn4+FcGCF4uIu2fdpdSg9J0EL5Si2T9To6kT7UEbUFyO7s96V94ArB5sW24rWbr5TuU9BpfC5v/IhePy7oVvKjzx6ncu+0mhwxTLAC+RAvBqYZognQJzlmprURcklwujJ79IZ46M2o1XGcH11W01XTW9n9nunEde5fnluMaF1CFRJ3fq9POdp871vkTCFNMWfH0rKT7k1s0C54J8IruCHkUsOzurgAMk+wxtorUahDlckg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
- by SJ1PR12MB6289.namprd12.prod.outlook.com (2603:10b6:a03:458::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.16; Tue, 2 Jun 2026
- 02:16:54 +0000
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::2920:e6d9:4461:e2b4]) by PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::2920:e6d9:4461:e2b4%5]) with mapi id 15.21.0071.015; Tue, 2 Jun 2026
- 02:16:54 +0000
-Date: Tue, 2 Jun 2026 12:16:50 +1000
-From: Balbir Singh <balbirs@nvidia.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, kernel-team@meta.com, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, 
-	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
-	longman@redhat.com, akpm@linux-foundation.org, david@kernel.org, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, 
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, 
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
-	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, 
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org, 
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, sj@kernel.org, 
-	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
-	baohua@kernel.org, lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn, 
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, 
-	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev, riel@surriel.com, 
-	harry.yoo@oracle.com, cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org, 
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
-	zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <ah47NNhuiClgGCdn@parvat>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
-X-ClientProxiedBy: MEVP282CA0014.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:1fe::7) To PH8PR12MB7277.namprd12.prod.outlook.com
- (2603:10b6:510:223::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKjBzFKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324921F00893;
+	Tue,  2 Jun 2026 02:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780367333;
+	bh=ezEo9cc7JkXhvm7MxxgrpmuedxkDa6q29rwJw20PSto=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=RKjBzFKMg/P76hm1jPtQ4ZKdX6/L9B0Qtk+ScXRwRcZvF3IgOs0lOOdGaak42o2ak
+	 nY3PtpAUTeU1+OcF0NWfpzQ1+csczVWJXm3C74l9GfZ67SmoCLvt2tImHJIhEOkJFP
+	 hr8yhdgVI89l+lJNqdp2JNw2kjilcw7NAJTv0AF5zro+YEDHFsZRQ819/sX31Lf5d4
+	 UkHis2ZgjDDUMdu+G/7hCJ4QiKbURMgGdmPeD87+r7i7h+WOookHE31hHn1IFmvXRT
+	 6IrrygaUsXQbHcBV4Fcy02fz1ZlNkZqFAfJs/+VrC/d2L6x4+8X+7d0xQQcvhizhdE
+	 Q3HZobEs8Lh1g==
+Date: Tue, 2 Jun 2026 11:28:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Namhyung Kim <namhyung@kernel.org>, Takaya Saeki <takayas@google.com>,
+ Douglas Raillard <douglas.raillard@arm.com>, Tom Zanussi
+ <zanussi@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Ian  Rogers <irogers@google.com>, Jiri Olsa
+ <olsajiri@gmail.com>
+Subject: Re: [RESEND][PATCH v8] tracing/eprobes: Allow use of BTF names to
+ dereference pointers
+Message-Id: <20260602112847.f7529a3d376744f7111e3951@kernel.org>
+In-Reply-To: <20260601202546.564e867b@gandalf.local.home>
+References: <20260601202546.564e867b@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|SJ1PR12MB6289:EE_
-X-MS-Office365-Filtering-Correlation-Id: a2f36585-e3c3-4041-6db6-08dec04d03db
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|7416014|18002099003|22082099003|56012099006|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	2XFt0VSikKHTJ4E6lk8jdB8iHi/1E0wAMBM/3iRMes/Km1GRQCJSZYQLPwkYdl6e5KMTTFwV2a16xtJYCtf5IQ/VACZIkGEeXjVftauRIEWJZbUAZyL5nv4AtNrdxATKnKxjY2dNgrt78uGaKJJBaQmw2VAjOkkBbvSWxG3TZ2Io9DysaHl8HJl15quN1XrYfqwsd/x6K1pGcF1WS7oaY0W4UV1rtMjLtqxoBcg/6WOU08rLW6IrEanws/otOg2EFk8rBcQRid0CGVTTPAS5NuoUQmXYU8nOZajHkOoVh7aqNA2J0HfBgUBJJK5CNVWpir5Bxt1OAeoBMaTSt6pxqPY0oV/qa7W1am77j6J+fBCWXbGc6i7+lk8AC6ppX9vRbZe/i8fSYUO7OuwDvfacIKnNPRi2lQOBra+DXlsRZN0Mo22mGBqYUMFcRvd65oD5UwEZZ2YpKT2CYK7qDuHAxTqk7qyFjrkAQWcQWTQ626+WFEnwDDlQ12ZgcNGL7uuM9ozrc1jmWvt+h1Kc9hhMu3YN6MLsVDk8Mj/jFEeW4W2EctkxHi9QD9QJZJSmwRPdHNEi78YXSIm0zxEem67Q7gsujBHJuBaTLFR+i/pEEf6/+ShKeOZqr0WOOqFgwZle+xteBHbiSsDrpXNJeRCEzDYcOHelX3myil+Pc8beqIJELCFfbm5NesJHj/TGANjJOa9waA0Ie7h3Icwb0BbzBg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MRy+oj9smaqa+RSHsx5yh+0v/BUlmSkU6O4fiQiTTjDyWfKth0IwxTt9Lj05?=
- =?us-ascii?Q?nQWCu5ewkx1aoxceNyr4+iNKXkRjGaEUuukRQrl/SMq79ziGKXG8yJRk6Zwx?=
- =?us-ascii?Q?WQk7oU/+phK20g7iXN9q8CQMjZyUCF9YgVF9iWslwtg+PzUWcjTQQH3R6Vkf?=
- =?us-ascii?Q?WqRSEAYsxyTg9RQkA6LneKSPQGH3ypALEkrv22I3QQiyzbMOAl4hjBeYw9Uq?=
- =?us-ascii?Q?cN9vkRi8byOMokj/4djo20t6ytG7Jt1oG39pOTcSPRr3VLxTyOecvFY3q32b?=
- =?us-ascii?Q?rjNhZbNKVyU3d68LZH9cwrVZMfI/tg13EEnyVEPoAimb8vIdmwL+9fkV+QH4?=
- =?us-ascii?Q?SLD0qINuol2yWZ8+8MtAtN9+mGn1cHdiDIO5Gg/KK7fool/ohzA8m6lipLdc?=
- =?us-ascii?Q?3yxFVBDg2pcsTuV6WJxPSZ+Kz4oMyUStdKtBhbms1eUd2LGADAFfKgukmCIz?=
- =?us-ascii?Q?NTW/8zhjgsXzwUzWxlnt499jNun3FtKHm/LDZow67T42Ja6c3rZK2rQ+EcFV?=
- =?us-ascii?Q?UU0hVvHR0n64YKDgCTsT2np8NaV6F4FOR05aihmPzMddmcLTsK3DvG04dYdK?=
- =?us-ascii?Q?C7c/GtsSgGrAgJuZXm0Wh2PlMGZvgGcaqkB65hm2XPiwpaTcB6lzuBsr2dh/?=
- =?us-ascii?Q?C9Lark7hUIcJ1bF5IcyRKHRvFkYpfIQH6Ua5ai1J7my+4BB5W2mPiogCzRCV?=
- =?us-ascii?Q?M5zbJW7Frk5E6cXiDoUeMgnkG7PW3aChp5pKqKP/d7vElblJzTDGz5d80DoB?=
- =?us-ascii?Q?Bii9xyZD/2wLq1meXvwREsSRL9Xw4PpqjTd+OrZviZrLxaXhhxPCGZ+Tt0rf?=
- =?us-ascii?Q?X+rU0mFWfmkbFgQh7cRdNkxdIzsqLY4A96yPxp/vvxPYscmlKSAkhn249AjB?=
- =?us-ascii?Q?s5F11QwmpZqJWc6rmoNo3XOCBJZLe2a6OdRp6aQVWPTTUX2EQcNSIAD9d8Nh?=
- =?us-ascii?Q?y8rsbuhW4WjUIFiuI1jEQZmJA+6z1GXSTq2O1jxci2U1z13vTfysyfZS2PvM?=
- =?us-ascii?Q?AW8T/ovSbGnA5aD5CnGL3Nieb2hfLf9eyqs19+BZKwLysmM/1rFSffQSnoww?=
- =?us-ascii?Q?QFcgKe8q0tXBtkc305jYP8JCVDgNR7JA2qqvjRuQ8wHnT+x/v3omciiXqcLK?=
- =?us-ascii?Q?547wDrI4mUGVTZvguNeNsKc0JwIxdFl+EgEqax8TCvMIAmR58LoGgvJ6Vq0D?=
- =?us-ascii?Q?dAjiN0D/owNb/x+HfshYvwQC9s8/MKb1PHPK0aXOEkuyoBOjbmM0iO/diqzd?=
- =?us-ascii?Q?l4M01lzmI9ODjhcrASNVkbMbvO2joGvg9jQb02RHB2Z/5dU9LXUxO06VQHx/?=
- =?us-ascii?Q?i5wIlZ/DEB9oCIOBb3WWwh/c1QGeZ6ewEzxlCHDA68gX1uIaDZITwwMTJFUI?=
- =?us-ascii?Q?Rl49ZTYBSNgdxi20bhKc9zKEW0/uEzONiinnxNaRDJqnIE9FvWvJeXnTzwIC?=
- =?us-ascii?Q?XKsXH9/o+NTh8RTra1FX2BH5zqrD53yX9yCL9lpYrcgQCE92P7KMzGLe2e/5?=
- =?us-ascii?Q?EHvJsSNOIkMGl7kQzRQR8fBXJPiUa+9ZchqBn+DiC8ffx1PKbFqJjI2BqLK4?=
- =?us-ascii?Q?IHdFAwG2CwkMls6cbcz+nHwZNoqP/w822LlWaI3pJ+22ovZ/aB82DtbmEYnv?=
- =?us-ascii?Q?j9Q0u9hQPvLJF3okdGAB5R95Gj0cBiu+FYd5LEYB6KM3CSJ/me7xKqoTciHe?=
- =?us-ascii?Q?NccegSSoz0WijKR9FY2HD+dhMaTaD/AhXTeS7EVfA15hkKX34omZ3T8VtSJ2?=
- =?us-ascii?Q?AxkL3/wNRA=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2f36585-e3c3-4041-6db6-08dec04d03db
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 02:16:54.5673
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rm5RNc3JFvQG7eDLrFqsoQ8huOET9q6QPbS2jeBikNo0Paui4k/zjduAeJwslQ1WKq2sRQPlChPi/qBpAOw37w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6289
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 24, 2026 at 09:50:06PM -0400, Gregory Price wrote:
-> On Thu, May 21, 2026 at 04:23:28PM +1000, Balbir Singh wrote:
-> > On Sun, Feb 22, 2026 at 03:48:15AM -0500, Gregory Price wrote:
-> > > Topic type: MM
-> > > 
-> > > Presenter: Gregory Price <gourry@gourry.net>
-> > > 
-> > > This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
-> > > managed by the buddy allocator but excluded from normal allocations.
-> > > 
-> > > I present it with an end-to-end Compressed RAM service (mm/cram.c)
-> > > that would otherwise not be possible (or would be considerably more
-> > > difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
-> > > 
-> > 
-> > Do we have updates/notes from the meeting?
-> > 
-> 
-> I have been on leave since LSF, but I do have some notes posted:
-> 
-> https://lore.kernel.org/linux-mm/af9i7dkNvGGxPHzu@gourry-fedora-PF4VCD3F/
-> https://lore.kernel.org/linux-mm/agYJcRgOHho8upVv@gourry-fedora-PF4VCD3F/
-> 
-> I will be trying to post an updated set stripped down without the GFP
-> flag as a first pass w/o RFC tags and no UAPI implications so that
-> device folks can play with this upstream.
-> 
-> I'm debating on whether to include OPS_MEMPOLICY in the initial version
-> if only because it's not intuitive how it interacts with pagecache. That
-> needs more time to bake.
->
+On Mon, 1 Jun 2026 20:25:46 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-It makes sense to look at it and then decide if it makes sense.
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Add syntax to the parsing of eprobes to be able to typecast a trace event
+> field that is a pointer to a structure.
+> 
+> Currently, a dereference must be a number, where the user has to figure
+> out manually the offset of a member of a structure that they want to
+> dereference.
+> 
+> But for event probes that records a field that happens to be a pointer to
+> a structure, it cannot dereference these values with BTF naming, but
+> must use numerical offsets.
+> 
+> For example, to find out what device a sk_buff is pointing to in the
+> net_dev_xmit trace event, one must first use gdb to find the offsets of the
+> members of the structures:
+> 
+>  (gdb) p &((struct sk_buff *)0)->dev
+>  $1 = (struct net_device **) 0x10
+>  (gdb) p &((struct net_device *)0)->name
+>  $2 = (char (*)[16]) 0x118
+> 
+> And then use the raw numbers to dereference:
+> 
+>   # echo 'e:xmit net.net_dev_xmit +0x118(+0x10($skbaddr)):string' >> dynamic_events
+> 
+> If BTF is in the kernel, then instead, the skbaddr can be typecast to
+> sk_buff and use the normal dereference logic.
+> 
+>   # echo 'e:xmit net.net_dev_xmit (sk_buff)skbaddr->dev->name:string' >> dynamic_events
+>   # echo 1 > events/eprobes/xmit/enable
+>   # cat trace
+> [..]
+>     sshd-session-1022    [000] b..2.   860.249343: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.250061: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.250142: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.263553: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.283820: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.302716: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.322905: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.342828: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.362268: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.382335: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.400856: xmit: (net.net_dev_xmit) arg1="enp7s0"
+>     sshd-session-1022    [000] b..2.   860.419893: xmit: (net.net_dev_xmit) arg1="enp7s0"
+> 
+> The syntax is simply: (STRUCT)(FIELD)->MEMBER[->MEMBER..]
+> 
+> Also add comments around the #else and #endif of #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
+> to know what they are for.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> 
+> [ Resend with base-id below, maybe Sashiko will apply it to the correct tree! ]
 
-> > > 
-> > > page = alloc_pages_node(nid, __GFP_PRIVATE, 0);
-> > 
-> > Do we want to provide kernel level control over allocation of private
-> > pages, I assumed that only user space applications? I would assume
-> > node affinity would be the way to do so, unless we have multiple
-> > 
-> 
-> alloc_pages_node() is the kernel interface
+Sashiko still faailed to apply this... Not sure why.
 
-I was think we wouldn't need explicit flags and that allocations would
-happen from user space using __GFP_THISNODE to the node or via a nodemask
-based on nodes of interest. Is there a reason to add this flag, a system
-might have more than one source of N_MEMORY_PRIVATE?
+https://sashiko.dev/#/message/20260601202546.564e867b%40gandalf.local.home
 
-> 
-> > > 
-> > > /* Ok but I want to do something useful with it */
-> > > static const struct node_private_ops ops = {
-> > >         .migrate_to     = my_migrate_to,
-> > >         .folio_migrate  = my_folio_migrate,
-> > >         .flags = NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
-> > > };
-> > > node_private_set_ops(nid, &ops);
-> > >
-> > 
-> > Could you explain this further? Why does OPS_MIGRATION
-> > and OPS_MEMPOLICY needs to be set explictly?
-> >
-> 
-> Both of these have been removed from the upcoming version, but in this
-> RFC version i was testing OPS_MIGRATION as an explicit flag that meant
-> "migrate.c can touch the folios" while OPS_MEMPOLICY meant "mempolicy.c
-> can touch the folios".
-> 
-> As it turns out, OPS_MIGRATION is not a useful filter, as it doesn't
-> actually filter anything (anything using OPS_MIGRATION would also need
-> its own filter flag, so better to just drop it and do per-server
-> opt-ins).
-> 
+Maybe better to configure Sashiko via github or sashiko-ml?
+https://github.com/sashiko-dev/sashiko/blob/main/MAINTAINERS_GUIDE.md
+
+Anyway, at least for me, this looks good.
 
 Thanks,
-Balbir
 
+> 
+> base-id: 585abc02be3d3ab82fbcc4dbcbbf0ceb61a02129
+> 
+> Changes since v7: https://patch.msgid.link/20260529110442.0967a64c@fedora
+> 
+> - Add error message in parse_btf_args() for failed parsing of TEVENT.
+>   (Sashiko)
+> 
+> - Remove TPARG_FL_TYPECAST and just use ctx->struct_btf instead.
+>   The flag was redundant and added unnecessary complexity.
+> 
+> - Restructure to keep the lifetime of the TYPECAST to the end of
+>   traceprobe_parse_probe_arg_body(). This allows the last_type to stay
+>   around in case there's not a type parameter and then btf can still be
+>   used.
+>   (Sashiko and Masami Hiramatsu)
+> 
+>  Documentation/trace/eprobetrace.rst |   4 +
+>  kernel/trace/trace_probe.c          | 173 +++++++++++++++++++++++-----
+>  kernel/trace/trace_probe.h          |   5 +-
+>  3 files changed, 154 insertions(+), 28 deletions(-)
+> 
+> diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
+> index 89b5157cfab8..fe3602540569 100644
+> --- a/Documentation/trace/eprobetrace.rst
+> +++ b/Documentation/trace/eprobetrace.rst
+> @@ -46,6 +46,10 @@ Synopsis of eprobe_events
+>  		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
+>                    "string", "ustring", "symbol", "symstr" and "bitfield" are
+>                    supported.
+> +  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
+> +                  a pointer to STRUCT and then derference the pointer defined by
+> +                  ->MEMBER. Note that when this is used, the FIELD name does not
+> +                  need to be prefixed with a '$'.
+>  
+>  Types
+>  -----
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 695310571b08..fd1caa1f9723 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -332,6 +332,23 @@ static int parse_trace_event_arg(char *arg, struct fetch_insn *code,
+>  	return -ENOENT;
+>  }
+>  
+> +static int parse_trace_event(char *arg, struct fetch_insn *code,
+> +			     struct traceprobe_parse_context *ctx)
+> +{
+> +	int ret;
+> +
+> +	if (code->data)
+> +		return -EFAULT;
+> +	ret = parse_trace_event_arg(arg, code, ctx);
+> +	if (!ret)
+> +		return 0;
+> +	if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
+> +		code->op = FETCH_OP_COMM;
+> +		return 0;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+>  #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
+>  
+>  static u32 btf_type_int(const struct btf_type *t)
+> @@ -376,11 +393,16 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
+>  		&& BTF_INT_BITS(intdata) == 8;
+>  }
+>  
+> +static struct btf *ctx_btf(struct traceprobe_parse_context *ctx)
+> +{
+> +	return ctx->struct_btf ? : ctx->btf;
+> +}
+> +
+>  static int check_prepare_btf_string_fetch(char *typename,
+>  				struct fetch_insn **pcode,
+>  				struct traceprobe_parse_context *ctx)
+>  {
+> -	struct btf *btf = ctx->btf;
+> +	struct btf *btf = ctx_btf(ctx);
+>  
+>  	if (!btf || !ctx->last_type)
+>  		return 0;
+> @@ -506,6 +528,15 @@ static int query_btf_context(struct traceprobe_parse_context *ctx)
+>  	return 0;
+>  }
+>  
+> +static void clear_struct_btf(struct traceprobe_parse_context *ctx)
+> +{
+> +	if (ctx->struct_btf) {
+> +		btf_put(ctx->struct_btf);
+> +		ctx->struct_btf = NULL;
+> +		ctx->last_struct = NULL;
+> +	}
+> +}
+> +
+>  static void clear_btf_context(struct traceprobe_parse_context *ctx)
+>  {
+>  	if (ctx->btf) {
+> @@ -554,22 +585,29 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  	struct fetch_insn *code = *pcode;
+>  	const struct btf_member *field;
+>  	u32 bitoffs, anon_offs;
+> +	bool is_struct = ctx->struct_btf != NULL;
+> +	struct btf *btf = ctx_btf(ctx);
+>  	char *next;
+>  	int is_ptr;
+>  	s32 tid;
+>  
+>  	do {
+> -		/* Outer loop for solving arrow operator ('->') */
+> -		if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
+> -			trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
+> -			return -EINVAL;
+> -		}
+> -		/* Convert a struct pointer type to a struct type */
+> -		type = btf_type_skip_modifiers(ctx->btf, type->type, &tid);
+> -		if (!type) {
+> -			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> -			return -EINVAL;
+> +		if (!is_struct) {
+> +			/* Outer loop for solving arrow operator ('->') */
+> +			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
+> +				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
+> +				return -EINVAL;
+> +			}
+> +
+> +			/* Convert a struct pointer type to a struct type */
+> +			type = btf_type_skip_modifiers(btf, type->type, &tid);
+> +			if (!type) {
+> +				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> +				return -EINVAL;
+> +			}
+>  		}
+> +		/* Only the first type can skip being a pointer */
+> +		is_struct = false;
+>  
+>  		bitoffs = 0;
+>  		do {
+> @@ -580,7 +618,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  				return is_ptr;
+>  
+>  			anon_offs = 0;
+> -			field = btf_find_struct_member(ctx->btf, type, fieldname,
+> +			field = btf_find_struct_member(btf, type, fieldname,
+>  						       &anon_offs);
+>  			if (IS_ERR(field)) {
+>  				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> @@ -602,7 +640,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  				ctx->last_bitsize = 0;
+>  			}
+>  
+> -			type = btf_type_skip_modifiers(ctx->btf, field->type, &tid);
+> +			type = btf_type_skip_modifiers(btf, field->type, &tid);
+>  			if (!type) {
+>  				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+>  				return -EINVAL;
+> @@ -640,7 +678,7 @@ static int parse_btf_arg(char *varname,
+>  	int i, is_ptr, ret;
+>  	u32 tid;
+>  
+> -	if (WARN_ON_ONCE(!ctx->funcname))
+> +	if (WARN_ON_ONCE(!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT)))
+>  		return -EINVAL;
+>  
+>  	is_ptr = split_next_field(varname, &field, ctx);
+> @@ -653,6 +691,19 @@ static int parse_btf_arg(char *varname,
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> +	if (ctx->flags & TPARG_FL_TEVENT) {
+> +		ret = parse_trace_event(varname, code, ctx);
+> +		if (ret < 0) {
+> +			trace_probe_log_err(ctx->offset, BAD_ATTACH_ARG);
+> +			return ret;
+> +		}
+> +		/* TEVENT is only here via a typecast */
+> +		if (WARN_ON_ONCE(ctx->struct_btf == NULL))
+> +			return -EINVAL;
+> +		type = ctx->last_struct;
+> +		goto found_type;
+> +	}
+> +
+>  	if (ctx->flags & TPARG_FL_RETURN && !strcmp(varname, "$retval")) {
+>  		code->op = FETCH_OP_RETVAL;
+>  		/* Check whether the function return type is not void */
+> @@ -709,6 +760,7 @@ static int parse_btf_arg(char *varname,
+>  
+>  found:
+>  	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
+> +found_type:
+>  	if (!type) {
+>  		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+>  		return -EINVAL;
+> @@ -727,7 +779,7 @@ static int parse_btf_arg(char *varname,
+>  static const struct fetch_type *find_fetch_type_from_btf_type(
+>  					struct traceprobe_parse_context *ctx)
+>  {
+> -	struct btf *btf = ctx->btf;
+> +	struct btf *btf = ctx_btf(ctx);
+>  	const char *typestr = NULL;
+>  
+>  	if (btf && ctx->last_type)
+> @@ -758,7 +810,67 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
+>  	return 0;
+>  }
+>  
+> -#else
+> +static int query_btf_struct(const char *sname, struct traceprobe_parse_context *ctx)
+> +{
+> +	struct btf *btf = NULL;
+> +	int id;
+> +
+> +	/* A struct_btf should only be used by a single argument */
+> +	if (WARN_ON_ONCE(ctx->struct_btf)) {
+> +		btf_put(ctx->struct_btf);
+> +		ctx->struct_btf = NULL;
+> +	}
+> +
+> +	id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
+> +	if (id < 0)
+> +		return id;
+> +	ctx->struct_btf = btf;
+> +	ctx->last_struct = btf_type_by_id(ctx->struct_btf, id);
+> +	return 0;
+> +}
+> +
+> +static int handle_typecast(char *arg, struct fetch_insn **pcode,
+> +			   struct fetch_insn *end,
+> +			   struct traceprobe_parse_context *ctx)
+> +{
+> +	char *tmp;
+> +	int ret;
+> +
+> +	/* Currently this only works for eprobes */
+> +	if (!(ctx->flags & TPARG_FL_TEVENT)) {
+> +		trace_probe_log_err(ctx->offset, TYPECAST_NOT_EVENT);
+> +		return -EINVAL;
+> +	}
+> +
+> +	tmp = strchr(arg, ')');
+> +	if (!tmp) {
+> +		trace_probe_log_err(ctx->offset + strlen(arg),
+> +				    DEREF_OPEN_BRACE);
+> +		return -EINVAL;
+> +	}
+> +	*tmp = '\0';
+> +	ret = query_btf_struct(arg + 1, ctx);
+> +	*tmp = ')';
+> +
+> +	if (ret < 0) {
+> +		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
+> +		return -EINVAL;
+> +	}
+> +
+> +	tmp++;
+> +
+> +	ctx->offset += tmp - arg;
+> +	ret = parse_btf_arg(tmp, pcode, end, ctx);
+> +	return ret;
+> +}
+> +
+> +#else /* !CONFIG_PROBE_EVENTS_BTF_ARGS */
+> +
+> +static void clear_struct_btf(struct traceprobe_parse_context *ctx)
+> +{
+> +	ctx->struct_btf = NULL;
+> +}
+> +
+>  static void clear_btf_context(struct traceprobe_parse_context *ctx)
+>  {
+>  	ctx->btf = NULL;
+> @@ -794,7 +906,15 @@ static int check_prepare_btf_string_fetch(char *typename,
+>  	return 0;
+>  }
+>  
+> -#endif
+> +static int handle_typecast(char *arg, struct fetch_insn **pcode,
+> +			   struct fetch_insn *end,
+> +			   struct traceprobe_parse_context *ctx)
+> +{
+> +	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +#endif /* CONFIG_PROBE_EVENTS_BTF_ARGS */
+>  
+>  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+>  
+> @@ -948,16 +1068,9 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
+>  	int len;
+>  
+>  	if (ctx->flags & TPARG_FL_TEVENT) {
+> -		if (code->data)
+> -			return -EFAULT;
+> -		ret = parse_trace_event_arg(arg, code, ctx);
+> -		if (!ret)
+> -			return 0;
+> -		if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
+> -			code->op = FETCH_OP_COMM;
+> -			return 0;
+> -		}
+> -		goto inval;
+> +		if (parse_trace_event(arg, code, ctx) < 0)
+> +			goto inval;
+> +		return 0;
+>  	}
+>  
+>  	if (str_has_prefix(arg, "retval")) {
+> @@ -1224,6 +1337,9 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+>  				code->op = FETCH_OP_IMM;
+>  		}
+>  		break;
+> +	case '(':
+> +		ret = handle_typecast(arg, pcode, end, ctx);
+> +		break;
+>  	default:
+>  		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
+>  			if (!tparg_is_function_entry(ctx->flags) &&
+> @@ -1556,6 +1672,9 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  	}
+>  	kfree(tmp);
+>  
+> +	/* struct_btf should not be passed to other arguments */
+> +	clear_struct_btf(ctx);
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 1076f1df347b..15758cc11fc6 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -422,7 +422,9 @@ struct traceprobe_parse_context {
+>  	const struct btf_param *params;	/* Parameter of the function */
+>  	s32 nr_params;			/* The number of the parameters */
+>  	struct btf *btf;		/* The BTF to be used */
+> +	struct btf *struct_btf;		/* The BTF to be used for structs */
+>  	const struct btf_type *last_type;	/* Saved type */
+> +	const struct btf_type *last_struct;	/* Saved structure */
+>  	u32 last_bitoffs;		/* Saved bitoffs */
+>  	u32 last_bitsize;		/* Saved bitsize */
+>  	struct trace_probe *tp;
+> @@ -563,7 +565,8 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+>  	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
+>  	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
+>  	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
+> -	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),
+> +	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),  \
+> +	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),
+>  
+>  #undef C
+>  #define C(a, b)		TP_ERR_##a
+> -- 
+> 2.53.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
