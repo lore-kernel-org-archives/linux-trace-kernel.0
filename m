@@ -1,133 +1,141 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C4B283FCF;
-	Wed,  3 Jun 2026 02:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB323A9632;
+	Wed,  3 Jun 2026 02:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780452653; cv=none; b=Xj0l9Px7x3h0iRb97l+x48cNVj5r3Vq0EcPwSpgKD67ltPHv1ooIz+LITpeQRKawhuu81K0NIz5cGuOkiqMEeHPLQkf4jQdsSaMew3tSxx0hrNKwEnT50n+z3HXPKgQLxfN3p6Em2YuDlsucNpL0xmGPh+dKP4g4eECkKyHiSEg=
+	t=1780453994; cv=none; b=ax5k8q5shLEYn/dR196UDCiUIoM5xar9ZAPykokbcx0zD3sJycxTA8BGO128O+9NfFReFdlsxVG90c4bVx4eZdLBhZdGdE4ZRYJHHoavw2tohwY3Ci+TsASC6CCGCvSWUm3QVvyi/h8vylBWhwp4QH10d2OPKzYKfV9hT5r+9ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780452653; c=relaxed/simple;
-	bh=sXwvZ3wYOxFDQXt0kfCdHokeQDrQ2QizOVau/+esg4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qWDWxz6AiV8iCBXj/A6DFAq9zYy+GFSrApi7UcseFA/59ubesf7KQyK2iqbPKGGOO+00QCgHNnTF6OG+Mgt68iZCaeH0c0oJLREPjsl6O/HYT8BPPxm2L45R9TWLKuTJeJaWEhZDtI9km5xvTD0UZUaclr+bFhgAKxlqv6X8svU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=PdQ9892K; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1780453994; c=relaxed/simple;
+	bh=dcw6J6XxUYMZByDAwHUqpq/EmR+eZ1hR9fjpYNYOqNc=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=iAso+daNYXeT6J1tAYBSxd+B4cpGgfA73xxIYUBMKuQvv8ZYkmMeBwz2YZeERjc3w1sAR1uQSgeQXyvs3x04FlnQrorW3NO7ssPK6MFHFO4vUyB47r8/xec8pbM2InfFhtyEg1xlUGVqI+8fzdD+8Tl/9fuTNk4bmybKx8TIFrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=pwX/FwLf; arc=none smtp.client-ip=113.46.200.222
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="PdQ9892K"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1780452649; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Jv3cJulouSWGCvGi6TS1IMCaE/rqytDPu3rilFU0XAM=;
-	b=PdQ9892KisRjKniNqwNvBrPBbRq95IfB9m4CDMSoqRaJtuAVVn0WhQNcM5u5UjO5axes7st/Dz3DfepyMAEiSF/KRgCj3uX6niBrXtSvXhKicchdpXFj4vfXLoU4qir6AgvEifNR8+X9DQgBeg50mjCS5k+cwvqfd+e54wK6boQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X45l.8N_1780452644;
-Received: from 30.246.180.204(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X45l.8N_1780452644 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Jun 2026 10:10:47 +0800
-Message-ID: <6753385b-c2ab-4ed0-9400-78ce967450ba@linux.alibaba.com>
-Date: Wed, 3 Jun 2026 10:10:44 +0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="pwX/FwLf"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=vHfwDEtQrbN077pHZVQUB5kFtwZn5VuD4rouby1Sq5g=;
+	b=pwX/FwLf0Z0XWLY+UYZMiEDu+1GHWfGUE1Huc+mqnyYOrAtgLxqd0RgdXNo+FHJh9qG5TIUMi
+	E6mb5BguU2Rz9q+HAndfUbJxHJQ7mYX7Mr1xd/82ZssGY7/3eoCkwycweLyjsXKk+0TDtst8NlQ
+	FmoI8h8zSR5GTRxLdxsJSI0=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gVWkj28JwzLlXL;
+	Wed,  3 Jun 2026 10:25:17 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id ABD1740575;
+	Wed,  3 Jun 2026 10:33:06 +0800 (CST)
+Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 3 Jun 2026 10:33:06 +0800
+Received: from [10.173.124.160] (10.173.124.160) by
+ kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 3 Jun 2026 10:33:05 +0800
+Subject: Re: [PATCH v8 2/6] mm/memory-failure: surface unhandlable kernel
+ pages as -ENOTRECOVERABLE
+To: "David Hildenbrand (Arm)" <david@kernel.org>, Breno Leitao
+	<leitao@debian.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <kernel-team@meta.com>, Lance Yang
+	<lance.yang@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+	<nao.horiguchi@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>
+References: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
+ <20260527-ecc_panic-v8-2-9ea0cfa16bb0@debian.org>
+ <19f968f5-1289-f573-4406-e5c91dcd8923@huawei.com>
+ <e3d023f1-ab6e-4424-b304-55f1294480c3@kernel.org>
+ <33ef8821-c809-b7d1-ea77-6e8a07a6e784@huawei.com>
+ <21732071-14a1-486a-951c-34de97b7c757@kernel.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <4b27467e-935f-5587-2f48-5a794c30a592@huawei.com>
+Date: Wed, 3 Jun 2026 10:33:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] scripts/sorttable: Handle RISC-V patchable ftrace
- entries
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Chen Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- Deepak Gupta <debug@rivosinc.com>, Puranjay Mohan <puranjay@kernel.org>,
- Conor Dooley <conor.dooley@microchip.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
- Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
- zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
- <20260528082310.1994388-2-wanghan@linux.alibaba.com>
- <0a913398-3d0c-472e-89c4-062052eae04d@linux.alibaba.com>
- <20260601095746.70c01d24@fedora>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20260601095746.70c01d24@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <21732071-14a1-486a-951c-34de97b7c757@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemq500010.china.huawei.com (7.202.194.235)
 
-
-
-On 6/1/26 9:57 PM, Steven Rostedt wrote:
-> On Mon, 1 Jun 2026 14:17:08 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> 
->>> diff --git a/scripts/sorttable.c b/scripts/sorttable.c
->>> index e8ed11c680c6..4c10e85bb5af 100644
->>> --- a/scripts/sorttable.c
->>> +++ b/scripts/sorttable.c
->>> @@ -891,17 +891,21 @@ static int do_file(char const *const fname, void *addr)
->>>    	table_sort_t custom_sort = NULL;
->>>    
->>>    	switch (elf_map_machine(ehdr)) {
->>> -	case EM_AARCH64:
->>>    #ifdef MCOUNT_SORT_ENABLED
->>> +	case EM_AARCH64:
->>>    		sort_reloc = true;
->>>    		rela_type = 0x403;
->>> -		/* arm64 uses patchable function entry placing before function */
->>> +		/* fallthrough */
->>> +	case EM_RISCV:
->>> +		/* arm64 and RISC-V place patchable entries before the function */
->>>    		before_func = 8;
+On 2026/6/2 17:41, David Hildenbrand (Arm) wrote:
+> On 6/2/26 05:08, Miaohe Lin wrote:
+>> On 2026/6/1 21:22, David Hildenbrand (Arm) wrote:
+>>> On 6/1/26 14:28, Miaohe Lin wrote:
+>>>>
+>>>> Thanks for your patch.
+>>>>
+>>>>
+>>>> Once shake_page finds a lightweight range-based way to shrink slab, slab pages could be freed
+>>>> into buddy and above PageSlab test should be removed then. Maybe add a TODO or XXX here?
+>>>>
+>>>>
+>>>> I'm not sure but is it safe or a common way to test PageReserved, PageSlab,
+>>>> PageTable and PageLargeKmalloc without extra page refcnt?
+>>>
+>>> Checking typed pages in a racy fashion is fine (PageSlab, PageTable,
+>>> PageLargeKmalloc).
 >>
->> Nit: The shared comment now sits under `case EM_RISCV:` but the two
->> lines above it (sort_reloc / rela_type = 0x403) are strictly
->> arm64-only — they configure the RELA-based weak-function fixup that
->> RISC-V does not need. On a quick read it is easy to wonder if RISC-V
->> is implicitly inheriting that path. Splitting the comments would
->> help, e.g.:
+>> Got it. Thanks.
 >>
->>          case EM_AARCH64:
->>              /* arm64 needs RELA-based weak-function fixup */
->>              sort_reloc = true;
->>              rela_type = 0x403;
->>              /* fallthrough */
->>          case EM_RISCV:
->>              /* arm64 and RISC-V place patchable entries before the function */
->>              before_func = 8;
+>>> Checking PageReserved in a racy fashion is fine as well. TESTPAGEFLAG() will
+>>> allow checking it on compound pages.
+>>
+>> It seems PageReserved is not intended to be set on compound pages. I see there are PF_NO_COMPOUND
+>> in its definition: PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND).
+>>
+>>>
+>>> For PageLargeKmalloc, we would want to check the head page, though. The page
+>>> type is only stored for the head page.
+>>
+>> Maybe we should check the head page for PageSlab and PageTable too? alloc_slab_page only
+>> set PageSlab on the head page and __pagetable_ctor uses __folio_set_pgtable to set PageTable
+>> on folio.
+>>
+>>>
+>>> So maybe we want to lookup the compound head (if any) and perform the type
+>>> checks against that?
+>>
+>> Maybe we should or we might miss some pages that could have been handled. And
+>> if compound head is required, should we hold an extra page refcnt to guard against
+>> possible folio split race?
 > 
-> Makes sense.
+> Races are fine. We might miss some pages, but that can happen on races either way.
 > 
-> Care to send a v3?
 > 
-> -- Steve
+> I'd just do something like
+> 
+> if (PageReserved(page))
+> 	return true;
+> 
+> head = compound_head(page);
 
-Hi, Steve,
-
-It's a pure comment cosmetic, not worth a respin on its own. But for the
-rest of the feedback on this series (the frame-record metadata contract
-in patch 2 and the dead state->regs field / Call Trace output change in
-patch 6) are the ones actually worth a new version.
-
-Just to get the routing straight: are you planning to pick this one up
-through the tracing tree on its own?
-
-It feels like a good candidate for that -- it's an independent
-regression fix (Fixes: 0ca1724b56af) that breaks *all* RISC-V dynamic
-ftrace, not just livepatch, so it shouldn't have to wait on the rest of
-the livepatch series.
+If @head is split just after compound_head. And then @head is freed into buddy and re-allocated as slab
+page while @page is still in the buddy. We would panic on this scene as @head is PageSlab. But we were
+supposed to successfully handle @page. Or am I miss something?
 
 Thanks.
-Shuai
+.
 
+> return PageSlab(head) || ...;
+> 	
+> 
 
