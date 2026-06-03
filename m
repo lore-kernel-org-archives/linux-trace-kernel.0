@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A3A43DA59;
-	Wed,  3 Jun 2026 09:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C200439D6C9;
+	Wed,  3 Jun 2026 10:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780480551; cv=none; b=sp6WKwAR98XYspoB7d092oRwka7O887vHSgcpl4t21iACwgJ5Wq4+FD8jRhVg0epdOTAOlYBNTqcL3BI/M0riCQ1Ue5XJ4khfxOHNsiVBHHLR0qv8C+BSmKi/LLR36IEQ8nun90ZVtU2mcq+4hDwFfF/A1CuenrU8Dm0TrS3mqg=
+	t=1780480858; cv=none; b=KHss4t4WRxfWaa425ksJYIlFoDrUl08/R39iSjeVgKuC/iyB8aeZozVYcxtIKyuud004u2wCgjJIKgHJ6nz/MRFxuozDqtoxcpLHfZ1svXcKXOwqvq9ohMc4SkgMZwqtWBPJ4DPMa4HQFXeRerOhQCiXTEEF5SWCqqReijgo1D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780480551; c=relaxed/simple;
-	bh=0TyQGe4Ec/j2RQI3LmJVPtC3UKOvffJW9+0s1ZL0fyA=;
+	s=arc-20240116; t=1780480858; c=relaxed/simple;
+	bh=+8LUElc0D1Oo7as6xnx6UefeGOKvOxID+7+71IxAR+s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=goVY8MaQzo/yjmv0h/BENN7CfgkYh54o6/ivjzz0WoEY/yFL9wJCPl5VmpkWRjJBk30rJjDxn9enHeTI+BFuRzAar+tZcbQmjrDGNeqcTLcuwpyU6AmNhuEum44USaAi0fkQMm+G4awcVCKhxX2b2kw5sFRxl3iRlApxNqlEGbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZELoh770; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=CgEwtfDSrFo3v2e3TnFlkQvSgKC8j7lj+1Wb9XzsnIAatvltLNvcX22jIDu8jMCR7Akvvxuu+ZMSUkwcarl52zA/ZppDgrGzOTgI4NdvkzBxXRKLqFlL2z7pvtxsSWaERY8dS+E8SSqK71NcOuEg3sK78WTNlUK8QbHv4CDik+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ML4vg+Og; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZELoh770"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED8C61F00893;
-	Wed,  3 Jun 2026 09:55:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ML4vg+Og"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E421F00893;
+	Wed,  3 Jun 2026 10:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780480547;
-	bh=TSgStdg4r20O9DWrCx2c1JrFgzKjF5JyWw+4KONqiHk=;
+	s=k20260515; t=1780480855;
+	bh=hRdMcuu42g8NujGeqFbFyl8BzMHa5wjh/TcLvEawNqo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ZELoh770qprhXSkJ72LkyIWtwH3H2nFUjNYwNSPCyxe0rxDELZAckjoe5yGiVg352
-	 KlvAzNNTvvdQ/WLZWmGZSlMShNKKanVigvXXbOF/F9HgQq/FNmxTRKIkj/sdjszZ4l
-	 aHNMg1zeEWYITJS0XgXdlKJMf9Xn/dX2ymSRrl9PcYsbWpNJwsjUEHHNFLpYuv8MOU
-	 5Nu/32PTwuUcAXkwaN+5mnJZpF2UsdlY2CWZJRPcR2BN87/sRNSGVlW50IRwnEwWzr
-	 7dDSkQi0c6YRZ0yhtWL4CPC4tM3yPuJqtzFHfahQVFuMilfm7n/LN5sIFbeg/EzPzv
-	 tGtf1zdo0waww==
-Message-ID: <b5616c79-8123-4717-b56e-b5be131eadef@kernel.org>
-Date: Wed, 3 Jun 2026 11:55:31 +0200
+	b=ML4vg+Og81CMlnLPvxVs5MrQVqYveAx2EOfh/vz8+WH982gQ4cOdmExulhZkEyb67
+	 6sYPKIdUJXww6AoSUjAUgQd/9avs6hnBswbwhx/7EzRLDIvAM+lHf08TjVoCiV3oWK
+	 yyQSxT4rvZtEjS+XxRxCeEkyCHZ6S63bVV+pkXEWa7NH0F4SKWDhp3I9ni1RRt1r4m
+	 BVIw1ytGmJ5EmW5Yk+6DvmTGpobmnvrK3208l74upJzInwN1UYlrdzL5davJqxGkff
+	 IxrNmd7mlABoVWjVz/0q4tzReon4fotvSoaJiG0O4zizGDgUktuYyUPmKwbwUNK6cE
+	 k8ciaPyNs/YfQ==
+Message-ID: <ef5c470f-3c32-418d-9566-17ec01b691bb@kernel.org>
+Date: Wed, 3 Jun 2026 12:00:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -113,277 +113,24 @@ In-Reply-To: <19639b08-5bf1-4974-9635-c458d512fa38@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/2/26 19:23, Nico Pache wrote:
-> 
-> 
-> On 6/1/26 7:15 AM, David Hildenbrand (Arm) wrote:
->>>
->>> So I looked into your items below. It seems logical, and I think it
->>> works the same way; however, your method seems slightly harder to
->>> understand due to all the edge cases and more error-prone to future
->>> changes (the stack holds implicit knowledge of the offset/order that
->>> must now be tracked in the edge cases).
->>>
->>> Given the stack is 24 bytes, I'm not sure if the extra complexity is
->>> worth saving that small amount of memory. Although we would also be
->>> getting rid of (3?) functions, so both approaches have pros and cons.
->>
->> I consider a simple forward loop over the offset ... less complexity compared to
->> a stack structure :)
->>
->>>
->>> I will implement a patch comparing your solution against mine and send
->>> it here, then we can decide which approach is better.
->>
->> Right, throw it over the fence and I'll see how to improve it further.
-> 
-> Ok heres what the diff looks like on top of my V19. 
-> 
-> you can access the tree here https://gitlab.com/npache/linux/-/commits/mthp-v19?ref_type=heads for easier review.
-> 
-> So far I have no problem with this approach it appeared cleaner than i thought. Did some light testing. Gonna throw it more through the ringer tomorrow. 
 
-It's very clean.
+>  next_order:
+> -		if ((BIT(order) - 1) & enabled_orders) {
+> -			const u8 next_order = order - 1;
+> -			const u16 mid_offset = offset + (nr_ptes / 2);
+> -
+> -			collapse_mthp_stack_push(cc, &stack_size, mid_offset,
+> -						 next_order);
+> -			collapse_mthp_stack_push(cc, &stack_size, offset,
+> -						 next_order);
+> +		if (order > KHUGEPAGED_MIN_MTHP_ORDER &&
+> +			(BIT(order) - 1) & enabled_orders) {
 
-Almost too nice to be true ;)
-
-[...]
-
->  	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
->  	enum scan_result last_result = SCAN_FAIL;
-> -	int collapsed = 0, stack_size = 0;
-> +	int collapsed = 0;
->  	bool alloc_failed = false;
->  	unsigned long collapse_address;
-> -	struct mthp_range range;
-> -	u16 offset;
-> -	u8 order;
-> +	unsigned int offset = 0;
-> +	unsigned int order = HPAGE_PMD_ORDER;
+Why not a test_bit() ?
 
 
-In include/linux/huge_mm.h we have
-
-	highest_order()
-
-and
-
-	next_order()
-
-They essentially allow you to get rid of the test_bit() and just jump to the
-next enabled order right away.
-
-I assume with only a handful of enabled_orders, that might be much more efficient.
-
-I tried to optimize it and ended with the following, which is completely untested.
-
-I think it might make sense to defer that and start with the simple approach you have.
-
-I do wonder, though, about the last hunk below: should we bail out early if
-enabled_orders is suddenly 0?
-
-
-
-From 0d8ff955b3071f354b7fc9b627820fa374fa99dc Mon Sep 17 00:00:00 2001
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Wed, 3 Jun 2026 11:52:44 +0200
-Subject: [PATCH] tmp
-
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- include/linux/huge_mm.h |   5 ++
- mm/khugepaged.c         | 132 ++++++++++++++++++++++------------------
- 2 files changed, 78 insertions(+), 59 deletions(-)
-
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 48496f09909b..099318bc1181 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -205,6 +205,11 @@ static inline int highest_order(unsigned long orders)
- 	return fls_long(orders) - 1;
- }
- 
-+static inline int smallest_order(unsigned long orders)
-+{
-+	return __ffs(orders);
-+}
-+
- static inline int next_order(unsigned long *orders, int prev)
- {
- 	*orders &= ~BIT(prev);
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 6de935e76ceb..49be9d1a88cb 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -99,8 +99,6 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
- 
- static struct kmem_cache *mm_slot_cache __ro_after_init;
- 
--#define KHUGEPAGED_MIN_MTHP_ORDER	2
--
- struct collapse_control {
- 	bool is_khugepaged;
- 
-@@ -1454,76 +1452,86 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
-  */
- static enum scan_result mthp_collapse(struct mm_struct *mm,
- 		unsigned long address, int referenced, int unmapped,
--		struct collapse_control *cc, unsigned long enabled_orders)
-+		struct collapse_control *cc, const unsigned long enabled_orders)
- {
--	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
- 	enum scan_result last_result = SCAN_FAIL;
- 	int collapsed = 0;
- 	bool alloc_failed = false;
- 	unsigned long collapse_address;
- 	unsigned int offset = 0;
--	unsigned int order = HPAGE_PMD_ORDER;
- 
-+	/* We cannot collapse anon folios to order-1 or order-0. */
-+	VM_WARN_ON_ONCE(!enabled_order || (enabled_orders & 0x3));
- 
- 	while (offset < HPAGE_PMD_NR) {
--		nr_ptes = 1UL << order;
--
--		if (!test_bit(order, &enabled_orders))
--			goto next_order;
--
--		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
--		nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
--						      offset + nr_ptes);
--
--		if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
--			enum scan_result ret;
--
--			collapse_address = address + offset * PAGE_SIZE;
--			ret = collapse_huge_page(mm, collapse_address, referenced,
--						 unmapped, cc, order);
--
--			switch (ret) {
--			/* Cases where we continue to next collapse candidate */
--			case SCAN_SUCCEED:
--				collapsed += nr_ptes;
--				fallthrough;
--			case SCAN_PTE_MAPPED_HUGEPAGE:
--				goto next_offset;
--			/* Cases where lower orders might still succeed */
--			case SCAN_ALLOC_HUGE_PAGE_FAIL:
--				alloc_failed = true;
--				fallthrough;
--			case SCAN_LACK_REFERENCED_PAGE:
--			case SCAN_EXCEED_NONE_PTE:
--			case SCAN_EXCEED_SWAP_PTE:
--			case SCAN_EXCEED_SHARED_PTE:
--			case SCAN_PAGE_LOCK:
--			case SCAN_PAGE_COUNT:
--			case SCAN_PAGE_NULL:
--			case SCAN_DEL_PAGE_LRU:
--			case SCAN_PTE_NON_PRESENT:
--			case SCAN_PTE_UFFD_WP:
--			case SCAN_PAGE_LAZYFREE:
--				last_result = ret;
--				goto next_order;
--			/* Cases where no further collapse is possible */
--			case SCAN_PMD_MAPPED:
--				fallthrough;
--			default:
--				last_result = ret;
--				goto done;
-+		/*
-+		 * We can only collapse to a maximum order for a given offset.
-+		 * So ignore all orders that do not apply to the current
-+		 * offset, then see if any order to collapse to remains.
-+		 */
-+		unsigned long orders = enabled_orders & GENMASK(__ffs(offset), 0);
-+		unsigned int order = highest_order(orders);
-+
-+		while (order) {
-+			const unsigned int nr_ptes = 1UL << order;
-+			unsigned int nr_occupied_ptes, max_ptes_none;
-+
-+			max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
-+			nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
-+							      offset + nr_ptes);
-+
-+			if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
-+				enum scan_result ret;
-+
-+				collapse_address = address + offset * PAGE_SIZE;
-+				ret = collapse_huge_page(mm, collapse_address, referenced,
-+							 unmapped, cc, order);
-+
-+				switch (ret) {
-+				/* Cases where we continue to next collapse candidate */
-+				case SCAN_SUCCEED:
-+					collapsed += nr_ptes;
-+					fallthrough;
-+				case SCAN_PTE_MAPPED_HUGEPAGE:
-+					goto next_offset;
-+				/* Cases where lower orders might still succeed */
-+				case SCAN_ALLOC_HUGE_PAGE_FAIL:
-+					alloc_failed = true;
-+					fallthrough;
-+				case SCAN_LACK_REFERENCED_PAGE:
-+				case SCAN_EXCEED_NONE_PTE:
-+				case SCAN_EXCEED_SWAP_PTE:
-+				case SCAN_EXCEED_SHARED_PTE:
-+				case SCAN_PAGE_LOCK:
-+				case SCAN_PAGE_COUNT:
-+				case SCAN_PAGE_NULL:
-+				case SCAN_DEL_PAGE_LRU:
-+				case SCAN_PTE_NON_PRESENT:
-+				case SCAN_PTE_UFFD_WP:
-+				case SCAN_PAGE_LAZYFREE:
-+					last_result = ret;
-+					break;
-+				/* Cases where no further collapse is possible */
-+				case SCAN_PMD_MAPPED:
-+					fallthrough;
-+				default:
-+					last_result = ret;
-+					goto done;
-+				}
- 			}
--		}
- 
--next_order:
--		if (order > KHUGEPAGED_MIN_MTHP_ORDER &&
--			(BIT(order) - 1) & enabled_orders) {
--			order = order - 1;
--			continue;
-+			order = next_order(&orders, order);
- 		}
-+
- next_offset:
--		offset += nr_ptes;
--		order = min_t(int, __ffs(offset), HPAGE_PMD_ORDER);
-+		/*
-+		 * Continue with the next collapse candidate. If we do not
-+		 * have an order, skip to nest smallest mTHP we can collapse to.
-+		 */
-+		if (order)
-+			offset += 1UL << order;
-+		else
-+			offset = ALIGN(offset + 1, smallest_order(enabled_orders));
- 	}
- done:
- 	if (collapsed)
-@@ -1567,6 +1575,12 @@ static enum scan_result collapse_scan_pmd(struct mm_struct *mm,
- 
- 	enabled_orders = collapse_allowable_orders(vma, vma->vm_flags, tva_flags);
- 
-+	if (unlikely(!enabled_orders)) {
-+		cc->progress++;
-+		result = SCAN_SUCCEED;
-+		goto out;
-+	}
-+
- 	/*
- 	 * If PMD is the only enabled order, enforce max_ptes_none, otherwise
- 	 * scan all pages to populate the bitmap for mTHP collapse.
--- 
-2.43.0
-
+But, wouldn't you want to skip orders that are not enabled and try with the next
+smaller one in any case before you advance the offset?
 
 -- 
 Cheers,
