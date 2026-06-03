@@ -1,182 +1,438 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012024.outbound.protection.outlook.com [40.93.195.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28AF343D91;
-	Wed,  3 Jun 2026 13:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780494927; cv=fail; b=ar3wMjlj0dc7A5dy4TLhcaMdLQeJ7zIpqRxuYLFMJW8sriMlcjx7orXAWYyjNcS8X0XCzzHqWFQbUW68gqv1Y70lhZw736IVAIAUFzGEMKp7ZwZCy8EraweaVnCma18mtnI2nkX/LbtZVq49n6llcVoMimId02zhQuVt0TYTxAA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780494927; c=relaxed/simple;
-	bh=Mt6FKdA7oaX0EmWf1el2N4/cUGTbGmA0KMP6ZuPByhE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cESPc66YP2jwySEEwH6Uj5fFhW65I0i6qjeasmO3E3vSmf3TDKafRI5fkN2jgLIr2I2AJQLdJrG4W0LaUefvw/glcGhYl1kqKW3Ny/+PldBFR2oXlfC+zgcnJpdPB+KEZtbW6XacXk21FQ+qe+5xC+qFt9OgouJsRzj/+50nV9w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=42gugWY2; arc=fail smtp.client-ip=40.93.195.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1515B33DEC2;
+	Wed,  3 Jun 2026 14:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780495660; cv=none; b=kUV7uqGV7vleHBdxFjmOn/LAc2FnVq6q+SdZNA1HGsKifM/uYjdmQ41yBGgjQ/IjxzAME6f+TG+lPRNj8F7AQSrNHshdXbH83hNQ5A21j3T180blvvh1a4p7eGnyNbuSfComWmKKR8cIPrj21eQ2GjqCJGhPeXGxFmefkDfL158=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780495660; c=relaxed/simple;
+	bh=TuvxhvQ6qT8PZk9QcqTmdR8hy9Bp8XJxh5W+vu3dD2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lqNRHBn6OGpWl5h8t3yiEj1ednV+z5EJmJwELK6ZOrUQ8iRxAYkMLD3NYbvhKzK+lxOjCHkWKf7Xw/f1Q5QmoPmgVUx8fub6o+Uo2DYP2ZatKMCgLpe6m188AVYP4XrIgIuaaVaUqFa9KBNQ3zTqpfl/M89Y9IcNrDDFRV+xIqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djZwibFV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="42gugWY2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LexPDtBMIFjaN48llagl/EqL8Jcnx4tRMYBOxi5+BRFQVcd38vHXJAhTNVJwK9OMRdMZ3Zf05Cwi+jQHlW4gyCSImM1cdnv9Xw64Kx3/PnV5H1tOQ3zaYUzrr9Qxt6t/86hw9hqTPxp5dr/Hl2mMhboYSEFbe+YGS/wx45P3ilck1cR1o+HYyIu/X5dB3OwTGmgTUZDIKVTFnitm+pbwCa2LmgvujcNrsJc6uLrrC5nsm//rl2vtv+3daglKe/ZwtkZo+8WfCY7sifdSOXCEDvUbH2/ANKkZN3HdXjMD61lzf9KYSxN5AOiNPa6I/J3WZvD/2mwRESEmPwGvgsBe6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uE/McTSOOrB36ftjLqW2xMrfuoTeBjIHK1FVOjhQgvo=;
- b=HNU8iHI9bVysrIEJhlWrpgx9ZV0BPUtyiVQbK7AUq36HmubsB7n5ah/G8s2xDPcpWAWnT5Ozlqyspf+3D3ckHA2TmpfN1fguUWO2fxOV1sFf22dArOoObkcJEVSGgdeb6u1h4Ycpl3jKApTz3V4o6TXx76bWvsjDRUQZLaXIUjnRLfXd/K7q20xSCT0ragi/LCB+LFOiVjJRYodlQyWg9dBllVqw8x4VYLqOJUal9zRfaRTuJAvplVualkwrbTmlmCLTw82vo5zKALA4YmniqbU+Ya54SGN9OFZCRSMuvYfy55P/lGgMz0lpm0/PJDr5hTzheTMaWfBBfukNsiczxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uE/McTSOOrB36ftjLqW2xMrfuoTeBjIHK1FVOjhQgvo=;
- b=42gugWY2obuVzaZLzMirH+Avhivm+Y//HcknNF1gnDxxdSUNyN1VIGQgSULpE5+OefQweuCHFZdwY/73VA8PpjgUitet3RbwGaRLJBbqCoQOc9sjzEu8zEkI4HLip5x/g3Hr3b6Y38XP5gskY6dr6S3V9T0BDkp32L8q3mcj5c8=
-Received: from SJ0PR13CA0069.namprd13.prod.outlook.com (2603:10b6:a03:2c4::14)
- by IA0PR12MB8325.namprd12.prod.outlook.com (2603:10b6:208:407::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
- 13:55:16 +0000
-Received: from SJ1PEPF00002316.namprd03.prod.outlook.com
- (2603:10b6:a03:2c4:cafe::4c) by SJ0PR13CA0069.outlook.office365.com
- (2603:10b6:a03:2c4::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.7 via Frontend Transport; Wed, 3
- Jun 2026 13:55:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00002316.mail.protection.outlook.com (10.167.242.170) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.92.5 via Frontend Transport; Wed, 3 Jun 2026 13:55:16 +0000
-Received: from localhost (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 3 Jun
- 2026 08:55:14 -0500
-Date: Wed, 3 Jun 2026 08:54:33 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Ackerley Tng <ackerleytng@google.com>
-CC: Suzuki K Poulose <suzuki.poulose@arm.com>, <aik@amd.com>,
-	<andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>, <brauner@kernel.org>,
-	<chao.p.peng@linux.intel.com>, <david@kernel.org>, <ira.weiny@intel.com>,
-	<jmattson@google.com>, <jthoughton@google.com>, <oupton@kernel.org>,
-	<pankaj.gupta@amd.com>, <qperret@google.com>, <rick.p.edgecombe@intel.com>,
-	<rientjes@google.com>, <shivankg@amd.com>, <steven.price@arm.com>,
-	<tabba@google.com>, <willy@infradead.org>, <wyihan@google.com>,
-	<yan.y.zhao@intel.com>, <forkloop@google.com>, <pratyush@kernel.org>,
-	<aneesh.kumar@kernel.org>, <liam@infradead.org>, Paolo Bonzini
-	<pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, "Thomas
- Gleixner" <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
- Khan" <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, "Vishal
- Annapurve" <vannapurve@google.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, Kairui Song
-	<kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
-	<nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song
-	<baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
-	<yuanchu@google.com>, Wei Xu <weixugc@google.com>, Youngjun Park
-	<youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
-	<shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-coco@lists.linux.dev>
-Subject: Re: [PATCH v7 07/42] KVM: guest_memfd: Only prepare folios for
- private pages
-Message-ID: <p33thsff5tucnebtya6e5h2rwb6c3f3szs7tfm3dtko3ajmlam@osbwd3neuktn>
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
- <20260522-gmem-inplace-conversion-v7-7-2f0fae496530@google.com>
- <d01cf1ec-b85d-4af6-9810-8107c0e2a4ec@arm.com>
- <CAEvNRgGzOnA34WyOHtkOx5MZDZhOHaXAe+nD75AiJsZ-PsTSFQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djZwibFV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2441D1F00893;
+	Wed,  3 Jun 2026 14:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780495658;
+	bh=Bo8gGARXDcaXuvyFyJX2aoEG+OLJ83vcodSStzsml1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=djZwibFVvtIxl3SSi3faxEeEoBGJRSguvvVJbrxuEvfdOcPCf7lhIX9KgugRuXL4g
+	 L4GJNrqhU1P+NCnldbLUtIuGvAIcMqZu8O+6xONTY4AdFrLA+/EkADj3suau9wmeoE
+	 T/ZOkXGT0uqCtlgHSJwEfJxxV+SmqtQvzNyV2W1nhi/tLl1ptYagUjR9fc4dCXJffi
+	 XiflzghimEheCIRgZ/G69yNWs0Gj5S58tVtLHJwBB7Fieon+rF9AwF6Ft6ySQmagLf
+	 lbuzT511qUwS0JAXCQGCTe+Q1UlRGK30h6bCxI1CUZY9A69YxF76xWAajGRErZvBpO
+	 OSNp6jKuiKFpA==
+Date: Wed, 3 Jun 2026 16:07:35 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [RFC PATCH 07/10] rcu: Wake NOCB rcuog kthreads on expedited
+ grace period completion
+Message-ID: <aiA1JwbwCI1Z4GG9@localhost.localdomain>
+References: <20260417231203.785172-1-puranjay@kernel.org>
+ <20260417231203.785172-8-puranjay@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAEvNRgGzOnA34WyOHtkOx5MZDZhOHaXAe+nD75AiJsZ-PsTSFQ@mail.gmail.com>
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002316:EE_|IA0PR12MB8325:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2450ac83-b963-462f-32a6-08dec177bdd5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|7416014|6133799003|18002099003|22082099003|56012099006|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	DBaCMzf+9vkWjRKtMZA4ov4QTb7BhoHEFrx7UZ05foVtL/hgw1VRha1iGr+H7aAHdakmFidBJ93V4hTfPxH2MV5SpnfnustqG0k387tY40M4VOB7RVdC5tpVDhKyodSwFzUZkom5HSTWW/hgJs6x+Zl55UhBCLmqZ6Eqce4p7SwvuxZPsl9k1N0W7Ur2sLz7aVbFTBZSy0L41GVW1B/3K/IrQo3nJqIFOnMaxVQ5TdOUs3UKcX7WtDmIBA/ZZo1XrTtJiKjWuTxAm2NG3/zcynbnRGQkcOVFisp/tOtjLtQJNxCWuLmPix+b376n6p8WTVO8YbcAxa2jmO/avWZ8efuhvXut5+rloti9ImuQtkMiA3nC/6SyppPaSZmwLh1k/mggEbnPChHpirexw5APhHT4Cs/Bx8reMlWwMxobujp5P3lc5mzbZE4hTwPICHDaTttq/Zb6IB/x6n4O5o4tqVbSkkp//Qnnh57QAhLwpm15BAoJowQKchZ192SE5I61mIUpoP/PeRuzG9Y9o+Nb9sVV+v/7TLftrBFcIfxxkCJFEu6/6iEI5VvdUvYoEEYYv3yMnuLU055c7i2u3wh48kzKXzqAFsKngEhxDwqwTaHg/2HNpd30Q1QaHKQYfTtahEYsyI/eDT0PRNsrJ9It8EUW0kWc4j9d8q+b4ItQL48k+ZML6/02e/MOhK512Wkw11xJ5qxAGdXF2urKwzCOpi81CZMOpWb1V8rrZlRhV5c=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(7416014)(6133799003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	xAHgQEoY9Mk28nMO1K9H/+gpANYI6S9l3DnxVzdVO2BoRVZad81bXZwr+30PkEnDR++uKUKXKofcywZ2E2Ie0hopL2u1LHLGfxiq5jqOw05wA9vV1Lln5/ArIHtlq8FtkDNUhmHWMr8hGMWZdmsf3c1yrTjbva6VbnPKmi2gCT49b7obcs2lOaLFIaNihvmSsVTWaKiNX4tVEb+CYGzxAalWOqPbBJrcDA2ZAksYVWr8bQO3J14q17c1mN/l/kTpApeTiv6W6/V9eXI+cGlZSrh63E8gRZLmV4/raJeNJOIsCLBOuKTLZny+urJYAEXAdaNtN189JpT2W/MeHQkNtrtPUK8nwh6Dxc6OS0ETCvokorHvwISc47x2/LqBjMTr/LDqBh5XlKyONrjL/9ywn2oHe4m8xnJ3SsAEeLEupTjb5Cn4zwRuIH0IwxuT/4qr
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 13:55:16.2050
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2450ac83-b963-462f-32a6-08dec177bdd5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002316.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8325
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260417231203.785172-8-puranjay@kernel.org>
 
-On Tue, Jun 02, 2026 at 01:46:09PM -0700, Ackerley Tng wrote:
-> Suzuki K Poulose <suzuki.poulose@arm.com> writes:
+Le Fri, Apr 17, 2026 at 04:11:55PM -0700, Puranjay Mohan a écrit :
+> When an expedited grace period completes, rcu_exp_wait_wake() wakes
+> waiters on rnp->exp_wq[] but does not notify NOCB rcuog kthreads.  These
+> kthreads may be sleeping waiting for a grace period to complete.
+> Without this wakeup, callbacks on offloaded CPUs that could benefit from
+> the expedited GP must wait until the rcuog kthread wakes for some other
+> reason (e.g., next normal GP completion or a timer).
 > 
-> > On 23/05/2026 01:17, Ackerley Tng via B4 Relay wrote:
-> >> From: Ackerley Tng <ackerleytng@google.com>
-> >>
-> >> All-shared guest_memfd used to be only supported for non-CoCo VMs where
-> >> preparation doesn't apply. INIT_SHARED is about to be supported for
-> >> non-CoCo VMs in a later patch in this series.
-> >
-> > nit: s/non-CoCo/CoCo ?
-> >
+> Add rcu_exp_wake_nocb() which wakes rcuog kthreads for leaf-node CPUs,
+> deduplicating via rdp->nocb_gp_rdp since multiple CPUs share one rcuog
+> kthread.  Uses for_each_leaf_node_possible_cpu() because offline CPUs
+> can have pending callbacks. The function is defined in tree_nocb.h with
+> an empty stub for CONFIG_RCU_NOCB_CPU=n builds.
 > 
-> Yes, thanks!
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> ---
+>  kernel/rcu/tree.h      |  1 +
+>  kernel/rcu/tree_exp.h  |  1 +
+>  kernel/rcu/tree_nocb.h | 29 +++++++++++++++++++++++++++++
+>  3 files changed, 31 insertions(+)
 > 
-> >>
-> >> In addition, KVM_SET_MEMORY_ATTRIBUTES2 is about to be supported in
-> >> guest_memfd in a later patch in this series.
-> >>
-> >> This means that the kvm fault handler may now call kvm_gmem_get_pfn() on a
-> >> shared folio for a CoCo VM where preparation applies.
-> >>
-> >> Add a check to make sure that preparation is only performed for private
-> >> folios.
-> >>
-> >> Preparation will be undone on freeing (see kvm_gmem_free_folio()) and on
-> >> conversion to shared.
-> >>
-> >> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> >
-> > nit: Missing Co-Developed-by: ?
-> >
-> 
-> IIRC this should have been
-> 
-> Suggested-by: Michael Roth <michael.roth@amd.com>
-> 
-> IIRC Michael suggested this on one of the guest_memfd calls, Michael
-> please let me know if you remember otherwise!
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index 7dfc57e9adb1..40f778453591 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -500,6 +500,7 @@ static struct swait_queue_head *rcu_nocb_gp_get(struct rcu_node *rnp);
+>  static void rcu_nocb_gp_cleanup(struct swait_queue_head *sq);
+>  static void rcu_init_one_nocb(struct rcu_node *rnp);
+>  static bool wake_nocb_gp(struct rcu_data *rdp);
+> +static void rcu_exp_wake_nocb(struct rcu_node *rnp);
+>  static bool rcu_nocb_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
+>  				  unsigned long j, bool lazy);
+>  static void call_rcu_nocb(struct rcu_data *rdp, struct rcu_head *head,
+> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> index 82cada459e5d..0df1009c6e97 100644
+> --- a/kernel/rcu/tree_exp.h
+> +++ b/kernel/rcu/tree_exp.h
+> @@ -708,6 +708,7 @@ static void rcu_exp_wait_wake(unsigned long s)
+>  		}
+>  		smp_mb(); /* All above changes before wakeup. */
+>  		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
+> +		rcu_exp_wake_nocb(rnp);
+>  	}
+>  	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
+>  	mutex_unlock(&rcu_state.exp_wake_mutex);
+> diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+> index 7462cd5e2507..f37ee56d62a9 100644
+> --- a/kernel/rcu/tree_nocb.h
+> +++ b/kernel/rcu/tree_nocb.h
+> @@ -190,6 +190,31 @@ static void rcu_init_one_nocb(struct rcu_node *rnp)
+>  	init_swait_queue_head(&rnp->nocb_gp_wq[1]);
+>  }
+>  
+> +/*
+> + * Wake NOCB rcuog kthreads for leaf-node CPUs so that they can advance
+> + * callbacks that were waiting for the just-completed expedited GP.
+> + * Deduplicate via nocb_gp_rdp since multiple CPUs share one rcuog
+> + * kthread.  Use for_each_leaf_node_possible_cpu() because offline CPUs
+> + * may have pending callbacks.
+> + */
+> +static void rcu_exp_wake_nocb(struct rcu_node *rnp)
 
-That rings a bell. Feel free to add, or just drop the stray SoB, either
-way.
+Please consolidate the naming to match rcu_nocb_gp_cleanup().
 
--Mike
+> +{
+> +	struct rcu_data *last_rdp_gp = NULL;
+> +	int cpu;
+> +
+> +	if (!rcu_is_leaf_node(rnp))
+> +		return;
+> +
+> +	for_each_leaf_node_possible_cpu(rnp, cpu) {
+> +		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> +
+> +		if (rdp->nocb_gp_rdp == last_rdp_gp)
+> +			continue;
+> +		last_rdp_gp = rdp->nocb_gp_rdp;
+> +		wake_nocb_gp(rdp);
+> +	}
 
-> 
-> >>
-> >> [...snip...]
-> >>
+There are two waitqueues for rcuog wake-ups:
+
+1) rdp->rdp_gp->nocb_gp_wq: to wait for callbacks on the queue
+2) rnp->nocb_gp_wq: to wait for grace periods
+
+So you're waking up the wrong one.
+
+Something like the below? (untested)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 0e43866dc4cd..436e12e313c2 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2193,8 +2193,13 @@ static noinline void rcu_gp_cleanup(void)
+ 			dump_blkd_tasks(rnp, 10);
+ 		WARN_ON_ONCE(rnp->qsmask);
+ 		WRITE_ONCE(rnp->gp_seq, new_gp_seq);
+-		if (!rnp->parent)
+-			smp_mb(); // Order against failing poll_state_synchronize_rcu_full().
++		if (!rnp->parent) {
++			/*
++			 * Order against failing poll_state_synchronize_rcu_full().
++			 * and also rcu_nocb_cleanup_wake() -> swait_active()
++			 */
++			smp_mb();
++		}
+ 		rdp = this_cpu_ptr(&rcu_data);
+ 		if (rnp == rdp->mynode)
+ 			needgp = __note_gp_changes(rnp, rdp) || needgp;
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index 40f778453591..8f272cb4e4f3 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -253,7 +253,7 @@ struct rcu_data {
+ 	u8 nocb_gp_sleep;		/* Is the nocb GP thread asleep? */
+ 	u8 nocb_gp_bypass;		/* Found a bypass on last scan? */
+ 	u8 nocb_gp_gp;			/* GP to wait for on last scan? */
+-	unsigned long nocb_gp_seq;	/*  If so, ->gp_seq to wait for. */
++	struct rcu_gp_oldstate nocb_gp_seq; /*  If so, ->gp_seq to wait for. */
+ 	unsigned long nocb_gp_loops;	/* # passes through wait code. */
+ 	struct swait_queue_head nocb_gp_wq; /* For nocb kthreads to sleep on. */
+ 	bool nocb_cb_sleep;		/* Is the nocb CB thread asleep? */
+@@ -498,9 +498,9 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t);
+ static void zero_cpu_stall_ticks(struct rcu_data *rdp);
+ static struct swait_queue_head *rcu_nocb_gp_get(struct rcu_node *rnp);
+ static void rcu_nocb_gp_cleanup(struct swait_queue_head *sq);
++static void rcu_nocb_exp_cleanup(struct rcu_node *rnp);
+ static void rcu_init_one_nocb(struct rcu_node *rnp);
+ static bool wake_nocb_gp(struct rcu_data *rdp);
+-static void rcu_exp_wake_nocb(struct rcu_node *rnp);
+ static bool rcu_nocb_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
+ 				  unsigned long j, bool lazy);
+ static void call_rcu_nocb(struct rcu_data *rdp, struct rcu_head *head,
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 0df1009c6e97..43c167a8a145 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -708,7 +708,8 @@ static void rcu_exp_wait_wake(unsigned long s)
+ 		}
+ 		smp_mb(); /* All above changes before wakeup. */
+ 		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
+-		rcu_exp_wake_nocb(rnp);
++		if (rcu_is_leaf_node(rnp))
++			rcu_nocb_exp_cleanup(rnp);
+ 	}
+ 	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
+ 	mutex_unlock(&rcu_state.exp_wake_mutex);
+diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+index f37ee56d62a9..60d4182b9509 100644
+--- a/kernel/rcu/tree_nocb.h
++++ b/kernel/rcu/tree_nocb.h
+@@ -170,13 +170,59 @@ static void rcu_lockdep_assert_cblist_protected(struct rcu_data *rdp)
+ 		lockdep_assert_held(&rdp->nocb_lock);
+ }
+ 
++static void rcu_nocb_cleanup_wake(struct swait_queue_head *sq)
++{
++	if (swait_active(sq))
++		swake_up_all(sq);
++}
++
+ /*
+  * Wake up any no-CBs CPUs' kthreads that were waiting on the just-ended
+  * grace period.
+  */
+ static void rcu_nocb_gp_cleanup(struct swait_queue_head *sq)
+ {
+-	swake_up_all(sq);
++	/*
++	 * swait active() can be checked first because:
++	 *
++	 * rcu_gp_cleanup()                              nocb_gp_wait()
++	 * ---------------                               --------------
++	 * WRITE_ONCE(root->gp_seq, new_gp_seq);         swait_event_interruptible_exclusive(sq)
++	 * smp_mb()                                         prepare_to_swait()
++	 * if swait_active(sq)                                 list_add_tail(&wait->task_list, &q->task_list);
++	 *    swake_up_all(sq)                                 set_current_state()
++	 *                                                       smp_mb()
++	 *                                                  if (poll_state_synchronize_rcu_full())
++	 *                                                     if (rcu_seq_done_exact(&root->gp_seq, rgosp->rgos_norm))
++	 *                                                        ...
++	 */
++	rcu_nocb_cleanup_wake(sq);
++}
++
++/*
++ * Wake NOCB rcuog kthreads for leaf-node CPUs so that they can advance
++ * callbacks that were waiting for the just-completed expedited GP.
++ * Wake-up waitqueues for both even and odd GP numbers because exp and
++ * normal sequences don't match.
++ */
++static void rcu_nocb_exp_cleanup(struct rcu_node *rnp)
++{
++/*
++ * swait active() can be checked first because:
++ *
++ * rcu_exp_wait_wake()                           nocb_gp_wait()
++ * ---------------                               --------------
++ * rcu_seq_end(&rcu_state.expedited_sequence);   swait_event_interruptible_exclusive(sq)
++ * smp_mb()                                         prepare_to_swait()
++ * if swait_active(sq)                                 list_add_tail(&wait->task_list, &q->task_list);
++ *    swake_up_all(sq)                                 set_current_state()
++ *                                                        smp_mb()
++ *                                                  if (poll_state_synchronize_rcu_full())
++ *                                                     if (rcu_seq_done_exact(&rcu_state.expedited_sequence, rgosp->rgos_exp))
++ *                                                        ...
++ */
++	rcu_nocb_cleanup_wake(&rnp->nocb_gp_wq[0]);
++	rcu_nocb_cleanup_wake(&rnp->nocb_gp_wq[1]);
+ }
+ 
+ static struct swait_queue_head *rcu_nocb_gp_get(struct rcu_node *rnp)
+@@ -190,31 +236,6 @@ static void rcu_init_one_nocb(struct rcu_node *rnp)
+ 	init_swait_queue_head(&rnp->nocb_gp_wq[1]);
+ }
+ 
+-/*
+- * Wake NOCB rcuog kthreads for leaf-node CPUs so that they can advance
+- * callbacks that were waiting for the just-completed expedited GP.
+- * Deduplicate via nocb_gp_rdp since multiple CPUs share one rcuog
+- * kthread.  Use for_each_leaf_node_possible_cpu() because offline CPUs
+- * may have pending callbacks.
+- */
+-static void rcu_exp_wake_nocb(struct rcu_node *rnp)
+-{
+-	struct rcu_data *last_rdp_gp = NULL;
+-	int cpu;
+-
+-	if (!rcu_is_leaf_node(rnp))
+-		return;
+-
+-	for_each_leaf_node_possible_cpu(rnp, cpu) {
+-		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+-
+-		if (rdp->nocb_gp_rdp == last_rdp_gp)
+-			continue;
+-		last_rdp_gp = rdp->nocb_gp_rdp;
+-		wake_nocb_gp(rdp);
+-	}
+-}
+-
+ /* Clear any pending deferred wakeup timer (nocb_gp_lock must be held). */
+ static void nocb_defer_wakeup_cancel(struct rcu_data *rdp_gp)
+ {
+@@ -684,7 +705,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ {
+ 	bool bypass = false;
+ 	int __maybe_unused cpu = my_rdp->cpu;
+-	struct rcu_gp_oldstate cur_gp_seq_full;
++	struct rcu_gp_oldstate wait_gp_seq = {0}; //remove uninitialized warning
+ 	unsigned long flags;
+ 	bool gotcbs = false;
+ 	unsigned long j = jiffies;
+@@ -694,7 +715,6 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 	bool needwake_gp;
+ 	struct rcu_data *rdp, *rdp_toggling = NULL;
+ 	struct rcu_node *rnp;
+-	unsigned long wait_gp_seq = 0; // Suppress "use uninitialized" warning.
+ 	bool wasempty = false;
+ 
+ 	/*
+@@ -718,6 +738,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 	 * won't be ignored for long.
+ 	 */
+ 	list_for_each_entry(rdp, &my_rdp->nocb_head_rdp, nocb_entry_rdp) {
++		struct rcu_gp_oldstate cur_gp_seq;
+ 		long bypass_ncbs;
+ 		bool flush_bypass = false;
+ 		long lazy_ncbs;
+@@ -755,8 +776,8 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 		needwake_gp = false;
+ 		if (!rcu_segcblist_restempty(&rdp->cblist,
+ 					     RCU_NEXT_READY_TAIL) ||
+-		    (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq_full) &&
+-		     poll_state_synchronize_rcu_full(&cur_gp_seq_full))) {
++		    (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
++		     poll_state_synchronize_rcu_full(&cur_gp_seq))) {
+ 			raw_spin_lock_rcu_node(rnp); /* irqs disabled. */
+ 			needwake_gp = rcu_advance_cbs(rnp, rdp);
+ 			wasempty = rcu_segcblist_restempty(&rdp->cblist,
+@@ -777,11 +798,15 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 		 * numbers from rcu_accelerate_cbs() inside
+ 		 * rcu_advance_cbs() and will be handled on the next pass.
+ 		 */
+-		if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq_full) &&
+-		    !poll_state_synchronize_rcu_full(&cur_gp_seq_full)) {
++		if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
++		    !poll_state_synchronize_rcu_full(&cur_gp_seq)) {
++			if (!needwait_gp ||
++			    ULONG_CMP_LT(cur_gp_seq.rgos_norm, wait_gp_seq.rgos_norm))
++				wait_gp_seq.rgos_norm = cur_gp_seq.rgos_norm;
+ 			if (!needwait_gp ||
+-			    ULONG_CMP_LT(cur_gp_seq_full.rgos_norm, wait_gp_seq))
+-				wait_gp_seq = cur_gp_seq_full.rgos_norm;
++			    ULONG_CMP_LT(cur_gp_seq.rgos_exp, wait_gp_seq.rgos_exp))
++				wait_gp_seq.rgos_exp = cur_gp_seq.rgos_exp;
++
+ 			needwait_gp = true;
+ 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
+ 					    TPS("NeedWaitGP"));
+@@ -803,7 +828,8 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 
+ 	my_rdp->nocb_gp_bypass = bypass;
+ 	my_rdp->nocb_gp_gp = needwait_gp;
+-	my_rdp->nocb_gp_seq = needwait_gp ? wait_gp_seq : 0;
++	if (needwait_gp)
++		my_rdp->nocb_gp_seq = wait_gp_seq;
+ 
+ 	// At least one child with non-empty ->nocb_bypass, so set
+ 	// timer in order to avoid stranding its callbacks.
+@@ -838,12 +864,12 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 		nocb_gp_sleep(my_rdp, cpu);
+ 	} else {
+ 		rnp = my_rdp->mynode;
+-		trace_rcu_this_gp(rnp, my_rdp, wait_gp_seq, TPS("StartWait"));
++		trace_rcu_this_gp(rnp, my_rdp, wait_gp_seq.rgos_norm, TPS("StartWait"));
+ 		swait_event_interruptible_exclusive(
+-			rnp->nocb_gp_wq[rcu_seq_ctr(wait_gp_seq) & 0x1],
+-			rcu_seq_done(&rnp->gp_seq, wait_gp_seq) ||
++			rnp->nocb_gp_wq[rcu_seq_ctr(wait_gp_seq.rgos_norm) & 0x1],
++			poll_state_synchronize_rcu_full(&wait_gp_seq) ||
+ 			!READ_ONCE(my_rdp->nocb_gp_sleep));
+-		trace_rcu_this_gp(rnp, my_rdp, wait_gp_seq, TPS("EndWait"));
++		trace_rcu_this_gp(rnp, my_rdp, wait_gp_seq.rgos_norm, TPS("EndWait"));
+ 	}
+ 
+ 	if (!rcu_nocb_poll) {
+@@ -877,7 +903,8 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 		swake_up_one(&rdp_toggling->nocb_state_wq);
+ 	}
+ 
+-	my_rdp->nocb_gp_seq = -1;
++	my_rdp->nocb_gp_seq.rgos_norm = -1;
++	my_rdp->nocb_gp_seq.rgos_exp = -1;
+ 	WARN_ON(signal_pending(current));
+ }
+ 
+@@ -1561,7 +1588,7 @@ static void show_rcu_nocb_gp_state(struct rcu_data *rdp)
+ {
+ 	struct rcu_node *rnp = rdp->mynode;
+ 
+-	pr_info("nocb GP %d %c%c%c%c%c %c[%c%c] %c%c:%ld rnp %d:%d %lu %c CPU %d%s\n",
++	pr_info("nocb GP %d %c%c%c%c%c %c[%c%c] %c%c:%ld/%ld rnp %d:%d %lu %c CPU %d%s\n",
+ 		rdp->cpu,
+ 		"kK"[!!rdp->nocb_gp_kthread],
+ 		"lL"[raw_spin_is_locked(&rdp->nocb_gp_lock)],
+@@ -1573,7 +1600,8 @@ static void show_rcu_nocb_gp_state(struct rcu_data *rdp)
+ 		".W"[swait_active(&rnp->nocb_gp_wq[1])],
+ 		".B"[!!rdp->nocb_gp_bypass],
+ 		".G"[!!rdp->nocb_gp_gp],
+-		(long)rdp->nocb_gp_seq,
++		(long)rdp->nocb_gp_seq.rgos_norm,
++		(long)rdp->nocb_gp_seq.rgos_exp,
+ 		rnp->grplo, rnp->grphi, READ_ONCE(rdp->nocb_gp_loops),
+ 		rdp->nocb_gp_kthread ? task_state_to_char(rdp->nocb_gp_kthread) : '.',
+ 		rdp->nocb_gp_kthread ? (int)task_cpu(rdp->nocb_gp_kthread) : -1,
+@@ -1684,16 +1712,16 @@ static void rcu_nocb_gp_cleanup(struct swait_queue_head *sq)
+ {
+ }
+ 
+-static struct swait_queue_head *rcu_nocb_gp_get(struct rcu_node *rnp)
++static void rcu_nocb_exp_cleanup(struct rcu_node *rnp)
+ {
+-	return NULL;
+ }
+ 
+-static void rcu_init_one_nocb(struct rcu_node *rnp)
++static struct swait_queue_head *rcu_nocb_gp_get(struct rcu_node *rnp)
+ {
++	return NULL;
+ }
+ 
+-static void rcu_exp_wake_nocb(struct rcu_node *rnp)
++static void rcu_init_one_nocb(struct rcu_node *rnp)
+ {
+ }
+ 
