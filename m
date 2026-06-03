@@ -1,182 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010001.outbound.protection.outlook.com [52.101.56.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012CA3168EF;
-	Wed,  3 Jun 2026 13:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780494300; cv=none; b=t1j4/cDUhzNwKNZpPTXmoe9Y7U81T94ZuwXQ6+tv0hIQmbLtt82RqNhKUqd1OV/rRF+yR2I85iMR4E9Fu+Zvs/Xsnv3TuNM5uH4SrNFqdqsEcR4F4ugyoz15rnlUZ9a57qe9cDTl7AaEtOi3w+I20w6k0c6xv2+bR1Ju6Rl6eKg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780494300; c=relaxed/simple;
-	bh=w76++h12UwTix1AQskx9/mzTq4FG3jWxNWFN1G8aIfA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S/mbhjluqPxbQLbz24JttViTLnCu+qIXGSM0soknGN8hrKcS+TyjG8qifsJTPD1I22lnu3QVnh1Yqz4ZE5NuROi9YvZqG3lLgT1iItoXFb3YSxG1TqSxuL7FNSuyL2gBxOvzSieYmZan21uE3ovVgyFJOmMos7aYA+37ayCNl1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TmG7iI+A; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D7D350D74;
+	Wed,  3 Jun 2026 13:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780494910; cv=fail; b=TnAerC/9i0Tiv2MsjXobqasyvoHOHs3GSywiW+qNI6Cc6dyl6FQm2xjvyBUKeYN7nty0ZpKlRsh+RC3FykBb3qXcVgYPCHwKVDKJ2RcF+Jw9zbG2lO5jj3xXx2m35xNY6yNCVZ8dvrd0aDXX79jHN6UNnmbx+4hukeko265g918=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780494910; c=relaxed/simple;
+	bh=rfz8UVefd+bkoGK5TcAABYhKTolEHA1NISoK1xJPlqU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ats3vcaqmwndPNuo7zJjj/28n4xNx2YTVdpwMUkkk3cWirvoVbX2vlQVKfqXwRAMfmoxedgtw2M3UWEnYKjFU9X+hazNvbw8UJ31AgqcxDojhXV0hg8OX28ma78SH10oaO+cRYtgyyb6AZ2h/fukjIia7K8eoNA63YclhqxNtNA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=fail (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VmbUMxLj reason="signature verification failed"; arc=fail smtp.client-ip=52.101.56.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TmG7iI+A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 944BF1F00893;
-	Wed,  3 Jun 2026 13:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780494299;
-	bh=UAcEW5sdNzXOvmfS53awUiH9gNX5gi+01tp59tm5Mgo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TmG7iI+ADon1SUHGYPnaGVvdMlaCwNhAUdiLnKnBVhjmEuAiUJ3gucXtELvOYXjjY
-	 wfjdALcg3+UuQiIPuVgR7//OC8D1F0K2QstqgbbTNpJxgRDkbV6s8+ES+JLVDADvzX
-	 0bed1eQkhDy84HStoEhqYmFnF4Tk08e7wxUUivCRSTqB59usF6Zo/uedWhmz4lq9yA
-	 ih+wOYHOZgPJYAHVBNW0glj9x9vplX2goojLzY1DrKAi9RsnOJ8zQzN0bDQrAyzvt2
-	 7IVMk3i22Pep6O1zRHtTiyalbT97jJiopI2/0Hj/lphkZ4laxlKmrnaEvVzb68B9mn
-	 VlKNASpUU2+jA==
-Message-ID: <b930678d-a1ae-458c-8705-7ca9680d4cb6@kernel.org>
-Date: Wed, 3 Jun 2026 15:44:54 +0200
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VmbUMxLj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qYmCoavDEMSKELSvlMkV7GBPB2EFPTFmjn9ddcZ/FPqvi1z/0kUp+a00PiNn3Jz+FTgvocPo28d+jYVqWiji9ziH8BjDh80m8szZv2bLFD14FGuYVts/NBMx8fd4NuMaA+auZdZbiTGlfXpmrDB6w889DqQsWvv9apzO4EDnTolGxuyMm5DbSPFl0ulujd5bFoB5T0rX37idK36zFBBaI6QkFDXcnXW6yZ9ZXwv1hOX5eQPmjMSwX5uTPsadYFc0tOEkxz29vTZqBehb+5dZc55jxJyKL45DffWpQ5EAjcY9WSke9Mh+KhOWvB64Wv/rNQUi1nPajz9d5UOHiPXbyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lWJJKq0XHaGHI5TnSD9auhv2n2Mb1lFzBdKs7NDxrRQ=;
+ b=vQDsd/0fKnzNv52Vata+2kLSVLbvYnPrptNbaoZJ89J3dUKL6+zdeRv++XFBFZkbDoRffPPqio0Q9SXAN+uyg7WVDC2Ob+1pS6JaZauIrutpExiu+h/OwjyJgtyAaONP5hZzWByYtd/vDQLKBws3BCw7YUTONb4CG5Cizqs3InWMQbFyQHQoN4/SwZn/odj8Kt1s+xu4+bzmvVnROOt4rduZvkgtKP5/8EcLlvyA6Yymx4f/ZPGsytq9yfNd137TP9LfyDxIPWXnCYeK9CrKj54HID+Nv/6+w3oBlPB7Sp9AjfHPf3M2s49XyOGPrkzgt9vU3cRXeo3uDrxoYvixXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=arm.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWJJKq0XHaGHI5TnSD9auhv2n2Mb1lFzBdKs7NDxrRQ=;
+ b=VmbUMxLjBCW0HGGIOwvbxB72biW1VEdZ5YfIJNoTnTBDAcis1ucNw5bJHhF6aS3rLc0u2uxOjWmo8GqHd61QlbYTL1mrw4oLnZH6J1s3DhBnarEdjR1dz2PTNURP5NLWSfxxP8+AiF3OXtXDHIU+C4hjRyqjzxaVOW9QBPxtWkM=
+Received: from SJ2PR07CA0024.namprd07.prod.outlook.com (2603:10b6:a03:505::14)
+ by SA1PR12MB6797.namprd12.prod.outlook.com (2603:10b6:806:259::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
+ 13:54:55 +0000
+Received: from SJ1PEPF00002314.namprd03.prod.outlook.com
+ (2603:10b6:a03:505:cafe::52) by SJ2PR07CA0024.outlook.office365.com
+ (2603:10b6:a03:505::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.7 via Frontend Transport; Wed, 3
+ Jun 2026 13:54:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF00002314.mail.protection.outlook.com (10.167.242.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.92.5 via Frontend Transport; Wed, 3 Jun 2026 13:54:54 +0000
+Received: from localhost (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 3 Jun
+ 2026 08:54:54 -0500
+Date: Wed, 3 Jun 2026 08:51:53 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+CC: Ackerley Tng <ackerleytng@google.com>, <aik@amd.com>,
+	<andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>, <brauner@kernel.org>,
+	<chao.p.peng@linux.intel.com>, <david@kernel.org>, <ira.weiny@intel.com>,
+	<jmattson@google.com>, <jthoughton@google.com>, <oupton@kernel.org>,
+	<pankaj.gupta@amd.com>, <qperret@google.com>, <rick.p.edgecombe@intel.com>,
+	<rientjes@google.com>, <shivankg@amd.com>, <steven.price@arm.com>,
+	<tabba@google.com>, <willy@infradead.org>, <wyihan@google.com>,
+	<yan.y.zhao@intel.com>, <forkloop@google.com>, <pratyush@kernel.org>,
+	<aneesh.kumar@kernel.org>, <liam@infradead.org>, Paolo Bonzini
+	<pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, "Thomas
+ Gleixner" <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, "Vishal
+ Annapurve" <vannapurve@google.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, Kairui Song
+	<kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
+	<nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song
+	<baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
+	<yuanchu@google.com>, Wei Xu <weixugc@google.com>, Youngjun Park
+	<youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
+	<shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-coco@lists.linux.dev>
+Subject: Re: [PATCH v7 07/42] KVM: guest_memfd: Only prepare folios for
+ private pages
+Message-ID: <mzbsmlljbqxv7epwh6bpjrlbsbc4yqdj456cb5hanxetco3thd@c7mdph3oi6o4>
+References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
+ <20260522-gmem-inplace-conversion-v7-7-2f0fae496530@google.com>
+ <d01cf1ec-b85d-4af6-9810-8107c0e2a4ec@arm.com>
+ <144bbb9f-39a2-4c90-8903-51521e022da0@arm.com>
+ <CAEvNRgE1dCVAxJWd_hyFa8N=m9JLfn97ip9tAmvHxspWJ50oGg@mail.gmail.com>
+ <88cae738-18e9-4ed3-8414-506a1ad8fb18@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: mm/memory-failure tracepoint change breaks userspace rasdaemon
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
- "Luck, Tony" <tony.luck@intel.com>, "bp@alien8.de" <bp@alien8.de>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "linmiaohe@huawei.com" <linmiaohe@huawei.com>,
- "xieyuanbin1@huawei.com" <xieyuanbin1@huawei.com>
-Cc: "Lai, Yi1" <yi1.lai@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
-References: <CY8PR11MB7134346A3E4BB28ECA28D6E989132@CY8PR11MB7134.namprd11.prod.outlook.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <CY8PR11MB7134346A3E4BB28ECA28D6E989132@CY8PR11MB7134.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <88cae738-18e9-4ed3-8414-506a1ad8fb18@arm.com>
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002314:EE_|SA1PR12MB6797:EE_
+X-MS-Office365-Filtering-Correlation-Id: 01fdd232-0bde-4b91-a416-08dec177b10e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700016|7416014|82310400026|376014|6133799003|56012099006|11063799006|4143699003|18002099003|22082099003|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	wGsDUj1VqMffVhv6PLZsn/UDfBQso8yfRbErvW2EFHXdDhQGSV0Y30uImcLMGsLd90tiGc6NMD0PEqPfNJCqwEz8UGoy04GngQOx1RHfPD0/R16l9Kdms6yLIEzXXaOuhoq3bVkvisGJuVSeX1LljM4ccybWG0pXg9iOZ/zrVKmLcVzLPP5R5CiIG3Eu0IWRO0Sxn+viDdZWC2QXLERVmo25dSCP10BEQjIiEubNO0fu87tN3inskd4j6IGSjSdoPxs0zZs8ONhvN61umymciIO4/oZlKnkwaZwnikq00nABmXDA3vXkPqQN0f2iv631C/IE47Zf+226DobLjTMlog6ZCQ6F8Rqs9db4cdioJiedFHQCVoMesiSG1X9mzQfRcaVjprziye5zQP6PXnumUgbricOuAqbSRT0iAN3NrLF+lSRBmwNo096+AmvfhLycabrRJLwQgKyC5gcGjnfPD3oTzOXg6Dhqej0KOYYLySxq0byEcVcAHXmYfGp7L4H4ZbNEYqE4euf1tmDadw2R3NXZJuiy/5lcsLRtISYszygsQOA9a390/mW5SR9Hedru1X578Gb75t8FZmwWM8+jYb/StrTsocuoeOxGdQkj225YKFUr9nQ9e2IaClLoqk1GiqQ7ykCRhjWxvLiQfULCP4ZOknD2h+UbSv9/GAfwWOCPjhuT/no+UP34wue+xwyocaxWNclPS1F0NV4U+zRbAmJq3D0f43vnqqQ8eNkftUg=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(7416014)(82310400026)(376014)(6133799003)(56012099006)(11063799006)(4143699003)(18002099003)(22082099003)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	vMtahuW4IGDeowK92ErtLxT3iBnRKNqnxnyEfRe2rBzCfsx8f9k9brqwDk0UoGKXy/xNp52GKAfBH1HrnsyL+4BH9BdA6u3dRhj2qSzFWN0AytLSHj8AGnle1tjA23biT4FB1vgvztZBouklQWWMXcjSlu6kIKoIkNqFJ1eYj6yJ/E+BUGH0X3eItSbmaUmO5M1vncUuxzBeMzVNv+zjNz1kv+7TMdS0wdLjgeghNdVxgv7LCK3HRND/Nt1ajee7DXYdPDXbDmx50CgRVJ5TljYSqR52LXnhfSOTm2ZtgmOxhtdb3o3/uye/M/KRHdziXv3C21opqNLIia5cu3cB2OkTFmA3IpZSkwkkKAOBYsJgFh++fAA6WxficmtlbpBkUsvBnQS06InLv9UWnpkaZ9yY8dN/uCCPiRpYkAgjS/jzP2294IM+JtxW+IJuSEyn
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 13:54:54.7713
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01fdd232-0bde-4b91-a416-08dec177b10e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002314.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6797
 
-On 6/3/26 15:11, Zhuo, Qiuxu wrote:
-> Hi,
+On Wed, Jun 03, 2026 at 09:58:45AM +0100, Suzuki K Poulose wrote:
+> On 02/06/2026 23:41, Ackerley Tng wrote:
+> > Suzuki K Poulose <suzuki.poulose@arm.com> writes:
+> > 
+> > > 
+> > > [...snip...]
+> > > 
+> > > > > @@ -914,7 +916,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct
+> > > > > kvm_memory_slot *slot,
+> > > > >            folio_mark_uptodate(folio);
+> > > > >        }
+> > > > > -    r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio);
+> > > > > +    if (kvm_gmem_is_private_mem(inode, index))
+> > > > 
+> > > > Don't we need to make sure the entire folio is private ? Not just the
+> > > > page at the index ?
+> > > >       if (kvm_gmem_range_is_private(, index, folio_nr_pages(folio)) ?
+> > 
+> > I was thinking to fix this when I do huge pages, for now guest_memfd is
+> > always just PAGE_SIZE, so just looking up index is fine.
+> > 
+> > Is that okay?
 > 
-> Â 
-> 
-> Laiyi reported that the userspace rasdaemon fails to enable memory_failure_event
-> on kernels >= v6.19.
-> 
-> Â 
-> 
-> Kernel commit 31807483d395 ("mm/memory-failure: remove the selection of RAS"),
-> merged in v6.19-rc1,
-> 
-> moved the memory_failure_event tracepoint from the "ras" subsystem to
-> "memory_failure".
-> 
-> However, rasdaemon still tries to enable:
-> 
-> Â 
-> 
-> Â Â Â  ras:memory_failure_event
-> 
-> Â 
-> 
-> while on v6.19+ kernels, the tracepoint is:
-> 
-> Â 
-> 
-> Â Â Â  memory_failure:memory_failure_event
-> 
-> Â 
-> 
-> As a result, rasdaemon fails to start:
-> 
-> Â 
-> 
-> Â Â Â  â€¦
-> 
-> Â Â  Can't write to set_event
-> 
-> Â Â  Huh! something got wrong. Aborting.
-> 
-> Â Â  â€¦
-> 
-> Â 
-> 
-> Reproducer:
-> 
-> Â 
-> 
-> Â Â Â  rasdaemon --enable
-> 
-> Â 
-> 
-> Could you please let me know whether the preferred solution is to revert the
-> kernel change,
-> 
-> or to update rasdaemon to support both tracepoint names for backward/forward
-> compatibility?
+> Thats fine, but would be good to enforce that here, so that we don't miss
+> out when we add support for multi page folios.
 
+We sort of already enforce that in kvm_gmem_get_folio():
 
-Likely the latter. BPF [1] documents:
+        /*
+         * External interfaces like kvm_gmem_get_pfn() support dealing
+         * with hugepages to a degree, but internally, guest_memfd currently
+         * assumes that all folios are order-0 and handling would need
+         * to be updated for anything otherwise (e.g. page-clearing
+         * operations).
+         */
+        WARN_ON_ONCE(!IS_ERR(folio) && folio_order(folio));
 
-Q: Are tracepoints part of the stable ABI?
-A: NO. Tracepoints are tied to internal implementation details hence they are
-subject to change and can break with newer kernels. BPF programs need to change
-accordingly when this happens.
+which was done as part of:
 
-The Kernel ABI document explicitly doesn't list them AFAIKS.
+  commit 6538b6221cc2feda415ca1946e66a5ef02dc6a0a
+  Author: Michael Roth <michael.roth@amd.com>
+  Date:   Thu Jan 8 15:46:18 2026 -0600
+  
+      KVM: guest_memfd: Remove partial hugepage handling from kvm_gmem_populate()
 
-There were previous discussions on the stability of tracepints [2], I don't know
-what changed in the meantime. CCing Steve
+and that should trigger before you even reach the prepare path, so I think
+that's covered.
 
-[1] https://www.kernel.org/doc/html/latest/bpf/bpf_design_QA.html
-[2] https://lwn.net/Articles/747256/
-[3] https://www.kernel.org/doc/html/latest/admin-guide/abi.html
+In general, there some previous discussion where we decided we would stop wasting
+time guessing at what we'll need to do for hugepages and instead just strip out
+the partial support. Sean wanted the folio order kept at part of the internal API
+since we know MMU will need that one way or another, but elsewhere within
+guest_memfd we are okay to assume 4K. If we *know* certain points that will need
+to change then a comment mentioning it isn't a bad idea, but even those comments
+have tended to be wrong so far about exactly what changes are supposed to happen.
 
--- 
-Cheers,
+I'm not sure where the original discussion happened but there's some aftermath
+discussion here[1] that I think summarizes current [non-]plans around
+prepare+hugepages.
 
-David
+[1] https://lore.kernel.org/kvm/20250711163440.kwjebnzd7zeb4bxt@amd.com/
+
+> 
+> > 
+> > > 
+> > > Or rather, we should go through the individual pages and apply the
+> > > prepare for ones that are private ?
+> > > 
+> > > Suzuki
+> > > 
+> > 
+> > IIRC the plan was to make kvm_gmem_prepare_folio() idempotent, as in, if
+> > a page is already private, just skip. Currently sev_gmem_prepare() does
+> > a pr_debug(), which I guess is technically still idempotent.
+> > 
+> > I'm thinking that the information tha needs tracking to make
+> > .gmem_prepare() idempotent should be tracked by arch code.
+> > 
+> > Does this work for ARM CCA?
+> 
+> We don't hook into the prepare yet, but have plans to do that. We should
+> be able to handle the pages that are already private. (For CCA context,
+> RMI_GRANULE_DELEGATE_RANGE can skip over already REALM pages). So this
+> should be fine.
+> 
+> My point is, in a given folio, there may be pages that are shared.
+> Like you said, this could be dealt with when we support hugepages.
+
+Sounds good, that's also what SNP will do once hugepages come along.
+
+-Mike
+
+> 
+> Suzuki
+> 
+> 
+> > 
+> > > > 
+> > > > [...snip...]
+> > > > 
+> 
