@@ -1,141 +1,236 @@
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010055.outbound.protection.outlook.com [40.93.198.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB323A9632;
-	Wed,  3 Jun 2026 02:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780453994; cv=none; b=ax5k8q5shLEYn/dR196UDCiUIoM5xar9ZAPykokbcx0zD3sJycxTA8BGO128O+9NfFReFdlsxVG90c4bVx4eZdLBhZdGdE4ZRYJHHoavw2tohwY3Ci+TsASC6CCGCvSWUm3QVvyi/h8vylBWhwp4QH10d2OPKzYKfV9hT5r+9ZY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780453994; c=relaxed/simple;
-	bh=dcw6J6XxUYMZByDAwHUqpq/EmR+eZ1hR9fjpYNYOqNc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=iAso+daNYXeT6J1tAYBSxd+B4cpGgfA73xxIYUBMKuQvv8ZYkmMeBwz2YZeERjc3w1sAR1uQSgeQXyvs3x04FlnQrorW3NO7ssPK6MFHFO4vUyB47r8/xec8pbM2InfFhtyEg1xlUGVqI+8fzdD+8Tl/9fuTNk4bmybKx8TIFrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=pwX/FwLf; arc=none smtp.client-ip=113.46.200.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D369145B3F;
+	Wed,  3 Jun 2026 05:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780462817; cv=fail; b=Bmt3tM2pCmUAhCouorRnA4ECzUTnvWaDkaVRAH+wIo51QSTzgeYY8ixaO/m0z0ai8YTA85Ec3mz5ukDLqg+qsEFGeWWEs/26/DjMOAmKUVyLidHWZ/kitHtxxcYHtffeF7DVU8u/+WqCo8XDqGd3KL4RtvD2O4LAGQpX8SVoeRA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780462817; c=relaxed/simple;
+	bh=aHIvLqjwl35Ieal2pD9PGWCp1Dq8uAdbxigAF0uLEMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=u3pIbe3lWATqRkyCa5qo/G/gPyPN6PR1V5LeMcwm9DVrh9onR0u3igZnh+UFzmPHtM6wvQyJb+AKzbFyUa2/DDOg/ldbjzJU58I+drzSQjRI50/A7zhh4gsipBlo/wSl8jNx9k4/kBjyVA4zITAKPHvF1I9p4sPW5046VHYE+H0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=baP6OAdj; arc=fail smtp.client-ip=40.93.198.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="pwX/FwLf"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=vHfwDEtQrbN077pHZVQUB5kFtwZn5VuD4rouby1Sq5g=;
-	b=pwX/FwLf0Z0XWLY+UYZMiEDu+1GHWfGUE1Huc+mqnyYOrAtgLxqd0RgdXNo+FHJh9qG5TIUMi
-	E6mb5BguU2Rz9q+HAndfUbJxHJQ7mYX7Mr1xd/82ZssGY7/3eoCkwycweLyjsXKk+0TDtst8NlQ
-	FmoI8h8zSR5GTRxLdxsJSI0=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gVWkj28JwzLlXL;
-	Wed,  3 Jun 2026 10:25:17 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id ABD1740575;
-	Wed,  3 Jun 2026 10:33:06 +0800 (CST)
-Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 3 Jun 2026 10:33:06 +0800
-Received: from [10.173.124.160] (10.173.124.160) by
- kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 3 Jun 2026 10:33:05 +0800
-Subject: Re: [PATCH v8 2/6] mm/memory-failure: surface unhandlable kernel
- pages as -ENOTRECOVERABLE
-To: "David Hildenbrand (Arm)" <david@kernel.org>, Breno Leitao
-	<leitao@debian.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <kernel-team@meta.com>, Lance Yang
-	<lance.yang@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, "Lorenzo
- Stoakes" <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
-	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
-	<mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
-	<nao.horiguchi@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>
-References: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
- <20260527-ecc_panic-v8-2-9ea0cfa16bb0@debian.org>
- <19f968f5-1289-f573-4406-e5c91dcd8923@huawei.com>
- <e3d023f1-ab6e-4424-b304-55f1294480c3@kernel.org>
- <33ef8821-c809-b7d1-ea77-6e8a07a6e784@huawei.com>
- <21732071-14a1-486a-951c-34de97b7c757@kernel.org>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <4b27467e-935f-5587-2f48-5a794c30a592@huawei.com>
-Date: Wed, 3 Jun 2026 10:33:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="baP6OAdj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RVT38OtQkpc9RepAN9aN6IxbQpKZ4XuL5ezYSC5+bvVVBz9xcaxk/Ly/1IDkIBYGiUlWtGuOgdD3hzroQHI7zrqCEKts+JFFc3fxHFIhHqh/zuCuOQb+O/KBwcA4+c34jIXSjl46FS8HMayWYis28sWkbJNzRnjEPkJgyY684LVFWlTxkj/F0U1Gov3MXaagHefDbP522Q6VfWj4n9sBxFhPAB2p3fpHxBrX1nJrnXfJe6KIYUweZ1DQmhZIywF/wifvBnRLGvhL224nsVqgY67I1Gop06GvFN3667eD6WWrE5DwAuHYphOTmBSBAeonA3ttQSQ63IRFNzHKZmCRyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XCW/QLLpRGGLbWCkWLPVcWArUftfeG7Y5hVWbTZSvvY=;
+ b=XFgUiGNgaPsyVYiekus/pjceRLlB0maBViBN5mmV+2WmqTAncA9D/K0mjpuYAJQPsgsrzBcIHMQlZMX7YZ75bWtxMfLSN9i57bPseMF3UA2E7ZXv1dHIjqoYmGU3+295r4nzyPR/EOyPY9HpZsOHYKhVpJYHTQv5kkBcGwXctqC7rnm+KqT51PScv3n6GcXqMO1t6scEeSCypbspK1OBgk/RFIiiTgBFr81nIkQLmj7j4fc8/qiQ4lsc/Jev9qaMCkjh4D7hRBiJ2J2bcFJHLXOa0W2pG+eQNKi7ZeMHp9yf/W1phIKWRw+7BdHG7WjGl/V5ryeLPmB3LZAxuYnhOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XCW/QLLpRGGLbWCkWLPVcWArUftfeG7Y5hVWbTZSvvY=;
+ b=baP6OAdjRhLxqqOyQHMF8AE15mY8ydh0chQu2gtD4zntM4diVpVliT9XodbzZi6v73NOZoBRrHoYcwuZL3TsIwYdIr1HeleA5teKCF7MMufP56y47OWhT9WFQUlBhoXHoUSnIzhdi6mjb8yhZpG7CPNbmw00kaChEjU95BOKPDJ1bi7T//uGcOD88cnVoyd2ociJO6+Za1ClZMvspConf7SvtFJ2Smpx8x6wBV076pS5qbk7i3hZRNacrHfsNf3kKDQQZ1TvbPfa3PtHIRie82tK3U1Ireq4Rx8zDbOq3Wx74gWpY4Oz9A4Rz8dtjkvIc5jCGp1vuW2akgD0mLnONQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
+ by MN0PR12MB5788.namprd12.prod.outlook.com (2603:10b6:208:377::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.15; Wed, 3 Jun 2026
+ 05:00:07 +0000
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4]) by PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4%5]) with mapi id 15.21.0071.015; Wed, 3 Jun 2026
+ 05:00:06 +0000
+Date: Wed, 3 Jun 2026 15:00:01 +1000
+From: Balbir Singh <balbirs@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, kernel-team@meta.com, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, 
+	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
+	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
+	longman@redhat.com, akpm@linux-foundation.org, david@kernel.org, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, 
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org, 
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, sj@kernel.org, 
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	baohua@kernel.org, lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn, 
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, 
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev, riel@surriel.com, 
+	harry.yoo@oracle.com, cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ah-0CyZurn5D1ezY@parvat>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: ME0P300CA0035.AUSP300.PROD.OUTLOOK.COM
+ (2603:10c6:220:20b::25) To PH8PR12MB7277.namprd12.prod.outlook.com
+ (2603:10b6:510:223::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <21732071-14a1-486a-951c-34de97b7c757@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemq500010.china.huawei.com (7.202.194.235)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|MN0PR12MB5788:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4913df85-93dd-48f0-fe32-08dec12cfa7c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|56012099006|18002099003|22082099003|6133799003|4143699003|11063799006|5023799004;
+X-Microsoft-Antispam-Message-Info:
+	EUyxNe2YsJ7vMHWc70ED249CIGfTZgmJBAyswiljQTh9ZmMfFcqpd64KqlPaMFSEwbLv4jkLjZJoOysY/msHYxQzYSovMXO6DfVqoOSetjSralSLnHZ/HhjEITg1nqS9I//zzZnA2a6svhGvdCH5N7RYK0jkggs5NN2A2ssYLxTXJm6j94/dUhXqXONTSnu5FxnKcnaFUgpmUJyuQ18dQ4Ai9dI0APv5z50Kh1em3qba9nrOsr2VOD9qCo5J2YV8xe1WtrGiSYZy2vDipRY/wQkpawYQBuFLk+s/+3lIoOGePNDUtBwZ2j7YR/ZlfbTmVJqKZOQNddQMaDc1e+mYiZu2yZjGxAACcb5a92JITuPQo8EaBnlMOpAitdhZ3IxcuPeobIm6KsaLkYl6kIZYwrasnNd8zNPFrH7imhkT/c1rOW/ftcM/zRUf/A7yHZTE4QHcOgDMPODH2V9vu82iZytnh2TUgATcfJet/r2ukoo4emOwHi5zc0bb6TDBjygjyAi7ENlhCK7ZVGdCYrI5vsmMD+Z04ELFTrxyxWeo2wzs/OPmguavjpMt87x1EfS3Ps/IovvvrI602eMKqvVg0DaARdZ61WXNEfIoEreQvJdrV/taXI4gncIV7IhwRHg3IyZhdc/ywXjgYTznLv+0B/7IclJ3Z6otZbOBiyNODVaSXQcReA9DjfghhoBUJXX8
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(56012099006)(18002099003)(22082099003)(6133799003)(4143699003)(11063799006)(5023799004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?r0XFHs81mfteDqi4BFNoxjlsNueccln1XjkKfSFyBJqye5l6k4dItEaMRzvm?=
+ =?us-ascii?Q?c4jFhP35e73sMQA5Ro5E9FVeAlJmJ5TNeChl0CQe5YYoyGBw00ksoDx+mJvo?=
+ =?us-ascii?Q?AET2ZvvnXR1M4EGTyo09inJvvFcVrxuFa+QzHqShExMSvEoIfpar3Z5t9HdB?=
+ =?us-ascii?Q?tutB/Ctd+lYdS2NLzRgeXGWDj3/msJ4k6oVZZ7eNfwi7loA43NkfELoSf1+t?=
+ =?us-ascii?Q?XRANMWbgpwcsY8aSinGbPrIvfQoRghOz89hlQKLgNu2+qxifz/Z+eV61uWVB?=
+ =?us-ascii?Q?14jQrIhLHXbPYof04KpY6z6Z1eg4R1vwn9ysOr3WLILjPGgsT/ykXKSi8ER+?=
+ =?us-ascii?Q?zCnlCSCM39+pMiBMDXf9QBobd8yKriwjuJ/EoCBnd4j13CZRMJMM3lJ4Gzk3?=
+ =?us-ascii?Q?wNntsqilTUB7lUgKQOQ6+gyWdMpPy/Pj39tZ95WE1uPxnIcxSRao/emYR0Pk?=
+ =?us-ascii?Q?DhkUyWU+Gt7SBR/Hm1RBXSn9/Aq3IP6b3y2jx+jkI1i/iN879ke5iEkBns3/?=
+ =?us-ascii?Q?9Y+WOW/MskAW/LZH0XbBmWPoOW4inejGJ9/7Z1KqIGC4N0a4v650DFwGmF+U?=
+ =?us-ascii?Q?KB/0w2xNVpZFLEjIVgnW5FzmLQZypdfghtVNOPRDN8gEV1rwenTG31+YKgaP?=
+ =?us-ascii?Q?cchB+1nvCOkqqu1PGo0GO+C0PRo2yZpsqBk/pZlZtFKBfCArzvHaKsLvHBtc?=
+ =?us-ascii?Q?RRX/4ZHVG2mya5a2PH7eZ9KZtxwsgikb7vr8nFhoCteHMyAb+sX7lOvWfJiO?=
+ =?us-ascii?Q?y9yA83lekSeKCKkr9aMErCzg0sGKEmvPoTx+EFuz3+/HL9grX6bUAqqo1H/n?=
+ =?us-ascii?Q?t3vnY+p8JaLEYx/stQdqGYBxb17AQjwsPexb9v4le/IKXoCVn56PwnZnqsiE?=
+ =?us-ascii?Q?+gBi65EtC345eSKQ6SSkLlGiWWLKScc3AoZVbbU9VdcZOYnAo7I37n8Il9MT?=
+ =?us-ascii?Q?oWllIJCbOaCrtPTlkSGNH5O2dIimdvyFDiU8v568kwJYQ+bEQ7xN4CMzuYXY?=
+ =?us-ascii?Q?WERCJ8DrEHVOrXvwx6PUyyraycE/iisIcQGXcA78dN/vsdCy/aLHkj4b/HzP?=
+ =?us-ascii?Q?mc8VgwECyTDyRMJ0gr1to5flLGg1dbj6sEO9tFtW67g2FaQ5HKlgMvBlJHqa?=
+ =?us-ascii?Q?JTbsmCCQkpFXefWL/ZJgmIzNIhMJA4nG9aFld2y9o+h1iti2dSyWw1l1WVaa?=
+ =?us-ascii?Q?HXleQoN+OgxfmmAYBN9zs0i2DeEb/5CX8TGDhYH3IHmGcl4X8AUBFIMFWzet?=
+ =?us-ascii?Q?e1KUzv/FDb1brU9/IiS3/jg9AdlbVZEiTMYcQYItWI9at5VzXW+Fo7UYxqak?=
+ =?us-ascii?Q?eVXNV7wHtRPmQsI5DbBcTGxurTGTv1V/ISFbwnaskl2p/5G07iSMbx6FZ9Ik?=
+ =?us-ascii?Q?vrLTYSaV8mqsf4xvxdmRJSn1pPvANFihb5DoezJshU2TKVF5ZJF7U/zf6mBo?=
+ =?us-ascii?Q?223EbJkrteJ7Y3e9QSYxudi40bpfifZt1RNNYsrtGvhY7w89NWygwH4qTXGi?=
+ =?us-ascii?Q?ZkwGwVLb/tYSPwib0xs/yI3vhJe/iD5PheCIM8+W0uqXseFSdoZhWqB+/vXx?=
+ =?us-ascii?Q?8UbolJHVr+ADKDiBiJO5ft+1gIpShUhM1rOhTcBhPn9hvVWztN4//squ3NGx?=
+ =?us-ascii?Q?OrcL/raHK2954JfVqAZ2yBuATtWAZa3Xaz0nqQWuRmme8GvXqyuFbGGpgJZa?=
+ =?us-ascii?Q?hDKDE5Pl7LaAISKxFgIxohWu/vZh4XZPUPCWOe19/raTQzZ1iHm9ATEqBQye?=
+ =?us-ascii?Q?LGADBMoiyg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4913df85-93dd-48f0-fe32-08dec12cfa7c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 05:00:06.0768
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sZ+GcgQQCHDt1JAI8jVUCLvmCnoQTUX/MGDKWAvB321YOidmmwAqnY8AV5segEqT7XLj9fXWzpws09C/YgRiHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5788
 
-On 2026/6/2 17:41, David Hildenbrand (Arm) wrote:
-> On 6/2/26 05:08, Miaohe Lin wrote:
->> On 2026/6/1 21:22, David Hildenbrand (Arm) wrote:
->>> On 6/1/26 14:28, Miaohe Lin wrote:
->>>>
->>>> Thanks for your patch.
->>>>
->>>>
->>>> Once shake_page finds a lightweight range-based way to shrink slab, slab pages could be freed
->>>> into buddy and above PageSlab test should be removed then. Maybe add a TODO or XXX here?
->>>>
->>>>
->>>> I'm not sure but is it safe or a common way to test PageReserved, PageSlab,
->>>> PageTable and PageLargeKmalloc without extra page refcnt?
->>>
->>> Checking typed pages in a racy fashion is fine (PageSlab, PageTable,
->>> PageLargeKmalloc).
->>
->> Got it. Thanks.
->>
->>> Checking PageReserved in a racy fashion is fine as well. TESTPAGEFLAG() will
->>> allow checking it on compound pages.
->>
->> It seems PageReserved is not intended to be set on compound pages. I see there are PF_NO_COMPOUND
->> in its definition: PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND).
->>
->>>
->>> For PageLargeKmalloc, we would want to check the head page, though. The page
->>> type is only stored for the head page.
->>
->> Maybe we should check the head page for PageSlab and PageTable too? alloc_slab_page only
->> set PageSlab on the head page and __pagetable_ctor uses __folio_set_pgtable to set PageTable
->> on folio.
->>
->>>
->>> So maybe we want to lookup the compound head (if any) and perform the type
->>> checks against that?
->>
->> Maybe we should or we might miss some pages that could have been handled. And
->> if compound head is required, should we hold an extra page refcnt to guard against
->> possible folio split race?
+On Tue, Jun 02, 2026 at 09:57:48AM +0100, Gregory Price wrote:
+> On Tue, Jun 02, 2026 at 12:16:50PM +1000, Balbir Singh wrote:
+> > On Sun, May 24, 2026 at 09:50:06PM -0400, Gregory Price wrote:
+> > > 
+> > > I'm debating on whether to include OPS_MEMPOLICY in the initial version
+> > > if only because it's not intuitive how it interacts with pagecache. That
+> > > needs more time to bake.
+> > >
+> > 
+> > It makes sense to look at it and then decide if it makes sense.
+> >
 > 
-> Races are fine. We might miss some pages, but that can happen on races either way.
+> I am thinking i will ship without any OPS flags at all for now and the
+> have the introduction of ops as a separate series.
 > 
+> > > alloc_pages_node() is the kernel interface
+> > 
+> > I was think we wouldn't need explicit flags and that allocations would
+> > happen from user space using __GFP_THISNODE to the node or via a nodemask
+> > based on nodes of interest. Is there a reason to add this flag, a system
+> > might have more than one source of N_MEMORY_PRIVATE?
+> > 
 > 
-> I'd just do something like
+> There's a few things to unpack here.  I discussed this many times on
+> list and at LSF, but to reiterate.
 > 
-> if (PageReserved(page))
-> 	return true;
-> 
-> head = compound_head(page);
+> 1) __GFP_THISNODE is insufficient to enforce isolation and otherwise
+>    not particularly useful.  Additionally, from userland, it's not
+>    something you can actually set.
 
-If @head is split just after compound_head. And then @head is freed into buddy and re-allocated as slab
-page while @page is still in the buddy. We would panic on this scene as @head is PageSlab. But we were
-supposed to successfully handle @page. Or am I miss something?
+I was thinking mbind()/mempolicy() is how we get to it. It already
+accepts a nodemask.
 
-Thanks.
-.
-
-> return PageSlab(head) || ...;
-> 	
+> 
+>    for node in possible_nodes:
+>        alloc_pages_node(private_node, __GFP_THISNODE)
+> 
+>    In fact it's the opposite semantic of what we want.
+>    THISNODE says: "Do not fallback back to OTHER nodes".
 > 
 
+That's why we need to control the fallback nodes carefully for
+N_MEMORY_PRIVATE
+
+>    The semantic we want is "Do not allow allocations from private
+>    nodes UNLESS we specifically request" (__GFP_PRIVATE).
+> 
+>    __GFP_THISNODE does not actually buy you anything here, AND it's
+>    worse, in the scenario where a private node makes its way into the
+>    preferred slot (via possible_nodes or some other nodemask), the
+>    allocator cannot fall back to a node it can access.
+> 
+>    __GFP_THISNODE cannot be overloaded to do anything useful here.
+
+Let me clarify, I meant to say, let's use a nodemask for allocation
+and __GFP_THISNODE gets us to the node we desire, if that is the only
+node. My earlier comment might not have been clear.
+
+> 
+> 2) We're trying not to expose *ANY* userland APIs for this, at all.
+> 
+>    The ultimate goal here should be one of two things:
+> 
+>    1) fd = open(/dev/xxx, ...);
+>       mem = mmap(fd, ...);
+>       mem[0] = 0xDEADBEEF; /* Fault device page into page table */
+> 
+>       In this case, the driver is responsible for doing the
+>       alloc_pages_node() call.
+> 
+>    or
+> 
+>    2) mem = mmap(NULL, ..., ANON);
+>       mbind(mem, ..., private_node);
+>       mem[0] = 0xDEADBEEF; /* Fault device page into page table */
+> 
+>       in this case mempolicy.c is responsible for doing the
+>       alloc_pages_node() call via the _mpol() alloc variants.
+> 
+> Addition OPT flags (reclaim, compaction, whatever), would
+> (optionally) allow mm/ to operate on the device memory with, for
+> example, mmu_notifier callbacks to tell the device to invalidate
+> whatever it's caching about that page.
+> 
+> This would all be relatively transparent the userland, all userland
+> "knows" is that it's getting memory from a device (/dev/xxx) or a
+> node it's otherwise aware of hosting device memory somehow.
+> 
+
+Why not use mbind() API's? Do we want to gate allocation/privileges
+via a /dev?
+
+Balbir
