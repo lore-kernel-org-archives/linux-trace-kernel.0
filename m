@@ -1,172 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012005.outbound.protection.outlook.com [52.101.66.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D632A43DA21;
-	Wed,  3 Jun 2026 12:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780489641; cv=none; b=gUCWni1LXNHk+MqaB7KU2edC1faCuBw5JBhqYRAu/P4/gQRD09n2x4Lc6U9y8qUZg412o7lQsRAWNvYbnhP/033p98KyOISJZAqkIRNUyyBJmE0+t6UTmToVVvZhhAWrmesa+YaAIBSr9G+4hiXFB8T5iO/CGH5gZA6IpRyf97g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780489641; c=relaxed/simple;
-	bh=6Cp0P7fQD/wksOKVblXuK5+v+Ffvb0SrIsAKw1TeOgw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rwutwnQqRsZI2KW/BekzxQN6diR4XY6ruqds8mw8OBJUPUy60qnok094u1Zje5SuQYZ1zx2OAGydjr5IylVoJCjY1W1sCpUefcbHdRbehTcTGGcqRs7WNoBh1mU4pffnNAiQ7VFikhH2hx6auhdwWv3JQ3YgGidm7B+rVi1mafw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cl2NQkYC; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2953D669C;
+	Wed,  3 Jun 2026 12:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780490969; cv=fail; b=Z2R4Uf5ZmVbtq9KonOFRKOSNb9GV2C2UubF2kHJnk0bCXwarKfVVo6XR8HdcfpPQnNjfrs8tLlUdBo1N/8vvk4Bv8/crg+2WyO9vrfWpt0FMDpCQvGyNJnj0iZq60ENmxXFjCOmnEd2xQ5BP7FhWjTSjxYsmyB4mKxR9g37bEcQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780490969; c=relaxed/simple;
+	bh=lJAhqtEnAGYI/M0inpQ/yNbH3yxhkaMNkXTq1i1fzh8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=heqcxgngjWn0J+lifunsTtWZLNMILvLKzV4GTv14E130gLXyXKifEN6x8KgG4zv/M1zWk6/ydMIEmW3Pt3PjOL1YRDVT8HFomABUCu8jlPmNEjf5l/rnKF1Zt3SQQkeGswK/CJnyk2Akxsbnju7kI3PNA9mYlWmC0g1msRoIzsA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=Ymlz/BTy; arc=fail smtp.client-ip=52.101.66.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cl2NQkYC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA7BE1F00893;
-	Wed,  3 Jun 2026 12:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780489640;
-	bh=uNfk9BcPdly9aVTPrznds3uJR0OWgZjLs5X0wKssQG0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cl2NQkYCVfoihPRZMFzihOK/KzDr1MQWeGdKvH2VD3xbr9ngUyMrQgHpzHxo87puf
-	 Uhc5ydifJ8z/cw9MetJNzvcVZNyi66FkiF0YbAKt7EIBqwk7ea4vKb0HlftPvy10HN
-	 C5YrywpP4xwhXtmU3t7M8AM+iDyIy8WGdebGnJvPIRpNQvy8QAV/pwCkWvFKcuu1kj
-	 fsMx7i3HnwJJVyZB5QDnts8G8bCvhveQFYQxh4Lsh5p3kE5nt2NAmLyZyDxQm1G7nY
-	 WTzWZVluCtSXURw5yiWS+s+iLozVM0Oa+XNTHfXV4/4p5Z5qEkdbVXB/x0BeKzXmel
-	 DL7doHtiYgeTA==
-Message-ID: <053db37c-bafa-43b2-ac54-717e461b57a8@kernel.org>
-Date: Wed, 3 Jun 2026 14:27:03 +0200
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="Ymlz/BTy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IeuRyLKCIy8ZVY2u6CZoBcnaFg5Fs+K7MASsIzQH2JgnS+9FyFSjHwfy5e/2xrKCEpYYI3+dgmFc62TEwZlAzPiqBbVMz/EmvkoEXvSQVP5p6xrbH5o6lU0W6V58KyLGAwF+h602fVKRKFVR1rI8q5wRPqj+8ABf80wZoBNTPwS1f5AwRbuwvkk/3FBjJcGBvSZcR4/8/mTFgsfEFaoIvoZhDWDza1f6GSqBu1ajWFExF5/WNwaO/VhtBtr73t8K/ln7H2Al5mBK+aCdFoRWZkpKt2urviwFY3EgIl+hO3SOfQs130GgPRfolHTyoFVPzt5ueLZbkvbjmsdMEKTpyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VAZbrhAsQ3EzdG55w24NXdb7XkL1n92bID843FSTc/s=;
+ b=ZlfWTEUTlmDBkgJ+McYdKU3SfYjOsmX3hDuesN/oVc/MlhAzeKswAKX25Yw0YCCwksPR8l0SKAIGMQBxxV5tWGhkZ+lf5wYSm183P+cgW1tyIWqnACV8zWrUBTWfEzc7cWyoCsVRZ2E4F3TcOwQjlxjecIE1W4Wtnnnzo0Kd8aCU7lu6qmlg8KCKSo8jnPdkv9/BFNIoEshWFdJN9EPADPpCmMTHNCEjZwz+j/KeptrLa2guY9Hozz9wbfTlnMisLUVpj2qO/gainwz83X8zmG6SX4wWeNkaOTpIE0q9/u2LePPDtuqdPEUernK4K2G+B75MMY5ThFYqzZOGpwVuKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VAZbrhAsQ3EzdG55w24NXdb7XkL1n92bID843FSTc/s=;
+ b=Ymlz/BTya/JOkXY5MI3ZxEFoRaDqUhus6JnN2OCJmGL/xqb3FFSErwIkwpTmrAhjDkuYYLANKdBTzcIBB4tfFvcQ+wtj4pvd2am6W2xCv5DXQa/D6XBuFi9UXUiYyYDu0yuMCXntMxlWA+AAy0+4qT7NgvdUWFlDTLlYFcNvS4w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=prevas.dk;
+Received: from AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:681::18)
+ by DB8PR10MB3323.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:11c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
+ 12:49:20 +0000
+Received: from AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ebc6:4e0d:5d6b:95d8]) by AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ebc6:4e0d:5d6b:95d8%6]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
+ 12:49:20 +0000
+From: Rasmus Villemoes <ravi@prevas.dk>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,  "Arnd Bergmann"
+ <arnd@kernel.org>,  "Steven Rostedt" <rostedt@goodmis.org>,  "Masami
+ Hiramatsu" <mhiramat@kernel.org>,  "Andrew Morton"
+ <akpm@linux-foundation.org>,  "Petr Mladek" <pmladek@suse.com>,  "Nathan
+ Chancellor" <nathan@kernel.org>,  "Dennis Dalessandro"
+ <dennis.dalessandro@cornelisnetworks.com>,  "Jason Gunthorpe"
+ <jgg@ziepe.ca>,  "Leon Romanovsky" <leon@kernel.org>,  "Arend van Spriel"
+ <arend.vanspriel@broadcom.com>,  "Miri Korenblit"
+ <miriam.rachel.korenblit@intel.com>,  "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>,  "Sergey Senozhatsky"
+ <senozhatsky@chromium.org>,  "Nick Desaulniers"
+ <nick.desaulniers+lkml@gmail.com>,  "Bill Wendling" <morbo@google.com>,
+  "Justin Stitt" <justinstitt@google.com>,  "Vlastimil Babka (SUSE)"
+ <vbabka@kernel.org>,  <linux-rdma@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-wireless@vger.kernel.org>,
+  <brcm80211@lists.linux.dev>,  <brcm80211-dev-list.pdl@broadcom.com>,
+  <linux-trace-kernel@vger.kernel.org>,  <llvm@lists.linux.dev>
+Subject: Re: [PATCH 1/2] tracing: work around -Wmissing-format-attribute
+ warning
+In-Reply-To: <aafe201a-64a6-438f-89a3-d1cd10a357a7@app.fastmail.com> (Arnd
+	Bergmann's message of "Wed, 03 Jun 2026 10:41:18 +0200")
+References: <20260602150904.2258624-1-arnd@kernel.org>
+	<ah8n-Nk305S5hRwN@ashevche-desk.local>
+	<WPQQfPHOiGJbSxrXRdFDy9jURhS7JMpNu9sD54Vfe5wB-JOjyGY6xPQyACz3MSGg0xGp79eOYCyZ2Hi2CsPeUg==@protonmail.internalid>
+	<35c1ba62-e74d-4abc-aa73-ccd35968ff89@app.fastmail.com>
+	<875x40hz7k.fsf@prevas.dk>
+	<cODLVx6ZlerCiOgdpsG7OSsC2YRA6pXmq2jBdTjRB2UQoTIY4hI-yhV1lrumRNBH1hTT2aJRS-MgtlbhNWUTEw==@protonmail.internalid>
+	<aafe201a-64a6-438f-89a3-d1cd10a357a7@app.fastmail.com>
+Date: Wed, 03 Jun 2026 14:49:18 +0200
+Message-ID: <87zf1bhjqp.fsf@prevas.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Content-Type: text/plain
+X-ClientProxiedBy: GV2PEPF00023989.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:158:400::366) To AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:681::18)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v18 11/14] mm/khugepaged: Introduce mTHP
- collapse support
-To: Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
- hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
- jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
- kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, ljs@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, vbabka@suse.cz, vishal.moola@gmail.com,
- wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org,
- yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com,
- zokeefe@google.com, Usama Arif <usama.arif@linux.dev>, usamaarif642@gmail.com
-References: <20260522150009.121603-1-npache@redhat.com>
- <20260522150009.121603-12-npache@redhat.com>
- <b8380eb3-096a-49f1-9ace-99c1e75888b4@kernel.org>
- <CAA1CXcBg1su-bk3i_H+TW4-nTgvGSGqRNeC9MpQo7sGeH8ejnA@mail.gmail.com>
- <d3c2b00c-6810-434a-b837-0707b0a11611@kernel.org>
- <19639b08-5bf1-4974-9635-c458d512fa38@redhat.com>
- <ef5c470f-3c32-418d-9566-17ec01b691bb@kernel.org>
- <CAA1CXcD_Bz=Si+vP0Sg_FhAHVjbeAJ4VdvtWGM-jVYiRXFHAnw@mail.gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <CAA1CXcD_Bz=Si+vP0Sg_FhAHVjbeAJ4VdvtWGM-jVYiRXFHAnw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS5PR10MB8243:EE_|DB8PR10MB3323:EE_
+X-MS-Office365-Filtering-Correlation-Id: d40e37ea-4692-4789-33ba-08dec16e87f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|3023799007|22082099003|18002099003|4143699003|11063799006|6133799003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	2hwtOGHiqQ9Taob/DXxXNKGwwENxmTsM6wwqwbqEZG7LeSX25e6MhSAsLsFqnUVQ9K30Uc1s59/d6rWvnkQUVqnbMi9EYnDeqDZy5Lj5hYOzJpD5pamsxxtDvuVk66aNRefsSTsTv6mH2NhB8cW6M6VW5YJ3r6VSlEx/+g/FZQdXxvIM+2YF338klUJE3ir0Nm9mVUmkeSfilv2NSzpz/gwXbUpRy1TCEQ4ouBafQscDHLYStOntcbpTyuBmcieK8ED10MDXXzDUSfkbCiSpOFz2FDUZlb18zzWdDruhkqhtWOTcDQvFVA3oV4euKzSk/lQbRU63tArdd8NIJQA+YhhyODmN5KFOqgyvYR9jSF2Ebkhc5zMNhIaJOgrmv9USDJWvyAxVcgpeAT7G8ZG7g6yy9ojY2tGRZ7byBhX/fFujeEWTjF+cUD0EOCZ5IgoaZr7I5Tq7aQhpTSMPHa+P4Gh0JkVyUok0x3YlbmdZyTuprJQM2IpdncTaVcmrV6B6od1NzFeBp8D0SzqhL2ayfF4f27Z56Uno4QHQsKQ6Toof8jgJiUXAiOB7etTVFw3KYZVC0vrXj3Qc2frEFRRVV7j2nUhxJ44Zyrg+NwXJOu/rFDduMqLxdW/3X2Bw7r+eI7DmR/CjIl+5BoGe+wIy4AXeaIdP+8zXKrKbarYj9vmeO5KWZKKsubHLMj8wSDJh
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(3023799007)(22082099003)(18002099003)(4143699003)(11063799006)(6133799003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?RA6C5FdOO+tjjw1+zzXfb44vBIBqVDEJAxSb/395wY6BnhDsyD6ksskatHfg?=
+ =?us-ascii?Q?GId+y5SZPxFhwc7MZfvT+NK74rnyQy1veq622AzTQfQNDHLqdbVAF/zVGPEg?=
+ =?us-ascii?Q?WrGt9c6r3uqPWe78fiqJAfdigAifInGGN6c1q0dqjgb4vb/HySknfBIBfUqj?=
+ =?us-ascii?Q?+qaTxjHXmfftFkWA/Q3mLMTzNJuDz+O3Lep3GtfYJk8pk9POzcWjaXJF/Kec?=
+ =?us-ascii?Q?FD9o07r0pMMGxfTEILR2lFgjvvp6mz7Cj2gCfdQ8MoTOTkdoG3/tX07QB/LL?=
+ =?us-ascii?Q?M93rcPOg5D5VKMCwAKFlAyrjCxMrTAq/QXKkkoUBVlQUmYYwhekZqyMcf2OO?=
+ =?us-ascii?Q?/FQE9lCv+dA/3S6sygYo6jjoSUAPe6ccm3UDrdNt5TUOXSTvenVsL40MYYMn?=
+ =?us-ascii?Q?3Gn+N1acjMq9GhNiG7gk6jTdLE1XfKko6HZHo5f92SPexURlxQl/e6vw32RJ?=
+ =?us-ascii?Q?jA+X5RzYDs+R6ch/eeDAcAPXf/V2Coe7lDgbgU1LpH+r47POMpfKXuDdSQ8E?=
+ =?us-ascii?Q?yCnYAykqHzZdwOezTrnf/pTsjX8lxL8LTsCn19NRh9keqlF4D4jWGBZy/ueW?=
+ =?us-ascii?Q?cXlM0PhqaBIGwdKyxDdNijCd6Xgkg7DrQuiRDxeRIrvLcDeJ09C6YcbAXvHp?=
+ =?us-ascii?Q?W+AejfSBgWF/LANluxwzjynVWa0REc+hYENB3kIoolpQQb9UvmOyEQ1pOjCM?=
+ =?us-ascii?Q?bczUB65qHrBbpgGWX3cp5ctx67eCi0bPhI4keemmMkwMeo9LOAwiVMvumi/x?=
+ =?us-ascii?Q?UMhYBXruUziWsqg4AQya2evpc/tSRUq52fsSb+dIOCePU3z5VUloMnFCQOD8?=
+ =?us-ascii?Q?pYjoLYqv7EfvY/AsOeQo6UkV4FoA/YjRY/kKQP+h27rjmhAd1oghwJAsCC6j?=
+ =?us-ascii?Q?2CutafZ423eSezaPVfeFn6glZzKzaJDSwMfm2DBY2xylirAWsYrpy9qqqOCc?=
+ =?us-ascii?Q?ekwxRsXHqYFnhWzdGDB4XoRahJV6LOz25aqgu5rPQP6NqWU5cbc+nt5trMCv?=
+ =?us-ascii?Q?FGUXAZczAoof6mHqM1YPKJ3mr2upc+224pUxN13wws6mpRwynYGtrzOzZRgJ?=
+ =?us-ascii?Q?MNZrV+V18V43zRM48DuunXZGJnbjDOh/KeNlNGSoRSBvQPIAazydGJeVQXP3?=
+ =?us-ascii?Q?1cmGv2Jhm+owaLCGJPCZ69APcLX06F1H/7pNh2qcH+qNPIELiqnO+UH7du2s?=
+ =?us-ascii?Q?HVNVMICkCDaIAQS761TG+M0eQvn/dIaSPxP7myTiw1VkRKvBez0h6Wrh+jpl?=
+ =?us-ascii?Q?VyGffdFNVUHID7FQybOUbLGExvSCMfDTcpoL7i/7xPhUnNAzY629uamtS3Ce?=
+ =?us-ascii?Q?H3O28hS/xE46GvNJEoQVNN2OabbFi1+CUkWWWqY3GHh51V2B8JJchVEhPK4+?=
+ =?us-ascii?Q?IFXqE9pSsZHT85n2KjN5YYa7Tkz6TfF8M7uq+QWWTgMEpWbErNSkNzU5q76E?=
+ =?us-ascii?Q?nm2fQyoAEDnnf0Z2IvGkNTZC4N1YtL6kKVDNhoQ1lz9lQPzz5zQARzeNUqGb?=
+ =?us-ascii?Q?9phIBIOGQ0ZAbWx/0jn8WgFR4F9p0+1l69JQBN6uv0BqvNi6VucJUadpHazZ?=
+ =?us-ascii?Q?bSoND7C7Xd9R8hIV3O3yAZ2xoVi9HmcxBpTHeHIxLnbihRfSxtWckJAbW/7E?=
+ =?us-ascii?Q?MOaKtw7dNZvlgG881nYYxljJb+K+v8nZ4NPf433JKatbIrUFEACZSaI1+rDA?=
+ =?us-ascii?Q?cLCUwV12b35Rs1lQhlwpOmnz00Slx8DdZCNQrLxuQN9OAIyr7+WgBcE7Zlnq?=
+ =?us-ascii?Q?lVkUJy9+grTqK+LCdtIXb65p7YIty2c=3D?=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: d40e37ea-4692-4789-33ba-08dec16e87f1
+X-MS-Exchange-CrossTenant-AuthSource: AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 12:49:20.7290
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S9039GmgpCOjqjI8gtuFf2XcyEjf8STTB+ETy37Dipne9vsw8xuFEYKdBIVrgmjaO5FtykKy3c/f8S74/jNVIL5Xt1up9ypticMkI3qmgNE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3323
 
-On 6/3/26 14:16, Nico Pache wrote:
-> On Wed, Jun 3, 2026 at 4:01 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
+On Wed, Jun 03 2026, "Arnd Bergmann" <arnd@arndb.de> wrote:
+
+> On Wed, Jun 3, 2026, at 09:15, Rasmus Villemoes wrote:
+>> On Tue, Jun 02 2026, "Arnd Bergmann" <arnd@arndb.de> wrote:
+>>> On Tue, Jun 2, 2026, at 20:59, Andy Shevchenko wrote:
+>>>> On Tue, Jun 02, 2026 at 05:07:05PM +0200, Arnd Bergmann wrote:
 >>
+>> May I suggest a different approach, that avoids having that extra
+>> function emitted (which presumably compiles to a single jump
+>> instruction, but still, with retpoline and CFI and all that it all adds
+>> up): Keep the declaration of __vsnprintf() in the header without the
+>> __print() attribute, but then do
 >>
->>>  next_order:
->>> -             if ((BIT(order) - 1) & enabled_orders) {
->>> -                     const u8 next_order = order - 1;
->>> -                     const u16 mid_offset = offset + (nr_ptes / 2);
->>> -
->>> -                     collapse_mthp_stack_push(cc, &stack_size, mid_offset,
->>> -                                              next_order);
->>> -                     collapse_mthp_stack_push(cc, &stack_size, offset,
->>> -                                              next_order);
->>> +             if (order > KHUGEPAGED_MIN_MTHP_ORDER &&
->>> +                     (BIT(order) - 1) & enabled_orders) {
+>> int __vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
+>>    __alias(vsnprintf);
 >>
->> Why not a test_bit() ?
-> 
-> The test bit is at the top of the loop. This adds a exit if the lower
-> orders are all disabled or we hit the last order.
-
-Ah, now I understand what you want to do here.
-
-I guess you should add a () around the & and maybe add a comment.
-
-And likely using GENMASK is clearer?
-
-/*
- * Continue with the next smaller order if there is still
- * any smaller order enabled.
- */
-if (order > KHUGEPAGED_MIN_MTHP_ORDER &&
-    (enabled_orders & GENMASK(order - 1, 0))) {
-	...
-}
-
-
-> 
+>> in vsprintf.c. Aside from reusing the same entry point, I could well
+>> imagine a compiler some day complaining about seeing the printf
+>> attribute applied in a local extra declaration but not having it in the
+>> header file.
 >>
->>
->> But, wouldn't you want to skip orders that are not enabled and try with the next
->> smaller one in any case before you advance the offset?
-> 
-> We are currently iterating through each order (not skipping them).
-> There may be optimizations to avoid iterating through every order
-> (like your changes suggest), but currently, every collapse, whether it
-> succeeds or fails at the bottom order, must also iterate the offset.
+>> Presumably it will need its own EXPORT_SYMBOL if any of the intended
+>> users are modular, and it certainly still needs a comment.
+>
+> I had tried that earlier but given up because the attributes have to
+> match exactly.
+>
+> This definition works with all currently supported versions of gcc,
+> but may have to change when the there is a new version that adds
+> even more attributes:
+>
+> int
+> __printf(3, 0)
+> __attribute__((nothrow))
+> __attribute__((nonnull(1)))
+> __vsnprintf(char *__restrict buf, size_t size,
+>             const char * __restrict fmt_str, va_list args)
+>                __alias(vsnprintf);
+>
 
-Right, we currently miss opportunities to just skip, that we can optimize later.
+Ah, I see. The documentation for the alias attribute does say that the
+types have to match, but I didn't know that the nothrow and nonnull
+attributes were considered part of the type identity. Oddly enough, if
+one does
 
+  typeof(vsnprintf) __vsnprintf __alias(vsnprintf);
 
--- 
-Cheers,
+that still fails, but only complains about nothrow, not nonnull.
 
-David
+I don't remember what minimum gcc we currently require, but gcc 9
+introduced another attribute that is apperently meant for cases like
+this: 'copy'. This seems to build:
+
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 9f359b31c8d1..c1402d375429 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -2988,6 +2988,9 @@ int vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
+ }
+ EXPORT_SYMBOL(vsnprintf);
+ 
++int __vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
++       __alias(vsnprintf) __attribute__((__copy__(vsnprintf)));
++
+ /**
+  * vscnprintf - Format a string and place it in a buffer
+  * @buf: The buffer to place the result into
+
+That at least should handle any future "gcc knows this-or-that about the
+vsnprintf function". But I don't know if clang supports that copy
+mechanism or if the minimum supported gcc is too old.
+
+Rasmus
