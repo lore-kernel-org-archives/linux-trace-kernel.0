@@ -1,39 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748F94DB570;
-	Wed,  3 Jun 2026 22:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4ED4DBD9F;
+	Wed,  3 Jun 2026 23:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780527069; cv=none; b=a5jvWo3GSgz4QXvoxSvxgsCcxFuF+5zzprzgU/kFYpQRkNRsg/XOmJXCc9qwW9jOk6Tkz8aSXp1FfypexJTP5JOhg4M90Huo+FlNQOdG3NACbRz3KtgL/cgzYa7tl26zfMvKt/OUYu5yJtN8wNc9Kpk0jSWends3QKOl8oxSKjg=
+	t=1780528599; cv=none; b=E6uwJq3FvgL4WVSG9JYOzhzAl4GrXqbURDr/GXV8e36MwBdajLXuND2jBe8yXldZ3cZOgG2OQb3cH5XlSekGcJg4uofGrVUw96XftX+yJSrh2YS/pH9zlyk15NdXl9fLhO02ghl2j0oec3rSXcaZCHLw8mhZTav7BpC3/N7zjWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780527069; c=relaxed/simple;
-	bh=UNmvRtEcZSRaXgcQydwfgOuoq71fs51rX4nIYd7c2Lw=;
+	s=arc-20240116; t=1780528599; c=relaxed/simple;
+	bh=MJjnxfflC4OSMdji0tNpAT0azswgulmQdjQI03gsXZE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qmfzc7S7QD0MVNTJ3yjSaQusf/a/3lu92iIoy2pwQ9kG6byfYnrRvc5QXNlmrK69FBwXKyYfgjB2lEWJgapwZlUH4AShY/l40Gx0mXs7eatZkCnEhBqOognC+DFrcf3eh5abkucmFenzVNSJmmLFaD7juVE/aBwjBbYLvCglp9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=Q3pZQTeAFkk9xnpU+uE7RLNKaK+Y2QsYbe1SMVZrnrwNSA5+7f0/8CvhRh8brYfB6uTajgA1ds92LxzeimM0KOJeIOTSVKqw/HEbvoOwDTdabzO1PChA9IChZNo4pvM0H7o+QGVLV3CDLbC2i+0IcngP5kzifxzOvvpWTTQlTMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id EBB1B8FD65;
-	Wed,  3 Jun 2026 22:51:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 354803D;
-	Wed,  3 Jun 2026 22:50:59 +0000 (UTC)
-Date: Wed, 3 Jun 2026 18:50:57 -0400
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id BE40E120564;
+	Wed,  3 Jun 2026 23:16:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 137A817;
+	Wed,  3 Jun 2026 23:16:29 +0000 (UTC)
+Date: Wed, 3 Jun 2026 19:16:27 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>, bpf@vger.kernel.org,
- Mykyta Yatsenko <yatsenko@meta.com>, linux-trace-kernel@vger.kernel.org,
- Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH bpf-next v2 2/3] tracing: Expose tracepoint BTF ids via
- tracefs
-Message-ID: <20260603185057.4a85d5df@fedora>
-In-Reply-To: <CAEf4BzY5MTGJyys369qDS3b63-tKq3okCpFMqUdfzy0dXk7vLg@mail.gmail.com>
-References: <20260518-generic_tracepoint-v2-0-b755a5cf67bb@meta.com>
-	<20260518-generic_tracepoint-v2-2-b755a5cf67bb@meta.com>
-	<eed59d12-969f-4135-a84b-4965743692cd@gmail.com>
-	<20260526215741.1e5b3e42@fedora>
-	<CAEf4BzY5MTGJyys369qDS3b63-tKq3okCpFMqUdfzy0dXk7vLg@mail.gmail.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ unknownbbqrx <dev@unknownbbqr.xyz>, Wen Yang <wen.yang@linux.dev>
+Subject: Re: [GIT PULL] rv fixes for v7.1
+Message-ID: <20260603191627.5cb4ef6c@fedora>
+In-Reply-To: <20260603125056.75559-1-gmonaco@redhat.com>
+References: <20260603125056.75559-1-gmonaco@redhat.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,25 +37,25 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: fnmuaqku3rtbor8iexhcb848tjbb9bee
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 354803D
+X-Rspamd-Queue-Id: 137A817
+X-Stat-Signature: kyy8abnrrxttisw3ndaw4xqmr56n9zt6
+X-Rspamd-Server: rspamout07
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+3DXqpXVFDZZB/RTNakh8HXKWW/9MbI5g=
-X-HE-Tag: 1780527059-188986
-X-HE-Meta: U2FsdGVkX1/NqY5FLitBgJyRQg2TAEl2vhdR66lZ1Nr0ap8Cp1d7mQGskpL9i3y7EzXXUETMyS/qOGeEvSPKMD4RBEGVsrUrriir6vGXadw+9d4e7QmH34a+WZsTHSsJRKzLSqSdeZo6WU8JxjYUhfxQu6EIrhIOfn09eLrh5n/fCIKQoO9P/3WFthAwZltNO2PbEGFS6zsgTKHJKvgAby1t8Q7mTG1ef2MKjwp7d2KKI1xgAHRp6ru7GHwcvk9uHHVCVALY7gixaaVAou9ICQNFyk+i/b3O90hAGgzmfLPmY06L5mk/WPYIuenmDoydCASLcETSqJjFQN79YkH8IEQEtoBbK/QJ
+X-Session-ID: U2FsdGVkX19X2CwodvmoZjfBgw9/AkKUD0RQEE/VGgs=
+X-HE-Tag: 1780528588-761654
+X-HE-Meta: U2FsdGVkX188nZUlPmVNXywPnzg0PVul+O31OLfHnIJVIXYSl3TeyAvwlR45Ox5y4CbrDVu4wurYT4A7MNIACpAemCQWiQH08n7pIlN5/PfQc66yhGE8NVb7XgdWBTIbqhO9J+HU0kCbMQ8PnCvfVrfg+lNapxZnHnnrOxnjGyqG9NMMulrZCDmGPJDJ1qUUtR9F18/ole5EMOtsajCOXNGFGp+TLa2ZJ6aT50rP1T/jeaAfrNFB0D7MRPL1OfqPmYXKRQOtkrSvhPMFMvYbq/SVuUnEN5f0RawfhoK6KuU1xpfLMp8xFzGJ7ROUTuE3Z733OHFnLE6X+efuf7FpElmkIbOhtG8Ip9I4kgJOLQjMYwtLkLQZV+jeyvZqxOEQp9S1HVazYZs=
 
-On Wed, 3 Jun 2026 15:41:50 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+On Wed,  3 Jun 2026 14:50:56 +0200
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-> That's just to say that it would be great to have this in some form of
-> shape, so please help getting this into acceptable form, thanks!
+> unknownbbqrx (1):
+>       tools/rv: Ensure monitor name and desc are NUL-terminated
 
-As I said, I'm not against it. I was hoping to find something to help
-alleviate the memory usage.
+Hi Gabriele,
 
-I'll likely take these as is, but I'm currently on vacation and it will
-have to wait until next week.
+What is this? All commits need to be authored by and signed off by from
+a real person with their official name.
+
+ https://docs.kernel.org/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
 
 -- Steve
- 
