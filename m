@@ -1,178 +1,340 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2E9368D51;
-	Wed,  3 Jun 2026 11:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C232346AF20;
+	Wed,  3 Jun 2026 12:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780487538; cv=none; b=SxRSohjmP4npa5t5ueez1HMrSqorP+ONR/YI5S3JR8chj07Y2Hodig7yIat2dOutW+XDQe5f4z7zqjUHqe92XudVHWqznNDaVsXLzsMOlrMr1WUnCqziIEwxePdbM1qSHjTLBM39EyhrmJWitN5Ybp2LUebtkh3i3g+vzdAtNlM=
+	t=1780488508; cv=none; b=svQ17K1kNmXcpvyUNLoD/b27ibhRVqkihb3HuMSPuqoDZUE7bTkylyQI1IkHN/AFiUQaCsXdu9yLUPr1EhZyasHihjy/L4RZ1ZN9qIPXRIgg21piXZbf8FF3lSDH1QVci9DkR0oZQplaindwjF52O8OMXa1wpt0ieHrUTBJ9qic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780487538; c=relaxed/simple;
-	bh=5/A7O3DT79Gdd6TU4cNV7fFyd6HLjaPFHcSvC0Fq2Bo=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=lK/9dgJRZn5JHlrgSle+s2VPPbJqOGEBIUQy2iuHhsjvdCji3a2ue80gcCxeP78egot/I9TVmu/oNF9a6M8gHVvIdYZoEInjJXvPOZ1wSVv2Fl1VnjQRReDQ5wucBxMrf6UK0q+mDHl10abaKq5vDnEtB0EAKEYOzwP31ELJUno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdAVhWLF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780488508; c=relaxed/simple;
+	bh=husHsBXts++6xfeVS4vQrdtk6eNs1v5BuuRy3CU7I4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pfN/7gJRSODtsjrOHO7WN7R/jqnzHogS7rDqGGyZIzdXtUEuR8H88BQImzXu7Qn/t8H7CT48QNm4VMmPmHiEbJR90HpLMJe9uzYUKHIbbKbHklipczYYgA7aXdAOBranA8W4RAd+IZYnR2VHXyU3PrC/kd0w5U/7hmKZS+mXvXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d5SmmfEf; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdAVhWLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C461F00893;
-	Wed,  3 Jun 2026 11:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780487537;
-	bh=AtHYcQ8rMbNlczfIJ0Hn37C1PknrbDcuvN1c7vLYZBQ=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=CdAVhWLF8QUrAFUGncevOqhCnRm6Wcq9FBjSiYNEB6c5neJRzZnrq8IBMLEkas9Ub
-	 i2WWDTSAsJjErk6FPwvNkmT+pBOwT0NlMUHJPRSHXId5s3K9v+musTQ4IFdX98shmO
-	 rkPZpc7v2VrzBVee4cvFpyG7E2SasD3FZgwiTYFyybL81RF550sZFqQ8y6f9Rbt0qT
-	 L4DOh1+P5j7hirQqjTqghqk6BDyqyCULPCk7zoJ/FKXSWpDFzKcLhr3QcvznQUaSIt
-	 V7G/UYa1P/xiAQpyJTn727qzPiZgpZT1huoRJhm7oyBY0gV/RZvUK9tYG8nDSfWhQR
-	 ju3ztfNzDwD+g==
-Content-Type: multipart/mixed; boundary="===============6022185078031312976=="
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d5SmmfEf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BjZzErQAmk+oO+4E0XcjmiW9hmCrWCk9t8jkFgLyPC4=; b=d5SmmfEf7raSFzg4vFDuRz3coH
+	z+67jG4KbJDEQovNpX0QBLbtbh5tdhne1+qs53r3XBtvymPRPtmo6uHSxh9oTTahgs8dAc3hjubVH
+	TjxIyF2tByPYK1SNwdAus4bunqc+oiQhx3KaDikJD7OR0bH0zHwcXCFc9PxzwQo2USWMY6gaz+gax
+	psOIEAn7ENGHGHDIPOHAfDrAgVYPG6MBJtugLGYM7rNY0SHSlYJY1ZLW248a62PrBMjvpfpPST3Ww
+	bn+ca1kNG1zCTGcCom57PuIUIbLXrVuU18Xy917FFvYAMb+dhQxvJQYnGRos24DqYx2XD0xeX8VK0
+	H/LTg4FA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wUkOK-0000000C4nY-1pBX;
+	Wed, 03 Jun 2026 12:08:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7A6863007A4; Wed, 03 Jun 2026 14:08:11 +0200 (CEST)
+Date: Wed, 3 Jun 2026 14:08:11 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com, "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v6 5/7] locking: Add contended_release tracepoint to
+ qspinlock
+Message-ID: <20260603120811.GW3493090@noisy.programming.kicks-ass.net>
+References: <cover.1777999826.git.d@ilvokhin.com>
+ <5d7ea75ffe74a785e6b234ada9f23c6373d4b4c1.1777999826.git.d@ilvokhin.com>
+ <20260513193342.GB2545104@noisy.programming.kicks-ass.net>
+ <agXBb0ga_6HJrrnm@shell.ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <fff707db5383c996a05ea6013a227410ebc522c041d2b6719485328f18194169@mail.kernel.org>
-In-Reply-To: <20260603110554.29590-13-jolsa@kernel.org>
-References: <20260603110554.29590-13-jolsa@kernel.org>
-Subject: Re: [PATCHv7 bpf-next 12/29] bpf: Add bpf_trampoline_multi_attach/detach functions
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
-Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kafai@fb.com,eddyz87@gmail.com,songliubraving@fb.com,yhs@fb.com,menglong8.dong@gmail.com,rostedt@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Wed,  3 Jun 2026 11:52:17 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <agXBb0ga_6HJrrnm@shell.ilvokhin.com>
 
---===============6022185078031312976==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Thu, May 14, 2026 at 12:34:55PM +0000, Dmitry Ilvokhin wrote:
 
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index ae7e4fdfe2a3..957e5d7f9554 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
+> Baseline, in best case scenario of least number of executed
+> instructions.
+> 
+>     3e0:  endbr64                          ; 4 bytes (always executed)
+>     3e4:  movb $0x0,(%rdi)                 ; 3 bytes (unlock,
+>                                            ; always executed)
+>     3e7:  decl %gs:__preempt_count         ; 7 bytes (always executed)
+>     3ee:  je   3f5                         ; 2 bytes (always executed)
+>     3f0:  jmp  __x86_return_thunk          ; 5 bytes (executed if above
+>                                            ; je is not taken)
+>                                            ; rest is not executed
+>     3f5:  call __SCT__preempt_schedule     ; 5 bytes
+>     3fa:  jmp  __x86_return_thunk          ; 5 bytes
+> 
+> Tracepoint (again same case of least number of executed instructions).
+> 
+>     bc0:  endbr64                          ; 4 bytes (always executed)
+>     bc4:  xchg %ax,%ax                     ; 2 bytes (always executed, this is an
+>                                            ; only addition on the execution path).
+>     bc6:  movb $0x0,(%rdi)                 ; 3 bytes (unlock, always executed)
+>     bc9:  decl %gs:__preempt_count         ; 7 bytes (always executed)
+>     bd0:  je   bde                         ; 2 bytes (always executed)
+>     bd2:  jmp  __x86_return_thunk          ; 5 bytes (executed if above
+>                                            ; je is not taken)
+>                                            ; rest is not executed
+>     bd7:  call queued_spin_release_traced  ; 5 bytes
+>     bdc:  jmp  bc9                         ; 2 bytes
+>     bde:  call __SCT__preempt_schedule     ; 5 bytes
+>     be3:  jmp  __x86_return_thunk          ; 5 bytes
+> 
 
-[ ... ]
+So I've been playing with this a bit, and it is all really sad.
 
-> @@ -1447,6 +1447,277 @@ int __weak arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
->  	return -ENOTSUPP;
->  }
->
-> +#if defined(CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS) && \
-> +    defined(CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS) && \
-> +    defined(CONFIG_BPF_SYSCALL)
+Now, since pretty much everybody+dog will have PARAVIRT_SPINLOCK=y, the
+'best' solution would be changing that paravirt call with a
+static_call(), that actually shrinks the code by 1 byte.
 
-[ ... ]
+And then this tracepoint nonsense can simply use a different unlock
+function, just like paravirt.
 
-> +int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
-> +				struct bpf_tracing_multi_link *link)
-> +{
-> +	struct bpf_tracing_multi_data *data = &link->data;
-> +	struct bpf_attach_target_info tgt_info = {};
-> +	struct btf *btf = prog->aux->attach_btf;
-> +	struct bpf_tracing_multi_node *mnode;
-> +	struct bpf_trampoline *tr;
-> +	int i, err, rollback_cnt;
-> +	u64 key;
-> +
-> +	for_each_mnode(mnode, link) {
-> +		rollback_cnt = i;
-> +
-> +		err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
-> +		if (err)
-> +			goto rollback_put;
-> +
-> +		key = bpf_trampoline_compute_key(NULL, btf, ids[i]);
-> +
-> +		tr = bpf_trampoline_get(key, &tgt_info);
-> +		if (!tr) {
-> +			err = -ENOMEM;
-> +			goto rollback_put;
-> +		}
-> +
-> +		mnode->trampoline = tr;
-> +		mnode->node.link = &link->link;
-> +
-> +		cond_resched();
-> +	}
-> +
-> +	err = init_tracing_multi_data(data);
-> +	if (err) {
-> +		rollback_cnt = link->nodes_cnt;
-> +		goto rollback_put;
-> +	}
-> +
-> +	trampoline_lock_all();
-> +
-> +	for_each_mnode(mnode, link) {
-> +		bpf_trampoline_multi_attach_init(mnode->trampoline);
-> +
-> +		data->entry = &mnode->entry;
-> +		err = __bpf_trampoline_link_prog(&mnode->node, mnode->trampoline, NULL,
-> +						 &trampoline_multi_ops, data);
-> +		if (err) {
-> +			rollback_cnt = i;
-> +			goto rollback_unlink;
-> +		}
-> +	}
+0000 00000000000001d0 <_raw_spin_unlock>:
+0000  1d0:	f3 0f 1e fa          	endbr64
+0004  1d4:	ff 15 00 00 00 00    	call   *0x0(%rip)        # 1da <_raw_spin_unlock+0xa>	1d6: R_X86_64_PC32	pv_ops_lock+0x4
+000a  1da:	65 ff 0d 00 00 00 00 	decl   %gs:0x0(%rip)        # 1e1 <_raw_spin_unlock+0x11>	1dd: R_X86_64_PC32	__preempt_count-0x4
+0011  1e1:	74 06                	je     1e9 <_raw_spin_unlock+0x19>
+0013  1e3:	2e e9 00 00 00 00    	cs jmp 1e9 <_raw_spin_unlock+0x19>	1e5: R_X86_64_PLT32	__x86_return_thunk-0x4
+0019  1e9:	e8 00 00 00 00       	call   1ee <_raw_spin_unlock+0x1e>	1ea: R_X86_64_PLT32	__SCT__preempt_schedule-0x4
+001e  1ee:	2e e9 00 00 00 00    	cs jmp 1f4 <_raw_spin_unlock+0x24>	1f0: R_X86_64_PLT32	__x86_return_thunk-0x4
 
-[ ... ]
 
-> +int bpf_trampoline_multi_detach(struct bpf_prog *prog, struct bpf_tracing_multi_link *link)
-> +{
-> +	struct bpf_tracing_multi_data *data = &link->data;
-> +	struct bpf_tracing_multi_node *mnode;
-> +	int i;
-> +
-> +	trampoline_lock_all();
-> +
-> +	for_each_mnode(mnode, link) {
-> +		data->entry = &mnode->entry;
-> +		bpf_trampoline_multi_attach_init(mnode->trampoline);
-> +		WARN_ON_ONCE(__bpf_trampoline_unlink_prog(&mnode->node, mnode->trampoline,
-> +					NULL, &trampoline_multi_ops, data));
-> +	}
-> +
-> +	if (ftrace_hash_count(data->unreg))
-> +		WARN_ON_ONCE(update_ftrace_direct_del(&direct_ops, data->unreg));
-> +	if (ftrace_hash_count(data->modify))
-> +		WARN_ON_ONCE(update_ftrace_direct_mod(&direct_ops, data->modify, true));
-> +
-> +	for_each_mnode(mnode, link)
-> +		bpf_trampoline_multi_attach_free(mnode->trampoline);
-> +
-> +	trampoline_unlock_all();
-> +
-> +	for_each_mnode(mnode, link)
-> +		bpf_trampoline_put(mnode->trampoline);
-> +
-> +	clear_tracing_multi_data(data);
-> +	return 0;
-> +}
+0000 00000000000001d0 <_raw_spin_unlock>:
+0000  1d0:	f3 0f 1e fa          	endbr64
+0004  1d4:	e8 00 00 00 00       	call   1d9 <_raw_spin_unlock+0x9>	1d5: R_X86_64_PLT32	__SCT__queued_spin_unlock-0x4
+0009  1d9:	65 ff 0d 00 00 00 00 	decl   %gs:0x0(%rip)        # 1e0 <_raw_spin_unlock+0x10>	1dc: R_X86_64_PC32	__preempt_count-0x4
+0010  1e0:	74 06                	je     1e8 <_raw_spin_unlock+0x18>
+0012  1e2:	2e e9 00 00 00 00    	cs jmp 1e8 <_raw_spin_unlock+0x18>	1e4: R_X86_64_PLT32	__x86_return_thunk-0x4
+0018  1e8:	e8 00 00 00 00       	call   1ed <_raw_spin_unlock+0x1d>	1e9: R_X86_64_PLT32	__SCT__preempt_schedule-0x4
+001d  1ed:	2e e9 00 00 00 00    	cs jmp 1f3 <_raw_spin_unlock+0x23>	1ef: R_X86_64_PLT32	__x86_return_thunk-0x4
 
-In v4, bot+bpf-ci@kernel.org raised a concern about the detach function
-potentially failing due to memory allocation. The concern was that if
-alloc_ftrace_hash() failed, the function would return -ENOMEM without
-detaching any trampolines or releasing refcounts. Since the caller
-(bpf_tracing_multi_link_release) uses WARN_ON_ONCE to drop the error,
-the link struct would be freed while trampolines remained attached with
-elevated refcounts, permanently leaking them and their ftrace hooks.
 
-The reviewer suggested pre-allocating hashes during attach and storing
-them in the link struct so that detach cannot fail.
+Something a little like so, which is completely untested, except to
+build kernel/locking/spinlock.o (with clang-23).
 
-In v7 (the current code), the bpf_tracing_multi_data structure is
-embedded in the link structure and init_tracing_multi_data is called
-during bpf_trampoline_multi_attach. The detach function now uses the
-pre-allocated data from link->data rather than allocating new hashes,
-which appears to resolve the original concern.
+Also, I think someone should go do some performance runs with
+ARCH_INLINE_SPIN_* set for x86 just like for s390.
 
-Reference: https://lore.kernel.org/bpf/711e8b90d27722e47cccfc30a1ccfe243ea7a696322997c15fda1a2147dba6a4@mail.kernel.org/
-
+Of course, this is only x86 done, and it doesn't nicely tie in with
+tracepoints, but it does give the sanest asm.
 
 ---
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/26881310426
---===============6022185078031312976==--
+diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+index 210b494e4de0..6b4bdea18218 100644
+--- a/arch/x86/hyperv/hv_spinlock.c
++++ b/arch/x86/hyperv/hv_spinlock.c
+@@ -78,8 +78,8 @@ void __init hv_init_spinlocks(void)
+ 	pr_info("PV spinlocks enabled\n");
+ 
+ 	__pv_init_lock_hash();
+-	pv_ops_lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+-	pv_ops_lock.queued_spin_unlock = PV_CALLEE_SAVE(__pv_queued_spin_unlock);
++	static_call_update(queued_spin_lock_slowpath, __pv_queued_spin_lock_slowpath);
++	static_call_update(queued_spin_unlock, __raw_callee_save___pv_queued_spin_unlock);
+ 	pv_ops_lock.wait = hv_qlock_wait;
+ 	pv_ops_lock.kick = hv_qlock_kick;
+ 	pv_ops_lock.vcpu_is_preempted = PV_CALLEE_SAVE(hv_vcpu_is_preempted);
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 1d506e5d6f46..52e7ce10df57 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -225,7 +225,6 @@
+ #define X86_FEATURE_EPT_AD		( 8*32+17) /* "ept_ad" Intel Extended Page Table access-dirty bit */
+ #define X86_FEATURE_VMCALL		( 8*32+18) /* Hypervisor supports the VMCALL instruction */
+ #define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* VMware prefers VMMCALL hypercall instruction */
+-#define X86_FEATURE_PVUNLOCK		( 8*32+20) /* PV unlock function */
+ #define X86_FEATURE_VCPUPREEMPT		( 8*32+21) /* PV vcpu_is_preempted function */
+ #define X86_FEATURE_TDX_GUEST		( 8*32+22) /* "tdx_guest" Intel Trust Domain Extensions Guest */
+ 
+diff --git a/arch/x86/include/asm/paravirt-spinlock.h b/arch/x86/include/asm/paravirt-spinlock.h
+index 7beffcb08ed6..553910f92906 100644
+--- a/arch/x86/include/asm/paravirt-spinlock.h
++++ b/arch/x86/include/asm/paravirt-spinlock.h
+@@ -3,6 +3,7 @@
+ #define _ASM_X86_PARAVIRT_SPINLOCK_H
+ 
+ #include <asm/paravirt_types.h>
++#include <linux/static_call_types.h>
+ 
+ #ifdef CONFIG_SMP
+ #include <asm/spinlock_types.h>
+@@ -11,9 +12,6 @@
+ struct qspinlock;
+ 
+ struct pv_lock_ops {
+-	void (*queued_spin_lock_slowpath)(struct qspinlock *lock, u32 val);
+-	struct paravirt_callee_save queued_spin_unlock;
+-
+ 	void (*wait)(u8 *ptr, u8 val);
+ 	void (*kick)(int cpu);
+ 
+@@ -26,20 +24,23 @@ extern struct pv_lock_ops pv_ops_lock;
+ extern void native_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
+ extern void __pv_init_lock_hash(void);
+ extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
++extern void __raw_callee_save___native_queued_spin_unlock(struct qspinlock *lock);
+ extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
+ extern bool nopvspin;
+ 
++DECLARE_STATIC_CALL(queued_spin_lock_slowpath, native_queued_spin_lock_slowpath);
++DECLARE_STATIC_CALL(queued_spin_unlock, __raw_callee_save___native_queued_spin_unlock);
++
+ static __always_inline void pv_queued_spin_lock_slowpath(struct qspinlock *lock,
+ 							 u32 val)
+ {
+-	PVOP_VCALL2(pv_ops_lock, queued_spin_lock_slowpath, lock, val);
++	static_call(queued_spin_lock_slowpath)(lock, val);
+ }
+ 
+ static __always_inline void pv_queued_spin_unlock(struct qspinlock *lock)
+ {
+-	PVOP_ALT_VCALLEE1(pv_ops_lock, queued_spin_unlock, lock,
+-			  "movb $0, (%%" _ASM_ARG1 ")",
+-			  ALT_NOT(X86_FEATURE_PVUNLOCK));
++	__STATIC_CALL_MOD_ADDRESSABLE(queued_spin_unlock);
++	asm volatile ("call " STATIC_CALL_TRAMP_STR(queued_spin_unlock) : ASM_CALL_CONSTRAINT);
+ }
+ 
+ static __always_inline bool pv_vcpu_is_preempted(long cpu)
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 29226d112029..5908d9fd94bb 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -1135,9 +1135,8 @@ void __init kvm_spinlock_init(void)
+ 	pr_info("PV spinlocks enabled\n");
+ 
+ 	__pv_init_lock_hash();
+-	pv_ops_lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+-	pv_ops_lock.queued_spin_unlock =
+-		PV_CALLEE_SAVE(__pv_queued_spin_unlock);
++	static_call_update(queued_spin_lock_slowpath, __pv_queued_spin_lock_slowpath);
++	static_call_update(queued_spin_unlock, __raw_callee_save___pv_queued_spin_unlock);
+ 	pv_ops_lock.wait = kvm_wait;
+ 	pv_ops_lock.kick = kvm_kick_cpu;
+ 
+diff --git a/arch/x86/kernel/paravirt-spinlocks.c b/arch/x86/kernel/paravirt-spinlocks.c
+index 95452444868f..28407304f123 100644
+--- a/arch/x86/kernel/paravirt-spinlocks.c
++++ b/arch/x86/kernel/paravirt-spinlocks.c
+@@ -25,9 +25,12 @@ __visible void __native_queued_spin_unlock(struct qspinlock *lock)
+ }
+ PV_CALLEE_SAVE_REGS_THUNK(__native_queued_spin_unlock);
+ 
++DEFINE_STATIC_CALL(queued_spin_lock_slowpath, native_queued_spin_lock_slowpath);
++DEFINE_STATIC_CALL(queued_spin_unlock, __raw_callee_save___native_queued_spin_unlock);
++
+ bool pv_is_native_spin_unlock(void)
+ {
+-	return pv_ops_lock.queued_spin_unlock.func ==
++	return static_call_query(queued_spin_unlock) ==
+ 		__raw_callee_save___native_queued_spin_unlock;
+ }
+ 
+@@ -45,16 +48,11 @@ bool pv_is_native_vcpu_is_preempted(void)
+ 
+ void __init paravirt_set_cap(void)
+ {
+-	if (!pv_is_native_spin_unlock())
+-		setup_force_cpu_cap(X86_FEATURE_PVUNLOCK);
+-
+ 	if (!pv_is_native_vcpu_is_preempted())
+ 		setup_force_cpu_cap(X86_FEATURE_VCPUPREEMPT);
+ }
+ 
+ struct pv_lock_ops pv_ops_lock = {
+-	.queued_spin_lock_slowpath	= native_queued_spin_lock_slowpath,
+-	.queued_spin_unlock		= PV_CALLEE_SAVE(__native_queued_spin_unlock),
+ 	.wait				= paravirt_nop,
+ 	.kick				= paravirt_nop,
+ 	.vcpu_is_preempted		= PV_CALLEE_SAVE(__native_vcpu_is_preempted),
+diff --git a/arch/x86/kernel/static_call.c b/arch/x86/kernel/static_call.c
+index 61592e41a6b1..1268b7dc93b1 100644
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -3,6 +3,7 @@
+ #include <linux/memory.h>
+ #include <linux/bug.h>
+ #include <asm/text-patching.h>
++#include <asm/paravirt-spinlock.h>
+ 
+ enum insn_type {
+ 	CALL = 0, /* site call */
+@@ -31,6 +32,15 @@ static const u8 retinsn[] = { RET_INSN_OPCODE, 0xcc, 0xcc, 0xcc, 0xcc };
+  */
+ static const u8 warninsn[] = { 0x67, 0x48, 0x0f, 0xb9, 0x3a };
+ 
++/*
++ * ds ds movb $0, (_ASM_ARG1)
++ */
++#ifdef CONFIG_64BIT
++static const u8 unlockinsn[] = { 0x3e, 0x3e, 0xc6, 0x07, 0x00 };
++#else
++static const u8 unlockinsn[] = { 0x3e, 0x3e, 0xc6, 0x00, 0x00 };
++#endif
++
+ static u8 __is_Jcc(u8 *insn) /* Jcc.d32 */
+ {
+ 	u8 ret = 0;
+@@ -78,6 +88,10 @@ static void __ref __static_call_transform(void *insn, enum insn_type type,
+ 			emulate = code;
+ 			code = &warninsn;
+ 		}
++		if (func == &__raw_callee_save___native_queued_spin_unlock) {
++			emulate = code;
++			code = &unlockinsn;
++		}
+ 		break;
+ 
+ 	case NOP:
+diff --git a/arch/x86/xen/spinlock.c b/arch/x86/xen/spinlock.c
+index 83ac24ead289..f718e535ea7c 100644
+--- a/arch/x86/xen/spinlock.c
++++ b/arch/x86/xen/spinlock.c
+@@ -134,9 +134,8 @@ void __init xen_init_spinlocks(void)
+ 	printk(KERN_DEBUG "xen: PV spinlocks enabled\n");
+ 
+ 	__pv_init_lock_hash();
+-	pv_ops_lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+-	pv_ops_lock.queued_spin_unlock =
+-		PV_CALLEE_SAVE(__pv_queued_spin_unlock);
++	static_call_update(queued_spin_lock_slowpath, __pv_queued_spin_lock_slowpath);
++	static_call_update(queued_spin_unlock, __raw_callee_save___pv_queued_spin_unlock);
+ 	pv_ops_lock.wait = xen_qlock_wait;
+ 	pv_ops_lock.kick = xen_qlock_kick;
+ 	pv_ops_lock.vcpu_is_preempted = PV_CALLEE_SAVE(xen_vcpu_stolen);
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 86d17b195e79..61541f042f74 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -225,7 +225,6 @@
+ #define X86_FEATURE_EPT_AD		( 8*32+17) /* "ept_ad" Intel Extended Page Table access-dirty bit */
+ #define X86_FEATURE_VMCALL		( 8*32+18) /* Hypervisor supports the VMCALL instruction */
+ #define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* VMware prefers VMMCALL hypercall instruction */
+-#define X86_FEATURE_PVUNLOCK		( 8*32+20) /* PV unlock function */
+ #define X86_FEATURE_VCPUPREEMPT		( 8*32+21) /* PV vcpu_is_preempted function */
+ #define X86_FEATURE_TDX_GUEST		( 8*32+22) /* "tdx_guest" Intel Trust Domain Extensions Guest */
+ 
