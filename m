@@ -1,295 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE7D33C507;
-	Wed,  3 Jun 2026 01:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3698B3382F9;
+	Wed,  3 Jun 2026 01:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780449664; cv=none; b=CZqv3Mnsbxx5GSOHSxlfgREhBDTIBTL5J89zUo9IneBZyz3+uCKkNo9Eh9rMXUXvabPijktCqskBEfz6uJVuYlU9tRobx2oG0FOAMCHAA6mbHDUah66VZUcJ0e4j9hdbWnGmXR7H9wjdDU6QJDYTHTAZhbni43gGlLs6qv3itYU=
+	t=1780449798; cv=none; b=fnTE+6rXEWml7Bpmi+gVMjr1W+cm9y00DWJgp+PjydaQ+GUO92uE+2XFWqd0XIaVZaRHBXdpMOWkkSxAmIvCe130R2mkg/ie8BpYJ/qpfFRvFxgZm1ZdxpAUhTjNKAnjYezy2tK58jxXun6niTuOoZfsso8Hgra9DdVyYyd+ND4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780449664; c=relaxed/simple;
-	bh=8vixmOuT3LIAXcCvcIoXDTdEI3JVjvXuSoPkQqs0Xoc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Zj3wtr5PSbwuIog61F0CaojFdXXjxaZSuFFYVJ80v299Zt2ruHRg9Ek0N3L/qEQVOlRSkVDzptunqTlqDAZKIklEifyU7OPnmQodpIxSRzaWwehjhfzRLHxd7aHck2v9Nz8/WLU7hqzZsBPkNnIWQKSr7bMEYPpt3G43WFFcNug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euhkND3O; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780449798; c=relaxed/simple;
+	bh=OUNnNBmYkrpRZR+iYgT2ZVhB2ELR6BFLJRgUu4+IxB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MNdJSfpuujmKLtKEBR+qHOIG6t1Mf0AargJKNxerJLp4RmEpF2ig+lSLReDgQNSE7j4fEFSm1jXKOcg1CKeUYawHeCE/UlpQhgGw7Ae27xeiHgBSuaBfozRMu64cX9j6NH0tIfHf65gYyxIH0nvG+X2WY0kwZjVJ40pj3ivmhsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=v0T79xHV; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euhkND3O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F461F00893;
-	Wed,  3 Jun 2026 01:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780449660;
-	bh=jaDw0gn3gT9HcVtufl402mihixaE+qh+yT/WCpNOLwU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=euhkND3Ob1K0sLstL/rcWgvqDNMX5Z+eHl2P4tnIoDk1a9DR/mTiCGrY1u2/FLgsE
-	 tsYtz6hEqg5sBj+DO7icxbHFQc4uaWKrcUVAF5vXbcSGXpc9+V24DirUKvUCMsBVte
-	 Dm1MoGLrZH33pk5Tk7kR1wsv41hfNiWcgiSjdcViVwxWXd8NRd0RAfvMY+fCTwi1UG
-	 MQGl1GB5qZtIdjDuBb0SqrauJXdOms1MlDYlVkBSFIB6EhO9NvC/mvZKn8U7D9oJy7
-	 nfBjTv+35stutj+0nBqTFNJNPfyp0oW4NYB9CBiXQmUxRWT16Ug1Z0WCmRQRAiqr8x
-	 Wo1d8VkyLDLrw==
-Date: Wed, 3 Jun 2026 10:20:55 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Eva Kurchatova <eva.kurchatova@virtuozzo.com>, mhiramat@kernel.org,
- rostedt@goodmis.org, oe-kbuild-all@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, peterz@infradead.org, jpoimboe@kernel.org,
- samitolvanen@google.com
-Subject: Re: [PATCH v2] tracing: fix CFI violation in probestub test
-Message-Id: <20260603102055.182fb82e837842e059862096@kernel.org>
-In-Reply-To: <202606022312.7cKiQBmg-lkp@intel.com>
-References: <20260602135425.542073-1-eva.kurchatova@virtuozzo.com>
-	<202606022312.7cKiQBmg-lkp@intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="v0T79xHV"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1780449793; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=aOvj40vd9kLAuQk7SPrErsDX1z7W+8ls3a4xdTv8HMg=;
+	b=v0T79xHV3oyjexi2kUcB99zuD5zwCChUQcTVtyIWMr3NH9jrcttg/i8bENMBpmTU4ojqs99qJ/DiYt0y4XpxpAlOlFzc2eksLaM+X+El8GqP1IacuXySYZAUxwZT3NYi9uHv04Tye7ITyKr1UuDvozuqDldk3ota9UN4GRvw/S0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X45kknw_1780449789;
+Received: from 30.246.177.175(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X45kknw_1780449789 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 03 Jun 2026 09:23:11 +0800
+Message-ID: <461a727f-e2cd-4192-9e19-16172500053c@linux.alibaba.com>
+Date: Wed, 3 Jun 2026 09:23:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/8] riscv: stacktrace: introduce stack-bound tracking
+ helpers
+To: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Alexandre Ghiti <alex@ghiti.fr>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Chen Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+ Deepak Gupta <debug@rivosinc.com>, Puranjay Mohan <puranjay@kernel.org>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+ Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
+ <20260528082310.1994388-6-wanghan@linux.alibaba.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260528082310.1994388-6-wanghan@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2 Jun 2026 23:40:51 +0200
-kernel test robot <lkp@intel.com> wrote:
-
-> Hi Eva,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on trace/for-next]
-> [also build test ERROR on linus/master v6.16-rc1 next-20260602]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Eva-Kurchatova/tracing-fix-CFI-violation-in-probestub-test/20260602-222302
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-> patch link:    https://lore.kernel.org/r/20260602135425.542073-1-eva.kurchatova%40virtuozzo.com
-> patch subject: [PATCH v2] tracing: fix CFI violation in probestub test
-> config: x86_64-rhel-9.4-kselftests (https://download.01.org/0day-ci/archive/20260602/202606022312.7cKiQBmg-lkp@intel.com/config)
-> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260602/202606022312.7cKiQBmg-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202606022312.7cKiQBmg-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from drivers/dma-buf/sync_trace.h:10,
->                     from drivers/dma-buf/sw_sync.c:18:
->    include/linux/tracepoint.h:403:9: warning: data definition has no type or storage class
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
-
-Hmm, it seems that this macro is not defined in this build
-configuration? Maybe we need:
-
-#include <linux/cfi.h>
-
-instead of asm/cfi.h?
-
-Thanks,
-
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/../../drivers/dma-buf/sync_trace.h:12:1: note: in expansion of macro 'TRACE_EVENT'
->       12 | TRACE_EVENT(sync_timeline,
->          | ^~~~~~~~~~~
->    include/linux/tracepoint.h:403:9: error: type defaults to 'int' in declaration of 'CFI_NOSEAL' [-Wimplicit-int]
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/../../drivers/dma-buf/sync_trace.h:12:1: note: in expansion of macro 'TRACE_EVENT'
->       12 | TRACE_EVENT(sync_timeline,
->          | ^~~~~~~~~~~
-> >> include/trace/../../drivers/dma-buf/sync_trace.h:13:25: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
->       13 |         TP_PROTO(struct sync_timeline *timeline),
->          |                         ^~~~~~~~~~~~~
->    include/linux/tracepoint.h:394:48: note: in definition of macro '__DEFINE_TRACE_EXT'
->      394 |         void __probestub_##_name(void *__data, proto)                   \
->          |                                                ^~~~~
->    include/linux/tracepoint.h:424:41: note: in expansion of macro 'PARAMS'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |                                         ^~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/define_trace.h:28:28: note: in expansion of macro 'PARAMS'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |                            ^~~~~~
->    include/trace/../../drivers/dma-buf/sync_trace.h:12:1: note: in expansion of macro 'TRACE_EVENT'
->       12 | TRACE_EVENT(sync_timeline,
->          | ^~~~~~~~~~~
->    include/trace/../../drivers/dma-buf/sync_trace.h:13:9: note: in expansion of macro 'TP_PROTO'
->       13 |         TP_PROTO(struct sync_timeline *timeline),
->          |         ^~~~~~~~
-> --
->    In file included from include/trace/events/lock.h:9,
->                     from kernel/locking/mutex.c:35:
->    include/linux/tracepoint.h:403:9: warning: data definition has no type or storage class
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/events/lock.h:24:1: note: in expansion of macro 'TRACE_EVENT'
->       24 | TRACE_EVENT(lock_acquire,
->          | ^~~~~~~~~~~
->    include/linux/tracepoint.h:403:9: error: type defaults to 'int' in declaration of 'CFI_NOSEAL' [-Wimplicit-int]
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/events/lock.h:24:1: note: in expansion of macro 'TRACE_EVENT'
->       24 | TRACE_EVENT(lock_acquire,
->          | ^~~~~~~~~~~
-> >> include/trace/events/lock.h:28:24: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
->       28 |                 struct lockdep_map *next_lock, unsigned long ip),
->          |                        ^~~~~~~~~~~
->    include/linux/tracepoint.h:394:48: note: in definition of macro '__DEFINE_TRACE_EXT'
->      394 |         void __probestub_##_name(void *__data, proto)                   \
->          |                                                ^~~~~
->    include/linux/tracepoint.h:424:41: note: in expansion of macro 'PARAMS'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |                                         ^~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/define_trace.h:28:28: note: in expansion of macro 'PARAMS'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |                            ^~~~~~
->    include/trace/events/lock.h:24:1: note: in expansion of macro 'TRACE_EVENT'
->       24 | TRACE_EVENT(lock_acquire,
->          | ^~~~~~~~~~~
->    include/trace/events/lock.h:26:9: note: in expansion of macro 'TP_PROTO'
->       26 |         TP_PROTO(struct lockdep_map *lock, unsigned int subclass,
->          |         ^~~~~~~~
->    include/linux/tracepoint.h:403:9: warning: data definition has no type or storage class
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:61:9: note: in expansion of macro 'DEFINE_TRACE'
->       61 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/events/lock.h:69:1: note: in expansion of macro 'DEFINE_EVENT'
->       69 | DEFINE_EVENT(lock, lock_release,
->          | ^~~~~~~~~~~~
->    include/linux/tracepoint.h:403:9: error: type defaults to 'int' in declaration of 'CFI_NOSEAL' [-Wimplicit-int]
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:61:9: note: in expansion of macro 'DEFINE_TRACE'
->       61 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/events/lock.h:69:1: note: in expansion of macro 'DEFINE_EVENT'
->       69 | DEFINE_EVENT(lock, lock_release,
->          | ^~~~~~~~~~~~
->    include/trace/events/lock.h:71:25: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
->       71 |         TP_PROTO(struct lockdep_map *lock, unsigned long ip),
->          |                         ^~~~~~~~~~~
->    include/linux/tracepoint.h:394:48: note: in definition of macro '__DEFINE_TRACE_EXT'
->      394 |         void __probestub_##_name(void *__data, proto)                   \
->          |                                                ^~~~~
->    include/linux/tracepoint.h:424:41: note: in expansion of macro 'PARAMS'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |                                         ^~~~~~
->    include/trace/define_trace.h:61:9: note: in expansion of macro 'DEFINE_TRACE'
->       61 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/define_trace.h:61:28: note: in expansion of macro 'PARAMS'
->       61 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |                            ^~~~~~
->    include/trace/events/lock.h:69:1: note: in expansion of macro 'DEFINE_EVENT'
->       69 | DEFINE_EVENT(lock, lock_release,
->          | ^~~~~~~~~~~~
->    include/trace/events/lock.h:71:9: note: in expansion of macro 'TP_PROTO'
->       71 |         TP_PROTO(struct lockdep_map *lock, unsigned long ip),
->          |         ^~~~~~~~
->    include/linux/tracepoint.h:403:9: warning: data definition has no type or storage class
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/events/lock.h:95:1: note: in expansion of macro 'TRACE_EVENT'
->       95 | TRACE_EVENT(contention_begin,
->          | ^~~~~~~~~~~
->    include/linux/tracepoint.h:403:9: error: type defaults to 'int' in declaration of 'CFI_NOSEAL' [-Wimplicit-int]
->      403 |         CFI_NOSEAL(__probestub_##_name);                                \
->          |         ^~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/events/lock.h:95:1: note: in expansion of macro 'TRACE_EVENT'
->       95 | TRACE_EVENT(contention_begin,
->          | ^~~~~~~~~~~
->    include/linux/tracepoint.h:380:24: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
->      380 |                 struct tracepoint_func *it_func_ptr;                    \
->          |                        ^~~~~~~~~~~~~~~
->    include/linux/tracepoint.h:424:9: note: in expansion of macro '__DEFINE_TRACE_EXT'
->      424 |         __DEFINE_TRACE_EXT(_name, NULL, PARAMS(_proto), PARAMS(_args));
->          |         ^~~~~~~~~~~~~~~~~~
->    include/trace/define_trace.h:28:9: note: in expansion of macro 'DEFINE_TRACE'
->       28 |         DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->          |         ^~~~~~~~~~~~
->    include/trace/events/lock.h:95:1: note: in expansion of macro 'TRACE_EVENT'
->       95 | TRACE_EVENT(contention_begin,
-> 
-> 
-> vim +13 include/trace/../../drivers/dma-buf/sync_trace.h
-> 
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  11  
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  12  TRACE_EVENT(sync_timeline,
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28 @13  	TP_PROTO(struct sync_timeline *timeline),
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  14  
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  15  	TP_ARGS(timeline),
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  16  
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  17  	TP_STRUCT__entry(
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  18  			__string(name, timeline->name)
-> 5c1401f83a16b7e drivers/staging/android/trace/sync.h Gustavo Padovan         2016-05-31  19  			__field(u32, value)
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  20  	),
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  21  
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  22  	TP_fast_assign(
-> 2c92ca849fcc6ee drivers/dma-buf/sync_trace.h         Steven Rostedt (Google  2024-05-16  23) 			__assign_str(name);
-> 5c1401f83a16b7e drivers/staging/android/trace/sync.h Gustavo Padovan         2016-05-31  24  			__entry->value = timeline->value;
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  25  	),
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  26  
-> 5c1401f83a16b7e drivers/staging/android/trace/sync.h Gustavo Padovan         2016-05-31  27  	TP_printk("name=%s value=%d", __get_str(name), __entry->value)
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  28  );
-> b699a644f82110e drivers/staging/android/trace/sync.h Erik Gilling            2013-02-28  29  
-> 
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 5/28/26 4:23 PM, Wang Han wrote:
+> A reliable unwinder needs to validate that every frame record it reads
+> is fully contained in a known kernel stack, and it needs to refuse to
+> walk back into a stack it has already left. Add the building blocks
+> for that:
+> 
+>    * struct stack_info / struct unwind_state in a new
+>      asm/stacktrace/common.h, modelled on the arm64 reference
+>      implementation.
+>    * stackinfo_get_irq() / stackinfo_get_task() / stackinfo_get_overflow()
+>      plus the corresponding on_*_stack() predicates in asm/stacktrace.h,
+>      so callers can ask "is this object on stack X?" by stack kind
+>      rather than open-coded address arithmetic.
+>    * unwind_init_common(), unwind_find_stack() and
+>      unwind_consume_stack() helpers that enforce the
+>      forward-progress-only invariant required for reliability.
+> 
+> No existing user is wired up to these helpers in this commit; the
+> unwinder switch comes in a follow-up. The header changes leave
+> on_thread_stack() with the same semantics as before, just expressed in
+> terms of the new helpers.
+> 
+> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+> ---
+>   arch/riscv/include/asm/stacktrace.h        |  65 ++++++++-
+>   arch/riscv/include/asm/stacktrace/common.h | 159 +++++++++++++++++++++
+>   2 files changed, 222 insertions(+), 2 deletions(-)
+>   create mode 100644 arch/riscv/include/asm/stacktrace/common.h
+> 
+> diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
+> index b1495a7e06ce..bc87c4940379 100644
+> --- a/arch/riscv/include/asm/stacktrace.h
+> +++ b/arch/riscv/include/asm/stacktrace.h
+> @@ -3,8 +3,13 @@
+>   #ifndef _ASM_RISCV_STACKTRACE_H
+>   #define _ASM_RISCV_STACKTRACE_H
+>   
+> +#include <linux/percpu.h>
+>   #include <linux/sched.h>
+> +#include <linux/sched/task_stack.h>
+> +
+> +#include <asm/irq_stack.h>
+>   #include <asm/ptrace.h>
+> +#include <asm/stacktrace/common.h>
+>   
+>   struct stackframe {
+>   	unsigned long fp;
+> @@ -16,14 +21,70 @@ extern void notrace walk_stackframe(struct task_struct *task, struct pt_regs *re
+>   extern void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
+>   			   const char *loglvl);
+>   
+> -static inline bool on_thread_stack(void)
+> +/*
+> + * IRQ stack accessors
+> + */
+> +static inline struct stack_info stackinfo_get_irq(void)
+> +{
+> +	unsigned long low = (unsigned long)raw_cpu_read(irq_stack_ptr);
+> +	unsigned long high = low + IRQ_STACK_SIZE;
+> +
+> +	return (struct stack_info) {
+> +		.low = low,
+> +		.high = high,
+> +	};
+> +}
+> +
+> +static inline bool on_irq_stack(unsigned long sp, unsigned long size)
+> +{
+> +	struct stack_info info = stackinfo_get_irq();
+> +
+> +	return stackinfo_on_stack(&info, sp, size);
+> +}
+> +
+> +/*
+> + * Task stack accessors
+> + */
+> +static inline struct stack_info stackinfo_get_task(const struct task_struct *tsk)
+>   {
+> -	return !(((unsigned long)(current->stack) ^ current_stack_pointer) & ~(THREAD_SIZE - 1));
+> +	unsigned long low = (unsigned long)task_stack_page(tsk);
+> +	unsigned long high = low + THREAD_SIZE;
+> +
+> +	return (struct stack_info) {
+> +		.low = low,
+> +		.high = high,
+> +	};
+> +}
+> +
+> +static inline bool on_task_stack(const struct task_struct *tsk,
+> +				 unsigned long sp, unsigned long size)
+> +{
+> +	struct stack_info info = stackinfo_get_task(tsk);
+> +
+> +	return stackinfo_on_stack(&info, sp, size);
+>   }
+>   
+> +/*
+> + * Cast is necessary since current->stack is an opaque ptr.
+> + */
+> +#define on_thread_stack()	(on_task_stack(current, current_stack_pointer, 1))
+>   
+> +/*
+> + * Overflow stack accessors
+> + */
+>   #ifdef CONFIG_VMAP_STACK
+>   DECLARE_PER_CPU(unsigned long [OVERFLOW_STACK_SIZE/sizeof(long)], overflow_stack);
+> +
+> +static inline struct stack_info stackinfo_get_overflow(void)
+> +{
+> +	unsigned long low = (unsigned long)raw_cpu_ptr(overflow_stack);
+> +	unsigned long high = low + OVERFLOW_STACK_SIZE;
+> +
+> +	return (struct stack_info) {
+> +		.low = low,
+> +		.high = high,
+> +	};
+> +}
+>   #endif /* CONFIG_VMAP_STACK */
+>   
+>   #endif /* _ASM_RISCV_STACKTRACE_H */
+> diff --git a/arch/riscv/include/asm/stacktrace/common.h b/arch/riscv/include/asm/stacktrace/common.h
+> new file mode 100644
+> index 000000000000..87d6d40672f3
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/stacktrace/common.h
+> @@ -0,0 +1,159 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * RISC-V common stack unwinder types and helpers.
+> + *
+> + * See: arch/arm64/include/asm/stacktrace/common.h for the reference
+> + * implementation.
+> + *
+> + * Copyright (C) 2024
+
+Nit: The new common.h carries "Copyright (C) 2024", but this is a 2026
+submission.
+
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+
+Thanks.
+Shuai
+
