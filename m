@@ -1,133 +1,138 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EF23D16E9;
-	Wed,  3 Jun 2026 14:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780496836; cv=none; b=BDgskUaV9dzPnIICYPRBG/oUC4fWnivnBm1rqijRqeGpiz1c6AG5lktmo9RnUBw3r/leFSGVN8ghjzXpxD3f/6k5LcUJw6ldeL+wU7TaCKJrNur/oKO/pYo6KsYM3m1M2DLXERgZ/c7wjaI+pbuKg0llogFp2BMCx9N+8rmWHR0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780496836; c=relaxed/simple;
-	bh=AuGuRH+fFyEdbJRKSt1mI4XMyMufmkTscbswOCeuews=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QtNlARfBrp+m4INV4kNvgN8NMantNM+Pc2UfBpzzDbH2b6oRIaq8O1Ne/YFn0HTgEg06vfomVf2cWWW8chgrQLh9XHxn2U+93FucFhlK1hX2VM5Dy6SHWiaZkK8yhcyBl20Vhk3uxGoM2h8+W7Qo+hs3I0x2Jlf1fntkJzwVntI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mXm4zhu/; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B4B384CFA
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jun 2026 14:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780497570; cv=pass; b=IPU3rFwXTkUebkvyNHT7tz/eiLJ/4BCAnzn8E9OvKKa80bSAnCxfmQ0ga/3HwMFxeJxOrOqRDtwffGteGVUhTdSWSIvXn/40ENQGYC/GbKmzSoRcf9ml6+abi5eb8WfHQK1qiBkk1JRRLPOAEzRb7CmyZGPiucvoL5t9q6ZjMSo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780497570; c=relaxed/simple;
+	bh=IGO3PuvDPm+gsi6Lka7LaUI6qTd54dbBVyczsiILhXU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WmkmuR5dM4ymt8+N2NgLWzIX8QexLISG1OI9hiZdqwlYhHMkTXIsKezL7KrchJHqm1fLQpLzl3bqIXPeK71fMR4Xoz5VntHqin+nHWK62hVdhXIF+pNm+cCIRHLIyd3GKtFqoL7zPdZI7C4B7Lt1Q6FuDLfUEgFHyFLlwqDTsqI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mBXv+/2r; arc=pass smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mXm4zhu/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=os4aRjDnafKUzup1QuKJHbiKJ+/dQN99U138wr5Ge48=; b=mXm4zhu/Rg+tWnyBEHPAizygP+
-	MokSQOOwsmHArQ5zsrd7YX3dwe41qJEnF1l5tg9WYaOHQgJI7SXdYYZZQyEz4Rtg697HMdeiKdyNY
-	V6QXv/NtFvmWLicZFBildOj3UogNmhtP8Ig6qT0IAl6uvnLiEBLKWu1anuSJI+qD+b8E9YGOA5KnK
-	AD/mZR5Hl1ie8T7XhS/5kg/3/z3q/me369Frj+mf4355m7BAd1/WiLPkkTV+l9MyKXB24EQCXsLht
-	mZny4wOhaOGbHX+TMYQmQ1cefA+QUrDIee5OqkmMyL0JDD02lRozDH6sryst0Ib0jaTxT1G7v7bpu
-	7mO+FzAA==;
-Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wUmYe-0000000CPBt-2ufD;
-	Wed, 03 Jun 2026 14:27:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 67A053007A4; Wed, 03 Jun 2026 16:26:59 +0200 (CEST)
-Date: Wed, 3 Jun 2026 16:26:59 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH v6 5/7] locking: Add contended_release tracepoint to
- qspinlock
-Message-ID: <20260603142659.GW3102624@noisy.programming.kicks-ass.net>
-References: <cover.1777999826.git.d@ilvokhin.com>
- <5d7ea75ffe74a785e6b234ada9f23c6373d4b4c1.1777999826.git.d@ilvokhin.com>
- <20260513193342.GB2545104@noisy.programming.kicks-ass.net>
- <agXBb0ga_6HJrrnm@shell.ilvokhin.com>
- <20260603120811.GW3493090@noisy.programming.kicks-ass.net>
- <aiA3dzjKVq2_cpSY@shell.ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBXv+/2r"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-68bd9fce347so10268518a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jun 2026 07:39:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780497567; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YPCZpl3PJg68sqNUa60is9dmfGX0NyS/al0hzhaL9EmrrSrzYWVu4zmIjFLEFGWyEC
+         bSIT0Jq3W92HI+sNRUVfCV2qd9uQEbonk17szGhNd2/muglkmy2H0FGiGqPa+f6XVt9O
+         iaWjru6Bc3mOKnD2i6HCD7SQ2MIBKNqnlrzUe0qS+GdpcYnGV6UrbFlkxxlZMO2Zb1DK
+         kPeRb+4I3K7YIQLGXItUUcdXeJQ6e9SlIf+eZKwTmqQ3SMSuzWl3ifOqtJMH1hL36qS3
+         xvNJ7th9MXH08M48nXbZjkPr71VwGK236t+7mqan75+LECc79y7mb/QinxT8UNady9mE
+         Qe2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=IGO3PuvDPm+gsi6Lka7LaUI6qTd54dbBVyczsiILhXU=;
+        fh=xM533bgWVHLdHiS1rR6crHJKCCCsce//J46/dQqCEKo=;
+        b=V4JspyoiJBGIm+ucj4wMHmcMuOe31qn849CAr3YLEFR1osOD9uRxECAN+cAzXHFW08
+         M41wL8gDfUMQge2EvjZqGby8vsc3l9pISMXgGlGDc9SJ68XvZP1BlKvRzWfOpdyPzERB
+         vcRXh0urVQsFPnIaLCqYV0XspqM4XyGqGFrsZgqa1kX5CNoguWnYGIcVXFKWJXGJ0pWl
+         uGMNBSoVVtHbRyuwne3kY6MFGScr8AE8ZOm9u83sR3AF0BLeCZyQ5P0IxHNQsRFrZFrV
+         VL2azt52AueVyoAlGrrtVhAzUb+rjxav4coGZ2hSSOEE7wYzGLE6iJlJ35o+5sQWgf2n
+         amsQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780497567; x=1781102367; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IGO3PuvDPm+gsi6Lka7LaUI6qTd54dbBVyczsiILhXU=;
+        b=mBXv+/2rrQJ/8E65tGladFfucL3ST48yuRmvBJifMeXU/Wenwq19Wee+/Cck8vgDsL
+         1F9Spi439MxhlsO6OTw/VvqIRg7Vz+WDN+smIN8d4ZT2H4A7V46ZmBRvpSmNNvdfGZPA
+         gN13FGFtn2eUZ5elpyXZMjiallTYQ8035c1tKHJwwGM1KHRENkIFKop3uQdRp2f1P4q8
+         6Y9+jVmPMdpMGbdJuckX/f+HHbksBBBGU8CfEN5soyuinEo6qzUSYZXLGLohT9XKOPz1
+         FwZo42XOmctNaM4n0nO+Zq0aDeVdVV71RM0ybl1rwZlt85HrNEXHHwjNMeiYYcUZmT9e
+         6bZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780497567; x=1781102367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IGO3PuvDPm+gsi6Lka7LaUI6qTd54dbBVyczsiILhXU=;
+        b=IqxP+H75tF1Wb8m2MwdKHEo6dn2meMsmKmXuVkiu54XxZjbgaixGI6z7OVGU7Mc2N8
+         vRM+m6z02JZfaC9BC+EX1b8E76P/fUuzF/Df0emH7Gq+FkuQNbS9Cayv8UqHOkvjuXoG
+         vG10p1uLLvcYNC3gtQH0AGJdHSAhsW3jI7zRF1Wp/DiXH1hY9mI61xOpg82EQst+3kLD
+         iMU3Y3vnZnvMEYurtXMJGw7LX6H6oOuwA7h2D99MLLhRPjwQP8tr/yXCafyr26sDJ+tr
+         lmBOt3DMHQ+ALJwACCjgulg6YZp7DQh0OQU8Et9/lBtjJCKz+tV0le0M6qZ04/rcdmiD
+         C+Uw==
+X-Forwarded-Encrypted: i=1; AFNElJ/9B2cIkhM0vHugubVe3TbR7Dfu0zzxzvp4Jg3+h56Q5v/xu+aqrSpir7TV7ccQJgk6nzaCO2MwDPxggqgXenEEMFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbGgGriyMJ1IWSHGryZlfNSeP5GuSfZWip5MCSl+OQZT8jivlu
+	YBpHW7Kj67z0EKYd7q6w7F/8SBmhd4V3euLHaE9df2xeLQwES+Uy4JkGx1sKt9ah/4+49b9AGCO
+	rRgEPGln7Dta9T41Op0UkKzwl1p1bX6o=
+X-Gm-Gg: Acq92OHEp4pVone71hwUkJNv4C/u01vlJes3rxZIC5DPCbpNxhC3IsvRsecCezEaYuk
+	JYaumUH7iTbomZ6hiG7otFBh67GbsSZ2sRU7KZeFNTf+hC9892KQT91+o/zH3dhrqH/Ba1Qeiev
+	nAVgqekGTupLbToW9x1TeE+aVn3Huq1HuaEr9NTkP8j6DwayqY0Q1YsX5RiI+nVhgb8FEmVOXsR
+	iR5WCMPkrHDC435MZ2iHD5ga4m+mjiS16Z0G+GaNfCVtb5SbHx7lqx9XfueK+NdJmEhGnikVYDY
+	5crVjNZ/dAtV1lE3dLXTF9EqiuEDz5y6CI1lW/IODq2V
+X-Received: by 2002:a05:6402:28ce:b0:68d:92cf:52f4 with SMTP id
+ 4fb4d7f45d1cf-68e6f7935a1mr1958834a12.5.1780497567206; Wed, 03 Jun 2026
+ 07:39:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aiA3dzjKVq2_cpSY@shell.ilvokhin.com>
+References: <20260417231203.785172-1-puranjay@kernel.org> <ahgxkIbBLkTJyUVt@localhost.localdomain>
+In-Reply-To: <ahgxkIbBLkTJyUVt@localhost.localdomain>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Wed, 3 Jun 2026 15:39:13 +0100
+X-Gm-Features: AVHnY4I2ofbFOw3-botyHDbqPzrG7jRG5CNyqRLx4va3_j8bkKgXxI12wfISC8Y
+Message-ID: <CANk7y0htB0VZUhXQavAjZJ4+BSZyup8uVnLaFTHbg_ixEge1-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/10] RCU: Enable callbacks to benefit from expedited
+ grace periods
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang@linux.dev>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 03, 2026 at 02:17:27PM +0000, Dmitry Ilvokhin wrote:
+Hi Frederic,
 
-> > Something a little like so, which is completely untested, except to
-> > build kernel/locking/spinlock.o (with clang-23).
-> 
-> Thanks a lot for taking a look, Peter.
-> 
-> I like the static_call idea. It's truly zero cost on x86 (and, as you
-> note, even a byte smaller). The one caveat is that it relies on
-> HAVE_STATIC_CALL_INLINE to stay free. 
-> 
-> So my plan would be: static_call where HAVE_STATIC_CALL_INLINE is
-> available (x86), and a static branch fallback elsewhere, gated behind a
-> default-off config so it imposes nothing on arches/kernels that don't
-> opt in. I'm mostly interested in x86, but would like arm64 to work too,
-> which would use the fallback.
+Thanks a lot for the detailed feedback on all patches, I will send the
+next version soon with requested changes.
 
-(i386 doesn't have STATIC_CALL_INLINE, but nobody cares about the
-performance on that target, so anything goes really ;-)
 
-> 
-> Concretely:
-> 
-> 1. Split the sleepable-lock patches out and send them separately.
->    They're independent of the static call work and look far less
->    controversial.
-> 
-> 2. Convert the paravirt spinlock unlock to a static_call, as the
->    foundation for the unlock tracepoint. I'm happy to take a stab at it.
->    Let me know if you'd rather do it yourself.
+On Thu, May 28, 2026 at 1:14=E2=80=AFPM Frederic Weisbecker <frederic@kerne=
+l.org> wrote:
+>
+> Hi,
+>
+> Le Fri, Apr 17, 2026 at 04:11:48PM -0700, Puranjay Mohan a =C3=A9crit :
+> > RCU callbacks only track normal grace period sequence numbers. This
+> > means callbacks must wait for normal GPs even when expedited GPs have
+> > already elapsed.
+> >
+> > This series tracks both normal and expedited GP sequences in the
+> > callback infrastructure using struct rcu_gp_oldstate, so callbacks
+> > advance when either GP type completes.
+>
+> What is the motivation behind this? When most callbacks don't have much l=
+atency
+> requirements between queue and invocation?
 
-Yeah, I think that patch as-is *should* work, but like said, I haven't
-even tried it, so it could be terribly broken :-)
+Right now there's an asymmetry: synchronize_rcu_expedited() callers
+get fast object freeing, but call_rcu() callers never benefit from
+those same grace periods even though they prove the exact same thing.
+This series closes that gap, the callback infrastructure treats a
+grace period as a grace period regardless of how it was driven. The
+practical effect is faster memory reclaim: objects that could already
+be safely freed stop sitting around waiting for the next normal GP.
+I'll make this motivation clearer in the next version.
 
-> 3. Build the unlock tracepoint on top: static_call where it's cheap,
->    config-gated static_branch fallback where it isn't.
-
-Right, so I think we need some sort of custom callback for tracepoint
-enable/disable. Its been a minute since I dug through the tracepoint
-code, but I don't think it provides that with a convenient wrapper, but
-it should be doable.
-
-One thing to note is that when you set the tracepoint unlock function,
-it should either tail-call into the original function, or you have to
-create two unlock_trace functions, one for native and one for paravirt
-and pick the right one.
-
-> Does this plan sound reasonable to you?
-
-Yeah, should work.
-
-> > Also, I think someone should go do some performance runs with
-> > ARCH_INLINE_SPIN_* set for x86 just like for s390.
-> 
-> That's a good point, I'll run benchmarks and report back with the
-> results.
-
-Thanks!
+Thanks,
+Puranjay
