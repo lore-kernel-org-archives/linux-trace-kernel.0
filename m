@@ -1,162 +1,147 @@
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA53402BB8
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jun 2026 21:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E91138D3EE
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jun 2026 22:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780522028; cv=pass; b=UXbtZoqG5ra/rPwZXBlWLl2PpUwhTTqSSFlV1WwrBLEFU4NIyV5XVLJnpHC+fHbl/RGG+0UBl/uLAl3CuoFBdMdx0HOa9kHEkNMu4YlMorHTx2P81jWGBq7kKRJUCjxbnT27GUByqmcFET9YVUw8FUbVSNK/s6QcZg2HVND6FpM=
+	t=1780526528; cv=pass; b=BCSjxG50LJmNXcE75JlNHtdCb7hc3BSPxbeKNe1glgtrT5OHG3eCcInyw8MBC0PYybde9o4qKuJOu268ORe4HWfX+ANrCyW1vWSMm/I571jcAqhZwhjIB5PkKxFizn+Bu1jaO0Zg/z1EumA1OgGS8NNnNkzD+o9IHQc4XlRKxrg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780522028; c=relaxed/simple;
-	bh=R6WSQnJIsA+v35uGQtkq6O8mYZ7zBggzE/oxP9twkYg=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JqbNbktL+HkfLOFpFEH9HlCi2vrx+zd/uD2ke65X15vrGOjekPNgSS18Cr4/H1zgmvjNXOlmT1cggNu1Slo8LXu44+P5Mwc+hxHLhxmLdLzn93bCWOB62NoZb1a/tgVIL59p0/+K9Ujl5v1uZyzOXZPw+IWVDXovt1N2wc1gUC4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WbpOTiLd; arc=pass smtp.client-ip=74.125.82.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1780526528; c=relaxed/simple;
+	bh=mlfM9AEMvcEfxPBVJ7L7dsmWt64ZgjO4Ruo7lQhMZqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a+xhP0z3sQSAIoBlUiEieicf2gFByPzULGPQ839cmltLi4vIXpLr+uILMOsJPaqlaE+EVBDBwIDXOFQCXKReW4FpO1DqIqbSVQusr2Cmnm1DWj/hjhVCTa2Rhqmn1mICWdawNlXMIVfY2DmQX7tXU2PfG4/mS1KV8L/FuapPDiI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mSqZg/he; arc=pass smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WbpOTiLd"
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-137e75bcb5eso6081672c88.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jun 2026 14:27:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780522026; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSqZg/he"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-bec2ddee9bbso8237066b.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jun 2026 15:42:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780526526; cv=none;
         d=google.com; s=arc-20240605;
-        b=XbaZB5Wtcr0nQau/6I9TuPu6mDyBIMNxD1qTUMo3/aqHb7lDUm2zkPcTiWYZgxadym
-         x2kld/rpkoj+va0Ki0l85mRt3tW+EQD7VKsvRdFN7xdTnpzgN0bbqJ1yzrdw0ItbWK/Q
-         //LakP6BRNszcjRBWGWM3bvz+4xve2gJmfcfoPFofQo/Pfb86mWXNKjZM5fFZXz3dMIM
-         +ijKytHebpEAJzomLWidsWx7tI+YM9yReGrVkImYpxT8LND/AL9UpvFeQwsWTfa9xIUd
-         /00jVzlUSJa5ATrvdaUl1S2Ju+Cm8gR3siZmGPPuQGupWnmH712IznNlf4wPqQ4S+G2N
-         0qjg==
+        b=GMuzUp+sHpuVZOtKHOuUMuDMnHUa5dd3dByYqkCR1jBMgTtphbKOENpf1chmwq+O1m
+         Li/yX7wBiQX25hvSW9/NxjNjQE7fPhOhBZ+Gds/6o+3M1uIdyR2zh73ahKOoiYmM9MIM
+         SZXRae/JxPkLDequpzKkFuGDP/sGeli15kMZVAeDZdjm+OlC6xOLxdEbsDEJOs5LJnnQ
+         XkZxVwVmPNjx5Kn9YsMmWJat2zBYKNfPJQsFnASbCgiqzskxjEuBdylFakmzBa10Zgc6
+         aQdAPIu9VNLxw1f7oXphwEhEVDX/WSs0IILgtK0xBcokv+JEuFAT+U1o5Rz8PHM25Jyp
+         lRcA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=kXmCClVJ6sffKdNaL7Yv6BlzVuWsmG/JEBjIeBbKKjE=;
-        fh=pVNcC1Jo1KSE3p+LKk6Br5lzXA2PBgcLrB6Z0MhI9lc=;
-        b=JLTLBAVi4zspENFXG5iunfdOqHDboPQOTrtza+t33RaDhbm1VW70B3MySp/TBEkbXj
-         2u70KKtKwUZpTa3VnBcjtLWURgVAoYSu/BYL+xrFOelkg1E44emWpMOWJ0iCU8JiC0u+
-         13yASEO6HE+2xUjJ+A91ppEFGkf8i6GCHaY1taOUswrdMgshbCVs5vzyLo6TIBtHXv5F
-         ZNgiRAcMldCQekUeVEVhdxQWv+sX6s6SQV/xZV5Ds9Jq3Txv35oL2Tz82eT+XyYKP7Be
-         I0yXVukXoZnyEbeuJwV1V0xknrPjd9FbLTrmPyiQe3TdqOFNMa1OdmF1peQqTmk+R2cC
-         0m9A==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=pwVbCGWyVitlFmHdRUWGc0ezDR+78ZvpePoMrndDp5k=;
+        fh=85olQeE/3ILWH7k3i49jkiv8Nz7oFW9Q+XH1c4T9dCQ=;
+        b=OE5GarREQEQc56ha/+B6D3FDO8udJrOudIEfySfXbMCDrZKIEb19OmnHQ/deLpNQMT
+         +ACuyx4Ec+Q9UEZ6S9tIVPUgaJz9KjQHBhWmI3639CCwkff9z9874zok+JPP91995xRR
+         KZKSLBqg2eFDWcx4yPLURPICEGAlnNVBy2Tlc1vuOIZFLabWXs0LctiUXrXXz30B7cAQ
+         yM32zCvpUigXOmU7GPgVK7c64S9aflD8zmqb0hCBPAGs+8Y59Dfp9PuIoQev6XSJ4TLY
+         RD8HeXEIlUjlnsbN9Vca1Q0z/VQ9PbcW5+feiK+9My33gBzQJGrvTaIgDzmNhC5MgtN+
+         FI7w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780522026; x=1781126826; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kXmCClVJ6sffKdNaL7Yv6BlzVuWsmG/JEBjIeBbKKjE=;
-        b=WbpOTiLdHBvzmwiTpMPVgbnII3vNyO3SNsoPLH6VIEBacZOPD4FZRi9ouBmHzGfdyz
-         qQr4UPLmfVX0Mna1x41GMFNRiJ8Tp5lxjh0qK2tOVIkO1Qx2eu5e61n9gM0VwSqQRiXz
-         inzjmgz0zLFYc43ghOoSHDJoDaSuI0qkD/ZgDe543j47DoVn3kqcDvcT2bIpL4xc8VDq
-         CEB7XicOiRBqR7dVAPk+kgjQJYxCxZ93tk/Ljic4NKSKnTRB+EEYoFl6psuEc5NDjHnC
-         B6iSDmEgjThK1D/INgd02VnCj/BaRFqwLruf0W6rr6YaUbM/nHavujSCNm9JhcxARVqE
-         AYlg==
+        d=gmail.com; s=20251104; t=1780526526; x=1781131326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pwVbCGWyVitlFmHdRUWGc0ezDR+78ZvpePoMrndDp5k=;
+        b=mSqZg/heWp6aSiHv5nyKPeWQr8YV7o07T3FdO5ah8eWu6Zctjt99Z9o3TNszwXjHdM
+         ysIbW0c9RISSVBiYSoE9/r8K3SH6erB3Rw4GbHnMkescY0FtwoyBaji9FOzouDLMgal7
+         4rLg8INWFvkFvNpbr0Q8S9GsCn0Za5Dcrlme/RtPHx4uhhwccc1XL52X4tBKoTeNugOv
+         RxgBxxUmgGTdAx+dGoIar92t+lJ+Ag2hdkwQ9UzWJghRlvdL+R6d81Ha5BFcsR3mx2wz
+         R8Wk5a/EJdokO3ocITh0vTFbtn/fOZtzdcQ1RE3jFRzvnBUZz23pMC9vQppi/zDQai7g
+         bDEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780522026; x=1781126826;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kXmCClVJ6sffKdNaL7Yv6BlzVuWsmG/JEBjIeBbKKjE=;
-        b=lexSFx8QdqTW0Ou3AJOZzlS2DtzXDxoO+n+OeUBelN/2gNqVW1b7SboWyxAYLneDlz
-         ZFMFi7KCDmn67o4jL4BDXEvNOhPVPaHW4Jo59+Y2YUFOuFT+IPKqK+wlOrgdhbjY+fQt
-         uwZ1IWiv3YJWc++4q4bn5+a73nwWcOD0hgKDWpUe5w4eYSqzy0O8Um9AxEQ+Bn/UVZwd
-         8y3i8bHxutTCJ1AOUUSm+Iw/xT8IzXWpIpuFEDX3pcVjn17u8OpeUUCxREyQxjgVc3Dr
-         W0MAFpayDP4Obulvdpq5IJ8fY0TG/NBijIxtEMalPyKzvWWcNs3uZVEEoRd676YpI+t7
-         ysqA==
-X-Forwarded-Encrypted: i=1; AFNElJ8bVufX5+ngUWa/K8ffgVvnaTU161Z+D/0ICXVCr9c99SN2NTkZ1Jelfv88yZ2GHEtNZxsYxOXEu0kLU6zFueomkAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOPvJbpm9/J8T6EWEjZ4iXrEmKQRcbu7pgTEYoReiUZOWYSjA+
-	4CxQ2EpVo/cdeNKREcVoi+wt+YjxN+JYcUDno0Jfs7VF/Gv/w3ZcdcT2kY+f/i+ykY2cDUuE3ri
-	LajpwCgNE/wt3doKRMyJ6699nMDwdE22HYpYV9W5j
-X-Gm-Gg: Acq92OHwyIP8CYgUDBUjRBj1swIWu6g4Pv5QawilM8fw47LkaONiQ9/9eJM4c45CXts
-	mcpIaimQnbaX7cz+ZBFBMxA3xe6sNGgTPwphrC9Qxvc9HmCSW+EBwBbwKTF2Dsz6JO6jzBU0UUv
-	MaSjpEW74HXHrRetrPp5co74qPFs5hpzyAbvqkrI4WO8A7p3cCFH+i16hQM8s0DS6NP4P6M2HLi
-	bn99xx+CV+3aHruGNvZZDVxuM34cTqGqN1HPF+OhVjUn5rB6sXR92saRvM9NZ8PJFkthjz+dAtu
-	pq2BsMUI20zEsInm8vWUqcpWRsQSkkNi7itdC5Hii4qm9Di3wmEyDZyWXMZKeF/wGNbHvtTummR
-	arVU2yf+4ODCCf5U=
-X-Received: by 2002:a05:7022:1285:b0:130:9b78:b17b with SMTP id
- a92af1059eb24-137f6befdaamr2412541c88.38.1780522025275; Wed, 03 Jun 2026
- 14:27:05 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jun 2026 14:27:04 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jun 2026 14:27:04 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
+        d=1e100.net; s=20251104; t=1780526526; x=1781131326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pwVbCGWyVitlFmHdRUWGc0ezDR+78ZvpePoMrndDp5k=;
+        b=Ks2rzdSdhzDN9hDCE5NX8q5P2dFL/RYlR3BB7oEdHIxBUziKU0LiV9JenkaANZxrLL
+         CimnorBVXXSykHm85yp9YZ7nTRaVG/CVkk0qD7hB39DorlFzqrcO/92XCpsXVgclheic
+         CI8u/7uHLoql8x/U0nb3hLim6pXmWxr1ZQpASzytTrOhvDQY1uY08rzzcU8XzUuJQGFd
+         D4kT7+GoKdB3ArCGGr8e9qkllegYuuMqgI0xgr+Om38dBPzr0JtRa21v5ZaHy0Js4c8U
+         P4Bv4VtFezQwgDyLAPts6XmtghM6dRcIxjYwDVkd9DYGmWClD4zynqw9lJzRktogtHA5
+         BfIw==
+X-Forwarded-Encrypted: i=1; AFNElJ9z54Jo+uj6cotqx4dzrZaZjsw6S+c9dXKxpEh1IBE7h/30VdiqrleKtrdT1viqul5DeZWFsuD2EBb34jyLwinMXsA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm4HSO1FZQcOJXBQabwwj2JdqnnlUKFD2vRrTDWmzJZb4vZeb0
+	gYtjWgRuaW/KpL1KzCrat+WotyQszp7tX0w72TI2BUL3Dt259ZBAIPTBzLYvExoXLvZzHQwiRU3
+	eXQYVOOSQPmQC9fLEUmnGtuaPyY44YhZRNuX1
+X-Gm-Gg: Acq92OFj77wmWkmfwYS3+jc6yIWqzxb0eWyyHP+WSP1TRp49G+pDsscHAuVeolvH3Ed
+	QSjOmnfMsmHuvNT7JTM+SXtEhok/F+i7CYUxGEJNs7a1mpzqVQo1TcrqQcCwB02xEqBCIuipL+Q
+	EucX3OzD/XfnqJ6B47UuL+6/jtU9x2WoDhQdaXBmAwelLCO7mfv9psgsjta27ATREaBplgE/ppD
+	Zc8AOtvA9BH91iW8xnHWsj2xr4weYKLSJ29TPj2UVN0Su+ZWODnKttawNw2BSzjNkJ85t5fcI4z
+	zfHu/4yOzTTYbY61zHR31mYVEIlp
+X-Received: by 2002:a17:906:30d4:b0:bf1:6366:f8c4 with SMTP id
+ a640c23a62f3a-bf1637645abmr130076766b.15.1780526525532; Wed, 03 Jun 2026
+ 15:42:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 3 Jun 2026 14:27:04 -0700
-X-Gm-Features: AVHnY4LsErH-4tZ18bsf2DQ3mNo93pDC9YYwJb_gB-LjwgbEb6k0MtNG-ciXWJs
-Message-ID: <CAEvNRgGpaggjd3=ooyzv7iEbmA-x1mWJHgjLSjPi8=5CPrk-yQ@mail.gmail.com>
-Subject: Re: [PATCH v7 00/42] guest_memfd: In-place conversion support
-To: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>, aik@amd.com, 
-	andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	chao.p.peng@linux.intel.com, david@kernel.org, ira.weiny@intel.com, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
+References: <20260518-generic_tracepoint-v2-0-b755a5cf67bb@meta.com>
+ <20260518-generic_tracepoint-v2-2-b755a5cf67bb@meta.com> <eed59d12-969f-4135-a84b-4965743692cd@gmail.com>
+ <20260526215741.1e5b3e42@fedora>
+In-Reply-To: <20260526215741.1e5b3e42@fedora>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 3 Jun 2026 15:41:50 -0700
+X-Gm-Features: AVHnY4JO84lm1Jm4LRIslikLFJmoC8aT5bml0xtrkTJBA4XifWgRoPCj9tn2DeY
+Message-ID: <CAEf4BzY5MTGJyys369qDS3b63-tKq3okCpFMqUdfzy0dXk7vLg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 2/3] tracing: Expose tracepoint BTF ids via tracefs
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>, bpf@vger.kernel.org, 
+	Mykyta Yatsenko <yatsenko@meta.com>, linux-trace-kernel@vger.kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-writes:
-
-> This is v7 of guest_memfd in-place conversion support.
+On Tue, May 26, 2026 at 6:57=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
+> On Tue, 26 May 2026 11:07:56 +0100
+> Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
+>
+> > Hi Steven,
+> >
+> > Gentle ping on this patch from the series.
+> >
+> > Since this part touches tracing, I=E2=80=99d appreciate your thoughts o=
+n the
+> > tracing changes whenever you have a chance.
+> >
+>
+> Hi,
+>
+> I've been looking at this and was wondering if there are ways to not
+> extend the trace_event_class structure. It's added for most trace
+> events (actually each DECLARE_EVENT_CLASS). Although when things like
+> BTF is enabled, this is a very small amount of extra memory.
+>
+> I haven't been ignoring this. I've just been thinking about other
+> approaches, but haven't come up with anything. Of course, I haven't
+> been spending that much time on it, as I've been focused on other
+> things.
 
-Here's the outstanding items after going over everyone's comments
-including Sashiko's:
+Just in theory, what alternative would there be besides having one
+extra pointer in trace_event_class struct? Some sort of lookup by name
+or something? E.g., if we know "call" part at runtime for any given
+tracepoint for
 
-+ KVM: TDX: Make source page optional for KVM_TDX_INIT_MEM_REGION
-    + Need to move page clearing into __kvm_gmem_get_pfn to resolve
-      leak where populate can put initialized kernel memory into TDX
-      guest
-    + See suggested fix at [1]
-+ KVM: guest_memfd: Only prepare folios for private pages,
-    + s/non-CoCo/CoCo in commit message "INIT_SHARED is about to be
-      supported for non-CoCo VMs in a later patch in this series
-    + Use Suggested-by: Michael Roth <michael.roth@amd.com>
-+ KVM: selftests: Test that shared/private status is consistent across
-  processes
-    + Improve test reliability using pthread_mutex
-    + I have a fixup patch offline.
-	
-I would like feedback on these:
-	
-+ KVM: selftests: Test conversion with elevated page refcount
-    + Askar pointed out that soon vmsplice may not pin pages. Should I
-      pin pages through CONFIG_GUP_TEST like in [2]? I prefer not to
-      take a dependency on CONFIG_GUP_TEST.
-+ KVM: selftests: Add script to exercise private_mem_conversions_test
-    + Would like to know what people think of a wrapper script before
-      I address Sashiko's comments.
+.btf_ids                =3D __bpf_trace_btf_ids_##call,
 
-[1] https://lore.kernel.org/all/CAEvNRgEVC=fFuKVgZYvWyZD7t_zvUZihFG8hrACjvtkD5cwugw@mail.gmail.com/
-[2] https://lore.kernel.org/all/baa8838f623102931e755cf34c86314b305af49c.1747264138.git.ackerleytng@google.com/
+we can probably lookup symbol from kallsyms and fetch BTF IDs that way
+without extending the struct?
+
+FWIW, this type info for tracepoints (classic and raw both) are very
+useful, because right now one needs to do a bunch of work (subject to
+break due to kernel type/name changes, etc) to find this, and for
+various generic tracing tooling this type information is actually a
+necessity to be useful.
+
+That's just to say that it would be great to have this in some form of
+shape, so please help getting this into acceptable form, thanks!
 
 >
-> [...snip...]
->
+> -- Steve
