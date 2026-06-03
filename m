@@ -1,101 +1,146 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from mail-106112.protonmail.ch (mail-106112.protonmail.ch [79.135.106.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0125939B4BB;
-	Wed,  3 Jun 2026 07:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A545396B76;
+	Wed,  3 Jun 2026 07:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780470896; cv=none; b=IBeXSs6xJG59AOmqDrJODvfoF8+kfUEx979phQw1JrjKOTxfha8quamC7tflG6hnKw7G5a3iN1U1QMl1qDTe0IYxYMEOnNYhvC5oE+7hyr9A2+OJ8ijKE0UEvvoOoGNiiSiGh+uVJIlrnDVpaWGoiKuZlEng0V+2Ojx9s5mkLds=
+	t=1780470937; cv=none; b=mc2Y0uJvbPZQ5eaDT8gBfBiE9rLMWcXjUdQaLJ8EAfHxefLpwxqwzKdP0eONCfuMQSiULpOgNnk8MfY80uZshH42nni2hmSdhrtoTpI6RoXd2oTafH67ibFuvf+XV8l/jrciJyXwx9zG2C16To8ADLmcVqSWeP61Px1IXW61Btk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780470896; c=relaxed/simple;
-	bh=rDxOehn6sudiAxRrHRT66Kpef5+QJrVaK09yRPwMOOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jGpxF5YyVAMIYOIktPXj4SsNp9uEQsWF9MHnB1wjMgM6+YzXDRVoF4JxCSKa95KoCRC4kqthhzn+Sjim3kaGvzgexrUfGVjcKAod19N6pNsOlJGL2HWM+SyI5hMirPqJmV2AB9paWi3BEM2qWk4n9PdliKkyksDk1g/cB9N6qmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gl6upFNn; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1780470937; c=relaxed/simple;
+	bh=M1qhC0UFXz8MVPH15I4zPG/B8TW75biCWf4twzWwS/M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QJ7ozG3LY1gdTWhF/fmvgY8R74XNgmwVKW9syqVwnLzMItWPx6TrbmPLk7RG1TWf38axBs8VGhh+n9EtlnxgKZt2jyIo3cMyiF4tNkkQnY1pZ+KaG6UuSYwaIXCVNRaADmU9EYLMsVZb34Y1wks8A0XHkuiFq0PP9dTL9nt/XPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (2048-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=PQbU687e; arc=none smtp.client-ip=79.135.106.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rasmusvillemoes.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gl6upFNn"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1780470884; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=S3SFKFoWcboEPyPNGOUmpMlqfzFH7srYWpl0FUhqNPI=;
-	b=gl6upFNnzDhHgvU+qiSg9Y/QA3GA1MuqGKfxArPk75YFM4ejp3tz97Nv9GY9erqV8pK/6XqCI6tCPEw7XwqncUpINiDz52JKcyE7ojWOLYeh6EVbNH7Z2otNhFCdFhLDMZsEno22oyOEwF7OB3wRM4SJ14Rz0NqsFViDdTNexQU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=31;SR=0;TI=SMTPD_---0X46a5-T_1780470878;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X46a5-T_1780470878 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Jun 2026 15:14:42 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: wanghan@linux.alibaba.com
-Cc: acme@kernel.org,
-	alex@ghiti.fr,
-	andybnac@gmail.com,
-	aou@eecs.berkeley.edu,
-	bjorn@rivosinc.com,
-	catalin.marinas@arm.com,
-	conor.dooley@microchip.com,
-	cp0613@linux.alibaba.com,
-	debug@rivosinc.com,
-	jikos@kernel.org,
-	joe.lawrence@redhat.com,
-	jpoimboe@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	mark.rutland@arm.com,
-	mbenes@suse.cz,
-	mhiramat@kernel.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	palmer@dabbelt.com,
-	peterz@infradead.org,
-	pjw@kernel.org,
-	pmladek@suse.com,
-	puranjay@kernel.org,
-	rostedt@goodmis.org,
-	shuah@kernel.org
-Subject: Re: [PATCH 1/8] scripts/sorttable: Handle RISC-V patchable ftrace entries
-Date: Wed,  3 Jun 2026 15:14:29 +0800
-Message-ID: <20260603071430.59794-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260527123530.2593918-2-wanghan@linux.alibaba.com>
-References: <20260527123530.2593918-2-wanghan@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="PQbU687e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rasmusvillemoes.dk;
+	s=protonmail; t=1780470921; x=1780730121;
+	bh=LmZEeSZAd+OZ1Gn48j9QvYPymSsKNATaHgUOGJMb/zs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=PQbU687emmJLIgwcPqMgFazSSKX0n0cdzFemS41SLCaXBkfiNvkSXGFWGo/n0UiqD
+	 oc3+1sUKRdBrTkJ0u6DrQtBYqE/67eBNluaDN9SbjNwZL6mJQtY7CIFAVv2Oq+/ZIt
+	 jvFfcGMHkPqudRC0yuZqRg6nksQi7sGyEP6TbUdYj1lg/9M4/oRdbj4wYXflpAwtlG
+	 zYVA7vUcVJ5Z6/+X5XKinW8nlbv948aAcHGuMzDAUQ+ns8HvapWodahfQOKD/6n9oV
+	 AhDAIn+6TmVBlnnICNTlwVoFnIvCwOVO65mMr+Sc5eZBYOU1Nzibau0b5NDda6Au50
+	 sZ/qvAPNDmkFA==
+X-Pm-Submission-Id: 4gVf9D52zyz2SccQ
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,  "Arnd Bergmann"
+ <arnd@kernel.org>,  "Steven Rostedt" <rostedt@goodmis.org>,  "Masami
+ Hiramatsu" <mhiramat@kernel.org>,  "Andrew Morton"
+ <akpm@linux-foundation.org>,  "Petr Mladek" <pmladek@suse.com>,  "Nathan
+ Chancellor" <nathan@kernel.org>,  "Dennis Dalessandro"
+ <dennis.dalessandro@cornelisnetworks.com>,  "Jason Gunthorpe"
+ <jgg@ziepe.ca>,  "Leon Romanovsky" <leon@kernel.org>,  "Arend van Spriel"
+ <arend.vanspriel@broadcom.com>,  "Miri Korenblit"
+ <miriam.rachel.korenblit@intel.com>,  "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>,  "Sergey Senozhatsky"
+ <senozhatsky@chromium.org>,  "Nick Desaulniers"
+ <nick.desaulniers+lkml@gmail.com>,  "Bill Wendling" <morbo@google.com>,
+  "Justin Stitt" <justinstitt@google.com>,  "Vlastimil Babka (SUSE)"
+ <vbabka@kernel.org>,  <linux-rdma@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-wireless@vger.kernel.org>,
+  <brcm80211@lists.linux.dev>,  <brcm80211-dev-list.pdl@broadcom.com>,
+  <linux-trace-kernel@vger.kernel.org>,  <llvm@lists.linux.dev>
+Subject: Re: [PATCH 1/2] tracing: work around -Wmissing-format-attribute
+ warning
+In-Reply-To: <35c1ba62-e74d-4abc-aa73-ccd35968ff89@app.fastmail.com> (Arnd
+	Bergmann's message of "Tue, 02 Jun 2026 22:32:04 +0200")
+References: <20260602150904.2258624-1-arnd@kernel.org>
+	<ah8n-Nk305S5hRwN@ashevche-desk.local>
+	<WPQQfPHOiGJbSxrXRdFDy9jURhS7JMpNu9sD54Vfe5wB-JOjyGY6xPQyACz3MSGg0xGp79eOYCyZ2Hi2CsPeUg==@protonmail.internalid>
+	<35c1ba62-e74d-4abc-aa73-ccd35968ff89@app.fastmail.com>
+Date: Wed, 03 Jun 2026 09:15:11 +0200
+Message-ID: <875x40hz7k.fsf@prevas.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, 27 May 2026 20:35:23 +0800, wanghan@linux.alibaba.com wrote:
+On Tue, Jun 02 2026, "Arnd Bergmann" <arnd@arndb.de> wrote:
 
-> On an affected RISC-V QEMU boot with both CONFIG_FTRACE_SORT_STARTUP_TEST
-> and CONFIG_FTRACE_STARTUP_TEST enabled, the sort check still passes
-> while ftrace reports zero usable entries and the early selftests fail:
-> 
->   [    0.000000] ftrace section at ffffffff8101da98 sorted properly
->   [    0.000000] ftrace: allocating 0 entries in 128 pages
->   [    0.054999] Testing tracer function: .. no entries found ..FAILED!
->   [    0.172407] tracer: function failed selftest, disabling
->   [    0.178186] Failed to init function_graph tracer, init returned -19
-> 
-> Handle RISC-V like arm64 for the function-range check and allow
-> patchable entries up to 8 bytes before the function address.
-> 
-> With this fix, a RISC-V QEMU smoke boot with ftrace startup tests shows
-> the vmlinux ftrace table is populated and dynamic ftrace still works:
-> 
->   [    0.000000] ftrace: allocating 46749 entries in 184 pages
->   [    0.051115] Testing tracer function: PASSED
->   [    1.283782] Testing dynamic ftrace: PASSED
->   [    6.275456] Testing tracer function_graph: PASSED
-> 
-> Fixes: 0ca1724b56af ("riscv: ftrace: select HAVE_BUILDTIME_MCOUNT_SORT")
+> On Tue, Jun 2, 2026, at 20:59, Andy Shevchenko wrote:
+>> On Tue, Jun 02, 2026 at 05:07:05PM +0200, Arnd Bergmann wrote:
+>>>
+>>> A number of tracing headers turn off -Wsuggest-attribute=format for
+>>> gcc, but they don't turn it off for clang, so the same warning still
+>>> happens on new versions of clang that support the format attribute.
+>>>
+>>> To avoid duplicating the same thing in each tracing header, as well
+>>> as changing all of them to also turn it off for clang, add a new
+>>> __vsnprintf() helper that is not annotated this way in linux/sprintf.h
+>>> but is defined to work the same way as the regular vsprintf.
+>>
+>> vsprintf()
+>
+> Fixed now
+>
+>> Why the __printf() annotation is in the C file and not here?
+>> Is this all about headers as the second paragraph in the commit message
+>> explains?
+>> I would add a comment to explain it here, otherwise we might see false
+>> patches to "make things consistent" in a wrong way.
+>
+> I've tried to come up with a kerneldoc comment now, similar to
+> the one for the vsnprintf() function, and added a separate prototype
+> in the header. Does this address your concern?
+>
+>       Arnd
+>
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 3caf0796f54d..7c696aea2ed3 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2975,7 +2975,23 @@ int vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
+>  }
+>  EXPORT_SYMBOL(vsnprintf);
+>
+> -int __printf(3, 0) __vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
+> +/**
+> + * __vsnprintf - vsnprintf() wrapper without __printf() attribute
+> + * @buf: The buffer to place the result into
+> + * @size: The size of the buffer, including the trailing null space
+> + * @fmt_str: The format string to use
+> + * @args: Arguments for the format string
+> + *
+> + * This has the exact same behavior as vsnprintf() but can be used in call
+> + * sites that are missing a __printf() annotation, e.g. because they
+> + * get a 'va_format' argument instead of format and varargs.
+> + *
+> + * For this to work, the attribute is added to the declaration here but
+> + * not in the header.
+> + */
+> +int __printf(3, 0) __vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args);
+> +
+> +int __vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args)
+>  {
+>  	return vsnprintf(buf, size, fmt_str, args);
+>  }
 
-Oops, sorry for missing that. Thanks for the quick fix!
+May I suggest a different approach, that avoids having that extra
+function emitted (which presumably compiles to a single jump
+instruction, but still, with retpoline and CFI and all that it all adds
+up): Keep the declaration of __vsnprintf() in the header without the
+__print() attribute, but then do
 
-Reviewed-by: Chen Pei <cp0613@linux.alibaba.com>
+int __vsnprintf(char *buf, size_t size, const char *fmt_str, va_list args) 
+   __alias(vsnprintf);
+
+in vsprintf.c. Aside from reusing the same entry point, I could well
+imagine a compiler some day complaining about seeing the printf
+attribute applied in a local extra declaration but not having it in the
+header file.
+
+Presumably it will need its own EXPORT_SYMBOL if any of the intended
+users are modular, and it certainly still needs a comment.
+
+Rasmus
