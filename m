@@ -1,153 +1,325 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FAF314A73
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jun 2026 06:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780468701; cv=pass; b=OviyWJacig/GqEYP8zFkyCmrMt6NWnVVpvnBpYYLK9W+m0riXLT9T8L3uJ6h7An4mdYF1at5EUhUlVxhsBqvhwQVjHc1rbjPxt3GbymyqDA+m9q/djV3mOBTj53vlXPv6RjjAQ0cBDPnXr5GrKItxvRtHSm0Bbk5Hn2BbaVIP+E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780468701; c=relaxed/simple;
-	bh=/OPUnB/LfrvfW8WOhD5J2WTH80ZgHarh6yN9o5WzBmM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nB3vVUtXm1PzBAq4k7blrNMA8Q/UvBHf4oM0/rBExvwRyvHCqKXXRj5c8KXDoWZT2cszZmUOn47bF3j5Bxj7BEZNGT1Jqy89bUjRDHMA3Nrx0ji38LwnfaHRvbSk7i8mIQY0fS9ojs9fOQYYQnuINZU3IzBn6yyo8sxezTYPDXE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N6df6bRu; arc=pass smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00628395AFC
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jun 2026 07:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780470136; cv=none; b=cBwgEbPAnfDer7nSHHHtly4fOCnrKDctoqrXJo/SaP0YJrLR4eYvwjnKsFtxN3p6/1NMyLyGm0+bT4l7sxWILohp/vxUjQAlG79RUIfGDaubd78V8jknQS6QY01FvRrc5Fw3oByUiOQgPwRdZYl5kQ+2/jYKuIcm0l43/3/6ctc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780470136; c=relaxed/simple;
+	bh=//hE9Fq13BG8LMkg9LZutEH9KkPSkAh3baK/10eKZNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mfiQrsfVByJ1ydWYNPc6OZqGVod5Bgq3MM47jMAQW+NtA+8tRh8N9dU1K/A/fiVKSkmrav9I+zdUDf6GIQ/YuKCyinpmspHdYcwKC56cVgnvV/z+FvoDtTd5hSYkr45l9UAaIsPr7XsdEk3ekDA9zTNZ5BO/+9r8sD/2yEuPKkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Mw5NUwP+; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N6df6bRu"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-48611d28204so1311150b6e.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jun 2026 23:38:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780468699; cv=none;
-        d=google.com; s=arc-20240605;
-        b=dQdAGblxU5tK0bie9MnYUNwoEdMiVfAWbWcQ9sypEZGCMTihxyjU17GEjO3uT72G6C
-         ivKUSH5YSFGKl7bAd/5a3T7tLAg5q9j7m53jY5f+Vq9D3nAKDd5kDI91Fcr2Qq47lE5p
-         Fhhaj3TR2VJ1nYaZxYGlTyzAOAeoiCrQVXjZngRGZBDTJdbOFceCQtYoACk/H4epq5MB
-         d+NPKYXUPmSCKA+AloSwgS52EBgKJagw1Gpn/kPkCkoSNfVaN8zf8tGq6UMXThm2RusS
-         PAQUP4vKPp4Msmi2qKl3wA362DrI1K/3PBHfksOqr8mF7nfrdiqpyqHk6tywz4kl3Suu
-         LqbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/bxMX6KQ5GY57H9DvNJJrwhgMHMAlHXler4JkrSkM+U=;
-        fh=sUhSgYMdtGUTKEK4ZFZBGsinovpBWzlgJC1j2BMUb3k=;
-        b=H6bUeMDMES574L2ANKD8vUnAnZ4uQEQM6XVYY/8dRumdgRWQ5yS2VBHaXjgNi04GbK
-         KmM4oF8bAD3Pxse6kU+ju5AhjIsDKRohJlC1xcz6a93rNRtIbDWBjQJPxRB7NpNFS2XL
-         ECB09Yc/F7Of1PYA7UDQHGFoUJWr29CJ3kTqPFcMF0g/n2gx2dSlEhUHvGJohgDV7O+l
-         nqv18QrfM3O++qoM3XlaQr2tCrOWAGAsfLanKcBbqfbaIfh2BixufhrpsS5Rp/QEqCDV
-         cXHjpAWmB1a0m5qylB/hK4bWd5zuNNEtCS9UleQ/Tc6kZUQg5D8la6pcfFy/RfJie7bw
-         0O5g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Mw5NUwP+"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-490b4a8e28bso7015745e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jun 2026 00:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780468699; x=1781073499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/bxMX6KQ5GY57H9DvNJJrwhgMHMAlHXler4JkrSkM+U=;
-        b=N6df6bRuqd3kq7h/+aMpORUnfGs86CY8mte1EKTPah9S8WqIYtvw7CuG/KkbXMDAzd
-         S3ejcDCD3xDJ3LElVJkgsxqb+8qMHWc4W3vjHt/fNEzq2VN3ya+gDlwGx0mEBIr1YkML
-         AUjzpN/pwY1i8EmphJ3JCLDuHyB3cuk7LZsFW1ZHwLzeuqGgEhghgssrnDL8HSVzwVGL
-         mStSlhKQPtjqxIUX79lOj33Q4qcTzlDWqt/eHqsb5kgjSLAIaqMA0NuQM2gZMNTYn0C4
-         IMQFVwKCItWySyXRNyYOg/cjcCVZKyftLIN++muiqqAwphE4UXqU6Eg6i8CP8wVs4yKe
-         ermQ==
+        d=gourry.net; s=google; t=1780470133; x=1781074933; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=as8GUoU4kWbY2J9d2zC/fdPvz19fGbLVGasT3ISIBEc=;
+        b=Mw5NUwP+6K0ahyfzMvZj7v96CD4tTTcjO7pnqqR8ocBbheHQ4rGZFqIezhtI3mlEf5
+         XaCHBuCNW7DEhnLSqnRjJsO6JoAPN/0v29kfbN1ucygxqz0/PAZUiWeWaGTRLH1dypkW
+         dZxelOO3HnZoxGCxfVdeplXIzzKwNq2QCzBjFl9Qmc0qWYwzFO6DBbXpTw305AnwVWTg
+         QsxnXhtKWgR0FweGMR2NIvCvjQC/2LYNdJXHP+Ym434YrFKf0LTOrmBnJ5869h/U1nF0
+         CAoXfx0ExvgNLTac0YFJ842Pb65CfZx+9icd5x/s74T6SIv9HmG0jG69x5Jr6pejiWOp
+         5XQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780468699; x=1781073499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/bxMX6KQ5GY57H9DvNJJrwhgMHMAlHXler4JkrSkM+U=;
-        b=OgxOku63Dzd8rI2tGz7hG6d4781r2Cu0iBGcaBvU4/2dRMjtdckNHayT6+dXEC0Nl+
-         RIDCZaEaT2Upre6tsGJE2Mh14VJuFp6skD5hgz2LvjaMBWFoFEYeXiI2evRx9PvWt12F
-         grF3IRNAnZPXhNOKjrLt8OGvk36k5rXzjLgLizMuQ9axsasMcf4AJrky08Fm6yWgJ3wn
-         UFVfT2cck7/flTVJuZrSR7MmUPESG5H1bv8gI0WwJ2d15nuz0jMy7yqmVSR4mHUcL7yu
-         vKwldYqSzToQ5zLI43K7oxF8CO0TqB24WSvsg5ehiTsY0FC7qOfLRJgzU0l+u51DeFtq
-         eohg==
-X-Forwarded-Encrypted: i=1; AFNElJ/bK/zokk43oCZPWY1iWbVnt5XE5ph5Ks+6JAEHLf/VSeYkSqcVwB3xpUFx+JrX4tqM18qrqEIAlhCVk5WBx3VrjyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyyl6Cziut9UNSryBBuvUnRyHXeoXqY5+rJUDu7hyw/+CZSODIM
-	C8DbdI/0UNhJcJP9hDFDB2CE/w3HnCjuyQGu6EKWw/BbTVZrpNDvz9sG/0DaDdPGxN7khiqC6zh
-	7jk3mGbch9UXaXeJ9x120Mynxn6TouAS+DL/yIJGy
-X-Gm-Gg: Acq92OGNwG9uNGF/uDx7uMKTjtyM4m63XLKAENozz4sPzlyoMZawFm+aD7jlFzsJex3
-	zhpkznPv2gtRW4rV55NitINS3WUScHsWyIVdDFlpkd6IhUsSD7b+TK94ExFpsde7xRgN8AxSEdm
-	h1AGPhcj/P/s1if5L7fG1V3C2lZZgXcEDPcxkTJ0gRO3up36JO6ZBYvvp6atLpw6++M5FZ9PFej
-	Tq56vF39u1OgZt9s5Y1HCbiqJu1w1bmCCIYkt/MTLfhYxTWkjvrcyazpOHpyqt4y8pRI/fLaLy4
-	bFD9HsEYoIcqIypIcIzwR+oZYyTBVDLJjWqtNMjY5WCInXu18ZwwnJjMoijUxaxkUFx4dTKyp8O
-	Odw==
-X-Received: by 2002:a05:6808:4482:b0:485:7c5a:63b5 with SMTP id
- 5614622812f47-4865a934c23mr1306785b6e.4.1780468698249; Tue, 02 Jun 2026
- 23:38:18 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1780470133; x=1781074933;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=as8GUoU4kWbY2J9d2zC/fdPvz19fGbLVGasT3ISIBEc=;
+        b=HvMrbYtATtqZNPFhEMWZ7AUrLMV+KNC88Dgm6rjstoS9FrhOAyRXh6jw4u80zaT423
+         GV7/dUcRp/FgJuOzsiJw42pCfxuLaF2LXqwjFZ35n9MlD3s2QvYuXnQ47tZr+sPMmJm5
+         8SYysiMcN+dYcT5xioa6V5zcqP6duCkXgBrG2IsRUQfLfjuzydFN2h7jTvtQvOjXx2Wz
+         xHJ8m6kHGijLVLzOET61zZ3+IQZkptQXD/IrbAP7uTiPD/obOyfzlQrKP+ExzysyUKjg
+         klMuVr0esSKoTHM4+hypAS6aOl+FtCLWvanMZe9Y5QcwHmjNUTpxKDduQdDfFMHbZ2B3
+         ljxg==
+X-Forwarded-Encrypted: i=1; AFNElJ8f+8zUowKij3TqMmmeAd9b2KvHSwT4NALYqhhN8ubMNMv8zMUme4CcsX0ZF5I4Geb5Q/7ieHNuLKEHWc3BZq95fzg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzajhHxWyBfFQdLTl8hEAcpYoJ87CuD46Q/eErWd9qQpaPWrdqO
+	dXyMC4KaxxC4zfL09mGs/KIYS8uIGXNB+s8F5U4EQqDAdYVcVEBwKGqDWKYNHLe8n68=
+X-Gm-Gg: Acq92OEHtJBPGcAyrqg/B42pAPWATHTFS4LN7ktFiSGrDXiABPTGsg3FM3AYLYHxS/u
+	+w7nyPExbdKtT928sPDavK3EBw9qp+eCvFfmC6vQGLJG97UhQ4T9sjmA3lywhB1l1Ew9YaqC2zg
+	VCmLEDTS0H/UA7Q2uQvWOhKwlRIYExQStUzgR9j529pADCl5+bcxW7OpyYutflkgWy+1yMYnewf
+	FNirEOzGYTwuZUfhxM6sqboZ94cAkcoVtQumiYZQIlTZVnf0t7Hi6tVGYo3gO/O6aVql9QPoSvJ
+	w8Pam1gjIe/VqOMMDqutqxcNCJC1B2YF/nsIZlAjCzAZI+tFuqsZvC5/rdmd4axvDIDmYXcblHl
+	cKlRL2qvFKYYp03c7a+PheyRe/2wy8tW654qqGXH9zSt5MjDzKTOuLOJsHwfyjSREknuNHssixz
+	5FuL6oUYKuH0UukgOQIiLJsP+hiI66iAmaSN3OfZj/IvVPhA==
+X-Received: by 2002:a05:600c:83c8:b0:490:47e0:e13f with SMTP id 5b1f17b1804b1-490b5d1cf3emr36644555e9.3.1780470132845;
+        Wed, 03 Jun 2026 00:02:12 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([149.107.71.118])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b7c6b966sm16631885e9.2.2026.06.03.00.02.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2026 00:02:12 -0700 (PDT)
+Date: Wed, 3 Jun 2026 08:02:09 +0100
+From: Gregory Price <gourry@gourry.net>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6a1ede7b.b4221f80.1326c5.0003.GAE@google.com> <20260602122829.4a91864f@gandalf.local.home>
- <20260603103445.236f260a3c5eafe140055761@kernel.org>
-In-Reply-To: <20260603103445.236f260a3c5eafe140055761@kernel.org>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Wed, 3 Jun 2026 08:38:06 +0200
-X-Gm-Features: AVHnY4JLADxEEURPZYM_ZNJnErMtbeh29sHKX-nw5HAQdr-tXn2mFkLB46g3odM
-Message-ID: <CANp29Y55QBfKT=FLpn=trH5Tmxj2P_7H7yhJG_xXCbCdR3Lv_A@mail.gmail.com>
-Subject: Re: [syzbot] [trace?] KASAN: use-after-free Write in ring_buffer_read_page
-To: Masami Hiramatsu <mhiramat@kernel.org>, Alexander Potapenko <glider@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	syzbot <syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ah-0CyZurn5D1ezY@parvat>
 
-On Wed, Jun 3, 2026 at 3:34=E2=80=AFAM 'Masami Hiramatsu' via syzkaller-bug=
-s
-<syzkaller-bugs@googlegroups.com> wrote:
+On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
+> On Tue, Jun 02, 2026 at 09:57:48AM +0100, Gregory Price wrote:
+> > On Tue, Jun 02, 2026 at 12:16:50PM +1000, Balbir Singh wrote:
+> > > 
+> > > I was think we wouldn't need explicit flags and that allocations would
+> > > happen from user space using __GFP_THISNODE to the node or via a nodemask
+> > > based on nodes of interest. Is there a reason to add this flag, a system
+> > > might have more than one source of N_MEMORY_PRIVATE?
+> > > 
+> > 
+> > There's a few things to unpack here.  I discussed this many times on
+> > list and at LSF, but to reiterate.
+> > 
+> > 1) __GFP_THISNODE is insufficient to enforce isolation and otherwise
+> >    not particularly useful.  Additionally, from userland, it's not
+> >    something you can actually set.
+> 
+> I was thinking mbind()/mempolicy() is how we get to it. It already
+> accepts a nodemask.
 >
-> On Tue, 2 Jun 2026 12:28:29 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > On Tue, 02 Jun 2026 06:45:31 -0700
-> > syzbot <syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com> wrote:
-> >
-> > > syzbot found the following issue on:
-> > >
-> > > HEAD commit:    e7ae89a0c97c Linux 7.1-rc5
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D16f06e2e5=
-80000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D58acee1ac=
-5406016
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D2dd9d02f607=
-75ce5c1fb
-> > > compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils f=
-or Debian) 2.44
-> > >
-> > > Unfortunately, I don't have any reproducer for this issue yet.
-> >
-> > Looks like the test was doing something really weird to trigger this.
-> > Without a reproducer, it's pretty much impossible to find out what
-> > happened. Maybe AI could do it?
-> >
->
-> Does the "I don't have any reproducer for this issue yet." means
-> this is not reproducible even if it runs completely same sequence
-> in the console output? If so, might this be a timing related issue?
-> (e.g. read v.s. write-event)
 
-Yes, syzbot normally re-plays the sequence of last programs executed
-on the crashed VM to find a reproducer, and, in many cases, they no
-longer crash the kernel..
+First let me say:  I want to enable mbind access to these nodes.
 
-In the meanwhile, syzbot's AI bug reproduction functionality has found
-a C reproducer for a KASAN crash in the kernel/trace's ring buffer,
-although with a slightly different stack trace:
-https://syzkaller.appspot.com/ai_job?id=3Db2620161-1632-4d4e-9314-114a8a5e7=
-9ef
+But let me caveat:  I think that needs more time to develop, and
+in the meantime, we can enable the /dev/xxx pattern somewhat trivially.
 
-Cc Alexander Potapenko
+First let me address a few things about mbind/mempolicy and how it
+interacts with page_alloc.c, I gave this overview at LSF but I don't
+remember if I posted it in any of my follow ups.
 
+
+1) Fallback lists are filtered by nodemask, the nodemask does not replace
+   the fallback list.
+
+Here is how the page allocator fallback lists and nodemasks interact:
+
+   Fallbacks A:  A B 
+   Fallbacks B:  B A
+   Fallbacks C:  C A B   (Private)
+   Fallbacks D:  D B A   (Private)
+
+Lets say you pass:
+
+   alloc_pages_node(C, ..., nodemask(A,C,D))
+
+So we get
+
+  Fallback(C,A,B) & nodemask(A,C,D) -> iterate(C,A)
+
+If we wanted to change this behavior, realistically we'd be looking for
+a way to add specific nodes to certain fallback lists - rather than
+modify the nodemask interaction in some way.
+
+I think this is out of scope for the first iteration - so supporting
+anything other than mbind() from the start is just pointless.
+
+The only feasible mempolicy you can apply is single-node bind, so
+realistically you can only support mbind.
+
+
+2) full mempolicy support doesn't really make sense
+
+   task mempolicy PROBABLY should never really touch private nodes,
+   while VMA policy certainly can.  Assuming we're able to support
+   multi-private-node masks, none of the non-bind mempolicies even
+   make sense for most private nodes (interleave? weighted interleave?)
+
+   I haven't worked through all the implications of a task policy having
+   a private node attached, but the longer I think about it, the less it
+   makes sense to just support this outright.
+
+
+3) Introducing mbind support is not just a simple nodemask on a VMA,
+   It also implies migration, cgroup/cpuset, and UAPI interactions.
+
+   a) migration:
+      
+      mbind/mempolicy can and will engage migration when it is called
+      with certain flags.  Migration has subtle LRU interactions, but
+      the patch set I have at least allows this to work.
+
+   b) cgroup/cpuset:
+   
+      cpuset.mems rebinding will cause private nodes to be quietly
+      rebound to non-private nodes within a nodemask.
+
+   c) between A and B - we really want MPOL_F_STATIC to be required
+      for mbind to be applied to private node so that it is never
+      forcefully remapped.
+
+      That's a UAPI semantic change specific for private nodes we
+      should really take time to consider.
+
+
+4) File VMA interactions don't entirely make sense with mbind
+
+   In theory you might want:
+
+   fd = open("somefile", ...);
+   mem = mmap(fd, ...);
+   mbind(mem, ..., private_node);
+   for page in mem:
+      mem[page_off] /* fault file into private memory */
+
+   In reality: This does not work the way you want.
+
+   I went digging and we need a few mild extensions to allow
+   migration on mbind to work for pagecache pages, and the fault
+   path does not necessarily respect the vma mempolicy always.
+
+   You also start getting into the question of "what happens when
+   the node is out of memory and you don't have reclaim support?".
+   The OOM implications jump out at you pretty aggressively.
+
+   Moreover other tasks can force the page cache pages to be moved
+   as well.  So the programming model here just kind of sucks.
+
+   Works great for anon memory though :]
+
+For all these reasons, I think the be mbind/mempolicy support with
+private nodes needs to be brought in with follow up work - not
+introduced as part of the baseline set.
+
+> > 
+> >    for node in possible_nodes:
+> >        alloc_pages_node(private_node, __GFP_THISNODE)
+> > 
+> >    In fact it's the opposite semantic of what we want.
+> >    THISNODE says: "Do not fallback back to OTHER nodes".
+> > 
+> 
+> That's why we need to control the fallback nodes carefully for
+> N_MEMORY_PRIVATE
 >
-> Thanks,
+
+My point is that __GFP_THISNODE is not actually useful.
+
+If we go by nodemask, submitting a single-node nodemask is the
+equivalent of an empty fallback list.
+
+If we gate access to a private node by __GFP_THISNODE... this is the
+same as just providing a single-node nodelist (putting aside the OOM
+implications for a moment).
+
+And it doesn't even buy you any new filtering ability against existing
+nodemask iterators that may already utilize __GFP_THISNODE.  i.e.
+
+   for node in online_nodes:
+       alloc_pages_node(node, __GFP_THISNODE, ...)
+       /* Alloc per-node resources */
+
+   This pattern is undesirable, but completely valid.
+
+So overloading/requiring __GFP_THISNODE is just not useful.
+
+I will follow up soon with a new version that limits the private node
+interface to just nodemask and fallback list controls.
+
+I need to test a few more things related to removing normal nodes from
+private node fallbacks before I feel comfortable shipping without
+__GFP_PRIVATE.
+
+> >    The semantic we want is "Do not allow allocations from private
+> >    nodes UNLESS we specifically request" (__GFP_PRIVATE).
+> > 
+> >    __GFP_THISNODE does not actually buy you anything here, AND it's
+> >    worse, in the scenario where a private node makes its way into the
+> >    preferred slot (via possible_nodes or some other nodemask), the
+> >    allocator cannot fall back to a node it can access.
+> > 
+> >    __GFP_THISNODE cannot be overloaded to do anything useful here.
+> 
+> Let me clarify, I meant to say, let's use a nodemask for allocation
+> and __GFP_THISNODE gets us to the node we desire, if that is the only
+> node. My earlier comment might not have been clear.
 >
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+My point was that __GFP_THISNODE is pointless and reduces to providing a
+single node nodemask anyway.
+
+The contention over __GFP_PRIVATE is a bit ideological - do we want:
+
+  1) A hard guarantee that allocations to a private node are controlled
+     (__GFP_PRIVATE implies the caller knows what it's doing)
+
+  or
+
+  2) A soft guarantee (fallback list isolation only), and needing to
+     deal with undesired behavior that's "not technically a bug"
+     associated with existing users of global nodemasks (possible,
+     online, etc).
+
+I am arguing for #1 - the community has argued for #2 and "fixing
+existing nodemask users".  I think we can ship #2 and pivot to #1 if we
+find fixing existing users is infeasible or too much of a maintenance
+burden.
+
+> 
+> Why not use mbind() API's? Do we want to gate allocation/privileges
+> via a /dev?
 >
+
+We want to eventually enable it, but we really need to treat these
+extensions as a separate step from the base so that the UAPI
+implications are given proper scrutiny.
+
+In the short term, /dev/xxx and driver-local/service-local control
+of a node is still very useful.
+
+For example, for my compressed memory work, I have found that if
+implemented as a swap backend - the kernel can manage the node without
+any UAPI implications at all :].
+
+A driver managing memory on a private node could do the same.
+
+~Gregory
