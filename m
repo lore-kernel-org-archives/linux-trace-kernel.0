@@ -1,177 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B752C11FA
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 14:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2D533C1B4;
+	Thu,  4 Jun 2026 15:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780584750; cv=none; b=QL320z7ty5IB1qxZsQeBauj5rCVSEVM60BZSLQmji5QfEV3gWSUYLJPy88wz6sP+KfBngFd7ctaVTy5G4h/OT9JipJAk9z6AHpymqRMK58xi2kInjaXnuopaKCCpYfdmbRUNJuO+n+zJuce19286ZrGQJuRtq5uIX7flv9oaJhs=
+	t=1780586973; cv=none; b=IyUyr7M/098p8/Dkb7MT6Xy6ouoRkpUEXpNFy+DOastyqzrxPUmctU7spjLFvh1YH2b7FKNsqD3yRo7p4/u0+fK9hefWg+hkt9cMuItJsZYG7FsR8sBuSgjHDtroSqIGA3fAF87TrHP09BI1+2Aj0BiDOq69blrLaqcfP7cpWoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780584750; c=relaxed/simple;
-	bh=Q3YPBGx8aOKBsV6U4vbpIbvQ+jVgETYvLJ3/wn4WG+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=dHKLJGLSPwnK1nGwkGcThGnW9ItcyL1Wp8gA1OGFUDi6RJoQfgADyPZxpoQd/NOq3xV1jhVvijF2LywjQtBG4HxsbvzC0fc3P4me3YCOg9dSwVvUBQ0MKsOQOSVNc+YM/ZjJulpF7eR3WH/9MAkQoIJFg+tgg8V4LzkjMe5uFWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K15AEJ7V; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780586973; c=relaxed/simple;
+	bh=bsr5b2gpdP7Z02h1Njek9qwNAkWcpQjmCyE6Te0xtUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QfSfb2QN/TQjIYnCGmvvJlZrz5ktf0A7Qj9zps+ug+UG412h5m6a3h6VT0QzXPBz38Ip4uuiGeQ6JTeeeumhImce9pckXbOXBXMTy7oGb1TN3QlBnTvPf+83mg4MoR/ekZYblhwe8z6s4BS2aCr+BRtFgEiR0yxBvk9y16bZqzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=u5tYSEK0; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K15AEJ7V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780584746;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=k8qWrbrvgaAlZEvDoZXhkJWCNlaRbPfkjarQeTv1+8I=;
-	b=K15AEJ7VjaC60fBrj6+CoWBsWjxEpIH0sIfkmY7oL+BKDF8ctndt/EHyRl6Fm+X9K90Nyp
-	7pahobMkciBJQY/lNocA6Ki+rLNTL//acfafII7aCy+b8roBf+kWkYGMMf+VGej8Q7d9de
-	+hry4Qqn/zTuGU9vPetZ5IThc/xK34A=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-HhnWWVGMMJSv41Ei9OYr4g-1; Thu,
- 04 Jun 2026 10:52:23 -0400
-X-MC-Unique: HhnWWVGMMJSv41Ei9OYr4g-1
-X-Mimecast-MFC-AGG-ID: HhnWWVGMMJSv41Ei9OYr4g_1780584742
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 31458180059B;
-	Thu,  4 Jun 2026 14:52:22 +0000 (UTC)
-Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 87E28195608E;
-	Thu,  4 Jun 2026 14:52:20 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [GIT PULL] rv fixes for v7.1 (resend with changed attribution)
-Date: Thu,  4 Jun 2026 16:50:21 +0200
-Message-ID: <20260604145020.135790-2-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="u5tYSEK0"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5F644993;
+	Thu,  4 Jun 2026 08:29:26 -0700 (PDT)
+Received: from [10.57.95.39] (unknown [10.57.95.39])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA02C3F86F;
+	Thu,  4 Jun 2026 08:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780586971; bh=bsr5b2gpdP7Z02h1Njek9qwNAkWcpQjmCyE6Te0xtUY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u5tYSEK0WD6FzVygVZ2inUsRE7KPNU6aiooHb7WFFytVH7MwdY+o3iH91d3sWJQym
+	 G77ajQTrso6CQR5994wgSjTDCEuz6fiiAdnuNQFgcq6pkYJfcMWf+6whcM46UC6c2z
+	 1s46Od/7JFr/FBCHQRzYdrTjrodXGQYEF9NX3838=
+Message-ID: <9d15479e-e36b-4865-804c-7d93eb339e4e@arm.com>
+Date: Thu, 4 Jun 2026 16:29:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: bq_aXmXaO3CGP9f5FlgzpUoGBYuc09XGna-p0PHgnsg_1780584742
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 20/42] KVM: SEV: Make 'uaddr' parameter optional for
+ KVM_SEV_SNP_LAUNCH_UPDATE
+Content-Language: en-GB
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, ira.weiny@intel.com, jmattson@google.com,
+ jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
+ tabba@google.com, willy@infradead.org, wyihan@google.com,
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Youngjun Park <youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
+ <20260522-gmem-inplace-conversion-v7-20-2f0fae496530@google.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20260522-gmem-inplace-conversion-v7-20-2f0fae496530@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Steve,
+On 23/05/2026 01:18, Ackerley Tng via B4 Relay wrote:
+> From: Michael Roth <michael.roth@amd.com>
+> 
+> For vm_memory_attributes=1, in-place conversion/population is not
+> supported, so the initial contents necessarily must need to come
+> from a separate src address, which is enforced by the current
+> implementation. However, for vm_memory_attributes=0, it is possible for
+> guest memory to be initialized directly from userspace by mmap()'ing the
+> guest_memfd and writing to it while the corresponding GPA ranges are in
+> a 'shared' state before converting them to the 'private' state expected
+> by KVM_SEV_SNP_LAUNCH_UPDATE.
+> 
+> Update the handling/documentation for KVM_SEV_SNP_LAUNCH_UPDATE to allow
+> for 'uaddr' to be set to NULL when vm_memory_attributes=0, which
+> SNP_LAUNCH_UPDATE will then use to determine when it should/shouldn't
+> copy in data from a separate memory location. Continue to enforce
+> non-NULL for the original vm_memory_attributes=1 case.
+> 
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> [Added src_page check in error handling path when the firmware command fails]
+> [Dropped ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES]
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
-The following changes since commit e43ffb69e0438cddd72aaa30898b4dc446f664f8:
 
-  Linux 7.1-rc6 (2026-05-31 15:14:24 -0700)
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv-fixes2-7.1
+> ---
+>   Documentation/virt/kvm/x86/amd-memory-encryption.rst | 15 +++++++++++----
+>   arch/x86/kvm/svm/sev.c                               | 18 +++++++++++++-----
+>   virt/kvm/kvm_main.c                                  |  1 +
+>   3 files changed, 25 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+> index b2395dd4769de..43085f65b2d85 100644
+> --- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+> @@ -503,7 +503,8 @@ secrets.
+>   
+>   It is required that the GPA ranges initialized by this command have had the
+>   KVM_MEMORY_ATTRIBUTE_PRIVATE attribute set in advance. See the documentation
+> -for KVM_SET_MEMORY_ATTRIBUTES for more details on this aspect.
+> +for KVM_SET_MEMORY_ATTRIBUTES/KVM_SET_MEMORY_ATTRIBUTES2 for more details on
+> +this aspect.
+>   
+>   Upon success, this command is not guaranteed to have processed the entire
+>   range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+> @@ -511,9 +512,15 @@ range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+>   remaining range that has yet to be processed. The caller should continue
+>   calling this command until those fields indicate the entire range has been
+>   processed, e.g. ``len`` is 0, ``gfn_start`` is equal to the last GFN in the
+> -range plus 1, and ``uaddr`` is the last byte of the userspace-provided source
+> -buffer address plus 1. In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO,
+> -``uaddr`` will be ignored completely.
+> +range plus 1, and ``uaddr`` (if specified) is the last byte of the
+> +userspace-provided source buffer address plus 1.
+> +
+> +In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO, ``uaddr`` will be
+> +ignored completely. Otherwise, ``uaddr`` is required if
+> +kvm.vm_memory_attributes=1 and optional if kvm.vm_memory_attributes=0, since
+> +in the latter case guest memory can be initialized directly from userspace
+> +prior to converting it to private and passing the GPA range on to this
+> +interface.
 
-for you to fetch changes up to df996599cc69a9b74ff437c67751cf8a61f62e39:
+Just to confirm, so the sev_gmem_prepare doesn't destroy the contents in 
+the process of making it "private" ? i.e., the contents of a SNP shared
+page are preserved while transitioning to "SNP Private" (via RMP
+update).
 
-  verification/rvgen: Fix ltl2k writing True as a literal (2026-06-04 16:44:25 +0200)
+Suzuki
 
-----------------------------------------------------------------
-rv fixes for v7.1
 
-Summary of changes:
 
-- Fix reset ordering on per-task destruction
-
-  Reset the task before dropping the slot instead of after, which was
-  causing out-of-bound memory accesses.
-
-- Fix HA monitor synchronization and cleanup
-
-  Ensure synchronous cleanup for HA monitors by running timer callbacks
-  in RCU read-side critical sections and using synchronize_rcu() during
-  destruction.
-
-- Avoid armed timers after tasks exit
-
-  Add automatic cleanup for per-task HA monitors to prevent timers from
-  firing after task exit.
-
-- Fix memory ordering for DA/HA monitors
-
-  Fix race conditions during monitor start by using release-acquire
-  semantics for the monitoring flag.
-
-- Fix initialization for DA/HA monitors
-
-  Ensure monitors are not initialized relying on potentially corrupted
-  state like the monitoring flag, that is not reset by all monitors type
-  and may have an unknown state in monitors reusing the storage
-  (per-task).
-
-- Fix memory safety in per-task and per-object monitors
-
-  Prevent use-after-free and out-of-bounds access by synchronizing with
-  in-flight tracepoint probes using tracepoint_synchronize_unregister()
-  before freeing monitor storage or releasing task slots.
-
-- Adjust monitors for preemptible tracepoints
-
-  Fix monitors that relied on tracepoints disabling preemption.
-  Explicitly disable task migration when per-CPU monitors handle events
-  to avoid accessing the wrong state and update the opid monitor logic.
-
-- Fix incorrect __user specifier usage
-
-  Remove __user from a non-pointer variable in the extract_params()
-  helper.
-
-- Fix bugs in the rv tool
-
-  Ensure strings are NUL-terminated, fix substring matching in monitor
-  searches, and improve cleanup and exit status handling.
-
-- Fix several bugs in rvgen
-
-  Fix LTL literal stringification, subparsers' options handling, and
-  suffix stripping in dot2k.
-
-----------------------------------------------------------------
-Gabriele Monaco (16):
-      rv: Fix __user specifier usage in extract_params()
-      rv: Reset per-task DA monitors before releasing the slot
-      rv: Prevent in-flight per-task handlers from using invalid slots
-      rv: Ensure all pending probes terminate on per-obj monitor destroy
-      rv: Do not rely on clean monitor when initialising HA
-      rv: Add automatic cleanup handlers for per-task HA monitors
-      rv: Ensure synchronous cleanup for HA monitors
-      rv: Prevent task migration while handling per-CPU events
-      rv: Use 0 to check preemption enabled in opid
-      tools/rv: Ensure monitor name and desc are NUL-terminated
-      tools/rv: Fix substring match bug in monitor name search
-      tools/rv: Fix substring match when listing container monitors
-      tools/rv: Fix cleanup after failed trace setup
-      verification/rvgen: Fix suffix strip in dot2k
-      verification/rvgen: Fix options shared among commands
-      verification/rvgen: Fix ltl2k writing True as a literal
-
-Wen Yang (1):
-      rv: Fix monitor start ordering and memory ordering for monitoring flag
-
- include/rv/da_monitor.h                            | 139 +++++++++++++++++----
- include/rv/ha_monitor.h                            |  91 +++++++++++++-
- include/rv/ltl_monitor.h                           |   1 +
- kernel/trace/rv/monitors/deadline/deadline.h       |   3 +-
- kernel/trace/rv/monitors/nomiss/nomiss.c           |   4 +-
- kernel/trace/rv/monitors/opid/opid.c               |  12 +-
- kernel/trace/rv/monitors/stall/stall.c             |   4 +-
- tools/verification/rv/src/in_kernel.c              |  65 +++++-----
- tools/verification/rvgen/__main__.py               |  10 +-
- tools/verification/rvgen/rvgen/dot2k.py            |   4 +-
- tools/verification/rvgen/rvgen/ltl2ba.py           |   9 +-
- .../rvgen/rvgen/templates/dot2k/main.c             |   4 +-
- 12 files changed, 263 insertions(+), 83 deletions(-)
-
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Wen Yang <wen.yang@linux.dev>
+>   
+>   Parameters (in): struct  kvm_sev_snp_launch_update
+>   
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 1a361f08c7a3d..e1dbc827c2807 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -2343,7 +2343,15 @@ static int sev_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+>   	int level;
+>   	int ret;
+>   
+> -	if (WARN_ON_ONCE(sev_populate_args->type != KVM_SEV_SNP_PAGE_TYPE_ZERO && !src_page))
+> +	/*
+> +	 * For vm_memory_attributes=1, in-place conversion/population is not
+> +	 * supported, so the initial contents necessarily need to come from a
+> +	 * separate src address. For vm_memory_attributes=0, this isn't
+> +	 * necessarily the case, since the pages may have been populated
+> +	 * directly from userspace before calling KVM_SEV_SNP_LAUNCH_UPDATE.
+> +	 */
+> +	if (vm_memory_attributes &&
+> +	    sev_populate_args->type != KVM_SEV_SNP_PAGE_TYPE_ZERO && !src_page)
+>   		return -EINVAL;
+>   
+>   	ret = snp_lookup_rmpentry((u64)pfn, &assigned, &level);
+> @@ -2390,7 +2398,7 @@ static int sev_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+>   	 */
+>   	if (ret && !snp_page_reclaim(kvm, pfn) &&
+>   	    sev_populate_args->type == KVM_SEV_SNP_PAGE_TYPE_CPUID &&
+> -	    sev_populate_args->fw_error == SEV_RET_INVALID_PARAM) {
+> +	    sev_populate_args->fw_error == SEV_RET_INVALID_PARAM && src_page) {
+>   		void *src_vaddr = kmap_local_page(src_page);
+>   		void *dst_vaddr = kmap_local_pfn(pfn);
+>   
+> @@ -2423,8 +2431,8 @@ static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>   	if (copy_from_user(&params, u64_to_user_ptr(argp->data), sizeof(params)))
+>   		return -EFAULT;
+>   
+> -	pr_debug("%s: GFN start 0x%llx length 0x%llx type %d flags %d\n", __func__,
+> -		 params.gfn_start, params.len, params.type, params.flags);
+> +	pr_debug("%s: GFN start 0x%llx length 0x%llx type %d flags %d src %llx\n", __func__,
+> +		 params.gfn_start, params.len, params.type, params.flags, params.uaddr);
+>   
+>   	if (!params.len || !PAGE_ALIGNED(params.len) || params.flags ||
+>   	    (params.type != KVM_SEV_SNP_PAGE_TYPE_NORMAL &&
+> @@ -2481,7 +2489,7 @@ static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>   
+>   	params.gfn_start += count;
+>   	params.len -= count * PAGE_SIZE;
+> -	if (params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO)
+> +	if (src && params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO)
+>   		params.uaddr += count * PAGE_SIZE;
+>   
+>   	if (copy_to_user(u64_to_user_ptr(argp->data), &params, sizeof(params)))
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index ba195bb239aaa..3bf212fd99193 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -105,6 +105,7 @@ module_param(allow_unsafe_mappings, bool, 0444);
+>   #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+>   bool vm_memory_attributes = true;
+>   module_param(vm_memory_attributes, bool, 0444);
+> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(vm_memory_attributes);
+>   #endif
+>   DEFINE_STATIC_CALL_RET0(__kvm_get_memory_attributes, kvm_get_memory_attributes_t);
+>   EXPORT_SYMBOL_FOR_KVM_INTERNAL(STATIC_CALL_KEY(__kvm_get_memory_attributes));
+> 
 
