@@ -1,106 +1,374 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4F847F2D3
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 14:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE8247F2C1;
+	Thu,  4 Jun 2026 14:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780581968; cv=none; b=J2uPkfVOEWCIdSbBHD8yMmm8VNcKsmkiLWFHTFZjBgyWT9AyRYQe37sgD8iLp9fnpoo9qzj9OtCozMPT0mKMyvA7GEbuHsYDZ1ppaaxPmkMgQqNbqs6ejeOXxF7VC6H7fMqzBWTkoK+g6JVVYWSUbry3L83Dp/pCLEF22qYQWgg=
+	t=1780582500; cv=none; b=gTKM8c2Oz0XjZL2QUUvZVuMZKEICb8oa+oUWH5mEkIYcC5PWRF7LGTzbzlV4NeVnPMWl+vFizxE5vmEUvr9V1OLfX4dkQBX0WAvqSnfP+0lbN7Z9lTbZ/xoTXqiAc6ZhPll9U0gtgUrM8qW4Hbff2lIw23998GnvsQ9JTCGKxEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780581968; c=relaxed/simple;
-	bh=Uw9nvY02UpD9KblUh9qxg1lYuQx0XJfOh5p3fL9sDkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=QwkVb8g9y+8eSSPlgc7XPOTLOGxXYyPymJ3txUccbn6XvqmdKBv60bFAwDvCQlDg0xrM0l/FY01Irw23PcUsX9olGrbDUfyj/HdbpvrSbv7d78g8tR6yePY1NIl4S78SebHCTk0WYlfhkaA6GsjAm5FQwHc0AXY1Et0Dg7iLHHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UJnqVsdP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780582500; c=relaxed/simple;
+	bh=lOP6l4Tef/B1TGmRNJIXB67bry7V+pPAEH1W6iZjXQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dAYtFNpMFB55MHg894QxsPmiZcamQ1LRkHgXuEyzf2vC//iuE49qJK3vHnz4qjfpy01cwIyONi2lCESyJRpK+a9sYBZIi8nQ4XMmMLcqte/EM7RY8uAJrOCtVEbe3GEF4hPFJq7s4eOl7Bf3uoHzsdsIt69QZor0g5xrC83KWYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfkfMw8R; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UJnqVsdP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780581964;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gLBeflr380ZNAPXfrIYScBzonk1AK7Sdg9uhhywNY/0=;
-	b=UJnqVsdPpumPow7FEDDQdIJWR/0RTrVkMHOtiwPzl9CIA3yGVzf9LLDBP/tc4G2yG2xPdX
-	p17c5FnmoaRU2fioRXtp+jIn2qbpWUx/PWJS3DOadtEt6yohNrN5sxAcSywOhcu5cGnGdh
-	rnFEm+op+700Cg1pb/gAnFo1Q8o9Qd0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-404-bjyXuGTkOUmeHGwvVY61AQ-1; Thu,
- 04 Jun 2026 10:06:01 -0400
-X-MC-Unique: bjyXuGTkOUmeHGwvVY61AQ-1
-X-Mimecast-MFC-AGG-ID: bjyXuGTkOUmeHGwvVY61AQ_1780581960
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 030761800D92;
-	Thu,  4 Jun 2026 14:06:00 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 962D7180049F;
-	Thu,  4 Jun 2026 14:05:57 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH] rtla/tests: Fix pgrep filter in get_workload_pids.sh
-Date: Thu,  4 Jun 2026 16:05:47 +0200
-Message-ID: <20260604140547.3616495-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfkfMw8R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9551F00893;
+	Thu,  4 Jun 2026 14:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780582499;
+	bh=6TeCSwFcY1TICi/h5cWubzeJu2VOClK7cfXnsPuqg2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RfkfMw8RJYbykieKNqD4yxk+UT80GwdmNIJWlMckRjjROvNZQ73OO8q2Qnipt0mU5
+	 h+kAHecvkhkPphRCrgGEbxd/JIDRPky1zSeh9g2zMcP7GfXJjvODXgPU18/6pZlLUQ
+	 +tSxgTmy9Sz/2BatXKztyCgMq2RBY96FSra9EpTA2z9uwavAtrYFozNdkXZxTTbiAh
+	 eHbPvuk5Tg6BMpLCPzI8WbiHLRHiuc/0RmX3tH9ZNBZmgaDdjPYD0IDyBySrfrxQKP
+	 AxprmnAi1JtLGvVRXlFtpMqwKt9lcNAAld6vQhqih995H7FiSY40Gt6YTU+9H5fkb8
+	 YAwLsayRQfxrQ==
+Date: Thu, 4 Jun 2026 15:14:43 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Nico Pache <npache@redhat.com>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, akpm@linux-foundation.org, 
+	anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
+	corbet@lwn.net, dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, 
+	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
+	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
+	lance.yang@linux.dev, liam@infradead.org, mathieu.desnoyers@efficios.com, 
+	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, 
+	pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org, 
+	richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
+	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com, 
+	thomas.hellstrom@linux.intel.com, tiwai@suse.de, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com, 
+	Usama Arif <usama.arif@linux.dev>, usamaarif642@gmail.com
+Subject: Re: [PATCH mm-unstable v18 11/14] mm/khugepaged: Introduce mTHP
+ collapse support
+Message-ID: <aiGFIrg8_vZZxnPg@lucifer>
+References: <20260522150009.121603-1-npache@redhat.com>
+ <20260522150009.121603-12-npache@redhat.com>
+ <b8380eb3-096a-49f1-9ace-99c1e75888b4@kernel.org>
+ <CAA1CXcBg1su-bk3i_H+TW4-nTgvGSGqRNeC9MpQo7sGeH8ejnA@mail.gmail.com>
+ <d3c2b00c-6810-434a-b837-0707b0a11611@kernel.org>
+ <19639b08-5bf1-4974-9635-c458d512fa38@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: 7WuO3sJGt01iI6ZmrAdW6okWnHiVcjZVe2UJi_8YVFY_1780581960
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19639b08-5bf1-4974-9635-c458d512fa38@redhat.com>
 
-Multiple runtime tests in RTLA rely on the get_workload_pids() shell
-helper function to get the PIDs of both kernel and user workloads.
+On Tue, Jun 02, 2026 at 11:23:35AM -0600, Nico Pache wrote:
+>
+>
+> On 6/1/26 7:15 AM, David Hildenbrand (Arm) wrote:
+> >>>
+> >>> Reading this, it is unclear why exactly do we need the stack.
+> >>
+> >> So I looked into your items below. It seems logical, and I think it
+> >> works the same way; however, your method seems slightly harder to
+> >> understand due to all the edge cases and more error-prone to future
+> >> changes (the stack holds implicit knowledge of the offset/order that
+> >> must now be tracked in the edge cases).
+> >>
+> >> Given the stack is 24 bytes, I'm not sure if the extra complexity is
+> >> worth saving that small amount of memory. Although we would also be
+> >> getting rid of (3?) functions, so both approaches have pros and cons.
+> >
+> > I consider a simple forward loop over the offset ... less complexity compared to
+> > a stack structure :)
+> >
+> >>
+> >> I will implement a patch comparing your solution against mine and send
+> >> it here, then we can decide which approach is better.
+> >
+> > Right, throw it over the fence and I'll see how to improve it further.
+>
+> Ok heres what the diff looks like on top of my V19.
+>
+> you can access the tree here https://gitlab.com/npache/linux/-/commits/mthp-v19?ref_type=heads for easier review.
+>
+> So far I have no problem with this approach it appeared cleaner than i thought. Did some light testing. Gonna throw it more through the ringer tomorrow.
+>
+>
+> From 9496c5d17eba7f6d04820d78c7c6f1592a58888a Mon Sep 17 00:00:00 2001
+> From: Nico Pache <npache@redhat.com>
+> Date: Tue, 2 Jun 2026 10:26:18 -0600
+> Subject: [PATCH] convert from stack to forward loop
+>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  mm/khugepaged.c | 96 ++++++++-----------------------------------------
+>  1 file changed, 15 insertions(+), 81 deletions(-)
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 498eba009751..6de935e76ceb 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -100,28 +100,6 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
+>  static struct kmem_cache *mm_slot_cache __ro_after_init;
+>
+>  #define KHUGEPAGED_MIN_MTHP_ORDER	2
+> -/*
+> - * mthp_collapse() does an iterative DFS over a binary tree, from
+> - * HPAGE_PMD_ORDER down to KHUGEPAGED_MIN_MTHP_ORDER. The max stack
+> - * size needed for a DFS on a binary tree is height + 1, where
+> - * height = HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER.
+> - *
+> - * ilog2 is used in place of HPAGE_PMD_ORDER because some architectures
+> - * (e.g. ppc64le) do not define HPAGE_PMD_ORDER until after build time.
+> - */
+> -#define MTHP_STACK_SIZE	(ilog2(MAX_PTRS_PER_PTE) - KHUGEPAGED_MIN_MTHP_ORDER + 1)
+> -
+> -/*
+> - * Defines a range of PTE entries in a PTE page table which are being
+> - * considered for mTHP collapse.
+> - *
+> - * @offset: the offset of the first PTE entry in a PMD range.
+> - * @order: the order of the PTE entries being considered for collapse.
+> - */
+> -struct mthp_range {
+> -	u16 offset;
+> -	u8 order;
+> -};
+>
+>  struct collapse_control {
+>  	bool is_khugepaged;
+> @@ -137,7 +115,6 @@ struct collapse_control {
+>
+>  	/* Each bit represents a single occupied (!none/zero) page. */
+>  	DECLARE_BITMAP(mthp_present_ptes, MAX_PTRS_PER_PTE);
+> -	struct mthp_range mthp_bitmap_stack[MTHP_STACK_SIZE];
+>  };
+>
+>  /**
+> @@ -1458,50 +1435,14 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
+>  	return result;
+>  }
+>
+> -static void collapse_mthp_stack_push(struct collapse_control *cc, int *stack_size,
+> -				     u16 offset, u8 order)
+> -{
+> -	const int size = *stack_size;
+> -	struct mthp_range *stack = &cc->mthp_bitmap_stack[size];
+> -
+> -	VM_WARN_ON_ONCE(size >= MTHP_STACK_SIZE);
+> -	stack->order = order;
+> -	stack->offset = offset;
+> -	(*stack_size)++;
+> -}
+> -
+> -static struct mthp_range collapse_mthp_stack_pop(struct collapse_control *cc,
+> -						 int *stack_size)
+> -{
+> -	const int size = *stack_size;
+> -
+> -	VM_WARN_ON_ONCE(size <= 0);
+> -	(*stack_size)--;
+> -	return cc->mthp_bitmap_stack[size - 1];
+> -}
+> -
+>  /*
+>   * mthp_collapse() consumes the bitmap that is generated during
+>   * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
+>   *
+>   * Each bit in cc->mthp_present_ptes represents a single occupied (!none/zero)
+> - * page. A stack structure cc->mthp_bitmap_stack is used to check different
+> - * regions of the bitmap for collapse eligibility. The stack maintains a pair
+> - * of variables (offset, order), indicating the number of PTEs from the start
+> - * of the PMD, and the order of the potential collapse candidate respectively.
+> - * We start at the PMD order and check if it is eligible for collapse; if not,
+> - * we add two entries to the stack at a lower order to represent the left and
+> - * right halves of the PTE page table we are examining.
+> - *
+> - *                         offset       mid_offset
+> - *                         |         |
+> - *                         |         |
+> - *                         v         v
+> - *      --------------------------------------
+> - *      |       cc->mthp_present_ptes         |
+> - *      --------------------------------------
+> - *                         <-------><------->
+> - *                          order-1  order-1
+> + * page. We start at the PMD order and check if it is eligible for collapse;
+> + * if not, we check the left and right halves of the PTE page table we are
+> + * examining at a lower order.
 
-On some systems (e.g. Fedora 43), pgrep matches kernel thread names
-including square brackets: "[osnoise/0]"; on other systems (e.g.
-RHEL 9.8), brackets are not included: "osnoise/0".
+Yeah this is not good enough sorry, before there was some kind of explanation of
+the algortihm, just because you can explain the _code_ more simply, that's not
+very useful.
 
-Accept both as valid workload PIDs rather that just the non-bracket form
-to make the tests work on all systems.
+I had to sit down and spend quite a bit of time to figure out how the actual
+output looks so I think that should be explained.
 
-Fixes: a98dad63cda3 ("rtla/tests: Add runtime test for -k and -u options")
-Reported-by: Crystal Wood <crwood@redhat.com>
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
+>   *
+>   * For each of these, we determine how many PTE entries are occupied in the
+>   * range of PTE entries we propose to collapse, then we compare this to a
+> @@ -1517,26 +1458,20 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
+>  {
+>  	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
+>  	enum scan_result last_result = SCAN_FAIL;
+> -	int collapsed = 0, stack_size = 0;
+> +	int collapsed = 0;
+>  	bool alloc_failed = false;
+>  	unsigned long collapse_address;
+> -	struct mthp_range range;
+> -	u16 offset;
+> -	u8 order;
+> +	unsigned int offset = 0;
+> +	unsigned int order = HPAGE_PMD_ORDER;
+>
+> -	collapse_mthp_stack_push(cc, &stack_size, 0, HPAGE_PMD_ORDER);
+>
+> -	while (stack_size) {
+> -		range = collapse_mthp_stack_pop(cc, &stack_size);
+> -		order = range.order;
+> -		offset = range.offset;
+> +	while (offset < HPAGE_PMD_NR) {
+>  		nr_ptes = 1UL << order;
+>
+>  		if (!test_bit(order, &enabled_orders))
+>  			goto next_order;
+>
+>  		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
+> -
+>  		nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
+>  						      offset + nr_ptes);
+>
+> @@ -1553,7 +1488,7 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
+>  				collapsed += nr_ptes;
+>  				fallthrough;
+>  			case SCAN_PTE_MAPPED_HUGEPAGE:
+> -				continue;
+> +				goto next_offset;
+>  			/* Cases where lower orders might still succeed */
+>  			case SCAN_ALLOC_HUGE_PAGE_FAIL:
+>  				alloc_failed = true;
+> @@ -1581,15 +1516,14 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
+>  		}
+>
 
-Note: the file touched by this commit is included by .gitignore, that is
-an error that will be fixed by [1].
+This obviously needs some comments describing what you're doing here. I think
+David said so too.
 
-[1] https://lore.kernel.org/linux-trace-kernel/20260601091835.3118094-1-tglozar@redhat.com/
+>  next_order:
+> -		if ((BIT(order) - 1) & enabled_orders) {
+> -			const u8 next_order = order - 1;
+> -			const u16 mid_offset = offset + (nr_ptes / 2);
+> -
+> -			collapse_mthp_stack_push(cc, &stack_size, mid_offset,
+> -						 next_order);
+> -			collapse_mthp_stack_push(cc, &stack_size, offset,
+> -						 next_order);
+> +		if (order > KHUGEPAGED_MIN_MTHP_ORDER &&
+> +			(BIT(order) - 1) & enabled_orders) {
 
- tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Wait, if I disable an order this changes the way we get mTHP doesn't it?
 
-diff --git a/tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh b/tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh
-index 8aff98cd2c1f..d10a4e3b321d 100644
---- a/tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh
-+++ b/tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh
-@@ -5,7 +5,7 @@ get_workload_pids() {
-     local rtla_pid=$(ps -o ppid= $shell_pid)
- 
-     # kernel threads
--    pgrep -P $(pgrep ^kthreadd$) -f '^(osnoise|timerlat)/[0-9]+$'
-+    pgrep -P $(pgrep ^kthreadd$) -f '^\[?(osnoise|timerlat)/[0-9]+\]?$'
-     # user threads
-     pgrep -P $rtla_pid | grep -v "^$shell_pid$"
- }
--- 
-2.54.0
+Let's say I disable order-4 but retain order-3 and order-2 for offset 0 we get:
 
+9->8->7->6->5->5->6->5->5->7
+
+And we simply can't get order-3 no?
+
+This seems broken doesn't it? Maybe I'm missing something?
+
+
+> +			order = order - 1;
+
+order--?
+
+> +			continue;
+>  		}
+> +next_offset:
+> +		offset += nr_ptes;
+> +		order = min_t(int, __ffs(offset), HPAGE_PMD_ORDER);
+
+Also wouldn't, in the case where an enabled order check above skips an order--,
+we could have offset=0 here and end up just looping around checking from (0,
+HPAGE_PMD_ORDER) again? That also seems broken?
+
+Also, what's __ffs(0)? Isn't it undefined? We shouldn't be relying on undefined
+behaviour no?
+
+https://elixir.bootlin.com/linux/v7.0.10/source/include/asm-generic/bitops/builtin-__ffs.h#L5
+Says as much?
+
+I guess we're assuming we're not going to get to 0 here, but that could do with
+a comment or a VM_WARN_ON_ONCE() at least.
+
+Also why aren't we making this a function?
+
+static inline unsigned int max_order_from_offset(unsigned int offset)
+{
+	if (!offset)
+		return HPAGE_PMD_ORDER;
+
+	return __ffs(offset);
+}
+
+Though __ffs() works on unsigned long... probably... OK?
+
+>  	}
+>  done:
+>  	if (collapsed)
+> --
+> 2.54.0
+>
+>
+>
+> >
+> > [...]
+> >
+> >>>> +     bitmap_zero(cc->mthp_bitmap, MAX_PTRS_PER_PTE);
+> >>>>       memset(cc->node_load, 0, sizeof(cc->node_load));
+> >>>>       nodes_clear(cc->alloc_nmask);
+> >>>> +
+> >>>> +     enabled_orders = collapse_allowable_orders(vma, vma->vm_flags, tva_flags);
+> >>>> +
+> >>>> +     /*
+> >>>> +      * If PMD is the only enabled order, enforce max_ptes_none, otherwise
+> >>>> +      * scan all pages to populate the bitmap for mTHP collapse.
+> >>>> +      */
+> >>>
+> >>> You should note here, that we re-verify in mthp_collapse().
+> >>>
+> >>> But the question is, whether we should relocate the check completely into
+> >>> mthp_collapse(), instead of conditionally duplicating it.
+> >>>
+> >>> What speaks against always populating the bitmap and making the decision in
+> >>> mthp_collapse()?
+> >>>
+> >>> Sure, we might scan a page table a bit longer, but the code gets clearer ... and
+> >>> I am not sure if scanning some more page table entries is really that critical here.
+> >>
+> >> Someone asked me to preserve the legacy behavior (PMD only). Although
+> >> rather trivial, if you set max_ptes_none=0 for example, we'd still
+> >> have to do 511 iterations for no reason if PMD collapse is the only
+> >> enabled order rather than bailing immediately.
+> >>
+> >> I'm ok with dropping it, but I think its the correct approach (despite
+> >> the extra complexity). @Usama Arif brought up this point here
+> >> https://lore.kernel.org/all/f8f7bb71-ca31-46ee-a62d-7ddfd83e0ead@gmail.com/
+> >
+> > We talk about regressions, but I am not sure if we care about scanning speed
+> > within a page table that much?
+> >
+> > After all, we locked it and already read some entries.
+> >
+> > Having the same check at two places to optimize for PMD order might right now
+> > feel like a good optimization, but likely an irrelevant one in a near future?
+> >
+> > Anyhow, won't push back, as long as we document why we are special casing things
+> > here.
+> >
+>
+
+Thanks, Lorenzo
