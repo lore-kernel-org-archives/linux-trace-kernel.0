@@ -1,52 +1,87 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE59423C4FF;
-	Thu,  4 Jun 2026 01:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BF936F912
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 02:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780537630; cv=none; b=L3eVzr4HxyW82pO2iOeGGaKLcLuAgOQNq3r45bHpA3FIQ+lYHnREmPn0tSAB3zQS0Eh2rfJKBb6/LqGj6cQ5bs3JI0yUNjqrkyWJr+Hyt+YP/7uVNqOdVANPKmHbiMybb4Ozgn6s4aua7xrePecnsIvudEKUrpHIEZ4AkAah4ts=
+	t=1780540710; cv=none; b=jzJ/Csg+jZw0KxJIck1F1B4yhzxufzpDZKc0J1IU2tRY+qbi7n51hFQ60d7tj3Of1q9tdMqPo/3qXd09eFDoMH+9pDCYO5pPlNOePamJOLAWFzkav04cjU1egzFlOOZbzmYgwmg2nBctq2h3waU7qECbwZDWwHcLDRseaXiDws0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780537630; c=relaxed/simple;
-	bh=mSi8Pus0KA7nMGO0z+b0kfqhtyYgw+rPcBtln1kvv2c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gFuPU8KimbrEDWjb8Ii4+9rK1/j8av1P7rRpva6RDzCv7CZ/gi83hXtqJfCauNrMf+dDW+obHN+5+8EP3NbA/9gsfVG95eeci9PMUf8VocT1Gvu7zRGvvChuaKNUWxV11e4ilgFXlTsXLWiSCWiPKbxfBrAy+1s3E5sSX/KMGwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Kky2CKkp; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1780540710; c=relaxed/simple;
+	bh=wwCoW7DmfdTZZnPyFRGmgps6+GicUaepEB+MXmFgDxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sMIfaFu44MDPtINo8ZEEpL72Jg+yUGfJUULxk/Av9/1ic6x7Mlaid3Fu9LcTlP4nuLkQGDK6nWNBSO7a0RvOIWgpUG23S+h4aksZEeuXhqYd9Zpup2imFMTjPExO6nUBRETn+HSdjRq2SrczCoSsm/Z+Vi6GYwzwblDxcDbkYdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LPYB7Qey; arc=none smtp.client-ip=209.85.216.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Kky2CKkp"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=nmYRbsUzzfhOIZDdazuLRX22nS9Q9OoZqwgs/MwD5ew=;
-	b=Kky2CKkpIKkIiFLgQmPPwG7cQe9UxaNb9i28B0sWpbx3oZWP6hOOmLKmRDFBYu8rxmAKFPEAx
-	OCX94y2KYER4lXeDL3X/ArevaOfVzOkM15HGN9zuCUvh4rHUJ7Uo8N7pc0q0AnLm46X8tMZ2zKX
-	nWBkayu36w+2WkIMe+YQBLI=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gW6g30YpnznTVh;
-	Thu,  4 Jun 2026 09:39:11 +0800 (CST)
-Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
-	by mail.maildlp.com (Postfix) with ESMTPS id C2E4840539;
-	Thu,  4 Jun 2026 09:47:03 +0800 (CST)
-Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
- kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 4 Jun 2026 09:47:03 +0800
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
-To: <david@kernel.org>, <qiuxu.zhuo@intel.com>, <bp@alien8.de>,
-	<akpm@linux-foundation.org>, <rostedt@goodmis.org>, <linmiaohe@huawei.com>
-CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<mchehab+huawei@kernel.org>, <tony.luck@intel.com>,
-	<torvalds@linux-foundation.org>, <xieyuanbin1@huawei.com>,
-	<yi1.lai@intel.com>
-Subject: Re: mm/memory-failure tracepoint change breaks userspace rasdaemon
-Date: Thu, 4 Jun 2026 09:46:29 +0800
-Message-ID: <20260604014629.3144-1-xieyuanbin1@huawei.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <b637ede2-73da-49f0-a7eb-70ec79e79624@kernel.org>
-References: <b637ede2-73da-49f0-a7eb-70ec79e79624@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPYB7Qey"
+Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-36b8e1760ccso98097a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jun 2026 19:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780540709; x=1781145509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HnVgPGbeod1FIMU1/Hr8h7dHeMhQCz5JwUfAc3OgklU=;
+        b=LPYB7QeyH8uWqC7GJ1wvmfiJkLTTNK5NKWeYtnPlts1fXPTv+6d6bX6oxxzkH1ZhzY
+         jTmIt6eMnvRtEkisRdwjuUEzb6vSzX7oVDU0LV7AvvGGHvADeSOJha3eDDymTOeBpWEZ
+         UeUMQDxCc7tKwhVlySmeblkgRzulvgHgUMIjAyjqMQkko7JoO3WFyE+bwoScUhDrcFPz
+         JBncbsDccyuZs8zRlPl1cUF0qFtHBOjLWFxlFlTrprFhse6X8UFmK69z5dQAflCFOHC4
+         zfoJc8+MZYdYTIYX0yXyb8GMDvK61+09d4GgYslfzoY8bIGVzYT170Pep2LzddE8tdkq
+         lEMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780540709; x=1781145509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HnVgPGbeod1FIMU1/Hr8h7dHeMhQCz5JwUfAc3OgklU=;
+        b=MhU/D3ch1p7ACLP2c5hsGgb+F3Nb4pTUjvy5D3UD08krCuj816o8S9dw4BPH6BqV6U
+         jU/fWDZLqW0HxA9A4guarGdfMphIIh2thUGXPXJgIiCLGxqy09aUw9AVT7yYFCjwucXh
+         Fdcwa/cgh9hNZsCPwwqM2tl8FFZAgrI6FAKSpcOs6phA35EGQH23Yhja7pvF0emzHmLq
+         8HOWrRv9CH1uhqiAB8lylG6czMOJPAI+gyc9AdeS+JE0eZ5vI/vS9M1p4Lgi3tNZ5JN4
+         0Ie5ztGApPK8AVghFeDxlo3uFTUGKKvvGkK0wOLi2xZgUZUY/vgUNBEVhaaGVAZRrOS4
+         Kkkw==
+X-Forwarded-Encrypted: i=1; AFNElJ96Vzj5SCwymYX1wQbPMeBLcOuBsCEyUF8uMPRhtq5iH3Xh35boFugMVXI7GAaotWhkO4gwcr9i6kc3pUOgIJB0rKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJfVuLIN4TYLq8nXUKqi5PNK7ZZJjFAkHDKmsG1ZW15lhagXIW
+	1dz1s8nW/0po8j9ypWlMjLXMw3cClgOYZ11XJrV6Q4cGwZz41voP6YU48FGEDuE8PazeoQ==
+X-Gm-Gg: Acq92OEyaz2RfFacGRKXWnPoAW+V8FQFhI7E4Gbzscjt6tKYyDyockM1Ml8Bou+Qsk1
+	WWcQghMGBrEk+RAx/s3q9odKeUL8iXupPh/QyxbQ3+9ZgQUQF4kgsWHlKGa8dw3Cj7CuQhsfnfI
+	sCjtWlLmeeqqZZ+zUFocaE31qo6+TXI9W0/lXDM7cd/glQ95Uo8kSMCu8BDGvJ/1mZl3EOpb27j
+	vjo4vKxM/E91Aa2Ox7LA+aJTMh0XGdzmwj9X7WMrBDjPnRTsM+Il1Bc4qod4w6QdcXuPk6xn0C7
+	mPQgWOs6hqho9sHfYCfMrMijpxS4uRK3DVUgPOaN/mdYcV5gQiFov+u1Mp8v4t7sj5z1UItZ2EF
+	V5gfe5ksEx7dvGitaCPzfX5vL6eY2kccXWhTpfi/Oend6nLnGCadqEMDVARrLpoQLFWYHB2yR2L
+	AL/BF/cUnjmQutFPYLxis7YF8xEaQSptO+zHgWd8MKB4pQdBo=
+X-Received: by 2002:a17:90b:5610:b0:369:7421:b376 with SMTP id 98e67ed59e1d1-36e32949e58mr5612929a91.19.1780540708922;
+        Wed, 03 Jun 2026 19:38:28 -0700 (PDT)
+Received: from intel.company.local ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6dba8573sm1253072a91.14.2026.06.03.19.38.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2026 19:38:28 -0700 (PDT)
+From: Wandun Chen <chenwandun1@gmail.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Cc: akpm@linux-foundation.org,
+	vbabka@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	jackmanb@google.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	rppt@kernel.org,
+	bigeasy@linutronix.de,
+	clrkwllms@kernel.org,
+	Alexander.Krabler@kuka.com
+Subject: [RFC PATCH 0/3] mm/compaction: honour compact_unevictable_allowed in mlock race and alloc_contig path
+Date: Thu,  4 Jun 2026 10:38:09 +0800
+Message-ID: <20260604023812.3700316-1-chenwandun1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,31 +89,28 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemj100009.china.huawei.com (7.202.194.3)
 
-On Wed, 3 Jun 2026 21:13:30 +0200, David Hildenbrand (Arm) wrote:
-> Would the following be sufficient to avoid a full revert and the dependency on CONFIG_RAS?
->
-> diff --git a/include/trace/events/memory-failure.h b/include/trace/events/memory-failure.h
-> index aa57cc8f896b..c46b17602578 100644
-> --- a/include/trace/events/memory-failure.h
-> +++ b/include/trace/events/memory-failure.h
-> @@ -1,6 +1,7 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  #undef TRACE_SYSTEM
-> -#define TRACE_SYSTEM memory_failure
-> +/* Some user space relies on ras/memory_failure_event */
-> +#define TRACE_SYSTEM ras
->  #define TRACE_INCLUDE_FILE memory-failure
->
->  #if !defined(_TRACE_MEMORY_FAILURE_H) || defined(TRACE_HEADER_MULTI_READ)
+From: Wandun Chen <chenwandun@lixiang.com>
 
-Yes, it should be. In fact, when I sent the V2 patch, I had already
-considered this issue, and that's exactly what I did:
-Link: https://lore.kernel.org/20251104072306.100738-3-xieyuanbin1@huawei.com
+vm.compact_unevictable_allowed=0 is meant to keep compaction from
+touching unevictable folios. In practice there are still two paths
+where it does not take effect. This series fixes them and adds a
+tracepoint to make such issues easier to diagnose in the future.
 
-However, David Hildenbrand advised me at that time to completely
-remove the dependence on RAS:
-Link: https://lore.kernel.org/01b44e0f-ea2e-406f-9f65-b698b5504f42@kernel.org
+Wandun Chen (3):
+  mm/compaction: skip isolate mlocked folios when
+    compact_unevictable_allowed=0
+  mm/compaction: add per-folio isolation tracepoint
+  mm/compaction: respect compact_unevictable_allowed in alloc_contig
+    path
+
+ include/linux/compaction.h        |  6 ++++++
+ include/trace/events/compaction.h | 26 ++++++++++++++++++++++++++
+ mm/compaction.c                   | 14 +++++++++++---
+ mm/internal.h                     |  1 +
+ mm/page_alloc.c                   |  2 ++
+ 5 files changed, 46 insertions(+), 3 deletions(-)
+
+-- 
+2.43.0
+
