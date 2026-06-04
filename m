@@ -1,51 +1,54 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB1D18871F;
-	Thu,  4 Jun 2026 09:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1925C3CAA27;
+	Thu,  4 Jun 2026 10:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780565694; cv=none; b=OuHyQgfs4iMpUDitjhyRd+PTnS4pJP7WR3YwrnJVE8LSxm4FB05RVotJ46vH3FQ43Zx+CR99oVjf3Riuxxx0bLDC8X2JNBO+DKvKl0jZhAyXimdLmn/ruFbEqN4IVS3J3wMaOOrAtyY2cVBvt3XLPhbxjto805RB/d+5VAzA0jc=
+	t=1780567851; cv=none; b=IAsKoArTFdQe7PnqrlYh/5w1wVh4CH74fo2kSTop9CHnRbmf9N6co0vUDjBduuOMsb3QnJJoXKWBPGCeJDvJZcLm1yNEtcPll11/ppnRsH2HI9IenD+ggQZNfU9OnYYNvdnsKBbg88T0FvcwkpN4TrP9B90E8uuTao50SEBBMus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780565694; c=relaxed/simple;
-	bh=YfAeJ06oxFq13xAWPlJyuWM6cBIfokfmiJ5IxY9FIx4=;
+	s=arc-20240116; t=1780567851; c=relaxed/simple;
+	bh=cltcT7YURRzZTuy0YlL8lZfC1GAWVnKijUYy89tqg7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCXYCJoI+PY9pFX/5OdejVMd0Ido9EyNndT9PGuyB2cdnjpZQL/fXZyIxd2JGnmni1Re4CcaZa6+DJ2tnOxVuzguh9715CYeok33qb/3Kifb54fdV0mjBzRSDv0O0AgwAZRbTpQSe4RMD9vqdFPIp+lsBzAU0mAXPnBYDHBEC4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a/aWqTp1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=B7+4gc+dT4yLih8koFLi0dbiB8CuCnbFC+gi6uAePem9t2ZkvQpaEC3PM/NeXatTKBkeBeVqUNl3piVr44D2n1iiBNMUnzTr3Zlt+B6zylPxixMatZ8PULVeScBTQtBRlBxEy6OGXIqX05FCCpT2AHwsedNZRxnxKryeqe47UCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGZwQshl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a/aWqTp1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=oAIOfYNzNKrl7NU/dsuIGGnjFpaY7UfhCHlbjkfTv2M=; b=a/aWqTp18bxGWjqPFafudwl1ud
-	78GAHabhWpar2q8+xd7vNCu2jkDHdK5E+mNgBMNF6ZqANjL7oL3cRQcP3tuAENBqR6pitkWuKbFlQ
-	K6RO4qi9PjDCoU/K2+/wuTCISKZ3u8grfKLlEv7Ax5gdXs2vNFvh2hW0ogOP8Wi+jGUPU/dguHjw8
-	O0/xero/jcap3KfqMFa4L+CuTLCKNoi1Or7bICk1PhMcfn4eQDXvHBWY7iMLTs3CThLgCLFzT+VAR
-	Jq0hqW5+cVL/ol2fvBs8bURjRrKpwV5X4WGjRvGvTeSsUuxlhzewmkaFdC66vEHGHO56sZqfnM1aF
-	LShLse4g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wV4TO-0000000E8uY-1HhS;
-	Thu, 04 Jun 2026 09:34:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 947733001FD; Thu, 04 Jun 2026 11:34:45 +0200 (CEST)
-Date: Thu, 4 Jun 2026 11:34:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Tengda Wu <wutengda@huaweicloud.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rethook: Use tsk->on_cpu to check task execution state
-Message-ID: <20260604093445.GF3126523@noisy.programming.kicks-ass.net>
-References: <20260525132253.1889726-1-wutengda@huaweicloud.com>
- <20260526123719.482f07a3843e207e22d95378@kernel.org>
- <94179dab-ffb7-4fab-af45-b20bfb686ab3@huaweicloud.com>
- <20260601084001.9566b443746447ec2bb1a9fb@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGZwQshl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AFE81F00893;
+	Thu,  4 Jun 2026 10:10:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780567848;
+	bh=gkkN3rSsy1x2rUTT5oj5wUdRNrzE7spA48FJt094/So=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=CGZwQshlxmc2XZ65+AI3hGi3KK0c2VD681fArvK6f2BFHTSRHLswxUOmVCb4sCt1W
+	 Z9ma7nQfGtuA7lQiYx2fKdTlqUTmG+BIcgeCQfL2Ft0oGgI/3HNPGgog9ahiuDtETX
+	 Xl1geh7I6bXjCsa2AirqS/z5tS58F7lwXKyYMrt7K0Zn7yig38OJG+sWAonnRQKFgI
+	 0Laur7+CZ0U1AMh/yCTt6ur8/8bQ2CJgb1YdPFW+rBo7sBOuBgGRUEuBu/3wqv/Vug
+	 UnntTmIGdNO1wzr7z87TEUllZ3vkysu/4bTLtGwNaq+Hf2B6fuzhyIqe6KE7/Mjw0X
+	 +84CVI1y8zr/w==
+Date: Thu, 4 Jun 2026 11:10:32 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
+	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
+	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
+	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
+	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
+	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
+	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
+	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
+	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
+	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
+	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
+	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
+	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-hotfixes-unstable v18 00/14] khugepaged: add mTHP
+ collapse support
+Message-ID: <aiFO1RlpZ7Ki44y1@lucifer>
+References: <20260522150009.121603-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,18 +57,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260601084001.9566b443746447ec2bb1a9fb@kernel.org>
+In-Reply-To: <20260522150009.121603-1-npache@redhat.com>
 
-On Mon, Jun 01, 2026 at 08:40:01AM +0900, Masami Hiramatsu wrote:
+Not sure if already addressed for v19 but I just tried building a kernel in
+mm-unstable and saw this (clang 22.1.6):
 
-> Peter, is it OK to drop @rq from task_on_cpu()? 
+mm/khugepaged.c:1357:6: warning: variable 'pte' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+ 1357 |         if (result != SCAN_SUCCEED)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+mm/khugepaged.c:1458:6: note: uninitialized use occurs here
+ 1458 |         if (pte)
+      |             ^~~
+mm/khugepaged.c:1357:2: note: remove the 'if' if its condition is always false
+ 1357 |         if (result != SCAN_SUCCEED)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1358 |                 goto out_up_write;
+      |                 ~~~~~~~~~~~~~~~~~
+mm/khugepaged.c:1352:6: warning: variable 'pte' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+ 1352 |         if (result != SCAN_SUCCEED)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+mm/khugepaged.c:1458:6: note: uninitialized use occurs here
+ 1458 |         if (pte)
+      |             ^~~
+mm/khugepaged.c:1352:2: note: remove the 'if' if its condition is always false
+ 1352 |         if (result != SCAN_SUCCEED)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1353 |                 goto out_up_write;
+      |                 ~~~~~~~~~~~~~~~~~
+mm/khugepaged.c:1296:12: note: initialize the variable 'pte' to silence this warning
+ 1296 |         pte_t *pte;
+      |                   ^
+      |                    = NULL
+2 warnings generated.
 
-Sure.
 
-> Then we can use it from rethook.
+Is this already addressed in v19/review here? If not could you please address it.
 
-Well, it is in sched/sched.h, which is an internal header, and no you
-cannot use that header in rethook.
-
-But lets step back first, what is the actual problem here, why are we
-looking at ->on_cpu at all?
+Thanks, Lorenzo
