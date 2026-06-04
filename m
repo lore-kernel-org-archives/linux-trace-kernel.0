@@ -1,132 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57758374739
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 13:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0A44418FC
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 13:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780578295; cv=none; b=WzICBeippyQitpjPji+Tnomu6OAY6s2y9PxqwE3/VoLkh4o485I4R1zg013ayR8taM26cDPT4JX4p3Ud0ZjqO7Pnr8vr+QsWrMKLOyRVIgZULci8RECK/5Y7Dm+ZQe+VlB0I6mdY2ac+76d7Q5tQIobzKuFn1Gc2XCGMILrVwp0=
+	t=1780579542; cv=none; b=JM+O2FRC1Vbe8n/UYswdMXJPMKG3GLvCFuEN7PC9HwpO1Ce9XpVj0W9jWf2fwQhQNcaovQWbFO9faGnjouAAJ96v0g1z2fNtZSKG36Wk9ge6gNhesa/o2+7mJqAPaSHOQjbpesIHiZMMoFaMTYZsdVdJxlB/gWjnptjt8J6WmrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780578295; c=relaxed/simple;
-	bh=/YVUXGy9XsepfY5ixMUJiWhjh1V91ITMsJcCapvoeAE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LskIPOoXvHdhZr9ud9MU+Oj+RGZNveHqSpMnXekzPe9TDCeUS1eVFelAJroBE5ibQJBA3v+vqpVuqmjdN0Agt4Eh9CHEqb7M/W18fRynNmZjLexuPIF+qXM0c3uCPV+pGPJSxuMxIeccdB2M89dAUaDLDUVfU9sdBm+qeX0MCMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NIaln0AA; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1780579542; c=relaxed/simple;
+	bh=BFNkqLrF5dTaHm3tuZ0PfICrnwF8BWPVCLq9SdgVJP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=ieyUJx5PcLzXli85sxCrFdHx9ySjpNPrmPkhCxA8f1VQZEPI0mAQu0LqvPAC7DVieNCu7mifU6EZcvWsOjVs0hKYl680m69OOgRDy0TXo7jgHN8aMZRogzGFTx5T/d5QTI0hFCuvAF/8PESp5bht92VwOPEVt0rM0hg3JPTXigE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WCCj7swa; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIaln0AA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WCCj7swa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780578293;
+	s=mimecast20190719; t=1780579539;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/YVUXGy9XsepfY5ixMUJiWhjh1V91ITMsJcCapvoeAE=;
-	b=NIaln0AAw/qFzbejbM761KUDZFg1MHOajs9X5bAvH5fH6AS07osMZASer4kg+FOyHxr6fv
-	YqXmvtnEp74xAguFSq04tZtx+oJeIjxAHNjkDDucxxbGt0wk+U7iekvax+Kkx+LpSjzDMB
-	T8WyF7cKHW++QkOMEqj5ubJ7W90p/XE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-632-QtasSfXbOoeygxZg2CKivw-1; Thu, 04 Jun 2026 09:04:51 -0400
-X-MC-Unique: QtasSfXbOoeygxZg2CKivw-1
-X-Mimecast-MFC-AGG-ID: QtasSfXbOoeygxZg2CKivw_1780578291
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-490ae016853so5350625e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 06:04:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780578290; x=1781183090;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/YVUXGy9XsepfY5ixMUJiWhjh1V91ITMsJcCapvoeAE=;
-        b=GhrXVkzSm5ORnwdsVF/KvXmGQpeaGk4ai9NKJez52a9Rg7DfhxIXz87XJF4iyTsdZn
-         tBqSuFVeIEiaelsJxH4xc+/CunA/QLIax6LPCGlOWU3vOYmdpJkYBWJnxet6wahTRidp
-         yFgJWOyciEEujV6FziLxJBidOwtDl4S4lBSjk+eHH3vFW6RA98IcQyWAEJcpuexltiXf
-         FctijN99NjJgujUzTximJTDiygH0TcjZ+TSCkrrXEwZtQ3O+NI7HJbiLzp77+WAlnrz2
-         AKJtvSIPI7LsJcIgY7oTXX+niuZ8MS0m0gEcuwBIIfoYjymTsi+PK1BIr1GnQBwOZ0SI
-         eoVg==
-X-Forwarded-Encrypted: i=1; AFNElJ8K3M9oEMrVXDg5o3HRA5po/6ietwbShPG0cFh2e+8hPwXUyvo5gVWeqBgxaWHvLUEYfo/JwB+ylDyMnR8NjP0QjSc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFGdVhu+ezG/6D8EqcAYDOnoCg373KAxUJn/kskT56JMKlhw3G
-	bY1xUaHjl//BgZr4EXWjnZ0h9CHnKOAIXMmt9Qf7gNKi5C6I2WcV8R3IQMqO5/XLWz/Qe3MprOU
-	I6pyv7p/HjUyLJzItvEJwu3PDvKneC9KiQ8V4HegGt9XAsTslnzkMhtItPxTOup7HX2HE7Sw/7A
-	==
-X-Gm-Gg: Acq92OEZHHzkCpyO05dtM+0UoFwhNB3xXE+i2cYzXoYI68rp4xqmeSg4Ak6MZ8bP/vC
-	oms8x09dYTdUWIu6dDRT7Zxysha/DZFGcy41QbKsxzXFc2HnbFCKbOdgaY8IlGrOdb7pSOXP45o
-	F5J2wSDuPbsUkdTG3gqdnXUou2Kdt88uG0p5ivuqo6JAlZYRWFjHJjLNlSnLFYjRGhZ/TvAUUqB
-	xD7ObwRVYM7mFM6qfTL87pUS9n+OmIclkd2p+iaXRonF1lXeb0QuGwRtI+0VNlgu9SnUJhLg7XQ
-	jZZv/GSVzysCoXGpfHheRUogzPqD1xLBdo2xfpy8CqjPY03cPP+bepJllKHJvDHflmvVP1wF6Jx
-	vtZgvhq32SRLBsmBYcMhJTLW6zR3E3Op4LV6g
-X-Received: by 2002:a05:600c:8218:b0:490:bfa4:5f0f with SMTP id 5b1f17b1804b1-490bfa46194mr26270965e9.18.1780578290635;
-        Thu, 04 Jun 2026 06:04:50 -0700 (PDT)
-X-Received: by 2002:a05:600c:8218:b0:490:bfa4:5f0f with SMTP id 5b1f17b1804b1-490bfa46194mr26270395e9.18.1780578290159;
-        Thu, 04 Jun 2026 06:04:50 -0700 (PDT)
-Received: from [192.168.1.167] ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3c1149sm59593385e9.4.2026.06.04.06.04.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 06:04:48 -0700 (PDT)
-Message-ID: <1ec107781373557924ee369ee13bf69d1efaa12c.camel@redhat.com>
-Subject: Re: [GIT PULL] rv fixes for v7.1
-From: Gabriele Monaco <gmonaco@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Cl1r6/pbsgg9eK3CtNqzO8MD+yHcfOavjRF3lsbOthQ=;
+	b=WCCj7swaOWDdP9Ris0tOcGe8qW3eWyr6NzAj+gUeqAYEi5emOQy8FSF8ApbYWJuw0Cw64L
+	HJUqL+snfb6j6BwSnHXI/zgvxFmq/xhPQRGhzOpa65MbO5r7Ea5NBLk6jxGJxTOfEbkA8I
+	rgGchM3U7ZQMbHp48MrKGHZpZbrEZlE=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-655-5KrnLzAbPlCJ4Z6mcVx6ng-1; Thu,
+ 04 Jun 2026 09:25:36 -0400
+X-MC-Unique: 5KrnLzAbPlCJ4Z6mcVx6ng-1
+X-Mimecast-MFC-AGG-ID: 5KrnLzAbPlCJ4Z6mcVx6ng_1780579535
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF7161800562;
+	Thu,  4 Jun 2026 13:25:35 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A0EBB1955D87;
+	Thu,  4 Jun 2026 13:25:34 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, unknownbbqrx <dev@unknownbbqr.xyz>, Wen
- Yang	 <wen.yang@linux.dev>
-Date: Thu, 04 Jun 2026 15:04:47 +0200
-In-Reply-To: <20260604085405.234d22eb@fedora>
-References: <20260603125056.75559-1-gmonaco@redhat.com>
-		<20260603191627.5cb4ef6c@fedora>
-		<CAP4=nvQEF7BtsMSoDaVO+5MazsRGypUnxB8w0Uq=2sCy=g2HGw@mail.gmail.com>
-		<791528a4f69460ba1e9589361860bafeb1517237.camel@redhat.com>
-	 <20260604085405.234d22eb@fedora>
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [GIT PULL] RTLA fixes for v7.1-rc7
+Date: Thu,  4 Jun 2026 15:25:28 +0200
+Message-ID: <20260604132528.3593844-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: w9DEQRm-DCdNIIXwaVq3Du9QXMJxjmqjkMHk7OFF9a0_1780578291
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: lFKBXre2kiW7ZsxwVg3PdrxN29h7hx-mO4sMd_ykkRQ_1780579535
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Thu, 2026-06-04 at 08:54 -0400, Steven Rostedt wrote:
-> On Thu, 04 Jun 2026 14:42:02 +0200
-> Gabriele Monaco <gmonaco@redhat.com> wrote:
->=20
-> > All this to say that, in my opinion unknownbbqrx
-> > <dev@unknownbbqr.xyz>
-> > is NOT an anonymous contribution, just a nickname that differs from
-> > the legal name of this person (which we wouldn't validate anyway),
-> > so I would say it complies with the rules.
->=20
-> It's a username on github and not a nickname. I did a search for
-> "unknownbbqr" and it doesn't come up anywhere but Google tries to
-> find similar matches which brings me to an OnlyFans account :-p
->=20
-> It *DOES NOT* qualify because there's no accountability for this. For
-> people who have a nickname as their entire internet persona, sure,
-> I'll take patches from them as there's an entity that exists behind
-> it.
-> But I'm not going to take some username on github as a persona. To
-> me, that's still anonymous.
+Steven,
 
-Alright, fair. In the link I sent, the signoff got changed to Ali Ahmet
-MEMIS <dev@unknownbbqr.xyz>, but I believe we cannot use that unless
-the user themselves adds it (and they seem unreachable).
+The following changes since commit e43ffb69e0438cddd72aaa30898b4dc446f664f8:
 
-I posted the re-authored patch in [1], I'm not sure that's the proper
-way though (the patch is so simple that is unmodified). But if you give
-me a green light I can send you a pull request with that patch instead.
+  Linux 7.1-rc6 (2026-05-31 15:14:24 -0700)
 
-Thanks,
-Gabriele
+are available in the Git repository at:
 
-[1] -
-https://lore.kernel.org/lkml/20260604120946.90302-2-gmonaco@redhat.com/
+  https://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git tags/rtla-fixes-v7.1-rc7
 
->=20
-> -- Steve
+for you to fetch changes up to e9e41d3035032ed6053d8bad7b7077e1cb3a6540:
+
+  rtla: Fix parsing of multi-character short options (2026-06-04 10:53:25 +0200)
+
+----------------------------------------------------------------
+RTLA fixes for v7.1-rc7
+
+- Fix multi-character short option parsing
+
+Fix regression in parsing of multiple-character short options (e.g.
+-p100 /= -p 100/, -un /= -u -n/) caused by getopt_long() internal state
+corruption after a refactoring.
+
+Build, runtime tests, unit tests pass. Extended runtime tests from next
+also pass, except for timerlat hist --dump-tasks (expected).
+
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+
+----------------------------------------------------------------
+Tomas Glozar (1):
+      rtla: Fix parsing of multi-character short options
+
+ tools/tracing/rtla/src/common.c        | 28 +++++-----------------------
+ tools/tracing/rtla/src/common.h        | 12 +++++++++++-
+ tools/tracing/rtla/src/osnoise_hist.c  |  7 ++++---
+ tools/tracing/rtla/src/osnoise_top.c   |  7 ++++---
+ tools/tracing/rtla/src/timerlat_hist.c |  7 ++++---
+ tools/tracing/rtla/src/timerlat_top.c  |  7 ++++---
+ 6 files changed, 32 insertions(+), 36 deletions(-)
 
