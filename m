@@ -1,271 +1,144 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FDC3CE0A8;
-	Thu,  4 Jun 2026 07:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD7130F803
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 08:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780557333; cv=none; b=EYKDKWoLT0VtFRDvQBqPET4cEDxrwh5ecgGlU93sa+Nrmguibpbd6plESmF1I5kIww+S5pZnolQ1ab17xH8VDLYLZEYU49q/L195BCLW2r5FHgunWwvgmkdqbLkf2zD4SachACBc/Jq+08vmIssn2Iqwl6KSc7+LBivbzYSq8CE=
+	t=1780560029; cv=none; b=Lt/84ozLN9w7+kvBI16u3ounpF9nqGlJtk8W7zzJyuhiqqKXTauXG9RFZFlFpGPas4mUOUehLieM3mXa7eLF7SRZqjJjyFnf8y3fsGhQvTYWFtK2vRX3ftIZ58qTB0Y89bvTRt0Ev9xGiIMVNVEPp+3ZUoFpc3uAgRlm6W0m86c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780557333; c=relaxed/simple;
-	bh=k13kmTzqMXkpWz6BPQCiOlKKerrWNZOQSX3sCAqvSVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XHnDDPXAZ8cdB3Dd8PSHmxAc6dESsbzzoMlukUhZXDhcweXp25kdZJmKXI7oSGx0fQDvu4hKgx0S0CEPJ+bdOjMPswxfhNxir9EW6B/Eak86plH0JLIlJf17c63LKQE1YREgvFC85RGroR4wHQqCJtfrZLSinBfLy2i/d7pU5O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=0LupkOPV; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1780560029; c=relaxed/simple;
+	bh=tLNBjb1LxGgsWGmcE25Qk72vSCilUGhydTgk7Zym6qg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E3p6nU+fz+Po6IHkT8uJwfU1zP51b6x0SWHNFUbB/k7j8g7uzz4jO5pjw1/EjQ1NiUB0Jp+Fb14AyWDr7psaVh3/ZO7dRzg1a8lgdGeZnoenLZjqmyuVeYe52WrbgN4RGhXFb5Y/+jKKgG2O5KTtPq/n6PqVY6qvHPs1vo5P+eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YjvY75eA; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="0LupkOPV"
-Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 6647DD115E;
-	Thu, 04 Jun 2026 07:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1780557330;
-	bh=nLXxTrSmFHZlKaFxxrI36D4pPO0XMiNqu/N8Xnsp7Ew=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=0LupkOPVf3tCpIHMJgDydCAfvmN7wz6XEcgmGwHjRfJ6qW9D2RZtPF0rbr1OBzcwE
-	 y6o3/hjwIBwGgrqwEZvER8bj72zW5Q2VZfi/HdInxcwNim66vPqyj9DRBAg+N8a8iW
-	 kSu+X1bBLNAydLirVXs8DaDPV5AVO/PymAFDvoSw=
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	Dmitry Ilvokhin <d@ilvokhin.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v7 3/3] locking: Add contended_release tracepoint to sleepable locks
-Date: Thu,  4 Jun 2026 07:15:07 +0000
-Message-ID: <02f4f6c5ce6761e7f6587cf0ff2289d962ecddd4.1780506267.git.d@ilvokhin.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <cover.1780506267.git.d@ilvokhin.com>
-References: <cover.1780506267.git.d@ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YjvY75eA"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490bc6a7958so5321925e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 01:00:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780560027; x=1781164827; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5S/ODxVsZ0F1Hysh5uuXFztTRTMytWGdM0vjEW7pXv0=;
+        b=YjvY75eADabUucunowoYWwHqVIXmxoS7hbodzR0L1O/gfSJ5DvEai8MqQqmms/QU04
+         kYr0O6bTFoeu7/Cyr/ZsD+axvHsuf7Pc1dqhceEkEEuAFfRFaEF7o+2n3odGlSXSUZ0g
+         m4sIorctztaxg399WRqgdqDckdK39aDf5zz0eN50n5ZmlYfHIr/T4y/AGs30IX8gn1Sk
+         nOWgNIYQRWQFFcfu3iogyVLN17TO0Ficrffpgu5bk9xMFRHVhBluMA8dqnZB8KrZhF6g
+         vE0yuWxST1vv6MXbSmrAxWewfH9YZhs+ymBra4UWJed58jDhvhK+rkHSzgC/y1iiIOot
+         WV0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780560027; x=1781164827;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5S/ODxVsZ0F1Hysh5uuXFztTRTMytWGdM0vjEW7pXv0=;
+        b=L3UwRCsONr3cENpn3sgDAOkzVo289wYPU649tjSAT+0LZ+M9LNS7Er8nsUejWImi/m
+         KCb7IZS4saIZEZuGXEdxrAeHkn1yBMUjtZYxqinCVCanegkIWTuZpAFGXgjCRlvHebwu
+         hbXdpvwHWit/m3LlOHS2q2l/L/OVGKOTVyLHXyaxRPHNl3aF/Z35Z9oKM0vS/v0CROjB
+         ydpBa/s9ZigRjjTTpcR1hRH/iUuSdV7fn10NpSRD3fRWsr8e7xIYz0h+JOOtl17JNovn
+         yHxrpAF03i7QswEaCqZj0F67GmI2xYLc5fV+awUVQLOcXJIXz687rxXwiH6ftf2xKsNR
+         3ziw==
+X-Forwarded-Encrypted: i=1; AFNElJ//vZW4MRFX32EVyAAi6KKvmNsY+gm0fgucg8bd/7OGwUNWOhoIloUXT8HzLuAQSqc6MjVmCkbOC4As0uBmu2/KLAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycEZqy/LFPgjmeMWe2kkw6wJ4yLmT73qEcWCXVz3k74W5KEJkB
+	ptjQ28ZGD/DgigkNLKhUHMt1eKeoZlfEK0prUikR5Pg0pV4Iu8/JVShv
+X-Gm-Gg: Acq92OFAkE9Jg7dDVCYJaE+/5FZQ+05GZT+Lt3LDfyVbm9psYVVl2jVQyEGDFL6uTPV
+	8yWr2uSzL28B6iLJehtQGwhpMCIafYHAJxqSac/7/8WxjukrCvK+hpfHv7KGfNAmV4+NxA6nan+
+	VMGXR/Ge7auEwcYn9cgiihJdtqFGOfo6kC4CIRqH4ZOxUDL7tp80EwZg5N2a9CRdoep7k5FmrhQ
+	6WlGifkzUpfb2GbdNy2RMwSK3y5visxZfGGubzgjXT/KawYkUU8gCjI9ZFCBNw9lE72a8Pr95Gs
+	vnMMFSa/cFWWMBL3An2MYrDIUdPdzYAxEMu5EVOGiNHbLNoz6HqubksgjNKnV7nL6guLdKf75if
+	nDWm3Ms7TNahrljuf8N8f5Qq1Xl5ntNzIqrMiGI/NEYl2UN1hMUR0qLJsyZMWNOfgYRt0+gLDfs
+	A3JOwIOtiv8rLz2BSfJAN/43c3Fw==
+X-Received: by 2002:a05:600c:6095:b0:490:bb60:68ca with SMTP id 5b1f17b1804b1-490bc4b54b4mr34914705e9.3.1780560026574;
+        Thu, 04 Jun 2026 01:00:26 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b7e6c774sm67383595e9.1.2026.06.04.01.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2026 01:00:26 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 4 Jun 2026 10:00:23 +0200
+To: bot+bpf-ci@kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
+	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
+	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCHv7 bpf-next 13/29] bpf: Add support for tracing multi link
+Message-ID: <aiEwl5axWo8_V7cR@krava>
+References: <20260603110554.29590-14-jolsa@kernel.org>
+ <6e738b0697b9ee06e9cbaa325a3330f0447f4cd12ae54d6b2c82365d58c4c525@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e738b0697b9ee06e9cbaa325a3330f0447f4cd12ae54d6b2c82365d58c4c525@mail.kernel.org>
 
-Add the contended_release trace event. This tracepoint fires on the
-holder side when a contended lock is released, complementing the
-existing contention_begin/contention_end tracepoints which fire on the
-waiter side.
+On Wed, Jun 03, 2026 at 11:52:13AM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index d853f97bd154..9e3cb547651e 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -42,6 +42,7 @@
+> >
+> >  #define MAX_UPROBE_MULTI_CNT (1U << 20)
+> >  #define MAX_KPROBE_MULTI_CNT (1U << 20)
+> > +#define MAX_TRACING_MULTI_CNT (1U << 20)
+> 
+> [ ... ]
+> 
+> > @@ -3641,3 +3642,132 @@ __bpf_kfunc int bpf_copy_from_user_task_str_dynptr(const struct bpf_dynptr *dptr
+> 
+> [ ... ]
+> 
+> > +static int check_dup_ids(u32 *ids, u32 cnt)
+> > +{
+> > +	int err = 0;
+> > +
+> > +	/*
+> > +	 * Sort ids array (together with cookies array if defined)
+> > +	 * and check it for duplicates. The ids and cookies arrays
+> > +	 * are left sorted.
+> > +	 */
+> > +	sort_r_nonatomic(ids, cnt, sizeof(ids[0]), ids_cmp_r, ids_swap_r, NULL);
+> 
+> The sort here can run over up to MAX_TRACING_MULTI_CNT (1 << 20) elements
+> without ever yielding the CPU. Can this hold the CPU long enough to trip
+> RCU stalls or the soft lockup watchdog when cnt is large?
+> 
+> This was raised on an earlier posting of the series, with the suggestion
+> to add a cond_resched() somewhere in the path. The reply noted that in
+> practice the count is expected to be closer to 100k rather than the full
+> 1M limit, and that it was unclear where the cond_resched() should go, so
+> the code was left as is. Since MAX_TRACING_MULTI_CNT is still 1 << 20,
+> would it be worth revisiting whether a reschedule point is needed here?
 
-This enables correlating lock hold time under contention with waiter
-events by lock address.
+we now use sort_r_nonatomic which calls cond_resched,
+I don't think loop below needs the cond_resched call
 
-Add trace_contended_release()/trace_call__contended_release() calls to
-the slowpath unlock paths of sleepable locks: mutex, rtmutex, semaphore,
-rwsem, percpu-rwsem, and RT-specific rwbase locks.
+jirka
 
-Where possible, trace_contended_release() fires before the lock is
-released and before the waiter is woken. For some lock types, the
-tracepoint fires after the release but before the wake. Making the
-placement consistent across all lock types is not worth the added
-complexity.
-
-For reader/writer locks, the tracepoint fires for every reader releasing
-while a writer is waiting, not only for the last reader.
-
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
----
- include/trace/events/lock.h   | 17 +++++++++++++++++
- kernel/locking/mutex.c        |  4 ++++
- kernel/locking/percpu-rwsem.c | 11 +++++++++++
- kernel/locking/rtmutex.c      |  1 +
- kernel/locking/rwbase_rt.c    |  6 ++++++
- kernel/locking/rwsem.c        | 10 ++++++++--
- kernel/locking/semaphore.c    |  4 ++++
- 7 files changed, 51 insertions(+), 2 deletions(-)
-
-diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
-index da978f2afb45..1ded869cd619 100644
---- a/include/trace/events/lock.h
-+++ b/include/trace/events/lock.h
-@@ -137,6 +137,23 @@ TRACE_EVENT(contention_end,
- 	TP_printk("%p (ret=%d)", __entry->lock_addr, __entry->ret)
- );
- 
-+TRACE_EVENT(contended_release,
-+
-+	TP_PROTO(void *lock),
-+
-+	TP_ARGS(lock),
-+
-+	TP_STRUCT__entry(
-+		__field(void *, lock_addr)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->lock_addr = lock;
-+	),
-+
-+	TP_printk("%p", __entry->lock_addr)
-+);
-+
- #endif /* _TRACE_LOCK_H */
- 
- /* This part must be outside protection */
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 09534628dc01..43b7f7e281a0 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -1023,6 +1023,9 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
- 		wake_q_add(&wake_q, next);
- 	}
- 
-+	if (trace_contended_release_enabled() && waiter)
-+		trace_call__contended_release(lock);
-+
- 	if (owner & MUTEX_FLAG_HANDOFF)
- 		__mutex_handoff(lock, next);
- 
-@@ -1220,6 +1223,7 @@ EXPORT_SYMBOL(ww_mutex_lock_interruptible);
- 
- EXPORT_TRACEPOINT_SYMBOL_GPL(contention_begin);
- EXPORT_TRACEPOINT_SYMBOL_GPL(contention_end);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(contended_release);
- 
- /**
-  * atomic_dec_and_mutex_lock - return holding mutex if we dec to 0
-diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
-index f3ee7a0d6047..f7e152c40d6d 100644
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -263,6 +263,9 @@ void percpu_up_write(struct percpu_rw_semaphore *sem)
- {
- 	rwsem_release(&sem->dep_map, _RET_IP_);
- 
-+	if (trace_contended_release_enabled() && wq_has_sleeper(&sem->waiters))
-+		trace_call__contended_release(sem);
-+
- 	/*
- 	 * Signal the writer is done, no fast path yet.
- 	 *
-@@ -292,6 +295,14 @@ EXPORT_SYMBOL_GPL(percpu_up_write);
- void __percpu_up_read(struct percpu_rw_semaphore *sem)
- {
- 	lockdep_assert_preemption_disabled();
-+	/*
-+	 * After percpu_up_write() completes, rcu_sync_is_idle() can still
-+	 * return false during the grace period, forcing readers into this
-+	 * slowpath. Only trace when a writer is actually waiting for
-+	 * readers to drain.
-+	 */
-+	if (trace_contended_release_enabled() && rcuwait_active(&sem->writer))
-+		trace_call__contended_release(sem);
- 	/*
- 	 * slowpath; reader will only ever wake a single blocked
- 	 * writer.
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 9147d6a31b78..28beae7d21fe 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -1470,6 +1470,7 @@ static void __sched rt_mutex_slowunlock(struct rt_mutex_base *lock)
- 		raw_spin_lock_irqsave(&lock->wait_lock, flags);
- 	}
- 
-+	trace_contended_release(lock);
- 	/*
- 	 * The wakeup next waiter path does not suffer from the above
- 	 * race. See the comments there.
-diff --git a/kernel/locking/rwbase_rt.c b/kernel/locking/rwbase_rt.c
-index 82e078c0665a..2835c9ef9b3f 100644
---- a/kernel/locking/rwbase_rt.c
-+++ b/kernel/locking/rwbase_rt.c
-@@ -174,6 +174,8 @@ static void __sched __rwbase_read_unlock(struct rwbase_rt *rwb,
- static __always_inline void rwbase_read_unlock(struct rwbase_rt *rwb,
- 					       unsigned int state)
- {
-+	if (trace_contended_release_enabled() && rt_mutex_owner(&rwb->rtmutex))
-+		trace_call__contended_release(rwb);
- 	/*
- 	 * rwb->readers can only hit 0 when a writer is waiting for the
- 	 * active readers to leave the critical section.
-@@ -205,6 +207,8 @@ static inline void rwbase_write_unlock(struct rwbase_rt *rwb)
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&rtm->wait_lock, flags);
-+	if (trace_contended_release_enabled() && rt_mutex_has_waiters(rtm))
-+		trace_call__contended_release(rwb);
- 	__rwbase_write_unlock(rwb, WRITER_BIAS, flags);
- }
- 
-@@ -214,6 +218,8 @@ static inline void rwbase_write_downgrade(struct rwbase_rt *rwb)
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&rtm->wait_lock, flags);
-+	if (trace_contended_release_enabled() && rt_mutex_has_waiters(rtm))
-+		trace_call__contended_release(rwb);
- 	/* Release it and account current as reader */
- 	__rwbase_write_unlock(rwb, WRITER_BIAS - 1, flags);
- }
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index bf647097369c..b9c180ac1eee 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -1387,6 +1387,8 @@ static inline void __up_read(struct rw_semaphore *sem)
- 	rwsem_clear_reader_owned(sem);
- 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
- 	DEBUG_RWSEMS_WARN_ON(tmp < 0, sem);
-+	if (trace_contended_release_enabled() && (tmp & RWSEM_FLAG_WAITERS))
-+		trace_call__contended_release(sem);
- 	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
- 		      RWSEM_FLAG_WAITERS)) {
- 		clear_nonspinnable(sem);
-@@ -1413,8 +1415,10 @@ static inline void __up_write(struct rw_semaphore *sem)
- 	preempt_disable();
- 	rwsem_clear_owner(sem);
- 	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
--	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
-+	if (unlikely(tmp & RWSEM_FLAG_WAITERS)) {
-+		trace_contended_release(sem);
- 		rwsem_wake(sem);
-+	}
- 	preempt_enable();
- }
- 
-@@ -1437,8 +1441,10 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
- 	tmp = atomic_long_fetch_add_release(
- 		-RWSEM_WRITER_LOCKED+RWSEM_READER_BIAS, &sem->count);
- 	rwsem_set_reader_owned(sem);
--	if (tmp & RWSEM_FLAG_WAITERS)
-+	if (tmp & RWSEM_FLAG_WAITERS) {
-+		trace_contended_release(sem);
- 		rwsem_downgrade_wake(sem);
-+	}
- 	preempt_enable();
- }
- 
-diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
-index 74d41433ba13..233730c25933 100644
---- a/kernel/locking/semaphore.c
-+++ b/kernel/locking/semaphore.c
-@@ -230,6 +230,10 @@ void __sched up(struct semaphore *sem)
- 		sem->count++;
- 	else
- 		__up(sem, &wake_q);
-+
-+	if (trace_contended_release_enabled() && !wake_q_empty(&wake_q))
-+		trace_call__contended_release(sem);
-+
- 	raw_spin_unlock_irqrestore(&sem->lock, flags);
- 	if (!wake_q_empty(&wake_q))
- 		wake_up_q(&wake_q);
--- 
-2.53.0-Meta
+> 
+> > +
+> > +	for (int i = 1; i < cnt; i++) {
+> > +		if (ids[i] == ids[i - 1]) {
+> > +			err = -EINVAL;
+> > +			break;
+> > +		}
+> > +	}
+> > +	return err;
+> > +}
+> 
+> 
+> ---
+> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> 
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/26881310426
 
