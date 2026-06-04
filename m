@@ -1,106 +1,57 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87576429827
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 12:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE7535E1B5;
+	Thu,  4 Jun 2026 12:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780575531; cv=none; b=vBrY/nh1qJtFJgNSvfQh5Gt7XzsUMhS3XWbfDViofStjV6dsiTjBLuq1AkpkGWG9trVp5dXAmZATdylXt+3PU2i5ZjEvDN1dW4ig04Je41sTZtd7i2e+gN246o1HrL9hxPstOxsHBhprAucXZhvnCa+fMEQHUAnAawkfNGGPmAM=
+	t=1780576451; cv=none; b=M0Eq73faoy8l/jxl6F8HW9codoqeXEISKW5j8lUAJBasZN6+IiNegLGk/iVQsFA137FPiAV8bsaLhXzc8MOx+zNEJjNgZroxSf6VQbMMruGP158JhTXXcxIpUDa8VbrCG45ECq/+PpCN8tjI4Z+MCoZ2vPwc6At9A8c8kC5YKYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780575531; c=relaxed/simple;
-	bh=VAnfCTlLBiEiB+TD0eyA0lvhdUfV9bmWB+Umsp+9RUQ=;
+	s=arc-20240116; t=1780576451; c=relaxed/simple;
+	bh=gdedar459vsMSFxl9/kWW91qvvU9Z+FRDiQswxnd6e8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBngDlzDH2wzrGwtxPih3tvQ4eXTKYgZ8ugrFmXrZsrSf02cM/bWQ62S35woKo84nndyxuC34iaLxChIFixu8ERtwR9bAxGGLmVBKgaSGjeOEeDj1QVRulCE9b44UTh+prLAVG0l/xzs5xnpNXi/3C70egdcd1D+iP+80vPTQcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=bHkB8C/Q; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=MNJ9otkifmIj/muQwrZ82buZ/ojfkBpU9F9Y39wgRdDeaGiIKFeg5+SBTN7vIWlTnqq8YLaxoCoIctdCbn73mHGcJcWR53o55eyOylD++buH8buji4MQHcYpHr0JHcGrERzui7WjzMLiEglvEqmgl6nMvIPPDqXue/mfseo/y3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmbeSmfP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="bHkB8C/Q"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490ace40f4bso7877525e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 05:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1780575528; x=1781180328; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pv1Oyz2SuibchEQ+somLIZ/UIk84PCQQ/cJhhIFylGE=;
-        b=bHkB8C/QgMJN0x492cuzjiWQbmo/qNdHkk0X5/9T2HXegtU8YQon1Qm7OWWgEoNPP4
-         agda4Ep/0fSBgpSjoH3j8MzyIEASf2eDI6tFgMLs0kyHGAEwgPqM5pHzI62v76y3xwNF
-         36lmi7duXQFTyWuSIOpKpFcYWJ+qluWCqt6OgZcUQmLZl0yyosp2ZHyYBZDa+HhGHCgO
-         Rntj1TrqwBpm8zp2NoclZT7hu7iGBas0RiuG7drvIY6fmRBM5deljhG8COMzMwZHy5cc
-         EaY65iWFtpmgO3SGvi9nvz0R6bnMmIALmPpN4KRrHlyYSEaSuAeS9L4pDhLZrb9oV2uX
-         chMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780575528; x=1781180328;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pv1Oyz2SuibchEQ+somLIZ/UIk84PCQQ/cJhhIFylGE=;
-        b=FmzMA6bQ+xppTOdzjJntraxVtgE9QG89gFzp0XMI8QVYeP7OfKkSS1QZIO7AiLS9V6
-         fhJwtcF2HPkKLHDjOWGtizbunSQRs/KDuEYtbBIJyz+CyK6VyDqxmrMoyrQoLu++vfDq
-         EjwhodeOzEAWB9WvzmaFAsE9T2Ymm11ry/Dwsd0YdRanoKxm+0dbwlFsfSF9eG/PPR1r
-         Zrs55AC/GBZosaiZZ5Njio23dySd8HclHpmwkLjRMIrUueIRryHTJoFq1mkCoo6Rl2DY
-         OYMGlYrOG+4uVXwwTFWxHTlWVT+0CGFr68K1ck+3Tna/GTGEH8mTE1BtLfmzPTI6awF7
-         0D9Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9096dBX0ay3OHLTt5Zzt46BQQ+CWWAxgMomVBXc8EDfgUXTrdsnrZOMYIWRBmHtTCmTzYuTrcPGwv0y+b5mN3/9Po=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+A8OUhZxg2vubCUzlOPt92B+oTZjL/3Ft0L0BvmkfCxrhTs0g
-	LnAvDvGeU+VUkCy55Y2kD+hhDHibSs1FxfkqHJNvHPaZ/ZLUzAgU9igStq3pL7g6R8o=
-X-Gm-Gg: Acq92OGgsvXz/bP16mV7rPhRaPHb71Zqz1UPGToPz4E1EqCqojTKjz6XvVhR5zivp1D
-	jtkrLlg9J6rWUKOhM9tHsVnw4LZiqRHf+TKilgAbINEAZ0uq/crFKD/mkWn1KIxo5DxKpUB5Fyq
-	r4ESZOBlA8SIgXtJ8OTx1qf19k05+RGF/HMJne7SXEutr0r5spFVcIs4cjG+if+HF3GcjfQTA4r
-	dk0auP897uPJe0oXXFWr1862y689VycuW0fifYNeVu5QxoafY/+Wv5GiMiHp6TZZPw6LPq373+T
-	gEH3NxHf+Uf6shqtPnkSyJgS8WNbdMyziXeZE+NkJOVOyR7UtmzHq7ADOWh+h3JF07fr3gewhdB
-	iKx/kdg98jaPBAyXXq6GRLS4v0DRalxDSGcacLcqFtumb1xLxPlz20hzoQsaHZ3bCMcqeYHpGDw
-	qXgm/MhSf/J1azx1Jg826gD3POSqopdiU=
-X-Received: by 2002:a05:600c:4043:b0:490:b2a6:8c2a with SMTP id 5b1f17b1804b1-490b5e748e3mr78263665e9.5.1780575527855;
-        Thu, 04 Jun 2026 05:18:47 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c092:500::7:a76c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm81382665e9.9.2026.06.04.05.18.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 05:18:47 -0700 (PDT)
-Date: Thu, 4 Jun 2026 13:18:44 +0100
-From: Gregory Price <gourry@gourry.net>
-To: Balbir Singh <balbirs@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aiFtJFqkpbZ9qFvM@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
- <aiDVMgu0viTIml8H@parvat>
- <aiE5DZC8Io4SNI3H@gourry-fedora-PF4VCD3F>
- <aiFSZfRlFPd7qlIw@parvat>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmbeSmfP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FF3B1F00893;
+	Thu,  4 Jun 2026 12:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780576450;
+	bh=nF1iBW3FnQDK77z6Z/erssj/aJgmx1yuGL+yjDuzS7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=FmbeSmfP3EK9rBz/hN1P235JwHBuwKRZqChSyPgRQ0akT4zcsHmAOwY8SpA8L/0D0
+	 HApsu4hM0YRqD/0/ychCxMQqWguRZdqvZ/uUPIYcdS7cXhn/mN8Ky9ChjKbGkO7J3x
+	 1THCiOccp+vQWU94FMtFxgj8o47NEOki/Okk4TzYLtdp0L4lkNQpoMgQrqwmh2a7el
+	 sJQPHqQHuyX1tZ8Jy89q3GawXcKUhAJICfbN7f+dTaRca2xtZKd96SQeoeWxu4aJO/
+	 oRVa6qNGwkhpV4gK5Fzqkt3zPzqKzqFNFGTejf6zO2tMnDmGTchjiWSFZuMC/KLKFp
+	 6menozUfpMnoQ==
+Date: Thu, 4 Jun 2026 13:33:55 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Lance Yang <lance.yang@linux.dev>, npache@redhat.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, akpm@linux-foundation.org, 
+	anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
+	corbet@lwn.net, dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, 
+	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
+	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
+	liam@infradead.org, mathieu.desnoyers@efficios.com, matthew.brost@intel.com, 
+	mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de, 
+	rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org, 
+	richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
+	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com, 
+	thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, 
+	vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
+	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com, 
+	usama.arif@linux.dev
+Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize
+ collapse_huge_page for mTHP collapse
+Message-ID: <aiFlNd9vr_NJi3Ah@lucifer>
+References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
+ <20260601032804.96122-1-lance.yang@linux.dev>
+ <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -109,161 +60,201 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aiFSZfRlFPd7qlIw@parvat>
+In-Reply-To: <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
 
-On Thu, Jun 04, 2026 at 08:35:19PM +1000, Balbir Singh wrote:
-> 
-> My concern is that __GFP_PRIVATE is too wide, I wonder if we'll have a
-> need to support N_MEMORY_PRIVATE may not be all homogeneous memory nodes.
-> Very similar to how not all ZONE_DEVICE memory is homogenous.
+On Mon, Jun 01, 2026 at 08:54:24AM +0200, David Hildenbrand (Arm) wrote:
+> On 6/1/26 05:28, Lance Yang wrote:
+> >
+> > On Sun, May 31, 2026 at 10:00:17PM +0200, David Hildenbrand (Arm) wrote:
+> >> On 5/31/26 11:39, Lance Yang wrote:
+> >>>
+> >>>
+> >>> Emm ... is it safe to use map_anon_folio_pte_nopf() here?
+> >>>
+> >>> At this point pmdp_collapse_flush() has cleared the PMD from the page
+> >>> tables. The PTE table we are updating is only reachable through the saved
+> >>> old PMD value, _pmd, until pmd_populate() below.
+> >>>
+> >>> map_anon_folio_pte_nopf() does set_ptes() and then calls
+> >>> update_mmu_cache_range(). Documentation/core-api/cachetlb.rst describes
+> >>> that hook as:
+> >>>
+> >>> "
+> >>> 	At the end of every page fault, this routine is invoked to tell
+> >>> 	the architecture specific code that translations now exists
+> >>> 	in the software page tables for address space "vma->vm_mm"
+> >>> 	at virtual address "address" for "nr" consecutive pages.
+> >>> "
+> >>>
+> >>> But that does not seem true here yet, since the PTE table is not
+> >>> reachable from vma->vm_mm when update_mmu_cache_range() is called.
+> >>>
+> >>> Should we avoid calling update_mmu_cache_range() until after the PTE
+> >>> table is reinstalled with pmd_populate()?
+> >>
+> >> I recall that update_mmu_cache* users mostly care about updating folios flags,
+> >> for the folio derived from the PTE ... or flushing caches for the user address.
+> >>
+> >> So intuitively I would say "the architecture code doesn't care that the PMD
+> >> table will only be visible to HW shortly after". The important thing should be
+> >> that it will definetly happen, and that nothing else is curently there or can be
+> >> there?
+> >
+> > Ah, fair point.
+> >
+> > I was mostly worried about arch hooks that walk vma->vm_mm again, rather
+> > than only using the pte pointer passed in. For example, mips does:
 >
-
-Can you more precise about your definition of homogeneous here?
-
-Are you saying not all memory on a private node will be homogeneous?
-   While possible, I would argue that you should not do this and
-   should instead prefer to use multiple nodes - 1 per memory class.
-
-Are you saying not all private nodes will be homogenous?
-   I don't see the issue with this.
-
-> > 
-> > Agreed, but also one which can be deferred and played with since it's
-> > all kernel-internal.  None of this should have UAPI implications, and we
-> > need need to accept that we're going to get it wrong on the first try.
-> > 
-> 
-> Agreed that we might get the design wrong, until we fix it up. I feel
-> that __GFP_PRIVATE should be an evolution of the design to that point.
+> Right, a re-walk would be the real problem.
 >
+> >
+> >   update_mmu_cache_range()
+> >     -> __update_tlb()
+> >       -> pgd_offset(vma->vm_mm, address)
+> >       -> pte_offset_map(...)
+> >
+> > and __update_tlb() has this assumption:
+> >
+> > 		/*
+> > 		 * update_mmu_cache() is called between pte_offset_map_lock()
+> > 		 * and pte_unmap_unlock(), so we can assume that ptep is not
+> > 		 * NULL here: and what should be done below if it were NULL?
+> > 		 */
+> >
+> > So if khugepaged happens to run with current->active_mm == vma->vm_mm
+> > here, could __update_tlb() hit the none PMD, get NULL from
 
-Possibly.  If we can't guarantee isolation without __GFP_PRIVATE, then
-we probably can't merge the baseline without it.
+I really wish people would say Pxx _entry_ :) so confusing.
 
-> > Because pagecache pages are associated with potentially many VMAs.
-> > 
-> > The fault can be a soft fault or a hard fault.  On soft fault - the page
-> > was already present, and will simply fault into VMA without being
-> > migrated.
-> > 
-> 
-> Let's split this into two:
-> 
-> 1. unmapped page cache is never impacted by mempolicy and should not
->    end up on private memory nodes
-> 2. For shared pages, mempolicy would be hard, but it would need to
->    be on a set of nodes backed by private memory, depending on mbind()
->    policy
+> > pte_offset_map(), and then dereference it?
 >
-... snip ...
-> 
-> I'd need to think more about this. For now, my basic requirement would
-> be that unmapped page cache should not come from/to private nodes.
-> 
-
-This does not fully describe the problem.
-
-A file can be opened and cached as unmapped page cache, and then mapped
-at a later time - at which point the mapped copy would share the filemap
-page cache page.
-
-Worse, because it's file-backed, you can have the memory faulted onto
-your remote node - reclaimed - and the faulted back in via the process
-accessing the file via unmapped operations (read/write), at which point
-you've had a silent migration occur.
-
-Basically consider
-
-Process A:
-   fd = open("myfile", ..., RO);
-   read(fd, ...);  /* mm/filemap.c fills page cache */
-
-Process B:
-   fd = open("myfile", ...);
-   mem = mmap(fd, ...);
-   mbind(mem, ..., private_node);
-   for page in mem:
-       int tmp = mem[page]; /* fault into vma */
-
-The result of Process A running first is Process B thinks it has faulted
-the memory onto private_node, but in reality it's taking soft faults and
-just getting the filemap folio mapped in.
-
-If you wanted mbind() support from the start, we would have to limit
-applicability to anon memory only.
-
-Shared anon memory is different, as there is a radix tree that deals
-with a shared mempolicy state.
-
-> 
-> I am open to this, I was coming from the blueprint approach of:
-> - Let's mimic N_MEMORY with N_MEMORY_PRIVATE and then pick and choose
->   what features to change or make specific to the implementation
+> Likely yes -- that MIPS code is horrible. And the comment in MIPS code
+> even spells that out. :(
 >
-
-N_MEMORY essentially states:
-	"This is normal memory touch it however you like"
-
-N_MEMORY_PRIVATE (_MANAGED, w/e) says
-	"This is NOT normal memory, there are special rules here"
-
-So, no, lets not mimic N_MEMORY.  This is a "closed by default" design,
-while N_MEMORY is an "open by default" design.  This design choice is
-explicit to make reasoning about these nodes feasible.
-
-> > This is informed by a single use case / device.
-> > 
-> > There are users / devices that don't want any UAPI for their memory,
-> > but simply wish to re-utilize some subsection of mm/ (page_alloc,
-> > reclaim, etc).
-> > 
-> 
-> But then, why do they need NUMA nodes? Do we have a list of use cases?
+> Do you know about other code like that, or is MIPS the only one doing a
+> re-walk and crossing fingers?
 >
-
-So far i have collected:
-
-- Network accelerators carrying their own memory for message buffers
-- GPUs with semi-general-purpose working memory across coherent links
-- Acceptionally slow distributed memory that you do not want fallback
-  allocations to (so you want to deliberately tier what lands there)
-- Compressed memory (just another form of accelerator really) which
-  has *special access rules* (i.e. writes need to be controlled)
-
-In most if not all of these cases, the right abstraction to reason about
-where memory *should come from* IS a NUMA node.
-
-- the network stack can be taught to check if the target device has a
-  node with memory and prefer that node over local memory
-
-- accelerators can be given private nodes to manage memory using
-  core mm/ components, without worrying that general kernel operation
-  will put unrelated memory on those nodes or do things like migrate
-  your pages out from under you (unless your driver/service requested
-  that).
-
-the tiering application should be somewhat obvious / trivial.
-
-> > 
-> > I am trying to test whether, lacking __GFP_PRIVATE, any normal runtime
-> > operations access private nodes removed from fallback lists are reached
-> > via something like the possible / online nodemask.
-> > 
-> > I remember, maybe a year ago, there were per-node allocations happening
-> > during hotplug and that's why I originally proposed __GFP_PRIVATE, but
-> > I'm trying to re-collect that data now.
-> > 
-> 
-> Thanks, I look forward to the next set of patches. Let me know if I
-> can help test what's on the list or if you want me to wait for the next
-> round
+> >
+> > Just wanted to raise it since some arch code may still have assumptions
+> > like this, and the always-enable-mTHP work is getting closer ...
 >
+> Right. I assume set_pte_at() couldn't trigger something similar (re-walk) in arch code,
+> because we simply provide the ptep. update_mmu_cache_range() only consumes the pte.
+>
+> >
+> > Probably very very very hard to hit, though :)
+>
+> Delaying update_mmu_cache_range() is nasty, as we'd have to make sure that
+> nobody can interfere in the meantime ... and the PMD lock will not be sufficient.
+>
+> Maybe we could reinstall the page table with the cleared (none) entries while
+> still holding the PTL?
 
-Really I want to get the minimized set out the door so we can start
-breaking this up by feature (reclaim, mempolicy, etc), because trying to
-reason about it as a whole is infeasible - and I cannot be the single
-arbiter of every use case (I simply do not have sufficient context).
+You mean the cleared PTE entries that are to be updated with the collapsed
+larger folio?
 
-I'm reworking it all as we speak.
+>
+> Thinking out loud:
 
-~Gregory
+After staring at this long enough, this does seems like a viable solution yes.
+
+I hate how subtle this is.
+
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 5ba298d420b7..e39b750b1e6f 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -1413,13 +1413,17 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
+>                 map_anon_folio_pmd_nopf(folio, pmd, vma, pmd_addr);
+>         } else {
+>                 /*
+> -                * set_ptes is called in map_anon_folio_pte_nopf with the
+> -                * pmd_ptl lock still held; this is safe as the PMD is expected
+> -                * to be none. The pmd entry is then repopulated below.
+> +                * Re-insert the page table with the cleared entries, but
+> +                * hold the PTL, such that no one can mess with the re-installed
+> +                * page table until we updated the temporarily-cleared entries
+> +                * through map_anon_folio_pte_nopf().
+>                  */
+
+You may say nit, but, I think we should be clearly stating the problem here. Yes
+we want to hold the PTL to stop anybody else messing with it yet, but we're
+really doing this because of:
+
+map_anon_folio_pte_nopf
+-> update_mmu_cache_range
+-> rewalk
+-> try to look up an entry that's not yet actually installed
+-> bang
+
+Right?
+
+So maybe something like:
+
+	Re-insert the PMD entry pointing to the PTE page table with cleared
+	entries first, because map_anon_folio_pte_nopf() invokes
+	update_mmu_cache_range() which may cause a rewalk of the page tables and
+	blow up if the supplied PTE entry belongs to a PTE table that is not yet
+	present there.
+
+	We hold the PTE PTL to avoid anything else messing with this until we're
+	ready.
+
+
+> -               map_anon_folio_pte_nopf(folio, pte, vma, start_addr, /*uffd_wp=*/ false);
+> -               smp_wmb(); /* make PTEs visible before PMD. See pmd_install() */
+
+(I guess better to comment on the smp_wmb() stuff in the other message about
+this.)
+
+> +               if (pte_ptl != pmd_ptl)
+> +                       spin_lock(pte_ptl);
+
+(Obviously should be spin_lock_nested() as David says later)
+
+It seems a bit weird to me that we acquire the PTE lock:
+
+	pte = pte_offset_map_lock(mm, &_pmd, start_addr, &pte_ptl);
+
+Clear out the mTHP entries we're going to remove:
+
+	if (pte) {
+		result = __collapse_huge_page_isolate(vma, start_addr, pte, cc,
+						      order, &compound_pagelist);
+
+THen unlock the PTE:
+
+		spin_unlock(pte_ptl);
+
+Before again reacquiring here, especially given this is an unreachable PTE
+table.
+
+But then again not doing that would require us to add some error handling logic
+to unlock again so it's probably not vital.
+
+>                 pmd_populate(mm, pmd, pmd_pgtable(_pmd));
+
+So we're protecting against concurrent rmap and fault handlers with the PTL such
+that installing this is safe right?
+
+Are we good against GUP fast? I guess a race will be fine with that, or will it?
+I suppose before it would have skipped the range entirely because of the missing
+PMD entry anyway.
+
+(in any case we also hold anon_vma write lock too.)
+
+> +               map_anon_folio_pte_nopf(folio, pte, vma, start_addr, /*uffd_wp=*/ false);
+> +               if (pte_ptl != pmd_ptl)
+> +                       spin_unlock(pte_ptl);
+>         }
+>         spin_unlock(pmd_ptl);
+>
+>
+>
+> --
+> Cheers,
+>
+> David
+
+Thanks, Lorenzo
