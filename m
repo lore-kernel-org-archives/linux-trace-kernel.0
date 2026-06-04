@@ -1,75 +1,104 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD7130F803
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 08:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222DA3E0732
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 08:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780560029; cv=none; b=Lt/84ozLN9w7+kvBI16u3ounpF9nqGlJtk8W7zzJyuhiqqKXTauXG9RFZFlFpGPas4mUOUehLieM3mXa7eLF7SRZqjJjyFnf8y3fsGhQvTYWFtK2vRX3ftIZ58qTB0Y89bvTRt0Ev9xGiIMVNVEPp+3ZUoFpc3uAgRlm6W0m86c=
+	t=1780562198; cv=none; b=T3hIS8XYPZgJfXV5zETfQgFguTPO1JLRcNUpkVP7bHyxr7zwVgYec62hVG4V7aXdRw+ioIu8BLVHtgRB1D5iqI/yKN9PeiiMmMER0JIrU7FXWPnEgcuDZziQ00bHYAo2AtEviEWxlr3LzRi8EKv53oqG500q4IbkynJsiR9C6vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780560029; c=relaxed/simple;
-	bh=tLNBjb1LxGgsWGmcE25Qk72vSCilUGhydTgk7Zym6qg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E3p6nU+fz+Po6IHkT8uJwfU1zP51b6x0SWHNFUbB/k7j8g7uzz4jO5pjw1/EjQ1NiUB0Jp+Fb14AyWDr7psaVh3/ZO7dRzg1a8lgdGeZnoenLZjqmyuVeYe52WrbgN4RGhXFb5Y/+jKKgG2O5KTtPq/n6PqVY6qvHPs1vo5P+eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YjvY75eA; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780562198; c=relaxed/simple;
+	bh=Y+OOrVjaPDaCY8wbBYPbbEO/xIu0Sw/Crs4VhELjjn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S7a+T0ck9CD7ihMOwfc6o9cdU200IVejwywONU/Hqrzdc2mt3e0mSr1LOH1gDvjNT76DFxsof9CevsHui789AwVVZQWQ0xNJJ5f4bQDDCgyuk+qJBOvWpCQm+DEIX9hi4p6OwlgIOQ+wiWThFWsp+wmgKfwhhTYKx8MlfnFT7C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=IkH0C/4z; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YjvY75eA"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490bc6a7958so5321925e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 01:00:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="IkH0C/4z"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-45ef41adbc1so347502f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 01:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780560027; x=1781164827; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1780562193; x=1781166993; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5S/ODxVsZ0F1Hysh5uuXFztTRTMytWGdM0vjEW7pXv0=;
-        b=YjvY75eADabUucunowoYWwHqVIXmxoS7hbodzR0L1O/gfSJ5DvEai8MqQqmms/QU04
-         kYr0O6bTFoeu7/Cyr/ZsD+axvHsuf7Pc1dqhceEkEEuAFfRFaEF7o+2n3odGlSXSUZ0g
-         m4sIorctztaxg399WRqgdqDckdK39aDf5zz0eN50n5ZmlYfHIr/T4y/AGs30IX8gn1Sk
-         nOWgNIYQRWQFFcfu3iogyVLN17TO0Ficrffpgu5bk9xMFRHVhBluMA8dqnZB8KrZhF6g
-         vE0yuWxST1vv6MXbSmrAxWewfH9YZhs+ymBra4UWJed58jDhvhK+rkHSzgC/y1iiIOot
-         WV0A==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GOxxBGCqGPcmxW8c5748w9UZojPmDniQUCAc18TCQK8=;
+        b=IkH0C/4zGN7OB3CWOxEcz1QwaVhUZd/QNO3Ud6O4sJGNsyijW12j9Z8Dt6s2iiFyGQ
+         j3bLoAMneD10bYvliHdxyLntCqtXC6jFl62vUqYDhe/8pTj4VCL5c1ku5Y5ow8mPMjSs
+         DC/F3rB3TAy5iEI/+pJ3bF7JqYaDj9n7LrNV6b8U8cUE1Q+WdMeydfNVVCpzBLEnyvuf
+         mcVSilgjlpMVwgjGlwI3eHVnqOqqVWB8miOIiZJ15PjP1xl/lDECY9ZUPYpvqAMwxMTz
+         8PqcpbmvGea0EJhF14muH9um4hITWMx9lgRC44E7zPgKHTfIBuG85UcdZHkoN2EsrDNk
+         gCFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780560027; x=1781164827;
+        d=1e100.net; s=20251104; t=1780562193; x=1781166993;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5S/ODxVsZ0F1Hysh5uuXFztTRTMytWGdM0vjEW7pXv0=;
-        b=L3UwRCsONr3cENpn3sgDAOkzVo289wYPU649tjSAT+0LZ+M9LNS7Er8nsUejWImi/m
-         KCb7IZS4saIZEZuGXEdxrAeHkn1yBMUjtZYxqinCVCanegkIWTuZpAFGXgjCRlvHebwu
-         hbXdpvwHWit/m3LlOHS2q2l/L/OVGKOTVyLHXyaxRPHNl3aF/Z35Z9oKM0vS/v0CROjB
-         ydpBa/s9ZigRjjTTpcR1hRH/iUuSdV7fn10NpSRD3fRWsr8e7xIYz0h+JOOtl17JNovn
-         yHxrpAF03i7QswEaCqZj0F67GmI2xYLc5fV+awUVQLOcXJIXz687rxXwiH6ftf2xKsNR
-         3ziw==
-X-Forwarded-Encrypted: i=1; AFNElJ//vZW4MRFX32EVyAAi6KKvmNsY+gm0fgucg8bd/7OGwUNWOhoIloUXT8HzLuAQSqc6MjVmCkbOC4As0uBmu2/KLAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycEZqy/LFPgjmeMWe2kkw6wJ4yLmT73qEcWCXVz3k74W5KEJkB
-	ptjQ28ZGD/DgigkNLKhUHMt1eKeoZlfEK0prUikR5Pg0pV4Iu8/JVShv
-X-Gm-Gg: Acq92OFAkE9Jg7dDVCYJaE+/5FZQ+05GZT+Lt3LDfyVbm9psYVVl2jVQyEGDFL6uTPV
-	8yWr2uSzL28B6iLJehtQGwhpMCIafYHAJxqSac/7/8WxjukrCvK+hpfHv7KGfNAmV4+NxA6nan+
-	VMGXR/Ge7auEwcYn9cgiihJdtqFGOfo6kC4CIRqH4ZOxUDL7tp80EwZg5N2a9CRdoep7k5FmrhQ
-	6WlGifkzUpfb2GbdNy2RMwSK3y5visxZfGGubzgjXT/KawYkUU8gCjI9ZFCBNw9lE72a8Pr95Gs
-	vnMMFSa/cFWWMBL3An2MYrDIUdPdzYAxEMu5EVOGiNHbLNoz6HqubksgjNKnV7nL6guLdKf75if
-	nDWm3Ms7TNahrljuf8N8f5Qq1Xl5ntNzIqrMiGI/NEYl2UN1hMUR0qLJsyZMWNOfgYRt0+gLDfs
-	A3JOwIOtiv8rLz2BSfJAN/43c3Fw==
-X-Received: by 2002:a05:600c:6095:b0:490:bb60:68ca with SMTP id 5b1f17b1804b1-490bc4b54b4mr34914705e9.3.1780560026574;
-        Thu, 04 Jun 2026 01:00:26 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b7e6c774sm67383595e9.1.2026.06.04.01.00.25
+        bh=GOxxBGCqGPcmxW8c5748w9UZojPmDniQUCAc18TCQK8=;
+        b=NWZ+LDfIVwnC1hgHz6uHMvZ391GAjBoPdrnLslGGpEmY9emliDcUwjugAJvTxKQV9z
+         8vD5GpsZ9x9ZkkPcBwQsaRJHtNeRJh3W0wuX8J4U/Ezc1tjD/TzN3UyXnyKn319JilYU
+         vT27jF6JoABzQdlRV4YUF18xuVlVbLFV75dTFxT32yPWB/HZc/PE5NHskfFsv0NNI8vd
+         lEzrpMp9MPWSuKqhRD9NWXBckY4gFzQFw3UT4mBlxuBwIFUuEBPZJEWmD1BN/RME2uXh
+         fSczJebMmvW2hFCTut0cm44EkhZ6fUVdLV5kOJUhx2bPSumCKnWzDlnB/WjbgjduFAKR
+         iPoQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/miWh+2bZ0TJQH6L0F/YIP6nmh79srNWg5XtT1a0H+LJ0EdjGoY4kD/gN7goq3BQMNy+JQlHhKakcJAIOuLfe49HU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwohHrbz3sTtmZuwG343HkMoqWqz/auq7C6R+PwaVd9w7Rw2Eek
+	BBGoHjJ4XoG8UJUsymDn+aSkXs2z3/2JCklJK/shLveyETxwn/n0Kp3P/ZjZlmFid3I=
+X-Gm-Gg: Acq92OGUMACUQHBAK+reFdYPMUz42PCrUd/UjuXOClRbiTQr9OQQChOVYqPFYw3Mh0e
+	mR89jrrcQx/okRE/DhKHQpcUEOQREFhhOuA71blsT10NN6polNbg+kR4waeSRIyEadr82eUdAM4
+	pIHlHRiO7PJLolaq1If9jLcdo2REE2BjPLgQFanoAqeq2bNKfpjZYtvuars9+6wx65mBHSId92v
+	Z/wmO/xcvIZYbi8lvuSaKv364RYESfXFKKm0Cs7OoAgGezf1LTYzGT1GJD21MjiPTqR9p+dqWs/
+	srzotzdiSpLqWfuBxCXEuZqlU4ruyIbXiFsCkmIsWa5bySu3NBoDUk40fcTg/6R+EQPG8nmLaIw
+	Uf6A6EIWb+nTr3Z2klEpKx9VDUnPf9S0di407NOvOvHpcFeY0caw+cx41l4Uc2kw1xHtgEFwFGA
+	tU93sYueClYmf9i6aNc4nL1rXWsYw/2PtJhj7GM4yjtw==
+X-Received: by 2002:a05:6000:4a02:b0:43d:50c:6f33 with SMTP id ffacd0b85a97d-4602194fc19mr9571400f8f.26.1780562192938;
+        Thu, 04 Jun 2026 01:36:32 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c092:500::7:a76c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4602cda363bsm1765818f8f.31.2026.06.04.01.36.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 01:00:26 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 4 Jun 2026 10:00:23 +0200
-To: bot+bpf-ci@kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
-	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
-	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCHv7 bpf-next 13/29] bpf: Add support for tracing multi link
-Message-ID: <aiEwl5axWo8_V7cR@krava>
-References: <20260603110554.29590-14-jolsa@kernel.org>
- <6e738b0697b9ee06e9cbaa325a3330f0447f4cd12ae54d6b2c82365d58c4c525@mail.kernel.org>
+        Thu, 04 Jun 2026 01:36:32 -0700 (PDT)
+Date: Thu, 4 Jun 2026 09:36:29 +0100
+From: Gregory Price <gourry@gourry.net>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aiE5DZC8Io4SNI3H@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
+ <aiDVMgu0viTIml8H@parvat>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -78,67 +107,206 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6e738b0697b9ee06e9cbaa325a3330f0447f4cd12ae54d6b2c82365d58c4c525@mail.kernel.org>
+In-Reply-To: <aiDVMgu0viTIml8H@parvat>
 
-On Wed, Jun 03, 2026 at 11:52:13AM +0000, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index d853f97bd154..9e3cb547651e 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -42,6 +42,7 @@
-> >
-> >  #define MAX_UPROBE_MULTI_CNT (1U << 20)
-> >  #define MAX_KPROBE_MULTI_CNT (1U << 20)
-> > +#define MAX_TRACING_MULTI_CNT (1U << 20)
+On Thu, Jun 04, 2026 at 11:43:14AM +1000, Balbir Singh wrote:
+> On Wed, Jun 03, 2026 at 08:02:09AM +0100, Gregory Price wrote:
+> > 
+> > Here is how the page allocator fallback lists and nodemasks interact:
+> > 
+> >    Fallbacks A:  A B 
+> >    Fallbacks B:  B A
+> >    Fallbacks C:  C A B   (Private)
+> >    Fallbacks D:  D B A   (Private)
+> > 
 > 
-> [ ... ]
-> 
-> > @@ -3641,3 +3642,132 @@ __bpf_kfunc int bpf_copy_from_user_task_str_dynptr(const struct bpf_dynptr *dptr
-> 
-> [ ... ]
-> 
-> > +static int check_dup_ids(u32 *ids, u32 cnt)
-> > +{
-> > +	int err = 0;
-> > +
-> > +	/*
-> > +	 * Sort ids array (together with cookies array if defined)
-> > +	 * and check it for duplicates. The ids and cookies arrays
-> > +	 * are left sorted.
-> > +	 */
-> > +	sort_r_nonatomic(ids, cnt, sizeof(ids[0]), ids_cmp_r, ids_swap_r, NULL);
-> 
-> The sort here can run over up to MAX_TRACING_MULTI_CNT (1 << 20) elements
-> without ever yielding the CPU. Can this hold the CPU long enough to trip
-> RCU stalls or the soft lockup watchdog when cnt is large?
-> 
-> This was raised on an earlier posting of the series, with the suggestion
-> to add a cond_resched() somewhere in the path. The reply noted that in
-> practice the count is expected to be closer to 100k rather than the full
-> 1M limit, and that it was unclear where the cond_resched() should go, so
-> the code was left as is. Since MAX_TRACING_MULTI_CNT is still 1 << 20,
-> would it be worth revisiting whether a reschedule point is needed here?
+> Do we want regular memory (N_MEMORY) in the fallback list of device private nodes?
+> The assumption is that we have ATS translation enabled? Assumiung A and
+> B are N_MEMORY here or am I misreading your illustraion?
+>
 
-we now use sort_r_nonatomic which calls cond_resched,
-I don't think loop below needs the cond_resched call
+If we don't have __GFP_PRIVATE, then probably not.  This is a holdover
+from the current __GFP_PRIVATE branch so that if the preferred_nid=
+value is a private node (which is a hint, but not a hard control),
+there's a way for that allocation to land *somewhere*.
 
-jirka
+__GFP_PRIVATE would say "Only allow access to private nodes if this
+flag is provided - otherwise treat that as unreachable and fall back".
 
-> 
-> > +
-> > +	for (int i = 1; i < cnt; i++) {
-> > +		if (ids[i] == ids[i - 1]) {
-> > +			err = -EINVAL;
-> > +			break;
-> > +		}
-> > +	}
-> > +	return err;
-> > +}
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/26881310426
+(__GFP_PRIVATE | __GFP_THISNODE) then does exactly what you expect (only
+allocate from specifically this private node and don't fall back).
 
+This has the added benefit of not causing OOM on allocation failure.
+
+Some would consider such a request a bug (i.e. that caller has a bad
+mask), but I find the premise of that statement to be flawwed if only
+because we do not have good controls over what ends up in a nodemask due
+to the existence of things like possible_nodes.
+
+
+> > If we wanted to change this behavior, realistically we'd be looking for
+> > a way to add specific nodes to certain fallback lists - rather than
+> > modify the nodemask interaction in some way.
+> 
+> Yes, that is what we did with CDM, control the fallback for
+> N_MEMORY_PRIVATE, but there is a design decision to be made here.
+>
+
+Agreed, but also one which can be deferred and played with since it's
+all kernel-internal.  None of this should have UAPI implications, and we
+need need to accept that we're going to get it wrong on the first try.
+
+> > 2) full mempolicy support doesn't really make sense
+> > 
+> >    task mempolicy PROBABLY should never really touch private nodes,
+> >    while VMA policy certainly can.  Assuming we're able to support
+> >    multi-private-node masks, none of the non-bind mempolicies even
+> >    make sense for most private nodes (interleave? weighted interleave?)
+> > 
+> 
+> Yes, mostly, but is that baked into the design? If so, why?
+>
+
+"Baked in" in this case would mean:
+
+  set_mempolicy(..., private_node) -> -EINVAL
+  mbind(..., private_node)         -> Success
+
+With appropriate documentation.
+
+This can be changed later if a reasonable design was agreed upon.
+
+> > 4) File VMA interactions don't entirely make sense with mbind
+> > 
+> >    In theory you might want:
+> > 
+> >    fd = open("somefile", ...);
+> >    mem = mmap(fd, ...);
+> >    mbind(mem, ..., private_node);
+> >    for page in mem:
+> >       mem[page_off] /* fault file into private memory */
+> > 
+> >    In reality: This does not work the way you want.
+> 
+> Why not? Just curious about what you found?
+> 
+
+Because pagecache pages are associated with potentially many VMAs.
+
+The fault can be a soft fault or a hard fault.  On soft fault - the page
+was already present, and will simply fault into VMA without being
+migrated.
+
+You can imagine the following
+
+Process A:
+    fd = open("somefile", ...);
+    mem = mmap(fd, ...);
+    mbind(mem, ..., private_node_A);
+    for page in mem:
+       mem[page_off] /* fault file into private memory */
+
+Process B:
+    fd = open("somefile", ...);
+    mem = mmap(fd, ...);
+    mbind(mem, ..., private_node_B);
+    for page in mem:
+       mem[page_off] /* fault file into private memory */
+
+If process A runs first, and assuming VMA mempolicy is respected for
+file backed allocation (note: it's not, see below) - then the second
+process will think the memory now lives on node B when it's already
+living on node A (pages are not migrated on fault).
+
+filemap page cache means file-backed pages are global resources.
+
+Re file-backed VMAs - see filemap_alloc_folio_noprof in mm/filemap.c
+
+struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order)
+{
+        int n;
+        struct folio *folio;
+
+        if (cpuset_do_page_mem_spread()) {
+                unsigned int cpuset_mems_cookie;
+                do {
+                        cpuset_mems_cookie = read_mems_allowed_begin();
+                        n = cpuset_mem_spread_node();
+                        folio = __folio_alloc_node_noprof(gfp, order, n);
+                } while (!folio && read_mems_allowed_retry(cpuset_mems_cookie));
+
+                return folio;
+        }
+        return folio_alloc_noprof(gfp, order);
+}
+
+We'd have to hang a mempolicy off of the file and use fctl or something
+like this if we want a file to have a node preference.
+
+> > 
+> >    I went digging and we need a few mild extensions to allow
+> >    migration on mbind to work for pagecache pages, and the fault
+> >    path does not necessarily respect the vma mempolicy always.
+> > 
+> >    You also start getting into the question of "what happens when
+> >    the node is out of memory and you don't have reclaim support?".
+> 
+> Yes, we should discuss reclaim support, I think we should allow for
+> reclaim. It allows you to overcommit private memory the way we can
+> with regular memory.
+> 
+
+Reclaim support is feasible, but again - crawl, walk, run.
+
+If we get the base private node infrastructure in place, we can break
+things like mempolicy and reclaim support into different work streams
+to enable support for these features.
+
+Different private node users will be interested in different
+combinations of mm/ service support.
+
+For example:  compressed memory as a swap backend DOES NOT want explicit
+reclaim support - it will need to manage its own shrinker.  This comes
+from requirements associated with that specific use case (which I do not
+want to get into here).
+
+That is why this series introduced the concept of NP_OPS_* - so that the
+owner (driver) of a private node (such as a CXL-enabled accelerator
+driver) can tell mm/ what services it should enable for that node.
+
+> > 
+> > For all these reasons, I think the be mbind/mempolicy support with
+> > private nodes needs to be brought in with follow up work - not
+> > introduced as part of the baseline set.
+> > 
+> 
+> I am not opposed to the follow up work, but I feel mbind() should
+> be the fundamental work and user space API.
+>
+
+This is informed by a single use case / device.
+
+There are users / devices that don't want any UAPI for their memory,
+but simply wish to re-utilize some subsection of mm/ (page_alloc,
+reclaim, etc).
+
+> > 
+> > I am arguing for #1 - the community has argued for #2 and "fixing
+> > existing nodemask users".  I think we can ship #2 and pivot to #1 if we
+> > find fixing existing users is infeasible or too much of a maintenance
+> > burden.
+> 
+> Again happy to discuss this, I'd like to make sure we agree on the
+> design. I am wondering if there is any experimental data to choose
+> between 1 and 2.
+> 
+
+I am trying to test whether, lacking __GFP_PRIVATE, any normal runtime
+operations access private nodes removed from fallback lists are reached
+via something like the possible / online nodemask.
+
+I remember, maybe a year ago, there were per-node allocations happening
+during hotplug and that's why I originally proposed __GFP_PRIVATE, but
+I'm trying to re-collect that data now.
+
+~Gregory
