@@ -1,112 +1,269 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA4742EEC8
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 12:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87576429827
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 12:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780575138; cv=none; b=K69/gN2SR9H+1n0eSZMAXsnPZzws1QdUZMaQKWQxcTAotseUno2IenqEIosUfXDnaqyoSj8dlE9pCQj+hDHqkcWaKhZy5A81pHvhGGdV0t05PQNSsEBd3fbjHh8IxgDHJPeFsZvOd5M6McqLGNgQzzJs/H/TY3MDuczAkM3TqsA=
+	t=1780575531; cv=none; b=vBrY/nh1qJtFJgNSvfQh5Gt7XzsUMhS3XWbfDViofStjV6dsiTjBLuq1AkpkGWG9trVp5dXAmZATdylXt+3PU2i5ZjEvDN1dW4ig04Je41sTZtd7i2e+gN246o1HrL9hxPstOxsHBhprAucXZhvnCa+fMEQHUAnAawkfNGGPmAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780575138; c=relaxed/simple;
-	bh=caCwuqVzsWKf5C7H8mNzR3l5siRj2q+Dc6klx4frKV8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=KgVvYdwqXC6r1Zn6Sqom50NW6V1L3wggRa+ANEEwxuCAPfnQys6FxwITaL43fy73Ns0ivCPj2eGOOMd8N9CadQ0pIGXHL5pwMPHejA/GLKjgJxmyU9oOgZ6OxyTE+C8MN6PxblMUdWD1Na3SFbopWQZYqalIkB5n5wz5xquPucE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bxXjisvU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780575531; c=relaxed/simple;
+	bh=VAnfCTlLBiEiB+TD0eyA0lvhdUfV9bmWB+Umsp+9RUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBngDlzDH2wzrGwtxPih3tvQ4eXTKYgZ8ugrFmXrZsrSf02cM/bWQ62S35woKo84nndyxuC34iaLxChIFixu8ERtwR9bAxGGLmVBKgaSGjeOEeDj1QVRulCE9b44UTh+prLAVG0l/xzs5xnpNXi/3C70egdcd1D+iP+80vPTQcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=bHkB8C/Q; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bxXjisvU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780575135;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7uHeI9SWHmVw0u2/IAVTENHKMN7RT0yYMgayaQTYARU=;
-	b=bxXjisvUAThYatQYPsleo/Xm3Q++hum7J/F0M62F4ce3dYkySk+/uMt+q1GxVfHTej/R7Y
-	3ycm0aS1WR7kSYu1liG1i1PZ4Fk7+KPjhR+WA+LQK5wBJwbb4ORQ9tYcabLyAbzU6CypMU
-	eowFnzo3fQWRnMC84gXgIdOiuo8Kmt4=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-642-56wiz6byNLmVEsocSF39kQ-1; Thu,
- 04 Jun 2026 08:12:12 -0400
-X-MC-Unique: 56wiz6byNLmVEsocSF39kQ-1
-X-Mimecast-MFC-AGG-ID: 56wiz6byNLmVEsocSF39kQ_1780575131
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EF5C4195608B;
-	Thu,  4 Jun 2026 12:12:10 +0000 (UTC)
-Received: from fedora-pc.redhat.corp (headnet01.pony-001.prod.iad2.dc.redhat.com [10.2.32.101])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 58533195608E;
-	Thu,  4 Jun 2026 12:12:09 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: unknownbbqrx <dev@unknownbbqr.xyz>
-Subject: [PATCH] tools/rv: Ensure monitor name and desc are NUL-terminated
-Date: Thu,  4 Jun 2026 14:09:45 +0200
-Message-ID: <20260604120946.90302-2-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="bHkB8C/Q"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490ace40f4bso7877525e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 05:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1780575528; x=1781180328; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pv1Oyz2SuibchEQ+somLIZ/UIk84PCQQ/cJhhIFylGE=;
+        b=bHkB8C/QgMJN0x492cuzjiWQbmo/qNdHkk0X5/9T2HXegtU8YQon1Qm7OWWgEoNPP4
+         agda4Ep/0fSBgpSjoH3j8MzyIEASf2eDI6tFgMLs0kyHGAEwgPqM5pHzI62v76y3xwNF
+         36lmi7duXQFTyWuSIOpKpFcYWJ+qluWCqt6OgZcUQmLZl0yyosp2ZHyYBZDa+HhGHCgO
+         Rntj1TrqwBpm8zp2NoclZT7hu7iGBas0RiuG7drvIY6fmRBM5deljhG8COMzMwZHy5cc
+         EaY65iWFtpmgO3SGvi9nvz0R6bnMmIALmPpN4KRrHlyYSEaSuAeS9L4pDhLZrb9oV2uX
+         chMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780575528; x=1781180328;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pv1Oyz2SuibchEQ+somLIZ/UIk84PCQQ/cJhhIFylGE=;
+        b=FmzMA6bQ+xppTOdzjJntraxVtgE9QG89gFzp0XMI8QVYeP7OfKkSS1QZIO7AiLS9V6
+         fhJwtcF2HPkKLHDjOWGtizbunSQRs/KDuEYtbBIJyz+CyK6VyDqxmrMoyrQoLu++vfDq
+         EjwhodeOzEAWB9WvzmaFAsE9T2Ymm11ry/Dwsd0YdRanoKxm+0dbwlFsfSF9eG/PPR1r
+         Zrs55AC/GBZosaiZZ5Njio23dySd8HclHpmwkLjRMIrUueIRryHTJoFq1mkCoo6Rl2DY
+         OYMGlYrOG+4uVXwwTFWxHTlWVT+0CGFr68K1ck+3Tna/GTGEH8mTE1BtLfmzPTI6awF7
+         0D9Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9096dBX0ay3OHLTt5Zzt46BQQ+CWWAxgMomVBXc8EDfgUXTrdsnrZOMYIWRBmHtTCmTzYuTrcPGwv0y+b5mN3/9Po=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+A8OUhZxg2vubCUzlOPt92B+oTZjL/3Ft0L0BvmkfCxrhTs0g
+	LnAvDvGeU+VUkCy55Y2kD+hhDHibSs1FxfkqHJNvHPaZ/ZLUzAgU9igStq3pL7g6R8o=
+X-Gm-Gg: Acq92OGgsvXz/bP16mV7rPhRaPHb71Zqz1UPGToPz4E1EqCqojTKjz6XvVhR5zivp1D
+	jtkrLlg9J6rWUKOhM9tHsVnw4LZiqRHf+TKilgAbINEAZ0uq/crFKD/mkWn1KIxo5DxKpUB5Fyq
+	r4ESZOBlA8SIgXtJ8OTx1qf19k05+RGF/HMJne7SXEutr0r5spFVcIs4cjG+if+HF3GcjfQTA4r
+	dk0auP897uPJe0oXXFWr1862y689VycuW0fifYNeVu5QxoafY/+Wv5GiMiHp6TZZPw6LPq373+T
+	gEH3NxHf+Uf6shqtPnkSyJgS8WNbdMyziXeZE+NkJOVOyR7UtmzHq7ADOWh+h3JF07fr3gewhdB
+	iKx/kdg98jaPBAyXXq6GRLS4v0DRalxDSGcacLcqFtumb1xLxPlz20hzoQsaHZ3bCMcqeYHpGDw
+	qXgm/MhSf/J1azx1Jg826gD3POSqopdiU=
+X-Received: by 2002:a05:600c:4043:b0:490:b2a6:8c2a with SMTP id 5b1f17b1804b1-490b5e748e3mr78263665e9.5.1780575527855;
+        Thu, 04 Jun 2026 05:18:47 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c092:500::7:a76c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm81382665e9.9.2026.06.04.05.18.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2026 05:18:47 -0700 (PDT)
+Date: Thu, 4 Jun 2026 13:18:44 +0100
+From: Gregory Price <gourry@gourry.net>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aiFtJFqkpbZ9qFvM@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
+ <aiDVMgu0viTIml8H@parvat>
+ <aiE5DZC8Io4SNI3H@gourry-fedora-PF4VCD3F>
+ <aiFSZfRlFPd7qlIw@parvat>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: XHPhE8NnqPUdDiwRDNyDu58ogfYFRYfY-WPXj0JHLkk_1780575131
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aiFSZfRlFPd7qlIw@parvat>
 
-ikm_fill_monitor_definition() copies monitor name and description with
-strncpy(), but does not guarantee NUL termination when source strings are
-equal to or longer than the destination buffers.
+On Thu, Jun 04, 2026 at 08:35:19PM +1000, Balbir Singh wrote:
+> 
+> My concern is that __GFP_PRIVATE is too wide, I wonder if we'll have a
+> need to support N_MEMORY_PRIVATE may not be all homogeneous memory nodes.
+> Very similar to how not all ZONE_DEVICE memory is homogenous.
+>
 
-Clamp copies to sizeof(dst) - 1 and explicitly append '\0' for both fields
-to keep them safe for later string operations.
+Can you more precise about your definition of homogeneous here?
 
-Suggested-by: unknownbbqrx <dev@unknownbbqr.xyz>
-Fixes: 6d60f89691fc9 ("tools/rv: Add in-kernel monitor interface")
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Are you saying not all memory on a private node will be homogeneous?
+   While possible, I would argue that you should not do this and
+   should instead prefer to use multiple nodes - 1 per memory class.
 
----
+Are you saying not all private nodes will be homogenous?
+   I don't see the issue with this.
 
-Patch was initially sent as [1], the original author's email address
-doesn't seem to exist any longer and the author didn't provide a valid
-name.
+> > 
+> > Agreed, but also one which can be deferred and played with since it's
+> > all kernel-internal.  None of this should have UAPI implications, and we
+> > need need to accept that we're going to get it wrong on the first try.
+> > 
+> 
+> Agreed that we might get the design wrong, until we fix it up. I feel
+> that __GFP_PRIVATE should be an evolution of the design to that point.
+>
 
-Reimplementing the fix and changing attribution.
+Possibly.  If we can't guarantee isolation without __GFP_PRIVATE, then
+we probably can't merge the baseline without it.
 
-[1] - https://lore.kernel.org/r/dc9ea036-de62-4e1f-be63-8e14d675bcca@smtp-relay.sendinblue.com
+> > Because pagecache pages are associated with potentially many VMAs.
+> > 
+> > The fault can be a soft fault or a hard fault.  On soft fault - the page
+> > was already present, and will simply fault into VMA without being
+> > migrated.
+> > 
+> 
+> Let's split this into two:
+> 
+> 1. unmapped page cache is never impacted by mempolicy and should not
+>    end up on private memory nodes
+> 2. For shared pages, mempolicy would be hard, but it would need to
+>    be on a set of nodes backed by private memory, depending on mbind()
+>    policy
+>
+... snip ...
+> 
+> I'd need to think more about this. For now, my basic requirement would
+> be that unmapped page cache should not come from/to private nodes.
+> 
 
----
- tools/verification/rv/src/in_kernel.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+This does not fully describe the problem.
 
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index 4bb746ea6..d32453824 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -215,10 +215,11 @@ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *co
- 		return -1;
- 	}
- 
--	strncpy(ikm->name, nested_name, MAX_DA_NAME_LEN);
-+	strncpy(ikm->name, nested_name, sizeof(ikm->name) - 1);
-+	ikm->name[sizeof(ikm->name) - 1] = '\0';
- 	ikm->enabled = enabled;
--	strncpy(ikm->desc, desc, MAX_DESCRIPTION);
--
-+	strncpy(ikm->desc, desc, sizeof(ikm->desc) - 1);
-+	ikm->desc[sizeof(ikm->desc) - 1] = '\0';
- 	free(desc);
- 
- 	return 0;
+A file can be opened and cached as unmapped page cache, and then mapped
+at a later time - at which point the mapped copy would share the filemap
+page cache page.
 
-base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
--- 
-2.54.0
+Worse, because it's file-backed, you can have the memory faulted onto
+your remote node - reclaimed - and the faulted back in via the process
+accessing the file via unmapped operations (read/write), at which point
+you've had a silent migration occur.
 
+Basically consider
+
+Process A:
+   fd = open("myfile", ..., RO);
+   read(fd, ...);  /* mm/filemap.c fills page cache */
+
+Process B:
+   fd = open("myfile", ...);
+   mem = mmap(fd, ...);
+   mbind(mem, ..., private_node);
+   for page in mem:
+       int tmp = mem[page]; /* fault into vma */
+
+The result of Process A running first is Process B thinks it has faulted
+the memory onto private_node, but in reality it's taking soft faults and
+just getting the filemap folio mapped in.
+
+If you wanted mbind() support from the start, we would have to limit
+applicability to anon memory only.
+
+Shared anon memory is different, as there is a radix tree that deals
+with a shared mempolicy state.
+
+> 
+> I am open to this, I was coming from the blueprint approach of:
+> - Let's mimic N_MEMORY with N_MEMORY_PRIVATE and then pick and choose
+>   what features to change or make specific to the implementation
+>
+
+N_MEMORY essentially states:
+	"This is normal memory touch it however you like"
+
+N_MEMORY_PRIVATE (_MANAGED, w/e) says
+	"This is NOT normal memory, there are special rules here"
+
+So, no, lets not mimic N_MEMORY.  This is a "closed by default" design,
+while N_MEMORY is an "open by default" design.  This design choice is
+explicit to make reasoning about these nodes feasible.
+
+> > This is informed by a single use case / device.
+> > 
+> > There are users / devices that don't want any UAPI for their memory,
+> > but simply wish to re-utilize some subsection of mm/ (page_alloc,
+> > reclaim, etc).
+> > 
+> 
+> But then, why do they need NUMA nodes? Do we have a list of use cases?
+>
+
+So far i have collected:
+
+- Network accelerators carrying their own memory for message buffers
+- GPUs with semi-general-purpose working memory across coherent links
+- Acceptionally slow distributed memory that you do not want fallback
+  allocations to (so you want to deliberately tier what lands there)
+- Compressed memory (just another form of accelerator really) which
+  has *special access rules* (i.e. writes need to be controlled)
+
+In most if not all of these cases, the right abstraction to reason about
+where memory *should come from* IS a NUMA node.
+
+- the network stack can be taught to check if the target device has a
+  node with memory and prefer that node over local memory
+
+- accelerators can be given private nodes to manage memory using
+  core mm/ components, without worrying that general kernel operation
+  will put unrelated memory on those nodes or do things like migrate
+  your pages out from under you (unless your driver/service requested
+  that).
+
+the tiering application should be somewhat obvious / trivial.
+
+> > 
+> > I am trying to test whether, lacking __GFP_PRIVATE, any normal runtime
+> > operations access private nodes removed from fallback lists are reached
+> > via something like the possible / online nodemask.
+> > 
+> > I remember, maybe a year ago, there were per-node allocations happening
+> > during hotplug and that's why I originally proposed __GFP_PRIVATE, but
+> > I'm trying to re-collect that data now.
+> > 
+> 
+> Thanks, I look forward to the next set of patches. Let me know if I
+> can help test what's on the list or if you want me to wait for the next
+> round
+>
+
+Really I want to get the minimized set out the door so we can start
+breaking this up by feature (reclaim, mempolicy, etc), because trying to
+reason about it as a whole is infeasible - and I cannot be the single
+arbiter of every use case (I simply do not have sufficient context).
+
+I'm reworking it all as we speak.
+
+~Gregory
