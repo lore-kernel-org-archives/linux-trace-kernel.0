@@ -1,66 +1,99 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F195E35B650
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 20:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780604432; cv=none; b=fM4qq6WjE5n8WSRPRVmdFDC8T3MVmfHWuVzxcZQS12qhzVVQE2OSqxP7Fmf3jX6A6xIp+FBm7yrfhTlOTTOP7bqg4igvtioo5nsubHTVFPfoXoyxzbVAXtBjjX0l80KdUeMF7WHEdbE398WigJYxifzrkRFS6HiPYT0XHTfvQzk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780604432; c=relaxed/simple;
-	bh=uDuzNTF1ZSyLMYiOoa+3kMLHWZaw1Jm0DeWS6NCT25U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tui3OdB3EGsqXsnMzRhEx2E7JG4jcfBSpYK8NWCg+TY1+zCpME39NlfDRGg29srTc3QMb8GtWeEBjIK7Yu3d6KQqkb84uJm8WuA1qG4gTYB7adRTeYByGoBZ/H62NQCYQYTv9MqDmI4fXCa9BRim7cAl8YQ/aoONKugjY2Fy8ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M5EG541W; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E483939D2
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 21:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780607676; cv=pass; b=i6/t+xCI3cJTnUj7SPyHZpWByoVgxl+osXchhy2h149p9lFzJ4HRUiRE4tWXOhUgA/jx65G3FCIT5aWnWiUE4rwEqzt6FrvCEcv7RxHn5wk8rq+ko24/UK02lkD630t5K7Gt/FRXI/EYEvbfSLMkZMl51FekruWIh443XvJadqA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780607676; c=relaxed/simple;
+	bh=3EQQ6v/Jh1n3vmJAx1K0KnEtPJfjxcjgCdoh94k7jVc=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NdZkIlcypAS0PHkBLEsyZmL89LS6ZaUq+arPdEI025OuuMoncGre000kuyoVdOln7cgP4LSVlGcPeaVr5JDGJ57Tg1b0UTk1dE35Tpj9P4lYAN2aSWJ5AVN+gX4QIPxd65vaYmCTj0SCm/Ug82HebUYwcNAE3Zu77KtU//vGknM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HSRVmStj; arc=pass smtp.client-ip=74.125.82.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M5EG541W"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-36b982ec27aso878814a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 13:20:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSRVmStj"
+Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-137f3cb3f46so2189008c88.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 14:14:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780607674; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UAx6F1KnEuJmXm3a33sc2gidKcl+H1VJfueMu1Jl1fKPREefP4DnHqLCd+sr+y3zQV
+         WuUukTRIFQW9tN6rRzO6Muj6vthLFMP6UPrTKP8jgY+4VaaNhDDY67VzcOViLf6xqK6F
+         /8ibrTnL67X9sp3wqQ6+JSub2tCGg4G1XnFujdwpQpC4iZOvsZCEYVXJXrpWay0Q4T4H
+         5yrSZNA5kFyeEZL1TACODpZtLgC02eGq2MD34HBxVQqv0GfSPUwGxTJ81nitmlCM912m
+         6lYMjL6NOwvas4jrOI5gv9Kli9Tr4WAUdp3r8nhIjoZLiYQy2UhrhUzi2bj8vUnCHy1p
+         qDnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=lyPEsnWgMEwVBTMM4vHE6GHrBW2HxmanLD1B4poadMk=;
+        fh=xDuDbUDASPmivmCQSsTNKZcr8LL6xd9bj+mHAnq9rS4=;
+        b=DnW7moOiNBdq/NEWnh3sFRBbQ91gjWZnI4nM+BUGEh/MlcTVliwcP//HeSPVHo0EPb
+         aUlTj7Tjxb3JuBsAv5bazXDZxZgeqgmnpcdwy2WPVcxhaW8Xdtx9SfKzE6z3VR4KhIUd
+         XRH/k/UL7+AhrWvMj0HLShwuZbJ1Mip0o+oFzhvhKNq/HQNgQojHwutuv8j17rFmVYva
+         BAiIh2NAPqowO98tt8e/8gLctZg8TdnqLavelnxmdvVI2YRhG9g2/F+PyaGHmkP2HCxU
+         HJtkYzJmk17vjlUFdrvQ4/DBActvTVW5dtk1UNTYamUjbmd53BBqpGuc4pFlB47B/U9L
+         TUZw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780604430; x=1781209230; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tgeZ0o5WGa6wb92jyP428hFVqKsbxK2JJNVhO+w+THo=;
-        b=M5EG541WGAZi+iSKgBWjFUKlkQ7LBBMr7Gqr6jkCl8hsdjJxiJA5TPF1X2K3EWcJFx
-         gATM4W/1yZD13GGPP7iH6TIPXi17opZyan4J5oqn9lN9hCG8TGvRtRx9nr7asadzr0o/
-         lsniiJ1QVdycY/kNNIAr8C34YuBDVDFKcEvhiYY31ifUbFIPMaEO4YdeWqLvx3626SNc
-         2MwKMqmr+FBU1YR2N6HL4AJL4HGh29k2zZJkCmHiMM8g9PeH6ypdB0g/48hKQyfmKyAY
-         82ec/FHt8LbuhDxGUvTtaWKYf2Tz1LKKEa0kXsu33oBrcPgb6oS2RtS+lyn3WyEjObhN
-         1ByA==
+        d=google.com; s=20251104; t=1780607674; x=1781212474; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lyPEsnWgMEwVBTMM4vHE6GHrBW2HxmanLD1B4poadMk=;
+        b=HSRVmStjClcx3bpB0Nbb1WbyCagVBGV1o7cutwUR264MGwQtzC2eb77Y4bg1tLolFP
+         UxRJgZO+x7uVz755belwPYpkKr0fa/sLsswY6U1FbRuGSq+FRLZFV9E37egIdz3AcdQD
+         Y6oth/EnlnZP+/as2xeBZe3f7YSCyOc+HK+OHIlR+MxlsswubTEXHxmnK/Y/SXtN+RNO
+         jjIk9ygzfucGJ4Lbodc642V544cS1eVP+enD/KpsMBJXgJncUfmlXv1lk0kIwxMlnR97
+         hDrSM1KDXGTYGLzCh7o2tGiU31yb/ExLLod3UWlbUSsGzNOsH+nfF8R4e8YKs+r5EgoY
+         Z6og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780604430; x=1781209230;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tgeZ0o5WGa6wb92jyP428hFVqKsbxK2JJNVhO+w+THo=;
-        b=isGElTSgZhgQzu76YSHTGwesyUECQkvuGWSpquxkcQc5QslKfyeN+USmq2fmzvHVFN
-         ABa8eKxTYI5w90I18PtVIIhhOL3myNSDmTVtPkjHLbtVmc8txwz5Su2+X25g3CuWemku
-         Tw65ieWu3MNMqf6nuNwk5Z93xafcai85hgoW9R999Y7/4mrM0V7PetX08eq3NyNWhxlm
-         4kyEEHbvxvN46R6hADDawAlnEOetUPXJiDJSCpODlcnTQCcDgX722mxFODGx/oke8hc0
-         5qomzxZsoiFRZMMhGltva6DwAf9bpytJxecYIZjcuLXpKBvnYL8AFwUaZBNsNLg5QqnF
-         34Pw==
-X-Forwarded-Encrypted: i=1; AFNElJ/sXkIW3bH9ywYmsWWIWmWaHPAc/C1j/tKv3isXaa5wuSh5xaeK45zU8pR/qQHhZrmGkFK3IVK3ltzq71791GGv3SQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCcYJq/JKt0WzxvldHf11dtMsvPv5Xil85uy02jaeLWvGPDeJH
-	UzHWUgCu5gHfaji9sZv9CJx8pzS90QOnJjPJbAIds8qRdfqgNBhCPrltfL6wmHZgwYNa2UZj5sp
-	nvuBbPw==
-X-Received: from pjao2.prod.google.com ([2002:a17:90a:1682:b0:365:d2b3:f703])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b04:b0:36a:5d1f:7b6
- with SMTP id 98e67ed59e1d1-370ee5444e7mr546764a91.2.1780604429941; Thu, 04
- Jun 2026 13:20:29 -0700 (PDT)
-Date: Thu, 4 Jun 2026 13:20:29 -0700
-In-Reply-To: <CAEvNRgGpaggjd3=ooyzv7iEbmA-x1mWJHgjLSjPi8=5CPrk-yQ@mail.gmail.com>
+        d=1e100.net; s=20251104; t=1780607674; x=1781212474;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lyPEsnWgMEwVBTMM4vHE6GHrBW2HxmanLD1B4poadMk=;
+        b=bYpDYfE8BcFeyO3nkXxQ5d4+ZXKtZtOaXasMDXflTDbRy0xOKovSegyMVJnJzlBRpY
+         h/TxRU6NTdBxbnPXJWFmhXX2l638oJrGNmskhoMOSmiBulj3T+YmOsBa9IDjpk1lqzZi
+         xNEx1YZH7tOWpiNlobSePp3O2G9G7lvq1Y8/FT/xmsBbHKlJlIk9AA8n96t4BZT8nbfU
+         Al0l7f4CAk4m+QKi7HAk0LxtXaGSGDv/LxlIBgV28SmaOackUVwiR45SHxzlBamffKxs
+         vxLn4urbV9K2RIzLDFpmAqdt6Tn8QtC5T9qZJwTnhdWB/mylMg5dPMAlfYdaivZkXtIt
+         ObmA==
+X-Forwarded-Encrypted: i=1; AFNElJ+9bcThLFbfd3pG8QYG3VwpbXJZ8ay0UUtt6jBf/AGHnrutD8ztfdhqogqKewQl7y9eRdAuX440G7gAwDRDohYUkWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhBgjWAYSpQi7lYMQNBVXgWCem7UZ6+S1SrI6h6iciiZ0/LFek
+	i7WdPsjbh2x8U50puE32vddlQTD1py6hyqw9IlSWi7M3D9hcB3TLP0GCij7JIKVaOLoMIM3Gsc9
+	/xymldGsDt8dNr4uNaV/ktf+55CGvg60rbsMIz3e8
+X-Gm-Gg: Acq92OF0c8wYyAYDXpm975D2LPdEI/qdOVrWLCUxowqLSWPU66Yo5DlFtucg3IqbyP4
+	S/XirQu9FTidOzLQQp7y+Xzz5OKfKDiN3P/NUyTE/Md8wYO6P5wY54Bnq4Vs22uf8WpVyhD6CuR
+	9cxHdwJZg7AQpobnmiTZLq9X7nCXyF/qxXNXELHXrbmF9wIkkIpYnwhWxYDHfQvzF/wUfu7YDKz
+	24ryuey1++iuY9uiEpXcR6BwQy3ef7wvnrvNFs4MMdiaNPVhobMv/r8Oszsfocilcr0EY8UHtNn
+	cx9OPN/3/HB2V+A2ULaZSRPU1+ODMPhXWv47JU4Wis+mEv5h7GEkNz0s0j/9faKqeVvTStddy3+
+	eRsI=
+X-Received: by 2002:a05:7300:5b83:b0:304:acc:f086 with SMTP id
+ 5a478bee46e88-3077b7ec417mr207174eec.33.1780607673246; Thu, 04 Jun 2026
+ 14:14:33 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 4 Jun 2026 14:14:32 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 4 Jun 2026 14:14:32 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <aiHeDZEPkAcWcSkn@google.com>
+References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
+ <CAEvNRgGpaggjd3=ooyzv7iEbmA-x1mWJHgjLSjPi8=5CPrk-yQ@mail.gmail.com> <aiHeDZEPkAcWcSkn@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com> <CAEvNRgGpaggjd3=ooyzv7iEbmA-x1mWJHgjLSjPi8=5CPrk-yQ@mail.gmail.com>
-Message-ID: <aiHeDZEPkAcWcSkn@google.com>
+MIME-Version: 1.0
+Date: Thu, 4 Jun 2026 14:14:32 -0700
+X-Gm-Features: AVHnY4J7O-BvLwAbWwmNVfQCapmW0Jz58QA9MN7lFJVjBHp7oGK-p6NKEbfSA24
+Message-ID: <CAEvNRgHz5GDjq0GqRmpQdHc-X45gCNr39VYWZH-T7XhPEtN5CQ@mail.gmail.com>
 Subject: Re: [PATCH v7 00/42] guest_memfd: In-place conversion support
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
+To: Sean Christopherson <seanjc@google.com>
 Cc: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>, aik@amd.com, 
 	andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org, 
 	chao.p.peng@linux.intel.com, david@kernel.org, ira.weiny@intel.com, 
@@ -87,64 +120,85 @@ Cc: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>, aik@a
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
 	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 03, 2026, Ackerley Tng wrote:
-> Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-> writes:
-> 
-> > This is v7 of guest_memfd in-place conversion support.
-> >
-> 
-> Here's the outstanding items after going over everyone's comments
-> including Sashiko's:
-> 
-> + KVM: TDX: Make source page optional for KVM_TDX_INIT_MEM_REGION
->     + Need to move page clearing into __kvm_gmem_get_pfn to resolve
->       leak where populate can put initialized kernel memory into TDX
->       guest
->     + See suggested fix at [1]
+Sean Christopherson <seanjc@google.com> writes:
 
-That fix works for me.  The initial guest image will typically be a tiny subset
-of guest memory, so unnecessarily zeroing a few pages isn't a performance concern.
+> On Wed, Jun 03, 2026, Ackerley Tng wrote:
+>> Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
+>> writes:
+>>
+>> > This is v7 of guest_memfd in-place conversion support.
+>> >
+>>
+>> Here's the outstanding items after going over everyone's comments
+>> including Sashiko's:
+>>
+>> + KVM: TDX: Make source page optional for KVM_TDX_INIT_MEM_REGION
+>>     + Need to move page clearing into __kvm_gmem_get_pfn to resolve
+>>       leak where populate can put initialized kernel memory into TDX
+>>       guest
+>>     + See suggested fix at [1]
+>
+> That fix works for me.  The initial guest image will typically be a tiny subset
+> of guest memory, so unnecessarily zeroing a few pages isn't a performance concern.
+>
 
-> + KVM: guest_memfd: Only prepare folios for private pages,
->     + s/non-CoCo/CoCo in commit message "INIT_SHARED is about to be
->       supported for non-CoCo VMs in a later patch in this series
->     + Use Suggested-by: Michael Roth <michael.roth@amd.com>
-> + KVM: selftests: Test that shared/private status is consistent across
->   processes
->     + Improve test reliability using pthread_mutex
->     + I have a fixup patch offline.
-> 	
-> I would like feedback on these:
-> 	
-> + KVM: selftests: Test conversion with elevated page refcount
->     + Askar pointed out that soon vmsplice may not pin pages. Should I
->       pin pages through CONFIG_GUP_TEST like in [2]? I prefer not to
->       take a dependency on CONFIG_GUP_TEST.
+In regular usage moving the zeroing in [1] doesn't change anything,
+since the same zeroing would have first happened when the host faults
+the pages to put the initial image. When populating, there's no more
+zeroing since it was zeroed.
 
-I'm not exactly excited about taking a dependency on CONFIG_GUP_TEST either, but
-it probably is the least awful choice.  E.g. KVM also pins pages is certain flows,
-but we're _also_ actively working to remove the need to pin.
+[1] covers the case where the host doesn't write anything to the pages
+and directly tries to populate the pages to the guest.
 
-Hmm, maybe IORING_REGISTER_PBUF_RING?  AFAICT, it's almost literally a "pin user
-memory" syscall.
+>> + KVM: guest_memfd: Only prepare folios for private pages,
+>>     + s/non-CoCo/CoCo in commit message "INIT_SHARED is about to be
+>>       supported for non-CoCo VMs in a later patch in this series
+>>     + Use Suggested-by: Michael Roth <michael.roth@amd.com>
+>> + KVM: selftests: Test that shared/private status is consistent across
+>>   processes
+>>     + Improve test reliability using pthread_mutex
+>>     + I have a fixup patch offline.
+>> 	
+>> I would like feedback on these:
+>> 	
+>> + KVM: selftests: Test conversion with elevated page refcount
+>>     + Askar pointed out that soon vmsplice may not pin pages. Should I
+>>       pin pages through CONFIG_GUP_TEST like in [2]? I prefer not to
+>>       take a dependency on CONFIG_GUP_TEST.
+>
+> I'm not exactly excited about taking a dependency on CONFIG_GUP_TEST either, but
+> it probably is the least awful choice.  E.g. KVM also pins pages is certain flows,
+> but we're _also_ actively working to remove the need to pin.
+>
+> Hmm, maybe IORING_REGISTER_PBUF_RING?  AFAICT, it's almost literally a "pin user
+> memory" syscall.
+>
 
-> + KVM: selftests: Add script to exercise private_mem_conversions_test
->     + Would like to know what people think of a wrapper script before
->       I address Sashiko's comments.
+Hmm that takes a dependency on io_uring, which isn't always compiled
+in. Between CONFIG_IO_URING and CONFIG_GUP_TEST, I'd rather
+CONFIG_GUP_TEST.
 
-NAK to a wrapper script.  This sounds like a perfect fit for Vipin's selftest
-runner (which I'm like 4 months overdue for reviewing, testing, and merging).
-If the runner _can't_ do what you want, then I'd rather improve the runner.
+>> + KVM: selftests: Add script to exercise private_mem_conversions_test
+>>     + Would like to know what people think of a wrapper script before
+>>       I address Sashiko's comments.
+>
+> NAK to a wrapper script.  This sounds like a perfect fit for Vipin's selftest
+> runner (which I'm like 4 months overdue for reviewing, testing, and merging).
+> If the runner _can't_ do what you want, then I'd rather improve the runner.
+>
+> [*] https://lore.kernel.org/all/20260331194202.1722082-1-vipinsh@google.com
+>
 
-[*] https://lore.kernel.org/all/20260331194202.1722082-1-vipinsh@google.com
+Good to know we have this!
 
-> 
-> [1] https://lore.kernel.org/all/CAEvNRgEVC=fFuKVgZYvWyZD7t_zvUZihFG8hrACjvtkD5cwugw@mail.gmail.com/
-> [2] https://lore.kernel.org/all/baa8838f623102931e755cf34c86314b305af49c.1747264138.git.ackerleytng@google.com/
-> 
-> >
-> > [...snip...]
-> >
+Thanks, I'll work on a v8 to clean up the above.
+
+>>
+>> [1] https://lore.kernel.org/all/CAEvNRgEVC=fFuKVgZYvWyZD7t_zvUZihFG8hrACjvtkD5cwugw@mail.gmail.com/
+>> [2] https://lore.kernel.org/all/baa8838f623102931e755cf34c86314b305af49c.1747264138.git.ackerleytng@google.com/
+>>
+>> >
+>> > [...snip...]
+>> >
