@@ -1,63 +1,63 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0D92701BB
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 02:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE603A6B8D
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jun 2026 02:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780540730; cv=none; b=WjpBdTkwuJdQ2axrrbO5K3fbZCvffZLe+9xKb/+53vwiOToxvcWwWrzm2TCWwrE/LauB09nL6+rqGGDE/3hQGIYiXIi4wPAzVIRxLELrMojLN1F+218/CJOalk8rFrzI0b5X/red/bkzWlw2U9N74XzO7ZRkxwVw/+g6k/GxtxI=
+	t=1780540745; cv=none; b=dMFtszt7JvUcawRME0/B+yAe+mYp6lEEkzzz7s/Z/IS5OHuWkWEXjPnS205jOmwrgIn2EzhGK8Wz162+UkMSu4enuUXaDeJFxlsAmsQt5XJhZtejiJ02Z1Ke5ZXWVeUKrE/ScWRdsUrQvymY/zOJh7ary7w5fwzoEtV+RRymYyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780540730; c=relaxed/simple;
-	bh=IYmoyLg/EeJdFRiogqb1Pp9mqFRQfPgEPlVgRs+mRvA=;
+	s=arc-20240116; t=1780540745; c=relaxed/simple;
+	bh=Z/Eh9Ow9GWrkfmkO+fjqV3ynDGOPRF2+Js97K1B7ZoQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=obrGdGzLKuguBMpyeKvhDr21CeQ2EQuwlNqWfQbl+MWWxklNn/1jTATp4rK9rdg0srEfa09rwMzH1it0+Km/ZjtJ4XRSjBUePfoch3tkHPUIPHLW+pDJcrr3JKcvZ6gcyitOYZYZVDsruzl1mzEm5s0nGLFZzBGTnSd0UnI8KpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=An5fzT8b; arc=none smtp.client-ip=209.85.216.66
+	 MIME-Version; b=hIwILlE0UgxIot5wu/66CR4pevey/H/3OuLtA9g8LTZQ60dIHlraUPwWBlUvpUW9Zq7gVeAfL1qTtsLCA+sG3JpEZYTnkGNfk3gtSimiDTTlgm9QdtHsuolVG4T/I+obcYB/zaBU96KJhAuPVkNOFR0CbZuFxY4qapj8E+TUgaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQRvYIVf; arc=none smtp.client-ip=209.85.216.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="An5fzT8b"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-36dac5d5d05so81545a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jun 2026 19:38:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQRvYIVf"
+Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-36bba9a1089so97971a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jun 2026 19:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780540728; x=1781145528; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780540741; x=1781145541; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=903p+XYNW6RRuBbLdT64GGYbi0Y3SIaWw22qBNVgp0Y=;
-        b=An5fzT8bDvQsj+HXZpLrF1Wlp+N5ka0dUJWP4Nx+KgNQwKiEHgRhSFmiDm0VdTU7Fw
-         JDLBX0nV2t7rGdIA7wG52JnwuGl1LK53ciD8bBWq4aY/Puec2gdcvsCjjhkQpwhYa8dx
-         57I8W7ZczBA5pKwf1PzcUmZsPs+2lFnxrrw8IAC+INWzgYPTDmKoQgxpSqZMJCj9270T
-         37z2LwjCJUSnqBo6PI3jgwD+FNQUKap2X2l63IjeJJsVPcjfPNvVNUuasMWWZY9iZtxe
-         lnKQUCXfXkYODjgS4aA/1oD6fXajZOdIsIQbCXTf14wkcdrJCny2F1SV65sH2w3KwrY6
-         ArGA==
+        bh=fY6gm/PYAmXfMCLc0nBMu9O2mOg48yeIOplSmvWr19Y=;
+        b=iQRvYIVfjsGG3arVLfNoG7woel5fUonNz0AoNjaktoYVBau1BS1gAbI+Zpn9hB8dch
+         u9yso3iEvSEbQRnwb68lRrUPoB8i8Zo26TfjkwBIsfyQgTUjoAr+w4FM6srDHT9lruqM
+         ejHRufQ7OMRecOO2+goIkbhzIWJlVqGEgURBhuNftENrVhlGrTWMHpB2YIFqIZlwyfKW
+         GOY+/4T2vq8RF6HTCVw2+U78E0eL2jSyrW/5PXMv8flPnWYe6YOztE7S0SyT7VzzV2TL
+         CqgOGN/gnBAd6NqRWVw7k8rj3locHIbE4YfNpcrB+tKpuzuiziCACRcsV+2OvsMFiq7l
+         VkNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780540728; x=1781145528;
+        d=1e100.net; s=20251104; t=1780540741; x=1781145541;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=903p+XYNW6RRuBbLdT64GGYbi0Y3SIaWw22qBNVgp0Y=;
-        b=UxVRbvPjt3viDxe1wN/vqbY/dnwrp4TaoYVfWEvhPA4xzV9RTPuYAcSlidBd7AxOy6
-         2976Yhg8bz9nD2GLCWoEl2n9g66knLdwbpeXwTbwne1E0wOb+49U76lIQ0MgIxhbto02
-         0hROxIamGwPYkn0aWnaMwcp/p/0+vRHQgBMgceEjpgybJiHS9JNxmByr+1iXvdSPJbda
-         wVOHTzTq60ts1G6TdssoEHjT46RtwHkl5A1AuNoRkQHFgMTkjIFJwxhzEs1TRkMIj6sd
-         cvMRNBLcAO0YL7xHB7ngMUGpmdDRALh+FKUg2VXwOVwQMgEL6bd+Vq32BtDncJlv0pPB
-         utww==
-X-Forwarded-Encrypted: i=1; AFNElJ/U/M3Es3qp8rIUVKpRDztQuUCr66XF0AKjQBuQEpR+dumkKRJFpdQGqLyGLIV/KQqy1LPVVNGqEmanbCpzd+IDwrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+Ygyf35wdJb1WKqa0JOHp+G4Pde5abss6NnuabPQrQFfSPjPv
-	V05u59iRBj/VJ375FuHjx0dBXgFrq3SGVM1xbUvhn0vme/ZyMQ9jkBkD
-X-Gm-Gg: Acq92OF04s2GQJRrP5+1gCm98jjLNmvn0Yr+zmoozGQJd9joHeJp6khKlQyKyRKAA7N
-	h6T2duA1lrTov1v8r+qmxX621LC2EMPvlJdkDum1mEcw7laYySeSoDxaI01egdQHwTh7WnyXtIG
-	duWLVMKEKQoL9Wxyd/N9WHcZI8q5mnyZoythpa6vPbyVSRljjAMC7CmcRPqcNXfXMof8j+NRMzf
-	qKapde7yj1vZLxqJdslyyM+bE9aVqgDyB8fFBGs1W6RDLHbuHUn1jjw+JoljbJogMjOb7tJe3Z5
-	k3zFSq9FHTmuimHHhhac+s3DBiwOE+m4+P9y/ywy3LYUY+DsEcHqhCs4VkBNg8RRQ6z4oih07/s
-	XnNTZq4cWL71d/HlCIRdA/ss1866XZoGNLHSs8xQKxdS1WBdbU5In8KxLzoYRYxRHXS8sQy18FB
-	sDNR4mfLOjiFuRx3LPkU6WK5KGUPRe27kmy4IZxpSgyGMcOZc=
-X-Received: by 2002:a17:90b:2b86:b0:36b:aed6:235a with SMTP id 98e67ed59e1d1-36e33106b26mr5951841a91.22.1780540728330;
-        Wed, 03 Jun 2026 19:38:48 -0700 (PDT)
+        bh=fY6gm/PYAmXfMCLc0nBMu9O2mOg48yeIOplSmvWr19Y=;
+        b=FborOCjgjIdg4GyFWETsRzsqFUMvJ0gKGV6IZ1z/Y7/yevWAtXXdo6lJW/Ueq2AnpM
+         JmvWpG9du4bvbbEBGY2qo7Z9ouiEFxkVW91MqBnzyRRFzsItxv7KzwhxbIY12KLdDHnA
+         Yr92J/XG+NVu6PYXxSu1cLGKY31K95K9S5GBu/drKPR8MssJ4WCnqMFgOogwKPbYbkD/
+         Gg/w0GSz/6XEr/1fGnqfPqmQ65rWwuH3zy7WINU+kTNoBOGqaoI1h97tFJvAQG0E+ZE6
+         MszlNZPPNZyMKHSSit9UILpnHTWUn8os6ubOQ/7JaW0Ieq08k7PAcfAfY2ReG54dh2iu
+         g78w==
+X-Forwarded-Encrypted: i=1; AFNElJ9N4PRMWHto0Yd5Oz3qEdhdhm012EStDgT48zq6JetL5R7as8MB8g3lDrsFA4156o1zgez20e6D/J14ko9exPO9m08=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEP1K0apUENtf4vX+oESbr80GcvqqTlgGYS9bjz4YwDBqDAtgZ
+	j54Mp1DtiPG65RiGYCZGDuUZs6O1YMOEaYvRDHwfleVWXANpjraVw1tm
+X-Gm-Gg: Acq92OH22Uv8H0ozxrzyY8ZJOU1kQJ/hm2Ik3XtuOQvRnCO8523AavfkPCS5BTxCRiZ
+	Wb0OPMWAuvNn5c2l7wglZCPqs3OAImkkvIuXYSuc+di+X3i5C35C9DIknwwn6XwpNEdDbbB4lyi
+	lENR/Eshu/x6mg88A8IJ3l2EsLSuggef3UbbW9I7djZ+XjK/SercyMqL0aNclJ3R4Zyu5p8c14T
+	Tqz50KD0xodeOtSTeseoETVTOWJW/1S7iGdK2f6v0SRMkYlG3al1RurpUUqGZAOIrCpQqO6+ujK
+	fIVCF2UmdPzdsN314pT90IeU+OE0EA+uyrIrgD13iJnTlbrty1U2tWEEwSdkf+pCbPoGqp/NWTa
+	a4lW6S3MA3IkhjXr5qGvrtyRlMaCC2BvJAiKL4GRtgobaavvJsv4pG83DGDI9S6cf2LPQA9eERb
+	kvTs3KGqoyKSfPnnXFoVXz2xS3yaMS9GjGpNfucU2kyA9Bze0=
+X-Received: by 2002:a17:90b:4ac7:b0:365:a5f6:4a5c with SMTP id 98e67ed59e1d1-36e3064896cmr5407549a91.1.1780540740997;
+        Wed, 03 Jun 2026 19:39:00 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6dba8573sm1253072a91.14.2026.06.03.19.38.38
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6dba8573sm1253072a91.14.2026.06.03.19.38.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 19:38:47 -0700 (PDT)
+        Wed, 03 Jun 2026 19:39:00 -0700 (PDT)
 From: Wandun Chen <chenwandun1@gmail.com>
 To: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
@@ -80,9 +80,9 @@ Cc: akpm@linux-foundation.org,
 	bigeasy@linutronix.de,
 	clrkwllms@kernel.org,
 	Alexander.Krabler@kuka.com
-Subject: [RFC PATCH 2/3] mm/compaction: add per-folio isolation tracepoint
-Date: Thu,  4 Jun 2026 10:38:11 +0800
-Message-ID: <20260604023812.3700316-3-chenwandun1@gmail.com>
+Subject: [RFC PATCH 3/3] mm/compaction: respect compact_unevictable_allowed in alloc_contig path
+Date: Thu,  4 Jun 2026 10:38:12 +0800
+Message-ID: <20260604023812.3700316-4-chenwandun1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260604023812.3700316-1-chenwandun1@gmail.com>
 References: <20260604023812.3700316-1-chenwandun1@gmail.com>
@@ -96,70 +96,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Wandun Chen <chenwandun@lixiang.com>
 
-Add a tracepoint that fires once per folio successfully isolated by
-isolate_migratepages_block(), recording the pfn, isolation mode and
-the folio flags. Knowing these makes it easier to debug unexpected
-isolation, such as mlocked or unevictable folios showing up on
-PREEMPT_RT kernels [1].
+vm.compact_unevictable_allowed=0 is used to prevent compacting
+unevictable pages. However, isolate_migratepages_range() passes
+ISOLATE_UNEVICTABLE regardless of this sysctl, so the setting
+has no effect in the alloc_contig path.
 
-Inspired-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Fix it by:
+  - Keep ISOLATE_UNEVICTABLE for CMA allocation, discussed in [1].
+  - Honour sysctl_compact_unevictable_allowed for non-CMA allocation.
+
+Suggested-by: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-Link: https://lore.kernel.org/all/20250820142919.HTybedrl@linutronix.de/ [1]
+Link: https://lore.kernel.org/all/25ba0d77-eb61-4efc-b2fc-73878cbd85c1@suse.cz/ [1]
 ---
- include/trace/events/compaction.h | 26 ++++++++++++++++++++++++++
- mm/compaction.c                   |  2 ++
- 2 files changed, 28 insertions(+)
+ include/linux/compaction.h | 6 ++++++
+ mm/compaction.c            | 9 +++++++--
+ mm/internal.h              | 1 +
+ mm/page_alloc.c            | 2 ++
+ 4 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
-index d05759d18538..8b8b3ec0f324 100644
---- a/include/trace/events/compaction.h
-+++ b/include/trace/events/compaction.h
-@@ -76,6 +76,32 @@ DEFINE_EVENT(mm_compaction_isolate_template, mm_compaction_fast_isolate_freepage
- );
+diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+index f29ef0653546..04e60f65b976 100644
+--- a/include/linux/compaction.h
++++ b/include/linux/compaction.h
+@@ -106,6 +106,7 @@ bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
+ extern void __meminit kcompactd_run(int nid);
+ extern void __meminit kcompactd_stop(int nid);
+ extern void wakeup_kcompactd(pg_data_t *pgdat, int order, int highest_zoneidx);
++extern bool compaction_allow_unevictable(void);
  
- #ifdef CONFIG_COMPACTION
-+TRACE_EVENT(mm_compaction_isolate_folio,
-+
-+	TP_PROTO(unsigned long pfn,
-+		isolate_mode_t mode,
-+		unsigned long flags),
-+
-+	TP_ARGS(pfn, mode, flags),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, pfn)
-+		__field(isolate_mode_t, mode)
-+		__field(unsigned long, flags)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pfn = pfn;
-+		__entry->mode = mode;
-+		__entry->flags = flags;
-+	),
-+
-+	TP_printk("pfn=0x%lx mode=0x%x flags=%s",
-+		__entry->pfn,
-+		__entry->mode,
-+		show_page_flags(__entry->flags & PAGEFLAGS_MASK))
-+);
-+
- TRACE_EVENT(mm_compaction_migratepages,
+ #else
+ static inline void reset_isolation_suitable(pg_data_t *pgdat)
+@@ -131,6 +132,11 @@ static inline void wakeup_kcompactd(pg_data_t *pgdat,
+ {
+ }
  
- 	TP_PROTO(unsigned int nr_migratepages,
++static inline bool compaction_allow_unevictable(void)
++{
++	return true;
++}
++
+ #endif /* CONFIG_COMPACTION */
+ 
+ struct node;
 diff --git a/mm/compaction.c b/mm/compaction.c
-index 7e07b792bcb5..007d5e00a8ae 100644
+index 007d5e00a8ae..a10acb273454 100644
 --- a/mm/compaction.c
 +++ b/mm/compaction.c
-@@ -1223,6 +1223,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- isolate_success:
- 		list_add(&folio->lru, &cc->migratepages);
- isolate_success_no_list:
-+		trace_mm_compaction_isolate_folio(folio_pfn(folio), mode,
-+						  folio->flags.f);
- 		cc->nr_migratepages += folio_nr_pages(folio);
- 		nr_isolated += folio_nr_pages(folio);
- 		nr_scanned += folio_nr_pages(folio) - 1;
+@@ -1341,6 +1341,7 @@ isolate_migratepages_range(struct compact_control *cc, unsigned long start_pfn,
+ 							unsigned long end_pfn)
+ {
+ 	unsigned long pfn, block_start_pfn, block_end_pfn;
++	isolate_mode_t mode = cc->allow_unevictable ? ISOLATE_UNEVICTABLE : 0;
+ 	int ret = 0;
+ 
+ 	/* Scan block by block. First and last block may be incomplete */
+@@ -1360,8 +1361,7 @@ isolate_migratepages_range(struct compact_control *cc, unsigned long start_pfn,
+ 					block_end_pfn, cc->zone))
+ 			continue;
+ 
+-		ret = isolate_migratepages_block(cc, pfn, block_end_pfn,
+-						 ISOLATE_UNEVICTABLE);
++		ret = isolate_migratepages_block(cc, pfn, block_end_pfn, mode);
+ 
+ 		if (ret)
+ 			break;
+@@ -1902,6 +1902,11 @@ typedef enum {
+  * compactable pages.
+  */
+ static int sysctl_compact_unevictable_allowed __read_mostly = CONFIG_COMPACT_UNEVICTABLE_DEFAULT;
++
++bool compaction_allow_unevictable(void)
++{
++	return sysctl_compact_unevictable_allowed;
++}
+ /*
+  * Tunable for proactive compaction. It determines how
+  * aggressively the kernel should compact memory in the
+diff --git a/mm/internal.h b/mm/internal.h
+index 181e79f1d6a2..163f9d6b37f3 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1052,6 +1052,7 @@ struct compact_control {
+ 					 * ensure forward progress.
+ 					 */
+ 	bool alloc_contig;		/* alloc_contig_range allocation */
++	bool allow_unevictable;		/* Allow isolation of unevictable folios */
+ };
+ 
+ /*
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 81a9d4d1e6c0..1cf9d4a3b14c 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7118,6 +7118,8 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
+ 		.ignore_skip_hint = true,
+ 		.no_set_skip_hint = true,
+ 		.alloc_contig = true,
++		.allow_unevictable = !!(alloc_flags & ACR_FLAGS_CMA) ||
++					     compaction_allow_unevictable(),
+ 	};
+ 	INIT_LIST_HEAD(&cc.migratepages);
+ 	enum pb_isolate_mode mode = (alloc_flags & ACR_FLAGS_CMA) ?
 -- 
 2.43.0
 
