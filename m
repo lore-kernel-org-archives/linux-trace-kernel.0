@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0F24A3412;
-	Fri,  5 Jun 2026 08:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936364A2E38;
+	Fri,  5 Jun 2026 08:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780649503; cv=none; b=SAap+amqP+Zzb/rSeTvdpKrsUYpo6Ni9ZOpGh/+uS61FJlIEAT03kgZ6uuQzNsULm4dWjZuv4oz9RCv4bN3mhxVazvervM2fxK1DSI1WAN7dUMc/CGLvWs8a3DdnPH7Yl4EHaR4tPj2jgY79KjJ8IheAGJuu6jtWJixPR6ns7Qo=
+	t=1780649556; cv=none; b=qE3g9hAhZAP/LSGNdJVrDK7ikH3G6F82f6UZ38VL/SWbscWBdUNuGsVWrpqqeZNVh0lISTWZK5DMkZ2TmjGC1J+gV1KdpuRPp1Ueh4jBK06qTChx+D+Oscum8Phykq031BszcgOLCittA+nuVIzfPRXLAmqJKaIY3Fsrvb2GFso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780649503; c=relaxed/simple;
-	bh=8yIvpbTVxGba6Vh2/cqlmbq+KNydJas30bcx4rW4Tjc=;
+	s=arc-20240116; t=1780649556; c=relaxed/simple;
+	bh=Gi/qbEKBIfDFH9flGZqk2T6/fjp0XxpJ45M24fdxZO8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JcjWvhQ2pk3bVBF8cH470YPeYkr80kP9dkXGulhcxbUiXuYJbSe6u9nxGpyph0fGL9k+fVWtFQne1J/rGOnqOjTncmCEx2V3k0majt3gUsgRTikej7ls/In3R9jos8WP5fXEVH+Udqne0tUrrOlGdUPn/Iqq2jzxTYI1RAllswY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=de1zSMnq; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=XkTlfoX2HaXhwKVRktHB/Ce6Naz7ayTvPiEs1pTsRLy/6c2EY0FZVXaunZ4/NG0eCGJ94i7W3SPL0cjHDay8qc5fZBwMTzxH6um9SeR0kNh2Oswy6ajmKzYEX/WtO13XFdFfyCC3JGv5oO5xrdushUKojABHJ4eM3dn5KaUYH44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VhNQwunr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="de1zSMnq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1296E1F00893;
-	Fri,  5 Jun 2026 08:51:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VhNQwunr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAC3A1F00893;
+	Fri,  5 Jun 2026 08:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780649501;
-	bh=IIeJ9iL/lDvJySy7dwtIphbMaPaW1rE4MmoyhmBkXhM=;
+	s=k20260515; t=1780649554;
+	bh=PsbfKlaq01f0v1LgLlTEBpfjv/xhSdlj/1kCdcHwrCA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=de1zSMnqVEgSxN0NuY43apjjCw8weSD6Yqs0qDheynej3/5uzpJ3BcBucvOjU0FqN
-	 N5O+ucZbnVM5/lKIjvqhVw8vPjrtJsckzMuhWIHkFdC77e9NNzpQ+jx60NyQAkgujA
-	 I87krPuwzgTZ1Jgz/jfIBD64CKNxVAAXnWT2xt9W/6zNWz8KjkCJf74yvuGLSMwtxv
-	 /jQWa6XQHhg+mPcJBlRoOhoA4uli8Kaz8VHLi5uobGppq6/NKgd7yRODnWjDediKfl
-	 YHexHFXdw56TOlZOBHqPHq7toE46jHuqRbYmNrYQCt80M23BJyFm5zr6hIXrEuzXUO
-	 GzdOVw5WcMD8w==
-Message-ID: <ebf488ab-779d-44be-8c57-d275ec26726d@kernel.org>
-Date: Fri, 5 Jun 2026 10:51:33 +0200
+	b=VhNQwunraPqo9lM7LGohuEyegSpdEJJ77cUJE5P1Ox/get019RYJYAEVLNDQV1d/5
+	 QzIKEooTy7semBQCXWBL8YxJjYKmzE0IWJU3MqPE8Bj4mvPHRwd518P+woHXM9XsAr
+	 dJwjfRFcYKbpopr9XvXWliGuhVhU006c1Wi3N7tA+0nOj5U0wWYwoNPHh+1gRFxmeR
+	 mvf+UBBZqIoVRofOon0uk57guY1wjXFnhkruc3Gi/Jcq8INlVmo/5nbeqbNHuniPGw
+	 fWGFoIv3fjDfkG3WjZWvmo46nowXgG+ISjVa3ahCEjl39CHLomOpOHENYcfQzg37mB
+	 B8H0nT/51c/+g==
+Message-ID: <39cbb38f-ed3b-4f17-b9b7-ed466957ee99@kernel.org>
+Date: Fri, 5 Jun 2026 10:52:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,16 +35,28 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/memory-failure: trace: change memory_failure_event to
- ras subsystem
-To: Xie Yuanbin <xieyuanbin1@huawei.com>, qiuxu.zhuo@intel.com, bp@alien8.de,
- akpm@linux-foundation.org, rostedt@goodmis.org, linmiaohe@huawei.com,
- nao.horiguchi@gmail.com, mhiramat@kernel.org, mchehab+huawei@kernel.org,
- tony.luck@intel.com, yi1.lai@intel.com
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, lilinjie8@huawei.com, liaohua4@huawei.com
-References: <20260605081213.154660-1-xieyuanbin1@huawei.com>
+Subject: Re: mm/memory-failure tracepoint change breaks userspace rasdaemon
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Borislav Petkov <bp@alien8.de>, "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+ "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
+ "Luck, Tony" <tony.luck@intel.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "linmiaohe@huawei.com" <linmiaohe@huawei.com>,
+ "xieyuanbin1@huawei.com" <xieyuanbin1@huawei.com>,
+ "Lai, Yi1" <yi1.lai@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <CY8PR11MB7134346A3E4BB28ECA28D6E989132@CY8PR11MB7134.namprd11.prod.outlook.com>
+ <b930678d-a1ae-458c-8705-7ca9680d4cb6@kernel.org>
+ <20260603121707.7eccb9fb@gandalf.local.home>
+ <20260603161947.GBaiBUI7C8WWPwD84S@fat_crate.local>
+ <0c16bf3d-7c6d-4e28-b200-03b7d0ef714a@kernel.org>
+ <20260603130006.7d2c4a62@gandalf.local.home>
+ <b637ede2-73da-49f0-a7eb-70ec79e79624@kernel.org>
+ <20260603153115.775a2e81@fedora>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -91,61 +103,28 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260605081213.154660-1-xieyuanbin1@huawei.com>
+In-Reply-To: <20260603153115.775a2e81@fedora>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/5/26 10:12, Xie Yuanbin wrote:
-> For historical version, commit 97f0b1345219 ("tracing: add trace event
-> for memory-failure") introduced memory_failure_event in ras subsystem.
-> commit 31807483d395 ("mm/memory-failure: remove the selection of RAS")
-> changed memory_failure_event to memory_failure subsystem. This breaks
-> the backward compatibility, some user programs rely on it.
+On 6/3/26 21:31, Steven Rostedt wrote:
+> On Wed, 3 Jun 2026 21:13:30 +0200
+> "David Hildenbrand (Arm)" <david@kernel.org> wrote:
 > 
-> Change memory_failure_event to ras subsystem to keep backward
-> compatibility.
+>> Thanks, that makes sense!
+>>
+>> So, would it be fair to say that, in general, what's exposed through
+>>
+>> 	/sys/kernel/tracing/events/
+>>
+>> is stable ABI?
 > 
-> Fixes: 31807483d395 ("mm/memory-failure: remove the selection of RAS")
-> 
-> Reported-by: Yi Lai <yi1.lai@intel.com>
-> Reported-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Closes: https://lore.kernel.org/linux-mm/CY8PR11MB7134346A3E4BB28ECA28D6E989132@CY8PR11MB7134.namprd11.prod.outlook.com
-> Cc: David Hildenbrand <david@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Miaohe Lin <linmiaohe@huawei.com>
-> Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
-> ---
->  include/trace/events/memory-failure.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/memory-failure.h b/include/trace/events/memory-failure.h
-> index aa57cc8f896b..7a8ee5d1a44e 100644
-> --- a/include/trace/events/memory-failure.h
-> +++ b/include/trace/events/memory-failure.h
-> @@ -1,6 +1,10 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  #undef TRACE_SYSTEM
-> -#define TRACE_SYSTEM memory_failure
-> +/*
-> + * For historical versions, memory_failure_event is in ras subsystem,
-> + * some user programs depend on it.
-> + */
-> +#define TRACE_SYSTEM ras
->  #define TRACE_INCLUDE_FILE memory-failure
->  
->  #if !defined(_TRACE_MEMORY_FAILURE_H) || defined(TRACE_HEADER_MULTI_READ)
+> It's only stable if something depends on it. It changes all the time.
+> It's only when someone complains about it that it becomes "stable"!
 
-We should
+Heh, so we only know that it's stable when we break it ...
 
-Cc: <stable@vger.kernel.org>
-
-given that it's in v6.19 and nobody noticed :(
-
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-
-Thanks, and fortunately now I learned about possible ABI salability of trace events.
+Let me figure out how to document that.
 
 -- 
 Cheers,
