@@ -1,194 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D89364943;
-	Fri,  5 Jun 2026 18:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5D53ACF15
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 18:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780683656; cv=none; b=CF9I/kwi5h68YyeOmdehSR+cpdaSXnBL6zzVRjZRarqI2dppRSEr51m4adHACacPjGiwuEe/LxSGYN/u/VMzD4aQLNocV5vGrtGIxYABjemMglZLtWA0edQqtP5ZkpEBABkWjsK8Y9kgkXuqjZxK/MlKcE58l9oA2mtZEHcGIwM=
+	t=1780684081; cv=none; b=BlV2PMVBG+Qp72ACWM7GxV0NUNq+szB3jQ3VIOu1JLkegdW4ypbsNYvWtO06Oq4AOS06lHj9d9JAMm4guBF2V4VbF7GTV4hv+XVPpL31ijFZZMruI3wu9bQ1W9rSGLeKfFG2lzMQo8UylnQH7ahapJjcGiF4TfJnF8jarQ9/cqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780683656; c=relaxed/simple;
-	bh=8MwjOW3aZfQ2HC6b4nVOV0ubMj3kgzdNsqYnQbYJ32I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJjPfUpDPmHRqw4hbQJG/dX2vzmR1xunkt0SdD9wRMG6N5ZbDd3ypY/+yuGzJKxx6VVxnyWaaPaGfRiJiozelvCAvsu6a0IOekbFjIBbo9Y6Wq22rTQDS6T8o8q+Sd+UWn6WasWRb+3wMFfgiSdTiTD07N6xXDmJ4wUihC7Bfiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6j2xosM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780684081; c=relaxed/simple;
+	bh=5jiFPb4shRixueM3EXqj7rLUUpc6Mvk/umob9LPRscI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EMZaDsFihAL9ZJiyPW8mIjxIk7vP0n9VN4eZYD3a9yqZFWwqV0hPfbOZfp3Iec8gBu4mtrnMzI2/COHkhCAqIXkzKvsBanflAyxptjQjTPkU6YAksAjNNAJjvsvbIwJrtLBjM9buRxwiX7vdkZvZZoPe3aXII2EruIWOdI66+OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e9yEA4mQ; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6j2xosM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE5771F00893;
-	Fri,  5 Jun 2026 18:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780683654;
-	bh=r+zVvdL1dXafGmhtKQIc5JAjS1cg9OS8KCtGRJH3gyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=G6j2xosM+nK/vGyDuiWC5HPu28msvGJihCctYNYSbrCCHx1W1zU91cb6B/2sv+Iyj
-	 3MooWXDSODBUEZz/OdfZz0wBnlFUcrGt4t85nSG9XiYqnNUvrDFsEGLTjZqXicf8e6
-	 pbE1JeALaahtaOQEIowFTXyapGPdBr01DWTmU93N4gI/NpqxbRdLHCoTHKJyraRWsY
-	 +Uh+y7hIFgMLZub0+5lnSjn5InOrwj/Ho3bUI1zqkQgGoZx+o2qCDusTxCt6ZCdp7F
-	 jFt8tLKKLB72G2kraakYZOgYrx8jslacyh/sJuoKirFoV2UhxyAfMKvizJhkvNdPZC
-	 eRe0tKBIY0Irw==
-Date: Fri, 5 Jun 2026 19:20:39 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
-	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com, cl@gentwo.org, 
-	corbet@lwn.net, dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
-	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
-	jackmanb@google.com, jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, 
-	kas@kernel.org, lance.yang@linux.dev, liam@infradead.org, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
-	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
-	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
-	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com, 
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Re: [PATCH mm-unstable v19 14/14] Documentation: mm: update the
- admin guide for mTHP collapse
-Message-ID: <aiMTFl2vvns1_dn3@lucifer>
-References: <20260605161422.213817-1-npache@redhat.com>
- <20260605161422.213817-15-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e9yEA4mQ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-36d979441eeso2088167a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Jun 2026 11:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780684079; x=1781288879; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Al0zDa4bN146O1R+FtGZtDttdy90kv7zGQH5evIcYPw=;
+        b=e9yEA4mQM2lut0pEuCRQy3Ps8v9Hyu0Fb1uWNJ62pgvmh5CYZnF9CaZYEwUMxEUlm/
+         8Azxab4UduI99UbxJyBd7805CWQsOCFsv4JaKlvMH59Y7Cs+QkZlEjZQII2EuW/mBvl+
+         E654i/X+2Q8W3amEZWXtyAubBNvVx1uFvWkQCXYiXnieAzgoTRL/MbVcCjEjU8sqx0P5
+         dvgaDa9D8TJAz2YY5WhxLFnWOBWMsxpQKRR5Mfaz95Yk+/6Nl9qtY4/rb4EjxDdkIe8X
+         OJUyzKpW/ERHauokVrwmOBbq1m25UU927PjuKGYU2fRqejCMwr3Y+8WzcAOOPP1bdT2x
+         5WqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780684079; x=1781288879;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Al0zDa4bN146O1R+FtGZtDttdy90kv7zGQH5evIcYPw=;
+        b=nymy4ti2aSE3fHls8VebuerWOmp3E33mTouStvKX6mOwPzB7azYrWNsWVDj2FOqutL
+         Ae/9IphwOpERkW5JGVpSSWjbUv+0fwBDMPHNhqbZMEa+lSj2kxfYM45LDQ5g2vkDVFsP
+         IHz/364emTeyXKb2MWZrr2TUce98WMFgBc6lnnM0hCgTetxz83ZYED1gTs1hemruIp3F
+         lDG1ieUzXEe3A1biCoHTcNU3soYy1BaDOroUI+i7z4WiG7GExnTioDp/jrhGJsc1bsrH
+         SFJrV6cEh7Yw7KmK8/ziPlpNF2FicrZb9XlH/gCJxYZmnpjlhWeGLYh71JaPGnOap4Pk
+         8cCA==
+X-Forwarded-Encrypted: i=1; AFNElJ+/hNuQf4im+rijgySzBtyovYM3t52qfNVq/DhGlrVgzzAjbz6qWS3asjJwAO0hENovq7QQeePBIrGOULilWcAM9nY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo+tqsGQcgTQdcTAcIk4RBkJePVd1kgwY+WVLtHcARDBmzOYls
+	gXZpQCIwG8Nh2zekifNsMbTD2sbCCrhHugCUP+OzA554CboNbzz7kXPA5L1R/fMNYuGy55jmaOr
+	LAazqIA==
+X-Received: from pfwp41.prod.google.com ([2002:a05:6a00:26e9:b0:842:5fa6:3103])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5210:b0:36a:1ed8:6fe6
+ with SMTP id 98e67ed59e1d1-370f0b58cefmr4684526a91.24.1780684078907; Fri, 05
+ Jun 2026 11:27:58 -0700 (PDT)
+Date: Fri, 5 Jun 2026 11:27:58 -0700
+In-Reply-To: <CAEvNRgHz5GDjq0GqRmpQdHc-X45gCNr39VYWZH-T7XhPEtN5CQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260605161422.213817-15-npache@redhat.com>
+Mime-Version: 1.0
+References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
+ <CAEvNRgGpaggjd3=ooyzv7iEbmA-x1mWJHgjLSjPi8=5CPrk-yQ@mail.gmail.com>
+ <aiHeDZEPkAcWcSkn@google.com> <CAEvNRgHz5GDjq0GqRmpQdHc-X45gCNr39VYWZH-T7XhPEtN5CQ@mail.gmail.com>
+Message-ID: <aiMVLtblIKu1DQWJ@google.com>
+Subject: Re: [PATCH v7 00/42] guest_memfd: In-place conversion support
+From: Sean Christopherson <seanjc@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>, aik@amd.com, 
+	andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	chao.p.peng@linux.intel.com, david@kernel.org, ira.weiny@intel.com, 
+	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
+	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Jun 05, 2026 at 10:14:21AM -0600, Nico Pache wrote:
-> Now that we can collapse to mTHPs lets update the admin guide to
-> reflect these changes and provide proper guidance on how to utilize it.
->
-> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
-> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
+On Thu, Jun 04, 2026, Ackerley Tng wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> >> + KVM: selftests: Test conversion with elevated page refcount
+> >>     + Askar pointed out that soon vmsplice may not pin pages. Should I
+> >>       pin pages through CONFIG_GUP_TEST like in [2]? I prefer not to
+> >>       take a dependency on CONFIG_GUP_TEST.
+> >
+> > I'm not exactly excited about taking a dependency on CONFIG_GUP_TEST either, but
+> > it probably is the least awful choice.  E.g. KVM also pins pages is certain flows,
+> > but we're _also_ actively working to remove the need to pin.
+> >
+> > Hmm, maybe IORING_REGISTER_PBUF_RING?  AFAICT, it's almost literally a "pin user
+> > memory" syscall.
+> >
+> 
+> Hmm that takes a dependency on io_uring, which isn't always compiled
+> in. Between CONFIG_IO_URING and CONFIG_GUP_TEST, I'd rather
+> CONFIG_GUP_TEST.
 
-This is completely fine, and no blockers, but just a couple tiny things
-below Claude brought up for a possible trivial follow up.
-
-> ---
->  Documentation/admin-guide/mm/transhuge.rst | 49 ++++++++++++++--------
->  1 file changed, 32 insertions(+), 17 deletions(-)
->
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index b98e18c80185..23f8d13c2629 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -63,7 +63,8 @@ often.
->  THP can be enabled system wide or restricted to certain tasks or even
->  memory ranges inside task's address space. Unless THP is completely
->  disabled, there is ``khugepaged`` daemon that scans memory and
-> -collapses sequences of basic pages into PMD-sized huge pages.
-> +collapses sequences of basic pages into huge pages of either PMD size
-> +or mTHP sizes, if the system is configured to do so.
->
->  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
->  interface and using madvise(2) and prctl(2) system calls.
-> @@ -219,10 +220,10 @@ this behaviour by writing 0 to shrink_underused, and enable it by writing
->  	echo 0 > /sys/kernel/mm/transparent_hugepage/shrink_underused
->  	echo 1 > /sys/kernel/mm/transparent_hugepage/shrink_underused
->
-> -khugepaged will be automatically started when PMD-sized THP is enabled
-> +khugepaged will be automatically started when any THP size is enabled
->  (either of the per-size anon control or the top-level control are set
->  to "always" or "madvise"), and it'll be automatically shutdown when
-> -PMD-sized THP is disabled (when both the per-size anon control and the
-> +all THP sizes are disabled (when both the per-size anon control and the
->  top-level control are "never")
-
-Claude was very pedantic and said we need a full stop here :P
-
-This is not a blocker, obviously...!
-
->
->  process THP controls
-> @@ -265,8 +266,8 @@ Khugepaged controls
->  -------------------
->
->  .. note::
-> -   khugepaged currently only searches for opportunities to collapse to
-> -   PMD-sized THP and no attempt is made to collapse to other THP
-> +   khugepaged currently only searches for opportunities to collapse file/shmem
-> +   to PMD-sized THP. Only anonymous memory will attempt to collapse to other THP
->     sizes.
->
->  khugepaged runs usually at low frequency so while one may not want to
-> @@ -296,11 +297,11 @@ allocation failure to throttle the next allocation attempt::
->  The khugepaged progress can be seen in the number of pages collapsed (note
->  that this counter may not be an exact count of the number of pages
->  collapsed, since "collapsed" could mean multiple things: (1) A PTE mapping
-> -being replaced by a PMD mapping, or (2) All 4K physical pages replaced by
-> -one 2M hugepage. Each may happen independently, or together, depending on
-> -the type of memory and the failures that occur. As such, this value should
-> -be interpreted roughly as a sign of progress, and counters in /proc/vmstat
-> -consulted for more accurate accounting)::
-> +being replaced by a PMD mapping, or (2) physical pages replaced by one
-> +hugepage of various sizes (PMD-sized or mTHP). Each may happen independently,
-> +or together, depending on the type of memory and the failures that occur.
-> +As such, this value should be interpreted roughly as a sign of progress,
-> +and counters in /proc/vmstat consulted for more accurate accounting)::
-
-So Claude said maybe it's worth mentioning that the per-mTHP counters are only
-actually exposed through
-/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/stats/ and maybe worth
-mentioning here too?
-
->
->  	/sys/kernel/mm/transparent_hugepage/khugepaged/pages_collapsed
->
-> @@ -308,16 +309,21 @@ for each pass::
->
->  	/sys/kernel/mm/transparent_hugepage/khugepaged/full_scans
->
-> -``max_ptes_none`` specifies how many extra small pages (that are
-> -not already mapped) can be allocated when collapsing a group
-> -of small pages into one large page::
-> +``max_ptes_none`` specifies how many empty (none/zero) pages are allowed
-> +when collapsing a group of small pages into one large page::
->
->  	/sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_none
->
-> -A higher value leads to use additional memory for programs.
-> -A lower value leads to gain less thp performance. Value of
-> -max_ptes_none can waste cpu time very little, you can
-> -ignore it.
-> +For PMD-sized THP collapse, this directly limits the number of empty pages
-> +allowed in the 2MB region.
-> +
-> +For mTHP collapse, only 0 or (HPAGE_PMD_NR - 1) are supported. At
-> +HPAGE_PMD_NR - 1, we collapse to the highest possible order. Any intermediate
-> +value will emit a warning and mTHP collapse will default to max_ptes_none=0.
-> +
-> +A higher value allows more empty pages, potentially leading to more memory
-> +usage but better THP performance. A lower value is more conservative and
-> +may result in fewer THP collapses.
->
->  ``max_ptes_swap`` specifies how many pages can be brought in from
->  swap when collapsing a group of pages into a transparent huge page::
-> @@ -337,6 +343,15 @@ that THP is shared. Exceeding the number would block the collapse::
->
->  A higher value may increase memory footprint for some workloads.
->
-> +.. note::
-> +   For mTHP collapse, khugepaged does not support collapsing regions that
-> +   contain shared or swapped out pages, as this could lead to continuous
-> +   promotion to higher orders. The collapse will fail if any shared or
-> +   swapped PTEs are encountered during the scan.
-> +
-> +   Currently, madvise_collapse only supports collapsing to PMD-sized THPs
-> +   and does not attempt mTHP collapses.
-> +
->  Boot parameters
->  ===============
->
-> --
-> 2.54.0
->
-
-Cheers, Lorenzo
+Or try both?  If it's not a ridiculous amount of work.
