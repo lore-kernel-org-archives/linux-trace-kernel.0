@@ -1,235 +1,178 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1BB4ADD99
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 08:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 237843D45E7;
+	Fri,  5 Jun 2026 09:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780649991; cv=none; b=oyJbME+EyUe7wcLkyJLCKJe7mFIuR1PJo3957LvtNzVwDEMhwggLCLS4TeLmYVLG6+NTzBiKNS4+HnA0gAYsSnT+Q3FTOWlZFiwa66WvkQ+WDHYxyIbNMa0eKxheyUT4tN5DMb0AMvXsD8xdC2TwrR7Lq2KNNOafpWZA7Iy3hrA=
+	t=1780650434; cv=none; b=cDVQbmGva75fRzD2S8xKwH+CRRz1mNorCDT1f9jVmFv61O6NZIsmIMZtsoc5uW8SPiXbeZlyxYGwJ10wqITCie63ZSUUx8Astl44J69fAQ3qFZAcyBggBHHp3V++13U7AJemL6BiopLiAPMajEh5KWatVbq7nsi9djqANwWeCVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780649991; c=relaxed/simple;
-	bh=0fl2zgVHbDzEtIsUlvXgrrdVHskXStrBxpd18D7t3AA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YJQ/aN46i99r3y93Wga5fMRS1o2RKPljVPThZueygvltvyG+Rd80MwtC89cQRv8FwlouImTosrHdAQpNHpkltRpayEruWa3cARx4bM+bynb71PB5XdJTUhyM+pBinRwHMdjImOLCbXK/X+K5aL2azhoiwS3MH724/hntPXtqN9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dhh7PXSj; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780650434; c=relaxed/simple;
+	bh=UXE7DC5dr6M+k24qAaywn7yvVqkTrb7vSLr7g8HR+1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cjegiXMqQtZyRn1aGi/ACynk7eeB0NmQ78JnxyzmS+F1Hw8GLJZlDFEab6mlAcU2shBgIGtBCK7PI0rSEOfSwUDazr8zkw4XQw90zO89QuCUqYcJh/ZCOn53ASlRu1HOWKbqG068AWVykHLEx0tdFMS+L9b9b3aKJEFFCl4Bybc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gjxPbq2p; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dhh7PXSj"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780649974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aph3F0yH35JYxECybQiTrc4aeTySkKR0krHjxKePy6w=;
-	b=dhh7PXSjnqOSGRZLH5vbiPzF+QSQXB5XerF/69shhrDMybXrN9ejD+mg7fsY598xDL7TOB
-	PkwYWYJ4hhvFk7dgkSszqLeqJbpYkzbjuX6JInJZXdm5weNWfisyyy7lsvwt3SUOK5R4o8
-	/vsuaca21affbDpb0uGv8xRTZRPq4Ck=
-From: Lance Yang <lance.yang@linux.dev>
-To: ljs@kernel.org,
-	david@kernel.org,
-	npache@redhat.com
-Cc: lance.yang@linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	aarcange@redhat.com,
-	akpm@linux-foundation.org,
-	anshuman.khandual@arm.com,
-	apopple@nvidia.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	byungchul@sk.com,
-	catalin.marinas@arm.com,
-	cl@gentwo.org,
-	corbet@lwn.net,
-	dave.hansen@linux.intel.com,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jackmanb@google.com,
-	jannh@google.com,
-	jglisse@google.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	liam@infradead.org,
-	mathieu.desnoyers@efficios.com,
-	matthew.brost@intel.com,
-	mhiramat@kernel.org,
-	mhocko@suse.com,
-	peterx@redhat.com,
-	pfalcato@suse.de,
-	rakie.kim@sk.com,
-	raquini@redhat.com,
-	rdunlap@infradead.org,
-	richard.weiyang@gmail.com,
-	rientjes@google.com,
-	rostedt@goodmis.org,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shivankg@amd.com,
-	sunnanyong@huawei.com,
-	surenb@google.com,
-	thomas.hellstrom@linux.intel.com,
-	tiwai@suse.de,
-	usamaarif642@gmail.com,
-	vbabka@suse.cz,
-	vishal.moola@gmail.com,
-	wangkefeng.wang@huawei.com,
-	will@kernel.org,
-	willy@infradead.org,
-	yang@os.amperecomputing.com,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	zokeefe@google.com,
-	usama.arif@linux.dev
-Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize collapse_huge_page for mTHP collapse
-Date: Fri,  5 Jun 2026 16:59:03 +0800
-Message-Id: <20260605085903.77186-1-lance.yang@linux.dev>
-In-Reply-To: <aiJ90SWqXvwN9dNT@lucifer>
-References: <aiJ90SWqXvwN9dNT@lucifer>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gjxPbq2p"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 975364CDF;
+	Fri,  5 Jun 2026 02:07:06 -0700 (PDT)
+Received: from [10.57.92.75] (unknown [10.57.92.75])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 891843F86F;
+	Fri,  5 Jun 2026 02:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780650431; bh=UXE7DC5dr6M+k24qAaywn7yvVqkTrb7vSLr7g8HR+1E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gjxPbq2pHkOfACoMFtOdYFETh8vR9siYUcniNUVttHwVYajSgtBX2fT7r8/6nEQVU
+	 3U+mruFBjhkJwoh7yfUyp4HzYXblvxOs58WoMrl+NRHN430tFwRzHI5G6iytvzgqmP
+	 jhilsf5wSLNEWJnWJVKRp1qhWyGeYwpuFX4LwbOQ=
+Message-ID: <85b8c177-b566-4e26-884c-9122e2455316@arm.com>
+Date: Fri, 5 Jun 2026 10:06:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 20/42] KVM: SEV: Make 'uaddr' parameter optional for
+ KVM_SEV_SNP_LAUNCH_UPDATE
+Content-Language: en-GB
+To: Michael Roth <michael.roth@amd.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, ira.weiny@intel.com, jmattson@google.com,
+ jthoughton@google.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, aneesh.kumar@kernel.org,
+ liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Youngjun Park <youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
+ <20260522-gmem-inplace-conversion-v7-20-2f0fae496530@google.com>
+ <9d15479e-e36b-4865-804c-7d93eb339e4e@arm.com>
+ <4muegrza5iyyhqx6wevdlssnb6wvlc4m4wmuz5hmd3xikkftc4@3e2lpuq6tjgr>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <4muegrza5iyyhqx6wevdlssnb6wvlc4m4wmuz5hmd3xikkftc4@3e2lpuq6tjgr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Fri, Jun 05, 2026 at 09:07:23AM +0100, Lorenzo Stoakes wrote:
->On Fri, Jun 05, 2026 at 09:18:27AM +0200, David Hildenbrand (Arm) wrote:
->> On 6/4/26 19:04, Nico Pache wrote:
->> > On Mon, Jun 1, 2026 at 9:00 AM Nico Pache <npache@redhat.com> wrote:
->> >>
->> >> On Mon, Jun 1, 2026 at 5:14 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
->> >>>
->> >>>
->> >>> Yeah. BTW, I think we'd need a spin_lock_nested(), so @Nico, treat my code as a
->> >>> draft.
->> >>
->> >> Okay, I read the above and did some investigating.
->> >>
->> >> I will try to implement and verify the changes you suggested :)
->> >
->> > I've implemented something slightly different actually and I *think* its better!
->> >
->> > } else {
->> >        /* this is map_anon_folio_pte_nopf with no mmu update */
->> >         __map_anon_folio_pte_nopf(folio, pte, vma, start_addr,
->> >                       /*uffd_wp=*/ false);
->> >        smp_wmb();
->> >         pmd_populate(mm, pmd, pmd_pgtable(_pmd));
->> >         /*
->> >          * Some architectures (e.g. MIPS) walk the live page table in
->> >          * their implementation. update_mmu_cache_range() must be called
->> >          * with a valid page table hierarchy and the PTE lock held.
->> >          * Acquire it nested inside pmd_ptl when they are distinct locks.
->> >          */
->> >         if (pte_ptl != pmd_ptl)
->> >             spin_lock_nested(pte_ptl, SINGLE_DEPTH_NESTING);
->> >         update_mmu_cache_range(NULL, vma, start_addr, pte, nr_pages);
->> >         if (pte_ptl != pmd_ptl)
->> >             spin_unlock(pte_ptl);
->> >     }
->> > spin_unlock(pmd_ptl);
->> >
->> > The logic here is that when the PMD becomes visible, PTEs are already
->> > populated (no possibility of spurious faults on local CPU)
->> >
->> > the SMP_WMB makes sure of the above
->
->THe locks prevent those 'spurious' (really: incorrect) faults anyway so I don't
->think this is necessary.
->
->> >
->> > And the pmd is installed with the pte and pmd lock both held through
->> > the mmu_cache update.
->> >
->> > This follows the conventions used in pmd_install() and clears the
->> > potential for local CPU faults hitting cleared PTE entries.
+On 04/06/2026 21:11, Michael Roth wrote:
+> On Thu, Jun 04, 2026 at 04:29:19PM +0100, Suzuki K Poulose wrote:
+>> On 23/05/2026 01:18, Ackerley Tng via B4 Relay wrote:
+>>> From: Michael Roth <michael.roth@amd.com>
+>>>
+>>> For vm_memory_attributes=1, in-place conversion/population is not
+>>> supported, so the initial contents necessarily must need to come
+>>> from a separate src address, which is enforced by the current
+>>> implementation. However, for vm_memory_attributes=0, it is possible for
+>>> guest memory to be initialized directly from userspace by mmap()'ing the
+>>> guest_memfd and writing to it while the corresponding GPA ranges are in
+>>> a 'shared' state before converting them to the 'private' state expected
+>>> by KVM_SEV_SNP_LAUNCH_UPDATE.
+>>>
+>>> Update the handling/documentation for KVM_SEV_SNP_LAUNCH_UPDATE to allow
+>>> for 'uaddr' to be set to NULL when vm_memory_attributes=0, which
+>>> SNP_LAUNCH_UPDATE will then use to determine when it should/shouldn't
+>>> copy in data from a separate memory location. Continue to enforce
+>>> non-NULL for the original vm_memory_attributes=1 case.
+>>>
+>>> Signed-off-by: Michael Roth <michael.roth@amd.com>
+>>> [Added src_page check in error handling path when the firmware command fails]
+>>> [Dropped ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES]
+>>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 >>
->> After the pmdp_collapse_flush() we'd be getting CPU faults due to the cleared
->> PMD already? So the case here is rather different.
-
-The issue I was worried about: update_mmu_cache_range() can re-walk
-vma->vm_mm while the PTE page table is still not reachable through the
-PMD. And, yeah, that assumption is ugly, but it is what it is, and there
-maybe be similar code elsewhere ...
-
-So the ordering we need is "the PMD points to the PTE page table from
-_pmd before update_mmu_cache_range()", not "new PTEs before PMD".
-
-Those PTEs are cleared, but we hold the PTL, so nobody else can install
-anything there :)
-
-So David's original suggestion looks enough to me:
-
-if (pte_ptl != pmd_ptl)
-        spin_lock_nested(pte_ptl, SINGLE_DEPTH_NESTING);
-
-pmd_populate();
-map_anon_folio_pte_nopf();
-
-if (pte_ptl != pmd_ptl)
-        spin_unlock(pte_ptl);
-
->Yeah conceptually the code above is problematic because you immediately make the
->PTE available right at the point you populate, so taking a PTE lock after that
->is rather shutting the stable door after the horse has bolted.
->
->Doing it this way is not a good idea in any case because we're adding
->complexity, an extra function and an open-coded cache maintenance call for
->really no benefit.
->
->I asked Nico to abstract the anon folio mapping stuff explicitly so we could
->avoid this sort of duplication so let's not roll that back :)
->
->So again, I think going with the original suggestion (with an updated comment)
->is the right thing to do.
->
->
->Anyway, an aside But in practice we can't have page faults here right? The VMA is:
->
->- Ensured to span at least the PMD range (this isn't immediately obvious in the
->  code)
->- VMA write locked (mmap write lock held)
->
->And we hold the anon_vma lock so no rmap walkers can walk the page tables here
->either.
->
->So I actually wonder, given that, whether we need the PTE PTL at all.
-
-I'd keep it. Cheap, and lets us sleep better at night :P
-
->But.
->
->At this stage it'll almost certainly be an owned exclusive cache line so it's
->very low cost to do it, and it means we honour the update_mmu_cache_range()
->contract.
->
->And it also makes it clear that we're gating changes on the PTE being
->untouchable so any future stuff that maybe changes some of these rules doesn't
->get caught out.
->
->So probably worth keeping.
-
-Yes!
-
-Cheers, Lance
-
 >>
->> --
->> Cheers,
 >>
->> David
->
->Thanks, Lorenzo
->
+>>
+>>> ---
+>>>    Documentation/virt/kvm/x86/amd-memory-encryption.rst | 15 +++++++++++----
+>>>    arch/x86/kvm/svm/sev.c                               | 18 +++++++++++++-----
+>>>    virt/kvm/kvm_main.c                                  |  1 +
+>>>    3 files changed, 25 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+>>> index b2395dd4769de..43085f65b2d85 100644
+>>> --- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+>>> +++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+>>> @@ -503,7 +503,8 @@ secrets.
+>>>    It is required that the GPA ranges initialized by this command have had the
+>>>    KVM_MEMORY_ATTRIBUTE_PRIVATE attribute set in advance. See the documentation
+>>> -for KVM_SET_MEMORY_ATTRIBUTES for more details on this aspect.
+>>> +for KVM_SET_MEMORY_ATTRIBUTES/KVM_SET_MEMORY_ATTRIBUTES2 for more details on
+>>> +this aspect.
+>>>    Upon success, this command is not guaranteed to have processed the entire
+>>>    range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+>>> @@ -511,9 +512,15 @@ range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+>>>    remaining range that has yet to be processed. The caller should continue
+>>>    calling this command until those fields indicate the entire range has been
+>>>    processed, e.g. ``len`` is 0, ``gfn_start`` is equal to the last GFN in the
+>>> -range plus 1, and ``uaddr`` is the last byte of the userspace-provided source
+>>> -buffer address plus 1. In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO,
+>>> -``uaddr`` will be ignored completely.
+>>> +range plus 1, and ``uaddr`` (if specified) is the last byte of the
+>>> +userspace-provided source buffer address plus 1.
+>>> +
+>>> +In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO, ``uaddr`` will be
+>>> +ignored completely. Otherwise, ``uaddr`` is required if
+>>> +kvm.vm_memory_attributes=1 and optional if kvm.vm_memory_attributes=0, since
+>>> +in the latter case guest memory can be initialized directly from userspace
+>>> +prior to converting it to private and passing the GPA range on to this
+>>> +interface.
+>>
+>> Just to confirm, so the sev_gmem_prepare doesn't destroy the contents in the
+>> process of making it "private" ? i.e., the contents of a SNP shared
+>> page are preserved while transitioning to "SNP Private" (via RMP
+>> update).
+> 
+> sev_gmem_prepare() does sort of destroy contents since it finalizes the
+> shared->private conversion which puts the page in an unusable state
+> until the guest 'accepts' it as private memory and re-initializes the
+> contents.
+> 
+> But that's run-time, when the guest is doing conversions. The
+> documentation here is relating to initialization time when we are
+> setting up the initial pre-encrypted/pre-measured guest memory image,
+> via SNP_LAUNCH_UPDATE. That path calls into kvm_gmem_populate(), and it
+> is then sev_gmem_post_populate() callback that actually finalizes the
+> shared->private conversion. The sev_gmem_prepare() hook doesn't get used
+> in this flow (kvm_gmem_populate() calls __kvm_gmem_get_pfn() which skips
+> preparation).
+
+Thanks, thats the bit I was missing. Skipping the prepare path, with 
+__kvm_gmem_get_pfn(). I was under the assumption that 
+kvm_arch_gmem_prepare() was called for all PFNs allocated from gmem
+and how SNP was handling this populate case.
+
+
+Thanks
+Suzuki
+
+
+> 
+> -Mike
+> 
+>>
+>> Suzuki
+>>
+>>
