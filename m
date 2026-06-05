@@ -1,103 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98912286430
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 14:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACC640E8FF;
+	Fri,  5 Jun 2026 14:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780668139; cv=none; b=tbadBKQRo+R0IF7+NQah0GQ/LllmjXpwX5asZkPMTlouRamBQJhYP6sOZ7oyS3vXdF+jarZGyyIvOkecJwhWMf3Wqogkh7oQ67HqmsHakCPpHMS1/gjLoZq1c2xmV0L+BmMr/IYCIHywvbEjXS438qmk6UUWHkIMYbhscPVcY5g=
+	t=1780668825; cv=none; b=deYDUqtzNPx1WQJuBIScL4pQdC3HSPizs4RF/R3DPPnDgH8BaQsZiNNN7T8cYGGqzsU4vdXnFgyKrMXbirwANwMx3XYU0/4xBr+lihDW/rtZFh7WH1WJTVOte3WBaKe5d690IMEbja7gVP9vHMoZAkXQB7caVRwzD43jjy91JXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780668139; c=relaxed/simple;
-	bh=6TQHkJm/Pq1mSnJHL1hBGX56th80IiC0wY5uxCKGmeQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=OIYWKyLJqPD3mfwMLnV0h8hxT5t56ppekRq/yuDiWqyx5y7bcVuHOwiz8L86wTbbHSVVFbKwQp8npV658XXS8KBcfq8y9+32WSLWTssxMfQHZlyyI4YrGU3kCXaSxn4OA2g7QWds+lyMJJSrq+5kKwyuOR0k/FCkSTVGfRm8Zlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hNrppq6n; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hNrppq6n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780668137;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wMY3iHR5pg2hpyn+V/okPE+FLq4GgaXTs1SF9UWIVaM=;
-	b=hNrppq6ncOT4kfi6ygBrDhgKujGjiPp5ijwCB9ud37hQu3hHHKikf6/0bMqO1698cdGpU5
-	FOsPlgIOghp3n9qjy7A6Rv7GJJxDcF/wY1PnkkXFhu7Jbe8js0x7473gAWhuqy0AchOMFH
-	TbW/kWRWdAAyDGIGTExP/lMM92iYGhw=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-sZKRiS6mPP2VxlxiFFj4WA-1; Fri,
- 05 Jun 2026 10:02:14 -0400
-X-MC-Unique: sZKRiS6mPP2VxlxiFFj4WA-1
-X-Mimecast-MFC-AGG-ID: sZKRiS6mPP2VxlxiFFj4WA_1780668134
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D1DBC1944CC5;
-	Fri,  5 Jun 2026 14:02:13 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.49.160])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6CD821800361;
-	Fri,  5 Jun 2026 14:02:12 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [GIT PULL] RTLA additional fixes for v7.2
-Date: Fri,  5 Jun 2026 16:02:09 +0200
-Message-ID: <20260605140209.101548-1-tglozar@redhat.com>
+	s=arc-20240116; t=1780668825; c=relaxed/simple;
+	bh=bU98HIRPthpNDJM5uR0akM5Kz5mqzk4XLNl22M9kIGM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=RD4eEuzhG5ho2zoUi2fD9ypxoQ1axrEdbKP+XIUFCQLswnm89CW/dnmdy+ZWWxvJVScxR2tD+eeMlcNk5NQnnd83Ro5ekG/jf5GcSwmile5/HHtKBVl8prtx6f+DiZf29CzoU5tE7kLUDmteRFqKE07ofW/r1KkvGwLQUSFKNWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id D0817A0142;
+	Fri,  5 Jun 2026 14:13:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 42D172000E;
+	Fri,  5 Jun 2026 14:13:33 +0000 (UTC)
+Date: Fri, 05 Jun 2026 10:13:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+CC: Borislav Petkov <bp@alien8.de>, "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+ "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
+ "Luck, Tony" <tony.luck@intel.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "linmiaohe@huawei.com" <linmiaohe@huawei.com>,
+ "xieyuanbin1@huawei.com" <xieyuanbin1@huawei.com>,
+ "Lai, Yi1" <yi1.lai@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: mm/memory-failure tracepoint change breaks userspace rasdaemon
+User-Agent: K-9 Mail for Android
+In-Reply-To: <39cbb38f-ed3b-4f17-b9b7-ed466957ee99@kernel.org>
+References: <CY8PR11MB7134346A3E4BB28ECA28D6E989132@CY8PR11MB7134.namprd11.prod.outlook.com> <b930678d-a1ae-458c-8705-7ca9680d4cb6@kernel.org> <20260603121707.7eccb9fb@gandalf.local.home> <20260603161947.GBaiBUI7C8WWPwD84S@fat_crate.local> <0c16bf3d-7c6d-4e28-b200-03b7d0ef714a@kernel.org> <20260603130006.7d2c4a62@gandalf.local.home> <b637ede2-73da-49f0-a7eb-70ec79e79624@kernel.org> <20260603153115.775a2e81@fedora> <39cbb38f-ed3b-4f17-b9b7-ed466957ee99@kernel.org>
+Message-ID: <BF17A4D3-D408-43B6-A440-A49B94C7BB62@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: GgRYY7HBCyUAp-0936Xdep8z7O5jWrx5Y1z2OmE5hOI_1780668134
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 42D172000E
+X-Rspamd-Server: rspamout01
+X-Stat-Signature: jes9k5b7di1o6k3x7d97ihiq411ba4nt
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/62rHCtMuTCz6iX+3NT56GhQE8IV4VS4s=
+X-HE-Tag: 1780668813-492527
+X-HE-Meta: U2FsdGVkX1/PBkQrb/Jvh0066tdGux5w33fpB9sqGI7EaNk0BPMC/PFfoJmWddVH0E58lf5PW+o+Bwu9NZZAw+13Qa8el9ieLTZTrtp+Aq/BWP8EX8uiLqqtn8+BHfHnNtAg3Voe5W9IgUOCcIQoGqfof9mdVZeOd0UkeUv0CwbdXtTcIEWT/c3PGfcjT3z9O6CA9MaRx3KqMvbA8+gvTPvIBlSIYlhA6NNvghAMXrInx84xI+MMmylkeqjsn/o4DZAiKD1E0Y/8cPVHNzAGUBfIL/9ZAHEFOnMapjaQjm7/cn4Fg9b/NoixMHoCY9kQJjr0+U+FAjbpVtYST5Un7Gsd7BYt4XP6
 
-Steven,
 
-The following changes since commit db956bcf8d681b5a01ebe04c79f6a7b29b9934f9:
 
-  rtla: Document tests in README (2026-05-29 09:40:54 +0200)
+On June 5, 2026 4:52:28 AM EDT, "David Hildenbrand (Arm)" <david@kernel=2E=
+org> wrote:
+>On 6/3/26 21:31, Steven Rostedt wrote:
+>> On Wed, 3 Jun 2026 21:13:30 +0200
+>> "David Hildenbrand (Arm)" <david@kernel=2Eorg> wrote:
+>>=20
+>>> Thanks, that makes sense!
+>>>
+>>> So, would it be fair to say that, in general, what's exposed through
+>>>
+>>> 	/sys/kernel/tracing/events/
+>>>
+>>> is stable ABI?
+>>=20
+>> It's only stable if something depends on it=2E It changes all the time=
+=2E
+>> It's only when someone complains about it that it becomes "stable"!
+>
+>Heh, so we only know that it's stable when we break it =2E=2E=2E
+>
+>Let me figure out how to document that=2E
+>
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git/ tags/rtla-v7.2-fixups
-
-for you to fetch changes up to 930645785902d5830f9c41862d21af651b8e5371:
-
-  rtla/tests: Fix pgrep filter in get_workload_pids.sh (2026-06-05 14:11:31 +0200)
-
-----------------------------------------------------------------
-RTLA additional fixes for v7.2
-
-- Fix and clean up .gitignore
-
-Narrow match range of entries in .gitignore to only what is needed,
-fixing "lib/" matching tools/tracing/rtla/tests/scripts/lib/*.
-
-- Fix pgrep filter in runtime tests
-
-Make the pgrep filter used by runtime tests to get workload PIDs work
-on both older and newer versions of pgrep, regardless of whether
-square brackets are counted as part of kthread comm or not.
-
-Build, runtime tests, unit tests pass.
-
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-
-----------------------------------------------------------------
-Tomas Glozar (2):
-      rtla: Fix and clean up .gitignore
-      rtla/tests: Fix pgrep filter in get_workload_pids.sh
-
- tools/tracing/rtla/.gitignore                             | 13 ++++---------
- tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh |  2 +-
- 2 files changed, 5 insertions(+), 10 deletions(-)
-
+Yep=2E That's basically Linus's rule=2E He even said we break user space A=
+PI all the time=2E What we don't allow is to break actual user space=2E The=
+ problem is that you can break user space by fixing an API without knowing =
+something depended on the bug=2E
