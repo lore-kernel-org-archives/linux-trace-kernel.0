@@ -1,118 +1,235 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60CA43CD8CA;
-	Fri,  5 Jun 2026 08:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1BB4ADD99
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 08:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780649665; cv=none; b=ia+BuTMDPBEa6/Ga9OPQrFuePWpyBy/2PO7zabFosFvmQ29rXQ1pinkEC5oSIxpWPxmaYsPPeKM94ERnKOcxOSZwqrv9rgymQljeGRTcBzcknxt/+EScB8pnvZafEC3ktV+PJN7dZbl5r9Q4xb4SS5g3fq6dwZaIbHhQPrgSXeY=
+	t=1780649991; cv=none; b=oyJbME+EyUe7wcLkyJLCKJe7mFIuR1PJo3957LvtNzVwDEMhwggLCLS4TeLmYVLG6+NTzBiKNS4+HnA0gAYsSnT+Q3FTOWlZFiwa66WvkQ+WDHYxyIbNMa0eKxheyUT4tN5DMb0AMvXsD8xdC2TwrR7Lq2KNNOafpWZA7Iy3hrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780649665; c=relaxed/simple;
-	bh=za/Q5W3FetgNGBxC3/mNtBqJ6BCx8IDSiT33jjoXZNw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pm8yLHMU0FSHv42HlYzliUvpAC4GQDZUuEUSNm3ar+YD/oCOhInywycxQlco664NYmq+Bcc8OJc1uibR5OindOycBu2GxOMjtN/aNpyHb1h9llJIBLPa/fxbI9cydXqsTPC9pbhNU1C6PpK5yyPTGG0o5pu01GlJgUmRyp8vcdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Gzzb9pgK; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1780649991; c=relaxed/simple;
+	bh=0fl2zgVHbDzEtIsUlvXgrrdVHskXStrBxpd18D7t3AA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YJQ/aN46i99r3y93Wga5fMRS1o2RKPljVPThZueygvltvyG+Rd80MwtC89cQRv8FwlouImTosrHdAQpNHpkltRpayEruWa3cARx4bM+bynb71PB5XdJTUhyM+pBinRwHMdjImOLCbXK/X+K5aL2azhoiwS3MH724/hntPXtqN9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dhh7PXSj; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Gzzb9pgK"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A3204CE7;
-	Fri,  5 Jun 2026 01:54:17 -0700 (PDT)
-Received: from [10.57.92.75] (unknown [10.57.92.75])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36C5A3F632;
-	Fri,  5 Jun 2026 01:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780649662; bh=za/Q5W3FetgNGBxC3/mNtBqJ6BCx8IDSiT33jjoXZNw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Gzzb9pgKm/VqzuNQWn4GqmeLpozOIVHEL4a7lpQ6LY9IuNt0PSiF4UMuyHA313reK
-	 adqVfC75WvtPaiw9gE55+iUPvW+5IJFa0HDb8PCVsfPSAiOnAbMba7hYbKQPgjS02w
-	 IVon2C90mRhBq/CB0loy54WttdKIcrw9FAQvra1o=
-Message-ID: <3322698e-af49-4998-b619-34ab24094374@arm.com>
-Date: Fri, 5 Jun 2026 09:54:12 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dhh7PXSj"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780649974;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aph3F0yH35JYxECybQiTrc4aeTySkKR0krHjxKePy6w=;
+	b=dhh7PXSjnqOSGRZLH5vbiPzF+QSQXB5XerF/69shhrDMybXrN9ejD+mg7fsY598xDL7TOB
+	PkwYWYJ4hhvFk7dgkSszqLeqJbpYkzbjuX6JInJZXdm5weNWfisyyy7lsvwt3SUOK5R4o8
+	/vsuaca21affbDpb0uGv8xRTZRPq4Ck=
+From: Lance Yang <lance.yang@linux.dev>
+To: ljs@kernel.org,
+	david@kernel.org,
+	npache@redhat.com
+Cc: lance.yang@linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	aarcange@redhat.com,
+	akpm@linux-foundation.org,
+	anshuman.khandual@arm.com,
+	apopple@nvidia.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	byungchul@sk.com,
+	catalin.marinas@arm.com,
+	cl@gentwo.org,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	dev.jain@arm.com,
+	gourry@gourry.net,
+	hannes@cmpxchg.org,
+	hughd@google.com,
+	jack@suse.cz,
+	jackmanb@google.com,
+	jannh@google.com,
+	jglisse@google.com,
+	joshua.hahnjy@gmail.com,
+	kas@kernel.org,
+	liam@infradead.org,
+	mathieu.desnoyers@efficios.com,
+	matthew.brost@intel.com,
+	mhiramat@kernel.org,
+	mhocko@suse.com,
+	peterx@redhat.com,
+	pfalcato@suse.de,
+	rakie.kim@sk.com,
+	raquini@redhat.com,
+	rdunlap@infradead.org,
+	richard.weiyang@gmail.com,
+	rientjes@google.com,
+	rostedt@goodmis.org,
+	rppt@kernel.org,
+	ryan.roberts@arm.com,
+	shivankg@amd.com,
+	sunnanyong@huawei.com,
+	surenb@google.com,
+	thomas.hellstrom@linux.intel.com,
+	tiwai@suse.de,
+	usamaarif642@gmail.com,
+	vbabka@suse.cz,
+	vishal.moola@gmail.com,
+	wangkefeng.wang@huawei.com,
+	will@kernel.org,
+	willy@infradead.org,
+	yang@os.amperecomputing.com,
+	ying.huang@linux.alibaba.com,
+	ziy@nvidia.com,
+	zokeefe@google.com,
+	usama.arif@linux.dev
+Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize collapse_huge_page for mTHP collapse
+Date: Fri,  5 Jun 2026 16:59:03 +0800
+Message-Id: <20260605085903.77186-1-lance.yang@linux.dev>
+In-Reply-To: <aiJ90SWqXvwN9dNT@lucifer>
+References: <aiJ90SWqXvwN9dNT@lucifer>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 20/42] KVM: SEV: Make 'uaddr' parameter optional for
- KVM_SEV_SNP_LAUNCH_UPDATE
-Content-Language: en-GB
-To: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
- andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
- chao.p.peng@linux.intel.com, david@kernel.org, ira.weiny@intel.com,
- jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
- oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com,
- rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com,
- steven.price@arm.com, tabba@google.com, willy@infradead.org,
- wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com,
- pratyush@kernel.org, aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Youngjun Park <youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
- <20260522-gmem-inplace-conversion-v7-20-2f0fae496530@google.com>
- <9d15479e-e36b-4865-804c-7d93eb339e4e@arm.com>
- <CAEvNRgF43RBv77RgM67kXRRHDnQw4L5uwQTuvkJHzkHJWB1mag@mail.gmail.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <CAEvNRgF43RBv77RgM67kXRRHDnQw4L5uwQTuvkJHzkHJWB1mag@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 04/06/2026 20:05, Ackerley Tng wrote:
-> Suzuki K Poulose <suzuki.poulose@arm.com> writes:
-> 
->>
->> [...snip...]
->>
->>> +In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO, ``uaddr`` will be
->>> +ignored completely. Otherwise, ``uaddr`` is required if
->>> +kvm.vm_memory_attributes=1 and optional if kvm.vm_memory_attributes=0, since
->>> +in the latter case guest memory can be initialized directly from userspace
->>> +prior to converting it to private and passing the GPA range on to this
->>> +interface.
->>
->> Just to confirm, so the sev_gmem_prepare doesn't destroy the contents in
->> the process of making it "private" ? i.e., the contents of a SNP shared
->> page are preserved while transitioning to "SNP Private" (via RMP
->> update).
->>
->> Suzuki
->>
-> 
-> The following is the guest_memfd perspective, I didn't look at the SNP
-> spec:
-> 
-> Do you mean specifically for KVM_SEV_SNP_PAGE_TYPE_ZERO, or for any
-> type?
-> 
-> guest_memfd has no plans to do any special zeroing based on type.
-> 
-> guest_memfd decoupled zeroing from preparation a while ago (Michael had
-> some patches), so zeroing is supposed to be once during folio ownership
-> by guest_memfd, tracked by the uptodate flag, and preparation is tracked
-> outside of guest_memfd. So far only SNP does preparation.
 
-I am talking about the SEV SNP conversions (specifically quoted in my 
-response), I will follow up on Michael's response.
+On Fri, Jun 05, 2026 at 09:07:23AM +0100, Lorenzo Stoakes wrote:
+>On Fri, Jun 05, 2026 at 09:18:27AM +0200, David Hildenbrand (Arm) wrote:
+>> On 6/4/26 19:04, Nico Pache wrote:
+>> > On Mon, Jun 1, 2026 at 9:00 AM Nico Pache <npache@redhat.com> wrote:
+>> >>
+>> >> On Mon, Jun 1, 2026 at 5:14 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
+>> >>>
+>> >>>
+>> >>> Yeah. BTW, I think we'd need a spin_lock_nested(), so @Nico, treat my code as a
+>> >>> draft.
+>> >>
+>> >> Okay, I read the above and did some investigating.
+>> >>
+>> >> I will try to implement and verify the changes you suggested :)
+>> >
+>> > I've implemented something slightly different actually and I *think* its better!
+>> >
+>> > } else {
+>> >        /* this is map_anon_folio_pte_nopf with no mmu update */
+>> >         __map_anon_folio_pte_nopf(folio, pte, vma, start_addr,
+>> >                       /*uffd_wp=*/ false);
+>> >        smp_wmb();
+>> >         pmd_populate(mm, pmd, pmd_pgtable(_pmd));
+>> >         /*
+>> >          * Some architectures (e.g. MIPS) walk the live page table in
+>> >          * their implementation. update_mmu_cache_range() must be called
+>> >          * with a valid page table hierarchy and the PTE lock held.
+>> >          * Acquire it nested inside pmd_ptl when they are distinct locks.
+>> >          */
+>> >         if (pte_ptl != pmd_ptl)
+>> >             spin_lock_nested(pte_ptl, SINGLE_DEPTH_NESTING);
+>> >         update_mmu_cache_range(NULL, vma, start_addr, pte, nr_pages);
+>> >         if (pte_ptl != pmd_ptl)
+>> >             spin_unlock(pte_ptl);
+>> >     }
+>> > spin_unlock(pmd_ptl);
+>> >
+>> > The logic here is that when the PMD becomes visible, PTEs are already
+>> > populated (no possibility of spurious faults on local CPU)
+>> >
+>> > the SMP_WMB makes sure of the above
+>
+>THe locks prevent those 'spurious' (really: incorrect) faults anyway so I don't
+>think this is necessary.
+>
+>> >
+>> > And the pmd is installed with the pte and pmd lock both held through
+>> > the mmu_cache update.
+>> >
+>> > This follows the conventions used in pmd_install() and clears the
+>> > potential for local CPU faults hitting cleared PTE entries.
+>>
+>> After the pmdp_collapse_flush() we'd be getting CPU faults due to the cleared
+>> PMD already? So the case here is rather different.
 
-Suzuki
+The issue I was worried about: update_mmu_cache_range() can re-walk
+vma->vm_mm while the PTE page table is still not reachable through the
+PMD. And, yeah, that assumption is ugly, but it is what it is, and there
+maybe be similar code elsewhere ...
 
+So the ordering we need is "the PMD points to the PTE page table from
+_pmd before update_mmu_cache_range()", not "new PTEs before PMD".
+
+Those PTEs are cleared, but we hold the PTL, so nobody else can install
+anything there :)
+
+So David's original suggestion looks enough to me:
+
+if (pte_ptl != pmd_ptl)
+        spin_lock_nested(pte_ptl, SINGLE_DEPTH_NESTING);
+
+pmd_populate();
+map_anon_folio_pte_nopf();
+
+if (pte_ptl != pmd_ptl)
+        spin_unlock(pte_ptl);
+
+>Yeah conceptually the code above is problematic because you immediately make the
+>PTE available right at the point you populate, so taking a PTE lock after that
+>is rather shutting the stable door after the horse has bolted.
+>
+>Doing it this way is not a good idea in any case because we're adding
+>complexity, an extra function and an open-coded cache maintenance call for
+>really no benefit.
+>
+>I asked Nico to abstract the anon folio mapping stuff explicitly so we could
+>avoid this sort of duplication so let's not roll that back :)
+>
+>So again, I think going with the original suggestion (with an updated comment)
+>is the right thing to do.
+>
+>
+>Anyway, an aside But in practice we can't have page faults here right? The VMA is:
+>
+>- Ensured to span at least the PMD range (this isn't immediately obvious in the
+>  code)
+>- VMA write locked (mmap write lock held)
+>
+>And we hold the anon_vma lock so no rmap walkers can walk the page tables here
+>either.
+>
+>So I actually wonder, given that, whether we need the PTE PTL at all.
+
+I'd keep it. Cheap, and lets us sleep better at night :P
+
+>But.
+>
+>At this stage it'll almost certainly be an owned exclusive cache line so it's
+>very low cost to do it, and it means we honour the update_mmu_cache_range()
+>contract.
+>
+>And it also makes it clear that we're gating changes on the PTE being
+>untouchable so any future stuff that maybe changes some of these rules doesn't
+>get caught out.
+>
+>So probably worth keeping.
+
+Yes!
+
+Cheers, Lance
+
+>>
+>> --
+>> Cheers,
+>>
+>> David
+>
+>Thanks, Lorenzo
+>
