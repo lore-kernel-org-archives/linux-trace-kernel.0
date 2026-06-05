@@ -1,101 +1,153 @@
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C879495526;
-	Fri,  5 Jun 2026 08:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0F24A3412;
+	Fri,  5 Jun 2026 08:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780647165; cv=none; b=ltSaW4Y3swIDgCKeYZFU0K8YTaQxkkJivlOOd3HLCd5TySbELTeHE06sQcTm4S7PZhEZEexIeeBUJflTSlSubruTslgU4LE2xqIykDBAKmPAXTkA7cQ4I5IQcOCxdZ4h1p6pX+OSxglrQd6s1Yq2oY1F4lPjyAslr983c9wUmLs=
+	t=1780649503; cv=none; b=SAap+amqP+Zzb/rSeTvdpKrsUYpo6Ni9ZOpGh/+uS61FJlIEAT03kgZ6uuQzNsULm4dWjZuv4oz9RCv4bN3mhxVazvervM2fxK1DSI1WAN7dUMc/CGLvWs8a3DdnPH7Yl4EHaR4tPj2jgY79KjJ8IheAGJuu6jtWJixPR6ns7Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780647165; c=relaxed/simple;
-	bh=SPrQ82EoyqeFxVyGSSzXEVkQhKmGpCGdwd76gsY+DYo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uGIpE92QPjx422haHmosWJmhmCJisIm+W4VY62zA2fFhCr3oPNLYFP4uEZxMiL+Gu6cttLB6t/Ja7X3xOZvQlZb7/sdVGSMsdg918ntQp2WRanTNu+g+qZsFF98j4yQ2qVkUEttSYkqUUe5E35qqOyqIWs7N4jRXWn9OluW9dbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=4MDYTyJr; arc=none smtp.client-ip=113.46.200.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1780649503; c=relaxed/simple;
+	bh=8yIvpbTVxGba6Vh2/cqlmbq+KNydJas30bcx4rW4Tjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JcjWvhQ2pk3bVBF8cH470YPeYkr80kP9dkXGulhcxbUiXuYJbSe6u9nxGpyph0fGL9k+fVWtFQne1J/rGOnqOjTncmCEx2V3k0majt3gUsgRTikej7ls/In3R9jos8WP5fXEVH+Udqne0tUrrOlGdUPn/Iqq2jzxTYI1RAllswY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=de1zSMnq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="4MDYTyJr"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=P/UmAPiytFwTrNcuTVo3jJjbv2ahSKmBzmXyOw4Hkt4=;
-	b=4MDYTyJrcl90mH7iy0GfzGrN2z57Rl8+Ya9qZdl/QD3SKlaFbUfMPTFLlVGBQM31LsUVVObXW
-	Mu99kjn6PeXQduuN6CAbjGtDbGIIRw7ypEyw+ITckDDkCjW98n00F15qwuZAi+Q5PORMJBqfcYW
-	KbV13tO84tWm4jNvE2OeTNM=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4gWv9N1jV0zmV8b;
-	Fri,  5 Jun 2026 16:04:40 +0800 (CST)
-Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9A2734055B;
-	Fri,  5 Jun 2026 16:12:32 +0800 (CST)
-Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
- kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Fri, 5 Jun 2026 16:12:31 +0800
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
-To: <david@kernel.org>, <qiuxu.zhuo@intel.com>, <bp@alien8.de>,
-	<akpm@linux-foundation.org>, <rostedt@goodmis.org>, <linmiaohe@huawei.com>,
-	<nao.horiguchi@gmail.com>, <mhiramat@kernel.org>,
-	<mchehab+huawei@kernel.org>, <tony.luck@intel.com>, <yi1.lai@intel.com>
-CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <lilinjie8@huawei.com>,
-	<liaohua4@huawei.com>, Xie Yuanbin <xieyuanbin1@huawei.com>
-Subject: [PATCH] mm/memory-failure: trace: change memory_failure_event to ras subsystem
-Date: Fri, 5 Jun 2026 16:12:13 +0800
-Message-ID: <20260605081213.154660-1-xieyuanbin1@huawei.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="de1zSMnq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1296E1F00893;
+	Fri,  5 Jun 2026 08:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780649501;
+	bh=IIeJ9iL/lDvJySy7dwtIphbMaPaW1rE4MmoyhmBkXhM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=de1zSMnqVEgSxN0NuY43apjjCw8weSD6Yqs0qDheynej3/5uzpJ3BcBucvOjU0FqN
+	 N5O+ucZbnVM5/lKIjvqhVw8vPjrtJsckzMuhWIHkFdC77e9NNzpQ+jx60NyQAkgujA
+	 I87krPuwzgTZ1Jgz/jfIBD64CKNxVAAXnWT2xt9W/6zNWz8KjkCJf74yvuGLSMwtxv
+	 /jQWa6XQHhg+mPcJBlRoOhoA4uli8Kaz8VHLi5uobGppq6/NKgd7yRODnWjDediKfl
+	 YHexHFXdw56TOlZOBHqPHq7toE46jHuqRbYmNrYQCt80M23BJyFm5zr6hIXrEuzXUO
+	 GzdOVw5WcMD8w==
+Message-ID: <ebf488ab-779d-44be-8c57-d275ec26726d@kernel.org>
+Date: Fri, 5 Jun 2026 10:51:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemj100009.china.huawei.com (7.202.194.3)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/memory-failure: trace: change memory_failure_event to
+ ras subsystem
+To: Xie Yuanbin <xieyuanbin1@huawei.com>, qiuxu.zhuo@intel.com, bp@alien8.de,
+ akpm@linux-foundation.org, rostedt@goodmis.org, linmiaohe@huawei.com,
+ nao.horiguchi@gmail.com, mhiramat@kernel.org, mchehab+huawei@kernel.org,
+ tony.luck@intel.com, yi1.lai@intel.com
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, lilinjie8@huawei.com, liaohua4@huawei.com
+References: <20260605081213.154660-1-xieyuanbin1@huawei.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260605081213.154660-1-xieyuanbin1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-For historical version, commit 97f0b1345219 ("tracing: add trace event
-for memory-failure") introduced memory_failure_event in ras subsystem.
-commit 31807483d395 ("mm/memory-failure: remove the selection of RAS")
-changed memory_failure_event to memory_failure subsystem. This breaks
-the backward compatibility, some user programs rely on it.
+On 6/5/26 10:12, Xie Yuanbin wrote:
+> For historical version, commit 97f0b1345219 ("tracing: add trace event
+> for memory-failure") introduced memory_failure_event in ras subsystem.
+> commit 31807483d395 ("mm/memory-failure: remove the selection of RAS")
+> changed memory_failure_event to memory_failure subsystem. This breaks
+> the backward compatibility, some user programs rely on it.
+> 
+> Change memory_failure_event to ras subsystem to keep backward
+> compatibility.
+> 
+> Fixes: 31807483d395 ("mm/memory-failure: remove the selection of RAS")
+> 
+> Reported-by: Yi Lai <yi1.lai@intel.com>
+> Reported-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Closes: https://lore.kernel.org/linux-mm/CY8PR11MB7134346A3E4BB28ECA28D6E989132@CY8PR11MB7134.namprd11.prod.outlook.com
+> Cc: David Hildenbrand <david@kernel.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Miaohe Lin <linmiaohe@huawei.com>
+> Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
+> ---
+>  include/trace/events/memory-failure.h | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/memory-failure.h b/include/trace/events/memory-failure.h
+> index aa57cc8f896b..7a8ee5d1a44e 100644
+> --- a/include/trace/events/memory-failure.h
+> +++ b/include/trace/events/memory-failure.h
+> @@ -1,6 +1,10 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #undef TRACE_SYSTEM
+> -#define TRACE_SYSTEM memory_failure
+> +/*
+> + * For historical versions, memory_failure_event is in ras subsystem,
+> + * some user programs depend on it.
+> + */
+> +#define TRACE_SYSTEM ras
+>  #define TRACE_INCLUDE_FILE memory-failure
+>  
+>  #if !defined(_TRACE_MEMORY_FAILURE_H) || defined(TRACE_HEADER_MULTI_READ)
 
-Change memory_failure_event to ras subsystem to keep backward
-compatibility.
+We should
 
-Fixes: 31807483d395 ("mm/memory-failure: remove the selection of RAS")
+Cc: <stable@vger.kernel.org>
 
-Reported-by: Yi Lai <yi1.lai@intel.com>
-Reported-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Closes: https://lore.kernel.org/linux-mm/CY8PR11MB7134346A3E4BB28ECA28D6E989132@CY8PR11MB7134.namprd11.prod.outlook.com
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
----
- include/trace/events/memory-failure.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+given that it's in v6.19 and nobody noticed :(
 
-diff --git a/include/trace/events/memory-failure.h b/include/trace/events/memory-failure.h
-index aa57cc8f896b..7a8ee5d1a44e 100644
---- a/include/trace/events/memory-failure.h
-+++ b/include/trace/events/memory-failure.h
-@@ -1,6 +1,10 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #undef TRACE_SYSTEM
--#define TRACE_SYSTEM memory_failure
-+/*
-+ * For historical versions, memory_failure_event is in ras subsystem,
-+ * some user programs depend on it.
-+ */
-+#define TRACE_SYSTEM ras
- #define TRACE_INCLUDE_FILE memory-failure
- 
- #if !defined(_TRACE_MEMORY_FAILURE_H) || defined(TRACE_HEADER_MULTI_READ)
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+
+Thanks, and fortunately now I learned about possible ABI salability of trace events.
+
 -- 
-2.53.0
+Cheers,
 
+David
