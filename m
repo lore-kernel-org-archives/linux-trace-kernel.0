@@ -1,123 +1,173 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F082030A
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 00:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F69D12C534;
+	Fri,  5 Jun 2026 07:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780620016; cv=none; b=ctOqKPFRwiFX0n6nGUNihOp6weWxJKHMHg5ce2IqmFHkOinDP1XIa/JXayGfrnT/H9E+HZEyPDRnI3Dxlq2bVWgmRmVREdk9nR1rwcAX0XQismbcaFwlVN+y8iOnxnrZ3PJzdsZME6MEXBF1ub4j6ozy1JOH8fS07MwZXVEIqgM=
+	t=1780643926; cv=none; b=RRf0ftqn9Kn4g640o8iOCA9DTA+5kmhhf7EI+0gfsqfmvbZn/t28ft828RXV+kHtOTXmHw9TXi2+TBPBovvrJj3qXr7l208AFTm6x9qBNpi0o3O4pS/fneXnJn71jGVTDYfgAjvVe9bznBXTY2cOoKAD7TRPcQ2J7Pu8VyzLjJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780620016; c=relaxed/simple;
-	bh=DXmhiCsWIXm11W34j1sugunE1ds1B0syHhs7CqJXlWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kwfRCwGh4ILZ4COipVWI4aKUz/8B6Z+88TNPed0YHnpVxR4JF5xEKcMTNMqh6hzMS6/c00qezFX+qgTbJIIRNLovIOEgPC5vUlWMfKYT0tqdGqQzivVfyTtRdgZ2lgfILiq7q1mg9poBk4XWHbaurNQDubBevRQsdRi+aFafNvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=Q4fj5C8q; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
+	s=arc-20240116; t=1780643926; c=relaxed/simple;
+	bh=DM9UlyIAHn15CmL8vPXapVhy+5dazkz7jhUmqLbUntY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VaVZap9wKLTc1fOf9hj95+0lipMHIAQi7MmTKqSCq+vrUMS8cBjAlGglmaDSgAXPy12cmD++pqaVe3wdxiqd+RydBk9APGPGnMCP75OJa+rc/ZoDJLUukkg0hs6901gXq7ge8o0X6vj1sUlahqo34BXpIRSUfTlqxMdqJul5dgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFKSoHsq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="Q4fj5C8q"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-9157d3f2098so176603085a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jun 2026 17:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=trailofbits.com; s=google; t=1780620014; x=1781224814; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mWrroz3+zH0jKSf35ivskF6g2ucZr//71hYihKdTdTw=;
-        b=Q4fj5C8qXeOuckPllAudy80RTwrcreHalqOXJv5npHKH8lC9Nl1EVx4gknwGMjfx+O
-         TPrpo7PR6TBnzOeixe/z7x39YRumuogR7FVjedRIvk+3NkvL5rz9npUZ28Byu1zXmqR4
-         7Y8VaSGl6TsmOi8Iy4hGMkNKpN6Y2y7aAwXGaQlVJRUfQ0dJhJOGMFJ6l2lHYOQm0V1w
-         hcAZyTC61aluS7rbV4SJhIkaiHUnLSCN31XClBtP9m7JOuCHlH6o6IFQuJ6aYlfWadVF
-         KeifM0Jln1U+QiJJlPlyMBM8t5yo3OeNiidZbJvjpOznoKP9pgeKSFWdPvvP5KR0jXxt
-         crug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780620014; x=1781224814;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mWrroz3+zH0jKSf35ivskF6g2ucZr//71hYihKdTdTw=;
-        b=s+/81R224LI+WOvl478P/az+K9WEjRcHnzOtCKBG/Gwi6Kvm9kVRGo6CD5ge8vf436
-         81a3i4YiDf+aNgYI3y8lpbDHNii9hzZvOaMN3dCxU89p+ev44FnjwAeQ8Srv6tsZ8p39
-         RBUdrPj9+eMn2B4TscZcALW+5g7AasPDf62qCUGuQw3coLG0vXMcc3GDQS/XwjLiiLdR
-         //arM8EZX+4uI05bgYlcGIvO2WVpwxOpp2lLt0VsVN6ggzst6nbjqjPR5k8Zno1uoZQc
-         +nSXrpB/jxoxLCB/MMIocJC27K6/9EsUAn7EmK/6tuyGcSZyT/wA3uTm5zWEhghKgUDj
-         mYdg==
-X-Forwarded-Encrypted: i=1; AFNElJ96SdknM7RuxFaWHbVYDLGeMgC5nIaY6G9oMsZ5UnjT3oV15G80DIfFxyXjNaVT9ExYLQT0V2POoyqlrTS6x6/kIyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzryp3SWUg/Y0faMzHwFskjiLDnWJRrbMJQHCGSUZf6vULvQ/pT
-	BYWyXvWfkqsZPI3blAfPCjQoYUP3McN7Bl2Zfc0fXbe16QIWQciHQqMdb4OWYTbTJZ4=
-X-Gm-Gg: Acq92OF/2cZF9whBMJ1oCsln5H7c+UGhHN+SjLyY874GIMoiGznXpvhdv1mQZ44I21x
-	IstjEOQqHXBiib/9mmQ5oYCamKa5YM4qTqUR2pgiUCNRgTPSCPYi9BWSPG0jd6WkKL+GZ3tb1Bp
-	X2j0al7xmEiI7PyqGLlybp5gUmVVeAEAfkgV6SVFCOJO4YK0aSFyNaKyZPTQXGaX9X8Au7JkI3E
-	2B1Lw62rPxWH6QrXVbrhfyW6igKHTcHt2LP07fYxV+2kvFQbIueDrPJXJcPwpw37y+biVpZlaPW
-	QdJP4UwFOZbp53XUMNLSilkCnbJ9dq7QhjqQtWLnQf7/gKsir2ErI5wROZrv3iorTJUQVEYPYf+
-	6v3tYLDn36M30MToJV2uY5wldnwBHiVuMnHKHSMD9USDJKLlhJMxtYH9DyFDtRxfth7O8owygUi
-	QoLkj6/Og3oEujdPkm9VeAvUYRi6KfQacoVj6MPg==
-X-Received: by 2002:a05:620a:254a:b0:915:9943:d760 with SMTP id af79cd13be357-915a9db892dmr272979485a.43.1780620013903;
-        Thu, 04 Jun 2026 17:40:13 -0700 (PDT)
-Received: from localhost ([161.35.96.86])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-8cecd06e4d6sm67196236d6.36.2026.06.04.17.40.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 17:40:13 -0700 (PDT)
-From: Samuel Moelius <sam.moelius@trailofbits.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Samuel Moelius <sam.moelius@trailofbits.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH] tracing: reject invalid preemptirq_delay_test CPU affinity
-Date: Fri,  5 Jun 2026 00:40:06 +0000
-Message-ID: <20260605004006.2041148-1-sam.moelius@trailofbits.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFKSoHsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689791F00893;
+	Fri,  5 Jun 2026 07:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780643924;
+	bh=3+V341z4AFJZZMWBuVoX5xq/8STGfWgb2w/e64lYkj8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=UFKSoHsqpiw5gvp4gxvIEeJV+ca7a8BTyA6Fv3MGXG6GJ0w6FjqLoAmGNkrI40bzi
+	 LPiHrU5+KmRBiz308PEbAzP4ENiIfnH+V734xr/2xp4sCaeu+zcMgecxFNyfqSjb+v
+	 WgHMFtYwkcSrA1pSkQ4v7Vz+wEkoqzQ2+YcHMqXkD4dWkMnKIGsUE6Gms3U33ndlPx
+	 YEzC14yJ1npKFNlXHQvj4x2sIQCn12AgtAexYzvK7XvBVdBfb0Yr4JhkqRHnpuQseK
+	 3jQOBtfcUkG3FG8kYz13aDf522Wg8k+yRie67+W03EZFQpEHhxZxIU0G0rzOPDryev
+	 ng00bDx57SfaA==
+Message-ID: <0ef96c28-9e6c-4d04-90ae-ac43c81d465d@kernel.org>
+Date: Fri, 5 Jun 2026 09:18:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mm-unstable v18 06/14] mm/khugepaged: generalize
+ collapse_huge_page for mTHP collapse
+To: Nico Pache <npache@redhat.com>
+Cc: Lance Yang <lance.yang@linux.dev>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, liam@infradead.org, ljs@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
+ rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
+ richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
+ rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
+ sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
+ tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
+ vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
+ willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
+ usama.arif@linux.dev
+References: <2024af56-5e99-4799-a586-e9ba756cecb9@kernel.org>
+ <20260601032804.96122-1-lance.yang@linux.dev>
+ <f5d38f64-ab92-496d-afd3-29ccc17fec2b@kernel.org>
+ <616de1a8-1cfd-40b8-b04f-7b324be40bfd@linux.dev>
+ <6b11bf0a-769c-4ef2-ac6f-2af38200a6bc@kernel.org>
+ <baa0a462-46e0-44ab-b583-c722ad253afe@linux.dev>
+ <06d9b665-945f-4967-9ed9-b06514478996@kernel.org>
+ <CAA1CXcAeEGOsqp-ywAQ7GMYQzXEeco-rUxUkk2hEF69HybC4=w@mail.gmail.com>
+ <CAA1CXcBSPVG4CJFCBDvbuodcJ_7eXoDQTpK0ZN0HEhkDPi-DEw@mail.gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <CAA1CXcBSPVG4CJFCBDvbuodcJ_7eXoDQTpK0ZN0HEhkDPi-DEw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-preemptirq_delay_test accepts cpu_affinity as a module parameter and,
-when it is non-negative, writes that CPU directly into a temporary
-cpumask from the worker thread.  Values outside nr_cpu_ids can set a
-bit outside the allocated cpumask before the test reports a normal
-affinity error.
+On 6/4/26 19:04, Nico Pache wrote:
+> On Mon, Jun 1, 2026 at 9:00 AM Nico Pache <npache@redhat.com> wrote:
+>>
+>> On Mon, Jun 1, 2026 at 5:14 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
+>>>
+>>>
+>>> Yeah. BTW, I think we'd need a spin_lock_nested(), so @Nico, treat my code as a
+>>> draft.
+>>
+>> Okay, I read the above and did some investigating.
+>>
+>> I will try to implement and verify the changes you suggested :)
+> 
+> I've implemented something slightly different actually and I *think* its better!
+> 
+> } else {
+>        /* this is map_anon_folio_pte_nopf with no mmu update */
+>         __map_anon_folio_pte_nopf(folio, pte, vma, start_addr,
+>                       /*uffd_wp=*/ false);
+>        smp_wmb();
+>         pmd_populate(mm, pmd, pmd_pgtable(_pmd));
+>         /*
+>          * Some architectures (e.g. MIPS) walk the live page table in
+>          * their implementation. update_mmu_cache_range() must be called
+>          * with a valid page table hierarchy and the PTE lock held.
+>          * Acquire it nested inside pmd_ptl when they are distinct locks.
+>          */
+>         if (pte_ptl != pmd_ptl)
+>             spin_lock_nested(pte_ptl, SINGLE_DEPTH_NESTING);
+>         update_mmu_cache_range(NULL, vma, start_addr, pte, nr_pages);
+>         if (pte_ptl != pmd_ptl)
+>             spin_unlock(pte_ptl);
+>     }
+> spin_unlock(pmd_ptl);
+> 
+> The logic here is that when the PMD becomes visible, PTEs are already
+> populated (no possibility of spurious faults on local CPU)
+> 
+> the SMP_WMB makes sure of the above
+> 
+> And the pmd is installed with the pte and pmd lock both held through
+> the mmu_cache update.
+> 
+> This follows the conventions used in pmd_install() and clears the
+> potential for local CPU faults hitting cleared PTE entries.
 
-Validate the requested CPU before starting the worker thread, and
-return -EINVAL for invalid affinity requests.
+After the pmdp_collapse_flush() we'd be getting CPU faults due to the cleared
+PMD already? So the case here is rather different.
 
-Assisted-by: Codex:gpt-5.5-cyber-preview
-Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
----
- kernel/trace/preemptirq_delay_test.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
-index acb0c971a408..0f017799754a 100644
---- a/kernel/trace/preemptirq_delay_test.c
-+++ b/kernel/trace/preemptirq_delay_test.c
-@@ -14,6 +14,7 @@
- #include <linux/kthread.h>
- #include <linux/module.h>
- #include <linux/printk.h>
-+#include <linux/cpumask.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
- #include <linux/completion.h>
-@@ -152,6 +153,15 @@ static int preemptirq_run_test(void)
- 	struct task_struct *task;
- 	char task_name[50];
- 
-+	if (cpu_affinity > -1) {
-+		unsigned int cpu = cpu_affinity;
-+
-+		if (cpu >= nr_cpu_ids || !cpu_possible(cpu)) {
-+			pr_err("cpu_affinity:%d, invalid CPU\n", cpu_affinity);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	init_completion(&done);
- 
- 	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
 -- 
-2.43.0
+Cheers,
 
+David
