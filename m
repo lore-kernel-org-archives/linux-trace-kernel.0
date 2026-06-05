@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F12416CEF;
-	Fri,  5 Jun 2026 17:49:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8952397E8A;
+	Fri,  5 Jun 2026 17:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780681794; cv=none; b=ggKqBmUhmYH0dWzrcylT2lI4nJDUUeSKVfSGawl89ERBsvZm9Q0qJF2zdK8rF2/KjVNnhBvpjtCoIHg+loRz//de8R1LorgMcsNKLPjriUknGyOPeAlhHRHndK9Hf/r+PUukz2TPA0IXgu6Svpaeh4aVvbKlafjFj9p8j46n5Lc=
+	t=1780681974; cv=none; b=LSkk5kd0vFRa2qxG5SrbKaLZCzk+DS8VkyAs2NieyNwytWs98Xs3HYwuM/TF8q/0RN1AzOmJvZ/Q0bZkIgeBaP1pcfsnOk8k/9/Xq0YzZ5sDSUxTSrdbYkX0IZrM4a1wkpM45LdANUjdEtDDCIGuDvYg6QFAJMx3buQbVD+dy1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780681794; c=relaxed/simple;
-	bh=6mtYHY0NJry8yiy0pciVb7hjZ6v867KC05MrPcjj+u4=;
+	s=arc-20240116; t=1780681974; c=relaxed/simple;
+	bh=St7wtNtQ0jc6x43uE2tX/pGDLiyJMKrS9/f+/H35xIM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XLwE6i/zRxF/HNoxJYm2bgRQUc7SfAsxp1kGvIQURknozT6HdjXMg0K3apiaw1oRuu2SIx+gG139g8stnFTMgTzL4vnFccYvFqOy4/DoyivsvZITRNQKlqzzu7Kheh03WH1bXFoy+C3JOTJPFfEsSD9OMBOZFLFdPdUKwjz6S04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ot0TX+03; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=SPC8ZNlgIngd69UKeOvjd5k0D+ajPuzC2lq0zJ2y9v1UPCPw7KY3xwKlw6aP0ZJhKOurDGoIirJ9kB1aeTvSJiShHokOoTil0NUiLyBUErJ4sSASVRsDEgFXaRhryg3OzfBootp0EvW1j7xtCA4wRUUNhbGyimCQufc+pWruE+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvoZr4Uk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ot0TX+03"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 434EC1F00893;
-	Fri,  5 Jun 2026 17:49:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvoZr4Uk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D549D1F00893;
+	Fri,  5 Jun 2026 17:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780681790;
-	bh=LwGtvOXKAGZrSsdtQYxVodblsUwtKRfClda98rWcRDc=;
+	s=k20260515; t=1780681968;
+	bh=L4zIeQlvQf78FCoQzZFvkcKsrBnu4s0OZArTXsfT7tk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ot0TX+03yOgzXrp8V7VE9CTLkYrkd0ZBlLgBbzx8SovkOxfR8IJChQWDsXmPsJcIH
-	 yUuy6/rCRZHxamblQ217ZHj1seYnsi1jdhHzJU8HR2QNJgJbuGbb6vxLx5B+8Hgs5Z
-	 v7lzYET7aRBhNj0yL1kz7VrcnGdSmYYf3Vzit6lWUVXAfYdqJ9GMKcio+8D1S6n2Os
-	 Qn25r5M9g94b5zudlxshPinbuuabMmzLeM1lJJWXluq0lUtJTBnaynQ9gFATakZN5H
-	 sYfzw3/dGyKrzU+JhcgzHVkL/S9aG6JvP2AEUotwxX9/6/mKI9UrKHbh64kevzHXPf
-	 2DjJHK2bGFBZw==
-Message-ID: <44b12ede-1e16-47f5-9051-27fa4ea34236@kernel.org>
-Date: Fri, 5 Jun 2026 19:49:34 +0200
+	b=XvoZr4UkuCFmy2Kh9C/g83cu3QpLQwjl1vpA4ZGtxKdPuCvStDsSjnA7H7Af0W7ON
+	 KkuUi6zj2VK6mIf+QgXu2hZearnFIFEjHM/hArCZuGvwCoz1oJ1Mh3qJ6yDl1tOvCz
+	 muYwWJwzR91ZlsRB1cz5q+5FyX9tgtL6J+vcPEQLET7j1hiTiLDOsHqo9HD+oyQTwh
+	 9OPkyaLpG7Hv6s2gKZI9e6B+0srPLbcdkI/knDsdifekQfRPev2j7Tpo5DwW4uVBc7
+	 N+A5GKOXb9i7mTIzDE5oTmfGA8LzmZoUGWpzyxy5NxsolIHRRsuVH6RDneMkmNvSdl
+	 Wg+Slyqu7eLoQ==
+Message-ID: <031f6304-a145-486b-b2b9-569cea4102a7@kernel.org>
+Date: Fri, 5 Jun 2026 19:52:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v19 12/14] mm/khugepaged: avoid unnecessary
- mTHP collapse attempts
+Subject: Re: [PATCH mm-unstable v19 14/14] Documentation: mm: update the admin
+ guide for mTHP collapse
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -57,9 +57,9 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
  will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com,
- Usama Arif <usama.arif@linux.dev>
+ Bagas Sanjaya <bagasdotme@gmail.com>
 References: <20260605161422.213817-1-npache@redhat.com>
- <20260605161422.213817-13-npache@redhat.com>
+ <20260605161422.213817-15-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -106,34 +106,20 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260605161422.213817-13-npache@redhat.com>
+In-Reply-To: <20260605161422.213817-15-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 6/5/26 18:14, Nico Pache wrote:
-> There are cases where, if an attempted collapse fails, all subsequent
-> orders are guaranteed to also fail. Avoid these collapse attempts by
-> bailing out early.
+> Now that we can collapse to mTHPs lets update the admin guide to
+> reflect these changes and provide proper guidance on how to utilize it.
 > 
 > Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
-> Acked-by: Usama Arif <usama.arif@linux.dev>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 > Signed-off-by: Nico Pache <npache@redhat.com>
 > ---
->  mm/khugepaged.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 430047316f43..7de92b28dd30 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1499,6 +1499,7 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
->  			collapse_address = address + offset * PAGE_SIZE;
->  			ret = collapse_huge_page(mm, collapse_address, referenced,
->  						 unmapped, cc, order);
-> +
 
-Unrelated to this patch, but not the end of the world :)
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
