@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F8428643C;
-	Fri,  5 Jun 2026 18:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD732EC0A4;
+	Fri,  5 Jun 2026 18:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780682603; cv=none; b=m2jbwarKUfs/IbxP16y3dXC+MMQ8ECMivyFYX4dqGOUyhERURFPAW1pwoAszJebuGN3QdebtoIeLa7a7F26X36oR1DokZFTU7yDhUJvB+Numi8cOu3Q2SlzCAmpcuftrmOtD6nofaNhu9oPUaAtLk8+WyoTKMGGLgax7k6soEu4=
+	t=1780682839; cv=none; b=crqNNW3s7GAzfP9l6myBNUCfuQ3rZtQz20QfhnDz7lNfQw/U5NsPfe/bQvhniIbg9jfR0ygQcXdqUVobutvcTJwAo21EBel9BmV8hGT7r+nD8f3jsmg69TAuLtX/RPQFw6LisgSdGXAUVa8YhndmNh657hkT5QM8idWqoMzZfZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780682603; c=relaxed/simple;
-	bh=iLUIFagN6XfRq77k6IUTip1085kPQXst1NkQQ75aMUs=;
+	s=arc-20240116; t=1780682839; c=relaxed/simple;
+	bh=xXq7HkR+vNYuMHeYJD9bWblvHRakO5bIzqxTfoE5zIA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QqYZGBNUg2YxnvuFltfAUr6rwnUWUZiB8q0IjdPyUw82ifFHl2fuDT1MmQAB5F2D4hSRsTV0VyT/nw48zqwkd7y0cZ9pTBQ9dnuSt2ZKMK7MD+1mDfQ+ZG5TITvvuE03qjgujwlFIrLbPLBw+ns9mFkptf3Qsx7Im2Yi9ACV+mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+e1iPjf; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=YTmSC8ohN72JGzdwMMF9C+R+V3sfmsAcUD61YXNyZkhW3IsI0eYQ79vV0tknD77rwTtIUsAlpf2o9SwVWfEsunIXU7Gu6Hs2AMO22wQhqy2ULDOvKUA7WxxsSTMEIAlxPsSWOBhATewF4M20g/erlem1O4GVNBf/obX/wjoLerY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=alsX+KfK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+e1iPjf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEDA81F00893;
-	Fri,  5 Jun 2026 18:03:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="alsX+KfK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A07371F00893;
+	Fri,  5 Jun 2026 18:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780682600;
-	bh=PGzu0aXe6HFW26JonkhpJzsdo5T0zMBSmF+3OrFmmlw=;
+	s=k20260515; t=1780682838;
+	bh=/Nhf4jMO4wZRRzTPNpV/mvbXK0GYYQL5VEX2HgG0GMc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Z+e1iPjfg+9HqlR3h8DHfBgPQRE68RxUVv8D1XNuenBu9ZF2YKFA1VjR+VhNGmsjH
-	 GFEsnohYRLoqPHInWHvAv+Y1P65hv1c/MMrxJSbBN+yOfJqPCciWJB5eDfz41GF86T
-	 qMqtn3TPL6lAtshubXlzylKeK/mZnTMTuJ8OreQfyscHUNmR0JCN2NxoetsjDP9SNX
-	 z6t2qhgbRR6iVRlYl5H6U92DpJ60wb1xEgXi0Mh5HIK/ZHtPmOapC6wlHz+l+codie
-	 TgFnFCzdg4BQYDwbENybXouCX/1iPohb/lA5DoazHpV+yJs7xg5DN0jxXw7ub4HMGJ
-	 C0hR8pP7Fim6A==
-Message-ID: <d1f8ce4d-d4d8-4776-a9e2-de394dc81f63@kernel.org>
-Date: Fri, 5 Jun 2026 20:03:05 +0200
+	b=alsX+KfKpBh3DHmOFR5AfpAGL8a8etxlfDAQgLlShE1jlMui4LaKD9+wiWQ42voDK
+	 1xswb8uIL6om3S/gp1xwoeb6UEV8V6IWwkyfi/D9E9zDXUSCioSbKg2AHA+ZrY0BFE
+	 2KZS4fs3fhWH8FIlfVJojSt6RX0bDEHEVF7OVAvL9h5+zR4sBRDLw10YjMYHjRWVgn
+	 LXwdC3Lvd34Oo6pG+yR6gf6mEfv/QDjo+K/VcfEBfifFGZZYnQsb2tocaaxiIlJQfy
+	 HTJTIbHVLR3z0JuQ/r1Hfi/yguSuZcybRH5O8fSD4DHd+AMDmED9H+IOjsNtAauyay
+	 1dFEy9B6/ISyw==
+Message-ID: <177704e1-03b3-4791-9a69-9b83b72d61d5@kernel.org>
+Date: Fri, 5 Jun 2026 20:07:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v19 11/14] mm/khugepaged: Introduce mTHP
- collapse support
+Subject: Re: [PATCH mm-unstable v19 00/14] khugepaged: add mTHP collapse
+ support
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -58,7 +58,6 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
 References: <20260605161422.213817-1-npache@redhat.com>
- <20260605161422.213817-12-npache@redhat.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -105,106 +104,50 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260605161422.213817-12-npache@redhat.com>
+In-Reply-To: <20260605161422.213817-1-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 6/5/26 18:14, Nico Pache wrote:
-> Enable khugepaged to collapse to mTHP orders. This patch implements the
-> main scanning logic using a bitmap to track occupied pages and the
-> algorithm to find optimal collapse sizes.
+> The following series provides khugepaged with the capability to collapse
+> anonymous memory regions to mTHPs.
 > 
-> Previous to this patch, PMD collapse had 3 main phases, a light weight
-> scanning phase (mmap_read_lock) that determines a potential PMD
-> collapse, an alloc phase (mmap unlocked), then finally heavier collapse
-> phase (mmap_write_lock).
+> To achieve this we generalize the khugepaged functions to no longer depend
+> on PMD_ORDER. Then during the PMD scan, we use a bitmap to track individual
+> pages that are occupied (!none/zero). After the PMD scan is done, we use
+> the bitmap to find the optimal mTHP sizes for the PMD range. The
+> restriction on max_ptes_none is removed during the scan, to make sure we
+> account for the whole PMD range in the bitmap. When no mTHP size is
+> enabled, the legacy behavior of khugepaged is maintained.
 > 
-> To enabled mTHP collapse we make the following changes:
+> We currently only support max_ptes_none values of 0 or HPAGE_PMD_NR - 1
+> (ie 511). If any other value is specified, the kernel will emit a warning
+> and mTHP collapse will default to max_ptes_none=0. If a mTHP collapse is
+> attempted, but contains swapped out, or shared pages, we don't perform
+> the collapse.
+> It is now also possible to collapse to mTHPs without requiring the PMD THP
+> size to be enabled. These limitations are to prevent collapse "creep"
+> behavior. This prevents constantly promoting mTHPs to the next available
+> size, which would occur because a collapse introduces more non-zero pages
+> that would satisfy the promotion condition on subsequent scans.
 > 
-> During PMD scan phase, track occupied pages in a bitmap. When mTHP
-> orders are enabled, we remove the restriction of max_ptes_none during the
-> scan phase to avoid missing potential mTHP collapse candidates. Once we
-> have scanned the full PMD range and updated the bitmap to track occupied
-> pages, we use the bitmap to find the optimal mTHP size.
+> Patch 1-2:   Generalize hugepage_vma_revalidate and alloc_charge_folio
+>              for arbitrary orders.
+> Patch 3:     Rework max_ptes_* handling into helper functions
+> Patch 4:     Generalize __collapse_huge_page_* for mTHP support
+> Patch 5:     Require collapse_huge_page to enter/exit with the lock dropped
+> Patch 6:     Generalize collapse_huge_page for mTHP collapse
+> Patch 7:     Skip collapsing mTHP to smaller orders
+> Patch 8-9:   Add per-order mTHP statistics and tracepoints
+> Patch 10:    Introduce collapse_possible_orders helper functions
+> Patch 11-13: Introduce bitmap and mTHP collapse support, fully enabled
+> Patch 14:    Documentation
 > 
-> Implement mthp_collapse() to walk forward through the bitmap and
-> determine the best eligible order for each naturally-aligned region. The
-> algorithm starts at the beginning of the PMD range and, for each offset,
-> tries the highest order that fits the alignment. If the number of
-> occupied PTEs in that region satisfies the max_ptes_none threshold for
-> that order, a collapse is attempted. On failure, the order is
-> decremented and the same offset is retried at the next smaller size. Once
-> the smallest enabled order is exhausted (or a collapse succeeds), the
-> offset advances past the region just processed, and the next attempt
-> starts at the highest order permitted by the new offset's natural
-> alignment.
-> 
-> The algorithm works as follows:
->     1) set offset=0 and order=HPAGE_PMD_ORDER
->     2) if the order is not enabled, go to step (5)
->     3) count occupied PTEs in the (offset, order) range using
->        bitmap_weight_from()
->     4) if the count satisfies the max_ptes_none threshold, attempt
->        collapse; on success, advance to step (6)
->     5) if a smaller enabled order exists, decrement order and retry
->        from step (2) at the same offset
->     6) advance offset past the current region and compute the next
->        order from the new offset's natural alignment via __ffs(offset),
->        capped at HPAGE_PMD_ORDER
->     7) repeat from step (2) until the full PMD range is covered
-> 
-> mTHP collapses reject regions containing swapped out or shared pages.
-> This is because adding new entries can lead to new none pages, and these
-> may lead to constant promotion into a higher order mTHP. A similar
-> issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
-> introducing at least 2x the number of pages, and on a future scan will
-> satisfy the promotion condition once again. This issue is prevented via
-> the collapse_max_ptes_none() function which imposes the max_ptes_none
-> restrictions above.
-> 
-> We currently only support mTHP collapse for max_ptes_none values of 0
-> and HPAGE_PMD_NR - 1. resulting in the following behavior:
-> 
->     - max_ptes_none=0: Never introduce new empty pages during collapse
->     - max_ptes_none=HPAGE_PMD_NR-1: Always try collapse to the highest
->       available mTHP order
-> 
-> Any other max_ptes_none value will emit a warning and default mTHP
-> collapse to max_ptes_none=0. There should be no behavior change for PMD
-> collapse.
-> 
-> Once we determine what mTHP sizes fits best in that PMD range a collapse
-> is attempted. A minimum collapse order of 2 is used as this is the lowest
-> order supported by anon memory as defined by THP_ORDERS_ALL_ANON.
-> 
-> Currently madv_collapse is not supported and will only attempt PMD
-> collapse.
-> 
-> We can also remove the check for is_khugepaged inside the PMD scan as
-> the collapse_max_ptes_none() function handles this logic now.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
 
-Yeah, overall much simpler and much easier to get. As discussed, we can optimize
-this later to traverse enabled orders more efficiently.
+Went through it and didn't find any blockers. Let's wait for Lorenzo's assessment.
 
-> +	bitmap_zero(cc->mthp_present_ptes, MAX_PTRS_PER_PTE);
->  	memset(cc->node_load, 0, sizeof(cc->node_load));
->  	nodes_clear(cc->alloc_nmask);
-> +
-> +	enabled_orders = collapse_possible_orders(vma, vma->vm_flags, tva_flags);
-> +
-> +	/*
-> +	 * If PMD is the only enabled order, enforce max_ptes_none, otherwise
-> +	 * scan all pages to populate the bitmap for mTHP collapse.
-> +	 */
-
-I think it would have been good to mention where the check is performed for mTHP
-collapse. Can be added later.
-
-
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+If he also doesn't find anything major, I think we can move forward with merging
+it and handle smaller things as follow-ups.
 
 -- 
 Cheers,
