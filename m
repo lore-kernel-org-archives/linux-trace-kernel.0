@@ -1,54 +1,54 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DAF388E64
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 16:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B09386557
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 16:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780677595; cv=none; b=QE8aNt+CamlquIo3xqhukibjsNmJkSJu+Gxw4ZHchmL6UNzTjnm5RA+ukEQAMLLtsy37rtlamorIDUupx/FrScQLtjGQlOG08NWUrOE03bezZYvQT0IK4wbC0xifwejdOnaj11Y1ByU8hIcyZntjudqRXoSDaMVMcGC5sOR52rE=
+	t=1780677595; cv=none; b=fdaQJzgRRB59sHIxYlHFITojrAfEXj9lWWZAiOc0lo9Y4ccQe9/WRlb7zWXMLw77Z+xY5PVJJ0sqxAgHAy/l36bKTlQTA7Mh4m3VGLvZpJh5OP3xP5vs0LLsYo4ZAukq6NZeoe6fJS/6bjzH8GIMi45m6ylZCk83bPbYDtBPbg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780677595; c=relaxed/simple;
-	bh=00WrbL+qC++juy3mRxcciqsSEaz5mpzzlJJXNcnEw9E=;
+	bh=7zF3hoBco+kheYhQFPMsuDWaQfk6rSkz3tdGzWg3LOc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=W6LxHZ+mLvya8AXyj6Y26w3cMMIi2NPHW99eVLiI74Yc4OC6rLvOSKeGx6jARp45mLUp7SXMvYRfJX75kNM7s/K0aF4JUt+5/bHdHkO3vpGJP7ZsSydsWjzHlEu+eo8zYrl97Usmh8J4gn/Y6CHBQrQKyYw9nEDCVWn/SWqvrhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NWe5dORc; arc=none smtp.client-ip=209.85.218.74
+	 To:Cc:Content-Type; b=QyQLAn+FWshEamo5ruHG78zcTzwLxn9zVh/BCRPgkGtc9AB+5d8ZTAVz+zzNof75Tu3c5aBlmNsNN9GS+z6XZhLCSfEA7UzEje3sY9ER2/PJ3keVDrqvwUxiB4z4pyx8dXWon8re02yM7zI7tDJ1kHzcj+viC70FRY0TjzmIqvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fgPeuUWu; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NWe5dORc"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-bef1e83c990so194984966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Jun 2026 09:39:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fgPeuUWu"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-490ab3f6e55so1833555e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Jun 2026 09:39:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780677591; x=1781282391; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780677592; x=1781282392; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A2LHKq5mEAFuwFPcckcFCn8LsvodpkOolH8tM9hbq18=;
-        b=NWe5dORcO4z8MWKM77iHpgp2wRsu7QEUHWs/DVdON2v2hW7fdBnvhhTLWUTsRQiffB
-         r1E+7lecN1oZRcf1n982S6/cz1sCULeateZL11e3Wq+M7bN/iuW72/k82YaphwgfiDP8
-         frMm8I6qXl5cUK0MRGhToSXMFuJ3QyEZ7xgZ1yr4+lhe6haB/MRz9VWXz/sS3nDBhXO3
-         s1Ufbsv9Sc0arsXCjmQPKpl6TaHx/mUbOUfVJ/uHW5LrHibkiUh9dTeDro8TXJwYiGet
-         SnhVxEiHMbBy+Bek9bGLEv6W5it6ghwJLCOP2fsXtKT1W+opMrr2atOyfUd3IjpiB8j8
-         0/wA==
+        bh=TzM6XX/eusxalGqryWLtyN7IPdFFdWTN29SoKegCm9s=;
+        b=fgPeuUWuEfPz90NA3wjIH4pOQ5QOu4hFSczP4i0l1rAIchxmV6yvRkhLzZ/BFf+mTk
+         jV46X6cnziZ34kwVDRLhUqMSLBqNPmocV7a7eIHZYESQyggbBC5I2wCLIAku7nRtxdyl
+         uGZoXEgR4qDr75mIq98BZBR2uyOQrKoWHf1m6g+K4SwYCfJm2huCP/iBJQeTi+izkzVa
+         qhNRTuG7pKh+vqBuZjB8cOa+gl1pnvbR4S0lFLeX/7dAbMM8D49utL1Ss0S5JI49kg9r
+         2+cw+UjYfPAhbYT+basQYyynl4DzupmYC11ny04aYRdlcC3AS1F9U8/iCEHk4K9t5mSu
+         jG6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780677591; x=1781282391;
+        d=1e100.net; s=20251104; t=1780677592; x=1781282392;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A2LHKq5mEAFuwFPcckcFCn8LsvodpkOolH8tM9hbq18=;
-        b=FmOFYKUm/ZN7Dal1q6zCwAf5tx/wrc52FYkkUpsPEftQy5E/VYqI3bxsryEuNgaVoe
-         /9dayQi9v6YVvHCmpV3dOARyrXdwPKiOJXb8+Pn1K3fruaw2a04hPTq35Sqq83dVX4iD
-         6+5Kw+JZ1kZ4TjRgwj3HM0AvwVDihm9PFQLSbfRV/EE4Z/OW0IVyfn1kxAF4KgltxeaB
-         lMgTyzLqRLV5iCawpJCbSxGlyr/eEO11cGwWv/n04QDpS6RIWS/vwQeWgZrs2ryncsx6
-         wkAm4Z9YvYGKqAXqZxr2BdtibH7CHtCNaDizBipBO5fLi3PqC9vblryI0XPxk4qZMRoT
-         MXxw==
-X-Forwarded-Encrypted: i=1; AFNElJ/1WDwK6D8d1A3DEFaNKfbs2s3CIOeb7YLJkt5LDkR4I5qYPsjNZtYIkAWcdLao6Ge8RD9ifwUjiNKgaZ7PQ5REGig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLBmOO/F1JLhI4BNu8IWED9SOm//vETsgMIPGJ+VqEGiCvtU/d
-	1QuG8WxS+CF62QUswyfRRB4QKPwww820rj5bLNRDE0IyApCDHTnYSn+Wh9gv9skEVXeGJTFY7yL
-	lJ7wnZMScX/1O7cihQm2MEQ==
-X-Received: from ejcqs4.prod.google.com ([2002:a17:906:4584:b0:beb:d121:a74b])
+        bh=TzM6XX/eusxalGqryWLtyN7IPdFFdWTN29SoKegCm9s=;
+        b=WdKqG8m/AZoLO6kbCHw8g4wax7uVnGRoElwNLzJo5/IhdrqN6RxnBsx2deaAHYjVCZ
+         rXQekIA4IDUWJjPDzEvOInFQwkSrWcSiYywoUtAKdy5RwBnfSKe1W7+D157CCc/FVX4D
+         TPVplQjkvh1ZnOy7bgNV+owD+e/EeA2pTsZfhDB+vWksDZzYyDUeGc7XZtz6T9Jh0HtQ
+         C8Nv8zbJ5W7auQnuSu5RUm+nOI8cFroEDDcKtg1uf4g//Z8Bq1pcILQ4akgf5GRtaHL/
+         HAJ+fSqD83S2+rvbZHa8iZEEaQcTHf9V6dGtMcDNcxJvZoXU95tYWMtCHN6mV7lucwYD
+         7pAQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8hkXkyQpoMkRqpQk2eA/G8VsIC3C2QaNrY9u2ZrCiKVyLgwrsmPwgdZH1Hcam6TKRbQT9aX7qAwAviPQZiEsJLRRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAABP2kyHW9z4vk7AACUf/jmVInTyrGZ+bMuvSV8RL9Mb3+luS
+	1h+K9zikuQKaUPyXTxOwJAx5J/XpBgAmhebJn8A74Ye1p0P1uobq3k1DjCkVoOE/ACfi6wsax5I
+	uu2OFtIx7PiRfRj9pCoUfCw==
+X-Received: from wmph20.prod.google.com ([2002:a05:600c:4994:b0:490:bd79:13cd])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:948e:b0:bf1:a59e:653f with SMTP id a640c23a62f3a-bf371e4379dmr234104066b.28.1780677591267;
- Fri, 05 Jun 2026 09:39:51 -0700 (PDT)
-Date: Fri,  5 Jun 2026 17:38:22 +0100
+ 2002:a05:600c:468c:b0:490:469c:556b with SMTP id 5b1f17b1804b1-490c257c3c8mr77547205e9.12.1780677592385;
+ Fri, 05 Jun 2026 09:39:52 -0700 (PDT)
+Date: Fri,  5 Jun 2026 17:38:23 +0100
 In-Reply-To: <20260605163825.1762953-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260605163825.1762953-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260605163825.1762953-16-vdonnefort@google.com>
-Subject: [PATCH v2 15/18] tracing/remotes: Add poll_ms tracefs file
+Message-ID: <20260605163825.1762953-17-vdonnefort@google.com>
+Subject: [PATCH v2 16/18] tracing/remotes: Add trace_remote cmdline options
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org
@@ -67,67 +67,185 @@ Cc: kernel-team@android.com, linux-kernel@vger.kernel.org,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a tracefs file to configure the trace remote polling period. Keep
-the default value to 100ms.
+Following the same format as trace_instance, add a cmdline to configure
+a trace remote on registration:
+
+  trace_remote=<remote>^<opt1>^<opt2>,<evt1>,<evt2>
+
+Enabling events automatically turns on tracing.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
 diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index cf99752e1cd5..f72fc862ae7f 100644
+index f72fc862ae7f..a0a372c47562 100644
 --- a/kernel/trace/trace_remote.c
 +++ b/kernel/trace/trace_remote.c
-@@ -1133,6 +1133,40 @@ static int dump_on_panic_show(struct seq_file *s, void *unused)
- }
- DEFINE_TRACE_REMOTE_ATTRIBUTE(dump_on_panic);
+@@ -13,6 +13,8 @@
+ #include <linux/trace_seq.h>
+ #include <linux/types.h>
  
-+static ssize_t poll_ms_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
++#include <asm/setup.h>
++
+ #include "trace.h"
+ 
+ #define TRACEFS_DIR		"remotes"
+@@ -1167,6 +1169,132 @@ static int poll_ms_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_TRACE_REMOTE_ATTRIBUTE(poll_ms);
+ 
++static char trace_remote_cmdline[COMMAND_LINE_SIZE];
++
++static int __init set_trace_remote_cmdline(char *str)
 +{
-+	struct seq_file *seq = filp->private_data;
-+	struct trace_remote *remote = seq->private;
-+	unsigned int val;
++	static int idx;
++
++	if (!str)
++		return 0;
++
++	strscpy(trace_remote_cmdline + idx, str, COMMAND_LINE_SIZE - idx);
++	idx += strlen(str);
++	trace_remote_cmdline[idx++] = '\t';
++	return 1;
++}
++__setup("trace_remote=", set_trace_remote_cmdline);
++
++static void trace_remote_apply_cmdline_opts(struct trace_remote *remote, char *cmdline)
++{
++	bool dmesg_on = false;
++	char *opt;
 +	int ret;
 +
-+	ret = kstrtouint_from_user(ubuf, cnt, 10, &val);
-+	if (ret)
-+		return ret;
++	while ((opt = strsep(&cmdline, "^"))) {
++		if (!*opt)
++			continue;
 +
-+	if (!val)
-+		return -EINVAL;
++		if (!strcmp(opt, "dump_on_panic")) {
++			remote->panic_on = true;
++		} else if (!strcmp(opt, "dmesg")) {
++			dmesg_on = true;
++		} else if (!strncmp(opt, "buf_size=", 9)) {
++			/* buf_size can only be applied if the buffer is unloaded */
++			if (!WARN_ON(trace_remote_loaded(remote)))
++				remote->trace_buffer_size = memparse(opt + 9, NULL);
++		} else if (!strncmp(opt, "poll=", 5)) {
++			unsigned int poll_ms;
++
++			if (!kstrtouint(opt + 5, 10, &poll_ms) && poll_ms > 0)
++				remote->poll_ms = poll_ms;
++			else
++				pr_warn("Invalid trace remote poll '%s'\n", opt);
++		} else {
++			pr_warn("Unknown trace remote option '%s'\n", opt);
++		}
++	}
++
++	if (dmesg_on) {
++		ret = trace_remote_enable_dmesg(remote, true);
++		if (ret)
++			pr_warn("Failed to enable trace remote dmesg (%d)\n", ret);
++	}
++}
++
++static struct remote_event *
++trace_remote_find_event_by_name(struct trace_remote *remote, const char *name);
++
++static int
++trace_remote_enable_event(struct trace_remote *remote, struct remote_event *evt, bool enable);
++
++static void trace_remote_apply_cmdline_events(struct trace_remote *remote, char *cmdline)
++{
++	bool tracing_on = false;
++	char *token;
++	int ret;
++
++	while ((token = strsep(&cmdline, ","))) {
++		struct remote_event *evt;
++
++		if (!*token)
++			continue;
++
++		evt = trace_remote_find_event_by_name(remote, token);
++		if (!evt) {
++			pr_warn("trace remote event '%s' not found\n", token);
++			continue;
++		}
++
++		ret = trace_remote_enable_event(remote, evt, true);
++		if (ret)
++			pr_warn("Failed to enable trace remote event '%s' (%d)\n", token, ret);
++		else
++			tracing_on = true;
++	}
++
++	if (tracing_on) {
++		ret = trace_remote_enable_tracing(remote);
++		if (ret)
++			pr_warn("Failed to enable trace remote tracing (%d)\n", ret);
++	}
++}
++
++static void trace_remote_apply_cmdline(const char *name, struct trace_remote *remote)
++{
++	char *cmdline __free(kfree) = NULL;
++	char *events_cmdline = NULL;
++	char *opts_cmdline = NULL;
++	char *curr, *next;
++
++	if (!trace_remote_cmdline[0])
++		return;
++
++	cmdline = kstrdup(trace_remote_cmdline, GFP_KERNEL);
++	if (!cmdline)
++		return;
++
++	next = cmdline;
++	while ((curr = strsep(&next, "\t"))) {
++		char *token = strsep(&curr, ",");
++		char *rname = strsep(&token, "^");
++
++		if (strcmp(rname, name) == 0) {
++			opts_cmdline = token;
++			events_cmdline = curr;
++			break;
++		}
++	}
 +
 +	guard(mutex)(&remote->lock);
 +
-+	if (val < remote->poll_ms && remote->poll_cnt)
-+		mod_delayed_work(system_percpu_wq, &remote->poll_work, msecs_to_jiffies(val));
-+
-+	remote->poll_ms = val;
-+
-+	return cnt;
++	if (opts_cmdline)
++		trace_remote_apply_cmdline_opts(remote, opts_cmdline);
++	if (events_cmdline)
++		trace_remote_apply_cmdline_events(remote, events_cmdline);
 +}
 +
-+static int poll_ms_show(struct seq_file *s, void *unused)
-+{
-+	struct trace_remote *remote = s->private;
-+
-+	seq_printf(s, "%u\n", remote->poll_ms);
-+
-+	return 0;
-+}
-+DEFINE_TRACE_REMOTE_ATTRIBUTE(poll_ms);
 +
  static int trace_remote_init_tracefs(const char *name, struct trace_remote *remote)
  {
  	struct dentry *remote_d, *percpu_d, *d;
-@@ -1165,6 +1199,10 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
- 	if (!d)
- 		goto err;
+@@ -1343,6 +1471,7 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
+ 	}
  
-+	d = trace_create_file("poll_ms", TRACEFS_MODE_WRITE, remote_d, remote, &poll_ms_fops);
-+	if (!d)
-+		goto err;
+ 	list_add(&remote->node, &trace_remotes);
++	trace_remote_apply_cmdline(name, remote);
+ 	retain_and_null_ptr(remote);
+ 
+ 	return 0;
+@@ -1822,3 +1951,15 @@ static struct remote_event *trace_remote_find_event(struct trace_remote *remote,
+ 	return bsearch((const void *)(unsigned long)id, remote->events, remote->nr_events,
+ 		       sizeof(*remote->events), __cmp_events);
+ }
 +
- 	d = trace_create_file("buffer_size_kb", TRACEFS_MODE_WRITE, remote_d, remote,
- 			      &buffer_size_kb_fops);
- 	if (!d)
++static struct remote_event *
++trace_remote_find_event_by_name(struct trace_remote *remote, const char *name)
++{
++	int i;
++
++	for (i = 0; i < remote->nr_events; i++) {
++		if (!strcmp(remote->events[i].name, name))
++			return &remote->events[i];
++	}
++	return NULL;
++}
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
