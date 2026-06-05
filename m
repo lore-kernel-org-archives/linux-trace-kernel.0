@@ -1,178 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 237843D45E7;
-	Fri,  5 Jun 2026 09:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3BB3D9DA5;
+	Fri,  5 Jun 2026 09:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780650434; cv=none; b=cDVQbmGva75fRzD2S8xKwH+CRRz1mNorCDT1f9jVmFv61O6NZIsmIMZtsoc5uW8SPiXbeZlyxYGwJ10wqITCie63ZSUUx8Astl44J69fAQ3qFZAcyBggBHHp3V++13U7AJemL6BiopLiAPMajEh5KWatVbq7nsi9djqANwWeCVg=
+	t=1780652150; cv=none; b=BgMfUAA7/LGXeqTVf16h4t91cDqmkkuDFm8iNNF4kZfC8ICi3QVm4NuLkPILHGSVqlSwHin5c6WcahVPIx6DU+oAMdc9Tb8shH90pAciM8qXSzCPam8oU+jVlUI/HhUOoJXq0IaYWijzdeb6rK76sZcoRmBPWa2KskUOCCiAQN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780650434; c=relaxed/simple;
-	bh=UXE7DC5dr6M+k24qAaywn7yvVqkTrb7vSLr7g8HR+1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cjegiXMqQtZyRn1aGi/ACynk7eeB0NmQ78JnxyzmS+F1Hw8GLJZlDFEab6mlAcU2shBgIGtBCK7PI0rSEOfSwUDazr8zkw4XQw90zO89QuCUqYcJh/ZCOn53ASlRu1HOWKbqG068AWVykHLEx0tdFMS+L9b9b3aKJEFFCl4Bybc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gjxPbq2p; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1780652150; c=relaxed/simple;
+	bh=RWyXGpeXTKNETGHIWgEjmAejxFfG/u5gH8IJN3uweL0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nmRjthOp87cSCuJysIProvhv1Vu/BrWeNieRdzyeJWGFeUS+BHZJAQ98hZudxjgmGLOyj2gwBFihrIBmbxvBY/9lrt/wNRy2jWidDR+8n5H27OZXvGFIaa5wRzlWrGieHFBX83mhQvhscFDQ7FAcelzm0B3HzgcLfYFmiXCXc4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=iDfmlnHG; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gjxPbq2p"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 975364CDF;
-	Fri,  5 Jun 2026 02:07:06 -0700 (PDT)
-Received: from [10.57.92.75] (unknown [10.57.92.75])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 891843F86F;
-	Fri,  5 Jun 2026 02:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780650431; bh=UXE7DC5dr6M+k24qAaywn7yvVqkTrb7vSLr7g8HR+1E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gjxPbq2pHkOfACoMFtOdYFETh8vR9siYUcniNUVttHwVYajSgtBX2fT7r8/6nEQVU
-	 3U+mruFBjhkJwoh7yfUyp4HzYXblvxOs58WoMrl+NRHN430tFwRzHI5G6iytvzgqmP
-	 jhilsf5wSLNEWJnWJVKRp1qhWyGeYwpuFX4LwbOQ=
-Message-ID: <85b8c177-b566-4e26-884c-9122e2455316@arm.com>
-Date: Fri, 5 Jun 2026 10:06:58 +0100
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="iDfmlnHG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zlWtZOvWgDoHJPvKqfNO3Eu581+nJ0SQLgmcmlXuYXo=; b=iDfmlnHGeVi2uxrYd7Tq9kWHf7
+	K+WPKvGVHHa1tIf0LwmKs9t6/v/nnGtvSwPhfytbVmDXWmmWoGQZ0v+rByRdaJA3tIYblFmqS4nIS
+	98Z4UbeAaVVIl+Em61k1tTXgScPOGnTtzUtQJtrQwgD1PqQHt4ngV9dPt3ik/u4d3jEtfaIbZcX5K
+	RByY1L08ON2pVGaR/VGq1IWlKHSo7St1+DxGWLp/bQpwVnMcOoyXYxg89tUNddrOlhJpYJWly3+/Y
+	XDvflUXvtQUsfaQ6nXNNM45oijiggEAwFb8SE4JJxSWoB1kQWoNtuYqpklQHvV56wUan3+1Jdh/6F
+	LoPIbzrg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wVQxe-005CEJ-2i;
+	Fri, 05 Jun 2026 09:35:31 +0000
+Date: Fri, 5 Jun 2026 02:35:23 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Miaohe Lin <linmiaohe@huawei.com>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, Lance Yang <lance.yang@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>
+Subject: Re: [PATCH v8 2/6] mm/memory-failure: surface unhandlable kernel
+ pages as -ENOTRECOVERABLE
+Message-ID: <aiKXrovzrNN-gExm@gmail.com>
+References: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
+ <20260527-ecc_panic-v8-2-9ea0cfa16bb0@debian.org>
+ <19f968f5-1289-f573-4406-e5c91dcd8923@huawei.com>
+ <e3d023f1-ab6e-4424-b304-55f1294480c3@kernel.org>
+ <33ef8821-c809-b7d1-ea77-6e8a07a6e784@huawei.com>
+ <21732071-14a1-486a-951c-34de97b7c757@kernel.org>
+ <4b27467e-935f-5587-2f48-5a794c30a592@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 20/42] KVM: SEV: Make 'uaddr' parameter optional for
- KVM_SEV_SNP_LAUNCH_UPDATE
-Content-Language: en-GB
-To: Michael Roth <michael.roth@amd.com>
-Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- david@kernel.org, ira.weiny@intel.com, jmattson@google.com,
- jthoughton@google.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, aneesh.kumar@kernel.org,
- liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Youngjun Park <youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
- <20260522-gmem-inplace-conversion-v7-20-2f0fae496530@google.com>
- <9d15479e-e36b-4865-804c-7d93eb339e4e@arm.com>
- <4muegrza5iyyhqx6wevdlssnb6wvlc4m4wmuz5hmd3xikkftc4@3e2lpuq6tjgr>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <4muegrza5iyyhqx6wevdlssnb6wvlc4m4wmuz5hmd3xikkftc4@3e2lpuq6tjgr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b27467e-935f-5587-2f48-5a794c30a592@huawei.com>
+X-Debian-User: leitao
 
-On 04/06/2026 21:11, Michael Roth wrote:
-> On Thu, Jun 04, 2026 at 04:29:19PM +0100, Suzuki K Poulose wrote:
->> On 23/05/2026 01:18, Ackerley Tng via B4 Relay wrote:
->>> From: Michael Roth <michael.roth@amd.com>
->>>
->>> For vm_memory_attributes=1, in-place conversion/population is not
->>> supported, so the initial contents necessarily must need to come
->>> from a separate src address, which is enforced by the current
->>> implementation. However, for vm_memory_attributes=0, it is possible for
->>> guest memory to be initialized directly from userspace by mmap()'ing the
->>> guest_memfd and writing to it while the corresponding GPA ranges are in
->>> a 'shared' state before converting them to the 'private' state expected
->>> by KVM_SEV_SNP_LAUNCH_UPDATE.
->>>
->>> Update the handling/documentation for KVM_SEV_SNP_LAUNCH_UPDATE to allow
->>> for 'uaddr' to be set to NULL when vm_memory_attributes=0, which
->>> SNP_LAUNCH_UPDATE will then use to determine when it should/shouldn't
->>> copy in data from a separate memory location. Continue to enforce
->>> non-NULL for the original vm_memory_attributes=1 case.
->>>
->>> Signed-off-by: Michael Roth <michael.roth@amd.com>
->>> [Added src_page check in error handling path when the firmware command fails]
->>> [Dropped ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES]
->>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->>
->>
->>
->>
->>> ---
->>>    Documentation/virt/kvm/x86/amd-memory-encryption.rst | 15 +++++++++++----
->>>    arch/x86/kvm/svm/sev.c                               | 18 +++++++++++++-----
->>>    virt/kvm/kvm_main.c                                  |  1 +
->>>    3 files changed, 25 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
->>> index b2395dd4769de..43085f65b2d85 100644
->>> --- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
->>> +++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
->>> @@ -503,7 +503,8 @@ secrets.
->>>    It is required that the GPA ranges initialized by this command have had the
->>>    KVM_MEMORY_ATTRIBUTE_PRIVATE attribute set in advance. See the documentation
->>> -for KVM_SET_MEMORY_ATTRIBUTES for more details on this aspect.
->>> +for KVM_SET_MEMORY_ATTRIBUTES/KVM_SET_MEMORY_ATTRIBUTES2 for more details on
->>> +this aspect.
->>>    Upon success, this command is not guaranteed to have processed the entire
->>>    range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
->>> @@ -511,9 +512,15 @@ range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
->>>    remaining range that has yet to be processed. The caller should continue
->>>    calling this command until those fields indicate the entire range has been
->>>    processed, e.g. ``len`` is 0, ``gfn_start`` is equal to the last GFN in the
->>> -range plus 1, and ``uaddr`` is the last byte of the userspace-provided source
->>> -buffer address plus 1. In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO,
->>> -``uaddr`` will be ignored completely.
->>> +range plus 1, and ``uaddr`` (if specified) is the last byte of the
->>> +userspace-provided source buffer address plus 1.
->>> +
->>> +In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO, ``uaddr`` will be
->>> +ignored completely. Otherwise, ``uaddr`` is required if
->>> +kvm.vm_memory_attributes=1 and optional if kvm.vm_memory_attributes=0, since
->>> +in the latter case guest memory can be initialized directly from userspace
->>> +prior to converting it to private and passing the GPA range on to this
->>> +interface.
->>
->> Just to confirm, so the sev_gmem_prepare doesn't destroy the contents in the
->> process of making it "private" ? i.e., the contents of a SNP shared
->> page are preserved while transitioning to "SNP Private" (via RMP
->> update).
+On Wed, Jun 03, 2026 at 10:33:04AM +0800, Miaohe Lin wrote:
+> On 2026/6/2 17:41, David Hildenbrand (Arm) wrote:
+> > On 6/2/26 05:08, Miaohe Lin wrote:
+> >> On 2026/6/1 21:22, David Hildenbrand (Arm) wrote:
+> >>> On 6/1/26 14:28, Miaohe Lin wrote:
+> >>>>
+> >>>> Thanks for your patch.
+> >>>>
+> >>>>
+> >>>> Once shake_page finds a lightweight range-based way to shrink slab, slab pages could be freed
+> >>>> into buddy and above PageSlab test should be removed then. Maybe add a TODO or XXX here?
+> >>>>
+> >>>>
+> >>>> I'm not sure but is it safe or a common way to test PageReserved, PageSlab,
+> >>>> PageTable and PageLargeKmalloc without extra page refcnt?
+> >>>
+> >>> Checking typed pages in a racy fashion is fine (PageSlab, PageTable,
+> >>> PageLargeKmalloc).
+> >>
+> >> Got it. Thanks.
+> >>
+> >>> Checking PageReserved in a racy fashion is fine as well. TESTPAGEFLAG() will
+> >>> allow checking it on compound pages.
+> >>
+> >> It seems PageReserved is not intended to be set on compound pages. I see there are PF_NO_COMPOUND
+> >> in its definition: PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND).
+> >>
+> >>>
+> >>> For PageLargeKmalloc, we would want to check the head page, though. The page
+> >>> type is only stored for the head page.
+> >>
+> >> Maybe we should check the head page for PageSlab and PageTable too? alloc_slab_page only
+> >> set PageSlab on the head page and __pagetable_ctor uses __folio_set_pgtable to set PageTable
+> >> on folio.
+> >>
+> >>>
+> >>> So maybe we want to lookup the compound head (if any) and perform the type
+> >>> checks against that?
+> >>
+> >> Maybe we should or we might miss some pages that could have been handled. And
+> >> if compound head is required, should we hold an extra page refcnt to guard against
+> >> possible folio split race?
+> > 
+> > Races are fine. We might miss some pages, but that can happen on races either way.
+> > 
+> > 
+> > I'd just do something like
+> > 
+> > if (PageReserved(page))
+> > 	return true;
+> > 
+> > head = compound_head(page);
 > 
-> sev_gmem_prepare() does sort of destroy contents since it finalizes the
-> shared->private conversion which puts the page in an unusable state
-> until the guest 'accepts' it as private memory and re-initializes the
-> contents.
-> 
-> But that's run-time, when the guest is doing conversions. The
-> documentation here is relating to initialization time when we are
-> setting up the initial pre-encrypted/pre-measured guest memory image,
-> via SNP_LAUNCH_UPDATE. That path calls into kvm_gmem_populate(), and it
-> is then sev_gmem_post_populate() callback that actually finalizes the
-> shared->private conversion. The sev_gmem_prepare() hook doesn't get used
-> in this flow (kvm_gmem_populate() calls __kvm_gmem_get_pfn() which skips
-> preparation).
+> If @head is split just after compound_head. And then @head is freed into buddy and re-allocated as slab
+> page while @page is still in the buddy. We would panic on this scene as @head is PageSlab. But we were
+> supposed to successfully handle @page. Or am I miss something?
 
-Thanks, thats the bit I was missing. Skipping the prepare path, with 
-__kvm_gmem_get_pfn(). I was under the assumption that 
-kvm_arch_gmem_prepare() was called for all PFNs allocated from gmem
-and how SNP was handling this populate case.
+You're right that it is racy, but I think it is an acceptable race here.
 
+For it to happen, the poisoned @page has to be a tail of a live compound page
+at the time of the fault, and then -- in the few instructions between
+compound_head() and the PageSlab(head) test -- that compound page has to be
+split, the old head freed to buddy, and that head re-allocated as a slab page,
+all while @page lands back in the buddy.  It cannot happen without concurrent
+split/free/alloc activity in that exact window.
 
-Thanks
-Suzuki
+It is also worth noting the page in question genuinely took a unrecoverable ECC
+error, and panic_on_unrecoverable_memory_failure is opt-in -- an operator who
+enables it has explicitly chosen to crash rather than risk running on corrupted
+memory.  Mis-attributing one such rare, genuinely-poisoned page as
+unrecoverable is within that contract.
 
-
-> 
-> -Mike
-> 
->>
->> Suzuki
->>
->>
+Thanks for the review and discussions,
+--breno
