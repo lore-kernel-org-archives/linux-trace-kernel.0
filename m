@@ -1,170 +1,243 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012055.outbound.protection.outlook.com [40.107.209.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784423271FD;
-	Fri,  5 Jun 2026 16:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780675518; cv=fail; b=I6bFOoGpNZBZRhHqxivHd/dv0nvDlM0Up2LnDK/OiAQP3wNO9h8VyqsSTnhm2rAxNx5nsHRlhPZyEXvmr+ZNKRKX8FrHKMC1Y4y53GrPOzIQcPC6xa9cduREVb7Z0G7N9XNFKTttxLW7PaixTx82K9moxGuqZd8JBweUNohYU14=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780675518; c=relaxed/simple;
-	bh=U+eAevlYKQ5YduqCf+Bz/DElrCnwr9Yis2197eD1j/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aNnMUzzZ6UlHUSHU7+hyo2rrgQRwMFLNoCh/8ywpxAY01CkItNO8aAQoskzgrCAVrrTqUe8Upe3DoJPatvptc9LGX2px56tdy0/2QbuQzBL2K5Y4lDTSsiUdNMZwlwUDRWAOB7Tg5uypWX1WH8ABZlSastKuZKjTeW1iPTSQB6s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MsPR1Bzx; arc=fail smtp.client-ip=40.107.209.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57963ED5A6
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jun 2026 16:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780676028; cv=none; b=DvegUKTpbtVcyLWvZKrp/Go3HENK7OIjuD9n/SqeSDdK6PTsGuhHAL6eDoDdVuMhZdCk0ZdB9jxwrhN6UpaTrlHKTeInIU5m3TqM1yS3y/PgLung0PoQH0qYBs7JOTALAKqnmvNKFIA/AGIKBnaKaYqSntW8BY2zraHHdlr9lsg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780676028; c=relaxed/simple;
+	bh=KxvLLEf3L+qn0IoFoO2VvGAcQ9AXKBtaOWPgwcDOP7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=MVrNQKvUX0A/Y8wXaBPp239C0mFhVVRW8MEUxJPYROdRp7QkJ+yKTYdKPF3g13dhmVKl6AJz6qJNELdh0TS+0NRC+rk/T3ffnby/VTw7h5fmwfpQ09vE3X2H2J4CNbynknRwu93+L9DubVGBvpKQcSmqWf6zrfQmNan6TfRqGxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QFAtMgds; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MsPR1Bzx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TP0QIAsEvT85DVZrZjYEPynRwjEYJT0FLphD1QSWnXha3PQ+dJf10mGHvuFtr+YLabgNMhIAEJXwqzrIsjLJsGhpemdprYaCN2k2nsPxB5xMyrwHoxdQqs8ILIHPV17XJg+9rce0xyGs5dybu1QKOmd+W0di+wUtR4ugwXF42eT/8HpvqF4I7EBgkEX5IOnQ1kNEZ8sGaAh1s6d4mxBFPxX14+ISt/0neqJj7mLw5dkzfC8ILu0JwC/bmvqrEk05+XbhgTOpkb9lJCMd7KBbONTf3SLoBQBSz35cAYwo91CoxKWN62wINGUGzX9Z2sy/WJLo+PffWUDvNR8nL2EJFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X0ljNOWJmuIFJa//vLl2Uii9okpP/nLim7UzXrn9yeE=;
- b=owbbvKEljIMej3IDY06jVWzt4CyoxUHsrX7Nzd/f0CfAXDD+eDGPjp/ee4bbvUC0QbENj1wnsuqUtyjyIV1EpuYVCEblLyzVvIGcG/o0MZN5AlMQ2TffPUXAKFqre62eS5iYIwdaaBfwPv+DDQuSsX0CpL4WR5nx0XodPdfCI+U5lQ9sxELAgxpy4+ZIaxdgSOk3eUH1mERygwUBFUFRFpEvcmV+3dmrbnwnVtcl00MwXzAFQ9qaQlMxCnFHs1VvpzRoayfukRsNzQeDM0B/5F11g8IxRNtqomeAAgaD9qhmtZwIwGSCz3clCJSBugNA/m8WnbuOYcWus3mRI517XA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X0ljNOWJmuIFJa//vLl2Uii9okpP/nLim7UzXrn9yeE=;
- b=MsPR1BzxSU5r3EMKoyLibC77c2r1j8YyS7RafLjdcA4VaAuoB+7Cnsvr/2t3E8zzj6hhnf/nNUFvVrJrFALHMHdNIWhNQcWan/KylCoG1WVfMhIg2LolSS6zFPv+Vw9UIU564IEj2rPwgV9l29RxS+IG6EQlJ9Z3VWFfiteQNxfMwF4eN2pcj4RucJ8BgMSLVl01tO/l2mAwEOnpX4y0R31749zgyZJE4dxZ6WdvRXsPAZNcc8EduYOBHl63Oszgv9cNgyITd0aR9ZyMr2gMVsWJlB/LG3mbXSOVNast7QWGiN5149R6HdNhJ1T88E6Fh+Y5yiCBtRRR10jwC1ndog==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- CH2PR12MB4085.namprd12.prod.outlook.com (2603:10b6:610:79::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.48.17; Fri, 5 Jun 2026 16:04:58 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2%5]) with mapi id 15.21.0092.007; Fri, 5 Jun 2026
- 16:04:58 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
- gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz,
- jackmanb@google.com, jannh@google.com, jglisse@google.com,
- joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
- liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com,
- matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
- peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
- rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
- rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, zokeefe@google.com,
- Usama Arif <usama.arif@linux.dev>
-Subject: Re: [PATCH mm-unstable v18 03/14] mm/khugepaged: rework max_ptes_*
- handling with helper functions
-Date: Fri, 05 Jun 2026 12:04:53 -0400
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <62E1363B-ED9C-4CFB-AB5E-CD7B1D1EF3C3@nvidia.com>
-In-Reply-To: <20260522150009.121603-4-npache@redhat.com>
-References: <20260522150009.121603-1-npache@redhat.com>
- <20260522150009.121603-4-npache@redhat.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR20CA0045.namprd20.prod.outlook.com
- (2603:10b6:208:235::14) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QFAtMgds"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780676024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=A4y+MelSbX2M+ZZatm09vxhIOL+bctnk296UHynr2zs=;
+	b=QFAtMgdsNQbMk8OaHd0JD0bFabOk2F7WvmwKWYgbwyWTqUK3+5gCxOqErtsrFwBa4btNIn
+	QtcmkuW8F0IlaxSwPtCGrumGfTEagi1KjbzSJWZ5FZR7dDBgpYprxfc6MaAKeEvkPus7O9
+	WWYX+1HRUiA7LcJ2nuxFc1WCav0iNH4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-1-pLsb70pbPJ6lrOLJMIxNJA-1; Fri,
+ 05 Jun 2026 12:13:43 -0400
+X-MC-Unique: pLsb70pbPJ6lrOLJMIxNJA-1
+X-Mimecast-MFC-AGG-ID: pLsb70pbPJ6lrOLJMIxNJA_1780676022
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17CB81944D29;
+	Fri,  5 Jun 2026 16:13:42 +0000 (UTC)
+Received: from p1.redhat.com (unknown [10.44.22.9])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CF35C180049F;
+	Fri,  5 Jun 2026 16:13:17 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: aarcange@redhat.com,
+	akpm@linux-foundation.org,
+	anshuman.khandual@arm.com,
+	apopple@nvidia.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	byungchul@sk.com,
+	catalin.marinas@arm.com,
+	cl@gentwo.org,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	david@kernel.org,
+	dev.jain@arm.com,
+	gourry@gourry.net,
+	hannes@cmpxchg.org,
+	hughd@google.com,
+	jack@suse.cz,
+	jackmanb@google.com,
+	jannh@google.com,
+	jglisse@google.com,
+	joshua.hahnjy@gmail.com,
+	kas@kernel.org,
+	lance.yang@linux.dev,
+	liam@infradead.org,
+	ljs@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	matthew.brost@intel.com,
+	mhiramat@kernel.org,
+	mhocko@suse.com,
+	npache@redhat.com,
+	peterx@redhat.com,
+	pfalcato@suse.de,
+	rakie.kim@sk.com,
+	raquini@redhat.com,
+	rdunlap@infradead.org,
+	richard.weiyang@gmail.com,
+	rientjes@google.com,
+	rostedt@goodmis.org,
+	rppt@kernel.org,
+	ryan.roberts@arm.com,
+	shivankg@amd.com,
+	sunnanyong@huawei.com,
+	surenb@google.com,
+	thomas.hellstrom@linux.intel.com,
+	tiwai@suse.de,
+	usamaarif642@gmail.com,
+	vbabka@suse.cz,
+	vishal.moola@gmail.com,
+	wangkefeng.wang@huawei.com,
+	will@kernel.org,
+	willy@infradead.org,
+	yang@os.amperecomputing.com,
+	ying.huang@linux.alibaba.com,
+	ziy@nvidia.com,
+	zokeefe@google.com
+Subject: [PATCH mm-unstable v19 00/14] khugepaged: add mTHP collapse support
+Date: Fri,  5 Jun 2026 10:14:07 -0600
+Message-ID: <20260605161422.213817-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|CH2PR12MB4085:EE_
-X-MS-Office365-Filtering-Correlation-Id: b9ebe9da-549c-4bf8-9d2d-08dec31c312c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|22082099003|18002099003|6133799003|11063799006|4143699003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	2Q/oMjzoU8jL+MMBnOsc5smPPVDUXzOZaTHbix4gAaItzK8b2i0F+66fDPrognR7h/0MwCZlO62iqiLWVH0dIHXR/4DpYOaBunrbfwEO79d1Ht/4s8qc2MehmbTchYs/zw2n8uCSwtPE3SbWOXeo7vO4UWufDPDBjGUVgqoqLZMy5CFsEq0nR+wT5dhP3Xz/Fpdy/YywX/pOCvGstM2bUkLufiLovFlM7ErrkQvedYxIAsSg9fUlfGWS1br1vegYjb2SrjOHFibDZcm8USo3ftaUZEYAgWkx3qgtkl8U1dn3DIRCVbttDz5vYkppB5ZPARJS2ba4ax+V79ERU4yvJIy1KUGCDO574Y6aJkiP/QdNxmzP67Jl3pTDv4c+fKccIPccvoVLqYkIJtWryg+POUqRKeb/LjSuV1XV88IYXkvTFD2CLCQeAWqHIIq6TLAxlhmnF7UYBaViogfSU9xEZwXnTCDJCRaVd+fxGjrmzoUCc5CTdRsshynjYHIAdFXvRLWW02RmfTl6Uy6eNVP7E5GMFj1ZITtgXtub+Z6+3w0L+lIw64at3XaqTa9FpJHfyBv8kWszjHc9VXoojDVeZ9JqgA1L6NYfMCbpYX3H8J0LO9jSpJmJ30Anw/LQBD1QlKoQEssdaBy56x3UHSiDpZBoVB3JQOX1l1/fTMN/F02Zp7cLIx+GveaBwyChCQFZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(22082099003)(18002099003)(6133799003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?J6GPxZrLZB/si2C0XXw0NvEsg0MCidp2w1XapKMXO0XnIRXFrU+9drYiWxnt?=
- =?us-ascii?Q?CNBMtYeNKZ7aNIC3EbzCs0YhzRVTaTUCvzFziga5jOlw1QpJQod4xbfvnoDW?=
- =?us-ascii?Q?0cyoSoBn7WwVooPY6/It1FfX6bNYvGIb1uFlxbxul50uv49HYdFsPKLw85D3?=
- =?us-ascii?Q?1nUS/qNtQlnzNsmEoaYLTieSisxB9PghD7oaCLaOCiQniUlh/m7zjsI3iYPl?=
- =?us-ascii?Q?6idq8Qfs/UYXk1/cQClxj6BrutF4m8Xq0bfRNnjDJBMbbb1gt9VJOD2IVbcy?=
- =?us-ascii?Q?0oe5nUdAMUqzFSPY/IsVYnxNMj7Rx/+tucwOdML0Sve428H6DN4FsYitO5BR?=
- =?us-ascii?Q?e0d5AomMxZSdDZZ9DbZwLiXGGsOLY2JY3kUjZKKz9GdXlrl4Qj1McPJJDakO?=
- =?us-ascii?Q?l6CBkM8De13LGxzZs87Gff8chwL15SXRSFyZ99/8Y/l+1QMClQpFLdNkIdek?=
- =?us-ascii?Q?Swh2IHuMb7xBQfRCrwoLhqpt7tF+2yyo5ty7i/jKIO8g0YgDgqU2KKwyQdRI?=
- =?us-ascii?Q?TjBE3ygDlDrlVsUPdrPpjufQy0OJhz/5w02eZ5VwUhgBRNimZYPArIs6qoIG?=
- =?us-ascii?Q?SP+9HCH9xJZX9NRcj60107FIVyFcgbj1XaWDGS7YHhjkZ56SuMab3/TUI78A?=
- =?us-ascii?Q?gEzVrajAppR533mmfB2c3HEx4buTdhhWYn4yzHrw7/FbqkCcDYiumLgqT9J4?=
- =?us-ascii?Q?Kh1r0FwLkj36iaIguh6JU7pp/Jh1qTAvJGgHQ2ruJSo38cG+8F29PSplkqUS?=
- =?us-ascii?Q?CQF1jc0MbkdxEGB8WZ2XWJt4/v3RzCXHWzzr5sx2ZFsOQm+2L8bp1Cg1tiDF?=
- =?us-ascii?Q?7UDhukPs6rNalNtBZD5GUX3tqf19YCmFBDKdqeRzQJ4NS5YQQhYAlOFe3E7R?=
- =?us-ascii?Q?EYF7s6X8FdJxQqdyMpqdibxwvdxCPKKx1l3rI3NDvSeUuQC3deHf3wc+oRx1?=
- =?us-ascii?Q?TCCw4YDafRua91gzVHOByqjTBKEFWINiwo2TSJSw8I5bLDMnswsO3CYbRkOu?=
- =?us-ascii?Q?rduok/lhrdZgKYUugotjU2IGqAR6h5KAe2l6+U5UAF5HZsryh1PaimUl+nA4?=
- =?us-ascii?Q?DPPhORq60BVtySv9e+3PZj3d9bzV2cmu4GVbLhURe8ywi8ucEHZ08asG2guY?=
- =?us-ascii?Q?ZxjOR0JgfN7XAO2huUQwh5pYhc6ruQXzc3P/OG6+NCtexewa8M0GWWVpIDEl?=
- =?us-ascii?Q?ELjGP5HmnGV042h6XXRPGOUS35NmYaZg8iagBNDVAb7CM6h9Jx7hcIVh8Hbt?=
- =?us-ascii?Q?w75m8RyIiJIJE/fuBzRySseLdauB9GCCA6x0aVxOSZhFzStx331wbdn+A73Y?=
- =?us-ascii?Q?tXxiT3gly0g7TiliCv1AGoZkjusMj+11UQJQ3s+nro8C2bsSQ6Y4iYuSFHma?=
- =?us-ascii?Q?zDgOmI9hsbiNW5kdQHbAI4zvc4Vw2+KxrcotFqKMyqE4qXzFjimTbRNfr0Gn?=
- =?us-ascii?Q?nPZcjKxuExNU4bxKi2rh2AV8tGKNywT13WTTaBiiHwCoWwKfV5PkkQKdGiUz?=
- =?us-ascii?Q?GvXt7E/zgtMqHB490nkwwQP61ElxX13+Odb8tGch+Jbt1Vob8wzv4BOXZAfw?=
- =?us-ascii?Q?nLxeUKQTMreV6qj6JB6guFJEVJxQiLlCEnc+PD7Lz9VmxC3R3GYlIRJOPZZB?=
- =?us-ascii?Q?Or7KxosjNsIUdmnAM8gGWRRUEg9vfmZ94eo73awAxaU4QUJOSLxmno7/WPot?=
- =?us-ascii?Q?ghrHpjJwX91XS/UJ07QdLw0ckjefTO4xc/OvMghAJYNKU/mV?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9ebe9da-549c-4bf8-9d2d-08dec31c312c
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2026 16:04:58.6284
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: H6OYTTiYEWw06o3OhSW+WYPDEj5+Bi8TzHvW4kHOjwVBYV0J3WA9L+NTrZ8iMWGZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4085
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: xLvCvYcK6xxtv2kT7ApgQyRuj14sEAqczrzZKRhZoyo_1780676022
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On 22 May 2026, at 10:59, Nico Pache wrote:
+The following series provides khugepaged with the capability to collapse
+anonymous memory regions to mTHPs.
 
-> The following cleanup reworks all the max_ptes_* handling into helper
-> functions. This increases the code readability and will later be used to
-> implement the mTHP handling of these variables.
->
-> With these changes we abstract all the madvise_collapse() special casing
-> (do not respect the sysctls) away from the functions that utilize them.
-> And will be used later in this series to cleanly restrict the mTHP
-> collapse behavior.
->
-> No functional change is intended; however, we are now only reading the
-> sysfs variables once per scan, whereas before these variables were being
-> read on each loop iteration.
->
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
-> Suggested-by: David Hildenbrand <david@kernel.org>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Acked-by: Usama Arif <usama.arif@linux.dev>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 120 +++++++++++++++++++++++++++++++++---------------
->  1 file changed, 84 insertions(+), 36 deletions(-)
->
+To achieve this we generalize the khugepaged functions to no longer depend
+on PMD_ORDER. Then during the PMD scan, we use a bitmap to track individual
+pages that are occupied (!none/zero). After the PMD scan is done, we use
+the bitmap to find the optimal mTHP sizes for the PMD range. The
+restriction on max_ptes_none is removed during the scan, to make sure we
+account for the whole PMD range in the bitmap. When no mTHP size is
+enabled, the legacy behavior of khugepaged is maintained.
 
-userfaultfd_armed() and cc->is_khugepaged check results are now folded
-into collapse_max_ptes_*() return values, using 0 and HPAGE_PMD_NR.
-It simplifies the caller code. LGTM.
+We currently only support max_ptes_none values of 0 or HPAGE_PMD_NR - 1
+(ie 511). If any other value is specified, the kernel will emit a warning
+and mTHP collapse will default to max_ptes_none=0. If a mTHP collapse is
+attempted, but contains swapped out, or shared pages, we don't perform
+the collapse.
+It is now also possible to collapse to mTHPs without requiring the PMD THP
+size to be enabled. These limitations are to prevent collapse "creep"
+behavior. This prevents constantly promoting mTHPs to the next available
+size, which would occur because a collapse introduces more non-zero pages
+that would satisfy the promotion condition on subsequent scans.
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+Patch 1-2:   Generalize hugepage_vma_revalidate and alloc_charge_folio
+             for arbitrary orders.
+Patch 3:     Rework max_ptes_* handling into helper functions
+Patch 4:     Generalize __collapse_huge_page_* for mTHP support
+Patch 5:     Require collapse_huge_page to enter/exit with the lock dropped
+Patch 6:     Generalize collapse_huge_page for mTHP collapse
+Patch 7:     Skip collapsing mTHP to smaller orders
+Patch 8-9:   Add per-order mTHP statistics and tracepoints
+Patch 10:    Introduce collapse_possible_orders helper functions
+Patch 11-13: Introduce bitmap and mTHP collapse support, fully enabled
+Patch 14:    Documentation
 
-Best Regards,
-Yan, Zi
+Testing:
+- Built for x86_64, aarch64, ppc64le, and s390x
+- ran all arches on test suites provided by the kernel-tests project
+- internal testing suites: functional testing and performance testing
+- selftests mm
+- I created a test script that I used to push khugepaged to its limits
+   while monitoring a number of stats and tracepoints. The code is
+   available here[1] (Run in legacy mode for these changes and set mthp
+   sizes to inherit)
+   The summary from my testings was that there was no significant
+   regression noticed through this test. In some cases my changes had
+   better collapse latencies, and was able to scan more pages in the same
+   amount of time/work, but for the most part the results were consistent.
+- redis testing. I did some testing with these changes along with my defer
+  changes (see followup [2] post for more details). We've decided to get
+  the mTHP changes merged first before attempting the defer series.
+- some basic testing on 64k page size.
+- lots of general use.
+
+[1] - https://gitlab.com/npache/khugepaged_mthp_test
+[2] - https://lore.kernel.org/lkml/20250515033857.132535-1-npache@redhat.com/
+
+V19 Changes:
+- Rebased onto mm-unstable (base: 9282f9bdbdf2, where v18 was based)
+- Added RBs/Acks
+- [patch 04] Make max_ptes_none const; guard pr_warn_once with
+  check so we only warn for non-zero intermediate values and use a single
+  "return 0" path (David)
+- [patch 06] Add comment explaining the mmu_notifier_range covers only
+  the modified PTE range (David); change BUG_ON to VM_WARN_ON_ONCE
+  (David); fix update_mmu_cache_range() arch safety issue: reinstall
+  PMD via pmd_populate() before calling map_anon_folio_pte_nopf() and
+  hold the PTE lock nested inside pmd_ptl during the operation (David,
+  Lance); drop the now-unnecessary smp_wmb() as __folio_mark_uptodate()
+  provides the required ordering (David, Lance)
+- [patch 07] Clarify commit message: "mTHP to a folio of equal or
+  smaller size, possibly resulting in a partially mapped source folio"
+  (David)
+- [patch 08] Add Lorenzo's RB and David's Ack; move TODO comment about
+  shared pages to patch 4 (David)
+- [patch 10] Rename collapse_allowable_orders() to
+  collapse_possible_orders() and add collapse_possible() boolean wrapper
+  for callers that only need a yes/no answer (David)
+- [patch 11] Major rework: replace the DFS stack-based algorithm with a
+  simpler linear forward-walking approach using offset + order (David);
+  remove mthp_range struct, mthp_bitmap_stack[], stack push/pop
+  functions, and MTHP_STACK_SIZE; add max_order_from_offset() helper
+  using __ffs(offset) for natural alignment; rename mthp_bitmap to
+  mthp_present_ptes (David); remove temporary mthp_bitmap_mask and use
+  bitmap_weight_from() directly (David); fix result propagation so
+  mthp_collapse() returns enum scan_result and properly propagates
+  SCAN_ALLOC_HUGE_PAGE_FAIL and SCAN_PTE_MAPPED_HUGEPAGE to callers
+  (Lance); fold in v18 fixup for potential use-after-free of vma in
+  mthp_collapse() by passing NULL to collapse_max_ptes_none()
+- [patch 12] Rework to match new linear algorithm; expand the set of
+  failures that allow retrying at a lower order
+- [patch 14] Re-add note about file/shmem still only collapsing to
+  PMD-sized THPs (David)
+
+Baolin Wang (1):
+  mm/khugepaged: run khugepaged for all orders
+
+Dev Jain (1):
+  mm/khugepaged: generalize alloc_charge_folio()
+
+Nico Pache (12):
+  mm/khugepaged: generalize hugepage_vma_revalidate for mTHP support
+  mm/khugepaged: rework max_ptes_* handling with helper functions
+  mm/khugepaged: generalize __collapse_huge_page_* for mTHP support
+  mm/khugepaged: require collapse_huge_page to enter/exit with the lock
+    dropped
+  mm/khugepaged: generalize collapse_huge_page for mTHP collapse
+  mm/khugepaged: skip collapsing mTHP to smaller orders
+  mm/khugepaged: add per-order mTHP collapse failure statistics
+  mm/khugepaged: improve tracepoints for mTHP orders
+  mm/khugepaged: introduce collapse_possible_orders helper functions
+  mm/khugepaged: Introduce mTHP collapse support
+  mm/khugepaged: avoid unnecessary mTHP collapse attempts
+  Documentation: mm: update the admin guide for mTHP collapse
+
+ Documentation/admin-guide/mm/transhuge.rst |  71 ++-
+ include/linux/huge_mm.h                    |   5 +
+ include/trace/events/huge_memory.h         |  34 +-
+ mm/huge_memory.c                           |  11 +
+ mm/khugepaged.c                            | 616 ++++++++++++++++-----
+ 5 files changed, 569 insertions(+), 168 deletions(-)
+
+
+base-commit: 9282f9bdbdf22a1914f0b085f2fe5e8141cbc3de
+-- 
+2.54.0
+
