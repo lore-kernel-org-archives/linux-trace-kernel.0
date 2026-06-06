@@ -1,51 +1,34 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012024.outbound.protection.outlook.com [52.101.53.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F327F345CC0;
-	Fri,  5 Jun 2026 20:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780690097; cv=fail; b=La75acwgCMKen5RUycyOavuf4Bl8FofuGwTPyi+xh+BT4XSgTpbu/HOt0KPs+5UHGFZpPhMekdY30aEPy6gTkQvq50YwsWZX8vcRXe/gLD+ZeKPBY4j4ggl6GJEHPzW69i6XK1m/v8p78vMukDquFfapMRWSFD0F0QJSPPUbEj8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780690097; c=relaxed/simple;
-	bh=WNMb2hxKC2nM6DlXB4DgI6A7f+ejICDQfGAPOWD8cmA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XVYf9umcFqZjg0K+c2Tx/mJLIgrBEY44su3+GYPP3CK/51lieZvKM1fLng6ZbdYbbwqNFljmqggPncFQhMq11Ew0Tj70HfLu8xwE6lWZOJcEwuj8RuMkvJLnojIt0z/X1MLAGy5nUzAICT3tpj0ZQlPpKQJe1cQE5QaYrtks5ZI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mJ9GqTTy; arc=fail smtp.client-ip=52.101.53.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A202AEE1;
+	Sat,  6 Jun 2026 00:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780706330; cv=none; b=QlF4o9mdtgwKZFvk2EXNk/CLGfihQSRhq4mOtSbtkAXS5Zy4SSb0UuErZs1rd2ErPT2NosiDDlsngm5dN3dlj7ZC8qXi0/WUxTEA6bTQWG4JklrUZ7dSolOT8oPSjOWzMZ3mSxp8l5sNj0SKKbaQAUOCN+0T5qu+F7nGDwCqv/k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780706330; c=relaxed/simple;
+	bh=ijPPUE5v7EJFuFKYYWi7jKl565pmjYlIRj00aZAnO3M=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fEftWEY0D3+Snr2AAw/4BsNwZi5PlaqKZdx0dky8MSADhoa97pGB/ew+7KEtz5tuKInwPWt5QKZdte1OxjHh1cCgnJUmK54rcUYMYNbyvB470HVW0uw4WE2hWTSz3tnWdZQSUfYo2jpjwNjUMzVdpevEj0lJvmcwbU75iKZmavk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=N3W/lCja; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mJ9GqTTy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=reTty9mAyL2B6KIgzDb0OKYQD11e9KyIqI6eeb9uoWKtb2gSKQjM6GcI8LAjG4vddePMSUOSmkw9AhZ1WK2KvVLgYP9VzMQVuoP+SNqpQRV3fROSwTEvkrVRh+VzsiAs7ZzieSO86CG1arWwZ25W4hWbjmSCsPyYI/Qc/pAhFqwAukvjGyVgN6LX3m8HIzmNjCWNX48zzj3ZTV+tFly+eyMbBmrIMlUPrqM6/51rJ2r36kByGUyynHUShSjBzaAOWYMLglm8IDQY07v+1gn7hLbHNkn1KmkjjpoGISLz596z6qSwlnmXAxPqbp/uIZ4F/cvcxR53xcBsLyX1VI0xGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zDOq5HSj2oX768VN+NTdbrN4/PMY7AoRKtlpz3K4WoQ=;
- b=XXtGHYO5TIOFE62TLtGNWYf7CyElrpp0uV7Q3woXSGdGzSK948QIP0XjONfQsIBB0pz3Fk6ODIfdTrksOGer20PkSn40axgflS8aC+XTLKSXpEu5eoNmLegESbWjL8ejydYGVauU5mSU7gOwwT06kdAguZU00RnkW2qQnuC+qwjpIAiWC7YjNxBvzYWDOQ468ByRO2mo1XHAFmietyAlmkuJBDMmyriPT/afiYp2lT29UNYsCELY5XpTG/oC2eaGbqNLc+IPjcYwu9L3Ib2RgCtURcaB3LE0aVWobXTCHBnP/TCTUGfesxvVr3QGGbCx3gOcanXh0XvcYOgWWaMAYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zDOq5HSj2oX768VN+NTdbrN4/PMY7AoRKtlpz3K4WoQ=;
- b=mJ9GqTTyhtLT41d7J+2EiF0qWmFLFjqJawbNopfCLqLUTybLhqe/XFa4Vj4thHw9hKQfHGquCH7iz/dJHdH77Jou/u8O10Sa4p9U8RdILpUYKk/HCVCL4gA3u/U27X2GE76OaqIePQtsHbdassDNxeB5M713OBbpIhD8gY4NwAIW1VM3gTC2g16qYvLittz+KFo3Vc/kND32c+D5dgO28MsEzBQuewscyFqQyoIWCIK4/wkIUrB03PK1J/ICK2qS9RzGmk6SNL9pMqDdcrIaTgC245SPi/XNNZyIvELiVrUQ+TpoLvXOMN580bs1rsUGM4cpsZ/SiJcRHDyFlqbGVQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- PH7PR12MB5998.namprd12.prod.outlook.com (2603:10b6:510:1da::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.92.9; Fri, 5 Jun 2026 20:08:07 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2%5]) with mapi id 15.21.0092.007; Fri, 5 Jun 2026
- 20:08:07 +0000
-From: Zi Yan <ziy@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="N3W/lCja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A4F1F00893;
+	Sat,  6 Jun 2026 00:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1780706328;
+	bh=2C3zfl86Y/ZbweEP0YrvTlodlE4cFwzCztBvaJcfGZY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=N3W/lCja3vMQi7/1tb7yiyQ6mgDphyKTWoJhGjjsXON7/+3BbP2oiq3zf8TjVri1U
+	 ri3MT7w470ebrbxtbFQR7eRLIc6r3z/HqJvW3xtAOFMvBsq+nWoEF7BM2ejKQLORqm
+	 1jieFilxQ/hgHrxZhSx+/muBR8D8ORG8LAFRLTKc=
+Date: Fri, 5 Jun 2026 17:38:46 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
 To: Nico Pache <npache@redhat.com>
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ aarcange@redhat.com, anshuman.khandual@arm.com, apopple@nvidia.com,
  baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
  catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
  dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com,
@@ -56,109 +39,468 @@ Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
  matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com,
  peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com,
  rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com,
- rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, zokeefe@google.com
-Subject: Re: [PATCH mm-unstable v19 05/14] mm/khugepaged: require
- collapse_huge_page to enter/exit with the lock dropped
-Date: Fri, 05 Jun 2026 16:07:56 -0400
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <F4C2A4F3-54E9-4150-8196-DD303E4D8C39@nvidia.com>
-In-Reply-To: <20260605161422.213817-6-npache@redhat.com>
+ rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com,
+ shivankg@amd.com, sunnanyong@huawei.com, surenb@google.com,
+ thomas.hellstrom@linux.intel.com, tiwai@suse.de, usamaarif642@gmail.com,
+ vbabka@suse.cz, vishal.moola@gmail.com, wangkefeng.wang@huawei.com,
+ will@kernel.org, willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+Subject: Re: [PATCH mm-unstable v19 00/14] khugepaged: add mTHP collapse
+ support
+Message-Id: <20260605173846.e403cd63c59c385d60268132@linux-foundation.org>
+In-Reply-To: <20260605161422.213817-1-npache@redhat.com>
 References: <20260605161422.213817-1-npache@redhat.com>
- <20260605161422.213817-6-npache@redhat.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0170.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::25) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|PH7PR12MB5998:EE_
-X-MS-Office365-Filtering-Correlation-Id: be69971c-7a13-4097-4a8e-08dec33e28a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|22082099003|18002099003|11063799006|4143699003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	mTktN32ilqW64KzrJQ/60dnvoe9EzbDKDn0yLtQyuL9g/Lc5NiTXwxu9dueiRkFjzfZO+mVidhox0kRbojP5Budh3k56wjJtmM3J/r8KJLz6DND+LftNK0Q5p5RVGjW6MUKdFaxMA/YOmhpB8rHsdfESHggevHwNnB6O/UXlDJKk8yvG97BRG5lOnHX5TXz5PH74crFmwvEXmGzYcH+japSmDjSGtyDnj70y4cpXqrQAxVpii7eAghWw6laef3BYPXvuWYWncVQfWyCAfprjyCOzfrMlTTuY/K6uekkC67rBI6egJET6rDN3KFuCV6IuG5dx8f8yDM5G2BpaanveFDe0ZER8F9dudt3vXqvuv9OU+3mausbYnjQUkp0uzs22m7e+ubVOtG8SSrcmYtHR+6Dk+VAilWHzyuLQp9yP/QZr+vCi1pLJ2hLBCQTjxaEsMNeHuC7s/67q7o8kwL/t2U75kufwHzz3jdoccpN4UslB6DC8w8HsyQX4HJO1GQ3sPNaMXO0VqTe6RZcdoFgUdju2Wu0vQhOgMKc2gdjBbRCM2hkRiR4hqG/o2UpuqKav5pauD+kKZONU0CIeDBb4NSf8bIfrOyLhMU1JCDG2Y10QuwPjZvHegru+IG6Bhxt4kHpJ25sVjqLloev630FZKBISB28zymnBmCCxn0kLxClw8A1EdTTLbUPD3a3FWHBB
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(22082099003)(18002099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bjpkw2Vb3KXhRKdF+DXuCXIVLFVbE/WBuTryVV9gAfFp0jCfIoZ0D5VZItlQ?=
- =?us-ascii?Q?Hosgrq0KbLfIntvobPRh9YKwYoYvBQOisDPaH03uW0pn2gpdrJowPwMHNNu5?=
- =?us-ascii?Q?YrpDH54Dfifc5f067aiyPKU6GSJNuVf8Ud8FlSMonBodr+EoQ2pPgknbAlus?=
- =?us-ascii?Q?tMKofB7djVa8MP3IExmV/CY4bi+puLLdhABVgsnLa3bJaFIInb74tgMJpxt6?=
- =?us-ascii?Q?lql9t57bwfoQD7e9zGNy1a51f+cGkc8yB7XTqP8VLY5otp0D6XY4gl/kacCv?=
- =?us-ascii?Q?xuBXQIs3r7+q789b4wrEDxJ1jriKly94igw5H1PSDaqsLStkpDjrpkg4sXZt?=
- =?us-ascii?Q?nhPo9HxgJp2RISW6LCfuskxJ44FlUlXtDmFccs+4jXIpy9mc2kqdFX0I3Ld5?=
- =?us-ascii?Q?rCkGs9ZWclEoQiF9zpTd70pIj8UYTFAYfLuLkrzn0nMCTi5jGj4jeOZJSyFk?=
- =?us-ascii?Q?Zru15PBwOzxJmke4Ni0eEq/O04AdWzyRR+VH2AC0ZZ4syO+60QBbAzShChHq?=
- =?us-ascii?Q?FI8p6Pwxfbd3bB8BphfegeXu5pZbui4bTZp644NvQICEkyOHdta3UksuYaN6?=
- =?us-ascii?Q?64D9N8JKbJyRFQnOBCxeX/ip9MLrzw/bpuT2bkJExzFzpCJb3vY4nCdcPLtB?=
- =?us-ascii?Q?uGWBm3p7fqCbS/+iu8Kje1WgolOiYrvr+jYywHesR5n0ofdDDz0lFBTmb8BA?=
- =?us-ascii?Q?GjmXW52jSuZjqlTEk3U5plH4LxxyXUFBo/jXB0MjffzLZFjf3HOQK/UdOR13?=
- =?us-ascii?Q?5UMRus0/4sA+9ynwx1NVMwMEnBXoNPxVO3Cfns9Dk7ZdCZ+G6MBIneNM+a8N?=
- =?us-ascii?Q?/SpLKySCvvF/0AK1l3b06m6DVop0GRCzCXUPUjKyC4UdvC3DMA7dwbAkHmqa?=
- =?us-ascii?Q?IV5QrlWm6E3M/E4p374Dci9PbK+3eiXyumx6fVdWiypFhjzVq44kU6poplhV?=
- =?us-ascii?Q?uds+B9IMKtS3lnPdEMxKSsHG6oZ8VnIhXO2IvTpwiQ8BHvTdeFqY/uVr3Rgq?=
- =?us-ascii?Q?ksRvLfjuDBdggtrJu17JNfZWiLkz/QzRasqa/f+4TKdso37R/AaV36WuZ0Nr?=
- =?us-ascii?Q?q5iP6OBpiqto2HAm0yByHgTH80wwlxBM6w8wSGxuXIRTGA4uXamypIV45l13?=
- =?us-ascii?Q?cz8GSjRkxYSkqo+FL6IBX8X0aGbQHFm9MoSHXiPnNK3hijpMw/7oZRJM98AQ?=
- =?us-ascii?Q?rGGlLeFcsur+89EbjGrSSDIN7qbsluQcDE+C0rHOe92re+J4tMPPwNcL5SNl?=
- =?us-ascii?Q?zDLuF7phSRfyy+mM9OlmN7xX92ko4ksH1WxJkV0CgmT+H+gBVtGDnlD2nAHF?=
- =?us-ascii?Q?RVk4l+hPVGugpEZFH9E3/8Pu1x3IWVYPPO78Pp0jlseHj86aMOd9GiWJkhff?=
- =?us-ascii?Q?048Ij20UhU01OwwK5OOo4ItacLvRXQDje6QxU2YimIOUjeR6t1l2Qv7efvR7?=
- =?us-ascii?Q?r/edPNgjMVoR3yXNiv48bH7iOBxeSwghdzmQNTM3cBbmmB9a9oZewia1hIU0?=
- =?us-ascii?Q?5OZJDDy9HeBStnp2G0ABmpvRPRrhGrMfzYx6O3MxMCKRM36wVIXhX8O0tMIT?=
- =?us-ascii?Q?tT5vg2yaP3G96/j53PCq2e/eZt1dTSa6MsZCiY8z0HU3jb/5VM31vWoEVglV?=
- =?us-ascii?Q?ma/emjkhXX1vhk7Wij3gOHhyR26FdxIr3RejjGLTO8zhpfGlaDf6NkTg+k6r?=
- =?us-ascii?Q?VDa+tce+7Q9DQWH3is9PRX1SiKOJiztlsJ8WXp8ot3kuKzT+?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be69971c-7a13-4097-4a8e-08dec33e28a2
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2026 20:08:07.1398
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tRYU/jAQx1K1T6rbsCJ69mTaLzizCgn2QOA6bPsyn7t1ntBNvO5bjkTtFcs4HUHg
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5998
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 5 Jun 2026, at 12:14, Nico Pache wrote:
+On Fri,  5 Jun 2026 10:14:07 -0600 Nico Pache <npache@redhat.com> wrote:
 
-> Currently the collapse_huge_page function requires the mmap_read_lock to
-> enter with it held, and exit with it dropped. This function moves the
-> unlock into its parent caller, and changes this semantic to requiring it
-> to enter/exit with it always unlocked.
->
-> In future patches, we need this expectation, as for in mTHP collapse, we
-> may have already dropped the lock, and do not want to conditionally
-> check for this by passing through the lock_dropped variable.
->
-> No functional change is expected as one of the first things the
-> collapse_huge_page function does is drop this lock before allocating the
-> hugepage.
->
-> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-LGTM.
+> The following series provides khugepaged with the capability to collapse
+> anonymous memory regions to mTHPs.
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+Thanks, I updated mm.git's mm-unstable branch to this version.
 
-Best Regards,
-Yan, Zi
+Sashiko said things:
+	https://sashiko.dev/#/patchset/20260605161422.213817-1-npache@redhat.com
+
+> V19 Changes:
+> - Rebased onto mm-unstable (base: 9282f9bdbdf2, where v18 was based)
+> - Added RBs/Acks
+> - [patch 04] Make max_ptes_none const; guard pr_warn_once with
+>   check so we only warn for non-zero intermediate values and use a single
+>   "return 0" path (David)
+> - [patch 06] Add comment explaining the mmu_notifier_range covers only
+>   the modified PTE range (David); change BUG_ON to VM_WARN_ON_ONCE
+>   (David); fix update_mmu_cache_range() arch safety issue: reinstall
+>   PMD via pmd_populate() before calling map_anon_folio_pte_nopf() and
+>   hold the PTE lock nested inside pmd_ptl during the operation (David,
+>   Lance); drop the now-unnecessary smp_wmb() as __folio_mark_uptodate()
+>   provides the required ordering (David, Lance)
+> - [patch 07] Clarify commit message: "mTHP to a folio of equal or
+>   smaller size, possibly resulting in a partially mapped source folio"
+>   (David)
+> - [patch 08] Add Lorenzo's RB and David's Ack; move TODO comment about
+>   shared pages to patch 4 (David)
+> - [patch 10] Rename collapse_allowable_orders() to
+>   collapse_possible_orders() and add collapse_possible() boolean wrapper
+>   for callers that only need a yes/no answer (David)
+> - [patch 11] Major rework: replace the DFS stack-based algorithm with a
+>   simpler linear forward-walking approach using offset + order (David);
+>   remove mthp_range struct, mthp_bitmap_stack[], stack push/pop
+>   functions, and MTHP_STACK_SIZE; add max_order_from_offset() helper
+>   using __ffs(offset) for natural alignment; rename mthp_bitmap to
+>   mthp_present_ptes (David); remove temporary mthp_bitmap_mask and use
+>   bitmap_weight_from() directly (David); fix result propagation so
+>   mthp_collapse() returns enum scan_result and properly propagates
+>   SCAN_ALLOC_HUGE_PAGE_FAIL and SCAN_PTE_MAPPED_HUGEPAGE to callers
+>   (Lance); fold in v18 fixup for potential use-after-free of vma in
+>   mthp_collapse() by passing NULL to collapse_max_ptes_none()
+> - [patch 12] Rework to match new linear algorithm; expand the set of
+>   failures that allow retrying at a lower order
+> - [patch 14] Re-add note about file/shmem still only collapsing to
+>   PMD-sized THPs (David)
+
+Here's how v19 altered mm.git:
+
+
+ mm/khugepaged.c |  222 ++++++++++++++++++++--------------------------
+ 1 file changed, 100 insertions(+), 122 deletions(-)
+
+--- a/mm/khugepaged.c~b
++++ a/mm/khugepaged.c
+@@ -100,28 +100,6 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_s
+ static struct kmem_cache *mm_slot_cache __ro_after_init;
+ 
+ #define KHUGEPAGED_MIN_MTHP_ORDER	2
+-/*
+- * mthp_collapse() does an iterative DFS over a binary tree, from
+- * HPAGE_PMD_ORDER down to KHUGEPAGED_MIN_MTHP_ORDER. The max stack
+- * size needed for a DFS on a binary tree is height + 1, where
+- * height = HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER.
+- *
+- * ilog2 is used in place of HPAGE_PMD_ORDER because some architectures
+- * (e.g. ppc64le) do not define HPAGE_PMD_ORDER until after build time.
+- */
+-#define MTHP_STACK_SIZE	(ilog2(MAX_PTRS_PER_PTE) - KHUGEPAGED_MIN_MTHP_ORDER + 1)
+-
+-/*
+- * Defines a range of PTE entries in a PTE page table which are being
+- * considered for mTHP collapse.
+- *
+- * @offset: the offset of the first PTE entry in a PMD range.
+- * @order: the order of the PTE entries being considered for collapse.
+- */
+-struct mthp_range {
+-	u16 offset;
+-	u8 order;
+-};
+ 
+ struct collapse_control {
+ 	bool is_khugepaged;
+@@ -136,10 +114,7 @@ struct collapse_control {
+ 	nodemask_t alloc_nmask;
+ 
+ 	/* Each bit represents a single occupied (!none/zero) page. */
+-	DECLARE_BITMAP(mthp_bitmap, MAX_PTRS_PER_PTE);
+-	/* A mask of the current range being considered for mTHP collapse. */
+-	DECLARE_BITMAP(mthp_bitmap_mask, MAX_PTRS_PER_PTE);
+-	struct mthp_range mthp_bitmap_stack[MTHP_STACK_SIZE];
++	DECLARE_BITMAP(mthp_present_ptes, MAX_PTRS_PER_PTE);
+ };
+ 
+ /**
+@@ -584,8 +559,11 @@ void __khugepaged_enter(struct mm_struct
+ 		wake_up_interruptible(&khugepaged_wait);
+ }
+ 
+-/* Check what orders are allowed based on the vma and collapse type */
+-static unsigned long collapse_allowable_orders(struct vm_area_struct *vma,
++/*
++ * Check what orders are possible based on the vma and collapse type.
++ * This is used to determine if mTHP collapse is a viable option.
++ */
++static unsigned long collapse_possible_orders(struct vm_area_struct *vma,
+ 		vm_flags_t vm_flags, enum tva_type tva_flags)
+ {
+ 	unsigned long orders;
+@@ -599,11 +577,17 @@ static unsigned long collapse_allowable_
+ 	return thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
+ }
+ 
++static bool collapse_possible(struct vm_area_struct *vma,
++		vm_flags_t vm_flags, enum tva_type tva_flags)
++{
++	return collapse_possible_orders(vma, vm_flags, tva_flags);
++}
++
+ void khugepaged_enter_vma(struct vm_area_struct *vma,
+ 			  vm_flags_t vm_flags)
+ {
+ 	if (!mm_flags_test(MMF_VM_HUGEPAGE, vma->vm_mm) && hugepage_enabled()
+-	    && collapse_allowable_orders(vma, vm_flags, TVA_KHUGEPAGED))
++	    && collapse_possible(vma, vm_flags, TVA_KHUGEPAGED))
+ 		__khugepaged_enter(vma->vm_mm);
+ }
+ 
+@@ -844,7 +828,7 @@ static void __collapse_huge_page_copy_su
+ 		struct list_head *compound_pagelist)
+ {
+ 	const unsigned long nr_pages = 1UL << order;
+-	unsigned long end = address + (PAGE_SIZE << order);
++	unsigned long end = address + (PAGE_SIZE * nr_pages);
+ 	struct folio *src, *tmp;
+ 	pte_t pteval;
+ 	pte_t *_pte;
+@@ -1074,7 +1058,13 @@ static enum scan_result hugepage_vma_rev
+ 	if (!vma)
+ 		return SCAN_VMA_NULL;
+ 
+-	/* Always check the PMD order to ensure its not shared by another VMA */
++	/*
++	 * We cannot collapse VMA regions that do not span the full PMD. This is
++	 * due to the potential of the PMD being shared by another VMA leaving
++	 * us vulnerable to a race condition. Always check the PMD order here to
++	 * ensure its not shared by another VMA. We'd need to lock all VMAs in
++	 * the PMD range to support this.
++	 */
+ 	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
+ 		return SCAN_ADDRESS_RANGE;
+ 	if (!thp_vma_allowable_orders(vma, vma->vm_flags, type, BIT(order)))
+@@ -1390,7 +1380,7 @@ static enum scan_result collapse_huge_pa
+ 
+ 	if (unlikely(result != SCAN_SUCCEED)) {
+ 		spin_lock(pmd_ptl);
+-		WARN_ON_ONCE(!pmd_none(*pmd));
++		VM_WARN_ON_ONCE(!pmd_none(*pmd));
+ 		/*
+ 		 * We can only use set_pmd_at when establishing
+ 		 * hugepmds and never for establishing regular pmds that
+@@ -1433,13 +1423,18 @@ static enum scan_result collapse_huge_pa
+ 		map_anon_folio_pmd_nopf(folio, pmd, vma, pmd_addr);
+ 	} else {
+ 		/*
+-		 * set_ptes is called in map_anon_folio_pte_nopf with the
+-		 * pmd_ptl lock still held; this is safe as the PMD is expected
+-		 * to be none. The pmd entry is then repopulated below.
++		 * Some architectures (e.g. MIPS) walk the live page table in
++		 * their implementation. update_mmu_cache_range() must be called
++		 * with a valid page table hierarchy and the PTE lock held.
++		 * Acquire it nested inside pmd_ptl when they are distinct locks.
+ 		 */
+-		map_anon_folio_pte_nopf(folio, pte, vma, start_addr, /*uffd_wp=*/ false);
+-		smp_wmb(); /* make PTEs visible before PMD. See pmd_install() */
++		if (pte_ptl != pmd_ptl)
++			spin_lock_nested(pte_ptl, SINGLE_DEPTH_NESTING);
+ 		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
++		map_anon_folio_pte_nopf(folio, pte, vma, start_addr,
++					  /*uffd_wp=*/ false);
++		if (pte_ptl != pmd_ptl)
++			spin_unlock(pte_ptl);
+ 	}
+ 	spin_unlock(pmd_ptl);
+ 
+@@ -1459,58 +1454,23 @@ out_nolock:
+ 	return result;
+ }
+ 
+-static void collapse_mthp_stack_push(struct collapse_control *cc, int *stack_size,
+-				     u16 offset, u8 order)
+-{
+-	const int size = *stack_size;
+-	struct mthp_range *stack = &cc->mthp_bitmap_stack[size];
+-
+-	VM_WARN_ON_ONCE(size >= MTHP_STACK_SIZE);
+-	stack->order = order;
+-	stack->offset = offset;
+-	(*stack_size)++;
+-}
+-
+-static struct mthp_range collapse_mthp_stack_pop(struct collapse_control *cc,
+-						 int *stack_size)
++/* Return the highest naturally aligned order that fits at @offset within a PMD. */
++static unsigned int max_order_from_offset(unsigned int offset)
+ {
+-	const int size = *stack_size;
++	if (offset == 0)
++		return HPAGE_PMD_ORDER;
+ 
+-	VM_WARN_ON_ONCE(size <= 0);
+-	(*stack_size)--;
+-	return cc->mthp_bitmap_stack[size - 1];
+-}
+-
+-static unsigned int collapse_mthp_count_present(struct collapse_control *cc,
+-						u16 offset, unsigned int nr_ptes)
+-{
+-	bitmap_zero(cc->mthp_bitmap_mask, MAX_PTRS_PER_PTE);
+-	bitmap_set(cc->mthp_bitmap_mask, offset, nr_ptes);
+-	return bitmap_weight_and(cc->mthp_bitmap, cc->mthp_bitmap_mask, MAX_PTRS_PER_PTE);
++	return min_t(unsigned int, __ffs(offset), HPAGE_PMD_ORDER);
+ }
+ 
+ /*
+  * mthp_collapse() consumes the bitmap that is generated during
+  * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
+  *
+- * Each bit in cc->mthp_bitmap represents a single occupied (!none/zero) page.
+- * A stack structure cc->mthp_bitmap_stack is used to check different regions
+- * of the bitmap for collapse eligibility. The stack maintains a pair of
+- * variables (offset, order), indicating the number of PTEs from the start of
+- * the PMD, and the order of the potential collapse candidate respectively. We
+- * start at the PMD order and check if it is eligible for collapse; if not, we
+- * add two entries to the stack at a lower order to represent the left and right
+- * halves of the PTE page table we are examining.
+- *
+- *                         offset       mid_offset
+- *                         |         |
+- *                         |         |
+- *                         v         v
+- *      --------------------------------------
+- *      |          cc->mthp_bitmap            |
+- *      --------------------------------------
+- *                         <-------><------->
+- *                          order-1  order-1
++ * Each bit in cc->mthp_present_ptes represents a single occupied (!none/zero)
++ * page. We start at the PMD order and check if it is eligible for collapse;
++ * if not, we check the left and right halves of the PTE page table we are
++ * examining at a lower order.
+  *
+  * For each of these, we determine how many PTE entries are occupied in the
+  * range of PTE entries we propose to collapse, then we compare this to a
+@@ -1520,35 +1480,30 @@ static unsigned int collapse_mthp_count_
+  * If a collapse is permitted, we attempt to collapse the PTE range into a
+  * mTHP.
+  */
+-static int mthp_collapse(struct mm_struct *mm, unsigned long address,
+-		int referenced, int unmapped, struct collapse_control *cc,
+-		unsigned long enabled_orders)
++static enum scan_result mthp_collapse(struct mm_struct *mm,
++		unsigned long address, int referenced, int unmapped,
++		struct collapse_control *cc, unsigned long enabled_orders)
+ {
+ 	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
+-	int collapsed = 0, stack_size = 0;
++	enum scan_result last_result = SCAN_FAIL;
++	int collapsed = 0;
++	bool alloc_failed = false;
+ 	unsigned long collapse_address;
+-	struct mthp_range range;
+-	u16 offset;
+-	u8 order;
+-
+-	collapse_mthp_stack_push(cc, &stack_size, 0, HPAGE_PMD_ORDER);
+-
+-	while (stack_size) {
+-		range = collapse_mthp_stack_pop(cc, &stack_size);
+-		order = range.order;
+-		offset = range.offset;
++	unsigned int offset = 0;
++	unsigned int order = HPAGE_PMD_ORDER;
++
++	while (offset < HPAGE_PMD_NR) {
+ 		nr_ptes = 1UL << order;
+ 
+ 		if (!test_bit(order, &enabled_orders))
+ 			goto next_order;
+ 
+ 		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
+-
+-		nr_occupied_ptes = collapse_mthp_count_present(cc, offset,
+-							       nr_ptes);
++		nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
++						      offset + nr_ptes);
+ 
+ 		if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+-			int ret;
++			enum scan_result ret;
+ 
+ 			collapse_address = address + offset * PAGE_SIZE;
+ 			ret = collapse_huge_page(mm, collapse_address, referenced,
+@@ -1560,8 +1515,11 @@ static int mthp_collapse(struct mm_struc
+ 				collapsed += nr_ptes;
+ 				fallthrough;
+ 			case SCAN_PTE_MAPPED_HUGEPAGE:
+-				continue;
++				goto next_offset;
+ 			/* Cases where lower orders might still succeed */
++			case SCAN_ALLOC_HUGE_PAGE_FAIL:
++				alloc_failed = true;
++				fallthrough;
+ 			case SCAN_LACK_REFERENCED_PAGE:
+ 			case SCAN_EXCEED_NONE_PTE:
+ 			case SCAN_EXCEED_SWAP_PTE:
+@@ -1572,27 +1530,48 @@ static int mthp_collapse(struct mm_struc
+ 			case SCAN_DEL_PAGE_LRU:
+ 			case SCAN_PTE_NON_PRESENT:
+ 			case SCAN_PTE_UFFD_WP:
+-			case SCAN_ALLOC_HUGE_PAGE_FAIL:
+ 			case SCAN_PAGE_LAZYFREE:
++				last_result = ret;
+ 				goto next_order;
+ 			/* Cases where no further collapse is possible */
++			case SCAN_PMD_MAPPED:
++				fallthrough;
+ 			default:
+-				return collapsed;
++				last_result = ret;
++				goto done;
+ 			}
+ 		}
+ 
+ next_order:
+-		if ((BIT(order) - 1) & enabled_orders) {
+-			const u8 next_order = order - 1;
+-			const u16 mid_offset = offset + (nr_ptes / 2);
+-
+-			collapse_mthp_stack_push(cc, &stack_size, mid_offset,
+-						 next_order);
+-			collapse_mthp_stack_push(cc, &stack_size, offset,
+-						 next_order);
+-		}
+-	}
+-	return collapsed;
++		/*
++		 * Continue with the next smaller order if there is still
++		 * any smaller order enabled. When at the smallest order
++		 * we must always move to the next offset.
++		 */
++		if (order > KHUGEPAGED_MIN_MTHP_ORDER &&
++			(enabled_orders & GENMASK(order - 1, 0))) {
++			order--;
++			continue;
++		}
++next_offset:
++		/*
++		 * Advance past the region we just processed and determine the
++		 * highest order we can attempt next. Since huge pages must be
++		 * naturally aligned, the max order we can attempt next is
++		 * limited by the alignment of the new offset.
++		 * E.g. if we collapsed a order-2 mTHP at offset 0, offset
++		 * becomes 4 and __ffs(4) == 2, so the next attempt starts at
++		 * order 2.
++		 */
++		offset += nr_ptes;
++		order = max_order_from_offset(offset);
++	}
++done:
++	if (collapsed)
++		return SCAN_SUCCEED;
++	if (alloc_failed)
++		return SCAN_ALLOC_HUGE_PAGE_FAIL;
++	return last_result;
+ }
+ 
+ static enum scan_result collapse_scan_pmd(struct mm_struct *mm,
+@@ -1606,7 +1585,7 @@ static enum scan_result collapse_scan_pm
+ 	pmd_t *pmd;
+ 	pte_t *pte, *_pte, pteval;
+ 	int i;
+-	int none_or_zero = 0, shared = 0, nr_collapsed = 0, referenced = 0;
++	int none_or_zero = 0, shared = 0, referenced = 0;
+ 	enum scan_result result = SCAN_FAIL;
+ 	struct page *page = NULL;
+ 	struct folio *folio = NULL;
+@@ -1623,11 +1602,11 @@ static enum scan_result collapse_scan_pm
+ 		goto out;
+ 	}
+ 
+-	bitmap_zero(cc->mthp_bitmap, MAX_PTRS_PER_PTE);
++	bitmap_zero(cc->mthp_present_ptes, MAX_PTRS_PER_PTE);
+ 	memset(cc->node_load, 0, sizeof(cc->node_load));
+ 	nodes_clear(cc->alloc_nmask);
+ 
+-	enabled_orders = collapse_allowable_orders(vma, vma->vm_flags, tva_flags);
++	enabled_orders = collapse_possible_orders(vma, vma->vm_flags, tva_flags);
+ 
+ 	/*
+ 	 * If PMD is the only enabled order, enforce max_ptes_none, otherwise
+@@ -1730,7 +1709,7 @@ static enum scan_result collapse_scan_pm
+ 		}
+ 
+ 		/* Set bit for occupied pages */
+-		__set_bit(i, cc->mthp_bitmap);
++		__set_bit(i, cc->mthp_present_ptes);
+ 		/*
+ 		 * Record which node the original page is from and save this
+ 		 * information to cc->node_load[].
+@@ -1789,11 +1768,10 @@ out_unmap:
+ 	if (result == SCAN_SUCCEED) {
+ 		/* collapse_huge_page expects the lock to be dropped before calling */
+ 		mmap_read_unlock(mm);
+-		nr_collapsed = mthp_collapse(mm, start_addr, referenced,
+-					     unmapped, cc, enabled_orders);
++		result = mthp_collapse(mm, start_addr, referenced,
++				       unmapped, cc, enabled_orders);
+ 		/* mmap_lock was released above, set lock_dropped */
+ 		*lock_dropped = true;
+-		result = nr_collapsed ? SCAN_SUCCEED : SCAN_FAIL;
+ 	}
+ out:
+ 	trace_mm_khugepaged_scan_pmd(mm, folio, referenced,
+@@ -2892,7 +2870,7 @@ static void collapse_scan_mm_slot(unsign
+ 			cc->progress++;
+ 			break;
+ 		}
+-		if (!collapse_allowable_orders(vma, vma->vm_flags, TVA_KHUGEPAGED)) {
++		if (!collapse_possible(vma, vma->vm_flags, TVA_KHUGEPAGED)) {
+ 			cc->progress++;
+ 			continue;
+ 		}
+@@ -3202,7 +3180,7 @@ int madvise_collapse(struct vm_area_stru
+ 	BUG_ON(vma->vm_start > start);
+ 	BUG_ON(vma->vm_end < end);
+ 
+-	if (!collapse_allowable_orders(vma, vma->vm_flags, TVA_FORCED_COLLAPSE))
++	if (!collapse_possible(vma, vma->vm_flags, TVA_FORCED_COLLAPSE))
+ 		return -EINVAL;
+ 
+ 	cc = kmalloc_obj(*cc);
+_
+
