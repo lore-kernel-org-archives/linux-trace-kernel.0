@@ -1,43 +1,43 @@
 Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79BA2F39B4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AC12F8E88;
 	Sun,  7 Jun 2026 07:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780817409; cv=none; b=DfP0ldrM924duMHudAaw4b0XRC5VuFGauEE5bWrWkMV+1/fQ7CMv7abDVMQNo24ALj/F+IGz2V7kfEbomSI4PqZwksuMPKVQTjzicnnaDoIg17v9z8KMGP+uAfLstTlZUsS9MYkMd223uYuYp6RxStd5IvKOQHMro4Ezwwm2raM=
+	t=1780817409; cv=none; b=eR00Uxn09OZaBI6Lef9iQgdA5tT3cDI16R6wz/IbZxxjD7JY4ZpDl+2VboZPYOvxvh4kD3JiTuYXZMfJDo2CYMLYvZTLajE3XRGnH/pBTSB07OI4nnaKkvmlYhe6zh2L1FQzs4qUns2YcplHp5CIhr/azHWRy9H+VAeuf7u7CVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780817409; c=relaxed/simple;
-	bh=EIVnlWTnHln2Wag6ziDjE0AZSlMzz0t8b3BEMBYgzIo=;
+	bh=EJS7A/wEAmBTsJQ6NcrhhgNvyUPkBirlnep1mxNluuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cuzh1DUkUh02vlZQrQYe0PIXfgFpoOyQljE+dGnWfRKn5i44qcbQ64dXc+h2EFXhdvt6mVrKohiX9zDcUpOmEGbHRIIMp3gbuuv6wlwKtdR/RV8i5zpNfBLBBILpr6u3ikmguDc0bpjXiT/gYlCF8C5z/+w+BtI+QmBONz0B88Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=gLqdF+KH; arc=none smtp.client-ip=185.125.188.121
+	 MIME-Version; b=nYyxjUfBw1xRwBcwavkbp+664OtKQBmcqtZ4k9IY5o71LiYySm8EOHDyj4R71SFlK5Y5+o2ptFIGt7n40i4fmalcBX0breF3AOV/7ULxY8lRQ+MfIDjUmR35OE+ckV1cflvWIxSUIgI3Uua6aaY8Rwv8NzY5fOEfOqy4+son6wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=O+Pr5+tE; arc=none smtp.client-ip=185.125.188.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="gLqdF+KH"
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="O+Pr5+tE"
 Received: from hwang4-g16.. (unknown [120.244.199.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 5B2704204A;
-	Sun,  7 Jun 2026 07:24:42 +0000 (UTC)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id BFA0D42049;
+	Sun,  7 Jun 2026 07:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1780817085;
-	bh=MTQ1uFkHflg1N4pmfm0c7KCjP6xZaLhbavIryo1F36A=;
+	s=20251003; t=1780817081;
+	bh=2FQxyjFfMjGMU2Su/NTyLwgvdlIjIUbAZkH2HU6daJI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version;
-	b=gLqdF+KHuMigbdeRiDAExikFkbFgkFpIqGgTg6fnD9iIghjlsjMKBxHOVE6sUw/X3
-	 1B7iUcNKZBPirO9DzdV7/uzSwvTR+mseYQKSllAdhkjoHMKzWL2TFtVhF4TRVd+Zmi
-	 J5csvX8XjHE+TS6k1PDKTq0U6xeUu+t0Bx+cJ+gV4/zZ7+cPIiv5pYLhx4shKdhOmd
-	 m4lTcwpvIaVy+TdUh2SxjU+7cknuBB//WCJeHT8LcWKvXIOu4tVf5UiyPGug7GQzSS
-	 EJfX77JJyyR2iYQPvDVLTLq2kZuGFFx+h7l/LU7+MHck5jncxu7IIvXuUs99HjIFMf
-	 kwIbOfilFJyOVHJUkva42Ab/KUh3J7wc5+NlPx6DOL8fuWXasb3OIUprpl02GkYuYb
-	 GzKXs6fwC9MN355auRZ8BCfF+U4QnBJDqVt+dZ1x8No484Hhdp6pkvanYIdzMCJltg
-	 feS8LhFvlGzRrYeePVQ1pha0MSnh9bZmp7pHgqyAgMlpEGfwSD4afzb4/tOvVXN3uF
-	 jIjFKDhtgOs1miaU/WhcJewLyr/eI/824jh8fBz5rIG5z9q9CTMK3QqG+96UW0u374
-	 1HvaHSU83IVX+kKPMr7+eW1z54iLs5LMEfvvECNvrKeOEKCnON9CeDqB2TqyLoMA3/
-	 CO5bgT1gsQsvaDhIsTgL3IZk=
+	b=O+Pr5+tEzURexoklTb6DT1ypm/jxJdItKVAGwChozCPjrs2UzqXy4kNY96X3JLD0w
+	 9PGDNlHqQFPjzAd6O5HzpYoPV0wQwmwUo0Gq8cGW7BeQR6AKndMg4MxoFFpTrIw9KR
+	 yR0qkDvm1J0OFpaKl6aavi3IO+hK4foenUUMLkMIkUGLac15+W6hktUu54cZ+Gbj7B
+	 AZonphXryYJPBrjmDfFR2aUadQseY9R/eJV9pDRaXrOEjgYXqrma63To8mBiVesV3p
+	 5xVBfPIlObC6gqZkekdCZu5yzHape1KMuHG0dN1clVbzOdZ4VMp/zw8/YjVoNWhox0
+	 TWFAMKP+w7gr1EktSP9yHKlY7bx+bZLHDVFGQlaY0sSrmLXnxtnT/qGDVJ/U+BVw3S
+	 bUk5T68Vai/LsqWl3wgS7vboadiUbuKnjiv1umaucxlIp7LlpeTWio5Hc2Nua4zwHZ
+	 M8nz3a/KWIOBFkPw4mb2ekufdRn/ucClUCd1pNyXqRDQJmALeG8kuZoGnQpuBqlPPh
+	 eeArDZeL1eSt9xiDPhFMLHhXX3UCVbrowiYKzmSKYAcvj4lR3paSRGeSECfQNc+h5a
+	 leTgE+EptypLF0IYM38CpOIf6xMOhRxDxvig/L04lGciYdCLtAg2zMMSY60AEvQCK3
+	 ouzs0aTIuNTPJ7nulSlhGPkc=
 From: Hui Wang <hui.wang@canonical.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org,
@@ -48,9 +48,9 @@ To: rostedt@goodmis.org,
 	wangfushuai@baidu.com,
 	linux-kselftest@vger.kernel.org
 Cc: hui.wang@canonical.com
-Subject: [PATCH 2/2] selftests/ftrace: Account for 8-byte aligned trace_marker_raw events
-Date: Sun,  7 Jun 2026 15:24:31 +0800
-Message-ID: <20260607072431.125633-3-hui.wang@canonical.com>
+Subject: [PATCH 1/2] ring-buffer: Fix event length with forced 8-byte alignment
+Date: Sun,  7 Jun 2026 15:24:30 +0800
+Message-ID: <20260607072431.125633-2-hui.wang@canonical.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260607072431.125633-1-hui.wang@canonical.com>
 References: <20260607072431.125633-1-hui.wang@canonical.com>
@@ -62,113 +62,57 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-trace_marker_raw.tc assumes that the raw marker payload length
-reported in trace_pipe is the result of int((id + 3) / 4) * 4, but
-that is not true on kernels with CONFIG_HAVE_64BIT_ALIGNED_ACCESS
-enabled.
+When RB_FORCE_8BYTE_ALIGNMENT is true, rb_calculate_event_length()
+reserves the space of event->array[0] for placing the data length and
+rb_update_event() stores the data length in event->array[0]
+accordingly. As a result the whole event length will add extra 4 bytes
+for sizeof(event.array[0]) unconditionally.
 
-With forced 8-byte alignment, the ring buffer event forces 8-byte
-alignment. The event length is stored in array[0], the payload data
-and id are placed in a struct raw_data_entry which is stored starting
-at array[1]. In this case, the printed payload data length is 8*N+4
-bytes.
+But ring_buffer_event_length() only subtracts the
+sizeof(event->array[0]) for events larger than RB_MAX_SMALL_DATA +
+sizeof(event->array[0]). As a result, small events on architectures
+with RB_FORCE_8BYTE_ALIGNMENT=true report a data length that is 4
+bytes larger than expected.
 
-To make the testcase pass in this case, add a kconfig_enabled() helper
-and use it to detect CONFIG_HAVE_64BIT_ALIGNED_ACCESS so
-trace_marker_raw.tc can calculate the expected length correctly.
+To fix it, add the RB_FORCE_8BYTE_ALIGNMENT as a condition to subtract
+the size of that length field whenever RB_FORCE_8BYTE_ALIGNMENT is
+true.
 
-Assisted-by: Copilot:gpt-5.5
+This issue is observed in a riscv64 kernel with
+CONFIG_HAVE_64BIT_ALIGNED_ACCESS set to y, when we run ftrace selftest
+trace_marker_raw.tc, we get the weird log: for cases where the id is
+1..100, the number of data field is 8*N, but once id exceeds 100, the
+number of data field becomes 8*N+4:
+ # 1 buf: 58 00 00 00 80 5e d1 63 (number of data field is 8*1)
+ ...
+ # a buf: 58 ...                  (number of data field is 8*2)
+ ...
+ # 64 buf: 58 ...                 (number of data field is 8*13)
+ # 65 buf: 58 ...                 (number of data field is 8*13+4)
+
+After applying this change, the number of data field keeps being 8*N+4
+consistently.
+
+Fixes: 2271048d1b3b ("ring-buffer: Do 8 byte alignment for 64 bit that can not handle 4 byte align")
 Signed-off-by: Hui Wang <hui.wang@canonical.com>
 ---
- .../ftrace/test.d/00basic/trace_marker_raw.tc | 16 +++++++--
- .../testing/selftests/ftrace/test.d/functions | 33 +++++++++++++++++++
- 2 files changed, 46 insertions(+), 3 deletions(-)
+ kernel/trace/ring_buffer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-index 8e905d4fe6dd..beda0f8627b3 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-@@ -15,6 +15,11 @@ is_little_endian() {
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 56a328e94395..d9af2bbaf9c0 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -270,7 +270,8 @@ unsigned ring_buffer_event_length(struct ring_buffer_event *event)
+ 	if (event->type_len > RINGBUF_TYPE_DATA_TYPE_LEN_MAX)
+ 		return length;
+ 	length -= RB_EVNT_HDR_SIZE;
+-	if (length > RB_MAX_SMALL_DATA + sizeof(event->array[0]))
++	if (length > RB_MAX_SMALL_DATA + sizeof(event->array[0]) ||
++	    RB_FORCE_8BYTE_ALIGNMENT)
+                 length -= sizeof(event->array[0]);
+ 	return length;
  }
- 
- little=`is_little_endian`
-+raw_data_align=4
-+
-+if kconfig_enabled CONFIG_HAVE_64BIT_ALIGNED_ACCESS; then
-+       raw_data_align=8
-+fi
- 
- make_str() {
- 	id=$1
-@@ -60,7 +65,8 @@ test_multiple_writes() {
- 	echo stop > trace_marker
- 
- 	# Check to make sure the number of entries is the id (rounded up by 4)
--	awk '/.*: # [0-9a-f]* / {
-+	# or is (((id + 3) rounded by 8) + 4) if raw_data_align is 8
-+	awk -v data_align=$raw_data_align '/.*: # [0-9a-f]* / {
- 			print;
- 			cnt = -1;
- 			for (i = 0; i < NF; i++) {
-@@ -69,8 +75,12 @@ test_multiple_writes() {
- 					i++;
- 					cnt = strtonum("0x" $i);
- 					num = NF - (i + 1);
--					# The number of items is always rounded up by 4
--					cnt2 = int((cnt + 3) / 4) * 4;
-+					# The number of items is rounded up by 4
-+					# or is (8 * N + 4) if data_align is 8
-+					if (data_align == 4)
-+						cnt2 = int((cnt + 3) / 4) * 4;
-+					else
-+						cnt2 = int((cnt + 3) / 8) * 8 + 4;
- 					if (cnt2 != num) {
- 						exit 1;
- 					}
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 826141e299e5..0f778087d81b 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -177,6 +177,39 @@ check_awk_strtonum() { # strtonum is GNU awk extension
-     awk 'BEGIN{strtonum("0x1")}'
- }
- 
-+# a helper to check if a kconfig is enabled or not
-+# return value: 0 (if kconfig is enabled)
-+#               1 (if kconfig is not enabled)
-+#               2 (if the config files don't exist or are unreadable)
-+kconfig_enabled() { # config-name
-+    local config="$1"
-+    local uname_r=`uname -r`
-+    local config_file
-+
-+    case "$config" in
-+    CONFIG_*) ;;
-+    *) config="CONFIG_$config" ;;
-+    esac
-+
-+    if [ -f /proc/config.gz ] && zgrep --version >/dev/null 2>&1; then
-+        zgrep -Eq "^${config}=(y|m)$" /proc/config.gz 2>/dev/null
-+        return $?
-+    fi
-+
-+    for config_file in \
-+        /boot/config-$uname_r \
-+        /lib/modules/$uname_r/config \
-+        /lib/modules/$uname_r/build/.config
-+    do
-+        if [ -f "$config_file" ]; then
-+            grep -Eq "^${config}=(y|m)$" "$config_file"
-+            return $?
-+        fi
-+    done
-+
-+    return 2
-+}
-+
- LOCALHOST=127.0.0.1
- 
- yield() {
 -- 
 2.43.0
 
