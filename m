@@ -1,54 +1,55 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F318F3C13E3;
-	Sat,  6 Jun 2026 20:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A4A2F5328;
+	Sun,  7 Jun 2026 07:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777640; cv=none; b=d5aLSgA8AwKEqha6d0x/iI42E9CJSEEK3ZqogAE2cK+iWXFeg+yyK/lhKY2ZFeLlksD8vIitxeJkETOxJSLBwXH3f+iA5/fWGMAY1Rf0wf+4qTDNgcoeJGDxcFot5jwxiED1NVLbL2wOPF9MoW817zsUApSff1TsfY+Hg/Y2rtM=
+	t=1780817409; cv=none; b=YDqd79DNER5M07f2mK2nXZjIFEcQvX82Yla+c7uAU83rcpDUeVfOeb+44ygl39G1jVBWYFJ9kbwXtITrINV5UHca1vVgJjlXfhKJEQCOD6WH2khBMzw4JQuFfaVsKE0oBtFiqccn5kdNFIZB6ftcbBLLlvCUR3droEXJl7fWoNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777640; c=relaxed/simple;
-	bh=AsZxzbtwY1uS8bwGg5TrklhBtJkdF4iE4u1EWdqdsio=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EvPtSjoWcZxRd38D1+0OqqtotkG2W4KONu6vXIpezW1NPWq/AKz7WYx8UID0ODtBsdIzxg4Ls1iMckMlAxymubfsdF7ETpfz9GexzzBIDDp2hByia6hlXIgq1Xcneea4UE4PZNxrwo5bm4hFJ6hyvofIIeNbLiUxZo9NXtZGj5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=mrTNlGfL; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
+	s=arc-20240116; t=1780817409; c=relaxed/simple;
+	bh=RkQF8lRbTFbKoWVeRbYJJtgDjACBKW9f4O6+Zj+KJwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YRx0rAFsf9FvfXE5wibVWnSdGSciD/G+YnwFwbch9dRaTR10mEa1tdSRIZqmrPNJJEGh0ioL91MCwTNxZ5bXv/UtRtjUndpTkzHcZMXq19E2xtVvIBA8aH7Ohv8Y8rWMJYz8sZFkn3Fq/ozGf4x42eLUbFcBO+rQfST5jnfp22s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=it4IPQRc; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="mrTNlGfL"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbt-007cGL-0S; Sat, 06 Jun 2026 22:27:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=sCegYZy4ZaeEUp5KE/t7AmuTsTUVBj9+y2Qhwzm3Wqg=; b=mrTNlG
-	fLKxo3wrjLQp1ru9RZpugd5dFQ/1HSwGTzwEpQsxy69X3rSaWjWJyCS1d2puM8rDpyF4fAnwk+rQZ
-	m9VVNLkfdUbzWkNoV96Lxqj7WFWtLXTod/5HGFUUNy6WNyxCMUhKUqsJ/s4hZ9h04PwATiqPLJ6Bx
-	CPQ2i5fURx8Lqcq+wmD9QvA6JrsX6hlBlyMfDTJPhCKSluAY9iC6qQmtsVFIV0+bZpXL5eqQloz59
-	f/cNk4c4ODaeKWY/vj6qNhT8HjXcM70WDrCoj35bzeJdISoPt11vRc5St1Ci4PKDp/4lG66r01cay
-	s3HP0M5zp5eNNSIiSZNpyw4B9kUw==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbs-0000tY-CV; Sat, 06 Jun 2026 22:27:12 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.95)
-	id 1wVxbn-006V18-79;
-	Sat, 06 Jun 2026 22:27:07 +0200
-From: david.laight.linux@gmail.com
-To: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] kernel/trace/trace_printk: Use kstrdup() instead of kmalloc() and strcpy()
-Date: Sat,  6 Jun 2026 21:26:28 +0100
-Message-Id: <20260606202633.5018-34-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="it4IPQRc"
+Received: from hwang4-g16.. (unknown [120.244.199.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id B19673F861;
+	Sun,  7 Jun 2026 07:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1780817078;
+	bh=ddikXD3l8TYjtFnVsxE8N0l73vEnH4C/n+VO9I+q5cc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=it4IPQRcsCT6KdGN18nITlblRVKq6EImDBlDcwQfsVzruEcHYiZZbIUVDfEt+Zvmk
+	 weaS4ACzupm8r7FQ4Vz3kBbykmjsAcpXE2WhXmswJ2ncxisekb+hLYdHWZdQdNR4Qf
+	 vN3T9GZh2cSkKAvyD5qbp5F+ow5bko3JMUtCO+b6y1db/lUAPXlFTU1xKjeEKcU9gG
+	 8Hog3tPexSt/hMZFTcwwhFCv8IQod+nKjaTaGtMPuq2kuEL1i34XtBTXUcGO+mz0//
+	 v8rDGad+zSYE4gd5/aTuefMN0mlZL2CGiwsfQNvOU25o0drAUhdR2f1fnjiRyfogRf
+	 J90Aau6gFU5Tcwe7W5fo8GOPjFTv0qWg7/200YDLh9QAbsCDkX5PBmYixJ9i/94rIr
+	 8u1DFBcTCae2Oy+QRAJGS4nBF1I5jO6R3Z/r5Rwv5YaNfDSl4SzZCwl9AigVoyF4Ji
+	 yBQKKoiHeatjp/X8g+o2aHIPfy6JDr6kAuXnr6T4h0O9Q0IpPsCt1hvd0CAl7GwRhL
+	 Re8xSkb5++ycp7BOR6CuYy4FAUUVfm6JrLNiNv0QFFDBmReaWaCd4n8OGMl0yYsUlp
+	 0SIDTSE7M5FpSnYNM99qI4kvIi2lojlqjcVS/5fh/ZeLSXNir9i0rEM1B10W3kb092
+	 dmqJhvlHXb2Go2k7qhza7VoM=
+From: Hui Wang <hui.wang@canonical.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	pjw@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	shuah@kernel.org,
+	wangfushuai@baidu.com,
+	linux-kselftest@vger.kernel.org
+Cc: hui.wang@canonical.com
+Subject: [PATCH 0/2] ring-buffer: Fix forced 8-byte alignment event length
+Date: Sun,  7 Jun 2026 15:24:29 +0800
+Message-ID: <20260607072431.125633-1-hui.wang@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,51 +58,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David Laight <david.laight.linux@gmail.com>
+This series fixes the event length reported by ring_buffer_event_length()
+when RB_FORCE_8BYTE_ALIGNMENT is enabled, and updates the ftrace
+trace_marker_raw selftest to account for that layout.
 
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
----
-This is one of a group of patches that remove potentially unbounded
-strcpy() calls.
+On architectures where CONFIG_HAVE_64BIT_ALIGNED_ACCESS is enabled, the
+ring buffer forces 8-byte alignment. In that mode, the event length is
+stored in event->array[0] even for small data events, and the payload
+starts from event->array[1]. However, ring_buffer_event_length() only
+subtracted the extra length field for large events. As a result, small
+events reported a payload length 4 bytes larger than expected.
 
-They are mostly replaced by strscpy() or, when strlen() has just been
-called, with memcpy() (usually including the '\0').
+This was observed on riscv64 with CONFIG_HAVE_64BIT_ALIGNED_ACCESS=y
+when running the ftrace trace_marker_raw.tc selftest. The first patch
+fixes the ring-buffer length calculation. The second patch updates the
+selftest expectation when the running kernel uses forced 8-byte
+alignment.
 
-Calls with copy string literals into arrays are left unchanged.
-They are safe and easily detected as such.
+Hui Wang (2):
+  ring-buffer: Fix event length with forced 8-byte alignment
+  selftests/ftrace: Account for 8-byte aligned trace_marker_raw events
 
-The changes were made by getting the compiler to detect the calls and
-then fixing the code by hand.
+ kernel/trace/ring_buffer.c                    |  3 +-
+ .../ftrace/test.d/00basic/trace_marker_raw.tc | 16 +++++++--
+ .../testing/selftests/ftrace/test.d/functions | 33 +++++++++++++++++++
+ 3 files changed, 48 insertions(+), 4 deletions(-)
 
-Note that all the changes are only compile tested.
-
-Some Makefiles were changed to allow files to contain strcpy().
-As well as 'difficult to fix' files, this included 'show' functions
-as they really need to use sysfs_emit() or seq_printf().
-
-All the patches are being sent individually to avoid very long cc lists.
-Apologies for the terse commit messages and likely unexpected tags.
-(There are about 100 patches in total.)
-
- kernel/trace/trace_printk.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index 3ea17af60169..98171a2398e4 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -71,10 +71,9 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
- 		fmt = NULL;
- 		tb_fmt = kmalloc_obj(*tb_fmt);
- 		if (tb_fmt) {
--			fmt = kmalloc(strlen(*iter) + 1, GFP_KERNEL);
-+			fmt = kstrdup(*iter, GFP_KERNEL);
- 			if (fmt) {
- 				list_add_tail(&tb_fmt->list, &trace_bprintk_fmt_list);
--				strcpy(fmt, *iter);
- 				tb_fmt->fmt = fmt;
- 			} else
- 				kfree(tb_fmt);
 -- 
-2.39.5
+2.43.0
 
