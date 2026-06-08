@@ -1,32 +1,32 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA32390CBF
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 07:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177F1390212
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 07:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780904266; cv=none; b=lNcUBIHg4tTMBLOgzewOMTbSZZlcjq15OBJvclYgFplJLJ0ImzSSltcpFoSCoaiOH9GDZBGUajrGqj5pjJCWpB9g0wzwgV9NIk0Xs8ax1h80S6mOeJ2RTexnCJigEvbNb6e26Lqq3I/YutZDPLlMZjZMwpBml9KZ1+qM5tctXc4=
+	t=1780904495; cv=none; b=gVlSa5T39ER4PNi0zUxqvfrCEbDh3/lH7My8HOhFn0XLPa25weIIzvVf7YJOiafnkiRYGbPO8otEc4Akzs5TJL9L/l8U1OKXbJieDyyADdLaqmrLC1eT4y3FE/eNzvZRrcW0ELci6EymDOo5/9qtxEqn8XB+9U2H0Rf8+l068yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780904266; c=relaxed/simple;
-	bh=Wsy3SV/x9gKjvdWcQFrp0CjrpEuT+cadsrsidaj4rB8=;
+	s=arc-20240116; t=1780904495; c=relaxed/simple;
+	bh=CyzJ9u89Ow4fnNhFsEexe5yqj0DRaCFbLEw4ahhTDo8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k9ogOUPxzUojlv7jdJkDgYAe7yvYu+nYl8tWi89M4W0jByCwVQy7ag2kfMgYHkj7mU2hKJ4mn5N04zIpRWCI2IP37KMk70mJls96AvsV5QGK082Yb3Weh4fStA1sOkDNgc88g1e+SNjuzXGoDwH4FuoivEjR+BtToLgiTfcfgWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ak6sWILD; arc=none smtp.client-ip=95.215.58.174
+	 MIME-Version:Content-Type; b=gJwj5KmMXxzJPDb2j490WBHeG8nYORkERpRRdJi9SwpfMqG8TZP7eAWe7R51BiwKE5DoitcomDfm9x7z72ag0xfV+/xxseeHdC9H1xPWc9tpAkzz8raS/n3IY+iVvbVq6uCsJMbDCxzyrA0Fyrf9dn+MdCk3u7VM1Kzt2K8uGmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UOQYKXQD; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ak6sWILD"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UOQYKXQD"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780904262;
+	t=1780904481;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wsy3SV/x9gKjvdWcQFrp0CjrpEuT+cadsrsidaj4rB8=;
-	b=Ak6sWILDDx3J0D1mzuDOxeWn8ejkSI2YgDmzlNwy111F3FOcKNLITeLI7L5RS1mV3wHKKH
-	SHYDnc4PExJJNYS6SWRZhJdtTLt84QeGYdYHR1KHKTSLnWprM08aXIk2QqdHZTt966lXoa
-	/UgQul8jmc07M9P9KRQQLPUc+HzmVqs=
+	bh=CyzJ9u89Ow4fnNhFsEexe5yqj0DRaCFbLEw4ahhTDo8=;
+	b=UOQYKXQDWMlxueS2KveD1eFP9YEyiTVoQNYGe9ZCf7hsfPLtvsZl3JZRIEYi9Hfn472pCH
+	n6gJQpBOq/1a+eHXexJrfeCgJAEOqbloKJHSlmTRkj5YoBlTDuZSriZskIOMh920Hrzmuk
+	ICeMI+zNbtQtgAmUmiMn8rBsBEStbO4=
 From: Lance Yang <lance.yang@linux.dev>
 To: npache@redhat.com
 Cc: linux-doc@vger.kernel.org,
@@ -87,12 +87,12 @@ Cc: linux-doc@vger.kernel.org,
 	ying.huang@linux.alibaba.com,
 	ziy@nvidia.com,
 	zokeefe@google.com,
-	usama.arif@linux.dev
-Subject: Re: [PATCH mm-unstable v19 12/14] mm/khugepaged: avoid unnecessary mTHP collapse attempts
-Date: Mon,  8 Jun 2026 15:36:49 +0800
-Message-Id: <20260608073649.99133-1-lance.yang@linux.dev>
-In-Reply-To: <20260605161422.213817-13-npache@redhat.com>
-References: <20260605161422.213817-13-npache@redhat.com>
+	bagasdotme@gmail.com
+Subject: Re: [PATCH mm-unstable v19 14/14] Documentation: mm: update the admin guide for mTHP collapse
+Date: Mon,  8 Jun 2026 15:41:06 +0800
+Message-Id: <20260608074106.2945-1-lance.yang@linux.dev>
+In-Reply-To: <20260605161422.213817-15-npache@redhat.com>
+References: <20260605161422.213817-15-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -104,14 +104,12 @@ Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
 
-On Fri, Jun 05, 2026 at 10:14:19AM -0600, Nico Pache wrote:
->There are cases where, if an attempted collapse fails, all subsequent
->orders are guaranteed to also fail. Avoid these collapse attempts by
->bailing out early.
+On Fri, Jun 05, 2026 at 10:14:21AM -0600, Nico Pache wrote:
+>Now that we can collapse to mTHPs lets update the admin guide to
+>reflect these changes and provide proper guidance on how to utilize it.
 >
 >Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
->Acked-by: Usama Arif <usama.arif@linux.dev>
->Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+>Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 >Signed-off-by: Nico Pache <npache@redhat.com>
 >---
 
