@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CF33CB8F4;
-	Mon,  8 Jun 2026 14:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA493BBFBF;
+	Mon,  8 Jun 2026 14:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780928721; cv=none; b=fAVMvQ5ONY56ViqpW5cs9ILyBC8aYRLNX50VQwgSmPumHUZ6/yTXL45v6TNz+H2P2GM+rgTQzHKKHDsoLqhIZdfSDOx5K2QL39+jy7456NJ4pSxKDQsU3odqGi3Fw6aeks0QUT+mqSDEwDVuCwKcfBlK+zzQwH3vlbwux3IGpVM=
+	t=1780928732; cv=none; b=SYe8muEDYEFDdlgteFWgDIr93uqU/4KJgd/7PXe7BagUb4zY4T5j7BJPmzLhxRfE5ISEhbssjboE0bmPfGDWqtxfDQnesnBl+Mnm1TO2tsAnHuK4saFJoxMytjwjjnFZlbfIVcUH9AIyUaTvDY46/N2LqYpZ5araKNVDR+tlPxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780928721; c=relaxed/simple;
-	bh=jjC2TroFZ4GHCUKzT+lReLkVA6zya7eZH2JC/izyyPo=;
+	s=arc-20240116; t=1780928732; c=relaxed/simple;
+	bh=OUIfpm4yjESU1AoCPcmkXCaC7HzyHnY3p+M2tI4H2Uw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eViWZFZBSDbmaCaIH9K4ftXdgwuo78fy5A36fFlvkw7L81B1PAwqJsL54PBQVp3Mg4rp6LCa/YIuER7YIR3+vNPBbuCRYhV7ApnZyj351oPCgjM6mm9Z9BkXFhcIhMF/VWwzwUaAXFWmJW94npD+H/+C+9YlKtTSRsVi4dPB+yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lg/jHuIr; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=btygi2q5l/A9YdNoFvixVAIlgGXz6vUo1JjPH799gDt+7WSHzXFA0DMfhqbaNoPuopKkoc7iOUQ2HdCCak9SR89DM1sWDlQmABqyVvTzb2PXRTfZbl4cg22tv29jOyGOLNNMmcBg0QrT8u1mzloZpRPecbo9wNipYgdadlby9kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POvJmeMY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lg/jHuIr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E7F1F00893;
-	Mon,  8 Jun 2026 14:25:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POvJmeMY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 484AC1F00893;
+	Mon,  8 Jun 2026 14:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780928720;
-	bh=QaiBhxkgTSsycOO0IquMLBjmDZbI+8btldjP6ELN4Ys=;
+	s=k20260515; t=1780928730;
+	bh=LXebLbU2PlO++pXKjvrv4XdGUtGGv/sVqpWNGZI12mI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lg/jHuIr4j8JLH030+n/9wcJYAi+zCoL6XWz9P1JTnNlvFYfOuOg5Ez5PtDri0veI
-	 lwlFUU+z2iuuu0XGg4imf26Pn2mmK3wHbNbIwUU73MyywQL/auzl9lTrIRla5UN4Ql
-	 Jm5XP3weIldrJf6wsd2BoIh9Pfsi7TTk8muwb56r+e9kwkK/NaNDUEDlQKd/YSK6Jb
-	 l9m9aJmV9S67J9qD0TO4pXCct3Ewc/JwrUXldpVNQm7diYQt+TBfP5iYgloJ7ubby6
-	 KaRafBJEdIwC61o0lJuxuEDrxgkuqwQ5kWEA05QCqukCl2fep7DqbvrKDE/g+kZUAk
-	 ip6mU6SrEZ12w==
+	b=POvJmeMYSx9UAj3HfJbX4UIIte/iPDJNRUJhZM9IzDYz/oDcVE6URGfU+d1nJrcKe
+	 ZXtDMBhfgr2Y7DbV1TS+NXJRMTYhXvns+p+TigtDhfuTfA6hixbsfiFqkK8xHWTN8J
+	 RrpUApPFVi+AwTTjRJBF/e8fS7NFcn7uXG8EJFaJ5Uj9S5qgznR04rqVYHTfWheqeS
+	 amuKcmhirwSZEAT6UOuy1BzoAsEKsH4ZpjBblT+SsUb8p4rEd8VS4Sqb7ay377YwyH
+	 36J5EBi2TK0KQ6+lcNeIoLyS+UxjLpi6C+Yg42J1nFzuQfIBOf990eWgzE1C2E7LsE
+	 A7Ph4C33Sz46A==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -36,9 +36,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH 6/7] tracing/probes: Support reserved this_cpu_ptr() method
-Date: Mon,  8 Jun 2026 23:25:16 +0900
-Message-ID: <178092871603.163648.8025563775854608488.stgit@devnote2>
+Subject: [RFC PATCH 7/7] tracing/probes: Add a new testcase for BTF typecasts
+Date: Mon,  8 Jun 2026 23:25:26 +0900
+Message-ID: <178092872598.163648.6705606677777891702.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178092865666.163648.10457567771536160909.stgit@devnote2>
 References: <178092865666.163648.10457567771536160909.stgit@devnote2>
@@ -54,63 +54,217 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-The +PCPU() dereference operator was introduced in trace probes to
-access a per-CPU pointer of a CPU local variable. However, kernel
-developers are more familiar with the "this_cpu_ptr()" macro.
+With the introduction of container_of-style BTF typecasting and
+per-CPU variable access support in trace probes, we need a way to
+verify their functionality and prevent regressions.
 
-To make trace probe syntax more intuitive and aligned with standard
-kernel macros, introduce support for "this_cpu_ptr(<fetcharg>)" as a
-reserved method.
+Add a new ftrace kselftest and update the trace event sample module to
+test and validate these features.
 
+Specifically, update the trace-events-sample module to set up a periodic
+timer whose callback accesses a per-CPU counter. Introduce a new sample
+trace event, foo_timer_fn, to trace this callback and log the current
+counter value.
+
+Then, add a new test case, btf_probe_event.tc, which defines a dynamic
+probe on the timer callback. The probe uses BTF typecasting to recover
+the parent structure from the timer argument and +CPU() to fetch the
+per-CPU counter. The test verifies the integrity of the implementation
+by ensuring the values recorded by the dynamic probe match those from
+the static tracepoint.
+
+Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace.c       |    2 +-
- kernel/trace/trace_probe.c |    7 +++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ samples/trace_events/trace-events-sample.c         |   38 ++++++++++++++-
+ samples/trace_events/trace-events-sample.h         |   34 ++++++++++++-
+ .../ftrace/test.d/dynevent/btf_probe_event.tc      |   52 ++++++++++++++++++++
+ 3 files changed, 120 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2b8c8ac4036a..60ab839d0867 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4332,7 +4332,7 @@ static const char readme_msg[] =
- 	"\t           $stack<index>, $stack, $retval, $comm, $current\n"
- #endif
- 	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
--	"\t           +CPU(<fetcharg>), +PCPU(<fetcharg>)\n"
-+	"\t           +CPU(<fetcharg>), +PCPU(<fetcharg>), this_cpu_ptr(<fetcharg>)\n"
- 	"\t     kernel return probes support: $retval, $arg<N>, $comm\n"
- 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
- 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index fa6757222fe6..27be0664cdf3 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1315,6 +1315,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 		struct fetch_insn **pcode, struct fetch_insn *end,
- 		struct traceprobe_parse_context *ctx)
+diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
+index ecc7db237f2e..770315812218 100644
+--- a/samples/trace_events/trace-events-sample.c
++++ b/samples/trace_events/trace-events-sample.c
+@@ -94,6 +94,20 @@ static int simple_thread_fn(void *arg)
+ static DEFINE_MUTEX(thread_mutex);
+ static int simple_thread_cnt;
+ 
++static struct foo_timer_data *foo_timer_data;
++
++static void sample_timer_cb(struct timer_list *t)
++{
++	struct foo_timer_data *data = container_of(t, struct foo_timer_data, timer);
++
++	get_cpu();
++	trace_foo_timer_fn(data);
++	(*this_cpu_ptr(data->counter))++;
++	put_cpu();
++
++	mod_timer(t, jiffies + HZ);
++}
++
+ int foo_bar_reg(void)
  {
-+	static const char *THIS_CPU_PTR_STR = "this_cpu_ptr(";
- 	struct fetch_insn *code = *pcode;
- 	unsigned long param;
- 	int deref = FETCH_OP_DEREF;
-@@ -1426,6 +1427,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 			ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
- 			arg = tmp + 1;
- 		}
-+handle_deref:
- 		tmp = strrchr(arg, ')');
- 		if (!tmp) {
- 			trace_probe_log_err(ctx->offset + strlen(arg),
-@@ -1476,6 +1478,11 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 		ret = handle_typecast(arg, pcode, end, ctx);
- 		break;
- 	default:
-+		if (str_has_prefix(arg, THIS_CPU_PTR_STR)) {
-+			arg += strlen(THIS_CPU_PTR_STR);
-+			deref = FETCH_OP_CPU_PTR;
-+			goto handle_deref;
-+		}
- 		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
- 			if (!tparg_is_function_entry(ctx->flags) &&
- 			    !tparg_is_function_return(ctx->flags)) {
+ 	mutex_lock(&thread_mutex);
+@@ -128,9 +142,27 @@ void foo_bar_unreg(void)
+ 
+ static int __init trace_event_init(void)
+ {
++	foo_timer_data = kzalloc_obj(*foo_timer_data, GFP_KERNEL);
++	if (!foo_timer_data)
++		return -ENOMEM;
++
++	foo_timer_data->name = "sample_timer_counter";
++	foo_timer_data->counter = alloc_percpu(int);
++	if (!foo_timer_data->counter) {
++		kfree(foo_timer_data);
++		return -ENOMEM;
++	}
++
++	timer_setup(&foo_timer_data->timer, sample_timer_cb, 0);
++	mod_timer(&foo_timer_data->timer, jiffies + HZ);
++
+ 	simple_tsk = kthread_run(simple_thread, NULL, "event-sample");
+-	if (IS_ERR(simple_tsk))
++	if (IS_ERR(simple_tsk)) {
++		timer_delete_sync(&foo_timer_data->timer);
++		free_percpu(foo_timer_data->counter);
++		kfree(foo_timer_data);
+ 		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -143,6 +175,10 @@ static void __exit trace_event_exit(void)
+ 		kthread_stop(simple_tsk_fn);
+ 	simple_tsk_fn = NULL;
+ 	mutex_unlock(&thread_mutex);
++
++	timer_delete_sync(&foo_timer_data->timer);
++	free_percpu(foo_timer_data->counter);
++	kfree(foo_timer_data);
+ }
+ 
+ module_init(trace_event_init);
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+index 1a05fc153353..816848a456a2 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -247,12 +247,14 @@
+  */
+ 
+ /*
+- * It is OK to have helper functions in the file, but they need to be protected
+- * from being defined more than once. Remember, this file gets included more
+- * than once.
++ * It is OK to have helper functions and data structures in the file, but they
++ * need to be protected from being defined more than once. Remember, this file
++ * gets included more than once.
+  */
+ #ifndef __TRACE_EVENT_SAMPLE_HELPER_FUNCTIONS
+ #define __TRACE_EVENT_SAMPLE_HELPER_FUNCTIONS
++#include <linux/timer.h>
++
+ static inline int __length_of(const int *list)
+ {
+ 	int i;
+@@ -270,6 +272,13 @@ enum {
+ 	TRACE_SAMPLE_BAR = 4,
+ 	TRACE_SAMPLE_ZOO = 8,
+ };
++
++struct foo_timer_data {
++	const char		*name;
++	struct timer_list	timer;
++	int __percpu		*counter;
++};
++
+ #endif
+ 
+ /*
+@@ -595,6 +604,25 @@ TRACE_EVENT(foo_rel_loc,
+ 		  __get_rel_bitmask(bitmask),
+ 		  __get_rel_cpumask(cpumask))
+ );
++
++TRACE_EVENT(foo_timer_fn,
++
++	TP_PROTO(struct foo_timer_data *data),
++
++	TP_ARGS(data),
++
++	TP_STRUCT__entry(
++		__string(	name,			data->name	)
++		__field(	int,			count		)
++	),
++
++	TP_fast_assign(
++		__assign_str(name);
++		__entry->count	= *this_cpu_ptr(data->counter);
++	),
++
++	TP_printk("name=%s count=%d", __get_str(name), __entry->count)
++);
+ #endif
+ 
+ /***** NOTICE! The #if protection ends here. *****/
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
+new file mode 100644
+index 000000000000..f1980650dbe2
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
+@@ -0,0 +1,52 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: BTF event with typecast and percpu access
++# requires: dynamic_events " +CPU(<fetcharg>)":README "[(structname[,field])]<argname>[->field[->field|.field...]]":README
++
++# Check if the sample module is loaded
++if ! lsmod | grep -q trace_events_sample; then
++  modprobe trace-events-sample || exit_unsupported
++fi
++
++echo 0 > events/enable
++echo > dynamic_events
++
++# The sample_timer_cb(struct timer_list *t) is called.
++# We want to check (STRUCT,FIELD)VAR typecast and +PCPU() dereference.
++# (foo_timer_data,timer)t converts t to struct foo_timer_data * using container_of.
++# data->counter is a per-cpu pointer to int.
++# +PCPU(data->counter) should give the per-cpu address of the counter.
++# *+PCPU(data->counter) should give the value of the counter.
++
++echo 'f:mysample/myevent sample_timer_cb name=(foo_timer_data,timer)t->name:string count=+CPU((foo_timer_data,timer)t->counter)' >> dynamic_events
++
++echo 1 > events/mysample/myevent/enable
++echo 1 > events/sample-trace/foo_timer_fn/enable
++
++sleep 2
++
++echo 0 > events/mysample/myevent/enable
++echo 0 > events/sample-trace/foo_timer_fn/enable
++
++# Compare the values.
++MATCH=0
++while read line; do
++  if echo $line | grep -q "foo_timer_fn:"; then
++    NAME=`echo $line | sed 's/.*name=\([^ ]*\) .*/\1/'`
++    COUNT=`echo $line | sed 's/.*count=\([^ ]*\).*/\1/'`
++    if grep -q "myevent:.*name=\"${NAME}\" count=$COUNT" trace; then
++       MATCH=$((MATCH+1))
++    fi
++  fi
++done < trace
++
++if [ $MATCH -eq 0 ]; then
++  echo "No matching events found"
++  exit_fail
++fi
++
++# Clean up
++echo 0 > events/mysample/myevent/enable
++echo 0 > events/sample-trace/foo_timer_fn/enable
++echo > dynamic_events
++clear_trace
 
