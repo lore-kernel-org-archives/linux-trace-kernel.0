@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5608F3B47D2;
-	Mon,  8 Jun 2026 08:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762933B6360;
+	Mon,  8 Jun 2026 08:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780909053; cv=none; b=hJqQcVEfxXhWXwHkPiYkwHD4gGWJG0PQVmK6WTQK7b5VSA2BrxgW6qX6khyXU1pGGirSvPoHBzD/U0ZkVLnopjft63TkQYc2lUFSQIeelR/l6gEI3GiJQ3/xGaIldvLPv+1PXhlmK0gZtFL+DRjEb7a1WE7+igUNdSeY/3ZrvTI=
+	t=1780909054; cv=none; b=B8iwMthb77KvVVTeOvZyjP3SpOU+4YMSKXN/iiVRtuTBtHJw38q8P9k1/vO2IclXkN/QV0PcXwzHaGpC9WypwB50HFScrn1bgaYRJCcBpQdfu5YkpgUHQ8i/03La1UNcV0q1D27vxza9Q1yUI+3n75D6kUoELONXW7tpgli0zF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780909053; c=relaxed/simple;
-	bh=t8Yp1bXY6HZ9xmibsWPBng/F81fqrrv91sgUj0BddMY=;
+	s=arc-20240116; t=1780909054; c=relaxed/simple;
+	bh=iHDbEV5tgOIJ+prrWKE06PpPskR06N/V/uw3z0vBMvQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rcqfWg3CMFHzVT+7h5FZLG4sLOOP4AfSLRJENhTT4BxJY47FyPI3wfSTTDjXMNFzZGfRa8gOj7b7shqp9Lwf1lCzv+xF9tmUTnChB5sw8CDKk+9gesdQhDba49xmEB7k7HCiCTBrxr2krqViJydad/OfXKWTo9o6rO94a84tgvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tt+IgOgh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KOz5IHLP; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=g+h9bGqmuS0j/xkgZINj9y9/d6lSZwPTQbCro8Fa8q/nOWhmTkgiISQ94Y8gOzl/gzi7XP0MWi9Bwqg57ChnkxAhnwJMzY82QFFP0vF+TA8c+YZtpz30v9J5d663kgQUj8ECky0QFRjmatYlBlx5pnPY1rEyJfCbyotw4HwAv7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lN+Z6GEg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=54F5qPTs; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tt+IgOgh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KOz5IHLP"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lN+Z6GEg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="54F5qPTs"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1780909047;
+	s=2020; t=1780909049;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8uyMduLEgsDHq0m1vaQkuvyF2pN5Tlwf1yEvS+sWVhs=;
-	b=Tt+IgOghmBoX8p3XpUedX0gjNYukASw4QY3QOboRjODmO/3SB5hAwCw8ETg0eOyGEAIO6f
-	bHNA8qnW0vJIX6YfX7mb+NiY2jsmnhdQKCnKQf26zYp3+KFn3pbglfHHgr0KYT+vVh8h+Z
-	Gah2CVVQiGrCiOJtDrXrftOUn41iSJMpTxpXVI8ZAS8gfhrSxWsOYwrhX78+kN2wZ7Ge1w
-	/CrvjiCFoc5HFO5kPrPnqSJb51XfuWRs51MOyR41UspNImMymOevVPlrFA1Gm1tckSrk81
-	yjWQSv6LswAqsLCYm8Uzg0sOMnEcEFV8bWILQZ2bR+Ih4I7KHioJ12+Nk24rTg==
+	bh=nvdb9GWfB/xMqK59RK6jWy5HMpwfMv+MHfy3F+lWCTc=;
+	b=lN+Z6GEgqiW46xNDv28/8Z2Ts12zKdwsKfYccAWkVvlRUrvpC4EfozG6hgU9AlSCXKh0/N
+	UQVSymMCH+hOPdtjLS8YFcBrYWcLYGmRSerA/VNlePJSrROqe1sc0z5wTmJnn6srYQEkG6
+	spAv/gr6IZ2hbQK8btWdmaU/kQRD/LbvFRuQLbBQ+e64ri+9XLf/2i2bziz/S92D3q7uB6
+	77FfowAbVTlbSRkBgDKZ3s0WgF9RY7UGLHq++GB72N6rVvzxvkbmKMTiCsR+lAyXB2wCS1
+	A9QMiWefz0ly7HeIi9Wt3+NtYkQULSMjopplgedzJ0UwXXZ7wW7vsQ/Zmm0EWw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1780909047;
+	s=2020e; t=1780909049;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8uyMduLEgsDHq0m1vaQkuvyF2pN5Tlwf1yEvS+sWVhs=;
-	b=KOz5IHLPS92bwGAH0+fPeINt1SCDdHnJx3H4VlC6GGexFnVQs4scN51+NxzIoqkvXKZdcX
-	UAlAtHhYMQywE0DA==
+	bh=nvdb9GWfB/xMqK59RK6jWy5HMpwfMv+MHfy3F+lWCTc=;
+	b=54F5qPTsghEn91t/uj/O7ScIR+a7+0SK+HZLltzuJmFuUr6U+VuZo0Wt72d0l0j1TBEzur
+	cjXZIg8WwJR7i+AA==
 To: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 07/13] rv: Simplify hybrid automata monitors's clock variables
-Date: Mon,  8 Jun 2026 10:57:03 +0200
-Message-ID: <08188c28f274da63a3f8549add3086a92aef45e5.1780908661.git.namcao@linutronix.de>
+Subject: [PATCH v3 13/13] verification/rvgen: Remove dead code
+Date: Mon,  8 Jun 2026 10:57:09 +0200
+Message-ID: <0cecddde5da0f833871993c8089d0b3b79142229.1780908661.git.namcao@linutronix.de>
 In-Reply-To: <cover.1780908661.git.namcao@linutronix.de>
 References: <cover.1780908661.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,262 +58,310 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hybrid automata monitors's clock variables have two different
-representations:
-
-  - The invariant representation, which is the timestamp when the invariant
-    expires
-
-  - The guard representation, which is the timestamp when the clock is last
-    reset
-
-This dual representation makes the logic quite difficult to follow (well,
-at least for me). It also complicates the monitors and the generation tool,
-as it requires conversion back and forth between the representation.
-
-Simplify by using the clock variables for a single purpose: storing the
-time stamp since the clock is last reset.
-
-This also allows simplifying rvgen, which will be done in a follow-up
-commit.
+The conversion to use Lark left some dead code behind. Remove them.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-v3:
-  - fix wrongly passing expire to ha_invariant_passed_jiffy()
-  - typo
+v3: delete unused import
 ---
- include/rv/ha_monitor.h                  | 64 ++++++------------------
- kernel/trace/rv/monitors/nomiss/nomiss.c | 18 +------
- kernel/trace/rv/monitors/stall/stall.c   |  2 +-
- 3 files changed, 19 insertions(+), 65 deletions(-)
+ tools/verification/rvgen/rvgen/automata.py | 157 ---------------------
+ tools/verification/rvgen/rvgen/dot2k.py    |  29 +---
+ 2 files changed, 1 insertion(+), 185 deletions(-)
 
-diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-index 28d3c74cabfc..9144b4c06f3f 100644
---- a/include/rv/ha_monitor.h
-+++ b/include/rv/ha_monitor.h
-@@ -327,19 +327,8 @@ static inline void __ha_monitor_timer_callback(struct =
-ha_monitor *ha_mon)
- }
+diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verificatio=
+n/rvgen/rvgen/automata.py
+index a3be327c2a73..bfc997f630d7 100644
+--- a/tools/verification/rvgen/rvgen/automata.py
++++ b/tools/verification/rvgen/rvgen/automata.py
+@@ -9,9 +9,6 @@
+ #   Documentation/trace/rv/deterministic_automata.rst
 =20
- /*
-- * The clock variables have 2 different representations in the env_store:
-- * - The guard representation is the timestamp of the last reset
-- * - The invariant representation is the timestamp when the invariant expi=
-res
-- * As the representations are incompatible, care must be taken when switch=
-ing
-- * between them: the invariant representation can only be used when starti=
-ng a
-- * timer when the previous representation was guard (e.g. no other invaria=
-nt
-- * started since the last reset operation).
-- * Likewise, switching from invariant to guard representation without a re=
-set
-- * can be done only by subtracting the exact value used to start the invar=
-iant.
-- *
-- * Reading the environment variable (ha_get_clk) also reflects this differ=
-ence
-- * any reads in states that have an invariant return the (possibly negativ=
-e)
-- * time since expiration, other reads return the time since last reset.
-+ * The clock variables store the time epoch - the timestamp when the clock=
- was last reset.
-+ * They are read by subtracting the time epoch from the current time.
-  */
+ import ntpath
+-import re
+-from typing import Iterator
+-from itertools import islice
 =20
- /*
-@@ -353,31 +342,21 @@ static inline void ha_reset_clk_ns(struct ha_monitor =
-*ha_mon, enum envs env, u64
- {
- 	WRITE_ONCE(ha_mon->env_store[env], time_ns);
- }
--static inline void ha_set_invariant_ns(struct ha_monitor *ha_mon, enum env=
-s env,
--				       u64 value, u64 time_ns)
--{
--	WRITE_ONCE(ha_mon->env_store[env], time_ns + value);
--}
--static inline bool ha_check_invariant_ns(struct ha_monitor *ha_mon,
--					 enum envs env, u64 time_ns)
-+static inline bool ha_check_invariant_ns(struct ha_monitor *ha_mon, enum e=
-nvs env,
-+					 u64 time_ns, u64 expire_ns)
- {
--	return READ_ONCE(ha_mon->env_store[env]) >=3D time_ns;
-+	return READ_ONCE(ha_mon->env_store[env]) >=3D time_ns - expire_ns;
- }
- /*
-  * ha_invariant_passed_ns - prepare the invariant and return the time sinc=
-e reset
-  */
--static inline u64 ha_invariant_passed_ns(struct ha_monitor *ha_mon, enum e=
-nvs env,
--				   u64 expire, u64 time_ns)
-+static inline u64 ha_invariant_passed_ns(struct ha_monitor *ha_mon, enum e=
-nvs env, u64 time_ns)
- {
--	u64 passed =3D 0;
+ import lark
+=20
+@@ -356,19 +353,6 @@ class State:
+         self.name =3D name
+         self.inv =3D inv
+=20
+-class _ConstraintKey:
+-    """Base class for constraint keys."""
 -
- 	if (env < 0 || env >=3D ENV_MAX_STORED)
- 		return 0;
- 	if (ha_monitor_env_invalid(ha_mon, env))
- 		return 0;
--	passed =3D ha_get_env(ha_mon, env, time_ns);
--	ha_set_invariant_ns(ha_mon, env, expire - passed, time_ns);
--	return passed;
-+	return ha_get_env(ha_mon, env, time_ns);
- }
-=20
- /*
-@@ -391,32 +370,21 @@ static inline void ha_reset_clk_jiffy(struct ha_monit=
-or *ha_mon, enum envs env)
- {
- 	WRITE_ONCE(ha_mon->env_store[env], get_jiffies_64());
- }
--static inline void ha_set_invariant_jiffy(struct ha_monitor *ha_mon,
--					  enum envs env, u64 value)
-+static inline bool ha_check_invariant_jiffy(struct ha_monitor *ha_mon, enu=
-m envs env,
-+					    u64 time_ns, u64 expire_jiffy)
- {
--	WRITE_ONCE(ha_mon->env_store[env], get_jiffies_64() + value);
--}
--static inline bool ha_check_invariant_jiffy(struct ha_monitor *ha_mon,
--					    enum envs env, u64 time_ns)
--{
--	return time_after64(READ_ONCE(ha_mon->env_store[env]), get_jiffies_64());
+-class _StateConstraintKey(_ConstraintKey, int):
+-    """Key for a state constraint. Under the hood just state_id."""
+-    def __new__(cls, state_id: int):
+-        return super().__new__(cls, state_id)
 -
-+	return time_after64(READ_ONCE(ha_mon->env_store[env]), get_jiffies_64() -=
- expire_jiffy);
- }
- /*
-  * ha_invariant_passed_jiffy - prepare the invariant and return the time s=
-ince reset
-  */
--static inline u64 ha_invariant_passed_jiffy(struct ha_monitor *ha_mon, enu=
-m envs env,
--				      u64 expire, u64 time_ns)
-+static inline u64 ha_invariant_passed_jiffy(struct ha_monitor *ha_mon, enu=
-m envs env, u64 time_ns)
- {
--	u64 passed =3D 0;
+-class _EventConstraintKey(_ConstraintKey, tuple):
+-    """Key for an event constraint. Under the hood just tuple(state_id,eve=
+nt_id)."""
+-    def __new__(cls, state_id: int, event_id: int):
+-        return super().__new__(cls, (state_id, event_id))
 -
- 	if (env < 0 || env >=3D ENV_MAX_STORED)
- 		return 0;
- 	if (ha_monitor_env_invalid(ha_mon, env))
- 		return 0;
--	passed =3D ha_get_env(ha_mon, env, time_ns);
--	ha_set_invariant_jiffy(ha_mon, env, expire - passed);
--	return passed;
-+	return ha_get_env(ha_mon, env, time_ns);
- }
+ class AutomataError(Exception):
+     """Exception raised for errors in automata parsing and validation.
 =20
- /*
-@@ -463,14 +431,14 @@ static inline void ha_setup_timer(struct ha_monitor *=
-ha_mon)
- static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, enum en=
-vs env,
- 					u64 expire, u64 time_ns)
- {
--	u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, expire, time_ns);
-+	u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, time_ns);
+@@ -387,28 +371,10 @@ class Automata:
 =20
- 	mod_timer(&ha_mon->timer, get_jiffies_64() + expire - passed);
- }
- static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enum envs =
-env,
- 				     u64 expire, u64 time_ns)
- {
--	u64 passed =3D ha_invariant_passed_ns(ha_mon, env, expire, time_ns);
-+	u64 passed =3D ha_invariant_passed_ns(ha_mon, env, time_ns);
+     invalid_state_str =3D "INVALID_STATE"
+     init_marker =3D "__init_"
+-    node_marker =3D "{node"
+-    # val can be numerical, uppercase (constant or macro), lowercase (para=
+meter or function)
+-    # only numerical values should have units
+-    constraint_rule =3D re.compile(r"""
+-        ^
+-        (?P<env>[a-zA-Z_][a-zA-Z0-9_]+)  # C-like identifier for the env v=
+ar
+-        (?P<op>[!<=3D>]{1,2})              # operator
+-        (?P<val>
+-            [0-9]+ |                     # numerical value
+-            [A-Z_]+\(\) |                # macro
+-            [A-Z_]+ |                    # constant
+-            [a-z_]+\(\) |                # function
+-            [a-z_]+                      # parameter
+-        )
+-        (?P<unit>[a-z]{1,2})?            # optional unit for numerical val=
+ues
+-        """, re.VERBOSE)
+-    constraint_reset =3D re.compile(r"^reset\((?P<env>[a-zA-Z_][a-zA-Z0-9_=
+]+)\)")
 =20
- 	ha_start_timer_jiffy(ha_mon, ENV_MAX_STORED,
- 			     nsecs_to_jiffies(expire - passed + TICK_NSEC - 1), time_ns);
-@@ -516,7 +484,7 @@ static inline void ha_start_timer_ns(struct ha_monitor =
-*ha_mon, enum envs env,
- 				     u64 expire, u64 time_ns)
- {
- 	int mode =3D HRTIMER_MODE_REL_HARD;
--	u64 passed =3D ha_invariant_passed_ns(ha_mon, env, expire, time_ns);
-+	u64 passed =3D ha_invariant_passed_ns(ha_mon, env, time_ns);
+     def __init__(self, file_path, model_name=3DNone):
+         self.__dot_path =3D file_path
+         self.name =3D model_name or self.__get_model_name()
+-        self.__dot_lines =3D self.__open_dot()
+         self.__parse_tree =3D ParseTree(file_path)
+         self.transitions =3D self.__parse_transitions()
+         self.states, self.initial_state, self.final_states =3D self.__pars=
+e_states()
+@@ -435,57 +401,6 @@ class Automata:
 =20
- 	if (RV_MON_TYPE =3D=3D RV_MON_PER_CPU)
- 		mode |=3D HRTIMER_MODE_PINNED;
-@@ -525,7 +493,7 @@ static inline void ha_start_timer_ns(struct ha_monitor =
-*ha_mon, enum envs env,
- static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, enum en=
-vs env,
- 					u64 expire, u64 time_ns)
- {
--	u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, expire, time_ns);
-+	u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, time_ns);
+         return model_name
 =20
- 	ha_start_timer_ns(ha_mon, ENV_MAX_STORED,
- 			  jiffies_to_nsecs(expire - passed), time_ns);
-diff --git a/kernel/trace/rv/monitors/nomiss/nomiss.c b/kernel/trace/rv/mon=
-itors/nomiss/nomiss.c
-index 8ead8783c29f..515ece5ce0ca 100644
---- a/kernel/trace/rv/monitors/nomiss/nomiss.c
-+++ b/kernel/trace/rv/monitors/nomiss/nomiss.c
-@@ -57,24 +57,12 @@ static inline bool ha_verify_invariants(struct ha_monit=
-or *ha_mon,
- 					enum states next_state, u64 time_ns)
- {
- 	if (curr_state =3D=3D ready_nomiss)
--		return ha_check_invariant_ns(ha_mon, clk_nomiss, time_ns);
-+		return ha_check_invariant_ns(ha_mon, clk_nomiss, time_ns, DEADLINE_NS(ha=
-_mon));
- 	else if (curr_state =3D=3D running_nomiss)
--		return ha_check_invariant_ns(ha_mon, clk_nomiss, time_ns);
-+		return ha_check_invariant_ns(ha_mon, clk_nomiss, time_ns, DEADLINE_NS(ha=
-_mon));
- 	return true;
- }
-=20
--static inline void ha_convert_inv_guard(struct ha_monitor *ha_mon,
--					enum states curr_state, enum events event,
--					enum states next_state, u64 time_ns)
--{
--	if (curr_state =3D=3D next_state)
--		return;
--	if (curr_state =3D=3D ready_nomiss)
--		ha_inv_to_guard(ha_mon, clk_nomiss, DEADLINE_NS(ha_mon), time_ns);
--	else if (curr_state =3D=3D running_nomiss)
--		ha_inv_to_guard(ha_mon, clk_nomiss, DEADLINE_NS(ha_mon), time_ns);
--}
+-    def __open_dot(self) -> list[str]:
+-        dot_lines =3D []
+-        try:
+-            with open(self.__dot_path) as dot_file:
+-                dot_lines =3D dot_file.readlines()
+-        except OSError as exc:
+-            raise AutomataError(exc.strerror) from exc
 -
- static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
- 				    enum states curr_state, enum events event,
- 				    enum states next_state, u64 time_ns)
-@@ -122,8 +110,6 @@ static bool ha_verify_constraint(struct ha_monitor *ha_=
-mon,
- 	if (!ha_verify_invariants(ha_mon, curr_state, event, next_state, time_ns))
- 		return false;
-=20
--	ha_convert_inv_guard(ha_mon, curr_state, event, next_state, time_ns);
+-        if not dot_lines:
+-            raise AutomataError(f"{self.__dot_path} is empty")
 -
- 	if (!ha_verify_guards(ha_mon, curr_state, event, next_state, time_ns))
- 		return false;
+-        # checking the first line:
+-        line =3D dot_lines[0].split()
+-
+-        if len(line) < 2 or line[0] !=3D "digraph" or line[1] !=3D "state_=
+automaton":
+-            raise AutomataError(f"Not a valid .dot format: {self.__dot_pat=
+h}")
+-
+-        return dot_lines
+-
+-    def __get_cursor_begin_states(self) -> int:
+-        for cursor, line in enumerate(self.__dot_lines):
+-            split_line =3D line.split()
+-
+-            if len(split_line) and split_line[0] =3D=3D self.node_marker:
+-                return cursor
+-
+-        raise AutomataError("Could not find a beginning state")
+-
+-    def __get_cursor_begin_events(self) -> int:
+-        state =3D 0
+-        cursor =3D 0 # make pyright happy
+-
+-        for cursor, line in enumerate(self.__dot_lines):
+-            line =3D line.split()
+-            if not line:
+-                continue
+-
+-            if state =3D=3D 0:
+-                if line[0] =3D=3D self.node_marker:
+-                    state =3D 1
+-            elif line[0] !=3D self.node_marker:
+-                break
+-        else:
+-            raise AutomataError("Could not find beginning event")
+-
+-        cursor +=3D 1 # skip initial state transition
+-        if cursor =3D=3D len(self.__dot_lines):
+-            raise AutomataError("Dot file ended after event beginning")
+-
+-        return cursor
+-
+     def __parse_transitions(self):
+         transitions =3D []
 =20
-diff --git a/kernel/trace/rv/monitors/stall/stall.c b/kernel/trace/rv/monit=
-ors/stall/stall.c
-index 3c38fb1a0159..b265578f845c 100644
---- a/kernel/trace/rv/monitors/stall/stall.c
-+++ b/kernel/trace/rv/monitors/stall/stall.c
-@@ -38,7 +38,7 @@ static inline bool ha_verify_invariants(struct ha_monitor=
- *ha_mon,
- 					enum states next_state, u64 time_ns)
- {
- 	if (curr_state =3D=3D enqueued_stall)
--		return ha_check_invariant_jiffy(ha_mon, clk_stall, time_ns);
-+		return ha_check_invariant_jiffy(ha_mon, clk_stall, time_ns, threshold_ji=
-ffies);
- 	return true;
- }
+@@ -542,51 +457,6 @@ class Automata:
+         states.insert(0, initial_state)
+         return states, initial_state, final_states
 =20
+-    def __get_state_variables(self) -> tuple[list[str], str, list[str]]:
+-        # wait for node declaration
+-        states =3D []
+-        final_states =3D []
+-        initial_state =3D ""
+-
+-        has_final_states =3D False
+-        cursor =3D self.__get_cursor_begin_states()
+-
+-        # process nodes
+-        for line in islice(self.__dot_lines, cursor, None):
+-            split_line =3D line.split()
+-            if not split_line or split_line[0] !=3D self.node_marker:
+-                break
+-
+-            raw_state =3D split_line[-1]
+-
+-            #  "enabled_fired"}; -> enabled_fired
+-            state =3D raw_state.replace('"', '').replace('};', '').replace=
+(',', '_')
+-            if state.startswith(self.init_marker):
+-                initial_state =3D state[len(self.init_marker):]
+-            else:
+-                states.append(state)
+-                if "doublecircle" in line:
+-                    final_states.append(state)
+-                    has_final_states =3D True
+-
+-                if "ellipse" in line:
+-                    final_states.append(state)
+-                    has_final_states =3D True
+-
+-        if not initial_state:
+-            raise AutomataError("The automaton doesn't have an initial sta=
+te")
+-
+-        states =3D sorted(set(states))
+-        states.remove(initial_state)
+-
+-        # Insert the initial state at the beginning of the states
+-        states.insert(0, initial_state)
+-
+-        if not has_final_states:
+-            final_states.append(initial_state)
+-
+-        return states, initial_state, final_states
+-
+     def __get_event_variables(self) -> tuple[list[str], list[str]]:
+         events: list[str] =3D []
+         envs: list[str] =3D []
+@@ -609,26 +479,6 @@ class Automata:
+=20
+         return sorted(set(events)), sorted(set(envs))
+=20
+-    def _split_constraint_expr(self, constr: list[str]) -> Iterator[tuple[=
+str,
+-                                                                          =
+str | None]]:
+-        """
+-        Get a list of strings of the type constr1 && constr2 and returns a=
+ list of
+-        constraints and separators: [[constr1,"&&"],[constr2,None]]
+-        """
+-        exprs =3D []
+-        seps =3D []
+-        for c in constr:
+-            while "&&" in c or "||" in c:
+-                a =3D c.find("&&")
+-                o =3D c.find("||")
+-                pos =3D a if o < 0 or 0 < a < o else o
+-                exprs.append(c[:pos].replace(" ", ""))
+-                seps.append(c[pos:pos + 2].replace(" ", ""))
+-                c =3D c[pos + 2:].replace(" ", "")
+-            exprs.append(c)
+-            seps.append(None)
+-        return zip(exprs, seps)
+-
+     def __extract_env_var(self, constraint: ConstraintCondition):
+         if constraint.unit:
+             self.env_types[constraint.env] =3D constraint.unit
+@@ -697,10 +547,3 @@ class Automata:
+=20
+     def is_hybrid_automata(self) -> bool:
+         return bool(self.envs)
+-
+-    def is_event_constraint(self, key: _ConstraintKey) -> bool:
+-        """
+-        Given the key in self.constraints return true if it is an event
+-        constraint, false if it is a state constraint
+-        """
+-        return isinstance(key, _EventConstraintKey)
+diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
+vgen/rvgen/dot2k.py
+index e4b6c7c09170..a080b92334f9 100644
+--- a/tools/verification/rvgen/rvgen/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -8,12 +8,9 @@
+ # For further information, see:
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
+=20
+-from collections import deque
+ from .dot2c import Dot2c
+ from .generator import Monitor
+-from .automata import _EventConstraintKey, _StateConstraintKey, AutomataEr=
+ror
+-from .automata import ConstraintCondition
+-
++from .automata import ConstraintCondition, AutomataError
+=20
+ class dot2k(Monitor, Dot2c):
+     template_dir =3D "dot2k"
+@@ -217,9 +214,6 @@ class ha2k(dot2k):
+                 value *=3D 10**9
+         return str(value) + "ull"
+=20
+-    def __parse_single_constraint(self, rule: dict, value: str) -> str:
+-        return f"ha_get_env(ha_mon, {rule["env"]}{self.enum_suffix}, time_=
+ns) {rule["op"]} {value}"
+-
+     def __parse_guard_rule(self, rule) -> list[str]:
+         buff =3D []
+         for c, sep in rule.rules:
+@@ -233,12 +227,6 @@ class ha2k(dot2k):
+             buff.append(cond)
+         return buff
+=20
+-    def __get_constraint_env(self, constr: str) -> str:
+-        """Extract the second argument from an ha_ function"""
+-        env =3D constr.split("(")[1].split()[1].rstrip(")").rstrip(",")
+-        assert env.removesuffix(f"_{self.name}") in self.envs
+-        return env
+-
+     def __start_to_invariant_check(self, inv: ConstraintCondition) -> str:
+         # by default assume the timer has ns expiration
+         clock_type =3D "ns"
+@@ -249,21 +237,6 @@ class ha2k(dot2k):
+=20
+         return f"return ha_check_invariant_{clock_type}(ha_mon, {inv.env}_=
+{self.name}, time_ns, {value})"
+=20
+-    def __start_to_conv(self, constr: str) -> str:
+-        """
+-        Undo the storage conversion done by ha_start_timer_
+-        """
+-        return "ha_inv_to_guard" + constr[constr.find("("):]
+-
+-    def __parse_timer_constraint(self, rule: dict, value: str) -> str:
+-        # by default assume the timer has ns expiration
+-        clock_type =3D "ns"
+-        if self.env_types.get(rule["env"]) =3D=3D "j":
+-            clock_type =3D "jiffy"
+-
+-        return (f"ha_start_timer_{clock_type}(ha_mon, {rule["env"]}{self.e=
+num_suffix},"
+-                f" {value}, time_ns)")
+-
+     def __parse_invariant(self, inv):
+         # by default assume the timer has ns expiration
+         clock_type =3D "ns"
 --=20
 2.47.3
 
