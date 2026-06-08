@@ -1,219 +1,162 @@
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7185410D15;
-	Mon,  8 Jun 2026 15:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70E533E35C;
+	Mon,  8 Jun 2026 16:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780930978; cv=none; b=RDnzHqNB9woO/EAJCsYK2ietbl1tLg5MC5c5hN3dv58hVhg/BYqLkV59+sPNyajmS9KzVJdAj2ZL+8FyTq3c2CA9QUvYFd5QD4uTIcJYbsHdASgeNaQdNKHcRY40imJlXvf2xQABi6gufI0o9ulpThDOqo1y3tR+JnEy6v7rnyE=
+	t=1780935899; cv=none; b=NLN47rySaZU/cJ5DTrHdi7KH9lxrNaHxscA8+uTe9Ocxo+08vUY7t8K4vGhAn2cNSnP5B74nQmy0sahU7NbAsNxK+kCFf1HPfieE1qN7fL2PPil8DaLPA9/BcHmPnDP4A40C7Uk42toSSmkMq4RPQVvj0FzVNhdzUzGz14IA8aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780930978; c=relaxed/simple;
-	bh=F+cqJiAqbjmDqc1ICxBYmiqgg+UjAe3s2eQS+FQnPcQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l3b5Ia+VZscDmeHRnn4GS0fuYCo6Dhqe7zY1b1u8UxjBxpdxdMxQCsaPdFQ3gaWEatznVsJtUwNSZSipgRkqC2hRgreHG9zGXLcQU4yEIJqeJfnEuVZKmzyvqzQHS5eHRDGnBby77EDitrxGr31b7aiVBhYNyS0iA/75gxh8Jfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=mtZ5CeuF; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1780935899; c=relaxed/simple;
+	bh=EAWSBZHUbvF+BebKTrcH7f4eYwq+NcrjSdvoq/taW5o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KNcCxhmuVEjnPEqgX1athgJDrX6SeTMgXD9q13EghrPGE6F4hfETe/U0VuRrcmbGM/RrOMVqUVlENcp4hn7WhwNBIWq+lm7Np/Gh4ANkhwRK3585YyvZfzZWVaeLoFdwnigvad0KJqhpQOa69QZoHs48PthIEjDjpW2P7OfWyWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=d0knTwgK; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="mtZ5CeuF"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=PF89iBFGZWTNZRK9VOfuJ1iPwj8Hi/GsMeo0UG2WBCE=;
-	b=mtZ5CeuF6orVQ8hpQLYEJu0b0OkRqsBoQGAcM5HSEYbGfbzHZRvVNamgEmVHYtipNU6uOLKnJ
-	2qXRIISO7Qhep9R6d0mHmJxefwMHzDdSSX3Cg4q0HawYRJKVNuXFASkIGc634AzQ9k+Ndd/bDrQ
-	Uz/sYg8gx0Tbp4V+QxDOJFg=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gYw7P4JdWzpStt;
-	Mon,  8 Jun 2026 22:54:57 +0800 (CST)
-Received: from dggpemf100008.china.huawei.com (unknown [7.185.36.138])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4597E40569;
-	Mon,  8 Jun 2026 23:02:45 +0800 (CST)
-Received: from mdc.huawei.com (10.50.87.204) by dggpemf100008.china.huawei.com
- (7.185.36.138) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 8 Jun
- 2026 23:02:44 +0800
-From: Chen Jun <chenjun102@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-CC: <chenjun102@huawei.com>
-Subject: [PATCH] tracing: Add "within" filter for call-stack-based event filtering
-Date: Mon, 8 Jun 2026 22:55:56 +0800
-Message-ID: <20260608145556.94931-1-chenjun102@huawei.com>
-X-Mailer: git-send-email 2.22.0
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="d0knTwgK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=pBa18RzXk1ANKaCmnnGIArgni6qzEnHSHRPoGBtodfY=; b=d0knTwgKFs1Irwis1QYmbIPQQn
+	p/1ChDd36Jk6g/tEJoXXt454yKKKLBlUgBmTR9i41jFgsigJIUTr972W70Ga0Vyy0MHH9cN6sWtei
+	4alK//msRye7FMEqV6VVF2gpmGJvxFYrdqF0i8XRjCorjmNFBKjhQPnni9T1Fmu7E/wC3T+O/3Kq6
+	N9GqqcS5TYQdhVUyn3gTkT0srXdU9suV8EJtUFqbyNC33EG0Y0fucBB/sk5jT0YpvpPt9qC2KPIaJ
+	+y8x8B1Z979qRbZLZ0B7JZhfd1RqnuYSi6a5cgf7hc/ydN4uf65AjwmWgWSgaMLl9T62XeCe25oJp
+	yh/9w8rQ==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wWcmS-007kgA-2p;
+	Mon, 08 Jun 2026 16:24:53 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Mon, 08 Jun 2026 09:23:58 -0700
+Subject: [PATCH v3 1/6] bootconfig: fix NULL-pointer arithmetic in
+ xbc_snprint_cmdline()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- dggpemf100008.china.huawei.com (7.185.36.138)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260608-bootconfig_using_tools-v3-1-4ddd079a0696@debian.org>
+References: <20260608-bootconfig_using_tools-v3-0-4ddd079a0696@debian.org>
+In-Reply-To: <20260608-bootconfig_using_tools-v3-0-4ddd079a0696@debian.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, 
+ Nicolas Schier <nsc@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, 
+ Breno Leitao <leitao@debian.org>, kernel-team@meta.com
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3059; i=leitao@debian.org;
+ h=from:subject:message-id; bh=EAWSBZHUbvF+BebKTrcH7f4eYwq+NcrjSdvoq/taW5o=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqJuzK5LPT66nv+qLpXluaKpNYu2BCwNRJv6Mam
+ QcnhQFA1SOJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaibsygAKCRA1o5Of/Hh3
+ bd6CD/wK/q58rEK8FWKyE7pAyNDnoOTF0e02qaAQAWYIEtoBQUtwxsRg82rcem8X1610p0t7lYS
+ wP1zMB0H0hD5oPBqWpsjdPHiUTGQZ4ncxu+KRBIA9ZwKeOf/krE1f79xkceshMhEwViAb8WcY+k
+ QBc/IgRGWWAHwxvGgvH9nOpvST4m0aoZuN1s6AzzUbZB6DR+cOIwk36XVKwrdejtbdDdVnWVdTS
+ j3rox/vQ2IXEDIzEcS4fht9kW8jL6Ihk8u6Z8ZnQW0p0JHRa070pknTNIwe4qivQtwx9X6bYSAc
+ 1Zg56ArgRLyXNc0circUzxoj7DhKbHjVCOEctYeq626cEpIWgC+5QEC+BJWsV6Jy7TXFn+5CI2X
+ jULQSwxMP6ln0MTYx0dEbRulqcVGndm/G5u1++Xq3lJO8yjIUrKkvhWQX8Z43AttiI191KnFrcY
+ KwLOw0dfVKgAZA1cWsEtz316TWEO0da0h0JXiEmJPLVdmbs/MGd17hlSsQw0fcjyPt+oVaW1HPC
+ ydfnDgzuJOt+lVwCo2HHIY+YOSdJj+/7aJOI/dCpMgEOfPRhHbevw0gk7A8xNIQwf4shMeKbonG
+ uTSrf6q2Q+gejvzyP685r4I59bL+GpDuVnFQjgB52kRfpDl4uWiWkTU0lJHmMsGrK/sMKGVw9MH
+ reVCFgdMuB65i1A==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-Low-level kernel functions are called from many different paths.
-When debugging, it is often useful to filter trace events to only
-those occurring within a specific call chain.
+xbc_snprint_cmdline() is meant to be called twice: first with
+buf=NULL, size=0 to probe the rendered length, then with a real
+buffer to fill it (the standard snprintf() two-pass pattern). The
+probe call makes the function compute "buf + size" (NULL + 0) and,
+on every iteration, advance "buf += ret" from that NULL base and
+pass the result back into snprintf().
 
-Add a "within" filter predicate that tests whether a given function
-appears in the current call stack at event time. The function name
-is resolved to its address range via kallsyms during filter setup;
-at runtime, stack_trace_save() captures the call stack and compares
-each return address against the stored range.
+Pointer arithmetic on a NULL pointer is undefined behavior. It is
+harmless in the in-kernel callers today, but the follow-up patches
+run this same code in the userspace tools/bootconfig parser at kernel
+build time, where host UBSan / FORTIFY_SOURCE abort the build.
 
-Example:
-  echo 'within == "vfs_read"' > events/sched/sched_switch/filter
+Track a running written length (size_t) instead of mutating @buf, and
+only form "buf + len" when @buf is non-NULL. snprintf(NULL, 0, ...)
+is itself well defined and returns the would-be length, so the
+two-pass "probe then fill" usage returns identical byte counts.
 
-Only "==" and "!=" operators are supported. The filter depends on
-CONFIG_STACKTRACE.
-Signed-off-by: Chen Jun <chenjun102@huawei.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- Documentation/trace/events.rst     | 12 +++++++++
- include/linux/trace_events.h       |  1 +
- kernel/trace/trace.h               |  3 ++-
- kernel/trace/trace_events.c        |  3 +++
- kernel/trace/trace_events_filter.c | 41 ++++++++++++++++++++++++++++--
- 5 files changed, 57 insertions(+), 3 deletions(-)
+ lib/bootconfig.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-index 18d112963dec..6e3877d376a9 100644
---- a/Documentation/trace/events.rst
-+++ b/Documentation/trace/events.rst
-@@ -243,6 +243,18 @@ the function "security_prepare_creds" and less than the end of that function.
- The ".function" postfix can only be attached to values of size long, and can only
- be compared with "==" or "!=".
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index f445b7703fdd..2ed9ee3dc81c 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -427,10 +427,18 @@ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ {
+ 	struct xbc_node *knode, *vnode;
+-	char *end = buf + size;
+ 	const char *val, *q;
++	size_t len = 0;
+ 	int ret;
  
-+The special field "within" can be used to filter events based on whether
-+a specific function appears in the current call stack::
-+
-+  within == "function_name"
-+  within != "function_name"
-+
-+For example, to only trace events where "vfs_read" is in the call stack::
-+
-+  # echo 'within == "vfs_read"' > events/sched/sched_switch/filter
-+
-+The within field supports only the "==" and "!=" operators.
-+
- Cpumask fields or scalar fields that encode a CPU number can be filtered using
- a user-provided cpumask in cpulist format. The format is as follows::
++	/*
++	 * Track the running written length rather than advancing @buf, so we
++	 * never form "buf + size" or "buf += ret" while @buf is NULL (the
++	 * size-probe call passes buf=NULL, size=0). NULL pointer arithmetic
++	 * is undefined behavior and trips host UBSan / FORTIFY_SOURCE when
++	 * this renderer runs at kernel build time. snprintf(NULL, 0, ...)
++	 * itself is well defined and returns the would-be length.
++	 */
+ 	xbc_node_for_each_key_value(root, knode, val) {
+ 		ret = xbc_node_compose_key_after(root, knode,
+ 					xbc_namebuf, XBC_KEYLEN_MAX);
+@@ -439,10 +447,11 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
  
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 40a43a4c7caf..9ed22c210add 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -851,6 +851,7 @@ enum {
- 	FILTER_COMM,
- 	FILTER_CPU,
- 	FILTER_STACKTRACE,
-+	FILTER_WITHIN,
- };
+ 		vnode = xbc_node_get_child(knode);
+ 		if (!vnode) {
+-			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
++			ret = snprintf(buf ? buf + len : NULL, rest(len, size),
++				       "%s ", xbc_namebuf);
+ 			if (ret < 0)
+ 				return ret;
+-			buf += ret;
++			len += ret;
+ 			continue;
+ 		}
+ 		xbc_array_for_each_value(vnode, val) {
+@@ -452,15 +461,15 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ 			 * whitespace.
+ 			 */
+ 			q = strpbrk(val, " \t\r\n") ? "\"" : "";
+-			ret = snprintf(buf, rest(buf, end), "%s=%s%s%s ",
+-				       xbc_namebuf, q, val, q);
++			ret = snprintf(buf ? buf + len : NULL, rest(len, size),
++				       "%s=%s%s%s ", xbc_namebuf, q, val, q);
+ 			if (ret < 0)
+ 				return ret;
+-			buf += ret;
++			len += ret;
+ 		}
+ 	}
  
- extern int trace_event_raw_init(struct trace_event_call *call);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 80fe152af1dd..a383da42badf 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1825,7 +1825,8 @@ static inline bool is_string_field(struct ftrace_event_field *field)
- 	       field->filter_type == FILTER_RDYN_STRING ||
- 	       field->filter_type == FILTER_STATIC_STRING ||
- 	       field->filter_type == FILTER_PTR_STRING ||
--	       field->filter_type == FILTER_COMM;
-+	       field->filter_type == FILTER_COMM ||
-+	       field->filter_type == FILTER_WITHIN;
+-	return buf - (end - size);
++	return len;
  }
+ #undef rest
  
- static inline bool is_function_field(struct ftrace_event_field *field)
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c46e623e7e0d..b7d681e55b0c 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -199,6 +199,9 @@ static int trace_define_generic_fields(void)
- 	__generic_field(char *, comm, FILTER_COMM);
- 	__generic_field(char *, stacktrace, FILTER_STACKTRACE);
- 	__generic_field(char *, STACKTRACE, FILTER_STACKTRACE);
-+#ifdef CONFIG_STACKTRACE
-+	__generic_field(char *, within, FILTER_WITHIN);
-+#endif
- 
- 	return ret;
- }
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 609325f57942..34e1a7f0b3cd 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -72,6 +72,7 @@ enum filter_pred_fn {
- 	FILTER_PRED_FN_CPUMASK,
- 	FILTER_PRED_FN_CPUMASK_CPU,
- 	FILTER_PRED_FN_FUNCTION,
-+	FILTER_PRED_FN_WITHIN,
- 	FILTER_PRED_FN_,
- 	FILTER_PRED_TEST_VISITED,
- };
-@@ -1009,6 +1010,22 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
- 	return pred->op == OP_EQ ? ret : !ret;
- }
- 
-+/* Filter predicate for within. */
-+static int filter_pred_within(struct filter_pred *pred, void *event)
-+{
-+#ifdef CONFIG_STACKTRACE
-+	unsigned long entries[16];
-+	unsigned int nr_entries;
-+	int i;
-+
-+	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
-+	for (i = 0; i < nr_entries; i++)
-+		if (pred->val <= entries[i] && entries[i] < pred->val2)
-+			return !pred->not;
-+#endif
-+	return pred->not;
-+}
-+
- /*
-  * regex_match_foo - Basic regex callbacks
-  *
-@@ -1617,6 +1634,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
- 		return filter_pred_cpumask_cpu(pred, event);
- 	case FILTER_PRED_FN_FUNCTION:
- 		return filter_pred_function(pred, event);
-+	case FILTER_PRED_FN_WITHIN:
-+		return filter_pred_within(pred, event);
- 	case FILTER_PRED_TEST_VISITED:
- 		return test_pred_visited_fn(pred, event);
- 	default:
-@@ -2002,10 +2021,28 @@ static int parse_pred(const char *str, void *data,
- 
- 		} else if (field->filter_type == FILTER_DYN_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRLOC;
--		} else if (field->filter_type == FILTER_RDYN_STRING)
-+		} else if (field->filter_type == FILTER_RDYN_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRRELLOC;
--		else {
-+		} else if (field->filter_type == FILTER_WITHIN) {
-+			unsigned long func;
-+
-+			if (op == OP_GLOB)
-+				goto err_free;
- 
-+			pred->fn_num = FILTER_PRED_FN_WITHIN;
-+			func = kallsyms_lookup_name(pred->regex->pattern);
-+			if (!func) {
-+				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
-+				goto err_free;
-+			}
-+			/* Now find the function start and end address */
-+			if (!kallsyms_lookup_size_offset(func, &size, &offset)) {
-+				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
-+				goto err_free;
-+			}
-+			pred->val = func - offset;
-+			pred->val2 = pred->val + size;
-+		} else {
- 			if (!ustring_per_cpu) {
- 				/* Once allocated, keep it around for good */
- 				ustring_per_cpu = alloc_percpu(struct ustring_buffer);
+
 -- 
-2.43.0
+2.53.0-Meta
 
