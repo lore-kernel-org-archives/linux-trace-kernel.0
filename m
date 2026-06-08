@@ -1,140 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D3A257452;
-	Sun,  7 Jun 2026 18:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADA0282F30
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 02:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780856449; cv=none; b=SkTevKE1oyQGeYq7mnStbxDWDum2GUV8YGk3HEtW3luXHweQYIrEMAFN+OBofMRo1FsKkUnqBYz5F8T1ATfM/KxRV1Wd9Mf9fCmVaSE1FCKSe7v20om6nmBPdJJVbv5JXuYcNI3AL+IvaJGaP2PeVIX1fj28wPYg1njKVgfq+nk=
+	t=1780884454; cv=none; b=VKwxUkJkS+cJHPNXpFcIXdu4qGxv0zyq/0Zqox7P46JNNv2dYKO+p28oMj4vYufdd8/EVcKjMmiwPL3q3BHYV52Hfte8qPFuGTtmZltPUxzvv40Q+aIlTQ0jz54NF5zDkTJvZ3Fi0g2zFjpAI8QNwPIprVxNSdWtbWri47TuSr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780856449; c=relaxed/simple;
-	bh=0F7DPyToee3xO+cKZrrCkbxswMZT4eDHVs/NfLhcOJo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=PlwVxKUFX0BxD7pA+zQ1HSIfVijmSRtl1dOxunXLVS4gYynMIBf6+lsRdMrwcsYOv/Zm7MDYsosZ1rEQFSRif5xzIle6QmCasS0dymIaAYDJs27hXptUDUcbx0QhCaTqLF9NqmKab5/IN3i+o5ZjGJdBLrq1Q4/CEmh9dujlhrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pc1rHFo2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780884454; c=relaxed/simple;
+	bh=cPstpMvfPw9QP9MXsMENPNSR7V9hRvHvKGadUXgWrws=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jQS4oRolnRwPfceJ3uY0x6M2HadwK3sWpT+rJVA1t3p0f70SRiMNbgXGzAreded/8yCQJBW1mrSqDbP+Qy+/YfU8BCHNfgsJDIVbffNSVZIAUN4MASeebuA1Q4prUNLdnE8TW1EDINKNrdwnki5Tpi87T8as6A/rETmU+FTt5qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WR4nKODQ; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pc1rHFo2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 882B81F00893;
-	Sun,  7 Jun 2026 18:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780856448;
-	bh=LYCNRsaLfbFMffqYd6MxAbma/hVOtG8OurYIyF1tJmw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=Pc1rHFo2SDrAhZn3HBZkK8vgwzDTmV1eAZdZcbLp960AohVprE9SpRntm3DY6HBcB
-	 LZoMvnMfeRQw0Lce9AeQENoid75dUyNBT7Dh78KetoFhCvGOHi9VuiKgvlhuPdg7lE
-	 Lj0A3yrlXG2p1HWw3+vaeXlpDJJOiSeMxvhf8FErpkuOoGUYvmeEKL6rgGYgSjaYSV
-	 5FAO96sNGBzRZfaAqfjrbBT+p4QJYDMNKHNZaHA0j8l5OWjtp3x5/YrV+nBD6u59Y0
-	 s313vUpwwRLLtvtAGT9xn6/rhezOZ5A2TzxlVe78AYz5LcyWTbS+nyBFUQjD0JbZ4C
-	 BZCy5TPc8C15Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 199833930C97;
-	Sun,  7 Jun 2026 18:20:49 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WR4nKODQ"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-36da8439078so3325459a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 07 Jun 2026 19:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780884453; x=1781489253; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cPstpMvfPw9QP9MXsMENPNSR7V9hRvHvKGadUXgWrws=;
+        b=WR4nKODQJzxfGECBBHiddb/GFJWgKfuco893KyNGNC36Ad6S83Jbd4ap4Er0I+i5h3
+         QG+iCS+qdGr6xBtTai4sBA5zNPnvnnMsSk8ZYeptM2YJl3CeCXsMgKmhHHAL+yVJMYvZ
+         HoSSL4TMBmosNaDWDl0v95kh+Gqi4DvHyOAJr/CfCNVzyuYqN9+rq75NAkubBvCl/nk2
+         9l1AJ1yWlr5SzetdhpfgV3YTw9kSh2WiKPjirGSJ6H+yfE7tqmwFNrpyceG31vz10Ojh
+         8ROH9RJXanS8WwgJwzsC9u5Piu4xRR3NQ0uGWjWaRNO+BjZBTAtg8qIwF04rZqjrNc+O
+         Jang==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780884453; x=1781489253;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cPstpMvfPw9QP9MXsMENPNSR7V9hRvHvKGadUXgWrws=;
+        b=LBHvjJrbI84sPtTq4MTnNEfXQet+vqx5PoAD2KXbC3DMN1/SP5f90IValXBk1jmpQX
+         khTnW1guWsttOutQcsE/AZGk0uZBEOdhJY+HbN/8/rLojCGjDHn8I9FWWayyOJAPZhjZ
+         /stm+LDJzOZ8U0apo0kcXOcrfE3NJw0BP2rw+KFyglmPSClvtQrUmyWuF6pb8mq5E6/I
+         VJzZOuQPGV0Ne0Vw+dozgmjMGZy+zEybMm7Tui35riGr1cG9un9fC/Ry7u5zINsK3RLI
+         3vVSR2EyJV2NfOzlj9WunoObmHuJL9Xrf2QP9w4U1gK37eDrxTgaUqKDvbgITZBu/miX
+         0TUQ==
+X-Gm-Message-State: AOJu0YzbKAWLiDl6kdlrTobqw0Bk8mSGkyk5JKzVorTfXOyY8VYz1qcN
+	nDdkzF9E6LIyTqxRgvrgArBT/SyNzcTNrX764d9nk1kj54etPnpn+SOO
+X-Gm-Gg: Acq92OFlB5LqQGevDIGdLs6XMGBeRK9yHpJIOHW1U514kkIPR00VeB7zK0I1lxmhB4p
+	52qqRWOgXQjR3uupbQEkx23RYNnxOS+I3CZhb7EYJ8qO4EU5Nl7aHxZWbS8MvYPfIMwPpe2/T+n
+	ZbNzlHgJ3E67p8T4kb41bYav4MK5Pr4rB+J2kzWpbCd8ptu1sLNA/AoOaWDDuf2H0AlxRxEvIWJ
+	vs4WLzSzJyyDWYuRPazB5BZS69/wyQj8r+150gL5RKypbEGOqT7bJS09oOpR4oQXEnxtOZfUGQQ
+	5TM7vI7qdC8hyZFeBonTYoAnkSm7vDDBa6lQOAqDv3kNXd0i6Fzrqekny9tYis5W3tE0YIpCTUz
+	njR22/egyy+ND2rW2/xP22bgqWhpm7H2p3sO3XdGrn6dc7cNXMO3Nb0JPJzxZlrRY8u5yy9EchS
+	XpAXNbo3HgtWCwu8FYE/UqBODyP1MJKrUnnLsG081kAKouSHJ6
+X-Received: by 2002:a17:90b:3d8f:b0:36d:70c8:3a3 with SMTP id 98e67ed59e1d1-370f0772dc6mr13810623a91.15.1780884453130;
+        Sun, 07 Jun 2026 19:07:33 -0700 (PDT)
+Received: from localhost.localdomain ([2408:8607:1b00:8:7098:2d38:794c:c7b8])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6dba82c6sm13550998a91.13.2026.06.07.19.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2026 19:07:32 -0700 (PDT)
+From: Li Pengfei <ljdlns1987@gmail.com>
+X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cmllamas@google.com,
+	zhangbo56@xiaomi.com,
+	Pengfei Li <lipengfei28@xiaomi.com>
+Subject: Re: [RFC PATCH v3 0/3] trace: stack trace deduplication for ftrace ring buffer
+Date: Mon,  8 Jun 2026 10:06:55 +0800
+Message-Id: <20260608020655.2638028-1-lipengfei28@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1779769138.git.lipengfei28@xiaomi.com>
+References: <cover.1779769138.git.lipengfei28@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv8 bpf-next 00/29] bpf: tracing_multi link
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <178085644764.273544.8250000589480262551.git-patchwork-notify@kernel.org>
-Date: Sun, 07 Jun 2026 18:20:47 +0000
-References: <20260606123955.345967-1-jolsa@kernel.org>
-In-Reply-To: <20260606123955.345967-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- hengqi.chen@gmail.com, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- songliubraving@fb.com, yhs@fb.com, menglong8.dong@gmail.com,
- rostedt@kernel.org
 
-Hello:
+From: Pengfei Li <lipengfei28@xiaomi.com>
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Hi Steven, Masami,
 
-On Sat,  6 Jun 2026 14:39:25 +0200 you wrote:
-> hi,
-> adding tracing_multi link support that allows fast attachment
-> of tracing program to many functions.
-> 
-> RFC: https://lore.kernel.org/bpf/20260203093819.2105105-1-jolsa@kernel.org/
-> v1: https://lore.kernel.org/bpf/20260220100649.628307-1-jolsa@kernel.org/
-> v2: https://lore.kernel.org/bpf/20260304222141.497203-1-jolsa@kernel.org/
-> v3: https://lore.kernel.org/bpf/20260316075138.465430-1-jolsa@kernel.org/
-> v4: https://lore.kernel.org/bpf/20260324081846.2334094-1-jolsa@kernel.org/
-> v5: https://lore.kernel.org/bpf/20260417192502.194548-1-jolsa@kernel.org/
-> v6: https://lore.kernel.org/bpf/20260527113951.46265-1-jolsa@kernel.org/
-> v7: https://lore.kernel.org/bpf/20260603110554.29590-1-jolsa@kernel.org/
-> 
-> [...]
+Friendly ping on this v3 series. Let me know if there's anything
+I should adjust or any direction concerns you'd like me to address.
 
-Here is the summary with links:
-  - [PATCHv8,bpf-next,01/29] ftrace: Add ftrace_hash_count function
-    https://git.kernel.org/bpf/bpf-next/c/e57f13eaab25
-  - [PATCHv8,bpf-next,02/29] ftrace: Add ftrace_hash_remove function
-    https://git.kernel.org/bpf/bpf-next/c/af7c32365090
-  - [PATCHv8,bpf-next,03/29] ftrace: Add add_ftrace_hash_entry function
-    https://git.kernel.org/bpf/bpf-next/c/2cd298c106e0
-  - [PATCHv8,bpf-next,04/29] bpf: Use mutex lock pool for bpf trampolines
-    https://git.kernel.org/bpf/bpf-next/c/e6abd4cd157b
-  - [PATCHv8,bpf-next,05/29] bpf: Add struct bpf_trampoline_ops object
-    https://git.kernel.org/bpf/bpf-next/c/8a35e8db740f
-  - [PATCHv8,bpf-next,06/29] bpf: Move trampoline image setup into bpf_trampoline_ops callbacks
-    https://git.kernel.org/bpf/bpf-next/c/bf4bc3e11c41
-  - [PATCHv8,bpf-next,07/29] bpf: Add bpf_trampoline_add/remove_prog functions
-    https://git.kernel.org/bpf/bpf-next/c/e6cc9ed677e6
-  - [PATCHv8,bpf-next,08/29] bpf: Add struct bpf_tramp_node object
-    https://git.kernel.org/bpf/bpf-next/c/65499074efaf
-  - [PATCHv8,bpf-next,09/29] bpf: Factor fsession link to use struct bpf_tramp_node
-    https://git.kernel.org/bpf/bpf-next/c/880db5d4abb2
-  - [PATCHv8,bpf-next,10/29] bpf: Add multi tracing attach types
-    https://git.kernel.org/bpf/bpf-next/c/d14e6b4346bf
-  - [PATCHv8,bpf-next,11/29] bpf: Move sleepable verification code to btf_id_allow_sleepable
-    https://git.kernel.org/bpf/bpf-next/c/bd06659d3b8a
-  - [PATCHv8,bpf-next,12/29] bpf: Add bpf_trampoline_multi_attach/detach functions
-    https://git.kernel.org/bpf/bpf-next/c/aef4dfa790b2
-  - [PATCHv8,bpf-next,13/29] bpf: Add support for tracing multi link
-    https://git.kernel.org/bpf/bpf-next/c/c1d32dea5d46
-  - [PATCHv8,bpf-next,14/29] bpf: Add support for tracing_multi link cookies
-    https://git.kernel.org/bpf/bpf-next/c/46b42af27d40
-  - [PATCHv8,bpf-next,15/29] bpf: Add support for tracing_multi link session
-    https://git.kernel.org/bpf/bpf-next/c/ba042ed6446f
-  - [PATCHv8,bpf-next,16/29] bpf: Add support for tracing_multi link fdinfo
-    https://git.kernel.org/bpf/bpf-next/c/8abecdafd575
-  - [PATCHv8,bpf-next,17/29] libbpf: Add bpf_object_cleanup_btf function
-    https://git.kernel.org/bpf/bpf-next/c/fe9c8cb2b52b
-  - [PATCHv8,bpf-next,18/29] libbpf: Add bpf_link_create support for tracing_multi link
-    https://git.kernel.org/bpf/bpf-next/c/630e85a9f005
-  - [PATCHv8,bpf-next,19/29] libbpf: Add btf_type_is_traceable_func function
-    https://git.kernel.org/bpf/bpf-next/c/616a93b473a6
-  - [PATCHv8,bpf-next,20/29] libbpf: Add support to create tracing multi link
-    https://git.kernel.org/bpf/bpf-next/c/f2aa370dfe57
-  - [PATCHv8,bpf-next,21/29] selftests/bpf: Add tracing multi skel/pattern/ids attach tests
-    https://git.kernel.org/bpf/bpf-next/c/2922dd58413c
-  - [PATCHv8,bpf-next,22/29] selftests/bpf: Add tracing multi skel/pattern/ids module attach tests
-    https://git.kernel.org/bpf/bpf-next/c/2863f074f146
-  - [PATCHv8,bpf-next,23/29] selftests/bpf: Add tracing multi intersect tests
-    https://git.kernel.org/bpf/bpf-next/c/4309f580a0a6
-  - [PATCHv8,bpf-next,24/29] selftests/bpf: Add tracing multi cookies test
-    https://git.kernel.org/bpf/bpf-next/c/1b938f42f5fa
-  - [PATCHv8,bpf-next,25/29] selftests/bpf: Add tracing multi session test
-    https://git.kernel.org/bpf/bpf-next/c/69f25d4b0c17
-  - [PATCHv8,bpf-next,26/29] selftests/bpf: Add tracing multi attach fails test
-    https://git.kernel.org/bpf/bpf-next/c/1fd832854997
-  - [PATCHv8,bpf-next,27/29] selftests/bpf: Add tracing multi verifier fails test
-    https://git.kernel.org/bpf/bpf-next/c/443c91d08c4b
-  - [PATCHv8,bpf-next,28/29] selftests/bpf: Add tracing multi attach benchmark test
-    (no matching commit)
-  - [PATCHv8,bpf-next,29/29] selftests/bpf: Add tracing multi attach rollback tests
-    https://git.kernel.org/bpf/bpf-next/c/b349efe49a12
+Lore link:
+https://lore.kernel.org/all/cover.1779769138.git.lipengfei28@xiaomi.com/
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Pengfei
