@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B35C3B47D6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C800C3B47F6;
 	Mon,  8 Jun 2026 08:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780909051; cv=none; b=TMzP4Lv3IUGENNcruaXmxENWOf8nltWhmTsspoAmvzeP8Ai2y4lDyi+4IHvOw+aJLrpN9B7NEfpRsyvEbFeE0ScjBmOcaVe8brfm0oCHSYcZaZEzEhVXNjI194pQfH/X4QyjknQEX8GFTRlt2WjLklSnoyreGABR6nunxrbqhHI=
+	t=1780909052; cv=none; b=CrCRnpvd9kMtp7KdPzUavPzcDmFTyIhcdgVTMvBW+JUUcJGNsdqSHWJ8vGK3Rzx81GHbpo91IK1iz6iscEYzBAXqVmFLSwXZn3GgE32zjhZRaYDhlfmsvgM+9AiE8QJiiBvvDeUmV+ofRZM3WuqZTURWmHaSJUEDUgWbwNMoCJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780909051; c=relaxed/simple;
-	bh=hzk7wwL4YpZjPt7CTDtp1gn5/7sdD/SaQLz0JUdHGvU=;
+	s=arc-20240116; t=1780909052; c=relaxed/simple;
+	bh=1MhA2aRP60183cN4HBLv3Aj1A/11LGKf9X/a96VYV4s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GRfgb8Nq/SfK9EM6GfZxJNeOXi+L1TiJGbxYfym3+lT44ZIt3p0V6/O0ZunyKqnU5pI2Xn0mkyw5Cq8zvriZQm6nRvwSa0yIoBFnumUru9IesdrKj8yHJGNEnIQkpLzjwLYobHEaUzAy4x2j6DbR15JkTwZPPNzeuXJ8NUXRFn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i9F2FPne; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t9QI+6Oa; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=bNHxAtbRKOQv+iO+3APLXtwwvmln1aUa6x2uwIhZNFHVtkJPV6qKAQD/y49jrxCtcjDObxiqzHGvPRxrKhrhmRMGr4DuAfngD2qvzGbkCU7PaIen4ZhfZdqRB31cMrVeduulUiaDGq/26mqzb1w1QLaBiO6Npc29fGnW8UNhG5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kzD4VZQc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gx4eqVxO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i9F2FPne";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t9QI+6Oa"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kzD4VZQc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gx4eqVxO"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1780909047;
+	s=2020; t=1780909048;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PTuMWZJQaJHSFCHxageLFGEL0EPkBs1RBomFaBfK0cQ=;
-	b=i9F2FPnenJmdYZTd8dvqNOlq03s1FNwGSj9OIj2mcLOhEvc/rkeJ1MqM9g/774WpqLuuBs
-	ki3gYeEOVvJNH4jYEBLub0qrmNsHuy8f33QtwQr/+DFNbEeTzSsrLxd/Mgt6zjBN8BDuvj
-	28XAwFvaNQgDXseQIl89FfMmdO7ZWWCSk54Ru1WFzM+Es6mw1JprahnecP0Gv0v7UfjA25
-	Vkth5Pji9IPxIUMsKqoMu2AyTQqMD7BXZJBfIKHsc7TucM1rvpGF9xYwLY8WkhshjhkAtX
-	50xuj09LPSTC5pZCOW4XN77s1/dTcKLqm3desJC0eCLTiz3oijKPzPthwqcEEA==
+	bh=iUxzZb6WjvKyMCBcd/paWjOXRIvgAJq42QDVRrYlzeg=;
+	b=kzD4VZQcOBlBJ7g62SxQ+ahKX7evRR/2LlOExgR1c0tqe/HgToT/4F8j1BJw3AaJipdTLs
+	UTzftXzgf2ig1XqVIVcPt+7OssMSU59mnyKkla+nZLpsoDHUUQdnqKy+jXvRSbvCSPLoce
+	bqt4LbcxiQAz2yVTWPHxBnjMnMe1uquCbgFK48F2pqTmyjMTL7wSa/0NGlKZOq/INvsHLM
+	hE9XETm/dyvTAmv5h/4swqPqaWgHVhjTWo+SjDKNuq1bLtJIKiEg5JGQbhpqRMh6bNKfZz
+	sfqBFRw2T0egRNVfklDj6lgQb4An1YvY5BaOXFbSqu8W1bkM/0mXagYOTaVW/A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1780909047;
+	s=2020e; t=1780909048;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PTuMWZJQaJHSFCHxageLFGEL0EPkBs1RBomFaBfK0cQ=;
-	b=t9QI+6Oa5bJT2TE5uiHk0rRR1eJCMnMyUbZSpwElsWroAUUMON3MslW4BJPYmDZeU1Yi9W
-	6QigIO4LI4KLylBg==
+	bh=iUxzZb6WjvKyMCBcd/paWjOXRIvgAJq42QDVRrYlzeg=;
+	b=Gx4eqVxOdO3WQCAf7EikqZb5+61eyNPquCZvQMOToOyDyNKY8KHEjJ6au753H2X6rOAOlH
+	WKTH6Gl9m8dAa8Cw==
 To: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 08/13] verification/rvgen: Simplify the generation for clock variables
-Date: Mon,  8 Jun 2026 10:57:04 +0200
-Message-ID: <eb57a6b4659b325a4a0eded67baa3c5fe9f0ff35.1780908661.git.namcao@linutronix.de>
+Subject: [PATCH v3 10/13] verification/rvgen: Switch __get_event_variables() to Lark
+Date: Mon,  8 Jun 2026 10:57:06 +0200
+Message-ID: <50df4dd278779328cf2aa283c8353bac2281a337.1780908661.git.namcao@linutronix.de>
 In-Reply-To: <cover.1780908661.git.namcao@linutronix.de>
 References: <cover.1780908661.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,181 +58,122 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hybrid automata monitors's clock variables have been changed to have
-only a single representation. Now there is no need to generate code to
-convert between the two representations.
-
-Delete __fill_convert_inv_guard_func() and its associates. Update
-__start_to_invariant_check() to how invariants now work.
+Switch __get_event_variables() to use the parsed results from Lark, instead
+of raw text processing.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/rvgen/rvgen/dot2k.py | 96 +------------------------
- 1 file changed, 3 insertions(+), 93 deletions(-)
+ tools/verification/rvgen/rvgen/automata.py | 78 ++++++----------------
+ 1 file changed, 19 insertions(+), 59 deletions(-)
 
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
-vgen/rvgen/dot2k.py
-index e91717fde30d..6d346a718a39 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -246,7 +246,9 @@ class ha2k(dot2k):
-         if inv.unit =3D=3D "j":
-             clock_type =3D "jiffy"
+diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verificatio=
+n/rvgen/rvgen/automata.py
+index b86275e7bf28..2e26bb863245 100644
+--- a/tools/verification/rvgen/rvgen/automata.py
++++ b/tools/verification/rvgen/rvgen/automata.py
+@@ -591,45 +591,22 @@ class Automata:
+     def __get_event_variables(self) -> tuple[list[str], list[str]]:
+         events: list[str] =3D []
+         envs: list[str] =3D []
+-        # here we are at the begin of transitions, take a note, we will re=
+turn later.
+-        cursor =3D self.__get_cursor_begin_events()
 =20
--        return f"return ha_check_invariant_{clock_type}(ha_mon, {inv.env}_=
-{self.name}, time_ns)"
-+        value =3D self.__adjust_value(inv.val, inv.unit)
+-        for line in map(str.lstrip, islice(self.__dot_lines, cursor, None)=
+):
+-            if not line.startswith('"'):
+-                break
++        for transition in self.transitions:
++            events.append(transition.event)
+=20
+-            # transitions have the format:
+-            # "all_fired" -> "both_fired" [ label =3D "disable_irq" ];
+-            #  ------------ event is here ------------^^^^^
+-            split_line =3D line.split()
+-            if len(split_line) > 1 and split_line[1] =3D=3D "->":
+-                event =3D "".join(split_line[split_line.index("label") + 2=
+:-1]).replace('"', '')
+-
+-                # when a transition has more than one label, they are like=
+ this
+-                # "local_irq_enable\nhw_local_irq_enable_n"
+-                # so split them.
+-
+-                for i in event.split("\\n"):
+-                    # if the event contains a constraint (hybrid automata),
+-                    # it will be separated by a ";":
+-                    # "sched_switch;x<1000;reset(x)"
+-                    ev, *constr =3D i.split(";")
+-                    if constr:
+-                        if len(constr) > 2:
+-                            raise AutomataError("Only 1 constraint and 1 r=
+eset are supported")
+-                        envs +=3D self.__extract_env_var(constr)
+-                    events.append(ev)
+-            else:
+-                # state labels have the format:
+-                # "enable_fired" [label =3D "enable_fired\ncondition"];
+-                #  ----- label is here -----^^^^^
+-                # label and node name must be the same, condition is optio=
+nal
+-                state =3D line.split("label")[1].split('"')[1]
+-                _, *constr =3D state.split("\\n")
+-                if constr:
+-                    if len(constr) > 1:
+-                        raise AutomataError("Only 1 constraint is supporte=
+d in the state")
+-                    envs +=3D self.__extract_env_var([constr[0].replace(" =
+", "")])
++            if transition.reset:
++                envs.append(transition.reset.env)
++                self.env_stored.add(transition.reset.env)
++            if transition.rule:
++                for c, _ in transition.rule.rules:
++                    envs.append(c.env)
++                    self.__extract_env_var(c)
 +
-+        return f"return ha_check_invariant_{clock_type}(ha_mon, {inv.env}_=
-{self.name}, time_ns, {value})"
++        for state in self._states:
++            if state.inv:
++                envs.append(state.inv.env)
++                self.__extract_env_var(state.inv)
 =20
-     def __start_to_conv(self, constr: str) -> str:
-         """
-@@ -383,40 +385,6 @@ f"""static inline bool ha_verify_invariants(struct ha_=
-monitor *ha_mon,
-         buff.append("\treturn true;\n}\n")
-         return buff
+         return sorted(set(events)), sorted(set(envs))
 =20
--    def __fill_convert_inv_guard_func(self) -> list[str]:
--        buff =3D []
--        if not self.invariants:
--            return []
--
--        conflict_guards, conflict_invs =3D self.__find_inv_conflicts()
--        if not conflict_guards and not conflict_invs:
--            return []
--
--        buff.append(
--f"""static inline void ha_convert_inv_guard(struct ha_monitor *ha_mon,
--\t\t\t\t\tenum {self.enum_states_def} curr_state, enum {self.enum_events_d=
-ef} event,
--\t\t\t\t\tenum {self.enum_states_def} next_state, u64 time_ns)
--{{""")
--        buff.append("\tif (curr_state =3D=3D next_state)\n\t\treturn;")
--
--        _else =3D ""
--        for state, constr in sorted(self.invariants.items()):
--            # a state with invariant can reach us without reset
--            # multiple conflicts must have the same invariant, otherwise w=
-e cannot
--            # know how to reset the value
--            conf_i =3D [start for start, end in conflict_invs if end =3D=
-=3D state]
--            # we can reach a guard without reset
--            conf_g =3D [e for s, e in conflict_guards if s =3D=3D state]
--            if not conf_i and not conf_g:
--                continue
--            buff.append(f"\t{_else}if (curr_state =3D=3D {self.states[stat=
-e]}{self.enum_suffix})")
--
--            buff.append(f"\t\t{self.__start_to_conv(constr)};")
--            _else =3D "else "
--
--        buff.append("}\n")
--        return buff
--
-     def __fill_verify_guards_func(self) -> list[str]:
-         buff =3D []
+@@ -653,28 +630,11 @@ class Automata:
+             seps.append(None)
+         return zip(exprs, seps)
 =20
-@@ -456,54 +424,6 @@ f"""static inline bool ha_verify_guards(struct ha_moni=
-tor *ha_mon,
-         buff.append("\treturn res;\n}\n")
-         return buff
+-    def __extract_env_var(self, constraint: list[str]) -> list[str]:
+-        env =3D []
+-        for c, _ in self._split_constraint_expr(constraint):
+-            rule =3D self.constraint_rule.search(c)
+-            reset =3D self.constraint_reset.search(c)
+-            if rule:
+-                env.append(rule["env"])
+-                if rule.groupdict().get("unit"):
+-                    self.env_types[rule["env"]] =3D rule["unit"]
+-                if rule["val"][0].isalpha():
+-                    self.constraint_vars.add(rule["val"])
+-                # try to infer unit from constants or parameters
+-                val_for_unit =3D rule["val"].lower().replace("()", "")
+-                if val_for_unit.endswith("_ns"):
+-                    self.env_types[rule["env"]] =3D "ns"
+-                if val_for_unit.endswith("_jiffies"):
+-                    self.env_types[rule["env"]] =3D "j"
+-            if reset:
+-                env.append(reset["env"])
+-                # environment variables that are reset need a storage
+-                self.env_stored.add(reset["env"])
+-        return env
++    def __extract_env_var(self, constraint: ConstraintCondition):
++        if constraint.unit:
++            self.env_types[constraint.env] =3D constraint.unit
++        if constraint.val[0].isalpha():
++            self.constraint_vars.add(constraint.val)
 =20
--    def __find_inv_conflicts(self) -> tuple[set[tuple[int, _EventConstrain=
-tKey]],
--                                            set[tuple[int, _StateConstrain=
-tKey]]]:
--        """
--        Run a breadth first search from all states with an invariant.
--        Find any conflicting constraints reachable from there, this can be
--        another state with an invariant or an edge with a non-reset guard.
--        Stop when we find a reset.
--
--        Return the set of conflicting guards and invariants as tuples of
--        conflicting state and constraint key.
--        """
--        conflict_guards: set[tuple[int, _EventConstraintKey]] =3D set()
--        conflict_invs: set[tuple[int, _StateConstraintKey]] =3D set()
--        for start_idx in self.invariants:
--            queue =3D deque([(start_idx, 0)])  # (state_idx, distance)
--            env =3D self.__get_constraint_env(self.invariants[start_idx])
--
--            while queue:
--                curr_idx, distance =3D queue.popleft()
--
--                # Check state condition
--                if curr_idx !=3D start_idx and curr_idx in self.invariants:
--                    conflict_invs.add((start_idx, _StateConstraintKey(curr=
-_idx)))
--                    continue
--
--                # Check if we should stop
--                if distance > len(self.states):
--                    break
--                if curr_idx !=3D start_idx and distance > 1:
--                    continue
--
--                for event_idx, next_state_name in enumerate(self.function[=
-curr_idx]):
--                    if next_state_name =3D=3D self.invalid_state_str:
--                        continue
--                    curr_guard =3D self.guards.get((curr_idx, event_idx), =
-"")
--                    if "reset" in curr_guard and env in curr_guard:
--                        continue
--
--                    if env in curr_guard:
--                        conflict_guards.add((start_idx,
--                                             _EventConstraintKey(curr_idx,=
- event_idx)))
--                        continue
--
--                    next_idx =3D self.states.index(next_state_name)
--                    queue.append((next_idx, distance + 1))
--
--        return conflict_guards, conflict_invs
--
-     def __fill_setup_invariants_func(self) -> list[str]:
-         if not self.has_invariant:
-             return []
-@@ -554,16 +474,9 @@ f"""static inline void ha_setup_invariants(struct ha_m=
-onitor *ha_mon,
-  * the next state has a constraint, cancel it in any other case and to che=
-ck
-  * that it didn't expire before the callback run. Transitions to the same =
-state
-  * without a reset never affect timers.
-- * Due to the different representations between invariants and guards, the=
-re is
-- * a function to convert it in case invariants or guards are reachable from
-- * another invariant without reset. Those are not present if not required =
-in
-- * the model. This is all automatic but is worth checking because it may s=
-how
-- * errors in the model (e.g. missing resets).
-  */""")
-=20
-         buff +=3D self.__fill_verify_invariants_func()
--        inv_conflicts =3D self.__fill_convert_inv_guard_func()
--        buff +=3D inv_conflicts
-         buff +=3D self.__fill_verify_guards_func()
-         buff +=3D self.__fill_setup_invariants_func()
-=20
-@@ -576,9 +489,6 @@ f"""static bool ha_verify_constraint(struct ha_monitor =
-*ha_mon,
-         if self.invariants:
-             buff.append("\tif (!ha_verify_invariants(ha_mon, curr_state, "
-                         "event, next_state, time_ns))\n\t\treturn false;\n=
-")
--        if inv_conflicts:
--            buff.append("\tha_convert_inv_guard(ha_mon, curr_state, event,=
- "
--                        "next_state, time_ns);\n")
-=20
-         if self.guards:
-             buff.append("\tif (!ha_verify_guards(ha_mon, curr_state, event=
-, "
+     def __create_matrix(self) -> tuple[list[list[str]], dict[_ConstraintKe=
+y, list[str]]]:
+         # transform the array into a dictionary
 --=20
 2.47.3
 
