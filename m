@@ -1,318 +1,82 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B87F3D093E
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 16:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFA93D4132;
+	Mon,  8 Jun 2026 16:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780936016; cv=none; b=dGRUAf9fLrZqUHvgU9iN41VBl5s+k+jI3O9+P0GN4wA2XT9PrnnGCcmo+WMstmBpijtgVDNLJdVN9jpgRFImJHWvaPaMPhKamqp/u8KXddy48ArKYixWmqsHiWUmAwSxyB+cvVSiMOE3/P790yHcj+UCFJXsZVD+fc99GJSlHXY=
+	t=1780937481; cv=none; b=sez0qcAuvVQ1t99zc3oLM8Km2TKHk8u8xBQdM3xu6NtgVM+GotsjePThw+T5VqPs9Y/GrPcR7lpVwFKpzPkOOy/pvBgEyCStYurO4jUBzlmdpjT/YT6GCGlAAP8z7EQyKAvpWa5GiDsXrk/4GawAFhkBoP+LJULKrZzWZ1A9qO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780936016; c=relaxed/simple;
-	bh=qUWLNR2u0Fu6Is32CFDEEVX9do0PCMwVYfajVGJWfMs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VVm81j/0PMHhhAKGkmyDyBFvSJhy1tztrgUqipm+07F1LorHHGBgID22iQnDH8oSNLDRJAauCWNZoBUgI+NH0WT/gaMSDD+Ex3Eoyce8ZaYHYs+ECXEkVoPgIij/8ov8+h79xK1B5LrBeUUnt6EHLtv2NHqoiIcdiaeZFEcZEjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=utcAAemx; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="utcAAemx"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780936001;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rFe8JeI/xgeGVuBJ7OtpfZjfx01poIP3QOXbHZ80Fsc=;
-	b=utcAAemxvsGz6LNQbA/4iedZt57xrnUw0BI5tskQnbWhKRzbtCrKVLhcdm4SzNz+nE4SR/
-	SDWZdz8poq1rWQFbuFIu3hr7cIjZeP8xURc3TuPgoW6gBGmCsjmjlfAYr4VEKr5oBVgHm6
-	qniLRpmnq9r6kGWX7qdOUfetA7LOzuA=
-From: Lance Yang <lance.yang@linux.dev>
-To: david@kernel.org
-Cc: lance.yang@linux.dev,
-	npache@redhat.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	aarcange@redhat.com,
-	akpm@linux-foundation.org,
-	anshuman.khandual@arm.com,
-	apopple@nvidia.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	byungchul@sk.com,
-	catalin.marinas@arm.com,
-	cl@gentwo.org,
-	corbet@lwn.net,
-	dave.hansen@linux.intel.com,
-	dev.jain@arm.com,
-	gourry@gourry.net,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	jack@suse.cz,
-	jackmanb@google.com,
-	jannh@google.com,
-	jglisse@google.com,
-	joshua.hahnjy@gmail.com,
-	kas@kernel.org,
-	liam@infradead.org,
-	ljs@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	matthew.brost@intel.com,
-	mhiramat@kernel.org,
-	mhocko@suse.com,
-	peterx@redhat.com,
-	pfalcato@suse.de,
-	rakie.kim@sk.com,
-	raquini@redhat.com,
-	rdunlap@infradead.org,
-	richard.weiyang@gmail.com,
-	rientjes@google.com,
-	rostedt@goodmis.org,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shivankg@amd.com,
-	sunnanyong@huawei.com,
-	surenb@google.com,
-	thomas.hellstrom@linux.intel.com,
-	tiwai@suse.de,
-	usamaarif642@gmail.com,
-	vbabka@suse.cz,
-	vishal.moola@gmail.com,
-	wangkefeng.wang@huawei.com,
-	will@kernel.org,
-	willy@infradead.org,
-	yang@os.amperecomputing.com,
-	ying.huang@linux.alibaba.com,
-	ziy@nvidia.com,
-	zokeefe@google.com
-Subject: Re: [PATCH mm-unstable v19 11/14] mm/khugepaged: Introduce mTHP collapse support
-Date: Tue,  9 Jun 2026 00:26:12 +0800
-Message-Id: <20260608162612.27122-1-lance.yang@linux.dev>
-In-Reply-To: <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org>
-References: <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org>
+	s=arc-20240116; t=1780937481; c=relaxed/simple;
+	bh=dvw4B0MFUGhQsaCJAWHJ57mhwnuAYBzXUK8+E7P+HII=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F5vaQO8fnhVU2eBdmUBPlYzQq/yO4MV+vfkFqgnra4xFvgsAv6HEjzxr5y9YsL0p0sP/HxKcKjUp8zCs3q+I0Pg7jSgyGvHOILXj8RLsFcxllgTt3C8fkOtpmhS0w5w7A8I5vSbTSD46QlhNEpbxDqxraZoUNNBcE+F11RbqOOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id BE9551C146F;
+	Mon,  8 Jun 2026 16:51:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id F026A6000C;
+	Mon,  8 Jun 2026 16:51:03 +0000 (UTC)
+Date: Mon, 8 Jun 2026 12:50:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Hui Wang <hui.wang@canonical.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, pjw@kernel.org,
+ linux-trace-kernel@vger.kernel.org, shuah@kernel.org,
+ wangfushuai@baidu.com, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/2] selftests/ftrace: Account for 8-byte aligned
+ trace_marker_raw events
+Message-ID: <20260608125049.092d4543@fedora>
+In-Reply-To: <20260607072431.125633-3-hui.wang@canonical.com>
+References: <20260607072431.125633-1-hui.wang@canonical.com>
+	<20260607072431.125633-3-hui.wang@canonical.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: n69aa6z4jurymeyti9gr6ra78987gknd
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: F026A6000C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+24W3c8CWHBr6zX27ioqSedKHmpq1RU6I=
+X-HE-Tag: 1780937463-703503
+X-HE-Meta: U2FsdGVkX196H5grzkMWc47i0gFRr0d7p9d4jZ8hur9FlIHsmAkqc595qqaDFfj0+m8TS2XiRph5Q5YmMcHYsk209IRTzy4qXbWQ/4Q9J+4MKd48wdE6TXTCJlnAtazs1ellKOIC3iVeqBPh3lCKWx+1ppJYuHKLTiLeehx7UO5UR2PlqCLfocBm6xEod+gymbfeiZYwHlzQ9qkvFFPAgGAUk683c6LIRdUarS+pgmi24YQmEurXLupIWcgOUvybA8PKLyQqOsoEfMzM53/tbX7crymmr33alZ1n7PxyMzYHHvKiKS/AdN78hFsu+WG5OVXJ4FB9vEDGajWp1S5EUaCVQdXRd08JQSHUNbYEmRgwUeXhmzQuBpgeNZr1G1IWKP061pWgLcgfc05jY7iAFLoAYByb9+c/3XdGKTofgPo=
 
+On Sun,  7 Jun 2026 15:24:31 +0800
+Hui Wang <hui.wang@canonical.com> wrote:
 
-On Mon, Jun 08, 2026 at 04:56:37PM +0200, David Hildenbrand (Arm) wrote:
->On 6/6/26 12:28, Lance Yang wrote:
->> 
->> On Fri, Jun 05, 2026 at 10:14:18AM -0600, Nico Pache wrote:
->>> Enable khugepaged to collapse to mTHP orders. This patch implements the
->>> main scanning logic using a bitmap to track occupied pages and the
->>> algorithm to find optimal collapse sizes.
->>>
->>> Previous to this patch, PMD collapse had 3 main phases, a light weight
->>> scanning phase (mmap_read_lock) that determines a potential PMD
->>> collapse, an alloc phase (mmap unlocked), then finally heavier collapse
->>> phase (mmap_write_lock).
->>>
->>> To enabled mTHP collapse we make the following changes:
->>>
->>> During PMD scan phase, track occupied pages in a bitmap. When mTHP
->>> orders are enabled, we remove the restriction of max_ptes_none during the
->>> scan phase to avoid missing potential mTHP collapse candidates. Once we
->>> have scanned the full PMD range and updated the bitmap to track occupied
->>> pages, we use the bitmap to find the optimal mTHP size.
->>>
->>> Implement mthp_collapse() to walk forward through the bitmap and
->>> determine the best eligible order for each naturally-aligned region. The
->>> algorithm starts at the beginning of the PMD range and, for each offset,
->>> tries the highest order that fits the alignment. If the number of
->>> occupied PTEs in that region satisfies the max_ptes_none threshold for
->>> that order, a collapse is attempted. On failure, the order is
->>> decremented and the same offset is retried at the next smaller size. Once
->>> the smallest enabled order is exhausted (or a collapse succeeds), the
->>> offset advances past the region just processed, and the next attempt
->>> starts at the highest order permitted by the new offset's natural
->>> alignment.
->>>
->>> The algorithm works as follows:
->>>    1) set offset=0 and order=HPAGE_PMD_ORDER
->>>    2) if the order is not enabled, go to step (5)
->>>    3) count occupied PTEs in the (offset, order) range using
->>>       bitmap_weight_from()
->>>    4) if the count satisfies the max_ptes_none threshold, attempt
->>>       collapse; on success, advance to step (6)
->>>    5) if a smaller enabled order exists, decrement order and retry
->>>       from step (2) at the same offset
->>>    6) advance offset past the current region and compute the next
->>>       order from the new offset's natural alignment via __ffs(offset),
->>>       capped at HPAGE_PMD_ORDER
->>>    7) repeat from step (2) until the full PMD range is covered
->>>
->>> mTHP collapses reject regions containing swapped out or shared pages.
->>> This is because adding new entries can lead to new none pages, and these
->>> may lead to constant promotion into a higher order mTHP. A similar
->>> issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
->>> introducing at least 2x the number of pages, and on a future scan will
->>> satisfy the promotion condition once again. This issue is prevented via
->>> the collapse_max_ptes_none() function which imposes the max_ptes_none
->>> restrictions above.
->>>
->>> We currently only support mTHP collapse for max_ptes_none values of 0
->>> and HPAGE_PMD_NR - 1. resulting in the following behavior:
->>>
->>>    - max_ptes_none=0: Never introduce new empty pages during collapse
->>>    - max_ptes_none=HPAGE_PMD_NR-1: Always try collapse to the highest
->>>      available mTHP order
->>>
->>> Any other max_ptes_none value will emit a warning and default mTHP
->>> collapse to max_ptes_none=0. There should be no behavior change for PMD
->>> collapse.
->>>
->>> Once we determine what mTHP sizes fits best in that PMD range a collapse
->>> is attempted. A minimum collapse order of 2 is used as this is the lowest
->>> order supported by anon memory as defined by THP_ORDERS_ALL_ANON.
->>>
->>> Currently madv_collapse is not supported and will only attempt PMD
->>> collapse.
->>>
->>> We can also remove the check for is_khugepaged inside the PMD scan as
->>> the collapse_max_ptes_none() function handles this logic now.
->>>
->>> Signed-off-by: Nico Pache <npache@redhat.com>
->>> ---
->>> mm/khugepaged.c | 146 +++++++++++++++++++++++++++++++++++++++++++++---
->>> 1 file changed, 138 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>> index ec886a031952..430047316f43 100644
->>> --- a/mm/khugepaged.c
->>> +++ b/mm/khugepaged.c
->>> @@ -99,6 +99,8 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
->>>
->>> static struct kmem_cache *mm_slot_cache __ro_after_init;
->>>
->>> +#define KHUGEPAGED_MIN_MTHP_ORDER	2
->>> +
->>> struct collapse_control {
->>> 	bool is_khugepaged;
->>>
->>> @@ -110,6 +112,9 @@ struct collapse_control {
->>>
->>> 	/* nodemask for allocation fallback */
->>> 	nodemask_t alloc_nmask;
->>> +
->>> +	/* Each bit represents a single occupied (!none/zero) page. */
->>> +	DECLARE_BITMAP(mthp_present_ptes, MAX_PTRS_PER_PTE);
->>> };
->>>
->>> /**
->>> @@ -1440,20 +1445,130 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
->>> 	return result;
->>> }
->>>
->>> +/* Return the highest naturally aligned order that fits at @offset within a PMD. */
->>> +static unsigned int max_order_from_offset(unsigned int offset)
->>> +{
->>> +	if (offset == 0)
->>> +		return HPAGE_PMD_ORDER;
->>> +
->>> +	return min_t(unsigned int, __ffs(offset), HPAGE_PMD_ORDER);
->>> +}
->>> +
->>> +/*
->>> + * mthp_collapse() consumes the bitmap that is generated during
->>> + * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
->>> + *
->>> + * Each bit in cc->mthp_present_ptes represents a single occupied (!none/zero)
->>> + * page. We start at the PMD order and check if it is eligible for collapse;
->>> + * if not, we check the left and right halves of the PTE page table we are
->>> + * examining at a lower order.
->>> + *
->>> + * For each of these, we determine how many PTE entries are occupied in the
->>> + * range of PTE entries we propose to collapse, then we compare this to a
->>> + * threshold number of PTE entries which would need to be occupied for a
->>> + * collapse to be permitted at that order (accounting for max_ptes_none).
->>> + *
->>> + * If a collapse is permitted, we attempt to collapse the PTE range into a
->>> + * mTHP.
->>> + */
->>> +static enum scan_result mthp_collapse(struct mm_struct *mm,
->>> +		unsigned long address, int referenced, int unmapped,
->>> +		struct collapse_control *cc, unsigned long enabled_orders)
->>> +{
->>> +	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
->>> +	enum scan_result last_result = SCAN_FAIL;
->>> +	int collapsed = 0;
->>> +	bool alloc_failed = false;
->>> +	unsigned long collapse_address;
->>> +	unsigned int offset = 0;
->>> +	unsigned int order = HPAGE_PMD_ORDER;
->>> +
->>> +	while (offset < HPAGE_PMD_NR) {
->>> +		nr_ptes = 1UL << order;
->>> +
->>> +		if (!test_bit(order, &enabled_orders))
->>> +			goto next_order;
->>> +
->>> +		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
->>> +		nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
->>> +						      offset + nr_ptes);
->>> +
->>> +		if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
->> 
->> Looks broken for swap PTEs in PMD collapse ...
->> 
->> collapse_scan_pmd() allows them up to max_ptes_swap and record them in
->> unmapped, but they don't get a bit in mthp_present_ptes. And then
->> mthp_collapse() does the check above:
->
->Right. I assumed this is implicitly handled by the optimization in collapse_scan_pmd:
->
->	if (enabled_orders != BIT(HPAGE_PMD_ORDER))
->		max_ptes_none = KHUGEPAGED_MAX_PTES_LIMIT;
->
->But we perform the check a second time.
-
-Note that once lower orders are enabled, the scan *relaxes* max_ptes_none
-only so it can cover the whole PMD and build the bitmap ...
-
->> 
->> nr_occupied_ptes >= nr_ptes - max_ptes_none
->> 
->> So max_ptes_none=0 + 511 present PTEs + one allowed swap PTE won't even
->> call collapse_huge_page() for PMD order.
->> 
->> Shouldn't we account for them in the PMD-order check? Something like:
->> 
->> if (is_pmd_order(order))
->> 	nr_occupied_ptes += unmapped;
->As an alternative, we could either 1) skip the check there for
->pmd order (as the check was already done); or 2) introduce+maintain
-
-Yeah, skipping the check would do the trick, since isolate will check
-max_ptes_none again later :)
-
->a bitmap that tracks non-present PTEs.
->
->@@ -1475,7 +1477,9 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
->                nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
->                                                      offset + nr_ptes);
+> trace_marker_raw.tc assumes that the raw marker payload length
+> reported in trace_pipe is the result of int((id + 3) / 4) * 4, but
+> that is not true on kernels with CONFIG_HAVE_64BIT_ALIGNED_ACCESS
+> enabled.
 > 
->-               if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
->+               /* Check was already done in the caller. */
-
-This check is not quite redundant for PMD order, though. It avoids
-entering collapse_huge_page() for a range that already exceeds
-max_ptes_none for that order.
-
->+               if (is_pmd_order(order) ||
->+                   nr_occupied_ptes >= nr_ptes - max_ptes_none) {
->                        enum scan_result ret;
+> With forced 8-byte alignment, the ring buffer event forces 8-byte
+> alignment. The event length is stored in array[0], the payload data
+> and id are placed in a struct raw_data_entry which is stored starting
+> at array[1]. In this case, the printed payload data length is 8*N+4
+> bytes.
 > 
->                        collapse_address = address + offset * PAGE_SIZE;
->
->2) would probably be cleanest long-term.
+> To make the testcase pass in this case, add a kconfig_enabled() helper
+> and use it to detect CONFIG_HAVE_64BIT_ALIGNED_ACCESS so
+> trace_marker_raw.tc can calculate the expected length correctly.
+> 
+> Assisted-by: Copilot:gpt-5.5
+> Signed-off-by: Hui Wang <hui.wang@canonical.com>
 
-Yeah, Agreed.
+NACK
+
+Let's not change the kernel for a broken test. Also this has already
+been fixed but appears not to be applied yet.
+
+Shuah, can you please apply the below fix.
+
+  https://lore.kernel.org/all/20260601023251.1916483-1-dtcccc@linux.alibaba.com/
+
+-- Steve
+
