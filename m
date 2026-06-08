@@ -1,246 +1,220 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C652F0C62
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 20:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F53E394781
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 20:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780951616; cv=pass; b=OqUy9LSMr9GW9NE9/hkiF0lNNuucDvjbSTxE8CAs5HzDNgYGHJkHGpv3rfAjALfNpgdl+cwfn7cDalsIrKPhdZElyWF3Wqk1w/xKgO9+xrTEpu9IZ+fTmUA4LEUOTEb7cJVXo7UoY0k4QxRmvNpqNf7bmwLIRAX1WyZFxilUVDQ=
+	t=1780951752; cv=pass; b=kC3DKb6FVKB6N9ypjfiVDq0ARgwv3sb9vlFEU6r6LS64aylv0karvpIg+wMLbaBzycaWGdzjy1esiiT/ICQp9b5z8Ms/B8vIGdVS9Q6RGIiXI32ZiPuYx8fn9I8Atk7jxvmVlO714YiZRDepRmOoRO1fNZGqsqbgsZn7oWl7GDk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780951616; c=relaxed/simple;
-	bh=VkcZ55KTdEMhzAd9CZKpprqWDhoO/PUfmHma6XOXPHQ=;
+	s=arc-20240116; t=1780951752; c=relaxed/simple;
+	bh=mqw2OrB4l7ryqRoi0JsPC1biAGfzHf38qCJAbRmuB+U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MUeufg7m6Q12UIiMBTYpiR6CIg/ecQcHClmbj64iFXTQ0w1B97u9pOqc6Xtm+h0/VWYSAfKQUHvpuC/IF6YdKVcOHiYRg9rESaPGgHIlSoZPB0DlBun1n8bWaSLctzQGt4wq7OIE5lNWS5N/UNIWGR8R/eMV5zti/4nVLDJtBAw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EI0HbSKc; arc=pass smtp.client-ip=209.85.216.51
+	 To:Cc:Content-Type; b=pt0ciZD7J9hC+juOcbFzn67K6Z7SMDxWWfHvVsdx/U72/lJOJLgUH2pGT2Ggd1uYmiphIa0urmZqz0ypA5/q0xv1c8EOcv3nP/yg5jxihNYquvoEcqaljgTDCt7OrvGbdpf9jH2S0SzDxvKVyZbZYQxyF+D+8GKIaLfUJttTn8I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WiXPxBsO; arc=pass smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EI0HbSKc"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-36b903567fdso4824430a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jun 2026 13:46:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780951614; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WiXPxBsO"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-36d8b644473so4770603a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jun 2026 13:49:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780951750; cv=none;
         d=google.com; s=arc-20240605;
-        b=aquGFan9Gxx8p0M7O0PDM+RL08o/J6p9U9g8p2jvYIqxXf7PgdDaYrT3jwde2b1RSa
-         a+YAzOxIot3sQ60sY5i7KTOQrYDXy3pPdSDu3XNY8uV4GY+7+xDKSHlLf+j4zgrAaJ4f
-         1t0xRLaM+dpl86bfQnsiJTqFmB/o58otUDdKBbVwZUFsxRUkwSHOSYTy8ybXoZWxLt6W
-         83Nx0mkGJMWWsnfHCZIoBzCdc7xfbGeuT34Bvo/t3zbdlu1cmsixXffGk9inDZiDlEWQ
-         xbeCOckK5eAM6KZYkjQ3xAcMB1o/teijzTYMlwn0M0p2bIQU1ZyPmjxkHxATS/SMqXun
-         RkzQ==
+        b=SuKDbCC/+g+5vu/0qD4vgrTnfzJElh4QBsXDSs7CCDujnm3HLY0xQHynQo5J1coVLu
+         9mZ3HzTg1Naiaddw66FKOphojnbkBXLoK1mpsHOnJ+bR1Xgtr3RMw7Dv8xT/JsKosKSJ
+         //g6QaX373nOD9b6Sdc+FkI0/PFHh2lgKHMAkksbx4NohIqJyKV9m+GQMHwQ03PqGDjL
+         78G2XHQuk+FzsiztWvsa7DgjrY9sixfaqfQgYsQgI+4JlMeG+DSc93KmPqbFF+uuyYc+
+         Il8ScnR2KTLF82WQFHkMX029UIJ2cGILdZHD3ZtqD+6aS/UsvZ4+3SCOYynEj4jkLTm8
+         Ln8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=bEyAmCN5izqc+BHw5LGWc/odGoJ+BdSkQDaB0mqnFRM=;
-        fh=M88i1KjQMGzTKRPTmHNRW4oGmxj6pt0LfpfHjdNK9lM=;
-        b=H2XNkm2mGdIKU2YdSypJbfn2huyq6rqZU3h63PKT6iVfeCX32HYEsY7k6HNOESuUBJ
-         9qSExoSnLabPhsKaAuDq/NmVCpnK3HdyOab55cUkErCIr6O1tPqxbDlW7OmDBelPRiZx
-         GifTi1n5lBrfASiuNXDQUx1FTxMtndduA3JYUC//zfDl4HMqimOBCold+bz2Ih9nCNVg
-         LepCcfXdQfLyHcysYA1yv0Wf97bIy6VFU5zveLRy1htRX+k6Sv5roztqnjxG1NYf3s2Q
-         6G7UG9VCzMmyv7RuKyGhdHa+JuIghT/yQ06s1WCBb4iDiqGI/2ZNLba38fEAUI5aD4wA
-         Lk1A==;
+        bh=szcQRKKYkYYaFVP42s66uUUsYAUfyJsuIUeX1ksEXwA=;
+        fh=f9WRdQjSVex0SGfQPmgkWG/B65UuZq/2Txgw58ft3yc=;
+        b=TTrEI3QdvpvGcq/YvFH/gVGV20PQ+cccLAehnpl2m0QlX8pkG+iHYjjIpu761WU2ZL
+         d4xiEZlR9DXUjEhz0bw6Yf77UNTqxQhPaAScobFMzmMtKZ1XC24/mjRPQCMzJu4TbBX6
+         NXitBgPssJpGZpE5htssh2N/RIPHItU72XHyxazy+o6HLJAmkmr+fne8lAHht6Pb4cYQ
+         IR/Nwqs1r/wdx8/T/jd9pKQiSJmL6D0wkwoX/vws/Iv1B356E3ShoLgUUTbKKu5Y3vbp
+         bqqMmJy+cXeAcG0+dAOTdPEv9rPhb4zbj5UB6ZzL3MtwVxLs1ySnvWsYXHn5c9DbXtBQ
+         hBVQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780951614; x=1781556414; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780951750; x=1781556550; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bEyAmCN5izqc+BHw5LGWc/odGoJ+BdSkQDaB0mqnFRM=;
-        b=EI0HbSKc1Xnfock0yqprt9Fz5j+7hB8KzBUZs2E3cPxvWJ8Z25VnzRJJOGsr+dmFqM
-         azsx+xJsBam8dtWxV+pbdHlgIIkYSZuxPyHrtuUOsUbQ6avaQ0fSDZKPnXU9Aal5HeFx
-         OkSJ+GmDq6+HqOGEH1kL+z7VLiVgBCCnUqoms4zvv7U2sqiyEYWF88pUAZ4sCn7FAgjN
-         zwLWrdJ8i+eRV7/bdi6ANQrX3Tvk+d4+/n+pyEqMwvQHrzGGZyLoToA7SqpWHGPv5HJp
-         x6OMZ6VsZ6xPNoOYIcg5Kce222bHG516XuEm99amQsPudH9V7Fkc7ZLDtK2PYfj2ZvZr
-         Ocuw==
+        bh=szcQRKKYkYYaFVP42s66uUUsYAUfyJsuIUeX1ksEXwA=;
+        b=WiXPxBsOpuWgrCjCeMlGEsIooX1nPU0qOSQDX1pQX6jUvEMrbCypazfzir7e8hAinI
+         UBka2LtWotYfpdw/V1+NFwyJ2EDKPq9qeMixW5SkYRAhR4+mKEddQPvFK+UgzU+iD8bo
+         nzbNFWPM9A6fl4s2BvKEG1e7AZtuYpPzKCpnqvpuW60Kq1Bd1EB0LMS0+XxFzFIzedC4
+         M46UptFlA1ocUvob6xEOSExONzPxXUroO3dyIE49wwgaNAa2BtvrJECWGI+CgzBFFyXO
+         1Wy0ZmnlBZIFVdTrahZ2IoLPM3so7kJHe9QXa6epI51//9XBtdUSupdNQdy1WbBUGvYX
+         gBVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780951614; x=1781556414;
+        d=1e100.net; s=20251104; t=1780951750; x=1781556550;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=bEyAmCN5izqc+BHw5LGWc/odGoJ+BdSkQDaB0mqnFRM=;
-        b=fUxqbFmvkI5Pv/iq8IcMi7jlY4xJUuySJnVRRvQlKCWFgxuZD+nBwMXZX3ZYmJgfU7
-         1hf68ASOCFfu0emni5swyvpFYaVrH+ZWK6UFQDqM8S6zARbYzeBJbGAF7/t1MxZEKhIo
-         D4vUSAGNoJ54ZJxWpz8iF7Fe4ehLhN/5dU0XspmtPjMA3wv+mUPCEWaqNHaZipqPXVpw
-         8TStu5sRJ5blz2Cm3F++f3qnR0Al9xXjBH/opeZDrHWdRtOIfWs/yIeLB0+U9dXnk5cE
-         rT1iuw3qhJ/tYjdF8dx3J94sVDWYkhP76q+JPplssojVHuz5Pie4XwDJ4DhpNZ9DorWX
-         mPpQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/q7AhWYWJ9MeqRu+ze2i1SE+KSwOK1PwUAjdXMmUFcUYj9HqD4ghFP4M5C8KHuFy+jsQ560ja3S+KdGbVTsT3svng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7WQHPGwSc40UgN52tERjx9kDTInmaAi8qU5vA1hMihwCKrkA5
-	FbkwEixjM94GrsrzRhoO3Ejl1+Xt+VmEA/hrNtBZrHZTlOLNqJTY7CjlIvLwTKX32w/lz9jXQVf
-	32ICRRqZBJvhuzqStCMwEf+dsEtL+6jE=
-X-Gm-Gg: Acq92OGLHEMmF8vovRnRvcQKXRIG+MZrpWIlVvy4qL+smBpJ/br30ekBKpVYLzNjkXE
-	EvnkwPOAbsjpC6kjrdjfMcYM+v85Q9cWLFXx5cV2DFVAFhHnAAn7L/gFCSKVw2kluptn97ISek8
-	aXlJiIN69R60ask/dvHNyXTyXAaLnGVTNQRFGXie3MDyiffrDo/eoMYlUc8NYjp+3O1KiQ0ASw5
-	7RzWOnoeALLXRnjnNRVU90PAp2iyMYcw8bbj99YgMEQu1TZpDclhsdMXd8dqjCzDU9U/9S2CN8q
-	9PtwnzK686F/sPITzy47pwIyIJSOiH5/bIoBz4gdxjNYgZzz2MTICcnuicVR6/HuhU6hgaghcCh
-	XSBA+OjCQRFm2Ry2/ACxxcqFxqQ==
-X-Received: by 2002:a17:90b:3512:b0:36d:b424:4f17 with SMTP id
- 98e67ed59e1d1-370ee82fa3cmr17358938a91.1.1780951614413; Mon, 08 Jun 2026
- 13:46:54 -0700 (PDT)
+        bh=szcQRKKYkYYaFVP42s66uUUsYAUfyJsuIUeX1ksEXwA=;
+        b=NgQvPdynNhU+TXwJyiRppkfRNOHZfoJwDD3G3MSSHRtu+tfxYWroO8Cu8+fvlyjoOa
+         2ZSVkDNRvyM/v0Hk7xkZ/tAk3EUI39GJ0Lb7krq3+4SkyMN4jRnL2MrCubBpUNbINfDd
+         Jid01EXtIaYHEUG0b4xbuge+tKh4olY6DzXNfblMRlmi+HK1oZgy5WuXEFHuZh3fYZZj
+         R+iS80HEOcvBiAY3iulb+fW6A/582ulYVMYu+EKuUJaTSoa9nF7FyaMr8wdr0cPLduEr
+         ERWiMsCkUHwT13IQAbKmOhUcfjcSN4v2i9V5T0kG2wF7Fzo/QQII1jc/aE9ct75FQj3R
+         iL9A==
+X-Forwarded-Encrypted: i=1; AFNElJ/IcbsqZw2jPkp0qTWJ1Yd8Cv/5uV+iIbjpqiBDl6ukKRNNBnCwqMTXTP0FZ3M/cG83vIX0P6FqMCHyS7OiZNEjDMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr9LtmmG19LXwxSFi+OFhNk+RK9l9zkTXF9XGzHsH4lU12p1zq
+	fZNcX1SWY9DEVQE+avvn1quxX75HPpNlhuXscgZfRmnK+h8lDIMeo3zcn5+PKAyAPFkVfMu9HCh
+	ZIL1lfTCKNgBhLsGlXiNphFYIJUc43io=
+X-Gm-Gg: Acq92OHe1Kw1+MfSG7GWSMi0JS2vva6jFvH97qvkaTtJR1pjxkUVemdtC+93RbcB85V
+	LIzJePakVELV1VL41v39ZPWsKa2gnmapw2yjM7nzWGp5+y6mqcU5TGMAQzdnvUderqwqWD2ePyi
+	blgf5W646J4ploDWN743d4W/zu2YUYF8KyjqR1vRAHOtR+G12NkCQBDeP9CLzeNmHFr5YzM87Ah
+	w4UFPpNcx2vskXlv6BpeJL8nT9rHvEpevObOOYMxcbaxczhYvH9a9uKMdDR9p1GARPL3N73BxMR
+	oAL5YKFUvAisfV2u2T7HhZLfcPn3pOiAjdc3EceGb0n/sunkfTdbBDOlZXMHV1YzBwNMBx0w86W
+	+8/fua7n3Q3ZCYc3k6k8+FAIzjQ==
+X-Received: by 2002:a17:90b:3bcb:b0:367:cb53:7435 with SMTP id
+ 98e67ed59e1d1-370f1525ed1mr16914932a91.24.1780951750236; Mon, 08 Jun 2026
+ 13:49:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260526205840.173790-1-jolsa@kernel.org> <20260526205840.173790-6-jolsa@kernel.org>
-In-Reply-To: <20260526205840.173790-6-jolsa@kernel.org>
+References: <20260526205840.173790-1-jolsa@kernel.org> <aiEiP54zktDqAZpG@krava>
+In-Reply-To: <aiEiP54zktDqAZpG@krava>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 8 Jun 2026 13:46:39 -0700
-X-Gm-Features: AVVi8CfRk6L2D7B6rQ3r0LikUw7cueXdxCQXSNM3PID6p4IbsR9995QvIqtVNp4
-Message-ID: <CAEf4BzZiFUeFa4fdghuSGpqiEzyvJVxs6TDgJd5U4hSj--imiQ@mail.gmail.com>
-Subject: Re: [PATCHv4 05/13] uprobes/x86: Move optimized uprobe from nop5 to nop10
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Date: Mon, 8 Jun 2026 13:48:54 -0700
+X-Gm-Features: AVVi8CcxWz4v5RpKgGDZlxpIi02CKmV66vQtWBFlpZJuRHPawXW7c-U_nKUu48I
+Message-ID: <CAEf4Bzbrd8xs5sSwEPR336=7z2FGcdXVtV-aVZ4W1zSjHkwwcg@mail.gmail.com>
+Subject: Re: [PATCHv4 00/13] uprobes/x86: Fix red zone issue for optimized uprobes
+To: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 26, 2026 at 1:59=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, Jun 3, 2026 at 11:59=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
 >
-> Andrii reported an issue with optimized uprobes [1] that can clobber
-> redzone area with call instruction storing return address on stack
-> where user code may keep temporary data without adjusting rsp.
->
-> Fixing this by moving the optimized uprobes on top of 10-bytes nop
-> instruction, so we can squeeze another instruction to escape the
-> redzone area before doing the call, like:
->
->   lea -0x80(%rsp), %rsp
->   call tramp
->
-> Note the lea instruction is used to adjust the rsp register without
-> changing the flags.
->
-> We use nop10 and following transformation to optimized instructions
-> above and back as suggested by Peterz [2].
->
-> Optimize path (int3_update_optimize):
->
->   1) Initial state after set_swbp() installed the uprobe:
->       cc 2e 0f 1f 84 00 00 00 00 00
->
->      From offset 0 this is INT3 followed by the tail of the original
->      10-byte NOP.
->
->      After a previous unoptimization bytes 5..9 may still contain the
->      old call instruction, which remains valid for threads already there.
->
->   2) Rewrite the LEA tail and call displacement:
->       cc [8d 64 24 80 e8 d0 d1 d2 d3]
->
->      From offset 0 this traps on the uprobe INT3.  Bytes 1..9 are not
->      executable entry points while byte 0 is trapped.
->
->   3) Publish the first LEA byte:
->       [48] 8d 64 24 80 e8 d0 d1 d2 d3
->
->      From offset 0 this is:
->         lea -0x80(%rsp), %rsp
->         call <uprobe-trampoline>
->
-> Unoptimize path (int3_update_unoptimize):
->
->   1) Initial optimized state:
->       48 8d 64 24 80 e8 d0 d1 d2 d3
->      Same as 3) above.
->
->   2) Trap new entries before restoring the NOP bytes:
->       [cc] 8d 64 24 80 e8 d0 d1 d2 d3
->
->      From offset 0 this traps. A thread that had already executed the
->      LEA can still reach the intact CALL at offset 5.
->
->   3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
->      and byte 5 as CALL.
->       cc [2e 0f 1f 84] e8 d0 d1 d2 d3
->
->      From offset 0 this still traps. Offset 5 is still the CALL for any
->      thread that was already past the first LEA byte.
->
->   4) Publish the first byte of the original NOP:
->       [66] 2e 0f 1f 84 e8 d0 d1 d2 d3
->
->      From offset 0 this is the restored 10-byte NOP; the CALL opcode and
->      displacement are now only NOP operands.  Offset 5 still decodes as
->      CALL for a thread that was already there.
->
->      Tthere is only a single target uprobe-trampoline for the given nop10
->      instruction address, so the CALL instruction will not be changed acr=
-oss
->      unoptimization/optimization cycles.
->      Therefore, any task that is preempted at the CALL instruction is gua=
-ranteed
->      to observe that CALL and not anything else.
->
-> Note as explained in [2] we need to use following nop10:
->        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
-> NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs n=
-opw 0x00000000(%rax,%rax,1)
->
-> which means we need to allow 0x2e prefix which maps to INAT_PFX_CS
-> attribute in is_prefix_bad function.
->
-> Also changing the uprobe syscall error when called out of uprobe
-> trampoline to -EPROTO, so we are able to detect the fixed kernel.
->
-> The optimized uprobe performance stays the same:
->
->         uprobe-nop     :    3.129 =C2=B1 0.013M/s
->         uprobe-push    :    3.045 =C2=B1 0.006M/s
->         uprobe-ret     :    1.095 =C2=B1 0.004M/s
->   -->   uprobe-nop10   :    7.170 =C2=B1 0.020M/s
->         uretprobe-nop  :    2.143 =C2=B1 0.021M/s
->         uretprobe-push :    2.090 =C2=B1 0.000M/s
->         uretprobe-ret  :    0.942 =C2=B1 0.000M/s
->   -->   uretprobe-nop10:    3.381 =C2=B1 0.003M/s
->         usdt-nop       :    3.245 =C2=B1 0.004M/s
->   -->   usdt-nop10     :    7.256 =C2=B1 0.023M/s
->
-> [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org=
+> On Tue, May 26, 2026 at 10:58:27PM +0200, Jiri Olsa wrote:
+> > hi,
+> > Andrii reported an issue with optimized uprobes [1] that can clobber
+> > redzone area with call instruction storing return address on stack
+> > where user code may keep temporary data without adjusting rsp.
+> >
+> > Fixing this by moving the optimized uprobes on top of 10-bytes nop
+> > instruction, so we can squeeze another instruction to escape the
+> > redzone area before doing the call.
+> >
+> > Note we need upstream update first for patch 3 (github.com/libbpf/usdt)=
+,
+> > if we decide to take this change.
+> >
+> > thanks,
+> > jirka
+> >
+> >
+> > v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org=
 /
-> [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programmin=
-g.kicks-ass.net/#t
-> Reported-by: Andrii Nakryiko <andrii@kernel.org>
-> Closes: https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel=
-.org/
-> Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
-> Assisted-by: Codex:GPT-5.5
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/kernel/uprobes.c | 255 ++++++++++++++++++++++++++++----------
->  1 file changed, 190 insertions(+), 65 deletions(-)
+> > v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.or=
+g/
+> > v3: https://lore.kernel.org/bpf/20260521124411.31133-1-jolsa@kernel.org=
+/
+> >
+> > v4 changes:
+> > - do not use 2nd int3 (ont +5 offset) because the call instruction
+> >   is allways the same for the given nop10 address [Andrii/Peter]
+> > - unmap unused trampoline vma after unsuccesfull optimization [sashiko]
+> > - small change to patch#2 moved user_64bit_mode earlier in the path
+> >   and pass/use mm_struct pointer directly from arch_uprobe_optimize
+> >   instead of gettting current->mm
+> >   Andrii, keeping your ack, please shout otherwise
+>
+> hi,
+> I think bots did not find anything substantial, I have just small
+> selftests changes queued for v5
+>
+> any other feedback/review would be great
 >
 
-[...]
+one small nit on only, otherwise LGTM.
 
-> @@ -943,13 +1026,31 @@ static int int3_update(struct arch_uprobe *auprobe=
-, struct vm_area_struct *vma,
->         smp_text_poke_sync_each_cpu();
+Peter, Masami, Ingo, should this go through tip tree or should we
+route this through bpf-next tree? I think we are fine either way, but
+might be more convenient to route through bpf-next given libbpf and
+BPF selftest changes.
+
+If so, I'd appreciate another look at first 5 patches by Peter, if
+that's ok. Thanks!
+
+
+
+> thanks,
+> jirka
 >
->         /*
-> -        * Write first byte.
-> +        * 3) Restore bytes 1..4 of the original NOP while keeping byte 0=
- trapped
-> +        *    and byte 5 as CALL:
-> +        *    cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> +        */
-> +       ctx.expect =3D EXPECT_SWBP_OPTIMIZED;
-> +       err =3D uprobe_write(auprobe, vma, vaddr + 1, insn + 1,
-> +                          LEA_INSN_SIZE - 1, verify_insn,
-> +                          true /* is_register */, false /* do_update_ref=
-_ctr */,
-
-tbh, it's quite subtle and non-obvious why is_register should be set
-to true first two times (and especially that is_register and
-do_update_ref_ctr are implicitly connected), not sure how to make it
-cleaner, but maybe leave a short comment explaining this twice
-register, once unregister sequence?
-
-> +                          &ctx);
-> +       if (err)
-> +               return err;
-> +
-> +       smp_text_poke_sync_each_cpu();
-
-[...]
+>
+> >
+> > v3 changes:
+> > - use nop10 update suggested by Peter in [2]
+> > - remove struct uprobe_trampoline object, use vma objects directly inst=
+ead
+> > - selftests fixes [sashiko]
+> > - ack from Andrii
+> >
+> > v2 changes:
+> > - several selftest fixes [sashiko]
+> > - consolidate is_lea_insn and is_call_insn insto single check [Jakub Si=
+tnicki]
+> > - use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
+> > - allow to copy uprobe trampolines vma objects on fork [sashiko]
+> > - change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
+> > - added fork/clone tests
+> > - I kept the selftest changes and nop5->nop10 changes in separate
+> >   commits for easier review, we can squash them later if we want to kee=
+p
+> >   bisect working properly
+> >
+> >
+> > [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.o=
+rg/
+> > [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programm=
+ing.kicks-ass.net/#t
+> > ---
+> > Andrii Nakryiko (1):
+> >       selftests/bpf: Add tests for uprobe nop10 red zone clobbering
+> >
+> > Jiri Olsa (12):
+> >       uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+> >       uprobes/x86: Remove struct uprobe_trampoline object
+> >       uprobes/x86: Allow to copy uprobe trampolines on fork
+> >       uprobes/x86: Unmap trampoline vma object in case it's unused
+> >       uprobes/x86: Move optimized uprobe from nop5 to nop10
+> >       libbpf: Change has_nop_combo to work on top of nop10
+> >       libbpf: Detect uprobe syscall with new error
+> >       selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
+> >       selftests/bpf: Change uprobe syscall tests to use nop10
+> >       selftests/bpf: Change uprobe/usdt trigger bench code to use nop10
+> >       selftests/bpf: Add reattach tests for uprobe syscall
+> >       selftests/bpf: Add tests for forked/cloned optimized uprobes
+> >
+> >  arch/x86/kernel/uprobes.c                               | 379 ++++++++=
++++++++++++++++++++++++++++++++++++-----------------------------
+> >  include/linux/uprobes.h                                 |   5 -
+> >  kernel/events/uprobes.c                                 |  10 --
+> >  kernel/fork.c                                           |   1 -
+> >  tools/lib/bpf/features.c                                |   4 +-
+> >  tools/lib/bpf/usdt.c                                    |  16 +--
+> >  tools/testing/selftests/bpf/bench.c                     |  20 ++--
+> >  tools/testing/selftests/bpf/benchs/bench_trigger.c      |  38 ++++----
+> >  tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh |   2 +-
+> >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 307 ++++++++=
++++++++++++++++++++++++++++++++++++++++++++++-----
+> >  tools/testing/selftests/bpf/prog_tests/usdt.c           |  74 ++++++++=
+++++--
+> >  tools/testing/selftests/bpf/progs/test_usdt.c           |  25 +++++
+> >  tools/testing/selftests/bpf/usdt.h                      |   2 +-
+> >  tools/testing/selftests/bpf/usdt_2.c                    |  15 ++-
+> >  14 files changed, 653 insertions(+), 245 deletions(-)
