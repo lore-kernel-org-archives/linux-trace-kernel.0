@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E133C3B14BE;
-	Mon,  8 Jun 2026 08:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0003B3887;
+	Mon,  8 Jun 2026 08:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780909048; cv=none; b=YZ1CUEcLcl4ngH+LsPwYkMLbznhNr1RGZVCyFD9op7aK6gYntaH6si0v5+hdhJQxunKOxmAqSwjXkBYLqsn/PyUDnJJscQaXXGqu4OaeVpS3/OpM2IaiQiZI1nBR1iqclOJRq8I3xC8ve3nXX1Ah/BfCur27CAq2/3igGuGfu0c=
+	t=1780909048; cv=none; b=tEKjGU3+WvmQvb0hH0uIDm2eBfvr82tdhJKSFMFO5L5AhY24T2XsIZ4HnSKtzkSh1tszs9nDScIh31IHHPOqsirEBPU+xkz/hGMRvqJJLr1FWl+jB6F21UOIpt0zC7yzhxlaysh9Q+PYNCEjfFSzIFhhHqnlTw1DrKevWheO/Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780909048; c=relaxed/simple;
-	bh=ezDTI9Ssy71qH8gl/qpo/ufrkH/UfQcR7UHF9HkpcqE=;
+	bh=fWDOil+1nalo8bXMWCuGsQj/R1sipl6kSB3bKbJG1kw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dBhwUt7C0p/i18wPqA3BHZ+cuju0gM4U0dnJt0YxpMu82DtVxFIX2YhnDd/oLywjPrvxhKJ5nC886IPgLErEj9v0wcpbOrD8+C3goiuB3q2gAJTPeFLF6z5gmgKOzhOY8HE1ePJsqZsXd7t9Ite591AnMvgnklB0z8GRPPLXs/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TYs1s+0L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IeYMX0No; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=fQXi/fQ1Tewua7LQF8A8CXGwcdiq/CTauevPJMDKiTmEjevXmRfJU3qsOhqWnwfCh8PbbHv/1ZuvWiKb8+iJ0nyVmVhunO7X72VTxnB9464xvYGkJrDMfilK1Lb9HA67XQKnkLISAZNmK5CIaXrSQ2Ee4+5bNjwkS5pGmDFrmbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=palc1tK8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nuUIbVlR; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TYs1s+0L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IeYMX0No"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="palc1tK8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nuUIbVlR"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1780909045;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RurhsS8UBLDY7FDyN6pd33mJFyUia5q2qCGObl7k6gU=;
-	b=TYs1s+0L3ytrYs9edxiwU6Lk8UZhkA2MNGfwmdDGvWVnynE56rD53xJtAGX8LHWB+74S20
-	Vvq0XEBQZW5Y21BXiX8Z2XSeXf7N2LboiRqVOppnr1q9l/dMXFEXXCVgIxLhjGeaK8zmKD
-	J9Tuy599+aUIxI8qiXyxsmYKan//reh7A9gdeZ3ELcdeViBWWF6jtdrDRImruxsxSbxtY5
-	DK3BJs0ABv0fP5LHONpQmR1Qxkn6InDWb/xEmd3oiiyncbjgSqqAwukoAxxneENT81Bi8/
-	KSB2fI852iIPCfEx1uDeI/XE4ohAYp+Fqo2iYd/CVZG0IvPQdT3wL2o3AZR4GQ==
+	bh=XGdJn1kK1yjAiJ1GvD7KIXuOfVDkCf2rQ+rNK2oX5iE=;
+	b=palc1tK8/tZYe4EtyvjtnVECPfUZzBXQ+XCa1FYYrdyDkxqCxTSLqlj2PydsO0MzZBpYvF
+	bqo7Bu5PTT8YZHtn1bOCIeD50CK3/FM3qSHw/wL/sjboPrTOnq5EYlMv2p3QT8gJOknF91
+	IHF79Y3gbVgXB73zdZJobDXsRrjFlDNkEvTFm0DoaQbkMRMkaOkEsBzY5Y46QjHCBVHY/G
+	dnEE2PAuBoWhGF6kDlSOETMb4CVp9oHCWdAieSHULnq8eEEdo1UzkP0xz8avSH4SwLcuMu
+	Wy8SvPPt0BXHDXHYjhteXQcCWKGKqa/UY98CS2NN5Ngi7XF/HlB1aRboCi5kvA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1780909045;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RurhsS8UBLDY7FDyN6pd33mJFyUia5q2qCGObl7k6gU=;
-	b=IeYMX0No+vK3tCGu9PWWmax0czoan4+LrjQTqe6HY4ukWn2qG5zzcMtCI1ghcV/yrMftIa
-	ZJoCOxneO04JZIDQ==
+	bh=XGdJn1kK1yjAiJ1GvD7KIXuOfVDkCf2rQ+rNK2oX5iE=;
+	b=nuUIbVlRpC6zV7LhxSgJiNc+5vHVn2Y47M2T3ECcaqo4UN+Q3cu2d9+8Zvun5MCC6fuT/J
+	W5z+VMcsj+v9ckCA==
 To: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 03/13] verification/rvgen: Implement state and transition parser based on Lark
-Date: Mon,  8 Jun 2026 10:56:59 +0200
-Message-ID: <8964bf8b7c20fa1a5b8ef2a7081cf8ba11d70526.1780908661.git.namcao@linutronix.de>
+Subject: [PATCH v3 04/13] verification/rvgen: Convert __fill_verify_invariants_func() to Lark
+Date: Mon,  8 Jun 2026 10:57:00 +0200
+Message-ID: <f620a4f1aea617bb9a643d58832d1be134377195.1780908661.git.namcao@linutronix.de>
 In-Reply-To: <cover.1780908661.git.namcao@linutronix.de>
 References: <cover.1780908661.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,272 +58,102 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The DOT parsing scripts directly parse the raw text and they are quite
-fragile. If the input dot files' formats are slightly changed (for
-instance, by breaking long some lines which is allowed by the DOT
-language), the scripts would fail.
-
-Prepare to move away from the raw text processing, implement parsers based
-on Lark which parse states, transitions and constraints.
-
-The parse results are not used yet. The existing scripts will be converted
-one by one to them, and the raw text processing will eventually be removed.
+Convert __fill_verify_invariants_func() to use the parsed states
+information from Lark, prepare to remove the old raw text parsing code.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/rvgen/rvgen/automata.py | 216 +++++++++++++++++++++
- 1 file changed, 216 insertions(+)
+v3:
+  - remove unused import
+---
+ tools/verification/rvgen/rvgen/dot2k.py | 32 ++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verificatio=
-n/rvgen/rvgen/automata.py
-index 8649d982383d..b86275e7bf28 100644
---- a/tools/verification/rvgen/rvgen/automata.py
-+++ b/tools/verification/rvgen/rvgen/automata.py
-@@ -198,6 +198,164 @@ class ParseTree:
-         self.node_attrs =3D attributes_parser.node_attrs
-         self.edge_attrs =3D attributes_parser.edge_attrs
+diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
+vgen/rvgen/dot2k.py
+index 110cfd69e53a..0595bfcd232e 100644
+--- a/tools/verification/rvgen/rvgen/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -12,6 +12,7 @@ from collections import deque
+ from .dot2c import Dot2c
+ from .generator import Monitor
+ from .automata import _EventConstraintKey, _StateConstraintKey, AutomataEr=
+ror
++from .automata import ConstraintCondition
 =20
-+class ConstraintCondition:
-+    def __init__(self, env: str, op: str, val: str, unit=3DNone):
-+        self.env =3D env
-+        self.op =3D op
-+        self.val =3D val
-+        self.unit =3D unit
-+        if unit is None:
-+            # try to infer unit from constants or parameters
-+            val_for_unit =3D val.lower().replace("()", "")
-+            if val_for_unit.endswith("_ns"):
-+                self.unit =3D "ns"
-+            if val_for_unit.endswith("_jiffies"):
-+                self.unit =3D "j"
-+
-+class ConstraintRule:
-+    grammar =3D r'''
-+        rule: condition (OP condition)*
-+
-+        OP: "&&" | "||"
-+
-+        condition: ENV CMP_OP VAL UNIT?
-+
-+        ENV: CNAME
-+
-+        CMP_OP: "=3D=3D" | "<=3D" | "<" | ">=3D" | ">"
-+
-+        VAL: /[0-9]+/
-+           | /[A-Z_]+\(\)/
-+           | /[A-Z_]+/
-+           | /[a-z_]+\(\)/
-+           | /[a-z_]+/
-+
-+        UNIT: "ns" | "us" | "ms" | "s"
-+    '''
-+
-+    def __init__(self, c: ConstraintCondition):
-+        '''
-+        A list of pairs of
-+          - the condition (e.g. is_constr_dl =3D=3D 1)
-+          - the logical operator ("||" or "&&") combining this
-+            condition with the next one if it exists, otherwise None
-+
-+        TODO: Perhaps use an abstract syntax tree instead, because
-+              this representation cannot capture precedence
-+        '''
-+        self.rules =3D [[c, None]]
-+
-+    def chain(self, op: str, c: ConstraintCondition):
-+        self.rules[-1][1] =3D op
-+        self.rules.append([c, None])
-+
-+class ConstraintReset:
-+    def __init__(self, env):
-+        self.env =3D env
-+
-+class StateLabelParser:
-+    grammar =3D r'''
-+    label: CNAME ("\\n" condition)?
-+
-+    %import common.CNAME
-+    %import common.WS
-+    %ignore WS
-+    ''' + ConstraintRule.grammar
-+
-+    parser =3D lark.Lark(grammar, parser=3D'lalr', start=3D"label")
-+
-+    def __init__(self, label: str):
-+        try:
-+            tree =3D self.parser.parse(label)
-+        except lark.exceptions.UnexpectedInput as exc:
-+            raise(AutomataError(f"Unrecognised state \"{label}\"\n{exc}"))
-+
-+        self.state =3D tree.children[0]
-+        self.constraint =3D None
-+
-+        if len(tree.children) =3D=3D 2:
-+            self.constraint =3D ConstraintCondition(*tree.children[1].chil=
-dren)
-+            if self.constraint.op not in ("<", "<=3D"):
-+                raise AutomataError("State constraints must be clock expir=
-ations like"
-+                                    f" clk<N ({label})")
-+
-+class EventLabelParser:
-+    grammar =3D r'''
-+    events: event ("\\n" event)*
-+
-+    event: name (";" guard)?
-+
-+    guard: reset
-+         | rule
-+         | rule ";" reset
-+         | reset ";" rule
-+
-+    name: CNAME
-+
-+    reset: "reset" "(" ENV ")"
-+
-+    %import common.CNAME
-+    %import common.WS
-+    %ignore WS
-+    ''' + ConstraintRule.grammar
-+
-+    parser =3D lark.Lark(grammar, parser=3D'lalr', start=3D"events")
-+
-+    class GetEvents(lark.visitors.Transformer):
-+        def guard(self, args):
-+            reset =3D None
-+            rule =3D None
-+            for arg in args:
-+                if arg.data =3D=3D "reset":
-+                    reset =3D ConstraintReset(arg.children[0])
-+                elif arg.data =3D=3D "rule":
-+                    conditions =3D arg.children
-+                    rule =3D ConstraintRule(conditions[0])
-+                    for i in range(1, len(conditions), 2):
-+                        rule.chain(conditions[i], conditions[i + 1])
-+            return reset, rule
-+
-+        def OP(self, args):
-+            return args
-+
-+        def condition(self, args):
-+            return ConstraintCondition(*args)
-+
-+        def event(self, args):
-+            assert(len(args) <=3D 2)
-+            name =3D args[0]
-+            rule, reset =3D None, None
-+            if len(args) =3D=3D 2:
-+                reset, rule =3D args[1]
-+            return name, reset, rule
-+
-+        def events(self, args):
-+            return args
-+
-+        def name(self, args):
-+            return args[0]
-+
-+    def __init__(self, label: str):
-+        try:
-+            tree =3D self.parser.parse(label)
-+            self.events =3D self.GetEvents().transform(tree)
-+        except lark.exceptions.UnexpectedInput as exc:
-+            raise(AutomataError(f"Unrecognised event \"{label}\"\n{exc}"))
-+
-+class Transition:
-+    def __init__(self, src: str, dst: str, event: str,
-+                 reset: ConstraintReset, rule: ConstraintRule):
-+        self.src =3D src
-+        self.dst =3D dst
-+        self.event =3D event
-+        self.rule =3D rule
-+        self.reset =3D reset
-+
-+class State:
-+    def __init__(self, name: str, inv: ConstraintCondition):
-+        self.name =3D name
-+        self.inv =3D inv
-+
- class _ConstraintKey:
-     """Base class for constraint keys."""
 =20
-@@ -252,6 +410,8 @@ class Automata:
-         self.name =3D model_name or self.__get_model_name()
-         self.__dot_lines =3D self.__open_dot()
-         self.__parse_tree =3D ParseTree(file_path)
-+        self.transitions =3D self.__parse_transitions()
-+        self._states, self._initial_state, self._final_states =3D self.__p=
-arse_states()
-         self.states, self.initial_state, self.final_states =3D self.__get_=
-state_variables()
-         self.env_types =3D {}
-         self.env_stored =3D set()
-@@ -327,6 +487,62 @@ class Automata:
+ class dot2k(Monitor, Dot2c):
+@@ -177,6 +178,14 @@ class ha2k(dot2k):
+             raise AutomataError("Detected deterministic automaton, use the=
+ 'da' class")
+         self.trace_h =3D self._read_template_file("trace_hybrid.h")
+         self.__parse_constraints()
++        self.has_invariant =3D False
++        self.has_guard =3D False
++        for state in self._states:
++            if state.inv:
++                self.has_invariant =3D True
++        for transition in self.transitions:
++            if transition.rule or transition.reset:
++                self.has_guard =3D True
 =20
-         return cursor
+     def fill_monitor_class_type(self) -> str:
+         if self._is_id_monitor():
+@@ -218,14 +227,13 @@ class ha2k(dot2k):
+         assert env.removesuffix(f"_{self.name}") in self.envs
+         return env
 =20
-+    def __parse_transitions(self):
-+        transitions =3D []
-+
-+        for edge in self.__parse_tree.edges:
-+            attr =3D self.__parse_tree.edge_attrs.get(edge)
-+            if not attr:
+-    def __start_to_invariant_check(self, constr: str) -> str:
++    def __start_to_invariant_check(self, inv: ConstraintCondition) -> str:
+         # by default assume the timer has ns expiration
+-        env =3D self.__get_constraint_env(constr)
+         clock_type =3D "ns"
+-        if self.env_types.get(env.removesuffix(f"_{self.name}")) =3D=3D "j=
+":
++        if inv.unit =3D=3D "j":
+             clock_type =3D "jiffy"
+=20
+-        return f"return ha_check_invariant_{clock_type}(ha_mon, {env}, tim=
+e_ns)"
++        return f"return ha_check_invariant_{clock_type}(ha_mon, {inv.env}_=
+{self.name}, time_ns)"
+=20
+     def __start_to_conv(self, constr: str) -> str:
+         """
+@@ -320,20 +328,22 @@ class ha2k(dot2k):
+                 self.invariants[key] =3D rules[0]
+=20
+     def __fill_verify_invariants_func(self) -> list[str]:
+-        buff =3D []
+-        if not self.invariants:
++        if not self.has_invariant:
+             return []
+=20
+-        buff.append(
++        buff =3D [
+ f"""static inline bool ha_verify_invariants(struct ha_monitor *ha_mon,
+ \t\t\t\t\tenum {self.enum_states_def} curr_state, enum {self.enum_events_d=
+ef} event,
+ \t\t\t\t\tenum {self.enum_states_def} next_state, u64 time_ns)
+-{{""")
++{{"""]
+=20
+         _else =3D ""
+-        for state, constr in sorted(self.invariants.items()):
+-            check_str =3D self.__start_to_invariant_check(constr)
+-            buff.append(f"\t{_else}if (curr_state =3D=3D {self.states[stat=
+e]}{self.enum_suffix})")
++        for state in self._states:
++            if not state.inv:
 +                continue
 +
-+            label =3D attr.get("label")
-+
-+            src, dst =3D edge
-+
-+            parser =3D EventLabelParser(label)
-+            for event, reset, rule in parser.events:
-+                transitions.append(Transition(src, dst, event, reset, rule=
-))
-+
-+        transitions.sort(key=3Dlambda t : (t.src, t.event))
-+        return transitions
-+
-+    def __parse_states(self):
-+        initial_state =3D ""
-+        states =3D []
-+        final_states =3D []
-+
-+        for node in self.__parse_tree.nodes:
-+            attr =3D self.__parse_tree.node_attrs[node]
-+            label =3D attr.get("label")
-+
-+            if node.startswith(Automata.init_marker):
-+                initial_state =3D node[len(Automata.init_marker):]
-+
-+            if not label:
-+                continue
-+
-+            parser =3D StateLabelParser(label)
-+            state =3D State(parser.state, parser.constraint)
-+
-+            states.append(state)
-+
-+            shape =3D attr.get("shape")
-+            if shape in ("doublecircle", "ellipse"):
-+                final_states.append(state)
-+
-+
-+        initial_state =3D next((s for s in states if s.name =3D=3D initial=
-_state), None)
-+        if not initial_state:
-+            raise AutomataError("The automaton doesn't have an initial sta=
-te")
-+
-+        if not final_states:
-+            final_states.append(initial_state)
-+
-+        states.remove(initial_state)
-+        states.sort(key=3Dlambda s : s.name)
-+        states.insert(0, initial_state)
-+        return states, initial_state, final_states
-+
-     def __get_state_variables(self) -> tuple[list[str], str, list[str]]:
-         # wait for node declaration
-         states =3D []
++            check_str =3D self.__start_to_invariant_check(state.inv)
++            buff.append(f"\t{_else}if (curr_state =3D=3D {state.name}{self=
+.enum_suffix})")
+             buff.append(f"\t\t{check_str};")
+             _else =3D "else "
+=20
 --=20
 2.47.3
 
