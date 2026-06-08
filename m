@@ -1,197 +1,318 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080253CAE74;
-	Mon,  8 Jun 2026 16:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B87F3D093E
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 16:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780935920; cv=none; b=Ucz2vL9ZYWk0vJcU9TlC6CtL+unOWWWoLwqxuyHVlvSvahz0PVTA5AXRKmjBfxERhplH2L0j+E0Xv5xq/Dcni5PHFs6DNYuTKh236x8zsv4OusGg99iLwPsK21AUkQ5zVQYmFObla/aMmqIvhj0enRTxyEUk+npr9a0YLIHApLM=
+	t=1780936016; cv=none; b=dGRUAf9fLrZqUHvgU9iN41VBl5s+k+jI3O9+P0GN4wA2XT9PrnnGCcmo+WMstmBpijtgVDNLJdVN9jpgRFImJHWvaPaMPhKamqp/u8KXddy48ArKYixWmqsHiWUmAwSxyB+cvVSiMOE3/P790yHcj+UCFJXsZVD+fc99GJSlHXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780935920; c=relaxed/simple;
-	bh=QPhqsebsO3HMrGMEDz9OVg+K2hivuE3EfkbyqQu5hD8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KfzjfgIG4UxAOA5NKdySohaV5cLMfRSd67Oe+kSn138N3ia4axKAYW49yqBtm1gaNIcXOA/vvmtTWW8Ja9nHAHT83YHmP1guKftMCjX+D2f/a7P55krc8w3TPsBdUp8UC2AkkDHu1GgfcwhPK0ztv01OHox+lD4/Er7TnkPoQS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=Y57GJxVy; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1780936016; c=relaxed/simple;
+	bh=qUWLNR2u0Fu6Is32CFDEEVX9do0PCMwVYfajVGJWfMs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VVm81j/0PMHhhAKGkmyDyBFvSJhy1tztrgUqipm+07F1LorHHGBgID22iQnDH8oSNLDRJAauCWNZoBUgI+NH0WT/gaMSDD+Ex3Eoyce8ZaYHYs+ECXEkVoPgIij/8ov8+h79xK1B5LrBeUUnt6EHLtv2NHqoiIcdiaeZFEcZEjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=utcAAemx; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="Y57GJxVy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
-	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description;
-	bh=k3Cl903UI3FDV6LUKk48+poCJ8NTaQVxa7IZmgH5xJo=; b=Y57GJxVy0Z/3PZerkPoYPQ/glg
-	3m+yPuxaSBUbeyEdegfqNviDIUfRupRmv8T9OsnFh3gK6AZeuHPcbmOhp5IboKcZS6bl5AwpngRaj
-	SvmHzwxkq43HVzxulK3PuAArB9/Qyx7Go8jhGcwbSTY1sMA5iUjvj4Fo5Ybo9ytYLrIfriuv0MuoT
-	AVI3OJlF0st2BuTcgbwXAvOQI/ZSIqWj207vwC6ov6uxMimRm+SMGwSf89AYBZzc/TPN9OZZMap61
-	V3efzaWoTbY2Uv8FlbW0Xlczic8i5FG9xK5Ou1lmkk1E0/7udx4txJbppllhNH5vm2+gBN4WSa75r
-	r13yHgsg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wWcmq-007kkS-1k;
-	Mon, 08 Jun 2026 16:25:16 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 08 Jun 2026 09:24:03 -0700
-Subject: [PATCH v3 6/6] x86/setup: prepend embedded bootconfig cmdline
- before parse_early_param
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="utcAAemx"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780936001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rFe8JeI/xgeGVuBJ7OtpfZjfx01poIP3QOXbHZ80Fsc=;
+	b=utcAAemxvsGz6LNQbA/4iedZt57xrnUw0BI5tskQnbWhKRzbtCrKVLhcdm4SzNz+nE4SR/
+	SDWZdz8poq1rWQFbuFIu3hr7cIjZeP8xURc3TuPgoW6gBGmCsjmjlfAYr4VEKr5oBVgHm6
+	qniLRpmnq9r6kGWX7qdOUfetA7LOzuA=
+From: Lance Yang <lance.yang@linux.dev>
+To: david@kernel.org
+Cc: lance.yang@linux.dev,
+	npache@redhat.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	aarcange@redhat.com,
+	akpm@linux-foundation.org,
+	anshuman.khandual@arm.com,
+	apopple@nvidia.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	byungchul@sk.com,
+	catalin.marinas@arm.com,
+	cl@gentwo.org,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	dev.jain@arm.com,
+	gourry@gourry.net,
+	hannes@cmpxchg.org,
+	hughd@google.com,
+	jack@suse.cz,
+	jackmanb@google.com,
+	jannh@google.com,
+	jglisse@google.com,
+	joshua.hahnjy@gmail.com,
+	kas@kernel.org,
+	liam@infradead.org,
+	ljs@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	matthew.brost@intel.com,
+	mhiramat@kernel.org,
+	mhocko@suse.com,
+	peterx@redhat.com,
+	pfalcato@suse.de,
+	rakie.kim@sk.com,
+	raquini@redhat.com,
+	rdunlap@infradead.org,
+	richard.weiyang@gmail.com,
+	rientjes@google.com,
+	rostedt@goodmis.org,
+	rppt@kernel.org,
+	ryan.roberts@arm.com,
+	shivankg@amd.com,
+	sunnanyong@huawei.com,
+	surenb@google.com,
+	thomas.hellstrom@linux.intel.com,
+	tiwai@suse.de,
+	usamaarif642@gmail.com,
+	vbabka@suse.cz,
+	vishal.moola@gmail.com,
+	wangkefeng.wang@huawei.com,
+	will@kernel.org,
+	willy@infradead.org,
+	yang@os.amperecomputing.com,
+	ying.huang@linux.alibaba.com,
+	ziy@nvidia.com,
+	zokeefe@google.com
+Subject: Re: [PATCH mm-unstable v19 11/14] mm/khugepaged: Introduce mTHP collapse support
+Date: Tue,  9 Jun 2026 00:26:12 +0800
+Message-Id: <20260608162612.27122-1-lance.yang@linux.dev>
+In-Reply-To: <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org>
+References: <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260608-bootconfig_using_tools-v3-6-4ddd079a0696@debian.org>
-References: <20260608-bootconfig_using_tools-v3-0-4ddd079a0696@debian.org>
-In-Reply-To: <20260608-bootconfig_using_tools-v3-0-4ddd079a0696@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, 
- Nicolas Schier <nsc@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>, kernel-team@meta.com
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4701; i=leitao@debian.org;
- h=from:subject:message-id; bh=QPhqsebsO3HMrGMEDz9OVg+K2hivuE3EfkbyqQu5hD8=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqJuzKQzotX3VnuQ3pkChLcKjYqne9Rkk/Fise6
- 5L2G8PWUCCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaibsygAKCRA1o5Of/Hh3
- baulD/4ntC/2wFrwFoTpj+Ekd46/woo3jQHZ2cN4TKhCNemATLVEhbN5SJyc0kVJrGnp2cQ0aYD
- A07hhnikjrrdJGToNvsxR1O5AzbJG7gWPf23sREIpzPIkOmO98Xr1cMQdhRvJf4rXmetHBtQ0zP
- W6NeMkBAV3/82ZRRu/HxubNvmE8mQdCInbc3a/3gVYhzbUO2pSIeB53mT8plF5N2q4gO9lvSNd5
- 7qGQXgLZkMUyzxZeSCn3xZNEFia4mCRseBMdQ7FX5qpJ2+uQcY/sS8thvFk6PCQK5qsJXMKOoHq
- 03w3fyPdgSOhq9jSCOKklGbv9l8uuuKqyp1zKYqSy3mZv6IuuYXJsPstwGv/4X/wI5NEJ0UHdUr
- J+gTdMv+lWRZ3BeFLi+RpD68c14bh2xNrVu6BUlcztBTCLv8IYJycewKhs2CDsUSeMrsVRmXJCz
- 5lIr6LqfQ8JPa6PQs9bMiyLsJEN4EGn1FO5438Gykb0eqV5lY7FRt+A7Vr/OGZ9rzX/no2dCs3n
- Oaho0VwF3GhTx2B5GFmynW3T0iCEYPgfleYV29orNpJqlz4CZZtU3WwWtAg48LMMmKILhlN94fK
- faZA4exkX66neesJe9o3g6rm528KCiKHTJcdHq8nicVl1YM/SrOZISddtuDeL7zUhz8GfHUOwQl
- FK4oqOCzEFaKtNg==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Call xbc_prepend_embedded_cmdline() in setup_arch() right after the
-CONFIG_CMDLINE merge and before strscpy(command_line, ...) so the
-build-time-rendered embedded bootconfig "kernel" subtree is part of
-boot_command_line by the time parse_early_param() runs. early_param()
-handlers (mem=, earlycon=, loglevel=, ...) now see values supplied via
-CONFIG_BOOT_CONFIG_EMBED_FILE without parsing bootconfig at runtime.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- arch/x86/Kconfig        |  1 +
- arch/x86/kernel/setup.c | 16 ++++++++++++++++
- init/main.c             | 25 ++++++++++++++++++++++---
- 3 files changed, 39 insertions(+), 3 deletions(-)
+On Mon, Jun 08, 2026 at 04:56:37PM +0200, David Hildenbrand (Arm) wrote:
+>On 6/6/26 12:28, Lance Yang wrote:
+>> 
+>> On Fri, Jun 05, 2026 at 10:14:18AM -0600, Nico Pache wrote:
+>>> Enable khugepaged to collapse to mTHP orders. This patch implements the
+>>> main scanning logic using a bitmap to track occupied pages and the
+>>> algorithm to find optimal collapse sizes.
+>>>
+>>> Previous to this patch, PMD collapse had 3 main phases, a light weight
+>>> scanning phase (mmap_read_lock) that determines a potential PMD
+>>> collapse, an alloc phase (mmap unlocked), then finally heavier collapse
+>>> phase (mmap_write_lock).
+>>>
+>>> To enabled mTHP collapse we make the following changes:
+>>>
+>>> During PMD scan phase, track occupied pages in a bitmap. When mTHP
+>>> orders are enabled, we remove the restriction of max_ptes_none during the
+>>> scan phase to avoid missing potential mTHP collapse candidates. Once we
+>>> have scanned the full PMD range and updated the bitmap to track occupied
+>>> pages, we use the bitmap to find the optimal mTHP size.
+>>>
+>>> Implement mthp_collapse() to walk forward through the bitmap and
+>>> determine the best eligible order for each naturally-aligned region. The
+>>> algorithm starts at the beginning of the PMD range and, for each offset,
+>>> tries the highest order that fits the alignment. If the number of
+>>> occupied PTEs in that region satisfies the max_ptes_none threshold for
+>>> that order, a collapse is attempted. On failure, the order is
+>>> decremented and the same offset is retried at the next smaller size. Once
+>>> the smallest enabled order is exhausted (or a collapse succeeds), the
+>>> offset advances past the region just processed, and the next attempt
+>>> starts at the highest order permitted by the new offset's natural
+>>> alignment.
+>>>
+>>> The algorithm works as follows:
+>>>    1) set offset=0 and order=HPAGE_PMD_ORDER
+>>>    2) if the order is not enabled, go to step (5)
+>>>    3) count occupied PTEs in the (offset, order) range using
+>>>       bitmap_weight_from()
+>>>    4) if the count satisfies the max_ptes_none threshold, attempt
+>>>       collapse; on success, advance to step (6)
+>>>    5) if a smaller enabled order exists, decrement order and retry
+>>>       from step (2) at the same offset
+>>>    6) advance offset past the current region and compute the next
+>>>       order from the new offset's natural alignment via __ffs(offset),
+>>>       capped at HPAGE_PMD_ORDER
+>>>    7) repeat from step (2) until the full PMD range is covered
+>>>
+>>> mTHP collapses reject regions containing swapped out or shared pages.
+>>> This is because adding new entries can lead to new none pages, and these
+>>> may lead to constant promotion into a higher order mTHP. A similar
+>>> issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
+>>> introducing at least 2x the number of pages, and on a future scan will
+>>> satisfy the promotion condition once again. This issue is prevented via
+>>> the collapse_max_ptes_none() function which imposes the max_ptes_none
+>>> restrictions above.
+>>>
+>>> We currently only support mTHP collapse for max_ptes_none values of 0
+>>> and HPAGE_PMD_NR - 1. resulting in the following behavior:
+>>>
+>>>    - max_ptes_none=0: Never introduce new empty pages during collapse
+>>>    - max_ptes_none=HPAGE_PMD_NR-1: Always try collapse to the highest
+>>>      available mTHP order
+>>>
+>>> Any other max_ptes_none value will emit a warning and default mTHP
+>>> collapse to max_ptes_none=0. There should be no behavior change for PMD
+>>> collapse.
+>>>
+>>> Once we determine what mTHP sizes fits best in that PMD range a collapse
+>>> is attempted. A minimum collapse order of 2 is used as this is the lowest
+>>> order supported by anon memory as defined by THP_ORDERS_ALL_ANON.
+>>>
+>>> Currently madv_collapse is not supported and will only attempt PMD
+>>> collapse.
+>>>
+>>> We can also remove the check for is_khugepaged inside the PMD scan as
+>>> the collapse_max_ptes_none() function handles this logic now.
+>>>
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>> mm/khugepaged.c | 146 +++++++++++++++++++++++++++++++++++++++++++++---
+>>> 1 file changed, 138 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index ec886a031952..430047316f43 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -99,6 +99,8 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
+>>>
+>>> static struct kmem_cache *mm_slot_cache __ro_after_init;
+>>>
+>>> +#define KHUGEPAGED_MIN_MTHP_ORDER	2
+>>> +
+>>> struct collapse_control {
+>>> 	bool is_khugepaged;
+>>>
+>>> @@ -110,6 +112,9 @@ struct collapse_control {
+>>>
+>>> 	/* nodemask for allocation fallback */
+>>> 	nodemask_t alloc_nmask;
+>>> +
+>>> +	/* Each bit represents a single occupied (!none/zero) page. */
+>>> +	DECLARE_BITMAP(mthp_present_ptes, MAX_PTRS_PER_PTE);
+>>> };
+>>>
+>>> /**
+>>> @@ -1440,20 +1445,130 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
+>>> 	return result;
+>>> }
+>>>
+>>> +/* Return the highest naturally aligned order that fits at @offset within a PMD. */
+>>> +static unsigned int max_order_from_offset(unsigned int offset)
+>>> +{
+>>> +	if (offset == 0)
+>>> +		return HPAGE_PMD_ORDER;
+>>> +
+>>> +	return min_t(unsigned int, __ffs(offset), HPAGE_PMD_ORDER);
+>>> +}
+>>> +
+>>> +/*
+>>> + * mthp_collapse() consumes the bitmap that is generated during
+>>> + * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
+>>> + *
+>>> + * Each bit in cc->mthp_present_ptes represents a single occupied (!none/zero)
+>>> + * page. We start at the PMD order and check if it is eligible for collapse;
+>>> + * if not, we check the left and right halves of the PTE page table we are
+>>> + * examining at a lower order.
+>>> + *
+>>> + * For each of these, we determine how many PTE entries are occupied in the
+>>> + * range of PTE entries we propose to collapse, then we compare this to a
+>>> + * threshold number of PTE entries which would need to be occupied for a
+>>> + * collapse to be permitted at that order (accounting for max_ptes_none).
+>>> + *
+>>> + * If a collapse is permitted, we attempt to collapse the PTE range into a
+>>> + * mTHP.
+>>> + */
+>>> +static enum scan_result mthp_collapse(struct mm_struct *mm,
+>>> +		unsigned long address, int referenced, int unmapped,
+>>> +		struct collapse_control *cc, unsigned long enabled_orders)
+>>> +{
+>>> +	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
+>>> +	enum scan_result last_result = SCAN_FAIL;
+>>> +	int collapsed = 0;
+>>> +	bool alloc_failed = false;
+>>> +	unsigned long collapse_address;
+>>> +	unsigned int offset = 0;
+>>> +	unsigned int order = HPAGE_PMD_ORDER;
+>>> +
+>>> +	while (offset < HPAGE_PMD_NR) {
+>>> +		nr_ptes = 1UL << order;
+>>> +
+>>> +		if (!test_bit(order, &enabled_orders))
+>>> +			goto next_order;
+>>> +
+>>> +		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
+>>> +		nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
+>>> +						      offset + nr_ptes);
+>>> +
+>>> +		if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+>> 
+>> Looks broken for swap PTEs in PMD collapse ...
+>> 
+>> collapse_scan_pmd() allows them up to max_ptes_swap and record them in
+>> unmapped, but they don't get a bit in mthp_present_ptes. And then
+>> mthp_collapse() does the check above:
+>
+>Right. I assumed this is implicitly handled by the optimization in collapse_scan_pmd:
+>
+>	if (enabled_orders != BIT(HPAGE_PMD_ORDER))
+>		max_ptes_none = KHUGEPAGED_MAX_PTES_LIMIT;
+>
+>But we perform the check a second time.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index f24810015234..f839795692b4 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -126,6 +126,7 @@ config X86
- 	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
- 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <= 4096
- 	select ARCH_SUPPORTS_CFI		if X86_64
-+	select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG
- 	select ARCH_USES_CFI_TRAPS		if X86_64 && CFI
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 46882ce79c3a..003f8651db6c 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -6,6 +6,7 @@
-  * parts of early kernel initialization.
-  */
- #include <linux/acpi.h>
-+#include <linux/bootconfig.h>
- #include <linux/console.h>
- #include <linux/cpu.h>
- #include <linux/crash_dump.h>
-@@ -36,6 +37,7 @@
- #include <asm/bios_ebda.h>
- #include <asm/bugs.h>
- #include <asm/cacheinfo.h>
-+#include <asm/cmdline.h>
- #include <asm/coco.h>
- #include <asm/cpu.h>
- #include <asm/efi.h>
-@@ -924,6 +926,20 @@ void __init setup_arch(char **cmdline_p)
- 	builtin_cmdline_added = true;
- #endif
- 
-+	/*
-+	 * Match the runtime bootconfig parser's opt-in: only fold the
-+	 * embedded kernel.* keys into the cmdline when "bootconfig" is
-+	 * present on the command line, or CONFIG_BOOT_CONFIG_FORCE is set.
-+	 * setup_boot_config() bails out under the same condition, so the
-+	 * early prepend stays in lockstep with what the late runtime parser
-+	 * would have applied. CONFIG_BOOT_CONFIG_FORCE defaults to y when
-+	 * BOOT_CONFIG_EMBED is set, so on the default config the embedded
-+	 * keys are applied unconditionally.
-+	 */
-+	if (IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE) ||
-+	    cmdline_find_option_bool(boot_command_line, "bootconfig"))
-+		xbc_prepend_embedded_cmdline(boot_command_line, COMMAND_LINE_SIZE);
-+
- 	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
- 
-diff --git a/init/main.c b/init/main.c
-index e363232b428b..2ecb6aa536dd 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -378,12 +378,15 @@ static void __init setup_boot_config(void)
- 	int pos, ret;
- 	size_t size;
- 	char *err;
-+	bool from_embedded = false;
- 
- 	/* Cut out the bootconfig data even if we have no bootconfig option */
- 	data = get_boot_config_from_initrd(&size);
- 	/* If there is no bootconfig in initrd, try embedded one. */
--	if (!data)
-+	if (!data) {
- 		data = xbc_get_embedded_bootconfig(&size);
-+		from_embedded = true;
-+	}
- 
- 	strscpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
- 	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-@@ -421,8 +424,24 @@ static void __init setup_boot_config(void)
- 	} else {
- 		xbc_get_info(&ret, NULL);
- 		pr_info("Load bootconfig: %ld bytes %d nodes\n", (long)size, ret);
--		/* keys starting with "kernel." are passed via cmdline */
--		extra_command_line = xbc_make_cmdline("kernel");
-+		/*
-+		 * keys starting with "kernel." are passed via cmdline. When
-+		 * this bootconfig came from the embedded source and
-+		 * setup_arch() already prepended the rendered "kernel" subtree
-+		 * to boot_command_line, rendering again here would duplicate
-+		 * the keys in saved_command_line and make accumulating handlers
-+		 * (console=, earlycon=, ...) re-register the same value. Skip
-+		 * only when the prepend really happened.
-+		 *
-+		 * On arches that do not select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG,
-+		 * CONFIG_BOOT_CONFIG_EMBED_CMDLINE is unselectable and
-+		 * xbc_embedded_cmdline_applied() collapses to a stub returning
-+		 * false, so this path still runs and the embedded "kernel"
-+		 * keys reach the cmdline via the runtime parser exactly as
-+		 * before this series.
-+		 */
-+		if (!from_embedded || !xbc_embedded_cmdline_applied())
-+			extra_command_line = xbc_make_cmdline("kernel");
- 		/* Also, "init." keys are init arguments */
- 		extra_init_args = xbc_make_cmdline("init");
- 	}
+Note that once lower orders are enabled, the scan *relaxes* max_ptes_none
+only so it can cover the whole PMD and build the bitmap ...
 
--- 
-2.53.0-Meta
+>> 
+>> nr_occupied_ptes >= nr_ptes - max_ptes_none
+>> 
+>> So max_ptes_none=0 + 511 present PTEs + one allowed swap PTE won't even
+>> call collapse_huge_page() for PMD order.
+>> 
+>> Shouldn't we account for them in the PMD-order check? Something like:
+>> 
+>> if (is_pmd_order(order))
+>> 	nr_occupied_ptes += unmapped;
+>As an alternative, we could either 1) skip the check there for
+>pmd order (as the check was already done); or 2) introduce+maintain
 
+Yeah, skipping the check would do the trick, since isolate will check
+max_ptes_none again later :)
+
+>a bitmap that tracks non-present PTEs.
+>
+>@@ -1475,7 +1477,9 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
+>                nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
+>                                                      offset + nr_ptes);
+> 
+>-               if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+>+               /* Check was already done in the caller. */
+
+This check is not quite redundant for PMD order, though. It avoids
+entering collapse_huge_page() for a range that already exceeds
+max_ptes_none for that order.
+
+>+               if (is_pmd_order(order) ||
+>+                   nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+>                        enum scan_result ret;
+> 
+>                        collapse_address = address + offset * PAGE_SIZE;
+>
+>2) would probably be cleanest long-term.
+
+Yeah, Agreed.
