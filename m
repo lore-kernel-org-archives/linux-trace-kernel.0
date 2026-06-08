@@ -1,80 +1,33 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804333E0C57
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 14:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2284921BD;
+	Mon,  8 Jun 2026 14:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780930339; cv=none; b=Rq3Zt1B0RjQ9pZ7yMGFQZj72QD99oDfs1AcNKkzDFtIu2ezDPyD/AJxmypEYRWCDP4H8p/ZvyvBPwVWlhkqAEydXJYvcFzeC9/oZH2oStM0VNmV/qGT/3Mi790Yl13G6weRCoQVNQb681nnQuMza3DY0qaVsvCNp3/bFPoXbqt0=
+	t=1780930623; cv=none; b=ipBk5pGZMuiINeH5so7y2yEidWls9Qjd8RXo6gTM7uD9wGLxRQkcGJQMyoAv2mo4v5sdp31bgqkyJhX0B5vBToIMXCDoFpm3mfkItT0kJLUqeY42rxJWwYGE53gWtnf04Vekh71mvX7tvJEgN51UDl6ocW8rBZH+V0mwdXQFC0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780930339; c=relaxed/simple;
-	bh=rpXnnfiHVzHB7ncZ9FTFRFhCJjEV5nU6ygT9vS6g1Dw=;
+	s=arc-20240116; t=1780930623; c=relaxed/simple;
+	bh=ebG4o8qj7VMbDD8nlq3kRNE075KOGxec9DFYcFOI8v0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rO3fZ3DduYKDxxXyuUucUFiCvEZz28XZryjqiKhGaGT0XGr1zN4rRJyO4QG74LMfUhZuyOy2EpjYnkGPGFL9/gc7YxDcu6MrKefT5F8g+sKv/XEyPyS0mL+qgvQ1TvXAnZYpVtoa/mVSAnjix9DYvqJXFz6Ng3G6F/2k//ubKZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=lwvYLV27; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	 In-Reply-To:Content-Type; b=KYfsMvLVbKZObnHPFReOs2mK8DQ2FFa2ku3eBvqDP2Ly4taz/OmKibVzZRCa21lze8fhKL05eYMZ6L7yM6y+wggRjWblhMMCMwI394saO1NAzREU0TJR0NDvZg6kgqgXwc4WNAMecBHSkgS+MttmMhtzmYTRLP/YbBsJEXG3dsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=apqaJtWf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="lwvYLV27"
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B1FF43F206
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jun 2026 14:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1780930328;
-	bh=b1pX3FZIzR6JtivhZtR5O2oycxLZ7mVagYmhnEiYG4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=lwvYLV27F7oDIAYT5ufo85O2nrP6AVjpKxCNaXn23/fbNLZGowueC2j4PdTfOcWnC
-	 ZxJAhKXPvVKvP/Dp+mrsJmNf0f90KiQf20jWYOOVgvdvF1sCbpea6sI7qEZFJ2iCPV
-	 9Cjj9OjyAe2deWqcrlSRCaEh9ytHG/gxQgovE4bC8UNl0lsnv8L4SYZk5+SrYThp1s
-	 zPVzP1PHzmTa7R97645CvFtwO4JM3rk38+/wkwtO/Y010IsJ8Pz3/3qTHai3js61fv
-	 Hwe0KhyNq6M2yX95G9nsiwLZu5aZ8U74lVqnsJaWmPn4fycnYi4NxFxdgyYjkWWhhX
-	 PgFlr4eUh0oy1qy7SCnNp7wn5akkxmowTVPrPNfL4P27+/ixVl0YSYpRae189Bbpzu
-	 e7pC/VISdVJEvFL2Yw+GL6ORqwCFePHM2PIx3fLJai4ej4vWYpG8nv8lbh8IQtto4P
-	 5u5WkTj4pGlzCln1AfR5GDCjL9kvqw92ddq+3oFlbekoaslot17tkTkvlMOr/3PmEi
-	 LMwI0GL7hb/MQ6N1uwBmanCwcAr86FsFlJv227/DtlvNQaV7jHg9jI6sONE8SDVuo3
-	 B9794cT5Z0TR4wi3nvOU4DV+WVU0JOkZTUAz/HRkDEZp2pH4OhrpX0YgIKy8XQOCS3
-	 9XwUu4X+/AO8+YuPhBXOKENM=
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-36d97a4e08fso4042587a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jun 2026 07:52:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780930327; x=1781535127;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b1pX3FZIzR6JtivhZtR5O2oycxLZ7mVagYmhnEiYG4Q=;
-        b=eXxwBthtpOhTDwBCU6N8y98YRj/uQK+95iZELAWF0hjGXPf8PNzmV9YFBE5vyqMWUq
-         HHgOQ0LU7xLCGZVRx2kiyO10B2/9tX6/6fvP06qALp9HZbHCY0sicje1ilamn71HhjGp
-         mYJxTA9j+ilwsc4SPCzuq2iNtSYrRcYrL7Jd5qAqmQBjog9K3zm80vJ0zp2teBUSmD6f
-         nd+Ug53up0Flp4h7WdN6wTcWtrYtvid57ZE8AeiXXai9qzQ5OR7aZanCzDThaPVtp7gA
-         nUPP+x3xiqaIXZ4MMihwMAERjCUe5ni+jrzzeCMWy/EdtgYLsCsIIBZsmvlHprqqaw7v
-         PuoQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/1AJIc1U727aAt3tMeTMDVZau161dTJeP4k13v/mdzJIAiPr44RRLmQ6shpV13TqBb+wgcDDI9jv+zW2Rg8CAK5/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBlzTCGGg+JKgI1k1XXaavWB2Z5WyZ7zSUl/hUSyfIV08TOkCM
-	S5scTH/3MP//6KHG3d5YjpiFCnDQnz67zjJDrRkdZXXivQUxmi3MDC1P4YXs1AAO5DTiIK0NZLx
-	XA799xKTQ9Olj2aw2gruZUzF7rNIMjDYZf+B+XVJkz+PUhBfKLjCS9X8uezffwTZH/Fs51n1u9e
-	jzDSRZqEzgtIngPA==
-X-Gm-Gg: Acq92OElL2Zuv2/xoPmwUDunC1zNpBx3Bhxs8OmaICBlg8dLOkKVSCu80NuHsy1b9K9
-	vPS4DOFE+UThoHIDF+2QeIHopUgti4iqusXY9CjcAoODxELEek1CeAWNJX/ClAtxrlCCa6g0y3p
-	kAaLBpK2vb6QviTTJWPjEE/aR1562KMOy5fVClZfPYjTaf3je2OO/AW4P2D7diLsKT145RsjEKL
-	xKNgrMGLDBvETqn6rSj7bg0WuImO7XLtkEyj/J0z0g+sLWDgM75/+pdxzvgpQ7XdQWoet3iFSEy
-	yvn7YKbh/qPL0jG300++3CRPeW827s36iAa4nXzfwgNSH0baA+1AMJ3XfKVP+WTYml0pHw4p4sK
-	OI9IdqI79dZcf9sCc0oxuPUP+VlV34Gnyh4wzbJaVpr9s9/dlXi5EzlwZ5Q8nX6qXAqdvGqXCMK
-	dJPg/Jq1SZ
-X-Received: by 2002:a17:90b:5747:b0:36b:9798:4f67 with SMTP id 98e67ed59e1d1-370eee03facmr15824950a91.8.1780930327069;
-        Mon, 08 Jun 2026 07:52:07 -0700 (PDT)
-X-Received: by 2002:a17:90b:5747:b0:36b:9798:4f67 with SMTP id 98e67ed59e1d1-370eee03facmr15824914a91.8.1780930326374;
-        Mon, 08 Jun 2026 07:52:06 -0700 (PDT)
-Received: from ?IPV6:2409:8a00:48c1:ca00:bd04:9263:b15c:15f? ([2409:8a00:48c1:ca00:bd04:9263:b15c:15f])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6e828eacsm16073363a91.16.2026.06.08.07.52.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2026 07:52:06 -0700 (PDT)
-Message-ID: <79c7ede3-e174-487f-bf0b-fc9347fdde9c@canonical.com>
-Date: Mon, 8 Jun 2026 22:51:59 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="apqaJtWf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AE21F00893;
+	Mon,  8 Jun 2026 14:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780930613;
+	bh=/kesTRV9t2c22OAzBqgCOd/YcVEK8MsHdf9rZxo8/1A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=apqaJtWfBTqTN+KmE10cgxfUIvzUJ4bFVOwiSnmdSo2kmJJI0K3hd5QiXb+aSWZRT
+	 7eB+2YDtliulbsFu8wuQqer2oOUIo9iRRRBBDgm2XUmFaqU2orT8Gerbp8IHQTJn26
+	 oqDwpFAQPuUHswzAIvrEZyw5icryOY9KUixQ6hDQLrhVOTyECMIsFsRCPxO576Riy+
+	 +Z4DrCo3ELWqzPu6taEr8+LAkcQYQVeLAwDuS/SKwwv5M9S0Q4V4+6JNqhaYxW8Lrw
+	 KZCk0sf2fm2xzFkZ8t10fR/NLh8p+UWzvD7M7d42hKkcVtmbLHqEQdZS4O+N6lqZde
+	 22AlX1OWxY2YA==
+Message-ID: <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org>
+Date: Mon, 8 Jun 2026 16:56:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,71 +35,280 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] selftests/ftrace: Account for 8-byte aligned
- trace_marker_raw events
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, pjw@kernel.org,
- linux-trace-kernel@vger.kernel.org, shuah@kernel.org, wangfushuai@baidu.com,
- linux-kselftest@vger.kernel.org
-References: <20260607072431.125633-1-hui.wang@canonical.com>
- <20260607072431.125633-3-hui.wang@canonical.com>
- <20260608181716.726cb9c81d41d49095e7f3cf@kernel.org>
+Subject: Re: [PATCH mm-unstable v19 11/14] mm/khugepaged: Introduce mTHP
+ collapse support
+To: Lance Yang <lance.yang@linux.dev>, npache@redhat.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, liam@infradead.org, ljs@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
+ rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
+ richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
+ rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
+ sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
+ tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
+ vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
+ willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+References: <20260605161422.213817-12-npache@redhat.com>
+ <20260606102800.26940-1-lance.yang@linux.dev>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: Hui Wang <hui.wang@canonical.com>
-In-Reply-To: <20260608181716.726cb9c81d41d49095e7f3cf@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260606102800.26940-1-lance.yang@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On 6/8/26 17:17, Masami Hiramatsu (Google) wrote:
-> On Sun,  7 Jun 2026 15:24:31 +0800
-> Hui Wang <hui.wang@canonical.com> wrote:
->
-[...]
-> +    for config_file in \
-> +        /boot/config-$uname_r \
-> +        /lib/modules/$uname_r/config \
-> +        /lib/modules/$uname_r/build/.config
->
-> Hmm, also I don't like this, because this highly depends on the environment.
-> Instead, we can add CONFIG_IKCONFIG_PROC=y in tools/testing/selftests/ftrace/config.
->
-> Thank you,
->
-Thanks for the review. I'll address all other comments in v2.
-
-I have a concern about this specific point. On Ubuntu kernels, both 
-CONFIG_IKCONFIG and CONFIG_IKCONFIG_PROC are disabled by default, so 
-/proc/config.gz does not exist. If we drop the /boot/config-$(uname -r) 
-lookup and rely solely on /proc/config.gz, this test would become 
-unresolved on every Ubuntu kernel — a regression, since it works on 
-those kernels today.
-
-There is also existing precedent for the /boot/config-$(uname -r) 
-fallback: tools/testing/selftests/mm/va_high_addr_switch.sh checks 
-/proc/config.gz first and falls back to /boot/config-$(uname -r).
-
-So how about we keep /boot/config-$(uname -r) as a fallback, but drop 
-the /lib/modules/... paths you objected to. And add ftrace/config as you 
-suggested here.
-
-Thanks,
-Hui.
->> +    do
->> +        if [ -f "$config_file" ]; then
->> +            grep -Eq "^${config}=(y|m)$" "$config_file"
->> +            return $?
->> +        fi
->> +    done
+On 6/6/26 12:28, Lance Yang wrote:
+> 
+> On Fri, Jun 05, 2026 at 10:14:18AM -0600, Nico Pache wrote:
+>> Enable khugepaged to collapse to mTHP orders. This patch implements the
+>> main scanning logic using a bitmap to track occupied pages and the
+>> algorithm to find optimal collapse sizes.
+>>
+>> Previous to this patch, PMD collapse had 3 main phases, a light weight
+>> scanning phase (mmap_read_lock) that determines a potential PMD
+>> collapse, an alloc phase (mmap unlocked), then finally heavier collapse
+>> phase (mmap_write_lock).
+>>
+>> To enabled mTHP collapse we make the following changes:
+>>
+>> During PMD scan phase, track occupied pages in a bitmap. When mTHP
+>> orders are enabled, we remove the restriction of max_ptes_none during the
+>> scan phase to avoid missing potential mTHP collapse candidates. Once we
+>> have scanned the full PMD range and updated the bitmap to track occupied
+>> pages, we use the bitmap to find the optimal mTHP size.
+>>
+>> Implement mthp_collapse() to walk forward through the bitmap and
+>> determine the best eligible order for each naturally-aligned region. The
+>> algorithm starts at the beginning of the PMD range and, for each offset,
+>> tries the highest order that fits the alignment. If the number of
+>> occupied PTEs in that region satisfies the max_ptes_none threshold for
+>> that order, a collapse is attempted. On failure, the order is
+>> decremented and the same offset is retried at the next smaller size. Once
+>> the smallest enabled order is exhausted (or a collapse succeeds), the
+>> offset advances past the region just processed, and the next attempt
+>> starts at the highest order permitted by the new offset's natural
+>> alignment.
+>>
+>> The algorithm works as follows:
+>>    1) set offset=0 and order=HPAGE_PMD_ORDER
+>>    2) if the order is not enabled, go to step (5)
+>>    3) count occupied PTEs in the (offset, order) range using
+>>       bitmap_weight_from()
+>>    4) if the count satisfies the max_ptes_none threshold, attempt
+>>       collapse; on success, advance to step (6)
+>>    5) if a smaller enabled order exists, decrement order and retry
+>>       from step (2) at the same offset
+>>    6) advance offset past the current region and compute the next
+>>       order from the new offset's natural alignment via __ffs(offset),
+>>       capped at HPAGE_PMD_ORDER
+>>    7) repeat from step (2) until the full PMD range is covered
+>>
+>> mTHP collapses reject regions containing swapped out or shared pages.
+>> This is because adding new entries can lead to new none pages, and these
+>> may lead to constant promotion into a higher order mTHP. A similar
+>> issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
+>> introducing at least 2x the number of pages, and on a future scan will
+>> satisfy the promotion condition once again. This issue is prevented via
+>> the collapse_max_ptes_none() function which imposes the max_ptes_none
+>> restrictions above.
+>>
+>> We currently only support mTHP collapse for max_ptes_none values of 0
+>> and HPAGE_PMD_NR - 1. resulting in the following behavior:
+>>
+>>    - max_ptes_none=0: Never introduce new empty pages during collapse
+>>    - max_ptes_none=HPAGE_PMD_NR-1: Always try collapse to the highest
+>>      available mTHP order
+>>
+>> Any other max_ptes_none value will emit a warning and default mTHP
+>> collapse to max_ptes_none=0. There should be no behavior change for PMD
+>> collapse.
+>>
+>> Once we determine what mTHP sizes fits best in that PMD range a collapse
+>> is attempted. A minimum collapse order of 2 is used as this is the lowest
+>> order supported by anon memory as defined by THP_ORDERS_ALL_ANON.
+>>
+>> Currently madv_collapse is not supported and will only attempt PMD
+>> collapse.
+>>
+>> We can also remove the check for is_khugepaged inside the PMD scan as
+>> the collapse_max_ptes_none() function handles this logic now.
+>>
+>> Signed-off-by: Nico Pache <npache@redhat.com>
+>> ---
+>> mm/khugepaged.c | 146 +++++++++++++++++++++++++++++++++++++++++++++---
+>> 1 file changed, 138 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index ec886a031952..430047316f43 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -99,6 +99,8 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
+>>
+>> static struct kmem_cache *mm_slot_cache __ro_after_init;
+>>
+>> +#define KHUGEPAGED_MIN_MTHP_ORDER	2
 >> +
->> +    return 2
+>> struct collapse_control {
+>> 	bool is_khugepaged;
+>>
+>> @@ -110,6 +112,9 @@ struct collapse_control {
+>>
+>> 	/* nodemask for allocation fallback */
+>> 	nodemask_t alloc_nmask;
+>> +
+>> +	/* Each bit represents a single occupied (!none/zero) page. */
+>> +	DECLARE_BITMAP(mthp_present_ptes, MAX_PTRS_PER_PTE);
+>> };
+>>
+>> /**
+>> @@ -1440,20 +1445,130 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
+>> 	return result;
+>> }
+>>
+>> +/* Return the highest naturally aligned order that fits at @offset within a PMD. */
+>> +static unsigned int max_order_from_offset(unsigned int offset)
+>> +{
+>> +	if (offset == 0)
+>> +		return HPAGE_PMD_ORDER;
+>> +
+>> +	return min_t(unsigned int, __ffs(offset), HPAGE_PMD_ORDER);
 >> +}
 >> +
->>   LOCALHOST=127.0.0.1
->>   
->>   yield() {
->> -- 
->> 2.43.0
->>
->>
->
+>> +/*
+>> + * mthp_collapse() consumes the bitmap that is generated during
+>> + * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
+>> + *
+>> + * Each bit in cc->mthp_present_ptes represents a single occupied (!none/zero)
+>> + * page. We start at the PMD order and check if it is eligible for collapse;
+>> + * if not, we check the left and right halves of the PTE page table we are
+>> + * examining at a lower order.
+>> + *
+>> + * For each of these, we determine how many PTE entries are occupied in the
+>> + * range of PTE entries we propose to collapse, then we compare this to a
+>> + * threshold number of PTE entries which would need to be occupied for a
+>> + * collapse to be permitted at that order (accounting for max_ptes_none).
+>> + *
+>> + * If a collapse is permitted, we attempt to collapse the PTE range into a
+>> + * mTHP.
+>> + */
+>> +static enum scan_result mthp_collapse(struct mm_struct *mm,
+>> +		unsigned long address, int referenced, int unmapped,
+>> +		struct collapse_control *cc, unsigned long enabled_orders)
+>> +{
+>> +	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
+>> +	enum scan_result last_result = SCAN_FAIL;
+>> +	int collapsed = 0;
+>> +	bool alloc_failed = false;
+>> +	unsigned long collapse_address;
+>> +	unsigned int offset = 0;
+>> +	unsigned int order = HPAGE_PMD_ORDER;
+>> +
+>> +	while (offset < HPAGE_PMD_NR) {
+>> +		nr_ptes = 1UL << order;
+>> +
+>> +		if (!test_bit(order, &enabled_orders))
+>> +			goto next_order;
+>> +
+>> +		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
+>> +		nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
+>> +						      offset + nr_ptes);
+>> +
+>> +		if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+> 
+> Looks broken for swap PTEs in PMD collapse ...
+> 
+> collapse_scan_pmd() allows them up to max_ptes_swap and record them in
+> unmapped, but they don't get a bit in mthp_present_ptes. And then
+> mthp_collapse() does the check above:
+
+Right. I assumed this is implicitly handled by the optimization in collapse_scan_pmd:
+
+	if (enabled_orders != BIT(HPAGE_PMD_ORDER))
+		max_ptes_none = KHUGEPAGED_MAX_PTES_LIMIT;
+
+But we perform the check a second time.
+
+> 
+> nr_occupied_ptes >= nr_ptes - max_ptes_none
+> 
+> So max_ptes_none=0 + 511 present PTEs + one allowed swap PTE won't even
+> call collapse_huge_page() for PMD order.
+> 
+> Shouldn't we account for them in the PMD-order check? Something like:
+> 
+> if (is_pmd_order(order))
+> 	nr_occupied_ptes += unmapped;
+As an alternative, we could either 1) skip the check there for
+pmd order (as the check was already done); or 2) introduce+maintain
+a bitmap that tracks non-present PTEs.
+
+@@ -1475,7 +1477,9 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
+                nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
+                                                      offset + nr_ptes);
+ 
+-               if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
++               /* Check was already done in the caller. */
++               if (is_pmd_order(order) ||
++                   nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+                        enum scan_result ret;
+ 
+                        collapse_address = address + offset * PAGE_SIZE;
+
+2) would probably be cleanest long-term.
+
+-- 
+Cheers,
+
+David
