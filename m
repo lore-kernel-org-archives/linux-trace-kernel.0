@@ -1,153 +1,212 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025891419A4;
-	Mon,  8 Jun 2026 09:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B173C1984;
+	Mon,  8 Jun 2026 10:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780911303; cv=none; b=p8WJrUBIfuxzd9VtZ7NBpuPud8F+gmorDFG3ZCH48T0qScssOSXuYHZ4WtabU4OFsR6K62uUfv9P9EWrCkjUJrqT4+3RY4xNU1BojV1nG6gCyDn3AV5afs13bpIvOXkA58qIM6ARPLlxl82gtoDxqj/VIxgevgcJ9woVPzH+YFg=
+	t=1780913975; cv=none; b=auvGdStxXJQ0d5xS7mpXBfJWxXXjdKcUkVem7hld/tZeMY4I7nvqEX8XaCDTuIqdp2BbnBWIV8tOTrUBqQvHqZ15vNNj8wvmQoXUfts2vkIzc69F58tDpaecnyXOnlO37qHO/C8ZWIimQ7/zFPts4io0YJT+2bQZydAkkacozws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780911303; c=relaxed/simple;
-	bh=etuSTnMPrlLsvTGi8WLbVDFCV8wD6goyss0U+98gk98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChsX0eHU20P5+IZkE+04HS8fUFlI0U7fwqSV1pqdQH0FLtIIMM43+suK1OV6SIxRFirxhbCdI9GJEczYSg2FEaVPkgsuDLVq9x8X7E73ecC5y3ivRro5Zv7mKIOL0MqSIPtvDTHrR37UAitSPmYYD0NvMGAUVmQisWpzit5US6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a8lKvyq+; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1780913975; c=relaxed/simple;
+	bh=f7eLZc/IcHT5GqFj5jujnTXujqX51uaz+wAaa3DATI4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uzm+1j/pKGQzOniIauFp+Blm6oPAqEQAUUYnmh5iDqjV4NhGwCEMxu8ha0ZKNhs8jocE9/emCXNXSlVBsu+c/nQj570hl+P0MHYSgSuxqr/tq1k9CMXGqiDF9hFpW0rMxjLNW7v9GUeUDNTB3GGeFmHxcnBQQJiiweziIPPep6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igvi1hOk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a8lKvyq+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3Tsj5SDXNxCIBGDmoRYg1mESVF/vVfOT5aym0N/V1qY=; b=a8lKvyq+boHcTdrPEw41/v312R
-	DBSbiTTxR9uL2OHi/zTGk/tQFazavQVzW6o6T05xzcWqxVBgGqGvOkS2d3Dk2ACExIxpnXQMvKr0G
-	T2JS7E5e572frYse6Jsh1Fe3L6g3G9yS+dzkgtMrUDqiS71lgKSWnwwRVOevqgVzd6J3kKgf9T7nO
-	+ojoNvHXweclZBuAzraKD3Ojahhjg3XuFEVPAcMmFEl21EUQzCkP5nkquW0xt9dFb5fA3tgVmoZf5
-	45NiYrlIkoXDZam2/odG9PDAfhlweDsNUvHJp3zL1fuaMhIHk1/IKpDnmIHSYIHFveOWcgaLyhX2X
-	tOFzHPmQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wWWNf-00000000naU-1OMt;
-	Mon, 08 Jun 2026 09:34:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D6B9D30036F; Mon, 08 Jun 2026 11:34:49 +0200 (CEST)
-Date: Mon, 8 Jun 2026 11:34:49 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@redhat.com>, jikos@kernel.org,
-	mbenes@suse.cz, pmladek@suse.com
-Subject: Re: [PATCH] rethook: Use tsk->on_cpu to check task execution state
-Message-ID: <20260608093449.GH4149641@noisy.programming.kicks-ass.net>
-References: <20260525132253.1889726-1-wutengda@huaweicloud.com>
- <20260526123719.482f07a3843e207e22d95378@kernel.org>
- <94179dab-ffb7-4fab-af45-b20bfb686ab3@huaweicloud.com>
- <20260601084001.9566b443746447ec2bb1a9fb@kernel.org>
- <20260604093445.GF3126523@noisy.programming.kicks-ass.net>
- <20260605224341.c926299d613b6102912c9a3f@kernel.org>
- <679a1c8f-1e4d-4ae5-83e1-d0068e6de1a6@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igvi1hOk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C501C1F00893;
+	Mon,  8 Jun 2026 10:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780913974;
+	bh=xrtlRFuiFzACaPUvDm3r3nLqN434Rs35tM7jQeJ31MA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=igvi1hOkDTsC3TCzgw5kQLirJqXjKfYp+StSBUbew7x7SB+Haxv4OEjgNg0BWlgrB
+	 wRZ8ix4u0MsAm3+KiEbxV+OiHnsiq0xmjkMRM5jqy1wxsbMaNK9lYw6/Xm1gQMWF3r
+	 eEJF5NRE4DP/VZnvkSzesE1gVmVLWRgOmdxSFiWNSD7GueUngYKKL6Af22fuXaLqzs
+	 DjQmUICaIO5WKYPg1v0/6at8tXcVfAXxNOSjxgD+6hxgTz/xJ89qIRW3UEawVe4NB+
+	 1U/6EsvW9oM+XvKvRjFA0KE7clLvMpj5E3FbYXhgGC1AfEZ1Vd84VyIgCpUJ7GLWn5
+	 6ILCsrzRZV78Q==
+Date: Mon, 8 Jun 2026 19:19:28 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor
+ <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v2 6/6] x86/setup: prepend embedded bootconfig cmdline
+ before parse_early_param
+Message-Id: <20260608191928.d7d2dea899b94f05d397f891@kernel.org>
+In-Reply-To: <20260605-bootconfig_using_tools-v2-6-d309f544b5f7@debian.org>
+References: <20260605-bootconfig_using_tools-v2-0-d309f544b5f7@debian.org>
+	<20260605-bootconfig_using_tools-v2-6-d309f544b5f7@debian.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <679a1c8f-1e4d-4ae5-83e1-d0068e6de1a6@huaweicloud.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 05 Jun 2026 05:03:37 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-+Live patching folks
-
-On Mon, Jun 08, 2026 at 09:52:37AM +0800, Tengda Wu wrote:
-
-> Background: We are verifying the support of live patches for functions that
-> have a kretprobe. The specific verification method is as follows:
+> Call xbc_prepend_embedded_cmdline() in setup_arch() right after the
+> CONFIG_CMDLINE merge and before strscpy(command_line, ...) so the
+> build-time-rendered embedded bootconfig "kernel" subtree is part of
+> boot_command_line by the time parse_early_param() runs. early_param()
+> handlers (mem=, earlycon=, loglevel=, ...) now see values supplied via
+> CONFIG_BOOT_CONFIG_EMBED_FILE without parsing bootconfig at runtime.
 > 
-> We construct a function foo() that calls bar():
+> Gate the prepend on the bootconfig opt-in: only fold in the embedded
+> kernel.* keys when "bootconfig" is present on the command line, or
+> CONFIG_BOOT_CONFIG_FORCE is set. Applying the embedded cmdline
+> unconditionally would (a) diverge from how embedded init.* keys are
+> treated and (b) break fail-safe recovery: a malformed embedded
+> console=/mem= could panic the boot with no way for the admin to disable
+> it by dropping "bootconfig" from the bootloader cmdline.
+> cmdline_find_option_bool() runs before parse_early_param(), so the gate
+> is cheap and correctly ordered.
 > 
-> void bar(void)
-> {
->     for (;;) {
->         schedule();
->     }
-> }
+> Select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG so the user-visible
+> CONFIG_BOOT_CONFIG_EMBED_CMDLINE option becomes selectable on x86.
+
+This seems like a dummy config. what code does depend on this flag?
+
 > 
-> void foo(void)
-> {
->     bar();
-> }
+> With this select in place, setup_boot_config() in init/main.c would
+> otherwise render the embedded "kernel" subtree a second time via
+> xbc_make_cmdline("kernel") into extra_command_line, duplicating every
+> embedded kernel.* key in saved_command_line and making accumulating
+> handlers (console=, earlycon=, ...) register the same value twice. Skip
+> that render only when xbc_prepend_embedded_cmdline() actually prepended
+> the keys, reported by xbc_embedded_cmdline_applied().
 > 
-> A kretprobe is attached to bar():
+> Keying the skip on the prepend itself, rather than re-deriving the
+> opt-in, keeps the two paths consistent even when setup_arch() and the
+> runtime parser detect "bootconfig" differently (e.g. "bootconfig=1"):
+> the keys are then rendered at runtime instead of being dropped.
 > 
-> echo 'r:rp1 bar' > /sys/kernel/tracing/kprobe_events
-> echo 1 > /sys/kernel/tracing/events/kprobes/rp1/enable
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  arch/x86/Kconfig        |  1 +
+>  arch/x86/kernel/setup.c | 16 ++++++++++++++++
+>  init/main.c             | 18 +++++++++++++++---
+>  3 files changed, 32 insertions(+), 3 deletions(-)
 > 
-> Then foo() is triggered. The expected behavior is that bar() will call
-> schedule() and yield the CPU.
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index f24810015234..f839795692b4 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -126,6 +126,7 @@ config X86
+>  	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
+>  	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <= 4096
+>  	select ARCH_SUPPORTS_CFI		if X86_64
+> +	select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG
+>  	select ARCH_USES_CFI_TRAPS		if X86_64 && CFI
+>  	select ARCH_SUPPORTS_LTO_CLANG
+>  	select ARCH_SUPPORTS_LTO_CLANG_THIN
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 46882ce79c3a..26a82a41f44c 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -6,6 +6,7 @@
+>   * parts of early kernel initialization.
+>   */
+>  #include <linux/acpi.h>
+> +#include <linux/bootconfig.h>
+>  #include <linux/console.h>
+>  #include <linux/cpu.h>
+>  #include <linux/crash_dump.h>
+> @@ -36,6 +37,7 @@
+>  #include <asm/bios_ebda.h>
+>  #include <asm/bugs.h>
+>  #include <asm/cacheinfo.h>
+> +#include <asm/cmdline.h>
+>  #include <asm/coco.h>
+>  #include <asm/cpu.h>
+>  #include <asm/efi.h>
+> @@ -924,6 +926,20 @@ void __init setup_arch(char **cmdline_p)
+>  	builtin_cmdline_added = true;
+>  #endif
+>  
+> +	/*
+> +	 * Honor the same opt-in as the runtime bootconfig parser: only fold
+> +	 * the embedded kernel.* keys into the cmdline when "bootconfig" is
+> +	 * present on the command line (or CONFIG_BOOT_CONFIG_FORCE is set).
+> +	 * This keeps fail-safe recovery working -- dropping "bootconfig" from
+> +	 * the bootloader cmdline disables the embedded keys -- so a malformed
+> +	 * embedded console=/mem= cannot brick a boot with no way out. It also
+> +	 * matches setup_boot_config(), which bails out under the same
+> +	 * condition before parsing the embedded bootconfig at runtime.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE) ||
+> +	    cmdline_find_option_bool(boot_command_line, "bootconfig"))
+> +		xbc_prepend_embedded_cmdline(boot_command_line, COMMAND_LINE_SIZE);
+> +
+>  	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+>  	*cmdline_p = command_line;
+>  
+> diff --git a/init/main.c b/init/main.c
+> index e363232b428b..567f641a5731 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -378,12 +378,15 @@ static void __init setup_boot_config(void)
+>  	int pos, ret;
+>  	size_t size;
+>  	char *err;
+> +	bool from_embedded = false;
+>  
+>  	/* Cut out the bootconfig data even if we have no bootconfig option */
+>  	data = get_boot_config_from_initrd(&size);
+>  	/* If there is no bootconfig in initrd, try embedded one. */
+> -	if (!data)
+> +	if (!data) {
+>  		data = xbc_get_embedded_bootconfig(&size);
+> +		from_embedded = true;
+
+Even from embedded bootconfig, if the arch set 
+ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG=n, this must be applied to
+the cmdline as we are doing.
+
+> +	}
+>  
+>  	strscpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+>  	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
+> @@ -421,8 +424,17 @@ static void __init setup_boot_config(void)
+>  	} else {
+>  		xbc_get_info(&ret, NULL);
+>  		pr_info("Load bootconfig: %ld bytes %d nodes\n", (long)size, ret);
+> -		/* keys starting with "kernel." are passed via cmdline */
+> -		extra_command_line = xbc_make_cmdline("kernel");
+> +		/*
+> +		 * keys starting with "kernel." are passed via cmdline. When
+> +		 * this bootconfig came from the embedded source and
+> +		 * setup_arch() already prepended the rendered "kernel" subtree
+> +		 * to boot_command_line, rendering again here would duplicate
+> +		 * the keys in saved_command_line and make accumulating handlers
+> +		 * (console=, earlycon=, ...) re-register the same value. Skip
+> +		 * only when the prepend really happened.
+
+Also, this should mention ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG=n case.
+
+Thank you,
+
+> +		 */
+> +		if (!from_embedded || !xbc_embedded_cmdline_applied())
+> +			extra_command_line = xbc_make_cmdline("kernel");
+>  		/* Also, "init." keys are init arguments */
+>  		extra_init_args = xbc_make_cmdline("init");
+>  	}
 > 
-> After that, the live patch is activated to attempt replacing the implementation
-> of foo(). The expectation is that this should succeed.
-
-This wholly depends on how foo() calls bar(), if it is a normal call,
-then no, it should not succeed, because foo() is still on the stack.
-
-If it is a tail-call, then yes, because foo() is no longer relevant.
-
-> However, in reality, because the task that called schedule() is still in the
-> RUNNING state,
-
-So calling schedule() without setting state is dodgy in the first place.
-Who is doing this? All wait primitives will set this to
-TASK_UNINTERRUPTIBLE or something along those lines.
-
-> the condition task_is_running(tsk) inside rethook_find_ret_addr()
-> is not satisfied, causing the function to return early. This, in turn,
-> prevents stack_trace_save_tsk_reliable() from determining the stack as
-> reliable, leading to a failure in activating the live patch.
+> -- 
+> 2.53.0-Meta
 > 
-> **Not sure if this is correct:**
-> 
-> We believe that after a task voluntarily calls schedule(), when the stack
-> is expected to be reliable, it is a safe time to activate a live patch.
-
-Calling schedule() without setting state is a no-op and really shouldn't
-count much at all.
-
-> Additionally, a similar tsk->on_cpu check can be found elsewhere in the
-> kernel (See task_on_another_cpu() in arch/x86/include/asm/unwind.h).
-> Therefore, we propose changing the task_is_running(tsk) condition to
-> tsk->on_cpu.
-
-Anyway, I'm wondering what the purpose of this check here is, there is
-no real comment, and commit 5120d167e21c ("rethook: Remove warning
-messages printed for finding return address of a frame.") is just pure
-voodoo as well.
-
-Also, note the comment that goes with the usage of
-task_on_another_cpu(); that thing is racy as all heck.
-
-So it really comes down to what the purpose of this check is.
-
-I suspect the issue at hand is that tsk->rethook elements, such as
-iterated by __rethook_find_ret_addr() are not safe to be accessed for a
-running task.
-
-Notably while rethook_recycle() has some RCU thing on, that objpool
-thing (and the recycle name itself) seems to strongly suggest iterating
-these things is not sound (you could start with things from this task,
-hit a recycled entry and continue iterating rethooks from another task).
-
-Also note that the current check is also racy, nothing really prevents a
-wakeup from happening right after you observe task_is_running() being
-false. The task can then get scheduled in on another CPU and tear down
-its rethooks concurrent with __rethook_find_ret_addr().
 
 
-Now, livepatch itself calls unwind from a proper context, but unwinds in
-general are not. This rethook stuff doesn't seem to be sound in general.
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
