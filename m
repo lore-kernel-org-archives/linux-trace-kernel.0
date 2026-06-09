@@ -1,162 +1,174 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104453D3CEF;
-	Tue,  9 Jun 2026 07:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65C23E3C50
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 07:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780990090; cv=none; b=LB7XbhpB/KL/dlL0YPvpfOO+wKZeecF9+rF3QKaTvkvyVrW2YfweET/6Wzhs+E0anDVvxXIjm+lNWl7fbO0C8Hxuo8jEqDfx46tXVR0APGaAOHLM+SSArgxk/HzQdeMr0AJVQoWCB1z4pAjmcHryx/VQgnGkJKLGpkPfpdVmu48=
+	t=1780991066; cv=none; b=rBKZH3wMrMjizooRhk1vqhLLLe3dN5Juyuk77CWd96BvsK7rN5pb209sh2QaeGIrXaZt/6ygNlFDy7BjpTqlQRYfVhPCjmqMYtaZuPKcgnsvwUf6DF7J3w9WanatVfBAUt+dpj1ZwaqgxnOW1hVG+M82MihuoeOMXJtNlpjl70s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780990090; c=relaxed/simple;
-	bh=1tjO6VMGzyVIS+TNlEBflb9MJnuAW7Hr0LU4DhXj+tI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjAyRMDvFn/ydG3DIwJwvZk0GGtEv6KZCEBzUaMolb8xDTX66QX8rOjblYXVCNka4S9mBXGyAXEFrg8GPH8ag0k6K5fww35vMtjzfsoQHZMihLNdL6GvQaJr7PfUKqhRTitTHMLC1q/stOjyxury47WYrgHLSgJjHAWFTNBHyeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-209-184-216.092.209.pools.vodafone-ip.de ([92.209.184.216] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1wWqsJ-000000020yB-196a;
-	Tue, 09 Jun 2026 09:27:51 +0200
-Date: Tue, 9 Jun 2026 09:27:50 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Wang Han <wanghan@linux.alibaba.com>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
-	xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] scripts/sorttable: Handle RISC-V patchable ftrace
- entries
-Message-ID: <aifAdmxJtnVjshl2@nb282.user.codasip.com>
-References: <20260528082310.1994388-1-wanghan@linux.alibaba.com>
- <cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com>
- <20260609063002.3943001-1-wanghan@linux.alibaba.com>
+	s=arc-20240116; t=1780991066; c=relaxed/simple;
+	bh=KMt/9yPMor0sSrdW2kpxbF2/UobDqTgWKs/d9cQJ52Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jYJpWK5xS7IklpCo7CyQG/IPG0AxegwTOiwHmhV81TbfXg3woUdWTd2jjbJg0i4sVsFS8DV/nmvUBLmEM9KAew1bv89QJOflfZywi0MyqAO7K4nvHm2Ti96tq51kM/Oih+if76ZCo1WCIPbhTMniezeIrKiwHo+bbENGBQDxmkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6TCR6is; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6TCR6is"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DB01F0089A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 07:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780991063;
+	bh=YBycYasDaIV1c55FVXytnKgd6uGrMzPwBTTo4/YfmGc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=W6TCR6isYeRRhaBuLbcGdSB06481pxkt/XDrRlvKMCbmbCXQFdz65l6jiCBbcmMgk
+	 VyS5Uztuk0v0nHwlIggl6pqV3DE3N2Z7krlX8E8vGr/FHHhtmUMYmis2NSE43lJY37
+	 cUUnCnYAzekKI9/L71IUsXpcs0PcmafWyKBRk3Niu1KIeT7JODq8Vu5ggaCnNOqVZQ
+	 9n7JsCUs6weT9ATOVMbOJ5MFdPKSyJdBCDeKp7q36FMzZGQFmHy60RrqqW2lHleCuY
+	 /wcBFHtQsB3zE/N5z8jlQC16Q7jN/f02nPfbxwArPUN/V6gYczjLF8FrwEralkSVC3
+	 7fdOeJbDFWE6A==
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-915d64fead9so173534585a.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jun 2026 00:44:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/jETI7ZqWggEB52VENW3I5ydKz+mc2a3mqB+62Ta7HbGn2dWZvUjTsGwo8ACcPerIOLzA6Xce5mthQPOQ1tqBXsRo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb4R7SfnRo0rFanyVIrENmbqw3MtoJT6NkoashCt1rmuUvJ/kr
+	A74yujULkv+Z7W0+QWWtBl2/xjEPiOsqbqsC+lJIcGnDHO48KCv6a3pX+KnWpqHaqjeLLZ+d+vj
+	2K27Boh0RpMdqAnk1D+YrnhICYtIM9zM=
+X-Received: by 2002:a05:620a:4608:b0:8cd:9281:6be9 with SMTP id
+ af79cd13be357-915ad30dda2mr2118273885a.31.1780991062278; Tue, 09 Jun 2026
+ 00:44:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260609063002.3943001-1-wanghan@linux.alibaba.com>
+References: <20260609041156.31127-1-jp.kobryn@linux.dev>
+In-Reply-To: <20260609041156.31127-1-jp.kobryn@linux.dev>
+From: Barry Song <baohua@kernel.org>
+Date: Tue, 9 Jun 2026 15:44:11 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4xk2Q3xTkQYMPb7rnvnvVsjp24uXRcOja5RxqSbQpdoEg@mail.gmail.com>
+X-Gm-Features: AVVi8Ce7w8O4ofIUO0KMJPnSxBUad7ad-fPBfMDmsM69pgWrp7a1y6xJ_69oSVY
+Message-ID: <CAGsJ_4xk2Q3xTkQYMPb7rnvnvVsjp24uXRcOja5RxqSbQpdoEg@mail.gmail.com>
+Subject: Re: [PATCH] mm/lruvec: trace LRU add drains and drain-all queuing
+To: JP Kobryn <jp.kobryn@linux.dev>
+Cc: linux-mm@kvack.org, willy@infradead.org, shakeel.butt@linux.dev, 
+	usama.arif@linux.dev, akpm@linux-foundation.org, vbabka@kernel.org, 
+	mhocko@suse.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, kasong@tencent.com, qi.zheng@linux.dev, 
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
+	chrisl@kernel.org, shikemeng@huaweicloud.com, nphamcs@gmail.com, 
+	baoquan.he@linux.dev, youngjun.park@lge.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thus wrote Wang Han (wanghan@linux.alibaba.com):
-
-> RISC-V uses -fpatchable-function-entry=8,4 when the compressed ISA is
-> enabled and -fpatchable-function-entry=4,2 otherwise. In both cases, the
-> patchable NOP area starts 8 bytes before the function symbol address.
-> The __mcount_loc entries therefore point at the patchable NOP area
-> associated with a function, while nm reports the function symbol at the
-> entry address used for the function range check.
-
-> After RISC-V selected HAVE_BUILDTIME_MCOUNT_SORT, sorttable started
-> applying that range check at build time. Without allowing entries just
-> before the reported function address, the mcount sorter treats valid
-> RISC-V ftrace callsites as invalid weak-function entries and writes
-> them back as zero. The resulting kernel boots with no ftrace entries,
-> breaking dynamic ftrace and users such as livepatch.
-
-> The failure is silent during the final link because zeroing weak-function
-> entries is an expected sorttable operation. At boot, those zero entries
-> are skipped by ftrace_process_locs(), so the only obvious symptom is that
-> the vmlinux ftrace table has lost valid callsites and ftrace users cannot
-> attach to them.
-
-> CONFIG_FTRACE_SORT_STARTUP_TEST also reports the table as sorted in this
-> state: it only checks that the __mcount_loc entries are in ascending
-> order, which a fully zeroed table trivially satisfies. The original
-> commit relied on this check and did not see the regression.
-
-> On an affected RISC-V QEMU boot with both CONFIG_FTRACE_SORT_STARTUP_TEST
-> and CONFIG_FTRACE_STARTUP_TEST enabled, the sort check still passes
-> while ftrace reports zero usable entries and the early selftests fail:
-
->   [    0.000000] ftrace section at ffffffff8101da98 sorted properly
->   [    0.000000] ftrace: allocating 0 entries in 128 pages
->   [    0.054999] Testing tracer function: .. no entries found ..FAILED!
->   [    0.172407] tracer: function failed selftest, disabling
->   [    0.178186] Failed to init function_graph tracer, init returned -19
-
-> Handle RISC-V like arm64 for the function-range check and allow
-> patchable entries up to 8 bytes before the function address.
-
-> With this fix, a RISC-V QEMU smoke boot with ftrace startup tests shows
-> the vmlinux ftrace table is populated and dynamic ftrace still works:
-
->   [    0.000000] ftrace: allocating 46749 entries in 184 pages
->   [    0.051115] Testing tracer function: PASSED
->   [    1.283782] Testing dynamic ftrace: PASSED
->   [    6.275456] Testing tracer function_graph: PASSED
-
-> Fixes: 0ca1724b56af ("riscv: ftrace: select HAVE_BUILDTIME_MCOUNT_SORT")
-> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
-> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reviewed-by: Chen Pei <cp0613@linux.alibaba.com>
-> Link: https://lore.kernel.org/all/20260527113028.4b21a5de@fedora/
-> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+On Tue, Jun 9, 2026 at 12:12=E2=80=AFPM JP Kobryn <jp.kobryn@linux.dev> wro=
+te:
+>
+> LRU add batches can be drained before they reach capacity. This can be a
+> source of LRU lock contention, but it is not currently possible to
+> attribute these drains to callers with existing tracepoints.
+>
+> Add mm_lru_add_drain to report the CPU and lru_add batch count when an
+> lru_add batch is drained. This allows tracing to distinguish full drains
+> from partial drains and attribute them to the calling stack.
+>
+> Add mm_lru_drain_all_queue to report when lru_add_drain_all() queues
+> per-CPU drain work. This captures the requester stack and target CPU for
+> remote drain work. The event is named as a drain-all queue event because
+> the queued work can be needed for batches other than lru_add.
+>
+> Signed-off-by: JP Kobryn <jp.kobryn@linux.dev>
 > ---
->  scripts/sorttable.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+>  include/trace/events/pagemap.h | 40 ++++++++++++++++++++++++++++++++++
+>  mm/swap.c                      |  6 ++++-
+>  2 files changed, 45 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/trace/events/pagemap.h b/include/trace/events/pagema=
+p.h
+> index 171524d3526d..ea8fc46bedb0 100644
+> --- a/include/trace/events/pagemap.h
+> +++ b/include/trace/events/pagemap.h
+> @@ -77,6 +77,46 @@ TRACE_EVENT(mm_lru_activate,
+>         TP_printk("folio=3D%p pfn=3D0x%lx", __entry->folio, __entry->pfn)
+>  );
+>
+> +TRACE_EVENT(mm_lru_add_drain,
+> +
+> +       TP_PROTO(int cpu, unsigned int nr),
+> +
+> +       TP_ARGS(cpu, nr),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(int,            cpu     )
+> +               __field(unsigned int,   nr      )
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->cpu    =3D cpu;
+> +               __entry->nr     =3D nr;
+> +       ),
+> +
+> +       TP_printk("cpu=3D%d nr=3D%u", __entry->cpu, __entry->nr)
+> +);
+> +
+> +TRACE_EVENT(mm_lru_drain_all_queue,
+> +
+> +       TP_PROTO(int target_cpu, bool force_all_cpus),
+> +
+> +       TP_ARGS(target_cpu, force_all_cpus),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(int,    target_cpu      )
+> +               __field(bool,   force_all_cpus  )
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->target_cpu     =3D target_cpu;
+> +               __entry->force_all_cpus =3D force_all_cpus;
+> +       ),
+> +
+> +       TP_printk("target_cpu=3D%d force_all_cpus=3D%s",
+> +               __entry->target_cpu,
+> +               __entry->force_all_cpus ? "true" : "false")
+> +);
+> +
+>  #endif /* _TRACE_PAGEMAP_H */
+>
+>  /* This part must be outside protection */
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 588f50d8f1a8..c385b93582eb 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -694,9 +694,12 @@ void lru_add_drain_cpu(int cpu)
+>  {
+>         struct cpu_fbatches *fbatches =3D &per_cpu(cpu_fbatches, cpu);
+>         struct folio_batch *fbatch =3D &fbatches->lru_add;
+> +       unsigned int nr_folios_add =3D folio_batch_count(fbatch);
+>
+> -       if (folio_batch_count(fbatch))
+> +       if (nr_folios_add) {
+>                 folio_batch_move_lru(fbatch, lru_add);
+> +               trace_mm_lru_add_drain(cpu, nr_folios_add);
+> +       }
+>
+>         fbatch =3D &fbatches->lru_move_tail;
+>         /* Disabling interrupts below acts as a compiler barrier. */
+> @@ -928,6 +931,7 @@ static inline void __lru_add_drain_all(bool force_all=
+_cpus)
+>                 if (cpu_needs_drain(cpu)) {
+>                         INIT_WORK(work, lru_add_drain_per_cpu);
+>                         queue_work_on(cpu, mm_percpu_wq, work);
+> +                       trace_mm_lru_drain_all_queue(cpu, force_all_cpus)=
+;
 
-> diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-> index e8ed11c680c6..d8dc2a1b7c31 100644
-> --- a/scripts/sorttable.c
-> +++ b/scripts/sorttable.c
-> @@ -891,17 +891,22 @@ static int do_file(char const *const fname, void *addr)
->  	table_sort_t custom_sort = NULL;
+Do you need tracing on each CPU individually, or is tracing the
+entire __lru_add_drain_all() invocation sufficient?
 
->  	switch (elf_map_machine(ehdr)) {
-> -	case EM_AARCH64:
->  #ifdef MCOUNT_SORT_ENABLED
-> +	case EM_AARCH64:
-> +		/* arm64 also needs RELA-based weak-function fixups. */
->  		sort_reloc = true;
->  		rela_type = 0x403;
-> -		/* arm64 uses patchable function entry placing before function */
-> +		/* fallthrough */
-> +	case EM_RISCV:
-> +		/* arm64 and RISC-V place patchable entries before the function. */
->  		before_func = 8;
-> +#else
-> +	case EM_AARCH64:
-> +	case EM_RISCV:
->  #endif
->  		/* fallthrough */
->  	case EM_386:
->  	case EM_LOONGARCH:
-> -	case EM_RISCV:
->  	case EM_S390:
->  	case EM_X86_64:
->  		custom_sort = sort_relative_table_with_data;
-> -- 
-> 2.43.0
+Do you also need this_gen and lru_drain_gen to be traced?
 
-I ran into this problem and came up with pretty much the same fix.
+By the way, I'm not sure drain_all_queue is the best name here.
+Why not simply use add_drain_all()? It would match the existing
+function name better.
 
-Reviewed-by: Martin Kaiser <martin@kaiser.cx>
+Best Regards
+Barry
