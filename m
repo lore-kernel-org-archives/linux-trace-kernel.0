@@ -1,222 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C42D3F8ECC
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 10:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE813F58EB;
+	Tue,  9 Jun 2026 10:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781002188; cv=none; b=bhKOeyF5DhDQojC0OEO8uTlLmjQQr8xOO7XkznyPnhWRPXI4FmkYWeB11J/5yHQLiJKENTNOJYw/qjyh/Ex2hYc85xCVdMqKvafZtdTEnqJj5MOBpzeTKytcBpjpjqiSg75SC8zmihXfUoKsA6RhZj0f85wSfMY4JNhMh7pMYTQ=
+	t=1781002641; cv=none; b=BuJFSlyeWkZ61vgrkd5MgdDtkdsRKUThYgKp3R5Nkaq4ijB4qNKbGxm+G+XDZc6KlEDyoKul3m1gURGfTygjPIGYZKKvUzMljzCJ6ZDlZQZxT321msQZ289IXWL0NYl4MAKcayhrjOXd0BsY4PRYgaXGqhrMm8EyQAr+0H/bO68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781002188; c=relaxed/simple;
-	bh=6CAvEDz43yKdOGhFNUEWaYf/+bgtBO1ehTPPArgHn20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lzKRx0BzhG4Rg/SgSPxeTVHDs8Nf/p3ITD8JtY0QLsxSI43jmbtl1hOijtdxIE6rxv2IihJvy9jGy5+IM4YJIjto6Z0UhdUYbvFw64HvkFMRctL8Gh9f9TC2ayZ4TcJKBfyZ66u5tH2+TiPeGopBFY6vz4JLCG6Fjb+fplWUrpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c3jKzHFN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1781002641; c=relaxed/simple;
+	bh=S/LBPsjK30OHelXFeIEq2OoL51toNBeqnKCcHXf3YZ8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DCxn8MepUMx0v7znuTsjZYlCnFgyXjnS0RH6+nPaW94PjEV6c9MNvQA349VvZh8t+0zdz7y4NTn2iMZiC4K8Nytn+jtnqyP4LlfxLoRkEtXP4X5LADBU2O58uySeXUbZJi+VhjG6Ds0UtWV0uH0D4gVIe42fVPTA/I/7EqTsVEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=R2Ebasz7; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c3jKzHFN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781002186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oybSjy/BUCusB5v0qku6caRMlW4QF0kXV4iZvPCHaIo=;
-	b=c3jKzHFNDJwEUkxjLjXAjnr8WHGpu4C/jVbXNZukTYGoE56CXmp01U1ob1+zfKxEfc8HCb
-	c+mPOhqA4XIk79ThuGw4MOdznOZOY1ZUzBlGCYUFnKUQwSrlFSi4YYunLEetuusgLrY6Gx
-	2pGbpnD3pSfyI7VzwTXlxZQXTa2I0Js=
-Received: from mail-yx1-f70.google.com (mail-yx1-f70.google.com
- [74.125.224.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-OmWCniztOritVWgr_i2o8g-1; Tue, 09 Jun 2026 06:49:45 -0400
-X-MC-Unique: OmWCniztOritVWgr_i2o8g-1
-X-Mimecast-MFC-AGG-ID: OmWCniztOritVWgr_i2o8g_1781002185
-Received: by mail-yx1-f70.google.com with SMTP id 956f58d0204a3-660555be5a0so8406702d50.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jun 2026 03:49:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781002185; x=1781606985;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oybSjy/BUCusB5v0qku6caRMlW4QF0kXV4iZvPCHaIo=;
-        b=XH5vtHZbNLNM5zwlko8j2IQ7tZxEj9RWTD/bCRol7sLSRatiDSGNMiAQWnY58YbwaO
-         wqzyZSAzUp24lRaUDP4Z4txyaf+KMlGXVVC86z63OGL2VKXHNDOYuxqGTEv/uHT6/nX1
-         ecrXyRv8VDkwj2nVEv+6klqkCXfrf1X5wb9aaPscC5KnnAgs/5ZUCYn0UNWYKx5s0lmp
-         UjeB+vKJ1Rcw0IBbMk4O+u3q6CxEfUddXhPt2Cs8kgdOtBZ7Wm9ZUjzMAnfMciZqe9XE
-         nImJ9jA4lrd+ubQw4TbGLv3QdSS66bFAAmDtNU0YFnZQYbaYL4lvKF3tjmvDT+01/8yJ
-         +AFg==
-X-Forwarded-Encrypted: i=1; AFNElJ/QWZhxl2FbSnPJKXRhOkJjAOwLhyChO3e5nIjf6FtaPFpNOgky0u3Dc/2tUTcYEGQCNxTN5Zoy9FNa/ltsEM3qQE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3/QpKR+VpiRYXL4iDDgsChytahXTnRS0SVWd6UM5S2o2tplbo
-	D9IvTRZQ/XavxS/oI3VB6nB+ochcN13RfiQPAPERyrOAFZdortuEh1TPfpgNugbbzYua+qU5kjH
-	k0ltsImdNoESjCr46to0RtDPM4OpHul1RdT2TIzbXUcXOcBx8WDl9+F/VWMBcR5PL2BiCCKb7Tb
-	iZgD4lm2OXPBjfooB27NN7YEaZhkerpTvw/5Fs3A3Pt5hVbCVg
-X-Gm-Gg: Acq92OGj1KqEG+UDKHqOKNK5gQV3kYSdEYSiZRh3rEh6JIgNKRKqAqlU5a+0HIM1ETT
-	0DMLm41eXsPVBvvO33ZfD6NPnsPSTaJI9SskyjLM+iz9AN6oZYfY+c9C5saMlt3KDOJPTHcAIf1
-	dy4W5ggFVvYjQGmHjCx11CLTkJbYW8IHjkmWDdQQq4Yrcypf+DGWwZM8WN3QWTKLkzhr/2ELcfW
-	u6HOUF+44Gexfkn
-X-Received: by 2002:a05:690e:bc8:b0:661:1307:3d48 with SMTP id 956f58d0204a3-661130740c1mr14942497d50.23.1781002184651;
-        Tue, 09 Jun 2026 03:49:44 -0700 (PDT)
-X-Received: by 2002:a05:690e:bc8:b0:661:1307:3d48 with SMTP id
- 956f58d0204a3-661130740c1mr14942464d50.23.1781002184142; Tue, 09 Jun 2026
- 03:49:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="R2Ebasz7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=fa8zz6R4p8oQR9YfNRRWZX08Hmu4ZhsxlCE5B6JMwdY=; b=R2Ebasz7sqx+PQI4Hl+rYq/Yah
+	KTpeniLLengUedpR0JZxa5kHQkS/sXBigQJVRtOblpTfnfdBT7PlkvhZL2VTR5zqvINsMgKVKrZ46
+	qzxqWewlD80vhGHWzUC+QnReOX533BW5H8jSGhy+0WZfadKWzi0vZNbJNPhCY2GVozO5KpZNAQa+4
+	DTSWN/XhKQe06Y5LHdmR14pTdR5qTILMr5lEHJ0HJk/FdI+Z2sj866hO11kM7Dp7GbfK1Y9mD0CnH
+	f1piZ1PerfnSuwVedlK4tkEItLxaeSBwIi/QUS+x5E3XjsOtDokiuWKgkeQx9RG//0zC3fU5qqxSL
+	wTS/Cw1w==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wWu8w-008LtA-2j;
+	Tue, 09 Jun 2026 10:57:15 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 09 Jun 2026 03:56:55 -0700
+Subject: [PATCH v9 1/6] mm/memory-failure: drop dead error_states[] entry
+ for reserved pages
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260605161422.213817-12-npache@redhat.com> <20260606102800.26940-1-lance.yang@linux.dev>
- <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org> <CAA1CXcBY_2372eJru8VoCq90rUMxn7w23hHou68MmXRv48NRXg@mail.gmail.com>
- <b7fb4184-7a99-42c7-8ee2-4c7fa20827c4@kernel.org> <CAA1CXcAhw8V+_dYcrqmtZ9ht4Pqz5PPB8EOcDrVCp4DA4y7pLg@mail.gmail.com>
- <7e36f7f0-b4d5-41c9-b399-9e0079907d33@linux.dev>
-In-Reply-To: <7e36f7f0-b4d5-41c9-b399-9e0079907d33@linux.dev>
-From: Nico Pache <npache@redhat.com>
-Date: Tue, 9 Jun 2026 04:50:30 -0600
-X-Gm-Features: AVVi8CfEmBBiPisLcTlQkrBGxz8hwbio2e3oUzPtBYwEihX4RcQI0ruEO3CUrE4
-Message-ID: <CAA1CXcD7WAiA1b9GTLAuNZ+kHaFx0SzZwpBkqAZ=s+RHsTUaow@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v19 11/14] mm/khugepaged: Introduce mTHP
- collapse support
-To: Lance Yang <lance.yang@linux.dev>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, aarcange@redhat.com, 
-	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, 
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com, 
-	catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
-	dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net, 
-	hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com, 
-	jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com, kas@kernel.org, 
-	liam@infradead.org, ljs@kernel.org, mathieu.desnoyers@efficios.com, 
-	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, raquini@redhat.com, 
-	rdunlap@infradead.org, richard.weiyang@gmail.com, rientjes@google.com, 
-	rostedt@goodmis.org, rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com, 
-	sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com, 
-	tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
-	zokeefe@google.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: DXIT-SKV_0Zb9Dp-iHZubA8uo0JcyZx6LuPyOAe_OTo_1781002185
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260609-ecc_panic-v9-1-432a74002e74@debian.org>
+References: <20260609-ecc_panic-v9-0-432a74002e74@debian.org>
+In-Reply-To: <20260609-ecc_panic-v9-0-432a74002e74@debian.org>
+To: Miaohe Lin <linmiaohe@huawei.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+ Shuah Khan <shuah@kernel.org>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "Liam R. Howlett" <liam@infradead.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Breno Leitao <leitao@debian.org>, linux-trace-kernel@vger.kernel.org, 
+ kernel-team@meta.com
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3199; i=leitao@debian.org;
+ h=from:subject:message-id; bh=S/LBPsjK30OHelXFeIEq2OoL51toNBeqnKCcHXf3YZ8=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqJ/F+RwM7FNvMEmtMWZ1Zg7fCTG+bxJiZsvZCe
+ jH49HaDs1+JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaifxfgAKCRA1o5Of/Hh3
+ bfWQD/99pUoutynRjvnbUr1KG39G7HbZBPVQotVsVqujJ9kMtd9WYO/9Mq3ApucmJ6rxrDOdobr
+ yPsAWi5L8Wm73ds8YU2RpvtWBfvLX/YKGlouKI4VCMFSfMXgSpIVfvqToBnSnXnle1Pm6uN4aHG
+ Su/eUPNTnkRnSCNIQZ3NoOJqX9xlrjiw87zP9aNgGsevb8IL5aye9meJZT6lwaJEa4WGQTryZVK
+ 1EWkgs3iLPgAy8Nf5jktGpIypnon4nRmgrDPra9MiuftTp02o5z9W7InLcCTU8iHtkWuwiUGyw6
+ 8+z+8GWgLrWP7kOSwnAsTpCKXoBjWaK0KMEEjgJm5q9GAMX3oI71isW9u6MfmWF5aOGBBpWAmw6
+ Fwj3o7IdL5b8hVzrjX9Yr+p+YmZ6bqBm7RPZu/JCnD5v2xHTCaL5LlSq9sfXGbcb5hl0y8zOyCN
+ VfgEju0mpzTSYmG1UVCfqTfEoyYpaA3Yayl/HpNQYWnRS31qopEgKxfK8bUxEoA2V7QUBJLs9kb
+ 9jeKdSDWaKGK11XjAbCoFgOXq4D3kBZY19n9Yw9Y8+XCFaazzzLLgWLIHKZUvhhKduqc1nzU9yX
+ yfXU1OZKQWCSVA1cl/ULE1LKeZX7FwWiNh+J68MQDCHCvREc08UbvgpdecFdOpdsOyllqWBpmZL
+ xRzlYtE7rZewwOw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On Tue, Jun 9, 2026 at 4:37=E2=80=AFAM Lance Yang <lance.yang@linux.dev> wr=
-ote:
->
->
->
-> On 2026/6/9 17:32, Nico Pache wrote:
-> > On Tue, Jun 9, 2026 at 3:26=E2=80=AFAM David Hildenbrand (Arm) <david@k=
-ernel.org> wrote:
-> >>
-> >> On 6/9/26 11:06, Nico Pache wrote:
-> >>> On Mon, Jun 8, 2026 at 8:57=E2=80=AFAM David Hildenbrand (Arm) <david=
-@kernel.org> wrote:
-> >>>>
-> >>>> On 6/6/26 12:28, Lance Yang wrote:
-> >>>>>
-> >>>>>
-> >>>>> Looks broken for swap PTEs in PMD collapse ...
-> >>>>>
-> >>>>> collapse_scan_pmd() allows them up to max_ptes_swap and record them=
- in
-> >>>>> unmapped, but they don't get a bit in mthp_present_ptes. And then
-> >>>>> mthp_collapse() does the check above:
-> >>>>
-> >>>> Right. I assumed this is implicitly handled by the optimization in c=
-ollapse_scan_pmd:
-> >>>>
-> >>>>          if (enabled_orders !=3D BIT(HPAGE_PMD_ORDER))
-> >>>>                  max_ptes_none =3D KHUGEPAGED_MAX_PTES_LIMIT;
-> >>>>
-> >>>> But we perform the check a second time.
-> >>>>
-> >>>>>
-> >>>>> nr_occupied_ptes >=3D nr_ptes - max_ptes_none
-> >>>>>
-> >>>>> So max_ptes_none=3D0 + 511 present PTEs + one allowed swap PTE won'=
-t even
-> >>>>> call collapse_huge_page() for PMD order.
-> >>>>>
-> >>>>> Shouldn't we account for them in the PMD-order check? Something lik=
-e:
-> >>>>>
-> >>>>> if (is_pmd_order(order))
-> >>>>>        nr_occupied_ptes +=3D unmapped;
-> >>>
-> >>> This solution seems good for a temporary fixup. but longterm we may
-> >>> want something else. I'm still not sure how we plan on supporting
-> >>> swapin without causing creep. So I'd be ok with adding a fix for
-> >>> legacy PMD behavior until we know how to handle mTHP creep correctly.
-> >>>
-> >>>> As an alternative, we could either 1) skip the check there for
-> >>>> pmd order (as the check was already done); or 2) introduce+maintain
-> >>>> a bitmap that tracks non-present PTEs.
-> >>>>
-> >>>> @@ -1475,7 +1477,9 @@ static enum scan_result mthp_collapse(struct m=
-m_struct *mm,
-> >>>>                  nr_occupied_ptes =3D bitmap_weight_from(cc->mthp_pr=
-esent_ptes, offset,
-> >>>>                                                        offset + nr_p=
-tes);
-> >>>>
-> >>>> -               if (nr_occupied_ptes >=3D nr_ptes - max_ptes_none) {
-> >>>> +               /* Check was already done in the caller. */
-> >>>> +               if (is_pmd_order(order) ||
-> >>>> +                   nr_occupied_ptes >=3D nr_ptes - max_ptes_none) {
-> >>>>                          enum scan_result ret;
-> >>>>
-> >>>>                          collapse_address =3D address + offset * PAG=
-E_SIZE;
-> >>>>
-> >>>> 2) would probably be cleanest long-term.
-> >>>
-> >>> That would be best for future swapin support in mTHP, but I still
-> >>> don't think it solves the creep issue.
-> >>
-> >> It wouldn't, we'd simply maintain the state we collect + rely on in se=
-parate
-> >> bitmaps. On swapin, we'd have to update/refresh bitmaps I guess.
-> >
-> > Yeah, I'm saying for the future, it obviously solves this issue here
-> > as well, but if we have positional tracking of the swapout, shared,
-> > and none PTEs, I think we can use this to determine whether the
-> > collapse would lead to creep. If we detect creep would happen it may
-> > be best to automatically collapse to the N+1 (or greater) candidate.
-> > Just thinking outloud here.
-> >
-> >>
-> >>> Perhaps we could combine the
-> >>> two bitmaps to determine if it would make the future collapse eligibl=
-e
-> >>> again? Not sure but ill start thinking about it.
-> >>>
-> >>> Should I send a fixup for this using Lance's solution? Or does Lance
-> >>> want to send a patch out with the fixes tag?
-> >>
-> >> If Lance could send a fixup, explaining the situation, that would be n=
-ice.
->
-> Sure, happy to send a fixup :P
->
-> Should I send it as a fixup to be folded into this patch, or as a
-> separate patch with a Fixes: tag?
+The first entry of error_states[],
 
-Id assume a seperate patch so you can keep credit for the discovery :)
+	{ reserved,	reserved,	MF_MSG_KERNEL,	me_kernel },
 
-Thank you for all the review you provided on this series, its been
-really helpful!
+is unreachable.  identify_page_state() has two callers, and neither
+one can dispatch a PG_reserved page to me_kernel():
 
--- Nico
+  * memory_failure() reaches identify_page_state() only after
+    get_hwpoison_page() returned 1.  get_any_page() reaches that
+    return only via __get_hwpoison_page(), which only takes a
+    refcount when the page is HWPoisonHandlable().
+    HWPoisonHandlable() is an allowlist for LRU, free-buddy, and
+    (for soft-offline) movable_ops pages -- PG_reserved pages do
+    not satisfy any of these, so they fail with -EBUSY/-EIO long
+    before identify_page_state() runs.
 
->
-> Will get one out soon :)
->
-> > OK, I'd appreciate that :)
->
-> Cheers!
->
+  * try_memory_failure_hugetlb() reaches identify_page_state() only
+    via the MF_HUGETLB_IN_USED branch, where the page is necessarily
+    a hugetlb folio.  hugetlb folios don't carry PG_reserved at that
+    point: hugetlb_folio_init_vmemmap() calls __folio_clear_reserved()
+    during init, so the reserved entry would not match even if it
+    were still present.
+
+me_kernel() never executes and the entry exists only to be matched
+against by code that cannot see it.
+
+Drop the entry, the me_kernel() helper, and the now-unused
+"reserved" macro.  Leave the MF_MSG_KERNEL enum value in place: it
+remains part of the tracepoint and pr_err() string tables, and
+follow-on work to classify unrecoverable kernel pages can reuse it
+without churning the user-visible enum.
+
+No functional change.
+
+Suggested-by: David Hildenbrand <david@kernel.org>
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ mm/memory-failure.c | 14 --------------
+ 1 file changed, 14 deletions(-)
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 51508a55c405..f4d3e6e20e13 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -980,17 +980,6 @@ static bool has_extra_refcount(struct page_state *ps, struct page *p,
+ 	return false;
+ }
+ 
+-/*
+- * Error hit kernel page.
+- * Do nothing, try to be lucky and not touch this instead. For a few cases we
+- * could be more sophisticated.
+- */
+-static int me_kernel(struct page_state *ps, struct page *p)
+-{
+-	unlock_page(p);
+-	return MF_IGNORED;
+-}
+-
+ /*
+  * Page in unknown state. Do nothing.
+  * This is a catch-all in case we fail to make sense of the page state.
+@@ -1199,10 +1188,8 @@ static int me_huge_page(struct page_state *ps, struct page *p)
+ #define mlock		(1UL << PG_mlocked)
+ #define lru		(1UL << PG_lru)
+ #define head		(1UL << PG_head)
+-#define reserved	(1UL << PG_reserved)
+ 
+ static struct page_state error_states[] = {
+-	{ reserved,	reserved,	MF_MSG_KERNEL,	me_kernel },
+ 	/*
+ 	 * free pages are specially detected outside this table:
+ 	 * PG_buddy pages only make a small fraction of all free pages.
+@@ -1234,7 +1221,6 @@ static struct page_state error_states[] = {
+ #undef mlock
+ #undef lru
+ #undef head
+-#undef reserved
+ 
+ static void update_per_node_mf_stats(unsigned long pfn,
+ 				     enum mf_result result)
+
+-- 
+2.53.0-Meta
 
