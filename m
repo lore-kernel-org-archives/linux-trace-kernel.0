@@ -1,299 +1,149 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09E119E992;
-	Tue,  9 Jun 2026 01:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D389714A4F0;
+	Tue,  9 Jun 2026 02:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780970007; cv=none; b=GjcOsouGXTbn5Zx/BRWIvwxEyIT4QSczdmJkKlkI3z6/6/9g8ZZwdm6bg9IUwKifkYBZXalo7C3qyiumFjV0IOgOOND2nDCtQkmOLUxsG/msEOjevkRuASx5yCx7QPXVZBaXJ110FtAYnfCLbzDRR6VFAFpv8z22rjIXioJX6lI=
+	t=1780972770; cv=none; b=YvZSsK299BDLlPiYs5yLDC67BUOdYo6EJ5frdvYqLqJZAwm1OrWY+CDOWHDfVGQX/NxtEX/H6Az/3c9ggNb8PRtFlw+OIxs2PkL7InU1IVwYBCrwDzHOysNND1cNNVgMKa4IhmQ3ZKDYkBB8BUPzbG8uHux+q8cNdIsBeZGJUGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780970007; c=relaxed/simple;
-	bh=3rEZS9nrFXppbBYvYEkboBLsa8gOn1O8HkJNrIWEt84=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ESNZU1PMaVh1DJ6fEUfoO8hGFKR2zCUs6XHPOes0DGgZ7ZR1Tmr0AnVPWLm+Fut5EERQqMzgJiqNRkKT5C48zy3eoQMeYVQzB4BtvY0fjPK8tHJdu9ICndLzaV2I3mEHOSySbB2OGI07JmJhvJPVkeXRwjITrSAxIx/ujLLde/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nr0e3yEp; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780972770; c=relaxed/simple;
+	bh=vzdTQlRHvXBtfIlvsJDtPDa3vYd7r9SNEh4wl0vmZMQ=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=b0+82L63u7DHmdOhfSBtdlrkx3ew66xGIWHzAhEffL6RpIqVgCbz2swy4W8TWxqq7zqN8A2/I6iXKMzcBcr9ZMf71qkcuRpi3HsEk9scbX0/Y1JwhZII15kOCQ4aIS5vKeyHdR/KBYe5MVfee3wA5U3enUx/unVPYg1VnWRvoYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=TjAn0LW9; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nr0e3yEp"
-Message-ID: <de647abc-b016-4425-9c82-96ea00bfaca5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780969993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lMwoIGwmHL5jq6k7DRmMIiOP7MlJzA+Jmp+TngHbG40=;
-	b=nr0e3yEplrSOJ9/zRyoUG5133F42jJgtk8LiVp8IlkZ8OU+hq9sC5Lnu8Aqbdk7lMAoj97
-	Ci+0TjQ2xmwhb7jN5i5uuvwGbdGjGbgEgrn7KxgV4wcAF9cKT1J5GXlzQCqBBOZuGcCbVx
-	ByIF1fkzg2gLezDl2KCiJi2fBqSf3WM=
-Date: Tue, 9 Jun 2026 09:52:31 +0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="TjAn0LW9"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=BtlygfYK5ZWM60nS1lbLJPtb40nPfh/c6avQxVCJIow=;
+	b=TjAn0LW9zPesqYG48M58ZA86DLn9aCGiPpV8lYTfGKl/80+2Y6G284eU1iW+QJDF6X0Y25+Ey
+	jeJ58Srr9xJ8MXSzFpaF+5L8tjs1ov2Q4iNAxrZWIfUdNhpmxdnQQRotp0akqHhiuppgywBvEgS
+	P6STz6TQKtOMYtM6UnrQig8=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gZCbC4gMvzpTKY;
+	Tue,  9 Jun 2026 10:31:35 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2BDB24056D;
+	Tue,  9 Jun 2026 10:39:24 +0800 (CST)
+Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 9 Jun 2026 10:39:23 +0800
+Received: from [10.173.124.160] (10.173.124.160) by
+ kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 9 Jun 2026 10:39:22 +0800
+Subject: Re: [PATCH v8 2/6] mm/memory-failure: surface unhandlable kernel
+ pages as -ENOTRECOVERABLE
+To: Breno Leitao <leitao@debian.org>, "David Hildenbrand (Arm)"
+	<david@kernel.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <kernel-team@meta.com>, Lance Yang
+	<lance.yang@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+	<nao.horiguchi@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>
+References: <20260527-ecc_panic-v8-0-9ea0cfa16bb0@debian.org>
+ <20260527-ecc_panic-v8-2-9ea0cfa16bb0@debian.org>
+ <19f968f5-1289-f573-4406-e5c91dcd8923@huawei.com>
+ <e3d023f1-ab6e-4424-b304-55f1294480c3@kernel.org>
+ <33ef8821-c809-b7d1-ea77-6e8a07a6e784@huawei.com>
+ <21732071-14a1-486a-951c-34de97b7c757@kernel.org>
+ <4b27467e-935f-5587-2f48-5a794c30a592@huawei.com>
+ <aiKXrovzrNN-gExm@gmail.com>
+ <f1a742be-80cb-4256-b1f9-e50a0f83cb15@kernel.org>
+ <aibN4osY_QF1Rejh@gmail.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <4953bcee-5a0f-2bc5-7295-63e5e7513e8b@huawei.com>
+Date: Tue, 9 Jun 2026 10:39:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH mm-unstable v19 11/14] mm/khugepaged: Introduce mTHP
- collapse support
+In-Reply-To: <aibN4osY_QF1Rejh@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-To: david@kernel.org
-Cc: npache@redhat.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
- catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
- hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
- jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
- kas@kernel.org, liam@infradead.org, ljs@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-References: <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org>
- <20260608162612.27122-1-lance.yang@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <20260608162612.27122-1-lance.yang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemq500010.china.huawei.com (7.202.194.235)
 
-
-
-On 2026/6/9 00:26, Lance Yang wrote:
-> 
-> On Mon, Jun 08, 2026 at 04:56:37PM +0200, David Hildenbrand (Arm) wrote:
->> On 6/6/26 12:28, Lance Yang wrote:
+On 2026/6/8 22:15, Breno Leitao wrote:
+> On Fri, Jun 05, 2026 at 11:42:53AM +0200, David Hildenbrand (Arm) wrote:
+>> On 6/5/26 11:35, Breno Leitao wrote:
+>>> On Wed, Jun 03, 2026 at 10:33:04AM +0800, Miaohe Lin wrote:
+>>>> On 2026/6/2 17:41, David Hildenbrand (Arm) wrote:
+>>>>>
+>>>>> Races are fine. We might miss some pages, but that can happen on races either way.
+>>>>>
+>>>>>
+>>>>> I'd just do something like
+>>>>>
+>>>>> if (PageReserved(page))
+>>>>> 	return true;
+>>>>>
+>>>>> head = compound_head(page);
+>>>>
+>>>> If @head is split just after compound_head. And then @head is freed into buddy and re-allocated as slab
+>>>> page while @page is still in the buddy. We would panic on this scene as @head is PageSlab. But we were
+>>>> supposed to successfully handle @page. Or am I miss something?
 >>>
->>> On Fri, Jun 05, 2026 at 10:14:18AM -0600, Nico Pache wrote:
->>>> Enable khugepaged to collapse to mTHP orders. This patch implements the
->>>> main scanning logic using a bitmap to track occupied pages and the
->>>> algorithm to find optimal collapse sizes.
->>>>
->>>> Previous to this patch, PMD collapse had 3 main phases, a light weight
->>>> scanning phase (mmap_read_lock) that determines a potential PMD
->>>> collapse, an alloc phase (mmap unlocked), then finally heavier collapse
->>>> phase (mmap_write_lock).
->>>>
->>>> To enabled mTHP collapse we make the following changes:
->>>>
->>>> During PMD scan phase, track occupied pages in a bitmap. When mTHP
->>>> orders are enabled, we remove the restriction of max_ptes_none during the
->>>> scan phase to avoid missing potential mTHP collapse candidates. Once we
->>>> have scanned the full PMD range and updated the bitmap to track occupied
->>>> pages, we use the bitmap to find the optimal mTHP size.
->>>>
->>>> Implement mthp_collapse() to walk forward through the bitmap and
->>>> determine the best eligible order for each naturally-aligned region. The
->>>> algorithm starts at the beginning of the PMD range and, for each offset,
->>>> tries the highest order that fits the alignment. If the number of
->>>> occupied PTEs in that region satisfies the max_ptes_none threshold for
->>>> that order, a collapse is attempted. On failure, the order is
->>>> decremented and the same offset is retried at the next smaller size. Once
->>>> the smallest enabled order is exhausted (or a collapse succeeds), the
->>>> offset advances past the region just processed, and the next attempt
->>>> starts at the highest order permitted by the new offset's natural
->>>> alignment.
->>>>
->>>> The algorithm works as follows:
->>>>     1) set offset=0 and order=HPAGE_PMD_ORDER
->>>>     2) if the order is not enabled, go to step (5)
->>>>     3) count occupied PTEs in the (offset, order) range using
->>>>        bitmap_weight_from()
->>>>     4) if the count satisfies the max_ptes_none threshold, attempt
->>>>        collapse; on success, advance to step (6)
->>>>     5) if a smaller enabled order exists, decrement order and retry
->>>>        from step (2) at the same offset
->>>>     6) advance offset past the current region and compute the next
->>>>        order from the new offset's natural alignment via __ffs(offset),
->>>>        capped at HPAGE_PMD_ORDER
->>>>     7) repeat from step (2) until the full PMD range is covered
->>>>
->>>> mTHP collapses reject regions containing swapped out or shared pages.
->>>> This is because adding new entries can lead to new none pages, and these
->>>> may lead to constant promotion into a higher order mTHP. A similar
->>>> issue can occur with "max_ptes_none > HPAGE_PMD_NR/2" due to a collapse
->>>> introducing at least 2x the number of pages, and on a future scan will
->>>> satisfy the promotion condition once again. This issue is prevented via
->>>> the collapse_max_ptes_none() function which imposes the max_ptes_none
->>>> restrictions above.
->>>>
->>>> We currently only support mTHP collapse for max_ptes_none values of 0
->>>> and HPAGE_PMD_NR - 1. resulting in the following behavior:
->>>>
->>>>     - max_ptes_none=0: Never introduce new empty pages during collapse
->>>>     - max_ptes_none=HPAGE_PMD_NR-1: Always try collapse to the highest
->>>>       available mTHP order
->>>>
->>>> Any other max_ptes_none value will emit a warning and default mTHP
->>>> collapse to max_ptes_none=0. There should be no behavior change for PMD
->>>> collapse.
->>>>
->>>> Once we determine what mTHP sizes fits best in that PMD range a collapse
->>>> is attempted. A minimum collapse order of 2 is used as this is the lowest
->>>> order supported by anon memory as defined by THP_ORDERS_ALL_ANON.
->>>>
->>>> Currently madv_collapse is not supported and will only attempt PMD
->>>> collapse.
->>>>
->>>> We can also remove the check for is_khugepaged inside the PMD scan as
->>>> the collapse_max_ptes_none() function handles this logic now.
->>>>
->>>> Signed-off-by: Nico Pache <npache@redhat.com>
->>>> ---
->>>> mm/khugepaged.c | 146 +++++++++++++++++++++++++++++++++++++++++++++---
->>>> 1 file changed, 138 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>>> index ec886a031952..430047316f43 100644
->>>> --- a/mm/khugepaged.c
->>>> +++ b/mm/khugepaged.c
->>>> @@ -99,6 +99,8 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
->>>>
->>>> static struct kmem_cache *mm_slot_cache __ro_after_init;
->>>>
->>>> +#define KHUGEPAGED_MIN_MTHP_ORDER	2
->>>> +
->>>> struct collapse_control {
->>>> 	bool is_khugepaged;
->>>>
->>>> @@ -110,6 +112,9 @@ struct collapse_control {
->>>>
->>>> 	/* nodemask for allocation fallback */
->>>> 	nodemask_t alloc_nmask;
->>>> +
->>>> +	/* Each bit represents a single occupied (!none/zero) page. */
->>>> +	DECLARE_BITMAP(mthp_present_ptes, MAX_PTRS_PER_PTE);
->>>> };
->>>>
->>>> /**
->>>> @@ -1440,20 +1445,130 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
->>>> 	return result;
->>>> }
->>>>
->>>> +/* Return the highest naturally aligned order that fits at @offset within a PMD. */
->>>> +static unsigned int max_order_from_offset(unsigned int offset)
->>>> +{
->>>> +	if (offset == 0)
->>>> +		return HPAGE_PMD_ORDER;
->>>> +
->>>> +	return min_t(unsigned int, __ffs(offset), HPAGE_PMD_ORDER);
->>>> +}
->>>> +
->>>> +/*
->>>> + * mthp_collapse() consumes the bitmap that is generated during
->>>> + * collapse_scan_pmd() to determine what regions and mTHP orders fit best.
->>>> + *
->>>> + * Each bit in cc->mthp_present_ptes represents a single occupied (!none/zero)
->>>> + * page. We start at the PMD order and check if it is eligible for collapse;
->>>> + * if not, we check the left and right halves of the PTE page table we are
->>>> + * examining at a lower order.
->>>> + *
->>>> + * For each of these, we determine how many PTE entries are occupied in the
->>>> + * range of PTE entries we propose to collapse, then we compare this to a
->>>> + * threshold number of PTE entries which would need to be occupied for a
->>>> + * collapse to be permitted at that order (accounting for max_ptes_none).
->>>> + *
->>>> + * If a collapse is permitted, we attempt to collapse the PTE range into a
->>>> + * mTHP.
->>>> + */
->>>> +static enum scan_result mthp_collapse(struct mm_struct *mm,
->>>> +		unsigned long address, int referenced, int unmapped,
->>>> +		struct collapse_control *cc, unsigned long enabled_orders)
->>>> +{
->>>> +	unsigned int nr_occupied_ptes, nr_ptes, max_ptes_none;
->>>> +	enum scan_result last_result = SCAN_FAIL;
->>>> +	int collapsed = 0;
->>>> +	bool alloc_failed = false;
->>>> +	unsigned long collapse_address;
->>>> +	unsigned int offset = 0;
->>>> +	unsigned int order = HPAGE_PMD_ORDER;
->>>> +
->>>> +	while (offset < HPAGE_PMD_NR) {
->>>> +		nr_ptes = 1UL << order;
->>>> +
->>>> +		if (!test_bit(order, &enabled_orders))
->>>> +			goto next_order;
->>>> +
->>>> +		max_ptes_none = collapse_max_ptes_none(cc, NULL, order);
->>>> +		nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
->>>> +						      offset + nr_ptes);
->>>> +
->>>> +		if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+>>> You're right that it is racy, but I think it is an acceptable race here.
 >>>
->>> Looks broken for swap PTEs in PMD collapse ...
->>>
->>> collapse_scan_pmd() allows them up to max_ptes_swap and record them in
->>> unmapped, but they don't get a bit in mthp_present_ptes. And then
->>> mthp_collapse() does the check above:
 >>
->> Right. I assumed this is implicitly handled by the optimization in collapse_scan_pmd:
+>> I mean, any such races can currently already happen one way or the other?
 >>
->> 	if (enabled_orders != BIT(HPAGE_PMD_ORDER))
->> 		max_ptes_none = KHUGEPAGED_MAX_PTES_LIMIT;
+>> Really, the only way to not get races is to tryget the (compound)page,
+>> revalidate that the page is still part of the compound page.
 >>
->> But we perform the check a second time.
+>> I'm not sure if that's really a good idea.
+>>
+>> But my memory is a bit vague in which scenarios we already hold a page reference
+>> here to prevent any concurrent freeing?
 > 
-> Note that once lower orders are enabled, the scan *relaxes* max_ptes_none
-> only so it can cover the whole PMD and build the bitmap ...
+> No, we don't hold one here in the case that matters.
 > 
->>>
->>> nr_occupied_ptes >= nr_ptes - max_ptes_none
->>>
->>> So max_ptes_none=0 + 511 present PTEs + one allowed swap PTE won't even
->>> call collapse_huge_page() for PMD order.
->>>
->>> Shouldn't we account for them in the PMD-order check? Something like:
->>>
->>> if (is_pmd_order(order))
->>> 	nr_occupied_ptes += unmapped;
->> As an alternative, we could either 1) skip the check there for
->> pmd order (as the check was already done); or 2) introduce+maintain
+> HWPoisonKernelOwned() runs at the very top of get_any_page(), before
+> try_again: and before __get_hwpoison_page(). The first refcount taken in
+> the whole path is the folio_try_get() inside __get_hwpoison_page(), which
+> runs *after* the short-circuit.
 > 
-> Yeah, skipping the check would do the trick, since isolate will check
-> max_ptes_none again later :)
-
-In addition, that later check is rather late, we may have already
-allocated the folio and swapped in pages before isolate rejects
-the range :)
-
->> a bitmap that tracks non-present PTEs.
->>
->> @@ -1475,7 +1477,9 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
->>                 nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
->>                                                       offset + nr_ptes);
->>
->> -               if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
-
-So I'd still slightly prefer keeping this check and accounting
-unmapped for PMD order.
-
-if (is_pmd_order(order))
-	nr_occupied_ptes += unmapped;
-
-
->> +               /* Check was already done in the caller. */
+> So get_any_page() itself never holds a reference at the check -- the only way
+> one exists is if the caller passed MF_COUNT_INCREASED (count_increased ==
+> true).
 > 
-> This check is not quite redundant for PMD order, though. It avoids
-> entering collapse_huge_page() for a range that already exceeds
-> max_ptes_none for that order.
+> So on the MCE/GHES path -- the one this panic option exists for -- no
+> reference is held when HWPoisonKernelOwned() does its compound_head() +
+> PageSlab()/PageTable()/PageLargeKmalloc() checks.
 > 
->> +               if (is_pmd_order(order) ||
->> +                   nr_occupied_ptes >= nr_ptes - max_ptes_none) {
->>                         enum scan_result ret;
->>
->>                         collapse_address = address + offset * PAGE_SIZE;
->>
->> 2) would probably be cleanest long-term.
+> Given that, I'd rather keep it racy and take no refcount than add a
+> tryget + revalidate purely for this check. As I've said earleir, an operator
+
+Would it be acceptable to add a simple recheck? Something like below:
+
+retry:
+head = compound_head(page);
+PageSlab()/PageTable()/PageLargeKmalloc() checks
+if (head != compound_head(page))
+	goto retry
+
+Thanks both.
+.
+
+> who enabled it has chosen to crash rather than run on corrupted memory;
+> mis-attributing one such rare, genuinely-poisoned page is within that contract.
+> .
 > 
-> Yeah, Agreed.
 
