@@ -1,175 +1,192 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEB03624A8
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 04:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB596364E9E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 04:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780978984; cv=none; b=BNaf4pnp8GoNufPBW56q9wBCdmWXRY2GH8rMxp4MgvF3XMRZw3qdP+V5152fcDubkXgYw4YrcdICKU7FAoquJF33SWLaTzXFapnpsYzYFsYWmIm/JVEGSsf7jja8vXFT/tzCyyPMvWCgU7NyIIhiNdyz06yPlg43+MJZHoY8h+s=
+	t=1780980087; cv=none; b=CiGpSB84HDNT+4Qr6r38maje/mrI0ZK5u33QHzwVhZFLXg+f2Ps7a+LTt0QCPW8D0TpkScILnSaFVXvrTRh4z0eE/l4sNUcoWPM/6NjYqT2v1Qzx2W5wklmzG8LmZDaJPzBpL1RgcU5lfFs3tlLwtYCBq3m8BsI/gGMINPC6O2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780978984; c=relaxed/simple;
-	bh=XUM4jSYxsy8OZpNlA2sFeJJyi0yvHFHO/l85O3H0Cik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N9NMEP2YjIWNofD29s+j18fuAFQdvwdFDsTLXBVJknT08un6YsLrhPE2Wf9wbkCJpTeu5dGkaO0p5318UcyOEjfgotRIlJBkORbXOz3PUKQ4xGyqETDtX3d9w78aSrdA6pJwoiLnNnetMQsgZDqaGxvY5r7O9oaKRwT/tCCPth8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=jq8A9Meb; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1780980087; c=relaxed/simple;
+	bh=niVPKu3KCGXpaVcO6/gS8ySgoA3IT21ZaQzq7eQRAoI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=N7xquSF2B38PAoduxUJQd5/kTYqGAqrHDWOl/nIFZA9MT4MnMgGnfcry4VHrMA3w/XJZf5cRk2WpIVRtYh3ipOgiXAhs/SGTvDGWjdp39v5k5yD92I/2okQOaZawxb5hcCcz+A9pw7+ErByc1OC2D6M1qGPP6a07s5oEJ4Dv9hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bey43OSD; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="jq8A9Meb"
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8BB903FA67
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 04:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1780978978;
-	bh=o6zPecMI7bLh93KjCTX3ud9wcf4W2rIyTKOsld/Pw24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=jq8A9MeboPF+JXR3nGbV+Q5vF7Hj2nUdUVuEghL407q4LhFzyg6o/8ziZaN5FXm+V
-	 cSVf2hUN8lv3e/5LW9ZTBMyQrb/rkf+LAcpnlu69OuPLXO7WZr2tDMqeCv2OX0D9w4
-	 1/4fNM6tdm403/jiP6FprHFqdVuMAUBqEuH2Xs5NZU/U1zbpwGljlbBsWvtxgR2hjt
-	 Pl9CZhb7a5NyCMMor7NCzVZb7PViolCMyRNycgH83kEaNvPQCFXR+Ltl2nw8vgaZ58
-	 J+8KXCTOTccmn2gN8QcBJ/TkjJmQcqzClWPf30rHOn7ZhdJHGdShK1LqsPsG5F5qtX
-	 3vk/xRJKWx8/Cdfj5gj8b3Ln79pxC66ePuA3uvKSo1PsU9b4LWitLqRjCyyhYcKcF4
-	 HpwEeplaAW5fFqaxVxCVqdzcFGEq8VE6pDXwNbDWeXwCeES5t+MXMS4Vdty1KcxaWb
-	 6jhEdE/HMrLJOURGUYiO1EQWuf0aeTQVy3upgzNDaS4nIafLW04Yb1kj91nkNFsTFg
-	 hsWtCRYYuvRViY/XsSS5UdevUvk8XAh31wy3gJpMuV7D/uXeGoK2boZyyvk/2HxT5+
-	 b5j4VqiM0KA0qjBW8awONSJLgGFR5y7Y9mrZ/Bwou8cRlYrWie58IVS67nf2gAhVVe
-	 yr7ZShqvaqhQSUCrQbGDOp3w=
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-8423970cb30so3229677b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jun 2026 21:22:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bey43OSD"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2bf18c30bb2so35515155ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jun 2026 21:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1780980085; x=1781584885; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M58CbF2eNhyrWg008D0ABCR+x+AP5d/FSVenLDFjbso=;
+        b=bey43OSDnW2g8//wfLnVS3L2InOBrSR+7XhB23f9w5SPJSS3FcNjfPEvIPaIDLkOkZ
+         PWujDlQ1QxvqiqQsSG9naXhLuD7bXHH6XXzbq7EJQsT1ehQ68NjC7bVt1ZHuGdRXJL5h
+         zacagIEJnUBeVDzYY//jx8/Sf91rQUFo8QB/U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780978977; x=1781583777;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o6zPecMI7bLh93KjCTX3ud9wcf4W2rIyTKOsld/Pw24=;
-        b=nXYIAd0UNrdXj33pBYZVU/5ErdRKQ9ftVURTyNIeQfn2cKIre2TGN10yIiOUq4fGSB
-         i9SIfCSK7spZAR4VhJ9uDjHjac+kWTsxFBpY0mknV6pOswy3CqvxJzb4vovkR1SjMd3S
-         z5Cg1zJRHzOXbv27R+Ay+3/Sr2in/GdmBiIqkO6kIDIEaAYGj3iaEaMgVEkR+Oc8BJAh
-         7yx5XhYuwmEQF53vAejCbTJP8RlTBMilm4xkcnCrf0hP4DhcWbRK0kIp2MBbDT6no+Aw
-         5fhy9oIH6QsH0T76veHFgdYbJdN9ImNg8YGkYd2AVN0Mj6aXUryG1BezXewJFuSGlL+O
-         LVSQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/a3vwPtnJteS/tpeBr3Hq6tfRxB/NX9Xg9rB7q3VSrxlmY5jJGBGDvZKPoal48INyoBna3TgP6Ff1I0hcHBiVyLoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7R55/kyyeUzBpuEJ9F1HTQEP5RnGVNwE5A3ssA/Pc4tbUqdI1
-	sgr4xvk2Ktp7+vq7jjx2lwJS1P+tr/AukYZ7YFR/+GaSp0MZ0ikHh/iaIFnuZT0lYNF2OI3Oskw
-	XUDD1Q7gSJaIy4dpVHPN7q2Cb6miwZQLJL46x4X8ZZivndC9134i1GKUhSa0MKOoPBUAsCWBVQ7
-	rXEhlx+Vm6breTPA==
-X-Gm-Gg: Acq92OElqwvCby/wOPgIYw3yQEciD4yRQfxJcQzhpX9TwedWVMUyt4jZTVWRqFsWrUX
-	HGFDuVU+xSm/r0lZCoxON0//SzHg7ntb/os2nFVAuILCnYrv+sAGx85j20Y6JA6OwaxkVGmqwSB
-	C20/D5NUHCVxvxvzYughrqIZEoWM4sP8I5eF+CWloLizovLkw7OL2t14nrgotSjBxXBq7P/amsI
-	c6YfOxeNfR1WZacu8VVWlYCtKRe8Y8e7FFFWJdXRlmy71zbPTqkx0QsRmCRtcEiZUO37JFMXT1B
-	Nv6rxa9Xv9CnUnJmADuLKotELJjJbcjl0VzbNko3hiLHiaADt1kh2d/+PrQSotGzw9B5RwzMCBU
-	WH/ODZJ2wS4nMz2/5T8fcJ5ZzTJEUGiTpbteKHMKQwcCPnvB7h/1wTss1QeBusq18yJ0n/RKwcZ
-	ZfybHExI3bmH4=
-X-Received: by 2002:a05:6a00:90a7:b0:842:5634:3c1d with SMTP id d2e1a72fcca58-842b0e835d1mr17963453b3a.19.1780978976533;
-        Mon, 08 Jun 2026 21:22:56 -0700 (PDT)
-X-Received: by 2002:a05:6a00:90a7:b0:842:5634:3c1d with SMTP id d2e1a72fcca58-842b0e835d1mr17963385b3a.19.1780978975763;
-        Mon, 08 Jun 2026 21:22:55 -0700 (PDT)
-Received: from ?IPV6:2409:8a00:48c1:ca00:75db:215a:5e30:3763? ([2409:8a00:48c1:ca00:75db:215a:5e30:3763])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-842828d6bc5sm18664636b3a.43.2026.06.08.21.22.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2026 21:22:55 -0700 (PDT)
-Message-ID: <ea9d00cb-54c6-4635-aa13-e5a688375132@canonical.com>
-Date: Tue, 9 Jun 2026 12:22:47 +0800
+        d=1e100.net; s=20251104; t=1780980085; x=1781584885;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M58CbF2eNhyrWg008D0ABCR+x+AP5d/FSVenLDFjbso=;
+        b=UeWcWlDV5YCA5yZWwM4BY3iadbnO/Msy2V7UGbyq+L/0B4rLgJ+3O7TPxavxNcrhMU
+         mvr3+C+XgQjL2r1xQqiaOfcNzNiC2HVwhFh7CXmOs8dFnYy8LMdkFLvWDY7mPKmR7qPn
+         /Kr+6rHamwkTS0QSX/tXPIi4Uuun4NwqcXujV/S6bCgmLxjLOL7U6Erhx7mBIbAhMi9J
+         Lp4f0wySHJg/suFAafkMKPxxDu2kpEtr3PMmAQy+Q/7dPvpd/qUwDW6BYfrkF3gXyIzz
+         9519w7cmdnNYTvMnm62C6qO6jRJMV9AKANseeWQbiKZR2cgCLesqBJBoN1k3Rwgj9rOC
+         fzsA==
+X-Forwarded-Encrypted: i=1; AFNElJ84PDFcvLpR9cktLdI2Z9wqmbXIA2XhbSy1oo8feIKsdSN0oS2D/4cEWSWkpDrnwbqlyjviiPT6wkXv9BTT9zT9Vrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdhKu+ZjKVrArHVJCQMqDCfZqkj+Sj89UcHSBGF6gC4eP998Aa
+	0fCrIXrAH6DZDKeeyDSMZwBuaepm0q9FlsEm8qn/Hl+jTHADIFSsPOiWJBymPpz0ww==
+X-Gm-Gg: Acq92OGe985QafUxKfOD2fk41lc+91jwakaVgVviVtqWj1WqyCQWvqLG845971lri2Q
+	NeD0bWYKFSOwnjt33n/No3nhY1LTscspMc9Rn2RbT3F/PdZVaAjPK232eh1r73m3dHphcSK1HVu
+	4Ja6/o1bbiywte9KxyJUovvZlQnbV3tcqXaZPCvQbMxRy79Ar/BtmdY9aaIzInrfOLBkNJKz4PJ
+	05hWR83mjCmEGSEI5lcOSz+pVa1prQ8ihN0OhcDcaRGBwXMSFDZoGS5OmRJLaI0/tAxsEoN23u+
+	NeuotMMZONZp+w3mun2gH9JazSYWvfnKN8kkFkPX6wMqdYOhk7eo3DCO7mS+PmI12DH6OgBZUC+
+	NRSH0PxHu5wgJgYJPxskIlSCuQmvo8ivtsyzEb7b+omRjGgn15typPkuVbG2szCRmYjQPPZJoZ4
+	zlPu42o1wFuMi54UiufUtNwvmj1p/MEnjLNBh5n6cfmL4mTkK0iZ5VNj1F+JE1ugMqj/q0ffXcb
+	21wCotn/dmivKYvStpboN7vWOdZxGWmcjy7WGC5wEKp
+X-Received: by 2002:a17:903:19e8:b0:2c0:bb2d:a30b with SMTP id d9443c01a7336-2c1e893e978mr199020155ad.32.1780980085248;
+        Mon, 08 Jun 2026 21:41:25 -0700 (PDT)
+Received: from jingyliang-input-linux.c.googlers.com (111.169.168.34.bc.googleusercontent.com. [34.168.169.111])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c1664a67b0sm200736065ad.80.2026.06.08.21.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2026 21:41:24 -0700 (PDT)
+From: Jingyuan Liang <jingyliang@chromium.org>
+Subject: [PATCH v4 00/11] Add spi-hid transport driver
+Date: Tue, 09 Jun 2026 04:40:51 +0000
+Message-Id: <20260609-send-upstream-v4-0-b843d5e6ced3@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] ring-buffer: Fix event length with forced 8-byte
- alignment
-To: Steven Rostedt <rostedt@goodmis.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: mathieu.desnoyers@efficios.com, pjw@kernel.org,
- linux-trace-kernel@vger.kernel.org, shuah@kernel.org, wangfushuai@baidu.com,
- linux-kselftest@vger.kernel.org
-References: <20260607072431.125633-1-hui.wang@canonical.com>
- <20260607072431.125633-2-hui.wang@canonical.com>
- <20260608180245.09e083867a7d4d96058d7323@kernel.org>
- <20260608125254.2598ef4e@fedora>
-Content-Language: en-US
-From: Hui Wang <hui.wang@canonical.com>
-In-Reply-To: <20260608125254.2598ef4e@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFOZJ2oC/23Pyw7CIBCF4VdpWIuBAXpx5XsYF7UMLYteAi3RN
+ H13aV1oiMv/JPMlsxKPzqInl2wlDoP1dhxiyFNGmq4eWqRWxybAIGfAgXocNF0mPzuse1ookxt
+ doa4ASbyZHBr7PLzbPXZn/Ty618EHvq8fSTCRSIFTRrni6lEDL43Q16ZzY2+X/jy6luxYgB8AZ
+ ApABBTwBsvaGFPmfwDxBSRLfwkiAjmreCNVqYUqEmDbtjdCPS72LwEAAA==
+X-Change-ID: 20260212-send-upstream-75f6fd9ed92e
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ hbarnor@chromium.org, tfiga@chromium.org, 
+ Jingyuan Liang <jingyliang@chromium.org>, 
+ Jarrett Schultz <jaschultz@microsoft.com>, 
+ Dmitry Antipov <dmanti@microsoft.com>, Angela Czubak <acz@semihalf.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780980084; l=4487;
+ i=jingyliang@chromium.org; s=20260213; h=from:subject:message-id;
+ bh=niVPKu3KCGXpaVcO6/gS8ySgoA3IT21ZaQzq7eQRAoI=;
+ b=gMiaV3ssfrSxB6Fkr0m/bcfIHp9ptbFeLfSnTk8bUHRLDQdur44JJWF8n6UENBPsDLHjwnDys
+ a1vurmOpnbgC1mSlSC2pqiuwkJcE4MyhX8Df0zwQplhFF1Yawu1lVbU
+X-Developer-Key: i=jingyliang@chromium.org; a=ed25519;
+ pk=VTYSdqslTtYOjWWoIGgYoWupGWqNSidrggReKMgfPo4=
 
+This series picks up the spi-hid driver work originally started by
+Microsoft. The patch breakdown has been modified and the implementation
+has been refactored to address upstream feedback and testing issues. We
+are submitting this as a new series while keeping the original sign-off
+chain to reflect the history.
 
-On 6/9/26 00:52, Steven Rostedt wrote:
-> On Mon, 8 Jun 2026 18:02:45 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
->
->> On Sun,  7 Jun 2026 15:24:30 +0800
->> Hui Wang <hui.wang@canonical.com> wrote:
->>
->>> When RB_FORCE_8BYTE_ALIGNMENT is true, rb_calculate_event_length()
->>> reserves the space of event->array[0] for placing the data length and
->>> rb_update_event() stores the data length in event->array[0]
->>> accordingly. As a result the whole event length will add extra 4 bytes
->>> for sizeof(event.array[0]) unconditionally.
->>>
->>> But ring_buffer_event_length() only subtracts the
->>> sizeof(event->array[0]) for events larger than RB_MAX_SMALL_DATA +
->>> sizeof(event->array[0]). As a result, small events on architectures
->>> with RB_FORCE_8BYTE_ALIGNMENT=true report a data length that is 4
->>> bytes larger than expected.
->>>
->>> To fix it, add the RB_FORCE_8BYTE_ALIGNMENT as a condition to subtract
->>> the size of that length field whenever RB_FORCE_8BYTE_ALIGNMENT is
->>> true.
->>>
->>> This issue is observed in a riscv64 kernel with
->>> CONFIG_HAVE_64BIT_ALIGNED_ACCESS set to y, when we run ftrace selftest
->>> trace_marker_raw.tc, we get the weird log: for cases where the id is
->>> 1..100, the number of data field is 8*N, but once id exceeds 100, the
->>> number of data field becomes 8*N+4:
->>>   # 1 buf: 58 00 00 00 80 5e d1 63 (number of data field is 8*1)
->>>   ...
->>>   # a buf: 58 ...                  (number of data field is 8*2)
->>>   ...
->>>   # 64 buf: 58 ...                 (number of data field is 8*13)
->>>   # 65 buf: 58 ...                 (number of data field is 8*13+4)
->>>
->>> After applying this change, the number of data field keeps being 8*N+4
->>> consistently.
->>>    
->> Good catch!
->>
->> This looks good to me.
->>
->> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> This is the patch I meant to reply to.
->
-> NACK as the test is broken and not the kernel.
->
-> There's a pending fix already:
->
->    https://lore.kernel.org/all/20260601023251.1916483-1-dtcccc@linux.alibaba.com/
->
->
-> -- Steve
+Same as the original series, there is a change to HID documentation, some
+HID core changes to support a SPI device, the SPI HID transport driver,
+and HID over SPI Device Tree binding. We have added the HID over SPI ACPI
+support, power management, panel follower, and quirks for Ilitek touch
+controllers.
 
-Hi Steven,
+Original authors: Jarrett Schultz <jaschultz@microsoft.com>,
+		  Dmitry Antipov <dmanti@microsoft.com>
+Link: https://lore.kernel.org/r/86b63b7b-afda-d7f4-7bfa-175085d5a8ef@gmail.com
 
-Thanks for the pointer. I reverted my two patches and applied the patch 
-you referenced, but unfortunately it doesn't resolve the problem — the 
-testcase still fails in my environment (riscv64 kernel with 
-CONFIG_HAVE_64BIT_ALIGNED_ACCESS enabled).
+Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
+---
+Changes in v4:
+- Extended io_lock scope to protect the shid->hid pointer lifecycle
+  against races with the IRQ handler
+- Cacheline-aligned DMA buffers, enforced 4-byte alignment
+- Added error rollback for failed suspend/resume transitions
+- Moved IRQ request to probe with IRQF_NO_AUTOEN (disabled by default)
+- DT Bindings & OF Driver:
+  - Required a device-specific compatible string in the schema.
+  - Added description to explain why opcodes and addresses properties
+    need to be defined in the schema
+  - Added `spi-peripheral-props.yaml` reference and switched to
+    `unevaluatedProperties: false`.
+  - Added fallback to default timing parameters in OF driver if match
+    data is missing.
+- Link to v3: https://lore.kernel.org/r/20260402-send-upstream-v3-0-6091c458d357@chromium.org
 
- From what I can tell, that fix addresses a different problem than the 
-one I'm hitting: it targets a 64K page-size issue, whereas my failure is 
-caused by the 64-bit alignment requirement 
-(CONFIG_HAVE_64BIT_ALIGNED_ACCESS). So I don't think they're the same 
-root cause.
+Changes in v3:
+- Add io_lock init
+- Relocate tracepoints to drivers/hid/spi-hid/ and fix tracepoint macros
+- Add tracepoints for sync, error handling, reset, and report processing
+- Clean up internal includes and fix Makefile CFLAGS
+- Add more details in v2 changelog
+- Link to v2: https://lore.kernel.org/r/20260324-send-upstream-v2-0-521ce8afff86@chromium.org
 
-So can you please take a look at them again.
+Changes in v2:
+- Clean up DT bindings: fix formatting and remove timing and flags properties
+- Update DT binding example: use a device-specific compatible and drop
+  reset_assert
+- Simplify ACPI/OF match tables by removing ACPI_PTR/of_match_ptr
+- Refactor OF driver to use match data for timing parameters instead
+  of DT properties
+- Switch to fsleep() for delays in ACPI and OF drivers
+- Drop patch 12 as it is vendor specific
+- Add a lock to fix input/output concurrency race
+- Link to v1: https://lore.kernel.org/r/20260303-send-upstream-v1-0-1515ba218f3d@chromium.org
 
-Thanks,
+---
+Angela Czubak (2):
+      HID: spi-hid: add transport driver skeleton for HID over SPI bus
+      HID: spi_hid: add ACPI support for SPI over HID
 
-Hui.
+Jarrett Schultz (3):
+      Documentation: Correction in HID output_report callback description.
+      HID: Add BUS_SPI support and define HID_SPI_DEVICE macro
+      HID: spi_hid: add device tree support for SPI over HID
+
+Jingyuan Liang (6):
+      HID: spi-hid: add spi-hid driver HID layer
+      HID: spi-hid: add HID SPI protocol implementation
+      HID: spi_hid: add spi_hid traces
+      dt-bindings: input: Document hid-over-spi DT schema
+      HID: spi-hid: add power management implementation
+      HID: spi-hid: add panel follower support
+
+ .../devicetree/bindings/input/hid-over-spi.yaml    |  128 ++
+ Documentation/hid/hid-transport.rst                |    4 +-
+ drivers/hid/Kconfig                                |    2 +
+ drivers/hid/Makefile                               |    2 +
+ drivers/hid/hid-core.c                             |    3 +
+ drivers/hid/spi-hid/Kconfig                        |   45 +
+ drivers/hid/spi-hid/Makefile                       |   12 +
+ drivers/hid/spi-hid/spi-hid-acpi.c                 |  254 ++++
+ drivers/hid/spi-hid/spi-hid-core.c                 | 1521 ++++++++++++++++++++
+ drivers/hid/spi-hid/spi-hid-core.h                 |   98 ++
+ drivers/hid/spi-hid/spi-hid-of.c                   |  247 ++++
+ drivers/hid/spi-hid/spi-hid-trace.h                |  169 +++
+ drivers/hid/spi-hid/spi-hid.h                      |   46 +
+ include/linux/hid.h                                |    2 +
+ 14 files changed, 2531 insertions(+), 2 deletions(-)
+---
+base-commit: 05f7e89ab9731565d8a62e3b5d1ec206485eeb0b
+change-id: 20260212-send-upstream-75f6fd9ed92e
+
+Best regards,
+-- 
+Jingyuan Liang <jingyliang@chromium.org>
 
