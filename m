@@ -1,174 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65C23E3C50
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 07:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394583812F6;
+	Tue,  9 Jun 2026 08:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780991066; cv=none; b=rBKZH3wMrMjizooRhk1vqhLLLe3dN5Juyuk77CWd96BvsK7rN5pb209sh2QaeGIrXaZt/6ygNlFDy7BjpTqlQRYfVhPCjmqMYtaZuPKcgnsvwUf6DF7J3w9WanatVfBAUt+dpj1ZwaqgxnOW1hVG+M82MihuoeOMXJtNlpjl70s=
+	t=1780995039; cv=none; b=pExrIaNrzxheAhNwkMViZDUroSF82Qk9U1MdFuEOYRjrDmlK/ubOgf3bpi5ck6yOgoUFLX3v4LSDIfLW3MzHsumD/41pXwIebNWXklTp9onXP7rjMpBwYVFkW1qMStdWI2p0u3l5jWaAphG2jV42+bcbnBj2vCrKFGA09X92EFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780991066; c=relaxed/simple;
-	bh=KMt/9yPMor0sSrdW2kpxbF2/UobDqTgWKs/d9cQJ52Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jYJpWK5xS7IklpCo7CyQG/IPG0AxegwTOiwHmhV81TbfXg3woUdWTd2jjbJg0i4sVsFS8DV/nmvUBLmEM9KAew1bv89QJOflfZywi0MyqAO7K4nvHm2Ti96tq51kM/Oih+if76ZCo1WCIPbhTMniezeIrKiwHo+bbENGBQDxmkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6TCR6is; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6TCR6is"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DB01F0089A
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 07:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780991063;
-	bh=YBycYasDaIV1c55FVXytnKgd6uGrMzPwBTTo4/YfmGc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=W6TCR6isYeRRhaBuLbcGdSB06481pxkt/XDrRlvKMCbmbCXQFdz65l6jiCBbcmMgk
-	 VyS5Uztuk0v0nHwlIggl6pqV3DE3N2Z7krlX8E8vGr/FHHhtmUMYmis2NSE43lJY37
-	 cUUnCnYAzekKI9/L71IUsXpcs0PcmafWyKBRk3Niu1KIeT7JODq8Vu5ggaCnNOqVZQ
-	 9n7JsCUs6weT9ATOVMbOJ5MFdPKSyJdBCDeKp7q36FMzZGQFmHy60RrqqW2lHleCuY
-	 /wcBFHtQsB3zE/N5z8jlQC16Q7jN/f02nPfbxwArPUN/V6gYczjLF8FrwEralkSVC3
-	 7fdOeJbDFWE6A==
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-915d64fead9so173534585a.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jun 2026 00:44:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/jETI7ZqWggEB52VENW3I5ydKz+mc2a3mqB+62Ta7HbGn2dWZvUjTsGwo8ACcPerIOLzA6Xce5mthQPOQ1tqBXsRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb4R7SfnRo0rFanyVIrENmbqw3MtoJT6NkoashCt1rmuUvJ/kr
-	A74yujULkv+Z7W0+QWWtBl2/xjEPiOsqbqsC+lJIcGnDHO48KCv6a3pX+KnWpqHaqjeLLZ+d+vj
-	2K27Boh0RpMdqAnk1D+YrnhICYtIM9zM=
-X-Received: by 2002:a05:620a:4608:b0:8cd:9281:6be9 with SMTP id
- af79cd13be357-915ad30dda2mr2118273885a.31.1780991062278; Tue, 09 Jun 2026
- 00:44:22 -0700 (PDT)
+	s=arc-20240116; t=1780995039; c=relaxed/simple;
+	bh=sFsCj8R0jEN1k2Y+Fu/trCTQWqQ/AKEkvKZ+ZH7ungA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L/P/kS3tZxS37ylJ/8LfwNTLNe+Lk+fxme64r18V3UlsSgcoPuZXRC0M6HK7s69NYc9CFRHiqq+eZ0oB2lvrgCFV1u1/q2tpMn+krc5j16qxJMW6JVdSiJfQ7EmrRcFITZTe/xjvOFOA3f0rUElHKqZMYIyHF7ky52bsAZo/RGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gZN012mCPzYQtM7;
+	Tue,  9 Jun 2026 16:50:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id F24EB40576;
+	Tue,  9 Jun 2026 16:50:25 +0800 (CST)
+Received: from huawei.com (unknown [7.197.88.80])
+	by APP2 (Coremail) with SMTP id Syh0CgA3+n_L0ydqfvuqBA--.61309S2;
+	Tue, 09 Jun 2026 16:50:24 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: [PATCH v3] rethook: Remove the running task check in rethook_find_ret_addr()
+Date: Tue,  9 Jun 2026 16:49:53 +0800
+Message-Id: <20260609084953.901576-1-wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260609041156.31127-1-jp.kobryn@linux.dev>
-In-Reply-To: <20260609041156.31127-1-jp.kobryn@linux.dev>
-From: Barry Song <baohua@kernel.org>
-Date: Tue, 9 Jun 2026 15:44:11 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4xk2Q3xTkQYMPb7rnvnvVsjp24uXRcOja5RxqSbQpdoEg@mail.gmail.com>
-X-Gm-Features: AVVi8Ce7w8O4ofIUO0KMJPnSxBUad7ad-fPBfMDmsM69pgWrp7a1y6xJ_69oSVY
-Message-ID: <CAGsJ_4xk2Q3xTkQYMPb7rnvnvVsjp24uXRcOja5RxqSbQpdoEg@mail.gmail.com>
-Subject: Re: [PATCH] mm/lruvec: trace LRU add drains and drain-all queuing
-To: JP Kobryn <jp.kobryn@linux.dev>
-Cc: linux-mm@kvack.org, willy@infradead.org, shakeel.butt@linux.dev, 
-	usama.arif@linux.dev, akpm@linux-foundation.org, vbabka@kernel.org, 
-	mhocko@suse.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, kasong@tencent.com, qi.zheng@linux.dev, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
-	chrisl@kernel.org, shikemeng@huaweicloud.com, nphamcs@gmail.com, 
-	baoquan.he@linux.dev, youngjun.park@lge.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgA3+n_L0ydqfvuqBA--.61309S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw4fJw1fGw18tF4UJFyrWFg_yoW8CF1UpF
+	4xGwnYkFsFyr10yw1qvws3u345Zrs5Kw13WFsrGw1F9Fs8tw4UKrWSgw1YvFs0qr9rGa42
+	qr42vryqkanrZa7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUU
+	UUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Tue, Jun 9, 2026 at 12:12=E2=80=AFPM JP Kobryn <jp.kobryn@linux.dev> wro=
-te:
->
-> LRU add batches can be drained before they reach capacity. This can be a
-> source of LRU lock contention, but it is not currently possible to
-> attribute these drains to callers with existing tracepoints.
->
-> Add mm_lru_add_drain to report the CPU and lru_add batch count when an
-> lru_add batch is drained. This allows tracing to distinguish full drains
-> from partial drains and attribute them to the calling stack.
->
-> Add mm_lru_drain_all_queue to report when lru_add_drain_all() queues
-> per-CPU drain work. This captures the requester stack and target CPU for
-> remote drain work. The event is named as a drain-all queue event because
-> the queued work can be needed for batches other than lru_add.
->
-> Signed-off-by: JP Kobryn <jp.kobryn@linux.dev>
-> ---
->  include/trace/events/pagemap.h | 40 ++++++++++++++++++++++++++++++++++
->  mm/swap.c                      |  6 ++++-
->  2 files changed, 45 insertions(+), 1 deletion(-)
->
-> diff --git a/include/trace/events/pagemap.h b/include/trace/events/pagema=
-p.h
-> index 171524d3526d..ea8fc46bedb0 100644
-> --- a/include/trace/events/pagemap.h
-> +++ b/include/trace/events/pagemap.h
-> @@ -77,6 +77,46 @@ TRACE_EVENT(mm_lru_activate,
->         TP_printk("folio=3D%p pfn=3D0x%lx", __entry->folio, __entry->pfn)
->  );
->
-> +TRACE_EVENT(mm_lru_add_drain,
-> +
-> +       TP_PROTO(int cpu, unsigned int nr),
-> +
-> +       TP_ARGS(cpu, nr),
-> +
-> +       TP_STRUCT__entry(
-> +               __field(int,            cpu     )
-> +               __field(unsigned int,   nr      )
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __entry->cpu    =3D cpu;
-> +               __entry->nr     =3D nr;
-> +       ),
-> +
-> +       TP_printk("cpu=3D%d nr=3D%u", __entry->cpu, __entry->nr)
-> +);
-> +
-> +TRACE_EVENT(mm_lru_drain_all_queue,
-> +
-> +       TP_PROTO(int target_cpu, bool force_all_cpus),
-> +
-> +       TP_ARGS(target_cpu, force_all_cpus),
-> +
-> +       TP_STRUCT__entry(
-> +               __field(int,    target_cpu      )
-> +               __field(bool,   force_all_cpus  )
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __entry->target_cpu     =3D target_cpu;
-> +               __entry->force_all_cpus =3D force_all_cpus;
-> +       ),
-> +
-> +       TP_printk("target_cpu=3D%d force_all_cpus=3D%s",
-> +               __entry->target_cpu,
-> +               __entry->force_all_cpus ? "true" : "false")
-> +);
-> +
->  #endif /* _TRACE_PAGEMAP_H */
->
->  /* This part must be outside protection */
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 588f50d8f1a8..c385b93582eb 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -694,9 +694,12 @@ void lru_add_drain_cpu(int cpu)
->  {
->         struct cpu_fbatches *fbatches =3D &per_cpu(cpu_fbatches, cpu);
->         struct folio_batch *fbatch =3D &fbatches->lru_add;
-> +       unsigned int nr_folios_add =3D folio_batch_count(fbatch);
->
-> -       if (folio_batch_count(fbatch))
-> +       if (nr_folios_add) {
->                 folio_batch_move_lru(fbatch, lru_add);
-> +               trace_mm_lru_add_drain(cpu, nr_folios_add);
-> +       }
->
->         fbatch =3D &fbatches->lru_move_tail;
->         /* Disabling interrupts below acts as a compiler barrier. */
-> @@ -928,6 +931,7 @@ static inline void __lru_add_drain_all(bool force_all=
-_cpus)
->                 if (cpu_needs_drain(cpu)) {
->                         INIT_WORK(work, lru_add_drain_per_cpu);
->                         queue_work_on(cpu, mm_percpu_wq, work);
-> +                       trace_mm_lru_drain_all_queue(cpu, force_all_cpus)=
-;
+The current check in rethook_find_ret_addr() prevents obtaining a return
+address when the target task is marked as running. However, this condition
+is both insufficient for correctness and unnecessary for its intended
+purpose.
 
-Do you need tracing on each CPU individually, or is tracing the
-entire __lru_add_drain_all() invocation sufficient?
+The check is inherently racy: a task can begin running on another CPU
+immediately after task_is_running() returns false, potentially leading to
+concurrent modification of rethook data structures while the iteration is
+in progress.
 
-Do you also need this_gen and lru_drain_gen to be traced?
+Rather than trying to fix this unreliable check deep in the unwinding
+path, simply remove it. The iteration is already safe from crashes because
+unwind_next_frame() holds RCU and rethook_node structures are RCU-freed;
+even if the iteration goes off the rails and returns invalid information,
+it will not crash. Callers that require consistency must provide a safe
+context themselves.
 
-By the way, I'm not sure drain_all_queue is the best name here.
-Why not simply use add_drain_all()? It would match the existing
-function name better.
+Fixes: 54ecbe6f1ed5 ("rethook: Add a generic return hook")
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+---
+v3: Improve commit message: clarify safety semantics and document that RCU guarantees no crash.
+v2: https://lore.kernel.org/all/20260609005728.458962-1-wutengda@huaweicloud.com/
+v1: https://lore.kernel.org/all/20260525132253.1889726-1-wutengda@huaweicloud.com/
 
-Best Regards
-Barry
+ kernel/trace/rethook.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+index 5a8bdf88999a..f70f11bc6c91 100644
+--- a/kernel/trace/rethook.c
++++ b/kernel/trace/rethook.c
+@@ -250,9 +250,6 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
+ 	if (WARN_ON_ONCE(!cur))
+ 		return 0;
+ 
+-	if (tsk != current && task_is_running(tsk))
+-		return 0;
+-
+ 	do {
+ 		ret = __rethook_find_ret_addr(tsk, cur);
+ 		if (!ret)
+-- 
+2.34.1
+
