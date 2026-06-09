@@ -1,126 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA7C3DF012
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 09:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523B3F23B6;
+	Tue,  9 Jun 2026 10:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780998647; cv=none; b=UwarBSthpWkbjImZyOqW8sN0QK7YFvavApmX1ZvH5kDLtGyL3b+VL1zy121TKDa5V2P10VSf/+04ZxxgsOwn9UJriHRnpsv/scgwGbdAXREPgtBFJAZkvgTZboOwzOc8Q0H1e+caJZBsplaFU6mJHqqr+kr3F7pOMn3DS5nlz6o=
+	t=1781000230; cv=none; b=E+6G2HhkWt5mQ18QXviOrqTdidBjsW8Nf6bZE6CRMl0MHxewzLBb2qyUeoPbPkZp5pdp4cQcc5HZCif/3/sR4WHBJLnbWJroTNE2KL+DMswbZdOACFul4n9A8Ir4H1QY+0JQ4Hw7H4j9Ghfa0u8CGnV5b5zjSaFritnbHtf/Nt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780998647; c=relaxed/simple;
-	bh=LVsisOh2t/3BY9u48eKv6sHKecTbrxVyTPE/nrEqEDE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eBvPMbZjC8mZkGarO77Iu4SZ55C6sYOuNkVGOWI4EULnq+AwgMna4r2BbfnYC9+lFPZoArPW+Fy0bsItW6K9ZUpCkC0PSrbTsWhI3gcq46djHBD4RBSdXdPTuOmEJRJY9o2mOq6I/bYn1FM8ICPRDhIStxp8v1+60Pj7xiTty+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omqD8ec4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781000230; c=relaxed/simple;
+	bh=CA358HIu20sn56nJ4KQrMlv/y7IL84T5f3Hax0mdNvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b38edYKGYs9j4YE0cOC1ng8zwdW2kNQFa2g1yXMFCD2kr6BP3mjMpigkrOKKronxxAqwee9Q9kYLBojkE7nHYwdB3SOOFrG0xGreALbVPHDzMxdVNy2++s1IbEOpyKxc35JpOoJ/r/mNWH4e4nTi7Npnn+5uxRwKRqb4FKQAaLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=QCzVuM8I; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omqD8ec4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634171F008A2
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 09:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780998645;
-	bh=LVsisOh2t/3BY9u48eKv6sHKecTbrxVyTPE/nrEqEDE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=omqD8ec4RwhqP75Swo+2L1XAYZsWpuWBoMBChLXYdR8kYizp0aLPgiic5S64rpMmk
-	 vb9iiZRLGgGyAFPj5RuQMpZZTb2eaZs29sOweS0GIp33uyAiyd5eb+Ztgfny7mctrC
-	 bNwBiIBwmzDof78RMjqPSG+5SC9BKZntXnazkz8JxepMnr0huQvNNZSzWTh0riXf0D
-	 GkQDMjqq4ZXWeg3veFYUtg+j1toh+4hFnrvb8WXX6LJu+bVCdseEUM4wtZH2HNdCnt
-	 SZYD+BjwnVx38RcvcS8nr6K/kHbHa08B59TF7yWJnMn1M0EglAuhQ4ZsOjLJPm5bBe
-	 ycrjhqeLYPTKQ==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-beb1bee8c16so691839766b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jun 2026 02:50:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/2cHxjVLHe2fUGYdJYkYO/BDZN4cjH5vlQtAYl5AJOv4QevXD+80zO47WAdkwGwdwqEDMTFAyD2RS+n/Y1QKmqAfU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIA6Xhv8C83XAbjj4pFqfnENxd/CbQMw98qIn3Xxv1+eSZdabt
-	LXcRipTZ3pT/mS58m/2/cr4p+VL6e/H59XKfOioZURVbeYzuVPvxedRX1fWpOZ8/94XZ+Sszy4l
-	ef5O3Q5evd+zyr0qyLXJWWvzp+vnLZeY=
-X-Received: by 2002:a17:907:60cd:b0:bed:f8a3:23a0 with SMTP id
- a640c23a62f3a-bf3a8a0ce48mr751853766b.25.1780998643858; Tue, 09 Jun 2026
- 02:50:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="QCzVuM8I"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nXkhW7gK992U0F8zjkoZLE6zzrR6bII1RM3e5glVcQk=; b=QCzVuM8IXTjKEuMSpZiFN95Bx7
+	qH9fdod7i1VMGT+zkh9TLJ9aZg4CoB4m7kouZ1dgAuevUD2R3mqZJ5+Lxy41sB02gvk1dP6/22gQl
+	pY9zkgvp48Tvff4FoMvAr1vHAkznkF1TWMZMU3koFf9NOpRCK9nF7Ecr0OaoiZnn/JRCnA4bOgiWF
+	iaxUqHZITvky06UhN3a/4mGZsGKn1rKkC/yla321BJb0kScqT9GZTcH+96eXaj/GuzMa9zjCOQwTb
+	zmi+ga0U/Mdn5AD7IlnfeqNQgmKPLNP8rtmo7KTidgR6mCp9vVbMUR8C32w5vvo/LzKQjnRNUxthc
+	ecwz68nw==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wWtVc-008KRz-0e;
+	Tue, 09 Jun 2026 10:16:37 +0000
+Date: Tue, 9 Jun 2026 03:16:30 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	bpf@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v3 0/6] bootconfig: embed kernel.* cmdline at build time
+Message-ID: <aifi1tbU2eeExo5o@gmail.com>
+References: <20260608-bootconfig_using_tools-v3-0-4ddd079a0696@debian.org>
+ <20260609104611.a0a5def510944d12cd0b6dfc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260609-arm64-ftrace-direct-calls-v1-0-4a46f266697f@linux.dev>
-In-Reply-To: <20260609-arm64-ftrace-direct-calls-v1-0-4a46f266697f@linux.dev>
-From: Puranjay Mohan <puranjay@kernel.org>
-Date: Tue, 9 Jun 2026 10:50:28 +0100
-X-Gmail-Original-Message-ID: <CANk7y0jKE1Mq5FQD1M9+CUQt-+G2EQN7hCvUCQJE=hFmsr+o0A@mail.gmail.com>
-X-Gm-Features: AVVi8CeSrRlbGA71o_97ek791-ypZvvhb-lg2xrkdnUMSr3_kQBTCBTCfOxMfQY
-Message-ID: <CANk7y0jKE1Mq5FQD1M9+CUQt-+G2EQN7hCvUCQJE=hFmsr+o0A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] arm64: ftrace: support DIRECT_CALLS without CALL_OPS
-To: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	llvm@lists.linux.dev, bpf@vger.kernel.org, 
-	Florent Revest <revest@chromium.org>, Xu Kuohai <xukuohai@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260609104611.a0a5def510944d12cd0b6dfc@kernel.org>
+X-Debian-User: leitao
 
-On Tue, Jun 9, 2026 at 6:19=E2=80=AFAM Jose Fernandez (Anthropic)
-<jose.fernandez@linux.dev> wrote:
->
-> On arm64, HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS is currently selected
-> only when DYNAMIC_FTRACE_WITH_CALL_OPS is available. CALL_OPS, in
-> turn, is mutually exclusive with kCFI: the pre-function NOPs it needs
-> would change the offset of the pre-function type hash (see
-> baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")),
-> and the compiler support needed to reconcile the two does not exist
-> yet.
->
-> The result is that a CONFIG_CFI=3Dy arm64 kernel has no
-> ftrace direct calls at all, so register_fentry() fails with -ENOTSUPP
-> and no BPF trampoline can attach: fentry/fexit, fmod_ret and BPF LSM
-> programs are all unavailable. Deployments that want both kCFI
-> hardening and BPF-based security monitoring currently have to give
-> one of them up. systemd's bpf-restrict-fs feature hits this today:
-> https://lore.kernel.org/all/20250610232418.GA3544567@ax162/
->
-> CALL_OPS is an optimization for direct calls, not a dependency.
-> In-BL-range trampolines are reached by a direct branch without
-> consulting the ops pointer, and out-of-range trampolines already
-> fall back to ftrace_caller, where the DIRECT_CALLS machinery
-> (call_direct_funcs() storing the trampoline in ftrace_regs, the
-> ftrace_caller tail-call) is gated on DIRECT_CALLS alone. s390 and
-> loongarch ship HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS this way,
-> without having CALL_OPS at all.
->
-> Patch 1 prepares ftrace_modify_call() to build without CALL_OPS by
-> widening its #ifdef and using the existing ftrace_rec_update_ops()
-> wrapper (no functional change for current configurations). Patch 2
-> drops the CALL_OPS requirement from the DIRECT_CALLS select.
->
-> Configurations that keep CALL_OPS (clang !CFI, and GCC without
-> CC_OPTIMIZE_FOR_SIZE) are unchanged. We verified this: in an arm64
-> clang build, every object file is byte-identical before and after
-> the series except ftrace.o itself, and its disassembly is identical.
-> CFI builds (and GCC -Os builds) gain working direct calls, with
-> out-of-range attachments taking the ftrace_caller dispatch path
-> instead of the per-callsite fast path.
->
-> We tested on a 6.18.y-based kernel and on this base with clang
-> kCFI builds (CONFIG_CFI=3Dy, enforcing) under qemu (TCG, and KVM on an
-> arm64 host) and on GB200-based arm64 hardware: fentry/fexit, fmod_ret
-> and BPF LSM programs load, attach and execute; the ftrace-direct
-> sample modules (including both modify samples, exercising
-> ftrace_modify_call()) run cleanly; no CFI violations observed. The
-> fentry_test, fexit_test, fentry_fexit, fexit_sleep, fexit_stress,
-> modify_return, tracing_struct, lsm and trampoline_count selftests and
-> the ftrace direct-call selftests (test.d/direct) pass on the new
-> configuration with results identical to a CALL_OPS kernel built from
-> the same tree, and a broader test_progs sweep showed no differences
-> attributable to this series. Without the series, all of the above
-> fail at attach time with -ENOTSUPP.
->
-> riscv has the same gap (its DIRECT_CALLS select also requires
-> CALL_OPS, and its CALL_OPS is likewise !CFI); if this approach is
-> acceptable for arm64 we can follow up there.
->
+On Tue, Jun 09, 2026 at 10:46:11AM +0900, Masami Hiramatsu wrote:
+> On Mon, 08 Jun 2026 09:23:57 -0700
+> Breno Leitao <leitao@debian.org> wrote:
+> 
+> > The userspace pieces (xbc_snprint_cmdline() in lib/, tools/bootconfig -C)
+> > already landed; this series wires the rendered cmdline into the kernel.
+> > 
+> > Motivation: today the embedded bootconfig is parsed at runtime, after
+> > parse_early_param() has already run, so early_param() handlers can't
+> > see embedded values. Folding the kernel.* subtree into the cmdline at
+> > build time gives a CONFIG_CMDLINE-equivalent for embedded-bootconfig
+> > users without forcing them to maintain two cmdline sources.
+> > 
+> > Behaviorally, the "kernel" subtree is rendered to a flat string at
+> > build time and stashed in .init.rodata. setup_arch() prepends it to
+> > boot_command_line before parse_early_param() runs. Overflow is a soft
+> > error: the helper logs and leaves boot_command_line untouched rather
+> > than panicking, so an oversized embedded bconf cannot brick a boot.
+> > 
+> 
+> Sashiko still leaves some comments. 
+> https://sashiko.dev/#/patchset/20260608-bootconfig_using_tools-v3-0-4ddd079a0696%40debian.org
 
-It looks correct to me and should work.
+Ack. There are two "low" issues and one high. I will fix all of them in
+v4.
 
-Reviewed-by: Puranjay Mohan <puranjay@kernel.org>
+> BTW, can you also update the document (Documentation/admin-guide/bootconfig.rst)
+> about what is the expected behavior of this feature (kconfigs, examples)?
+
+Sure, good idea. I will add a new patch documenting this new feature.
+
+
+Thanks for the review,
+--breno
