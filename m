@@ -1,243 +1,84 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D1C400DF7
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 11:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6501A3AB5C7
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 12:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781005461; cv=none; b=dPDT0bpdiWnKNH4uMmye2g1ru89Zb8yIKOQ56P78D4EZ/BgINIyejGc/Qm1RDnYwJBy6jBHOm1baKmuuyjmLhp8Nf3fVGsz2RrSiXZ7eE7O+mXiN8Hb617ONtbzdQwAxVMURk+dTxWLE/+jQNxHMmrHag5LnBb6PBIbJhAhRONg=
+	t=1781006751; cv=none; b=WgFNX3Qj3maxETuiFuMbfeeNFgr9M8Fj5+FjFlyqRBgLRExPRxHn5AHOQCH0VgzWqT1w8w5bLGS4pkOhUyNMgCG3F/81jEkVe19tyc6k5X/Yl0pqiceZl+zyTPzpNDWGMpH0t4afrW/yMKTOYp4QTpGSd6XFkxztr9wwoVyBdfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781005461; c=relaxed/simple;
-	bh=W34tW+TL1fVpTZsQAz7hrtAMDWwpsV8907Q0DNpW7Pg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0Dhy+yUnNjJeIZZR9ZgkLsWnkeRJLmR1wdYobB91zIRE4/I14/kYFrT29fpXSvS5F87fx15CcGPkC2mehTuFFMe+TA5su+SHabYuFLNsZx+c5ZN4h6kgLZBUdH1mujaRKWI4Z8e6lQUkhHYAmQsRUpBvLUQ81yGIPedsl/Sgcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IISkgHsB; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781006751; c=relaxed/simple;
+	bh=r4jgTsbDBuHlfQLMsK7IDzzrGW5d4xG0og6jaXUqIy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=T4MiYMzJbC8F94fE602SxfMmzDngr46f/hvN7xDm2Qvc2r090N6aOdGjPFjg76fcMu9xKVOfGoatKwQoCZJ9v6ZcFUW7dYHY83qCXpQ98NcmN6UDb/PDMwEzhnZ3E87N1DHf2f6D0HpmHut+hLjURAuDKqcMDW5wIhmtbpasV1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bw+FeNDD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IISkgHsB"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-490cf3000f0so25965865e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jun 2026 04:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781005457; x=1781610257; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=78g+kaugjg6eGXzQYKhL68a4cErx8U1dVjePqpr+p18=;
-        b=IISkgHsBlESSQR4az4NZO1mW1fHV7fBxXkGYh5uSRA1FqFVh8PfT7FkJuOfwyU5FRK
-         +DOT6djo6LInDS9uhFWs0wzJi/4CJN5MzFFDJzeH5dnUkFMeJkY0TLiwz5Qe+LVWurkp
-         DsR7BVUHSk4IGWzwqq64MlbqDKW2M9JuLEET6EfH1hCKAkwf7H8HDo/vDS3bCnOjAGEX
-         m2jQVlytJCwSX6LvQ8JmEcNw9VmEZlz5d+DKo7qi1YUR3ITuoVHRtqZL5nZRIJrstW/l
-         LdpR7xSp/SbQd0EZvXwX5I9XHbGRhvmsHHP2a1AZQ/okLTLxt06ZbiSa4eJ4sfPf/y/E
-         Fi8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781005457; x=1781610257;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=78g+kaugjg6eGXzQYKhL68a4cErx8U1dVjePqpr+p18=;
-        b=FjWqhtAqzCf+BrnbvqyBe6otl/7knjsGmE9jwVgsn7MA1c3d4bTCsoUOz41nVB15CK
-         uMZ5Wsb42ANTBbRCAJ7v98S7TV2q8VprYEFaN3LnhR4mqvafI/Ly4rg+LRr15qzWo9+N
-         MYar2FRtn524TtjvhrfIzVUNy0i2HzPkOttpBY6Y852p5cPHib4j6OPqemItz8JdZzmz
-         OOdm/NKWNONyf0qIlS3aYoxaA2VDbKG5OwUUbuO/7Bb9E7wtTZFbUeBWy5LA+af3p9d2
-         S1Pm2BagLekr3vLn1nBB89xBaes5ep1QGusGdobokCWGBRor+QdtME76ytPY9UFfTRmk
-         LNAg==
-X-Forwarded-Encrypted: i=1; AFNElJ+DLaL58msJ6MTsjf7+hbEx5IXTBDWKoDAumihdhPekChcCPhcQJ+2Y/waDWq7+Tu7tklZVZoJvYgfzpdZMy13zqw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLOgh0FDFa9ra3byRueYTBKVsY52O4t4Rcz7tADDlfsi2MVmdb
-	SazLx4JA4McYKHt3eYdXdiQpSxLL8i9iQe3e/D5bVgFNl5gKU/Lm/P8l
-X-Gm-Gg: Acq92OFRbBNq4Hj/YAV6OG0/5uA/717wWyL5B5wDDJ5xsnyAoVVp1rahQS599OAO1vh
-	WnnslBIoGVcFqBd/jj/5D5fvAlFbCBdBNiZtuuI+itIYNOh8gYLumLCb1xKLnFaA2flwPF8hglK
-	88Lupm59nIyGUj/ObKpWecGwR5ZdwwrruxRuhYtXvj5XmdGYU01ATyMNK1YSMxDhoFujuYfRdHy
-	S11UY1IhncmK2+00IacGjltnX+60Z9LUi+qm4Y4Dv8LpezEWRarwVAGtnQa6ZCAEoHTvT8X8Eba
-	ezzUHmmZJOqXOuJn48QJDiIeeeViQNEL/C2CjrCh+jtDhc5YwhGNbIX+DXbD0vbL18rFJnqPJn5
-	KlaTk9VEpKxL0ZBb0kH33ly28MEZFB9VYXaGHPLYZEc8VXmiimCrElJAaFWaa1oo591xnv5lWGi
-	iYriMVmwL54q/DCO9XySPgQHrchN+kwOnkqSxa
-X-Received: by 2002:a05:600c:c165:b0:490:a2fd:e1e5 with SMTP id 5b1f17b1804b1-490c2623527mr380298985e9.17.1781005457181;
-        Tue, 09 Jun 2026 04:44:17 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4602cda3651sm50544318f8f.32.2026.06.09.04.44.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 04:44:16 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 9 Jun 2026 13:44:14 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 05/13] uprobes/x86: Move optimized uprobe from nop5 to
- nop10
-Message-ID: <aif8jkUPst-tTskE@krava>
-References: <20260526205840.173790-1-jolsa@kernel.org>
- <20260526205840.173790-6-jolsa@kernel.org>
- <CAEf4BzZiFUeFa4fdghuSGpqiEzyvJVxs6TDgJd5U4hSj--imiQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw+FeNDD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781006749;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qF6BY3F3ucjt0ieDKHCwxYl8JJmwAdazwSYD0P0e2g4=;
+	b=Bw+FeNDD6iFiks6+TwTqaKAi8KEAjC3QvRIef2D0mhQOjCyhIHdOopj55/idgirhy8ref8
+	SEwfE8tGkU4PocZlQHxDHchgCWpRj3tD2Pxy0I9LWU5XbB/rf790EJ7o197D9zHzJZ5EKw
+	V1EmwpKJ6xSwmj2Ts0lg1DFecdDSzOQ=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-382-uTviGDzlMsqZgwdr_X7nRA-1; Tue,
+ 09 Jun 2026 08:05:46 -0400
+X-MC-Unique: uTviGDzlMsqZgwdr_X7nRA-1
+X-Mimecast-MFC-AGG-ID: uTviGDzlMsqZgwdr_X7nRA_1781006745
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0FF991955E74;
+	Tue,  9 Jun 2026 12:05:45 +0000 (UTC)
+Received: from wcosta-defaultstring.rmtbr.csb (unknown [10.22.64.147])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 092253008B37;
+	Tue,  9 Jun 2026 12:05:41 +0000 (UTC)
+Date: Tue, 9 Jun 2026 09:05:40 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Crystal Wood <crwood@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>
+Subject: Re: [PATCH v2] rtla: Stop the record trace on interrupt
+Message-ID: <aigBcatMTt2LJvdD@wcosta-defaultstring.rmtbr.csb>
+References: <20260512173731.2151841-1-crwood@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20260512173731.2151841-1-crwood@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: IktDUhhhHezBD5g03N_5Z1SPtoT5DvymCi5-CTRc08k_1781006745
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZiFUeFa4fdghuSGpqiEzyvJVxs6TDgJd5U4hSj--imiQ@mail.gmail.com>
 
-On Mon, Jun 08, 2026 at 01:46:39PM -0700, Andrii Nakryiko wrote:
-> On Tue, May 26, 2026 at 1:59 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Andrii reported an issue with optimized uprobes [1] that can clobber
-> > redzone area with call instruction storing return address on stack
-> > where user code may keep temporary data without adjusting rsp.
-> >
-> > Fixing this by moving the optimized uprobes on top of 10-bytes nop
-> > instruction, so we can squeeze another instruction to escape the
-> > redzone area before doing the call, like:
-> >
-> >   lea -0x80(%rsp), %rsp
-> >   call tramp
-> >
-> > Note the lea instruction is used to adjust the rsp register without
-> > changing the flags.
-> >
-> > We use nop10 and following transformation to optimized instructions
-> > above and back as suggested by Peterz [2].
-> >
-> > Optimize path (int3_update_optimize):
-> >
-> >   1) Initial state after set_swbp() installed the uprobe:
-> >       cc 2e 0f 1f 84 00 00 00 00 00
-> >
-> >      From offset 0 this is INT3 followed by the tail of the original
-> >      10-byte NOP.
-> >
-> >      After a previous unoptimization bytes 5..9 may still contain the
-> >      old call instruction, which remains valid for threads already there.
-> >
-> >   2) Rewrite the LEA tail and call displacement:
-> >       cc [8d 64 24 80 e8 d0 d1 d2 d3]
-> >
-> >      From offset 0 this traps on the uprobe INT3.  Bytes 1..9 are not
-> >      executable entry points while byte 0 is trapped.
-> >
-> >   3) Publish the first LEA byte:
-> >       [48] 8d 64 24 80 e8 d0 d1 d2 d3
-> >
-> >      From offset 0 this is:
-> >         lea -0x80(%rsp), %rsp
-> >         call <uprobe-trampoline>
-> >
-> > Unoptimize path (int3_update_unoptimize):
-> >
-> >   1) Initial optimized state:
-> >       48 8d 64 24 80 e8 d0 d1 d2 d3
-> >      Same as 3) above.
-> >
-> >   2) Trap new entries before restoring the NOP bytes:
-> >       [cc] 8d 64 24 80 e8 d0 d1 d2 d3
-> >
-> >      From offset 0 this traps. A thread that had already executed the
-> >      LEA can still reach the intact CALL at offset 5.
-> >
-> >   3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
-> >      and byte 5 as CALL.
-> >       cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> >
-> >      From offset 0 this still traps. Offset 5 is still the CALL for any
-> >      thread that was already past the first LEA byte.
-> >
-> >   4) Publish the first byte of the original NOP:
-> >       [66] 2e 0f 1f 84 e8 d0 d1 d2 d3
-> >
-> >      From offset 0 this is the restored 10-byte NOP; the CALL opcode and
-> >      displacement are now only NOP operands.  Offset 5 still decodes as
-> >      CALL for a thread that was already there.
-> >
-> >      Tthere is only a single target uprobe-trampoline for the given nop10
-> >      instruction address, so the CALL instruction will not be changed across
-> >      unoptimization/optimization cycles.
-> >      Therefore, any task that is preempted at the CALL instruction is guaranteed
-> >      to observe that CALL and not anything else.
-> >
-> > Note as explained in [2] we need to use following nop10:
-> >        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
-> > NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
-> >
-> > which means we need to allow 0x2e prefix which maps to INAT_PFX_CS
-> > attribute in is_prefix_bad function.
-> >
-> > Also changing the uprobe syscall error when called out of uprobe
-> > trampoline to -EPROTO, so we are able to detect the fixed kernel.
-> >
-> > The optimized uprobe performance stays the same:
-> >
-> >         uprobe-nop     :    3.129 ± 0.013M/s
-> >         uprobe-push    :    3.045 ± 0.006M/s
-> >         uprobe-ret     :    1.095 ± 0.004M/s
-> >   -->   uprobe-nop10   :    7.170 ± 0.020M/s
-> >         uretprobe-nop  :    2.143 ± 0.021M/s
-> >         uretprobe-push :    2.090 ± 0.000M/s
-> >         uretprobe-ret  :    0.942 ± 0.000M/s
-> >   -->   uretprobe-nop10:    3.381 ± 0.003M/s
-> >         usdt-nop       :    3.245 ± 0.004M/s
-> >   -->   usdt-nop10     :    7.256 ± 0.023M/s
-> >
-> > [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
-> > [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
-> > Reported-by: Andrii Nakryiko <andrii@kernel.org>
-> > Closes: https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
-> > Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
-> > Assisted-by: Codex:GPT-5.5
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  arch/x86/kernel/uprobes.c | 255 ++++++++++++++++++++++++++++----------
-> >  1 file changed, 190 insertions(+), 65 deletions(-)
-> >
+On Tue, May 12, 2026 at 12:37:31PM -0500, Crystal Wood wrote:
+> Before, when rtla got a signal, it stopped the main trace but not the
+> record trace.  With "--on-end trace", this can lead to
+> save_trace_to_file() failing to keep up, especially on a debug kernel. 
+> Plus, it adds post-stoppage noise to the trace file.
 > 
-> [...]
+> Signed-off-by: Crystal Wood <crwood@redhat.com>
+> ---
+> v2: clarify that this matters for --on-end trace
 > 
-> > @@ -943,13 +1026,31 @@ static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >         smp_text_poke_sync_each_cpu();
-> >
-> >         /*
-> > -        * Write first byte.
-> > +        * 3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
-> > +        *    and byte 5 as CALL:
-> > +        *    cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> > +        */
-> > +       ctx.expect = EXPECT_SWBP_OPTIMIZED;
-> > +       err = uprobe_write(auprobe, vma, vaddr + 1, insn + 1,
-> > +                          LEA_INSN_SIZE - 1, verify_insn,
-> > +                          true /* is_register */, false /* do_update_ref_ctr */,
-> 
-> tbh, it's quite subtle and non-obvious why is_register should be set
-> to true first two times (and especially that is_register and
-> do_update_ref_ctr are implicitly connected), not sure how to make it
-> cleaner, but maybe leave a short comment explaining this twice
-> register, once unregister sequence?
-
-ok, I came up with comment below
-
-thanks,
-jirka
+>  tools/tracing/rtla/src/common.c   | 19 +++++++++++--------
+>  tools/tracing/rtla/src/common.h   |  1 -
+>  tools/tracing/rtla/src/timerlat.c |  2 +-
+>  3 files changed, 12 insertions(+), 10 deletions(-)
 
 
----
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index de544516ea70..92449f34c005 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1011,6 +1011,12 @@ static int int3_update_unoptimize(struct arch_uprobe *auprobe, struct vm_area_st
- 	int err;
- 
- 	/*
-+	 * Note the first two uprobe_write calls use is_register=true, because they
-+	 * are intermediate patching states while the probe is still active.
-+	 *
-+	 * The last uprobe_write to nop10 instruction is called with is_register=false
-+	 * and do_update_ref_ctr=true to trigger the refctr update.
-+	 *
- 	 * 1) Initial optimized state:
- 	 *    48 8d 64 24 80 e8 d0 d1 d2 d3
- 	 *
+Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+
