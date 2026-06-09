@@ -1,101 +1,108 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0764E285041;
-	Tue,  9 Jun 2026 01:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC47426B2D3;
+	Tue,  9 Jun 2026 01:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780966996; cv=none; b=AUsiItqEQzJU3GjXqouuhy9kh1bIx5enEQe4YNgLicnQWAee/mXwOH8FqBQdZoZe8Gig8/9rTM2gAiPNdijD+XTiG2m6W3s6k2Bl9Qw94yPM/kSlzyJA1N+dsdos3P63j+pVjr31NnU8VEe9C48O+/qMRHT+2EQfNZRu+0nMIEs=
+	t=1780968893; cv=none; b=Uv31CCrvMJhshezk26QmOQF60NidXEKs2SZHuGgdmXTFqUbshl4GHTxfEOhhqS6eJgY4zmyAr09n0yoyp4RQtzWrHJ/d7Nd4PtfUT9xf2VE+mm93QQX7xBFw0aw6RgB4kgrxucx7k67OAl+zKk2NLnJoDoJFzLzZ7v39GVKNWSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780966996; c=relaxed/simple;
-	bh=RpdMb+iDB0M1eq/WD/ujxRwSSDI1HpZ+EWHuWe9IBJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQv7E3WWRM28fFeSTEgP58Jz4M1i1CnAakb0DRULRymTOnPxHPhcouOKoKbExprYhOlgypFfJZu65rIxupktzrx+asJUkdFk+IGxZDtBgpMQuaTpATPDOWFV1lQhB6q7vu0vhBy92yR2GjRuvUMHcgsVVjjVBAWKYA/IYHKthnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id D90A51203A7;
-	Tue,  9 Jun 2026 01:03:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 272BE20010;
-	Tue,  9 Jun 2026 01:03:12 +0000 (UTC)
-Date: Mon, 8 Jun 2026 21:03:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Samuel Moelius <sam.moelius@trailofbits.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, linux-kernel@vger.kernel.org (open list:FUNCTION
- HOOKS (FTRACE)), linux-trace-kernel@vger.kernel.org (open list:FUNCTION
- HOOKS (FTRACE))
-Subject: Re: [PATCH] samples/ftrace: reject zero ftrace-ops call count
-Message-ID: <20260608210324.6af37e65@gandalf.local.home>
-In-Reply-To: <20260609004422.1239735.f6c06011af32.ftrace-ops-zero-function-calls-div0@trailofbits.com>
-References: <20260609004422.1239735.f6c06011af32.ftrace-ops-zero-function-calls-div0@trailofbits.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1780968893; c=relaxed/simple;
+	bh=ub253+LnCietUqOYZskAZYNVdjA1Fth/D8XFf5NguYk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=goLgZLBhBQ4qvYRTHwcoqMJVaz4e0ccX3l2vLAKjzM+dRt7moq45MrIieRzBqBJWRtxLbvlbKy+ZlGWFdWI/BQsfvOXhEyzRof4Xg2d9Lcxsuao2qniHQgVOL7kpKEPwTLeidS/K4sq/UCGlDREYpuwVL7yHkdU4ogY4L647y6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Por0PhLM; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Por0PhLM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F081F00893;
+	Tue,  9 Jun 2026 01:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780968892;
+	bh=vmZpCmuQ7wnqO/HZtrmD6xeHLLBF/ouoM10uO0DNTf8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Por0PhLMP79NepOjIWPiWkHnvzQ+eXwkBv5Xjv5jYrjk1TDsj1TzcrF7PoZjBCyfF
+	 jgv2uffcCsM1ZokMG1TLIFUzabaXkdrc3+SM5xT/rf/W0JW0O+QKLHxfR94MCuy520
+	 hLYj16XH8DsHmXkv3Y7nli2hm1IX+sIW4mqjOZPgpX+7/HKm/DQLs2/Txzpxag1y8o
+	 TL0lyaqZ/n1CgpI5TDjO5iSlu8CYqOPzSm2zZR5dxNW35ykbeFw3IZK8y/SEUXfhr8
+	 3STcmTvgYn3EXYv85pIhFURsr5u5Bv8HMdWyo7R9wUaCkvb+4nGH6TmoqwWNKsGuAe
+	 9dQuJO7jD3+2A==
+Date: Tue, 9 Jun 2026 10:34:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor
+ <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v2 6/6] x86/setup: prepend embedded bootconfig cmdline
+ before parse_early_param
+Message-Id: <20260609103446.7d29679c90e834ff8e32c56d@kernel.org>
+In-Reply-To: <aibSj4XeRWJmasCx@gmail.com>
+References: <20260605-bootconfig_using_tools-v2-0-d309f544b5f7@debian.org>
+	<20260605-bootconfig_using_tools-v2-6-d309f544b5f7@debian.org>
+	<20260608191928.d7d2dea899b94f05d397f891@kernel.org>
+	<aibSj4XeRWJmasCx@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 272BE20010
-X-Stat-Signature: gmfbug3jmxph479m7psxfpcexfa3r51j
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX194P2UJhffN29Z5zL7p9gQw4TJxME9TiIc=
-X-HE-Tag: 1780966992-323129
-X-HE-Meta: U2FsdGVkX18Kxd1cqiU3WjimGaES0ZPrSSyISCxqbcs/niWj2J+6IFChsEjrdLL9mQvjlaIEgSUiaLBAv/gmeUbpPMD3du+P+pZYsui2HkfuJTNkbik3v0JRsmee4ypPg+kFrZyudcCNAKWE9k8LDbBEEgBLkUzBN2HX7uBfQo8dQIAyd+azJw2GlgOhDvPZyIKI0vQkiVeM1tEY3b0jShWT2tD1iD4npxruiHiEXgyRDE66WgNNQtqtTVES2pstua8uJUjuZCwBQQX63RhsTHrHQFSkivALiSIea/GfWNjV2JJfRTTSRWVJb/d0VHMcQmUeEX8IW3CFqVxyWbD9fLTTxuf2PfAbRU5QiceZ3oIR1Se2xjLoqfvawEV9FPs8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue,  9 Jun 2026 00:44:23 +0000
-Samuel Moelius <sam.moelius@trailofbits.com> wrote:
+On Mon, 8 Jun 2026 07:41:05 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-> The ftrace-ops sample exposes nr_function_calls as a module parameter
-> and uses it as the divisor when printing the measured time per call.
-> Loading the module with nr_function_calls=0 skips the benchmark loop and
-> then divides the elapsed time by zero, crashing the kernel during sample
-> module initialization.
-
-This change is rather pointless, but whatever.
-
+> On Mon, Jun 08, 2026 at 07:19:28PM +0900, Masami Hiramatsu wrote:
+> > On Fri, 05 Jun 2026 05:03:37 -0700
+> > Breno Leitao <leitao@debian.org> wrote:
+> > 
+> > > Call xbc_prepend_embedded_cmdline() in setup_arch() right after the
+> > > CONFIG_CMDLINE merge and before strscpy(command_line, ...) so the
+> > > build-time-rendered embedded bootconfig "kernel" subtree is part of
+> > > boot_command_line by the time parse_early_param() runs. early_param()
+> > > handlers (mem=, earlycon=, loglevel=, ...) now see values supplied via
+> > > CONFIG_BOOT_CONFIG_EMBED_FILE without parsing bootconfig at runtime.
+> > > 
+> > > Gate the prepend on the bootconfig opt-in: only fold in the embedded
+> > > kernel.* keys when "bootconfig" is present on the command line, or
+> > > CONFIG_BOOT_CONFIG_FORCE is set. Applying the embedded cmdline
+> > > unconditionally would (a) diverge from how embedded init.* keys are
+> > > treated and (b) break fail-safe recovery: a malformed embedded
+> > > console=/mem= could panic the boot with no way for the admin to disable
+> > > it by dropping "bootconfig" from the bootloader cmdline.
+> > > cmdline_find_option_bool() runs before parse_early_param(), so the gate
+> > > is cheap and correctly ordered.
+> > > 
+> > > Select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG so the user-visible
+> > > CONFIG_BOOT_CONFIG_EMBED_CMDLINE option becomes selectable on x86.
+> > 
+> > This seems like a dummy config. what code does depend on this flag?
 > 
-> Reject a zero call count before registering any ftrace ops.
+> No C code reads ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG directly — it's
+> a silent gating symbol, the same ARCH_SUPPORTS_* idiom as
+> ARCH_SUPPORTS_CFI, ARCH_SUPPORTS_LTO_CLANG, etc.
 > 
-> Assisted-by: Codex:gpt-5.5-cyber-preview
-> Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
-> ---
->  samples/ftrace/ftrace-ops.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> Its only role is the depends on line of BOOT_CONFIG_EMBED_CMDLINE: an
+> arch selects it once its setup_arch() calls
+> xbc_prepend_embedded_cmdline(), and that makes the user-visible
+> BOOT_CONFIG_EMBED_CMDLINE selectable.
 > 
-> diff --git a/samples/ftrace/ftrace-ops.c b/samples/ftrace/ftrace-ops.c
-> index 68d6685c80bd..d5adaa61484f 100644
-> --- a/samples/ftrace/ftrace-ops.c
-> +++ b/samples/ftrace/ftrace-ops.c
-> @@ -190,6 +190,11 @@ static int __init ftrace_ops_sample_init(void)
->  		tracer_irrelevant = ops_func_count;
->  	}
->  
-> +	if (!nr_function_calls) {
-> +		pr_err("nr_function_calls must be non-zero\n");
-> +		return -EINVAL;
+> Right now, only x86 supports embedded bootconfig, thus, only x86 does
+> the following (last patch):
+> 
+> 	config X86
+> 	+       select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG
+> 
+> So, no other platform can see CONFIG_BOOT_CONFIG_EMBED_CMDLINE.
 
-No need to print that the admin did something stupid.
+Ah, OK. I missed the 3/6, which defined the dependency.
 
-> +	}
-> +
->  	pr_info("registering:\n"
->  		"  relevant ops: %u\n"
->  		"    tracee: %ps\n"
+Thanks!
 
-In fact, I would just change the output to be:
-
-        pr_info("Attempted %u calls to %ps in %lluns (%lluns / call)\n",
-                nr_function_calls, tracee_relevant,
-                period, nr_function_calls ? div_u64(period, nr_function_calls) : -1LL);
-
-and have garbage in, garbage out.
-
--- Steve
-
-
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
