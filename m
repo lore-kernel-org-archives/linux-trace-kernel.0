@@ -1,133 +1,99 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4681D3D4130;
-	Tue,  9 Jun 2026 06:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BF23D9DB9;
+	Tue,  9 Jun 2026 07:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780986628; cv=none; b=Qx86m+xqEoFBnhmUsq3HAuPi3513vO703mstlFt+XUo/hN2Qyn6qSX0fK8rjrYbM05vVA5bC+FH8bvaXLJ1Dnt8vKyoPHv37VtNCxVwLX8Ek26eWqkIdUkm0nHar+V2ikb5jIIHiWutET959fV0OQFc0t0qxxTMLu8qJ2IWUxoo=
+	t=1780988781; cv=none; b=S8c4itwTB1uMICleiEfP4SRSFORb1m8AkI0w39f6cwLpNYF1A74/95E/VsrMoftVu2ix8U0k8qxJNhQWXY/zM4ddGUsV0sMVCo9Kg997NfSNJmb4j9h8J1GfgfcZRNTnMDg9vzlaE+ZRtvVW6ezZ3IXWRNBnlSD0azKak1YymD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780986628; c=relaxed/simple;
-	bh=0KCT5lX/yA5lYF4rKIYrYcunKBGHZ4tEo6Vt4nyxfCw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RY5ffb5wCtGGEPGynh0PlD85bVtKd3grVCkvI6JKILdD6ukmGYY++a0+fTJD2VmjHNnQm0XV74AFuIJmsSS8LQ3ZCy4NS+Wg2Eyn1QRuBmY8My1vrTBfYl66tFRfPgMjEKWXoXWGUyXBntArYNm7lNmiFkQLtJuxmSR8atJPCoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ge0iK81i; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1780988781; c=relaxed/simple;
+	bh=/1p9O9WrK8BRBzAZ2Ybv1OoY/AKYevpga6mRKbC4PJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VYlsc1MKP29FTdyICFTJWBJdgpcYPqF+FXDWXxVhsp4loDzndqR/W6r2oxzMqVKU1Z2AiBtR1onr5V9P4l2sLf6Tj3/61qBFEj1V/AGH6+AWj7KjaYk5q/Mv9gyMimfKAfFadyYeIa8DMaWFJGwYZCYC0bAXsdHB3V+RjLnO+Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pg5y11nF; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ge0iK81i"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1780986616; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ipNiCgq1zQDmCfj6MBMo/UwiU6bdUS/uJE7SlSsGs3U=;
-	b=ge0iK81iqsPuiVmpr0xd0LylLaGITQOrAPNusAfhsl2wQ4gYnPJkTPuXQoO1M3PiSG6Nd+fncF9Xw5NS3LuQsYou4XMgmWs3N6hwWhBV/2D5ROEAzdFsDiwIEt08TNdY4zOl8UBY+LvjMoGW03juIoMiynYKmXgCJELcU/BFUEo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X4VD53s_1780986613;
-Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X4VD53s_1780986613 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Jun 2026 14:30:14 +0800
-From: Wang Han <wanghan@linux.alibaba.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	Andy Chiu <andybnac@gmail.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	oliver.yang@linux.alibaba.com,
-	xueshuai@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 7/8] riscv: Kconfig: enable HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH
-Date: Tue,  9 Jun 2026 14:29:58 +0800
-Message-ID: <20260609063002.3943001-7-wanghan@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com>
-References: <20260528082310.1994388-1-wanghan@linux.alibaba.com> <cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pg5y11nF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ob9OfVRU9ZHHyh2Prr29GebKBWTRqDdF/FoIinPntFI=; b=pg5y11nF09BUheVQ59jR8Rzyyj
+	ZSZoFw3llG+GCcgFj7Nb8IxPuzjgK1Dds/rfEAgU5DKixXXOQpx233gn+ebBnw/a/bEWhJCDo5qxR
+	XfabMhCOZQLuBsc89kFaof/aXhF1bHUww2go1pBXQdQ8RbFgyKHupX/qmEOHqcySfrSBDn4umJ3dQ
+	Q1E52F7YWXJCs98B9S98RiGB0xEDwIYLG00kTz6NiFIlemvzpz2dNPJwZKNNoCfbfwNcZuFmGe3+J
+	gsC7K4ivMSUA9Df8VeNTvy8k/f5BLtOfJV0e5hBsbB6Xa4aYy1m3rwz2Fm9vArrKmHdN3JahbxnQT
+	1wT50E9A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wWqWo-000000024tO-1NDV;
+	Tue, 09 Jun 2026 07:05:40 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id AC310300642; Tue, 09 Jun 2026 09:05:36 +0200 (CEST)
+Date: Tue, 9 Jun 2026 09:05:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: bpf@vger.kernel.org, Tengda Wu <wutengda@huaweicloud.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@redhat.com>, jikos@kernel.org,
+	mbenes@suse.cz, pmladek@suse.com
+Subject: Re: [PATCH] rethook: Use tsk->on_cpu to check task execution state
+Message-ID: <20260609070536.GF3102624@noisy.programming.kicks-ass.net>
+References: <94179dab-ffb7-4fab-af45-b20bfb686ab3@huaweicloud.com>
+ <20260601084001.9566b443746447ec2bb1a9fb@kernel.org>
+ <20260604093445.GF3126523@noisy.programming.kicks-ass.net>
+ <20260605224341.c926299d613b6102912c9a3f@kernel.org>
+ <679a1c8f-1e4d-4ae5-83e1-d0068e6de1a6@huaweicloud.com>
+ <20260608093449.GH4149641@noisy.programming.kicks-ass.net>
+ <20260608102326.GB3161497@noisy.programming.kicks-ass.net>
+ <20260608220811.d4a0b58961cfb9eeb6bbbccb@kernel.org>
+ <20260608140654.GE3102624@noisy.programming.kicks-ass.net>
+ <20260609134153.d06aef367a366e5d976cba62@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260609134153.d06aef367a366e5d976cba62@kernel.org>
 
-Now that the metadata frame records, the kunwind state machine and
-arch_stack_walk_reliable() are all in place, advertise the capability
-to the rest of the kernel:
+On Tue, Jun 09, 2026 at 01:41:53PM +0900, Masami Hiramatsu wrote:
 
-  * select HAVE_RELIABLE_STACKTRACE under FRAME_POINTER && 64BIT, so
-    only the configurations with the tested metadata records and
-    FP-based reliable walker enable it.
-  * select HAVE_LIVEPATCH under the same condition and source
-    kernel/livepatch/Kconfig so the livepatch menu is reachable from
-    the RISC-V configuration.
+> > This, you cannot take locks in unwinding. The only thing you can do is
+> > try to do the best you can without crashing.
+> > 
+> > Typically unwind only happens on self -- this is natural, a task crashes
+> > and unwinds itself, or a task does something (takes a lock, hits a
+> > tracepoint, etc) and takes a snapshot of its own stack, and this is
+> > safe.
+> > 
+> > Things like live-patch use task_call_func(), which ensures the callback
+> > function is done while holding sufficient locks for the task to not
+> > change state.
+> 
+> Hmm, is there any way to ensure the function is called from task_call_func()?
 
-The 64BIT dependency is conservative scoping rather than a hard
-technical requirement: the metadata frame record, kunwind state machine
-and arch_stack_walk_reliable() also build on RV32, and the IRQ-stack
-frame-record adjustment fixes a latent RV32 issue. However, the syscall
-livepatch selftest and module relocation path have only been exercised
-on RV64 QEMU virt so far. The 64BIT gate can be relaxed in a follow-up
-once RV32 has equivalent coverage.
+Nope. And you shouldn't want to.
 
-This is split out from the unwinder change so the policy decision and
-the implementation can be reviewed and reverted independently.
+> (Maybe checking p->pi_lock, but this is not sure the lock owner is this
+> context?) If not, I need to make this available only for current task
+> (anyway it just return kretprobe trampoline address, no critical issue)
+> or, introduce a spinlock.
+> 
+> Or, eventually it may be better to replace kretprobe/rethook with
+> fprobe return handler.
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
----
- arch/riscv/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+I'm not sure where you're wanting to go. AFAICT the current rethook
+stuff won't crash when called on an active task, it might just not give
+the right results -- but that is true for the entire unwind, so who
+cares?
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 674044754378..2921680d2132 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -185,6 +185,7 @@ config RISCV
- 	select HAVE_KRETPROBES
- 	# https://github.com/ClangBuiltLinux/linux/issues/1881
- 	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
-+	select HAVE_LIVEPATCH if FRAME_POINTER && 64BIT
- 	select HAVE_MOVE_PMD
- 	select HAVE_MOVE_PUD
- 	select HAVE_PAGE_SIZE_4KB
-@@ -195,6 +196,7 @@ config RISCV
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
- 	select HAVE_PREEMPT_DYNAMIC_KEY
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-+	select HAVE_RELIABLE_STACKTRACE if FRAME_POINTER && 64BIT
- 	select HAVE_RETHOOK
- 	select HAVE_RSEQ
- 	select HAVE_RUST if RUSTC_SUPPORTS_RISCV && CC_IS_CLANG
-@@ -1394,3 +1396,5 @@ endmenu # "CPU Power Management"
- source "arch/riscv/kvm/Kconfig"
- 
- source "drivers/acpi/Kconfig"
-+
-+source "kernel/livepatch/Kconfig"
--- 
-2.43.0
-
+Those who call unwind on active tasks get to keep the pieces, not our
+problem etc.
