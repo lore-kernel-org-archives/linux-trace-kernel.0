@@ -1,218 +1,165 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93CF3F39C6;
-	Tue,  9 Jun 2026 10:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F493F4859;
+	Tue,  9 Jun 2026 10:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781000962; cv=none; b=cMIsBpql6zsbG99zqBySKOk/vBls3a6VaC7k/ENep3H5+L26Lwtv/zAiu9jzFWDWp0Row8shC/gRxd+hJQZ5iqlwPRiwHjJ2lToIkYoTjDPOV5QZrj3TqA8eOEsjN70UJiwWbpCegAyc1ebTjWfYOk8J7K52KHwKjRLS8lXpPzs=
+	t=1781001417; cv=none; b=oU1sA/U4X8xluBe4Ojixp3JPB9XyZR4cuWzjBpIFYSizq9smkqIaF19PJMSEg4grBiaa4Ao9lTxK1p6I4sR86t+ZXqspp60OiLum+pimPXEqw2A7hKAZNbACLwNNcfy4riUGukGUxlZ6Gi5mE2BpPAG55a2k1uOUPrzAPevD5q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781000962; c=relaxed/simple;
-	bh=SgWVd3DFgOxwhQI8SXvXPP+pToSq9yRG60TurUSNiV8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EX8akgVu7fsJnmcn5hgtArRcwMAgoQEbaT8xi48u0nh1ZOIblZGBUVlhEtzOQFyPqJpr2ASZ/AcvWhLc2pSjvbTg1+qoocwTvn4lrxsvLmflC9+L3NMY7ZDG9d6UhI+Bpi1gf7clRqsi46bLXsDTKiZWrFmcaFrYpZOyVsSDD5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=GjJV2vwA; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1781001417; c=relaxed/simple;
+	bh=6SUKSJTLXATU6iPS+hpKhJ7YFA9CUvj9MoM3hqwlMW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qdx3vHyyROer2rYJISe4IZ8bhIlTqgznT7Vl9pnJM5gi75zCrM+5Sb4EgE4PHKOgyFj2dKeVDzK1yhqNlXnyggrHa3DXJDvK5FoSb7S71Wm6JGUpNBvgd0IM+nDhRLKHmn3Jvu3vQ3SlVe2u6jQ6S4J8C+iFDGxOFlgab7GLJ4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OxFA9un9; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="GjJV2vwA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
-	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description;
-	bh=fveKo/ArUELsguqNauoSDBrPUcMaabksHqjPg8uoepc=; b=GjJV2vwAKD9zWAR+lameMpNBZM
-	bvmEiYeiyuo26X4yoYd13lsRyaC6fYFcxHszU7IEKysWybdX3wjHhTPcjR9+TBQJaJfWmICo+4iAg
-	yLhrvKfWItcMpI9Bd8gIA48lDQSWqD/EbWBx5pn49cp/6XjDBJ36L8oKwyW3/Zmg1HYvQefzkCJcs
-	BG7fb/dUhzVzZq9F7LLHQbyw5Wzzoh+w2vDI7crrRAE/lRyslVzaM5NWwbGFKbud+msmd2pAxSMrG
-	TIH+vRSMpTG5FH6OI0+r5B7nV1sCaw4jm0gt2LKJn1EVTS/edtFweRh3B6bDDhPCDifsuC7HXdOoz
-	yp/LKfDg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wWtho-008Kv9-2n;
-	Tue, 09 Jun 2026 10:29:13 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 09 Jun 2026 03:28:34 -0700
-Subject: [PATCH v4 7/7] x86/setup: prepend embedded bootconfig cmdline
- before parse_early_param
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OxFA9un9"
+Message-ID: <7e36f7f0-b4d5-41c9-b399-9e0079907d33@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781001411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k/rAkLlXIlXwRgQb+cLefFBf2z5QC1/Z0DCE0BETG/c=;
+	b=OxFA9un9vu0GW542DvVoiEKSZvKgU8m+pFneJhMgeukhwmrYt4Cnz+zD/9qEHska0Zm+it
+	w02Mufbjx8vAI7xkfWKQ6k/fxd+dKq5O+h1nA+/pRzFEhofRlBQPjXC2b9LO+W1mqNpYo6
+	Ly/xyxg1oW+1zQouZxts70DutOiLlr4=
+Date: Tue, 9 Jun 2026 18:36:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-bootconfig_using_tools-v4-7-73c463f03a97@debian.org>
-References: <20260609-bootconfig_using_tools-v4-0-73c463f03a97@debian.org>
-In-Reply-To: <20260609-bootconfig_using_tools-v4-0-73c463f03a97@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, 
- Nicolas Schier <nsc@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>, kernel-team@meta.com
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5718; i=leitao@debian.org;
- h=from:subject:message-id; bh=SgWVd3DFgOxwhQI8SXvXPP+pToSq9yRG60TurUSNiV8=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqJ+rRp7KklqgOH8X78COolam8wSpgL0FLVlLdq
- 09+JfqRjBOJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaifq0QAKCRA1o5Of/Hh3
- bRSQD/oCif5myVm/BIHl1V4e9WC19/ZnXgDr+5BdXjkk3/1768kPwXn5TH/d3sNKPUEBoVjoNiv
- BE3qd6zZ9P6KIo4UbqwTz/2Os7usjawYIPKmc1JrhZRz7ArqIrmC7+XbTOHThgT6dWitbJtIGpz
- TfOWYFLegmF4oGxpONlEcBCPa1N/o1kytcwwouYpGvrUPRs3SkWwRj8wtYrgws1SsCJL+1IUMYm
- 5AMBWGWdBPRsdfVYbe79h0xiMP4rYAW2LW695qTpzMkim/s7MG+S9yIdoxInpV6/qbcc4so9zjp
- XFJBNl6qkuHhx8KydO7fBsjjvN17Czc96w20XUaGmgoewCNBdqPUGK/FcrDgcFW+NIf3J0gki+m
- 1A3LzgJDhMmvSr9mhba84xtkMrWMC01rAPhSnzF3wyeAV9TB+QGkFdT/O/9HWv0JAaCYrBUmLuo
- hvLcdwQ9dOyig0fbhCq6uZRRWscmbEmxXiLXCKjyMEKMDI61vX2iVNeXYZKBcOr9I5nI2F7IVlf
- 1YagR1/EKSybCCIaACzBF4E34Gey/aIzZapMDfrDTSFJWMjT3adWktzi88rTRggRvqDbVA5bup0
- rSfWGTbMjv+xCBIhVgo+9+gpInJtxM9Sc08Xq78tUV0LbMjxqe6u/EH+4IOSDB9O3axkzAF8B/c
- 8HcwgM0ArQIcLDA==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+Subject: Re: [PATCH mm-unstable v19 11/14] mm/khugepaged: Introduce mTHP
+ collapse support
+Content-Language: en-US
+To: Nico Pache <npache@redhat.com>, "David Hildenbrand (Arm)"
+ <david@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, aarcange@redhat.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+ catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net,
+ dave.hansen@linux.intel.com, dev.jain@arm.com, gourry@gourry.net,
+ hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, jackmanb@google.com,
+ jannh@google.com, jglisse@google.com, joshua.hahnjy@gmail.com,
+ kas@kernel.org, liam@infradead.org, ljs@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
+ rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
+ richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
+ rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
+ sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
+ tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
+ vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
+ willy@infradead.org, yang@os.amperecomputing.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
+References: <20260605161422.213817-12-npache@redhat.com>
+ <20260606102800.26940-1-lance.yang@linux.dev>
+ <2553caae-9e0e-42a7-8b61-d1216f1e81fa@kernel.org>
+ <CAA1CXcBY_2372eJru8VoCq90rUMxn7w23hHou68MmXRv48NRXg@mail.gmail.com>
+ <b7fb4184-7a99-42c7-8ee2-4c7fa20827c4@kernel.org>
+ <CAA1CXcAhw8V+_dYcrqmtZ9ht4Pqz5PPB8EOcDrVCp4DA4y7pLg@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <CAA1CXcAhw8V+_dYcrqmtZ9ht4Pqz5PPB8EOcDrVCp4DA4y7pLg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Call xbc_prepend_embedded_cmdline() in setup_arch() right after the
-CONFIG_CMDLINE merge and before strscpy(command_line, ...) so the
-build-time-rendered embedded bootconfig "kernel" subtree is part of
-boot_command_line by the time parse_early_param() runs. early_param()
-handlers (mem=, earlycon=, loglevel=, ...) now see values supplied via
-CONFIG_BOOT_CONFIG_EMBED_FILE without parsing bootconfig at runtime.
 
-Gate the prepend on the same opt-in the runtime parser uses: prepend
-when "bootconfig" is present on the command line, or when
-CONFIG_BOOT_CONFIG_FORCE is set. setup_boot_config()'s parse_args()
-loop treats any presence of the "bootconfig" key as opt-in regardless
-of value, so check both cmdline_find_option_bool() (matches the bare
-key) and cmdline_find_option() (matches "bootconfig=<anything>").
-Without the latter check, "bootconfig=0" would skip the early prepend
-yet still trigger the late runtime apply, leaving the embedded keys
-invisible to early_param() but applied to saved_command_line.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- arch/x86/Kconfig        |  1 +
- arch/x86/kernel/setup.c | 27 +++++++++++++++++++++++++++
- init/main.c             | 25 ++++++++++++++++++++++---
- 3 files changed, 50 insertions(+), 3 deletions(-)
+On 2026/6/9 17:32, Nico Pache wrote:
+> On Tue, Jun 9, 2026 at 3:26 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
+>>
+>> On 6/9/26 11:06, Nico Pache wrote:
+>>> On Mon, Jun 8, 2026 at 8:57 AM David Hildenbrand (Arm) <david@kernel.org> wrote:
+>>>>
+>>>> On 6/6/26 12:28, Lance Yang wrote:
+>>>>>
+>>>>>
+>>>>> Looks broken for swap PTEs in PMD collapse ...
+>>>>>
+>>>>> collapse_scan_pmd() allows them up to max_ptes_swap and record them in
+>>>>> unmapped, but they don't get a bit in mthp_present_ptes. And then
+>>>>> mthp_collapse() does the check above:
+>>>>
+>>>> Right. I assumed this is implicitly handled by the optimization in collapse_scan_pmd:
+>>>>
+>>>>          if (enabled_orders != BIT(HPAGE_PMD_ORDER))
+>>>>                  max_ptes_none = KHUGEPAGED_MAX_PTES_LIMIT;
+>>>>
+>>>> But we perform the check a second time.
+>>>>
+>>>>>
+>>>>> nr_occupied_ptes >= nr_ptes - max_ptes_none
+>>>>>
+>>>>> So max_ptes_none=0 + 511 present PTEs + one allowed swap PTE won't even
+>>>>> call collapse_huge_page() for PMD order.
+>>>>>
+>>>>> Shouldn't we account for them in the PMD-order check? Something like:
+>>>>>
+>>>>> if (is_pmd_order(order))
+>>>>>        nr_occupied_ptes += unmapped;
+>>>
+>>> This solution seems good for a temporary fixup. but longterm we may
+>>> want something else. I'm still not sure how we plan on supporting
+>>> swapin without causing creep. So I'd be ok with adding a fix for
+>>> legacy PMD behavior until we know how to handle mTHP creep correctly.
+>>>
+>>>> As an alternative, we could either 1) skip the check there for
+>>>> pmd order (as the check was already done); or 2) introduce+maintain
+>>>> a bitmap that tracks non-present PTEs.
+>>>>
+>>>> @@ -1475,7 +1477,9 @@ static enum scan_result mthp_collapse(struct mm_struct *mm,
+>>>>                  nr_occupied_ptes = bitmap_weight_from(cc->mthp_present_ptes, offset,
+>>>>                                                        offset + nr_ptes);
+>>>>
+>>>> -               if (nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+>>>> +               /* Check was already done in the caller. */
+>>>> +               if (is_pmd_order(order) ||
+>>>> +                   nr_occupied_ptes >= nr_ptes - max_ptes_none) {
+>>>>                          enum scan_result ret;
+>>>>
+>>>>                          collapse_address = address + offset * PAGE_SIZE;
+>>>>
+>>>> 2) would probably be cleanest long-term.
+>>>
+>>> That would be best for future swapin support in mTHP, but I still
+>>> don't think it solves the creep issue.
+>>
+>> It wouldn't, we'd simply maintain the state we collect + rely on in separate
+>> bitmaps. On swapin, we'd have to update/refresh bitmaps I guess.
+> 
+> Yeah, I'm saying for the future, it obviously solves this issue here
+> as well, but if we have positional tracking of the swapout, shared,
+> and none PTEs, I think we can use this to determine whether the
+> collapse would lead to creep. If we detect creep would happen it may
+> be best to automatically collapse to the N+1 (or greater) candidate.
+> Just thinking outloud here.
+> 
+>>
+>>> Perhaps we could combine the
+>>> two bitmaps to determine if it would make the future collapse eligible
+>>> again? Not sure but ill start thinking about it.
+>>>
+>>> Should I send a fixup for this using Lance's solution? Or does Lance
+>>> want to send a patch out with the fixes tag?
+>>
+>> If Lance could send a fixup, explaining the situation, that would be nice.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 0de23e647197..8ab11199c16d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -127,6 +127,7 @@ config X86
- 	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
- 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <= 4096
- 	select ARCH_SUPPORTS_CFI		if X86_64
-+	select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG
- 	select ARCH_USES_CFI_TRAPS		if X86_64 && CFI
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 46882ce79c3a..d69ba84c203f 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -6,6 +6,7 @@
-  * parts of early kernel initialization.
-  */
- #include <linux/acpi.h>
-+#include <linux/bootconfig.h>
- #include <linux/console.h>
- #include <linux/cpu.h>
- #include <linux/crash_dump.h>
-@@ -36,6 +37,7 @@
- #include <asm/bios_ebda.h>
- #include <asm/bugs.h>
- #include <asm/cacheinfo.h>
-+#include <asm/cmdline.h>
- #include <asm/coco.h>
- #include <asm/cpu.h>
- #include <asm/efi.h>
-@@ -924,6 +926,31 @@ void __init setup_arch(char **cmdline_p)
- 	builtin_cmdline_added = true;
- #endif
- 
-+	/*
-+	 * Match the runtime bootconfig parser's opt-in: only fold the
-+	 * embedded kernel.* keys into the cmdline when "bootconfig" is
-+	 * present on the command line, or CONFIG_BOOT_CONFIG_FORCE is set.
-+	 * setup_boot_config()'s parse_args() loop treats any presence of
-+	 * the "bootconfig" key as opt-in (bare, =0, =1, ...), so check both
-+	 * forms here: cmdline_find_option_bool() matches the bare key,
-+	 * cmdline_find_option() matches "bootconfig=<anything>". Without
-+	 * the second check, "bootconfig=0" would skip the early prepend
-+	 * but still trigger the late runtime apply -- a split-brain state.
-+	 * CONFIG_BOOT_CONFIG_FORCE defaults to y when BOOT_CONFIG_EMBED is
-+	 * set, so on the default config the embedded keys are applied
-+	 * unconditionally.
-+	 */
-+	{
-+		char buf[8];
-+
-+		if (IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE) ||
-+		    cmdline_find_option_bool(boot_command_line, "bootconfig") ||
-+		    cmdline_find_option(boot_command_line, "bootconfig",
-+					buf, sizeof(buf)) >= 0)
-+			xbc_prepend_embedded_cmdline(boot_command_line,
-+						     COMMAND_LINE_SIZE);
-+	}
-+
- 	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
- 
-diff --git a/init/main.c b/init/main.c
-index e363232b428b..2ecb6aa536dd 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -378,12 +378,15 @@ static void __init setup_boot_config(void)
- 	int pos, ret;
- 	size_t size;
- 	char *err;
-+	bool from_embedded = false;
- 
- 	/* Cut out the bootconfig data even if we have no bootconfig option */
- 	data = get_boot_config_from_initrd(&size);
- 	/* If there is no bootconfig in initrd, try embedded one. */
--	if (!data)
-+	if (!data) {
- 		data = xbc_get_embedded_bootconfig(&size);
-+		from_embedded = true;
-+	}
- 
- 	strscpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
- 	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-@@ -421,8 +424,24 @@ static void __init setup_boot_config(void)
- 	} else {
- 		xbc_get_info(&ret, NULL);
- 		pr_info("Load bootconfig: %ld bytes %d nodes\n", (long)size, ret);
--		/* keys starting with "kernel." are passed via cmdline */
--		extra_command_line = xbc_make_cmdline("kernel");
-+		/*
-+		 * keys starting with "kernel." are passed via cmdline. When
-+		 * this bootconfig came from the embedded source and
-+		 * setup_arch() already prepended the rendered "kernel" subtree
-+		 * to boot_command_line, rendering again here would duplicate
-+		 * the keys in saved_command_line and make accumulating handlers
-+		 * (console=, earlycon=, ...) re-register the same value. Skip
-+		 * only when the prepend really happened.
-+		 *
-+		 * On arches that do not select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG,
-+		 * CONFIG_BOOT_CONFIG_EMBED_CMDLINE is unselectable and
-+		 * xbc_embedded_cmdline_applied() collapses to a stub returning
-+		 * false, so this path still runs and the embedded "kernel"
-+		 * keys reach the cmdline via the runtime parser exactly as
-+		 * before this series.
-+		 */
-+		if (!from_embedded || !xbc_embedded_cmdline_applied())
-+			extra_command_line = xbc_make_cmdline("kernel");
- 		/* Also, "init." keys are init arguments */
- 		extra_init_args = xbc_make_cmdline("init");
- 	}
+Sure, happy to send a fixup :P
 
--- 
-2.53.0-Meta
+Should I send it as a fixup to be folded into this patch, or as a
+separate patch with a Fixes: tag?
+
+Will get one out soon :)
+
+> OK, I'd appreciate that :)
+
+Cheers!
 
