@@ -1,117 +1,132 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2000935DA65
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jun 2026 14:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E77643D518;
+	Tue,  9 Jun 2026 15:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781016204; cv=none; b=ZSlPH4/4ZefTGaRjG/xdRzQvu1EjGYWl1VjTwmhQnriR3+NrF0bI37rBilWjTWVXkD5ad4+pQMZsQtqGKTtDsffWdNJYxhPcesSLIYM8WphhEUe+YMNB3HRn8KGmPSjeWMOMjk1S6gtqmCfREjph3t7ozeAhcyKH2olcx48cG5I=
+	t=1781017381; cv=none; b=TcScRy8nbU/SfClbQAJwGRCGuorFoFiFNs5tz9Ov1iL/4bnTzlrYIZqen/6W9CU9UAo7h+xHvwXdbO+pN0BaghjUiLz5Ag9stcFaWZxT4wjsfY2TQEfPrdmJ/BhBN0PeVfu3AhVJOJznmIxMYM6LOCf3cgebKaOch2aytvAFw5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781016204; c=relaxed/simple;
-	bh=Y92YhwUPJv/2h7H2Q6e9DHow9kcLoMvdAckDZ2rlfCA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=oCqIoOXd84InUdAasPXX3U8G9CjQk8xDQxVk/Uk5tuUiErGSZ9B31yKrvlyNKnN9wCY8JsJhTeLCqXBKgiZfDqFQ27W8xZE2SWxkU+yvvYT3Y1+/mK9w+FHUQll7kbCErWYFUfrekiDZ3swrPBuT11IqwgsIZdjwAu+XvCiZoTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CxFxf07w; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781017381; c=relaxed/simple;
+	bh=jib5mn+3RmtqhFJwUiXYnhJHVpB5Laika14vNqpxqqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AiMJui3CASKjW6mmZbCQFjbPgceKuCAH4Gd0XpBRc5jQQoE1+ypoJ/CpS5nuyS7HQFi7PEs3CS9hqa8fAOcbmpAlV/YuiAegmu6E14i4DLN/v4W340pOLc1jEu6KbntXxb8ldJ9BMPEQq2Z4FpIik7+iVqt5TDSJLngBDQeywOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org; spf=pass smtp.mailfrom=rostedt.org; dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b=xQzD4mo/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=R00GJ4A/; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rostedt.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxFxf07w"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-490c1915793so37997165e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jun 2026 07:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781016200; x=1781621000; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J5wPRNbXYNk+CemuXK96At7KwYoVbQHOG25Mipgi4x8=;
-        b=CxFxf07wmaCxZEoyuTCK5RMGcNPwGEamu+G1CoY6KQuzzDmEl5u/4yuiMmbsR+OfBN
-         dTr8fl3WVmRqfn+DzzV90CEvlsdO2VjF4Zd+nG2N6C8RARk6fTydMY+usPFsLFrWCBjA
-         nStpY4XlgGvHcTVqWWLI2SZTl8XogzeROM3zm1hiroQe81qwHvg9HSg+8kF4kcOPQbM2
-         AzD4vt8gzVLVCuRwYcxWU2hf8LCeu4yYLrQebnREUdr5xjUnV9a7/OcRjbDwuap8BmaY
-         n3PUT5MkACwMy45KNlozJ2mXLAMHPES24qkMoZGYzV1gxU8X0BF95RUImGUBc08A7WWG
-         Ftig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781016200; x=1781621000;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J5wPRNbXYNk+CemuXK96At7KwYoVbQHOG25Mipgi4x8=;
-        b=prk5HwrHR3alHvBVGF9RfliZsRZWKBk9JNlLDl2QS8gzSLsg1m2FhcDYHDm8cJVz2+
-         8trcOutKGvhNtAlqnaKW/B6H0QSDzpkUvkiHAG3Wf2CeqrVckZXUVTVWXTXQF/dVN5v5
-         E80Preof0KLFIEWW6EEWYP49UeoiOFkgQfkHnUrvLTbcbk0nWe0OQxV1B0h7PbUJGrKv
-         OEmRmDtX1YK9zBh/blsMsSNztSy/SByeHl45rn9B+++N/Ytz4g+We5sXeBi+5Mo9Ode8
-         r/levs1c0zvQoNP/bjKoQ9kje9G/eq/abekm9srHh9OSwBbAhz3v98Y8Oq+9VeYDpVCA
-         QR8w==
-X-Forwarded-Encrypted: i=1; AFNElJ+pMTvpKzTPQbwsjNLUd9YOddBSGMR+B/HFsL47VrCpaAgRSgqxBI9zJpZ2232ZNY4MmpwJLzSHPv/guWVaXqhyrLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKISWsmh7zWRidq/VHrOCmPQcBfn3nK2VqFdXyk+7BEbhNETVf
-	V+LpyZybq15sh8GXDZ764+o2u2NxtKRYKHOm2r/f2c1WlN5t9cVLlTkQ
-X-Gm-Gg: Acq92OFPxK5OLaAnhnB61Es5Q2fD8x/6WrNNKVDdHZEjhPAJrtfTkO9p+rgscH+wwkq
-	5r86do8uj3UYG414VvliosdlzxdZnfKtEdoaJ37Z7nhH9+6TH/sM31aCVQDD7QZQpjh0TsiiLJq
-	AgxcooIKnDWGeB2jbtEi2AbwAM2fzAHDyLRbACMMlzOQGopMeG7dp0dMNwPHdYikZ4Gucl+CXJd
-	4w2tPiErUhg+sVqwtsbOAOny7y75Ufafmo+HqCAloJLJBvJCuNdHnpKFDPeL/j+viAq/R4QVjaP
-	aWzUn51JPodrE3vb6xHJTWjbdv8D5lqJvTMYL8m5Yqco3wALeCHj8SPRAtx+Y494K8U/gne4rHI
-	yjjuC4fhDx+fDj9GkKPjjzf7q5zfvPix5KHHg2cJ1JFrKU2bwJoBhKo7ugV0m+r2SxNlYYoVFAW
-	jhMV9tmwbUlf+AU2AkzZGJB5a4OPtvLeQh1W23k8D/0wg5I1QU2P1wBarTCmtCQu86+Bl5PkIBn
-	T1GxoU1T8FVxMnoTqJDlp8gpLvMsFpxhesFL2PF3SKPYWCg2fklbUplXYIY/sYHtQOZTON8z+s+
-X-Received: by 2002:a05:600c:3e0d:b0:490:a1dc:e542 with SMTP id 5b1f17b1804b1-490c25afe6bmr330636105e9.6.1781016200339;
-        Tue, 09 Jun 2026 07:43:20 -0700 (PDT)
-Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3a87dasm473111435e9.7.2026.06.09.07.43.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 07:43:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b="xQzD4mo/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R00GJ4A/"
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id A34EC1D000D2;
+	Tue,  9 Jun 2026 11:02:58 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Tue, 09 Jun 2026 11:02:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rostedt.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1781017378; x=1781103778; bh=SY
+	1z+Kbi3GWO3NeBX9/bHE6RV1hiB3oBcqoziDZyzdQ=; b=xQzD4mo/3cjNneehhE
+	5gvIFwyKbh+QE/mGCe7OfNh35JaEu5bqv5OQZRH3hzv9hGxcrcv95hfyjZOG7zd7
+	4axqnnmGxuudn4JadMCklVlgHb817133HTT6pG7c/n1jR04n4UMFTSIP/TWtx0/U
+	K3Dh1zTrRwDC/b4sbGLZLGVVC+w2KdMZe4Rp35DrDjx5A9ZWqFE3X562EgFBDyTw
+	nX3JAFZj7y6OTSsvyNyrqogdRTAWR6eHZhZXlQXtgOlA6E/eu363yugyfTdbtP3s
+	EeSTfGQBmI/pJkg+Hj9zSajapVBycDgqQs7F/HrIPmW8A5cQDCd0mTit53u0MxEo
+	AqZg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1781017378; x=1781103778; bh=SY1z+Kbi3GWO3NeBX9/bHE6RV1hi
+	B3oBcqoziDZyzdQ=; b=R00GJ4A/O716MptH7hdSBNrsHSiyk8BXeXos65ZgzMzV
+	vkiGinylE4boqXcm06u2r/070UdzMCVeY5ib2zoP3vhmNFt3OCECmaeEq3pAPVTY
+	srkE3S66RqKWfu5VbQM2T7LjYCA/dYInzzwSCtAAqQ7GhjS++SzhlEYi87nl8Ste
+	yXdo3zvZshtHua/tL9Dx0chH3oDkQfNmKSSO27TsWGqfedMkwrpSojG0uoFKW750
+	zk02Uok3kdm0xpz6dY0TNk3zLeg0Kvf9pYL+CxZZiZQImkAmt8ewbjPjg7pFQIf2
+	nzQTyA+Ldg2RBhppUCAyTCjVEDr+iDgQd1oTsqObyg==
+X-ME-Sender: <xms:Iisoas6dW9mIsAiYBOf17Q05HxwgzLIkN1f6CzR679RBMpdYkWKefQ>
+    <xme:Iisoal37p_2rFvt0WSFA2XQDycUK-wRykRzISqQyP4teo46NKohxBxcIr1MPUCPr7
+    ximpqGfkAus2fLlQyauhnV3U-hI9RCERw96Vi-hDe1DYIxkahl4IAc>
+X-ME-Received: <xmr:IisoaiqevWH9tF8xUGbXZwZdsrzKF-wngOupup9NIjVfP3cGADMOoadc>
+X-ME-Proxy-Cause: dmFkZTEsHgkI2cbii2IU0g921/ycC+qCa9oklhM6HUdqBif26TVKlHwG4xPTilvqCjC5eV
+    I4vb09nj7zV5K0w/mnFMyvdKslQtLM6KPmYIcH4MVlQvn22tSognWCQYTl7WG7NC/7l8oW
+    a/OoCDf31DlSPhkwJnfp642QwQkkINXHlg8MQ6NIJ3leDmZ4NLEcxJNYwUZmdgYQmlYnis
+    eY1piOVwNkfiBSTlp1K4wVIb9zxF+QcdnlFiLtHVEzgyGq1AJHKuMI94usVgOJAhhTe/qR
+    lDhusl89IpIiLTWOREkXN4BlL8MH88UlADZZZLPLesv5A1a4BW+6ITb0NnJr8xg3bdfsCi
+    dGq7rIOb3jnCfEzttF+40EPY0t7o2PYp6kJd5mN/5s0Dbnhh/Pe3MkzHTsvYnrmI2jZ1Ey
+    RYe89KRmT2qJDAprebS9/lqhPHHUGgZDTUuYEwvzhGQXPaut/B1+KqXSk5BXdRMyeexQex
+    Si+1X5SymU/KqgladTYxwprO+UlqX4GwS5Fr+aXEsZ0KGKVA9cZvdpGsXCddNOEEewYTok
+    W9dvGRlhPxzxdWVWqSnIlBiynBb3WT5mQoy9PJUyNylLhzVrT5DymkE9Bt8/SoeI10RXkE
+    mnFuQ55b2CFe9psqPxbEAaqwm3f9SrvUCB/rZ8DR5Zx5yGbE2xwVlrRikB+Q
+X-ME-Proxy: <xmx:IisoanlxcUl3QmW-lWH7v4We3iHYzj5xM1Pbp-VVCeG9Myck5YC0GQ>
+    <xmx:IisoasRYu2yEd2lpXj_FQcuc_TJKmVPqkGZr6OOSs7bKzl8vAk4vkA>
+    <xmx:IisoapAb64756GrVYQxT6tHeTGGg7MxqGZa8YReNxmCBDsdKvAC0AQ>
+    <xmx:IisoasoQ_XdCixjbO5I7E5zuwz3so0j1y0c7wd_R1v5CfUv72mwoDw>
+    <xmx:IisoamZJypIF51MZpWI_ZeUmLClTEl5qFej5akgcomLD0lzAbXvghfK9>
+Feedback-ID: id06e481b:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Jun 2026 11:02:56 -0400 (EDT)
+Date: Tue, 9 Jun 2026 11:02:42 -0400
+From: Steven Rostedt <steven@rostedt.org>
+To: LKML <linux-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
+ <linux-trace-users@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Linux Trace Devel
+ <linux-trace-devel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ian Rogers
+ <irogers@google.com>, Dylan Hatch <dylanbhatch@google.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Jens Remus <jremus@linux.ibm.com>, Indu Bhagat
+ <ibhagatgnu@gmail.com>, Beau Belgrave <beaub@linux.microsoft.com>, Tomas
+ Glozar <tglozar@redhat.com>, Gabriele Monaco <gmonaco@redhat.com>
+Subject: [ANNOUNCE/CFP] Tracing Microconference at Linux Plumbers
+Message-ID: <20260609110242.467f37ce@fedora>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 09 Jun 2026 16:43:19 +0200
-Message-Id: <DJ4LJUWPD2BF.1TY4Z3WY2V0H5@gmail.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
- <bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>, "Martin KaFai
- Lau" <kafai@fb.com>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
- <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>, "Menglong Dong"
- <menglong8.dong@gmail.com>
-Subject: Re: [PATCHv7 bpf-next 03/29] ftrace: Add add_ftrace_hash_entry
- function
-From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
-To: "Steven Rostedt" <rostedt@kernel.org>, "Jiri Olsa" <jolsa@kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20260603110554.29590-1-jolsa@kernel.org>
- <20260603110554.29590-4-jolsa@kernel.org> <20260609102922.3c489f76@fedora>
-In-Reply-To: <20260609102922.3c489f76@fedora>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue Jun 9, 2026 at 4:29 PM CEST, Steven Rostedt wrote:
-> On Wed,  3 Jun 2026 13:05:27 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
->
->> Renaming __add_hash_entry to add_ftrace_hash_entry and making it global,
->> it will be used in following changes outside ftrace.c object.
->>
->> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
->> ---
->>  include/linux/ftrace.h | 1 +
->>  kernel/trace/ftrace.c  | 9 ++++-----
->>  2 files changed, 5 insertions(+), 5 deletions(-)
->
-> It's getting late in the RC release and I'm guessing this series will
-> likely not make the next merge window. The first three patches are
-> rather trivial and since the rest of the series depends on them, I'm
-> happy to take them and apply them for the next merge window. That way
-> you can continue development in the next rotation without needing these
-> ftrace patches.
->
-> Would that work for you?
+The Tracing Microconference is accepting new topic proposals.
 
-Hi Steven,
-Version 8 of this set was already applied to bpf-next.
+  https://lpc.events/event/20/contributions/2316/
 
-https://lore.kernel.org/bpf/178085644764.273544.8250000589480262551.git-pat=
-chwork-notify@kernel.org
+All Linux kernel tracing related topics are appropriate to discuss. If
+there's a Linux kernel tracing issue that you are having or a feature
+you would like to see, please submit your problem statement at:
 
->
-> -- Steve
+  https://lpc.events/event/20/abstracts/
 
+Make sure to select "Tracing MC" in the "Track" pulldown.
+
+Topics may include but not limited to;
+
+ o  Stack tracing features
+ o  Better lock statistic tracing
+ o  Better system call tracepoint recording
+ o  Updates to the persistent ring buffer
+ o  More features for dynamic events
+ o  Better integration between perf, ftrace and BPF
+ o  Integration with BTF
+
+The above is just ideas for topics, but is not an exhausted list. Feel
+free to submit anything you think is relevant.
+
+For what is expected for a microconference, please read the blog on
+"The Ideal Microconference Topic Session":
+
+  https://lpc.events/blog/current/index.php/2023/06/26/the-ideal-microconference-topic-session/
+
+Note, those that submit topics before July 10th will become eligible to
+pre-register for the conference.
+
+The CFP itself closes on August 7th.
+
+Looking forward to seeing you at Linux Plumbers in Prague!
+
+-- Steve
