@@ -1,129 +1,166 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11EA4183D5;
-	Wed, 10 Jun 2026 14:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8290A4192F9;
+	Wed, 10 Jun 2026 15:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781103516; cv=none; b=PuRF3/N+V6w2gYls80Jx1JxSbuypTXsZ7+7ZudzFFd1O/UJ99LBEpQ7orWwHizlUkAnk7VhxHlSutDS5s57nx2YfsWKq4/RssChkKE9KJ2BK8hx/fsGz+2HWwT3vS2gx7BEuJGbjgDIRXzCurggK7Wy6Uw5zuoWeIr4oNMMaPB0=
+	t=1781103655; cv=none; b=hk+tFqXlLemceZQVYljgsG32yRsxJVqZZ+eRNCZca5VCmdBguVWnx0Z/GTYUCS0UZ2N36YYdoTDElL6eWk9mTixQa/FoI1fqg1u2kOX8VFQCjgZ58Y6fVud4p+4vcHhf9+6VH0KkxLdblEjKFreFOgrXYMc3s68dT1SBOMQpHs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781103516; c=relaxed/simple;
-	bh=/6Nf9G5lLEN8BF9smhemAcg0T3KOlEyIG3wNfGBKmcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UfZUAI+MCGGpsAT1R8xmtMvxb2q5UKI7c0vYSzT0DlYpo4RL9KL0VmTjHmacoRpkw1FeBcRCG8Wd+w1K9SE9wLKx/jXaArDNMkzfiBRjwpN+cay+d37ohJGvmAy3Q1qQ5aO/Wd0lD2eJxCLhaI/OZ2XOD6AerPN9VeinetWlnp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=FVtbWKkZ; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1781103655; c=relaxed/simple;
+	bh=cdfu6a8174Wa007irlBxGZAyGscAfwNswZpYHIKVIrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YH5J753uageGQEFrQ5ii/aGodSp2tc/lIxCl2d/XQB09YE5NAtqGcBDKZR54Mhri3g/4ARfq23MrRcrtZkQa3JuHVfj/SpllUywbl4vbl5ETzAtc6VsCzIF+x7rJG8+rJaSGmHd4i/SgfBZiB3cr79nsQ0QBJffpV9s9VWyzSUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHjoTr7s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="FVtbWKkZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zZfC0EJJ7HHhhWDFFicBOAdBi6iTtdoJgHhoFDJ4PdI=; b=FVtbWKkZR2WNVBuBAu4NrhMpS6
-	4d/EJvs/kP5Q9kfe+Kmb1I7CsJX+tVkpYlK/7+kcgbZ2+YWPuU6GA8BGs7N7viLMkDZ3Py7cxxlN1
-	UPYJae7o/49uE3/icRs5V0GvBRN7p3WGwBSGdtQgiZZipxNTEZjDGfWvEU4SHeNFf0ByEG99A3EA4
-	Em1d3YBhmehKdYeGGs+3Cbh1IvjkMRSkq0agno8F6fM8hV5CDAQ26NuHjAX9LjGDuck2ynzY9OaxT
-	Jl7lrjzG5E62aIkfpl15N3b7xxDADPcX5LHwpoWBAQ9GqfWo+xQJf9CGNb7e540dDDorQ9oiqkXWR
-	jkFra1Ug==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wXKNk-009Gg8-0w;
-	Wed, 10 Jun 2026 14:58:16 +0000
-Date: Wed, 10 Jun 2026 07:58:10 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	bpf@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v4 6/7] Documentation: bootconfig: document build-time
- cmdline rendering
-Message-ID: <ail6rQnRYKsXPxyF@gmail.com>
-References: <20260609-bootconfig_using_tools-v4-0-73c463f03a97@debian.org>
- <20260609-bootconfig_using_tools-v4-6-73c463f03a97@debian.org>
- <20260610233720.82fe59cf42aa57659c2e5697@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHjoTr7s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B991F00898;
+	Wed, 10 Jun 2026 15:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781103654;
+	bh=RTuU9FrMu80USEPHZIsR86q72HI9h9O4g+u2c63dTjM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lHjoTr7sIlcC9HNescoIpEPVQhPYNXrrn8kuYOlfh41Cd/1Outqp9FnHfcUeTMY0W
+	 iEkxlDCU3g121k8qL8QB4vVFyvlUqmahDpoM0wbD8edNTZvDyu4kC9L/+4efEQZRg9
+	 9ug6ej2V7Wp/wLNPpr+vhhwio/AUSHk/cMZ3X0VOJN7l2YevgVwJt4HvwPKD5azCJG
+	 3SsQehi0gO+JbVNmV9/lYMQEJp8KkZYPn1kJg0aUkJmJdAkjrHcgY+pbbeBIYzyBH6
+	 dVPiOO+/ZBtF/BOxpPF09c9LCbWa+wijIvDfgmdiu0fzJngBcN+9tIejaPyPefGGlK
+	 1ZJJoJQDTfZsg==
+Message-ID: <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+Date: Wed, 10 Jun 2026 17:00:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260610233720.82fe59cf42aa57659c2e5697@kernel.org>
-X-Debian-User: leitao
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+To: Gregory Price <gourry@gourry.net>, Balbir Singh <balbirs@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+ kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+ mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+ baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+ jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+ riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+ roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+ zhengqi.arch@bytedance.com, terry.bowman@amd.com
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat> <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat> <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat> <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 10, 2026 at 11:37:20PM +0900, Masami Hiramatsu wrote:
-> On Tue, 09 Jun 2026 03:28:33 -0700
-> Breno Leitao <leitao@debian.org> wrote:
+On 6/10/26 12:41, Gregory Price wrote:
+> On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
+>>>
+>>>    __GFP_THISNODE cannot be overloaded to do anything useful here.
+>>
+>> Let me clarify, I meant to say, let's use a nodemask for allocation
+>> and __GFP_THISNODE gets us to the node we desire, if that is the only
+>> node. My earlier comment might not have been clear.
+>>
 > 
-> > Add a section describing CONFIG_BOOT_CONFIG_EMBED_CMDLINE: what it
-> > does (renders the embedded "kernel" subtree to a flat cmdline at
-> > build time so early_param() handlers see the values), what it
-> > requires (BOOT_CONFIG_EMBED, a non-empty BOOT_CONFIG_EMBED_FILE,
-> > and ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG -- currently x86 only),
-> > the bootconfig opt-in semantics, the initrd-vs-embedded precedence,
-> > and the soft-error overflow behavior.
+> I've been tested an stripped back patch set where I drop all FALLBACK
+> entries for private nodes (including for itself) and only keep the
+> NOFALLBACK entry for private nodes.
 > 
-> Hi Breno,
+> This effectively isolates the nodes for any allocation without
+> __GFP_THISNODE.
 > 
-> Thanks for adding the document. But related to the Sashiko's comment,
-> I believe it's necessary to pre-describe in this document how the
-> kernel behaves with various combinations of cmdline and bootconfig,
-> both embbedded and initrd/bootloader.
+> This also precludes these nodes from ever using non-mbind mempolicies,
+> which I think is a completely reasonable compromise and something I was
+> already expecting we would do.
 > 
-> We can have these ways to pass the kernel options.
+> Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
+> which causes spillage into private nodes because slub allows private
+> nodes in its mask.  I think this is fixable.
 > 
-> - bootloader cmdline
-> - embedded cmdline
-> - initrd bootconfig
-> - embedded bootconfig (standard/cmdline)
+> I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
+> code, etc), but it seems like fully dropping the FALLBACK entries and
+> requiring __GFP_THISNODE might be sufficient.
 
-Will do.  For v5 I'll extend bootconfig.rst with a section that walks through
-each combination -- which source wins, when parse_early_param() sees it, and
-how it shows up in /proc/cmdline and /proc/bootconfig.
+Sorry, I haven't been able to follow up so far, and not sure if that's what you
+are discussing here ...
 
-> Clearly, we will have the option to choose between a standard embedded
-> boot configuration or a command-line one, not either, but the behavior
-> is different. I confirmed that is covered.
-> 
-> Embedded bootconfig is a kind of default bootconfig, which is NOT used
-> when initrd has another bootconfig. I made this design because of
-> /proc/bootconfig, which is not merged with embedded one. However, 
-> CONFIG_BOOT_CONFIG_EMBED_CMDLINE will be a bit different, if it is
-> embedded and "bootconfig" feature is enabled, the embbedded one
-> has been used already. 
-> 
-> To avoid confusion, when this option is used, shouldn't we treat it
-> the same way as if embedded command lines were enabled, and either
-> not display it in /proc/bootconfig (or always display it, by merging
-> the rendered string)?
+After the LSF/MM session, I was wondering, whether if we focus on allowing only
+folios allocations to end up on private memory nodes for now: could the
+__GFP_THISNODE approach work there?
 
-You're right that EMBED_CMDLINE breaks it: the embedded kernel.* keys
-are already in boot_command_line before setup_boot_config() ever sees
-the initrd bconf, so a user reading /proc/bootconfig would see only
-the initrd keys while parse_early_param() acted on the embedded ones.
-That's exactly the split-state Sashiko was circling around.
+Essentially, disallow any allocations on non-folio paths, and allow folio
+allocation only with __GFP_THISNODE set.
 
-Both options you suggest work for me, but they pull in opposite
-directions and I'd rather not guess wrong on the user-facing
-contract.  Which do you prefer for v5?
+I have to find time to read the other mails in this thread, on my todo list.
 
-  (a) Don't display embedded in /proc/bootconfig -- keep the current
-      "file shows the active bootconfig source" behavior and document
-      that with EMBED_CMDLINE=y, the kernel.* subtree may have been
-      applied separately via the cmdline.
+So sorry if that is precisely what is being discussed here.
 
-  (b) Always display embedded by merging the rendered string into
-      /proc/bootconfig when EMBED_CMDLINE=y, so the file reflects
-      what was actually applied.
+-- 
+Cheers,
 
-Happy to go either way
-
-Thanks for the direction,
---breno
+David
