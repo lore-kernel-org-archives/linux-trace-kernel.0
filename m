@@ -1,133 +1,133 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C236540D599
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 00:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC0317A305;
+	Wed, 10 Jun 2026 00:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781051393; cv=none; b=hM/iv1yDFdjhKcepMSeNHvELpf2u0UGYIvhd/ZEfVrgM0Ytn8gFAwTbKrXpTkE1rvsCGGjmc3WaEiNIWyaWP9kBTtigiGJ27GA+OhO5oiKto1mNy5MfcZOeB4b2d6hjGsJqClJ+wEdsDCYzPoP8LLzmZfBM3lcZREZryzZI61Z4=
+	t=1781052687; cv=none; b=VeLPNFEOPQqXcXmQR9eHftovLc2AcfmEtM4TBNCzh+fOfU65A4fKSw4QnHJoB9Ux+tqMONzSV1yOklIAE9TNTfl9HKUojOB3oWJPDGOxdNONkV7KO4RBbETRmEtOChY/T76WhNOroXDPVtbRWT4eshTEWdc7vUX+kEWUcR5mqE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781051393; c=relaxed/simple;
-	bh=LHcZsEXdnVHezmSiNhyaOdVrmvBWhcUXgGCQU7gHSu0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m6yYOwhxCRxWKqZ+EdQikx6qpgAHaLFkHmTBpk0LCnvDN4L23Neao9HbftlOUhzTWo2V1iyqi/4am7ad1K6tl1cx2EBRvNHzDxevbSx5yPkaidfmEuNZtqkDK756ZY15ypPt1KiBXFLrn+XJsKpC3pFUmnFtv6pjMR89Dr8EKOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k2Ykltry; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1781052687; c=relaxed/simple;
+	bh=hHSweqaoPPOWP//CiRXcgp6ysK37O1r6QEAl6tA6cSU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gddaDY3ePmUwINdZILnNKwuGuvuH2PUF4IIWLPB5gWn3wuN9k+MMW6ZjXlwDVbBXCnsyHOAWJpfumwJr7v9RIuASufb235lYx4v9fmkuAryp5RRrc9+uHLKMqR/yNHa30llxhaB28MsMQQaIKliOGkjYy0NB/BvvEVVFaCL3KYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kh29NEbW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k2Ykltry"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781051379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=n6nRitLA5dXPldaPWFJdkV5WToaQRP9IZnc/9WgQeWE=;
-	b=k2YkltryaSxG3AYCOSdIpuXULa3fQ8OUMTERCHllVLhHajWA21GfAKY3mmj4y1OIY0Ll+u
-	slAp1PHk4pDzgon8/6fFc2Z1xLfIvaOIPZ0bj/wjj8VBODn21z+8Aod9n4xk4kZzMLMlFT
-	NhnyfLkdTaiG95Q8ZhTlOO10X6Mih8o=
-From: JP Kobryn <jp.kobryn@linux.dev>
-To: linux-mm@kvack.org,
-	willy@infradead.org,
-	shakeel.butt@linux.dev,
-	usama.arif@linux.dev,
-	akpm@linux-foundation.org,
-	vbabka@kernel.org,
-	mhocko@suse.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	kasong@tencent.com,
-	qi.zheng@linux.dev,
-	baohua@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	chrisl@kernel.org,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	baoquan.he@linux.dev,
-	youngjun.park@lge.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] mm/lruvec: trace LRU add drains
-Date: Tue,  9 Jun 2026 17:29:19 -0700
-Message-ID: <20260610002919.14102-1-jp.kobryn@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kh29NEbW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B14041F00893;
+	Wed, 10 Jun 2026 00:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781052685;
+	bh=AknOC9ftrQ9npWsX4G287ronaobFlPP7dg7D/271fCg=;
+	h=From:To:Cc:Subject:Date;
+	b=Kh29NEbWMMf5Dwxam8iyR8o0632/X5Fn4bfelwOtb9BkK11MH65DqlmD0pqOmMqmF
+	 PZSo+WesGN+gUdNj6PQ5kwR347apZtnzxRJqiDChzymX97AIfxbbdsKVAkV6tjFUts
+	 eccMq3EBPzzvaiLzw1GWYOpA1Qxopto93ZvaUoEb7rgQ9WIeCT44heH9pxv88JuLFF
+	 lBUcFJudrS3jIJp1gll1aVlEDwESrUhRQic2HW5hFghoC7zZFihXboBIvlHu3tq9S0
+	 uUvXdQm8NaMjWpEV1rFEmx0cZLfOxK97OEwzN60rHaZ0tkbAMyPilMdpJ/2kONOSyw
+	 jHbusxyGvOtaw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH v2 0/7] tracing/probes: Add more typecast features
+Date: Wed, 10 Jun 2026 09:51:21 +0900
+Message-ID: <178105268094.21760.13668249930524377840.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-LRU add batches can be drained before they reach capacity. This can be a
-source of LRU lock contention, but it is not currently possible to
-attribute these drains to callers with existing tracepoints.
+Hi,
 
-Add mm_lru_add_drain to report the CPU and lru_add batch count when an
-lru_add batch is drained. This allows tracing to distinguish full drains
-from partial drains and attribute them to the calling stack.
+Here is the 2nd version of series to introduce more typecast features
+to probe events. The previous version is here:
 
-Signed-off-by: JP Kobryn <jp.kobryn@linux.dev>
+ https://lore.kernel.org/all/178092865666.163648.10457567771536160909.stgit@devnote2/
+
+In this version, I fixed various problems Sashiko reviewed and add
+a fix of sample code. Also drop +CPU/PCPU() and introduce this_cpu_read().
+
+
+Steve introduced BTF typecast feature for eprobe[1].
+This series extends it and add more options:
+
+1. Expanding BTF typecast to kprobe and fprobe.
+   (currently only function entry/exit)
+
+2. Introduce container_of like typecast. This adds a "assigned
+   member" option to the typecast.
+
+   (STRUCT,MEMBER)VAR->ANOTHER_MEMBER
+
+   This casts VAR to STRUCT type but the VAR is as the address
+   of STRUCT.MEMBER. In C, it is:
+
+   container_of(VAR, STRUCT, MEMBER)->ANOTHER_MEMBER
+
+3. Support nested typecast, e.g.
+
+   (STRUCT)((STRUCT2)VAR->MEMBER2)->MEMBER
+
+   the nest level must be smaller than 3.
+
+4. Add $current variable to point "current" task_struct.
+   This is useful with typecast, e.g.
+
+   (task_struct)$current->pid
+
+5. per-cpu dereference support.
+
+   Intrdouce this_cpu_read(VAR) and this_cpu_ptr(VAR) to
+   access per-cpu data on the current CPU (accessing other CPU
+   data is not stable, because it can be changed.)
+
+   You can access the member of per-cpu data structure using
+   typecast like:
+
+   (STRUCT)this_cpu_ptr(VAR)->MEMBER
+
+
+And added a test script to test part of them.
+
+[1] https://lore.kernel.org/all/20260601130746.2139d926@gandalf.local.home/
+
+
 ---
-v2:
-  - removed mm_lru_drain_all tracepoint
 
-v1: https://lore.kernel.org/linux-mm/20260609041156.31127-1-jp.kobryn@linux.dev/
+Masami Hiramatsu (Google) (7):
+      tracing/events: Fix to check the simple_tsk_fn creation
+      tracing/probes: Support typecast for various probe events
+      tracing/probes: Support nested typecast
+      tracing/probes: Support field specifier option for typecast
+      tracing/probes: Add $current variable support
+      tracing/probes: Add this_cpu_read() and this_cpu_ptr() dereference method to fetcharg
+      tracing/probes: Add a new testcase for BTF typecasts
 
- include/trace/events/pagemap.h | 19 +++++++++++++++++++
- mm/swap.c                      |  5 ++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/pagemap.h b/include/trace/events/pagemap.h
-index 171524d3526d..fc28745507be 100644
---- a/include/trace/events/pagemap.h
-+++ b/include/trace/events/pagemap.h
-@@ -77,6 +77,25 @@ TRACE_EVENT(mm_lru_activate,
- 	TP_printk("folio=%p pfn=0x%lx", __entry->folio, __entry->pfn)
- );
- 
-+TRACE_EVENT(mm_lru_add_drain,
-+
-+	TP_PROTO(int cpu, unsigned int nr),
-+
-+	TP_ARGS(cpu, nr),
-+
-+	TP_STRUCT__entry(
-+		__field(int,		cpu	)
-+		__field(unsigned int,	nr	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu	= cpu;
-+		__entry->nr	= nr;
-+	),
-+
-+	TP_printk("cpu=%d nr=%u", __entry->cpu, __entry->nr)
-+);
-+
- #endif /* _TRACE_PAGEMAP_H */
- 
- /* This part must be outside protection */
-diff --git a/mm/swap.c b/mm/swap.c
-index 588f50d8f1a8..8fd6808bfc6e 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -694,9 +694,12 @@ void lru_add_drain_cpu(int cpu)
- {
- 	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
- 	struct folio_batch *fbatch = &fbatches->lru_add;
-+	unsigned int nr_folios_add = folio_batch_count(fbatch);
- 
--	if (folio_batch_count(fbatch))
-+	if (nr_folios_add) {
- 		folio_batch_move_lru(fbatch, lru_add);
-+		trace_mm_lru_add_drain(cpu, nr_folios_add);
-+	}
- 
- 	fbatch = &fbatches->lru_move_tail;
- 	/* Disabling interrupts below acts as a compiler barrier. */
--- 
-2.54.0
+ Documentation/trace/eprobetrace.rst                |   10 
+ Documentation/trace/fprobetrace.rst                |   10 
+ Documentation/trace/kprobetrace.rst                |   11 +
+ kernel/trace/trace.c                               |    6 
+ kernel/trace/trace_probe.c                         |  404 +++++++++++++++-----
+ kernel/trace/trace_probe.h                         |   18 +
+ kernel/trace/trace_probe_tmpl.h                    |   33 +-
+ samples/trace_events/trace-events-sample.c         |   56 ++-
+ samples/trace_events/trace-events-sample.h         |   34 ++
+ .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 +++
+ 10 files changed, 509 insertions(+), 124 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
 
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
