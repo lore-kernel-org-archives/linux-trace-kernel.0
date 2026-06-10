@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176281B6CE9;
-	Wed, 10 Jun 2026 00:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9FD1E5B70;
+	Wed, 10 Jun 2026 00:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781052706; cv=none; b=uG1v0rd0wlHCxK42jP6dOd1yJVxOtIK5jem4SqIMA92RGu/x1lxxP7HynRWIKRyr5+CL62zOUD0FgNnGP+A6SYAV8RybYc2l0gtYa2bmPdtaBe7yCrVfBcUM+s3wCJ6JIqUFbUPRJVbGkwkETc6AL3S8oaZf2XyzVk0b9QK7MDE=
+	t=1781052717; cv=none; b=FnOgIZVr9uErIDNPFpvEubw1QnB2zbbMWqHe0RpCDzyu7KMk7OkW59Z6kh74+i0rFT2KQzc6wudsiAMwUH3eH9wX83tBu0aND7t3skqGMyV4uZYXXTrCjBTYhHA4jjgaETGQZj91kD6Z0PSCBW55zr7BhsL4yKm6XKiskWRUoos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781052706; c=relaxed/simple;
-	bh=c5WExVv811Iyvj3RxZPs8jJhopjfV6DfLTY11TxGXXg=;
+	s=arc-20240116; t=1781052717; c=relaxed/simple;
+	bh=YAYS7SYX5EYChmD4cMxkAFIgcqcuhauGz0UZOBzsfCQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X1mlDk4Uvx/9gtfonJ+j98xVV0Pz6GlPUeGTi0uIcCJ9rX7GMFHnU7U4LptrmSivfrul1s2xYUb5k0CMGBSFwnEC1tEO/eOzjj5jsQwC/2wvBtFXR4hlJ4MWwmQ2ts0zHQPnGls0XbLGbIlta7fFAv6xho6iYd+mj4TcZEiX6CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beHh2r3w; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=GJoknj0XcS85fp4DkJ4ahQ4V36rwZr6bsBc8kEBbKXAX4Rk9heMCvnAdGvH4IL4C56GV63FgEjfh8pyXvlqaYJy/QlbnU4cFrteXctBPVCq6pLnmDKhfVMIIuSwObENo2Hm25veeKPQ3HFdjSNYu/H8S54NUvtkdRIWwqil0fe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRsRz5Tz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beHh2r3w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D841F00893;
-	Wed, 10 Jun 2026 00:51:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRsRz5Tz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 935EF1F00893;
+	Wed, 10 Jun 2026 00:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781052704;
-	bh=LEB61XnRBSa3cidYk+jjC9e49mqh8zUrA0rZXEJ4Nx4=;
+	s=k20260515; t=1781052715;
+	bh=vHyzK7th7ig2jGo2NU2kB/RUneIkmWgue1vkgkAVYbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=beHh2r3wRqHmOr3oXYZ3ezcdWBiMvHR8YaPzi3s5SzEc4UzN/ZS13U+VG2xPtYgQ3
-	 Q/HnwyDTRRi9x6L3zjlQwoQPtry8930IEpq3OSamiXmvQi5eKsY4rHdjw+cS/XoJ6X
-	 JToWLJVPRIhzXp0xiwtlWPwEZBEgjXh7uRGilfXHbtWh4Ht28wvQOCgc3axNHU0p/g
-	 kK4be0r6/ephv3ND0cFkuzXpfm6S0zF/q+G3Z9S/8uiqIm+lqOjiCtZxNPHPbixjm2
-	 ThAts6f++TioXtyb28AbGgS/qlAnmmppXub54oYMzNZ3BgQXl/4w42QAg2eolJMUXH
-	 FunGK84zlWZGw==
+	b=SRsRz5TzHWGPE3hGAB6vt8DbuY7dJDOo0rd8mhaJyRB+Dz6QpP5GCmtPnT2kMa7Sh
+	 mwC3loBiwyFHnklObfryQHeG7cn9q36I0MZZvQztbtmaR4r/9EHbisnox3qBS9R94w
+	 CCATnj2sb8S6Ntbn+aF7aFRRei6MrZI/Clqim854FefGy270ISucN+OftBC6GAksmI
+	 dgrYWDkMXkUjKEEgZ8yBqNool76y3s+ai/H6M3OozMAF+/rkJMOlWCU6eURXkwgC4U
+	 fb3Ukm03XyxxLhC+z9lzbUAOQ6zo+Mzl/F3U6hBrYezZkaSBXtyIepjFW6wmI3jgbJ
+	 saWGU8E/U+1Cg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -36,9 +36,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH v2 2/7] tracing/probes: Support typecast for various probe events
-Date: Wed, 10 Jun 2026 09:51:40 +0900
-Message-ID: <178105270048.21760.1767177339859084457.stgit@devnote2>
+Subject: [RFC PATCH v2 3/7] tracing/probes: Support nested typecast
+Date: Wed, 10 Jun 2026 09:51:50 +0900
+Message-ID: <178105271020.21760.7206043226962935811.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178105268094.21760.13668249930524377840.stgit@devnote2>
 References: <178105268094.21760.13668249930524377840.stgit@devnote2>
@@ -54,114 +54,215 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Support BTF typecast feature on other probe events (but only if it is
-kernel function entry or return.)
+When we hit an open parenthesis right after typecast closing
+parenthesis, it means we have nested typecast. This allows us to
+typecast a generic data member in a structure to a pointer to
+another structure.
 
-To support other probe events, we just need to use last_struct type
-when we find a function parameter in parse_btf_arg().
+For example, to cast a DATA_MEMBER of VAR structure to STRUCT pointer
+and get MEMBER value.
 
-This also update <tracefs>/README file to show struct typecast.
+   (STRUCT)(VAR->DATA_MEMBER)->MEMBER
+
+Also, we can nest typecast.
+
+    (STRUCT1)((STRUCT2)$ARG->FIELD2)->FIELD1
+
+Currently the max nest level is limited to 3.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
  Changes in v2:
-  - Fix to re-enable typecast on eprobe.
+  - Fix to skip "->" after closing parenthetsis.
 ---
- Documentation/trace/fprobetrace.rst |    3 +++
- Documentation/trace/kprobetrace.rst |    4 ++++
- kernel/trace/trace.c                |    2 +-
- kernel/trace/trace_probe.c          |   14 +++++++++-----
- kernel/trace/trace_probe.h          |    5 +++++
- 5 files changed, 22 insertions(+), 6 deletions(-)
+ Documentation/trace/eprobetrace.rst |    2 +
+ Documentation/trace/fprobetrace.rst |    2 +
+ Documentation/trace/kprobetrace.rst |    2 +
+ kernel/trace/trace.c                |    1 
+ kernel/trace/trace_probe.c          |   76 ++++++++++++++++++++++++++++++++---
+ kernel/trace/trace_probe.h          |    7 +++
+ 6 files changed, 82 insertions(+), 8 deletions(-)
 
+diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
+index fe3602540569..cd0b4aa7f896 100644
+--- a/Documentation/trace/eprobetrace.rst
++++ b/Documentation/trace/eprobetrace.rst
+@@ -50,6 +50,8 @@ Synopsis of eprobe_events
+                   a pointer to STRUCT and then derference the pointer defined by
+                   ->MEMBER. Note that when this is used, the FIELD name does not
+                   need to be prefixed with a '$'.
++  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
++		  also be used with another FETCHARG instead of FIELD.
+ 
+ Types
+ -----
 diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index b4c2ca3d02c1..7435ded2d66d 100644
+index 7435ded2d66d..6b8bb27bb62d 100644
 --- a/Documentation/trace/fprobetrace.rst
 +++ b/Documentation/trace/fprobetrace.rst
-@@ -57,6 +57,9 @@ Synopsis of fprobe-events
-                   (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-                   (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
-                   and bitfield are supported.
-+  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-+                  a pointer to STRUCT and then derference the pointer defined by
-+                  ->MEMBER.
+@@ -60,6 +60,8 @@ Synopsis of fprobe-events
+   (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
+                   a pointer to STRUCT and then derference the pointer defined by
+                   ->MEMBER.
++  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
++                 also be used with another FETCHARG instead of FIELD.
  
    (\*1) This is available only when BTF is enabled.
    (\*2) only for the probe on function entry (offs == 0). Note, this argument access
 diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index 3b6791c17e9b..f73614997d52 100644
+index f73614997d52..c4382765d5b2 100644
 --- a/Documentation/trace/kprobetrace.rst
 +++ b/Documentation/trace/kprobetrace.rst
-@@ -61,6 +61,10 @@ Synopsis of kprobe_events
- 		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
-                   "string", "ustring", "symbol", "symstr" and bitfield are
-                   supported.
-+  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-+                  a pointer to STRUCT and then derference the pointer defined by
-+                  ->MEMBER. Note that this is available only when the probe is
-+		   on function entry.
+@@ -65,6 +65,8 @@ Synopsis of kprobe_events
+                   a pointer to STRUCT and then derference the pointer defined by
+                   ->MEMBER. Note that this is available only when the probe is
+ 		   on function entry.
++  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
++                 also be used with another FETCHARG instead of FIELD.
  
    (\*1) only for the probe on function entry (offs == 0). Note, this argument access
          is best effort, because depending on the argument type, it may be passed on
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6eb4d3097a4d..aa93e7b01146 100644
+index aa93e7b01146..4f70318918c2 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4325,7 +4325,7 @@ static const char readme_msg[] =
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+@@ -4326,6 +4326,7 @@ static const char readme_msg[] =
  	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
  #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
--	"\t           <argname>[->field[->field|.field...]],\n"
-+	"\t           [(structname)]<argname>[->field[->field|.field...]],\n"
+ 	"\t           [(structname)]<argname>[->field[->field|.field...]],\n"
++	"\t           [(structname)](fetcharg)->field[->field|.field...],\n"
  #endif
  #else
  	"\t           $stack<index>, $stack, $retval, $comm,\n"
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index fd1caa1f9723..9158f1f22a62 100644
+index 9158f1f22a62..dba73aaa8ade 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
-@@ -759,7 +759,10 @@ static int parse_btf_arg(char *varname,
- 	return -ENOENT;
+@@ -832,10 +832,35 @@ static int query_btf_struct(const char *sname, struct traceprobe_parse_context *
+ 	return 0;
+ }
  
- found:
--	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
-+	if (ctx->struct_btf)
-+		type = ctx->last_struct;
-+	else
-+		type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
- found_type:
- 	if (!type) {
- 		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-@@ -836,10 +839,11 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
++/* Find the matching closing parenthesis for a given opening parenthesis. */
++static char *find_matched_close_paren(char *s)
++{
++	char *p = s;
++	int count = 0;
++
++	while (*p) {
++		if (*p == '(')
++			count++;
++		else if (*p == ')') {
++			if (--count == 0)
++				return p;
++		}
++		p++;
++	}
++	return NULL;
++}
++
++static int
++parse_probe_arg(char *arg, const struct fetch_type *type,
++		struct fetch_insn **pcode, struct fetch_insn *end,
++		struct traceprobe_parse_context *ctx);
++
+ static int handle_typecast(char *arg, struct fetch_insn **pcode,
+ 			   struct fetch_insn *end,
+ 			   struct traceprobe_parse_context *ctx)
+ {
++	int orig_offset = ctx->offset;
++	bool nested = false;
  	char *tmp;
  	int ret;
  
--	/* Currently this only works for eprobes */
--	if (!(ctx->flags & TPARG_FL_TEVENT)) {
--		trace_probe_log_err(ctx->offset, TYPECAST_NOT_EVENT);
--		return -EINVAL;
-+	if (!(tparg_is_event_probe(ctx->flags) ||
-+	      tparg_is_function_entry(ctx->flags) ||
-+	      tparg_is_function_return(ctx->flags))) {
-+		trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
-+		return -EOPNOTSUPP;
+@@ -852,19 +877,56 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
+ 				    DEREF_OPEN_BRACE);
+ 		return -EINVAL;
+ 	}
+-	*tmp = '\0';
+-	ret = query_btf_struct(arg + 1, ctx);
+-	*tmp = ')';
++	*tmp++ = '\0';
++
++	/* Handle the nested structure like (STRUCT)(VAR->FIELD)->... */
++	if (*tmp == '(') {
++		char *close = find_matched_close_paren(tmp);
++
++		ctx->offset += tmp - arg;
++		if (!close) {
++			trace_probe_log_err(ctx->offset, DEREF_OPEN_BRACE);
++			return -EINVAL;
++		}
++		/* We expect a field access for typecast */
++		if (close[1] != '-' || close[2] != '>') {
++			trace_probe_log_err(ctx->offset + close - tmp + 1,
++					    TYPECAST_REQ_FIELD);
++			return -EINVAL;
++		}
+ 
++		ctx->nested_level++;
++		if (ctx->nested_level > TRACEPROBE_MAX_NESTED_LEVEL) {
++			trace_probe_log_err(ctx->offset, TOO_MANY_NESTED);
++			return -E2BIG;
++		}
++		*close = '\0';
++
++		ctx->offset += 1;	/* for the '(' */
++		/* We need to parse the nested one */
++		ret = parse_probe_arg(tmp + 1, find_fetch_type(NULL, ctx->flags),
++				pcode, end, ctx);
++		if (ret < 0)
++			return ret;
++		ctx->nested_level--;
++		clear_struct_btf(ctx);
++
++		tmp = close + 3;/* Skip "->" after closing parenthesis */
++		nested = true;
++	}
++
++	ret = query_btf_struct(arg + 1, ctx);
+ 	if (ret < 0) {
+ 		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
+ 		return -EINVAL;
  	}
  
- 	tmp = strchr(arg, ')');
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 15758cc11fc6..883938a74aee 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -414,6 +414,11 @@ static inline bool tparg_is_function_return(unsigned int flags)
- 	return (flags & TPARG_FL_LOC_MASK) == (TPARG_FL_KERNEL | TPARG_FL_RETURN);
+-	tmp++;
+-
+-	ctx->offset += tmp - arg;
+-	ret = parse_btf_arg(tmp, pcode, end, ctx);
++	ctx->offset = orig_offset + tmp - arg;
++	/* If it is nested, tmp points to the field name. */
++	if (nested)
++		ret = parse_btf_field(tmp, ctx->last_struct, pcode, end, ctx);
++	else
++		ret = parse_btf_arg(tmp, pcode, end, ctx);
+ 	return ret;
  }
  
-+static inline bool tparg_is_event_probe(unsigned int flags)
-+{
-+	return !!(flags & TPARG_FL_TEVENT);
-+}
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 883938a74aee..982d32a5df8b 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -435,8 +435,11 @@ struct traceprobe_parse_context {
+ 	struct trace_probe *tp;
+ 	unsigned int flags;
+ 	int offset;
++	int nested_level;
+ };
+ 
++#define TRACEPROBE_MAX_NESTED_LEVEL 3
 +
- struct traceprobe_parse_context {
- 	struct trace_event_call *event;
- 	/* BTF related parameters */
+ extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
+ 				      const char *argv,
+ 				      struct traceprobe_parse_context *ctx);
+@@ -571,7 +574,9 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
+ 	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
+ 	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),  \
+-	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),
++	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"), \
++	C(TYPECAST_REQ_FIELD,	"Typecast requires a field access"),	\
++	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"),
+ 
+ #undef C
+ #define C(a, b)		TP_ERR_##a
 
