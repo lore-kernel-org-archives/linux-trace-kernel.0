@@ -1,58 +1,103 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42B21F938;
-	Wed, 10 Jun 2026 09:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497CD403129
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 10:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781085266; cv=none; b=csVwTMs2PgFN+dcKxLpbTL7Mmyc5D2T/a74w9basfBHTVF5/1iakcewzCEfb+9AmAgR4TI0HFr192a1ryDxvLv2Wi1QWN1lPkCrbcOlLm4BYzALUpgLUHVhRQFDrOiTtdwwFJwsZGCfmLrorO2VaBqA7Yj4NU/hEMECOjfasv8Y=
+	t=1781088129; cv=none; b=KtAnQRUqda93uGtcTUNlZyxQ5k+HnMEEx2dCv4PTLXZGyhxIVe5OqkI1l3jQ1IHdX0NoZB5c/EManiysCEMGWNXWYP377WtKTqcjKQC2opSMThHZuy9N9Cy/4NPzYAiIo0PeUpbjlze8OuOcd4ROYCCcakqmkIGTtl2Pno14mCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781085266; c=relaxed/simple;
-	bh=8Pj1GunqJrcWqchsaEZS3wU/MEK03pcJuqgKQ3TmrBM=;
+	s=arc-20240116; t=1781088129; c=relaxed/simple;
+	bh=rLAKx7oZEBl4l8VQ6/vsIVEV/nqRO6+w6w+1NuugFRI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tvk8gXcYtoQ4OgcBCrfwZ+XVKECHHq96fdeH4LTbw8XA23+vJ//tu+nB8yMi/w6QglAMlWbI9uCDTac0RuFtDwscwt/9p0zTJU9jgDbc17lGjJImKfowB1BA70+WXlQIXDCAjSo03Zjr6YdVtGDe/30CHCTEv/76ksgk7URAapo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=jH67hAAN; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=sIz9OG+NQpQ8bxTmEdPJTXgmQdvqhAtQQ4tTnSxrIgRVkZN1KgPBGKLjv5dsm8XTaS2YFvGhFBIaAPzJggDMYOC36Jtb02jO1QKppxlqOOm1MKg4szLeDugOtJNH8kBJYRc17HI4HR5qKMiTtupffoXDA3OhlNF3jZdyXOUBWXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gpUTAXO7; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="jH67hAAN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WJ+oozuTPWZxI5kixO5e7S8FM2lyDR3C9rSQw3An66c=; b=jH67hAANF8wuJYBMqz+qTNr8+T
-	nORRSP5pvnJJPbq5vwen1ZKCwTaW0SEbxnHjxJLzGVTBJM+PIWeXD4P1At/BzKrvIgotviRRpS+8g
-	7nhaiWFOrrg8OWXQBAEM9PYMeCgg5S23Y3cx4YqzHUs1UQyPSlLjbBngmrAkVBgCZwxE9UMe7Ckuz
-	XTy7BcjWOLSatFNmIjq1JmYPpB7j17bCoRVouLW5hy9fG1B4SUyE4zroqKZqNaYX+mWJYkfMzqLKg
-	AFWQA4DMtBH4hodbla/UBBN0qaG2+ifF7eHoK1DcAUT8OvNtBYyQXwwoic+fNS5hK1Z8zeYe5McY3
-	twfitMzw==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wXFdG-0096hL-1t;
-	Wed, 10 Jun 2026 09:53:59 +0000
-Date: Wed, 10 Jun 2026 02:53:52 -0700
-From: Breno Leitao <leitao@debian.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v9 2/6] mm/memory-failure: surface unhandlable kernel
- pages as -ENOTRECOVERABLE
-Message-ID: <aikz-gW9DHeyrksy@gmail.com>
-References: <20260609-ecc_panic-v9-0-432a74002e74@debian.org>
- <20260609-ecc_panic-v9-2-432a74002e74@debian.org>
- <174b8d76-5514-4942-af5d-c975ff95ee03@kernel.org>
- <aig7jzwDHfVCxikl@gmail.com>
- <cf2bb24e-9341-4ded-b238-064dca442a92@kernel.org>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gpUTAXO7"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-8ccf6a63a45so81822416d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 03:42:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1781088121; x=1781692921; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pgx1xgYrFcSjqIUoyhFqGxYUzhtvYzBpQalCqkbKQaU=;
+        b=gpUTAXO7LYj55vqZytrIq49IGLWTJvLT+xAvLnjZFi7gjoGYGbTGjCIel1PHtM67TK
+         fKtSbxARYH8l3bdsI1eQaDqaPVFqfZgLqYp2Hdz3Q8F9NJfn1/AGnBpOnXQl8Xp6HqVM
+         fnpXPMJnuDMbGNyVvoklwWlIeAEsE40/bq+oK7DemyY/a4CJkZnYYCXzsxU6HbjjFEmF
+         yzdeFiW+XXjOVaS62j0zEFozPv75geuKQhBJ/bx6qUvXD7YWWOSsFxDd+UVh+le0AZBv
+         CIwPnI/Y91RzF+4pup0vWYBvUqDzBYJFSLPYs+DWujHYLHVfYs0K/EJP/e5pF7mytowE
+         sOXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781088121; x=1781692921;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pgx1xgYrFcSjqIUoyhFqGxYUzhtvYzBpQalCqkbKQaU=;
+        b=MfdngWwjMwi7dKHjsUndnMosjdINDUcCGnDDhlIzwLurK9IIaUhvf44JdjM3/Ob87p
+         NHvLJLWNjjJOEX4dU4hLTWkmB8H5Ck4RgQC/t5b1KNHLoYM4y6Kl37tqCw8k24Xv7yOv
+         rLrFe2GAHzN7hZpqNnuFuP05EEJHt55Jc1GJtWAvPWEF0ysOSQyt3ZwVUgt8w5pWubcx
+         IuyFrF8FBIVTZI4Mut/LOcXwJVONJHSstW+sfI899LjAaLFxqBp3vsv53Nit2qDvpiPh
+         lDZtEDyvfB35j/VxaTufTmQko0qQqR8dzOINmbNuTbD2LElOz6CwBvFmR/mKQN8RW/jI
+         JHYQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+b3xBJvDPLWrprNbeLnvUj2iyoI9TlBo9m3vavQ1O/1ctKdryAJy5h/29c/Iw7BcbwtsCXDhbot6uNOoYAyGPRb8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1vspzgxUsdJCUGkiXkUBNrfDszV1cir70iOolbTEqigJ9LQrv
+	Cs9nI+iqSMbG6PODMacdPfQcCTOAeVeyh7juFIuo0k35d6dNz8cBLBRCi1mom2g6akg=
+X-Gm-Gg: Acq92OFfBX+4yDgYCYP6H6Xwqv+ZzlZGCiKD3CTYnVX8CIFlEVN+tT0L82L6nvSj7ZV
+	PM4bfdaUul26XXECgRhb3WRsy7Kzj3xY1ohRzVX2ghI1vY5iTovaRfTn+AD2mJ3JIJujc/OFqGo
+	AUPOd0D11rKyTYwxaL4Zw8LCMC8MmFt8ANXMGUzl/rElU5V5nZMfLbEz8u5E3/dktUpDM9LlR2Z
+	t35km1slKJBBYMogf7IkAxAImdJ9iGq5bgyynpohyUWnzjD+dhNFcLAnVDiphXLYEtibOs7x8EK
+	1+qQAuVJ75E3QeetFN/j0x58LTFCxzf9ISR/ePXLB96IepLpot4MzlfRKfGC41UjFRjwOS7SrPV
+	9uLihNWdu2MCUR9kf5JjmHqd1NCOf4eJmVjYkVYiwPJGIMXy2f1BruwXqyjl3oj1robI7vY89/S
+	tcQISlK0E3ypzmc97MAOfjVuMeodqKGbbErHxG7hFkg+B/FdiBy1jP8fLq6cK+EtbhFIa4pjNzN
+	hy30SBDEsmc3SrCTw==
+X-Received: by 2002:a05:6214:c68:b0:8b5:6654:7556 with SMTP id 6a1803df08f44-8cee63e377emr394580386d6.42.1781088120984;
+        Wed, 10 Jun 2026 03:42:00 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd06e4d6sm231860136d6.36.2026.06.10.03.41.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 03:41:59 -0700 (PDT)
+Date: Wed, 10 Jun 2026 06:41:57 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com,
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,40 +106,34 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cf2bb24e-9341-4ded-b238-064dca442a92@kernel.org>
-X-Debian-User: leitao
+In-Reply-To: <ah-0CyZurn5D1ezY@parvat>
 
-On Tue, Jun 09, 2026 at 08:41:25PM +0200, David Hildenbrand (Arm) wrote:
-> On 6/9/26 18:15, Breno Leitao wrote:
-> > On Tue, Jun 09, 2026 at 04:41:01PM +0200, David Hildenbrand (Arm) wrote:
-
-> >> a) HWPoisonKernelOwned: this is not the common style for us to name functions.
-> >>
-> >> is_kernel_owned_page() or sth like that would do.
+On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
 > > 
-> > Ack, I will rename it is_kernel_owned_page()
-> > 
-> > In my defence, most of the functions similar to HWPoisonKernelOwned()
-> > has this name format, and I got this discussion earlier (with Lance?
-> > I think). Here are the similar function names in that file:
-> > 
-> >  * HWPoisonHandlable
-> >  * PageHWPoisonTakenOff()
-> >  * SetPageHWPoisonTakenOff
+> >    __GFP_THISNODE cannot be overloaded to do anything useful here.
 > 
-> Some of these probably date back to our old way of handling page flags and
-> things, like PageLRU.
+> Let me clarify, I meant to say, let's use a nodemask for allocation
+> and __GFP_THISNODE gets us to the node we desire, if that is the only
+> node. My earlier comment might not have been clear.
 > 
-> But we really should stop :)
 
-Ack!
+I've been tested an stripped back patch set where I drop all FALLBACK
+entries for private nodes (including for itself) and only keep the
+NOFALLBACK entry for private nodes.
 
-> > I will update in the new version.
-> 
-> Thanks! Probably best to wait a bit, the merge window is coming up either way,
-> so this will have to wait a bit either way.
+This effectively isolates the nodes for any allocation without
+__GFP_THISNODE.
 
-no hurry at all,
+This also precludes these nodes from ever using non-mbind mempolicies,
+which I think is a completely reasonable compromise and something I was
+already expecting we would do.
 
-Thanks for the review,
---breno
+Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
+which causes spillage into private nodes because slub allows private
+nodes in its mask.  I think this is fixable.
+
+I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
+code, etc), but it seems like fully dropping the FALLBACK entries and
+requiring __GFP_THISNODE might be sufficient.
+
+~Gregory
