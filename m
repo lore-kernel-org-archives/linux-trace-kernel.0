@@ -1,109 +1,321 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012022.outbound.protection.outlook.com [52.101.43.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66858369992
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 22:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781130199; cv=none; b=c0xCk2KqGgHsiHlH125Ch6gFo8BTGWrWcL88Jg7O88O5s5WW43qJRQ2M/MvZsBA5ZMKHGb2XbEPOwF1hSx5pvRBIF9GL575ZuG0hjkgi1X4O9x6MR/zyTbyuPuwiIFyDi87NbDDGHDHUfV88S0vM612m5Iq3hI/Pjclwgwnw+ws=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781130199; c=relaxed/simple;
-	bh=qAjd2/KUhCE05aLK86qBIKOiIpOhNXWGC/5z6iGv760=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tsBDDDy/VzW4BF/BrEIceJo1L/aqnGQUI7ZN9TjUZzoDsgS9jRPDQENAO0GSmSr45NAdNP0/hdO0dBx1N+NbasM1I43a6Wqrexq93a7wOW08GZfmx6apqwvAFteN4oYfeTgVTUmiJzig7bNWwEXmkGGg8jJNDia9BknbsXdQrQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v/y78KOp; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15F81DE4EF;
+	Wed, 10 Jun 2026 23:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781133031; cv=fail; b=Qx8pgVqt1rzbva7srN7cRu2/OrpVtaHtulX2+HQn1S2uxCpjzA3eD8eGkp58XxLzGx2MFAEkDlhXxAMhE2frKi0bBeNHdlY7bB4IVSZITg3fFClu8+3wMv+z22WweuwnPYv9krGklbn21197Bd83xTKEjiyQJiXNUefkReysmG8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781133031; c=relaxed/simple;
+	bh=BnJ04MSE79FAn5DtWPwvs2P6o4sGMvtujra/t20Zsrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sqcWcOiYaP6wxwKbOS/clAS1Pcjqx8ymDQMCmVv84n4CfzoaTRTEJiS2Q7XAHzSTXznZ3FeBvFD6Rc8iMf1yCkry5DRc+3Zl8X4WOFRcfs7qqypftRx3BpxKkXRO3cUr9yfha+UlY+pVPhuKgvK83bk9pobk/neOYWeZG+kx/Tc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kwB3HARn; arc=fail smtp.client-ip=52.101.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v/y78KOp"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2bf2bc4371bso2061645ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 15:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781130198; x=1781734998; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=98nQEvZDyKKcPdn3AcVzWFv9XYmn8L+0P9K+2v5L7Fk=;
-        b=v/y78KOpMM8Epdinj0Xd1ajiQGJ9nvLmAuLlvnNN5mC4ejiucVZcg1iGoZf/12aAoa
-         ten+bmESuXsdcP+YVqnpO7vMWHm7dOm7LxSCrDZH9Qm/3AtgtBAVQhA7/N8RirUKtbxd
-         wyiW5hY2MiniyOnEqEKUh6fBTZPo2FvpttmZylPFqs9nh9mE9EnwJ6LKdSSwItCt2xiF
-         FBbGo4j9qn8cAH1sqgrtZ8Kfs6vyBwlVdV2l9LiYQskgBRd4w2or4xutpD/CTi+xGa6s
-         riN21OgqjBNctSNpy/6f2xk4rYgNsXb8fGoIStUcoB31NggKGLXJVp71Om83RhR26I4E
-         Qv8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781130198; x=1781734998;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=98nQEvZDyKKcPdn3AcVzWFv9XYmn8L+0P9K+2v5L7Fk=;
-        b=e1JuZGmR0phqr6FH9hnJZTOpMGk+wPphLpbwNnQ1CXuiR/S5ssLLnBqnKEcxAIx1aD
-         bG3yMMHcHXfVSUhzaIEsOK8Y/05Eu3n95vaS5vWVbCo90wkpFzl4EjR5gXgw58mm+TY0
-         gTCoHytEZ54QQXu2U7PksKEwWXMbZSH6t2mHEhHaF9I4cCkTU6ywur8M1gEywWgDgH0N
-         5g4sRxR8hGnj9w8xbRaNdkItufeRSV+Dd5kF2VaZLD0frZ5TquijlzvIEW3uMXTmDZF2
-         OB2hCemUyJYSE+6ba2rRZP+lKzUiVaEOmYEis7nGZQhA16A6fQYP1Gknxp7qHikU9c9B
-         3pNw==
-X-Forwarded-Encrypted: i=1; AFNElJ8G3mdBuCGph3viWn1Kw0swcHucRsYnA37fVKG/hrzp+KfWxlhTOaukgYWDp24ifLwysiyJeZdPOWIROmrnBi5Cq04=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz6IBB78wXmgoc1gINPShQ4ifMHgZDb1xZA2IGbG8LiJc1TSOL
-	xwbBuEKzo0YyjP9tqzp9yTs2vuhZASHBEo5SBXwIKD9bI3iFP8hiJWMXnZJgrY+EmROn2Ia3iCN
-	44uBVug==
-X-Received: from plpv10.prod.google.com ([2002:a17:902:9a0a:b0:2bf:224f:daf])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c6f:b0:2bf:1aa9:6c8a
- with SMTP id d9443c01a7336-2c2dce83fd5mr4806375ad.12.1781130197572; Wed, 10
- Jun 2026 15:23:17 -0700 (PDT)
-Date: Wed, 10 Jun 2026 15:23:16 -0700
-In-Reply-To: <20260522-gmem-inplace-conversion-v7-6-2f0fae496530@google.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kwB3HARn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lknDu3aRMVxIslYbAIUcFjYFhD76npJBLuMfEKJt5WJDM1WvTixjSYI3g6oEzMGGMfbjgruFvHXVD1643DFQ7bWQKVZBFeleXRZ4g4WWkZxRo7Ve3pI+7opDwnHrOtGwF9Py4uA1CpsX72/CDoUcqQkVyjmRf87BoLrXcCv+YbXbd04BCgTndQcjiJNjBkypXqhIGsuq+eoTrSA32bUX8+clDEnsRtJ4KsW24M/y2j036JvSLGbKb7a4+oNudESvi3cAO+nPybYWE0I2PkMea2n8VCjEMmk7M8fL+fIB99Q9RrBk0ebuSOQ4wl2eox6frJneeds5GB8IuL7wbp7dIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CZTOqMgmbq6t1RboSLXU3Z4LuPBK9MEs2D2gguG1dsk=;
+ b=BiOJCbrQbVja09cBtIiVC3cA9yZAesgtmyqpzHZfU23cRaT+uJ/doqU84vcVtOov5NIx6mDiXClArVyWrYYzrrLYjf0e9EpApkNuJNv1Btwg+e2d7+MDk3FSi5Etvz3vqjz6uPDlw1cqQCYGdKuCKOSqSUYTAwOTIVpAJ3DpJaNJKOT2yfZfpfjTPy2Gf5vYVCtszhrnDgyVbiOACbFaVuqG144PngHvLtcZwaOUMSr/R/Pz1vNerk5/bTKQIydKUyuZ7ONH75W0gkRyBuk3NrXN1skREF9+R82d+1P12z0OBMjH2d34LKvACY9Xtc9It0HNdgS6XeYaauH+TZUj5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CZTOqMgmbq6t1RboSLXU3Z4LuPBK9MEs2D2gguG1dsk=;
+ b=kwB3HARnXkzxDZ+GqrR+mJS1DL5x3B4Yh0C3ZfhSew9QYWW7B/I4GSfoXwJ78OKYHJI0f1TKnajhCjBbZtAAXdvjisTztle40H5Ye7UnBuL0cJQojGLiP/ALyvX4QIEI1ABvM8H9Eaiwi4Gxs0oCUO7r3URwJOMAr0/3M3u72+hulyaEhFZCYWYWr+hMl3wIRupyhTIRtn6W6A3qzhSDDXSWOkV40meFJq8QFOZNE56sn44znZKH8Fx/K2qPlBU6LURsmLTJOCrff7y3qvNiPcwyU2d/wWOLaxDIY8bJ4lVgmch57g75Vz97fXBTG6YKF0R30sR34lkqh4BzBjDmTw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB4995.namprd12.prod.outlook.com (2603:10b6:208:1c7::23)
+ by MN0PR12MB5908.namprd12.prod.outlook.com (2603:10b6:208:37c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.15; Wed, 10 Jun
+ 2026 23:10:16 +0000
+Received: from BL0PR12MB4995.namprd12.prod.outlook.com
+ ([fe80::dde:9068:4b1a:53e2]) by BL0PR12MB4995.namprd12.prod.outlook.com
+ ([fe80::dde:9068:4b1a:53e2%4]) with mapi id 15.21.0092.014; Wed, 10 Jun 2026
+ 23:10:16 +0000
+Date: Thu, 11 Jun 2026 09:09:55 +1000
+From: Balbir Singh <balbirs@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, kernel-team@meta.com, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, 
+	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
+	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
+	longman@redhat.com, akpm@linux-foundation.org, david@kernel.org, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, 
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org, 
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, sj@kernel.org, 
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	baohua@kernel.org, lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn, 
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, 
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev, riel@surriel.com, 
+	harry.yoo@oracle.com, cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ainsAU6T58hGDdWY@parvat>
+References: <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
+ <aiDVMgu0viTIml8H@parvat>
+ <aiE5DZC8Io4SNI3H@gourry-fedora-PF4VCD3F>
+ <aiFSZfRlFPd7qlIw@parvat>
+ <aiFtJFqkpbZ9qFvM@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aiFtJFqkpbZ9qFvM@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: MEVPR01CA0060.ausprd01.prod.outlook.com
+ (2603:10c6:220:1fd::12) To CH2PR12MB5001.namprd12.prod.outlook.com
+ (2603:10b6:610:61::18)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com> <20260522-gmem-inplace-conversion-v7-6-2f0fae496530@google.com>
-Message-ID: <ainj1B4jB_XihoHZ@google.com>
-Subject: Re: [PATCH v7 06/42] KVM: guest_memfd: Update kvm_gmem_populate() to
- use gmem attributes
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	ira.weiny@intel.com, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB4995:EE_|MN0PR12MB5908:EE_
+X-MS-Office365-Filtering-Correlation-Id: 523ebde2-54da-4a5d-f682-08dec74565d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|23010399003|1800799024|366016|11063799006|4143699003|56012099006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	lW7F/PF/3npE2o8VU41xtDio0wnrf80UaqaXr1JkpEOAoy3mFAtu3+c6dRsUGRwrw32lcE/w1wRJvuHMHkSPr8/A2TqQ+/IlTeCB/R1esI2Aa2zmMbjgnxW16LEiQq1KzxdZOFXmMWxjCsXqeZHP+ORG0kgnoIDxBZQJqG/u1/7DyOirwFMp2gFDRcm65yVrHyAQUSgXl5PPracoTAbgnmBJu+GOgNEYUFafZEugLwP95EWz2EGjU86lS5Pa84a8C93Gh/qbEpMVMqFHgDQGSHl1md/OOxKneoH8xSKAL/6LkKqhRpQEWCMetdgaOP/TiQZR8wsi1o6tZ2xBqZ1N4h+/5Kx6emKio/Euws++sBrp8wukcQ03lnI8F4M032jYGT9yClL8pAJ1MTiWeWis1bu1cVEP0Wajl3kIkvAtvAZ+z6BqnCawb2JgA6oL5Ja7T3JSet6s0dUkDx80qy1sLpWwWmqvC5Q2S8PJ0gzvNwv53VhVoz3CfNBVy/TvRV+4Xj6XBGe3nam0TtYrBzqEw4TfEZnZlS7Oz0FzKOpwGiKqm12ndA1KgIT3Le0UWFmvo2J5d5L0dc0cip+R8IC5p3IRfo3BPA2TfUK8wlspS9uIAwPuz/Q/UkXcfpKkoXvjumyewEX0Uhi85PfcMMU4QTWfRD7UoEL0DjxcUtniayIZ0KIvGpPwHGKTmuIlNbN2
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB4995.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(1800799024)(366016)(11063799006)(4143699003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?S/nVMxMP610VSk5DkAjfgUV+0Ujbx25bvSiFf/Lq4wxqSE2i77DYDVuTGyNn?=
+ =?us-ascii?Q?a3VY+T6VEb5v7aWC3+Nl41JxvzGOJ09ja7DXUSh31NcevTfuCS27nGWK6UMg?=
+ =?us-ascii?Q?L4nsBt1dD5pCSvl/ol/JlIFyAojMp4DG7bS2eCJCjnMM5hnjaJTzEZZ4Sz7E?=
+ =?us-ascii?Q?xo0ghQib1WelPh2xP4tk5zD/gdTC45PbV2bk26MfNh4rYqM9rd3LPbJNa7a8?=
+ =?us-ascii?Q?i+TGuuS1T69vrqKfpmQmkTS5NJeGcE1wiM/NdPcvNjampunG9RXru2cGXZyr?=
+ =?us-ascii?Q?X90ymolgOegBMvvzNJ7I+Jx5A4O6bIsQ4ZnwlrrnCWy2MjICYDeD1yW4/3Rs?=
+ =?us-ascii?Q?/1NpZNPcaaQanTfuSbTqA32KJqyVgLgaIZJ2/w/GmsGh94whwtz60m8u0IDf?=
+ =?us-ascii?Q?znivqCRdn8dbNOsPHiY3vDA0a3jAxjlEInhQMg/tkqxt3MyAvk9LlnRidWxr?=
+ =?us-ascii?Q?Q3ss2dAYgohViHegNjCYYXisDP7LJ7SuZZqY43l+ZmLfVwp2dGkcCpOdi+fi?=
+ =?us-ascii?Q?rM3T3exuPmLPhP8j1j+V/ED4vIXpVNk2Mt4wl1QVR+2miBo6M3gHDWcSEBN+?=
+ =?us-ascii?Q?CjRLvo+xoac5rOtIgpQ80NkzacJz/DnV9p8pwQhEYvnb1y2SMTQ6LKhXVK5h?=
+ =?us-ascii?Q?q2nZx+li74ntpRmC3AIbHJZfqfj9gN+LXwYJZAfHIe4XNBrci83aMR+ug8br?=
+ =?us-ascii?Q?QEiEILlkfWQKnvYnPcTkmx1gnUa8i2Ms1PBB66onHV/1lU8dtCPJflEc3OKv?=
+ =?us-ascii?Q?iNdwjOppftRYidgRimEsw7l3VtLTKpt5JSMnTTTCkFZWSuuJYsrqkXzc4j0+?=
+ =?us-ascii?Q?Ih85D9iH5syRZA2LkthU9wiWTLCP0pKS4T2g95lPKqycjFaUb2/CyMxIAxle?=
+ =?us-ascii?Q?c0Vm86fsgNRUb+YPwgWgCVGNZF2tdw/ISFYHfJ2tjxFeam+bpH9PprF3oVCp?=
+ =?us-ascii?Q?eJErJ5Elv8nx/vbfGAlenEOi9gK79f8D/rEEpTK0q1dGV+/byRXBPT3RGFSL?=
+ =?us-ascii?Q?hDozgp+yELYha7iUBMhF4DpN3+ecnYxM4SP6QWi4XEpLkuVTxKGqOlfpeMD3?=
+ =?us-ascii?Q?iW/8YdhW0hhYg68eshmAgTmcmiEHjUgTauTvWtYGKiFj4k9w+v1HJ2B7XUce?=
+ =?us-ascii?Q?A1t/Z6RsM1Cl/eaoiMG5OjXtIpDlzGbYZttIRTDb870EfbF6zQsY/BDVx2aW?=
+ =?us-ascii?Q?JLhtkWOCec/HFPbpl8WQLzbEv8UKW+xzFbg5ks05EHbrz8MI2i+5GwjNaJLp?=
+ =?us-ascii?Q?gVEK1f/bEzdUHEChUgTLknE/BN8z4+mSTOJjHof2xUgzKS8BxV4UDP3DgfeK?=
+ =?us-ascii?Q?O7189eV2X03SW6CFxob1/de2cLkbxUbNBFL5ltlMsHM+KI2J9Q2rmjz4uvBR?=
+ =?us-ascii?Q?fl602RfcoxinaVmgSvO5KCgchixwhysRQrE9KA7ALLDfcWWLcL5Z4O0jqN7G?=
+ =?us-ascii?Q?cOSTgbIuVIJDihklOO4GreWmN3C5qWa6JSGlsreCiyJtnBKvZqufH/gFoaTH?=
+ =?us-ascii?Q?b7VGUexerpDOjj5dmBaumAcrjGhouTFR00UO+t2hb8daOKvx/3aF9+EA5JQ2?=
+ =?us-ascii?Q?ePH3UBBKet8/vmAdxoNsmJB7xOie5Uywy8F8PucOxjrLILx9XlYNH3zW0oM4?=
+ =?us-ascii?Q?Ecu1vKb6IJX0Al+nGWuxZizxmPFVX9QsmSz8W+xbqH5lfc5Wu82CMTWJ/dXy?=
+ =?us-ascii?Q?jnxRCz1l12eSnJmtcxgEDQkIvkLloRZ1iEAwK5Pg7Q7R56zmYlZSdNwj/wCO?=
+ =?us-ascii?Q?7UQmn9vXhg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 523ebde2-54da-4a5d-f682-08dec74565d4
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB5001.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2026 23:10:16.3735
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DWBAlI9D1uQ983qG39qtCUkMgpVVcBcmMSq7+G4p3WGky1Dq1BxV7mAFCF9n6Su/wszMq1pQNpDIEO0MBtNn5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5908
 
-On Fri, May 22, 2026, Ackerley Tng wrote:
-> Update the guest_memfd populate() flow to pull memory attributes from the
-> gmem instance instead of the VM when KVM is not configured to track
-> shared/private status in the VM.
+On Thu, Jun 04, 2026 at 01:18:44PM +0100, Gregory Price wrote:
+> On Thu, Jun 04, 2026 at 08:35:19PM +1000, Balbir Singh wrote:
+> > 
+> > My concern is that __GFP_PRIVATE is too wide, I wonder if we'll have a
+> > need to support N_MEMORY_PRIVATE may not be all homogeneous memory nodes.
+> > Very similar to how not all ZONE_DEVICE memory is homogenous.
+> >
 > 
-> Rename the per-VM API to make it clear that it retrieves per-VM
-> attributes, i.e. is not suitable for use outside of flows that are
-> specific to generic per-VM attributes.
+> Can you more precise about your definition of homogeneous here?
 > 
-> Co-developed-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> Are you saying not all memory on a private node will be homogeneous?
+>    While possible, I would argue that you should not do this and
+>    should instead prefer to use multiple nodes - 1 per memory class.
+> 
+> Are you saying not all private nodes will be homogenous?
+>    I don't see the issue with this.
 
-We should squash this in with the previous patch, i.e. wire up PRIVATE to gmem
-in a single patch (sans the ioctl support).  I had a hell of time figure out how
-the range-based lookup was supposed to work when revisiting the "wire up" patch,
-until I realized populate() was handled in the next patch.
+Yes, I meant, nodes might belong to different devices. These might not
+want fallover allocations, for example __GFP_PRIVATE falling back to
+unwanted nodes.
+
+> 
+> > > 
+> > > Agreed, but also one which can be deferred and played with since it's
+> > > all kernel-internal.  None of this should have UAPI implications, and we
+> > > need need to accept that we're going to get it wrong on the first try.
+> > > 
+> > 
+> > Agreed that we might get the design wrong, until we fix it up. I feel
+> > that __GFP_PRIVATE should be an evolution of the design to that point.
+> >
+> 
+> Possibly.  If we can't guarantee isolation without __GFP_PRIVATE, then
+> we probably can't merge the baseline without it.
+> 
+
+I'll rethink about this, but I am concerned that __GFP_PRIVATE is too
+broad, in fact it breaks isolation by allocating from any private
+device. Again this is a function of how fallback lists are organized.
+
+> > > Because pagecache pages are associated with potentially many VMAs.
+> > > 
+> > > The fault can be a soft fault or a hard fault.  On soft fault - the page
+> > > was already present, and will simply fault into VMA without being
+> > > migrated.
+> > > 
+> > 
+> > Let's split this into two:
+> > 
+> > 1. unmapped page cache is never impacted by mempolicy and should not
+> >    end up on private memory nodes
+> > 2. For shared pages, mempolicy would be hard, but it would need to
+> >    be on a set of nodes backed by private memory, depending on mbind()
+> >    policy
+> >
+> ... snip ...
+> > 
+> > I'd need to think more about this. For now, my basic requirement would
+> > be that unmapped page cache should not come from/to private nodes.
+> > 
+> 
+> This does not fully describe the problem.
+> 
+> A file can be opened and cached as unmapped page cache, and then mapped
+> at a later time - at which point the mapped copy would share the filemap
+> page cache page.
+> 
+> Worse, because it's file-backed, you can have the memory faulted onto
+> your remote node - reclaimed - and the faulted back in via the process
+> accessing the file via unmapped operations (read/write), at which point
+> you've had a silent migration occur.
+> 
+> Basically consider
+> 
+> Process A:
+>    fd = open("myfile", ..., RO);
+>    read(fd, ...);  /* mm/filemap.c fills page cache */
+> 
+> Process B:
+>    fd = open("myfile", ...);
+>    mem = mmap(fd, ...);
+>    mbind(mem, ..., private_node);
+>    for page in mem:
+>        int tmp = mem[page]; /* fault into vma */
+> 
+> The result of Process A running first is Process B thinks it has faulted
+> the memory onto private_node, but in reality it's taking soft faults and
+> just getting the filemap folio mapped in.
+> 
+> If you wanted mbind() support from the start, we would have to limit
+> applicability to anon memory only.
+> 
+> Shared anon memory is different, as there is a radix tree that deals
+> with a shared mempolicy state.
+
+Ack, need to think through this.
+
+> 
+> > 
+> > I am open to this, I was coming from the blueprint approach of:
+> > - Let's mimic N_MEMORY with N_MEMORY_PRIVATE and then pick and choose
+> >   what features to change or make specific to the implementation
+> >
+> 
+> N_MEMORY essentially states:
+> 	"This is normal memory touch it however you like"
+> 
+> N_MEMORY_PRIVATE (_MANAGED, w/e) says
+> 	"This is NOT normal memory, there are special rules here"
+> 
+> So, no, lets not mimic N_MEMORY.  This is a "closed by default" design,
+> while N_MEMORY is an "open by default" design.  This design choice is
+> explicit to make reasoning about these nodes feasible.
+> 
+> > > This is informed by a single use case / device.
+> > > 
+> > > There are users / devices that don't want any UAPI for their memory,
+> > > but simply wish to re-utilize some subsection of mm/ (page_alloc,
+> > > reclaim, etc).
+> > > 
+> > 
+> > But then, why do they need NUMA nodes? Do we have a list of use cases?
+> >
+> 
+> So far i have collected:
+> 
+> - Network accelerators carrying their own memory for message buffers
+> - GPUs with semi-general-purpose working memory across coherent links
+> - Acceptionally slow distributed memory that you do not want fallback
+>   allocations to (so you want to deliberately tier what lands there)
+> - Compressed memory (just another form of accelerator really) which
+>   has *special access rules* (i.e. writes need to be controlled)
+> 
+> In most if not all of these cases, the right abstraction to reason about
+> where memory *should come from* IS a NUMA node.
+> 
+> - the network stack can be taught to check if the target device has a
+>   node with memory and prefer that node over local memory
+> 
+> - accelerators can be given private nodes to manage memory using
+>   core mm/ components, without worrying that general kernel operation
+>   will put unrelated memory on those nodes or do things like migrate
+>   your pages out from under you (unless your driver/service requested
+>   that).
+> 
+> the tiering application should be somewhat obvious / trivial.
+> 
+> > > 
+> > > I am trying to test whether, lacking __GFP_PRIVATE, any normal runtime
+> > > operations access private nodes removed from fallback lists are reached
+> > > via something like the possible / online nodemask.
+> > > 
+> > > I remember, maybe a year ago, there were per-node allocations happening
+> > > during hotplug and that's why I originally proposed __GFP_PRIVATE, but
+> > > I'm trying to re-collect that data now.
+> > > 
+> > 
+> > Thanks, I look forward to the next set of patches. Let me know if I
+> > can help test what's on the list or if you want me to wait for the next
+> > round
+> >
+> 
+> Really I want to get the minimized set out the door so we can start
+> breaking this up by feature (reclaim, mempolicy, etc), because trying to
+> reason about it as a whole is infeasible - and I cannot be the single
+> arbiter of every use case (I simply do not have sufficient context).
+> 
+> I'm reworking it all as we speak.
+> 
+
+Look forward to it
+
+Balbir
