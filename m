@@ -1,139 +1,158 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497CD403129
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 10:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F183EDAA0
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 11:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781088129; cv=none; b=KtAnQRUqda93uGtcTUNlZyxQ5k+HnMEEx2dCv4PTLXZGyhxIVe5OqkI1l3jQ1IHdX0NoZB5c/EManiysCEMGWNXWYP377WtKTqcjKQC2opSMThHZuy9N9Cy/4NPzYAiIo0PeUpbjlze8OuOcd4ROYCCcakqmkIGTtl2Pno14mCA=
+	t=1781089629; cv=none; b=OxpPyxOEI0mR8MIuJJrg5NlinnwsljhQP4pjQkrBTOmUFF9PtItEq4ktPnbf29UaQ5OFxdlORQBk5Fhioi2hb1vtzW0kq3J7aamOkK4sf3NJtiPNj6oVPTjL70okUDgDFzYQhUk/RMBn/qV9MOrM9AjIeGN0KZ9UmX+IeRfnp3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781088129; c=relaxed/simple;
-	bh=rLAKx7oZEBl4l8VQ6/vsIVEV/nqRO6+w6w+1NuugFRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIz9OG+NQpQ8bxTmEdPJTXgmQdvqhAtQQ4tTnSxrIgRVkZN1KgPBGKLjv5dsm8XTaS2YFvGhFBIaAPzJggDMYOC36Jtb02jO1QKppxlqOOm1MKg4szLeDugOtJNH8kBJYRc17HI4HR5qKMiTtupffoXDA3OhlNF3jZdyXOUBWXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gpUTAXO7; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1781089629; c=relaxed/simple;
+	bh=JehR0oU+hw1WQAoEsOX3iWYFXq1/Qs0MJtpZSJOhIMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FZAO65PW6EZW+g6T7esEKMdU5VLslGjOSjai9t7E3n+cl20F23tXk328QNbNsoW2v1652BGclkHKEsxrJHPWZKZpWUr0d5FrHX/rYiCxKZ86NoK/7C8SEmuk7udJA1apK7gQlqfhdo0Tv7Z9CsRo0GQAGAcJzXiaw1WdewAwmD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C/Yn1xRZ; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gpUTAXO7"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-8ccf6a63a45so81822416d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 03:42:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/Yn1xRZ"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4602e2a0372so4804569f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 04:07:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781088121; x=1781692921; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pgx1xgYrFcSjqIUoyhFqGxYUzhtvYzBpQalCqkbKQaU=;
-        b=gpUTAXO7LYj55vqZytrIq49IGLWTJvLT+xAvLnjZFi7gjoGYGbTGjCIel1PHtM67TK
-         fKtSbxARYH8l3bdsI1eQaDqaPVFqfZgLqYp2Hdz3Q8F9NJfn1/AGnBpOnXQl8Xp6HqVM
-         fnpXPMJnuDMbGNyVvoklwWlIeAEsE40/bq+oK7DemyY/a4CJkZnYYCXzsxU6HbjjFEmF
-         yzdeFiW+XXjOVaS62j0zEFozPv75geuKQhBJ/bx6qUvXD7YWWOSsFxDd+UVh+le0AZBv
-         CIwPnI/Y91RzF+4pup0vWYBvUqDzBYJFSLPYs+DWujHYLHVfYs0K/EJP/e5pF7mytowE
-         sOXw==
+        d=gmail.com; s=20251104; t=1781089621; x=1781694421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CD+jAvn+F6KZcBr47jRj5pM/yHOUpsx3lmiZzRlGXro=;
+        b=C/Yn1xRZnhF25737NjWSEkIg18ZI70MHxYR8DjpMBhXmxB4sBymcnF+vySC9fRJRnG
+         BQ2RrTelpb/CtLwd1mpTKSFY68VeMqPc+39Bb6p6TR0zpkVtorrKWyjbqxYY+xe8hy8p
+         RaDJW5GPHIkyTuwkKiat0ckNeFj4K/wcwXUD0DeqOdTN2/UpqkAID2eRkG/hrYLb4rEA
+         oup46s6ZklMS8u6fwFqfch6CUrWUigCm2IC7kVul3HaOezp/kx4K23UFOOD8KwqySuaF
+         Bj8TLRr+TiyikJAfZ454m7ytMt2Z+yTjP57CVlzzHUnMRQGoMwyn3zPxyCLsvaGDMwop
+         sn7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781088121; x=1781692921;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pgx1xgYrFcSjqIUoyhFqGxYUzhtvYzBpQalCqkbKQaU=;
-        b=MfdngWwjMwi7dKHjsUndnMosjdINDUcCGnDDhlIzwLurK9IIaUhvf44JdjM3/Ob87p
-         NHvLJLWNjjJOEX4dU4hLTWkmB8H5Ck4RgQC/t5b1KNHLoYM4y6Kl37tqCw8k24Xv7yOv
-         rLrFe2GAHzN7hZpqNnuFuP05EEJHt55Jc1GJtWAvPWEF0ysOSQyt3ZwVUgt8w5pWubcx
-         IuyFrF8FBIVTZI4Mut/LOcXwJVONJHSstW+sfI899LjAaLFxqBp3vsv53Nit2qDvpiPh
-         lDZtEDyvfB35j/VxaTufTmQko0qQqR8dzOINmbNuTbD2LElOz6CwBvFmR/mKQN8RW/jI
-         JHYQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+b3xBJvDPLWrprNbeLnvUj2iyoI9TlBo9m3vavQ1O/1ctKdryAJy5h/29c/Iw7BcbwtsCXDhbot6uNOoYAyGPRb8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1vspzgxUsdJCUGkiXkUBNrfDszV1cir70iOolbTEqigJ9LQrv
-	Cs9nI+iqSMbG6PODMacdPfQcCTOAeVeyh7juFIuo0k35d6dNz8cBLBRCi1mom2g6akg=
-X-Gm-Gg: Acq92OFfBX+4yDgYCYP6H6Xwqv+ZzlZGCiKD3CTYnVX8CIFlEVN+tT0L82L6nvSj7ZV
-	PM4bfdaUul26XXECgRhb3WRsy7Kzj3xY1ohRzVX2ghI1vY5iTovaRfTn+AD2mJ3JIJujc/OFqGo
-	AUPOd0D11rKyTYwxaL4Zw8LCMC8MmFt8ANXMGUzl/rElU5V5nZMfLbEz8u5E3/dktUpDM9LlR2Z
-	t35km1slKJBBYMogf7IkAxAImdJ9iGq5bgyynpohyUWnzjD+dhNFcLAnVDiphXLYEtibOs7x8EK
-	1+qQAuVJ75E3QeetFN/j0x58LTFCxzf9ISR/ePXLB96IepLpot4MzlfRKfGC41UjFRjwOS7SrPV
-	9uLihNWdu2MCUR9kf5JjmHqd1NCOf4eJmVjYkVYiwPJGIMXy2f1BruwXqyjl3oj1robI7vY89/S
-	tcQISlK0E3ypzmc97MAOfjVuMeodqKGbbErHxG7hFkg+B/FdiBy1jP8fLq6cK+EtbhFIa4pjNzN
-	hy30SBDEsmc3SrCTw==
-X-Received: by 2002:a05:6214:c68:b0:8b5:6654:7556 with SMTP id 6a1803df08f44-8cee63e377emr394580386d6.42.1781088120984;
-        Wed, 10 Jun 2026 03:42:00 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd06e4d6sm231860136d6.36.2026.06.10.03.41.58
+        d=1e100.net; s=20251104; t=1781089621; x=1781694421;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CD+jAvn+F6KZcBr47jRj5pM/yHOUpsx3lmiZzRlGXro=;
+        b=D0kkb2uocTlJmB3MP55J6m5GyshW73iqnCs5iUY5saz/iwC7BLc5Qv+DdLNIrmE/V9
+         NOH4Ov//Y7Kp+XPi4GAFuxnn4vwteIP+xVh4H3pW9ShYTF5DF2Y0zAvj5CcyUNbxLtNW
+         6riK4YagwP2t8D4uQX+t7pUtoSwlm5y8JCi5hjEpQxA2Zx+/2kxPid6zqp8Lx469AmgS
+         LouLM44eGsoCIdZgu6z+OfQBKHNHOQyEN4vCityPE7m3SRTSG/LIOE+gWkjp93ev0UGJ
+         vI9gnOLZjlFsWfmTRIUHen1Ed1sGtXWI1dkF1y8KqWtcREB5Fhg9uvLixzC/nA66ni6p
+         DLQw==
+X-Forwarded-Encrypted: i=1; AFNElJ8H7xQ56xYpgoIuOgZwnTBSWSpNKPP763DtCnSIZazbJiLgSHO3Q/znAVp3N3MHP29J/bG5ZlPaWygPCP7+FhL2Vqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPueF5KHQgODQWa5hYgBA4h7fADNnuX7BiEJlZUdcUm1AA8wzf
+	irnbkJC8DUoF8iAcHRzDdrrOK/knsQgpyV0ly6/DuWY2vQlRuWhR4P9/
+X-Gm-Gg: Acq92OFFv0MUZ/HB+cPdGl6yoTUC4qmBMTWUoTaPoOFoW7YCZm1tU2WrhYefZ1ppu0m
+	dDlsrZAat8KaIUtyG3UGCQmu+99aolo0EPUjf4WfSNS0IQ7kAJXdZoQA8cQFoByYUnmY4Ah/9fN
+	btPXjH1mLua+Q5W4MzsjrVgqZGc3+pofoELUBNpympnx1AcuknLXSl4TKtyNmnWegAwe9vs0oZw
+	ue81Q7aSENd55v/glyzb5eO5gmkNFaAzMorNaDGefIDkHLWEcDH3jZEb6bYxMyl2Lx2FwgxbBVk
+	dLzwLuYJD+OoG9tXudJ09vTF9sMeeL1MdIrdDf/2AcUZ7wS3ceexMZbXiyp+0YACpsMQdQzyKm8
+	E+3xuZtMxsJPlo8LX4McU1NsKuih1VjKuM0heequBvdr0bMMOsEmm3fJZXL+CIgu6rkUov8mDWw
+	wcnV/Wlq0a81n5hoL37doZ19L7laAcPeRNavoShdOLn5DoprXtpmW1BviJ/m29es2S3SvRCew=
+X-Received: by 2002:a5d:554f:0:b0:45f:f142:d56d with SMTP id ffacd0b85a97d-4603050e58dmr28190240f8f.13.1781089621362;
+        Wed, 10 Jun 2026 04:07:01 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2e4b18sm55870321f8f.10.2026.06.10.04.07.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 03:41:59 -0700 (PDT)
-Date: Wed, 10 Jun 2026 06:41:57 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Balbir Singh <balbirs@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
+        Wed, 10 Jun 2026 04:07:01 -0700 (PDT)
+Date: Wed, 10 Jun 2026 12:06:59 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: "Markus Schneider-Pargmann (The Capable Hub)" <msp@baylibre.com>, Steven
+ Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Heiko Carstens <hca@linux.ibm.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: fprobe: Remove __packed from generic
+ __fprobe_header
+Message-ID: <20260610120659.7c61cfa6@pumpkin>
+In-Reply-To: <20260610171740.c30c43c5faee0beac3ad7546@kernel.org>
+References: <20260428-topic-fprobe-packed-v7-1-v1-1-9abc9b866b4c@baylibre.com>
+	<20260610171740.c30c43c5faee0beac3ad7546@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ah-0CyZurn5D1ezY@parvat>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
+On Wed, 10 Jun 2026 17:17:40 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> Hi Markus,
+> 
+> Thanks for ping me.
+> 
+> On Tue, 28 Apr 2026 10:30:29 +0200
+> "Markus Schneider-Pargmann (The Capable Hub)" <msp@baylibre.com> wrote:
+> 
+> > fp pointer and unsigned long have the same size on all relevant
+> > architectures that build Linux. Furthermore this struct is only used in
+> > architectures that do not set ARCH_DEFINE_ENCODE_FPROBE_HEADER which is
+> > set only for 64bit architectures (apart from LoongArch).
 > > 
-> >    __GFP_THISNODE cannot be overloaded to do anything useful here.
+> > Both fields are aligned on these architectures so the struct with
+> > __packed and without it are the same.
+> > 
+> > Remove the __packed as it is unnecessary.
+> > 
+> > Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")  
 > 
-> Let me clarify, I meant to say, let's use a nodemask for allocation
-> and __GFP_THISNODE gets us to the node we desire, if that is the only
-> node. My earlier comment might not have been clear.
+> NOTE: This is not a Fix, but just cleanup or minor update. Or, you have
+> any problem with this __packed attribute?
+> 
+> Unless there is no problem (or any concern), I would like to keep this
+> as it is.
+
+There is likely to be a difference on architectures that fault misaligned
+accesses.
+On those gcc will use multiple byte-sized accesses (and a log of shifts etc)
+for code that accesses those members because it will assume that the
+structure itself can be misaligned.
+
+So you only want __packed on structures that might be misaligned and those
+that contain misaligned members.
+
+If the structure is only guaranteed to be 32bit aligned then use __packed
+__aligned(4) so that two 32bit accesses get used instead of 8 8bit ones.
+
+-- David
+
+> 
+> Thank you,
+> 
+> > Signed-off-by: Markus Schneider-Pargmann (The Capable Hub) <msp@baylibre.com>
+> > ---
+> >  kernel/trace/fprobe.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index cc49ebd2a773..21751dcdb7b9 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -181,7 +181,7 @@ static inline void read_fprobe_header(unsigned long *stack,
+> >  struct __fprobe_header {
+> >  	struct fprobe *fp;
+> >  	unsigned long size_words;
+> > -} __packed;
+> > +};
+> >  
+> >  #define FPROBE_HEADER_SIZE_IN_LONG	SIZE_IN_LONG(sizeof(struct __fprobe_header))
+> >  
+> > 
+> > ---
+> > base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+> > change-id: 20260427-topic-fprobe-packed-v7-1-f44f9bbdedf6
+> > 
+> > Best regards,
+> > --  
+> > Markus Schneider-Pargmann (The Capable Hub) <msp@baylibre.com>
+> >   
+> 
 > 
 
-I've been tested an stripped back patch set where I drop all FALLBACK
-entries for private nodes (including for itself) and only keep the
-NOFALLBACK entry for private nodes.
-
-This effectively isolates the nodes for any allocation without
-__GFP_THISNODE.
-
-This also precludes these nodes from ever using non-mbind mempolicies,
-which I think is a completely reasonable compromise and something I was
-already expecting we would do.
-
-Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
-which causes spillage into private nodes because slub allows private
-nodes in its mask.  I think this is fixable.
-
-I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
-code, etc), but it seems like fully dropping the FALLBACK entries and
-requiring __GFP_THISNODE might be sufficient.
-
-~Gregory
