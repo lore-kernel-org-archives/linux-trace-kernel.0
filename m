@@ -1,311 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72293537EE;
-	Wed, 10 Jun 2026 19:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781118034; cv=none; b=PnOEuzm9COTU2WmHEfDH/Eztk1lPZklfWw6KDoycJ5j2QVspWJdxmTgSbBLo2cUzyqLvdkHMK2kzIRFvxRZvdf/n5wJKgVO1nduq0T6ZA2nYYfbA46RMVFLafSpq327Epckkkaf/j3mKfsEqfCHZ30zgplr7Rv7apBhWoXslf+Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781118034; c=relaxed/simple;
-	bh=YdJvFqMZf+8hD5/S7uuTonnbqreUR8JR149Ppecvyt0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Na5VvnWXeq/KvviuYVAbzAeFZJFZsL7lj1t7zmWdQZQD0Cprzuu/brqPCX6YGYzhWwmV148FVqxQZQmbsthxCoqoUDBZMuxSaaFCqnMhc4Pry+AC1DbNAW2nc1z1892bdsguoAF0tPxxJ39kkG0gNDNXFTcc3a5wH/Ki4z2jDKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7hYyMVS; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F90E1E5207
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 19:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781118068; cv=pass; b=UmlbTKknPMwoCubekUa6eldGcRonaBlL6oOwyzbxd3FVUokGPn9DK4yPkyyadNQWQvr6ZfjjG60mFkzP+8VVn4bWmQvkONlCVlWxB6yi5p2xWg0af2FvgPIf02srdck9DC6T91R7oV1HUwkmq3II8XQ5BdTZmX72naNA/Q3pVLc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781118068; c=relaxed/simple;
+	bh=KojWc5g4dM4amOUWQa6TiDAvQ799Q6Ii9VxdLEUmD28=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pfEQ+AuPMNVzomZnStrJA7hoPgbiodi8wEwBl9IWBFlqQBAvWrk8tkKzQxarss1rd7Z3ojzPZS+ATXW1aia/rmaI3Oyx7T0QXUO6H2c55kHxPkAJZ3icMt71gJTzCh7v/uJPfz8tfeJkcPjU0xq6d+/aCRjXygB95qgVWLLIalo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=CEZDFGR+; arc=pass smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7hYyMVS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A5AF1F00893;
-	Wed, 10 Jun 2026 19:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781118019;
-	bh=M0t4n3HCps7taaGU6Q6PrW/pQCZIXwS6BBGzfXojpIE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=X7hYyMVSI6Mi0sP+Grod1QWamTJ5Cd8C24A8xgEC34EpFhULVTmCXMEcNjvm50o8h
-	 fcMiuQtVWWpiPQW9UF2eKGnnv40bBYnqWwcyAZtpPv08RaHKg62L7w8ht2DO7Y7j+h
-	 XLCcETnYT1QGs6naP0FQ1tqTtFd3t1G4UsDeWTrEasWTQw841ToyAnfborKCuV2rZA
-	 CmJbbG8FZLRGzAbk7WrX8w5scBKfP+d9KQvQXX0notHqaVFA3JjWPmq7RsdC1UQBH1
-	 wf04lnmZQ4L7CcWxpS6J+jM2tMhthsvsUUpNx8qalHDVCyPsz3ErNSt5ixKoHCdgge
-	 MtDa3WiM+tqgA==
-Message-ID: <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
-Date: Wed, 10 Jun 2026 20:59:59 +0200
+	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="CEZDFGR+"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5aa2c25c632so7745529e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 12:01:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781118065; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZUnC5qjyEpzzpbR/fboUc8pD4CykHSFn6XSSqTH+KcglDlY8F4uLuThf3OUqDj830C
+         0oD6oVIRwB4YSayHAyRVpAeGVcUghAcOzR1vyoIeukSglmpfMBLmIOx71TMfz1+9Tg3L
+         J6vJCUsF25iP3w+8FklvHqnHG+TdzaoCPdVai0ukaG9BAjE3MsPrewbHPey2KaP7z/Rk
+         ynDPlGJTf3VitMSWxdMNYh826WX3xjx0OSTorlqzuhLNTuB8pFL1B/AGvRBL98OhQf6A
+         l7ugO7p31yEGpd8OY9kdCFt2OxgsaFy+TemaVJLJj8a0+EzL9RqH13Ve/2W1+jX6xfGj
+         kPBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=sK1ep5727p7DwH3peM6L5HJRPXeW5dBkVx3KmvyAzlI=;
+        fh=87FcYqOfAMZcj5WWE1A72bsSd9BO9kuCgX7SuFk8b5Y=;
+        b=JGwA8SPoIzj8KlicE79Zjz7Nm8/1e2HtthJ6Yk0rujmd4VNmzIHrUZAsqVctRM2gDz
+         PsOH7mO6e9+w6P2wjyMtY7YYbbJdV/2bOCXQANAgLHArJVC3C3fs3y/uzu9pcBdR/GmR
+         Lvj/fR4cOVsmPkHQCBlXhXCZDoKIfskKfqLqpW6N5evJjlJ0NjX1MIy3QlqkkiY4GXuo
+         MIAM6CIIAMhlFkcxiLhAk1rwImGkEI7YnmyWRUiDOiEzv3Pvq6zENYujJXNBkWBA/8/v
+         OLvU4ofnYYyEbxuB4ffhuFwlz0tWEkwTJQyOTcaTVO/J02GUBiENNFlVjymrNDiTQm06
+         hQPg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=trailofbits.com; s=google; t=1781118065; x=1781722865; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sK1ep5727p7DwH3peM6L5HJRPXeW5dBkVx3KmvyAzlI=;
+        b=CEZDFGR+nssOsp0tvY+J+QqT6lQ6cuWEyPXEY1bDbNJ4j5AfIf6e/uqQloZ179guDR
+         CBuxGsz5ldkTcspb2cFxcIgJBH9ww49pnpOHfbWP/JZLyT3dsKrWivB3/ivwDILLEyFf
+         ycp66oGv3ynVmPBQqrkuZ8VLFskMI0yIVbcCbC/XsvhxPt8v6ldVPf+DBa4B+REmZo8z
+         V6c3Zf9mRbI0NJfTkcBvH5XsPYvMNYd9t7SpnHcrbnv5GUGD8BpVz3rHff4n9060Wn6D
+         42XNvls3AiDVp7FhyeWrc9igoi0MMOXARVyk0QVWa8OyLILEUzUEC9L/cVXGPJvO9uNS
+         bWFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781118065; x=1781722865;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=sK1ep5727p7DwH3peM6L5HJRPXeW5dBkVx3KmvyAzlI=;
+        b=W5+ua5yhuqLDlqjK3jcacjMFwY/eiBF6ZIbfAv+p7jVZ/G5FB7Ye9nWcHdo9/lIF3E
+         uQ7JOsZcP8qOQVmALMWIY2E+Mitec3LqTMBrYZXqqicNmf8bHPIlItF5PyFyob0+lZnJ
+         lSjT5uGsQxz/ufFzVPP5Y5eWKE93v+EBevKmE3K4cdEn4aYSuKc5EdjgDv9c70Gdmw1J
+         XhdsrQbL8HuQaBG4KQCCNVVKnllCul6KaEBODnVPj3IIjMMmyFEbLKsKQdNehBfPVUVH
+         6IpDTA808ClKrP4UB9SW4+102XNadlzqJEhu673Ts//55DiC3r+hJYmUFPuP8fhGIn3B
+         Ulow==
+X-Forwarded-Encrypted: i=1; AFNElJ89mFBS+1fNs57G5SKm2Og3DvOPzECj1UONSSC8xQhk57zPqw4YJ8sT/Zu9eQWzY/sPOWjmJIkidJhy3EtL3l6GcZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDpPKwo7KoMM/XaGJoghdozcge3plsD3NFFrWuwxT9YHWlJsCE
+	VLcEmHYzzqHlkc/X986MkW5fNTkv12Ri7ZkyGsYwO7XsLsNelS+BuPNtyVLZvQ7VdZX9dgXYoXQ
+	WX1/AlAwsRFlTiYZbLLb08HeX3f9pLhwktmsL+2FEbg==
+X-Gm-Gg: Acq92OE5oXNFILP4zV/cJGY9E32GzjG59+8n66zz0+kIihu5wnQpxVdUxdIr/Zj8wdG
+	GZ4PmBjb+ObAeP3ezQpIpt/lGnZJmamaXYsTUVOpC0WMNpjRETs/46Cq85zKr1AYW2Hiu7AnHFn
+	F9RyRJCuvyvLVTGRpDpPZhV6YiGDLchOOncSv47+nX44HiZTJ87iGpxJ1Z5of4QB2Ktj+gHh67Z
+	S/TOGaHlVAT66az62jWcqsCckfBiNyPdyLlo08KBwSV2Rv29NMuq8HGAZyp9TAQ32/nyetx2yuC
+	vlD4bFsGbJFilWMN
+X-Received: by 2002:ac2:43b3:0:b0:5aa:6301:846b with SMTP id
+ 2adb3069b0e04-5aa87b8c393mr5862222e87.5.1781118065424; Wed, 10 Jun 2026
+ 12:01:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-To: Gregory Price <gourry@gourry.net>
-Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
- kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
- dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
- akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
- linux@rasmusvillemoes.dk, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
- mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
- baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
- muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
- jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
- pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
- riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
- roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
- shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
- zhengqi.arch@bytedance.com, terry.bowman@amd.com
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat> <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat> <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat> <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260605004006.2041148-1-sam.moelius@trailofbits.com> <20260609181617.185f1e02@fedora>
+In-Reply-To: <20260609181617.185f1e02@fedora>
+From: Samuel Moelius <sam.moelius@trailofbits.com>
+Date: Wed, 10 Jun 2026 15:00:52 -0400
+X-Gm-Features: AVVi8CdKPs4dbSPdBcbMhTvlLGa4uVilMi5s-VISt168ofSBYuZq9mZwQkJxOxk
+Message-ID: <CAE+C+DYR7bA1AoT6Aqv_2eCWVzsYhepmy1TeHV27uwEdDBpwxg@mail.gmail.com>
+Subject: Re: [PATCH] tracing: reject invalid preemptirq_delay_test CPU affinity
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"open list:TRACING" <linux-kernel@vger.kernel.org>, 
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/10/26 18:37, Gregory Price wrote:
-> On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
->> On 6/10/26 12:41, Gregory Price wrote:
->>>
->>> Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
->>> which causes spillage into private nodes because slub allows private
->>> nodes in its mask.  I think this is fixable.
->>>
->>> I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
->>> code, etc), but it seems like fully dropping the FALLBACK entries and
->>> requiring __GFP_THISNODE might be sufficient.
->>
->> Sorry, I haven't been able to follow up so far, and not sure if that's what you
->> are discussing here ...
->>
->> After the LSF/MM session, I was wondering, whether if we focus on allowing only
->> folios allocations to end up on private memory nodes for now: could the
->> __GFP_THISNODE approach work there?
->>
->> Essentially, disallow any allocations on non-folio paths, and allow folio
->> allocation only with __GFP_THISNODE set.
->>
->> I have to find time to read the other mails in this thread, on my todo list.
->>
->> So sorry if that is precisely what is being discussed here.
->>
-> 
-> So, I remember this being asked, and I didn't fully grok the request.
-> 
-> I'm still not sure I fully understand the question, so apologies if I'm
-> answer the wrong things here.
-> 
-> I understand this question in two ways:
-> 
->   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
+On Tue, Jun 9, 2026 at 6:16=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Fri,  5 Jun 2026 00:40:06 +0000
+> Samuel Moelius <sam.moelius@trailofbits.com> wrote:
+>
+> > preemptirq_delay_test accepts cpu_affinity as a module parameter and,
+> > when it is non-negative, writes that CPU directly into a temporary
+> > cpumask from the worker thread.  Values outside nr_cpu_ids can set a
+> > bit outside the allocated cpumask before the test reports a normal
+> > affinity error.
+> >
+> > Validate the requested CPU before starting the worker thread, and
+> > return -EINVAL for invalid affinity requests.
+> >
+> > Assisted-by: Codex:gpt-5.5-cyber-preview
+> > Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
+> > ---
+> >  kernel/trace/preemptirq_delay_test.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemp=
+tirq_delay_test.c
+> > index acb0c971a408..0f017799754a 100644
+> > --- a/kernel/trace/preemptirq_delay_test.c
+> > +++ b/kernel/trace/preemptirq_delay_test.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/kthread.h>
+> >  #include <linux/module.h>
+> >  #include <linux/printk.h>
+> > +#include <linux/cpumask.h>
+> >  #include <linux/string.h>
+> >  #include <linux/sysfs.h>
+> >  #include <linux/completion.h>
+> > @@ -152,6 +153,15 @@ static int preemptirq_run_test(void)
+> >       struct task_struct *task;
+> >       char task_name[50];
+> >
+> > +     if (cpu_affinity > -1) {
+> > +             unsigned int cpu =3D cpu_affinity;
+> > +
+> > +             if (cpu >=3D nr_cpu_ids || !cpu_possible(cpu)) {
+> > +                     pr_err("cpu_affinity:%d, invalid CPU\n", cpu_affi=
+nity);
+> > +                     return -EINVAL;
+>
+> Just add the check to the preemptirq_delay_run() function where it
+> tests affinity. Who cares if it created the thread or not. It's just a
+> test.
 
-Yes. Can we only allow folios to be allocated from private memory nodes. So let
-me reply to that one below.
-
->   2) Can we disallow [Feature] (i.e. slab) allocation targeting the node.
-> 
-> 
-> 1) Can we disallow page allocation and limit this to folios?
-> 
-> No, I don't think so.
-> 
-> Folio allocations are written in terms of page allocations, we would
-> have to rewrite folio allocation interfaces and introduce a bunch of
-> boilerplate for the sake of this.
-> 
-> struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order,
->                 int preferred_nid, nodemask_t *nodemask)
-> {
->         struct page *page;
-> 
->         page = __alloc_frozen_pages_noprof(gfp, order, preferred_nid, nodemask);
->         if (page)
->                 set_page_refcounted(page);
->         return page;
-> }
-> 
-> struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
->                 nodemask_t *nodemask)
-> {
->         struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
->                                         preferred_nid, nodemask);
-> 	return page_rmappable_folio(page);
-> }
-
-At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
-context might be better. I think there was also talk about how the memalloc_*
-interface might be a better way forward. Maybe we would start giving the
-allocator more context ("we are allocating a folio").
-
-The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
-
-From 64aaff5f40497201ecc089c3339df6576184c433 Mon Sep 17 00:00:00 2001
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Wed, 10 Jun 2026 20:55:49 +0200
-Subject: [PATCH] tmp
-
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- include/linux/sched.h    |  2 +-
- include/linux/sched/mm.h | 11 +++++++++++
- mm/mempolicy.c           | 14 ++++++++++++--
- mm/page_alloc.c          |  7 ++++++-
- 4 files changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index ee06cba5c6f5..9c850b7be6bf 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1778,7 +1778,7 @@ extern struct pid *cad_pid;
- 						 * I am cleaning dirty pages from some other bdi. */
- #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
- #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
--#define PF__HOLE__00800000	0x00800000
-+#define PF__MEMALLOC_FOLIO	0x00800000	/* Allocating a folio that can end up on
-private memory nodes */
- #define PF__HOLE__01000000	0x01000000
- #define PF__HOLE__02000000	0x02000000
- #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with
-cpus_mask */
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 95d0040df584..2101a447c084 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -471,6 +471,17 @@ static inline void memalloc_pin_restore(unsigned int flags)
- 	memalloc_flags_restore(flags);
- }
-
-+static inline unsigned int memalloc_folio_save(void)
-+{
-+	return memalloc_flags_save(PF_MEMALLOC_FOLIO);
-+}
-+
-+static inline void memalloc_folio_restore(unsigned int flags)
-+{
-+	memalloc_flags_restore(flags);
-+}
-+
-+
- #ifdef CONFIG_MEMCG
- DECLARE_PER_CPU(struct mem_cgroup *, int_active_memcg);
- /**
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 36699fabd3c2..a78b0e5a1fce 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -2506,8 +2506,13 @@ static struct page *alloc_pages_mpol(gfp_t gfp, unsigned
-int order,
- struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order,
- 		struct mempolicy *pol, pgoff_t ilx, int nid)
- {
--	struct page *page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
-+	struct page *page;
-+	int flags;
-+
-+	flags = memalloc_folio_save();
-+	page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
- 			ilx, nid);
-+	memalloc_folio_restore(flags);
- 	if (!page)
- 		return NULL;
-
-@@ -2588,7 +2593,12 @@ EXPORT_SYMBOL(alloc_pages_noprof);
-
- struct folio *folio_alloc_noprof(gfp_t gfp, unsigned int order)
- {
--	return page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
-+	struct folio *folio;
-+	int flags;
-+
-+	flags = memalloc_folio_save();
-+	folio = page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
-+	memalloc_folio_restore(flags);
-+	return folio;
- }
- EXPORT_SYMBOL(folio_alloc_noprof);
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ee902a468c2f..37434b37f7af 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5345,8 +5345,13 @@ EXPORT_SYMBOL(__alloc_pages_noprof);
- struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int
-preferred_nid,
- 		nodemask_t *nodemask)
- {
--	struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
-+	struct page *page;
-+	int flags;
-+
-+	flags = memalloc_folio_save();
-+	page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
- 					preferred_nid, nodemask);
-+	memalloc_folio_restore(flags);
- 	return page_rmappable_folio(page);
- }
- EXPORT_SYMBOL(__folio_alloc_noprof);
--- 
-2.43.0
-
-
--- 
-Cheers,
-
-David
+I am getting ready to travel and I will address this when I return in
+about two weeks. Thank you for understanding.
