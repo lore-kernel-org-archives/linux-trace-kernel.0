@@ -1,191 +1,309 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021083.outbound.protection.outlook.com [40.107.192.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6288A37104C;
-	Wed, 10 Jun 2026 20:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781121932; cv=fail; b=PPu/AllvaN62j1lji4Sniz0THyipmDCLjL60+688bcbGGFI68UyNPvUUY3S2evFadLKFoNFH5Z+GWMv3QmKITbwK1fVps0iFiSoQ53I6WGQuB1EUlMnNMmmjTHhDIXz5hvDS1y/qJSOBG1JdS6v99nAxTKEc6/JyPiLtK0ARLIE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781121932; c=relaxed/simple;
-	bh=ecHsqBTdU/qwHqeUG4Hn+qPVh4Te9tc8mtBSxx+e4nw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bbCu/zePs1KrMRW6V3yPVXcRPilgW8JuHKGnTFZgpOVXZFWH6GT+Ue/Oy4PxTXkFjPbMgqUGJSPnKtVzX4p3oJrBRL3ST6HNvkuBmOwB8EEFRKT9DWMhHer4nIRYRv9Ef1nOXXgWo83AxTwq2ktLKIRzAGWQMvJHrji7TWBAzng=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=HQqz4Hd6; arc=fail smtp.client-ip=40.107.192.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2826F3D88E5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 20:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781122383; cv=none; b=NmNT+G0h/Nn3xm1ozOh7gy4pNsO+He5NxUmP7/BQ89DHE4/YNN5VXjY14pGAYu5yX2Lto1qUr4WEbGR2EL7sBwx/XL3kko13QnEOnoCath2xAL9pLg11UDUGnbaH2XO334IGEu/iWByE+sqPwlmWVDYxBtK28VNOOjknTaQblUw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781122383; c=relaxed/simple;
+	bh=XCLXnOmTwKXh09FcYtQFFaA7Jpvehuih5/s/Esa9XgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SBVShddtRKJz2WIkVFDy7Rcb2kvDu4nCZ/MAynalodO69gtO7+ukuiM+UCLiPXvJZ/iZpPxWfo8dgUUrnXVPQ/4EmNqy/4fGbobaf9fm6JfvXGAuWhG9lavS0qGcsyL+tqJasPwlvsp6Ni1oOInMhhPdHp93XqZbE4zVvPmzSvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=U89rvehF; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="HQqz4Hd6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RnbsfFtdkY8n3h3V8HLfuk7HFY558Un+2Vg/ECoJs/DAF4N4VkeANl+V+P4AQS9t8wKhEJ51K2fEvYFbq4AoA38dFcO1TT0Wqraq91C+qX0nGP1xgrQx7QtN/HTk0XCu8+HrKzW0CEMGy4BmuYMolljlbe0UCalr6XTXk+jm+mDoYDJ95mGSlwLX6NjXYRcFX2YdqLjDliZxwEQ0w5Y4jnLUJ8T94Od+gySC2xTPr9EimZegPujwSZ94VKqYwyTnzOS42ayptnKYm71Vai7JlKCNiZLKXl8x+6iVR0JCQKJfqexjqZpviSVSUjIyOMWEwms1upu0l28t7MZQ2qh93g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GK7B32pnsKBR0z1KuxrmL9btWv6IpEJv9GxJxmIIfOY=;
- b=szQF4gM24LS0sVOnl21TtnJG+wjr8+a8kmDJa7xrT6m6QM0jKToHHNTVE6AZyuDKBvbeM5Xp8rAtN6Phqtx0I7ujMHWrNq7G2jEkSaAJRhHYtHIuOqKVdlVwFGJX42B+9bD+UyFmZYXpgmggOstRm1AxvU5QCYtlvqmoSgpNGctU6D1YXsJt+juxwrqYbAy7Ri4EcV+79eTvennelKGP+BkhK5Kf1ZDylVM+KJLWxUkKBciVvdDEFp/Uq44d82YfVjTxYECDXdD8+90sDMmGzVGLIbLXQzW6Sp1V9LUQf9w6U20ejjUlqgMqt9eNDxqLVCt/w5T8S1uSb8GjB7X31g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GK7B32pnsKBR0z1KuxrmL9btWv6IpEJv9GxJxmIIfOY=;
- b=HQqz4Hd6Ifg6g4HVuVZiT8AQoDQHk/34kChnMIswV620DEk3VLiihCzQ1w0HTwI+aCEKKYQB/DUmzvJSS+8+zQaxjUn/Xk5AMMMtBMzalLYnBAQT779vDogZfNhcUiciFcY+93oiYx8a/X7fpZP6VZg2WMMnXor7Yov6KaQX+CH06VRLWK7yF7GwdrB40c9eFCIEjU2Jk1tbRtGC2aQ9uZ+XZE8YP0tfxZDHJCCgrTIbyp7eYEoxK8aKDWa02p+5wUMV8BJ4A5mws9r8KVJL7GuOVR0ly60rTCS1UkXObc3UTZEhcI8xKPs7ix2+2PbyaxEdooyq+16R3pqMMS9t/g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:a0::18)
- by YT3PR01MB10412.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:89::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.11; Wed, 10 Jun
- 2026 20:05:20 +0000
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5ebf:cd84:eeab:fe31]) by YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5ebf:cd84:eeab:fe31%5]) with mapi id 15.21.0113.011; Wed, 10 Jun 2026
- 20:05:20 +0000
-Message-ID: <0ea2ae74-7452-4ba5-9549-59197c766c25@efficios.com>
-Date: Wed, 10 Jun 2026 16:05:19 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: fprobe: Remove __packed from generic
- __fprobe_header
-To: Steven Rostedt <rostedt@goodmis.org>,
- David Laight <david.laight.linux@gmail.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- "Markus Schneider-Pargmann (The Capable Hub)" <msp@baylibre.com>,
- Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260428-topic-fprobe-packed-v7-1-v1-1-9abc9b866b4c@baylibre.com>
- <20260610171740.c30c43c5faee0beac3ad7546@kernel.org>
- <20260610120659.7c61cfa6@pumpkin>
- <20260610155139.01b6def4@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20260610155139.01b6def4@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQBPR0101CA0274.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:68::33) To YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:a0::18)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="U89rvehF"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-8ccf887de87so82179056d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 13:12:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1781122377; x=1781727177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/w5IO6RWAJnNghyz7HGZ8KjTibYl6mxc1wTK9gnS8M=;
+        b=U89rvehFEHxEMK7PFZYfFR18kWOCZanlPn7D/236dPmSgbe7z0Rd3TEztIDx1OlD5S
+         WyW1gy0UaLBCVLn8ykVE83DvMbZHrr5S8k1D3urbym10cvGs3BbGuG51gVbK7DPhnDYP
+         1Hp0Hkon7DdJ8AzAxskbDCU+y8x4C28hdT3TX6bZ53QS0YXGcPn3oetMo7UdYvMCXSDR
+         gDtH+u9bE5LYnhCWmWMMdbUUy3ZwAnuBWNit6YAIbqbyfZ8dbNvTY/Fhy46E7M164yjh
+         itKxUsar6LFAgPXEB1nDpvaZDIbFJ5Eae7CcrI1dQU5SxTE/9DtR+91S6Md/EC4RDx7T
+         Tu0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781122377; x=1781727177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5/w5IO6RWAJnNghyz7HGZ8KjTibYl6mxc1wTK9gnS8M=;
+        b=Qxu2wWKFZvvPj5vqRKws7OWQ6aR4Ojc+gBDT5hsHG21WHaMAFw8LkGZfoesG3QImHx
+         NrycBHdiWmNuwTmjvATpLs3urIt1UUlg0xQOT6x+XzeUY0YVEMB6NMM1AJyOQ/ju1l6i
+         f1bK0iFd5R+SqVWRi143ehTocU5MREsB0ENnM02bVTb5n2NQwJZDSyD+yJRQGo8ZnShp
+         R49ZEI0E/Iu37Yy+haBZchR38LnSNd8pToJsMBxJzlnSm7w7qEwAdOzaA7eYKQBG/15J
+         fZadWUNAboXGCXX5G24ilQVUtFio8a/Oaequ8gz4nW2byTeWuuDR8H5TBqcIVqjPPm1P
+         a3Dw==
+X-Forwarded-Encrypted: i=1; AFNElJ9mRbK0C5KCLC1W2Ecbt4hMjo66oQ3KJs9iONpK6taqX7+AwbQNkhvCEiLTRnnHIjd0i6S56mP++DntQRGhnVutpos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAKMgXX6NCyFNjqymVBAmMwfxVLB0JHwBj4X4ynRF/fBLcXjSg
+	lgW7+ltvcXRNSXV8XS4P2FwpWNdaJ3dnvGbkooZACjM1qgMq+k133UTPJkoGU9yHZvU=
+X-Gm-Gg: Acq92OGuEOAZ8EXZTNSAqQYqq3leCFvy1pngLdzSsi60uaGN/sEywoeqCZF9n3LUk28
+	+QYIO2CbvqQLwnPjofZ4CjWH4ZEnxDlOGINtlJrsXZMCrbO3Dsb+ldVZ0lm+aCfTWzxOIg/srq9
+	bgTB3rSBSgwmHTEKENnIhW+z/Oj/L6Wt3PeGkm/xs8ssukF6Cq6Wrf1lDwcFo5TsGsV4KbFq6c6
+	zyUDO977bZb1JkEV37Lw64Ey2PSmz4L9yfYLKg49Jho/K+6q+1NrCkASvdonENp6PXWcZM7DzaT
+	BQshubTSuXGutyZe80tolDLS9z3/igtFzbm5I/q3VD0cIoe61fRkDAMVIxiZtWn0wQynvgNGUze
+	0h/vGonE1zdjK/wgf3+JIf+O5MqwKlXpwGapAWSotCHAWB701XfmunpxJHtNQnXScAoQlBvxlxD
+	YbpijDTHLbixGJqA4v4Uq7Mj7HhBfmUrYaFoFFoAyYRJI+LTdfk6NBWfcCRREnknOb/v388vWzE
+	xbjy0pxk/Byxl8wuw==
+X-Received: by 2002:a05:6214:4586:b0:8ac:a6bd:503b with SMTP id 6a1803df08f44-8d187aef6a5mr16950546d6.15.1781122376601;
+        Wed, 10 Jun 2026 13:12:56 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd0535b0sm241706096d6.28.2026.06.10.13.12.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 13:12:55 -0700 (PDT)
+Date: Wed, 10 Jun 2026 16:12:52 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+ <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT3PR01MB9171:EE_|YT3PR01MB10412:EE_
-X-MS-Office365-Filtering-Correlation-Id: 37f6e783-eb9b-4e56-492b-08dec72b991f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|3023799007|56012099006|5023799004|4143699003|18002099003|22082099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	tGSm5fwIEFyX6VuQf9jhdX6D48kCvorNWVg/ZQV9eBY/dhdKkMgtjrfNnm/cbQavBgNdD58N04g0RB6qc9b8+17unaYtX7YmhhkcgqEGkVpvnDF3YnwVgZ5+5I4NMPwX+xtkJDInfUErN0efxmKEnr5DNcUsLWQ15PvoK0V3TZYQ/SghPVfN+H5f3wETHK5ls7+GSEhb2XrOAiv5BKr+wXZAtN3yDzTJVrqkFS7J0J/i3rhos+jTrk7aEb1BQLKKcAk39KJ9+0WbrKXvrHZOgWVCgE02fZHOyTi2Gyv5aUlkCNg1NngfMo4lq2NkRZbjtmCVOUBtvh59i71y12cazOREvzl1pKV8MOiHgK4tm4eqG7dCrTi/9KmRhoBD8/3aV5yC/DkYY0vhqnpoznJKSW9//pydyXle6WJzbLhInyXiJpUO4TEFky4tt71CpvtDxcXzsh1cxxOpC6wNMq2equX2YTa94XfTNhGDEQy6EsgTofIcVdLlfh8I1m2Jg93jTQsDebelBG7WwX3XrNQL7lhT5Cm9N9WKgia/JbKT7XTbGMPSFalU7bvH54GyydHGmiLqvRlHOj4r6F1R5GDPenyCRyD44eDeKcm0CRTNz5nCXJ1qrvjYlQShPT4fcwOh
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(3023799007)(56012099006)(5023799004)(4143699003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZldGTjhzOEJPaHRJUGVpQkUyZXRxRmgzc2RBVDVLZWxPcVBUd3RpRnJkSXZs?=
- =?utf-8?B?eDlPMmQrcWxTRXBXYW5lWnljZTVIenZyVjkrUC9KOU5xMTl2amNleitRYXU1?=
- =?utf-8?B?cXVaVzRySmNISjM1RnR2eTgxTXNtWVdUbU5tTDdwcmJOOHFCZG9SQ00wSWRB?=
- =?utf-8?B?VGhvejh1WXdHZy9zSk55QnZDNzB4SHdlT2E5dWRVWkNVdVZIaGMxaFdld2JW?=
- =?utf-8?B?WlByK1VQemNkeXhvTWdoaHZyNUVTYVRhVGlnMGxCWEczWjc0SFlYakcwVWZY?=
- =?utf-8?B?cmIzTjFQOUVPdFp6aVcrYndqUFhIcXBvNGR3SnFJR21MV2hQd08xT3dxTE16?=
- =?utf-8?B?bnJkTHlmS1BNRmI3TGtqYXlaZGRRb1FGcGlRbFNLNkpxM3U2MlJIVHRDYXFw?=
- =?utf-8?B?NWhHZFhKREtyVGpEUjJnZ0V2MmxRY1hzRC9YNFdKWnFGVkdNVUlyS000aHpl?=
- =?utf-8?B?M1NweGxBNVhiRlY2UVBzUk9yUnAwRksvUWk4NGhORVM4b2xEYXNSc3o5bFJL?=
- =?utf-8?B?clhXQTlXTFRuNWpQRDAxdTNKUXByOHRKTlBFYlAxMHhCV0N3NjBkTDI5ZmJh?=
- =?utf-8?B?L3REbFZ1WVI2RU9XRWJQL1hPaVZaYndWdC9FYjUyNndsTzB0MkNHV25KWDMy?=
- =?utf-8?B?TmRBMGcvWHduUFMxYmVmdXAzbHFhVkdzdk9HTWRYQkZJbUpiRUcreVpxRi9u?=
- =?utf-8?B?QTQ0L0YrRWJMQndQa1NnSzAxaGtrYTYxbXlYbGtZT1BaSHZXdVR2b1pyVkxo?=
- =?utf-8?B?MHhySVZhMVF6Mnp6aGNTaGJuYm9WMG5IMWVTSHpKU2JuTDVTZEVlSUZ5b2lu?=
- =?utf-8?B?QzdYcllKbzloci96LzF1eE9jVWhyU3FmS0h2YTRJSUV4N095cjJhZnh0TlZu?=
- =?utf-8?B?dkNnaUMzQUtFbk5mWnBjS1pNMUNuc2pEa1pVcTVJYVplUXU5RDVGY1dDOVJq?=
- =?utf-8?B?K3BkVU1MTXozbkZrK2taYmYwKzFvdmpseExXbmswYkk4bCtNOXlhN016RmV6?=
- =?utf-8?B?b015QjBiOWtpRGZZZ1dXZ0J1YVpXN0F6WlNOL0lCZVROYVdhQ0Y1NWpTWm9s?=
- =?utf-8?B?MWNINUsrUVZEOHp3cmtlK2ljS1RXeEgyS1JpbTR5cmJZaDhHSkh2ZkhXWTIv?=
- =?utf-8?B?Uk94ZnZwbUxJUnVVK0hFZ0hYSk5BSFFNUWxnd2JPcUtSb2FTOWFBSXFVaS9n?=
- =?utf-8?B?Zko4TkRmcW4ycnFTWG5JZmhvcUk1bndvTnRuK2VPZldEYmpXRTVwUitVK004?=
- =?utf-8?B?NmhzL2taR1BKL3RCYUJuNXhlRlVYOE1LTzJOek5vRHp6aDNjMFNxQjFsWmJj?=
- =?utf-8?B?RTNtNWtsVGRVV1kxM0p4eEVEVkhMaWVTUENleTB4VlZyR3pKRm9CaEVBN21Q?=
- =?utf-8?B?d0pkZnJNektITlkrSTVmNFFJNjRkYmlRUlZqMHlCLzVEazZUSEZxWlRXZHhR?=
- =?utf-8?B?SEdaelorUVBxcHltTEp1YzFtdnJ0Q2tSanN0c3RsTTdIYVFFWE9VUG9jVHFi?=
- =?utf-8?B?aWM4aXhTT0R6bWVGVlBsSmU2NlFXb0k3NVc3SDJ1M05PdlM3Nk41MVJUeTk5?=
- =?utf-8?B?djRHTHdCSWg3dXFMcHpnOEk0UWUvN1dlVDl4ZkZHTUhRWGVTcGtZWjliaUow?=
- =?utf-8?B?RE9RYmdiZVh0VTFWbEt4Wnh2SWVGZlJaMGd4aTdXYllGMmFiSjNFWEhON255?=
- =?utf-8?B?VmlrRTl5UThIUDJJenV3dXU2bWpkV09mbDhkdm1ZeHFCVjZFRkN6c1RvY0VR?=
- =?utf-8?B?YVp4QUpHNER6YURzVkVBd2ZSWGJaNnpBbFpjSnpKajBqZTNJZlh4aEJ4eklR?=
- =?utf-8?B?dHpBMVlNeTR0RllLTU00SUh1VXdwR3dZS2FYQzluOWVEd1laZVFjMlpZYTls?=
- =?utf-8?B?eG1ublFsU1R5eEN2YXpQaHRtR0REdkkzK3kzYTFscjRqNjVlOVhhczRUV0Nx?=
- =?utf-8?B?OGExeUxRRERrcUM5eDJQenpPRis3clA4dnZYYTVrd2Jqcm4xR3kyWTA3VlJa?=
- =?utf-8?B?V1N1eDM1WlgyY0p3RlAreTNpbTdDV054UzZYdDFud0YyWHNEakNwL3ExUmpM?=
- =?utf-8?B?d0FxdmJKTkk2KzhKMHhacjB6ODJEcXNiK3VFYlMvNDZqcHpacFhtRWhsWWVT?=
- =?utf-8?B?eVRWTmpJcGw3eXN2Sy91T3lsU0c5cFhOeWIwVXpDT0FTZDFxNnovam8ybmJE?=
- =?utf-8?B?d0w4dHcwc251dVV5NHZqdldLWmhhOFFieFpsQUpCcDY2MU1aR2dXVDloY0x6?=
- =?utf-8?B?TDczNGQ2bGpRdVpkc3E3aldPVFpTZ3Z5WmlYTDVJaUtCYjRxQ3pYaVhpTmg0?=
- =?utf-8?B?eVdqL2cvdTRjV1huM2RwbmxZRmZhOU5JdDlEakhZYW1zZkYrTGswM1RrdExu?=
- =?utf-8?Q?SOe3eVCItFhtwGZ9szPkEkUEOXtWn+sQoos3Q?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37f6e783-eb9b-4e56-492b-08dec72b991f
-X-MS-Exchange-CrossTenant-AuthSource: YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2026 20:05:20.1348
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TCtj1d9MWFyKVPycPkxwxf1NPYAf6xPhXsGpJXnuifcKuDRjwyauLmLYSlOtS9uI0Bsq6CdiCNEFuUkvaeWzIezi8xybutHKIgKUNFxMA58=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB10412
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
 
-On 2026-06-10 15:51, Steven Rostedt wrote:
-> On Wed, 10 Jun 2026 12:06:59 +0100
-> David Laight <david.laight.linux@gmail.com> wrote:
+On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
+> On 6/10/26 18:37, Gregory Price wrote:
+> > On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
+> >> On 6/10/26 12:41, Gregory Price wrote:
+> > 
+> > So, I remember this being asked, and I didn't fully grok the request.
+> > 
+> > I'm still not sure I fully understand the question, so apologies if I'm
+> > answer the wrong things here.
+> > 
+> > I understand this question in two ways:
+> > 
+> >   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
 > 
->> So you only want __packed on structures that might be misaligned and those
->> that contain misaligned members.
->>
->> If the structure is only guaranteed to be 32bit aligned then use __packed
->> __aligned(4) so that two 32bit accesses get used instead of 8 8bit ones.
->>
->> -- David
->>
->>>
->>> Thank you,
->>>    
->>>> Signed-off-by: Markus Schneider-Pargmann (The Capable Hub) <msp@baylibre.com>
->>>> ---
->>>>   kernel/trace/fprobe.c | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
->>>> index cc49ebd2a773..21751dcdb7b9 100644
->>>> --- a/kernel/trace/fprobe.c
->>>> +++ b/kernel/trace/fprobe.c
->>>> @@ -181,7 +181,7 @@ static inline void read_fprobe_header(unsigned long *stack,
->>>>   struct __fprobe_header {
->>>>   	struct fprobe *fp;
->>>>   	unsigned long size_words;
->>>> -} __packed;
->>>> +};
->>>>   
+> Yes. Can we only allow folios to be allocated from private memory nodes. So let
+> me reply to that one below.
 > 
-> Does "__packed" really do anything between a pointer and a long?
+... snip ...
+> 
+> At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
+> context might be better. I think there was also talk about how the memalloc_*
+> interface might be a better way forward. Maybe we would start giving the
+> allocator more context ("we are allocating a folio").
+> 
+> The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
+>
 
-If that structure is allocated at a non-void-ptr-aligned address, the
-packed attribute will ensure that the compiler don't emit instructions
-that require aligned loads/stores when accessing those fields.
+Ok, the mental gap I have is not knowing the full context behind
+memalloc.  I'll take this and do some reading / prototyping, but
+this looks entirely reasonable.
 
-It does not change the layout of the structure per se in this specific
-case, but it informs the compiler about the lack of guarantees about
-alignment for the entire structure.
+I will still probably send the next RFC version tomorrow or friday,
+as I want to get some eyes on the __GFP_PRIVATE-less pattern.
 
-x86 32/64 cannot care less about this, but it's relevant on other
-architectures.
+Also, I made a new `anondax` driver which enables userland testing
+of this functionality without any specialty hardware.
 
-Thanks,
+tl;dr:
 
-Mathieu
+fd = open("/dev/anondax0.0", ....);
+buf = mmap(fd, ...);
+buf[0] = 0xDEADBEEF; /* fault to anondax driver */
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+static vm_fault_t anon_dax_fault(struct vm_fault *vmf)
+{
+        struct dev_dax *dev_dax = vmf->vma->vm_file->private_data;
+        vm_fault_t ret;
+        int id;
+
+        id = dax_read_lock();
+        if (!dax_alive(dev_dax->dax_dev))
+                ret = VM_FAULT_SIGBUS;
+        else
+                ret = do_anonymous_page_node(vmf, dev_dax->target_node);
+        dax_read_unlock(id);
+
+        if (ret & VM_FAULT_OOM)
+                return VM_FAULT_SIGBUS;
+        return ret ? ret : VM_FAULT_NOPAGE;
+}
+
+With:
+  qemu-system-x86_64 -m 5G \
+    -object memory-backend-ram,id=m0,size=4G -numa node,nodeid=0,memdev=m0 \
+    -object memory-backend-ram,id=m1,size=1G -numa node,nodeid=1,memdev=m1 \
+    -append "... memmap=0x40000000!0x140000000"
+
+Voila - buddy-managed private anonymous memory (1G region)
+
+No need to reinvent page_alloc.c or fault handling :]
+
+This can be used to hammer on reclaim/compaction/whatever support
+without needing any particular hardware setup, and in fact it gives
+some memory devices a path to support in userland while standards
+get worked out.
+
+do_anonymous_page_node is a bit of a bodge right now but I just haven't
+fleshed it out yet.  The idea is - don't reinvent the fault path, just
+provide the appropriate context to memory.c to do the right thing.
+
+If this is acceptable, I imagine whatever interface gets implemented
+will carry an in-tree driver export only, similar to hotplug/kmem.
+
+> From 64aaff5f40497201ecc089c3339df6576184c433 Mon Sep 17 00:00:00 2001
+> From: "David Hildenbrand (Arm)" <david@kernel.org>
+> Date: Wed, 10 Jun 2026 20:55:49 +0200
+> Subject: [PATCH] tmp
+> 
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  include/linux/sched.h    |  2 +-
+>  include/linux/sched/mm.h | 11 +++++++++++
+>  mm/mempolicy.c           | 14 ++++++++++++--
+>  mm/page_alloc.c          |  7 ++++++-
+>  4 files changed, 30 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index ee06cba5c6f5..9c850b7be6bf 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1778,7 +1778,7 @@ extern struct pid *cad_pid;
+>  						 * I am cleaning dirty pages from some other bdi. */
+>  #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+>  #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+> -#define PF__HOLE__00800000	0x00800000
+> +#define PF__MEMALLOC_FOLIO	0x00800000	/* Allocating a folio that can end up on
+> private memory nodes */
+>  #define PF__HOLE__01000000	0x01000000
+>  #define PF__HOLE__02000000	0x02000000
+>  #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with
+> cpus_mask */
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 95d0040df584..2101a447c084 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -471,6 +471,17 @@ static inline void memalloc_pin_restore(unsigned int flags)
+>  	memalloc_flags_restore(flags);
+>  }
+> 
+> +static inline unsigned int memalloc_folio_save(void)
+> +{
+> +	return memalloc_flags_save(PF_MEMALLOC_FOLIO);
+> +}
+> +
+> +static inline void memalloc_folio_restore(unsigned int flags)
+> +{
+> +	memalloc_flags_restore(flags);
+> +}
+> +
+> +
+>  #ifdef CONFIG_MEMCG
+>  DECLARE_PER_CPU(struct mem_cgroup *, int_active_memcg);
+>  /**
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 36699fabd3c2..a78b0e5a1fce 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -2506,8 +2506,13 @@ static struct page *alloc_pages_mpol(gfp_t gfp, unsigned
+> int order,
+>  struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order,
+>  		struct mempolicy *pol, pgoff_t ilx, int nid)
+>  {
+> -	struct page *page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
+> +	struct page *page;
+> +	int flags;
+> +
+> +	flags = memalloc_folio_save();
+> +	page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
+>  			ilx, nid);
+> +	memalloc_folio_restore(flags);
+>  	if (!page)
+>  		return NULL;
+> 
+> @@ -2588,7 +2593,12 @@ EXPORT_SYMBOL(alloc_pages_noprof);
+> 
+>  struct folio *folio_alloc_noprof(gfp_t gfp, unsigned int order)
+>  {
+> -	return page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
+> +	struct folio *folio;
+> +	int flags;
+> +
+> +	flags = memalloc_folio_save();
+> +	folio = page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
+> +	memalloc_folio_restore(flags);
+> +	return folio;
+>  }
+>  EXPORT_SYMBOL(folio_alloc_noprof);
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index ee902a468c2f..37434b37f7af 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5345,8 +5345,13 @@ EXPORT_SYMBOL(__alloc_pages_noprof);
+>  struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int
+> preferred_nid,
+>  		nodemask_t *nodemask)
+>  {
+> -	struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+> +	struct page *page;
+> +	int flags;
+> +
+> +	flags = memalloc_folio_save();
+> +	page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+>  					preferred_nid, nodemask);
+> +	memalloc_folio_restore(flags);
+>  	return page_rmappable_folio(page);
+>  }
+>  EXPORT_SYMBOL(__folio_alloc_noprof);
+> -- 
+> 2.43.0
+> 
+> 
+> -- 
+> Cheers,
+> 
+> David
