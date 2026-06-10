@@ -1,347 +1,181 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C2C209F43
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 18:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781114544; cv=pass; b=gMTVS6ffdv5rXbOf+IF9b719i+BGJWBX6UiW7kpSXMcwaq3JKkuzyaPTNfHiE1gbe4t2nEFVF0wq7f9QDhrrPBDXlkujYrU1YX9WTYjslpxRcw+2bCZu+6sWNXs+gexakMoJAuroK9TwNl82vgWdQKFsp5j3fm2WZJUYvmPER8g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781114544; c=relaxed/simple;
-	bh=7sPyy8cC8UyRtjCg/DQlQqazKm29Om0ms69W0GvgSpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dZRCjfPcVr66J41rN4fEu3XHUEPsgq2LI4L0A1FIhQWsLPxDul8oOGqo7iPbCiSl1Zvxz7bvqx75/8DYHgIANSq0mVzTFmRwk9F5ch+ZxkUhnsYGxA4PB82Tj0rRDFLGibiSqFLGmaSWKqAP55ZYT09H9/n5ITrMMo+lLDZ0JFY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhomfRnR; arc=pass smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C092DA765
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 18:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781117705; cv=none; b=NNlD0lNFzsz1GmOjkYUgMWE/OS33c+u4JcflHpJ/tY9I54O+jbPQzpdn5+sp7mrRIrSxeVjNjdrtDp2MqI5I3gEDfe33s2WUgcvXkP/C8c8RC+amEZ1vBJSblz4s7bN8K91bAy963ZyIrbVJKleIeEWax1LoTTY2BixwXwf7GA8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781117705; c=relaxed/simple;
+	bh=yC2zZz6UZHJtr9dQq6Am1mx0TC7iSJe8Z9EGM4xmyjQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G9FmDnFgF92qYUMGNtOoAj1NYuqXxX6m8InrBjlJD4RHwkfZsKeMoe2GykS+QYWptmuG9nQk1oGXumXNMeJFL/yQNE9Q1DnS9xTDBE7xUZlggpn31N93Llfse6U3HlWnykf80xwjHwIZErJi3mn7s8j4G163bZ6NpYqvcDsQu8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fVrOYUWX; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhomfRnR"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2bf55c39e16so734285ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 11:02:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781114543; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Dw7O6XLxTG8dCPCE8+NH2kht5EZg0GB1Q5Ti7V/UfRKi7mTFFFRpDRVRnAKZpoe4ub
-         0uHatk4SqPKNYN7R9zUOlznHGJz4bPCPa57DZr6xw7rhS3gvjLkmDHt+V4813oteL5Cp
-         PVbhUHngwKo5LJFwN65DKyqraiTEUiIdTe1Vl/BUxMBmiPpE3vIOJnlUHQM2K0D1I9WP
-         U5j39i2SaFdKdD2wMpOcvWudHxWpkVIWg/t8ghoHHEiITpn342iddDiGrJD1hidYNwHJ
-         ADsESSqUl1Ze7UfE5Q4/pnHMqtcXJ+t2Gc8UOcu6fuGKk9YCYytvDF1okTGEBe9XNDsJ
-         TtLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=pJnlJlQ30WFBCS0cKwVCZOuVVwwvVHiS/1leOhv1Elc=;
-        fh=+wDxK2RVTqwy+PE5anuoqXN8RDkPPPI0i//s1G+mLZQ=;
-        b=ARxLoLyac/EtpaodjEjQqg0nXDgk80IlKTTpd78X6OHNSo8Donye0ostZ8FcswaVlB
-         twi+MfKZqltWCJWi4fzgf2EpUHNCF2JamDIyDvwLdld8p8T9YNOuePpEFco6QGvLBPXT
-         ZfC0ctkUFPX+1RS3A4+8qMZjwksdgl/QVBZu0Q/NIzBNXoE05TYmp/hyTh/EdmJD22zN
-         DjxHTdHl4cYmkK9FtSeOgY3cpbOLTL/EXoptiUiCApeI5lzF+cwMHSUVdYuqIVwOeocG
-         GJH9R2y4nyCSEKJz29N+wNojJWS9pJtiG+sARVpGd3FCm4fBPXLInsPu8JEaKcFtho4v
-         1gWg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781114543; x=1781719343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pJnlJlQ30WFBCS0cKwVCZOuVVwwvVHiS/1leOhv1Elc=;
-        b=OhomfRnRKWUnwQcfWfYOWPV5A1Ar+WA0qRrzKd1XhXyxyPsI/AARf4h0/JUF1Tg2L7
-         kGcz/TgjsmCDUveYQxXnuIWhgjNqo5QutPKHF6/wXgTo6EJwM4Mug6FYPe0PzOrjZkXk
-         1SegtEsZqevXTzqmdCrK+DwwNhVqwhaiYz9TX3DJW1RzFgXb3YlCg7HLZ9GBIcuSLE34
-         VgOil3Cwoo/jr+yrJLpXn4P1xt2aMLa6AMgqO7ydmKDo2T3/6EHCRpj28ssQ0My4C6Q+
-         3GF0eSrVWL9VajCSp3QN5k1/pmM5fn1Hcms1pDKALiGr4SqkGX3k+M75y4D1d6sqpeTc
-         BHjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781114543; x=1781719343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pJnlJlQ30WFBCS0cKwVCZOuVVwwvVHiS/1leOhv1Elc=;
-        b=H74A2mD0W4gEI84FdlGxdWPdFgxwvlrXNwwROpNFjsCqA3sVQUbSDdK/eRayuwvAf+
-         KzU0LtasLeHstzYuS44CzID0h86yHVy+amcO/IL5jh7GBhIYGAN+Ee3yu4UD8XLQlHR3
-         f1Pfl34qRdnpZSarJpUCM4B/wgR1bVEn5QmzbXc7Fig8wItVxXPF1g6DFp7bsr5j0c+P
-         UOVmvcdCaUGZEJORp+tWSyiRxkzfxQfRgk3Z7ESJRvaSDRomW6SfWgi/9nibDI0A0pl/
-         4WL+Am5pO/NVe4YUNIf/K45x+aYIN8RuJbwJ4gbAPwsYlXIQViFCY7T0AJpSzTJPgc8q
-         //Fw==
-X-Forwarded-Encrypted: i=1; AFNElJ+TQb/kxQsM3EIiXLMSo2rsaW0XirhL15gCDHTbgVGlpEss1YdGubCKUzf6gbA+wmTCmhHaWCVWy7Ye+yqrJjEpuPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqncVxWirABd2M+XxvbzhiNhyi19lMaxq7pyzWaRrdanXgyiHV
-	1RRNQ/BmXXPu4kt2LXYWxzBrTgFD9dABqO54I6tDMcYZpf4/7Kj3oMUbkgSqKBPC4aifzvXY2+M
-	1txOenBZc5KGkVfFt1AozMZXFS/zFFRk=
-X-Gm-Gg: Acq92OGi/DHoKXzNYcy/5oEP8nIZKXT8UJHUWeUcfUlkiKCsHVJxL61UjafiaTxiA9a
-	U5C8T7r0TkY8xap0XfrN+cemqF7dVBlUMkQBSW+mPDYR+SIh+bKLm4SYwCwvlVOBIZDb/b4Ae0k
-	tZbnOwn2Pcrkcoc+pSpU1Ua1/yf0qZYDZDR4vJAxZ+sI2ciV/IjUj6k6zjePoVcNt7l5Wqknrzv
-	YnZPjgchET1fnEX+jl9habYM7yJh4isz74FgisVlxAC5f+MB6S5ZlLw07ChcCW17afbY6ANVKAU
-	HHWCK2dSH3z2Ga4/1ogEE655N8bU/pjzZHg3N7bJ3MSDIOhLvsftxJ8zcRP8eqsF5ykzgAtWz3k
-	7u310BE1MHIV/6sM=
-X-Received: by 2002:a17:902:d2c7:b0:2bf:13af:b077 with SMTP id
- d9443c01a7336-2c1ec9290abmr225113575ad.14.1781114542545; Wed, 10 Jun 2026
- 11:02:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fVrOYUWX"
+Message-ID: <6e7739cc-327e-4ca9-86f4-17729b624632@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781117700;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lfF9RI+iBUohFlyVvEs6LdGT+K29EajhjVSojF8K/mI=;
+	b=fVrOYUWXUVlrBfNXAhQTMoDvIZnpoFcfZw/N8kWM0UJhwbqwCvWHOnUH1GLRd2XFk31Y0D
+	KtRzgsYUb3TtLR/EB8DOAy1PmMrLVX3hhZvyMYh6/dqUzPFbcFDSxTf5bLh8gVeC1R9O1L
+	PJzAfMQ2NGHxaWsC2vwPLS0Sq6pUnPg=
+Date: Wed, 10 Jun 2026 11:54:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260526205840.173790-1-jolsa@kernel.org> <20260526205840.173790-6-jolsa@kernel.org>
- <CAEf4BzZiFUeFa4fdghuSGpqiEzyvJVxs6TDgJd5U4hSj--imiQ@mail.gmail.com>
- <aif8jkUPst-tTskE@krava> <CAEf4BzbsB-PRZRqkz37YK5wYNR=ajZv2N7tEznpZM0rdyYC_xA@mail.gmail.com>
- <aikd6-5HYhCnc0Ze@krava>
-In-Reply-To: <aikd6-5HYhCnc0Ze@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Jun 2026 11:02:08 -0700
-X-Gm-Features: AVVi8CdywaZzLDzIOPnc2LK8GWSXgj_KSvmGO8TWO4azabbUqslamAUKZwWVs_g
-Message-ID: <CAEf4BzaJhjQiqbs6bh9zdjRzjySLJ0qccpiRk7yhdxUC-BvfUQ@mail.gmail.com>
-Subject: Re: [PATCHv4 05/13] uprobes/x86: Move optimized uprobe from nop5 to nop10
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] mm/lruvec: trace LRU add drains and drain-all queuing
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Barry Song <baohua@kernel.org>, linux-mm@kvack.org, willy@infradead.org,
+ usama.arif@linux.dev, akpm@linux-foundation.org, vbabka@kernel.org,
+ mhocko@suse.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, kasong@tencent.com, qi.zheng@linux.dev,
+ axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+ chrisl@kernel.org, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+ baoquan.he@linux.dev, youngjun.park@lge.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260609041156.31127-1-jp.kobryn@linux.dev>
+ <CAGsJ_4xk2Q3xTkQYMPb7rnvnvVsjp24uXRcOja5RxqSbQpdoEg@mail.gmail.com>
+ <3e55e520-b979-4b1c-874c-3b4e5ca629e2@linux.dev>
+ <d676cf78-4b0a-4d6b-b322-f64826aaca75@linux.dev> <aii7WWFmAyoXn9rk@linux.dev>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: JP Kobryn <jp.kobryn@linux.dev>
+In-Reply-To: <aii7WWFmAyoXn9rk@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 10, 2026 at 1:18=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Tue, Jun 09, 2026 at 09:43:15AM -0700, Andrii Nakryiko wrote:
-> > On Tue, Jun 9, 2026 at 4:44=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> w=
-rote:
-> > >
-> > > On Mon, Jun 08, 2026 at 01:46:39PM -0700, Andrii Nakryiko wrote:
-> > > > On Tue, May 26, 2026 at 1:59=E2=80=AFPM Jiri Olsa <jolsa@kernel.org=
-> wrote:
-> > > > >
-> > > > > Andrii reported an issue with optimized uprobes [1] that can clob=
-ber
-> > > > > redzone area with call instruction storing return address on stac=
-k
-> > > > > where user code may keep temporary data without adjusting rsp.
-> > > > >
-> > > > > Fixing this by moving the optimized uprobes on top of 10-bytes no=
-p
-> > > > > instruction, so we can squeeze another instruction to escape the
-> > > > > redzone area before doing the call, like:
-> > > > >
-> > > > >   lea -0x80(%rsp), %rsp
-> > > > >   call tramp
-> > > > >
-> > > > > Note the lea instruction is used to adjust the rsp register witho=
-ut
-> > > > > changing the flags.
-> > > > >
-> > > > > We use nop10 and following transformation to optimized instructio=
-ns
-> > > > > above and back as suggested by Peterz [2].
-> > > > >
-> > > > > Optimize path (int3_update_optimize):
-> > > > >
-> > > > >   1) Initial state after set_swbp() installed the uprobe:
-> > > > >       cc 2e 0f 1f 84 00 00 00 00 00
-> > > > >
-> > > > >      From offset 0 this is INT3 followed by the tail of the origi=
-nal
-> > > > >      10-byte NOP.
-> > > > >
-> > > > >      After a previous unoptimization bytes 5..9 may still contain=
- the
-> > > > >      old call instruction, which remains valid for threads alread=
-y there.
-> > > > >
-> > > > >   2) Rewrite the LEA tail and call displacement:
-> > > > >       cc [8d 64 24 80 e8 d0 d1 d2 d3]
-> > > > >
-> > > > >      From offset 0 this traps on the uprobe INT3.  Bytes 1..9 are=
- not
-> > > > >      executable entry points while byte 0 is trapped.
-> > > > >
-> > > > >   3) Publish the first LEA byte:
-> > > > >       [48] 8d 64 24 80 e8 d0 d1 d2 d3
-> > > > >
-> > > > >      From offset 0 this is:
-> > > > >         lea -0x80(%rsp), %rsp
-> > > > >         call <uprobe-trampoline>
-> > > > >
-> > > > > Unoptimize path (int3_update_unoptimize):
-> > > > >
-> > > > >   1) Initial optimized state:
-> > > > >       48 8d 64 24 80 e8 d0 d1 d2 d3
-> > > > >      Same as 3) above.
-> > > > >
-> > > > >   2) Trap new entries before restoring the NOP bytes:
-> > > > >       [cc] 8d 64 24 80 e8 d0 d1 d2 d3
-> > > > >
-> > > > >      From offset 0 this traps. A thread that had already executed=
- the
-> > > > >      LEA can still reach the intact CALL at offset 5.
-> > > > >
-> > > > >   3) Restore bytes 1..4 of the original NOP while keeping byte 0 =
-trapped
-> > > > >      and byte 5 as CALL.
-> > > > >       cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> > > > >
-> > > > >      From offset 0 this still traps. Offset 5 is still the CALL f=
-or any
-> > > > >      thread that was already past the first LEA byte.
-> > > > >
-> > > > >   4) Publish the first byte of the original NOP:
-> > > > >       [66] 2e 0f 1f 84 e8 d0 d1 d2 d3
-> > > > >
-> > > > >      From offset 0 this is the restored 10-byte NOP; the CALL opc=
-ode and
-> > > > >      displacement are now only NOP operands.  Offset 5 still deco=
-des as
-> > > > >      CALL for a thread that was already there.
-> > > > >
-> > > > >      Tthere is only a single target uprobe-trampoline for the giv=
-en nop10
-> > > > >      instruction address, so the CALL instruction will not be cha=
-nged across
-> > > > >      unoptimization/optimization cycles.
-> > > > >      Therefore, any task that is preempted at the CALL instructio=
-n is guaranteed
-> > > > >      to observe that CALL and not anything else.
-> > > > >
-> > > > > Note as explained in [2] we need to use following nop10:
-> > > > >        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
-> > > > > NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00=
- -- cs nopw 0x00000000(%rax,%rax,1)
-> > > > >
-> > > > > which means we need to allow 0x2e prefix which maps to INAT_PFX_C=
-S
-> > > > > attribute in is_prefix_bad function.
-> > > > >
-> > > > > Also changing the uprobe syscall error when called out of uprobe
-> > > > > trampoline to -EPROTO, so we are able to detect the fixed kernel.
-> > > > >
-> > > > > The optimized uprobe performance stays the same:
-> > > > >
-> > > > >         uprobe-nop     :    3.129 =C2=B1 0.013M/s
-> > > > >         uprobe-push    :    3.045 =C2=B1 0.006M/s
-> > > > >         uprobe-ret     :    1.095 =C2=B1 0.004M/s
-> > > > >   -->   uprobe-nop10   :    7.170 =C2=B1 0.020M/s
-> > > > >         uretprobe-nop  :    2.143 =C2=B1 0.021M/s
-> > > > >         uretprobe-push :    2.090 =C2=B1 0.000M/s
-> > > > >         uretprobe-ret  :    0.942 =C2=B1 0.000M/s
-> > > > >   -->   uretprobe-nop10:    3.381 =C2=B1 0.003M/s
-> > > > >         usdt-nop       :    3.245 =C2=B1 0.004M/s
-> > > > >   -->   usdt-nop10     :    7.256 =C2=B1 0.023M/s
-> > > > >
-> > > > > [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@ke=
-rnel.org/
-> > > > > [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.pr=
-ogramming.kicks-ass.net/#t
-> > > > > Reported-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > > Closes: https://lore.kernel.org/bpf/20260509003146.976844-1-andri=
-i@kernel.org/
-> > > > > Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobe=
-s")
-> > > > > Assisted-by: Codex:GPT-5.5
-> > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > ---
-> > > > >  arch/x86/kernel/uprobes.c | 255 ++++++++++++++++++++++++++++----=
-------
-> > > > >  1 file changed, 190 insertions(+), 65 deletions(-)
-> > > > >
-> > > >
-> > > > [...]
-> > > >
-> > > > > @@ -943,13 +1026,31 @@ static int int3_update(struct arch_uprobe =
-*auprobe, struct vm_area_struct *vma,
-> > > > >         smp_text_poke_sync_each_cpu();
-> > > > >
-> > > > >         /*
-> > > > > -        * Write first byte.
-> > > > > +        * 3) Restore bytes 1..4 of the original NOP while keepin=
-g byte 0 trapped
-> > > > > +        *    and byte 5 as CALL:
-> > > > > +        *    cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> > > > > +        */
-> > > > > +       ctx.expect =3D EXPECT_SWBP_OPTIMIZED;
-> > > > > +       err =3D uprobe_write(auprobe, vma, vaddr + 1, insn + 1,
-> > > > > +                          LEA_INSN_SIZE - 1, verify_insn,
-> > > > > +                          true /* is_register */, false /* do_up=
-date_ref_ctr */,
-> > > >
-> > > > tbh, it's quite subtle and non-obvious why is_register should be se=
-t
-> > > > to true first two times (and especially that is_register and
-> > > > do_update_ref_ctr are implicitly connected), not sure how to make i=
-t
-> > > > cleaner, but maybe leave a short comment explaining this twice
-> > > > register, once unregister sequence?
-> > >
-> > > ok, I came up with comment below
-> > >
-> > > thanks,
-> > > jirka
-> > >
-> > >
-> > > ---
-> > > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > > index de544516ea70..92449f34c005 100644
-> > > --- a/arch/x86/kernel/uprobes.c
-> > > +++ b/arch/x86/kernel/uprobes.c
-> > > @@ -1011,6 +1011,12 @@ static int int3_update_unoptimize(struct arch_=
-uprobe *auprobe, struct vm_area_st
-> > >         int err;
-> > >
-> > >         /*
-> > > +        * Note the first two uprobe_write calls use is_register=3Dtr=
-ue, because they
-> > > +        * are intermediate patching states while the probe is still =
-active.
-> >
-> > this doesn't really explain why is_register=3Dtrue is the right one. It
-> > actually doesn't matter as long as do_update_ref_ctr=3Dtrue, isn't that
-> > right? So maybe just to avoid a bit of confusion let's pass
-> > is_register=3Dfalse and do_update_ref_ctr=3Dfalse, and in the comment
-> > explain as you said that it's intermediate update and we don't want to
-> > update refctr just yet until the very last step?
->
-> apart from refctr update there's also different way the concerned
-> page is managed, IIUC:
->
-> with is_register=3Dtrue we force to get exclusive anonymous page for
-> the update (or pin the existing one)
->
-> with is_register=3Dfalse we try to zap the private anonymous page and
-> return the mapping to the original page
->
-> there are several comments on this in uprobe_write/__uprobe_write
->
-> how about the update below
->
-> jirka
->
->
-> ---
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index de544516ea70..09f5ff71227c 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -1011,6 +1011,16 @@ static int int3_update_unoptimize(struct arch_upro=
-be *auprobe, struct vm_area_st
->         int err;
->
->         /*
-> +        * Note the first two uprobe_write calls use is_register=3Dtrue, =
-because they
-> +        * are intermediate patching states while the probe is still acti=
-ve, so
-> +        * we force the exclusive anonymous page for the update.
-> +        * Also we use do_update_ref_ctr=3Dfalse because refctr was alrea=
-dy updated by
-> +        * the initial int3 install.
-> +        *
-> +        * The last uprobe_write to nop10 instruction is called with is_r=
-egister=3Dfalse
-> +        * and do_update_ref_ctr=3Dtrue to trigger the refctr update and =
-to instruct
-> +        * uprobe_write to zap the anonymous page if it now matches the f=
-ile page.
-> +        *
+On 6/9/26 6:21 PM, Shakeel Butt wrote:
+> On Tue, Jun 09, 2026 at 05:16:15PM -0700, JP Kobryn wrote:
+>> On 6/9/26 5:07 PM, JP Kobryn wrote:
+>>> On 6/9/26 12:44 AM, Barry Song wrote:
+>>>> On Tue, Jun 9, 2026 at 12:12 PM JP Kobryn <jp.kobryn@linux.dev> wrote:
+>>>>>
+>>>>> LRU add batches can be drained before they reach capacity. This can be a
+>>>>> source of LRU lock contention, but it is not currently possible to
+>>>>> attribute these drains to callers with existing tracepoints.
+>>>>>
+>>>>> Add mm_lru_add_drain to report the CPU and lru_add batch count when an
+>>>>> lru_add batch is drained. This allows tracing to distinguish full drains
+>>>>> from partial drains and attribute them to the calling stack.
+>>>>>
+>>>>> Add mm_lru_drain_all_queue to report when lru_add_drain_all() queues
+>>>>> per-CPU drain work. This captures the requester stack and target CPU for
+>>>>> remote drain work. The event is named as a drain-all queue event because
+>>>>> the queued work can be needed for batches other than lru_add.
+>>>>>
+>>>>> Signed-off-by: JP Kobryn <jp.kobryn@linux.dev>
+>>>>> ---
+>>>>>  include/trace/events/pagemap.h | 40 ++++++++++++++++++++++++++++++++++
+>>>>>  mm/swap.c                      |  6 ++++-
+>>>>>  2 files changed, 45 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/include/trace/events/pagemap.h b/include/trace/events/pagemap.h
+>>>>> index 171524d3526d..ea8fc46bedb0 100644
+>>>>> --- a/include/trace/events/pagemap.h
+>>>>> +++ b/include/trace/events/pagemap.h
+>>>>> @@ -77,6 +77,46 @@ TRACE_EVENT(mm_lru_activate,
+>>>>>         TP_printk("folio=%p pfn=0x%lx", __entry->folio, __entry->pfn)
+>>>>>  );
+>>>>>
+>>>>> +TRACE_EVENT(mm_lru_add_drain,
+>>>>> +
+>>>>> +       TP_PROTO(int cpu, unsigned int nr),
+>>>>> +
+>>>>> +       TP_ARGS(cpu, nr),
+>>>>> +
+>>>>> +       TP_STRUCT__entry(
+>>>>> +               __field(int,            cpu     )
+>>>>> +               __field(unsigned int,   nr      )
+>>>>> +       ),
+>>>>> +
+>>>>> +       TP_fast_assign(
+>>>>> +               __entry->cpu    = cpu;
+>>>>> +               __entry->nr     = nr;
+>>>>> +       ),
+>>>>> +
+>>>>> +       TP_printk("cpu=%d nr=%u", __entry->cpu, __entry->nr)
+>>>>> +);
+>>>>> +
+>>>>> +TRACE_EVENT(mm_lru_drain_all_queue,
+>>>>> +
+>>>>> +       TP_PROTO(int target_cpu, bool force_all_cpus),
+>>>>> +
+>>>>> +       TP_ARGS(target_cpu, force_all_cpus),
+>>>>> +
+>>>>> +       TP_STRUCT__entry(
+>>>>> +               __field(int,    target_cpu      )
+>>>>> +               __field(bool,   force_all_cpus  )
+>>>>> +       ),
+>>>>> +
+>>>>> +       TP_fast_assign(
+>>>>> +               __entry->target_cpu     = target_cpu;
+>>>>> +               __entry->force_all_cpus = force_all_cpus;
+>>>>> +       ),
+>>>>> +
+>>>>> +       TP_printk("target_cpu=%d force_all_cpus=%s",
+>>>>> +               __entry->target_cpu,
+>>>>> +               __entry->force_all_cpus ? "true" : "false")
+>>>>> +);
+>>>>> +
+>>>>>  #endif /* _TRACE_PAGEMAP_H */
+>>>>>
+>>>>>  /* This part must be outside protection */
+>>>>> diff --git a/mm/swap.c b/mm/swap.c
+>>>>> index 588f50d8f1a8..c385b93582eb 100644
+>>>>> --- a/mm/swap.c
+>>>>> +++ b/mm/swap.c
+>>>>> @@ -694,9 +694,12 @@ void lru_add_drain_cpu(int cpu)
+>>>>>  {
+>>>>>         struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
+>>>>>         struct folio_batch *fbatch = &fbatches->lru_add;
+>>>>> +       unsigned int nr_folios_add = folio_batch_count(fbatch);
+>>>>>
+>>>>> -       if (folio_batch_count(fbatch))
+>>>>> +       if (nr_folios_add) {
+>>>>>                 folio_batch_move_lru(fbatch, lru_add);
+>>>>> +               trace_mm_lru_add_drain(cpu, nr_folios_add);
+>>>>> +       }
+>>>>>
+>>>>>         fbatch = &fbatches->lru_move_tail;
+>>>>>         /* Disabling interrupts below acts as a compiler barrier. */
+>>>>> @@ -928,6 +931,7 @@ static inline void __lru_add_drain_all(bool force_all_cpus)
+>>>>>                 if (cpu_needs_drain(cpu)) {
+>>>>>                         INIT_WORK(work, lru_add_drain_per_cpu);
+>>>>>                         queue_work_on(cpu, mm_percpu_wq, work);
+>>>>> +                       trace_mm_lru_drain_all_queue(cpu, force_all_cpus);
+>>>>
+>>>> Do you need tracing on each CPU individually, or is tracing the
+>>>> entire __lru_add_drain_all() invocation sufficient?
+>>>
+>>> I think the latter would be fine. The remote work will invoke the
+>>> mm_lru_add_drain tracepoint, which will show up as kworker stacks. Since
+>>> the event already has the CPU, we could see where queued drains actually
+>>> ran.
+>>
+>> Actually if it's just a single invocation and the only event data is the
+>> force flag, a tracepoint may not even be needed. Other probes can be
+>> installed on function invocation and read the single argument. I can
+>> drop this from v2 and keep the single mm_lru_add_drain tracepoint.
+> 
+> No we do want to trace the callers requesting to drain from all the CPUs. If you
+> trace just lru_add_drain_cpu() then you will only see that the drain is
+> requested for a given CPU but no information on the requester. 
+> 
+> Also as Barry said, I think single trace for whole __lru_add_drain_all() is good
+> enough.
 
-lgtm!
-
->          * 1) Initial optimized state:
->          *    48 8d 64 24 80 e8 d0 d1 d2 d3
->          *
+Right, but couldn't that already be done with fentry or kprobe? If we
+only need the calling stack and the argument value of force_all_cpus I
+don't see a strong need for a dedicated tracepoint.
