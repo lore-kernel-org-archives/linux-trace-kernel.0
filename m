@@ -1,149 +1,187 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F90E1E5207
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 19:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781118068; cv=pass; b=UmlbTKknPMwoCubekUa6eldGcRonaBlL6oOwyzbxd3FVUokGPn9DK4yPkyyadNQWQvr6ZfjjG60mFkzP+8VVn4bWmQvkONlCVlWxB6yi5p2xWg0af2FvgPIf02srdck9DC6T91R7oV1HUwkmq3II8XQ5BdTZmX72naNA/Q3pVLc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781118068; c=relaxed/simple;
-	bh=KojWc5g4dM4amOUWQa6TiDAvQ799Q6Ii9VxdLEUmD28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pfEQ+AuPMNVzomZnStrJA7hoPgbiodi8wEwBl9IWBFlqQBAvWrk8tkKzQxarss1rd7Z3ojzPZS+ATXW1aia/rmaI3Oyx7T0QXUO6H2c55kHxPkAJZ3icMt71gJTzCh7v/uJPfz8tfeJkcPjU0xq6d+/aCRjXygB95qgVWLLIalo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=CEZDFGR+; arc=pass smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03403002D1
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 19:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781119391; cv=none; b=FdGtzsSXZiu2lfwgxIDPrHB+GZm4T3nTJA72BgPtDyVqkoD/Ze4/awHsG0zOjYiS/MB7UksEGqx7d4kqZMuX5GIs4yz4i53SoIlsmW5jhujLFbIRFAgrn5mQKkkc87Bn0jpWaalMiS8MPk0oeJ5Uyz++opTzrWTSzItTR6xGfGs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781119391; c=relaxed/simple;
+	bh=NJewdxZvpJ4YYH3dhp3E3gyPK09zc/gdxzJ1PEAjB8I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QT/31ROp0YytGgyT3N6SEbErsjqNUZxETZup6zgAGH3drek8GmqbgLfZSxaEMBaDJRqgR9cw3Kc0chT/+zT+MqunKmR5be1x92vBkJD8HRCYjoU0u671KN0uFQHZGdYIM9zy5bE7WEfVRT3Jgb4Butwz1pVBpey/QVfB5iHTfss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J9HpL/4+; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="CEZDFGR+"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5aa2c25c632so7745529e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 12:01:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781118065; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZUnC5qjyEpzzpbR/fboUc8pD4CykHSFn6XSSqTH+KcglDlY8F4uLuThf3OUqDj830C
-         0oD6oVIRwB4YSayHAyRVpAeGVcUghAcOzR1vyoIeukSglmpfMBLmIOx71TMfz1+9Tg3L
-         J6vJCUsF25iP3w+8FklvHqnHG+TdzaoCPdVai0ukaG9BAjE3MsPrewbHPey2KaP7z/Rk
-         ynDPlGJTf3VitMSWxdMNYh826WX3xjx0OSTorlqzuhLNTuB8pFL1B/AGvRBL98OhQf6A
-         l7ugO7p31yEGpd8OY9kdCFt2OxgsaFy+TemaVJLJj8a0+EzL9RqH13Ve/2W1+jX6xfGj
-         kPBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=sK1ep5727p7DwH3peM6L5HJRPXeW5dBkVx3KmvyAzlI=;
-        fh=87FcYqOfAMZcj5WWE1A72bsSd9BO9kuCgX7SuFk8b5Y=;
-        b=JGwA8SPoIzj8KlicE79Zjz7Nm8/1e2HtthJ6Yk0rujmd4VNmzIHrUZAsqVctRM2gDz
-         PsOH7mO6e9+w6P2wjyMtY7YYbbJdV/2bOCXQANAgLHArJVC3C3fs3y/uzu9pcBdR/GmR
-         Lvj/fR4cOVsmPkHQCBlXhXCZDoKIfskKfqLqpW6N5evJjlJ0NjX1MIy3QlqkkiY4GXuo
-         MIAM6CIIAMhlFkcxiLhAk1rwImGkEI7YnmyWRUiDOiEzv3Pvq6zENYujJXNBkWBA/8/v
-         OLvU4ofnYYyEbxuB4ffhuFwlz0tWEkwTJQyOTcaTVO/J02GUBiENNFlVjymrNDiTQm06
-         hQPg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=trailofbits.com; s=google; t=1781118065; x=1781722865; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sK1ep5727p7DwH3peM6L5HJRPXeW5dBkVx3KmvyAzlI=;
-        b=CEZDFGR+nssOsp0tvY+J+QqT6lQ6cuWEyPXEY1bDbNJ4j5AfIf6e/uqQloZ179guDR
-         CBuxGsz5ldkTcspb2cFxcIgJBH9ww49pnpOHfbWP/JZLyT3dsKrWivB3/ivwDILLEyFf
-         ycp66oGv3ynVmPBQqrkuZ8VLFskMI0yIVbcCbC/XsvhxPt8v6ldVPf+DBa4B+REmZo8z
-         V6c3Zf9mRbI0NJfTkcBvH5XsPYvMNYd9t7SpnHcrbnv5GUGD8BpVz3rHff4n9060Wn6D
-         42XNvls3AiDVp7FhyeWrc9igoi0MMOXARVyk0QVWa8OyLILEUzUEC9L/cVXGPJvO9uNS
-         bWFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781118065; x=1781722865;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=sK1ep5727p7DwH3peM6L5HJRPXeW5dBkVx3KmvyAzlI=;
-        b=W5+ua5yhuqLDlqjK3jcacjMFwY/eiBF6ZIbfAv+p7jVZ/G5FB7Ye9nWcHdo9/lIF3E
-         uQ7JOsZcP8qOQVmALMWIY2E+Mitec3LqTMBrYZXqqicNmf8bHPIlItF5PyFyob0+lZnJ
-         lSjT5uGsQxz/ufFzVPP5Y5eWKE93v+EBevKmE3K4cdEn4aYSuKc5EdjgDv9c70Gdmw1J
-         XhdsrQbL8HuQaBG4KQCCNVVKnllCul6KaEBODnVPj3IIjMMmyFEbLKsKQdNehBfPVUVH
-         6IpDTA808ClKrP4UB9SW4+102XNadlzqJEhu673Ts//55DiC3r+hJYmUFPuP8fhGIn3B
-         Ulow==
-X-Forwarded-Encrypted: i=1; AFNElJ89mFBS+1fNs57G5SKm2Og3DvOPzECj1UONSSC8xQhk57zPqw4YJ8sT/Zu9eQWzY/sPOWjmJIkidJhy3EtL3l6GcZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDpPKwo7KoMM/XaGJoghdozcge3plsD3NFFrWuwxT9YHWlJsCE
-	VLcEmHYzzqHlkc/X986MkW5fNTkv12Ri7ZkyGsYwO7XsLsNelS+BuPNtyVLZvQ7VdZX9dgXYoXQ
-	WX1/AlAwsRFlTiYZbLLb08HeX3f9pLhwktmsL+2FEbg==
-X-Gm-Gg: Acq92OE5oXNFILP4zV/cJGY9E32GzjG59+8n66zz0+kIihu5wnQpxVdUxdIr/Zj8wdG
-	GZ4PmBjb+ObAeP3ezQpIpt/lGnZJmamaXYsTUVOpC0WMNpjRETs/46Cq85zKr1AYW2Hiu7AnHFn
-	F9RyRJCuvyvLVTGRpDpPZhV6YiGDLchOOncSv47+nX44HiZTJ87iGpxJ1Z5of4QB2Ktj+gHh67Z
-	S/TOGaHlVAT66az62jWcqsCckfBiNyPdyLlo08KBwSV2Rv29NMuq8HGAZyp9TAQ32/nyetx2yuC
-	vlD4bFsGbJFilWMN
-X-Received: by 2002:ac2:43b3:0:b0:5aa:6301:846b with SMTP id
- 2adb3069b0e04-5aa87b8c393mr5862222e87.5.1781118065424; Wed, 10 Jun 2026
- 12:01:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J9HpL/4+"
+Message-ID: <ffdf9b07-487b-4668-a91b-27b0ab29c70d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781119226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qWcyqlFHr5mEY42mMiFua4E/gMz+s/X2vILeDjuLg30=;
+	b=J9HpL/4+E3jEKvbtYmDAMJUgYViuJPtNed4QFKKvOa1p4lg+r7fS6BGHUGAvB3m36bE+ek
+	V92qDCwWhQGhPfkq24rX/i31U5boavRKK4AoX2zXj34jzt5/6YVceXVs1yx1iHuYldBGzh
+	yu5+6uON6ZndR5c6kTbmdfg3aeshNZI=
+Date: Wed, 10 Jun 2026 12:20:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260605004006.2041148-1-sam.moelius@trailofbits.com> <20260609181617.185f1e02@fedora>
-In-Reply-To: <20260609181617.185f1e02@fedora>
-From: Samuel Moelius <sam.moelius@trailofbits.com>
-Date: Wed, 10 Jun 2026 15:00:52 -0400
-X-Gm-Features: AVVi8CdKPs4dbSPdBcbMhTvlLGa4uVilMi5s-VISt168ofSBYuZq9mZwQkJxOxk
-Message-ID: <CAE+C+DYR7bA1AoT6Aqv_2eCWVzsYhepmy1TeHV27uwEdDBpwxg@mail.gmail.com>
-Subject: Re: [PATCH] tracing: reject invalid preemptirq_delay_test CPU affinity
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	"open list:TRACING" <linux-kernel@vger.kernel.org>, 
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] mm/lruvec: trace LRU add drains and drain-all queuing
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: JP Kobryn <jp.kobryn@linux.dev>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Barry Song <baohua@kernel.org>, linux-mm@kvack.org, willy@infradead.org,
+ usama.arif@linux.dev, akpm@linux-foundation.org, vbabka@kernel.org,
+ mhocko@suse.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, kasong@tencent.com, qi.zheng@linux.dev,
+ axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+ chrisl@kernel.org, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+ baoquan.he@linux.dev, youngjun.park@lge.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260609041156.31127-1-jp.kobryn@linux.dev>
+ <CAGsJ_4xk2Q3xTkQYMPb7rnvnvVsjp24uXRcOja5RxqSbQpdoEg@mail.gmail.com>
+ <3e55e520-b979-4b1c-874c-3b4e5ca629e2@linux.dev>
+ <d676cf78-4b0a-4d6b-b322-f64826aaca75@linux.dev> <aii7WWFmAyoXn9rk@linux.dev>
+ <6e7739cc-327e-4ca9-86f4-17729b624632@linux.dev>
+Content-Language: en-US
+In-Reply-To: <6e7739cc-327e-4ca9-86f4-17729b624632@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 9, 2026 at 6:16=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Fri,  5 Jun 2026 00:40:06 +0000
-> Samuel Moelius <sam.moelius@trailofbits.com> wrote:
->
-> > preemptirq_delay_test accepts cpu_affinity as a module parameter and,
-> > when it is non-negative, writes that CPU directly into a temporary
-> > cpumask from the worker thread.  Values outside nr_cpu_ids can set a
-> > bit outside the allocated cpumask before the test reports a normal
-> > affinity error.
-> >
-> > Validate the requested CPU before starting the worker thread, and
-> > return -EINVAL for invalid affinity requests.
-> >
-> > Assisted-by: Codex:gpt-5.5-cyber-preview
-> > Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
-> > ---
-> >  kernel/trace/preemptirq_delay_test.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemp=
-tirq_delay_test.c
-> > index acb0c971a408..0f017799754a 100644
-> > --- a/kernel/trace/preemptirq_delay_test.c
-> > +++ b/kernel/trace/preemptirq_delay_test.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/kthread.h>
-> >  #include <linux/module.h>
-> >  #include <linux/printk.h>
-> > +#include <linux/cpumask.h>
-> >  #include <linux/string.h>
-> >  #include <linux/sysfs.h>
-> >  #include <linux/completion.h>
-> > @@ -152,6 +153,15 @@ static int preemptirq_run_test(void)
-> >       struct task_struct *task;
-> >       char task_name[50];
-> >
-> > +     if (cpu_affinity > -1) {
-> > +             unsigned int cpu =3D cpu_affinity;
-> > +
-> > +             if (cpu >=3D nr_cpu_ids || !cpu_possible(cpu)) {
-> > +                     pr_err("cpu_affinity:%d, invalid CPU\n", cpu_affi=
-nity);
-> > +                     return -EINVAL;
->
-> Just add the check to the preemptirq_delay_run() function where it
-> tests affinity. Who cares if it created the thread or not. It's just a
-> test.
+On 6/10/26 11:54 AM, JP Kobryn wrote:
+> On 6/9/26 6:21 PM, Shakeel Butt wrote:
+>> On Tue, Jun 09, 2026 at 05:16:15PM -0700, JP Kobryn wrote:
+>>> On 6/9/26 5:07 PM, JP Kobryn wrote:
+>>>> On 6/9/26 12:44 AM, Barry Song wrote:
+>>>>> On Tue, Jun 9, 2026 at 12:12 PM JP Kobryn <jp.kobryn@linux.dev> wrote:
+>>>>>>
+>>>>>> LRU add batches can be drained before they reach capacity. This can be a
+>>>>>> source of LRU lock contention, but it is not currently possible to
+>>>>>> attribute these drains to callers with existing tracepoints.
+>>>>>>
+>>>>>> Add mm_lru_add_drain to report the CPU and lru_add batch count when an
+>>>>>> lru_add batch is drained. This allows tracing to distinguish full drains
+>>>>>> from partial drains and attribute them to the calling stack.
+>>>>>>
+>>>>>> Add mm_lru_drain_all_queue to report when lru_add_drain_all() queues
+>>>>>> per-CPU drain work. This captures the requester stack and target CPU for
+>>>>>> remote drain work. The event is named as a drain-all queue event because
+>>>>>> the queued work can be needed for batches other than lru_add.
+>>>>>>
+>>>>>> Signed-off-by: JP Kobryn <jp.kobryn@linux.dev>
+>>>>>> ---
+>>>>>>  include/trace/events/pagemap.h | 40 ++++++++++++++++++++++++++++++++++
+>>>>>>  mm/swap.c                      |  6 ++++-
+>>>>>>  2 files changed, 45 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/include/trace/events/pagemap.h b/include/trace/events/pagemap.h
+>>>>>> index 171524d3526d..ea8fc46bedb0 100644
+>>>>>> --- a/include/trace/events/pagemap.h
+>>>>>> +++ b/include/trace/events/pagemap.h
+>>>>>> @@ -77,6 +77,46 @@ TRACE_EVENT(mm_lru_activate,
+>>>>>>         TP_printk("folio=%p pfn=0x%lx", __entry->folio, __entry->pfn)
+>>>>>>  );
+>>>>>>
+>>>>>> +TRACE_EVENT(mm_lru_add_drain,
+>>>>>> +
+>>>>>> +       TP_PROTO(int cpu, unsigned int nr),
+>>>>>> +
+>>>>>> +       TP_ARGS(cpu, nr),
+>>>>>> +
+>>>>>> +       TP_STRUCT__entry(
+>>>>>> +               __field(int,            cpu     )
+>>>>>> +               __field(unsigned int,   nr      )
+>>>>>> +       ),
+>>>>>> +
+>>>>>> +       TP_fast_assign(
+>>>>>> +               __entry->cpu    = cpu;
+>>>>>> +               __entry->nr     = nr;
+>>>>>> +       ),
+>>>>>> +
+>>>>>> +       TP_printk("cpu=%d nr=%u", __entry->cpu, __entry->nr)
+>>>>>> +);
+>>>>>> +
+>>>>>> +TRACE_EVENT(mm_lru_drain_all_queue,
+>>>>>> +
+>>>>>> +       TP_PROTO(int target_cpu, bool force_all_cpus),
+>>>>>> +
+>>>>>> +       TP_ARGS(target_cpu, force_all_cpus),
+>>>>>> +
+>>>>>> +       TP_STRUCT__entry(
+>>>>>> +               __field(int,    target_cpu      )
+>>>>>> +               __field(bool,   force_all_cpus  )
+>>>>>> +       ),
+>>>>>> +
+>>>>>> +       TP_fast_assign(
+>>>>>> +               __entry->target_cpu     = target_cpu;
+>>>>>> +               __entry->force_all_cpus = force_all_cpus;
+>>>>>> +       ),
+>>>>>> +
+>>>>>> +       TP_printk("target_cpu=%d force_all_cpus=%s",
+>>>>>> +               __entry->target_cpu,
+>>>>>> +               __entry->force_all_cpus ? "true" : "false")
+>>>>>> +);
+>>>>>> +
+>>>>>>  #endif /* _TRACE_PAGEMAP_H */
+>>>>>>
+>>>>>>  /* This part must be outside protection */
+>>>>>> diff --git a/mm/swap.c b/mm/swap.c
+>>>>>> index 588f50d8f1a8..c385b93582eb 100644
+>>>>>> --- a/mm/swap.c
+>>>>>> +++ b/mm/swap.c
+>>>>>> @@ -694,9 +694,12 @@ void lru_add_drain_cpu(int cpu)
+>>>>>>  {
+>>>>>>         struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
+>>>>>>         struct folio_batch *fbatch = &fbatches->lru_add;
+>>>>>> +       unsigned int nr_folios_add = folio_batch_count(fbatch);
+>>>>>>
+>>>>>> -       if (folio_batch_count(fbatch))
+>>>>>> +       if (nr_folios_add) {
+>>>>>>                 folio_batch_move_lru(fbatch, lru_add);
+>>>>>> +               trace_mm_lru_add_drain(cpu, nr_folios_add);
+>>>>>> +       }
+>>>>>>
+>>>>>>         fbatch = &fbatches->lru_move_tail;
+>>>>>>         /* Disabling interrupts below acts as a compiler barrier. */
+>>>>>> @@ -928,6 +931,7 @@ static inline void __lru_add_drain_all(bool force_all_cpus)
+>>>>>>                 if (cpu_needs_drain(cpu)) {
+>>>>>>                         INIT_WORK(work, lru_add_drain_per_cpu);
+>>>>>>                         queue_work_on(cpu, mm_percpu_wq, work);
+>>>>>> +                       trace_mm_lru_drain_all_queue(cpu, force_all_cpus);
+>>>>>
+>>>>> Do you need tracing on each CPU individually, or is tracing the
+>>>>> entire __lru_add_drain_all() invocation sufficient?
+>>>>
+>>>> I think the latter would be fine. The remote work will invoke the
+>>>> mm_lru_add_drain tracepoint, which will show up as kworker stacks. Since
+>>>> the event already has the CPU, we could see where queued drains actually
+>>>> ran.
+>>>
+>>> Actually if it's just a single invocation and the only event data is the
+>>> force flag, a tracepoint may not even be needed. Other probes can be
+>>> installed on function invocation and read the single argument. I can
+>>> drop this from v2 and keep the single mm_lru_add_drain tracepoint.
+>>
+>> No we do want to trace the callers requesting to drain from all the CPUs. If you
+>> trace just lru_add_drain_cpu() then you will only see that the drain is
+>> requested for a given CPU but no information on the requester. 
+>>
+>> Also as Barry said, I think single trace for whole __lru_add_drain_all() is good
+>> enough.
+> 
+> Right, but couldn't that already be done with fentry or kprobe? If we
+> only need the calling stack and the argument value of force_all_cpus I
+> don't see a strong need for a dedicated tracepoint.
 
-I am getting ready to travel and I will address this when I return in
-about two weeks. Thank you for understanding.
+Nevermind that. I see it's declared inline so I'll add a tracepoint and
+send v3.
+
