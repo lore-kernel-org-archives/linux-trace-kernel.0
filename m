@@ -1,86 +1,160 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037F530C629;
-	Wed, 10 Jun 2026 19:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107E437BE8D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 19:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781121094; cv=none; b=PMISbTs1jzjfdk1h4fYVKIEPhuFEVggTrkkXaXIqiTNElGmmiDOBNXr4MFMkeymf0vvIst15pEvvz176BFUN96vxjXdagPngyqwJSaKfgpVgaEkGzx6ikE1ZCKnBVpKP1PQooiOeNdB2xSljBJ935dbv5B6XK2UW3VoxMZ5KA9g=
+	t=1781121195; cv=none; b=l+IYHShKHsvdwOusvqfdy91HW6YcqPoLv/zILwIwZ+Q6jyBQACVwSyBb+WFVP+Z++/gUr6tSgkZxapvXcyShBUBmLiGlCpb1J9OQcRSylwqu4xkyXUiA4L2H9fprKVzxLuxo3BvXwLDRd6/0mlVfeoHKBVcYgmvuWTu8MBXbF/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781121094; c=relaxed/simple;
-	bh=+AH/FqasSiuNkfQ7VgJC3EddiciO2ruM6zRYZJUzkFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CGm+RqyeRFCHkoG/6dctWDiX7ufGKnuS3bA/oNH7B3zxuMtuLn6Qr5nBBAUE/tGTlrzj2QSe7yNtwQxAFYATZ3AE9bQivcPURGBLSyHsP+Zap23y9ffnMdYOpQtcUdszybHSU3KsRnNVYQM38psljvip1PoZVSfxKiDFFL9NP5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 34F03402DD;
-	Wed, 10 Jun 2026 19:51:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id CDF8E2001C;
-	Wed, 10 Jun 2026 19:51:22 +0000 (UTC)
-Date: Wed, 10 Jun 2026 15:51:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, "Markus
- Schneider-Pargmann (The Capable Hub)" <msp@baylibre.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Heiko Carstens <hca@linux.ibm.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: fprobe: Remove __packed from generic
- __fprobe_header
-Message-ID: <20260610155139.01b6def4@gandalf.local.home>
-In-Reply-To: <20260610120659.7c61cfa6@pumpkin>
-References: <20260428-topic-fprobe-packed-v7-1-v1-1-9abc9b866b4c@baylibre.com>
-	<20260610171740.c30c43c5faee0beac3ad7546@kernel.org>
-	<20260610120659.7c61cfa6@pumpkin>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1781121195; c=relaxed/simple;
+	bh=PdA92GaxC2iI5xrbQDhqtPgsCnUzs7qU2yK9O87omuc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FrIj4jlz0l7tViha1IB8KXa/vMTtT0uSgWYy6TBD6B0UVQd/DymLHR582HHXQYzMZ1fEd7eMeGJFoqYZ+VroczSn623qAZPjEUQvjVqpCDil8db8ufxqVDxHu0CWKOXuDxIowJPSIJBEWxMOFM9b6cLYpV1U9DpCAfCqDVEFMVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KIT1SxJv; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KIT1SxJv"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781121180;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fFNM+csKuGsAi8zW+tua6hmsF6Jv56ZUXMuPVDdT++g=;
+	b=KIT1SxJvnnMM9esD4/wv1ZtvrkIc7so2MoZbLd8fD4HwqlXWLnTI1+chx03t1ehbZlvO7s
+	Yb2l8RO/m2g+mbEg2u+yzJJ47onjz5+Z+eevu3UsW0VRqvjJ11JKxC5Wu+YlyBrOosrTTO
+	hyNY3tLcrojL03mL86KA6EMszoCnHmQ=
+From: JP Kobryn <jp.kobryn@linux.dev>
+To: linux-mm@kvack.org,
+	willy@infradead.org,
+	shakeel.butt@linux.dev,
+	usama.arif@linux.dev,
+	akpm@linux-foundation.org,
+	vbabka@kernel.org,
+	mhocko@suse.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	kasong@tencent.com,
+	qi.zheng@linux.dev,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	chrisl@kernel.org,
+	shikemeng@huaweicloud.com,
+	nphamcs@gmail.com,
+	baoquan.he@linux.dev,
+	youngjun.park@lge.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v3] mm/lruvec: trace LRU add drains and drain-all requests
+Date: Wed, 10 Jun 2026 12:52:20 -0700
+Message-ID: <20260610195220.12403-1-jp.kobryn@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: CDF8E2001C
-X-Stat-Signature: rxff1hj5rsz7jjwntfwxw86zob5ytdr1
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+OZ+hbMIfpG/05B/nS4JLz2+xamN3edX0=
-X-HE-Tag: 1781121082-733007
-X-HE-Meta: U2FsdGVkX18Epw5yADqQeuv1zb8Di3KFLdVdzC0ujN3OOggbQYDsDxMahcqSCjN1416OvfDlUaFo0IKYzkNWqRP5KzC2lcivd8vqxSW2AlIeQhBWTIWfmkCTny4F3lk6Jk7TDpjYWW3Q/hVA0YDwABsoZHQLhBeV+/yzfgwUwYDOAG5JiMlzOUunSZtM323mIdfj+BiiNhDHUTaGOJedBCFdup+aOhyTUfB15/aIjUMhbQ1zUTJheruR7V2flLxP9mqbw8Qn9dJLRiA0maX5HqYheL9RUbFSpO4tH9r7xh/oguWinA1YRFPPR6WV+LslHtREqTWyZUx0+4oQsQVicFFUlhYyLxM/dM/H2kChhDvp9xBvpkHxv8GXBS7VYyL0jMMvTPQ/fxxBgHOMq3Q8QA==
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 10 Jun 2026 12:06:59 +0100
-David Laight <david.laight.linux@gmail.com> wrote:
+LRU add batches can be drained before they reach capacity. This can be a
+source of LRU lock contention, but it is not currently possible to
+attribute these drains to callers with existing tracepoints.
 
-> So you only want __packed on structures that might be misaligned and those
-> that contain misaligned members.
-> 
-> If the structure is only guaranteed to be 32bit aligned then use __packed
-> __aligned(4) so that two 32bit accesses get used instead of 8 8bit ones.
-> 
-> -- David
-> 
-> > 
-> > Thank you,
-> >   
-> > > Signed-off-by: Markus Schneider-Pargmann (The Capable Hub) <msp@baylibre.com>
-> > > ---
-> > >  kernel/trace/fprobe.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > > index cc49ebd2a773..21751dcdb7b9 100644
-> > > --- a/kernel/trace/fprobe.c
-> > > +++ b/kernel/trace/fprobe.c
-> > > @@ -181,7 +181,7 @@ static inline void read_fprobe_header(unsigned long *stack,
-> > >  struct __fprobe_header {
-> > >  	struct fprobe *fp;
-> > >  	unsigned long size_words;
-> > > -} __packed;
-> > > +};
-> > >  
+Add mm_lru_add_drain to report the CPU and lru_add batch count when an
+lru_add batch is drained. This allows tracing to distinguish full drains
+from partial drains and attribute them to the calling stack.
 
-Does "__packed" really do anything between a pointer and a long?
+Add mm_lru_add_drain_all to capture callers of __lru_add_drain_all and
+whether they set the force flag for all CPUs. The tracepoint resembles
+the signature of the enclosing function, but is needed because of
+potential inlining.
 
--- Steve
+Signed-off-by: JP Kobryn <jp.kobryn@linux.dev>
+---
+ include/trace/events/pagemap.h | 37 ++++++++++++++++++++++++++++++++++
+ mm/swap.c                      |  7 ++++++-
+ 2 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/include/trace/events/pagemap.h b/include/trace/events/pagemap.h
+index 171524d3526d..ff3da07ccb40 100644
+--- a/include/trace/events/pagemap.h
++++ b/include/trace/events/pagemap.h
+@@ -77,6 +77,43 @@ TRACE_EVENT(mm_lru_activate,
+ 	TP_printk("folio=%p pfn=0x%lx", __entry->folio, __entry->pfn)
+ );
+ 
++TRACE_EVENT(mm_lru_add_drain,
++
++	TP_PROTO(int cpu, unsigned int nr),
++
++	TP_ARGS(cpu, nr),
++
++	TP_STRUCT__entry(
++		__field(int,		cpu	)
++		__field(unsigned int,	nr	)
++	),
++
++	TP_fast_assign(
++		__entry->cpu	= cpu;
++		__entry->nr	= nr;
++	),
++
++	TP_printk("cpu=%d nr=%u", __entry->cpu, __entry->nr)
++);
++
++TRACE_EVENT(mm_lru_add_drain_all,
++
++	TP_PROTO(bool force_all_cpus),
++
++	TP_ARGS(force_all_cpus),
++
++	TP_STRUCT__entry(
++		__field(bool,	force_all_cpus	)
++	),
++
++	TP_fast_assign(
++		__entry->force_all_cpus	= force_all_cpus;
++	),
++
++	TP_printk("force_all_cpus=%s",
++		__entry->force_all_cpus ? "true" : "false")
++);
++
+ #endif /* _TRACE_PAGEMAP_H */
+ 
+ /* This part must be outside protection */
+diff --git a/mm/swap.c b/mm/swap.c
+index 588f50d8f1a8..e14b7612f896 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -694,9 +694,12 @@ void lru_add_drain_cpu(int cpu)
+ {
+ 	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
+ 	struct folio_batch *fbatch = &fbatches->lru_add;
++	unsigned int nr_folios_add = folio_batch_count(fbatch);
+ 
+-	if (folio_batch_count(fbatch))
++	if (nr_folios_add) {
+ 		folio_batch_move_lru(fbatch, lru_add);
++		trace_mm_lru_add_drain(cpu, nr_folios_add);
++	}
+ 
+ 	fbatch = &fbatches->lru_move_tail;
+ 	/* Disabling interrupts below acts as a compiler barrier. */
+@@ -869,6 +872,8 @@ static inline void __lru_add_drain_all(bool force_all_cpus)
+ 	if (WARN_ON(!mm_percpu_wq))
+ 		return;
+ 
++	trace_mm_lru_add_drain_all(force_all_cpus);
++
+ 	/*
+ 	 * Guarantee folio_batch counter stores visible by this CPU
+ 	 * are visible to other CPUs before loading the current drain
+-- 
+2.54.0
+
