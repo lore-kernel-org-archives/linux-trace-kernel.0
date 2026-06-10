@@ -1,288 +1,117 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DB6394783
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 08:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906E43A4F58;
+	Wed, 10 Jun 2026 08:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781079538; cv=none; b=JtntnQK3M7dczgoUqW/r+lXTyimjSB5KtWigLPOsp3qVJbopDas7FwSrUCJdSOFhQdxXA9lgCoGbwlRyfzKy7YyFWqpSXbo8/Kmp3T0MDClgX9RffTp0BQwLEkfbr21LcF74o7XlR7oHDHKRlJyG9P5I98+PjFVhUGZ1Xg3peks=
+	t=1781080157; cv=none; b=O+Jm9mW0FvaA+cnvBY04Ucqyxl0kVxjw0fz/43vyLhbEJqSxoUU1urirFpGLNF+V7nWF1rXqnOJngwe+3nwcJIb6wq3sJPc91c6iy+Tk9q9VADtjEmC/N8VTxuZ793f34SlHBwsXAXM7UEIEa9BX71AFqKNaXzMgrC+IfId3BF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781079538; c=relaxed/simple;
-	bh=Cw/r4gtd4OI5SmACpI5d9errnzMgY7OeHrVY93RuT/Q=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YauXpq7RPW90qzGFcTxjwxLHhlUQoW8uz/9/pnTbxTNoB2UtOJo+cvCMqkOycqPCVCKGn/yy0Ob/lZ6o/v2ZKKKADDOeZgZG9a+J3Qr41PW1IgRHX/nwSn60+yGD1t0x7Xp0FVJSXyLUnH4AYd9hluQIjLsGZD0ImcXNOX1+nF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LrHrj02K; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781080157; c=relaxed/simple;
+	bh=ToxkZY2A3N7s4IptGVgkaK1BmOYf7/Nd6ckYL0Uu/X4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lK9uGerc+Gn+UIJWrVeDccuuCtKTrar7wS5zvoaBXMy+qT3C5IytfkvkrPK2w2pjliv03Luls8kQ2/yYZURFCPW1/IAiIGHfoNS7WXox52+bKmeclyEwNYaZsu6kxesHuumSplD97QMuEuyWiQzuAfNhZ1ZzXe4H9R5rzEKsB3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Id7QXBUF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrHrj02K"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-45ee5cdbd28so4386113f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 01:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781079535; x=1781684335; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ySNomSuoOhQxNd9Yz08f3BU+RBs1JCr8A6QWQlp27so=;
-        b=LrHrj02KzklNwHdZTsRebC0xBBltnDTxdqFEFEK8zICaHFjipphZLPUqlsGYtqU6FC
-         z8Y0rr6cO9exga2xjkEr8qFd1g9+bGbOLNApkLK5B5bcrklR1+av7KFPtwLLrZH8aqMZ
-         woNkDebkqR29YnVlpY/O/Uwi0jmvHF4PRswF6+gS92quH2eKO/lwJL5QUeaSHVggUmTp
-         rq7NLzpqPCYtqbsf7bbbLvfrbUaiGJS2blRhGb1YpjLW26P2NOuJ6xOmNMUVCz4bPzlX
-         haFWc+2buw8jDvakZ72jcBosc10wN2gJvy00FwdLsACZpoy2owtkzoFEe/ooS5fW5hF1
-         FjgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781079535; x=1781684335;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ySNomSuoOhQxNd9Yz08f3BU+RBs1JCr8A6QWQlp27so=;
-        b=VsAHkn5t9wq6zDPYhnkKzb/5hTxkvfthCtIqVilwxQ1rUB3edsV01UDRAEftYNUs9b
-         nj0RmThbJUstFTSO0mtX5KR6SbZOFpH5anXglmOTUdo7XIQP++Ef9xst9A9VSi5sdndN
-         ucRymq5YwL7ZrSaoh5MVY4cckCnbjwaLwkDmLekhSsndYd7vEpF8qDHmWi5dVzJWAQ8L
-         h6VapNrMP8bJWgCLirdN+jRenUG6ct7pLvqMGjbAslMD4euTv1OMfgUiZQMZuoz48jWN
-         LgdA4ZgTAvYZU7yo0Njv4C/oLajC2fvS7tepaOc4Txd5iDUoB+FdCbXgXiVH6ObVmiPO
-         gSGg==
-X-Forwarded-Encrypted: i=1; AFNElJ+1ZL8euj781vUDrFpIAXBNxGDWfV63srxravD5dxbvtCMGrzS/UU/3oGt9jUygWEOu1f81xqtn+r2sYWQyC5Ai2vA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUtGss8LoFV3HOskV/CK9EkBNkI81jcGEpUDAh4U/rQnXDj8cf
-	zW9majMjygvse5EZcAiQy92HHa/R5aMVwQFbamXz3TGFRpBYj5UqUCpG
-X-Gm-Gg: Acq92OEo0mxQXTW7Y7dFaD/mwuUnJymBEmiX7h0VSuI47NnRNW8mHpHNGsEU3GROvdn
-	MCdFsGCznUzZTS5WR9ff9Xp95VuCbvbXKnX8vN600hrxha/Mv/TrR9MC8yicbCogcLwCKj5YJq7
-	bJvjVHES9FJ/G+mntEa0atQiET9B9zsFUW9BeZu6FqehJxfgvb0NBLrdc0a56AUjH2m9UIOaz7O
-	JVUCKq9zaWmSTGmG6mYM7b7o22FvnYbpf9kZ2CQ0cUHw0caNWj/ntvlZ/DlGKJCh2wUfkIizKNJ
-	5va0YLTjJHspnaKtb3FWdzIVBuF2//0BI/28HKAqdNlz3dWZUFXkGkjNnMNY6Gpwqkqa5utf7rk
-	2HDEj1jgGzIS4tJSw7KiFwgmIQJGRE3IimCS+IQQwvHYDB8hm1zk0GIhWEF7u+Jm53RCz8kc6dP
-	Cc6RtreXtbMElELvWjEoFxcQ==
-X-Received: by 2002:a05:6000:2083:b0:460:1378:7b0 with SMTP id ffacd0b85a97d-46032b6124bmr28994465f8f.5.1781079533500;
-        Wed, 10 Jun 2026 01:18:53 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2ec711sm67902866f8f.12.2026.06.10.01.18.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 01:18:52 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 10 Jun 2026 10:18:51 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 05/13] uprobes/x86: Move optimized uprobe from nop5 to
- nop10
-Message-ID: <aikd6-5HYhCnc0Ze@krava>
-References: <20260526205840.173790-1-jolsa@kernel.org>
- <20260526205840.173790-6-jolsa@kernel.org>
- <CAEf4BzZiFUeFa4fdghuSGpqiEzyvJVxs6TDgJd5U4hSj--imiQ@mail.gmail.com>
- <aif8jkUPst-tTskE@krava>
- <CAEf4BzbsB-PRZRqkz37YK5wYNR=ajZv2N7tEznpZM0rdyYC_xA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Id7QXBUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09F51F00893;
+	Wed, 10 Jun 2026 08:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781080156;
+	bh=IOsU3oX4q3ZwCNWXMbxQIeoL1EPjX+bUPxPRnD5EXQo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Id7QXBUFh3rfPz2T9CJjaSeZ8BTD/oGvvDWPmb+pFHlQRpzIDSaEJ/obvbEi3orSg
+	 SL1dz62sgUo98hQX23sMGUc2f5rkNy/xxsXV4VcdQ+UQJ/s1QyATdOknyZMVbqrt5N
+	 kApjxlOzwQohUx0ugxcI9NKB0cwpxPwJNrK1IJ2q37zT8mw/Y9nrVHbjmz1SJZn8Pr
+	 afIBCp1zNBFTH7HtgKPKJWyvdLJ1xDnlxkaNA/Mc75P3Y1WxO2/RbUM9Zt6BVja4IM
+	 Bb0oXHIdXC9KWoYxBTIAcruonpXP/GFGZeTsQ3PnMb2lEVjOBMcmpB0YvASuwHVY1U
+	 CbrkrObylbjaA==
+Date: Wed, 10 Jun 2026 17:29:13 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Petr Mladek <pmladek@suse.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alexei Starovoitov <ast@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v3] rethook: Remove the running task check in
+ rethook_find_ret_addr()
+Message-Id: <20260610172913.d6806ca2575197a425db9514@kernel.org>
+In-Reply-To: <e016536c-df99-4de8-a8fb-6ac50932fd2f@huaweicloud.com>
+References: <20260609084953.901576-1-wutengda@huaweicloud.com>
+	<aifgPaLc_p2vZr5n@pathway.suse.cz>
+	<e016536c-df99-4de8-a8fb-6ac50932fd2f@huaweicloud.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbsB-PRZRqkz37YK5wYNR=ajZv2N7tEznpZM0rdyYC_xA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 09, 2026 at 09:43:15AM -0700, Andrii Nakryiko wrote:
-> On Tue, Jun 9, 2026 at 4:44 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Mon, Jun 08, 2026 at 01:46:39PM -0700, Andrii Nakryiko wrote:
-> > > On Tue, May 26, 2026 at 1:59 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > > Andrii reported an issue with optimized uprobes [1] that can clobber
-> > > > redzone area with call instruction storing return address on stack
-> > > > where user code may keep temporary data without adjusting rsp.
-> > > >
-> > > > Fixing this by moving the optimized uprobes on top of 10-bytes nop
-> > > > instruction, so we can squeeze another instruction to escape the
-> > > > redzone area before doing the call, like:
-> > > >
-> > > >   lea -0x80(%rsp), %rsp
-> > > >   call tramp
-> > > >
-> > > > Note the lea instruction is used to adjust the rsp register without
-> > > > changing the flags.
-> > > >
-> > > > We use nop10 and following transformation to optimized instructions
-> > > > above and back as suggested by Peterz [2].
-> > > >
-> > > > Optimize path (int3_update_optimize):
-> > > >
-> > > >   1) Initial state after set_swbp() installed the uprobe:
-> > > >       cc 2e 0f 1f 84 00 00 00 00 00
-> > > >
-> > > >      From offset 0 this is INT3 followed by the tail of the original
-> > > >      10-byte NOP.
-> > > >
-> > > >      After a previous unoptimization bytes 5..9 may still contain the
-> > > >      old call instruction, which remains valid for threads already there.
-> > > >
-> > > >   2) Rewrite the LEA tail and call displacement:
-> > > >       cc [8d 64 24 80 e8 d0 d1 d2 d3]
-> > > >
-> > > >      From offset 0 this traps on the uprobe INT3.  Bytes 1..9 are not
-> > > >      executable entry points while byte 0 is trapped.
-> > > >
-> > > >   3) Publish the first LEA byte:
-> > > >       [48] 8d 64 24 80 e8 d0 d1 d2 d3
-> > > >
-> > > >      From offset 0 this is:
-> > > >         lea -0x80(%rsp), %rsp
-> > > >         call <uprobe-trampoline>
-> > > >
-> > > > Unoptimize path (int3_update_unoptimize):
-> > > >
-> > > >   1) Initial optimized state:
-> > > >       48 8d 64 24 80 e8 d0 d1 d2 d3
-> > > >      Same as 3) above.
-> > > >
-> > > >   2) Trap new entries before restoring the NOP bytes:
-> > > >       [cc] 8d 64 24 80 e8 d0 d1 d2 d3
-> > > >
-> > > >      From offset 0 this traps. A thread that had already executed the
-> > > >      LEA can still reach the intact CALL at offset 5.
-> > > >
-> > > >   3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
-> > > >      and byte 5 as CALL.
-> > > >       cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> > > >
-> > > >      From offset 0 this still traps. Offset 5 is still the CALL for any
-> > > >      thread that was already past the first LEA byte.
-> > > >
-> > > >   4) Publish the first byte of the original NOP:
-> > > >       [66] 2e 0f 1f 84 e8 d0 d1 d2 d3
-> > > >
-> > > >      From offset 0 this is the restored 10-byte NOP; the CALL opcode and
-> > > >      displacement are now only NOP operands.  Offset 5 still decodes as
-> > > >      CALL for a thread that was already there.
-> > > >
-> > > >      Tthere is only a single target uprobe-trampoline for the given nop10
-> > > >      instruction address, so the CALL instruction will not be changed across
-> > > >      unoptimization/optimization cycles.
-> > > >      Therefore, any task that is preempted at the CALL instruction is guaranteed
-> > > >      to observe that CALL and not anything else.
-> > > >
-> > > > Note as explained in [2] we need to use following nop10:
-> > > >        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
-> > > > NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
-> > > >
-> > > > which means we need to allow 0x2e prefix which maps to INAT_PFX_CS
-> > > > attribute in is_prefix_bad function.
-> > > >
-> > > > Also changing the uprobe syscall error when called out of uprobe
-> > > > trampoline to -EPROTO, so we are able to detect the fixed kernel.
-> > > >
-> > > > The optimized uprobe performance stays the same:
-> > > >
-> > > >         uprobe-nop     :    3.129 ± 0.013M/s
-> > > >         uprobe-push    :    3.045 ± 0.006M/s
-> > > >         uprobe-ret     :    1.095 ± 0.004M/s
-> > > >   -->   uprobe-nop10   :    7.170 ± 0.020M/s
-> > > >         uretprobe-nop  :    2.143 ± 0.021M/s
-> > > >         uretprobe-push :    2.090 ± 0.000M/s
-> > > >         uretprobe-ret  :    0.942 ± 0.000M/s
-> > > >   -->   uretprobe-nop10:    3.381 ± 0.003M/s
-> > > >         usdt-nop       :    3.245 ± 0.004M/s
-> > > >   -->   usdt-nop10     :    7.256 ± 0.023M/s
-> > > >
-> > > > [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
-> > > > [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
-> > > > Reported-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > Closes: https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
-> > > > Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
-> > > > Assisted-by: Codex:GPT-5.5
-> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > ---
-> > > >  arch/x86/kernel/uprobes.c | 255 ++++++++++++++++++++++++++++----------
-> > > >  1 file changed, 190 insertions(+), 65 deletions(-)
-> > > >
-> > >
-> > > [...]
-> > >
-> > > > @@ -943,13 +1026,31 @@ static int int3_update(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> > > >         smp_text_poke_sync_each_cpu();
-> > > >
-> > > >         /*
-> > > > -        * Write first byte.
-> > > > +        * 3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
-> > > > +        *    and byte 5 as CALL:
-> > > > +        *    cc [2e 0f 1f 84] e8 d0 d1 d2 d3
-> > > > +        */
-> > > > +       ctx.expect = EXPECT_SWBP_OPTIMIZED;
-> > > > +       err = uprobe_write(auprobe, vma, vaddr + 1, insn + 1,
-> > > > +                          LEA_INSN_SIZE - 1, verify_insn,
-> > > > +                          true /* is_register */, false /* do_update_ref_ctr */,
-> > >
-> > > tbh, it's quite subtle and non-obvious why is_register should be set
-> > > to true first two times (and especially that is_register and
-> > > do_update_ref_ctr are implicitly connected), not sure how to make it
-> > > cleaner, but maybe leave a short comment explaining this twice
-> > > register, once unregister sequence?
-> >
-> > ok, I came up with comment below
-> >
-> > thanks,
-> > jirka
-> >
-> >
-> > ---
-> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > index de544516ea70..92449f34c005 100644
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -1011,6 +1011,12 @@ static int int3_update_unoptimize(struct arch_uprobe *auprobe, struct vm_area_st
-> >         int err;
-> >
-> >         /*
-> > +        * Note the first two uprobe_write calls use is_register=true, because they
-> > +        * are intermediate patching states while the probe is still active.
+On Tue, 9 Jun 2026 19:12:41 +0800
+Tengda Wu <wutengda@huaweicloud.com> wrote:
+
 > 
-> this doesn't really explain why is_register=true is the right one. It
-> actually doesn't matter as long as do_update_ref_ctr=true, isn't that
-> right? So maybe just to avoid a bit of confusion let's pass
-> is_register=false and do_update_ref_ctr=false, and in the comment
-> explain as you said that it's intermediate update and we don't want to
-> update refctr just yet until the very last step?
+> 
+> On 2026/6/9 17:43, Petr Mladek wrote:
+> > Added live-patching mailing list.
+> > 
+> > On Tue 2026-06-09 16:49:53, Tengda Wu wrote:
+> >> The current check in rethook_find_ret_addr() prevents obtaining a return
+> >> address when the target task is marked as running. However, this condition
+> >> is both insufficient for correctness and unnecessary for its intended
+> >> purpose.
+> >>
+> >> The check is inherently racy: a task can begin running on another CPU
+> >> immediately after task_is_running() returns false, potentially leading to
+> >> concurrent modification of rethook data structures while the iteration is
+> >> in progress.
+> >>
+> >> Rather than trying to fix this unreliable check deep in the unwinding
+> >> path, simply remove it. The iteration is already safe from crashes because
+> >> unwind_next_frame() holds RCU and rethook_node structures are RCU-freed;
+> >> even if the iteration goes off the rails and returns invalid information,
+> >> it will not crash. Callers that require consistency must provide a safe
+> >> context themselves.
+> >>
+> >> Fixes: 54ecbe6f1ed5 ("rethook: Add a generic return hook")
+> >> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> >> ---
+> >> v3: Improve commit message: clarify safety semantics and document that RCU guarantees no crash.
+> >> v2: https://lore.kernel.org/all/20260609005728.458962-1-wutengda@huaweicloud.com/
+> >> v1: https://lore.kernel.org/all/20260525132253.1889726-1-wutengda@huaweicloud.com/
+> >>
+> >> --- a/kernel/trace/rethook.c
+> >> +++ b/kernel/trace/rethook.c
+> >> @@ -250,9 +250,6 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
+> >>  	if (WARN_ON_ONCE(!cur))
+> >>  		return 0;
+> >>  
+> >> -	if (tsk != current && task_is_running(tsk))
+> >> -		return 0;
+> >> -
+> > 
+> > The description of the function should be updated as well. It still
+> > mentions:
+> > 
+> >  * The @tsk must be 'current' or a task which is not running.
+> > 
+> > Instead it should explain that it safe to call the function even
+> > on another running tasks but the returned address is not reliable
+> > then.
+> > 
+> 
+> Oh, I forgot that. Thanks for pointing it out.
 
-apart from refctr update there's also different way the concerned
-page is managed, IIUC:
+Yeah, but it should be updated to explain what you need to do.
+For example call it should hold RCU, or use for current.
 
-with is_register=true we force to get exclusive anonymous page for
-the update (or pin the existing one)
-
-with is_register=false we try to zap the private anonymous page and
-return the mapping to the original page
-
-there are several comments on this in uprobe_write/__uprobe_write
-
-how about the update below
-
-jirka
+Thanks,
 
 
----
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index de544516ea70..09f5ff71227c 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1011,6 +1011,16 @@ static int int3_update_unoptimize(struct arch_uprobe *auprobe, struct vm_area_st
- 	int err;
- 
- 	/*
-+	 * Note the first two uprobe_write calls use is_register=true, because they
-+	 * are intermediate patching states while the probe is still active, so
-+	 * we force the exclusive anonymous page for the update.
-+	 * Also we use do_update_ref_ctr=false because refctr was already updated by
-+	 * the initial int3 install.
-+	 *
-+	 * The last uprobe_write to nop10 instruction is called with is_register=false
-+	 * and do_update_ref_ctr=true to trigger the refctr update and to instruct
-+	 * uprobe_write to zap the anonymous page if it now matches the file page.
-+	 *
- 	 * 1) Initial optimized state:
- 	 *    48 8d 64 24 80 e8 d0 d1 d2 d3
- 	 *
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
