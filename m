@@ -1,238 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3906E32937A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 08:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D178B21CC58
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 08:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781167189; cv=none; b=PzaEyX2znIUG/ujnOBSvZCQEwZChZdZTIHBUKzn+zN4W4tTRSDHrpRu7KiowDlX6GannTfSjMviO1eIpYMRHbyCVPhP1ba5F+35jkaLEza1xZUUw/lUqlH6DNcWEgnUOH/igZEFtX6oSICnLxG6CPivf2k3ssZ3X4K3J00ayODI=
+	t=1781168359; cv=none; b=BB9tD+rTWr2eb9UuSkLCW4sm2msHikLE0Dy5tdAiRO6tw9uuQ9IQDULMTGrm906IPz+aMZ8NST78QViGo6w6sevEAMkNwN4vrnd8f4f28blJCzhxXSk2ThquZHsS2qbDWQkoDR3OYj5Nqkf0JSqwwHJeaWGy7ldnxxiiPSOo18M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781167189; c=relaxed/simple;
-	bh=pyo0Nt+pi1ys9S3mw9PND2KxRRei6qs0KxrPF4/h5pk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KRc9pVDHrZO3r/yY1+FEAEKSaERpSOtCUHolBni0yJ85LbmzutzG/3BXbsV0GzSjfCg2qM7jH1RhLopGUUMYdYzkIVW4iFZ/krVgK0zl/u8tLF+BwM9UMa46KEG3XCp8LSkdz3wMm4rKEK7SiwSaSvbVuGX8tFh+oTCXA3LCkIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WgNXuCp5; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1781168359; c=relaxed/simple;
+	bh=hoW2qoXXWUdw64xdOYUFtunSI0T/Bujcb1mKGjCcqys=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JSyIpKGaKdjWdgpLS+uGSdmzuogOyPRXxA09IrY+F/eEXFGr+3zXY1s5QWSKgVELA+0oArIayiEYQvZaUxQwt5QTOINhV0dNhlQi5aU0LvHG3efYv+eR75dEUsJ4m/d4sCb7N32Q1h/bhH+zfBA8U6ZoV2/Xf9JVOqQ6/0A2lyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AbgIU083; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WgNXuCp5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AbgIU083"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781167187;
+	s=mimecast20190719; t=1781168356;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pyo0Nt+pi1ys9S3mw9PND2KxRRei6qs0KxrPF4/h5pk=;
-	b=WgNXuCp5AbExPaItlx+1BsSPbq73W01K/2ZyssbtUnYIJuacm4WMxq7wWME+0Y47w+RiIv
-	SN/jU5IqUsLSXC0H2n+IEHpDYz3pdOixfIJbDsz1pYqIS15WLWbfqClSyITiHPF/J6TcG5
-	E1qpbkZVoD0hUbspwYV8zFkqWmrYO1g=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=xgjtbDYbp+QKPickoNL6vc/x0GpsTUnlr50ME1BIXxA=;
+	b=AbgIU083qDVaKQrpg7Cri5Df3K5OtsECGOwdIzkQgQPVkwO5Umx8siUP1tf77zCIdt6Fhs
+	mgNu6NZkOe5Ww0G8BnbFH+eoxgwgh2V51lKFQ/XzyuQFYK/aibwhd4iarP1qnvt2X3Q4IE
+	tA17VvtGzEj6zBTK5iV8wqzi0MllDE0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-583-3Cb-NRAcPhyjdwZKs_v1qA-1; Thu, 11 Jun 2026 04:39:46 -0400
-X-MC-Unique: 3Cb-NRAcPhyjdwZKs_v1qA-1
-X-Mimecast-MFC-AGG-ID: 3Cb-NRAcPhyjdwZKs_v1qA_1781167185
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-46011aa5000so3390549f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 01:39:45 -0700 (PDT)
+ us-mta-258-ZgZloBTtMg6-WMiATAt85w-1; Thu, 11 Jun 2026 04:59:15 -0400
+X-MC-Unique: ZgZloBTtMg6-WMiATAt85w-1
+X-Mimecast-MFC-AGG-ID: ZgZloBTtMg6-WMiATAt85w_1781168354
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-bf381078ac8so239873166b.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 01:59:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781167185; x=1781771985;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+DOdffqgz7jOIJPeS1KofKXXtb7Ik0l7QNU4WyVsj30=;
-        b=SMeVmXOuFvVm2lJjwphv2BHhBTaaQ3SGvBJtVNlFOPx/ahKvwYZXQJL2JihZVzA4Mn
-         uIo4mZN9Hgpc9mo4zAq5Jqnf/px6H17PmilUz1mR8c7F/vjYVXCBWjLdobvXone/L+DZ
-         vhS6Em3sk/7/c5NrTSs6PCla8f40CyMJwc2V3js1gR/hy3AmJLo/0S8exIjR3ijVVBXZ
-         OnFAFy8WqiI7npzf7bVAHqEVXB1OafJPIl+1SQAFD27mC1ZzGb7qVlbgA+oN1PHAVrwv
-         cP4wJORzcOr5P74ae+kVR44DuUnuiZpPtCmD7GNJPjP1kANcdMbIInhQsO6iT2SLGTwn
-         lkZQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8ungOBzqUzKjck5fZs5fccsCs22EwBlCF2wjYWDtcF7huhBWySRilQR7Ah/xQGdZyVkZoLLKSEHfe4Ms1AiOsHxOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+UuB8mdTvLdMNVoc6zki9W+s0nGNr+Ssnk3evu3xSlKeS2fLm
-	RvoPiuzC5xqejHkttsknWJa/xu/FRF60d9SHwKfd3OdJn1yTPA9BYyQWRrCqoFR9gS8DYDruBPE
-	BT5XwiHqMnKBn91grVu4JhBQPpM+RgiSdCw1KnHKWN8O0x106sXlwO6UX4s8s7jV26bvEzSsXGA
-	==
-X-Gm-Gg: Acq92OFkzXgJ89AXSbLykZ4lIuhf1IhCX4qAAkIrOTkoX9A47JTbBpL1eF2rVV+3CTb
-	nXOj6wCYfZ05hdwTlYrI2m/PZmyDrYqWL6JqVT63r7iyOeXIlt8OhG2M9svUnJcpj916E5Hw9Id
-	zQbv5YHRSdNuTCnE7f2FMJJfKPoLGkYuo0/aq10R7YpFrfQy4mGiMEaOr0mUkgh78aM1nxAu6KY
-	FhqoDo4nzJpRoeAynbNaCwUq5MsjfS6xU2vX12cFiPhTpS4FQFQ5ia9zSXVW5GU7LvqDhz0oQk0
-	fMIjuI7anHIGlgKirnQ8dpPTwMFq9HpvJYvOQjSnk4eJBG+2Ei8VV0896CE5qAtHh0cnVLzfGFi
-	Bsjy4dV8FIndPUDX+8GXqW0lW6/9V38DVYAp2
-X-Received: by 2002:a05:600c:b96:b0:490:b724:dbd6 with SMTP id 5b1f17b1804b1-490e55b71a8mr18684565e9.6.1781167184843;
-        Thu, 11 Jun 2026 01:39:44 -0700 (PDT)
-X-Received: by 2002:a05:600c:b96:b0:490:b724:dbd6 with SMTP id 5b1f17b1804b1-490e55b71a8mr18684145e9.6.1781167184469;
-        Thu, 11 Jun 2026 01:39:44 -0700 (PDT)
-Received: from [192.168.1.167] ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2ec711sm76510109f8f.12.2026.06.11.01.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 01:39:44 -0700 (PDT)
-Message-ID: <1ba770537330483e9345f0f88c6a2e03aa34423a.camel@redhat.com>
-Subject: Re: [PATCH v3 08/13] verification/rvgen: Simplify the generation
- for clock variables
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Wander Lairson Costa
-	 <wander@redhat.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 11 Jun 2026 10:39:42 +0200
-In-Reply-To: <eb57a6b4659b325a4a0eded67baa3c5fe9f0ff35.1780908661.git.namcao@linutronix.de>
-References: <cover.1780908661.git.namcao@linutronix.de>
-	 <eb57a6b4659b325a4a0eded67baa3c5fe9f0ff35.1780908661.git.namcao@linutronix.de>
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        d=1e100.net; s=20251104; t=1781168354; x=1781773154;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xgjtbDYbp+QKPickoNL6vc/x0GpsTUnlr50ME1BIXxA=;
+        b=VMCbfrGOQ8I4breCEGpL05IuMpjEBtunLYatWA6JngdCLESjTjCHwxoWDo86qpzyvN
+         J88sf0J737nkfFU3X4Zyg2hIP3KiDFM1OpdtWeWVZcubb7JkzPOf1s0P2w38O+EH7z1c
+         mDVRR+V6OLTSrLYdqlUF5MZUyK5DzZaUmokeLvzhLMPI12hU4cRtyAnn11ADbblMyoPQ
+         KJkInrpZv06UKb6iPl6pPiPDTOZZ8GAOfeQNmrwmrExFQFo9ZskJSzHtga3iE/09G+BF
+         joDtfhh5Spb3GLkuKLEz1YDWkLVHm0Y7k+Jj0R4Ql2sBWB3wOS6Hve1lE5U1cUMNrlaI
+         bC8w==
+X-Forwarded-Encrypted: i=1; AFNElJ+4bw5r6CxVqf+L7PKZ+MSY2hzXhR/TOypQXby4iEegQ2wW+/zx/8A6aXFkQbEn0qpMhsmXPqRL7YiGUCZKuj4fa1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxteQKEZjTjM3gdgylG+2sSAoz5A5M0/PF3S0JUVqVz+1ncTYCq
+	8PAcViiVkrhI6mhyyg2rySl5CAxiG6T3/zwBwm7SLUw21oMT8c+u765GD/nrZOcJ7iog6fS+QjK
+	OOXQna6Ev7ykmukfa08oD7CrnMs74RUv7WOlhiM4SD+C6JVHBFlNRlHZrv+zLe2yhimAJbP4PNB
+	/ra4UPf2yimvC3Gf4ZPDUHfLvCY1cpEdxx2cRgN97MsjakFQJH
+X-Gm-Gg: Acq92OG02BxDKG1ZK1UZmgW9EzcOoVSyC15cStm9C3cZDjlhZYbqeOM8N5Qsclk+IbR
+	1ESUP9+F/W2WBIAA3waep4s13y/zAkh+SmBf1H64RjUuO97GpiiFd2RlqUHcDCPGUz+X1T7v07T
+	F0ayJ6dlw5quLNnJCJOYYTGI9uPn+YWXKvZKzLMXZ11/qJ3FNpJBQ/rk7rR8RZ7VK1iw4R94i5Q
+	WuNUFuapNn7QuRq
+X-Received: by 2002:a17:906:d542:b0:bed:6bd7:71ad with SMTP id a640c23a62f3a-bfc8894adecmr80855766b.49.1781168353686;
+        Thu, 11 Jun 2026 01:59:13 -0700 (PDT)
+X-Received: by 2002:a17:906:d542:b0:bed:6bd7:71ad with SMTP id
+ a640c23a62f3a-bfc8894adecmr80854366b.49.1781168353131; Thu, 11 Jun 2026
+ 01:59:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260610130457.1304245-1-vschneid@redhat.com> <20260610130457.1304245-2-vschneid@redhat.com>
+ <f40903f8198f8e2f42f1efdf950f995f24cf6e93.camel@redhat.com>
+In-Reply-To: <f40903f8198f8e2f42f1efdf950f995f24cf6e93.camel@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Thu, 11 Jun 2026 10:59:01 +0200
+X-Gm-Features: AVVi8CeKUSxUvFDLk6LW9QyJCUBWA_3dwRTkpM9_wyFGufl95qGYehlYrefZ59g
+Message-ID: <CAP4=nvT6GEdwZAm-2h+Z-mj9DOmJ-swyApujFun6m1Qaxxr7hQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] tracing/osnoise: Sample IPI counts
+To: Crystal Wood <crwood@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 1G4z98RNHm2xAXaY7jNd32hMHANUVN30u78wXnc2faA_1781167185
+X-Mimecast-MFC-PROC-ID: K8pgudiRrgETjaud0NB7UmRa11QrVQDKIb_gZSZC7bM_1781168354
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 
-T24gTW9uLCAyMDI2LTA2LTA4IGF0IDEwOjU3ICswMjAwLCBOYW0gQ2FvIHdyb3RlOgo+IEh5YnJp
-ZCBhdXRvbWF0YSBtb25pdG9ycydzIGNsb2NrIHZhcmlhYmxlcyBoYXZlIGJlZW4gY2hhbmdlZCB0
-byBoYXZlCj4gb25seSBhIHNpbmdsZSByZXByZXNlbnRhdGlvbi4gTm93IHRoZXJlIGlzIG5vIG5l
-ZWQgdG8gZ2VuZXJhdGUgY29kZQo+IHRvIGNvbnZlcnQgYmV0d2VlbiB0aGUgdHdvIHJlcHJlc2Vu
-dGF0aW9ucy4KPiAKPiBEZWxldGUgX19maWxsX2NvbnZlcnRfaW52X2d1YXJkX2Z1bmMoKSBhbmQg
-aXRzIGFzc29jaWF0ZXMuIFVwZGF0ZQo+IF9fc3RhcnRfdG9faW52YXJpYW50X2NoZWNrKCkgdG8g
-aG93IGludmFyaWFudHMgbm93IHdvcmsuCj4gCj4gU2lnbmVkLW9mZi1ieTogTmFtIENhbyA8bmFt
-Y2FvQGxpbnV0cm9uaXguZGU+CgpSZXZpZXdlZC1ieTogR2FicmllbGUgTW9uYWNvIDxnbW9uYWNv
-QHJlZGhhdC5jb20+Cgo+IC0tLQo+IMKgdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2Rv
-dDJrLnB5IHwgOTYgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAtLQo+IMKgMSBmaWxlIGNoYW5n
-ZWQsIDMgaW5zZXJ0aW9ucygrKSwgOTMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL3Rv
-b2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9kb3Qyay5weQo+IGIvdG9vbHMvdmVyaWZpY2F0
-aW9uL3J2Z2VuL3J2Z2VuL2RvdDJrLnB5Cj4gaW5kZXggZTkxNzE3ZmRlMzBkLi42ZDM0NmE3MThh
-MzkgMTAwNjQ0Cj4gLS0tIGEvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2RvdDJrLnB5
-Cj4gKysrIGIvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2RvdDJrLnB5Cj4gQEAgLTI0
-Niw3ICsyNDYsOSBAQCBjbGFzcyBoYTJrKGRvdDJrKToKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIGlu
-di51bml0ID09ICJqIjoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY2xvY2tfdHlwZSA9ICJq
-aWZmeSIKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoCByZXR1cm4gZiJyZXR1cm4gaGFfY2hlY2tfaW52
-YXJpYW50X3tjbG9ja190eXBlfShoYV9tb24sCj4ge2ludi5lbnZ9X3tzZWxmLm5hbWV9LCB0aW1l
-X25zKSIKPiArwqDCoMKgwqDCoMKgwqAgdmFsdWUgPSBzZWxmLl9fYWRqdXN0X3ZhbHVlKGludi52
-YWwsIGludi51bml0KQo+ICsKPiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGYicmV0dXJuIGhhX2No
-ZWNrX2ludmFyaWFudF97Y2xvY2tfdHlwZX0oaGFfbW9uLAo+IHtpbnYuZW52fV97c2VsZi5uYW1l
-fSwgdGltZV9ucywge3ZhbHVlfSkiCj4gwqAKPiDCoMKgwqDCoCBkZWYgX19zdGFydF90b19jb252
-KHNlbGYsIGNvbnN0cjogc3RyKSAtPiBzdHI6Cj4gwqDCoMKgwqDCoMKgwqDCoCAiIiIKPiBAQCAt
-MzgzLDQwICszODUsNiBAQCBmIiIic3RhdGljIGlubGluZSBib29sCj4gaGFfdmVyaWZ5X2ludmFy
-aWFudHMoc3RydWN0IGhhX21vbml0b3IgKmhhX21vbiwKPiDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYu
-YXBwZW5kKCJcdHJldHVybiB0cnVlO1xufVxuIikKPiDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBi
-dWZmCj4gwqAKPiAtwqDCoMKgIGRlZiBfX2ZpbGxfY29udmVydF9pbnZfZ3VhcmRfZnVuYyhzZWxm
-KSAtPiBsaXN0W3N0cl06Cj4gLcKgwqDCoMKgwqDCoMKgIGJ1ZmYgPSBbXQo+IC3CoMKgwqDCoMKg
-wqDCoCBpZiBub3Qgc2VsZi5pbnZhcmlhbnRzOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJl
-dHVybiBbXQo+IC0KPiAtwqDCoMKgwqDCoMKgwqAgY29uZmxpY3RfZ3VhcmRzLCBjb25mbGljdF9p
-bnZzID0gc2VsZi5fX2ZpbmRfaW52X2NvbmZsaWN0cygpCj4gLcKgwqDCoMKgwqDCoMKgIGlmIG5v
-dCBjb25mbGljdF9ndWFyZHMgYW5kIG5vdCBjb25mbGljdF9pbnZzOgo+IC3CoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHJldHVybiBbXQo+IC0KPiAtwqDCoMKgwqDCoMKgwqAgYnVmZi5hcHBlbmQoCj4g
-LWYiIiJzdGF0aWMgaW5saW5lIHZvaWQgaGFfY29udmVydF9pbnZfZ3VhcmQoc3RydWN0IGhhX21v
-bml0b3IKPiAqaGFfbW9uLAo+IC1cdFx0XHRcdFx0ZW51bSB7c2VsZi5lbnVtX3N0YXRlc19kZWZ9
-IGN1cnJfc3RhdGUsIGVudW0KPiB7c2VsZi5lbnVtX2V2ZW50c19kZWZ9IGV2ZW50LAo+IC1cdFx0
-XHRcdFx0ZW51bSB7c2VsZi5lbnVtX3N0YXRlc19kZWZ9IG5leHRfc3RhdGUsIHU2NCB0aW1lX25z
-KQo+IC17eyIiIikKPiAtwqDCoMKgwqDCoMKgwqAgYnVmZi5hcHBlbmQoIlx0aWYgKGN1cnJfc3Rh
-dGUgPT0gbmV4dF9zdGF0ZSlcblx0XHRyZXR1cm47IikKPiAtCj4gLcKgwqDCoMKgwqDCoMKgIF9l
-bHNlID0gIiIKPiAtwqDCoMKgwqDCoMKgwqAgZm9yIHN0YXRlLCBjb25zdHIgaW4gc29ydGVkKHNl
-bGYuaW52YXJpYW50cy5pdGVtcygpKToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIGEgc3Rh
-dGUgd2l0aCBpbnZhcmlhbnQgY2FuIHJlYWNoIHVzIHdpdGhvdXQgcmVzZXQKPiAtwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCAjIG11bHRpcGxlIGNvbmZsaWN0cyBtdXN0IGhhdmUgdGhlIHNhbWUgaW52
-YXJpYW50LAo+IG90aGVyd2lzZSB3ZSBjYW5ub3QKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAj
-IGtub3cgaG93IHRvIHJlc2V0IHRoZSB2YWx1ZQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNv
-bmZfaSA9IFtzdGFydCBmb3Igc3RhcnQsIGVuZCBpbiBjb25mbGljdF9pbnZzIGlmIGVuZAo+ID09
-IHN0YXRlXQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgd2UgY2FuIHJlYWNoIGEgZ3VhcmQg
-d2l0aG91dCByZXNldAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbmZfZyA9IFtlIGZvciBz
-LCBlIGluIGNvbmZsaWN0X2d1YXJkcyBpZiBzID09IHN0YXRlXQo+IC3CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGlmIG5vdCBjb25mX2kgYW5kIG5vdCBjb25mX2c6Cj4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBjb250aW51ZQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYuYXBw
-ZW5kKGYiXHR7X2Vsc2V9aWYgKGN1cnJfc3RhdGUgPT0KPiB7c2VsZi5zdGF0ZXNbc3RhdGVdfXtz
-ZWxmLmVudW1fc3VmZml4fSkiKQo+IC0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFw
-cGVuZChmIlx0XHR7c2VsZi5fX3N0YXJ0X3RvX2NvbnYoY29uc3RyKX07IikKPiAtwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBfZWxzZSA9ICJlbHNlICIKPiAtCj4gLcKgwqDCoMKgwqDCoMKgIGJ1ZmYu
-YXBwZW5kKCJ9XG4iKQo+IC3CoMKgwqDCoMKgwqDCoCByZXR1cm4gYnVmZgo+IC0KPiDCoMKgwqDC
-oCBkZWYgX19maWxsX3ZlcmlmeV9ndWFyZHNfZnVuYyhzZWxmKSAtPiBsaXN0W3N0cl06Cj4gwqDC
-oMKgwqDCoMKgwqDCoCBidWZmID0gW10KPiDCoAo+IEBAIC00NTYsNTQgKzQyNCw2IEBAIGYiIiJz
-dGF0aWMgaW5saW5lIGJvb2wgaGFfdmVyaWZ5X2d1YXJkcyhzdHJ1Y3QKPiBoYV9tb25pdG9yICpo
-YV9tb24sCj4gwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiXHRyZXR1cm4gcmVzO1xufVxu
-IikKPiDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBidWZmCj4gwqAKPiAtwqDCoMKgIGRlZiBfX2Zp
-bmRfaW52X2NvbmZsaWN0cyhzZWxmKSAtPiB0dXBsZVtzZXRbdHVwbGVbaW50LAo+IF9FdmVudENv
-bnN0cmFpbnRLZXldXSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2V0W3R1cGxl
-W2ludCwKPiBfU3RhdGVDb25zdHJhaW50S2V5XV1dOgo+IC3CoMKgwqDCoMKgwqDCoCAiIiIKPiAt
-wqDCoMKgwqDCoMKgwqAgUnVuIGEgYnJlYWR0aCBmaXJzdCBzZWFyY2ggZnJvbSBhbGwgc3RhdGVz
-IHdpdGggYW4KPiBpbnZhcmlhbnQuCj4gLcKgwqDCoMKgwqDCoMKgIEZpbmQgYW55IGNvbmZsaWN0
-aW5nIGNvbnN0cmFpbnRzIHJlYWNoYWJsZSBmcm9tIHRoZXJlLCB0aGlzCj4gY2FuIGJlCj4gLcKg
-wqDCoMKgwqDCoMKgIGFub3RoZXIgc3RhdGUgd2l0aCBhbiBpbnZhcmlhbnQgb3IgYW4gZWRnZSB3
-aXRoIGEgbm9uLXJlc2V0Cj4gZ3VhcmQuCj4gLcKgwqDCoMKgwqDCoMKgIFN0b3Agd2hlbiB3ZSBm
-aW5kIGEgcmVzZXQuCj4gLQo+IC3CoMKgwqDCoMKgwqDCoCBSZXR1cm4gdGhlIHNldCBvZiBjb25m
-bGljdGluZyBndWFyZHMgYW5kIGludmFyaWFudHMgYXMKPiB0dXBsZXMgb2YKPiAtwqDCoMKgwqDC
-oMKgwqAgY29uZmxpY3Rpbmcgc3RhdGUgYW5kIGNvbnN0cmFpbnQga2V5Lgo+IC3CoMKgwqDCoMKg
-wqDCoCAiIiIKPiAtwqDCoMKgwqDCoMKgwqAgY29uZmxpY3RfZ3VhcmRzOiBzZXRbdHVwbGVbaW50
-LCBfRXZlbnRDb25zdHJhaW50S2V5XV0gPQo+IHNldCgpCj4gLcKgwqDCoMKgwqDCoMKgIGNvbmZs
-aWN0X2ludnM6IHNldFt0dXBsZVtpbnQsIF9TdGF0ZUNvbnN0cmFpbnRLZXldXSA9IHNldCgpCj4g
-LcKgwqDCoMKgwqDCoMKgIGZvciBzdGFydF9pZHggaW4gc2VsZi5pbnZhcmlhbnRzOgo+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHF1ZXVlID0gZGVxdWUoWyhzdGFydF9pZHgsIDApXSnCoCAjIChz
-dGF0ZV9pZHgsIGRpc3RhbmNlKQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVudiA9Cj4gc2Vs
-Zi5fX2dldF9jb25zdHJhaW50X2VudihzZWxmLmludmFyaWFudHNbc3RhcnRfaWR4XSkKPiAtCj4g
-LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd2hpbGUgcXVldWU6Cj4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBjdXJyX2lkeCwgZGlzdGFuY2UgPSBxdWV1ZS5wb3BsZWZ0KCkKPiAtCj4g
-LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIENoZWNrIHN0YXRlIGNvbmRpdGlvbgo+
-IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgY3Vycl9pZHggIT0gc3RhcnRfaWR4
-IGFuZCBjdXJyX2lkeCBpbgo+IHNlbGYuaW52YXJpYW50czoKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgY29uZmxpY3RfaW52cy5hZGQoKHN0YXJ0X2lkeCwKPiBfU3Rh
-dGVDb25zdHJhaW50S2V5KGN1cnJfaWR4KSkpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4gLQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgIyBDaGVjayBpZiB3ZSBzaG91bGQgc3RvcAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgaWYgZGlzdGFuY2UgPiBsZW4oc2VsZi5zdGF0ZXMpOgo+IC3CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhawo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgaWYgY3Vycl9pZHggIT0gc3RhcnRfaWR4IGFuZCBkaXN0YW5jZSA+IDE6Cj4gLcKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4gLQo+IC3CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9yIGV2ZW50X2lkeCwgbmV4dF9zdGF0ZV9uYW1lIGlu
-Cj4gZW51bWVyYXRlKHNlbGYuZnVuY3Rpb25bY3Vycl9pZHhdKToKPiAtwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgbmV4dF9zdGF0ZV9uYW1lID09IHNlbGYuaW52YWxp
-ZF9zdGF0ZV9zdHI6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgY29udGludWUKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-Y3Vycl9ndWFyZCA9IHNlbGYuZ3VhcmRzLmdldCgoY3Vycl9pZHgsCj4gZXZlbnRfaWR4KSwgIiIp
-Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmICJyZXNldCIgaW4g
-Y3Vycl9ndWFyZCBhbmQgZW52IGluIGN1cnJfZ3VhcmQ6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29udGludWUKPiAtCj4gLcKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGVudiBpbiBjdXJyX2d1YXJkOgo+IC3CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbmZsaWN0X2d1YXJkcy5h
-ZGQoKHN0YXJ0X2lkeCwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoAo+IF9FdmVu
-dENvbnN0cmFpbnRLZXkoY3Vycl9pZHgsIGV2ZW50X2lkeCkpKQo+IC3CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4gLQo+IC3CoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuZXh0X2lkeCA9IHNlbGYuc3RhdGVzLmluZGV4
-KG5leHRfc3RhdGVfbmFtZSkKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgcXVldWUuYXBwZW5kKChuZXh0X2lkeCwgZGlzdGFuY2UgKyAxKSkKPiAtCj4gLcKgwqDCoMKg
-wqDCoMKgIHJldHVybiBjb25mbGljdF9ndWFyZHMsIGNvbmZsaWN0X2ludnMKPiAtCj4gwqDCoMKg
-wqAgZGVmIF9fZmlsbF9zZXR1cF9pbnZhcmlhbnRzX2Z1bmMoc2VsZikgLT4gbGlzdFtzdHJdOgo+
-IMKgwqDCoMKgwqDCoMKgwqAgaWYgbm90IHNlbGYuaGFzX2ludmFyaWFudDoKPiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgcmV0dXJuIFtdCj4gQEAgLTU1NCwxNiArNDc0LDkgQEAgZiIiInN0YXRp
-YyBpbmxpbmUgdm9pZAo+IGhhX3NldHVwX2ludmFyaWFudHMoc3RydWN0IGhhX21vbml0b3IgKmhh
-X21vbiwKPiDCoCAqIHRoZSBuZXh0IHN0YXRlIGhhcyBhIGNvbnN0cmFpbnQsIGNhbmNlbCBpdCBp
-biBhbnkgb3RoZXIgY2FzZSBhbmQKPiB0byBjaGVjawo+IMKgICogdGhhdCBpdCBkaWRuJ3QgZXhw
-aXJlIGJlZm9yZSB0aGUgY2FsbGJhY2sgcnVuLiBUcmFuc2l0aW9ucyB0byB0aGUKPiBzYW1lIHN0
-YXRlCj4gwqAgKiB3aXRob3V0IGEgcmVzZXQgbmV2ZXIgYWZmZWN0IHRpbWVycy4KPiAtICogRHVl
-IHRvIHRoZSBkaWZmZXJlbnQgcmVwcmVzZW50YXRpb25zIGJldHdlZW4gaW52YXJpYW50cyBhbmQK
-PiBndWFyZHMsIHRoZXJlIGlzCj4gLSAqIGEgZnVuY3Rpb24gdG8gY29udmVydCBpdCBpbiBjYXNl
-IGludmFyaWFudHMgb3IgZ3VhcmRzIGFyZQo+IHJlYWNoYWJsZSBmcm9tCj4gLSAqIGFub3RoZXIg
-aW52YXJpYW50IHdpdGhvdXQgcmVzZXQuIFRob3NlIGFyZSBub3QgcHJlc2VudCBpZiBub3QKPiBy
-ZXF1aXJlZCBpbgo+IC0gKiB0aGUgbW9kZWwuIFRoaXMgaXMgYWxsIGF1dG9tYXRpYyBidXQgaXMg
-d29ydGggY2hlY2tpbmcgYmVjYXVzZSBpdAo+IG1heSBzaG93Cj4gLSAqIGVycm9ycyBpbiB0aGUg
-bW9kZWwgKGUuZy4gbWlzc2luZyByZXNldHMpLgo+IMKgICovIiIiKQo+IMKgCj4gwqDCoMKgwqDC
-oMKgwqDCoCBidWZmICs9IHNlbGYuX19maWxsX3ZlcmlmeV9pbnZhcmlhbnRzX2Z1bmMoKQo+IC3C
-oMKgwqDCoMKgwqDCoCBpbnZfY29uZmxpY3RzID0gc2VsZi5fX2ZpbGxfY29udmVydF9pbnZfZ3Vh
-cmRfZnVuYygpCj4gLcKgwqDCoMKgwqDCoMKgIGJ1ZmYgKz0gaW52X2NvbmZsaWN0cwo+IMKgwqDC
-oMKgwqDCoMKgwqAgYnVmZiArPSBzZWxmLl9fZmlsbF92ZXJpZnlfZ3VhcmRzX2Z1bmMoKQo+IMKg
-wqDCoMKgwqDCoMKgwqAgYnVmZiArPSBzZWxmLl9fZmlsbF9zZXR1cF9pbnZhcmlhbnRzX2Z1bmMo
-KQo+IMKgCj4gQEAgLTU3Niw5ICs0ODksNiBAQCBmIiIic3RhdGljIGJvb2wgaGFfdmVyaWZ5X2Nv
-bnN0cmFpbnQoc3RydWN0Cj4gaGFfbW9uaXRvciAqaGFfbW9uLAo+IMKgwqDCoMKgwqDCoMKgwqAg
-aWYgc2VsZi5pbnZhcmlhbnRzOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVu
-ZCgiXHRpZiAoIWhhX3ZlcmlmeV9pbnZhcmlhbnRzKGhhX21vbiwKPiBjdXJyX3N0YXRlLCAiCj4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJldmVudCwg
-bmV4dF9zdGF0ZSwgdGltZV9ucykpXG5cdFx0cmV0dXJuCj4gZmFsc2U7XG4iKQo+IC3CoMKgwqDC
-oMKgwqDCoCBpZiBpbnZfY29uZmxpY3RzOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYu
-YXBwZW5kKCJcdGhhX2NvbnZlcnRfaW52X2d1YXJkKGhhX21vbiwgY3Vycl9zdGF0ZSwKPiBldmVu
-dCwgIgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJu
-ZXh0X3N0YXRlLCB0aW1lX25zKTtcbiIpCj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIHNlbGYu
-Z3VhcmRzOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiXHRpZiAoIWhh
-X3ZlcmlmeV9ndWFyZHMoaGFfbW9uLCBjdXJyX3N0YXRlLAo+IGV2ZW50LCAiCg0K
+[just replying to comments, will do a full review later]
+
+st 10. 6. 2026 v 21:51 odes=C3=ADlatel Crystal Wood <crwood@redhat.com> nap=
+sal:
+>
+> On Wed, 2026-06-10 at 15:04 +0200, Valentin Schneider wrote:
+> > Osnoise already implictly accounts IPIs via its IRQ tracking,
+>
+> Does it?  It seems that IPIs bypass the kernel/irq subsystem on some
+> arches (including x86, but not ARM).
+>
+> It would be nice to solve this properly by adding generic ipi
+> entry/exit tracing (similar to what ARM already has).
+>
+
+Isn't that precisely what the ipi tracepoints used by this
+implementation (ipi:ipi_send_cpu) are for?
+
+> > however it
+> > can be interesting to distiguish between the two: undesired IPIs usuall=
+y
+> > imply a software configuration issue (e.g. wrong/incomplete CPU isolati=
+on)
+> > whereas undesired (non-IPI) IRQs usually imply a hardware configuration
+> > issue.
+> >
+> > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> > ---
+> > Note that this is modifying the osnoise:osnoise_entry Ftrace entry; I k=
+now
+> > trace events are sort of supposed to be stable, but I'm not sure about
+> > ftrace entries.
+>
+> I think old rtla will be OK with this since it looks up fields by name
+> rather than assuming a fixed layout.
+>
+
+Yeah, the fields are either looked up with tep_get_field_val() [2], or
+with name-based BPF CO-RE relocations against the tracepoint structure
+[3]. So this shouldn't be an issue, as long as the old counts stay the
+same.
+
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
+e/tools/tracing/rtla/src/timerlat_hist.c#n191
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
+e/tools/tracing/rtla/src/timerlat.bpf.c#n12
+
+> > Alternatively I can have this be purely supported in userspace osnoise =
+by
+> > hooking into the IPI events and counting IPIs separately from the osnoi=
+se
+> > events.
+>
+> One benefit I could see of doing this in kernel osnoise would be if you
+> could atomically correlate the count with the particular noise
+> interval, but this patch doesn't do that.
+>
+
+The count is already reported by cycle on the kernel side in the
+patchset, right? It's only missing in the current RTLA (userspace)
+part, as there is no statistic using the information. But it can still
+be collected through custom histogram triggers.
+
+> > ...
+> >
+> > +static void trace_ipi_send_cpumask_callback(void *data, const struct c=
+pumask *cpumask,
+> > +                                         unsigned long callsite, void =
+*callback)
+> > +{
+> > +     struct osnoise_variables *osn_var;
+> > +     int cpu;
+> > +
+> > +     for_each_cpu_and(cpu, cpumask, &osnoise_cpumask) {
+> > +             osn_var =3D per_cpu_ptr(&per_cpu_osnoise_var, cpu);
+> > +             ipi_emission(osn_var, cpu);
+> > +     }
+> > +}
+>
+> Isn't this racy to do from a different CPU?  Both in terms of the
+> counter, and the timing of the increment relative to when the IPI is
+> actually received.  Not necessarily a huge deal if you only care about
+> zero versus bignum, but still.  At least worth a comment, if we go with
+> this approach.
+>
+
+I also think it's a bit confusing, especially as the other accesses to
+osn_var are cpu-local, but here, "cpu" is the *target* CPU, not the
+current CPU. Not sure how expensive it would be to do atomic_add for
+that, at least it's something to consider.
+
+Tomas
 
