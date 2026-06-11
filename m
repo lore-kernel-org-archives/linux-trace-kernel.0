@@ -1,20 +1,20 @@
 Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379BB2DB7B9;
-	Thu, 11 Jun 2026 05:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B9932A3C8;
+	Thu, 11 Jun 2026 05:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781157597; cv=none; b=I8KnFzsyV7vTDtgvdFZWOSMSuvoYxN/GV8sTIzjshmWp1Qhm6kx9eYrOo9dou22TB3LGAnIwW0st+xPTZ5Whip1jE8lB5vEAcnh5sYdb11xeVZdxFmzaL9a/i0OSyrmh9rw4bnzNMF9D/TOhct/eEjmkGcylXSfxTBYGa39+CZs=
+	t=1781157598; cv=none; b=IC4sZDldnGZjOlxXV3eSasmKRyxN+9plV+7H5fbvqRojV8TJxlh1DhYh3iUoWcqD+3jS8+y2N7CtY6uKxxCn2+BUzbSU/t2h/ve5VTvISnhSXtuZx/QW3MFrZJXH0W1tGcRcJfJZ5F4+XupXbi/4DWPzoYisVzt16oWqXtZhmEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781157597; c=relaxed/simple;
-	bh=xIWDsWMDfzSC9s4Hxf2T695OOeCQGjh3p+/FrdCRcZ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tijsdrP7RSqLSKuqfxkKeTn0kl7jj5DrZPE4c2GlUykLttDEYnopptHOSp0X0lSYyBC7zY/yODSWsowV5kU6hIj7hPOWJ0VWq5DFC59pgRqwCx3+tYG1xkEGyZrCiLOMDkym/jqoFOzCTikmXK6cbyyX+RHIKwQ2DTaMLjgNKXE=
+	s=arc-20240116; t=1781157598; c=relaxed/simple;
+	bh=6L/q6dP9lWy/R4rAm0cuefHfRwGS//KTuLkVK3OgBVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m8N+uAgT/6YBeLv2P+XbSnXqzfJGdIMbq++kA+zxLY0XtssuRPOgsouGHH8lM3BHKs2HE/195g44gulYkW1etNNigne0Iid2JigR27A+iX9SKryG2/89NULwZpn5qSKx08tSZioJcN/1qxlTrTr1FOr9uvlBjKc4WjqmjugrDdA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
 Received: from localhost.localdomain (unknown [111.196.245.140])
-	by APP-01 (Coremail) with SMTP id qwCowACXPdbTTipqvyxFAQ--.9346S4;
+	by APP-01 (Coremail) with SMTP id qwCowACXPdbTTipqvyxFAQ--.9346S2;
 	Thu, 11 Jun 2026 13:59:48 +0800 (CST)
 From: Pengpeng Hou <pengpeng@iscas.ac.cn>
 To: Steven Rostedt <rostedt@goodmis.org>,
@@ -23,9 +23,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Pengpeng Hou <pengpeng@iscas.ac.cn>
-Subject: [PATCH v5 2/3] tracing: Return ERR_PTR() from expr_str()
-Date: Thu, 11 Jun 2026 13:59:44 +0800
-Message-ID: <20260611055945.22348-3-pengpeng@iscas.ac.cn>
+Subject: [PATCH v5 0/3] tracing: bound histogram expression strings
+Date: Thu, 11 Jun 2026 13:59:42 +0800
+Message-ID: <20260611055945.22348-1-pengpeng@iscas.ac.cn>
 X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,112 +34,56 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACXPdbTTipqvyxFAQ--.9346S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxWr4fXF18tr43KFW3tFyUGFg_yoW5XFyDpF
-	4kXwnIg3ykJF4Ig343AF48u3W3G393Gr4UGF97uay0yrnxKr48Xa1UWF1UX34SvrW0qrW3
-	JF4UZrZ8Cr42gFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r126r1DMx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWx
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUULZ2DUUUUU==
+X-CM-TRANSID:qwCowACXPdbTTipqvyxFAQ--.9346S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zry3Wr4rZF4fXryrGr4kWFg_yoW8GrWfpF
+	4fu3sxGw4ktw4Iyrs3A3WDZ3Z8Xas3GrWUJwsrGw4rKry3Jr4jqFWvk3W5uw1ft34Iqw15
+	Kr4DuF4fCFWUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjuHq7UUUU
+	U==
 X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 
-expr_str() currently reports all failure cases as NULL, so callers cannot
-distinguish invalid recursion depth from allocation failure or later
-string construction errors.
+This v5 starts a new thread and splits the previous expr_str() update
+into the preparatory lifetime cleanup, the ERR_PTR() conversion, and the
+bounded seq_buf conversion.
 
-Return ERR_PTR()-encoded errors from expr_str() and make parse_unary()
-and parse_expr() propagate them. Clear expr->name before destroying the
-hist field so the error pointer is not freed as a string.
+The series is based on trace/for-next at 8970865b788e
+("Merge trace/for-next").
 
-Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
----
- kernel/trace/trace_events_hist.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+Patch 1 converts the expr_str() output buffer to __free(kfree).
+Patch 2 converts expr_str() failures from NULL to ERR_PTR().
+Patch 3 replaces the raw strcat() expression construction with seq_buf
+and returns -E2BIG when the rendered expression would exceed
+MAX_FILTER_STR_VAL.
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index f778f060e922..082842e64ccd 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1762,11 +1762,11 @@ static char *expr_str(struct hist_field *field, unsigned int level)
- 	char *expr __free(kfree) = NULL;
- 
- 	if (level > 1)
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 
- 	expr = kzalloc(MAX_FILTER_STR_VAL, GFP_KERNEL);
- 	if (!expr)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	if (!field->operands[0]) {
- 		expr_field_str(field, expr);
-@@ -1778,8 +1778,8 @@ static char *expr_str(struct hist_field *field, unsigned int level)
- 
- 		strcat(expr, "-(");
- 		subexpr = expr_str(field->operands[0], ++level);
--		if (!subexpr)
--			return NULL;
-+		if (IS_ERR(subexpr))
-+			return subexpr;
- 
- 		strcat(expr, subexpr);
- 		strcat(expr, ")");
-@@ -1805,7 +1805,7 @@ static char *expr_str(struct hist_field *field, unsigned int level)
- 		strcat(expr, "*");
- 		break;
- 	default:
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
- 
- 	expr_field_str(field->operands[1], expr);
-@@ -2624,6 +2624,11 @@ static struct hist_field *parse_unary(struct hist_trigger_data *hist_data,
- 	expr->is_signed = operand1->is_signed;
- 	expr->operator = FIELD_OP_UNARY_MINUS;
- 	expr->name = expr_str(expr, 0);
-+	if (IS_ERR(expr->name)) {
-+		ret = PTR_ERR(expr->name);
-+		expr->name = NULL;
-+		goto free;
-+	}
- 	expr->type = kstrdup_const(operand1->type, GFP_KERNEL);
- 	if (!expr->type) {
- 		ret = -ENOMEM;
-@@ -2836,6 +2841,11 @@ static struct hist_field *parse_expr(struct hist_trigger_data *hist_data,
- 		destroy_hist_field(operand1, 0);
- 
- 		expr->name = expr_str(expr, 0);
-+		if (IS_ERR(expr->name)) {
-+			ret = PTR_ERR(expr->name);
-+			expr->name = NULL;
-+			goto free_expr;
-+		}
- 	} else {
- 		/* The operand sizes should be the same, so just pick one */
- 		expr->size = operand1->size;
-@@ -2849,6 +2859,11 @@ static struct hist_field *parse_expr(struct hist_trigger_data *hist_data,
- 		}
- 
- 		expr->name = expr_str(expr, 0);
-+		if (IS_ERR(expr->name)) {
-+			ret = PTR_ERR(expr->name);
-+			expr->name = NULL;
-+			goto free_expr;
-+		}
- 	}
- 
- 	return expr;
+Changes since v4:
+https://lore.kernel.org/all/20260521022817.38453-1-pengpeng@iscas.ac.cn/
+- start a new thread for the new patch revision
+- split the __free(kfree) conversion and ERR_PTR() conversion into
+  separate patches as requested
+- simplify the unary-minus seq_buf conversion with a single
+  seq_buf_printf(&s, "-(%s)", subexpr) and keep subexpr manually freed
+- keep the seq_buf include unchanged because trace/for-next already has
+  <linux/seq_buf.h> in this file
+
+Pengpeng Hou (3):
+  tracing: Use __free() for expr_str() buffer
+  tracing: Return ERR_PTR() from expr_str()
+  tracing: Bound histogram expression strings with seq_buf
+
+ kernel/trace/trace_events_hist.c | 92 ++++++++++++++++++++------------
+ 1 file changed, 57 insertions(+), 35 deletions(-)
+
 -- 
 2.50.1 (Apple Git-155)
 
