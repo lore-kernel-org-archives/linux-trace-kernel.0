@@ -1,84 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA4C3C8705
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 10:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703DB3CFF5A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 10:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781173298; cv=none; b=VPdT2FAklbupd8moHmpomWdHjWxgXAcmgD99gVulN9PH6oNqYwok/MJVIq6b41lX9/w+YcT9NqgzDR37S5cf1zGuV13tA/nhQ3zBgCMWgefwSUJhEcyzXcWtlCoLoOLDCI7GCjFeugLZjSoHilLtly1ewOaMpcK6Cg0bpXPqik8=
+	t=1781173863; cv=none; b=b1efXsiYPcfSC9+u7l7xeaUCElbJOU1scicuyilwkWlGhsBta+3eCBLVtspAe2NBn/oegBFMMtT2h/id/2UXDWNOyRAQa3NIudAHv8MJp4b7V+0Wyv88OvlO+U+01/ONlDJ1eA/k05araTCbMR5q9PBF4xCvAJybcfFNBSOgNPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781173298; c=relaxed/simple;
-	bh=KxujICApJct0ddBnV8QYo0692bUdsnXtmZmanpZU8u8=;
+	s=arc-20240116; t=1781173863; c=relaxed/simple;
+	bh=UbVW6ggehIpgX/GchyYfvdiFEIE6BSAdT89W6ZiFe7U=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=F6vcZ2J7vWEwJyhA9HZfyUkbQ+b+iDnYBFSLlJuivLT6cpYp8pNCyqD2PIJU5WK/OT53iaRP0gHeLQ9wyWtNm5zTVv99F2sxu+m0IDKup71/4bui8I7eOGeDJRV2PaZBsQ8ewrbrK7MHuHYmHecIxz3kIvbui3HczSnXd/yh9x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cZjTR0bN; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=n6/mrBPA8sxbIHWKhk2yzjt+LJL2Ra4aSmW9cm6hul70t8AMrSRUByu+NDDZBDL5bj5pLPXjUgWAs+MDYgZjctksswMCE16wJuwevbZOinkVdxNhvVj9vh06ZfdAcBO4a3oxYBR0nL3zeWPyvMmNFXeTs5/w5Gx/qvOACYHHmP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PAYhI5eI; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cZjTR0bN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PAYhI5eI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781173295;
+	s=mimecast20190719; t=1781173860;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Be6DaheHjENBxcZUlCpyDT73aU4MAUcxC97l0DHHuuw=;
-	b=cZjTR0bNnBMoH45IYEXAz7q7awt6UBmvRCfuUO53ijvGGKA9oX2Wxpr9oKBxOhB5CzJdLL
-	IElBd+ybqFOZNg6kLcQk5xb/ZBH80EKWQ7Jp4ZEIwmflPv09VcMi+sHrYMoi8X87Ke+TO9
-	q4k0ZNk4RYAZT+iY0LFwG+bglVF4n0U=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=nu5DulhRD5GvjFL2dL285B18ikNF4YHRoNMOTNczkjw=;
+	b=PAYhI5eIBPDA83efo2GfkLNrBkFypBJkRWfbSkHbBfCoGifZqc0B7Ime5ZsRFryC5D4QPI
+	xRO9DB1cijNRF1NIHSkVLxiti28HfX1/5guBNTdjnEp7RfIciKo6eT8xLJsvlKDkOuhHL2
+	Jae4ta2vOz48vecS8uQqDnjKB45XT0Y=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-22-SCMfdTZVNQGUPFee6BYTxg-1; Thu, 11 Jun 2026 06:21:34 -0400
-X-MC-Unique: SCMfdTZVNQGUPFee6BYTxg-1
-X-Mimecast-MFC-AGG-ID: SCMfdTZVNQGUPFee6BYTxg_1781173293
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-490ae016853so14426355e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 03:21:34 -0700 (PDT)
+ us-mta-103-gmObJjUoOkuzZT90W9estQ-1; Thu, 11 Jun 2026 06:30:59 -0400
+X-MC-Unique: gmObJjUoOkuzZT90W9estQ-1
+X-Mimecast-MFC-AGG-ID: gmObJjUoOkuzZT90W9estQ_1781173858
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-490c840efe6so6609475e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 03:30:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781173293; x=1781778093;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Be6DaheHjENBxcZUlCpyDT73aU4MAUcxC97l0DHHuuw=;
-        b=QQ6pUCv+FrHkb3aax1gzwdPvZWQ/B/EwP5dY/2CgDa2lDbtjYFdNN0bVyrVZuOQp2a
-         X9PNHOTfq/WAkiB/prCbGEoHbU0v9JAfu6UuFswuhMzJOykmI0QDJCIudGA9XrZxpEtA
-         oMUSZyW/EoKiBP2qYkkH14b2cbRtq8kYl+HZ7XQ4d1Fyn/ZigoX9zHr84X2+Jso6xEp3
-         7UweNFtc56D1iv4Np8XPBKheTqvUPnEGaEeRFWccXIy6kucYI4I0IDQa6TBXCWIAoBkB
-         bRRxEyHjyZR1JAxmYGKOtaQW90KanT7QWFrTRIY0u99hVIritIXSkALhlRkjisJubQyr
-         OfNA==
-X-Forwarded-Encrypted: i=1; AFNElJ9pAMjKKsMZ8tadkXAwYYoRwQmqUNVkt6QvGlGNdZAxfe7Dwm7xz6GfNCAQFfiCsuqLoy4kq60FJ94Ytd+6x2mVSJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAGNKh5o1fpIYaBeIjd4Gb4wViHMSn+kY97C4YRBUooMw6pvkX
-	gBvpxWJAn7Vx+YJIkX6SBMrih+dA+NEC6nylqi9zsKGoFQVIMqrlEEXwxZ1XJIetTOHndrigYCM
-	K+GDqMOwm5/TP9DeKo5PBfOtIKEHzqmzmxZFFISv954DVKjNL0SPHnZiJswenCLLkaalObErpWQ
+        d=1e100.net; s=20251104; t=1781173858; x=1781778658;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=V8uctc9+aAOAb1j01brzPJHvMVOuj0goYp0HtlmUdJ0=;
+        b=q2OudM073dwezdeZFn8oKMhRH7OVKKS/jB5liYSPVxbB53jPA0tLmbtWsDK6lDoNJq
+         HIginV4/l/xx2lvceWEOga45KamAxRS5KKuVdZEgkkvCr+tyXznw2wmh1pObK86Hz545
+         6OsGOZ2kkip+5Pm9iNGYFS+CRO4wONS7lpzJd+IwrcOb8T9JG/AfIjBrS9IWRDgD0qDi
+         CEe0Pplgf242ePuo+9A7OCN3JG7Il4r2TeJhC/uZQwYpoEktNRSsziT++7soLOMhUzj9
+         LpBra7lRGKlZB2TxiuJler0XAF2+EcyY8Nc8G9PAAKpjgksTJAy8kJ+y1waSJt/9LQw4
+         qJJg==
+X-Forwarded-Encrypted: i=1; AFNElJ/4S3bjN1dQA3WWGw/ZFtMrFPKHwMZChFMJHclwxN6cAyEvl6Q4jow/HMM8fmuPdHRP9HZIDvA8Foy5Ho5pmBbjJhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR5nA8TmISxF1S52cCqA4N9oTwMCW49Gj7CRth4v3hCmn1+peY
+	6PfW4QdeESpabPA638aDnd6WeDzBJj7Zg2QS+jlF8lBAFd0UTYvTicgsJCGKSsgjUPRECTPcapI
+	GEHf/+QObpLFFAYmEm6zwu2zc1qY5pQQV2wnG87JEJaUTf/MR+O6ymWKOseQmxjzkd+22v8eP4g
 	==
-X-Gm-Gg: Acq92OH7wQOlQf7UEdRO7qyvOIOlHVynYs2TWOjSjtxWaQSAaa7lB3vtEwjjyN6wLQW
-	fdJTFD8geRYgITRRhc8IEv1/dPORlaFwHtZlt64GhNlvTqHoF0PGCsRUPGRoBfoQLVfm0Hf9Mew
-	NwCeKalPN8IZS5sd2KhsJ+QGkw3uLOnueMIBvYIDJNFqjczSqmz6wzBwedxacc6rBSF3kdy85vE
-	hrdAdyRgyYC6uTNazwaH8SqLsYToLkGGBrq9+yTmZMDbERluGLQ8LPefGDtHernpfVZjXljcYi8
-	nG14tcTc8Kxb35J80xY//j8GSbv6//xr3rcDiRe8vkUeu2lKh/mW1Hmxs2P7deTs2u6Va7W0f3+
-	f3KyxaRBa8hCqyRQETHiHR/LBDi42bTMd/3unOw/vEKtatefQS/D5COb9/Kyy0ffJrXXJ87f5zu
-	M53/xpMd3kkuPkU2vGiA==
-X-Received: by 2002:a05:600c:c8a:b0:490:b072:1be6 with SMTP id 5b1f17b1804b1-490e5639bffmr27420765e9.25.1781173293196;
-        Thu, 11 Jun 2026 03:21:33 -0700 (PDT)
-X-Received: by 2002:a05:600c:c8a:b0:490:b072:1be6 with SMTP id 5b1f17b1804b1-490e5639bffmr27420275e9.25.1781173292813;
-        Thu, 11 Jun 2026 03:21:32 -0700 (PDT)
+X-Gm-Gg: Acq92OECYMDQYScH9TjMhs3mvKtvlzp4QeCJCkp/p6lW/JjD5vBUbFsfkA0G50ufTCo
+	Iy2SHzZL/Y7b6TU9D0ZSXBvd3VbpN8/XoWiu0V6ji1CPPREn8fS9jAARNROZAEyFRM4pc7laL07
+	LhQ/pSHF9EYYRV1k+sZHJLJDN0YNNgA9P6kcHcg1n+K+DEFkgbM5emTr7cpMHN1bF0do/TIxSP0
+	/dDCAmlObhlK69q8PmDmksimC/cRBRGfHK5HC2OAV10OiW+ea0O6qewfrib6CKBbK0hAtt/u7Vk
+	0ASWWBnLmezt6twdq9ItXMFKxY1ZlG49nhTuFFcD1/JLjJIZWbPt+5X5PVhwPHrUiSRQPbDgjkg
+	EM7fA6TfxYiRoidMbiWneDJ7eMiBCbFG+09yIiWQbYIwRWyjcPqmQYXBpJAGV1Z72MNTWoSEEHn
+	PUsnB0D1dXjL7IsYP0YQ==
+X-Received: by 2002:a05:600d:8444:20b0:490:7df7:9190 with SMTP id 5b1f17b1804b1-490e52dfc5emr16161685e9.8.1781173857861;
+        Thu, 11 Jun 2026 03:30:57 -0700 (PDT)
+X-Received: by 2002:a05:600d:8444:20b0:490:7df7:9190 with SMTP id 5b1f17b1804b1-490e52dfc5emr16161405e9.8.1781173857304;
+        Thu, 11 Jun 2026 03:30:57 -0700 (PDT)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490e2c7ea21sm54190235e9.1.2026.06.11.03.21.31
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490e2c0d360sm63347395e9.0.2026.06.11.03.30.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 03:21:31 -0700 (PDT)
+        Thu, 11 Jun 2026 03:30:56 -0700 (PDT)
 From: Valentin Schneider <vschneid@redhat.com>
-To: Crystal Wood <crwood@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tomas Glozar <tglozar@redhat.com>, Costa Shulyupin
+To: Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin
  <costa.shul@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>
 Subject: Re: [RFC PATCH 1/2] tracing/osnoise: Sample IPI counts
-In-Reply-To: <f40903f8198f8e2f42f1efdf950f995f24cf6e93.camel@redhat.com>
+In-Reply-To: <CAP4=nvT6GEdwZAm-2h+Z-mj9DOmJ-swyApujFun6m1Qaxxr7hQ@mail.gmail.com>
 References: <20260610130457.1304245-1-vschneid@redhat.com>
  <20260610130457.1304245-2-vschneid@redhat.com>
  <f40903f8198f8e2f42f1efdf950f995f24cf6e93.camel@redhat.com>
-Date: Thu, 11 Jun 2026 12:21:30 +0200
-Message-ID: <xhsmh5x3p2x91.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAP4=nvT6GEdwZAm-2h+Z-mj9DOmJ-swyApujFun6m1Qaxxr7hQ@mail.gmail.com>
+Date: Thu, 11 Jun 2026 12:30:55 +0200
+Message-ID: <xhsmh33yt2wtc.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -86,87 +87,120 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: slwxSKF_WcUl8sCy_Yfteevw9OGY18WQ_LL4I3zXGlg_1781173293
+X-Mimecast-MFC-PROC-ID: WsLuLh_cctlVgpPgOniyRKwNr7vmVQ6RY-x3NTfqaLY_1781173858
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 10/06/26 14:51, Crystal Wood wrote:
-> On Wed, 2026-06-10 at 15:04 +0200, Valentin Schneider wrote:
->> Osnoise already implictly accounts IPIs via its IRQ tracking,
+On 11/06/26 10:59, Tomas Glozar wrote:
+> [just replying to comments, will do a full review later]
 >
-> Does it?  It seems that IPIs bypass the kernel/irq subsystem on some
-> arches (including x86, but not ARM).
+> st 10. 6. 2026 v 21:51 odes=C3=ADlatel Crystal Wood <crwood@redhat.com> n=
+apsal:
+>>
+>> On Wed, 2026-06-10 at 15:04 +0200, Valentin Schneider wrote:
+>> > Osnoise already implictly accounts IPIs via its IRQ tracking,
+>>
+>> Does it?  It seems that IPIs bypass the kernel/irq subsystem on some
+>> arches (including x86, but not ARM).
+>>
+>> It would be nice to solve this properly by adding generic ipi
+>> entry/exit tracing (similar to what ARM already has).
+>>
 >
-
-Right...
-
-> It would be nice to solve this properly by adding generic ipi
-> entry/exit tracing (similar to what ARM already has).
->
-
-I think for x86 the CSD tracepoints catch a few of these strays - I think
-the smp_call ones for instance.
-
->> however it
->> can be interesting to distiguish between the two: undesired IPIs usually
->> imply a software configuration issue (e.g. wrong/incomplete CPU isolation)
->> whereas undesired (non-IPI) IRQs usually imply a hardware configuration
->> issue.
->> 
->> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
->> ---
->> Note that this is modifying the osnoise:osnoise_entry Ftrace entry; I know
->> trace events are sort of supposed to be stable, but I'm not sure about
->> ftrace entries.
->
-> I think old rtla will be OK with this since it looks up fields by name
-> rather than assuming a fixed layout.
->
->> Alternatively I can have this be purely supported in userspace osnoise by
->> hooking into the IPI events and counting IPIs separately from the osnoise
->> events.
->
-> One benefit I could see of doing this in kernel osnoise would be if you
-> could atomically correlate the count with the particular noise
-> interval, but this patch doesn't do that.
->
->> +static void ipi_emission(struct osnoise_variables *osn_var, unsigned int dst_cpu)
->> +{
->> +	if (!osn_var->sampling)
->> +		return;
->> +
->> +	osn_var->ipi.count++;
->> +}
->> +
->> +static void trace_ipi_send_cpu_callback(void *data, unsigned int cpu,
->> +					unsigned long callsite, void *callback)
->> +{
->> +	struct osnoise_variables *osn_var;
->> +
->> +	osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
->> +	ipi_emission(osn_var, cpu);
->> +}
->> +
->> +static void trace_ipi_send_cpumask_callback(void *data, const struct cpumask *cpumask,
->> +					    unsigned long callsite, void *callback)
->> +{
->> +	struct osnoise_variables *osn_var;
->> +	int cpu;
->> +
->> +	for_each_cpu_and(cpu, cpumask, &osnoise_cpumask) {
->> +		osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
->> +		ipi_emission(osn_var, cpu);
->> +	}
->> +}
->
-> Isn't this racy to do from a different CPU?  Both in terms of the
-> counter, and the timing of the increment relative to when the IPI is
-> actually received.  Not necessarily a huge deal if you only care about
-> zero versus bignum, but still.  At least worth a comment, if we go with
-> this approach.
+> Isn't that precisely what the ipi tracepoints used by this
+> implementation (ipi:ipi_send_cpu) are for?
 >
 
-Yes on both points :-) Let me see what Tomas has to say on that...
+Well, these catch the emission of the IPI, which is great for investigation
+- slap a stacktrace trigger and you (most of the time) get the source of
+your interference.
 
-> -Crystal
+However Crystal's point is that on x86 (and I assume other archs) receiving
+& handling these IPIs is "special" and doesn't go through the generic irq
+subsystem and thus has to be tracked separately, which is why osnoise has
+this fairly lengthy osnoise_arch_register() thing.
+
+>> > however it
+>> > can be interesting to distiguish between the two: undesired IPIs usual=
+ly
+>> > imply a software configuration issue (e.g. wrong/incomplete CPU isolat=
+ion)
+>> > whereas undesired (non-IPI) IRQs usually imply a hardware configuratio=
+n
+>> > issue.
+>> >
+>> > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+>> > ---
+>> > Note that this is modifying the osnoise:osnoise_entry Ftrace entry; I =
+know
+>> > trace events are sort of supposed to be stable, but I'm not sure about
+>> > ftrace entries.
+>>
+>> I think old rtla will be OK with this since it looks up fields by name
+>> rather than assuming a fixed layout.
+>>
+>
+> Yeah, the fields are either looked up with tep_get_field_val() [2], or
+> with name-based BPF CO-RE relocations against the tracepoint structure
+> [3]. So this shouldn't be an issue, as long as the old counts stay the
+> same.
+>
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
+ree/tools/tracing/rtla/src/timerlat_hist.c#n191
+> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
+ree/tools/tracing/rtla/src/timerlat.bpf.c#n12
+>
+>> > Alternatively I can have this be purely supported in userspace osnoise=
+ by
+>> > hooking into the IPI events and counting IPIs separately from the osno=
+ise
+>> > events.
+>>
+>> One benefit I could see of doing this in kernel osnoise would be if you
+>> could atomically correlate the count with the particular noise
+>> interval, but this patch doesn't do that.
+>>
+>
+> The count is already reported by cycle on the kernel side in the
+> patchset, right? It's only missing in the current RTLA (userspace)
+> part, as there is no statistic using the information. But it can still
+> be collected through custom histogram triggers.
+>
+>> > ...
+>> >
+>> > +static void trace_ipi_send_cpumask_callback(void *data, const struct =
+cpumask *cpumask,
+>> > +                                         unsigned long callsite, void=
+ *callback)
+>> > +{
+>> > +     struct osnoise_variables *osn_var;
+>> > +     int cpu;
+>> > +
+>> > +     for_each_cpu_and(cpu, cpumask, &osnoise_cpumask) {
+>> > +             osn_var =3D per_cpu_ptr(&per_cpu_osnoise_var, cpu);
+>> > +             ipi_emission(osn_var, cpu);
+>> > +     }
+>> > +}
+>>
+>> Isn't this racy to do from a different CPU?  Both in terms of the
+>> counter, and the timing of the increment relative to when the IPI is
+>> actually received.  Not necessarily a huge deal if you only care about
+>> zero versus bignum, but still.  At least worth a comment, if we go with
+>> this approach.
+>>
+>
+> I also think it's a bit confusing, especially as the other accesses to
+> osn_var are cpu-local, but here, "cpu" is the *target* CPU, not the
+> current CPU. Not sure how expensive it would be to do atomic_add for
+> that, at least it's something to consider.
+>
+
+I suppose that could be an argument for doing that stat aggregation in
+userspace osnoise - event handlers are run after the fact via
+tracefs_iterate_raw_events(), it's all inherently slower since it's just
+increments of one (one per handled event) but it's also all done in
+userspace on a control thread and doesn't bog down the kernelspace.
+
+> Tomas
 
