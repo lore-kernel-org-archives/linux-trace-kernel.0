@@ -1,30 +1,30 @@
 Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA7E32BD58A;
-	Thu, 11 Jun 2026 06:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A156348C5C;
+	Thu, 11 Jun 2026 06:47:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781158941; cv=none; b=ucU+pqEWz54sbhNTY6rE559Jv6mydt2BYDqQ9Gglmg07DPOoe58YkxWuK9xPwbl/QdY9Y6YbhJbN4qmAnzag1MkTCWzMFQywrONRWXxDyJeOrAQvkrac2bguJcuZp9Q0L/Ik/94oDiVjkraLAWZYo+2aqT8lPZmGcVcOTsaMMPo=
+	t=1781160463; cv=none; b=XW5BwATBhcUg020wp6nVEh6a4TBvdZrI1u7GV872qEGiwoapfE256Kd7ksSRAypT+e8Mar1gXc5DsO8NX0thNi+NV6x5QfTDOlhLrLOz1yX6sq22r49GPuZFzHcRQbj1eBO3THfeCUOKzZ1mS/VFGLRA+2B0w1h7Loe2xm/VA0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781158941; c=relaxed/simple;
-	bh=HpKx7iNOoNn/W9ykpZyJTUq/2x/av0MA7ffeHEjPGko=;
+	s=arc-20240116; t=1781160463; c=relaxed/simple;
+	bh=NwnuO8Z0UsG+3NUpzyI9s9wy3riFEcPQ4uqsjijXHjQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RmKGS8aHTmNFo5kwQH0CKxTzHTB4hCEF5AMehAMO7cWI4sj+PPIo/AxM1q/9y/HDf0u5uFmntdAfcCbswJvaQxT3WhO0Leywo+2gxrBlAmaeXlLdeaAbrd4yyAENbKlF5CV913nhVBL0qjosaHKUiYXIi4LTrZX6vdhq7tw1sEo=
+	 MIME-Version:Content-Type; b=kGlF6pNQK6eoSS0y6DpE4XzDAEVJmi3s5grsg59atztoELRWGKa1lMJbeDEMXRg3lyXhZ+Eo5qPObS7a3MInhqKTcSKNcGqJTZTabdNm8S9Zn8qfW0uDfwdv96caS/QMWNwSPbQPWI0wonlD+lP/0ikJN1josPgVy4Q52MFq7GY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gbXc774mMz1dd8x;
-	Thu, 11 Jun 2026 14:21:59 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gbXc66yN9z1dd8p;
-	Thu, 11 Jun 2026 14:21:58 +0800 (CST)
+Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gbXbn74Ckz12NXN;
+	Thu, 11 Jun 2026 14:21:41 +0800 (CST)
+Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gbXbn6tJgz12NXN;
+	Thu, 11 Jun 2026 14:21:41 +0800 (CST)
 Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id A4BFA30004DB;
-	Thu, 11 Jun 2026 14:20:33 +0800 (CST)
+	by maildlp1.hygon.cn (Postfix) with ESMTPS id D585816CF;
+	Thu, 11 Jun 2026 14:21:23 +0800 (CST)
 Received: from hsj-2U-Workstation.hygon.cn (172.19.20.61) by
  cncheex04.Hygon.cn (172.23.18.114) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 11 Jun 2026 14:21:53 +0800
+ 15.2.1544.36; Thu, 11 Jun 2026 14:21:36 +0800
 From: Huang Shijie <huangsj@hygon.cn>
 To: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
 	<brauner@kernel.org>, <jack@suse.cz>, <muchun.song@linux.dev>,
@@ -52,9 +52,9 @@ CC: <surenb@google.com>, <mjguzik@gmail.com>, <liam@infradead.org>,
 	<linux-perf-users@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
 	<zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>, Huang
  Shijie <huangsj@hygon.cn>
-Subject: [PATCH v2 4/4] docs/mm: update document for split i_mmap tree
-Date: Thu, 11 Jun 2026 14:19:00 +0800
-Message-ID: <20260611061915.2354307-5-huangsj@hygon.cn>
+Subject: [PATCH v2 1/4] mm: use mapping_mapped to simplify the code
+Date: Thu, 11 Jun 2026 14:18:57 +0800
+Message-ID: <20260611061915.2354307-2-huangsj@hygon.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260611061915.2354307-1-huangsj@hygon.cn>
 References: <20260611061915.2354307-1-huangsj@hygon.cn>
@@ -64,142 +64,64 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
  (172.23.18.114)
 
-Document the i_mmap locking changes introduced by the following patches:
-- Use mapping_mapped() to simplify the code
-- Use get_i_mmap_root() to access the file's i_mmap
-- Split the file's i_mmap tree (CONFIG_SPLIT_I_MMAP)
-
-Add documentation for:
-- CONFIG_SPLIT_I_MMAP split i_mmap tree architecture with per-tree locks
-- New per-tree lock helpers: i_mmap_tree_lock_write/unlock_write
-- New vm_area_struct.tree_idx field for sibling tree selection
-- Updated i_mmap_lock_read/write semantics acquiring all per-tree locks
-- Updated lock ordering notes for split tree configuration
-- Updated page table freeing section for split tree scenario
+Use mapping_mapped() to simplify the code, make
+the code tidy and clean.
 
 Signed-off-by: Huang Shijie <huangsj@hygon.cn>
 ---
- Documentation/mm/process_addrs.rst | 63 +++++++++++++++++++++++-------
- 1 file changed, 49 insertions(+), 14 deletions(-)
+ fs/hugetlbfs/inode.c | 4 ++--
+ mm/memory.c          | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/mm/process_addrs.rst b/Documentation/mm/process_addrs.rst
-index 851680ead45f..4aed3100b249 100644
---- a/Documentation/mm/process_addrs.rst
-+++ b/Documentation/mm/process_addrs.rst
-@@ -60,6 +60,15 @@ Terminology
-   :c:func:`!i_mmap_[try]lock_write` for file-backed memory. We refer to these
-   locks as the reverse mapping locks, or 'rmap locks' for brevity.
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 78d61bf2bd9b..216e1a0dd0b2 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -614,7 +614,7 @@ static void hugetlb_vmtruncate(struct inode *inode, loff_t offset)
  
-+  When :c:macro:`!CONFIG_SPLIT_I_MMAP` is enabled, the file-backed i_mmap tree
-+  is split into multiple sibling trees (one per NUMA node or a number based on
-+  CPU count), each with its own :c:type:`!struct i_mmap_tree` containing a
-+  red/black interval tree and a :c:type:`!struct rw_semaphore`. In this
-+  configuration, :c:func:`!i_mmap_lock_read` and :c:func:`!i_mmap_lock_write`
-+  acquire all per-tree locks, while VMA insert/remove operations use the
-+  per-tree granularity :c:func:`!i_mmap_tree_lock_write` to lock only the
-+  relevant sibling tree, significantly reducing lock contention.
-+
- We discuss page table locks separately in the dedicated section below.
+ 	i_size_write(inode, offset);
+ 	i_mmap_lock_write(mapping);
+-	if (!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root))
++	if (mapping_mapped(mapping))
+ 		hugetlb_vmdelete_list(&mapping->i_mmap, pgoff, 0,
+ 				      ZAP_FLAG_DROP_MARKER);
+ 	i_mmap_unlock_write(mapping);
+@@ -675,7 +675,7 @@ static long hugetlbfs_punch_hole(struct inode *inode, loff_t offset, loff_t len)
  
- The first thing **any** of these locks achieve is to **stabilise** the VMA
-@@ -230,12 +239,16 @@ These are the core fields which describe the MM the VMA belongs to and its attri
-                                                            Updated under mmap read lock by
-                                                            :c:func:`!task_numa_work`.
-    :c:member:`!vm_userfaultfd_ctx`   CONFIG_USERFAULTFD    Userfaultfd context wrapper object of    mmap write,
--                                                           type :c:type:`!vm_userfaultfd_ctx`,      VMA write.
--                                                           either of zero size if userfaultfd is
--                                                           disabled, or containing a pointer
--                                                           to an underlying
--                                                           :c:type:`!userfaultfd_ctx` object which
--                                                           describes userfaultfd metadata.
-+                                                            type :c:type:`!vm_userfaultfd_ctx`,      VMA write.
-+                                                            either of zero size if userfaultfd is
-+                                                            disabled, or containing a pointer
-+                                                            to an underlying
-+                                                            :c:type:`!userfaultfd_ctx` object which
-+                                                            describes userfaultfd metadata.
-+   :c:member:`!tree_idx`             CONFIG_SPLIT_I_MMAP   The index of the sibling i_mmap tree     Written once on
-+                                                            that this VMA belongs to, set at         initial map.
-+                                                            VMA creation time based on the NUMA
-+                                                            node or the smallest sibling tree.
-    ================================= ===================== ======================================== ===============
+ 	/* Unmap users of full pages in the hole. */
+ 	if (hole_end > hole_start) {
+-		if (!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root))
++		if (mapping_mapped(mapping))
+ 			hugetlb_vmdelete_list(&mapping->i_mmap,
+ 					      hole_start >> PAGE_SHIFT,
+ 					      hole_end >> PAGE_SHIFT, 0);
+diff --git a/mm/memory.c b/mm/memory.c
+index 86a973119bd4..5335077765e2 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4386,7 +4386,7 @@ void unmap_mapping_folio(struct folio *folio)
+ 	details.zap_flags = ZAP_FLAG_DROP_MARKER;
  
- These fields are present or not depending on whether the relevant kernel
-@@ -247,12 +260,18 @@ configuration option is set.
-    Field                               Description                               Write lock
-    =================================== ========================================= ============================
-    :c:member:`!shared.rb`              A red/black tree node used, if the        mmap write, VMA write,
--                                       mapping is file-backed, to place the VMA  i_mmap write.
--                                       in the
--                                       :c:member:`!struct address_space->i_mmap`
--                                       red/black interval tree.
-+                                        mapping is file-backed, to place the VMA  i_mmap write (or per-tree
-+                                        in the                                    i_mmap write when
-+                                        :c:member:`!struct address_space->i_mmap` :c:macro:`!CONFIG_SPLIT_I_MMAP`
-+                                        red/black interval tree (or one of the    is set).
-+                                        sibling trees when
-+                                        :c:macro:`!CONFIG_SPLIT_I_MMAP`
-+                                        is enabled).
-    :c:member:`!shared.rb_subtree_last` Metadata used for management of the       mmap write, VMA write,
--                                       interval tree if the VMA is file-backed.  i_mmap write.
-+                                        interval tree if the VMA is file-backed.  i_mmap write (or per-tree
-+                                                                                  i_mmap write when
-+                                                                                  :c:macro:`!CONFIG_SPLIT_I_MMAP`
-+                                                                                  is set).
-    :c:member:`!anon_vma_chain`         List of pointers to both forked/CoW’d     mmap read, anon_vma write.
-                                        :c:type:`!anon_vma` objects and
-                                        :c:member:`!vma->anon_vma` if it is
-@@ -490,6 +509,16 @@ There is also a file-system specific lock ordering comment located at the top of
- Please check the current state of these comments which may have changed since
- the time of writing of this document.
+ 	i_mmap_lock_read(mapping);
+-	if (unlikely(!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root)))
++	if (unlikely(mapping_mapped(mapping)))
+ 		unmap_mapping_range_tree(&mapping->i_mmap, first_index,
+ 					 last_index, &details);
+ 	i_mmap_unlock_read(mapping);
+@@ -4416,7 +4416,7 @@ void unmap_mapping_pages(struct address_space *mapping, pgoff_t start,
+ 		last_index = ULONG_MAX;
  
-+.. note:: When :c:macro:`!CONFIG_SPLIT_I_MMAP` is enabled, the single
-+   ``mapping->i_mmap_rwsem`` is replaced by an array of per-tree locks
-+   ``mapping->i_mmap[i]->rwsem``. The lock ordering positions of
-+   ``mapping->i_mmap_rwsem`` above apply to each per-tree lock
-+   equivalently. VMA insert/remove operations acquire only the relevant
-+   per-tree lock via :c:func:`!i_mmap_tree_lock_write`, while operations
-+   that require all trees to be locked (such as
-+   :c:func:`!unmap_mapping_range`) acquire all per-tree locks via
-+   :c:func:`!i_mmap_lock_write` or :c:func:`!i_mmap_lock_read`.
-+
- ------------------------------
- Locking Implementation Details
- ------------------------------
-@@ -704,11 +733,15 @@ traversed or referenced by concurrent tasks.
- 
- It is insufficient to simply hold an mmap write lock and VMA lock (which will
- prevent racing faults, and rmap operations), as a file-backed mapping can be
--truncated under the :c:struct:`!struct address_space->i_mmap_rwsem` alone.
-+truncated under the :c:struct:`!struct address_space->i_mmap_rwsem` alone
-+(or, when :c:macro:`!CONFIG_SPLIT_I_MMAP` is enabled, under all per-tree
-+``mapping->i_mmap[i]->rwsem`` locks acquired via
-+:c:func:`!i_mmap_lock_write`).
- 
- As a result, no VMA which can be accessed via the reverse mapping (either
- through the :c:struct:`!struct anon_vma->rb_root` or the :c:member:`!struct
--address_space->i_mmap` interval trees) can have its page tables torn down.
-+address_space->i_mmap` interval trees, or the sibling trees when
-+:c:macro:`!CONFIG_SPLIT_I_MMAP` is enabled) can have its page tables torn down.
- 
- The operation is typically performed via :c:func:`!free_pgtables`, which assumes
- either the mmap write lock has been taken (as specified by its
-@@ -729,7 +762,9 @@ cleared without page table locks (in the :c:func:`!pgd_clear`, :c:func:`!p4d_cle
- .. note:: It is possible for leaf page tables to be torn down independent of
-           the page tables above it as is done by
-           :c:func:`!retract_page_tables`, which is performed under the i_mmap
--          read lock, PMD, and PTE page table locks, without this level of care.
-+          read lock (or all per-tree ``mapping->i_mmap[i]->rwsem`` locks in
-+          read mode when :c:macro:`!CONFIG_SPLIT_I_MMAP` is enabled), PMD, and
-+          PTE page table locks, without this level of care.
- 
- Page table moving
- ^^^^^^^^^^^^^^^^^
+ 	i_mmap_lock_read(mapping);
+-	if (unlikely(!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root)))
++	if (unlikely(mapping_mapped(mapping)))
+ 		unmap_mapping_range_tree(&mapping->i_mmap, first_index,
+ 					 last_index, &details);
+ 	i_mmap_unlock_read(mapping);
 -- 
 2.53.0
 
