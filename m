@@ -1,102 +1,127 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7258128C874
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 04:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2751E175A9C;
+	Thu, 11 Jun 2026 05:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781151686; cv=none; b=EUOnmP37bfP39svW4Aw+qhfXLC5R5zHttFjTbsslJXlVFkS3ah+CF4OM+cnKtUYh68HOsuTfSPvuoJCkcEaLOK+aZaZ+FgWCW0q2dJEG509VscN8rksPV8L+WI1fU3ZDWfjvTUfoaJWpqJ7rnLQAcTmBmp9KcCnrFBh55XpALxc=
+	t=1781157597; cv=none; b=WzP6/nTfFEHkh5apCJ+8yk9JADMTYZ2bSAQFVGo8W8aOAg+5S/OT+kq2C9dWfTqpSsAH9XPYeT/S3WhxuI+jUxUc3HjVTetCOGmfUGejbixsVwPWbyrqunt0++HyH4cNM5/ib4vpncy58nLp+gCplCKr27BeJ2ZkynKePYRmVZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781151686; c=relaxed/simple;
-	bh=0te+i9a/MoRadeQVR5jKcvhhCawGb36tZuFxB4eHYn8=;
-	h=Message-ID:From:Date:Subject:To:Cc; b=QIbUGUQo+g/IVnkYnLKoYd7lCc94E4sPNiLzPpZc9C6HD5rWAdVcclhgZ3lwWiiib/jbhVM9cZniOKVliH1EGzOuVWSLXFwXj8lYQzc/CZcCACKEdaHJ/kXpeoOYcmBnVuF9888ZsAwTaD3wgJ7M/Wou4gZtWwwuPTaY7enzRlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JhlD9Lqt; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhlD9Lqt"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-36b95eb4bb4so4613966a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jun 2026 21:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781151684; x=1781756484; darn=vger.kernel.org;
-        h=cc:to:subject:date:from:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yM4XTomlMtTxHkUKPHi8ZbL/w0xReDLXjA1BvbxdT/c=;
-        b=JhlD9LqthEToTswZu9ijISRi21Q8OE7XH9SbxqQyFqhumGQqM8jGzSHLGA2Om2ykkp
-         sRx2XWa20cPE7QeOlwwqB5jdW/8UcjXkrqEUWxTg96IVOdcuj8JL+kQMUMLF23NVWVjS
-         u13BxQ+VcsOplTS3sqq2pkn/hPwCKHmGi6OPVp6tn2kUTvtquNgyBYUyRQE0LHBcB+Qu
-         Ekej3PRCzD1OICx46Su0MJWxHMBT/vnHfz0RHcRI1iwmXagRYej83HCTcxtUTrvUyjwl
-         emLW2m1gxoGCZiTtZ1V1MbIj2FnwAeicwTN1brbjI1AQMLcThZ6da1xy6bEN2mSRFrKf
-         IVyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781151684; x=1781756484;
-        h=cc:to:subject:date:from:message-id:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yM4XTomlMtTxHkUKPHi8ZbL/w0xReDLXjA1BvbxdT/c=;
-        b=PVsq/mj+GwqiAktCsK9klLrKUrnQ+1d7iXzV8rEWjVjOr/B24v3qFe1SLqM38ubgaN
-         uZuOYbZrvdQVDn8Kl/0T3Z7YxJN2TQ2Ww7klUqCCrMNMhAUzG1YTENjfY8F+SVWHOenm
-         FDcGLkmD8F7YqS6pMTpkKuLm1Yejp4D4vpv+J8W8RDVZN7Vvsp1/NX2VZwzYihnCx1s6
-         Iy5Bl8HBMWdFFkYKNCUaOYbxyzYcqTpvE9PaCgLvs71KGQPGBPrX87+S0YwGEU44qlhY
-         9+E09R/iuSb1BeOEJfrchJczZRnIgKJCfcZzNSLcnd5Q428W/0ddnxTddtPLFinBPD7g
-         8Kpw==
-X-Forwarded-Encrypted: i=1; AFNElJ/uD/vWfWyhasJlI5FjadkPMKh3AEe+5r7wk0oFdOTZpW8Xt8qJGtOI2YS1lAHQrbeSlyFEJkHO7FYeuC68+LHiT7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3n7gETuPsi5flY5iL8tNoMdbiYMzMj+KxYF/p0RYI34lA7LjA
-	hYeNpPFxYq7ZpnrS7esqJiD/TOpSEjthbFzPpoKvWin3nUjXeJdPsrZKcR+hQI/t
-X-Gm-Gg: Acq92OG/CVuPti3nf0zVlkZYlN/D5GXivR1FloopF9bRgcI9/anbJUMI+xEvX3Frb/n
-	IcOzpHQempvbJ4pmoPe08TSd4Dj67gDqzpDNrHU8hQ4PSuJ3XoAPswrC80l0VaDEBdn7bounjNn
-	y0RWsFjAXo3Uen1dHIOZnffP4kyLmswmWTxn4ckw3tndJVM00w3sOljShfnWenbsrnhq2rPJlF4
-	lPeEzlGqREKwcfVtmpKiBImYSk34GnI4rUOQ0wAmvHCyOO0X9DYBUqUDCKKMRg/wXRSv5a+rxww
-	6S4UxBbiAjq98nJGTgxFbL+QRW5qLuIn7C5F5JIrI1BGwLmIfaF2YfgYVmyGfvGyyfkiAIdvT1d
-	OTiNH3h7T27mPqMkOuQY5gRD3uBkCMTJwe85V/SrY60GX5cu5ey2rfdJq880jUcsnTVrTybEhFb
-	Da6uZ5wXi6ot7X6N/p9dlUKVfuQT8=
-X-Received: by 2002:a17:90b:4a43:b0:36b:b4a1:2939 with SMTP id 98e67ed59e1d1-377a48cc277mr1494064a91.15.1781151684556;
-        Wed, 10 Jun 2026 21:21:24 -0700 (PDT)
-Received: from [127.0.1.1] ([47.253.114.73])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-377522a0eb9sm1002903a91.4.2026.06.10.21.21.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 21:21:24 -0700 (PDT)
-Message-ID: <6a2a37c4.f0a9eb5a.2fc603.7724@mx.google.com>
-From: "Wayen.Yan" <win847@gmail.com>
-Date: Thu, 11 Jun 2026 11:52:57 +0800
-Subject: [PATCH] tracing: Remove unused ret assignment in tracing_set_tracer()
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-    mathieu.desnoyers@efficios.com,
-    linux-trace-kernel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1781157597; c=relaxed/simple;
+	bh=7f09IZWMFz/v/1KoPGiZNcp6YE2VP5mDI3ehJs+azeI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ha/4v32BtA4SN3CuLBoxpuBGXQZCqCbByAjMPhNC+dMYYlLsLwLG+7dZjRp/NH+w9Chmip4i5hQ46cIQ7KsTY8gbowmIr+njGj/VSre25FNvE1EXPBUDF/3iPdmkqCyeNnV525IXgsZ/6UZAoLYVsPZ4R7H/DKO9zgWqJoyDaic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.196.245.140])
+	by APP-01 (Coremail) with SMTP id qwCowACXPdbTTipqvyxFAQ--.9346S3;
+	Thu, 11 Jun 2026 13:59:48 +0800 (CST)
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>
+Subject: [PATCH v5 1/3] tracing: Use __free() for expr_str() buffer
+Date: Thu, 11 Jun 2026 13:59:43 +0800
+Message-ID: <20260611055945.22348-2-pengpeng@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowACXPdbTTipqvyxFAQ--.9346S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr4kGF1rur18uF48Aw4xZwb_yoW8Cr43pF
+	s5twnIkw4kJFs2g3W5Aan3u3WrCwnxJ34xGr4DC39Yyr15Jr4kZa1DCF1jgr1ftFW0krWD
+	Jrn8ZrZ8Kr4UWFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r126r1DMx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWx
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjNVyDUUUUU==
+X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 
-In tracing_set_tracer(), the assignment 'ret = 0' following the
-__tracing_resize_ring_buffer() error check is a dead store. After
-this point, all subsequent code paths either return with a constant
-value (-EINVAL, 0, -EBUSY) or reassign ret before reading it
-(tracing_arm_snapshot_locked, tracer_init).
+expr_str() allocates a temporary expression buffer and manually frees it
+on some error paths.
 
-Remove the unnecessary assignment.
+Convert the buffer to __free(kfree) and return it with return_ptr() on
+success. This keeps ownership handling separate from the later ERR_PTR()
+conversion and string-bound change.
 
-No functional change.
-
-Signed-off-by: Wayen.Yan <win847@gmail.com>
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
 ---
- kernel/trace/trace.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/trace/trace_events_hist.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6eb4d3097a..58f81b36b7 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5018,7 +5018,6 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 						RING_BUFFER_ALL_CPUS);
- 		if (ret < 0)
- 			return ret;
--		ret = 0;
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 82ce492ab268..f778f060e922 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1759,7 +1759,7 @@ static void expr_field_str(struct hist_field *field, char *expr)
+ 
+ static char *expr_str(struct hist_field *field, unsigned int level)
+ {
+-	char *expr;
++	char *expr __free(kfree) = NULL;
+ 
+ 	if (level > 1)
+ 		return NULL;
+@@ -1770,7 +1770,7 @@ static char *expr_str(struct hist_field *field, unsigned int level)
+ 
+ 	if (!field->operands[0]) {
+ 		expr_field_str(field, expr);
+-		return expr;
++		return_ptr(expr);
  	}
  
- 	list_for_each_entry(t, &tr->tracers, list) {
+ 	if (field->operator == FIELD_OP_UNARY_MINUS) {
+@@ -1778,16 +1778,15 @@ static char *expr_str(struct hist_field *field, unsigned int level)
+ 
+ 		strcat(expr, "-(");
+ 		subexpr = expr_str(field->operands[0], ++level);
+-		if (!subexpr) {
+-			kfree(expr);
++		if (!subexpr)
+ 			return NULL;
+-		}
++
+ 		strcat(expr, subexpr);
+ 		strcat(expr, ")");
+ 
+ 		kfree(subexpr);
+ 
+-		return expr;
++		return_ptr(expr);
+ 	}
+ 
+ 	expr_field_str(field->operands[0], expr);
+@@ -1806,13 +1805,12 @@ static char *expr_str(struct hist_field *field, unsigned int level)
+ 		strcat(expr, "*");
+ 		break;
+ 	default:
+-		kfree(expr);
+ 		return NULL;
+ 	}
+ 
+ 	expr_field_str(field->operands[1], expr);
+ 
+-	return expr;
++	return_ptr(expr);
+ }
+ 
+ /*
 -- 
-2.51.0
+2.50.1 (Apple Git-155)
 
