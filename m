@@ -1,214 +1,167 @@
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAFE3596F8
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 20:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEB6374192
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 20:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781209451; cv=none; b=hmc7cXH+vbJHTNYSvmA8p1tNeGGQJ8qJRPqYpa+46QkkyaK5/0s3kdRbfdDUvt2K9j4cmv2pQgjbll0cSFzbc32jGNZtxoX2bkjeGuPQOzliTNpULTeW0uSum8LAywl9oN61hfPK9zPJQaNTIxKBsB2r362rl/QEy42p0naZlUE=
+	t=1781210959; cv=none; b=Rnt61YuPcITFXgBW2n+7SooRSeCa6AsArmCh8wV3pTvuEVGDCgwQBJ2EcACpnrKM/bNGAWSQE3BjYSIGR5pfWlFMUDu9TMSxi4/oY31Evz0xucaPQ0OF0SaXEJLeaukYBLxryBsirHw8G65ozBSZjW3Ni7N0X9vyogTrfM8J8Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781209451; c=relaxed/simple;
-	bh=+xNeGwemUqzYFPVDgfqnrZWtgLJ4R1DhZ7ACEcpAM7k=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=eTxc1tMoI44nuOYs5zfGgtF2z2lA5kJl4ECGSARjfvLnMGy1g1So8wL7cbC7GYT+B+fzMIzJPfv2YkfQFit1RBgOpreTKpHibJJaVs9dOywdLa3CMiHvDg60U6RmiSTMOysbQrvX42uHK87r81XHUrRPMU0D4QL6v2+SlEkZAfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-69ea6309883so424883eaf.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 13:24:10 -0700 (PDT)
+	s=arc-20240116; t=1781210959; c=relaxed/simple;
+	bh=5hOHi9t8eWvhak32t4WLHOEeSPNgnnXI2tqmdR/ET2I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=byDQrjNSIbay8z/bxor24D1/SYitFb2dv77g4b/JzK69rvz3641oWEpJDMbG0XZQZ1TvOUicFGfcMe2OAmPstMNQSBZMwIufSSeppZfHIj/j3QgC/QE6lvA58eTWSw8hY65glHXw9NfNdlwUk+CYTQIaZxmj2ZTYuvBmEElg7WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JbjeYhqc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JbjeYhqc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781210957;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wgktEKfzuJsITNJ+8XhsgZmhYbupv7GRDCn0xvz14pw=;
+	b=JbjeYhqcT2JlEwoUUi+KAUhkJNxBaSMkBJ6mLiVghg6eK2XZsXplWmwiiUxkCmzGl+1aYe
+	uwxhmpCOABBtT4DQNQLMnlL3ASlH1PwPA/HRnqD/5OdOwk/sUsyulJ0RkVozJWNp4XzRZS
+	jwtGIP9tUtLkI9gA5+60l0jG+5HanpI=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-86-C7Vmqp9PPwKHIJeGg5VDyQ-1; Thu, 11 Jun 2026 16:49:16 -0400
+X-MC-Unique: C7Vmqp9PPwKHIJeGg5VDyQ-1
+X-Mimecast-MFC-AGG-ID: C7Vmqp9PPwKHIJeGg5VDyQ_1781210956
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-9159c4b210aso43567585a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 13:49:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781209449; x=1781814249;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20251104; t=1781210956; x=1781815756;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9grvKRD1snOVoU/w8AWVaOix9sWh6XIsSpdq1MW8cvg=;
-        b=bj/yGWOvFPNrtCWBmwP0t3Pj2ctcv03UJFAuUCJAnoCKXGZ6H1a3YX0DhAZTFbW3Ap
-         NgGMK4VCPvcM5pz0nv+qrvcRmCH+vZ7qsdH4QZpjz4zGen5qHdvaeE9Avzpp4Ormi0Li
-         CIqWrWD9YBtBNkBIFozIsZio6qnO/Z6XcKNmq+jVwo4uYDheZ74zH/JHnA4TF0iPo44S
-         EydOoi18G3xJNbDOBBC+Gyov6I+rrDJv/rYMbY1vL0LULlvy9qagOvw+PM97DW/OyNOU
-         qZJLL7NPwxSLaxbdvjdhnUXLHVTMkZb2VO2ksaTXol0WAt/FJSNo1yGdJuNrM6XZ+2yC
-         mQjA==
-X-Forwarded-Encrypted: i=1; AFNElJ+T9TMSXwzorrVGZdA9yNc+/FgG9kliiunKvqQBALOVvxJgfB/bKLgVrR1oepsl61QEK198vaa0Y+4HiJXE/4i+7MM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8d1iUrJvs4h6wxAPPEFu+ihmFBymPi1hMsDH/BzCldi6glsSP
-	dHHqLWL0WrfWSEzgowAl6DKOuUMQMOBUW5UM/EexKSoQgygrNCx1P+oiLkBHPCg9hNbRiWe4T+o
-	oVDbOozyMQLO0tSG+MBrH2nB7PfsafRvQPnxNjNlq2TkBCsokLASC5hW7nrQ=
+        bh=wgktEKfzuJsITNJ+8XhsgZmhYbupv7GRDCn0xvz14pw=;
+        b=QvuhmxiorQjTmVUCp5ykFjWImcqY1G4qeMpjlmOv5d+AHssGd7JEe5r/ww+fD6xEzO
+         C4JrY84+zn0AA0E/9BC5EXO9cPJoA2ubphjSoj1SoXlJOBK+m0BWOTMiv+rDvluRbags
+         jlNIBLFHs9mj7G295Zvcwqw8ECNeu1S7XAaCs27FXilHJyyc0NgLeKKtu/BJ7PkD82p9
+         mBBaGJQ1hm6iw1TaN7IBYImpLezkZs8aj3t2cWJB7x/bmim9wB0z8PpztR/MOWsMpAqE
+         89tFv1+DodZ29f3+H/rm8IkItjWWMLspZCd8v2YsvB7iVB5qDWAuwz47ZXccE6i87/Bo
+         fbPA==
+X-Forwarded-Encrypted: i=1; AFNElJ92+qJnQWygfjqu3VxSCDljCcvcINE5BViarpFS3gmQV4MWYvYNgVuEZYWaSMYznn+rt0+cdgOMillSeQ/M86UL7ac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaoiUTjOKXvBiMovihWGXNrxBAc17IsVK5cm6M6tn9/3Y1Vo9Z
+	1/sk/dkOUw/EDkJRfgat3nfbAmyQ8rYSIrYFa60hj/Q5VsmXRXOFDrfwAnAGsdiJyxV1MQgWr5S
+	iFDOTSUWMkFAF7AYABJv4K/n5WyhlEMtKIRAGumxjqak5QfxSqOuww7qdjvdhx0iTiF2DiZHnFg
+	==
+X-Gm-Gg: Acq92OH8BdKOniPJI18OTHXF+h8RF0wnXetEJ4dNM5DgEfZpyqM02t/1/u9SX8Ca/gR
+	XTLZbej2vrolBQA6amNW6qWyZPriyWv8BtLUDX9i6W8gZXlxKBH2Cb0RahUjqkamUwQdzqO+C1+
+	cYKTbeZUhk1qcKjTQ3a7ImUFFsmPy1RBKj8r9V0l0aK5tV/VDR5+ykD33XzC4ghmBJSsVMqdosW
+	a2s4gIdgvZ0sReeSZOdfGS6l2DKV8tLidG14RHKoMjoB5MVnJvf7vqCgHUasjMxvWsN5a+0jfyf
+	6M8GewD1mZPildl0Doa5mftbWh2lUoBzfemuwSuNx/3P/YAygCwcKoiUzvyysd8AbZHsZ6hvQLC
+	5fL6JCJ6wVTD0X9RAEuMiwNZ9m9hcnTTLVdJ5F7+ZFxgidknhKB1GYw==
+X-Received: by 2002:a05:620a:2954:b0:915:351b:3ad5 with SMTP id af79cd13be357-9161a3cbedbmr33292385a.29.1781210955595;
+        Thu, 11 Jun 2026 13:49:15 -0700 (PDT)
+X-Received: by 2002:a05:620a:2954:b0:915:351b:3ad5 with SMTP id af79cd13be357-9161a3cbedbmr33287985a.29.1781210955151;
+        Thu, 11 Jun 2026 13:49:15 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc81:56d0:ab94:b2cb:29a6:7ac0])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-91619f210b7sm21254885a.18.2026.06.11.13.49.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 13:49:14 -0700 (PDT)
+Message-ID: <dcab30ebd537f34cbab2446be8ff9b8cca61e0f3.camel@redhat.com>
+Subject: Re: [RFC PATCH 1/2] tracing/osnoise: Sample IPI counts
+From: Crystal Wood <crwood@redhat.com>
+To: Valentin Schneider <vschneid@redhat.com>, Tomas Glozar
+ <tglozar@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers	 <mathieu.desnoyers@efficios.com>, Costa Shulyupin
+ <costa.shul@redhat.com>,  Ivan Pravdin <ipravdin.official@gmail.com>
+Date: Thu, 11 Jun 2026 15:49:13 -0500
+In-Reply-To: <xhsmh33yt2wtc.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+References: <20260610130457.1304245-1-vschneid@redhat.com>
+	 <20260610130457.1304245-2-vschneid@redhat.com>
+	 <f40903f8198f8e2f42f1efdf950f995f24cf6e93.camel@redhat.com>
+	 <CAP4=nvT6GEdwZAm-2h+Z-mj9DOmJ-swyApujFun6m1Qaxxr7hQ@mail.gmail.com>
+	 <xhsmh33yt2wtc.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:81c5:b0:69e:3dde:869d with SMTP id
- 006d021491bc7-69ecae5274emr3358153eaf.23.1781209449321; Thu, 11 Jun 2026
- 13:24:09 -0700 (PDT)
-Date: Thu, 11 Jun 2026 13:24:09 -0700
-In-Reply-To: <20260611061915.2354307-1-huangsj@hygon.cn>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a2b1969.5d79d3ce.e8697.0000.GAE@google.com>
-Subject: [syzbot ci] Re: mm: split the file's i_mmap tree for NUMA
-From: syzbot ci <syzbot+ci1ee4d53eb174bb4c@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, akpm@linux-foundation.org, 
-	alexander.shishkin@linux.intel.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, brauner@kernel.org, 
-	brian.ruley@gehealthcare.com, corbet@lwn.net, dave.anglin@bell.net, 
-	david@kernel.org, deller@gmx.de, dev.jain@arm.com, dinguyen@kernel.org, 
-	djbw@kernel.org, fangbaoshun@hygon.cn, harry@kernel.org, huangsj@hygon.cn, 
-	irogers@google.com, jack@suse.cz, james.bottomley@hansenpartnership.com, 
-	james.clark@linaro.org, jannh@google.com, jolsa@kernel.org, 
-	lance.yang@linux.dev, liam@infradead.org, linmiaohe@huawei.com, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-parisc@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux@armlinux.org.uk, ljs@kernel.org, mark.rutland@arm.com, 
-	mhiramat@kernel.org, mhocko@suse.com, mingo@redhat.com, mjguzik@gmail.com, 
-	muchun.song@linux.dev, namhyung@kernel.org, nao.horiguchi@gmail.com, 
-	npache@redhat.com, nvdimm@lists.linux.dev, oleg@redhat.com, osalvador@suse.de, 
-	peterz@infradead.org
-Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 4JMnkCgquB9Nr46WDBN4XnhvakZ0otAECxhXSVXbCAY_1781210956
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot ci has tested the following series
+On Thu, 2026-06-11 at 12:30 +0200, Valentin Schneider wrote:
+> On 11/06/26 10:59, Tomas Glozar wrote:
+> > [just replying to comments, will do a full review later]
+> >=20
+> > st 10. 6. 2026 v 21:51 odes=C3=ADlatel Crystal Wood <crwood@redhat.com>=
+ napsal:
+> > >=20
+> > > On Wed, 2026-06-10 at 15:04 +0200, Valentin Schneider wrote:
+> > > > Osnoise already implictly accounts IPIs via its IRQ tracking,
+> > >=20
+> > > Does it?  It seems that IPIs bypass the kernel/irq subsystem on some
+> > > arches (including x86, but not ARM).
+> > >=20
+> > > It would be nice to solve this properly by adding generic ipi
+> > > entry/exit tracing (similar to what ARM already has).
+> > >=20
+> >=20
+> > Isn't that precisely what the ipi tracepoints used by this
+> > implementation (ipi:ipi_send_cpu) are for?
+> >=20
+>=20
+> Well, these catch the emission of the IPI, which is great for investigati=
+on
+> - slap a stacktrace trigger and you (most of the time) get the source of
+> your interference.
+>=20
+> However Crystal's point is that on x86 (and I assume other archs) receivi=
+ng
+> & handling these IPIs is "special" and doesn't go through the generic irq
+> subsystem and thus has to be tracked separately, which is why osnoise has
+> this fairly lengthy osnoise_arch_register() thing.
 
-[v2] mm: split the file's i_mmap tree for NUMA
-https://lore.kernel.org/all/20260611061915.2354307-1-huangsj@hygon.cn
-* [PATCH v2 1/4] mm: use mapping_mapped to simplify the code
-* [PATCH v2 2/4] mm: use get_i_mmap_root to access the file's i_mmap
-* [PATCH v2 3/4] mm/fs: split the file's i_mmap tree
-* [PATCH v2 4/4] docs/mm: update document for split i_mmap tree
+Oh, I missed the arch hook.  I feel better now :-)
 
-and found the following issue:
-INFO: trying to register non-static key in do_one_initcall
-
-Full report is available here:
-https://ci.syzbot.org/series/a9bada61-06e7-40d5-b423-5f2d69a60209
-
-***
-
-INFO: trying to register non-static key in do_one_initcall
-
-tree:      linux-next
-URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next
-base:      14546c7bef6c1036fc82e36c1a200b0caccd339a
-arch:      amd64
-compiler:  Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-config:    https://ci.syzbot.org/builds/2f92f704-660a-4108-9172-7e620e10ce46/config
-
-acpi PNP0A08:00: _OSC: platform does not support [PCIeHotplug LTR]
-acpi PNP0A08:00: _OSC: OS now controls [PME AER PCIeCapability]
-PCI host bridge to bus 0000:00
-pci_bus 0000:00: Unknown NUMA node; performance will be reduced
-pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-pci_bus 0000:00: root bus resource [mem 0x80000000-0xafffffff window]
-pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
-pci_bus 0000:00: root bus resource [mem 0x240000000-0xa3fffffff window]
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci 0000:00:00.0: [8086:29c0] type 00 class 0x060000 conventional PCI endpoint
-pci 0000:00:01.0: [1234:1111] type 00 class 0x030000 conventional PCI endpoint
-pci 0000:00:01.0: BAR 0 [mem 0xfd000000-0xfdffffff pref]
-pci 0000:00:01.0: BAR 2 [mem 0xfebf0000-0xfebf0fff]
-pci 0000:00:01.0: ROM [mem 0xfebe0000-0xfebeffff pref]
-pci 0000:00:01.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
-pci 0000:00:02.0: [1af4:1005] type 00 class 0x00ff00 conventional PCI endpoint
-pci 0000:00:02.0: BAR 0 [io  0xc080-0xc09f]
-pci 0000:00:02.0: BAR 1 [mem 0xfebf1000-0xfebf1fff]
-pci 0000:00:02.0: BAR 4 [mem 0xfe000000-0xfe003fff 64bit pref]
-pci 0000:00:03.0: [8086:100e] type 00 class 0x020000 conventional PCI endpoint
-pci 0000:00:03.0: BAR 0 [mem 0xfebc0000-0xfebdffff]
-pci 0000:00:03.0: BAR 1 [io  0xc000-0xc03f]
-pci 0000:00:03.0: ROM [mem 0xfeb80000-0xfebbffff pref]
-pci 0000:00:1f.0: [8086:2918] type 00 class 0x060100 conventional PCI endpoint
-pci 0000:00:1f.0: quirk: [io  0x0600-0x067f] claimed by ICH6 ACPI/GPIO/TCO
-pci 0000:00:1f.2: [8086:2922] type 00 class 0x010601 conventional PCI endpoint
-pci 0000:00:1f.2: BAR 4 [io  0xc0a0-0xc0bf]
-pci 0000:00:1f.2: BAR 5 [mem 0xfebf2000-0xfebf2fff]
-pci 0000:00:1f.3: [8086:2930] type 00 class 0x0c0500 conventional PCI endpoint
-pci 0000:00:1f.3: BAR 4 [io  0x0700-0x073f]
-ACPI: PCI: Interrupt link LNKA configured for IRQ 10
-ACPI: PCI: Interrupt link LNKB configured for IRQ 10
-ACPI: PCI: Interrupt link LNKC configured for IRQ 11
-ACPI: PCI: Interrupt link LNKD configured for IRQ 11
-ACPI: PCI: Interrupt link LNKE configured for IRQ 10
-ACPI: PCI: Interrupt link LNKF configured for IRQ 10
-ACPI: PCI: Interrupt link LNKG configured for IRQ 11
-ACPI: PCI: Interrupt link LNKH configured for IRQ 11
-ACPI: PCI: Interrupt link GSIA configured for IRQ 16
-ACPI: PCI: Interrupt link GSIB configured for IRQ 17
-ACPI: PCI: Interrupt link GSIC configured for IRQ 18
-ACPI: PCI: Interrupt link GSID configured for IRQ 19
-ACPI: PCI: Interrupt link GSIE configured for IRQ 20
-ACPI: PCI: Interrupt link GSIF configured for IRQ 21
-ACPI: PCI: Interrupt link GSIG configured for IRQ 22
-ACPI: PCI: Interrupt link GSIH configured for IRQ 23
-iommu: Default domain type: Translated
-iommu: DMA domain TLB invalidation policy: lazy mode
-INFO: trying to register non-static key.
-The code is fine but needs lockdep annotation, or maybe
-you didn't initialize this object before use?
-turning off the locking correctness validator.
-CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0xe8/0x150
- assign_lock_key+0x133/0x150
- register_lock_class+0xcc/0x2e0
- __lock_acquire+0xad/0x2cf0
- lock_acquire+0x106/0x350
- down_write+0x96/0x200
- dma_resv_lockdep+0x39c/0x660
- do_one_initcall+0x250/0x870
- do_initcall_level+0x104/0x190
- do_initcalls+0x59/0xa0
- kernel_init_freeable+0x2a6/0x3e0
- kernel_init+0x1d/0x1d0
- ret_from_fork+0x514/0xb70
- ret_from_fork_asm+0x1a/0x30
- </TASK>
-------------[ cut here ]------------
-DEBUG_RWSEMS_WARN_ON(sem->magic != sem): count = 0x1, magic = 0x0, owner = 0xffff888102a95940, curr 0xffff888102a95940, list not empty
-WARNING: kernel/locking/rwsem.c:1405 at up_write+0x1e2/0x410, CPU#0: swapper/0/1
-Modules linked in:
-CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-RIP: 0010:up_write+0x2b1/0x410
-Code: c0 c0 e6 cc 8b 49 c7 c2 a0 e6 cc 8b 4c 0f 44 d0 48 8b 7c 24 10 48 c7 c6 40 e8 cc 8b 48 8b 54 24 08 48 8b 0c 24 4d 89 f9 41 52 <67> 48 0f b9 3a 48 83 c4 08 e8 21 1f 0d 03 e9 b2 fd ff ff 90 0f 0b
-RSP: 0000:ffffc90000067480 EFLAGS: 00010246
-RAX: ffffffff8bcce6c0 RBX: ffffc900000677d0 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff8bcce840 RDI: ffffffff90338290
-RBP: ffffc90000067830 R08: ffff888102a95940 R09: ffff888102a95940
-R10: ffffffff8bcce6c0 R11: fffff5200000cefc R12: ffffc90000067828
-R13: dffffc0000000000 R14: 1ffff9200000cf06 R15: ffff888102a95940
-FS:  0000000000000000(0000) GS:ffff88818dc9e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000e74a000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- dma_resv_lockdep+0x3a4/0x660
- do_one_initcall+0x250/0x870
- do_initcall_level+0x104/0x190
- do_initcalls+0x59/0xa0
- kernel_init_freeable+0x2a6/0x3e0
- kernel_init+0x1d/0x1d0
- ret_from_fork+0x514/0xb70
- ret_from_fork_asm+0x1a/0x30
- </TASK>
+(I'd feel better if it didn't rely on osnoise-specific arch code being
+updated to match if some new interrupt path pops up, but oh well.)
 
 
-***
+> >=20
+> > > > Alternatively I can have this be purely supported in userspace osno=
+ise by
+> > > > hooking into the IPI events and counting IPIs separately from the o=
+snoise
+> > > > events.
+> > >=20
+> > > One benefit I could see of doing this in kernel osnoise would be if y=
+ou
+> > > could atomically correlate the count with the particular noise
+> > > interval, but this patch doesn't do that.
+> > >=20
+> >=20
+> > The count is already reported by cycle on the kernel side in the
+> > patchset, right? It's only missing in the current RTLA (userspace)
+> > part, as there is no statistic using the information. But it can still
+> > be collected through custom histogram triggers.
 
-If these findings have caused you to resend the series or submit a
-separate fix, please add the following tag to your commit message:
-  Tested-by: syzbot@syzkaller.appspotmail.com
+Not sure I follow... this patchset reports a count of IPIs, not cycle
+info, but the count is based on when the IPIs were sent, not received.=20
+The IPI send events capture cycle info, but that's not what this
+patchset adds.
 
----
-This report is generated by a bot. It may contain errors.
-syzbot ci engineers can be reached at syzkaller@googlegroups.com.
+I'm not sure that it really matters though.  I had been thinking of this
+more like the interference count, which is atomic with respect to a
+single noise (and thus the sender of the noise would be outside that
+window).  But this count is reported over the entire osnoise sample
+period, so a little slop is probably OK.
 
-To test a patch for this bug, please reply with `#syz test`
-(should be on a separate line).
+-Crystal
 
-The patch should be attached to the email.
-Note: arguments like custom git repos and branches are not supported.
+>=20
+
