@@ -1,145 +1,117 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF89F3DD508
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 11:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3643DE439;
+	Thu, 11 Jun 2026 11:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781176417; cv=none; b=tN9LiGkHr+00GWgGqp0w3DZrqKp9MhSA+rJRe1YpqrumY1Acqd4B7TZj0M6bpBJUnatYGRAcX9PhNyIVNiTwnSRlclZ6dq6TjHpwvKBmahJS4jaXTrDCRC7GLEOzLBjlvUmQNUfZqDRrM9GMalmTkNnNTs48IXLHxq0QQmQ/wKg=
+	t=1781176974; cv=none; b=oUAp77Ew0lpb7J2ngVSFqwR7Hzi6FFXlcyGee7B11sCA3M67WztfGMUfeTOaFu/PRQkzRELSOCAz5xFvY9z+F/BNCB3LlzT5caAzx/M3kXY8XWT2EFvJnrHSd6s8rgOEw0/NtUqlwBT4/7hEP0vwwwNJbGRGyjmK6j3q/nsQnnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781176417; c=relaxed/simple;
-	bh=yX+biDOJMWTtKkH3Cw9JnqrWk90JigwtHAtrPYqc1mc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovjTV8cWWyuWeKprXrYRhezBhUgWoWaEozUYSLnc4M/UvCzS2jVN7mn5hvg8qzVudciK3i/K7cekTXAShg/JdBqGm2W6cT7vHkUMEN6D13zP+pargsyCtcS51n7GLeD3zaYqp8Ax54UFFe7fMku7ZC/xDkR85hZr3y/8uEbK/1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h7gGhUHC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3oX5UDZz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h7gGhUHC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3oX5UDZz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1781176974; c=relaxed/simple;
+	bh=sIkoD90dsA2/h+owQ5rfH3AZMnRfSiTrBB41fjNGsqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JrmtamR77oL7OiwFx1RDpyR20G4VSPICo5aJNaSXM0wkNOXFtxFH8bSXV5F0jkw9EQ0yH6XFBYiOynIN4yYw3FvSJ0DQgzhikhxCTqYDdnqMn8272XgosNT00knPAqjk8j6dOdJQFjL3aR9Hjznui4hCRi8nuPFzNegxzCvazs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNVYEIzn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h7gGhUHC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3oX5UDZz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h7gGhUHC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3oX5UDZz"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1B6257595E;
-	Thu, 11 Jun 2026 11:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1781176414; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uTPmKDC2++fFuX1IGIaCfTosGFLn7J/XiVm22BhhlKY=;
-	b=h7gGhUHCMWHR9qmMcGC0AoT1CAbC0qDA+DovzA8zAz7H7fQv0PFs7CPOjJnxhCdFaDcGUu
-	vyvAK0DfyY1RdmfXFklPCJyPNhMzAuw2CP1s6N7qwcEYWiR5mxL9DG/5BysO6PhZMxKoKD
-	ISZg6RTIwJecj6GxaQYPdfgUtqJTzRk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1781176414;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uTPmKDC2++fFuX1IGIaCfTosGFLn7J/XiVm22BhhlKY=;
-	b=3oX5UDZz+h4XTy4ey9XkDARLpL0LSp4+oHtkq9J8VDyjYLcXPfbAOHxVyfqg6po5L3jIcS
-	rP2TI5nu7gaMawCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1781176414; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uTPmKDC2++fFuX1IGIaCfTosGFLn7J/XiVm22BhhlKY=;
-	b=h7gGhUHCMWHR9qmMcGC0AoT1CAbC0qDA+DovzA8zAz7H7fQv0PFs7CPOjJnxhCdFaDcGUu
-	vyvAK0DfyY1RdmfXFklPCJyPNhMzAuw2CP1s6N7qwcEYWiR5mxL9DG/5BysO6PhZMxKoKD
-	ISZg6RTIwJecj6GxaQYPdfgUtqJTzRk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1781176414;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uTPmKDC2++fFuX1IGIaCfTosGFLn7J/XiVm22BhhlKY=;
-	b=3oX5UDZz+h4XTy4ey9XkDARLpL0LSp4+oHtkq9J8VDyjYLcXPfbAOHxVyfqg6po5L3jIcS
-	rP2TI5nu7gaMawCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0CEF1779A7;
-	Thu, 11 Jun 2026 11:13:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wxlKO1mYKmqmDQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Thu, 11 Jun 2026 11:13:29 +0000
-Date: Thu, 11 Jun 2026 12:13:28 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Huang Shijie <huangsj@hygon.cn>
-Cc: akpm@linux-foundation.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	jack@suse.cz, muchun.song@linux.dev, osalvador@suse.de, david@kernel.org, 
-	surenb@google.com, mjguzik@gmail.com, liam@infradead.org, ljs@kernel.org, 
-	vbabka@kernel.org, shakeel.butt@linux.dev, rppt@kernel.org, mhocko@suse.com, 
-	corbet@lwn.net, skhan@linuxfoundation.org, linux@armlinux.org.uk, 
-	dinguyen@kernel.org, schuster.simon@siemens-energy.com, 
-	James.Bottomley@hansenpartnership.com, deller@gmx.de, djbw@kernel.org, willy@infradead.org, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
-	mhiramat@kernel.org, oleg@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
-	npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, 
-	lance.yang@linux.dev, linmiaohe@huawei.com, nao.horiguchi@gmail.com, jannh@google.com, 
-	riel@surriel.com, harry@kernel.org, will@kernel.org, brian.ruley@gehealthcare.com, 
-	rmk+kernel@armlinux.org.uk, dave.anglin@bell.net, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, zhongyuan@hygon.cn, fangbaoshun@hygon.cn, yingzhiwei@hygon.cn
-Subject: Re: [PATCH v2 1/4] mm: use mapping_mapped to simplify the code
-Message-ID: <aiqYJTJFIHHk_IOt@pedro-suse.lan>
-References: <20260611061915.2354307-1-huangsj@hygon.cn>
- <20260611061915.2354307-2-huangsj@hygon.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNVYEIzn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 469D31F00893;
+	Thu, 11 Jun 2026 11:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781176972;
+	bh=fUjEhPihvAgKIeS0vkP/dqhW32QCbB+0VtmkbkN7PKE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=oNVYEIzn2GOUMObsuReviEW/N8TnFb2OzhstcgTEO9TNPKsTNzllGK1bloANXk2Ng
+	 TU74suxzVwZRgSijuIyHyaCCoEzlB0anupyzwfNM7fdeEEQR63Buytjpuj8EboQ2ZH
+	 2owL5sUaLLn3rAfZGLWb8PxDuYqz2YGwOwKl3dZQ63J+ZylZRHgNYnpZJLROHFrfWn
+	 +c2EheRWvwawyUUbLZdhGi0V+RD6pDQyK6f8qdqXWh9PS19EDvT3id4t5bKhwaOLaM
+	 jx1NPWzri4lDN259D+F+mdqfhQP2usy7T4+QcfqX7kvHTlst6xLX654QfBw4bsEZxW
+	 ZvP62HgrGJbjw==
+Date: Thu, 11 Jun 2026 07:22:49 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: Fangrui Song <i@maskray.me>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <ibhagatgnu@gmail.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave
+ <beaub@linux.microsoft.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, Carlos
+ O'Donell <codonell@redhat.com>, Sam James <sam@gentoo.org>, Dylan Hatch
+ <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Michal Hocko
+ <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>
+Subject: Re: [RESEND][PATCH v2] unwind: Add sframe_(un)register() system
+ calls
+Message-ID: <20260611072249.2222fd9d@gandalf.local.home>
+In-Reply-To: <aipWtXVRqNmZY4gr@archer>
+References: <20260528151626.4573592d@gandalf.local.home>
+	<aipWtXVRqNmZY4gr@archer>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260611061915.2354307-2-huangsj@hygon.cn>
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[kernel];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,linux.dev,suse.de,google.com,gmail.com,infradead.org,suse.com,lwn.net,linuxfoundation.org,armlinux.org.uk,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,arm.com,linux.intel.com,intel.com,linaro.org,nvidia.com,linux.alibaba.com,huawei.com,surriel.com,gehealthcare.com,bell.net,kvack.org,vger.kernel.org,lists.infradead.org,lists.linux.dev,hygon.cn];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[65];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,pedro-suse.lan:mid,hygon.cn:email]
-X-Spam-Level: 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 11, 2026 at 02:18:57PM +0800, Huang Shijie wrote:
-> Use mapping_mapped() to simplify the code, make
-> the code tidy and clean.
+On Thu, 11 Jun 2026 00:00:25 -0700
+Fangrui Song <i@maskray.me> wrote:
+
+> Hi Steven,
 > 
-> Signed-off-by: Huang Shijie <huangsj@hygon.cn>
+> This is not an objection to deferred userspace unwinding itself -- my
+> concern is narrower: these syscalls permanently encode the kernel's
+> commitment to the SFrame format family at exactly the moment the
+> format's size trajectory is heading the wrong way, and while arguably
+> superior formats exist.
+> 
+> I raised related size concerns about SFrame's viability for userspace
+> stack walking earlier:
+> https://lore.kernel.org/all/3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr/
+> ("Concerns about SFrame viability for userspace stack walking")
+> 
+> SFrame v3 is even larger than v2.
+> 
+> For comparison: Microsoft is currently upstreaming its Windows x64
+> Unwind V3 implementation to LLVM, which will make a side-by-side reading
+> of the two formats straightforward. Unwind V3 provides correct
+> exception-handling unwind -- full prologue replay, SEH handlers,
+> funclets -- and supports Intel APX. SFrame v3 provides stack tracing
+> only, no EH, yet comes out larger than .eh_frame. A format revision that
+> adds capability without adding bulk is demonstrably achievable; SFrame
+> v3 went the other way.
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+My main concern is simplicity in implementation on the kernel side. One
+thing we would like to avoid is any interpreter that becomes basically
+executing user space code to perform the stack tracing (i.e. DWARF). I
+haven't looked at the Windows x64 but will do so.
 
-LGTM, thanks! Super uncontroversial so perhaps
-could be picked up separately.
+> 
+> I understand IBM is doubling down on SFrame for their s390x and ppc64,
 
--- 
-Pedro
+That's because this is currently the only way s390 can perform stack
+walking in user space.
+
+> but I'm not convinced the size overhead of v3 will make it appealing on
+> x86-64. I have learned that the person driving their SFrame work at
+> Google had left and the SFrame at data center effort was being
+> reevaluated per a toolchain manager.
+
+I believe the person who left Google that was driving the SFrame work was
+me ;-)
+
+Thanks,
+
+-- Steve
