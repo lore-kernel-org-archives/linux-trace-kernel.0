@@ -1,171 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E033FD94C;
-	Thu, 11 Jun 2026 16:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BD834252C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 17:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781193669; cv=none; b=q5jhENJANKH0OfH+Ks65/73R0sK/V3ZtxOu/jyEbgZfLL8MqYa6h7P8GezwH0MkUSyIuppI5RtAUslVb3tctYHYbYfQ/A7QMstiXG8FgXhe/LKvBzGAOR6j5MPGoQqX0KrkgsqxdinBu/jD5ABC1bxAVe6e1aoewLY0jCxYuOts=
+	t=1781199315; cv=none; b=q5yWyKCzyu/ZpkjFBZbPSPFkiAujTimwnT7oA96TxrK/zWn1vs4wILB12uMu2mqBhKsJ8wRuhSfvi+CV1skDI2akwOdXFV+otjrI8UZJAWCNhnyMNWnnpTBJ8xeMAKSVA+TjQ9s5uYLIjcGjpVtBkm8GihGIEVP6cK9nrzae5Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781193669; c=relaxed/simple;
-	bh=8Fh4IVoDtk0GLFrzgFzfzN0FNODMW++KeLv36dKvg3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tR+W8IdwrrLFzToXzj0OFuPtIWRQTqAwyJaTrna3Mqzu9Lf3JzErD+i59HsSQoS3pKp9RiMGG8R3PJCKBcTP4pAF7T4jg9ZYLNkUkLmYvEsVImhMJjPyU/hXBghJzNC5BZSpeLh3/xCjL4KfCLiIegjSTozso/Po2M0veh4BWiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Agon439w; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781199315; c=relaxed/simple;
+	bh=vbkZN8+SdeptEibqFYK5kEEH1xB7aIc1ObJ8q49tt+I=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=DPtJnlnu+r2SHMkIm8QStsVaqetILRforJ4G4drY5te0AsCgs8w/OX1iZw6r6mcpMSyRx2kYSI1H2E+Zy4/QZLEIxwb3QXsLeI7cdQ5Gb0RyAytcVj8E8obToqWZzQ+slaaKX7BoYQE2EtJ/S78xWP/Kym2BYKiOYwb2MeCDtYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYZ5dLNJ; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Agon439w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7491F00893;
-	Thu, 11 Jun 2026 16:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781193667;
-	bh=OwWE4lbKK0T3ZfG4RSM1mqAP2yW+nfdYO3kCAr+3V9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Agon439wUBrQ/uonepv6QEQHD/Z6m9RS5Xb1WWxv0Q0wtFCqyeaUMDuH0YQ8F7h0k
-	 poSBPrZ26U6e7yClapl80sHwPywpSo1ut24RqLlXqmKw9hqFEnVKp4lveByc+2vqB3
-	 EclGyTzkzaf/JuT0Y3YBNKGWeKbjVkE7GFozcXEUaXdNNGcdC3plff9fkmEzUEr8SF
-	 yLRHAf/w30nkrr5M5sh+jsu8VOfRlN45yDsLJie0TAMYvIFEMuSK4TFwnyZ712ahH2
-	 NhS25Ts0oai4t03guxudm8WtA2u3sbx6tJpv0YIWL+aZL2eWXqKdHCQGfxrg1QzJzC
-	 +XiDkTpLLoHog==
-Date: Thu, 11 Jun 2026 17:00:49 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Huang Shijie <huangsj@hygon.cn>
-Cc: akpm@linux-foundation.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	jack@suse.cz, muchun.song@linux.dev, osalvador@suse.de, david@kernel.org, 
-	surenb@google.com, mjguzik@gmail.com, liam@infradead.org, vbabka@kernel.org, 
-	shakeel.butt@linux.dev, rppt@kernel.org, mhocko@suse.com, corbet@lwn.net, 
-	skhan@linuxfoundation.org, linux@armlinux.org.uk, dinguyen@kernel.org, 
-	schuster.simon@siemens-energy.com, James.Bottomley@hansenpartnership.com, deller@gmx.de, 
-	djbw@kernel.org, willy@infradead.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	james.clark@linaro.org, mhiramat@kernel.org, oleg@redhat.com, ziy@nvidia.com, 
-	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
-	baohua@kernel.org, lance.yang@linux.dev, linmiaohe@huawei.com, 
-	nao.horiguchi@gmail.com, jannh@google.com, pfalcato@suse.de, riel@surriel.com, 
-	harry@kernel.org, will@kernel.org, brian.ruley@gehealthcare.com, 
-	rmk+kernel@armlinux.org.uk, dave.anglin@bell.net, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, zhongyuan@hygon.cn, fangbaoshun@hygon.cn, yingzhiwei@hygon.cn
-Subject: Re: [PATCH v2 0/4] mm: split the file's i_mmap tree for NUMA
-Message-ID: <airY5q_SspdbQDbi@lucifer>
-References: <20260611061915.2354307-1-huangsj@hygon.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYZ5dLNJ"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-487135fd4f9so90692b6e.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 10:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781199313; x=1781804113; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vbkZN8+SdeptEibqFYK5kEEH1xB7aIc1ObJ8q49tt+I=;
+        b=BYZ5dLNJ1IBvEK5ib/bzK5ktyDRpKQtTz0Pa5eSPDrRyO72d5rfJM2JumMtKNGXkt+
+         Ys04gx2n/EgEtvqa/TSdPfzMZ9NGwrNvFbA7nZdBKZ7mync+PH0VgbJbYeU9qylu+OJW
+         zBLsD/iHJocBFpsF94KLithPi919Q/dyq3PY1fp69kJ2OpG2iRbw/ati5BXIU6THDNgL
+         OKZqkhrDOZdaNUPLT5o3neeRa9qQxe0bm/ErKIHk+b35QEn1KAaIafA3mRt33tldqUBp
+         9OzcgR9BQyPWiLi1hd3rv2DL2b7z1Udg54FK6QybRP8eh33Su/SWLQprae4W4efFY7kG
+         66nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781199313; x=1781804113;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vbkZN8+SdeptEibqFYK5kEEH1xB7aIc1ObJ8q49tt+I=;
+        b=HD2MSN8qTjBE2eRvks0sPbyZ74w84bPEgR8N9CYjed4Mwjqn4Omk8yyOM96lH49o/6
+         qTeVLFuWTcVzqvm+TeARSNPTqHFz7X539VN0BEorw4wqAxJNEVOZwik8kgbJA8V/GMut
+         +a8cMisq5xOkYBeGqkM9yRpS7HdbA2+BHCd2N0AKLKmAtpCUtysy5PO009lyUn0j7pAh
+         CCQ8yVqHBT+Y9i+n8n3ifuRAY8GDwQoz24TGEVE4TO0PBYzrr7bchcNvShprFLraIM5u
+         yQq9LoJ+k6z7K2g4bJ6uC9EZCsJL+FKaPEC9nmJvJSC8cWU/GZPybrqpRBO+6r9NHGKT
+         Bc3w==
+X-Forwarded-Encrypted: i=1; AFNElJ8pJbH70VmEs792oH++ABC5KNs7dRtkHAzuv4hGR+WypxEJOMl+lEb+APqEfegew0pAPX4sq5/GCyJVePaQM46BBoA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVRgRHvNdR9Fzgz1VNWbH8NBf+SYJiSxpeH/zxgwOrIYYNT3lO
+	xZ1y2rzIz4gyweblJG7wJ1nAeoUa4vttlCdAMpd5qtU3FiqYafJxiUhX
+X-Gm-Gg: Acq92OFdPD7NqJXAWYkZd7CnV9poLbK3UnGD6fbm5Qrcb8yUpkbSS+Vw9AUT/XYpAwR
+	Ss2dGVI/cfMx8CcKRekZl+lcp1Yj/OKeWWIFhlzJ7ObKqAAOrecKgRXocuEeFfnxKPfwD6fJ/jA
+	0+BMWDQ8ux3JeGoOYLtb4t+v8qY6G3LYBvq+hqj9t2TnlA3sjUtnVQE3iDsWuqfq0BJIo5dTxds
+	e9MrFE2dq5S7h5X1nJZwtCuvZD55vYviZPaURAFqad6StVtl+Mwgicw08B9fAGJzY7ssVMznVQD
+	/oFFK6IISVzsxKZcdG8W+ym9JVCvhU37Z6OAPyBZQ+2+lLpPNkzmRciHRMtCNYydEVaycG+Xtej
+	JCJlyPRkn269Z5W4QNybkOw+GUiE1V/aOWAlOQcyIbTUQWm4kCAHKewfVi0DIomEVHlG+Qp/D3O
+	Kzwr7nt9WoSE1KczdTzFVlE29Z/Y8rVEVIKTnT2pLxVS+Jid5cG2N82eJV/BzYpDRVk3gMwri00
+	g3CoyP2YMqKJj9BOg==
+X-Received: by 2002:a05:6808:c2d5:b0:485:29ad:d1a9 with SMTP id 5614622812f47-4871a1611famr2717742b6e.37.1781199313083;
+        Thu, 11 Jun 2026 10:35:13 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:5d::])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4865b91f944sm21186925b6e.9.2026.06.11.10.35.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2026 10:35:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260611061915.2354307-1-huangsj@hygon.cn>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 11 Jun 2026 10:35:11 -0700
+Message-Id: <DJ6EGJ8S87HP.2WOTGYK374XKI@gmail.com>
+Cc: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "Jiri Olsa"
+ <jolsa@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
+ Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
+ "bpf" <bpf@vger.kernel.org>, "linux-trace-kernel"
+ <linux-trace-kernel@vger.kernel.org>, "Martin KaFai Lau" <kafai@fb.com>,
+ "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <songliubraving@fb.com>,
+ "Yonghong Song" <yhs@fb.com>, "Menglong Dong" <menglong8.dong@gmail.com>
+Subject: Re: [PATCHv7 bpf-next 03/29] ftrace: Add add_ftrace_hash_entry
+ function
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "Steven Rostedt" <rostedt@kernel.org>
+X-Mailer: aerc
+References: <20260603110554.29590-1-jolsa@kernel.org>
+ <20260603110554.29590-4-jolsa@kernel.org> <20260609102922.3c489f76@fedora>
+ <DJ4LJUWPD2BF.1TY4Z3WY2V0H5@gmail.com> <20260610113536.77172ad1@robin>
+ <CAADnVQ+RhRiUp8FeptdVKZimGd-Wv8C+NbW5U4hh+7Hi5abQxw@mail.gmail.com>
+ <20260611094648.04622890@gandalf.local.home>
+In-Reply-To: <20260611094648.04622890@gandalf.local.home>
 
-Hi Huang,
-
-You seem to be replacing the file rmap altogether here, so you really ought
-to have sent this as an RFC so we could discuss it as a community first.
-
-Especially so as Pedro had publicly mentioned his plans to implement
-something similar here, so coordination would have been appreciated.
-
-Anyway, as Pedro has pointed out, the code is overly complicated, it's far
-too configurable (not always a good thing), and the locking implementation
-is questionable.
-
-You seem to be adding a whole bunch of open-coded complexity too, which is
-not something we want. Abstraction is key for the rmap.
-
-You're also not adding any kdoc comments or really many comments at all,
-and you've not added any tests (though perhaps it's difficult given how
-core this is).
-
-So I would suggest that perhaps any respin should be sent as an RFC so we
-can engage in that conversation and ensure we're all on the same page?
-
-Especially since Pedro plans to send an alternative, simpler, solution I
-believe.
-
-It's also not helpful that you haven't examined the non-NUMA case :)
-perhaps your particular server behaves a certain way that this approach
-aids, but regresses other NUMA configurations?
-
-We'd really need to be sure of this before accepting invasive changes like
-this.
-
-Thanks, Lorenzo
-
-On Thu, Jun 11, 2026 at 02:18:56PM +0800, Huang Shijie wrote:
->   In NUMA, there are maybe many NUMA nodes and many CPUs.
-> For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
-> In the UnixBench tests, there is a test "execl" which tests
-> the execve system call.
+On Thu Jun 11, 2026 at 6:46 AM PDT, Steven Rostedt wrote:
+> On Wed, 10 Jun 2026 08:42:51 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 >
->   When we test our server with "./Run -c 384 execl",
-> the test result is not good enough. The i_mmap locks contended heavily on
-> "libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have
-> over 6000 VMAs, all the VMAs can be in different NUMA mode.
-> The insert/remove operations do not run quickly enough.
+>> If my memory doesn't fail me you said it's fine during v1,v2 iterations.
+>
+> I'm fine with it, but I wanted to test it first. Did I give an Acked-by?
+>
+>> The last v3 - v8 you were silent, so we assumed you're still fine.
+>
+> When I see AI reports that say the series needs a fix, I don't bother
+> looking. I thought that was the entire point of AI; to let the maintainer
+> not have to review if the AI found something.
 
-You really need to send detailed, statistically valid numbers across
-different NUMA configurations for changes like this to be considered.
+AI finds things to consider, but when they're considered and postponned
+to future it doesn't understand that and keep reporting the same thing
+every revision. So it might look like that patches are landing with
+outstanding AI complains, but this is not the case.
+
+btw since patches touch ftrace from time to time should we add your
+ftrace testsuite to bpf CI ?
+How automated is it?
 
 >
-> patch 1 & patch 2 are try to hide the direct access of i_mmap.
-> patch 3 splits the i_mmap into sibling trees, each tree has separate lock,
-> and we can get better performance with this patch set in our NUMA server:
->     we can get over 400% performance improvement.
+>>=20
+>> While at it, please review Mykyta's set:
+>> https://patchwork.kernel.org/user/todo/netdevbpf/?series=3D1096695
+>>=20
+>> It's also been pending for almost a month now.
 >
-> I did not test the non-NUMA case, since I do not have such server.
+> Have a better link? I just get a blank page as "TODO" is set to what I ha=
+ve.
 
-Yeah this isn't a great thing to hear :) you need to demonstrate this
-doesn't regress non-NUMA machines or NUMA machines of a different
-configuration.
-
->
-> v1 --> v2:
-> 	Not only split the immap tree, but also split the lock.
-> 	v1 : https://lkml.org/lkml/2026/4/13/199
->
-> Huang Shijie (4):
->   mm: use mapping_mapped to simplify the code
->   mm: use get_i_mmap_root to access the file's i_mmap
->   mm/fs: split the file's i_mmap tree
->   docs/mm: update document for split i_mmap tree
->
->  Documentation/mm/process_addrs.rst |  63 +++++++---
->  arch/arm/mm/fault-armv.c           |   3 +-
->  arch/arm/mm/flush.c                |   3 +-
->  arch/nios2/mm/cacheflush.c         |   3 +-
->  arch/parisc/kernel/cache.c         |   4 +-
->  fs/Kconfig                         |   8 ++
->  fs/dax.c                           |   3 +-
->  fs/hugetlbfs/inode.c               |  30 +++--
->  fs/inode.c                         |  75 +++++++++++-
->  include/linux/fs.h                 | 179 ++++++++++++++++++++++++++++-
->  include/linux/mm.h                 |  81 +++++++++++++
->  include/linux/mm_types.h           |   3 +
->  kernel/events/uprobes.c            |   3 +-
->  mm/hugetlb.c                       |   7 +-
->  mm/internal.h                      |   3 +-
->  mm/khugepaged.c                    |   6 +-
->  mm/memory-failure.c                |   8 +-
->  mm/memory.c                        |   8 +-
->  mm/mmap.c                          |  11 +-
->  mm/nommu.c                         |  28 +++--
->  mm/pagewalk.c                      |   4 +-
->  mm/rmap.c                          |   2 +-
->  mm/vma.c                           |  74 +++++++++---
->  mm/vma_init.c                      |   3 +
->  24 files changed, 534 insertions(+), 78 deletions(-)
-
-This is a _lot_ of changes you're making here. It therefore feels like the
-abstraction is broken somewhat?
-
->
-> --
-> 2.53.0
->
->
-
-Thanks, Lorenzo
+Ohh. I meant this set:
+https://lore.kernel.org/bpf/CAEf4BzZFjsEv3aLktwdCZF6EXoCL+eefX+6xa3XGrhBmfO=
+1SqA@mail.gmail.com/
+where you said that you'll think more about it after pto.
+Would be great to land it now for this merge window, so we have
+discoverability right now and if better approach comes in the future
+we can adjust to it later.
+=20
