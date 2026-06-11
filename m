@@ -1,274 +1,238 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9821635E950;
-	Thu, 11 Jun 2026 07:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3906E32937A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 08:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781162275; cv=none; b=GC9lpDkZXL1L1nTqBTdSaJrAIdkZNmkIMmxK1/e8MFF4GnHN++LkK++I+hma/xODJC9hcLWprBQB2wJkDkcMU+nlgU27j0w+a2iNbRMp0oTOLeUMqJi/l6Tl8DdU7F+/n7t9feDOyJxkQhldgvS+o55JAODEns5MLtl1tOIQLng=
+	t=1781167189; cv=none; b=PzaEyX2znIUG/ujnOBSvZCQEwZChZdZTIHBUKzn+zN4W4tTRSDHrpRu7KiowDlX6GannTfSjMviO1eIpYMRHbyCVPhP1ba5F+35jkaLEza1xZUUw/lUqlH6DNcWEgnUOH/igZEFtX6oSICnLxG6CPivf2k3ssZ3X4K3J00ayODI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781162275; c=relaxed/simple;
-	bh=mx7Coopivs4IKxGcY9Afs8u7C5ixpvwisrBYow1ZD3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RZSYYBPR49asn/MyYlbqgu18t84SfNSQADm/jCs5+W1td1y3VttJnq22R/MYuRI0tZhQhauGvz5lMMMyBLx3sxFv4W03mIfQyREb25qMimK2wrY9UbhDjX2HmUgdi1O8SROxo4f9SL9TpI52rfyKfaQzcgT/F5aWf3t+w/ZXn4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=sy5dx0+f; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1781167189; c=relaxed/simple;
+	bh=pyo0Nt+pi1ys9S3mw9PND2KxRRei6qs0KxrPF4/h5pk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KRc9pVDHrZO3r/yY1+FEAEKSaERpSOtCUHolBni0yJ85LbmzutzG/3BXbsV0GzSjfCg2qM7jH1RhLopGUUMYdYzkIVW4iFZ/krVgK0zl/u8tLF+BwM9UMa46KEG3XCp8LSkdz3wMm4rKEK7SiwSaSvbVuGX8tFh+oTCXA3LCkIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WgNXuCp5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="sy5dx0+f"
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id B2D35D1438;
-	Thu, 11 Jun 2026 07:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1781162265;
-	bh=SQhvUZ/DbKf6/FrlFmNBUBTYC4OnQ9SUq8CAmtvtmpA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=sy5dx0+foJ2ScZ4tBYFnB4DhLS92V5pg+v0SGYTkem1nbyFd6xfJTyFf9OYEhfLwJ
-	 ZaAc/VbC7/EOornnQ7Y6s4ARfBsV0d9MxWFS+NCaBc1HINhdYGNHKpn29lf2DyNF1K
-	 8iW896swJPRi2QnuCHQ4br1eZusJ65henUh4DGAA=
-Date: Thu, 11 Jun 2026 07:17:41 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH v6 5/7] locking: Add contended_release tracepoint to
- qspinlock
-Message-ID: <aiphFXe_TPNPxZ_n@shell.ilvokhin.com>
-References: <cover.1777999826.git.d@ilvokhin.com>
- <5d7ea75ffe74a785e6b234ada9f23c6373d4b4c1.1777999826.git.d@ilvokhin.com>
- <20260513193342.GB2545104@noisy.programming.kicks-ass.net>
- <agXBb0ga_6HJrrnm@shell.ilvokhin.com>
- <20260603120811.GW3493090@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WgNXuCp5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781167187;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pyo0Nt+pi1ys9S3mw9PND2KxRRei6qs0KxrPF4/h5pk=;
+	b=WgNXuCp5AbExPaItlx+1BsSPbq73W01K/2ZyssbtUnYIJuacm4WMxq7wWME+0Y47w+RiIv
+	SN/jU5IqUsLSXC0H2n+IEHpDYz3pdOixfIJbDsz1pYqIS15WLWbfqClSyITiHPF/J6TcG5
+	E1qpbkZVoD0hUbspwYV8zFkqWmrYO1g=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-583-3Cb-NRAcPhyjdwZKs_v1qA-1; Thu, 11 Jun 2026 04:39:46 -0400
+X-MC-Unique: 3Cb-NRAcPhyjdwZKs_v1qA-1
+X-Mimecast-MFC-AGG-ID: 3Cb-NRAcPhyjdwZKs_v1qA_1781167185
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-46011aa5000so3390549f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 01:39:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781167185; x=1781771985;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+DOdffqgz7jOIJPeS1KofKXXtb7Ik0l7QNU4WyVsj30=;
+        b=SMeVmXOuFvVm2lJjwphv2BHhBTaaQ3SGvBJtVNlFOPx/ahKvwYZXQJL2JihZVzA4Mn
+         uIo4mZN9Hgpc9mo4zAq5Jqnf/px6H17PmilUz1mR8c7F/vjYVXCBWjLdobvXone/L+DZ
+         vhS6Em3sk/7/c5NrTSs6PCla8f40CyMJwc2V3js1gR/hy3AmJLo/0S8exIjR3ijVVBXZ
+         OnFAFy8WqiI7npzf7bVAHqEVXB1OafJPIl+1SQAFD27mC1ZzGb7qVlbgA+oN1PHAVrwv
+         cP4wJORzcOr5P74ae+kVR44DuUnuiZpPtCmD7GNJPjP1kANcdMbIInhQsO6iT2SLGTwn
+         lkZQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8ungOBzqUzKjck5fZs5fccsCs22EwBlCF2wjYWDtcF7huhBWySRilQR7Ah/xQGdZyVkZoLLKSEHfe4Ms1AiOsHxOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+UuB8mdTvLdMNVoc6zki9W+s0nGNr+Ssnk3evu3xSlKeS2fLm
+	RvoPiuzC5xqejHkttsknWJa/xu/FRF60d9SHwKfd3OdJn1yTPA9BYyQWRrCqoFR9gS8DYDruBPE
+	BT5XwiHqMnKBn91grVu4JhBQPpM+RgiSdCw1KnHKWN8O0x106sXlwO6UX4s8s7jV26bvEzSsXGA
+	==
+X-Gm-Gg: Acq92OFkzXgJ89AXSbLykZ4lIuhf1IhCX4qAAkIrOTkoX9A47JTbBpL1eF2rVV+3CTb
+	nXOj6wCYfZ05hdwTlYrI2m/PZmyDrYqWL6JqVT63r7iyOeXIlt8OhG2M9svUnJcpj916E5Hw9Id
+	zQbv5YHRSdNuTCnE7f2FMJJfKPoLGkYuo0/aq10R7YpFrfQy4mGiMEaOr0mUkgh78aM1nxAu6KY
+	FhqoDo4nzJpRoeAynbNaCwUq5MsjfS6xU2vX12cFiPhTpS4FQFQ5ia9zSXVW5GU7LvqDhz0oQk0
+	fMIjuI7anHIGlgKirnQ8dpPTwMFq9HpvJYvOQjSnk4eJBG+2Ei8VV0896CE5qAtHh0cnVLzfGFi
+	Bsjy4dV8FIndPUDX+8GXqW0lW6/9V38DVYAp2
+X-Received: by 2002:a05:600c:b96:b0:490:b724:dbd6 with SMTP id 5b1f17b1804b1-490e55b71a8mr18684565e9.6.1781167184843;
+        Thu, 11 Jun 2026 01:39:44 -0700 (PDT)
+X-Received: by 2002:a05:600c:b96:b0:490:b724:dbd6 with SMTP id 5b1f17b1804b1-490e55b71a8mr18684145e9.6.1781167184469;
+        Thu, 11 Jun 2026 01:39:44 -0700 (PDT)
+Received: from [192.168.1.167] ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2ec711sm76510109f8f.12.2026.06.11.01.39.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 01:39:44 -0700 (PDT)
+Message-ID: <1ba770537330483e9345f0f88c6a2e03aa34423a.camel@redhat.com>
+Subject: Re: [PATCH v3 08/13] verification/rvgen: Simplify the generation
+ for clock variables
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Wander Lairson Costa
+	 <wander@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 11 Jun 2026 10:39:42 +0200
+In-Reply-To: <eb57a6b4659b325a4a0eded67baa3c5fe9f0ff35.1780908661.git.namcao@linutronix.de>
+References: <cover.1780908661.git.namcao@linutronix.de>
+	 <eb57a6b4659b325a4a0eded67baa3c5fe9f0ff35.1780908661.git.namcao@linutronix.de>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260603120811.GW3493090@noisy.programming.kicks-ass.net>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 1G4z98RNHm2xAXaY7jNd32hMHANUVN30u78wXnc2faA_1781167185
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On Wed, Jun 03, 2026 at 02:08:11PM +0200, Peter Zijlstra wrote:
-> Also, I think someone should go do some performance runs with
-> ARCH_INLINE_SPIN_* set for x86 just like for s390.
-
-As promised, I set ARCH_INLINE_SPIN_UNLOCK{,_BH,_IRQ,_IRQRESTORE} for
-x86 and measured the effect on a few real workloads.
-
-Short version: inlining of _raw_spin_unlock() adds measurable kernel
-i-cache pressure on every workload I tried, and on a
-kernel-i-cache-bound one (nginx connection churn) it costs ~1.27%
-throughput. I did not find a workload where it helps.
-
-HOW BENCHMARKS WERE CHOSEN
-
-The cost of inlining unlock is text footprint increase. Every unlock
-site grows, and the extra bytes compete for the shared L1i. The bill is
-paid by unrelated code, in both kernel and userspace.
-
-Locktorture and similar microbenchmarks can't see this, because they
-usually hammer a tiny loop that stays L1i-resident, so they measure
-fast-path cycles, where inlining (fewer instructions per unlock) looks
-neutral-to-good.
-
-To make the cost visible, the workload has to have real instruction
-cache pressure. To achieve that, it has to touch a lot of code.
-
-A good way to screen benchmarks: look for high tma_frontend_bound
-fraction from 'perf stat -M TopdownL1' and simultaneously require it to
-spend non-trivial time in the kernel (be syscall-heavy).
-
-SETUP
-
-Hardware: 2x Intel Xeon Gold 6138 (Skylake-SP), 20 cores/socket, 40C/80T
-with kernel built from locking/core branch. Baseline _raw_spin_unlock()
-is out-of-line via UNINLINE_SPIN_UNLOCK=y. Experiment adds the four
-selects above (exact patch is at the end of this message). Cache
-geometry (lscpu -C):
-
-NAME ONE-SIZE ALL-SIZE WAYS TYPE        LEVEL  SETS PHY-LINE COHERENCY-SIZE
-L1d       32K     1.3M    8 Data            1    64        1             64
-L1i       32K     1.3M    8 Instruction     1    64        1             64
-L2         1M      40M   16 Unified         2  1024        1             64
-L3      27.5M      55M   11 Unified         3 40960        1             64
-
-Per run I collected cycles, instructions and L1i-misses. To stay within
-the available PMU counters, each run used only 3 events: cycles,
-instructions and one L1i filter (:u or :k). The NMI watchdog was off and
-every run reported 100% counter enablement (no multiplexing). Userspace
-and kernel misses therefore come from separate runs. Each benchmark was
-run 20x per side: 10 with the :u counter, 10 with :k.  Cycles,
-instructions and throughput are pooled across all 20, each L1i split
-comes from its 10.
-
-KERNEL IMAGE SIZE
-
-To give a sense of the code-footprint increase, scripts/bloat-o-meter on
-vmlinux, GCC 11, x86_64, defconfig + CONFIG_PARAVIRT_SPINLOCKS=y:
-
-    Total: Before=23838694, After=23977159, chg +0.58%
-
-ROCKSDB (DELETESEQ)
-
-    db_bench -benchmarks=deleteseq
-
-Metric                       Baseline      Experiment     Delta   Sig
-----------------------------------------------------------------------
-Instructions (total)    9,574,476,543   9,573,602,441    -0.01%   flat
-L1i-miss :k (kernel)      198,588,165     216,672,536    +9.11%   **
-L1i-miss :u (userspace)   593,276,235     616,433,813    +3.90%   **
-Throughput ops/s            431,398         432,897      +0.35%   ns
-Cycles (total)          4,681,002,302   4,665,106,876    -0.34%   ns
-IPC                          2.045           2.052       +0.33%   ns
-Time elapsed (s)            2.4012          2.3865       -0.62%   ns
-----------------------------------------------------------------------
-L1i-miss: higher = worse. Throughput: higher = better.
-** = beyond per-run noise (+-0.1..0.36%), ns = within noise.
-
-At constant instructions, inlining raises L1i misses +9.11% (kernel) and
-+3.90% (userspace), both well beyond noise. Throughput, cycles, IPC and
-wall-time all stay within run-to-run noise. So the i-cache cost is real,
-but at IPC ~2 db_bench isn't fetch-bound at the app level, so it doesn't
-surface.
-
-No benefit from _raw_spin_unlock() inlining.
-
-KERNEL BUILD
-
-Building locking/core (defconfig), GCC 11.
-
-    make -j80
-
-Metric              Baseline      Experiment     Delta   Sig
--------------------------------------------------------------
-L1i-miss :k          36.72G        37.51G       +2.16%   **
-L1i-miss :u         246.99G       246.06G       -0.38%   **
-Sys (s)             478.250       482.420       +0.87%   **
-Time elapsed (s)    105.221       105.373       +0.14%   ns
-User (s)           4022.046      4024.012       +0.05%   flat
-Cycles            8,894.10G     8,902.12G       +0.09%   flat
-Instructions      8,424.28G     8,426.48G       +0.03%   flat
-IPC                   0.947         0.947       -0.06%   flat
--------------------------------------------------------------
-L1i-miss/Sys: higher = worse.
-** = beyond per-run noise, ns = within noise.
-
-Kernel i-cache misses (+2.16%) and sys time (+0.87%) both rise and are
-significant. Wall-time and userspace L1i are flat. Kernel build is
-GCC/userspace-bound (User 4022s vs Sys 478s), so the added kernel fetch
-cost is real but appears to sit off the critical path.
-
-No benefit from _raw_spin_unlock() inlining.
-
-NGINX
-
-I ran nginx with taskset -c 2.
-
-    perf stat -C 2 ... -- ab -n 100000 -c 80 http://127.0.0.1:8080/
-
-Config for nginx was the following.
-
-  worker_processes 1;
-  error_log /tmp/ngx/error.log;
-  pid       /tmp/ngx/nginx.pid;
-  events { worker_connections 16384; }
-  http {
-      access_log off;
-      server { listen 8080 reuseport; location / { return 200 "ok\n"; } }
-  }
-
-
-I used nginx version 1.20.1 (prebuilt, from CentOS repo).
-
-Metric              Baseline      Experiment     Delta   Sig
-------------------------------------------------------------
-req/s (ab)           25,113        24,795       -1.27%   **
-L1i MPKI :k          70.06         72.10        +2.92%   **
-L1i MPKI :u          20.16         20.66        +2.50%   **
-instructions          5.86G         5.83G       -0.50%   **
-L1i-miss :k           0.41G         0.42G       +2.44%   **
-L1i-miss :u           0.12G         0.12G       +1.95%   **
-cycles                4.82G         4.81G       -0.28%   ns
-IPC                   1.215         1.213       -0.22%   ns
-perf time (s)         4.077         4.129       +1.26%   **
-failed reqs              0             0          -      valid
-------------------------------------------------------------
-req/s: higher=better. MPKI: higher=worse.
-** = beyond per-run noise, ns = within noise.
-
-nginx connection-churn is the one workload that is genuinely
-kernel-fetch-bound: MPKI:k ~70 and IPC ~1.2 (vs db_bench's 2.05). Here
-the cost surfaces: req/s −1.27%. Misses rise in both domains (+2.9%
-MPKI:k, +2.5% MPKI:u). Unlike kernel build, userspace is hit too,
-because nginx runs user and kernel hot on the same core and the kernel
-bloat pollutes the shared L1i.
-
-And the kicker: instructions fell 0.5% (inlining removed the call/ret)
-yet throughput dropped.
-
-Caveat: ab is single-threaded, so it seems the worker core is
-under-saturated: cycles is flat (−0.28%, ns) while wall-time rose
-(+1.26%).
-
-Measurable throughput regression from _raw_spin_unlock() inlining.
-
-CONCLUSION
-
-Inlining _raw_spin_unlock() raises kernel L1i misses on every workload.
-It's an unconditional cost. Whether it costs the application throughput
-depends on how kernel-fetch-bound the workload is.
-  
-The cost is real everywhere. It only surfaces as throughput regression
-where the kernel is on the fetch critical path. And inlining did not
-help in any workload I measured. The one micro-effect inlining produced
-(-0.5% instructions on nginx) was erased by the added i-cache pressure.
-
-
-From 99502328caed3c195e20cf194a1e8aa1563f3896 Mon Sep 17 00:00:00 2001
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-Date: Thu, 4 Jun 2026 07:43:00 -0700
-Subject: [PATCH] x86/locking: Inline the spin_unlock()
-
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- arch/x86/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index fdaef60b46d6..c9a0638225fd 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -113,6 +113,10 @@ config X86
- 	select ARCH_HAS_ZONE_DMA_SET if EXPERT
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_HAVE_EXTRA_ELF_NOTES
-+	select ARCH_INLINE_SPIN_UNLOCK
-+	select ARCH_INLINE_SPIN_UNLOCK_BH
-+	select ARCH_INLINE_SPIN_UNLOCK_IRQ
-+	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE
- 	select ARCH_MEMORY_ORDER_TSO
- 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE
- 	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
--- 
-2.53.0-Meta
+T24gTW9uLCAyMDI2LTA2LTA4IGF0IDEwOjU3ICswMjAwLCBOYW0gQ2FvIHdyb3RlOgo+IEh5YnJp
+ZCBhdXRvbWF0YSBtb25pdG9ycydzIGNsb2NrIHZhcmlhYmxlcyBoYXZlIGJlZW4gY2hhbmdlZCB0
+byBoYXZlCj4gb25seSBhIHNpbmdsZSByZXByZXNlbnRhdGlvbi4gTm93IHRoZXJlIGlzIG5vIG5l
+ZWQgdG8gZ2VuZXJhdGUgY29kZQo+IHRvIGNvbnZlcnQgYmV0d2VlbiB0aGUgdHdvIHJlcHJlc2Vu
+dGF0aW9ucy4KPiAKPiBEZWxldGUgX19maWxsX2NvbnZlcnRfaW52X2d1YXJkX2Z1bmMoKSBhbmQg
+aXRzIGFzc29jaWF0ZXMuIFVwZGF0ZQo+IF9fc3RhcnRfdG9faW52YXJpYW50X2NoZWNrKCkgdG8g
+aG93IGludmFyaWFudHMgbm93IHdvcmsuCj4gCj4gU2lnbmVkLW9mZi1ieTogTmFtIENhbyA8bmFt
+Y2FvQGxpbnV0cm9uaXguZGU+CgpSZXZpZXdlZC1ieTogR2FicmllbGUgTW9uYWNvIDxnbW9uYWNv
+QHJlZGhhdC5jb20+Cgo+IC0tLQo+IMKgdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2Rv
+dDJrLnB5IHwgOTYgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAtLQo+IMKgMSBmaWxlIGNoYW5n
+ZWQsIDMgaW5zZXJ0aW9ucygrKSwgOTMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL3Rv
+b2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9kb3Qyay5weQo+IGIvdG9vbHMvdmVyaWZpY2F0
+aW9uL3J2Z2VuL3J2Z2VuL2RvdDJrLnB5Cj4gaW5kZXggZTkxNzE3ZmRlMzBkLi42ZDM0NmE3MThh
+MzkgMTAwNjQ0Cj4gLS0tIGEvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2RvdDJrLnB5
+Cj4gKysrIGIvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2RvdDJrLnB5Cj4gQEAgLTI0
+Niw3ICsyNDYsOSBAQCBjbGFzcyBoYTJrKGRvdDJrKToKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIGlu
+di51bml0ID09ICJqIjoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY2xvY2tfdHlwZSA9ICJq
+aWZmeSIKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoCByZXR1cm4gZiJyZXR1cm4gaGFfY2hlY2tfaW52
+YXJpYW50X3tjbG9ja190eXBlfShoYV9tb24sCj4ge2ludi5lbnZ9X3tzZWxmLm5hbWV9LCB0aW1l
+X25zKSIKPiArwqDCoMKgwqDCoMKgwqAgdmFsdWUgPSBzZWxmLl9fYWRqdXN0X3ZhbHVlKGludi52
+YWwsIGludi51bml0KQo+ICsKPiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGYicmV0dXJuIGhhX2No
+ZWNrX2ludmFyaWFudF97Y2xvY2tfdHlwZX0oaGFfbW9uLAo+IHtpbnYuZW52fV97c2VsZi5uYW1l
+fSwgdGltZV9ucywge3ZhbHVlfSkiCj4gwqAKPiDCoMKgwqDCoCBkZWYgX19zdGFydF90b19jb252
+KHNlbGYsIGNvbnN0cjogc3RyKSAtPiBzdHI6Cj4gwqDCoMKgwqDCoMKgwqDCoCAiIiIKPiBAQCAt
+MzgzLDQwICszODUsNiBAQCBmIiIic3RhdGljIGlubGluZSBib29sCj4gaGFfdmVyaWZ5X2ludmFy
+aWFudHMoc3RydWN0IGhhX21vbml0b3IgKmhhX21vbiwKPiDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYu
+YXBwZW5kKCJcdHJldHVybiB0cnVlO1xufVxuIikKPiDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBi
+dWZmCj4gwqAKPiAtwqDCoMKgIGRlZiBfX2ZpbGxfY29udmVydF9pbnZfZ3VhcmRfZnVuYyhzZWxm
+KSAtPiBsaXN0W3N0cl06Cj4gLcKgwqDCoMKgwqDCoMKgIGJ1ZmYgPSBbXQo+IC3CoMKgwqDCoMKg
+wqDCoCBpZiBub3Qgc2VsZi5pbnZhcmlhbnRzOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJl
+dHVybiBbXQo+IC0KPiAtwqDCoMKgwqDCoMKgwqAgY29uZmxpY3RfZ3VhcmRzLCBjb25mbGljdF9p
+bnZzID0gc2VsZi5fX2ZpbmRfaW52X2NvbmZsaWN0cygpCj4gLcKgwqDCoMKgwqDCoMKgIGlmIG5v
+dCBjb25mbGljdF9ndWFyZHMgYW5kIG5vdCBjb25mbGljdF9pbnZzOgo+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHJldHVybiBbXQo+IC0KPiAtwqDCoMKgwqDCoMKgwqAgYnVmZi5hcHBlbmQoCj4g
+LWYiIiJzdGF0aWMgaW5saW5lIHZvaWQgaGFfY29udmVydF9pbnZfZ3VhcmQoc3RydWN0IGhhX21v
+bml0b3IKPiAqaGFfbW9uLAo+IC1cdFx0XHRcdFx0ZW51bSB7c2VsZi5lbnVtX3N0YXRlc19kZWZ9
+IGN1cnJfc3RhdGUsIGVudW0KPiB7c2VsZi5lbnVtX2V2ZW50c19kZWZ9IGV2ZW50LAo+IC1cdFx0
+XHRcdFx0ZW51bSB7c2VsZi5lbnVtX3N0YXRlc19kZWZ9IG5leHRfc3RhdGUsIHU2NCB0aW1lX25z
+KQo+IC17eyIiIikKPiAtwqDCoMKgwqDCoMKgwqAgYnVmZi5hcHBlbmQoIlx0aWYgKGN1cnJfc3Rh
+dGUgPT0gbmV4dF9zdGF0ZSlcblx0XHRyZXR1cm47IikKPiAtCj4gLcKgwqDCoMKgwqDCoMKgIF9l
+bHNlID0gIiIKPiAtwqDCoMKgwqDCoMKgwqAgZm9yIHN0YXRlLCBjb25zdHIgaW4gc29ydGVkKHNl
+bGYuaW52YXJpYW50cy5pdGVtcygpKToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIGEgc3Rh
+dGUgd2l0aCBpbnZhcmlhbnQgY2FuIHJlYWNoIHVzIHdpdGhvdXQgcmVzZXQKPiAtwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCAjIG11bHRpcGxlIGNvbmZsaWN0cyBtdXN0IGhhdmUgdGhlIHNhbWUgaW52
+YXJpYW50LAo+IG90aGVyd2lzZSB3ZSBjYW5ub3QKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAj
+IGtub3cgaG93IHRvIHJlc2V0IHRoZSB2YWx1ZQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNv
+bmZfaSA9IFtzdGFydCBmb3Igc3RhcnQsIGVuZCBpbiBjb25mbGljdF9pbnZzIGlmIGVuZAo+ID09
+IHN0YXRlXQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgd2UgY2FuIHJlYWNoIGEgZ3VhcmQg
+d2l0aG91dCByZXNldAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbmZfZyA9IFtlIGZvciBz
+LCBlIGluIGNvbmZsaWN0X2d1YXJkcyBpZiBzID09IHN0YXRlXQo+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGlmIG5vdCBjb25mX2kgYW5kIG5vdCBjb25mX2c6Cj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBjb250aW51ZQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYuYXBw
+ZW5kKGYiXHR7X2Vsc2V9aWYgKGN1cnJfc3RhdGUgPT0KPiB7c2VsZi5zdGF0ZXNbc3RhdGVdfXtz
+ZWxmLmVudW1fc3VmZml4fSkiKQo+IC0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFw
+cGVuZChmIlx0XHR7c2VsZi5fX3N0YXJ0X3RvX2NvbnYoY29uc3RyKX07IikKPiAtwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBfZWxzZSA9ICJlbHNlICIKPiAtCj4gLcKgwqDCoMKgwqDCoMKgIGJ1ZmYu
+YXBwZW5kKCJ9XG4iKQo+IC3CoMKgwqDCoMKgwqDCoCByZXR1cm4gYnVmZgo+IC0KPiDCoMKgwqDC
+oCBkZWYgX19maWxsX3ZlcmlmeV9ndWFyZHNfZnVuYyhzZWxmKSAtPiBsaXN0W3N0cl06Cj4gwqDC
+oMKgwqDCoMKgwqDCoCBidWZmID0gW10KPiDCoAo+IEBAIC00NTYsNTQgKzQyNCw2IEBAIGYiIiJz
+dGF0aWMgaW5saW5lIGJvb2wgaGFfdmVyaWZ5X2d1YXJkcyhzdHJ1Y3QKPiBoYV9tb25pdG9yICpo
+YV9tb24sCj4gwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiXHRyZXR1cm4gcmVzO1xufVxu
+IikKPiDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBidWZmCj4gwqAKPiAtwqDCoMKgIGRlZiBfX2Zp
+bmRfaW52X2NvbmZsaWN0cyhzZWxmKSAtPiB0dXBsZVtzZXRbdHVwbGVbaW50LAo+IF9FdmVudENv
+bnN0cmFpbnRLZXldXSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2V0W3R1cGxl
+W2ludCwKPiBfU3RhdGVDb25zdHJhaW50S2V5XV1dOgo+IC3CoMKgwqDCoMKgwqDCoCAiIiIKPiAt
+wqDCoMKgwqDCoMKgwqAgUnVuIGEgYnJlYWR0aCBmaXJzdCBzZWFyY2ggZnJvbSBhbGwgc3RhdGVz
+IHdpdGggYW4KPiBpbnZhcmlhbnQuCj4gLcKgwqDCoMKgwqDCoMKgIEZpbmQgYW55IGNvbmZsaWN0
+aW5nIGNvbnN0cmFpbnRzIHJlYWNoYWJsZSBmcm9tIHRoZXJlLCB0aGlzCj4gY2FuIGJlCj4gLcKg
+wqDCoMKgwqDCoMKgIGFub3RoZXIgc3RhdGUgd2l0aCBhbiBpbnZhcmlhbnQgb3IgYW4gZWRnZSB3
+aXRoIGEgbm9uLXJlc2V0Cj4gZ3VhcmQuCj4gLcKgwqDCoMKgwqDCoMKgIFN0b3Agd2hlbiB3ZSBm
+aW5kIGEgcmVzZXQuCj4gLQo+IC3CoMKgwqDCoMKgwqDCoCBSZXR1cm4gdGhlIHNldCBvZiBjb25m
+bGljdGluZyBndWFyZHMgYW5kIGludmFyaWFudHMgYXMKPiB0dXBsZXMgb2YKPiAtwqDCoMKgwqDC
+oMKgwqAgY29uZmxpY3Rpbmcgc3RhdGUgYW5kIGNvbnN0cmFpbnQga2V5Lgo+IC3CoMKgwqDCoMKg
+wqDCoCAiIiIKPiAtwqDCoMKgwqDCoMKgwqAgY29uZmxpY3RfZ3VhcmRzOiBzZXRbdHVwbGVbaW50
+LCBfRXZlbnRDb25zdHJhaW50S2V5XV0gPQo+IHNldCgpCj4gLcKgwqDCoMKgwqDCoMKgIGNvbmZs
+aWN0X2ludnM6IHNldFt0dXBsZVtpbnQsIF9TdGF0ZUNvbnN0cmFpbnRLZXldXSA9IHNldCgpCj4g
+LcKgwqDCoMKgwqDCoMKgIGZvciBzdGFydF9pZHggaW4gc2VsZi5pbnZhcmlhbnRzOgo+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHF1ZXVlID0gZGVxdWUoWyhzdGFydF9pZHgsIDApXSnCoCAjIChz
+dGF0ZV9pZHgsIGRpc3RhbmNlKQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVudiA9Cj4gc2Vs
+Zi5fX2dldF9jb25zdHJhaW50X2VudihzZWxmLmludmFyaWFudHNbc3RhcnRfaWR4XSkKPiAtCj4g
+LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd2hpbGUgcXVldWU6Cj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBjdXJyX2lkeCwgZGlzdGFuY2UgPSBxdWV1ZS5wb3BsZWZ0KCkKPiAtCj4g
+LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIENoZWNrIHN0YXRlIGNvbmRpdGlvbgo+
+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgY3Vycl9pZHggIT0gc3RhcnRfaWR4
+IGFuZCBjdXJyX2lkeCBpbgo+IHNlbGYuaW52YXJpYW50czoKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgY29uZmxpY3RfaW52cy5hZGQoKHN0YXJ0X2lkeCwKPiBfU3Rh
+dGVDb25zdHJhaW50S2V5KGN1cnJfaWR4KSkpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4gLQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgIyBDaGVjayBpZiB3ZSBzaG91bGQgc3RvcAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgaWYgZGlzdGFuY2UgPiBsZW4oc2VsZi5zdGF0ZXMpOgo+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhawo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgaWYgY3Vycl9pZHggIT0gc3RhcnRfaWR4IGFuZCBkaXN0YW5jZSA+IDE6Cj4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4gLQo+IC3CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9yIGV2ZW50X2lkeCwgbmV4dF9zdGF0ZV9uYW1lIGlu
+Cj4gZW51bWVyYXRlKHNlbGYuZnVuY3Rpb25bY3Vycl9pZHhdKToKPiAtwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgbmV4dF9zdGF0ZV9uYW1lID09IHNlbGYuaW52YWxp
+ZF9zdGF0ZV9zdHI6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgY29udGludWUKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+Y3Vycl9ndWFyZCA9IHNlbGYuZ3VhcmRzLmdldCgoY3Vycl9pZHgsCj4gZXZlbnRfaWR4KSwgIiIp
+Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmICJyZXNldCIgaW4g
+Y3Vycl9ndWFyZCBhbmQgZW52IGluIGN1cnJfZ3VhcmQ6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29udGludWUKPiAtCj4gLcKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGVudiBpbiBjdXJyX2d1YXJkOgo+IC3CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbmZsaWN0X2d1YXJkcy5h
+ZGQoKHN0YXJ0X2lkeCwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoAo+IF9FdmVu
+dENvbnN0cmFpbnRLZXkoY3Vycl9pZHgsIGV2ZW50X2lkeCkpKQo+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4gLQo+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuZXh0X2lkeCA9IHNlbGYuc3RhdGVzLmluZGV4
+KG5leHRfc3RhdGVfbmFtZSkKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcXVldWUuYXBwZW5kKChuZXh0X2lkeCwgZGlzdGFuY2UgKyAxKSkKPiAtCj4gLcKgwqDCoMKg
+wqDCoMKgIHJldHVybiBjb25mbGljdF9ndWFyZHMsIGNvbmZsaWN0X2ludnMKPiAtCj4gwqDCoMKg
+wqAgZGVmIF9fZmlsbF9zZXR1cF9pbnZhcmlhbnRzX2Z1bmMoc2VsZikgLT4gbGlzdFtzdHJdOgo+
+IMKgwqDCoMKgwqDCoMKgwqAgaWYgbm90IHNlbGYuaGFzX2ludmFyaWFudDoKPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgcmV0dXJuIFtdCj4gQEAgLTU1NCwxNiArNDc0LDkgQEAgZiIiInN0YXRp
+YyBpbmxpbmUgdm9pZAo+IGhhX3NldHVwX2ludmFyaWFudHMoc3RydWN0IGhhX21vbml0b3IgKmhh
+X21vbiwKPiDCoCAqIHRoZSBuZXh0IHN0YXRlIGhhcyBhIGNvbnN0cmFpbnQsIGNhbmNlbCBpdCBp
+biBhbnkgb3RoZXIgY2FzZSBhbmQKPiB0byBjaGVjawo+IMKgICogdGhhdCBpdCBkaWRuJ3QgZXhw
+aXJlIGJlZm9yZSB0aGUgY2FsbGJhY2sgcnVuLiBUcmFuc2l0aW9ucyB0byB0aGUKPiBzYW1lIHN0
+YXRlCj4gwqAgKiB3aXRob3V0IGEgcmVzZXQgbmV2ZXIgYWZmZWN0IHRpbWVycy4KPiAtICogRHVl
+IHRvIHRoZSBkaWZmZXJlbnQgcmVwcmVzZW50YXRpb25zIGJldHdlZW4gaW52YXJpYW50cyBhbmQK
+PiBndWFyZHMsIHRoZXJlIGlzCj4gLSAqIGEgZnVuY3Rpb24gdG8gY29udmVydCBpdCBpbiBjYXNl
+IGludmFyaWFudHMgb3IgZ3VhcmRzIGFyZQo+IHJlYWNoYWJsZSBmcm9tCj4gLSAqIGFub3RoZXIg
+aW52YXJpYW50IHdpdGhvdXQgcmVzZXQuIFRob3NlIGFyZSBub3QgcHJlc2VudCBpZiBub3QKPiBy
+ZXF1aXJlZCBpbgo+IC0gKiB0aGUgbW9kZWwuIFRoaXMgaXMgYWxsIGF1dG9tYXRpYyBidXQgaXMg
+d29ydGggY2hlY2tpbmcgYmVjYXVzZSBpdAo+IG1heSBzaG93Cj4gLSAqIGVycm9ycyBpbiB0aGUg
+bW9kZWwgKGUuZy4gbWlzc2luZyByZXNldHMpLgo+IMKgICovIiIiKQo+IMKgCj4gwqDCoMKgwqDC
+oMKgwqDCoCBidWZmICs9IHNlbGYuX19maWxsX3ZlcmlmeV9pbnZhcmlhbnRzX2Z1bmMoKQo+IC3C
+oMKgwqDCoMKgwqDCoCBpbnZfY29uZmxpY3RzID0gc2VsZi5fX2ZpbGxfY29udmVydF9pbnZfZ3Vh
+cmRfZnVuYygpCj4gLcKgwqDCoMKgwqDCoMKgIGJ1ZmYgKz0gaW52X2NvbmZsaWN0cwo+IMKgwqDC
+oMKgwqDCoMKgwqAgYnVmZiArPSBzZWxmLl9fZmlsbF92ZXJpZnlfZ3VhcmRzX2Z1bmMoKQo+IMKg
+wqDCoMKgwqDCoMKgwqAgYnVmZiArPSBzZWxmLl9fZmlsbF9zZXR1cF9pbnZhcmlhbnRzX2Z1bmMo
+KQo+IMKgCj4gQEAgLTU3Niw5ICs0ODksNiBAQCBmIiIic3RhdGljIGJvb2wgaGFfdmVyaWZ5X2Nv
+bnN0cmFpbnQoc3RydWN0Cj4gaGFfbW9uaXRvciAqaGFfbW9uLAo+IMKgwqDCoMKgwqDCoMKgwqAg
+aWYgc2VsZi5pbnZhcmlhbnRzOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVu
+ZCgiXHRpZiAoIWhhX3ZlcmlmeV9pbnZhcmlhbnRzKGhhX21vbiwKPiBjdXJyX3N0YXRlLCAiCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJldmVudCwg
+bmV4dF9zdGF0ZSwgdGltZV9ucykpXG5cdFx0cmV0dXJuCj4gZmFsc2U7XG4iKQo+IC3CoMKgwqDC
+oMKgwqDCoCBpZiBpbnZfY29uZmxpY3RzOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYu
+YXBwZW5kKCJcdGhhX2NvbnZlcnRfaW52X2d1YXJkKGhhX21vbiwgY3Vycl9zdGF0ZSwKPiBldmVu
+dCwgIgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJu
+ZXh0X3N0YXRlLCB0aW1lX25zKTtcbiIpCj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIHNlbGYu
+Z3VhcmRzOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiXHRpZiAoIWhh
+X3ZlcmlmeV9ndWFyZHMoaGFfbW9uLCBjdXJyX3N0YXRlLAo+IGV2ZW50LCAiCg0K
 
