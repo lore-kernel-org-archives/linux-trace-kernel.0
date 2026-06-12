@@ -1,188 +1,136 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9C03AD517
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 12:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7962C375A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 14:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781268734; cv=none; b=bzR37oXIHUtwBtmH7Pifb6HAU+aj67pgAib9ol+kgytetWhQ1vsu3l5Uoi4PfEAhpawL7MP5QsoVEtS3CNRWoNW/kyy3lnsDPtE1GXAV2Xc74t5mCmXh2pxCWCjPQZ5n9OsiJqk6QUXYdu4s7EPhc2vxP+2Mp+wAscQsbnlCqXs=
+	t=1781273962; cv=none; b=U7Aw9jRA7BZRnET5pHt9CE/bawjYI933Byx91lauxy4au5mH/sHiJyWBtrXxAQ3sikWoWvToSa3TqavUQcj5mLBmESr+XWs7NjX0m1ivzPOTfml2Nx2LvbQsPtQmATVGF/9umclDPsXelfrSprFxvDJRVG0K4cUw+7dQy2Psr88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781268734; c=relaxed/simple;
-	bh=cStNl0TAPT93gNmUpgiu3tt/N/MKv25GszYVr3I6KiI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=XZExkqM1VkhWMy0ldxzRfFUxI3C2qualo2BQwCk4NPt7i27NoK17VbPlc7mmPMrQIH/liZhMhWuAIUIIjNvlsxcJq7amu2RRt2yWY685fVMFpShBLqtbg05Iw/F4Gpg6DHkVQp0WKR+VI0/nZvIC2au1uiLjzQxE9uByI0Ahgy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=oCnTSqK3; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1781273962; c=relaxed/simple;
+	bh=N11KqFqqpa8pIXLi3ZH1nreVT0ImrnKzchs5LUB++qQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qJsofIB9AgxyjeESgNeCmyqKBJTPat3DOxMKyeeqmScAQDI9H3qSpu06E1Flm7FpRwyWwK0zFkL3759FS2KAaCJsMBPBbgwsNY8GHHP3c3r8j0ujvuQ3neYFwC0SPy2rr7GvsDVPlL0hrKX5NyqRh6WIDdjQ0kpieJRu3ajNPjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LJd0peg4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="oCnTSqK3"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-45fd45e596cso529111f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 05:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1781268728; x=1781873528; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BanM+9FqN0NH2f7uUkajDPjkggu36+oU5qieAlWT7rI=;
-        b=oCnTSqK3r9pfU4lXlVBCY6ViuzScer0ftri/qY2+sJSSCmu7ay+VpVdjVuXqkvn8pi
-         zybpoYgc8IPDJEgOjNjy3Evd0fcNk7u9hOPRxczmvgpsVquTtef2hSOUZ0LkoC1vC1KC
-         XimGxmirgA8h6RpShNlfwKHyyR8F4VZVLCzv2/mCBzvxaa4SXXKeAKgBX9BlxAgtTg3I
-         2pQIuOrSzmobpC9f6hqntiqigLmUWx1fFuzYyT99jcMb1hv0LYL0EsifFdrmdqfrP1ir
-         o2dOT/vxmrbtvLHdCbQALPwntGAo9+1sZN60YRiziI+WklFSlnbdRIx3QbTytdHtQ5U7
-         l2vA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJd0peg4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781273960;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4t96VqnC3BD1F7T/58snKnEK4qwB+Yq2QQw8u6ZVkoo=;
+	b=LJd0peg4GOj3/W2E68lBEKi5iwVVFqJ8C/HO3oG0lGnjBg2Rn0++u3T8nXCmnvxnLNpda/
+	pDttPwXe9nniWjqDxLUGEQAEPCGC0lkHvbbRMwddqJWGpp3M7sd6XSgivAy7YOqVx3uTbG
+	3uPToDDM24FDWwpekKPCZbWO0op3r+8=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-523-6ZOMhihTNM63B0sTlK9wZg-1; Fri, 12 Jun 2026 10:19:19 -0400
+X-MC-Unique: 6ZOMhihTNM63B0sTlK9wZg-1
+X-Mimecast-MFC-AGG-ID: 6ZOMhihTNM63B0sTlK9wZg_1781273958
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-691a67a7b58so824710a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 07:19:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781268728; x=1781873528;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BanM+9FqN0NH2f7uUkajDPjkggu36+oU5qieAlWT7rI=;
-        b=PXNi9WTcTyEyi5XjHuLDe9tLD2+A1DxtWGLlVxrRqJ6IvBSG0a1OxsBTkNtVsFOYhf
-         dCZfqQ9f25112E3GMHebVquO0jyInMVA+YbTW93x4BhW26pjgpf/BinbcTxXwJc44vgl
-         qu2OlHqMmCahq0wn8Wk00ny89/4zbm80dQzAyR5ep8na8dB0I+IWx/psInkJYKoDmDT5
-         GPUHY3lN+qvBZnHUDMZPQgBbTAihavHMqJpneFe7zlaByUl2KTPrKWfsoUMidPKzXXpP
-         eEIKIWLACyq0cvWQCDmQkNMeV01bAXgj0WWLHCCaCNwrPZimIZ/u316G5xG7cz0aMWqD
-         ocag==
-X-Forwarded-Encrypted: i=1; AFNElJ/wXXFJE7Ts+5BLAmfKkQHeHoAjudfc3xA3bbgWx/DzaUj5Sehqm8G7LHjtwmbyISyloU1LIQrkqJg5nBx32DFeqzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1A1Ay1wVpJdGxXBIUhU1ddNpy0WxTmCStoN/tcAQfl3esRFBO
-	uofD2asq7ofLHS4XyUbcG0dGM+xOidHFqtWWkfA//3E5Fx78mfOw46p1Cfo+2kWQp4c=
-X-Gm-Gg: Acq92OGuZ9j5bMuvWVfUqflnWn4o/vUmX7e8qZKmL4EILdFoKeyNr5/Ruvf2yJxQg/d
-	ppGR/dPxAhMQpt16WcosW0NpAKt8xBnSzDmFimmUkW/VUPXSmdepHV+egfxluTWz6KAip7feOk6
-	SnazI/ggfZgexDxNHmjgyON/4eFIDyiK11cOeEqnzzBLLCq15su0Of9VKkamMw873XR5bT4bWV/
-	6Nb+d6/LWeViccFHW8Er8lsM/K38G4Csvsg02Rz/IGu1i+V+i16rCOAeHkytzjlMRL9kq683KZA
-	qJPxcQpSD47e0Il6sarySrQBdBnc8hPalazQd1v4/1Gq2T/K7ncr6BYbOTKo4NOvyG9u7z19FtD
-	Q/ER5gJIoRtRNObiq9+LfqLjdQ9koKU7IKIvRE1FTet/49qYaKbquLCIQcpstMgfyx3FbcvdBQe
-	E23dOagJCKW+/UaE8wsQ==
-X-Received: by 2002:a5d:5f44:0:b0:460:1c5b:f25f with SMTP id ffacd0b85a97d-4606db96c29mr4446363f8f.20.1781268727756;
-        Fri, 12 Jun 2026 05:52:07 -0700 (PDT)
-Received: from localhost ([2001:4091:a245:857c:229:71f5:91db:9ccb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2b0bbfsm5561589f8f.23.2026.06.12.05.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 05:52:07 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1781273958; x=1781878758;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4t96VqnC3BD1F7T/58snKnEK4qwB+Yq2QQw8u6ZVkoo=;
+        b=HIPbhQForwujIIVlgDn6oy4vewUhxcxmyfnjPboyIj2wZQsa3cZOYNFs4CIVaDpq7H
+         epdU5cUQJ8JOqbENOgBpuq0enp4mFQdwm/hoBZbmzMJNwtwrDfWlsMiKnF0SMKBWtnUh
+         0O378MRUkoqozxC82HgqWn1i+qNXZms1RhQmDvLfYNc/TzjfKk7gBy/a7QUlvYWQrjtl
+         QfebZOXn4he2BzvIVjGvhxo/5VlIHgKlDRpEDVXXi+JOgJz921+rmcUodq/XcG6BYfB/
+         NsnlpTuEpIrYTSsRed6LAOQkTlccA0beE6Y82ib7mujTrsCJn7B8pQFYai3FuMR9k36j
+         pkhQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/BV1hhyomVIjj9NCIiv5QXWL6mIEpvEGwOUswe4GC0VIt7ywgBcq/Lerm815PJc6H9Rm/dRFPPcv7gL2CEiTrfpOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3ZC8WWEfiOOIbP/G74Gfy4HFl1KeVRrwYofKDhGR3V88FrrBg
+	pybu7N++6Dn4cz4oDpLaY5nRdb3QqiN2rMT9JRIgrvpk+vVvpvaR6g8RTWPB+j5OhGjbTDxCobs
+	alNzUulNUty0soxb+He86+FYj2WkGysegIJY+M4WUSTpEynfw0alWyxuPwfxib8kwi4gXbpdv53
+	a0RVR/fVhrblmeJJwPUwbuNd2Hom1VHS4Ldy1/i3FpOAuBAxTddit4mtFKTyc=
+X-Gm-Gg: Acq92OFDyMziL1uMKcfjgNIsRSTKupanyDdjDgseEqQkHizTCrb/nK/P+Pfjssh0/l1
+	KdKvKjt2WkSm5ctBjGueDAkq2hzgtI+5DaPFnO4MqkGVIw6oROxzMF8A4Ug1e2jx3xPsHRAOg1M
+	ZYLcW8QZNBUaJ13RzZEw5qlkzTUbcDyZeDgdLyaagqFnnwLmifL9jMjUewuBhmhBFh0pLcf8tpX
+	Ln2gK11A5JlGPpcBIG4t/hW7wePw3ZJVTjA
+X-Received: by 2002:a17:907:a02:b0:bf1:118b:d5e2 with SMTP id a640c23a62f3a-bfe2b7dcb1cmr157759066b.46.1781273957613;
+        Fri, 12 Jun 2026 07:19:17 -0700 (PDT)
+X-Received: by 2002:a17:907:a02:b0:bf1:118b:d5e2 with SMTP id
+ a640c23a62f3a-bfe2b7dcb1cmr157757266b.46.1781273957099; Fri, 12 Jun 2026
+ 07:19:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=1d98463f0909420db3aaf81a6f6c79f939a96177e69408b418dd1161c3a1;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 12 Jun 2026 14:51:58 +0200
-Message-Id: <DJ7328G40P9R.YB03MWLT8GQF@baylibre.com>
-To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Steven Rostedt"
- <rostedt@goodmis.org>, "David Laight" <david.laight.linux@gmail.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, "Markus
- Schneider-Pargmann (The Capable Hub)" <msp@baylibre.com>, "Heiko Carstens"
- <hca@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: fprobe: Remove __packed from generic
- __fprobe_header
-From: "Markus Schneider-Pargmann" <msp@baylibre.com>
-X-Mailer: aerc 0.21.0-126-g9e77103592fe
-References: <20260428-topic-fprobe-packed-v7-1-v1-1-9abc9b866b4c@baylibre.com> <20260610171740.c30c43c5faee0beac3ad7546@kernel.org> <20260610120659.7c61cfa6@pumpkin> <20260610155139.01b6def4@gandalf.local.home> <0ea2ae74-7452-4ba5-9549-59197c766c25@efficios.com>
-In-Reply-To: <0ea2ae74-7452-4ba5-9549-59197c766c25@efficios.com>
-
---1d98463f0909420db3aaf81a6f6c79f939a96177e69408b418dd1161c3a1
+MIME-Version: 1.0
+References: <20260529130643.3080315-1-tglozar@redhat.com>
+In-Reply-To: <20260529130643.3080315-1-tglozar@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 12 Jun 2026 16:19:04 +0200
+X-Gm-Features: AVVi8CfdOUhxTccYgdH0PccD08b_P2nlHLghOP58n65mnSN_tBSEBVopOcbmemM
+Message-ID: <CAP4=nvS9MQMeXTnN_hsH7gTDUnV1yeMqyQ=hak5fbZvVQR3jCA@mail.gmail.com>
+Subject: Re: [GIT PULL] RTLA changes for 7.2
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: oGad-xER4tMDP_Hm4KzOgAmbSTk0IzlGxZ-dE6-feIw_1781273958
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-Hi,
-
-On Wed Jun 10, 2026 at 10:05 PM CEST, Mathieu Desnoyers wrote:
-> On 2026-06-10 15:51, Steven Rostedt wrote:
->> On Wed, 10 Jun 2026 12:06:59 +0100
->> David Laight <david.laight.linux@gmail.com> wrote:
->>=20
->>> So you only want __packed on structures that might be misaligned and th=
-ose
->>> that contain misaligned members.
->>>
->>> If the structure is only guaranteed to be 32bit aligned then use __pack=
-ed
->>> __aligned(4) so that two 32bit accesses get used instead of 8 8bit ones=
-.
->>>
->>> -- David
->>>
->>>>
->>>> Thank you,
->>>>   =20
->>>>> Signed-off-by: Markus Schneider-Pargmann (The Capable Hub) <msp@bayli=
-bre.com>
->>>>> ---
->>>>>   kernel/trace/fprobe.c | 2 +-
->>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
->>>>> index cc49ebd2a773..21751dcdb7b9 100644
->>>>> --- a/kernel/trace/fprobe.c
->>>>> +++ b/kernel/trace/fprobe.c
->>>>> @@ -181,7 +181,7 @@ static inline void read_fprobe_header(unsigned lo=
-ng *stack,
->>>>>   struct __fprobe_header {
->>>>>   	struct fprobe *fp;
->>>>>   	unsigned long size_words;
->>>>> -} __packed;
->>>>> +};
->>>>>  =20
->>=20
->> Does "__packed" really do anything between a pointer and a long?
+p=C3=A1 29. 5. 2026 v 15:16 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.co=
+m> napsal:
 >
-> If that structure is allocated at a non-void-ptr-aligned address, the
-> packed attribute will ensure that the compiler don't emit instructions
-> that require aligned loads/stores when accessing those fields.
+> ----------------------------------------------------------------
+> Costa Shulyupin (1):
+>       tools/rtla: Fix --dump-tasks usage in timerlat
 >
-> It does not change the layout of the structure per se in this specific
-> case, but it informs the compiler about the lack of guarantees about
-> alignment for the entire structure.
+> Crystal Wood (1):
+>       rtla: Stop the record trace on interrupt
 >
-> x86 32/64 cannot care less about this, but it's relevant on other
-> architectures.
+> Tomas Glozar (24):
+>       rtla/tests: Cover both top and hist tools where possible
+>       rtla/tests: Add get_workload_pids() helper
+>       rtla/tests: Check -c/--cpus thread affinity
+>       rtla/tests: Use negative match when testing --aa-only
+>       rtla/tests: Extend timerlat top --aa-only coverage
+>       rtla/tests: Cover all hist options in runtime tests
+>       rtla/tests: Add runtime test for -H/--house-keeping
+>       rtla/tests: Add runtime test for -k and -u options
+>       rtla/tests: Add runtime tests for -C/--cgroup
+>       rtla/tests: Add unit tests for actions module
+>       rtla/actions: Restore continue flag in actions_perform()
+>       rtla/tests: Add unit test for restoring continue flag
+>       rtla/tests: Run runtime tests in temporary directory
+>       rtla/tests: Add runtime tests for restoring continue flag
+>       rtla: Add libsubcmd dependency
+>       tools subcmd: support optarg as separate argument
+>       tools subcmd: allow parsing distinct --opt and --no-opt
+>       rtla: Parse cmdline using libsubcmd
 
-Thanks for your feedback. I checked this before submitting the patch.
-The struct is always aligned to sizeof(long):
+This will create a conflict with a fix in master/7.1 [1] as it removes
+the code that is fixed by the patch, as reported in linux-next already
+[2]. The resolution is trivial (just remove the new, fixed code, as it
+is entirely replaced by a new implementation that doesn't have the
+bug) but a small note in the final pull request might be useful, so
+that it's clear we know about it.
 
-struct __fprobe_header is only ever accessed through
-read_fprobe_header() and write_fprobe_header(). Since the read will only
-read what we have previously written, only the write part is relevant
-here. write_fprobe_header() is only called from fprobe_fgraph_entry():
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?id=3De9e41d3035032ed6053d8bad7b7077e1cb3a6540
+[2] https://lore.kernel.org/linux-next/aimDwlNq_RRLjg6X@sirena.co.uk/T/#u
 
-  if (write_fprobe_header(&fgraph_data[used], fp, size_words))
-    used +=3D FPROBE_HEADER_SIZE_IN_LONG + size_words;
+>       rtla/tests: Add unit tests for _parse_args() functions
+>       rtla/tests: Add unit tests for CLI option callbacks
+>       rtla/timerlat: Add -A/--aligned CLI option
+>       rtla/tests: Add unit tests for -A/--aligned option
+>       Documentation/rtla: Add -A/--aligned option
+>       rtla: Document tests in README
+>
 
-used is always kept aligned to sizeof(long), in fact the above snippet
-is the only part where it is actually changed. fgraph_data is assigned
-here:
+Tomas
 
-  fgraph_data =3D fgraph_reserve_data(gops->idx, reserved_words * sizeof(lo=
-ng));
-
-fgraph_reserve_data() returns a pointer into an unsigned long array
-ret_stack. ret_stack is allocated with
-
-  ret_stack =3D kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
-
-and fgraph_stack_cachep is allocated with
-
-  fgraph_stack_cachep =3D kmem_cache_create("fgraph_stack",
-                                          SHADOW_STACK_SIZE,
-                                          SHADOW_STACK_SIZE, 0, NULL);
-
-So as far as I can see everything is sizeof(long) aligned here and it is
-not allocated at a non-void-ptr-aligned address.
-
-Best
-Markus
-
---1d98463f0909420db3aaf81a6f6c79f939a96177e69408b418dd1161c3a1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKMEABYKAEsWIQSJYVVm/x+5xmOiprOFwVZpkBVKUwUCaiwA7hsUgAAAAAAEAA5t
-YW51MiwyLjUrMS4xMiwyLDIRHG1zcEBiYXlsaWJyZS5jb20ACgkQhcFWaZAVSlO0
-gwEA1oCSzd1Hbai4Da7Y1FjR5B6IlbDp562NsFYQJz6VxGgBAMmmzm8vHk/eOP+g
-n+ibbZWP+b156M1ITG2+ajqWbhoO
-=L48n
------END PGP SIGNATURE-----
-
---1d98463f0909420db3aaf81a6f6c79f939a96177e69408b418dd1161c3a1--
