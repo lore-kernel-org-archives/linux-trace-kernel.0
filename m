@@ -1,233 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from GVZP280CU018.outbound.protection.outlook.com (mail-swedencentralazon11022093.outbound.protection.outlook.com [52.101.82.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B26E331230
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 08:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781254446; cv=none; b=Npdpa5voF5O076UnNBYjE78R9Yku+IpVOcQml45HgrJr0F5jO8Zy//CTSJq73tdCNe4++eX/N5fVk3o9pxF8Yx8QBePwaVn9i6f6l1GKq7o4rwdzIphani5a9U11u6GACP48GJUArdaBhpO596G/0r1N+g4PQ8s6F2r2cbagU8A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781254446; c=relaxed/simple;
-	bh=E3yy8cnJC59xavzVgyOgR/fYd6zP2+wnrE2emvTx6kE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HSHz/mY1KyBGmNkfCvg7y9dvKqi5n+z6kXegIz1dkayLkyy2GcK8vWOudu9KAwzJlCMNO4DVSahjVZ5cf7uFsZbRCKScYPdHJsfASID42ddIYtoXQftwvYPLfYcVy1eyvcj/R9D0EjY+4jnca9kzzMDC+5gym4GkRrstC9tZReU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bOOaS6FD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F133019C8;
+	Fri, 12 Jun 2026 09:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.82.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781255634; cv=fail; b=BXw/q6+YhzbmiuBFthA/L3gH14pZpf2uiqIzCWynvuOwblG7qiVtMIa5SzwUx+YCzaMrSOhg4I/wt0qMhKnjA/b+5wcJsLtaeDptV16DbndzFW5bYFJCRFxyxYZjEhiJhGio6Mdl2G1/AYHR2nE/+gxgaPLmNsTvNKA23WJahmw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781255634; c=relaxed/simple;
+	bh=bfAFFc18LnG+WxAchMdLsK0gkWLPUcrXoBSyjQc2JKQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=iBd3PD+lJ+e821+VTHL4xQPlr3sAm50SjlCUEVtnAHXA303PyPg0zSmfr6z1tW+LJdslK1tUb2xsGDim99NygFD1ybikB+Fiw3HDAodkuXbQOl+7C4+TO6F6E/uKnxD5RZknNPOauiwmvn6QfwpyurvRiTlSDOGbwEgMiP1x65E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=HbS+yGPL; arc=fail smtp.client-ip=52.101.82.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bOOaS6FD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781254444;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T6l0W7oSoQQsUySqqQFhvGaI1Ae4Pz0PRvQcuSyUgeQ=;
-	b=bOOaS6FDsKXT50ej7ENbZV9zCMZ+YBXKucfj5NAhAdqYa354ryaEHeyY771x8VVSiaaVz3
-	UsH9PMML6O/OBxI5fYI5+vKi5ZigQmvLFQSBqJf1dNbcnn/ZGa45oQvhbGRW4OYuSq6/VT
-	HonOP4xJA7reguNL9X2yQZvED4JmmmA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-498-SeNA337lNFqu6P5vaAbUDw-1; Fri, 12 Jun 2026 04:54:03 -0400
-X-MC-Unique: SeNA337lNFqu6P5vaAbUDw-1
-X-Mimecast-MFC-AGG-ID: SeNA337lNFqu6P5vaAbUDw_1781254442
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-460163035e3so430382f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 01:54:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781254442; x=1781859242;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3h3Z17YlU+JUM0dzmHKckOTf08CDPs3EE5yZwLDugEw=;
-        b=GTG4tHkYgauZLI0yrNz8OKMLIvQ3i+dfvTMQ+qVXlY7VHxiB6hPiteZrPad66F4LmN
-         XsoEBnoG2esPEYCEp+qpVqBSWW0gaDknW9nO6y6UcwQctVUjjGwxLZE12nyHGmJsQqQR
-         RhPzJBXcrQRs95wLBWtfmtSyWpWr+KvvjDkpEmWfpOZPzZhJAPfQf/Ds2FI/CUL1hAhP
-         OA/WQGUty715d+TmKQ1W6xWlKNQbID9pdLz1JfQtsvQ9A1epDK7ERloMHmxpne68fwbz
-         At7uMj7wH7PdhfKmlcgkHFpZzRnk8Dja3qPfyhk/bhx6Br9Qtx6+WCZ3T+P6hQr3weAG
-         4TMg==
-X-Forwarded-Encrypted: i=1; AFNElJ8laywzd42YNlefv76NmjbvHXAE3VUEiJUq2kjdyVUTkrXhCpKMu/VQM6BuQLI+b+2XwBy0oXgr0lQYzzg6WS9I8RM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ6LrH9Pvlx0nh8dcA0wLCIOXYF+rNKqR+Nx0aRCA7O+ch08St
-	ElP6cLzukKAyMbZ8RTYcAs0+69BdLPw8ohrJWOJmZsnRwi2TEqYaOpQdikK1HWgUqP4ZzV0VuPK
-	qhSii/M4sTLQDhYE9iS18T8d0bm96xSK6jVI/bT6tRsSSeLXO/zx9af480eDR3jLylmm0sWjOoQ
-	==
-X-Gm-Gg: Acq92OHh1Pvmxn/wvn33uALpQmS8urleeUDbyxPnLQso+14IPa16041eWwsGV9izkx9
-	u/66MFUtIruFnIzo4g9Nhok204OM8F1h7C+l2M8ztRtiP7XKENb5+C9WBL9AcXY/bu5pgZcNLKN
-	E9oUCW+02VpR3GMxThny1PoNtU0DMiDa0d9VVVuqWElviT88n7hcJhNtUgj1n9/ZqvK9LpIjOm9
-	/P0ML+5OgCIgEaA+vu6J7BAg69Zl3Va4AxQ3Jc2hyQMNjepor+Kk51PzlDSL1Swh1xBAG/RNMwB
-	6lIFnvGSAT+YbGwBXnH2jJSohaxrUMsfvBBwO+4ILZineMinl+WNOsITXLOZPgvNBGoWRHMlVtN
-	x73PsWVMjFaU8j58pL7rMwThbnZCf89ol1ZKaJAr6qO2AY5/1UxqzJmMfp79aog==
-X-Received: by 2002:a5d:5d0e:0:b0:460:3210:434a with SMTP id ffacd0b85a97d-4606dbc6b71mr2814017f8f.43.1781254441916;
-        Fri, 12 Jun 2026 01:54:01 -0700 (PDT)
-X-Received: by 2002:a5d:5d0e:0:b0:460:3210:434a with SMTP id ffacd0b85a97d-4606dbc6b71mr2813966f8f.43.1781254441401;
-        Fri, 12 Jun 2026 01:54:01 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2a01:cb16:2069:d022:ee80:c854:b3a4:c6d1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2c3782sm3737386f8f.25.2026.06.12.01.53.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 01:54:00 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Crystal Wood <crwood@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Costa Shulyupin <costa.shul@redhat.com>,
- Ivan Pravdin <ipravdin.official@gmail.com>
-Subject: Re: [RFC PATCH 1/2] tracing/osnoise: Sample IPI counts
-In-Reply-To: <CAP4=nvTOV9jSermE_E_eUh29ks7B9Nv1Nkq1DfvA5nLRv=5hxg@mail.gmail.com>
-References: <20260610130457.1304245-1-vschneid@redhat.com>
- <20260610130457.1304245-2-vschneid@redhat.com>
- <f40903f8198f8e2f42f1efdf950f995f24cf6e93.camel@redhat.com>
- <CAP4=nvT6GEdwZAm-2h+Z-mj9DOmJ-swyApujFun6m1Qaxxr7hQ@mail.gmail.com>
- <xhsmh33yt2wtc.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAP4=nvTOV9jSermE_E_eUh29ks7B9Nv1Nkq1DfvA5nLRv=5hxg@mail.gmail.com>
-Date: Fri, 12 Jun 2026 10:53:58 +0200
-Message-ID: <xhsmhzf1016mx.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="HbS+yGPL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YcdTPQOraB7d9Dr8QysaYi1JpQAs52ef6DIRZ7B8oS6WMA0iRSh/DrMTpjbIjiAFtclEKsEANVV+jv2+pQBKnDHahaGrdrYebHcUpxKON9T4Gy/Eo3VWZfb/I46NRMGZysZ3Lv4rioviimCJGd2eZbxDXc8yzJUikR7zOv4QsSfKT5YdQ1F8Cpm+KbqJt7Md1EFV6Qgc8fcxGFenGCd1T/IzH7/SF0zEL0wc/lQSnfa+hMc+t8vJHXmPcxuejvJKeQgZoY0pJQKjQRUAb6Meit2miprL9CMxUp73hww6tfACQznqKI737gTbRafJo0bfMoh1vOgvlezB5jYWMdLCJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CT35u1SfTyctJEqcjqxxEW3DnR8jJBco87PxmAx1RK4=;
+ b=cky+5VyFK/mkSvkdnsT0++2zCMMCBCoCsDO0VUFtXZi/j2paxxVLUECngqXuTviU7rRFBjSi8nBPySsNYc1sMWpqyVNfm9pvVSH4o6uGNri7jRlR4iZDXgNgGxOIk7ODSI4rHnia6ih+9f3smhYWQaOx2LZZ0HMISSFhoqZ6CQzkan1d2E5TkypBd732sOCdB//gwd3bVc0KgQqJ0SyZbM8t9nMkgdbw+aAg8itrbrUbMlxODiIHrDo+nP2gsNytPR6kaoTVPHuzeGYODRUZND1nGk8S2DhfjojvaJndJtc+ynlJfVRlyCb/BFnm6f1EbJpbvjxLdtB9z3vN2pbzlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=gaisler.com; dmarc=pass action=none header.from=gaisler.com;
+ dkim=pass header.d=gaisler.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CT35u1SfTyctJEqcjqxxEW3DnR8jJBco87PxmAx1RK4=;
+ b=HbS+yGPLu7uoVeVNNRtUqfbIIMK+fnhs2aA+gL8Y03sTiaj+YVJAZB2TCj51HQjdKCoNAeZNPz54cLL22AJ+v4O8pYCY6Se1Q6jL8UEYv3jsxixH7zNCYakTikk5abmLipaPnViY8iEjVl14qvRaAkBLkEtiO0aiYWDh/7afMaQ/zQ6/9gEjVnPNmSAzPheb6XEWFsRuNy6/ba0q155AiAc0nS/evfc/0yPh3CSaFJ90pfRk5r3VIsrwDdrz0c8rfo9yDNb2AjSQTDEVZOE3iHW+QsZnKTYVvKhMdQ2TymuG9EdHxmRSAsoVlpu3qbhlwB0ROdVnx1aiF12vG9EMDQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gaisler.com;
+Received: from GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:195::18)
+ by GV3P280MB0759.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:f1::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.14; Fri, 12 Jun
+ 2026 09:13:50 +0000
+Received: from GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::be76:7636:f4ac:6773]) by GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::be76:7636:f4ac:6773%6]) with mapi id 15.21.0113.013; Fri, 12 Jun 2026
+ 09:13:50 +0000
+Message-ID: <2fb1c4cb-5d0f-41f5-990e-8070adc029ad@gaisler.com>
+Date: Fri, 12 Jun 2026 11:13:49 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sparc64: uprobes: add missing break
+To: Rosen Penev <rosenp@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, "David S. Miller"
+ <davem@davemloft.net>, "open list:UPROBES"
+ <linux-trace-kernel@vger.kernel.org>,
+ "open list:SPARC + UltraSPARC (sparc/sparc64)" <sparclinux@vger.kernel.org>
+References: <20260506031815.779909-1-rosenp@gmail.com>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20260506031815.779909-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: GVX0EPF0005F6A1.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:158:400::129) To GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:150:195::18)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jE4swtiYUSRPf7UQuBFiGYP4QNMP65RQ0qCxaUu_VHw_1781254442
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GVYP280MB1290:EE_|GV3P280MB0759:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9436b8b5-ad4c-47d4-b5a8-08dec862ea8f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|376014|366016|18002099003|22082099003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	gmALivmi9LbNhKH7zVUeD3B8s0Hrxem1W7auCi6UGKEheUA1tDVnwdN/QpPdndDlcdW6fuAB2rlBElFNW0Lijc5MWi8Me8g78Cj93WwT3q0YSFoCyXH2R0DXLgttTMi0nbIOkQ/OB3N1GcmAgHWyNmQErfhsutWuUULSr4/wXygjmuhX5w7Gu/b6Tyej/bjVR1sT1gX3UWljo1uGs7S97Z/r9Z6vGtmmT/gRRPe//ggxqmiexYELARaYdGyXA85VcgtQLQ8M36E0IJuyVdR/WXiv7oE9swlsifKWXuV3il17KLRdv7yms5zaZUcEU8bFb6dvDPdmr+1e4w27wbDW0kHSn4gfclZFKAuJ+Wr+F3GGmUoPOdvXdRjUKNekHd+/c38aTBQcl48WNJjnYzFVbe5kZp5kqAJXANEzZSnrTqOqiEjnSbHlk/8GX6hbtcV8Tli4nMRzvlzQXpOf4Kg5EZsIjZ6/aKV+9XNmRRjVu+gzmuHbH5s30+Ng0K1yFQN0GWkXjrMmSHVloNYKzLtarB7HlG3yV/rgGxlFcW1eC7gddI8NaNwG61vWznfmsQiJ+w4okR6OIfylWqrkMKl71CnE5TzZZXBgSe/Up44dkjJeUAOq43XXf45YaSt7JkrRKdV8mSiBZitKkXWOTKPKFNuVENn8UFonH9OGeaF8iurbBIzRWLnsYkQ+MzKKUCaP
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(376014)(366016)(18002099003)(22082099003)(56012099006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bUtJVDNZdnA1Mmk1TkpUR3ladXBaajFDZGdwNXlHUjYzZDFHRVRpbDNxYllF?=
+ =?utf-8?B?RlpRczViUnBMTW1pOUNwVXlmbVBDdS9nbjZJZndzczJXZFo0Vml2dm43Rkh5?=
+ =?utf-8?B?SGF2MDdRbEpIeU1RZWhFSmY2TkRaMUxrSWVLVTd3ZGhocTlpOEx5ZGwvVVRj?=
+ =?utf-8?B?T2VxNjhGTXUvSU8zeWNpT3MzenBEUURFV2R6Ulk1RG9aWXZTSk50b0hxQXJw?=
+ =?utf-8?B?ZlZ0cXJZT1hYbXpjY1FkSTlLdm11ZHBhY2ZHT0NhUmFzWUM2SzVJaEhlYWlp?=
+ =?utf-8?B?RkExRUljeG5JNTBIOGRhTDllQVExbjhpb1NRWFhuaE4vdEdNSFZUWTR2cVNp?=
+ =?utf-8?B?OENKWnNHTTQwK0p3NUdjdUx4c1A2WksrRWFlRkhYZkdZQU9oOC9DaWtGNUtL?=
+ =?utf-8?B?S21QNkIrNU84WS9aelQycE5xb1d2d2dsWmc5Nk0wWDBzVlBaV3pxUDNlVmg0?=
+ =?utf-8?B?Qm04clVwQjhPV2E5UWlXWXdmdXZxenBabWc1S21XNWREV25CNWhjL2MxRllh?=
+ =?utf-8?B?b2pvN2RRelBoVlBGeFIwdkxzNzNOMEN4a1htZFN2MVVDcFFGeE51Y2JXcy9y?=
+ =?utf-8?B?SW00YlVRS0phTUxrcEp2ZXpGWlJTMFQ1clZyTTYwUU1wb3dQb2x3SHFLUTZx?=
+ =?utf-8?B?ZVVBS29DUmFYeEJDeVpuUVd3M3Rudk1NalZRdEo5NnU3OGpIUVpZcUFvVk1h?=
+ =?utf-8?B?azcvM01PR2dtVkkrR3NzQXAzYyszaW5TNjR3RWNBdHR0RlhxZ3ZlaHdic0Jr?=
+ =?utf-8?B?SThmWWpSOWhaZXNXMmdoRG9Dei8rRzJQSnhmVjN3ZGlKNFFlb01PS3c3ZUtL?=
+ =?utf-8?B?U3VkOHFSVjBwdVJnQmxMN1lJQkVWeUtsbVV5TEtlTXF0eW9uT3VHTXovUHIr?=
+ =?utf-8?B?U3J2ZmJHaWVGTjU3T25TenZDUmZwczdLQXZJVU90UDF5akNsOUxzZE9nRlY2?=
+ =?utf-8?B?WXZpNmk0bUFnM3FubVJTd1dJUWtIMTl6OWE1TWRoczRWaFNOb0RHd0RnUVdJ?=
+ =?utf-8?B?TDhaSXdIZDFoNWFnd0NLcmpneEhkRmRZNTFQK0Q0WGJBa1FyVzlsUjY4Szhn?=
+ =?utf-8?B?QzdiVlBxMHR0czl1UmJkdzRTZzdjK3JRbHBNZmpFWHZUV09OVkt0RnFobTFK?=
+ =?utf-8?B?TityWjMyK1JrM2ErL3RBQVlaY2MvWGZhZEdIdEdxM0hqUkdTOW8yYVMwM2Jw?=
+ =?utf-8?B?QjRwMGRrKzJMWUZFSEVxQk52dTdqM3hZUEVLL3ZCZmtidkJqd0FQZnJEMGcw?=
+ =?utf-8?B?YS8vb001Q1RvOFIrM3JQa3dteFQ4cS9zYmk4UWRwZUFPVDB0UERPWkd5a1pX?=
+ =?utf-8?B?UmQvMGtrYmpUYURwVzRzeStiM3NOVm9nSmFxdDd6cjhIaFNWN1pFRy9jdm5Z?=
+ =?utf-8?B?bDE4UmVHWTVQUFpheDdCZ2tKRUVnSGVGTk84NnFxd2tHaXBzTkdTVDlHNi9p?=
+ =?utf-8?B?ZEVIVnRPL2RwdGRWcmFKdno4d3pvdlhWL01EN0hmL2VjL0ZxMjZwWldVZXd2?=
+ =?utf-8?B?eCtySzZXTXhzL3dsTnRSL0tyZVFJbDIzcktxb1BzT3F5dXByL0o0dkJHWHZi?=
+ =?utf-8?B?eDZxUjNod0VVZndBVWZibFpaeUhMeEVVRHhKSHdnMHpnaWpzOG5nbDBjMS9P?=
+ =?utf-8?B?S2JEMDNlNnB0WGZnckRlZzE4MTlqT29ZR0x4TlQ1ZUlMUXpENUNsQllOdGt0?=
+ =?utf-8?B?R0c1LzBqOTh1ZUtwNHlieHBXTURJb3NQWWdudG1OT1M1eGR2SlVQRFZJQ1Z2?=
+ =?utf-8?B?UVVZZG50THdobUJNSGYwQUoxdkJDVmZ0eUs0Wjlhak1tM2U1eDdEL3o4NjAw?=
+ =?utf-8?B?NGZ3bWxDd2JBblpCR3JjLy9tTzlDS3FITHJjYUFnWWVSRFFtcTMxMVdET0RY?=
+ =?utf-8?B?aEpXczdVR0NEb0pFSE5FZkkxSlphcVJYeVhIdTE2K1Z0aDhKMVlVbHVlZkJs?=
+ =?utf-8?B?bGFRcG1jK0tXU2VyaFdJWUkwMlhMQjJRaXkzOXZXdC80YS9zRXJVc0d4Mm45?=
+ =?utf-8?B?UXhLUm94NzBvUHVva0tYTTdDNE9zY09iemIrbjdFL3l5eHhuUHRtQzhRa2lT?=
+ =?utf-8?B?T1RORXRPRFdnYlpaZlhBWng4QjE3aVM3UVZ5UTkrN2V4TWJ1S3h6QkdHZE4y?=
+ =?utf-8?B?Q2k1NEpEYUZSQWpwOWJ5eWRsZUk0OFZWcEJDN2hXMXMycjFpdXZoaHdVU1l0?=
+ =?utf-8?B?cGFzN2dmdFA3aHZ5Um02ZnBta3VpdXRCNTlrRzlRT2VadVhkcFpHTzJZMHNa?=
+ =?utf-8?B?aHJ6eVpWOTJlendYWWhsT29FVUFaRGNnWlJNWVlxakNCbUs4YkI4V2UzT3J5?=
+ =?utf-8?B?SGVkaEw5NXZ4S1l0K2t4YmhzMHNjcUl5MTgvdy8wR3JqUEd5QUozUllYZWlW?=
+ =?utf-8?Q?E/7TQyg5qlWdxDqU=3D?=
+X-OriginatorOrg: gaisler.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9436b8b5-ad4c-47d4-b5a8-08dec862ea8f
+X-MS-Exchange-CrossTenant-AuthSource: GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2026 09:13:50.2469
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 91fa4a59-2167-458a-8318-e45d80469d7e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 11PFZzQ210/BvAdoK9Ucu01QHqswr8OU4/2XLxdJX16Yi5AJVJuN+5XIPTcGSS2bZwz2ZvCTJkSHqD6rVh5bMKIOGZRXvKvJq5w+OEvGurg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV3P280MB0759
 
-On 11/06/26 13:55, Tomas Glozar wrote:
-> =C4=8Dt 11. 6. 2026 v 12:31 odes=C3=ADlatel Valentin Schneider
-> <vschneid@redhat.com> napsal:
->> >
->> > Isn't that precisely what the ipi tracepoints used by this
->> > implementation (ipi:ipi_send_cpu) are for?
->> >
->>
->> Well, these catch the emission of the IPI, which is great for investigat=
-ion
->> - slap a stacktrace trigger and you (most of the time) get the source of
->> your interference.
->>
->> However Crystal's point is that on x86 (and I assume other archs) receiv=
-ing
->> & handling these IPIs is "special" and doesn't go through the generic ir=
-q
->> subsystem and thus has to be tracked separately, which is why osnoise ha=
-s
->> this fairly lengthy osnoise_arch_register() thing.
->>
->
-> Ah, right. This is not IPI specific, though, IIUC - Intel also has
-> other IRQs that have to be traced using Intel-specific trace points,
-> like irq_vectors:local_timer, which is also handled in
-> osnoise_arch_register(). On ARM from what I recall, most (all?) IRQs
-> are traced with irq:* tracepoints.
->
-> So there are two parts to this:
->
-> - Detecting interference from IPIs firing as osnoise:irq_noise (to be
-> analyzed by timerlat auto analysis, and also will appear by default in
-> trace output if enabled, regardless of the tool, as all osnoise:*
-> tracepoints are enabled there). This is done locally using the already
-> existing path (no race hazard), but requires arch-specific detection.
->
-> - Counting IPIs when they are being sent. This is the new feature, and
-> the count is being recorded in osnoise_sample.
->
-> I guess that means that if there were a generic IPI interface, it
-> would be easier to use that for IPI counting, as the event would be
-> CPU-local? As you say, for tracing of the IPI source, the sending
-> tracepoints are better, and that you can already dump the stack trace
-> of with --event/--trigger. timerlat auto-analysis could be extended to
-> connect the specific IPI to the IRQ noise and display its stack trace
-> automatically, instead of manually analyzing the trace output.
->
+On 2026-05-06 05:18, Rosen Penev wrote:
+> Missing fallthrough causes failure with newer compilers:
+> 
+> arch/sparc/kernel/uprobes.c:284:2: error: unannotated fall-through between switch labels [-Werror,-Wimplicit-fallthrough]
+>   284 |         default:
+>       |         ^
+> arch/sparc/kernel/uprobes.c:284:2: note: insert 'break;' to avoid fall-through
+>   284 |         default:
+>       |         ^
+>       |         break;
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  arch/sparc/kernel/uprobes.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/sparc/kernel/uprobes.c b/arch/sparc/kernel/uprobes.c
+> index 305017bec164..c8cac64e9988 100644
+> --- a/arch/sparc/kernel/uprobes.c
+> +++ b/arch/sparc/kernel/uprobes.c
+> @@ -280,6 +280,7 @@ int arch_uprobe_exception_notify(struct notifier_block *self,
+>  	case DIE_SSTEP:
+>  		if (uprobe_post_sstep_notifier(args->regs))
+>  			ret = NOTIFY_STOP;
+> +		break;
+>  
+>  	default:
+>  		break;
 
-Right, at least for the smp_call stuff (which includes irq_work) we can
-leverage:
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
 
-  csd_queue_cpu (on the sending CPU)
-  csd_func_start (on the receiving CPU)
+Picking this up to my for-next.
 
-by indexing on the @csd address; once upon a time [1] I had this:
-
-  $ echo 'hist:keys=3Dcpu,csd.hex:ts=3Dcommon_timestamp.usecs:src=3Dcommon_=
-cpu' >\
-       /sys/kernel/tracing/events/csd/csd_queue_cpu/trigger
-  $ echo 'csd_latency unsigned int src_cpu; '\
-       'unsigned int dst_cpu; '\
-       'unsigned long csd; u64 time' >\
-       /sys/kernel/tracing/synthetic_events
-
-  $ echo 'hist:keys=3Dcommon_cpu,csd.hex:
-  time=3Dcommon_timestamp.usecs-$ts:
-  onmatch(csd.csd_queue_cpu).trace(csd_latency,$src,common_cpu,csd,$time)' =
->\
-       /sys/kernel/tracing/events/csd/csd_function_entry/trigger
-
-  $ trace-cmd record -e 'synthetic:csd_latency' hackbench
-  $ trace-cmd report
-  <idle>-0     [001]   115.236810: csd_latency:          src_cpu=3D7, dst_c=
-pu=3D1, csd=3D18446612682588476192, time=3D134
-  <idle>-0     [000]   115.240676: csd_latency:          src_cpu=3D7, dst_c=
-pu=3D0, csd=3D18446612682588214048, time=3D103
-  <idle>-0     [009]   115.241320: csd_latency:          src_cpu=3D7, dst_c=
-pu=3D9, csd=3D18446612682143963384, time=3D83
-  <idle>-0     [007]   115.242817: csd_latency:          src_cpu=3D8, dst_c=
-pu=3D7, csd=3D18446612682150759032, time=3D93
-  <idle>-0     [005]   115.247802: csd_latency:          src_cpu=3D7, dst_c=
-pu=3D5, csd=3D18446612682144441144, time=3D114
-  <idle>-0     [005]   115.271775: csd_latency:          src_cpu=3D7, dst_c=
-pu=3D5, csd=3D18446612682144441144, time=3D151
-  <idle>-0     [000]   115.279620: csd_latency:          src_cpu=3D7, dst_c=
-pu=3D0, csd=3D18446612682588214048, time=3D87
-  <idle>-0     [000]   115.281727: csd_latency:          src_cpu=3D7, dst_c=
-pu=3D0, csd=3D18446612682588214048, time=3D101
-
-[1]: https://lore.kernel.org/lkml/xhsmh4jn8y8vt.mognet@vschneid.remote.csb/
-
-I believe you're right that leveraging this would be useful for
-timerlat-aa; I'll add it to my todolist :-)
-
->> >> Isn't this racy to do from a different CPU?  Both in terms of the
->> >> counter, and the timing of the increment relative to when the IPI is
->> >> actually received.  Not necessarily a huge deal if you only care abou=
-t
->> >> zero versus bignum, but still.  At least worth a comment, if we go wi=
-th
->> >> this approach.
->> >>
->> >
->> > I also think it's a bit confusing, especially as the other accesses to
->> > osn_var are cpu-local, but here, "cpu" is the *target* CPU, not the
->> > current CPU. Not sure how expensive it would be to do atomic_add for
->> > that, at least it's something to consider.
->> >
->>
->> I suppose that could be an argument for doing that stat aggregation in
->> userspace osnoise - event handlers are run after the fact via
->> tracefs_iterate_raw_events(), it's all inherently slower since it's just
->> increments of one (one per handled event) but it's also all done in
->> userspace on a control thread and doesn't bog down the kernelspace.
->>
->
-> You can also do per-cpu counters in-kernel and sum them in the end,
-> but that would take cpus^2 space (indexed by [current_cpu,
-> target_cpu]). The question is whether there could be enough samples to
-> overload sample collection (like it happens for timerlat, which
-> collects data in-kernel using BPF instead).
->
-> In-kernel counting can be tested with " --event ipi:ipi_send_cpu
-> --trigger hist:key=3Dcpu" - IIRC, tracefs histograms use atomic
-> operations (via tracing_map) to protect the entries from races in
-> multi thread access. Of course, that is inferior to what the patchset
-> implements, as it doesn't record which osnoise cycle the IPI was sent
-> in, nor can record cpumask IPIs.
->
-
-I suppose I'll need to go do some benchmarking, but I'm starting to lean
-towards the side of atomic incs for IPI counts being okay considering the
-sort of latencies we track.
-
->
-> Tomas
+Thanks,
+Andreas
 
