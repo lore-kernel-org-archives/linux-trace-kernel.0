@@ -1,167 +1,352 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEB6374192
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 20:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A17E2C21D8;
+	Fri, 12 Jun 2026 01:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781210959; cv=none; b=Rnt61YuPcITFXgBW2n+7SooRSeCa6AsArmCh8wV3pTvuEVGDCgwQBJ2EcACpnrKM/bNGAWSQE3BjYSIGR5pfWlFMUDu9TMSxi4/oY31Evz0xucaPQ0OF0SaXEJLeaukYBLxryBsirHw8G65ozBSZjW3Ni7N0X9vyogTrfM8J8Zg=
+	t=1781229310; cv=none; b=Px0isC5a+uF/RdK4foxlGYGkDWSQQZyXmV0SaBr9LrEBCglAIeL/Xjy3Y2rS3tebF9p+i2a/k8FyUYxIxDS7sQ90pg4XZUzR95ZIMiST6ZMg+oZAwbVR71CYBIRxvu8QoNtCA9W2fhdLvpg0+vA/q4sqbROiH5iLo0QdBnBJRyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781210959; c=relaxed/simple;
-	bh=5hOHi9t8eWvhak32t4WLHOEeSPNgnnXI2tqmdR/ET2I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=byDQrjNSIbay8z/bxor24D1/SYitFb2dv77g4b/JzK69rvz3641oWEpJDMbG0XZQZ1TvOUicFGfcMe2OAmPstMNQSBZMwIufSSeppZfHIj/j3QgC/QE6lvA58eTWSw8hY65glHXw9NfNdlwUk+CYTQIaZxmj2ZTYuvBmEElg7WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JbjeYhqc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JbjeYhqc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781210957;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wgktEKfzuJsITNJ+8XhsgZmhYbupv7GRDCn0xvz14pw=;
-	b=JbjeYhqcT2JlEwoUUi+KAUhkJNxBaSMkBJ6mLiVghg6eK2XZsXplWmwiiUxkCmzGl+1aYe
-	uwxhmpCOABBtT4DQNQLMnlL3ASlH1PwPA/HRnqD/5OdOwk/sUsyulJ0RkVozJWNp4XzRZS
-	jwtGIP9tUtLkI9gA5+60l0jG+5HanpI=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-C7Vmqp9PPwKHIJeGg5VDyQ-1; Thu, 11 Jun 2026 16:49:16 -0400
-X-MC-Unique: C7Vmqp9PPwKHIJeGg5VDyQ-1
-X-Mimecast-MFC-AGG-ID: C7Vmqp9PPwKHIJeGg5VDyQ_1781210956
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-9159c4b210aso43567585a.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jun 2026 13:49:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781210956; x=1781815756;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wgktEKfzuJsITNJ+8XhsgZmhYbupv7GRDCn0xvz14pw=;
-        b=QvuhmxiorQjTmVUCp5ykFjWImcqY1G4qeMpjlmOv5d+AHssGd7JEe5r/ww+fD6xEzO
-         C4JrY84+zn0AA0E/9BC5EXO9cPJoA2ubphjSoj1SoXlJOBK+m0BWOTMiv+rDvluRbags
-         jlNIBLFHs9mj7G295Zvcwqw8ECNeu1S7XAaCs27FXilHJyyc0NgLeKKtu/BJ7PkD82p9
-         mBBaGJQ1hm6iw1TaN7IBYImpLezkZs8aj3t2cWJB7x/bmim9wB0z8PpztR/MOWsMpAqE
-         89tFv1+DodZ29f3+H/rm8IkItjWWMLspZCd8v2YsvB7iVB5qDWAuwz47ZXccE6i87/Bo
-         fbPA==
-X-Forwarded-Encrypted: i=1; AFNElJ92+qJnQWygfjqu3VxSCDljCcvcINE5BViarpFS3gmQV4MWYvYNgVuEZYWaSMYznn+rt0+cdgOMillSeQ/M86UL7ac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaoiUTjOKXvBiMovihWGXNrxBAc17IsVK5cm6M6tn9/3Y1Vo9Z
-	1/sk/dkOUw/EDkJRfgat3nfbAmyQ8rYSIrYFa60hj/Q5VsmXRXOFDrfwAnAGsdiJyxV1MQgWr5S
-	iFDOTSUWMkFAF7AYABJv4K/n5WyhlEMtKIRAGumxjqak5QfxSqOuww7qdjvdhx0iTiF2DiZHnFg
-	==
-X-Gm-Gg: Acq92OH8BdKOniPJI18OTHXF+h8RF0wnXetEJ4dNM5DgEfZpyqM02t/1/u9SX8Ca/gR
-	XTLZbej2vrolBQA6amNW6qWyZPriyWv8BtLUDX9i6W8gZXlxKBH2Cb0RahUjqkamUwQdzqO+C1+
-	cYKTbeZUhk1qcKjTQ3a7ImUFFsmPy1RBKj8r9V0l0aK5tV/VDR5+ykD33XzC4ghmBJSsVMqdosW
-	a2s4gIdgvZ0sReeSZOdfGS6l2DKV8tLidG14RHKoMjoB5MVnJvf7vqCgHUasjMxvWsN5a+0jfyf
-	6M8GewD1mZPildl0Doa5mftbWh2lUoBzfemuwSuNx/3P/YAygCwcKoiUzvyysd8AbZHsZ6hvQLC
-	5fL6JCJ6wVTD0X9RAEuMiwNZ9m9hcnTTLVdJ5F7+ZFxgidknhKB1GYw==
-X-Received: by 2002:a05:620a:2954:b0:915:351b:3ad5 with SMTP id af79cd13be357-9161a3cbedbmr33292385a.29.1781210955595;
-        Thu, 11 Jun 2026 13:49:15 -0700 (PDT)
-X-Received: by 2002:a05:620a:2954:b0:915:351b:3ad5 with SMTP id af79cd13be357-9161a3cbedbmr33287985a.29.1781210955151;
-        Thu, 11 Jun 2026 13:49:15 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc81:56d0:ab94:b2cb:29a6:7ac0])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-91619f210b7sm21254885a.18.2026.06.11.13.49.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 13:49:14 -0700 (PDT)
-Message-ID: <dcab30ebd537f34cbab2446be8ff9b8cca61e0f3.camel@redhat.com>
-Subject: Re: [RFC PATCH 1/2] tracing/osnoise: Sample IPI counts
-From: Crystal Wood <crwood@redhat.com>
-To: Valentin Schneider <vschneid@redhat.com>, Tomas Glozar
- <tglozar@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers	 <mathieu.desnoyers@efficios.com>, Costa Shulyupin
- <costa.shul@redhat.com>,  Ivan Pravdin <ipravdin.official@gmail.com>
-Date: Thu, 11 Jun 2026 15:49:13 -0500
-In-Reply-To: <xhsmh33yt2wtc.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-References: <20260610130457.1304245-1-vschneid@redhat.com>
-	 <20260610130457.1304245-2-vschneid@redhat.com>
-	 <f40903f8198f8e2f42f1efdf950f995f24cf6e93.camel@redhat.com>
-	 <CAP4=nvT6GEdwZAm-2h+Z-mj9DOmJ-swyApujFun6m1Qaxxr7hQ@mail.gmail.com>
-	 <xhsmh33yt2wtc.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
+	s=arc-20240116; t=1781229310; c=relaxed/simple;
+	bh=9xA22wVJimg+XD28C2L+cY+sHz1FGSAX+RAwoc/grds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GQGVwRzC7R7bAldNqmDbnRSjBe71t11JOoKzLbGgVGA0T7lVQOCbKZntgYzUSK33iSGuGbq/0YgfYorAQvUBFou3vYZJsvyOfjLfxcLQcG6j9Budhvj8X4KMtaucn6jqgAmpdNRgtNKJG6xC5+fYgIxsOpM2USE76eg4YpEn35k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gc2d62KtjzYQtpF;
+	Fri, 12 Jun 2026 09:54:34 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 85A5040573;
+	Fri, 12 Jun 2026 09:54:55 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with SMTP id Syh0CgAHy4DtZitqxOPwBQ--.20143S2;
+	Fri, 12 Jun 2026 09:54:54 +0800 (CST)
+Message-ID: <6df6e707-0d79-4bc9-95c0-7f2c4896a229@huaweicloud.com>
+Date: Fri, 12 Jun 2026 09:54:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4JMnkCgquB9Nr46WDBN4XnhvakZ0otAECxhXSVXbCAY_1781210956
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] rethook: Remove the running task check in
+ rethook_find_ret_addr()
+To: XIAO WU <xiaowu.417@qq.com>, sashiko-reviews@lists.linux.dev,
+ Masami Hiramatsu <mhiramat@kernel.org>, Petr Mladek <pmladek@suse.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org
+References: <20260610013658.1837963-1-wutengda@huaweicloud.com>
+ <20260610015032.4BFAA1F00893@smtp.kernel.org>
+ <tencent_3D17DC5BE32C8A51D938AF50F221321F6206@qq.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <tencent_3D17DC5BE32C8A51D938AF50F221321F6206@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgAHy4DtZitqxOPwBQ--.20143S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3JF1UWw48ArWxGr45CrWfZrb_yoWDJrWrpF
+	Z7trZ0yF95Aryvyr1DJr1UZFyrJrsYqw4UGr1kGFyUAa1UAr1jqrWSqr4Y9F45Cr4kGr15
+	GF4jqr9rursrAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Thu, 2026-06-11 at 12:30 +0200, Valentin Schneider wrote:
-> On 11/06/26 10:59, Tomas Glozar wrote:
-> > [just replying to comments, will do a full review later]
-> >=20
-> > st 10. 6. 2026 v 21:51 odes=C3=ADlatel Crystal Wood <crwood@redhat.com>=
- napsal:
-> > >=20
-> > > On Wed, 2026-06-10 at 15:04 +0200, Valentin Schneider wrote:
-> > > > Osnoise already implictly accounts IPIs via its IRQ tracking,
-> > >=20
-> > > Does it?  It seems that IPIs bypass the kernel/irq subsystem on some
-> > > arches (including x86, but not ARM).
-> > >=20
-> > > It would be nice to solve this properly by adding generic ipi
-> > > entry/exit tracing (similar to what ARM already has).
-> > >=20
-> >=20
-> > Isn't that precisely what the ipi tracepoints used by this
-> > implementation (ipi:ipi_send_cpu) are for?
-> >=20
->=20
-> Well, these catch the emission of the IPI, which is great for investigati=
-on
-> - slap a stacktrace trigger and you (most of the time) get the source of
-> your interference.
->=20
-> However Crystal's point is that on x86 (and I assume other archs) receivi=
-ng
-> & handling these IPIs is "special" and doesn't go through the generic irq
-> subsystem and thus has to be tracked separately, which is why osnoise has
-> this fairly lengthy osnoise_arch_register() thing.
+Hi Xiao,
 
-Oh, I missed the arch hook.  I feel better now :-)
+Thank you very much for your detailed analysis and verification.
 
-(I'd feel better if it didn't rely on osnoise-specific arch code being
-updated to match if some new interrupt path pops up, but oh well.)
+On 2026/6/11 23:53, XIAO WU wrote:
+> Hi Tengda,
+> 
+> Sashiko [1] reviewed this patch and found that removing the
+> task_is_running() check exposes stack unwinders to real crashes — not
+> just "invalid information."  A PoC confirms this: a KASAN panic triggers
+> within seconds when /proc/<pid>/stack reads the stack of a task that is
+> concurrently running a kretprobe.
+> 
+> [1] https://sashiko.dev/#/patchset/20260610013658.1837963-1-wutengda%40huaweicloud.com
+> 
+>> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+>> index 5a8bdf88999a..1e7fdebe3cd5 100644
+>> --- a/kernel/trace/rethook.c
+>> +++ b/kernel/trace/rethook.c
+>> @@ -250,9 +251,6 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
+>>      if (WARN_ON_ONCE(!cur))
+>>          return 0;
+>>
+>> -    if (tsk != current && task_is_running(tsk))
+>> -        return 0;
+>> -
+>>      do {
+>>          ret = __rethook_find_ret_addr(tsk, cur);
+>>          if (!ret)
+> 
+> The commit message states:
+> 
+>> The iteration is already safe from crashes because
+>> unwind_next_frame() holds RCU and rethook_node structures are
+>> RCU-freed; even if the iteration goes off the rails and returns
+>> invalid information, it will not crash.
+> 
+> There are two problems with this claim, both reproducible.
+> 
+> **Problem 1: stack-out-of-bounds in unwind_next_frame itself**
+> 
+> The PoC below reliably triggers the following KASAN panic — not in the
+> rethook list traversal, but inside unwind_next_frame():
+> 
+> [ 1833.494623] BUG: KASAN: stack-out-of-bounds in unwind_next_frame+0x861/0x2080
+> [ 1833.494651] Read of size 2 at addr ffffc90003e6f5f0 by task poc/9854
+> [ 1833.494707] Call Trace:
+> [ 1833.494719]  dump_stack_lvl+0x116/0x1f0
+> [ 1833.494743]  print_report+0xf4/0x600
+> [ 1833.494788]  kasan_report+0xe0/0x110
+> [ 1833.494836]  unwind_next_frame+0x861/0x2080
+> [ 1833.494948]  arch_stack_walk+0x99/0x100
+> [ 1833.495000]  stack_trace_save_tsk+0x16a/0x200
+> [ 1833.495054]  proc_pid_stack+0x173/0x2b0
+> [ 1833.495103]  seq_read_iter+0x519/0x12d0
+> [ 1833.495166]  seq_read+0x3b7/0x590
+> [ 1833.495297]  vfs_read+0x1f5/0xd20
+> [ 1833.495497]  ksys_read+0x135/0x250
+> [ 1833.495549]  do_syscall_64+0x129/0x850
+> [ 1833.495566]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> [ 1833.498894] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+> 
+> page last free pid 9737 tgid 9737 stack trace:
+>  do_sys_openat2+0xbf/0x260          <-- target task inside kretprobe
+>  __x64_sys_openat+0x179/0x210
+> 
+> This crash has nothing to do with rethook_node lifetimes or RCU.  It
+> happens because the ORC unwinder reads stack memory while the target
+> task concurrently executes a kretprobe trampoline that modifies return
+> addresses.  The unwinder follows corrupted frame data past valid stack
+> boundaries.  RCU protection of rethook_node structures is irrelevant —
+> this crash occurs at the stack frame interpretation level, before any
+> rethook list traversal.
+> 
+> The old task_is_running() check prevented the unwinder from attempting
+> to unwind a running task's stack in the first place.
+> 
 
+Yes, I was able to reproduce the issue locally using your PoC. The problem
+does exist as you described. I need to take a deeper look and figure out how
+to properly fix it.
 
-> >=20
-> > > > Alternatively I can have this be purely supported in userspace osno=
-ise by
-> > > > hooking into the IPI events and counting IPIs separately from the o=
-snoise
-> > > > events.
-> > >=20
-> > > One benefit I could see of doing this in kernel osnoise would be if y=
-ou
-> > > could atomically correlate the count with the particular noise
-> > > interval, but this patch doesn't do that.
-> > >=20
-> >=20
-> > The count is already reported by cycle on the kernel side in the
-> > patchset, right? It's only missing in the current RTLA (userspace)
-> > part, as there is no statistic using the information. But it can still
-> > be collected through custom histogram triggers.
+> **Problem 2: use-after-free via rethook_node recycling**
+> 
+> Even if the stack-out-of-bounds above were addressed, a second crash
+> path exists in the rethook list traversal itself.
+> 
+> rethook_recycle() immediately pushes nodes back to the objpool without
+> an RCU grace period:
+> 
+>   kernel/trace/rethook.c:
+>   void rethook_recycle(struct rethook_node *node)
+>   {
+>           ...
+>           objpool_push(node, &node->rethook->pool);
+>   }
+> 
+> Meanwhile, unwind_next_frame() in arch/x86/kernel/unwind_orc.c drops
+> RCU between frames while the cursor (*cur) persists across iterations:
+> 
+>   arch/x86/kernel/unwind_orc.c:
+>   bool unwind_next_frame(...)
+>   {
+>           ...
+>           guard(rcu)();    // RCU held for one frame
+>           ...
+>   }                        // RCU dropped here
+> 
+> When the unwinder calls __rethook_find_ret_addr() in the next frame
+> iteration, it does:
+> 
+>   struct llist_node *first = tsk->rethooks.first;
+>   ...
+>   *cur = first;
+>   ...
+>   node = node->next;       // node may have been recycled
+> 
+> If the target task returns from a probed function between frames, its
+> rethook_node is recycled and can be instantly reallocated to another
+> task.  The unwinder's stale cursor then dereferences a freed pointer,
+> leading to use-after-free.
+> 
 
-Not sure I follow... this patchset reports a count of IPIs, not cycle
-info, but the count is based on when the IPIs were sent, not received.=20
-The IPI send events capture cycle info, but that's not what this
-patchset adds.
+Yes, Sashiko also pointed this out. You have opened this issue for further
+analysis to clarify its fault model. It appears to be a pre-existing issue
+that may require a separate patch to resolve.
 
-I'm not sure that it really matters though.  I had been thinking of this
-more like the interference count, which is atomic with respect to a
-single noise (and thus the sender of the noise would be outside that
-window).  But this count is reported over the entire osnoise sample
-period, so a little slop is probably OK.
+> ## Reproducer
+> 
+> The PoC sets up a kretprobe on do_sys_openat2, creates hot-loop threads
+> calling open(), and concurrently reads /proc/<tid>/stack.  The race
+> triggers within seconds (Problem 1 above; Problem 2 may reproduce on
+> kernels without KASAN or with different timing).
+> 
+> Build:  gcc -static -pthread -o poc poc.c
+> Run:    ./poc [runtime_seconds]
+> Needs:  root, CONFIG_KASAN=y
+> 
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <unistd.h>
+> #include <sys/types.h>
+> #include <sys/stat.h>
+> #include <sys/wait.h>
+> #include <sys/syscall.h>
+> #include <sched.h>
+> #include <fcntl.h>
+> #include <errno.h>
+> #include <signal.h>
+> #include <pthread.h>
+> #include <dirent.h>
+> 
+> #define TRACE "/sys/kernel/tracing"
+> 
+> volatile int stop = 0;
+> 
+> static int tfs(const char *f, const char *b)
+> {
+>     char p[256]; int fd, r;
+>     snprintf(p, 256, "%s/%s", TRACE, f);
+>     fd = open(p, O_WRONLY | O_TRUNC);
+>     if (fd < 0) {
+>         system("mount -t tracefs tracefs /sys/kernel/tracing 2>/dev/null");
+>         usleep(50000);
+>         fd = open(p, O_WRONLY | O_TRUNC);
+>     }
+>     if (fd < 0) return -1;
+>     r = write(fd, b, strlen(b));
+>     close(fd);
+>     return r < 0 ? -1 : 0;
+> }
+> 
+> void *hot_thread(void *arg)
+> {
+>     while (!__atomic_load_n(&stop, __ATOMIC_RELAXED)) {
+>         int fd = open("/dev/null", O_RDONLY);
+>         if (fd >= 0) close(fd);
+>     }
+>     return NULL;
+> }
+> 
+> void *reader_thread(void *arg)
+> {
+>     pid_t target = *(pid_t *)arg;
+>     char path[64], buf[8192];
+>     snprintf(path, 64, "/proc/%d/stack", target);
+>     while (!__atomic_load_n(&stop, __ATOMIC_RELAXED)) {
+>         int fd = open(path, O_RDONLY);
+>         if (fd >= 0) { read(fd, buf, 8191); close(fd); }
+>     }
+>     return NULL;
+> }
+> 
+> void sigh(int s) { stop = 1; }
+> 
+> int main(int argc, char *argv[])
+> {
+>     int runtime = 120;
+>     if (argc > 1) runtime = atoi(argv[1]);
+> 
+>     printf("rethook race PoC\n");
+>     if (geteuid()) { printf("root needed\n"); return 1; }
+>     signal(SIGINT, sigh);
+> 
+>     pthread_t hot[4], rdr[4];
+>     pid_t hot_tids[4];
+>     int pairs = 4;
+> 
+>     for (int c = 0; c < runtime / 5 && !stop; c++) {
+>         tfs("events/kprobes/myretprobe/enable", "0");
+>         tfs("kprobe_events", "-:myretprobe");
+>         usleep(100);
+>         tfs("kprobe_events", "r:myretprobe do_sys_openat2 $retval");
+>         tfs("events/kprobes/myretprobe/enable", "1");
+> 
+>         pid_t main_tid = syscall(SYS_gettid);
+> 
+>         for (int i = 0; i < pairs; i++)
+>             pthread_create(&hot[i], NULL, hot_thread, NULL);
+> 
+>         usleep(300000);
+> 
+>         {
+>             DIR *d = opendir("/proc/self/task");
+>             int cnt = 0;
+>             if (d) {
+>                 struct dirent *de;
+>                 while ((de = readdir(d)) != NULL && cnt < pairs) {
+>                     pid_t t = atoi(de->d_name);
+>                     if (t > 0 && t != main_tid)
+>                         hot_tids[cnt++] = t;
+>                 }
+>                 closedir(d);
+>             }
+>             for (int i = 0; i < cnt; i++)
+>                 pthread_create(&rdr[i], NULL, reader_thread, &hot_tids[i]);
+>         }
+> 
+>         printf("round %d\n", c);
+>         sleep(5);
+> 
+>         stop = 1;
+>         usleep(100000);
+> 
+>         for (int i = 0; i < pairs; i++) pthread_join(hot[i], NULL);
+>         for (int i = 0; i < pairs; i++) pthread_join(rdr[i], NULL);
+> 
+>         stop = 0;
+>         usleep(1000);
+>     }
+> 
+>     tfs("events/kprobes/myretprobe/enable", "0");
+>     tfs("kprobe_events", "-:myretprobe");
+>     printf("Done\n");
+>     return 0;
+> }
+> 
+> ## Summary
+> 
+> The v4 commit message claims the iteration "will not crash," but the PoC
+> demonstrates a reproducible KASAN panic:
+> 
+> 1. stack-out-of-bounds in unwind_next_frame (ORC unwinder reads
+>    concurrently-modified stack frames of a running task)
+> 
+> 2. Potential use-after-free in __rethook_find_ret_addr (rethook nodes
+>    recycled without RCU grace period, cursor persists across RCU drops)
+> 
+> The old task_is_running() check was racy but served as a practical
+> safety net.  Removing it without adding equivalent protection in the
+> callers (proc_pid_stack, BPF stack walkers) exposes users to kernel
+> panics via /proc/<pid>/stack on any task running a kretprobe.
 
--Crystal
+Once again, I truly appreciate your thorough review and testing.
+I'm not sure if I can fully resolve these issues, but if I succeed, I will
+send out a v5.
 
->=20
+Best regards,
+Tengda
 
