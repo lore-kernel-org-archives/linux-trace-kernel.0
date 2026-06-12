@@ -1,136 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7962C375A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 14:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7EE331EBF;
+	Fri, 12 Jun 2026 14:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781273962; cv=none; b=U7Aw9jRA7BZRnET5pHt9CE/bawjYI933Byx91lauxy4au5mH/sHiJyWBtrXxAQ3sikWoWvToSa3TqavUQcj5mLBmESr+XWs7NjX0m1ivzPOTfml2Nx2LvbQsPtQmATVGF/9umclDPsXelfrSprFxvDJRVG0K4cUw+7dQy2Psr88=
+	t=1781275459; cv=none; b=JWXpAV4Eeef2nZIZDPu34U7dzvAN2qpM9Xb2P6OSlRw/Dndp33AjBb+Skkcnh2f7lQQTPLZxEcWqzxhaYtDtl/Gegc6JSClWI5weLUxWP80UbjlL/mgQr32GXJKQodB67BSl1XUGMhsaTN8cIHTX0aFj02Djjnmha00RlUfpEAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781273962; c=relaxed/simple;
-	bh=N11KqFqqpa8pIXLi3ZH1nreVT0ImrnKzchs5LUB++qQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qJsofIB9AgxyjeESgNeCmyqKBJTPat3DOxMKyeeqmScAQDI9H3qSpu06E1Flm7FpRwyWwK0zFkL3759FS2KAaCJsMBPBbgwsNY8GHHP3c3r8j0ujvuQ3neYFwC0SPy2rr7GvsDVPlL0hrKX5NyqRh6WIDdjQ0kpieJRu3ajNPjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LJd0peg4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1781275459; c=relaxed/simple;
+	bh=dxFtqWQ70XB/DaGOcbVC90PMg8yesbWzoM+TwcPqJdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JRIuAVhC5uhMJo+LVJQgq7nhrUDF+ViJCjNr/AyUyMtLI76+XJ0M1+FHHDEpn4EBEqsx9oecygBMHQ0avZYVHDhWzV253Oj1Bb56ntARKOOgi8polxKCLa2lp6/xR8N+V9R91zfpq7hcg1FHT/LBG4bep01CImf4Yfho7ZIJkjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3Xlhxzd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJd0peg4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781273960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4t96VqnC3BD1F7T/58snKnEK4qwB+Yq2QQw8u6ZVkoo=;
-	b=LJd0peg4GOj3/W2E68lBEKi5iwVVFqJ8C/HO3oG0lGnjBg2Rn0++u3T8nXCmnvxnLNpda/
-	pDttPwXe9nniWjqDxLUGEQAEPCGC0lkHvbbRMwddqJWGpp3M7sd6XSgivAy7YOqVx3uTbG
-	3uPToDDM24FDWwpekKPCZbWO0op3r+8=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-523-6ZOMhihTNM63B0sTlK9wZg-1; Fri, 12 Jun 2026 10:19:19 -0400
-X-MC-Unique: 6ZOMhihTNM63B0sTlK9wZg-1
-X-Mimecast-MFC-AGG-ID: 6ZOMhihTNM63B0sTlK9wZg_1781273958
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-691a67a7b58so824710a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 07:19:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781273958; x=1781878758;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4t96VqnC3BD1F7T/58snKnEK4qwB+Yq2QQw8u6ZVkoo=;
-        b=HIPbhQForwujIIVlgDn6oy4vewUhxcxmyfnjPboyIj2wZQsa3cZOYNFs4CIVaDpq7H
-         epdU5cUQJ8JOqbENOgBpuq0enp4mFQdwm/hoBZbmzMJNwtwrDfWlsMiKnF0SMKBWtnUh
-         0O378MRUkoqozxC82HgqWn1i+qNXZms1RhQmDvLfYNc/TzjfKk7gBy/a7QUlvYWQrjtl
-         QfebZOXn4he2BzvIVjGvhxo/5VlIHgKlDRpEDVXXi+JOgJz921+rmcUodq/XcG6BYfB/
-         NsnlpTuEpIrYTSsRed6LAOQkTlccA0beE6Y82ib7mujTrsCJn7B8pQFYai3FuMR9k36j
-         pkhQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/BV1hhyomVIjj9NCIiv5QXWL6mIEpvEGwOUswe4GC0VIt7ywgBcq/Lerm815PJc6H9Rm/dRFPPcv7gL2CEiTrfpOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3ZC8WWEfiOOIbP/G74Gfy4HFl1KeVRrwYofKDhGR3V88FrrBg
-	pybu7N++6Dn4cz4oDpLaY5nRdb3QqiN2rMT9JRIgrvpk+vVvpvaR6g8RTWPB+j5OhGjbTDxCobs
-	alNzUulNUty0soxb+He86+FYj2WkGysegIJY+M4WUSTpEynfw0alWyxuPwfxib8kwi4gXbpdv53
-	a0RVR/fVhrblmeJJwPUwbuNd2Hom1VHS4Ldy1/i3FpOAuBAxTddit4mtFKTyc=
-X-Gm-Gg: Acq92OFDyMziL1uMKcfjgNIsRSTKupanyDdjDgseEqQkHizTCrb/nK/P+Pfjssh0/l1
-	KdKvKjt2WkSm5ctBjGueDAkq2hzgtI+5DaPFnO4MqkGVIw6oROxzMF8A4Ug1e2jx3xPsHRAOg1M
-	ZYLcW8QZNBUaJ13RzZEw5qlkzTUbcDyZeDgdLyaagqFnnwLmifL9jMjUewuBhmhBFh0pLcf8tpX
-	Ln2gK11A5JlGPpcBIG4t/hW7wePw3ZJVTjA
-X-Received: by 2002:a17:907:a02:b0:bf1:118b:d5e2 with SMTP id a640c23a62f3a-bfe2b7dcb1cmr157759066b.46.1781273957613;
-        Fri, 12 Jun 2026 07:19:17 -0700 (PDT)
-X-Received: by 2002:a17:907:a02:b0:bf1:118b:d5e2 with SMTP id
- a640c23a62f3a-bfe2b7dcb1cmr157757266b.46.1781273957099; Fri, 12 Jun 2026
- 07:19:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3Xlhxzd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE041F00A3A;
+	Fri, 12 Jun 2026 14:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781275458;
+	bh=n9aTJjJwU1L9XEBdVRGWsY/1ImnvN4E/KMlZX2tVWDg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=E3Xlhxzd+m3y5iDwefNy32rmo7fIhHyKTP4J+ETI+4nN5UWbMN9N8KoDF3xr3hoJ/
+	 r99CC64PSLdS7N4IVizA5Gaom73abuvDqkM5GzT3e4uK1ImKx5Cz07EOMuWLcBsnyg
+	 am7YwIZO4+cLhii4drTRF6JmPt8TQwgMXj2wCp3CAjleMMh6UQ0hgnNIQaQ8DPrPbZ
+	 7OxwrRP/c83qNQEXs28AO74N2kOVhmk2wPnLITfKtYVMbMjjbBoWnx9mFCVxsOrMCh
+	 yf70RRBgKb7PPh1vI9icfaouNq87BxuVK+jnf3gOO5xxuZselitvQc4jXWgZGyVZ00
+	 SeXPRAG+hfPBA==
+Date: Fri, 12 Jun 2026 10:44:15 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+Cc: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "Jiri Olsa"
+ <jolsa@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
+ Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
+ "bpf" <bpf@vger.kernel.org>, "linux-trace-kernel"
+ <linux-trace-kernel@vger.kernel.org>, "Martin KaFai Lau" <kafai@fb.com>,
+ "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <songliubraving@fb.com>,
+ "Yonghong Song" <yhs@fb.com>, "Menglong Dong" <menglong8.dong@gmail.com>
+Subject: Re: [PATCHv7 bpf-next 03/29] ftrace: Add add_ftrace_hash_entry
+ function
+Message-ID: <20260612104415.0becd517@robin>
+In-Reply-To: <DJ6EGJ8S87HP.2WOTGYK374XKI@gmail.com>
+References: <20260603110554.29590-1-jolsa@kernel.org>
+ <20260603110554.29590-4-jolsa@kernel.org>
+ <20260609102922.3c489f76@fedora>
+ <DJ4LJUWPD2BF.1TY4Z3WY2V0H5@gmail.com>
+ <20260610113536.77172ad1@robin>
+ <CAADnVQ+RhRiUp8FeptdVKZimGd-Wv8C+NbW5U4hh+7Hi5abQxw@mail.gmail.com>
+ <20260611094648.04622890@gandalf.local.home>
+ <DJ6EGJ8S87HP.2WOTGYK374XKI@gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260529130643.3080315-1-tglozar@redhat.com>
-In-Reply-To: <20260529130643.3080315-1-tglozar@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 12 Jun 2026 16:19:04 +0200
-X-Gm-Features: AVVi8CfdOUhxTccYgdH0PccD08b_P2nlHLghOP58n65mnSN_tBSEBVopOcbmemM
-Message-ID: <CAP4=nvS9MQMeXTnN_hsH7gTDUnV1yeMqyQ=hak5fbZvVQR3jCA@mail.gmail.com>
-Subject: Re: [GIT PULL] RTLA changes for 7.2
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: oGad-xER4tMDP_Hm4KzOgAmbSTk0IzlGxZ-dE6-feIw_1781273958
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-p=C3=A1 29. 5. 2026 v 15:16 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.co=
-m> napsal:
->
-> ----------------------------------------------------------------
-> Costa Shulyupin (1):
->       tools/rtla: Fix --dump-tasks usage in timerlat
->
-> Crystal Wood (1):
->       rtla: Stop the record trace on interrupt
->
-> Tomas Glozar (24):
->       rtla/tests: Cover both top and hist tools where possible
->       rtla/tests: Add get_workload_pids() helper
->       rtla/tests: Check -c/--cpus thread affinity
->       rtla/tests: Use negative match when testing --aa-only
->       rtla/tests: Extend timerlat top --aa-only coverage
->       rtla/tests: Cover all hist options in runtime tests
->       rtla/tests: Add runtime test for -H/--house-keeping
->       rtla/tests: Add runtime test for -k and -u options
->       rtla/tests: Add runtime tests for -C/--cgroup
->       rtla/tests: Add unit tests for actions module
->       rtla/actions: Restore continue flag in actions_perform()
->       rtla/tests: Add unit test for restoring continue flag
->       rtla/tests: Run runtime tests in temporary directory
->       rtla/tests: Add runtime tests for restoring continue flag
->       rtla: Add libsubcmd dependency
->       tools subcmd: support optarg as separate argument
->       tools subcmd: allow parsing distinct --opt and --no-opt
->       rtla: Parse cmdline using libsubcmd
+On Thu, 11 Jun 2026 10:35:11 -0700
+"Alexei Starovoitov" <alexei.starovoitov@gmail.com> wrote:
 
-This will create a conflict with a fix in master/7.1 [1] as it removes
-the code that is fixed by the patch, as reported in linux-next already
-[2]. The resolution is trivial (just remove the new, fixed code, as it
-is entirely replaced by a new implementation that doesn't have the
-bug) but a small note in the final pull request might be useful, so
-that it's clear we know about it.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3De9e41d3035032ed6053d8bad7b7077e1cb3a6540
-[2] https://lore.kernel.org/linux-next/aimDwlNq_RRLjg6X@sirena.co.uk/T/#u
+> AI finds things to consider, but when they're considered and postponned
+> to future it doesn't understand that and keep reporting the same thing
+> every revision. So it might look like that patches are landing with
+> outstanding AI complains, but this is not the case.
 
->       rtla/tests: Add unit tests for _parse_args() functions
->       rtla/tests: Add unit tests for CLI option callbacks
->       rtla/timerlat: Add -A/--aligned CLI option
->       rtla/tests: Add unit tests for -A/--aligned option
->       Documentation/rtla: Add -A/--aligned option
->       rtla: Document tests in README
->
+Well, if someone just asked me to give an ack then I would have. But I
+have other things to work on. Especially since everything I do at the
+moment is 100% hobby related. The chores my wife gives me now have
+priority ;-)
 
-Tomas
+I'll start a new job come Monday.
 
+> 
+> btw since patches touch ftrace from time to time should we add your
+> ftrace testsuite to bpf CI ?
+
+That's actually a good idea.
+
+> How automated is it?
+
+Very. In fact it's public. Although it's been a few years since I
+updated the git repos.
+
+I have two qemu images (currently private, but I can update them and
+share). Where one is a 32bit x86 image and the other is a 64bit image.
+
+The 64bit image hostname is called tracetest and the 32bit image's
+hostname is tracetest-32. Both with root password of test0000.
+
+The tests loaded on the image is here:
+
+  https://github.com/rostedt/ftrace-tests
+
+And the ktests I run are here:
+
+  https://github.com/rostedt/ftrace-ktests
+
+I would run the ktest like;
+
+  ktest.pl -DPATCH_CHECKOUT:=<SHA/BRANCH> -DPATCH_START:=<first-commit> tracetest-64.conf
+
+And in another window
+
+  ktest.pl -DPATCH_CHECKOUT:=<SHA/BRANCH> -DPATCH_START:=<first-commit> tracetest-32.conf
+
+For example:
+
+  ktest.pl -DPATCH_CHECKOUT:=trace/ftrace/core -DPATCH_START:=b5d6d3f73d0bac4a7e3a061372f6da166fc6ee5c tracetest-64.conf
+
+And that will run 40 tests (I added some more since my last push, so
+github doesn't have 40) and build, boot, install, test on the qemu
+64bit image. It starts out testing commits from
+b5d6d3f73d0bac4a7e3a061372f6da166fc6ee5c and going through to
+trace/ftrace/core. Note, the PATCH_START needs to be in the history of
+the PATCH_CHECKOUT otherwise the test will fail.
+
+If you want to run these, let me know and I can help with the setup.
+It's what I gave Masami to test as well.
+
+> 
+> >  
+> >> 
+> >> While at it, please review Mykyta's set:
+> >> https://patchwork.kernel.org/user/todo/netdevbpf/?series=1096695
+> >> 
+> >> It's also been pending for almost a month now.  
+> >
+> > Have a better link? I just get a blank page as "TODO" is set to what I have.  
+> 
+> Ohh. I meant this set:
+> https://lore.kernel.org/bpf/CAEf4BzZFjsEv3aLktwdCZF6EXoCL+eefX+6xa3XGrhBmfO1SqA@mail.gmail.com/
+> where you said that you'll think more about it after pto.
+
+I came back on Tuesday and have yet to catch up on all the email I
+ignored while away :-p
+
+> Would be great to land it now for this merge window, so we have
+> discoverability right now and if better approach comes in the future
+> we can adjust to it later.
+>  
+
+I'll take a look at it.
+
+-- Steve
