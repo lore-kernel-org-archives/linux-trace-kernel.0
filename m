@@ -1,201 +1,300 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CF43112B2
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 13 Jun 2026 04:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79123451AF
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 13 Jun 2026 16:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781324340; cv=none; b=qf2iQT56P8B8WBpZiZj6JK3z8pUdVWMlxqx+2qCT3uj1gzp+fB9hYeS2xZsX8XhBYBwlFlQAL49/cAkydKQbbeSyfdoYiaDvpUNiUxaNRpBkIfuen04O1K7NcZHJE3C1TTvb67N23A7ipj8Z9SYc6Kae9yA4sCFY5LKP8kOa9Qo=
+	t=1781366447; cv=none; b=d55KqGpNYDmMzDK0LURyDyfI72kyHPTGcdBAFlfThXRA9TRQkHwjMt+RFXRBOXBTPeQne3YMM45XywS7T0KDHDQl47GYjXlMMhCPDB7q3lN4jqxsGycwCAoI8WoKksAcnk3FdXCY5iXOmIid0MaePTqrgIQY/d7oPzSCvrx3ffg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781324340; c=relaxed/simple;
-	bh=94pmSxxXwigo8rQnUo4y837fT0gsI4xXDFVI8LixR9Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rH+XcCo6bHaFzEKFL+Xkx66eQ4lrNpRmxV4ysuDefKlnYDiNSHQrVnE50Q0Eh4MJMx/eBSx0xJFt5qW28ojzn2RxtyfUX6kuVjNxgIUnW47qT0jQSF1co2u50yJ9k3GD+OrCHhIU/NxyTEUGC+C9++PreJ27YAadZu4MS/kfJnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aa68d9d56fso2121730e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 21:18:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781324338; x=1781929138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=QNBpFZSlT9IipEukCIMaVMW5t0ZIvjSC1UXquBgnP14=;
-        b=kO/PYxsB8/Hkg5vfKRBaOCFWO1FHdCLkDE4hr0nf7OomA9sjkBDumogLaa85D0k0RD
-         wu07B3tDgca2nLPOqpdtKrEQi5CbisX8p5w5id40Yy1YBrxLYwfCEQv+Pu0wbcRQM/rM
-         Qn+iGpiq75SRd7syqEim7UgsucvNMV0klgCLnslzqA37m6eeuJdbveUV9Rl6tRZWQ/iw
-         6V8JqDuqCQTIqKQ41+lXnXrSStY7vSIinbRX5FAn08HTmMLJl13Qw4rkIJCigNTF2tEf
-         S7o9bV+6KPOtlHq8Oi8IfGxIe/RFk4w9wAYJK4sGwPi/+Eu32fui9UAwH/hixyGY63wi
-         szPg==
-X-Forwarded-Encrypted: i=1; AFNElJ/Dxi7LabNLursRgQfzlbw3vqcFL2mHQKzgrX7c3n4wnYRWBUQIjwNylo6zQxNT1GXlF+xNbdTogN17u5wmGZbABSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt+qQJiZEng9cvn0SWG7IpBzrlIk0ZeIdw2HKSP6rcBqAuDXGo
-	IsNpWWiUCFEwgezQ/02DJFJREqp8mnSJganjbqlCTmK4oxlFiYQ2kELrlh3n15jh7AU=
-X-Gm-Gg: Acq92OFFSzLhr1wnRh9C1PDwwRL5KWdZbk1StEMk6dS4L+L8MqxDiwVmk5UIV8RiG0Z
-	g8t9Yckv5CKf+pgIPVrhjJR7I9A9JzkB2pp7sCI/2zQdydqBuzLDGN8i0AeSpX7yMIx2xHx1HiE
-	ZcRTiy8hqa6E1NURNKIObLx6Bu831LAchb5GVYV3vciGm8H0tPJMSF4O8ROtsPCmyKB7nfSU1KU
-	IaKV8/iAL1BvLLYpatEZJ5tcw0Hqi2JWsKmjCwgYUeMZa9SluXLcx/gxIjbWBxoJAhNQKc3pXkF
-	eIYpNEyURsA6HxoXOy/F71nMTNYQbq4QO0NlywEawpQir0X3HOogKqJ0WLUmhh1NGR4cNsRWMfR
-	URPmMDpGhI5oi+XvvB3/HECRJDDaLAqUhnADEtdgaHTMoKsHZhzEjABI/BjPBCymCADItLIA1so
-	8TAhDOiTVz8DicrBFtRhDZRuVx0wRc42/MXOv7PIbS0FomOA0Rd6VwDrLEYqizQ4+75I+nE2vfm
-	NNv42KrNA==
-X-Received: by 2002:ac2:47f1:0:b0:5aa:780b:f341 with SMTP id 2adb3069b0e04-5ad2db77eb3mr1049585e87.35.1781324337462;
-        Fri, 12 Jun 2026 21:18:57 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ad2e1a729fsm992196e87.54.2026.06.12.21.18.56
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2026 21:18:56 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aa7a70c0aaso1490787e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 21:18:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+/s5FeLVz5annZrN4XABLENwjhu1Wpl3QWFnA3FerRPDvS67+XSKPliI71b2M45Lf4nBTq47HzaFJ1TxfzilZbwI8=@vger.kernel.org
-X-Received: by 2002:a05:6512:12c8:b0:5a3:6731:910a with SMTP id
- 2adb3069b0e04-5ad2db379a4mr1715631e87.11.1781324336334; Fri, 12 Jun 2026
- 21:18:56 -0700 (PDT)
+	s=arc-20240116; t=1781366447; c=relaxed/simple;
+	bh=5FNJmpW2/AsXYNvioCn8eel8vUKDYaJ5NLx6HVGmxo4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rio41LwMqu6qTJWL7K5jduC1GEQ/mu5AmV1uJtz9Yz6bsfLa0iPPKFVj2Iy8PitErfiL12OUuodkGeFUtEG4aPU8iq/L9wMgxD7JnIImcqkNX4Tt0jLr29YTMnK4S/PKy0pPI6Esq0QC8Y91wtog1xnZXpDL1FfvvwzGFW1AIbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IXQey3fP; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IXQey3fP"
+Message-ID: <8eb290fe-38b0-4a68-9163-d168220b4642@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781366443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6MXPvCXMxTAsg8WCftslnXsHEAGyyTyjo0yccg3bNuI=;
+	b=IXQey3fPC8hv1Dj9E/Avak9UZ9Set/kiLgSCDhO1zh3jMDxoBv3ft7UBf7I9UhiEgUYpMi
+	SYB6UxjnEv+b+WXg5b3ienUVS9q8KMxptnShSS1BbfxdcQf5HkWuvqe4e2I2eUGmGGVZQb
+	/1RV0yz+w7FYjNtrG1eZKWJID1TvfSk=
+Date: Sun, 14 Jun 2026 00:00:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260528151626.4573592d@gandalf.local.home> <aipWtXVRqNmZY4gr@archer>
- <20260611072249.2222fd9d@gandalf.local.home>
-In-Reply-To: <20260611072249.2222fd9d@gandalf.local.home>
-From: Fangrui Song <i@maskray.me>
-Date: Fri, 12 Jun 2026 21:18:56 -0700
-X-Gmail-Original-Message-ID: <CAN30aBFVDxeoXApn_g_Hw0Ayhi4V=m7CcX8UDO6ZDTi6xA-3Pg@mail.gmail.com>
-X-Gm-Features: AVVi8CeA-wfXRKwpwFaX1TpuI1S98nIWVMn-l0DOzuzXaavbqA8lya5xLsRWjsk
-Message-ID: <CAN30aBFVDxeoXApn_g_Hw0Ayhi4V=m7CcX8UDO6ZDTi6xA-3Pg@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v2] unwind: Add sframe_(un)register() system calls
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <ibhagatgnu@gmail.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
-	Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, 
-	Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 11, 2026 at 4:23=E2=80=AFAM Steven Rostedt <rostedt@kernel.org>=
- wrote:
->
-> On Thu, 11 Jun 2026 00:00:25 -0700
-> Fangrui Song <i@maskray.me> wrote:
->
-> > Hi Steven,
-> >
-> > This is not an objection to deferred userspace unwinding itself -- my
-> > concern is narrower: these syscalls permanently encode the kernel's
-> > commitment to the SFrame format family at exactly the moment the
-> > format's size trajectory is heading the wrong way, and while arguably
-> > superior formats exist.
-> >
-> > I raised related size concerns about SFrame's viability for userspace
-> > stack walking earlier:
-> > https://lore.kernel.org/all/3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5t=
-ounihe4@3ftafgryadsr/
-> > ("Concerns about SFrame viability for userspace stack walking")
-> >
-> > SFrame v3 is even larger than v2.
-> >
-> > For comparison: Microsoft is currently upstreaming its Windows x64
-> > Unwind V3 implementation to LLVM, which will make a side-by-side readin=
-g
-> > of the two formats straightforward. Unwind V3 provides correct
-> > exception-handling unwind -- full prologue replay, SEH handlers,
-> > funclets -- and supports Intel APX. SFrame v3 provides stack tracing
-> > only, no EH, yet comes out larger than .eh_frame. A format revision tha=
-t
-> > adds capability without adding bulk is demonstrably achievable; SFrame
-> > v3 went the other way.
->
-> My main concern is simplicity in implementation on the kernel side. One
-> thing we would like to avoid is any interpreter that becomes basically
-> executing user space code to perform the stack tracing (i.e. DWARF). I
-> haven't looked at the Windows x64 but will do so.
-
-I recognize interpreter complexity as a real and valid concern (though
-I believe the concern can be alleviated with a good use of LLM
-auditing).
-But the SFrame family's size problem is more pressing than it's being
-given credit for, because of a point that applies specifically to
-x86-64: SFrame cannot *replace* .eh_frame there, only add to it (to
-keep debugging and C++ exception handling working).
-
-.eh_frame+.eh_frame_hdr almost takes 9%; adding .sframe adds another 9% on =
-top.
-I don't think the perceived benefit on x86-64 justifies near-doubling
-the unwind metadata footprint.
+Subject: Re: [PATCH v3 0/9] rv/tlob: Add task latency over budget RV monitor
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1780847473.git.wen.yang@linux.dev>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Wen Yang <wen.yang@linux.dev>
+In-Reply-To: <cover.1780847473.git.wen.yang@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
 
-x86-64 experiments with x64 Unwind V3 for ELF:
+Hi Gabriele,
 
-                    unwind B     VM B      % of VM
-  sqlite3 -O0
-    .eh_frame(+hdr)   42,120   446,735      9.43%
-    Win64 v1          24,536   438,609      5.59%
-    Win64 v3          33,296   450,889      7.38%
-    SFrame v3         39,105   440,727      8.87%
+Gentle ping on this series. Please let me know if there are any
+concerns or if further changes are needed.
 
-  sqlite3 -O1
-    .eh_frame(+hdr)   44,424   479,348      9.27%
-    Win64 v1          15,496   450,724      3.44%
-    Win64 v3          21,816   458,916      4.75%
-    SFrame v3         44,756   477,776      9.37%
+Thanks for your time,
+Wen
 
-  CGExpr.cpp -O3
-    .eh_frame(+hdr)   27,040   372,416      7.26%
-    Win64 v1          10,720   356,080      3.01%
-    Win64 v3          15,320   360,185      4.25%
-    SFrame v3         27,628   370,912      7.45%
 
-> >
-> > I understand IBM is doubling down on SFrame for their s390x and ppc64,
->
-> That's because this is currently the only way s390 can perform stack
-> walking in user space.
-
-Hmm, I think that DWARF .eh_frame already works on s390x, but I take
-your word that .sframe might be appealing for some use cases.
-
-Perhaps s390x and x86-64 shouldn't be decided by the same vote.
-
-> > but I'm not convinced the size overhead of v3 will make it appealing on
-> > x86-64. I have learned that the person driving their SFrame work at
-> > Google had left and the SFrame at data center effort was being
-> > reevaluated per a toolchain manager.
-
-> I believe the person who left Google that was driving the SFrame work was
-> me ;-)
->
-> Thanks,
->
-> -- Steve
-
-Ha, I wasn't referring to you. I had a different toolchain engineer in mind=
-.
-But that was a secondhand aside and not the point I want to rest
-anything on, so I'll set it aside and stick to the bytes.
-
------
-
-Separately, on maturity and sequencing:
-
-On timing: the SFrame v3 binutils set was first posted 2025-12-09; the
-2.46 branch was cut 2026-01-17 and released 2026-02-08 with v3
-generation. That's a ~5-week window, and I'm not convinced there's
-been time for rigorous review of the v3 design; if flaws surface we're
-at a v4, and kernel adoption still wouldn't be a given.
+On 6/8/26 00:13, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+> 
+> This series introduces tlob (task latency over budget), a per-task
+> hybrid automaton RV monitor that measures elapsed wall-clock time across
+> a user-delimited code section and fires when the time exceeds a
+> configurable budget.
+> 
+> The series applies cleanly on top of:
+>    [1] git://git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv-fixes-7.1
+>        "rv fixes for v7.1"
+> 
+> Background
+> ----------
+> The existing wwnr monitor uses a two-state DA to detect tasks that are
+> woken but never run.  tlob extends the RV framework to a three-state
+> hybrid automaton:
+> 
+>    running  (initial) -- on CPU
+>    waiting             -- in the scheduler runqueue, not yet on CPU
+>    sleeping            -- blocked on a lock, I/O, or similar resource
+> 
+> A single HA clock invariant, clk_elapsed < BUDGET_NS(), is active in
+> all states.  The framework enforces it via a per-task hrtimer.  On
+> expiry, error_env_tlob is emitted, followed by detail_env_tlob which
+> carries a per-state time breakdown (running_ns, waiting_ns, sleeping_ns)
+> that pinpoints whether the overrun occurred in the running, waiting, or
+> sleeping state.
+> 
+> Userspace interface
+> -------------------
+> Tasks are registered for monitoring by writing to the tracefs monitor
+> file:
+> 
+>    # echo "p /path/to/binary:START_OFFSET STOP_OFFSET threshold=NS" \
+>          > /sys/kernel/tracing/rv/monitors/tlob/monitor
+> 
+> Two uprobes are registered at START_OFFSET (entry) and STOP_OFFSET
+> (exit) of the delimited section.  When a task executes the entry uprobe,
+> the monitor starts; when the task reaches the exit uprobe or the budget
+> expires, monitoring stops and the slot is returned to the pool.
+> 
+> Multiple uprobe pairs can be registered for the same binary or different
+> binaries.  Each task can have at most one active monitoring session; if
+> a task hits a start uprobe while already monitored, the prior session is
+> cancelled and a new one begins.
+> 
+> Series structure
+> ----------------
+> Patch 1: rv/da: introduce DA_MON_ALLOCATION_STRATEGY
+>    Consolidates per-object DA storage allocation under a compile-time
+>    selector with three strategies:
+>      DA_ALLOC_AUTO   (default) - lock-free kmalloc_nolock; unbounded
+>      DA_ALLOC_POOL             - pre-allocated fixed-size pool
+>      DA_ALLOC_MANUAL           - caller pre-inserts storage
+> 
+>    da_handle_start_event() and da_handle_start_run_event() call
+>    da_prepare_storage() which resolves at compile time to the correct
+>    allocation function.
+> 
+>    This patch also includes critical correctness fixes for the pool
+>    implementation:
+>    - Add tracepoint_synchronize_unregister() in da_monitor_destroy_pool()
+>      to fix UAF where in-flight handlers access freed pool storage
+>    - Fix duplicate hash entry race in da_create_or_get_pool() via
+>      concurrent-insert detection under RCU
+>    - Add capacity field to fix build error (DA_MON_POOL_SIZE undeclared
+>      in da_pool_return_cb)
+> 
+> Patch 2: rv: add generic uprobe infrastructure for RV monitors
+>    Introduces rv_uprobe, a thin wrapper around uprobe_consumer for RV
+>    monitors.  Provides rv_uprobe_register(), rv_uprobe_unregister(),
+>    and rv_uprobe_sync() for safe teardown.
+> 
+> Patch 3: rv/tlob: add tlob model DOT file
+>    The formal model used to generate tlob.h.
+> 
+> Patch 4: rv/ha: fix ha_invariant_passed_ns silent bypass of invariant check
+>    Fixes a bug where ha_invariant_passed_ns() returned 0 early when
+>    env_store was invalid (U64_MAX), leaving it at U64_MAX and causing
+>    ha_check_invariant_ns() to always pass.  The fix calls ha_reset_clk_ns()
+>    then ha_set_invariant_ns() on first use.
+> 
+> Patch 5: rv/ha: make da_monitor_reset_hook and EVENT_NONE_LBL overridable
+>    Allows tlob to override EVENT_NONE_LBL for its start_tlob self-loop.
+> 
+> Patch 6: rv/tlob: add tlob hybrid automaton monitor
+>    The main tlob implementation, including:
+>    - Three-state HA (running/waiting/sleeping)
+>    - Per-task hrtimer enforcement (HRTIMER_MODE_REL_HARD)
+>    - DA_ALLOC_POOL for allocation-free hot path
+>    - Uprobe registration via tracefs monitor file
+>    - Per-state time accumulation (running_ns, waiting_ns, sleeping_ns)
+>    - HIGH_RES_TIMERS dependency in Kconfig
+> 
+> Patches 7-9: Tests
+>    - KUnit tests for tlob monitor
+>    - Selftest infrastructure fixes
+>    - tlob selftests (uprobe binding, state tracking, violation detection)
+> 
+> Changes since v2
+> ----------------
+> All feedback from Gabriele Monaco has been addressed:
+> 
+> -- Patch 02 (per-task slot ordering / ha_monitor_reset_env):
+>     Dropped from v3; rebased on top of Gabriele's series [1].
+> 
+> -- Patch 03 (verificationtest-ktap):
+>     Changed to use realpath for robustness as suggested.
+> 
+> -- Patch 04 (pre-allocated storage pool):
+>     Complete redesign as DA_MON_ALLOCATION_STRATEGY:
+>     - Three strategies (AUTO/POOL/MANUAL) via compile-time macro
+>     - da_monitor_init_prealloc() removed; da_monitor_init() selects
+>       internally
+>     - da_create_or_get_kmalloc() removed (no viable use case)
+>     - nomiss updated to use DA_ALLOC_MANUAL
+>     - da_extra_cleanup() hook added for per-entry teardown
+> 
+>     Critical bug fixes included in this patch:
+>     - tracepoint_synchronize_unregister() added to da_monitor_destroy_pool()
+>       to prevent UAF from in-flight handlers accessing freed pool storage
+>     - Duplicate hash entry race fixed in da_create_or_get_pool() via
+>       concurrent-insert detection and slot return under RCU
+>     - capacity field added to fix DA_MON_POOL_SIZE undeclared build error
+> 
+> -- Patch 05 (generic uprobe infrastructure):
+>     Carried unchanged into v3.
+> 
+> -- Patch 06 (rvgen __init arrow reset):
+>     Carried unchanged into v3.
+> 
+> -- Patch 08 (tlob monitor):
+>     Split and refactored:
+>     - ioctl interface deferred to follow-up series (tracefs-only in v3)
+>     - Handler simplification: three inline helpers (tlob_acc_running/
+>       waiting/sleeping) with scoped_guard(rcu)
+>     - do_prev/do_next flags removed (da_handle_event skips unmonitored)
+>     - scoped_guard(rcu) and guard(mutex) applied throughout
+>     - tlob_stop_all() removed; da_extra_cleanup() hook used instead
+>     - start_tlob self-loop added to DOT model as suggested
+>     - ha_setup_invariants() guards against redundant timer restart
+>     - HIGH_RES_TIMERS dependency added to Kconfig
+> 
+> Additional improvements in v3
+> ------------------------------
+> Beyond the v2 feedback, this version includes:
+> 
+> 1. Simplified tlob monitor implementation:
+>     - Removed redundant tlob_num_monitored atomic counter
+>       (da_handle_event already handles unmonitored tasks via hash lookup)
+>     - Eliminated extra cacheline touch on every sched_switch/sched_wakeup
+>     - Several repeated pattern simplifications.
+> 
+> 2. Extracted common accumulation logic:
+>     - __tlob_acc() using offsetof() replaces three nearly-identical functions
+>     - Reduces code duplication while maintaining type safety
+> 
+> 3. Complete test coverage:
+>     - KUnit tests for core functionality
+>     - Comprehensive selftests for uprobe integration, state tracking,
+>       and violation detection
+> 
+> Testing
+> -------
+> All patches have been tested on:
+> - x86_64 with CONFIG_PREEMPT_RT
+> - All KUnit tests pass
+> - All selftests pass with verificationtest-ktap
+> 
+>    
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv-fixes-7.1
+>      "rv fixes for v7.1"
+> 
+> 
+> Wen Yang (9):
+>    rv/da: introduce DA_MON_ALLOCATION_STRATEGY
+>    rv: add generic uprobe infrastructure for RV monitors
+>    rv/tlob: add tlob model DOT file
+>    rv/ha: fix ha_invariant_passed_ns silent bypass of invariant check
+>    rv/ha: make da_monitor_reset_hook and EVENT_NONE_LBL overridable
+>    rv/tlob: add tlob hybrid automaton monitor
+>    rv/tlob: add KUnit tests for the tlob monitor
+>    selftests/verification: fix verificationtest-ktap for out-of-tree
+>      execution
+>    selftests/verification: add tlob selftests
+> 
+>   Documentation/trace/rv/index.rst              |   1 +
+>   Documentation/trace/rv/monitor_tlob.rst       | 177 ++++
+>   include/rv/da_monitor.h                       | 276 ++++-
+>   include/rv/ha_monitor.h                       |  22 +-
+>   include/rv/rv_uprobe.h                        | 119 +++
+>   kernel/trace/rv/Kconfig                       |   5 +
+>   kernel/trace/rv/Makefile                      |   3 +
+>   kernel/trace/rv/monitors/nomiss/nomiss.c      |   6 +-
+>   kernel/trace/rv/monitors/tlob/.kunitconfig    |   6 +
+>   kernel/trace/rv/monitors/tlob/Kconfig         |  19 +
+>   kernel/trace/rv/monitors/tlob/tlob.c          | 968 ++++++++++++++++++
+>   kernel/trace/rv/monitors/tlob/tlob.h          | 148 +++
+>   kernel/trace/rv/monitors/tlob/tlob_kunit.c    |  92 ++
+>   kernel/trace/rv/monitors/tlob/tlob_trace.h    |  49 +
+>   kernel/trace/rv/rv_trace.h                    |   1 +
+>   kernel/trace/rv/rv_uprobe.c                   | 182 ++++
+>   .../testing/selftests/verification/.gitignore |   2 +
+>   tools/testing/selftests/verification/Makefile |  19 +-
+>   .../verification/test.d/tlob/Makefile         |  20 +
+>   .../verification/test.d/tlob/test.d/functions |   1 +
+>   .../verification/test.d/tlob/tlob_sym.c       | 189 ++++
+>   .../verification/test.d/tlob/tlob_target.c    | 138 +++
+>   .../verification/test.d/tlob/uprobe_bind.tc   |  37 +
+>   .../test.d/tlob/uprobe_detail_running.tc      |  51 +
+>   .../test.d/tlob/uprobe_detail_sleeping.tc     |  50 +
+>   .../test.d/tlob/uprobe_detail_waiting.tc      |  66 ++
+>   .../verification/test.d/tlob/uprobe_multi.tc  |  64 ++
+>   .../test.d/tlob/uprobe_no_event.tc            |  19 +
+>   .../test.d/tlob/uprobe_violation.tc           |  67 ++
+>   .../verification/verificationtest-ktap        |   4 +-
+>   tools/verification/models/tlob.dot            |  22 +
+>   31 files changed, 2789 insertions(+), 34 deletions(-)
+>   create mode 100644 Documentation/trace/rv/monitor_tlob.rst
+>   create mode 100644 include/rv/rv_uprobe.h
+>   create mode 100644 kernel/trace/rv/monitors/tlob/.kunitconfig
+>   create mode 100644 kernel/trace/rv/monitors/tlob/Kconfig
+>   create mode 100644 kernel/trace/rv/monitors/tlob/tlob.c
+>   create mode 100644 kernel/trace/rv/monitors/tlob/tlob.h
+>   create mode 100644 kernel/trace/rv/monitors/tlob/tlob_kunit.c
+>   create mode 100644 kernel/trace/rv/monitors/tlob/tlob_trace.h
+>   create mode 100644 kernel/trace/rv/rv_uprobe.c
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/Makefile
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/test.d/functions
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/tlob_sym.c
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/tlob_target.c
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_bind.tc
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_running.tc
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_sleeping.tc
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_waiting.tc
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_multi.tc
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_no_event.tc
+>   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_violation.tc
+>   create mode 100644 tools/verification/models/tlob.dot
+> 
