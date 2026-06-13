@@ -1,352 +1,201 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAEF364E84
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 17:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CF43112B2
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 13 Jun 2026 04:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781286906; cv=none; b=tHb6Z6CcM6G66nujvq7rD19+PBFLZ5gz9b25Im9qmH6PJEyqOHm88yevDo7hLcV2sfyNRe4KGWO0/kssqIcEX29ckVomDuDJpdvOVGMF9U0jJ6P3rebxjn/3LP79rf3Fje0a1/N/N9u3DD/BWpJe8bJM4WdAxh2MNxwFbz8Slwo=
+	t=1781324340; cv=none; b=qf2iQT56P8B8WBpZiZj6JK3z8pUdVWMlxqx+2qCT3uj1gzp+fB9hYeS2xZsX8XhBYBwlFlQAL49/cAkydKQbbeSyfdoYiaDvpUNiUxaNRpBkIfuen04O1K7NcZHJE3C1TTvb67N23A7ipj8Z9SYc6Kae9yA4sCFY5LKP8kOa9Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781286906; c=relaxed/simple;
-	bh=IMwwu+eNJCeVhS5LhWzy2Jw4/oZo5p8Rdoh9+2U3Jrk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PuTRitXxToo6UTaE6uXu0+hiaHmzL4YyWQAtw/8pibt8c7wAIv4vIyxe/lBighJMM+IKA1+v5g/35nFXRpKv5vvW4hSh+WK0cY7GyUXBNBQXW7we/IeKxRgTjOKuY23btltdgASCL7rg882+tlZJTPTg7Lv5NCjf/nlk7lIeNWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VneR8ir1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VneR8ir1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781286903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QlBALwHaaUfLykQq2jQq7yxXT7I+8fynip/nN0uEBM=;
-	b=VneR8ir1VZ7VhWY2T2uoMiAxINrPjXHyOerfaUXy+oulRapHcuURjLoM62hcL1n62ADW3e
-	3lYatVNYCL+SPE0LiV5SiOeZAIUhlDQZyUUuI56S7rfx9cgGALmgPD6Op6FX3d7nDPAlYn
-	I+LZ/ga5r1oJGgNLnUfcGgxdrO7kLk4=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-434-PTZ7yWMzPHSLDk2EViZfkA-1; Fri, 12 Jun 2026 13:55:02 -0400
-X-MC-Unique: PTZ7yWMzPHSLDk2EViZfkA-1
-X-Mimecast-MFC-AGG-ID: PTZ7yWMzPHSLDk2EViZfkA_1781286901
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-69e393262d6so1822835eaf.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 10:55:02 -0700 (PDT)
+	s=arc-20240116; t=1781324340; c=relaxed/simple;
+	bh=94pmSxxXwigo8rQnUo4y837fT0gsI4xXDFVI8LixR9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rH+XcCo6bHaFzEKFL+Xkx66eQ4lrNpRmxV4ysuDefKlnYDiNSHQrVnE50Q0Eh4MJMx/eBSx0xJFt5qW28ojzn2RxtyfUX6kuVjNxgIUnW47qT0jQSF1co2u50yJ9k3GD+OrCHhIU/NxyTEUGC+C9++PreJ27YAadZu4MS/kfJnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aa68d9d56fso2121730e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 21:18:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781286901; x=1781891701;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pXDhvV8bnaAuLCQ67j/U6pOfdL+WZT0Eo2w9Zx37nwM=;
-        b=ansiiHbl1GP1eaKviAhfMgPtef/7al875QCy4qjDGoLWbyD8s1JCROyWNW44S9zuc3
-         0JrqAikzC0kAqe5Kuh89oApMyaQUPaT3zbu+oM1hK8zrhWDEg3ddY6oTzpydKKdMfEfy
-         lL1UkVxh8Rvu0FhDmqy2fk7fFJb2zW+01FhfRc5RsUA/RlG/bxvXyVDxaZT/eSjATx3Y
-         jQ0rFlwzZu/CxUCMeeQidq+0OJ2+bBqplFgE7j5ASudTJOkyKs4FzasKRVcSzV9ir+Ts
-         LPkTnH/AYTii+f77I/LOkFXjo41jDyjeYK2GUxwxDf6aXrTk/huRmxbuo6CzmEyqPyKo
-         0kmg==
-X-Forwarded-Encrypted: i=1; AFNElJ8Ci9r9n8cXXu0W2XMH4htznb4RR4rMhjFgFOhA3x1RBxsO0a2Wx3hzsaJCUVcB4ilIIJb3yuIvBm3lGigSahsYS1Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwokMch3G4OUMz1T8fBy7V7aSPb6jV+IPlgVjjtLJ1XcbrgRMGE
-	iIAUrwmewNm5sdfHhX2TdHmBtf8zjMXkF2K2CLLwJ0RG1Tcxhm5vIosohOmGLiQjrZUTYcziL4m
-	MOHlw+WVUw3ZyF24T0U88yg/EhnqyamEXKqgX26RYZQJxiA3/rlX8mG/4183Mtdg4OaTST43atw
-	==
-X-Gm-Gg: Acq92OFc2S0hrg0tpeeuX9kz9jaFkLx12tdrg8W9Tezm+Ws1GNncdIRv5cGChQjgSgo
-	qEd7OPyKc3UBZp4l0YrQ38jkEt0MxWt4WRpM11CT7IEYQ4kcdLj25v8YHzSEWZoAxOJhC1IxVdY
-	Mt4oTGi1rg70KhrGSYJ7Ynt109pwJHbnPdLBAhptbDKJH1Y1IhFdkVJFTgOZT5VcCn9tv3TCXxr
-	5+PHo+pxMsXbX3cSfVR9e9RS8QVQKZmyk193sLLVdWZThHuoc+PM39MTeC9fl6dXi1DcIc3d57H
-	/QAQKsL1mh9xoDDalN59pJlxt0Ff4p5CO39mfgJs457vaYw1nLslqLdqyLfODShJqNjanF4onl7
-	/EkIUWQfVtDD5+fdyfqZyye2N2fpAd6u/LN5rUusfO1mbShzo+T+8aA==
-X-Received: by 2002:a4a:e915:0:b0:69e:b6df:6824 with SMTP id 006d021491bc7-69edc5e9a07mr2194825eaf.6.1781286901355;
-        Fri, 12 Jun 2026 10:55:01 -0700 (PDT)
-X-Received: by 2002:a4a:e915:0:b0:69e:b6df:6824 with SMTP id 006d021491bc7-69edc5e9a07mr2194809eaf.6.1781286900853;
-        Fri, 12 Jun 2026 10:55:00 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc01:6890:c623:cd89:345e:99f3])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-69ed8369957sm2041681eaf.3.2026.06.12.10.54.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 10:55:00 -0700 (PDT)
-Message-ID: <725da8a4ca6a46ea8ba41778971602b49d650e60.camel@redhat.com>
-Subject: Re: [PATCH] rtla: Simplify osnoise tracer option setting code
-From: Crystal Wood <crwood@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
- Costa Shulyupin <costa.shul@redhat.com>, Wander Lairson Costa
- <wander@redhat.com>, LKML	 <linux-kernel@vger.kernel.org>,
- linux-trace-kernel	 <linux-trace-kernel@vger.kernel.org>
-Date: Fri, 12 Jun 2026 12:54:59 -0500
-In-Reply-To: <20260612115121.54862-1-tglozar@redhat.com>
-References: <20260612115121.54862-1-tglozar@redhat.com>
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
+        d=1e100.net; s=20251104; t=1781324338; x=1781929138;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QNBpFZSlT9IipEukCIMaVMW5t0ZIvjSC1UXquBgnP14=;
+        b=kO/PYxsB8/Hkg5vfKRBaOCFWO1FHdCLkDE4hr0nf7OomA9sjkBDumogLaa85D0k0RD
+         wu07B3tDgca2nLPOqpdtKrEQi5CbisX8p5w5id40Yy1YBrxLYwfCEQv+Pu0wbcRQM/rM
+         Qn+iGpiq75SRd7syqEim7UgsucvNMV0klgCLnslzqA37m6eeuJdbveUV9Rl6tRZWQ/iw
+         6V8JqDuqCQTIqKQ41+lXnXrSStY7vSIinbRX5FAn08HTmMLJl13Qw4rkIJCigNTF2tEf
+         S7o9bV+6KPOtlHq8Oi8IfGxIe/RFk4w9wAYJK4sGwPi/+Eu32fui9UAwH/hixyGY63wi
+         szPg==
+X-Forwarded-Encrypted: i=1; AFNElJ/Dxi7LabNLursRgQfzlbw3vqcFL2mHQKzgrX7c3n4wnYRWBUQIjwNylo6zQxNT1GXlF+xNbdTogN17u5wmGZbABSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt+qQJiZEng9cvn0SWG7IpBzrlIk0ZeIdw2HKSP6rcBqAuDXGo
+	IsNpWWiUCFEwgezQ/02DJFJREqp8mnSJganjbqlCTmK4oxlFiYQ2kELrlh3n15jh7AU=
+X-Gm-Gg: Acq92OFFSzLhr1wnRh9C1PDwwRL5KWdZbk1StEMk6dS4L+L8MqxDiwVmk5UIV8RiG0Z
+	g8t9Yckv5CKf+pgIPVrhjJR7I9A9JzkB2pp7sCI/2zQdydqBuzLDGN8i0AeSpX7yMIx2xHx1HiE
+	ZcRTiy8hqa6E1NURNKIObLx6Bu831LAchb5GVYV3vciGm8H0tPJMSF4O8ROtsPCmyKB7nfSU1KU
+	IaKV8/iAL1BvLLYpatEZJ5tcw0Hqi2JWsKmjCwgYUeMZa9SluXLcx/gxIjbWBxoJAhNQKc3pXkF
+	eIYpNEyURsA6HxoXOy/F71nMTNYQbq4QO0NlywEawpQir0X3HOogKqJ0WLUmhh1NGR4cNsRWMfR
+	URPmMDpGhI5oi+XvvB3/HECRJDDaLAqUhnADEtdgaHTMoKsHZhzEjABI/BjPBCymCADItLIA1so
+	8TAhDOiTVz8DicrBFtRhDZRuVx0wRc42/MXOv7PIbS0FomOA0Rd6VwDrLEYqizQ4+75I+nE2vfm
+	NNv42KrNA==
+X-Received: by 2002:ac2:47f1:0:b0:5aa:780b:f341 with SMTP id 2adb3069b0e04-5ad2db77eb3mr1049585e87.35.1781324337462;
+        Fri, 12 Jun 2026 21:18:57 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ad2e1a729fsm992196e87.54.2026.06.12.21.18.56
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2026 21:18:56 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aa7a70c0aaso1490787e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jun 2026 21:18:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+/s5FeLVz5annZrN4XABLENwjhu1Wpl3QWFnA3FerRPDvS67+XSKPliI71b2M45Lf4nBTq47HzaFJ1TxfzilZbwI8=@vger.kernel.org
+X-Received: by 2002:a05:6512:12c8:b0:5a3:6731:910a with SMTP id
+ 2adb3069b0e04-5ad2db379a4mr1715631e87.11.1781324336334; Fri, 12 Jun 2026
+ 21:18:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 6ShruZlhvNgNIpEitLwFOV2_U8IwOj_Tm8O1M2a4jBM_1781286901
-X-Mimecast-Originator: redhat.com
+References: <20260528151626.4573592d@gandalf.local.home> <aipWtXVRqNmZY4gr@archer>
+ <20260611072249.2222fd9d@gandalf.local.home>
+In-Reply-To: <20260611072249.2222fd9d@gandalf.local.home>
+From: Fangrui Song <i@maskray.me>
+Date: Fri, 12 Jun 2026 21:18:56 -0700
+X-Gmail-Original-Message-ID: <CAN30aBFVDxeoXApn_g_Hw0Ayhi4V=m7CcX8UDO6ZDTi6xA-3Pg@mail.gmail.com>
+X-Gm-Features: AVVi8CeA-wfXRKwpwFaX1TpuI1S98nIWVMn-l0DOzuzXaavbqA8lya5xLsRWjsk
+Message-ID: <CAN30aBFVDxeoXApn_g_Hw0Ayhi4V=m7CcX8UDO6ZDTi6xA-3Pg@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2] unwind: Add sframe_(un)register() system calls
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Indu Bhagat <ibhagatgnu@gmail.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Florian Weimer <fweimer@redhat.com>, 
+	Kees Cook <kees@kernel.org>, "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, 
+	Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Michal Hocko <mhocko@suse.com>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2026-06-12 at 13:51 +0200, Tomas Glozar wrote:
-> Each osnoise tracer option (in /sys/kernel/tracing/osnoise) used by RTLA
-> requires four functions to be defined:
->=20
-> - static osnoise_get_<opt>() - to get the current value of the option
->   and save it into struct osnoise_context's orig_<opt> field,
-> - osnoise_set_<opt>() - to set the value of the option requested by the
->   user after reading and saving the original with osnoise_get_<opt>(),
->   and save it into <opt> field of struct osnoise_context,
-> - osnoise_restore_<opt>() - restore the value recorded in orig_<opt>,
-> - static osnoise_put_<opt>() - restore the value recorded in orig_<opt>
->   and update <opt> to reflect that.
->=20
-> The logic is duplicated for all the options, except for cpus (which is
-> the only string option) and period/runtime (which are handled together
-> and feature extra checks).
+On Thu, Jun 11, 2026 at 4:23=E2=80=AFAM Steven Rostedt <rostedt@kernel.org>=
+ wrote:
+>
+> On Thu, 11 Jun 2026 00:00:25 -0700
+> Fangrui Song <i@maskray.me> wrote:
+>
+> > Hi Steven,
+> >
+> > This is not an objection to deferred userspace unwinding itself -- my
+> > concern is narrower: these syscalls permanently encode the kernel's
+> > commitment to the SFrame format family at exactly the moment the
+> > format's size trajectory is heading the wrong way, and while arguably
+> > superior formats exist.
+> >
+> > I raised related size concerns about SFrame's viability for userspace
+> > stack walking earlier:
+> > https://lore.kernel.org/all/3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5t=
+ounihe4@3ftafgryadsr/
+> > ("Concerns about SFrame viability for userspace stack walking")
+> >
+> > SFrame v3 is even larger than v2.
+> >
+> > For comparison: Microsoft is currently upstreaming its Windows x64
+> > Unwind V3 implementation to LLVM, which will make a side-by-side readin=
+g
+> > of the two formats straightforward. Unwind V3 provides correct
+> > exception-handling unwind -- full prologue replay, SEH handlers,
+> > funclets -- and supports Intel APX. SFrame v3 provides stack tracing
+> > only, no EH, yet comes out larger than .eh_frame. A format revision tha=
+t
+> > adds capability without adding bulk is demonstrably achievable; SFrame
+> > v3 went the other way.
+>
+> My main concern is simplicity in implementation on the kernel side. One
+> thing we would like to avoid is any interpreter that becomes basically
+> executing user space code to perform the stack tracing (i.e. DWARF). I
+> haven't looked at the Windows x64 but will do so.
 
-Thanks for taking this on... this is one of the things that was bugging me
-during consolidation work that I didn't get to.
+I recognize interpreter complexity as a real and valid concern (though
+I believe the concern can be alleviated with a good use of LLM
+auditing).
+But the SFrame family's size problem is more pressing than it's being
+given credit for, because of a point that applies specifically to
+x86-64: SFrame cannot *replace* .eh_frame there, only add to it (to
+keep debugging and C++ exception handling working).
 
-> Deduplicate the logic using a set of macros featuring the X macro
-> pattern, defined in src/common.h:
->=20
-> - OSNOISE_LL_OPTIONS, which invokes OSNOISE_LL_OPTION macro for all
->   "long long" options,
-> - OSNOISE_FLAG_OPTIONS, which invokes OSNOISE_FLAG_OPTION macro for all
->   flag (boolean values in osnoise/options file) options.
->=20
-> The list macros are then invoked in four places:
->=20
-> - for struct osnoise_context fields in src/common.h,
-> - for function declarations, moved into src/common.h from
->   src/osnoise.h,
-> - for function definitions in src/osnoise.c,
-> - for context initialization and restoration, in osnoise_context_alloc()
->   and osnoise_put_context(), both in src/osnoise.c.
->=20
-> OSNOISE_LL_OPTIONS takes three options: name - struct osnoise_context
-> field name (written "<opt>" above), path - filename inside
-> /sys/kernel/tracing/osnoise passed to libtracefs, and init_val - initial
-> value of struct fields, corresponding to an otherwise invalid option
-> (some options use OSNOISE_OPTION_INIT_VAL =3D -1, some use
-> OSNOISE_TIME_INIT_VAL =3D 0).
+.eh_frame+.eh_frame_hdr almost takes 9%; adding .sframe adds another 9% on =
+top.
+I don't think the perceived benefit on x86-64 justifies near-doubling
+the unwind metadata footprint.
 
-Can we simplify by always using -1?  Especially since that's already
-treated as the universal "invalid" by osnoise_read_ll_config().
 
-FWIW using "init val" to mean "invalid" rather than "default" is a bit
-unintuitive.
+x86-64 experiments with x64 Unwind V3 for ELF:
 
-> OSNOISE_FLAG_OPTION is similar, but instead of path, it takes the option
-> string inside /sys/kernel/tracing/osnoise/options (opt_string), and no
-> init_val, as it is purely boolean (0 or 1).
->=20
-> Previously, for options timerlat_align and osnoise_workload, the return
-> value of osnoise_set_<opt>() distinguished between -2 (option cannot be
-> set) and -1 (option not present). This distinction is expanded for all
-> options for consistency; for most options, it is currently not used,
-> only osnoise_workload is implemented to avoid error on -1 on older RTLA
-> versions.
+                    unwind B     VM B      % of VM
+  sqlite3 -O0
+    .eh_frame(+hdr)   42,120   446,735      9.43%
+    Win64 v1          24,536   438,609      5.59%
+    Win64 v3          33,296   450,889      7.38%
+    SFrame v3         39,105   440,727      8.87%
 
-"on -1 on"?
+  sqlite3 -O1
+    .eh_frame(+hdr)   44,424   479,348      9.27%
+    Win64 v1          15,496   450,724      3.44%
+    Win64 v3          21,816   458,916      4.75%
+    SFrame v3         44,756   477,776      9.37%
 
-> The change overall has two main benefits: it makes it much simpler to
-> add a new option, as well as to change existing logic consistently for
-> all of them. It also makes the code shorter by a bit over 500 lines.
->=20
-> There is no intentional user-visible change coming from the refactoring.
-> osnoise_restore_<opt>() for flag options now sets <opt> instead of
-> orig_<opt>. As the latter is also set by osnoise_put_<opt>(), plus long
-> long options set <opt> in both the old and new implementation, the old
-> behavior was likely a mistake, and should not matter for now, as the
-> options are only restored once at the end of tracing and neither <opt>
-> nor orig_<opt> field is read again.
->=20
-> Assisted-by: Claude:claude-opus-4-6
-> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-> ---
->  tools/tracing/rtla/src/common.h  |  79 +--
->  tools/tracing/rtla/src/osnoise.c | 836 ++++++-------------------------
->  tools/tracing/rtla/src/osnoise.h |  22 -
->  3 files changed, 188 insertions(+), 749 deletions(-)
+  CGExpr.cpp -O3
+    .eh_frame(+hdr)   27,040   372,416      7.26%
+    Win64 v1          10,720   356,080      3.01%
+    Win64 v3          15,320   360,185      4.25%
+    SFrame v3         27,628   370,912      7.45%
 
-While we're at it, can we move this code to common.c, and drop
-"osnoise" from the names, to move closer to using that only for the
-actual osnoise mode?
+> >
+> > I understand IBM is doubling down on SFrame for their s390x and ppc64,
+>
+> That's because this is currently the only way s390 can perform stack
+> walking in user space.
 
-Or if we really want to namespace things that are specific to the
-osnoise subsystem (i.e. everything implemented in trace_osnoise.c) but
-not specific with respect to the osnoise/timerlat split, I'd suggest
-something different like "osn_".
+Hmm, I think that DWARF .eh_frame already works on s390x, but I take
+your word that .sframe might be appealing for some use cases.
 
-> + * Long long option get/set/restore/put functions, generated from OSNOIS=
-E_LL_OPTIONS.
-> + */
-> +#define OSNOISE_LL_OPTION(name, path, init_val)=09=09=09=09=09=09\
-> +static long long=09=09=09=09=09=09=09=09=09\
-> +osnoise_get_##name(struct osnoise_context *context)=09=09=09=09=09\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09long long name;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->name !=3D (init_val))=09=09=09=09=09=09\
-> +=09=09return context->name;=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_##name !=3D (init_val))=09=09=09=09=09=09\
-> +=09=09return context->orig_##name;=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09name =3D osnoise_read_ll_config(path);=09=09=09=09=09=09\
-> +=09if (name < 0)=09=09=09=09=09=09=09=09=09\
-> +=09=09return (init_val);=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09context->orig_##name =3D name;=09=09=09=09=09=09=09\
-> +=09return name;=09=09=09=09=09=09=09=09=09\
-> +}=09=09=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +int osnoise_set_##name(struct osnoise_context *context, long long name)=
-=09=09=09\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09long long curr =3D osnoise_get_##name(context);=09=09=09=09=09\
-> +=09int retval;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (curr =3D=3D (init_val))=09=09=09=09=09=09=09=09\
-> +=09=09return -1;=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09retval =3D osnoise_write_ll_config(path, name);=09=09=09=09=09\
-> +=09if (retval < 0)=09=09=09=09=09=09=09=09=09\
-> +=09=09return -2;=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09context->name =3D name;=09=09=09=09=09=09=09=09\
-> +=09return 0;=09=09=09=09=09=09=09=09=09\
-> +}=09=09=09=09=09=09=09=09=09=09=09\
+Perhaps s390x and x86-64 shouldn't be decided by the same vote.
 
-Using "name" for the value is confusing... "val" would be better.
+> > but I'm not convinced the size overhead of v3 will make it appealing on
+> > x86-64. I have learned that the person driving their SFrame work at
+> > Google had left and the SFrame at data center effort was being
+> > reevaluated per a toolchain manager.
 
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +void osnoise_restore_##name(struct osnoise_context *context)=09=09=09=09=
-\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09int retval;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_##name =3D=3D (init_val))=09=09=09=09=09=09\
-> +=09=09return;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_##name =3D=3D context->name)=09=09=09=09=09\
-> +=09=09goto out_done_##name;=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09retval =3D osnoise_write_ll_config(path, context->orig_##name);=09=09=
-=09\
-> +=09if (retval < 0)=09=09=09=09=09=09=09=09=09\
-> +=09=09err_msg("Could not restore original " #name "\n");=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +out_done_##name:=09=09=09=09=09=09=09=09=09\
-> +=09context->name =3D (init_val);=09=09=09=09=09=09=09\
-> +}=09=09=09=09=09=09=09=09=09=09=09\
+> I believe the person who left Google that was driving the SFrame work was
+> me ;-)
+>
+> Thanks,
+>
+> -- Steve
 
-Why does the label need to have ##name in it?
+Ha, I wasn't referring to you. I had a different toolchain engineer in mind=
+.
+But that was a secondhand aside and not the point I want to rest
+anything on, so I'll set it aside and stick to the bytes.
 
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +static void osnoise_put_##name(struct osnoise_context *context)=09=09=09=
-=09\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09osnoise_restore_##name(context);=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_##name =3D=3D (init_val))=09=09=09=09=09=09\
-> +=09=09return;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09context->orig_##name =3D (init_val);=09=09=09=09=09=09\
-> +}
-[snip]
-> +/*
-> + * Flag option get/set/restore/put functions, generated from OSNOISE_FLA=
-G_OPTIONS.
-> + */
-> +#define OSNOISE_FLAG_OPTION(name, option_str)=09=09=09=09=09=09\
-> +static int osnoise_get_##name(struct osnoise_context *context)=09=09=09=
-=09\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->opt_##name !=3D OSNOISE_OPTION_INIT_VAL)=09=09=09=09\
-> +=09=09return context->opt_##name;=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_opt_##name !=3D OSNOISE_OPTION_INIT_VAL)=09=09=09\
-> +=09=09return context->orig_opt_##name;=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09context->orig_opt_##name =3D osnoise_options_get_option(option_str);=
-=09=09\
-> +=09return context->orig_opt_##name;=09=09=09=09=09=09\
-> +}=09=09=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +int osnoise_set_##name(struct osnoise_context *context, bool onoff)=09=
-=09=09\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09int val =3D osnoise_get_##name(context);=09=09=09=09=09=09\
-> +=09int retval;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (val =3D=3D OSNOISE_OPTION_INIT_VAL)=09=09=09=09=09=09\
-> +=09=09return -1;=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (val =3D=3D onoff)=09=09=09=09=09=09=09=09\
-> +=09=09return 0;=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09retval =3D osnoise_options_set_option(option_str, onoff);=09=09=09=09=
-\
-> +=09if (retval < 0)=09=09=09=09=09=09=09=09=09\
-> +=09=09return -2;=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09context->opt_##name =3D onoff;=09=09=09=09=09=09=09\
-> +=09return 0;=09=09=09=09=09=09=09=09=09\
-> +}=09=09=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +void osnoise_restore_##name(struct osnoise_context *context)=09=09=09=09=
-\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09int retval;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_opt_##name =3D=3D OSNOISE_OPTION_INIT_VAL)=09=09=09=
-\
-> +=09=09return;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_opt_##name =3D=3D context->opt_##name)=09=09=09=09\
-> +=09=09goto out_done_##name;=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09retval =3D osnoise_options_set_option(option_str, context->orig_opt_#=
-#name);=09\
-> +=09if (retval < 0)=09=09=09=09=09=09=09=09=09\
-> +=09=09err_msg("Could not restore original " option_str " option\n");=09=
-=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +out_done_##name:=09=09=09=09=09=09=09=09=09\
-> +=09context->opt_##name =3D OSNOISE_OPTION_INIT_VAL;=09=09=09=09=09\
-> +}=09=09=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +static void osnoise_put_##name(struct osnoise_context *context)=09=09=09=
-=09\
-> +{=09=09=09=09=09=09=09=09=09=09=09\
-> +=09osnoise_restore_##name(context);=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09if (context->orig_opt_##name =3D=3D OSNOISE_OPTION_INIT_VAL)=09=09=09=
-\
-> +=09=09return;=09=09=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09=09=09\
-> +=09context->orig_opt_##name =3D OSNOISE_OPTION_INIT_VAL;=09=09=09=09\
-> +}
+-----
 
-Can we reduce the amount of code we put in macros by moving some of the
-logic to osnoise_read/write_ll_config() and osnoise_get/set_optino()?=20
-Or a non-macro wrapper around them if there are other callers that need
-the current behavior.
+Separately, on maturity and sequencing:
 
-Something like (assuming universal -1 invalid):
-
-static int osn_read_ll_config(const char *rel_path, long long *val, long lo=
-ng *orig)
-static int osn_write_ll_config(const char *rel_path, long long *val, long l=
-ong *orig)
-static int osn_get_option(const char *name, int *val, int *orig)
-static int osn_set_option(const char *name, int *val, int *orig)
-
--Crystal (who wishes we were using a modern language that didn't require al=
-l
-this macro stuff)
-
+On timing: the SFrame v3 binutils set was first posted 2025-12-09; the
+2.46 branch was cut 2026-01-17 and released 2026-02-08 with v3
+generation. That's a ~5-week window, and I'm not convinced there's
+been time for rigorous review of the v3 design; if flaws surface we're
+at a v4, and kernel adoption still wouldn't be a given.
