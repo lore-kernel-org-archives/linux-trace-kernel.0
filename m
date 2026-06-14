@@ -1,300 +1,95 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from serv15.avernis.de (serv15.avernis.de [176.9.89.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79123451AF
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 13 Jun 2026 16:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CEE1474CC;
+	Sun, 14 Jun 2026 09:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.89.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781366447; cv=none; b=d55KqGpNYDmMzDK0LURyDyfI72kyHPTGcdBAFlfThXRA9TRQkHwjMt+RFXRBOXBTPeQne3YMM45XywS7T0KDHDQl47GYjXlMMhCPDB7q3lN4jqxsGycwCAoI8WoKksAcnk3FdXCY5iXOmIid0MaePTqrgIQY/d7oPzSCvrx3ffg=
+	t=1781429715; cv=none; b=rP5EKrKxWDYJDl0exSUDu6eN0MhCw/o3rtKsQbrrYRi1Ym6zYJpRjYU6AXN7oBl/t9LsfqteJidlCllxKWSIr7DbVIgYC1uU1xKkBgb0luBNgHmgvHGhtQ2TUIUDyUExKmJAnsB9j9ycyctx+972Sy/qw66HF2ScnhU8ee7xI6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781366447; c=relaxed/simple;
-	bh=5FNJmpW2/AsXYNvioCn8eel8vUKDYaJ5NLx6HVGmxo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rio41LwMqu6qTJWL7K5jduC1GEQ/mu5AmV1uJtz9Yz6bsfLa0iPPKFVj2Iy8PitErfiL12OUuodkGeFUtEG4aPU8iq/L9wMgxD7JnIImcqkNX4Tt0jLr29YTMnK4S/PKy0pPI6Esq0QC8Y91wtog1xnZXpDL1FfvvwzGFW1AIbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IXQey3fP; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1781429715; c=relaxed/simple;
+	bh=kvlhBayuM0LFrweShy60Gb6P+63GddwWc/14Y184eeM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Tv+9prV2CbmkVlebEOnkkyCJLXfjhu6bYoBWTPjsBRXZaaD7O9JFakFMy8Qo89kU2WgPwyzYdHSqVPju/JTuuE6YcBGsVVXRhvCGHS/i+oms6EkgTilHxkOKBe2oztBxKu9zWrJV5WzsOigAZMYj7T+b9c2Iq+O9Zo49JyyjlRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=umbiko.net; spf=none smtp.mailfrom=umbiko.net; dkim=pass (1024-bit key) header.d=umbiko.net header.i=@umbiko.net header.b=mdnE/Osd; arc=none smtp.client-ip=176.9.89.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=umbiko.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=umbiko.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IXQey3fP"
-Message-ID: <8eb290fe-38b0-4a68-9163-d168220b4642@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781366443;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6MXPvCXMxTAsg8WCftslnXsHEAGyyTyjo0yccg3bNuI=;
-	b=IXQey3fPC8hv1Dj9E/Avak9UZ9Set/kiLgSCDhO1zh3jMDxoBv3ft7UBf7I9UhiEgUYpMi
-	SYB6UxjnEv+b+WXg5b3ienUVS9q8KMxptnShSS1BbfxdcQf5HkWuvqe4e2I2eUGmGGVZQb
-	/1RV0yz+w7FYjNtrG1eZKWJID1TvfSk=
-Date: Sun, 14 Jun 2026 00:00:14 +0800
+	dkim=pass (1024-bit key) header.d=umbiko.net header.i=@umbiko.net header.b="mdnE/Osd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=umbiko.net; s=mail;
+	t=1781429359; bh=kvlhBayuM0LFrweShy60Gb6P+63GddwWc/14Y184eeM=;
+	h=From:To:Cc:Subject:Date;
+	b=mdnE/Osd0yHBP/LuVgfSUmDhRm1JP7JRoxuLaHvfFP5DG1WsjESd6j+pQ4QVF8oKP
+	 NNicLrNBdFkRLMBLe1biJp14Ou6mUgGPKo/Zi4YVjIrU+KdUXqirrtgyql5pNWOUVN
+	 foTImutWoq4lbpOUpuEntSh35ceLtptV7VEdp7zI=
+Received: by serv15.avernis.de (Postfix) with ESMTPSA id 40A5BBDE1080;
+	Sun, 14 Jun 2026 11:29:17 +0200 (CEST)
+From: Andreas Ziegler <br025@umbiko.net>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andreas Ziegler <br025@umbiko.net>
+Subject: [PATCH 1/1] tools/tracing/rtla: fix missing unistd include
+Date: Sun, 14 Jun 2026 11:28:51 +0200
+Message-ID: <20260614092855.129278-1-br025@umbiko.net>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/9] rv/tlob: Add task latency over budget RV monitor
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1780847473.git.wen.yang@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <cover.1780847473.git.wen.yang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 1.4.3 at serv15.avernis.de
+X-Virus-Status: Clean
 
+Compiling RTLA 7.1-rc6 with GCC 16 and uClibc as standard library fails
+with these errors:
 
-Hi Gabriele,
+src/common.c: In function ‘set_signals’:
+src/common.c:40:17: error: implicit declaration of function ‘alarm’ [-Wimplicit-function-declaration]
+   40 |                 alarm(params->duration);
+      |                 ^~~~~
+src/common.c: In function ‘common_apply_config’:
+src/common.c:187:44: error: implicit declaration of function ‘getpid’; did you mean ‘getpt’? [-Wimplicit-function-declaration]
+  187 |                 retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
+      |                                            ^~~~~~
+      |                                            getpt
+In file included from src/common.c:9:
+src/common.c: In function ‘run_tool’:
+src/common.c:262:19: error: implicit declaration of function ‘sysconf’; did you mean ‘sscanf’? [-Wimplicit-function-declaration]
+  262 |         nr_cpus = get_nprocs_conf();
+      |                   ^~~~~~~~~~~~~~~
+src/common.c:262:19: error: ‘_SC_NPROCESSORS_CONF’ undeclared (first use in this function)
+  262 |         nr_cpus = get_nprocs_conf();
+      |                   ^~~~~~~~~~~~~~~
+src/common.c:262:19: note: each undeclared identifier is reported only once for each function it appears in
+src/common.c:370:17: error: implicit declaration of function ‘sleep’ [-Wimplicit-function-declaration]
+  370 |                 sleep(1);
+      |                 ^~~~~
 
-Gentle ping on this series. Please let me know if there are any
-concerns or if further changes are needed.
+Restore the missing unistd.h include.
 
-Thanks for your time,
-Wen
+Fixes: <115b06a00875> (tools/rtla: Consolidate nr_cpus usage across all tools)
 
+Signed-off-by: Andreas Ziegler <br025@umbiko.net>
+---
+ tools/tracing/rtla/src/common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 6/8/26 00:13, wen.yang@linux.dev wrote:
-> From: Wen Yang <wen.yang@linux.dev>
-> 
-> This series introduces tlob (task latency over budget), a per-task
-> hybrid automaton RV monitor that measures elapsed wall-clock time across
-> a user-delimited code section and fires when the time exceeds a
-> configurable budget.
-> 
-> The series applies cleanly on top of:
->    [1] git://git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv-fixes-7.1
->        "rv fixes for v7.1"
-> 
-> Background
-> ----------
-> The existing wwnr monitor uses a two-state DA to detect tasks that are
-> woken but never run.  tlob extends the RV framework to a three-state
-> hybrid automaton:
-> 
->    running  (initial) -- on CPU
->    waiting             -- in the scheduler runqueue, not yet on CPU
->    sleeping            -- blocked on a lock, I/O, or similar resource
-> 
-> A single HA clock invariant, clk_elapsed < BUDGET_NS(), is active in
-> all states.  The framework enforces it via a per-task hrtimer.  On
-> expiry, error_env_tlob is emitted, followed by detail_env_tlob which
-> carries a per-state time breakdown (running_ns, waiting_ns, sleeping_ns)
-> that pinpoints whether the overrun occurred in the running, waiting, or
-> sleeping state.
-> 
-> Userspace interface
-> -------------------
-> Tasks are registered for monitoring by writing to the tracefs monitor
-> file:
-> 
->    # echo "p /path/to/binary:START_OFFSET STOP_OFFSET threshold=NS" \
->          > /sys/kernel/tracing/rv/monitors/tlob/monitor
-> 
-> Two uprobes are registered at START_OFFSET (entry) and STOP_OFFSET
-> (exit) of the delimited section.  When a task executes the entry uprobe,
-> the monitor starts; when the task reaches the exit uprobe or the budget
-> expires, monitoring stops and the slot is returned to the pool.
-> 
-> Multiple uprobe pairs can be registered for the same binary or different
-> binaries.  Each task can have at most one active monitoring session; if
-> a task hits a start uprobe while already monitored, the prior session is
-> cancelled and a new one begins.
-> 
-> Series structure
-> ----------------
-> Patch 1: rv/da: introduce DA_MON_ALLOCATION_STRATEGY
->    Consolidates per-object DA storage allocation under a compile-time
->    selector with three strategies:
->      DA_ALLOC_AUTO   (default) - lock-free kmalloc_nolock; unbounded
->      DA_ALLOC_POOL             - pre-allocated fixed-size pool
->      DA_ALLOC_MANUAL           - caller pre-inserts storage
-> 
->    da_handle_start_event() and da_handle_start_run_event() call
->    da_prepare_storage() which resolves at compile time to the correct
->    allocation function.
-> 
->    This patch also includes critical correctness fixes for the pool
->    implementation:
->    - Add tracepoint_synchronize_unregister() in da_monitor_destroy_pool()
->      to fix UAF where in-flight handlers access freed pool storage
->    - Fix duplicate hash entry race in da_create_or_get_pool() via
->      concurrent-insert detection under RCU
->    - Add capacity field to fix build error (DA_MON_POOL_SIZE undeclared
->      in da_pool_return_cb)
-> 
-> Patch 2: rv: add generic uprobe infrastructure for RV monitors
->    Introduces rv_uprobe, a thin wrapper around uprobe_consumer for RV
->    monitors.  Provides rv_uprobe_register(), rv_uprobe_unregister(),
->    and rv_uprobe_sync() for safe teardown.
-> 
-> Patch 3: rv/tlob: add tlob model DOT file
->    The formal model used to generate tlob.h.
-> 
-> Patch 4: rv/ha: fix ha_invariant_passed_ns silent bypass of invariant check
->    Fixes a bug where ha_invariant_passed_ns() returned 0 early when
->    env_store was invalid (U64_MAX), leaving it at U64_MAX and causing
->    ha_check_invariant_ns() to always pass.  The fix calls ha_reset_clk_ns()
->    then ha_set_invariant_ns() on first use.
-> 
-> Patch 5: rv/ha: make da_monitor_reset_hook and EVENT_NONE_LBL overridable
->    Allows tlob to override EVENT_NONE_LBL for its start_tlob self-loop.
-> 
-> Patch 6: rv/tlob: add tlob hybrid automaton monitor
->    The main tlob implementation, including:
->    - Three-state HA (running/waiting/sleeping)
->    - Per-task hrtimer enforcement (HRTIMER_MODE_REL_HARD)
->    - DA_ALLOC_POOL for allocation-free hot path
->    - Uprobe registration via tracefs monitor file
->    - Per-state time accumulation (running_ns, waiting_ns, sleeping_ns)
->    - HIGH_RES_TIMERS dependency in Kconfig
-> 
-> Patches 7-9: Tests
->    - KUnit tests for tlob monitor
->    - Selftest infrastructure fixes
->    - tlob selftests (uprobe binding, state tracking, violation detection)
-> 
-> Changes since v2
-> ----------------
-> All feedback from Gabriele Monaco has been addressed:
-> 
-> -- Patch 02 (per-task slot ordering / ha_monitor_reset_env):
->     Dropped from v3; rebased on top of Gabriele's series [1].
-> 
-> -- Patch 03 (verificationtest-ktap):
->     Changed to use realpath for robustness as suggested.
-> 
-> -- Patch 04 (pre-allocated storage pool):
->     Complete redesign as DA_MON_ALLOCATION_STRATEGY:
->     - Three strategies (AUTO/POOL/MANUAL) via compile-time macro
->     - da_monitor_init_prealloc() removed; da_monitor_init() selects
->       internally
->     - da_create_or_get_kmalloc() removed (no viable use case)
->     - nomiss updated to use DA_ALLOC_MANUAL
->     - da_extra_cleanup() hook added for per-entry teardown
-> 
->     Critical bug fixes included in this patch:
->     - tracepoint_synchronize_unregister() added to da_monitor_destroy_pool()
->       to prevent UAF from in-flight handlers accessing freed pool storage
->     - Duplicate hash entry race fixed in da_create_or_get_pool() via
->       concurrent-insert detection and slot return under RCU
->     - capacity field added to fix DA_MON_POOL_SIZE undeclared build error
-> 
-> -- Patch 05 (generic uprobe infrastructure):
->     Carried unchanged into v3.
-> 
-> -- Patch 06 (rvgen __init arrow reset):
->     Carried unchanged into v3.
-> 
-> -- Patch 08 (tlob monitor):
->     Split and refactored:
->     - ioctl interface deferred to follow-up series (tracefs-only in v3)
->     - Handler simplification: three inline helpers (tlob_acc_running/
->       waiting/sleeping) with scoped_guard(rcu)
->     - do_prev/do_next flags removed (da_handle_event skips unmonitored)
->     - scoped_guard(rcu) and guard(mutex) applied throughout
->     - tlob_stop_all() removed; da_extra_cleanup() hook used instead
->     - start_tlob self-loop added to DOT model as suggested
->     - ha_setup_invariants() guards against redundant timer restart
->     - HIGH_RES_TIMERS dependency added to Kconfig
-> 
-> Additional improvements in v3
-> ------------------------------
-> Beyond the v2 feedback, this version includes:
-> 
-> 1. Simplified tlob monitor implementation:
->     - Removed redundant tlob_num_monitored atomic counter
->       (da_handle_event already handles unmonitored tasks via hash lookup)
->     - Eliminated extra cacheline touch on every sched_switch/sched_wakeup
->     - Several repeated pattern simplifications.
-> 
-> 2. Extracted common accumulation logic:
->     - __tlob_acc() using offsetof() replaces three nearly-identical functions
->     - Reduces code duplication while maintaining type safety
-> 
-> 3. Complete test coverage:
->     - KUnit tests for core functionality
->     - Comprehensive selftests for uprobe integration, state tracking,
->       and violation detection
-> 
-> Testing
-> -------
-> All patches have been tested on:
-> - x86_64 with CONFIG_PREEMPT_RT
-> - All KUnit tests pass
-> - All selftests pass with verificationtest-ktap
-> 
->    
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv-fixes-7.1
->      "rv fixes for v7.1"
-> 
-> 
-> Wen Yang (9):
->    rv/da: introduce DA_MON_ALLOCATION_STRATEGY
->    rv: add generic uprobe infrastructure for RV monitors
->    rv/tlob: add tlob model DOT file
->    rv/ha: fix ha_invariant_passed_ns silent bypass of invariant check
->    rv/ha: make da_monitor_reset_hook and EVENT_NONE_LBL overridable
->    rv/tlob: add tlob hybrid automaton monitor
->    rv/tlob: add KUnit tests for the tlob monitor
->    selftests/verification: fix verificationtest-ktap for out-of-tree
->      execution
->    selftests/verification: add tlob selftests
-> 
->   Documentation/trace/rv/index.rst              |   1 +
->   Documentation/trace/rv/monitor_tlob.rst       | 177 ++++
->   include/rv/da_monitor.h                       | 276 ++++-
->   include/rv/ha_monitor.h                       |  22 +-
->   include/rv/rv_uprobe.h                        | 119 +++
->   kernel/trace/rv/Kconfig                       |   5 +
->   kernel/trace/rv/Makefile                      |   3 +
->   kernel/trace/rv/monitors/nomiss/nomiss.c      |   6 +-
->   kernel/trace/rv/monitors/tlob/.kunitconfig    |   6 +
->   kernel/trace/rv/monitors/tlob/Kconfig         |  19 +
->   kernel/trace/rv/monitors/tlob/tlob.c          | 968 ++++++++++++++++++
->   kernel/trace/rv/monitors/tlob/tlob.h          | 148 +++
->   kernel/trace/rv/monitors/tlob/tlob_kunit.c    |  92 ++
->   kernel/trace/rv/monitors/tlob/tlob_trace.h    |  49 +
->   kernel/trace/rv/rv_trace.h                    |   1 +
->   kernel/trace/rv/rv_uprobe.c                   | 182 ++++
->   .../testing/selftests/verification/.gitignore |   2 +
->   tools/testing/selftests/verification/Makefile |  19 +-
->   .../verification/test.d/tlob/Makefile         |  20 +
->   .../verification/test.d/tlob/test.d/functions |   1 +
->   .../verification/test.d/tlob/tlob_sym.c       | 189 ++++
->   .../verification/test.d/tlob/tlob_target.c    | 138 +++
->   .../verification/test.d/tlob/uprobe_bind.tc   |  37 +
->   .../test.d/tlob/uprobe_detail_running.tc      |  51 +
->   .../test.d/tlob/uprobe_detail_sleeping.tc     |  50 +
->   .../test.d/tlob/uprobe_detail_waiting.tc      |  66 ++
->   .../verification/test.d/tlob/uprobe_multi.tc  |  64 ++
->   .../test.d/tlob/uprobe_no_event.tc            |  19 +
->   .../test.d/tlob/uprobe_violation.tc           |  67 ++
->   .../verification/verificationtest-ktap        |   4 +-
->   tools/verification/models/tlob.dot            |  22 +
->   31 files changed, 2789 insertions(+), 34 deletions(-)
->   create mode 100644 Documentation/trace/rv/monitor_tlob.rst
->   create mode 100644 include/rv/rv_uprobe.h
->   create mode 100644 kernel/trace/rv/monitors/tlob/.kunitconfig
->   create mode 100644 kernel/trace/rv/monitors/tlob/Kconfig
->   create mode 100644 kernel/trace/rv/monitors/tlob/tlob.c
->   create mode 100644 kernel/trace/rv/monitors/tlob/tlob.h
->   create mode 100644 kernel/trace/rv/monitors/tlob/tlob_kunit.c
->   create mode 100644 kernel/trace/rv/monitors/tlob/tlob_trace.h
->   create mode 100644 kernel/trace/rv/rv_uprobe.c
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/Makefile
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/test.d/functions
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/tlob_sym.c
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/tlob_target.c
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_bind.tc
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_running.tc
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_sleeping.tc
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_detail_waiting.tc
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_multi.tc
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_no_event.tc
->   create mode 100644 tools/testing/selftests/verification/test.d/tlob/uprobe_violation.tc
->   create mode 100644 tools/verification/models/tlob.dot
-> 
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index 35e3d3aa922e..5c5398d20f40 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -5,6 +5,7 @@
+ #include <signal.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <unistd.h>
+ #include <getopt.h>
+ #include <sys/sysinfo.h>
+ 
+-- 
+2.53.0
+
