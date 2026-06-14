@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8A43A782D;
-	Sun, 14 Jun 2026 14:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDCC3C4165;
+	Sun, 14 Jun 2026 14:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781448837; cv=none; b=iZAnHk0RNYl3fVvCly/yNcmBjNTAFWlAae6xOrO621ZlgQmCxr+BIkerrNLhMceSU6A7w9b+lcpIYnqzcDst0mRiyowDWChBvVSYqJFyxbo/mcYogFwZMAg2qTwkmhlbHS5lIOmQ4nn5NKH2emDCy4mcwNVc/QhngnrnlVl8xfQ=
+	t=1781448848; cv=none; b=a7AbRj60gwQZTI+jfhbjl6XOyK/wvSms9586VBS5AfFmlZkF/wQGcGlK4aR8BjI8OUuCIXC8p7EuwoInhqxP5RS8mRKArKWcQ8x7M6srUagbVDEeVAIUBDe/zVGlKrXpPtMZB27xqDZDFh7ZvPcQuxxnI9jeWKywUWtsNZ68u1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781448837; c=relaxed/simple;
-	bh=pfIZKjovKDgclFSAr7pd4DXbZAGafNivV+l7dEqJ38k=;
+	s=arc-20240116; t=1781448848; c=relaxed/simple;
+	bh=k6rcUKey2vDWXg3j+mU44cbMCjJlj5fRT/fgzMlFAkU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aD7Ov3xVU/gJ+LdTF2CVY1dktFTG04rEw6+ju4laOHPRYocRwIL4gLVG4SGUGsgpAuQsWGrdDCEFhjeoWhDzgxNtrrc2Q+JzYFcy3o5Sxf9O4qy5QU/JhHFKRwvXpCTX9oM6RbKpqTrwA9nCIhqjmARFcw7c8nkWLb6hc4FRZgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRql32Mj; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=ZXYDaAOkQLZbQKdCKr4KZvxaNERXxggpa0pzV+JuBHoHkfVMyXBVdZrnPupNEprRnfiZYPfZ9QzMMr+nB7DxNhpKUeYzTfge+FwwVCjdYk5nFea/XBusXWAm3tmwTwt5BTHrGNPH5KqwCEqNmNtNNPU+6QRncmFyN/bwJiSzajk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLsvqWHl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRql32Mj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845651F000E9;
-	Sun, 14 Jun 2026 14:53:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLsvqWHl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 437A71F000E9;
+	Sun, 14 Jun 2026 14:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781448836;
-	bh=Srwf7ohctcpY8YThnw+qgvvaj8lObUGZVMtJoVYR1kM=;
+	s=k20260515; t=1781448846;
+	bh=ZUr8UpXsi754hLTSqsWWU0wdaL7c+DxvjBxcqW8rVdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JRql32MjKhQ8qJjHyBoHwrju99XQQ057QBJ/95QTVKA5SUxpZE3IERyHEzuvCP5ZX
-	 i3UVtmJIQEaCaHFJuJCLH+ZY/AlAO+lRSan19UTph1IzKtvTPP5VoDXaLa/ZBZPGLx
-	 dWQowmmJvjLEhEGDkJHlwsyBL8cmu79UzbgHAjzVoDwh9cVb6HzzYhq/ECkymkfY3y
-	 wi2Zo2ANwtSlnS2mmSKoBix5Dg7p+dSHJ/JJ+FC3XeBEaI5K/f04foWohhJFsb6VMY
-	 CKiagx7Nu2Okh9+oSXhJGe35uX0rxDrUj7BsEBgOdMK9oDPi0IsPIizaIR+fwvYVo0
-	 cKO7uBe7co0fg==
+	b=oLsvqWHlJBN36/pkp2DiSQk91COgyDN+v/jwu0i4Xbp0+kDhJ4utYY6R/N8zFXO7+
+	 4UKz4vn+ltKlJvF+tTFOGobL/BZ99xfYVI2BFkCVs4/5tWdV+djfvXnW9m5ZpYh7yf
+	 1/ILdvl772MWrty3MufjgPNQVg5s5BIjUW0w73Ij41+6dwLHjzCtfdDe9iRq1jDNMG
+	 SGC7BdtBFnzWlJffwpEOKqAf3ZFf8OydELLfRaMs0ALIQv39kD3sdWUqgtb6QDCT+f
+	 4qOeVxHc20UQcc7umWrwv+xLE8hKNwLsDF7/WtfDQSAdbw0J6l5S/Wknit/mz8aY/M
+	 SyaA73Mzb3F7w==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -36,9 +36,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 3/7] tracing/probes: Support nested typecast
-Date: Sun, 14 Jun 2026 23:53:52 +0900
-Message-ID: <178144883221.159464.12387631892284322551.stgit@devnote2>
+Subject: [PATCH v3 4/7] tracing/probes: Support field specifier option for typecast
+Date: Sun, 14 Jun 2026 23:54:01 +0900
+Message-ID: <178144884175.159464.2374355805242726805.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178144880282.159464.16882854283219530040.stgit@devnote2>
 References: <178144880282.159464.16882854283219530040.stgit@devnote2>
@@ -54,222 +54,401 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-When we hit an open parenthesis right after typecast closing
-parenthesis, it means we have nested typecast. This allows us to
-typecast a generic data member in a structure to a pointer to
-another structure.
+Add a field specifier option for the typecast. This works like
+container_of() macro.
 
-For example, to cast a DATA_MEMBER of VAR structure to STRUCT pointer
-and get MEMBER value.
+    (STRUCT[,FIELD[.FIELD2...]])VAR
 
-  (STRUCT)(VAR->DATA_MEMBER)->MEMBER
+This is equivalent to :
 
-Also, we can nest typecast.
+    container_of(VAR, struct STRUCT, FIELD[.FIELD2...])
 
-  (STRUCT1)((STRUCT2)$ARG->FIELD2)->FIELD1
+For example:
 
-Currently the max nest level is limited to 3.
+ echo "f tick_nohz_handler next_tick=(tick_sched,sched_timer)timer->next_tick" >> dynamic_events
 
-This also allows user to use typecasting for registers or stacks on
-kprobe events. e.g.
+This will trace tick_nohz_handler() with its tick_sched::next_tick which
+is converted from @timer by contianer_of(tick, struct tick_sched, sched_timer).
+So, if you enabkle both fprobes:tick_nohz_handler__entry and
+timer:hrtimer_expire_entry events, we will see something like:
 
-  (STRUCT)(%ax)->MEMBER
 
-  (STRUCT)($stack0)->MEMBER
+          <idle>-0       [002] d.h1.  3778.087272: hrtimer_expire_entry: hrtimer=00000000d63db328 f
+unction=tick_nohz_handler now=3777450051040
+          <idle>-0       [002] d.h1.  3778.087281: tick_nohz_handler__entry: (tick_nohz_handler+0x4
+/0x140) next_tick=3777450000000
 
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ Changes in v3:
+  - Fix error caret position.
  Changes in v2:
-  - Fix to skip "->" after closing parenthetsis.
+  - Use byteoffset for typecast field offset instead of bitoffset. This fixes negative modulo calculation.
+  - Check whether a field is specified after typecast.
+  - Reject if typecast field option  has arrow operator.
 ---
- Documentation/trace/eprobetrace.rst |    2 +
- Documentation/trace/fprobetrace.rst |    2 +
- Documentation/trace/kprobetrace.rst |    2 +
- kernel/trace/trace.c                |    1 
- kernel/trace/trace_probe.c          |   76 ++++++++++++++++++++++++++++++++---
- kernel/trace/trace_probe.h          |    7 +++
- 6 files changed, 82 insertions(+), 8 deletions(-)
+ Documentation/trace/eprobetrace.rst |    5 +
+ Documentation/trace/fprobetrace.rst |    8 +-
+ Documentation/trace/kprobetrace.rst |    8 +-
+ kernel/trace/trace.c                |    4 -
+ kernel/trace/trace_probe.c          |  179 ++++++++++++++++++++++++-----------
+ kernel/trace/trace_probe.h          |    5 +
+ 6 files changed, 142 insertions(+), 67 deletions(-)
 
 diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
-index fe3602540569..cd0b4aa7f896 100644
+index cd0b4aa7f896..680e0af43d5d 100644
 --- a/Documentation/trace/eprobetrace.rst
 +++ b/Documentation/trace/eprobetrace.rst
-@@ -50,6 +50,8 @@ Synopsis of eprobe_events
-                   a pointer to STRUCT and then derference the pointer defined by
-                   ->MEMBER. Note that when this is used, the FIELD name does not
-                   need to be prefixed with a '$'.
-+  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
-+		  also be used with another FETCHARG instead of FIELD.
- 
- Types
- -----
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index 7435ded2d66d..6b8bb27bb62d 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -60,6 +60,8 @@ Synopsis of fprobe-events
+@@ -49,7 +49,10 @@ Synopsis of eprobe_events
    (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
                    a pointer to STRUCT and then derference the pointer defined by
-                   ->MEMBER.
-+  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
-+                 also be used with another FETCHARG instead of FIELD.
+                   ->MEMBER. Note that when this is used, the FIELD name does not
+-                  need to be prefixed with a '$'.
++                  need to be prefixed with a '$'. ASGN can be specified optionally.
++		  If ASGN is specified, FIELD will be cast to the same offset
++		  position as the ASGN member, rather than to the beginning of
++		  the STRUCT.
+   (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
+ 		  also be used with another FETCHARG instead of FIELD.
+ 
+diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
+index 6b8bb27bb62d..290a9e6f7491 100644
+--- a/Documentation/trace/fprobetrace.rst
++++ b/Documentation/trace/fprobetrace.rst
+@@ -57,10 +57,12 @@ Synopsis of fprobe-events
+                   (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+                   (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
+                   and bitfield are supported.
+-  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
++  (STRUCT[,ASGN])FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
+                   a pointer to STRUCT and then derference the pointer defined by
+-                  ->MEMBER.
+-  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
++                  ->MEMBER. ASGN can be specified optionally. If ASGN is specified,
++		  FIELD will be cast to the same offset position as the ASGN member,
++		  rather than to the beginning of the STRUCT.
++  (STRUCT[,ASGN])(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
+                  also be used with another FETCHARG instead of FIELD.
  
    (\*1) This is available only when BTF is enabled.
-   (\*2) only for the probe on function entry (offs == 0). Note, this argument access
 diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index f73614997d52..c4382765d5b2 100644
+index c4382765d5b2..a62707e6a9f2 100644
 --- a/Documentation/trace/kprobetrace.rst
 +++ b/Documentation/trace/kprobetrace.rst
-@@ -65,6 +65,8 @@ Synopsis of kprobe_events
+@@ -61,11 +61,13 @@ Synopsis of kprobe_events
+ 		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
+                   "string", "ustring", "symbol", "symstr" and bitfield are
+                   supported.
+-  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
++  (STRUCT[,ASGN])FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
                    a pointer to STRUCT and then derference the pointer defined by
                    ->MEMBER. Note that this is available only when the probe is
- 		   on function entry.
-+  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
-+                 also be used with another FETCHARG instead of FIELD.
+-		   on function entry.
+-  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
++		   on function entry. ASGN can be specified optionally. If ASGN
++		   is specified, FIELD will be cast to the same offset position
++		   as the ASGN member, rather than to the beginning of the STRUCT.
++  (STRUCT[,ASGN])(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
+                  also be used with another FETCHARG instead of FIELD.
  
    (\*1) only for the probe on function entry (offs == 0). Note, this argument access
-         is best effort, because depending on the argument type, it may be passed on
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index aa93e7b01146..4f70318918c2 100644
+index 4f70318918c2..0e36af853199 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4326,6 +4326,7 @@ static const char readme_msg[] =
+@@ -4325,8 +4325,8 @@ static const char readme_msg[] =
+ #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
  	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
  #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
- 	"\t           [(structname)]<argname>[->field[->field|.field...]],\n"
-+	"\t           [(structname)](fetcharg)->field[->field|.field...],\n"
+-	"\t           [(structname)]<argname>[->field[->field|.field...]],\n"
+-	"\t           [(structname)](fetcharg)->field[->field|.field...],\n"
++	"\t           [(structname[,field])]<argname>[->field[->field|.field...]],\n"
++	"\t           [(structname[,field])](fetcharg)->field[->field|.field...],\n"
  #endif
  #else
  	"\t           $stack<index>, $stack, $retval, $comm,\n"
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 9158f1f22a62..dba73aaa8ade 100644
+index dba73aaa8ade..3ead93de2d93 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
-@@ -832,10 +832,35 @@ static int query_btf_struct(const char *sname, struct traceprobe_parse_context *
+@@ -574,6 +574,65 @@ static int split_next_field(char *varname, char **next_field,
+ 	return ret;
+ }
+ 
++/* Inner loop for solving dot operator ('.'). Return bit-offset of the given field */
++static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **ptype,
++				  struct traceprobe_parse_context *ctx)
++{
++	const struct btf_type *type = *ptype;
++	const struct btf_member *field;
++	struct btf *btf = ctx_btf(ctx);
++	char *fieldname = *pfieldname;
++	int bitoffs = 0;
++	u32 anon_offs;
++	char *next;
++	int is_ptr;
++	s32 tid;
++
++	do {
++		next = NULL;
++		is_ptr = split_next_field(fieldname, &next, ctx);
++		if (is_ptr < 0)
++			return is_ptr;
++
++		anon_offs = 0;
++		field = btf_find_struct_member(btf, type, fieldname,
++						&anon_offs);
++		if (IS_ERR(field)) {
++			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
++			return PTR_ERR(field);
++		}
++		if (!field) {
++			trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
++			return -ENOENT;
++		}
++		/* Add anonymous structure/union offset */
++		bitoffs += anon_offs;
++
++		/* Accumulate the bit-offsets of the dot-connected fields */
++		if (btf_type_kflag(type)) {
++			bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
++			ctx->last_bitsize = BTF_MEMBER_BITFIELD_SIZE(field->offset);
++		} else {
++			bitoffs += field->offset;
++			ctx->last_bitsize = 0;
++		}
++
++		type = btf_type_skip_modifiers(btf, field->type, &tid);
++		if (!type) {
++			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
++			return -EINVAL;
++		}
++
++		if (next)
++			ctx->offset += next - fieldname;
++		fieldname = next;
++	} while (!is_ptr && fieldname);
++
++	*pfieldname = fieldname;
++	*ptype = type;
++
++	return bitoffs;
++}
+ /*
+  * Parse the field of data structure. The @type must be a pointer type
+  * pointing the target data structure type.
+@@ -583,16 +642,14 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+ 			   struct traceprobe_parse_context *ctx)
+ {
+ 	struct fetch_insn *code = *pcode;
+-	const struct btf_member *field;
+-	u32 bitoffs, anon_offs;
+-	bool is_struct = ctx->struct_btf != NULL;
+ 	struct btf *btf = ctx_btf(ctx);
+-	char *next;
+-	int is_ptr;
++	bool is_first_field = true;
++	int bitoffs;
+ 	s32 tid;
+ 
+ 	do {
+-		if (!is_struct) {
++		/* For the first field of typecast, @type will be the target structure type. */
++		if (!(is_first_field && ctx->struct_btf)) {
+ 			/* Outer loop for solving arrow operator ('->') */
+ 			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
+ 				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
+@@ -606,60 +663,25 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+ 				return -EINVAL;
+ 			}
+ 		}
+-		/* Only the first type can skip being a pointer */
+-		is_struct = false;
+-
+-		bitoffs = 0;
+-		do {
+-			/* Inner loop for solving dot operator ('.') */
+-			next = NULL;
+-			is_ptr = split_next_field(fieldname, &next, ctx);
+-			if (is_ptr < 0)
+-				return is_ptr;
+-
+-			anon_offs = 0;
+-			field = btf_find_struct_member(btf, type, fieldname,
+-						       &anon_offs);
+-			if (IS_ERR(field)) {
+-				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+-				return PTR_ERR(field);
+-			}
+-			if (!field) {
+-				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
+-				return -ENOENT;
+-			}
+-			/* Add anonymous structure/union offset */
+-			bitoffs += anon_offs;
+-
+-			/* Accumulate the bit-offsets of the dot-connected fields */
+-			if (btf_type_kflag(type)) {
+-				bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
+-				ctx->last_bitsize = BTF_MEMBER_BITFIELD_SIZE(field->offset);
+-			} else {
+-				bitoffs += field->offset;
+-				ctx->last_bitsize = 0;
+-			}
+-
+-			type = btf_type_skip_modifiers(btf, field->type, &tid);
+-			if (!type) {
+-				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+-				return -EINVAL;
+-			}
+-
+-			ctx->offset += next - fieldname;
+-			fieldname = next;
+-		} while (!is_ptr && fieldname);
+ 
++		bitoffs = get_bitoffset_of_field(&fieldname, &type, ctx);
++		if (bitoffs < 0)
++			return bitoffs;
+ 		if (++code == end) {
+ 			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
+ 			return -EINVAL;
+ 		}
+ 		code->op = FETCH_OP_DEREF;	/* TODO: user deref support */
+ 		code->offset = bitoffs / 8;
++		if (is_first_field && ctx->struct_btf) {
++			/* The first field can be typecasted with field option. */
++			code->offset -= ctx->prefix_byteoffs;
++		}
+ 		*pcode = code;
+ 
+ 		ctx->last_bitoffs = bitoffs % 8;
+ 		ctx->last_type = type;
++		is_first_field = false;
+ 	} while (fieldname);
+ 
+ 	return 0;
+@@ -690,6 +712,11 @@ static int parse_btf_arg(char *varname,
+ 				    NOSUP_DAT_ARG);
+ 		return -EOPNOTSUPP;
+ 	}
++	if (!field && ctx->struct_btf) {
++		/* Typecast without field option is not supported */
++		trace_probe_log_err(ctx->offset + strlen(varname), TYPECAST_REQ_FIELD);
++		return -EOPNOTSUPP;
++	}
+ 
+ 	if (ctx->flags & TPARG_FL_TEVENT) {
+ 		ret = parse_trace_event(varname, code, ctx);
+@@ -700,8 +727,7 @@ static int parse_btf_arg(char *varname,
+ 		/* TEVENT is only here via a typecast */
+ 		if (WARN_ON_ONCE(ctx->struct_btf == NULL))
+ 			return -EINVAL;
+-		type = ctx->last_struct;
+-		goto found_type;
++		goto found;
+ 	}
+ 
+ 	if (ctx->flags & TPARG_FL_RETURN && !strcmp(varname, "$retval")) {
+@@ -763,7 +789,6 @@ static int parse_btf_arg(char *varname,
+ 		type = ctx->last_struct;
+ 	else
+ 		type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
+-found_type:
+ 	if (!type) {
+ 		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+ 		return -EINVAL;
+@@ -832,6 +857,46 @@ static int query_btf_struct(const char *sname, struct traceprobe_parse_context *
  	return 0;
  }
  
-+/* Find the matching closing parenthesis for a given opening parenthesis. */
-+static char *find_matched_close_paren(char *s)
++static int parse_btf_casttype(char *casttype, struct traceprobe_parse_context *ctx)
 +{
-+	char *p = s;
-+	int count = 0;
++	char *field;
++	int ret;
 +
-+	while (*p) {
-+		if (*p == '(')
-+			count++;
-+		else if (*p == ')') {
-+			if (--count == 0)
-+				return p;
-+		}
-+		p++;
++	/* Field option - evaluated later. */
++	field = strchr(casttype, ',');
++	if (field)
++		*field++ = '\0';
++
++	ret = query_btf_struct(casttype, ctx);
++	if (ret < 0) {
++		trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
++		return -EINVAL;
 +	}
-+	return NULL;
-+}
 +
-+static int
-+parse_probe_arg(char *arg, const struct fetch_type *type,
-+		struct fetch_insn **pcode, struct fetch_insn *end,
-+		struct traceprobe_parse_context *ctx);
++	if (field) {
++		struct btf_type *type = (struct btf_type *)ctx->last_struct;
 +
- static int handle_typecast(char *arg, struct fetch_insn **pcode,
- 			   struct fetch_insn *end,
- 			   struct traceprobe_parse_context *ctx)
- {
-+	int orig_offset = ctx->offset;
-+	bool nested = false;
- 	char *tmp;
- 	int ret;
- 
-@@ -852,19 +877,56 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
- 				    DEREF_OPEN_BRACE);
- 		return -EINVAL;
- 	}
--	*tmp = '\0';
--	ret = query_btf_struct(arg + 1, ctx);
--	*tmp = ')';
-+	*tmp++ = '\0';
-+
-+	/* Handle the nested structure like (STRUCT)(VAR->FIELD)->... */
-+	if (*tmp == '(') {
-+		char *close = find_matched_close_paren(tmp);
-+
-+		ctx->offset += tmp - arg;
-+		if (!close) {
-+			trace_probe_log_err(ctx->offset, DEREF_OPEN_BRACE);
-+			return -EINVAL;
-+		}
-+		/* We expect a field access for typecast */
-+		if (close[1] != '-' || close[2] != '>') {
-+			trace_probe_log_err(ctx->offset + close - tmp + 1,
-+					    TYPECAST_REQ_FIELD);
-+			return -EINVAL;
-+		}
- 
-+		ctx->nested_level++;
-+		if (ctx->nested_level > TRACEPROBE_MAX_NESTED_LEVEL) {
-+			trace_probe_log_err(ctx->offset, TOO_MANY_NESTED);
-+			return -E2BIG;
-+		}
-+		*close = '\0';
-+
-+		ctx->offset += 1;	/* for the '(' */
-+		/* We need to parse the nested one */
-+		ret = parse_probe_arg(tmp + 1, find_fetch_type(NULL, ctx->flags),
-+				pcode, end, ctx);
++		ctx->offset += field - casttype;
++		ret = get_bitoffset_of_field(&field, &ctx->last_struct, ctx);
 +		if (ret < 0)
 +			return ret;
-+		ctx->nested_level--;
-+		clear_struct_btf(ctx);
-+
-+		tmp = close + 3;/* Skip "->" after closing parenthesis */
-+		nested = true;
++		if (ret % 8) {
++			trace_probe_log_err(ctx->offset, TYPECAST_NOT_ALIGNED);
++			return -EINVAL;
++		}
++		if (field != NULL) {
++			/* this means @field skips an arrow operator ("->"). */
++			trace_probe_log_err(ctx->offset - 2, TYPECAST_BAD_ARROW);
++			return -EINVAL;
++		}
++		ctx->prefix_byteoffs = ret / 8;
++		/* Restore the original struct type (overwritten by get_bitoffset_of_field) */
++		ctx->last_struct = type;
 +	}
 +
-+	ret = query_btf_struct(arg + 1, ctx);
- 	if (ret < 0) {
- 		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
- 		return -EINVAL;
++	return ret;
++}
++
+ /* Find the matching closing parenthesis for a given opening parenthesis. */
+ static char *find_matched_close_paren(char *s)
+ {
+@@ -915,11 +980,10 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
+ 		nested = true;
  	}
  
--	tmp++;
--
--	ctx->offset += tmp - arg;
--	ret = parse_btf_arg(tmp, pcode, end, ctx);
-+	ctx->offset = orig_offset + tmp - arg;
-+	/* If it is nested, tmp points to the field name. */
-+	if (nested)
-+		ret = parse_btf_field(tmp, ctx->last_struct, pcode, end, ctx);
-+	else
-+		ret = parse_btf_arg(tmp, pcode, end, ctx);
+-	ret = query_btf_struct(arg + 1, ctx);
+-	if (ret < 0) {
+-		trace_probe_log_err(ctx->offset + 1, NO_PTR_STRCT);
+-		return -EINVAL;
+-	}
++	ctx->offset = orig_offset + 1;	/* for the '(' */
++	ret = parse_btf_casttype(arg + 1, ctx);
++	if (ret < 0)
++		return ret;
+ 
+ 	ctx->offset = orig_offset + tmp - arg;
+ 	/* If it is nested, tmp points to the field name. */
+@@ -927,6 +991,7 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
+ 		ret = parse_btf_field(tmp, ctx->last_struct, pcode, end, ctx);
+ 	else
+ 		ret = parse_btf_arg(tmp, pcode, end, ctx);
++	ctx->prefix_byteoffs = 0;
  	return ret;
  }
  
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 883938a74aee..982d32a5df8b 100644
+index 982d32a5df8b..44f113faae61 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -435,8 +435,11 @@ struct traceprobe_parse_context {
- 	struct trace_probe *tp;
+@@ -436,6 +436,7 @@ struct traceprobe_parse_context {
  	unsigned int flags;
  	int offset;
-+	int nested_level;
+ 	int nested_level;
++	int prefix_byteoffs;	/* The byte offset of the prefix field of typecast */
  };
  
-+#define TRACEPROBE_MAX_NESTED_LEVEL 3
-+
- extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
- 				      const char *argv,
- 				      struct traceprobe_parse_context *ctx);
-@@ -571,7 +574,9 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
- 	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
+ #define TRACEPROBE_MAX_NESTED_LEVEL 3
+@@ -576,7 +577,9 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
  	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),  \
--	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),
-+	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"), \
-+	C(TYPECAST_REQ_FIELD,	"Typecast requires a field access"),	\
-+	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"),
+ 	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"), \
+ 	C(TYPECAST_REQ_FIELD,	"Typecast requires a field access"),	\
+-	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"),
++	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"), \
++	C(TYPECAST_NOT_ALIGNED,	"Typecast field option is not byte-aligned"), \
++	C(TYPECAST_BAD_ARROW,	"Typecast field option does not support -> operator"),
  
  #undef C
  #define C(a, b)		TP_ERR_##a
