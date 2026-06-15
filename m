@@ -1,258 +1,239 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971603F44FC
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 14:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3DA2309AA;
+	Mon, 15 Jun 2026 14:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781533037; cv=none; b=rXI5+4gR+8rqfAnkR/sPvVynAdIyfLamht5gr+qc+UPo64LMzpfU7uhZKHG5Vq8BaNPPXKQ08XviWBEXKEhryHAlX+HMgXQVjDWSatXHTnV29QwJUobxINBT52rNl7SZB0tyGnwpAvMDGKoerYXkWMEcBvEvO9Dd4Knx10ocsDg=
+	t=1781534341; cv=none; b=ESRpUJ38jGXLZTUKFQf2mgW0RKXStj5RKNQcjjUJLo4PvbdIHXxzKqVI89cDoDSFajmyYwHlOBJPKuR0ZOkvGtRkMLrAQXrYqPb/X3P4ZuIhhkvkxJyer7PxqRuty7HYwYW8RQtx9fGr+u92W57riJYWT0WzKeW+TrB1EBNK4IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781533037; c=relaxed/simple;
-	bh=UK0w8cVX6HonoLLMdXc+3FVa/9hg3gdhTjqWi4T6mns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D204fNuJpr4RJhyyYAtPqvAxmulTMiiSSU2CHvcEpijUR8Z8vQd/j22c+utezDVxaBSE4OKYTMPOX8A+LIYuuomnk2XnengYix50tap9zruoV0mg26QMDiwfH/0o+ivv8dDWqxa70W1GJL7sW2mcGSuzIJtb0cMLPMm8sq709Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UJmt6HOi; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=A4vAyvgW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1781534341; c=relaxed/simple;
+	bh=2SyvoKljCiqDT7XAWLBQi18Nl5IGompSDj0xrvARkNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jSIEsBjhmYvJeRQGFok6epv3WhCL2dPSKu3bmjvUOOFi/bFn5wcJRM8MFJwXAH2sFIycjSlHPRSXAYtTrb2gxxpkgyFCMTF20D2bN1Ts9Mi0DO+mw5exDyLvtZUtNVBywAgkwmaN8Ee4Q1wYiV2VJ/3MqNrUFzrHWFZxkCFeJtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tpe1s7W/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UJmt6HOi";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="A4vAyvgW"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FCZBWP2712649
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 14:17:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xxStlaNB4x9Mu659Ds+9UQmpLOGQ5xsUav0PKNZl0Yw=; b=UJmt6HOi/rwRra3t
-	l8sp3S4SBw4CBG7/oogEe0jOCglWUD9Wyay1ePvVTVrC4m4S9C+3QPQEiYk2C1Bh
-	7acHVV2/bed6PEr7p4DsTv6sRHj1olZCdd585/6Rzui7TLXj6wkNp7iA7LMCZUMK
-	QXbstIGi+U+8thXf68JzSaxUlBl50rYxap72vUxwabEsFnXzbZCjAYXrTNxBl1U5
-	+jxFsBVC31EE/fEdEjxjw/jASWeEBv6a77EnNE+P5qLJmnC4bbcXeeSYCCpuM4ov
-	0858wR1WVJs+iQbelDa8WSvl/6Xwshud2VfoOvDL8uRMev+REPj/Ac2kE+S1Mowe
-	DYPHvQ==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ete9818na-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 14:17:16 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-36d98b6f019so3822683a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 07:17:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1781533035; x=1782137835; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xxStlaNB4x9Mu659Ds+9UQmpLOGQ5xsUav0PKNZl0Yw=;
-        b=A4vAyvgW8d4tSA1qG9WHBJKH2rDZtVdyRVCJV0ZTbCM725BxdSaCpuGPqsbhbLJM9c
-         gyO7/oBgc0mSKyGNlUmspys6DPw2dA0b/h0L/yLuzwczaeNtYBAwgcWmipDeoTjHH6t6
-         eSZ6z8TDJ6E/0jEOWOMx3omQEGVVQlc3p7Rv4qNfGvsm1vJZWV691EdyvuC5nBgNVOf9
-         coV28PYhqNko0J4ujE0G+EiOiAiD6yPpzoHyvcM9FXeZGqvqOr/A2HzQDVAioI1vaX/P
-         AS+YUGziPWSkAUJoqMxGDDw+Sk1c9x6Xti4OtW+NKksDj4HMYt1fHdkPIsa4PPT34rjI
-         VAPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781533035; x=1782137835;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xxStlaNB4x9Mu659Ds+9UQmpLOGQ5xsUav0PKNZl0Yw=;
-        b=iucDlTNHECY0i2bYUxD49zq+YwjJzgBCYWbj4zjZi7PpEsVuNpbFQKIAVPxZRY205C
-         caN9sOvhuoCCxOs92gghwuf3tgDbL8SgUFzEzgU3OXKukdhKqWQkWUUaYlLqaoT5Vcvf
-         DKzoYCKxQu9lxryHRe+rBeW+92DPgCRRuvmj43hHgNIccYGF74pCA2oYGWonhwFX8reS
-         R0n1T4QBWZoq8zKpSX1uCojYPRspahSsJMiuUKgzj8sDBpzdiifPPgTAzTxCsYZ5JIBr
-         vIAXfg3cC9hdRf0iEXA4RXu2HvQ0DkNFL2Bjom52bfwAFraGHxTjsslJldhKUefsWzMK
-         CBXw==
-X-Forwarded-Encrypted: i=1; AFNElJ9oJzgQl2mnLb5hlAzZ+T/yKpSybX/QHXtxANesuM+IPvGcJDl3MK2uJ0z3XM2xTBDqFHenG4cM5qJ3L/3dKKJ1N24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGqNEVCYCjbif5p4NET/QktpUITZp2E64zJ2/Bg9yLs8gd6bKj
-	HRd0xC+50VepKPlm8xbjDjJJrICzva2P8rChggeqOjybZxj90hFzAz2uG+Mc6p37eVRz9q8zJbQ
-	30CqyWNhX2q9Q7v1lEscSezIxE5Qm5VgG+3CKw/bxRWs02D+uf7/mJlbLa2Hy/ibPbRmyrCD4Ri
-	Q=
-X-Gm-Gg: Acq92OEzpp2/OLO/aHINTRvCyFLRRJKtxh+TbH7xEcI7UQQqcBVIS9j/6V2ldyH0eqQ
-	RYIESYUaRoKwzEGWu0tpniXiDSovU87VHqafyBc0OH1GWvVnMsWA2JfSqXRpe9CgDaa1cluHg9u
-	onW0CKQUWiQEtHSrQYBeCDZUfZfeEm8X7wwaxKmrS1y5sD7lMx4Lr30VxVi/+Qd7rU5rGle44Tz
-	xnv3wCL5gLWsZK2CsCn/1AH+4VlBwABtKytei8s2AkZI3Raa2N1R6qG/wsnj6b2StyM9O4FVIpZ
-	o2DRhtHXdmxr5Njmqv7XmMGc1T1twvpnQt2gi7ArtK5qbQX/RB51iQ77WagHm9LuL9QY/UAMVhe
-	2xEP4+0Nicsi+Q3XTKr5ZVfiFHnzDDbUechkH9d5N72SrppMmf2eltAc=
-X-Received: by 2002:a17:90b:514f:b0:35a:189b:43db with SMTP id 98e67ed59e1d1-37a0184a3bemr15713038a91.4.1781533035404;
-        Mon, 15 Jun 2026 07:17:15 -0700 (PDT)
-X-Received: by 2002:a17:90b:514f:b0:35a:189b:43db with SMTP id 98e67ed59e1d1-37a0184a3bemr15712968a91.4.1781533034731;
-        Mon, 15 Jun 2026 07:17:14 -0700 (PDT)
-Received: from hu-ptalari-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-379e8cc467csm7172476a91.2.2026.06.15.07.17.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 07:17:14 -0700 (PDT)
-From: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Date: Mon, 15 Jun 2026 19:46:53 +0530
-Subject: [PATCH v5 2/2] serial: qcom-geni: Add tracepoints for Qualcomm
- GENI serial driver
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tpe1s7W/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9FA1F000E9;
+	Mon, 15 Jun 2026 14:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781534339;
+	bh=NLJ1HyaUGHk9FC6sPoHgRQivjZ9rWHzGujDQIgijU0E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Tpe1s7W/FGNaFy4435tVtHAd9EY3oIvVA4mf4Fb3YDtRFfntZdHFaKKi4f9CCh34Q
+	 N4xz+lIF98xwePPiI+ghawakdTdThDF5S3F8FV+xN0fCucATIu2Lx6YySlJwGbHNu+
+	 2QBbGn2rIZUR9hjHSmq7MQJFg7R6sG3rczMZlJrTSWeubKk3zLT+pforXagFL+Ylvn
+	 fpwfdemAo9uIZautm9dnwTWDKtjOgkD55tEAMcD9uHOTH9QQaMQFGigGXE9tDDkjfE
+	 8O+X25HAcTiNhHhq8UDLz8uu0M0ZPrB8HafAzb9Z3yU7oGpTq13M0aCIUq+uHxmTAc
+	 GX64SZo27dNAQ==
+Message-ID: <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
+Date: Mon, 15 Jun 2026 16:38:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
+ Nodes (w/ Compressed RAM)
+Content-Language: en-US
+To: Gregory Price <gourry@gourry.net>,
+ "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+ kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+ mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+ baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+ jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+ riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+ roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+ zhengqi.arch@bytedance.com, terry.bowman@amd.com,
+ Matthew Wilcox <willy@infradead.org>
+References: <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F> <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F> <ah-0CyZurn5D1ezY@parvat>
+ <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+ <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
+ <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
+ <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ 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
+In-Reply-To: <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260615-add-tracepoints-for-qcom-geni-serial-v5-2-2efa4c97e0e2@oss.qualcomm.com>
-References: <20260615-add-tracepoints-for-qcom-geni-serial-v5-0-2efa4c97e0e2@oss.qualcomm.com>
-In-Reply-To: <20260615-add-tracepoints-for-qcom-geni-serial-v5-0-2efa4c97e0e2@oss.qualcomm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, konrad.dybcio@oss.qualcomm.com
-Cc: Praveen Talari <praveen.talari@oss.qualcomm.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        mukesh.savaliya@oss.qualcomm.com, aniket.randive@oss.qualcomm.com,
-        chandana.chiluveru@oss.qualcomm.com
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781533020; l=4256;
- i=praveen.talari@oss.qualcomm.com; s=20251114; h=from:subject:message-id;
- bh=UK0w8cVX6HonoLLMdXc+3FVa/9hg3gdhTjqWi4T6mns=;
- b=qTbvMsUOC65Bt7ZLTkLfW54/qFSjUxfHmp6BMI0qwDqiP42Ml3uTZGq2DsyEV+gNq55q3IPdH
- e6PCr/CrgyGCOLA+sYrx/D/Rywd9phNURw0u2ZI1ocRUpjEirRPcvKo
-X-Developer-Key: i=praveen.talari@oss.qualcomm.com; a=ed25519;
- pk=NGK/88fjyHXgfhIKwag7+uIytOmyOypvZ/hDFaYPEss=
-X-Authority-Analysis: v=2.4 cv=V5tNF+ni c=1 sm=1 tr=0 ts=6a30096c cx=c_pps
- a=0uOsjrqzRL749jD1oC5vDA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=EUspDBNiAAAA:8 a=KXSloCXmEunfo-Xy6rIA:9 a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19
- a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
-X-Proofpoint-GUID: D7cM48z1NUVVNZGiCOc4Ikd3lqdolyxS
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDE1MCBTYWx0ZWRfXxiE1zmmgbyKk
- 7TddMf0kN8ik+Qxabi61xMGhoL7Pu/G8yX5xJ6CfpD/QJrChQgKJ53iMsuJ12zPkW/useA9qqsR
- WzQw9Ye8NBZXZixoRkn1IJgkc0j2E8A=
-X-Proofpoint-ORIG-GUID: D7cM48z1NUVVNZGiCOc4Ikd3lqdolyxS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDE1MCBTYWx0ZWRfXwtKN87w7ZC3Q
- rN4utfY+cks4BDgGdi6qLjtk57iHNf1f2VI5ZLWKPJ/sEqzmwEGTkB7QNAosAdpdYaTwICBcJ4z
- NErM/IxbpxAwHaTBMw14HcVERlcJVjpbNqmzkuApzsrAjbguMSsL8vZJLfDPb2oeZ1QXuTmwIGr
- DoPGFD7OZ5yDSDwGgkdsSkoCfpci0FAOozrXW5XaCOsNdSJewdx0tYKU3aN9yIlWe0ZIVgER/LH
- 4DiyiMnNRuQpTJHaGiQ5Gl8of8SLVuCCebHpHNs4VIlmlSP4nta0c3nPPftT3Ib34+rhCX4qNY5
- MQpTb+ms/n1dlt92dLK2D+D2Io7tZ/g0gpcoYUMR9STV0r0Gn6UKfC2MiY3GCkX7Wc8ZrVc1f/O
- HHa5ALJPHxT/grSE2MvRqPwDlNL9pENfuhJ++E2X4dF0ACTxVdEE+VLiPxxkhK+SWLcISX/Ma51
- +wE579f2G0S0b/TwE3A==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-15_03,2026-06-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 phishscore=0 malwarescore=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606150150
 
-Add tracing to the Qualcomm GENI serial driver to improve runtime
-observability.
+On 6/12/26 17:29, Gregory Price wrote:
+> On Wed, Jun 10, 2026 at 04:12:52PM -0400, Gregory Price wrote:
+>> On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
+>> > > 
+>> > > I understand this question in two ways:
+>> > > 
+>> > >   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
+>> > 
+>> > Yes. Can we only allow folios to be allocated from private memory nodes. So let
+>> > me reply to that one below.
+>> > 
+>> ... snip ...
+>> > 
+>> > At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
+>> > context might be better. I think there was also talk about how the memalloc_*
+>> > interface might be a better way forward. Maybe we would start giving the
+>> > allocator more context ("we are allocating a folio").
+>> > 
+>> > The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
+>> >
+>> 
+>> I will still probably send the next RFC version tomorrow or friday,
+>> as I want to get some eyes on the __GFP_PRIVATE-less pattern.
+>> 
+>> Also, I made a new `anondax` driver which enables userland testing
+>> of this functionality without any specialty hardware.
+>> 
+> 
+> (apologies for the length of this email: this will all be covered in
+> the coming cover letter, but I just wanted to share a bit of a preview)
+> 
+> ===
+> 
+> Just another small update - I am planning to post the RFC today once i
+> get some mild cleanup done.  It will be based on the dax atomic hotplug
+> 
+> https://lore.kernel.org/linux-mm/20260605211911.2160954-1-gourry@gourry.net/
+> 
+> But a couple specific details regarding the memalloc pieces that i've
+> learned the past couple of days playing with it.
+> 
+> 1) memalloc_folio is required to ensure non-folio allocations don't land
+>    on the private node, even if it happens within a memalloc_private
+>    context.  Since memalloc_folio may be useful in contexts outside of
+>    private nodes, I kept this as a separate flag.
+> 
+>    If we think there will *never* be additional users of memalloc_folio,
+>    then we could fold _folio into _private to save the flag for now and
+>    add it back when we actually need it.
+> 
+> 2) memalloc_private is needed to unlock private nodes, but in the
+>    original NOFALLBACK-only design, you also needed __GFP_THISNODE.
+> 
+>    This is *highly* restrictive.  I found when playing with mbind that
+>    MPOL_BIND + __GFP_THISNODE generates a WARN (valid WARN, it normally
+>    implies a bug). 
+> 
+>    That leads me to #3
 
-Trace hooks are added at key points including termios and clock
-configuration, manual control get/set, interrupt handling, and data
-TX/RX paths.
+I think the memalloc approach is dangerous due to unexpected nesting. There
+might be nested page allocations in page allocation itself (due to some
+debugging option). But also interrupts do not change what "current" points
+to. Suddenly those could start requesting folios and/or private nodes and be
+surprised, I'm afraid.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
----
-v2->v3:
-- Updated commit text(removed example as it was available on cover
-  letter).
----
- drivers/tty/serial/qcom_geni_serial.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+The memalloc scopes only work well when they restrict the context wrt
+reclaim, and allocations in IRQ have to be already restricted heavily
+(atomic) so further memalloc restrictions don't do anything in practice. But
+to make them change other aspects of the allocations like this won't work.
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index d81b539cff7f..4b62e58d4918 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -7,6 +7,9 @@
- /* Disable MMIO tracing to prevent excessive logging of unwanted MMIO traces */
- #define __DISABLE_TRACE_MMIO__
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/qcom_geni_serial.h>
-+
- #include <linux/clk.h>
- #include <linux/console.h>
- #include <linux/io.h>
-@@ -226,7 +229,7 @@ static void qcom_geni_serial_config_port(struct uart_port *uport, int cfg_flags)
- static unsigned int qcom_geni_serial_get_mctrl(struct uart_port *uport)
- {
- 	unsigned int mctrl = TIOCM_DSR | TIOCM_CAR;
--	u32 geni_ios;
-+	u32 geni_ios = 0;
- 
- 	if (uart_console(uport)) {
- 		mctrl |= TIOCM_CTS;
-@@ -236,6 +239,8 @@ static unsigned int qcom_geni_serial_get_mctrl(struct uart_port *uport)
- 			mctrl |= TIOCM_CTS;
- 	}
- 
-+	trace_geni_serial_get_mctrl(uport->dev, mctrl, geni_ios);
-+
- 	return mctrl;
- }
- 
-@@ -254,6 +259,8 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
- 	if (port->manual_flow && !(mctrl & TIOCM_RTS) && !uport->suspended)
- 		uart_manual_rfr = UART_MANUAL_RFR_EN | UART_RFR_NOT_READY;
- 	writel(uart_manual_rfr, uport->membase + SE_UART_MANUAL_RFR);
-+
-+	trace_geni_serial_set_mctrl(uport->dev, mctrl, uart_manual_rfr);
- }
- 
- static const char *qcom_geni_serial_get_type(struct uart_port *uport)
-@@ -684,6 +691,8 @@ static void qcom_geni_serial_start_tx_dma(struct uart_port *uport)
- 	xmit_size = kfifo_out_linear_ptr(&tport->xmit_fifo, &tail,
- 			UART_XMIT_SIZE);
- 
-+	trace_geni_serial_tx_data(uport->dev, tail, xmit_size);
-+
- 	qcom_geni_set_rs485_mode(uport, SER_RS485_RTS_ON_SEND);
- 
- 	qcom_geni_serial_setup_tx(uport, xmit_size);
-@@ -910,8 +919,10 @@ static void qcom_geni_serial_handle_rx_dma(struct uart_port *uport, bool drop)
- 		return;
- 	}
- 
--	if (!drop)
-+	if (!drop) {
-+		trace_geni_serial_rx_data(uport->dev, port->rx_buf, rx_in);
- 		handle_rx_uart(uport, rx_in);
-+	}
- 
- 	ret = geni_se_rx_dma_prep(&port->se, port->rx_buf,
- 				  DMA_RX_BUF_SIZE,
-@@ -1082,6 +1093,10 @@ static irqreturn_t qcom_geni_serial_isr(int isr, void *dev)
- 	geni_status = readl(uport->membase + SE_GENI_STATUS);
- 	dma = readl(uport->membase + SE_GENI_DMA_MODE_EN);
- 	m_irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
-+
-+	trace_geni_serial_irq(uport->dev, m_irq_status, s_irq_status,
-+			      dma_tx_status, dma_rx_status);
-+
- 	writel(m_irq_status, uport->membase + SE_GENI_M_IRQ_CLEAR);
- 	writel(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR);
- 	writel(dma_tx_status, uport->membase + SE_DMA_TX_IRQ_CLR);
-@@ -1294,8 +1309,8 @@ static int geni_serial_set_rate(struct uart_port *uport, unsigned int baud)
- 		return -EINVAL;
- 	}
- 
--	dev_dbg(port->se.dev, "desired_rate = %u, clk_rate = %lu, clk_div = %u, clk_idx = %u\n",
--		baud * sampling_rate, clk_rate, clk_div, clk_idx);
-+	trace_geni_serial_clk_cfg(uport->dev, baud * sampling_rate, clk_rate,
-+				  clk_div, clk_idx);
- 
- 	uport->uartclk = clk_rate;
- 	port->clk_rate = clk_rate;
-@@ -1455,6 +1470,10 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
- 	writel(bits_per_char, uport->membase + SE_UART_TX_WORD_LEN);
- 	writel(bits_per_char, uport->membase + SE_UART_RX_WORD_LEN);
- 	writel(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
-+
-+	trace_geni_serial_set_termios(uport->dev, baud, bits_per_char,
-+				      tx_trans_cfg, tx_parity_cfg, rx_trans_cfg,
-+				      rx_parity_cfg, stop_bit_len);
- }
- 
- #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
-
--- 
-2.34.1
+> 3) If a private node is opted into something like Demotion (the node is
+>    a demotion target) or mbind(), such that normal kernel operation can
+>    place memory there - it's *pseudo-private*, and should actually land
+>    in it's own FALLBACK list (reachable without __GFP_THISNODE, but not
+>    reachable as a normal fallback allocation target).
+> 
+> I'm still playing with this, but I think we can even omit the
+> __GFP_THISNODE requirement (my initial feeling that __GFP_THISNODE
+> didn't buy us anything in particular seems to have panned out).
+> 
+> At the end of the day, this makes the whole memalloc_private_save()
+> pattern a heck of a lot cleaner than trying fiddle with GFP.
+> 
+> I think you will all enjoy how clean the code ends up, and how easily
+> testable it is.
+> 
+> As a testbed I've implement an anondax (we can discuss naming) that
+> adds some sample NODE_PRIVATE_OPT_* flags so you can do the following.
+> 
+> I'm including this in the next RFC - but we can hack the entire thing
+> off (including the OPT flags) if we prefer to just get the base set in
+> without a new driver as a start.
+> 
+> echo 1 > dax0.0/reclaim   # kswapd and reclaim run normally on this node
+> echo 1 > dax0.0/demotion  # it is a demotion target
+> echo 1 > dax0.0/mbind     # mbind() can target this node for anon-vma's
+> echo 1 > dax0.0/madvise   # allow madvise() to operate on its folios
+> echo 1 > dax0.0/numa_balance  # allow numa balancing for this node
+> echo 1 > dax0.0/ltpin     # allow GUP longterm pin to operate normally
+> echo * > dax0.0/adistance # set the adistance for hotplug time
+> echo * > dax0.0/hotplug   # same as kmem/hotplug
+> 
+> This also means *existing hardware* can leverage private nodes if
+> they're capable of generating a dax device.
+> 
+> I've even gotten it such that you can put a private node above dram in
+> the adistance heirarchy - which means demotion flows downward from
+> device to CPU, but allocations don't default or fallback there.
+> 
+> This seems *immediately* useful for a variety of use cases.
+> 
+> ~Gregory
+> _______________________________________________
+> Lsf-pc mailing list
+> Lsf-pc@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/lsf-pc
 
