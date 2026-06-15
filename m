@@ -1,39 +1,43 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A509940E8F4
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 16:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670D640F8E9
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 16:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781541923; cv=none; b=XKg9rSl3c0o3k1lGAgzfmQozHj32P0+AwnveXyeX69YnsTxAySEsL77HERd92oY61xD/7fynramqFT9OI05n20WgGRjgiVCdcgO7jBHn7/5EciYYQ9n4xUub4oZKt12A7KTBjUF1wGE3drirgzXNZZvva4MssFFiiTYSX2yCBPQ=
+	t=1781541927; cv=none; b=enXEq+K6SLL93mqEXtG2+DiNIrub/eoGQf1DzoxP/1hGhw+Tnm/5TumX+mpKo/JXoTzCDrIbMQveDRMiJ6b3sjjfHqF+PRxgUXKaaYaU5bWwqygr50o3Cn+XePx3Oij6SKRmvXLjbnlGnOIX0GSv+btiQzk1OV6g1BNLot74evo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781541923; c=relaxed/simple;
-	bh=RiBqeywWeI3b1Rpr8H1Hk9Dc3cIEHX+XSdJ/CwOCUqU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=a7iA/TiaEpxP3geERqInEqUFPdGt+/F0P3eBOSLdbUjDDQEOcjwg8gBvcH50LtaYWkREjQt5todZrV7/D8oaSGuw+D9Wdo+p28a2SfdisehqHlS2hoytsxqkZ4venGCaGDsUhbmN+6Xo9TQcW9dwA8fVAkOrUTlerUICLGFNFCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dF9RQAk6; arc=none smtp.client-ip=95.215.58.174
+	s=arc-20240116; t=1781541927; c=relaxed/simple;
+	bh=qKWnneKAtGUoeRmEMUOeFKJHRf+QxxhOhN416oe9nvA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NXg0cnysxpbHP3xJ0k5cDnH0bjoMb0lkW4/EyoVIFX/MA33o3DBapzJqeykaauK240VrPjUDZPMYtGjSZaNXYSHCpXawheMQYvkDHkh5hvvll82Lb4TUetajFu9zYEt50UW0yXlOpOUW94gac46F+cw+yCYsqqpLV535BFpWeQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JKGe7q5h; arc=none smtp.client-ip=95.215.58.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dF9RQAk6"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JKGe7q5h"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781541909;
+	t=1781541923;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Pd+jfSSVlSnyTqB7FPjgaNUtNm21pbTrUo2wVp3Q8rw=;
-	b=dF9RQAk6IBht0AdV57mn4VmWJ3qo2iLhfvoGUxvWvb1xU57Er1BTU+1sJqcvmHD8My7JpB
-	kfuoM4FUlE5e6VX3zNh5N3NQSKN+LGJhtbS34EmGpTTyy27VxUAIYZzKEQdBKMc/nKui9L
-	thfifXjn/0sGMKATyzI07ujGg6cDV1c=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5CyGz3TR9s7ubrGHuzXBTbIIWmicxQdnFDKpHFKj+eA=;
+	b=JKGe7q5hIaH7Dq/yc+I9PUWLpcXlw+ZiU3xXeyriMrNFXQfX2TRe89JFRkU2LnMghdRTIH
+	pxnHqIkrR7M5wBymc4u/QIqHk470ODGrX1eTT6b5/5DB0ylbH7kKpVUzXEPsif7dXm35cX
+	/NxEG8QRPNL9akz5HI4Zi4abJT+eNQM=
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH 0/3] rv/reactors: fix lockdep warning and add KUnit tests
-Date: Tue, 16 Jun 2026 00:44:47 +0800
-Message-Id: <cover.1781541556.git.wen.yang@linux.dev>
+Subject: [PATCH 3/3] rv/reactors: add KUnit tests for reactor_panic
+Date: Tue, 16 Jun 2026 00:44:50 +0800
+Message-Id: <810f587d63c84b64067f990299be02b88f5d8106.1781541556.git.wen.yang@linux.dev>
+In-Reply-To: <cover.1781541556.git.wen.yang@linux.dev>
+References: <cover.1781541556.git.wen.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -46,94 +50,168 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Wen Yang <wen.yang@linux.dev>
 
-We occasionally hit a lockdep "Invalid wait context" warning in production
-environments when rv_react() callbacks are interrupted.
+Add KUnit tests for the panic reactor covering:
+- Reactor registration and unregistration lifecycle
+- Panic notifier chain reachability
 
-The bug is intermittent in production. KUnit tests with busy-wait callbacks
-can reproduce it by holding the CPU long enough for a timer interrupt to fire
-during rv_react(), exposing the lockdep constraint violation:
+The real rv_panic_reaction() calls vpanic(), which is __noreturn and
+halts the system. KUnit cannot test across that boundary. Instead, the
+test drives atomic_notifier_call_chain(&panic_notifier_list, ...) directly
+with a high-priority mock notifier that returns NOTIFY_STOP, verifying
+that the panic notification propagates without triggering real handlers
+(kdump, watchdog, reboot).
 
-[   44.820913] =============================
-[   44.820923] [ BUG: Invalid wait context ]
-[   44.821137] 7.1.0-rc7-next-20260612-virtme #6 Tainted: G                 N
-[   44.821203] -----------------------------
-[   44.821211] kunit_try_catch/209 is trying to lock:
-[   44.821244] ffff8a743ed3e8a0 (&rq->__lock){-...}-{2:2}, at: __schedule+0x102/0x13d0
-[   44.821688] other info that might help us debug this:
-[   44.821708] context-{5:5}
-[   44.821730] 1 lock held by kunit_try_catch/209:
-[   44.821745]  #0: ffffffffb6ba62c0 (rv_react_map-wait-type-override){+.+.}-{1:1}, at: rv_react+0x9d/0xf0
-[   44.821803] stack backtrace:
-[   44.822110] CPU: 10 UID: 0 PID: 209 Comm: kunit_try_catch Tainted: G                 N  7.1.0-rc7-next-20260612-virtme #6 PREEMPT_{RT,(full)}
-[   44.822197] Tainted: [N]=TEST
-[   44.822210] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_caps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   44.822328] Call Trace:
-[   44.822377]  <TASK>
-[   44.822806]  dump_stack_lvl+0x78/0xe0
-[   44.822860]  __lock_acquire+0x926/0x1c90
-[   44.822888]  lock_acquire+0xd3/0x310
-[   44.822901]  ? __schedule+0x102/0x13d0
-[   44.822919]  ? rcu_qs+0x2d/0x1a0
-[   44.822954]  _raw_spin_lock_nested+0x36/0x50
-[   44.822966]  ? __schedule+0x102/0x13d0
-[   44.822979]  __schedule+0x102/0x13d0
-[   44.822993]  ? mark_held_locks+0x40/0x70
-[   44.823009]  preempt_schedule_irq+0x37/0x70
-[   44.823018]  irqentry_exit+0x1da/0x8c0
-[   44.823032]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
-[   44.823093] RIP: 0010:mock_printk_react+0x2a/0x50
-[   44.823250] Code: f3 0f 1e fa 0f 1f 44 00 00 41 54 49 89 f4 55 48 89 fd 53 e8 18 8b db ff 4c 89 e6 48 89 ef 48 89 c3 e8 fa 8e ed ff eb 02 f3 90 <e8> 01 8b db ff 48 29 d8 48 3d 3f 4b 4c 00 76 ee 5b 5d 41 5c c3 cc
-[   44.823303] RSP: 0018:ffffd1c3c0733d38 EFLAGS: 00000297
-[   44.823332] RAX: 00000000000119f3 RBX: 0000000a74e60d1c RCX: 000000000000001f
-[   44.823342] RDX: 0000000000000000 RSI: 000000003348c8a2 RDI: ffffffffc1abbfd9
-[   44.823351] RBP: ffffffffb671b613 R08: 0000000000000002 R09: 0000000000000000
-[   44.823359] R10: 0000000000000001 R11: 0000000000000000 R12: ffffd1c3c0733d60
-[   44.823367] R13: ffffffffb575a5fd R14: ffffd1c3c0017be8 R15: ffffd1c3c00179f8
-[   44.823397]  ? rv_react+0x9d/0xf0
-[   44.823437]  ? mock_printk_react+0x2f/0x50
-[   44.823448]  rv_react+0xb4/0xf0
-[   44.823455]  ? rv_react+0x9d/0xf0
-[   44.823476]  test_printk_react_called+0x83/0xb0
-[   44.823486]  ? __pfx_mock_printk_react+0x10/0x10
-[   44.823502]  ? __pfx_mock_printk_react+0x10/0x10
-[   44.823513]  kunit_try_run_case+0x97/0x190
-[   44.823534]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10
-[   44.823544]  kunit_generic_run_threadfn_adapter+0x21/0x40
-[   44.823551]  kthread+0x124/0x160
-[   44.823562]  ? __pfx_kthread+0x10/0x10
-[   44.823574]  ret_from_fork+0x291/0x3b0
-[   44.823585]  ? __pfx_kthread+0x10/0x10
-[   44.823595]  ret_from_fork_asm+0x1a/0x30
-[   44.823641]  </TASK>
+The mock notifier busy-waits to simulate real handler execution time
+(e.g., crash_save_vmcoreinfo, emergency_restart preamble) under the
+panic context constraints.
 
-
-Patch 1 fixes the lockdep bug by correcting rv_react()'s wait_type_inner
-from LD_WAIT_CONFIG (which inherits the outer context) to LD_WAIT_SPIN
-(the tightest constraint callbacks must satisfy).
-
-Patch 2 adds KUnit tests for reactor_printk. The busy-wait in the mock
-callback reproduces the timer interrupt scenario that exposes the bug.
-
-Patch 3 adds KUnit tests for reactor_panic, exercising the panic notifier
-chain without halting the system.
-
-Tested with CONFIG_PROVE_LOCKING=y and CONFIG_KUNIT=y.
-
-
-Wen Yang (3):
-  rv/reactors: fix lockdep "Invalid wait context" in rv_react()
-  rv/reactors: add KUnit tests for reactor_printk
-  rv/reactors: add KUnit tests for reactor_panic
-
- kernel/trace/rv/Kconfig                |  20 ++++
- kernel/trace/rv/Makefile               |   2 +
- kernel/trace/rv/reactor_panic_kunit.c  | 106 +++++++++++++++++++++
- kernel/trace/rv/reactor_printk_kunit.c | 123 +++++++++++++++++++++++++
- kernel/trace/rv/rv_reactors.c          |   8 +-
- 5 files changed, 258 insertions(+), 1 deletion(-)
+Signed-off-by: Wen Yang <wen.yang@linux.dev>
+---
+ kernel/trace/rv/Kconfig               |  10 +++
+ kernel/trace/rv/Makefile              |   1 +
+ kernel/trace/rv/reactor_panic_kunit.c | 106 ++++++++++++++++++++++++++
+ 3 files changed, 117 insertions(+)
  create mode 100644 kernel/trace/rv/reactor_panic_kunit.c
- create mode 100644 kernel/trace/rv/reactor_printk_kunit.c
 
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index ff47895c897f..6c6c43c5f86c 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -121,3 +121,13 @@ config RV_REACT_PANIC
+ 	help
+ 	  Enables the panic reactor. The panic reactor emits a printk()
+ 	  message if an exception is found and panic()s the system.
++
++config RV_REACT_PANIC_KUNIT
++	bool "KUnit tests for reactor_panic" if !KUNIT_ALL_TESTS
++	depends on RV_REACT_PANIC && KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  This builds KUnit tests for the panic reactor. These are only
++	  for development and testing, not for regular kernel use cases.
++
++	  If unsure, say N.
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index ef0a2dcb927c..2ebfe5e5068c 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -25,3 +25,4 @@ obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
+ obj-$(CONFIG_RV_REACT_PRINTK_KUNIT) += reactor_printk_kunit.o
+ obj-$(CONFIG_RV_REACT_PANIC) += reactor_panic.o
++obj-$(CONFIG_RV_REACT_PANIC_KUNIT) += reactor_panic_kunit.o
+diff --git a/kernel/trace/rv/reactor_panic_kunit.c b/kernel/trace/rv/reactor_panic_kunit.c
+new file mode 100644
+index 000000000000..f9a09ae7aaad
+--- /dev/null
++++ b/kernel/trace/rv/reactor_panic_kunit.c
+@@ -0,0 +1,106 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit tests for reactor_panic
++ *
++ */
++
++#include <kunit/test.h>
++#include <linux/rv.h>
++#include <linux/panic_notifier.h>
++#include <linux/notifier.h>
++#include <linux/limits.h>
++#include <linux/sched/clock.h>
++#include <linux/processor.h>
++
++/* Simulated execution time for mock panic notifier (nanoseconds). */
++#define RV_PANIC_NOTIFIER_EXEC_NS	2000000ULL
++
++/* Test state */
++static struct {
++	bool notifier_called;
++} panic_test_state;
++
++/*
++ * Mock panic notifier callback.
++ *
++ * Runs at INT_MAX priority and returns NOTIFY_STOP to prevent real panic
++ * handlers (kdump, watchdog) from executing during the test.  Busy-waits
++ * RV_PANIC_NOTIFIER_EXEC_NS to simulate a real handler's execution time.
++ */
++static int mock_panic_notifier_fn(struct notifier_block *nb,
++				  unsigned long action, void *data)
++{
++	char *msg = data;
++	u64 start = sched_clock();
++
++	panic_test_state.notifier_called = true;
++	pr_emerg("KUnit: reactor_panic test intercepted panic notifier: %s\n",
++		 msg ? msg : "(no message)");
++
++	while (sched_clock() - start < RV_PANIC_NOTIFIER_EXEC_NS)
++		cpu_relax();
++
++	return NOTIFY_STOP;
++}
++
++static struct notifier_block mock_panic_nb = {
++	.notifier_call	= mock_panic_notifier_fn,
++	.priority	= INT_MAX,
++};
++
++static struct rv_reactor mock_panic_reactor = {
++	.name		= "test_panic",
++	.description	= "test panic reactor",
++};
++
++static int reactor_panic_kunit_init(struct kunit *test)
++{
++	panic_test_state.notifier_called = false;
++	return 0;
++}
++
++/* Test 1: register and unregister reactor */
++static void test_panic_register_unregister(struct kunit *test)
++{
++	int ret;
++
++	ret = rv_register_reactor(&mock_panic_reactor);
++	KUNIT_EXPECT_EQ(test, ret, 0);
++	KUNIT_EXPECT_STREQ(test, mock_panic_reactor.name, "test_panic");
++
++	rv_unregister_reactor(&mock_panic_reactor);
++}
++
++/*
++ * Test 2: panic notifier chain is reachable.
++ *
++ * vpanic() calls atomic_notifier_call_chain(&panic_notifier_list, ...).
++ * Drive the chain directly to verify panic notifiers receive the notification —
++ * the observable side-effect of reactor_panic without halting the system.
++ */
++static void test_panic_notifier_called(struct kunit *test)
++{
++	atomic_notifier_chain_register(&panic_notifier_list, &mock_panic_nb);
++	atomic_notifier_call_chain(&panic_notifier_list, 0,
++				   "panic violation message");
++	atomic_notifier_chain_unregister(&panic_notifier_list, &mock_panic_nb);
++
++	KUNIT_EXPECT_TRUE(test, panic_test_state.notifier_called);
++}
++
++static struct kunit_case reactor_panic_kunit_cases[] = {
++	KUNIT_CASE(test_panic_register_unregister),
++	KUNIT_CASE(test_panic_notifier_called),
++	{}
++};
++
++static struct kunit_suite reactor_panic_kunit_suite = {
++	.name		= "rv_reactor_panic",
++	.init		= reactor_panic_kunit_init,
++	.test_cases	= reactor_panic_kunit_cases,
++};
++
++kunit_test_suite(reactor_panic_kunit_suite);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("KUnit tests for reactor_panic");
 -- 
 2.25.1
 
