@@ -1,80 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B382E2D9EDC
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 09:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0809E3D9684
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 10:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781517420; cv=none; b=RO6FyRFqpRtFCXqlmGsR1LhQM8qvuunGZede+aSvBU1ug3i98NatjaXzi/xtP9UhsvCeZHt+tNhmArml6tjSQI21nB4FUKi11y50lvpXzlFbaTzhHLwGafp7GAAr+Z5QXJsEbE4G7ybjfqeNA3ufE6lSwWYt7wmnZKS/pX9AtpM=
+	t=1781518353; cv=none; b=CDBAW3iAkY9WChH9RE/etKG4NhK9uj9CG89YJzEfnnEoOj3iYlHbOjTIe71A0BoXOMcSDNm4kCnewVdfwbzfwKPn1sa2d/RAYLi2CocuO958fgBcAKCvMmTlUm5DrH6SnZM78OtJvWlZaX7vq/VeIZcx/8NTipe2urnX/SjKQvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781517420; c=relaxed/simple;
-	bh=EX1QBW2Zn0BVDtuCduA9wEF5d0HWmdsgLO05qkdV3HQ=;
+	s=arc-20240116; t=1781518353; c=relaxed/simple;
+	bh=mc1zxisHkWiVd7CBd3GkM0WhffpmJu3KmjNbCP1J9gw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U6GWT8DxB85KK0mduZfWu+Igi++OG/TMAzGCB+jcngqh7xxjUvZHRzxNJuv9OE8CG2kGNpSXKwYsKu7U5psmR8OnSlrivbYcOmwfOhdRJ13BXE6GOvp94N6LzSfzzSfmx2N0Sr+JU32tRplnbgn0dV09xMnqW7uRDNJnqZCna9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RigLX31X; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=rRxF4vPSKBhKzxmwzlh+zuf0jP+thgXhYooN7FN8qiqy7gd6JU+HjCiDQexJ/T7lsdL8vZR2rlbk+YGa8z1Xx7xevh/phVKS+g9SxyL1z1YrQe4q91fLZ2zkdi9TCWdWXFjrhHEjolR2hdSrNPPmWq+Ixyy8Lq28txWfGEPNDjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZrHvf6RK; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RigLX31X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrHvf6RK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781517417;
+	s=mimecast20190719; t=1781518350;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T/PwRg718kogBMCY/fjDomNjGg31W98QX4Wq2qV0nkI=;
-	b=RigLX31XoLLXM/cM0PCmzQUgfdp7dKL2hR3w5uf/txf81PqmHM9ub41xSMKzfuAEVSzMiy
-	y116duXEsU4VcoOIaBUvj2wGRwPbCXSOljBzHK0Z8QTs9d+pqLMCOTC6OQYA6yjsZ4J404
-	1hvImV8Wsk+dJHkmNqWw4l6DLH4QPKY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=mc1zxisHkWiVd7CBd3GkM0WhffpmJu3KmjNbCP1J9gw=;
+	b=ZrHvf6RKZ8Vrt3Uzb7GEMFtuGYDlpujhRhiyH6S//UhQtTmOmulgn7lkNXeSopsyyO+7Kb
+	2FXUyiY1ogBxPUw5m2ZMncRWKfz3uAeoIiSN0sVvcvpuKyBLL/N8b7BHv/9iisqpAyCg83
+	WwCXWeV8XCav0AzAzE78iuJWzDfI1C8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-LRyAVpx4NNKAI3YVAmWQZg-1; Mon, 15 Jun 2026 05:56:56 -0400
-X-MC-Unique: LRyAVpx4NNKAI3YVAmWQZg-1
-X-Mimecast-MFC-AGG-ID: LRyAVpx4NNKAI3YVAmWQZg_1781517415
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-490b5d2e394so21152975e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 02:56:56 -0700 (PDT)
+ us-mta-436-RmU7dpNTMOaCa8_IAQwJfA-1; Mon, 15 Jun 2026 06:12:29 -0400
+X-MC-Unique: RmU7dpNTMOaCa8_IAQwJfA-1
+X-Mimecast-MFC-AGG-ID: RmU7dpNTMOaCa8_IAQwJfA_1781518348
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-45ef66cc579so1476965f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jun 2026 03:12:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781517415; x=1782122215;
+        d=1e100.net; s=20251104; t=1781518348; x=1782123148;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdVZ8Zm6R4iX8++LAiMGKRGC+5n+aNHI7iGhJHzDLTU=;
-        b=Dt09suJq0LYsnbd9rRpgHWEHbFipa3mtAqmwseTRT3yYQUzO0bKP7aIP7dKu6BPAui
-         dgXG4XNAS0JP+789KYTVTFhRIwiQVhYKfxOkx3Wd5Jfj12PN+TSLwFGXgDWOxWIVaiIj
-         XRCnD9cXL1FnOuzzO58YXv5xg7/OErNu86/MRrFZtFGVR9ldqXXavJqW29e8xZK0OUBp
-         hKXz3jybTbn3KP8XLs0hldR8Tj9RByqE0FiGGF7yIqRNGEO/6oIaTNkcMgpn+xbzsrqa
-         cDO6QoZg5ZBW2qISGGohImt+I38pAVIGy0i6v97gDJsTjcxNmscD+1qqqXArccnBhYxt
-         iwaA==
-X-Forwarded-Encrypted: i=1; AFNElJ+8i7ep7mqENw3f9bO89/EzwaHihRbi8711Ouwq4RQW0yASh1KoB7hICs3kjJ4wPW3v1KJL5LDBkAFaq1yj2OZ5WHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXeiBCNpJXld7CVk6zaOpCkg2C57/2FYdf8q+oviYMPTBBmMnT
-	ZuMJGzcGCTLwXvlfcIx6R01Si4jz/XwQ29DLRWFgue3hFRxQffwUDOk6/1eNxye567OhDIC4Db1
-	iQxoKRDsPGQoQewFEicsVslcoK1AuYQow0xX/qJDxZDLbBkhW9GWvnTsMJtCwo7n8LbEfwtHNNq
-	yg5wv1SA==
-X-Gm-Gg: Acq92OGC4p3zE6WAt5adjNceTuUyQc/wGMuOsPxvzVrvDtPzcU6rO4GTqi1BFjNqxsn
-	gx787kElYNFlZguTS1myeFQZ1RX8HYpz4d/hRDV9truAKnAg7RtDmZwjtbP5PJPH2oOOAd+oUNA
-	ncp/CDgbMepj/bA+1uP7HplscuzbO+DAsTrn+FfRQUZzbI97wkcQCVJEW9+Vb8Uj7dFupDwL5tk
-	nIwYUJgXjN9tIsmS9tK5KTKzFC79Nvko2w/Pspydzh/xlg8e2kjGIojaXIKgr7Jh/ZMwY7tnIFJ
-	7q92lNeDVd2ImIBfh0svNij9slPxvXhvong+LDrfHh3DLUR4Kypi0IdAYnPOWBQ6c+UD7gzFcxM
-	BO+KNb2vFAcQcDMAbTe8ABcNGgQ==
-X-Received: by 2002:a05:600c:5394:b0:492:29a1:98c4 with SMTP id 5b1f17b1804b1-49229a1991emr51447835e9.8.1781517415033;
-        Mon, 15 Jun 2026 02:56:55 -0700 (PDT)
-X-Received: by 2002:a05:600c:5394:b0:492:29a1:98c4 with SMTP id 5b1f17b1804b1-49229a1991emr51447505e9.8.1781517414624;
-        Mon, 15 Jun 2026 02:56:54 -0700 (PDT)
+        bh=J5KDtylEulH4nzlQDklazM4BcDULe+/NGudq0xGCiOA=;
+        b=JCMYRXMsvY5kIgnB2LZi6LJT9IA9Kl4j0zkP+mHv/+AwBRg4xi3EjW0KOhJj2qs0MZ
+         E5iC3W8rsEXW4AOWtGq2M8K4hkGZFQerBCSVgkZPX5dGaS/tu/alaJf2Cz+Y5EbmTLZ7
+         poCy/ZvU9a4EvE7cwkUF36O+YNNlOH9OCLtS9SvnB8psH1WsmEDWRhnoxUEGWNWgBqse
+         NwSQMLwYUBE+9CAoaUDyv5E7diyGPij/eOYVRfT7v7elBKi0bCeTm0ArO6290tvB/M9f
+         Adr0we3iSywSZG5u2PeV5q8VpV06wGoeFcmemCMjaExYyhk+ky11OPZWcIfhigxGdaf+
+         fDNQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/RW6ZhHQsEF+JkasbduPkUTsC1ktBjCWnDpxIjUFNkV5PBNwxvMnJ64x80ydi+Wqxsc9see7t/pFDhKtubk+A3ru8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyuv4ugijdH1051lBCDsOkLHKSxHNknajiU3phk/yDOkGTJ5vxq
+	MXLRapzKPPo+Hn3v9ITPwU0wLZMNS18JMScgtMsTF0KH7sQJplqa71Ct/SqFn7CwlOsxZdBkOaR
+	rFL0zdvU+LyKJrkmtUJA7TPbeQIZYuSsOC/2wkc9rcHvrV1IRMss182soLrxsZOrYHd1YIpMUnA
+	==
+X-Gm-Gg: Acq92OG3+wLSaTq+duBPYAibsZJLa0aG71oP1WvO3wotylH/icawjdRYbGx2LG7hdRW
+	LOuKUD+2AytIvKXpinjYOlgv8qjuc6opNeZvy9G2ksv/9JKM2bhyII5pB5HzIeukHzZnar5isYE
+	rgt8/+rZfZZOjHwdC85SmFHoXyZ/oN2G+ocmJ5rrw0LbooCkNYOuAL/mkXDWgedw0w9qn+7bMgA
+	mLEFz727FtfZyE6sVCkbof3s+AxvBKb316R39ivGxngrvc1MuMEXpcGNK1LcboWGGvKoLqxazKu
+	DZHsE66Lkpw7rr/5o/HTXNGwbXa1HqWjJzmnjvdpHedOXJ+oMtds44CwyLH9euQ7bvH8/q9fPcX
+	Xyae4HsHVvgNmZSZ9+SVkAV6Mhg==
+X-Received: by 2002:a05:6000:41fe:b0:460:67b7:54f1 with SMTP id ffacd0b85a97d-4606dbbcc38mr19632469f8f.42.1781518347877;
+        Mon, 15 Jun 2026 03:12:27 -0700 (PDT)
+X-Received: by 2002:a05:6000:41fe:b0:460:67b7:54f1 with SMTP id ffacd0b85a97d-4606dbbcc38mr19632415f8f.42.1781518347348;
+        Mon, 15 Jun 2026 03:12:27 -0700 (PDT)
 Received: from [192.168.1.167] ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490ea95c51dsm227714945e9.1.2026.06.15.02.56.53
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2d933esm31425885f8f.33.2026.06.15.03.12.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 02:56:54 -0700 (PDT)
-Message-ID: <a1d868cc9352b28f7309353a43c6759420b02b2c.camel@redhat.com>
-Subject: Re: [PATCH v3 1/9] rv/da: introduce DA_MON_ALLOCATION_STRATEGY
+        Mon, 15 Jun 2026 03:12:26 -0700 (PDT)
+Message-ID: <4442008c90e6957d9d6916a3b30afd1401b2f760.camel@redhat.com>
+Subject: Re: [PATCH v3 4/9] rv/ha: fix ha_invariant_passed_ns silent bypass
+ of invariant check
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: wen.yang@linux.dev
 Cc: Steven Rostedt <rostedt@goodmis.org>,
  linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Mon, 15 Jun 2026 11:56:53 +0200
-In-Reply-To: <496394879a590b4d7bafdb2f13618d2e30be982f.1780847473.git.wen.yang@linux.dev>
+Date: Mon, 15 Jun 2026 12:12:26 +0200
+In-Reply-To: <812b7b8e8979b4ab00ac7727e3fea578799f2a8b.1780847473.git.wen.yang@linux.dev>
 References: <cover.1780847473.git.wen.yang@linux.dev>
-	 <496394879a590b4d7bafdb2f13618d2e30be982f.1780847473.git.wen.yang@linux.dev>
+	 <812b7b8e8979b4ab00ac7727e3fea578799f2a8b.1780847473.git.wen.yang@linux.dev>
 User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -83,238 +84,135 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Ck4pTq_6sqI1MKv-httSW35YJWsQsu_ISBWMsjPWbrQ_1781517415
+X-Mimecast-MFC-PROC-ID: l9XH99Agw9Izd1fDrP75siG2tjdCyMongo6cSWM7C04_1781518348
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 2026-06-08 at 00:13 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> The function is documented as "prepare the invariant and return the
+> time
+> since reset", but on the first call (env_store =3D=3D U64_MAX) it exits
+> early without calling ha_set_invariant_ns():
+>=20
+> =C2=A0 if (ha_monitor_env_invalid(ha_mon, env))=C2=A0 /* env_store =3D=3D=
+ U64_MAX
+> */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;=C2=A0=C2=A0 /* ha_set_invariant_=
+ns skipped, env_store stays
+> U64_MAX */
+> =C2=A0 ...
+> =C2=A0 ha_set_invariant_ns(ha_mon, env, expire - passed, time_ns);
+>=20
+> This leaves env_store =3D=3D U64_MAX, so ha_check_invariant_ns() always
+> passes on the first activation regardless of elapsed time:
+>=20
+> =C2=A0 return READ_ONCE(ha_mon->env_store[env]) >=3D time_ns;=C2=A0 /* U6=
+4_MAX >=3D
+> any */
+>=20
+> Fix: establish the guard before converting to the invariant:
+>=20
+> =C2=A0 if (ha_monitor_env_invalid(ha_mon, env))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ha_reset_clk_ns(ha_mon, env, time_ns); /* =
+guard: env_store =3D
+> time_ns */
+> =C2=A0 passed =3D ha_get_env(ha_mon, env, time_ns);
+> =C2=A0 ha_set_invariant_ns(ha_mon, env, expire - passed, time_ns);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* invariant: env_store =3D t=
+ime_ns +
+> expire */
+>=20
+> Apply the same fix to ha_invariant_passed_jiffy().
+>=20
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
 
-> +#ifndef DA_MON_ALLOCATION_STRATEGY
-> +# define DA_MON_ALLOCATION_STRATEGY DA_ALLOC_AUTO
-> +#endif
+This is neat and probably works just fine in your case. Anyway I'm
+planning on a more seamless solution not involving invalid states at
+all. Initialisation would include a reset, which should work better on
+monitors doing da_handle_start(), so not running the first event.
+That's, by the way, pretty much what you wanted by doing reset() on the
+(virtual) init transition.
 
-I'm not sure the space goes there according to kernel coding style, we
-don't use it in this file and clang-format removes it. I'd keep
-consistency.
-
-...
-
-> =C2=A0
-> +/*
-> + * DA_MON_POOL_SIZE must be defined before this header is included
-
-I don't think we need to be this verbose (also, ha_monitor may not even
-be included if that's a da_monitor). I would stop at the line above.
-
-> (directly or
-> + * transitively via ha_monitor.h) when DA_ALLOC_POOL is selected.=C2=A0
-> In practice
-> + * this means defining it after the monitor's model header (which
-> supplies the
-> + * capacity constant) and before the ha_monitor.h include.
-> + */
-
-> +#if DA_MON_ALLOCATION_STRATEGY =3D=3D DA_ALLOC_POOL &&
-> !defined(DA_MON_POOL_SIZE)
-> +# error "DA_ALLOC_POOL requires DA_MON_POOL_SIZE to be defined
-> before including this header"
-
-Same here I'd keep consistency and remove the space before error.
-
-> +#endif
-
-...
- =C2=A0
-> +/*
-> + * Per-object pool state.
-> + *
-> + * Zero-initialised by default (storage =3D=3D NULL =E2=9F=B9 kmalloc mo=
-de).=C2=A0 A
-
-Mmh, =E2=9F=B9  doesn't seem to print that well on my terminal, let's perha=
-ps
-use plain old ASCII =3D> . Also I don't find what you put in parentheses
-to be adding much value, we could even omit it.
-
-I remember discussing about this so I may have missed your answer, but
-why don't we handle this pool as a simple kmem_cache/mempool instead of
-implementing a similar logic from scratch?
-
-> monitor
-> + * opts into pool mode by defining DA_MON_ALLOCATION_STRATEGY
-> DA_ALLOC_POOL
-> + * and DA_MON_POOL_SIZE before including this header;
-> da_monitor_init() then
-> + * pre-allocates the pool internally.
-> + *
-> + * Because every field is wrapped in this struct and the struct
-> itself is a
-> + * per-TU static, each monitor that includes this header gets a
-> completely
-> + * independent pool.=C2=A0 A kmalloc monitor (e.g. nomiss) and a pool
-> monitor
-> + * (e.g. tlob) therefore coexist without any interference.
-> + *
-> + * da_pool_return_cb runs from softirq (non-PREEMPT_RT) or rcuc
-> kthread
-> + * (PREEMPT_RT); spin_lock_irqsave handles both.
-> + */
-> +struct da_per_obj_pool {
-> +=09struct da_monitor_storage=C2=A0 *storage;=C2=A0 /* non-NULL =E2=9F=B9=
- pool
-> mode */
-> +=09struct da_monitor_storage **free;=C2=A0=C2=A0=C2=A0=C2=A0 /* kmalloc'=
-d pointer
-> stack */
-> +=09unsigned int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 free_top;
-> +=09unsigned int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 capacity; /* total number of
-> slots */
-> +=09spinlock_t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lock;
-> +};
-> +
-> +static struct da_per_obj_pool da_pool =3D {
-> +=09.lock =3D __SPIN_LOCK_UNLOCKED(da_pool.lock),
-> +};
-
-...
-
-> =C2=A0/*
-> =C2=A0 * da_destroy_storage - destroy the per-object storage
-> =C2=A0 *
-> - * The caller is responsible to synchronise writers, either with
-> locks or
-> - * implicitly. For instance, if da_destroy_storage is called at
-> sched_exit and
-> - * da_create_storage can never occur after that, it's safe to call
-> this without
-> - * locks.
-> - * This function includes an RCU read-side critical section to
-> synchronise
-> - * against da_monitor_destroy().
-> + * Pool mode: removes from hash and returns the slot via call_rcu().
-> + * Kmalloc mode: removes from hash and frees via kfree_rcu().
-> + *
-> + * Includes an RCU read-side critical section to synchronise against
-> + * da_monitor_destroy().
-> =C2=A0 */
-> =C2=A0static inline void da_destroy_storage(da_id_type id)
-> =C2=A0{
-> @@ -558,7 +670,11 @@ static inline void da_destroy_storage(da_id_type
-> id)
-> =C2=A0=09=09return;
-> =C2=A0=09da_monitor_reset_hook(&mon_storage->rv.da_mon);
-> =C2=A0=09hash_del_rcu(&mon_storage->node);
-> +#if DA_MON_ALLOCATION_STRATEGY =3D=3D DA_ALLOC_POOL
-> +=09call_rcu(&mon_storage->rcu, da_pool_return_cb);
-> +#else
-
-ifdeffery in functions is discouraged as quite unreadable. Since
-DA_MON_ALLOCATION_STRATEGY is guaranteed to be defined, simple C ifs are
-going to be mostly equivalent (the compiler will cut instead of the
-preprocessor, but still).
-
-> =C2=A0=09kfree_rcu(mon_storage, rcu);
-> +#endif
-> =C2=A0}
-
-...
-
-> +
-> +/*
-> + * da_monitor_init - initialise the per-object monitor
-> + *
-> + * Selects the allocation path at compile time based on
-> DA_MON_ALLOCATION_STRATEGY:
-> + *=C2=A0=C2=A0 DA_ALLOC_POOL=C2=A0=C2=A0 - pre-allocates DA_MON_POOL_SIZ=
-E storage slots.
-> + *=C2=A0=C2=A0 DA_ALLOC_AUTO / DA_ALLOC_MANUAL - initialises the hash ta=
-ble
-> only.
-> + */
-> =C2=A0static inline int da_monitor_init(void)
-> =C2=A0{
-> =C2=A0=09hash_init(da_monitor_ht);
-> +#if DA_MON_ALLOCATION_STRATEGY =3D=3D DA_ALLOC_POOL
-> +=09return __da_monitor_init_pool(DA_MON_POOL_SIZE);
-> +#else
-
-Same here, use if()
-
-> =C2=A0=09return 0;
-> +#endif
-> =C2=A0}
-> =C2=A0
-> -static inline void da_monitor_destroy(void)
-> +static inline void da_monitor_destroy_pool(void)
-> +{
-> +=09struct da_monitor_storage *ms;
-> +=09struct hlist_node *tmp;
-> +=09int bkt;
-> +
-> +=09/*
-> +=09 * Ensure all in-flight tracepoint handlers that may hold a
-> raw pointer
-> +=09 * to a pool slot (e.g. tlob_stop_task after its RCU guard
-> exits) have
-> +=09 * completed before we begin tearing down the pool.=C2=A0 Mirrors
-> the same
-> +=09 * call in da_monitor_destroy_kmalloc().
-> +=09 */
-> +=09tracepoint_synchronize_unregister();
-> +
-
-This is common between the pool and kmalloc flavours, you can leave it
-in da_monitor_destroy() before branching.
-
-> +=09/*
-> +=09 * Drain any entries that were not stopped before destroy
-> (e.g.
-> +=09 * uprobe-started sessions whose stop probe never fired).=C2=A0
-> Call
-> +=09 * da_extra_cleanup() before hash_del_rcu() so the hook may
-> safely
-> +=09 * call ha_cancel_timer_sync() while the monitor is still
-> reachable.
-> +=09 */
-> +=09hash_for_each_safe(da_monitor_ht, bkt, tmp, ms, node) {
-> +=09=09da_extra_cleanup(&ms->rv.da_mon);
-> +=09=09hash_del_rcu(&ms->node);
-> +=09=09call_rcu(&ms->rcu, da_pool_return_cb);
-> +=09}
-
-Cannot you make also this common? da_extra_cleanup() should be called in
-all flavours and the only difference I see here is the rcu callback.
-
-Also do you really need call_rcu() ? Since we should already have waited
-for a grace period, you can probably call the function directly. If not,
-I'd still try and make both flavours consistent (sync + free OR call_rcu
-+ barrier, not both).
-
-> +
-> +=09/*
-> +=09 * rcu_barrier() drains every pending call_rcu() callback,
-> including
-> +=09 * both da_pool_return_cb() and any monitor-specific free
-> callbacks
-> +=09 * (e.g. tlob_free_rcu) enqueued by da_extra_cleanup().
-> +=09 */
-> +=09rcu_barrier();
-> +=09kfree(da_pool.storage);
-> +=09da_pool.storage =3D NULL;
-> +=09kfree(da_pool.free);
-> +=09da_pool.free =3D NULL;
-> +=09da_pool.free_top =3D 0;
-> +=09da_pool.capacity =3D 0;
-
-Only this part is really specific to this allocation flavour, if you
-want it in a separate function, go ahead, but the rest should probably
-share as much code as possible (especially the cleanup/synchronisation
-mess we just worked out).
+We first needs Nam's simplification though [1]. We can synchronise
+during this development cycle, you probably won't really need to bother
+for now.
 
 Thanks,
 Gabriele
+
+[1] -
+https://lore.kernel.org/lkml/08188c28f274da63a3f8549add3086a92aef45e5.17809=
+08661.git.namcao@linutronix.de
+
+> ---
+> =C2=A0include/rv/ha_monitor.h | 17 +++++++++++++----
+> =C2=A01 file changed, 13 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+> index 28d3c74cabfc..e5860900a337 100644
+> --- a/include/rv/ha_monitor.h
+> +++ b/include/rv/ha_monitor.h
+> @@ -365,16 +365,22 @@ static inline bool ha_check_invariant_ns(struct
+> ha_monitor *ha_mon,
+> =C2=A0}
+> =C2=A0/*
+> =C2=A0 * ha_invariant_passed_ns - prepare the invariant and return the
+> time since reset
+> + *
+> + * If the env has not been initialised yet (first entry into a state
+> with an
+> + * invariant), anchor the guard clock at the current time so that
+> the full
+> + * budget is available from this point.=C2=A0 This preserves the
+> documented
+> + * guard=E2=86=92invariant ordering: ha_set_invariant_ns() is always
+> preceded by a
+> + * valid guard representation in env_store.
+> =C2=A0 */
+> =C2=A0static inline u64 ha_invariant_passed_ns(struct ha_monitor *ha_mon,
+> enum envs env,
+> =C2=A0=09=09=09=09=C2=A0=C2=A0 u64 expire, u64 time_ns)
+> =C2=A0{
+> -=09u64 passed =3D 0;
+> +=09u64 passed;
+> =C2=A0
+> =C2=A0=09if (env < 0 || env >=3D ENV_MAX_STORED)
+> =C2=A0=09=09return 0;
+> =C2=A0=09if (ha_monitor_env_invalid(ha_mon, env))
+> -=09=09return 0;
+> +=09=09ha_reset_clk_ns(ha_mon, env, time_ns);
+> =C2=A0=09passed =3D ha_get_env(ha_mon, env, time_ns);
+> =C2=A0=09ha_set_invariant_ns(ha_mon, env, expire - passed, time_ns);
+> =C2=A0=09return passed;
+> @@ -404,16 +410,19 @@ static inline bool
+> ha_check_invariant_jiffy(struct ha_monitor *ha_mon,
+> =C2=A0}
+> =C2=A0/*
+> =C2=A0 * ha_invariant_passed_jiffy - prepare the invariant and return the
+> time since reset
+> + *
+> + * Same first-use semantics as ha_invariant_passed_ns(): anchor the
+> guard clock
+> + * now if the env has not been initialised.
+> =C2=A0 */
+> =C2=A0static inline u64 ha_invariant_passed_jiffy(struct ha_monitor
+> *ha_mon, enum envs env,
+> =C2=A0=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 expire, u64 time_ns)
+> =C2=A0{
+> -=09u64 passed =3D 0;
+> +=09u64 passed;
+> =C2=A0
+> =C2=A0=09if (env < 0 || env >=3D ENV_MAX_STORED)
+> =C2=A0=09=09return 0;
+> =C2=A0=09if (ha_monitor_env_invalid(ha_mon, env))
+> -=09=09return 0;
+> +=09=09ha_reset_clk_jiffy(ha_mon, env);
+> =C2=A0=09passed =3D ha_get_env(ha_mon, env, time_ns);
+> =C2=A0=09ha_set_invariant_jiffy(ha_mon, env, expire - passed);
+> =C2=A0=09return passed;
 
