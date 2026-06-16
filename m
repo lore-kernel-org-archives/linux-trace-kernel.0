@@ -1,143 +1,198 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0035F33C182
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Jun 2026 13:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A3135201E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Jun 2026 14:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781617634; cv=none; b=mTYfR6ByCAwOgWkIk4H/jLT/LYg3IPWBQKGRt59BuohcpRoH1OPzcX2Z7zxkAdg9ZTT9I5vnKJnxBr03xH9wgo9SrDhc4mTBoXlQyAIFRhdfC66bGZDi2BB3qqCuwlZRBQaYIOscIYwaKQHgivKL8fPfG0TBXXHjsEcBvNPBZ4E=
+	t=1781621894; cv=none; b=OxUfxaaxS3dyiKmrry026Ao/hJCz2le7fFhiV+AsvskvNroQK9vu8Fbg2o0x+7MVZQi5Y8ipQhk4kNpm+//P9qbd28qidf45EYcLYT1X2VR8ewR71NlEv/HdyjYC8TSkb1/CQpGDdefRDCWrBtCJWHHUoIwdGwuGhUwTgSSxP1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781617634; c=relaxed/simple;
-	bh=ON5XRz8lHOpOJ8xktgKhULmQK7Hl4dNNx6xl4pP0U7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4kUzNGniSJY5etw2pBfp3zxmOSdYnPUuLCMrrnzcmij9c1l+w0T5XD28z5DteZPNZ9SBdTgKM84n8GkGPzfku4nXei9bGMpWiFD/R1seGpQU3rGPLAEGrVuefC4QWieipGmzHPrNPTdqgFuzISErmltHp62hbE5EZieFJGD/uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LCkTe2IB; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1781621894; c=relaxed/simple;
+	bh=GBbcQ+Dtt+zE/oTQ3XdqrKLWF5yDHnAfA8BhdK5uzNU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QV+QEzg3JZuZ5zBWjlAUHdbLmAbbDelwq4CtoMpahZ+MNXZ3KUuTlO+7wK4r39C2IAVLKCJjzWTW4lDZCu1Cw64rgWz+ktaqikhJx2WyR25RFtab5T6umYV+ERBeY3saMfx3iSADtWtbO12DV/NwfYWbwUU6Aueo3gJZXwti5PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Klap4WyM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LCkTe2IB"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-517b1f2c668so50913781cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Jun 2026 06:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781617632; x=1782222432; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EvNzegJ7+heyexsBUGAQ0jwoVUjk7efTCiVuRf1VOy0=;
-        b=LCkTe2IBkv5qsv/rAmGrOexkI/ZfXf5q6AV8BqKMOOZ+sHg78vk69hSs+G8iRTCY5v
-         cBhcigAqcSSFuNUN6XPPFKundVuwRQFhop+/+/fUKrv3GG/rLB7va1VT2qASgn0EHkQH
-         fIHaDBVjEL5IiGHZs1jE6KCzQxaM+SSybNLhFBQj9Uwl3v/L2i+i6lch40EIrpPmaVFQ
-         c55fGSwNOIdqM4IPGd8JBp7QTkM8ULCKMIFgubmM5K7RtnuAWHk0qvXXik2UHAk/NcMx
-         SuBqjt0rDc3YlRFJu1MXZNOhDqTDk5tk3S0IND+cMCL74Nhq+x5UQ3pvsyhBUR8CUkD8
-         WwBw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Klap4WyM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781621892;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wY21a+SJ61/cTr41m/qL4v3KzKPZfdNGeLnZZdtyStU=;
+	b=Klap4WyMyC4fLneH5DzXHJMvMJjcIVGeG0vlVoYz1A0z/A16FDTVGKx0yccB0PXDpktQqP
+	I7on1JJ80kWvma42VhXY75nDbBtT4yeze6NHJcYf0C3xnqA70AlZHH78NeRtOqFRAWZsls
+	oK+TP37WZv8vifxtrcFPMbxTLtaT3Ik=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-303-LF7OdOu6NMC57rIDLToo_g-1; Tue, 16 Jun 2026 10:58:10 -0400
+X-MC-Unique: LF7OdOu6NMC57rIDLToo_g-1
+X-Mimecast-MFC-AGG-ID: LF7OdOu6NMC57rIDLToo_g_1781621890
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-461e0dad8easo237394f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Jun 2026 07:58:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781617632; x=1782222432;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EvNzegJ7+heyexsBUGAQ0jwoVUjk7efTCiVuRf1VOy0=;
-        b=HgHU828urQVMStiIiqj762B9V1X9VHOtHoC139DbO64/Valf45UVoT3uSUsSZbg9jW
-         teZqb+o3VE5QNjqmhSOHZIvnp+c6MFedXcWFLs66j2tlUoUQ03c+E7/aC4jALtY+tYLT
-         yWOxD17MOn7Z/TLj2aKeO92NW3Q2aGamSWhHm/6DYMcwQA4f3TBDiCnFFHe47tLR2LO0
-         isQKmKpt2ynhjKW6CxRBj9b75umcGF2kC5IcOpyF65Yd3JdGA6Cw4eF6gV55kXj+fqyP
-         CDwjPYMzVrFHL9MrV+M7BAClB8UXG5fRYfFRzJnhAtF2bPHbJEj25Qmf3IYcLznj3yem
-         HxGA==
-X-Forwarded-Encrypted: i=1; AFNElJ+dLvpPcwNmkYnDuOKaIkqsWabfY5fp0jOVZGXDHBUXcC3XhrpgcAya3ILOVTSYnoZjv4G0loAT7ISjHYJwNBJ1J4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUl3BxVLkcRiWtNXIv32kdO31JjUaFOLoCrOvOXJaO4ULNoMhE
-	Q7JfXu2UjF6FKVFd0+OrAAr+HVhCCl4T6u4YuGADWwfLG++NhsZB7goG7EXeuz2K5DU=
-X-Gm-Gg: Acq92OH58P0STTxR8L/GdHq21NzgpPK6ishBoBJmNu2qWzmoEDH0I5LKM48jwJxf5nz
-	7/fcobjsHC3usUzls/AmGRIOZ2kn0FKvb74AGSlbz6mgVxuck1RPbLXPOJsj0mXOBIJAW+AO7UH
-	5vlm+5Lhm2H8rFMiHw5zjiraMWl/NgoE/P0ubRKKzwotcnI2LpXbmUxzlkHJfss2kHgEO4Zf6Hv
-	dxXqr2qPyOtws7kEvWwVptiS6RFw1W3E8RUFDvQYXw76kkvQ+VJBqe9SqQt9y/IPmDMuXPgOON3
-	SF0kc+1icTOYqSyN7W4YfofLVdUSfcWCvUlgJ6bO71Jl+Gz8N2vuw9drHODCTdZ88LrNSB5Z6Rh
-	JCMkkYg93Ri2dHJ66pkq4enp3FIDZjHJCYi7/3FDyqqYLbMIlSb9OcRU/FaWV0NO0dHuVtPUSQL
-	4VvlHH6zS+NATCfLpljR0X
-X-Received: by 2002:a05:622a:a6d4:b0:517:7e3a:5ee1 with SMTP id d75a77b69052e-519916d65f2mr43449041cf.1.1781617631680;
-        Tue, 16 Jun 2026 06:47:11 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::3:437e])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb84188asm150577021cf.29.2026.06.16.06.47.09
+        d=1e100.net; s=20251104; t=1781621890; x=1782226690;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wY21a+SJ61/cTr41m/qL4v3KzKPZfdNGeLnZZdtyStU=;
+        b=oDOc1wH3ZIPkW458srfQhOWr42NLVq+ZX9F3tuZsWmMC1kdjqX4m+v/rf+FGgk0UqY
+         WXLpkbUhy3L8FWb5HydMe40+Qz2OHbiOJgSaYuScIHOsSmR6aUtNqePObZTvxbj/rFaR
+         67ZMTwH3/ZpDrF5vUm895EkxEoYpVjCr/5WciQ2KoXCDRDmWzAEb6Mt9tTnxB/kTIl9H
+         KJGBBnbrMS6zONf/49NIcR9lmk6UTps6wX1AjVtLXTRrVpmgj3JMV1kRZvM0Hk+S/I8a
+         j/KkhpgKbkuV1zS+pegSBbaaXPsR4gDdAzIs1koDzPZGkcZI0okQOsMrDSBUtletFcfT
+         w7Bg==
+X-Forwarded-Encrypted: i=1; AFNElJ889waT9cT6nfCqTxPhsAR6vWZZoLf/lwizO0B/jKdAreSPJUmf3PrzSh1r0ouyNh1upsy/ucUhjNMepILMkVSHkT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz+1FeC57+6CfnvZPeMPNaTrVw6Pka4fdv3xrNRYsfIGLLwpRX
+	gWOyecTsH0+Ijmq5mqnIWjes1IlbYwtEAJjjU9QC1+rdIzq0oHbB9BPgC9gd+KgWDAl4kYLHEFj
+	ix/yj9B82C8/jfkgsut8g/LsVSVfYTNMokTy/RuwGuZvuVusHcZkX6ZPzDI36mgThlcIPcjW7tw
+	==
+X-Gm-Gg: Acq92OFZUMDA0/3j6VWJCIEajeNGhZ1INLNscZIwMFXrtOwypqc43L+rwvM4qIiJOmT
+	eqNJkVL4P5252Mz+wqHciWCA7Q1W6PsD1AXRfAtDNYKGs7gn9Y036Zu81YAIAR7ENlpeYYEo2U+
+	zw+A3vkuudbt7NYbGNPVSbPtkmtSSGp74rnpMTrdD4IbEYZfWDzS6cVHmnOBz2RWtm/9EgocPU7
+	V44eOvUMgnhzQugzQzs0QOisvzBWo+KcmapIFI2O75SWYao360J1/2rP+OvRWYQc+7I05IEOHOL
+	G2KLuyQlttRAAKpV4jN5MZxAONnQqEgnOE3syyrp3XqbOZi45TSkU6me9t7ZYEr6KKSKAbX7JXr
+	aTSvtvW0tDBNfLZnZKgTBYUqFbA==
+X-Received: by 2002:a05:6000:490e:b0:45e:739b:3e3c with SMTP id ffacd0b85a97d-4606da10952mr26129796f8f.0.1781621888958;
+        Tue, 16 Jun 2026 07:58:08 -0700 (PDT)
+X-Received: by 2002:a05:6000:490e:b0:45e:739b:3e3c with SMTP id ffacd0b85a97d-4606da10952mr26129573f8f.0.1781621887250;
+        Tue, 16 Jun 2026 07:58:07 -0700 (PDT)
+Received: from [192.168.1.167] ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2c3782sm40350946f8f.25.2026.06.16.07.58.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2026 06:47:10 -0700 (PDT)
-Date: Tue, 16 Jun 2026 09:47:07 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Brendan Jackman <brendan.jackman@linux.dev>
-Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
-	"David Hildenbrand (Arm)" <david@kernel.org>,
-	Balbir Singh <balbirs@nvidia.com>,
-	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
- Nodes (w/ Compressed RAM)
-Message-ID: <ajFT235iYsSJ7nbR@gourry-fedora-PF4VCD3F>
-References: <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
- <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
- <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
- <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
- <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
- <DJAGEUY8S09F.3V3HF570G85OF@linux.dev>
+        Tue, 16 Jun 2026 07:58:06 -0700 (PDT)
+Message-ID: <dee3a6da35a41c9b0344ae610cc277e8488ae20c.camel@redhat.com>
+Subject: Re: [PATCH v3 9/9] selftests/verification: add tlob selftests
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Tue, 16 Jun 2026 16:58:05 +0200
+In-Reply-To: <4aeb668c8446a9f6366d92e218df386bef7bc965.1780847473.git.wen.yang@linux.dev>
+References: <cover.1780847473.git.wen.yang@linux.dev>
+	 <4aeb668c8446a9f6366d92e218df386bef7bc965.1780847473.git.wen.yang@linux.dev>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DJAGEUY8S09F.3V3HF570G85OF@linux.dev>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: mKH550zbeTTY35fLcULPvJdWNCeJ7PfF9CmPH8moaSQ_1781621890
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 16, 2026 at 11:57:42AM +0000, Brendan Jackman wrote:
-> On Mon Jun 15, 2026 at 2:38 PM UTC, Vlastimil Babka (SUSE) wrote:
-> > On 6/12/26 17:29, Gregory Price wrote:
-> >> On Wed, Jun 10, 2026 at 04:12:52PM -0400, Gregory Price wrote:
-> >>> On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
-> >>> > > 
-> >
-> > I think the memalloc approach is dangerous due to unexpected nesting. There
-> > might be nested page allocations in page allocation itself (due to some
-> > debugging option). But also interrupts do not change what "current" points
-> > to. Suddenly those could start requesting folios and/or private nodes and be
-> > surprised, I'm afraid.
-> 
-> Minor side-note: couldn't we just define it such that the allocator
-> ignores the context when not in_task() (and warn if you try to enter the
-> context while not currently in_task())?
-> 
-> (Don't think this would change the conclusion very much, e.g. doesn't
-> help with the nesting issues. Mostly curious in case I'm missing a
-> detail here).
->
+On Mon, 2026-06-08 at 00:13 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> Add selftest coverage for the tlob uprobe monitoring interface under
+> tools/testing/selftests/verification/.
+>=20
+> test.d/tlob/ contains both the helper sources (tlob_target, tlob_sym)
+> and the seven test scripts so the test suite is self-contained.
+> tlob_target provides busy-spin, sleep, and preempt workloads;
+> tlob_sym
+> resolves ELF symbol offsets for uprobe registration.
+>=20
+> Seven test scripts exercise uprobe binding management, budget
+> violation
+> detection, and per-state time accounting (running_ns, waiting_ns,
+> sleeping_ns).
+>=20
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> ---
+> =C2=A0.../testing/selftests/verification/.gitignore |=C2=A0=C2=A0 2 +
+> =C2=A0tools/testing/selftests/verification/Makefile |=C2=A0 19 +-
+> =C2=A0.../verification/test.d/tlob/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 20 ++
+> =C2=A0.../verification/test.d/tlob/test.d/functions |=C2=A0=C2=A0 1 +
 
-I looked at this - only solves one issue and oh boy is that an obtuse
-confusing condition to understand.  We still suffer from recursion in
-reclaim.
+Tests seems to work fine, thanks. I think I'm getting what you're
+trying to do and probably defining a dummy functions for tlob isn't the
+right thing to do.
 
-~Gregory
+ftracetest --rv doesn't quite work with different folders as you'd pick
+the ftrace functions. We shouldn't be adding a dummy functions script
+every time but rather fix ftracetest directly.
+
+Try the attached patch, it seems to work on my side. Then you'd be able
+to use ftracetest --rv as you please (folder is mandatory, I don't
+think we need a version inside selftests/verification,
+verificationtest-ktap is only meant for the makefile just like
+ftracetest-ktap).
+
+Thanks,
+Gabriele
+
+---
+From 32242f83af8214a51c47167a1904d3663aa43870 Mon Sep 17 00:00:00 2001
+From: Gabriele Monaco <gmonaco@redhat.com>
+Date: Tue, 16 Jun 2026 16:26:53 +0200
+Subject: [PATCH] selftests/tracing: support flexible helper functions
+
+Target directory or file arguments passed to ftracetest had
+to contain their own nested test.d/functions files to properly override
+the top-level directory (TOP_DIR). This works for standard ftrace tests
+that would fall back to ftrace's functions, but doesn't for rv tests.
+
+Introduce find_functions() to recursively check parent and grandparent
+directories of the target test directory/file to dynamically locate the
+appropriate root functions config.
+This allows to define additional directories for rv selftests and run
+them with the appropriate rv functions:
+
+  ftracetest --rv tools/testing/selftests/verification/test.d/<topic>
+
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ tools/testing/selftests/ftrace/ftracetest | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/self=
+tests/ftrace/ftracetest
+index 0a56bf209f..5d1b1f9380 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -80,6 +80,23 @@ find_testcases() { #directory
+   echo `find $1 -name \*.tc | sort`
+ }
+=20
++find_functions() { # [directory] [test_cases]
++  local BASE_DIR=3D"$1"
++  if [ -f "$1" ]; then
++    BASE_DIR=3D"`absdir $1`"
++  elif [ ! -d "$1" ]; then
++    return
++  fi
++
++  if [ -f "$BASE_DIR"/test.d/functions ]; then
++    echo "$BASE_DIR"
++  elif [ -f "$BASE_DIR"/../test.d/functions ]; then
++    abspath "$BASE_DIR"/..
++  elif [ -f "$BASE_DIR"/../../test.d/functions ]; then
++    abspath "$BASE_DIR"/../..
++  fi
++}
++
+ parse_opts() { # opts
+   local OPT_TEST_CASES=3D
+   local OPT_TEST_DIR=3D
+@@ -159,7 +176,8 @@ parse_opts() { # opts
+   if [ -n "$OPT_TEST_CASES" ]; then
+     TEST_CASES=3D$OPT_TEST_CASES
+   fi
+-  if [ -n "$OPT_TEST_DIR" -a -f "$OPT_TEST_DIR"/test.d/functions ]; then
++  OPT_TEST_DIR=3D"`find_functions $OPT_TEST_DIR $OPT_TEST_CASES`"
++  if [ -n "$OPT_TEST_DIR" ]; then
+     TOP_DIR=3D$OPT_TEST_DIR
+     TEST_DIR=3D$TOP_DIR/test.d
+   fi
+--=20
+2.54.0
+
