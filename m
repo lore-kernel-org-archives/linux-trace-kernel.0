@@ -1,130 +1,306 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.119])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC61842EEB8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Jun 2026 13:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C8B402457;
+	Wed, 17 Jun 2026 13:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781702806; cv=none; b=flcd+/DtFBPNhddn1tV1+FMwIbKsFiKfC7BtXDOkd8CmNJGiQrkIBypp8yd6J7VfeJii+uGF/KbYdU7greSxmN4t5wb/xytlWG3+rkls+N+dKEEmbAiz9FompcJRFmG3G4weBrt61JsERvsprbEB4DZDn/Do3gwAmJXttrTAAK8=
+	t=1781703324; cv=none; b=NEzv0a9OXgapl1TCWZ/xfPYEgfATD6fjbH8vO3VbGRM9kVdLrpp81n+2D/pqUgLtYy0xGvpI3wSCTw1lOnp4s9MOSR03q72qUSAwn23wZDgvNvXvDPgpHDkJdHVu8Y4IC++dZK1JrkU+/YDCkWt7EfWifS/cY0nXmyrfBpCmxrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781702806; c=relaxed/simple;
-	bh=2empQF2J/OcdElnIEv2j+jOQoEM6gxuILIKRvoUJ4XA=;
+	s=arc-20240116; t=1781703324; c=relaxed/simple;
+	bh=kDA6Nkp+jAYf3MEAkq8r80XXK88zd+WJ8fd58l0AE1g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VlC7w5nQCQm2QlubbZqVjQ7QJBtv2BteMWs9gHDUfmT4v7ZuoIj+vQTe8vbn34ymxq/B3dKBhiunULz+wYkjPAFv81tb4i1YIglESxwvOw6pxcnp/sfHJGo5eC1acT7QBij/PBd4Ey00uvGh+CTSHkKXf4e32NcS2G3EVGIe8sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONejZZAP; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONejZZAP"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso73174775e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Jun 2026 06:26:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781702802; x=1782307602; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5zxb6GFRrhCgQ7TLt0ipxO76kANUtNRaysZidmTt9y8=;
-        b=ONejZZAPF2BvEGe6NRsbzeiHDsKtxjxhL/PVspTGxtHatrJNnOCGCJ9sDtaWp83+jN
-         n6QmmnzizbJmeXlqWok63gCTg0tN7aVcbwakCIXv/7IiKmBK6EIy5lNT90+22YgxC56U
-         dqosxVAkDl2IQFvPNrMR1h5s6G6unj00ocjuNHjGY7n6He7itVRELIYhefkSaluZNb6c
-         e/QOXvdszLth3s+t/4K3hvsItpsGLD2Ke4Q0c2O6afy3Ni2SyAv+h9Q7A9LUlCF9UeRS
-         EW0ZBW5nroinrl+VNVOjp4Fda/Krrcf7GWOhNw5N1As/3iyFQwm+H2j0aXVKjycP4wOn
-         9Afg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781702802; x=1782307602;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5zxb6GFRrhCgQ7TLt0ipxO76kANUtNRaysZidmTt9y8=;
-        b=duFjolGNGTWPFPcOdtZfhHRlLlnQAg94CFOlcM5UXTYHbjZ3gw/zrKqjtuAc/S4AC8
-         3C3Mbf4ZE4vNdEc5WcdCyXUjQTd/oXinIn5KX1m5EbVbYjXCKBEfy/unL7QgR+tzjeRi
-         HSZHuB0H7+iwTnpLcFGBZ4fziFNJleuSeOW8Bt598LfykRZH68LMnFRVO9V0WnJg8b2V
-         3VOT3gh5Wmn7FrdZcA4rHZHt83i+PYiS+FgZySnCer1TrzGPoiDSgy361Y32VmgJGx40
-         ANC6VEnK4L3WvxweWTz61O0p2NuSDYvA27q07EUfRZn7eRY1Pi2u1Mabc0FjvnnG3gqS
-         A7pQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8qy7SexMQb1ZHGcpBoqK1drbnO7tNR0N0L2XIyXaoQuLmd/i9YcSjuhKYj1g2nyZ0zQO6P04YOMEBRcfKUDYi+4ns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbWXCN68wxPMd1vwVUqBDpesVDvD000eqj+DgFaR4aC/A+F4iH
-	m6AmsH04vfC+uNgifto9KFUHI9E7g11Dzs/OLEMxXiEqZvcwOKmJprXta3MRyZbO3A==
-X-Gm-Gg: Acq92OEIeXPPuiJ9lLk8JYB3dilE+Rgx2F59uGrTJcM6YU4LiFOb71wMReajFVsC1fh
-	h0U/i6Kf2kOnw5KLMOicdfORmRyHG+lf+lykoEngy6TXjii7PuGMUYoaDY9is9ckdlYtCuOqpx3
-	UNcoT0ih7ql2fw6PjbWiAs2iaIk/u+OWgJSOz6U/TT5SiI6ybwTti61JDxGJS5qZr9bNONFrTZQ
-	h+jK9zD6pGsb4N0x33ftk4nIovnj0P4H9uJtuM0w5fJDDxA8dmwAjNjkF8fLWOalHrDAoSFYpUT
-	OR8D7UYYrlOeWez3/+a2G+1KcrmTYTl6R+SU9jHWppv+rdtRl7h7lb82ml7Kso6MkxUO6GnUafZ
-	/Dk6gT7co9JbWiSvyjMEOkR1xXtU6KDoKxJm+/+N+hIGexfWMcoJE5uL7o2+A2u2DDSXsTyMwPp
-	imX3ib+s6K/acCjxE/+BkyiAop74ekW2St6xmAawW6pZsjg8DHQHyu94Hz
-X-Received: by 2002:a05:600c:628b:b0:490:d354:bcef with SMTP id 5b1f17b1804b1-492333df0c7mr63112735e9.33.1781702801641;
-        Wed, 17 Jun 2026 06:26:41 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923757b8a5sm5686655e9.2.2026.06.17.06.26.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2026 06:26:40 -0700 (PDT)
-Date: Wed, 17 Jun 2026 14:26:36 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] tracing: ring-buffer: allowlist clang-generated symbols
-Message-ID: <ajKgjNuHUlteSziZ@google.com>
-References: <20260616164211.3733326-1-arnd@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LrlUIVCHKbj4Na0sZKjjV1rk4QJX0EkSB5axteNRYH6SDVqVqsch2dCKK0NyiocIWWj7AjXDDzuC/AzyLqASFdpFuvtuJT1oEVqKjZ05SL+kfJrUdS59FLJH+lDJvmjOzN5+I0JMYKtqxToqDBbMGrqm7GaMtz+WpMBwFNzcPfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com; spf=pass smtp.mailfrom=fritz.com; arc=none smtp.client-ip=212.42.244.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fritz.com
+Received: from [212.42.244.78] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.56.1)
+	(envelope-from <n.schier@fritz.com>)
+	id 6a32a15a-3215-7f0000032729-7f0000018c22-1
+	for <multiple-recipients>; Wed, 17 Jun 2026 15:30:02 +0200
+Received: from mail-auth.fritz.com (unknown [212.42.244.78])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Wed, 17 Jun 2026 15:30:02 +0200 (CEST)
+Date: Wed, 17 Jun 2026 15:30:01 +0200
+From: Nicolas Schier <n.schier@fritz.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org,
+	Nicolas Schier <nsc@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	bpf@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v5 3/7] bootconfig: render embedded bootconfig as a
+ kernel cmdline at build time
+Message-ID: <20260617-congenial-porcupine-of-rain-bb4d8e@l-nschier-aarch64>
+References: <20260617-bootconfig_using_tools-v5-0-fd589a9cc5e3@debian.org>
+ <20260617-bootconfig_using_tools-v5-3-fd589a9cc5e3@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260616164211.3733326-1-arnd@kernel.org>
+In-Reply-To: <20260617-bootconfig_using_tools-v5-3-fd589a9cc5e3@debian.org>
+Organization: FRITZ! Technology GmbH
+x-ms-reactions: disallow
+X-purgate-ID: 149429::1781703002-EFE5ED97-3DDEDA1F/0/0
+X-purgate-type: clean
+X-purgate-size: 10746
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
 
-On Tue, Jun 16, 2026 at 06:42:03PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jun 17, 2026 at 04:23:35AM -0700, Breno Leitao wrote:
+> Add the build-time pipeline that renders the "kernel" subtree of
+> CONFIG_BOOT_CONFIG_EMBED_FILE into a flat cmdline string and stashes
+> it in .init.rodata as embedded_kernel_cmdline[]. A follow-up patch
+> adds the runtime helper that prepends this string to boot_command_line
+> during early architecture setup so parse_early_param() sees the values.
 > 
-> In randconfig build testing using clang-22, I came across two
-> sets of extra symbols in the ring buffer code that may get
-> inserted by the compiler:
+> The build wires up:
+>   tools/bootconfig -C kernel - userspace tool already shared with
+>                                lib/bootconfig.c, used here in -C mode
+>                                to render a bootconfig file to a cmdline
+>   lib/embedded-cmdline.S     - .incbin's the rendered text plus a NUL
+>                                (listed under the EXTRA BOOT CONFIG
+>                                MAINTAINERS entry)
+>   lib/Makefile rule          - runs tools/bootconfig at build time
+>   Makefile prepare dep       - ensures tools/bootconfig is built first,
+>                                same pattern as tools/objtool and
+>                                tools/bpf/resolve_btfids
+[...]
 > 
-> Unexpected symbols in kernel/trace/simple_ring_buffer.o:
->          U memset
+> Drop the test target from tools/bootconfig/Makefile's default 'all'
+> recipe so that hooking the binary into the kernel build does not run
+> test-bootconfig.sh on every prepare. The tests stay available as
+> 'make -C tools/bootconfig test', matching the convention of
+> tools/objtool and tools/bpf/resolve_btfids whose 'all' targets only
+> build the binary.
 > 
-> Unexpected symbols in kernel/trace/simple_ring_buffer.o:
->                  U llvm_gcda_emit_arcs
->                  U llvm_gcda_emit_function
->                  U llvm_gcda_end_file
->                  U llvm_gcda_start_file
->                  U llvm_gcda_summary_info
->                  U llvm_gcov_init
+> Require BOOT_CONFIG_EMBED_FILE to be non-empty before the new option
+> can be enabled, otherwise tools/bootconfig -C runs against an empty
+> file and prints a parse error on every kernel build.
 > 
-> Add all of these to the allowlist.
+> The feature gates on CONFIG_ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG, a
+> silent symbol arches select once they've wired the prepend call into
+> setup_arch(). No arch selects it in this patch, so the user-visible
+> CONFIG_BOOT_CONFIG_EMBED_CMDLINE is not yet enableable; when an arch
+> later opts in, the runtime behavior is added by the follow-up patches.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> tools/bootconfig also installs on target systems, so its own Makefile
+> keeps $(CC) and stays cross-buildable as a standalone tool. The kernel
+> build, which runs the tool on the build host during prepare, instead
+> forces CC=$(HOSTCC) from a dedicated tools/bootconfig rule and clears
+> CROSS_COMPILE= in the sub-make. Without that clear, an LLVM=1 cross
+> build would inherit CROSS_COMPILE and tools/scripts/Makefile.include
+> would inject --target=/--sysroot= flags into the host clang invocation,
+> producing a target binary that fails to exec ("Exec format error").
+> 
+> embedded-cmdline.S places the rendered string in its own .init.rodata
+> subsection (.init.rodata.embed_cmdline) with the "a" (allocatable,
+> read-only) flag and %progbits. lib/bootconfig-data.S already places
+> the embedded bootconfig blob in .init.rodata with the "aw" flag
+> (xbc_init() rewrites separators in place, so that data must be
+> writable). Using a distinct subsection name avoids the ld.lld section-
+> type mismatch that would otherwise arise from mixing "a" and "aw"
+> under the same name; the linker's "*(.init.rodata .init.rodata.*)"
+> glob still folds both into the init image and frees them after boot.
+> 
+> A follow-up patch wires the build-time tools/bootconfig into the
+> top-level clean target.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  kernel/trace/Makefile | 1 +
->  1 file changed, 1 insertion(+)
+>  MAINTAINERS               |  1 +
+>  Makefile                  | 15 +++++++++++++++
+>  init/Kconfig              | 35 +++++++++++++++++++++++++++++++++++
+>  lib/Makefile              | 16 ++++++++++++++++
+>  lib/embedded-cmdline.S    | 16 ++++++++++++++++
+>  tools/bootconfig/Makefile |  2 +-
+>  6 files changed, 84 insertions(+), 1 deletion(-)
 > 
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index f934ff586bd4..aa8564fb8ff4 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -146,6 +146,7 @@ KASAN_SANITIZE_undefsyms_base.o := y
-
-Would "GCOV_PROFILE_undefsyms_base.o := y" work?
-
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 57656ec0e9d5d..953231df1911d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9844,6 +9844,7 @@ F:	fs/proc/bootconfig.c
+>  F:	include/linux/bootconfig.h
+>  F:	lib/bootconfig-data.S
+>  F:	lib/bootconfig.c
+> +F:	lib/embedded-cmdline.S
+>  F:	tools/bootconfig/*
+>  F:	tools/bootconfig/scripts/*
 >  
->  UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __msan \
->  		      __aeabi_unwind_cpp __s390_indirect_jump __x86_indirect_thunk simple_ring_buffer \
-> +		      memset llvm_gcda llvm_gcov \
->  		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+> diff --git a/Makefile b/Makefile
+> index bf196c6df5b92..a7abb3f9a6264 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1545,6 +1545,21 @@ prepare: tools/bpf/resolve_btfids
+>  endif
+>  endif
 >  
->  quiet_cmd_check_undefined = NM      $<
+> +# tools/bootconfig renders the embedded bootconfig into a cmdline at build time.
+> +ifdef CONFIG_BOOT_CONFIG_EMBED_CMDLINE
+> +prepare: tools/bootconfig
+> +endif
+> +
+> +# tools/bootconfig is run on the build host during prepare, so force a host
+> +# binary here; its own Makefile keeps $(CC) for standalone and cross builds.
+> +# CROSS_COMPILE= is cleared so tools/scripts/Makefile.include does not inject
+> +# the target's --target=/--sysroot= flags into the host clang invocation under
+> +# LLVM=1 cross builds (which would produce a target binary that fails to exec).
+> +tools/bootconfig: FORCE
+> +	$(Q)mkdir -p $(objtree)/tools
+> +	$(Q)$(MAKE) O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ \
+> +		bootconfig CC=$(HOSTCC) CROSS_COMPILE=
+
+sashiko whines (priority: low) about the 'CC=$(HOSTCC)' as HOSTCC might 
+contains spaces (e.g. "ccache gcc") [1].  Instead of adding quotes (as 
+sashiko suggests), the CC could be redefined locally for the target, for 
+example:
+
+
+tools/bootconfig: export CC := $(HOSTCC)
+tools/bootconfig: FORCE
+	$(Q)mkdir -p $(objtree)/tools
+	$(Q)$(MAKE) O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ \
+		bootconfig CROSS_COMPILE=
+
+
+That way, make handles the variable definition as it should and there is 
+no interference with shell escaping.
+
+for Kbuild:
+
+Reviewed-by: Nicolas Schier <n.schier@fritz.com>
+
+
+Kind regards,
+Nicolas
+
+
+[1]: http://sashiko.dev/#/message/20260617113701.0405E1F000E9%40smtp.kernel.org
+
+
+> +
+>  # The tools build system is not a part of Kbuild and tends to introduce
+>  # its own unique issues. If you need to integrate a new tool into Kbuild,
+>  # please consider locating that tool outside the tools/ tree and using the
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 5230d4879b1c8..d2b8613a6b927 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1566,6 +1566,41 @@ config BOOT_CONFIG_EMBED_FILE
+>  	  This bootconfig will be used if there is no initrd or no other
+>  	  bootconfig in the initrd.
+>  
+> +config ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG
+> +	bool
+> +	help
+> +	  Silent symbol; no C code reads it directly. Architectures
+> +	  select it once their setup_arch() calls
+> +	  xbc_prepend_embedded_cmdline() before parse_early_param().
+> +	  Its only role is to gate the user-visible
+> +	  BOOT_CONFIG_EMBED_CMDLINE option per-arch, the same
+> +	  ARCH_SUPPORTS_* idiom used by ARCH_SUPPORTS_CFI, etc.
+> +
+> +config BOOT_CONFIG_EMBED_CMDLINE
+> +	bool "Render embedded bootconfig as kernel cmdline at build time"
+> +	depends on BOOT_CONFIG_EMBED_FILE != ""
+> +	depends on ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG
+> +	default n
+> +	help
+> +	  Render the "kernel" subtree of the embedded bootconfig file into a
+> +	  flat cmdline string at kernel build time and prepend it to
+> +	  boot_command_line during early architecture setup. This makes
+> +	  early_param() handlers (e.g. mem=, earlycon=, loglevel=) see the
+> +	  values supplied via the embedded bootconfig.
+> +
+> +	  The runtime bootconfig parser is unaffected, so tree-structured
+> +	  consumers such as ftrace boot-time tracing keep working.
+> +
+> +	  Note: when an initrd also carries a bootconfig, its "kernel"
+> +	  subtree is still parsed at runtime, but the embedded "kernel"
+> +	  keys remain in boot_command_line for parse_early_param() and
+> +	  end up later than the initrd keys in saved_command_line, so
+> +	  parse_args() last-wins favors the embedded values. If you need
+> +	  initrd to override embedded kernel.* keys, leave this option
+> +	  off.
+> +
+> +	  If unsure, say N.
+> +
+>  config CMDLINE_LOG_WRAP_IDEAL_LEN
+>  	int "Length to try to wrap the cmdline when logged at boot"
+>  	default 1021
+> diff --git a/lib/Makefile b/lib/Makefile
+> index 7f75cc6edf94a..4ace86a5cb6de 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -273,6 +273,22 @@ filechk_defbconf = cat $(or $(real-prereqs), /dev/null)
+>  $(obj)/default.bconf: $(CONFIG_BOOT_CONFIG_EMBED_FILE) FORCE
+>  	$(call filechk,defbconf)
+>  
+> +obj-$(CONFIG_BOOT_CONFIG_EMBED_CMDLINE) += embedded-cmdline.o
+> +$(obj)/embedded-cmdline.o: $(obj)/embedded_cmdline.bin
+> +
+> +# Render the bootconfig "kernel" subtree to a flat cmdline string using
+> +# the userspace tools/bootconfig parser (-C mode). The runtime prepend
+> +# helper enforces COMMAND_LINE_SIZE at boot, so no build-time size
+> +# check is performed here (COMMAND_LINE_SIZE is an arch header
+> +# constant, not a Kconfig value).
+> +quiet_cmd_render_cmdline = BCONF2C $@
+> +      cmd_render_cmdline = \
+> +	$(objtree)/tools/bootconfig/bootconfig -C $< > $@
+> +
+> +targets += embedded_cmdline.bin
+> +$(obj)/embedded_cmdline.bin: $(obj)/default.bconf $(objtree)/tools/bootconfig/bootconfig FORCE
+> +	$(call if_changed,render_cmdline)
+> +
+>  obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
+>  obj-$(CONFIG_INTERVAL_TREE_TEST) += interval_tree_test.o
+>  
+> diff --git a/lib/embedded-cmdline.S b/lib/embedded-cmdline.S
+> new file mode 100644
+> index 0000000000000..bda81b4a42bea
+> --- /dev/null
+> +++ b/lib/embedded-cmdline.S
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Embed the build-time-rendered bootconfig "kernel" subtree as a flat
+> + * cmdline string. setup_arch() prepends this to boot_command_line on
+> + * architectures that select ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG.
+> + *
+> + * Copyright (c) 2026 Meta Platforms, Inc. and affiliates
+> + * Copyright (c) 2026 Breno Leitao <leitao@debian.org>
+> + */
+> +	.section .init.rodata.embed_cmdline, "a", %progbits
+> +	.global embedded_kernel_cmdline
+> +embedded_kernel_cmdline:
+> +	.incbin "lib/embedded_cmdline.bin"
+> +	.byte 0
+> +	.global embedded_kernel_cmdline_end
+> +embedded_kernel_cmdline_end:
+> diff --git a/tools/bootconfig/Makefile b/tools/bootconfig/Makefile
+> index 90eb47c9d8de6..4e82fd9553cde 100644
+> --- a/tools/bootconfig/Makefile
+> +++ b/tools/bootconfig/Makefile
+> @@ -15,7 +15,7 @@ override CFLAGS += -Wall -g -I$(CURDIR)/include
+>  ALL_TARGETS := bootconfig
+>  ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+>  
+> -all: $(ALL_PROGRAMS) test
+> +all: $(ALL_PROGRAMS)
+>  
+>  $(OUTPUT)bootconfig: main.c include/linux/bootconfig.h $(LIBSRC)
+>  	$(CC) $(filter %.c,$^) $(CFLAGS) $(LDFLAGS) -o $@
+> 
 > -- 
-> 2.39.5
+> 2.53.0-Meta
 > 
