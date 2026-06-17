@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5228F9D9;
-	Wed, 17 Jun 2026 01:02:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFB6F9D9;
+	Wed, 17 Jun 2026 01:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781658170; cv=none; b=PqYQf8IseAuhIjG2XvqYxryfQYiWGOx9AZg4ESZgD465TMYRJqIgCzbT0cvrHcVDpwB+3AmWywQMA/arrwlYuzXBP1BSs5mh4AMHMZBLyE+8Rzl8KYHNW1OotwF0VPcZCAqJxt5/Tk0OqZQnf949Vsaz5rva6vGbNDS+kzAEzxk=
+	t=1781658178; cv=none; b=r5ubRfHJ3T6ZcPa6wySAH1hCxZQHdwatxy6mzZ8zVCejMFkzr0F659lABh27qNViZnm/8Y02Zf59HjwK7khiAHKGQRnII2QwqfdVXLNMVuIOr/jSVCOpvA+XJOlj2r4qT6SqV0k/C3qrLoSz7Vqrd9H7I9+EzacRxVO7MWLoKls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781658170; c=relaxed/simple;
-	bh=MwAUITCY71TvqKgK+d2+dZhrF6BF5u4Yt119pa5Offg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QqdVTyo5ci2By50RWE8SfADDc5muP5bOLB1JcIxknvVQXYpMP+lRwkzL1ja9FWViq+t6sXBVIS/0+PzdWvjxyapK8HzMcgzCVG82xcxDNtRbF78wjyyvAR76CpMR7UwLnvJOC76PyLsS/9NDmoeboVtw6ocs8/HYKLEs0TiQQFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dq/W2mlD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781658178; c=relaxed/simple;
+	bh=MzBTi/tHniuupSgZNNgJV6HTE/0IMN1vtSnLhJYNgEQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XHW/KzizMygs/e87Y8I4xVJZfqZD0haqAnhR1YgtuaiuVfMUZLR2Yapc9GW3PniDbmIj17h+ZDXV77FhwfRm526wdXIgPEIPRIdi37pnbUJ3jzZSMeSrJC0oqS8st5nHDsgx1bIWVKrRyVP/HCT7NzpYcDRG3G0EteMbQwHW1bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L9jb2Vd4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dq/W2mlD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE90D1F000E9;
-	Wed, 17 Jun 2026 01:02:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L9jb2Vd4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B541F000E9;
+	Wed, 17 Jun 2026 01:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781658167;
-	bh=xFpQIWYAE0rXBuCc5y3yoBzamTGA5qheLbZTB7avkOc=;
-	h=From:To:Cc:Subject:Date;
-	b=dq/W2mlD6+v+60BKUj1QWQSd5QI/F19ECvF95Y1jgUMI89uIIYrxJbHYhXD/moCTv
-	 0fzRqpb4cZAbd/W4K8Vg6NinxekpOGj12oY8+fuS0nArd+PrQR5IUzNmuErWR32V1B
-	 6po5ZiWkoKLDi2GHPfezwFXKQTST/Ce0XwLssGK8pYrNXxUC7Qa9f15BbtejUoo0gW
-	 xjU4Hs8+/z6g9S+c7ZZ90hhaEyHFSBOersmDw6PfbXbZcbc+4Zn/Z/56AH+ybp6a0U
-	 OJVSSaF6WECtyFO5yUp2x1gvm70fZRppi+sD5V9wkaU7VJCT+rSVcWkrhm2c+GLwA2
-	 teeAGf//l1N0A==
+	s=k20260515; t=1781658177;
+	bh=cTmALM5v9MF+mL5ZFkPM1vyGeEUBS3mg7wggTL6NLQI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=L9jb2Vd4nLlnTssQCVroiiD8RH+3D6TnR+4n3LzataTyQguT4g+GZ1fM2KhSADHK3
+	 Yc1uJan+se76uzSCrm2liNACRV2v8vPc573/pzKpoXszF4qSrkecMHa7Itj8mZtpM0
+	 zzbHL0pPmmmlSq/WLxzA8a9SI+PaWGivq31YSgThyUh3FcpQcNO6aYmq87RDZ3b3kr
+	 idUUBN/WbGWJPiruOGqRZELQ+pdrVyHDVsXyl613Z7ruPi2tuUznHp4AC9mD3k3ZLu
+	 eMGT/CvJzSbtdVm4PjME9w1NpmmFKPmO+wdfY+bRxqX5YZV/iGvSoljHEmXW7+Jkdv
+	 IvKwkq7nFvxiA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -35,10 +36,12 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v5 0/7] tracing/probes: Add more typecast features
-Date: Wed, 17 Jun 2026 10:02:43 +0900
-Message-ID: <178165816303.269421.7302603996990753309.stgit@devnote2>
+Subject: [PATCH v5 1/7] tracing/events: Fix to check the simple_tsk_fn creation
+Date: Wed, 17 Jun 2026 10:02:53 +0900
+Message-ID: <178165817322.269421.3992299509400184196.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178165816303.269421.7302603996990753309.stgit@devnote2>
+References: <178165816303.269421.7302603996990753309.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,87 +52,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 5th version of series to introduce more typecast features
-to probe events. The previous version is here:
+Sashiko pointed that this sample code does not correctly handle the
+failure of thread creation because kthread_run() can return -errno.
 
- https://lore.kernel.org/all/178148603548.185520.3389196102475741865.stgit@devnote2/
+Check the simple_tsk_fn is correctly initialized (created) or not.
 
-In this version, I fixed some issues found by Sashiko reviews,
-convert this_cpu_read() into this_cpu_ptr() + dereference[6/7],
-and add some syntax testcases. 
+Link: https://sashiko.dev/#/patchset/178092865666.163648.10457567771536160909.stgit%40devnote2
 
-Steve introduced BTF typecast feature for eprobe[1].
-This series extends it and add more options:
-
-1. Expanding BTF typecast to kprobe and fprobe.
-   (currently only function entry/exit)
-
-2. Introduce container_of like typecast. This adds a "assigned
-   member" option to the typecast.
-
-   (STRUCT,MEMBER)VAR->ANOTHER_MEMBER
-
-   This casts VAR to STRUCT type but the VAR is as the address
-   of STRUCT.MEMBER. In C, it is:
-
-   container_of(VAR, STRUCT, MEMBER)->ANOTHER_MEMBER
-
-3. Support nested typecast, e.g.
-
-   (STRUCT)((STRUCT2)VAR->MEMBER2)->MEMBER
-
-   the nest level must be smaller than 3.
-
-4. Add $current variable to point "current" task_struct.
-   This is useful with typecast, e.g.
-
-   (task_struct)$current->pid
-
-5. per-cpu dereference support.
-
-   Intrdouce this_cpu_read(VAR) and this_cpu_ptr(VAR) to
-   access per-cpu data on the current CPU (accessing other CPU
-   data is not stable, because it can be changed.)
-
-   You can access the member of per-cpu data structure using
-   typecast like:
-
-   (STRUCT)this_cpu_ptr(VAR)->MEMBER
-
-
-And added a test script to test part of them.
-
-Thanks,
-
+Fixes: 9cfe06f8cd5c ("tracing/events: add trace-events-sample")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ Changes in v4:
+   - Fix to remove decrementing counter in error path, since foo_bar_reg() always returns 0.
+   - Add a newline to error message.
+ Changes in v3:
+   - Recover the usage counter.
+---
+ samples/trace_events/trace-events-sample.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-Masami Hiramatsu (Google) (7):
-      tracing/events: Fix to check the simple_tsk_fn creation
-      tracing/probes: Support typecast for various probe events
-      tracing/probes: Support nested typecast
-      tracing/probes: Support field specifier option for typecast
-      tracing/probes: Add $current variable support
-      tracing/probes: Add this_cpu_read() and this_cpu_ptr() dereference method to fetcharg
-      tracing/probes: Add a new testcase for BTF typecasts
+diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
+index ecc7db237f2e..0b7a6efdb247 100644
+--- a/samples/trace_events/trace-events-sample.c
++++ b/samples/trace_events/trace-events-sample.c
+@@ -107,6 +107,10 @@ int foo_bar_reg(void)
+ 	 * for consistency sake, we still take the thread_mutex.
+ 	 */
+ 	simple_tsk_fn = kthread_run(simple_thread_fn, NULL, "event-sample-fn");
++	if (IS_ERR_OR_NULL(simple_tsk_fn)) {
++		pr_err("Failed to create simple_thread_fn\n");
++		simple_tsk_fn = NULL;
++	}
+  out:
+ 	mutex_unlock(&thread_mutex);
+ 	return 0;
 
-
- Documentation/trace/eprobetrace.rst                |    9 
- Documentation/trace/fprobetrace.rst                |   10 
- Documentation/trace/kprobetrace.rst                |   11 +
- kernel/trace/trace.c                               |    8 
- kernel/trace/trace_probe.c                         |  439 +++++++++++++++-----
- kernel/trace/trace_probe.h                         |   17 +
- kernel/trace/trace_probe_tmpl.h                    |   25 +
- samples/trace_events/trace-events-sample.c         |   44 ++
- samples/trace_events/trace-events-sample.h         |   34 +-
- .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 ++
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   11 +
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   11 +
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 
- 13 files changed, 559 insertions(+), 116 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
