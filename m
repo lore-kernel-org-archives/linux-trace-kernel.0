@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879E833A9FF;
-	Wed, 17 Jun 2026 18:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABE337DAA2;
+	Wed, 17 Jun 2026 18:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781722353; cv=none; b=SdYAx2yUXZr/UTNZkTntT8nyETYMIiiU6YZpVf/M3S+vTRN2Ub4I2EiBiTPPgPtMXlXW7kgU4vV7fuQhdOCKGL+Xl5he8/XHMch37CsPOqBLj0EJ/8T/2Q3RSQSMoFLrjTggBrJUXHlPekR+0yEM8l/KZmZU8qqmkx0K4+CKxKQ=
+	t=1781722653; cv=none; b=UQlt7CtPCWJlWbv8TFf4CN+sGS0GrUm/MWtJttYmZAR+iScbVoXfHziFN9By2hDJ/o6pSqwQF5rsIRw9EuXP6Pmu3hSNp/FaFlfhWiEcHW2Vjx7BwE9zva2BkwIerFkuqFx0xsIGiTSePBwAbEMpCMoMJv0ZapIQ7O+vqDkUH9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781722353; c=relaxed/simple;
-	bh=Jr3O0hUh1LfTS0GuG9W2/eV8l2XXjecCZ3YhJ4yB0Ac=;
+	s=arc-20240116; t=1781722653; c=relaxed/simple;
+	bh=RhM1si7AiBQSL9pqxtl9GolkybQbQ56Si1L1KVCopAQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oEcPREla3LynYal6M03xVJmJadBhFbdMWFyvYPqk65TMdetufNK0ySZ5bhnUzWgj/HB3ZsVi57naXWwAFg2z5FudNe29nmwu+1PwgEP7Pyk9VOkhBb8VYFWrdJPywsC7cta0Bd7QoULKxG/VZUYcrYB6IhUcE6pbTZIb3mkdVUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kxiFCM4M; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=cW7Bs+gMkpKCzx1r2ZliFeJdPVmfl1swGVYCxKduzl4VnyYscxeoBo3dYqLdtuLG7Uf74zAYgMYe+YhpkrNnriVVEkSso/HNqP49geDHCKc0wSo94Ff2BNcKuiYaTdpqIrNC+F3fiu1G1BxNji3rnUcOug2yH+xeQ3Yvq23unJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ss5/7B8P; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kxiFCM4M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 306081F00A3A;
-	Wed, 17 Jun 2026 18:52:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ss5/7B8P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A281F000E9;
+	Wed, 17 Jun 2026 18:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781722352;
-	bh=1mhh+jU+SViuEIswUJX3OsTgBu5BICnREJa91OfaeeY=;
+	s=k20260515; t=1781722652;
+	bh=zZWtaENFb8wsffv7f3IzX9YbZfqNh2H7+UoPSzSXYuI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=kxiFCM4MJcV/aLWLoH1cJ+nt7/RWWggSenk4fFCmjRqKAZvgCy7+6/imKq1vuaUOE
-	 e8AI9PjAWmFo/yrZNICWmQFM0rhdX3q6BmQmeLX6tCbZD5/CDvzLwx4Qtf+8AXohYZ
-	 ZJ/leLAdu9nmSxyrDHOYm5IlNEYT57BUVCFlLgEz7Ts5sSOUjLNgk6pnhXhtMCleKB
-	 X/Iv/EcFF3b3RhUbEzp3nu+PWRFKOwsWnIS9Ohxt7SNKVXo3f8chZrVW/PWujOfnE5
-	 dKRmaBKTuZtosYuBj6dW4Xj4Xv/UbpCfEYtjuaYRzrXhtYxPDnlNzWh9w5gXbRRZWT
-	 4Jy3to8iIkHgA==
-Message-ID: <969cb14b-5b8b-48e6-add6-4dd13101dd89@kernel.org>
-Date: Wed, 17 Jun 2026 20:52:26 +0200
+	b=Ss5/7B8P4iVJPoxo3V8uqSXR32uktKCar1PAxSEIUAkKWjK8zbtQ2aArLbreU0Dd/
+	 7ARsemNGFI9DMTx4NFvVe00i0qE7iAmuiAjGwFAfU5HJ6PdTHbtQw2OOLGuUs+6rgx
+	 3EbBDikXjrhTlqc4ygMfDWESvYheqwElZvDOrvmIvINI37/nUboqOPddbJ8SCbzO6r
+	 /2Z8H9gMlcozH2lAEvmRZJUwubNIOEKzpesBcu5K+64kLbqGZNzYKkVqvSJQYSGzpj
+	 WE7rsyuS5eyLMDPAOIorSpQCck6JXOPZfxf0+kgMnp9w+AdSjyvjky6mwfDHk60mnt
+	 pGTM/sFIr1riw==
+Message-ID: <9890b8f5-69b9-49bc-8ed6-ea47723b644e@kernel.org>
+Date: Wed, 17 Jun 2026 20:57:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] mm/compaction: skip isolate mlocked folios when
- compact_unevictable_allowed=0
+Subject: Re: [RFC PATCH 3/3] mm/compaction: respect
+ compact_unevictable_allowed in alloc_contig path
 Content-Language: en-US
 To: Wandun Chen <chenwandun1@gmail.com>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -45,10 +45,9 @@ Cc: akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
  jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
  rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
  david@kernel.org, ljs@kernel.org, liam@infradead.org, rppt@kernel.org,
- bigeasy@linutronix.de, clrkwllms@kernel.org, Alexander.Krabler@kuka.com,
- Hugh Dickins <hughd@google.com>
+ bigeasy@linutronix.de, clrkwllms@kernel.org, Alexander.Krabler@kuka.com
 References: <20260604023812.3700316-1-chenwandun1@gmail.com>
- <20260604023812.3700316-2-chenwandun1@gmail.com>
+ <20260604023812.3700316-4-chenwandun1@gmail.com>
 From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 Autocrypt: addr=vbabka@kernel.org; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -89,52 +88,118 @@ Autocrypt: addr=vbabka@kernel.org; keydata=
  NcaZ+c6J4H+nEJGi2SkHAUJz5oBzuThvPudLvPA/SK8sKoM01IRxSihev/S/5WLazXB1PGem
  OCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLV
  jXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4pYekxJujNeEDkUlky0Y=
-In-Reply-To: <20260604023812.3700316-2-chenwandun1@gmail.com>
+In-Reply-To: <20260604023812.3700316-4-chenwandun1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 6/4/26 04:38, Wandun Chen wrote:
 > From: Wandun Chen <chenwandun@lixiang.com>
 > 
-> compact_unevictable_allowed is default 0 under PREEMPT_RT,
-> isolate_migratepages_block() skips folios with PG_unevictable set.
-> However, mlock_folio() sets PG_mlocked immediately but defers
-> PG_unevictable to mlock_folio_batch(), result in a folio with
-> PG_mlocked=1 but PG_unevictable=0. Compaction will isolate such a
-> folio.
+> vm.compact_unevictable_allowed=0 is used to prevent compacting
+> unevictable pages. However, isolate_migratepages_range() passes
+> ISOLATE_UNEVICTABLE regardless of this sysctl, so the setting
+> has no effect in the alloc_contig path.
 > 
-> Fix by checking folio_test_mlocked() together with the existing
-> folio_test_unevictable() check.
+> Fix it by:
+>   - Keep ISOLATE_UNEVICTABLE for CMA allocation, discussed in [1].
+>   - Honour sysctl_compact_unevictable_allowed for non-CMA allocation.
 > 
-> A similar issue has been reported by Alexander Krabler on a 6.12-rt
-> aarch64 system. Vlastimil suggested to check the mlocked flag [1].
-> 
-> Reported-by: Alexander Krabler <Alexander.Krabler@kuka.com>
-> Closes: https://lore.kernel.org/all/DU0PR01MB10385345F7153F334100981888259A@DU0PR01MB10385.eurprd01.prod.exchangelabs.com/
 > Suggested-by: Vlastimil Babka <vbabka@suse.cz>
 > Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-> Link: https://lore.kernel.org/all/33275585-f2db-4779-89f0-3ae24b455a67@suse.cz/ [1]
+> Link: https://lore.kernel.org/all/25ba0d77-eb61-4efc-b2fc-73878cbd85c1@suse.cz/ [1]
 
-Well in that thread, Hugh doubted my suggestion and then it seems we didn't
-concluded anything. Did you actually in practice observe the issue that
-Alexander had, and that this patch fixed it, or is that theoretical?
+There was also the "Ideally by not having mlock'd pages in CMA areas at
+all." part. Is it the case? It was more elaborated here:
+https://lore.kernel.org/all/CAPTztWZpnX1j8-7yeppVUsxE=O9hbVeqricDjZt8_pnN7a-kBQ@mail.gmail.com/
 
 > ---
->  mm/compaction.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  include/linux/compaction.h | 6 ++++++
+>  mm/compaction.c            | 9 +++++++--
+>  mm/internal.h              | 1 +
+>  mm/page_alloc.c            | 2 ++
+>  4 files changed, 16 insertions(+), 2 deletions(-)
 > 
+> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+> index f29ef0653546..04e60f65b976 100644
+> --- a/include/linux/compaction.h
+> +++ b/include/linux/compaction.h
+> @@ -106,6 +106,7 @@ bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
+>  extern void __meminit kcompactd_run(int nid);
+>  extern void __meminit kcompactd_stop(int nid);
+>  extern void wakeup_kcompactd(pg_data_t *pgdat, int order, int highest_zoneidx);
+> +extern bool compaction_allow_unevictable(void);
+>  
+>  #else
+>  static inline void reset_isolation_suitable(pg_data_t *pgdat)
+> @@ -131,6 +132,11 @@ static inline void wakeup_kcompactd(pg_data_t *pgdat,
+>  {
+>  }
+>  
+> +static inline bool compaction_allow_unevictable(void)
+> +{
+> +	return true;
+> +}
+> +
+>  #endif /* CONFIG_COMPACTION */
+>  
+>  struct node;
 > diff --git a/mm/compaction.c b/mm/compaction.c
-> index b776f35ad020..7e07b792bcb5 100644
+> index 007d5e00a8ae..a10acb273454 100644
 > --- a/mm/compaction.c
 > +++ b/mm/compaction.c
-> @@ -1116,7 +1116,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  		is_unevictable = folio_test_unevictable(folio);
+> @@ -1341,6 +1341,7 @@ isolate_migratepages_range(struct compact_control *cc, unsigned long start_pfn,
+>  							unsigned long end_pfn)
+>  {
+>  	unsigned long pfn, block_start_pfn, block_end_pfn;
+> +	isolate_mode_t mode = cc->allow_unevictable ? ISOLATE_UNEVICTABLE : 0;
+>  	int ret = 0;
 >  
->  		/* Compaction might skip unevictable pages but CMA takes them */
-> -		if (!(mode & ISOLATE_UNEVICTABLE) && is_unevictable)
-> +		if (!(mode & ISOLATE_UNEVICTABLE) &&
-> +		    (is_unevictable || folio_test_mlocked(folio)))
->  			goto isolate_fail_put;
+>  	/* Scan block by block. First and last block may be incomplete */
+> @@ -1360,8 +1361,7 @@ isolate_migratepages_range(struct compact_control *cc, unsigned long start_pfn,
+>  					block_end_pfn, cc->zone))
+>  			continue;
 >  
->  		/*
+> -		ret = isolate_migratepages_block(cc, pfn, block_end_pfn,
+> -						 ISOLATE_UNEVICTABLE);
+> +		ret = isolate_migratepages_block(cc, pfn, block_end_pfn, mode);
+>  
+>  		if (ret)
+>  			break;
+> @@ -1902,6 +1902,11 @@ typedef enum {
+>   * compactable pages.
+>   */
+>  static int sysctl_compact_unevictable_allowed __read_mostly = CONFIG_COMPACT_UNEVICTABLE_DEFAULT;
+> +
+> +bool compaction_allow_unevictable(void)
+> +{
+> +	return sysctl_compact_unevictable_allowed;
+> +}
+>  /*
+>   * Tunable for proactive compaction. It determines how
+>   * aggressively the kernel should compact memory in the
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 181e79f1d6a2..163f9d6b37f3 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -1052,6 +1052,7 @@ struct compact_control {
+>  					 * ensure forward progress.
+>  					 */
+>  	bool alloc_contig;		/* alloc_contig_range allocation */
+> +	bool allow_unevictable;		/* Allow isolation of unevictable folios */
+>  };
+>  
+>  /*
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 81a9d4d1e6c0..1cf9d4a3b14c 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -7118,6 +7118,8 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
+>  		.ignore_skip_hint = true,
+>  		.no_set_skip_hint = true,
+>  		.alloc_contig = true,
+> +		.allow_unevictable = !!(alloc_flags & ACR_FLAGS_CMA) ||
+> +					     compaction_allow_unevictable(),
+>  	};
+>  	INIT_LIST_HEAD(&cc.migratepages);
+>  	enum pb_isolate_mode mode = (alloc_flags & ACR_FLAGS_CMA) ?
 
