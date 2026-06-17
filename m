@@ -1,341 +1,357 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013069.outbound.protection.outlook.com [40.93.201.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621EF282F25;
-	Wed, 17 Jun 2026 01:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781658235; cv=none; b=Tk8jUH0bK62dgMSG2bN7c6hBLcoeVk9qImXM/urovLVehQhYyB+KJ9+ZZXYI4kHs9q8GTMHYZ/J5XfA+x7DLqEg8MdfbMJnYOicx5IwkY3IFydOwkBHWpnPDYjToSkeQc5+3FENEPDy6zvxAesraNKUZ8ySkYn+rSnqpvZOP+sg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781658235; c=relaxed/simple;
-	bh=pQfl3Q6VVzfNh7ktCNcwVvAPXPyk6mW2Bg1rXZdNEAc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VUbftQiAIhR3lfdmEX4DEv17Cwhck6nwZkLNap3L0bf2D70TbxTITngsEhinto0WF/rODqzkqcDTWsoN8YMVMCAL6o7hVVkzTQ9HbuqOEojPADJVtdrkKg+KGB1uR+NomPtMqrXLp66XPk9hieuGnpuhVMFlxakyiuDcOkNsw3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZTmJeyJ; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A3D2F8EB1;
+	Wed, 17 Jun 2026 04:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781668985; cv=fail; b=DsuD+3at9jyHEALVVNb6/Rj5pwi+j2K7QWe9jyJVHr41zM+CTS3+R2xYwthtte7r9E2cyPrBpfitcFfN8vEI8h1evCuMUwN12haNEa/p9lJSa40+l8X0zTN2Cde5PCz2i1IT/dpUhCwS7gvDWAbxsJkw8yJgCN0Ppt5CQyEJHDM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781668985; c=relaxed/simple;
+	bh=yV08sE2+LG9scfa9oj61C3SrmwPdC70yUH3kcF8gvdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=USYNGbpga3rNVS3bDK1v3hS0LQ9WyguPIzM6bnfnyLimKeo2TicasQ3hdpX9MPw2wgaEbO8N7f7qEBWfH1qvLtpkkoSNyJnH8PzqRpj9TuNdb0D+9jWSD3yNq5PuBuLRtYSFUbjYmBxJ5s0I2nzWUuQmSNoZlfu/82+2d+ae0oM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ozuDjcCh; arc=fail smtp.client-ip=40.93.201.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZTmJeyJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28F6D1F000E9;
-	Wed, 17 Jun 2026 01:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781658234;
-	bh=LLJg6d7dC/gvs51xJLvTitv8jujCadoEJi3+5sjiC4Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IZTmJeyJ8Fd9qflAh5jszmgF2ZbOInJu8q1e8rSNfyYdkQdYc9NXOCEHvdUymv5AD
-	 IMsfisAic/QqEWgWwhMsf3wSHEKw2iFoR8agMfUHXXwhgPe9tfqI0NdEXvWJnFM/fY
-	 vh/Haf2m4TJpJ4P7w9UbLx/Lwb7OfQ5b1h9fsUv0VBfAukCQwijo7Frn4ta2HIOj6O
-	 ke3lI3XGCz9jmV8B08ZO1tGmv4meq/mQutIGW0KCI/PrF/XjPGbpRSwQms2Y0xReUD
-	 kL+vwCSXoi19FFNwMUZZ15+zwXR/rLVkvzD4vy5vGWK5E+ah4+DPgu8Ek1qaGEh635
-	 uLBMxEoO+jXAw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v5 7/7] tracing/probes: Add a new testcase for BTF typecasts
-Date: Wed, 17 Jun 2026 10:03:50 +0900
-Message-ID: <178165822999.269421.3650241506657907944.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178165816303.269421.7302603996990753309.stgit@devnote2>
-References: <178165816303.269421.7302603996990753309.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ozuDjcCh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I8aeupI7OMtTdzJD7Uu+FSe8BbRdbBC6cTncg6d3luIg+JtSWjJSk0KhFf6UYZtEaEcLmyDcqnvz/cfVNi4Jo3n9Wm+Ps9iMX5zD8e++cKJ+5cblAlkv89cw8DIdI5Ww1ner2MI4hUa1oWoysWeFV8wQx46+Icp1ENDJH3XESSc8psgzRXzgUFEid2t9QXkq3ww4zvxkffeC0/LnPspCa74kb/FaTCs3+G+kf/+K4zMY9jiF3BW/qizJtmlojWwWw3JTkf3ZvUfjv+gnp2V8ZiPkSQ5QnzPx0t3teehaTQRQHPjtGudt9Mb4GlHMUVebt75JIBWn1HhwBxL/kHmjfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FB69vVfVPBhIwbobVxhKuOXjePDausT/B1ctopKcIw0=;
+ b=XmJtFVBcc2wBWeNJC0ru0+tO94lpyw3CQMl1lhFyh6tB0855gurwcTewVpmT8kn5nHrilpA5sEOFwuJdmZT9hKe/n+bOQJapdhj37BWsPeJpFHL0A5PmrSVVoJY61m3Cc1BfBQQL624z5U7wNr1CAVtdgPXKh0XwSnO3jsB9DQHiWo3Dxm8Y74MFkJu4tZ+90OgoikcoXPIqchNGgsBWnxX2QB515pnn6tguJuz8gvuUWR3yd3r3LV3ErBCVESUfxsmUC2ozOMSyytiKZG4AASSiWYvJXXQmBW8KfK9zaiNuaxdb37OWa1ewa86ddOHYNrj570Vyx58XxrlyX8QOnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FB69vVfVPBhIwbobVxhKuOXjePDausT/B1ctopKcIw0=;
+ b=ozuDjcChD6ZpuzEBokN8YLTk4A3jIhvRolGTz1MMuSw+OfeufQ5RHFiIfuToI8lh8W+uA5CHbw4V37w/zEFJZHLElwR90fSFTurCsJLFrlPI2OZEVyh5y6kjT1vwVO9/+/oZNR3XFiiBhsWdKwnfnUdPA+dENrUKln91iJpZB+EOQXIYXnnVcxHkbgy8yIeItopm+VROJMukjdLlbLDAkjtp6epTvytsyXMJpnx+MsF51X7Y/f/1XvIF0roLTce/D2vp8smPJdO72g++zoSuDX+9aCdMT8/gpOtbyz1CBL+AuX+wlRnWKKBps/IbVfyrkhtJmmwm0VR7F4STE/URlw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB5001.namprd12.prod.outlook.com (2603:10b6:610:61::18)
+ by IA0PPF73BED5E32.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd2) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Wed, 17 Jun
+ 2026 04:02:55 +0000
+Received: from CH2PR12MB5001.namprd12.prod.outlook.com
+ ([fe80::89e3:6df0:de90:8dfe]) by CH2PR12MB5001.namprd12.prod.outlook.com
+ ([fe80::89e3:6df0:de90:8dfe%5]) with mapi id 15.21.0139.009; Wed, 17 Jun 2026
+ 04:02:54 +0000
+Date: Wed, 17 Jun 2026 14:02:47 +1000
+From: Balbir Singh <balbirs@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	damon@lists.linux.dev, kernel-team@meta.com, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com, 
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
+	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com, 
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
+	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
+	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, 
+	jackmanb@google.com, sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev, 
+	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev, jannh@google.com, 
+	linmiaohe@huawei.com, nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com, 
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org, 
+	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
+	nphamcs@gmail.com, bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ajIb4DJdLGPbMB4V@parvat>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: ME0PR01CA0080.ausprd01.prod.outlook.com
+ (2603:10c6:220:233::23) To CH2PR12MB5001.namprd12.prod.outlook.com
+ (2603:10b6:610:61::18)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB5001:EE_|IA0PPF73BED5E32:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef50179a-2e7f-46fc-45e1-08decc254ded
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|23010399003|1800799024|366016|56012099006|11063799006|5023799004|22082099003|18002099003|3023799007|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	LX/0QUaZzdLTRoGjNspt9VKVAEJbth1SqxwFY/9ESxCysxQXkrLZz5JVjxQ4CTpxZ1W+ziH/cIqGRDtpfj6uFgpZUYsS/zATGcyzj6vvk+NlZ0mgprThl0l3EtTYeNO5t/aCPhzHCqPEHyxsGk9i7mfm3/XaXJSySYQzyWw+Mx/vub/n0TQnys4AtzXx9NpHJAmU5EidVXckol5lkaaNeownWOC9s6IPGzBFOvIMntV3I118RgCIAj99ITWFiHdwyTj1S/FXOEv5lgj69GnhTFDJLAtIwcfTAIrvqDjCnIuD82mMkWPtp6T99zfjwzX10ydPotFWAlEwQYiK7ctr3lhCDnzCC6txKs4lwd425vNxpcgqb3mPsP5wE2EA3Vz2yO56mUA3xOmEkGoGwNfOESMCSKimfGzAflYfOorCRJ4jdK7JDZORfXR7roVyruktanMytrSMFFGuFHvUoEwXHlPuMKoOpLunaVDINMvH//WGGZ5ddiwOcb5jjnMrkltNH3QQ3Byy8z9OFle0dd/QYk73Oe6/372gbBld00EC+ObUlh2y9s2A7cb6cwHVDpazKV1iyhDg9qV7/nGz7JMkyvwzaWlJdban0GKWPmX77veewzvD+QDtpIOh4BCikDeOKU3lMAd9fAuUJkxV+klnG5xtBP8Ucdlc2NItN9gxsIy/WaLeNUP9FCfP3C+xyGJW
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB5001.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(1800799024)(366016)(56012099006)(11063799006)(5023799004)(22082099003)(18002099003)(3023799007)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Y1gzM2c0TWhKbk00R1RUdERaM3dDeTNaVWpjY3VWb1AzTDJpQytBcWpYRTh2?=
+ =?utf-8?B?aGNsQWV2OWN2OW5TRHl5M29PSVYxR0w0V1BsSVhUODJPT09sVXJtdGd4RFpj?=
+ =?utf-8?B?cnRiZmpCcjlCYTBuaGI4T3lPd00wNmZRUHdtaHlQL3loTzNFMUZ1OFplODVX?=
+ =?utf-8?B?Z3NsRHQxb2tUTitzZmw4UUhtZGxqUWdKbWE0OFhmYmNoUjVSTmk0aUw0ZmNp?=
+ =?utf-8?B?ZSswYkl2dks4V2sraytzNGc4aG0yUWpBRktnTlhtQmk3NGFoRW1zV2FvVy91?=
+ =?utf-8?B?S3BLMTdKMGJmR0I4bU53bHNSS3dFWFVsWGVFRWhmZU5oYU9pc3h0NmI3SWl4?=
+ =?utf-8?B?eDZhaUtBWEUrM3BmczRFVkVLakRPSXFyVUlEblNsUmpMRWNhL21GaEM3Sjgx?=
+ =?utf-8?B?VjFmdnUweTRZcG1WVnRFVE9jSWJmRGxkdkJDNHR2b2V6YXZXcDFoTlRFQmhG?=
+ =?utf-8?B?QkN2Z2dzb2NKUjlPMVFTaS9NeTk4WDloek5mcmlXemJlRFQ4U25BMW5vbk55?=
+ =?utf-8?B?T0ZOeTVyOS9ZL2tOTEdhL3Y4M2Z3Q3NvMDZraFFCTWNKL3F4NHlyRW9Ka3No?=
+ =?utf-8?B?T1Z6R092d0tsVFRkYlFKVVBUaGJ1YXI2QU1YcVg3bWE5Qyt3MHdwZUNLWkFN?=
+ =?utf-8?B?V091cFVIcWJnNmUwc1FLVFQrQ1RYWmNUbXFnSVJVa200eElaQmxtbGZjdCtE?=
+ =?utf-8?B?cVRZdUNYMG1xWVNwZFR4WFkxTDlKNDJFaXBBaHM0bGFKUVpCRnEzdVNZdHlx?=
+ =?utf-8?B?cS9qUUxsL2VIUGlvZGkyYjMyUmNRZWNYMTI4a0FjdGlqU0VyWjE2UTdtNm5X?=
+ =?utf-8?B?NzRWVWhvQ0k0QllHS0FaNGUzalVPSVN4RWI3YUxQSEwrNGlEU2x3SGxQN0hw?=
+ =?utf-8?B?WkJXU3pjditLelZPaHhYRmZTZVc0K2JWVnNWRGdhQlVGd3N1bGNRU0Y1cFpj?=
+ =?utf-8?B?dG4zUVB2VnJsMXdRS08yNlFWVHg4RHZPS3l6c01EM3E2Q3VibENQTHdGVVZo?=
+ =?utf-8?B?dlFyamFjWVEyTlhuT1ZvUTN4dkRqUUhaeno4clVHRHdBUDBJM3ArUUo1SjZP?=
+ =?utf-8?B?a2dxelpwaGc1LzBEdHdIY3RJcWkwOWFYdkVCb2JSN044YjZDNkpJWWplZDRX?=
+ =?utf-8?B?TnpaSlBEOHdkTDZkbms0dlJWbWVTYnA0eVpvWGpwbVRLWE84QmErM2dRSU5Q?=
+ =?utf-8?B?bkpzWWRsQUc0RWdjYzcxbkhpZHRqUHNGZFNyc0pMRDEyV0lFT3dYdTZ1TVVt?=
+ =?utf-8?B?VVpuOXphZllrOGVGd1NPSnJKT3lsUXZYcHVsR29QakV2STcwQ1oxaVd5U29h?=
+ =?utf-8?B?WnZhbFhzdi9sSUdDL21PRFoxMnRPRzlMTlZRQmtqL3FHc0RPUDVyZytKT1c3?=
+ =?utf-8?B?bk1lSitHUUp3VWJFM1NSWUN3VDE5MG45NmdOS0hLNTFrY2pOUk1tNzFnV3hX?=
+ =?utf-8?B?NEVWSWlERDFvSmk4VGlBc3JwZUExS0xRYWZGZmpkWjRrQnpsWVcxVUxLN2xt?=
+ =?utf-8?B?dXhxbjZ6VWdkME9vWlB2aWdlRFRvLzRGc1RjbXA2Wk0wdExPSWQwZkErZ2VD?=
+ =?utf-8?B?V0VIUGl3UXpLR2pDMGh6SjgxZTR3S1oyQjI3SkhTWjUxZWg3Z0VtbFhJV2xq?=
+ =?utf-8?B?RXFxdEdENXlLNmd6UGE3bW0vSHJEUTE4aHZkazdCeUlSSkJ6RVdPYXd3NWRr?=
+ =?utf-8?B?UHFCb2hVdEdHUERtUDUwc0FQTHJYRTJhL1RGSjN1SEVsemZXc0xwblVjRllG?=
+ =?utf-8?B?UXYrTTZRV0crcVVsSmUveDUrVEtuT3hzVFNHRG12UTNIOEhPNUtjdk01Tm9o?=
+ =?utf-8?B?Ykh6REZxdkJ5U2dQSDJqcDYzQ3NNTVZBRjZST1hESk1aU0RnQWZRWUFjck1l?=
+ =?utf-8?B?LzhGYjdnZWQvMXRHK3R6cEhWaUJmMlR3Y281SXVKNGJVeTZQSGllbjJBZGNk?=
+ =?utf-8?B?YUtYRmgvaC9xMzNpT3ZnVzhvZXBlVGYrdStVU1h4Wi9WaWJBL2h6K1NGengx?=
+ =?utf-8?B?TG85SlN6OU50M3UybUt0NFZkdEdjSGwzU1VZOXNUU1RmLzFTSVlsODJkVmFv?=
+ =?utf-8?B?WjU4OFdFZkJGajd0N0ZDNFBjUXlBRHljWnZNdW93ekVvdDdScjdsQ3h1aFFK?=
+ =?utf-8?B?L2JDcVFNUXN3YXF6bEIzaStBdEZ6eUIzRFFVRUZNcExGekJjSVlDaWQ0UURN?=
+ =?utf-8?B?bUpWS2JIdmpZSGZNdWNrZk5HTDJ5MFpXajZiVUh3ZW5TLzFLTkFGc0dmay83?=
+ =?utf-8?B?SVp3UHZuWDl3eXdQcjFmNGpNYk1MSEs4N29nSjI2QmNRUTVxL3NSdzdmcnh1?=
+ =?utf-8?B?djJBRHdDbUVXNzJrSTFBcVJ3bDFRalBvL0VxWUJoaE5RUUw3cmROdz09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef50179a-2e7f-46fc-45e1-08decc254ded
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB5001.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2026 04:02:54.4739
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NpKV9YIpgmvq5DJ+8nn525AIpdnxq3cYhoBtCJ7MmnCSh1572oL6iYkzUecQ4LHu+q9swBJSAdlbL2Q4ys3e7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF73BED5E32
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, Jun 10, 2026 at 12:37:34PM -0400, Gregory Price wrote:
+> On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
+> > On 6/10/26 12:41, Gregory Price wrote:
+> > > On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
+> > > 
+> > > Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
+> > > which causes spillage into private nodes because slub allows private
+> > > nodes in its mask.  I think this is fixable.
+> > > 
+> > > I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
+> > > code, etc), but it seems like fully dropping the FALLBACK entries and
+> > > requiring __GFP_THISNODE might be sufficient.
+> > 
+> > Sorry, I haven't been able to follow up so far, and not sure if that's what you
+> > are discussing here ...
+> > 
+> > After the LSF/MM session, I was wondering, whether if we focus on allowing only
+> > folios allocations to end up on private memory nodes for now: could the
+> > __GFP_THISNODE approach work there?
+> > 
+> > Essentially, disallow any allocations on non-folio paths, and allow folio
+> > allocation only with __GFP_THISNODE set.
+> > 
+> > I have to find time to read the other mails in this thread, on my todo list.
+> > 
+> > So sorry if that is precisely what is being discussed here.
+> > 
+> 
+> So, I remember this being asked, and I didn't fully grok the request.
+> 
+> I'm still not sure I fully understand the question, so apologies if I'm
+> answer the wrong things here.
+> 
+> I understand this question in two ways:
+> 
+>   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
+>   2) Can we disallow [Feature] (i.e. slab) allocation targeting the node.
+> 
+> 
+> 1) Can we disallow page allocation and limit this to folios?
+> 
+> No, I don't think so.
+> 
+> Folio allocations are written in terms of page allocations, we would
+> have to rewrite folio allocation interfaces and introduce a bunch of
+> boilerplate for the sake of this.
+> 
+> struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order,
+>                 int preferred_nid, nodemask_t *nodemask)
+> {
+>         struct page *page;
+> 
+>         page = __alloc_frozen_pages_noprof(gfp, order, preferred_nid, nodemask);
+>         if (page)
+>                 set_page_refcounted(page);
+>         return page;
+> }
+> 
+> struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
+>                 nodemask_t *nodemask)
+> {
+>         struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+>                                         preferred_nid, nodemask);
+> 	return page_rmappable_folio(page);
+> }
+> 
+> At the end of the day, this all reduces to `get_pages_from_freelist`,
+> and at that level we don't really care about folio vs page.
+> 
+> __GFP_COMP is insufficient to differentiate between a non-folio compound
+> page and a folio, and __GFP_COMP is passed into __alloc_pages_*
+> interfaces all over the kernel.
+> 
+> Trying to detach these paths things seems like a horrible rats nest /
+> not feasible / will create a lot of boilerplate for little value.
+> 
+> (I did not fully understand this request when it was asked, I do
+>  not fully understand this request not, please let me know if I
+>  have misunderstood what you were asking).
+> 
 
-With the introduction of container_of-style BTF typecasting and
-per-CPU variable access support in trace probes, we need a way to
-verify their functionality and prevent regressions.
+I agree with this, any changes to folio only allocation could then be
+easily adapted for N_MEMORY_PRIVATE
 
-Add a new ftrace kselftest and update the trace event sample module
-to test and validate these features.
+> 
+> 
+> 2) Can we disallow SLAB allocation.
+> 
+> Yeah, but I think a better question is whether there's a difference
+> between alloc_pages_node() and kmalloc_node() when it all just sinks
+> to the same fundamental code in mm/page_alloc.c
+> 
+> Maybe there's an argument for something like NP_OPT_KMALLOC (allow slab
+> allocations on the private node w/ __GFP_THISNODE)
+> 
+> On my current set, I don't implement any explicit filtering at all in
+> mm/page_alloc.c - the filtering is a function of the nodes not being
+> present in the FALLBACK list and only having a NOFALLBACK list.
+> 
+> What __GFP_THISNODE actually does under the hood is just switch
+> which zone list (FALLBACK vs NOFALLBACK) is used for the target node.
+> 
+> For isolation w/o __GFP_PRIVATE, we're removing N_MEMORY_PRIVATE nodes
+> from *their own FALLBACK* list and only adding them to their NOFALLBACK
+> list.  That means to reach a private node you MUST use __GFP_THISNODE.
+> 
+> I realize this is confusing, but essentially we don't have to modify
+> mm/page_alloc.c to get the __GFP_THISNODE filtering, we get this from
+> the fallback/nofallback list construction.
+> 
+> 
+> Ok, so how does this flush out in practice - and why do I call this
+> filtering mechanism fragile?
+> 
+> consider kmalloc_node() and __slab_alloc():
+> 
+> kmalloc_node(...)
+>   └─ ___slab_alloc()     mm/slub.c:4406   pc.flags |= __GFP_THISNODE
+>       └─ new_slab(s, pc.flags, node)
+>           └─ allocate_slab(s, flags, node)
+>               └─ alloc_slab_page(flags, node, oo, …)
+>                   └─ __alloc_frozen_pages(flags, order, node, NULL);
+> 
+> Slab silently upgrades the page allocator flags here to include
+> __GFP_THISNODE - even if the user didn't request that behavior.
+> 
+> This is exactly the kind of "spillage" I said was hard to police at LSF.
+> 
+> Without __GFP_PRIVATE, we have to keep an eye on what around the kernel
+> is using __GFP_THISNODE and how.
+> 
+> For mm/slub.c we can choose to do one of thwo things
+> 
+>   1) 100% refuse slab allocations on private nodes, i.e.:
+> 
+>      kmalloc_node(..., private_nid, __GFP_THISNODE)
+> 
+>      And will fail (return NULL).
+> 
 
-Specifically, update the trace-events-sample module to set up a
-periodic timer whose callback accesses a per-CPU counter. Introduce
-a new sample trace event, foo_timer_fn, to trace this callback
-and log the current counter value.
+Doesn't this iterate through N_MEMORY only? N_MEMORY_PRIVATE should not
+be in the regular for_each(...) loops
 
-Then, add a new test case, btf_probe_event.tc, which defines a
-dynamic probe on the timer callback. The probe uses BTF typecasting
-to recover the parent structure from the timer argument and
-this_cpu_read() to fetch the per-CPU counter. The test verifies
-the integrity of the implementation by ensuring the values
-recorded by the dynamic probe match those from the static tracepoint.
+>   or
+> 
+>   2) Do not upgrade private-node slab requests w/ __GFP_THISNODE
+>      
+>      This allows kmalloc_node() to work the same as folio_alloc()
+>      or alloc_pages() interfaces (__GFP_THISNODE is the key), with
+>      the understanding that any __GFP_THISNODE user
+> 
+> We can opt these nodes into slab/kmalloc with a NP_OPT_SLAB
+> if the owner wants kmalloc_node(), with the understanding that any
+> caller using __GFP_THISNODE may get access.
+> 
+> That's the kind of fragility I was trying to avoid.
+> 
+> 
+> That said, in practice, I have found that basic kernel operations don't
+> generally target use kmalloc_node() w/ __GFP_THISNODE - there's just
+> nothing to prevent anyone from doing so.
+> 
+> So this seems promising...
+> And then theres arch/powerpc/platforms/powernv/memtrace.c
+> 
+> static u64 memtrace_alloc_node(u32 nid, u64 size)
+> {
+> 	... snip ...
+>         page = alloc_contig_pages(nr_pages, GFP_KERNEL | __GFP_THISNODE |
+>                                   __GFP_NOWARN | __GFP_ZERO, nid, NULL);
+> 	... snip ...
+> }
+> 
+> static int memtrace_init_regions_runtime(u64 size)
+> {
+> 	... snip ...
+>         for_each_online_node(nid) {
+>                 m = memtrace_alloc_node(nid, size);
+> 	... snip ...
+> }
+> 
+> static int memtrace_enable_set(void *data, u64 val)
+> {
+> 	... snip ...
+>         if (memtrace_init_regions_runtime(val))
+>                 goto out_unlock;
+> 	... snip ...
+> }
+> 
+> This is the *exact* pattern I said would be hard to police - and it
+> doesn't look like a bug, just not informed that private nodes exist.
+> 
+> This is why I'm concerned with trying to depend on __GFP_THISNODE as the
+> filtering function.
+> 
+> That said, the number of __GFP_THISNODE users is very limited
+> kernel-wide, so maybe that's an acceptable maintenance burden?
+> 
 
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v5:
-  - Add more syntax test cases.
- Changes in v4:
-  - Fix uprobe $current test.
- Changes in v3:
-  - Add syntax test case.
-  - Update testcase to use this_cpu_read()
- Changes in v2:
-  - Use timer_shutdown_sync() instead of timer_delete_sync() for teardown.
----
- samples/trace_events/trace-events-sample.c         |   40 +++++++++++++++-
- samples/trace_events/trace-events-sample.h         |   34 ++++++++++++-
- .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 ++++++++++++++++++++
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   11 ++++
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   11 ++++
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 ++
- 6 files changed, 147 insertions(+), 5 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
-
-diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
-index 0b7a6efdb247..ca5d98c360cb 100644
---- a/samples/trace_events/trace-events-sample.c
-+++ b/samples/trace_events/trace-events-sample.c
-@@ -94,6 +94,20 @@ static int simple_thread_fn(void *arg)
- static DEFINE_MUTEX(thread_mutex);
- static int simple_thread_cnt;
- 
-+static struct foo_timer_data *foo_timer_data;
-+
-+static void sample_timer_cb(struct timer_list *t)
-+{
-+	struct foo_timer_data *data = container_of(t, struct foo_timer_data, timer);
-+
-+	get_cpu();
-+	trace_foo_timer_fn(data);
-+	(*this_cpu_ptr(data->counter))++;
-+	put_cpu();
-+
-+	mod_timer(t, jiffies + HZ);
-+}
-+
- int foo_bar_reg(void)
- {
- 	mutex_lock(&thread_mutex);
-@@ -132,9 +146,27 @@ void foo_bar_unreg(void)
- 
- static int __init trace_event_init(void)
- {
-+	foo_timer_data = kzalloc_obj(*foo_timer_data, GFP_KERNEL);
-+	if (!foo_timer_data)
-+		return -ENOMEM;
-+
-+	foo_timer_data->name = "sample_timer_counter";
-+	foo_timer_data->counter = alloc_percpu(int);
-+	if (!foo_timer_data->counter) {
-+		kfree(foo_timer_data);
-+		return -ENOMEM;
-+	}
-+
-+	timer_setup(&foo_timer_data->timer, sample_timer_cb, 0);
-+	mod_timer(&foo_timer_data->timer, jiffies + HZ);
-+
- 	simple_tsk = kthread_run(simple_thread, NULL, "event-sample");
--	if (IS_ERR(simple_tsk))
--		return -1;
-+	if (IS_ERR(simple_tsk)) {
-+		timer_shutdown_sync(&foo_timer_data->timer);
-+		free_percpu(foo_timer_data->counter);
-+		kfree(foo_timer_data);
-+		return PTR_ERR(simple_tsk);
-+	}
- 
- 	return 0;
- }
-@@ -147,6 +179,10 @@ static void __exit trace_event_exit(void)
- 		kthread_stop(simple_tsk_fn);
- 	simple_tsk_fn = NULL;
- 	mutex_unlock(&thread_mutex);
-+
-+	timer_shutdown_sync(&foo_timer_data->timer);
-+	free_percpu(foo_timer_data->counter);
-+	kfree(foo_timer_data);
- }
- 
- module_init(trace_event_init);
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index 1a05fc153353..816848a456a2 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -247,12 +247,14 @@
-  */
- 
- /*
-- * It is OK to have helper functions in the file, but they need to be protected
-- * from being defined more than once. Remember, this file gets included more
-- * than once.
-+ * It is OK to have helper functions and data structures in the file, but they
-+ * need to be protected from being defined more than once. Remember, this file
-+ * gets included more than once.
-  */
- #ifndef __TRACE_EVENT_SAMPLE_HELPER_FUNCTIONS
- #define __TRACE_EVENT_SAMPLE_HELPER_FUNCTIONS
-+#include <linux/timer.h>
-+
- static inline int __length_of(const int *list)
- {
- 	int i;
-@@ -270,6 +272,13 @@ enum {
- 	TRACE_SAMPLE_BAR = 4,
- 	TRACE_SAMPLE_ZOO = 8,
- };
-+
-+struct foo_timer_data {
-+	const char		*name;
-+	struct timer_list	timer;
-+	int __percpu		*counter;
-+};
-+
- #endif
- 
- /*
-@@ -595,6 +604,25 @@ TRACE_EVENT(foo_rel_loc,
- 		  __get_rel_bitmask(bitmask),
- 		  __get_rel_cpumask(cpumask))
- );
-+
-+TRACE_EVENT(foo_timer_fn,
-+
-+	TP_PROTO(struct foo_timer_data *data),
-+
-+	TP_ARGS(data),
-+
-+	TP_STRUCT__entry(
-+		__string(	name,			data->name	)
-+		__field(	int,			count		)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name);
-+		__entry->count	= *this_cpu_ptr(data->counter);
-+	),
-+
-+	TP_printk("name=%s count=%d", __get_str(name), __entry->count)
-+);
- #endif
- 
- /***** NOTICE! The #if protection ends here. *****/
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
-new file mode 100644
-index 000000000000..96791e120b7d
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
-@@ -0,0 +1,51 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: BTF event with typecast and percpu access
-+# requires: dynamic_events "this_cpu_read(<fetcharg>)":README "[(structname[,field])]<argname>[->field[->field|.field...]]":README
-+
-+# Check if the sample module is loaded
-+if ! lsmod | grep -q trace_events_sample; then
-+  modprobe trace-events-sample || exit_unsupported
-+fi
-+
-+echo 0 > events/enable
-+echo > dynamic_events
-+
-+# The sample_timer_cb(struct timer_list *t) is called.
-+# We want to check (STRUCT,FIELD)VAR typecast and this_cpu_read() access.
-+# (foo_timer_data,timer)t converts t to struct foo_timer_data * using container_of.
-+# data->counter is a per-cpu pointer to int.
-+# this_cpu_read(data->counter) should give the value of the counter.
-+
-+echo 'f:mysample/myevent sample_timer_cb name=(foo_timer_data,timer)t->name:string count=this_cpu_read((foo_timer_data,timer)t->counter)' >> dynamic_events
-+
-+echo 1 > events/mysample/myevent/enable
-+echo 1 > events/sample-trace/foo_timer_fn/enable
-+
-+sleep 2
-+
-+echo 0 > events/mysample/myevent/enable
-+echo 0 > events/sample-trace/foo_timer_fn/enable
-+
-+# Compare the values.
-+MATCH=0
-+while read line; do
-+  if echo $line | grep -q "foo_timer_fn:"; then
-+    NAME=`echo $line | sed 's/.*name=\([^ ]*\) .*/\1/'`
-+    COUNT=`echo $line | sed 's/.*count=\([^ ]*\).*/\1/'`
-+    if grep -q "myevent:.*name=\"${NAME}\" count=$COUNT" trace; then
-+       MATCH=$((MATCH+1))
-+    fi
-+  fi
-+done < trace
-+
-+if [ $MATCH -eq 0 ]; then
-+  echo "No matching events found"
-+  exit_fail
-+fi
-+
-+# Clean up
-+echo 0 > events/mysample/myevent/enable
-+echo 0 > events/sample-trace/foo_timer_fn/enable
-+echo > dynamic_events
-+clear_trace
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-index fee479295e2f..0402d0271bfe 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-@@ -112,6 +112,17 @@ check_error 'f vfs_read%return $retval->^foo'	# NO_PTR_STRCT
- check_error 'f vfs_read file->^foo'		# NO_BTF_FIELD
- check_error 'f vfs_read file^-.foo'		# BAD_HYPHEN
- check_error 'f vfs_read ^file:string'		# BAD_TYPE4STR
-+if grep -qF "[(structname" README ; then
-+check_error 'f vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
-+check_error 'f vfs_read arg1=(f)((f)((f)((f)^((f)file->f)->f)->f)->f)->f'	# TOO_MANY_NESTED
-+check_error 'f vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
-+check_error 'f vfs_read arg1=(task_struct,^foo_bar)file:u8'	# NO_BTF_FIELD
-+check_error 'f vfs_read arg1=(^task_struct1234)file:u8'		# NO_PTR_STRCT
-+check_error 'f vfs_read arg1=(task_struct,se^->group_node)file->comm'	# TYPECAST_BAD_ARROW
-+check_error 'f vfs_read arg1=(task_struct,^->pid)file->comm'	# NO_BTF_FIELD
-+check_error 'f vfs_read arg1=(task_struct,^.pid)file->comm'	# NO_BTF_FIELD
-+check_error 'f vfs_read arg1=(task_struct,^.)file->comm'	# NO_BTF_FIELD
-+fi
- fi
- 
- else
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index 8f1c58f0c239..742b342e4930 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -115,6 +115,17 @@ check_error 'p vfs_read+20 ^$arg*'		# NOFENTRY_ARGS
- check_error 'p vfs_read ^hoge'			# NO_BTFARG
- check_error 'p kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
- check_error 'r kfree ^$retval'			# NO_RETVAL
-+if grep -qF "[(structname" README ; then
-+check_error 'p vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
-+check_error 'p vfs_read arg1=(f)((f)((f)((f)^((f)file->f)->f)->f)->f)->f'	# TOO_MANY_NESTED
-+check_error 'p vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
-+check_error 'p vfs_read arg1=(task_struct,^foo_bar)file:u8'	# NO_BTF_FIELD
-+check_error 'p vfs_read arg1=(^task_struct1234)file:u8'		# NO_PTR_STRCT
-+check_error 'p vfs_read arg1=(task_struct,se^->group_node)file->comm'	# TYPECAST_BAD_ARROW
-+check_error 'p vfs_read arg1=(task_struct,^->pid)file->comm'	# NO_BTF_FIELD
-+check_error 'p vfs_read arg1=(task_struct,^.pid)file->comm'	# NO_BTF_FIELD
-+check_error 'p vfs_read arg1=(task_struct,^.)file->comm'	# NO_BTF_FIELD
-+fi
- else
- check_error 'p vfs_read ^$arg*'			# NOSUP_BTFARG
- fi
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-index c817158b99db..e12dc967ec76 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-@@ -28,4 +28,9 @@ if grep -q ".*symstr.*" README; then
- check_error 'p /bin/sh:10 $stack0:^symstr'	# BAD_TYPE
- fi
- 
-+# $current is not supported by uprobe
-+if grep -q "\$current.*" README; then
-+check_error 'p /bin/sh:10 ^$current:u8'	# BAD_VAR
-+fi
-+
- exit 0
-
+Balbir
