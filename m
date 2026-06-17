@@ -1,357 +1,181 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013069.outbound.protection.outlook.com [40.93.201.69])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A3D2F8EB1;
-	Wed, 17 Jun 2026 04:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781668985; cv=fail; b=DsuD+3at9jyHEALVVNb6/Rj5pwi+j2K7QWe9jyJVHr41zM+CTS3+R2xYwthtte7r9E2cyPrBpfitcFfN8vEI8h1evCuMUwN12haNEa/p9lJSa40+l8X0zTN2Cde5PCz2i1IT/dpUhCwS7gvDWAbxsJkw8yJgCN0Ppt5CQyEJHDM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781668985; c=relaxed/simple;
-	bh=yV08sE2+LG9scfa9oj61C3SrmwPdC70yUH3kcF8gvdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=USYNGbpga3rNVS3bDK1v3hS0LQ9WyguPIzM6bnfnyLimKeo2TicasQ3hdpX9MPw2wgaEbO8N7f7qEBWfH1qvLtpkkoSNyJnH8PzqRpj9TuNdb0D+9jWSD3yNq5PuBuLRtYSFUbjYmBxJ5s0I2nzWUuQmSNoZlfu/82+2d+ae0oM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ozuDjcCh; arc=fail smtp.client-ip=40.93.201.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978693BBFAF
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Jun 2026 07:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781682577; cv=none; b=WXH3GdtSnsvaiuQQdAwW1FQquWxhrtpntzQJsYlKwHRxN0qEQD9ceg/Zqy4SDK4y6iqRntNdYbov6QROMF5nuY+S1PPAesiE9hlZjSqA9bIrqom2rQB67fElUBqH4xJTdTlz3q4PoF+gsClL3oindXxtw3TbTFxnXeol1xvvCi4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781682577; c=relaxed/simple;
+	bh=guWX0dE4eNypnv4EH6wbsBgSrxQUTF6+7ftmPMw81cg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O3yOcgpbLZ5Xo3ufsdJLmeQs3I4vEt4L3stwwiKXmkY+DV0LlnwgxR3rB8GtBqzglIxETkpy6+cxhEVLtK0/VwWNjQaaO1QrnkxNnQGfTiSX9cjM1LwqaodvRQGOqAKymavB6rW2D+1sLwON+ltklbTNtw1JYr9pSixoME6iIbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J/VwI2rT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ozuDjcCh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I8aeupI7OMtTdzJD7Uu+FSe8BbRdbBC6cTncg6d3luIg+JtSWjJSk0KhFf6UYZtEaEcLmyDcqnvz/cfVNi4Jo3n9Wm+Ps9iMX5zD8e++cKJ+5cblAlkv89cw8DIdI5Ww1ner2MI4hUa1oWoysWeFV8wQx46+Icp1ENDJH3XESSc8psgzRXzgUFEid2t9QXkq3ww4zvxkffeC0/LnPspCa74kb/FaTCs3+G+kf/+K4zMY9jiF3BW/qizJtmlojWwWw3JTkf3ZvUfjv+gnp2V8ZiPkSQ5QnzPx0t3teehaTQRQHPjtGudt9Mb4GlHMUVebt75JIBWn1HhwBxL/kHmjfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FB69vVfVPBhIwbobVxhKuOXjePDausT/B1ctopKcIw0=;
- b=XmJtFVBcc2wBWeNJC0ru0+tO94lpyw3CQMl1lhFyh6tB0855gurwcTewVpmT8kn5nHrilpA5sEOFwuJdmZT9hKe/n+bOQJapdhj37BWsPeJpFHL0A5PmrSVVoJY61m3Cc1BfBQQL624z5U7wNr1CAVtdgPXKh0XwSnO3jsB9DQHiWo3Dxm8Y74MFkJu4tZ+90OgoikcoXPIqchNGgsBWnxX2QB515pnn6tguJuz8gvuUWR3yd3r3LV3ErBCVESUfxsmUC2ozOMSyytiKZG4AASSiWYvJXXQmBW8KfK9zaiNuaxdb37OWa1ewa86ddOHYNrj570Vyx58XxrlyX8QOnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FB69vVfVPBhIwbobVxhKuOXjePDausT/B1ctopKcIw0=;
- b=ozuDjcChD6ZpuzEBokN8YLTk4A3jIhvRolGTz1MMuSw+OfeufQ5RHFiIfuToI8lh8W+uA5CHbw4V37w/zEFJZHLElwR90fSFTurCsJLFrlPI2OZEVyh5y6kjT1vwVO9/+/oZNR3XFiiBhsWdKwnfnUdPA+dENrUKln91iJpZB+EOQXIYXnnVcxHkbgy8yIeItopm+VROJMukjdLlbLDAkjtp6epTvytsyXMJpnx+MsF51X7Y/f/1XvIF0roLTce/D2vp8smPJdO72g++zoSuDX+9aCdMT8/gpOtbyz1CBL+AuX+wlRnWKKBps/IbVfyrkhtJmmwm0VR7F4STE/URlw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB5001.namprd12.prod.outlook.com (2603:10b6:610:61::18)
- by IA0PPF73BED5E32.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd2) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Wed, 17 Jun
- 2026 04:02:55 +0000
-Received: from CH2PR12MB5001.namprd12.prod.outlook.com
- ([fe80::89e3:6df0:de90:8dfe]) by CH2PR12MB5001.namprd12.prod.outlook.com
- ([fe80::89e3:6df0:de90:8dfe%5]) with mapi id 15.21.0139.009; Wed, 17 Jun 2026
- 04:02:54 +0000
-Date: Wed, 17 Jun 2026 14:02:47 +1000
-From: Balbir Singh <balbirs@nvidia.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	damon@lists.linux.dev, kernel-team@meta.com, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
-	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com, 
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, 
-	jackmanb@google.com, sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev, 
-	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev, jannh@google.com, 
-	linmiaohe@huawei.com, nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com, 
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org, 
-	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <ajIb4DJdLGPbMB4V@parvat>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
-X-ClientProxiedBy: ME0PR01CA0080.ausprd01.prod.outlook.com
- (2603:10c6:220:233::23) To CH2PR12MB5001.namprd12.prod.outlook.com
- (2603:10b6:610:61::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/VwI2rT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781682575;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=guWX0dE4eNypnv4EH6wbsBgSrxQUTF6+7ftmPMw81cg=;
+	b=J/VwI2rT7s/yFU9+Y/ZTnm9W67uAcQ9lJTWK63Uh3HVSFpgA+QZR/oeC+s3qOGO1Bx636a
+	8H+IFhpjAWJrFBwrEZCUBu3jt1FWkyDGJTb7Xx7gFWGVylzBUnjLeA5v8UFiQhzzqVHsca
+	wqzlCh9hzJeGUaKZavmAqiVtTxstMdA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-86-AEBB6yoSPoSZGHj-Mgfdpw-1; Wed, 17 Jun 2026 03:49:34 -0400
+X-MC-Unique: AEBB6yoSPoSZGHj-Mgfdpw-1
+X-Mimecast-MFC-AGG-ID: AEBB6yoSPoSZGHj-Mgfdpw_1781682573
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-46011aa5000so2574511f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Jun 2026 00:49:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781682573; x=1782287373;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qnrC2V4pS2DHv+kF7P0/Ub99li8+YXaNw21vBBSsAJc=;
+        b=IeaW4Yl41h0x/IgHsDVVPYeOUg+GL19BcRe5C49f/x+EDtM+zOdoQMs4MCbFH9dN5n
+         l7TcFC4lB3yw8d6bfjx8ntmO6XEewh23RmVArf2H/37X2icii9ZO6CFMq87JhJGtd4gD
+         yBNxz4J10Ej24bk+elZ1AyqWgwifBbQaO9CQh/ctJiWp85HQWVWqgYM7QuP8OLQ/qdpq
+         0iEmKFM8gF12UP2H2Qk88emYHACzVMFICZ38rzGEKEKejbZLgcepZ08369am6tet3Q9Y
+         VPS3bD58+plM0Wt+012ov5dhuE6bLzJsWz+r0uT/Zsuf/SM4ptFCPKBVMDK9Y68oCWZM
+         sIdQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/0ADADxI/o1hriIqcY5kor3aMlrSZti2m3Oyqbovy+ScGkycXWPUVdjwlGNVNgrF6mchOaGwfZNnkPCNOgcaaQ2H8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU5CgBDJdVYQnDApY4+D1ynE3LboGy4BVXTKF9i5okOu0rleWC
+	AIsHud9fgPo6M7EqT6GRkeoWmpgg1J0ku1+RJgMrmafSC4c4QPh65r0MKlksV59DDZxdGHUnkFR
+	IuUgwRx+Va2fByXP65C7GDrXHd3OE3I9wAkdfd0W4x4EzShUraO83WyzOrvD5uyW4/OyV5Xo55g
+	==
+X-Gm-Gg: Acq92OFmpBgqUr9wwqPzAAa52ydLy6dMoDoKsF1XJNuPpzK9g9JaBPgOOUPcF+XlzRK
+	sV4Wj7Q5+xPwk6/JNoA8tNc3wT3gWR0JOJO7vABDqnXCjhPuvk6MEKzE+YaLSLL8MoOZzq4fki2
+	vzmgpeRmr6cgv6SCEgerStzKBghA9yExisjMXl1jxqV/X+A0SUE9FxbTsZSXb0qerSa0EgnF6Oa
+	z8kAvoeSWFhoRD2WTesebF6CRZqLC83fQDQNMNtt1UjmgJyLtyEtqMyJnad4eKhsKCeIN1jhxQ2
+	e+Wsa9PMD1aBAfZXA5mnU5NZurvdv9hkdqFsREvTXQpShPkl5hWjzGjWT2yIdq/DBwYkbIyHEJ3
+	LfezNCT/AtmlKAK4=
+X-Received: by 2002:a05:600c:a143:b0:490:4b89:5362 with SMTP id 5b1f17b1804b1-492333e2f05mr33180845e9.24.1781682573017;
+        Wed, 17 Jun 2026 00:49:33 -0700 (PDT)
+X-Received: by 2002:a05:600c:a143:b0:490:4b89:5362 with SMTP id 5b1f17b1804b1-492333e2f05mr33180605e9.24.1781682572547;
+        Wed, 17 Jun 2026 00:49:32 -0700 (PDT)
+Received: from [192.168.1.167] ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2c473bsm55865403f8f.28.2026.06.17.00.49.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 00:49:32 -0700 (PDT)
+Message-ID: <bd466346234132a353a36aeac988ee707a0df55d.camel@redhat.com>
+Subject: Re: [PATCH v3 7/9] rv/tlob: add KUnit tests for the tlob monitor
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Wed, 17 Jun 2026 09:49:30 +0200
+In-Reply-To: <d9abf11ee0af54689fce87ab95f8e8f7f5eb233d.1780847473.git.wen.yang@linux.dev>
+References: <cover.1780847473.git.wen.yang@linux.dev>
+	 <d9abf11ee0af54689fce87ab95f8e8f7f5eb233d.1780847473.git.wen.yang@linux.dev>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB5001:EE_|IA0PPF73BED5E32:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef50179a-2e7f-46fc-45e1-08decc254ded
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|23010399003|1800799024|366016|56012099006|11063799006|5023799004|22082099003|18002099003|3023799007|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	LX/0QUaZzdLTRoGjNspt9VKVAEJbth1SqxwFY/9ESxCysxQXkrLZz5JVjxQ4CTpxZ1W+ziH/cIqGRDtpfj6uFgpZUYsS/zATGcyzj6vvk+NlZ0mgprThl0l3EtTYeNO5t/aCPhzHCqPEHyxsGk9i7mfm3/XaXJSySYQzyWw+Mx/vub/n0TQnys4AtzXx9NpHJAmU5EidVXckol5lkaaNeownWOC9s6IPGzBFOvIMntV3I118RgCIAj99ITWFiHdwyTj1S/FXOEv5lgj69GnhTFDJLAtIwcfTAIrvqDjCnIuD82mMkWPtp6T99zfjwzX10ydPotFWAlEwQYiK7ctr3lhCDnzCC6txKs4lwd425vNxpcgqb3mPsP5wE2EA3Vz2yO56mUA3xOmEkGoGwNfOESMCSKimfGzAflYfOorCRJ4jdK7JDZORfXR7roVyruktanMytrSMFFGuFHvUoEwXHlPuMKoOpLunaVDINMvH//WGGZ5ddiwOcb5jjnMrkltNH3QQ3Byy8z9OFle0dd/QYk73Oe6/372gbBld00EC+ObUlh2y9s2A7cb6cwHVDpazKV1iyhDg9qV7/nGz7JMkyvwzaWlJdban0GKWPmX77veewzvD+QDtpIOh4BCikDeOKU3lMAd9fAuUJkxV+klnG5xtBP8Ucdlc2NItN9gxsIy/WaLeNUP9FCfP3C+xyGJW
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB5001.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(1800799024)(366016)(56012099006)(11063799006)(5023799004)(22082099003)(18002099003)(3023799007)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y1gzM2c0TWhKbk00R1RUdERaM3dDeTNaVWpjY3VWb1AzTDJpQytBcWpYRTh2?=
- =?utf-8?B?aGNsQWV2OWN2OW5TRHl5M29PSVYxR0w0V1BsSVhUODJPT09sVXJtdGd4RFpj?=
- =?utf-8?B?cnRiZmpCcjlCYTBuaGI4T3lPd00wNmZRUHdtaHlQL3loTzNFMUZ1OFplODVX?=
- =?utf-8?B?Z3NsRHQxb2tUTitzZmw4UUhtZGxqUWdKbWE0OFhmYmNoUjVSTmk0aUw0ZmNp?=
- =?utf-8?B?ZSswYkl2dks4V2sraytzNGc4aG0yUWpBRktnTlhtQmk3NGFoRW1zV2FvVy91?=
- =?utf-8?B?S3BLMTdKMGJmR0I4bU53bHNSS3dFWFVsWGVFRWhmZU5oYU9pc3h0NmI3SWl4?=
- =?utf-8?B?eDZhaUtBWEUrM3BmczRFVkVLakRPSXFyVUlEblNsUmpMRWNhL21GaEM3Sjgx?=
- =?utf-8?B?VjFmdnUweTRZcG1WVnRFVE9jSWJmRGxkdkJDNHR2b2V6YXZXcDFoTlRFQmhG?=
- =?utf-8?B?QkN2Z2dzb2NKUjlPMVFTaS9NeTk4WDloek5mcmlXemJlRFQ4U25BMW5vbk55?=
- =?utf-8?B?T0ZOeTVyOS9ZL2tOTEdhL3Y4M2Z3Q3NvMDZraFFCTWNKL3F4NHlyRW9Ka3No?=
- =?utf-8?B?T1Z6R092d0tsVFRkYlFKVVBUaGJ1YXI2QU1YcVg3bWE5Qyt3MHdwZUNLWkFN?=
- =?utf-8?B?V091cFVIcWJnNmUwc1FLVFQrQ1RYWmNUbXFnSVJVa200eElaQmxtbGZjdCtE?=
- =?utf-8?B?cVRZdUNYMG1xWVNwZFR4WFkxTDlKNDJFaXBBaHM0bGFKUVpCRnEzdVNZdHlx?=
- =?utf-8?B?cS9qUUxsL2VIUGlvZGkyYjMyUmNRZWNYMTI4a0FjdGlqU0VyWjE2UTdtNm5X?=
- =?utf-8?B?NzRWVWhvQ0k0QllHS0FaNGUzalVPSVN4RWI3YUxQSEwrNGlEU2x3SGxQN0hw?=
- =?utf-8?B?WkJXU3pjditLelZPaHhYRmZTZVc0K2JWVnNWRGdhQlVGd3N1bGNRU0Y1cFpj?=
- =?utf-8?B?dG4zUVB2VnJsMXdRS08yNlFWVHg4RHZPS3l6c01EM3E2Q3VibENQTHdGVVZo?=
- =?utf-8?B?dlFyamFjWVEyTlhuT1ZvUTN4dkRqUUhaeno4clVHRHdBUDBJM3ArUUo1SjZP?=
- =?utf-8?B?a2dxelpwaGc1LzBEdHdIY3RJcWkwOWFYdkVCb2JSN044YjZDNkpJWWplZDRX?=
- =?utf-8?B?TnpaSlBEOHdkTDZkbms0dlJWbWVTYnA0eVpvWGpwbVRLWE84QmErM2dRSU5Q?=
- =?utf-8?B?bkpzWWRsQUc0RWdjYzcxbkhpZHRqUHNGZFNyc0pMRDEyV0lFT3dYdTZ1TVVt?=
- =?utf-8?B?VVpuOXphZllrOGVGd1NPSnJKT3lsUXZYcHVsR29QakV2STcwQ1oxaVd5U29h?=
- =?utf-8?B?WnZhbFhzdi9sSUdDL21PRFoxMnRPRzlMTlZRQmtqL3FHc0RPUDVyZytKT1c3?=
- =?utf-8?B?bk1lSitHUUp3VWJFM1NSWUN3VDE5MG45NmdOS0hLNTFrY2pOUk1tNzFnV3hX?=
- =?utf-8?B?NEVWSWlERDFvSmk4VGlBc3JwZUExS0xRYWZGZmpkWjRrQnpsWVcxVUxLN2xt?=
- =?utf-8?B?dXhxbjZ6VWdkME9vWlB2aWdlRFRvLzRGc1RjbXA2Wk0wdExPSWQwZkErZ2VD?=
- =?utf-8?B?V0VIUGl3UXpLR2pDMGh6SjgxZTR3S1oyQjI3SkhTWjUxZWg3Z0VtbFhJV2xq?=
- =?utf-8?B?RXFxdEdENXlLNmd6UGE3bW0vSHJEUTE4aHZkazdCeUlSSkJ6RVdPYXd3NWRr?=
- =?utf-8?B?UHFCb2hVdEdHUERtUDUwc0FQTHJYRTJhL1RGSjN1SEVsemZXc0xwblVjRllG?=
- =?utf-8?B?UXYrTTZRV0crcVVsSmUveDUrVEtuT3hzVFNHRG12UTNIOEhPNUtjdk01Tm9o?=
- =?utf-8?B?Ykh6REZxdkJ5U2dQSDJqcDYzQ3NNTVZBRjZST1hESk1aU0RnQWZRWUFjck1l?=
- =?utf-8?B?LzhGYjdnZWQvMXRHK3R6cEhWaUJmMlR3Y281SXVKNGJVeTZQSGllbjJBZGNk?=
- =?utf-8?B?YUtYRmgvaC9xMzNpT3ZnVzhvZXBlVGYrdStVU1h4Wi9WaWJBL2h6K1NGengx?=
- =?utf-8?B?TG85SlN6OU50M3UybUt0NFZkdEdjSGwzU1VZOXNUU1RmLzFTSVlsODJkVmFv?=
- =?utf-8?B?WjU4OFdFZkJGajd0N0ZDNFBjUXlBRHljWnZNdW93ekVvdDdScjdsQ3h1aFFK?=
- =?utf-8?B?L2JDcVFNUXN3YXF6bEIzaStBdEZ6eUIzRFFVRUZNcExGekJjSVlDaWQ0UURN?=
- =?utf-8?B?bUpWS2JIdmpZSGZNdWNrZk5HTDJ5MFpXajZiVUh3ZW5TLzFLTkFGc0dmay83?=
- =?utf-8?B?SVp3UHZuWDl3eXdQcjFmNGpNYk1MSEs4N29nSjI2QmNRUTVxL3NSdzdmcnh1?=
- =?utf-8?B?djJBRHdDbUVXNzJrSTFBcVJ3bDFRalBvL0VxWUJoaE5RUUw3cmROdz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef50179a-2e7f-46fc-45e1-08decc254ded
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB5001.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2026 04:02:54.4739
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NpKV9YIpgmvq5DJ+8nn525AIpdnxq3cYhoBtCJ7MmnCSh1572oL6iYkzUecQ4LHu+q9swBJSAdlbL2Q4ys3e7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF73BED5E32
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: bsU6qSy_MKHflheaDSxdM67fPvUcygx94VvUJukrzsU_1781682573
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 10, 2026 at 12:37:34PM -0400, Gregory Price wrote:
-> On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
-> > On 6/10/26 12:41, Gregory Price wrote:
-> > > On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
-> > > 
-> > > Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
-> > > which causes spillage into private nodes because slub allows private
-> > > nodes in its mask.  I think this is fixable.
-> > > 
-> > > I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
-> > > code, etc), but it seems like fully dropping the FALLBACK entries and
-> > > requiring __GFP_THISNODE might be sufficient.
-> > 
-> > Sorry, I haven't been able to follow up so far, and not sure if that's what you
-> > are discussing here ...
-> > 
-> > After the LSF/MM session, I was wondering, whether if we focus on allowing only
-> > folios allocations to end up on private memory nodes for now: could the
-> > __GFP_THISNODE approach work there?
-> > 
-> > Essentially, disallow any allocations on non-folio paths, and allow folio
-> > allocation only with __GFP_THISNODE set.
-> > 
-> > I have to find time to read the other mails in this thread, on my todo list.
-> > 
-> > So sorry if that is precisely what is being discussed here.
-> > 
-> 
-> So, I remember this being asked, and I didn't fully grok the request.
-> 
-> I'm still not sure I fully understand the question, so apologies if I'm
-> answer the wrong things here.
-> 
-> I understand this question in two ways:
-> 
->   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
->   2) Can we disallow [Feature] (i.e. slab) allocation targeting the node.
-> 
-> 
-> 1) Can we disallow page allocation and limit this to folios?
-> 
-> No, I don't think so.
-> 
-> Folio allocations are written in terms of page allocations, we would
-> have to rewrite folio allocation interfaces and introduce a bunch of
-> boilerplate for the sake of this.
-> 
-> struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order,
->                 int preferred_nid, nodemask_t *nodemask)
-> {
->         struct page *page;
-> 
->         page = __alloc_frozen_pages_noprof(gfp, order, preferred_nid, nodemask);
->         if (page)
->                 set_page_refcounted(page);
->         return page;
-> }
-> 
-> struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
->                 nodemask_t *nodemask)
-> {
->         struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
->                                         preferred_nid, nodemask);
-> 	return page_rmappable_folio(page);
-> }
-> 
-> At the end of the day, this all reduces to `get_pages_from_freelist`,
-> and at that level we don't really care about folio vs page.
-> 
-> __GFP_COMP is insufficient to differentiate between a non-folio compound
-> page and a folio, and __GFP_COMP is passed into __alloc_pages_*
-> interfaces all over the kernel.
-> 
-> Trying to detach these paths things seems like a horrible rats nest /
-> not feasible / will create a lot of boilerplate for little value.
-> 
-> (I did not fully understand this request when it was asked, I do
->  not fully understand this request not, please let me know if I
->  have misunderstood what you were asking).
-> 
+On Mon, 2026-06-08 at 00:13 +0800, wen.yang@linux.dev wrote:
+> +/*
+> + * Valid add lines return -ENOENT (kern_path() finds no such file in
+> the test
+> + * environment) rather than 0; a non-(-EINVAL) return confirms the
+> format was
+> + * accepted by the parser.
+> + */
+> +static void tlob_parse_valid_accepted(struct kunit *test)
+> +{
+> +=09char buf[128];
+> +=09int i;
+> +
+> +=09for (i =3D 0; i < ARRAY_SIZE(tlob_parse_valid); i++) {
+> +=09=09strscpy(buf, tlob_parse_valid[i], sizeof(buf));
+> +=09=09KUNIT_EXPECT_NE(test,
+> tlob_create_or_delete_uprobe(buf), -EINVAL);
 
-I agree with this, any changes to folio only allocation could then be
-easily adapted for N_MEMORY_PRIVATE
+Can you perhaps add those uprobes for real from this test case?
+Unit tests should not touch the system, you usually do that by:=C2=A0
 
-> 
-> 
-> 2) Can we disallow SLAB allocation.
-> 
-> Yeah, but I think a better question is whether there's a difference
-> between alloc_pages_node() and kmalloc_node() when it all just sinks
-> to the same fundamental code in mm/page_alloc.c
-> 
-> Maybe there's an argument for something like NP_OPT_KMALLOC (allow slab
-> allocations on the private node w/ __GFP_THISNODE)
-> 
-> On my current set, I don't implement any explicit filtering at all in
-> mm/page_alloc.c - the filtering is a function of the nodes not being
-> present in the FALLBACK list and only having a NOFALLBACK list.
-> 
-> What __GFP_THISNODE actually does under the hood is just switch
-> which zone list (FALLBACK vs NOFALLBACK) is used for the target node.
-> 
-> For isolation w/o __GFP_PRIVATE, we're removing N_MEMORY_PRIVATE nodes
-> from *their own FALLBACK* list and only adding them to their NOFALLBACK
-> list.  That means to reach a private node you MUST use __GFP_THISNODE.
-> 
-> I realize this is confusing, but essentially we don't have to modify
-> mm/page_alloc.c to get the __GFP_THISNODE filtering, we get this from
-> the fallback/nofallback list construction.
-> 
-> 
-> Ok, so how does this flush out in practice - and why do I call this
-> filtering mechanism fragile?
-> 
-> consider kmalloc_node() and __slab_alloc():
-> 
-> kmalloc_node(...)
->   └─ ___slab_alloc()     mm/slub.c:4406   pc.flags |= __GFP_THISNODE
->       └─ new_slab(s, pc.flags, node)
->           └─ allocate_slab(s, flags, node)
->               └─ alloc_slab_page(flags, node, oo, …)
->                   └─ __alloc_frozen_pages(flags, order, node, NULL);
-> 
-> Slab silently upgrades the page allocator flags here to include
-> __GFP_THISNODE - even if the user didn't request that behavior.
-> 
-> This is exactly the kind of "spillage" I said was hard to police at LSF.
-> 
-> Without __GFP_PRIVATE, we have to keep an eye on what around the kernel
-> is using __GFP_THISNODE and how.
-> 
-> For mm/slub.c we can choose to do one of thwo things
-> 
->   1) 100% refuse slab allocations on private nodes, i.e.:
-> 
->      kmalloc_node(..., private_nid, __GFP_THISNODE)
-> 
->      And will fail (return NULL).
-> 
+1. stubbing the tested function when it starts doing bad things
+2. test with dummy data not attaching anything (not applicable here)
+3. test a different function not affecting the system
 
-Doesn't this iterate through N_MEMORY only? N_MEMORY_PRIVATE should not
-be in the regular for_each(...) loops
+I think the cleanest here is 3. so you could just kunit test
+tlob_parse_uprobe_line() and tlob_parse_remove_line().
 
->   or
-> 
->   2) Do not upgrade private-node slab requests w/ __GFP_THISNODE
->      
->      This allows kmalloc_node() to work the same as folio_alloc()
->      or alloc_pages() interfaces (__GFP_THISNODE is the key), with
->      the understanding that any __GFP_THISNODE user
-> 
-> We can opt these nodes into slab/kmalloc with a NP_OPT_SLAB
-> if the owner wants kmalloc_node(), with the understanding that any
-> caller using __GFP_THISNODE may get access.
-> 
-> That's the kind of fragility I was trying to avoid.
-> 
-> 
-> That said, in practice, I have found that basic kernel operations don't
-> generally target use kmalloc_node() w/ __GFP_THISNODE - there's just
-> nothing to prevent anyone from doing so.
-> 
-> So this seems promising...
-> And then theres arch/powerpc/platforms/powernv/memtrace.c
-> 
-> static u64 memtrace_alloc_node(u32 nid, u64 size)
-> {
-> 	... snip ...
->         page = alloc_contig_pages(nr_pages, GFP_KERNEL | __GFP_THISNODE |
->                                   __GFP_NOWARN | __GFP_ZERO, nid, NULL);
-> 	... snip ...
-> }
-> 
-> static int memtrace_init_regions_runtime(u64 size)
-> {
-> 	... snip ...
->         for_each_online_node(nid) {
->                 m = memtrace_alloc_node(nid, size);
-> 	... snip ...
-> }
-> 
-> static int memtrace_enable_set(void *data, u64 val)
-> {
-> 	... snip ...
->         if (memtrace_init_regions_runtime(val))
->                 goto out_unlock;
-> 	... snip ...
-> }
-> 
-> This is the *exact* pattern I said would be hard to police - and it
-> doesn't look like a bug, just not informed that private nodes exist.
-> 
-> This is why I'm concerned with trying to depend on __GFP_THISNODE as the
-> filtering function.
-> 
-> That said, the number of __GFP_THISNODE users is very limited
-> kernel-wide, so maybe that's an acceptable maintenance burden?
-> 
+Alternatively just stub the entirety of tlob_add_uprobe()
+tlob_remove_uprobe_by_key() and maybe even check that they're called
+when expected and not called on failure (right now you aren't testing
+valid removals, probably because that's going to break).
 
-Balbir
+I believe a good unit test should be validating the parsing logic only
+/or/ the add/remove logic (but that's hard, you can skip it or even
+check in selftests).
+Right now your tests are trying to do both, so you don't know if
+failures came from the uprobes subsystem or allocation (you shouln't
+even get there from the unit test).
+
+Then you can just check for success and not for ! EINVAL , which is
+confusing.
+
+Thanks,
+Gabriele
+
+> +=09}
+> +}
+> +
+> +static void tlob_parse_invalid_rejected(struct kunit *test)
+> +{
+> +=09char buf[128];
+> +=09int i;
+> +
+> +=09for (i =3D 0; i < ARRAY_SIZE(tlob_parse_invalid); i++) {
+> +=09=09strscpy(buf, tlob_parse_invalid[i], sizeof(buf));
+> +=09=09KUNIT_EXPECT_EQ(test,
+> tlob_create_or_delete_uprobe(buf), -EINVAL);
+> +=09}
+> +}
+> +
+> +static void tlob_parse_out_of_range_rejected(struct kunit *test)
+> +{
+> +=09char buf[128];
+> +=09int i;
+> +
+> +=09for (i =3D 0; i < ARRAY_SIZE(tlob_parse_out_of_range); i++) {
+> +=09=09strscpy(buf, tlob_parse_out_of_range[i],
+> sizeof(buf));
+> +=09=09KUNIT_EXPECT_EQ(test,
+> tlob_create_or_delete_uprobe(buf), -ERANGE);
+> +=09}
+> +}
+> +
+> +static struct kunit_case tlob_parse_cases[] =3D {
+> +=09KUNIT_CASE(tlob_parse_valid_accepted),
+> +=09KUNIT_CASE(tlob_parse_invalid_rejected),
+> +=09KUNIT_CASE(tlob_parse_out_of_range_rejected),
+> +=09{}
+> +};
+> +
+> +static struct kunit_suite tlob_parse_suite =3D {
+> +=09.name=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D "tlob_parse",
+> +=09.test_cases =3D tlob_parse_cases,
+> +};
+> +
+> +kunit_test_suite(tlob_parse_suite);
+> +
+> +MODULE_DESCRIPTION("KUnit tests for the tlob RV monitor");
+> +MODULE_LICENSE("GPL");
+
