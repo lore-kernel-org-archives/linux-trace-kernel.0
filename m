@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EBA23D7C2;
-	Thu, 18 Jun 2026 08:21:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F453ACF00;
+	Thu, 18 Jun 2026 08:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781770906; cv=none; b=HcghWibBNShL28ZfDCsXCJgRmuJMq+s+WhcwzQpt8yHSi+f7xTY743Q8bw3b6ZCVG/URSlrsUIb/7XWaW7uiIaHwMIkiDhJlqZG8Nj99gKBrMh1JZxbfJGBoJV3CVRnrzDp6AihMIkRQe+dticOFqBaUrvuppCq3HRZM+/hr89o=
+	t=1781771436; cv=none; b=Xlh9JmSMb8wCsXglBzxyRHjK+RPhyUj+HXl1BqDwvhBdkwmQkgkgCEp6fn+Y7PgqEJaxFC3Pg0Vo7Dbes+FzsVnGtK8ji8e9Ud7nsDj1FZ1G+x0pmuY/SyA+Xali+HaZ98+eIs8JbWBxeE61/uHsyvwlKw9ZQ+qaEjaS3ndy0w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781770906; c=relaxed/simple;
-	bh=zO1P8FCDkyNsaznneXft9GIqctoSCxuodcns+kMiZfI=;
+	s=arc-20240116; t=1781771436; c=relaxed/simple;
+	bh=BE+AkOT+UhVmsr+Fbbhh+B/l1rTNj1zC2tHJxKWFb0E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EDYgufi02uZEeIYSf7naxj7powD9MW3a13qsdwVkEB614hJ6xZQaGuQbUckviTzpkK1szNCFh/c4vWCO7vjIj3U63P3zyymLV73QzpZOEd/ZuWXjgSvFxVv6hiR8INLNAnr0cXgxqxPVDpsM/UUrXiVm51ZEEnA6CvU6WMDKwgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITH1SfL9; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=lJ3UCxYke7GoYvlXTvf8hkaY4xH5i4GGvCfQcnjjujLGD97nkXWMJ9fB5CC0bT5Uaf9XfsidMF08H7jZog9R7ojIcpLOZHHPhOguvEmphnbVGOoEBHPg+FiAkb1Mi0rilZHWXNL3X71hfQqFjNiuBDZT0NjQRD6zdrzhx/pigLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fK7PnRy1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITH1SfL9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67571F000E9;
-	Thu, 18 Jun 2026 08:21:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fK7PnRy1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F6F61F000E9;
+	Thu, 18 Jun 2026 08:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781770905;
-	bh=a86Xi+KHHQiKgkwKDg3yWKQ4QvB5ZMfq8SczFe4Ok00=;
+	s=k20260515; t=1781771434;
+	bh=nGhbQekJqWwn8AB1BZdGKXVYLktjfCTf6Z1qRB9iehw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ITH1SfL9/zU15o1E1iAQjeukJh5FkXRn/rUOWQjgchYsoLnfG6CQNPDmkYQWSIGtA
-	 flAwOMq4gnrxIY64c1aNj8iKGJWTtQFzfGweGo/onTzL4vpk5oXeSIk20LEnpPeXXt
-	 C0pgo890yABHW1jPPR2yX6XQCccneiRP7V/XG0EeUKjwRC4CoYZ8IVoU3JjrxnmAod
-	 HiKByqpkXFRyyMnC0Aj6gbr5ueeiX7S1Mn1WM9uWmV68ehvqF9pQyzHRkBqr1c1o1c
-	 00hWesaUNkTugeyf+fQ4AKFEOnvmyGMVT7rElu2qfPAqenL8AcjySokDq53iH5vJCf
-	 /TA5xQp4963ww==
-Message-ID: <90418cd3-751f-439d-83ed-a0c33517c3bd@kernel.org>
-Date: Thu, 18 Jun 2026 10:21:30 +0200
+	b=fK7PnRy1mINc5gLPRbZ/6poyoyt3t0M5bTbyMiyuB+bCopIZKet3C9E0v4PFNnI62
+	 5k+oajs2ANDCtmp8bMremIf/p6d8ZT8sdS9ERHa0Eve379SeQIuOT2M/1DidM9MU/X
+	 fu5RQE4Lk+uEm1Z6yIBiCSXZHefqC16Kb53h0AvJ4CCDPCNolrnHtE63hLaVwARE3t
+	 qn1kbie8UesGRg8N1K72yF7fpHszX+ZMuNWahliLPf6/CxseOWPKrbV7Cl0s1Qlg2b
+	 RNsZWj9wqgLcRcdKgEPI6i5U6pMhz+0bX6xueOpDEWd1VA/0YRdMDVk0rsUJyGrfxg
+	 7QgBmSYhw7E8w==
+Message-ID: <bbcb6db5-6a01-46b7-979f-dadd52a5176f@kernel.org>
+Date: Thu, 18 Jun 2026 10:30:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,48 +35,23 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
- Nodes (w/ Compressed RAM)
+Subject: Re: [PATCH v3] mm/lruvec: trace LRU add drains and drain-all requests
 Content-Language: en-US
-To: Gregory Price <gourry@gourry.net>,
- "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
- kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
- dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
- akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
- linux@rasmusvillemoes.dk, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
- mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
- baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
- muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
- jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
- pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
- riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
- roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
- shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
- zhengqi.arch@bytedance.com, terry.bowman@amd.com,
- Matthew Wilcox <willy@infradead.org>
-References: <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat> <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
- <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
- <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
- <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
- <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
- <fdbdc9f7-d142-4880-b429-065d5056cabb@kernel.org>
- <ajAcIwBAnqgEEWSD@gourry-fedora-PF4VCD3F>
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Cc: JP Kobryn <jp.kobryn@linux.dev>, linux-mm@kvack.org, willy@infradead.org,
+ usama.arif@linux.dev, akpm@linux-foundation.org, mhocko@suse.com,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ kasong@tencent.com, qi.zheng@linux.dev, baohua@kernel.org,
+ axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+ chrisl@kernel.org, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+ baoquan.he@linux.dev, youngjun.park@lge.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260610195220.12403-1-jp.kobryn@linux.dev>
+ <06122cae-e28b-4ded-a9dd-d380d31c5230@kernel.org>
+ <ajK1YsIJmD2ImbAk@linux.dev>
+ <1136baf3-3967-4202-9eaa-5fd667c235cf@kernel.org>
+ <3149bc84-dd3a-43ba-826e-6364965fdafd@kernel.org>
 From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 Autocrypt: addr=vbabka@kernel.org; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -117,65 +92,31 @@ Autocrypt: addr=vbabka@kernel.org; keydata=
  NcaZ+c6J4H+nEJGi2SkHAUJz5oBzuThvPudLvPA/SK8sKoM01IRxSihev/S/5WLazXB1PGem
  OCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLV
  jXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4pYekxJujNeEDkUlky0Y=
-In-Reply-To: <ajAcIwBAnqgEEWSD@gourry-fedora-PF4VCD3F>
+In-Reply-To: <3149bc84-dd3a-43ba-826e-6364965fdafd@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/15/26 17:37, Gregory Price wrote:
-> On Mon, Jun 15, 2026 at 05:18:55PM +0200, David Hildenbrand (Arm) wrote:
->> On 6/15/26 16:38, Vlastimil Babka (SUSE) wrote:
->> > 
->> > I think the memalloc approach is dangerous due to unexpected nesting. There
->> > might be nested page allocations in page allocation itself (due to some
->> > debugging option). But also interrupts do not change what "current" points
->> > to. Suddenly those could start requesting folios and/or private nodes and be
->> > surprised, I'm afraid.
+On 6/18/26 10:21, David Hildenbrand (Arm) wrote:
+> On 6/17/26 20:18, Vlastimil Babka (SUSE) wrote:
+>> On 6/17/26 17:03, Shakeel Butt wrote:
+>>> On Wed, Jun 17, 2026 at 01:11:16PM +0200, David Hildenbrand (Arm) wrote:
+>>>>
+>>>> Given that trace events can quickly become stable ABI [1], are we really sure we
+>>>> want to add this?
+>>>
+>>> Yes, I think so as this is useful to get insights into lru cache draining.
+>>> Trace events being stable or not is secondary IMHO. If in future we rearchitect
+>>> the lru page handling where there is no cache draining anymore, we can make
+>>> these a noops.
 >> 
->> Yeah, we'd need some way to distinguish the main allocation from these other
->> (nested) allocations.
->>
->> 
->> > 
->> > The memalloc scopes only work well when they restrict the context wrt
->> > reclaim, and allocations in IRQ have to be already restricted heavily
->> > (atomic) so further memalloc restrictions don't do anything in practice. But
->> > to make them change other aspects of the allocations like this won't work.
->> 
->> I was assuming that memalloc_pin_save() would already violate that, but really
->> it only restricts where movable allocations land, and that doesn't matter for
->> other kernel allocations.
->> 
->> Do you see any other way to make something like an allocation context work, and
->> avoid introducing more GFP flags?
->>
+>> Yeah and I don't recall ever that a change to a mm tracepoint would ever
+>> break someone who'd complain and we'd have to revert it.
+> Really? :)
 > 
-> One thought would be a way to switch what fallback list is used, and
-> then have specific fallback lists for certain contexts.
-> 
-> Right now there is a single example of this: __GFP_THISNODE
->   |= __GFP_THISNODE   =>  NOFALLBACK
->   &= ~__GFP_THISNODE  =>  FALLBACK
-> 
-> We could add an interface with the desired fallback list based as an
-> argument, and let get_page_from_freelist to prefer that over the default
-> global lists.
+> Read the context of the link I posted once more.
 
-Does it mean a new argument in a number of functions in the page allocator,
-or can it be mapped to alloc_flags (at least internally?), because the
-number of possible fallback lists is small enough?
+Ah, I see. I've only read the single mail from Steven that referred to the
+old powertop breakage and didn't notice the context.
 
-> Omit all special nodes from FALLBACK/NOFALLBACK and make the special
-> contexts provide the fallback-base that should be used.
-> 
-> On my current branch i think that would include modifying, in totality:
-> 
->    alloc_folio_mpol()
->    alloc_demotion_folio()
->    alloc_migration_target()
-> 
-> And i'm pretty sure that all just nests nicely.
-> 
-> We might not even need memalloc... hmmm
-> 
-> ~Gregory
-
+But I don't think these worries should stop us from adding easily usable
+tracepoints.
