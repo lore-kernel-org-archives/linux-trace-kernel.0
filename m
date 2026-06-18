@@ -1,84 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDE52BDC28;
-	Thu, 18 Jun 2026 13:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE5119E96D;
+	Thu, 18 Jun 2026 13:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781789047; cv=none; b=W2EompqoJAvKc3tG+0yQTTNFp40Zr+2tbmE1BiFsEOjqwMsau7ZmJ3IK77L2YIL/3ZjJZ4B2ZBF5/gfeYjfsk4AlxgiAlnz9EUsbFw2b65C6SaDq2AUIWdGnNE4M/qRLqTtR/8JA0KPqgC0Mxp9z8jHs8i9eD/VJ8Tx0KacLCW0=
+	t=1781790329; cv=none; b=G6cQBTVUna4CwlBkrWdPcGs3hiYDB+Jh3L2rsEbR58IV44Oua/eZEDJeX8bu0okoVnYjEZX2CFbJO7q51Owrin0OqEcQsT03p2i/U/XLdRez5VP6AuX2HXpsl+yfQSmOwyKnpVUHZSQIxg4XXC2MLKXqljD909yO3VVwQXDNnmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781789047; c=relaxed/simple;
-	bh=6b0wxlvLuBUC6cVgFXTa3EXfEIljcSpLEmdjpoRCQ+A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cepsaBqsDZbyGQXzWtY9AxaJ56Gp5t38SB6jDU7IQNro6Y7R3SvoFWKVlRegXf67Q0yQcriEu2qOT9FrXzEM4Osru/eSfU+klIiKO4VQrx9x5ilMwj63v3sGLtt4c491IgbF6ZwzwuymDmtFsHpgyzktpPtIfZAe4629F4oBS5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zSXrdP/Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jvM8QL+B; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1781790329; c=relaxed/simple;
+	bh=PShIqshMvvS0vi1hQjCg38YYWjwzyHtKctaEZPvleX4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=unqVSxqkZAt8yYuucZg9sgsO0nhr+qJLVgxqjajUCZ/z+mizUi++lnx9vkRnjfuVUxBXD1Tv56C/Iqg/EM1BnfMqPvnDSaonzBZ7nDPdgPkTuCTY3O88uihRpmyqgY02jW7CEtiOe+w9CniofLd184N2/oEMc5FOsTPUfYp8jNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJYeybWn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zSXrdP/Z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jvM8QL+B"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1781789044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HIgUZaDPjftaCuMCI9RgucFIBdYvkJk/aGPMmH8L/8A=;
-	b=zSXrdP/ZrZYjRnzMfxWYLGKvt+3hcpUnSTbO7q7uWPGYhn4uDaUixR6l4BpVSZh6e69gqK
-	wxV4Mg4As7LXxdeuvKiKCv6xn/4Zku7UJ8IommF7MfgnNcaFfFCdDBu5AcE5qu0YPn0OzY
-	lIzjUn6jcdufG9XC8AwHsEqSTLdWX6IY30HLQXO3ixEz+3FxQxc09Io0Bf4sMkOQGUicyZ
-	AQ6rnM13kp63Prd5dRqe5pVxwClBBVURUDHJyToLuVE8OyE8tMpQaHKD8kl2zXm805wusY
-	hy8Vn5W0/+Ac2SQtkqKwJ300QdmTo6eG2sIDvCKtSM8CYj8yDl6HrWfG87lEUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1781789044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HIgUZaDPjftaCuMCI9RgucFIBdYvkJk/aGPMmH8L/8A=;
-	b=jvM8QL+Bfxj7FrBaDx/3P0JsfytM6OWIGJo1KbdTzMc4sQa1/zeihjAqKAKJUN8LEzCj+C
-	S71Y9KrPUlI2BrAQ==
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Wander Lairson Costa
- <wander@redhat.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 09/13] verification/rvgen: Delete __parse_constraint()
-In-Reply-To: <9035cc5b83dda3a8ec06e8488fba62ceb7431123.camel@redhat.com>
-References: <cover.1780908661.git.namcao@linutronix.de>
- <8d9b9068a5dde8256edd7debe7aab33e15a7fc51.1780908661.git.namcao@linutronix.de>
- <e3f63618b48dba9299c88bfffeae14b71717fa77.camel@redhat.com>
- <87tsr1mqrj.fsf@yellow.woof>
- <9035cc5b83dda3a8ec06e8488fba62ceb7431123.camel@redhat.com>
-Date: Thu, 18 Jun 2026 15:24:03 +0200
-Message-ID: <87fr2kdlsc.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJYeybWn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4A26EC2BCC7;
+	Thu, 18 Jun 2026 13:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1781790328;
+	bh=PShIqshMvvS0vi1hQjCg38YYWjwzyHtKctaEZPvleX4=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=IJYeybWn2hDpdgB4+Kqa9Bi8GAv/DKtG7C3o5E/tFEzHeP81O+cPrhog4+NfDYTgl
+	 Q3qZz8HRU/vhUXWR6e+PXVmaZOIEhb5cCITPEwdDTO6iud5bhPggeQ3UGQ/uKvBC7W
+	 jw8VUeh/D0gJnLSRjXnmuJDqJGGujdj50Xno+FUIMGOhhITu/ac08PjabN2nS7AYd+
+	 IeWph6RgYLYxrTWs7GE0t4uwCi1nsIN3EZfu9SaMMPKvGP7YkaUsg1cK7iqoPJ0dsn
+	 iNYli3584khyf4XBtmNIoUY5fJ/9XkJe5ufYR4R3HYhSEyYYPUhBw9DCVhkfDxIZyJ
+	 wKK++Inqjjxwg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41352CD98F2;
+	Thu, 18 Jun 2026 13:45:28 +0000 (UTC)
+From: Yu Chuanyu via B4 Relay <devnull+lucayu.alight.gmail.com@kernel.org>
+Date: Thu, 18 Jun 2026 21:45:25 +0800
+Subject: [PATCH] rv: update rvgen monitor synthesis documentation path
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260618-rvgen-doc-path-v1-1-9bcf0148417a@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMPQ6DMAxA4asgz1jCVAk/V0EMNHHBDAElgJCi3
+ L2hHb/hvQiBvXCAvojg+ZIgm8ugsgCzTG5mFJsNdVXrSlOL/prZod0M7tOxIJHulFENqZeFHO2
+ eP3L/hsP4dzjfK5vjuUBKX6t02E5yAAAA
+X-Change-ID: 20260618-rvgen-doc-path-11695c57153d
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yu Chuanyu <lucayu.alight@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781790327; l=1613;
+ i=lucayu.alight@gmail.com; s=20260618; h=from:subject:message-id;
+ bh=y70STU5WqHnmEwXDM8h6KvVTXzM4TCAuCZacgD+U7dQ=;
+ b=jSEZoSXn/v+7KQENCUJMEVyZ9FtE804yj7QnCoqv/t6YPLvxrUDEdubT7WWpGdk+5aa1ci2Vc
+ 9TeLa2/k1z6CV0ic8hGvnJjDNtYns/lVbBzCkQ/CKb+zbJP4AkGIMjv
+X-Developer-Key: i=lucayu.alight@gmail.com; a=ed25519;
+ pk=ctVJlHrt5LLZUQdDrVWTtL5fYY5bukfU6L4wkFzuvZk=
+X-Endpoint-Received: by B4 Relay for lucayu.alight@gmail.com/20260618 with
+ auth_id=830
+X-Original-From: Yu Chuanyu <lucayu.alight@gmail.com>
+Reply-To: lucayu.alight@gmail.com
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> Yeah, I don't see it explicitly mandated in the theory, but the
-> description (from the sources) states:
->
->   The value of a clock thus denotes the amount of time that has been  
-> elapsed since its last reset
->
-> But it also says (emphasis added by me):
->
->   Clocks /can/ be reset to zero after which they start increasing ...
->
-> Nowhere it says clocks /must/ be reset, their value simply won't make
-> sense (according to the definition).
->
-> Now in our implementation we may have some automatic reset when the
-> monitor starts (I'm planning that to avoid invalid states), which could
-> make explicit resets superfluous in some cases.
+From: Yu Chuanyu <lucayu.alight@gmail.com>
 
-Reseting the clocks on monitor start sounds sensible.
+The rvgen source comments still refer to da_monitor_synthesis.rst, which
+no longer exists. The documentation is now available in
+monitor_synthesis.rst. Update both references to point to the current
+file.
 
-> Let's leave that to the user for now and skip this check.
+Signed-off-by: Yu Chuanyu <lucayu.alight@gmail.com>
+---
+ tools/verification/rvgen/__main__.py    | 2 +-
+ tools/verification/rvgen/rvgen/dot2k.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Nam
+diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvgen/__main__.py
+index 5c923dc..2a2bb03 100644
+--- a/tools/verification/rvgen/__main__.py
++++ b/tools/verification/rvgen/__main__.py
+@@ -6,7 +6,7 @@
+ # dot2k: transform dot files into a monitor for the Linux kernel.
+ #
+ # For further information, see:
+-#   Documentation/trace/rv/da_monitor_synthesis.rst
++#   Documentation/trace/rv/monitor_synthesis.rst
+ 
+ if __name__ == '__main__':
+     from rvgen.dot2k import da2k, ha2k
+diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
+index 110cfd6..326984f 100644
+--- a/tools/verification/rvgen/rvgen/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -6,7 +6,7 @@
+ # dot2k: transform dot files into a monitor for the Linux kernel.
+ #
+ # For further information, see:
+-#   Documentation/trace/rv/da_monitor_synthesis.rst
++#   Documentation/trace/rv/monitor_synthesis.rst
+ 
+ from collections import deque
+ from .dot2c import Dot2c
+
+---
+base-commit: e771677c937da5808f7b6c1f0e4a97ec1a84f8a8
+change-id: 20260618-rvgen-doc-path-11695c57153d
+
+Best regards,
+--  
+Yu Chuanyu <lucayu.alight@gmail.com>
+
+
