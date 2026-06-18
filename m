@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D5A29405;
-	Thu, 18 Jun 2026 00:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2530C23BD05;
+	Thu, 18 Jun 2026 01:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781743646; cv=none; b=Ntr9jRNbnTrYVMlurGQh/acmCG+vHxwd0IgViDfKkV0voxw67+r32Vo7PJZKzhYWXv/pgKQu6H20Y4BHtOx49+u2BCM5aYCDxtN0kFCpqaASN6/7ta/1EfP1reRsFcLVYFMCyHPosPWAvPPnEd67hrLDbrxPihojCvp7EqWHrrc=
+	t=1781747552; cv=none; b=heg4us6+CP8AEJsjyZnJUMKDa1sUhok8/mM441CHFM/5XKDmh8e4PI2H/OPrOAMb7lYyi1fqKbx/PoNjaJ/DrZp8yTkgqq1o/N1PvgkcmdA9XLT3HD5ZGwchexedg5IdOK0NuNlsUHnTya3Fw3gYpl/Y47UJxnjVyvSE78I8ljI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781743646; c=relaxed/simple;
-	bh=F4gRYMlMxsy0+7Wx0VzxOwmwc0PB6Yh5GZ4Q0UAxf78=;
+	s=arc-20240116; t=1781747552; c=relaxed/simple;
+	bh=2vs48G/wyGMLkEOduADAZvuxl8T/x6YT+C/hJPNOqkU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KqPwETe+lApM5lizUL18BFq8cClfL57wXRfFJ3y5wc0o0s1Jjq0swGBzVhsaxYWoUjkqT1UEIQ9s277+qzBnbZkHsi2qVn0FBGbq/8BwGG35hkklxxqEcWWheeJ06u5gnYSYNsXiBzu5ZJTLTD3jNWjdrufFANBJ0/8X5IS3XTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQSSOjUv; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=N9V5syr9+JqknS8HwXpZGEm5vBBSgkjKYebfFn/RNq/Sl/dN/h9nzpkOzkJwG0QJfoSOpQVo5dXQuGi2f5H4Yib1MwhaSFJhtfLvehUllWR5gNG/TJ8C2wA+5LKUjsu24JKgPb6dl6drj69g9CEOR24lalWKaRrDR1sxX3SE9ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZ2SnECG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQSSOjUv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19B91F000E9;
-	Thu, 18 Jun 2026 00:47:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZ2SnECG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F5C1F000E9;
+	Thu, 18 Jun 2026 01:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781743645;
-	bh=D4NrgH69WQfJXDd+cI1xHQfObRCCi25E5s09HMh6n+s=;
+	s=k20260515; t=1781747550;
+	bh=1QY7Y1ZunN8lZl8iwHgNyGGrr+lVU+OaaTzPx65gGVo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=RQSSOjUvD+yKml31cpJlWhXt73t4M7WsT/mecNere55eTpb1Gyf4gaE0dqQGXvzan
-	 qeSmjM2Ls13O0IcxbndFQ0/8nCKqhnUTDuRxul+0nSq90HEKmVC0ViOJv1QCQv9513
-	 C9P6p35qvpxvF/+O7hKBrT1PzrRM17F0aVLAAd7L/qqWL783/43Uqiw3nRFtuZ5N9A
-	 9N7oyXsq2hMGzT0kqO2JQWD0YLRqImpEz+8VvQGmMO0GyMZV3kqDpfj+HdTW6Q0yAf
-	 gcAUl4gzeXsQHgAd/z3c8jDIQ8YQZghMCOzWLG/EIGOI4bBP7BggG3qTJh20sGOB8b
-	 kS8wxpQ9zgD/w==
-Date: Thu, 18 Jun 2026 09:47:19 +0900
+	b=IZ2SnECGKfy9juNIkM6F+T0jgZWBoLrzcwWHdofsIa9nJADhq+VdgXvCq2wjOL4NR
+	 ZfuuThZC2J2YAGfUwbgnfcPJhwCXB1HUN1JfS+KDDtAjzcWoMSPmihSSSCDTvDD+3p
+	 TPsTpxe82Hw5EiIXP63vTwDIz+NF8xVRmd5HQXzdMoSMo+u6A0wkWV3oqVYX+gA159
+	 M/HmIH3a4Cb0iVcpmHTaUrvjfwBBhh7w2h5qy8OldXhI0vyGe9vO11SSTAWkZKW+rP
+	 PnNSQYtTbEsf5sc85iDiDVXVRA7W1j5xuZ5RVDUEZyrHG238kBubKbwWVhekqaFgWq
+	 iH24b/J9BUELg==
+Date: Thu, 18 Jun 2026 10:52:27 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor
- <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v4 6/7] Documentation: bootconfig: document build-time
- cmdline rendering
-Message-Id: <20260618094719.17bf5448351adc2e56c267fb@kernel.org>
-In-Reply-To: <ajJu2KlfVyuUH-VA@gmail.com>
-References: <20260609-bootconfig_using_tools-v4-0-73c463f03a97@debian.org>
-	<20260609-bootconfig_using_tools-v4-6-73c463f03a97@debian.org>
-	<20260610233720.82fe59cf42aa57659c2e5697@kernel.org>
-	<ail6rQnRYKsXPxyF@gmail.com>
-	<ajJu2KlfVyuUH-VA@gmail.com>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: eprobe: read the complete FILTER_PTR_STRING
+ pointer
+Message-Id: <20260618105227.c58c85e9cb19bce673d9a79b@kernel.org>
+In-Reply-To: <ajJbkeK0zXb8MtcS@akranes.kaiser.cx>
+References: <20260615145500.2662456-1-martin@kaiser.cx>
+	<20260616110910.e6420488b6a798d49951cde9@kernel.org>
+	<ajJbkeK0zXb8MtcS@akranes.kaiser.cx>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,156 +48,122 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 17 Jun 2026 02:56:23 -0700
-Breno Leitao <leitao@debian.org> wrote:
+On Wed, 17 Jun 2026 10:32:17 +0200
+Martin Kaiser <martin@kaiser.cx> wrote:
 
-> On Wed, Jun 10, 2026 at 07:58:10AM -0700, Breno Leitao wrote:
-> > On Wed, Jun 10, 2026 at 11:37:20PM +0900, Masami Hiramatsu wrote:
-> > > To avoid confusion, when this option is used, shouldn't we treat it
-> > > the same way as if embedded command lines were enabled, and either
-> > > not display it in /proc/bootconfig (or always display it, by merging
-> > > the rendered string)?
-> > 
-> > You're right that EMBED_CMDLINE breaks it: the embedded kernel.* keys
-> > are already in boot_command_line before setup_boot_config() ever sees
-> > the initrd bconf, so a user reading /proc/bootconfig would see only
-> > the initrd keys while parse_early_param() acted on the embedded ones.
-> > That's exactly the split-state Sashiko was circling around.
-> > 
-> > Both options you suggest work for me, but they pull in opposite
-> > directions and I'd rather not guess wrong on the user-facing
-> > contract.  Which do you prefer for v5?
-> > 
-> >   (a) Don't display embedded in /proc/bootconfig -- keep the current
-> >       "file shows the active bootconfig source" behavior and document
-> >       that with EMBED_CMDLINE=y, the kernel.* subtree may have been
-> >       applied separately via the cmdline.
-> > 
-> >   (b) Always display embedded by merging the rendered string into
-> >       /proc/bootconfig when EMBED_CMDLINE=y, so the file reflects
-> >       what was actually applied.
-> > 
-> > Happy to go either way
+> Hiramatsu-san,
 > 
-> Following up on my own mail rather than leaving it fully open: after
-> looking at the code more, I'd like to recommend (a).
+> thank you for reviewing my patch.
+> 
+> Thus wrote Masami Hiramatsu (mhiramat@kernel.org):
+> 
+> > Ah, this is a bit complicated. It seems to work with sched_switch event
+> > as commit f04dec93466a ("tracing/eprobes: Fix reading of string fields"):
+> 
+> > echo 'e:sw sched/sched_switch comm=$next_comm:string' > dynamic_events
+> 
+> > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> > #              | |         |   |||||     |         |
+> >               sh-162     [002] d..3.    54.027213: sw: (sched.sched_switch) comm="swapper/2"
+> >           <idle>-0       [007] d..3.    54.034573: sw: (sched.sched_switch) comm="rcu_preempt"
+> >      rcu_preempt-15      [007] d..3.    54.034589: sw: (sched.sched_switch) comm="swapper/7"
+> 
+> > Maybe comm is stored as a fixed string information in the event record?
+> 
+> Yes, this example does not execute my change.
+> 
+> > /sys/kernel/tracing # cat events/sched/sched_switch/format 
+> > name: sched_switch
+> > ID: 254
+> > format:
+> > 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+> > 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+> > 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+> > 	field:int common_pid;	offset:4;	size:4;	signed:1;
+> 
+> > 	field:char prev_comm[16];	offset:8;	size:16;	signed:0;
+> > 	field:pid_t prev_pid;	offset:24;	size:4;	signed:1;
+> > 	field:int prev_prio;	offset:28;	size:4;	signed:1;
+> > 	field:long prev_state;	offset:32;	size:8;	signed:1;
+> > 	field:char next_comm[16];	offset:40;	size:16;	signed:0;
+> > 	field:pid_t next_pid;	offset:56;	size:4;	signed:1;
+> > 	field:int next_prio;	offset:60;	size:4;	signed:1;
+> 
+> > But the filename is a pointer.
+> 
+> > /sys/kernel/tracing # cat events/syscalls/sys_enter_openat/format 
+> > name: sys_enter_openat
+> > ID: 705
+> > format:
+> > 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+> > 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+> > 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+> > 	field:int common_pid;	offset:4;	size:4;	signed:1;
+> 
+> > 	field:int __syscall_nr;	offset:8;	size:4;	signed:1;
+> > 	field:int dfd;	offset:16;	size:8;	signed:0;
+> > 	field:const char * filename;	offset:24;	size:8;	signed:0;
+> > 	field:int flags;	offset:32;	size:8;	signed:0;
+> > 	field:umode_t mode;	offset:40;	size:8;	signed:0;
+> > 	field:__data_loc char[] __filename_val;	offset:48;	size:4;	signed:0;
+> 
+> > In this case, the filename field should use __data_loc directly instead of
+> > pointing data on the ring buffer.
+> 
+> > Can you try 
+> 
+> > echo 'e syscalls.sys_enter_openat $__filename_val:string' > \
+> >  		/sys/kernel/tracing/dynamic_events
+> 
+> > Instead?
+> 
+> This field is working as expected.
+> 
+> I still believe that the handling of FILTER_PTR_STRING is not correct. The
+> pointer is stored in the ringbuffer as unsigned long and read as a char. This
+> gives us a truncated pointer that cannot be dereferenced.
 
-Agreed. Sorry for replying late.
+Ah, OK. I understand the problem.
+
+ - ring buffer and its records should be self-contained.
+ - In most cases, events use __data_loc/__rel_loc or fixed array to store
+   strings.
+ - only syscall events exposes the char *, which is not recommended but
+   important to debug user space. (not for dereference)
+
+The example usage of FILTER_PTR_STRING is actually using FILTER_STATIC_STRING
+now, so FILTER_PTR_STRING is left broken. (hmm, but there are many
+ "const char *" are used especially under rcu events...)
+
+OK, can you update your patch description to use rcu events?
+
+BTW, I think those also should be decoded from enum value in the events,
+or use __rel_loc. Since it is not self-contained. (it's a TODO item)
+
+> > I think better solution is fixing sycall tracer.
+> 
+> I would say that syscall trace is doing the right thing. The ringbuffer entry
+> is a struct syscall_trace_enter, the syscall arguments are unsigned longs.
+> They are written in ftrace_syscall_enter, this looks correct to me.
+
+OK, I thought the filename points the ringbuffer, but it actually points
+the user space. (saving a raw parameter values) So it is OK.
+
+For eprobe users, it should not access to the user space data directly
+because it can cause page fault in the kernel without fixup. It may work
+on x86, but it doesn't work on other architecture which has separated
+address space for user space. To avoid such mistake, it saves actual
+string in the ringbuffer as __filename_val.
+
+Hmm, this must be documented in eprobe example code...
 
 > 
-> The deciding factor is ordering. EMBED_CMDLINE only works because the
-> embedded "kernel" keys are folded into boot_command_line in
-> setup_arch(), before parse_early_param() -- which is long before
-> setup_boot_config() looks at the initrd.
+> A const char * syscall argument is using FILTER_PTR_STRING, the unsigned long
+> argument from the ringbuffer is read as a char and then converted to a
+> truncated pointer.
 
-Yes. Unless doing setup_arch() we can not get initrd image, this means
-we don't know whether there is bootconfig or not at that point.
 
-> 
-> So for early params the embedded values are necessarily applied first, and an
-> initrd bootconfig cannot override them no matter how we present
-> /proc/bootconfig. That makes the embedded cmdline behave like a build-time
-> CONFIG_CMDLINE rather than a bootconfig source, and (a) is the option that
-> describes it honestly: it shows in /proc/cmdline, and /proc/bootconfig keeps
-> meaning "the bootconfig tree that was parsed".
-
-Indeed. So I think this EMBED_CMDLINE is more like CMDLINE set by bootconfig
-file, instead of embedded string. That is useful for reusing the boot options.
-We need to change the explanation and clarify it.
-
-Thus we should those configs mutual exclusive. If user already sets the
-CONFIG_CMDLINE, EMBED_CMDLINE should not be enabled.
-
-But actually, there is another options we need to mention:
-
-- CONFIG_CMDLINE: default cmdline, could be ignored if bootloader passes
-   a cmdline string.
-- CONFIG_CMDLINE_FORCE: ignore the other cmdline. (but bootconfig can
-  overwrite it, hmm)
-- CONFIG_CMDLINE_EXTEND: append the embedded cmdline string to bootloader
-  cmdline. (similar to bootconfig current behavior)
-
-- CONFIG_BOOT_CONFIG_EMBED: just an embedded bootconfig. extends the
-  existing cmdline, but does not support early parameters. This is ignored
-  if user passed bootconfig via initrd.
-
-- CONFIG_BOOT_CONFIG_EMBED_CMDLINE: replacing CONFIG_CMDLINE with bootconfig
-  but it will not shown in /proc/bootconfig.
-
-So you can see CONFIG_BOOT_CONFIG_EMBED_CMDLINE is a bit special.
-I think it maybe natual that we call it CONFIG_CMDLINE_BOOT_CONFIG.
-In this case, we render the cmdline string from bootconfig build-time
-and set CONFIG_CMDLINE with the rendered cmdline string.
-
-> 
-> (a) is also what the tree already does -- saved_boot_config is built
-> only from the XBC tree, the rendered string never enters it -- so it is
-> no new code on the /proc side and keeps the series small.
-
-Agreed.
-
-> 
-> (b) would pull the flattened cmdline string back into the structured
-> tree view and need dedup against the initrd keys, which muddies what
-> /proc/bootconfig means for little gain.
-
-I would like to avoid such complexity, just keep it simple as possible.
-
-> 
-> So unless you'd rather have (b), I'll take (a) for v5 and extend
-> bootconfig.rst to cover the four sources (bootloader cmdline, embedded
-> cmdline, initrd bootconfig, embedded bootconfig).
-
-Yes, I agree with you.
-
-> 
-> I'll also document the sharp edge -- with both an embedded cmdline and an
-> initrd bootconfig, early params reflect the embedded values because the initrd
-> is not parsed yet.
-
-My recommendation is to give simpler mind model to users. If it is simply
-extend the CONFIG_CMDLINE which can be described by bootconfig file,
-that is more managable outside of kernel configuration.
-
-Or, you would like to access cmdline setting via /proc/bootconfig?
-In this case, the problem is a bit more limitation of bootconfig side.
-
-Since the kernel cmdline accepts any contradictory settings, if "foo=A foo=B"
-are passed, bootconfig will make an error because foo has 2 different
-settings.
-Typically, this is represented as an array in bootconfig.
-
- foo = A, B;
-
-But if cmdline bootconfig says:
-
- foo = A;
-
-and initrd bootconfig says:
-
- foo := B;
-
-":=" means overriding the previous settings. Thus a contradiction
-arises between these two, when rendering /proc/bootconfig. It can not
-show 2 different settings for the same key. (it is possible if we
-render it twice, but /proc/bootconfig user may not expect it.)
-
-I think it's fine to represent it as an array (foo = A, B) if this
-ENBED_CMDLINE is set, but it still seems risky if early parameters
-aren't detected. If `early_param = A` is set in the embedded
-bootconfig, and accidentally initrd bootconfig sets `early_param = B`
-we should ignore latter one (with warning). But maybe it is another
-story.
-
-I think we can proceed it without rendering it in /proc/bootconfig
-at this point. And later we find the way to detect early parameters
-correctly, we can fix it.
-
-(BTW, early parameter problem is a bit complicated. It is not hard
-to distinguish early parameters, but kernel accepts the same key
-for early parameter and normal parameter. e.g. "console=")
-
-Thank you,
+Thanks,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
