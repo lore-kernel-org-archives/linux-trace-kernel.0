@@ -1,66 +1,33 @@
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC933F1AD7
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Jun 2026 11:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCA83AB29C;
+	Thu, 18 Jun 2026 12:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781783274; cv=none; b=cU5znF91/bUFbmRMbMQgP1/SAzAINGCx62IbuIEYUYlGeC4kxpsiQTjbrZXqEEYDzFjvQ6NyeGsjcKZyJfs2HPXmwGRMR0ste3M9Iblkqtc1BqHZkzeoXuS2f8T8YqyAk99ENkBdGxhqg8vCwxe1Ix+p7QjLPmha1LD2J4X0aPc=
+	t=1781786336; cv=none; b=o942DRMrVIEVMCIAdqLGILvqPtmLEeGIIlAGjb/cI2nBJw7QAe/UkRA+5mRtRxfZW1EFMAKQP4HfhaiUDE/d2qozQu8C9J5K0u9u2rcy+Z3guoRAyZGvzHMgGrKtJlMMkfc+wpf/plB9IJPLNkEfXoBbWnfGZI1FRVAWXz23PN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781783274; c=relaxed/simple;
-	bh=DawbSgcdQQQz1EZyan4wjlE7kUMw/zCrfNcnbNjat5w=;
+	s=arc-20240116; t=1781786336; c=relaxed/simple;
+	bh=NKKv11XE0zF/nCIUid6G7GBfJ24lYlVE9oBD4P57fGs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l6Kk91Sk/6eyS8pe6B/AEtREU36MmgKtHQP1ecH6tbTtHOR1vOQews3A2A7sBgyIWbxZE+24EIZOytwTbytQNiFoBXKx0nVunSeDr6VTAmMhMsydwaC6N7Ncnzd3Fy59Kissdl7cq96QFQfgjuuVkc0Q5ngIl57EXfWWlu1nU2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aI5nx+6W; arc=none smtp.client-ip=209.85.216.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=l/MYt3XK+k9pzw1Mq9cU9RssbNHsSj7LQQi3hLQ/PBLU4Vcy8VhkEp1wNsyc1ALpbgshHxzlOfLAUb5bSXr/6f3unV7aWa+N0xa+NAz/7PQnxAqSBD0aszq1R7d8JlmKllq3ViI8FnhMJgAzWw8G2B6dRDyo7o2GoxAnKIRQlfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXZvhX1w; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aI5nx+6W"
-Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-37c8e7c8185so440169a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Jun 2026 04:47:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781783272; x=1782388072; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hgJSxfkbpRL1li2RmiPzgr2AwPNLZXo7UF6R1jDsgxA=;
-        b=aI5nx+6WE+egF02khgwQA/AuS55fjsdcEGbdlL01mOZ6AcH5FT9Ycp0ucPHvb4VTYR
-         Eh00qCP9xztQxe5JOSLZjtzgL8Jl48BVHK6MRpyhZMe9lp6Ldr29CICx0tnpgPAj++Vk
-         BpFlFkLQExRtML0hk1WOqFfKUSGLAMYuX75rPNCWwfhWDwnM+INJ1o5M2fwBsjZ0qPFt
-         nUcXR/F3ZJdV5b9wjI1u4akVsIdtftEd/AqeIxM4Wy/tLlEpGMcql6oAuuBM/WuF7raD
-         YSwruePTl/w1Ka5WR+WgqmoMWJ0pLKoQo79FlF/LVKxC9FzNy00zXX13/8BovPW8wHBK
-         9fEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781783272; x=1782388072;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hgJSxfkbpRL1li2RmiPzgr2AwPNLZXo7UF6R1jDsgxA=;
-        b=hNJOWChys/d58MZjOvG9Y/Nr2rhecRYKsvTBIGSMdDImRVgeCHoxw43l68L8QMvaC0
-         9ye5vwykwIGAxJHHlfWoY1ubnEyybRGooQ+/3xV13wBP9HHn5i/Ef4ansBNrQuSjIqb5
-         3dIX/9c6gXRmRNse49GIDnt8zQUuXk4mrmOG3WR7SgenriJVQYTZFaF4fvubSg0GDggU
-         IaunsqeG2ZMvnE0iu82feuSoU94cXC/cJtXEt3O/oxcPrXriNZ4yNV0xdBH2qyZ07o0T
-         VU3ALUQ667GzvxlGGqPMNrCqjwSAZzzLqWL1IX1Df50IFiqEGhz8bDm9JG7pszfw4tV2
-         iWpw==
-X-Forwarded-Encrypted: i=1; AFNElJ+mtAR6rY2FNKGTu75gYj2kDdFzvb8OgBBqlHKwmS29JdJoJHNUNOebHeeY64KVbLSml5aWNi6Av9/ou4s+9XKuA78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqoX/qkV6fDy21RXpBxaM8QFsFtXAW7ACKEuU5UtGKZLmmgn++
-	ausVcTGk1i2rKbQ0wWkr9GzfgvYtzCJIztIQAEMdk9a6y6dR6Vj9Dkhp
-X-Gm-Gg: AfdE7cmN+lgcdt6+5hFst5yfAzXhGECxv4rUZIY0iQwGRTiOGNCpqHTpFM2YBAezPRq
-	o72nkUkyg9ZevAYSR5mXwtbcO+LdO24wOn5k5R3+3i7Lo1vPCEuXGwTXBdi9RYoU8LygrLgQd1l
-	/qkvxAkkccGm9VWJQdiNlfuWSAkVE6c2XN5dDVTJxg/lyRSh8GHyNSQWM7LB8K1p/im5jjxvnET
-	jIPZgSGauPgUo5MD8UdY+ARBDskwjmHF5qSzYjwmuKaRp+aOUUMKyDnxgbrMdqHOFD0E1OHgQLK
-	fEw3A/71kr3frsyzM/AdFWW2XRlVN/Wxr1/CVvNaWajJUcsRRrW/B3S4K9XkoTGaEIok+CKTkQ6
-	0bUDrViM1Ph9kpSQ8XPWVWBD00NDfGWhKoT7sWICOEUFHkmD9hNUQo4JM4EwPzm1kk6mf7E5nKq
-	P4oqZAtIV59a3k14OvRq0cO+Tzcv2IECA=
-X-Received: by 2002:a17:90b:4c84:b0:36b:9798:4f67 with SMTP id 98e67ed59e1d1-37ce44caf41mr3737106a91.8.1781783272420;
-        Thu, 18 Jun 2026 04:47:52 -0700 (PDT)
-Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37c521ca980sm9530544a91.6.2026.06.18.04.47.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2026 04:47:51 -0700 (PDT)
-Message-ID: <b5605aef-c3a3-4a35-aceb-d1df3c9a7f4a@gmail.com>
-Date: Thu, 18 Jun 2026 19:47:42 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXZvhX1w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C441F000E9;
+	Thu, 18 Jun 2026 12:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781786335;
+	bh=v5OV2563283YHAEvpvJhlyU83u7DJ+i27wFCKx2WtMc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=PXZvhX1w3Q62MTgCQdbJwIzKCTZAbIVyDIh5ZVc9+h/W0uHbN4coaZ2M576QpPmcF
+	 ZwODhKRuqrtC+ZCBGrGeDVESVsTq4POkW2uP29xytbdEHRAuV0nBI3sK5OODMfdDAP
+	 ZL4ig4pnFtyEGwb5s+F9TvGSggB8e66DD6OcUjt3hMZyHC8uX93cuDdlemV5iKo1Eg
+	 ZPS8cOHA0dx3yK2XIo6DK71UVECo1A0NMQZZ7JwFHp1jcnEJErYLsZW1qLS2wF6kQR
+	 4fLfr7kHSY+kQu1tVaLJC+GBLnoxrp8dhMOsei1Vw6qvGRSG/n7/8B4Ql4RYzYVP23
+	 kG833FD/mPU1Q==
+Message-ID: <d4b55716-97c7-4e75-8500-6a1171ad7fc6@kernel.org>
+Date: Thu, 18 Jun 2026 14:38:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,146 +35,98 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/3] mm/compaction: respect
- compact_unevictable_allowed in alloc_contig path
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Cc: akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
- jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
+Subject: Re: [PATCH v3] mm/lruvec: trace LRU add drains and drain-all requests
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Cc: JP Kobryn <jp.kobryn@linux.dev>, linux-mm@kvack.org, willy@infradead.org,
+ usama.arif@linux.dev, akpm@linux-foundation.org, mhocko@suse.com,
  rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- david@kernel.org, ljs@kernel.org, liam@infradead.org, rppt@kernel.org,
- bigeasy@linutronix.de, clrkwllms@kernel.org, Alexander.Krabler@kuka.com
-References: <20260604023812.3700316-1-chenwandun1@gmail.com>
- <20260604023812.3700316-4-chenwandun1@gmail.com>
- <9890b8f5-69b9-49bc-8ed6-ea47723b644e@kernel.org>
+ kasong@tencent.com, qi.zheng@linux.dev, baohua@kernel.org,
+ axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+ chrisl@kernel.org, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+ baoquan.he@linux.dev, youngjun.park@lge.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260610195220.12403-1-jp.kobryn@linux.dev>
+ <06122cae-e28b-4ded-a9dd-d380d31c5230@kernel.org>
+ <ajK1YsIJmD2ImbAk@linux.dev>
+ <1136baf3-3967-4202-9eaa-5fd667c235cf@kernel.org>
+ <3149bc84-dd3a-43ba-826e-6364965fdafd@kernel.org>
+ <bbcb6db5-6a01-46b7-979f-dadd52a5176f@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: Wandun <chenwandun1@gmail.com>
-In-Reply-To: <9890b8f5-69b9-49bc-8ed6-ea47723b644e@kernel.org>
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <bbcb6db5-6a01-46b7-979f-dadd52a5176f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 6/18/26 02:57, Vlastimil Babka (SUSE) wrote:
-> On 6/4/26 04:38, Wandun Chen wrote:
->> From: Wandun Chen <chenwandun@lixiang.com>
+On 6/18/26 10:30, Vlastimil Babka (SUSE) wrote:
+> On 6/18/26 10:21, David Hildenbrand (Arm) wrote:
+>> On 6/17/26 20:18, Vlastimil Babka (SUSE) wrote:
+>>>
+>>> Yeah and I don't recall ever that a change to a mm tracepoint would ever
+>>> break someone who'd complain and we'd have to revert it.
+>> Really? :)
 >>
->> vm.compact_unevictable_allowed=0 is used to prevent compacting
->> unevictable pages. However, isolate_migratepages_range() passes
->> ISOLATE_UNEVICTABLE regardless of this sysctl, so the setting
->> has no effect in the alloc_contig path.
->>
->> Fix it by:
->>   - Keep ISOLATE_UNEVICTABLE for CMA allocation, discussed in [1].
->>   - Honour sysctl_compact_unevictable_allowed for non-CMA allocation.
->>
->> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
->> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
->> Link: https://lore.kernel.org/all/25ba0d77-eb61-4efc-b2fc-73878cbd85c1@suse.cz/ [1]
+>> Read the context of the link I posted once more.
 > 
-> There was also the "Ideally by not having mlock'd pages in CMA areas at
-> all." part. Is it the case? It was more elaborated here:
-
-Yes, It is the case.
-
-> https://lore.kernel.org/all/CAPTztWZpnX1j8-7yeppVUsxE=O9hbVeqricDjZt8_pnN7a-kBQ@mail.gmail.com/
-
-I missed this important information. Thanks for pointing it out, Vlastimil.
-
-Best regards,
-Wandun
-
+> Ah, I see. I've only read the single mail from Steven that referred to the
+> old powertop breakage and didn't notice the context.
 > 
->> ---
->>  include/linux/compaction.h | 6 ++++++
->>  mm/compaction.c            | 9 +++++++--
->>  mm/internal.h              | 1 +
->>  mm/page_alloc.c            | 2 ++
->>  4 files changed, 16 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
->> index f29ef0653546..04e60f65b976 100644
->> --- a/include/linux/compaction.h
->> +++ b/include/linux/compaction.h
->> @@ -106,6 +106,7 @@ bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
->>  extern void __meminit kcompactd_run(int nid);
->>  extern void __meminit kcompactd_stop(int nid);
->>  extern void wakeup_kcompactd(pg_data_t *pgdat, int order, int highest_zoneidx);
->> +extern bool compaction_allow_unevictable(void);
->>  
->>  #else
->>  static inline void reset_isolation_suitable(pg_data_t *pgdat)
->> @@ -131,6 +132,11 @@ static inline void wakeup_kcompactd(pg_data_t *pgdat,
->>  {
->>  }
->>  
->> +static inline bool compaction_allow_unevictable(void)
->> +{
->> +	return true;
->> +}
->> +
->>  #endif /* CONFIG_COMPACTION */
->>  
->>  struct node;
->> diff --git a/mm/compaction.c b/mm/compaction.c
->> index 007d5e00a8ae..a10acb273454 100644
->> --- a/mm/compaction.c
->> +++ b/mm/compaction.c
->> @@ -1341,6 +1341,7 @@ isolate_migratepages_range(struct compact_control *cc, unsigned long start_pfn,
->>  							unsigned long end_pfn)
->>  {
->>  	unsigned long pfn, block_start_pfn, block_end_pfn;
->> +	isolate_mode_t mode = cc->allow_unevictable ? ISOLATE_UNEVICTABLE : 0;
->>  	int ret = 0;
->>  
->>  	/* Scan block by block. First and last block may be incomplete */
->> @@ -1360,8 +1361,7 @@ isolate_migratepages_range(struct compact_control *cc, unsigned long start_pfn,
->>  					block_end_pfn, cc->zone))
->>  			continue;
->>  
->> -		ret = isolate_migratepages_block(cc, pfn, block_end_pfn,
->> -						 ISOLATE_UNEVICTABLE);
->> +		ret = isolate_migratepages_block(cc, pfn, block_end_pfn, mode);
->>  
->>  		if (ret)
->>  			break;
->> @@ -1902,6 +1902,11 @@ typedef enum {
->>   * compactable pages.
->>   */
->>  static int sysctl_compact_unevictable_allowed __read_mostly = CONFIG_COMPACT_UNEVICTABLE_DEFAULT;
->> +
->> +bool compaction_allow_unevictable(void)
->> +{
->> +	return sysctl_compact_unevictable_allowed;
->> +}
->>  /*
->>   * Tunable for proactive compaction. It determines how
->>   * aggressively the kernel should compact memory in the
->> diff --git a/mm/internal.h b/mm/internal.h
->> index 181e79f1d6a2..163f9d6b37f3 100644
->> --- a/mm/internal.h
->> +++ b/mm/internal.h
->> @@ -1052,6 +1052,7 @@ struct compact_control {
->>  					 * ensure forward progress.
->>  					 */
->>  	bool alloc_contig;		/* alloc_contig_range allocation */
->> +	bool allow_unevictable;		/* Allow isolation of unevictable folios */
->>  };
->>  
->>  /*
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index 81a9d4d1e6c0..1cf9d4a3b14c 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -7118,6 +7118,8 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
->>  		.ignore_skip_hint = true,
->>  		.no_set_skip_hint = true,
->>  		.alloc_contig = true,
->> +		.allow_unevictable = !!(alloc_flags & ACR_FLAGS_CMA) ||
->> +					     compaction_allow_unevictable(),
->>  	};
->>  	INIT_LIST_HEAD(&cc.migratepages);
->>  	enum pb_isolate_mode mode = (alloc_flags & ACR_FLAGS_CMA) ?
-> 
+> But I don't think these worries should stop us from adding easily usable
+> tracepoints.
 
+Steve explained a way how apparently scheduler people are handling it without
+trace events.
+
+You can always remove/modify tracepoints, but not trace events.
+
+Anyhow, just wanted to mention it, because so far MM didn't rally know about
+this implication.
+
+-- 
+Cheers,
+
+David
