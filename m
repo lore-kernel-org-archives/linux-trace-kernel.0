@@ -1,169 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2530C23BD05;
-	Thu, 18 Jun 2026 01:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304713DB645
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Jun 2026 08:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781747552; cv=none; b=heg4us6+CP8AEJsjyZnJUMKDa1sUhok8/mM441CHFM/5XKDmh8e4PI2H/OPrOAMb7lYyi1fqKbx/PoNjaJ/DrZp8yTkgqq1o/N1PvgkcmdA9XLT3HD5ZGwchexedg5IdOK0NuNlsUHnTya3Fw3gYpl/Y47UJxnjVyvSE78I8ljI=
+	t=1781770440; cv=none; b=ZNYHewLSGqG2oiALK9NuJ2gG/fousDSsf20RCsR3sBaL/MZOeH6+SrKuxmkFp9+5MZyFyUIHBh5tIvJzH7ySue2E+vvq4f9DBf8H7uyIrPXxrIrrtWs1O39AxDXBiMk9e9UGXrXqK/twIuibnRihBFWPrBuhJzky6IJu1O4uCOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781747552; c=relaxed/simple;
-	bh=2vs48G/wyGMLkEOduADAZvuxl8T/x6YT+C/hJPNOqkU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=N9V5syr9+JqknS8HwXpZGEm5vBBSgkjKYebfFn/RNq/Sl/dN/h9nzpkOzkJwG0QJfoSOpQVo5dXQuGi2f5H4Yib1MwhaSFJhtfLvehUllWR5gNG/TJ8C2wA+5LKUjsu24JKgPb6dl6drj69g9CEOR24lalWKaRrDR1sxX3SE9ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZ2SnECG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781770440; c=relaxed/simple;
+	bh=V4atjPoRLxPj/P/o9GCbq2G6p0+PCrf2LHSnCgfA5UY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sFptx+pppLw7Q7/GcbyeEMXFnjJFtQV2ULlY1lgnHF5yi7/JI3hDOPgoqA9YV0UsAwq1cAsxUOCIl0qFTF4bgqUrbKLL7OSV/+zV8/EfAkCh4LvuJ0FN9dmfvSseW80VfnC05jlTBDQIJqOzLky0yj8mx5aRb1tDSH7i9mG7I/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q9+FobWf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZ2SnECG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F5C1F000E9;
-	Thu, 18 Jun 2026 01:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781747550;
-	bh=1QY7Y1ZunN8lZl8iwHgNyGGrr+lVU+OaaTzPx65gGVo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=IZ2SnECGKfy9juNIkM6F+T0jgZWBoLrzcwWHdofsIa9nJADhq+VdgXvCq2wjOL4NR
-	 ZfuuThZC2J2YAGfUwbgnfcPJhwCXB1HUN1JfS+KDDtAjzcWoMSPmihSSSCDTvDD+3p
-	 TPsTpxe82Hw5EiIXP63vTwDIz+NF8xVRmd5HQXzdMoSMo+u6A0wkWV3oqVYX+gA159
-	 M/HmIH3a4Cb0iVcpmHTaUrvjfwBBhh7w2h5qy8OldXhI0vyGe9vO11SSTAWkZKW+rP
-	 PnNSQYtTbEsf5sc85iDiDVXVRA7W1j5xuZ5RVDUEZyrHG238kBubKbwWVhekqaFgWq
-	 iH24b/J9BUELg==
-Date: Thu, 18 Jun 2026 10:52:27 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: eprobe: read the complete FILTER_PTR_STRING
- pointer
-Message-Id: <20260618105227.c58c85e9cb19bce673d9a79b@kernel.org>
-In-Reply-To: <ajJbkeK0zXb8MtcS@akranes.kaiser.cx>
-References: <20260615145500.2662456-1-martin@kaiser.cx>
-	<20260616110910.e6420488b6a798d49951cde9@kernel.org>
-	<ajJbkeK0zXb8MtcS@akranes.kaiser.cx>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q9+FobWf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781770436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JMNQ/q7fbi4PfAmfawMCfx/QWCOmT+5njtbain3KxO8=;
+	b=Q9+FobWff3GBn11rL5ynatUVX/XL1DOeiJTUpxEIRZfe5+2I4OABiQpH5sYyWE0xdL49/A
+	aOiE2H+hW6JvVTLiv2POEPB3CNuyT1KGfGw/Lz1ppED6qXtOueDNEHzNIR6GiG9mceBp75
+	mwbfaSzUPGSycwAjOla0YtZORgc+pd4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-442-myKMldnqPtSikBU_pZvWFA-1; Thu, 18 Jun 2026 04:13:55 -0400
+X-MC-Unique: myKMldnqPtSikBU_pZvWFA-1
+X-Mimecast-MFC-AGG-ID: myKMldnqPtSikBU_pZvWFA_1781770434
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4625e71d3ccso1117139f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Jun 2026 01:13:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781770434; x=1782375234;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JMNQ/q7fbi4PfAmfawMCfx/QWCOmT+5njtbain3KxO8=;
+        b=q/aBsU3ButsOqGuTBwID/m0x3+9cycMh821ZQsY5aSaUNSOpP0qd943dD5PU6+I+g2
+         gX0Wjj+moALD8jb+2hh7Vbe3WdGElFPZ5r5Q1M9DLMb0+jjQFgzP2lU/Q4ITYo6XSZZZ
+         OlmZpTjnl3d+pOY4KuNOVUHX9iMXoMAIr5xDe35w2vOMJlbJ3SwovGjmUHk8sShbOaDu
+         rtQweXqN+zQnsir2ABAqJEIW/WRggDkT5lBGCStUI0fTuNLiGkvelZXAu2Qg5v6h35qo
+         379yNG4o7qVRoC5xoAgSXBUfap/epr2N4vYRuCoU1zmQJ3SL0+l7TKcXE0tj2ZcLSQS0
+         nFPA==
+X-Forwarded-Encrypted: i=1; AFNElJ8FVBTRZKrryxJjjGDdhX+huKsP/E+b3RNfq2VgFbq6JkRGONaN9BydS+v3NwGGOnDvqjobvGGf9ic430PFAxfKTOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR5ZYqgyI7vrxPEFabeGWG20LO7W3HOzSgGang1cmqpbPKEyfB
+	g7xzxhyLsaWWmqVu5GYe4FQhvXCazqkttzfHbQygVnb10NRHn5jn8TDVjzO+vlEDwq7Rybxn4h1
+	4Xo5GhijE76S1NcKdfm7h9aPVS/R7edgWiMLDy4aWWj/2SfGbPBx4btyrwJvc0VsmdW05O7GGnQ
+	==
+X-Gm-Gg: AfdE7cnnq8fY7RTxpZ6o36Hmx8yWQAMtkybA5w3ZV2po4ou8wEyzxHnkI89F3UOkOlP
+	m7ZyFNhu2xGNomcUXG5R57+wb56/0e6lQb3vtHRVSPQBQtm9Af6uyhoI+LZf4IdaWJ8nPvAk5UV
+	8QEhccjGkxzc4tsLNqWnSfWemK7eM9TGp+15v5WWx1fozGeMUctJw0wDKV9/2brrwvSXJUYwB+e
+	KNVWz6DygVxVDh34k1pJYcO6kiDqIa2dBCGLKfPbrBKmgGLFRsizxc9vYOnQHbgJF1PnoIRFxkO
+	CF+fwkmgziptCMLKpZs1a/IN/gEH2U7hnisMD1HkVPNptF46UX44Cou9vkuuOq1uUsY3kH2EREB
+	PZWyw/pLnbNW/qnQ=
+X-Received: by 2002:a05:6000:2989:20b0:462:6fdc:8194 with SMTP id ffacd0b85a97d-4639881b88fmr3232286f8f.25.1781770433952;
+        Thu, 18 Jun 2026 01:13:53 -0700 (PDT)
+X-Received: by 2002:a05:6000:2989:20b0:462:6fdc:8194 with SMTP id ffacd0b85a97d-4639881b88fmr3232260f8f.25.1781770433508;
+        Thu, 18 Jun 2026 01:13:53 -0700 (PDT)
+Received: from [192.168.1.167] ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f26392esm60856772f8f.3.2026.06.18.01.13.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2026 01:13:52 -0700 (PDT)
+Message-ID: <9035cc5b83dda3a8ec06e8488fba62ceb7431123.camel@redhat.com>
+Subject: Re: [PATCH v3 09/13] verification/rvgen: Delete __parse_constraint()
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Wander Lairson Costa
+	 <wander@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 18 Jun 2026 10:13:50 +0200
+In-Reply-To: <87tsr1mqrj.fsf@yellow.woof>
+References: <cover.1780908661.git.namcao@linutronix.de>
+	 <8d9b9068a5dde8256edd7debe7aab33e15a7fc51.1780908661.git.namcao@linutronix.de>
+	 <e3f63618b48dba9299c88bfffeae14b71717fa77.camel@redhat.com>
+	 <87tsr1mqrj.fsf@yellow.woof>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: OuOrEQWpTzlMAg2MtiAVyF8qUyyJtjOyC_gfarkOx0M_1781770434
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 17 Jun 2026 10:32:17 +0200
-Martin Kaiser <martin@kaiser.cx> wrote:
+On Wed, 2026-06-17 at 11:59 +0200, Nam Cao wrote:
+> Gabriele Monaco <gmonaco@redhat.com> writes:
+> > This function used to validate things we are no longer validating,
+> > now it's
+> > alright to create a model where a clock is never reset, which
+> > doesn't fully
+> > make sense. Should we add that check somewhere else?
+>=20
+> Theory does not require clock reset, right?
 
-> Hiramatsu-san,
-> 
-> thank you for reviewing my patch.
-> 
-> Thus wrote Masami Hiramatsu (mhiramat@kernel.org):
-> 
-> > Ah, this is a bit complicated. It seems to work with sched_switch event
-> > as commit f04dec93466a ("tracing/eprobes: Fix reading of string fields"):
-> 
-> > echo 'e:sw sched/sched_switch comm=$next_comm:string' > dynamic_events
-> 
-> > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-> > #              | |         |   |||||     |         |
-> >               sh-162     [002] d..3.    54.027213: sw: (sched.sched_switch) comm="swapper/2"
-> >           <idle>-0       [007] d..3.    54.034573: sw: (sched.sched_switch) comm="rcu_preempt"
-> >      rcu_preempt-15      [007] d..3.    54.034589: sw: (sched.sched_switch) comm="swapper/7"
-> 
-> > Maybe comm is stored as a fixed string information in the event record?
-> 
-> Yes, this example does not execute my change.
-> 
-> > /sys/kernel/tracing # cat events/sched/sched_switch/format 
-> > name: sched_switch
-> > ID: 254
-> > format:
-> > 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-> > 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-> > 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-> > 	field:int common_pid;	offset:4;	size:4;	signed:1;
-> 
-> > 	field:char prev_comm[16];	offset:8;	size:16;	signed:0;
-> > 	field:pid_t prev_pid;	offset:24;	size:4;	signed:1;
-> > 	field:int prev_prio;	offset:28;	size:4;	signed:1;
-> > 	field:long prev_state;	offset:32;	size:8;	signed:1;
-> > 	field:char next_comm[16];	offset:40;	size:16;	signed:0;
-> > 	field:pid_t next_pid;	offset:56;	size:4;	signed:1;
-> > 	field:int next_prio;	offset:60;	size:4;	signed:1;
-> 
-> > But the filename is a pointer.
-> 
-> > /sys/kernel/tracing # cat events/syscalls/sys_enter_openat/format 
-> > name: sys_enter_openat
-> > ID: 705
-> > format:
-> > 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-> > 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-> > 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-> > 	field:int common_pid;	offset:4;	size:4;	signed:1;
-> 
-> > 	field:int __syscall_nr;	offset:8;	size:4;	signed:1;
-> > 	field:int dfd;	offset:16;	size:8;	signed:0;
-> > 	field:const char * filename;	offset:24;	size:8;	signed:0;
-> > 	field:int flags;	offset:32;	size:8;	signed:0;
-> > 	field:umode_t mode;	offset:40;	size:8;	signed:0;
-> > 	field:__data_loc char[] __filename_val;	offset:48;	size:4;	signed:0;
-> 
-> > In this case, the filename field should use __data_loc directly instead of
-> > pointing data on the ring buffer.
-> 
-> > Can you try 
-> 
-> > echo 'e syscalls.sys_enter_openat $__filename_val:string' > \
-> >  		/sys/kernel/tracing/dynamic_events
-> 
-> > Instead?
-> 
-> This field is working as expected.
-> 
-> I still believe that the handling of FILTER_PTR_STRING is not correct. The
-> pointer is stored in the ringbuffer as unsigned long and read as a char. This
-> gives us a truncated pointer that cannot be dereferenced.
+Yeah, I don't see it explicitly mandated in the theory, but the
+description (from the sources) states:
 
-Ah, OK. I understand the problem.
+  The value of a clock thus denotes the amount of time that has been =20
+elapsed since its last reset
 
- - ring buffer and its records should be self-contained.
- - In most cases, events use __data_loc/__rel_loc or fixed array to store
-   strings.
- - only syscall events exposes the char *, which is not recommended but
-   important to debug user space. (not for dereference)
+But it also says (emphasis added by me):
 
-The example usage of FILTER_PTR_STRING is actually using FILTER_STATIC_STRING
-now, so FILTER_PTR_STRING is left broken. (hmm, but there are many
- "const char *" are used especially under rcu events...)
+  Clocks /can/ be reset to zero after which they start increasing ...
 
-OK, can you update your patch description to use rcu events?
+Nowhere it says clocks /must/ be reset, their value simply won't make
+sense (according to the definition).
 
-BTW, I think those also should be decoded from enum value in the events,
-or use __rel_loc. Since it is not self-contained. (it's a TODO item)
+Now in our implementation we may have some automatic reset when the
+monitor starts (I'm planning that to avoid invalid states), which could
+make explicit resets superfluous in some cases.
 
-> > I think better solution is fixing sycall tracer.
-> 
-> I would say that syscall trace is doing the right thing. The ringbuffer entry
-> is a struct syscall_trace_enter, the syscall arguments are unsigned longs.
-> They are written in ftrace_syscall_enter, this looks correct to me.
-
-OK, I thought the filename points the ringbuffer, but it actually points
-the user space. (saving a raw parameter values) So it is OK.
-
-For eprobe users, it should not access to the user space data directly
-because it can cause page fault in the kernel without fixup. It may work
-on x86, but it doesn't work on other architecture which has separated
-address space for user space. To avoid such mistake, it saves actual
-string in the ringbuffer as __filename_val.
-
-Hmm, this must be documented in eprobe example code...
-
-> 
-> A const char * syscall argument is using FILTER_PTR_STRING, the unsigned long
-> argument from the ringbuffer is read as a char and then converted to a
-> truncated pointer.
-
+Let's leave that to the user for now and skip this check.
 
 Thanks,
+Gabriele
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>  This is not some sort of
+> hidden issue that trips up unsuspecting people. It is obvious from
+> the
+> model that the clock is never reset. So I think it's fine to allow
+> people to do that, maybe there will be an actual useful model without
+> clock reset, you never know.
+>=20
+> The self.env_types check is enforced by the grammar. We do lose the
+> self.env_types check, but that is likely redundant anyway because we
+> have this:
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for transition in self.transit=
+ions:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [...]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if tra=
+nsition.reset:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 envs.append(transition.reset.env)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 self.env_stored.add(transition.reset.env)
+>=20
+> so it is clear that all envs that are reset do have a storage.
+>=20
+> That said, I am fine with keeping these sanity checks, if you are
+> paranoid.
+>=20
+> Nam
+
