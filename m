@@ -1,126 +1,106 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9683803E1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Jun 2026 12:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B659E3B960F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Jun 2026 16:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781873513; cv=none; b=H8DhxC+h3xAGgmQOmqEjSMspSa3C5lKEF3sedexKnzEnYU+rClMWlpOKYuxN6gV8zMBos3Rc8sjbFgRoSXhOq0WI1vmw/XBw+q0A+ueDUw9L5N5nJQb9Z+ZkQxxPQv5z5UKzhgWZLRTJFoe71NiKjcAg9avfGN+gde7ESJC8PGc=
+	t=1781885686; cv=none; b=Pcu62NSv/keKTk5m9m6YZCOUlosgaTE0sYPRcas7zIhytU3gbaWRkrvSWCom7D7d1PlhY3mHtvF6gQf8ObRfF0hZyY99uccl/+G1jOYIRxv+avNPs5WN6aO7CFdocCsG501kbe7rVESeRtrsmHfwqvsXZi1a5MivpAjHDO7LWS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781873513; c=relaxed/simple;
-	bh=AoSchuXJGAayDzDPFIuHozNVcqm/iWheUa1nSVya5uQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N+Lh1OJ1w3d2uJRZgbeT64Us0FzEzs/IBGIQGCfIyCqNZY1RG6YfDQr9NgGwZZU1G3mm7N5Pa3R+aDH880DNJWoqPSDy5D9OtS7cNhmIP9v2rJGb0Aom75cORYVBEMLcsuCkDvsjnTUCq77ZiRI3IsyHe9G/Opd76Z7VFSDfIvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M6G6hYoQ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781885686; c=relaxed/simple;
+	bh=CciQhVZkdMjQeQurwPQlK3eA3fJ1BEEhkxvOiJb2L9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=iG3ufwvdp7vVuLf7lFJwW4JDvsqja4Zh/0xVvbmkh45Xwvvd6oUp/O3mK5pRX9b1no8E7FyIImlB1iBOUqY+v8XZfIQXzy3+17MPEWzaoixZ+cvRb1cwBCyI/XqJQMI59X1L+UcOWJtLNcx2k9Dz5ksHhRbkCP82zy0Hcdf51o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SUVM2KLq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6G6hYoQ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso27193655e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Jun 2026 05:51:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781873510; x=1782478310; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=laROZbWnzE0hCDsDDd6yA+mJoystSAqNpvIVq0sPclE=;
-        b=M6G6hYoQGyEFSHNFdRWBdU4G7ykRDxlAROTSMAlGePNeLH6fwR2d2KwGFBeEjya4rC
-         BRr787JIbVdi566ccw22qNGtfsdczdqKskU/r6th6LF/XO1W4RTPjDvJOEFwDwcX8tWN
-         RBnFtBY6AuYGPkhzKAQrGFCtaLpIxcRVixGOH4fegOPJ5UowVOqCf5cAIeNCNJZ8hDup
-         qz5s3dFSMMomrLxtqxUvwyl/SBfZTK1ylwbeLWnXudrPTqQQbXpRViclUOlHlmy9AP4w
-         NFz5R1imyhysVzPS3PZmBxVKnDZWwqB8qgCxNP4yX1s8Xs6rgA9q4gryRQbXbqd88BBI
-         Mk8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781873510; x=1782478310;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=laROZbWnzE0hCDsDDd6yA+mJoystSAqNpvIVq0sPclE=;
-        b=nU57KCP+jPaj4FN8UAoKORgs55NM0V25xMGkpVkEowrCKnXzdfrCONAQEyjyTrggD/
-         ZL5joVq2mo4vZsYQnfrx4j+50fC1JtLPTztKvO4Xa01kY6vG9qf1XAg0rp99Sjw3DYCd
-         3Pmje9sO5ut30AW24prXueUORiTffjjGE+jH7m+7veuLGYsSv+Jq4s2fT+OuOMrWPEjQ
-         c2Oii5XxunJEDtpYzmckwxe98pJPrQk51rvLJp2zGz1FCHAyy7RxiCGQcDfSudfLjXiV
-         ArMgHEt+KQP8DgjrXglBNwfRg+1Tv1Q4y3gQ52MsSSNmsNMVo4Msn5DX3b9DfmQF9tHk
-         U0vA==
-X-Forwarded-Encrypted: i=1; AFNElJ8aXTdO4XCMkN1q9DoXXH0qoi2vq3h5Gwo7CghpBLbzZJMWRzqK5eVPSHWouUQtk4evmlwVCA5+Cbvp3YoDOB4c5QA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYpwA5CcTUdstinM2gx94wS4VddnYktw/3U5hMd6QZQ0Tispam
-	Um6GYLV443fuhyTg1o33Z8c9koSQnUi/a0jwtJO2kMsMwPBLl/fZH0xg
-X-Gm-Gg: AfdE7cln81mqLfq+C6MaLjcybmltpUI3Cc0Nag2AG6GYVL2Op7QIoPnu0AlwVUmyRvU
-	aS4xk9ribWeF5cvRaPr/zASnRq3EiKtH0VMplJmktQZxuComn7xmLPHBGtehP01a6Hn8riSCpBJ
-	oL7IEePQgbFOJdu1mgCaZDE+xTNi+cRWbA5Wr8GaBS8Yiwq8mQZn51HEcX93hTSY/X03UvOCp8V
-	Wz5mUbRx7O1K8JK1qdinN5TBM9aU9sAYr9HZ386Znd8uCWJ+BN+7Oo4hlnee+GcwCSu2uayaJC1
-	ftEAwXbSpbx5nfS2ql+MPZGuLYCGXJKEI/BUeLbIC43RThKx2nMHvOdJg94Eifc1JtKfbxhFb9H
-	0FwPMyaK8fek1XYaie+POvYmC0CzeC62i1eKvCNvKKnW9NV3HbjWuLer3MDLOQ0uGOSpY3TkgNK
-	VS16uZfPXceUHsU3HT8q9RYfHFxIw1r4Jrk54npE3hihTzOEcsaNQ1ldfs2jPELCRtcJ0vWSwgu
-	hBgdtA=
-X-Received: by 2002:a05:600c:8b10:b0:490:b00c:8e6a with SMTP id 5b1f17b1804b1-4923f58988dmr65892965e9.28.1781873510164;
-        Fri, 19 Jun 2026 05:51:50 -0700 (PDT)
-Received: from [10.128.11.42] (195-23-151-163.net.novis.pt. [195.23.151.163])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4650c115fd8sm7984157f8f.35.2026.06.19.05.51.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2026 05:51:48 -0700 (PDT)
-Sender: Julian Braha <julian.braha@gmail.com>
-Message-ID: <8e53844c-f2f8-4a4b-bf72-f3140c170d43@gmail.com>
-Date: Fri, 19 Jun 2026 13:51:45 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SUVM2KLq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781885683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qjdJl/aIjLBeqeT1ey7cLdIZICtMkB44mhPgkeKrWdY=;
+	b=SUVM2KLqweJl3LZouX9Uv46ECboI+QgpWa5Yj6QU6eWsQnWIiof4AkA0bcQ0Q5gORxFxhR
+	IDMgl1NqdW9U33Plf7SKJSYz0D6vZRFUDBbYoZpo/WDR3ifDYwJpFgJ5bm+VMJYqZMW/5d
+	FB6TLx0iSKPBByEbRAmTNIaDRvL7xSo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-8hx6TyT-Okexek8-hjIhyg-1; Fri,
+ 19 Jun 2026 12:14:39 -0400
+X-MC-Unique: 8hx6TyT-Okexek8-hjIhyg-1
+X-Mimecast-MFC-AGG-ID: 8hx6TyT-Okexek8-hjIhyg_1781885678
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC0AF1944D45;
+	Fri, 19 Jun 2026 16:14:37 +0000 (UTC)
+Received: from thuth-p1g4.redhat.corp (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C46C418005B7;
+	Fri, 19 Jun 2026 16:14:35 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: Naveen N Rao <naveen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH] kprobes: Replace __ASSEMBLY__ with __ASSEMBLER__ in header file
+Date: Fri, 19 Jun 2026 18:14:34 +0200
+Message-ID: <20260619161434.88270-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 05/46] KVM: Make CONFIG_KVM_VM_MEMORY_ATTRIBUTES
- selectable
-To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- david@kernel.org, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-5-9d2959357853@google.com>
-Content-Language: en-US
-From: Julian Braha <julianbraha@gmail.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-5-9d2959357853@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: YWzLy6nBIIjeaA0iTzvy5mvBXFpGgDy0mC26amk8ekE_1781885678
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Ackerley,
+From: Thomas Huth <thuth@redhat.com>
 
-On 6/19/26 01:31, Ackerley Tng via B4 Relay wrote:
+While the GCC and Clang compilers already define __ASSEMBLER__
+automatically when compiling assembly code, __ASSEMBLY__ is a
+macro that only gets defined by the Makefiles in the kernel.
+This can be very confusing when switching between userspace
+and kernelspace coding, or when dealing with uapi headers that
+rather should use __ASSEMBLER__ instead. So let's standardize now
+on the __ASSEMBLER__ macro that is provided by the compilers.
 
->  config KVM_VM_MEMORY_ATTRIBUTES
-> -	bool
-> +	depends on KVM_SW_PROTECTED_VM || KVM_INTEL_TDX || KVM_AMD_SEV
-> +	bool "Enable per-VM PRIVATE vs. SHARED attributes (for CoCo VMs)"
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ Note: This patch has been split from an earlier bigger patch of
+ mine to ease reviewing.
+ 
+ include/asm-generic/kprobes.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Sorry for the style nitpick, but could you keep the type and prompt as
-the first attribute in the Kconfig option definition (like the other
-options do)?
+diff --git a/include/asm-generic/kprobes.h b/include/asm-generic/kprobes.h
+index 5290a2b2e15a0..16f16963d503d 100644
+--- a/include/asm-generic/kprobes.h
++++ b/include/asm-generic/kprobes.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_GENERIC_KPROBES_H
+ #define _ASM_GENERIC_KPROBES_H
+ 
+-#if defined(__KERNEL__) && !defined(__ASSEMBLY__)
++#if defined(__KERNEL__) && !defined(__ASSEMBLER__)
+ #ifdef CONFIG_KPROBES
+ /*
+  * Blacklist ganerating macro. Specify functions which is not probed
+@@ -21,6 +21,6 @@ static unsigned long __used					\
+ # define __kprobes
+ # define nokprobe_inline	inline
+ #endif
+-#endif /* defined(__KERNEL__) && !defined(__ASSEMBLY__) */
++#endif /* defined(__KERNEL__) && !defined(__ASSEMBLER__) */
+ 
+ #endif /* _ASM_GENERIC_KPROBES_H */
+-- 
+2.54.0
 
-- Julian Braha
