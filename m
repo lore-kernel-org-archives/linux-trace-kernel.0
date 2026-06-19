@@ -1,177 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A4E32AAB5;
-	Fri, 19 Jun 2026 00:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A082F3438A4;
+	Fri, 19 Jun 2026 05:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781829112; cv=none; b=pRwYS1vC4CkNUwxzASy5sRWI1TZdFgmiePfEsuFixhmdb/l+GDQFMq6TDy7nLttJQ90h7h83NaTvGtO6qA6VQxYTy7k4Rq7/ioBsI9MjCwKL2NY9YsQmNkJ5apQsr2Vc2m0ihvY3ufQ4PI9co/kGYgYL9xpORIJUqObbLZT2MDg=
+	t=1781848354; cv=none; b=ZfOBe8MQMlf5rc3qiM8Vs8kKLQizO9Qo3+yvaFekSApmxcnWQfInIcqu6rnPgzO5GS9WmVcQqcrU/D0/r1JFBHCLr698Kt3xpAWT/7m6qYzDVIb6zM0g5R+Bcylv+S2uodXswMZPd1j8s8clZR5m/T2n3h/DMfzZcnJL4VB1vrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781829112; c=relaxed/simple;
-	bh=tNAUmpS5z/21OzG0te8pXUP3RWNb3fTiwZKRQR9IfEw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YT0oP4nnanLVXmmF5l4fpq7FcltnxxV0leAPNc0nPAn1O7v+HzaVyKVhd5FftNPPVjttuRfhHEcynrSVQPxCcrD08zBCJi1QJ5Mp9GUVjRjepnR8NhFc6c4lJjilnqf8skEFsZfc2av8bOleRJ2fkZx94Rf+tDQg4koxuua20g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJ65TqOL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1781848354; c=relaxed/simple;
+	bh=Eg8t41pMOWWrduPXWNrzBc8G3rKPOll3N2vde21MGsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GQdbnyrLTlswyJzgyAFlCWI1+NtE/4DqW9phSueyX1MYXzBqe4/hqE3N2IaE5axofPbCT06Ed1kMUmGyvl9dGsTs/oglvHpvvXRTJubIq/85leGacBu9mPr07hYC9amXJdOu3Beh9dWYE8K4eAUjYZzgI+eTPoWE6AayIcXZ2Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CbHUtiQ3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=50RGuS+i; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJ65TqOL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 960D3C2BCFF;
-	Fri, 19 Jun 2026 00:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781829111;
-	bh=tNAUmpS5z/21OzG0te8pXUP3RWNb3fTiwZKRQR9IfEw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=hJ65TqOL5Pw53sHOXGFblAtQa460JhiHQh9znV0nIzA+d2tVESXYlEYALmbG0yuRb
-	 qEKxuDEZXyS2dSsvROy903yvdzXfPUkUighwQtNiCBBwqOlsyNW+RwZ2uFOS5yJ91L
-	 T0l18WForui/BRXAPoFVTHMBqT4kjf4VBoDWKr/SmMuq9M7Hj+cUrY4GGBuGV1/SMk
-	 7+ruTs3gTymB+lQGOSxUmuKf1G8rXfiTVh0/xO0didMm8vs/w8uI+eGW7HPQRFN+3M
-	 ud4puQ4NBWCHMjxkRgw08SVjJBH+Xh6nlox1u6z+FUSTwzfu3wJfcwKlARJZYIgJhs
-	 WrKEkbUsG1zAA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815B4CD98F0;
-	Fri, 19 Jun 2026 00:31:51 +0000 (UTC)
-From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Thu, 18 Jun 2026 17:32:23 -0700
-Subject: [PATCH v8 46/46] KVM: selftests: Update private memory exits test
- to work with per-gmem attributes
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CbHUtiQ3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="50RGuS+i"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1781848350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RrSiBzQbDLLZOpucVMD4WSq1slvu306/40/sKFtrblA=;
+	b=CbHUtiQ3nTtrZly3zqhIBQFICzpsnLHwmyDmJ5BUdWJsJjfBBdRKS3UVyfjcbfsK3NDFCs
+	E30R95ujIlFupeQKv7e/Z0FLTOmlv4DgdgH3vJGeE8OTK1WACP0hcGddfdWPWlW80B+v1z
+	og3JEmHn+eM/nG/tFDCyGUK3Yi5ieTY2Vo1CUb+/6myVRrILCERJtuTLQDeNFrQXSAEqSw
+	hGMQhodNr7s/C9/3DE1otog4lD/xFfIE2H942chJoX5IX+jii71aPqeQvUiWtUTCb4zbca
+	yvSby4+3HI8oD5RWZBoNtMaPlAsPlgmA1vX/1HmlS8smcEzPDppCjVYu+Bc26w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1781848350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RrSiBzQbDLLZOpucVMD4WSq1slvu306/40/sKFtrblA=;
+	b=50RGuS+iG/AtEt9OchAXXB16tqt9hvHOSdYPlMbLwxYIq1HYPT2gLMqeDksQolqmBBya4n
+	oLWIaayAM6wH9lDg==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v4 00/13] rv: Convert rvgen to Lark
+Date: Fri, 19 Jun 2026 07:52:03 +0200
+Message-ID: <cover.1781847583.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260618-gmem-inplace-conversion-v8-46-9d2959357853@google.com>
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
-To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
- brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
- jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
- oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
- rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
- steven.price@arm.com, tabba@google.com, willy@infradead.org, 
- wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
- pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
- liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, 
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, 
- Baoquan He <baoquan.he@linux.dev>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
- linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781829104; l=3722;
- i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=Vm6B0jcVpnq5VhVcR58Pd8s5Kl/3lbCBJGBKp5XlmQM=;
- b=nUID8/wKDEk3EQAynE5ah0zGcUawuGh93RpkaOZbh45qXiO2uL0OBjgsC2lb3lX+NX4uC8HGM
- bZfMXvjceB2B0XQ79vDuL7pM8Ke5ZKrxDSbvgzz51c25Ih5BQioa6qU
-X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
- pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
- auth_id=649
-X-Original-From: Ackerley Tng <ackerleytng@google.com>
-Reply-To: ackerleytng@google.com
+Content-Transfer-Encoding: quoted-printable
 
-From: Sean Christopherson <seanjc@google.com>
+This series converts the linear temporal logic parser and the automata
+parser into using Lark.
 
-Skip setting memory to private in the private memory exits test when using
-per-gmem memory attributes, as memory is initialized to private by default
-for guest_memfd, and using vm_mem_set_private() on a guest_memfd instance
-requires creating guest_memfd with GUEST_MEMFD_FLAG_MMAP (which is totally
-doable, but would need to be conditional and is ultimately unnecessary).
+The LTL parser has been using ply - a parsing library. However, ply
+was recently announced to be abandoned. Furthermore, ply does not
+offer the features that lark has.
 
-Expect an emulated MMIO instead of a memory fault exit when attributes are
-per-gmem, as deleting the memslot effectively drops the private status,
-i.e. the GPA becomes shared and thus supports emulated MMIO.
+On the other hand, the automata parser is mostly raw text processing
+which is quite fragile. For instance, by slightly deform wwnr.dot (but
+does not make it an invalid dot file):
 
-Skip the "memslot not private" test entirely, as private vs. shared state
-for x86 software-protected VMs comes from the memory attributes themselves,
-and so when doing in-place conversions there can never be a disconnect
-between the expected and actual states.
+digraph state_automaton {
+	{node [shape =3D plaintext, style=3Dinvis, label=3D""] "__init_not_running=
+"};
+	{node [shape =3D ellipse]
+	      "not_running"};
+	{node [shape=3Dplaintext] "not_running"};
+	{node [shape =3D plaintext] "running"};
+	"__init_not_running"
+		-> "not_running";
+	"not_running" [label =3D "not_running", color =3D green3];
+	"not_running" ->
+		      "not_running" [ label =3D "wakeup" ];
+	"not_running" -> "running" [ label =3D "switch_in" ];
+	"running" [label =3D "running"];
+	"running" -> "not_running" [ label =3D "switch_out" ];
+}
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- .../selftests/kvm/x86/private_mem_kvm_exits_test.c | 36 ++++++++++++++++++----
- 1 file changed, 30 insertions(+), 6 deletions(-)
+the parser would be broken. Furthermore, the code is a bit hard to
+follow with raw text being stored in lots of variables and sometimes
+it is hard to figure out what sort of text is stored in the variables
+while reading the code.
 
-diff --git a/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c b/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
-index 10db9fe6d9063..70ed16066c63e 100644
---- a/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
-+++ b/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
-@@ -62,8 +62,9 @@ static void test_private_access_memslot_deleted(void)
- 
- 	virt_map(vm, EXITS_TEST_GVA, EXITS_TEST_GPA, EXITS_TEST_NPAGES);
- 
--	/* Request to access page privately */
--	vm_mem_set_private(vm, EXITS_TEST_GPA, EXITS_TEST_SIZE);
-+	/* Request to access page privately. */
-+	if (!kvm_has_gmem_attributes)
-+		vm_mem_set_private(vm, EXITS_TEST_GPA, EXITS_TEST_SIZE);
- 
- 	pthread_create(&vm_thread, NULL,
- 		       (void *(*)(void *))run_vcpu_get_exit_reason,
-@@ -74,10 +75,26 @@ static void test_private_access_memslot_deleted(void)
- 	pthread_join(vm_thread, &thread_return);
- 	exit_reason = (u32)(u64)thread_return;
- 
--	TEST_ASSERT_EQ(exit_reason, KVM_EXIT_MEMORY_FAULT);
--	TEST_ASSERT_EQ(vcpu->run->memory_fault.flags, KVM_MEMORY_EXIT_FLAG_PRIVATE);
--	TEST_ASSERT_EQ(vcpu->run->memory_fault.gpa, EXITS_TEST_GPA);
--	TEST_ASSERT_EQ(vcpu->run->memory_fault.size, EXITS_TEST_SIZE);
-+	/*
-+	 * If attributes are tracked per-gmem, deleting the memslot that points
-+	 * at the gmem instance effectively makes the memory shared, and so the
-+	 * read should trigger emulated MMIO.
-+	 *
-+	 * If attributes are tracked per-VM, deleting the memslot shouldn't
-+	 * affect the private attribute, and so KVM should generate a memory
-+	 * fault exit (emulated MMIO on private GPAs is disallowed).
-+	 */
-+	if (kvm_has_gmem_attributes) {
-+		TEST_ASSERT_EQ(exit_reason, KVM_EXIT_MMIO);
-+		TEST_ASSERT_EQ(vcpu->run->mmio.phys_addr, EXITS_TEST_GPA);
-+		TEST_ASSERT_EQ(vcpu->run->mmio.len, sizeof(u64));
-+		TEST_ASSERT_EQ(vcpu->run->mmio.is_write, false);
-+	} else {
-+		TEST_ASSERT_EQ(exit_reason, KVM_EXIT_MEMORY_FAULT);
-+		TEST_ASSERT_EQ(vcpu->run->memory_fault.flags, KVM_MEMORY_EXIT_FLAG_PRIVATE);
-+		TEST_ASSERT_EQ(vcpu->run->memory_fault.gpa, EXITS_TEST_GPA);
-+		TEST_ASSERT_EQ(vcpu->run->memory_fault.size, EXITS_TEST_SIZE);
-+	}
- 
- 	kvm_vm_free(vm);
- }
-@@ -88,6 +105,13 @@ static void test_private_access_memslot_not_private(void)
- 	struct kvm_vcpu *vcpu;
- 	u32 exit_reason;
- 
-+	/*
-+	 * Accessing non-private memory as private with a software-protected VM
-+	 * isn't possible when doing in-place conversions.
-+	 */
-+	if (kvm_has_gmem_attributes)
-+		return;
-+
- 	vm = vm_create_shape_with_one_vcpu(protected_vm_shape, &vcpu,
- 					   guest_repeatedly_read);
- 
+This motivates me to convert the automata parser as well. The plan is:
 
--- 
-2.55.0.rc0.738.g0c8ab3ebcc-goog
+  - Introduce Lark and prepare the parsed states, transitions and
+    constraints
 
+  - Convert the parser piece by piece to the parsed results from Lark
+
+  - Delete the old code
+
+I struggled with converting __find_inv_conflicts(). So I decided to
+remove the dual clock representation in the HA monitors, which allows
+me to delete __find_inv_conflicts() entirely. This makes the code
+simpler overall.
+
+After the series, the generated HA monitors are mostly unchanged,
+except:
+
+  - Clock representation conversion is gone and
+    ha_check_invariant_[ns|jiffy]() takes a new argument
+
+  - The ordering in ha_verify_guards() is changed, but still
+    equivalent. This is because it is now sorted lexically.
+
+The generated LTL monitors are sadly significantly different, but proved to
+be equivalent with runtime testing. Further work will make LTL monitor
+generation more consistent.
+
+v4..v3: https://lore.kernel.org/linux-trace-kernel/cover.1780908661.git.nam=
+cao@linutronix.de/
+  - fix missing operator "!=3D" and unit "j" in the grammar
+  - fix generation error when time values have units
+
+v3..v2: https://lore.kernel.org/lkml/cover.1779956342.git.namcao@linutronix=
+.de/
+  - remove some redundant imports
+  - fix build failure due to passing wrong parameters to ha_invariant_passe=
+d_jiffy()
+
+v2..v1: https://lore.kernel.org/lkml/cover.1777962130.git.namcao@linutronix=
+.de/
+  - address human's reviews and sashiko's reviews
+  - handle lark's exception, yielding a much better error message
+
+Nam Cao (13):
+  verification/rvgen: Switch LTL parser to Lark
+  verification/rvgen: Introduce a parse tree for automata using Lark
+  verification/rvgen: Implement state and transition parser based on
+    Lark
+  verification/rvgen: Convert __fill_verify_invariants_func() to Lark
+  verification/rvgen: Convert __fill_setup_invariants_func() to Lark
+  verification/rvgen: Convert __fill_verify_guards_func() to Lark
+  rv: Simplify hybrid automata monitors's clock variables
+  verification/rvgen: Simplify the generation for clock variables
+  verification/rvgen: Delete __parse_constraint()
+  verification/rvgen: Switch __get_event_variables() to Lark
+  verification/rvgen: Switch __create_matrix() to Lark
+  verification/rvgen: Remove the old state variables
+  verification/rvgen: Remove dead code
+
+ include/rv/ha_monitor.h                    |  64 +-
+ kernel/trace/rv/monitors/nomiss/nomiss.c   |  18 +-
+ kernel/trace/rv/monitors/stall/stall.c     |   2 +-
+ tools/verification/rvgen/__main__.py       |   5 +-
+ tools/verification/rvgen/rvgen/automata.py | 643 +++++++++++++--------
+ tools/verification/rvgen/rvgen/dot2c.py    |  10 +-
+ tools/verification/rvgen/rvgen/dot2k.py    | 294 +++-------
+ tools/verification/rvgen/rvgen/ltl2ba.py   | 202 +++----
+ 8 files changed, 608 insertions(+), 630 deletions(-)
+
+--=20
+2.47.3
 
