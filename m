@@ -1,343 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235691C8603;
-	Sat, 20 Jun 2026 15:18:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6A024677B;
+	Sat, 20 Jun 2026 17:22:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781968704; cv=none; b=hhkbgFF42X1+1dMAb7Xjv+PCU1UamzywgBPe5CSEI4sdLNph7BKh5uY97gFgJVg+51zblfSorl7IJ5CHJyQ5ZLSgcOsn/PuNHEEywna2xFEDzpKbPDD+vp5cDPeLzlGqJ40+3A1cSKznI7QPTnwsDgqQfiIu1PvDXuYjRusu1bM=
+	t=1781976177; cv=none; b=p+xk1soQZ6AS5Jn35AiqP0GrKVUTYecchibe91O5zv4hmfFE8xVvQwIpGYmI49a+PUlETaxrXnqlg5S7jYIG70VjMmUzMOuNj2jcLaS/MOWDuMnu9mn2jSX2mGjOuNs1UfPcKzHvjjm4Kvt18+L/gILNaQSPtbPcPpvdzuNn6Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781968704; c=relaxed/simple;
-	bh=mLEzXNoUaolYDkSzISUgjiSyeMmx7spgUbpsbHy41eM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ieEZMzI4IB9prWvNZc3fzf5JCtoxiTnNK/uXcvOdEXHRBYe8O3vH+pDZRw4MCQsHSMg8vUD385HbzSArRis63QDuhsN4KdYyQzfcix8crjkQkh+OoFhyTEa6FOlbI7V59RJwn2EDy92+Ek31y0Sl67+erdPbCPUwfHKIHhcS5Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXI2plAt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781976177; c=relaxed/simple;
+	bh=8Aanmz0Dvd1GDoZkhHNkaix+Wtm6xY3dMVaOWfddS+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NRYxtv0Ydo6FU5wZGZ1txwP5R/VCc/MQnoZjHd534zAiGNpF88609a7O3WOM1DaeIauGLzCtsyKscupWamXYcZgsXpQt7bjBK1G08+DOJ+y25xJj1t24YEaRW6puORaCpSq6AuxSZnsmMtDX140MZvrBzWLSmWrnX8gewRGX9Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iuyi5ggm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXI2plAt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020E71F000E9;
-	Sat, 20 Jun 2026 15:18:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iuyi5ggm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2101F000E9;
+	Sat, 20 Jun 2026 17:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781968702;
-	bh=caJSDRsjJHydSioOXhqDSYWRboMVNZqx5hqLzOIv4xQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AXI2plAtTqcj2rxay40uW6GxzZfqLHOKKce0yrlERRhpm+Uzfs0oSDTvKxi0q1HxX
-	 j9VQtrCRrh0QlAojt8AFlHs9F6KXhcyGHkiVExI1DxU6GvupAPHpKhAQv5Dyq4Ikf9
-	 fWWchwlSdNmLSSzLDDooD/vHzRk4hUq2a2J1Qc2rZvnPQDC5aBt8XXnoIRKLF6kO+E
-	 ROfXaXRUSbGB/roWXmWfFs7l1d78ePY7hmPdgrT3JD/HuwJ4sK057ldvvONGlB78E6
-	 Aym/9hQIzATQa97bHBy3PxVxxANnc7u+NNiXO/a5aHyBlq+tOD7LqAUuHQT9KfbZYz
-	 IOyqMVnxtFcMg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+	s=k20260515; t=1781976175;
+	bh=h+feMnzBSlgDokl+hk6/kvzQur6aofhh+JGbxs86k9Y=;
+	h=From:To:Cc:Subject:Date;
+	b=Iuyi5ggmnFZk67+k61TzLwwpXd6dzbhiq7CxDCPQ/2O/N5G+wA3Wg4UZBzSOxSZBN
+	 PzPBG8YhoTSjWxscMc9YONVhbn7gxxe8I7WMfsBeEZ4rsjRt4nesvgr5dzRtvzDp92
+	 W+OdkOPjiKC5LJclbKZyFFGD3q4vBuKrsyLuZhi5JVpdePvujfSAb2jSS5xm4X+Q5f
+	 tJ+RdTQVDkdHqhlXKwlakoqfJGDqdhxKHzX3HfFjWAZ8ZhOV5DrgBCQ8wYBx8A43hK
+	 1KOfwv56Z2AGdk/t448u07ExluqcE3zq91CYXPsHvYxgjiOYnjcP/oZkHdwjT8KKZE
+	 vzW4fl5IDUCyQ==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@davidgow.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	damon@lists.linux.dev,
+	kunit-dev@googlegroups.com,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v6 8/8] tracing/probes: Add a new testcase for BTF typecasts
-Date: Sun, 21 Jun 2026 00:18:18 +0900
-Message-ID: <178196869887.560995.13036609465547218071.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178196862271.560995.5255615288323003663.stgit@devnote2>
-References: <178196862271.560995.5255615288323003663.stgit@devnote2>
-User-Agent: StGit/0.19
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RFC PATCH v1.1 00/13] mm/damon: optimize out nr_accesses_bp
+Date: Sat, 20 Jun 2026 10:22:30 -0700
+Message-ID: <20260620172244.90953-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+TLDR: Replace damon_region->nr_accesses_bp, which is easy to be wrong,
+with a simpler on-demand moving sum function, damon_nr_accesses_mvsum().
 
-With the introduction of container_of-style BTF typecasting and
-per-CPU variable access support in trace probes, we need a way to
-verify their functionality and prevent regressions.
+Background
+==========
 
-Add a new ftrace kselftest and update the trace event sample module
-to test and validate these features.
+DAMON's monitoring output (access pattern snapshot, or more technically
+speaking, damon_region->nr_accesses) is completed once per aggregation
+interval, which is 100 ms by default.  Users can arbitrarily increase
+the interval for demand.  Under the suggested intervals auto-tuning
+setup, it can span up to 200 seconds.  If the aggregation interval is
+too long, the snapshot users cannot use it in reasonable time.  To
+mitigate this, we introduced a new field of damon_region, namely
+nr_accesses_bp.  It contains a pseudo moving sum of nr_accesses in bp
+units and is updated for each sampling interval.
 
-Specifically, update the trace-events-sample module to set up a
-periodic timer whose callback accesses a per-CPU counter. Introduce
-a new sample trace event, foo_timer_fn, to trace this callback
-and log the current counter value.
+It turned out keeping it correctly updated every sampling interval is
+not that easy.  From online parameter update feature development and
+more experimental hacks, we found it is easy to be corrupted.  Once it
+is corrupted, DAMON's monitoring outputs become quite insane.  Hence we
+added a few validation checks.  It is easy  to be corrupted because it
+requires every update per sampling interval to be correct.
 
-Then, add a new test case, btf_probe_event.tc, which defines a
-dynamic probe on the timer callback. The probe uses BTF typecasting
-to recover the parent structure from the timer argument and
-this_cpu_read() to fetch the per-CPU counter. The test verifies
-the integrity of the implementation by ensuring the values
-recorded by the dynamic probe match those from the static tracepoint.
+Solution
+========
 
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v6:
-  - Update testcase according to changes.
- Changes in v5:
-  - Add more syntax test cases.
- Changes in v4:
-  - Fix uprobe $current test.
- Changes in v3:
-  - Add syntax test case.
-  - Update testcase to use this_cpu_read()
- Changes in v2:
-  - Use timer_shutdown_sync() instead of timer_delete_sync() for teardown.
----
- samples/trace_events/trace-events-sample.c         |   40 +++++++++++++++-
- samples/trace_events/trace-events-sample.h         |   34 ++++++++++++-
- .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 ++++++++++++++++++++
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   11 ++++
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   11 ++++
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 ++
- 6 files changed, 147 insertions(+), 5 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
+There is no real reason to keep it updated every sampling interval.  Due
+to the simple pseudo-moving sum mechanism and existing helper field
+(last_nr_accesses), we can also calculate the pseudo moving sum on
+demand in a much simpler way.
 
-diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
-index 0b7a6efdb247..ca5d98c360cb 100644
---- a/samples/trace_events/trace-events-sample.c
-+++ b/samples/trace_events/trace-events-sample.c
-@@ -94,6 +94,20 @@ static int simple_thread_fn(void *arg)
- static DEFINE_MUTEX(thread_mutex);
- static int simple_thread_cnt;
- 
-+static struct foo_timer_data *foo_timer_data;
-+
-+static void sample_timer_cb(struct timer_list *t)
-+{
-+	struct foo_timer_data *data = container_of(t, struct foo_timer_data, timer);
-+
-+	get_cpu();
-+	trace_foo_timer_fn(data);
-+	(*this_cpu_ptr(data->counter))++;
-+	put_cpu();
-+
-+	mod_timer(t, jiffies + HZ);
-+}
-+
- int foo_bar_reg(void)
- {
- 	mutex_lock(&thread_mutex);
-@@ -132,9 +146,27 @@ void foo_bar_unreg(void)
- 
- static int __init trace_event_init(void)
- {
-+	foo_timer_data = kzalloc_obj(*foo_timer_data, GFP_KERNEL);
-+	if (!foo_timer_data)
-+		return -ENOMEM;
-+
-+	foo_timer_data->name = "sample_timer_counter";
-+	foo_timer_data->counter = alloc_percpu(int);
-+	if (!foo_timer_data->counter) {
-+		kfree(foo_timer_data);
-+		return -ENOMEM;
-+	}
-+
-+	timer_setup(&foo_timer_data->timer, sample_timer_cb, 0);
-+	mod_timer(&foo_timer_data->timer, jiffies + HZ);
-+
- 	simple_tsk = kthread_run(simple_thread, NULL, "event-sample");
--	if (IS_ERR(simple_tsk))
--		return -1;
-+	if (IS_ERR(simple_tsk)) {
-+		timer_shutdown_sync(&foo_timer_data->timer);
-+		free_percpu(foo_timer_data->counter);
-+		kfree(foo_timer_data);
-+		return PTR_ERR(simple_tsk);
-+	}
- 
- 	return 0;
- }
-@@ -147,6 +179,10 @@ static void __exit trace_event_exit(void)
- 		kthread_stop(simple_tsk_fn);
- 	simple_tsk_fn = NULL;
- 	mutex_unlock(&thread_mutex);
-+
-+	timer_shutdown_sync(&foo_timer_data->timer);
-+	free_percpu(foo_timer_data->counter);
-+	kfree(foo_timer_data);
- }
- 
- module_init(trace_event_init);
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index 1a05fc153353..816848a456a2 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -247,12 +247,14 @@
-  */
- 
- /*
-- * It is OK to have helper functions in the file, but they need to be protected
-- * from being defined more than once. Remember, this file gets included more
-- * than once.
-+ * It is OK to have helper functions and data structures in the file, but they
-+ * need to be protected from being defined more than once. Remember, this file
-+ * gets included more than once.
-  */
- #ifndef __TRACE_EVENT_SAMPLE_HELPER_FUNCTIONS
- #define __TRACE_EVENT_SAMPLE_HELPER_FUNCTIONS
-+#include <linux/timer.h>
-+
- static inline int __length_of(const int *list)
- {
- 	int i;
-@@ -270,6 +272,13 @@ enum {
- 	TRACE_SAMPLE_BAR = 4,
- 	TRACE_SAMPLE_ZOO = 8,
- };
-+
-+struct foo_timer_data {
-+	const char		*name;
-+	struct timer_list	timer;
-+	int __percpu		*counter;
-+};
-+
- #endif
- 
- /*
-@@ -595,6 +604,25 @@ TRACE_EVENT(foo_rel_loc,
- 		  __get_rel_bitmask(bitmask),
- 		  __get_rel_cpumask(cpumask))
- );
-+
-+TRACE_EVENT(foo_timer_fn,
-+
-+	TP_PROTO(struct foo_timer_data *data),
-+
-+	TP_ARGS(data),
-+
-+	TP_STRUCT__entry(
-+		__string(	name,			data->name	)
-+		__field(	int,			count		)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name);
-+		__entry->count	= *this_cpu_ptr(data->counter);
-+	),
-+
-+	TP_printk("name=%s count=%d", __get_str(name), __entry->count)
-+);
- #endif
- 
- /***** NOTICE! The #if protection ends here. *****/
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
-new file mode 100644
-index 000000000000..96791e120b7d
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
-@@ -0,0 +1,51 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: BTF event with typecast and percpu access
-+# requires: dynamic_events "this_cpu_read(<fetcharg>)":README "[(structname[,field])]<argname>[->field[->field|.field...]]":README
-+
-+# Check if the sample module is loaded
-+if ! lsmod | grep -q trace_events_sample; then
-+  modprobe trace-events-sample || exit_unsupported
-+fi
-+
-+echo 0 > events/enable
-+echo > dynamic_events
-+
-+# The sample_timer_cb(struct timer_list *t) is called.
-+# We want to check (STRUCT,FIELD)VAR typecast and this_cpu_read() access.
-+# (foo_timer_data,timer)t converts t to struct foo_timer_data * using container_of.
-+# data->counter is a per-cpu pointer to int.
-+# this_cpu_read(data->counter) should give the value of the counter.
-+
-+echo 'f:mysample/myevent sample_timer_cb name=(foo_timer_data,timer)t->name:string count=this_cpu_read((foo_timer_data,timer)t->counter)' >> dynamic_events
-+
-+echo 1 > events/mysample/myevent/enable
-+echo 1 > events/sample-trace/foo_timer_fn/enable
-+
-+sleep 2
-+
-+echo 0 > events/mysample/myevent/enable
-+echo 0 > events/sample-trace/foo_timer_fn/enable
-+
-+# Compare the values.
-+MATCH=0
-+while read line; do
-+  if echo $line | grep -q "foo_timer_fn:"; then
-+    NAME=`echo $line | sed 's/.*name=\([^ ]*\) .*/\1/'`
-+    COUNT=`echo $line | sed 's/.*count=\([^ ]*\).*/\1/'`
-+    if grep -q "myevent:.*name=\"${NAME}\" count=$COUNT" trace; then
-+       MATCH=$((MATCH+1))
-+    fi
-+  fi
-+done < trace
-+
-+if [ $MATCH -eq 0 ]; then
-+  echo "No matching events found"
-+  exit_fail
-+fi
-+
-+# Clean up
-+echo 0 > events/mysample/myevent/enable
-+echo 0 > events/sample-trace/foo_timer_fn/enable
-+echo > dynamic_events
-+clear_trace
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-index fee479295e2f..e111d426a984 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-@@ -112,6 +112,17 @@ check_error 'f vfs_read%return $retval->^foo'	# NO_PTR_STRCT
- check_error 'f vfs_read file->^foo'		# NO_BTF_FIELD
- check_error 'f vfs_read file^-.foo'		# BAD_HYPHEN
- check_error 'f vfs_read ^file:string'		# BAD_TYPE4STR
-+if grep -qF "[(structname" README ; then
-+check_error 'f vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
-+check_error 'f vfs_read arg1=(a)((b)((c)(^(d)file->d)->c)->b)->a'	# TOO_MANY_NESTED
-+check_error 'f vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
-+check_error 'f vfs_read arg1=(task_struct,^foo_bar)file->pid'	# NO_BTF_FIELD
-+check_error 'f vfs_read arg1=(^task_struct1234)file->pid'	# NO_PTR_STRCT
-+check_error 'f vfs_read arg1=(task_struct,se^->group_node)file->comm'	# TYPECAST_BAD_ARROW
-+check_error 'f vfs_read arg1=(task_struct,^->pid)file->comm'	# NO_BTF_FIELD
-+check_error 'f vfs_read arg1=(task_struct,^.pid)file->comm'	# NO_BTF_FIELD
-+check_error 'f vfs_read arg1=(task_struct,^.)file->comm'	# NO_BTF_FIELD
-+fi
- fi
- 
- else
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index 8f1c58f0c239..626adeb2e840 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -115,6 +115,17 @@ check_error 'p vfs_read+20 ^$arg*'		# NOFENTRY_ARGS
- check_error 'p vfs_read ^hoge'			# NO_BTFARG
- check_error 'p kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
- check_error 'r kfree ^$retval'			# NO_RETVAL
-+if grep -qF "[(structname" README ; then
-+check_error 'p vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
-+check_error 'p vfs_read arg1=(a)((b)((c)(^(d)file->d)->c)->b)->a'	# TOO_MANY_NESTED
-+check_error 'p vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
-+check_error 'p vfs_read arg1=(task_struct,^foo_bar)file->pid'	# NO_BTF_FIELD
-+check_error 'p vfs_read arg1=(^task_struct1234)file->pid'		# NO_PTR_STRCT
-+check_error 'p vfs_read arg1=(task_struct,se^->group_node)file->comm'	# TYPECAST_BAD_ARROW
-+check_error 'p vfs_read arg1=(task_struct,^->pid)file->comm'	# NO_BTF_FIELD
-+check_error 'p vfs_read arg1=(task_struct,^.pid)file->comm'	# NO_BTF_FIELD
-+check_error 'p vfs_read arg1=(task_struct,^.)file->comm'	# NO_BTF_FIELD
-+fi
- else
- check_error 'p vfs_read ^$arg*'			# NOSUP_BTFARG
- fi
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-index c817158b99db..e12dc967ec76 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-@@ -28,4 +28,9 @@ if grep -q ".*symstr.*" README; then
- check_error 'p /bin/sh:10 $stack0:^symstr'	# BAD_TYPE
- fi
- 
-+# $current is not supported by uprobe
-+if grep -q "\$current.*" README; then
-+check_error 'p /bin/sh:10 ^$current:u8'	# BAD_VAR
-+fi
-+
- exit 0
+Implement a function for getting the pseudo moving sum on demand, and
+replace nr_accessses_bp uses with the new function.  Also remove no more
+needed tests for nr_accesses_bp and the per-sampling interval update
+functions.  Finally, remove the nr_accesses_bp.  The new function is
+quite simple.
 
+Discussion
+==========
+
+Depending on the use case, multiple nr_accesses readers could be
+executed in the same kdamond_fn() main loop iteration, which is executed
+once per sampling interval.  Such readers include DAMON region exporting
+tracepoints (damon_[region_]aggregated and damos_before_apply), DAMOS,
+and DAMON sysfs interface logic for update_schemes_tried_regions
+command.  In this case, the new function will be called multiple times
+and this could be overhead compared to the old logic, which simply reads
+the field without any additional work.  Nonetheless, the new function is
+quite simple.  And the new approach does nothing while there is no need
+to read.  The old approach had to execute its update function for each
+region for every sampling interval.  Hence the new approach is believed
+to be even more lightweight in common case, and the overhead is anyway
+negligible.
+
+One more advantage of this change is that one field from the
+damon_region struct is removed.  On setups that uses a high number of
+DAMON regions, this could be a potential memory space benefit.
+
+Patches Sequence
+================
+
+Patch 1 introduces the new function for getting the pseudo moving sum of
+nr_accesses on demands.  Patch 2 implements a unit test for the new
+function's internal logic.  Patches 3-5 replace uses of nr_accesses_bp
+in DAMOS, tracepoints and DAMON sysfs interface with the new function,
+respectively.  Patches 6-8 removes nr_accesses_bp validation functions
+in DAMON core, one by one.  Patches 9 and 10 further remove tests and
+test helper for nr_accesses_bp, respectively. Patches 11 removes the
+setups and updates or nr_accesses_bp field.  Patch 12 removes the
+function that was used for updating nr_accesses_bp field with its unit
+test, which is the single remaining caller of the function.  Finally,
+patch 13 removes damon_region->nr_accesses_bp field.
+
+Changes from RFC v1
+- RFC v1: https://lore.kernel.org/20260619193415.73833-1-sj@kernel.org
+- Avoid divide-by-zero from zero aggregation interval.
+- Call damon_nr_accesses_mvsum() for damos tracing only when it is enabled.
+- Remove obsolete mentioning of nr_accesses_bp in comments.
+
+SeongJae Park (13):
+  mm/damon: introduce damon_nr_accesses_mvsum()
+  mm/damon/tests/core-kunit: test damon_mvsum()
+  mm/damon/core: use damon_nr_accesses_mvsum() in __damos_valid_target()
+  mm/damon/core: use damon_nr_accesses_mvsum() for damos region tracing
+  mm/damon/sysfs-schemes: use damon_nr_accesses_mvsum() for damo regions
+  mm/damon/core: remove damon_warn_fix_nr_accesses_corruption()
+  mm/damon/core: remove damon_verify_reset_aggregated()
+  mm/damon/core: remove damon_verify_merge_regions_of()
+  mm/damon/tests/core-kunit: remove nr_accesses_bp setup and tests
+  selftests/damon/drgn_dump_damon_status: do not dump nr_accesses_bp
+  mm/damon/core: remove nr_accesses_bp setups and updates
+  mm/damon/core: remove damon_moving_sum() and its unit test
+  mm/damon: remove damon_region->nr_accesses_bp
+
+ include/linux/damon.h                         |  12 +-
+ include/trace/events/damon.h                  |   8 +-
+ mm/damon/core.c                               | 180 +++++++-----------
+ mm/damon/sysfs-schemes.c                      |   6 +-
+ mm/damon/tests/core-kunit.h                   |  37 ++--
+ .../selftests/damon/drgn_dump_damon_status.py |   1 -
+ 6 files changed, 96 insertions(+), 148 deletions(-)
+
+
+base-commit: a74bff7aaa4b3a64070425b4b367a459388a8233
+-- 
+2.47.3
