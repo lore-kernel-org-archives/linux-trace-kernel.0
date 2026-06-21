@@ -1,104 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776C633985;
-	Sun, 21 Jun 2026 13:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B782749DF
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Jun 2026 13:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782048475; cv=none; b=Wxqq9eIJhBv502gKabWWsWuCrVgJvZHtfMJzCX2cPvrUf+/80esQd5V1O4q67YZg9wqmU13chMn0lpNa4thZL/Dxgi34X6sNCOHXVI7Orp5rsXVDv9QYgDJdLPKe+1X4+UQNcl/qFNcj6wndZrfpOI397g6fIsbY0AcXpXwC7XQ=
+	t=1782049160; cv=none; b=kvBQgOyff1PYSdQJdR6F2/52+JmVXeEKqa2ThgRcKe1P8CjXQQ1ff8evRz2Re8oXg7yYriLO9hJCcfaDd9t3XmJlPebsvZFqWfKuJ6xtE/JvCFqRdpBlRaz1yFsayPvIUZxEYzMOC/ZfNbQTJivvl8V/ANOasbcjRgX3Upt5p7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782048475; c=relaxed/simple;
-	bh=xkJEW9pKFU4yPVjDyWcwx/y0yl+P+BcNaKhlnYBDm2c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=E5yZJrh0gtP7sltJKakg6w+FbwGou3azszE7sENrgvzk+U38jOLlaOMUmwxLd/2i5VDCZ+gjCgj15M7OXpFrgqjis8u7rhd8u657sL7A5c5mjiUJTzolJFNcFu3a/GslngRqhWIYRt9p6wHcg+65ctVwDpIRI9BYrwKOtqaHQbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9uayeuf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782049160; c=relaxed/simple;
+	bh=PcEURl2W5mmzOY49oIrDgC4sXuUKEmnXJC+EqHFqIx8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AXHrCq0mz4ZITMSrlXZt0c4+eRF04D1tAYnQcMALL3EugwlN+g5WpwLhfns6HFE9/WHnIfcgaACiGEGMXO3Wst+WRBEf+IcbY0kxSudCVDHdx1J8ckxiFTObBYE89EKTwW/Vbh7ZCjVAKtJcG1OMFA2grVroTSEX0vSgUe6ZM7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WjSFBVc+; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9uayeuf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47951F000E9;
-	Sun, 21 Jun 2026 13:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782048474;
-	bh=mcHi/liLSd8GB2joSaWN2acFn+aDoc7uhNOGOZOvcro=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Q9uayeuf/qZ0uLVTmbe08op55ejKZzIwGRJ8gq+OLoMrx2D/MktY/M323BAsNg3pw
-	 tEBzyDryAlE7dk8jfuekcsCwCzNmeiVTuBwY//eQwqwBLUy+nNL2/p1kYu2grvZREn
-	 MQBZ1LAxH2KfqMuKTlLNjV+t2q7nzn+pjBJmAFjTAhUtme8EjHYj52l+H/oeOc6i3T
-	 Vg70Pcjdipsz+vIWvlnFkEntHlFR8MBVwCuO6yxIa2tcn7ObIYoAmkX+1dusdrcKHL
-	 SeDzfiIoUasOVyzJwQgkPD54NPql+ocvECj4YDpSnekJuzm7zRZRDdc/j/a2nUZgKk
-	 lrfeNeLM7QMLw==
-Date: Sun, 21 Jun 2026 22:27:50 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Thomas Huth <thuth@redhat.com>
-Cc: Naveen N Rao <naveen@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Replace __ASSEMBLY__ with __ASSEMBLER__ in
- header file
-Message-Id: <20260621222750.9cdafc543ab0bca9ad16f730@kernel.org>
-In-Reply-To: <20260619161434.88270-1-thuth@redhat.com>
-References: <20260619161434.88270-1-thuth@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjSFBVc+"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7dfceeaf168so43955067b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Jun 2026 06:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782049158; x=1782653958; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YUsaj7vv5ecLJDUQ0RmLhOH3YlF5lnncSJLJl2FpGbU=;
+        b=WjSFBVc+x5PQ4eaJ0Sgq53AeKSuFVqLUXt1bdNxYWDgfM9Gd+cbZm9xNx6j0EHdJPE
+         HTww0TPxeWims2viP3NLoABiuxw4YJbyhjsaFbiCmT9CUzuiOMJBall4Ny5+a8n3JoxL
+         RAbWijGhJB9Y959HS7qnPSGQSXUMVj4DJPBFAQ54uygppFKbaRn/JaF2eVX9T+oKy55s
+         5UuvzBs3n9atksSgvIo+LnDIY6WzFlP9VIiHQn/cekRGZeQ/fCZya9JTR/7Go5adjR4K
+         RgwOPTOQfje4Iq1ypeW2heg3nQ4ZNXcxpe/8Sn+A/ACOrH9r4nxxn0LtXIlC4IPvBREK
+         JbsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782049158; x=1782653958;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YUsaj7vv5ecLJDUQ0RmLhOH3YlF5lnncSJLJl2FpGbU=;
+        b=LzJbmN4/mjULS1k0+tFCMp0gTirniVxU9cr8dBy7q6aFFfqFVSKQqjaRJxJG8I/EQ9
+         a7V+sfH+qcEQwutDB9bSw7K8kaQjdyrc6kpzJvjrrr75y9poSZIOALwOJmBsPOX9mOg6
+         L0Da2NPSF6w0JkAgHWgubhpbFn5/TSX1CimOWwYfqFWv/IP/ZpiMKeUeMSMr6xlochWp
+         KzuWqee+g5xCA1qKnBuLvBkwDSf5JmifFbhS424nrePgsZ0A84vWkrZ1ZBWtRPBnN/k0
+         k30U6WPgvrkiJev3sS+Fq/bRuJUmFjLjXWyW7526lShRPyxK6l5LMSE9PIzq2/tTTmjW
+         pbxQ==
+X-Forwarded-Encrypted: i=1; AHgh+RomWT86MvJNYiDmxrZDp3UWwe1nxjXSX9MWLPHS0affsFfO10zRULtEwh8tvfyskuuBujwpq6Q1zmulLm+nzWBwTTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0fWifKdPBR+lp+VIaevg3iaAEp8/PYBonvCaJtKiqL51qLxxx
+	2TuP8svb7ieMPKw/gmhX7rVvB6iPjOLOIQ9WwIlVRTpz3xZXf1YNoYwJ
+X-Gm-Gg: AfdE7cnGvOElnmlxgZVipyRkaWP4m0wJ15NXn1lwtI2Hf48IzYIlnm0u1rjwC8QiM75
+	rHKSZrhoFrAapO8zelGSftvgZJzhIxSDyXUkriq0E3KxSXd0k6GofELnythrrGLXATXtxteZ0VT
+	3HubdPtcofaj4f1I4zvB8tGx/3jLzkUFyYodAya0uj34/duEjnzW+A1ijPLUBs2JucMnXCKxfO+
+	1m3nTjBH3Kz70Gq+k6hJohAuS/ax8VnRbKKW00moHe3frtW1bV+dmyVoNceQfoDrynajtu/l1lg
+	fd7DiksvfCg8KRKOxGetSm4FBuep2PJYA22jO9BznjOuNI191/vSMQ45QnuNaeIKIMVcx5vwdMI
+	Z2vxuX8l0RjmqjZ0G9M8ytV2d8cyYy1ba25rbelIzKcms1ljcf0qPq2PgZaHxT1h1fe+40NUL07
+	A3w5H27KL2CHOuoLQhC3chx7tejrCy5rsKBHM=
+X-Received: by 2002:a05:690c:e347:b0:7db:ccda:a409 with SMTP id 00721157ae682-801759e5070mr88778787b3.9.1782049157948;
+        Sun, 21 Jun 2026 06:39:17 -0700 (PDT)
+Received: from localhost (user-24-214-85-55.knology.net. [24.214.85.55])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8025f8dde30sm20893067b3.27.2026.06.21.06.39.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2026 06:39:17 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+X-Google-Original-From: Yury Norov <ynorov@nvidia.com>
+Date: Sun, 21 Jun 2026 09:39:17 -0400
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Yury Norov <yury.norov@gmail.com>, linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH 2/2] tracing: Add CONFIG_TRACE_PRINTK_DEBUGGING to clean
+ up kernel.h
+Message-ID: <ajfphe4Z8BrfYoUX@yury>
+References: <20260621093430.264983361@kernel.org>
+ <20260621093811.168514984@kernel.org>
+ <20260621054721.7cde38f0@fedora>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260621054721.7cde38f0@fedora>
 
-On Fri, 19 Jun 2026 18:14:34 +0200
-Thomas Huth <thuth@redhat.com> wrote:
-
-> From: Thomas Huth <thuth@redhat.com>
+On Sun, Jun 21, 2026 at 05:47:21AM -0400, Steven Rostedt wrote:
+> On Sun, 21 Jun 2026 05:34:32 -0400
+> Steven Rostedt <rostedt@kernel.org> wrote:
 > 
-> While the GCC and Clang compilers already define __ASSEMBLER__
-> automatically when compiling assembly code, __ASSEMBLY__ is a
-> macro that only gets defined by the Makefiles in the kernel.
-> This can be very confusing when switching between userspace
-> and kernelspace coding, or when dealing with uapi headers that
-> rather should use __ASSEMBLER__ instead. So let's standardize now
-> on the __ASSEMBLER__ macro that is provided by the compilers.
+> > Instead of having trace_printk.h included in kernel.h, create a config
+> > TRACE_PRINTK_DEBUGGING that when set will update the CFLAGS in the
+> > Makefile to allow developers to add trace_printk() without the need to add
+> > the include for it. Having it included in the Makefile keeps it from being
+> > in the dependency chain and it will not waste extra CPU cycles for those
+> > building the kernel without using trace_printk.
 > 
+> Bah, I only tested with the config option enabled, and missed some
+> dependencies with it disabled.
 
-Oops, good catch!
+Yes you did.
+ 
+> For instance, rcu.h also uses ftrace_dump() so that too needs to go
+> into kernel.h.
 
-Let me pick it.
-Thanks!
+No, it shouldn't.
 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  Note: This patch has been split from an earlier bigger patch of
->  mine to ease reviewing.
->  
->  include/asm-generic/kprobes.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/asm-generic/kprobes.h b/include/asm-generic/kprobes.h
-> index 5290a2b2e15a0..16f16963d503d 100644
-> --- a/include/asm-generic/kprobes.h
-> +++ b/include/asm-generic/kprobes.h
-> @@ -2,7 +2,7 @@
->  #ifndef _ASM_GENERIC_KPROBES_H
->  #define _ASM_GENERIC_KPROBES_H
->  
-> -#if defined(__KERNEL__) && !defined(__ASSEMBLY__)
-> +#if defined(__KERNEL__) && !defined(__ASSEMBLER__)
->  #ifdef CONFIG_KPROBES
->  /*
->   * Blacklist ganerating macro. Specify functions which is not probed
-> @@ -21,6 +21,6 @@ static unsigned long __used					\
->  # define __kprobes
->  # define nokprobe_inline	inline
->  #endif
-> -#endif /* defined(__KERNEL__) && !defined(__ASSEMBLY__) */
-> +#endif /* defined(__KERNEL__) && !defined(__ASSEMBLER__) */
->  
->  #endif /* _ASM_GENERIC_KPROBES_H */
-> -- 
-> 2.54.0
-> 
+> I also need to add a few more includes to trace_printk.h.
 
+> OK, I need to run this through all my tests to find where else I missed
+> adding the includes. But the idea should hopefully satisfy everyone.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+If you include it under config in kernel.h, to make the kernel buildable,
+you need to include trace_printk.h explicitly where it's actually used.
+IOW, apply my patch v4-7.
+
+Then, developers who use trace_printk() on their development machine,
+will be really frustrated when their debugging code will break client
+build just because CONFIG_TRACE_PRINTK_DEBUGGING is disabled there.
+They will spend a day, at best, communicating with remote managers,
+and end up with adding #include <linux/trace_printk.h> in the files
+they touch. Is that your plan?
+
+If I was one of those developers, the solution would be simple for me:
+don't use trace_printk() at all.
+
+Thanks,
+Yury
