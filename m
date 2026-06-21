@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E0C2FF66A;
-	Sun, 21 Jun 2026 03:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE472BEFFE;
+	Sun, 21 Jun 2026 03:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782012447; cv=none; b=aRSomOjczNjK9a9EW9FJ88AC2SO4NsFDOqdX2B60JKURjW3QYGOsoM+9FTxYunBn4bsvbCtttS273WFxfoSrdFDgSjd6Xv0pH+PLoElcrGswJXKS5OGvYBYTkIT4HGy78VeA3Mu7/VgHDs4nn1K5rC8mxeT/6wBjlBY88dXQQbs=
+	t=1782012457; cv=none; b=O7eZxC1l42JrywEcqHrxnarAtVJmLftxhIeYJeG81V9JhflH5DY8862aeJTpHSbGiNocKQwyHvIuGwVPiaaVa5XHRHv7SHn7nVZIvSNdX3fPAhScnJxwkE4a+GlGdiNuem+Ch9e3Ny3iXd3AzbPDwOaRMc+DEufAYxLTJCpKB1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782012447; c=relaxed/simple;
-	bh=xU6zuM/HbYMaltYcjwukisTr0VSMBwt6jbjQ3T3zIHY=;
+	s=arc-20240116; t=1782012457; c=relaxed/simple;
+	bh=grhVsv92HwtzJ1z25VXSER+hAQ3AtmZLfrW04YbNswU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZXWW1vaNTqKlscdVtnQUfPuBBdXdfZnaY3OciST3po7nikYEjlb/1vs/uPxYdzIKJEy8SHrWYSXoW3psQseoFzgrDx06SM8qXQdk9FLBOW6gC64JLUNWJkRlvKWnhfIyLBGjee3ZqjdayHPPSsb8HBcdzKV5gBeFCvlG29/NRug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvkZPznC; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=MlWpD/BQffJ1I9DOiF2jzbuUXq/Z8Ps1Fnr99qZJijCsl8DnU3UuEcGkNCzKniXNMRE38QARElvypkKNAqEoEHGe5LYthrHcVcdqt2Yw/3raMlBftXhSEwYBYkBNsstBkTcG+E3o1HLx8/Tt1jXAjdHkVzRfcPLLRW8trZ8T410=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWNzkx4j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvkZPznC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DA31F000E9;
-	Sun, 21 Jun 2026 03:27:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWNzkx4j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E501F000E9;
+	Sun, 21 Jun 2026 03:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782012446;
-	bh=l19KSv81H8CLDh/l6df6UqO1an9RpFg82puag8/Glqc=;
+	s=k20260515; t=1782012455;
+	bh=Iu5b6HLd6iSKHACOwtjHyyGxZlrBlnnKzLtAPwJTtiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jvkZPznCSKgh6rDosJpdx6aHxGvmo18hE2VXIBtvdt+SNXW9tINo34jliT0W++U9k
-	 aBzhPsoIqlThAp3hBuML1cmpaI65Ce8IhQNhWINNELLiENsTU4sXA0ZsK8KqEs7Czi
-	 2tCxw9pVhymeo/07jCI6K+cq6iElpAtDb/DyeafSwwr5cWQ8l2RVanIdLErwGnYIqD
-	 uh23EKf6uHzVYL3Fse+9DJdrvH+WDB4S+YIUyJOXKa4uUMvtAPbSvWAuH67g46clZb
-	 m/S6wgL2cXuIbCdWuZx4rGCBmkyF9wjCUc+feP1PIuNrVWepwRjjDQMpTf1BUyRu0Z
-	 Q892t7UTG79hA==
+	b=UWNzkx4jVNETp5pnw/IfIWqtw2qE4IX9LNElxhHFKWCGdNqAmSlCD0U7OS4xBo8pa
+	 CzQNUl1/EXtCVmkLZvi5FP/VDR8h1UOgC89Wku/59D2nYrf4GiUfSHPWFi7Z8Y6YFU
+	 ItBE2SV7pDs6BhZrQQz1ac9d93AMk7bLqs0AoE4AWpDVKs91v2u4ZgH7OTPeWplZWv
+	 7waD+gNAOQKgp+qNqrVqWPGpeTp6Whtx0ip/tHpEjR0ZClilvysh/iz4NgwAEcDNHs
+	 u8rPEll4maypwT++v317f3OlzZ+Yr1u5fTC93o+TjoqeDFWR5UjuezaMZY87/2lFJB
+	 EUUfFLOaaEfDQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -36,9 +36,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [RESEND PATCH v6 6/8] tracing/probes: Add $current variable support
-Date: Sun, 21 Jun 2026 12:27:22 +0900
-Message-ID: <178201244244.570818.11928719829378403826.stgit@devnote2>
+Subject: [RESEND PATCH v6 7/8] tracing/probes: Add this_cpu_read() and this_cpu_ptr() dereference method to fetcharg
+Date: Sun, 21 Jun 2026 12:27:31 +0900
+Message-ID: <178201245161.570818.4503955079962912109.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178201238795.570818.15573963115625446598.stgit@devnote2>
 References: <178201238795.570818.15573963115625446598.stgit@devnote2>
@@ -54,174 +54,339 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Since we can use the BTF to cast value to a structure pointer type,
-it is useful to introduce "$current" special variable support to
-fetcharg.
+When tracing the kernel local variables, sometimes we need to get the
+CPU local variables. To access it, current simple dereference is not
+enough.
 
-User can define a fetcharg to access current task_struct properties
-using BTF info. e.g.
+Thus, introduce a special this_cpu_read() dereference to access per-cpu
+variable for the current CPU (accessing other CPU variable may race with
+updates on other CPUs). Also this_cpu_ptr() is for accessing per-cpu
+pointer.
 
-  $current->cpus_ptr
+Those are working as same as the kernel percpu macro.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
  Changes in v6:
   - Rebased on dump fetcharg patch.
-  - Remove function name/eprobe requirement for $current.
+  - Fix to fetch static percpu variable with @SYM correctly.
  Changes in v5:
-  - Use s32 for bof_find_btf_id().
- Changes in v4:
-  - Add $current in README when CONFIG_HAVE_FUNCTION_ARG_ACCESS_API=y case.
-  - Fix to prohibit using $current in eprobes and address based kprobes.
+  - Simplify this_cpu_read() into +0(this_cpu_ptr()).
  Changes in v3:
-  - Remove $current support from eprobes (because eprobes is only for event)
-  - Prohibit uprobes to use $current.
+  - Remove NULL check for percpu var because it is just an offset, could be 0.
+  - Simplify process_fetch_insn_bottom() code.
+  - If the last operation is this_cpu_read(), read only memory of the specific
+    size (of type).
  Changes in v2:
-   - Support to parse $current in parse_btf_arg().
-   - If no typecast on $current, it automatically casted to task_struct.
-   - Check error case if $current follows something except for "-".
+  - Drop +CPU/+PCPU and introduce this_cpu_read() and this_cpu_ptr().
+  - Support these method with BTF typecast.
+  - Just check the base address is NOT NULL instead of is_kernel_percpu_address().
 ---
- Documentation/trace/fprobetrace.rst |    1 +
- Documentation/trace/kprobetrace.rst |    1 +
- kernel/trace/trace.c                |    4 ++--
- kernel/trace/trace_probe.c          |   40 ++++++++++++++++++++++++++++++++++-
- kernel/trace/trace_probe.h          |    1 +
- kernel/trace/trace_probe_tmpl.h     |    3 +++
- 6 files changed, 47 insertions(+), 3 deletions(-)
+ Documentation/trace/eprobetrace.rst |    2 
+ Documentation/trace/fprobetrace.rst |    2 
+ Documentation/trace/kprobetrace.rst |    2 
+ kernel/trace/trace.c                |    1 
+ kernel/trace/trace_probe.c          |  143 ++++++++++++++++++++++++++---------
+ kernel/trace/trace_probe.h          |    1 
+ kernel/trace/trace_probe_tmpl.h     |   22 ++++-
+ 7 files changed, 129 insertions(+), 44 deletions(-)
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index 290a9e6f7491..3392cab016b3 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -50,6 +50,7 @@ Synopsis of fprobe-events
-   $argN         : Fetch the Nth function argument. (N >= 1) (\*2)
-   $retval       : Fetch return value.(\*3)
-   $comm         : Fetch current task comm.
-+  $current      : Fetch the address of the current task_struct.
-   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*4)(\*5)
-   \IMM          : Store an immediate value to the argument.
-   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index a62707e6a9f2..81e4fe38791d 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -53,6 +53,7 @@ Synopsis of kprobe_events
-   $argN		: Fetch the Nth function argument. (N >= 1) (\*1)
-   $retval	: Fetch return value.(\*2)
+diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
+index 680e0af43d5d..279396951b34 100644
+--- a/Documentation/trace/eprobetrace.rst
++++ b/Documentation/trace/eprobetrace.rst
+@@ -39,6 +39,8 @@ Synopsis of eprobe_events
+   @SYM[+|-offs]	: Fetch memory at SYM +|- offs (SYM should be a data symbol)
    $comm		: Fetch current task comm.
-+  $current      : Fetch the address of the current task_struct.
    +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
++  this_cpu_read(FETCHARG) : Read the value of the per-CPU variable FETCHARG on the current CPU.
++  this_cpu_ptr(FETCHARG) : Get the address of the per-CPU variable FETCHARG on the current CPU.
    \IMM		: Store an immediate value to the argument.
    NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
+index 3392cab016b3..3439bc9bd351 100644
+--- a/Documentation/trace/fprobetrace.rst
++++ b/Documentation/trace/fprobetrace.rst
+@@ -52,6 +52,8 @@ Synopsis of fprobe-events
+   $comm         : Fetch current task comm.
+   $current      : Fetch the address of the current task_struct.
+   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*4)(\*5)
++  this_cpu_read(FETCHARG) : Read the value of the per-CPU variable FETCHARG on the current CPU.
++  this_cpu_ptr(FETCHARG) : Get the address of the per-CPU variable FETCHARG on the current CPU.
+   \IMM          : Store an immediate value to the argument.
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+index 81e4fe38791d..9ae330eb0a52 100644
+--- a/Documentation/trace/kprobetrace.rst
++++ b/Documentation/trace/kprobetrace.rst
+@@ -55,6 +55,8 @@ Synopsis of kprobe_events
+   $comm		: Fetch current task comm.
+   $current      : Fetch the address of the current task_struct.
+   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
++  this_cpu_read(FETCHARG) : Read the value of the per-CPU variable FETCHARG on the current CPU.
++  this_cpu_ptr(FETCHARG) : Get the address of the per-CPU variable FETCHARG on the current CPU.
+   \IMM		: Store an immediate value to the argument.
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 0e36af853199..7a5676524f1a 100644
+index 7a5676524f1a..d4121acc2938 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4323,13 +4323,13 @@ static const char readme_msg[] =
- 	"\t     args: <name>=fetcharg[:type]\n"
- 	"\t fetcharg: (%<register>|$<efield>), @<address>, @<symbol>[+|-<offset>],\n"
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
--	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
-+	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>, $current\n"
- #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
- 	"\t           [(structname[,field])]<argname>[->field[->field|.field...]],\n"
- 	"\t           [(structname[,field])](fetcharg)->field[->field|.field...],\n"
- #endif
- #else
--	"\t           $stack<index>, $stack, $retval, $comm,\n"
-+	"\t           $stack<index>, $stack, $retval, $comm, $current\n"
+@@ -4332,6 +4332,7 @@ static const char readme_msg[] =
+ 	"\t           $stack<index>, $stack, $retval, $comm, $current\n"
  #endif
  	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
++	"\t           this_cpu_read(<fetcharg>), this_cpu_ptr(<fetcharg>)\n"
  	"\t     kernel return probes support: $retval, $arg<N>, $comm\n"
+ 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
+ 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 8c21c378fac7..1ddd0a804e39 100644
+index 1ddd0a804e39..a64edb0c6baa 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
-@@ -700,7 +700,9 @@ static int parse_btf_arg(char *varname,
- 	int i, is_ptr, ret;
- 	u32 tid;
+@@ -349,6 +349,100 @@ static int parse_trace_event(char *arg, struct fetch_insn *code,
+ 	return -EINVAL;
+ }
  
--	if (!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT))
-+	/* Note: field is not separated at this point, so check prefix. */
-+	if (!str_has_prefix(varname, "$current") &&
-+	    !ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT))
- 		return -EINVAL;
- 
- 	is_ptr = split_next_field(varname, &field, ctx);
-@@ -713,6 +715,24 @@ static int parse_btf_arg(char *varname,
- 		return -EOPNOTSUPP;
- 	}
- 
-+	if (!strcmp(varname, "$current")) {
-+		code->op = FETCH_OP_CURRENT;
-+		/* If no typecast is specified for $current, use task_struct by default */
-+		if (!ctx->struct_btf) {
-+			s32 ttid = bpf_find_btf_id("task_struct", BTF_KIND_STRUCT,
-+						   &ctx->struct_btf);
++/* this_cpu_* parser */
++#define THIS_CPU_PTR_PREFIX "this_cpu_ptr("
++#define THIS_CPU_READ_PREFIX "this_cpu_read("
++#define THIS_CPU_PTR_LEN (sizeof(THIS_CPU_PTR_PREFIX) - 1)
++#define THIS_CPU_READ_LEN (sizeof(THIS_CPU_READ_PREFIX) - 1)
 +
-+			if (ttid < 0) {
-+				trace_probe_log_err(ctx->offset, NO_BTF_ENTRY);
-+				return -ENOENT;
-+			}
-+			/* btf_type_skip_modifier() requires u32 for type id. */
-+			tid = ttid;
-+			ctx->last_struct = btf_type_skip_modifiers(ctx->struct_btf, tid, &tid);
-+		}
-+		goto found;
++static int
++parse_probe_arg(char *arg, const struct fetch_type *type,
++		struct fetch_insn **pcode, struct fetch_insn *end,
++		struct traceprobe_parse_context *ctx);
++
++/* handle dereference nested call */
++static inline int handle_dereference(char *arg, struct fetch_insn **pcode,
++	struct fetch_insn *end, struct traceprobe_parse_context *ctx,
++	int deref, long offset)
++{
++	const struct fetch_type *type = find_fetch_type(NULL, ctx->flags);
++	struct fetch_insn *code = *pcode;
++	int cur_offs = ctx->offset;
++	char *tmp;
++	int ret;
++
++	tmp = strrchr(arg, ')');
++	if (!tmp) {
++		trace_probe_log_err(ctx->offset + strlen(arg),
++					DEREF_OPEN_BRACE);
++		return -EINVAL;
 +	}
 +
- 	if (ctx->flags & TPARG_FL_RETURN && !strcmp(varname, "$retval")) {
- 		code->op = FETCH_OP_RETVAL;
- 		/* Check whether the function return type is not void, even with typecast. */
-@@ -1273,6 +1293,24 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
- 		return 0;
- 	}
- 
-+	/* $current returns the address of the current task_struct. */
-+	if (str_has_prefix(arg, "current")) {
-+		/* $current is only supported by kernel probe. */
-+		if (!(ctx->flags & TPARG_FL_KERNEL)) {
-+			err = TP_ERR_BAD_VAR;
-+			goto inval;
-+		}
-+		arg += strlen("current");
-+		if (*arg == '-' && IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS))
-+			return parse_btf_arg(orig_arg, pcode, end, ctx);
-+
-+		if (*arg != '\0')
-+			goto inval;
-+
-+		code->op = FETCH_OP_CURRENT;
-+		return 0;
++	*tmp = '\0';
++	ret = parse_probe_arg(arg, type, &code, end, ctx);
++	if (ret)
++		return ret;
++	ctx->offset = cur_offs;
++	if (code->op == FETCH_OP_COMM || code->op == FETCH_OP_DATA) {
++		trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
++		return -EINVAL;
 +	}
 +
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 	len = str_has_prefix(arg, "arg");
- 	if (len) {
++	/*
++	 * this_cpu_ptr(@SYM) does not use SYM value, but use SYM address.
++	 * So we overwrite the last FETCH_OP_DEREF with FETCH_OP_CPU_PTR.
++	 */
++	if (!(deref == FETCH_OP_CPU_PTR && *arg == '@')) {
++		code++;
++		if (code == end) {
++			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
++			return -EINVAL;
++		}
++		*pcode = code;
++	}
++
++	code->op = deref;
++	code->offset = offset;
++	/* Reset the last type if used */
++	ctx->last_type = NULL;
++	return 0;
++}
++
++static int parse_this_cpu(char *arg, struct fetch_insn **pcode,
++			  struct fetch_insn *end,
++			  struct traceprobe_parse_context *ctx)
++{
++	struct fetch_insn *code;
++	bool is_ptr = false;
++	int ret;
++
++	if (str_has_prefix(arg, THIS_CPU_PTR_PREFIX)) {
++		arg += THIS_CPU_PTR_LEN;
++		ctx->offset += THIS_CPU_PTR_LEN;
++		is_ptr = true;
++	} else if (str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
++		arg += THIS_CPU_READ_LEN;
++		ctx->offset += THIS_CPU_READ_LEN;
++	} else
++		return -EINVAL;
++
++	ret = handle_dereference(arg, pcode, end, ctx, FETCH_OP_CPU_PTR, 0);
++	if (ret || is_ptr)
++		return ret;
++
++	/* this_cpu_read(VAR) -> +0(this_cpu_ptr(VAR)) */
++	code = *pcode;
++	code++;
++	if (code == end) {
++		trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
++		return -EINVAL;
++	}
++	code->op = FETCH_OP_DEREF;
++	code->offset = 0;
++	*pcode = code;
++	return 0;
++}
++
+ #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
+ 
+ static u32 btf_type_int(const struct btf_type *t)
+@@ -925,11 +1019,6 @@ static char *find_matched_close_paren(char *s)
+ 	return NULL;
+ }
+ 
+-static int
+-parse_probe_arg(char *arg, const struct fetch_type *type,
+-		struct fetch_insn **pcode, struct fetch_insn *end,
+-		struct traceprobe_parse_context *ctx);
+-
+ static int handle_typecast(char *arg, struct fetch_insn **pcode,
+ 			   struct fetch_insn *end,
+ 			   struct traceprobe_parse_context *ctx)
+@@ -982,7 +1071,9 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
+ 		/* Skip '(' */
+ 		ctx->offset += 1;
+ 		tmp++;
+-	} else if (*tmp == '+' || *tmp == '-') {
++	} else if (*tmp == '+' || *tmp == '-' ||
++		   str_has_prefix(tmp, THIS_CPU_PTR_PREFIX) ||
++		   str_has_prefix(tmp, THIS_CPU_READ_PREFIX)) {
+ 		/* Dereference can have another field access inside it. */
+ 		char *open = strchr(tmp + 1, '(');
+ 
+@@ -1486,36 +1577,9 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 		}
+ 		ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
+ 		arg = tmp + 1;
+-		tmp = strrchr(arg, ')');
+-		if (!tmp) {
+-			trace_probe_log_err(ctx->offset + strlen(arg),
+-					    DEREF_OPEN_BRACE);
+-			return -EINVAL;
+-		} else {
+-			const struct fetch_type *t2 = find_fetch_type(NULL, ctx->flags);
+-			int cur_offs = ctx->offset;
+-
+-			*tmp = '\0';
+-			ret = parse_probe_arg(arg, t2, &code, end, ctx);
+-			if (ret)
+-				break;
+-			ctx->offset = cur_offs;
+-			if (code->op == FETCH_OP_COMM ||
+-			    code->op == FETCH_OP_DATA) {
+-				trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
+-				return -EINVAL;
+-			}
+-			if (++code == end) {
+-				trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
+-				return -EINVAL;
+-			}
+-			*pcode = code;
+-
+-			code->op = deref;
+-			code->offset = offset;
+-			/* Reset the last type if used */
+-			ctx->last_type = NULL;
+-		}
++		ret = handle_dereference(arg, pcode, end, ctx, deref, offset);
++		if (ret < 0)
++			return ret;
+ 		break;
+ 	case '\\':	/* Immediate value */
+ 		if (arg[1] == '"') {	/* Immediate string */
+@@ -1536,15 +1600,18 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 		ret = handle_typecast(arg, pcode, end, ctx);
+ 		break;
+ 	default:
+-		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
++		if (str_has_prefix(arg, THIS_CPU_PTR_PREFIX) ||
++		    str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
++			ret = parse_this_cpu(arg, pcode, end, ctx);
++		} else if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
+ 			if (!tparg_is_function_entry(ctx->flags) &&
+ 			    !tparg_is_function_return(ctx->flags)) {
+ 				trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
+ 				return -EINVAL;
+ 			}
+ 			ret = parse_btf_arg(arg, pcode, end, ctx);
+-			break;
+ 		}
++		break;
+ 	}
+ 	if (!ret && code->op == FETCH_OP_NOP) {
+ 		/* Parsed, but do not find fetch method */
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index bc3ac148a655..488d6790b5ef 100644
+index 488d6790b5ef..e79e019b922d 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -92,6 +92,7 @@ typedef int (*print_type_func_t)(struct trace_seq *, void *, void *);
- 	FETCH_OP(RETVAL, none)		/* Return value */		\
- 	FETCH_OP(IMM, imm)		/* Immediate: .immediate */	\
- 	FETCH_OP(COMM, none)		/* Current comm */		\
-+	FETCH_OP(CURRENT, none)		/* Current task_struct address */\
- 	FETCH_OP(ARG, param)		/* Argument: .param = index */	\
- 	FETCH_OP(FOFFS, imm)		/* File offset: .immediate */	\
- 	FETCH_OP(DATA, ptr)		/* Allocated data: .data */	\
+@@ -101,6 +101,7 @@ typedef int (*print_type_func_t)(struct trace_seq *, void *, void *);
+ 	/* Stage 2 (dereference) ops */					\
+ 	FETCH_OP(DEREF, offset)		/* Dereference: .offset */	\
+ 	FETCH_OP(UDEREF, offset)	/* User-space dereference: .offset */\
++	FETCH_OP(CPU_PTR, none)		/* Per-CPU pointer: .offset */	\
+ 	/* Stage 3 (store) ops */					\
+ 	FETCH_OP(ST_RAW, store)		/* Raw value: .size */		\
+ 	FETCH_OP(ST_MEM, store)		/* Memory: .offset, .size */	\
 diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index f39b37fcdb3b..f630930288d2 100644
+index f630930288d2..9265b03cf19d 100644
 --- a/kernel/trace/trace_probe_tmpl.h
 +++ b/kernel/trace/trace_probe_tmpl.h
-@@ -112,6 +112,9 @@ process_common_fetch_insn(struct fetch_insn *code, unsigned long *val)
- 	case FETCH_OP_DATA:
- 		*val = (unsigned long)code->data;
- 		break;
-+	case FETCH_OP_CURRENT:
-+		*val = (unsigned long)current;
-+		break;
- 	default:
- 		return -EILSEQ;
- 	}
+@@ -129,25 +129,35 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 	struct fetch_insn *s3 = NULL;
+ 	int total = 0, ret = 0, i = 0;
+ 	u32 loc = 0;
+-	unsigned long lval = val;
++	unsigned long lval, llval = val;
+ 
+ stage2:
+ 	/* 2nd stage: dereference memory if needed */
+ 	do {
+-		if (code->op == FETCH_OP_DEREF) {
+-			lval = val;
++		lval = val;
++		switch (code->op) {
++		case FETCH_OP_DEREF:
+ 			ret = probe_mem_read(&val, (void *)val + code->offset,
+ 					     sizeof(val));
+-		} else if (code->op == FETCH_OP_UDEREF) {
+-			lval = val;
++			break;
++		case FETCH_OP_UDEREF:
+ 			ret = probe_mem_read_user(&val,
+ 				 (void *)val + code->offset, sizeof(val));
+-		} else
+ 			break;
++		case FETCH_OP_CPU_PTR:
++			val = (unsigned long)this_cpu_ptr((void __percpu *)val);
++			ret = 0;
++			break;
++		default:
++			lval = llval;
++			goto out;
++		}
+ 		if (ret)
+ 			return ret;
++		llval = lval;
+ 		code++;
+ 	} while (1);
++out:
+ 
+ 	s3 = code;
+ stage3:
 
