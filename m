@@ -1,125 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84952DB78C;
-	Sun, 21 Jun 2026 15:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBC42F361B
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Jun 2026 17:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782057455; cv=none; b=PLjhWGrAhjXVQfTbMU84GSc2BpGSVJAUNOvFHd23kgBYj/5i8DBwjKuK5SquMMgnpf0SlMPHStiRSCatPpGj3H6Dvw9wtsCsbMdAkBqBN2BpmbFc7qURrv4EqrP4FLWSPTqj15p0dwctwS8AbmIDedYjpiqnDwzSoJpZlf9EXuc=
+	t=1782062203; cv=none; b=HV2ATCgURj34+9lnmKlM+zdFeo37b4HhBART+uTDRhqtQQpdl92m0kyrx2FaJWpGZDJ0ddtwvrM+qvVSege01ArGs4A0WZ2L2Pt1bEhGoiFihOj7fDIIwvsuE2OFreNLhVe85IEGCXEbHcRrobi05UsAoQLGGMaIP5lRHXDWJqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782057455; c=relaxed/simple;
-	bh=xLv2ZsPItWNa1Bd/DUb2pkZzsyLZff662HVFSw4ZoQc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hw5sCFlUTj7Z+bKz/mPntLFqUgUgIhNGQrH/0+BIn4edYPkhg2e6akFDRwD07gttv3wL5aePwC34nAlkSDpz06lKfHliQsoQIMr3vvHqnO4CXI0DPBC3LeClyWqYNHX973iUJUnnH9+AvgGnHw4v4BibOV6fgj9h/ZLYy4KIWwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMBje4RB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782062203; c=relaxed/simple;
+	bh=PYIMUPD3AKX4CJIC+IT5NFVlBmhjj2gGWN3cHcV/ny8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=qJpUD9sdwELJOG6yNUQkSVth8mJSZE7sgOOFsWob6M4adqZzX7xBWYSy7JUPju4W9nWo+m/CWGwCg2YSZciIvKfnkE7fn6V7V/aGGEwHcQ13ms1edlzmojuLQDNDyPI75yTDENO36Id5vxJdFH0jRxl36oNOPyr7B3JtdHxfV3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xs4all.nl; spf=pass smtp.mailfrom=xs4all.nl; dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b=hIlEOycc; arc=none smtp.client-ip=195.121.94.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xs4all.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xs4all.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMBje4RB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B17111F00A3E;
-	Sun, 21 Jun 2026 15:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782057451;
-	bh=nXiLtH+Zn2MRUp1wccyuIqHTYFDO5c0rsaJ6q0wXLp8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=BMBje4RB33lYb1mviROX82s8w7c/xoZi8s5NLWLxs5VcE1Iz8boP7n1ygFuS01NVB
-	 XpxBSaPqDpWCiP1bQx2165TNpJzIQtHA7mpjt5X35LytEUJFGhp76aCmFS8miDg+73
-	 ACY5jnpcE/IwmFzhja9q8ilO4EudnELunau5Nk2PCDE9Er4PR203UqoOEh0vV19UNP
-	 Tam9EJDpWM0J0Qeo/9+LF+F+DTO+A62nk5dyPCjJJ0EKPz9w9XnfAnLBVymoS/5hG7
-	 4aUEIIoILsbP+i8yAE8YbPLNasg1oVTEsp6zOoeKbA2f0+Z3tmUJpGURHY6lc3B2JS
-	 IViLjaKo6s6yg==
-From: SeongJae Park <sj@kernel.org>
-To: 
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH v1.2 05/17] mm/damon/core: use damon_nr_accesses_mvsum() for damos region tracing
-Date: Sun, 21 Jun 2026 08:57:01 -0700
-Message-ID: <20260621155715.87932-6-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260621155715.87932-1-sj@kernel.org>
-References: <20260621155715.87932-1-sj@kernel.org>
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="hIlEOycc"
+X-KPN-MessageId: f1a9766b-6d94-11f1-9e8e-005056999439
+Received: from mta.kpnmail.nl (unknown [10.31.161.191])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id f1a9766b-6d94-11f1-9e8e-005056999439;
+	Sun, 21 Jun 2026 19:16:30 +0200 (CEST)
+Received: from mtaoutbound.kpnmail.nl (unknown [10.128.135.189])
+	by mta.kpnmail.nl (Halon) with ESMTP
+	id f1a82abf-6d94-11f1-91a1-00505699891e;
+	Sun, 21 Jun 2026 19:16:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xs4all.nl; s=xs4all01;
+	h=content-type:mime-version:subject:message-id:to:from:date;
+	bh=AgwUlvkvdVPsfsg7AKOcX+bnU/0pIR65cfU+vu3313k=;
+	b=hIlEOyccXgbbsnumur7UImx7rxa2RiVjw14vUxr44wSwaKgm/WhUsf8/hAHXxadq1ZgW0uR1Gfup6
+	 zcbMf26c9Lqdac4Gzkul9HfVsIdwfJ2nG6alFjSb+ZUbeonj+dD+GhMS056+2iaXpC0asLdmfoPje6
+	 uyTli+D12wBaqjD1fNXbCnV98mSJTkvqzuNOhX2Jm4KfIU/I7i9oShAw1XDVmchRbqAUcbcKqfJ38c
+	 5InEDqu6Z6rUM8iLmIG6ezqVYAsmZOzcjzAv2CwQStD9U7CIrO1jIFnzpj+CqT3Ozrc/ZLwyh6F0q8
+	 MT0FDYpGOejmA2C5IzNW1iH6Hekr6Mg==
+X-KPN-MID: 33|zV4dEls6C4crfDir2+UZIpGFiLqTMyiyl6bIU5JQdDoQtxSg5hq593U0k2PA2Mb
+ ZSRTRTzura5jEIsrBS68NK/WjQeSu8Y7BeJcvn+6iOdg=
+X-CMASSUN: 33|eS54b1dhrtIOizHOqjVgpqCmrVIMyIa7gQmI+mqdc9DL2gA4+DX2LD2WeJQkrde
+ ZkYMZVQb6QjfOLkDtgeFDLg==
+X-KPN-VerifiedSender: Yes
+Received: from cpxoxapps-mh06 (cpxoxapps-mh06.personalcloud.so.kpn.org [10.128.135.212])
+	by mtaoutbound.kpnmail.nl (Halon) with ESMTPSA
+	id f19a84bb-6d94-11f1-8edb-00505699eff2;
+	Sun, 21 Jun 2026 19:16:30 +0200 (CEST)
+Date: Sun, 21 Jun 2026 19:16:30 +0200 (CEST)
+From: Jori Koolstra <jkoolstra@xs4all.nl>
+To: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>, rostedt@goodmis.org
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev, shuah@kernel.org,
+	skhan@linuxfoundation.org, me@brighamcampbell.com
+Message-ID: <70408559.2499685.1782062190117@kpc.webmail.kpnmail.nl>
+In-Reply-To: <20260620175441.223342-1-woradorn.laon@gmail.com>
+References: <20260620175441.223342-1-woradorn.laon@gmail.com>
+Subject: Re: [PATCH] tracing: Use seq_buf for string concatenation
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
 
-damon_nr_accesses_mvsum() returns a value same to nr_accesses_bp.  Also
-the function is more simple and therefore more tolerant to errors.
-Execution of the function would be more expensive than the simple read
-of the field, but because the function is quite simple, the overhead
-should be negligible.  Use it in the DAMON region exporting trace points
-instead of the nr_accesses_bp.
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/trace/events/damon.h | 8 +++++---
- mm/damon/core.c              | 5 +++--
- 2 files changed, 8 insertions(+), 5 deletions(-)
+> Op 20-06-2026 19:54 CEST schreef Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>:
+> 
+>  
+> In preparation for removing the strlcat API[1],
+> replace the string concatenation logic with a struct seq_buf,
+> which tracks the current position and the remaining space internally.
+> 
+> The backing buffer bootup_event_buf allocation is unchanged.
+> Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
+> 
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> 
+> Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+> ---
+>  kernel/trace/trace_events.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index c46e623e7e0d..15164723e028 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/sort.h>
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+> +#include <linux/seq_buf.h>
+>  
+>  #include <trace/events/sched.h>
+>  #include <trace/syscall.h>
+> @@ -4501,13 +4502,23 @@ extern struct trace_event_call *__start_ftrace_events[];
+>  extern struct trace_event_call *__stop_ftrace_events[];
+>  
+>  static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-index 78388538acf44..8851727ae1627 100644
---- a/include/trace/events/damon.h
-+++ b/include/trace/events/damon.h
-@@ -78,9 +78,11 @@ TRACE_EVENT_CONDITION(damos_before_apply,
- 
- 	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
- 		unsigned int target_idx, struct damon_region *r,
--		unsigned int nr_regions, bool do_trace),
-+		unsigned int nr_accesses, unsigned int nr_regions,
-+		bool do_trace),
- 
--	TP_ARGS(context_idx, scheme_idx, target_idx, r, nr_regions, do_trace),
-+	TP_ARGS(context_idx, scheme_idx, target_idx, r, nr_accesses,
-+		nr_regions, do_trace),
- 
- 	TP_CONDITION(do_trace),
- 
-@@ -101,7 +103,7 @@ TRACE_EVENT_CONDITION(damos_before_apply,
- 		__entry->target_idx = target_idx;
- 		__entry->start = r->ar.start;
- 		__entry->end = r->ar.end;
--		__entry->nr_accesses = r->nr_accesses_bp / 10000;
-+		__entry->nr_accesses = nr_accesses;
- 		__entry->age = r->age;
- 		__entry->nr_regions = nr_regions;
- 	),
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index 8f845bf698b2d..91f137901e726 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -2439,7 +2439,7 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
- 	struct damos *siter;		/* schemes iterator */
- 	unsigned int sidx = 0;
- 	struct damon_target *titer;	/* targets iterator */
--	unsigned int tidx = 0;
-+	unsigned int tidx = 0, nr_accesses = 0;
- 	bool do_trace = false;
- 
- 	/* get indices for trace_damos_before_apply() */
-@@ -2454,6 +2454,7 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
- 				break;
- 			tidx++;
- 		}
-+		nr_accesses = damon_nr_accesses_mvsum(r, c);
- 		do_trace = true;
- 	}
- 
-@@ -2469,7 +2470,7 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
- 		if (damos_core_filter_out(c, t, r, s))
- 			return;
- 		ktime_get_coarse_ts64(&begin);
--		trace_damos_before_apply(cidx, sidx, tidx, r,
-+		trace_damos_before_apply(cidx, sidx, tidx, r, nr_accesses,
- 				damon_nr_regions(t), do_trace);
- 		sz_applied = c->ops.apply_scheme(c, t, r, s,
- 				&sz_ops_filter_passed);
--- 
-2.47.3
+Isn't this now unused?
+
+> +static struct seq_buf bootup_event_seq;
+> +static bool bootup_event_seq_initialized;
+>  
+
+I think this can be refactored to avoid the bool. And should bootup_event_seq not be
+__initdata?
+
+>  static __init int setup_trace_event(char *str)
+>  {
+> -	if (bootup_event_buf[0] != '\0')
+> -		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
+> +	if (!bootup_event_seq_initialized) {
+> +		seq_buf_init(&bootup_event_seq, bootup_event_buf, COMMAND_LINE_SIZE);
+> +		bootup_event_seq_initialized = true;
+> +	}
+> +
+> +	if (seq_buf_used(&bootup_event_seq) > 0)
+> +		seq_buf_puts(&bootup_event_seq, ",");
+>  
+> -	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
+> +	seq_buf_puts(&bootup_event_seq, str);
+> +
+> +	if (seq_buf_has_overflowed(&bootup_event_seq))
+> +		return -ENOMEM;
+>  
+>  	trace_set_ring_buffer_expanded(NULL);
+>  	disable_tracing_selftest("running event tracing");
+> @@ -4766,7 +4777,7 @@ static __init int event_trace_enable(void)
+>  	 */
+>  	__trace_early_add_events(tr);
+>  
+> -	early_enable_events(tr, bootup_event_buf, false);
+> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), false);
+
+What if trace_event is empty? Then setup_trace_event does not run AFAIK. See the
+WARN_ON in seq_buf_str too. Have you tested this?
+
+>  
+>  	trace_printk_start_comm();
+>  
+> @@ -4794,7 +4805,7 @@ static __init int event_trace_enable_again(void)
+>  	if (!tr)
+>  		return -ENODEV;
+>  
+> -	early_enable_events(tr, bootup_event_buf, true);
+> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), true);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.43.0
+
+Thanks,
+Jori.
