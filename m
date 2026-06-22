@@ -1,150 +1,104 @@
-Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from confino.investici.org (confino.investici.org [93.190.126.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB1D347FC8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 19:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05B934D4EA;
+	Mon, 22 Jun 2026 20:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.190.126.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782155036; cv=none; b=t7lkYsC9uM4SmOLmh9XxrEyK2RkWPKB5BRdn5iVF//sl3s0ONOIsgcm2sngosXAzUHliaoHUKk/5T4GkzfiGlnrkKmb7TrsA12dvcXpQEzP1jBSwIKLPl3hHtLVrBYlWrKEeJ6fY73uocbmDuKDMHKu0N0wAKdE2Aw+4Zv2jmGM=
+	t=1782159916; cv=none; b=m/hWhK77g5g533sBTsnMCdSzbMvjR/TrJkgy7YWOBuSH4M0tCEGz5er+gFygqH+kwAGkf7H8VxEvz7ydYKSSLMomEi7zRd9RNnauKfTCKC4cmkKW/76pNUIdghzPtAgNRpw2N75murEB6Wphk3mO3+H5ADY3aQG6c179unYAi1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782155036; c=relaxed/simple;
-	bh=uM6rjwv+rWrcNEl8KjTKnVcDSG3oUNpsPUMqnFOcLeE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PdhP0mbb7Bt6kl/eOrcP/054iSE/N1T3otV7WefP3qpblwzbs6r0eoInL4pWnQ4N0l2/RsU2Rl9Xde+HiW5/cscOLm7KkDVyOu/dw7mJuQSiG7JHKg5mBdaGyis4utNUTe3jo+JEPCEPkekS1edQpO0XxTrhaTCRSx1QWV37lsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFiZE21b; arc=none smtp.client-ip=74.125.82.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782159916; c=relaxed/simple;
+	bh=9zDHXLa66Xn/XKdO3WB8LnylbOQH868qI2JmHCyWXFs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HYIFQRmiK5DFrW45Zl+5qChLVcvvL4onBRf1gl8w2P2YgWJHQnxpKu1h3MJABToyQmnAFFE0Anb6Cvzu1GDde0KSfor8fxnaaBxhPewb14ZdG9nvS8hxKBq92rmUVvZHr/XMV1EBki9TysYjIeMvpz+efutOhmaGpdSIGWcLiAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=uoa7IfAY; arc=none smtp.client-ip=93.190.126.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFiZE21b"
-Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-30c0a352e33so197591eec.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 12:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782155033; x=1782759833; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uM6rjwv+rWrcNEl8KjTKnVcDSG3oUNpsPUMqnFOcLeE=;
-        b=LFiZE21bJOd27mvhUeQY65zQorGfroSNylZhnl5pr3qjxqG/eN1p6cReYMi7Y8XHb0
-         7P2yUKScTc7SL9KBMwdl8WT1nEKnGZf9ur45NKJJuEmRNsVr4TarSwghnJCBC39U5FT/
-         hbLMbAuZB7Uhid7P768tqQ5oB5rNa0UgEghjqL8I6E/OiecFdkW7XXJUCVzAvM2Bcvqj
-         aAAg70ofC8G+A3+uW7Vx2nk3e0tc12ATFJvEbWA6+4EjPe4CrUqJXP2Emg2HT57KZ67b
-         LsX6aiKqdjYFThFXLMKvM5eHENHiOf+kS4D8rdkQabgcObx3aWN/R9FVWrU0LGgqTlRe
-         mYGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782155033; x=1782759833;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uM6rjwv+rWrcNEl8KjTKnVcDSG3oUNpsPUMqnFOcLeE=;
-        b=Hwey1SEsx2NttTOOjlLN+4gcxM905X3/027ETLdrpMLfw0fQEDJGxW6SnpjIMGoZce
-         +YQZ3c0XpBl1bnMa0v4qny+XtQm4cQqJrvdxx07KvuY0+922XmbPVmBHlmOEY4Xu2HO5
-         rc2hzC7Kcsg3dCHYJX1Bk9mRd2kVj+4u3UZLSWhT//N+WsPbWgW58LaJklLs9T/5mgDJ
-         imBW/xPtgfK/wWztNZqZ2Le6ntNMhuc/0BiIDtfYDZj2mmkgCNnKzm68azqVLwQHfzjN
-         76MgS2wthz/PPHYrCMbx47w8rdiA9lkSyDptgOuXJQ89J+vp8fORyenc5LVEOLxY7NyX
-         cYRw==
-X-Forwarded-Encrypted: i=1; AHgh+Rof1NdYYIHlV+Nno9ky+TSaXzonkfC6aK7ieu/kTLEerKKOGs5e7RebigVBtEUBPVan4p5CsaiM1OJ71YtzVo8Uohk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztH/v64DFBav0r2CqKJtvUE1v11n1KHvYxATF7vrkCipC9Qfum
-	5vezM8ty7PVQWrnpy+uoImu/fIkSX/A9TPg0v702dlJ/Szdc2EKw+48j
-X-Gm-Gg: AfdE7cloj+hK9dglxgYl2NTq0NiFqjXoOCPMo4naDtQIGdkxGtak4L6vzC4aff80w35
-	31dym0vnUmyyKSLh/y3OosHCptrgS8kJiOq+8HG5zgRZME/VHcee1RVc2atPVuQZ6FABRmT+3Vu
-	GyUrrapQOnGYNoaKnMtDgrFyklll0t2iO432JdC/JtYzTonV+mLVvgD27V7RckPIFsgNvom5Ef8
-	79sr11QSK+2wi6S8sPJCIQfgsGq8ua5qggDgDK3CKKhG9FgogormXYnJnKeDHo0VujUAuSdUXYo
-	/pGHUvcHpC2UCOxIIDeNZWWnV0yqGmKwO+w9Zva+WpnPhwbrZnULI4VKgqRqrtZU3ir6NX39Gzd
-	pba2aMxRDzomvnmxy4SSDXRuPOcRDa+ajBetWUODBibUXxbNcWk46HgBuAWitiZaBJQlo/mzCLZ
-	nNFFPlSDaZmXe2n3lI0pmiIb1888A+MaFwFW1KfBRVcZx2M2rEtkzhpVwTeWwBp0Y+fhk=
-X-Received: by 2002:a05:693c:2887:b0:30b:cc4e:6396 with SMTP id 5a478bee46e88-30c5553b105mr382073eec.7.1782155033135;
-        Mon, 22 Jun 2026 12:03:53 -0700 (PDT)
-Received: from ?IPv6:2a03:83e0:115c:1:6e2:c699:67c:63fe? ([2620:10d:c090:500::1:5387])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c1be4967fsm10549199eec.26.2026.06.22.12.03.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2026 12:03:52 -0700 (PDT)
-Message-ID: <1979fc81ae7bdaabda8616cd9698a40ef8bbfaee.camel@gmail.com>
-Subject: Re: [PATCH v3 5/7] kernel: Use mutable list iterators
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Kaitao Cheng <kaitao.cheng@linux.dev>, Paul Moore <paul@paul-moore.com>,
-  Eric Paris <eparis@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann	 <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, "David S.
- Miller" <davem@davemloft.net>, Jakub Kicinski	 <kuba@kernel.org>, Jesper
- Dangaard Brouer <hawk@kernel.org>, John Fastabend	
- <john.fastabend@gmail.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner	
- <hannes@cmpxchg.org>, Michal =?ISO-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>, 
- Maarten Lankhorst	 <dev@lankhorst.se>, Maxime Ripard <mripard@kernel.org>,
- Natalie Vock	 <natalie.vock@gmx.de>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar	 <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim	 <namhyung@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov	 <oleg@redhat.com>, Peter
- Oberparleiter <oberpar@linux.ibm.com>, Andrew Morton	
- <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, Mike
- Rapoport	 <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav	 <pratyush@kernel.org>, Naveen N Rao <naveen@kernel.org>,
- Josh Poimboeuf	 <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Miroslav Benes	 <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Will
- Deacon <will@kernel.org>,  Boqun Feng <boqun@kernel.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,  Daniel Gomez
- <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Steffen
- Klassert	 <steffen.klassert@secunet.com>, Daniel Jordan
- <daniel.m.jordan@oracle.com>,  "Rafael J. Wysocki"	 <rafael@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>, "Paul E. McKenney"	
- <paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>, Frederic
- Weisbecker <frederic@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes	 <joelagnelf@nvidia.com>,
- Uladzislau Rezki <urezki@gmail.com>, Juri Lelli	 <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Kees Cook <kees@kernel.org>,
- Balbir Singh <bsingharora@gmail.com>, Anna-Maria Behnsen	
- <anna-maria@linutronix.de>, Thomas Gleixner <tglx@kernel.org>, John Stultz	
- <jstultz@google.com>, KP Singh <kpsingh@kernel.org>, Matt Bobrowski	
- <mattbobrowski@google.com>, Nathan Chancellor <nathan@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, David Vernet	 <void@manifault.com>, Steven
- Rostedt <rostedt@goodmis.org>
-Cc: audit@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, 	netdev@vger.kernel.org, cgroups@vger.kernel.org,
- dri-devel@lists.freedesktop.org, 	linux-perf-users@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, 	kexec@lists.infradead.org,
- live-patching@vger.kernel.org, 	linux-modules@vger.kernel.org,
- linux-crypto@vger.kernel.org, 	linux-pm@vger.kernel.org,
- rcu@vger.kernel.org, sched-ext@lists.linux.dev, 	llvm@lists.linux.dev,
- Kaitao Cheng <chengkaitao@kylinos.cn>
-Date: Mon, 22 Jun 2026 12:03:46 -0700
-In-Reply-To: <20260622042811.31684-1-kaitao.cheng@linux.dev>
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
-	 <20260622042811.31684-1-kaitao.cheng@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
+	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="uoa7IfAY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
+	s=stigmate; t=1782159912;
+	bh=k0v4xR04FoHT4BvbTEC8K2nsjXc2WGmzmSQQ7cw26QY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uoa7IfAYHPCRYd/QHMqJi6EO/eyDq4gVh9GOBmyldZmtPTOZKgoJSgXmvo/KERQje
+	 Rs0EVrqV+mLMx8iPK4/7dk3giJxVbqTTwAoLOS++ZtZYRgymogQP59VOV+crrBdvBK
+	 RyumuHSAm7g/GDTzKZgKxeN7yKSEcXoc/X8vFSbg=
+Received: from mx1.investici.org (unknown [127.0.0.1])
+	by confino.investici.org (Postfix) with ESMTP id 4gkfp04TRxz10wb;
+	Mon, 22 Jun 2026 20:25:12 +0000 (UTC)
+Received: by mx1.investici.org (Postfix) id 4gkfnz5HDxz10wK;
+	Mon, 22 Jun 2026 20:25:11 +0000 (UTC)
+From: Bradley Morgan <include@grrlz.net>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Marco Elver <elver@google.com>,
+	Aleksandr Nogikh <nogikh@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Adrian Huang <adrianhuang0701@gmail.com>,
+	Kexin Sun <kexinsun@smail.nju.edu.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Bradley Morgan <include@grrlz.net>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/2] signal: avoid shared siginfo namespace rewrites
+Date: Mon, 22 Jun 2026 20:25:08 +0000
+Message-ID: <86a8857d58d43ee26a8b365b837fd24830343494.1782159692.git.include@grrlz.net>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260622164029.11474-1-include@grrlz.net>
+References: <20260622164029.11474-1-include@grrlz.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2026-06-22 at 12:28 +0800, Kaitao Cheng wrote:
-> From: Kaitao Cheng <chengkaitao@kylinos.cn>
->=20
-> The safe list iteration helpers require callers to provide a temporary
-> cursor even when the cursor is only used internally by the loop. This
-> leaves many functions with otherwise unused variables whose only purpose
-> is to satisfy the old iterator interface.
->=20
-> Use the mutable list iteration helpers for those cases. The mutable
-> helpers keep the same removal-safe traversal semantics, while allowing
-> the temporary cursor to be internal to the macro when the caller does
-> not need to observe it.
->=20
-> Convert list, hlist and llist users under kernel/ where the temporary
-> cursor is not used outside the iteration. Keep the explicit cursor form
-> where the next entry is still needed by the surrounding code.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
-> ---
+send_signal_locked() rewrites sender ids for the target namespace.
+Group sends reuse the same siginfo, so one recipient can affect the
+next.
 
-Beside the fact that this does not apply,
-I don't see a reason why is this needed for BPF sub-tree.
+Copy the siginfo before changing it.
 
-[...]
+Fixes: 7a0cf094944e ("signal: Correct namespace fixups of si_pid and si_uid")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bradley Morgan <include@grrlz.net>
+---
+Changes since v1:
+- No code changes in this patch.
+- Add patch 2 for Oleg's const suggestion.
+- Link to v1:
+  https://lore.kernel.org/all/0873AC4A-3CB2-4F7B-BFE6-75D855AD22DC@grrlz.net/T/#m89955d13f10807c316d34cc76680d690a2d95b31
+
+ kernel/signal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index b9fc7be1a169..d72d9be3a992 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1181,6 +1181,7 @@ static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
+ int send_signal_locked(int sig, struct kernel_siginfo *info,
+ 		       struct task_struct *t, enum pid_type type)
+ {
++	struct kernel_siginfo rewritten;
+ 	/* Should SIGKILL or SIGSTOP be received by a pid namespace init? */
+ 	bool force = false;
+ 
+@@ -1194,6 +1195,9 @@ int send_signal_locked(int sig, struct kernel_siginfo *info,
+ 		/* SIGKILL and SIGSTOP is special or has ids */
+ 		struct user_namespace *t_user_ns;
+ 
++		rewritten = *info;
++		info = &rewritten;
++
+ 		rcu_read_lock();
+ 		t_user_ns = task_cred_xxx(t, user_ns);
+ 		if (current_user_ns() != t_user_ns) {
+-- 
+2.53.0
