@@ -1,270 +1,272 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A20399D02;
-	Mon, 22 Jun 2026 09:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961B12E1746;
+	Mon, 22 Jun 2026 10:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782122144; cv=none; b=g/JFXs8Cdd+0mMVCth+iS6Xjut11xeYWXcBtNGCJrSrSwckECQCJOiBNSi/sLuFE/UhYEJKtIefQ7Nzabc7SEyQ/NYhHjNdrfc6A8ro34EX8JNnZ9zyebYPj1KZiIWRiObwADR+igEpF1RNlvq7S3lTFmhz7VHpCKRh1TkuUFrU=
+	t=1782125198; cv=none; b=dgZlRRYEwgCL3MepyIsJLbjvMQetRZGhD4GjIQtkoglAXK0Ii7sEy185/W7VwLFjDVPiYVOSIlWpQFjF2nBj+eGCJf+W/bYamDEXpjTpe+ZS2sb7w8e0jXIQWXPBPHLO+PCCBUfRIxQMEA9Muq+3ReNAsJEfLZIKImeBlpECDPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782122144; c=relaxed/simple;
-	bh=1YL6RatgGp8U8YRdXU/Ojf6J99LCBk/IjDvPKIBcnkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nNAF+6EpKGRnpMuivsbSQslHsWRGy9T0H0zjuGXbdfpjI57RY5H11oRfP8PmpeiHe2ZxWXQAUNWAkxAIZgRZglU4mE5nUPEMu/KXgTYkW8sUaNV8uF38FhXdgmV2fXUK8ujQyJeeHoilJ2GlzpTDAZS7F6LY2OTjqA8hagHM/bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEYqsQ3T; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782125198; c=relaxed/simple;
+	bh=/hKgAevfumO8x7LfebeUyLh/erlFr2Hmr9kpKNVbH0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RXODWZKElkwNYpFJonxchYxL7m7+buIIWgUiJMAD0MYfyKNwNMLSslVv6yBoc/HcLQI6ALqaWoX3hI7BUhDfYNAOp/d/O61d+5hIwFcf2eExAjaRh+yyxF4FlmXcJqP/2R2L+iPy0pH17SBJrNaylwgCZ4MV+XxvZHUJxlT/gKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzU+mGOE; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEYqsQ3T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C543F1F000E9;
-	Mon, 22 Jun 2026 09:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782122140;
-	bh=/V21/Y3QZfwVUdB3NIeBi+XnD7XL4Xt67aol7kqmo4c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=EEYqsQ3TRB2hMmbU7Z79YG2RHRf9MC51VSumhuqrt6HrdNifmpdbgiXdj+mPOOuZn
-	 cGHRNhUuRMFgZbU1FsE0Knbg9l762v4L1xpLsjiqiLdYo1UjsVXFx8uNL0eSjfJv/V
-	 5JN+cQOhPTaqHR3nQdb1YKbrcAPE2GMgKGtj7ImzzeGN7tGBabXgNdAhpFhA1Hhwog
-	 QunbjMB9l0vA19HXJW3S2zAexHyQyNTuyvQMRklcEFQVJl92ZZdE8v0UUyEj0SYGYx
-	 /wzt36/BFphiOGtrnRSXv/NkfcMiAKOwFfnjThiNUnfmtxxmy/qTB025Ec/hFKr/cq
-	 TRd3NUImRxD/Q==
-Message-ID: <c8793c0f-7156-4cb7-9e6e-7909397e2fff@kernel.org>
-Date: Mon, 22 Jun 2026 11:55:34 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzU+mGOE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782125197; x=1813661197;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=/hKgAevfumO8x7LfebeUyLh/erlFr2Hmr9kpKNVbH0Q=;
+  b=nzU+mGOEqWcv1ZhOmQPh7A2Vpfo+LMNqc4tcIPxCOVAjg5E+B8987oJm
+   CRk7qHz3x3v+O+oG7cXujRDkzL1gtlG6mhDITbvghfqBqcfJ18psAc+PI
+   Tg6A1WV+wrBAYDeVjinRSZ8iVzEiuhmQJVGAURRe3kSmW2jMrs7sROlGE
+   u8+D/V9jaSTcCF1v2EIm0ssuPCon5Qce2IQ+52WID3KKCx1hIbTl0AP50
+   tBvVqFdniXMiI+R7HhzvDTzP1eZ59wlltT5mIxb+U8IVJjshC3XaerKJ+
+   nuUFkH1Xgheje/msjZOEt2IJ3ymfBjkuClzZN1MPvQKC7KGcG7O1ntKDW
+   A==;
+X-CSE-ConnectionGUID: RGyONYQVSea0+pxWnZOPdg==
+X-CSE-MsgGUID: tWucpBD+SQmz4hzgmxAYMg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11824"; a="93506230"
+X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
+   d="scan'208";a="93506230"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 03:46:35 -0700
+X-CSE-ConnectionGUID: xNR2+KjtQLGBpSv9fyyNaQ==
+X-CSE-MsgGUID: i0RzaMPlRGCEVMh1muYCuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
+   d="scan'208";a="253099713"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.152])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 03:46:25 -0700
+Date: Mon, 22 Jun 2026 13:46:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kaitao Cheng <kaitao.cheng@linux.dev>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Paul Moore <paul@paul-moore.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Howells <dhowells@redhat.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+	linux-ntfs-dev@lists.sourceforge.net,
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+	io-uring <io-uring@vger.kernel.org>, audit@vger.kernel.org,
+	bpf <bpf@vger.kernel.org>,
+	Network Development <netdev@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	kexec@lists.infradead.org, live-patching@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	rcu@vger.kernel.org, sched-ext@lists.linux.dev,
+	linux-mm <linux-mm@kvack.org>, virtualization@lists.linux.dev,
+	damon@lists.linux.dev, clang-built-linux <llvm@lists.linux.dev>,
+	chengkaitao <chengkaitao@kylinos.cn>,
+	Muchun Song <muchun.song@linux.dev>
+Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
+ state
+Message-ID: <ajkSftEbdGoiJXYs@ashevche-desk.local>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+ <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+ <8c8f1849-86d3-4c69-be27-30bbdffdf616@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] mm/compaction: skip isolate mlocked folios when
- compact_unevictable_allowed=0
-Content-Language: en-US
-To: Wandun <chenwandun1@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Cc: akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
- jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- david@kernel.org, ljs@kernel.org, liam@infradead.org, rppt@kernel.org,
- bigeasy@linutronix.de, clrkwllms@kernel.org, Alexander.Krabler@kuka.com,
- Hugh Dickins <hughd@google.com>
-References: <20260604023812.3700316-1-chenwandun1@gmail.com>
- <20260604023812.3700316-2-chenwandun1@gmail.com>
- <969cb14b-5b8b-48e6-add6-4dd13101dd89@kernel.org>
- <040788a9-e0d5-478e-bb48-3d22b8b41020@gmail.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <040788a9-e0d5-478e-bb48-3d22b8b41020@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8c8f1849-86d3-4c69-be27-30bbdffdf616@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 6/18/26 13:43, Wandun wrote:
-> 
-> 
-> On 6/18/26 02:52, Vlastimil Babka (SUSE) wrote:
->> On 6/4/26 04:38, Wandun Chen wrote:
->>> From: Wandun Chen <chenwandun@lixiang.com>
->>>
->>> compact_unevictable_allowed is default 0 under PREEMPT_RT,
->>> isolate_migratepages_block() skips folios with PG_unevictable set.
->>> However, mlock_folio() sets PG_mlocked immediately but defers
->>> PG_unevictable to mlock_folio_batch(), result in a folio with
->>> PG_mlocked=1 but PG_unevictable=0. Compaction will isolate such a
->>> folio.
->>>
->>> Fix by checking folio_test_mlocked() together with the existing
->>> folio_test_unevictable() check.
->>>
->>> A similar issue has been reported by Alexander Krabler on a 6.12-rt
->>> aarch64 system. Vlastimil suggested to check the mlocked flag [1].
->>>
->>> Reported-by: Alexander Krabler <Alexander.Krabler@kuka.com>
->>> Closes: https://lore.kernel.org/all/DU0PR01MB10385345F7153F334100981888259A@DU0PR01MB10385.eurprd01.prod.exchangelabs.com/
->>> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
->>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
->>> Link: https://lore.kernel.org/all/33275585-f2db-4779-89f0-3ae24b455a67@suse.cz/ [1]
->> 
->> Well in that thread, Hugh doubted my suggestion and then it seems we didn't
->> concluded anything. Did you actually in practice observe the issue that
->> Alexander had, and that this patch fixed it, or is that theoretical?
->> 
-> Yes, I wrote a test case that can reproduce it in a few second.
-> 
-> The test case contains 3 steps:
-> 1. mlockall
-> 2. mmap file(2GB) + trigger file write page fault;
-> 3. during step 1, trigger compact via /proc/sys/vm/compact_memory
-> 
-> 
-> My reproduction environment is qemu with 4GB ram, 8 core, aarch64,
-> preempt_rt and includes the tracepoint in patch 02.
-> After running the reproduction program for a few seconds, the
-> following output appears.
+On Mon, Jun 22, 2026 at 02:15:01PM +0800, Kaitao Cheng wrote:
+> 在 2026/6/22 13:28, Alexei Starovoitov 写道:
+> > On Sun, Jun 21, 2026 at 9:06 PM Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
 
-Ah, nice.
+...
 
-> repro-403     [004] ....1   101.270505: mm_compaction_isolate_folio: pfn=0x71e3a mode=0x0 flags=referenced|uptodate|mlocked
-> repro-403     [004] ....1   101.270507: mm_compaction_isolate_folio: pfn=0x71e3b mode=0x0 flags=referenced|uptodate|mlocked
-> repro-403     [004] ....1   101.270513: mm_compaction_isolate_folio: pfn=0x71e3c mode=0x0 flags=referenced|uptodate|mlocked
-> repro-403     [004] ....1   101.270515: mm_compaction_isolate_folio: pfn=0x71e3d mode=0x0 flags=uptodate|mlocked
-> repro-403     [004] ....1   101.270517: mm_compaction_isolate_folio: pfn=0x71e3e mode=0x0 flags=uptodate|mlocked
-> repro-403     [004] ....1   101.270520: mm_compaction_isolate_folio: pfn=0x71e3f mode=0x0 flags=uptodate|mlocked
+> >>  block/bfq-iosched.c                 |  17 +-
+> >>  block/blk-cgroup.c                  |  12 +-
+> >>  block/blk-flush.c                   |   4 +-
+> >>  block/blk-iocost.c                  |  18 +-
+> >>  block/blk-mq.c                      |   8 +-
+> >>  block/blk-throttle.c                |   4 +-
+> >>  block/kyber-iosched.c               |   4 +-
+> >>  block/partitions/ldm.c              |   8 +-
+> >>  block/sed-opal.c                    |   4 +-
+> >>  include/linux/list.h                | 269 ++++++++++++++++++++++++----
+> >>  include/linux/llist.h               |  81 +++++++--
+> >>  init/initramfs.c                    |   5 +-
+> >>  io_uring/cancel.c                   |   6 +-
+> >>  io_uring/poll.c                     |   3 +-
+> >>  io_uring/rw.c                       |   4 +-
+> >>  io_uring/timeout.c                  |   8 +-
+> >>  io_uring/uring_cmd.c                |   3 +-
+> >>  kernel/audit_tree.c                 |   4 +-
+> >>  kernel/audit_watch.c                |  16 +-
+> >>  kernel/auditfilter.c                |   4 +-
+> >>  kernel/auditsc.c                    |   4 +-
+> >>  kernel/bpf/arena.c                  |  10 +-
+> >>  kernel/bpf/arraymap.c               |   8 +-
+> >>  kernel/bpf/bpf_local_storage.c      |   3 +-
+> >>  kernel/bpf/bpf_lru_list.c           |  25 ++-
+> >>  kernel/bpf/btf.c                    |  18 +-
+> >>  kernel/bpf/cgroup.c                 |   7 +-
+> >>  kernel/bpf/cpumap.c                 |   4 +-
+> >>  kernel/bpf/devmap.c                 |  10 +-
+> >>  kernel/bpf/helpers.c                |   8 +-
+> >>  kernel/bpf/local_storage.c          |   4 +-
+> >>  kernel/bpf/memalloc.c               |  16 +-
+> >>  kernel/bpf/offload.c                |   8 +-
+> >>  kernel/bpf/states.c                 |   4 +-
+> >>  kernel/bpf/stream.c                 |   4 +-
+> >>  kernel/bpf/verifier.c               |   6 +-
+> >>  kernel/cgroup/cgroup-v1.c           |   4 +-
+> >>  kernel/cgroup/cgroup.c              |  54 +++---
+> >>  kernel/cgroup/dmem.c                |  12 +-
+> >>  kernel/cgroup/rdma.c                |   8 +-
+> >>  kernel/events/core.c                |  44 +++--
+> >>  kernel/events/uprobes.c             |  12 +-
+> >>  kernel/exit.c                       |   8 +-
+> >>  kernel/fail_function.c              |   4 +-
+> >>  kernel/gcov/clang.c                 |   4 +-
+> >>  kernel/irq_work.c                   |   4 +-
+> >>  kernel/kexec_core.c                 |   4 +-
+> >>  kernel/kprobes.c                    |  16 +-
+> >>  kernel/livepatch/core.c             |   4 +-
+> >>  kernel/livepatch/core.h             |   4 +-
+> >>  kernel/liveupdate/kho_block.c       |   4 +-
+> >>  kernel/liveupdate/luo_flb.c         |   4 +-
+> >>  kernel/locking/rwsem.c              |   2 +-
+> >>  kernel/locking/test-ww_mutex.c      |   2 +-
+> >>  kernel/module/main.c                |  11 +-
+> >>  kernel/padata.c                     |   4 +-
+> >>  kernel/power/snapshot.c             |   8 +-
+> >>  kernel/power/wakelock.c             |   4 +-
+> >>  kernel/printk/printk.c              |  11 +-
+> >>  kernel/ptrace.c                     |   4 +-
+> >>  kernel/rcu/rcutorture.c             |   3 +-
+> >>  kernel/rcu/tasks.h                  |   9 +-
+> >>  kernel/rcu/tree.c                   |   6 +-
+> >>  kernel/resource.c                   |   4 +-
+> >>  kernel/sched/core.c                 |   4 +-
+> >>  kernel/sched/ext.c                  |  22 +--
+> >>  kernel/sched/fair.c                 |  28 +--
+> >>  kernel/sched/topology.c             |   4 +-
+> >>  kernel/sched/wait.c                 |   4 +-
+> >>  kernel/seccomp.c                    |   4 +-
+> >>  kernel/signal.c                     |  11 +-
+> >>  kernel/smp.c                        |   4 +-
+> >>  kernel/taskstats.c                  |   8 +-
+> >>  kernel/time/clockevents.c           |   6 +-
+> >>  kernel/time/clocksource.c           |   4 +-
+> >>  kernel/time/posix-cpu-timers.c      |   4 +-
+> >>  kernel/time/posix-timers.c          |   3 +-
+> >>  kernel/torture.c                    |   3 +-
+> >>  kernel/trace/bpf_trace.c            |   4 +-
+> >>  kernel/trace/ftrace.c               |  49 +++--
+> >>  kernel/trace/ring_buffer.c          |  25 ++-
+> >>  kernel/trace/trace.c                |  12 +-
+> >>  kernel/trace/trace_dynevent.c       |   6 +-
+> >>  kernel/trace/trace_dynevent.h       |   5 +-
+> >>  kernel/trace/trace_events.c         |  35 ++--
+> >>  kernel/trace/trace_events_filter.c  |   4 +-
+> >>  kernel/trace/trace_events_hist.c    |   8 +-
+> >>  kernel/trace/trace_events_trigger.c |  17 +-
+> >>  kernel/trace/trace_events_user.c    |  16 +-
+> >>  kernel/trace/trace_stat.c           |   4 +-
+> >>  kernel/user-return-notifier.c       |   3 +-
+> >>  kernel/workqueue.c                  |  16 +-
+> >>  mm/backing-dev.c                    |   8 +-
+> >>  mm/balloon.c                        |   8 +-
+> >>  mm/cma.c                            |   4 +-
+> >>  mm/compaction.c                     |   4 +-
+> >>  mm/damon/core.c                     |   4 +-
+> >>  mm/damon/sysfs-schemes.c            |   4 +-
+> >>  mm/dmapool.c                        |   4 +-
+> >>  mm/huge_memory.c                    |   8 +-
+> >>  mm/hugetlb.c                        |  56 +++---
+> >>  mm/hugetlb_vmemmap.c                |  16 +-
+> >>  mm/khugepaged.c                     |  14 +-
+> >>  mm/kmemleak.c                       |   7 +-
+> >>  mm/ksm.c                            |  25 +--
+> >>  mm/list_lru.c                       |   4 +-
+> >>  mm/memcontrol-v1.c                  |   8 +-
+> >>  mm/memory-failure.c                 |  12 +-
+> >>  mm/memory-tiers.c                   |   4 +-
+> >>  mm/migrate.c                        |  23 ++-
+> >>  mm/mmu_notifier.c                   |   9 +-
+> >>  mm/page_alloc.c                     |   8 +-
+> >>  mm/page_reporting.c                 |   2 +-
+> >>  mm/percpu.c                         |  11 +-
+> >>  mm/pgtable-generic.c                |   4 +-
+> >>  mm/rmap.c                           |  10 +-
+> >>  mm/shmem.c                          |   9 +-
+> >>  mm/slab_common.c                    |  14 +-
+> >>  mm/slub.c                           |  33 ++--
+> >>  mm/swapfile.c                       |   4 +-
+> >>  mm/userfaultfd.c                    |  12 +-
+> >>  mm/vmalloc.c                        |  24 +--
+> >>  mm/vmscan.c                         |   7 +-
+> >>  mm/zsmalloc.c                       |   4 +-
+> >>  124 files changed, 875 insertions(+), 681 deletions(-)
+> > 
+> > Not sure what you were thinking, but this diff stat
+> > is not landable.
 > 
+> [PATCH v3 1/7] and [PATCH v3 2/7] contain the main logic and can
+> be merged directly. They are also compatible with the old API.
+> [PATCH v3 3/7] through [PATCH v3 7/7] are just simple interface
+> replacements and do not change any functional logic. They can be
+> left unmerged for now; individual modules can pick them up later
+> if needed.
 > 
-> Unfortunately, I recently found that there is still a bug in the
-> fix patch. Setting mlocked in the mlock_folio function could happen
-> even after the page is successfully isolated, so it still cannot
-> prevent migration. Because of this, I need to think more about how
-> to fix it.
-> 
-> Perhaps we should double-check whether the page is mlocked during
-> the actual migration phase.
+> In v2, Andy Shevchenko mentioned: "If it's done by Linus himself
+> during the day when he prepares -rc1, it's fine."
 
-So IIUC the isolation+migration might be started between the folio is
-allocated, and mlocked? In that case the check during migration could still
-be racy, and if the page is isolated, it's already bad for the RT process.
+Yes, but you need to get his blessing first to go with this.
+Have you communicated with him on this?
 
-So this would only be a short-term problem after the mlockall, but we don't
-have a way for the RT process to know the moment it's all settled, right?
-Probably the proper solution would be for mlock[all]() itself to wait for an
-isolated page, and only continue once it knows it can't be isolated anymore.
-This might howver would go against some of the folio batching optimizations?
+> Even so, the
+> changes in this patch series are indeed quite large and touch
+> almost every subsystem. I have only converted part of them for
+> now, so I wanted to send this out first and see what people think.
 
-> What do you think of this best-effort approach?
-> 
-> 
-> Best regards,
-> Wandun
-> 
-> 
-> 
-> 
-> 
-> The full reproducer is as below:
-> 
-> /* gcc repro.c -o repro -lpthread */
-> 
-> #define _GNU_SOURCE
-> #include <fcntl.h>
-> #include <pthread.h>
-> #include <stdio.h>
-> #include <stdlib.h>
-> #include <sys/mman.h>
-> #include <unistd.h>
-> 
-> #define PAGE_SIZE       4096
-> #define NR_PAGES        32
-> #define FILE_SIZE       (2ULL * 1024 * 1024 * 1024)
-> 
-> static void *worker_fn(void *arg)
-> {
-> 	int fd = (long)arg;
-> 	size_t len = (size_t)FILE_SIZE;
-> 	char *p = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-> 	if (p == MAP_FAILED)
-> 		return NULL;
-> 
-> 	for (size_t off = 0; off + NR_PAGES * PAGE_SIZE <= len;
-> 	     off += NR_PAGES * PAGE_SIZE) {
-> 		for (int i = 0; i < NR_PAGES; i++)
-> 			p[off + i * PAGE_SIZE] = 1;
-> 		usleep(200);
-> 	}
-> 
-> 	munmap(p, len);
-> 	return NULL;
-> }
-> 
-> static void *compact_fn(void *arg)
-> {
-> 	(void)arg;
-> 	int fd = open("/proc/sys/vm/compact_memory", O_WRONLY);
-> 	if (fd < 0)
-> 		return NULL;
-> 
-> 	while (1) {
-> 		if (write(fd, "1", 1) < 0) {}
-> 		usleep(5000);
-> 	}
-> }
-> 
-> int main(void)
-> {
-> 	mlockall(MCL_CURRENT | MCL_FUTURE);
-> 
-> 	int fd = open("./repro_largefile.dat", O_RDWR | O_CREAT, 0600);
-> 	if (fd < 0)
-> 		return 1;
-> 	unlink("./repro_largefile.dat");
-> 	if (ftruncate(fd, (off_t)FILE_SIZE) < 0)
-> 		return 1;
-> 
-> 	printf("repro_largefile: 1 worker, %d pages/batch, Ctrl-C to stop\n",
-> 	       NR_PAGES);
-> 
-> 	pthread_t compact, worker;
-> 	pthread_create(&compact, NULL, compact_fn, NULL);
-> 	pthread_create(&worker, NULL, worker_fn, (void *)(long)fd);
-> 
-> 	pthread_join(worker, NULL);
-> 	return 0;
-> }
-> 
->>> ---
->>>  mm/compaction.c | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/mm/compaction.c b/mm/compaction.c
->>> index b776f35ad020..7e07b792bcb5 100644
->>> --- a/mm/compaction.c
->>> +++ b/mm/compaction.c
->>> @@ -1116,7 +1116,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->>>  		is_unevictable = folio_test_unevictable(folio);
->>>  
->>>  		/* Compaction might skip unevictable pages but CMA takes them */
->>> -		if (!(mode & ISOLATE_UNEVICTABLE) && is_unevictable)
->>> +		if (!(mode & ISOLATE_UNEVICTABLE) &&
->>> +		    (is_unevictable || folio_test_mlocked(folio)))
->>>  			goto isolate_fail_put;
->>>  
->>>  		/*
->> 
-> 
+That's why it's better to provide a script to convert (e.g., coccinelle)
+instead of tons of patches.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
