@@ -1,440 +1,184 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF694345CBF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 13:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C565D3B47D6;
+	Mon, 22 Jun 2026 14:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782135681; cv=none; b=Wi+gfZNoV5pe5+VXVCU4Va3W4w8K5b1y6uQqe4lRTUNxxIIA5FO4ID3gywSn8/Svw2BIvBvY10dK0VzU1eAdgsSG3uqaqJGfdjDvdzPw1Vh/zcck7eqoVfYcRZUrak+NTYA5VLlLT1PbGnjCvl0IgDZIIf28tZI/ERD9DgK3XjI=
+	t=1782138108; cv=none; b=fz8IHNvrFgFI4x2w3yqsrcDR+FmIJcrIxzay3twkrlBp7ArRFrMiFQvRX4Jw2540iwUFWtJM+/JS772r1FyTFExrH+trHkt54tYhtVlXmKJvCxH0nChaOocPW/lFs+qkkSIdZL+5hGGv5as3R0IS4IBl80NVqoMGvBqr2Q0YcpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782135681; c=relaxed/simple;
-	bh=iYz4WgbG+JJ8a42uSEuI6Mq+PJXh0vYb8kFS4ud8nsw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oHWe3RSnAPDGNrsOBW9Am0Hhm8r7u7oOTcfvmiNMghElLce+N/715rWa0RZozUdAc9X2DfbXW2saYg04MSVgijWBOzd+CqyXI+it0K1+qvdQXpUzPXFLvJigdP1xNkIHYxNl3od0lIl48gFu0vKfgUc+r5q7c113hH3Rs5KpVFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QuiaWDig; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782138108; c=relaxed/simple;
+	bh=iIhu9887dhx+SJ0eMusAwK3CPQRNNJXPhXwuKWYjGfI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b0e6ioP8Bc53K4C2nSxm7XkQa1um/N0d7bvUhP3y5jm8oGpjEfM253ZYHjH89MQ9zLZ4fb1ZM3oGaL4Tz7ikd3LjDamU7umqujPRtVE/5gbT9jxvMoTifwA5VH1zWCFMhlZwSEkxdxxX4Zselv3A5kjpB/bJaY/Ehb0MOLq4fns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5upGlO7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuiaWDig"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7f811da1eedso32376117b3.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 06:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782135678; x=1782740478; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yP3NGepcMuhROLFUFK7LlQ99xK8MbURk7N7GJYY4SJk=;
-        b=QuiaWDigCHwvhiFKS5Voie8PVfTaWbCEBgkNLIECw1N1HkJAtX71+BV5uGMNg3wDHY
-         ICRnqNZ2mwzG52xzD81FVuYnDkY3ru9NOsQRi3v8hWX4jOu34bL2IG94AKHtGGqsI6LW
-         jv1BYju8zlV9zIGQnMg7cLKiOPMSnLdxv7DhaslQgztFRyL6b+sshHRwu3qiS0MYo89y
-         L0+/XJBoa/SG5OwVUKFvXc8hZJRPr9JZ6QjSYsAzf1ykmkyUekty9ujKPGtW9m7P91/c
-         b7NIlgMozQ4UCMYEFPxWVCV1oNEiFycQCLXk1AJZafDMsEzyhJOl3nBcEuE0dlo8zGJS
-         3KJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782135678; x=1782740478;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yP3NGepcMuhROLFUFK7LlQ99xK8MbURk7N7GJYY4SJk=;
-        b=Ojm/HeuOGUX7801WgX1r7l01G1a8uVHqeDEOXqutIfArrecXbPmhWzwb/59sRJJIVO
-         sTJEtbZIgKFCx8qND64SlIrfucZHOlMtpXHZSkDwo+TaTtzA6Szd8xmNxBW+6pO0TG8d
-         SUHBINc1/czTLa4nVmGGAN4LGSJQ0Yo0pjjPgwuOLdCFPcxArLLn7xtidvvp24nC+o94
-         F7CGT9COFYw9zCFhoQ4EC7GaJRm+ul5o9tmS4T6XgfjX7Xjy3MOUvCaQ53DEUi5Zwlbo
-         6F50NrHrWGhToBNweuRwTkcN6XMu9yE5koQWLU6t/al5hznjWB/m0mzfVSseIFOAoLcg
-         LN5w==
-X-Forwarded-Encrypted: i=1; AHgh+RpOFZnm7CwP9GllV/LUKIC6/urw83JYuy518Pmw+/ofiOzDKlhsEGNMHXLRikueg6G7aFXMVtYxSIZeIH2e7dc0xKI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWUKTlgzDPsiU0mkh3bot+aqi3n2dzds01gjM3/LWPMDF0Q+HQ
-	kajmIDfCG9JzbUoqRHdPaX0olpN6BGP9bNDFiITO+6n/5OlQtg0fyx8b
-X-Gm-Gg: AfdE7cl4rUEtColka0eT0BmT/Om+w0U64lwFpSdLsKN7Va8kS3JRB/+4UpHnGVUhpwt
-	fbStJGB8QcVBHm84FfDU3Bd/gteO0f3rwtN5eabwvCy2kmumDF/RBx0OD4shSg+jvc4V+8INaOg
-	Hmjvq/TuullyE/KTSVZ3WhBJZI6gUuB9OZC1tb2+KFkPFCg/t0vypzvZwqcdHP3xQDsGD0P1vxo
-	69+RbpgKkU0Gv4ixyZ9yowd4af0a1E6pZrxmDRO4lo+m5guBnYFl6bIFfaqFCz8xCkFhInILokN
-	Z6Y6s7UQsTBNcPovxBxUx63nPhfobdA4JjJUWYFJM205m48VO5r1obIr96sA9Q9ngAPGMYIqaBt
-	EcWjTfdC/9MgTUbBLBAdERfwnzniXciPGRvh0hBLzVXJyGDwkZlsNbVkL5ViehQLthTTa/B8kFH
-	CrAMj/2NM=
-X-Received: by 2002:a05:690c:6284:b0:7f8:7e31:28af with SMTP id 00721157ae682-801340bcfcfmr132551367b3.49.1782135677501;
-        Mon, 22 Jun 2026 06:41:17 -0700 (PDT)
-Received: from localhost ([38.101.158.131])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8025cf6703bsm31379457b3.16.2026.06.22.06.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2026 06:41:17 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-X-Google-Original-From: Yury Norov <ynorov@nvidia.com>
-Date: Mon, 22 Jun 2026 09:41:16 -0400
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5upGlO7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55CA1F000E9;
+	Mon, 22 Jun 2026 14:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782138106;
+	bh=ulp3AjMI7B4owCFSWbljnqEOw+fQMJireuqm4uU5XDA=;
+	h=From:To:Cc:Subject:Date;
+	b=f5upGlO7tDaw2xoj25Q0J6HRHLPKbqkTMUPQDH4FgG/FbyZTeze8a9YMz+D4OqDnB
+	 8xf4fWEYEmNX4IiqH4yHZPl4G1Mzru9Eqmnf03K2ePUacbq4Wa7INIoebAI8vYoba+
+	 DAeupamDMxxuR/rO3R2O064FMtTTcdy7tCJjfw+p6hRPHYWX+XSkHPmaBiD4OILXUY
+	 NAgWjSG1aPqi/Z0NhR0urrhchDa64wjpL2SJbrjrrpTBEK/G44vgaavy9U4LZwu4WI
+	 GWwKpPmS4/SPsqZikB4uB7VhnW3ZDP7HjvtPYIrzsEm8sDGDrs9MCiIT3DLdx7ui0I
+	 BwdmvhSgoNg8Q==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH v2 1/2] tracing: Move non-trace_printk prototypes into
- trace_controls.h
-Message-ID: <ajk7fN5v31kCfGVp@yury>
-References: <20260622130739.375198646@kernel.org>
- <20260622131029.655382134@kernel.org>
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@davidgow.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	damon@lists.linux.dev,
+	kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RFC PATCH v1.3 00/18] mm/damon: optimize out nr_accesses_bp
+Date: Mon, 22 Jun 2026 07:21:20 -0700
+Message-ID: <20260622142139.30269-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260622131029.655382134@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 22, 2026 at 09:07:40AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> In order to remove the include to trace_printk.h from kernel.h the tracing
-> control prototypes need to be separated into their own header file as they
-> are used in other common header files like rcu.h. There's no point in
-> removing trace_printk.h from kernel.h if it just gets added back to other
-> common headers.
-> 
-> Prototypes are very cheap for the compiler and should not be an issue.
-> 
-> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+TLDR: Replace damon_region->nr_accesses_bp, which is easy to be wrong,
+with a simpler on-demand moving sum function, damon_nr_accesses_mvsum().
 
-Suggested-by: Yury Norov <yury.norov@gmail.com>
+Background
+==========
 
-> ---
-> Changes since v1: https://patch.msgid.link/20260621093811.007634476@kernel.org
-> 
-> - Instead of moving back into kernel.h, create a new trace_controls.h
->   header.
-> 
->  arch/powerpc/xmon/xmon.c         |  1 +
->  arch/s390/kernel/ipl.c           |  1 +
->  arch/s390/kernel/machine_kexec.c |  1 +
->  drivers/gpu/drm/i915/i915_gem.h  |  1 +
->  drivers/tty/sysrq.c              |  1 +
->  include/linux/trace_controls.h   | 54 ++++++++++++++++++++++++++++++++
->  include/linux/trace_printk.h     | 51 ------------------------------
->  kernel/debug/debug_core.c        |  1 +
->  kernel/panic.c                   |  1 +
->  kernel/rcu/rcu.h                 |  2 ++
->  kernel/rcu/rcutorture.c          |  1 +
->  kernel/trace/trace.h             |  1 +
->  kernel/trace/trace_benchmark.c   |  1 +
->  lib/sys_info.c                   |  1 +
->  14 files changed, 67 insertions(+), 51 deletions(-)
->  create mode 100644 include/linux/trace_controls.h
-> 
-> diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-> index cb3a3244ae6f..2135f319e0dd 100644
-> --- a/arch/powerpc/xmon/xmon.c
-> +++ b/arch/powerpc/xmon/xmon.c
-> @@ -27,6 +27,7 @@
->  #include <linux/highmem.h>
->  #include <linux/security.h>
->  #include <linux/debugfs.h>
-> +#include <linux/trace_controls.h>
->  
->  #include <asm/ptrace.h>
->  #include <asm/smp.h>
-> diff --git a/arch/s390/kernel/ipl.c b/arch/s390/kernel/ipl.c
-> index 3c346b02ceb9..baac66cc4de4 100644
-> --- a/arch/s390/kernel/ipl.c
-> +++ b/arch/s390/kernel/ipl.c
-> @@ -22,6 +22,7 @@
->  #include <linux/debug_locks.h>
->  #include <linux/vmalloc.h>
->  #include <linux/secure_boot.h>
-> +#include <linux/trace_controls.h>
->  #include <asm/asm-extable.h>
->  #include <asm/machine.h>
->  #include <asm/diag.h>
-> diff --git a/arch/s390/kernel/machine_kexec.c b/arch/s390/kernel/machine_kexec.c
-> index baeb3dcfc1c8..33f9a89eb3ad 100644
-> --- a/arch/s390/kernel/machine_kexec.c
-> +++ b/arch/s390/kernel/machine_kexec.c
-> @@ -12,6 +12,7 @@
->  #include <linux/delay.h>
->  #include <linux/reboot.h>
->  #include <linux/ftrace.h>
-> +#include <linux/trace_controls.h>
->  #include <linux/debug_locks.h>
->  #include <linux/cpufeature.h>
->  #include <asm/guarded_storage.h>
-> diff --git a/drivers/gpu/drm/i915/i915_gem.h b/drivers/gpu/drm/i915/i915_gem.h
-> index 20b3cb29cfff..1da8fb61c09e 100644
-> --- a/drivers/gpu/drm/i915/i915_gem.h
-> +++ b/drivers/gpu/drm/i915/i915_gem.h
-> @@ -116,6 +116,7 @@ int i915_gem_open(struct drm_i915_private *i915, struct drm_file *file);
->  #endif
->  
->  #if IS_ENABLED(CONFIG_DRM_I915_TRACE_GEM)
-> +#include <linux/trace_controls.h>
->  #define GEM_TRACE(...) trace_printk(__VA_ARGS__)
->  #define GEM_TRACE_ERR(...) do {						\
->  	pr_err(__VA_ARGS__);						\
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index c2e4b31b699a..d3f72dc430b8 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -324,6 +324,7 @@ static const struct sysrq_key_op sysrq_showstate_blocked_op = {
->  };
->  
->  #ifdef CONFIG_TRACING
-> +#include <linux/trace_controls.h>
->  #include <linux/ftrace.h>
->  
->  static void sysrq_ftrace_dump(u8 key)
-> diff --git a/include/linux/trace_controls.h b/include/linux/trace_controls.h
-> new file mode 100644
-> index 000000000000..995b97e963b4
-> --- /dev/null
-> +++ b/include/linux/trace_controls.h
-> @@ -0,0 +1,54 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_TRACE_CONTROLS_H
-> +#define _LINUX_TRACE_CONTROLS_H
-> +
-> +
-> +/*
-> + * General tracing related utility functions - trace_printk(),
-> + * tracing_on/tracing_off and tracing_start()/tracing_stop
-> + *
-> + * Use tracing_on/tracing_off when you want to quickly turn on or off
-> + * tracing. It simply enables or disables the recording of the trace events.
-> + * This also corresponds to the user space /sys/kernel/tracing/tracing_on
-> + * file, which gives a means for the kernel and userspace to interact.
-> + * Place a tracing_off() in the kernel where you want tracing to end.
-> + * From user space, examine the trace, and then echo 1 > tracing_on
-> + * to continue tracing.
-> + *
-> + * tracing_stop/tracing_start has slightly more overhead. It is used
-> + * by things like suspend to ram where disabling the recording of the
-> + * trace is not enough, but tracing must actually stop because things
-> + * like calling smp_processor_id() may crash the system.
-> + *
-> + * Most likely, you want to use tracing_on/tracing_off.
-> + */
-> +enum ftrace_dump_mode {
-> +	DUMP_NONE,
-> +	DUMP_ALL,
-> +	DUMP_ORIG,
-> +	DUMP_PARAM,
-> +};
-> +
-> +#ifdef CONFIG_TRACING
-> +void tracing_on(void);
-> +void tracing_off(void);
-> +int tracing_is_on(void);
-> +void tracing_snapshot(void);
-> +void tracing_snapshot_alloc(void);
-> +void tracing_start(void);
-> +void tracing_stop(void);
-> +void trace_dump_stack(int skip);
+DAMON's monitoring output (access pattern snapshot, or more technically
+speaking, damon_region->nr_accesses) is completed once per aggregation
+interval, which is 100 ms by default.  Users can arbitrarily increase
+the interval for demand.  Under the suggested intervals auto-tuning
+setup, it can span up to 200 seconds.  If the aggregation interval is
+too long, the snapshot users cannot use it in reasonable time.  To
+mitigate this, we introduced a new field of damon_region, namely
+nr_accesses_bp.  It contains a pseudo moving sum of nr_accesses in bp
+units and is updated for each sampling interval.
 
-The function description says:
+It turned out keeping it correctly updated every sampling interval is
+not that easy.  From online parameter update feature development and
+more experimental hacks, we found it is easy to be corrupted.  Once it
+is corrupted, DAMON's monitoring outputs become quite insane.  Hence we
+added a few validation checks.  It is easy  to be corrupted because it
+requires every update per sampling interval to be correct.
 
-  record a stack back trace in the trace buffer
+Solution
+========
 
-So, to me it sounds like it should go to the trace_printk.h.
+There is no real reason to keep it updated every sampling interval.  Due
+to the simple pseudo-moving sum mechanism and existing helper field
+(last_nr_accesses), we can also calculate the pseudo moving sum on
+demand in a much simpler way.
 
-> +void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
+Implement a function for getting the pseudo moving sum on demand, and
+replace nr_accessses_bp uses with the new function.  Also remove no more
+needed tests for nr_accesses_bp and the per-sampling interval update
+functions.  Finally, remove the nr_accesses_bp.  The new function is
+quite simple.
 
-Same here, based on the function name, it relates to ftrace.h, not the
-tracing control itself.
+Discussion
+==========
 
-For example, lib/sys_info.c only calls ftrace_dump, and already
-includes ftrace.h. If you place ftrace_dump() as suggested, you can
-include only ftrace.h in there, and don't include trace_printk.h and
-trace_control.h
+Depending on the use case, multiple nr_accesses readers could be
+executed in the same kdamond_fn() main loop iteration, which is executed
+once per sampling interval.  Such readers include DAMON region exporting
+tracepoints (damon_[region_]aggregated and damos_before_apply), DAMOS,
+and DAMON sysfs interface logic for update_schemes_tried_regions
+command.  In this case, the new function will be called multiple times
+and this could be overhead compared to the old logic, which simply reads
+the field without any additional work.  Nonetheless, the new function is
+quite simple.  And the new approach does nothing while there is no need
+to read.  The old approach had to execute its update function for each
+region for every sampling interval.  Hence the new approach is believed
+to be even more lightweight in common case, and the overhead is anyway
+negligible.
 
-Thanks,
-Yury
+One more advantage of this change is that one field from the
+damon_region struct is removed.  On setups that uses a high number of
+DAMON regions, this could be a potential memory space benefit.
 
-> +#else
-> +static inline void tracing_start(void) { }
-> +static inline void tracing_stop(void) { }
-> +static inline void tracing_on(void) { }
-> +static inline void tracing_off(void) { }
-> +static inline int tracing_is_on(void) { return 0; }
-> +static inline void tracing_snapshot(void) { }
-> +static inline void tracing_snapshot_alloc(void) { }
-> +static inline void trace_dump_stack(int skip) { }
-> +static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
-> +#endif
-> +
-> +#endif /* _LINUX_TRACE_CONTROLS_H */
-> diff --git a/include/linux/trace_printk.h b/include/linux/trace_printk.h
-> index 3d54f440dccf..a488ea9e9f85 100644
-> --- a/include/linux/trace_printk.h
-> +++ b/include/linux/trace_printk.h
-> @@ -7,43 +7,7 @@
->  #include <linux/stddef.h>
->  #include <linux/stringify.h>
->  
-> -/*
-> - * General tracing related utility functions - trace_printk(),
-> - * tracing_on/tracing_off and tracing_start()/tracing_stop
-> - *
-> - * Use tracing_on/tracing_off when you want to quickly turn on or off
-> - * tracing. It simply enables or disables the recording of the trace events.
-> - * This also corresponds to the user space /sys/kernel/tracing/tracing_on
-> - * file, which gives a means for the kernel and userspace to interact.
-> - * Place a tracing_off() in the kernel where you want tracing to end.
-> - * From user space, examine the trace, and then echo 1 > tracing_on
-> - * to continue tracing.
-> - *
-> - * tracing_stop/tracing_start has slightly more overhead. It is used
-> - * by things like suspend to ram where disabling the recording of the
-> - * trace is not enough, but tracing must actually stop because things
-> - * like calling smp_processor_id() may crash the system.
-> - *
-> - * Most likely, you want to use tracing_on/tracing_off.
-> - */
-> -
-> -enum ftrace_dump_mode {
-> -	DUMP_NONE,
-> -	DUMP_ALL,
-> -	DUMP_ORIG,
-> -	DUMP_PARAM,
-> -};
-> -
->  #ifdef CONFIG_TRACING
-> -void tracing_on(void);
-> -void tracing_off(void);
-> -int tracing_is_on(void);
-> -void tracing_snapshot(void);
-> -void tracing_snapshot_alloc(void);
-> -
-> -extern void tracing_start(void);
-> -extern void tracing_stop(void);
-> -
->  static inline __printf(1, 2)
->  void ____trace_printk_check_format(const char *fmt, ...)
->  {
-> @@ -149,8 +113,6 @@ int __trace_printk(unsigned long ip, const char *fmt, ...);
->  extern int __trace_bputs(unsigned long ip, const char *str);
->  extern int __trace_puts(unsigned long ip, const char *str);
->  
-> -extern void trace_dump_stack(int skip);
-> -
->  /*
->   * The double __builtin_constant_p is because gcc will give us an error
->   * if we try to allocate the static variable to fmt if it is not a
-> @@ -173,19 +135,7 @@ __ftrace_vbprintk(unsigned long ip, const char *fmt, va_list ap);
->  
->  extern __printf(2, 0) int
->  __ftrace_vprintk(unsigned long ip, const char *fmt, va_list ap);
-> -
-> -extern void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
->  #else
-> -static inline void tracing_start(void) { }
-> -static inline void tracing_stop(void) { }
-> -static inline void trace_dump_stack(int skip) { }
-> -
-> -static inline void tracing_on(void) { }
-> -static inline void tracing_off(void) { }
-> -static inline int tracing_is_on(void) { return 0; }
-> -static inline void tracing_snapshot(void) { }
-> -static inline void tracing_snapshot_alloc(void) { }
-> -
->  static inline __printf(1, 2)
->  int trace_printk(const char *fmt, ...)
->  {
-> @@ -196,7 +146,6 @@ ftrace_vprintk(const char *fmt, va_list ap)
->  {
->  	return 0;
->  }
-> -static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
->  #endif /* CONFIG_TRACING */
->  
->  #endif
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index b276504c1c6b..f9c83a470c98 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -27,6 +27,7 @@
->  
->  #define pr_fmt(fmt) "KGDB: " fmt
->  
-> +#include <linux/trace_controls.h>
->  #include <linux/pid_namespace.h>
->  #include <linux/clocksource.h>
->  #include <linux/serial_core.h>
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 213725b612aa..1415e910371d 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -9,6 +9,7 @@
->   * This function is used through-out the kernel (including mm and fs)
->   * to indicate a major problem.
->   */
-> +#include <linux/trace_controls.h>
->  #include <linux/debug_locks.h>
->  #include <linux/sched/debug.h>
->  #include <linux/interrupt.h>
-> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> index fa6d30ce73d1..b3e2c8f25a4f 100644
-> --- a/kernel/rcu/rcu.h
-> +++ b/kernel/rcu/rcu.h
-> @@ -280,6 +280,8 @@ extern int rcu_cpu_stall_notifiers;
->  
->  #ifdef CONFIG_RCU_STALL_COMMON
->  
-> +#include <linux/trace_controls.h>
-> +
->  extern int rcu_cpu_stall_ftrace_dump;
->  extern int rcu_cpu_stall_suppress;
->  extern int rcu_cpu_stall_timeout;
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 882a158ada7b..76bf0184b267 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -39,6 +39,7 @@
->  #include <linux/srcu.h>
->  #include <linux/slab.h>
->  #include <linux/trace_clock.h>
-> +#include <linux/trace_controls.h>
->  #include <asm/byteorder.h>
->  #include <linux/torture.h>
->  #include <linux/vmalloc.h>
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 80fe152af1dd..2537c33ddd49 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -22,6 +22,7 @@
->  #include <linux/ctype.h>
->  #include <linux/once_lite.h>
->  #include <linux/ftrace_regs.h>
-> +#include <linux/trace_controls.h>
->  #include <linux/llist.h>
->  
->  #include "pid_list.h"
-> diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
-> index e19c32f2a938..69cc39008c36 100644
-> --- a/kernel/trace/trace_benchmark.c
-> +++ b/kernel/trace/trace_benchmark.c
-> @@ -3,6 +3,7 @@
->  #include <linux/module.h>
->  #include <linux/kthread.h>
->  #include <linux/trace_clock.h>
-> +#include <linux/trace_controls.h>
->  
->  #define CREATE_TRACE_POINTS
->  #include "trace_benchmark.h"
-> diff --git a/lib/sys_info.c b/lib/sys_info.c
-> index f32a06ec9ed4..e3c9ca05601b 100644
-> --- a/lib/sys_info.c
-> +++ b/lib/sys_info.c
-> @@ -8,6 +8,7 @@
->  #include <linux/ftrace.h>
->  #include <linux/nmi.h>
->  #include <linux/sched/debug.h>
-> +#include <linux/trace_controls.h>
->  #include <linux/string.h>
->  #include <linux/sysctl.h>
->  
-> -- 
-> 2.53.0
-> 
+Patches Sequence
+================
+
+Patch 1 introduces the new function for getting the pseudo moving sum of
+nr_accesses on demands.  Patch 2 implements a unit test for the new
+function's internal logic.  Patch 3 and 4 update monitoring logic and
+the new function to ready for safe use on the existing logic.  Patches
+5-7 replace uses of nr_accesses_bp in DAMOS, tracepoints and DAMON sysfs
+interface with the new function, respectively.  Patches 8-10 removes
+nr_accesses_bp validation functions in DAMON core, one by one.  Patches
+11 and 12 further remove tests and test helper for nr_accesses_bp,
+respectively.  Patches 13 removes the setups and updates or
+nr_accesses_bp field.  Patches 14-16 cleans up function parameters that
+are no more being used due to the previous patch.  Patch 17 removes the
+function that was used for updating nr_accesses_bp field with its unit
+test, which is the single remaining caller of the function.  Finally,
+patch 18 removes damon_region->nr_accesses_bp field.
+
+Changes from RFC v1.2
+- RFC v1.2: https://lore.kernel.org/20260621155715.87932-1-sj@kernel.org
+- Explicitly ignore nr_accesses from mvsum at the beginning of
+  aggregation.
+- Fix a typo in a commit message.
+Changes from RFC v1.1
+- RFC v1.1: https://lore.kernel.org/20260620172244.90953-1-sj@kernel.org
+- Handle next_aggregation_sis < passed_sample_intervals in
+  nr_accesses_mvsum().
+- Always rescale ->last_nr_accesss for parameter changes.
+- Remove unused attrs params from damon_update_region_access_rate() and
+  its callers.
+Changes from RFC v1
+- RFC v1: https://lore.kernel.org/20260619193415.73833-1-sj@kernel.org
+- Avoid divide-by-zero from zero aggregation interval.
+- Call damon_nr_accesses_mvsum() for damos tracing only when it is enabled.
+- Remove obsolete mentions of nr_accesses_bp in comments.
+
+SeongJae Park (18):
+  mm/damon: introduce damon_nr_accesses_mvsum()
+  mm/damon/tests/core-kunit: test damon_mvsum()
+  mm/damon/core: always update ->last_nr_accesses for intervals change
+  mm/damon/core: handle unreset nr_accesses in damon_nr_accesses_mvsum()
+  mm/damon/core: use damon_nr_accesses_mvsum() in __damos_valid_target()
+  mm/damon/core: use damon_nr_accesses_mvsum() for damos region tracing
+  mm/damon/sysfs-schemes: use damon_nr_accesses_mvsum() for damo regions
+  mm/damon/core: remove damon_warn_fix_nr_accesses_corruption()
+  mm/damon/core: remove damon_verify_reset_aggregated()
+  mm/damon/core: remove damon_verify_merge_regions_of()
+  mm/damon/tests/core-kunit: remove nr_accesses_bp setup and tests
+  selftests/damon/drgn_dump_damon_status: do not dump nr_accesses_bp
+  mm/damon/core: remove nr_accesses_bp setups and updates
+  mm/damon/core: remove attrs param from
+    damon_update_region_access_rate()
+  mm/damonn/paddr: remove attrs param from __damon_pa_check_access()
+  mm/damon/vaddr: remove attrs param from __damon_va_check_access()
+  mm/damon/core: remove damon_moving_sum() and its unit test
+  mm/damon: remove damon_region->nr_accesses_bp
+
+ include/linux/damon.h                         |  15 +-
+ include/trace/events/damon.h                  |   8 +-
+ mm/damon/core.c                               | 201 +++++++-----------
+ mm/damon/paddr.c                              |   9 +-
+ mm/damon/sysfs-schemes.c                      |   6 +-
+ mm/damon/tests/core-kunit.h                   |  37 ++--
+ mm/damon/vaddr.c                              |  12 +-
+ .../selftests/damon/drgn_dump_damon_status.py |   1 -
+ 8 files changed, 119 insertions(+), 170 deletions(-)
+
+
+base-commit: e08d3bec1dc38cc991fc819afd698bf7bd07bd6d
+-- 
+2.47.3
