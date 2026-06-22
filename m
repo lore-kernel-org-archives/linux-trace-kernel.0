@@ -1,297 +1,177 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f208.google.com (mail-oi1-f208.google.com [209.85.167.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1EF35DA5D;
-	Mon, 22 Jun 2026 06:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2FD360EF4
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 06:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782108981; cv=none; b=lfesxdaTZcQ+VZ1jzsbEZTiiKg+WqNJXvPSsI7vatbgFjaNue3R/y2LJBhy5UEw+oBChnI3gyYChvCyYizPD0NKlBr2DMm/+G7lqv5YtEIPKvCcDh6JJwkEwpVSKHzFw4GZYoUeDVXncergJITKsOHJerDEzNbqaZ0D1HX0hweQ=
+	t=1782111562; cv=none; b=exV2pkK2bWDN0GwLyx1X+mnhut7qtJMwnMuqZzgetA8BC8XPH7gbLM15rsG1XjSrlI5pS4GRQWq+h1jekJsRgIgJES3FXr0c8SeGIf0PoJXCtLKzdaY1d+aXCjAC3WXgfzj0vsD2ru+Qr94/75nXzKWqTrmnibLRbfZzA8J7fTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782108981; c=relaxed/simple;
-	bh=hk8s1HyY3dzHKU/LGLjDjlXFo8lRWPfUJ+Vkj0iR3dk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F1ggR9CTuEuGVyTuf9KE1/GpZM0RPl0Knr+KdqWSBado0xvY9SUiJXosvYsSgYIB/dxltiKldZ5Tj/cKoSI3YhXdEnlzaz/N71tPKr5n6w+HtKRtarvoe15z4zBg8ZhG3DUxT0pa9V1wtV3G4adepCRLb17CIDGyiJIsVYuOmyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t15fr1vS; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t15fr1vS"
-Message-ID: <8c8f1849-86d3-4c69-be27-30bbdffdf616@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782108966;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uc01vIZYGfTIV3fdEG67Z2UKVAOKK7e6urfcQoWTPXs=;
-	b=t15fr1vSWPqYuOVx1/bxMEqBYsgHtm0lD1qKuOgL6xYl94f+kJLWMkDtNXA1O6oXS4NWrk
-	UXfi4I4xGSapixdXs6K5v7yl7QxZTsj0xBO+b54oW8Z9JaKuiK5OobLxhWf+TcWH/AL++5
-	EurPaDWOivYCOI4YE0QW4UrJN1dv49Y=
-Date: Mon, 22 Jun 2026 14:15:01 +0800
+	s=arc-20240116; t=1782111562; c=relaxed/simple;
+	bh=AgcuzwIjjv8yYFF8QnqEVbIJ9+BBcQRSlSd2ixjkgcI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Oq6pUq1cPt4SFgqZrbolksZUfHQyGgP5U7Pcb8Xqr2VQj1VMuA27Ar8oOz1CM4d6J5TzE7w4QEiR/wYKyOlVXC8i9NPi+mi9akdWxnFvzur46javpn2DithVNdC+0dVgEPR31CvSjUHa127tGXUiz0lQKIXbSOZRlaMjYx0Gx38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oi1-f208.google.com with SMTP id 5614622812f47-485fdae1db3so7123055b6e.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Jun 2026 23:59:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782111559; x=1782716359;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dee/d/lype2pOO/ItFtdTcT37BMlTqmm2dUXLU1k+7Q=;
+        b=LQmqXM7rW4mLWEa+IJDLG6alRmUjLAfvJzmfEoU2h8kby8Za7MJflgLxLTOdwFa7Vn
+         TTrROEdUwFPYrx1+fncbyX3nPSELQm0i/k7VEpuYEUF8BcVKkw7BLPwoFBpvkjglNHeU
+         keHhM/0tOuZ1305vfU0fvZBz6fZffHykT6L3mogmwuDllC18Ofiym1/XbzA0sXLwGh65
+         BzeGnSCkQvrR0Kr6iYIrxGNedbLbyOrCvQDbYlhVVndtEmtjMzQYs0JhjKcUiFPGaZgL
+         OGLYq7jaTfay4xU3mpcYZWEY0sc60m1pZ25cYGAvIk0ay2B+/PTKky4UXavW7TysPd36
+         B7ww==
+X-Forwarded-Encrypted: i=1; AFNElJ9+IggSEmh8n1ve9+fWOBe5XpsV06Da/kOIR1eBmT7+yTGFmox0UbZ359OnXV9GHjnvE+EwUoM40xtFh6mUx9cU87Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNkyvtV9POpCvwckdrM8lEf8veQ9eCH2N+TxK4BKz4MI92Tpmd
+	Wil90BmpzgjRRTrTNQm0NDhUPCaoxu4cbKGRGnvifZoVfaOG/l9pIf6vZD+oZZXfK94d2dAhqQ/
+	5hBE3Vw0PAftx1D50BVTDNv0b1nUH7is140XB4oHUs/Qmbfi3hphok4UbKAA=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
- state
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Paul Moore <paul@paul-moore.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Howells <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>,
- Randy Dunlap <rdunlap@infradead.org>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
- linux-ntfs-dev@lists.sourceforge.net,
- Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
- io-uring <io-uring@vger.kernel.org>, audit@vger.kernel.org,
- bpf <bpf@vger.kernel.org>, Network Development <netdev@vger.kernel.org>,
- dri-devel@lists.freedesktop.org,
- "linux-perf-use." <linux-perf-users@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
- kexec@lists.infradead.org, live-patching@vger.kernel.org,
- linux-modules@vger.kernel.org,
- Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
- Linux Power Management <linux-pm@vger.kernel.org>, rcu@vger.kernel.org,
- sched-ext@lists.linux.dev, linux-mm <linux-mm@kvack.org>,
- virtualization@lists.linux.dev, damon@lists.linux.dev,
- clang-built-linux <llvm@lists.linux.dev>,
- chengkaitao <chengkaitao@kylinos.cn>, Muchun Song <muchun.song@linux.dev>
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
- <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kaitao Cheng <kaitao.cheng@linux.dev>
-In-Reply-To: <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6808:14d6:b0:489:61e0:544a with SMTP id
+ 5614622812f47-48ac065c421mr7636488b6e.22.1782111559702; Sun, 21 Jun 2026
+ 23:59:19 -0700 (PDT)
+Date: Sun, 21 Jun 2026 23:59:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6a38dd47.713c5d62.148f7.000c.GAE@google.com>
+Subject: [syzbot] [trace?] general protection fault in mtree_load
+From: syzbot <syzbot+61ce80689253f42e6d80@syzkaller.appspotmail.com>
+To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, mingo@redhat.com, oleg@redhat.com, peterz@infradead.org, 
+	syzkaller-bugs@googlegroups.com, tglx@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    6b5a2b7d9bc1 Merge tag 'trace-tools-v7.2' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16d56986580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea6584355d75e0cd
+dashboard link: https://syzkaller.appspot.com/bug?extid=61ce80689253f42e6d80
+compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-6b5a2b7d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b3cb0499fbe9/vmlinux-6b5a2b7d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/47cfbe57f6ea/bzImage-6b5a2b7d.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+61ce80689253f42e6d80@syzkaller.appspotmail.com
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000011: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000088-0x000000000000008f]
+CPU: 3 UID: 0 PID: 24402 Comm: syz.4.5217 Tainted: G             L      syzkaller #0 PREEMPT(full) 
+Tainted: [L]=SOFTLOCKUP
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+RIP: 0010:mas_root lib/maple_tree.c:759 [inline]
+RIP: 0010:mas_start lib/maple_tree.c:1179 [inline]
+RIP: 0010:mtree_load+0x16d/0xa90 lib/maple_tree.c:5657
+Code: 00 00 00 00 48 c7 44 24 78 ff ff ff ff e8 6b bd 84 f6 48 8b 5c 24 50 c6 84 24 9c 00 00 00 00 48 8d 7b 48 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 d6 08 00 00 48 8b 5b 48 e8 6f 1a 08 00 31 ff
+RSP: 0018:ffffc900039c76d8 EFLAGS: 00010206
+RAX: 0000000000000011 RBX: 0000000000000040 RCX: ffffffff8b848746
+RDX: ffff888041b6a540 RSI: ffffffff8b848775 RDI: 0000000000000088
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000001
+R10: 0000000000000001 R11: 000000000000751b R12: dffffc0000000000
+R13: ffff88802693adc0 R14: 00001fff904365a7 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880d665f000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f44aa04f156 CR3: 00000000364d5000 CR4: 0000000000352ef0
+Call Trace:
+ <TASK>
+ vma_lookup include/linux/mm.h:4204 [inline]
+ __in_uprobe_trampoline arch/x86/kernel/uprobes.c:766 [inline]
+ __is_optimized arch/x86/kernel/uprobes.c:1056 [inline]
+ is_optimized arch/x86/kernel/uprobes.c:1067 [inline]
+ set_orig_insn+0x1ec/0x2a0 arch/x86/kernel/uprobes.c:1098
+ remove_breakpoint kernel/events/uprobes.c:1185 [inline]
+ register_for_each_vma+0xbb7/0xdb0 kernel/events/uprobes.c:1318
+ uprobe_unregister_nosync+0x12a/0x1c0 kernel/events/uprobes.c:1343
+ bpf_uprobe_unregister kernel/trace/bpf_trace.c:2936 [inline]
+ bpf_uprobe_multi_link_release+0xb3/0x1c0 kernel/trace/bpf_trace.c:2947
+ bpf_link_free+0xec/0x4a0 kernel/bpf/syscall.c:3273
+ bpf_link_put_direct kernel/bpf/syscall.c:3326 [inline]
+ bpf_link_release+0x5d/0x80 kernel/bpf/syscall.c:3333
+ __fput+0x3ff/0xb50 fs/file_table.c:512
+ task_work_run+0x150/0x240 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x951/0x2ae0 kernel/exit.c:1004
+ do_group_exit+0xd5/0x2a0 kernel/exit.c:1147
+ get_signal+0x1ec7/0x21e0 kernel/signal.c:3038
+ arch_do_signal_or_restart+0x91/0x7e0 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:66 [inline]
+ exit_to_user_mode_loop+0x139/0x6f0 kernel/entry/common.c:101
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ ret_from_fork+0x932/0xd50 arch/x86/kernel/process.c:167
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:mas_root lib/maple_tree.c:759 [inline]
+RIP: 0010:mas_start lib/maple_tree.c:1179 [inline]
+RIP: 0010:mtree_load+0x16d/0xa90 lib/maple_tree.c:5657
+Code: 00 00 00 00 48 c7 44 24 78 ff ff ff ff e8 6b bd 84 f6 48 8b 5c 24 50 c6 84 24 9c 00 00 00 00 48 8d 7b 48 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 d6 08 00 00 48 8b 5b 48 e8 6f 1a 08 00 31 ff
+RSP: 0018:ffffc900039c76d8 EFLAGS: 00010206
+RAX: 0000000000000011 RBX: 0000000000000040 RCX: ffffffff8b848746
+RDX: ffff888041b6a540 RSI: ffffffff8b848775 RDI: 0000000000000088
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000001
+R10: 0000000000000001 R11: 000000000000751b R12: dffffc0000000000
+R13: ffff88802693adc0 R14: 00001fff904365a7 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880d665f000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c433cbf CR3: 00000000429b6000 CR4: 0000000000352ef0
+----------------
+Code disassembly (best guess):
+   0:	00 00                	add    %al,(%rax)
+   2:	00 00                	add    %al,(%rax)
+   4:	48 c7 44 24 78 ff ff 	movq   $0xffffffffffffffff,0x78(%rsp)
+   b:	ff ff
+   d:	e8 6b bd 84 f6       	call   0xf684bd7d
+  12:	48 8b 5c 24 50       	mov    0x50(%rsp),%rbx
+  17:	c6 84 24 9c 00 00 00 	movb   $0x0,0x9c(%rsp)
+  1e:	00
+  1f:	48 8d 7b 48          	lea    0x48(%rbx),%rdi
+  23:	48 89 f8             	mov    %rdi,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 20 00       	cmpb   $0x0,(%rax,%r12,1) <-- trapping instruction
+  2f:	0f 85 d6 08 00 00    	jne    0x90b
+  35:	48 8b 5b 48          	mov    0x48(%rbx),%rbx
+  39:	e8 6f 1a 08 00       	call   0x81aad
+  3e:	31 ff                	xor    %edi,%edi
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-在 2026/6/22 13:28, Alexei Starovoitov 写道:
-> On Sun, Jun 21, 2026 at 9:06 PM Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
->>
->> From: chengkaitao <chengkaitao@kylinos.cn>
->>
->> The list_for_each*_safe() helpers are used when the loop body may remove
->> the current entry.  Their current interface, however, forces every caller
->> to define a temporary cursor outside the macro and pass it in, even when
->> the caller never uses that cursor directly.  For most call sites this
->> extra cursor is just boilerplate required by the macro implementation.
->>
->> This is awkward because the saved next pointer is an internal detail of
->> the iteration.  Callers that only remove or move the current entry do not
->> need to spell it out.
->>
->> The _safe() suffix has also caused confusion.  Christian Koenig pointed
->> out that the name is easy to read as a thread-safe variant, especially
->> for beginners, even though it only means that the iterator keeps enough
->> state to tolerate removal of the current entry.  He suggested _mutable()
->> as a clearer description of what the loop permits.
->>
->> Add *_mutable() iterator variants for list, hlist and llist.  The new
->> helpers are variadic and support both forms.  In the common case, the
->> caller omits the temporary cursor and the macro creates a unique internal
->> cursor with typeof(pos) and __UNIQUE_ID().  If a loop really needs an
->> explicit temporary cursor, the caller can still pass it and the helper
->> keeps the existing *_safe() behaviour.
->>
->> For example, a call site may use the shorter form:
->>
->>   list_for_each_entry_mutable(pos, head, member)
->>
->> or keep the explicit temporary cursor form:
->>
->>   list_for_each_entry_mutable(pos, tmp, head, member)
->>
->> The existing *_safe() helpers remain available for compatibility.  This
->> series only converts users in mm, block, kernel, init and io_uring.  If
->> this approach looks acceptable, the remaining users can be converted in
->> follow-up series.
->>
->> Changes in v3 (Christian König, Andy Shevchenko):
->> - Convert safe list walks to mutable iterators
->>
->> Changes in v2 (Muchun Song, Andy Shevchenko):
->> - Drop the list_for_each_entry_mutable*() helpers from v1 and make the
->>   cursor change directly in the existing list_for_each_entry*() helpers.
->> - Open-code special list walks that rely on updating the loop cursor in
->>   the body, preserving their existing traversal semantics.
->>
->> Link to v2:
->> https://lore.kernel.org/all/20260609061347.93688-1-kaitao.cheng@linux.dev/
->>
->> Link to v1:
->> https://lore.kernel.org/all/20260529082149.76764-1-kaitao.cheng@linux.dev/
->>
->> Kaitao Cheng (7):
->>   list: Add mutable iterator variants
->>   llist: Add mutable iterator variants
->>   mm: Use mutable list iterators
->>   block: Use mutable list iterators
->>   kernel: Use mutable list iterators
->>   initramfs: Use mutable list iterator
->>   io_uring: Use mutable list iterators
->>
->>  block/bfq-iosched.c                 |  17 +-
->>  block/blk-cgroup.c                  |  12 +-
->>  block/blk-flush.c                   |   4 +-
->>  block/blk-iocost.c                  |  18 +-
->>  block/blk-mq.c                      |   8 +-
->>  block/blk-throttle.c                |   4 +-
->>  block/kyber-iosched.c               |   4 +-
->>  block/partitions/ldm.c              |   8 +-
->>  block/sed-opal.c                    |   4 +-
->>  include/linux/list.h                | 269 ++++++++++++++++++++++++----
->>  include/linux/llist.h               |  81 +++++++--
->>  init/initramfs.c                    |   5 +-
->>  io_uring/cancel.c                   |   6 +-
->>  io_uring/poll.c                     |   3 +-
->>  io_uring/rw.c                       |   4 +-
->>  io_uring/timeout.c                  |   8 +-
->>  io_uring/uring_cmd.c                |   3 +-
->>  kernel/audit_tree.c                 |   4 +-
->>  kernel/audit_watch.c                |  16 +-
->>  kernel/auditfilter.c                |   4 +-
->>  kernel/auditsc.c                    |   4 +-
->>  kernel/bpf/arena.c                  |  10 +-
->>  kernel/bpf/arraymap.c               |   8 +-
->>  kernel/bpf/bpf_local_storage.c      |   3 +-
->>  kernel/bpf/bpf_lru_list.c           |  25 ++-
->>  kernel/bpf/btf.c                    |  18 +-
->>  kernel/bpf/cgroup.c                 |   7 +-
->>  kernel/bpf/cpumap.c                 |   4 +-
->>  kernel/bpf/devmap.c                 |  10 +-
->>  kernel/bpf/helpers.c                |   8 +-
->>  kernel/bpf/local_storage.c          |   4 +-
->>  kernel/bpf/memalloc.c               |  16 +-
->>  kernel/bpf/offload.c                |   8 +-
->>  kernel/bpf/states.c                 |   4 +-
->>  kernel/bpf/stream.c                 |   4 +-
->>  kernel/bpf/verifier.c               |   6 +-
->>  kernel/cgroup/cgroup-v1.c           |   4 +-
->>  kernel/cgroup/cgroup.c              |  54 +++---
->>  kernel/cgroup/dmem.c                |  12 +-
->>  kernel/cgroup/rdma.c                |   8 +-
->>  kernel/events/core.c                |  44 +++--
->>  kernel/events/uprobes.c             |  12 +-
->>  kernel/exit.c                       |   8 +-
->>  kernel/fail_function.c              |   4 +-
->>  kernel/gcov/clang.c                 |   4 +-
->>  kernel/irq_work.c                   |   4 +-
->>  kernel/kexec_core.c                 |   4 +-
->>  kernel/kprobes.c                    |  16 +-
->>  kernel/livepatch/core.c             |   4 +-
->>  kernel/livepatch/core.h             |   4 +-
->>  kernel/liveupdate/kho_block.c       |   4 +-
->>  kernel/liveupdate/luo_flb.c         |   4 +-
->>  kernel/locking/rwsem.c              |   2 +-
->>  kernel/locking/test-ww_mutex.c      |   2 +-
->>  kernel/module/main.c                |  11 +-
->>  kernel/padata.c                     |   4 +-
->>  kernel/power/snapshot.c             |   8 +-
->>  kernel/power/wakelock.c             |   4 +-
->>  kernel/printk/printk.c              |  11 +-
->>  kernel/ptrace.c                     |   4 +-
->>  kernel/rcu/rcutorture.c             |   3 +-
->>  kernel/rcu/tasks.h                  |   9 +-
->>  kernel/rcu/tree.c                   |   6 +-
->>  kernel/resource.c                   |   4 +-
->>  kernel/sched/core.c                 |   4 +-
->>  kernel/sched/ext.c                  |  22 +--
->>  kernel/sched/fair.c                 |  28 +--
->>  kernel/sched/topology.c             |   4 +-
->>  kernel/sched/wait.c                 |   4 +-
->>  kernel/seccomp.c                    |   4 +-
->>  kernel/signal.c                     |  11 +-
->>  kernel/smp.c                        |   4 +-
->>  kernel/taskstats.c                  |   8 +-
->>  kernel/time/clockevents.c           |   6 +-
->>  kernel/time/clocksource.c           |   4 +-
->>  kernel/time/posix-cpu-timers.c      |   4 +-
->>  kernel/time/posix-timers.c          |   3 +-
->>  kernel/torture.c                    |   3 +-
->>  kernel/trace/bpf_trace.c            |   4 +-
->>  kernel/trace/ftrace.c               |  49 +++--
->>  kernel/trace/ring_buffer.c          |  25 ++-
->>  kernel/trace/trace.c                |  12 +-
->>  kernel/trace/trace_dynevent.c       |   6 +-
->>  kernel/trace/trace_dynevent.h       |   5 +-
->>  kernel/trace/trace_events.c         |  35 ++--
->>  kernel/trace/trace_events_filter.c  |   4 +-
->>  kernel/trace/trace_events_hist.c    |   8 +-
->>  kernel/trace/trace_events_trigger.c |  17 +-
->>  kernel/trace/trace_events_user.c    |  16 +-
->>  kernel/trace/trace_stat.c           |   4 +-
->>  kernel/user-return-notifier.c       |   3 +-
->>  kernel/workqueue.c                  |  16 +-
->>  mm/backing-dev.c                    |   8 +-
->>  mm/balloon.c                        |   8 +-
->>  mm/cma.c                            |   4 +-
->>  mm/compaction.c                     |   4 +-
->>  mm/damon/core.c                     |   4 +-
->>  mm/damon/sysfs-schemes.c            |   4 +-
->>  mm/dmapool.c                        |   4 +-
->>  mm/huge_memory.c                    |   8 +-
->>  mm/hugetlb.c                        |  56 +++---
->>  mm/hugetlb_vmemmap.c                |  16 +-
->>  mm/khugepaged.c                     |  14 +-
->>  mm/kmemleak.c                       |   7 +-
->>  mm/ksm.c                            |  25 +--
->>  mm/list_lru.c                       |   4 +-
->>  mm/memcontrol-v1.c                  |   8 +-
->>  mm/memory-failure.c                 |  12 +-
->>  mm/memory-tiers.c                   |   4 +-
->>  mm/migrate.c                        |  23 ++-
->>  mm/mmu_notifier.c                   |   9 +-
->>  mm/page_alloc.c                     |   8 +-
->>  mm/page_reporting.c                 |   2 +-
->>  mm/percpu.c                         |  11 +-
->>  mm/pgtable-generic.c                |   4 +-
->>  mm/rmap.c                           |  10 +-
->>  mm/shmem.c                          |   9 +-
->>  mm/slab_common.c                    |  14 +-
->>  mm/slub.c                           |  33 ++--
->>  mm/swapfile.c                       |   4 +-
->>  mm/userfaultfd.c                    |  12 +-
->>  mm/vmalloc.c                        |  24 +--
->>  mm/vmscan.c                         |   7 +-
->>  mm/zsmalloc.c                       |   4 +-
->>  124 files changed, 875 insertions(+), 681 deletions(-)
-> 
-> Not sure what you were thinking, but this diff stat
-> is not landable.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-[PATCH v3 1/7] and [PATCH v3 2/7] contain the main logic and can
-be merged directly. They are also compatible with the old API.
-[PATCH v3 3/7] through [PATCH v3 7/7] are just simple interface
-replacements and do not change any functional logic. They can be
-left unmerged for now; individual modules can pick them up later
-if needed.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-In v2, Andy Shevchenko mentioned: "If it's done by Linus himself
-during the day when he prepares -rc1, it's fine." Even so, the
-changes in this patch series are indeed quite large and touch
-almost every subsystem. I have only converted part of them for
-now, so I wanted to send this out first and see what people think.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
--- 
-Thanks
-Kaitao Cheng
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
+If you want to undo deduplication, reply with:
+#syz undup
