@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC3A1547C0;
-	Mon, 22 Jun 2026 15:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208063314B7;
+	Mon, 22 Jun 2026 15:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782141693; cv=none; b=OYSJ/bVzHTCIi4p/W253AezpvF+/juRPK93eC5CIglX2ykql4FZ9cj1jA4oCZBaf/Y4sWC0ge7OLFdKewt5GS2SLL1WOvG4ksqzCSjQBIjcFiHAaLyTsL0nVcwp9entOWVR7UpVh7JNPlZTjOeRui8nKkXpvfeaZT2NsQYgCb+c=
+	t=1782141717; cv=none; b=OBVnOUlVp+dYgDGC1dHTxWt6oKNmPFlmVv2N1PO22R+E0jfL580tHk1Kvu4SCy6aVMmICcubuuHSEIPZXW9+VoKZONZYvEMn9fU4H/jqrrSd/95lEobNjFhEokSBa4KfSryxvFHHB3xewxdAPFnvKZAqa1i5Lska6zKSuYFsmsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782141693; c=relaxed/simple;
-	bh=A7EsyfoS+QDNjUA5lAcxk34cZXl91nrRJUrO1ALq2os=;
+	s=arc-20240116; t=1782141717; c=relaxed/simple;
+	bh=/ckRsrHFrU7aeG7XGLDQiPl7NyycZTI1IIkl2emyW2E=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eggRqR06L3EBAHWdOfVpG6c1VFm+hqWOLgMM8irNyNBX9cXA8qVqHZiXo4n6L50CiXlXkiHkMXAdTMbs28Dg/X+IB+nkyHJ08cKlGqfxWJlqBmWjgXAGz70AmNl68uEzpBW0gy+Opkp38srkwiavMoDR4LyJNjjNYTCA5zrHGV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaO7VhhQ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=bkOw6iLcOVYZCee/p3l1ogZMHjHd6aphfzWPG8CnfxkZFm3GM5qenDSjZh6eOy5yWtLKaCAK8qIg0yBWBPUT3fQBwXKOE7aficdDuGN2LmeGz2pKlAdGAvkkd5Zu/Fl/kwtIeAPzjT60z1FlBOB7AXxD31NjZFabkc+/Z/iFbrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvpMFWsf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaO7VhhQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B01671F000E9;
-	Mon, 22 Jun 2026 15:21:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvpMFWsf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA0011F000E9;
+	Mon, 22 Jun 2026 15:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782141692;
-	bh=Lr+SBaFaR+hMEGntl6oFN62eDSQVVgfspGlk04ujMPc=;
+	s=k20260515; t=1782141715;
+	bh=D1bneM2mCN98hSZmqxk4GKLwd+efElLVoDFRUpMrdhk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=TaO7VhhQn5gI6MFwhQvoQw3hNwao3B9Ctyyxfm96NwulPNfogA6mR2lz+EZhUXrIA
-	 KLy0++EgkTTW3eLnJcF9fslxBmT7tJkyjpUHMQBIguOgge46wb4q+UPZFMEN4sTELc
-	 jv4rBASghAxkQztJPxzmsAPf3D0u4/nL1Qh++ymp12Rvljrv9BVPEaKIxZ3DCG9N/u
-	 yxuT99o7hyqY5ieaq9tS9nfJ7g7dYTexyDhXbCEpaaZ3diAhRgHOjxCMhRSDHhbZ9/
-	 4/EelHEhQqW2f9gbnTEfaqYwWlF2T6Q2tgY5RVt0T/alxkO7+cMTKrs5/Bm446REhc
-	 GFoiVpGZxv0Ww==
-Date: Mon, 22 Jun 2026 11:21:27 -0400
+	b=GvpMFWsfBEfoGIJrskWt/9OxAW2wBoUk2kA4juiRXNFDk/CSfgMWmCO5RWluVwCCi
+	 9R0kveb33YscMMwAfRdNdKRqIj3X0+i5ha5OYN7b4JhS5FltJvEFHvE+wUf3ByFfkN
+	 HFkT1/73P4rsRE0XNvW+Qx/c7iSD0JtEPLgAvwRpy2yTvUNYxMK8bzum0gpfbgOwzV
+	 t17IaomzJd3M18Id+c1m1RraMvkxXbYA7NvWFtKrU21ZSP6/eam/X7AY1Y3je53Pmk
+	 KPvQE8cZBDOwqaLw6rMW0pe540q4whhY8cNU/NlvoHoy4GftEPRdGbMGTe5GX8S+dh
+	 dDYVvPqUrAkEg==
+Date: Mon, 22 Jun 2026 11:21:50 -0400
 From: Steven Rostedt <rostedt@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
  <akpm@linux-foundation.org>, Linus Torvalds
  <torvalds@linux-foundation.org>, Sebastian Andrzej Siewior
  <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Thomas
  Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Julia
- Lawall <julia.lawall@inria.fr>
-Subject: Re: [PATCH v2 1/2] tracing: Move non-trace_printk prototypes into
- trace_controls.h
-Message-ID: <20260622112127.5763f5ba@fedora>
-In-Reply-To: <ajk7fN5v31kCfGVp@yury>
+ Lawall <julia.lawall@inria.fr>, Yury Norov <yury.norov@gmail.com>
+Subject: Re: [PATCH v2 0/2] tracing: Remove trace_printk.h from kernel.h
+Message-ID: <20260622112150.14d4c162@fedora>
+In-Reply-To: <20260622234416.9f85ff87b81bcfb9776c73a6@kernel.org>
 References: <20260622130739.375198646@kernel.org>
-	<20260622131029.655382134@kernel.org>
-	<ajk7fN5v31kCfGVp@yury>
+	<20260622234416.9f85ff87b81bcfb9776c73a6@kernel.org>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,24 +52,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Jun 2026 09:41:16 -0400
-Yury Norov <yury.norov@gmail.com> wrote:
+On Mon, 22 Jun 2026 23:44:16 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Mon, Jun 22, 2026 at 09:07:40AM -0400, Steven Rostedt wrote:
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> > 
-> > In order to remove the include to trace_printk.h from kernel.h the tracing
-> > control prototypes need to be separated into their own header file as they
-> > are used in other common header files like rcu.h. There's no point in
-> > removing trace_printk.h from kernel.h if it just gets added back to other
-> > common headers.
-> > 
-> > Prototypes are very cheap for the compiler and should not be an issue.
-> > 
-> > Signed-off-by: Steven Rostedt <rostedt@goodmis.org>  
+> The series looks good to me.
 > 
-> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thanks, I'll add you tag.
+Thanks!
 
 -- Steve
