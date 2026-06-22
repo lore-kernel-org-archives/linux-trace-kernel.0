@@ -1,151 +1,150 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C5E33123D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 18:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB1D347FC8
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 19:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782154325; cv=none; b=dsd/NjWBIITx74YvrNUBSEkFsNqR1pRjcMlSpjt/4qKvpXt1k7HA0CbsQe5AzY9C7dOOHWQt8DGvPZy7T+DRcrD9n1a5VT2rjZ00FjlgtkJexzFdMnRqFPZMTIikCH4EE7cgIbY4kHsN4bi+bBh6WVf7ZwTc2+kcf65VCA/Bawk=
+	t=1782155036; cv=none; b=t7lkYsC9uM4SmOLmh9XxrEyK2RkWPKB5BRdn5iVF//sl3s0ONOIsgcm2sngosXAzUHliaoHUKk/5T4GkzfiGlnrkKmb7TrsA12dvcXpQEzP1jBSwIKLPl3hHtLVrBYlWrKEeJ6fY73uocbmDuKDMHKu0N0wAKdE2Aw+4Zv2jmGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782154325; c=relaxed/simple;
-	bh=cquM22kQ1qwztn9LoA0LACh6bK4Sgp7dDbVzAOSs540=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WZEaaLrWoRIr7hUgsug4gpIr/Aja1SRBKO1PGxWQ7f15ZNPNxnAixofM7RI4j2ynt6aJGzCpbNFRjShoc3YeRF6D26SQMhA696I0RuKkrsCMkXAWHjTfxGJDLzjpR533/Z8HvA5pBeAql5tvq5UXRuQ36JB8q24bSxIbEzYexmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LQ5UmGuH; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782155036; c=relaxed/simple;
+	bh=uM6rjwv+rWrcNEl8KjTKnVcDSG3oUNpsPUMqnFOcLeE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PdhP0mbb7Bt6kl/eOrcP/054iSE/N1T3otV7WefP3qpblwzbs6r0eoInL4pWnQ4N0l2/RsU2Rl9Xde+HiW5/cscOLm7KkDVyOu/dw7mJuQSiG7JHKg5mBdaGyis4utNUTe3jo+JEPCEPkekS1edQpO0XxTrhaTCRSx1QWV37lsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFiZE21b; arc=none smtp.client-ip=74.125.82.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LQ5UmGuH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782154311;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=P2FntB3QrBOJu+PV6zq+MqWBctOWxjgmfPOSEN+T8fQ=;
-	b=LQ5UmGuHzFWHqd4GHfy0JN96cJGwdY/deLgob6tnNEhffHniusw8d7dZWRP4O+D7ueXhqo
-	saP0kl8mWM9szfoXk82w7rja1AKDf7JQnoge7BEACXrcmH6IDhOC6XNsL11Sh7ipaYm+9p
-	Qo+lpUJuO2M0jG8xOjGMd2NExehc6rI=
-From: JP Kobryn <jp.kobryn@linux.dev>
-To: linux-mm@kvack.org,
-	willy@infradead.org,
-	shakeel.butt@linux.dev,
-	usama.arif@linux.dev,
-	akpm@linux-foundation.org,
-	vbabka@kernel.org,
-	mhocko@suse.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	kasong@tencent.com,
-	qi.zheng@linux.dev,
-	baohua@kernel.org,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	chrisl@kernel.org,
-	shikemeng@huaweicloud.com,
-	nphamcs@gmail.com,
-	baoquan.he@linux.dev,
-	youngjun.park@lge.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5] mm/lruvec: trace LRU add drains and drain-all requests
-Date: Mon, 22 Jun 2026 11:51:27 -0700
-Message-ID: <20260622185127.24579-1-jp.kobryn@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFiZE21b"
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-30c0a352e33so197591eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 12:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782155033; x=1782759833; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uM6rjwv+rWrcNEl8KjTKnVcDSG3oUNpsPUMqnFOcLeE=;
+        b=LFiZE21bJOd27mvhUeQY65zQorGfroSNylZhnl5pr3qjxqG/eN1p6cReYMi7Y8XHb0
+         7P2yUKScTc7SL9KBMwdl8WT1nEKnGZf9ur45NKJJuEmRNsVr4TarSwghnJCBC39U5FT/
+         hbLMbAuZB7Uhid7P768tqQ5oB5rNa0UgEghjqL8I6E/OiecFdkW7XXJUCVzAvM2Bcvqj
+         aAAg70ofC8G+A3+uW7Vx2nk3e0tc12ATFJvEbWA6+4EjPe4CrUqJXP2Emg2HT57KZ67b
+         LsX6aiKqdjYFThFXLMKvM5eHENHiOf+kS4D8rdkQabgcObx3aWN/R9FVWrU0LGgqTlRe
+         mYGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782155033; x=1782759833;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uM6rjwv+rWrcNEl8KjTKnVcDSG3oUNpsPUMqnFOcLeE=;
+        b=Hwey1SEsx2NttTOOjlLN+4gcxM905X3/027ETLdrpMLfw0fQEDJGxW6SnpjIMGoZce
+         +YQZ3c0XpBl1bnMa0v4qny+XtQm4cQqJrvdxx07KvuY0+922XmbPVmBHlmOEY4Xu2HO5
+         rc2hzC7Kcsg3dCHYJX1Bk9mRd2kVj+4u3UZLSWhT//N+WsPbWgW58LaJklLs9T/5mgDJ
+         imBW/xPtgfK/wWztNZqZ2Le6ntNMhuc/0BiIDtfYDZj2mmkgCNnKzm68azqVLwQHfzjN
+         76MgS2wthz/PPHYrCMbx47w8rdiA9lkSyDptgOuXJQ89J+vp8fORyenc5LVEOLxY7NyX
+         cYRw==
+X-Forwarded-Encrypted: i=1; AHgh+Rof1NdYYIHlV+Nno9ky+TSaXzonkfC6aK7ieu/kTLEerKKOGs5e7RebigVBtEUBPVan4p5CsaiM1OJ71YtzVo8Uohk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztH/v64DFBav0r2CqKJtvUE1v11n1KHvYxATF7vrkCipC9Qfum
+	5vezM8ty7PVQWrnpy+uoImu/fIkSX/A9TPg0v702dlJ/Szdc2EKw+48j
+X-Gm-Gg: AfdE7cloj+hK9dglxgYl2NTq0NiFqjXoOCPMo4naDtQIGdkxGtak4L6vzC4aff80w35
+	31dym0vnUmyyKSLh/y3OosHCptrgS8kJiOq+8HG5zgRZME/VHcee1RVc2atPVuQZ6FABRmT+3Vu
+	GyUrrapQOnGYNoaKnMtDgrFyklll0t2iO432JdC/JtYzTonV+mLVvgD27V7RckPIFsgNvom5Ef8
+	79sr11QSK+2wi6S8sPJCIQfgsGq8ua5qggDgDK3CKKhG9FgogormXYnJnKeDHo0VujUAuSdUXYo
+	/pGHUvcHpC2UCOxIIDeNZWWnV0yqGmKwO+w9Zva+WpnPhwbrZnULI4VKgqRqrtZU3ir6NX39Gzd
+	pba2aMxRDzomvnmxy4SSDXRuPOcRDa+ajBetWUODBibUXxbNcWk46HgBuAWitiZaBJQlo/mzCLZ
+	nNFFPlSDaZmXe2n3lI0pmiIb1888A+MaFwFW1KfBRVcZx2M2rEtkzhpVwTeWwBp0Y+fhk=
+X-Received: by 2002:a05:693c:2887:b0:30b:cc4e:6396 with SMTP id 5a478bee46e88-30c5553b105mr382073eec.7.1782155033135;
+        Mon, 22 Jun 2026 12:03:53 -0700 (PDT)
+Received: from ?IPv6:2a03:83e0:115c:1:6e2:c699:67c:63fe? ([2620:10d:c090:500::1:5387])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c1be4967fsm10549199eec.26.2026.06.22.12.03.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2026 12:03:52 -0700 (PDT)
+Message-ID: <1979fc81ae7bdaabda8616cd9698a40ef8bbfaee.camel@gmail.com>
+Subject: Re: [PATCH v3 5/7] kernel: Use mutable list iterators
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Kaitao Cheng <kaitao.cheng@linux.dev>, Paul Moore <paul@paul-moore.com>,
+  Eric Paris <eparis@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann	 <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, "David S.
+ Miller" <davem@davemloft.net>, Jakub Kicinski	 <kuba@kernel.org>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, John Fastabend	
+ <john.fastabend@gmail.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner	
+ <hannes@cmpxchg.org>, Michal =?ISO-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>, 
+ Maarten Lankhorst	 <dev@lankhorst.se>, Maxime Ripard <mripard@kernel.org>,
+ Natalie Vock	 <natalie.vock@gmx.de>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar	 <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim	 <namhyung@kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov	 <oleg@redhat.com>, Peter
+ Oberparleiter <oberpar@linux.ibm.com>, Andrew Morton	
+ <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, Mike
+ Rapoport	 <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav	 <pratyush@kernel.org>, Naveen N Rao <naveen@kernel.org>,
+ Josh Poimboeuf	 <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Miroslav Benes	 <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Will
+ Deacon <will@kernel.org>,  Boqun Feng <boqun@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,  Daniel Gomez
+ <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Steffen
+ Klassert	 <steffen.klassert@secunet.com>, Daniel Jordan
+ <daniel.m.jordan@oracle.com>,  "Rafael J. Wysocki"	 <rafael@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, "Paul E. McKenney"	
+ <paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>, Frederic
+ Weisbecker <frederic@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes	 <joelagnelf@nvidia.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Juri Lelli	 <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Kees Cook <kees@kernel.org>,
+ Balbir Singh <bsingharora@gmail.com>, Anna-Maria Behnsen	
+ <anna-maria@linutronix.de>, Thomas Gleixner <tglx@kernel.org>, John Stultz	
+ <jstultz@google.com>, KP Singh <kpsingh@kernel.org>, Matt Bobrowski	
+ <mattbobrowski@google.com>, Nathan Chancellor <nathan@kernel.org>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, David Vernet	 <void@manifault.com>, Steven
+ Rostedt <rostedt@goodmis.org>
+Cc: audit@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, 	netdev@vger.kernel.org, cgroups@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, 	linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, 	kexec@lists.infradead.org,
+ live-patching@vger.kernel.org, 	linux-modules@vger.kernel.org,
+ linux-crypto@vger.kernel.org, 	linux-pm@vger.kernel.org,
+ rcu@vger.kernel.org, sched-ext@lists.linux.dev, 	llvm@lists.linux.dev,
+ Kaitao Cheng <chengkaitao@kylinos.cn>
+Date: Mon, 22 Jun 2026 12:03:46 -0700
+In-Reply-To: <20260622042811.31684-1-kaitao.cheng@linux.dev>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+	 <20260622042811.31684-1-kaitao.cheng@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-LRU add batches can be drained before they reach capacity. This can be a
-source of LRU lock contention, but it is not currently possible to
-attribute these drains to callers with existing tracepoints.
+On Mon, 2026-06-22 at 12:28 +0800, Kaitao Cheng wrote:
+> From: Kaitao Cheng <chengkaitao@kylinos.cn>
+>=20
+> The safe list iteration helpers require callers to provide a temporary
+> cursor even when the cursor is only used internally by the loop. This
+> leaves many functions with otherwise unused variables whose only purpose
+> is to satisfy the old iterator interface.
+>=20
+> Use the mutable list iteration helpers for those cases. The mutable
+> helpers keep the same removal-safe traversal semantics, while allowing
+> the temporary cursor to be internal to the macro when the caller does
+> not need to observe it.
+>=20
+> Convert list, hlist and llist users under kernel/ where the temporary
+> cursor is not used outside the iteration. Keep the explicit cursor form
+> where the next entry is still needed by the surrounding code.
+>=20
+> No functional change intended.
+>=20
+> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
+> ---
 
-Add mm_lru_add_drain to report the CPU and lru_add batch count when an
-lru_add batch is drained. This allows tracing to distinguish full drains
-from partial drains and attribute them to the calling stack.
+Beside the fact that this does not apply,
+I don't see a reason why is this needed for BPF sub-tree.
 
-Add mm_lru_add_drain_all to capture callers of __lru_add_drain_all and
-whether they set the force flag for all CPUs. The tracepoint resembles
-the signature of the enclosing function, but is needed because of
-potential inlining.
-
-Note that DECLARE_TRACE() is used for these new trace hooks to avoid
-creating a new trace event ABI.
-
-Signed-off-by: JP Kobryn <jp.kobryn@linux.dev>
-Reviewed-by: Barry Song <baohua@kernel.org>
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
----
-v5:
-  - change from trace events to bare trace hooks
-
-v4: https://lore.kernel.org/linux-mm/20260610234808.212397-1-jp.kobryn@linux.dev/
-  - renamed nr_folio_add to nr_folios in lru_add_drain()
-  - renamed nr to nr_folios in tracepoint for consistency
-
-v3: https://lore.kernel.org/linux-mm/20260610195220.12403-1-jp.kobryn@linux.dev/
-  - restored and renamed tracepoint in __lru_add_drain_all
-
-v2: https://lore.kernel.org/linux-mm/20260609041156.31127-1-jp.kobryn@linux.dev/
-  - removed mm_lru_drain_all tracepoint
-
-v1: https://lore.kernel.org/linux-mm/20260609041156.31127-1-jp.kobryn@linux.dev/
-
- include/trace/events/pagemap.h | 8 ++++++++
- mm/swap.c                      | 7 ++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/include/trace/events/pagemap.h b/include/trace/events/pagemap.h
-index 171524d3526d..36c3a90f0acc 100644
---- a/include/trace/events/pagemap.h
-+++ b/include/trace/events/pagemap.h
-@@ -77,6 +77,14 @@ TRACE_EVENT(mm_lru_activate,
- 	TP_printk("folio=%p pfn=0x%lx", __entry->folio, __entry->pfn)
- );
- 
-+DECLARE_TRACE(mm_lru_add_drain,
-+	      TP_PROTO(int cpu, unsigned int nr_folios),
-+	      TP_ARGS(cpu, nr_folios));
-+
-+DECLARE_TRACE(mm_lru_add_drain_all,
-+	      TP_PROTO(bool force_all_cpus),
-+	      TP_ARGS(force_all_cpus));
-+
- #endif /* _TRACE_PAGEMAP_H */
- 
- /* This part must be outside protection */
-diff --git a/mm/swap.c b/mm/swap.c
-index 588f50d8f1a8..460e56370b3c 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -694,9 +694,12 @@ void lru_add_drain_cpu(int cpu)
- {
- 	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
- 	struct folio_batch *fbatch = &fbatches->lru_add;
-+	unsigned int nr_folios = folio_batch_count(fbatch);
- 
--	if (folio_batch_count(fbatch))
-+	if (nr_folios) {
- 		folio_batch_move_lru(fbatch, lru_add);
-+		trace_mm_lru_add_drain_tp(cpu, nr_folios);
-+	}
- 
- 	fbatch = &fbatches->lru_move_tail;
- 	/* Disabling interrupts below acts as a compiler barrier. */
-@@ -869,6 +872,8 @@ static inline void __lru_add_drain_all(bool force_all_cpus)
- 	if (WARN_ON(!mm_percpu_wq))
- 		return;
- 
-+	trace_mm_lru_add_drain_all_tp(force_all_cpus);
-+
- 	/*
- 	 * Guarantee folio_batch counter stores visible by this CPU
- 	 * are visible to other CPUs before loading the current drain
--- 
-2.54.0
-
+[...]
