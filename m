@@ -1,277 +1,297 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4612076025;
-	Mon, 22 Jun 2026 05:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782106488; cv=fail; b=mKcVXXToA0ElBEVQ8zQcDQqecyWoftZserQAwmyRYRhuuHvv0RV+oX/oNoIA1S+z+LWdqIib4v3JIt+Wo1ASilR45/yEuwXDuel31wylJ9rzc0yrjXXtDIm54Z3vci+YAanP5G8D1BSeeSaJxStVhOMbafn4ZKlNLDYFtSZKAUY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782106488; c=relaxed/simple;
-	bh=FIUuEA9lJI5YjoxLOH/bnJ6tHCB6l+esN7OrPdYqTSg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=T85FKF3w5ZQYvu5L5x+15HKaIkNoJFGET6WbQ6obmgLQuOeEr2Jh6Gur/E/4d6XcxPTvhTqgvtoh67eTuLe6xI8QFsuwb/KcheCyXwrwQgiKNQ0kxF9w8pXztMqaV5gP/6ryuRtcswAU4MtA1Qj0ylmDYPdLXS2hdz3f+SzUIBA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T+riQ3DB; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1EF35DA5D;
+	Mon, 22 Jun 2026 06:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782108981; cv=none; b=lfesxdaTZcQ+VZ1jzsbEZTiiKg+WqNJXvPSsI7vatbgFjaNue3R/y2LJBhy5UEw+oBChnI3gyYChvCyYizPD0NKlBr2DMm/+G7lqv5YtEIPKvCcDh6JJwkEwpVSKHzFw4GZYoUeDVXncergJITKsOHJerDEzNbqaZ0D1HX0hweQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782108981; c=relaxed/simple;
+	bh=hk8s1HyY3dzHKU/LGLjDjlXFo8lRWPfUJ+Vkj0iR3dk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F1ggR9CTuEuGVyTuf9KE1/GpZM0RPl0Knr+KdqWSBado0xvY9SUiJXosvYsSgYIB/dxltiKldZ5Tj/cKoSI3YhXdEnlzaz/N71tPKr5n6w+HtKRtarvoe15z4zBg8ZhG3DUxT0pa9V1wtV3G4adepCRLb17CIDGyiJIsVYuOmyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t15fr1vS; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+riQ3DB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782106486; x=1813642486;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=FIUuEA9lJI5YjoxLOH/bnJ6tHCB6l+esN7OrPdYqTSg=;
-  b=T+riQ3DBoopNeXHbQ81asAyEJbQRuwZFFv5UqtV+VOfCLyspp91HvZeg
-   43r7ooMrXZw7Lu74YawGYBnMm513HfZ+hebj+qzTmbjAAlgcvN6A9fxhk
-   qR2nLoER29dcL6KILoobz6qmP+KT37vzc3XE67Uh4UeFPfSzSI192rbC0
-   XWwHbZdECm2HbkV1K/KBolsF9ql6dMHtrShy+NTm/ZDgz/8NgxBptkUz/
-   sPp+/PGgv1P6d+hZHCOeNp0LlV56AmHk+08lnAofvjpQ9EdwFLnuRU9pL
-   DmTdGd2GbpflyfAka/qrHdt+fkdYPbrQ/3dTYFht2S2Iv9DnWr3dGnV3K
-   w==;
-X-CSE-ConnectionGUID: TJl5w2oWSV6Ntdd0jiowjg==
-X-CSE-MsgGUID: 4T8pcwYwTsebklAa8B1Z0w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11824"; a="82923617"
-X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
-   d="scan'208";a="82923617"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2026 22:34:45 -0700
-X-CSE-ConnectionGUID: ltXke1pwQ1CUr0TPB8HhEQ==
-X-CSE-MsgGUID: llh7/H/sRHGDu1P4Pk2b2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
-   d="scan'208";a="248982413"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2026 22:34:44 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Sun, 21 Jun 2026 22:34:43 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Sun, 21 Jun 2026 22:34:43 -0700
-Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.46) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Sun, 21 Jun 2026 22:34:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lBPCenZFsJWQW5Eql7lLMjIuzyzBj7/lsyQglW9aydxUeWhx7ZOCr5xRgqJJGEvD4e9jpCdKYNTqqwR0vfjfKwd6zFZUauIVPvgTc7opi7VvYGGPef7+wmN/qXmLPS3YgKDayHGeF1cKDsFd4ekCtdZpLGqaZF6LG/t042DeHy0hnDUy/70CcO0gFe6MAxFREcXAVd9327wTpRsCLfxw6ZjNeQ1WrdSmToaL8jcGdweam4wJigJeu4GpXLDoYZiW4Si34dkh547f697wmGqyUv8OoV1J7Cz08OaFPr0AEd2dG+O0NR/esPQAk1GnCuDidQWM3zdZ16AdRXxPZx3TTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RyFfjhYxdsWMr+khTg3aRZNYL9VtLYMYKjKB+g+p2vc=;
- b=ovqFhntPjWNIP2qmorrnW4T/TIRus+bv80xbQbasqEwgk4ACrx1Qwj7GOhDBaP4GGV5UVSk20Iq1n9TBDc1VJpYs2CnDGY1goZGGkZd/sn4v0JsnDnRo8Ch/rnVdtCPH8kNI1DtfOY/eNRXVAGkeN4AO1PbvxSAC0IEtgn9bL0IzT8kRHkXcy1mQtg/KeYCtFUS+5BCfnPSyTRCccwZ7KmSRAgjdR+UYkfaPwofXhT4LqkbH2qdUVz2abSUPGjyItD2oOGm1GyKhlG5FtkQCcf0/00ZGYrqc0hbo07iFBQem0btiW7lyY644taNLVuuj4YkFBdNNcaPyzbwUj+dk7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH0PR11MB7472.namprd11.prod.outlook.com (2603:10b6:510:28c::12)
- by CH3PR11MB8187.namprd11.prod.outlook.com (2603:10b6:610:160::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Mon, 22 Jun
- 2026 05:34:39 +0000
-Received: from PH0PR11MB7472.namprd11.prod.outlook.com
- ([fe80::1bad:44dd:4e60:6475]) by PH0PR11MB7472.namprd11.prod.outlook.com
- ([fe80::1bad:44dd:4e60:6475%5]) with mapi id 15.21.0139.018; Mon, 22 Jun 2026
- 05:34:38 +0000
-Date: Mon, 22 Jun 2026 12:53:46 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: <ackerleytng@google.com>
-CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
-	<brauner@kernel.org>, <chao.p.peng@linux.intel.com>, <david@kernel.org>,
-	<jmattson@google.com>, <jthoughton@google.com>, <michael.roth@amd.com>,
-	<oupton@kernel.org>, <pankaj.gupta@amd.com>, <qperret@google.com>,
-	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <shivankg@amd.com>,
-	<steven.price@arm.com>, <tabba@google.com>, <willy@infradead.org>,
-	<wyihan@google.com>, <forkloop@google.com>, <pratyush@kernel.org>,
-	<suzuki.poulose@arm.com>, <aneesh.kumar@kernel.org>, <liam@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Borislav
- Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>, Jonathan Corbet
-	<corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan
-	<shuah@kernel.org>, "Vishal Annapurve" <vannapurve@google.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, Kairui Song
-	<kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
-	<nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, Axel Rasmussen
-	<axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
-	<weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, Qi Zheng
-	<qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau
-	<kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-coco@lists.linux.dev>
-Subject: Re: [PATCH v8 24/46] KVM: guest_memfd: Make in-place conversion the
- default
-Message-ID: <aji/2svhcc84rn5w@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-24-9d2959357853@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-24-9d2959357853@google.com>
-X-ClientProxiedBy: SI2PR01CA0012.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::8) To PH0PR11MB7472.namprd11.prod.outlook.com
- (2603:10b6:510:28c::12)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t15fr1vS"
+Message-ID: <8c8f1849-86d3-4c69-be27-30bbdffdf616@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782108966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uc01vIZYGfTIV3fdEG67Z2UKVAOKK7e6urfcQoWTPXs=;
+	b=t15fr1vSWPqYuOVx1/bxMEqBYsgHtm0lD1qKuOgL6xYl94f+kJLWMkDtNXA1O6oXS4NWrk
+	UXfi4I4xGSapixdXs6K5v7yl7QxZTsj0xBO+b54oW8Z9JaKuiK5OobLxhWf+TcWH/AL++5
+	EurPaDWOivYCOI4YE0QW4UrJN1dv49Y=
+Date: Mon, 22 Jun 2026 14:15:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB7472:EE_|CH3PR11MB8187:EE_
-X-MS-Office365-Filtering-Correlation-Id: a2bda0e8-04a4-4206-b640-08ded01ff3ca
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|23010399003|1800799024|56012099006|11063799006|3023799007|4143699003|6133799003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: 1Haw93axPivZMiJFmLfoho3IklKufJURcMBrVuIaSB4ixfBO68yXhK4l62a54hB9KVQ89K3naYc+h1w7WCvqjsDEyUR0pTZLs2lXQ4cX77GHxQ3L2LBw2FePwQJa36eGPC5rbmdMCrmJQHT32olrewAZmc1tt03JFnSQJ/SvBAHIC+Hz3fDBp4nwLMs0AxFkRACD8vcEW5RhzU+y2FZJmt0iEcjOp9D9mibji1ClmbVG8YAQ6/PoPhCjviaWFonVd9YK4DtWCsg2f7UEvJvqDf6lB+lgpLR7evOOf/oUxHyEXnVUonZYbo2QYVi+K+5SQO+C/r+E2x1Kzpy+XnKcb+m2RVehcwwK/F7SKRn3Inxs8vnoxhwqlk3GW4E+BCiJzHEIGqTnqCnSlj+P/DA4I9BS6/h0S8qfFr1f0W0mtU3vzNDxKS2/EwDN4SjtJ1OKG9L93zIEZ1+OGfe+6lB/zrahVW2dkxN/zdvHxT8AyrySvtIy+nIUnaEg1y1+New16AljKb5iSh/V2lZeCZFwzVO1bR0ZsBAs8CENgd/zHxFs6zyS/VELuQo4W8zVvrZRzL5KLqA0h7yS+Yx7QdYIpyMV70yH/aAEo42DU4v9QMLpPb4gwjb05VCfi9ZmQBn+PT/bxD3y8d8rJm7ocGPhqFkfNi/YwNW6FKB5dQAwO1I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB7472.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(23010399003)(1800799024)(56012099006)(11063799006)(3023799007)(4143699003)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FKvJa9kbD/JQHxNmmY/E43ZtztItoRCjvuWBUZ8tmkcs8std6j57nP3MLGIs?=
- =?us-ascii?Q?4VGm2vyms+LqfZiBeE+YMhByJbithzEzQpaFF0+UEYvYGLJrHOycsawn/SGG?=
- =?us-ascii?Q?Ksf+i9S8HJfkoimve66xXwnbs9ESmvqtxiPoHcRuhPUcPsZdDfPjO/T3MpkO?=
- =?us-ascii?Q?woNYuD10KbIHWJ73NwPst1+CGgCur/j53jhOblRNMGp+j0Xiq5qqLsc0xO9X?=
- =?us-ascii?Q?JTdROvXuy7BkG/6xdW4IukLQ23V1s0vrnia25nHgxLr6GxINY3kGXwwY0xxz?=
- =?us-ascii?Q?JGeMucqiCHSRyqL60V2JbBzAr7vXxePsdp+EqGXjKY1iQvVC0Tn5O0X8640Q?=
- =?us-ascii?Q?VP/Dv0DzSS4o5BptEarcggLFXTxMcU6JlrMfahPVy7IYUyHwPOF3Srk9MvjV?=
- =?us-ascii?Q?LPKFGx8wOyJB1HJqvpYhQpWkfcTQhOn4oOfyFZVKk7vB1YZe32KzQQqloC94?=
- =?us-ascii?Q?FY9olPxPEUfNjAI8WyMQIfpcXx+oW2B9W/pQ0oENGxrxsn7tl2pS+q6krq1S?=
- =?us-ascii?Q?gUgMt0OeVOw1qlq/ldJJykWjkuPAi1Bo3pdKrplNdFRAT4OOlZ4rtouW6kjJ?=
- =?us-ascii?Q?z/icvqishD80V4gqFWMxRdHwLfDCvIfisOsvOBMQYgt+dMhInZ8kCTvXwUTX?=
- =?us-ascii?Q?t77AAbni5wUBP5hsvcMGj95erUJqC+KpepuPzLwcNqh6qJHF8LHdCE63/nus?=
- =?us-ascii?Q?zrqdsKBGkI39GWqzy5z9/Grwk0kmz5LavNutJwI2HNSbTYx07Pn52w2GOxcq?=
- =?us-ascii?Q?cN15oMmTejzejN9mMO+eFIEVQ+Jvvt5sn88oXTRoOHGtg6B1Yis0AYAkU6au?=
- =?us-ascii?Q?/HVGI7m7q8kNz25Ka246wKaS4DRdCRSh+Kx01YN18zaQDRKqGBQskADrqjUt?=
- =?us-ascii?Q?p8FtZxECGcsyYjTX27pr5z0evG+6uByomNrqY61Ue0Uav3cug1kogMGR+OML?=
- =?us-ascii?Q?YLLPbERsLR7Ggd84SOQBpNECDPzIYisOLpbeuEEYs6OkefSIFVp3KeHPGAGz?=
- =?us-ascii?Q?6Ot9KzZPWwk7mxCu0JTUTsRSb7+04ut/35+lEtA9jNKfZAmTie8R1MI/emSL?=
- =?us-ascii?Q?J4mdaDfwqugXfTByZC12JvvRsWRyN/xUJhWVw+4eALWCBisRdRBUgpZu6NPv?=
- =?us-ascii?Q?dOWG15Ej9sSyQr3hGX6yvgafE6sCx8CxBTNhFKveYSqk4BNzT3UpctnNOv/b?=
- =?us-ascii?Q?CV8QIu1uSuxKYLKTEcNULp0+9aHLjt9imScFm3xxVTuLFWshtu459ByXAtnz?=
- =?us-ascii?Q?GOq88Mcl68Z42VR7OhnIoVahTyRhIIoGIhKG6WO14XcsdrGw+LUaiJVFKz/t?=
- =?us-ascii?Q?bfEFlrgTRpObT2/tM5FCfiBhYrFQ8iM1OH3Wllz7IVq3LHsWLssaTtO/DEMm?=
- =?us-ascii?Q?qOeZRn3sbwq6Ct5tmaXg2RAMLmliKaIzsfXfCNjv9OuroO9TKP8rACMQoPXO?=
- =?us-ascii?Q?OgNS4SFs7mKpufA9HmUwgeGRoe5HU28vm2LksQ5MoxWg37exl/gMu3Cozur/?=
- =?us-ascii?Q?WmauNIb06tG7urOYhW+feMIBjC4qoACR7PtQGgaoZ54fD1SEzjzxgxX5pqBG?=
- =?us-ascii?Q?E+8yOtEgCaPaxs2VKNX7QE1LMZ90aWdqDJsRz90aYfKx9v4dPOO+MvV95CFc?=
- =?us-ascii?Q?Tv0cX/MlSSj35aOI0K9OWeeGxo6PQ6MuWvSXz6Ogrn20ucENgOIl5Vj0BJwb?=
- =?us-ascii?Q?JglUDnUM6cTptIYZqs3abWQ8IT6UpjEYdoCl595MjRu41BmqGfO9zd4CT/+/?=
- =?us-ascii?Q?U0opJ3APVg=3D=3D?=
-X-Exchange-RoutingPolicyChecked: cBpo2XtC7VLIlERky94gRa1sGJc8+k2Y4t4Z4n08ffwvKx/NQfq7VG01K6c4FU4C07IF9djVBie+Ywas5+vSTuvJ+h/UdGy4Aq6bDvLXeSzi+wzmrLSGili+JQodmEJo7NNlpvsWR1RIHutXgjSD/MQzDL63TcroqwMOCg3MxLw2YYMZdEwwyxCV/Z5LZ6zVGstzmkfKanYaw0vUrnx2MgWOR5kRTUNSm7oOUCzWLB8BHx2NX9ueUoqJLzATH/ds3ReuqPnB4vSdmIcDSIQR/Ket1lFidEtVY+z7mtm8oD5lDvuQZzCrVIJj3k0MQheLoIxXAh9TOZmhZMT1ZiaVqg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2bda0e8-04a4-4206-b640-08ded01ff3ca
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB7472.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2026 05:34:38.8455
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DlZekpAv8Fo/LZkF95SXAVvbfi5JiUecD7a7RKvilhG7g5TyEKw1210h5uqVLkXwwcqV2zCo+RR983ReU7TiTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8187
-X-OriginatorOrg: intel.com
-
-On Thu, Jun 18, 2026 at 05:32:01PM -0700, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
-> 
-> Make in-place conversion the default if the arch has private mem.
-> 
-> The default can be overridden at compile type by enabling
-> CONFIG_KVM_VM_MEMORY_ATTRIBUTES, or at KVM load time through a module
-> parameter.
-> 
-> In-place conversion also implies tracking a guest's private/shared state in
-> guest_memfd. To avoid inconsistencies in the way memory attributes are
-> tracked between the per-VM or by guest_memfd, make the module_param
-> read-only (0444).
-> 
-> Document that using per-VM attributes for tracking private/shared state of
-> guest memory is deprecated in favor of tracking in guest_memfd.
-> 
-> Warn if the admin sets gmem_in_place_conversion as false when
-> CONFIG_KVM_VM_MEMORY_ATTRIBUTES is not enabled. Add warning in the code
-> path where guest memory is populated for a CoCo VM, since that's the
-> earliest point in a CoCo VM's lifecycle where memory attributes are
-> queried. Unlike other query sites, this site is exclusively used by CoCo
-> VMs.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/Kconfig   | 7 ++++++-
->  virt/kvm/guest_memfd.c | 5 +++++
->  virt/kvm/kvm_main.c    | 3 ++-
->  3 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> index c28393dc664eb..a3c189d765150 100644
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -85,7 +85,12 @@ config KVM_VM_MEMORY_ATTRIBUTES
->  	bool "Enable per-VM PRIVATE vs. SHARED attributes (for CoCo VMs)"
->  	help
->  	  Enable support for tracking PRIVATE vs. SHARED memory using per-VM
-> -	  memory attributes.
-> +	  memory attributes.  Using per-VM attributes are deprecated in favor
-> +	  of tracking PRIVATE state in guest_memfd.  Select this if you need
-> +	  to run CoCo VMs using a VMM that doesn't support guest_memfd memory
-> +	  attributes.
-> +
-> +	  If unsure, say N.
->  
->  config KVM_SW_PROTECTED_VM
->  	bool "Enable support for KVM software-protected VMs"
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 86c9f5b0863cb..5cb73543c03c8 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -1193,10 +1193,15 @@ static bool kvm_gmem_range_is_private(struct file *file, pgoff_t index,
->  {
->  	struct maple_tree *mt = &GMEM_I(file_inode(file))->attributes;
->  
-> +#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
->  	if (!gmem_in_place_conversion)
->  		return kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + nr_pages,
->  							  KVM_MEMORY_ATTRIBUTE_PRIVATE,
->  							  KVM_MEMORY_ATTRIBUTE_PRIVATE);
-> +#else
-> +	if (WARN_ON_ONCE(!gmem_in_place_conversion))
-> +		return false;
-> +#endif
->  
->  	return kvm_gmem_range_has_attributes(mt, index, nr_pages,
->  					     KVM_MEMORY_ATTRIBUTE_PRIVATE);
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index dd1d18a1d2f68..46e92b5dc3804 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -102,7 +102,8 @@ static bool __ro_after_init allow_unsafe_mappings;
->  module_param(allow_unsafe_mappings, bool, 0444);
->  
->  #ifdef kvm_arch_has_private_mem
-> -bool __ro_after_init gmem_in_place_conversion = false;
-> +bool __ro_after_init gmem_in_place_conversion = !IS_ENABLED(CONFIG_KVM_VM_MEMORY_ATTRIBUTES);
-> +module_param(gmem_in_place_conversion, bool, 0444);
-
-With gmem_in_place_conversion=true, userspace can create guest_memfd without the
-MMAP flag. In such cases, shared memory is allocated from different backends.
-This means this module parameter only enables per-gmem memory attribute and does
-not guarantee that gmem in-place conversion will actually occur.
-
-To avoid confusion, could we rename this module parameter to something more
-accurate, such as gmem_memory_attribute?
+Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
+ state
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Paul Moore <paul@paul-moore.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Howells <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+ linux-ntfs-dev@lists.sourceforge.net,
+ Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+ io-uring <io-uring@vger.kernel.org>, audit@vger.kernel.org,
+ bpf <bpf@vger.kernel.org>, Network Development <netdev@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ kexec@lists.infradead.org, live-patching@vger.kernel.org,
+ linux-modules@vger.kernel.org,
+ Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+ Linux Power Management <linux-pm@vger.kernel.org>, rcu@vger.kernel.org,
+ sched-ext@lists.linux.dev, linux-mm <linux-mm@kvack.org>,
+ virtualization@lists.linux.dev, damon@lists.linux.dev,
+ clang-built-linux <llvm@lists.linux.dev>,
+ chengkaitao <chengkaitao@kylinos.cn>, Muchun Song <muchun.song@linux.dev>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+ <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kaitao Cheng <kaitao.cheng@linux.dev>
+In-Reply-To: <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
->  EXPORT_SYMBOL_FOR_KVM_INTERNAL(gmem_in_place_conversion);
->  #endif
->  
+
+在 2026/6/22 13:28, Alexei Starovoitov 写道:
+> On Sun, Jun 21, 2026 at 9:06 PM Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
+>>
+>> From: chengkaitao <chengkaitao@kylinos.cn>
+>>
+>> The list_for_each*_safe() helpers are used when the loop body may remove
+>> the current entry.  Their current interface, however, forces every caller
+>> to define a temporary cursor outside the macro and pass it in, even when
+>> the caller never uses that cursor directly.  For most call sites this
+>> extra cursor is just boilerplate required by the macro implementation.
+>>
+>> This is awkward because the saved next pointer is an internal detail of
+>> the iteration.  Callers that only remove or move the current entry do not
+>> need to spell it out.
+>>
+>> The _safe() suffix has also caused confusion.  Christian Koenig pointed
+>> out that the name is easy to read as a thread-safe variant, especially
+>> for beginners, even though it only means that the iterator keeps enough
+>> state to tolerate removal of the current entry.  He suggested _mutable()
+>> as a clearer description of what the loop permits.
+>>
+>> Add *_mutable() iterator variants for list, hlist and llist.  The new
+>> helpers are variadic and support both forms.  In the common case, the
+>> caller omits the temporary cursor and the macro creates a unique internal
+>> cursor with typeof(pos) and __UNIQUE_ID().  If a loop really needs an
+>> explicit temporary cursor, the caller can still pass it and the helper
+>> keeps the existing *_safe() behaviour.
+>>
+>> For example, a call site may use the shorter form:
+>>
+>>   list_for_each_entry_mutable(pos, head, member)
+>>
+>> or keep the explicit temporary cursor form:
+>>
+>>   list_for_each_entry_mutable(pos, tmp, head, member)
+>>
+>> The existing *_safe() helpers remain available for compatibility.  This
+>> series only converts users in mm, block, kernel, init and io_uring.  If
+>> this approach looks acceptable, the remaining users can be converted in
+>> follow-up series.
+>>
+>> Changes in v3 (Christian König, Andy Shevchenko):
+>> - Convert safe list walks to mutable iterators
+>>
+>> Changes in v2 (Muchun Song, Andy Shevchenko):
+>> - Drop the list_for_each_entry_mutable*() helpers from v1 and make the
+>>   cursor change directly in the existing list_for_each_entry*() helpers.
+>> - Open-code special list walks that rely on updating the loop cursor in
+>>   the body, preserving their existing traversal semantics.
+>>
+>> Link to v2:
+>> https://lore.kernel.org/all/20260609061347.93688-1-kaitao.cheng@linux.dev/
+>>
+>> Link to v1:
+>> https://lore.kernel.org/all/20260529082149.76764-1-kaitao.cheng@linux.dev/
+>>
+>> Kaitao Cheng (7):
+>>   list: Add mutable iterator variants
+>>   llist: Add mutable iterator variants
+>>   mm: Use mutable list iterators
+>>   block: Use mutable list iterators
+>>   kernel: Use mutable list iterators
+>>   initramfs: Use mutable list iterator
+>>   io_uring: Use mutable list iterators
+>>
+>>  block/bfq-iosched.c                 |  17 +-
+>>  block/blk-cgroup.c                  |  12 +-
+>>  block/blk-flush.c                   |   4 +-
+>>  block/blk-iocost.c                  |  18 +-
+>>  block/blk-mq.c                      |   8 +-
+>>  block/blk-throttle.c                |   4 +-
+>>  block/kyber-iosched.c               |   4 +-
+>>  block/partitions/ldm.c              |   8 +-
+>>  block/sed-opal.c                    |   4 +-
+>>  include/linux/list.h                | 269 ++++++++++++++++++++++++----
+>>  include/linux/llist.h               |  81 +++++++--
+>>  init/initramfs.c                    |   5 +-
+>>  io_uring/cancel.c                   |   6 +-
+>>  io_uring/poll.c                     |   3 +-
+>>  io_uring/rw.c                       |   4 +-
+>>  io_uring/timeout.c                  |   8 +-
+>>  io_uring/uring_cmd.c                |   3 +-
+>>  kernel/audit_tree.c                 |   4 +-
+>>  kernel/audit_watch.c                |  16 +-
+>>  kernel/auditfilter.c                |   4 +-
+>>  kernel/auditsc.c                    |   4 +-
+>>  kernel/bpf/arena.c                  |  10 +-
+>>  kernel/bpf/arraymap.c               |   8 +-
+>>  kernel/bpf/bpf_local_storage.c      |   3 +-
+>>  kernel/bpf/bpf_lru_list.c           |  25 ++-
+>>  kernel/bpf/btf.c                    |  18 +-
+>>  kernel/bpf/cgroup.c                 |   7 +-
+>>  kernel/bpf/cpumap.c                 |   4 +-
+>>  kernel/bpf/devmap.c                 |  10 +-
+>>  kernel/bpf/helpers.c                |   8 +-
+>>  kernel/bpf/local_storage.c          |   4 +-
+>>  kernel/bpf/memalloc.c               |  16 +-
+>>  kernel/bpf/offload.c                |   8 +-
+>>  kernel/bpf/states.c                 |   4 +-
+>>  kernel/bpf/stream.c                 |   4 +-
+>>  kernel/bpf/verifier.c               |   6 +-
+>>  kernel/cgroup/cgroup-v1.c           |   4 +-
+>>  kernel/cgroup/cgroup.c              |  54 +++---
+>>  kernel/cgroup/dmem.c                |  12 +-
+>>  kernel/cgroup/rdma.c                |   8 +-
+>>  kernel/events/core.c                |  44 +++--
+>>  kernel/events/uprobes.c             |  12 +-
+>>  kernel/exit.c                       |   8 +-
+>>  kernel/fail_function.c              |   4 +-
+>>  kernel/gcov/clang.c                 |   4 +-
+>>  kernel/irq_work.c                   |   4 +-
+>>  kernel/kexec_core.c                 |   4 +-
+>>  kernel/kprobes.c                    |  16 +-
+>>  kernel/livepatch/core.c             |   4 +-
+>>  kernel/livepatch/core.h             |   4 +-
+>>  kernel/liveupdate/kho_block.c       |   4 +-
+>>  kernel/liveupdate/luo_flb.c         |   4 +-
+>>  kernel/locking/rwsem.c              |   2 +-
+>>  kernel/locking/test-ww_mutex.c      |   2 +-
+>>  kernel/module/main.c                |  11 +-
+>>  kernel/padata.c                     |   4 +-
+>>  kernel/power/snapshot.c             |   8 +-
+>>  kernel/power/wakelock.c             |   4 +-
+>>  kernel/printk/printk.c              |  11 +-
+>>  kernel/ptrace.c                     |   4 +-
+>>  kernel/rcu/rcutorture.c             |   3 +-
+>>  kernel/rcu/tasks.h                  |   9 +-
+>>  kernel/rcu/tree.c                   |   6 +-
+>>  kernel/resource.c                   |   4 +-
+>>  kernel/sched/core.c                 |   4 +-
+>>  kernel/sched/ext.c                  |  22 +--
+>>  kernel/sched/fair.c                 |  28 +--
+>>  kernel/sched/topology.c             |   4 +-
+>>  kernel/sched/wait.c                 |   4 +-
+>>  kernel/seccomp.c                    |   4 +-
+>>  kernel/signal.c                     |  11 +-
+>>  kernel/smp.c                        |   4 +-
+>>  kernel/taskstats.c                  |   8 +-
+>>  kernel/time/clockevents.c           |   6 +-
+>>  kernel/time/clocksource.c           |   4 +-
+>>  kernel/time/posix-cpu-timers.c      |   4 +-
+>>  kernel/time/posix-timers.c          |   3 +-
+>>  kernel/torture.c                    |   3 +-
+>>  kernel/trace/bpf_trace.c            |   4 +-
+>>  kernel/trace/ftrace.c               |  49 +++--
+>>  kernel/trace/ring_buffer.c          |  25 ++-
+>>  kernel/trace/trace.c                |  12 +-
+>>  kernel/trace/trace_dynevent.c       |   6 +-
+>>  kernel/trace/trace_dynevent.h       |   5 +-
+>>  kernel/trace/trace_events.c         |  35 ++--
+>>  kernel/trace/trace_events_filter.c  |   4 +-
+>>  kernel/trace/trace_events_hist.c    |   8 +-
+>>  kernel/trace/trace_events_trigger.c |  17 +-
+>>  kernel/trace/trace_events_user.c    |  16 +-
+>>  kernel/trace/trace_stat.c           |   4 +-
+>>  kernel/user-return-notifier.c       |   3 +-
+>>  kernel/workqueue.c                  |  16 +-
+>>  mm/backing-dev.c                    |   8 +-
+>>  mm/balloon.c                        |   8 +-
+>>  mm/cma.c                            |   4 +-
+>>  mm/compaction.c                     |   4 +-
+>>  mm/damon/core.c                     |   4 +-
+>>  mm/damon/sysfs-schemes.c            |   4 +-
+>>  mm/dmapool.c                        |   4 +-
+>>  mm/huge_memory.c                    |   8 +-
+>>  mm/hugetlb.c                        |  56 +++---
+>>  mm/hugetlb_vmemmap.c                |  16 +-
+>>  mm/khugepaged.c                     |  14 +-
+>>  mm/kmemleak.c                       |   7 +-
+>>  mm/ksm.c                            |  25 +--
+>>  mm/list_lru.c                       |   4 +-
+>>  mm/memcontrol-v1.c                  |   8 +-
+>>  mm/memory-failure.c                 |  12 +-
+>>  mm/memory-tiers.c                   |   4 +-
+>>  mm/migrate.c                        |  23 ++-
+>>  mm/mmu_notifier.c                   |   9 +-
+>>  mm/page_alloc.c                     |   8 +-
+>>  mm/page_reporting.c                 |   2 +-
+>>  mm/percpu.c                         |  11 +-
+>>  mm/pgtable-generic.c                |   4 +-
+>>  mm/rmap.c                           |  10 +-
+>>  mm/shmem.c                          |   9 +-
+>>  mm/slab_common.c                    |  14 +-
+>>  mm/slub.c                           |  33 ++--
+>>  mm/swapfile.c                       |   4 +-
+>>  mm/userfaultfd.c                    |  12 +-
+>>  mm/vmalloc.c                        |  24 +--
+>>  mm/vmscan.c                         |   7 +-
+>>  mm/zsmalloc.c                       |   4 +-
+>>  124 files changed, 875 insertions(+), 681 deletions(-)
 > 
-> -- 
-> 2.55.0.rc0.738.g0c8ab3ebcc-goog
-> 
-> 
+> Not sure what you were thinking, but this diff stat
+> is not landable.
+
+[PATCH v3 1/7] and [PATCH v3 2/7] contain the main logic and can
+be merged directly. They are also compatible with the old API.
+[PATCH v3 3/7] through [PATCH v3 7/7] are just simple interface
+replacements and do not change any functional logic. They can be
+left unmerged for now; individual modules can pick them up later
+if needed.
+
+In v2, Andy Shevchenko mentioned: "If it's done by Linus himself
+during the day when he prepares -rc1, it's fine." Even so, the
+changes in this patch series are indeed quite large and touch
+almost every subsystem. I have only converted part of them for
+now, so I wanted to send this out first and see what people think.
+
+-- 
+Thanks
+Kaitao Cheng
+
