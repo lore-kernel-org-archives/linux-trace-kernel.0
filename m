@@ -1,258 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAAF3A9D9C;
-	Mon, 22 Jun 2026 12:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C869C3B0AE7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 13:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782131504; cv=none; b=VXIuJe3mknMu8tAu6ZY8dv3OIhBXgQj+HpOX2/h/rPdQxxod2XXScb7pn5DPzOTKSlNb5lY6V5Cmn+lQ2mlRy16UUKUez5Om+HuNsCA048gy6thvVT6GUssdFQr3K/SOd/Tgq7gK7+Y0N/+tPz0+GFxJ5D9tPRyeu+9+u/2cAzI=
+	t=1782133473; cv=none; b=qQz4MqFtRJ75bN//iPoYY+S1JOjUqMdM+JpSvxQCsYx4ON+klvEotPdFCjgL42VlDKeKbXoHye+vv9hjKD67Q7TATw9LYq/2G4yU5GIccALEG/3QMkHVayBM43XuXkLHd8enq/6ZepG5otTE3TIlA9tUpvb0GFtLpkTHdOC/Wxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782131504; c=relaxed/simple;
-	bh=cZea8u201/KNpcJN/7HBfbqx3/twPSpuO7D46mqtqY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qKP7bP9bqPcgGoyyyYUbOf3ZA+aAwnqoujCVeeplpQolejITeK/6SAFLO8tBpZKLVBz7Khlq5OFHk+vTdwqY8emzbJhIdpM4aKSGhMFiYsRjldof3i1+QyX4EL0ts6IYVA7ERW0foXj63neTlUpdw4CgQkX+2zNbjNGOMMsAFbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yq6Bpl9x; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782133473; c=relaxed/simple;
+	bh=oZv+pp/Oal4BLNj5iKlvdswcFkCjoPMDy9fRrzLbZuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=m1NMYUskMLckL0+/qEhHH3qimHADqLWxctm5VWoqhhQjz1i7Q89wUNKlIp0D0YbS3oKS0lEk8Is518EZAGDsZ0SbwqxvZZ2blrIYCom+Q5akR0RIzvKivQNy7WczjwT9uyETFHIJD88r/MHf9J2GTacqx5YgA7BHQhZiTNSvjQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DtvyWmHz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yq6Bpl9x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E0ED1F000E9;
-	Mon, 22 Jun 2026 12:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782131503;
-	bh=mv1TDIjJmBLfFfHDh7TWc3Ec+yFIfWNb9f4z3gl0gSU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Yq6Bpl9xNgG8eaRATgdPo0E6+dJzOGDQdCno3iqmf9KIjIyllG26382Fr+fu01Xf9
-	 bUxEbSPKJ8PlEknLGKhUqgRA61PAmFzSJyc1PboFoovpAJAw/XooS3FS6ehllQovLR
-	 lZjaUXJqM2NijaocEgvjjV0L0wYR640roDVz94qNQodlQ/fWv/DAdDjodvjLDklrZs
-	 5/kg/o5GRcSCI3UnWdBn5hE0/Yxen3qdzKU4Pv1QmF/0aj1G+OQ+VuKGt8hcVDMbXm
-	 6CrJEankWsCzYKYacNiCs0vkPokNkFSC7JFUDLoURnu1O0TSFTiyMNn3+RaT36bGsh
-	 H6c0z304WZg0A==
-Message-ID: <6b22698c-ac2e-4c71-9448-50f073b4efc6@kernel.org>
-Date: Mon, 22 Jun 2026 14:31:24 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DtvyWmHz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782133469;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xHRcAdgmO3yxC3eNJUqTmBhO9L8DI2BmsXigahU3JQE=;
+	b=DtvyWmHzHA3CEqhWgZ2nBn9WY/3zRwCnqjd5i/R9gE5T9ChbZGplxOFINS7y9XKiR3EzD2
+	PY67UeKCwHSveX6TEqZIWwLScv69JlneliE1JdPd8H/jJ3gBTzi3PltI5H7S/b0B79K6M6
+	dVVaxgCj6kh11x03iUDiyffUSrt1BZg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-375-oealJNnhN725m6fkl8KBgg-1; Mon,
+ 22 Jun 2026 09:04:26 -0400
+X-MC-Unique: oealJNnhN725m6fkl8KBgg-1
+X-Mimecast-MFC-AGG-ID: oealJNnhN725m6fkl8KBgg_1782133464
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 51A001955E9E;
+	Mon, 22 Jun 2026 13:04:23 +0000 (UTC)
+Received: from fedora (unknown [10.44.32.50])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EF7C3195608F;
+	Mon, 22 Jun 2026 13:04:17 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 22 Jun 2026 15:04:22 +0200 (CEST)
+Date: Mon, 22 Jun 2026 15:04:16 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: syzbot <syzbot+61ce80689253f42e6d80@syzkaller.appspotmail.com>
+Cc: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	syzkaller-bugs@googlegroups.com, tglx@kernel.org, x86@kernel.org
+Subject: Re: [syzbot] [trace?] general protection fault in mtree_load
+Message-ID: <ajky0IbEvV_UDj2a@redhat.com>
+References: <6a38dd47.713c5d62.148f7.000c.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
- Nodes (w/ Compressed RAM)
-Content-Language: en-US
-To: Gregory Price <gourry@gourry.net>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
- Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
- kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
- dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
- akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
- linux@rasmusvillemoes.dk, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
- mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
- baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
- muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
- jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
- pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
- riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
- roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
- shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
- zhengqi.arch@bytedance.com, terry.bowman@amd.com,
- Matthew Wilcox <willy@infradead.org>
-References: <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
- <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
- <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
- <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
- <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
- <fdbdc9f7-d142-4880-b429-065d5056cabb@kernel.org>
- <ajAcIwBAnqgEEWSD@gourry-fedora-PF4VCD3F>
- <90418cd3-751f-439d-83ed-a0c33517c3bd@kernel.org>
- <ajPS3AKrZEbZbXBw@gourry-fedora-PF4VCD3F>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <ajPS3AKrZEbZbXBw@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <6a38dd47.713c5d62.148f7.000c.GAE@google.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: mgv9743pCkOExisur9p5-gfCwbM7rey3ubbsoB1pwiY_1782133464
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/18/26 13:13, Gregory Price wrote:
-> On Thu, Jun 18, 2026 at 10:21:30AM +0200, Vlastimil Babka (SUSE) wrote:
->> On 6/15/26 17:37, Gregory Price wrote:
->> > 
->> > One thought would be a way to switch what fallback list is used, and
->> > then have specific fallback lists for certain contexts.
->> > 
->> > Right now there is a single example of this: __GFP_THISNODE
->> >   |= __GFP_THISNODE   =>  NOFALLBACK
->> >   &= ~__GFP_THISNODE  =>  FALLBACK
->> > 
->> > We could add an interface with the desired fallback list based as an
->> > argument, and let get_page_from_freelist to prefer that over the default
->> > global lists.
->> 
->> Does it mean a new argument in a number of functions in the page allocator,
->> or can it be mapped to alloc_flags (at least internally?), because the
->> number of possible fallback lists is small enough?
->>
-> 
-> What I ended up with was adding a single page_alloc.c external interface
-> that allows you define the zonelist via an enum, and then an internal
-> selector resolution in prepare_alloc_pages() stored in alloc_context
+On 06/21, syzbot wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    6b5a2b7d9bc1 Merge tag 'trace-tools-v7.2' of git://git.ker..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16d56986580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ea6584355d75e0cd
+> dashboard link: https://syzkaller.appspot.com/bug?extid=61ce80689253f42e6d80
+> compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-6b5a2b7d.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/b3cb0499fbe9/vmlinux-6b5a2b7d.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/47cfbe57f6ea/bzImage-6b5a2b7d.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+61ce80689253f42e6d80@syzkaller.appspotmail.com
+>
+> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000011: 0000 [#1] SMP KASAN NOPTI
+> KASAN: null-ptr-deref in range [0x0000000000000088-0x000000000000008f]
+> CPU: 3 UID: 0 PID: 24402 Comm: syz.4.5217 Tainted: G             L      syzkaller #0 PREEMPT(full)
+> Tainted: [L]=SOFTLOCKUP
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> RIP: 0010:mas_root lib/maple_tree.c:759 [inline]
+> RIP: 0010:mas_start lib/maple_tree.c:1179 [inline]
+> RIP: 0010:mtree_load+0x16d/0xa90 lib/maple_tree.c:5657
+> Code: 00 00 00 00 48 c7 44 24 78 ff ff ff ff e8 6b bd 84 f6 48 8b 5c 24 50 c6 84 24 9c 00 00 00 00 48 8d 7b 48 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 d6 08 00 00 48 8b 5b 48 e8 6f 1a 08 00 31 ff
+> RSP: 0018:ffffc900039c76d8 EFLAGS: 00010206
+> RAX: 0000000000000011 RBX: 0000000000000040 RCX: ffffffff8b848746
+> RDX: ffff888041b6a540 RSI: ffffffff8b848775 RDI: 0000000000000088
+> RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000001
+> R10: 0000000000000001 R11: 000000000000751b R12: dffffc0000000000
+> R13: ffff88802693adc0 R14: 00001fff904365a7 R15: dffffc0000000000
+> FS:  0000000000000000(0000) GS:ffff8880d665f000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f44aa04f156 CR3: 00000000364d5000 CR4: 0000000000352ef0
+> Call Trace:
+>  <TASK>
+>  vma_lookup include/linux/mm.h:4204 [inline]
+>  __in_uprobe_trampoline arch/x86/kernel/uprobes.c:766 [inline]
+>  __is_optimized arch/x86/kernel/uprobes.c:1056 [inline]
+>  is_optimized arch/x86/kernel/uprobes.c:1067 [inline]
+>  set_orig_insn+0x1ec/0x2a0 arch/x86/kernel/uprobes.c:1098
+>  remove_breakpoint kernel/events/uprobes.c:1185 [inline]
+>  register_for_each_vma+0xbb7/0xdb0 kernel/events/uprobes.c:1318
+>  uprobe_unregister_nosync+0x12a/0x1c0 kernel/events/uprobes.c:1343
+>  bpf_uprobe_unregister kernel/trace/bpf_trace.c:2936 [inline]
+>  bpf_uprobe_multi_link_release+0xb3/0x1c0 kernel/trace/bpf_trace.c:2947
+>  bpf_link_free+0xec/0x4a0 kernel/bpf/syscall.c:3273
+>  bpf_link_put_direct kernel/bpf/syscall.c:3326 [inline]
+>  bpf_link_release+0x5d/0x80 kernel/bpf/syscall.c:3333
+>  __fput+0x3ff/0xb50 fs/file_table.c:512
+>  task_work_run+0x150/0x240 kernel/task_work.c:233
+>  exit_task_work include/linux/task_work.h:40 [inline]
 
-OK. Since it's in alloc_context then there should be no parameter bloat
-inside page allocator. And for the single external entry point it's better
-to be explicit.
+current->mm is already NULL, the exiting task has already passed exit_mm().
 
-> 
-> eg:
-> 
-> static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
->                 int preferred_nid, nodemask_t *nodemask,
->                 struct alloc_context *ac, gfp_t *alloc_gfp,
->                 unsigned int *alloc_flags)
-> {       
->         ac->highest_zoneidx = gfp_zone(gfp_mask);
->         ac->zonelist = select_zonelist(preferred_nid, gfp_mask, ac->zlsel);
-> 	... snip ...
-> }
-> 
-> struct folio *__folio_alloc_zonelist_noprof(gfp_t gfp, unsigned int order,
->                 int preferred_nid, nodemask_t *nodemask,
->                 enum alloc_zonelist zlsel);
-> 
-> 
-> The original __folio_alloc* functions just add a DEFAULT - which tells
-> select_zonelist() to base the decision on __GFP_THISNODE.
-> 
-> 
-> struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
->                 nodemask_t *nodemask)
-> {
->         return __folio_alloc_core(gfp, order, preferred_nid, nodemask,
->                                   ALLOC_ZONELIST_DEFAULT);
-> }
-> EXPORT_SYMBOL(__folio_alloc_noprof);
-> 
-> 
-> This does a few things
->   - The isolation is structural, there is no way to accidentally
->     allocate private memory without passing ALLOC_ZONELIST_PRIVATE
-> 
->   - The isolation forces folios - there are no non-folio interfaces
->     which allow zonelist selection
-> 
->   - The zonelist selection is confined to this allocation context,
->     so no inheritence is possible.
-> 
+Hopefully
 
-Ack.
+	[PATCHv4 01/13] uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+	https://lore.kernel.org/all/20260526205840.173790-2-jolsa@kernel.org/
 
-> 
-> I tried to avoid using an ALLOC_ flag so we can avoid yet another flag
-> crunch, but there certainly are few enough zonelists that we could
-> encode it there and expose it.  I know Brendan was looking at plumbing
-> alloc flags out to an interface, so i'm open to that.
-> 
-> Externally the way I determine what zonelist to use is a lookup based on
-> reason - letting the node filter.  This is really only needed in a
-> couple spots:
-> 
-> mm/khugepaged.c:  enum alloc_zonelist zlsel = alloc_zonelist_for_node(node, NODE_ALLOC_RECLAIM);
-> mm/vmscan.c:      mtc->zlsel = alloc_zonelist_for_nodemask(mtc->nmask, NODE_ALLOC_TIERING);
-> mm/migrate.c:     .zlsel = alloc_zonelist_for_node(node, NODE_ALLOC_USER_MIGRATE),
-> 
-> static inline enum alloc_zonelist
-> alloc_zonelist_for_node(int nid, enum node_alloc_reason reason)
-> {
->         bool ok;
-> 
->         if (!node_state(nid, N_MEMORY_PRIVATE))
->                 return ALLOC_ZONELIST_DEFAULT;
->         switch (reason) {
->         case NODE_ALLOC_RECLAIM:
->                 ok = node_is_reclaimable(nid);
->                 break;
->         case NODE_ALLOC_TIERING:
->                 ok = node_allows_tiering(nid);
->                 break;
->         case NODE_ALLOC_USER_MIGRATE:
->                 ok = node_allows_user_migrate(nid);
->                 break;
->         default:
->                 ok = false;
->         }
->         return ok ? ALLOC_ZONELIST_PRIVATE : ALLOC_ZONELIST_DEFAULT;
-> }
-> 
-> Otherwise... everything is now a mempolicy w/ MPOL_F_BIND and all the
-> handling goes through the normal fault-paths :]
-> 
-> static struct page *__alloc_pages_mpol(gfp_t gfp, unsigned int order,
->                 struct mempolicy *pol, pgoff_t ilx, int nid)
-> {
->         nodemask_t *nodemask;
->         struct page *page;
->         enum alloc_zonelist zlsel = (pol->flags & MPOL_F_PRIVATE) ?
->                 ALLOC_ZONELIST_PRIVATE : ALLOC_ZONELIST_DEFAULT;
-> ...
->         if (pol->mode == MPOL_PREFERRED_MANY)
->                 return alloc_pages_preferred_many(gfp, order, nid, nodemask,
->                                                   zlsel);
-> ...
-> }
-> 
-> 
-> Switching to an alloc_flag would probably be trivially if that's really
-> wanted
+should help...
 
-I guess not. Thanks for the explanation!
-
-> ~Gregory
+Oleg.
 
