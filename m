@@ -1,93 +1,147 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEC840D596;
-	Mon, 22 Jun 2026 08:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC4E369D63;
+	Mon, 22 Jun 2026 09:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782118454; cv=none; b=tV2P8WECAXZbyl/5HlOSVgPbqttOdeL8CKbw7P17BpFxwPSinyd/f9DHckxKkaco2V+VNOkjGE3cDIpqsiShiJBL/cM+HFFx4HtKT35dgraYPB+PhXd3hiqLZYKaQ7GILVl5icPH3ZNeurEu4S4hzGAKbi9UJaXvTv4UFKurY9w=
+	t=1782119320; cv=none; b=CMOroaBmPkKHURYSYFvXEYi2h0S/is5nG5ysxK1tl99jTAtyzLBsuVZt7hroZ3qo0r4d6wGFoIYXjqFpLQHYIcv/5i+9dAJSaLzpkdTNpOfh4JN+3KMqiMKLXlzRyGzdFahlLGw81rPtUwiDj4p7kuZHFMvV/n9i3CwJD6lco/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782118454; c=relaxed/simple;
-	bh=OAWmV8skIxMVw/WDm7TlekxPmF8xJMXvHUg1xzxkcD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OjWViWBEWY75Dib0nocssY8HZ0CJB8m/hrsROFYW8Sf4dP2guecWBadIQJa4MR4ds/C9Wm6Bfd0hQt6KzYgd8HBkH4gBBq2LjXfzoTK1Pv91XV1Rwag8YNs39JK1gcr1XWfRpggsnAUdhRpQuyV+IIlY/F1DjFjzL3Qsypw8mVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TuPlTRCU; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1782119320; c=relaxed/simple;
+	bh=FXXp3XnnK+h7it17TWsBjNahQbzhpOBnqzH77Gg3oyY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nb9yn0gLfeteVeaNEPhOr6vkCixeZVLCNLCzV09ldc+N8uzFcFhO+nD4XaCkJG1OstmcYXQIh1RTZEYovmQ8vFk6FG2DJewJRgylvaYxjX8yd+GrvWa28E4TYd1PhT1ImTyWLKwkX0uk+m2TfAmtoTweWOljnYnNNHaP0VEpYYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lmC6kglw; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TuPlTRCU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=y2+mOP/j6lYd9qVyAamBJsy1djQW4CKGJJUDwRnuyXs=; b=TuPlTRCUatJuuJgUUAwvzHwMKv
-	dWwVfsTqUjTJh9SX5fPBCQGdiQcrZu7Ws4gSZKgN7rA0kNKxui7b5LEtKWEEQDe4V7j5A8N0jYuRY
-	uas/iKoJjFjR3gKpo0uOWWxjsbSNbU4N4b8MGJpMvU190ZELYDlzfAoftHa96t+aSCVqbpoMUbpfL
-	uOWtb+WeGCTtTYOdcuf3kQ/LcfWhZsQK+C/ri3C/zOHCtiyE1n8uDvDi3TDA+Xy225DqvitJuIeN0
-	RneapmfngTU0PhOUCG9gkRpGwiGc3BAbq6jkG1ZvAJCnP1chuakPaLn4PyoFg+CyhHRv/kOJ0Ywl3
-	cXoCNRYg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wba77-00000003u7U-1iUV;
-	Mon, 22 Jun 2026 08:34:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 52395300B5F; Mon, 22 Jun 2026 10:34:40 +0200 (CEST)
-Date: Mon, 22 Jun 2026 10:34:40 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Yury Norov <yury.norov@gmail.com>, linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH 0/2] tracing: Move trace_printk.h out of kernel.h
-Message-ID: <20260622083440.GX49951@noisy.programming.kicks-ass.net>
-References: <20260621093430.264983361@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lmC6kglw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782119318; x=1813655318;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FXXp3XnnK+h7it17TWsBjNahQbzhpOBnqzH77Gg3oyY=;
+  b=lmC6kglwX4TsU4z3XINIe74vfOsN0tgAz+3DqL4263Wppp5w4iwCVzOg
+   vL/sxCtV7hHh7/WrXeKJJWakNQ1O0BaLHQ2b87qLVA7ZQYK7W0Kje73fV
+   GF+6nmF4PBWaU29bSAWtXZzVOQobDOA7MV+D0dW6zokgOReDvIwnHyRHJ
+   KMgH2JnS+lD8VQHtNjbJlnZaTaGMl3L8qkFd1agV2w+E/vSCrYW31yZHx
+   sj0bxAYOfGh8MIATUYX0yuSr1c1OKUD3wPaSF6IHcQ7VPh3ZsMBvf7bLh
+   9cLT8Ws+bsYwI65QDCvOotuEi7H82io+ib4o/ynTkVxNGRA0cbU60orJp
+   g==;
+X-CSE-ConnectionGUID: EtiThkM6SCqhqbRSGMAI4w==
+X-CSE-MsgGUID: cDls0euuRKujL0p1x8O4Vg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11824"; a="100396428"
+X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
+   d="scan'208";a="100396428"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 02:08:37 -0700
+X-CSE-ConnectionGUID: 4ErWbjSDR3WHIlqXrzczlQ==
+X-CSE-MsgGUID: sPY+aiHyTLWvSIqlDpESFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
+   d="scan'208";a="248291517"
+Received: from unknown (HELO [10.238.2.81]) ([10.238.2.81])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 02:08:24 -0700
+Message-ID: <aceb07e1-77bc-49b6-a932-5fd9b5a21727@linux.intel.com>
+Date: Mon, 22 Jun 2026 17:08:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260621093430.264983361@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/46] KVM: guest_memfd: Introduce per-gmem attributes,
+ use to guard user mappings
+To: ackerleytng@google.com
+Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
+ chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
+ jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
+ tabba@google.com, willy@infradead.org, wyihan@google.com,
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
+ suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-1-9d2959357853@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-1-9d2959357853@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 21, 2026 at 05:34:30AM -0400, Steven Rostedt wrote:
-> There's been complaints about trace_printk() being defined in kernel.h as it
-> can increase the compilation time. As it is only used by some developers for
-> debugging purposes, it should not be in kernel.h causing lots of wasted CPU
-> cycles for those that do not ever care about it.
-> 
-> Instead, add a CONFIG_TRACE_PRINTK_DEBUGGING option that developers that do
-> use it can set and not have to always remember to add #include <linux/trace_printk.h>
-> to the files they add trace_printk() while debugging. It also means that
-> those that do not have that config set will not have to worry about wasted
-> CPU cycles as it is only include in the CFLAGS when the option is set, and
-> its completely ignored otherwise.
+On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
 
-Did you forget your C 101 class? If you use a function, you gotta
-include the relevant header.
+[...]
 
-You don't see userspace saying: 'Hey, you know what, perhaps we should
-add stdio.h to every other header, just in case someone wants to
-printf()' either.
+>  
+> +static u64 kvm_gmem_get_attributes(struct inode *inode, pgoff_t index)
+> +{
+> +	struct maple_tree *mt = &GMEM_I(inode)->attributes;
+> +	void *entry = mtree_load(mt, index);
+> +
+> +	return WARN_ON_ONCE(!entry) ? 0 : xa_to_value(entry);
 
-I really don't understand your argument. Yes, maybe someone will forget
-and then either their editor (if they have a halfway modern setup with
-LSP enabled) or their build will complain, but so what? This is all
-trivial stuff, surely we have more pressing matters to concern outselves
-with?
+If the entry is unexpectedly missing, returning 0 means the attribute would be treated as shared.
+And then in kvm_gmem_fault_user_mapping(), it would allow the userspace to fault in the folio.
+
+Should gmem deny such edge case?
+
+> +}
+> +
+> +static bool kvm_gmem_is_private_mem(struct inode *inode, pgoff_t index)
+> +{
+> +	return kvm_gmem_get_attributes(inode, index) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> +}
+> +
+> +static bool kvm_gmem_is_shared_mem(struct inode *inode, pgoff_t index)
+> +{
+> +	return !kvm_gmem_is_private_mem(inode, index);
+> +}
+> +
+>  static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
+>  				    pgoff_t index, struct folio *folio)
+>  {
+> @@ -397,10 +423,13 @@ static vm_fault_t kvm_gmem_fault_user_mapping(struct vm_fault *vmf)
+>  	if (((loff_t)vmf->pgoff << PAGE_SHIFT) >= i_size_read(inode))
+>  		return VM_FAULT_SIGBUS;
+>  
+> -	if (!(GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED))
+> -		return VM_FAULT_SIGBUS;
+> +	filemap_invalidate_lock_shared(inode->i_mapping);
+> +	if (kvm_gmem_is_shared_mem(inode, vmf->pgoff))
+> +		folio = kvm_gmem_get_folio(inode, vmf->pgoff);
+> +	else
+> +		folio = ERR_PTR(-EACCES);
+> +	filemap_invalidate_unlock_shared(inode->i_mapping);
+>  
+> -	folio = kvm_gmem_get_folio(inode, vmf->pgoff);
+>  	if (IS_ERR(folio)) {
+>  		if (PTR_ERR(folio) == -EAGAIN)
+>  			return VM_FAULT_RETRY;
+> @@ -557,6 +586,51 @@ bool __weak kvm_arch_supports_gmem_init_shared(struct kvm *kvm)
+>  	return true;
+>  }
+>  
