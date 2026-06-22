@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E529475;
-	Mon, 22 Jun 2026 00:01:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BFD344DAD;
+	Mon, 22 Jun 2026 03:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782086467; cv=none; b=U0BzczihwvOE/R9wjnLniu9ZG/BxRPzUyMf+/PDUhjuTXCMiQ8l89Tw8vrAdETws4ILW4sLskpdenOGe6O1FsWpZTZwnqopyHlYZrY25YsFYfUd7E83dpPWFW1W8wna08ULdyHJY9+yO+s/lDSSZwbNE3Ae87B2oRXIiSN7LVQQ=
+	t=1782100700; cv=none; b=piocObYK1ruefea0q33TSKymKlokwwR1PlzJHz2kQC14NEcP+9urQ6pOs1tVS1VK/Wl3Mve9YdEk1IBSdO52wpUffEbUPoDJ1caPzWYuxG+ahTj8ganC6lNvAPGCHAAPhTAQZhIayeAOPe+vx782cKRg971PJ+Ykjk5phHZrQNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782086467; c=relaxed/simple;
-	bh=7QhfewhlqMKdju09JxDulEQdt6cYyGZg8ueUqh8nyV8=;
+	s=arc-20240116; t=1782100700; c=relaxed/simple;
+	bh=kqbTJioe56eAEWkpe07u5NZxwS4AEsxVYuTTCGz79kA=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Fq91+nTuL9rGx3TUHqjxpUq89CFuVzGCd+oW4VIowPkTmYR2F6xbmgtk61Cze0CODHNKc2hatUrFgxEW1bg37g8w2UWB4mWPudSS4RxQfUvP8nO1FfuNS2PsC4a2f8riOa6Fs7B8udfXyzIt2ioK8EQz6bNkOcN6dIB2JTeRA9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k74WazRd; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=f4qvMgP6bpf2xdNaoOlT2Ybl5SxlUti5odFdegvmdKSfEgo/r9L6EylHfO5ZovFIHZ8pTh1LNaEuj2lFQKpLaUyajxHyAGQcEjRBYJTbtQZ+Y64sLPRlVID7DlzQCytmqkN1U92+b56/6eNo7uGQCwfG1535EUXa7NktNVuyfDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lyh2zPMX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k74WazRd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF3F1F000E9;
-	Mon, 22 Jun 2026 00:01:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lyh2zPMX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE9D1F000E9;
+	Mon, 22 Jun 2026 03:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782086465;
-	bh=YdkLfWDFs2R25zvjXEg6EfrwOX7ZSNvk5hmIgUBerv8=;
+	s=k20260515; t=1782100697;
+	bh=x22Q8iJQQqMBkDLEZYqH0+ZY4hv9lO+kL+4BTFfGJmw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=k74WazRd2JEO0rfFV9o5s9ZuEATOS0AaK2HkecSHqP5kk35uaoDQc6AA+ArBRjvVL
-	 iAmIPQDmfYpnR8FJDT3Gnhzr5fFSNkCTNSQ2uvHvYzSdqbVPf9DL9IVWzh3qxCJ9O1
-	 bf/Y0KTKrTbFS5DJAVp/fJRjU46FRqAE1ctiICGdwTcDc2VydzH8xqKya29AJDZnvH
-	 9LjhxdNy4ZhpKw0jZMop6lXdosgiDeQZd6WhJvpAaU5Ra/xZW2UwYV0f/qMWjdR6c9
-	 4EjpLEwlG8VZAREtnXogF6ncCp510f/br9LtWekpIaD8ZqZw09qQDcauy84YvaUcFT
-	 Pu2FDPP2GWgPw==
-Date: Mon, 22 Jun 2026 09:01:00 +0900
+	b=Lyh2zPMXPcohZyPV9D+9i6Z8UX86SN2mHWMhjMUNMpU3Sd5UtX9ABsMzjrIsnxjUy
+	 RBotyM0BSQh89iyn4U8lhJ3jqhQjVBN0ohs6alMa62zSIIwioA0KdhTpxMRCa3Buwd
+	 6HndXrDlRXHtUQ1LKJSs+9WUn+7kS6mnrazBmVmGMU8NEyfgkre1z1v/KUhxYUpyq6
+	 07zo/KQwUpyM451bQZ0CJJG97FqAgBkxAShfZqWh8VjQHfDFgMPMXi6iM7tylrrVgT
+	 7dGMDvdYQvQbUppJn7+O/2SY55gjEQwPa1HeSffr9TvoVuY1dnCSV/zVSMDo+MDMCI
+	 GvfRDO4+egWdg==
+Date: Mon, 22 Jun 2026 12:58:15 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] tracing/probes: Support dumping fetcharg program
- for debugging dynamic events
-Message-Id: <20260622090100.27f1cd94c90e7a8fd541b51b@kernel.org>
-In-Reply-To: <178196863297.560995.16891637449659873905.stgit@devnote2>
-References: <178196862271.560995.5255615288323003663.stgit@devnote2>
-	<178196863297.560995.16891637449659873905.stgit@devnote2>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: eprobe: read the complete FILTER_PTR_STRING
+ pointer
+Message-Id: <20260622125815.7416792c020bd3d81c01e51b@kernel.org>
+In-Reply-To: <ajasLMUt_AMM3ztH@akranes.kaiser.cx>
+References: <20260615145500.2662456-1-martin@kaiser.cx>
+	<20260616110910.e6420488b6a798d49951cde9@kernel.org>
+	<ajJbkeK0zXb8MtcS@akranes.kaiser.cx>
+	<20260618105227.c58c85e9cb19bce673d9a79b@kernel.org>
+	<ajasLMUt_AMM3ztH@akranes.kaiser.cx>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,320 +50,91 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi
+On Sat, 20 Jun 2026 17:05:16 +0200
+Martin Kaiser <martin@kaiser.cx> wrote:
 
-Sashiko found another bug about FETCH_OP_TP_ARG. which seems using
-fetch_insn parameter wrongly (using different parameters).
-I need to fix it first.
-We also may need to rename FETCH_OP_DATA to FETCH_OP_IMMSTR.
+> Thus wrote Masami Hiramatsu (mhiramat@kernel.org):
+> 
+> > Ah, OK. I understand the problem.
+> 
+> >  - ring buffer and its records should be self-contained.
+> >  - In most cases, events use __data_loc/__rel_loc or fixed array to store
+> >    strings.
+> >  - only syscall events exposes the char *, which is not recommended but
+> >    important to debug user space. (not for dereference)
+> 
+> > The example usage of FILTER_PTR_STRING is actually using FILTER_STATIC_STRING
+> > now, so FILTER_PTR_STRING is left broken. (hmm, but there are many
+> >  "const char *" are used especially under rcu events...)
+> 
+> > OK, can you update your patch description to use rcu events?
+> 
+> I've just sent a v2 with an rcu event as an example.
 
-Thanks,
+OK, let me check.
 
-On Sun, 21 Jun 2026 00:17:13 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > BTW, I think those also should be decoded from enum value in the events,
+> > or use __rel_loc. Since it is not self-contained. (it's a TODO item)
+> 
+> That makes sense. But it needs a bit more space in the ringbuffer for each
+> event.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Yeah, but it just exposes the raw kernel address to users. That's not good.
+
+
 > 
-> For debugging probe events, it is helpful to verify the compiled
-> fetch instructions for each probe argument. This introduces a new
-> kernel config CONFIG_PROBE_EVENTS_DUMP_FETCHARG to decode the
-> instruction sequence of each argument and display it under a
-> commented line starting with '#' immediately following the dynamic
-> event definition (such as in dynamic_events, kprobe_events,
-> uprobe_events, etc.).
+> > > > I think better solution is fixing sycall tracer.
 > 
-> For example:
-> /sys/kernel/tracing # cat dynamic_events
-> p:kprobes/p_vfs_read_0 vfs_read arg1=+0(file):ustring arg2=%ax:x16
-> #  arg1: ARG(0) -> ST_USTRING(offset=0,size=4) -> END
-> #  arg2: REG(80) -> ST_RAW(size=2) -> END
+> > > I would say that syscall trace is doing the right thing. The ringbuffer entry
+> > > is a struct syscall_trace_enter, the syscall arguments are unsigned longs.
+> > > They are written in ftrace_syscall_enter, this looks correct to me.
 > 
-> Assisted-by: Antigravity:gemini-3.5-flash
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v6:
->    - Newly added.
-> ---
->  kernel/trace/Kconfig        |   11 +++++
->  kernel/trace/trace_eprobe.c |    2 +
->  kernel/trace/trace_fprobe.c |    2 +
->  kernel/trace/trace_kprobe.c |    2 +
->  kernel/trace/trace_probe.c  |   90 +++++++++++++++++++++++++++++++++++++++++++
->  kernel/trace/trace_probe.h  |   77 ++++++++++++++++++++++---------------
->  kernel/trace/trace_uprobe.c |    3 +
->  7 files changed, 157 insertions(+), 30 deletions(-)
+> > OK, I thought the filename points the ringbuffer, but it actually points
+> > the user space. (saving a raw parameter values) So it is OK.
 > 
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index e130da35808f..ed83fbfb4b7c 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -779,6 +779,17 @@ config PROBE_EVENTS_BTF_ARGS
->  	  kernel function entry or a tracepoint.
->  	  This is available only if BTF (BPF Type Format) support is enabled.
->  
-> +config PROBE_EVENTS_DUMP_FETCHARG
-> +	depends on PROBE_EVENTS
-> +	bool "Dump of dynamic probe event fetch-arguments"
-> +	default n
-> +	help
-> +	  This shows the dump of fetch-arguments of dynamic probe events
-> +	  alongside their event definitions in the dynamic_events file
-> +	  as comment lines. This is useful to debug the probe events.
-> +
-> +	  If unsure, say N.
-> +
->  config KPROBE_EVENTS
->  	depends on KPROBES
->  	depends on HAVE_REGS_AND_STACK_ACCESS_API
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index b66d6196338d..fdb4ce993cad 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -87,6 +87,8 @@ static int eprobe_dyn_event_show(struct seq_file *m, struct dyn_event *ev)
->  		seq_printf(m, " %s=%s", ep->tp.args[i].name, ep->tp.args[i].comm);
->  	seq_putc(m, '\n');
->  
-> +	trace_probe_dump_args(m, &ep->tp);
-> +
->  	return 0;
->  }
->  
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 4d1abbf66229..536781cd4c47 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -1449,6 +1449,8 @@ static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
->  		seq_printf(m, " %s=%s", tf->tp.args[i].name, tf->tp.args[i].comm);
->  	seq_putc(m, '\n');
->  
-> +	trace_probe_dump_args(m, &tf->tp);
-> +
->  	return 0;
->  }
->  
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index a8420e6abb56..cfa807d8e760 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1320,6 +1320,8 @@ static int trace_kprobe_show(struct seq_file *m, struct dyn_event *ev)
->  		seq_printf(m, " %s=%s", tk->tp.args[i].name, tk->tp.args[i].comm);
->  	seq_putc(m, '\n');
->  
-> +	trace_probe_dump_args(m, &tk->tp);
-> +
->  	return 0;
->  }
->  
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 98532c503d02..9d174cd1fb1c 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -2393,3 +2393,93 @@ int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_a
->  	}
->  	return 0;
->  }
-> +
-> +#ifdef CONFIG_PROBE_EVENTS_DUMP_FETCHARG
-> +
-> +struct fetch_op_decode {
-> +	const char *name;
-> +	void (*decode)(struct seq_file *m, struct fetch_insn *insn);
-> +};
-> +
-> +static const struct fetch_op_decode fetch_op_decode[];
-> +
-> +static void fetcharg_decode_none(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	seq_puts(m, fetch_op_decode[insn->op].name);
-> +}
-> +
-> +static void fetcharg_decode_param(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	seq_printf(m, "%s(%u)", fetch_op_decode[insn->op].name, insn->param);
-> +}
-> +
-> +static void fetcharg_decode_imm(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	seq_printf(m, "%s(0x%lx)", fetch_op_decode[insn->op].name, insn->immediate);
-> +}
-> +
-> +static void fetcharg_decode_ptr(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	seq_printf(m, "%s(%p)", fetch_op_decode[insn->op].name, insn->data);
-> +}
-> +
-> +static void fetcharg_decode_symbol(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	seq_printf(m, "%s(%s)", fetch_op_decode[insn->op].name, (char *)insn->data);
-> +}
-> +
-> +static void fetcharg_decode_offset(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	seq_printf(m, "%s(offset=%d)", fetch_op_decode[insn->op].name, insn->offset);
-> +}
-> +
-> +static void fetcharg_decode_store(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	if (insn->op == FETCH_OP_ST_RAW)
-> +		seq_printf(m, "%s(size=%u)", fetch_op_decode[insn->op].name, insn->size);
-> +	else
-> +		seq_printf(m, "%s(offset=%d,size=%u)", fetch_op_decode[insn->op].name, insn->offset, insn->size);
-> +}
-> +
-> +static void fetcharg_decode_bf(struct seq_file *m, struct fetch_insn *insn)
-> +{
-> +	seq_printf(m, "%s(basesize=%u,lshift=%u,rshift=%u)",
-> +		   fetch_op_decode[insn->op].name, insn->basesize, insn->lshift, insn->rshift);
-> +}
-> +
-> +#define FETCH_OP(opname, decode_fn) \
-> +	[FETCH_OP_##opname] = { .name = #opname, .decode = fetcharg_decode_##decode_fn },
-> +
-> +static const struct fetch_op_decode fetch_op_decode[] = {
-> +	FETCH_OP_LIST
-> +};
-> +#undef FETCH_OP
-> +
-> +static void trace_probe_dump_arg(struct seq_file *m, struct probe_arg *parg)
-> +{
-> +	int i;
-> +
-> +	seq_printf(m, "#  %s: ", parg->name);
-> +	for (i = 0; i < FETCH_INSN_MAX; i++) {
-> +		struct fetch_insn *insn = parg->code + i;
-> +
-> +		if (insn->op >= ARRAY_SIZE(fetch_op_decode) || !fetch_op_decode[insn->op].decode)
-> +			seq_printf(m, "unknown(%d)", insn->op);
-> +		else
-> +			fetch_op_decode[insn->op].decode(m, insn);
-> +
-> +		if (insn->op == FETCH_OP_END)
-> +			break;
-> +		seq_puts(m, " -> ");
-> +	}
-> +	seq_putc(m, '\n');
-> +}
-> +
-> +void trace_probe_dump_args(struct seq_file *m, struct trace_probe *tp)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < tp->nr_args; i++)
-> +		trace_probe_dump_arg(m, &tp->args[i]);
-> +}
-> +#endif /* CONFIG_PROBE_EVENTS_DUMP_FETCHARG */
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 0f09f7aaf93f..b428ef42b229 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -83,38 +83,47 @@ static nokprobe_inline u32 update_data_loc(u32 loc, int consumed)
->  /* Printing function type */
->  typedef int (*print_type_func_t)(struct trace_seq *, void *, void *);
->  
-> +#define FETCH_OP_LIST							\
-> +	/* Stage 1 (load) ops */					\
-> +	FETCH_OP(NOP, none)		/* NOP */			\
-> +	FETCH_OP(REG, param)		/* Register: .param = offset */	\
-> +	FETCH_OP(STACK, param)		/* Stack: .param = index */	\
-> +	FETCH_OP(STACKP, none)		/* Stack pointer */		\
-> +	FETCH_OP(RETVAL, none)		/* Return value */		\
-> +	FETCH_OP(IMM, imm)		/* Immediate: .immediate */	\
-> +	FETCH_OP(COMM, none)		/* Current comm */		\
-> +	FETCH_OP(ARG, param)		/* Argument: .param = index */	\
-> +	FETCH_OP(FOFFS, imm)		/* File offset: .immediate */	\
-> +	FETCH_OP(DATA, ptr)		/* Allocated data: .data */	\
-> +	FETCH_OP(EDATA, offset)		/* Entry data: .offset */	\
-> +	FETCH_OP(TP_ARG, param)		/* Tracepoint argument: .data */\
-> +	/* Stage 2 (dereference) ops */					\
-> +	FETCH_OP(DEREF, offset)		/* Dereference: .offset */	\
-> +	FETCH_OP(UDEREF, offset)	/* User-space dereference: .offset */\
-> +	/* Stage 3 (store) ops */					\
-> +	FETCH_OP(ST_RAW, store)		/* Raw value: .size */		\
-> +	FETCH_OP(ST_MEM, store)		/* Memory: .offset, .size */	\
-> +	FETCH_OP(ST_UMEM, store)	/* User memory: .offset, .size */\
-> +	FETCH_OP(ST_STRING, store)	/* String: .offset, .size */	\
-> +	FETCH_OP(ST_USTRING, store)	/* User string: .offset, .size */\
-> +	FETCH_OP(ST_SYMSTR, store)	/* Symbol name: .offset, .size */\
-> +	FETCH_OP(ST_EDATA, offset)	/* Entry data: .offset */	\
-> +	/* Stage 4 (modify) op */					\
-> +	FETCH_OP(MOD_BF, bf)		/* Bitfield: .basesize, .lshift, .rshift*/\
-> +	/* Stage 5 (loop) op */						\
-> +	FETCH_OP(LP_ARRAY, param)	/* Loop array: .param = count */\
-> +	/* End */							\
-> +	FETCH_OP(END, none)						\
-> +	/* Unresolved Symbol holder */					\
-> +	FETCH_OP(NOP_SYMBOL, symbol)	/* Non loaded symbol: .data = symbol name */
-> +
-> +#define FETCH_OP(opname, decode_fn) FETCH_OP_##opname,
->  enum fetch_op {
-> -	FETCH_OP_NOP = 0,
-> -	// Stage 1 (load) ops
-> -	FETCH_OP_REG,		/* Register : .param = offset */
-> -	FETCH_OP_STACK,		/* Stack : .param = index */
-> -	FETCH_OP_STACKP,	/* Stack pointer */
-> -	FETCH_OP_RETVAL,	/* Return value */
-> -	FETCH_OP_IMM,		/* Immediate : .immediate */
-> -	FETCH_OP_COMM,		/* Current comm */
-> -	FETCH_OP_ARG,		/* Function argument : .param */
-> -	FETCH_OP_FOFFS,		/* File offset: .immediate */
-> -	FETCH_OP_DATA,		/* Allocated data: .data */
-> -	FETCH_OP_EDATA,		/* Entry data: .offset */
-> -	// Stage 2 (dereference) op
-> -	FETCH_OP_DEREF,		/* Dereference: .offset */
-> -	FETCH_OP_UDEREF,	/* User-space Dereference: .offset */
-> -	// Stage 3 (store) ops
-> -	FETCH_OP_ST_RAW,	/* Raw: .size */
-> -	FETCH_OP_ST_MEM,	/* Mem: .offset, .size */
-> -	FETCH_OP_ST_UMEM,	/* Mem: .offset, .size */
-> -	FETCH_OP_ST_STRING,	/* String: .offset, .size */
-> -	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
-> -	FETCH_OP_ST_SYMSTR,	/* Kernel Symbol String: .offset, .size */
-> -	FETCH_OP_ST_EDATA,	/* Store Entry Data: .offset */
-> -	// Stage 4 (modify) op
-> -	FETCH_OP_MOD_BF,	/* Bitfield: .basesize, .lshift, .rshift */
-> -	// Stage 5 (loop) op
-> -	FETCH_OP_LP_ARRAY,	/* Array: .param = loop count */
-> -	FETCH_OP_TP_ARG,	/* Trace Point argument */
-> -	FETCH_OP_END,
-> -	FETCH_NOP_SYMBOL,	/* Unresolved Symbol holder */
-> +	FETCH_OP_LIST
->  };
-> +#undef FETCH_OP
-> +
-> +#define FETCH_NOP_SYMBOL FETCH_OP_NOP_SYMBOL
->  
->  struct fetch_insn {
->  	enum fetch_op op;
-> @@ -370,6 +379,14 @@ bool trace_probe_match_command_args(struct trace_probe *tp,
->  int trace_probe_create(const char *raw_command, int (*createfn)(int, const char **));
->  int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_args,
->  		 u8 *data, void *field);
-> +#ifdef CONFIG_PROBE_EVENTS_DUMP_FETCHARG
-> +void trace_probe_dump_args(struct seq_file *m, struct trace_probe *tp);
-> +#else
-> +static inline void trace_probe_dump_args(struct seq_file *m, struct trace_probe *tp)
-> +{
-> +	return;
-> +}
-> +#endif
->  
->  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
->  int traceprobe_get_entry_data_size(struct trace_probe *tp);
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index c274346853d1..b2e264a4b96c 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -765,6 +765,9 @@ static int trace_uprobe_show(struct seq_file *m, struct dyn_event *ev)
->  		seq_printf(m, " %s=%s", tu->tp.args[i].name, tu->tp.args[i].comm);
->  
->  	seq_putc(m, '\n');
-> +
-> +	trace_probe_dump_args(m, &tu->tp);
-> +
->  	return 0;
->  }
->  
+> > For eprobe users, it should not access to the user space data directly
+> > because it can cause page fault in the kernel without fixup. It may work
+> > on x86, but it doesn't work on other architecture which has separated
+> > address space for user space. To avoid such mistake, it saves actual
+> > string in the ringbuffer as __filename_val.
 > 
+> > Hmm, this must be documented in eprobe example code...
+> 
+> Could we use is_kernel() from kallsyms.h to check the address?
+
+No, it is hard to identify a given unsigned long value is an address
+of kernel space or not.
+
+> 
+> Or should we forbid string and ustring fetch types in eprobes if the
+> base field is a FILTER_PTR_STRING?
+
+No, it depends on user to use string or ustring. The "ustring" fetch
+type can handle it correctly.
+
+The problem is that the event does not provide the information that
+the string is in user space or not. But actually, for syscall events
+all data pointed by syscall parameter should be in the user space.
+
+So feel free to add a new FILTER type to syscall events and use that
+to check it should use ustring type or not, if you want.
+
+Thank you,
+
+> 
+> Best regards,
+> Martin
+> 
+> > > A const char * syscall argument is using FILTER_PTR_STRING, the unsigned long
+> > > argument from the ringbuffer is read as a char and then converted to a
+> > > truncated pointer.
+> 
+> 
+> > Thanks,
+> 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
 -- 
