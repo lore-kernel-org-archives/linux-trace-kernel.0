@@ -1,210 +1,165 @@
-Received: from latitanza.investici.org (latitanza.investici.org [185.218.207.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9209931E84E;
-	Tue, 23 Jun 2026 14:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.218.207.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BDD3D6472
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 14:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782226197; cv=none; b=K3C2KT2mkZS9JgKDaygwhGkRQYyac+1UKqFRYDRUR4t0GRjDlkssGiUG9NpXavcjtmw5UobMy1QeR2PwBQzg7cu0E1H0MbZf6fAklr1JEXHU8Nd6FwluQ8Nma7n6JNZj6OXqdp8x0kB91nY6pkwWnTgJnMvO61c5FlSxDEpbmmQ=
+	t=1782226486; cv=none; b=F/k/KIuJuhSvgKyW0K37rc9guKAT2K3oGHgBww4Gyla/CAOut6b6428r7Y5C7Esg/MCYLtLqA+DTk48Wtuqt3rpfNaj/W+stegZos/Ps+s/zmutaSMx+8/AMdSbVCbmcRiXsnpuQWoE1V2LzCyAiqlgPnexgXJcK5A5VRO3LqRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782226197; c=relaxed/simple;
-	bh=QfTvAy+x1hC49KvWQqLJof0UTqMaIGPP7koTnJ+x7RU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=T4W2J/t+XC8QA2MRXZ8O2W5VrDNQ7yPhsimkFeIPlnsAD5ASXdRNjzh2v8fa4PIb4ec0Dyc8HFypbnnjvwhYwAUrNZFVpcvpQIWct58ZhTueJl5Ngd2CLqf6Cmo9gv/YQphOGkT449NRZsxAz0iDr9nZqm61eW+OqPFHSazvu1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=KtIlrF0C; arc=none smtp.client-ip=185.218.207.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+	s=arc-20240116; t=1782226486; c=relaxed/simple;
+	bh=L90/AkyCB9U0geyi1lWA/eHf7voiXgf417DXWgwVaXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lt0qKVW+AMB4C92xKWbMxChh7lRYlIV3RD+dKkpyBDfPy7JwtBHLcJnqqo8RCMfhz1OTsV4hMYGls/CgHgt8yCglZpEtCH7F0kYoSLxVmUgTUMlNgfMHW/f8tzjRy0Fku/h+xNV77Zh+PRExA4mjvPHmvGRIQ3DiBSsk5uIH6g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRbupCAR; arc=none smtp.client-ip=74.125.82.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="KtIlrF0C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1782226192;
-	bh=o2iXiKw3WOFmFNd4p/XpLc0ehaPGE9uKhnvwB827W9s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=KtIlrF0CJd6PlDbBin6ES7N6eZiCHKPxLej6e6lmD681M6SCvYFGQ5azdNTEqd0pv
-	 wLFwM/yr156kYJFeJbbxAe+feZ4X0idvYxBen+UtIzIUnNy1uVKbqKkurfZWuugl1T
-	 satLVYT5aB2ahVxLQbCIqlfVAevdmZHvWjMZU73g=
-Received: from mx3.investici.org (unknown [127.0.0.1])
-	by latitanza.investici.org (Postfix) with ESMTP id 4gl7Jc1RkgzGpHy;
-	Tue, 23 Jun 2026 14:49:52 +0000 (UTC)
-Received: by mx3.investici.org (Postfix) id 4gl7Jb5424zGpHd;
-	Tue, 23 Jun 2026 14:49:51 +0000 (UTC)
-Date: Tue, 23 Jun 2026 15:49:51 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: Oleg Nesterov <oleg@redhat.com>
-CC: Christian Brauner <brauner@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Marco Elver <elver@google.com>,
- Aleksandr Nogikh <nogikh@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Adrian Huang <adrianhuang0701@gmail.com>,
- Kexin Sun <kexinsun@smail.nju.edu.cn>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_2/2=5D_signal=3A_make_sen?=
- =?US-ASCII?Q?d=5Fsignal=5Flocked=28=29_take_const_siginfo?=
-In-Reply-To: <ajpiSbciUfZr2zfm@redhat.com>
-References: <20260622164029.11474-1-include@grrlz.net> <f754c4e5c82b45bcbb770aa8bb1f4ab1d87a0b0e.1782159692.git.include@grrlz.net> <ajpiSbciUfZr2zfm@redhat.com>
-Message-ID: <09C44F05-1ED0-48F1-A9CE-F120EE48B07D@grrlz.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRbupCAR"
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1384ebe7a10so5869943c88.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 07:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782226484; x=1782831284; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IY3KFhICfndG+RHDKCrSaeQPMXM8dmxeDhVM/4MoFI4=;
+        b=SRbupCARI7MYaWuFBF0iNPDW3bnl1Yvh5aNmuzOLlmacehSE3eZ1uu6844w0iwmcPl
+         YifKmvZwdTMr9m/HJTG2dV+VtEZ3mVOHtJ5I0yNml/5T3W5PVnQcldvjX6LdzKEpc8sp
+         sMssFA+3h8u0Lu9VaF7o5dEtipVvSCrxocqQT7RihS28qI7cRttyzwl0/usFYhD2+VkS
+         6IpBZjxyEonjgrO8ECMEtlRx7OjmEvimsTku0/KUa6EmITpuzbDF3oUri4V9FBj1zwbo
+         H+vHOSLgj6UDWHZb9LWhiF26YqGlYILI9eO+5bADxQZbAvuyi5eO2S+yoZzAf54etk40
+         Km3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782226484; x=1782831284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IY3KFhICfndG+RHDKCrSaeQPMXM8dmxeDhVM/4MoFI4=;
+        b=WZONPohO2gRq6wFuavtasMbIBZDHIUZCl+OJgluYW9JPjj5caQR/qoCqBbEdUPZE6o
+         VUDhjwotEOnqYp3ZFSO66UO5cxnW852fI0Gdv0C5EjXEYXgjr+od6e6etYqVsC5JEluA
+         5smiD7phcXkRz1yqCRwsv4mE3NPnS+mySRUszlCjo6hiZeqMtDfN2sSBGTTmttbjDcgJ
+         CQM9aguT1jQN5A3tGhe0gmSTXuQYnc0qO2DoReZ3czaA43jzocPnIrmYbJXr4eTy2WbL
+         9dDNY748PNzN3cIMvx7Qn49CTctEjqf9eK/rOc2Qm9GLSgdBx/3ojyjlQcQN/1BkbA/F
+         natw==
+X-Forwarded-Encrypted: i=1; AFNElJ8kItSARTKKnCv5CcfpxWbdNP2xx7TjNl2AqFCLE89D7eNd/FrPozyZPt//KA/t8Zfhtu7EqK5snl/q3RYh7kP7Ncs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu2OILzcIwvPb9xx0FnRSXAQ47ni60pdgPQbZkCHxH/VuBsf3p
+	4HzQCUVv5H9GODmhvPApkcFch1Q4OWztpU0gGLqxG5Ef9HlR21/GqFxO
+X-Gm-Gg: AfdE7cm0uZCs+KSY2kHsbnYch2bSa4x7daj4IqtEfpzcRJSzmKNjC+PcEw/qMPF9NrC
+	/uXjYFbXzQPOZyHR5sE4xjOw9kMC2n96g6JD2P2LldccaGYFN0s/QhF9LBW4ntL9Qf53BDlbgIE
+	kjVTERweXgDUNVLwQcvx3WtmJ3adY6vwTQU8d46t05a+FRgl7uc++jgnABIAREC56FmqyfVUJVM
+	ClTKtUQuDzgUhsqpiCR6/RfkBHNvXZG1Dva17MCfa1PEcKs+sDd3LPy7un2JfFsGBQa8oyJu1+y
+	frQPR1QTv6Lh2Q1DEQ75Dt0OtpBkxv+J1oUnQjzmOUUY7QE7RvIfk4Inb312jvI7qScmtgTsbwu
+	wvdRGK+nXIsoh8Le/82HcI9sVysutsFdSsoS9Io4FHQs5XgiSIhbmpMpHX0kaUqnS9CBx8cxHYZ
+	9WZd0pxW6FXgOQ8k0HPMSrk3lmjwSUpIc/Cx0AFQ==
+X-Received: by 2002:a05:7022:90d:b0:12a:6fb7:87e3 with SMTP id a92af1059eb24-139c5e033b1mr2686422c88.31.1782226484332;
+        Tue, 23 Jun 2026 07:54:44 -0700 (PDT)
+Received: from mo-Inspiron-5559.. ([2001:fb1:d9:863a:37d9:e7c4:e450:11e4])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139adca1b00sm12963863c88.2.2026.06.23.07.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 07:54:43 -0700 (PDT)
+From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	me@brighamcampbell.com,
+	jkoolstra@xs4all.nl,
+	woradorn.laon@gmail.com
+Subject: [PATCH v3] tracing: Use seq_buf for string concatenation
+Date: Tue, 23 Jun 2026 21:51:47 +0700
+Message-ID: <20260623145147.12145-1-woradorn.laon@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On June 23, 2026 11:39:05 AM GMT+01:00, Oleg Nesterov <oleg@redhat.com>
-wrote:
->On 06/22, Bradley Morgan wrote:
->>
->> send_signal_locked() should not change the caller's siginfo. Make that
->> part of the type and keep the local rewrite on its copy.
->>
->> Suggested-by: Oleg Nesterov <oleg@redhat.com>
->
->Ah, sorry... I only suggested to change the signature of
->send_signal_locked()
->and thus has_si_pid_and_uid(). Perhaps a broader change makes sense too,
->but
->this conflicts with another (under discussion) series:
->
->	PATCH v2 3/3] signal: fix evasion of SA_IMMUTABLE signals
->	https://lore.kernel.org/all/ajVD6ZmiSQLxjj57@redhat.com/
->
->Now let me take another look at 1/2 ...
->
->Oleg.
+In preparation for removing the strlcat API[1],
+replace the string concatenation logic with a struct seq_buf,
+which tracks the current position and the remaining space internally.
 
-Aww. My bad.
+Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
 
-You may keep this shelved in case :)
+Link: https://github.com/KSPP/linux/issues/370 [1]
 
+Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+---
+v1 -> v2: 
+	- Fixed WARN_ON when booting with empty trace_event.
+v2 -> v3: 
+	- Addressed Sashiko's concern about the compound literal backing buffer.
+	- Replaced the compund literal with an explicit declared buffer and pointed
+	seq_buf.buffer to it. This guarantees the backing storage is placed in 
+	`.init.data` and reclaimed after boot.
 
->> Signed-off-by: Bradley Morgan <include@grrlz.net>
->> ---
->> Changes since v1:
->> - New patch from Oleg's suggestion.
->> - Link to Oleg's suggestion:
->>  
->https://lore.kernel.org/all/0873AC4A-3CB2-4F7B-BFE6-75D855AD22DC@grrlz.net/T/#m5f8a2d54928efff41de539969b68149e1ec5fca4
->> 
->>  include/linux/signal.h        |  2 +-
->>  include/trace/events/signal.h |  4 ++--
->>  kernel/signal.c               | 20 +++++++++++---------
->>  3 files changed, 14 insertions(+), 12 deletions(-)
->> 
->> diff --git a/include/linux/signal.h b/include/linux/signal.h
->> index f19816832f05..a1ba8c5973c6 100644
->> --- a/include/linux/signal.h
->> +++ b/include/linux/signal.h
->> @@ -283,7 +283,7 @@ extern int do_send_sig_info(int sig, struct
->kernel_siginfo *info,
->>  				struct task_struct *p, enum pid_type type);
->>  extern int group_send_sig_info(int sig, struct kernel_siginfo *info,
->>  			       struct task_struct *p, enum pid_type type);
->> -extern int send_signal_locked(int sig, struct kernel_siginfo *info,
->> +extern int send_signal_locked(int sig, const struct kernel_siginfo
->*info,
->>  			      struct task_struct *p, enum pid_type type);
->>  extern int sigprocmask(int, sigset_t *, sigset_t *);
->>  extern void set_current_blocked(sigset_t *);
->> diff --git a/include/trace/events/signal.h
->b/include/trace/events/signal.h
->> index 1db7e4b07c01..05a46135ee34 100644
->> --- a/include/trace/events/signal.h
->> +++ b/include/trace/events/signal.h
->> @@ -49,8 +49,8 @@ enum {
->>   */
->>  TRACE_EVENT(signal_generate,
->>  
->> -	TP_PROTO(int sig, struct kernel_siginfo *info, struct task_struct *task,
->> -			int group, int result),
->> +	TP_PROTO(int sig, const struct kernel_siginfo *info,
->> +		 struct task_struct *task, int group, int result),
->>  
->>  	TP_ARGS(sig, info, task, group, result),
->>  
->> diff --git a/kernel/signal.c b/kernel/signal.c
->> index d72d9be3a992..26e8b8e1d03c 100644
->> --- a/kernel/signal.c
->> +++ b/kernel/signal.c
->> @@ -1037,7 +1037,7 @@ static inline bool legacy_queue(struct sigpending
->*signals, int sig)
->>  	return (sig < SIGRTMIN) && sigismember(&signals->signal, sig);
->>  }
->>  
->> -static int __send_signal_locked(int sig, struct kernel_siginfo *info,
->> +static int __send_signal_locked(int sig, const struct kernel_siginfo
->*info,
->>  				struct task_struct *t, enum pid_type type, bool force)
->>  {
->>  	struct sigpending *pending;
->> @@ -1154,7 +1154,7 @@ static int __send_signal_locked(int sig, struct
->kernel_siginfo *info,
->>  	return ret;
->>  }
->>  
->> -static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
->> +static inline bool has_si_pid_and_uid(const struct kernel_siginfo
->*info)
->>  {
->>  	bool ret = false;
->>  	switch (siginfo_layout(info->si_signo, info->si_code)) {
->> @@ -1178,10 +1178,11 @@ static inline bool has_si_pid_and_uid(struct
->kernel_siginfo *info)
->>  	return ret;
->>  }
->>  
->> -int send_signal_locked(int sig, struct kernel_siginfo *info,
->> +int send_signal_locked(int sig, const struct kernel_siginfo *info,
->>  		       struct task_struct *t, enum pid_type type)
->>  {
->>  	struct kernel_siginfo rewritten;
->> +	const struct kernel_siginfo *send_info = info;
->>  	/* Should SIGKILL or SIGSTOP be received by a pid namespace init? */
->>  	bool force = false;
->>  
->> @@ -1196,26 +1197,27 @@ int send_signal_locked(int sig, struct
->kernel_siginfo *info,
->>  		struct user_namespace *t_user_ns;
->>  
->>  		rewritten = *info;
->> -		info = &rewritten;
->> +		send_info = &rewritten;
->>  
->>  		rcu_read_lock();
->>  		t_user_ns = task_cred_xxx(t, user_ns);
->>  		if (current_user_ns() != t_user_ns) {
->> -			kuid_t uid = make_kuid(current_user_ns(), info->si_uid);
->> -			info->si_uid = from_kuid_munged(t_user_ns, uid);
->> +			kuid_t uid = make_kuid(current_user_ns(), rewritten.si_uid);
->> +
->> +			rewritten.si_uid = from_kuid_munged(t_user_ns, uid);
->>  		}
->>  		rcu_read_unlock();
->>  
->>  		/* A kernel generated signal? */
->> -		force = (info->si_code == SI_KERNEL);
->> +		force = (rewritten.si_code == SI_KERNEL);
->>  
->>  		/* From an ancestor pid namespace? */
->>  		if (!task_pid_nr_ns(current, task_active_pid_ns(t))) {
->> -			info->si_pid = 0;
->> +			rewritten.si_pid = 0;
->>  			force = true;
->>  		}
->>  	}
->> -	return __send_signal_locked(sig, info, t, type, force);
->> +	return __send_signal_locked(sig, send_info, t, type, force);
->>  }
->>  
->>  static void print_fatal_signal(int signr)
->> -- 
->> 2.53.0
->> 
->
->
+v1: https://lore.kernel.org/all/20260620175441.223342-1-woradorn.laon@gmail.com
+v2: https://lore.kernel.org/all/20260622094623.18469-1-woradorn.laon@gmail.com
+Sashiko: https://sashiko.dev/#/patchset/20260622094623.18469-1-woradorn.laon%40gmail.com
 
-Thanks!
+ kernel/trace/trace_events.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..5ab630155ab6 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -22,6 +22,7 @@
+ #include <linux/sort.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/seq_buf.h>
+ 
+ #include <trace/events/sched.h>
+ #include <trace/syscall.h>
+@@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_events[];
+ extern struct trace_event_call *__stop_ftrace_events[];
+ 
+ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
++static struct seq_buf bootup_event_seq __initdata = {
++	.buffer = bootup_event_buf,
++	.size = COMMAND_LINE_SIZE,
++};
+ 
+ static __init int setup_trace_event(char *str)
+ {
+-	if (bootup_event_buf[0] != '\0')
+-		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
++	if (seq_buf_used(&bootup_event_seq) > 0)
++		seq_buf_puts(&bootup_event_seq, ",");
++
++	seq_buf_puts(&bootup_event_seq, str);
+ 
+-	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
++	if (seq_buf_has_overflowed(&bootup_event_seq))
++		return -ENOMEM;
+ 
+ 	trace_set_ring_buffer_expanded(NULL);
+ 	disable_tracing_selftest("running event tracing");
+@@ -4766,7 +4774,7 @@ static __init int event_trace_enable(void)
+ 	 */
+ 	__trace_early_add_events(tr);
+ 
+-	early_enable_events(tr, bootup_event_buf, false);
++	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), false);
+ 
+ 	trace_printk_start_comm();
+ 
+@@ -4794,7 +4802,7 @@ static __init int event_trace_enable_again(void)
+ 	if (!tr)
+ 		return -ENODEV;
+ 
+-	early_enable_events(tr, bootup_event_buf, true);
++	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), true);
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
+
