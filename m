@@ -1,102 +1,182 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1783537F7
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 18:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FEE37C907
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 19:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782239513; cv=none; b=pba/HFwP7tcgQTmEQHH+qBVWcfPdGy25r5jvY50nEqbhCaG3C3w5YG+R6jw0gLNh8QISV2NNNyZu/ugCWwlWjDwkCaNRFyE4X7SDTZloDE/GQIWW9EP5K9cgT+fo5GThtKZljIc3WWWQ2hLoN26Mbbmf9kYq0dxVA6mDP3FJKmc=
+	t=1782241880; cv=none; b=N+OLuzP9d4qGfjSHWfb4/+xy7zLPEzR3jGXiikaOdL2rR1kENBMTZbqKI2RulbgC3WBrJQ+AdhkXrKeC1nOaJWyTp2FDotm5s9Op6elDuK9xvgHa46wcFWLXzXTTbjMKF/tDEqImgMdO5CrCCBWBgu+vdC8x7Xu/w6wDCzI4Uxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782239513; c=relaxed/simple;
-	bh=a6v/lpFeLkHnDu+IGa4zSrsn/mm02YtnvEpTbfS3FQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OzggEVwgoKh6vDoFPo2NQ0JT+ChdalIQ3HIX2KPcYop7M6UCU7Ng7ydi7pPeXhnguw1wafzJgRHEIpDoztwOPgk8V/GGvOPVKh0t+gupwH7A9HMauQ8BODRjndDaMPIu3WuTHobRAnK4VXn7U4QkIpdo3RPABHrrigSZGvVYSdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gASq32cQ; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1782241880; c=relaxed/simple;
+	bh=ak2Pag302wzIU6JvetlLqwWRWhBzDXIm/3d0p/6xjDU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJsRikBz7Y10yPZ7QPzwvCTqnqFmt/lJ4VQ/RJMWH3WWHcQaxtYYGqguK0axCXKoQ4JNVqmLSYIRYOGr03yy1N0HayYGmaQhScAWKhDsSIYhxfrjrpbbiaxXGDrXrLucXss9hIm4SvEWV1ugMs/hxv7ER/MFKte2ouzmZATfnLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jJOpDK8E; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gASq32cQ"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-460662fcb4eso163315f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 11:31:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJOpDK8E"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-463f1165e16so281605f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 12:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782239510; x=1782844310; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=1WzoRhsusRl0gQfys6taa/vq131osq1TZkHvUeTyq2k=;
-        b=gASq32cQQnOakdWdGAi4RKCu9gJ4gOgSadpTO6u8yjQhIeI9UkJLK8QVemzr/zH93r
-         G9/KCwzJi0U9+L3zXYGQL/tceIXVLwWamlL00Gs4zvoEk8O1fnBfmOOuHynOG1SfxkyO
-         SUCsf2A2TWUGeAdKPjfAn/nf+SQfYbLH0JCEqHBuy/fPBqHR/+ato5LVhdTS9r4cOtYv
-         zJoQ3LDFNBxpwKjlTciRlPnNeNyOKeRANt8XnIrWTXVNsQvx/BDSV9vgwV9S0T+XY0kF
-         0Fo3QnXiPTQM0OuTOs+c71C/EZeQBQnasKVwleqBu1m2XGTIvIpSGbDACuDh1mZR71Nt
-         5Grw==
+        d=gmail.com; s=20251104; t=1782241873; x=1782846673; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6oU+L9zQu/aklDl++k+2cg0xhcWLV/5t/SZwmgE+09o=;
+        b=jJOpDK8EoGAYU1uOUQB/YMRlIjyQYQX7RLUzFQZYY+CWml4gsOtNDVdcuQjDpvGqbQ
+         BJBv8GoWxP2hX0JDB1M4c7axMl/ujLM8tMF24wJpyUv9LGvJep0IYdi/b34cfa1duCZW
+         2tWp9+3kdQzbFV1ek3/7c5QgkNtMwAFnn3vfnJG/ia92EEPH79YtcflCpwyVHIQ2cXsT
+         IkvA++yjnt7/1a0lD0rdmyXXuHCYm6H2FeHFqkzFa7wlWSI2QIe9A5oQKxqBgo9CaWfp
+         SeaGw4KEneVgf7kmgu24fA+d2lfxcv7Qyr7GzkEC7iFPWp3vOBizjGDIjwQBmvKzr3H0
+         x50A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782239510; x=1782844310;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1WzoRhsusRl0gQfys6taa/vq131osq1TZkHvUeTyq2k=;
-        b=b0JqJU/D2gqA9RLYvgF4AfXg2RBdGB5y6Ya4hDaK3QNSH5poQ04Qcwxep6sGk5QrNq
-         myP62Cokr5GazXWcIzKaxVp/DiSnb+RaUGBEHgEJM9zErOKIncTy0Ni6KweQqd949x4K
-         zGeEMuyxsSpcvWmAFk+P02PDwvmXRGA79oWq/k+TbqpLI1Vdw13Z2r8XK8GmdtFxMsXh
-         N6XLkebRYyE0EogAUfdm9tOsZxUAHgKSRG4xpeWgXw7SMKsy+wy5gAzCQhnn3llOVIYI
-         Wtd5tXhgkghhs7/zWNGUzZa6aqTNuXLA7huUpN2DaX18TRGTsbt3zYF1+GNdzFbpC+1+
-         OkBQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoiqcrRAZsznb+lCS19+yjcmlj6bUO48zbyS0oEw4gOQ5i6LQqIxkYRXcRZ5v86SgrBt4DiZnpzegvp8ZN4tdGHDh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKlNsF7xeS2OmYgzawph4M1FJ4ryyy6EPBDo7pz8oht1elKrq1
-	WNAV+Y+N3Didxu5BkHihls/YUN/JuWcEZCqqoUaVrYnM3Gq2RyDW9t89
-X-Gm-Gg: AfdE7cmq9tWwoIJn3KEel9ZYFlOguSm6X5mcF7o0axuwwDBANM5QFRGJ0yxGZM0par4
-	zSZXIJAZ1XrdoTZQBw8SFj6Yfig8L+ZJageOyLVcU13ZtfuHCvAraERTIUFZNDK80HhcWn7wLQ4
-	INaT5uIAQW7FxvEKACruGKrPKY9I9910MP7eOVS8itPrvFid5CriwzytyXWFZ6z5j/rEq/0Yi3a
-	7xu7yKAmW4hNMhoXi8xdCuzYiqrta99f+N97z7iLX9JkVFrX9A2PgW/Quw0o4Yh+/jWrV1VZOf8
-	YdaT3mhYMzdWL7yiO/Xoqe+lUaMsScmCR0jIXT9qX8Ftlipy57cdPllsuImz9h2sbJ7rbrtS2PI
-	xHpCxA2kPLKAE1XZCGIEZGQReAkwtdjwcfh5G2qo3Slc9p7Q2+HVNAO8igTFMzR9LPT46Rf7IQa
-	/eYDFGnsOz3d+oEwrPbun5dD0L8FFw8a9qvomQBOnNmPKAXlKNx9RUj3enFypJJ80K+GH09kC9t
-	X34WKNv
-X-Received: by 2002:a05:6000:18af:b0:465:767a:3a15 with SMTP id ffacd0b85a97d-46c0a670fc9mr2639f8f.18.1782239510389;
-        Tue, 23 Jun 2026 11:31:50 -0700 (PDT)
-Received: from [10.128.11.131] (195-23-151-163.net.novis.pt. [195.23.151.163])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46666788282sm55782307f8f.17.2026.06.23.11.31.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2026 11:31:49 -0700 (PDT)
-Sender: Julian Braha <julian.braha@gmail.com>
-Message-ID: <96b043ed-c527-4e5d-8eb7-631805da53fd@gmail.com>
-Date: Tue, 23 Jun 2026 19:31:47 +0100
+        d=1e100.net; s=20251104; t=1782241873; x=1782846673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6oU+L9zQu/aklDl++k+2cg0xhcWLV/5t/SZwmgE+09o=;
+        b=Cv/XCF1oxmc6zTugPDimd/ZIN6Uxz2tSIrAB/Afv5ALGdWkZ3GtPc+ByI0uTPzCNvg
+         F4GocexNCkfQWJ12w3q4X/uDjXZW89n8NwqX0P9yXfDHZUeBK34n32MjgE1G+s44TGw6
+         4YZrB4Z3i+Uvz3UMiHUL9E2tIqyXBlmQRymTx6n8VJvNlKR2El0m3zwi/m1svaOz3P5S
+         JzdHMFrdISWZDt2uXjdh0hAtmc7UvOQuB+ZtXPylm3DpqpTfRYG/oO0BlF0uq5fUXu/U
+         VuKt4RIl09Aao5LB+BI7UWs8RwihtihwtMMykwWY47wcUBu6VZ7X9vUfbzIh+mqoIsxB
+         jQwQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqWtT1bRyP5HEqJiclQuDBujdY+EgiDfmUvAGfa8uIcNHwvr6nXBmDlmfqF1/wHklv338k8QGPbIA46aBCRRYFysHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEhwSBgTYDdQqaKipdeJfBiDVv+8eggpABy1uCAO3L+yyQKbOt
+	sZutnDrRE5jJS1UC16Es8hifhQtmoKoMoVg+EQDEG2euSRiZbrjreguW
+X-Gm-Gg: AfdE7ckyOA/7CSdmlk8ihzCLNIphqmnT60L3XlHtgFUAlexDyM9hMIrwEAAwXALhTE6
+	yxLoQQsBnSUFFp81ofKq9se/27ocnZC71FMJRS3wF+zA5yeRy60N0UYdcJ3HPHjIyw+276x5ZE+
+	roiFmS+SeOyGvzHW0AFgIbNfYsYRa7M4QiGcNDqCG7kUvvtn9kHSePpY8DVWABjNeDxlABeOwaI
+	9gF/lmE0q7TYfaJz1ufnnzM0742hUpsEWa4xLzl2xt+1zRRFpWO8zyBWMY1iNkvjfWxcWnVa0vo
+	XBVOutJcwiOC4dZhLaA6LGqi08TWPaDEC5BdGfe+5lfzMh3sjfHJpEgWzxtRp4PCVqq7uyugHDM
+	bsV4Lieq9zoB+hcpms43Wg9bwpR+mMrLdj4jugV0NcMP8seiHHUHm3O224DESEXcdm6TRk2Wb9I
+	J3
+X-Received: by 2002:a05:6000:2209:b0:46a:8fab:ec6f with SMTP id ffacd0b85a97d-46c04a365damr367834f8f.4.1782241872756;
+        Tue, 23 Jun 2026 12:11:12 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46666c57afasm39639063f8f.29.2026.06.23.12.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 12:11:12 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 23 Jun 2026 21:11:11 +0200
+To: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 00/13] uprobes/x86: Fix red zone issue for optimized
+ uprobes
+Message-ID: <ajraT7xBqcKa83fy@krava>
+References: <20260526205840.173790-1-jolsa@kernel.org>
+ <aiEiP54zktDqAZpG@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 03/10] tracing/probes: Support dumping fetcharg program
- for debugging dynamic events
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <178217904992.643090.15726197350652241270.stgit@devnote2>
- <178217907822.643090.14693478306190628970.stgit@devnote2>
-Content-Language: en-US
-From: Julian Braha <julianbraha@gmail.com>
-In-Reply-To: <178217907822.643090.14693478306190628970.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aiEiP54zktDqAZpG@krava>
 
-Hi Masami,
+hi, ping, thanks
 
-On 6/23/26 02:44, Masami Hiramatsu (Google) wrote:
+jirka
 
-> +config PROBE_EVENTS_DUMP_FETCHARG
-> +	depends on PROBE_EVENTS
-> +	bool "Dump of dynamic probe event fetch-arguments"
-> +	default n
 
-Sorry, kconfig nitpick: could you match the style used by the rest of
-the config options in this file? E.g. the type and prompt come first in
-the list of attributes?
-
-- Julian Braha
+On Thu, Jun 04, 2026 at 08:59:11AM +0200, Jiri Olsa wrote:
+> On Tue, May 26, 2026 at 10:58:27PM +0200, Jiri Olsa wrote:
+> > hi,
+> > Andrii reported an issue with optimized uprobes [1] that can clobber
+> > redzone area with call instruction storing return address on stack
+> > where user code may keep temporary data without adjusting rsp.
+> > 
+> > Fixing this by moving the optimized uprobes on top of 10-bytes nop
+> > instruction, so we can squeeze another instruction to escape the
+> > redzone area before doing the call.
+> > 
+> > Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
+> > if we decide to take this change.
+> > 
+> > thanks,
+> > jirka
+> > 
+> > 
+> > v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
+> > v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.org/
+> > v3: https://lore.kernel.org/bpf/20260521124411.31133-1-jolsa@kernel.org/
+> > 
+> > v4 changes:
+> > - do not use 2nd int3 (ont +5 offset) because the call instruction
+> >   is allways the same for the given nop10 address [Andrii/Peter]
+> > - unmap unused trampoline vma after unsuccesfull optimization [sashiko]
+> > - small change to patch#2 moved user_64bit_mode earlier in the path
+> >   and pass/use mm_struct pointer directly from arch_uprobe_optimize
+> >   instead of gettting current->mm
+> >   Andrii, keeping your ack, please shout otherwise
+> 
+> hi,
+> I think bots did not find anything substantial, I have just small
+> selftests changes queued for v5
+> 
+> any other feedback/review would be great
+> 
+> thanks,
+> jirka
+> 
+> 
+> > 
+> > v3 changes:
+> > - use nop10 update suggested by Peter in [2]
+> > - remove struct uprobe_trampoline object, use vma objects directly instead
+> > - selftests fixes [sashiko]
+> > - ack from Andrii
+> > 
+> > v2 changes:
+> > - several selftest fixes [sashiko]
+> > - consolidate is_lea_insn and is_call_insn insto single check [Jakub Sitnicki]
+> > - use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
+> > - allow to copy uprobe trampolines vma objects on fork [sashiko]
+> > - change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
+> > - added fork/clone tests
+> > - I kept the selftest changes and nop5->nop10 changes in separate
+> >   commits for easier review, we can squash them later if we want to keep
+> >   bisect working properly
+> > 
+> > 
+> > [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
+> > [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
+> > ---
+> > Andrii Nakryiko (1):
+> >       selftests/bpf: Add tests for uprobe nop10 red zone clobbering
+> > 
+> > Jiri Olsa (12):
+> >       uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+> >       uprobes/x86: Remove struct uprobe_trampoline object
+> >       uprobes/x86: Allow to copy uprobe trampolines on fork
+> >       uprobes/x86: Unmap trampoline vma object in case it's unused
+> >       uprobes/x86: Move optimized uprobe from nop5 to nop10
+> >       libbpf: Change has_nop_combo to work on top of nop10
+> >       libbpf: Detect uprobe syscall with new error
+> >       selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
+> >       selftests/bpf: Change uprobe syscall tests to use nop10
+> >       selftests/bpf: Change uprobe/usdt trigger bench code to use nop10
+> >       selftests/bpf: Add reattach tests for uprobe syscall
+> >       selftests/bpf: Add tests for forked/cloned optimized uprobes
+> > 
+> >  arch/x86/kernel/uprobes.c                               | 379 +++++++++++++++++++++++++++++++++++++++++++-----------------------------
+> >  include/linux/uprobes.h                                 |   5 -
+> >  kernel/events/uprobes.c                                 |  10 --
+> >  kernel/fork.c                                           |   1 -
+> >  tools/lib/bpf/features.c                                |   4 +-
+> >  tools/lib/bpf/usdt.c                                    |  16 +--
+> >  tools/testing/selftests/bpf/bench.c                     |  20 ++--
+> >  tools/testing/selftests/bpf/benchs/bench_trigger.c      |  38 ++++----
+> >  tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh |   2 +-
+> >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 307 +++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+> >  tools/testing/selftests/bpf/prog_tests/usdt.c           |  74 ++++++++++++--
+> >  tools/testing/selftests/bpf/progs/test_usdt.c           |  25 +++++
+> >  tools/testing/selftests/bpf/usdt.h                      |   2 +-
+> >  tools/testing/selftests/bpf/usdt_2.c                    |  15 ++-
+> >  14 files changed, 653 insertions(+), 245 deletions(-)
