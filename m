@@ -1,146 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C99242D89
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 13:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DA53203B4
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 13:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782220367; cv=none; b=WIybeus3GLGbyO0MeQXVbpwvexzFqd6zcmA94QkFML6vTPHcSm8UHJdw+LTKUOUMVTCmOoZL6PdzapT7iztxT2uZWtOWtHBWm/+/Gp6+vH+MZ3UM5MgFTag1b0wGni94kzUt2Fu7yFBw/E9ons4h1BXz6GUhChw4Re0qj9aoaP4=
+	t=1782221138; cv=none; b=ieaf2BllXOiQE7djyzIi1wOx9MaQYv3qtN+6PUVWJsa5pLHETfrefSgv2C8pCUX50GqRt4S8P4WkNBz+83D3P6P4wbBUNeMhRqI1DqA2KCRR9WOfstAwMYBgxG25maldBknGQowP7RDIXaXy/k+qe+5djFxZ4BwNdp0yzmSlP0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782220367; c=relaxed/simple;
-	bh=3AWvtOWJT2gA99BNvf8VG6vqTg7vnv+65eLP8AE21r8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lx7EKzu4qoM1xkqMEuHxudI6rv8cjzdXnFy0vnV976YMnGjCM4Fybabf9dTgHcFSjd9eOm6RFYb0ndvvcjShnwbt0Ik35/a3Y3GkhO8Q8bwnNG4aKkeZ0/U8N2PDGjwA05uGCsf4pStyz1Ws2h2tK7v8NfZ2uidWQOHNQ9tRrVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bwxcImZi; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1782221138; c=relaxed/simple;
+	bh=OKx7ZDYj7SAZpoBy3rn8owt1iUaI62/RmSFsa8I59mI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=VXbi/ykPKAxTHnbUFnHRidSnW4yjgc3D58RiuGGQFjXSK0oOMwDTirm2T43cltzH6yNNAFbaURXBrmQZbYa8IgmyYsSbc5X/gDXigm4KevNmLvqUBf9ehxveFTVEVB8GAFwVSIAI5+ofmrONqUs8BtA9sqgm6EBUfHEElgHOG9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fnMGoEuy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bwxcImZi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fnMGoEuy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782220363;
+	s=mimecast20190719; t=1782221135;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=On9dHYv8SnoFxko0GrSVdclsMr1Axpq7yAvvKv+9j2g=;
-	b=bwxcImZi5StWHpQD6hpHFm14cAqL+isoLz3iyWqzngPBUXFR+qqrVZxIIpw00KATKRjWUM
-	qy0KlPg1cqvzYHNrodq82qTEuUnIhXbU4f2ddvPeYEX55UkEOvo9/v1b7G65qyqnSdryAh
-	LctztkCz418MzClcnDadIga2IbZ8Nw8=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-fyUfbYDpO3OUZe635nSuFw-1; Tue, 23 Jun 2026 09:12:42 -0400
-X-MC-Unique: fyUfbYDpO3OUZe635nSuFw-1
-X-Mimecast-MFC-AGG-ID: fyUfbYDpO3OUZe635nSuFw_1782220361
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c074ac8a2ddso589197966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 06:12:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782220361; x=1782825161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=On9dHYv8SnoFxko0GrSVdclsMr1Axpq7yAvvKv+9j2g=;
-        b=kctCVJFz8QZvIiLqhZmb36hh5YVKcGRNJfOSKj2jXUr0um4OhutfSa1H/0sk4l41J6
-         qW2tUbXecahXIk5XNYWxXV4bDk2GhaW9C9BIJrGG3/sihH5cTx8Zn2eAvpKRNpUIO3IV
-         zHwZJ8KSpa5C7M9mgHDA6fTvFEjNdTtL7ZVM6rgoq7PtO9RAmlVpFHqaHlAJm9OmLgET
-         b/yq5nztdU0tDS1a+XVOlmBrhBmClSBJji4TCSMfj5utkYcPZWxQ29o3rPtXB0pxoQtf
-         G9BxNjnBN02YLgT8WHYcgYgckRmM9/gwEHy0BRMp79Gdhb4EppJU9MVSOnYeZvzty/L1
-         xs9g==
-X-Forwarded-Encrypted: i=1; AFNElJ8NHeewNKNmTbOkyqQPeC2vsXs68hNxi5zclpw4TfAIyCJLKPL1X2kqWmtDTFg48v92PmmjKXDsVbnQbSTa83gWdds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhYmKIPwh4Vvwk5S1Eoomh3iUofF+AkQSrh7+d4/8+wDaKfNJ6
-	Qih0q5GjpLzWo41I48mSZHxS1J/wxwUmweA3vBF67MVhdm9GOe5Ecf8F0EfZOnP2ur/PUhu1vx0
-	wmVXqvSZyiaDCqFfyMums6NPtRG/8bIeWEg+3NmK7t5kYfIyO0H4A6Y1KmO+hQZbtsqtJa1XTli
-	hKL5+IpvS55AqwHy79X6UNZ+HnF9+a+wjT/sMdiHVj+xkodotO7/4WpNRQ
-X-Gm-Gg: AfdE7cmCEQoJfaDdSCBAAfsxdqlat0+Rov3XmJEP3E0WCIEdPnBk0pQXvVV0eVvaJsa
-	RL8SrIMZ12fzf4FTlZ1+U9xS9A/YbRkELBQIzQrpS9iLHZEjPHOPc895go1ZFvb5GZ8BLJO4H8A
-	xS8Uq0sgp5oKv7MLsLd51C9VhMkxa4OkPOdhh5Wn97dYNAau50/Nc+v0ESSv7ZXfhZM2c=
-X-Received: by 2002:a17:907:d1e:b0:beb:2de3:1ba1 with SMTP id a640c23a62f3a-c097adf8d40mr1100545166b.11.1782220361031;
-        Tue, 23 Jun 2026 06:12:41 -0700 (PDT)
-X-Received: by 2002:a17:907:d1e:b0:beb:2de3:1ba1 with SMTP id
- a640c23a62f3a-c097adf8d40mr1100541866b.11.1782220360427; Tue, 23 Jun 2026
- 06:12:40 -0700 (PDT)
+	bh=QjzcbOUH/JYV0AOYsdrx/GdOx3eRULAHiB6tLZrDBX4=;
+	b=fnMGoEuychYiHloo+k2kafLpm7FfHKx3K75+mW7SSJRHScQZNH7bIvB3rM7nV6h0CnMg/z
+	MnRuC6L51ZlTPdS9VAWGAUsHUVZ24nJkPUkCWUUGF5VHUM+AQZ/MXVG8FUVaYAILMf/3dK
+	ck4T0W8Hx8c37rNInv8mapSmXf5qrZs=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-316-dfvzV4kiNZSf5zZLeWTgvA-1; Tue,
+ 23 Jun 2026 09:25:22 -0400
+X-MC-Unique: dfvzV4kiNZSf5zZLeWTgvA-1
+X-Mimecast-MFC-AGG-ID: dfvzV4kiNZSf5zZLeWTgvA_1782221117
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3B97C1955EAC;
+	Tue, 23 Jun 2026 13:25:17 +0000 (UTC)
+Received: from fedora (unknown [10.44.49.10])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F2C863653A;
+	Tue, 23 Jun 2026 13:25:11 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 23 Jun 2026 15:25:16 +0200 (CEST)
+Date: Tue, 23 Jun 2026 15:25:10 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: David Windsor <dwindsor@gmail.com>, mhiramat@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, shuah@kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86/uprobes: Keep shadow stack in sync for emulated
+ CALLs
+Message-ID: <ajqJNju6MY3B0S2F@redhat.com>
+References: <20260622183109.1137245-1-dwindsor@gmail.com>
+ <ajqBkKE8TpQL1mIG@redhat.com>
+ <20260623125725.GW48970@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260614092855.129278-1-br025@umbiko.net>
-In-Reply-To: <20260614092855.129278-1-br025@umbiko.net>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 23 Jun 2026 15:12:28 +0200
-X-Gm-Features: AVVi8CccVHpIRaTgj8g2hkTAcBjoO0IQfixy-1mXfHC-M_NUxxaQBYnuSNGc284
-Message-ID: <CAP4=nvRozLS73PooixqWUhDh19eG6oPLTCSV8HvjhibsTLswtw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] tools/tracing/rtla: fix missing unistd include
-To: Andreas Ziegler <br025@umbiko.net>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: HUCBrrJ_6z5de1IeP98KYSTU-Zj5dWXZ7ffZS2FhKY4_1782220361
+In-Reply-To: <20260623125725.GW48970@noisy.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: 6CzuLFG4RPGEe_skhOpFKuL0oLuvkPXUJ02HperybBs_1782221117
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Andreas,
-
-Please note that rtla uses "tools/rtla:" or "rtla:" prefix for
-patches, not "tools/tracing/rtla".
-
-ne 14. 6. 2026 v 11:35 odes=C3=ADlatel Andreas Ziegler <br025@umbiko.net> n=
-apsal:
+On 06/23, Peter Zijlstra wrote:
 >
-> Compiling RTLA 7.1-rc6 with GCC 16 and uClibc as standard library fails
-> with these errors:
+> On Tue, Jun 23, 2026 at 02:52:32PM +0200, Oleg Nesterov wrote:
+> > On 06/22, David Windsor wrote:
+> > >
+> > > --- a/arch/x86/kernel/uprobes.c
+> > > +++ b/arch/x86/kernel/uprobes.c
+> > > @@ -1246,8 +1246,12 @@ static int default_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs
+> > >  		long correction = utask->vaddr - utask->xol_vaddr;
+> > >  		regs->ip += correction;
+> > >  	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
+> > > +		unsigned long retaddr = utask->vaddr + auprobe->defparam.ilen;
+> > > +
+> > >  		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
+> > > -		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
+> > > +		if (emulate_push_stack(regs, retaddr))
+> > > +			return -ERESTART;
+> > > +		if (shstk_update_last_frame(retaddr))
+> > >  			return -ERESTART;
+> >
+> > Well, if shstk_update_last_frame() fails after emulate_push_stack(), we should
+> > probably return another error, so that the caller handle_singlestep() will kill
+> > this task?
 >
-> ...
->
-> Restore the missing unistd.h include.
->
+> Makes sense, the other user has a force_sig(SIGSEGV) on failure.
 
-Thanks for the fix, I missed that.
+Offtopic question... both shstk_update_last_frame() and shstk_push() are only
+used by arch/x86/kernel/uprobes.c. But they are not symmetric in that
+shstk_update_last_frame() returns 0 if !features_enabled(ARCH_SHSTK_SHSTK),
+while shstk_push() returns -ENOTSUPP in this case.
 
-Indeed, according to POSIX, alarm() has to include unistd.h. I'll try
-to add the uclibc build to my tests.
+That is why the users can't just do "if (shstk_push(xxx)) ...". This is really
+minor, but perhaps it makes sense to change shstk_push() to return 0 in this
+case too? I don't think -ENOTSUPP is actually useful...
 
-> Fixes: <115b06a00875> (tools/rtla: Consolidate nr_cpus usage across all t=
-ools)
->
-
-The conventional syntax for Fixes is:
-
-Fixes: 115b06a00875 ("tools/rtla: Consolidate nr_cpus usage across all tool=
-s")
-
-i.e. no angle brackets, and double quotes around the commit name. See:
-https://docs.kernel.org/process/submitting-patches.html#describe-changes
-
-> Signed-off-by: Andreas Ziegler <br025@umbiko.net>
-> ---
->  tools/tracing/rtla/src/common.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/com=
-mon.c
-> index 35e3d3aa922e..5c5398d20f40 100644
-> --- a/tools/tracing/rtla/src/common.c
-> +++ b/tools/tracing/rtla/src/common.c
-> @@ -5,6 +5,7 @@
->  #include <signal.h>
->  #include <stdlib.h>
->  #include <string.h>
-> +#include <unistd.h>
->  #include <getopt.h>
-
-The getopt.h include was removed in master, causing a conflict when
-applying the patch. Could you please rebase?
-
->  #include <sys/sysinfo.h>
->
-> --
-> 2.53.0
->
-
-Thanks,
-
-Tomas
+Oleg.
 
