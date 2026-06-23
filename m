@@ -1,149 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B783D091D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 11:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8839374E6C;
+	Tue, 23 Jun 2026 11:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782214647; cv=none; b=LrU63lRgtzLUX0P/Kb+NfTFAAIVmpyNv1pwL98vYflEtkz2wfaJDocbaveop30XffoPV9EevjNkoU6p7gDUMiDo94ngy0ohh2LGXVXmM9cQaH6OUZfIlP6nTQKURlcVHtOrdoIplaL1tSp17Q7c5IqQbW5jcSBDLVwc4Phz872c=
+	t=1782215417; cv=none; b=otBXoznA3idB3/laO0oWTtHo3F46+gJZTgmSIc3if/6R/X7xRyhhG5t3/O6pNVd6ptkJO57tYUgoqRaEdO6cRro4MkktLWJwrBsNJGkVn3JULyW7fzOz8PjjSmtVg6hM1GuLA6MOURG7THrNsFtcNJTrC7ZK3wZ/uGkcJy2CzuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782214647; c=relaxed/simple;
-	bh=/rvnHWxsyjatejwWQprf3f9bMXo+Vb/0KMckYAc718M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=AH16eVzX4q0dSxqSJf4kT94MQvj6cVAr3+e1lH2DLmOsvNiE2Qb8MBlaVbkk3r/kDDCxDiVyzYfrfPvfL2yazpoCm5KESDbIe4ejBFSbPdHmb3T2E/wp/43U2HPr4Y2pDiJgsBEsz63pYi0RPtWJ2qyeXDHcTEmM08A+fFiLx+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FbQqBo96; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782215417; c=relaxed/simple;
+	bh=n9OhQRcivBTU+0Hw5QfVQWAdoHhSvvpTs4h0+H96Yv8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=g5XgzlJhsavMn/2uj17D0VKUIx4KkP9PzdFPiQcnpYeIw6OSsuZ7kcfk1jbvhmtCrdlhlTXis0zDRlqGgrMTOmJN8rmXjnJj96nsDYlbSOReXNOf8/13IbiOUAmbJulBmlz1oJmirsV/n0hwjTU/zMtRTZY7ySMgKg0W1rrwE0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoytTKJp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FbQqBo96"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782214645;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QY/9Nl/VrWcVhdfUgvda7VSgNL1uP8RPDDyNnbWdsHA=;
-	b=FbQqBo96JdsoFN9UWkPHMdC3ZUIltOPPMl6bNDJV4oFJA8NY0IXDqbgpTmF1p0H6d9AgeI
-	EcHXJtE87U+rtOxUQn39qo+6fht/X/VS6MIj5X/B1l/OAbqnCfIZa1csJxy8eUzhgP8e+B
-	/Dd89EHUHDMo5iPmzuNgzD+TnDiajR8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-198-pUab9T4nMmyWCqshHQA76g-1; Tue,
- 23 Jun 2026 07:37:20 -0400
-X-MC-Unique: pUab9T4nMmyWCqshHQA76g-1
-X-Mimecast-MFC-AGG-ID: pUab9T4nMmyWCqshHQA76g_1782214637
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E34EE18009C8;
-	Tue, 23 Jun 2026 11:37:16 +0000 (UTC)
-Received: from fedora (unknown [10.44.49.10])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 68CD33189;
-	Tue, 23 Jun 2026 11:37:10 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 23 Jun 2026 13:37:16 +0200 (CEST)
-Date: Tue, 23 Jun 2026 13:37:09 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Bradley Morgan <include@grrlz.net>,
-	"Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Marco Elver <elver@google.com>,
-	Aleksandr Nogikh <nogikh@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Adrian Huang <adrianhuang0701@gmail.com>,
-	Kexin Sun <kexinsun@smail.nju.edu.cn>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] signal: avoid shared siginfo namespace rewrites
-Message-ID: <ajpv5bW01_xtlZ6R@redhat.com>
-References: <20260622164029.11474-1-include@grrlz.net>
- <86a8857d58d43ee26a8b365b837fd24830343494.1782159692.git.include@grrlz.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoytTKJp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 554ED1F000E9;
+	Tue, 23 Jun 2026 11:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782215416;
+	bh=d62k19kj1SfRjgL7jcO1Hvgy3SxR7Y2lcNyjJKm9tsY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=aoytTKJpKqwrv0PxU7BckYroUsYWDez6dmQNqqy/xFmhsf4WiIX2f0iDLTacI7n/0
+	 prIGaAvGrMEq29qEsx89JxkRvNnp3w8vIiHPSGQsmTxO4RhTSFeMFP7C6cU0Uvq3nA
+	 P0qfK+RBTWf2NHRbIF0RK1rOKsqV4rqIYP7SyrWRbBELcnEDwXfiZzPYzHIow/dfmb
+	 R8XbxHZYzpEmLI0OeHqnWtA0Hu4jv5g/T7xNgcifsXb8h1H+lm/hYohWfPQ/H9pYrc
+	 IkPWQ7w+AqL6qzcP2WGTmDJzKdiuH/09lYcsVRcXTskKy3tCkjlngeYp1pl4xCaF4R
+	 C7NlqrVd62+0A==
+Date: Tue, 23 Jun 2026 20:50:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 06/10] tracing/probes: Type casting always involves
+ nested calls
+Message-Id: <20260623205011.6f295bbf425412435f25b72f@kernel.org>
+In-Reply-To: <178217910709.643090.6379198143797177881.stgit@devnote2>
+References: <178217904992.643090.15726197350652241270.stgit@devnote2>
+	<178217910709.643090.6379198143797177881.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <86a8857d58d43ee26a8b365b837fd24830343494.1782159692.git.include@grrlz.net>
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: pzZkA0lJ-E_nXhZhfzcJasvim5QStTSC02MhQ97-5rw_1782214637
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add Eric.
 
-OK, I agree, it seems we need a simple fix.
+Sashiko commented:
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > +	}
+> > +	*close = '\0';
+> >  
+> > -		ctx->offset += 1;	/* for the '(' */
+> > -		/* We need to parse the nested one */
+> > -		ret = parse_probe_arg(tmp + 1, find_fetch_type(NULL, ctx->flags),
+> > -				pcode, end, ctx);
+> > -		if (ret < 0)
+> > -			return ret;
+> > -		ctx->nested_level--;
+> > -		clear_struct_btf(ctx);
+> > +	/* We need to parse the nested one */
+> > +	ret = parse_probe_arg(tmp, find_fetch_type(NULL, ctx->flags),
+> > +			      pcode, end, ctx);
+> 
+> Does routing the nested argument through parse_probe_arg() instead of 
+> parse_btf_arg() break the documented eprobe syntax (STRUCT)FIELD->MEMBER?
+> Since this patch removes the TPARG_FL_TEVENT handling block from
+> parse_btf_arg(), and handle_typecast() now recursively invokes 
+> parse_probe_arg() on the extracted FIELD name, a bare eprobe FIELD name 
+> that does not start with a '$' prefix will hit the default case in 
+> parse_probe_arg().
+> This causes it to be unconditionally rejected with -EINVAL (NOSUP_BTFARG) 
+> because eprobe flags (TPARG_FL_TEVENT) do not satisfy 
+> tparg_is_function_entry() or tparg_is_function_return(). This acts as an 
+> ABI breakage for existing user-space scripts relying on this eprobe syntax.
 
--------------------------------------------------------------------------
-But let me add some "offtopic" notes... Why do we actually need this fix?
+Wait... Did the type-casting support patch accidentally allow access to
+event fields without the "$"?
 
-kill_something_info(). But at first glance sys_kill/kill_something_info
-can simply use SEND_SIG_NOINFO? If yes, this makes sense anyway, I will
-re-check...
+Hmm, if so, it should be documented, and need to support correctly
+with/without typecast.
 
-do_pidfd_send_signal(PIDFD_SIGNAL_PROCESS_GROUP) allows to call
-kill_pgrp_info() if si_code < 0... Not that I think this would be better,
-but we could move this "rewrite" logic into __kill_pgrp_info()...
+Thank you,
 
-Anything else needs this change? Most probably yes, but after the quick
-grep I don't see other group senders with !is_si_special(info).
-
-Eric, what do you think?
-
-Oleg.
-
-On 06/22, Bradley Morgan wrote:
->
-> send_signal_locked() rewrites sender ids for the target namespace.
-> Group sends reuse the same siginfo, so one recipient can affect the
-> next.
->
-> Copy the siginfo before changing it.
->
-> Fixes: 7a0cf094944e ("signal: Correct namespace fixups of si_pid and si_uid")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bradley Morgan <include@grrlz.net>
-> ---
-> Changes since v1:
-> - No code changes in this patch.
-> - Add patch 2 for Oleg's const suggestion.
-> - Link to v1:
->   https://lore.kernel.org/all/0873AC4A-3CB2-4F7B-BFE6-75D855AD22DC@grrlz.net/T/#m89955d13f10807c316d34cc76680d690a2d95b31
->
->  kernel/signal.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index b9fc7be1a169..d72d9be3a992 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1181,6 +1181,7 @@ static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
->  int send_signal_locked(int sig, struct kernel_siginfo *info,
->  		       struct task_struct *t, enum pid_type type)
->  {
-> +	struct kernel_siginfo rewritten;
->  	/* Should SIGKILL or SIGSTOP be received by a pid namespace init? */
->  	bool force = false;
->
-> @@ -1194,6 +1195,9 @@ int send_signal_locked(int sig, struct kernel_siginfo *info,
->  		/* SIGKILL and SIGSTOP is special or has ids */
->  		struct user_namespace *t_user_ns;
->
-> +		rewritten = *info;
-> +		info = &rewritten;
-> +
->  		rcu_read_lock();
->  		t_user_ns = task_cred_xxx(t, user_ns);
->  		if (current_user_ns() != t_user_ns) {
-> --
-> 2.53.0
->
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
