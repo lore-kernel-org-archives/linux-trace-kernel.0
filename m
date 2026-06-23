@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC7B37B40C;
-	Tue, 23 Jun 2026 06:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300CA30ACF2;
+	Tue, 23 Jun 2026 06:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782195597; cv=none; b=mWNgN3jsexIlcsa3yH3n7zz6pJKkk71zUvh1u1dHMhc7Lyo9oUqQIH0lgBwCMha1F9taM1O+/TWnT6iQLQ/Gro2T4xUwm/1JfDV2YREmNFesQEZCKjWYjBtN6rDPfSizuiZ7jAMPdCxA2A7FYgn9Dgen2f0/VBOa5pKDFEmECZM=
+	t=1782197346; cv=none; b=CkIBz8SC+4a50qepz1vV+MqBh80oj8dKZ/QGFaHDmHkUHYLIDIEzGP+KyFOXH7KYImvQb+UFSNR5nsrqGopvoHQBvTG69sIN3kgQRwCGZMHD6Tpw06aWPxJBxXJfc83ECfhnu0TdTgM2/eoWm+e4+sjR3N9BVm89x2rXMgoOyZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782195597; c=relaxed/simple;
-	bh=OVl0lauamZ9UP82xgjaUBVhU9XMWc3+GnTCVk+DPPMA=;
+	s=arc-20240116; t=1782197346; c=relaxed/simple;
+	bh=h8AQJDX3UfNiJ86zepeJMtjP8yPCQGflfnfOwDXysvw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=REI7sv6jWcW0SfpgGvP6NTMUgH5t1YJP6sWMBcr+WX+o1AQ3gZc1R3V7PmNsoN7T7G+++ZP/MMnbnre+AR/HUpkopzYKWV5rvXMsEF+XwgdlWbk2N6QxBMTvhYx0BGnvjSOVTxHz+RneWJUITmx/aEYxaqfCd8W9Xwiys2HTYJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TERLac2S; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=eTfvdOD/UfQiD7fgQuiCVOMxtTtyKbo2fMNpwx+DU/GZ6u+iJITeufvAQIpamJ91/JUZBIRIsHfo6tvpMv7bbMcUyiAvBV+nPj7W/onnWTAb/JakLo6LXQ1FEvVKhrpJrq90TNMmolq3C4QRFvwzu+QZyjy1Hb419zu1FNLmI74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bXK1xsux; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TERLac2S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bXK1xsux"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782195590; x=1813731590;
+  t=1782197344; x=1813733344;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=OVl0lauamZ9UP82xgjaUBVhU9XMWc3+GnTCVk+DPPMA=;
-  b=TERLac2SaCJt8ng8/OiCxjT7VaZN/MXAwbUc0fnkeDZaXSY+Gv6j8vl1
-   foBxEsoxX14B+9M6FY/ddM+M86cpovUTBic8vadrYdO3Trzg8GmmfV/Di
-   EwlOeIqU5U+WQYCE4QoxkgVz3G0PAWJ1lU0JHoxB5qrqRULZkHhg022wu
-   jMxu+e3RWOdK1zBE4A6Pe5ibJZ04lqAp2NfGplKvw1wlZX/kYKC5hNNEp
-   xAkveGH+oN0uYLhBWttGSMtQXyeYtjbvkvUwSAOVqWF23cL7MO9ZIt2do
-   uyVESymvc0vXDfFo0lTCX6W8ddP9R32woXIm08l7MiPOegoQNiIs0+GKB
+  bh=h8AQJDX3UfNiJ86zepeJMtjP8yPCQGflfnfOwDXysvw=;
+  b=bXK1xsuxNccQ8Ip6aNhtnU6cXJtpMepuLUyp1On0HmupbKsCHCfw1KAy
+   c8kjycCVFLMLfrGqWVpbnXVYBozuVEr5y4vUv9urHvVpdzei7ylN32uNZ
+   t4cT/HQSrzG7DSzKUjyuQPvE0K2GP9RFT8JdXysujXqTd4HBFybRUtIFm
+   xG0B1Fydsw8OSjQTc6ssAurth7UCbnm1xZxpeSbC6TKkxhpQThxQVw+js
+   /5+OeDxIHZ5lSbqzIxT7p20wn3KM2CcCgLDy058hbS/gubvI0ljpnPO7G
+   hGGBgaI/Iz49bd6b4piunb7P+h1OIYn2pghPYqXOTm3e+9pr/An/9asfF
    Q==;
-X-CSE-ConnectionGUID: 5ZK4yfkIRwmINNWSgPr5Mw==
-X-CSE-MsgGUID: TIqqBXnaT4iEhncQYFtcdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="93293804"
+X-CSE-ConnectionGUID: VamQVzpbRgmoOQA8+QBoqQ==
+X-CSE-MsgGUID: eu4+u/1wQ9ioe4cLA93wEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="82701955"
 X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="93293804"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 23:19:49 -0700
-X-CSE-ConnectionGUID: 7CTGyGSsSQeyst4z2E8mrA==
-X-CSE-MsgGUID: 3FFN9xRISGGDv0urrvE/jQ==
+   d="scan'208";a="82701955"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 23:49:03 -0700
+X-CSE-ConnectionGUID: UQ6n62bSSPGTWfszTIj7Fw==
+X-CSE-MsgGUID: AN4e/MmzQW2EM/WlHV3RkA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="248279937"
+   d="scan'208";a="243076433"
 Received: from unknown (HELO [10.238.2.81]) ([10.238.2.81])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 23:19:36 -0700
-Message-ID: <49cee70e-86a4-46b6-b690-0d48aeb94221@linux.intel.com>
-Date: Tue, 23 Jun 2026 14:19:33 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 23:48:50 -0700
+Message-ID: <120b6d16-4218-4ba6-824e-54c62dd3d74f@linux.intel.com>
+Date: Tue, 23 Jun 2026 14:48:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/46] KVM: Consolidate private memory and guest_memfd
- ifdeffery in kvm_host.h
+Subject: Re: [PATCH v8 12/46] KVM: guest_memfd: Only prepare folios for
+ private pages
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
@@ -85,25 +85,35 @@ Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-11-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-12-9d2959357853@google.com>
 Content-Language: en-US
 From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-11-9d2959357853@google.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-12-9d2959357853@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson <seanjc@google.com>
+> From: Ackerley Tng <ackerleytng@google.com>
 > 
-> Move the kvm_arch_has_private_mem() stub and a few guest_memfd function
-> definitions/declarations "down" in kvm_host.h to utilize existing #ifdefs,
-> and so that related code is clustered together.
+> All-shared guest_memfd used to be only supported for non-CoCo VMs where
+> preparation doesn't apply. INIT_SHARED is about to be supported for CoCo
+> VMs in a later patch in this series.
 > 
-> No functional change intended.
+> In addition, KVM_SET_MEMORY_ATTRIBUTES2 is about to be supported in
+> guest_memfd in a later patch in this series.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-After fixing SoB ...
+> This means that the kvm fault handler may now call kvm_gmem_get_pfn() on a
+> shared folio for a CoCo VM where preparation applies.
+> 
+> Add a check to make sure that preparation is only performed for private
+> folios.
+> 
+> Preparation will be undone on freeing (see kvm_gmem_free_folio()) and on
+> conversion to shared.
+> 
+> Suggested-by: Michael Roth <michael.roth@amd.com>
+> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
 Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 
