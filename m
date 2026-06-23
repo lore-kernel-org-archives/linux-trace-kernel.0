@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099C338888E;
-	Tue, 23 Jun 2026 03:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763D153E0B;
+	Tue, 23 Jun 2026 04:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782184229; cv=none; b=nugJgZiZUQUcx15HGzCWpQ00Th3svTojLeaWAJHsyAyWmJhePQCgvBKJakctlIj2rAm2/sosebyyC6kIzanh9LpnlNBu+o8ufkMQBBKHX7amUxY3MCnDHQYFn2Plnl2+JgtZbwbE7tdZGn581RJP5EZkgAH9LuD7yprEfnGuIT0=
+	t=1782190568; cv=none; b=NSLbMEoklIQjAeWY/+arYUeuun54TJ98wGVLCnKQIBF2S1v/BChVr4TGJOWNzAjBwh/ZWKOw0SQ/48AVJaLf09kjvzjvkVVOuUBL4wWB6U+UZHBERdGYTc/prYZdiz26dUYek55Qtw0SWZCGThFgpEY9hTZLFPHDjf2h8yU6yUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782184229; c=relaxed/simple;
-	bh=FzB8Fb4p4Mjwmnh7oxOdArQm2a4Bl6t8IOGs1WP0LH8=;
+	s=arc-20240116; t=1782190568; c=relaxed/simple;
+	bh=TLs0cQbV4zQ3otfUmbOc+g0UN+QoGh4qUf1p9MrAKU0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ufCQaIBmfENmxZUKxWN++/biWVlTg31b/yVAgM4tVg6luJXWTEVwqSqvZ9yq3aZUgVKpvWwxYhmgsYa0DHHvVFVri3uStZJ6a7Uz4SG+Tj+MKTmZg+rbtc+bj8ldPCrK48EULGHcwYZ11H6h+I/WIiFhyhdmCrNpzZk0GxBF374=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BLl2Ug/e; arc=none smtp.client-ip=192.198.163.8
+	 In-Reply-To:Content-Type; b=Cpp/DyQUcJx0OHNdyKonb2TIt9/eOu7Xbw4/8eUu0vIxaDCVQ3Yn8AXQ7wUWNQKhE1f5G28IejWLmPRniuiDVxK5C6uReA8wSplIqf4QE0xQlB76p/QJd2wJdOxnCalTuGmnsgPDBO5Hu8utOCXYjdhmUpO9vtRr3PSURag+swg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nRx1Vcd5; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BLl2Ug/e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nRx1Vcd5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782184224; x=1813720224;
+  t=1782190567; x=1813726567;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=FzB8Fb4p4Mjwmnh7oxOdArQm2a4Bl6t8IOGs1WP0LH8=;
-  b=BLl2Ug/eLj8p1uLirtLSh0KPVKuPz79n9xv/OeDHRYsBU3dRGdmatr3c
-   tj/8RMSbSniF3stF0N267pPq1jw9uhz5HtGN98F3xziJDaDNOxAg3oDxs
-   +dkY7LcQQVMnyDxN9TRKKhRdVyLl2JLPoUbu61nX2dfRAuvcM4Kw+Dix0
-   gLBRYKma7fEnEjgA1GAkBYNPVtUP2R6JfGqNCfMguzDImuXit6BIuT1Wn
-   WICJx03pjJ4Y2JMqj/IbbUnyv5JbPkBbctVOr7/0JhzVzHpuEsTqwl6Cp
-   S0n7v8ant6cu8gMFBAhwNvWtNWabRp/Xz4HpPlGgRmEOac1H84k11MO2b
-   w==;
-X-CSE-ConnectionGUID: l/t3aqZrQROMQx24pH9cPQ==
-X-CSE-MsgGUID: TTQXJxn3QvKAMpWYdGVJiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="100470615"
+  bh=TLs0cQbV4zQ3otfUmbOc+g0UN+QoGh4qUf1p9MrAKU0=;
+  b=nRx1Vcd5EHkx11DaM63lpi38QvmCKT/Q7C0qjoyG1y8BRx9sxHLsqrLI
+   NXEAa25tJic8giKi9ijw+mTTQywiCAvXutdf2kmNe2G2U/l+xyRttkW1B
+   fieYLssVmBVDkWt80sKU4PqVEG4xNreAQlBb9B3ORWt5rTEiQf5uYgzBj
+   Av1IflftMwpgVzCjlVUJrE5q9DEsFxdBS6yxvSnUhbCiZuZJW0zv2H/Ur
+   uJRK4NLRz6CKyLmDE33Qjzs3KRWexXJldZ7+Gdx3xLlGUTSZh9uvr1gE5
+   mUGbjSZ1unRuNZ1QYEpzbL3U1wlhCTYZsbb18DLr8dFvQxjYR517N0/g5
+   g==;
+X-CSE-ConnectionGUID: XXTW7DstQRqtL/pRusoevQ==
+X-CSE-MsgGUID: 5Iv15DEqR/+HU+HMViG0zw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="82696353"
 X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="100470615"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 20:10:22 -0700
-X-CSE-ConnectionGUID: l6e4mZ83QTiXSvs+mWEwsQ==
-X-CSE-MsgGUID: FX/cqQqIQeCB/GDWGdGDPA==
+   d="scan'208";a="82696353"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 21:56:06 -0700
+X-CSE-ConnectionGUID: 4Bxv4k3BSX6J0pVhhllv2Q==
+X-CSE-MsgGUID: yXIM0ueyQAGYNRhCF5FN7g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="254376571"
+   d="scan'208";a="248527637"
 Received: from unknown (HELO [10.238.2.81]) ([10.238.2.81])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 20:10:09 -0700
-Message-ID: <1c3d817b-e5d4-47fc-a716-3a8bd941375d@linux.intel.com>
-Date: Tue, 23 Jun 2026 11:10:06 +0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 21:55:52 -0700
+Message-ID: <96fb369d-dbff-4ed6-b1f9-0ce63d7d4ed0@linux.intel.com>
+Date: Tue, 23 Jun 2026 12:55:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 06/46] KVM: Enumerate support for PRIVATE memory iff
- kvm_arch_has_private_mem is defined
+Subject: Re: [PATCH v8 07/46] KVM: Rename memory attribute APIs to prepare for
+ in-place gmem conversion
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
@@ -85,49 +85,56 @@ Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-6-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-7-9d2959357853@google.com>
 Content-Language: en-US
 From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-6-9d2959357853@google.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-7-9d2959357853@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
-> 
-> Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE based
-> on kvm_arch_has_private_mem being #defined in anticipation of decoupling
-> kvm_supported_mem_attributes() from CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
-> guest_memfd support for memory attributes will be unconditional to avoid
-> yet more macros (all architectures that support guest_memfd are expected to
-> use per-gmem attributes at some point), at which point enumerating support
-> KVM_MEMORY_ATTRIBUTE_PRIVATE based solely on memory attributes being
-> supported _somewhere_ would result in KVM over-reporting support on arm64.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-
-> ---
->  virt/kvm/kvm_main.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 1ccc4895a4c26..7b989b659cf82 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2421,8 +2421,10 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
->  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
->  static u64 kvm_supported_mem_attributes(struct kvm *kvm)
->  {
-> +#ifdef kvm_arch_has_private_mem
->  	if (!kvm || kvm_arch_has_private_mem(kvm))
->  		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
-> +#endif
->  
->  	return 0;
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index d370e834d619e..eb26d4ea8945a 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -2534,13 +2534,13 @@ static inline bool kvm_memslot_is_gmem_only(const struct kvm_memory_slot *slot)
 >  }
-> 
+>  
+>  #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+> -static inline unsigned long kvm_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
+> +static inline unsigned long kvm_get_vm_memory_attributes(struct kvm *kvm, gfn_t gfn)
+>  {
+>  	return xa_to_value(xa_load(&kvm->mem_attr_array, gfn));
+>  }
+>  
+> -bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> -				     unsigned long mask, unsigned long attrs);
+> +bool kvm_range_has_vm_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> +					unsigned long mask, unsigned long attrs);
+>  bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+>  					struct kvm_gfn_range *range);
+>  bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+> @@ -2548,7 +2548,14 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+>  
+>  static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>  {
+> -	return kvm_get_memory_attributes(kvm, gfn) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> +	return kvm_get_vm_memory_attributes(kvm, gfn) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> +}
+> +static inline bool kvm_mem_range_is_private(struct kvm *kvm, gfn_t start,
+> +					    gfn_t end)
+> +{
+> +	return kvm_range_has_vm_memory_attributes(kvm, start, end,
+> +						  KVM_MEMORY_ATTRIBUTE_PRIVATE,
+> +						  KVM_MEMORY_ATTRIBUTE_PRIVATE);
+>  }
 
+This function is added, but never used in this patch series.
+Is it intended to be called only when CONFIG_KVM_VM_MEMORY_ATTRIBUTES is
+enabled?
+
+
+
+>  #else
+>  static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
