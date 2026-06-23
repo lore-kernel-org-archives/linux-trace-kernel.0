@@ -1,158 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0ED37EFE4;
-	Tue, 23 Jun 2026 13:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782222897; cv=none; b=Mm7q3m7x60aN1ekkAB9IeNspqtQLmUMMLgwos9dYrxEQ/c6cUTbQfzbTHbVxa4cSGmkHa9tB1jC6wlTBczAQqySH6erbUBtpwWuyk8S06NMR/weYAU3XI1MTMq2xswtaBx/DDJvtqVjzW14OnevuiCPVzB6fb/IOQyHA7k3lQYM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782222897; c=relaxed/simple;
-	bh=/68utzRqhR106IezMe6HL563F8EtUs0AW9xqTvzK6pU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=JPFVm7CMpiJY6mu/BQcJLA0DLD+0NGaNoad62hFiAT5EAd2up+yL6o3SSSqSkwnqrkrnDIQ0vnZQ1MCNagtBskNlw0de0LhYQiaB4J6K8L35F5i5rIxu3srJxDmVVLmixHm/yRZ+bHwUypaCXfYFliIB7UsJEaJzAtvv62rhDAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vcll6fbK; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1154367B72
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 14:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782223670; cv=pass; b=tlVs+JdGxAQcdIRNc0zHwqyXm1kWfInUfSqWHsTdSJ+lGHY5c71OiJgKUYZy2j6zqKafKQ6+x9bRkLDJ7yHIqoKZwBqJygehRnjopSW7ORtHTj4BhyUnH8vY5iXfvd098/c+LuWoqDKwZ6wXLg9Tpi8efRgtmnvDT1QlDpTa/y8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782223670; c=relaxed/simple;
+	bh=G67U1RwSbF+mPt7N0lSoGZbUv0SpaaN+gXs+8BGSMz4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f7f6sNBpTWpg8Gvux1s5qeaPYeF3KIxHBifC6pRl6dZsQboxE0UzoTWujmZx2/RXCVtt3fqkuEnSGAiFaePAbHz3ONtKklohnvC8Rsexor1dLK7gp+qAq9UQGz9qM2WLAWJiiEqNQzLwu5YWXukqmIy/E94txjwl5jJ1GGwWzOo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G9LNQ4iK; arc=pass smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vcll6fbK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 027501F000E9;
-	Tue, 23 Jun 2026 13:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782222896;
-	bh=aSCji0pWv4eufX4fgSb7qGv1Ss7fXCfVYg+H9V0MoFA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Vcll6fbKB7wYNJOLSQqyu5EOox1GdzMr/y4GV8TovfKTlZtHKgVEurVRVauJ3FR4p
-	 RFL+ivmEZQOlurnxl45pYlV/K6xwHdxv5txErxm2yWZ8zKljPrdYuqMyLFwleu+e9N
-	 T/LgLPg0qxeJl/lF1CDUCS0eYZ0zdJ3wsupon5GmyZksyJPFFAIUefZQBT+BSN5Vrt
-	 TCuwNjRzG0cH5ea3duUJtcUg0fZ/sqMRQtv+/wym2kj6vMokfcs9U3UKRPGAHX9vh4
-	 4BMl0xW0sgpGvO2uD6BSC1uQosw2NhP/ooHfB91wvbdsNup3RM8ykoK7n+VOPDhS7F
-	 ptz6K4rCygWWw==
-Date: Tue, 23 Jun 2026 22:54:52 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v7 00/10] tracing/probes: Add more typecast features
-Message-Id: <20260623225452.d0c8bba7a7a21126a08ed8b7@kernel.org>
-In-Reply-To: <178217904992.643090.15726197350652241270.stgit@devnote2>
-References: <178217904992.643090.15726197350652241270.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9LNQ4iK"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-4864ebb6268so3185132b6e.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 07:07:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782223669; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EZrCMjJ6VJ1ur0gzjP1X4c9dF4xNqrLsJZ+XGKBdLDcYwBFJghork6r9NdKb3HKBKv
+         mobNtaf8uA87vY8j3NmfBzjPWjV7edpwqdH/8o0nitPPdE9gBYdVTK6TqvKKr0z7383x
+         +CqPKAzDvJfTsC3tHaQt8zUwM5Cv4nEyANc4AoqfPAz9sBQ5g8wiYB9BelRdjXEZJcKc
+         pCIZmP0ZX0MrvyAFzgehJXVQK0QApCjM2DH4/9wuRGboTkJVFalsINXbSqwQEHiMR2PB
+         Zo/tYs1VMue54AMqq4FGbwgzse+hOFqVIzmekQk2KidpLB1YonvpbhWuStBtilkAQsY/
+         Nc/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=G67U1RwSbF+mPt7N0lSoGZbUv0SpaaN+gXs+8BGSMz4=;
+        fh=zIXjqrdW++K2mtBwRNkkjpQv5eRd6AmwE+U92ZGrVtc=;
+        b=SlNableSfSntAoOgIf6pE8bBVzWfVgNWQjFe0k8mQRglzr5gY+3Kd0LdLGFdc4imBK
+         LdBG1vPTlW5EZU8SUJPtY3opOWsnGI/NCyx7A6QgHQ3jUvrI9+rNMVma+EL4V33DsUTd
+         gTP7eWgjF5yr5QKHmTZW9+TDubox7vEeF7D5RbAqHqZykgp31ubu3aWB3HTaaxH27P9C
+         IPY8oTLs8pJrJqPgvd8Wk8hJg4+yHUmfPcTIOlUMo6bVyd/Cj/ChOuq5v/PrU2sK0c65
+         7udkHJGqVxnvw/hDwrxOIRZAl98wKvdbzg8GOKihdVsm6Epp2qGliHgm08Y0D8D5FlWu
+         Ff0g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782223669; x=1782828469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G67U1RwSbF+mPt7N0lSoGZbUv0SpaaN+gXs+8BGSMz4=;
+        b=G9LNQ4iKOngGapFwTTcCg9vD1z8ruMZzeCYxO9kVKERYXNM9gOTaQhZtCEkgT7fEYO
+         vmT2sUd50U1PPmG8aBEHBx1wndUsF7JZsK9aU7Ja6NXauG6doLgs/iDShHO3+w+/s2+S
+         v5GMLmXDv+/B1x4cBOwkaqrm5qNiaKA0n82JCVUDcz7ZgBpnm0PTgsuJtRTOHnu96vOH
+         PyBMtqBQHq6mPVOoPORzr8+Bjq1bEI1eK8A8wHT+9QDwYkPlgzdlT+wT5cJwdGcpDVAM
+         XBY+lL4oDt/gs+8EfnbSaPI3KqTvTUU1a07yKkmu1smGE4KnNjfD6YqczZ6qQ7iPhiGF
+         smxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782223669; x=1782828469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=G67U1RwSbF+mPt7N0lSoGZbUv0SpaaN+gXs+8BGSMz4=;
+        b=KT9NLBwoaz0dzIS1Lv+R6bIdzbCNC4qqjzmoCix6HUMXmy3kgiBm6EC4Gv6iwxN9qD
+         XU0zvGxZo7Zf7sChwdg/ihKg1Awq1IfMixg/Qllq2kscwVEoPjWiCdSmWYcmLJ3q9G2b
+         HsLTJd7vY1eVgyccXAODFrXUbhTOo4K8ULhoTAHmjiL6YCNM9fI6A3b5oRY4izIfT+si
+         pRzvROYPxxVM56UoQ5g2OPsDre1U7vDxJR4FCX567RZCTyx6hqBPc63bSI15AQusVFlu
+         dQjGzaLyFRtMsto4vyMgGCgUdpPw/ZPIErto6xye9odbHFyijHdm+Rx596VonDdob3sK
+         /RvA==
+X-Forwarded-Encrypted: i=1; AFNElJ//UTS6O2WBYRh+2yNRxrUVyUPCxnoUqG1FZWwQdUP6qYVGJe2oXye1BAVh2hIsZES7gtL3ke4GIu+3H/r6TEQ0AI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn8VfLNPdHF3SfV7RGl6nXa+zXiAPJrQ5xgzZ6Zz9UBbIv68bo
+	Xheg5NFQOjoZFuAlQnVHfoiSz9h+TccYInkxWWv4gVadUAm7xCpmTAWDgeawjYeTosBXry2g3UB
+	a1jN7CjclRM6nwLVokoD/f1gtXoFWbm0=
+X-Gm-Gg: AfdE7cljhbBzw/mAkGcZIF/oDkNWLCAegY0HetcSiqWtZe6I3K6DVJOlW5L3ceUy8VI
+	F6I/P7udQkzVrvIhfaLfDpP9jo7ypn9OaeAoc5R6h89Lo49LcFCzroRGQbJ5tbdD//zEnMdPJ09
+	aGcsNXjI2ha5oDElK6zSkXe1GQbn2fOJbAXK5vYXoQYH9/e375VLc7uVYxP7j5FJaKatBTF70eW
+	yCvxl/10N+Upqh+qll0dLDT8QgXre3fDsey8QkBmSi35dLELc6NArYJheAtmd9PGfQstjbu8yPF
+	n6XyeP9491Bns3IdR7u4IXbgTwdSEo3Yw8/Mw6g=
+X-Received: by 2002:a05:6808:1b06:b0:479:eb19:6e66 with SMTP id
+ 5614622812f47-48f29eb5fcamr2080626b6e.38.1782223668359; Tue, 23 Jun 2026
+ 07:07:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20260622183109.1137245-1-dwindsor@gmail.com> <20260623084327.GU48970@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260623084327.GU48970@noisy.programming.kicks-ass.net>
+From: David Windsor <dwindsor@gmail.com>
+Date: Tue, 23 Jun 2026 10:07:36 -0400
+X-Gm-Features: AVVi8Ce4azXvS8RMtuB5ZswOmmVhWcuumJwHulSPO1SroME3hfaP0NykDEwpcDg
+Message-ID: <CAEXv5_g8NZ+dBxH_towkEzJAH1emabsmmnCiX2gzikOqoAso7Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/uprobes: Keep shadow stack in sync for emulated CALLs
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mhiramat@kernel.org, oleg@redhat.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, shuah@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 23 Jun 2026 10:44:10 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Tue, Jun 23, 2026 at 4:43=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Mon, Jun 22, 2026 at 02:31:08PM -0400, David Windsor wrote:
+> > Uprobe CALL emulation updates the normal user stack, but not the CET us=
+er
+> > shadow stack. The subsequent RET then sees a stale shadow stack entry a=
+nd
+> > raises #CP.
+> >
+> > Update the relative CALL emulation and XOL CALL fixup paths to keep the
+> > shadow stack in sync.
+> >
+> > Fixes: 488af8ea7131 ("x86/shstk: Wire in shadow stack interface")
+>
+> I can confirm this patch fixes the included test case, so yay for that.
+>
+> However, should this not be:
+>
+> Fixes: 1713b63a07a2 ("x86/shstk: Make return uprobe work with shadow stac=
+k")
+>
+> ?
+>
 
-> Hi,
-> 
-> Here is the 7th version of series to introduce more typecast features
-> to probe events. The previous version is here:
-> 
->  https://lore.kernel.org/all/178201238795.570818.15573963115625446598.stgit@devnote2/
-> 
-> In this version, I added 2 new fix and cleanup patches and update
-> according to Sashiko's review. [1/10] is a long-lived issue about
-> @+FOFFS, which was wrongly adding offset twice. [2/10] is a clean
-> up patch for renaming fetch_op name (good to dump it). 
-> This is applicable against probes/core branch on linux-trace tree.
-
-I'll take the first 2 patches to probes/core, since those
-are obvious fix and cleanup.
-
-Thanks,
-
-> 
-> Steve introduced BTF typecast feature for eprobe[1].
-> This series extends it and add more options:
-> 
-> 1. Expanding BTF typecast to kprobe and fprobe.
->    (currently only function entry/exit)
-> 
-> 2. Introduce container_of like typecast. This adds a "assigned
->    member" option to the typecast.
-> 
->    (STRUCT,MEMBER)VAR->ANOTHER_MEMBER
-> 
->    This casts VAR to STRUCT type but the VAR is as the address
->    of STRUCT.MEMBER. In C, it is:
-> 
->    container_of(VAR, STRUCT, MEMBER)->ANOTHER_MEMBER
-> 
-> 3. Support nested typecast, e.g.
-> 
->    (STRUCT)((STRUCT2)VAR->MEMBER2)->MEMBER
-> 
->    the nest level must be smaller than 3.
-> 
-> 4. Add $current variable to point "current" task_struct.
->    This is useful with typecast, e.g.
-> 
->    (task_struct)$current->pid
-> 
-> 5. per-cpu dereference support.
-> 
->    Intrdouce this_cpu_read(VAR) and this_cpu_ptr(VAR) to
->    access per-cpu data on the current CPU (accessing other CPU
->    data is not stable, because it can be changed.)
-> 
->    You can access the member of per-cpu data structure using
->    typecast like:
-> 
->    (STRUCT)this_cpu_ptr(VAR)->MEMBER
-> 
-> And added fetcharg dump feature (for debug) and updated test scripts
-> to test part of them.
-> 
-> Thanks,
-> 
-> ---
-> base-commit: 3ec75d0067f30eb5e0730f033766d6ab2feca7ae
-> 
-> Masami Hiramatsu (Google) (10):
->       tracing/probes: Fix double addition of offset for @+FOFFSET
->       tracing/probes: Rename FETCH_OP_DATA to FETCH_OP_IMMSTR
->       tracing/probes: Support dumping fetcharg program for debugging dynamic events
->       tracing/probes: Support typecast for various probe events
->       tracing/probes: Support nested typecast
->       tracing/probes: Type casting always involves nested calls
->       tracing/probes: Support field specifier option for typecast
->       tracing/probes: Add $current variable support
->       tracing/probes: Add this_cpu_read() and this_cpu_ptr() dereference method to fetcharg
->       tracing/probes: Add a new testcase for BTF typecasts
-> 
-> 
->  Documentation/trace/eprobetrace.rst                |    9 
->  Documentation/trace/fprobetrace.rst                |   10 
->  Documentation/trace/kprobetrace.rst                |   11 
->  kernel/trace/Kconfig                               |   11 
->  kernel/trace/trace.c                               |    8 
->  kernel/trace/trace_eprobe.c                        |    2 
->  kernel/trace/trace_fprobe.c                        |    2 
->  kernel/trace/trace_kprobe.c                        |    2 
->  kernel/trace/trace_probe.c                         |  582 ++++++++++++++++----
->  kernel/trace/trace_probe.h                         |   98 ++-
->  kernel/trace/trace_probe_tmpl.h                    |   27 +
->  kernel/trace/trace_uprobe.c                        |    3 
->  samples/trace_events/trace-events-sample.c         |   40 +
->  samples/trace_events/trace-events-sample.h         |   34 +
->  .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 ++
->  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   11 
->  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   11 
->  .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 
->  18 files changed, 756 insertions(+), 161 deletions(-)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hmm, this commit appears to only be concerned with the uretprobe case?
