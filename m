@@ -1,138 +1,146 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F7367291
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 01:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E646377019;
+	Tue, 23 Jun 2026 01:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782178639; cv=none; b=agkt5cMr3Zfr9ZwpuyQNkOz2yTtKDBUVOUuS4+9a+97nGh/xuxoaeZCRwljK8ayRDpzKmL8m21CudI+xLXfKlvAilR+/8jCh3QM8AajxVumq/yK/dFdA29/QccD9qwG/EF4Vp8w9izASDqpmgLhCs+etc6bj1Dr9LB4mKpp5y/Y=
+	t=1782179055; cv=none; b=J7+ULdMxo7u02bYZCr/uRxI5Jv3Uxe1idfrqoWZp5drRe6JYeopGRJtj/+QI9WgGkeif0+xwC4J3mdQWh5n3Lmz1SlgA/l4bSUPtO7CLVuW2LZII+hxXrsH42fqNFdaY2jiBc+kNDrFVyGxAADjp0LDKja1FnF5uifZ7mnqzk8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782178639; c=relaxed/simple;
-	bh=5DxnOpKxfSLreEefJhlh19ZNtNNDhg7LneuBINRCFH0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=g5gp3B9THZh6HxxagdJBLsTBGYWCxpPx4X/tPOeCYT7pEu8A359XhW/cYdK2NF6XiMdwG0cUOnGlggwxmx0PU+2GeBLOj/2KgEzPzS64pGSk6loIZ3BT58z0GX/HdN9MZm2H4gizr5HmNtHPqow5tmetNJvnHIj23QMkL/XWlJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hRn3tqx+; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1782179055; c=relaxed/simple;
+	bh=ty118v/GEIKgPHRF7FkPEb1YYTctfSyI9LDfVCc8uBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dnSrwMAR9M6GST8HTwJZa1YmHM/HP9vBALjheGdOgo/rZ7dw/pLS0LrOnxzJcRaD8Uwalvy/ucZ5RmY1Ewc70N/x9fm412hl26HOUsTbW1ofwYlIVwlX/bp+kU2e5EnBYRuzpNgCC/0afQEwEnyxha5fGOnwBBHDcnHSx365WcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZeo4cWT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hRn3tqx+"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2c2a4babe45so32559885ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jun 2026 18:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782178638; x=1782783438; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AP9gehEakYRCrViEtM0iQf/Z+UhqMaziDYgqcj7Zu0I=;
-        b=hRn3tqx+Sz8fueo4/W3oWJiLZ8I6XXIlhDj8ugi8QdXZIv4FrxBaMw/z9DbQsh+H55
-         qg6S2EcgvsrtLPAxT3OqjzT2lUVXYMGS07H32nTNP5EOr4R9J3EY7ZPbNcBPmSBTRK8i
-         5bWai6YNUqT6XuNqEeaZQWj6ajY+LsES/9QF3TmiGL0hUagoN8Unz7XtqLHPjPwSNiUZ
-         3CLncvk9uH7NTJWJne/Vpn/693HMcfGoQMqhhWX8MlUC3J9/knjy85ewtxYQm+qwDhbe
-         scPCG9WTN9OoIQIQ/fORHRIGjEG7M0+2mueTIsuRey7AttGsP0NOZdZGjEpx/4prN6wP
-         O2VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782178638; x=1782783438;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AP9gehEakYRCrViEtM0iQf/Z+UhqMaziDYgqcj7Zu0I=;
-        b=Kj4z9DwLNclKMDZ2RuoY6BqTfzWStomVLg9zfc59BvxceuxBNUaGz9oFCl+o1TXZYC
-         cFb8iSAHzo+TTrlcG4sz1NY5ZvpshQ0+vje6i+8eOsEg4sLj2zorZdkyl9x7c4Orjwmn
-         uQ12jZqgX1UkOjL1v35psyh4oFryQ+bbV9JU0tcgb0I5TvmZ/Posv1udaiWS2xKMEc5U
-         BpQV3WOTpwmiUVoKknKxUkIuAWU1hlBp6azCHj5UklZvReUFb2CxCtGOLSo2F1ssbZqm
-         99BUD2gw1EFMupwD+WWOK8Pep8PE/v/+bkHbwIPTF1XBFJfwgoZKRhQzle30LvRiVz9O
-         e+eg==
-X-Forwarded-Encrypted: i=1; AHgh+RpAPFrmnfw/uGjg6Swj9mxnT4inS6l/3h/Nc3u8IEMv9n6aIBIBuBSlIRfDhRJLyjF/4OXy+ofnOayeNrlwG/0vUNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4jm62S0+Q2yWyrPXY7shy5+aD4JviYOrpPvKLczTyADultC4N
-	WUOZn9g3+lqCoi6EkYn2ep2dl6cF42sZrnWuUVEgWJmC8/rTdHeI6ZDaShtoayUC4sG/973J58A
-	Kx84qHw==
-X-Received: from plox10.prod.google.com ([2002:a17:902:8eca:b0:2bf:27ab:9cf4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a68:b0:2c7:9ba7:a39f
- with SMTP id d9443c01a7336-2c7c99de6e3mr2076175ad.17.1782178637132; Mon, 22
- Jun 2026 18:37:17 -0700 (PDT)
-Date: Mon, 22 Jun 2026 18:37:16 -0700
-In-Reply-To: <aceb07e1-77bc-49b6-a932-5fd9b5a21727@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZeo4cWT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386DD1F000E9;
+	Tue, 23 Jun 2026 01:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782179054;
+	bh=vni5Lyip3mgwniFnSgkoIOM9DFuNAQmCprTMRCiORoU=;
+	h=From:To:Cc:Subject:Date;
+	b=jZeo4cWTbOi4j3PW944Wwi8m+/QXtToDpe7N3uOJzT60jex6ZikMn6LvXCqG7GHMv
+	 q9k0q1V+TgggdtJkR+aCiufi5rt/fgZrSmjZg2yMz5DbjelHq7a5ZGdG8F4hYM63kL
+	 zNOOn/gqW/fGF5KI216G5d0HNxPyz76ViI59nGSkKEq/JswvFhwQYkfA4EnL86hQDW
+	 dqetFDoeTneXCXBYOZy7LNfbWFsWbeZ0cEUFIgQF2DGUyo/KZZ0zkS4p3WnSoSU3eM
+	 yigvj8RMw3O1xC/N3il+KbSvokgRHsjUB+rirELEAYWl0f4sY9a/D75/ZVC8hxiY4X
+	 h7y2iyWUnWD3A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v7 00/10] tracing/probes: Add more typecast features
+Date: Tue, 23 Jun 2026 10:44:10 +0900
+Message-ID: <178217904992.643090.15726197350652241270.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-1-9d2959357853@google.com> <aceb07e1-77bc-49b6-a932-5fd9b5a21727@linux.intel.com>
-Message-ID: <ajnjTJdQKD1Kz3tf@google.com>
-Subject: Re: [PATCH v8 01/46] KVM: guest_memfd: Introduce per-gmem attributes,
- use to guard user mappings
-From: Sean Christopherson <seanjc@google.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 22, 2026, Binbin Wu wrote:
-> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
-> 
-> [...]
-> 
-> >  
-> > +static u64 kvm_gmem_get_attributes(struct inode *inode, pgoff_t index)
-> > +{
-> > +	struct maple_tree *mt = &GMEM_I(inode)->attributes;
-> > +	void *entry = mtree_load(mt, index);
-> > +
-> > +	return WARN_ON_ONCE(!entry) ? 0 : xa_to_value(entry);
-> 
-> If the entry is unexpectedly missing, returning 0 means the attribute would
-> be treated as shared.  And then in kvm_gmem_fault_user_mapping(), it would
-> allow the userspace to fault in the folio.
-> 
-> Should gmem deny such edge case?
+Hi,
 
-After several bugs this year where a WARN_ON_ONCE() fired, but was entirely
-insufficient to prevent true badness, I'm definitely senstive to making the "bad"
-behavior as harmless as possible.
+Here is the 7th version of series to introduce more typecast features
+to probe events. The previous version is here:
 
-However, in this case I think we're just hosed.  If KVM treats the memory as
-private, KVM will incorrectly do prepare(), incorrectly allow populate(), and
-will caused missed invalidations (though I suppose __kvm_gmem_set_attributes()
-"only" lies to userspace in that case).
+ https://lore.kernel.org/all/178201238795.570818.15573963115625446598.stgit@devnote2/
 
-That said, assuming SHARED is definitely odd for cases where guest_memfd *can't*
-hold shared memory.  Ditto for assuming PRIVATE.  What if we instead fall back to
-the "init" state, e.g.?
+In this version, I added 2 new fix and cleanup patches and update
+according to Sashiko's review. [1/10] is a long-lived issue about
+@+FOFFS, which was wrongly adding offset twice. [2/10] is a clean
+up patch for renaming fetch_op name (good to dump it). 
+This is applicable against probes/core branch on linux-trace tree.
 
-static u64 kvm_gmem_get_attributes(struct inode *inode, pgoff_t index)
-{
-	struct maple_tree *mt = &GMEM_I(inode)->attributes;
-	void *entry = mtree_load(mt, index);
+Steve introduced BTF typecast feature for eprobe[1].
+This series extends it and add more options:
 
-	if (WARN_ON_ONCE(!entry)) {
-		bool shared = GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED;
+1. Expanding BTF typecast to kprobe and fprobe.
+   (currently only function entry/exit)
 
-		return shared ? 0 : KVM_MEMORY_ATTRIBUTE_PRIVATE;
-	}
+2. Introduce container_of like typecast. This adds a "assigned
+   member" option to the typecast.
 
-	return xa_to_value(entry);
-}
+   (STRUCT,MEMBER)VAR->ANOTHER_MEMBER
+
+   This casts VAR to STRUCT type but the VAR is as the address
+   of STRUCT.MEMBER. In C, it is:
+
+   container_of(VAR, STRUCT, MEMBER)->ANOTHER_MEMBER
+
+3. Support nested typecast, e.g.
+
+   (STRUCT)((STRUCT2)VAR->MEMBER2)->MEMBER
+
+   the nest level must be smaller than 3.
+
+4. Add $current variable to point "current" task_struct.
+   This is useful with typecast, e.g.
+
+   (task_struct)$current->pid
+
+5. per-cpu dereference support.
+
+   Intrdouce this_cpu_read(VAR) and this_cpu_ptr(VAR) to
+   access per-cpu data on the current CPU (accessing other CPU
+   data is not stable, because it can be changed.)
+
+   You can access the member of per-cpu data structure using
+   typecast like:
+
+   (STRUCT)this_cpu_ptr(VAR)->MEMBER
+
+And added fetcharg dump feature (for debug) and updated test scripts
+to test part of them.
+
+Thanks,
+
+---
+base-commit: 3ec75d0067f30eb5e0730f033766d6ab2feca7ae
+
+Masami Hiramatsu (Google) (10):
+      tracing/probes: Fix double addition of offset for @+FOFFSET
+      tracing/probes: Rename FETCH_OP_DATA to FETCH_OP_IMMSTR
+      tracing/probes: Support dumping fetcharg program for debugging dynamic events
+      tracing/probes: Support typecast for various probe events
+      tracing/probes: Support nested typecast
+      tracing/probes: Type casting always involves nested calls
+      tracing/probes: Support field specifier option for typecast
+      tracing/probes: Add $current variable support
+      tracing/probes: Add this_cpu_read() and this_cpu_ptr() dereference method to fetcharg
+      tracing/probes: Add a new testcase for BTF typecasts
+
+
+ Documentation/trace/eprobetrace.rst                |    9 
+ Documentation/trace/fprobetrace.rst                |   10 
+ Documentation/trace/kprobetrace.rst                |   11 
+ kernel/trace/Kconfig                               |   11 
+ kernel/trace/trace.c                               |    8 
+ kernel/trace/trace_eprobe.c                        |    2 
+ kernel/trace/trace_fprobe.c                        |    2 
+ kernel/trace/trace_kprobe.c                        |    2 
+ kernel/trace/trace_probe.c                         |  582 ++++++++++++++++----
+ kernel/trace/trace_probe.h                         |   98 ++-
+ kernel/trace/trace_probe_tmpl.h                    |   27 +
+ kernel/trace/trace_uprobe.c                        |    3 
+ samples/trace_events/trace-events-sample.c         |   40 +
+ samples/trace_events/trace-events-sample.h         |   34 +
+ .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 ++
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   11 
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   11 
+ .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 
+ 18 files changed, 756 insertions(+), 161 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
