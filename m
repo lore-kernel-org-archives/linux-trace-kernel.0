@@ -1,116 +1,158 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40D3366562;
-	Tue, 23 Jun 2026 13:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0ED37EFE4;
+	Tue, 23 Jun 2026 13:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782221405; cv=none; b=cF8kRj18tADg6GkgE/x4M1rTYo2x9+ysCB2Wsq/Y2WoRUxgZt7P9W6b8RQbgt0MJTo8YQZYNXSbzAXS6k8zk7RmpX1Cjt0707fqfCwkjQiAnSXPjuyO2Qpn2EIbH35q3tkeO5sUtl8ZiTVqaMxaklWuRRAA/bpP5yGJQZRfPRN4=
+	t=1782222897; cv=none; b=Mm7q3m7x60aN1ekkAB9IeNspqtQLmUMMLgwos9dYrxEQ/c6cUTbQfzbTHbVxa4cSGmkHa9tB1jC6wlTBczAQqySH6erbUBtpwWuyk8S06NMR/weYAU3XI1MTMq2xswtaBx/DDJvtqVjzW14OnevuiCPVzB6fb/IOQyHA7k3lQYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782221405; c=relaxed/simple;
-	bh=Kvq3ohziYfNoxLc9yuJ1MGlLQHJXS1KkEJiYP/DBS/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zvzkt2+fsddWyY8SwqQORGgvg+Hdji2weRbfTuyG8m1qecz5P2ypj86wbxw7Ha4SlWQR2FnaaDVHwNbfFUZ8qRU20RGvzGysw42YzlJ0Lim99mFGa+mV477jkSc7renMVfMn58yRNFBcexjQoogAZKS98iikHCdT/LUcloWBbVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-209-184-216.092.209.pools.vodafone-ip.de ([92.209.184.216] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1wc1CL-000000008pB-3ZXj;
-	Tue, 23 Jun 2026 15:29:53 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH] tracing/probes: ignore id update from btf_type_skip_modifiers
-Date: Tue, 23 Jun 2026 15:29:32 +0200
-Message-ID: <20260623132937.3494895-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1782222897; c=relaxed/simple;
+	bh=/68utzRqhR106IezMe6HL563F8EtUs0AW9xqTvzK6pU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JPFVm7CMpiJY6mu/BQcJLA0DLD+0NGaNoad62hFiAT5EAd2up+yL6o3SSSqSkwnqrkrnDIQ0vnZQ1MCNagtBskNlw0de0LhYQiaB4J6K8L35F5i5rIxu3srJxDmVVLmixHm/yRZ+bHwUypaCXfYFliIB7UsJEaJzAtvv62rhDAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vcll6fbK; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vcll6fbK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 027501F000E9;
+	Tue, 23 Jun 2026 13:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782222896;
+	bh=aSCji0pWv4eufX4fgSb7qGv1Ss7fXCfVYg+H9V0MoFA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Vcll6fbKB7wYNJOLSQqyu5EOox1GdzMr/y4GV8TovfKTlZtHKgVEurVRVauJ3FR4p
+	 RFL+ivmEZQOlurnxl45pYlV/K6xwHdxv5txErxm2yWZ8zKljPrdYuqMyLFwleu+e9N
+	 T/LgLPg0qxeJl/lF1CDUCS0eYZ0zdJ3wsupon5GmyZksyJPFFAIUefZQBT+BSN5Vrt
+	 TCuwNjRzG0cH5ea3duUJtcUg0fZ/sqMRQtv+/wym2kj6vMokfcs9U3UKRPGAHX9vh4
+	 4BMl0xW0sgpGvO2uD6BSC1uQosw2NhP/ooHfB91wvbdsNup3RM8ykoK7n+VOPDhS7F
+	 ptz6K4rCygWWw==
+Date: Tue, 23 Jun 2026 22:54:52 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] tracing/probes: Add more typecast features
+Message-Id: <20260623225452.d0c8bba7a7a21126a08ed8b7@kernel.org>
+In-Reply-To: <178217904992.643090.15726197350652241270.stgit@devnote2>
+References: <178217904992.643090.15726197350652241270.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-We can pass NULL as id pointer to btf_type_skip_modifiers if we do not
-need the id of the returned btf_type.
+On Tue, 23 Jun 2026 10:44:10 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- kernel/trace/trace_probe.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+> Hi,
+> 
+> Here is the 7th version of series to introduce more typecast features
+> to probe events. The previous version is here:
+> 
+>  https://lore.kernel.org/all/178201238795.570818.15573963115625446598.stgit@devnote2/
+> 
+> In this version, I added 2 new fix and cleanup patches and update
+> according to Sashiko's review. [1/10] is a long-lived issue about
+> @+FOFFS, which was wrongly adding offset twice. [2/10] is a clean
+> up patch for renaming fetch_op name (good to dump it). 
+> This is applicable against probes/core branch on linux-trace tree.
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 9b3219e755cb..78bca283763f 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -360,9 +360,8 @@ static bool btf_type_is_char_ptr(struct btf *btf, const struct btf_type *type)
- {
- 	const struct btf_type *real_type;
- 	u32 intdata;
--	s32 tid;
- 
--	real_type = btf_type_skip_modifiers(btf, type->type, &tid);
-+	real_type = btf_type_skip_modifiers(btf, type->type, NULL);
- 	if (!real_type)
- 		return false;
- 
-@@ -379,14 +378,13 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
- 	const struct btf_type *real_type;
- 	const struct btf_array *array;
- 	u32 intdata;
--	s32 tid;
- 
- 	if (BTF_INFO_KIND(type->info) != BTF_KIND_ARRAY)
- 		return false;
- 
- 	array = (const struct btf_array *)(type + 1);
- 
--	real_type = btf_type_skip_modifiers(btf, array->type, &tid);
-+	real_type = btf_type_skip_modifiers(btf, array->type, NULL);
- 
- 	intdata = btf_type_int(real_type);
- 	return !(BTF_INT_ENCODING(intdata) & BTF_INT_SIGNED)
-@@ -589,7 +587,6 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 	struct btf *btf = ctx_btf(ctx);
- 	char *next;
- 	int is_ptr;
--	s32 tid;
- 
- 	do {
- 		if (!is_struct) {
-@@ -600,7 +597,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 			}
- 
- 			/* Convert a struct pointer type to a struct type */
--			type = btf_type_skip_modifiers(btf, type->type, &tid);
-+			type = btf_type_skip_modifiers(btf, type->type, NULL);
- 			if (!type) {
- 				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
- 				return -EINVAL;
-@@ -640,7 +637,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 				ctx->last_bitsize = 0;
- 			}
- 
--			type = btf_type_skip_modifiers(btf, field->type, &tid);
-+			type = btf_type_skip_modifiers(btf, field->type, NULL);
- 			if (!type) {
- 				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
- 				return -EINVAL;
-@@ -759,7 +756,7 @@ static int parse_btf_arg(char *varname,
- 	return -ENOENT;
- 
- found:
--	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
-+	type = btf_type_skip_modifiers(ctx->btf, tid, NULL);
- found_type:
- 	if (!type) {
- 		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+I'll take the first 2 patches to probes/core, since those
+are obvious fix and cleanup.
+
+Thanks,
+
+> 
+> Steve introduced BTF typecast feature for eprobe[1].
+> This series extends it and add more options:
+> 
+> 1. Expanding BTF typecast to kprobe and fprobe.
+>    (currently only function entry/exit)
+> 
+> 2. Introduce container_of like typecast. This adds a "assigned
+>    member" option to the typecast.
+> 
+>    (STRUCT,MEMBER)VAR->ANOTHER_MEMBER
+> 
+>    This casts VAR to STRUCT type but the VAR is as the address
+>    of STRUCT.MEMBER. In C, it is:
+> 
+>    container_of(VAR, STRUCT, MEMBER)->ANOTHER_MEMBER
+> 
+> 3. Support nested typecast, e.g.
+> 
+>    (STRUCT)((STRUCT2)VAR->MEMBER2)->MEMBER
+> 
+>    the nest level must be smaller than 3.
+> 
+> 4. Add $current variable to point "current" task_struct.
+>    This is useful with typecast, e.g.
+> 
+>    (task_struct)$current->pid
+> 
+> 5. per-cpu dereference support.
+> 
+>    Intrdouce this_cpu_read(VAR) and this_cpu_ptr(VAR) to
+>    access per-cpu data on the current CPU (accessing other CPU
+>    data is not stable, because it can be changed.)
+> 
+>    You can access the member of per-cpu data structure using
+>    typecast like:
+> 
+>    (STRUCT)this_cpu_ptr(VAR)->MEMBER
+> 
+> And added fetcharg dump feature (for debug) and updated test scripts
+> to test part of them.
+> 
+> Thanks,
+> 
+> ---
+> base-commit: 3ec75d0067f30eb5e0730f033766d6ab2feca7ae
+> 
+> Masami Hiramatsu (Google) (10):
+>       tracing/probes: Fix double addition of offset for @+FOFFSET
+>       tracing/probes: Rename FETCH_OP_DATA to FETCH_OP_IMMSTR
+>       tracing/probes: Support dumping fetcharg program for debugging dynamic events
+>       tracing/probes: Support typecast for various probe events
+>       tracing/probes: Support nested typecast
+>       tracing/probes: Type casting always involves nested calls
+>       tracing/probes: Support field specifier option for typecast
+>       tracing/probes: Add $current variable support
+>       tracing/probes: Add this_cpu_read() and this_cpu_ptr() dereference method to fetcharg
+>       tracing/probes: Add a new testcase for BTF typecasts
+> 
+> 
+>  Documentation/trace/eprobetrace.rst                |    9 
+>  Documentation/trace/fprobetrace.rst                |   10 
+>  Documentation/trace/kprobetrace.rst                |   11 
+>  kernel/trace/Kconfig                               |   11 
+>  kernel/trace/trace.c                               |    8 
+>  kernel/trace/trace_eprobe.c                        |    2 
+>  kernel/trace/trace_fprobe.c                        |    2 
+>  kernel/trace/trace_kprobe.c                        |    2 
+>  kernel/trace/trace_probe.c                         |  582 ++++++++++++++++----
+>  kernel/trace/trace_probe.h                         |   98 ++-
+>  kernel/trace/trace_probe_tmpl.h                    |   27 +
+>  kernel/trace/trace_uprobe.c                        |    3 
+>  samples/trace_events/trace-events-sample.c         |   40 +
+>  samples/trace_events/trace-events-sample.h         |   34 +
+>  .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 ++
+>  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   11 
+>  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   11 
+>  .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 
+>  18 files changed, 756 insertions(+), 161 deletions(-)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
 -- 
-2.43.7
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
