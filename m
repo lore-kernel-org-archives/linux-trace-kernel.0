@@ -1,165 +1,197 @@
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BDD3D6472
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 14:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BA1233928;
+	Tue, 23 Jun 2026 16:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782226486; cv=none; b=F/k/KIuJuhSvgKyW0K37rc9guKAT2K3oGHgBww4Gyla/CAOut6b6428r7Y5C7Esg/MCYLtLqA+DTk48Wtuqt3rpfNaj/W+stegZos/Ps+s/zmutaSMx+8/AMdSbVCbmcRiXsnpuQWoE1V2LzCyAiqlgPnexgXJcK5A5VRO3LqRo=
+	t=1782231408; cv=none; b=lAn1vTR4eZ2LA/ceEt+MO+ZNjlL1fI3V7sidl56qg16Dwdkbk2gpHxld+PbtuWsNaGkTsdOyZJzl3+1SUK9rDZQ8PNbE4ZYHgIqq+SzSNiFhMgqmo3rzauqtq2x20dl3RFcZJS5yAXj48bmwWliLFL5oPqFdvttHJre87wD+0tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782226486; c=relaxed/simple;
-	bh=L90/AkyCB9U0geyi1lWA/eHf7voiXgf417DXWgwVaXs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lt0qKVW+AMB4C92xKWbMxChh7lRYlIV3RD+dKkpyBDfPy7JwtBHLcJnqqo8RCMfhz1OTsV4hMYGls/CgHgt8yCglZpEtCH7F0kYoSLxVmUgTUMlNgfMHW/f8tzjRy0Fku/h+xNV77Zh+PRExA4mjvPHmvGRIQ3DiBSsk5uIH6g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRbupCAR; arc=none smtp.client-ip=74.125.82.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782231408; c=relaxed/simple;
+	bh=T4tgISafCkgnXGGafK2/GxnOwikrUfen6KvUGLLld4o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GkUjehIN+jYg4It4yO1bN+Jwaeabp1JYaAgTN9GKdJSod0wXnsrP7JIKLOOR+3TTCFa6aYQ27eMLZtVihdwZilsyiLWTO53+qg87LeSDWJ24KXmd+SpJj7r99f9Xziph7rPxk5o2XNte42YK0aNT8jRhaJ3dSXpR2QTi+yTCGoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=qkN+pW9J; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRbupCAR"
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1384ebe7a10so5869943c88.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 07:54:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782226484; x=1782831284; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IY3KFhICfndG+RHDKCrSaeQPMXM8dmxeDhVM/4MoFI4=;
-        b=SRbupCARI7MYaWuFBF0iNPDW3bnl1Yvh5aNmuzOLlmacehSE3eZ1uu6844w0iwmcPl
-         YifKmvZwdTMr9m/HJTG2dV+VtEZ3mVOHtJ5I0yNml/5T3W5PVnQcldvjX6LdzKEpc8sp
-         sMssFA+3h8u0Lu9VaF7o5dEtipVvSCrxocqQT7RihS28qI7cRttyzwl0/usFYhD2+VkS
-         6IpBZjxyEonjgrO8ECMEtlRx7OjmEvimsTku0/KUa6EmITpuzbDF3oUri4V9FBj1zwbo
-         H+vHOSLgj6UDWHZb9LWhiF26YqGlYILI9eO+5bADxQZbAvuyi5eO2S+yoZzAf54etk40
-         Km3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782226484; x=1782831284;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IY3KFhICfndG+RHDKCrSaeQPMXM8dmxeDhVM/4MoFI4=;
-        b=WZONPohO2gRq6wFuavtasMbIBZDHIUZCl+OJgluYW9JPjj5caQR/qoCqBbEdUPZE6o
-         VUDhjwotEOnqYp3ZFSO66UO5cxnW852fI0Gdv0C5EjXEYXgjr+od6e6etYqVsC5JEluA
-         5smiD7phcXkRz1yqCRwsv4mE3NPnS+mySRUszlCjo6hiZeqMtDfN2sSBGTTmttbjDcgJ
-         CQM9aguT1jQN5A3tGhe0gmSTXuQYnc0qO2DoReZ3czaA43jzocPnIrmYbJXr4eTy2WbL
-         9dDNY748PNzN3cIMvx7Qn49CTctEjqf9eK/rOc2Qm9GLSgdBx/3ojyjlQcQN/1BkbA/F
-         natw==
-X-Forwarded-Encrypted: i=1; AFNElJ8kItSARTKKnCv5CcfpxWbdNP2xx7TjNl2AqFCLE89D7eNd/FrPozyZPt//KA/t8Zfhtu7EqK5snl/q3RYh7kP7Ncs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu2OILzcIwvPb9xx0FnRSXAQ47ni60pdgPQbZkCHxH/VuBsf3p
-	4HzQCUVv5H9GODmhvPApkcFch1Q4OWztpU0gGLqxG5Ef9HlR21/GqFxO
-X-Gm-Gg: AfdE7cm0uZCs+KSY2kHsbnYch2bSa4x7daj4IqtEfpzcRJSzmKNjC+PcEw/qMPF9NrC
-	/uXjYFbXzQPOZyHR5sE4xjOw9kMC2n96g6JD2P2LldccaGYFN0s/QhF9LBW4ntL9Qf53BDlbgIE
-	kjVTERweXgDUNVLwQcvx3WtmJ3adY6vwTQU8d46t05a+FRgl7uc++jgnABIAREC56FmqyfVUJVM
-	ClTKtUQuDzgUhsqpiCR6/RfkBHNvXZG1Dva17MCfa1PEcKs+sDd3LPy7un2JfFsGBQa8oyJu1+y
-	frQPR1QTv6Lh2Q1DEQ75Dt0OtpBkxv+J1oUnQjzmOUUY7QE7RvIfk4Inb312jvI7qScmtgTsbwu
-	wvdRGK+nXIsoh8Le/82HcI9sVysutsFdSsoS9Io4FHQs5XgiSIhbmpMpHX0kaUqnS9CBx8cxHYZ
-	9WZd0pxW6FXgOQ8k0HPMSrk3lmjwSUpIc/Cx0AFQ==
-X-Received: by 2002:a05:7022:90d:b0:12a:6fb7:87e3 with SMTP id a92af1059eb24-139c5e033b1mr2686422c88.31.1782226484332;
-        Tue, 23 Jun 2026 07:54:44 -0700 (PDT)
-Received: from mo-Inspiron-5559.. ([2001:fb1:d9:863a:37d9:e7c4:e450:11e4])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139adca1b00sm12963863c88.2.2026.06.23.07.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2026 07:54:43 -0700 (PDT)
-From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	me@brighamcampbell.com,
-	jkoolstra@xs4all.nl,
-	woradorn.laon@gmail.com
-Subject: [PATCH v3] tracing: Use seq_buf for string concatenation
-Date: Tue, 23 Jun 2026 21:51:47 +0700
-Message-ID: <20260623145147.12145-1-woradorn.laon@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="qkN+pW9J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-Id:Date:Subject:From:Reply-To:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=yilEp3Sna9L6YuGzTAKOxiWEdKXDTL13E/uTiXZb7tE=; b=qkN+pW9JB+817CdybLNZYyCnil
+	L53OBAPqABn6fJRnGzl0B9AZknnJqXzSwy+3tKjWDP9XqSd817pdJ1Acdj1MEMtGvxTW1jdGxs1aC
+	THJUZ7DDseD9zfyGrh8WGEWoMjamRayt/AH1Jqtf5OstNKyyvUsCN4aJqa0bLMcmZyW1bHF+h2PXK
+	hDcEb+jho5ZMHSijANKmVawhS2ye0n8/Q7Ej/MrshzbltSGvcKdNP04X/Edp4xTpf10FRaAhND00d
+	fK5Bla1GD8cau340Z9CvXWlVtUb3W80SBQNYuGK9v+kx+h3jc1Igw1XH+r3FQjCGE3eW7YmNhgObp
+	3La27nLA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wc3nZ-001m2B-1C;
+	Tue, 23 Jun 2026 16:16:30 +0000
+From: Breno Leitao <leitao@debian.org>
+Subject: [PATCH v6 0/8] bootconfig: embed kernel.* cmdline at build time
+Date: Tue, 23 Jun 2026 09:15:27 -0700
+Message-Id: <20260623-bootconfig_using_tools-v6-0-640c2f587a3c@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB+xOmoC/3XQ22rDMAwG4FcJvq6GEp/iXO09xiiKD6nHsEech
+ paSdx/pBssIuRT8fL+kByt+jL6wrnqw0c+xxJxYV6lTxeyF0uAhOtZVrMFGocQW+pwnm1OIw/l
+ aYhrOU86fBWwgTWScIknsVLGv0Yd4e8Jv7z9zufYf3k6rtiYusUx5vD+b53rN/ZY0+qhkrgGhV
+ wYVtcprJ1+d7yOllzwObG2Zmz9HoTx0GkBwHE2QQvQy6J3Dt87h0TMHBOGcQ20IlVE7R2wdc+g
+ IQNDcCsUDcjL7feTGqY//IwEhONkaMtZKz/85y7J8A7coaZXvAQAA
+X-Change-ID: 20260508-bootconfig_using_tools-cfa7aa9d6a5a
+To: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, 
+ Nicolas Schier <nsc@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev, 
+ linux-doc@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
+ kernel-team@meta.com, Nicolas Schier <n.schier@fritz.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5783; i=leitao@debian.org;
+ h=from:subject:message-id; bh=T4tgISafCkgnXGGafK2/GxnOwikrUfen6KvUGLLld4o=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqOrFWINW7Sao7G2xfmZVOJWTTR7k3WVLv7rztJ
+ XxCNgIZSyyJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCajqxVgAKCRA1o5Of/Hh3
+ bQVBD/kBsO4csaQ8D2a71trTPdKcZ5hIe0VQWDneI8T/aQE/apy4IshD+bCUgGWyQJEqGzIWtRg
+ 23YsQv++uQuKTYOlA8ekxF9xm0LZfUmLGp4ejcZAWfqKZ2rKgKuU9DqGMXoMjZqta24rkM9rAWC
+ ETBe8GAjo0EQnMy2+kE/txJhwfK+q5E7slCqtZvn89csajFk23slc1YGLbdnqDUDjRrZRNSVSpQ
+ HDaG4QCVNR2T1ePoGMXrrT4/cetaB4w+enkJfOzUuCX/WjW+3bBTqWWUAU87d6Cv+y5EaRzobwW
+ 3QrxSdpFP5NmvSiw91nognP0f4D10jiJ6KwN407zxdMFBSR9sBHXN47OrO7OO440tWPlH/iYrbX
+ lRDfhix50B13VAkyM3NRzbgoLVrJ+0kmqDN6SJs9ZM6FpxppFGwUxnlthP+xFolkH7uwB4ohrwV
+ dAgyr5CZqICCoYq0XQaOdggjd2GEnJhh6B/1YioEBQyFRMiyWdG12AnaHCZm3HS8tGdVtprrGyV
+ AJ88wowgZ61ijM1cd/eomq3k11g7UecZKz+NbpvPrCv2rQZMDMIRXFjcSN0M55lzYT2KbZPRMTe
+ Y8emcH7KI9+MYGQFWaJI8d/gb6sYEaEyeM7y5TB8/g0UF71cJmtdqhQz27FNnyRMjq0/uCFP+fU
+ HsBuDSjILukw3Og==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-In preparation for removing the strlcat API[1],
-replace the string concatenation logic with a struct seq_buf,
-which tracks the current position and the remaining space internally.
+The userspace pieces (xbc_snprint_cmdline() in lib/, tools/bootconfig -C)
+already landed; this series wires the rendered cmdline into the kernel.
 
-Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
+Motivation: today the embedded bootconfig is parsed at runtime, after
+parse_early_param() has already run, so early_param() handlers can't
+see embedded values. Folding the kernel.* subtree into the cmdline at
+build time gives a CONFIG_CMDLINE-equivalent for embedded-bootconfig
+users without forcing them to maintain two cmdline sources.
 
-Link: https://github.com/KSPP/linux/issues/370 [1]
+Behaviorally, the "kernel" subtree is rendered to a flat string at
+build time and stashed in .init.rodata. setup_arch() prepends it to
+boot_command_line before parse_early_param() runs. Overflow is a soft
+error: the helper logs and leaves boot_command_line untouched rather
+than panicking, so an oversized embedded bconf cannot brick a boot.
 
-Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-v1 -> v2: 
-	- Fixed WARN_ON when booting with empty trace_event.
-v2 -> v3: 
-	- Addressed Sashiko's concern about the compound literal backing buffer.
-	- Replaced the compund literal with an explicit declared buffer and pointed
-	seq_buf.buffer to it. This guarantees the backing storage is placed in 
-	`.init.data` and reclaimed after boot.
+Changes in v6:
+- renamed CONFIG_BOOT_CONFIG_EMBED_CMDLINE to
+  CONFIG_CMDLINE_FROM_BOOTCONFIG
+- prepend embedded bootconfig cmdline before parse_early_param
+- Link to v5: https://lore.kernel.org/r/20260617-bootconfig_using_tools-v5-0-fd589a9cc5e3@debian.org
 
-v1: https://lore.kernel.org/all/20260620175441.223342-1-woradorn.laon@gmail.com
-v2: https://lore.kernel.org/all/20260622094623.18469-1-woradorn.laon@gmail.com
-Sashiko: https://sashiko.dev/#/patchset/20260622094623.18469-1-woradorn.laon%40gmail.com
+Changes in v5:
+- Patch 3 (Kconfig): drop the redundant "depends on BOOT_CONFIG_EMBED"
+  from CMDLINE_FROM_BOOTCONFIG; Julian Braha.
+- Patch 6 (Documentation): spell out how the embedded cmdline interacts
+  with the bootloader cmdline, an initrd bootconfig, and the embedded
+  bootconfig
+- Link to v4: https://lore.kernel.org/r/20260609-bootconfig_using_tools-v4-0-73c463f03a97@debian.org
 
- kernel/trace/trace_events.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Changes in v4:
+- Patch 3 (build pipeline): clear CROSS_COMPILE= in the kernel-side
+  tools/bootconfig sub-make. Without it, an LLVM=1 cross build
+  inherits CROSS_COMPILE and tools/scripts/Makefile.include injects
+  --target=/--sysroot= into the host clang, producing a target
+  binary that fails to exec.
+- Patch 3 (build pipeline): place embedded-cmdline.S in its own
+  .init.rodata.embed_cmdline subsection ("a") so ld.lld does not
+  see a section-type mismatch against lib/bootconfig-data.S's
+  writable .init.rodata ("aw"). The linker's *(.init.rodata
+  .init.rodata.*) glob still folds it into the init image.
+- Patch 6 (x86/setup): also accept the bootconfig=<anything> form
+  via cmdline_find_option(), matching the runtime parse_args() loop.
+  Without it, bootconfig=0/=off would skip the early prepend but
+  still trigger the late runtime apply -- a split-brain state.
+- New patch 7: document CONFIG_CMDLINE_FROM_BOOTCONFIG in
+  Documentation/admin-guide/bootconfig.rst (semantics, opt-in,
+  precedence, overflow behavior, example).
+- Link to v3: https://lore.kernel.org/r/20260608-bootconfig_using_tools-v3-0-4ddd079a0696@debian.org
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c46e623e7e0d..5ab630155ab6 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -22,6 +22,7 @@
- #include <linux/sort.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/seq_buf.h>
- 
- #include <trace/events/sched.h>
- #include <trace/syscall.h>
-@@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_events[];
- extern struct trace_event_call *__stop_ftrace_events[];
- 
- static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
-+static struct seq_buf bootup_event_seq __initdata = {
-+	.buffer = bootup_event_buf,
-+	.size = COMMAND_LINE_SIZE,
-+};
- 
- static __init int setup_trace_event(char *str)
- {
--	if (bootup_event_buf[0] != '\0')
--		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
-+	if (seq_buf_used(&bootup_event_seq) > 0)
-+		seq_buf_puts(&bootup_event_seq, ",");
-+
-+	seq_buf_puts(&bootup_event_seq, str);
- 
--	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
-+	if (seq_buf_has_overflowed(&bootup_event_seq))
-+		return -ENOMEM;
- 
- 	trace_set_ring_buffer_expanded(NULL);
- 	disable_tracing_selftest("running event tracing");
-@@ -4766,7 +4774,7 @@ static __init int event_trace_enable(void)
- 	 */
- 	__trace_early_add_events(tr);
- 
--	early_enable_events(tr, bootup_event_buf, false);
-+	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), false);
- 
- 	trace_printk_start_comm();
- 
-@@ -4794,7 +4802,7 @@ static __init int event_trace_enable_again(void)
- 	if (!tr)
- 		return -ENODEV;
- 
--	early_enable_events(tr, bootup_event_buf, true);
-+	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), true);
- 
- 	return 0;
- }
+Changes in v3:
+- Patch 3: Move HOSTCC override to the kernel-side rule; tool keeps
+  $(CC) for standalone/cross builds.
+- Patch 6: Drop the false fail-safe wording; document the
+  BOOT_CONFIG_FORCE=y default interaction.
+- Link to v2:
+  https://lore.kernel.org/r/20260605-bootconfig_using_tools-v2-0-d309f544b5f7@debian.org
+
+Changes in v2 (addressing review of v1):
+- Split out a standalone fix for the NULL-pointer arithmetic in
+  xbc_snprint_cmdline() so the build-time render cannot trip host
+  UBSan/FORTIFY_SOURCE.
+- Rework the leaf-root handling: instead of returning early, skip @root
+  inside the loop so a root carrying both a value and subkeys
+  (kernel = x together with kernel.foo = bar) still renders its
+  descendant keys.
+- Build tools/bootconfig with $(HOSTCC) so cross-compiled (ARCH=...)
+  builds render the cmdline on the build host instead of failing with
+  "Exec format error".
+- Mark the embedded cmdline section read-only (drop the "w" flag from
+  .init.rodata).
+- Add a make-clean hook so tools/bootconfig artifacts are removed by
+  make clean.
+- Gate the x86 prepend on "bootconfig" being present on the command
+  line (or CONFIG_BOOT_CONFIG_FORCE), matching the init.* opt-in
+  semantics documented in bootconfig.rst and preserving fail-safe
+  recovery: dropping "bootconfig" from the bootloader cmdline now also
+  disables the embedded kernel.* keys.
+- Link to v1: https://patch.msgid.link/20260527-bootconfig_using_tools-v1-0-b6906a86e7d5@debian.org
+
+---
+Breno Leitao (8):
+      bootconfig: fix NULL-pointer arithmetic in xbc_snprint_cmdline()
+      bootconfig: render descendant keys when xbc_snprint_cmdline() root has a value
+      bootconfig: render embedded bootconfig as a kernel cmdline at build time
+      bootconfig: clean build-time tools/bootconfig from make clean
+      bootconfig: add xbc_prepend_embedded_cmdline() helper
+      Documentation: bootconfig: document build-time cmdline rendering
+      bootconfig: skip runtime kernel.* render once prepended early
+      x86/setup: prepend embedded bootconfig cmdline before parse_early_param
+
+ Documentation/admin-guide/bootconfig.rst |  81 ++++++++++++++++++++++
+ MAINTAINERS                              |   1 +
+ Makefile                                 |  27 +++++++-
+ arch/x86/Kconfig                         |   1 +
+ arch/x86/kernel/setup.c                  |  43 ++++++++++++
+ include/linux/bootconfig.h               |   9 +++
+ init/Kconfig                             |  36 ++++++++++
+ init/main.c                              |  25 ++++++-
+ lib/Makefile                             |  16 +++++
+ lib/bootconfig.c                         | 112 +++++++++++++++++++++++++++++--
+ lib/embedded-cmdline.S                   |  16 +++++
+ tools/bootconfig/Makefile                |   4 +-
+ 12 files changed, 358 insertions(+), 13 deletions(-)
+---
+base-commit: a87737435cfa134f9cdcc696ba3080759d04cf72
+change-id: 20260508-bootconfig_using_tools-cfa7aa9d6a5a
+
+Best regards,
 -- 
-2.43.0
+Breno Leitao <leitao@debian.org>
 
