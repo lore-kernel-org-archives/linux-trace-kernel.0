@@ -1,175 +1,251 @@
-Received: from confino.investici.org (confino.investici.org [93.190.126.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66A234D3B0;
-	Mon, 22 Jun 2026 20:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.190.126.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3AC2030A;
+	Tue, 23 Jun 2026 00:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782159917; cv=none; b=RKqwyEnNjcFVMUQ2C9G1BG9PXsfECbhF4Q0MO5ijBAjMOn5eReN//sjtlGlPBFzlyUcc0JIPwMqG8f8Z87DAStNCYNDYYW/8mW1AKPHRLDuMTZOq5sbzwTfBYMyQyMvwAiDdT6Wq0/sWMoaGOxJJl9ACEw2NCiedv1J+IWgQoSY=
+	t=1782173508; cv=none; b=NC3/RMynl8BbkJLBzRkxr7HbkcUx1MhcusmHKlRT7T9YC2D8Jumqi59iUhXnCoTYtsZWWrFPQ2/DS1Vbt6PQNWwNAMEI7C6/2OxvOtWD65b1J+aiqfHCxW9b7jj8xDYIbJuI+92cJQxLqOGsfL+g6ak6npg3hUKEoscrN8RzqtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782159917; c=relaxed/simple;
-	bh=Qm3fN9SxpqdsziW5uabSJ3ImEYV11vJ5Zu0CZyrxk2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uZptjTozsJ2Kt+M8FFuOAwQ4hcw971IjGq00zil9eb63BlxF/dJjnDsUYTQlGM9m7AKmT0inoOIxrRv7nSesX0S5vKATFz07c4Ek9J+E/1zcEaB43QpefL1u5Jwm2cOwGhT91yTEZVg6SyHH5lRu9iK5oh3NxJsOS5zimgPPOAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=bYouQ9GI; arc=none smtp.client-ip=93.190.126.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+	s=arc-20240116; t=1782173508; c=relaxed/simple;
+	bh=J+4qy6yUt2qsjFzgWyqN9qlFurVR2nEFmDDhPoK6F0Y=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pcd0+X4MphOHHXdM89mbsVOCQPYW/tomVBCRzvijqSCrJlbwDkfjp3gYLg6LFkdF65i2cGwOwJBbXFrrtjSNNPKDDTk3idaJwTL2p3l7t0xxDnwLzU/ICMIavL7ViwYaiSSiBwVEGRBXpmMkBL0rkHiRU4wHO5Y8MHnMDFeYWBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2FK96HX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="bYouQ9GI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1782159913;
-	bh=ZLlfepZFeaknCi6xAkAqXBfExe+6Pg0BUxgR3tzsj14=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bYouQ9GINun7AFdz1AKycwsTNIazXlEIuyFulJ0XMuMWkTcA509run8/FXg8mVMre
-	 zN/G7JU8e+WeRZAtiSEN+agfNAj5R0dTLHYOq6mU3aYmmQshn45VwXA9gSXpsswkkb
-	 W6P0ESdHF5NGGKgYBCk9pors3VobM2pZr35Q0ABQ=
-Received: from mx1.investici.org (unknown [127.0.0.1])
-	by confino.investici.org (Postfix) with ESMTP id 4gkfp13yrMz10wc;
-	Mon, 22 Jun 2026 20:25:13 +0000 (UTC)
-Received: by mx1.investici.org (Postfix) id 4gkfp050RLz10wK;
-	Mon, 22 Jun 2026 20:25:12 +0000 (UTC)
-From: Bradley Morgan <include@grrlz.net>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Marco Elver <elver@google.com>,
-	Aleksandr Nogikh <nogikh@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Adrian Huang <adrianhuang0701@gmail.com>,
-	Kexin Sun <kexinsun@smail.nju.edu.cn>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Bradley Morgan <include@grrlz.net>
-Subject: [PATCH v2 2/2] signal: make send_signal_locked() take const siginfo
-Date: Mon, 22 Jun 2026 20:25:09 +0000
-Message-ID: <f754c4e5c82b45bcbb770aa8bb1f4ab1d87a0b0e.1782159692.git.include@grrlz.net>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260622164029.11474-1-include@grrlz.net>
-References: <20260622164029.11474-1-include@grrlz.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2FK96HX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D1DF1F000E9;
+	Tue, 23 Jun 2026 00:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782173507;
+	bh=u3G2k+vNcbri1rsk1r3PRgx76PxVv/AgsF6Bes4pFjM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=S2FK96HXBIX3IPeJ+oZ+SNyzCBmlrHdG6N2svUdBYGhnEYbgAgySvVd89aSUQ9fnC
+	 93MwaMEK5/axFm+LBDZo+MQfBMBOKRC5Ff4UcRsKEfGBls2A/E8HU7YZwM/6jRHxlB
+	 j5quk/9D7CLDIBvB2NRf42cn6YBkstPBqgMZi2KdY/7Radc37xHX9hLpsSH0stVxBm
+	 SfTVcLEHJi3nfl5V0fO/OhEmkt6RVY+m9pYTgr3aqY+mgGK6SZVJn2YX2pa11TGM/h
+	 c45+UZjfog9s3Pg96f/p+3AM7kD0/kRk0WEkASFv7pvcA4Sy2YNBLV5DLJTZDbrZx8
+	 ffTyN0RLDkp7w==
+Date: Tue, 23 Jun 2026 09:11:41 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor
+ <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v4 6/7] Documentation: bootconfig: document build-time
+ cmdline rendering
+Message-Id: <20260623091141.384913aa7eb0cb3c5db01e9d@kernel.org>
+In-Reply-To: <ajkfTQwmmVo0DvFx@gmail.com>
+References: <20260609-bootconfig_using_tools-v4-0-73c463f03a97@debian.org>
+	<20260609-bootconfig_using_tools-v4-6-73c463f03a97@debian.org>
+	<20260610233720.82fe59cf42aa57659c2e5697@kernel.org>
+	<ail6rQnRYKsXPxyF@gmail.com>
+	<ajJu2KlfVyuUH-VA@gmail.com>
+	<20260618094719.17bf5448351adc2e56c267fb@kernel.org>
+	<ajkfTQwmmVo0DvFx@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-send_signal_locked() should not change the caller's siginfo. Make that
-part of the type and keep the local rewrite on its copy.
+Hi Breno,
 
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Bradley Morgan <include@grrlz.net>
----
-Changes since v1:
-- New patch from Oleg's suggestion.
-- Link to Oleg's suggestion:
-  https://lore.kernel.org/all/0873AC4A-3CB2-4F7B-BFE6-75D855AD22DC@grrlz.net/T/#m5f8a2d54928efff41de539969b68149e1ec5fca4
+On Mon, 22 Jun 2026 05:30:53 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
- include/linux/signal.h        |  2 +-
- include/trace/events/signal.h |  4 ++--
- kernel/signal.c               | 20 +++++++++++---------
- 3 files changed, 14 insertions(+), 12 deletions(-)
+> On Thu, Jun 18, 2026 at 09:47:19AM +0900, Masami Hiramatsu wrote:
+> > On Wed, 17 Jun 2026 02:56:23 -0700
+> > Breno Leitao <leitao@debian.org> wrote:
+> > 
+> > > On Wed, Jun 10, 2026 at 07:58:10AM -0700, Breno Leitao wrote:
+> > > > On Wed, Jun 10, 2026 at 11:37:20PM +0900, Masami Hiramatsu wrote:
+> > > > > To avoid confusion, when this option is used, shouldn't we treat it
+> > > > > the same way as if embedded command lines were enabled, and either
+> > > > > not display it in /proc/bootconfig (or always display it, by merging
+> > > > > the rendered string)?
+> > > > 
+> > > > You're right that EMBED_CMDLINE breaks it: the embedded kernel.* keys
+> > > > are already in boot_command_line before setup_boot_config() ever sees
+> > > > the initrd bconf, so a user reading /proc/bootconfig would see only
+> > > > the initrd keys while parse_early_param() acted on the embedded ones.
+> > > > That's exactly the split-state Sashiko was circling around.
+> > > > 
+> > > > Both options you suggest work for me, but they pull in opposite
+> > > > directions and I'd rather not guess wrong on the user-facing
+> > > > contract.  Which do you prefer for v5?
+> > > > 
+> > > >   (a) Don't display embedded in /proc/bootconfig -- keep the current
+> > > >       "file shows the active bootconfig source" behavior and document
+> > > >       that with EMBED_CMDLINE=y, the kernel.* subtree may have been
+> > > >       applied separately via the cmdline.
+> > > > 
+> > > >   (b) Always display embedded by merging the rendered string into
+> > > >       /proc/bootconfig when EMBED_CMDLINE=y, so the file reflects
+> > > >       what was actually applied.
+> > > > 
+> > > > Happy to go either way
+> > > 
+> > > Following up on my own mail rather than leaving it fully open: after
+> > > looking at the code more, I'd like to recommend (a).
+> > 
+> > Agreed. Sorry for replying late.
+> 
+> No problem, thanks. Quick heads-up: v5 already went out and crossed with
+> this mail. It takes (a) and extends bootconfig.rst to walk through the
+> four sources (bootloader cmdline, embedded cmdline, initrd bootconfig,
+> embedded bootconfig), so that part is already in flight:
+> 
+>   https://lore.kernel.org/r/20260617-bootconfig_using_tools-v5-0-fd589a9cc5e3@debian.org
+> 
+> The naming/mutual-exclusion rework below I'll fold into v6.
 
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index f19816832f05..a1ba8c5973c6 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -283,7 +283,7 @@ extern int do_send_sig_info(int sig, struct kernel_siginfo *info,
- 				struct task_struct *p, enum pid_type type);
- extern int group_send_sig_info(int sig, struct kernel_siginfo *info,
- 			       struct task_struct *p, enum pid_type type);
--extern int send_signal_locked(int sig, struct kernel_siginfo *info,
-+extern int send_signal_locked(int sig, const struct kernel_siginfo *info,
- 			      struct task_struct *p, enum pid_type type);
- extern int sigprocmask(int, sigset_t *, sigset_t *);
- extern void set_current_blocked(sigset_t *);
-diff --git a/include/trace/events/signal.h b/include/trace/events/signal.h
-index 1db7e4b07c01..05a46135ee34 100644
---- a/include/trace/events/signal.h
-+++ b/include/trace/events/signal.h
-@@ -49,8 +49,8 @@ enum {
-  */
- TRACE_EVENT(signal_generate,
- 
--	TP_PROTO(int sig, struct kernel_siginfo *info, struct task_struct *task,
--			int group, int result),
-+	TP_PROTO(int sig, const struct kernel_siginfo *info,
-+		 struct task_struct *task, int group, int result),
- 
- 	TP_ARGS(sig, info, task, group, result),
- 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index d72d9be3a992..26e8b8e1d03c 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1037,7 +1037,7 @@ static inline bool legacy_queue(struct sigpending *signals, int sig)
- 	return (sig < SIGRTMIN) && sigismember(&signals->signal, sig);
- }
- 
--static int __send_signal_locked(int sig, struct kernel_siginfo *info,
-+static int __send_signal_locked(int sig, const struct kernel_siginfo *info,
- 				struct task_struct *t, enum pid_type type, bool force)
- {
- 	struct sigpending *pending;
-@@ -1154,7 +1154,7 @@ static int __send_signal_locked(int sig, struct kernel_siginfo *info,
- 	return ret;
- }
- 
--static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
-+static inline bool has_si_pid_and_uid(const struct kernel_siginfo *info)
- {
- 	bool ret = false;
- 	switch (siginfo_layout(info->si_signo, info->si_code)) {
-@@ -1178,10 +1178,11 @@ static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
- 	return ret;
- }
- 
--int send_signal_locked(int sig, struct kernel_siginfo *info,
-+int send_signal_locked(int sig, const struct kernel_siginfo *info,
- 		       struct task_struct *t, enum pid_type type)
- {
- 	struct kernel_siginfo rewritten;
-+	const struct kernel_siginfo *send_info = info;
- 	/* Should SIGKILL or SIGSTOP be received by a pid namespace init? */
- 	bool force = false;
- 
-@@ -1196,26 +1197,27 @@ int send_signal_locked(int sig, struct kernel_siginfo *info,
- 		struct user_namespace *t_user_ns;
- 
- 		rewritten = *info;
--		info = &rewritten;
-+		send_info = &rewritten;
- 
- 		rcu_read_lock();
- 		t_user_ns = task_cred_xxx(t, user_ns);
- 		if (current_user_ns() != t_user_ns) {
--			kuid_t uid = make_kuid(current_user_ns(), info->si_uid);
--			info->si_uid = from_kuid_munged(t_user_ns, uid);
-+			kuid_t uid = make_kuid(current_user_ns(), rewritten.si_uid);
-+
-+			rewritten.si_uid = from_kuid_munged(t_user_ns, uid);
- 		}
- 		rcu_read_unlock();
- 
- 		/* A kernel generated signal? */
--		force = (info->si_code == SI_KERNEL);
-+		force = (rewritten.si_code == SI_KERNEL);
- 
- 		/* From an ancestor pid namespace? */
- 		if (!task_pid_nr_ns(current, task_active_pid_ns(t))) {
--			info->si_pid = 0;
-+			rewritten.si_pid = 0;
- 			force = true;
- 		}
- 	}
--	return __send_signal_locked(sig, info, t, type, force);
-+	return __send_signal_locked(sig, send_info, t, type, force);
- }
- 
- static void print_fatal_signal(int signr)
+Yeah, thanks for updating!
+
+> 
+> > Indeed. So I think this EMBED_CMDLINE is more like CMDLINE set by
+> > bootconfig file, instead of embedded string. That is useful for reusing
+> > the boot options. We need to change the explanation and clarify it.
+> 
+> Agreed, that's a much clearer model. v6 will reframe the Kconfig help and
+> bootconfig.rst around "this is CONFIG_CMDLINE, sourced from a bootconfig
+> file at build time" rather than "an embedded bootconfig that also feeds
+> the cmdline".
+
+Nice!
+
+> 
+> It also matches what the code already does precedence-wise: the rendered
+> "kernel" string is prepended to boot_command_line in setup_arch(), so it
+> sits in front of the bootloader args and parse_args() last-wins lets the
+> bootloader override it -- i.e. exactly CONFIG_CMDLINE without _OVERRIDE.
+> So this is mostly a rename + dependency + docs change, not a behavioral
+> one. (A _FORCE/_EXTEND-style variant could come later if there's demand;
+> the current behavior is the plain "overridable default" one.)
+
+OK. Yeah, for the first step, I think current behavior is enough.
+
+> 
+> > Thus we should those configs mutual exclusive. If user already sets the
+> > CONFIG_CMDLINE, EMBED_CMDLINE should not be enabled.
+> 
+> Makes sense -- two built-in cmdline sources at once is confusing. I'll
+> make them mutually exclusive in v6. I'm thinking:
+> 
+>   depends on CMDLINE = ""
+> 
+> on the new symbol. On x86 CONFIG_CMDLINE is a string that depends on
+> CMDLINE_BOOL and defaults to "", so this reads as "only offer the
+> bootconfig-rendered cmdline when no static CONFIG_CMDLINE is configured",
+> and it works the same on other arches that define CMDLINE as a string.
+> Does that match what you had in mind, or would you rather gate it the
+> other way (CMDLINE depends on !the-new-symbol)?
+
+No, this looks good and enough clear to me.
+
+> 
+> > So you can see CONFIG_BOOT_CONFIG_EMBED_CMDLINE is a bit special.
+> > I think it maybe natual that we call it CONFIG_CMDLINE_BOOT_CONFIG.
+> > In this case, we render the cmdline string from bootconfig build-time
+> > and set CONFIG_CMDLINE with the rendered cmdline string.
+> > So you can see CONFIG_BOOT_CONFIG_EMBED_CMDLINE is a bit special.
+> > I think it maybe natual that we call it CONFIG_CMDLINE_BOOT_CONFIG.
+> > In this case, we render the cmdline string from bootconfig build-time
+> > and set CONFIG_CMDLINE with the rendered cmdline string.
+> 
+> I'll rename it for v6. One nit: the arch opt-in symbol is already
+> ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG, so CONFIG_CMDLINE_FROM_BOOTCONFIG would
+> pair with it verbatim. I'll use CONFIG_CMDLINE_FROM_BOOTCONFIG I'll rename it
+> for v6.
+
+Yeah, thanks!
+
+> 
+> Another nit: the arch opt-in symbol is already
+> ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG, so CONFIG_CMDLINE_FROM_BOOTCONFIG would
+> pair with it verbatim. I'll use CONFIG_CMDLINE_FROM_BOOTCONFIG unless you'd
+> rather keep CONFIG_CMDLINE_BOOT_CONFIG -- either is fine by me.
+
+I think it should use the same pattern to avoid confusion.
+
+> 
+> One clarification on "set CONFIG_CMDLINE with the rendered string":
+> CONFIG_CMDLINE is a Kconfig string fixed when .config is read, while the
+> render happens later during the build, so we can't literally store the
+> rendered text into CONFIG_CMDLINE. The mechanism stays "render into
+> .init.rodata, merge into boot_command_line in setup_arch()"; what changes
+> is how we name and document it, plus the mutual exclusion above. Let me
+
+Yes, it is fine to me because it does not change the current behavior.
+
+> 
+> > So you can see CONFIG_BOOT_CONFIG_EMBED_CMDLINE is a bit special.
+> > I think it maybe natual that we call it CONFIG_CMDLINE_BOOT_CONFIG.
+> 
+> I'll rename it for v6. One nit: the arch opt-in symbol is already
+> ARCH_SUPPORTS_CMDLINE_FROM_BOOTCONFIG, so CONFIG_CMDLINE_FROM_BOOTCONFIG
+> would pair with it verbatim. I'll use CONFIG_CMDLINE_FROM_BOOTCONFIG
+
+Yes, that's better to be renamed.
+
+> > In this case, we render the cmdline string from bootconfig build-time
+> > and set CONFIG_CMDLINE with the rendered cmdline string.
+> 
+> CONFIG_CMDLINE is a Kconfig string fixed when .config is read, while the
+> render happens later during the build, so we can't literally store the
+> rendered text into CONFIG_CMDLINE?  let me know if you can envision a way to
+> get it done.
+
+Ah, ok. Nevermind, as far as it is shown in /proc/cmdline, I think it is OK.
+(BTW, if we use the embedded bootconfig, the file path is shown in
+ /proc/config.gz, maybe I need to notice it.)
+
+> > I think we can proceed it without rendering it in /proc/bootconfig
+> > at this point. And later we find the way to detect early parameters
+> > correctly, we can fix it.
+> 
+> Sounds good. I'll document the sharp edge (with both an embedded cmdline and an
+> initrd bootconfig, early params reflect the embedded values because the initrd
+> isn't parsed yet) and leave the early-param-aware override detection as the
+> follow-up you describe.
+
+Thanks for the documenting :)
+
+> 
+> > (BTW, early parameter problem is a bit complicated. It is not hard
+> > to distinguish early parameters, but kernel accepts the same key
+> > for early parameter and normal parameter. e.g. "console=")
+> 
+> Right, console= being both is the awkward case. Agreed that's better as
+> its own series once we have a reliable way to detect early params.
+> 
+> So the v6 plan:
+>   - rename CONFIG_BOOT_CONFIG_EMBED_CMDLINE -> CONFIG_CMDLINE_FROM_BOOTCONFIG
+>     (or _BOOT_CONFIG, your call)
+>   - make it mutually exclusive with CONFIG_CMDLINE (depends on CMDLINE = "")
+>   - reframe the Kconfig help + bootconfig.rst as "CONFIG_CMDLINE from a
+>     bootconfig file"
+>   - keep (a): no rendering in /proc/bootconfig; document the early-param
+>     sharp edge
+>   - defer early-param-aware override detection to a follow-up
+> 
+> Thanks for the direction,
+
+Thanks for working on this feature!
+
+Thank you,
+
+> --breno
+> 
+
+
 -- 
-2.53.0
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
