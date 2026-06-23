@@ -1,278 +1,209 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC62369D59;
-	Tue, 23 Jun 2026 09:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E02C3B42FF
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 10:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782208475; cv=none; b=iBzInRUoCUZLOeo3K8uE/oWYzi4Y6xYhenLDX3322g4fr/bCqc82om0zgvqEP7rhQ94ha6rLhwaObnlG3hQbvKTZ6yyAIFmfd2Jz/ZZSa7tlxy5Z6A32z+W+hELrDfI/0FN+l3BM+3Vqtm9ME+fO4rNZ2Qd2nO8GMA/M9LcjNSE=
+	t=1782211161; cv=none; b=Xzuswd1fC45fwaUNdUca48T60VniwZbCNOajVtPgbhStk0/pzfKs3/gYq3kqv6pHECpfB+VDghyR3t2gE+XjFX6gKN5yrz60xO9a4z5jC3Gj7+KdcMNOLetXv9a/0JkTqTGfKLdJ9ECaB7nJ+xoGXgFZ6AugU4PwDBRcWyHM5es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782208475; c=relaxed/simple;
-	bh=1JmnwYIobU2n/Vd7xYa5ksdyuZRqwA+p9O/JK+8Os9o=;
+	s=arc-20240116; t=1782211161; c=relaxed/simple;
+	bh=IV1QldZgqzH52eVxugIeJGz+StgBDJ2F0UNDEKfNXR4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YE+uFXbTFsXeqY5I5pkCHht5YDkwQES5akWf1nwDv2wK23h7NlUR0AEHVOthlg1JyqCxWlJxvqXPPFjXdsJ2nDgNaQB6xJhv/0hriEnUqkIn0VoNx8CJOYDf4CU3JwlrKx0q0ZZuhstZ7FPew/KzV1TNfnYARM3Nhi4ktQE+ibU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BokoyEDh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kRAAHAH5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 In-Reply-To:Content-Type:Content-Disposition; b=T8xdQUvDbkdWpTCDVu7XUCELrIeDxf1jGTlCch0w3Vc+C7ga/1NlT2+ko9mME3KctuMKgpTDMsdh5bHVNVz9eU3/9Hm//zlK0EhjbkIzcb0heW4gcAyfML3JH32675oj0BGlA1r9l+jpOUYlCd4Bl4GMUmxPb1wlPsBYgkj0yZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YHd/tT0Y; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BokoyEDh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kRAAHAH5"
-Date: Tue, 23 Jun 2026 11:54:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1782208472;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YHd/tT0Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782211159;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s084yR3GrFX8xeCFT87QRxP1TxLcA7Wjw4Sk5s8ivO8=;
-	b=BokoyEDh8VJ8CAdabEaS8LV+muo1Lm3fluMBSSkSrv/NXQwkRYgBYoUTdEClN8iNdkZ3cp
-	8pXn5fghDGRQE0vkkMoDgh0fCYS7nwPjMjHbAuvLku/+gO/8snuorugsw5j0J5QbYjqKUb
-	GJD1+Pn6f7/yS6J7al1E8J9UNEFoZMfehQTueNyxYy/0HIRrR+OwbIjwaxBzGqfoRQstHa
-	51WreXjYmnrfSlieFibd6SUxpskViS5/mDpwDzESl+ox7qzlfPVlkQHhmx9L66zjkxiaFl
-	YYaCHhDQL2ySfDNw9RXTHOjFlJaNysMuzDFcxCVGFqsmZWsivGi6epPXLDTTcQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1782208472;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s084yR3GrFX8xeCFT87QRxP1TxLcA7Wjw4Sk5s8ivO8=;
-	b=kRAAHAH5ZV3Oilb03MeQh9aPWwoq2qLMiceSmiqFKNC5qS0+QIoR8fKZKWsAgnxQrVrcEL
-	dr86iDEp7bns8bCg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: wen.yang@linux.dev
-Cc: Gabriele Monaco <gmonaco@redhat.com>, Nam Cao <namcao@linutronix.de>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] rv/reactors: add KUnit tests for reactor_printk
-Message-ID: <20260623114142-639eab7e-0227-4471-9117-b765fb37f7e8@linutronix.de>
-References: <cover.1781541556.git.wen.yang@linux.dev>
- <690593305ad075539a804e0bf94493335354e6b9.1781541556.git.wen.yang@linux.dev>
+	bh=Xl8UbG6E1hb/5jf156FSHiPb13Lnv7ruACH+pYdCnkc=;
+	b=YHd/tT0YHyVxyXM9p7STJZs0P3+ob+iR2QTzsOh0wtG9t7GSl2x5o7s7uosRJA80eONfFq
+	koV+0fGN0MXkEQYTuj5x0OyR9RREJyxNIDBNH27W2HG9Raln/NbSeTJvE/0YouZAXGBs4P
+	9jshhvPZUP7PNynnFrfKL4G2WXx9zAg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-1EGTjoUYNUKtwR4XEGGL8A-1; Tue,
+ 23 Jun 2026 06:39:15 -0400
+X-MC-Unique: 1EGTjoUYNUKtwR4XEGGL8A-1
+X-Mimecast-MFC-AGG-ID: 1EGTjoUYNUKtwR4XEGGL8A_1782211153
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B776D1800D9C;
+	Tue, 23 Jun 2026 10:39:12 +0000 (UTC)
+Received: from fedora (unknown [10.44.49.10])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4E53F3000B50;
+	Tue, 23 Jun 2026 10:39:06 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 23 Jun 2026 12:39:12 +0200 (CEST)
+Date: Tue, 23 Jun 2026 12:39:05 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Bradley Morgan <include@grrlz.net>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Marco Elver <elver@google.com>,
+	Aleksandr Nogikh <nogikh@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Adrian Huang <adrianhuang0701@gmail.com>,
+	Kexin Sun <kexinsun@smail.nju.edu.cn>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] signal: make send_signal_locked() take const
+ siginfo
+Message-ID: <ajpiSbciUfZr2zfm@redhat.com>
+References: <20260622164029.11474-1-include@grrlz.net>
+ <f754c4e5c82b45bcbb770aa8bb1f4ab1d87a0b0e.1782159692.git.include@grrlz.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <f754c4e5c82b45bcbb770aa8bb1f4ab1d87a0b0e.1782159692.git.include@grrlz.net>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: bXMFQdTi8sqCsm1Wulnn8csU89aQB23Ys8RcIQqLN2o_1782211153
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <690593305ad075539a804e0bf94493335354e6b9.1781541556.git.wen.yang@linux.dev>
 
-On Tue, Jun 16, 2026 at 12:44:49AM +0800, wen.yang@linux.dev wrote:
-> From: Wen Yang <wen.yang@linux.dev>
-> 
-> Add KUnit tests for the printk reactor covering:
-> - Reactor registration and unregistration lifecycle
-> - React callback invocation via rv_react()
-> - Double registration rejection
-> - Multiple register/unregister cycles
-> 
-> The mock callback calls vprintk_deferred() — the same path as the real
-> reactor — then busy-waits to simulate I/O back-pressure, exercising the
-> LD_WAIT_FREE constraint of rv_react() under load.
-> 
-> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+On 06/22, Bradley Morgan wrote:
+>
+> send_signal_locked() should not change the caller's siginfo. Make that
+> part of the type and keep the local rewrite on its copy.
+>
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+
+Ah, sorry... I only suggested to change the signature of send_signal_locked()
+and thus has_si_pid_and_uid(). Perhaps a broader change makes sense too, but
+this conflicts with another (under discussion) series:
+
+	PATCH v2 3/3] signal: fix evasion of SA_IMMUTABLE signals
+	https://lore.kernel.org/all/ajVD6ZmiSQLxjj57@redhat.com/
+
+Now let me take another look at 1/2 ...
+
+Oleg.
+
+> Signed-off-by: Bradley Morgan <include@grrlz.net>
 > ---
->  kernel/trace/rv/Kconfig                |  10 ++
->  kernel/trace/rv/Makefile               |   1 +
->  kernel/trace/rv/reactor_printk_kunit.c | 123 +++++++++++++++++++++++++
->  3 files changed, 134 insertions(+)
->  create mode 100644 kernel/trace/rv/reactor_printk_kunit.c
+> Changes since v1:
+> - New patch from Oleg's suggestion.
+> - Link to Oleg's suggestion:
+>   https://lore.kernel.org/all/0873AC4A-3CB2-4F7B-BFE6-75D855AD22DC@grrlz.net/T/#m5f8a2d54928efff41de539969b68149e1ec5fca4
 > 
-> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-> index 3884b14df375..ff47895c897f 100644
-> --- a/kernel/trace/rv/Kconfig
-> +++ b/kernel/trace/rv/Kconfig
-> @@ -104,6 +104,16 @@ config RV_REACT_PRINTK
->  	  Enables the printk reactor. The printk reactor emits a printk()
->  	  message if an exception is found.
+>  include/linux/signal.h        |  2 +-
+>  include/trace/events/signal.h |  4 ++--
+>  kernel/signal.c               | 20 +++++++++++---------
+>  3 files changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/signal.h b/include/linux/signal.h
+> index f19816832f05..a1ba8c5973c6 100644
+> --- a/include/linux/signal.h
+> +++ b/include/linux/signal.h
+> @@ -283,7 +283,7 @@ extern int do_send_sig_info(int sig, struct kernel_siginfo *info,
+>  				struct task_struct *p, enum pid_type type);
+>  extern int group_send_sig_info(int sig, struct kernel_siginfo *info,
+>  			       struct task_struct *p, enum pid_type type);
+> -extern int send_signal_locked(int sig, struct kernel_siginfo *info,
+> +extern int send_signal_locked(int sig, const struct kernel_siginfo *info,
+>  			      struct task_struct *p, enum pid_type type);
+>  extern int sigprocmask(int, sigset_t *, sigset_t *);
+>  extern void set_current_blocked(sigset_t *);
+> diff --git a/include/trace/events/signal.h b/include/trace/events/signal.h
+> index 1db7e4b07c01..05a46135ee34 100644
+> --- a/include/trace/events/signal.h
+> +++ b/include/trace/events/signal.h
+> @@ -49,8 +49,8 @@ enum {
+>   */
+>  TRACE_EVENT(signal_generate,
 >  
-> +config RV_REACT_PRINTK_KUNIT
-> +	bool "KUnit tests for reactor_printk" if !KUNIT_ALL_TESTS
-
-It would be nice if this was a tristate symbol.
-Otherwise the test is completely unusable with CONFIG_KUNIT=m.
-Maybe use EXPORT_SYMBOL_FOR_MODULES() for the few needed symbols.
-
-> +	depends on RV_REACT_PRINTK && KUNIT
-
-The dependency on RV_REACT_PRINTK is not actually necessary.
-
-Nit: I would split this into two 'depends on'.
-
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  This builds KUnit tests for the printk reactor. These are only
-> +	  for development and testing, not for regular kernel use cases.
+> -	TP_PROTO(int sig, struct kernel_siginfo *info, struct task_struct *task,
+> -			int group, int result),
+> +	TP_PROTO(int sig, const struct kernel_siginfo *info,
+> +		 struct task_struct *task, int group, int result),
+>  
+>  	TP_ARGS(sig, info, task, group, result),
+>  
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index d72d9be3a992..26e8b8e1d03c 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1037,7 +1037,7 @@ static inline bool legacy_queue(struct sigpending *signals, int sig)
+>  	return (sig < SIGRTMIN) && sigismember(&signals->signal, sig);
+>  }
+>  
+> -static int __send_signal_locked(int sig, struct kernel_siginfo *info,
+> +static int __send_signal_locked(int sig, const struct kernel_siginfo *info,
+>  				struct task_struct *t, enum pid_type type, bool force)
+>  {
+>  	struct sigpending *pending;
+> @@ -1154,7 +1154,7 @@ static int __send_signal_locked(int sig, struct kernel_siginfo *info,
+>  	return ret;
+>  }
+>  
+> -static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
+> +static inline bool has_si_pid_and_uid(const struct kernel_siginfo *info)
+>  {
+>  	bool ret = false;
+>  	switch (siginfo_layout(info->si_signo, info->si_code)) {
+> @@ -1178,10 +1178,11 @@ static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
+>  	return ret;
+>  }
+>  
+> -int send_signal_locked(int sig, struct kernel_siginfo *info,
+> +int send_signal_locked(int sig, const struct kernel_siginfo *info,
+>  		       struct task_struct *t, enum pid_type type)
+>  {
+>  	struct kernel_siginfo rewritten;
+> +	const struct kernel_siginfo *send_info = info;
+>  	/* Should SIGKILL or SIGSTOP be received by a pid namespace init? */
+>  	bool force = false;
+>  
+> @@ -1196,26 +1197,27 @@ int send_signal_locked(int sig, struct kernel_siginfo *info,
+>  		struct user_namespace *t_user_ns;
+>  
+>  		rewritten = *info;
+> -		info = &rewritten;
+> +		send_info = &rewritten;
+>  
+>  		rcu_read_lock();
+>  		t_user_ns = task_cred_xxx(t, user_ns);
+>  		if (current_user_ns() != t_user_ns) {
+> -			kuid_t uid = make_kuid(current_user_ns(), info->si_uid);
+> -			info->si_uid = from_kuid_munged(t_user_ns, uid);
+> +			kuid_t uid = make_kuid(current_user_ns(), rewritten.si_uid);
 > +
-> +	  If unsure, say N.
-> +
->  config RV_REACT_PANIC
->  	bool "Panic reactor"
->  	depends on RV_REACTORS
-> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-> index 94498da35b37..ef0a2dcb927c 100644
-> --- a/kernel/trace/rv/Makefile
-> +++ b/kernel/trace/rv/Makefile
-> @@ -23,4 +23,5 @@ obj-$(CONFIG_RV_MON_NOMISS) += monitors/nomiss/nomiss.o
->  # Add new monitors here
->  obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
->  obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-> +obj-$(CONFIG_RV_REACT_PRINTK_KUNIT) += reactor_printk_kunit.o
->  obj-$(CONFIG_RV_REACT_PANIC) += reactor_panic.o
-> diff --git a/kernel/trace/rv/reactor_printk_kunit.c b/kernel/trace/rv/reactor_printk_kunit.c
-> new file mode 100644
-> index 000000000000..933aa5602226
-> --- /dev/null
-> +++ b/kernel/trace/rv/reactor_printk_kunit.c
-> @@ -0,0 +1,123 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * KUnit tests for reactor_printk
-> + *
-> + */
-> +
-> +#include <kunit/test.h>
-> +#include <linux/rv.h>
-> +#include <linux/printk.h>
-> +#include <linux/sched/clock.h>
-> +#include <linux/processor.h>
-> +
-> +/*
-> + * Simulated execution time for mock_printk_react (sched_clock units,
-> + * nanoseconds).  Models the time a real printk reactor callback may consume
-> + * under I/O pressure, exercising the LD_WAIT_FREE constraint of rv_react().
-> + */
-> +#define MOCK_REACT_DURATION_NS	5000000ULL
-> +
-> +/*
-> + * Mock react callback mirroring rv_printk_reaction().
-> + *
-> + * Calls vprintk_deferred() — the same path as the real reactor — then holds
-> + * the CPU for MOCK_REACT_DURATION_NS via a sched_clock() timed busy-loop,
-> + * simulating a callback that is slow due to I/O back-pressure.
-> + * sched_clock() is notrace and lock-free; no sleep or lock acquisition is
-> + * performed, satisfying the LD_WAIT_FREE constraint of rv_react().
-> + */
-> +__printf(1, 0) static void mock_printk_react(const char *msg, va_list args)
-> +{
-> +	u64 start = sched_clock();
-> +
-> +	vprintk_deferred(msg, args);
-
-This can get out of sync with the real reactor.
-
-> +
-> +	while (sched_clock() - start < MOCK_REACT_DURATION_NS)
-> +		cpu_relax();
-> +}
-> +
-> +static struct rv_reactor mock_printk_reactor = {
-> +	.name		= "test_printk",
-> +	.description	= "test printk reactor",
-> +	.react		= mock_printk_react,
-> +};
-> +
-> +/* Test 1: register and unregister reactor */
-
-Not a fan of the test numbers in the comment.
-They will become stale fast.
-
-> +static void test_printk_register_unregister(struct kunit *test)
-> +{
-> +	int ret;
-> +
-> +	ret = rv_register_reactor(&mock_printk_reactor);
-> +	KUNIT_EXPECT_EQ(test, ret, 0);
-
-> +	KUNIT_EXPECT_STREQ(test, mock_printk_reactor.name, "test_printk");
-
-This doesn't really test anything.
-
-> +
-> +	rv_unregister_reactor(&mock_printk_reactor);
-> +}
-> +
-> +/* Test 2: react callback is invoked via rv_react() */
-> +static void test_printk_react_called(struct kunit *test)
-> +{
-> +	struct rv_reactor reactor = {
-> +		.name	= "printk_cb_test",
-> +		.react	= mock_printk_react,
-> +	};
-> +	struct rv_monitor monitor = {
-> +		.name	= "test_monitor",
-> +		.reactor = &reactor,
-> +		.react	= mock_printk_react,
-> +	};
-> +
-> +	rv_react(&monitor, "printk violation message");
-
-The invocation is not actually tested.
-
-> +}
-> +
-> +/* Test 3: double registration should fail */
-> +static void test_printk_double_register(struct kunit *test)
-> +{
-> +	int ret;
-> +
-> +	ret = rv_register_reactor(&mock_printk_reactor);
-> +	KUNIT_ASSERT_EQ(test, ret, 0);
-> +
-> +	ret = rv_register_reactor(&mock_printk_reactor);
-> +	KUNIT_EXPECT_NE(test, ret, 0);
-
-This could test the specific return value.
-
-> +
-> +	rv_unregister_reactor(&mock_printk_reactor);
-> +}
-> +
-> +/* Test 4: register/unregister cycle */
-> +static void test_printk_register_cycle(struct kunit *test)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < 5; i++) {
-> +		ret = rv_register_reactor(&mock_printk_reactor);
-> +		KUNIT_EXPECT_EQ(test, ret, 0);
-> +
-> +		rv_unregister_reactor(&mock_printk_reactor);
-> +	}
-> +}
-> +
-> +/* Test 5: react callback is not NULL (printk reactors must provide react) */
-> +static void test_printk_react_not_null(struct kunit *test)
-> +{
-> +	KUNIT_EXPECT_NOT_NULL(test, mock_printk_reactor.react);
-
-This doesn't really test anything.
-
-> +}
-> +
-> +static struct kunit_case reactor_printk_kunit_cases[] = {
-> +	KUNIT_CASE(test_printk_register_unregister),
-> +	KUNIT_CASE(test_printk_react_called),
-> +	KUNIT_CASE(test_printk_double_register),
-> +	KUNIT_CASE(test_printk_register_cycle),
-> +	KUNIT_CASE(test_printk_react_not_null),
-
-Most tests are not related to the printk reactor at all.
-Maybe add a generic "rv_reactor" suite.
-
-> +	{}
-> +};
-> +
-> +static struct kunit_suite reactor_printk_kunit_suite = {
-> +	.name		= "rv_reactor_printk",
-> +	.test_cases	= reactor_printk_kunit_cases,
-> +};
-> +
-> +kunit_test_suite(reactor_printk_kunit_suite);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("KUnit tests for reactor_printk");
+> +			rewritten.si_uid = from_kuid_munged(t_user_ns, uid);
+>  		}
+>  		rcu_read_unlock();
+>  
+>  		/* A kernel generated signal? */
+> -		force = (info->si_code == SI_KERNEL);
+> +		force = (rewritten.si_code == SI_KERNEL);
+>  
+>  		/* From an ancestor pid namespace? */
+>  		if (!task_pid_nr_ns(current, task_active_pid_ns(t))) {
+> -			info->si_pid = 0;
+> +			rewritten.si_pid = 0;
+>  			force = true;
+>  		}
+>  	}
+> -	return __send_signal_locked(sig, info, t, type, force);
+> +	return __send_signal_locked(sig, send_info, t, type, force);
+>  }
+>  
+>  static void print_fatal_signal(int signr)
 > -- 
-> 2.25.1
+> 2.53.0
 > 
+
