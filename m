@@ -1,109 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DA53203B4
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jun 2026 13:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40D3366562;
+	Tue, 23 Jun 2026 13:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782221138; cv=none; b=ieaf2BllXOiQE7djyzIi1wOx9MaQYv3qtN+6PUVWJsa5pLHETfrefSgv2C8pCUX50GqRt4S8P4WkNBz+83D3P6P4wbBUNeMhRqI1DqA2KCRR9WOfstAwMYBgxG25maldBknGQowP7RDIXaXy/k+qe+5djFxZ4BwNdp0yzmSlP0E=
+	t=1782221405; cv=none; b=cF8kRj18tADg6GkgE/x4M1rTYo2x9+ysCB2Wsq/Y2WoRUxgZt7P9W6b8RQbgt0MJTo8YQZYNXSbzAXS6k8zk7RmpX1Cjt0707fqfCwkjQiAnSXPjuyO2Qpn2EIbH35q3tkeO5sUtl8ZiTVqaMxaklWuRRAA/bpP5yGJQZRfPRN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782221138; c=relaxed/simple;
-	bh=OKx7ZDYj7SAZpoBy3rn8owt1iUaI62/RmSFsa8I59mI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=VXbi/ykPKAxTHnbUFnHRidSnW4yjgc3D58RiuGGQFjXSK0oOMwDTirm2T43cltzH6yNNAFbaURXBrmQZbYa8IgmyYsSbc5X/gDXigm4KevNmLvqUBf9ehxveFTVEVB8GAFwVSIAI5+ofmrONqUs8BtA9sqgm6EBUfHEElgHOG9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fnMGoEuy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fnMGoEuy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782221135;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QjzcbOUH/JYV0AOYsdrx/GdOx3eRULAHiB6tLZrDBX4=;
-	b=fnMGoEuychYiHloo+k2kafLpm7FfHKx3K75+mW7SSJRHScQZNH7bIvB3rM7nV6h0CnMg/z
-	MnRuC6L51ZlTPdS9VAWGAUsHUVZ24nJkPUkCWUUGF5VHUM+AQZ/MXVG8FUVaYAILMf/3dK
-	ck4T0W8Hx8c37rNInv8mapSmXf5qrZs=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-316-dfvzV4kiNZSf5zZLeWTgvA-1; Tue,
- 23 Jun 2026 09:25:22 -0400
-X-MC-Unique: dfvzV4kiNZSf5zZLeWTgvA-1
-X-Mimecast-MFC-AGG-ID: dfvzV4kiNZSf5zZLeWTgvA_1782221117
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3B97C1955EAC;
-	Tue, 23 Jun 2026 13:25:17 +0000 (UTC)
-Received: from fedora (unknown [10.44.49.10])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F2C863653A;
-	Tue, 23 Jun 2026 13:25:11 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 23 Jun 2026 15:25:16 +0200 (CEST)
-Date: Tue, 23 Jun 2026 15:25:10 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: David Windsor <dwindsor@gmail.com>, mhiramat@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, shuah@kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/uprobes: Keep shadow stack in sync for emulated
- CALLs
-Message-ID: <ajqJNju6MY3B0S2F@redhat.com>
-References: <20260622183109.1137245-1-dwindsor@gmail.com>
- <ajqBkKE8TpQL1mIG@redhat.com>
- <20260623125725.GW48970@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1782221405; c=relaxed/simple;
+	bh=Kvq3ohziYfNoxLc9yuJ1MGlLQHJXS1KkEJiYP/DBS/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zvzkt2+fsddWyY8SwqQORGgvg+Hdji2weRbfTuyG8m1qecz5P2ypj86wbxw7Ha4SlWQR2FnaaDVHwNbfFUZ8qRU20RGvzGysw42YzlJ0Lim99mFGa+mV477jkSc7renMVfMn58yRNFBcexjQoogAZKS98iikHCdT/LUcloWBbVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from ipservice-092-209-184-216.092.209.pools.vodafone-ip.de ([92.209.184.216] helo=nb282.user.codasip.com)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <martin@kaiser.cx>)
+	id 1wc1CL-000000008pB-3ZXj;
+	Tue, 23 Jun 2026 15:29:53 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH] tracing/probes: ignore id update from btf_type_skip_modifiers
+Date: Tue, 23 Jun 2026 15:29:32 +0200
+Message-ID: <20260623132937.3494895-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260623125725.GW48970@noisy.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: 6CzuLFG4RPGEe_skhOpFKuL0oLuvkPXUJ02HperybBs_1782221117
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On 06/23, Peter Zijlstra wrote:
->
-> On Tue, Jun 23, 2026 at 02:52:32PM +0200, Oleg Nesterov wrote:
-> > On 06/22, David Windsor wrote:
-> > >
-> > > --- a/arch/x86/kernel/uprobes.c
-> > > +++ b/arch/x86/kernel/uprobes.c
-> > > @@ -1246,8 +1246,12 @@ static int default_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs
-> > >  		long correction = utask->vaddr - utask->xol_vaddr;
-> > >  		regs->ip += correction;
-> > >  	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
-> > > +		unsigned long retaddr = utask->vaddr + auprobe->defparam.ilen;
-> > > +
-> > >  		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
-> > > -		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
-> > > +		if (emulate_push_stack(regs, retaddr))
-> > > +			return -ERESTART;
-> > > +		if (shstk_update_last_frame(retaddr))
-> > >  			return -ERESTART;
-> >
-> > Well, if shstk_update_last_frame() fails after emulate_push_stack(), we should
-> > probably return another error, so that the caller handle_singlestep() will kill
-> > this task?
->
-> Makes sense, the other user has a force_sig(SIGSEGV) on failure.
+We can pass NULL as id pointer to btf_type_skip_modifiers if we do not
+need the id of the returned btf_type.
 
-Offtopic question... both shstk_update_last_frame() and shstk_push() are only
-used by arch/x86/kernel/uprobes.c. But they are not symmetric in that
-shstk_update_last_frame() returns 0 if !features_enabled(ARCH_SHSTK_SHSTK),
-while shstk_push() returns -ENOTSUPP in this case.
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+ kernel/trace/trace_probe.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-That is why the users can't just do "if (shstk_push(xxx)) ...". This is really
-minor, but perhaps it makes sense to change shstk_push() to return 0 in this
-case too? I don't think -ENOTSUPP is actually useful...
-
-Oleg.
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 9b3219e755cb..78bca283763f 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -360,9 +360,8 @@ static bool btf_type_is_char_ptr(struct btf *btf, const struct btf_type *type)
+ {
+ 	const struct btf_type *real_type;
+ 	u32 intdata;
+-	s32 tid;
+ 
+-	real_type = btf_type_skip_modifiers(btf, type->type, &tid);
++	real_type = btf_type_skip_modifiers(btf, type->type, NULL);
+ 	if (!real_type)
+ 		return false;
+ 
+@@ -379,14 +378,13 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
+ 	const struct btf_type *real_type;
+ 	const struct btf_array *array;
+ 	u32 intdata;
+-	s32 tid;
+ 
+ 	if (BTF_INFO_KIND(type->info) != BTF_KIND_ARRAY)
+ 		return false;
+ 
+ 	array = (const struct btf_array *)(type + 1);
+ 
+-	real_type = btf_type_skip_modifiers(btf, array->type, &tid);
++	real_type = btf_type_skip_modifiers(btf, array->type, NULL);
+ 
+ 	intdata = btf_type_int(real_type);
+ 	return !(BTF_INT_ENCODING(intdata) & BTF_INT_SIGNED)
+@@ -589,7 +587,6 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+ 	struct btf *btf = ctx_btf(ctx);
+ 	char *next;
+ 	int is_ptr;
+-	s32 tid;
+ 
+ 	do {
+ 		if (!is_struct) {
+@@ -600,7 +597,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+ 			}
+ 
+ 			/* Convert a struct pointer type to a struct type */
+-			type = btf_type_skip_modifiers(btf, type->type, &tid);
++			type = btf_type_skip_modifiers(btf, type->type, NULL);
+ 			if (!type) {
+ 				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+ 				return -EINVAL;
+@@ -640,7 +637,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+ 				ctx->last_bitsize = 0;
+ 			}
+ 
+-			type = btf_type_skip_modifiers(btf, field->type, &tid);
++			type = btf_type_skip_modifiers(btf, field->type, NULL);
+ 			if (!type) {
+ 				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+ 				return -EINVAL;
+@@ -759,7 +756,7 @@ static int parse_btf_arg(char *varname,
+ 	return -ENOENT;
+ 
+ found:
+-	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
++	type = btf_type_skip_modifiers(ctx->btf, tid, NULL);
+ found_type:
+ 	if (!type) {
+ 		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+-- 
+2.43.7
 
