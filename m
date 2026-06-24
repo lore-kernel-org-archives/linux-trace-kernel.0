@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F601E4BE;
-	Wed, 24 Jun 2026 00:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312A115CD7E;
+	Wed, 24 Jun 2026 00:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782260310; cv=none; b=thWeTR9yHwTMPHuhBOm5yLCtSA0Q99DS7V+0Yoi0ocFgZr+wVYgxj9KcxqWlH+FGiGCEyGGiNX+c5shomDRjHwEC19aV+7XGZZyWT+lG+T20VaaQG2JCyDj9+Ew/vBpWLMttMFEvwyf4guzeFOMCp0NoJo15mqoRNUgiLL5/Yo8=
+	t=1782260669; cv=none; b=Qc0De2bythipJc02cgX/J7rLcP30xbeTKopQDgL/D1OxWdBCW65J3GB1bB3vdvllPnTnM4D0v2hntU/Z6KrcPOFOqIpoCnDcYDKpj2IJkWCvBID3idavuXBKTAV9hKQuybqyGbV8KprBcL/+Ze9gqKZ5o6elFzqPGJz8BwgsD5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782260310; c=relaxed/simple;
-	bh=XzOxuRDnofjdrpT4K4fhZObNEk3P3gYfZ52SiFLtxnA=;
+	s=arc-20240116; t=1782260669; c=relaxed/simple;
+	bh=ryJcHuiZO66/Ss73hYBYx4UJbME4NGgLeAnJIOpi25Y=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LFcw7ghXfmX/ZafGEPfNlPGC9By3/8B9k5CNC0m8jK0uTzTm/9x906ljkjF/h0D0q8+rWKluhHnB/X1zvA67bqw3vcfXK+4MTh13ZRQAAKMyZsqQVebWXJfakMaY0TxL7zCTms/8IYexGQhSd+srII5W3ZnAVuLoqBtovVe6nG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OozVl96Z; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=Fyd6LCYmbY03gGrwNYQkWXDFVCZBGm7we3YyHZlJaHLWjIFhuMrYVJMMgmjEVztFUykDduGfo7oFYOsdTn6J7DOvsS5g5g7zeuMaV9eQxpSiGuwpN+brQyxzqHHyAgMHfqpJEPTDR8YpqF/f5qdTvLeAd6qUGvSRKiNib0GalvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXvxVxws; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OozVl96Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEAAA1F000E9;
-	Wed, 24 Jun 2026 00:18:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXvxVxws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998C71F000E9;
+	Wed, 24 Jun 2026 00:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782260308;
-	bh=XrdhfGcYgMenD2jjtSGlsm428jv6nMXQm1sX0BzfxKw=;
+	s=k20260515; t=1782260667;
+	bh=SiUdj96eUiyr4BhbzuofJTBJur66o4a/5RL9fSJq2OU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=OozVl96ZTJyZ68ickb8lSlOhTHybBuDoHD49NK8nbpQsVcT2qB8/UhoU8Hbw4kjlj
-	 1/V6k6zWOZxt6R8HHLm+83bAQgCANxuhXqMDiSm7yTCS5YdurQXcNHrcPxHUMVTR5l
-	 gYcDU+/CSAVvUbThXr0JygEOBufLrsWkQW+hr5YVUqlaT15ovhTS5dK58bE631UPMq
-	 2ERNQ+QZzfaq6dJREhJu+6YUsgw9Poc4x6Ey0aPrU3Vr1VrbMabnqnbMT8lhUAKixz
-	 qoNo39f62VBlsCZxuHiGslbZ5W94SBDxiBjqVFb3sWsAZqITOHZKKpgkFirkMq993Z
-	 jVbpwdKVbUcUQ==
-Date: Wed, 24 Jun 2026 09:18:24 +0900
+	b=IXvxVxws71cSuYcwDCt9WHgUE0RC1ito4yx2mEzslgQd20q2YfN0c4QoHFaOBJCDU
+	 Xyo1UQ8aZtgZhdxdQzNuDoubb/ourJyqEhbw9+0/9UOkfruL1ZxSN6qpsqOa4aoRQl
+	 5E94eor/272IwG3flshyW9MDAawSKJK+F/EA3CFkJcvQp3RY4LFMbFklC3H5nQK6+X
+	 DlWzH0eeIhitQei5fex35WBxUgCzINOuMaexo3vrH8mkH4s9g3SChhLC0yrTYUi4c9
+	 +I4ErBepbFxTp8QcvSxBRM02YhB3z7ZCmTWPe7mNSsT/zV4kyTV9cVE84kD5Uo6suK
+	 AmF09jqqz6DhQ==
+Date: Wed, 24 Jun 2026 09:24:24 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Julian Braha <julianbraha@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v7 03/10] tracing/probes: Support dumping fetcharg
- program for debugging dynamic events
-Message-Id: <20260624091824.8208ab77482dd411ca9c7fcc@kernel.org>
-In-Reply-To: <96b043ed-c527-4e5d-8eb7-631805da53fd@gmail.com>
-References: <178217904992.643090.15726197350652241270.stgit@devnote2>
-	<178217907822.643090.14693478306190628970.stgit@devnote2>
-	<96b043ed-c527-4e5d-8eb7-631805da53fd@gmail.com>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/probes: ignore id update from
+ btf_type_skip_modifiers
+Message-Id: <20260624092424.f73dfc7be85f61bd45f0748f@kernel.org>
+In-Reply-To: <20260623132937.3494895-1-martin@kaiser.cx>
+References: <20260623132937.3494895-1-martin@kaiser.cx>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,28 +46,91 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jun 2026 19:31:47 +0100
-Julian Braha <julianbraha@gmail.com> wrote:
+On Tue, 23 Jun 2026 15:29:32 +0200
+Martin Kaiser <martin@kaiser.cx> wrote:
 
-> Hi Masami,
+> We can pass NULL as id pointer to btf_type_skip_modifiers if we do not
+> need the id of the returned btf_type.
 > 
-> On 6/23/26 02:44, Masami Hiramatsu (Google) wrote:
-> 
-> > +config PROBE_EVENTS_DUMP_FETCHARG
-> > +	depends on PROBE_EVENTS
-> > +	bool "Dump of dynamic probe event fetch-arguments"
-> > +	default n
-> 
-> Sorry, kconfig nitpick: could you match the style used by the rest of
-> the config options in this file? E.g. the type and prompt come first in
-> the list of attributes?
 
-Ah, good catch! Let me fix it.
+Good catch! Let me pick it to probes/core.
 
 Thanks,
 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> ---
+>  kernel/trace/trace_probe.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
 > 
-> - Julian Braha
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 9b3219e755cb..78bca283763f 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -360,9 +360,8 @@ static bool btf_type_is_char_ptr(struct btf *btf, const struct btf_type *type)
+>  {
+>  	const struct btf_type *real_type;
+>  	u32 intdata;
+> -	s32 tid;
+>  
+> -	real_type = btf_type_skip_modifiers(btf, type->type, &tid);
+> +	real_type = btf_type_skip_modifiers(btf, type->type, NULL);
+>  	if (!real_type)
+>  		return false;
+>  
+> @@ -379,14 +378,13 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
+>  	const struct btf_type *real_type;
+>  	const struct btf_array *array;
+>  	u32 intdata;
+> -	s32 tid;
+>  
+>  	if (BTF_INFO_KIND(type->info) != BTF_KIND_ARRAY)
+>  		return false;
+>  
+>  	array = (const struct btf_array *)(type + 1);
+>  
+> -	real_type = btf_type_skip_modifiers(btf, array->type, &tid);
+> +	real_type = btf_type_skip_modifiers(btf, array->type, NULL);
+>  
+>  	intdata = btf_type_int(real_type);
+>  	return !(BTF_INT_ENCODING(intdata) & BTF_INT_SIGNED)
+> @@ -589,7 +587,6 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  	struct btf *btf = ctx_btf(ctx);
+>  	char *next;
+>  	int is_ptr;
+> -	s32 tid;
+>  
+>  	do {
+>  		if (!is_struct) {
+> @@ -600,7 +597,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  			}
+>  
+>  			/* Convert a struct pointer type to a struct type */
+> -			type = btf_type_skip_modifiers(btf, type->type, &tid);
+> +			type = btf_type_skip_modifiers(btf, type->type, NULL);
+>  			if (!type) {
+>  				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+>  				return -EINVAL;
+> @@ -640,7 +637,7 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  				ctx->last_bitsize = 0;
+>  			}
+>  
+> -			type = btf_type_skip_modifiers(btf, field->type, &tid);
+> +			type = btf_type_skip_modifiers(btf, field->type, NULL);
+>  			if (!type) {
+>  				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+>  				return -EINVAL;
+> @@ -759,7 +756,7 @@ static int parse_btf_arg(char *varname,
+>  	return -ENOENT;
+>  
+>  found:
+> -	type = btf_type_skip_modifiers(ctx->btf, tid, &tid);
+> +	type = btf_type_skip_modifiers(ctx->btf, tid, NULL);
+>  found_type:
+>  	if (!type) {
+>  		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> -- 
+> 2.43.7
+> 
 
 
 -- 
