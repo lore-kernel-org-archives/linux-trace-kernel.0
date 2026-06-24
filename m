@@ -1,103 +1,146 @@
-Received: from serv15.avernis.de (serv15.avernis.de [176.9.89.163])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B6F30BB91;
-	Wed, 24 Jun 2026 03:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.89.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7F02C032E;
+	Wed, 24 Jun 2026 05:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782272431; cv=none; b=i9Z5NaiUC48zMH15Hoq1x/pjo0JL8tkn4zcCKGwbua3QMLOiIZtPPkjE7J7xxZtOoJXmSUsEF9tmFls46jwZmmiA03qT23ptD5S4K1MXvwQ9I3rz+QaTmGZHwUj1SYyCSkUQdNX7PQg3EQu1QbkV90FKO8n+WGCVj2PrivKQytI=
+	t=1782277390; cv=none; b=dzU89mXiqz0H7VOcwio9gd/5RQB36ad3VVnXpJsZIDWQrszVILSqDac5O6cSuDZkghAfM9lRfJ5c5ZJOpGXxysk0BX6JCYzPFOg2Ud29oCnsWmbi18w8hx0KA8K5e8VXsNCP2OfXQHcwbWc0s+9fMaNNxBauQyJFc/i5GITdoQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782272431; c=relaxed/simple;
-	bh=u1hdxE0kDEXJ4eRWqv4JDM7ApFqbXvmMnIcLeT46bSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S75gk2s/55oKqrI4j2S0FS0lXuCCWMQwdxLWi2DPpW3NssRw95Jyq4akkwfJsdmXTIbOWrI4vE8SJMRKK2YIj8HkmYxZ51twaai17sO7rr+EpnaTbIHdaszHsmSk0L0C/0DqVxcQ1y57LI8x7EZYu4qu6lM8S/QaQpEzfIDWcfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=umbiko.net; spf=none smtp.mailfrom=umbiko.net; dkim=pass (1024-bit key) header.d=umbiko.net header.i=@umbiko.net header.b=zupYTnB7; arc=none smtp.client-ip=176.9.89.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=umbiko.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=umbiko.net
+	s=arc-20240116; t=1782277390; c=relaxed/simple;
+	bh=R+429pqsrrwtoJ7O+R+xci3ETjFCL+XKHwd1gisU358=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=XhgeEcH1uqnDCS+hg4TnoXt0ds2Tp4qANkkBDqyWrJ+md0T1wbMMm1hAzwr9OBmtZi1tXZxyOnHikD+/YPMwemyPRLP+Rtwuz9K/BsvuSUNyIjcjnC6PpzcERXNAZ0UQmGNhRNEjoimEMwAlYSLIBbrWztKpY/eGO0/htuPquGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoAPTeFS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=umbiko.net header.i=@umbiko.net header.b="zupYTnB7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=umbiko.net; s=mail;
-	t=1782272067; bh=u1hdxE0kDEXJ4eRWqv4JDM7ApFqbXvmMnIcLeT46bSo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=zupYTnB7GfM+obHCsR+irxXcIQcVNVYsic+4fbPxPdBHnlzLCe+7DaVmVua02RGYl
-	 npCpjPZq9jOmT+Uhg9ujcPsRNUlWnN6ze9sa+3R0RskScm9m+MllMj95V5mSo7BIEp
-	 7EexSkYAk9poALM9VRKcsOBtWxmDox6K3nXDzs8Q=
-Received: by serv15.avernis.de (Postfix) with ESMTPSA id C0DDABDE0E98;
-	Wed, 24 Jun 2026 05:34:26 +0200 (CEST)
-From: Andreas Ziegler <br025@umbiko.net>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andreas Ziegler <br025@umbiko.net>
-Subject: [PATCH v2 1/1] rtla: fix missing unistd include
-Date: Wed, 24 Jun 2026 05:33:41 +0200
-Message-ID: <20260624033342.129970-1-br025@umbiko.net>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAP4=nvRozLS73PooixqWUhDh19eG6oPLTCSV8HvjhibsTLswtw@mail.gmail.com>
-References: <CAP4=nvRozLS73PooixqWUhDh19eG6oPLTCSV8HvjhibsTLswtw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoAPTeFS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4240F1F000E9;
+	Wed, 24 Jun 2026 05:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782277388;
+	bh=etJNdBG9SqZBVpsZZzBAhAVFoG3Scky9EQ1NQqsVgKY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=QoAPTeFSy04CNMgmiYffzBaHsAkyx9wchogQN4XaR9KxO6voTqDtwFwvbhkScuT58
+	 I6XjKwoCHQJo9OAmdQBsjJuHt2/o//O+nMQo9mxniKB7ko+QLmC9wlk2KWvV2O9vgv
+	 mwDfiWyTnriaYpPpJyrAxmyB8JQqr0wFLvSjdwfIU6P449r0JERLXDMowAnliJKBJo
+	 EjQycuTVukK2xT15/lNc5UQ+lwom3dswCv2uDq04xEG2cNcgwBHtS9zRg5z0NS7NWS
+	 505P2rZ7KvumA7sQWkJJSXXtmSwt2OG/66Wp+7O7gSE9wWT95x/ZUj6N4TB3RB3uRt
+	 LJwUjaq4FjOsQ==
+Date: Wed, 24 Jun 2026 14:03:05 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev, shuah@kernel.org,
+ skhan@linuxfoundation.org, me@brighamcampbell.com, jkoolstra@xs4all.nl
+Subject: Re: [PATCH v3] tracing: Use seq_buf for string concatenation
+Message-Id: <20260624140305.3827bbb32f84c62dd9f09222@kernel.org>
+In-Reply-To: <20260623145147.12145-1-woradorn.laon@gmail.com>
+References: <20260623145147.12145-1-woradorn.laon@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 1.4.3 at serv15.avernis.de
-X-Virus-Status: Clean
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Compiling RTLA 7.1.x with GCC 16 and uClibc as standard library fails
-with these errors:
+On Tue, 23 Jun 2026 21:51:47 +0700
+Woradorn Laodhanadhaworn <woradorn.laon@gmail.com> wrote:
 
-src/common.c: In function ‘set_signals’:
-src/common.c:40:17: error: implicit declaration of function ‘alarm’ [-Wimplicit-function-declaration]
-   40 |                 alarm(params->duration);
-      |                 ^~~~~
-src/common.c: In function ‘common_apply_config’:
-src/common.c:187:44: error: implicit declaration of function ‘getpid’; did you mean ‘getpt’? [-Wimplicit-function-declaration]
-  187 |                 retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
-      |                                            ^~~~~~
-      |                                            getpt
-In file included from src/common.c:9:
-src/common.c: In function ‘run_tool’:
-src/common.c:262:19: error: implicit declaration of function ‘sysconf’; did you mean ‘sscanf’? [-Wimplicit-function-declaration]
-  262 |         nr_cpus = get_nprocs_conf();
-      |                   ^~~~~~~~~~~~~~~
-src/common.c:262:19: error: ‘_SC_NPROCESSORS_CONF’ undeclared (first use in this function)
-  262 |         nr_cpus = get_nprocs_conf();
-      |                   ^~~~~~~~~~~~~~~
-src/common.c:262:19: note: each undeclared identifier is reported only once for each function it appears in
-src/common.c:370:17: error: implicit declaration of function ‘sleep’ [-Wimplicit-function-declaration]
-  370 |                 sleep(1);
-      |                 ^~~~~
+> In preparation for removing the strlcat API[1],
+> replace the string concatenation logic with a struct seq_buf,
+> which tracks the current position and the remaining space internally.
+> 
+> Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
+> 
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> 
 
-Restore the missing unistd.h include.
+Looks good to me.
 
-Fixes: 115b06a00875 ("tools/rtla: Consolidate nr_cpus usage across all tools")
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Signed-off-by: Andreas Ziegler <br025@umbiko.net>
----
-Changes v1 -> v2:
-  adapt commit message
-  correct fixes: formatting
-  rebase on current master (502d801f0ab0)
+Thanks,
 
- tools/tracing/rtla/src/common.c | 1 +
- 1 file changed, 1 insertion(+)
+> Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+> ---
+> v1 -> v2: 
+> 	- Fixed WARN_ON when booting with empty trace_event.
+> v2 -> v3: 
+> 	- Addressed Sashiko's concern about the compound literal backing buffer.
+> 	- Replaced the compund literal with an explicit declared buffer and pointed
+> 	seq_buf.buffer to it. This guarantees the backing storage is placed in 
+> 	`.init.data` and reclaimed after boot.
+> 
+> v1: https://lore.kernel.org/all/20260620175441.223342-1-woradorn.laon@gmail.com
+> v2: https://lore.kernel.org/all/20260622094623.18469-1-woradorn.laon@gmail.com
+> Sashiko: https://sashiko.dev/#/patchset/20260622094623.18469-1-woradorn.laon%40gmail.com
+> 
+>  kernel/trace/trace_events.c | 18 +++++++++++++-----
+>  1 file changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index c46e623e7e0d..5ab630155ab6 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/sort.h>
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+> +#include <linux/seq_buf.h>
+>  
+>  #include <trace/events/sched.h>
+>  #include <trace/syscall.h>
+> @@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_events[];
+>  extern struct trace_event_call *__stop_ftrace_events[];
+>  
+>  static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
+> +static struct seq_buf bootup_event_seq __initdata = {
+> +	.buffer = bootup_event_buf,
+> +	.size = COMMAND_LINE_SIZE,
+> +};
+>  
+>  static __init int setup_trace_event(char *str)
+>  {
+> -	if (bootup_event_buf[0] != '\0')
+> -		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
+> +	if (seq_buf_used(&bootup_event_seq) > 0)
+> +		seq_buf_puts(&bootup_event_seq, ",");
+> +
+> +	seq_buf_puts(&bootup_event_seq, str);
+>  
+> -	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
+> +	if (seq_buf_has_overflowed(&bootup_event_seq))
+> +		return -ENOMEM;
+>  
+>  	trace_set_ring_buffer_expanded(NULL);
+>  	disable_tracing_selftest("running event tracing");
+> @@ -4766,7 +4774,7 @@ static __init int event_trace_enable(void)
+>  	 */
+>  	__trace_early_add_events(tr);
+>  
+> -	early_enable_events(tr, bootup_event_buf, false);
+> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), false);
+>  
+>  	trace_printk_start_comm();
+>  
+> @@ -4794,7 +4802,7 @@ static __init int event_trace_enable_again(void)
+>  	if (!tr)
+>  		return -ENODEV;
+>  
+> -	early_enable_events(tr, bootup_event_buf, true);
+> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), true);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.43.0
+> 
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index d0a8a6edbf0c..8c7f5e75b2ec 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -5,6 +5,7 @@
- #include <signal.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <unistd.h>
- #include <sys/sysinfo.h>
- 
- #include "common.h"
+
 -- 
-2.53.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
