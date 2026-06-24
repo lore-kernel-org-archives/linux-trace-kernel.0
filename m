@@ -1,214 +1,168 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E50A3DEAD6;
-	Wed, 24 Jun 2026 20:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782331551; cv=none; b=mPdRj3gCfTKGW6KVLP0bovGFMt2Ij7AbWprIZTtF6T68gnMqQFjaQFxXroUD0/lKOBR4tOc9i8fUItZYRtBDgE/KmhH0Q3c6SD1yjF6speDyeCn7zSpuarOMhkwRI6tK67okl9FGkm+dhyUCHZhEOj8XpeMwKBKAEC7hqPfEGoA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782331551; c=relaxed/simple;
-	bh=mDXvhgvMBbtebrMTxKeU5TzK5uAp/GbyBv6TSR52dFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oYFQNtmtLOkDPVamE9HcE7WU2j3RIf5Mal4tUeRAX6soGkhrkgd5soIVmryJjukZlGxGfczqTXLrgPY22cA7+jFjjV1AiCOhVymdyOTCm0jlgdFhL7hccr/l5NE8FISNEvufT1Sm+KsGnZo4mfWHwoSwYdHSh/vCHED4KfHiW84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=glPFbAgi; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0C43B2FF9
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 20:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782333855; cv=pass; b=j5Csr0SI8LrLhXPp05o0PYLqU2vBN3qI4ldCC4Fqg7gDYWS8ke8qH512Zho8V5ZW6RNLnKpAEippqllWafS/eFcRiFzlnggDaq7qhRdkJk5nximPHn7l4iBXzVHhN1E7dnlYK/9lzZEC6a+eElb4YuerBExLeHxrKv16kObDWKA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782333855; c=relaxed/simple;
+	bh=QyhcqbadZWN+AG6WcwYfzT9ILGIvGzGDjWcEDHa8YsM=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s2ZmTN96EQh+J7woIXXgJZUGeZHlxrwm15y3H2+mkPBsuBmJx7AxhYvp5K7vgn0hMEf4FTSeLbr6gWjUkTDkYdzqTH4DjX11zJrmEat7L1FFqiF7mE9Bg8j/nW51ZYZxXu0vtIH1u9+avzvupgN4GxZSZhmbMnml1RhmNzvI0K0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JSkv1ByO; arc=pass smtp.client-ip=74.125.82.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="glPFbAgi"
-Received: from CPC-beaub-VBQ1L.localdomain (unknown [70.37.26.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 69DAF20B7166;
-	Wed, 24 Jun 2026 13:05:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 69DAF20B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1782331538;
-	bh=uTPAhFcCNxcdpvID6odN7opmF9CXa7AS0OJLkqi0GiM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=glPFbAgiEdbig2XHfW2Q1dlGXuTvo9Q0Iv0r0OVgBqgR1cvzz3sr7e1YF+/QS5LCE
-	 j2r4k9qbcsQSUlBmbt/5ABEi/Ejk4AUZ9yqxwWmuuPlKc5kvZvYvS80kMQIcpU12qC
-	 rFoQs0Xw3oIKe6auO6rv+0R5ofeEl38rFiRjIYP4=
-Date: Wed, 24 Jun 2026 20:05:35 +0000
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: XIAO WU <xiaowu.417@qq.com>
-Cc: Michael Bommarito <michael.bommarito@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: fix use-after-free of enabler in
- user_event_mm_dup()
-Message-ID: <20260624200535.GA132-beaub@linux.microsoft.com>
-References: <20260618222743.538915-1-michael.bommarito@gmail.com>
- <tencent_89647CE40DC452B891C65C94D1B271DE8E07@qq.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JSkv1ByO"
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-13986d61b4eso593247c88.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 13:44:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782333852; cv=none;
+        d=google.com; s=arc-20240605;
+        b=TLFzvpJRE7kvgkPtNNktDsNqRCOiQMokpn3p5BOy3NyrleeRgSQf5MIEcABst2gvzJ
+         9Y4ztxmArCNxeB/O9raoCnv0NH3+QXl3bNc7yiHnRDYXBfr+sSOGXbARxaYTwFxqwaW+
+         tRsnosQjXFJO2+hMS/rjrrGT7j9W+TQifAeXFeBRlm1hu6PJTBQY0K+Lcqfcnkhwrig4
+         x7ZK4jRpAUrqIRWN7mUEwG7QTezo72COAWYUblWVqC6GL4cbjCN6d5oO3IZqs0l4SHAj
+         1TDfxIbzyUUbdMQn2dt/RuuWH7Kvh6vZsW/fchOMBxe9fA0LtomHTItfDL5iAH2KJu77
+         HmMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=G5/9dkbJhmiJkcsjBrae3PYSyLuk0zvc0a2KRC6LUH8=;
+        fh=uwIXhxy3+i0dN0x+jTmgr5NNc5BNgOc9ANzfqtJ9KPo=;
+        b=QtA1eRbObNv3+PhH5vI3rTYi/Bz+klNVzG7fLtSdq8cBayxnUwtTfKGwgmrhX8mmxO
+         IaNw6+USH/r5HcIrL738j9aHDvJ8Oy7Nz70xCAjZeyQvdiRF076L9dCy3BpsubY7X+9z
+         zUkCRo0fPecqSQuiASZCZLEN//qHyWM+jc1KfdtdYfXhdCT0KprBZzH9Lnw2HMkkWrye
+         hHGuCmggE3e3mTd/SqbROeK8Ufr/6d0sHIcf+6hnNnoCzHzjM/rkipEwu1eG6RIfGIX4
+         7jsBjUb33P1ZHbdB0GP7p9vGAJyHCE2JVuRywYVwx2ihd+GPgtQxTRBhHzA91S30+5to
+         hLSA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782333852; x=1782938652; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G5/9dkbJhmiJkcsjBrae3PYSyLuk0zvc0a2KRC6LUH8=;
+        b=JSkv1ByOJCbqB3lKP23YrYbT+yH7RufFZrgmn4j/W8qw6G5kef45xY9CunSp1hBjKl
+         KHgVhL5ObhUsvnwhujk91Y67/6q+5ENJ5W776GmqArB+gXTtg+DIFH3JaFJNxCbmJgx2
+         xK1qHRd0fYVk0P6hcWRVYj+0lEjKw/IRQzc4/bPK98RF9CScDpgGhyhJ+aB4yD10Nn48
+         x058kobRMDvgeK0FribCHSLJNszxKB2rtE0mEA2S+CpTC9JeLDOuZC5qZs737sz/P9HV
+         FvvFbAnWU8Eix7XSgeUEQs3GFnal1lCF03gEvkFky91ryDTf9BXSrKyKy2IGAXpkxAmx
+         c54A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782333852; x=1782938652;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G5/9dkbJhmiJkcsjBrae3PYSyLuk0zvc0a2KRC6LUH8=;
+        b=OKw8wzZ5FxWDoy0sTAaZhjGFJOK90ZnpYOAD8PCqvM01qhI8QGXvkDSyaoh+iSi0TV
+         xnYvEJvZblmEpTXt7xF4EHdor6sH+bUopOVVsfSvix0dNzxtNRvU8HqvJ4VLJGrowO68
+         esuACtJ5J1QwvbVr9O0y0Rv9Y4VDe0baNTWEkUQPGAyg2jr2L2e03D7U3IaTMvOq2XO/
+         3st1qIzrY7n0w9zFvfJ1hvkHLy4IiWqL+qWig9OxNoq9gwcxAsX/eEw6+Jbw4Ek4YW8G
+         So1/VbFN1GZ1AnEN8Bnj98PaEdPwn2JOGJ/uWd9Z4/tRudnMgFJ5hnZAyoX6eOPXbIUA
+         EyTA==
+X-Forwarded-Encrypted: i=1; AFNElJ8Q5+l/qOgRpAQuTB6UkENjpFrevHsvv/vkLDM3kPpgPbQIfqABZ9D9RVt7cq0S63b1c0K3spZuUN16HEG2V68yf4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGoRixKreSMD0S2Ag6RDk3X6rGc2EYCQTNbHeTmzaOJTwPZt3R
+	8C8As+hp/3rWmDb89YoMOWi0UOPuENKrEX0xTPpw5b6bG8NOZ5/SbIxhmo4q8u0g7ff0fh5XQh7
+	gmBryLZAXPYzOFZ8p8CnNhdsomPGymnU3bRQCU8BA
+X-Gm-Gg: AfdE7cn5UuCXjlfOE7ya0fmPCWef4TLZVdGG3PKcB9dWnMys6Ng6eKoETVaAmZhVYTs
+	aDYec9zAQ5y7mR+nIkaUA6qsqQuiIUg0VWqmB9qmQEG04ihO4KwywqYvmaeRqGSNaqPTfdPuzjY
+	/faEgy9vFFSqC7dHm8gypNL1+BTdsn24TpprPhYEZzFpm/8dmISwylvBc37XAqUz5AhiRr+3gYm
+	EVGNv0UFgXiU30EI+u7xgioVknqLwlq4/GtvgzUBI+61czZYs+Iz7gj6q89nUK83dgtQbEsJ1BP
+	tFN46OC4ZzLMnwYb2f4wapYRcqzWQiklIcC+WCyWv7FleFofO36cYFOm8tA=
+X-Received: by 2002:a05:7022:e995:b0:137:eda3:e5a9 with SMTP id
+ a92af1059eb24-139ad711637mr14297421c88.28.1782333850616; Wed, 24 Jun 2026
+ 13:44:10 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 24 Jun 2026 13:44:09 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 24 Jun 2026 13:44:09 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <2ef455c3-a3f5-4ba1-86ea-b96416d163ce@linux.intel.com>
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-10-9d2959357853@google.com> <2ef455c3-a3f5-4ba1-86ea-b96416d163ce@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <tencent_89647CE40DC452B891C65C94D1B271DE8E07@qq.com>
+Date: Wed, 24 Jun 2026 13:44:09 -0700
+X-Gm-Features: AVVi8Cc-v85YTGgbOrOpBNr09aOMCIpUVvlduJvADSpw08YaAcwUxrqW73F-Zbs
+Message-ID: <CAEvNRgFYpTAi+F8iF_m3mQnP_hB+DWN1oTnhEQ5WWxduX2D5MQ@mail.gmail.com>
+Subject: Re: [PATCH v8 10/46] KVM: guest_memfd: Wire up core private/shared
+ attribute interfaces
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org, 
+	chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com, 
+	jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org, 
+	pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com, 
+	rientjes@google.com, shivankg@amd.com, steven.price@arm.com, tabba@google.com, 
+	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com, 
+	forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com, 
+	aneesh.kumar@kernel.org, liam@infradead.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 23, 2026 at 01:03:59AM +0800, XIAO WU wrote:
-> Hi,
-> 
+Binbin Wu <binbin.wu@linux.intel.com> writes:
 
-Hey XIAO WU,
+> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+>
+> [...]
+>
+>> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+>> index bca912db5be6e..e0e544ef47d69 100644
+>> --- a/virt/kvm/guest_memfd.c
+>> +++ b/virt/kvm/guest_memfd.c
+>> @@ -926,6 +926,24 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>  EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_pfn);
+>>
+>>  #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_POPULATE
+>> +static bool kvm_gmem_range_is_private(struct file *file, pgoff_t index,
+>> +				      size_t nr_pages, struct kvm *kvm, gfn_t gfn)
+>> +{
+>> +	struct maple_tree *mt = &GMEM_I(file_inode(file))->attributes;
+>> +	pgoff_t end = index + nr_pages - 1;
+>> +	void *entry;
+>> +
+>> +	if (!gmem_in_place_conversion)
+>> +		return kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + nr_pages,
+>> +							  KVM_MEMORY_ATTRIBUTE_PRIVATE,
+>> +							  KVM_MEMORY_ATTRIBUTE_PRIVATE);
+>> +
+>> +	mt_for_each(mt, entry, index, end) {
+>> +		if (xa_to_value(entry) != KVM_MEMORY_ATTRIBUTE_PRIVATE)
+>> +			return false;
+>> +	}
+>
+> Patch 1 noted that "Ensuring every index is represented in the maple tree at all times".
+> So I think the queried range should not be a hole in the maple tree.
+> However, there is a inconsistency: in patch 1 kvm_gmem_get_attributes() explicitly
+> checks for holes, but this patch does not.
+>
+>> +	return true;
+>> +}
+>>
 
-> I came across the Sashiko AI review [1] in this thread and wanted to
-> share some test results that may be useful.
-> 
+With Sean's suggestion for patch 1, I'll update this one to default to
+the "init" state if xa_to_value(entry) is NULL.
 
 Thanks!
-
-> First — thank you for this patch!  The enabler UAF in
-> user_event_mm_dup() is a real bug and the fix (kfree → kfree_rcu) is
-> the right approach for protecting the RCU list walkers.  The selftest
-> results you included in the commit are also really helpful.
-> 
-> However, I was able to reproduce a second UAF on the *user_event*
-> object that the Sashiko review flagged — it's still reachable after the
-> patch is applied.  I've included a PoC and crash log below.
-> 
-> On Thu, Jun 18, 2026 at 06:27:43PM -0400, Michael Bommarito wrote:
-> > @@ -404,7 +407,12 @@ static void user_event_enabler_destroy(struct
-> user_event_enabler *enabler,
-> >      /* No longer tracking the event via the enabler */
-> >      user_event_put(enabler->event, locked);
-> >
-> > -    kfree(enabler);
-> > +    /*
-> > +     * The enabler is removed from an RCU-traversed list
-> > +     * (user_event_mm_dup walks mm->enablers under rcu_read_lock only),
-> > +     * so the backing memory must outlive a grace period.
-> > +     */
-> > +    kfree_rcu(enabler, rcu);
-> >  }
-> 
-> The issue: user_event_put(enabler->event, locked) is called
-> synchronously, before kfree_rcu(enabler, rcu).  If this drops the last
-> reference to the user_event, delayed_destroy_user_event() is scheduled
-> on a workqueue, which calls destroy_user_event() → kfree(user).  The
-> user_event memory is freed without RCU protection.
-> 
-> But the enabler itself is now protected by kfree_rcu — it remains
-> visible to RCU readers in user_event_mm_dup() during fork().  Those
-> readers access enabler->event (via user_event_enabler_dup →
-> user_event_get(orig->event)), which now points to freed memory:
-> 
->   fork()                                       unregister
->   ────────                                     ──────────
->   user_event_mm_dup()
->     rcu_read_lock();
->     list_for_each_entry_rcu(enabler, ...)
->  user_event_enabler_destroy()
->  list_del_rcu(enabler)
->  user_event_put(enabler->event)
->                                                    → last ref!
->                                                    → schedule_work(put_work)
->                                                  kfree_rcu(enabler, rcu)
->       user_event_enabler_dup(enabler, ...)     [workqueue]
->         enabler->event =  delayed_destroy_user_event()
->           user_event_get(orig->event);  destroy_user_event()
->           ↑ UAF: orig->event was freed! kfree(user_event)
-> 
-
-While I cannot repro this locally on my 16 core machine, I do agree this
-case needs to be handled correctly. The enabler should keep the ref to
-the user_event until after an RCU grace period. I have this fix that
-addresses it more completely than the original proposal.
-
-I'm hoping you can try out this fix with your machine that does repro
-the timing window. The below change needs self test fixes, since now the
-free happens after an RCU grace period + work queue schedule. This is
-because the self tests (abi_test and perf_test) assume after unreg the
-last ref is immediate (which was never guaranteed).
-
-Thanks,
--Beau
-
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index c4ba484f7b38..b860d8b70c7b 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -109,6 +109,9 @@ struct user_event_enabler {
-
-        /* Track enable bit, flags, etc. Aligned for bitops. */
-        unsigned long           values;
-+
-+       /* Defer put so RCU list readers (user_event_mm_dup) are safe. */
-+       struct rcu_work         put_rwork;
- };
-
- /* Bits 0-5 are for the bit to update upon enable/disable (0-63 allowed) */
-@@ -396,17 +399,38 @@ static struct user_event_group *user_event_group_create(void)
-        return NULL;
- };
-
--static void user_event_enabler_destroy(struct user_event_enabler *enabler,
--                                      bool locked)
-+static void delayed_user_event_enabler_put(struct work_struct *work)
- {
--       list_del_rcu(&enabler->mm_enablers_link);
-+       struct user_event_enabler *enabler;
-+
-+       enabler = container_of(to_rcu_work(work), struct user_event_enabler, put_rwork);
-
-        /* No longer tracking the event via the enabler */
--       user_event_put(enabler->event, locked);
-+       user_event_put(enabler->event, false);
-
-+       /* Run from queue_rcu_work(), no need for RCU */
-        kfree(enabler);
- }
-
-+static void user_event_enabler_destroy(struct user_event_enabler *enabler)
-+{
-+       list_del_rcu(&enabler->mm_enablers_link);
-+
-+       /*
-+        * We need to hold onto the reference of the user_event for this enabler
-+        * until an RCU grace period has elapsed. This ensures that we only ever
-+        * put (which may free) the user_event after all CPUs have an updated
-+        * enabler list. If during the RCU grace period more enablers are added,
-+        * the user_event will be kept alive by new ref counts.
-+        *
-+        * If user_event_put() is called on the last reference, the event_mutex
-+        * is taken. These cannot be taken in an RCU context, so we have to run
-+        * this in a work queue only after an RCU grace period.
-+        */
-+       INIT_RCU_WORK(&enabler->put_rwork, delayed_user_event_enabler_put);
-+       queue_rcu_work(system_percpu_wq, &enabler->put_rwork);
-+}
-+
- static int user_event_mm_fault_in(struct user_event_mm *mm, unsigned long uaddr,
-                                  int attempt)
- {
-@@ -464,7 +488,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
-
-        /* User asked for enabler to be removed during fault */
-        if (test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))) {
--               user_event_enabler_destroy(enabler, true);
-+               user_event_enabler_destroy(enabler);
-                goto out;
-        }
-
-@@ -764,7 +788,7 @@ static void user_event_mm_destroy(struct user_event_mm *mm)
-        struct user_event_enabler *enabler, *next;
-
-        list_for_each_entry_safe(enabler, next, &mm->enablers, mm_enablers_link)
--               user_event_enabler_destroy(enabler, false);
-+               user_event_enabler_destroy(enabler);
-
-        mmdrop(mm->mm);
-        kfree(mm);
-@@ -2645,7 +2669,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
-                        flags |= enabler->values & ENABLE_VAL_COMPAT_MASK;
-
-                        if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
--                               user_event_enabler_destroy(enabler, true);
-+                               user_event_enabler_destroy(enabler);
-
-                        /* Removed at least one */
-                        ret = 0;
