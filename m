@@ -1,294 +1,261 @@
-Received: from pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com [34.218.115.239])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACCE17A300;
-	Wed, 24 Jun 2026 12:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.218.115.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F66F3A9856;
+	Wed, 24 Jun 2026 12:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782303871; cv=none; b=gKRRhgIok4by29+Uk/VunA5pxhN06/jo58Aaz2Cp8CrjOnKjUFcKJy9g25efi5b2lfOSdtDGSXpy+iRlzghoTSKBcJMwZ+5pvGN6IQcjqxQN9gNN3ApCmuMQgkuSQZx/mCYhz286sCpZO6vktV3dLHal/e9NhaOp7STesdjoisU=
+	t=1782304211; cv=none; b=XR5YQPFxakFduvEHcPuVVJ0zpo497ifKgIUEIL+KRgz4CHaRGARpt65tbaSzdPI+vEXCdjhPpbR2q1mr/LDDSEM0LIe3jk0Wgsc/2U2f7LU8QYg1MWaLI6nKiEpwwbw2IDFfz4QbCq4nlhsuNtTGEHIvJsHwuFk16f4DUauhVoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782303871; c=relaxed/simple;
-	bh=XLlqBBnRDRZstIwJ+0KRDED8w8EH1SfkPGEn5Dei+g8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s0qgtQUwZ17XoBYmwoeEexmXYTFJZr7rogGPIdGgHSKbMrL4k3CbAVPOaoq6Yh3hMZ4W6CCN+FQ/rE6lmMJiy8BEyWknlSg+JUkYKAJWO4BfUmVavgb1rji/6sN9hmEMx9kSktFtTqnWY0Ym0MEP31edlJWzC4tu/SVvMCVqF3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=T5wUaXXx; arc=none smtp.client-ip=34.218.115.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1782304211; c=relaxed/simple;
+	bh=x+wrByIgOH4VvEI96gvWujAPl3WM8xGYqVOhtQGJNvw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uD29StXT8KBuXsAVFLCZPlkAZexRlAMcVcNZ2gTb0dsqLkPU3wtnAPiAfpOL0xNKL5cbaJ/iLfxA/nuZxDiruel64fMc7E7MHrOh98SxNNiq5ckdfHOFCUe8jBH1D3CEjUHtaXEGAC+SCB/2Iz1dXC1SEUr0fC/QyH7qlEqm+Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R0l5uaRB; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="T5wUaXXx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1782303870; x=1813839870;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4CGeDu3hMo8aMIESD7AmSWajUrAp09msfHqA1oL1ei4=;
-  b=T5wUaXXxfc9xNZ2lLagG6mpF9lURgMUm2fS5DtsAlAAnuP5bsLIGrUq1
-   YL4J5qcg33vbgBrvmzvaxCOFd2Nyo33AxkipyyvYSezYqvyUnywCi7hUq
-   XANxWhP/PVJYjZgCuoh8j/C6Bo/MMaCd5JuDxOaGhCzn3H5JEx9pyVIKV
-   QirEGcb5WrnULgOJlNSEsyYFipEOqApS6tBWYWDp67BEvZgEJ8lwqynpN
-   emrQwcJnKGUxBkBqi7ZN7Mbrj/9g/CFQ00906IqVHaWhmPa1/TK5TJ2NP
-   DdVLWlC4rKEnM/a4fMZtpJvbEQxKFLr7WtoP2dnlHU7KfnMGMiiIOzo22
-   w==;
-X-CSE-ConnectionGUID: QL2WzA6RQ5SZHeE1mbR7RA==
-X-CSE-MsgGUID: 2T/rD8ahSP+S7yJuVQXkow==
-X-IronPort-AV: E=Sophos;i="6.24,222,1774310400"; 
-   d="scan'208";a="22200394"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2026 12:24:27 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [205.251.233.111:4717]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.31.226:2525] with esmtp (Farcaster)
- id 983191cf-44e7-40d8-80e7-28447858eef1; Wed, 24 Jun 2026 12:24:27 +0000 (UTC)
-X-Farcaster-Flow-ID: 983191cf-44e7-40d8-80e7-28447858eef1
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Wed, 24 Jun 2026 12:24:27 +0000
-Received: from dev-dsk-doebel-1a-7b355d76.us-east-1.amazon.com (10.169.119.5)
- by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Wed, 24 Jun 2026 12:24:26 +0000
-From: Bjoern Doebel <doebel@amazon.de>
-To: <stable@vger.kernel.org>
-CC: Bjoern Doebel <doebel@amazon.de>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.10.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
-Date: Wed, 24 Jun 2026 12:24:11 +0000
-Message-ID: <20260624122413.2477871-1-doebel@amazon.de>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R0l5uaRB"
+Message-ID: <f99b70cc-e11c-42a9-a986-d20b3f232a31@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782304195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eNfuHxO86n8b93ev9jYNFJxXkathlRXlXpz1k/8S9nI=;
+	b=R0l5uaRBMcxiN2aXXeE7sJmbbWZ+nIwvYOIBg2hW4xeZNywWJj11l3PcvXG3Ip7YlbinqT
+	P/PQ6kfAvOv13VlW7fdMv2tpC85uXP91R5VJRz9HOOc6aZfnOL/SuWOVvCXI8elJq6bVmX
+	Hq88NW9qj4aWnLm21y4nDBq7fAgYa9M=
+Date: Wed, 24 Jun 2026 20:29:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D042UWB004.ant.amazon.com (10.13.139.150) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
+ state
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Paul Moore <paul@paul-moore.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Howells <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+ linux-ntfs-dev@lists.sourceforge.net,
+ Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+ io-uring <io-uring@vger.kernel.org>, audit@vger.kernel.org,
+ bpf <bpf@vger.kernel.org>, Network Development <netdev@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ kexec@lists.infradead.org, live-patching@vger.kernel.org,
+ linux-modules@vger.kernel.org,
+ Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+ Linux Power Management <linux-pm@vger.kernel.org>, rcu@vger.kernel.org,
+ sched-ext@lists.linux.dev, linux-mm <linux-mm@kvack.org>,
+ virtualization@lists.linux.dev, damon@lists.linux.dev,
+ clang-built-linux <llvm@lists.linux.dev>,
+ chengkaitao <chengkaitao@kylinos.cn>, Muchun Song <muchun.song@linux.dev>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+ <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+ <8c8f1849-86d3-4c69-be27-30bbdffdf616@linux.dev>
+ <ajkSftEbdGoiJXYs@ashevche-desk.local>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kaitao Cheng <kaitao.cheng@linux.dev>
+In-Reply-To: <ajkSftEbdGoiJXYs@ashevche-desk.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-[ Upstream commit 119a5d573622ae90ba730d18acfae9bb75d77b9a ]
 
-When the ring buffer was first introduced, reading the non-consuming
-"trace" file required disabling the writing of the ring buffer. To make
-sure the writing was fully disabled before iterating the buffer with a
-non-consuming read, it would set the disable flag of the buffer and then
-call an RCU synchronization to make sure all the buffers were
-synchronized.
 
-The function ring_buffer_read_start() originally  would initialize the
-iterator and call an RCU synchronization, but this was for each individual
-per CPU buffer where this would get called many times on a machine with
-many CPUs before the trace file could be read. The commit 72c9ddfd4c5bf
-("ring-buffer: Make non-consuming read less expensive with lots of cpus.")
-separated ring_buffer_read_start into ring_buffer_read_prepare(),
-ring_buffer_read_sync() and then ring_buffer_read_start() to allow each of
-the per CPU buffers to be prepared, call the read_buffer_read_sync() once,
-and then the ring_buffer_read_start() for each of the CPUs which made
-things much faster.
+在 2026/6/22 18:46, Andy Shevchenko 写道:
+> On Mon, Jun 22, 2026 at 02:15:01PM +0800, Kaitao Cheng wrote:
+>> 在 2026/6/22 13:28, Alexei Starovoitov 写道:
+>>> On Sun, Jun 21, 2026 at 9:06 PM Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
+> 
+> ...
+> 
+>>>>  block/bfq-iosched.c                 |  17 +-
+>>>>  block/blk-cgroup.c                  |  12 +-
+>>>>  block/blk-flush.c                   |   4 +-
+>>>>  block/blk-iocost.c                  |  18 +-
+>>>>  block/blk-mq.c                      |   8 +-
+>>>>  block/blk-throttle.c                |   4 +-
+>>>>  block/kyber-iosched.c               |   4 +-
+>>>>  block/partitions/ldm.c              |   8 +-
+>>>>  block/sed-opal.c                    |   4 +-
+>>>>  include/linux/list.h                | 269 ++++++++++++++++++++++++----
+>>>>  include/linux/llist.h               |  81 +++++++--
+>>>>  init/initramfs.c                    |   5 +-
+>>>>  io_uring/cancel.c                   |   6 +-
+>>>>  io_uring/poll.c                     |   3 +-
+>>>>  io_uring/rw.c                       |   4 +-
+>>>>  io_uring/timeout.c                  |   8 +-
+>>>>  io_uring/uring_cmd.c                |   3 +-
+>>>>  kernel/audit_tree.c                 |   4 +-
+>>>>  kernel/audit_watch.c                |  16 +-
+>>>>  kernel/auditfilter.c                |   4 +-
+>>>>  kernel/auditsc.c                    |   4 +-
+>>>>  kernel/bpf/arena.c                  |  10 +-
+>>>>  kernel/bpf/arraymap.c               |   8 +-
+>>>>  kernel/bpf/bpf_local_storage.c      |   3 +-
+>>>>  kernel/bpf/bpf_lru_list.c           |  25 ++-
+>>>>  kernel/bpf/btf.c                    |  18 +-
+>>>>  kernel/bpf/cgroup.c                 |   7 +-
+>>>>  kernel/bpf/cpumap.c                 |   4 +-
+>>>>  kernel/bpf/devmap.c                 |  10 +-
+>>>>  kernel/bpf/helpers.c                |   8 +-
+>>>>  kernel/bpf/local_storage.c          |   4 +-
+>>>>  kernel/bpf/memalloc.c               |  16 +-
+>>>>  kernel/bpf/offload.c                |   8 +-
+>>>>  kernel/bpf/states.c                 |   4 +-
+>>>>  kernel/bpf/stream.c                 |   4 +-
+>>>>  kernel/bpf/verifier.c               |   6 +-
+>>>>  kernel/cgroup/cgroup-v1.c           |   4 +-
+>>>>  kernel/cgroup/cgroup.c              |  54 +++---
+>>>>  kernel/cgroup/dmem.c                |  12 +-
+>>>>  kernel/cgroup/rdma.c                |   8 +-
+>>>>  kernel/events/core.c                |  44 +++--
+>>>>  kernel/events/uprobes.c             |  12 +-
+>>>>  kernel/exit.c                       |   8 +-
+>>>>  kernel/fail_function.c              |   4 +-
+>>>>  kernel/gcov/clang.c                 |   4 +-
+>>>>  kernel/irq_work.c                   |   4 +-
+>>>>  kernel/kexec_core.c                 |   4 +-
+>>>>  kernel/kprobes.c                    |  16 +-
+>>>>  kernel/livepatch/core.c             |   4 +-
+>>>>  kernel/livepatch/core.h             |   4 +-
+>>>>  kernel/liveupdate/kho_block.c       |   4 +-
+>>>>  kernel/liveupdate/luo_flb.c         |   4 +-
+>>>>  kernel/locking/rwsem.c              |   2 +-
+>>>>  kernel/locking/test-ww_mutex.c      |   2 +-
+>>>>  kernel/module/main.c                |  11 +-
+>>>>  kernel/padata.c                     |   4 +-
+>>>>  kernel/power/snapshot.c             |   8 +-
+>>>>  kernel/power/wakelock.c             |   4 +-
+>>>>  kernel/printk/printk.c              |  11 +-
+>>>>  kernel/ptrace.c                     |   4 +-
+>>>>  kernel/rcu/rcutorture.c             |   3 +-
+>>>>  kernel/rcu/tasks.h                  |   9 +-
+>>>>  kernel/rcu/tree.c                   |   6 +-
+>>>>  kernel/resource.c                   |   4 +-
+>>>>  kernel/sched/core.c                 |   4 +-
+>>>>  kernel/sched/ext.c                  |  22 +--
+>>>>  kernel/sched/fair.c                 |  28 +--
+>>>>  kernel/sched/topology.c             |   4 +-
+>>>>  kernel/sched/wait.c                 |   4 +-
+>>>>  kernel/seccomp.c                    |   4 +-
+>>>>  kernel/signal.c                     |  11 +-
+>>>>  kernel/smp.c                        |   4 +-
+>>>>  kernel/taskstats.c                  |   8 +-
+>>>>  kernel/time/clockevents.c           |   6 +-
+>>>>  kernel/time/clocksource.c           |   4 +-
+>>>>  kernel/time/posix-cpu-timers.c      |   4 +-
+>>>>  kernel/time/posix-timers.c          |   3 +-
+>>>>  kernel/torture.c                    |   3 +-
+>>>>  kernel/trace/bpf_trace.c            |   4 +-
+>>>>  kernel/trace/ftrace.c               |  49 +++--
+>>>>  kernel/trace/ring_buffer.c          |  25 ++-
+>>>>  kernel/trace/trace.c                |  12 +-
+>>>>  kernel/trace/trace_dynevent.c       |   6 +-
+>>>>  kernel/trace/trace_dynevent.h       |   5 +-
+>>>>  kernel/trace/trace_events.c         |  35 ++--
+>>>>  kernel/trace/trace_events_filter.c  |   4 +-
+>>>>  kernel/trace/trace_events_hist.c    |   8 +-
+>>>>  kernel/trace/trace_events_trigger.c |  17 +-
+>>>>  kernel/trace/trace_events_user.c    |  16 +-
+>>>>  kernel/trace/trace_stat.c           |   4 +-
+>>>>  kernel/user-return-notifier.c       |   3 +-
+>>>>  kernel/workqueue.c                  |  16 +-
+>>>>  mm/backing-dev.c                    |   8 +-
+>>>>  mm/balloon.c                        |   8 +-
+>>>>  mm/cma.c                            |   4 +-
+>>>>  mm/compaction.c                     |   4 +-
+>>>>  mm/damon/core.c                     |   4 +-
+>>>>  mm/damon/sysfs-schemes.c            |   4 +-
+>>>>  mm/dmapool.c                        |   4 +-
+>>>>  mm/huge_memory.c                    |   8 +-
+>>>>  mm/hugetlb.c                        |  56 +++---
+>>>>  mm/hugetlb_vmemmap.c                |  16 +-
+>>>>  mm/khugepaged.c                     |  14 +-
+>>>>  mm/kmemleak.c                       |   7 +-
+>>>>  mm/ksm.c                            |  25 +--
+>>>>  mm/list_lru.c                       |   4 +-
+>>>>  mm/memcontrol-v1.c                  |   8 +-
+>>>>  mm/memory-failure.c                 |  12 +-
+>>>>  mm/memory-tiers.c                   |   4 +-
+>>>>  mm/migrate.c                        |  23 ++-
+>>>>  mm/mmu_notifier.c                   |   9 +-
+>>>>  mm/page_alloc.c                     |   8 +-
+>>>>  mm/page_reporting.c                 |   2 +-
+>>>>  mm/percpu.c                         |  11 +-
+>>>>  mm/pgtable-generic.c                |   4 +-
+>>>>  mm/rmap.c                           |  10 +-
+>>>>  mm/shmem.c                          |   9 +-
+>>>>  mm/slab_common.c                    |  14 +-
+>>>>  mm/slub.c                           |  33 ++--
+>>>>  mm/swapfile.c                       |   4 +-
+>>>>  mm/userfaultfd.c                    |  12 +-
+>>>>  mm/vmalloc.c                        |  24 +--
+>>>>  mm/vmscan.c                         |   7 +-
+>>>>  mm/zsmalloc.c                       |   4 +-
+>>>>  124 files changed, 875 insertions(+), 681 deletions(-)
+>>>
+>>> Not sure what you were thinking, but this diff stat
+>>> is not landable.
+>>
+>> [PATCH v3 1/7] and [PATCH v3 2/7] contain the main logic and can
+>> be merged directly. They are also compatible with the old API.
+>> [PATCH v3 3/7] through [PATCH v3 7/7] are just simple interface
+>> replacements and do not change any functional logic. They can be
+>> left unmerged for now; individual modules can pick them up later
+>> if needed.
+>>
+>> In v2, Andy Shevchenko mentioned: "If it's done by Linus himself
+>> during the day when he prepares -rc1, it's fine."
+> 
+> Yes, but you need to get his blessing first to go with this.
+> Have you communicated with him on this?
 
-The commit 1039221cc278 ("ring-buffer: Do not disable recording when there
-is an iterator") removed the requirement of disabling the recording of the
-ring buffer in order to iterate it, but it did not remove the
-synchronization that was happening that was required to wait for all the
-buffers to have no more writers. It's now OK for the buffers to have
-writers and no synchronization is needed.
+Not yet, because the overall approach is still not mature. People
+have different opinions on the implementation details and on how
+to move this forward, so I think we should iterate through a few
+versions first before making a final decision.
 
-Remove the synchronization and put back the interface for the ring buffer
-iterator back before commit 72c9ddfd4c5bf was applied.
+>> Even so, the
+>> changes in this patch series are indeed quite large and touch
+>> almost every subsystem. I have only converted part of them for
+>> now, so I wanted to send this out first and see what people think.
+> 
+> That's why it's better to provide a script to convert (e.g., coccinelle)
+> instead of tons of patches.
 
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20250630180440.3eabb514@batman.local.home
-Reported-by: David Howells <dhowells@redhat.com>
-Fixes: 1039221cc278 ("ring-buffer: Do not disable recording when there is an iterator")
-Tested-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Assisted-by: Kiro:claude-opus-4.8
-Signed-off-by: Bjoern Doebel <doebel@amazon.de>
----
- include/linux/ring_buffer.h |  4 +--
- kernel/trace/ring_buffer.c  | 67 ++++++-------------------------------
- kernel/trace/trace.c        | 14 +++-----
- kernel/trace/trace_kdb.c    |  8 ++---
- 4 files changed, 18 insertions(+), 75 deletions(-)
+I tried writing conversion scripts with Coccinelle, but there were
+always cases that got missed. In contrast, I found that using AI
+for focused replacements was actually more efficient.
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 7d5a78f49d43..be5c12092246 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -128,9 +128,7 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
- 		    unsigned long *lost_events);
- 
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags);
--void ring_buffer_read_prepare_sync(void);
--void ring_buffer_read_start(struct ring_buffer_iter *iter);
-+ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags);
- void ring_buffer_read_finish(struct ring_buffer_iter *iter);
- 
- struct ring_buffer_event *
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 03a7127efc5a..05f2d7f16670 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4858,28 +4858,20 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
- EXPORT_SYMBOL_GPL(ring_buffer_consume);
- 
- /**
-- * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
-+ * ring_buffer_read_start - start a non consuming read of the buffer
-  * @buffer: The ring buffer to read from
-  * @cpu: The cpu buffer to iterate over
-  * @flags: gfp flags to use for memory allocation
-  *
-- * This performs the initial preparations necessary to iterate
-- * through the buffer.  Memory is allocated, buffer recording
-- * is disabled, and the iterator pointer is returned to the caller.
-- *
-- * Disabling buffer recording prevents the reading from being
-- * corrupted. This is not a consuming read, so a producer is not
-- * expected.
-- *
-- * After a sequence of ring_buffer_read_prepare calls, the user is
-- * expected to make at least one call to ring_buffer_read_prepare_sync.
-- * Afterwards, ring_buffer_read_start is invoked to get things going
-- * for real.
-+ * This creates an iterator to allow non-consuming iteration through
-+ * the buffer. If the buffer is disabled for writing, it will produce
-+ * the same information each time, but if the buffer is still writing
-+ * then the first hit of a write will cause the iteration to stop.
-  *
-- * This overall must be paired with ring_buffer_read_finish.
-+ * Must be paired with ring_buffer_read_finish.
-  */
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
-+ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_iter *iter;
-@@ -4904,51 +4896,12 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
- 
- 	atomic_inc(&cpu_buffer->resize_disabled);
- 
--	return iter;
--}
--EXPORT_SYMBOL_GPL(ring_buffer_read_prepare);
--
--/**
-- * ring_buffer_read_prepare_sync - Synchronize a set of prepare calls
-- *
-- * All previously invoked ring_buffer_read_prepare calls to prepare
-- * iterators will be synchronized.  Afterwards, read_buffer_read_start
-- * calls on those iterators are allowed.
-- */
--void
--ring_buffer_read_prepare_sync(void)
--{
--	synchronize_rcu();
--}
--EXPORT_SYMBOL_GPL(ring_buffer_read_prepare_sync);
--
--/**
-- * ring_buffer_read_start - start a non consuming read of the buffer
-- * @iter: The iterator returned by ring_buffer_read_prepare
-- *
-- * This finalizes the startup of an iteration through the buffer.
-- * The iterator comes from a call to ring_buffer_read_prepare and
-- * an intervening ring_buffer_read_prepare_sync must have been
-- * performed.
-- *
-- * Must be paired with ring_buffer_read_finish.
-- */
--void
--ring_buffer_read_start(struct ring_buffer_iter *iter)
--{
--	struct ring_buffer_per_cpu *cpu_buffer;
--	unsigned long flags;
--
--	if (!iter)
--		return;
--
--	cpu_buffer = iter->cpu_buffer;
--
--	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
- 	arch_spin_lock(&cpu_buffer->lock);
- 	rb_iter_reset(iter);
- 	arch_spin_unlock(&cpu_buffer->lock);
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+
-+	return iter;
- }
- EXPORT_SYMBOL_GPL(ring_buffer_read_start);
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5bcd4cbeeb4f..ed32d3c4f0e7 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4480,21 +4480,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter->buffer_iter[cpu] =
--				ring_buffer_read_prepare(iter->array_buffer->buffer,
--							 cpu, GFP_KERNEL);
--		}
--		ring_buffer_read_prepare_sync();
--		for_each_tracing_cpu(cpu) {
--			ring_buffer_read_start(iter->buffer_iter[cpu]);
-+				ring_buffer_read_start(iter->array_buffer->buffer,
-+						       cpu, GFP_KERNEL);
- 			tracing_iter_reset(iter, cpu);
- 		}
- 	} else {
- 		cpu = iter->cpu_file;
- 		iter->buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter->array_buffer->buffer,
--						 cpu, GFP_KERNEL);
--		ring_buffer_read_prepare_sync();
--		ring_buffer_read_start(iter->buffer_iter[cpu]);
-+			ring_buffer_read_start(iter->array_buffer->buffer,
-+					       cpu, GFP_KERNEL);
- 		tracing_iter_reset(iter, cpu);
- 	}
- 
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 9da76104f7a2..18d1551db2b0 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -43,17 +43,15 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter.buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter.array_buffer->buffer,
--						 cpu, GFP_ATOMIC);
--			ring_buffer_read_start(iter.buffer_iter[cpu]);
-+			ring_buffer_read_start(iter.array_buffer->buffer,
-+					       cpu, GFP_ATOMIC);
- 			tracing_iter_reset(&iter, cpu);
- 		}
- 	} else {
- 		iter.cpu_file = cpu_file;
- 		iter.buffer_iter[cpu_file] =
--			ring_buffer_read_prepare(iter.array_buffer->buffer,
-+			ring_buffer_read_start(iter.array_buffer->buffer,
- 						 cpu_file, GFP_ATOMIC);
--		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
- 		tracing_iter_reset(&iter, cpu_file);
- 	}
- 
+As David Hildenbrand mentioned, "If we decide we want this, I guess
+we should target per-subsystem conversions." I would like to provide
+the new interface first; adapting each subsystem on demand later may
+be easier to achieve.
 -- 
-2.50.1
-
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+Thanks
+Kaitao Cheng
 
